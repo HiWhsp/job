@@ -1,624 +1,296 @@
 <template>
-  <div class="page-head">
-    <div class="section-nav">
-      <div class="header-inner">
-        <div class="logo-wrap">
-          <div class="logo-box" @click="toHome()">
-            <img src="@/static/common/head-logo.png" />
+  <div class="page-header">
+    <div class="top-box">
+      <div class="content flex flex-between">
+        <div class="l-box flex">
+          <span class="name">富俊机械运动组件采购商城</span>
+          <div class="tools-btn flex">
+            <div class="login pointer">登录</div>
+            <div class="col"></div>
+            <div class="register pointer">注册</div>
           </div>
         </div>
-
-        <div class="nav-wrap">
-          <div class="nav-list flex-between">
-            <div class="nav-item" v-for="(item, index) in nav_list" :key="index" :class="checkClass(item)">
-              <!-- 无子导航 -->
-              <template v-if="!item.child || !item.child.length">
-                <router-link class="nav-link" :to="item.route">
-                  {{ item.title }}
-                </router-link>
-              </template>
-
-              <!-- 有子导航 -->
-              <template v-else>
-                <el-popover popper-class="w-nav-popover" placement="top" title="" width="150" trigger="hover"
-                  content="">
-                  <router-link slot="reference" class="nav-link" :to="item.route">
-                    {{ item.title }}
-                  </router-link>
-
-                  <div class="pop-child" v-if="item.child">
-                    <router-link :to="sub.route" class="child-item" v-for="(sub, index) in item.child" :key="index">
-                      {{ sub.title }}
-                    </router-link>
-                  </div>
-                </el-popover>
-              </template>
-            </div>
+        <div class="r-box flex pointer">
+          <div class="color-a6 flex">
+            <img src="../../static/home/phone.png" alt="dianhua" class="img-1">400-085-7709
           </div>
+          <div class="col"></div>
+          <div class="flex">我的消息<span class="color-a6">({{ numList.message }})</span><img
+              src="../../static/home/down.png" class="img-2"></div>
+          <div class="col"></div>
+          <div>我的订单<span class="color-a6">({{ numList.message }})</span></div>
+          <div class="col"></div>
+          <div>积分商城<span class="color-a6">({{ numList.message }})</span></div>
+          <div class="col"></div>
+          <div>关于富俊</div>
+          <div class="col"></div>
+          <div>帮助中心</div>
         </div>
-
-        <div class="user-act flex">
-          <div class="center-search-wrap">
-            <div class="center-search">
-              <div class="search-box">
-                <input v-model="keyword" type="text" placeholder="请输入搜索关键词" @keyup.enter="toSearch"
-                  @input="handleSearchInput" />
-                <button class="btn-search " @click="toSearch()">
-                  <img class="img-search" src="@/static/common/head-search.png" alt="" />
-                </button>
-              </div>
-            </div>
-            <!-- 搜索建议 -->
-            <!-- <div class="search-suggest-list" v-if="search_suggest_list.length">
-            <div class="search-suggest-item" v-for="(item, index) in search_suggest_list" :key="index">
-              <router-link :to="'/product-detail/' + (item.skuId || item.inventoryId)" :alt="item.title"
-                :title="item.title">
-                【{{ item.skuId }}】 {{ item.title }}
-              </router-link>
-            </div>
-          </div> -->
-          </div>
-
-          <div class="info-right">
-            <div class="log-box">
-              <router-link class="login" to="/login">
-                <img src="@/static/common/head-user-login.png" alt="" class="user-login">
-              </router-link>
-              <router-link class="register" to="/register">
-                <img src="@/static/common/head-user-reg.png" alt="" class="user-reg">
-              </router-link>
-            </div>
-            <router-link class="shopcart" to="/cart">
-              <img src="@/static/common/head-cart.png" alt="" class="cart-image">
-              <span class="cart-num">{{ shopcart_count || 0 }}</span>
-            </router-link>
-          </div>
-        </div>
-
-        <div class="user-login-info flex" v-if="vuex_is_login">
-          <div class="avatar-box" @click="$router.push('/my-index')">
-            <img :src="mix_user_avatar || avatar_default" alt="">
-          </div>
-          <router-link class="phone" to="/my-index">
-            {{ mix_user_phone }}
-          </router-link>
-          <a class="logout" href="javascript:void(0)" @click="logout()"> 退出 </a>
-        </div>
-
       </div>
     </div>
-
+    <div class="info-box">
+      <div class="content flex flex-between">
+        <div class="l-box">
+          <img src="../../static/home/logo.png" alt="logo" class="img-1">
+          <span>运动组件采购商城</span>
+        </div>
+        <div class="m-box">
+          <div class="search flex">
+            <el-input v-model="searchInput" placeholder="可直接搜索同行型号 获取低成本替代"></el-input>
+            <el-button type="primary" icon="el-icon-search">搜索</el-button>
+          </div>
+          <div class="search-hot">
+            <a class="hot">简易丝杆模组</a>
+            <a class="hot">两轴模组</a>
+            <a class="hot">丝杆组件</a>
+            <a class="hot">两轴组件</a>
+            <a class="hot">多轴模组</a>
+          </div>
+        </div>
+        <div class="r-box">
+          <div class="flex">
+            <div class="tools-btn pointer flex"><img class="img-2" src="../../static/home/gouwuche.png" alt="">购物车
+            </div>
+            <div class="tools-btn pointer flex"><img class="img-3" src="../../static/home/wexin.png" alt="">微信公众号
+            </div>
+          </div>
+          <div class="hot">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-box">
+      <div class="content flex">
+        <div class="nav flex" v-for="(item, index) in navList" :key="index">
+          <img class="img-0" :src="item.icon" alt="" v-if="item.position == 'l'">
+          <span class="name">{{ item.title }}</span>
+          <img class="img-1" :src="item.icon" alt="" v-if="item.position == 'r'">
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {
-  name: "HeaderIndex",
   data() {
     return {
-      showSearch: false,
-      keyword: "",
-
-      search_suggest_list: [],
-      disabledSearchQuery: false,
-      searchLock: false, //锁定搜素
-    };
-  },
-
-  computed: {
-
-    ...mapState([
-      //
-      "vuex_product_cate_1",
-      'vuex_product_cate_2',
-      "userInfo",
-      "avatar_default",
-    ]),
-
-    // 主导航
-    nav_list() {
-      let arr = [
-        { title: "首页", route: "/" },
-        { title: this.vuex_product_cate_1.title || 'Cream Charger', route: this.vuex_product_cate_1.route || '/product-cates?id=780', child: [] },
-        { title: this.vuex_product_cate_2.title || "Cream Dispenser", route: this.vuex_product_cate_2.route || '/product-cates?id=780', child: [] },
-        { title: "关于我们", route: '/about', child: [] },
-        { title: "联系我们", route: "/contact", child: [] },
-      ];
-      return arr;
-    },
-
-    // 个人中心导航
-    opt_user_center_nav() {
-      let arr = [
-        { title: "我的订单", route: "/order-list" },
-        { title: "我的佣金", route: "/myCommission" },
-        { title: "个人资料", route: "/my-info" },
-      ];
-      if (this.vuex_is_login) {
-        arr.push({ title: "退出账号", route: "" });
+      searchInput: '', // 搜索条件
+      // 头部导航列表
+      navList: [
+        {
+          title: '全部商品分类', // 名称
+          icon: require('../../static/home/down_all.png'),
+          position: 'r'
+        },
+        {
+          title: '特惠商城', // 名称
+          icon: require('../../static/home/hot-shop.png'),
+          position: 'l'
+        },
+        {
+          title: '低价爆款专区', // 名称
+          icon: null,
+          position: null
+        }, {
+          title: '每月新款专区', // 名称
+          icon: require('../../static/home/hot-new.png'),
+          position: 'l'
+        }, {
+          title: '定制组件专区', // 名称
+          icon: null,
+          position: null
+        }, {
+          title: 'DIY 组件专区', // 名称
+          icon: null,
+          position: null
+        }, {
+          title: '非标定制', // 名称
+          icon: null,
+          position: null
+        }, {
+          title: '快速报价', // 名称
+          icon: null,
+          position: null
+        }],
+      // 小标数据
+      numList: {
+        orderIndex: 0,
+        integral: 0,
+        message: 0,
+        shop: 0
       }
-      return arr;
-    },
-
-
-  },
-
-  watch: {
-    $route(to, from) {
-      if (to.name == "product-search") {
-        if (to.query.id) {
-
-        }
-      }
-      this.searchLock = true;
-      this.keyword = to.query.keyword;
-    },
-  },
-
-  created() {
-    this.keyword = this.$route.query.keyword || "";
-    this.setView();
-  },
-
-  methods: {
-    setView() {
-
-    },
-    mouseoutSearch() {
-
-    },
-    handleSearchInput() {
-      this.searchLock = false;
-    },
-
-    toHome() {
-      if (this.$route.name != "index") {
-        this.$router.push("/");
-      } else {
-        document.documentElement.scrollTop = 0;
-      }
-    },
-
-    checkClass(item) {
-      let pagePath = this.$route.fullPath;
-
-      let obj = {
-        active: item.route == pagePath || item.title == this.$route.meta.root,
-        "nav-item-static": "/product-cates" == item.path,
-      };
-      return obj;
-    },
-
-    toSearch() {
-      // if (!this.keyword) {
-      //   alertErr("请输入搜索关键字");
-      //   return;
-      // }
-      let query = {};
-      if (this.selectCate) {
-        query.id = this.selectCate;
-      }
-
-      let keyword = (this.keyword || '').trim() || ""
-      query.keyword = keyword;
-      query.ms = new Date().getTime();
-      this.$router.push({
-        path: "/product-search",
-        query: query,
-      });
-    },
-
-    logout() {
-      this.$store.commit("clear_loginInfo");
-      // if (this.$route.meta.requireAuth) {
-      //   this.$router.push("/login");
-      // }
-      this.$router.push("/login");
-      alertSucc("退出成功");
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
-<style lang="less">
-.w-nav-popover .popper__arrow {
-  display: none !important;
-}
-
-.w-nav-popover {
-  padding: 0 !important;
-  margin-top: 2px !important;
-  // border: none !important;
-}
-
-.pop-child {
-  .child-item {
-    text-align: center;
-    display: block;
-    height: 40px;
-    line-height: 40px;
-
-    background: #fff;
-    font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-    font-weight: 400;
-    color: #000000;
-
-    &:hover {
-      background: #4CA5E4;
-      color: #fff;
-    }
-  }
-}
-</style>
-
-<style scoped lang="less">
-.page-head {
-  position: sticky;
-  z-index: 100;
-  top: 0;
-  left: 0;
-  right: 0;
-  line-height: 0;
-  padding: 0;
-  // border-bottom: 4px solid #009a44;
-  // box-shadow: 0px 3px 10px 1px rgba(0, 0, 0, 0.16);
-  background: #fff;
-}
-
-.header-inner {
-  position: relative;
-  width: 1520px;
-  height: 150px;
+<style lang="less" scoped>
+.content {
+  width: 1200px;
   margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  .logo-wrap {
-    display: flex;
-    align-items: center;
-
-    .logo-box {
-      cursor: pointer;
-
-      img {
-        width: 141px;
-        height: 82px;
-      }
-    }
-  }
-
-
-
-  .nav-wrap {
-    flex: 1;
-    margin-left: 60px;
-    margin-right: 92px;
-  }
-
-  .nav-list {
-    height: 100%;
-
-    .nav-item {
-      // flex: 1;
-      text-align: center;
-
-      &.nav-item-static {
-        position: static;
-      }
-
-      .nav-link {
-        position: relative;
-        display: inline-block;
-        height: 50px;
-        line-height: 50px;
-        font-family: Poppins, Poppins;
-        font-weight: 600;
-        font-size: 17px;
-        color: #333333;
-
-
-        &::after {
-          content: "";
-          position: absolute;
-          bottom: 0;
-          left: 50%;
-          transform: translate(-50%);
-          width: 0;
-          height: 2px;
-          background: #4CA5E4;
-          transition: 0.3s;
-        }
-      }
-
-      &:hover {
-        .nav-link::after {
-          width: 36px;
-        }
-      }
-
-      &.active {
-        .nav-link {
-          // font-weight: bold;
-          color: #4CA5E4;
-
-          &::after {
-            // width: 36px;
-          }
-        }
-      }
-
-      a {
-        color: #222;
-        width: 100%;
-        font-size: 16px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #333;
-      }
-    }
-  }
 }
 
-.user-act {
-  width: 440px;
-  width: fit-content;
+.col {
+  width: 0px;
+  height: 12px;
+  border: 1px solid #C6CACD;
+  margin: 0 10px;
 }
 
-
-.center-search-wrap {
-  position: relative;
-  margin-right: 25px;
-
-  &:hover {
-    .search-suggest-list {
-      display: block;
-    }
-  }
-
-  .center-search {
-    width: 270px;
-    border-bottom: 1px solid #999999;
-
-    .flex();
-    align-items: stretch;
-
-    border-radius: 5px;
-    position: relative;
-    overflow: hidden;
-
-
-    .search-box {
-      // border: 1px solid #aaa;
-      .flex();
-      overflow: hidden;
-      // height: 100%;
-
-      input {
-        display: block;
-        width: 317px;
-        height: 38px;
-        padding-left: 10px;
-
-        &::-webkit-input-placeholder {
-          font-weight: normal;
-          font-size: 14px;
-          color: #909090;
-        }
-      }
-
-      .btn-search {
-        .flex-center();
-        position: absolute;
-        right: 0;
-        width: 40px;
-        height: 40px;
-        background: #4CA5E4;
-        border-radius: 0px 6px 6px 0px;
-        font-weight: normal;
-        font-size: 16px;
-        color: #FFFFFF;
-        background: transparent;
-
-        &:hover {
-          opacity: 1 !important;
-        }
-
-        .img-search {
-          width: 20px;
-          height: 20px;
-          cursor: pointer;
-          transition: 0.3s;
-          margin-right: 11px;
-
-          &:hover {
-            opacity: 0.85;
-          }
-        }
-      }
-
-
-    }
-  }
-
-  .search-suggest-list {
-    display: none;
-    position: absolute;
-    z-index: 100;
-    left: 0;
-    right: 0;
-    top: 43px;
-    border: 1px solid #ddd;
-    border-top: none;
-    background: #fff;
-    border-radius: 6px;
-    overflow: hidden;
-
-    .search-suggest-item {
-      .ellipsis-1();
-      line-height: 3.5rem;
-      height: 3.5rem;
-      padding: 0 5px;
-      text-align: left;
-      transition: 0.3s;
-
-      &:hover {
-        background: #f5f5f5;
-      }
-
-      a {
-        .ellipsis-1();
-        display: block;
-        width: 100%;
-        height: 100%;
-        color: #888;
-        font-size: 1.3rem;
-
-        &:hover {
-          color: #4CA5E4;
-        }
-      }
-    }
-  }
-
+.color-a6 {
+  color: #A66600;
 }
 
+.page-header {
+  width: 100%;
 
-.info-right {
-  .flex();
+  .top-box {
+    background: #F1F1F1;
+    border-radius: 0px 0px 0px 0px;
 
-
-  .log-box {
-    .flex();
-  }
-
-
-  a {
-    color: #fff;
-    .flex();
-
-    img {
-      width: 30px;
-      height: 30px;
-    }
-  }
-
-  .user-login {
-    width: 30px;
-    height: 30px;
-  }
-
-  .user-reg {
-    margin: 0 16px;
-    width: 30px;
-    height: 30px;
-  }
-
-  .cart-image {
-    width: 30px;
-    height: 30px;
-  }
-
-  .shopcart {
-    position: relative;
-    width: 30px;
-    height: 30px;
-    .flex-center();
-
-    img {
-      width: 30px;
-      height: 30px;
+    .l-box {
+      .name {
+        margin-right: 21px;
+      }
     }
 
-    .cart-num {
-      .flex-center();
-      position: absolute;
-      right: -10px;
-      top: -10px;
-      min-width: 18px;
-      min-height: 18px;
-      padding: 0 3px;
-      background: #FF3B30;
-      border: 1px solid #FFFFFF;
-      border-radius: 50%;
+    .r-box {
+      color: #77797B;
+
+      .img-1 {
+        width: 16px;
+        height: 16px;
+        margin-right: 5px;
+      }
+
+      .img-2 {
+        width: 9.01px;
+        height: 5.22px;
+        margin-left: 5px;
+        margin-top: 3px;
+      }
+    }
+
+    .content {
+      height: 37px;
+      color: #77797B;
       font-size: 12px;
     }
   }
-}
 
+  .info-box {
+    width: 100%;
+    height: 99px;
+    background: #FFFFFF;
 
+    .l-box {
+      .img-1 {
+        width: 261px;
+        height: 29px;
+        margin-right: 10px;
+      }
 
-.user-login-info {
-  position: absolute;
-  right: 0;
-  top: 12px;
+      font-weight: bold;
+      font-size: 16px;
+      color: #959491;
+      text-align: left;
+      font-style: normal;
+      text-transform: none;
+    }
 
+    .m-box {
+      .search {
+        .el-input {
+          width: 383px;
 
-  .avatar-box {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    overflow: hidden;
-    cursor: pointer;
+          /deep/ .el-input__inner {
+            border: 3px solid #A66600;
+            border-radius: 4px 0px 0px 4px;
+          }
+        }
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+        .el-button--primary {
+          background-color: #A66600;
+          border-color: #A66600;
+          border-radius: 0px 4px 4px 0px;
+        }
+      }
+
+      .search-hot {
+        margin-top: 7px;
+        font-size: 12px;
+        .hot {
+          margin-right: 16px;
+          color: #86888A;
+        }
+      }
+    }
+
+    .r-box {
+      .tools-btn {
+        padding: 10px;
+        background: #FFFFFF;
+        border-radius: 4px;
+        border: 1px solid #E9EBEE;
+        margin-right: 15px;
+        font-size: 16px;
+      }
+
+      .hot {
+        height: 20px;
+      }
+
+      .img-2 {
+        width: 21.9px;
+        height: 17.45px;
+        margin-right: 10px;
+      }
+
+      .img-3 {
+        width: 22.13px;
+        height: 17.84px;
+        margin-right: 10px;
+      }
+    }
+
+    .content {
+      height: 99px;
     }
   }
 
-  .phone {
-    margin: 0 16px;
-    font-family: Arial, Arial;
-    font-weight: 400;
-    font-size: 16px;
-    color: #999999;
+  .nav-box {
+    .nav {
+      margin-right: 60px;
+      .name {
+        font-family: Roboto, Roboto;
+        font-weight: bold;
+        font-size: 16px;
+        color: #000000;
+        text-align: left;
+        font-style: normal;
+        text-transform: none;
+      }
+    }
+    .nav:last-child {
+      margin-right: 0;
+    }
+    .img-0 {
+      width: 21.7px;
+      height: 21.68px;
+      margin-right: 5px;
+    }
 
-    &:hover {
-      color: #4CA5E4;
+    .img-1 {
+      width: 9.45px;
+      height: 6.69px;
+      margin-left: 5px;
+    }
+
+    .content {
+      height: 42px;
     }
   }
 
-  .logout {
-    font-family: Arial, Arial;
-    font-weight: 400;
-    font-size: 16px;
-    color: #999999;
-
-    &:hover {
-      color: #4CA5E4;
-    }
-  }
-}
-
-
-
-
-@media screen and (max-width: 1600px) {
-  .header-inner .nav-list .nav-item {
-    margin-left: 10px;
-    min-width: 80px;
-  }
-
-  .left-select {
-    width: 160px !important;
-  }
-}
-
-@media screen and (max-width: 1520px) {
-  .header-inner .nav-list .nav-item {
-    margin-left: 10px;
-    min-width: 80px;
-  }
-
-  .left-select {
-    width: 150px !important;
-  }
 }
 </style>
-
-<style scoped lang="less" src="@/assets/h5css/zujian/pageHeader.less"></style>

@@ -78,9 +78,9 @@ export default new Vuex.Store({
     vuex_is_login: false, //是否登录
     isLogin: false,
     //
-    avatar_default: require("@/static/common/avatar.png"),
-    vuex_avatar_default: require("@/static/common/avatar.png"),
-    defaultAvatar: require("@/static/common/avatar.png"),
+    // avatar_default: require("@/static/common/avatar.png"),
+    // vuex_avatar_default: require("@/static/common/avatar.png"),
+    // defaultAvatar: require("@/static/common/avatar.png"),
     //
     //
     //商城部分

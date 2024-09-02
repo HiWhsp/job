@@ -1,394 +1,240 @@
 <template>
   <div class="page-footer">
-    <div class="logo-wrap">
-      <div class="left-logo">
-        <img src="@/static/common/foot-logo.png" alt="" />
-      </div>
-    </div>
-
-    <div class="web-footer">
-      <div class="footer-left">
-        <div class="left-info">
-          <div class="left-item">
-            <div class="left-label">
-              <router-link to="/about" class="group-title">
-                About Us
-              </router-link>
-            </div>
-            <div class="left-text">
-              GreatWhip is a dynamic and high standard brand, we are committed to providing our customers with the best
-              products and services, 7/24 full service.
-            </div>
+    <div class="content">
+      <div class="advantage flex flex-between">
+        <div class="item flex">
+          <img src="../../static/home/advantage-1.png" alt="">
+          <div class="advantage_content">
+            <p class="tag">降本</p>
+            <p class="tips">价格低</p>
+          </div>
+        </div>
+        <div class="item flex">
+          <img src="../../static/home/advantage-2.png" alt="">
+          <div class="advantage_content">
+            <p class="tag">简化</p>
+            <p class="tips">效率高</p>
+          </div>
+        </div>
+        <div class="item flex">
+          <img src="../../static/home/advantage-3.png" alt="">
+          <div class="advantage_content">
+            <p class="tag">高稳定性</p>
+            <p class="tips">效率高</p>
+          </div>
+        </div>
+        <div class="item flex">
+          <img src="../../static/home/advantage-4.png" alt="">
+          <div class="advantage_content">
+            <p class="tag">高耐久性</p>
+            <p class="tips">效率高</p>
+          </div>
+        </div>
+        <div class="item flex">
+          <img src="../../static/home/advantage-5.png" alt="">
+          <div class="advantage_content">
+            <p class="tag">高刚性</p>
+            <p class="tips">效率高</p>
+          </div>
+        </div>
+        <div class="item flex">
+          <img src="../../static/home/advantage-6.png" alt="">
+          <div class="advantage_content">
+            <p class="tag">高精度</p>
+            <p class="tips">效率高</p>
           </div>
         </div>
       </div>
-
-      <div class="footer-center">
-        <div class="nav-group">
-          <div class="group-item">
-            <div class="group-title">
-              <router-link to="/contact" class="group-title">
-                Contact Us
-              </router-link>
-            </div>
-
-
-            <div class="info-box">
-              <div class="info-item">
-                <img src="@/static/common/foot-tel.png" alt="">
-                <span> {{ vuex_config.comPhone }}</span>
-              </div>
-              <div class="info-item">
-                <img src="@/static/common/foot-email.png" alt="">
-                <span> {{ vuex_config.comAddress }}</span>
-              </div>
-              <div class="links">
-                <a href="">
-                  <img src="@/static/common/foot-link1.png" alt="">
-                </a>
-                <a href="">
-                  <img src="@/static/common/foot-link2.png" alt="">
-                </a>
-                <a href="">
-                  <img src="@/static/common/foot-link3.png" alt="">
-                </a>
-              </div>
-            </div>
+      <div class="len"></div>
+      <div class="footer-nav">
+        <div class="logo">
+          <img src="../../static/home/logo-1.png" alt="">
+        </div>
+        <div class="footer-nav_service flex flex-start">
+          <div class="service">
+            <p class="service-title">关于我们</p>
+            <a href="" class="service-item">关于富俊</a>
+            <a href="" class="service-item">帮助中心</a>
+            <a href="" class="service-item">收藏网址</a>
           </div>
-
-          <div class="group-item">
-            <div class="group-title">
-              <router-link :to="vuex_product_cate_1.route" class="group-title">
-                <!-- Cream Charger -->
-                {{ vuex_product_cate_1.title }}
-              </router-link>
-            </div>
-            <div class="group-title">
-              <router-link :to="vuex_product_cate_2.route" class="group-title">
-                <!-- Cream Dispenser -->
-                {{ vuex_product_cate_2.title }}
-              </router-link>
-            </div>
+          <div class="service">
+            <p class="service-title">咨询</p>
+            <a href="" class="service-item">服务热线：400 085 7709</a>
+            <a href="" class="service-item">业务咨询：13953657709 李先生</a>
+            <a href="" class="service-item">技术支持：15265813830 王工</a>
+          </div>
+          <div class="service">
+            <p class="service-title"></p>
+            <a href="" class="service-item">技术支持：15265813830 王工</a>
+            <a href="" class="service-item">服务时间：周一至周六（8：00-17：00）</a>
+            <a href="" class="service-item">(国家法定节假日除外)</a>
+          </div>
+        </div>
+        <div class="qrcode flex">
+          <div class="qrcode-item">
+            <div class="img"></div>
+            <p>微信公众号</p>
+          </div>
+          <div class="qrcode-item">
+            <div class="img"></div>
+            <p>抖音号</p>
           </div>
         </div>
       </div>
-
-      <div class="footer-right">
-        <button class="btn-ripple fit-text btn-dingyue" @click="$router.push('/contact?apply=1')">Distributor</button>
+      <div class="len"></div>
+      <div class="copyright flex flex-center">
+        <p class="info">
+          Copyright © 2024 山东富俊机械科技有限公司
+          <a href="">鲁ICP备11084592号</a>
+          <a href="">鲁公网安备44030402005642号</a>
+          <a href="">增值电信业务经营许可证鲁B2-20201198</a>
+          <a href="">ISO/IEC</a>
+        </p>
+        <p class="agreement">
+          <a href="">隐私协议</a>
+          <div class="col"></div>
+          <a href="">用户协议</a>
+        </p>
       </div>
-    </div>
-
-    <div class="beian-box">
-      <div class="beian-ctx">
-        <div class="beian" v-html="vuex_config.comBeian">
-
-        </div>
-        <!-- <a href="https://beian.miit.gov.cn/" target="_blank">© Copyright 2024 COMPANY NAME. All Rights Reserved.</a> -->
-        <!-- <a href="https://beian.miit.gov.cn/" target="_blank"> {{ vuex_config.comBeian }} </a> -->
-        <!-- <span>{{ vuex_config.comBeian }}</span> -->
-      </div>
-
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-
-export default {
-  name: "web-footer",
-  components: {},
-  props: [],
-  data() {
-    return {};
-  },
-  computed: {
-    ...mapState(["vuex_product_cate_1", 'vuex_product_cate_2']),
-
-    groupList() {
-      let arr = [
-        { title: "关于石磨坊", route: "/companyProfile" },
-        { title: "加入⽯磨坊", route: "/job", },
-        { title: "联系我们", route: "/contact", },
-        { title: "帮助中心", route: "/help", },
-        { title: "使用条款", route: "/terms", },
-      ];
-
-      return arr;
-    },
-  },
-  watch: {},
-
-  created() { },
-
-  methods: {
-    toNav(item) {
-      this.$router.push(item.route)
-    }
-  },
-};
+export default {}
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
+.col {
+  width: 0px;
+  height: 12px;
+  border: 1px solid #C6CACD;
+  margin: 0 5px;
+}
 .page-footer {
-  width: 100%;
-  min-height: 402px;
-  padding-top: 40px;
-  // background: #4CA5E4;
-  background: #F9FAFC;
-  color: #fff;
-}
+  height: 476px;
+  background: #EBEBEB;
 
-
-
-.logo-wrap {
-  width: @width;
-  margin: 0 auto;
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 43px;
-
-  .left-logo {
-    text-align: left;
-
-    img {
-      width: 141px;
-      height: 82px;
-    }
-  }
-}
-
-.web-footer {
-  width: @width;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding-bottom: 60px;
-
-
-  .footer-left {
-    width: 640px;
-    padding-right: 180px;
-
-    .left-info {
-
-      .left-item {
-        margin-bottom: 10px;
-
-        .left-label {
-       
-          a {
-            font-family: Poppins, Poppins;
-          font-weight: bold;
-          font-size: 22px;
-          color: #333333;
-          }
-        }
-
-        .left-text {
-          margin-top: 24px;
-          font-family: OPPOSans, OPPOSans;
-          font-weight: bold;
-          font-size: 14px;
-          color: #888888;
-          line-height: 24px;
-        }
-      }
-    }
+  .len {
+    width: 1200px;
+    height: 1px;
+    background-color: #707070;
+    opacity: 0.2;
   }
 
-  .footer-center {
-    flex: 1;
-    display: flex;
-    justify-content: space-evenly;
-    padding-right: 100px;
-
-    .nav-group {
-      flex: 1;
-
-      display: flex;
-      justify-content: space-between;
-
-      .group-title {
-        margin-bottom: 24px;
-        cursor: pointer;
-        font-family: Poppins, Poppins;
-        font-weight: bold;
-        font-size: 22px;
-        color: #333333;
-
-        a {
-          cursor: pointer;
-          font-family: Poppins, Poppins;
-          font-weight: bold;
-          font-size: 22px;
-          color: #333333;
-        }
-      }
-
-      .info-box {
-        .info-item {
-          margin-bottom: 18px;
-
-          img {
-            margin-right: 8px;
-            width: 20px;
-            height: 20px;
-          }
-
-          span {
-            font-family: OPPOSans, OPPOSans;
-            font-weight: bold;
-            font-size: 16px;
-            color: #888888;
-          }
-        }
-
-        .links {
-          margin-top: 40px;
-
-          img {
-            margin-right: 20px;
-            width: 40px;
-            height: 40px;
-          }
-        }
-      }
-    }
-  }
-
-  .footer-right {
-    .btn-dingyue {
-      width: 150px;
-      height: 40px;
-      background: #4CA5E4;
-
-      font-family: OPPOSans, OPPOSans;
-      font-weight: bold;
-      font-size: 14px;
-      color: #FFFFFF;
-    }
-  }
-}
-
-.top-logo {
-  img {
-    width: 201px;
-  }
-}
-
-.desc-box {
-  margin-top: 15px;
-  font-size: 14px;
-  font-family: Microsoft YaHei;
-  font-weight: 400;
-  line-height: 14px;
-  color: #dae8e2;
-}
-
-.info-box {
-  margin-top: 10px;
-  font-size: 14px;
-  font-family: Microsoft YaHei;
-  font-weight: 400;
-  line-height: 14px;
-  color: #dae8e2;
-}
-
-.nav-box {
-  .flex-between();
-  width: 1600px;
-  margin: 60px auto;
-  border-top: 1px solid #41b48a;
-  border-bottom: 1px solid #41b48a;
-  height: 48px;
-  line-height: 48px;
-
-  .nav-item {
-    flex: 1;
-
-    a {
-      font-size: 16px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      line-height: 48px;
-      color: #ffffff;
-    }
-  }
-}
-
-.qrcode-box {
-  .flex-center();
-  padding-bottom: 60px;
-
-  .qrcode-item {
-    &:last-child {
-      margin-left: 40px;
-    }
-
-    img {
-      width: 190px;
-      height: 190px;
-      border-radius: 6px;
-    }
-
-    .text {
-      margin-top: 15px;
-      font-size: 14px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      line-height: 16px;
-      color: #dae8e2;
-    }
-  }
-}
-
-.beian-box {
-  border-top: 1px solid #ddd;
-  background: #F9FAFC;
-
-  .beian-ctx {
-    width: @width;
+  .content {
+    width: 1200px;
     margin: 0 auto;
-    height: 50px;
-    line-height: 50px;
-    padding: 0;
-    text-align: center;
-    text-align: left;
 
-    font-family: OPPOSans, OPPOSans;
-    font-weight: bold;
-    font-size: 14px;
-    color: rgba(153, 153, 153, 0.6);
+    .advantage {
+      padding: 48px 0 50px 0;
 
-    a {
-      font-family: OPPOSans, OPPOSans;
-      font-weight: bold;
-      font-size: 14px;
-      color: rgba(153, 153, 153, 0.6);
+      .item {
+        img {
+          width: 53px;
+          height: 53px;
+        }
+
+        .advantage_content {
+          margin-left: 10px;
+
+          .tag {
+            color: #000;
+            font-size: 18px;
+            font-weight: bold;
+          }
+
+          .tips {
+            color: #000;
+            font-size: 12px;
+          }
+        }
+      }
     }
 
-    /deep/ a,
-    p,
-    span,
-    div {
-      font-family: OPPOSans, OPPOSans;
-      font-weight: bold;
-      font-size: 14px;
-      color: rgba(153, 153, 153, 0.6);
+    .footer-nav {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 58px 0 56px 0;
+      .logo {
+        img {
+          width: 217.26px;
+          height: 24.12px;
+        }
+      }
+
+      .footer-nav_service {
+        width: 650px;
+        justify-content: space-between;
+        .service {
+          display: flex;
+          flex-direction: column;
+
+          .service-title {
+            height: 24px;
+            color: #000;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 29px;
+          }
+
+          .service-item {
+            font-family: Roboto, Roboto;
+            font-weight: 400;
+            font-size: 14px;
+            color: #333333;
+            font-style: normal;
+            text-transform: none;
+            margin-bottom: 18px;
+          }
+
+          .service-item:last-child {
+            margin: 0;
+          }
+        }
+      }
+      .qrcode {
+        .qrcode-item {
+          margin-right: 22px;
+
+          .img {
+            width: 87px;
+            height: 85px;
+            background-color: #000;
+          }
+
+          p {
+            font-family: Roboto, Roboto;
+            font-weight: 400;
+            font-size: 14px;
+            color: #333333;
+            font-style: normal;
+            text-transform: none;
+            text-align: center;
+            margin-top: 20px;
+          }
+        }
+
+        .qrcode-item:last-child {
+          margin: 0;
+        }
+      }
+
     }
 
-    .beian {
-      font-family: OPPOSans, OPPOSans;
-      font-weight: bold;
+    .copyright {
       font-size: 14px;
-      color: rgba(153, 153, 153, 0.6);
+      color: #77797B;
+      height: 62px;
+      a {
+        color: #77797B;
+        margin-right: 5px;
+      }
+      .agreement {
+        margin-left: 29px;
+      }
     }
   }
-
-
 }
 </style>
-
-<style scoped lang="less" src="@/assets/h5css/zujian/pageFooter.less"></style>

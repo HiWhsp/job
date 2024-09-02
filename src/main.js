@@ -4,8 +4,6 @@ import router from "./router";
 import store from "./store";
 
 // 全局组件注册
-import pageTop from "@/components/page/pageTop.vue";
-Vue.component("pageTop", pageTop); //
 import pageBread from "@/components/common/pageBread.vue";
 Vue.component("pageBread", pageBread); //
 
@@ -18,9 +16,9 @@ Vue.component("pageBread", pageBread); //
 
 
 import "@/css/css-reset.css"; // css reset
-import "@/plugin/request.js"; 
-import "@/plugin/message.js"; 
-import "@/plugin/log.js"; 
+import "@/plugin/request.js";
+import "@/plugin/message.js";
+import "@/plugin/log.js";
 import '@/lib/lib-flexible.js';
 
 
