@@ -1,0 +1,166 @@
+@media screen and (max-width: 1199px) {
+  .btn-upload {
+    .flex-center();
+    min-width: fit-content;
+    padding: 0 15px;
+    height: 36px;
+    background: #ffffff;
+    border-radius: 4px 4px 4px 4px;
+    border: 1px solid #4CA5E4;
+    font-size: 14px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #4CA5E4;
+
+    img {
+      margin-right: 10px;
+    }
+  }
+
+  /deep/ .el-input__suffix {
+    display: none !important;
+  }
+  /deep/ .el-switch__core {
+    height: 20px;
+    border-radius: 10px;
+  }
+
+  /deep/ .el-switch__core:after {
+    width: 15px;
+    height: 15px;
+  }
+
+  /deep/ .el-switch.is-checked .el-switch__core::after {
+    margin-left: -20px;
+  }
+
+  /deep/ .modal-bind-phone {
+    width: 95% !important;
+    margin: 0 auto;
+    min-width: 40vw;
+
+    .el-dialog {
+      width: 100% !important;
+    }
+
+    .modal-inner {
+      padding: 10px 0;
+
+      .modall-ctx {
+        padding: 15px 10px;
+        max-height: 60vh;
+        overflow-y: auto;
+        border-bottom: 1px solid #ddd;
+
+        .tip {
+          margin-bottom: 20px;
+          color: #444;
+          font-size: 14px;
+        }
+
+        .input-box {
+          margin-bottom: 15px;
+          position: relative;
+
+          &.flex {
+            display: flex;
+            align-items: center;
+
+            .label {
+              margin-bottom: 0;
+            }
+          }
+
+          .label {
+            min-width: 60px;
+            // margin-right: 20px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #6e7285;
+          }
+
+          .input-item {
+            display: flex;
+            align-items: center;
+          }
+
+          .btn-send {
+            font-size: 12px;
+          }
+
+          .el-input {
+            width: 160px;
+          }
+        }
+      }
+    }
+  }
+
+  /deep/ .modal-record .el-dialog__header .el-dialog__headerbtn .el-dialog__close {
+    font-size: 24px;
+  }
+
+  /deep/ .el-dialog__header {
+    height: 44px !important;
+    line-height: 44px !important;
+    border-bottom: 1px solid #eee;
+    padding: 0 15px !important;
+
+    .el-dialog__title {
+      font-size: 16px;
+      line-height: 44px;
+    }
+
+    .el-dialog__headerbtn {
+      font-size: 24px;
+      top: 10px;
+    }
+  }
+
+  /deep/ .modal-bind-phone {
+    .el-dialog__footer {
+      text-align: center;
+      padding: 15px;
+
+      button {
+        width: 104px;
+        height: 40px;
+        border-radius: 4px 4px 4px 4px;
+        border: 1px solid #4CA5E4 !important;
+        // border: 1px solid transparent;
+      }
+      .queding {
+        margin-left: 20px;
+        background: #4CA5E4;
+        border-radius: 3px;
+        font-size: 14px;
+        color: #ffffff;
+        border: 1px solid #4CA5E4 !important;
+      }
+      .cancel {
+        background: #fff;
+        border-radius: 3px;
+        font-size: 14px;
+        color: #4CA5E4;
+        border: 1px solid #4CA5E4 !important;
+        font-size: 14px;
+      }
+    }
+  }
+
+  /deep/ .el-textarea {
+    .el-textarea__inner {
+      // background-color: #f5f5f5;
+    }
+  }
+  /deep/ .el-input {
+    .el-input__inner {
+      height: 32px;
+      line-height: 32px;
+
+      &:disabled {
+        color: #666;
+      }
+    }
+  }
+}

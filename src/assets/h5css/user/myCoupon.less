@@ -1,0 +1,299 @@
+@media screen and (max-width: 1199px) {
+  .page {
+    text-align: left;
+    padding-bottom: 80px;
+    .main-title {
+      .flex-between();
+      padding: 0 32px;
+      text-align: left;
+      height: 56px;
+      line-height: 56px;
+      background: #ffffff;
+      font-size: 16px;
+      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-weight: bold;
+      color: #333333;
+
+      button {
+        min-width: 96px;
+        height: 30px;
+        line-height: 30px;
+        background: #4CA5E4;
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .page-ctx {
+    margin-top: 24px;
+    padding: 24px 32px 40px 32px;
+    padding: 10px 15px;
+    background: #fff;
+  }
+
+  .inner {
+    padding-bottom: 80px;
+
+    .tab-wrap {
+      position: relative;
+      margin-bottom: 30px;
+      .flex-between();
+
+      .tab-box {
+        flex: 2;
+        // border-bottom: 1px solid #eee;
+
+        .flex();
+        .tab-item {
+          cursor: pointer;
+          padding-bottom: 10px;
+          border-bottom: 3px solid transparent;
+          margin-right: 20px;
+
+          font-size: 14px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #333333;
+
+          &.active {
+            border-bottom: 3px solid #4CA5E4;
+            font-weight: bold;
+            color: #4CA5E4;
+          }
+        }
+      }
+
+      .lingquan {
+        position: absolute;
+        right: 0;
+        .flex();
+        cursor: pointer;
+        width: fit-content;
+
+        .coupon {
+          width: 25px;
+        }
+
+        .arrow {
+          width: 10px;
+          margin-left: 3px;
+        }
+        span {
+          margin-left: 10px;
+          font-size: 12px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          line-height: 1;
+          color: #eb5d53;
+        }
+      }
+    }
+
+    .list-box {
+      .flex();
+      flex-wrap: wrap;
+
+      .item {
+        position: relative;
+        background: url(~@img/other/mycoupon-bg.png) center / cover no-repeat;
+        width: 238px;
+        height: 234px;
+        padding: 15px;
+        margin-right: 10px;
+        margin-bottom: 20px;
+        color: #fff;
+
+        &.state-2 {
+          background: url(~@img/coupon/bg-yishiyong.png) center / cover no-repeat;
+        }
+        &.state-3 {
+          background: url(~@img/coupon/bg-yiguoqi.png) center / cover no-repeat;
+        }
+
+        &:nth-child(4n) {
+          margin-right: 0;
+        }
+
+        .info {
+          font-size: 12px;
+          font-family: Microsoft YaHei;
+          font-weight: 400;
+          line-height: 20px;
+          color: #ffffff;
+
+          .title {
+            margin-top: 25px;
+            .huobi {
+              font-size: 24px;
+              font-family: Microsoft YaHei;
+              font-weight: 400;
+              line-height: 20px;
+              color: #ffffff;
+            }
+            .num {
+              font-size: 36px;
+              font-family: Microsoft YaHei;
+              font-weight: bold;
+              line-height: 20px;
+              color: #ffffff;
+            }
+          }
+          .tiaojian {
+            margin: 20px 0 10px;
+          }
+          .shijian {
+          }
+        }
+        .action {
+          margin-top: 43px;
+          text-align: center;
+          button {
+            width: 122px;
+            height: 34px;
+            border: 1px solid #ff3d00;
+            background: transparent;
+            font-size: 14px;
+            font-family: Microsoft YaHei;
+            font-weight: 400;
+            line-height: 20px;
+            color: #ff3d00;
+            border-radius: 17px;
+
+            // &:hover {
+            //   background: #ff3d00;
+            //   color: #fff;
+            // }
+
+            &:disabled {
+              opacity: 0.3;
+              cursor: not-allowed;
+            }
+          }
+        }
+
+        .guoqi {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          img {
+            width: 60px;
+            vertical-align: bottom;
+          }
+        }
+      }
+    }
+  }
+
+  .yhq-list {
+    .yhq-item-box {
+      position: relative;
+    }
+
+    .yhq-item {
+      .flex();
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+
+      .yhq-left {
+        width: 100%;
+        height: 150px;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .yhq-right {
+        width: 100%;
+        flex: 1;
+        height: auto;
+        padding: 10px;
+        background: #f9f9f9;
+
+        .money {
+          display: flex;
+          align-items: flex-start;
+          .currency {
+            font-size: 24px;
+            font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+            font-weight: bold;
+            color: #4CA5E4;
+          }
+          .num {
+            font-size: 24px;
+            font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+            font-weight: bold;
+            color: #4CA5E4;
+          }
+        }
+
+        .tiaojian {
+          margin-top: 0;
+          font-size: 12px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #999999;
+          line-height: 28px;
+        }
+        .shijian {
+          font-size: 12px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #999999;
+          line-height: 28px;
+        }
+        .action {
+          margin-top: 10px;
+          button {
+            width: 127px;
+            height: 36px;
+            background: #4CA5E4;
+            border-radius: 4px 4px 4px 4px;
+            font-size: 14px;
+            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-weight: 400;
+            color: #ffffff;
+
+            &:disabled {
+              background: #aaa;
+              cursor: not-allowed;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .used {
+    filter: grayscale(1);
+    opacity: 0.3;
+  }
+
+  .used-img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+// pad 端
+@media screen and (max-width: 1199px) and (min-width: 768px) {
+  .yhq-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .yhq-item-box {
+    width: calc((100% - 30px) / 2);
+    margin-right: 30px;
+
+    &:nth-child(2n) {
+      margin-right: 0;
+    }
+  }
+
+  .used-img {
+    width: 100px;
+  }
+}

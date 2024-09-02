@@ -1,0 +1,314 @@
+@media screen and (max-width: 1199px) {
+  .img-check {
+    cursor: pointer;
+    &.check-0 {
+      display: block;
+    }
+    &.check-1 {
+      display: none;
+    }
+  }
+
+  .checked {
+    cursor: pointer;
+    .check-0 {
+      display: none !important;
+    }
+    .check-1 {
+      display: block !important;
+    }
+  }
+
+  .page {
+    text-align: left;
+    padding-bottom: 80px;
+    .main-title {
+      .flex-between();
+      padding: 0 32px;
+      text-align: left;
+      height: 56px;
+      line-height: 56px;
+      background: #ffffff;
+      font-size: 16px;
+      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-weight: bold;
+      color: #333333;
+
+      button {
+        min-width: 96px;
+        height: 30px;
+        line-height: 30px;
+        background: #4CA5E4;
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
+
+    .page-ctx {
+      margin-top: 24px;
+      padding: 32px 32px 55px 32px;
+      padding: 15px;
+      background: #fff;
+    }
+  }
+
+  .wrap {
+    .inner {
+      padding: 0;
+    }
+  }
+
+  .top-info {
+    .yue-box {
+      width: 458px;
+      height: 240px;
+      background: url(~@img/yue/yue-bg.png) no-repeat center / cover;
+      padding-left: 40px;
+      .flex-center();
+      flex-direction: column;
+      align-items: flex-start;
+
+      .text-box {
+        text-align: left;
+        .text-1 {
+          font-size: 26px;
+          font-family: PingFang SC;
+          font-weight: bold;
+          line-height: 40px;
+          color: #ffffff;
+        }
+        .text-2 {
+          margin-top: 10px;
+          margin-bottom: 30px;
+          font-size: 48px;
+          font-family: PingFang SC;
+          font-weight: bold;
+          line-height: 40px;
+          color: #ffffff;
+        }
+        .text-3 {
+          button {
+            border-radius: 20px;
+            width: 106px;
+            height: 34px;
+            background: rgba(0, 0, 0, 0.45);
+            font-size: 14px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            line-height: 34px;
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+
+  .bottom-info {
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+
+  .list {
+    .flex();
+    flex-wrap: wrap;
+    .item {
+      .flex-center();
+      cursor: pointer;
+      justify-content: flex-start;
+      margin-top: 20px;
+      margin-right: 60px;
+      width: 185px;
+      height: 85px;
+      padding-left: 15px;
+      background: url(~@img/yue/yue-chongzhi-inactive.png) no-repeat center / cover;
+
+      &:nth-child(4n) {
+        margin-right: 0;
+      }
+      &:nth-child(-n + 4) {
+        margin-top: 0;
+      }
+
+      .currency {
+        font-size: 15px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        line-height: 15px;
+        color: #333;
+      }
+      .money {
+        font-size: 30px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        line-height: 40px;
+        color: #333;
+      }
+
+      &.active {
+        background: url(~@img/yue/yue-chongzhi-active.png) no-repeat center / cover;
+
+        .currency {
+          color: #fff;
+        }
+        .money {
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .yue-rich {
+    margin-bottom: 20px;
+    background: #f5f5f5;
+    padding: 24px;
+    padding: 10px;
+    font-size: 12px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #666666;
+    line-height: 28px;
+    line-height: 1.7;
+  }
+
+  .chongzhi-title {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-size: 14px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #333333;
+  }
+
+  .chongzhi-list {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .chongzhi-item {
+      cursor: pointer;
+      position: relative;
+      .flex-center();
+      flex-direction: column;
+      margin-right: 31px;
+      margin-bottom: 50px;
+      width: 343px;
+      height: 180px;
+      border-radius: 12px;
+      width: calc((100% - 15px) / 2);
+      height: auto;
+      margin-right: 15px;
+      padding-bottom: 0;
+
+      border: 2px solid #4CA5E4;
+      border: 2px solid transparent;
+      background: #f6f6f6;
+
+      &:nth-child(3n) {
+        margin-right: 0;
+      }
+
+      &:nth-child(2n) {
+        margin-right: 0;
+      }
+
+      &.selected {
+        border: 2px solid #4CA5E4;
+      }
+      .song-marker {
+        position: absolute;
+        left: 0;
+        top: -15px;
+        width: 154px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        background: linear-gradient(61deg, #4CA5E4 0%, #fe6927 100%);
+        border-radius: 20px 0px 20px 0px;
+        font-size: 12px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #ffffff;
+      }
+
+      .money {
+        padding-top: 30px;
+        padding-bottom: 15px;
+        font-size: 16px;
+        font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+        font-weight: bold;
+        color: #4CA5E4;
+      }
+      .tip {
+        margin-top: 10px;
+        font-size: 12px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #666666;
+      }
+    }
+  }
+
+  .chongzhi-type {
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #333333;
+  }
+
+  .type-box {
+    .flex();
+
+    .type-item {
+      .flex();
+      cursor: pointer;
+
+      & + .type-item {
+        margin-left: 100px;
+      }
+
+      .img-check {
+        width: 21px;
+      }
+      .img-marker {
+        width: 24px;
+        margin: 0 10px 0 16px;
+      }
+      span {
+        font-size: 16px;
+        color: #000000;
+      }
+    }
+  }
+
+  .action-box {
+    margin-top: 20px;
+    text-align: center;
+
+    button {
+      width: 200px;
+      height: 40px;
+      line-height: 40px;
+      background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
+      background: #4CA5E4;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      color: #ffffff;
+    }
+  }
+}
+
+// pad 端
+@media screen and (max-width: 1199px) and (min-width: 768px) {
+  .chongzhi-list .chongzhi-item {
+    width: calc((100% - 30px) / 3);
+    margin-right: 15px !important;
+  }
+  .chongzhi-list .chongzhi-item:nth-child(3n) {
+    margin-right: 0 !important;
+  }
+}

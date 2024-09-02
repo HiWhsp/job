@@ -1,0 +1,210 @@
+@media screen and (max-width: 1199px) {
+  .page {
+    text-align: left;
+    padding-bottom: 80px;
+    .main-title {
+      .flex-between();
+      padding: 0 32px;
+      text-align: left;
+      height: 56px;
+      line-height: 56px;
+      background: #ffffff;
+      font-size: 16px;
+      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-weight: bold;
+      color: #333333;
+
+      button {
+        min-width: 96px;
+        height: 30px;
+        line-height: 30px;
+        background: #4CA5E4;
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
+
+    .page-ctx {
+      margin-top: 24px;
+      padding: 32px 32px 55px 32px;
+      padding: 15px;
+      background: #fff;
+    }
+  }
+
+  .yue-box {
+    position: relative;
+    width: 100%;
+    height: auto;
+    background: url(~@img/jifen-bg.png) no-repeat center / cover;
+    background-size: 100% 100%;
+    padding: 15px;
+    // padding-left: 40px;
+    // padding-left: 10px;
+
+    flex-direction: column;
+    .flex-center();
+    align-items: flex-start;
+
+    .text-box {
+      text-align: left;
+      .text-1 {
+        font-size: 16px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        line-height: 40px;
+        color: #ffffff;
+      }
+      .text-2 {
+        margin-top: 10px;
+
+        font-size: 24px;
+        font-family: PingFang SC;
+        font-weight: bold;
+        line-height: 40px;
+        color: #ffffff;
+
+        .currency {
+          font-size: 18px;
+        }
+      }
+      .text-3 {
+        position: absolute;
+        right: 24px;
+        bottom: 20px;
+        button {
+          border-radius: 20px;
+          width: fit-content;
+          padding: 0 10px;
+          height: 26px;
+          line-height: 26px;
+          background: rgba(255, 255, 255, 0.78);
+          font-size: 12px;
+          font-family: PingFang SC;
+          font-weight: 400;
+
+          color: #666;
+        }
+      }
+    }
+  }
+
+  .tab-box {
+    margin-top: 24px;
+    flex: 2;
+    // border-bottom: 1px solid #eee;
+
+    .flex();
+    .tab-item {
+      cursor: pointer;
+      padding-bottom: 10px;
+      border-bottom: 3px solid transparent;
+      margin-right: 55px;
+      font-size: 14px;
+      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-weight: 400;
+      color: #333333;
+
+      &.active {
+        border-bottom: 3px solid #4CA5E4;
+        font-weight: bold;
+        color: #4CA5E4;
+      }
+    }
+  }
+
+  .bottom-info {
+    margin-top: 20px;
+    margin-bottom: 50px;
+  }
+
+  .good-list {
+    .flex();
+    flex-wrap: wrap;
+    margin-top: 20px;
+    text-align: left;
+    .item {
+      margin-bottom: 30px;
+      cursor: pointer;
+      margin-right: 32px;
+      margin-top: 30px;
+      border: 1px solid #e5e5e5;
+      overflow: hidden;
+      width: 249px;
+
+      &:nth-child(4n) {
+        margin-right: 0;
+      }
+      &:nth-child(-n + 5) {
+        margin-top: 0;
+      }
+
+      .img-box {
+        img {
+          width: 249px;
+          height: 249px;
+        }
+      }
+      .info {
+        text-align: left;
+        padding: 15px;
+        .title {
+          .ellipsis-1();
+          margin-top: 0;
+          font-size: 13px;
+          color: #222;
+          line-height: 26px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .duihuan-info {
+          margin-top: 10px;
+          .flex-between();
+
+          .jifen {
+            font-size: 14px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            line-height: 24px;
+            color: #222222;
+            color: #f13f17;
+
+            b {
+              color: #f13f17;
+              font-weight: normal;
+            }
+          }
+          .yidui {
+            margin-left: 15px;
+            min-width: 52px;
+            height: 20px;
+            line-height: 20px;
+            background: #f4f4f4;
+            opacity: 1;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            color: #7d7d7d;
+          }
+        }
+        .price-prev {
+          color: #aaa;
+          text-decoration: line-through;
+        }
+
+        button {
+          width: 51px;
+          height: 22px;
+          background: #4CA5E4;
+          border-radius: 2px;
+          color: #fff;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}

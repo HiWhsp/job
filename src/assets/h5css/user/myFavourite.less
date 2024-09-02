@@ -1,0 +1,244 @@
+@media screen and (max-width: 1199px) {
+  .img-check {
+    cursor: pointer;
+    &.check-0 {
+      display: block;
+    }
+    &.check-1 {
+      display: none;
+    }
+  }
+
+  .checked {
+    cursor: pointer;
+    .check-0 {
+      display: none !important;
+    }
+    .check-1 {
+      display: block !important;
+    }
+  }
+
+  .page {
+    padding-bottom: 80px;
+    .main-title {
+      .flex-between();
+      padding: 0 32px;
+      text-align: left;
+      height: 56px;
+      line-height: 56px;
+      background: #ffffff;
+      font-size: 16px;
+      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-weight: bold;
+      color: #333333;
+
+      button {
+        min-width: 96px;
+        height: 30px;
+        line-height: 30px;
+        background: #4CA5E4;
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
+
+    .page-ctx {
+      margin-top: 24px;
+      padding: 24px 32px 40px 32px;
+      padding: 15px;
+      background: #fff;
+    }
+  }
+
+  .wrap {
+    .inner {
+      padding: 0;
+    }
+  }
+
+  .bottom-info {
+    margin-top: 20px;
+    margin-bottom: 50px;
+  }
+  .goods-list {
+    .flex();
+    flex-wrap: wrap;
+    .item {
+      position: relative;
+      cursor: pointer;
+      background: #ffffff;
+      margin-top: 30px;
+      margin-right: 23px;
+
+      &:nth-child(4n) {
+        margin-right: 0;
+      }
+      &:nth-child(-n + 4) {
+        margin-top: 0;
+      }
+
+      .action-box {
+        .flex-center();
+        position: absolute;
+        z-index: 10;
+        right: 0;
+        top: 0;
+        width: 50px;
+        height: 50px;
+        background: rgba(0, 0, 0, 0.5);
+
+        img {
+          width: 27px;
+        }
+      }
+
+      .img-box {
+        overflow: hidden;
+        width: 228px;
+        height: 228px;
+        img {
+          width: 228px;
+          height: 228px;
+        }
+      }
+      .info {
+        text-align: left;
+        margin-top: 12px;
+        .title {
+          width: 228px;
+          .ellipsis-1();
+          font-size: 14px;
+          font-family: PingFang SC;
+          font-weight: 400;
+          line-height: 40px;
+          color: #222222;
+        }
+        .price-box {
+          .flex();
+          margin-top: 8px;
+          .price {
+            font-size: 14px;
+            font-family: PingFang SC;
+            font-weight: 400;
+
+            color: #ea5959;
+          }
+          .xiaoliang {
+            margin-left: 15px;
+            font-size: 14px;
+            font-family: PingFang SC;
+            font-weight: 400;
+
+            color: #a5a5a5;
+          }
+        }
+      }
+    }
+  }
+
+  .fav-box {
+    .fav-titles {
+      // margin-bottom: 20px;
+      padding: 0 15px;
+      .flex();
+      border: 1px solid #e5e5e5;
+      height: 44px;
+      background: #f5f5f5;
+      color: #666666;
+      font-size: 14px;
+      .fav-check {
+        .flex();
+
+        img {
+          width: 13px;
+          margin-right: 8px;
+        }
+      }
+
+      .fav-delete {
+        margin-left: 15px;
+        cursor: pointer;
+      }
+    }
+    .fav-list {
+      border: 1px solid #e5e5e5;
+      border-top: none;
+      .fav-item {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 10px;
+        border-bottom: 1px solid #e5e5e5;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .fav-check {
+          width: 32px;
+          text-align: left;
+          img {
+            width: 13px;
+          }
+        }
+
+        .goods-img {
+          cursor: pointer;
+          img {
+            width: 104px;
+            height: 104px;
+          }
+          /deep/ img {
+            width: 104px;
+            height: 104px;
+          }
+        }
+
+        .goods-title {
+          flex: 1;
+          text-align: left;
+          padding-left: 15px;
+          .text-1 {
+            cursor: pointer;
+            margin-bottom: 15px;
+            font-size: 12px;
+            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-weight: 400;
+            color: #333333;
+            line-height: 1.7;
+          }
+          .text-2 {
+            font-size: 12px;
+            font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+            font-weight: bold;
+            color: #4CA5E4;
+          }
+        }
+
+        .goods-actions {
+          min-width: 230px;
+          display: none;
+
+          button {
+            width: 104px;
+            height: 32px;
+            background: #ffffff;
+            border-radius: 4px;
+            font-size: 14px;
+
+            &.btn-cancel {
+              color: #999999;
+            }
+            &.btn-detail {
+              display: none;
+              border: 1px solid #4CA5E4;
+              color: #4CA5E4;
+            }
+          }
+        }
+      }
+    }
+  }
+}

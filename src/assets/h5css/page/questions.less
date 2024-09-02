@@ -1,0 +1,238 @@
+@media screen and (max-width: 1199px) {
+ 
+
+  .page {
+    padding-bottom: 20px;
+    .page-box {
+      background: #f7f7f7;
+      background: #fff;
+    }
+    .page-inner {
+      padding: 20px 0;
+      text-align: left;
+      padding-bottom: 0;
+
+      .page-block {
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .block-chanpin {
+        margin-bottom: 20px;
+      }
+
+      .detail-title {
+        text-align: center;
+        position: relative;
+        font-size: 36px;
+        font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+        font-weight: bold;
+        color: #333333;
+
+        .btn-xunjia {
+          position: absolute;
+          right: 0;
+          top: 20px;
+
+          width: 140px;
+          height: 40px;
+          background: #ffffff;
+          border-radius: 4px 4px 4px 4px;
+          border: 1px solid #4CA5E4;
+          font-size: 14px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #4CA5E4;
+        }
+      }
+
+      .detail-title-line {
+        width: 80px;
+        margin: 24px auto;
+        height: 5px;
+        background: #4CA5E4;
+        border-radius: 3px 3px 3px 3px;
+      }
+    }
+  }
+
+  .tabs {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    .tab-item {
+      text-align: center;
+      margin-left: 10px;
+      width: fit-content;
+      padding: 0 20px;
+      height: 42px;
+      line-height: 42px;
+      height: 36px;
+      line-height: 36px;
+      background: #f4f4f4;
+      border-radius: 4px 4px 4px 4px;
+      font-size: 14px;
+      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-weight: 400;
+      color: #333333;
+      cursor: pointer;
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &.active {
+        background: #4CA5E4;
+        color: #fff;
+      }
+    }
+  }
+
+  // 问题列表
+  .ques-list {
+    padding-top: 20px;
+    .ques-item {
+      margin-bottom: 15px;
+      &.expand {
+        .ques-title {
+          background: #4CA5E4 !important;
+          .text {
+            color: #fff !important;
+          }
+
+          .img-box {
+            .expand-0 {
+              display: none !important;
+            }
+            .expand-1 {
+              display: block !important;
+              color: #fff !important;
+            }
+          }
+        }
+
+        .ques-anwser {
+          padding: 15px 10px;
+          height: auto !important;
+          line-height: 1.8;
+          text-align: justify;
+          font-size: 12px;
+          display: block;
+        }
+      }
+
+      .ques-title {
+        padding: 0 15px;
+        height: 50px;
+        background: #f4f4f4;
+        transition: 0.3s;
+        .flex-between();
+        cursor: pointer;
+
+        &:hover {
+          background: #4CA5E4;
+          color: #fff;
+
+          .text {
+            color: #fff;
+          }
+        }
+
+        .text {
+          font-size: 14px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #333333;
+        }
+        .img-box {
+          width: 25px;
+          .expand-marker {
+            width: 16px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+
+            &.expand-0 {
+              display: block;
+            }
+            &.expand-1 {
+              display: none;
+            }
+          }
+        }
+      }
+
+      .ques-anwser {
+        padding: 15px 10px;
+        line-height: 1.8;
+        text-align: justify;
+        font-size: 12px;
+
+
+        height: 0 !important;
+        overflow: hidden;
+        transition: all 0.3s ease-in-out;
+display: none;
+
+        &.shown {
+        }
+      }
+    }
+  }
+
+  // 步骤列表
+  .buzhou-list {
+    padding-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+
+    .buzhou-item {
+      .flex-between();
+      width: 100%;
+      height: 50px;
+      padding: 0 10px;
+      margin-right: 0;
+      margin-bottom: 16px;
+      background: #f4f4f4;
+      border-radius: 0px 0px 0px 0px;
+      cursor: pointer;
+      transition: 0.3s;
+
+      &:nth-child(2n) {
+        margin: 0;
+      }
+
+      &:hover {
+        background: #eee;
+      }
+
+      .title {
+        font-size: 14px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #333333;
+      }
+      .img-box {
+        .flex-center();
+        cursor: pointer;
+        font-size: 14px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #666666;
+
+        img {
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+
+  // 文献
+  .block-buzhou {
+    padding-bottom: 20px;
+  }
+}
+
+
+@import "~@/assets/h5css/common/aboutCommon.less";

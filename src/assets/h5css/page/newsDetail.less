@@ -1,0 +1,129 @@
+@media screen and (max-width: 1199px) {
+  .page {
+    .inner {
+      width: 100%;
+      margin: 0 auto;
+      padding-top: 0;
+      padding-bottom: 20px;
+      text-align: left;
+    }
+  }
+
+  .btn-lingquan {
+    .flex-center();
+    position: absolute !important;
+    position: static !important;
+    margin: 0 auto;
+    top: 0;
+    right: 0;
+    width: fit-content;
+    height: 36px;
+    padding: 0 10px;
+    background: #ffffff;
+    border-radius: 4px 4px 4px 4px;
+    border: 1px solid #4CA5E4;
+    margin-top: 20px;
+    font-size: 14px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #4CA5E4;
+
+    img {
+      margin-right: 8px;
+    }
+  }
+
+  .ctx-news {
+    width: 100vw;
+    padding: 20px 15px;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+
+    .ctx-left {
+      width: 100%;
+      flex: 1;
+      .news-title {
+        text-align: center;
+        font-size: 16px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #333333;
+        line-height: 1.7;
+      }
+      .news-desc {
+        position: relative;
+        margin: 20px 0 20px;
+        text-align: center;
+        font-size: 14px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #999999;
+
+        a {
+          font-size: 14px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #999999;
+
+          &:hover {
+            color: #4CA5E4;
+          }
+        }
+      }
+
+      .news-line {
+        border-bottom: 1px solid #d9d9d9;
+      }
+      .news-ctx {
+        padding: 20px 0;
+        padding: 0;
+
+        .news-html {
+          text-indent: 2em;
+          text-align: justify;
+          /deep/ img {
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+            vertical-align: bottom;
+          }
+
+            /deep/ p {
+              font-size: 14px;
+              line-height: 1.7;
+            }
+            /deep/ span {
+              font-size: 14px;
+              line-height: 1.7;
+            }
+        }
+      }
+      .news-nav {
+        border-top: 1px solid #ddd;
+        padding-top: 20px;
+
+        .news-nav-item {
+          .flex();
+          margin-bottom: 10px;
+          font-size: 14px;
+
+          a {
+            font-size: 14px;
+            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-weight: 400;
+            color: #666666;
+            &:hover {
+              color: #4CA5E4;
+            }
+          }
+        }
+      }
+    }
+
+    .ctx-right {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+}

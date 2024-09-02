@@ -1,0 +1,1072 @@
+@media screen and (max-width: 1199px) {
+  /deep/ .modal-pay-tip {
+    .el-dialog {
+      width: 80%;
+    }
+  }
+
+
+  /deep/ .el-input__inner {
+    height: 32px;
+    padding: 0 10px;
+  }
+
+
+  /deep/ .el-upload {
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+  }
+
+  .el-upload--picture-card i {
+    font-size: 16px;
+  }
+
+  .upload-box {
+    padding: 20px 20px;
+    text-align: left;
+  }
+
+  .btn-cancel {
+    min-width: 100px;
+    height: 40px;
+    border: 1px solid #4CA5E4;
+    color: #4CA5E4;
+    font-size: 14px;
+  }
+
+  .btn-confirm {
+    margin-left: 20px;
+    min-width: 100px;
+    height: 40px;
+    background: #4CA5E4;
+    color: #fff;
+    font-size: 14px;
+  }
+
+  .img-check {
+    cursor: pointer;
+
+    &.check-0 {
+      display: block;
+    }
+
+    &.check-1 {
+      display: none;
+    }
+  }
+
+  .checked {
+    cursor: pointer;
+
+    .check-0 {
+      display: none !important;
+    }
+
+    .check-1 {
+      display: block !important;
+    }
+  }
+
+  .page {
+    text-align: center;
+    font-size: 14px;
+
+    .inner {
+      width: 100%;
+      // width: 100%;
+      margin: 0 auto;
+      padding: 20px 15px;
+    }
+
+    .main-title {
+      .flex-between();
+      margin-bottom: 30px;
+      text-align: left;
+
+      .left {
+        font-size: 16px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        color: #333;
+
+        .num {
+          margin-left: 10px;
+        }
+      }
+
+      .right {
+        font-size: 12px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        line-height: 24px;
+        color: #333333;
+
+        .el-select {
+          width: 250px;
+        }
+
+        .step-box {
+          width: 500px;
+          margin: 0 auto;
+          font-size: 14px;
+          .flex();
+
+          .step {
+            flex: 1;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background: #eee;
+            cursor: pointer;
+            transition: 0.3s;
+
+            &:hover {
+              opacity: 0.75;
+            }
+
+            &.step-1 {
+              clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%);
+            }
+
+            &.step-2 {
+              clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%, 3% 50%);
+            }
+
+            &.step-3 {
+              clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%, 3% 50%);
+            }
+
+            &.active {
+              background: #4CA5E4;
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+
+    .goods-list {
+      // border: 1px solid #cccccc;
+      // margin-bottom: 40px;
+      text-align: left;
+
+      .title {
+        padding-left: 20px;
+        height: 48px;
+        line-height: 48px;
+        background: #f9f9f9;
+        border-bottom: 1px solid #cccccc;
+        font-size: 14px;
+        font-weight: bold;
+        color: #333333;
+      }
+
+      .list {
+        max-width: calc(100vw - 30px);
+        overflow-x: auto;
+
+        .goods-list-inner {
+          max-width: 10000vw;
+          width: 600px;
+        }
+
+        .list-title {
+          max-width: 10000vw;
+          width: 600px;
+
+          .flex();
+          font-size: 14px;
+          text-align: center;
+          height: 48px;
+          background: #f9f9f9;
+          background: #fafbfc;
+          padding: 15px;
+          color: #666;
+
+          // border-bottom: 1px solid #ddd;
+          .title-1 {
+            flex: 2;
+            text-align: left;
+            padding-left: 10px;
+          }
+
+          .title-2 {
+            width: 100px;
+          }
+
+          .title-3 {
+            width: 80px;
+          }
+
+          .title-4 {
+            width: 100px;
+          }
+        }
+
+        .item {
+          max-width: 10000vw;
+          width: 600px;
+
+          border-bottom: 1px solid #eee;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          .item-detail {
+            max-width: 10000vw;
+            width: 600px;
+            padding: 15px;
+            text-align: center;
+            font-size: 16px;
+            color: #333333;
+
+            .flex();
+
+            .item-1 {
+              width: 100px;
+
+              img {
+                width: 100px;
+                height: 100px;
+              }
+            }
+
+            .item-2 {
+              flex: 2;
+              padding-left: 20px;
+              text-align: left;
+
+              .goods-title {
+                height: 40px;
+                font-size: 12px;
+                font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+                font-weight: 400;
+                color: #666666;
+                line-height: 18px;
+              }
+
+              .goods-guige {
+                font-size: 12px;
+                font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+                font-weight: 400;
+                color: #999999;
+              }
+            }
+
+            .item-3 {
+              width: 100px;
+
+              color: #4CA5E4;
+            }
+
+            .item-4 {
+              width: 80px;
+            }
+
+            .item-5 {
+              width: 100px;
+              color: #4CA5E4;
+            }
+          }
+        }
+      }
+
+      .huizong {
+        padding: 10px;
+        // padding-top: 0;
+        background: #f9f9f9;
+        font-size: 14px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        // line-height: 30px;
+        color: #333333;
+
+        .item {
+          margin-bottom: 10px;
+          text-align: right;
+
+          b {
+            font-weight: normal;
+            font-size: 16px;
+            color: #333;
+          }
+        }
+
+        .total {
+          text-align: right;
+
+          b {
+            font-weight: bold;
+            font-size: 16px;
+            color: #f13f17;
+          }
+        }
+      }
+    }
+
+    .bottom-btns {
+      display: flex;
+      justify-content: flex-end;
+      justify-content: space-between;
+
+      button {
+        width: 150px;
+        height: 40px;
+        // border-radius: 30px;
+        background: #ffffff;
+        border: 1px solid #cccccc;
+        font-size: 14px;
+        font-weight: 400;
+        color: #4CA5E4;
+
+        transition: 0.3s;
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &.back {
+          margin-right: 24px;
+          border: 1px solid #4CA5E4;
+          font-size: 14px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #4CA5E4;
+        }
+
+        &.tijiao {
+          color: #ffffff;
+          background: #4CA5E4;
+        }
+      }
+    }
+  }
+
+  .ziti-wrap {
+    margin-bottom: 40px;
+    text-align: left;
+    min-height: 127px;
+    background: #ffffff;
+    border: 1px solid #cccccc;
+
+    .ziti-title {
+      .flex-between();
+      padding-left: 20px;
+      padding-right: 20px;
+      height: 48px;
+      line-height: 48px;
+      background: #f9f9f9;
+      border-bottom: 1px solid #cccccc;
+      border-top: none;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333333;
+    }
+
+    .ziti-ctx {
+      padding: 30px 20px;
+
+      .ziti-info {
+        margin-bottom: 15px;
+        .flex();
+
+        span {
+          display: inline-block;
+          min-width: 100px;
+        }
+
+        .el-input {
+          width: auto;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  // 地址选择
+  .dizhi-select {
+    margin-bottom: 40px;
+    text-align: left;
+    min-height: 127px;
+    background: #ffffff;
+    border: 1px solid #cccccc;
+
+    .dizhi-title {
+      .flex-between();
+      padding-left: 20px;
+      padding-right: 20px;
+      height: 48px;
+      line-height: 48px;
+      background: #f9f9f9;
+      border-bottom: 1px solid #cccccc;
+      border-top: none;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333333;
+
+      .add {
+        b {
+          font-weight: bold;
+          color: #4CA5E4;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .dizhi-inner {
+      padding: 30px 20px;
+
+      .tip {
+        font-size: 14px;
+        color: #7d7d7d;
+
+        b {
+          color: #4CA5E4;
+          cursor: pointer;
+        }
+      }
+
+      .list {
+        padding-left: 0;
+
+        .item {
+          cursor: pointer;
+          font-size: 14px;
+          color: #7d7d7d;
+          margin-bottom: 5px;
+          padding: 10px;
+          padding-left: 30px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          &:hover {
+            background-color: #eee;
+          }
+
+          &.active {
+            background: #eee;
+          }
+
+          .flex();
+
+          .name {
+            width: 120px;
+            height: 30px;
+            background: #ffffff;
+            border: 1px solid #cccccc;
+
+            &.active {
+              // border: 1px solid #ff3d00;
+            }
+          }
+
+          .phone {
+            margin: 0 15px;
+          }
+
+          .address {
+          }
+
+          .moren {
+            margin-left: 20px;
+            min-width: 40px;
+            height: 24px;
+            line-height: 24px;
+            background: #f29f25;
+            font-size: 12px;
+            color: #ffffff;
+          }
+
+          .checked {
+            flex: 2;
+            color: #4CA5E4;
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+
+  // 支付配送方式选择
+
+  .type-select {
+    margin-bottom: 40px;
+    text-align: left;
+    min-height: 127px;
+    background: #ffffff;
+    border: 1px solid #cccccc;
+
+    .type-title {
+      padding-left: 20px;
+      padding-right: 20px;
+      height: 48px;
+      line-height: 48px;
+      background: #f9f9f9;
+      border-bottom: 1px solid #cccccc;
+      border-top: none;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333333;
+    }
+
+    .type-inner {
+      padding: 30px 20px;
+
+      .select-1 {
+        .flex();
+
+        & + .select-1 {
+          margin-top: 30px;
+        }
+
+        .title {
+          font-size: 14px;
+          font-weight: bold;
+          color: #333333;
+        }
+
+        .list {
+          padding-left: 20px;
+
+          button {
+            margin-right: 20px;
+            min-width: 96px;
+            height: 30px;
+            line-height: 30px;
+            background: #ffffff;
+            border: 1px solid #cccccc;
+
+            &.active {
+              border: 1px solid #4CA5E4;
+            }
+          }
+        }
+      }
+
+      .ziti-box {
+        padding-top: 10px;
+
+        .title {
+          font-weight: bold;
+        }
+
+        .ziti-info {
+          margin-top: 10px;
+        }
+      }
+    }
+  }
+
+  // 订单优惠等
+  .order-action {
+    background: #f9f9f9;
+    background: #fff;
+    padding: 0 0;
+
+    .order-action-inner {
+      // border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+
+    .section-item {
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      margin-bottom: 5px;
+      font-size: 14px;
+      font-family: Microsoft YaHei;
+      font-weight: bold;
+      line-height: 25px;
+      color: #333333;
+    }
+
+    .section-tip {
+      margin-bottom: 5px;
+      font-size: 14px;
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      line-height: 25px;
+      color: #666666;
+    }
+
+    .section-input {
+      margin-top: 5px;
+      margin-bottom: 5px;
+
+      input {
+        display: inline-block;
+        width: 240px;
+        height: 35px;
+        background: #ffffff;
+        border: 1px solid #cccccc;
+        opacity: 1;
+        border-radius: 4px;
+        padding-left: 15px;
+      }
+
+      textarea {
+        border: 1px solid #cccccc;
+        outline: none;
+        width: 460px;
+        min-height: 100px;
+        background: #fff;
+        resize: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+      }
+
+      .el-input {
+        width: 340px;
+      }
+
+      .el-select {
+        width: 340px;
+      }
+
+      .el-textarea {
+        width: 460px;
+        width: 100%;
+      }
+    }
+
+    .use-jifen-num {
+      margin-top: 10px;
+      margin-bottom: 10px;
+
+      b {
+        color: #4CA5E4;
+      }
+    }
+
+    .section-btn-actions {
+      .flex();
+
+      .btn {
+        width: 160px;
+        height: 32px;
+        margin-right: 20px;
+        font-size: 16px;
+        font-weight: bold;
+        background: #e1e1e1;
+        color: #333333;
+
+        &.active {
+          background: #009a44;
+          color: #ffffff;
+        }
+      }
+    }
+  }
+
+  .section-info {
+    .section-ctx {
+      padding-top: 0 !important;
+    }
+  }
+
+  // 新增
+  .section {
+    padding-bottom: 20px;
+    text-align: left;
+
+    .section-title {
+      padding-bottom: 16px;
+      border-bottom: 1px solid #d5d8de;
+      font-size: 16px;
+      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-weight: bold;
+      color: #333333;
+    }
+
+    .section-ctx {
+      padding-top: 20px;
+
+      .address-list {
+        display: flex;
+        flex-wrap: wrap;
+
+        .address-item {
+          position: relative;
+          margin-top: 20px;
+          margin-right: 0;
+          width: 100%;
+          min-height: auto;
+          padding: 10px;
+          background: #ffffff;
+          border-radius: 4px 4px 4px 4px;
+          border: 2px solid #d5d8de;
+          overflow: hidden;
+          cursor: pointer;
+          margin-bottom: 15px;
+
+          &:nth-child(3n) {
+            margin-right: 0;
+          }
+
+          &:nth-child(-n + 3) {
+            margin-top: 0;
+          }
+
+          &.active {
+            border: 2px solid #4CA5E4;
+
+            .marker {
+              display: block;
+            }
+          }
+
+          .marker {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            display: none;
+          }
+
+          .address-top {
+            padding-bottom: 10px;
+            border-bottom: 1px solid #d5d8de;
+            font-size: 14px;
+            font-size: 12px;
+            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-weight: 400;
+            color: #000000;
+          }
+
+          .address-bottom {
+            padding-top: 10px;
+            font-size: 12px;
+            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-weight: 400;
+            color: #999999;
+          }
+        }
+      }
+
+      .btn-box {
+        margin-top: 10px;
+        text-align: center;
+
+        button {
+          min-width: 124px;
+          min-height: 32px;
+          background: #ffffff;
+          border-radius: 2px 2px 2px 2px;
+          border: 1px solid #b9b9b9;
+          font-size: 14px;
+          font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+          font-weight: normal;
+          color: #666666;
+        }
+      }
+    }
+  }
+
+  .section-info {
+    .input-list {
+      display: flex;
+      flex-wrap: wrap;
+
+      .input-item {
+        width: 100%;
+        margin-top: 15px !important;
+        margin-right: 0;
+
+        &:nth-child(3n) {
+          margin-right: 0;
+        }
+
+        &:nth-child(-n + 3) {
+          margin-top: 0;
+        }
+
+        .label {
+          margin-bottom: 10px;
+          font-size: 14px;
+          font-weight: normal;
+          color: #666666;
+
+          span {
+            color: #4CA5E4;
+          }
+        }
+
+        .val {
+          .img-address-edit {
+            margin-left: 15px;
+            width: 16px;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+
+  // 支付配送
+  .section-pay {
+    .pay-group {
+      .flex();
+      align-items: flex-start;
+
+      & + .pay-group {
+        margin-top: 10px !important;
+      }
+
+      .title {
+        min-width: 80px;
+        font-size: 14px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #666666;
+      }
+
+      .pay-items {
+        flex: 1;
+        .flex();
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+
+        .item {
+          .flex();
+          margin-right: 5px;
+          cursor: pointer;
+          margin-bottom: 15px;
+
+          .check-img {
+            width: 14px;
+          }
+
+          .check-img-1 {
+            display: none;
+          }
+
+          .marker-img {
+            width: 24px;
+            margin: 0 10px;
+          }
+          span {
+            font-size: 14px;
+            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-weight: 400;
+            color: #333;
+          }
+        }
+      }
+
+      .peisong-items {
+        .item {
+          text-align: center;
+          width: fit-content;
+          padding: 0 15px;
+          height: 32px;
+          line-height: 32px;
+          background: #ffffff;
+          border-radius: 3px 3px 3px 3px;
+          border: 1px solid #4CA5E4;
+          font-size: 14px;
+          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-weight: normal;
+          color: #4CA5E4;
+        }
+      }
+    }
+  }
+
+  .section-huizong {
+    .sub-title {
+      .flex();
+      padding-left: 20px;
+      height: 50px;
+      background: #fafbfc;
+      cursor: pointer;
+
+      &.expand-0 {
+        margin-bottom: 15px;
+      }
+
+      .text {
+        font-size: 14px;
+        font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+        font-weight: bold;
+        color: #333333;
+      }
+
+      img {
+        width: 16px;
+        margin-left: 15px;
+      }
+    }
+
+    .yhq-list {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 15px;
+
+      .yhq-item {
+        position: relative;
+        margin-right: 24px;
+        width: 220px;
+        height: auto;
+        border-radius: 4px 4px 4px 4px;
+        border: 1px solid #e5e5e5;
+        cursor: pointer;
+
+        &.active {
+          border-color: #4CA5E4;
+
+          .marker {
+            display: block;
+          }
+        }
+
+        .marker {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          display: none;
+        }
+
+        .yhq-top {
+          height: auto;
+          background: #fdf2ef;
+          padding: 10px 15px;
+
+          .yhq-1 {
+            .flex();
+            align-items: flex-end;
+
+            .text-1 {
+              font-size: 24px;
+              font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+              font-weight: bold;
+              color: #4CA5E4;
+            }
+
+            .text-2 {
+              margin-left: 5px;
+              font-size: 12px;
+              font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+              font-weight: 400;
+              color: #333333;
+            }
+          }
+
+          .yhq-2 {
+            margin-top: 10px;
+            font-size: 12px;
+            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-weight: 400;
+            color: #999999;
+          }
+        }
+
+        .yhq-bottom {
+          height: 32px;
+          line-height: 32px;
+          padding: 0 15px;
+          font-size: 12px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #4CA5E4;
+        }
+      }
+    }
+
+    .yhq-select-info {
+      height: 50px;
+      line-height: 50px;
+      background: #fafbfc;
+      padding: 0 30px;
+
+      .number {
+        color: #4CA5E4;
+        margin: 0 10px;
+      }
+    }
+
+    .remark-box {
+      .input-box {
+        padding: 10px;
+      }
+    }
+  }
+
+  .section-ctx-type {
+    padding-left: 0;
+  }
+
+  // 余额信息
+  .yue-info {
+    margin-top: 10px;
+    padding: 15px;
+    // padding-bottom: 0;
+    border: 1px dashed #ccc;
+
+    .info-item {
+      .flex();
+      align-items: flex-start;
+      margin-bottom: 10px;
+
+      .info-label {
+        line-height: 32px;
+        padding-right: 10px;
+        font-size: 14px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #666666;
+      }
+
+      .info-val {
+        line-height: 32px;
+        font-size: 14px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #666666;
+      }
+
+      .yue-warn-tip {
+        color: #4CA5E4;
+        font-size: 14px;
+      }
+    }
+  }
+
+  // 线下转款信息
+  .xianxia-info {
+    margin-top: 20px;
+    padding: 10px;
+    // padding-bottom: 0;
+    border: 1px dashed #ccc;
+
+    .info-item {
+      .flex();
+      align-items: flex-start;
+      margin-bottom: 5px;
+
+      .info-label {
+        line-height: 1.7;
+        padding-right: 10px;
+        font-size: 14px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #666666;
+      }
+
+      .info-val {
+        line-height: 1.7;
+        font-size: 14px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #666666;
+      }
+    }
+  }
+}

@@ -1,0 +1,212 @@
+@media screen and (max-width: 1199px) {
+ 
+
+  .page {
+    padding-bottom: 20px;
+    .page-box {
+      background: #f7f7f7;
+      background: #fff;
+    }
+    .page-inner {
+      padding: 80px 0;
+      text-align: left;
+      padding-bottom: 0;
+
+      .page-block {
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .block-chanpin {
+        margin-bottom: 0px;
+      }
+
+      .detail-title {
+        text-align: center;
+        position: relative;
+        font-size: 36px;
+        font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+        font-weight: bold;
+        color: #333333;
+
+        .btn-xunjia {
+          position: absolute;
+          right: 0;
+          top: 20px;
+
+          width: 140px;
+          height: 40px;
+          background: #ffffff;
+          border-radius: 4px 4px 4px 4px;
+          border: 1px solid #4CA5E4;
+          font-size: 14px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #4CA5E4;
+        }
+      }
+
+      .detail-title-line {
+        width: 80px;
+        margin: 24px auto;
+        height: 5px;
+        background: #4CA5E4;
+        border-radius: 3px 3px 3px 3px;
+      }
+    }
+  }
+
+  .ctx-box {
+    .flex-between();
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    .ctx-left {
+      width: 100%;
+      height: auto;
+      margin-right: 0;
+      background: #fafbfc;
+      border: 1px solid #ebeef5;
+
+      // display: flex;
+      // justify-content: flex-start;
+
+      .left-title {
+        border-bottom: 1px solid #eee;
+        padding-left: 20px;
+        height: 36px;
+        line-height: 36px;
+        font-size: 14px;
+        font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+        font-weight: bold;
+        color: #333333;
+      }
+
+      .navs {
+        padding: 0 20px;
+        .nav-item {
+          display: block;
+          width: fit-content;
+          width: 100%;
+          border-bottom: 1px solid #eee;
+          height: 36px;
+          line-height: 36px;
+          font-size: 14px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #606266;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &.active {
+            font-weight: bold;
+            color: #4CA5E4;
+          }
+        }
+      }
+    }
+    .ctx-right {
+      margin-top: 20px;
+      flex: 1;
+      width: 100%;
+    }
+  }
+
+  // 问题列表
+  .ques-list {
+    // padding-top: 32px;
+    .ques-item {
+      width: 100%;
+      margin-bottom: 15px;
+      &.expand {
+        .ques-title {
+          background: #4CA5E4 !important;
+          .text {
+            color: #fff !important;
+          }
+
+          .img-box {
+            .expand-0 {
+              display: none !important;
+            }
+            .expand-1 {
+              display: block !important;
+              color: #fff !important;
+            }
+          }
+        }
+
+        .ques-anwser {
+          padding: 15px 10px;
+          height: auto !important;
+          line-height: 1.8;
+          text-align: justify;
+          font-size: 12px;
+          display: block;
+        }
+      }
+
+      .ques-title {
+        padding: 0 15px;
+        height: 50px;
+        background: #f4f4f4;
+        transition: 0.3s;
+        .flex-between();
+        cursor: pointer;
+
+        &:hover {
+          background: #4CA5E4;
+          color: #fff;
+
+          .text {
+            color: #fff;
+          }
+        }
+
+        .text {
+          font-size: 14px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #333333;
+        }
+        .img-box {
+          width: 25px;
+          .expand-marker {
+            width: 16px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+
+            &.expand-0 {
+              display: block;
+            }
+            &.expand-1 {
+              display: none;
+            }
+          }
+        }
+      }
+
+      .ques-anwser {
+        padding: 15px 10px;
+        line-height: 1.8;
+        text-align: justify;
+        font-size: 12px;
+
+        height: 0 !important;
+        overflow: hidden;
+        transition: all 0.3s ease-in-out;
+        display: none;
+
+        &.shown {
+        }
+      }
+    }
+  }
+}
+
+@import "~@/assets/h5css/common/aboutCommon.less";

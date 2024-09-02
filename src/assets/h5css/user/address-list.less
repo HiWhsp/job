@@ -1,0 +1,108 @@
+@media screen and (max-width: 1199px) {
+  .page {
+    text-align: left;
+    padding-bottom: 80px;
+    .main-title {
+      .flex-between();
+      padding: 0 32px;
+      text-align: left;
+      height: 56px;
+      line-height: 56px;
+      background: #ffffff;
+      font-size: 16px;
+      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-weight: bold;
+      color: #333333;
+
+      button {
+        .flex();
+        min-width: 96px;
+        height: 30px;
+        line-height: 30px;
+        background: #4CA5E4;
+        color: #fff;
+        background: #fff;
+        color: #4CA5E4;
+        font-size: 14px;
+        // font-weight: bold;
+
+        img {
+          width: 20px;
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .page-ctx {
+      margin-top: 24px;
+      padding: 32px 32px 55px 32px;
+      padding: 15px;
+      background: #fff;
+    }
+  }
+
+  // 地址列表
+  .wrap-address {
+    text-align: left;
+    .address-item {
+      min-height: auto;
+      background: #ffffff;
+      border: 1px solid #e5e5e5;
+      padding: 10px;
+      margin-bottom: 20px;
+
+      .top {
+        padding-bottom: 10px;
+        font-size: 12px;
+        > div {
+          margin-bottom: 10px;
+          color: #333333;
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          span {
+            font-size: 14px;
+            font-size: 12px;
+            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-weight: 400;
+            color: #666666;
+          }
+        }
+      }
+      .bottom {
+        .flex-between();
+        border-top: 1px solid #eeeeee;
+        padding-top: 10px;
+
+        .left {
+          .moren {
+            display: inline-block;
+            width: fit-content;
+            padding: 0 10px;
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            // background: rgba(255, 90, 0, 0.68);
+            background: #4CA5E4;
+            font-size: 12px;
+            color: #ffffff;
+          }
+        }
+
+        .right {
+          font-size: 14px;
+          font-family: Microsoft YaHei;
+          font-weight: 400;
+          line-height: 20px;
+          color: #4CA5E4;
+
+          .action {
+            margin-left: 20px;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}

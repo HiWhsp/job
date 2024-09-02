@@ -1,0 +1,152 @@
+@media screen and (max-width: 1199px) {
+  .page {
+    .main-title {
+      .flex-between();
+      margin-bottom: 20px;
+      text-align: left;
+      font-size: 16px;
+      font-family: Microsoft YaHei;
+      font-weight: bold;
+      line-height: 20px;
+      color: #333333;
+
+      .left {
+      }
+      .right {
+        .flex();
+        img {
+          margin-right: 15px;
+          width: 16px;
+        }
+        span {
+          font-size: 16px;
+          font-family: Microsoft YaHei;
+          font-weight: 400;
+          line-height: 24px;
+          color: #222222;
+        }
+      }
+    }
+  }
+  .wrap {
+    .inner {
+      padding: 0;
+    }
+  }
+
+  .top-info {
+    .yue-box {
+      width: 458px;
+      height: 240px;
+      background: url(~@img/yue/yue-bg.png) no-repeat center / cover;
+      padding-left: 40px;
+      .flex-center();
+      flex-direction: column;
+      align-items: flex-start;
+
+      .text-box {
+        text-align: left;
+        .text-1 {
+          font-size: 26px;
+          font-family: PingFang SC;
+          font-weight: bold;
+          line-height: 40px;
+          color: #ffffff;
+        }
+        .text-2 {
+          margin-top: 10px;
+          margin-bottom: 30px;
+          font-size: 48px;
+          font-family: PingFang SC;
+          font-weight: bold;
+          line-height: 40px;
+          color: #ffffff;
+        }
+        .text-3 {
+          button {
+            border-radius: 20px;
+            width: 106px;
+            height: 34px;
+            background: rgba(0, 0, 0, 0.45);
+            font-size: 14px;
+            font-family: PingFang SC;
+            font-weight: 400;
+            line-height: 34px;
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+
+  .bottom-info {
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+
+  .action-box {
+    text-align: left;
+    button {
+      min-width: 170px;
+      height: 40px;
+      background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
+      opacity: 1;
+      border-radius: 45px;
+
+      font-size: 16px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      line-height: 36px;
+      color: #ffffff;
+    }
+  }
+
+  .list {
+    .flex();
+    flex-wrap: wrap;
+    .item {
+      .flex-center();
+      cursor: pointer;
+      justify-content: flex-start;
+      margin-top: 20px;
+      margin-right: 60px;
+      width: 185px;
+      height: 85px;
+      padding-left: 15px;
+      background: url(~@img/yue/yue-chongzhi-inactive.png) no-repeat center / cover;
+
+      &:nth-child(4n) {
+        margin-right: 0;
+      }
+      &:nth-child(-n + 4) {
+        margin-top: 0;
+      }
+
+      .currency {
+        font-size: 15px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        line-height: 15px;
+        color: #333;
+      }
+      .money {
+        font-size: 30px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        line-height: 40px;
+        color: #333;
+      }
+
+      &.active {
+        background: url(~@img/yue/yue-chongzhi-active.png) no-repeat center / cover;
+
+        .currency {
+          color: #fff;
+        }
+        .money {
+          color: #fff;
+        }
+      }
+    }
+  }
+}

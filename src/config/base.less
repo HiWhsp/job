@@ -1,0 +1,105 @@
+@width: 1520px;
+@theme: #4CA5E4;
+@navhead: 152px;
+
+.flex {
+  display: flex;
+  align-items: center;
+}
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flex-start {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.column-flex-center {
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ellipsis-1 {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.ellipsis-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+}
+.ellipsis-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+}
+.ellipsis-4 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+}
+.ellipsis-5 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 5;
+}
+
+.fit-text {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.no-scroll-x {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.scrollbar {
+  overflow-y: auto;
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    border: 5px solid #bbb;
+    background: #fff;
+  }
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 0px;
+  }
+}
+
+
+.scrollbar-y {
+  overflow-y: auto;
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    border: 5px solid #bbb;
+    background: #fff;
+  }
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 0px;
+  }
+}

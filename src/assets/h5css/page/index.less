@@ -1,0 +1,486 @@
+@media screen and (max-width: 1199px) {
+  .index-top-video {
+    position: absolute;
+    z-index: 5;
+    width: 100%;
+    height: 240px;
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-mask {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  .banner-box {
+    margin-top: 20px;
+  }
+
+  .lunbo-box {
+    position: relative;
+    width: 100%;
+    height: auto !important;
+
+    /deep/ .el-carousel__container {
+      height: 120px;
+    }
+
+    /deep/ img {
+      width: 100%;
+      height: 160px;
+      height: 120px;
+      height: 100%;
+      cursor: pointer;
+      object-fit: cover;
+    }
+  }
+
+  // 搜索框
+
+  .section-search {
+    height: 240px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 0;
+    padding-bottom: 0;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+
+    .main-title {
+      margin-bottom: 20px;
+      font-size: 18px;
+      font-family: Alibaba PuHuiTi 2-85 Bold, Alibaba PuHuiTi 20;
+      font-weight: normal;
+      color: #ffffff;
+    }
+
+    .hot-words {
+      margin-top: 20px;
+      font-size: 12px;
+      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-weight: 400;
+      color: #ffffff;
+
+      .words {
+        margin-right: 20px;
+        font-size: 12px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #ffffff;
+        line-height: 1.7;
+
+        &:hover {
+          color: #4CA5E4;
+        }
+      }
+    }
+
+    .center-search {
+      .flex();
+
+      width: 100%;
+      height: 34px;
+      background: #ffffff;
+      border-radius: 4px 4px 4px 4px;
+      margin: 0 auto;
+      border: 1px solid #c2c2c2;
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
+
+      .left-select {
+        width: 100px;
+        height: 32px;
+
+        .el-select {
+          width: 100px;
+          height: 100%;
+
+          /deep/ .el-input {
+            height: 100%;
+          }
+          /deep/ .el-input__inner {
+            border: none !important;
+            background: #f2f2f2;
+            padding: 0 10px;
+            height: 100%;
+            text-align: center;
+          }
+        }
+      }
+      .search-box {
+        .flex();
+        flex: 1;
+        align-self: stretch;
+
+        input {
+          width: 100%;
+          display: inline-block;
+          height: 100%;
+          padding-left: 20px;
+
+          &::-webkit-input-placeholder {
+            font-size: 12px;
+            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-weight: 400;
+            color: #a6a6a6;
+          }
+        }
+
+        button {
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: 32px;
+          height: 32px;
+          .flex-center();
+          .img-search {
+            width: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+              opacity: 0.7;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .section-title {
+    .flex-between();
+    .section-left {
+      font-size: 16px;
+      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-weight: bold;
+      color: #333333;
+    }
+    .section-right {
+      .flex();
+
+      .text {
+        padding-bottom: 10px;
+        position: relative;
+        font-size: 14px;
+        font-family: Alibaba PuHuiTi 2-55 Regular, Alibaba PuHuiTi 20;
+        font-weight: normal;
+        color: #4CA5E4;
+
+        &::before {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          width: 35px;
+          height: 1px;
+          background: #000;
+        }
+      }
+      .arrow {
+        width: 18px;
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .section-yewu {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 15px;
+
+    .section-ctx {
+      margin-top: 20px;
+
+      .main-poster {
+        cursor: pointer;
+        margin-bottom: 10px;
+        position: relative;
+        overflow: hidden;
+        height: auto;
+        border-radius: 16px 16px 0 0;
+        .poster-box {
+          position: absolute;
+          z-index: 1;
+          left: 0;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          // background-size: 100% 100%;
+          // background-size: 100% auto;
+          background-size: 100% 100%;
+          background-position: center;
+        }
+
+        .info-box {
+          position: relative;
+          z-index: 2;
+          height: auto;
+          background: transparent;
+          padding: 25px 15px;
+          text-align: left;
+          border-radius: 16px 16px 0px 0px;
+        }
+
+        .cate-title {
+          font-size: 16px;
+          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-weight: bold;
+          color: #ffffff;
+        }
+
+        .cate-desc-box {
+          min-height: 80px;
+        }
+        .cate-desc {
+          .ellipsis-3();
+          max-width: 100%;
+          margin-top: 20px;
+          min-height: 50px;
+          font-size: 12px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #ffffff;
+          line-height: 2;
+        }
+        .cate-btn {
+          margin-top: 20px;
+          width: fit-content;
+          background: rgba(255, 255, 255, 0);
+          border-radius: 0px 31px 0px 31px;
+          border: 2px solid #ffffff;
+          padding: 0 15px;
+
+          a {
+            .flex-center();
+            width: fit-content;
+            height: 42px;
+            font-size: 14px;
+            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-weight: 400;
+            color: #ffffff;
+            img {
+              margin-left: 15px;
+              width: 20px;
+            }
+          }
+        }
+      }
+      .main-cates {
+        display: flex;
+        justify-content: space-between;
+
+        .cate-item {
+          .flex-center();
+          flex-direction: column;
+          flex: 1;
+          height: auto;
+          background: #eff4fa;
+          margin-right: 10px;
+          cursor: pointer;
+          transition: 0.4s linear;
+          padding: 15px 0;
+
+          &:first-child {
+            border-radius: 0px 0px 0px 16px;
+          }
+          &:last-child {
+            border-radius: 0px 0px 16px 0px;
+            margin-right: 0;
+          }
+
+          &.active {
+            background: #4CA5E4;
+            .title {
+              color: #fff;
+            }
+
+            .cate-img-0 {
+              display: none !important;
+            }
+            .cate-img-1 {
+              display: inline-block !important;
+            }
+          }
+
+          .cate-img {
+            max-width: 24px !important;
+            height: auto;
+          }
+
+          .cate-img-1 {
+            display: none;
+          }
+          .title {
+            transition: 0.4s linear;
+            margin-top: 10px;
+            font-size: 14px;
+            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-weight: 400;
+            color: #000000;
+          }
+        }
+      }
+    }
+  }
+
+  .adv-box {
+    margin-top: 80px;
+    img {
+      width: 100%;
+      vertical-align: bottom;
+    }
+  }
+
+  // 文献列表
+  .section-wenxian {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 15px;
+
+    // padding-top: 20px;
+    // padding-bottom: 20px;
+
+    .section-ctx {
+      margin-top: 10px;
+
+      .swiper-wenxian {
+        padding: 10px;
+        // padding-bottom: 0;
+        .wenxian-item {
+          width: 100%;
+          display: block;
+          box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.1);
+          overflow: hidden;
+          border-radius: 8px;
+
+          &:hover {
+            .wenxian-title {
+              color: #4CA5E4;
+            }
+          }
+
+          .wenxian-img {
+            width: 100%;
+            height: 300px;
+          }
+
+          .wenxian-title-box {
+            padding: 15px 10px;
+          }
+          .wenxian-title {
+            overflow: hidden;
+            .ellipsis-2();
+            height: auto;
+            padding: 0px;
+            font-size: 14px;
+            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-weight: 400;
+            color: #333333;
+            line-height: 1.7;
+            text-align: left;
+          }
+        }
+      }
+
+      // 文献分页
+      .wenxian-fenye {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-align: center;
+
+        .fenye-left {
+          .flex();
+          width: 160px;
+          height: 50px;
+          background: #ffffff;
+          box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.08);
+          border-radius: 8px 8px 8px 8px;
+
+          .arrow-left {
+            flex: 1;
+          }
+          .arrow-right {
+            flex: 1;
+          }
+
+          img {
+            cursor: pointer;
+            max-width: 26px;
+
+            &.img-0 {
+              cursor: not-allowed;
+            }
+          }
+
+          .arrow-center {
+            width: 1px;
+            height: 20px;
+            background: #c5c5c5;
+          }
+        }
+        .fenye-center {
+          flex: 1;
+          height: 1px;
+          background: #d9ded5;
+        }
+        .fenye-right {
+          .flex();
+          width: 76px;
+          padding-bottom: 0;
+
+          align-items: flex-end;
+          justify-content: flex-end;
+          font-size: 16px;
+          font-family: Microsoft YaHei-Light, Microsoft YaHei;
+          font-weight: 300;
+          color: #87888a;
+
+          .page-curr {
+            color: #4CA5E4;
+            // font-weight: BOLD;
+            font-size: 20px;
+          }
+          .page-divider {
+          }
+          .page-total {
+          }
+        }
+      }
+    }
+  }
+
+  .page-index {
+    // background: #fff;
+
+    .inner {
+      padding-top: 0;
+      // width: 100%;
+      margin: 0 auto;
+    }
+  }
+}
+
+// pad 端
+@media screen and (max-width: 1199px) and (min-width: 768px) {
+  /deep/ .lunbo-box .el-carousel__container {
+    height: 240px;
+  }
+
+  .section-wenxian .section-ctx .swiper-wenxian .wenxian-item .wenxian-img {
+    height: calc((100vmin - 30px - 20px - 23px * 3) / 4);
+  }
+}

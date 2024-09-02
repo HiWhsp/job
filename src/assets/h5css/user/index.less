@@ -1,0 +1,117 @@
+@media screen and (max-width: 1199px) {
+  /deep/ .main-title {
+    height: 40px !important;
+    line-height: 40px !important;
+    font-size: 14px !important;
+    padding: 0 15px !important;
+  }
+
+  /deep/ .page {
+    padding-bottom: 0 !important;
+
+    .page-ctx {
+      padding-bottom: 20px !important;
+    }
+  }
+
+  .page-user-wrap {
+    background: #fff;
+    background: #f7f7f7;
+    background-size: cover;
+    padding: 20px 15px;
+
+    .inner {
+      width: 100%;
+      margin: 0 auto;
+      min-height: 70vh;
+      min-height: 40vh;
+      display: flex;
+      justify-content: space-between;
+
+      .user-left {
+        display: none;
+        width: 210px;
+        min-width: 210px;
+        margin-bottom: 50px;
+
+        .nav-wrap {
+          background: #f9f9f9;
+          background: #fff;
+          padding-bottom: 20px;
+          .nav-item {
+            overflow: hidden;
+            .nav-title {
+              position: relative;
+              cursor: pointer;
+              padding-left: 30px;
+              padding-left: 52px;
+              text-align: left;
+              line-height: 48px;
+              height: 48px;
+              line-height: 32px;
+              height: 32px;
+              // border-bottom: 1px solid #eee;
+
+              font-size: 12px;
+              font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+              font-weight: 400;
+              color: #666666;
+
+              &.link {
+                &:hover {
+                  color: #4CA5E4;
+                }
+              }
+
+              &.main-title {
+                line-height: 48px;
+                height: 48px;
+                margin-top: 10px;
+                padding-left: 30px;
+                cursor: auto;
+                font-size: 14px;
+                font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+                font-weight: 400;
+                color: #333333;
+                user-select: none;
+              }
+
+              &.active {
+                background: #ffffff;
+                background: #fffaf7;
+                color: #4CA5E4;
+                &:before {
+                  content: "";
+                  position: absolute;
+                  left: 0;
+                  top: 0;
+                  bottom: 0;
+                  width: 3px;
+                  // height: 24px;
+                  background-color: #4CA5E4;
+                }
+              }
+
+              &[data-hide="hide"] {
+                display: none;
+              }
+            }
+
+            &:first-child {
+              .main-title {
+                margin-top: 0;
+              }
+            }
+          }
+        }
+      }
+      .user-right {
+        flex: 2;
+        margin-left: 0;
+        min-height: 20vh;
+        padding-bottom: 20px;
+        width: 100%;
+      }
+    }
+  }
+}

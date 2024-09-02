@@ -1,0 +1,73 @@
+@media screen and (max-width: 1199px) {
+  .linian-list {
+    margin-top: 30px;
+    // .flex();
+    // flex-wrap: wrap;
+
+    .linian-item {
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row-reverse;
+      flex-direction: column;
+
+
+      &:nth-child(2n) {
+        flex-direction: row;
+        flex-direction: column;
+        .info-box {
+          padding-left: 0;
+          padding-right: 0 !important;
+        }
+      }
+
+      .img-box {
+        width: 100%;
+        height: auto;
+        img {
+        }
+      }
+      .info-box {
+        flex: 1;
+        text-align: left;
+        padding-right: 0;
+        .title {
+          margin-top: 20px;
+          font-size: 16px;
+          font-size: 16px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #333333;
+        }
+        .desc {
+          margin-top: 33px;
+          font-size: 16px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #666666;
+          line-height: 36px;
+        }
+      }
+    }
+  }
+}
+
+@import "~@/assets/h5css/common/aboutCommon.less";
+
+
+
+
+
+
+
+// pad端
+@media screen and (max-width: 1199px) and (min-width: 768px) {
+  .linian-list {
+    display: flex;
+    justify-content: space-between;
+  }
+  .linian-item {
+    width: calc((100% - 15px) / 2); 
+  }
+}

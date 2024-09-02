@@ -1,0 +1,216 @@
+@media screen and (max-width: 1199px) {
+  /deep/ .box-wrap .list .item:nth-child(4n) {
+    margin-right: 0;
+  }
+  /deep/ .box-wrap .list .item:nth-child(5n) {
+    margin-right: 10px;
+  }
+
+  /deep/ .box-wrap .list .item {
+    margin-top: 10px;
+  }
+  /deep/ .box-wrap .list .item:nth-child(-n + 4) {
+    margin-top: 10px;
+  }
+
+  .section-box {
+    .flex();
+  }
+
+  .section-1 {
+    // .flex();
+    // height: 72px;
+
+    .flex-center();
+    // flex-direction: column;
+    position: relative;
+    background: #faf7f5;
+    background-size: 100% 100%;
+    padding: 0 15px;
+    width: 66px;
+    height: 60px;
+
+    display: none;
+
+    .left {
+      height: calc(100% - 48px);
+      .img-box {
+        img {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      }
+
+      .name {
+        margin-top: 10px;
+        font-size: 14px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #ffffff;
+      }
+    }
+    .right {
+      .flex-between();
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: #ffffff;
+      text-align: left;
+      padding: 0 15px;
+      border: 1px solid #4CA5E4;
+      border-radius: 0 0 11px 11px;
+
+      .text-1 {
+        font-size: 14px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #333333;
+      }
+      .text-2 {
+        .flex();
+
+        img {
+          width: 24px;
+          margin-right: 5px;
+        }
+        span {
+          font-size: 14px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #4CA5E4;
+        }
+      }
+    }
+  }
+  .section-2 {
+    flex: 1;
+    .list {
+      .flex-between();
+      height: auto;
+      background: #ffffff;
+      border: 1px solid #eee9e4;
+
+      .item {
+        width: 25%;
+        padding: 10px 0;
+        border-right: 1px solid #d5d8de;
+        // margin-left: 40px;
+        // margin-right: 40px;
+        font-size: 16px;
+        cursor: pointer;
+
+        &:last-child {
+          border-right: none;
+        }
+
+        .label {
+          margin-top: 10px;
+          font-size: 14px;
+          font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+          font-weight: normal;
+          color: #333333;
+        }
+        .val {
+          span {
+            // margin-left: 5px;
+            font-size: 16px;
+            font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+            font-weight: normal;
+            color: #4CA5E4;
+          }
+        }
+      }
+    }
+  }
+
+  .page {
+    padding-bottom: 70px;
+  }
+
+  .section-title {
+    border-bottom: 1px solid #dedede;
+    .flex-between();
+    height: 44px;
+    padding: 0 15px;
+
+    .label {
+      font-size: 14px;
+      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-weight: 400;
+      color: #333333;
+    }
+    .action {
+      .flex();
+      font-size: 14px;
+      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-weight: 400;
+      color: #4CA5E4;
+      cursor: pointer;
+      img {
+        width: 14px;
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .section-order {
+    margin: 25px 0;
+    background: #fff;
+
+    .order-box {
+      .empty-info {
+        padding: 40px 0;
+        border-top: 1px solid #dedede;
+        .empty-img {
+          text-align: center;
+          img {
+            width: 190px;
+          }
+        }
+        .empty-text {
+          margin-top: 10px;
+          margin-bottom: 20px;
+          font-size: 14px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #999999;
+        }
+
+        .empty-action {
+          font-size: 14px;
+          color: #4CA5E4;
+        }
+      }
+    }
+    .order-info {
+      padding: 24px 32px;
+      padding: 10px;
+    }
+  }
+
+  .suggest-goods {
+    background: #fff;
+    .list-wrap {
+      padding: 32px 30px;
+      padding: 10px;
+    }
+
+    /deep/ .section-list {
+      .item {
+        // margin-right: 23px;
+
+        &:nth-child(4n) {
+          // margin-right: 0;
+        }
+
+        &:nth-child(5) {
+          // margin-top: 50px;
+        }
+      }
+    }
+  }
+}

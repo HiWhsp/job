@@ -1,0 +1,71 @@
+@media screen and (max-width: 1199px) {
+  .aside {
+    z-index: 10000;
+    position: fixed;
+    right: 0;
+    bottom: 60px;
+
+    // height: 151.45px;
+    // height: 50px;
+    background: #cccccc;
+    border-radius: 0;
+
+    .inner {
+    }
+  }
+
+  // 工具列表
+  .list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .item {
+      position: relative;
+      cursor: pointer;
+      .flex-center();
+      // width: 50px;
+      // height: 50px;
+      // transition: 0.3s;
+
+      width: 36px;
+      height: 36px;
+      background: #ffffff;
+      box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.1);
+      border-radius: 4px 4px 4px 4px;
+
+      &:nth-child(1) {
+        background: #ff9312;
+      }
+      &:nth-child(1) {
+        background: #fff;
+      }
+      &:nth-child(2) {
+        background: #ea5959;
+      }
+      &:nth-child(3) {
+        background: #f13f17;
+      }
+
+      &:hover {
+        opacity: 0.6;
+      }
+
+      img {
+        height: 24px;
+      }
+
+      .cart-num {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 19px;
+        height: 19px;
+        background: #ffffff;
+        border: 1px solid #ff9312;
+        border-radius: 50%;
+        font-size: 10px;
+        color: #ff9312;
+      }
+    }
+  }
+}

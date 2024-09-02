@@ -1,0 +1,279 @@
+@media screen and (max-width: 1199px) {
+  .money-yh {
+    span {
+      color: #04be02;
+      font-weight: bold;
+    }
+  }
+  .money-heji {
+    span {
+      color: #4CA5E4;
+      font-weight: bold;
+    }
+  }
+
+  .zhifufangshi-wrap {
+    margin-bottom: 0 !important;
+    padding: 10px 0;
+    width: 100%;
+    border-top: 1px dashed #e5e5e5;
+    .flex();
+    justify-content: flex-end;
+    .zhifufangshi {
+      .flex();
+      .pay-item {
+        .flex();
+        margin-left: 10px;
+
+        font-size: 14px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        line-height: 24px;
+        color: #4CA5E4;
+        .pay-title {
+          margin-right: 5px;
+        }
+        .pay-money {
+        }
+      }
+    }
+  }
+
+  .order-list-wrap {
+    .info-item {
+      border: 1px solid #e5e5e5;
+      margin-bottom: 15px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    .info-title {
+      position: relative;
+      .flex-between();
+      flex-wrap: wrap;
+      height: auto;
+      padding: 10px;
+      background: #f5f5f5;
+      border-bottom: 1px solid #e5e5e5;
+
+      .date {
+        font-size: 12px;
+        font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+        font-weight: bold;
+        color: #333333;
+      }
+      .order-code {
+        margin-top: 10px;
+        width: 100%;
+        // display: none;
+        flex: auto;
+        text-align: left;
+        padding-left: 0;
+
+        font-size: 12px;
+        font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+        font-weight: bold;
+        color: #333333;
+        span {
+          color: #333333;
+        }
+      }
+      .order-state {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        padding: 3px 6px;
+        // border: 1px solid #ccc;
+        font-size: 12px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        line-height: 20px;
+        color: #999999;
+        color: #4CA5E4;
+
+        // 待付款
+        &.state--5 {
+          // background: #ff4c29;
+          // border-color: #ff4c29;
+          // color: #fff;
+        }
+        &.state-2 {
+          color: #4CA5E4;
+          border-color: #4CA5E4;
+        }
+      }
+    }
+
+
+    .info-good {
+      .list-good {
+        .item-good {
+          padding: 10px;
+          border-bottom: 1px dashed #ccc;
+          .flex();
+
+          &:last-child {
+            border: none;
+          }
+
+          .img-box {
+            width: 90px;
+            cursor: pointer;
+            img {
+              width: 80px;
+              height: 80px;
+            }
+          }
+          .title {
+            text-align: left;
+            padding-left: 0;
+            font-size: 12px;
+            font-family: Microsoft YaHei;
+            font-weight: 400;
+            line-height: 20px;
+            color: #333333;
+            flex: 2;
+
+            .goods-title {
+              width: fit-content;
+              cursor: pointer;
+              &:hover {
+                color: #4CA5E4;
+              }
+            }
+          }
+          .num {
+            width: auto;
+            min-width: 20px;
+            font-size: 12px;
+            font-family: Microsoft YaHei;
+            font-weight: 400;
+            line-height: 20px;
+            color: #999999;
+          }
+          .price {
+            text-align: right;
+            min-width: 80px;
+            font-size: 12px;
+            font-family: Microsoft YaHei;
+            font-weight: 400;
+            line-height: 20px;
+            color: #333333;
+          }
+        }
+      }
+    }
+  }
+
+  // 商品信息汇总和订单操作
+
+  .info-heji {
+    background: #fafafa;
+    padding: 15px;
+    padding: 10px;
+    border-top: 1px solid #e5e5e5;
+    // .flex-between();
+    align-items: flex-start;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #666;
+
+    .heji {
+      visibility: hidden;
+    }
+
+    .money-box {
+      text-align: right;
+
+      > div {
+        margin-bottom: 10px;
+      }
+
+      .count {
+        font-weight: bold;
+        color: #4CA5E4;
+      }
+
+      .money-item {
+        .label {
+        }
+        .money-num {
+          min-width: 70px;
+          display: inline-block;
+
+          &.money-total {
+            color: #4CA5E4;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+
+  .order-action-box {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .btn-box {
+    // margin-top: 10px;
+
+    button {
+      transition: 0.3s;
+      margin-left: 15px;
+      width: 104px;
+      height: 32px;
+      border-radius: 4px;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    .order-detail {
+      background: #fff;
+      border: 1px solid #cccccc;
+      font-size: 14px;
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      line-height: 20px;
+      color: #7d7d7d;
+
+      border: 1px solid #4CA5E4;
+      color: #4CA5E4;
+    }
+
+    .order-action {
+      background: #fff;
+      border: 1px solid #cccccc;
+      font-size: 14px;
+      color: #7d7d7d;
+
+      border: 1px solid #4CA5E4;
+      color: #4CA5E4;
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &.zhifu {
+        background: #4CA5E4;
+        border-color: #4CA5E4;
+        color: #fff;
+      }
+
+      &.shanchu {
+        background: #4CA5E4;
+        border-color: #4CA5E4;
+        color: #fff;
+      }
+      &.shouhuo {
+        background: #4CA5E4;
+        border-color: #4CA5E4;
+        color: #fff;
+      }
+    }
+  }
+}
