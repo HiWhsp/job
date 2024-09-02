@@ -190,6 +190,7 @@ export default {
   width: 1200px;
   height: 1920px;
   padding: 21px 0 53px 0;
+  margin: auto;
 }
 
 .CategoryLayout {
