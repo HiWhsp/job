@@ -89,6 +89,12 @@ body {
     overflow: hidden;
   }
 }
+
+.page {
+  width: 1200px;
+  padding: 21px 0 53px 0;
+  margin: auto;
+}
 .layout-box {
   background-color: #F6F5F4;
 }

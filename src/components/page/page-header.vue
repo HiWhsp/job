@@ -15,8 +15,30 @@
             <img src="../../static/home/phone.png" alt="dianhua" class="img-1">400-085-7709
           </div>
           <div class="col"></div>
-          <div class="flex">我的消息<span class="color-a6">({{ numList.message }})</span><img
-              src="../../static/home/down.png" class="img-2"></div>
+          <el-popover
+              placement="bottom"
+              width="650"
+              trigger="click"
+          >
+            <div class="InfomationPopover">
+              <div class="InfomationPopover-title">我的未读消息</div>
+              <div class="InfomationPopover-content">
+                <div class="content-item">
+                  <span class="ellipsis-1">您的报价单FAQP2405088242在报价有效期内未完成订购，报价已失效，点击查看</span>
+                  <span class="item-time">2024-06-07 15:39</span>
+                </div>
+              </div>
+              <div class="InfomationPopover-bottom"><span>可前往消息中心，</span>
+                <span class="msg-more pointer">查看更多</span>
+                <img src="../../static/home/right-back.png" alt="">
+              </div>
+            </div>
+            <div class="flex" slot="reference">
+              我的消息<span class="color-a6">({{ numList.message }})</span>
+              <img src="../../static/home/down.png" class="img-2">
+            </div>
+          </el-popover>
+
           <div class="col"></div>
           <div>我的订单<span class="color-a6">({{ numList.message }})</span></div>
           <div class="col"></div>
@@ -31,7 +53,7 @@
     <div class="info-box">
       <div class="content flex flex-between">
         <div class="l-box">
-          <img src="../../static/home/logo.png" alt="logo" class="img-1">
+          <img src="../../static/home/logo.png" alt="logo" class="img-1 pointer" @click="goUrl({url: '/'})">
           <span>运动组件采购商城</span>
         </div>
         <div class="m-box">
@@ -61,7 +83,7 @@
     </div>
     <div class="nav-box">
       <div class="content flex">
-        <div class="nav flex" v-for="(item, index) in navList" :key="index">
+        <div class="nav flex pointer" v-for="(item, index) in navList" :key="index" @click="goUrl(item)">
           <img class="img-0" :src="item.icon" alt="" v-if="item.position == 'l'">
           <span class="name">{{ item.title }}</span>
           <img class="img-1" :src="item.icon" alt="" v-if="item.position == 'r'">
@@ -81,7 +103,8 @@ export default {
         {
           title: '全部商品分类', // 名称
           icon: require('../../static/home/down_all.png'),
-          position: 'r'
+          position: 'r',
+          url: '/productCategories',
         },
         {
           title: '特惠商城', // 名称
@@ -120,6 +143,12 @@ export default {
         message: 0,
         shop: 0
       }
+    }
+  },
+  methods: {
+    // 跳转链接
+    goUrl(item) {
+      this.$router.push(item.url);
     }
   }
 }
@@ -220,6 +249,7 @@ export default {
       .search-hot {
         margin-top: 7px;
         font-size: 12px;
+
         .hot {
           margin-right: 16px;
           color: #86888A;
@@ -262,6 +292,7 @@ export default {
   .nav-box {
     .nav {
       margin-right: 60px;
+
       .name {
         font-family: Roboto, Roboto;
         font-weight: bold;
@@ -272,9 +303,11 @@ export default {
         text-transform: none;
       }
     }
+
     .nav:last-child {
       margin-right: 0;
     }
+
     .img-0 {
       width: 21.7px;
       height: 21.68px;
@@ -292,5 +325,80 @@ export default {
     }
   }
 
+}
+
+.InfomationPopover {
+  padding: 10px;
+  color: #77797b;
+
+  .InfomationPopover-title {
+    height: 30px;
+    color: #1c2023;
+    font-size: 14px;
+    font-weight: 700;
+    border-bottom: 1px solid #e6e9ea;
+  }
+
+  .InfomationPopover-content {
+    max-height: 180px;
+    margin-top: 15px;
+    overflow-y: scroll;
+    font-size: 14px;
+    color: #77797B;
+
+    .content-item {
+      display: flex;
+      height: 20px;
+      line-height: 20px;
+      cursor: pointer;
+
+      .content-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .content-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .item-title {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 10px
+      }
+
+      .item-time {
+        width: 110px;
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+    }
+
+  }
+
+  .InfomationPopover-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: #fff;
+  }
+
+  .InfomationPopover-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin-top: 12px;
+
+    img {
+      width: 5.28px;
+      height: 9.46px;
+    }
+
+    .msg-more {
+      color: #A66600;
+      margin-right: 5px;
+    }
+  }
 }
 </style>

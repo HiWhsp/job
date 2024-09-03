@@ -26,7 +26,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "index" */ "@/views/index.vue"),
     meta: {},
   },
-
+  // 商品分类
+  {
+    path: '/productCategories',
+    name: "productCategories",
+    component: () => import('@/views/product/classify.vue')
+  },
   {
     path: "*",
     redirect: "/",
@@ -36,9 +41,9 @@ const routes = [
 const scrollBehavior = (to, from, savedPosition) => {
   if (to.name == "technologyCenter") {
     let scrollTop = document.documentElement.scrollTop;
-    return { x: 0, y: scrollTop };
+    return {x: 0, y: scrollTop};
   }
-  return { x: 0, y: 0 };
+  return {x: 0, y: 0};
 };
 
 const router = new VueRouter({

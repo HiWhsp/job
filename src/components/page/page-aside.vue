@@ -1,57 +1,30 @@
 <template>
   <div class="aside">
-    <div class="inner">
-      <div class="list">
-        <div class="item" v-if="showTop" @click="toTop()">
-          <div class="item-inner">
-            <img src="@img/to-top.png" alt="" />
-          </div>
+    <div class="list flex flex-between">
+      <div class="item flex" v-for="(item, index) in list_util" :key="index" @mouseenter="on_mouseenter(index + 1)" @mouseleave="on_mouseleave">
+        <img :src="item.icon" alt="">
+        <p>{{ item.title }}</p>
+      </div>
+      <div class="item flex" v-if="showTop" @click="toTop()">
+        <div class="item-inner flex">
+          <img src="../../static/home/up-row.png" alt=""/>
+          <p>顶部</p>
         </div>
-
-        <!-- <div class="item" v-for="(item, index) in list_util" :key="index" @mouseenter="on_mouseenter(item)" @mouseleave="on_mouseleave(item)" @click="on_click_util(item)">
-          <div class="item-inner" v-if="item.title != '客服'">
-            <div class="cart-num" v-if="item.title == '购物车'">
-              {{ shopcart_count }}
-            </div>
-            <img :src="item.icon" alt="" />
-          </div>
-
-          <template v-if="item.title == '客服'">
-            <el-popover placement="right" trigger="hover">
-              <div class="pop-kefu">
-                <div class="pop-kefu-inner">
-                  <div class="kefu-tip">请微信扫描下方二维码</div>
-                  <img class="kefu-code" :src="webConfig.kefu_code" />
-                </div>
-              </div>
-
-              <div class="item-inner" slot="reference">
-                <img :src="item.icon" alt="" />
-              </div>
-            </el-popover>
-          </template>
-        </div> -->
       </div>
     </div>
+    <div class="modal" v-show="hoverIndex == 1">
+      <div class="qrcode"></div>
+      <p>微信咨询 李先生</p>
+    </div>
 
-    <div class="modal" v-show="hoverIndex == 2 || hoverIndex == 3">
-      <template v-if="hoverIndex == 2">
-        <div class="text-box">
-          <div class="text">联系方式</div>
-          <div class="phone">{{ "xxxxx" }}</div>
-        </div>
-      </template>
-      <template v-if="hoverIndex == 3">
-        <div class="img-box">
-          <!-- <img :src="fixInfo.wechat" alt /> -->
-        </div>
-      </template>
+    <div class="pop-kefu" v-show="hoverIndex == 2">
+      <p>业务咨询： </p>
+      <p>13953657709 李先生</p>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
 
 export default {
   name: "common-aside",
@@ -61,16 +34,13 @@ export default {
     return {
       hoverIndex: "",
       list_util: [
-        // { title: "购物车", icon: require("@img/other/aside-shopcart.png") },
-        // { title: "客服", icon: require("@img/other/aside-kefu.png") },
-        // { title: "收藏", icon: require("@img/other/aside-favourite.png") },
+        {title: "微信咨询", icon: require("../../static/home/wexin.png")},
+        {title: "电话咨询", icon: require("../../static/home/dianhua.png")},
+        {title: "在线咨询", icon: require("../../static/home/im.png")},
       ],
 
       showTop: false,
     };
-  },
-  computed: {
-    ...mapState(["shopcart_count", "webConfig"]),
   },
   watch: {},
 
@@ -96,7 +66,6 @@ export default {
       } else {
         this.showTop = false;
       }
-      // //console.log("滚动监听", new Date(), scrollTop);
     },
 
     toTop() {
@@ -111,25 +80,6 @@ export default {
       //console.log("鼠标移出", item);
       this.hoverIndex = "";
     },
-
-    on_click_util(item) {
-      //console.log("点击", item);
-
-      document.documentElement.scrollTop = 0;
-
-      return;
-
-      let title = item.title;
-
-      if (title == "回到顶部") {
-        document.documentElement.scrollTop = 0;
-      } else if (title == "购物车") {
-        this.$router.push("/cart");
-      }
-      //  else if (title == "客服") {
-      //   this.$router.push("/contact");
-      // }
-    },
   },
 };
 </script>
@@ -140,68 +90,46 @@ export default {
   position: fixed;
   right: 50px;
   bottom: 150px;
-
-  // height: 151.45px;
-  // height: 50px;
-  background: #cccccc;
-  border-radius: 0;
-
-  .inner {
-  }
 }
 
 // 工具列表
 .list {
-  display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  width: 63px;
+  background: #FFFFFF;
+  border-radius: 8px 8px 8px 8px;
+  padding: 0 5px;
+
   .item {
     position: relative;
     cursor: pointer;
-    .flex-center();
-    // width: 50px;
-    // height: 50px;
-    // transition: 0.3s;
-
     width: 60px;
-    height: 60px;
+    height: 62px;
     background: #ffffff;
-    box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.1);
-    border-radius: 4px 4px 4px 4px;
-
-    &:nth-child(1) {
-      background: #ff9312;
-    }
-    &:nth-child(1) {
-      background: #fff;
-    }
-    &:nth-child(2) {
-      background: #ea5959;
-    }
-    &:nth-child(3) {
-      background: #f13f17;
-    }
+    transition: 0.3s;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom: 1px solid #eee;;
 
     &:hover {
       opacity: 0.6;
     }
 
     img {
-      height: 32px;
+      height: 20px;
+      width: 22px;
     }
 
-    .cart-num {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 19px;
-      height: 19px;
-      background: #ffffff;
-      border: 1px solid #ff9312;
-      border-radius: 50%;
-      font-size: 10px;
-      color: #ff9312;
-    }
+  }
+}
+
+.item-inner {
+  flex-direction: column;
+
+  img {
+    width: 13.52px !important;
+    height: 7.39px !important;
+    margin-bottom: 5px;
   }
 }
 
@@ -209,48 +137,46 @@ export default {
 .modal {
   position: absolute;
   border: 1px solid #eee;
-  top: 70px;
-  right: 49px;
-  width: 130px;
+  top: -68px;
+  right: 65px;
+  width: 110px;
   height: 130px;
   background: #fff;
-  padding: 7px;
+  padding: 10px;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #000;
-
-  img {
-    width: 100%;
-    height: 100%;
+  .qrcode {
+    width: 87px;
+    height: 85px;
+    background: #333333;
+    border-radius: 0px 0px 0px 0px;
   }
 
-  .text-box {
-    font-size: 16px;
-    .text {
-    }
-    .phone {
-      margin-top: 30px;
-    }
+  p {
+    font-size: 12px;
+    color: #333333;
+    margin-top: 10px;
   }
 }
 
 // 联系客服
 .pop-kefu {
-  .pop-kefu-inner {
-    text-align: center;
-    .kefu-tip {
-      text-align: center;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-    .kefu-code {
-      width: 200px;
-    }
+  position: absolute;
+  top: 72px;
+  right: 65px;
+  background: #fff;
+  padding: 7px;
+
+  width: 132px;
+  height: 52px;
+  border-radius: 0px 0px 0px 0px;
+
+  font-weight: 400;
+  font-size: 12px;
+  color: #333333;
+  font-style: normal;
+  text-transform: none;
+  p:last-child {
+    margin-top: 8px;
   }
 }
 </style>
-
-<style scoped lang="less" src="@/assets/h5css/common/pageAside.less"></style>

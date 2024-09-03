@@ -1,8 +1,5 @@
 <template>
   <div class="order-list-wrap">
-
-
-
     <div class="info-item" v-for="(item, index) in list" :key="index">
       <div class="info-title">
         <div class="date">{{ item.createdTime }}</div>
@@ -82,7 +79,7 @@
     <order_delete_modal ref="order_delete_modal" @confirm="emitConfirm" data-type="删除" />
     <order_receive_modal ref="order_receive_modal" @confirm="emitConfirm" data-type="收货" />
     <order_refund_modal ref="order_refund_modal" @confirm="emitConfirm" data-type="售后"/>
-    
+
   </div>
 </template>
 
