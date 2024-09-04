@@ -32,6 +32,30 @@ const routes = [
     name: "productCategories",
     component: () => import('@/views/product/classify.vue')
   },
+  // 商品详情
+  {
+    path: '/productDetail',
+    name: "productCategories",
+    component: () => import('@/views/product/detail.vue')
+  },
+
+
+  // 登录相关
+  {
+    path: '/register',
+    name: "register",
+    component: () => import('@/views/account/register.vue')
+  },
+  {
+    path: '/login',
+    name: "login",
+    component: () => import('@/views/account/login.vue')
+  },
+  {
+    path: '/retrieve',
+    name: "retrieve",
+    component: () => import('@/views/account/retrieve.vue')
+  },
   {
     path: "*",
     redirect: "/",

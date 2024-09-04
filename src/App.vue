@@ -174,6 +174,24 @@ body {
   border-color: #4CA5E4 !important;
 }
 
+.el-pagination.is-background .btn-next,
+.el-pagination.is-background .btn-prev,
+.el-pagination.is-background .el-pager li {
+  background-color: #f4f4f5 !important;
+  min-width: 30px !important;
+  height: 30px;
+  line-height: 30px;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled):hover {
+  color: @theme !important;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background-color: @theme !important;
+  color: #fff !important;
+}
+
 .pagination-box {
   text-align: center;
 }
@@ -231,5 +249,27 @@ button {
   &:hover {
     opacity: 0.7;
   }
+}
+
+/* 针对整个页面 */
+::-webkit-scrollbar {
+  width: 12px; /* 宽度 */
+  height: 12px; /* 高度 */
+}
+
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+  background-color: #A66600; /* 颜色 */
+  border-radius: 6px; /* 边角弧度 */
+}
+
+/* 在悬停时 */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* 悬停颜色 */
+}
+
+/* 滚动条轨道 */
+::-webkit-scrollbar-track {
+  background: #E6E4E1; /* 轨道颜色 */
 }
 </style>

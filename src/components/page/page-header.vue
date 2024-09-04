@@ -290,6 +290,7 @@ export default {
   }
 
   .nav-box {
+    border-bottom: 4px solid #A66600;;
     .nav {
       margin-right: 60px;
 
