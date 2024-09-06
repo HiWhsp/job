@@ -8,7 +8,7 @@ const ROOT = "https://shbxx.dx.hdapp.com.cn";
 export const API_ROOT = ROOT;
 
 // 商城类型 - 空-默认国内普通商城  foreign-海外商城 (地址管理不一样 账号登录注册等)
-export const SHOP_TYPE = 'foreign';
+export const SHOP_TYPE = '';
 
 
 // 上传

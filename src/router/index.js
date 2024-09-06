@@ -26,6 +26,8 @@ const routes = [
     component: () => import(/* webpackChunkName: "index" */ "@/views/index.vue"),
     meta: {},
   },
+
+  /** 商品相关 **/
   // 商品分类
   {
     path: '/productCategories',
@@ -39,8 +41,46 @@ const routes = [
     component: () => import('@/views/product/detail.vue')
   },
 
+  /** 导航路由 **/
+  // 特惠商城
+  {
+    path: '/discountShop',
+    name: 'discountShop',
+    component: () => import('@/views/nav/discountShop.vue')
+  },
+  // 低价商城
+  {
+    path: '/lowPriceShop',
+    name: 'lowPriceShop',
+    component: () => import('@/views/nav/lowPriceShop.vue')
+  },
+  // 每月新款
+  {
+    path: '/newMonthShop',
+    name: 'newMonthShop',
+    component: () => import('@/views/nav/newMonthShop.vue')
+  },
+  // 非标定制
+  {
+    path: '/nonstandard',
+    name: 'nonstandard',
+    component: () => import('@/views/nav/nonstandard.vue')
+  },
+  // 非标定制提交成功页面
+  {
+    path: '/nonstandard_success',
+    name: 'nonstandard_success',
+    component: () => import('@/views/nav/nonstandard_success.vue')
+  },
+  // 快速报价
+  {
+    path: '/fastQuotation',
+    name: 'fastQuotation',
+    component: () => import('@/views/nav/fastQuotation.vue')
+  },
 
-  // 登录相关
+
+  /** 登录相关 **/
   {
     path: '/register',
     name: "register",
@@ -56,6 +96,22 @@ const routes = [
     name: "retrieve",
     component: () => import('@/views/account/retrieve.vue')
   },
+
+  // 购物车
+  {
+    path: '/cart',
+    name: 'cart',
+    component: () => import('@/views/cart/cart.vue')
+  },
+
+  /** 订单相关 **/
+  {
+    path: '/orderSubmit',
+    name: 'orderSubmit',
+    component: () => import('@/views/order/order-submit.vue')
+  },
+
+
   {
     path: "*",
     redirect: "/",

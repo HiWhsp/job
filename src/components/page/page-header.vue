@@ -5,9 +5,9 @@
         <div class="l-box flex">
           <span class="name">富俊机械运动组件采购商城</span>
           <div class="tools-btn flex">
-            <div class="login pointer">登录</div>
+            <div class="login pointer" @click="goUrl({url: '/login'})">登录</div>
             <div class="col"></div>
-            <div class="register pointer">注册</div>
+            <div class="register pointer" @click="goUrl({url: '/register'})">注册</div>
           </div>
         </div>
         <div class="r-box flex pointer">
@@ -71,9 +71,11 @@
         </div>
         <div class="r-box">
           <div class="flex">
-            <div class="tools-btn pointer flex"><img class="img-2" src="../../static/home/gouwuche.png" alt="">购物车
+            <div class="tools-btn pointer flex" @click="goUrl({url: '/cart'})">
+              <img class="img-2" src="../../static/home/gouwuche.png" alt="">购物车
             </div>
-            <div class="tools-btn pointer flex"><img class="img-3" src="../../static/home/wexin.png" alt="">微信公众号
+            <div class="tools-btn pointer flex">
+              <img class="img-3" src="../../static/home/wexin.png" alt="">微信公众号
             </div>
           </div>
           <div class="hot">
@@ -109,29 +111,38 @@ export default {
         {
           title: '特惠商城', // 名称
           icon: require('../../static/home/hot-shop.png'),
-          position: 'l'
+          position: 'l',
+          url: '/discountShop'
         },
         {
           title: '低价爆款专区', // 名称
           icon: null,
-          position: null
-        }, {
+          position: null,
+          url: '/lowPriceShop'
+        },
+        {
           title: '每月新款专区', // 名称
           icon: require('../../static/home/hot-new.png'),
-          position: 'l'
-        }, {
+          position: 'l',
+          url: '/newMonthShop'
+        },
+        {
           title: '定制组件专区', // 名称
           icon: null,
           position: null
-        }, {
+        },
+        {
           title: 'DIY 组件专区', // 名称
           icon: null,
           position: null
-        }, {
+        },
+        {
           title: '非标定制', // 名称
           icon: null,
-          position: null
-        }, {
+          position: null,
+          url: '/nonstandard'
+        },
+        {
           title: '快速报价', // 名称
           icon: null,
           position: null
@@ -291,6 +302,7 @@ export default {
 
   .nav-box {
     border-bottom: 4px solid #A66600;;
+
     .nav {
       margin-right: 60px;
 

@@ -800,7 +800,7 @@ export default {
       background-image: url("../static/home/back-left.png");
       background-repeat: no-repeat;
       background-size: 100% 100%;
-      background-color: #fff;
+      background-color: transparent;
       left: -7px;
 
       .el-icon-arrow-left {
@@ -809,7 +809,7 @@ export default {
     }
 
     .el-carousel__arrow:hover {
-      background-color: #fff;
+      background-color: transparent;
     }
 
     /deep/ .el-carousel__arrow--right {
@@ -818,7 +818,7 @@ export default {
       height: 49px;
       background-repeat: no-repeat;
       background-size: 100% 100%;
-      background-color: #fff;
+      background-color: transparent;
       right: -7px;
 
       .el-icon-arrow-right {

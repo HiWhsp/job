@@ -10,7 +10,7 @@
     >
       <div class="modal-inner">
         <div class="text-box">
-          <img src="@/static/product/product-add-success.png" alt />
+<!--          <img src="@/static/product/product-add-success.png" alt />-->
           支付结果查询中，请稍后...
         </div>
       </div>

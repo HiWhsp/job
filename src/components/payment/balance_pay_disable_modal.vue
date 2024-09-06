@@ -3,7 +3,7 @@
     <el-dialog title="余额支付" width="580px" custom-class="modal-wrap" :close-on-click-modal="true" :visible.sync="showModal" :before-close="onModal_close">
       <div class="modal-inner">
         <div class="img-box">
-          <img src="@/static/payment/pay-warn.png" alt="" />
+<!--          <img src="@/static/payment/pay-warn.png" alt="" />-->
         </div>
         <div class="tip">余额不足</div>
         <div class="texts">

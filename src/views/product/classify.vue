@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="goods-wrap">
-        <div class="product-list flex flex-between">
+        <div class="product-list flex">
           <div class="product-item flex" v-for="(item, index)  in list_goods" :key="index" @click="toDetail(item)">
             <div class="poster-box scale-box">
               <img :src="item.thumb" alt="" class="poster scale-img">
@@ -365,6 +365,8 @@ export default {
       flex-direction: column;
       padding: 15px;
       margin-bottom: 20px;
+      margin-right: 14px;
+
       &:hover {
         .title {
           color: @theme !important;
@@ -417,6 +419,10 @@ export default {
           }
         }
       }
+    }
+
+    .product-item:nth-child(5n) {
+      margin-right: 0;
     }
   }
 }
