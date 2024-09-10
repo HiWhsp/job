@@ -10,7 +10,8 @@
       <div class="inner">
         <div class="tab-wrap">
           <div class="tab-box">
-            <div class="tab-item" v-for="(item, index) in list_tab" :key="index" @click="tab_toggle(item)" :class="status == item.status ? 'active' : ''">
+            <div class="tab-item" v-for="(item, index) in list_tab" :key="index" @click="tab_toggle(item)"
+                 :class="status == item.status ? 'active' : ''">
               {{ item.title }}
             </div>
           </div>
@@ -18,29 +19,31 @@
           <div class="lingquan" @click="$router.push('/couponCenter')">
             <!-- <img src="@img/other/mycoupon-to-center.png" alt="" class="coupon" /> -->
             <span>进入领券中心 </span>
-            <img src="@img/order-more.png" alt="" class="arrow" />
+            <img src="@/static/order/more.png" alt="" class="arrow"/>
           </div>
         </div>
 
         <div class="ctx-box">
           <div class="yhq-list" v-if="list_yhq.length">
             <div class="yhq-item-box" v-for="(item, index) in list_yhq" :key="index">
-              <img v-if="item.status == 1" src="@img/coupon-used.png" alt="" class="used-img" />
-              <img v-if="item.status == 2" src="@img/coupon-guoqi.png" alt="" class="used-img" />
+              <img v-if="item.status == 1" src="@/static/order/coupon-used.png" alt="" class="used-img"/>
+              <img v-if="item.status == 2" src="@/static/order/coupon-guoqi.png" alt="" class="used-img"/>
 
               <div class="yhq-item" :class="{ used: item.status == 1 || item.status == 2  }">
                 <div class="yhq-left">
-                  <img :src="item.originalPic" alt="" />
+                  <img :src="item.originalPic" alt=""/>
                 </div>
                 <div class="yhq-right">
                   <div class="money">
-                    <div class="currency">{{vuex_huobi}}</div>
+                    <div class="currency">{{ vuex_huobi }}</div>
                     <div class="num">{{ item.jian }}</div>
                   </div>
                   <div class="tiaojian">使用条件： 满{{ item.man }}可用</div>
                   <div class="shijian">有效时间： {{ item.startTime }} - {{ item.endTime }}</div>
                   <div class="action">
-                    <button v-if="status == 1" class="btn-ripple btn-pick btn-lingqu" @click="coupon_use(item)">立即使用</button>
+                    <button v-if="status == 1" class="btn-ripple btn-pick btn-lingqu" @click="coupon_use(item)">
+                      立即使用
+                    </button>
                     <!-- <button class="btn-ripple btn-pick btn-yilingqu" disabled v-else>已领取</button> -->
                   </div>
                 </div>
@@ -54,7 +57,7 @@
             <div class="item" :class="'state-' + status" v-for="(item, index) in list_yhq" :key="index">
               <div class="info">
                 <div class="title">
-                  <span class="huobi">{{vuex_huobi}} </span>
+                  <span class="huobi">{{ vuex_huobi }} </span>
                   <span class="num">{{ item.jian }}</span>
                 </div>
                 <div class="tiaojian">
@@ -70,9 +73,8 @@
                 <button :disabled="status != 1" @click="coupon_use(item)">立即使用</button>
               </div>
               <div class="guoqi">
-                <!-- <img v-if="status == 1" :src="jijiangguoqi" alt /> -->
-                <img v-if="status == 2" :src="yishiyong" alt />
-                <img v-if="status == 3" :src="yiguoqi" alt />
+                <img v-if="status == 2" :src="yishiyong" alt/>
+                <img v-if="status == 3" :src="yiguoqi" alt/>
               </div>
             </div>
           </div>
@@ -83,27 +85,25 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
-const jijiangguoqi = require("@img/coupon/jijiangguoqi.png");
-const yiguoqi = require("@img/coupon/yiguoqi.png");
-const yishiyong = require("@img/coupon/yishiyong.png");
+const yiguoqi = require("@/static/order/yiguoqi.png");
+const yishiyong = require("@/static/order/yishiyong.png");
 
 export default {
   name: "servicePage",
   components: {},
   data() {
     return {
-      jijiangguoqi,
       yiguoqi,
       yishiyong,
 
       status: 1,
       list_tab: [
         // { title: "全部", status: 0 },
-        { title: "未使用", status: 1 },
-        { title: "已使用", status: 2 },
-        { title: "已过期", status: 3 },
+        {title: "未使用", status: 1},
+        {title: "已使用", status: 2},
+        {title: "已过期", status: 3},
       ],
 
       list_yhq: [],
@@ -128,7 +128,7 @@ export default {
       this.$api("users_myYhqList", {
         scene: this.status,
       }).then((res) => {
-        let { code, data } = res;
+        let {code, data} = res;
         if (code == 200) {
           this.list_yhq = data;
         }
@@ -148,6 +148,7 @@ export default {
 .page {
   text-align: left;
   padding-bottom: 80px;
+
   .main-title {
     .flex-between();
     padding: 0 32px;
@@ -191,6 +192,7 @@ export default {
       // border-bottom: 1px solid #eee;
 
       .flex();
+
       .tab-item {
         cursor: pointer;
         padding-bottom: 10px;
@@ -225,6 +227,7 @@ export default {
         width: 14px;
         margin-left: 8px;
       }
+
       span {
         margin-left: 10px;
         font-size: 16px;
@@ -253,6 +256,7 @@ export default {
       &.state-2 {
         background: url(~@img/coupon/bg-yishiyong.png) center / cover no-repeat;
       }
+
       &.state-3 {
         background: url(~@img/coupon/bg-yiguoqi.png) center / cover no-repeat;
       }
@@ -270,6 +274,7 @@ export default {
 
         .title {
           margin-top: 25px;
+
           .huobi {
             font-size: 24px;
             font-family: Microsoft YaHei;
@@ -277,6 +282,7 @@ export default {
             line-height: 20px;
             color: #ffffff;
           }
+
           .num {
             font-size: 36px;
             font-family: Microsoft YaHei;
@@ -285,15 +291,19 @@ export default {
             color: #ffffff;
           }
         }
+
         .tiaojian {
           margin: 20px 0 10px;
         }
+
         .shijian {
         }
       }
+
       .action {
         margin-top: 43px;
         text-align: center;
+
         button {
           width: 122px;
           height: 34px;
@@ -322,6 +332,7 @@ export default {
         position: absolute;
         bottom: 0;
         right: 0;
+
         img {
           width: 60px;
           vertical-align: bottom;
@@ -343,11 +354,13 @@ export default {
     .yhq-left {
       width: 786px;
       height: 252px;
+
       img {
         width: 100%;
         height: 100%;
       }
     }
+
     .yhq-right {
       flex: 1;
       height: 252px;
@@ -357,12 +370,14 @@ export default {
       .money {
         display: flex;
         align-items: flex-start;
+
         .currency {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
           color: #4CA5E4;
         }
+
         .num {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
@@ -379,6 +394,7 @@ export default {
         color: #999999;
         line-height: 28px;
       }
+
       .shijian {
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -386,8 +402,10 @@ export default {
         color: #999999;
         line-height: 28px;
       }
+
       .action {
         margin-top: 30px;
+
         button {
           width: 127px;
           height: 36px;
@@ -420,8 +438,6 @@ export default {
   transform: translate(-50%, -50%);
 }
 </style>
-
-
 
 
 <style scoped lang="less" src="@/assets/h5css/user/myCoupon.less"></style>

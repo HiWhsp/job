@@ -77,7 +77,7 @@ export default {
         },
         {
           title: "我的优惠券",
-          route: "favorite-list",
+          route: "coupon-list",
         },
         {
           title: "领券中心",

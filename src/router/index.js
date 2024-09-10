@@ -237,6 +237,69 @@ const routes = [
           title: "领券中心",
           requireAuth: true,
         },
+      },
+      {
+        path: '/pointsDetail',
+        name: 'pointsDetail',
+        component: () => import('@/views/my/points/pointsDetail.vue'),
+        meta: {
+          title: "我的积分",
+          requireAuth: true
+        }
+      },
+      {
+        path: '/pointsMall',
+        name: 'pointsMall',
+        component: () => import('@/views/my/points/pointsMall.vue'),
+        meta: {
+          title: "积分商城",
+          requireAuth: true
+        }
+      },
+      {
+        path: '/feedback',
+        name: 'feedback',
+        component: () => import('@/views/my/feedback/feedback.vue'),
+        meta: {
+          title: "积分商城",
+          requireAuth: true
+        }
+      },
+      {
+        path: '/my-feedback',
+        name: 'my-feedback',
+        component: () => import('@/views/my/feedback/my-feedback.vue'),
+        meta: {
+          title: "积分商城",
+          requireAuth: true
+        }
+      },
+      {
+        path: "/address-list",
+        name: "address-list",
+        component: () => import('@/views/my/address/address-list.vue'),
+        meta: {
+          title: "我的地址",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/my-info",
+        name: "my-info",
+        component: () => import('@/views/my/my-info.vue'),
+        meta: {
+          title: "个人信息",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/change-password",
+        name: "change-password",
+        component: () => import('@/views/my/change-password.vue'),
+        meta: {
+          title: "修改密码",
+          requireAuth: true,
+        },
       }
     ]
   },
