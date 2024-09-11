@@ -105,7 +105,7 @@ axios.interceptors.response.use(
 );
 
 function api(action, data, method, uploaderConfig) {
-  console.log("接口请求", action);
+  // console.log("接口请求", action);
 
   let option = action;
 
@@ -117,12 +117,12 @@ function api(action, data, method, uploaderConfig) {
     method = option.method;
     reqData = option.data; //请求数据
 
-    reqData.userId = localStorage.getItem("userId") || "";
+    reqData.userId = localStorage.getItem("user_id") || "";
     reqData.token = localStorage.getItem("token") || "";
   } else {
     reqData = {
       action: action,
-      userId: localStorage.getItem("userId") || "",
+      userId: localStorage.getItem("user_id") || "",
       token: localStorage.getItem("token") || "",
       ...data,
     }; //请求数据

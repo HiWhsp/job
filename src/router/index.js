@@ -327,7 +327,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   let token = localStorage.getItem("token");
-  let userId = localStorage.getItem("userId");
+  let userId = localStorage.getItem("user_id");
   let user_is_login = token && userId;
 
   // debugger

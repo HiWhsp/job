@@ -8,47 +8,19 @@
               <img src="@/static/order/user.png" alt/>
             </div>
             <div class="name">
-              {{ mix_user_phone }}
+              {{ my_info.nickname }}
             </div>
           </div>
         </div>
         <div class="right">
-          <div class="text-1">{{ mix_user_name }}</div>
-          <!-- <div class="text-2">
-            <img src="@img/level-0.png" alt="" />
-            <span>{{ baseInfo.level }}</span>
-          </div> -->
+          <div class="text-1">{{ my_info.phone }}</div>
+          <div class="text-2">
+            <span>{{ my_info.levelTitle }}</span>
+          </div>
         </div>
       </div>
 
       <div class="section-2">
-        <!-- <div class="list">
-          <div class="item" @click="$router.push('/order-list?order_status=1')">
-            <div class="val">
-              <span>{{ user_index.order_num_1 || "0" }}</span>
-            </div>
-            <div class="label">待付款</div>
-          </div>
-          <div class="item" @click="$router.push('/order-list?order_status=2')">
-            <div class="val">
-              <span>{{ user_index.order_num_2 || "0" }}</span>
-            </div>
-            <div class="label">待发货</div>
-          </div>
-          <div class="item" @click="$router.push('/order-list?order_status=3')">
-            <div class="val">
-              <span>{{ user_index.order_num_3 || "0" }}</span>
-            </div>
-            <div class="label">待收货</div>
-          </div>
-          <div class="item" @click="$router.push('/order-list?order_status=4')">
-            <div class="val">
-              <span>{{ user_index.order_num_4 || "0" }}</span>
-            </div>
-            <div class="label">待评价</div>
-          </div>
-        </div> -->
-
         <div class="list">
           <div class="item" @click="$router.push('/order-list?order_status=1')">
             <div class="val">
@@ -56,26 +28,19 @@
             </div>
             <div class="label">全部订单</div>
           </div>
-          <div class="item" @click="$router.push('/cart')">
+          <div class="item" @click="$router.push('/order-list?order_status=1')">
             <div class="val">
-              <span>{{ my_info.cartNum || "0" }}</span>
+              <span>{{ user_index.order_num_1 || "0" }}</span>
             </div>
-            <div class="label">购物车</div>
+            <div class="label">待付款</div>
           </div>
-          <div class="item" @click="$router.push('/favorite-list')">
+          <div class="item" @click="$router.push('/order-list?order_status=3')">
             <div class="val">
-              <span>{{ my_info.shoucangNum || "0" }}</span>
+              <span>{{ user_index.order_num_3 || "0" }}</span>
             </div>
-            <div class="label">我的收藏</div>
-          </div>
-          <div class="item" @click="$router.push('/order-list?status=6')">
-            <div class="val">
-              <span>{{ my_info.orderNeedComment || "0" }}</span>
-            </div>
-            <div class="label">待评价</div>
+            <div class="label">待收货</div>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -84,7 +49,7 @@
         <div class="label">最近订单</div>
         <router-link to="/order-list" class="action">
           <span>全部订单</span>
-          <img src="@/static/order/more.png" alt=""/>
+          <img src="@/static/order/more.png" alt/>
         </router-link>
       </div>
 
@@ -143,11 +108,6 @@ export default {
     emitConfirm() {
       this.query_order()
     },
-    // uploadSuccess(col, data) {
-    //   if (data.code == 200) {
-    //     this.uploadImg = data.image;
-    //   }
-    // },
 
     setView() {
       this.query_user();
@@ -155,8 +115,8 @@ export default {
       this.query_order();
       this.query_goods();
     },
+    //
     query_user() {
-      // this.$store.dispatch("query_user");
       this.$api({
         url: '/service.php',
         method: 'get',
@@ -165,7 +125,7 @@ export default {
         },
       }).then(res => {
         if (res.code == 200) {
-          this.my_info = res.data
+          this.my_info = res.data;
         }
       })
     },

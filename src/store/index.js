@@ -87,7 +87,7 @@ export default new Vuex.Store({
     vuex_cart_number: 0,
 
     //
-    vuex_huobi: "$",
+    vuex_huobi: "￥",
     index_banners: [],
     map_banners: {
       关于我们: [],
@@ -192,14 +192,14 @@ export default new Vuex.Store({
     //设置基本信息
     set_baseInfo(state, data) {
       // //console.log("设置用户信息", { ...data });
-      let { token, userId, id, level, level_rules } = data;
+      let { token, user_id, id, level, level_rules } = data;
 
       state.vuex_is_login = true;
       state.token = token;
-      state.userId = userId || id;
+      state.user_id = user_id || id;
 
       localStorage.setItem("token", token);
-      localStorage.setItem("userId", userId || id);
+      localStorage.setItem("user_id", user_id || id);
 
       // if (level_rules) {
       //   //处理

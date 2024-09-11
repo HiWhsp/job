@@ -25,12 +25,13 @@
 
             <div class="box-title">
               <div class="goods-title" @click="mix_to_product(product_item)">{{ product_item.title }}</div>
+              <div class="goods-sku">型号：{{ product_item.keyVals }}</div>
             </div>
             <div class="box-sku">
               <div class="goods-sku">{{ product_item.keyVals }}</div>
             </div>
             <div class="box-num">
-              x {{ product_item.num }}
+              {{ product_item.num }}
             </div>
             <div class="box-price">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
           </div>
@@ -286,19 +287,17 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
-      color: #999999;
-      color: #4CA5E4;
 
       // 待付款
       &.state--5 {
-        // background: #ff4c29;
-        // border-color: #ff4c29;
-        // color: #fff;
+        //background: #ff4c29;
+        //border-color: #ff4c29;
+        color: #EA3200;
       }
 
       &.state-2 {
-        color: #4CA5E4;
-        border-color: #4CA5E4;
+        color: #A66600;
+        border-color: #A66600;
       }
     }
   }
@@ -307,7 +306,7 @@ export default {
     .list-good {
       .item-good {
         padding: 20px;
-        border-bottom: 1px dashed #ccc;
+        border-bottom: 1px solid #e5e5e5;
 
         font-family: OPPOSans, OPPOSans;
         font-weight: 400;
@@ -351,7 +350,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #4CA5E4;
+              color: #A66600;
             }
           }
         }
@@ -371,9 +370,9 @@ export default {
           min-width: 200px;
 
           font-family: OPPOSans, OPPOSans;
-          font-weight: 400;
+          font-weight: bold;
           font-size: 14px;
-          color: #FF0000;
+          color: #333;
         }
       }
     }
@@ -400,13 +399,13 @@ export default {
         margin-right: 30px;
 
         b {
-          color: #4CA5E4;
+          color: #EA3200;
         }
       }
 
       .heji-money {
         b {
-          color: #4CA5E4;
+          color: #EA3200;
         }
       }
     }
@@ -417,12 +416,12 @@ export default {
         min-width: 120px;
         height: 32px;
         background: #FFFFFF;
-        border-radius: 50px 50px 50px 50px;
-        border: 1px solid #4CA5E4;
+        border-radius: 4px;
+        border: 1px solid #A66600;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #4CA5E4;
+        color: #A66600;
 
         &+button {
           margin-left: 20px;
@@ -433,7 +432,7 @@ export default {
         }
 
         &.btn-bg {
-          background: #4CA5E4;
+          background: #A66600;
           color: #FFFFFF;
         }
       }

@@ -33,7 +33,7 @@ export default {
   components: {},
   // props: [""],
   data() {
-    let userId = localStorage.getItem("userId") || "";
+    let user_id = localStorage.getItem("userId") || "";
     const registerLink = location.origin + "/register?invite=" + userId || location.href;
 
     return {

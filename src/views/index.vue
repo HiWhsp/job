@@ -13,7 +13,8 @@
               <div class="submenu-item">
                 <div class="submenu-item-name">{{ item.title }}</div>
                 <div class="submenu-item-content">
-                  <a :title="it.title" class="submenu-item-content__a pointer" v-for="(it, i) in item.children" :key="i">
+                  <a :title="it.title" class="submenu-item-content__a pointer" v-for="(it, i) in item.children"
+                     :key="i">
                     <span>{{ it.title }}</span>
                   </a></div>
               </div>
@@ -34,8 +35,8 @@
         <div class="info-box">
           <p>Hi 欢迎来到富俊商城</p>
           <div class="info-btn flex flex-between">
-            <div class="login-btn pointer">登录</div>
-            <div class="register-btn pointer">注册</div>
+            <div class="login-btn pointer" @click="goUrl({url: '/login'})">登录</div>
+            <div class="register-btn pointer" @click="goUrl({url: '/register'})">注册</div>
           </div>
         </div>
         <div class="my-serve">
@@ -361,6 +362,10 @@ export default {
         }
       });
     },
+    // 跳转链接
+    goUrl(item) {
+      this.$router.push(item.url);
+    }
   },
 }
 
