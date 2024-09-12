@@ -141,7 +141,7 @@ export default {
     margin-top: 35px;
     width: 191px;
     height: 46px;
-    background: #A66600;
+    background: @theme;
     font-family: Roboto, Roboto;
     font-weight: 400;
     font-size: 16px;

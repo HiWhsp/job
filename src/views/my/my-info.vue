@@ -1,11 +1,8 @@
 <template>
   <div class="page">
-
-
     <div class="main-title">
       <span>个人资料</span>
     </div>
-
     <div class="page-ctx">
       <div class="section">
         <div class="section-title">基本信息</div>
@@ -15,10 +12,10 @@
             <span class="info">
               <div class="upload-box">
                 <el-upload class="upload-demo" accept="image/*" :show-file-list="false" :name="UPLOAD_NAME"
-                  :action="UPLOAD_ACTION" :data="mix_upload_data" :on-success="upload_on_success"
-                  :before-upload="upload_before_upload">
-                  <img v-if="form.image" :src="form.image" class="user-avatar" />
-                  <img v-else src="@/static/common/avatar.png" class="user-avatar" />
+                           :action="UPLOAD_ACTION" :data="mix_upload_data" :on-success="upload_on_success"
+                           :before-upload="upload_before_upload">
+                  <img v-if="form.image" :src="form.image" class="user-avatar"/>
+                  <img v-else src="@/static/common/avatar.png" class="user-avatar"/>
                 </el-upload>
               </div>
             </span>
@@ -36,14 +33,14 @@
           <div class="item">
             <span class="text">真实姓名：</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.realName" />
+              <el-input clearable type="text" v-model="form.realName"/>
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">所在地区：</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.address" />
+              <el-input clearable type="text" v-model="form.address"/>
             </span>
             <span class="action"> </span>
           </div>
@@ -83,7 +80,8 @@
             <span class="text" style="visibility: hidden">-</span>
             <div class="info">
               <el-button class="btn-ripple fit-text btn-save" @click="throttle_do_submit()"
-                :loading="loading">保存</el-button>
+                         :loading="loading">保存
+              </el-button>
               <button class="btn-ripple fit-text btn-cancel" @click="do_reset()">清空</button>
             </div>
           </div>
@@ -91,21 +89,18 @@
       </div>
     </div>
 
-    <phone_bind_old_check_modal ref="phone_bind_old_check_modal" data-title="校验" @confirm="confirm_old_pass" />
-    <phone_bind_new_set_modal ref="phone_bind_new_set_modal" data-title="绑定" @confirm="confirm_new" />
+    <phone_bind_old_check_modal ref="phone_bind_old_check_modal" data-title="校验" @confirm="confirm_old_pass"/>
+    <phone_bind_new_set_modal ref="phone_bind_new_set_modal" data-title="绑定" @confirm="confirm_new"/>
 
 
   </div>
 </template>
 
 <script>
-import { UPLOAD_ACTION, UPLOAD_NAME } from '@/config/env.js'
+import {UPLOAD_ACTION, UPLOAD_NAME} from '@/config/env.js'
 
 import phone_bind_old_check_modal from "@/components/account/phone_bind_old_check_modal.vue";
 import phone_bind_new_set_modal from "@/components/account/phone_bind_new_set_modal.vue";
-
-
-import { mapState } from "vuex";
 
 export default {
   name: "servicePage",
@@ -126,9 +121,6 @@ export default {
       },
       loading: false,
     };
-  },
-  computed: {
-    ...mapState(["baseInfo"]),
   },
   watch: {},
   created() {
@@ -154,7 +146,6 @@ export default {
       this.query_user();
     },
     query_user() {
-      // this.$store.dispatch("query_user");
       this.$api({
         url: '/service.php',
         method: 'get',
@@ -188,7 +179,7 @@ export default {
           ...this.form
         },
       }).then((res) => {
-        let { code, msg, data } = res;
+        let {code, msg, data} = res;
         alert(res).then(() => {
           this.loading = false;
         });
@@ -210,7 +201,7 @@ export default {
     //上传相关
     upload_on_success(res, file) {
       //console.log("上传结果", res);
-      let { code, data, msg } = res;
+      let {code, data, msg} = res;
       alert(res);
       if (code == 200) {
         this.form.image = res.data;
@@ -249,7 +240,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #4CA5E4;
+      background: ;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -258,7 +249,7 @@ export default {
 
   .page-ctx {
     margin-top: 24px;
-    padding: 80px 100px;
+    padding: 20px 30px;
     background: #fff;
   }
 }
@@ -274,7 +265,7 @@ export default {
     }
 
     .section-title {
-      margin-bottom: 50px;
+      margin-bottom: 30px;
       font-size: 16px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
@@ -287,8 +278,8 @@ export default {
 
     .upload-box {
       img {
-        width: 100px;
-        height: 100px;
+        width: 88px;
+        height: 88px;
         border-radius: 50%;
       }
     }
@@ -334,7 +325,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: #4CA5E4;
+        color: @theme;
 
         span {
           margin-right: 20px;
@@ -356,12 +347,12 @@ export default {
     width: 120px;
     height: 32px;
     background: #FFFFFF;
-    border-radius: 50px 50px 50px 50px;
-    border: 1px solid #4CA5E4;
+    border-radius: 4px;
+    border: 1px solid @theme;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #4CA5E4;
+    color: @theme;
 
   }
 
@@ -369,8 +360,8 @@ export default {
     margin-left: 20px;
     width: 120px;
     height: 32px;
-    background: #4CA5E4;
-    border-radius: 50px 50px 50px 50px;
+    background: @theme;
+    border-radius: 4px;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
@@ -379,4 +370,3 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/user/my-info.less"></style>

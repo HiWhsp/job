@@ -154,7 +154,7 @@ export default {
         return;
       }
 
-      this.$api("users_phoneRegister", {
+      this.$api("login_phoneReg", {
         ...this.form,
         invite_id: this.$route.query.invite || "",
       }).then((res) => {

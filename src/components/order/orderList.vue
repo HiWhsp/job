@@ -296,8 +296,8 @@ export default {
       }
 
       &.state-2 {
-        color: #A66600;
-        border-color: #A66600;
+        color: @theme;
+        border-color: @theme;
       }
     }
   }
@@ -350,7 +350,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #A66600;
+              color: @theme;
             }
           }
         }
@@ -417,11 +417,11 @@ export default {
         height: 32px;
         background: #FFFFFF;
         border-radius: 4px;
-        border: 1px solid #A66600;
+        border: 1px solid @theme;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #A66600;
+        color: @theme;
 
         &+button {
           margin-left: 20px;
@@ -432,7 +432,7 @@ export default {
         }
 
         &.btn-bg {
-          background: #A66600;
+          background: @theme;
           color: #FFFFFF;
         }
       }

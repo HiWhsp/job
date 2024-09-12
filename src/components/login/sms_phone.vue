@@ -61,7 +61,7 @@ export default {
 
     //修改绑定邮箱
     retrieveByEmail() {
-      this.$api("users_sendSms", {
+      this.$api("login_phoneYzm", {
         phone: this.form.phone,
       }).then((res) => {
         //console.log("验证码", res);

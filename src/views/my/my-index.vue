@@ -258,7 +258,7 @@ export default {
     background: #ffffff;
     text-align: left;
     padding: 0 15px;
-    border: 1px solid #A66600;
+    border: 1px solid @theme;
     border-radius: 0 0 11px 11px;
 
     .text-1 {
@@ -280,7 +280,7 @@ export default {
         font-size: 14px;
         font-family: Roboto, Roboto;
         font-weight: 400;
-        color: #A66600;
+        color: @theme;
       }
     }
   }
@@ -323,7 +323,7 @@ export default {
           font-size: 32px;
           font-family: Roboto, Roboto;
           font-weight: normal;
-          color: #A66600;
+          color: @theme;
         }
       }
     }
@@ -352,7 +352,7 @@ export default {
     font-size: 14px;
     font-family: Roboto, Roboto;
     font-weight: 400;
-    color: #A66600;
+    color: @theme;
     cursor: pointer;
 
     img {
@@ -391,7 +391,7 @@ export default {
 
       .empty-action {
         font-size: 14px;
-        color: #A66600;
+        color: @theme;
       }
     }
   }

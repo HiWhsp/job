@@ -34,15 +34,18 @@
       <div class="info-panel">
         <div class="info-box">
           <p>Hi 欢迎来到富俊商城</p>
-          <div class="info-btn flex flex-between">
+          <div class="info-btn flex flex-between" v-if="!userInfo.id">
             <div class="login-btn pointer" @click="goUrl({url: '/login'})">登录</div>
             <div class="register-btn pointer" @click="goUrl({url: '/register'})">注册</div>
+          </div>
+          <div v-else class="info-btn flex flex-between">
+            <div class="register-btn pointer" @click="onunload">退出登录</div>
           </div>
         </div>
         <div class="my-serve">
           <div class="title flex flex-between">
             <div class="name">我的订单</div>
-            <div class="more flex">
+            <div class="more flex" @click="goUrl({url: '/order-list'})">
               <span>更多</span>
               <img src="../static/home/right.png" alt="right">
             </div>
@@ -261,14 +264,12 @@ export default {
     };
   },
   computed: {
-    ...mapState([
-      "index_banners",
-      "index_full_ani",
-      "hotSearchWords",
-    ]),
-
+    ...mapState({
+      userInfo: state => state.userInfo
+    }),
   },
   mounted() {
+    console.log(this.userInfo)
     this.handleAni()
   },
   methods: {
@@ -365,6 +366,14 @@ export default {
     // 跳转链接
     goUrl(item) {
       this.$router.push(item.url);
+    },
+    // 退出登录
+    onunload() {
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('userInfo');
+      localStorage.removeItem('baseInfo');
+      localStorage.removeItem('token');
+      location.reload();
     }
   },
 }
@@ -421,7 +430,7 @@ export default {
         }
 
         .link:hover span {
-          color: #A66600;
+          color: @theme;
         }
       }
 
@@ -469,7 +478,7 @@ export default {
         }
 
         .submenu-item-content__a:hover {
-          color: #A66600;
+          color: @theme;
         }
 
         .submenu-item-content__a span {
@@ -528,6 +537,11 @@ export default {
         text-transform: none;
       }
 
+      .hello {
+        //font-size: 14px;
+        margin-top: 10px;
+      }
+
       .info-btn {
         padding: 21px 0 23px 0;
         border-bottom: 1px solid #eee;
@@ -535,9 +549,9 @@ export default {
         .login-btn {
           width: 82px;
           height: 29px;
-          background: #A66600;
+          background: @theme;
           border-radius: 20px 20px 20px 20px;
-          border: 1px solid #A66600;
+          border: 1px solid @theme;
 
           font-family: Roboto, Roboto;
           font-weight: 400;
@@ -695,7 +709,7 @@ export default {
             font-family: Roboto, Roboto;
             font-weight: 400;
             font-size: 12px;
-            color: #A66600;
+            color: @theme;
             line-height: 16px;
             text-align: center;
             font-style: normal;

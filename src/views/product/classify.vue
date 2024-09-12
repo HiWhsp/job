@@ -247,8 +247,8 @@ export default {
       }
 
       .item.active {
-        border: 1px solid #A66600;
-        color: #A66600;
+        border: 1px solid @theme;
+        color: @theme;
       }
     }
   }

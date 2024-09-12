@@ -272,7 +272,7 @@ export default {
               text-transform: none;
 
               &:hover {
-                color: #A66600;
+                color: @theme;
               }
             }
 
@@ -293,7 +293,7 @@ export default {
 
             &.active {
               background: #FCFAF7;
-              color: #A66600;
+              color: @theme;
 
               &:before {
                 content: "";
@@ -302,7 +302,7 @@ export default {
                 top: 0;
                 bottom: 0;
                 width: 4px;
-                background-color: #A66600;
+                background-color: @theme;
               }
             }
 

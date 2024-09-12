@@ -338,7 +338,7 @@ export default {
   .btn-1 {
     width: 104px;
     height: 40px;
-    background: #A66600;
+    background: @theme;
     border-radius: 4px 4px 4px 4px;
     text-align: center;
     font-family: Roboto, Roboto;
@@ -354,11 +354,11 @@ export default {
     width: 104px;
     height: 40px;
     border-radius: 4px 4px 4px 4px;
-    border: 1px solid #A66600;
+    border: 1px solid @theme;
     font-family: Roboto, Roboto;
     font-weight: 400;
     font-size: 14px;
-    color: #A66600;
+    color: @theme;
     line-height: 40px;
     font-style: normal;
     text-transform: none;
