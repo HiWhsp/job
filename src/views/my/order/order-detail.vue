@@ -405,78 +405,7 @@ export default {
           id: this.id
         },
       }).then((res) => {
-        let {code, data, msg} = {
-          "code": 200,
-          "msg": "获取成功",
-          "data": {
-            "shouhuoInfo": {
-              "收件人": "张三",
-              "手机号": "15284221025",
-              "所在地区": null,
-              "详细地址": "详细地址"
-            },
-            "products": [
-              {
-                "id": 5,
-                "productId": 5,
-                "title": "测试商品多规格2",
-                "sn": "编码",
-                "keyVals": "小,黑",
-                "weight": "0.00",
-                "num": 2,
-                "image": "",
-                "priceSale": "8.00",
-                "priceMarket": "10.00",
-                "unit": null,
-                "ifRefund": 1,
-                "ifpingjia": 0
-              },
-              {
-                "id": 4,
-                "productId": 1,
-                "title": "测试商品多规格2",
-                "sn": "编码",
-                "keyVals": "大,白",
-                "weight": "0.00",
-                "num": 2,
-                "image": "",
-                "priceSale": "8.00",
-                "priceMarket": "10.00",
-                "unit": null,
-                "ifRefund": 0,
-                "ifpingjia": 0
-              }
-            ],
-            "fahuoInfo": {
-              "id": 1,
-              "expressName": "顺丰速运",
-              "expressOrder": "SF001",
-              "expressNo": "SF",
-              "fahuoTime": "2024-08-17 11:14:41"
-            },
-            "tuan_info": [],
-            "orderNo": "O_2024081518060350013",
-            "orderStatus": 3,
-            "ifPay": 0,
-            "ifDel": 0,
-            "ifCancel": 0,
-            "statusInfo": "待收货",
-            "remark": "",
-            "price": "32.00",
-            "pricePayed": "32.00",
-            "priceNeedPay": "0.00",
-            "createdTime": "2024-08-15 18:06:03",
-            "payInfo": {
-              "goods": 32,
-              "foreignManjian": "1",
-              "yhq": "1.00",
-              "foreignYunfei": "2"
-            },
-            "ifComment": 0,
-            "peisongType": 1,
-            "peisongTime": 1
-          }
-        };
+        let {code, data, msg} = res;
         if (code == 200) {
           this.info = data;
           let {payInfo, products, shouhuoInfo, fahuoInfo, payType} = data;
