@@ -111,6 +111,20 @@ const routes = [
     component: () => import('@/views/my/order/order-submit.vue')
   },
 
+  /** 帮助中心 **/
+  {
+    path: '/help',
+    name: 'help',
+    component: () => import('@/views/service/helpCenter.vue')
+  },
+
+  /** 关于 **/
+  {
+    path: '/about',
+    name: 'about',
+    component: () => import('@/views/company/companyProfile.vue')
+  },
+
   /** 个人中心 **/
   {
     path: "/my",

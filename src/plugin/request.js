@@ -130,10 +130,10 @@ function api(action, data, method, uploaderConfig) {
 
   if (process.env.NODE_ENV !== "production") {
     reqUrl = "/api/service.php";
-    reqUrl = "https://vuesc.new.zhishangez.com/service.php"; //请求地址
+    reqUrl = "http://fujunjixie.dx.hdapp.com.cn/service.php"; //请求地址
   } else {
     reqUrl = "/service.php";
-    reqUrl = "https://vuesc.new.zhishangez.com/service.php"; //请求地址
+    reqUrl = "http://fujunjixie.dx.hdapp.com.cn/service.php"; //请求地址
   }
 
   // debugger
