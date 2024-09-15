@@ -80,7 +80,7 @@ export default {
   .btn-1 {
     width: 133px;
     height: 40px;
-    background: #A66600;
+    background: @theme;
     border-radius: 4px 4px 4px 4px;
     font-family: Roboto, Roboto;
     font-weight: 400;
@@ -123,7 +123,7 @@ export default {
       font-family: Roboto, Roboto;
       font-weight: bold;
       font-size: 20px;
-      color: #A66600;
+      color: @theme;
       font-style: normal;
       text-transform: none;
     }

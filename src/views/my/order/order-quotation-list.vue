@@ -323,14 +323,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #A66600;
+        color: @theme;
       }
 
       &.active {
-        // background: #A66600;
+        // background: @theme;
         // color: #fff;
         font-weight: bold;
-        color: #A66600;
+        color: @theme;
 
         &::after {
           content: "";
@@ -339,7 +339,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #A66600;
+          background: @theme;
         }
       }
     }

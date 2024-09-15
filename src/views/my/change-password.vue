@@ -191,7 +191,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: #A66600;
+        color: @theme;
 
         span {
           margin-right: 20px;
@@ -213,11 +213,11 @@ export default {
     height: 32px;
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #A66600;
+    border: 1px solid @theme;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #A66600;
+    color: @theme;
 
   }
 
@@ -225,7 +225,7 @@ export default {
     margin-left: 24px;
     width: 120px;
     height: 32px;
-    background: #A66600;
+    background: @theme;
     border-radius: 50px 50px 50px 50px;
     font-family: Arial, Arial;
     font-weight: 400;

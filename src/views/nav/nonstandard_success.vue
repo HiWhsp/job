@@ -69,13 +69,13 @@ export default {
     height: 40px;
     background: #FFFFFF;
     border-radius: 4px 4px 4px 4px;
-    border: 1px solid #A66600;
+    border: 1px solid @theme;
     text-align: center;
     line-height: 40px;
     font-family: Roboto, Roboto;
     font-weight: 400;
     font-size: 14px;
-    color: #A66600;
+    color: @theme;
     font-style: normal;
     text-transform: none;
     margin-top: 34px;

@@ -139,7 +139,7 @@ export default {
                               <div class="">del</div>
                               <div style="margin-left: 15px;">down</div>
                             </div>
-                            <span slot="reference" style="color: #A66600;">上传</span>
+                            <span slot="reference" style="color: @theme;">上传</span>
                           </el-popover>
                         </div>
                         <div class="delete-item">
@@ -295,7 +295,7 @@ export default {
         height: 100%;
         line-height: 44px;
         text-align: center;
-        border-left: 1px dashed #A66600;
+        border-left: 1px dashed @theme;
       }
     }
 
@@ -321,7 +321,7 @@ export default {
 
       .right-box {
         width: 1084px;
-        border-left: 1px dashed #A66600;
+        border-left: 1px dashed @theme;
 
         .left-spilt {
           text-align: center;
@@ -389,7 +389,7 @@ export default {
         .right-box {
           width: 1084px;
           height: 100%;
-          border-left: 1px dashed #A66600;
+          border-left: 1px dashed @theme;
 
           .textCenter {
             text-align: center;
@@ -478,7 +478,7 @@ export default {
     .submit {
       width: 50px;
       height: 30px;
-      background: #A66600;
+      background: @theme;
       border-radius: 2px 2px 2px 2px;
       font-family: Roboto, Roboto;
       font-weight: 400;
@@ -533,14 +533,14 @@ export default {
     }
 
     .batch-input-footer-protocol {
-      color: #A66600;
+      color: @theme;
     }
 
     .el-button {
       margin-left: 22px;
       width: 191px;
       height: 46px;
-      background: #A66600;
+      background: @theme;
       border-radius: 4px 4px 4px 4px;
       color: #fff;
     }

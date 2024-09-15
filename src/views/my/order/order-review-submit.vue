@@ -2,7 +2,7 @@
   <div class="page">
     <!-- 图片预览 -->
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt />
+      <img width="100%" :src="dialogImageUrl" alt/>
     </el-dialog>
 
     <div class="main-title">
@@ -25,7 +25,7 @@
             <div class="item" v-for="(product_item, index) in products" :key="index">
               <div class="item-good flex" @click="mix_to_product(product_item)">
                 <div class="box-image">
-                  <img :src="product_item.image" alt />
+                  <img :src="product_item.image" alt/>
                 </div>
                 <div class="box-title">
                   <div class="title" @click="mix_to_product(product_item)">
@@ -36,7 +36,7 @@
                   <div class="goods-sku">{{ product_item.keyVals }}</div>
                 </div>
                 <div class="box-num">x {{ product_item.num }}</div>
-                <div class="box-price">{{vuex_huobi}} {{ product_item.priceSale }}</div>
+                <div class="box-price">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
               </div>
             </div>
           </div>
@@ -48,18 +48,18 @@
           <div class="title">
             <div class="text">总体评分</div>
             <div>
-              <el-rate v-model="params.star" ></el-rate>
+              <el-rate v-model="params.star"></el-rate>
             </div>
           </div>
           <div class="input-box">
             <el-input type="textarea" placeholder="分享购物心得..." v-model="params.content" maxlength="500"
-              :autosize="{ minRows: 8 }" show-word-limit />
+                      :autosize="{ minRows: 8 }" show-word-limit/>
           </div>
 
           <div class="upload-box">
             <el-upload class="upload-demo" list-type="picture-card" accept="image/*" multiple :name="UPLOAD_NAME"
-              :action="UPLOAD_ACTION" :limit="upload_limit_number" :data="mix_upload_data"
-              :on-success="upload_on_success" :before-upload="upload_before_upload">
+                       :action="UPLOAD_ACTION" :limit="upload_limit_number" :data="mix_upload_data"
+                       :on-success="upload_on_success" :before-upload="upload_before_upload">
               <i class="el-icon-plus"></i>
 
               <div class="el-upload__tip" slot="tip">
@@ -82,11 +82,10 @@
 </template>
 
 <script>
-import { UPLOAD_ACTION, UPLOAD_NAME } from '@/config/env.js'
+import {UPLOAD_ACTION, UPLOAD_NAME} from '@/config/env.js'
 
 
-
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "order-info",
@@ -98,7 +97,6 @@ export default {
       //
       params: {
         id: this.$route.query.orderId || "",//订单id
-        inventoryId: this.$route.query.inventoryId || "", //商品规格
         star: '',
         star1: '',
         star2: '',
@@ -136,9 +134,9 @@ export default {
           id: this.params.id
         },
       }).then((res) => {
-        let { code, data, msg } = res;
+        let {code, data, msg} = res;
         if (code == 200) {
-          this.products = data.products.filter((v) => v.id == this.params.inventoryId);
+          this.products = data.products;
           this.info = data;
         }
       });
@@ -146,7 +144,7 @@ export default {
 
     //提交评价
     submit_pingjia() {
-      let { content, star } = this.params;
+      let {content, star} = this.params;
       if (!star) {
         alertErr("请选择总体评分");
         return;
@@ -156,7 +154,6 @@ export default {
         return;
       }
 
-      // let inventoryId = this.info.products.map((v) => v.id).join();
       this.$api({
         url: '/service.php',
         method: 'get',
@@ -166,7 +163,7 @@ export default {
         },
       }).then((res) => {
         alert(res)
-        let { code, msg, data } = res;
+        let {code, msg, data} = res;
         if (code == 200) {
           this.$router.back();
         }
@@ -176,7 +173,7 @@ export default {
     //上传相关
     upload_on_success(res, file) {
       //console.log("上传结果", res);
-      let { code, data, msg } = res;
+      let {code, data, msg} = res;
       alert(res);
       if (code == 200) {
         // this.form.image = res.data;
@@ -202,7 +199,6 @@ export default {
   height: 100px;
   line-height: 100px;
 }
-
 
 
 .page {
@@ -238,7 +234,7 @@ export default {
   background: #fff;
 }
 
-/deep/.btn-box {
+/deep/ .btn-box {
   display: none;
 }
 
@@ -284,14 +280,16 @@ export default {
     font-weight: bold;
     color: #333333;
 
-    .date {}
+    .date {
+    }
 
     .order-code {
       flex: 2;
       text-align: left;
       padding-left: 20px;
 
-      span {}
+      span {
+      }
     }
 
     .order-state {
@@ -449,9 +447,9 @@ export default {
       background: #4CA5E4;
       border-radius: 100px 100px 100px 100px;
       font-family: OPPOSans, OPPOSans;
-font-weight: 400;
-font-size: 16px;
-color: #FFFFFF;
+      font-weight: 400;
+      font-size: 16px;
+      color: #FFFFFF;
 
 
       &:hover {

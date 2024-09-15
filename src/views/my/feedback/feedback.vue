@@ -94,7 +94,7 @@ export default {
   .submit {
     width: 240px;
     height: 34px;
-    background-color: #A66600;
+    background-color: @theme;
     margin-top: 25px;
 
     line-height: 34px;

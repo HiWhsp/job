@@ -123,65 +123,7 @@ export default {
           // keyword: this.keyword,
         },
       }).then((res) => {
-        let {code, data} = {
-          "code": 200,
-          "msg": "获取成功",
-          "data": {
-            "count": 1,
-            "pages": 1,
-            "list": [
-              {
-                "id": 1,
-                "tuanId": 0,
-                "orderNo": "O_2024081518060350013",
-                "orderFahuoId": 0,
-                "ifReceive": 0,
-                "ifPay": 1,
-                "ifDel": 0,
-                "ifCancel": 1,
-                "statusInfo": "待支付",
-                "products": [
-                  {
-                    "id": 5,
-                    "productId": 5,
-                    "title": "测试商品多规格2",
-                    "sn": "编码",
-                    "keyVals": "小,黑",
-                    "weight": "0.00",
-                    "num": 2,
-                    "image": "",
-                    "priceSale": "8.00",
-                    "priceMarket": "10.00",
-                    "unit": null,
-                    "ifshouhou": false
-                  },
-                  {
-                    "id": 4,
-                    "productId": 1,
-                    "title": "测试商品多规格2",
-                    "sn": "编码",
-                    "keyVals": "大,白",
-                    "weight": "0.00",
-                    "num": 2,
-                    "image": "",
-                    "priceSale": "8.00",
-                    "priceMarket": "10.00",
-                    "unit": null,
-                    "ifshouhou": false
-                  }
-                ],
-                "createdTime": "2024-08-15 18:06",
-                "payEnd": 1723896423000,
-                "jishiqi": 1,
-                "price": "32.00",
-                "pricePayed": "0.00",
-                "productNum": 4,
-                "orderStatus": -5,
-                "ifComment": 0
-              }
-            ]
-          }
-        };
+        let {code, data} = res;
         if (code == 200) {
           let list = data.list
 
@@ -349,14 +291,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #A66600;
+        color: @theme;
       }
 
       &.active {
-        // background: #A66600;
+        // background: @theme;
         // color: #fff;
         font-weight: bold;
-        color: #A66600;
+        color: @theme;
 
         &::after {
           content: "";
@@ -365,7 +307,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #A66600;
+          background: @theme;
         }
       }
     }

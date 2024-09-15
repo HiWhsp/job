@@ -141,7 +141,7 @@ export default new Vuex.Store({
       });
 
       // debugger
-      let { token, userId, id } = data;
+      let {token, userId, id} = data;
 
       state.vuex_is_login = true;
       state.isLogin = true;
@@ -164,7 +164,7 @@ export default new Vuex.Store({
     },
 
     set_vuex_product_cate(state, data) {
-      let { cateFlatList, cateTreeList } = data;
+      let {cateFlatList, cateTreeList} = data;
       console.warn(
         "cateTreeList 产品分类数据",
         JSON.parse(JSON.stringify(cateTreeList))
@@ -184,15 +184,15 @@ export default new Vuex.Store({
       state.vuex_cart_number = value;
     },
 
-    set_cache_payment_products(state, str_products)  {
-      console.log('vuex 缓存商品信息',str_products)
+    set_cache_payment_products(state, str_products) {
+      console.log('vuex 缓存商品信息', str_products)
       sessionStorage.setItem("cache_payment_products", str_products);
     },
 
     //设置基本信息
     set_baseInfo(state, data) {
       // //console.log("设置用户信息", { ...data });
-      let { token, user_id, id, level, level_rules } = data;
+      let {token, user_id, id, level, level_rules} = data;
 
       state.vuex_is_login = true;
       state.token = token;
@@ -261,9 +261,8 @@ export default new Vuex.Store({
   },
 
   actions: {
-    async appInit({ commit, state, dispatch }, data) {
+    async appInit({commit, state, dispatch}, data) {
       dispatch("appInitGetAssets");
-
 
 
       let token = localStorage.getItem("token");
@@ -278,13 +277,13 @@ export default new Vuex.Store({
     },
 
     //获取登录后的信息
-    async getUserloginedInfo({ commit, state, dispatch }, data) {
+    async getUserloginedInfo({commit, state, dispatch}, data) {
       dispatch("query_user");
       dispatch("query_cart");
     },
 
     // 获取用户信息
-    async query_user({ commit, state, dispatch }) {
+    async query_user({commit, state, dispatch}) {
       api({
         url: "/service.php",
         method: "get",
@@ -301,7 +300,7 @@ export default new Vuex.Store({
       });
     },
     // 获取用户信息
-    async query_cart({ commit, state, dispatch }) {
+    async query_cart({commit, state, dispatch}) {
       api({
         url: "/service.php",
         method: "get",
@@ -309,22 +308,24 @@ export default new Vuex.Store({
           action: "gouwuche_lists",
         },
       })
-      .then((res) => {
-        let { code, data } = res;
-        if (code == 200) {
-          let count = 0;
-          data.forEach((v) => {
-            count += v.num * 1;
-          });
+        .then((res) => {
+          let {code, data} = res;
+          if (code == 200) {
+            let count = 0;
+            data.forEach((v) => {
+              count += v.num * 1;
+            });
 
-          commit("set_vuex_cart_number", count);
-        }
-      });
+            commit("set_vuex_cart_number", count);
+          }
+        });
     },
 
 
     //初始化资源
-    async appInitGetAssets({ commit, state, dispatch }, data) {
+    async appInitGetAssets({commit, state, dispatch}, data) {
+      dispatch("query_user");
+
       api({
         url: "/service.php",
         method: "get",
@@ -332,7 +333,7 @@ export default new Vuex.Store({
           action: "index_config",
         },
       }).then((res) => {
-        let { code, data } = res;
+        let {code, data} = res;
         if (code == 200) {
           commit("set_vuex_configInfo", data);
         }
@@ -344,7 +345,7 @@ export default new Vuex.Store({
         method: "get",
         data: {
           action: "banner_index",
-          position: 0, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
+          position: 2, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
         },
       }).then((res) => {
         if (res.code == 200) {

@@ -492,15 +492,15 @@ export default {
       color: #999999;
 
       /deep/ .el-checkbox__inner {
-        border-color: #A66600 !important;
+        border-color: @theme !important;
       }
 
       /deep/ .el-checkbox__input.is-checked .el-checkbox__inner {
-        background: #A66600 !important;
+        background: @theme !important;
       }
 
       /deep/ .el-checkbox__label {
-        color: #A66600 !important;
+        color: @theme !important;
       }
 
       a {
@@ -590,15 +590,15 @@ export default {
     .flex-center();
 
     /deep/ .el-checkbox__inner {
-      border-color: #A66600 !important;
+      border-color: @theme !important;
     }
 
     /deep/ .el-checkbox__input.is-checked .el-checkbox__inner {
-      background: #A66600 !important;
+      background: @theme !important;
     }
 
     /deep/ .el-checkbox__label {
-      color: #A66600 !important;
+      color: @theme !important;
     }
 
     img {

@@ -883,8 +883,8 @@ export default {
 
             .item.active {
               background: rgba(166, 102, 0, 0.07);
-              border: 1px solid #A66600;
-              color: #A66600;
+              border: 1px solid @theme;
+              color: @theme;
             }
           }
         }
@@ -1017,9 +1017,9 @@ export default {
             .btn-buy {
               width: 142px;
               height: 48px;
-              background: #A66600;
+              background: @theme;
               border-radius: 4px 4px 4px 4px;
-              border: 1px solid #A66600;
+              border: 1px solid @theme;
               font-family: Roboto, Roboto;
               font-weight: bold;
               font-size: 16px;
@@ -1033,11 +1033,11 @@ export default {
               height: 48px;
               background: #FFFFFF;
               border-radius: 4px 4px 4px 4px;
-              border: 1px solid #A66600;
+              border: 1px solid @theme;
               font-family: Roboto, Roboto;
               font-weight: bold;
               font-size: 16px;
-              color: #A66600;
+              color: @theme;
               font-style: normal;
               text-transform: none;
 
@@ -1101,7 +1101,7 @@ export default {
 
           .nav-item.active {
             text-align: center;
-            background: #A66600;
+            background: @theme;
             font-family: Roboto, Roboto;
             font-weight: bold;
             font-size: 14px;

@@ -259,7 +259,7 @@ button {
 
 /* 滚动条滑块 */
 ::-webkit-scrollbar-thumb {
-  background-color: #A66600; /* 颜色 */
+  background-color: @theme; /* 颜色 */
   border-radius: 6px; /* 边角弧度 */
 }
 

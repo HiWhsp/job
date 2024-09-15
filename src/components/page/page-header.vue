@@ -1,168 +1,178 @@
 <template>
-    <div class="page-header">
-        <div class="top-box">
-            <div class="content flex flex-between">
-                <div class="l-box flex">
-                    <span class="name">富俊机械运动组件采购商城</span>
-                    <div class="tools-btn flex">
-                        <div class="login pointer" @click="goUrl({url: '/login'})">登录</div>
-                        <div class="col"></div>
-                        <div class="register pointer" @click="goUrl({url: '/register'})">注册</div>
-                    </div>
+  <div class="page-header">
+    <div class="top-box">
+      <div class="content flex flex-between">
+        <div class="l-box flex">
+          <span class="name">富俊机械运动组件采购商城</span>
+          <div class="tools-btn flex" v-if="!userInfo.id">
+            <div class="login pointer" @click="goUrl({url: '/login'})">登录</div>
+            <div class="col"></div>
+            <div class="register pointer" @click="goUrl({url: '/register'})">注册</div>
+          </div>
+          <div class="tools-btn flex" v-else>
+            <div class="hello">{{ userInfo.nickname }}</div>
+          </div>
+        </div>
+        <div class="r-box flex pointer">
+          <div class="color-a6 flex">
+            <img src="../../static/home/phone.png" alt="dianhua" class="img-1">400-085-7709
+          </div>
+          <div class="col"></div>
+          <el-popover
+              placement="bottom"
+              width="650"
+              trigger="click"
+          >
+            <div class="InfomationPopover">
+              <div class="InfomationPopover-title">我的未读消息</div>
+              <div class="InfomationPopover-content">
+                <div class="content-item">
+                  <span class="ellipsis-1">您的报价单FAQP2405088242在报价有效期内未完成订购，报价已失效，点击查看</span>
+                  <span class="item-time">2024-06-07 15:39</span>
                 </div>
-                <div class="r-box flex pointer">
-                    <div class="color-a6 flex">
-                        <img src="../../static/home/phone.png" alt="dianhua" class="img-1">400-085-7709
-                    </div>
-                    <div class="col"></div>
-                    <el-popover
-                            placement="bottom"
-                            width="650"
-                            trigger="click"
-                    >
-                        <div class="InfomationPopover">
-                            <div class="InfomationPopover-title">我的未读消息</div>
-                            <div class="InfomationPopover-content">
-                                <div class="content-item">
-                                    <span class="ellipsis-1">您的报价单FAQP2405088242在报价有效期内未完成订购，报价已失效，点击查看</span>
-                                    <span class="item-time">2024-06-07 15:39</span>
-                                </div>
-                            </div>
-                            <div class="InfomationPopover-bottom"><span>可前往消息中心，</span>
-                                <span class="msg-more pointer">查看更多</span>
-                                <img src="../../static/home/right-back.png" alt="">
-                            </div>
-                        </div>
-                        <div class="flex" slot="reference">
-                            我的消息<span class="color-a6">({{ numList.message }})</span>
-                            <img src="../../static/home/down.png" class="img-2">
-                        </div>
-                    </el-popover>
+              </div>
+              <div class="InfomationPopover-bottom"><span>可前往消息中心，</span>
+                <span class="msg-more pointer">查看更多</span>
+                <img src="../../static/home/right-back.png" alt="">
+              </div>
+            </div>
+            <div class="flex" slot="reference">
+              我的消息<span class="color-a6">({{ numList.message }})</span>
+              <img src="../../static/home/down.png" class="img-2">
+            </div>
+          </el-popover>
 
-                    <div class="col"></div>
-                    <div>我的订单<span class="color-a6">({{ numList.message }})</span></div>
-                    <div class="col"></div>
-                    <div>积分商城<span class="color-a6">({{ numList.message }})</span></div>
-                    <div class="col"></div>
-                    <div>关于富俊</div>
-                    <div class="col"></div>
-                    <div>帮助中心</div>
-                </div>
-            </div>
+          <div class="col"></div>
+          <div @click="goUrl({url: '/order-list'})">我的订单<span class="color-a6">({{ numList.message }})</span></div>
+          <div class="col"></div>
+          <div @click="goUrl({url: '/'})">积分商城<span class="color-a6">({{ numList.message }})</span></div>
+          <div class="col"></div>
+          <div @click="goUrl({url: '/about'})">关于富俊</div>
+          <div class="col"></div>
+          <div @click="goUrl({url: '/help'})">帮助中心</div>
         </div>
-        <div class="info-box">
-            <div class="content flex flex-between">
-                <div class="l-box">
-                    <img src="../../static/home/logo.png" alt="logo" class="img-1 pointer" @click="goUrl({url: '/'})">
-                    <span>运动组件采购商城</span>
-                </div>
-                <div class="m-box">
-                    <div class="search flex">
-                        <el-input v-model="searchInput" placeholder="可直接搜索同行型号 获取低成本替代"></el-input>
-                        <el-button type="primary" icon="el-icon-search">搜索</el-button>
-                    </div>
-                    <div class="search-hot">
-                        <a class="hot">简易丝杆模组</a>
-                        <a class="hot">两轴模组</a>
-                        <a class="hot">丝杆组件</a>
-                        <a class="hot">两轴组件</a>
-                        <a class="hot">多轴模组</a>
-                    </div>
-                </div>
-                <div class="r-box">
-                    <div class="flex">
-                        <div class="tools-btn pointer flex" @click="goUrl({url: '/cart'})">
-                            <img class="img-2" src="../../static/home/gouwuche.png" alt="">购物车
-                        </div>
-                        <div class="tools-btn pointer flex">
-                            <img class="img-3" src="../../static/home/wexin.png" alt="">微信公众号
-                        </div>
-                    </div>
-                    <div class="hot">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="nav-box">
-            <div class="content flex">
-                <div class="nav flex pointer" v-for="(item, index) in navList" :key="index" @click="goUrl(item)">
-                    <img class="img-0" :src="item.icon" alt="" v-if="item.position == 'l'">
-                    <span class="name">{{ item.title }}</span>
-                    <img class="img-1" :src="item.icon" alt="" v-if="item.position == 'r'">
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="info-box">
+      <div class="content flex flex-between">
+        <div class="l-box">
+          <img src="../../static/home/logo.png" alt="logo" class="img-1 pointer" @click="goUrl({url: '/'})">
+          <span>运动组件采购商城</span>
+        </div>
+        <div class="m-box">
+          <div class="search flex">
+            <el-input v-model="searchInput" placeholder="可直接搜索同行型号 获取低成本替代"></el-input>
+            <el-button type="primary" icon="el-icon-search">搜索</el-button>
+          </div>
+          <div class="search-hot">
+            <a class="hot">简易丝杆模组</a>
+            <a class="hot">两轴模组</a>
+            <a class="hot">丝杆组件</a>
+            <a class="hot">两轴组件</a>
+            <a class="hot">多轴模组</a>
+          </div>
+        </div>
+        <div class="r-box">
+          <div class="flex">
+            <div class="tools-btn pointer flex" @click="goUrl({url: '/cart'})">
+              <img class="img-2" src="../../static/home/gouwuche.png" alt="">购物车
+            </div>
+            <div class="tools-btn pointer flex">
+              <img class="img-3" src="../../static/home/wexin.png" alt="">微信公众号
+            </div>
+          </div>
+          <div class="hot">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-box">
+      <div class="content flex">
+        <div class="nav flex pointer" v-for="(item, index) in navList" :key="index" @click="goUrl(item)">
+          <img class="img-0" :src="item.icon" alt="" v-if="item.position == 'l'">
+          <span class="name">{{ item.title }}</span>
+          <img class="img-1" :src="item.icon" alt="" v-if="item.position == 'r'">
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import {mapState} from "vuex";
+
 export default {
-    data() {
-        return {
-            searchInput: '', // 搜索条件
-            // 头部导航列表
-            navList: [
-                {
-                    title: '全部商品分类', // 名称
-                    icon: require('../../static/home/down_all.png'),
-                    position: 'r',
-                    url: '/productCategories',
-                },
-                {
-                    title: '特惠商城', // 名称
-                    icon: require('../../static/home/hot-shop.png'),
-                    position: 'l',
-                    url: '/discountShop'
-                },
-                {
-                    title: '低价爆款专区', // 名称
-                    icon: null,
-                    position: null,
-                    url: '/lowPriceShop'
-                },
-                {
-                    title: '每月新款专区', // 名称
-                    icon: require('../../static/home/hot-new.png'),
-                    position: 'l',
-                    url: '/newMonthShop'
-                },
-                {
-                    title: '定制组件专区', // 名称
-                    icon: null,
-                    position: null
-                },
-                {
-                    title: 'DIY 组件专区', // 名称
-                    icon: null,
-                    position: null
-                },
-                {
-                    title: '非标定制', // 名称
-                    icon: null,
-                    position: null,
-                    url: '/nonstandard'
-                },
-                {
-                    title: '快速报价', // 名称
-                    icon: null,
-                    position: null,
-                    url: '/fastQuotation'
-                }],
-            // 小标数据
-            numList: {
-                orderIndex: 0,
-                integral: 0,
-                message: 0,
-                shop: 0
-            }
-        }
-    },
-    methods: {
-        // 跳转链接
-        goUrl(item) {
-            this.$router.push(item.url);
-        }
+  data() {
+    return {
+      searchInput: '', // 搜索条件
+      // 头部导航列表
+      navList: [
+        {
+          title: '全部商品分类', // 名称
+          icon: require('../../static/home/down_all.png'),
+          position: 'r',
+          url: '/productCategories',
+        },
+        {
+          title: '特惠商城', // 名称
+          icon: require('../../static/home/hot-shop.png'),
+          position: 'l',
+          url: '/discountShop'
+        },
+        {
+          title: '低价爆款专区', // 名称
+          icon: null,
+          position: null,
+          url: '/lowPriceShop'
+        },
+        {
+          title: '每月新款专区', // 名称
+          icon: require('../../static/home/hot-new.png'),
+          position: 'l',
+          url: '/newMonthShop'
+        },
+        {
+          title: '定制组件专区', // 名称
+          icon: null,
+          position: null
+        },
+        {
+          title: 'DIY 组件专区', // 名称
+          icon: null,
+          position: null
+        },
+        {
+          title: '非标定制', // 名称
+          icon: null,
+          position: null,
+          url: '/nonstandard'
+        },
+        {
+          title: '快速报价', // 名称
+          icon: null,
+          position: null,
+          url: '/fastQuotation'
+        }],
+      // 小标数据
+      numList: {
+        orderIndex: 0,
+        integral: 0,
+        message: 0,
+        shop: 0
+      }
     }
+  },
+  computed: {
+    ...mapState({
+      userInfo: state => state.userInfo
+    })
+  },
+  methods: {
+    // 跳转链接
+    goUrl(item) {
+      this.$router.push(item.url);
+    }
+  }
 }
 </script>
 
@@ -180,7 +190,7 @@ export default {
 }
 
 .color-a6 {
-  color: #A66600;
+  color: @theme;
 }
 
 .page-header {
@@ -246,14 +256,14 @@ export default {
           width: 383px;
 
           /deep/ .el-input__inner {
-            border: 3px solid #A66600;
+            border: 3px solid @theme;
             border-radius: 4px 0px 0px 4px;
           }
         }
 
         .el-button--primary {
-          background-color: #A66600;
-          border-color: #A66600;
+          background-color: @theme;
+          border-color: @theme;
           border-radius: 0px 4px 4px 0px;
         }
       }
@@ -302,7 +312,7 @@ export default {
   }
 
   .nav-box {
-    border-bottom: 4px solid #A66600;;
+    border-bottom: 4px solid @theme;;
 
     .nav {
       margin-right: 60px;
@@ -410,7 +420,7 @@ export default {
     }
 
     .msg-more {
-      color: #A66600;
+      color: @theme;
       margin-right: 5px;
     }
   }
