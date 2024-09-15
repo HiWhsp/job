@@ -280,6 +280,7 @@ export default {
           //console.log("登录", res);
           let {code, data, message} = res;
           if (code == 0) {
+              this.$message.error(res.message);
           } else if (code == 1) {
             if (this.savePass) {
               localStorage.setItem("save1", this.encodeString(this.form.phone));
