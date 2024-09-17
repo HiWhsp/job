@@ -1,32 +1,46 @@
 <template>
-  <div class="page">
-    <div class="nav-box">
-      <div class="title flex">
-        <p class="tit">关于富俊</p>
-        <p class="desc">运动组件采购商城</p>
-      </div>
-      <div class="nav flex">
-        <div class="item pointer" :class="{'active': current === 1}">公司简介</div>
-        <div class="col"></div>
-        <div class="item pointer">新闻资讯</div>
-        <div class="col"></div>
-        <div class="item pointer">联系我们</div>
-      </div>
+    <div class="page">
+        <div class="nav-box">
+            <div class="title flex">
+                <p class="tit">关于富俊</p>
+                <p class="desc">运动组件采购商城</p>
+            </div>
+            <div class="nav flex">
+                <div class="item pointer" :class="{'active': current === 1}" @click="itemClick(1)">公司简介</div>
+                <div class="col"></div>
+                <div class="item pointer" :class="{'active': current === 2}" @click="itemClick(2)">新闻资讯</div>
+                <div class="col"></div>
+                <div class="item pointer" :class="{'active': current === 3}" @click="itemClick(3)">联系我们</div>
+            </div>
+        </div>
+        <jianjie v-if="current === 1"></jianjie>
+        <xinwen v-if="current === 2"></xinwen>
+        <lianxi v-if="current === 3"></lianxi>
     </div>
-    <div class="content">
-      
-    </div>
-  </div>
 </template>
 
 <script>
+import jianjie from './jianjie.vue'
+import xinwen from './xinwen.vue'
+import lianxi from './lianxi.vue'
+
 export default {
-  name: 'companyProfile',
-  data() {
-    return {
-      current: 1
+    name: 'companyProfile',
+    components: {
+        jianjie,
+        xinwen,
+        lianxi
+    },
+    data() {
+        return {
+            current: 1
+        }
+    },
+    methods: {
+        itemClick(val) {
+            this.current = val;
+        }
     }
-  }
 }
 </script>
 
@@ -105,6 +119,10 @@ export default {
         margin: 0 62px;
       }
     }
+  }
+
+  .content {
+    width: 100%;
   }
 }
 </style>

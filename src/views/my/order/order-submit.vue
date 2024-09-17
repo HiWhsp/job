@@ -1643,18 +1643,18 @@ export default {
         height: 45px;
         background: #FFFFFF;
         border-radius: 0px 0px 0px 0px;
-        border: 1px solid #A66600;
+        border: 1px solid @theme;
         font-family: Roboto, Roboto;
         font-weight: 400;
         font-size: 16px;
-        color: #A66600;
+        color: @theme;
       }
 
       &.btn-2 {
 
         width: 200px;
         height: 45px;
-        background: #A66600;
+        background: @theme;
         font-family: Roboto, Roboto;
         font-weight: 400;
         font-size: 16px;
@@ -2020,10 +2020,10 @@ export default {
         height: 32px;
         background: #FFFFFF;
         border-radius: 2px 2px 2px 2px;
-        border: 1px solid #A66600;
+        border: 1px solid @theme;
         font-size: 14px;
         font-weight: normal;
-        color: #A66600;
+        color: @theme;
       }
     }
 
@@ -2152,8 +2152,8 @@ export default {
 
       .checked {
         .invoice {
-          border: 1px solid #A66600;
-          color: #A66600;
+          border: 1px solid @theme;
+          color: @theme;
         }
       }
     }
@@ -2364,7 +2364,7 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #A66600;
+      color: @theme;
     }
   }
 }

@@ -1,196 +1,183 @@
 <template>
-  <div class="page">
-    <div class="nav-bar">
-      <el-breadcrumb separator=">">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-        <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-        <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
-    <!--    条件筛选-->
-    <div class="condition-filter">
-      <p class="title">条件筛选</p>
-      <div class="filter flex">
-        <p class="name">种类</p>
-        <div class="item-wrap flex">
-          <div class="item pointer" :class="{ 'active': activeIndex === item.id }" v-for="(item, index) in filterItem"
-               :key="index"
-               @click="itemNav(item)">
-            {{ item.title }}
-          </div>
+    <div class="page">
+        <div class="nav-bar">
+            <el-breadcrumb separator=">">
+                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item>商品列表</el-breadcrumb-item>
+            </el-breadcrumb>
         </div>
-      </div>
-    </div>
-    <!--    商品列表-->
-    <div class="page-list">
-      <div class="filter-item">
-        <div class="label">
-          <p>共<span>{{ count }}</span>条</p>
-        </div>
-        <div class="val">
-          <div class="sort-box">
-            <div class="item" v-for="(item, index) in sortList" :key="index"
-                 :class="orderByColumn == item.ziduan ? 'active' : ''" @click="onClickSort(item)">
-              <div class="text">{{ item.title }}</div>
-              <div class="sanjiao-box" v-if="item.title != '综合排序'">
-                <div class="top" :class="orderByColumn == item.ziduan && isAsc == 'asc' ? 'active' : ''"></div>
-                <div class="bottom" :class="orderByColumn == item.ziduan && isAsc == 'desc' ? 'active' : ''"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="goods-wrap">
-        <div class="product-list flex">
-          <div class="product-item flex" v-for="(item, index)  in list_goods" :key="index" @click="toDetail(item)">
-            <div class="poster-box scale-box">
-              <img :src="item.thumb" alt="" class="poster scale-img">
-            </div>
-            <div class="info-box">
-              <div class="title">{{ item.title }}</div>
-              <div class="pirce-box flex flex-between">
-                <div class="price-info">
-                  <div class="price-1">￥{{ item.priceSale }}</div>
+        <!--    条件筛选-->
+        <div class="condition-filter">
+            <p class="title">条件筛选</p>
+            <div class="filter flex">
+                <p class="name">种类</p>
+                <div class="item-wrap flex">
+                    <div class="item pointer" :class="{ 'active': activeIndex === item.id }"
+                         v-for="(item, index) in filterList"
+                         :key="index"
+                         @click="itemNav(item)">
+                        {{ item.title }}
+                    </div>
                 </div>
-                <div class="cart-box" @click.stop="doCart(item)">
-                  <img src="../../static/prod/goods-cart.png" alt="" class="cart">
-                </div>
-              </div>
             </div>
-          </div>
         </div>
+        <!--    商品列表-->
+        <div class="page-list">
+            <div class="filter-item">
+                <div class="label">
+                    <p>共<span>{{ count }}</span>条</p>
+                </div>
+                <div class="val">
+                    <div class="sort-box">
+                        <div class="item" v-for="(item, index) in sortList" :key="index"
+                             :class="orderByColumn == item.ziduan ? 'active' : ''" @click="onClickSort(item)">
+                            <div class="text">{{ item.title }}</div>
+                            <div class="sanjiao-box" v-if="item.title != '综合排序'">
+                                <div class="top"
+                                     :class="orderByColumn == item.ziduan && isAsc == 'asc' ? 'active' : ''"></div>
+                                <div class="bottom"
+                                     :class="orderByColumn == item.ziduan && isAsc == 'desc' ? 'active' : ''"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="goods-wrap">
+                <div class="product-list flex">
+                    <div class="product-item flex" v-for="(item, index)  in list_goods" :key="index"
+                         @click="toDetail(item)">
+                        <div class="poster-box scale-box">
+                            <img :src="item.thumb" alt="" class="poster scale-img">
+                        </div>
+                        <div class="info-box">
+                            <div class="title">{{ item.title }}</div>
+                            <div class="pirce-box flex flex-between">
+                                <div class="price-info">
+                                    <div class="price-1">￥{{ item.priceSale }}</div>
+                                </div>
+                                <div class="cart-box" @click.stop="doCart(item)">
+                                    <img src="../../static/prod/goods-cart.png" alt="" class="cart">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <el-empty v-if="!list_goods.length" description="暂无数据..."></el-empty>
 
-        <div class="pagination-box" v-if="count" style="margin-top: 50px;">
-          <el-pagination background layout="prev, pager, next" :total="count" :current-page="pagination.page"
-                         :page-size="pagination.pagenum" @current-change="changePage"></el-pagination>
+                <div class="pagination-box" v-if="count" style="margin-top: 50px;">
+                    <el-pagination background layout="prev, pager, next" :total="count" :current-page="pagination.page"
+                                   :page-size="pagination.pagenum" @current-change="changePage"></el-pagination>
+                </div>
+            </div>
         </div>
-      </div>
+        <productAddCartSuccessModal ref="modalAddSuccess"></productAddCartSuccessModal>
     </div>
-  </div>
 </template>
 
 <script>
-import {createLogger} from "vuex";
+import {mapState} from "vuex";
+import productAddCartSuccessModal from "@/components/product/product_add_cart_success_modal.vue";
 
 export default {
-  name: '',
-  data() {
-    return {
-      activeIndex: '',
-      count: 0, // 总和
-      pages: 1,
-
-      // 筛选分类
-      filterItem: [
-        {
-          title: '全封闭同步带模组',
-          id: 1
-        }, {
-          title: '全封闭同步带模组',
-          id: 2
-        }, {
-          title: '全封闭同步带模组',
-          id: 3
-        }, {
-          title: '全封闭同步带模组',
-          id: 4
-        }, {
-          title: '全封闭同步带模组',
-          id: 5
-        }, {
-          title: '全封闭同步带模组',
-          id: 6
-        }, {
-          title: '全封闭同步带模组',
-          id: 7
-        }, {
-          title: '全封闭同步带模组',
-          id: 8
-        }, {
-          title: '全封闭同步带模组',
-          id: 9
-        }, {
-          title: '全封闭同步带模组',
-          id: 10
+    name: '',
+    components: {
+        productAddCartSuccessModal
+    },
+    data() {
+        return {
+            activeIndex: 0,
+            count: 0, // 总和
+            pages: 1,
+            isAsc: "", //升asc 降序desc
+            orderByColumn: "ordering", //选择的排序方式
+            sortList: [
+                {title: "综合排序", ziduan: "ordering"},
+                {title: "单价", ziduan: "price_sale"},
+                {title: "库存", ziduan: "orders"}
+            ],
+            pagination: {
+                page: 1,
+                pagenum: 10
+            },
+            // 商品列表
+            list_goods: [],
         }
-      ],
-      isAsc: "", //升asc 降序desc
-      orderByColumn: "ordering", //选择的排序方式
-      sortList: [
-        {title: "综合排序", ziduan: "ordering"},
-        {title: "单价", ziduan: "price_sale"},
-        {title: "库存", ziduan: "orders"}
-      ],
-      pagination: {
-        page: 1,
-        pagenum: 18,
-      },
-      // 商品列表
-      list_goods: [],
+    },
+    computed: {
+        ...mapState({
+            filterList: state => state.vuexTreeCates,// 商品分类
+        }),
+    },
+    mounted() {
+        this.setView();
+    },
+    methods: {
+        setView() {
+            this.queryGoods();
+        },
+        // 条件点击
+        itemNav(item) {
+            if (this.activeIndex === item.id) {
+                this.activeIndex = 0;
+            } else {
+                this.activeIndex = item.id;
+            }
+            this.setView();
+        },
+        //排序方式
+        onClickSort(item) {
+            if (item.ziduan == this.orderByColumn) {
+                this.isAsc = this.isAsc == "asc" ? "desc" : "asc";
+            } else {
+                this.isAsc = "asc";
+            }
+            this.orderByColumn = item.ziduan;
+            this.setView();
+        },
+        //商品查询
+        queryGoods() {
+            this.$api("product_plist", {
+                ...this.pagination,
+                channelId: this.activeIndex,
+                orderType: this.getOrderType(this.orderByColumn),
+            }).then((res) => {
+                let data = res.data;
+                this.list_goods = data.list;
+                this.count = data.count;
+                this.pages = data.pages;
+            });
+        },
+        // 加入购物车
+        doCart(item) {
+            this.$api("gouwuche_add", {
+                inventoryId: item.inventoryId,
+                num: 1,
+                _no_tip: 1,
+            }).then((res) => {
+                let {code} = res;
+                if (code === 200) {
+                    this.$refs.modalAddSuccess.init({
+                        num: 1,
+                        shopcart_count: res.data.count
+                    });
+                }
+            });
+        },
+        // 获取排序方式
+        getOrderType(item) {
+            if (item === "ordering") { // 综合
+                return 0;
+            } else if (item === "price_sale") { // 单价
+                return this.isAsc === "asc" ? 2 : 3;
+            } else if (item === "orders") { // 库存
+                return 1;
+            }
+        },
+        // 跳转详情页
+        toDetail(item) {
+            this.$router.push(`/productDetail?id=${item.inventoryId}`)
+        },
     }
-  },
-  created() {
-    this.setView();
-  },
-  methods: {
-    setView() {
-      this.queryGoods();
-    },
-    // 条件点击
-    itemNav(item) {
-      this.activeIndex = item.id
-    },
-    //排序方式
-    onClickSort(item) {
-      if (item.ziduan == this.orderByColumn) {
-        this.isAsc = this.isAsc == "asc" ? "desc" : "asc";
-      } else {
-        this.isAsc = "asc";
-      }
-      this.orderByColumn = item.ziduan;
-
-      let sortParams = {
-        order1: this.orderByColumn,
-        order2: this.orderByColumn != 'ordering' ? this.isAsc : '',
-      };
-    },
-    //商品查询
-    queryGoods() {
-      this.$api("product_plist", {
-        channelId: 0 || "",
-        ...this.pagination,
-      }).then((res) => {
-        let data = res.data;
-        this.list_goods = data.list;
-        this.count = data.count;
-        this.pages = data.pages;
-
-      });
-    },
-    // 加入购物车
-    doCart(item) {
-      this.$api("gouwuche_add", {
-        inventoryId: item.inventoryId,
-        num: 1,
-        _no_tip: 1,
-      }).then((res) => {
-        let {code, count} = res;
-        alert(res)
-        if (code == 1) {
-          // this.$refs.modalAddSuccess.init({
-          //   num: this.selected_num,
-          //   ...this.select_specifications,
-          // });
-          this.mix_shopcart_update_count(count);
-        }
-      });
-    },
-    // 跳转详情页
-    toDetail(item) {
-      this.$router.push(`/productDetail?id=${item.inventoryId}`)
-    },
-  }
 
 }
 </script>

@@ -125,7 +125,7 @@ export default {
         top: 0;
         bottom: 0;
         width: 6px;
-        background-color: #A66600;
+        background-color: @theme;
       }
 
       .nav-item {
@@ -154,7 +154,7 @@ export default {
         }
 
         .active p {
-          background: #A66600;
+          background: @theme;
           color: #FFFFFF !important;
         }
       }
@@ -184,7 +184,7 @@ export default {
         top: 0;
         bottom: 0;
         width: 6px;
-        background-color: #A66600;
+        background-color: @theme;
       }
 
       .html-box {
