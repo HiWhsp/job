@@ -10,11 +10,11 @@
         <div class="yhq-list" v-if="list_yhq.length">
           <div class="yhq-item" v-for="(item, index) in list_yhq" :key="index">
             <div class="yhq-left">
-              <img :src="item.originalPic" alt="" />
+              <img :src="item.originalPic" alt=""/>
             </div>
             <div class="yhq-right">
               <div class="money">
-                <div class="currency">{{vuex_huobi}}</div>
+                <div class="currency">{{ vuex_huobi }}</div>
                 <div class="num">{{ item.money }}</div>
               </div>
               <div class="tiaojian">使用条件： 满{{ item.man }}可用</div>
@@ -23,9 +23,9 @@
               </div>
               <div class="action">
                 <button
-                  class="btn-ripple btn-pick btn-lingqu"
-                  v-if="item.if_ke_lingqu == 1"
-                  @click="coupon_pick(item)"
+                    class="btn-ripple btn-pick btn-lingqu"
+                    v-if="item.if_ke_lingqu == 1"
+                    @click="coupon_pick(item)"
                 >
                   立即领取
                 </button>
@@ -57,14 +57,14 @@
 
         <div class="list-box" v-if="false">
           <div
-            class="item"
-            :class="'state-' + status"
-            v-for="(item, index) in list_yhq"
-            :key="index"
+              class="item"
+              :class="'state-' + status"
+              v-for="(item, index) in list_yhq"
+              :key="index"
           >
             <div class="info">
               <div class="title">
-                <span class="huobi">{{vuex_huobi}} </span>
+                <span class="huobi">{{ vuex_huobi }} </span>
                 <span class="num">{{ item.money }}</span>
               </div>
               <div class="tiaojian">
@@ -78,9 +78,9 @@
             </div>
             <div class="action">
               <button
-                class="btn-lingqu"
-                v-if="item.if_ke_lingqu == 1"
-                @click="coupon_pick(item)"
+                  class="btn-lingqu"
+                  v-if="item.if_ke_lingqu == 1"
+                  @click="coupon_pick(item)"
               >
                 立即领取
               </button>
@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "servicePage",
@@ -111,9 +111,9 @@ export default {
       status: 1,
       list_tab: [
         // { title: "全部", status: 0 },
-        { title: "未使用", status: 1 },
-        { title: "已使用", status: 2 },
-        { title: "已过期", status: 3 },
+        {title: "未使用", status: 1},
+        {title: "已使用", status: 2},
+        {title: "已过期", status: 3},
       ],
 
       list_yhq: [],
@@ -137,22 +137,48 @@ export default {
   },
   methods: {
     setView() {
-      this.$api("users_yhqList", {
+      this.$api("yhq_list", {
         scene: 0,
         ...this.pagination,
       }).then((res) => {
-        let { code, data, msg} = res;
+        let {code, data, msg} = res;
         if (code == 200) {
-          this.list_yhq = data;
+          this.list_yhq = [{
+            "id": 2,
+            "title": "满10-1优惠券",
+            "money": 1,
+            "man": 10,
+            "color": "",
+            "content": "满10-1优惠券满10-1优惠券满10-1优惠券满10-1优惠券",
+            "numLimit": 1,
+            "num": 100,
+            "hasNum": 0,
+            "originalPic": "https://vuesc.new.zhishangez.com/upload/20240408/2024040810342565361.jpg",
+            "startTime": "2024-08-01",
+            "endTime": "2024-08-31",
+            "areaIds": "",
+            "levelIds": "",
+            "mendianIds": "",
+            "channels": "",
+            "pdts": "",
+            "channelNames": "",
+            "pdtNames": "",
+            "status": 1,
+            "dtTime": "2024-04-08 10:48:03",
+            "tiaojian": "通用",
+            "if_lingqu": 0,
+            "if_ke_lingqu": 1,
+            "width": 0
+          }];
         }
       });
     },
 
     coupon_pick(item) {
-      this.$api("users_yhqLingqu", {
+      this.$api("yhq_lingQu", {
         id: item.id,
       }).then((res) => {
-        let { code, data, msg} = res;
+        let {code, data, msg} = res;
 
         if (code == 200) {
           this.setView();
@@ -167,6 +193,8 @@ export default {
 .page {
   text-align: left;
   padding-bottom: 80px;
+  padding-top: 0px;
+
   .main-title {
     .flex-between();
     padding: 0 32px;
@@ -183,7 +211,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #4CA5E4;
+      background: @theme;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -200,8 +228,10 @@ export default {
 
 .inner {
   padding-bottom: 80px;
+
   .bg-box {
     margin-bottom: 30px;
+
     img {
       max-width: 100%;
     }
@@ -210,6 +240,7 @@ export default {
   .tab-box {
     margin-bottom: 30px;
     .flex();
+
     .tab-item {
       cursor: pointer;
       padding-bottom: 5px;
@@ -239,6 +270,7 @@ export default {
       &.state-2 {
         background: url(~@img/coupon/bg-yishiyong.png) center / cover no-repeat;
       }
+
       &.state-3 {
         background: url(~@img/coupon/bg-yiguoqi.png) center / cover no-repeat;
       }
@@ -256,6 +288,7 @@ export default {
 
         .title {
           margin-top: 25px;
+
           .huobi {
             font-size: 24px;
             font-family: Microsoft YaHei;
@@ -263,6 +296,7 @@ export default {
             line-height: 20px;
             color: #ffffff;
           }
+
           .num {
             font-size: 36px;
             font-family: Microsoft YaHei;
@@ -271,15 +305,19 @@ export default {
             color: #ffffff;
           }
         }
+
         .tiaojian {
           margin: 20px 0 10px;
         }
+
         .shijian {
         }
       }
+
       .action {
         margin-top: 43px;
         text-align: center;
+
         button {
           width: 122px;
           height: 34px;
@@ -313,6 +351,7 @@ export default {
         position: absolute;
         bottom: 0;
         right: 0;
+
         img {
           width: 60px;
           vertical-align: bottom;
@@ -331,6 +370,7 @@ export default {
   img {
     width: 25px;
   }
+
   span {
     margin-left: 10px;
     font-size: 16px;
@@ -349,11 +389,13 @@ export default {
     .yhq-left {
       width: 786px;
       height: 252px;
+
       img {
         width: 100%;
         height: 100%;
       }
     }
+
     .yhq-right {
       flex: 1;
       height: 252px;
@@ -363,17 +405,19 @@ export default {
       .money {
         display: flex;
         align-items: flex-start;
+
         .currency {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #4CA5E4;
+          color: @theme;
         }
+
         .num {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #4CA5E4;
+          color: @theme;
         }
       }
 
@@ -385,6 +429,7 @@ export default {
         color: #999999;
         line-height: 28px;
       }
+
       .shijian {
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -392,12 +437,14 @@ export default {
         color: #999999;
         line-height: 28px;
       }
+
       .action {
         margin-top: 30px;
+
         button {
           width: 127px;
           height: 36px;
-          background: #4CA5E4;
+          background: @theme;
           border-radius: 4px 4px 4px 4px;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;

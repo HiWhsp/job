@@ -1,5 +1,5 @@
-@media screen and (max-width: 1199px) { 
-  
+@media screen and (max-width: 1199px) {
+
 .theme-transparent {
   box-shadow: none !important;
 
@@ -18,7 +18,7 @@
 
 .section-1 {
   height: 32px;
-  background: #4CA5E4;
+  background: @theme;
 
   .header-info {
     .flex-between();
@@ -194,7 +194,7 @@
           transform: translate(-50%);
           width: 0;
           height: 3px;
-          background: #4CA5E4;
+          background: @theme;
           transition: 0.3s;
         }
       }
@@ -208,7 +208,7 @@
       &.active {
         .nav-link {
           font-weight: bold;
-          color: #4CA5E4;
+          color: @theme;
           &::after {
             width: 36px;
           }
@@ -334,12 +334,12 @@
           font-size: 1.6rem;
 
           &.active {
-            background: #4CA5E4;
+            background: @theme;
             color: #fff;
           }
 
           &:hover {
-            background: #4CA5E4;
+            background: @theme;
             color: #fff;
           }
         }
@@ -370,12 +370,12 @@
             margin-bottom: 0.5rem;
 
             &.active {
-              background: #4CA5E4;
+              background: @theme;
               color: #fff;
             }
 
             &:hover {
-              background: #4CA5E4;
+              background: @theme;
               color: #fff;
             }
           }
@@ -412,7 +412,7 @@
               font-size: 1.4rem;
 
               &:hover {
-                background: #4CA5E4;
+                background: @theme;
                 color: #fff;
               }
             }
@@ -441,7 +441,7 @@
             font-size: 16px;
             font-size: 1.6rem;
             &:hover {
-              background: #4CA5E4;
+              background: @theme;
               color: #fff;
             }
           }
@@ -464,7 +464,7 @@
               line-height: 2;
               padding-left: 9px;
               &:hover {
-                color: #4CA5E4;
+                color: @theme;
               }
             }
           }
@@ -488,7 +488,7 @@
             // line-height: 1.5;
 
             &:hover {
-              background: #4CA5E4;
+              background: @theme;
               color: #fff;
             }
           }
@@ -539,7 +539,7 @@
       color: #888;
       font-size: 1.3rem;
       &:hover {
-        color: #4CA5E4;
+        color: @theme;
       }
     }
   }

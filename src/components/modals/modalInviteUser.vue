@@ -98,7 +98,7 @@ export default {
       color: #333;
       .link {
         font-size: 14px;
-        color: #4CA5E4;
+        color: @theme;
         // text-decoration: underline;
         // cursor: pointer;
       }
@@ -109,7 +109,7 @@ export default {
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
   // background: #ea5959;
-  background: #4CA5E4;
+  background: @theme;
   height: 40px;
   .flex-between();
   padding: 0 20px;
@@ -142,7 +142,7 @@ export default {
   .queding {
     color: #fff;
     background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
-    background: #4CA5E4;
+    background: @theme;
   }
 }
 </style>

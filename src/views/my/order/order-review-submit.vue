@@ -191,7 +191,7 @@ export default {
 
 <style scoped lang="less">
 /deep/ .el-rate__icon {
-  color: #4CA5E4 !important;
+  color: @theme !important;
 }
 
 /deep/ .el-upload--picture-card {
@@ -220,7 +220,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #4CA5E4;
+      background: @theme;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -347,7 +347,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #4CA5E4;
+              color: @theme;
             }
           }
         }
@@ -385,7 +385,7 @@ export default {
           margin-left: 10px;
           min-width: 96px;
           height: 30px;
-          background: #4CA5E4;
+          background: @theme;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;
@@ -444,7 +444,7 @@ export default {
     .btn {
       width: 250px;
       height: 48px;
-      background: #4CA5E4;
+      background: @theme;
       border-radius: 100px 100px 100px 100px;
       font-family: OPPOSans, OPPOSans;
       font-weight: 400;

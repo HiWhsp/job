@@ -1,8 +1,8 @@
 @media screen and (max-width: 1199px) {
 
-  
+
 /deep/ .el-rate__icon {
-  color: #4CA5E4 !important;
+  color: @theme !important;
 }
 
 .page {
@@ -23,7 +23,7 @@
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #4CA5E4;
+      background: @theme;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -116,7 +116,7 @@
       font-weight: 400;
       line-height: 20px;
       color: #999999;
-      color: #4CA5E4;
+      color: @theme;
 
       // 待付款
       &.state--5 {
@@ -125,8 +125,8 @@
         // color: #fff;
       }
       &.state-2 {
-        color: #4CA5E4;
-        border-color: #4CA5E4;
+        color: @theme;
+        border-color: @theme;
       }
     }
   }
@@ -165,7 +165,7 @@
             width: fit-content;
             cursor: pointer;
             &:hover {
-              color: #4CA5E4;
+              color: @theme;
             }
           }
         }
@@ -230,7 +230,7 @@
     .btn {
       width: 300px;
       height: 48px;
-      background: #4CA5E4;
+      background: @theme;
       border-radius: 4px 4px 4px 4px;
       transition: 0.3s;
       font-size: 14px;

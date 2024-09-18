@@ -127,7 +127,7 @@ export default {
       margin-top: 10px;
       .flex();
       .sale {
-        color: #4CA5E4;
+        color: @theme;
         font-size: 20px;
         font-family: PingFang SC;
         font-weight: bold;
@@ -225,7 +225,7 @@ export default {
         margin-top: 10px;
         .flex();
         .sale {
-          color: #4CA5E4;
+          color: @theme;
           font-size: 14px;
           font-family: PingFang SC;
           font-weight: bold;

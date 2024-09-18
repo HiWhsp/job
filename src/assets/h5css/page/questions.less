@@ -1,5 +1,5 @@
 @media screen and (max-width: 1199px) {
- 
+
 
   .page {
     padding-bottom: 20px;
@@ -38,11 +38,11 @@
           height: 40px;
           background: #ffffff;
           border-radius: 4px 4px 4px 4px;
-          border: 1px solid #4CA5E4;
+          border: 1px solid @theme;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #4CA5E4;
+          color: @theme;
         }
       }
 
@@ -50,7 +50,7 @@
         width: 80px;
         margin: 24px auto;
         height: 5px;
-        background: #4CA5E4;
+        background: @theme;
         border-radius: 3px 3px 3px 3px;
       }
     }
@@ -82,7 +82,7 @@
       }
 
       &.active {
-        background: #4CA5E4;
+        background: @theme;
         color: #fff;
       }
     }
@@ -95,7 +95,7 @@
       margin-bottom: 15px;
       &.expand {
         .ques-title {
-          background: #4CA5E4 !important;
+          background: @theme !important;
           .text {
             color: #fff !important;
           }
@@ -130,7 +130,7 @@
         cursor: pointer;
 
         &:hover {
-          background: #4CA5E4;
+          background: @theme;
           color: #fff;
 
           .text {

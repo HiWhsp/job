@@ -307,7 +307,7 @@ export default {
       }
 
       &.active {
-        background: #4CA5E4;
+        background: @theme;
         color: #fff;
       }
     }
@@ -315,7 +315,7 @@ export default {
 }
 
 .refund-info {
- 
+
 }
 
 .form-wrap {
@@ -368,7 +368,7 @@ export default {
       width: 240px;
       height: 40px;
       background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
-      background: #4CA5E4;
+      background: @theme;
       border-radius: 30px;
       border-radius: 0;
 

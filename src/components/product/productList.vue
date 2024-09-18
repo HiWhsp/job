@@ -233,14 +233,14 @@ export default {
           width: 100%;
           height: 27px;
           border-radius: 0px 0px 0px 0px;
-          border: 1px solid #4CA5E4;
+          border: 1px solid @theme;
           font-family: OPPOSans, OPPOSans;
           font-weight: bold;
           font-size: 12px;
-          color: #4CA5E4;
+          color: @theme;
 
           &:hover {
-            background: #4CA5E4;
+            background: @theme;
             color: #fff;
           }
         }

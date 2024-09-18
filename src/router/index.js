@@ -120,6 +120,11 @@ const routes = [
         name: 'orderSubmit',
         component: () => import('@/views/order/order-submit.vue')
     },
+    {
+      path: '/payment-success',
+      name: 'payment-success',
+      component: () => import('@/views/order/payment-success.vue')
+    },
 
     /** 帮助中心 **/
     {

@@ -1459,8 +1459,8 @@ export default {
 .btn-cancel {
   min-width: 100px;
   height: 40px;
-  border: 1px solid #4CA5E4;
-  color: #4CA5E4;
+  border: 1px solid @theme;
+  color: @theme;
   font-size: 14px;
 }
 
@@ -1468,7 +1468,7 @@ export default {
   margin-left: 20px;
   min-width: 100px;
   height: 40px;
-  background: #4CA5E4;
+  background: @theme;
   color: #fff;
   font-size: 14px;
 }
@@ -1802,7 +1802,7 @@ export default {
           border: 1px solid #cccccc;
 
           &.active {
-            border: 1px solid #4CA5E4;
+            border: 1px solid @theme;
           }
         }
       }
@@ -1898,7 +1898,7 @@ export default {
     margin-bottom: 10px;
 
     b {
-      color: #4CA5E4;
+      color: @theme;
     }
   }
 
@@ -2075,7 +2075,7 @@ export default {
         color: #666666;
 
         span {
-          color: #4CA5E4;
+          color: @theme;
         }
       }
 
@@ -2166,11 +2166,11 @@ export default {
         line-height: 40px;
         background: #ffffff;
         border-radius: 3px 3px 3px 3px;
-        border: 1px solid #4CA5E4;
+        border: 1px solid @theme;
         font-size: 14px;
         font-family: Microsoft YaHei-Bold, Microsoft YaHei;
         font-weight: bold;
-        color: #4CA5E4;
+        color: @theme;
       }
     }
   }
@@ -2215,7 +2215,7 @@ export default {
       cursor: pointer;
 
       &.active {
-        border-color: #4CA5E4;
+        border-color: @theme;
 
         .marker {
           display: block;
@@ -2242,7 +2242,7 @@ export default {
             font-size: 24px;
             font-family: Microsoft YaHei-Bold, Microsoft YaHei;
             font-weight: bold;
-            color: #4CA5E4;
+            color: @theme;
           }
 
           .text-2 {
@@ -2270,7 +2270,7 @@ export default {
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #4CA5E4;
+        color: @theme;
       }
     }
   }
@@ -2282,7 +2282,7 @@ export default {
     padding: 0 30px;
 
     .number {
-      color: #4CA5E4;
+      color: @theme;
       margin: 0 10px;
     }
   }
@@ -2330,7 +2330,7 @@ export default {
     }
 
     .yue-warn-tip {
-      color: #4CA5E4;
+      color: @theme;
       font-size: 14px;
     }
   }

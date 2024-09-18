@@ -247,14 +247,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #4CA5E4;
+        color: @theme;
       }
 
       &.active {
-        // background: #4CA5E4;
+        // background: @theme;
         // color: #fff;
         font-weight: bold;
-        color: #4CA5E4;
+        color: @theme;
 
         &::after {
           content: "";
@@ -263,7 +263,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #4CA5E4;
+          background: @theme;
         }
       }
     }

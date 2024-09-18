@@ -62,9 +62,9 @@ export default {
     ...mapState([""]),
 
     tabList() {
-      //scene 
+      //scene
       //筛选状态：0-全部 1-待支付 2-待发货 3-待收货 4-待核销 5-已完成 6-待评价 7-已取消
-      //orderStatus 
+      //orderStatus
       //订单状态：-5-待支付  -1-已取消  2-待发货  3-待收货  4-待自提  5-已完成
       let user_index = {} || this.user_index;
       let tabList = [
@@ -82,7 +82,7 @@ export default {
     },
   },
   created() {
-    
+
     this.setView();
   },
 
@@ -289,14 +289,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #4CA5E4;
+        color: @theme;
       }
 
       &.active {
-        // background: #4CA5E4;
+        // background: @theme;
         // color: #fff;
         font-weight: bold;
-        color: #4CA5E4;
+        color: @theme;
 
         &::after {
           content: "";
@@ -305,7 +305,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #4CA5E4;
+          background: @theme;
         }
       }
     }

@@ -7,8 +7,8 @@
           <span>{{ item.nickname }}</span>
         </div>
         <div class="right">
-          <el-rate v-model="item.star" disabled :colors="['#4CA5E4', '#4CA5E4', '#4CA5E4']"
-            text-color="#4CA5E4"></el-rate>
+          <el-rate v-model="item.star" disabled :colors="['@theme', '@theme', '@theme']"
+            text-color="@theme"></el-rate>
         </div>
       </div>
       <div class="content">{{ item.content }}</div>

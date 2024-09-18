@@ -818,7 +818,7 @@ export default {
       height: 30px;
       line-height: 30px;
 
-      background: #4CA5E4;
+      background: @theme;
       color: #fff;
       font-size: 14px;
     }
@@ -861,7 +861,7 @@ export default {
       }
 
       &.active {
-        background: #4CA5E4;
+        background: @theme;
         color: #fff;
       }
     }
@@ -907,11 +907,11 @@ export default {
     &.step-1 {
       .step-item {
         &:nth-child(1) {
-          background: #4CA5E4;
+          background: @theme;
           color: #fff;
 
           .right-arrow {
-            border-left-color: #4CA5E4;
+            border-left-color: @theme;
           }
         }
       }
@@ -919,11 +919,11 @@ export default {
     &.step-2 {
       .step-item {
         &:nth-child(2) {
-          background: #4CA5E4;
+          background: @theme;
           color: #fff;
 
           .right-arrow {
-            border-left-color: #4CA5E4;
+            border-left-color: @theme;
           }
         }
       }
@@ -931,11 +931,11 @@ export default {
     &.step-3 {
       .step-item {
         &:nth-child(3) {
-          background: #4CA5E4;
+          background: @theme;
           color: #fff;
 
           .right-arrow {
-            border-left-color: #4CA5E4;
+            border-left-color: @theme;
           }
         }
       }
@@ -1053,7 +1053,7 @@ export default {
   }
 
   .section.section-status {
-    background: #4CA5E4;
+    background: @theme;
     color: #ffffff;
     padding: 30px;
 

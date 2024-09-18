@@ -20,7 +20,7 @@
               </div>
               <div>
                 <span>所在地区：</span>
-                {{ item.full_addr }} 
+                {{ item.full_addr }}
               </div>
               <div>
                 <span>详细地址：</span>
@@ -168,10 +168,8 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #4CA5E4;
-      color: #fff;
       background: #fff;
-      color: #4CA5E4;
+      color: #A66600;
       font-size: 14px;
       // font-weight: bold;
 
@@ -239,7 +237,7 @@ export default {
           line-height: 30px;
           text-align: center;
           // background: rgba(255, 90, 0, 0.68);
-          background: #4CA5E4;
+          background: @theme;
           font-size: 14px;
           color: #ffffff;
         }
@@ -250,7 +248,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 20px;
-        color: #4CA5E4;
+        color: @theme;
 
         .action {
           margin-left: 20px;

@@ -61,7 +61,7 @@
         font-weight: 400;
         line-height: 20px;
         color: #999999;
-        color: #4CA5E4;
+        color: @theme;
 
         // 待付款
         &.state--5 {
@@ -70,8 +70,8 @@
           // color: #fff;
         }
         &.state-2 {
-          color: #4CA5E4;
-          border-color: #4CA5E4;
+          color: @theme;
+          border-color: @theme;
         }
       }
     }
@@ -108,7 +108,7 @@
               width: fit-content;
               cursor: pointer;
               &:hover {
-                color: #4CA5E4;
+                color: @theme;
               }
             }
           }
@@ -157,13 +157,13 @@
         .heji-num {
           margin-right: 30px;
           b {
-            color: #4CA5E4;
+            color: @theme;
           }
         }
         .heji-money {
           b {
             font-size: 14px;
-            color: #4CA5E4;
+            color: @theme;
           }
         }
       }
@@ -196,25 +196,25 @@
           line-height: 20px;
           color: #7d7d7d;
 
-          border: 1px solid #4CA5E4;
-          color: #4CA5E4;
+          border: 1px solid @theme;
+          color: @theme;
         }
 
         .order-action {
           background: #fff;
-          border: 1px solid #4CA5E4;
+          border: 1px solid @theme;
           font-size: 12px;
-          color: #4CA5E4;
+          color: @theme;
 
           &.zhifu {
-            background: #4CA5E4;
-            border-color: #4CA5E4;
+            background: @theme;
+            border-color: @theme;
             color: #fff;
           }
 
           &.shanchu {
-            background: #4CA5E4;
-            border-color: #4CA5E4;
+            background: @theme;
+            border-color: @theme;
             color: #fff;
           }
         }

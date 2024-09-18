@@ -59,7 +59,7 @@ export default {
         },
         {
           title: "购物车下单",
-          route: "my-review-list",
+          route: "cart",
         },
         {
           title: "我的评价",
@@ -324,6 +324,9 @@ export default {
       width: 960px;
       margin-left: 20px;
       min-height: 50vh;
+      .page {
+        width: 100%;
+      }
     }
   }
 }

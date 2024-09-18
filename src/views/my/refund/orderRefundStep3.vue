@@ -151,7 +151,7 @@ export default {
     uploadSuccess_pingjia(res, file) {
       //console.log("上传结果", res);
       let { code, image, message } = res;
-  
+
       if (code == 200) {
         this.images.push(image);
       }
@@ -226,11 +226,11 @@ export default {
   &.step-1 {
     .step-item {
       &:nth-child(1) {
-        background: #4CA5E4;
+        background: @theme;
         color: #fff;
 
         .right-arrow {
-          border-left-color: #4CA5E4;
+          border-left-color: @theme;
         }
       }
     }
@@ -238,11 +238,11 @@ export default {
   &.step-2 {
     .step-item {
       &:nth-child(2) {
-        background: #4CA5E4;
+        background: @theme;
         color: #fff;
 
         .right-arrow {
-          border-left-color: #4CA5E4;
+          border-left-color: @theme;
         }
       }
     }
@@ -250,11 +250,11 @@ export default {
   &.step-3 {
     .step-item {
       &:nth-child(3) {
-        background: #4CA5E4;
+        background: @theme;
         color: #fff;
 
         .right-arrow {
-          border-left-color: #4CA5E4;
+          border-left-color: @theme;
         }
       }
     }

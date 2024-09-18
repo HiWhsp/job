@@ -168,7 +168,7 @@ export default {
 
 <style scoped lang="less">
 .plus {
-  color: #4CA5E4;
+  color: @theme;
   font-weight: bold;
 }
 .minus {
@@ -207,7 +207,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #4CA5E4;
+      background: @theme;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -292,9 +292,9 @@ export default {
     color: #333333;
 
     &.active {
-      border-bottom: 3px solid #4CA5E4;
+      border-bottom: 3px solid @theme;
       font-weight: bold;
-      color: #4CA5E4;
+      color: @theme;
     }
   }
 }

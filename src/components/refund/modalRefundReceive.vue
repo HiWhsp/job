@@ -83,7 +83,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  background: #4CA5E4;
+  background: @theme;
 
   .el-dialog__title {
     color: #fff;
@@ -112,7 +112,7 @@ export default {
 
   .queding {
     margin-left: 20px;
-    background: #4CA5E4;
+    background: @theme;
     color: #fff;
   }
 }

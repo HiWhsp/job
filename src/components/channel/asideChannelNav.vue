@@ -169,7 +169,7 @@ export default {
 
           &:hover {
             text-decoration: underline;
-            color: #4CA5E4;
+            color: @theme;
           }
           &.active {
             color: #f07f00;
@@ -185,7 +185,7 @@ export default {
 
             &:hover {
               text-decoration: underline;
-              color: #4CA5E4;
+              color: @theme;
             }
             &.active {
               color: #f07f00;
@@ -206,12 +206,12 @@ export default {
     padding: 20px;
 
     background-color: #fff;
-    border: 1px solid #4CA5E4;
+    border: 1px solid @theme;
     border-left: none;
     text-align: left;
 
     &.need-border-top {
-      border-top: 1px solid #4CA5E4;
+      border-top: 1px solid @theme;
     }
 
     .pannel-item {
@@ -224,7 +224,7 @@ export default {
 
         &:hover {
           text-decoration: underline;
-          color: #4CA5E4;
+          color: @theme;
         }
       }
       .pannel-content {

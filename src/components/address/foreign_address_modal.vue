@@ -52,7 +52,7 @@
         </div>
         <div class="item">
           <span class="text" style="visibility: hidden;">默认地址</span>
-          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#4CA5E4"
+          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="@theme"
             inactive-color="#eeeeee">
           </el-switch>
           <span class="default-text">
@@ -433,17 +433,17 @@ export default {
     height: 32px;
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #4CA5E4;
+    border: 1px solid @theme;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #4CA5E4;
+    color: @theme;
   }
 
   .btn-2 {
     min-width: 120px;
     height: 32px;
-    background: #4CA5E4;
+    background: @theme;
     border-radius: 50px 50px 50px 50px;
     font-family: Arial, Arial;
     font-weight: 400;

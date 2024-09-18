@@ -527,7 +527,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #4CA5E4;
+      background: @theme;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -551,12 +551,12 @@ export default {
     &.active {
       .step-number {
         .step-num {
-          background: #4CA5E4;
+          background: @theme;
           color: #fff;
         }
 
         .step-line {
-          background: #4CA5E4;
+          background: @theme;
         }
       }
     }
@@ -708,7 +708,7 @@ export default {
 
   .money-heji {
     span {
-      color: #4CA5E4;
+      color: @theme;
       font-weight: bold;
     }
   }
@@ -732,7 +732,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: bold;
         line-height: 24px;
-        color: #4CA5E4;
+        color: @theme;
 
         .pay-title {
           margin-right: 5px;
@@ -775,8 +775,8 @@ export default {
         // min-width: 96px;
         height: 30px;
         line-height: 30px;
-        // background: #4CA5E4;
-        color: #4CA5E4;
+        // background: @theme;
+        color: @theme;
         // color: #fff;
         font-size: 14px;
       }
@@ -834,7 +834,7 @@ export default {
               cursor: pointer;
 
               &:hover {
-                color: #4CA5E4;
+                color: @theme;
               }
             }
           }
@@ -873,7 +873,7 @@ export default {
             margin-left: 10px;
             min-width: 96px;
             height: 30px;
-            background: #4CA5E4;
+            background: @theme;
             font-size: 14px;
             font-family: Microsoft YaHei;
             color: #ffffff;
@@ -914,7 +914,7 @@ export default {
 
       .count {
         font-weight: bold;
-        color: #4CA5E4;
+        color: @theme;
       }
 
       .money-item {
@@ -967,18 +967,18 @@ export default {
         height: 32px;
         background: #FFFFFF;
         border-radius: 50px 50px 50px 50px;
-        border: 1px solid #4CA5E4;
+        border: 1px solid @theme;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #4CA5E4;
+        color: @theme;
 
         &+button {
           margin-left: 20px;
         }
 
         &.btn-bg {
-          background: #4CA5E4;
+          background: @theme;
           color: #FFF;
         }
 

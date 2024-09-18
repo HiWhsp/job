@@ -116,7 +116,7 @@ export default {
   right: 0;
   .flex();
   cursor: pointer;
-  color: #4CA5E4;
+  color: @theme;
 
   &.disabled {
     color: #ccc;

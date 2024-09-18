@@ -448,7 +448,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #4CA5E4;
+      background: @theme;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -673,7 +673,7 @@ export default {
           margin-left: 10px;
           min-width: 96px;
           height: 30px;
-          background: #4CA5E4;
+          background: @theme;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;

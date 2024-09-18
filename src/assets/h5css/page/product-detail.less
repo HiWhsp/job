@@ -38,7 +38,7 @@
     //       color: #999999;
 
     //       &:hover {
-    //         color: #4CA5E4;
+    //         color: @theme;
     //       }
     //     }
     //   }
@@ -95,7 +95,7 @@
               font-weight: normal;
               font-size: 14px;
               color: #999;
-              color: #4CA5E4;
+              color: @theme;
             }
           }
           .product-other-action {
@@ -109,7 +109,7 @@
 
               &:hover {
                 span {
-                  color: #4CA5E4;
+                  color: @theme;
                 }
               }
 
@@ -173,9 +173,9 @@
                 max-width: 70%;
 
                 &.active {
-                  background: #4CA5E4;
+                  background: @theme;
                   color: #fff;
-                  border-color: #4CA5E4;
+                  border-color: @theme;
                 }
               }
             }
@@ -203,7 +203,7 @@
               width: 100%;
               .limit-end-box {
                 font-size: 0.3rem;
-                color: #4CA5E4;
+                color: @theme;
                 font-weight: bold;
                 text-align: center;
                 padding-bottom: 0.5rem;
@@ -288,7 +288,7 @@
                   font-size: 20px;
                   font-family: Microsoft YaHei-Bold, Microsoft YaHei;
                   font-weight: bold;
-                  color: #4CA5E4;
+                  color: @theme;
                 }
               }
 
@@ -317,17 +317,17 @@
                   }
 
                   &.active {
-                    border: 1px solid #4CA5E4;
+                    border: 1px solid @theme;
                     .img-box {
                       img {
                         visibility: visible !important;
                       }
                     }
                     .text {
-                      color: #4CA5E4;
+                      color: @theme;
                     }
                     .price {
-                      color: #4CA5E4;
+                      color: @theme;
                     }
                   }
 
@@ -365,7 +365,7 @@
                     position: absolute;
                     right: 0;
                     font-size: 12px;
-                    color: #4CA5E4;
+                    color: @theme;
                   }
                 }
               }
@@ -534,7 +534,7 @@
                       color: #333;
 
                       &.active {
-                        border-color: #4CA5E4;
+                        border-color: @theme;
                         color: #333;
                       }
                     }
@@ -561,7 +561,7 @@
                         margin-bottom: 5px;
 
                         &.active {
-                          background: #4CA5E4;
+                          background: @theme;
                           color: #fff;
                         }
 
@@ -599,7 +599,7 @@
                   font-size: 12px;
 
                   &:hover {
-                    border-color: #4CA5E4;
+                    border-color: @theme;
                   }
 
                   .coupon-info {
@@ -628,9 +628,9 @@
                 min-width: 142px;
                 height: 48px;
                 background: #fff7f2;
-                border: 1px solid #4CA5E4;
+                border: 1px solid @theme;
                 // border-radius: 24px;
-                color: #4CA5E4;
+                color: @theme;
               }
 
               .huoqi {
@@ -645,7 +645,7 @@
                 width: 266px;
                 height: 36px;
                 line-height: 36px;
-                background: #4CA5E4;
+                background: @theme;
                 border-radius: 4px 4px 4px 4px;
                 font-size: 14px;
                 font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -679,13 +679,13 @@
 
   .bottom-nav {
     position: relative;
-    // border-bottom: 2px solid #4CA5E4;
+    // border-bottom: 2px solid @theme;
     display: flex;
     height: 40px; /*no */
     line-height: 40px; /*no */
 
     .count-num {
-      color: #4CA5E4;
+      color: @theme;
     }
 
     .nav-item {
@@ -704,7 +704,7 @@
       }
 
       &.active {
-        background-color: #4CA5E4 !important;
+        background-color: @theme !important;
         color: #fff !important;
 
         .count-num {
@@ -722,7 +722,7 @@
       height: 32px; /*no */
 
       &.contact {
-        background: #4CA5E4;
+        background: @theme;
         .flex-center();
         right: 20px;
 
@@ -893,7 +893,7 @@
       .comment-title-text {
         padding: 5px 30px;
         margin-right: 20px;
-        background-color: #4CA5E4;
+        background-color: @theme;
         color: #fff;
       }
     }
@@ -1048,7 +1048,7 @@
 
         &:hover {
           .title {
-            color: #4CA5E4;
+            color: @theme;
           }
         }
 
@@ -1120,7 +1120,7 @@
     display: none;
   }
   /deep/ .swiper-pagination-bullet-active {
-    background: #4CA5E4;
+    background: @theme;
   }
 
   .swiper-wenxian {
@@ -1143,7 +1143,7 @@
 
     &:hover {
       .title {
-        color: #4CA5E4;
+        color: @theme;
       }
     }
 

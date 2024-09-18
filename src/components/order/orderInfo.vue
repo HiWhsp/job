@@ -446,7 +446,7 @@ export default {
 
 .money-heji {
   span {
-    color: #4CA5E4;
+    color: @theme;
     font-weight: bold;
   }
 }
@@ -470,7 +470,7 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: bold;
       line-height: 24px;
-      color: #4CA5E4;
+      color: @theme;
 
       .pay-title {
         margin-right: 5px;
@@ -513,8 +513,8 @@ export default {
       // min-width: 96px;
       height: 30px;
       line-height: 30px;
-      // background: #4CA5E4;
-      color: #4CA5E4;
+      // background: @theme;
+      color: @theme;
       // color: #fff;
       font-size: 14px;
     }
@@ -572,7 +572,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #4CA5E4;
+              color: @theme;
             }
           }
         }
@@ -611,7 +611,7 @@ export default {
           margin-left: 10px;
           min-width: 96px;
           height: 30px;
-          background: #4CA5E4;
+          background: @theme;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;
@@ -652,7 +652,7 @@ export default {
 
     .count {
       font-weight: bold;
-      color: #4CA5E4;
+      color: @theme;
     }
 
     .money-item {
@@ -721,8 +721,8 @@ export default {
     line-height: 20px;
     color: #7d7d7d;
 
-    border: 1px solid #4CA5E4;
-    color: #4CA5E4;
+    border: 1px solid #A66600;
+    color: #A66600;
   }
 
   .order-action {
@@ -731,28 +731,28 @@ export default {
     font-size: 14px;
     color: #7d7d7d;
 
-    border: 1px solid #4CA5E4;
-    color: #4CA5E4;
+    border: 1px solid @theme;
+    color: @theme;
 
     &:hover {
       opacity: 0.8;
     }
 
     &.zhifu {
-      background: #4CA5E4;
-      border-color: #4CA5E4;
+      background: @theme;
+      border-color: @theme;
       color: #fff;
     }
 
     &.shanchu {
-      background: #4CA5E4;
-      border-color: #4CA5E4;
+      background: @theme;
+      border-color: @theme;
       color: #fff;
     }
 
     &.shouhuo {
-      background: #4CA5E4;
-      border-color: #4CA5E4;
+      background: @theme;
+      border-color: @theme;
       color: #fff;
     }
   }

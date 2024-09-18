@@ -146,7 +146,7 @@ export default {
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: #4CA5E4;
+  color: @theme;
   font-size: 1.4rem;
 
   &.disabled {
@@ -205,7 +205,7 @@ export default {
     right: 0;
     .flex();
     cursor: pointer;
-    color: #4CA5E4;
+    color: @theme;
 
     &.disabled {
       color: #ccc;

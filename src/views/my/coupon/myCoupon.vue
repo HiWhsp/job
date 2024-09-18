@@ -24,27 +24,26 @@
         </div>
 
         <div class="ctx-box">
-          <div class="yhq-list" v-if="list_yhq.length">
+          <div class="yhq-list flex-between" v-if="list_yhq.length">
             <div class="yhq-item-box" v-for="(item, index) in list_yhq" :key="index">
               <img v-if="item.status == 1" src="@/static/order/coupon-used.png" alt="" class="used-img"/>
               <img v-if="item.status == 2" src="@/static/order/coupon-guoqi.png" alt="" class="used-img"/>
 
               <div class="yhq-item" :class="{ used: item.status == 1 || item.status == 2  }">
                 <div class="yhq-left">
-                  <img :src="item.originalPic" alt=""/>
-                </div>
-                <div class="yhq-right">
                   <div class="money">
                     <div class="currency">{{ vuex_huobi }}</div>
                     <div class="num">{{ item.jian }}</div>
                   </div>
+                </div>
+                <div class="yhq-right">
                   <div class="tiaojian">使用条件： 满{{ item.man }}可用</div>
                   <div class="shijian">有效时间： {{ item.startTime }} - {{ item.endTime }}</div>
                   <div class="action">
-                    <button v-if="status == 1" class="btn-ripple btn-pick btn-lingqu" @click="coupon_use(item)">
+                    <button v-if="item.status == 1" class="btn-ripple btn-pick btn-lingqu" @click="coupon_use(item)">
                       立即使用
                     </button>
-                    <!-- <button class="btn-ripple btn-pick btn-yilingqu" disabled v-else>已领取</button> -->
+<!--                     <button class="btn-ripple btn-pick btn-yilingqu" disabled v-else>已领取</button> -->
                   </div>
                 </div>
               </div>
@@ -125,12 +124,48 @@ export default {
       }
     },
     setView() {
-      this.$api("users_myYhqList", {
+      this.$api("yhq_myList", {
         scene: this.status,
+        page: 1,
+        pageSize: 1000,
       }).then((res) => {
         let {code, data} = res;
         if (code == 200) {
-          this.list_yhq = data;
+          this.list_yhq = [{
+            "id": 1,
+            "yhqId": "6284ab9e084029411",
+            "userId": 1,
+            "jiluId": 1,
+            "title": "新店开业",
+            "man": 100,
+            "jian": 50,
+            "status": 1,
+            "startTime": "2022-05-17",
+            "endTime": "2023-06-18",
+            "dtTime": "2022-05-18 16:17:34",
+            "orderId": 38,
+            "tiaojian": "通用",
+            "image": "",
+            "color": null,
+            "content": null
+          }, {
+            "id": 1,
+            "yhqId": "6284ab9e084029411",
+            "userId": 1,
+            "jiluId": 1,
+            "title": "新店开业",
+            "man": 100,
+            "jian": 50,
+            "status": 2,
+            "startTime": "2022-05-17",
+            "endTime": "2023-06-18",
+            "dtTime": "2022-05-18 16:17:34",
+            "orderId": 38,
+            "tiaojian": "通用",
+            "image": "",
+            "color": null,
+            "content": null
+          }];
         }
       });
     },
@@ -147,6 +182,7 @@ export default {
 <style scoped lang="less">
 .page {
   text-align: left;
+  padding-top: 0;
   padding-bottom: 80px;
 
   .main-title {
@@ -165,7 +201,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #4CA5E4;
+      background: @theme;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -205,9 +241,9 @@ export default {
         color: #333333;
 
         &.active {
-          border-bottom: 3px solid #4CA5E4;
+          border-bottom: 3px solid @theme;
           font-weight: bold;
-          color: #4CA5E4;
+          color: @theme;
         }
       }
     }
@@ -345,27 +381,52 @@ export default {
 .yhq-list {
   .yhq-item-box {
     position: relative;
+    width: 419px;
+    height: 128px;
+    background: #FFFFFF;
+    border-radius: 10px 10px 10px 10px;
+    border: 1px solid #E6E6E6;
+
+    img {
+      width: 140px;
+      height: 100%;
+    }
   }
 
   .yhq-item {
     .flex();
+
     margin-bottom: 30px;
 
     .yhq-left {
-      width: 786px;
-      height: 252px;
+      position: absolute;
+      width: 140px;
 
-      img {
-        width: 100%;
-        height: 100%;
+      .money {
+        .flex();
+        justify-content: center;
+
+        .currency {
+          font-size: 42px;
+          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-weight: bold;
+          color: #fff;
+        }
+
+        .num {
+          font-size: 42px;
+          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-weight: bold;
+          color: #fff;
+        }
       }
     }
 
     .yhq-right {
       flex: 1;
-      height: 252px;
-      padding: 20px;
-      background: #f9f9f9;
+      padding: 15px;
+      margin-left: 140px;
+      height: 128px;
 
       .money {
         display: flex;
@@ -375,23 +436,22 @@ export default {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #4CA5E4;
+          color: @theme;
         }
 
         .num {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #4CA5E4;
+          color: @theme;
         }
       }
 
       .tiaojian {
-        margin-top: 10px;
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
+        color: #000;
         line-height: 28px;
       }
 
@@ -399,17 +459,16 @@ export default {
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
+        color: #979797;
         line-height: 28px;
       }
 
       .action {
-        margin-top: 30px;
 
         button {
           width: 127px;
           height: 36px;
-          background: #4CA5E4;
+          background: #FF4000;
           border-radius: 4px 4px 4px 4px;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -426,16 +485,9 @@ export default {
   }
 }
 
-.used {
-  filter: grayscale(1);
-  opacity: 0.3;
-}
 
 .used-img {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
 }
 </style>
 

@@ -201,7 +201,7 @@ export default {
     }
 
     &.active {
-      border: 1px solid #4CA5E4;
+      border: 1px solid @theme;
     }
 
     img {

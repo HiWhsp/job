@@ -13,8 +13,8 @@
               <span>{{ item.nickname }}</span>
             </div>
             <div class="right">
-              <el-rate v-model="item.star" disabled :colors="['#4CA5E4', '#4CA5E4', '#4CA5E4']"
-                text-color="#4CA5E4"></el-rate>
+              <el-rate v-model="item.star" disabled :colors="['#A66600', '#A66600', '#A66600']"
+                text-color="#A66600"></el-rate>
             </div>
           </div>
 
@@ -123,7 +123,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #4CA5E4;
+      background: @theme;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
