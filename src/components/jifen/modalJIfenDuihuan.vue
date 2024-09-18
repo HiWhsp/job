@@ -1,103 +1,107 @@
 <template>
-  <div class="modal-container">
-    <el-dialog
-      class="modal-duihuan"
-      title="积分兑换"
-      width="580px"
-      custom-class="modal-wrap"
-      :close-on-click-modal="true"
-      :visible.sync="showModal"
-      :before-close="onModal_close"
-    >
-      <div class="modal-inner">
-        <div class="img-box">
-          <img :src="detail.image" alt="" />
-        </div>
-        <!-- <div class="tip">请您输入要兑换的积分商品数量。</div> -->
-        <div class="form-box">
-          <div class="input-box">
-            <span class="label">兑换数量</span>
-            <input type="text" placeholder="" v-model="number" />
-          </div>
-        </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
+    <div class="modal-container">
+        <el-dialog
+                class="modal-duihuan"
+                title="积分兑换"
+                width="580px"
+                custom-class="modal-wrap"
+                :close-on-click-modal="true"
+                :visible.sync="showModal"
+                :before-close="onModal_close"
+        >
+            <div class="modal-inner">
+                <div class="img-box">
+                    <img :src="detail.image" alt=""/>
+                </div>
+                <!-- <div class="tip">请您输入要兑换的积分商品数量。</div> -->
+                <div class="form-box">
+                    <div class="input-box">
+                        <span class="label">兑换数量</span>
+                        <input type="text" placeholder="" v-model="number"/>
+                    </div>
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
         <button class="btn-ripple quxiao" @click="showModal = false">取消</button>
         <button class="btn-ripple queding" @click="confirm_duihuan">确认</button>
       </span>
-    </el-dialog>
-  </div>
+        </el-dialog>
+    </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
-  name: "commonShare",
-  components: {},
-  props: ["curr"],
-  data() {
-    return {
-      showModal: false,
-      // showModal: true,
-      number: 1,
-      detail: {},
-    };
-  },
-  computed: {
-    ...mapState(["baseInfo"]),
-  },
-  watch: {
-    showModal(val) {
-      if (!val) {
-        this.number = 1;
-        this.detail = {};
-      }
+    name: "commonShare",
+    components: {},
+    props: ["curr"],
+    data() {
+        return {
+            showModal: false,
+            // showModal: true,
+            number: 1,
+            detail: {},
+        };
     },
-  },
-
-  beforeDestroy() {
-    clearInterval(this.timer);
-    this.timer = null;
-  },
-
-  methods: {
-    init(data) {
-      //console.log("设置余额密码", { ...data });
-      this.detail = data;
-      this.showModal = true;
+    computed: {
+        ...mapState(["baseInfo"]),
     },
-
-    onModal_close() {
-      this.showModal = false;
-    },
-    //确认兑换
-    confirm_duihuan() {
-      if (!this.number) {
-        alertErr("请输入要兑换的积分商品数量");
-        return;
-      }
-
-      var item = { ...this.detail };
-
-      let { image, inventoryId, jifen, key_vals, title } = item;
-
-      var payment_products = [
-        {
-          num: this.number, //数量
-          image,
-          inventoryId,
-          jifen,
-          key_vals,
-          title,
+    watch: {
+        showModal(val) {
+            if (!val) {
+                this.number = 1;
+                this.detail = {};
+            }
         },
-      ];
-
-      sessionStorage.setItem("jifen_payment_products", JSON.stringify(payment_products));
-
-      this.$router.push("/jifenorder-submit");
     },
-  },
+
+    beforeDestroy() {
+        clearInterval(this.timer);
+        this.timer = null;
+    },
+
+    methods: {
+        init(data) {
+            //console.log("设置余额密码", { ...data });
+            this.detail = data;
+            this.showModal = true;
+        },
+
+        onModal_close() {
+            this.showModal = false;
+        },
+        //确认兑换
+        confirm_duihuan() {
+            if (!this.number) {
+                alertErr("请输入要兑换的积分商品数量");
+                return;
+            }
+
+            var item = {...this.detail};
+
+            let {image, inventoryId, jifen, key_vals, title} = item;
+
+            var payment_products =
+                {
+                    num: this.number, //数量
+                    inventoryId,
+                };
+
+            this.$api("jiFen_order", {
+                ...payment_products,
+            }).then((res) => {
+                let {code, data, pages, msg} = res;
+                if (code == 200) {
+                    this.showModal = false;
+                    this.$message.success('兑换成功');
+                } else {
+                    this.$message.error(msg);
+                }
+            });
+
+        },
+    },
 };
 </script>
 
@@ -121,6 +125,7 @@ export default {
     .img-box {
       .flex-center();
       margin-bottom: 20px;
+
       img {
         width: 150px;
         height: 150px;
@@ -134,6 +139,7 @@ export default {
   width: 400px;
   margin: 0 auto;
 }
+
 .input-box {
   position: relative;
   margin-bottom: 20px;
@@ -193,6 +199,7 @@ export default {
     color: #fff;
     color: #333;
   }
+
   .el-dialog__headerbtn .el-dialog__close {
     color: #fff;
     color: #333;
@@ -219,6 +226,7 @@ export default {
     color: @theme;
     border: 1px solid @theme;
   }
+
   .queding {
     background: @theme;
     color: #fff;

@@ -88,6 +88,15 @@ const routes = [
             requireAuth: true
         }
     },
+    {
+        path: '/pointsMallDetail',
+        name: 'pointsMallDetail',
+        component: () => import('@/views/my/points/jifengoodsdetail.vue'),
+        meta: {
+            title: "积分商品详情",
+            requireAuth: true
+        }
+    },
 
 
     /** 登录相关 **/

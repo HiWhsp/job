@@ -24,13 +24,13 @@
                             <div class="good-list">
                                 <div class="item pointer" v-for="(item, index) in list_goods" :key="index">
                                     <div class="img-box cover">
-                                        <img src="@/static/home/promation-img.png" alt/>
+                                        <img :src="item.image" alt/>
                                     </div>
                                     <div class="info">
-                                        <div class="title">FUHS-30</div>
+                                        <div class="title">{{ item.title }}</div>
                                         <div class="duihuan-info" @click.stop="onClick_duihuan(item)">
                                             <div class="jifen">
-                                                <b>100</b>
+                                                <b>{{ item.jifen }}</b>
                                                 <span>积分·兑换</span>
                                             </div>
                                         </div>
@@ -58,13 +58,18 @@
                 </div>
             </div>
         </div>
+        <modalJIfenDuihuan ref="modalJIfenDuihuan"></modalJIfenDuihuan>
     </div>
 </template>
 <script>
 import {mapState} from "vuex";
+import modalJIfenDuihuan from "@/components/jifen/modalJIfenDuihuan.vue";
 
 export default {
     name: "pointsMall",
+    components: {
+        modalJIfenDuihuan
+    },
     data() {
         return {
             selectTab: {title: "全部", status: "0"},
@@ -104,23 +109,41 @@ export default {
     methods: {
         setView() {
             //积分商品
-            this.$api("money_jifenPdts", {
+            this.$api("jiFen_plist", {
                 ...this.pagination,
             }).then((res) => {
-                let {code, data, pages, message} = res;
-                this.list_goods = data;
-            });
-        },
-
-        //进入详情
-        click_goods(item) {
-            this.$router.push({
-                path: "/jifenproduct-detail",
-                query: {
-                    id: item.inventoryId,
-                    jifen: item.jifen,
-                    order: item.order,
-                },
+                let {code, data, pages, message} = {
+                    "code": 200,
+                    "msg": "获取成功",
+                    "data": {
+                        "count": 2,
+                        "pages": 1,
+                        "list": [
+                            {
+                                "productId": 8,
+                                "inventoryId": 22,
+                                "title": "电镐圆孔凿",
+                                "keyVals": "绿",
+                                "image": "",
+                                "jifen": 1000,
+                                "price": "500.00",
+                                "kucun": 81
+                            },
+                            {
+                                "productId": 7,
+                                "inventoryId": 8,
+                                "title": "多规格-商品测试",
+                                "keyVals": "白,小",
+                                "image": "",
+                                "jifen": 200,
+                                "price": "100.00",
+                                "kucun": 999
+                            }
+                        ]
+                    }
+                };
+                this.list_goods = data.list;
+                this.count = data.count;
             });
         },
 
@@ -245,6 +268,7 @@ export default {
 
     .img-box {
       img {
+        margin-top: 15px;
         width: 160px;
         height: 160px;
       }
@@ -252,7 +276,7 @@ export default {
 
     .info {
       text-align: left;
-      padding: 0 15px 15px;
+      padding: 5px 15px 15px;
       .flex();
       flex-direction: column;
 

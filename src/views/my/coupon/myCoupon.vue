@@ -1,86 +1,92 @@
 <template>
-  <div class="page">
-    <div class="main-title">
-      <span>我的优惠券</span>
+    <div class="page">
+        <div class="main-title">
+            <span>我的优惠券</span>
 
-      <!-- <b @click="$router.push('/coupon')">领券中心</b> -->
-    </div>
-
-    <div class="page-ctx">
-      <div class="inner">
-        <div class="tab-wrap">
-          <div class="tab-box">
-            <div class="tab-item" v-for="(item, index) in list_tab" :key="index" @click="tab_toggle(item)"
-                 :class="status == item.status ? 'active' : ''">
-              {{ item.title }}
-            </div>
-          </div>
-
-          <div class="lingquan" @click="$router.push('/couponCenter')">
-            <!-- <img src="@img/other/mycoupon-to-center.png" alt="" class="coupon" /> -->
-            <span>进入领券中心 </span>
-            <img src="@/static/order/more.png" alt="" class="arrow"/>
-          </div>
+            <!-- <b @click="$router.push('/coupon')">领券中心</b> -->
         </div>
 
-        <div class="ctx-box">
-          <div class="yhq-list flex-between" v-if="list_yhq.length">
-            <div class="yhq-item-box" v-for="(item, index) in list_yhq" :key="index">
-              <img v-if="item.status == 1" src="@/static/order/coupon-used.png" alt="" class="used-img"/>
-              <img v-if="item.status == 2" src="@/static/order/coupon-guoqi.png" alt="" class="used-img"/>
+        <div class="page-ctx">
+            <div class="inner">
+                <div class="tab-wrap">
+                    <div class="tab-box">
+                        <div class="tab-item" v-for="(item, index) in list_tab" :key="index" @click="tab_toggle(item)"
+                             :class="status == item.status ? 'active' : ''">
+                            {{ item.title }}
+                        </div>
+                    </div>
 
-              <div class="yhq-item" :class="{ used: item.status == 1 || item.status == 2  }">
-                <div class="yhq-left">
-                  <div class="money">
-                    <div class="currency">{{ vuex_huobi }}</div>
-                    <div class="num">{{ item.jian }}</div>
-                  </div>
+                    <div class="lingquan" @click="$router.push('/couponCenter')">
+                        <!-- <img src="@img/other/mycoupon-to-center.png" alt="" class="coupon" /> -->
+                        <span>进入领券中心 </span>
+                        <img src="@/static/order/more.png" alt="" class="arrow"/>
+                    </div>
                 </div>
-                <div class="yhq-right">
-                  <div class="tiaojian">使用条件： 满{{ item.man }}可用</div>
-                  <div class="shijian">有效时间： {{ item.startTime }} - {{ item.endTime }}</div>
-                  <div class="action">
-                    <button v-if="item.status == 1" class="btn-ripple btn-pick btn-lingqu" @click="coupon_use(item)">
-                      立即使用
-                    </button>
-<!--                     <button class="btn-ripple btn-pick btn-yilingqu" disabled v-else>已领取</button> -->
-                  </div>
+
+                <div class="ctx-box">
+                    <div class="yhq-list flex-between" v-if="list_yhq.length">
+                        <div class="yhq-item-box" v-for="(item, index) in list_yhq" :key="index">
+                            <img v-if="item.status == 1" src="@/static/order/coupon-used.png" alt="" class="used-img"/>
+                            <img v-if="item.status == 2 || item.status == 3" src="@/static/order/coupon-guoqi.png"
+                                 alt=""
+                                 class="used-img"/>
+
+                            <div class="yhq-item" :class="{ used: item.status == 1 || item.status == 2  }">
+                                <div class="yhq-left">
+                                    <div class="money">
+                                        <div class="currency">{{ vuex_huobi }}</div>
+                                        <div class="num">{{ item.jian }}</div>
+                                    </div>
+                                </div>
+                                <div class="yhq-right">
+                                    <div class="tiaojian">使用条件： 满{{ item.man }}可用</div>
+                                    <div class="shijian">有效时间： {{ item.startTime }} - {{ item.endTime }}</div>
+                                    <div class="action">
+                                        <button v-if="item.status == 1" class="btn-ripple btn-pick btn-lingqu"
+                                                @click="coupon_use(item)">
+                                            立即使用
+                                        </button>
+                                        <img v-if="item.status == 2" src="@/static/order/yishiyong.png"
+                                             class="status-img" alt="">
+                                        <img v-if="item.status == 3" src="@/static/order/yiguoqi.png" class="status-img"
+                                             alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <el-empty v-if="!list_yhq.length" description="暂无数据..."></el-empty>
+
+                    <div class="list-box" v-if="false">
+                        <div class="item" :class="'state-' + status" v-for="(item, index) in list_yhq" :key="index">
+                            <div class="info">
+                                <div class="title">
+                                    <span class="huobi">{{ vuex_huobi }} </span>
+                                    <span class="num">{{ item.jian }}</span>
+                                </div>
+                                <div class="tiaojian">
+                                    <!-- 使用条件： -->
+                                    满{{ item.man }}可用
+                                </div>
+                                <div class="shijian">
+                                    <!-- 有效时间： -->
+                                    {{ item.startTime }}-{{ item.endTime }}
+                                </div>
+                            </div>
+                            <div class="action">
+                                <button :disabled="status != 1" @click="coupon_use(item)">立即使用</button>
+                            </div>
+                            <div class="guoqi">
+                                <img v-if="status == 2" :src="yishiyong" alt/>
+                                <img v-if="status == 3" :src="yiguoqi" alt/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-
-          <el-empty v-if="!list_yhq.length" description="暂无数据..."></el-empty>
-
-          <div class="list-box" v-if="false">
-            <div class="item" :class="'state-' + status" v-for="(item, index) in list_yhq" :key="index">
-              <div class="info">
-                <div class="title">
-                  <span class="huobi">{{ vuex_huobi }} </span>
-                  <span class="num">{{ item.jian }}</span>
-                </div>
-                <div class="tiaojian">
-                  <!-- 使用条件： -->
-                  满{{ item.man }}可用
-                </div>
-                <div class="shijian">
-                  <!-- 有效时间： -->
-                  {{ item.startTime }}-{{ item.endTime }}
-                </div>
-              </div>
-              <div class="action">
-                <button :disabled="status != 1" @click="coupon_use(item)">立即使用</button>
-              </div>
-              <div class="guoqi">
-                <img v-if="status == 2" :src="yishiyong" alt/>
-                <img v-if="status == 3" :src="yiguoqi" alt/>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -90,91 +96,108 @@ const yiguoqi = require("@/static/order/yiguoqi.png");
 const yishiyong = require("@/static/order/yishiyong.png");
 
 export default {
-  name: "servicePage",
-  components: {},
-  data() {
-    return {
-      yiguoqi,
-      yishiyong,
+    name: "servicePage",
+    components: {},
+    data() {
+        return {
+            yiguoqi,
+            yishiyong,
 
-      status: 1,
-      list_tab: [
-        // { title: "全部", status: 0 },
-        {title: "未使用", status: 1},
-        {title: "已使用", status: 2},
-        {title: "已过期", status: 3},
-      ],
+            status: 1,
+            list_tab: [
+                // { title: "全部", status: 0 },
+                {title: "未使用", status: 1},
+                {title: "已使用", status: 2},
+                {title: "已过期", status: 3},
+            ],
 
-      list_yhq: [],
-    };
-  },
-  computed: {
-    ...mapState(["defaultAvatar"]),
-  },
-  watch: {},
-  created() {
-    this.setView();
-  },
-  methods: {
-    tab_toggle(item) {
-      if (this.status != item.status) {
-        this.list_yhq = [];
-        this.status = item.status;
+            list_yhq: [],
+        };
+    },
+    computed: {
+        ...mapState(["defaultAvatar"]),
+    },
+    watch: {},
+    created() {
         this.setView();
-      }
     },
-    setView() {
-      this.$api("yhq_myList", {
-        scene: this.status,
-        page: 1,
-        pageSize: 1000,
-      }).then((res) => {
-        let {code, data} = res;
-        if (code == 200) {
-          this.list_yhq = [{
-            "id": 1,
-            "yhqId": "6284ab9e084029411",
-            "userId": 1,
-            "jiluId": 1,
-            "title": "新店开业",
-            "man": 100,
-            "jian": 50,
-            "status": 1,
-            "startTime": "2022-05-17",
-            "endTime": "2023-06-18",
-            "dtTime": "2022-05-18 16:17:34",
-            "orderId": 38,
-            "tiaojian": "通用",
-            "image": "",
-            "color": null,
-            "content": null
-          }, {
-            "id": 1,
-            "yhqId": "6284ab9e084029411",
-            "userId": 1,
-            "jiluId": 1,
-            "title": "新店开业",
-            "man": 100,
-            "jian": 50,
-            "status": 2,
-            "startTime": "2022-05-17",
-            "endTime": "2023-06-18",
-            "dtTime": "2022-05-18 16:17:34",
-            "orderId": 38,
-            "tiaojian": "通用",
-            "image": "",
-            "color": null,
-            "content": null
-          }];
-        }
-      });
-    },
+    methods: {
+        tab_toggle(item) {
+            if (this.status != item.status) {
+                this.list_yhq = [];
+                this.status = item.status;
+                this.setView();
+            }
+        },
+        setView() {
+            this.$api("yhq_myList", {
+                scene: this.status,
+                page: 1,
+                pageSize: 1000,
+            }).then((res) => {
+                let {code, data} = res;
+                if (code == 200) {
+                    this.list_yhq = [{
+                        "id": 1,
+                        "yhqId": "6284ab9e084029411",
+                        "userId": 1,
+                        "jiluId": 1,
+                        "title": "新店开业",
+                        "man": 100,
+                        "jian": 50,
+                        "status": 1,
+                        "startTime": "2022-05-17",
+                        "endTime": "2023-06-18",
+                        "dtTime": "2022-05-18 16:17:34",
+                        "orderId": 38,
+                        "tiaojian": "通用",
+                        "image": "",
+                        "color": null,
+                        "content": null
+                    }, {
+                        "id": 1,
+                        "yhqId": "6284ab9e084029411",
+                        "userId": 1,
+                        "jiluId": 1,
+                        "title": "新店开业",
+                        "man": 100,
+                        "jian": 50,
+                        "status": 2,
+                        "startTime": "2022-05-17",
+                        "endTime": "2023-06-18",
+                        "dtTime": "2022-05-18 16:17:34",
+                        "orderId": 38,
+                        "tiaojian": "通用",
+                        "image": "",
+                        "color": null,
+                        "content": null
+                    }, {
+                        "id": 1,
+                        "yhqId": "6284ab9e084029411",
+                        "userId": 1,
+                        "jiluId": 1,
+                        "title": "新店开业",
+                        "man": 100,
+                        "jian": 50,
+                        "status": 3,
+                        "startTime": "2022-05-17",
+                        "endTime": "2023-06-18",
+                        "dtTime": "2022-05-18 16:17:34",
+                        "orderId": 38,
+                        "tiaojian": "通用",
+                        "image": "",
+                        "color": null,
+                        "content": null
+                    }];
+                }
+            });
+        },
 
-    coupon_use(item) {
-      //console.log("使用优惠券", { ...item });
-      this.$router.push("/product-cates?id=853");
+        coupon_use(item) {
+            //console.log("使用优惠券", { ...item });
+            this.$router.push("/product-cates?id=853");
+        },
     },
-  },
 };
 </script>
 
@@ -379,6 +402,10 @@ export default {
 }
 
 .yhq-list {
+  .flex();
+  flex-wrap: wrap;
+  .flex-between();
+
   .yhq-item-box {
     position: relative;
     width: 419px;
@@ -386,6 +413,7 @@ export default {
     background: #FFFFFF;
     border-radius: 10px 10px 10px 10px;
     border: 1px solid #E6E6E6;
+    margin-bottom: 20px;
 
     img {
       width: 140px;
@@ -395,7 +423,6 @@ export default {
 
   .yhq-item {
     .flex();
-
     margin-bottom: 30px;
 
     .yhq-left {
@@ -408,14 +435,12 @@ export default {
 
         .currency {
           font-size: 42px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
           color: #fff;
         }
 
         .num {
           font-size: 42px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
           color: #fff;
         }
@@ -479,6 +504,14 @@ export default {
             background: #aaa;
             cursor: not-allowed;
           }
+        }
+
+        .status-img {
+          width: 65px;
+          height: 54px;
+          position: absolute;
+          right: 5px;
+          bottom: 5px;
         }
       }
     }

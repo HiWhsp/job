@@ -1,191 +1,243 @@
 <template>
-  <div class="page">
-    <div class="main-title">
-      <span>领券中心</span>
-      <!-- <b @click="$router.push('/mycoupon')">我的优惠券</b> -->
-    </div>
+    <div class="page">
+        <div class="main-title">
+            <span>领券中心</span>
+            <!-- <b @click="$router.push('/mycoupon')">我的优惠券</b> -->
+        </div>
 
-    <div class="page-ctx">
-      <div class="inner">
-        <div class="yhq-list" v-if="list_yhq.length">
-          <div class="yhq-item" v-for="(item, index) in list_yhq" :key="index">
-            <div class="yhq-left">
-              <img :src="item.originalPic" alt=""/>
-            </div>
-            <div class="yhq-right">
-              <div class="money">
-                <div class="currency">{{ vuex_huobi }}</div>
-                <div class="num">{{ item.money }}</div>
-              </div>
-              <div class="tiaojian">使用条件： 满{{ item.man }}可用</div>
-              <div class="shijian">
-                有效时间： {{ item.startTime }} - {{ item.endTime }}
-              </div>
-              <div class="action">
-                <button
-                    class="btn-ripple btn-pick btn-lingqu"
-                    v-if="item.if_ke_lingqu == 1"
-                    @click="coupon_pick(item)"
+        <div class="page-ctx">
+            <div class="inner">
+                <div class="yhq-list" v-if="list_yhq.length">
+                    <div class="yhq-item" v-for="(item, index) in list_yhq" :key="index">
+                        <div class="yhq-left">
+                            <div class="money">
+                                <div class="currency">{{ vuex_huobi }}</div>
+                                <div class="num">{{ item.money }}</div>
+                            </div>
+                            <!--                            <img src="@/static/order/coupon-used.png" alt=""/>-->
+                        </div>
+                        <div class="yhq-right">
+                            <div class="tiaojian">使用条件： 满{{ item.man }}可用</div>
+                            <div class="shijian">
+                                有效时间： {{ item.startTime }} - {{ item.endTime }}
+                            </div>
+                            <div class="action">
+                                <button
+                                        class="btn-ripple btn-pick btn-lingqu"
+                                        v-if="item.if_ke_lingqu == 1"
+                                        @click="coupon_pick(item)"
+                                >
+                                    立即领取
+                                </button>
+                                <button class="btn-ripple btn-pick btn-yilingqu" disabled v-else>
+                                    已领取
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <el-empty v-if="!list_yhq.length" description="暂无优惠券信息..."></el-empty>
+
+                <!-- <div class="bg-box">
+                  <img src="@img/my/bg-coupon.png" alt="" />
+                </div> -->
+
+                <!-- <div class="tab-box">
+                <div
+                  class="tab-item"
+                  v-for="(item, index) in list_tab"
+                  :key="index"
+                  @click="status = item.status"
+                  :class="status == item.status ? 'active' : ''"
                 >
-                  立即领取
-                </button>
-                <button class="btn-ripple btn-pick btn-yilingqu" disabled v-else>
-                  已领取
-                </button>
-              </div>
+                  {{ item.title }}
+                </div>
+              </div> -->
+
+                <div class="list-box" v-if="false">
+                    <div
+                            class="item"
+                            :class="'state-' + status"
+                            v-for="(item, index) in list_yhq"
+                            :key="index"
+                    >
+                        <div class="info">
+                            <div class="title">
+                                <span class="huobi">{{ vuex_huobi }} </span>
+                                <span class="num">{{ item.money }}</span>
+                            </div>
+                            <div class="tiaojian">
+                                <!-- 使用条件： -->
+                                满{{ item.man }}可用
+                            </div>
+                            <div class="shijian">
+                                <!-- 有效时间： -->
+                                {{ item.startTime }}-{{ item.endTime }}
+                            </div>
+                        </div>
+                        <div class="action">
+                            <button
+                                    class="btn-lingqu"
+                                    v-if="item.if_ke_lingqu == 1"
+                                    @click="coupon_pick(item)"
+                            >
+                                立即领取
+                            </button>
+                            <button class="btn-yilingqu" v-else>已领取</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <el-empty v-if="!list_yhq.length" description="暂无优惠券信息..."></el-empty> -->
+
+                <!-- <div class="lingquan" @click="$router.push('/mycoupon')">
+                <img src="@img/other/mycoupon-to-center.png" alt="" />
+                <span>我的优惠券 ></span>
+              </div> -->
             </div>
-          </div>
         </div>
-
-        <el-empty v-if="!list_yhq.length" description="暂无优惠券信息..."></el-empty>
-
-        <!-- <div class="bg-box">
-          <img src="@img/my/bg-coupon.png" alt="" />
-        </div> -->
-
-        <!-- <div class="tab-box">
-        <div
-          class="tab-item"
-          v-for="(item, index) in list_tab"
-          :key="index"
-          @click="status = item.status"
-          :class="status == item.status ? 'active' : ''"
-        >
-          {{ item.title }}
-        </div>
-      </div> -->
-
-        <div class="list-box" v-if="false">
-          <div
-              class="item"
-              :class="'state-' + status"
-              v-for="(item, index) in list_yhq"
-              :key="index"
-          >
-            <div class="info">
-              <div class="title">
-                <span class="huobi">{{ vuex_huobi }} </span>
-                <span class="num">{{ item.money }}</span>
-              </div>
-              <div class="tiaojian">
-                <!-- 使用条件： -->
-                满{{ item.man }}可用
-              </div>
-              <div class="shijian">
-                <!-- 有效时间： -->
-                {{ item.startTime }}-{{ item.endTime }}
-              </div>
-            </div>
-            <div class="action">
-              <button
-                  class="btn-lingqu"
-                  v-if="item.if_ke_lingqu == 1"
-                  @click="coupon_pick(item)"
-              >
-                立即领取
-              </button>
-              <button class="btn-yilingqu" v-else>已领取</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- <el-empty v-if="!list_yhq.length" description="暂无优惠券信息..."></el-empty> -->
-
-        <!-- <div class="lingquan" @click="$router.push('/mycoupon')">
-        <img src="@img/other/mycoupon-to-center.png" alt="" />
-        <span>我的优惠券 ></span>
-      </div> -->
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
 import {mapState} from "vuex";
 
 export default {
-  name: "servicePage",
-  components: {},
-  data() {
-    return {
-      status: 1,
-      list_tab: [
-        // { title: "全部", status: 0 },
-        {title: "未使用", status: 1},
-        {title: "已使用", status: 2},
-        {title: "已过期", status: 3},
-      ],
+    name: "servicePage",
+    components: {},
+    data() {
+        return {
+            status: 1,
+            list_tab: [
+                // { title: "全部", status: 0 },
+                {title: "未使用", status: 1},
+                {title: "已使用", status: 2},
+                {title: "已过期", status: 3},
+            ],
 
-      list_yhq: [],
+            list_yhq: [],
 
-      pagination: {
-        page: 1,
-        pageNum: 1000,
-      },
-    };
-  },
-  computed: {
-    ...mapState(["defaultAvatar"]),
-  },
-  watch: {
-    status(status_curr) {
-      this.setView();
+            pagination: {
+                page: 1,
+                pageNum: 1000,
+            },
+        };
     },
-  },
-  created() {
-    this.setView();
-  },
-  methods: {
-    setView() {
-      this.$api("yhq_list", {
-        scene: 0,
-        ...this.pagination,
-      }).then((res) => {
-        let {code, data, msg} = res;
-        if (code == 200) {
-          this.list_yhq = [{
-            "id": 2,
-            "title": "满10-1优惠券",
-            "money": 1,
-            "man": 10,
-            "color": "",
-            "content": "满10-1优惠券满10-1优惠券满10-1优惠券满10-1优惠券",
-            "numLimit": 1,
-            "num": 100,
-            "hasNum": 0,
-            "originalPic": "https://vuesc.new.zhishangez.com/upload/20240408/2024040810342565361.jpg",
-            "startTime": "2024-08-01",
-            "endTime": "2024-08-31",
-            "areaIds": "",
-            "levelIds": "",
-            "mendianIds": "",
-            "channels": "",
-            "pdts": "",
-            "channelNames": "",
-            "pdtNames": "",
-            "status": 1,
-            "dtTime": "2024-04-08 10:48:03",
-            "tiaojian": "通用",
-            "if_lingqu": 0,
-            "if_ke_lingqu": 1,
-            "width": 0
-          }];
-        }
-      });
+    computed: {
+        ...mapState(["defaultAvatar"]),
     },
-
-    coupon_pick(item) {
-      this.$api("yhq_lingQu", {
-        id: item.id,
-      }).then((res) => {
-        let {code, data, msg} = res;
-
-        if (code == 200) {
-          this.setView();
-        }
-      });
+    watch: {
+        status(status_curr) {
+            this.setView();
+        },
     },
-  },
+    created() {
+        this.setView();
+    },
+    methods: {
+        setView() {
+            this.$api("yhq_list", {
+                scene: 0,
+                ...this.pagination,
+            }).then((res) => {
+                let {code, data, msg} = res;
+                if (code == 200) {
+                    this.list_yhq = [{
+                        "id": 2,
+                        "title": "满10-1优惠券",
+                        "money": 1,
+                        "man": 10,
+                        "color": "",
+                        "content": "满10-1优惠券满10-1优惠券满10-1优惠券满10-1优惠券",
+                        "numLimit": 1,
+                        "num": 100,
+                        "hasNum": 0,
+                        "originalPic": "https://vuesc.new.zhishangez.com/upload/20240408/2024040810342565361.jpg",
+                        "startTime": "2024-08-01",
+                        "endTime": "2024-08-31",
+                        "areaIds": "",
+                        "levelIds": "",
+                        "mendianIds": "",
+                        "channels": "",
+                        "pdts": "",
+                        "channelNames": "",
+                        "pdtNames": "",
+                        "status": 1,
+                        "dtTime": "2024-04-08 10:48:03",
+                        "tiaojian": "通用",
+                        "if_lingqu": 0,
+                        "if_ke_lingqu": 1,
+                        "width": 0
+                    }, {
+                        "id": 2,
+                        "title": "满10-1优惠券",
+                        "money": 1,
+                        "man": 10,
+                        "color": "",
+                        "content": "满10-1优惠券满10-1优惠券满10-1优惠券满10-1优惠券",
+                        "numLimit": 1,
+                        "num": 100,
+                        "hasNum": 0,
+                        "originalPic": "https://vuesc.new.zhishangez.com/upload/20240408/2024040810342565361.jpg",
+                        "startTime": "2024-08-01",
+                        "endTime": "2024-08-31",
+                        "areaIds": "",
+                        "levelIds": "",
+                        "mendianIds": "",
+                        "channels": "",
+                        "pdts": "",
+                        "channelNames": "",
+                        "pdtNames": "",
+                        "status": 1,
+                        "dtTime": "2024-04-08 10:48:03",
+                        "tiaojian": "通用",
+                        "if_lingqu": 0,
+                        "if_ke_lingqu": 1,
+                        "width": 0
+                    }, {
+                        "id": 2,
+                        "title": "满10-1优惠券",
+                        "money": 1,
+                        "man": 10,
+                        "color": "",
+                        "content": "满10-1优惠券满10-1优惠券满10-1优惠券满10-1优惠券",
+                        "numLimit": 1,
+                        "num": 100,
+                        "hasNum": 0,
+                        "originalPic": "https://vuesc.new.zhishangez.com/upload/20240408/2024040810342565361.jpg",
+                        "startTime": "2024-08-01",
+                        "endTime": "2024-08-31",
+                        "areaIds": "",
+                        "levelIds": "",
+                        "mendianIds": "",
+                        "channels": "",
+                        "pdts": "",
+                        "channelNames": "",
+                        "pdtNames": "",
+                        "status": 1,
+                        "dtTime": "2024-04-08 10:48:03",
+                        "tiaojian": "通用",
+                        "if_lingqu": 0,
+                        "if_ke_lingqu": 1,
+                        "width": 0
+                    }];
+                }
+            });
+        },
+
+        coupon_pick(item) {
+            this.$api("yhq_lingQu", {
+                id: item.id,
+            }).then((res) => {
+                let {code, data, msg} = res;
+
+                if (code == 200) {
+                    this.setView();
+                }
+            });
+        },
+    },
 };
 </script>
 
@@ -382,51 +434,65 @@ export default {
 }
 
 .yhq-list {
+  position: relative;
+  .flex();
+  flex-wrap: wrap;
+  .flex-between();
+
   .yhq-item {
+    width: 420px;
+    height: 128px;
+    background: #FFFFFF;
+    border-radius: 10px 10px 10px 10px;
+    border: 1px solid #E6E6E6;
     .flex();
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 
     .yhq-left {
-      width: 786px;
-      height: 252px;
+      width: 140px;
+      height: 128px;
+      background-image: url("~@/static/order/coupon-used.png");
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      .flex();
+      justify-content: center;
 
       img {
-        width: 100%;
-        height: 100%;
+        width: 140px;
+        height: 128px;
+        position: absolute;
+        bottom: 0;
+      }
+
+      .money {
+        .flex();
+        justify-content: center;
+
+        .currency {
+          font-size: 42px;
+          font-weight: bold;
+          color: #fff;
+        }
+
+        .num {
+          font-size: 42px;
+          font-weight: bold;
+          color: #fff;
+        }
       }
     }
 
     .yhq-right {
       flex: 1;
-      height: 252px;
-      padding: 20px;
-      background: #f9f9f9;
-
-      .money {
-        display: flex;
-        align-items: flex-start;
-
-        .currency {
-          font-size: 42px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-          font-weight: bold;
-          color: @theme;
-        }
-
-        .num {
-          font-size: 42px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-          font-weight: bold;
-          color: @theme;
-        }
-      }
+      width: 280px;
+      height: 128px;
+      padding: 10px;
 
       .tiaojian {
-        margin-top: 10px;
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
+        color: #000;
         line-height: 28px;
       }
 
@@ -439,12 +505,12 @@ export default {
       }
 
       .action {
-        margin-top: 30px;
+        margin-top: 15px;
 
         button {
           width: 127px;
           height: 36px;
-          background: @theme;
+          background: #FF4000;
           border-radius: 4px 4px 4px 4px;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;

@@ -1,13 +1,11 @@
 <script>
 import detailLunbo from "@/components/detail/detailLunbo.vue"; // 滚动图
-import product_add_cart_success_modal from "@/components/product/product_add_cart_success_modal.vue"; // 加入购物车
 import {Loading} from "element-ui";
 
 export default {
     name: "detail",
     components: {
         detailLunbo,
-        product_add_cart_success_modal
     },
     data() {
         return {
@@ -78,34 +76,6 @@ export default {
         };
     },
 
-    computed: {
-
-        poster() {
-            let ret = "";
-            if (this.detail.images && this.detail.images.length) {
-                ret = this.detail.images[0];
-            }
-            return ret;
-        },
-
-        huoqi_text() {
-            let text = "现货";
-            if (this.detail.skuDay) {
-                let num = parseInt(this.detail.skuDay);
-                if (num) {
-                    text = "货期" + num + "天";
-                }
-            }
-            return text;
-        },
-    },
-
-    watch: {
-        param_list(val) {
-            //console.log(" ******** 产品参数 ******** ", val);
-        },
-    },
-
     beforeRouteUpdate(to, from, next) {
         next(to.query);
         this.id = this.$route.query.id || ""; //规格id
@@ -124,10 +94,10 @@ export default {
         // 初始化
         setView() {
             //查询商品信息
-            this.$api("product_detail", {inventoryId: this.id}).then((res) => {
+            this.$api("jiFen_pdtInfo", {inventoryId: this.id}).then((res) => {
                 let {code, data, message} = res;
 
-                if (code == 1) {
+                if (code == 200) {
                     this.curr = data;
                     this.detail = data;
                     this.if_shoucang = data.if_shoucang || 0;
@@ -505,7 +475,7 @@ export default {
         <div class="nav-bar">
             <el-breadcrumb separator=">">
                 <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item><a href="/productCategories">商品列表</a></el-breadcrumb-item>
+                <el-breadcrumb-item><a href="/pointsMall">积分商城</a></el-breadcrumb-item>
                 <el-breadcrumb-item><a>FUS-U30系列28电机 本体宽30mm</a></el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -523,105 +493,11 @@ export default {
                         <!--            规格-->
                         <div class="ctx-right">
                             <div class="detail-title">
-                                FUS-U30系列28电机 本体宽30mm
+                                {{ detail.title }}
                             </div>
-                            <!--              产品型号-->
-                            <div class="info-box">
-                                <div class="label">产品型号</div>
-                                <div class="list">
-                                    <div class="item ellipsis-1 active">
-                                        28电机*梯形丝杆导程0802*行程100mm(FUS-U30-B28-L0802-T100)
-                                    </div>
-                                    <div class="item ellipsis-1">
-                                        28电机*梯形丝杆导程0802*行程100mm(FUS-U30-B28-L0802-T100)
-                                    </div>
-                                    <div class="item ellipsis-1">
-                                        28电机*梯形丝杆导程0802*行程100mm(FUS-U30-B28-L0802-T100)
-                                    </div>
-                                    <div class="item ellipsis-1">
-                                        28电机*梯形丝杆导程0802*行程100mm(FUS-U30-B28-L0802-T100)
-                                    </div>
-                                    <div class="item ellipsis-1">
-                                        28电机*梯形丝杆导程0802*行程100mm(FUS-U30-B28-L0802-T100)
-                                    </div>
-                                    <div class="item ellipsis-1">
-                                        28电机*梯形丝杆导程0802*行程100mm(FUS-U30-B28-L0802-T100)
-                                    </div>
-                                    <div class="item ellipsis-1">
-                                        28电机*梯形丝杆导程0802*行程100mm(FUS-U30-B28-L0802-T100)
-                                    </div>
-                                    <div class="item ellipsis-1">
-                                        28电机*梯形丝杆导程0802*行程100mm(FUS-U30-B28-L0802-T100)
-                                    </div>
-                                    <div class="item ellipsis-1">
-                                        28电机*梯形丝杆导程0802*行程100mm(FUS-U30-B28-L0802-T100)
-                                    </div>
-                                    <div class="item ellipsis-1">28电机*梯形丝杆导程0802*行程100mm(FUS-U30-B28-L0802-T100)
-                                        28电机*梯形丝杆导程0802*行程100mm(FUS-U30-B28-L0802-T100)
-                                    </div>
-                                </div>
-                            </div>
-                            <!--              富俊价-->
-                            <div class="info-texts">
-                                <div class="title">
-                                    <el-row :gutter="24">
-                                        <el-col :span="4"><p>富俊价</p></el-col>
-                                        <el-col :span="8"><p>数量</p></el-col>
-                                        <el-col :span="8"><p>单件(含税)</p></el-col>
-                                        <el-col :span="4"><p>预估发货日</p></el-col>
-                                    </el-row>
-                                </div>
-                                <div class="list-item">
-                                    <div class="item">
-                                        <el-row :gutter="24">
-                                            <el-col :span="4"><p style="color: transparent">1</p></el-col>
-                                            <el-col :span="8"><p>1+</p></el-col>
-                                            <el-col :span="8"><p class="price">$320.00</p></el-col>
-                                            <el-col :span="4"><p>7个工日内</p></el-col>
-                                        </el-row>
-                                    </div>
-                                    <div class="item">
-                                        <el-row :gutter="24">
-                                            <el-col :span="4"><p style="color: transparent"> 1</p></el-col>
-                                            <el-col :span="8"><p>10+</p></el-col>
-                                            <el-col :span="8"><p class="price">$320.00</p></el-col>
-                                            <el-col :span="4"><p>7-10个工日内</p></el-col>
-                                        </el-row>
-                                    </div>
-                                </div>
-                            </div>
-
                             <!--              汇总-->
                             <div class="other-box">
                                 <div class="btn-box">
-                                    <div class="label">选购数量</div>
-                                    <div class="content flex">
-                                        <el-input-number :min="1" :max="99"></el-input-number>
-                                        <div class="tip">PCS</div>
-                                        <div class="desc">库存: 2000</div>
-                                    </div>
-                                </div>
-                                <div class="btn-box">
-                                    <div class="label">商品总价</div>
-                                    <div class="content">
-                                        <div class="price">¥320.00</div>
-                                    </div>
-                                </div>
-                                <div class="btn-box">
-                                    <div class="label">商品交期</div>
-                                    <div class="content">
-                                        <div class="title">
-                                            <p>预计7个工作日发货 <span>(付款锁库存)</span></p>
-                                        </div>
-                                        <div class="desc">实际发货以付款成功次日起算，不含周日与法定节假日</div>
-                                    </div>
-                                </div>
-                                <div class="btn-box">
-                                    <div class="label"></div>
-                                    <button class="btn-ripple flex-center btn-add-cart" @click="shopcart_add()">
-                                        <img src="../../static/prod/cart.png" alt="" class="cart">
-                                        加入购物车
-                                    </button>
                                     <button class="btn-ripple flex-center btn-buy" @click="payNow()">立即购买</button>
                                 </div>
                             </div>
@@ -638,11 +514,6 @@ export default {
                                              :class="active_panel == '详情' ? 'active' : ''">
                                             规格表
                                         </div>
-
-                                        <div class="nav-item" @click="togglePanel('评价')"
-                                             :class="active_panel == '评价' ? 'active' : ''">
-                                            商品评价
-                                        </div>
                                     </div>
 
                                     <div class="detail-content-box" v-if="active_panel == '详情'">
@@ -650,22 +521,6 @@ export default {
                                         <div class="rich-html" v-html="detail.content"></div>
                                         <div class="rich-html" v-html="detail.cont2"></div>
                                         <div class="rich-html" v-html="detail.cont3"></div>
-                                    </div>
-
-                                    <div class="comment-box" v-if="active_panel == '评价'">
-                                        <commentList :list="list_comments"/>
-                                        <div class="pagination-box" style="margin-top: 80px"
-                                             v-if="list_comments.length">
-                                            <el-pagination background layout="total, prev, pager, next"
-                                                           @current-change="changePage_comment"
-                                                           :current-page.sync="pagination.page"
-                                                           :page-size="pagination.pagenum"
-                                                           :total="count_comments"></el-pagination>
-                                        </div>
-
-                                        <div class="detail-empty" v-if="!list_comments.length">
-                                            <el-empty description="没有查询到评论信息..."></el-empty>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -675,8 +530,6 @@ export default {
                 </div>
             </div>
         </div>
-
-        <product_add_cart_success_modal ref="modalAddSuccess"></product_add_cart_success_modal>
     </div>
 </template>
 
@@ -1078,7 +931,7 @@ export default {
 
     .ctx-bottom-container {
       .flex();
-      padding: 0 25px;
+      padding: 0 25px 25px;
       background-color: #fff;
 
       .bottom-left {
@@ -1098,6 +951,10 @@ export default {
       .ctx-bottom-inner {
         width: 100%;
         text-align: left;
+
+        .detail-content-box {
+          margin-top: 10px;
+        }
 
         .bottom-nav {
           height: 38px;
