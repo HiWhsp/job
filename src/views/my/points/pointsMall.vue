@@ -1,163 +1,161 @@
 <template>
-    <div class="page">
-        <div class="top-img">
-        </div>
-        <div class="page-ctx">
-            <div class="yue-box">
-                <div class="text-box">
-                    <div class="text-2">
-                        {{ baseInfo.jifen || 0 }}
-                        <!-- <span class="currency">元</span> -->
-                    </div>
-                    <div class="text-1">当前积分</div>
-                    <div class="text-3 pointer">
-                        <span>积分明细</span>
-                        <span>|</span>
-                        <span>积分规则</span>
-                    </div>
-                </div>
-            </div>
-            <div class="wrap">
-                <div class="inner">
-                    <div class="bottom-info">
-                        <div class="list-wrap" v-if="list_goods.length">
-                            <div class="good-list">
-                                <div class="item pointer" v-for="(item, index) in list_goods" :key="index">
-                                    <div class="img-box cover">
-                                        <img :src="item.image" alt/>
-                                    </div>
-                                    <div class="info">
-                                        <div class="title">{{ item.title }}</div>
-                                        <div class="duihuan-info" @click.stop="onClick_duihuan(item)">
-                                            <div class="jifen">
-                                                <b>{{ item.jifen }}</b>
-                                                <span>积分·兑换</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="pagination-box" style="margin-top: 40px">
-                                <el-pagination
-                                        background
-                                        layout="total, prev, pager, next"
-                                        @current-change="changePage"
-                                        :current-page.sync="pagination.page"
-                                        :page-size="pagination.pageNum"
-                                        :total="count"
-                                ></el-pagination>
-                            </div>
-                        </div>
-                        <div v-else>
-                            <div class="product-empty" v-if="!list_goods.length">
-                                <el-empty description="没有查询到积分商品信息..."></el-empty>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <modalJIfenDuihuan ref="modalJIfenDuihuan"></modalJIfenDuihuan>
+  <div class="page">
+    <div class="top-img">
     </div>
+    <div class="page-ctx">
+      <div class="yue-box">
+        <div class="text-box">
+          <div class="text-2">
+            {{ baseInfo.jifen || 0 }}
+            <!-- <span class="currency">元</span> -->
+          </div>
+          <div class="text-1">当前积分</div>
+          <div class="text-3 pointer">
+            <span>积分明细</span>
+            <span>|</span>
+            <span>积分规则</span>
+          </div>
+        </div>
+      </div>
+      <div class="wrap">
+        <div class="inner">
+          <div class="bottom-info">
+            <div class="list-wrap" v-if="list_goods.length">
+              <div class="good-list">
+                <div class="item pointer" v-for="(item, index) in list_goods" :key="index">
+                  <div class="img-box cover">
+                    <img :src="item.image" alt/>
+                  </div>
+                  <div class="info">
+                    <div class="title">{{ item.title }}</div>
+                    <div class="duihuan-info" @click.stop="onClick_duihuan(item)">
+                      <div class="jifen">
+                        <b>{{ item.jifen }}</b>
+                        <span>积分·兑换</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pagination-box" style="margin-top: 40px">
+                <el-pagination
+                    background
+                    layout="total, prev, pager, next"
+                    @current-change="changePage"
+                    :current-page.sync="pagination.page"
+                    :page-size="pagination.pageNum"
+                    :total="count"
+                ></el-pagination>
+              </div>
+            </div>
+            <div v-else>
+              <div class="product-empty" v-if="!list_goods.length">
+                <el-empty description="没有查询到积分商品信息..."></el-empty>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import {mapState} from "vuex";
 import modalJIfenDuihuan from "@/components/jifen/modalJIfenDuihuan.vue";
 
 export default {
-    name: "pointsMall",
-    components: {
-        modalJIfenDuihuan
-    },
-    data() {
-        return {
-            selectTab: {title: "全部", status: "0"},
+  name: "pointsMall",
+  components: {
+    modalJIfenDuihuan
+  },
+  data() {
+    return {
+      selectTab: {title: "全部", status: "0"},
 
-            count: 0,
-            pagination: {
-                page: 1,
-                pageNum: 10,
-            },
-            list_goods: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+      count: 0,
+      pagination: {
+        page: 1,
+        pageNum: 10,
+      },
+      list_goods: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+    };
+  },
+  computed: {
+    ...mapState(["baseInfo"]),
+
+    list_tab() {
+      return [
+        {title: "全部", status: "0"},
+        {title: "收入", status: "1"},
+        {title: "支出", status: "2"},
+      ];
+    },
+  },
+  watch: {
+    selectTab() {
+      this.setView();
+    },
+  },
+  created() {
+    this.$store.dispatch("query_user");
+    this.setView();
+  },
+
+  mounted() {
+  },
+
+  methods: {
+    setView() {
+      //积分商品
+      this.$api("jiFen_plist", {
+        ...this.pagination,
+      }).then((res) => {
+        let {code, data, pages, message} = {
+          "code": 200,
+          "msg": "获取成功",
+          "data": {
+            "count": 2,
+            "pages": 1,
+            "list": [
+              {
+                "productId": 8,
+                "inventoryId": 22,
+                "title": "电镐圆孔凿",
+                "keyVals": "绿",
+                "image": "",
+                "jifen": 1000,
+                "price": "500.00",
+                "kucun": 81
+              },
+              {
+                "productId": 7,
+                "inventoryId": 8,
+                "title": "多规格-商品测试",
+                "keyVals": "白,小",
+                "image": "",
+                "jifen": 200,
+                "price": "100.00",
+                "kucun": 999
+              }
+            ]
+          }
         };
-    },
-    computed: {
-        ...mapState(["baseInfo"]),
-
-        list_tab() {
-            return [
-                {title: "全部", status: "0"},
-                {title: "收入", status: "1"},
-                {title: "支出", status: "2"},
-            ];
-        },
-    },
-    watch: {
-        selectTab() {
-            this.setView();
-        },
-    },
-    created() {
-        this.$store.dispatch("query_user");
-        this.setView();
+        this.list_goods = data.list;
+        this.count = data.count;
+      });
     },
 
-    mounted() {
+    openInvite() {
+      this.$refs.modalInviteUser.init();
     },
 
-    methods: {
-        setView() {
-            //积分商品
-            this.$api("jiFen_plist", {
-                ...this.pagination,
-            }).then((res) => {
-                let {code, data, pages, message} = {
-                    "code": 200,
-                    "msg": "获取成功",
-                    "data": {
-                        "count": 2,
-                        "pages": 1,
-                        "list": [
-                            {
-                                "productId": 8,
-                                "inventoryId": 22,
-                                "title": "电镐圆孔凿",
-                                "keyVals": "绿",
-                                "image": "",
-                                "jifen": 1000,
-                                "price": "500.00",
-                                "kucun": 81
-                            },
-                            {
-                                "productId": 7,
-                                "inventoryId": 8,
-                                "title": "多规格-商品测试",
-                                "keyVals": "白,小",
-                                "image": "",
-                                "jifen": 200,
-                                "price": "100.00",
-                                "kucun": 999
-                            }
-                        ]
-                    }
-                };
-                this.list_goods = data.list;
-                this.count = data.count;
-            });
-        },
-
-        openInvite() {
-            this.$refs.modalInviteUser.init();
-        },
-
-        //积分兑换
-        onClick_duihuan(item) {
-            //console.log("积分兑换");
-
-            this.$refs.modalJIfenDuihuan.init(item);
-        },
+    //积分兑换
+    onClick_duihuan(item) {
+      //console.log("积分兑换");
+      this.$router.push('/pointsMallDetail?id=' + item.productId);
     },
+  },
 };
 </script>
 

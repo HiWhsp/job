@@ -80,7 +80,7 @@ export default new Vuex.Store({
         //
         // avatar_default: require("@/static/common/avatar.png"),
         // vuex_avatar_default: require("@/static/common/avatar.png"),
-        // defaultAvatar: require("@/static/common/avatar.png"),
+        defaultAvatar: require("@/static/common/head-user-login.png"),
         //
         //
         //商城部分

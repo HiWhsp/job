@@ -1,9 +1,7 @@
 <template>
   <div class="page">
     <div class="main-title">
-      <span>我的优惠券</span>
-
-      <!-- <b @click="$router.push('/coupon')">领券中心</b> -->
+      <span>我的问题</span>
     </div>
 
     <div class="page-ctx">
@@ -37,7 +35,8 @@
                 <div class="reply" v-if="status == 2">
                   <div class="it flex">
                     <label for="">回复内容：</label>
-                    <p>回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容</p>
+                    <p>
+                      回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容</p>
                   </div>
                   <div class="it flex">
                     <label for="">回复时间：</label>
@@ -71,9 +70,17 @@ export default {
     };
   },
   watch: {},
-  created() {
+  mounted() {
+    this.setView();
   },
   methods: {
+    setView() {
+      this.$api("feedback_getList", {
+        status: this.status,
+        page: 1,
+        pageNum: 10,
+      })
+    },
     tab_toggle(item) {
       if (this.status != item.status) {
         this.list = [];
@@ -89,6 +96,7 @@ export default {
 .page {
   text-align: left;
   padding-bottom: 80px;
+  padding-top: 0;
 
   .main-title {
     .flex-between();
@@ -189,6 +197,7 @@ export default {
         height: 95px;
         background: #F6F5F4;
         padding: 17px;
+
         .it {
           margin-bottom: 19px;
         }

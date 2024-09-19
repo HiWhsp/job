@@ -9,18 +9,20 @@
         <div class="item flex">
           <label for="">问题类型: <span>*</span></label>
           <div class="content">
-            <el-select placeholder="请选择"></el-select>
+            <el-select placeholder="请选择" v-model="feedType">
+              <el-option label="留言咨询" value="留言咨询"></el-option>
+            </el-select>
           </div>
         </div>
         <div class="item flex">
           <label for="">问题说明: <span>*</span></label>
           <div class="content">
-            <el-input type="textarea" :rows="4"></el-input>
+            <el-input type="textarea" :rows="4" v-model="content"></el-input>
           </div>
         </div>
         <div class="item flex">
           <label for=""></label>
-          <div class="submit">提交</div>
+          <div class="submit pointer" @click="onsubmit">提交</div>
         </div>
       </div>
     </div>
@@ -32,12 +34,31 @@ export default {
   name: "feedback",
   components: {},
   data() {
-    return {};
+    return {
+      feedType: "",
+      content: ""
+    };
   },
   watch: {},
   created() {
   },
-  methods: {},
+  methods: {
+    onsubmit() {
+      this.$api("feedback_add", {
+        feedType: this.feedType,
+        content: this.content
+      }).then((res) => {
+        let {code, data, msg} = res;
+        if (code == 200) {
+          this.$message.success("信息反馈成功");
+          this.feedType = "";
+          this.content = "";
+        } else {
+          this.$message.error(msg);
+        }
+      });
+    }
+  },
 };
 </script>
 

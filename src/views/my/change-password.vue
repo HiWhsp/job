@@ -31,9 +31,9 @@
           <div class="item btn-box">
             <span class="text" style="visibility: hidden">-</span>
             <div class="info">
-              <el-button class="btn-ripple fit-text btn-save" @click="throttle_do_submit()"
+              <el-button class="btn-ripple fit-text btn-cancel" @click="throttle_do_submit()"
                 :loading="loading">确认</el-button>
-              <button class="btn-ripple fit-text btn-cancel" @click="do_clear()">清空</button>
+              <button class="btn-ripple fit-text btn-save" @click="do_clear()">清空</button>
             </div>
           </div>
         </div>
@@ -122,7 +122,7 @@ export default {
 .page {
   text-align: left;
   padding-bottom: 80px;
-
+  padding-top: 0;
   .main-title {
     padding: 0 32px;
     text-align: left;
@@ -222,7 +222,7 @@ export default {
   }
 
   .btn-cancel {
-    margin-left: 24px;
+    margin-right: 24px;
     width: 120px;
     height: 32px;
     background: @theme;

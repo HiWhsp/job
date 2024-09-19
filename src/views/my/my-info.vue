@@ -15,7 +15,7 @@
                            :action="UPLOAD_ACTION" :data="mix_upload_data" :on-success="upload_on_success"
                            :before-upload="upload_before_upload">
                   <img v-if="form.image" :src="form.image" class="user-avatar"/>
-                  <img v-else src="@/static/common/avatar.png" class="user-avatar"/>
+                  <img v-else src="@/static/common/head-user-login.png" class="user-avatar"/>
                 </el-upload>
               </div>
             </span>
@@ -40,36 +40,28 @@
           <div class="item">
             <span class="text">所在地区：</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.address"/>
+<!--              <el-input clearable type="text" v-model="form.address"/>-->
+              <area_select ref="area_select" @change="changeSelectAddress"/>
             </span>
             <span class="action"> </span>
           </div>
-
-
-          <!-- <div class="item">
-            <span class="text">昵称：</span>
+          <div class="item">
+            <span class="text">公司名称：</span>
             <span class="info">
-              <input type="text" v-model="nickname" class="" />
+              <el-input clearable type="text" v-model="form.nickname"/>
             </span>
             <span class="action">
-
-            </span>
-          </div> -->
-
-          <!-- <div class="item">
-            <span class="text">密码：</span>
-            <span class="info">******</span>
-            <span class="action">
-              <span @click="$router.push('/retrieve')">修改</span>
             </span>
           </div>
+
           <div class="item">
-            <span class="text">账号：</span>
-            <span class="info" style="visibility: hidden">******</span>
-            <span class="action">
-              <span @click="mix_logout">退出登录</span>
+            <span class="text"> 邮箱：</span>
+            <span class="info">
+              <el-input clearable type="text" v-model="form.email"/>
             </span>
-          </div> -->
+            <span class="action">
+            </span>
+          </div>
         </div>
       </div>
 
@@ -79,10 +71,10 @@
           <div class="item btn-box">
             <span class="text" style="visibility: hidden">-</span>
             <div class="info">
-              <el-button class="btn-ripple fit-text btn-save" @click="throttle_do_submit()"
+              <el-button class="btn-ripple fit-text btn-cancel " @click="throttle_do_submit()"
                          :loading="loading">保存
               </el-button>
-              <button class="btn-ripple fit-text btn-cancel" @click="do_reset()">清空</button>
+              <button class="btn-ripple fit-text btn-save" @click="do_reset()">清空</button>
             </div>
           </div>
         </div>
@@ -101,10 +93,12 @@ import {UPLOAD_ACTION, UPLOAD_NAME} from '@/config/env.js'
 
 import phone_bind_old_check_modal from "@/components/account/phone_bind_old_check_modal.vue";
 import phone_bind_new_set_modal from "@/components/account/phone_bind_new_set_modal.vue";
+import area_select from "@/components/address/area_select.vue";
 
 export default {
   name: "servicePage",
   components: {
+    area_select,
     phone_bind_old_check_modal,
     phone_bind_new_set_modal,
   },
@@ -118,6 +112,8 @@ export default {
         image: "",
         realName: "",
         address: "",
+        nickName: "",
+        email: ""
       },
       loading: false,
     };
@@ -194,6 +190,8 @@ export default {
         image: this.my_info.image,
         realName: "",
         address: "",
+        nickName: "",
+        email: ""
       };
     },
 
@@ -211,6 +209,19 @@ export default {
       const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
       return isLt2M;
     },
+
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      let {sheng, shi, qu} = data;
+      this.form.province = sheng.title;
+      this.form.city = shi.title;
+      this.form.area = qu.title;
+
+      this.form.provinceCode = sheng.id;
+      this.form.cityCode = shi.id;
+      this.form.areaCode = qu.id;
+      // debugger
+    },
   },
 };
 </script>
@@ -223,7 +234,7 @@ export default {
 .page {
   text-align: left;
   padding-bottom: 80px;
-
+  padding-top: 0;
   .main-title {
     .flex-between();
     padding: 0 32px;
@@ -357,7 +368,7 @@ export default {
   }
 
   .btn-cancel {
-    margin-left: 20px;
+    margin-right: 20px;
     width: 120px;
     height: 32px;
     background: @theme;

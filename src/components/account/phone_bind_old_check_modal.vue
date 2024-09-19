@@ -10,8 +10,8 @@
           <div class="input-box flex">
             <div class="label">新手机号</div>
             <div class="input-item">
-              <!-- <el-input type="text" v-model="phone" placeholder="手机号"> </el-input> -->
-              {{ mix_user_phone }}
+               <el-input type="text" v-model="phone" placeholder="手机号"> </el-input>
+<!--              {{ mix_user_phone }}-->
             </div>
           </div>
           <div class="input-box flex">
@@ -76,7 +76,7 @@ export default {
   methods: {
     query_code() {
       //console.log("发送验证码");
-      let phone = this.mix_user_phone;
+      let phone = this.phone;
       if (this.timer) {
         alertErr("验证码发送频繁，请稍后再试");
         return;
@@ -271,8 +271,7 @@ export default {
   // position: absolute;
   // right: -50px;
   // top: 10px;
-  min-width: 90px;
-  padding: 0 10px;
+  min-width: 120px;
   height: 40px;
   background: #fff;
   color: @theme;
