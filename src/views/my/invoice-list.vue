@@ -1,241 +1,260 @@
 <template>
-  <div class="page">
-    <div class="main-title">发票信息</div>
+    <div class="page">
+        <div class="main-title">发票信息</div>
 
-    <div class="page-ctx">
-      <div class="tab-box">
-        <div class="tab-list">
-          <div v-for="(item, index) in tabList" :key="index" class="tab-item"
-            :class="tabSelect.value == item.value ? 'active' : ''" @click="do_toggle_tab(item)">
-            {{ item.title }}
-            <span class="number" v-if="item.num">{{ item.num }}</span>
-          </div>
+        <div class="page-ctx">
+            <div class="tab-box">
+                <div class="tab-list">
+                    <div v-for="(item, index) in tabList" :key="index" class="tab-item"
+                         :class="tabSelect.value == item.value ? 'active' : ''" @click="do_toggle_tab(item)">
+                        {{ item.title }}
+                        <span class="number" v-if="item.num">{{ item.num }}</span>
+                    </div>
+                </div>
+                <div class="search-box">
+                    <input v-model="keyword" type="text" placeholder="输入商品名称、订单号"/>
+                    <button @click="do_search()">搜索</button>
+                    <button @click="do_reset()">重置</button>
+                </div>
+            </div>
+
+            <div class="center">
+                <invoiceList :list="orders"></invoiceList>
+                <div v-if="count" class="pagination-box" style="margin-top: 40px; text-align: right;">
+                    <el-pagination background layout="total, prev, pager, next" @current-change="changePage"
+                                   :current-page.sync="pagination.page" :page-size="pagination.pageNum"
+                                   :total="count"></el-pagination>
+                </div>
+
+                <el-empty v-if="!count" description="没有查询到订单信息..."></el-empty>
+            </div>
         </div>
-        <div class="search-box">
-          <input v-model="keyword" type="text" placeholder="输入商品名称、订单号" />
-          <button @click="do_search()">搜索</button>
-          <button @click="do_reset()">重置</button>
-        </div>
-      </div>
-
-      <div class="center">
-        <orderList :list="orders" @confirm="emitConfirm"/>
-
-        <div v-if="count" class="pagination-box" style="margin-top: 40px; text-align: right;">
-          <el-pagination background layout="total, prev, pager, next" @current-change="changePage"
-            :current-page.sync="pagination.page" :page-size="pagination.pageNum" :total="count"></el-pagination>
-        </div>
-
-        <el-empty v-if="!count" description="没有查询到订单信息..."></el-empty>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
-import orderList from "@/components/order/orderList.vue"; //订单列表
-import { mapState } from "vuex";
+import {mapState} from "vuex";
+import invoiceList from "@/components/order/invoiceList.vue";
 
 export default {
-  name: "servicePage",
-  components: {
-    orderList,
-  },
-  data() {
-    return {
-      tabSelect: {
-        title: '全部',
-        value: 0,
-      },
-      //
-      orders: [],
-      pagination: {
-        page: 1,
-        pageNum: 10,
-      },
-      count: 0,
-      keyword: "",
-      user_index: {},
-    };
-  },
-  computed: {
-    ...mapState([""]),
-
-    tabList() {
-      //scene
-      //筛选状态：0-全部 1-待支付 2-待发货 3-待收货 4-待核销 5-已完成 6-待评价 7-已取消
-      //orderStatus
-      //订单状态：-5-待支付  -1-已取消  2-待发货  3-待收货  4-待自提  5-已完成
-      let user_index = {} || this.user_index;
-      let tabList = [
-        { value: 0, title: "全部订单" },
-        { value: 1, title: "待付款", num: user_index.order_num_1 || 0 },
-        { value: 2, title: "待发货", num: user_index.order_num_2 || 0 },
-        { value: 3, title: "待收货", num: user_index.order_num_3 || 0 },
-        // { value: 4, title: "待核销", num: user_index.order_num_4 || 0 },
-        { value: 6, title: "待评价", num: user_index.order_num_4 || 0 },
-        { value: 5, title: "已完成", num: user_index.order_num_4 || 0 },
-        { value: 7, title: "已取消", num: user_index.order_num_4 || 0 },
-        // { value: 6, title: "待审核", num: user_index.order_num_6 || 0 },
-      ];
-      return tabList;
+    name: "servicePage",
+    components: {
+        invoiceList
     },
-  },
-  created() {
-
-    this.setView();
-  },
-
-  methods: {
-    emitConfirm() {
-      this.query_order()
+    data() {
+        return {
+            tabSelect: {
+                title: '全部',
+                value: 0,
+            },
+            //
+            orders: [],
+            pagination: {
+                page: 1,
+                pageNum: 10,
+            },
+            count: 0,
+            keyword: "",
+            user_index: {},
+        };
     },
-    setView() {
-      if (this.$route.query.status) {
-        this.tabSelect = this.tabList.find(v => v.value == this.$route.query.status) || this.tabList[0]
-      }
+    computed: {
+        ...mapState([""]),
 
-      this.query_userIndex();
-      this.query_order();
-    },
-
-    //用户主页数据
-    query_userIndex() {
-      this.$api("users_index").then((res) => {
-        let { code, data } = res;
-        if (code == 200) {
-          this.user_index = data;
-        }
-      });
-    },
-
-    //订单列表
-    query_order() {
-      this.$api({
-        url: '/service.php',
-        method: 'get',
-        data: {
-          action: 'orders_lists',
-          ...this.pagination,
-          scene: this.tabSelect.value,
-          // keyword: this.keyword,
+        tabList() {
+            let user_index = {} || this.user_index;
+            let tabList = [
+                {value: 0, title: "全部"},
+                {value: 1, title: "待开票", num: user_index.order_num_1 || 0},
+                {value: 2, title: "已开票", num: user_index.order_num_2 || 0},
+            ];
+            return tabList;
         },
-      }).then((res) => {
-        let { code, data } = res;
-        if (code == 200) {
-          let list = data.list
+    },
+    created() {
+        this.setView();
+    },
 
-          list.forEach((order) => {
-            order.isPay = order.value >= 0;
-            order.actions = this.getOrderActions({
-              ...order,
+    methods: {
+        emitConfirm() {
+            this.query_order()
+        },
+        setView() {
+            if (this.$route.query.status) {
+                this.tabSelect = this.tabList.find(v => v.value == this.$route.query.status) || this.tabList[0]
+            }
+
+            this.query_userIndex();
+            this.query_order();
+        },
+
+        //用户主页数据
+        query_userIndex() {
+            this.$api("users_index").then((res) => {
+                let {code, data} = res;
+                if (code == 200) {
+                    this.user_index = data;
+                }
             });
+        },
 
-            let count_goods = 0;
-            order.products.forEach((product) => {
-              count_goods = count_goods + +product.num;
+        //订单列表
+        query_order() {
+            this.$api({
+                url: '/service.php',
+                method: 'post',
+                data: {
+                    action: 'invoices_getList',
+                    ...this.pagination,
+                    status: this.tabSelect.value,
+                },
+            }).then((res) => {
+                let {code, data} = res;
+                if (code == 200) {
+                    let list = data.list
+
+                    // this.orders = list;
+                    // this.count = data.count;
+                    this.orders = [{
+                        "id": 5, //发票id  0-添加   大于0-修改
+                        "userId": 1, //用户id
+                        "orderId": 1, //关联订单
+                        "info": "", //产品信息
+                        "money": "0.00", //开票金额
+                        "status": 2, //状态：1-已作废 2-待开票 3-已开票
+                        "invoicType": 1, //发票类型：1-普通发票 2-专用发票
+                        "titleType": 2, //抬头类型：1 个人  2-公司
+                        "title": "当了个当1111", //单位名称
+                        "shibiema": "1111", //识别码
+                        "companyAddress": "111", //注册地址
+                        "companyPhone": "111", //注册电话
+                        "bankName": "111", //开户银行
+                        "bankNo": "1111", //银行账户
+                        "email": "", //电子票邮箱
+                        "invoicUrl": null, //开票地址
+                        "invoicRemark": "", //开票备注
+                        "invoicTime": null, //开票日期
+                        "invoicAdmin": null, //开票人
+                        "dtTime": null
+                    }, {
+                        "id": 5, //发票id  0-添加   大于0-修改
+                        "userId": 1, //用户id
+                        "orderId": 1, //关联订单
+                        "info": "", //产品信息
+                        "money": "0.00", //开票金额
+                        "status": 3, //状态：1-已作废 2-待开票 3-已开票
+                        "invoicType": 1, //发票类型：1-普通发票 2-专用发票
+                        "titleType": 2, //抬头类型：1 个人  2-公司
+                        "title": "当了个当1111", //单位名称
+                        "shibiema": "1111", //识别码
+                        "companyAddress": "111", //注册地址
+                        "companyPhone": "111", //注册电话
+                        "bankName": "111", //开户银行
+                        "bankNo": "1111", //银行账户
+                        "email": "", //电子票邮箱
+                        "invoicUrl": null, //开票地址
+                        "invoicRemark": "", //开票备注
+                        "invoicTime": null, //开票日期
+                        "invoicAdmin": null, //开票人
+                        "dtTime": null
+                    }];
+                    this.count = 1;
+                }
             });
-            order.count_goods = count_goods;
-          });
+        },
 
-          this.orders = list;
-          this.count = data.count;
-        }
-      });
+        //根据订单状态获取订单操作结果
+        getOrderActions(order) {
+            let {status, status_info, ifpingjia} = order;
+            let actions = [];
+            // let actions = [
+            //   { name: "取消订单",type: 'quxiao' },
+            //   { name: "立即支付",type: 'zhifu' },
+            //   { name: "确认收货",type: 'shouhuo' },
+            //   { name: "评价订单",type: 'pingjia' },
+            //   { name: "申请售后",type: 'shouhou' },
+            //   { name: "删除订单",type: 'shanchu' },
+            //   { name: "再次购买",type: 'goumai' },
+            // ];
+
+            if (status == -5) {
+                //待支付
+                if (status_info == "无效") {
+                    actions = [{name: "取消订单", type: "quxiao"}];
+                } else if (status_info == "待支付") {
+                    actions = [
+                        {name: "立即支付", type: "zhifu"},
+                        {name: "取消订单", type: "quxiao"},
+                    ];
+                }
+            } else if (status == -3) {
+                //-3售后处理中
+                actions = [{name: "删除订单", type: "shanchu"}];
+            } else if (status == -1) {
+                //无效
+                actions = [{name: "删除订单", type: "shanchu"}];
+            } else if (status == 0) {
+                //0待成团
+                actions = [{name: "取消订单", type: "quxiao"}];
+            } else if (status == 2) {
+                //2待发货
+                actions = [
+                    // { name: "取消订单", type: "quxiao" }
+                ];
+            } else if (status == 3) {
+                //3待收货
+                actions = [
+                    {name: "确认收货", type: "shouhuo"},
+                    {name: "查看物流", type: "wuliu"},
+                ];
+            } else if (status == 4) {
+                //4已收货
+                if (ifpingjia) {
+                    actions = [
+                        // { name: "删除订单", type: "shanchu" },
+                        // { name: "查看物流", type: "wuliu" },
+                        // { name: "售后", type: "shouhou" },
+                    ];
+                } else {
+                    actions = [
+                        // { name: "删除订单", type: "shanchu" },
+                        // { name: "查看物流", type: "wuliu" },
+                        // { name: "售后", type: "shouhou" },
+                        //  { name: "评价", type: 'pingjia' }
+                    ];
+                }
+            }
+            return actions;
+        },
+
+        do_toggle_tab(item) {
+            this.tabSelect = item;
+            this.pagination.page = 1;
+            this.query_order();
+        },
+
+
+        //分页
+        changePage() {
+            this.query_order();
+        },
+
+        //搜索
+        do_search() {
+            this.query_order();
+        },
+
+        //重置
+        do_reset() {
+            this.keyword = "";
+            this.pagination.page = 1;
+            this.query_order();
+        },
+
+        updateView() {
+            this.query_order();
+        },
     },
-
-    //根据订单状态获取订单操作结果
-    getOrderActions(order) {
-      let { status, status_info, ifpingjia } = order;
-      let actions = [];
-      // let actions = [
-      //   { name: "取消订单",type: 'quxiao' },
-      //   { name: "立即支付",type: 'zhifu' },
-      //   { name: "确认收货",type: 'shouhuo' },
-      //   { name: "评价订单",type: 'pingjia' },
-      //   { name: "申请售后",type: 'shouhou' },
-      //   { name: "删除订单",type: 'shanchu' },
-      //   { name: "再次购买",type: 'goumai' },
-      // ];
-
-      if (status == -5) {
-        //待支付
-        if (status_info == "无效") {
-          actions = [{ name: "取消订单", type: "quxiao" }];
-        } else if (status_info == "待支付") {
-          actions = [
-            { name: "立即支付", type: "zhifu" },
-            { name: "取消订单", type: "quxiao" },
-          ];
-        }
-      } else if (status == -3) {
-        //-3售后处理中
-        actions = [{ name: "删除订单", type: "shanchu" }];
-      } else if (status == -1) {
-        //无效
-        actions = [{ name: "删除订单", type: "shanchu" }];
-      } else if (status == 0) {
-        //0待成团
-        actions = [{ name: "取消订单", type: "quxiao" }];
-      } else if (status == 2) {
-        //2待发货
-        actions = [
-          // { name: "取消订单", type: "quxiao" }
-        ];
-      } else if (status == 3) {
-        //3待收货
-        actions = [
-          { name: "确认收货", type: "shouhuo" },
-          { name: "查看物流", type: "wuliu" },
-        ];
-      } else if (status == 4) {
-        //4已收货
-        if (ifpingjia) {
-          actions = [
-            // { name: "删除订单", type: "shanchu" },
-            // { name: "查看物流", type: "wuliu" },
-            // { name: "售后", type: "shouhou" },
-          ];
-        } else {
-          actions = [
-            // { name: "删除订单", type: "shanchu" },
-            // { name: "查看物流", type: "wuliu" },
-            // { name: "售后", type: "shouhou" },
-            //  { name: "评价", type: 'pingjia' }
-          ];
-        }
-      }
-      return actions;
-    },
-
-    do_toggle_tab(item) {
-      this.tabSelect = item;
-      this.pagination.page = 1;
-      this.query_order();
-    },
-
-
-    //分页
-    changePage() {
-      this.query_order();
-    },
-
-    //搜索
-    do_search() {
-      this.query_order();
-    },
-
-    //重置
-    do_reset() {
-      this.keyword = "";
-      this.pagination.page = 1;
-      this.query_order();
-    },
-
-    updateView() {
-      this.query_order();
-    },
-  },
 };
 </script>
 

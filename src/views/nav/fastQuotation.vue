@@ -1,233 +1,242 @@
 <script>
 export default {
-  name: "fastQuotation",
-  data() {
-    return {
-      visible: false,
-      activeName: 'first',
-      list: [1, 2, 3]
-    }
-  },
-  methods: {
-    handleClick() {
+    name: "fastQuotation",
+    data() {
+        return {
+            visible: false,
+            activeName: 'first',
+            list: [1, 2, 3]
+        }
+    },
+    methods: {
+        handleClick() {
 
+        }
     }
-  }
 }
 </script>
 
 <template>
-  <div class="page">
-    <div class="nav-bar">
-      <el-breadcrumb separator=">">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-        <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-        <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
-    <div class="prod-wrap">
-      <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="全部产品" name="first">
-          <div class="batch-input">
-            <div class="virtual-list">
-              <div class="batch-title-box">
-                <div class="left-box">
-                  产品信息录入
-                </div>
-                <div class="right-box box-size">
-                  匹配结果展示
-                </div>
-              </div>
-              <div class="batch-input-header">
-                <div class="left-box">
-                  <el-row :gutter="24">
-                    <el-col :span="3">
-                      <div class="item-col-check item table-cell-left-width">
-                        <el-checkbox></el-checkbox>
-                      </div>
-                    </el-col>
-                    <el-col :span="12">
-                      <div class="item">
-                        我的需求
-                      </div>
-                    </el-col>
-                    <el-col :span="6">
-                      <div class="item">
-                        购买数量
-                      </div>
-                    </el-col>
-                    <el-col :span="3">
-                      <div class="item">
-                        附件
-                      </div>
-                    </el-col>
-                  </el-row>
-                </div>
-                <div class="right-box">
-                  <el-row :gutter="24">
-                    <el-col :span="3">
-                      <div class="item left-spilt">结果</div>
-                    </el-col>
-                    <el-col :span="8">
-                      <div class="item">推荐匹配商品</div>
-                    </el-col>
-                    <el-col :span="4">
-                      <div class="item">操作</div>
-                    </el-col>
-                    <el-col :span="3">
-                      <div class="item">库存/交期</div>
-                    </el-col>
-                    <el-col :span="3">
-                      <div class="item">单价/含税</div>
-                    </el-col>
-                    <el-col :span="3">
-                      <div class="item">小计/含税</div>
-                    </el-col>
-                  </el-row>
-                </div>
-              </div>
-              <div class="infinite-list-container">
-                <div class="infinite-list" v-for="(item, index) in list" :key="index">
-                  <div class="left-box">
-                    <el-row :gutter="24">
-                      <el-col :span="3">
-                        <div class="item-col-check item table-cell-left-width">
-                          <div>
-                            <el-checkbox></el-checkbox>
-                            <span style="margin-left: 14px;">{{ index + 1 }}</span>
-                          </div>
-                        </div>
-                      </el-col>
-                      <el-col :span="12">
-                        <div class="item">
-                          <div class="flex">
-                            <label for="">我的型号：</label>
-                            <el-input placeholder="请输入内容"></el-input>
-                          </div>
-                          <div class="flex">
-                            <label for="">我的型号：</label>
-                            <el-input placeholder="请输入内容"></el-input>
-                          </div>
-                          <div class="flex">
-                            <label for="">我的型号：</label>
-                            <el-input placeholder="请输入内容"></el-input>
-                          </div>
-                          <div class="flex">
-                            <label for="">我的型号：</label>
-                            <el-input placeholder="请输入内容"></el-input>
-                          </div>
-                        </div>
-                      </el-col>
-                      <el-col :span="6">
-                        <div class="item number-item">
-                          <el-input type="number"
-                                    placeholder="请输入内容"></el-input>
-                        </div>
-                      </el-col>
-                      <el-col :span="3">
-                        <div class="item file-item">
-                          <!--                          <el-upload class="upload-demo">-->
-                          <!--                            <span style="color: #A66600;">上传</span>-->
-                          <!--                          </el-upload>-->
-                          <el-popover
-                              placement="top"
-                              width="55"
-                              trigger="click"
-                          >
-                            <div class="flex flex-center pointer">
-                              <div class="">del</div>
-                              <div style="margin-left: 15px;">down</div>
+    <div class="page">
+        <div class="nav-bar">
+            <el-breadcrumb separator=">">
+                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
+                <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+                <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <div class="prod-wrap">
+            <el-tabs v-model="activeName" @tab-click="handleClick">
+                <el-tab-pane label="全部产品" name="first">
+                    <div class="batch-input">
+                        <div class="virtual-list">
+                            <div class="batch-title-box">
+                                <div class="left-box">
+                                    产品信息录入
+                                </div>
+                                <div class="right-box box-size">
+                                    匹配结果展示
+                                </div>
                             </div>
-                            <span slot="reference" style="color: @theme;">上传</span>
-                          </el-popover>
-                        </div>
-                        <div class="delete-item">
-                          <el-popover
-                              placement="top"
-                              width="160"
-                              v-model="visible">
-                            <p>确定删除吗？</p>
-                            <div style="text-align: right; margin: 0">
-                              <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-                              <el-button type="primary" size="mini" @click="visible = false">确定</el-button>
+                            <div class="batch-input-header">
+                                <div class="left-box">
+                                    <el-row :gutter="24">
+                                        <el-col :span="3">
+                                            <div class="item-col-check item table-cell-left-width">
+                                                <el-checkbox></el-checkbox>
+                                            </div>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <div class="item">
+                                                我的需求
+                                            </div>
+                                        </el-col>
+                                        <el-col :span="6">
+                                            <div class="item">
+                                                购买数量
+                                            </div>
+                                        </el-col>
+                                        <el-col :span="3">
+                                            <div class="item">
+                                                附件
+                                            </div>
+                                        </el-col>
+                                    </el-row>
+                                </div>
+                                <div class="right-box">
+                                    <el-row :gutter="24">
+                                        <el-col :span="3">
+                                            <div class="item left-spilt">结果</div>
+                                        </el-col>
+                                        <el-col :span="8">
+                                            <div class="item">推荐匹配商品</div>
+                                        </el-col>
+                                        <el-col :span="4">
+                                            <div class="item">操作</div>
+                                        </el-col>
+                                        <el-col :span="3">
+                                            <div class="item">库存/交期</div>
+                                        </el-col>
+                                        <el-col :span="3">
+                                            <div class="item">单价/含税</div>
+                                        </el-col>
+                                        <el-col :span="3">
+                                            <div class="item">小计/含税</div>
+                                        </el-col>
+                                    </el-row>
+                                </div>
                             </div>
-                            <span slot="reference">删除</span>
-                          </el-popover>
+                            <div class="infinite-list-container">
+                                <div class="infinite-list" v-for="(item, index) in list" :key="index">
+                                    <div class="left-box">
+                                        <el-row :gutter="24">
+                                            <el-col :span="3">
+                                                <div class="item-col-check item table-cell-left-width">
+                                                    <div>
+                                                        <el-checkbox></el-checkbox>
+                                                        <span style="margin-left: 14px;">{{ index + 1 }}</span>
+                                                    </div>
+                                                </div>
+                                            </el-col>
+                                            <el-col :span="12">
+                                                <div class="item">
+                                                    <div class="flex">
+                                                        <label for="">我的型号：</label>
+                                                        <el-input placeholder="请输入内容"></el-input>
+                                                    </div>
+                                                    <div class="flex">
+                                                        <label for="">我的型号：</label>
+                                                        <el-input placeholder="请输入内容"></el-input>
+                                                    </div>
+                                                    <div class="flex">
+                                                        <label for="">我的型号：</label>
+                                                        <el-input placeholder="请输入内容"></el-input>
+                                                    </div>
+                                                    <div class="flex">
+                                                        <label for="">我的型号：</label>
+                                                        <el-input placeholder="请输入内容"></el-input>
+                                                    </div>
+                                                </div>
+                                            </el-col>
+                                            <el-col :span="6">
+                                                <div class="item number-item">
+                                                    <el-input type="number"
+                                                              placeholder="请输入内容"></el-input>
+                                                </div>
+                                            </el-col>
+                                            <el-col :span="3">
+                                                <div class="item file-item">
+                                                    <!--                          <el-upload class="upload-demo">-->
+                                                    <!--                            <span style="color: #A66600;">上传</span>-->
+                                                    <!--                          </el-upload>-->
+                                                    <el-popover
+                                                            placement="top"
+                                                            width="55"
+                                                            trigger="click"
+                                                    >
+                                                        <div class="flex flex-center pointer">
+                                                            <div class="">
+                                                                <img src="@/static/account/del.png" alt="">
+                                                            </div>
+                                                            <div style="margin-left: 15px;">
+                                                                <img src="@/static/account/down.png" alt="">
+                                                            </div>
+                                                        </div>
+                                                        <span slot="reference" style="color: #A66600;">上传</span>
+                                                    </el-popover>
+                                                </div>
+                                                <div class="delete-item">
+                                                    <el-popover
+                                                            placement="top"
+                                                            width="160"
+                                                            v-model="visible">
+                                                        <p>确定删除吗？</p>
+                                                        <div style="text-align: right; margin: 0">
+                                                            <el-button size="mini" type="text" @click="visible = false">
+                                                                取消
+                                                            </el-button>
+                                                            <el-button type="primary" size="mini"
+                                                                       @click="visible = false">确定
+                                                            </el-button>
+                                                        </div>
+                                                        <span slot="reference"><img src="@/static/account/del.png"
+                                                                                    alt=""></span>
+                                                    </el-popover>
+                                                </div>
+                                            </el-col>
+                                        </el-row>
+                                    </div>
+                                    <div class="right-box">
+                                        <el-row :gutter="24">
+                                            <el-col :span="3">
+                                                <div class="item textCenter">未匹配</div>
+                                            </el-col>
+                                            <el-col :span="8">
+                                                <div class="item  prod-info">
+                                                    <img src="../../static/home/promation-img.png" alt="">
+                                                    <div class="info">
+                                                        <p class="title ellipsis-1">FUS-U30系列28电机 本体宽30mm</p>
+                                                        <p class="desc ellipsis-2">
+                                                            型号：28电机*梯形丝杆导程0802*行程50mm(FUS-U30-B28-L0802-T050)</p>
+                                                    </div>
+                                                </div>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <div class="item">相似型号</div>
+                                            </el-col>
+                                            <el-col :span="3">
+                                                <div class="item">
+                                                    <p class="static">需订货</p>
+                                                    <p class="fahuo">7天内发货</p>
+                                                </div>
+                                            </el-col>
+                                            <el-col :span="3">
+                                                <div class="item">
+                                                    {{ vuex_huobi }}764.22
+                                                </div>
+                                            </el-col>
+                                            <el-col :span="3">
+                                                <div class="item">
+                                                    {{ vuex_huobi }}764.22
+                                                </div>
+                                            </el-col>
+                                        </el-row>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                      </el-col>
-                    </el-row>
-                  </div>
-                  <div class="right-box">
-                    <el-row :gutter="24">
-                      <el-col :span="3">
-                        <div class="item textCenter">未匹配</div>
-                      </el-col>
-                      <el-col :span="8">
-                        <div class="item  prod-info">
-                          <img src="../../static/home/promation-img.png" alt="">
-                          <div class="info">
-                            <p class="title ellipsis-1">FUS-U30系列28电机 本体宽30mm</p>
-                            <p class="desc ellipsis-2">
-                              型号：28电机*梯形丝杆导程0802*行程50mm(FUS-U30-B28-L0802-T050)</p>
-                          </div>
-                        </div>
-                      </el-col>
-                      <el-col :span="4">
-                        <div class="item">相似型号</div>
-                      </el-col>
-                      <el-col :span="3">
-                        <div class="item">
-                          <p class="static">需订货</p>
-                          <p class="fahuo">7天内发货</p>
-                        </div>
-                      </el-col>
-                      <el-col :span="3">
-                        <div class="item">
-                          $764.22
-                        </div>
-                      </el-col>
-                      <el-col :span="3">
-                        <div class="item">
-                          $764.22
-                        </div>
-                      </el-col>
-                    </el-row>
-                  </div>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane label="已报价产品" name="second">已报价产品</el-tab-pane>
+                <el-tab-pane label="需询价产品" name="third">需询价产品</el-tab-pane>
+            </el-tabs>
+        </div>
+        <div class="footer-sticky flex flex-between">
+            <div class="left-box flex">
+                <div class="select">
+                    <el-checkbox></el-checkbox>
+                    <span>全选</span>
                 </div>
-              </div>
+                <div class="add-num flex">
+                    <p>新增</p>
+                    <el-input type="number"></el-input>
+                    <p>条</p>
+                    <div class="pointer submit">确定</div>
+                </div>
+                <div class="btn">
+                    <div class="btn-item">点击上传BOM文件</div>
+                    <div class="btn-item">下载BOM模版</div>
+                </div>
             </div>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="已报价产品" name="second">已报价产品</el-tab-pane>
-        <el-tab-pane label="需询价产品" name="third">需询价产品</el-tab-pane>
-      </el-tabs>
+            <div class="right-box">
+                <el-checkbox></el-checkbox>
+                <span>我同意并已知晓</span>
+                <span class="batch-input-footer-protocol">《保密协议》</span>
+                <el-button>去询价</el-button>
+            </div>
+        </div>
     </div>
-    <div class="footer-sticky flex flex-between">
-      <div class="left-box flex">
-        <div class="select">
-          <el-checkbox></el-checkbox>
-          <span>全选</span>
-        </div>
-        <div class="add-num flex">
-          <p>新增</p>
-          <el-input type="number"></el-input>
-          <p>条</p>
-          <div class="pointer submit">确定</div>
-        </div>
-        <div class="btn">
-          <div class="btn-item">点击上传BOM文件</div>
-          <div class="btn-item">下载BOM模版</div>
-        </div>
-      </div>
-      <div class="right-box">
-        <el-checkbox></el-checkbox>
-        <span>我同意并已知晓</span>
-        <span class="batch-input-footer-protocol">《保密协议》</span>
-        <el-button>去询价</el-button>
-      </div>
-    </div>
-  </div>
 </template>
 
 <style scoped lang="less">
@@ -356,6 +365,11 @@ export default {
           flex-direction: column;
           justify-content: center;
 
+          .fahuo {
+              margin-top: 10px;
+            color: @theme;
+          }
+
           label {
             width: 100px;
           }
@@ -436,6 +450,7 @@ export default {
         box-shadow: 0px 0 10px 1px rgba(84, 98, 108, .06);
         z-index: 999;
         border: 1px solid hsla(0, 0%, 100%, 0);
+
         .delete-item {
           display: block;
         }

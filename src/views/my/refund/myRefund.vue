@@ -1,43 +1,43 @@
 <template>
-  <div class="page">
-    <div class="main-title">售后订单</div>
+    <div class="page">
+        <div class="main-title">售后订单</div>
 
-    <div class="page-ctx">
-      <div class="tab-box">
-        <div class="tab-list">
-          <div v-for="(item, index) in list_status_refund" :key="index" class="tab-item"
-               :class="refund_status == item.status ? 'active' : ''" @click="refund_status = item.status">
-            {{ item.title }}
-          </div>
-        </div>
-        <div class="search-box">
-          <input type="text" placeholder="输入商品名称、订单号" v-model="keyword"/>
-          <button @click="click_order_search">搜索</button>
-        </div>
-      </div>
-      <div class="center ctx-box">
-        <template v-if="!isRefundApply">
-          <!-- 可申请售后列表 -->
-          <refundList :list="list_order"/>
-          <el-empty v-if="!list_order.length" description="暂无数据..."></el-empty>
-        </template>
-        <template v-else>
-          <!-- 售后申请列表 -->
-          <refundApplyList :list="list_refund"/>
-          <el-empty v-if="!list_refund.length" description="暂无数据..."></el-empty>
-        </template>
+        <div class="page-ctx">
+            <div class="tab-box">
+                <div class="tab-list">
+                    <div v-for="(item, index) in list_status_refund" :key="index" class="tab-item"
+                         :class="refund_status == item.status ? 'active' : ''" @click="refund_status = item.status">
+                        {{ item.title }}
+                    </div>
+                </div>
+                <div class="search-box">
+                    <input type="text" placeholder="输入商品名称、订单号" v-model="keyword"/>
+                    <button @click="click_order_search">搜索</button>
+                </div>
+            </div>
+            <div class="center ctx-box">
+                <template v-if="!isRefundApply">
+                    <!-- 可申请售后列表 -->
+                    <refundList :list="list_order"/>
+                    <el-empty v-if="!list_order.length" description="暂无数据..."></el-empty>
+                </template>
+                <template v-else>
+                    <!-- 售后申请列表 -->
+                    <refundApplyList :list="list_refund"/>
+                    <el-empty v-if="!list_refund.length" description="暂无数据..."></el-empty>
+                </template>
 
-        <div v-if="!((!isRefundApply && !list_order.length) || (isRefundApply && !list_refund.length))"
-             class="pagination-box" style="margin-top: 40px">
-          <el-pagination @current-change="changePage" :current-page.sync="pagination.page"
-                         :page-size="pagination.pageNum" layout="total, prev, pager, next"
-                         :total="count"></el-pagination>
+                <div v-if="!((!isRefundApply && !list_order.length) || (isRefundApply && !list_refund.length))"
+                     class="pagination-box" style="margin-top: 40px">
+                    <el-pagination @current-change="changePage" :current-page.sync="pagination.page"
+                                   :page-size="pagination.pageNum" layout="total, prev, pager, next"
+                                   :total="count"></el-pagination>
+                </div>
+            </div>
         </div>
-      </div>
+
+
     </div>
-
-
-  </div>
 </template>
 
 <script>
@@ -47,149 +47,180 @@ import refundApplyList from "@/components/refund/refundApplyList.vue"; //订单�
 import {mapState} from "vuex";
 
 export default {
-  name: "servicePage",
-  components: {
-    refundList,
-    refundApplyList,
-  },
-  data() {
-    return {
-      refund_status: -10,
-      list_status_refund: [
-        {status: -10, title: "全部"},
-        {status: 2, title: "申请记录"},
-        {status: 0, title: "待处理"},
-        {status: 1, title: "已完成"},
-      ],
-      list_order: [], //订单列表
-      list_refund: [], //售后列表
-
-      pagination: {
-        page: 1,
-        pageNum: 10,
-      },
-      count: 0,
-      keyword: "",
-    };
-  },
-
-  computed: {
-    //是否为售后申请列表 还是可申请列表
-    isRefundApply() {
-      return this.refund_status != -10;
+    name: "servicePage",
+    components: {
+        refundList,
+        refundApplyList,
     },
-  },
+    data() {
+        return {
+            refund_status: -10,
+            list_status_refund: [
+                {status: -10, title: "全部"},
+                {status: 2, title: "申请记录"},
+                {status: 0, title: "待处理"},
+                {status: 1, title: "已完成"},
+            ],
+            list_order: [], //订单列表
+            list_refund: [], //售后列表
 
-  watch: {
-    refund_status() {
-      this.setView();
-    },
-  },
-
-  created() {
-    this.setView();
-  },
-
-  methods: {
-    setView() {
-      if (this.refund_status == -10) {
-        this.query_shouhou_order(); //可申请订单列表
-      } else {
-        this.query_apply(); //售后申请列表
-      }
+            pagination: {
+                page: 1,
+                pageNum: 10,
+            },
+            count: 0,
+            keyword: "",
+        };
     },
 
-    //售后列表
-    query_shouhou_order() {
-      this.$api("refund_afterSaleList", {
-        ...this.pagination,
-      }).then((res) => {
-        //console.log("退换货列表", res);
-        let {code, data} = res;
-        if (code == 200) {
-          let {list} = data;
-          this.list_order = list;
-        }
-      });
-    },
-
-    //已申请售后列表
-    query_apply() {
-      this.$api("refund_lists", {
-        ...this.pagination,
-        status: this.refund_status, //(0待处理  1已完成  -1无效)
-      }).then((res) => {
-        //console.log("退换货列表", res);
-        let {code, data} = res;
-        if (code == 200) {
-          let {list} = data;
-          list.forEach((v) => {
-            v.is_jifen = v.products.jifen ? 1 : 0;
-          });
-          this.list_refund = list;
-
-          this.count = data.count;
-        }
-      });
-    },
-
-    //分页
-    changePage() {
-      this.setView();
-    },
-
-    //搜索
-    click_order_search() {
-      this.setView();
-    },
-
-    updateView() {
-      this.setView();
-    },
-
-    //申请售后
-    onApplyRefund(item) {
-      this.$router.push({
-        path: "/orderRefund", //refundType
-        query: {
-          id: item.id,
+    computed: {
+        //是否为售后申请列表 还是可申请列表
+        isRefundApply() {
+            return this.refund_status != -10;
         },
-      });
     },
 
-    //售后进度
-    onRefundServiceDetail(refund) {
-      this.$router.push({
-        path: "/refundDetail",
-        query: {
-          id: refund.id,
+    watch: {
+        refund_status() {
+            this.setView();
         },
-      });
     },
 
-    //订单详情
-    refund_detail(item) {
-      this.$router.push({
-        // path: "/refundDetail",
-        path: "/refundProgress",
-        query: {
-          refund_id: item.id,
+    created() {
+        this.setView();
+    },
+
+    methods: {
+        setView() {
+            if (this.refund_status == -10) {
+                this.query_shouhou_order(); //可申请订单列表
+            } else {
+                this.query_apply(); //售后申请列表
+            }
         },
-      });
-    },
 
-    onClickLeft() {
-      this.$router.push({
-        path: "/user",
-      });
-    },
+        //售后列表
+        query_shouhou_order() {
+            this.$api("refund_afterSaleList", {
+                ...this.pagination,
+            }).then((res) => {
+                let {code, data} = res;
+                if (code == 200) {
+                    this.list_order = data.list || [{
+                        "inventoryId": 4,
+                        "createdTime": "2024-08-15 18:06:03",
+                        "orderId": 1,
+                        "address": {
+                            "收件人": "张三",
 
-    //售后申请
-    refund_apply(item) {
-      //console.log({ ...item });
-      this.$router.push(`/refundType?order_id=${item.order_id}&inventoryId=${item.inventoryId}`);
+                            "手机号": "15284221025",
+
+                            "所在地区": null,
+
+                            "详细地址": "详细地址"
+
+                        },
+                        "orderNo": "O_2024081518060350013",
+                        "ifRefund": 0,
+                        "products": {
+                            "sn": "编码",
+
+                            "title": "测试商品多规格2",
+
+                            "keyVals": "大,白",
+
+                            "priceSale": "8.00",
+
+                            "priceMarket": "10.00",
+
+                            "image": "",
+
+                            "unit": "",
+
+                            "num": 2
+
+                        }
+                    }];
+                }
+            });
+        },
+
+        //已申请售后列表
+        query_apply() {
+            this.$api("refund_lists", {
+                ...this.pagination,
+                status: this.refund_status, //(0待处理  1已完成  -1无效)
+            }).then((res) => {
+                let {code, data} = res;
+                if (code == 200) {
+                    let list = data.list || [];
+                    list.forEach((v) => {
+                        v.is_jifen = v.products.jifen ? 1 : 0;
+                    });
+                    this.list_refund = list;
+
+                    this.count = data.count;
+                }
+            });
+        },
+
+        //分页
+        changePage() {
+            this.setView();
+        },
+
+        //搜索
+        click_order_search() {
+            this.setView();
+        },
+
+        updateView() {
+            this.setView();
+        },
+
+        //申请售后
+        onApplyRefund(item) {
+            this.$router.push({
+                path: "/orderRefund", //refundType
+                query: {
+                    id: item.id,
+                },
+            });
+        },
+
+        //售后进度
+        onRefundServiceDetail(refund) {
+            this.$router.push({
+                path: "/refundDetail",
+                query: {
+                    id: refund.id,
+                },
+            });
+        },
+
+        //订单详情
+        refund_detail(item) {
+            this.$router.push({
+                // path: "/refundDetail",
+                path: "/refundProgress",
+                query: {
+                    refund_id: item.id,
+                },
+            });
+        },
+
+        onClickLeft() {
+            this.$router.push({
+                path: "/user",
+            });
+        },
+
+        //售后申请
+        refund_apply(item) {
+            //console.log({ ...item });
+            this.$router.push(`/refundType?order_id=${item.order_id}&inventoryId=${item.inventoryId}`);
+        },
     },
-  },
 };
 </script>
 

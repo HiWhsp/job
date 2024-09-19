@@ -130,9 +130,9 @@ const routes = [
         component: () => import('@/views/order/order-submit.vue')
     },
     {
-      path: '/payment-success',
-      name: 'payment-success',
-      component: () => import('@/views/order/payment-success.vue')
+        path: '/payment-success',
+        name: 'payment-success',
+        component: () => import('@/views/order/payment-success.vue')
     },
 
     /** 帮助中心 **/
@@ -217,6 +217,24 @@ const routes = [
                     title: "售后订单",
                     requireAuth: true,
                 },
+            },
+            {
+                path: '/refundType',
+                name: 'refundType',
+                component: () => import('@/views/my/refund/refundType.vue'),
+                meta: {
+                    title: "售后类型",
+                    requireAuth: true,
+                }
+            },
+            {
+              path: '/refundSubmit',
+              name: 'refundSubmit',
+              component: () => import('@/views/my/refund/refundSubmit.vue'),
+              meta: {
+                  title: "售后提交",
+                  requireAuth: true,
+              }
             },
             {
                 path: "/refund-detail",
