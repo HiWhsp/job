@@ -339,6 +339,7 @@ export default new Vuex.Store({
             }).then((res) => {
                 let {code, data} = res;
                 if (code === 200) {
+                    console.log(data)
                     commit("set_vuex_configInfo", data);
                 }
             });

@@ -191,7 +191,7 @@ export default {
         //售后进度
         onRefundServiceDetail(refund) {
             this.$router.push({
-                path: "/refund-detail",
+                path: "/refundDetail",
                 query: {
                     id: refund.id,
                 },
@@ -201,7 +201,7 @@ export default {
         //订单详情
         refund_detail(item) {
             this.$router.push({
-                // path: "/refund-detail",
+                // path: "/refundDetail",
                 path: "/refundProgress",
                 query: {
                     refund_id: item.id,

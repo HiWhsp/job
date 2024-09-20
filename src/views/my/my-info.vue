@@ -11,12 +11,12 @@
             <span class="text">头像：</span>
             <span class="info">
               <div class="upload-box">
-                <el-upload class="upload-demo" accept="image/*" :show-file-list="false" :name="UPLOAD_NAME"
-                           :action="UPLOAD_ACTION" :data="mix_upload_data" :on-success="upload_on_success"
+                < class="upload-demo" accept="image/*" :show-file-list="false" :name="UPLOAD_NAME"
+                           action="http://fujunjixie.dx.hdapp.com.cn/service.php?action=index_ossUpload" :data="mix_upload_data" :on-success="upload_on_success"
                            :before-upload="upload_before_upload">
                   <img v-if="form.image" :src="form.image" class="user-avatar"/>
                   <img v-else src="@/static/common/head-user-login.png" class="user-avatar"/>
-                </el-upload>
+                </>
               </div>
             </span>
           </div>

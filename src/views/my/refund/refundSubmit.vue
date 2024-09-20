@@ -1,33 +1,32 @@
 <template>
   <div class="page">
     <div class="main-title">申请售后</div>
-
-    <div class="refund-step">
-      <div class="step-box">
-        <div class="step step-1 active">① 买家申请</div>
-        <div class="step step-2 ">② 卖家处理</div>
-        <div class="step step-3">③ 售后完成</div>
-      </div>
-    </div>
+    <!--    <div class="refund-step">-->
+    <!--      <div class="step-box">-->
+    <!--        <div class="step step-1 active">① 买家申请</div>-->
+    <!--        <div class="step step-2 ">② 卖家处理</div>-->
+    <!--        <div class="step step-3">③ 售后完成</div>-->
+    <!--      </div>-->
+    <!--    </div>-->
 
     <div class="refund-info page-ctx">
       <div class="center">
         <!-- 商品信息 -->
-        <refundGoodsInfo :order="order" />
+        <refundGoodsInfo :order="order"/>
       </div>
 
       <div class="form-wrap">
         <div class="form-box">
-          <div class="input-box">
-            <div class="label">服务类型</div>
-            <div class="action">{{ refund_type_text }}</div>
-          </div>
+          <!--          <div class="input-box">-->
+          <!--            <div class="label">服务类型</div>-->
+          <!--            <div class="action">{{ refund_type_text }}</div>-->
+          <!--          </div>-->
 
           <div class="input-box">
-            <div class="label">申请原因</div>
+            <div class="label">{{ refund_type_text }}原因：<span style="color: #FF3D00;">*</span></div>
             <div class="action">
               <el-select v-model="reason" placeholder="请选择">
-                <el-option v-for="item in list_reason_title" :key="item" :label="item" :value="item"> </el-option>
+                <el-option v-for="item in list_reason_title" :key="item.item" :label="item.title" :value="item.title"></el-option>
               </el-select>
             </div>
           </div>
@@ -43,28 +42,29 @@
             </div>
           </div> -->
 
-          <div class="input-box" v-if="refund_type_text == '退货退款'">
-            <div class="label">
-              {{ currency == "积分" ? "退还积分" : "退款金额(￥)" }}
-            </div>
+          <div class="input-box" v-if="refund_type_text == '退货退款' || refund_type_text == '退款'">
+            <div class="label">退款金额：<span style="color: #FF3D00;">*</span></div>
             <div class="action">
               <!-- {{ refundMoney }} -->
-              <el-input placeholder="请输入退款金额" v-model="money" />
+              <el-input placeholder="请输入退款金额" v-model="money"/>
             </div>
           </div>
 
           <div class="input-box remark-box">
-            <div class="label">详细说明</div>
+            <div class="label">{{ refund_type_text }}说明：</div>
             <div class="action">
-              <el-input type="textarea" placeholder="请输入说明信息" v-model="remark" :autosize="{ minRows: 6 }" />
+              <el-input type="textarea" :placeholder="`请输入${refund_type_text}信息`" v-model="remark"
+                        :autosize="{ minRows: 6 }"/>
             </div>
           </div>
           <div class="input-box upload-box">
-            <div class="label">图片上传</div>
+            <div class="label">上传凭证：</div>
             <div class="action">
-              <el-upload class="upload-demo" list-type="picture-card" multiple accept="image/*" :name="upload_col_name" :action="uploadAction" :on-success="uploadSuccess_pingjia" :before-upload="beforeUpload_pingjia" :data="uploadExtraData">
+              <el-upload class="upload-demo" list-type="picture-card" multiple accept="image/*" name="img"
+                         action="uploadAction" :on-success="uploadSuccess_pingjia"
+                         :before-upload="beforeUpload_pingjia" :data="uploadExtraData">
                 <!-- <i class="el-icon-upload"></i> -->
-                上传图片
+                上传凭证
                 <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
               </el-upload>
             </div>
@@ -82,7 +82,7 @@
 <script>
 import refundGoodsInfo from "@/components/refund/refundGoodsInfo.vue"; //
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "servicePage",
@@ -110,7 +110,6 @@ export default {
     };
   },
   computed: {
-    ...mapState([""]),
 
     refund_type_text() {
       //退换货类型(1-退款   2-退货退款  3-换货)
@@ -124,7 +123,9 @@ export default {
 
     //售后原因
     list_reason_title() {
-      return this.webConfig.tuihuan_reason;
+      const obj = Object.assign({}, this.$store.state.webConfig)
+      const name = obj.tuihuanReason ? JSON.parse(obj.tuihuanReason) : [];
+      return name;
     },
 
     //要售后的商品
@@ -147,7 +148,9 @@ export default {
       }
     },
   },
-  created() {
+  mounted() {
+    console.log(this.$store.state.webConfig)
+
     this.setView();
   },
   methods: {
@@ -156,7 +159,7 @@ export default {
         id: this.order_id,
       }).then((res) => {
         //console.log("订单详情", res);
-        let { code, data, msg} = res;
+        let {code, data, msg} = res;
         if (code == 200) {
           this.order = data;
           this.orderObj = data;
@@ -169,7 +172,7 @@ export default {
 
     //提交评价
     submit_refund() {
-      let { reason, remark } = this;
+      let {reason, remark} = this;
 
       let urlArrStr = "";
       if (this.images) {
@@ -214,9 +217,11 @@ export default {
       // debugger;
       this.$api("refund_add", params).then((res) => {
         //console.log("申请退货退款", res);
-        let { code, message } = res;
+        let {code, msg} = res;
         if (code == 200) {
           this.$router.push("/myRefund");
+        }else {
+          alertErr(msg);
         }
       });
     },
@@ -224,7 +229,7 @@ export default {
     //上传相关
     uploadSuccess_pingjia(res, file) {
       //console.log("上传结果", res);
-      let { code, data, msg} = res;
+      let {code, data, msg} = res;
       // alert(res);
       if (code == 200) {
         this.images.push(res.data);
@@ -244,14 +249,15 @@ export default {
 /deep/ .order-list-wrap {
   margin-top: 30px;
 }
+
 /deep/ .info-heji {
   display: none !important;
 }
 
 
-
 .page {
   padding-bottom: 50px;
+  padding-top: 0;
 
   .main-title {
     margin-bottom: 20px;
@@ -261,7 +267,6 @@ export default {
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
     color: #333333;
   }
@@ -274,15 +279,13 @@ export default {
 }
 
 
-
-
-
 .refund-step {
   .step-box {
     width: 100%;
     margin: 0 auto;
     font-size: 14px;
     .flex();
+
     .step {
       flex: 1;
       height: 40px;
@@ -291,6 +294,7 @@ export default {
       background: #eee;
       cursor: pointer;
       transition: 0.3s;
+
       &:hover {
         opacity: 0.75;
       }
@@ -298,9 +302,11 @@ export default {
       &.step-1 {
         clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%);
       }
+
       &.step-2 {
         clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%, 3% 50%);
       }
+
       &.step-3 {
         // clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%, 3% 50%);
         clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 3% 50%);
@@ -319,17 +325,22 @@ export default {
 }
 
 .form-wrap {
+  margin-top: 30px;
   text-align: left;
+
   .input-box {
     margin-bottom: 25px;
     .flex();
+    font-size: 14px;
 
     &.shouhuo-box {
       align-items: flex-start;
     }
+
     &.remark-box {
       align-items: flex-start;
     }
+
     &.upload-box {
       align-items: flex-start;
     }
@@ -337,12 +348,14 @@ export default {
     .label {
       min-width: 120px;
     }
+
     .action {
       width: 455px;
 
       .el-input {
         width: 100%;
       }
+
       .el-select {
         width: 100%;
       }
@@ -354,6 +367,7 @@ export default {
           .text {
             min-width: 75px;
           }
+
           .val {
           }
         }
@@ -364,6 +378,7 @@ export default {
   .submit-box {
     margin-top: 40px;
     padding-left: 120px;
+
     .btn {
       width: 240px;
       height: 40px;

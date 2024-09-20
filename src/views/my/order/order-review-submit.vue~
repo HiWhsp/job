@@ -58,7 +58,7 @@
 
           <div class="upload-box">
             <el-upload class="upload-demo" list-type="picture-card" accept="image/*" multiple :name="UPLOAD_NAME"
-                       action="UPLOAD_ACTION" :limit="upload_limit_number" :data="mix_upload_data"
+                       :action="UPLOAD_ACTION" :limit="upload_limit_number" :data="mix_upload_data"
                        :on-success="upload_on_success" :before-upload="upload_before_upload">
               <i class="el-icon-plus"></i>
 

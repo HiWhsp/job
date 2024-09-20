@@ -73,8 +73,7 @@ export default {
 
 <style scoped lang="less">
 .goods-info {
-  border: 1px solid #eee;
-
+  
   .info-title {
     .flex-between();
     height: 48px;

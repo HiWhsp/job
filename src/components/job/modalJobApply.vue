@@ -26,7 +26,7 @@
           <div class="val">
             <div class="upload-box">
               <el-upload class="upload-demo" multiple :limit="1" name="img" :data="uploadExtraData"
-                :action="uploadAction" :on-success="onSuccess_upload" :on-preview="handlePreview"
+                action="http://fujunjixie.dx.hdapp.com.cn/service.php?action=index_ossUpload" :on-success="onSuccess_upload" :on-preview="handlePreview"
                 :on-remove="handleRemove" :before-remove="beforeRemove" :on-exceed="handleExceed" :file-list="fileList">
                 <button class="btn-ripple btn-upload">
                   <img src="@img/upload.png" alt="" />

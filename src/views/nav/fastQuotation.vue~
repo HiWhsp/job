@@ -155,6 +155,7 @@ export default {
                             <el-upload v-if="!item.img.length" slot="reference" class="upload-demo"
                                        action="http://fujunjixie.dx.hdapp.com.cn/service.php?action=index_ossUpload"
                                        name="img"
+                                       :file-list="item.img"
                             >
                               <span style="color: #A66600;">上传</span>
                             </el-upload>
