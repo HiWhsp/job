@@ -327,6 +327,24 @@ export default {
       return true;
     },
 
+    //处理购物车列表数据
+    handlePiPrice(item) {
+      let v = item;
+      let {nums1, nums2} = v;
+      let num = this.selected_num;
+      let price_sale = 0;
+      if (+nums2 && +nums1) {
+        if (+num > +(+nums2)) {
+          price_sale = v.price_sale3;
+        } else if (+num >= +nums1) {
+          price_sale = v.price_sale2;
+        } else {
+          price_sale = v.price_origin;
+        }
+      }
+
+      return price_sale;
+    },
 
     //立即购买
     payNow() {
@@ -354,7 +372,7 @@ export default {
       let str_data = JSON.stringify(data_format);
       this.$store.commit('set_cache_payment_products', str_data)
       this.$router.push({
-        path: "/orderSubmit",
+        path: "/order-submit",
       });
     },
 

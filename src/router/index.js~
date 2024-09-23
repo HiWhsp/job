@@ -356,7 +356,7 @@ const routes = [
       {
         path: '/message',
         name: 'message',
-        component: () => import('@/views/my/myMessage.vue'),
+        component: () => import('@/views/my/message.vue'),
         meta: {
           title: "消息",
           requireAuth: true

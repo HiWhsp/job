@@ -85,7 +85,7 @@ export default {
     cancelPay() {
       // this.showModal= false;
       // this.order_id =
-      if (this.$route.name == "order-submit" || this.$route.name == "payment-methods") {
+      if (this.$route.name == "order-submit" || this.$route.name == "orderSubmit") {
         //创建订单页
         this.$router.push("/payment-success?order_id=" + this.order_id);
       } else {

@@ -483,7 +483,7 @@ export default {
     },
     doPay(item) {
       this.$router.push({
-        path: '/payment-methods',
+        path: '/orderSubmit',
         query: {
           id: item.id
         }

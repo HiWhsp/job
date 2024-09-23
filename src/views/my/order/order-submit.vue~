@@ -1355,7 +1355,7 @@ export default {
       }
 
       this.$router.push({
-        path: "/orderSubmit",
+        path: "/payment-methods",
         query: {
           order_id: this.order_id,
           from: "order-submit",

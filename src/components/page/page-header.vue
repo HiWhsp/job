@@ -32,7 +32,7 @@
                 </div>
               </div>
               <div class="InfomationPopover-bottom"><span>可前往消息中心，</span>
-                <span class="msg-more pointer">查看更多</span>
+                <span class="msg-more pointer" @click="goUrl({url: '/message'})">查看更多</span>
                 <img src="../../static/home/right-back.png" alt="">
               </div>
             </div>

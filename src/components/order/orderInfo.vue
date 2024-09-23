@@ -364,7 +364,7 @@ export default {
     },
     //订单支付
     order_payment(order_id) {
-      this.$router.push(`/payment-methods?order_id=${order_id}`);
+      this.$router.push(`/orderSubmit?order_id=${order_id}`);
     },
 
     //订单确认收货

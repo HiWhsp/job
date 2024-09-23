@@ -373,7 +373,7 @@ export default {
     },
     //订单去支付
     mix_order_payment_link(order_id) {
-      this.toRoute(`/payment-methods?order_id=${order_id}`);
+      this.toRoute(`/orderSubmit?order_id=${order_id}`);
     },
     //订单去评价
     mix_order_review_link(order_id) {

@@ -63,7 +63,6 @@ export default {
       }
 
       .info {
-        width: 100px;
         margin-left: 24px;
         .flex();
         flex-direction: column;
