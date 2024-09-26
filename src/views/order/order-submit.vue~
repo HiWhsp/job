@@ -1,21 +1,22 @@
+z`
 <template>
   <div class="page">
     <div class="inner">
       <div class="section">
         <div class="section-title">选择收货人地址</div>
         <div class="section-ctx">
-          <div class="address-list">
+          <div class="address-list p-l-30">
             <div class="address-item" v-for="(item, index) in list_address" :key="index"
                  :class="{ active: item.id == address_selected.id }" @click="do_toggle_address(item)">
               <div class="address-top">{{ item.name_phone }}</div>
               <div class="address-bottom">
                 {{ item.full_addr }}
               </div>
-              <!--              <img src="@/static/order/addr-select.png" alt="" class="marker"/>-->
+              <img src="@/static/order/addr-select.png" alt="" class="marker"/>
             </div>
             <div v-if="list_address.length == 0" class="empty-dev">还没有收件地址</div>
           </div>
-          <div class="btn-box">
+          <div class="btn-box p-l-30">
             <button class="btn-ripple" @click="open_addr_add()">+ 新增地址</button>
           </div>
         </div>
@@ -23,14 +24,16 @@
 
       <div class="section section-pay">
         <div class="section-title">支付方式</div>
-        <div class="section-ctx section-ctx-type">
+        <div class="section-ctx section-ctx-type p-l-30">
           <div class="pay-group">
             <div class="title">支付方式 ：</div>
             <div class="pay-items">
               <div class="item" v-for="(item, index) in payTypeOption" @click="do_toggle_paytype(item)"
                    :class="{ checked: pay_type_value == item.value }">
-                <img class="img-check check-0 check-img check-img-0" src="@/static/common/check0.png" alt=""/>
-                <img class="img-check check-1 check-img check-img-1" src="@/static/common/check1.png" alt=""/>
+                <img class="img-check check-0 check-img check-img-0" src="@/static/common/check0.png"
+                     alt=""/>
+                <img class="img-check check-1 check-img check-img-1" src="@/static/common/check1.png"
+                     alt=""/>
                 <img class="marker-img" :src="item.icon" alt=""/>
                 <span>{{ item.title }}</span>
               </div>
@@ -74,7 +77,7 @@
           <!--  -->
           <div class="invoice-info" v-if="invoice_info.invoiceType === '1'">
             <div class="info-item">
-              <div class="info-label">发票抬头类型1</div>
+              <div class="info-label">发票抬头类型</div>
               <div class="info-val">
                 <el-radio-group v-model="invoice_info.titleType" fill="#A66600">
                   <el-radio label="1">个人</el-radio>
@@ -140,22 +143,22 @@
       <!-- 商品列表 -->
       <div class="section section-product">
         <div class="section-title">订单商品</div>
-        <div class="section-ctx" style="background: #FAFBFC;">
-          <div class="goods-list">
+        <div class="section-ctx">
+          <div class="goods-list ">
             <!-- <div class="title">订单商品</div> -->
             <div class="list">
               <div class="goods-list-inner">
                 <!-- 标题 -->
-                <div class="list-title flex">
+                <div class="list-title flex p-l-30">
                   <div class="box-title">
                     <div class="title-text">商品</div>
                   </div>
-                  <div class="box-unit">价格</div>
+                  <div class="box-unit">单价</div>
                   <div class="box-num">数量</div>
                   <div class="box-subtitle">金额</div>
                 </div>
                 <!-- 商品列表 -->
-                <div class="item" v-for="(item, index) in payment_products" :key="index">
+                <div class="item p-l-30" v-for="(item, index) in payment_products" :key="index">
                   <div class="item-detail flex">
                     <div class="box-title flex">
                       <div class="poster-box">
@@ -167,10 +170,10 @@
                       </div>
                       <div class="title-box">
                         {{ item.title }}
+                        <div class="box-sku">
+                          {{ item.keyVals }}
+                        </div>
                       </div>
-                    </div>
-                    <div class="box-sku">
-                      {{ item.keyVals }}
                     </div>
                     <div class="box-unit">{{ vuex_huobi }} {{ item.priceSale }}</div>
                     <div class="box-num">{{ item.num }}</div>
@@ -181,101 +184,75 @@
                 </div>
               </div>
             </div>
-
-            <div class="order-action" v-if="list_coupon.length">
-              <div class="order-action-inner">
-                <div class="section-item">
-                  <!--                  v-if="list_coupon.length"-->
-                  <div class="sub-title flex" @click="showCoupon = !showCoupon" :class="{ 'expand-0': !showCoupon }">
-                    <div class="text">使用优惠</div>
-                    <img src="@/static/common/pay-arrow-top.png" alt=""/>
-                  </div>
-
-                  <div class="yhq-list" v-if="showCoupon">
-                    <div class="yhq-item" v-for="(item, index) in list_coupon" :key="index"
-                         :class="{ active: coupon_select_id == item.id }" @click="handleCouponSelect(item)">
-                      <!--                      <img src="@/static/address/dizhi-check-1.png" alt="" class="marker"/>-->
-                      <div class="yhq-top">
-                        <div class="yhq-1">
-                          <div class="text-1">{{ vuex_huobi }}{{ +item.jian }}</div>
-                          <div class="text-2">满{{ +item.man }}</div>
-                        </div>
-                        <div class="yhq-2">
-                          有效期至 {{ item.endTime && item.endTime.substr(0, 10) }}
-                        </div>
-                      </div>
-                      <div class="yhq-bottom">
-                        <div class="yhq-3">[{{ item.title }}]</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!--                  <div class="yhq-select-info">-->
-                  <!--                    <b>金额抵用</b>-->
-
-                  <!--                    <template v-if="coupon_select.id">-->
-                  <!--                      <b class="number">{{ vuex_huobi }}{{ +coupon_select.jian }}</b>, 使用【{{-->
-                  <!--                        coupon_select.title-->
-                  <!--                      }}】优惠券-->
-                  <!--                      1张，优惠-->
-                  <!--                      {{ +coupon_select.jian }} 元-->
-                  <!--                    </template>-->
-                  <!--                    <template v-else> 无</template>-->
-                  <!--                  </div>-->
-                </div>
-
-
-                <!--
-            <div class="section-item">
-              <div class="section-title">优惠码</div>
-              <div class="section-input">
-                <el-input v-model="yh_code" placeholder="请填写优惠码"></el-input>
-              </div>
-              <div class="section-tip">优惠码填写完成后, 请点击下方使用按钮查询优惠信息。</div>
-              <div class="section-input">
-                <div class="btn-actions">
-                  <el-button size="small" type="warning" @click="query_yh">使用优惠</el-button>
-                  <el-button size="small" type="warning" @click="not_use_yh">不使用</el-button>
-                </div>
-              </div>
-            </div>
-          -->
-
-                <div class="section-item remark-box" v-if="false">
-                  <div class="sub-title">
-                    <b> 订单备注 </b>
-                  </div>
-                  <div class="section-input input-box">
-                    <el-input type="textarea" :autosize="{ minRows: 3 }" placeholder="请填写订单备注" v-model="remark">
-                    </el-input>
-                    <!-- <textarea placeholder="请填写订单备注"></textarea> -->
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
           </div>
         </div>
       </div>
 
+      <!--            优惠券-->
+      <div class="order-action" v-if="list_coupon.length">
+        <div class="order-action-inner">
+          <div class="section-item">
+            <!--                  v-if="list_coupon.length"-->
+            <div class="sub-title flex" @click="showCoupon = !showCoupon"
+                 :class="{ 'expand-0': !showCoupon }">
+              <div class="text">使用优惠</div>
+              <img src="@/static/common/pay-arrow-top.png" alt=""/>
+            </div>
+
+            <div class="yhq-list" v-if="showCoupon">
+              <div class="yhq-item" v-for="(item, index) in list_coupon" :key="index"
+                   :class="{ active: coupon_select_id == item.id }"
+                   @click="handleCouponSelect(item)">
+                <img src="@/static/order/yhp_select.png" alt="" class="marker"/>
+                <div class="yhq-top">
+                  <div class="yhq-1">
+                    <div class="text-1">{{ vuex_huobi }}{{ +item.jian }}</div>
+                    <div class="text-2">满{{ +item.man }}可用</div>
+                  </div>
+                  <div class="yhq-bottom">
+                    <div class="yhq-3">{{ item.title }}</div>
+                  </div>
+                  <div class="yhq-2"> 2020.12.21 - 2020.12.28
+                    <!--                    {{ item.endTime && item.endTime.substr(0, 10) }}-->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--                  <div class="yhq-select-info">-->
+            <!--                    <b>金额抵用</b>-->
+
+            <!--                    <template v-if="coupon_select.id">-->
+            <!--                      <b class="number">{{ vuex_huobi }}{{ +coupon_select.jian }}</b>, 使用【{{-->
+            <!--                        coupon_select.title-->
+            <!--                      }}】优惠券-->
+            <!--                      1张，优惠-->
+            <!--                      {{ +coupon_select.jian }} 元-->
+            <!--                    </template>-->
+            <!--                    <template v-else> 无</template>-->
+            <!--                  </div>-->
+          </div>
+        </div>
+      </div>
+
+
       <!--      赠品-->
       <div class="section section-pay">
-        <div class="section-title">赠品信息</div>
-        <div class="section-ctx" style="background: #FAFBFC;">
+        <div class="section-title">赠品</div>
+        <div class="section-ctx">
           <div class="goods-list">
             <!-- <div class="title">订单商品</div> -->
             <div class="list">
               <div class="goods-list-inner">
                 <!-- 标题 -->
-                <div class="list-title flex">
+                <div class="list-title flex p-l-30">
                   <div class="box-title">
                     <div class="title-text">赠品信息</div>
                   </div>
                   <div class="box-num">数量</div>
                 </div>
                 <!-- 商品列表 -->
-                <div class="item" v-for="(item, index) in payment_products" :key="index">
+                <div class="item p-l-30" v-for="(item, index) in payment_products" :key="index">
                   <div class="item-detail flex">
                     <div class="box-title flex">
                       <div class="poster-box">
@@ -287,13 +264,11 @@
                       </div>
                       <div class="title-box">
                         {{ item.title }}
+                        <div class="box-sku">
+                          {{ item.keyVals }}
+                        </div>
                       </div>
                     </div>
-                    <div class="box-sku">
-                      {{ item.keyVals }}
-                    </div>
-                    <div class="box-unit">{{ vuex_huobi }} {{ item.priceSale }}</div>
-                    <div class="box-num">{{ item.num }}</div>
                     <div class="box-subtitle">
                       {{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}
                     </div>
@@ -463,7 +438,6 @@ export default {
 
       my_info: {}, //我的信息 包含 余额 佣金数值
       total_balance: 0,
-
       // 发票信息
       invoice_info: {
         invoiceStatus: 0, //是否开票 0-不需要 1-需要发票
@@ -478,22 +452,22 @@ export default {
         email: '', // 电子邮箱
         orderId: '', // 关联订单
       },
+      // 支付方式
+      payTypeValue: 2,
+      pay_type_value: 'paypal',
+      Invoice_type_value: '0', // 开票类型
+      payTypeOption: [
+        // {value: 'weixin', title: '微信支付', icon: require("@/static/order/paytype-wx.png")},
+        // {value: 'zhifubao', title: '支付宝支付', icon: require("@/static/order/paytype-zfb.png")},
+        {value: 'paypal', title: '货到付款', icon: require("@/static/order/paytype-pal.png")},
+        // {value: 'xianxia', title: '线下支付', icon: require("@/static/order/paytype-xian.png")},
+        // {value: 'balance', title: '月结支付', icon: require("@/static/order/paytype-yue.png")},
+      ],
       // 发票类型
       invoiceTypeOption: [
         {value: '0', title: '不开票', icon: ''},
         {value: '1', title: '普通发票', icon: ''},
         {value: '2', title: '专用发票', icon: ''},
-      ],
-
-      // 支付方式
-      payTypeValue: 2,
-      pay_type_value: 'weixin',
-      payTypeOption: [
-        {value: 'weixin', title: '微信支付', icon: ''},
-        {value: 'zhifubao', title: '支付宝支付', icon: ''},
-        {value: 'paypal', title: '货到付款', icon: ''},
-        {value: 'xianxia', title: '线下支付', icon: ''},
-        {value: 'yue', title: '月结支付', icon: ''},
       ],
 
       order_id: "", //是否已经创建过订单
@@ -539,6 +513,7 @@ export default {
 
       is_pay_pass: 0, //是否设置余额支付密码
       payType: "", // 支付类型
+      invoiceType: "", // 发票类型
       upload_limit_number: 6,
       dialogVisible: false,
       dialogImageUrl: "", //转账图片查看
@@ -662,7 +637,7 @@ export default {
     clearCacheProduct() {
       if (this.from == 'cart') {
         //移除购物车中商品
-        let guige_ids = this.payment_products.map(v => v.guige_id).join(',')
+        let guige_ids = this.payment_products.map(v => v.inventoryId).join(',')
         this.$api({
           url: '/service.php',
           method: 'get',
@@ -804,13 +779,13 @@ export default {
         let {code, data, msg} = res;
         if (code == 200) {
           this.pay_info = data;
-          this.jifen_pay = data.jifen_pay || {}; //积分信息
+          this.jifen_pay = data.jifenPay || {}; //积分信息
 
           //
-          this.total_order_price = data.order_price || 0
+          this.total_order_price = data.orderPrice || 0
           //this.total_product_price = data.goods_price || 0;
           this.order_zhekou_bili = parseFloat(data.zhekou) || 10
-          this.order_zhekou_price = parseFloat(data.zhekou_price) || 0
+          this.order_zhekou_price = parseFloat(data.zhekouPrice) || 0
           this.order_yunfei = data.yunfei || 0;
 
 
@@ -823,20 +798,30 @@ export default {
           }
 
 
-          // if (data.yhq_list.length) {
-          //   this.list_coupon = data.yhq_list.map((item) => ({
-          //     ...item,
+          // 临时数据
+          const yhpList = [{
+            "id": 7,
+            "yhqId": "66d121ca6055a7888", //选中优惠券的ID
+            "title": "优惠券标题",
+            "man": "12.00",
+            "jian": "10.00",
+            "jiluId": 4
+          }]
+          // 优惠券
+          if (yhpList.length) {
+            this.list_coupon = yhpList.map((item) => ({
+              ...item,
 
-          //     miaoshu: +item.man
-          //       ? `满${+item.man}减${+item.jian}元`
-          //       : `下单立减${+item.jian}元`,
-          //     youxiaoqi:
-          //       item.startTime.substr(0, 10) + " - " + item.endTime.substr(0, 10),
-          //   }));
-          // }
-          // this.order_price = data.order_price;
-          // this.money_yunfei = +data.yunfei || 0;
-          // this.jifen_pay = data.jifen_pay;
+              miaoshu: +item.man
+                  ? `满${+item.man}减${+item.jian}元`
+                  : `下单立减${+item.jian}元`,
+              // youxiaoqi:
+              //     item.startTime.substr(0, 10) + " - " + item.endTime.substr(0, 10),
+            }));
+          }
+          this.order_price = data.orderPrice;
+          this.money_yunfei = +data.yunfei || 0;
+          this.jifen_pay = data.jifenPay;
         }
       });
     },
@@ -962,6 +947,8 @@ export default {
         if (res.code == 200) {
           let {id, orderNo} = res.data;
           this.order_id = id;
+          this.invoice_info.orderId = orderNo;
+          this.invoice_pay(orderNo); // 发票支付
           this.do_order_pay();
         }
       });
@@ -984,6 +971,22 @@ export default {
           this.pay_use_paypal();
         }
       }
+    },
+
+    invoice_pay(orderNo) {
+      if (this.invoice_info.invoiceType == 0) {
+        return;
+      }
+
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'invoices_add',
+          id: 0,
+          ...this.invoice_info
+        },
+      })
     },
 
     pay_use_yue() {
@@ -1034,8 +1037,9 @@ export default {
 
     //微信支付 pc
     order_payment_wx_pc() {
-      this.$api("orders_wxScanCodePay", {
-        order_id: this.order_id,
+      this.$api("pay_weixin", {
+        orderId: this.order_id,
+        orderType: 1
       }).then((res) => {
         //console.log("pc 微信扫码", res);
         // alert(res);
@@ -1050,6 +1054,8 @@ export default {
           // this.$refs.orderPayWxCode.qrcode = data.qrcode;
           // this.$refs.orderPayWxCode.showModal = true;
           // this.showWaiting();
+        } else {
+          alert(res.msg);
         }
       });
     },
@@ -1061,7 +1067,7 @@ export default {
       this.showWaiting();
 
       this.$api("orders_aliScanCodePay", {
-        order_id: this.order_id,
+        orderId: this.order_id,
       }).then((res) => {
         //console.log("支付宝支付", res);
         let {code, msg, data} = res;
@@ -1118,7 +1124,7 @@ export default {
       let paypz = this.xianxia_file_list.join();
       this.$api("orders_uploadPz", {
         //
-        order_id: this.order_id,
+        orderId: this.order_id,
         paypz: paypz,
       }).then((res) => {
         //console.log("线下转款支付", res);
@@ -1194,7 +1200,7 @@ export default {
       if (this.mode == "yue") {
         this.$router.push(`/yue`);
       } else {
-        this.$router.push(`/payment-success?order_id=${this.order_id}`);
+        this.$router.push(`/payment-success?id=${this.order_id}`);
       }
     },
 
@@ -1367,14 +1373,17 @@ export default {
 
     //优惠券相关
     handleCouponSelect(item) {
-      //console.log("优惠券", { ...item });
-      this.coupon_select_id = item.id;
+      if (this.coupon_select_id === item.id) {
+        this.coupon_select_id = '';
+      } else {
+        this.coupon_select_id = item.id;
+      }
     },
 
     //
-    toPaySuccess() {
-      this.toPayResult(1)
-    },
+    // toPaySuccess() {
+    //   this.toPayResult(1)
+    // },
     toPayFail() {
       // this.toPayResult(0)
       this.toRoute({
@@ -1529,7 +1538,7 @@ export default {
 
         .item-detail {
           padding: 15px 0;
-          text-align: center;
+          //text-align: center;
           font-family: OPPOSans, OPPOSans;
           // font-weight: bold;
           font-size: 14px;
@@ -1540,7 +1549,7 @@ export default {
             flex: 1;
 
             .poster-box {
-              margin-left: 70px;
+              //margin-left: 70px;
               margin-right: 16px;
             }
 
@@ -1556,11 +1565,10 @@ export default {
           }
 
           .box-sku {
+            margin-top: 5px;
             width: 240px;
-
-
             font-size: 12px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: Roboto, Roboto;;
             font-weight: 400;
             color: #999999;
           }
@@ -1780,107 +1788,117 @@ export default {
 
 // 订单优惠等
 .order-action {
-  background: #FAFBFC;
-  margin-top: 34px;
+  //background: #FAFBFC;
 
   .order-action-inner {
-    // border-bottom: 1px solid #ddd;
     padding-bottom: 10px;
   }
 
   .section-item {
     margin-bottom: 20px;
-  }
 
-  .section-title {
-    margin-bottom: 5px;
-    font-family: Poppins, Poppins;
-    font-weight: bold;
-    font-size: 24px;
-    color: #333333;
-  }
+    .sub-title {
+      height: 50px;
+      background: #FAFBFC;
+      padding-left: 30px;
 
-  .section-tip {
-    margin-bottom: 5px;
-    font-size: 14px;
-    font-family: Microsoft YaHei;
-    font-weight: 400;
-    line-height: 25px;
-    color: #666666;
-  }
+      .text {
+        font-size: 14px;
+        font-family: Roboto, Roboto;
+        font-weight: bold;
+        color: #333333;
+      }
 
-  .section-input {
-    margin-top: 5px;
-    margin-bottom: 5px;
-
-    input {
-      display: inline-block;
-      width: 240px;
-      height: 35px;
-      background: #ffffff;
-      border: 1px solid #cccccc;
-      opacity: 1;
-      border-radius: 4px;
-      padding-left: 15px;
+      img {
+        width: 16px;
+        margin-left: 10px;
+      }
     }
 
-    textarea {
-      border: 1px solid #cccccc;
-      outline: none;
-      width: 460px;
-      min-height: 100px;
-      background: #fff;
-      resize: none;
-      padding: 10px 15px;
-      border-radius: 4px;
-    }
+    .yhq-list {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 15px;
 
-    .el-input {
-      width: 340px;
-    }
+      .yhq-item {
+        width: 211px;
+        height: auto;
+        border-radius: 4px;
+        position: relative;
+        margin-right: 24px;
+        cursor: pointer;
+        background-image: url("~@/static/order/youhui.png");
 
-    .el-select {
-      width: 340px;
-    }
+        &.active {
 
-    .el-textarea {
-      width: 460px;
-      width: 100%;
-    }
-  }
+          .marker {
+            width: 40px;
+            height: 40px;
+            display: block;
+          }
+        }
 
-  .use-jifen-num {
-    margin-top: 10px;
-    margin-bottom: 10px;
+        .marker {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          display: none;
+        }
 
-    b {
-      color: @theme;
-    }
-  }
+        .yhq-top {
+          height: auto;
+          padding: 10px 15px;
 
-  .section-btn-actions {
-    .flex();
+          .yhq-1 {
+            .flex();
+            align-items: flex-end;
 
-    .btn {
-      width: 160px;
-      height: 32px;
-      margin-right: 20px;
-      font-size: 16px;
-      font-weight: bold;
-      background: #e1e1e1;
-      color: #333333;
+            .text-1 {
+              font-size: 28px;
+              font-family: Roboto, Roboto;;
+              font-weight: bold;
+              color: #fff;
+            }
 
-      &.active {
-        background: #009a44;
-        color: #ffffff;
+            .text-2 {
+              margin-left: 5px;
+              font-size: 14px;
+              font-family: Roboto, Roboto;;
+              font-weight: 400;
+              color: #fff;
+              line-height: 25px;
+            }
+          }
+
+          .yhq-2 {
+            font-size: 14px;
+            font-family: Roboto, Roboto;
+            padding: 0 5px;
+            font-weight: 400;
+            color: #fff;
+            text-align: left;
+          }
+        }
+
+        .yhq-bottom {
+          height: 32px;
+          line-height: 32px;
+          padding: 0 5px;
+          font-size: 14px;
+          font-family: Roboto, Roboto;;
+          font-weight: 400;
+          color: #fff;
+          text-align: left;
+        }
       }
     }
   }
+
 }
 
 // 新增
 .section {
-  padding-bottom: 55px;
+  padding-bottom: 40px;
   text-align: left;
 
   .section-title {
@@ -1895,24 +1913,26 @@ export default {
   }
 
   .section-ctx {
-    padding: 0px 0 0 30px;
     margin-top: 24px;
 
     .address-list {
       display: flex;
       flex-wrap: wrap;
+      overflow-y: auto;
+      width: 100%;
+      height: 130px;
 
       .address-item {
         position: relative;
+        width: 350px;
+        height: 130px;
+        background: #FFFFFF;
+        border: 2px solid @theme;
         margin-top: 20px;
-        margin-right: 40px;
-        width: 440px;
-        width: 470px;
+        margin-right: 45px;
         min-height: 130px;
         padding: 15px 20px;
-        background: #ffffff;
         border-radius: 4px 4px 4px 4px;
-        border: 2px solid #d5d8de;
         overflow: hidden;
         cursor: pointer;
 
@@ -1926,7 +1946,7 @@ export default {
         }
 
         &.active {
-          border: 2px solid #FF0000;
+          border: 2px solid @theme;
 
           .marker {
             display: block;
@@ -1944,7 +1964,7 @@ export default {
           padding-bottom: 15px;
           border-bottom: 1px solid #d5d8de;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: Roboto, Roboto;;
           font-weight: 400;
           color: #000000;
         }
@@ -1952,7 +1972,7 @@ export default {
         .address-bottom {
           padding-top: 15px;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: Roboto, Roboto;;
           font-weight: 400;
           color: #999999;
         }
@@ -1969,7 +1989,7 @@ export default {
     }
 
     .btn-box {
-      margin-top: 40px;
+      margin-top: 25px;
 
       button {
         width: 124px;
@@ -2124,7 +2144,7 @@ export default {
         border-radius: 3px 3px 3px 3px;
         border: 1px solid @theme;
         font-size: 14px;
-        font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+        font-family: Roboto, Roboto;;
         font-weight: bold;
         color: @theme;
       }
@@ -2145,7 +2165,7 @@ export default {
 
     .text {
       font-size: 14px;
-      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-family: Roboto, Roboto;;
       font-weight: bold;
       color: #333333;
     }
@@ -2153,81 +2173,6 @@ export default {
     img {
       width: 16px;
       margin-left: 15px;
-    }
-  }
-
-  .yhq-list {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 15px;
-
-    .yhq-item {
-      position: relative;
-      margin-right: 24px;
-      width: 220px;
-      height: auto;
-      border-radius: 4px 4px 4px 4px;
-      border: 1px solid #e5e5e5;
-      cursor: pointer;
-
-      &.active {
-        border-color: @theme;
-
-        .marker {
-          display: block;
-        }
-      }
-
-      .marker {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        display: none;
-      }
-
-      .yhq-top {
-        height: auto;
-        background: #fdf2ef;
-        padding: 10px 15px;
-
-        .yhq-1 {
-          .flex();
-          align-items: flex-end;
-
-          .text-1 {
-            font-size: 24px;
-            font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-            font-weight: bold;
-            color: @theme;
-          }
-
-          .text-2 {
-            margin-left: 5px;
-            font-size: 12px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-            font-weight: 400;
-            color: #333333;
-          }
-        }
-
-        .yhq-2 {
-          margin-top: 10px;
-          font-size: 12px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-          font-weight: 400;
-          color: #999999;
-        }
-      }
-
-      .yhq-bottom {
-        height: 32px;
-        line-height: 32px;
-        padding: 0 15px;
-        font-size: 12px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: @theme;
-      }
     }
   }
 
@@ -2272,7 +2217,7 @@ export default {
       line-height: 32px;
       padding-right: 10px;
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Roboto, Roboto;;
       font-weight: 400;
       color: #666666;
     }
@@ -2280,7 +2225,7 @@ export default {
     .info-val {
       line-height: 32px;
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Roboto, Roboto;;
       font-weight: 400;
       color: #666666;
     }
@@ -2310,7 +2255,7 @@ export default {
       line-height: 32px;
       padding-right: 10px;
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Roboto, Roboto;;
       font-weight: 400;
       color: #333;
     }
@@ -2318,11 +2263,15 @@ export default {
     .info-val {
       line-height: 32px;
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Roboto, Roboto;;
       font-weight: 400;
       color: @theme;
     }
   }
+}
+
+.p-l-30 {
+  padding-left: 30px;
 }
 </style>
 

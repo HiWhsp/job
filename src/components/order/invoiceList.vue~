@@ -15,9 +15,9 @@
         <div class="list-good">
           <div class="item-good flex">
             <div class="box-image cover">
-              <el-image :src="JSON.parse(item.info)[0].image">
+              <el-image :src="item.image">
                 <div slot="error" class="image-slot">
-                  <img :src="JSON.parse(item.info)[0].image"/>
+                  <img :src="item.image"/>
                 </div>
               </el-image>
             </div>

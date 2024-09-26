@@ -64,83 +64,76 @@ z`
       <!--      发票-->
       <div class="section section-pay">
         <div class="section-title">发票信息</div>
-        <div class="section-ctx section-ctx-type p-l-30">
+        <div class="section-ctx section-ctx-type">
           <div class="pay-group">
             <div class="title">是否开票 ：</div>
             <div class="pay-items">
-              <div class="item" v-for="(item, index) in invoiceTypeOption"
-                   @click="do_toggle_invoice(item)"
-                   :class="{ checked: Invoice_type_value == item.value }">
+              <div class="item" v-for="(item, index) in invoiceTypeOption" @click="do_toggle_invoice(item)"
+                   :class="{ checked: invoice_info.invoiceType == item.value }">
                 <div class="invoice">{{ item.title }}</div>
               </div>
             </div>
           </div>
           <!--  -->
-          <div class="invoice-info" v-if="invoiceType == '普通发票'">
+          <div class="invoice-info" v-if="invoice_info.invoiceType === '1'">
             <div class="info-item">
               <div class="info-label">发票抬头类型</div>
               <div class="info-val">
-                <el-radio-group v-model="webConfig.offline_bank" fill="#A66600">
-                  <el-radio :label="1">个人</el-radio>
-                  <el-radio :label="2">企业</el-radio>
+                <el-radio-group v-model="invoice_info.titleType" fill="#A66600">
+                  <el-radio label="1">个人</el-radio>
+                  <el-radio label="2">企业</el-radio>
                 </el-radio-group>
               </div>
             </div>
             <div class="info-item">
-              <div class="info-label">* 发票抬头</div>
+              <div class="info-label"><span>*</span> 发票抬头</div>
               <div class="info-val">
-                <el-input v-model="webConfig.offline_bank"
-                          placeholder="请填写准确的抬头名称 必填"></el-input>
+                <el-input v-model="invoice_info.title" placeholder="请填写准确的抬头名称 必填"></el-input>
               </div>
             </div>
-            <div class="info-item" v-if="webConfig.offline_bank == 2">
+            <div class="info-item" v-if="invoice_info.titleType === '2'">
               <div class="info-label"><span>*</span> 纳税人识别号</div>
               <div class="info-val">
-                <el-input v-model="webConfig.offline_bank"
-                          placeholder="请填写准确的纳税人识别号 必填"></el-input>
+                <el-input v-model="invoice_info.shibiema" placeholder="请填写准确的纳税人识别号 必填"></el-input>
               </div>
             </div>
           </div>
 
-          <div class="invoice-info" v-if="invoiceType == '专用发票'">
+          <div class="invoice-info" v-if="invoice_info.invoiceType === '2'">
             <div class="info-item">
               <div class="info-label"><span>*</span> 发票抬头</div>
               <div class="info-val">
-                <el-input v-model="webConfig.offline_bank"
-                          placeholder="请填写准确的抬头名称 必填"></el-input>
+                <el-input v-model="invoice_info.title" placeholder="请填写准确的抬头名称 必填"></el-input>
               </div>
             </div>
             <div class="info-item">
               <div class="info-label"><span>*</span> 纳税人识别号</div>
               <div class="info-val">
-                <el-input v-model="webConfig.offline_bank"
-                          placeholder="请填写准确的纳税人识别号 必填"></el-input>
+                <el-input v-model="invoice_info.shibiema" placeholder="请填写准确的纳税人识别号 必填"></el-input>
               </div>
             </div>
             <div class="info-item">
               <div class="info-label"><span>*</span> 注册地址</div>
               <div class="info-val">
-                <el-input v-model="webConfig.offline_bank"
-                          placeholder="输入单位注册地址 必填"></el-input>
+                <el-input v-model="invoice_info.companyAddress" placeholder="输入单位注册地址 必填"></el-input>
               </div>
             </div>
             <div class="info-item">
               <div class="info-label"><span>*</span> 注册电话</div>
               <div class="info-val">
-                <el-input v-model="webConfig.offline_bank"
-                          placeholder="输入单位注册电话 必填"></el-input>
+                <el-input v-model="invoice_info.companyPhone" placeholder="输入单位注册电话 必填"></el-input>
               </div>
             </div>
             <div class="info-item">
               <div class="info-label"><span>*</span> 开户银行</div>
               <div class="info-val">
-                <el-input v-model="webConfig.offline_bank" placeholder="输入开户银行 必填"></el-input>
+                <el-input v-model="invoice_info.bankName" placeholder="输入开户银行 必填"></el-input>
               </div>
             </div>
             <div class="info-item">
               <div class="info-label"><span>*</span> 账户银行</div>
               <div class="info-val">
-                <el-input v-model="webConfig.offline_bank" placeholder="输入银行账户 必填"></el-input>
+                <el-input v-model="invoice_info.bankNo" placeholder="输入银行账户 必填"></el-input>
               </div>
             </div>
           </div>
@@ -445,28 +438,30 @@ export default {
 
       my_info: {}, //我的信息 包含 余额 佣金数值
       total_balance: 0,
-      //
+      // 发票信息
       invoice_info: {
-        invoicStatus: 0, //是否开票 0-不需要 1-需要发票
-        invoicType: '1', //发票类型：1-普通发票 2-专用发票
+        invoiceStatus: 0, //是否开票 0-不需要 1-需要发票
+        invoiceType: '1', //发票类型：1-普通发票 2-专用发票
         titleType: '1', //抬头：1-个人 2-单位
-        title: '', //
-        shibiema: '', //
-        companyAddress: '', //
-        companyPhone: '', //
-        bankName: '', //
-        bankNo: '', //
+        title: '', // 公司名称
+        shibiema: '', // 识别码
+        companyAddress: '', // 注册地址
+        companyPhone: '', // 注册电话
+        bankName: '', // 开户银行
+        bankNo: '', // 银行账号
+        email: '', // 电子邮箱
+        orderId: '', // 关联订单
       },
       // 支付方式
       payTypeValue: 2,
       pay_type_value: 'paypal',
       Invoice_type_value: '0', // 开票类型
       payTypeOption: [
-        {value: 'weixin', title: '微信支付', icon: require("@/static/order/paytype-wx.png")},
-        {value: 'zhifubao', title: '支付宝支付', icon: require("@/static/order/paytype-zfb.png")},
+        // {value: 'weixin', title: '微信支付', icon: require("@/static/order/paytype-wx.png")},
+        // {value: 'zhifubao', title: '支付宝支付', icon: require("@/static/order/paytype-zfb.png")},
         {value: 'paypal', title: '货到付款', icon: require("@/static/order/paytype-pal.png")},
-        {value: 'xianxia', title: '线下支付', icon: require("@/static/order/paytype-xian.png")},
-        {value: 'balance', title: '月结支付', icon: require("@/static/order/paytype-yue.png")},
+        // {value: 'xianxia', title: '线下支付', icon: require("@/static/order/paytype-xian.png")},
+        // {value: 'balance', title: '月结支付', icon: require("@/static/order/paytype-yue.png")},
       ],
       // 发票类型
       invoiceTypeOption: [
@@ -861,8 +856,7 @@ export default {
 
     // 发票信息选择
     do_toggle_invoice(item) {
-      this.Invoice_type_value = item.value;
-      this.invoiceType = item.title;
+      this.invoice_info.invoiceType = item.value;
     },
     yuePayPassSetCallback() {
       this.is_pay_pass = 1;
@@ -953,6 +947,8 @@ export default {
         if (res.code == 200) {
           let {id, orderNo} = res.data;
           this.order_id = id;
+          this.invoice_info.orderId = id;
+          this.invoice_pay(orderNo); // 发票支付
           this.do_order_pay();
         }
       });
@@ -975,6 +971,22 @@ export default {
           this.pay_use_paypal();
         }
       }
+    },
+
+    invoice_pay(orderNo) {
+      if (this.invoice_info.invoiceType == 0) {
+        return;
+      }
+
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'invoices_add',
+          id: 0,
+          ...this.invoice_info
+        },
+      })
     },
 
     pay_use_yue() {

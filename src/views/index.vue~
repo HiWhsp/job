@@ -320,7 +320,7 @@ export default {
       overflow-y: auto;
 
       .category-list {
-        min-height: 46px;
+        height: 46px;
         font-size: 14px;
         display: flex;
         align-items: center;
