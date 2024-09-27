@@ -66,7 +66,7 @@ export default {
   },
   data() {
     return {
-      order_id: this.$route.query.order_id,
+      orderId: this.$route.query.orderId,
       type: this.$route.query.type,
       orderObj: {}, //
 
@@ -94,7 +94,7 @@ export default {
     orders_detail() {
       order.orders_detail({
         params: {
-          id: this.order_id,
+          id: this.orderId,
         },
         success: (data) => {
           //console.log("orders_detail", data);
@@ -126,7 +126,7 @@ export default {
       }
 
       let formData = {
-        order_id: this.order_id,
+        orderId: this.orderId,
         type: this.type,
         reason: this.reason,
         remark: this.remark,

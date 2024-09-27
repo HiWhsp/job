@@ -1,12 +1,12 @@
 <template>
   <div class="modal-container">
-    <el-dialog title="取消售后？" width="580px" custom-class="modal-wrap" :close-on-click-modal="false" :visible.sync="showModal" :before-close="onModal_close">
+    <el-dialog title="确认收货？" width="580px" custom-class="modal-wrap" :close-on-click-modal="false" :visible.sync="showModal" :before-close="onModal_close">
       <div class="modal-inner">
-        <div class="text-2">确认取消售后申请？</div>
+        <div class="text-2">确认收货后，此售后服务单将完成。</div>
       </div>
       <span slot="footer" class="dialog-footer">
         <button class="quxiao" @click="showModal = false">取消</button>
-        <button class="queding" @click="refund_qxRefund">确定</button>
+        <button class="queding" @click="refund_receive">确定</button>
       </span>
     </el-dialog>
   </div>
@@ -18,7 +18,7 @@ import { mapState } from "vuex";
 export default {
   name: "modal-wuliu",
   components: {},
-  props: ["curr"],
+  props: [""],
   data() {
     return {
       showModal: false,
@@ -36,16 +36,19 @@ export default {
   },
 
   methods: {
-    refund_qxRefund() {
-      let id = this.$route.query.refund_id;
+    init(refund_id) {
+      this.showModal = true;
+      this.refund_id = refund_id;
+    },
 
-      this.$api("refund_qxRefund", {
-        id: id,
+    refund_receive() {
+      this.$api("refund_qrShouHuo", {
+        id: this.refund_id,
       }).then((res) => {
         let { code, data, msg} = res;
         if (code == 200) {
-          this.$emit("updateView");
-          // this.$parent.updateView();
+          // this.$emit("updateView");
+          this.$parent.setView();
           this.showModal = false;
         }
       });
@@ -67,7 +70,7 @@ export default {
     .text-1 {
       font-weight: bold;
       font-size: 20px;
-      color: @theme;
+      color: #ff3d00;
     }
     .text-2 {
       text-align: center;
@@ -96,7 +99,7 @@ export default {
   button {
     width: 180px;
     height: 35px;
-    background: @theme;
+    background: #ff3d00;
     opacity: 1;
     border-radius: 15px;
   }

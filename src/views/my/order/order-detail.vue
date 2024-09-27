@@ -54,11 +54,11 @@
             <div class="item-content">
               <div class="name">
                 <span>收货人：</span>
-                {{ shouhuoInfo['收件人'] }}
+                {{ shouhuoInfo['firstName'] || shouhuoInfo['lastName'] }}
               </div>
               <div class="phone">
                 <span>手机号码：</span>
-                {{ shouhuoInfo['手机号'] }}
+                {{ shouhuoInfo['phone'] }}
               </div>
               <div class="address">
                 <span>详细地址：</span>
@@ -219,7 +219,7 @@
                   <div class="goods-action" v-if="info.orderStatus == 5">
                     <!-- <button v-if="!is_jifen_goods && item.allow_actions.allow_refund" class="btn-goods-action" @click="refundApply(item)">申请售后</button> -->
                     <!-- <button v-if="item.ifshouhou" class="btn-goods-action disabled">已售后</button> -->
-                    <!-- <button v-if="item.allow_actions.allow_logistics" class="btn-goods-action" @click="toRoute(`/orderLogistics?order_id=${order_id}&logistics_id=${fahuo_id}`)">查看物流</button> -->
+                    <!-- <button v-if="item.allow_actions.allow_logistics" class="btn-goods-action" @click="toRoute(`/orderLogistics?orderId=${orderId}&logistics_id=${fahuo_id}`)">查看物流</button> -->
                     <button v-if="product_item.ifComment == 0" class="btn-goods-action"
                             @click="to_review(product_item)">
                       商品评价
@@ -351,7 +351,7 @@ export default {
   data() {
     return {
       id: this.$route.query.id,
-      order_id: this.$route.query.id,
+      orderId: this.$route.query.id,
       info: {},
       payInfo: {},
       shouhuoInfo: {}, //收货人信息
@@ -447,7 +447,7 @@ export default {
       this.$router.push({
         path: '/order-review-submit',
         query: {
-          orderId: this.order_id,
+          orderId: this.orderId,
           inventoryId: item.id
         }
       });
@@ -471,7 +471,15 @@ export default {
       this.$refs.order_receive_modal.init(item);
     },
     doRefund(item) {
-      this.$refs.order_refund_modal.init(item);
+      // this.$refs.order_refund_modal.init(item);
+      this.$router.push({
+        path: '/refundType',
+        query: {
+          orderId: this.info.id,
+          inventoryId: this.info.id
+        }
+
+      })
     },
 
     emitConfirmDelete() {

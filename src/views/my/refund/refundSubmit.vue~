@@ -221,7 +221,7 @@ export default {
         //console.log("申请退货退款", res);
         let {code, msg} = res;
         if (code == 200) {
-          this.$router.push("/refund-list");
+          this.$router.push("/myRefund");
         } else {
           alertErr(msg);
         }

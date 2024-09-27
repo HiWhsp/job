@@ -100,7 +100,7 @@ export default {
               <p class="money">促销价：￥{{ item.priceSale }}</p>
             </div>
             <div class="btn">
-              <span class="residue">剩余:{{ item.kucun > 99 ? '99+' : item.kucun }}PCS</span>
+              <span class="residue">剩余:{{ item.kucun }}PCS</span>
               <div class="submit" @click="goDetail(item)">立即抢购</div>
             </div>
           </div>

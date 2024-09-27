@@ -41,7 +41,7 @@
                                 </div>
 
                                 <div class="item-box" v-for="(item, index) in list_jilu.list" :key="index"
-                                     @click="$router.push(`/order-detail?order_id=${order.id}`)"
+                                     @click="$router.push(`/order-detail?orderId=${order.id}`)"
                                 >
                                     <div class="item item_other">
                                         <div class="item-1">

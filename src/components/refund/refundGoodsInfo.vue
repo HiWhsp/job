@@ -1,72 +1,70 @@
 <template>
-    <div class="goods-info">
-<!--        <div class="info-title">-->
-<!--            <div class="date">{{ order.dtTime }}</div>-->
-<!--            <div class="order-code">-->
-<!--                订单号：-->
-<!--                <span>{{ order.order_id }}</span>-->
-<!--            </div>-->
-<!--            <div class="order-state">{{ order.status_info }}</div>-->
-<!--        </div>-->
-        <div class="info-good">
-            <div class="list-good">
-                <div class="item">
-                    <div class="item-good">
-                        <div class="img-box">
-                            <img :src="refund_goods.image" alt/>
-                        </div>
-                        <div class="title">
-                            {{ refund_goods.title }}
-                            <div class="desc">型号：{{ refund_goods.keyVals }}</div>
-                        </div>
-                        <div class="num">
-                            {{ refund_goods.num }}
-                        </div>
-                        <div class="price">
-                            {{
-                            currency
-                            }}{{
-                            currency != "积分"
-                                ? refund_goods.priceSale
-                                : refund_goods.jifen
-                            }}
-                        </div>
-                    </div>
-                </div>
+  <div class="goods-info">
+    <!--        <div class="info-title">-->
+    <!--            <div class="date">{{ order.dtTime }}</div>-->
+    <!--            <div class="order-code">-->
+    <!--                订单号：-->
+    <!--                <span>{{ order.orderId }}</span>-->
+    <!--            </div>-->
+    <!--            <div class="order-state">{{ order.statusInfo }}</div>-->
+    <!--        </div>-->
+    <div class="info-good">
+      <div class="list-good">
+        <div class="item">
+          <div class="item-good">
+            <div class="img-box">
+              <img :src="refund_goods.image" alt/>
             </div>
+            <div class="title">
+              {{ refund_goods.title }}
+              <div class="desc">型号：{{ refund_goods.keyVals }}</div>
+            </div>
+            <div class="num">
+              {{ refund_goods.num }}
+            </div>
+            <div class="price">
+              {{
+                currency
+              }}{{
+                currency != "积分"
+                    ? refund_goods.priceSale
+                    : refund_goods.jifen
+              }}
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
 import {mapState} from "vuex";
 
 export default {
-    name: "refundGoodsInfo",
-    props: ["order"],
-    data() {
-        return {};
+  name: "refundGoodsInfo",
+  props: ["order"],
+  data() {
+    return {};
+  },
+  computed: {
+    //要售后的商品
+    refund_goods() {
+      let obj = {};
+      if (this.order && this.order.products) {
+        obj = this.order.products[0]
+      }
+      return obj;
     },
-    computed: {
-        //要售后的商品
-        refund_goods() {
-            let obj = {};
-            if (this.order && this.order.products) {
-                obj = this.order.products.find(
-                    (v) => v.id == this.$route.query.inventoryId
-                );
-            }
-            return obj;
-        },
-        currency() {
-            let ret = "￥";
-            if (this.order.if_jifen) {
-                ret = "积分";
-            }
-            return ret;
-        },
+    currency() {
+      let ret = "￥";
+      if (this.order.if_jifen) {
+        ret = "积分";
+      }
+      return ret;
     },
-    methods: {},
+  },
+  methods: {},
 };
 </script>
 

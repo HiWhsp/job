@@ -496,7 +496,7 @@ export default {
         {value: 'yue', title: '月结支付', icon: ''},
       ],
 
-      order_id: "", //是否已经创建过订单
+      orderId: "", //是否已经创建过订单
       showCoupon: true, //
 
       if_use_jifen: true, //是否使用积分抵扣
@@ -961,7 +961,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           let {id, orderNo} = res.data;
-          this.order_id = id;
+          this.orderId = id;
           this.do_order_pay();
         }
       });
@@ -988,7 +988,7 @@ export default {
 
     pay_use_yue() {
       // this.$refs.balance_pay_modal.init({
-      //   order_id: this.order_id,
+      //   orderId: this.orderId,
       //   money: this.real_payment_money,
       // });
 
@@ -998,7 +998,7 @@ export default {
         data: {
           action: 'pay_balance',
           orderType: 1,
-          orderId: this.order_id,
+          orderId: this.orderId,
         },
       }).then((res) => {
         alert(res)
@@ -1019,7 +1019,7 @@ export default {
       //   data: {
       //     action: 'pay_balance',
       //     orderType: 1,
-      //     orderId: this.order_id,
+      //     orderId: this.orderId,
       //   },
       // }).then((res) => {
       //   alert(res)
@@ -1035,7 +1035,7 @@ export default {
     //微信支付 pc
     order_payment_wx_pc() {
       this.$api("orders_wxScanCodePay", {
-        order_id: this.order_id,
+        orderId: this.orderId,
       }).then((res) => {
         //console.log("pc 微信扫码", res);
         // alert(res);
@@ -1044,7 +1044,7 @@ export default {
           let info = {
             // ...res,
             qrcode: data.qrcode,
-            order_id: this.order_id,
+            orderId: this.orderId,
           };
           this.$refs.orderPayWxCode.init(info);
           // this.$refs.orderPayWxCode.qrcode = data.qrcode;
@@ -1061,7 +1061,7 @@ export default {
       this.showWaiting();
 
       this.$api("orders_aliScanCodePay", {
-        order_id: this.order_id,
+        orderId: this.orderId,
       }).then((res) => {
         //console.log("支付宝支付", res);
         let {code, msg, data} = res;
@@ -1091,7 +1091,7 @@ export default {
         return;
       }
 
-      this.$api("orders_yuePay", {order_id: this.order_id}).then((res) => {
+      this.$api("orders_yuePay", {orderId: this.orderId}).then((res) => {
         //console.log("余额支付", res);
         let {code, message} = res;
 
@@ -1104,7 +1104,7 @@ export default {
 
     //线下转款
     order_payment_xianxia() {
-      // this.$api("orders_offlinePay", { order_id: this.order_id }).then((res) => {
+      // this.$api("orders_offlinePay", { orderId: this.orderId }).then((res) => {
       //   //console.log("货到付款支付", res);
       //   let { code, message } = res;
 
@@ -1118,7 +1118,7 @@ export default {
       let paypz = this.xianxia_file_list.join();
       this.$api("orders_uploadPz", {
         //
-        order_id: this.order_id,
+        orderId: this.orderId,
         paypz: paypz,
       }).then((res) => {
         //console.log("线下转款支付", res);
@@ -1132,7 +1132,7 @@ export default {
     },
 
     toFail() {
-      this.$router.push(`/payFail?order_id=${this.order_id}`);
+      this.$router.push(`/payFail?orderId=${this.orderId}`);
     },
 
     //订单微信jsapi支付
@@ -1140,7 +1140,7 @@ export default {
       let that = this;
       order.orders_wxPay({
         params: {
-          order_id: this.order_id,
+          orderId: this.orderId,
         },
         success: (data) => {
           //console.log("订单微信jsapi支付", data);
@@ -1174,7 +1174,7 @@ export default {
 
       this.timer = setInterval(() => {
         this.$api("orders_detail", {
-          id: this.order_id,
+          id: this.orderId,
         }).then((res) => {
           let {code, data, msg} = res;
           if (data.status == 2 || data.status == 3) {
@@ -1194,7 +1194,7 @@ export default {
       if (this.mode == "yue") {
         this.$router.push(`/yue`);
       } else {
-        this.$router.push(`/payment-success?order_id=${this.order_id}`);
+        this.$router.push(`/payment-success?orderId=${this.orderId}`);
       }
     },
 
@@ -1264,7 +1264,7 @@ export default {
     // 订单积分抵现
     order_jifen_dixian() {
       this.$api("orders_jifenPay", {
-        order_id: this.order_id,
+        orderId: this.orderId,
         jifen: this.use_jifen_num,
       }).then((res) => {
         //console.log("积分抵现", res);
@@ -1288,7 +1288,7 @@ export default {
     //订单佣金抵现
     order_yongjin_pay() {
       this.$api("orders_yuePay", {
-        order_id: this.order_id,
+        orderId: this.orderId,
       }).then((res) => {
         //console.log("余额抵扣", res);
         let {code, is_over} = res;
@@ -1313,7 +1313,7 @@ export default {
       this.$router.push({
         path: "/orderSubmit",
         query: {
-          order_id: this.order_id,
+          orderId: this.orderId,
           from: "order-submit",
         },
       });
@@ -1381,7 +1381,7 @@ export default {
         path: '/order-detail',
         query: {
           from: 'payment',
-          id: this.order_id,
+          id: this.orderId,
         },
         mode: 'reLaunch'
       })
@@ -1393,7 +1393,7 @@ export default {
       this.toRoute({
         path: '/payment-success',
         query: {
-          id: this.order_id,
+          id: this.orderId,
           type: 'order',
           is_pay: is_pay,
         },

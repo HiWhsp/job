@@ -947,7 +947,7 @@ export default {
         if (res.code == 200) {
           let {id, orderNo} = res.data;
           this.order_id = id;
-          this.invoice_info.orderId = orderNo;
+          this.invoice_info.orderId = id;
           this.invoice_pay(orderNo); // 发票支付
           this.do_order_pay();
         }
@@ -1014,24 +1014,24 @@ export default {
     },
 
     pay_use_paypal() {
-      this.toPaySuccess();
+      // this.toPaySuccess();
 
-      // this.$api({
-      //   url: '/service.php',
-      //   method: 'get',
-      //   data: {
-      //     action: 'pay_balance',
-      //     orderType: 1,
-      //     orderId: this.order_id,
-      //   },
-      // }).then((res) => {
-      //   alert(res)
-      //   let { code, message } = res;
-      //   if (code == 200) {
-      //     this.toPaySuccess();
-      //   } else {
-      //   }
-      // });
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'pay_balance',
+          orderType: 1,
+          orderId: this.order_id,
+        },
+      }).then((res) => {
+        alert(res)
+        let { code, message } = res;
+        if (code == 200) {
+          this.toPaySuccess();
+        } else {
+        }
+      });
     },
 
 

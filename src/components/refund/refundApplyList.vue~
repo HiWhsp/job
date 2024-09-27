@@ -32,7 +32,7 @@
           {{ order.statusInfo }}
           <span>{{ order.type == 1 ? "退款金额：" + order.money : '' }}</span>
           <span>{{ order.type != 1 && order.status == 6 ? order.typeInfo + '已完成' : '' }}</span>
-          <span>{{ order.status == -1 ? order.typeInfo : '' }}</span>
+          <span>{{ order.status == -1 ? '已取消' : '' }}</span>
         </div>
         <div class="btn-actions">
           <button class="order-detail" @click="$router.push(`/refund-detail?refund_id=${order.id}`)">售后详情

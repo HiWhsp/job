@@ -43,7 +43,7 @@ export default {
 
       paypass: "",
       money: "",
-      orderId: "",
+      order_id: "",
     };
   },
   computed: {
@@ -52,7 +52,7 @@ export default {
   watch: {
     showModal(val) {
       if (!val) {
-        this.orderId = "";
+        this.order_id = "";
         this.money = "";
         this.paypass = "";
       }
@@ -63,7 +63,7 @@ export default {
     init(data) {
       this.showModal = true;
       this.money = data.money;
-      this.orderId = data.orderId;
+      this.order_id = data.order_id;
     },
     onModal_close() {
       this.showModal = false;
@@ -74,10 +74,10 @@ export default {
 
     cancelPay() {
       // this.showModal= false;
-      // this.orderId =
+      // this.order_id =
       if (this.$route.name == "order-submit") {
         //创建订单页
-        this.$router.push("/payment-success?orderId=" + this.orderId);
+        this.$router.push("/payment-success?order_id=" + this.order_id);
       } else {
         this.showModal = false;
       }
@@ -95,7 +95,7 @@ export default {
       }
 
       this.$api("orders_yuePay", {
-        orderId: this.orderId,
+        order_id: this.order_id,
         pay_pass: this.paypass,
       }).then((res) => {
         //console.log("余额支付", res);
@@ -105,14 +105,14 @@ export default {
           this.toPaySuccess();
         } else {
           alert(res);
-          this.$router.push(`/payment-success?orderId=${this.orderId}`);
+          this.$router.push(`/payment-success?order_id=${this.order_id}`);
         }
       });
     },
 
     //支付成功操作
     toPaySuccess() {
-      this.$router.push(`/payment-success?orderId=${this.orderId}`);
+      this.$router.push(`/payment-success?order_id=${this.order_id}`);
     },
   },
 };

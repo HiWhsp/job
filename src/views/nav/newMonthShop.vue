@@ -3,6 +3,7 @@ export default {
   name: "discountShop",
   data() {
     return {
+      count: 0,
       navIndex: 1,
       navList: [
         {
@@ -34,14 +35,40 @@ export default {
           id: 7
         }
       ],
-      dataList: [1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1],
+      dataList: [],
+      pagination: {
+        page: 1,
+        pagenum: 10
+      },
     }
+  },
+  mounted() {
+    this.getList();
   },
   methods: {
     // 导航条点击
     navClick(item) {
       this.navIndex = item.id;
-    }
+    },
+    changePage() {
+      this.getList();
+    },
+    // 获取列表
+    getList() {
+      this.$api("product_plist", {
+        ...this.pagination,
+        channelId: 0,
+        orderType: 0,
+      }).then(res => {
+        if (res.code == 200) {
+          this.dataList = res.data.list;
+          this.count = res.data.count;
+        }
+      })
+    },
+    goDetail(item) {
+      this.$router.push(`/productDetail?id=${item.inventoryId}`)
+    },
   }
 }
 </script>
@@ -66,17 +93,23 @@ export default {
         <!--        </div>-->
         <div class="list flex">
           <div class="item" v-for="(item, index) in dataList" :key="index">
-            <img src="../../static/home/promation-img.png" alt="">
+            <img :src="item.thumb" alt="">
             <div class="info">
-              <p class="title">FUHS-30</p>
-              <p class="desc ellipsis-1">型号：FUS-U30-28-L08-2-50</p>
-              <p class="money">促销价：￥21.115</p>
+              <p class="title">{{ item.title }}</p>
+              <p class="desc ellipsis-1">型号：{{ item.keyVals }}</p>
+              <p class="money">促销价：￥{{ item.priceSale }}</p>
             </div>
             <div class="btn">
-              <span class="residue">剩余:156PCS</span>
-              <div class="submit">立即抢购</div>
+              <span class="residue">剩余:{{ item.kucun > 99 ? '99+' : item.kucun }}PCS</span>
+              <div class="submit" @click="goDetail(item)">立即抢购</div>
             </div>
           </div>
+        </div>
+        <el-empty v-if="!count" description="暂无数据..."></el-empty>
+
+        <div class="pagination-box" v-if="count" style="margin-top: 50px;">
+          <el-pagination background layout="prev, pager, next" :total="count" :current-page="pagination.page"
+                         :page-size="pagination.pagenum" @current-change="changePage"></el-pagination>
         </div>
       </div>
     </div>

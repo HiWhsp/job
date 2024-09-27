@@ -151,7 +151,7 @@
               </div>
               <div class="wuliu-code">
                 <span>物流单号：</span>
-                {{ fahuo_info.order_id }}
+                {{ fahuo_info.orderId }}
               </div>
             </div>
           </div>
@@ -213,7 +213,7 @@
                   <div class="goods-action" v-if="info.orderStatus == 5">
                     <!-- <button v-if="!is_jifen_goods && item.allow_actions.allow_refund" class="btn-goods-action" @click="refundApply(item)">申请售后</button> -->
                     <!-- <button v-if="item.ifshouhou" class="btn-goods-action disabled">已售后</button> -->
-                    <!-- <button v-if="item.allow_actions.allow_logistics" class="btn-goods-action" @click="toRoute(`/orderLogistics?order_id=${order_id}&logistics_id=${fahuo_id}`)">查看物流</button> -->
+                    <!-- <button v-if="item.allow_actions.allow_logistics" class="btn-goods-action" @click="toRoute(`/orderLogistics?orderId=${orderId}&logistics_id=${fahuo_id}`)">查看物流</button> -->
                     <button v-if="product_item.ifComment == 0" class="btn-goods-action"
                       @click="to_review(product_item)">
                       商品评价
@@ -345,7 +345,7 @@ export default {
   data() {
     return {
       id: this.$route.query.id,
-      order_id: this.$route.query.id,
+      orderId: this.$route.query.id,
       info: {},
       payInfo: {},
       shouhuoInfo: {}, //收货人信息
@@ -472,7 +472,7 @@ export default {
       this.$router.push({
         path: '/order-review-submit',
         query: {
-          orderId: this.order_id,
+          orderId: this.orderId,
           inventoryId: item.id
         }
       });

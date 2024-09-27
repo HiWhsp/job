@@ -91,7 +91,7 @@ export default {
     .text-1 {
       font-weight: bold;
       font-size: 20px;
-      color: @theme;
+      color: #ff3d00;
     }
     .text-2 {
       font-size: 14px;
@@ -115,7 +115,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  background: @theme;
+  background: #ea5959;
 
   .el-dialog__title {
     color: #fff;
@@ -131,13 +131,13 @@ export default {
   button {
     width: 180px;
     height: 35px;
-    background: @theme;
+    background: #ff3d00;
     opacity: 1;
     border-radius: 45px;
   }
 
   .queding {
-    background: @theme;
+    background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
     color: #fff;
   }
 }

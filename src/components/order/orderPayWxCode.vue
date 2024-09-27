@@ -43,7 +43,7 @@ export default {
   props: ["payment_money"],
   data() {
     return {
-      order_id: "",
+      orderId: "",
       showModal: false,
       qrcode: "",
       payDone: false,
@@ -73,7 +73,7 @@ export default {
 
   methods: {
     init(data) {
-      this.order_id = data.order_id;
+      this.orderId = data.orderId;
       this.qrcode = data.qrcode;
 
       this.showModal = true;
@@ -84,10 +84,10 @@ export default {
     },
     cancelPay() {
       // this.showModal= false;
-      // this.order_id =
+      // this.orderId =
       if (this.$route.name == "order-submit" || this.$route.name == "orderSubmit") {
         //创建订单页
-        this.$router.push("/payment-success?order_id=" + this.order_id);
+        this.$router.push("/payment-success?orderId=" + this.orderId);
       } else {
         this.showModal = false;
       }
@@ -96,7 +96,7 @@ export default {
     orders_detail() {
       this.timer = setInterval(() => {
         this.$api("orders_detail", {
-          id: this.order_id,
+          id: this.orderId,
         }).then((res) => {
           let { code, data, msg} = res;
 
@@ -119,8 +119,8 @@ export default {
       }
     },
     toPaySuccess() {
-      // this.$router.push(`/payment-success?order_id=${this.order_id}`);
-      this.$router.push(`/payment-success?order_id=${this.order_id}`);
+      // this.$router.push(`/payment-success?orderId=${this.orderId}`);
+      this.$router.push(`/payment-success?orderId=${this.orderId}`);
     },
   },
 };

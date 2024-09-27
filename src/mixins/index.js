@@ -308,9 +308,9 @@ export default {
 
     //订单
     //订单详情
-    mix_order_detail(order_id, callback) {
+    mix_order_detail(orderId, callback) {
       this.$api("orders_detail", {
-        id: order_id,
+        id: orderId,
       }).then((res) => {
         let { code, data, msg } = res;
         if (code == 200) {
@@ -326,9 +326,9 @@ export default {
     },
 
     //订单取消
-    mix_order_cancel(order_id, callback) {
+    mix_order_cancel(orderId, callback) {
       this.$api("orders_qxOrder", {
-        order_id: order_id,
+        orderId: orderId,
       }).then((res) => {
         let { code, data, msg } = res;
         if (code == 200) {
@@ -340,9 +340,9 @@ export default {
     },
 
     //订单删除
-    mix_order_delete(order_id, callback) {
+    mix_order_delete(orderId, callback) {
       this.$api("orders_del", {
-        order_id: order_id,
+        orderId: orderId,
       }).then((res) => {
         let { code, data, msg } = res;
         if (code == 200) {
@@ -354,9 +354,9 @@ export default {
     },
 
     //订单确认收货
-    mix_order_qianshou(order_id, callback) {
+    mix_order_qianshou(orderId, callback) {
       this.$api("orders_qrshouhuo", {
-        orderId: order_id,
+        orderId: orderId,
       }).then((res) => {
         let { code, data, msg } = res;
         if (code == 200) {
@@ -368,20 +368,20 @@ export default {
     },
 
     //订单详情页
-    mix_order_detail_link(order_id) {
-      this.toRoute(`/order-detail?order_id=${order_id}`);
+    mix_order_detail_link(orderId) {
+      this.toRoute(`/order-detail?orderId=${orderId}`);
     },
     //订单去支付
-    mix_order_payment_link(order_id) {
-      this.toRoute(`/orderSubmit?order_id=${order_id}`);
+    mix_order_payment_link(orderId) {
+      this.toRoute(`/orderSubmit?orderId=${orderId}`);
     },
     //订单去评价
-    mix_order_review_link(order_id) {
-      this.toRoute(`/order-review-submit?order_id=${order_id}`);
+    mix_order_review_link(orderId) {
+      this.toRoute(`/order-review-submit?orderId=${orderId}`);
     },
     //订单去售后
-    mix_order_refund_link(order_id) {
-      this.toRoute(`/orderRefund?order_id=${order_id}`);
+    mix_order_refund_link(orderId) {
+      this.toRoute(`/orderRefund?orderId=${orderId}`);
     },
 
     //上传文件
@@ -470,7 +470,7 @@ export default {
 
     //根据订单状态获取订单操作结果
     getOrderActionsByStatus(order) {
-      let { status, status_info, ifpingjia } = order;
+      let { status, statusInfo, ifpingjia } = order;
       let actions = [];
       // let actions = [
       //   { name: "取消订单",type: 'quxiao' },
@@ -484,9 +484,9 @@ export default {
 
       if (status == -5) {
         //待支付
-        if (status_info == "无效") {
+        if (statusInfo == "无效") {
           actions = [{ name: "取消订单", type: "quxiao" }];
-        } else if (status_info == "待支付") {
+        } else if (statusInfo == "待支付") {
           actions = [
             { name: "立即支付", type: "zhifu" },
             { name: "取消订单", type: "quxiao" },

@@ -62,11 +62,11 @@ export default {
   //2 下单
   orders_create({ params, success } = opt) {
     api("orders_create", params).then((res) => {
-      let { code, order_id, message } = res;
+      let { code, orderId, message } = res;
       
       if (code == 200) {
         if (success) {
-          success(order_id)
+          success(orderId)
         }
       } else  {
      

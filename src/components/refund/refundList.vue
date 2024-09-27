@@ -23,7 +23,7 @@
                         <div class="info-heji">
                             <div class="btn-actions">
                                 <button class="order-detail"
-                                        @click="$router.push(`/refundType?order_id=${order.order_id}&inventoryId=${order.inventoryId}`)">
+                                        @click="$router.push(`/refundType?orderId=${order.orderId}&inventoryId=${order.inventoryId}`)">
                                     申请售后
                                 </button>
                             </div>

@@ -122,7 +122,7 @@ export default {
   data() {
     return {
       id: this.$route.query.id,
-      order_id: this.$route.query.id,
+      orderId: this.$route.query.id,
       info: {},
       total_product_number: 0,
       products: [],
@@ -231,7 +231,7 @@ export default {
       this.$router.push({
         path: '/order-review-submit',
         query: {
-          orderId: this.order_id,
+          orderId: this.orderId,
           inventoryId: item.id
         }
       });

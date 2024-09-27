@@ -1,4 +1,3 @@
-<script src="../../../../../魏瞒义海外商城平台中文版/src/store/index.js"></script>
 <template>
   <div class="page">
     <div class="main-title">申请售后</div>
@@ -54,7 +53,7 @@ export default {
   },
   data() {
     return {
-      order_id: this.$route.query.order_id,
+      orderId: this.$route.query.orderId,
       inventoryId: this.$route.query.inventoryId,
       order: {},
     };
@@ -68,7 +67,7 @@ export default {
   methods: {
     setView() {
       this.$api("orders_detail", {
-        id: this.order_id,
+        id: this.orderId,
       }).then((res) => {
         //console.log("订单详情", res);
         let {code, data, msg} = res;
@@ -81,7 +80,7 @@ export default {
     jump_apply_shouhou(type) {
       //退换货类型(1-退款   2-退货退款  3-换货)
       this.$router.push(
-          `/refundSubmit?order_id=${this.order_id}&inventoryId=${this.inventoryId}&refund_type=${type}`
+          `/refundSubmit?orderId=${this.orderId}&inventoryId=${this.inventoryId}&refund_type=${type}`
       );
     },
   },

@@ -121,7 +121,7 @@ export default {
 
         //根据订单状态获取订单操作结果
         getOrderActions(order) {
-            let {status, status_info, ifpingjia} = order;
+            let {status, statusInfo, ifpingjia} = order;
             let actions = [];
             // let actions = [
             //   { name: "取消订单",type: 'quxiao' },
@@ -135,9 +135,9 @@ export default {
 
             if (status == -5) {
                 //待支付
-                if (status_info == "无效") {
+                if (statusInfo == "无效") {
                     actions = [{name: "取消订单", type: "quxiao"}];
-                } else if (status_info == "待支付") {
+                } else if (statusInfo == "待支付") {
                     actions = [
                         {name: "立即支付", type: "zhifu"},
                         {name: "取消订单", type: "quxiao"},

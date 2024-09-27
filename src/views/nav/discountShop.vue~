@@ -5,36 +5,7 @@ export default {
     return {
       count: 0,
       navIndex: 1,
-      navList: [
-        {
-          title: '单轴模组',
-          id: 1
-        },
-        {
-          title: '多轴模组',
-          id: 2
-        },
-        {
-          title: '单轴组件',
-          id: 3
-        },
-        {
-          title: '多轴组件',
-          id: 4
-        },
-        {
-          title: '电动直线滑台',
-          id: 5
-        },
-        {
-          title: '对位平台',
-          id: 6
-        },
-        {
-          title: '模组配件',
-          id: 7
-        }
-      ],
+      navList: [],
       dataList: [],
       pagination: {
         page: 1,
@@ -43,21 +14,35 @@ export default {
     }
   },
   mounted() {
-    this.getList();
+    this.setView();
   },
   methods: {
-    // 导航条点击
-    navClick(item) {
-      this.navIndex = item.id;
-    },
-    changePage() {
-      this.getList();
+    setView() {
+      // 获取分类
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_channel",
+          page: 1,
+          pageNum: 10,
+          parentId: 0,
+          type: 1,
+        },
+      }).then(res => {
+        if (res.code == 200) {
+          this.navList = res.data[0].channels;
+          this.navIndex = this.navList[0].id;
+          // 获取列表
+          this.getList();
+        }
+      })
     },
     // 获取列表
     getList() {
       this.$api("product_plist", {
         ...this.pagination,
-        channelId: 0,
+        channelId: this.navIndex,
         orderType: 0,
       }).then(res => {
         if (res.code == 200) {
@@ -66,9 +51,15 @@ export default {
         }
       })
     },
+
     goDetail(item) {
       this.$router.push(`/productDetail?id=${item.inventoryId}`)
     },
+    // 导航条点击
+    navClick(item) {
+      this.navIndex = item.id;
+      this.getList();
+    }
   }
 }
 </script>
@@ -77,20 +68,20 @@ export default {
   <div class="page">
     <div class="wrap">
       <div class="top-img">
-        <img src="../../static/prod/lowPriceShop_back.png" alt="">
+        <img src="../../static/prod/discountShop_back.png" alt="">
       </div>
       <div class="center-img">
         <!--        <img src="../../static/prod/discount.png" alt="">-->
-        <p>低价爆款专区</p>
+        <p>特惠商城</p>
       </div>
       <div class="commodity-list">
-<!--        <div class="nav-bar">-->
-<!--          <div class="item" :class="{'active': item.id == navIndex}" v-for="(item) in navList" @click="navClick(item)"-->
-<!--               :key="item.id">{{-->
-<!--              item.title-->
-<!--            }}-->
-<!--          </div>-->
-<!--        </div>-->
+        <div class="nav-bar">
+          <div class="item" :class="{'active': item.id == navIndex}" v-for="(item) in navList" @click="navClick(item)"
+               :key="item.id">{{
+              item.title
+            }}
+          </div>
+        </div>
         <div class="list flex">
           <div class="item" v-for="(item, index) in dataList" :key="index">
             <img :src="item.thumb" alt="">
@@ -100,7 +91,7 @@ export default {
               <p class="money">促销价：￥{{ item.priceSale }}</p>
             </div>
             <div class="btn">
-              <span class="residue">剩余:{{ item.kucun > 99 ? '99+' : item.kucun }}PCS</span>
+              <span class="residue">剩余:{{ item.kucun }}PCS</span>
               <div class="submit" @click="goDetail(item)">立即抢购</div>
             </div>
           </div>
@@ -114,14 +105,13 @@ export default {
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
 <style scoped lang="less">
 .page {
   width: 100%;
-  background-color: #6BA9C8;
+  background-color: #FFD0A2;
   padding: 0 0 51px 0;
 }
 
@@ -172,9 +162,11 @@ export default {
     border-radius: 30px;
     margin-bottom: 30px;
     overflow: hidden;
+    //flex-shrink: 0;
     .flex();
 
     .item {
+      width: 143px;
       height: 100%;
       line-height: 48px;
       flex: 1;
@@ -191,6 +183,7 @@ export default {
 
   .list {
     flex-wrap: wrap;
+
     .item {
       padding: 15px 13px 24px;
       margin-right: 14px;
@@ -200,6 +193,7 @@ export default {
       box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.08);
       border-radius: 8px 8px 8px 8px;
       margin-bottom: 30px;
+
       img {
         margin: 0 15px 8px;
         width: 160px;

@@ -140,7 +140,15 @@ export default {
     },
     doReview(item) { },
     doRefund(item) {
-      this.$refs.order_refund_modal.init(item);
+      // this.$refs.order_refund_modal.init(item);
+
+      this.toRoute({
+        path: '/refundType',
+        query: {
+          orderId: item.id,
+          invoiceType: item.id
+        },
+      })
     },
 
 
@@ -149,73 +157,73 @@ export default {
     },
 
     //处理订单行为
-    handleOrderAction(action, order_id, order) {
+    handleOrderAction(action, orderId, order) {
 
       let fahuo_id = order.fahuo_id || "";
       //console.log({ ...action });
       let name = action.name;
       if (name == "取消订单") {
-        this.orders_qxOrder(order_id);
+        this.orders_qxOrder(orderId);
       } else if (name == "删除订单") {
-        this.orders_del(order_id);
+        this.orders_del(orderId);
       } else if (name == "立即支付") {
-        this.order_payment(order_id);
+        this.order_payment(orderId);
       } else if (name == "确认收货") {
-        this.order_qianshou(order_id);
+        this.order_qianshou(orderId);
       } else if (name == "评价") {
-        this.jump_pingjia(order_id);
+        this.jump_pingjia(orderId);
       } else if (name == "申请售后") {
-        this.jump_shouhou(order_id);
+        this.jump_shouhou(orderId);
       } else if (name == "查看物流") {
         this.$router.push(
-          `/orderLogistics?order_id=${order_id}&logistics_id=${fahuo_id}`
+          `/orderLogistics?orderId=${orderId}&logistics_id=${fahuo_id}`
         );
       } else if (name == "售后") {
-        this.$router.push(`/refundFeedback?order_id=${order_id}`);
+        this.$router.push(`/refundFeedback?orderId=${orderId}`);
       }
     },
 
     //取消订单
-    orders_qxOrder(order_id) {
-      let order = this.list.find((v) => v.id == order_id);
+    orders_qxOrder(orderId) {
+      let order = this.list.find((v) => v.id == orderId);
 
 
       // order.orders_qxOrder({
-      //   params: { order_id },
+      //   params: { orderId },
       //   success: () => {
       //     this.updateView();
       //   }
       // });
     },
     //删除订单
-    orders_del(order_id) {
+    orders_del(orderId) {
       order.orders_del({
-        params: { order_id },
+        params: { orderId },
         success: () => {
           this.updateView();
         },
       });
     },
     //订单支付
-    order_payment(order_id) {
-      this.$router.push(`/orderSubmit?order_id=${order_id}`);
+    order_payment(orderId) {
+      this.$router.push(`/orderSubmit?orderId=${orderId}`);
     },
 
     //订单确认收货
-    order_qianshou(order_id) {
-      let order = this.list.find((v) => v.id == order_id);
+    order_qianshou(orderId) {
+      let order = this.list.find((v) => v.id == orderId);
       this.$refs.order_receive_modal.showModal = true;
       this.$refs.order_receive_modal.order = order;
       //console.log("订单信息", { ...order });
     },
 
     //订单评价
-    jump_pingjia(order_id) {
-      this.$router.push(`/order-review-submit?order_id=${order_id}`);
+    jump_pingjia(orderId) {
+      this.$router.push(`/order-review-submit?orderId=${orderId}`);
     },
     //订单售后申请
-    jump_shouhou(order_id) {
-      this.$router.push(`/orderRefund?order_id=${order_id}`);
+    jump_shouhou(orderId) {
+      this.$router.push(`/orderRefund?orderId=${orderId}`);
     },
     jump_order_detail(order) {
 

@@ -65,9 +65,9 @@ export default {
         let {code, data, msg} = res;
         if (code == 200) {
           this.info = data;
-          if (data.statusInfo == "待支付") {
+          if (data.status_info == "待支付") {
             this.payState = "支付失败";
-          } else if (data.statusInfo == "待审核") {
+          } else if (data.status_info == "待审核") {
             this.payState = "提交成功";
           } else {
             this.payState = "支付成功";

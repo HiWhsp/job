@@ -78,23 +78,23 @@
                 <span>发票抬头：</span>
                 {{ info.title }}
               </div>
-              <div class="it" v-if="info.invoiceType == 2 || info.">
+              <div class="it" v-if="info.invoiceType == 2 || info.titleType == 2">
                 <span>纳税人识别码：</span>
                 {{ info.shibiema }}
               </div>
-              <div class="it" v-if="info.invoicType == 2">
+              <div class="it" v-if="info.invoiceType == 2">
                 <span>注册地址：</span>
                 {{ info.companyAddress }}
               </div>
-              <div class="it" v-if="info.invoicType == 2">
+              <div class="it" v-if="info.invoiceType == 2">
                 <span>注册电话：</span>
                 {{ info.companyPhone }}
               </div>
-              <div class="it" v-if="info.invoicType == 2">
+              <div class="it" v-if="info.invoiceType == 2">
                 <span>开户银行：</span>
                 {{ info.bankName }}
               </div>
-              <div class="it" v-if="info.invoicType == 2">
+              <div class="it" v-if="info.invoiceType == 2">
                 <span>银行账户：</span>
                 {{ info.bankNo }}
               </div>

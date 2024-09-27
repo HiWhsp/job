@@ -56,9 +56,8 @@ export default {
         return {
             refund_status: -10,
             list_status_refund: [
-                {status: -10, title: "全部"},
-                {status: 2, title: "申请记录"},
-                {status: 0, title: "待处理"},
+                {status: -10, title: "售后申请"},
+                {status: 0, title: "处理中"},
                 {status: 1, title: "已完成"},
             ],
             list_order: [], //订单列表
@@ -106,41 +105,7 @@ export default {
             }).then((res) => {
                 let {code, data} = res;
                 if (code == 200) {
-                    this.list_order = data.list || [{
-                        "inventoryId": 4,
-                        "createdTime": "2024-08-15 18:06:03",
-                        "orderId": 1,
-                        "address": {
-                            "收件人": "张三",
-
-                            "手机号": "15284221025",
-
-                            "所在地区": null,
-
-                            "详细地址": "详细地址"
-
-                        },
-                        "orderNo": "O_2024081518060350013",
-                        "ifRefund": 0,
-                        "products": {
-                            "sn": "编码",
-
-                            "title": "测试商品多规格2",
-
-                            "keyVals": "大,白",
-
-                            "priceSale": "8.00",
-
-                            "priceMarket": "10.00",
-
-                            "image": "",
-
-                            "unit": "",
-
-                            "num": 2
-
-                        }
-                    }];
+                    this.list_order = data.list || [];
                 }
             });
         },
@@ -218,7 +183,7 @@ export default {
         //售后申请
         refund_apply(item) {
             //console.log({ ...item });
-            this.$router.push(`/refundType?order_id=${item.order_id}&inventoryId=${item.inventoryId}`);
+            this.$router.push(`/refundType?orderId=${item.orderId}&inventoryId=${item.inventoryId}`);
         },
     },
 };
@@ -249,12 +214,9 @@ export default {
 
 }
 
-
 .ctx-box {
   margin-top: 30px;
 }
-
-
 .tab-box {
   padding-right: 20px;
   .flex-between();
@@ -329,5 +291,9 @@ export default {
       }
     }
   }
+}
+
+.pagination-box {
+
 }
 </style>

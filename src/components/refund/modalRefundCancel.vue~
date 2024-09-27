@@ -96,7 +96,7 @@ export default {
   button {
     width: 180px;
     height: 35px;
-    background: @theme;
+    background: #ff3d00;
     opacity: 1;
     border-radius: 15px;
   }

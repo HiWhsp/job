@@ -70,7 +70,7 @@ export default {
     .text-1 {
       font-weight: bold;
       font-size: 20px;
-      color: #ff3d00;
+      color: @theme;
     }
     .text-2 {
       text-align: center;
@@ -99,7 +99,7 @@ export default {
   button {
     width: 180px;
     height: 35px;
-    background: #ff3d00;
+    background: @theme;
     opacity: 1;
     border-radius: 15px;
   }
