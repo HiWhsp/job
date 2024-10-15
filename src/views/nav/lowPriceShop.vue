@@ -1,121 +1,121 @@
 <script>
 export default {
-  name: "discountShop",
-  data() {
-    return {
-      count: 0,
-      navIndex: 1,
-      navList: [
-        {
-          title: '单轴模组',
-          id: 1
-        },
-        {
-          title: '多轴模组',
-          id: 2
-        },
-        {
-          title: '单轴组件',
-          id: 3
-        },
-        {
-          title: '多轴组件',
-          id: 4
-        },
-        {
-          title: '电动直线滑台',
-          id: 5
-        },
-        {
-          title: '对位平台',
-          id: 6
-        },
-        {
-          title: '模组配件',
-          id: 7
+    name: "discountShop",
+    data() {
+        return {
+            count: 0,
+            navIndex: 1,
+            navList: [
+                {
+                    title: '单轴模组',
+                    id: 1
+                },
+                {
+                    title: '多轴模组',
+                    id: 2
+                },
+                {
+                    title: '单轴组件',
+                    id: 3
+                },
+                {
+                    title: '多轴组件',
+                    id: 4
+                },
+                {
+                    title: '电动直线滑台',
+                    id: 5
+                },
+                {
+                    title: '对位平台',
+                    id: 6
+                },
+                {
+                    title: '模组配件',
+                    id: 7
+                }
+            ],
+            dataList: [],
+            pagination: {
+                page: 1,
+                pagenum: 35
+            },
         }
-      ],
-      dataList: [],
-      pagination: {
-        page: 1,
-        pagenum: 10
-      },
+    },
+    mounted() {
+        this.getList();
+    },
+    methods: {
+        // 导航条点击
+        navClick(item) {
+            this.navIndex = item.id;
+        },
+        changePage() {
+            this.getList();
+        },
+        // 获取列表
+        getList() {
+            this.$api("product_plist", {
+                ...this.pagination,
+                channelId: 0,
+                orderType: 0,
+            }).then(res => {
+                if (res.code == 200) {
+                    this.dataList = res.data.list;
+                    this.count = res.data.count;
+                }
+            })
+        },
+        goDetail(item) {
+            this.$router.push(`/productDetail?id=${item.inventoryId}`)
+        },
     }
-  },
-  mounted() {
-    this.getList();
-  },
-  methods: {
-    // 导航条点击
-    navClick(item) {
-      this.navIndex = item.id;
-    },
-    changePage() {
-      this.getList();
-    },
-    // 获取列表
-    getList() {
-      this.$api("product_plist", {
-        ...this.pagination,
-        channelId: 0,
-        orderType: 0,
-      }).then(res => {
-        if (res.code == 200) {
-          this.dataList = res.data.list;
-          this.count = res.data.count;
-        }
-      })
-    },
-    goDetail(item) {
-      this.$router.push(`/productDetail?id=${item.inventoryId}`)
-    },
-  }
 }
 </script>
 
 <template>
-  <div class="page">
-    <div class="wrap">
-      <div class="top-img">
-        <img src="../../static/prod/lowPriceShop_back.png" alt="">
-      </div>
-      <div class="center-img">
-        <!--        <img src="../../static/prod/discount.png" alt="">-->
-        <p>低价爆款专区</p>
-      </div>
-      <div class="commodity-list">
-<!--        <div class="nav-bar">-->
-<!--          <div class="item" :class="{'active': item.id == navIndex}" v-for="(item) in navList" @click="navClick(item)"-->
-<!--               :key="item.id">{{-->
-<!--              item.title-->
-<!--            }}-->
-<!--          </div>-->
-<!--        </div>-->
-        <div class="list flex">
-          <div class="item" v-for="(item, index) in dataList" :key="index">
-            <img :src="item.thumb" alt="">
-            <div class="info">
-              <p class="title">{{ item.title }}</p>
-              <p class="desc ellipsis-1">型号：{{ item.keyVals }}</p>
-              <p class="money">促销价：￥{{ item.priceSale }}</p>
+    <div class="page">
+        <div class="wrap">
+            <div class="top-img">
+                <img src="../../static/prod/lowPriceShop_back.png" alt="">
             </div>
-            <div class="btn">
-              <span class="residue">剩余:{{ item.kucun > 99 ? '99+' : item.kucun }}PCS</span>
-              <div class="submit" @click="goDetail(item)">立即抢购</div>
+            <div class="center-img">
+                <!--        <img src="../../static/prod/discount.png" alt="">-->
+                <p>低价爆款专区</p>
             </div>
-          </div>
+            <div class="commodity-list">
+                <!--        <div class="nav-bar">-->
+                <!--          <div class="item" :class="{'active': item.id == navIndex}" v-for="(item) in navList" @click="navClick(item)"-->
+                <!--               :key="item.id">{{-->
+                <!--              item.title-->
+                <!--            }}-->
+                <!--          </div>-->
+                <!--        </div>-->
+                <div class="list flex">
+                    <div class="item" v-for="(item, index) in dataList" :key="index">
+                        <img :src="item.thumb" alt="">
+                        <div class="info">
+                            <p class="title">{{ item.title }}</p>
+                            <p class="desc ellipsis-1">型号：{{ item.keyVals }}</p>
+                            <p class="money">促销价：￥<span>{{ item.priceSale }}</span></p>
+                        </div>
+                        <div class="btn">
+                            <span class="residue">剩余:{{ item.kucun > 99 ? '99+' : item.kucun }}PCS</span>
+                            <div class="submit" @click="goDetail(item)">立即抢购</div>
+                        </div>
+                    </div>
+                </div>
+
+                <el-empty v-if="!count" description="暂无数据..."></el-empty>
+
+                <div class="pagination-box" v-if="count" style="margin-top: 50px;">
+                    <el-pagination background layout="prev, pager, next" :total="count" :current-page="pagination.page"
+                                   :page-size="pagination.pagenum" @current-change="changePage"></el-pagination>
+                </div>
+            </div>
         </div>
 
-        <el-empty v-if="!count" description="暂无数据..."></el-empty>
-
-        <div class="pagination-box" v-if="count" style="margin-top: 50px;">
-          <el-pagination background layout="prev, pager, next" :total="count" :current-page="pagination.page"
-                         :page-size="pagination.pagenum" @current-change="changePage"></el-pagination>
-        </div>
-      </div>
     </div>
-
-  </div>
 </template>
 
 <style scoped lang="less">
@@ -191,6 +191,7 @@ export default {
 
   .list {
     flex-wrap: wrap;
+
     .item {
       padding: 15px 13px 24px;
       margin-right: 14px;
@@ -200,6 +201,7 @@ export default {
       box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.08);
       border-radius: 8px 8px 8px 8px;
       margin-bottom: 30px;
+
       img {
         margin: 0 15px 8px;
         width: 160px;
@@ -233,10 +235,14 @@ export default {
         .money {
           font-family: Roboto, Roboto;
           font-weight: 400;
-          font-size: 18px;
+          font-size: 14px;
           color: #FF4000;
           font-style: normal;
           text-transform: none;
+
+          span {
+            font-size: 18px;
+          }
         }
       }
 

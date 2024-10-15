@@ -358,7 +358,7 @@ export default {
       }
 
       .category-list:hover .active {
-        display: block !important;
+        //display: block !important; // 菜单二级展示
       }
 
       .category-list-submenu {

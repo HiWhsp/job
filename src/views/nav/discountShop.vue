@@ -9,7 +9,7 @@ export default {
       dataList: [],
       pagination: {
         page: 1,
-        pagenum: 10
+        pagenum: 35
       },
     }
   },
@@ -88,7 +88,7 @@ export default {
             <div class="info">
               <p class="title">{{ item.title }}</p>
               <p class="desc ellipsis-1">型号：{{ item.keyVals }}</p>
-              <p class="money">促销价：￥{{ item.priceSale }}</p>
+              <p class="money">促销价：￥<span>{{ item.priceSale }}</span></p>
             </div>
             <div class="btn">
               <span class="residue">剩余:{{ item.kucun > 99 ? '99+' : item.kucun }}PCS</span>
@@ -227,10 +227,13 @@ export default {
         .money {
           font-family: Roboto, Roboto;
           font-weight: 400;
-          font-size: 18px;
+          font-size: 14px;
           color: #FF4000;
           font-style: normal;
           text-transform: none;
+          span {
+            font-size: 18px;
+          }
         }
       }
 
