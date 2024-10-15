@@ -73,7 +73,7 @@ export default {
     uploadExtraData() {
       let data = {
         action: "index_upload",
-        userId: localStorage.getItem("userId") || "",
+        user_id: localStorage.getItem("user_id") || "",
         token: localStorage.getItem("token") || "",
       };
       return data;

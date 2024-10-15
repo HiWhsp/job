@@ -1,8 +1,5 @@
 <template>
   <div class="order-list-wrap">
-
-
-
     <div class="info-item" v-for="(item, index) in list" :key="index">
       <div class="info-title">
         <div class="date">{{ item.createdTime }}</div>
@@ -16,7 +13,11 @@
       </div>
       <div class="info-good">
         <div class="list-good">
-          <div class="item-good flex" v-for="(product_item, product_index) in item.products" :key="product_index">
+          <div
+            class="item-good flex"
+            v-for="(product_item, product_index) in item.products"
+            :key="product_index"
+          >
             <div class="box-image cover" @click="mix_to_product(product_item)">
               <!-- <img :src="good.img" alt /> -->
               <el-image :src="product_item.image">
@@ -27,15 +28,22 @@
             </div>
 
             <div class="box-title">
-              <div class="goods-title" @click="mix_to_product(product_item)">{{ product_item.title }}</div>
-            </div>
-            <div class="box-sku">
+              <div class="goods-title" @click="mix_to_product(product_item)">
+                {{ product_item.title }}
+              </div>
               <div class="goods-sku">{{ product_item.keyVals }}</div>
             </div>
-            <div class="box-num">
-              x {{ product_item.num }}
+            <div class="box-sku">
+              <div class="goods-sku">
+                {{ vuex_huobi }}{{ product_item.priceSale }}
+              </div>
             </div>
-            <div class="box-price">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
+            <div class="box-num">
+              {{ product_item.num }}
+            </div>
+            <div class="box-price">
+              {{ vuex_huobi }} {{ product_item.priceSale * product_item.num }}
+            </div>
           </div>
         </div>
       </div>
@@ -50,25 +58,52 @@
         </div>
 
         <div class="btn-actions">
-          <button class="btn-ripple fit-text " @click="toDetail(item)">
+          <button class="btn-ripple fit-text" @click="toLogistics(item)">
+            物流信息
+          </button>
+          <button class="btn-ripple fit-text" @click="toDetail(item)">
             订单详情
           </button>
-          <button v-if="item.ifCancel == 1" class="btn-ripple fit-text btn-bg" @click="doCancel(item)">
+          <button
+            v-if="item.ifCancel == 1"
+            class="btn-ripple fit-text btn-bg"
+            @click="doCancel(item)"
+          >
             取消订单
           </button>
-          <button v-if="item.ifPay == 1" class="btn-ripple fit-text btn-bg" @click="doPay(item)">
+          <button
+            v-if="item.ifPay == 1"
+            class="btn-ripple fit-text btn-bg"
+            @click="doPay(item)"
+          >
             去支付
           </button>
-          <button v-if="item.ifDel == 1" class="btn-ripple fit-text btn-bg" @click="doDelete(item)">
+          <button
+            v-if="item.ifDel == 1"
+            class="btn-ripple fit-text btn-bg"
+            @click="doDelete(item)"
+          >
             删除订单
           </button>
-          <button v-if="item.ifReceive == 1" class="btn-ripple fit-text btn-bg" @click="doReceive(item)">
+          <button
+            v-if="item.ifReceive == 1"
+            class="btn-ripple fit-text btn-bg"
+            @click="doReceive(item)"
+          >
             确认收货
           </button>
-          <button v-if="item.ifComment == 1" class="btn-ripple fit-text btn-bg" @click="doReview(item)">
+          <button
+            v-if="item.ifComment == 1"
+            class="btn-ripple fit-text btn-bg"
+            @click="doReview(item)"
+          >
             去评价
           </button>
-          <button v-if="item.orderStatus >= 5" class="btn-ripple fit-text btn-bg" @click="doRefund(item)">
+          <button
+            v-if="item.orderStatus >= 5"
+            class="btn-ripple fit-text btn-bg"
+            @click="doRefund(item)"
+          >
             售后
           </button>
           <!-- <button v-if="item.is_aa == 1" class="btn-ripple fit-text btn-bg" @click="toDetail(item)">
@@ -78,11 +113,26 @@
       </div>
     </div>
 
-    <order_cancel_modal ref="order_cancel_modal" @confirm="emitConfirm" data-type="取消" />
-    <order_delete_modal ref="order_delete_modal" @confirm="emitConfirm" data-type="删除" />
-    <order_receive_modal ref="order_receive_modal" @confirm="emitConfirm" data-type="收货" />
-    <order_refund_modal ref="order_refund_modal" @confirm="emitConfirm" data-type="售后"/>
-    
+    <order_cancel_modal
+      ref="order_cancel_modal"
+      @confirm="emitConfirm"
+      data-type="取消"
+    />
+    <order_delete_modal
+      ref="order_delete_modal"
+      @confirm="emitConfirm"
+      data-type="删除"
+    />
+    <order_receive_modal
+      ref="order_receive_modal"
+      @confirm="emitConfirm"
+      data-type="收货"
+    />
+    <order_refund_modal
+      ref="order_refund_modal"
+      @confirm="emitConfirm"
+      data-type="售后"
+    />
   </div>
 </template>
 
@@ -93,6 +143,8 @@ import order_cancel_modal from "@/components/order/order_cancel_modal.vue"; //�
 import order_delete_modal from "@/components/order/order_delete_modal.vue"; //删除
 import order_receive_modal from "@/components/order/order_receive_modal.vue"; //收货
 import order_refund_modal from "@/components/order/order_refund_modal.vue"; //售后
+
+import download from "@/static/order/download.png";
 
 import { mapState } from "vuex";
 
@@ -111,48 +163,106 @@ export default {
   computed: {},
   methods: {
     emitConfirm() {
-      this.$emit('confirm')
+      this.$emit("confirm");
     },
-
+    toLogistics(item) {
+      this.toRoute({
+        path: "/order-logistics",
+        query: {
+          id: item.id,
+        },
+      });
+    },
     toDetail(item) {
       // this.$router.push(`/order-detail?id=${item.id}`);
       this.toRoute({
-        path: '/order-detail',
+        path: "/order-detail",
         query: {
-          id: item.id
+          id: item.id,
         },
-      })
+      });
     },
     doCancel(item) {
-      this.$refs.order_cancel_modal.init(item)
+      this.$refs.order_cancel_modal.init(item);
     },
     doPay(item) {
-      this.$router.push({
-        path: '/payment-methods',
-        query: {
-          id: item.id
-        }
-      })
+      // this.$router.push({
+      //   path: '/payment-methods',
+      //   query: {
+      //     id: item.id
+      //   }
+      // })
+      const h = this.$createElement;
+      this.$msgbox({
+        title: "上传支付凭证",
+        customClass: "order-list-model-warp",
+        message: h("div", [
+          h("div", { class: "model-desc-wrap" }, [
+            h("div", { class: "one-desc" }, "1. 收款人信息"),
+            h("div", { class: "row" }, "户名：*******"),
+            h("div", { class: "row" }, "开户行：*******"),
+            h("div", { class: "row" }, "账号：*******"),
+          ]),
+          h("div", { class: "model-img-wrap" }, [
+            h("div", { class: "img-wrap" }, [
+              h("img", {
+                attrs: {
+                  src: download,
+                  alt: "",
+                },
+              }),
+            ]),
+          ]),
+          h("div", { class: "model-btn-wrap" }, [
+            h(
+              "div",
+              {
+                class: "btn-ripple btn btn-bg",
+                on: {
+                  click: this.ok,
+                },
+              },
+              "确定"
+            ),
+            h(
+              "div",
+              {
+                class: "btn-ripple btn",
+                on: {
+                  click: this.cancel,
+                },
+              },
+              "取消"
+            ),
+          ]),
+        ]),
+        showCancelButton: false,
+        showConfirmButton: false,
+      });
     },
     doDelete(item) {
-      this.$refs.order_delete_modal.init(item)
+      this.$refs.order_delete_modal.init(item);
     },
     doReceive(item) {
       this.$refs.order_receive_modal.init(item);
     },
-    doReview(item) { },
+    doReview(item) {},
     doRefund(item) {
       this.$refs.order_refund_modal.init(item);
     },
 
-
     updateView() {
       this.$parent.updateView();
+    },
+    ok() {
+      this.$msgbox.close();
+    },
+    cancel() {
+      this.$msgbox.close();
     },
 
     //处理订单行为
     handleOrderAction(action, order_id, order) {
-
       let fahuo_id = order.fahuo_id || "";
       //console.log({ ...action });
       let name = action.name;
@@ -180,7 +290,6 @@ export default {
     //取消订单
     orders_qxOrder(order_id) {
       let order = this.list.find((v) => v.id == order_id);
-
 
       // order.orders_qxOrder({
       //   params: { order_id },
@@ -219,9 +328,7 @@ export default {
     jump_shouhou(order_id) {
       this.$router.push(`/orderRefund?order_id=${order_id}`);
     },
-    jump_order_detail(order) {
-
-    },
+    jump_order_detail(order) {},
 
     open_link(link) {
       window.open(link, "_blank");
@@ -289,19 +396,17 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
-      color: #999999;
-      color: #4CA5E4;
 
       // 待付款
       &.state--5 {
-        // background: #ff4c29;
-        // border-color: #ff4c29;
-        // color: #fff;
+        //background: #ff4c29;
+        //border-color: #ff4c29;
+        color: #ea3200;
       }
 
       &.state-2 {
-        color: #4CA5E4;
-        border-color: #4CA5E4;
+        color: @theme;
+        border-color: @theme;
       }
     }
   }
@@ -310,7 +415,7 @@ export default {
     .list-good {
       .item-good {
         padding: 20px;
-        border-bottom: 1px dashed #ccc;
+        border-bottom: 1px solid #e5e5e5;
 
         font-family: OPPOSans, OPPOSans;
         font-weight: 400;
@@ -325,8 +430,7 @@ export default {
           width: 100px;
           height: 100px;
           cursor: pointer;
-          border: 1px solid #F5F5F5;
-
+          border: 1px solid #f5f5f5;
 
           /deep/ img {
             width: 100px;
@@ -348,13 +452,12 @@ export default {
           text-align: left;
           padding-left: 40px;
 
-
           .goods-title {
             width: fit-content;
             cursor: pointer;
 
             &:hover {
-              color: #4CA5E4;
+              color: @theme;
             }
           }
         }
@@ -374,9 +477,9 @@ export default {
           min-width: 200px;
 
           font-family: OPPOSans, OPPOSans;
-          font-weight: 400;
+          font-weight: bold;
           font-size: 14px;
-          color: #FF0000;
+          color: #333;
         }
       }
     }
@@ -403,13 +506,13 @@ export default {
         margin-right: 30px;
 
         b {
-          color: #4CA5E4;
+          color: #ea3200;
         }
       }
 
       .heji-money {
         b {
-          color: #4CA5E4;
+          color: #ea3200;
         }
       }
     }
@@ -419,15 +522,15 @@ export default {
         transition: 0.3s;
         min-width: 120px;
         height: 32px;
-        background: #FFFFFF;
-        border-radius: 50px 50px 50px 50px;
-        border: 1px solid #4CA5E4;
+        background: #ffffff;
+        border-radius: 4px;
+        border: 1px solid @theme;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #4CA5E4;
+        color: @theme;
 
-        &+button {
+        & + button {
           margin-left: 20px;
         }
 
@@ -436,8 +539,8 @@ export default {
         }
 
         &.btn-bg {
-          background: #4CA5E4;
-          color: #FFFFFF;
+          background: @theme;
+          color: #ffffff;
         }
       }
     }
@@ -446,3 +549,62 @@ export default {
 </style>
 
 <style scoped lang="less" src="@/assets/h5css/shop/orderList.less"></style>
+
+<style lang="less">
+.order-list-model-warp {
+  width: 789px;
+  height: 443px;
+  padding: 11px 0 0 19px;
+  .model-desc-wrap {
+    width: 717px;
+    height: 153px;
+    border: 1px solid #c3d1f1;
+    background: #eff2f9;
+    padding: 12px 0 0 24px;
+    .one-desc {
+      font-size: 16px;
+      color: #333333;
+      line-height: 30px;
+    }
+    .row {
+      font-size: 14px;
+      color: #333333;
+      line-height: 32px;
+    }
+  }
+  .model-img-wrap {
+    margin-top: 23px;
+    .img-wrap {
+      width: 90px;
+      height: 90px;
+      cursor: pointer;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .model-btn-wrap {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    .btn {
+      width: 104px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      background: #ffffff;
+      border-radius: 4px;
+      font-family: Arial, Arial;
+      border: 1px solid #27417c;
+      color: @theme;
+      cursor: pointer;
+      &.btn-bg {
+        background: #27417c;
+        color: #fff;
+      }
+    }
+  }
+}
+</style>

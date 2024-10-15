@@ -1,57 +1,67 @@
 <template>
   <div class="aside">
-    <div class="inner">
-      <div class="list">
-        <div class="item" v-if="showTop" @click="toTop()">
-          <div class="item-inner">
-            <img src="@img/to-top.png" alt="" />
-          </div>
+    <div class="list">
+      <div
+        class="item"
+        v-for="(item, index) in itemList"
+        :key="item.text"
+        @click="onClickItem(index)"
+        @mouseenter="onMouseEnter(index)"
+        @mouseleave="onMouseLeave(index)"
+        :class="{ active: selectedIndex === index }"
+      >
+        <div class="img-wrap">
+          <img
+            :src="selectedIndex === index ? item.activeIconSrc : item.iconSrc"
+            alt="icon"
+          />
         </div>
-
-        <!-- <div class="item" v-for="(item, index) in list_util" :key="index" @mouseenter="on_mouseenter(item)" @mouseleave="on_mouseleave(item)" @click="on_click_util(item)">
-          <div class="item-inner" v-if="item.title != '客服'">
-            <div class="cart-num" v-if="item.title == '购物车'">
-              {{ shopcart_count }}
-            </div>
-            <img :src="item.icon" alt="" />
-          </div>
-
-          <template v-if="item.title == '客服'">
-            <el-popover placement="right" trigger="hover">
-              <div class="pop-kefu">
-                <div class="pop-kefu-inner">
-                  <div class="kefu-tip">请微信扫描下方二维码</div>
-                  <img class="kefu-code" :src="webConfig.kefu_code" />
+        <div>{{ item.text }}</div>
+        <div
+          class="popup"
+          v-if="popupIndex === index"
+          @mouseenter="onPopupMouseEnter"
+          @mouseleave="onPopupMouseLeave"
+        >
+          <div class="sub-list">
+            <el-checkbox-group v-model="checkList">
+              <el-checkbox
+                :label="subItem"
+                class="sub-item"
+                v-for="(subItem, index) in item.subItems"
+                :key="index"
+              >
+                <div class="item-wrap">
+                  <div class="img-wrap">
+                    <img src="@/assets/img/aside/img.png" alt="" />
+                  </div>
+                  <div class="item-text">激光平面窗口片名称位置</div>
                 </div>
-              </div>
-
-              <div class="item-inner" slot="reference">
-                <img :src="item.icon" alt="" />
-              </div>
-            </el-popover>
-          </template>
-        </div> -->
+              </el-checkbox>
+            </el-checkbox-group>
+            <div class="btn-wrap">
+              <div class="btn close" @click="popupIndex = -1">关闭</div>
+              <div class="btn contrast" @click="onRouteTo({ name: 'productComparison' })">对比</div>
+            </div>
+          </div>
+          <div class="arrow"></div>
+        </div>
       </div>
-    </div>
-
-    <div class="modal" v-show="hoverIndex == 2 || hoverIndex == 3">
-      <template v-if="hoverIndex == 2">
-        <div class="text-box">
-          <div class="text">联系方式</div>
-          <div class="phone">{{ "xxxxx" }}</div>
-        </div>
-      </template>
-      <template v-if="hoverIndex == 3">
-        <div class="img-box">
-          <!-- <img :src="fixInfo.wechat" alt /> -->
-        </div>
-      </template>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import icon1 from "@/assets/img/aside/icon1.png";
+import icon1Active from "@/assets/img/aside/icon1-active.png";
+import icon2 from "@/assets/img/aside/icon2.png";
+import icon2Active from "@/assets/img/aside/icon1-active.png";
+import icon3 from "@/assets/img/aside/icon3.png";
+import icon3Active from "@/assets/img/aside/icon1-active.png";
+import icon4 from "@/assets/img/aside/icon4.png";
+import icon4Active from "@/assets/img/aside/icon1-active.png";
+import icon5 from "@/assets/img/aside/icon5.png";
+import icon5Active from "@/assets/img/aside/icon1-active.png";
 
 export default {
   name: "common-aside",
@@ -59,76 +69,73 @@ export default {
   props: [],
   data() {
     return {
-      hoverIndex: "",
-      list_util: [
-        // { title: "购物车", icon: require("@img/other/aside-shopcart.png") },
-        // { title: "客服", icon: require("@img/other/aside-kefu.png") },
-        // { title: "收藏", icon: require("@img/other/aside-favourite.png") },
-      ],
-
-      showTop: false,
+      selectedIndex: -1,
+      popupIndex: -1,
+      popupVisible: false,
+      checkList: ["选中且禁用", "复选框 A"],
+      icon1,
     };
   },
-  computed: {
-    ...mapState(["shopcart_count", "webConfig"]),
-  },
   watch: {},
-
-  mounted() {
-    this.watchPageScroll();
+  created() {
+    this.itemList = [
+      {
+        iconSrc: icon1,
+        activeIconSrc: icon1Active,
+        text: "快速报价",
+        subItems: ["子选项1", "子选项2", "子选项3", "子选项4", "子选项5"],
+      },
+      {
+        iconSrc: icon2,
+        activeIconSrc: icon2Active,
+        text: "产品对比",
+        subItems: ["子选项1", "子选项2", "子选项3", "子选项4", "子选项5"],
+      },
+      {
+        iconSrc: icon3,
+        activeIconSrc: icon3Active,
+        text: "购物车",
+        subItems: ["子选项1", "子选项2", "子选项3", "子选项4", "子选项5"],
+      },
+      {
+        iconSrc: icon4,
+        activeIconSrc: icon4Active,
+        text: "在线咨询",
+        subItems: ["子选项1", "子选项2", "子选项3", "子选项4", "子选项5"],
+      },
+      {
+        iconSrc: icon5,
+        activeIconSrc: icon5Active,
+        text: "返回顶部",
+        subItems: ["子选项1", "子选项2", "子选项3", "子选项4", "子选项5"],
+      },
+    ];
   },
-
   methods: {
-    watchPageScroll() {
-      var that = this;
-      if (document && document.documentElement) {
-        document.addEventListener("scroll", that.scrollEvent);
+    onClickItem(index) {
+      this.selectedIndex = index;
+    },
+    onMouseEnter(index) {
+      this.selectedIndex = index;
+      this.popupIndex = index;
+      this.popupVisible = true;
+    },
+    onMouseLeave(index) {
+      if (!this.popupVisible) {
+        this.popupIndex = -1;
       }
     },
-
-    scrollEvent() {
-      var that = this;
-      var scrollTop = document.documentElement.scrollTop;
-      var clientHeight = document.documentElement.clientHeight;
-
-      if (scrollTop >= 400) {
-        this.showTop = true;
-      } else {
-        this.showTop = false;
-      }
-      // //console.log("滚动监听", new Date(), scrollTop);
+    onPopupMouseEnter() {
+      this.popupVisible = true;
     },
-
-    toTop() {
-      document.documentElement.scrollTop = 0;
+    onPopupMouseLeave() {
+      this.selectedIndex = -1;
+      this.popupVisible = false;
+      this.popupIndex = -1;
     },
-
-    on_mouseenter(item) {
-      //console.log("鼠标移入", item);
-      this.hoverIndex = item;
-    },
-    on_mouseleave(item) {
-      //console.log("鼠标移出", item);
-      this.hoverIndex = "";
-    },
-
-    on_click_util(item) {
-      //console.log("点击", item);
-
-      document.documentElement.scrollTop = 0;
-
-      return;
-
-      let title = item.title;
-
-      if (title == "回到顶部") {
-        document.documentElement.scrollTop = 0;
-      } else if (title == "购物车") {
-        this.$router.push("/cart");
-      }
-      //  else if (title == "客服") {
-      //   this.$router.push("/contact");
-      // }
+    onRouteTo(params) {
+      const { name } = params;
+      this.$router.push({ name });
     },
   },
 };
@@ -138,119 +145,126 @@ export default {
 .aside {
   z-index: 10000;
   position: fixed;
-  right: 50px;
-  bottom: 150px;
-
-  // height: 151.45px;
-  // height: 50px;
-  background: #cccccc;
-  border-radius: 0;
-
-  .inner {
-  }
+  right: 46px;
+  top: 150px;
+  background: #fff;
 }
 
-// 工具列表
 .list {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+
   .item {
     position: relative;
+    width: 71px;
+    height: 76px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 0 1px #e6e6e6;
     cursor: pointer;
-    .flex-center();
-    // width: 50px;
-    // height: 50px;
-    // transition: 0.3s;
 
-    width: 60px;
-    height: 60px;
-    background: #ffffff;
-    box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.1);
-    border-radius: 4px 4px 4px 4px;
-
-    &:nth-child(1) {
-      background: #ff9312;
-    }
-    &:nth-child(1) {
-      background: #fff;
-    }
-    &:nth-child(2) {
-      background: #ea5959;
-    }
-    &:nth-child(3) {
-      background: #f13f17;
+    &.active {
+      background-color: #27417c;
+      color: #fff;
     }
 
-    &:hover {
-      opacity: 0.6;
+    .img-wrap {
+      margin: 14px 24px 3px 25px;
+      width: 22px;
+      height: 22px;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
 
-    img {
-      height: 32px;
-    }
-
-    .cart-num {
+    .popup {
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 19px;
-      height: 19px;
-      background: #ffffff;
-      border: 1px solid #ff9312;
-      border-radius: 50%;
-      font-size: 10px;
-      color: #ff9312;
+      right: 88px;
+      background-color: #fff;
+      border: 1px solid #e6e6e6;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+      .sub-list {
+        display: flex;
+        flex-direction: column;
+
+        .sub-item {
+          width: 331px;
+          height: 85px;
+          padding-left: 21px;
+          border-bottom: 1px solid #707070;
+
+          .item-wrap {
+            display: flex;
+
+            .img-wrap {
+              width: 55px;
+              height: 55px;
+
+              img {
+                width: 100%;
+                height: 100%;
+              }
+            }
+
+            .item-text {
+              height: 100%;
+              padding-top: 22px;
+            }
+          }
+        }
+      }
+
+      .arrow {
+        position: absolute;
+        right: -6px;
+        top: 32px;
+        width: 0;
+        height: 0;
+        border: 9px solid transparent;
+        border-left: 9px solid #fff;
+      }
+
+      .btn-wrap {
+        height: 77px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        box-sizing: border-box;
+        cursor: default;
+
+        .btn {
+          width: 138px;
+          height: 39px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 0px 8px 0px 8px;
+          font-size: 16px;
+          color: #ffffff;
+          text-align: center;
+          cursor: pointer;
+        }
+
+        .close {
+          background: #bec1c4;
+        }
+
+        .contrast {
+          background: #27417c;
+        }
+      }
     }
   }
 }
 
-// 弹窗
-.modal {
-  position: absolute;
-  border: 1px solid #eee;
-  top: 70px;
-  right: 49px;
-  width: 130px;
-  height: 130px;
-  background: #fff;
-  padding: 7px;
-
+::v-deep .el-checkbox {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  color: #000;
-
-  img {
-    width: 100%;
-    height: 100%;
-  }
-
-  .text-box {
-    font-size: 16px;
-    .text {
-    }
-    .phone {
-      margin-top: 30px;
-    }
-  }
-}
-
-// 联系客服
-.pop-kefu {
-  .pop-kefu-inner {
-    text-align: center;
-    .kefu-tip {
-      text-align: center;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-    .kefu-code {
-      width: 200px;
-    }
-  }
 }
 </style>
-
-<style scoped lang="less" src="@/assets/h5css/common/pageAside.less"></style>

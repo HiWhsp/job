@@ -21,7 +21,6 @@ import "@/plugin/message.js";
 import "@/plugin/log.js";
 import '@/lib/lib-flexible.js';
 
-
 import Directives from "./directives"; //全局指令
 Vue.use(Directives);
 
@@ -55,7 +54,6 @@ Vue.prototype.$load = {
     this.loading.close();
   },
 };
-
 
 store.dispatch("appInit"); //重新初始化
 

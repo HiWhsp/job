@@ -4,8 +4,7 @@ import Vuex from "vuex";
 import ajax from "@/plugin/request.js"; //导入 axios 配置
 const api = ajax.api; //请求方法
 
-// debugger
-//console.log("========== store location ==========", location);
+import { app } from './module/app'
 
 // 处理产品分类数据
 function handle_product_cate_data(cateTreeList) {
@@ -87,7 +86,7 @@ export default new Vuex.Store({
     vuex_cart_number: 0,
 
     //
-    vuex_huobi: "$",
+    vuex_huobi: "￥",
     index_banners: [],
     map_banners: {
       关于我们: [],
@@ -184,22 +183,22 @@ export default new Vuex.Store({
       state.vuex_cart_number = value;
     },
 
-    set_cache_payment_products(state, str_products)  {
-      console.log('vuex 缓存商品信息',str_products)
+    set_cache_payment_products(state, str_products) {
+      console.log('vuex 缓存商品信息', str_products)
       sessionStorage.setItem("cache_payment_products", str_products);
     },
 
     //设置基本信息
     set_baseInfo(state, data) {
       // //console.log("设置用户信息", { ...data });
-      let { token, userId, id, level, level_rules } = data;
+      let { token, user_id, id, level, level_rules } = data;
 
       state.vuex_is_login = true;
       state.token = token;
-      state.userId = userId || id;
+      state.user_id = user_id || id;
 
       localStorage.setItem("token", token);
-      localStorage.setItem("userId", userId || id);
+      localStorage.setItem("user_id", user_id || id);
 
       // if (level_rules) {
       //   //处理
@@ -265,7 +264,6 @@ export default new Vuex.Store({
       dispatch("appInitGetAssets");
 
 
-
       let token = localStorage.getItem("token");
       let userId = localStorage.getItem("userId");
 
@@ -309,22 +307,24 @@ export default new Vuex.Store({
           action: "gouwuche_lists",
         },
       })
-      .then((res) => {
-        let { code, data } = res;
-        if (code == 200) {
-          let count = 0;
-          data.forEach((v) => {
-            count += v.num * 1;
-          });
+        .then((res) => {
+          let { code, data } = res;
+          if (code == 200) {
+            let count = 0;
+            data.forEach((v) => {
+              count += v.num * 1;
+            });
 
-          commit("set_vuex_cart_number", count);
-        }
-      });
+            commit("set_vuex_cart_number", count);
+          }
+        });
     },
 
 
     //初始化资源
     async appInitGetAssets({ commit, state, dispatch }, data) {
+      dispatch("query_user");
+
       api({
         url: "/service.php",
         method: "get",
@@ -344,7 +344,7 @@ export default new Vuex.Store({
         method: "get",
         data: {
           action: "banner_index",
-          position: 0, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
+          position: 2, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -388,4 +388,8 @@ export default new Vuex.Store({
       // });
     },
   },
+
+  modules: {
+    app
+  }
 });

@@ -28,7 +28,7 @@
 <script>
 import { mapState } from "vuex";
 
-let userId = localStorage.getItem("userId") || "";
+let user_id = localStorage.getItem("userId") || "";
 let cutId = sessionStorage.getItem("cutId") || "";
 const registerLink = location.href;
 

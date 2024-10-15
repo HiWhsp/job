@@ -1,0 +1,211 @@
+<template>
+  <div class="page">
+    <div class="filter-wrap">
+      <el-select v-model="value" placeholder="请选择文章分类" class="select">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+      <el-select v-model="value" placeholder="请选择文章分类" class="select">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+      <el-input
+        v-model="value"
+        placeholder="请输入关键词"
+        class="input"
+      ></el-input>
+      <div class="search-btn" @click="search">搜索</div>
+      <div class="reset-btn" @click="reset">重置</div>
+    </div>
+    <div class="article-list">
+      <div class="article-item" v-for="(item, index) in 10" :key="index">
+        <div class="article-img" @click="toDetail(item)">
+          <img src="" alt="" />
+        </div>
+        <div class="article-title-wrap">
+          <div class="article-title">液态透镜技术在工业镜头中的应用</div>
+          <div class="article-sub-title">
+            <div class="article-sub-title-img-wrap">
+              <img src="@/assets/img/service/icon1.png" alt="" />
+            </div>
+            <div>原理及产品介绍</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pagination">
+      <el-pagination
+        @current-change="changePage"
+        :current-page.sync="pagination.page"
+        :page-size="pagination.pageNum"
+        layout="total, prev, pager, next, jumper"
+        :total="count"
+        size="large"
+      ></el-pagination>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "technical-article",
+  data() {
+    return {
+      options: [
+        {
+          value: "选项1",
+          label: "黄金糕",
+        },
+        {
+          value: "选项2",
+          label: "双皮奶",
+        },
+        {
+          value: "选项3",
+          label: "蚵仔煎",
+        },
+        {
+          value: "选项4",
+          label: "龙须面",
+        },
+        {
+          value: "选项5",
+          label: "北京烤鸭",
+        },
+      ],
+      value: "",
+      pagination: {
+        page: 1,
+        pageNum: 10,
+      },
+      count: 100,
+    };
+  },
+  methods: {
+    search() {
+      console.log("search");
+    },
+    reset() {
+      console.log("reset");
+    },
+    changePage(page) {
+      this.pagination.page = page;
+    },
+    toDetail(item) {
+      this.$router.push({
+        path: "/technical-article-detail",
+      })
+    }
+  },
+};
+</script>
+
+<style scoped lang="less">
+.filter-wrap {
+  width: 100%;
+  height: 123px;
+  display: flex;
+  padding: 41px 260px 42px;
+  background: #fff;
+}
+
+.select {
+  width: 350px;
+  margin-right: 20px;
+}
+
+.input {
+  width: 350px;
+  margin-right: 44px;
+}
+
+.search-btn {
+  width: 126px;
+  height: 40px;
+  margin-right: 14px;
+  background: #27417c;
+  border-radius: 4px 4px 4px 4px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #ffffff;
+  line-height: 32px;
+  text-align: center;
+}
+
+.reset-btn {
+  width: 126px;
+  height: 40px;
+  border-radius: 4px 4px 4px 4px;
+  border: 1px solid #b2b2b2;
+  cursor: pointer;
+  font-size: 18px;
+  color: #707070;
+  line-height: 32px;
+  text-align: center;
+}
+
+.article-list {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 37px;
+  column-gap: 37px;
+  padding: 50px 260px 0;
+  background: #f4f4f6;
+  .article-item {
+    width: 436px;
+    background: #ffffff;
+    border-radius: 10px 0px 10px 10px;
+    .article-img {
+      width: 100%;
+      height: 292px;
+      cursor: pointer;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .article-title-wrap {
+      height: 110px;
+    }
+    .article-title {
+      padding: 24px 0 0 26px;
+      font-weight: 400;
+      font-size: 20px;
+      color: #333333;
+      line-height: 26px;
+    }
+    .article-sub-title {
+      padding: 21px 0 0 26px;
+      display: flex;
+      gap: 9px;
+      font-size: 14px;
+      color: #27417c;
+      line-height: 19px;
+      .article-sub-title-img-wrap {
+        width: 13px;
+        height: 13px;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+}
+
+.pagination {
+  padding: 48px 0 59px;
+  background: #f4f4f6;
+  text-align: center;
+}
+</style>

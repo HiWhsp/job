@@ -1,296 +1,443 @@
 <template>
-  <div class="page-header">
-    <div class="top-box">
-      <div class="content flex flex-between">
-        <div class="l-box flex">
-          <span class="name">富俊机械运动组件采购商城</span>
-          <div class="tools-btn flex">
-            <div class="login pointer">登录</div>
-            <div class="col"></div>
-            <div class="register pointer">注册</div>
-          </div>
-        </div>
-        <div class="r-box flex pointer">
-          <div class="color-a6 flex">
-            <img src="../../static/home/phone.png" alt="dianhua" class="img-1">400-085-7709
-          </div>
-          <div class="col"></div>
-          <div class="flex">我的消息<span class="color-a6">({{ numList.message }})</span><img
-              src="../../static/home/down.png" class="img-2"></div>
-          <div class="col"></div>
-          <div>我的订单<span class="color-a6">({{ numList.message }})</span></div>
-          <div class="col"></div>
-          <div>积分商城<span class="color-a6">({{ numList.message }})</span></div>
-          <div class="col"></div>
-          <div>关于富俊</div>
-          <div class="col"></div>
-          <div>帮助中心</div>
-        </div>
+  <div class="page-header" :style="{ background: pageHeaderBackground }">
+    <div class="main">
+      <div class="left">
+        <img
+          :src="iconImgSrc"
+          alt="Logo"
+          @click="onRouteTo({ name: 'index' })"
+        />
       </div>
-    </div>
-    <div class="info-box">
-      <div class="content flex flex-between">
-        <div class="l-box">
-          <img src="../../static/home/logo.png" alt="logo" class="img-1">
-          <span>运动组件采购商城</span>
-        </div>
-        <div class="m-box">
-          <div class="search flex">
-            <el-input v-model="searchInput" placeholder="可直接搜索同行型号 获取低成本替代"></el-input>
-            <el-button type="primary" icon="el-icon-search">搜索</el-button>
-          </div>
-          <div class="search-hot">
-            <a class="hot">简易丝杆模组</a>
-            <a class="hot">两轴模组</a>
-            <a class="hot">丝杆组件</a>
-            <a class="hot">两轴组件</a>
-            <a class="hot">多轴模组</a>
-          </div>
-        </div>
-        <div class="r-box">
-          <div class="flex">
-            <div class="tools-btn pointer flex"><img class="img-2" src="../../static/home/gouwuche.png" alt="">购物车
+      <div class="mid">
+        <ul class="nav-list">
+          <li
+            v-for="(item, index) in navLists"
+            :key="index"
+            :class="['li', { active: activeIndex === index }]"
+            @click="onRouteTo({ name: item.path, index })"
+            @mouseenter="mouseenterChat(index)"
+            :style="{ color: color, '--active-color': color }"
+          >
+            {{ item.text }}
+          </li>
+          <img
+            src="../../assets/img/head/icon.png"
+            v-show="activeIndex === 0 && color !== '#fff'"
+            class="icon"
+            alt=""
+          />
+        </ul>
+      </div>
+      <div class="right">
+        <div class="img-wrap" @mouseenter="showSearchBox = true">
+          <img :src="searchImgSrc" alt="search" />
+          <transition name="fade">
+            <div
+              class="search-box"
+              v-show="showSearchBox"
+              @mouseleave="showSearchBox = false"
+            >
+              <div class="input-wrap">
+                <el-input v-model="input"> </el-input>
+                <div class="icon-wrap">
+                  <img
+                    src="../../assets/img/head/search-icon.png"
+                    alt="search-icon"
+                  />
+                </div>
+              </div>
+              <ul class="keyword-list">
+                <li
+                  v-for="(keyword, index) in keywordList"
+                  :key="index"
+                  class="keyword-li"
+                >
+                  <span class="span">{{ keyword }}</span>
+                </li>
+              </ul>
+              <div class="arrow"></div>
             </div>
-            <div class="tools-btn pointer flex"><img class="img-3" src="../../static/home/wexin.png" alt="">微信公众号
+          </transition>
+        </div>
+        <div class="img-wrap">
+          <img :src="cartImgSrc" alt="cart" />
+        </div>
+        <div class="img-wrap" @mouseenter="showUserMenu = true">
+          <img :src="personImgSrc" alt="user" />
+          <transition name="fade">
+            <div
+              class="user-menu"
+              v-show="isLogin && showUserMenu"
+              @mouseleave="showUserMenu = false"
+            >
+              <div class="user-item" @click="onRouteTo({ name: 'my' })">
+                个人中心
+              </div>
+              <div class="user-item">我的订单</div>
+              <div class="user-item">领券中心</div>
+              <div class="user-item">积分商城</div>
+              <div class="arrow"></div>
+            </div>
+          </transition>
+          <transition name="fade">
+            <div
+              v-show="!isLogin && showUserMenu"
+              class="user-menu"
+              @mouseleave="showUserMenu = false"
+            >
+              <div
+                class="user-item"
+                @click="onRouteTo({ name: 'login', query: 'login' })"
+              >
+                会员登录
+              </div>
+              <div
+                class="user-item"
+                @click="onRouteTo({ name: 'login', query: 'register' })"
+              >
+                会员注册
+              </div>
+            </div>
+          </transition>
+        </div>
+      </div>
+      <transition name="fade">
+        <div
+          class="chat-with-up-pop"
+          v-show="showChatWithUp"
+          @mouseleave="showChatWithUp = false"
+        >
+          <div class="chat-list">
+            <div
+              class="chat-item"
+              :class="{ active: chatActiveIndex === index }"
+              v-for="(item, index) in chatList"
+              :key="index"
+              @click="onClickChatItem(index)"
+            >
+              {{ item.text }}
             </div>
           </div>
-          <div class="hot">
-          </div>
         </div>
-      </div>
-    </div>
-    <div class="nav-box">
-      <div class="content flex">
-        <div class="nav flex" v-for="(item, index) in navList" :key="index">
-          <img class="img-0" :src="item.icon" alt="" v-if="item.position == 'l'">
-          <span class="name">{{ item.title }}</span>
-          <img class="img-1" :src="item.icon" alt="" v-if="item.position == 'r'">
-        </div>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
-      searchInput: '', // 搜索条件
-      // 头部导航列表
-      navList: [
+      activeIndex: -1,
+      chatActiveIndex: -1,
+      showSearchBox: false,
+      showChatWithUp: false,
+      keywordList: ["激光器", "飞秒激光器", "科研激光器"],
+      input: "",
+      showUserMenu: false,
+      chatList: [
         {
-          title: '全部商品分类', // 名称
-          icon: require('../../static/home/down_all.png'),
-          position: 'r'
+          path: "company-profile",
+          text: "公司简介",
         },
         {
-          title: '特惠商城', // 名称
-          icon: require('../../static/home/hot-shop.png'),
-          position: 'l'
+          path: "company-news",
+          text: "公司新闻",
         },
         {
-          title: '低价爆款专区', // 名称
-          icon: null,
-          position: null
-        }, {
-          title: '每月新款专区', // 名称
-          icon: require('../../static/home/hot-new.png'),
-          position: 'l'
-        }, {
-          title: '定制组件专区', // 名称
-          icon: null,
-          position: null
-        }, {
-          title: 'DIY 组件专区', // 名称
-          icon: null,
-          position: null
-        }, {
-          title: '非标定制', // 名称
-          icon: null,
-          position: null
-        }, {
-          title: '快速报价', // 名称
-          icon: null,
-          position: null
-        }],
-      // 小标数据
-      numList: {
-        orderIndex: 0,
-        integral: 0,
-        message: 0,
-        shop: 0
+          path: "exhibition-information",
+          text: "展会信息",
+        },
+        {
+          path: "contact-us",
+          text: "联系我们",
+        },
+      ],
+    };
+  },
+  computed: {
+    ...mapGetters([
+      "pageHeaderBackground",
+      "iconImgSrc",
+      "color",
+      "searchImgSrc",
+      "cartImgSrc",
+      "personImgSrc",
+      "isLogin"
+    ]),
+  },
+  created() {
+    this.navLists = [
+      {
+        path: "allCommodities",
+        text: "全部商品",
+      },
+      {
+        path: "laboratory",
+        text: "光电实验室",
+      },
+      {
+        path: "oneClickSelection",
+        text: "一键选型",
+      },
+      {
+        path: "service-support",
+        text: "服务支持",
+      },
+      {
+        path: "chat-us",
+        text: "联系我们",
+      },
+    ];
+  },
+  methods: {
+    onRouteTo(params) {
+      const { index, name, query } = params;
+      this.activeIndex = index;
+      this.$router.push({ name, query: { to: query } });
+    },
+    mouseenterChat(index) {
+      if (index === 4) {
+        this.showChatWithUp = true;
+      } else {
+        this.showChatWithUp = false;
       }
-    }
-  }
-}
+    },
+    onClickChatItem(index) {
+      this.chatActiveIndex = index;
+      this.$router.push({ path: this.chatList[index].path });
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
-.content {
-  width: 1200px;
-  margin: 0 auto;
-}
-
-.col {
-  width: 0px;
-  height: 12px;
-  border: 1px solid #C6CACD;
-  margin: 0 10px;
-}
-
-.color-a6 {
-  color: #A66600;
-}
-
 .page-header {
+  position: relative;
+  height: 114px;
   width: 100%;
+  z-index: 10;
 
-  .top-box {
-    background: #F1F1F1;
-    border-radius: 0px 0px 0px 0px;
+  .main {
+    height: 100%;
+    padding: 0 260px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    .l-box {
-      .name {
-        margin-right: 21px;
+    .left {
+      width: 409px;
+      cursor: pointer;
+
+      img {
+        width: 232px;
+        height: 55px;
       }
     }
 
-    .r-box {
-      color: #77797B;
+    .mid {
+      height: 100%;
+      flex: 1;
+      font-size: 20px;
 
-      .img-1 {
-        width: 16px;
-        height: 16px;
-        margin-right: 5px;
-      }
+      .nav-list {
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
-      .img-2 {
-        width: 9.01px;
-        height: 5.22px;
-        margin-left: 5px;
-        margin-top: 3px;
-      }
-    }
+        .li {
+          position: relative;
+          cursor: pointer;
+          font-weight: bold;
+          padding-bottom: 11px;
 
-    .content {
-      height: 37px;
-      color: #77797B;
-      font-size: 12px;
-    }
-  }
+          &.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 35px;
+            width: 100%;
+            height: 3px;
+            background: var(--active-color);
+          }
 
-  .info-box {
-    width: 100%;
-    height: 99px;
-    background: #FFFFFF;
-
-    .l-box {
-      .img-1 {
-        width: 261px;
-        height: 29px;
-        margin-right: 10px;
-      }
-
-      font-weight: bold;
-      font-size: 16px;
-      color: #959491;
-      text-align: left;
-      font-style: normal;
-      text-transform: none;
-    }
-
-    .m-box {
-      .search {
-        .el-input {
-          width: 383px;
-
-          /deep/ .el-input__inner {
-            border: 3px solid #A66600;
-            border-radius: 4px 0px 0px 4px;
+          &:hover::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 35px;
+            width: 100%;
+            height: 3px;
+            background: var(--active-color);
           }
         }
 
-        .el-button--primary {
-          background-color: #A66600;
-          border-color: #A66600;
-          border-radius: 0px 4px 4px 0px;
-        }
-      }
-
-      .search-hot {
-        margin-top: 7px;
-        font-size: 12px;
-        .hot {
-          margin-right: 16px;
-          color: #86888A;
+        .icon {
+          position: absolute;
+          left: 91px;
+          width: 10px;
+          height: 7px;
         }
       }
     }
 
-    .r-box {
-      .tools-btn {
-        padding: 10px;
-        background: #FFFFFF;
-        border-radius: 4px;
-        border: 1px solid #E9EBEE;
-        margin-right: 15px;
-        font-size: 16px;
-      }
+    .right {
+      width: 296px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 27px;
 
-      .hot {
+      .img-wrap {
+        position: relative;
+        width: 18px;
         height: 20px;
+        cursor: pointer;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
       }
 
-      .img-2 {
-        width: 21.9px;
-        height: 17.45px;
-        margin-right: 10px;
+      .search-box {
+        padding: 16px 15px 19px 23px;
+        width: 508px;
+        position: absolute;
+        top: 36px;
+        right: 0;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+
+        .input-wrap {
+          position: relative;
+          display: flex;
+
+          ::v-deep .el-input__inner {
+            padding-right: 20%;
+          }
+
+          .icon-wrap {
+            position: absolute;
+            right: 4px;
+            top: 4px;
+            width: 66px;
+            height: 31px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #27417c;
+            border-radius: 3px;
+
+            img {
+              width: 22px;
+              height: 24px;
+            }
+          }
+        }
+
+        .keyword-list {
+          display: flex;
+          gap: 5px;
+          font-size: 13px;
+          color: #5e5e5e;
+          cursor: default;
+
+          .keyword-li {
+            cursor: pointer;
+            padding: 5px 0;
+
+            .span {
+              cursor: pointer;
+            }
+          }
+        }
+
+        .arrow {
+          position: absolute;
+          right: 6px;
+          top: -10px;
+          width: 0;
+          height: 0;
+          border: 5px solid transparent;
+          border-bottom: 5px solid #fff;
+        }
       }
 
-      .img-3 {
-        width: 22.13px;
-        height: 17.84px;
-        margin-right: 10px;
-      }
-    }
+      .user-menu {
+        position: absolute;
+        top: 36px;
+        left: -58.5px;
+        width: 117px;
+        background: #fff;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        color: #5e5e5e;
+        border-radius: 4px;
 
-    .content {
-      height: 99px;
+        .user-item {
+          height: 41px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-bottom: 1px solid rgba(112, 112, 112, 0.2);
+        }
+
+        .arrow {
+          position: absolute;
+          left: 58.5px;
+          right: 6px;
+          top: -10px;
+          width: 0;
+          height: 0;
+          border: 5px solid transparent;
+          border-bottom: 5px solid #fff;
+        }
+      }
     }
   }
+}
 
-  .nav-box {
-    .nav {
-      margin-right: 60px;
-      .name {
-        font-family: Roboto, Roboto;
+.chat-with-up-pop {
+  position: absolute;
+  top: 114px;
+  left: 0;
+  width: 100%;
+  height: 152px;
+  padding: 48px 260px 0;
+  background: #fff;
+  .chat-list {
+    display: flex;
+    justify-content: space-around;
+    font-size: 18px;
+    color: #333333;
+    line-height: 30px;
+    .chat-item {
+      cursor: pointer;
+      &.active {
+        color: #27417c;
         font-weight: bold;
-        font-size: 16px;
-        color: #000000;
-        text-align: left;
-        font-style: normal;
-        text-transform: none;
+      }
+      &:hover {
+        color: #27417c;
+        font-weight: bold;
       }
     }
-    .nav:last-child {
-      margin-right: 0;
-    }
-    .img-0 {
-      width: 21.7px;
-      height: 21.68px;
-      margin-right: 5px;
-    }
-
-    .img-1 {
-      width: 9.45px;
-      height: 6.69px;
-      margin-left: 5px;
-    }
-
-    .content {
-      height: 42px;
-    }
   }
+}
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

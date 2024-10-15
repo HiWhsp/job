@@ -1,0 +1,302 @@
+<template>
+  <div class="page">
+    <div class="main-title">售后订单</div>
+
+    <div class="page-ctx">
+      <div class="tab-box">
+        <div class="tab-list">
+          <div v-for="(item, index) in list_status_refund" :key="index" class="tab-item"
+               :class="refund_status == item.status ? 'active' : ''" @click="refund_status = item.status">
+            {{ item.title }}
+          </div>
+        </div>
+        <div class="search-box">
+          <input type="text" placeholder="输入商品名称、订单号" v-model="keyword"/>
+          <button @click="click_order_search">搜索</button>
+        </div>
+      </div>
+      <div class="center ctx-box">
+        <template v-if="!isRefundApply">
+          <!-- 可申请售后列表 -->
+          <refundList :list="list_order"/>
+          <el-empty v-if="!list_order.length" description="暂无数据..."></el-empty>
+        </template>
+        <template v-else>
+          <!-- 售后申请列表 -->
+          <refundApplyList :list="list_refund"/>
+          <el-empty v-if="!list_refund.length" description="暂无数据..."></el-empty>
+        </template>
+
+        <div v-if="!((!isRefundApply && !list_order.length) || (isRefundApply && !list_refund.length))"
+             class="pagination-box" style="margin-top: 40px">
+          <el-pagination @current-change="changePage" :current-page.sync="pagination.page"
+                         :page-size="pagination.pageNum" layout="total, prev, pager, next"
+                         :total="count"></el-pagination>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</template>
+
+<script>
+import refundList from "@/components/refund/refundList.vue"; //订单列表
+import refundApplyList from "@/components/refund/refundApplyList.vue"; //订单列表
+
+import {mapState} from "vuex";
+
+export default {
+  name: "servicePage",
+  components: {
+    refundList,
+    refundApplyList,
+  },
+  data() {
+    return {
+      refund_status: -10,
+      list_status_refund: [
+        {status: -10, title: "全部"},
+        {status: 2, title: "申请记录"},
+        {status: 0, title: "待处理"},
+        {status: 1, title: "已完成"},
+      ],
+      list_order: [], //订单列表
+      list_refund: [], //售后列表
+
+      pagination: {
+        page: 1,
+        pageNum: 10,
+      },
+      count: 0,
+      keyword: "",
+    };
+  },
+
+  computed: {
+    //是否为售后申请列表 还是可申请列表
+    isRefundApply() {
+      return this.refund_status != -10;
+    },
+  },
+
+  watch: {
+    refund_status() {
+      this.setView();
+    },
+  },
+
+  created() {
+    this.setView();
+  },
+
+  methods: {
+    setView() {
+      if (this.refund_status == -10) {
+        this.query_shouhou_order(); //可申请订单列表
+      } else {
+        this.query_apply(); //售后申请列表
+      }
+    },
+
+    //售后列表
+    query_shouhou_order() {
+      this.$api("refund_afterSaleList", {
+        ...this.pagination,
+      }).then((res) => {
+        //console.log("退换货列表", res);
+        let {code, data} = res;
+        if (code == 200) {
+          let {list} = data;
+          this.list_order = list;
+        }
+      });
+    },
+
+    //已申请售后列表
+    query_apply() {
+      this.$api("refund_lists", {
+        ...this.pagination,
+        status: this.refund_status, //(0待处理  1已完成  -1无效)
+      }).then((res) => {
+        //console.log("退换货列表", res);
+        let {code, data} = res;
+        if (code == 200) {
+          let {list} = data;
+          list.forEach((v) => {
+            v.is_jifen = v.products.jifen ? 1 : 0;
+          });
+          this.list_refund = list;
+
+          this.count = data.count;
+        }
+      });
+    },
+
+    //分页
+    changePage() {
+      this.setView();
+    },
+
+    //搜索
+    click_order_search() {
+      this.setView();
+    },
+
+    updateView() {
+      this.setView();
+    },
+
+    //申请售后
+    onApplyRefund(item) {
+      this.$router.push({
+        path: "/orderRefund", //refundType
+        query: {
+          id: item.id,
+        },
+      });
+    },
+
+    //售后进度
+    onRefundServiceDetail(refund) {
+      this.$router.push({
+        path: "/refundDetail",
+        query: {
+          id: refund.id,
+        },
+      });
+    },
+
+    //订单详情
+    refund_detail(item) {
+      this.$router.push({
+        // path: "/refundDetail",
+        path: "/refundProgress",
+        query: {
+          refund_id: item.id,
+        },
+      });
+    },
+
+    onClickLeft() {
+      this.$router.push({
+        path: "/user",
+      });
+    },
+
+    //售后申请
+    refund_apply(item) {
+      //console.log({ ...item });
+      this.$router.push(`/refundType?order_id=${item.order_id}&inventoryId=${item.inventoryId}`);
+    },
+  },
+};
+</script>
+
+
+<style scoped lang="less">
+.page {
+  padding: 0;
+
+  .main-title {
+    margin-bottom: 20px;
+    padding: 0 32px;
+    text-align: left;
+    height: 56px;
+    line-height: 56px;
+    background: #ffffff;
+    font-size: 16px;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+  }
+
+  .page-ctx {
+    padding: 24px 32px;
+    background: #fff;
+  }
+
+}
+
+
+.ctx-box {
+  margin-top: 30px;
+}
+
+
+.tab-box {
+  padding-right: 20px;
+  .flex-between();
+  background: #ffffff;
+  // border: 1px solid #cccccc;
+
+  .tab-list {
+    .flex();
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #7d7d7d;
+
+    .tab-item {
+      position: relative;
+      // min-width: 96px;
+      height: 48px;
+      line-height: 48px;
+      cursor: pointer;
+      margin-right: 40px;
+
+      .number {
+        color: #4CA5E4;
+      }
+
+      &.active {
+        // background: #4CA5E4;
+        // color: #fff;
+        font-weight: bold;
+        color: #4CA5E4;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: #4CA5E4;
+        }
+      }
+    }
+  }
+
+  .search-box {
+    .flex();
+    min-width: 260px;
+    height: 32px;
+    background: #f9f9f9;
+
+    input {
+      background: #f9f9f9;
+      flex: 2;
+      height: 100%;
+      border: 1px solid #e2e2e2;
+      border-right: none;
+      outline: none;
+      padding-left: 10px;
+      font-size: 12px;
+    }
+
+    button {
+      width: 50px;
+      height: 32px;
+      background: #ffffff;
+      border: 1px solid #e2e2e2;
+      color: #7d7d7d;
+
+      &:last-child {
+        border-left: 0;
+      }
+    }
+  }
+}
+</style>

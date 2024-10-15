@@ -1,0 +1,162 @@
+<template>
+  <div class="page">
+    <div
+      class="banner"
+      :style="{ backgroundImage: `url(${bannerList[curBannerIndex]?.img})` }"
+    >
+      <div class="title">{{ bannerList[curBannerIndex].title }}</div>
+      <div class="sub-title">{{ bannerList[curBannerIndex].subTitle }}</div>
+    </div>
+
+    <div class="tab-list">
+      <div
+        class="tab-item"
+        :class="{ active: activeIndex === index }"
+        @click="onTabClick(index)"
+        v-for="(item, index) in tabList"
+        :key="item.id"
+      >
+        <span>{{ item.name }}</span>
+      </div>
+    </div>
+
+    <router-view></router-view>
+  </div>
+</template>
+
+<script>
+import img1 from "@/assets/img/service/banner1.png";
+import img2 from "@/assets/img/service/banner2.png";
+import img3 from "@/assets/img/service/banner3.png";
+import img4 from "@/assets/img/service/banner4.png";
+import img5 from "@/assets/img/service/banner5.png";
+
+export default {
+  name: "service-support",
+  data() {
+    return {
+      activeIndex: 0,
+      activeLeftIndex: 0,
+      tabList: [
+        {
+          id: 1,
+          name: "资料下载",
+          path: "/download-materials",
+        },
+        {
+          id: 2,
+          name: "投诉建议",
+          path: "/complaints-suggestions",
+        },
+        {
+          id: 3,
+          name: "商家合作",
+          path: "/merchant-cooperation",
+        },
+        {
+          id: 4,
+          name: "会员权益",
+          path: "/member-benefits",
+        },
+        {
+          id: 5,
+          name: "技术文章",
+          path: "/technical-article",
+        },
+      ],
+      bannerList: [
+        {
+          id: 1,
+          img: img1,
+          title: "资料下载",
+          subTitle: "科研计算器",
+        },
+        {
+          id: 2,
+          img: img2,
+          title: "投诉建议",
+          subTitle: "科研计算器",
+        },
+        {
+          id: 3,
+          img: img3,
+          title: "商家合作",
+          subTitle: "用激光工具改变生活",
+        },
+        {
+          id: 4,
+          img: img4,
+          title: "会员权益",
+          subTitle: "用激光工具改变生活",
+        },
+        {
+          id: 5,
+          img: img5,
+          title: "技术文章",
+          subTitle: "技术文章内容包括产品参数说明、原理说明，以及产品的应用等",
+        },
+      ],
+      curBannerIndex: 0,
+    };
+  },
+  methods: {
+    onTabClick(index) {
+      this.activeIndex = index;
+      this.$router.push({ path: this.tabList[index].path });
+      this.curBannerIndex = index;
+    },
+  },
+  created() {
+    const path = this.$route.path;
+    const index = this.tabList.findIndex((item) => item.path === path);
+    this.activeIndex = index;
+    this.curBannerIndex = index;
+  },
+};
+</script>
+
+<style scoped lang="less">
+.banner {
+  width: 100%;
+  height: 500px;
+  padding-top: 174px;
+  .title {
+    font-weight: bold;
+    font-size: 36px;
+    color: #ffffff;
+    text-align: center;
+  }
+  .sub-title {
+    margin-top: 24px;
+    font-weight: 400;
+    font-size: 18px;
+    color: #ffffff;
+    text-align: center;
+  }
+}
+
+.tab-list {
+  height: 80px;
+  padding-left: 280px;
+  display: flex;
+  gap: 79px;
+  align-items: center;
+  box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.16);
+  .tab-item {
+    width: 81px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    line-height: 30px;
+    cursor: pointer;
+    &.active {
+      font-weight: bold;
+      color: #fff;
+      color: #27417c;
+      border-bottom: 3px solid #27417c;
+    }
+  }
+}
+</style>

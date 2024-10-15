@@ -2,7 +2,6 @@
   <div class="sms-box">
     <div class="input-box">
       <span class="label">验证码</span>
-      <!-- <img src="/common/icon-code.png" alt="" /> -->
       <input type="text" placeholder="请输入验证码" v-model="form.code" />
 
       <button
@@ -62,7 +61,7 @@ export default {
 
     //修改绑定邮箱
     retrieveByEmail() {
-      this.$api("users_sendSms", {
+      this.$api("login_phoneYzm", {
         phone: this.form.phone,
       }).then((res) => {
         //console.log("验证码", res);
@@ -108,7 +107,7 @@ export default {
   .label {
     display: inline-block;
     width: 90px; /*no */
-    border-right: 1px solid #ccc;
+    border-right: 1px solid #eee;
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: 400;
@@ -139,7 +138,7 @@ export default {
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: #4CA5E4;
+  color: #EA3200;
   font-size: 1.4rem;
 
   &.disabled {
@@ -196,7 +195,7 @@ export default {
     right: 0;
     .flex();
     cursor: pointer;
-    color: #4CA5E4;
+    color: #EA3200;
 
     &.disabled {
       color: #ccc;
