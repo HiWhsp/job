@@ -25,7 +25,7 @@
         </div>
         <div class="item">
           <span class="text required">邮政编码</span>
-          <el-input clearable v-model="form.zipCode" placeholder="请输入邮政编码"></el-input>
+          <el-input clearable v-model="form.phone" placeholder="请输入邮政编码"></el-input>
         </div>
         <div class="item">
           <span class="text"></span>

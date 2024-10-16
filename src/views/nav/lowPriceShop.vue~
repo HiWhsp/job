@@ -57,7 +57,7 @@ export default {
         getList() {
             this.$api("product_plist", {
                 ...this.pagination,
-                channelId: 824,
+                channelId: 0,
                 orderType: 0,
             }).then(res => {
                 if (res.code == 200) {
@@ -77,11 +77,11 @@ export default {
     <div class="page">
         <div class="wrap">
             <div class="top-img">
-                <img src="../../static/prod/newMonthShop_back.png" alt="">
+                <img src="../../static/prod/lowPriceShop_back.png" alt="">
             </div>
             <div class="center-img">
                 <!--        <img src="../../static/prod/discount.png" alt="">-->
-                <p>每月新款</p>
+                <p>低价爆款专区</p>
             </div>
             <div class="commodity-list">
                 <!--        <div class="nav-bar">-->
@@ -105,6 +105,7 @@ export default {
                         </div>
                     </div>
                 </div>
+
                 <el-empty v-if="!count" description="暂无数据..."></el-empty>
 
                 <div class="pagination-box" v-if="count" style="margin-top: 50px;">
@@ -120,7 +121,7 @@ export default {
 <style scoped lang="less">
 .page {
   width: 100%;
-  background-color: #F8C268;
+  background-color: #6BA9C8;
   padding: 0 0 51px 0;
 }
 

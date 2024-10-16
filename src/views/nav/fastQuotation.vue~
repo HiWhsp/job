@@ -373,7 +373,7 @@ export default {
                                 <img src="@/static/account/down.png" alt="">
                               </div>
                             </div>
-                            <span v-if="item.fileList.length" style="color: #A66600;" class="ellipsis-2" slot="reference"
+                            <span v-if="item.fileList.length" style="color: #A66600;" slot="reference"
                                   @click="visible = true">{{ item.fileList[0].name }}</span>
                           </el-popover>
 
@@ -551,7 +551,7 @@ export default {
                                 <img src="@/static/account/down.png" alt="">
                               </div>
                             </div>
-                            <span v-if="item.fileList.length" style="color: #A66600;" class="ellipsis-2" slot="reference"
+                            <span v-if="item.fileList.length" style="color: #A66600;" slot="reference"
                                   @click="visible = true">{{ item.fileList[0].name }}</span>
                           </el-popover>
 

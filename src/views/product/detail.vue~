@@ -339,7 +339,7 @@ export default {
       }
 
 
-      let info = this.detail;
+      let info = this.info;
       let sku_item = this.sku_select;
       let data_format = [{
         title: info.title,

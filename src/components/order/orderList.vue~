@@ -144,7 +144,7 @@ export default {
         path: '/review-submit',
         query: {
           orderId: item.id,
-          inventoryId: item.products[0].id
+          inventoryId: item.products
         }
       });
     },

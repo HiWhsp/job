@@ -137,58 +137,7 @@ export default {
             }).then((res) => {
                 let {code, data} = res;
                 if (code == 200) {
-                    this.list_yhq = [{
-                        "id": 1,
-                        "yhqId": "6284ab9e084029411",
-                        "userId": 1,
-                        "jiluId": 1,
-                        "title": "新店开业",
-                        "man": 100,
-                        "jian": 50,
-                        "status": 1,
-                        "startTime": "2022-05-17",
-                        "endTime": "2023-06-18",
-                        "dtTime": "2022-05-18 16:17:34",
-                        "orderId": 38,
-                        "tiaojian": "通用",
-                        "image": "",
-                        "color": null,
-                        "content": null
-                    }, {
-                        "id": 1,
-                        "yhqId": "6284ab9e084029411",
-                        "userId": 1,
-                        "jiluId": 1,
-                        "title": "新店开业",
-                        "man": 100,
-                        "jian": 50,
-                        "status": 2,
-                        "startTime": "2022-05-17",
-                        "endTime": "2023-06-18",
-                        "dtTime": "2022-05-18 16:17:34",
-                        "orderId": 38,
-                        "tiaojian": "通用",
-                        "image": "",
-                        "color": null,
-                        "content": null
-                    }, {
-                        "id": 1,
-                        "yhqId": "6284ab9e084029411",
-                        "userId": 1,
-                        "jiluId": 1,
-                        "title": "新店开业",
-                        "man": 100,
-                        "jian": 50,
-                        "status": 3,
-                        "startTime": "2022-05-17",
-                        "endTime": "2023-06-18",
-                        "dtTime": "2022-05-18 16:17:34",
-                        "orderId": 38,
-                        "tiaojian": "通用",
-                        "image": "",
-                        "color": null,
-                        "content": null
-                    }];
+                    this.list_yhq = data.list;
                 }
             });
         },

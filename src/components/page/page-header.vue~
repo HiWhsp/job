@@ -50,7 +50,7 @@
                         numList.message
                         }})</span></div>
                     <div class="col"></div>
-                    <div @click="goUrl({url: '/pointsMall'})">积分商城</div>
+                    <div @click="goUrl({url: '/pointsMall'})">积分商城</span></div>
                     <div class="col"></div>
                     <div @click="goUrl({url: '/about'})">关于富俊</div>
                     <div class="col"></div>

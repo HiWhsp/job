@@ -36,7 +36,7 @@
                     </div>
                   </el-image>
                   <div class="box-title">
-                    <div class="goods-title" @click="mix_to_product(item)">
+                    <div class="goods-title ellipsis-1" @click="mix_to_product(item)">
                       {{ item.title }}
                     </div>
                     <div class="sku-info">

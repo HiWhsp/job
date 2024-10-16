@@ -54,7 +54,7 @@
           <div class="service">
             <p class="service-title">关于我们</p>
             <a href="" class="service-item" href="/about">关于富俊</a>
-            <a href="" class="service-item" href="/help">帮助中心</a>
+            <a href="" class="service-item" @click="goUrl('help')">帮助中心</a>
             <a href="" class="service-item">收藏网址</a>
           </div>
           <div class="service">

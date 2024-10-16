@@ -1,9 +1,45 @@
 <script>
 export default {
   name: "xinwen",
+  data() {
+    return {
+      current: 1,
+      count: 0,
+      dataList: [],
+      params: {
+        channelId: 50,
+        page: 1,
+        pageNum: 12,
+        isIndex: 0,
+        orderType: 0
+      }
+    }
+  },
+  mounted() {
+    this.getList()
+  },
   methods: {
-    go_url() {
-      this.$router.push('/xinhun-detail')
+    go_url(item, index) {
+      const start = this.dataList[index - 1] ? this.dataList[index - 1] : null;
+      const end = this.dataList[index + 1] ? this.dataList[index + 1] : null;
+      sessionStorage.setItem("productsToBuy", JSON.stringify([start, end]));
+      sessionStorage.setItem("allToBuy", JSON.stringify(this.dataList));
+      this.$router.push('/xinhun-detail?id=' + item.id)
+    },
+    getList() {
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'news_lists',
+          ...this.params
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.dataList = res.data.list;
+          this.count = res.data.count;
+        }
+      })
     }
   }
 }
@@ -12,18 +48,24 @@ export default {
 <template>
   <div class="content">
     <div class="item-wrap">
-      <div class="item" v-for="item in 9" :key="item" @click="go_url">
-        <img src="@/static/about/5.png" alt="">
+      <div class="item" v-for="(item, index) in dataList" :key="item.id" @click="go_url(item, index)">
+        <img :src="item.thumb" alt="">
         <div class="info flex">
-          <p class="title ellipsis-1">STAF直线滑轨采用行业唯一的共轨设计</p>
+          <p class="title ellipsis-1">{{ item.title }}</p>
           <div class="desc flex flex-between">
-            <div class="date flex"><img src="@/static/about/date.png" alt="">2024-10-10</div>
+            <div class="date flex"><img src="@/static/about/date.png" alt="">{{ item.dtTime }}</div>
             <div class="right">
               <img src="@/static/about/right.png" alt="" class="no-active">
               <img src="@/static/about/right-active.png" alt="" class="active">
             </div>
           </div>
         </div>
+      </div>
+
+      <div v-if="count" class="pagination-box" style="margin-top: 40px; text-align: right;">
+        <el-pagination background layout="total, prev, pager, next" @current-change="getList"
+                       :current-page.sync="params.page" :page-size="params.pageNum"
+                       :total="count"></el-pagination>
       </div>
     </div>
   </div>
@@ -118,6 +160,13 @@ export default {
         }
       }
     }
+  }
+
+  .pagination-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>

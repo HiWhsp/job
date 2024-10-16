@@ -72,7 +72,7 @@
                                 </el-pagination>
                             </div>
                         </div>
-                      <el-empty v-else description="暂无记录..."></el-empty>
+                      <el-empty v-else description="暂无..."></el-empty>
                     </div>
                 </div>
             </div>

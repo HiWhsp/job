@@ -53,7 +53,7 @@ export default {
         const start = this.productsToBuy[1];
         let end = [];
         for (let i = 0; i < this.allToBuy.length; i++) {
-          if (this.productsToBuy[1].id == this.allToBuy[i].id) {
+          if (this.productsToBuy[0].id == this.allToBuy[i].id) {
             end = this.allToBuy[i + 1] ? this.allToBuy[i + 1] : null;
             sessionStorage.setItem("productsToBuy", JSON.stringify([start, end]));
             sessionStorage.setItem("allToBuy", JSON.stringify(this.allToBuy));

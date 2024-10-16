@@ -82,9 +82,12 @@ export default {
       let obj_qu = {};
       if (this.sheng) {
         obj_sheng = this.list_sheng.find((v) => v.id == this.sheng);
+        this.shi = ''
+        this.qu = ''
       }
       if (this.shi) {
         obj_shi = this.list_shi.find((v) => v.id == this.shi);
+        this.qu = ''
       }
       if (this.qu) {
         obj_qu = this.list_qu.find((v) => v.id == this.qu);

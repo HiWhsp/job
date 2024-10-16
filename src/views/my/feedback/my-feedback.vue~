@@ -39,7 +39,7 @@
                   </div>
                   <div class="it flex">
                     <label for="">回复时间：</label>
-                    <p>{{ item.reply_time }}</p>
+                    <p>{{ item.replyTime }}</p>
                   </div>
                 </div>
               </div>

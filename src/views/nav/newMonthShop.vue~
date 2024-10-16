@@ -57,7 +57,7 @@ export default {
         getList() {
             this.$api("product_plist", {
                 ...this.pagination,
-                channelId: 824,
+                channelId: 0,
                 orderType: 0,
             }).then(res => {
                 if (res.code == 200) {

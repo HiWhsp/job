@@ -218,19 +218,6 @@ z`
                 </div>
               </div>
             </div>
-
-            <!--                  <div class="yhq-select-info">-->
-            <!--                    <b>金额抵用</b>-->
-
-            <!--                    <template v-if="coupon_select.id">-->
-            <!--                      <b class="number">{{ vuex_huobi }}{{ +coupon_select.jian }}</b>, 使用【{{-->
-            <!--                        coupon_select.title-->
-            <!--                      }}】优惠券-->
-            <!--                      1张，优惠-->
-            <!--                      {{ +coupon_select.jian }} 元-->
-            <!--                    </template>-->
-            <!--                    <template v-else> 无</template>-->
-            <!--                  </div>-->
           </div>
         </div>
       </div>
@@ -718,7 +705,7 @@ export default {
           });
           this.list_address = data;
 
-          let obj = data.find((v) => v.if_default) || {};
+          let obj = data.find((v) => v.moren) || {};
           this.address_selected = obj || {};
         }
       })
@@ -1026,7 +1013,7 @@ export default {
         },
       }).then((res) => {
         alert(res)
-        let { code, message } = res;
+        let {code, message} = res;
         if (code == 200) {
           this.toPaySuccess();
         } else {

@@ -445,7 +445,7 @@ export default {
     },
     to_review(item) {
       this.$router.push({
-        path: '/order-review-submit',
+        path: '/review-submit',
         query: {
           orderId: this.orderId,
           inventoryId: item.id

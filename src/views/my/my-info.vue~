@@ -182,7 +182,7 @@ export default {
         return;
       }
 
-      if (!this.form.area) {
+      if (!this.form.address) {
         alertErr("请填写所在地区");
         return;
       }
