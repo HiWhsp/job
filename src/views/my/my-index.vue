@@ -30,13 +30,13 @@
           </div>
           <div class="item" @click="$router.push('/order-list?order_status=1')">
             <div class="val">
-              <span>{{ user_index.order_num_1 || "0" }}</span>
+              <span>{{ my_info.orderNeedPay || "0" }}</span>
             </div>
             <div class="label">待付款</div>
           </div>
           <div class="item" @click="$router.push('/order-list?order_status=3')">
             <div class="val">
-              <span>{{ user_index.order_num_3 || "0" }}</span>
+              <span>{{ my_info.orderNeedShouhuo || "0" }}</span>
             </div>
             <div class="label">待收货</div>
           </div>
@@ -89,7 +89,7 @@ export default {
       count: 0,
 
       my_info: {},
-      user_index: {}, //用户首页数据
+      // user_index: {}, //用户首页数据
       list_order: [],
       list_goods: [],
 
@@ -131,20 +131,20 @@ export default {
     },
 
     //用户主页数据
-    query_userIndex() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "users_index",
-        },
-      }).then((res) => {
-        let {code, data} = res;
-        if (res.code == 200) {
-          this.user_index = res.data;
-        }
-      });
-    },
+    // query_userIndex() {
+    //   this.$api({
+    //     url: "/service.php",
+    //     method: "get",
+    //     data: {
+    //       action: "users_index",
+    //     },
+    //   }).then((res) => {
+    //     let {code, data} = res;
+    //     if (res.code == 200) {
+    //       this.user_index = res.data;
+    //     }
+    //   });
+    // },
 
     //订单查询
     query_order() {

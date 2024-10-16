@@ -47,7 +47,7 @@
                     </div>
                     <div class="col"></div>
                     <div @click="goUrl({url: '/order-list'})">我的订单<span class="color-a6">({{
-                        numList.message
+                        userInfo.orderNum
                         }})</span></div>
                     <div class="col"></div>
                     <div @click="goUrl({url: '/pointsMall'})">积分商城</div>

@@ -11,7 +11,24 @@
         >
             <div class="modal-inner">
                 <div class="img-box">
-                    <img :src="detail.image" alt=""/>
+                    <img :src="detail.images ? detail.images[0] : ''" alt=""/>
+                </div>
+
+                <div class="section-ctx">
+                    <div class="address-list p-l-30">
+                        <div class="address-item" v-for="(item, index) in list_address" :key="index"
+                             :class="{ active: item.id == address_selected.id }" @click="do_toggle_address(item)">
+                            <div class="address-top">{{ item.name_phone }}</div>
+                            <div class="address-bottom">
+                                {{ item.full_addr }}
+                            </div>
+                            <img src="@/static/order/addr-select.png" alt="" class="marker"/>
+                        </div>
+                        <div v-if="list_address.length == 0" class="empty-dev">还没有收件地址</div>
+                    </div>
+                    <!--                    <div class="btn-box p-l-30">-->
+                    <!--                        <button class="btn-ripple" @click="open_addr_add()">+ 新增地址</button>-->
+                    <!--                    </div>-->
                 </div>
                 <!-- <div class="tip">请您输入要兑换的积分商品数量。</div> -->
                 <div class="form-box">
@@ -31,6 +48,7 @@
 
 <script>
 import {mapState} from "vuex";
+import {SHOP_TYPE} from "@/config/env";
 
 export default {
     name: "commonShare",
@@ -42,6 +60,8 @@ export default {
             // showModal: true,
             number: 1,
             detail: {},
+            address_selected: {},
+            list_address: []
         };
     },
     computed: {
@@ -63,11 +83,43 @@ export default {
 
     methods: {
         init(data) {
-            //console.log("设置余额密码", { ...data });
             this.detail = data;
             this.showModal = true;
+            this.query_address();
         },
+        //获取地址列表
+        query_address() {
+            this.$api({
+                url: '/service.php',
+                method: 'get',
+                data: {
+                    action: 'userAddress_lists',
+                    page: 1,
+                    pagenum: 20
+                },
+            }).then(res => {
+                if (res.code == 200) {
+                    let data = res.data
+                    data.forEach((v) => {
+                        if (SHOP_TYPE == 'foreign') {//海外商城
+                            v.full_addr = [v.country, v.province, v.city, v.area, v.address].filter(v => !!v).join(',');
+                            v.name_phone = `${v.firstName} ${v.lastName} (${v.phone})`
+                        } else {
+                            v.full_addr = [v.country, v.province, v.city, v.area, v.address].filter(v => !!v).join(',');
+                            v.name_phone = `${v.name} (${v.phone})`
+                        }
+                    });
+                    this.list_address = data;
 
+                    let obj = data.find((v) => v.moren) || {};
+                    this.address_selected = obj || {};
+                }
+            })
+        },
+        //选择收货地址
+        do_toggle_address(item) {
+            this.address_selected = item;
+        },
         onModal_close() {
             this.showModal = false;
         },
@@ -75,6 +127,10 @@ export default {
         confirm_duihuan() {
             if (!this.number) {
                 alertErr("请输入要兑换的积分商品数量");
+                return;
+            }
+            if (!this.address_selected.id) {
+                alertErr("请选择收货地址");
                 return;
             }
 
@@ -86,6 +142,7 @@ export default {
                 {
                     num: this.number, //数量
                     inventoryId,
+                    addressId: this.address_selected.id,
                 };
 
             this.$api("jiFen_order", {
@@ -243,6 +300,120 @@ export default {
 
   &.disabled {
     color: #ccc;
+  }
+}
+
+.section-ctx {
+  margin-top: 24px;
+  margin-bottom: 20px;
+
+  .address-list {
+    display: flex;
+    overflow: hidden;
+    overflow-x: auto;
+    width: 500px;
+    height: 160px;
+
+    .address-item {
+      position: relative;
+      min-width: 250px;
+      height: 100px;
+      background: #FFFFFF;
+      border: 2px solid @theme;
+      margin-top: 20px;
+      margin-right: 45px;
+      min-height: 130px;
+      padding: 15px 20px;
+      border-radius: 4px 4px 4px 4px;
+      overflow: hidden;
+      cursor: pointer;
+
+
+      &:nth-child(3n) {
+        margin-right: 0;
+      }
+
+      &:nth-child(-n + 3) {
+        margin-top: 0;
+      }
+
+      &.active {
+        border: 2px solid @theme;
+
+        .marker {
+          display: block;
+        }
+      }
+
+      .marker {
+        position: absolute;
+        right: -1px;
+        bottom: -1px;
+        display: none;
+      }
+
+      .address-top {
+        padding-bottom: 15px;
+        border-bottom: 1px solid #d5d8de;
+        font-size: 14px;
+        font-family: Roboto, Roboto;;
+        font-weight: 400;
+        color: #000000;
+      }
+
+      .address-bottom {
+        padding-top: 15px;
+        font-size: 14px;
+        font-family: Roboto, Roboto;;
+        font-weight: 400;
+        color: #999999;
+      }
+    }
+
+    .empty-dev {
+      font-family: Roboto, Roboto;
+      font-weight: 400;
+      font-size: 16px;
+      color: #333333;
+      font-style: normal;
+      text-transform: none;
+    }
+  }
+
+  .btn-box {
+    margin-top: 25px;
+
+    button {
+      width: 124px;
+      height: 32px;
+      background: #FFFFFF;
+      border-radius: 2px 2px 2px 2px;
+      border: 1px solid @theme;
+      font-size: 14px;
+      font-weight: normal;
+      color: @theme;
+    }
+  }
+
+  .invoice-info {
+    padding-left: 120px;
+    margin-top: 31px;
+
+    .info-item {
+      .flex();
+      margin-top: 26px;
+
+      .info-label {
+        width: 100px;
+        text-align: right;
+        margin-right: 18px;
+        color: #666;
+
+        span {
+          color: #FF5F00;
+        }
+      }
+    }
   }
 }
 </style>

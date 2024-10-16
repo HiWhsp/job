@@ -147,7 +147,7 @@ export default {
       <el-breadcrumb separator=">">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item><a href="/pointsMall">积分商城</a></el-breadcrumb-item>
-        <el-breadcrumb-item><a>FUS-U30系列28电机 本体宽30mm</a></el-breadcrumb-item>
+        <el-breadcrumb-item><a>{{ detail.title }}</a></el-breadcrumb-item>
       </el-breadcrumb>
     </div>
 
@@ -173,7 +173,7 @@ export default {
               <div class="other-box">
                 <div class="btn-box">
                   <button class="btn-ripple flex-center btn-buy" @click="payNow(detail)">
-                    <img src="@/static/order/jifen.png" alt="">立即购买
+                    <img src="@/static/order/jifen.png" alt="">立即兑换
                   </button>
                 </div>
               </div>
