@@ -1,90 +1,104 @@
 <template>
-  <div class="lunbo-box">
-    <div class="zhutu-wrap">
-      <div class="zhutu-inner" @mouseover="showMaskModal = true" @mouseout="showMaskModal = false">
-        <el-carousel ref="carousel" :autoplay="false" :interval="4000" @change="onCarouseChange" height="100%">
-          <el-carousel-item v-for="item in imageViewList" :key="item">
-            <div class="img-box">
-              <el-image :src="item" :preview-src-list="imageViewList"></el-image>
+    <div class="lunbo-box">
+        <div class="zhutu-wrap">
+            <div class="zhutu-inner" @mouseover="showMaskModal = true" @mouseout="showMaskModal = false">
+                <el-carousel ref="carousel" :autoplay="false" :interval="4000" @change="onCarouseChange" height="100%">
+                    <el-carousel-item v-for="item in imageViewList" :key="item">
+                        <div class="img-box">
+                            <el-image :src="item" :preview-src-list="imageViewList"></el-image>
+                        </div>
+                    </el-carousel-item>
+                </el-carousel>
             </div>
-          </el-carousel-item>
-        </el-carousel>
-      </div>
-    </div>
+        </div>
 
-    <!-- <div class="mask-modal" v-if="showMaskModal">
-      <div class="mask-inner">
-        <img :src="imageList[activeSwipeIndex]" alt />
-      </div>
-    </div> -->
+        <!--        <div class="mask-modal" v-if="showMaskModal">-->
+        <!--            <div class="mask-inner">-->
+        <!--                <img :src="imageList[activeSwipeIndex]" alt/>-->
+        <!--            </div>-->
+        <!--        </div>-->
 
-    <!-- 缩略图 -->
-    <div class="slt-wrap">
-      <div class="lunbo-arrow arrow-left" @click="toPrev()">
-        <i class="el-icon-arrow-left"></i>
-      </div>
-      <div class="lunbo-arrow arrow-right" @click="toNext()">
-        <i class="el-icon-arrow-right"></i>
-      </div>
+        <div class="tip">图片仅供参考</div>
 
-      <div class="lunbo-slt-list">
-        <div class="lunbo-slt-item cover hidden" v-for="(item, index) in imageList" :key="index" :class="{
+        <!-- 缩略图 -->
+        <div class="slt-wrap">
+            <div class="lunbo-arrow arrow-left" @click="toPrev()">
+                <i class="el-icon-arrow-left"></i>
+            </div>
+            <div class="lunbo-arrow arrow-right" @click="toNext()">
+                <i class="el-icon-arrow-right"></i>
+            </div>
+
+            <div class="lunbo-slt-list">
+                <div class="lunbo-slt-item cover hidden" v-for="(item, index) in imageList" :key="index" :class="{
                     active: item.index == activeSwipeIndex,
                     shown: Math.floor(item.index / 6) == shownGroupIndex,
                 }" @click="onClickSwipeItem(item.index)">
-          <img :src="item.image"/>
+                    <img :src="item.image"/>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <!-- 下载 -->
+        <div class="down flex flex-center">
+            <div class="it flex flex-center pointer">
+                <img src="@/static/prod/lock_pdf.png" alt="pdf">
+                <span>PDF图档</span>
+            </div>
+            <div class="it flex flex-center pointer">
+                <img src="@/static/prod/down.png" alt="down">
+                <span>3D模型</span>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: "carouselComponent",
-  components: {},
-  props: ["imageList"],
-  data() {
-    return {
-      showMaskModal: false, //是否展示模态框
-      activeSwipeIndex: 0, //轮播图指示器
-    };
-  },
-  computed: {
-    imageViewList() {
-      return this.imageList.map((v) => v.image);
+    name: "carouselComponent",
+    components: {},
+    props: ["imageList"],
+    data() {
+        return {
+            showMaskModal: false, //是否展示模态框
+            activeSwipeIndex: 0, //轮播图指示器
+        };
     },
+    computed: {
+        imageViewList() {
+            return this.imageList.map((v) => v.image);
+        },
 
-    shownGroupIndex() {
-      return Math.floor(this.activeSwipeIndex / 6);
-    },
+        shownGroupIndex() {
+            return Math.floor(this.activeSwipeIndex / 6);
+        },
 
-    imageListShown() {
-      let group = Math.floor(this.activeSwipeIndex / 6);
-      let start = this.activeSwipeIndex * group;
-      let end = this.activeSwipeIndex * group + 6;
-      return this.imageList.slice(start, end);
+        imageListShown() {
+            let group = Math.floor(this.activeSwipeIndex / 6);
+            let start = this.activeSwipeIndex * group;
+            let end = this.activeSwipeIndex * group + 6;
+            return this.imageList.slice(start, end);
+        },
     },
-  },
-  methods: {
-    //幻灯片切换
-    onCarouseChange(index_curr, index_prev) {
-      //console.log(index_curr, index_prev);
-      this.activeSwipeIndex = index_curr;
-    },
+    methods: {
+        //幻灯片切换
+        onCarouseChange(index_curr, index_prev) {
+            //console.log(index_curr, index_prev);
+            this.activeSwipeIndex = index_curr;
+        },
 
-    //手段切换幻灯片
-    onClickSwipeItem(index) {
-      this.$refs.carousel.setActiveItem(index);
-    },
+        //手段切换幻灯片
+        onClickSwipeItem(index) {
+            this.$refs.carousel.setActiveItem(index);
+        },
 
-    toPrev() {
-      this.$refs.carousel.prev();
+        toPrev() {
+            this.$refs.carousel.prev();
+        },
+        toNext() {
+            this.$refs.carousel.next();
+        },
     },
-    toNext() {
-      this.$refs.carousel.next();
-    },
-  },
 };
 </script>
 
@@ -174,7 +188,6 @@ export default {
   margin-left: 66px;
   margin-right: 66px;
   width: 100%;
-  margin-top: 36px;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -211,6 +224,17 @@ export default {
   }
 }
 
+.tip {
+  font-family: Roboto, Roboto;
+  font-weight: 400;
+  font-size: 12px;
+  color: #77797B;
+  line-height: 46px;
+  text-align: center;
+  font-style: normal;
+  text-transform: none;
+}
+
 .slt-wrap {
   position: relative;
 }
@@ -244,6 +268,30 @@ export default {
     font-size: 20px;
     font-size: 14px;
     color: #aaa;
+  }
+}
+
+.down {
+  margin-top: 22px;
+
+  .it {
+    padding: 2px 5px;
+    border-radius: 2px;
+    border: 1px solid #E6E4E1;
+    margin-right: 15px;
+
+    img {
+      width: 15px;
+      height: 15px;
+      margin-right: 3px;
+    }
+
+    span {
+      font-family: Roboto, Roboto;
+      font-weight: 400;
+      font-size: 14px;
+      color: #77797B;
+    }
   }
 }
 </style>

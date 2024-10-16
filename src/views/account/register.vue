@@ -1,91 +1,95 @@
 <template>
-  <div class="page">
-    <modalTerms ref="modalTerms"/>
-    <!--    <modalRich ref="modalRich"/>-->
-    <div class="mask"></div>
+    <div class="page">
+        <modalTerms ref="modalTerms"/>
+        <!--    <modalRich ref="modalRich"/>-->
+        <div class="mask"></div>
 
-    <div class="center">
-      <div class="inner">
-        <div class="mode-toggle">
-          <img v-if="mode == '账号密码'" @click="mode = '微信扫码'" src="../../static/account/login-qrcode.png" alt=""/>
-          <img v-if="mode == '微信扫码'" @click="mode = '账号密码'" src="../../static/account/login-pc.png" alt=""/>
-        </div>
-
-        <div class="input-wrap">
-          <div class="tab-box">
-            <div
-                class="tab-item"
-                :class="tabType == 'PASS' ? 'active' : ''"
-                @click="tabType = 'PASS'"
-            >
-              {{ mode == "账号密码" ? "手机号注册" : "微信注册" }}
-            </div>
-          </div>
-          <!--          手机号注册-->
-          <template v-if="mode == '账号密码'">
-            <div class="input-box">
-              <span>手机号</span>
-              <input type="text" placeholder="请输入手机号码" v-model="form.phone"/>
-            </div>
-
-            <!-- 验证码 -->
-            <sms_phone :form="form"/>
-
-            <div class="input-box">
-              <span>设置密码</span>
-              <!-- <img src="@img/other/icon-lock.png" alt="" /> -->
-              <input type="password" placeholder="请输入密码" v-model="form.pass"/>
-            </div>
-
-            <div class="input-box">
-              <span>确认密码</span>
-              <!-- <img src="@img/other/icon-lock.png" alt="" /> -->
-              <input
-                  type="password"
-                  placeholder="请输入密码"
-                  v-model="form.confirm_pass"
-              />
-            </div>
-
-            <div class="btn-box">
-              <button class="btn-ripple" @click="retrieve_submit">确定</button>
-            </div>
-
-            <div class="register-box">
-              <!-- <router-link to="/">回到主页 ></router-link> -->
-              <span> <router-link to="/login">已有账号，去登录 ></router-link> </span>
-            </div>
-
-            <div class="terms-box">
-              <!-- 登录即代表同意 <router-link to="/">《用户协议》</router-link> 与 <router-link to="/">《隐私政策》</router-link> -->
-              登录注册即表示同意 <span @click="terms_open(83)">《隐私政策》</span>
-            </div>
-          </template>
-          <!-- 扫码登录 -->
-          <template v-else>
-            <div class="qrcode-cit flex">
-              <div class="title">使用微信扫码后点击【关注公众号】注册账号</div>
-              <div class="qrcode-box">
-                <img src="../../static/account/demo-code.png" alt=""/>
-                <!--                <div ref="qrCodeUrl" class="erweima"></div>-->
-              </div>
-              <div class="text-box flex">
-                <div class="title flex">
-                  <div class="col"></div>
-                  <span>其他注册方式</span>
-                  <div class="col"></div>
+        <div class="center">
+            <div class="inner">
+                <div class="mode-toggle">
+                    <img v-if="mode == '账号密码'" @click="mode = '微信扫码'"
+                         src="../../static/account/login-qrcode.png" alt=""/>
+                    <img v-if="mode == '微信扫码'" @click="mode = '账号密码'" src="../../static/account/login-pc.png"
+                         alt=""/>
                 </div>
-                <div class="check flex pointer" @click="mode = '账号密码'">
-                  <img src="../../static/account/phone.png" alt="">
-                  <span>手机号注册</span>
+
+                <div class="input-wrap">
+                    <div class="tab-box">
+                        <div
+                                class="tab-item"
+                                :class="tabType == 'PASS' ? 'active' : ''"
+                                @click="tabType = 'PASS'"
+                        >
+                            {{ mode == "账号密码" ? "手机号注册" : "微信注册" }}
+                        </div>
+                    </div>
+                    <!--          手机号注册-->
+                    <template v-if="mode == '账号密码'">
+                        <div class="input-box">
+                            <span>手机号</span>
+                            <input type="text" placeholder="请输入手机号码" v-model="form.phone"/>
+                        </div>
+
+                        <!-- 验证码 -->
+                        <sms_phone :form="form"/>
+
+                        <div class="input-box">
+                            <span>设置密码</span>
+                            <!-- <img src="@img/other/icon-lock.png" alt="" /> -->
+                            <input type="password" placeholder="请输入密码" v-model="form.pass"/>
+                        </div>
+
+                        <div class="input-box">
+                            <span>确认密码</span>
+                            <!-- <img src="@img/other/icon-lock.png" alt="" /> -->
+                            <input
+                                    type="password"
+                                    placeholder="请输入密码"
+                                    v-model="form.confirm_pass"
+                            />
+                        </div>
+
+                        <div class="btn-box">
+                            <button class="btn-ripple" @click="retrieve_submit">确定</button>
+                        </div>
+
+                        <div class="register-box">
+                            <!-- <router-link to="/">回到主页 ></router-link> -->
+                            <span> <router-link to="/login">已有账号，去登录 ></router-link> </span>
+                        </div>
+
+                        <div class="terms-box">
+                            <el-checkbox v-model="agreed"></el-checkbox>
+                            我已认真阅读并同意 <span>《用户协议》</span>和<span>《隐私政策》</span>
+                        </div>
+                    </template>
+                    <!-- 扫码登录 -->
+                    <template v-else>
+                        <div class="qrcode-cit flex">
+                            <div class="title">
+                                <img src="@/static/account/login-wx.png" alt="">使用微信扫码后点击【关注公众号】注册账号
+                            </div>
+                            <div class="qrcode-box">
+                                <img src="../../static/account/demo-code.png" alt=""/>
+                                <!--                <div ref="qrCodeUrl" class="erweima"></div>-->
+                            </div>
+                            <div class="text-box flex">
+                                <div class="title flex">
+                                    <div class="col"></div>
+                                    <span>其他注册方式</span>
+                                    <div class="col"></div>
+                                </div>
+                                <div class="check flex pointer" @click="mode = '账号密码'">
+                                    <img src="../../static/account/phone.png" alt="">
+                                    <span>手机号注册</span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
-              </div>
             </div>
-          </template>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -98,82 +102,88 @@ import modalTerms from "@/components/modals/modalTerms.vue"; //协议弹窗
 import {mapState} from "vuex";
 
 export default {
-  name: "login",
-  components: {
-    sms_phone,
-    modalTerms,
-    // modalRich,
-  },
-  data() {
-    return {
-      mode: "账号密码", //微信扫码
-      tabType: "PASS", //登录方式
-      agreed: false,
+    name: "login",
+    components: {
+        sms_phone,
+        modalTerms,
+        // modalRich,
+    },
+    data() {
+        return {
+            mode: "账号密码", //微信扫码
+            tabType: "PASS", //登录方式
+            agreed: false,
 
-      form: {
-        phone: "",
-        code: "",
-        pass: "",
-        confirm_pass: "",
-      },
-    };
-  },
-  computed: {
-    ...mapState(["logo"]),
-  },
-  created() {
-  },
-
-  methods: {
-    terms_open(id) {
-      this.$refs.modalRich.init(id);
+            form: {
+                phone: "",
+                code: "",
+                pass: "",
+                confirm_pass: "",
+            },
+        };
+    },
+    computed: {
+        ...mapState(["logo"]),
+    },
+    created() {
     },
 
-    retrieve_submit() {
-      let reg_phone = /^1[3-9]\d{9}$/;
-      let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
+    methods: {
+        terms_open(id) {
+            this.$refs.modalRich.init(id);
+        },
 
-      if (!reg_phone.test(this.form.phone)) {
-        alertErr("请输入正确的手机号");
-        return;
-      }
-      if (!this.form.code) {
-        alertErr("请输入验证码");
-        return;
-      }
-      if (!this.form.pass) {
-        alertErr("请输入密码");
-        return;
-      }
-      if (!this.form.confirm_pass) {
-        alertErr("请输入确认密码");
-        return;
-      }
-      if (this.form.pass != this.form.confirm_pass) {
-        alertErr("两次密码不一致");
-        return;
-      }
+        retrieve_submit() {
+            let reg_phone = /^1[3-9]\d{9}$/;
+            let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
 
-      this.$api("login_phoneReg", {
-        ...this.form,
-        invite_id: this.$route.query.invite || "",
-      }).then((res) => {
-        //console.log("注册", res);
-        let {code, data, message} = res;
-        if (code == 1) {
-          this.$router.push("/login");
-        }
-      });
-    },
+            if (!reg_phone.test(this.form.phone)) {
+                alertErr("请输入正确的手机号");
+                return;
+            }
+            if (!this.form.code) {
+                alertErr("请输入验证码");
+                return;
+            }
+            if (!this.form.pass) {
+                alertErr("请输入密码");
+                return;
+            }
+            if (!this.form.confirm_pass) {
+                alertErr("请输入确认密码");
+                return;
+            }
+            if (this.form.pass != this.form.confirm_pass) {
+                alertErr("两次密码不一致");
+                return;
+            }
+            if (!this.agreed) {
+                alertErr("请勾选同意协议");
+                return;
+            }
 
-    //条款
-    onClick_shengming() {
-      this.$router.push("/banquan");
+            this.$api("login_phoneReg", {
+                ...this.form,
+                invite_id: this.$route.query.invite || "",
+            }).then((res) => {
+                //console.log("注册", res);
+                let {code, data, msg} = res;
+                if (code == 1) {
+                    this.$router.push("/login");
+                } else {
+                    alertErr(msg);
+                }
+            });
+        },
+
+        //条款
+        onClick_shengming() {
+            this.$router.push("/banquan");
+        },
+        onClick_yinsi() {
+            this.$router.push("/yinsi");
+        },
     },
-    onClick_yinsi() {
-      this.$router.push("/yinsi");
-    },
-  },
 };
 </script>
 
@@ -379,12 +389,15 @@ export default {
   background: #f5f6f8;
   bottom: 0;
   left: 0;
-  right: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  // padding-left: 40px;
+  padding-left: 40px;
   text-align: center;
+
+  .el-checkbox {
+    margin-right: 5px;
+  }
 
   span {
     cursor: pointer;
@@ -417,6 +430,12 @@ export default {
     color: #333333;
     font-style: normal;
     text-transform: none;
+
+    img {
+      width: 16px;
+      height: 16px;
+      margin-right: 5px;
+    }
   }
 
   .text-box {
@@ -426,7 +445,6 @@ export default {
 
     img {
       width: 32px;
-      margin-right: 10px;
     }
 
     .text {
@@ -443,6 +461,7 @@ export default {
         border: 1px solid #707070;
         opacity: 0.2;
       }
+
       span {
         margin: 0 5px;
       }
@@ -451,6 +470,7 @@ export default {
     .check {
       flex-direction: column;
       margin-top: 20px;
+
       img {
         width: 48px;
         height: 48px;
