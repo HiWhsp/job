@@ -143,7 +143,7 @@ body {
 
 
 .el-rate__icon {
-  color: #F7BB04 !important;
+  //color: #F7BB04 !important;
 }
 
 

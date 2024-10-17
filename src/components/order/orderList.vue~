@@ -27,9 +27,9 @@
               <div class="goods-title" @click="mix_to_product(product_item)">{{ product_item.title }}</div>
               <div class="goods-sku">型号：{{ product_item.keyVals }}</div>
             </div>
-            <div class="box-sku">
-              <div class="goods-sku">{{ product_item.keyVals }}</div>
-            </div>
+<!--            <div class="box-sku">-->
+<!--              <div class="goods-sku">{{ product_item.keyVals }}</div>-->
+<!--            </div>-->
             <div class="box-num">
               {{ product_item.num }}
             </div>
@@ -54,9 +54,9 @@
           <button v-if="item.ifCancel == 1" class="btn-ripple fit-text btn-bg" @click="doCancel(item)">
             取消订单
           </button>
-          <button v-if="item.ifPay == 1" class="btn-ripple fit-text btn-bg" @click="doPay(item)">
-            去支付
-          </button>
+<!--          <button v-if="item.ifPay == 1" class="btn-ripple fit-text btn-bg" @click="doPay(item)">-->
+<!--            去支付-->
+<!--          </button>-->
           <button v-if="item.ifDel == 1" class="btn-ripple fit-text btn-bg" @click="doDelete(item)">
             删除订单
           </button>
@@ -144,7 +144,7 @@ export default {
         path: '/review-submit',
         query: {
           orderId: item.id,
-          inventoryId: item.products
+          inventoryId: item.products[0].id
         }
       });
     },

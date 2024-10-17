@@ -461,7 +461,7 @@ export default {
             <!--      商品图片轮播      -->
             <div class="ctx-left">
               <div class="preview-wrap">
-                <detailLunbo :imageList="detailImages"/>
+                <detailLunbo :imageList="detailImages" :img3D="detail.images3d"/>
               </div>
             </div>
             <!--            规格-->

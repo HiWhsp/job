@@ -339,7 +339,7 @@ export default {
       }
 
 
-      let info = this.info;
+      let info = this.detail;
       let sku_item = this.sku_select;
       let data_format = [{
         title: info.title,
@@ -461,7 +461,7 @@ export default {
             <!--      商品图片轮播      -->
             <div class="ctx-left">
               <div class="preview-wrap">
-                <detailLunbo :imageList="detailImages"/>
+                <detailLunbo :imageList="detailImages" :img3D="detail."/>
               </div>
             </div>
             <!--            规格-->

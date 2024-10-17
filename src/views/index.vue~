@@ -96,11 +96,11 @@
         </div>
       </div>
       <div class="promation-product-box">
-        <el-carousel :interval="500000" arrow="always" height="100%">
-          <el-carousel-item v-for="(item,index) in promationList" :key="index">
+        <el-carousel :interval="500000" arrow="always" height="100%" indicator-position="none">
+          <el-carousel-item v-for="(item,index) in promationList" :key="index" >
             <div class="item-wrap flex">
               <template v-for="it in item">
-                <div class="item pointer" @click="goUrl({url: `/productDetail?id=${it.id}`})">
+                <div class="item pointer" @click="goUrl({url: `/productDetail?id=${it.inventoryId}`})">
                   <img :src="it.thumb" alt="">
                   <div class="pointer">
                     <p class="title">{{ it.title }}</p>
@@ -129,7 +129,7 @@
       </div>
       <div class="list flex">
         <div class="item pointer" v-for="item in product_list" :key="item.id"
-             @click="goUrl({url: `/productDetail?id=${item.id}`})">
+             @click="goUrl({url: `/productDetail?id=${item.inventoryId}`})">
           <img :src="item.thumb" alt="">
           <p class="tit">{{ item.title }}</p>
           <p class="money">￥{{ item.priceSale }}</p>
@@ -145,7 +145,7 @@
       </div>
       <div class="list flex">
         <div class="item pointer" v-for="item in product_list" :key="item.id"
-             @click="goUrl({url: `/productDetail?id=${item.id}`})">
+             @click="goUrl({url: `/productDetail?id=${item.inventoryId}`})">
           <img :src="item.thumb" alt="">
           <p class="tit">{{ item.title }}</p>
           <p class="money">￥{{ item.priceSale }}</p>
@@ -730,6 +730,10 @@ export default {
 
     .el-carousel__item {
       padding: 17px 15.5px;
+    }
+
+    /deep/ .el-carousel__indicators {
+      display: none;
     }
 
     /deep/ .el-carousel__arrow--left {

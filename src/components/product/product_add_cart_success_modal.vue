@@ -40,9 +40,12 @@ export default {
         data: {
           action: "gouwuche_lists",
         }
-      }).then(res=>{
-        if(res.code == 200){
-          this.shopcart_count = res.data.length;
+      }).then(res => {
+        if (res.code == 200) {
+          res.data.forEach((v) => {
+            this.shopcart_count += +v.num;
+          });
+          // this.shopcart_count = res.data.length;
         }
       })
       // this.shopcart_count = select_sku.shopcart_count;

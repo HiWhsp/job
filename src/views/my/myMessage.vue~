@@ -14,7 +14,7 @@
           </div>
         </div>
         <div class="search-box">
-          <button class="lock btn">全部标记已读</button>
+          <button class="lock btn" @click="do_mark_read()">全部标记已读</button>
           <button class="clear btn">清空</button>
         </div>
       </div>
@@ -31,6 +31,13 @@
           </div>
         </div>
       </div>
+
+      <div v-if="count" class="pagination-box" style="margin-top: 40px; text-align: right;">
+        <el-pagination background layout="total, prev, pager, next" @current-change="setView"
+                       :current-page.sync="pagination.page" :page-size="pagination.pageNum"
+                       :total="count"></el-pagination>
+      </div>
+      <el-empty v-if="!count" description="没有查询到订单信息..."></el-empty>
     </div>
   </div>
 </template>
@@ -43,9 +50,10 @@ export default {
   components: {},
   data() {
     return {
+      count: 0,
       tabSelect: {
         title: '未读',
-        value: 0,
+        value: 1,
       },
       messList: [],
       pagination: {
@@ -53,8 +61,8 @@ export default {
         pageNum: 10
       },
       tabList: [
-        {value: 0, title: "未读"},
-        {value: 1, title: "全部"}
+        {value: 1, title: "未读"},
+        {value: 0, title: "全部"}
       ]
     };
   },
@@ -67,13 +75,12 @@ export default {
   },
   methods: {
     setView() {
-
-      this.$api("feedback_getList", {
+      this.$api("users_msgRecord", {
         ...this.pagination,
+        scene: this.tabSelect.value
       }).then((res) => {
-        let {code, data, pages, count} = res;
-        this.messList = res.data
-
+        this.messList = res.data.list
+        this.count = res.data.count;
       });
     },
 
@@ -82,6 +89,17 @@ export default {
       this.pagination.page = 1;
       this.setView();
     },
+    // 标记已读
+    do_mark_read() {
+      this.$api("users_msgRead", {
+        ids: this.messList.map(v => v.id).join(",")
+      }).then(res=>{
+        if (res.code == 200) {
+          alertSucc(res.msg)
+          this.setView();
+        }
+      })
+    }
   },
 };
 </script>
@@ -116,7 +134,7 @@ export default {
 
   .page-ctx {
     min-height: 400px;
-    margin-top: 24px;
+    margin-top: 14px;
     padding: 8px 32px 40px 32px;
     background: #fff;
   }

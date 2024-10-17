@@ -111,7 +111,7 @@ export default {
 
     setView() {
       this.query_user();
-      // this.query_userIndex();
+      this.query_userIndex();
       this.query_order();
       this.query_goods();
     },

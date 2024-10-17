@@ -96,8 +96,8 @@
         </div>
       </div>
       <div class="promation-product-box">
-        <el-carousel :interval="500000" arrow="always" height="100%">
-          <el-carousel-item v-for="(item,index) in promationList" :key="index">
+        <el-carousel :interval="5000" arrow="always" height="100%" indicator-position="none">
+          <el-carousel-item v-for="(item,index) in promationList" :key="index" >
             <div class="item-wrap flex">
               <template v-for="it in item">
                 <div class="item pointer" @click="goUrl({url: `/productDetail?id=${it.inventoryId}`})">
@@ -730,6 +730,10 @@ export default {
 
     .el-carousel__item {
       padding: 17px 15.5px;
+    }
+
+    /deep/ .el-carousel__indicators {
+      display: none;
     }
 
     /deep/ .el-carousel__arrow--left {

@@ -43,7 +43,7 @@
           <!--            </div>-->
           <!--          </el-popover>-->
           <div class="flex" slot="reference" @click="goUrl({url: '/message'})">
-            我的消息<span class="color-a6">({{ userInfo.msgNum }})</span>
+            我的消息<span class="color-a6">({{ numList.message }})</span>
             <img src="../../static/home/down.png" class="img-2">
           </div>
           <div class="col"></div>

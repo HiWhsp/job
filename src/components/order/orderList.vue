@@ -27,9 +27,9 @@
               <div class="goods-title" @click="mix_to_product(product_item)">{{ product_item.title }}</div>
               <div class="goods-sku">型号：{{ product_item.keyVals }}</div>
             </div>
-            <div class="box-sku">
-              <div class="goods-sku">{{ product_item.keyVals }}</div>
-            </div>
+<!--            <div class="box-sku">-->
+<!--              <div class="goods-sku">{{ product_item.keyVals }}</div>-->
+<!--            </div>-->
             <div class="box-num">
               {{ product_item.num }}
             </div>
@@ -54,19 +54,19 @@
           <button v-if="item.ifCancel == 1" class="btn-ripple fit-text btn-bg" @click="doCancel(item)">
             取消订单
           </button>
-          <button v-if="item.ifPay == 1" class="btn-ripple fit-text btn-bg" @click="doPay(item)">
-            去支付
-          </button>
+<!--          <button v-if="item.ifPay == 1" class="btn-ripple fit-text btn-bg" @click="doPay(item)">-->
+<!--            去支付-->
+<!--          </button>-->
           <button v-if="item.ifDel == 1" class="btn-ripple fit-text btn-bg" @click="doDelete(item)">
             删除订单
           </button>
           <button v-if="item.ifReceive == 1" class="btn-ripple fit-text btn-bg" @click="doReceive(item)">
             确认收货
           </button>
-          <button v-if="item.ifCommented == 1" class="btn-ripple fit-text btn-bg" @click="doReview(item)">
+          <button v-if="item.ifComment == 1" class="btn-ripple fit-text btn-bg" @click="doReview(item)">
             去评价
           </button>
-          <button v-if="item.orderStatus >= 5 && item.ifCommented != 1" class="btn-ripple fit-text btn-bg"
+          <button v-if="item.orderStatus >= 5 && item.ifComment != 1" class="btn-ripple fit-text btn-bg"
                   @click="doRefund(item)">
             售后
           </button>

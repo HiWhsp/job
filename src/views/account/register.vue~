@@ -161,7 +161,7 @@ export default {
         alertErr("请勾选同意协议");
         return;
       }
-
+ 
       this.$api("login_phoneReg", {
         ...this.form,
         invite_id: this.$route.query.invite || "",

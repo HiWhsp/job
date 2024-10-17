@@ -2,7 +2,7 @@
 
 
 /deep/ .el-rate__icon {
-  //color: @theme !important;
+  color: @theme !important;
 }
 
 .page {
