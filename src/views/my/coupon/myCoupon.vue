@@ -26,12 +26,12 @@
                 <div class="ctx-box">
                     <div class="yhq-list flex-between" v-if="list_yhq.length">
                         <div class="yhq-item-box" v-for="(item, index) in list_yhq" :key="index">
-                            <img v-if="item.status == 1" src="@/static/order/coupon-used.png" alt="" class="used-img"/>
-                            <img v-if="item.status == 2 || item.status == 3" src="@/static/order/coupon-guoqi.png"
+                            <img v-if="item.status == 0" src="@/static/order/coupon-used.png" alt="" class="used-img"/>
+                            <img v-if="item.status == 1 || item.status == 2" src="@/static/order/coupon-guoqi.png"
                                  alt=""
                                  class="used-img"/>
 
-                            <div class="yhq-item" :class="{ used: item.status == 1 || item.status == 2  }">
+                            <div class="yhq-item" :class="{ used: item.status == 0 || item.status == 1  }">
                                 <div class="yhq-left">
                                     <div class="money">
                                         <div class="currency">{{ vuex_huobi }}</div>
@@ -42,13 +42,13 @@
                                     <div class="tiaojian">使用条件： 满{{ item.man }}可用</div>
                                     <div class="shijian">有效时间： {{ item.startTime }} - {{ item.endTime }}</div>
                                     <div class="action">
-                                        <button v-if="item.status == 1" class="btn-ripple btn-pick btn-lingqu"
+                                        <button v-if="item.status == 0" class="btn-ripple btn-pick btn-lingqu"
                                                 @click="coupon_use(item)">
                                             立即使用
                                         </button>
-                                        <img v-if="item.status == 2" src="@/static/order/yishiyong.png"
+                                        <img v-if="item.status == 1" src="@/static/order/yishiyong.png"
                                              class="status-img" alt="">
-                                        <img v-if="item.status == 3" src="@/static/order/yiguoqi.png" class="status-img"
+                                        <img v-if="item.status == 2" src="@/static/order/yiguoqi.png" class="status-img"
                                              alt="">
                                     </div>
                                 </div>
@@ -75,11 +75,11 @@
                                 </div>
                             </div>
                             <div class="action">
-                                <button :disabled="status != 1" @click="coupon_use(item)">立即使用</button>
+                                <button :disabled="status != 0" @click="coupon_use(item)">立即使用</button>
                             </div>
                             <div class="guoqi">
-                                <img v-if="status == 2" :src="yishiyong" alt/>
-                                <img v-if="status == 3" :src="yiguoqi" alt/>
+                                <img v-if="status == 1" :src="yishiyong" alt/>
+                                <img v-if="status == 2" :src="yiguoqi" alt/>
                             </div>
                         </div>
                     </div>

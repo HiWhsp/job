@@ -143,7 +143,7 @@ export default {
             this.$router.push('/pointsMallDetail?id=' + item.inventoryId);
         },
         go_url() {
-            this.$router.push("/pointsMallDetail");
+            this.$router.push("/pointsDetail");
         },
         getRole() {
             this.$api("news_lists", {

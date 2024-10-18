@@ -213,7 +213,6 @@ z`
       <div class="order-action" v-if="list_coupon.length">
         <div class="order-action-inner">
           <div class="section-item">
-            <!--                  v-if="list_coupon.length"-->
             <div class="sub-title flex" @click="showCoupon = !showCoupon"
                  :class="{ 'expand-0': !showCoupon }">
               <div class="text">使用优惠</div>
@@ -308,10 +307,10 @@ z`
           <b class="val">{{ vuex_huobi }} {{ pay_info.goodsPrice || 0 }}</b>
         </div>
 
-        <!-- <div class="item">
+        <div class="item">
           <span class="text">优惠券：</span>
           <b class="val">-{{ vuex_huobi }} {{ money_yhq || 0 }}</b>
-        </div> -->
+        </div>
 
         <!-- <div class="item">
           <span class="text">积分抵现：</span>
@@ -446,7 +445,7 @@ export default {
       total_balance: 0,
       // 发票信息
       invoice_info: {
-        invoiceStatus: 0, //是否开票 0-不需要 1-需要发票
+        invoiceStatus: 1, //是否开票 0-不需要 1-需要发票
         invoiceType: '1', //发票类型：1-普通发票 2-专用发票
         titleType: '1', //抬头：1-个人 2-单位
         title: '', // 公司名称
@@ -496,17 +495,6 @@ export default {
       list_coupon: [], //优惠券
       coupon_select_id: "", //选择的优惠券 id
       bankList: [], // 线下卡列表
-      // select_date: "", //日期
-      // select_time: "", //时间
-
-      shouhuo_name: "", //自提 取货人姓名
-      shouhuo_phone: "", //自提 取货人电话
-
-      // pickerOptions: {
-      //   disabledDate(time) {
-      //     return time.getTime() < Date.now() - 1000 * 60 * 60 * 24 * 1 || time.getTime() > Date.now() + 1000 * 60 * 60 * 24 * 6;
-      //   },
-      // },
 
       form: {
         real_name: "",
@@ -632,14 +620,18 @@ export default {
     this.from = this.$route.query.from || '';
     this.getCacheProduct();
 
-    //
+    // 获取用户
     this.query_user();
+    // 获取地址列表
     this.query_address();
+    //获取线下卡列
+    this.getBankList();
+    // 获取优惠券列表
+    this.query_coupon();
 
     this.query_pay_info();
 
-    //获取线下卡列
-    this.getBankList();
+
   },
   methods: {
     //下单成功后 移除商品信息
@@ -733,7 +725,6 @@ export default {
       })
     },
 
-
     get_pay_info_params() {
       let product_items = this.payment_products.map(v => ({
         "inventoryId": v.inventoryId,
@@ -745,6 +736,7 @@ export default {
       let params = {
         productInfo: productInfo,
         addressId: this.address_selected.id || '',
+        yhqId: this.coupon_select_id,//优惠券记录ID
       }
       return params
     },
@@ -759,14 +751,12 @@ export default {
       let productInfo = JSON.stringify(product_items)
 
       let params = {
-        invoicStatus: 0,//是否开票 0-不需要 1-需要发票
+        invoiceStatus: this.invoice_info.invoiceStatus,//是否开票 0-不需要 1-需要发票
         productInfo: productInfo,
         addressId: this.address_selected.id || '',
         peisongType: 1,//配送类型：1-快递物流 2-上门自提
         peisongTime: '',//配送时间
-        yhqId: '',//优惠券记录ID
-        tuanId: '',//参与拼团的团ID
-        tuanType: '',//拼团类型：0-普通订单 1-普通团 2-社区团
+        yhqId: this.coupon_select_id,//优惠券记录ID
         remark: '',//备注
         cash_on_delivery: this.pay_type_value == 'paypal' ? 1 : 0,//是否货到付款 0-否 1-是
       }
@@ -798,28 +788,10 @@ export default {
           this.order_zhekou_price = parseFloat(data.zhekouPrice) || 0
           this.order_yunfei = data.yunfei || 0;
 
-
-          // this.format_coupon_view_info(data.yhq_list)
-          // this.coupons_for_allow_use = data.yhq_list || []
-          // this.total_product_price = data.goods_price;
-
           if (this.coupon_selected.id) {
             this.total_order_price = (this.total_order_price - this.coupon_selected.jian).toFixed(2)
           }
 
-
-          // 优惠券
-          if (data.yhqList.length) {
-            this.list_coupon = data.yhqList.map((item) => ({
-              ...item,
-
-              miaoshu: +item.man
-                  ? `满${+item.man}减${+item.jian}元`
-                  : `下单立减${+item.jian}元`,
-              // youxiaoqi:
-              //     item.startTime.substr(0, 10) + " - " + item.endTime.substr(0, 10),
-            }));
-          }
           this.order_price = data.orderPrice;
           this.money_yunfei = +data.yunfei || 0;
           this.jifen_pay = data.jifenPay;
@@ -827,16 +799,6 @@ export default {
       });
     },
 
-
-    // 格式化优惠券展示信息
-    format_coupon_view_info(list) {
-      list.forEach(v => {
-        // v.is_expand = false;
-        v.man_price = parseFloat(v.man);
-        v.jian_price = parseFloat(v.jian);
-        v.tiaojian = v.man_price == 0 ? '无门槛' : `满${v.man_price}元可用`
-      })
-    },
 
     do_toggle_paytype(item) {
       this.pay_type_value = item.value
@@ -857,6 +819,11 @@ export default {
 
     // 发票信息选择
     do_toggle_invoice(item) {
+      if (item.value != 0) {
+        this.invoice_info.invoiceStatus = 1;
+      } else {
+        this.invoice_info.invoiceStatus = 0
+      }
       this.invoice_info.invoiceType = item.value;
     },
     yuePayPassSetCallback() {
@@ -926,16 +893,6 @@ export default {
     //订单提交-支付
     do_confirm_submit() {
       this.order_confirm_tip = false;
-
-      // let not_use_jifen = !this.if_use_jifen || this.baseInfo.jifen <= 0;
-      // let not_use_yongjin = !this.if_use_yongjin || this.baseInfo.yongjin <= 0;
-      // if (not_use_jifen && not_use_yongjin) {
-      //   //不使用积分 不使用佣金  直接进行微信支付
-      //   // alert(res);
-      //   // this.to_pay_methods();
-      // } else {
-      //   this.order_pay_step();
-      // }
       let params = this.get_pay_params();
 
       this.$api({
@@ -1124,24 +1081,9 @@ export default {
         if (code == 200) {
           this.toPaySuccess();
         } else {
-          this.toFail();
+          // this.toFail();
         }
       });
-
-      // let paypz = this.xianxia_file_list.join();
-      // this.$api("orders_uploadPz", {
-      //     //
-      //     orderId: this.orderId,
-      //     paypz: paypz,
-      // }).then((res) => {
-      //     //console.log("线下转款支付", res);
-      //     let {code, message} = res;
-      //     if (code == 200) {
-      //         this.toPaySuccess();
-      //     } else {
-      //         this.toFail();
-      //     }
-      // });
     },
 
     toFail() {
@@ -1198,10 +1140,10 @@ export default {
     },
 
     clearTimer() {
-      //console.log("清除定时器");
       clearInterval(this.timer);
       this.timer = null;
     },
+
     //支付成功操作
     toPaySuccess() {
       if (this.mode == "yue") {
@@ -1211,25 +1153,10 @@ export default {
       }
     },
 
-    order_pay_step() {
-      //支付步骤
-      //优惠券
-
-      //积分 1
-      //佣金 2
-      //其他 3
-      if (this.if_use_jifen && this.use_jifen_num > 0) {
-        this.order_jifen_dixian(); //积分抵现
-      } else if (this.if_use_yongjin && this.money_yongjin_dixian) {
-        this.order_yongjin_pay(); //佣金支付
-      }
-    },
-
     //购物车 删除支付的商品
     shopcart_delete_payment() {
       let ids = this.payment_products.map((v) => v.inventoryId);
       let id = ids.join();
-
 
       this.$api({
         url: "/service.php",
@@ -1251,15 +1178,14 @@ export default {
           this.do_update_vuex_cart_number()
         }
       })
-
     },
-
 
     //选择收货地址
     do_toggle_address(item) {
       this.address_selected = item;
       this.query_pay_info()
     },
+
     //新增地址
     open_addr_add() {
       if (SHOP_TYPE == 'foreign') {
@@ -1272,7 +1198,6 @@ export default {
     confirm_add_address() {
       this.query_address()
     },
-
 
     // 订单积分抵现
     order_jifen_dixian() {
@@ -1332,78 +1257,24 @@ export default {
       });
     },
 
-    peisong_toggle(item) {
-      //console.log("配送方式", item);
-
-      this.peisong_type = item;
-
-      if (item == "上门自提") {
-        //console.log("用户地址", { ...this.address_selected });
-        if (this.address_selected.id) {
-          this.shouhuo_name = this.address_selected.name;
-          this.shouhuo_phone = this.address_selected.phone;
-        }
-      }
-    },
-
-    //上传相关
-    uploadSuccess_pingjia(res, file) {
-      //console.log("上传结果", res);
-      let {code, data, msg} = res;
-      alert(res);
-      if (code == 200) {
-        this.xianxia_file_list.push(res.data);
-      }
-    },
-
     beforeUpload_pingjia(file) {
       const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
       return isLt2M;
     },
 
     handlePictureCardPreview(file) {
-      // this.dialogImageUrl = file.url;
       this.dialogImageUrl = file.response.data;
       this.dialogVisible = true;
     },
 
-    //优惠券相关
+    //优惠券选择
     handleCouponSelect(item) {
       if (this.coupon_select_id === item.id) {
         this.coupon_select_id = '';
       } else {
         this.coupon_select_id = item.id;
       }
-    },
-
-    //
-    // toPaySuccess() {
-    //   this.toPayResult(1)
-    // },
-    toPayFail() {
-      // this.toPayResult(0)
-      this.toRoute({
-        path: '/order-detail',
-        query: {
-          from: 'payment',
-          id: this.orderId,
-        },
-        mode: 'reLaunch'
-      })
-    },
-
-    //
-    toPayResult(is_pay = 0) {
-      // this.clearCacheProduct()
-      this.toRoute({
-        path: '/payment-success',
-        query: {
-          id: this.orderId,
-          type: 'order',
-          is_pay: is_pay,
-        },
-        // mode: 'redirectTo'
-      })
+      this.query_pay_info();
     },
 
     // 获取线下卡列
@@ -1415,10 +1286,24 @@ export default {
       })
     },
 
+    // 查询优惠券
+    query_coupon() {
+      this.$api("yhq_myList", {
+        scene: 1,
+        page: 1,
+        pageSize: 1000,
+      }).then((res) => {
+        let {code, data} = res;
+        if (code == 200) {
+          this.list_coupon = data.list;
+        }
+      });
+    },
+
+    // 上传凭证
     handleSuccessImg(response, file, fileList) {
       this.xianxia_file_list = fileList.map(item => item.response.data);
     }
-
   },
 };
 </script>

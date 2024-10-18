@@ -3,7 +3,7 @@
     <div class="upload-box">
       <!-- <input type="text" disabled placeholder="点击右侧上传文件"/> -->
       <div class="action">
-        <el-upload name="img" :data="uploadExtraData" action="http://fujunjixie.dx.hdapp.com.cn/service.php?action=index_ossUpload"  :show-file-list="false" :on-success="onSuccess_upload" :before-upload="onBefore_upload">
+        <el-upload name="img" :data="uploadExtraData" action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload"  :show-file-list="false" :on-success="onSuccess_upload" :before-upload="onBefore_upload">
           <slot></slot>
         </el-upload>
       </div>

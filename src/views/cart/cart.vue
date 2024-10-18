@@ -56,7 +56,7 @@
                   }}
                 </div>
                 <div class="box-inventory">
-                  7个工日内
+                  {{ item.num < 10 ? '7个工日内' : '7-10个工日内' }}
                 </div>
                 <div class="box-act">
                   <!-- <div class="goods-action-box" v-if="false">
