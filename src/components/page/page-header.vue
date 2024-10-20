@@ -29,7 +29,7 @@
         </ul>
       </div>
       <div class="right">
-        <div class="img-wrap" @mouseenter="showSearchBox = true">
+        <div class="img-wrap" @mousedown="showSearchBox = true">
           <img :src="searchImgSrc" alt="search" />
           <transition name="fade">
             <div
@@ -222,7 +222,8 @@ export default {
 
   .main {
     height: 100%;
-    padding: 0 260px 0;
+    //padding: 0 260px 0;
+    margin: 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;

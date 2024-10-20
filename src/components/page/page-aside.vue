@@ -1,54 +1,51 @@
 <template>
-  <div class="aside">
-    <div class="list">
-      <div
-        class="item"
-        v-for="(item, index) in itemList"
-        :key="item.text"
-        @click="onClickItem(index)"
-        @mouseenter="onMouseEnter(index)"
-        @mouseleave="onMouseLeave(index)"
-        :class="{ active: selectedIndex === index }"
-      >
-        <div class="img-wrap">
-          <img
-            :src="selectedIndex === index ? item.activeIconSrc : item.iconSrc"
-            alt="icon"
-          />
-        </div>
-        <div>{{ item.text }}</div>
-        <div
-          class="popup"
-          v-if="popupIndex === index"
-          @mouseenter="onPopupMouseEnter"
-          @mouseleave="onPopupMouseLeave"
-        >
-          <div class="sub-list">
-            <el-checkbox-group v-model="checkList">
-              <el-checkbox
-                :label="subItem"
-                class="sub-item"
-                v-for="(subItem, index) in item.subItems"
-                :key="index"
-              >
-                <div class="item-wrap">
-                  <div class="img-wrap">
-                    <img src="@/assets/img/aside/img.png" alt="" />
-                  </div>
-                  <div class="item-text">激光平面窗口片名称位置</div>
+    <div class="aside">
+        <div class="list">
+            <div
+                    class="item"
+                    v-for="(item, index) in itemList"
+                    :key="item.text"
+                    @click="onClickItem(index)"
+                    @mouseenter="onMouseEnter(index)"
+                    @mouseleave="onMouseLeave(index)"
+                    :class="{ active: selectedIndex === index && item.text != '返回顶部' }"
+            >
+                <div class="img-wrap" @click="onRouteTo({ name: item.routeName })">
+                    <img :src="selectedIndex === index ? item.activeIconSrc : item.iconSrc" alt="icon"/>
                 </div>
-              </el-checkbox>
-            </el-checkbox-group>
-            <div class="btn-wrap">
-              <div class="btn close" @click="popupIndex = -1">关闭</div>
-              <div class="btn contrast" @click="onRouteTo({ name: 'productComparison' })">对比</div>
+                <div>{{ item.text }}</div>
+                <div
+                        class="popup"
+                        v-if="popupIndex === index && item.text == '产品对比'"
+                        @mouseenter="onPopupMouseEnter"
+                        @mouseleave="onPopupMouseLeave"
+                >
+                    <div class="sub-list">
+                        <el-checkbox-group v-model="checkList">
+                            <el-checkbox
+                                    :label="subItem"
+                                    class="sub-item"
+                                    v-for="(subItem, index) in item.subItems"
+                                    :key="index"
+                            >
+                                <div class="item-wrap">
+                                    <div class="img-wrap">
+                                        <img src="@/assets/img/aside/img.png" alt=""/>
+                                    </div>
+                                    <div class="item-text">激光平面窗口片名称位置</div>
+                                </div>
+                            </el-checkbox>
+                        </el-checkbox-group>
+                        <div class="btn-wrap">
+                            <div class="btn close" @click="popupIndex = -1">关闭</div>
+                            <div class="btn contrast" @click="onRouteTo({ name: 'productComparison' })">对比</div>
+                        </div>
+                    </div>
+                    <div class="arrow"></div>
+                </div>
             </div>
-          </div>
-          <div class="arrow"></div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -61,83 +58,80 @@ import icon3Active from "@/assets/img/aside/icon1-active.png";
 import icon4 from "@/assets/img/aside/icon4.png";
 import icon4Active from "@/assets/img/aside/icon1-active.png";
 import icon5 from "@/assets/img/aside/icon5.png";
-import icon5Active from "@/assets/img/aside/icon1-active.png";
+import icon5Active from "@/assets/img/aside/top.png";
 
 export default {
-  name: "common-aside",
-  components: {},
-  props: [],
-  data() {
-    return {
-      selectedIndex: -1,
-      popupIndex: -1,
-      popupVisible: false,
-      checkList: ["选中且禁用", "复选框 A"],
-      icon1,
-    };
-  },
-  watch: {},
-  created() {
-    this.itemList = [
-      {
-        iconSrc: icon1,
-        activeIconSrc: icon1Active,
-        text: "快速报价",
-        subItems: ["子选项1", "子选项2", "子选项3", "子选项4", "子选项5"],
-      },
-      {
-        iconSrc: icon2,
-        activeIconSrc: icon2Active,
-        text: "产品对比",
-        subItems: ["子选项1", "子选项2", "子选项3", "子选项4", "子选项5"],
-      },
-      {
-        iconSrc: icon3,
-        activeIconSrc: icon3Active,
-        text: "购物车",
-        subItems: ["子选项1", "子选项2", "子选项3", "子选项4", "子选项5"],
-      },
-      {
-        iconSrc: icon4,
-        activeIconSrc: icon4Active,
-        text: "在线咨询",
-        subItems: ["子选项1", "子选项2", "子选项3", "子选项4", "子选项5"],
-      },
-      {
-        iconSrc: icon5,
-        activeIconSrc: icon5Active,
-        text: "返回顶部",
-        subItems: ["子选项1", "子选项2", "子选项3", "子选项4", "子选项5"],
-      },
-    ];
-  },
-  methods: {
-    onClickItem(index) {
-      this.selectedIndex = index;
+    name: "common-aside",
+    components: {},
+    props: [],
+    data() {
+        return {
+            itemList: [
+                {
+                    iconSrc: icon1,
+                    activeIconSrc: icon1Active,
+                    text: "快速报价",
+                },
+                {
+                    iconSrc: icon2,
+                    activeIconSrc: icon2Active,
+                    text: "产品对比",
+                    subItems: ["子选项1", "子选项2", "子选项3", "子选项4", "子选项5"],
+                },
+                {
+                    iconSrc: icon3,
+                    activeIconSrc: icon3Active,
+                    text: "购物车",
+                    routeName: 'productCart'
+                },
+                {
+                    iconSrc: icon4,
+                    activeIconSrc: icon4Active,
+                    text: "在线咨询",
+                },
+                {
+                    iconSrc: icon5Active,
+                    activeIconSrc: icon5Active,
+                    text: "返回顶部",
+                },
+            ],
+            selectedIndex: -1,
+            popupIndex: -1,
+            popupVisible: false,
+            checkList: ["选中且禁用", "复选框 A"],
+            icon1,
+        };
     },
-    onMouseEnter(index) {
-      this.selectedIndex = index;
-      this.popupIndex = index;
-      this.popupVisible = true;
+    watch: {},
+    created() {
     },
-    onMouseLeave(index) {
-      if (!this.popupVisible) {
-        this.popupIndex = -1;
-      }
+    methods: {
+        onClickItem(index) {
+            this.selectedIndex = index;
+        },
+        onMouseEnter(index) {
+            this.selectedIndex = index;
+            this.popupIndex = index;
+            this.popupVisible = true;
+        },
+        onMouseLeave(index) {
+            if (!this.popupVisible) {
+                this.popupIndex = -1;
+            }
+        },
+        onPopupMouseEnter() {
+            this.popupVisible = true;
+        },
+        onPopupMouseLeave() {
+            this.selectedIndex = -1;
+            this.popupVisible = false;
+            this.popupIndex = -1;
+        },
+        onRouteTo(params) {
+            const {name} = params;
+            this.$router.push({name});
+        },
     },
-    onPopupMouseEnter() {
-      this.popupVisible = true;
-    },
-    onPopupMouseLeave() {
-      this.selectedIndex = -1;
-      this.popupVisible = false;
-      this.popupIndex = -1;
-    },
-    onRouteTo(params) {
-      const { name } = params;
-      this.$router.push({ name });
-    },
-  },
 };
 </script>
 

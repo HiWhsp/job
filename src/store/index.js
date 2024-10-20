@@ -191,14 +191,14 @@ export default new Vuex.Store({
     //设置基本信息
     set_baseInfo(state, data) {
       // //console.log("设置用户信息", { ...data });
-      let { token, user_id, id, level, level_rules } = data;
+      let { token, userId, id, level, level_rules } = data;
 
       state.vuex_is_login = true;
       state.token = token;
-      state.user_id = user_id || id;
+      state.userId = userId || id;
 
       localStorage.setItem("token", token);
-      localStorage.setItem("user_id", user_id || id);
+      localStorage.setItem("userId", userId || id);
 
       // if (level_rules) {
       //   //处理

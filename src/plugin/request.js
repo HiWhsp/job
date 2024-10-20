@@ -115,12 +115,12 @@ function api(action, data, method, uploaderConfig) {
     method = option.method;
     reqData = option.data; //请求数据
 
-    reqData.userId = localStorage.getItem("user_id") || "";
+    reqData.userId = localStorage.getItem("userId") || "";
     reqData.token = localStorage.getItem("token") || "";
   } else {
     reqData = {
       action: action,
-      userId: localStorage.getItem("user_id") || "",
+      userId: localStorage.getItem("userId") || "",
       token: localStorage.getItem("token") || "",
       ...data,
     }; //请求数据

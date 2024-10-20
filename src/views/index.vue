@@ -1,265 +1,229 @@
 <template>
-  <div class="page">
-    <el-carousel class="banner">
-      <el-carousel-item v-for="item in 3" :key="item">
-        <div class="banner-img-wrap">
-          <img :src="bannerList[item - 1]" alt="banner" />
-        </div>
-      </el-carousel-item>
-    </el-carousel>
+    <div class="page">
+        <el-carousel class="banner" indicator-position="none" arrow="always">
+            <el-carousel-item v-for="item in bannerList.length" :key="item">
+                <div class="banner-img-wrap">
+                    <img :src="bannerList[item - 1]" alt="banner"/>
+                </div>
+            </el-carousel-item>
+        </el-carousel>
 
-    <div class="activity-area">
-      <div class="img-wrap-left">
-        <img src="../static/home/activity-area/left.png" alt="activity-img" />
-      </div>
-      <div class="img-wrap">
-        <img src="../static/home/activity-area/mid.png" alt="activity-img" />
-      </div>
-      <div class="img-wrap">
-        <img src="../static/home/activity-area/right.png" alt="activity-img" />
-      </div>
-    </div>
-
-    <div class="featuredRecommendations">
-      <div class="title-wrap">
-        <div class="title">
-          <span class="main-title"
-            >精品<span style="color: #27417c">推荐</span></span
-          >
-          <span class="sub-title">精挑细选 省心省力</span>
-        </div>
-        <div class="arrow-wrap">
-          <div class="img-wrap">
-            <img
-              src="../static/home/featuredRecommendations/left-arrow.png"
-              alt="arrow"
-            />
-          </div>
-          <div class="img-wrap">
-            <img
-              src="../static/home/featuredRecommendations/right-arrow.png"
-              alt="arrow"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="high-quality-products">
-        <div class="product-wrap" v-for="item in productList" :key="item.src">
-          <div class="img-wrap">
-            <img :src="item.img" alt="" />
-          </div>
-          <div class="desc-wrap">
-            <div class="desc">{{ item.desc }}</div>
-            <div class="price-wrap">
-              <div class="price">
-                <span style="font-size: 14px">￥</span>{{ item.price }}
-              </div>
-              <div class="cart">
-                <img
-                  src="../static/home/featuredRecommendations/cart.png"
-                  alt=""
-                />
-              </div>
+        <div class="activity-area">
+            <div class="img-wrap-left">
+                <img src="../static/home/activity-area/left.png" alt="activity-img"/>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 仪器查看更多 -->
-    <div class="pic">
-      <div class="pic-row-1">
-        <div class="img-wrap-1">
-          <img src="../static/home/pic/pic_01.png" alt="" />
-          <span class="pic-title">光源</span>
-          <div class="pic-content">
-            概要文字概要文字概要文字概要文字概要文字概要文字
-          </div>
-          <div class="pic-readmore">
-            <div class="readmore">查看更多</div>
-            <div class="arrow">
-              <img src="../static/home/pic/right_arrow.png" />
+            <div class="img-wrap">
+                <img src="../static/home/activity-area/mid.png" alt="activity-img"/>
             </div>
-          </div>
-        </div>
-        <div class="img-wrap-2">
-          <img src="../static/home/pic/pic_02.png" alt="" />
-          <span class="pic-title">实验室解决方案</span>
-          <div class="pic-content">
-            概要文字概要文字概要文字概要文字概要文字概要文字
-          </div>
-        </div>
-      </div>
-      <div class="pic-row-2">
-        <div class="img-wrap-3">
-          <img src="../static/home/pic/pic_03.png" alt="" />
-          <span class="pic-title">配件</span>
-          <div class="pic-content">
-            概要文字概要文字概要文字概要文字概要文字概要文字
-          </div>
-        </div>
-        <div class="img-wrap-4">
-          <img src="../static/home/pic/pic_04.png" alt="" />
-          <span class="pic-title">仪器</span>
-          <div class="pic-content">
-            概要文字概要文字概要文字概要文字概要文字概要文字
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 新闻和活动 -->
-    <section class="news-activity">
-      <div class="news-header">
-        <div class="header-left">
-          <div class="header-title">
-            <span style="color: #27417c">新闻</span>与活动
-          </div>
-          <div class="header-subtitle">我们从未停止探索</div>
-        </div>
-        <div class="header-right">
-          <div class="img-wrap">
-            <img
-              src="../static/home/featuredRecommendations/left-arrow.png"
-              alt="arrow"
-            />
-          </div>
-          <div class="img-wrap">
-            <img
-              src="../static/home/featuredRecommendations/right-arrow.png"
-              alt="arrow"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="news-container">
-        <div class="news-card" v-for="(item, index) in newsEvents" :key="index">
-          <div class="time-icon">
-            <img src="../static/home/new/time_icon.png" />
-          </div>
-          <p class="date">{{ item.date }}</p>
-          <p class="category">{{ item.type }}</p>
-          <div class="new-title">{{ item.title }}</div>
-          <div class="detail-link">
-            <div class="detail-text" @click="onViewMore">了解详情</div>
-            <div class="detail-icon">
-              <img src="../static/home/new/arrow.png" />
+            <div class="img-wrap">
+                <img src="../static/home/activity-area/right.png" alt="activity-img"/>
             </div>
-          </div>
         </div>
-      </div>
-      <div class="news-readmore-wrap">
-        <div class="news-readmore">
-          <div class="readmore">查看更多</div>
-          <div class="arrow">
-            <img src="../static/home/new/arrow_black.png" />
-          </div>
+
+        <div class="featuredRecommendations">
+            <div class="title-wrap">
+                <div class="title">
+                    <span class="main-title">精品<span style="color: #27417c">推荐</span></span>
+                    <span class="sub-title">精挑细选 省心省力</span>
+                </div>
+                <div class="arrow-wrap">
+                    <div class="img-wrap">
+                        <img
+                                src="../static/home/featuredRecommendations/left-arrow.png"
+                                alt="arrow"
+                        />
+                    </div>
+                    <div class="img-wrap">
+                        <img
+                                src="../static/home/featuredRecommendations/right-arrow.png"
+                                alt="arrow"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="high-quality-products">
+                <el-carousel indicator-position="none" arrow="never">
+                    <el-carousel-item class="product-carousel" v-for="(item, index) in productList" :key="index">
+                        <div class="product-wrap" v-for="it in item" :key="it.src">
+                            <div class="img-wrap">
+                                <img :src="it.images" alt=""/>
+                            </div>
+                            <div class="desc-wrap">
+                                <div class="desc ellipsis-2">{{ it.title }}</div>
+                                <div class="price-wrap">
+                                    <div class="price">
+                                        <span style="font-size: 14px">￥</span>{{ it.priceSale }}
+                                    </div>
+                                    <div class="cart pointer">
+                                        <img src="../static/home/featuredRecommendations/cart.png" alt=""/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </el-carousel-item>
+                </el-carousel>
+            </div>
         </div>
-      </div>
-    </section>
-    <pageAside></pageAside>
-  </div>
+
+        <!-- 仪器查看更多 -->
+        <div class="pic">
+            <div class="pic-row-1">
+                <div class="img-wrap-1">
+                    <img src="../static/home/pic/pic_01.png" alt=""/>
+                    <span class="pic-title">光源</span>
+                    <div class="pic-content">
+                        概要文字概要文字概要文字概要文字概要文字概要文字
+                    </div>
+                    <div class="pic-readmore">
+                        <div class="readmore">查看更多</div>
+                        <div class="arrow">
+                            <img src="../static/home/pic/right_arrow.png"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="img-wrap-2">
+                    <img src="../static/home/pic/pic_02.png" alt=""/>
+                    <span class="pic-title">实验室解决方案</span>
+                    <div class="pic-content">
+                        概要文字概要文字概要文字概要文字概要文字概要文字
+                    </div>
+                </div>
+            </div>
+            <div class="pic-row-2">
+                <div class="img-wrap-3">
+                    <img src="../static/home/pic/pic_03.png" alt=""/>
+                    <span class="pic-title">配件</span>
+                    <div class="pic-content">
+                        概要文字概要文字概要文字概要文字概要文字概要文字
+                    </div>
+                </div>
+                <div class="img-wrap-4">
+                    <img src="../static/home/pic/pic_04.png" alt=""/>
+                    <span class="pic-title">仪器</span>
+                    <div class="pic-content">
+                        概要文字概要文字概要文字概要文字概要文字概要文字
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新闻和活动 -->
+        <section class="news-activity">
+            <div class="news-header">
+                <div class="header-left">
+                    <div class="header-title">
+                        <span style="color: #27417c">新闻</span>与活动
+                    </div>
+                    <div class="header-subtitle">我们从未停止探索</div>
+                </div>
+                <div class="header-right">
+                    <div class="img-wrap">
+                        <i class="el-icon-arrow-left"></i>
+                    </div>
+                    <div class="img-wrap">
+                        <i class="el-icon-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="news-container">
+                <div class="news-card" v-for="(item, index) in newsEvents" :key="index">
+                    <div class="time-icon">
+                        <img src="../static/home/new/time_icon.png"/>
+                    </div>
+                    <p class="date">{{ item.dtTime }}</p>
+                    <p class="category">{{ '新闻' }}</p>
+                    <div class="new-title">{{ item.title || '无' }}</div>
+                    <div class="detail-link">
+                        <div class="detail-text" @click="onViewMore">了解详情</div>
+                        <div class="detail-icon">
+                            <img src="../static/home/new/arrow.png"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="news-readmore-wrap">
+                <div class="news-readmore">
+                    <div class="readmore">查看更多</div>
+                    <div class="arrow">
+                        <img src="../static/home/new/arrow_black.png"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <pageAside></pageAside>
+    </div>
 </template>
 
 <script>
 import pageAside from "@/components/page/page-aside.vue";
-import product1 from "../static/home/featuredRecommendations/product1.png";
-import product2 from "../static/home/featuredRecommendations/product2.png";
-import product3 from "../static/home/featuredRecommendations/product3.png";
-import product4 from "../static/home/featuredRecommendations/product4.png";
-import product5 from "../static/home/featuredRecommendations/product5.png";
 import banner1 from "@/static/home/banner/banner1.jpg";
 import banner2 from "@/static/home/banner/banner2.png";
 import banner3 from "@/static/home/banner/banner3.png";
 
 export default {
-  name: "index",
-  components: {
-    pageAside,
-  },
-  data() {
-    return {
-      bannerList: [],
-      productList: [],
-      newsEvents: [],
-    };
-  },
-  async created() {
-    const { data } = await this.$api({
-      url: "/service.php",
-      method: "get",
-      data: {
-        action: "banner_index",
-        position: 0,
-      },
-    });
-    this.bannerList = [banner1, banner2, banner3];
-    this.productList = [
-      {
-        img: product1,
-        desc: "激光平凸透镜 D=25.4mm F=100mm 1064nm",
-        price: "21.115",
-      },
-      {
-        img: product2,
-        desc: "激光平凸透镜 D=25.4mm F=100mm 1064nm",
-        price: "21.115",
-      },
-      {
-        img: product3,
-        desc: "激光平凸透镜 D=25.4mm F=100mm 1064nm",
-        price: "21.115",
-      },
-      {
-        img: product4,
-        desc: "激光平凸透镜 D=25.4mm F=100mm 1064nm",
-        price: "21.115",
-      },
-      {
-        img: product5,
-        desc: "激光平凸透镜 D=25.4mm F=100mm 1064nm",
-        price: "21.115",
-      },
-      {
-        img: product5,
-        desc: "激光平凸透镜 D=25.4mm F=100mm 1064nm",
-        price: "21.115",
-      },
-    ];
-    this.newsEvents = [
-      {
-        date: "2024-05-07",
-        title: "现场直击 | 华日激光亮相上海展光博会！",
-        type: "展会",
-      },
-      {
-        date: "2024-05-07",
-        title: "【展会邀请】华日激光邀您共赴2023 CIOE中国光博会",
-        type: "展会",
-      },
-      {
-        date: "2024-05-07",
-        title:
-          "CCTV《经济半小时》深度报道：华日激光飞秒激光器技术创新，实现CCTV《经济半小时》深度报道：华日激光飞秒激光器技术创新，实现",
-        type: "新闻",
-      },
-      {
-        date: "2024-05-07",
-        title: "现场直击 | 华日激光亮相上海展光博会！",
-        type: "新闻",
-      },
-    ];
-  },
-  methods: {
-    onLearnMore(item) {
-      console.log("查看详情: ", item);
-      // 跳转或显示详情逻辑
+    name: "index",
+    components: {
+        pageAside,
     },
-    onViewMore() {
-      console.log("查看更多新闻与活动");
-      // 跳转到更多新闻页面
+    data() {
+        return {
+            bannerList: [],
+            productList: [],
+            newsEvents: [],
+        };
     },
-  },
+    async created() {
+        this.bannerList = [banner1, banner2, banner3];
+        this.getProductList();
+        this.getNewsEvents();
+    },
+    methods: {
+        onLearnMore(item) {
+            console.log("查看详情: ", item);
+            // 跳转或显示详情逻辑
+        },
+        onViewMore() {
+            console.log("查看更多新闻与活动");
+            // 跳转到更多新闻页面
+        },
+        // 获取产品列表
+        async getProductList() {
+            const {code, data} = await this.$api({
+                url: "/service.php",
+                method: "get",
+                data: {
+                    action: "product_plist",
+                    channelId: 0,
+                    page: 1,
+                    pageSize: 12,
+                },
+            });
+
+            if (code === 200) {
+                const result = data.list;
+                for (let i = 0, len = result.length; i < len; i += 6) {
+                    this.productList.push(result.slice(i, i + 6));
+                }
+            }
+        },
+        // 获取新闻列表
+        async getNewsEvents() {
+            const {code, data} = await this.$api({
+                url: "/service.php",
+                method: "get",
+                data: {
+                    action: "news_lists",
+                    channelId: 8,
+                    page: 1,
+                    pageSize: 4,
+                },
+            });
+
+            if (code === 200) {
+                this.newsEvents = data.list;
+            }
+        }
+    }
 };
 </script>
 
@@ -272,8 +236,14 @@ export default {
   .banner {
     height: 680px;
 
+
     ::v-deep .el-carousel__container {
       height: 100%;
+
+      .el-carousel__arrow {
+        background-color: transparent;
+        border: 1px solid #fff;
+      }
     }
 
     .banner-img-wrap {
@@ -358,12 +328,28 @@ export default {
     }
 
     .high-quality-products {
-      display: flex;
-      box-sizing: border-box;
-      gap: 17px;
+      height: 219px;
+      height: 340px;
+
+      /deep/ .el-carousel {
+        width: 100%;
+        height: 100%;
+      }
+
+      /deep/ .el-carousel__container {
+        height: 100%;
+      }
+
+      .product-carousel {
+        display: flex;
+      }
 
       .product-wrap {
+        width: 219px;
+        height: 100%;
+        flex-direction: column;
         background: #fff;
+        margin-right: 17px;
 
         .img-wrap {
           height: 219px;
@@ -382,6 +368,7 @@ export default {
             font-size: 16px;
             color: #3d4248;
             line-height: 24px;
+            height: 50px;
           }
         }
 
@@ -390,6 +377,10 @@ export default {
           display: flex;
           justify-content: space-between;
           align-items: center;
+
+          span {
+            font-size: 14px;
+          }
 
           .price {
             color: #ff4000;
@@ -407,6 +398,10 @@ export default {
             }
           }
         }
+      }
+
+      .product-wrap:last-child {
+        margin: 0;
       }
     }
   }
@@ -617,22 +612,19 @@ export default {
         align-items: center;
 
         /* 垂直居中 */
-        .img-wrap {
-          width: 64px;
-          height: 64px;
-          margin-left: 24px;
-          box-sizing: border-box;
-          /* 如果有边框或内边距，确保它们不会影响总尺寸 */
-          position: relative;
-          /* 如果需要绝对定位内部元素，可以使用相对定位 */
-          cursor: pointer;
 
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            /* 保持图片原始宽高比的同时填满整个容器 */
-          }
+        .img-wrap {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 56px;
+          height: 56px;
+          margin-left: 24px;
+          cursor: pointer;
+          background-color: #27417C;
+          border-radius: 50%;
+          font-size: 18px;
+          color: #fff;
         }
       }
     }

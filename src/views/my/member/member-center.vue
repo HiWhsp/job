@@ -154,7 +154,7 @@ export default {
   async created() {
     this.setView();
     let token = localStorage.getItem("token");
-    let userId = localStorage.getItem("user_id");
+    let userId = localStorage.getItem("userId");
     const res = await this.$api({
       url: "/service.php",
       method: "get",
@@ -166,7 +166,7 @@ export default {
     });
     if (res.message === "登录已过期，请重新登录！") {
       localStorage.removeItem("token");
-      localStorage.removeItem("user_id");
+      localStorage.removeItem("userId");
       this.$router.push("/login");
     }
     console.log("🚀 ~ created ~ code:", res);
