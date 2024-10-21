@@ -62,7 +62,7 @@
             <div class="label">上传凭证：</div>
             <div class="action">
               <el-upload class="upload-demo" list-type="picture-card" multiple accept="image/*" name="img"
-                         action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload"
+                         action="http://wuhanjingmi.new.zhishangez.com//service.php?action=index_ossUpload"
                          :on-success="uploadSuccess_pingjia"
                          :before-upload="beforeUpload_pingjia" :data="uploadExtraData">
                 <!-- <i class="el-icon-upload"></i> -->

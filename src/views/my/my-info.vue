@@ -1,254 +1,259 @@
 <template>
-  <div class="page">
-    <div class="main-title">
-      <span>个人资料</span>
-    </div>
-    <div class="page-ctx">
-      <div class="section">
-        <div class="section-title">基本信息</div>
-        <div class="section-ctx">
-          <div class="item upload-box">
-            <span class="text">头像：</span>
-            <span class="info">
+    <div class="page">
+        <div class="main-title">
+            <span>个人资料</span>
+        </div>
+        <div class="page-ctx">
+            <div class="section">
+                <div class="section-title">基本信息</div>
+                <div class="section-ctx">
+                    <div class="item upload-box">
+                        <span class="text">头像：</span>
+                        <span class="info">
               <div class="upload-box">
-                <el-upload
-                  class="avatar-uploader"
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccess"
-                  :before-upload="beforeAvatarUpload"
-                >
-                  <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="img"
+                           action="http://wuhanjingmi.new.zhishangez.com//service.php?action=index_ossUpload"
+                           :data="mix_upload_data" :on-success="upload_on_success"
+                           :before-upload="upload_before_upload">
+                  <img v-if="form.image" :src="form.image" class="user-avatar"/>
+                  <img v-else src="@/static/common/head-user-login.png" class="user-avatar"/>
                 </el-upload>
               </div>
             </span>
-          </div>
+                    </div>
 
-          <div class="item">
-            <span class="text">手机：</span>
-            <span class="info">{{ my_info.phone || "15931263145" }}</span>
-          </div>
+                    <div class="item">
+                        <span class="text">手机：</span>
+                        <span class="info">{{ my_info.phone }}</span>
+                        <span class="action" @click="open_phone_update()">
+              <span>修改</span>
+            </span>
+                    </div>
 
-          <!-- <div class="item">
-            <span class="text">昵称：</span>
-            <span class="info">
-              <input type="text" v-model="nickname" class="" />
-            </span>
-            <span class="action">
 
+                    <div class="item">
+                        <span class="text"><span>*</span> 真实姓名：</span>
+                        <span class="info">
+              <el-input clearable type="text" v-model="form.realName"/>
             </span>
-          </div> -->
+                        <span class="action"> </span>
+                    </div>
+                    <div class="item">
+                        <span class="text"><span>*</span> 所在地区：</span>
+                        <span class="info">
+              <area_select ref="area_select" @change="changeSelectAddress"/>
+            </span>
+                        <span class="action"> </span>
+                    </div>
+                    <div class="item">
+                        <span class="text"><span>*</span> 公司名称：</span>
+                        <span class="info">
+              <el-input clearable type="text" v-model="form.nickname"/>
+            </span>
+                        <span class="action">
+            </span>
+                    </div>
 
-          <!-- <div class="item">
-            <span class="text">密码：</span>
-            <span class="info">******</span>
-            <span class="action">
-              <span @click="$router.push('/retrieve')">修改</span>
+                    <div class="item">
+                        <span class="text"><span>*</span> 邮箱：</span>
+                        <span class="info">
+              <el-input clearable type="text" v-model="form.email"/>
             </span>
-          </div>
-          <div class="item">
-            <span class="text">账号：</span>
-            <span class="info" style="visibility: hidden">******</span>
-            <span class="action">
-              <span @click="mix_logout">退出登录</span>
+                        <span class="action">
             </span>
-          </div> -->
-        </div>
-      </div>
-
-      <div class="section other">
-        <div class="section-title">个人信息</div>
-        <div class="section-ctx">
-          <div class="item">
-            <span class="text"
-              ><span style="color: red">*</span> 真实姓名：</span
-            >
-            <span class="info">
-              <el-input clearable type="text" v-model="form.realName" />
-            </span>
-            <span class="action"> </span>
-          </div>
-          <div class="item">
-            <span class="text"
-              ><span style="color: red">*</span> 所在地区：</span
-            >
-            <span class="info">
-              <el-input clearable type="text" v-model="form.address" />
-            </span>
-            <span class="action"> </span>
-          </div>
-          <div class="item">
-            <span class="text"
-              ><span style="color: red">*</span> 公司名称：</span
-            >
-            <span class="info">
-              <el-input clearable type="text" v-model="form.address" />
-            </span>
-            <span class="action"> </span>
-          </div>
-          <div class="item">
-            <span class="text"><span style="color: red">*</span> 邮箱：</span>
-            <span class="info">
-              <el-input clearable type="text" v-model="form.address" />
-            </span>
-            <span class="action"> </span>
-          </div>
-          <div class="item btn-box">
-            <span class="text" style="visibility: hidden">-</span>
-            <div class="info">
-              <button
-                class="btn-ripple fit-text btn-confirm"
-                @click="do_reset()"
-              >
-                确 定
-              </button>
-              <el-button
-                class="btn-ripple fit-text btn-cancel"
-                @click="throttle_do_submit()"
-                :loading="loading"
-              >
-                取 消
-              </el-button>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <phone_bind_old_check_modal
-      ref="phone_bind_old_check_modal"
-      data-title="校验"
-      @confirm="confirm_old_pass"
-    />
-    <phone_bind_new_set_modal
-      ref="phone_bind_new_set_modal"
-      data-title="绑定"
-      @confirm="confirm_new"
-    />
-  </div>
+            <div class="other">
+                <!-- <div class="section-title">个人信息</div> -->
+                <div class="section-ctx">
+                    <div class="item btn-box">
+                        <span class="text" style="visibility: hidden">-</span>
+                        <div class="info">
+                            <el-button class="btn-ripple fit-text btn-cancel " @click="throttle_do_submit()"
+                                       :loading="loading">保存
+                            </el-button>
+                            <button class="btn-ripple fit-text btn-save" @click="do_reset()">清空</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <phone_bind_old_check_modal ref="phone_bind_old_check_modal" data-title="校验" @confirm="confirm_old_pass"/>
+        <phone_bind_new_set_modal ref="phone_bind_new_set_modal" data-title="绑定" @confirm="confirm_new"/>
+
+
+    </div>
 </template>
 
 <script>
-import { UPLOAD_ACTION, UPLOAD_NAME } from "@/config/env.js";
+import {UPLOAD_ACTION, UPLOAD_NAME} from '@/config/env.js'
 
 import phone_bind_old_check_modal from "@/components/account/phone_bind_old_check_modal.vue";
 import phone_bind_new_set_modal from "@/components/account/phone_bind_new_set_modal.vue";
+import area_select from "@/components/address/area_select.vue";
 
 export default {
-  name: "servicePage",
-  components: {
-    phone_bind_old_check_modal,
-    phone_bind_new_set_modal,
-  },
-  data() {
-    return {
-      UPLOAD_ACTION,
-      UPLOAD_NAME,
+    name: "servicePage",
+    components: {
+        area_select,
+        phone_bind_old_check_modal,
+        phone_bind_new_set_modal,
+    },
+    data() {
+        return {
+            UPLOAD_ACTION,
+            UPLOAD_NAME,
 
-      my_info: {},
-      form: {
-        image: "",
-        realName: "",
-        address: "",
-      },
-      loading: false,
-      imageUrl: "",
-    };
-  },
-  watch: {},
-  created() {
-    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000);
-    this.setView();
-  },
-  methods: {
-    throttle_do_submit() {},
+            my_info: {},
+            form: {
+                image: '',
+                realName: "",
+                nickname: "",
+                email: "",
+                province: '',
+                city: '',
+                area: '',
+                provinceCode: '',
+                cityCode: '',
+                areaCode: '',
+            },
+            loading: false,
+        };
+    },
+    watch: {},
+    created() {
+        this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
+        this.setView();
+    },
+    methods: {
+        throttle_do_submit() {
 
-    open_phone_update() {
-      this.$refs.phone_bind_old_check_modal.init();
-    },
-    confirm_old_pass() {
-      this.$refs.phone_bind_new_set_modal.init();
-    },
-    confirm_new() {
-      this.query_user();
-    },
-
-    setView() {
-      this.query_user();
-    },
-    query_user() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "users_userInfo",
         },
-      }).then((res) => {
-        if (res.code == 200) {
-          let data = res.data;
-          this.my_info = data;
 
-          this.form = {
-            image: data.image || "",
-            realName: data.realName || "",
-            address: data.address || "",
-          };
-
-          this.$store.commit("set_baseInfo", res.data);
-        }
-      });
-    },
-
-    do_submit() {
-      this.loading = true;
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "users_editInfo",
-          ...this.form,
+        open_phone_update() {
+            this.$refs.phone_bind_old_check_modal.init();
         },
-      }).then((res) => {
-        let { code, msg, data } = res;
-        alert(res).then(() => {
-          this.loading = false;
-        });
-        if (code == 200) {
-          this.setView();
-        }
-      });
-    },
+        confirm_old_pass() {
+            this.$refs.phone_bind_new_set_modal.init();
+        },
+        confirm_new() {
+            this.query_user()
+        },
 
-    do_reset() {
-      this.form = {
-        image: this.my_info.image,
-        realName: "",
-        address: "",
-      };
-    },
+        setView() {
+            this.query_user();
+        },
+        query_user() {
+            this.$api({
+                url: '/service.php',
+                method: 'get',
+                data: {
+                    action: 'users_userInfo',
+                },
+            }).then(res => {
+                if (res.code == 200) {
+                    let data = res.data;
+                    this.my_info = data;
 
-    //上传相关
-    upload_on_success(res, file) {
-      //console.log("上传结果", res);
-      let { code, data, msg } = res;
-      alert(res);
-      if (code == 200) {
-        this.form.image = res.data;
-      }
+                    this.form = {
+                        image: data.image,
+                        realName: data.realName,
+                        nickname: data.nickname,
+                        email: data.email,
+                        province: data.province,
+                        city: data.city,
+                        area: data.areaId,
+                        provinceCode: data.provinceCode,
+                        cityCode: data.cityCode,
+                        areaCode: data.areaCode,
+                    }
+                    this.$refs.area_select.init({province: data.province, city: data.city, area: data.areaId});
+                    this.$store.commit("set_baseInfo", res.data);
+                }
+            })
+        },
+
+        do_submit() {
+
+            if (!this.form.realName) {
+                alertErr("请填写真实姓名");
+                return;
+            }
+
+            if (!this.form.area) {
+                alertErr("请填写所在地区");
+                return;
+            }
+
+            if (!this.form.email) {
+                alertErr("请填写邮箱");
+                return;
+            }
+            this.loading = true;
+            this.$api({
+                url: '/service.php',
+                method: 'get',
+                data: {
+                    action: 'users_editInfo',
+                    ...this.form
+                },
+            }).then((res) => {
+                let {code, msg, data} = res;
+                alert(res).then(() => {
+                    this.loading = false;
+                });
+                if (code == 200) {
+                    this.setView();
+                }
+            });
+        },
+
+        do_reset() {
+            this.form = {
+                image: this.my_info.image,
+                realName: "",
+                nickName: "",
+                email: "",
+                province: '',
+                city: '',
+                area: '',
+                provinceCode: '',
+                cityCode: '',
+                areaCode: '',
+            };
+        },
+
+
+        //上传相关
+        upload_on_success(res, file) {
+            //console.log("上传结果", res);
+            let {code, data, msg} = res;
+            alert(res);
+            if (code == 200) {
+                this.form.image = res.data;
+            }
+        },
+        upload_before_upload(file) {
+            const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
+            return isLt2M;
+        },
+
+        changeSelectAddress(data) {
+            this.$log("更新省市区数据", data);
+            let {sheng, shi, qu} = data;
+            this.form.province = sheng.title;
+            this.form.city = shi.title;
+            this.form.area = qu.title;
+
+            this.form.provinceCode = sheng.id;
+            this.form.cityCode = shi.id;
+            this.form.areaCode = qu.id;
+            // debugger
+        },
     },
-    upload_before_upload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
-      return isLt2M;
-    },
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
-      return isLt2M;
-    },
-  },
 };
 </script>
 
@@ -260,6 +265,7 @@ export default {
 .page {
   text-align: left;
   padding-bottom: 80px;
+  padding-top: 0;
 
   .main-title {
     .flex-between();
@@ -277,6 +283,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
+      background: ;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -292,12 +299,12 @@ export default {
 
 .page {
   .page-ctx {
-    padding-bottom: 69px;
+    padding-bottom: 80px;
 
     .section {
       // padding-bottom: 27px;
       // margin-bottom: 40px;
-      border-bottom: 1px solid #dbdbdb;
+      // border-bottom: 1px solid #dbdbdb;
     }
 
     .section-title {
@@ -310,11 +317,6 @@ export default {
 
     .section-ctx {
       // padding-top: 32px;
-    }
-
-    .other {
-      margin-top: 40px;
-      border: none;
     }
 
     .upload-box {
@@ -332,20 +334,32 @@ export default {
 
       .text {
         display: inline-block;
-        min-width: 157px;
+        min-width: 134px;
         text-align: right;
         font-size: 14px;
         color: #666;
+
+        span {
+          color: #ff0000;
+        }
       }
 
       .info {
-        padding-left: 26px;
+        padding-left: 10px;
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
         color: #333333;
         display: inline-block;
         min-width: 120px;
+
+        input {
+          // width: 400px;
+          // height: 40px;
+          // background: #ffffff;
+          // border-radius: 4px 4px 4px 4px;
+          // border: 1px solid #d4d4d4;
+        }
 
         .el-input {
           width: 400px;
@@ -369,57 +383,37 @@ export default {
   }
 }
 
+
 .btn-box {
   button {
     width: 76px;
     height: 40px;
   }
 
-  .btn-confirm {
-    width: 104px;
-    height: 40px;
-    margin-right: 20px;
-    background: #27417c;
-    border-radius: 4px 4px 4px 4px;
-    background: @theme;
+  .btn-save {
+    width: 120px;
+    height: 32px;
+    background: #FFFFFF;
     border-radius: 4px;
     border: 1px solid @theme;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #fff;
+    color: @theme;
+
   }
 
   .btn-cancel {
-    width: 104px;
-    height: 40px;
-    border-radius: 4px 4px 4px 4px;
-    border: 1px solid #27417c;
+    margin-right: 20px;
+    width: 120px;
+    height: 32px;
+    background: @theme;
+    border-radius: 4px;
+    font-family: Arial, Arial;
+    font-weight: 400;
+    font-size: 14px;
+    color: #FFFFFF;
   }
-}
-
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 88px;
-  height: 88px;
-  line-height: 88px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
 }
 </style>
 

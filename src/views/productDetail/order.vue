@@ -62,7 +62,7 @@ z`
                         <el-upload
                                 multiple
                                 name="img"
-                                action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload"
+                                action="http://wuhanjingmi.new.zhishangez.com//service.php?action=index_ossUpload"
                                 list-type="picture-card"
                                 :on-success="handleSuccessImg"
                         >
