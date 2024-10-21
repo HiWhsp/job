@@ -376,7 +376,7 @@ export default {
             let str_data = JSON.stringify(data_format);
             this.$store.commit('set_cache_payment_products', str_data)
             this.$router.push({
-                path: "/order",
+                path: "/orderSubmit",
             });
         },
 

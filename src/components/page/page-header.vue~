@@ -197,6 +197,7 @@ export default {
       const { index, name, query } = params;
       this.activeIndex = index;
       this.$router.push({ name, query: { to: query } });
+      location.reload();
     },
     mouseenterChat(index) {
       if (index === 4) {

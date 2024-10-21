@@ -225,7 +225,7 @@ export default {
         });
         if (res.code === 200) {
           localStorage.setItem("token", res.data.token);
-          localStorage.setItem("userId", res.data.userId);
+          localStorage.setItem("userId", res.data.user);
           this.$router.push("index");
           this.setIsLogin(true);
         } else {

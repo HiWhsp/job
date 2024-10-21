@@ -218,7 +218,7 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "gouwuche_lists",
+          action: "gouwuche_lists", 
         },
       }).then((res) => {
         let {code, data} = res;

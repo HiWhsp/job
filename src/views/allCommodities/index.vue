@@ -1,256 +1,256 @@
 <template>
-    <div class="container">
-        <div class="main">
-            <breadcrumb :list="['首页', '商品分类']"></breadcrumb>
-            <div class="category-con">
-                <ul class="row" @click="handleItemClick($event, 0)">
-                    <li class="one">分类</li>
-                    <div class="li-wrap" :class="{'li-wrap__all': allRow[0]}">
-                        <li :class="['row-li']" v-for="(item, index) in categoryList" :key="index">
+  <div class="container">
+    <div class="main">
+      <breadcrumb :list="['首页', '商品分类']"></breadcrumb>
+      <div class="category-con">
+        <ul class="row" @click="handleItemClick($event, 0)">
+          <li class="one">分类</li>
+          <div class="li-wrap" :class="{'li-wrap__all': allRow[0]}">
+            <li :class="['row-li']" v-for="(item, index) in categoryList" :key="index">
                         <span class="pointer item" :data-id="item.id"
                               :data-name="item.title">{{ item.title }}</span>
-                        </li>
-                    </div>
-                    <div class="icon-wrap" @click="hiddenRow(0)">
-                        <span class="all">全部</span>
-                        <img class="all-icon" src="../../assets/img/allCommodities/icon2.png" alt="icon"/>
-                    </div>
-                </ul>
-                <ul class="row" v-if="secondLevelCategory.length" @click="handleItemClick($event, 1)">
-                    <li class="one">二级分类</li>
-                    <div class="li-wrap" :class="{'li-wrap__all': allRow[1]}">
-                        <li :class="['row-li']" v-for="(item, index) in secondLevelCategory"
-                            :key="index">
+            </li>
+          </div>
+          <div class="icon-wrap" @click="hiddenRow(0)">
+            <span class="all">全部</span>
+            <img class="all-icon" src="../../assets/img/allCommodities/icon2.png" alt="icon"/>
+          </div>
+        </ul>
+        <ul class="row" v-if="secondLevelCategory.length" @click="handleItemClick($event, 1)">
+          <li class="one">二级分类</li>
+          <div class="li-wrap" :class="{'li-wrap__all': allRow[1]}">
+            <li :class="['row-li']" v-for="(item, index) in secondLevelCategory"
+                :key="index">
                         <span class="pointer item" :data-id="item.id"
                               :data-name="item.title">{{ item.title }}</span>
-                        </li>
-                    </div>
-                    <div class="icon-wrap" @click="hiddenRow(1)">
-                        <span class="all">全部</span>
-                        <img class="all-icon" src="../../assets/img/allCommodities/icon2.png" alt="icon"/>
-                    </div>
-                </ul>
-                <ul class="row" v-if="thirdLevelCategory.length" @click="handleItemClick($event, 2)">
-                    <li class="one">三级分类</li>
-                    <div class="li-wrap" :class="{'li-wrap__all': allRow[2]}">
-                        <li :class="['row-li']" v-for="(item, index) in thirdLevelCategory" :key="index">
+            </li>
+          </div>
+          <div class="icon-wrap" @click="hiddenRow(1)">
+            <span class="all">全部</span>
+            <img class="all-icon" src="../../assets/img/allCommodities/icon2.png" alt="icon"/>
+          </div>
+        </ul>
+        <ul class="row" v-if="thirdLevelCategory.length" @click="handleItemClick($event, 2)">
+          <li class="one">三级分类</li>
+          <div class="li-wrap" :class="{'li-wrap__all': allRow[2]}">
+            <li :class="['row-li']" v-for="(item, index) in thirdLevelCategory" :key="index">
                             <span class="pointer item" :data-id="item.id" :data-name="item.title">{{
                                 item.title
-                                }}</span>
-                        </li>
-                    </div>
-                    <div class="icon-wrap" @click="hiddenRow(2)">
-                        <span class="all">全部</span>
-                        <img class="all-icon" src="../../assets/img/allCommodities/icon2.png" alt="icon"/>
-                    </div>
-                </ul>
-                <ul class="row">
-                    <li class="one">筛选</li>
-                    <li :class="['filter-li-wrap']">
-                        <div class="filter-li" v-for="(item, index) in filter" :key="index">
-                            <span>{{ item }}</span>
-                            <img class="icon" src="../../assets/img/allCommodities/icon3.png"
-                                 alt="icon"/>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="last-row">
-                    <li class="one">当前筛选</li>
-                    <div class="li-wrap">
-                        <div class="li" v-for="(item,index) in selectFilterList" :key="item.id">
-                            {{ item.name }}
-                            <img class="closeIcon" src="../../assets/img/allCommodities/closeIcon.png" alt="icon"
-                                 @click="close(index)"/>
-                        </div>
-                    </div>
-                    <div class="icon-wrap  pointer" @click="selectFilterList = []">
-                        <img class="all-icon" src="../../assets/img/allCommodities/allDel.png" alt="icon"/>
-                        <span class="all">清除所选</span>
-                    </div>
-                </ul>
+                              }}</span>
+            </li>
+          </div>
+          <div class="icon-wrap" @click="hiddenRow(2)">
+            <span class="all">全部</span>
+            <img class="all-icon" src="../../assets/img/allCommodities/icon2.png" alt="icon"/>
+          </div>
+        </ul>
+        <ul class="row">
+          <li class="one">筛选</li>
+          <li :class="['filter-li-wrap']">
+            <div class="filter-li" v-for="(item, index) in filter" :key="index">
+              <span>{{ item }}</span>
+              <img class="icon" src="../../assets/img/allCommodities/icon3.png"
+                   alt="icon"/>
             </div>
-            <!--综合排序-->
-            <div class="sort-wrap">
-                <div class="filter-item">
-                    <div class="val">
-                        <div class="sort-box">
-                            <div class="item" v-for="(item, index) in sortList" :key="index"
-                                 :class="orderByColumn == item.ziduan ? 'active' : ''" @click="onClickSort(item)">
-                                <div class="text">{{ item.title }}</div>
-                                <div class="sanjiao-box" v-if="!item.not">
-                                    <div class="top"
-                                         :class="orderByColumn == item.ziduan && isAsc == 'asc' ? 'active' : ''"></div>
-                                    <div class="bottom"
-                                         :class="orderByColumn == item.ziduan && isAsc == 'desc' ? 'active' : ''"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+          </li>
+        </ul>
+        <ul class="last-row">
+          <li class="one">当前筛选</li>
+          <div class="li-wrap">
+            <div class="li" v-for="(item,index) in selectFilterList" :key="item.id">
+              {{ item.name }}
+              <img class="closeIcon" src="../../assets/img/allCommodities/closeIcon.png" alt="icon"
+                   @click="close(index)"/>
+            </div>
+          </div>
+          <div class="icon-wrap  pointer" @click="selectFilterList = []">
+            <img class="all-icon" src="../../assets/img/allCommodities/allDel.png" alt="icon"/>
+            <span class="all">清除所选</span>
+          </div>
+        </ul>
+      </div>
+      <!--综合排序-->
+      <div class="sort-wrap">
+        <div class="filter-item">
+          <div class="val">
+            <div class="sort-box">
+              <div class="item" v-for="(item, index) in sortList" :key="index"
+                   :class="orderByColumn == item.ziduan ? 'active' : ''" @click="onClickSort(item)">
+                <div class="text">{{ item.title }}</div>
+                <div class="sanjiao-box" v-if="!item.not">
+                  <div class="top"
+                       :class="orderByColumn == item.ziduan && isAsc == 'asc' ? 'active' : ''"></div>
+                  <div class="bottom"
+                       :class="orderByColumn == item.ziduan && isAsc == 'desc' ? 'active' : ''"></div>
                 </div>
+              </div>
             </div>
-            <!--商品列表-->
-            <div class="commodity-list">
-                <div class="commodity-wrap" v-for="(item, index) in commodityList" :key="index">
-                    <div class="commodity-img-wrap" @click="onRouteTo(item)">
-                        <img :src="item.thumb" alt="商品"/>
-                    </div>
-                    <div class="desc-wrap">
-                        <div class="desc ellipsis-1">{{ item.title }}</div>
-                        <div class="price">￥{{ item.priceSale }}</div>
-                        <div class="bottom">
-                            <div class="text">
-                                <div class="text-img-wrap">
-                                    <img src="../../assets/img/allCommodities/icon4.png" alt="icon"/>
-                                </div>
-                                加入对比
-                            </div>
-                            <div class="cart-wrap pointer">
-                                <div class="cart-text" @click="onRouteTo(item)">立即下单</div>
-                                <div class="img-wrap">
-                                    <img src="../../assets/img/allCommodities/cart.png" alt=""/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--分页器-->
-            <div class="pagination-box" v-if="count">
-                <el-pagination background layout="total, prev, pager, next, jumper" :total="count"
-                               :current-page="pagination.page"
-                               :page-size="pagination.pageNum" @current-change="changePage"></el-pagination>
-            </div>
+          </div>
         </div>
+      </div>
+      <!--商品列表-->
+      <div class="commodity-list">
+        <div class="commodity-wrap" v-for="(item, index) in commodityList" :key="index">
+          <div class="commodity-img-wrap" @click="onRouteTo(item)">
+            <img :src="item.thumb" alt="商品"/>
+          </div>
+          <div class="desc-wrap">
+            <div class="desc ellipsis-1">{{ item.title }}</div>
+            <div class="price">￥{{ item.priceSale }}</div>
+            <div class="bottom">
+              <div class="text">
+                <div class="text-img-wrap">
+                  <img src="../../assets/img/allCommodities/icon4.png" alt="icon"/>
+                </div>
+                加入对比
+              </div>
+              <div class="cart-wrap pointer">
+                <div class="cart-text" @click="onRouteTo(item)">立即下单</div>
+                <div class="img-wrap">
+                  <img src="../../assets/img/allCommodities/cart.png" alt=""/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--分页器-->
+      <div class="pagination-box" v-if="count">
+        <el-pagination background layout="total, prev, pager, next, jumper" :total="count"
+                       :current-page="pagination.page"
+                       :page-size="pagination.pageNum" @current-change="changePage"></el-pagination>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
 import breadcrumb from "@/components/breadcrumb";
 
 export default {
-    name: "allCommodities",
-    data() {
-        return {
-            allRow: [false, false, false], // 是否显示全部
-            sortList: [ // 排序列表
-                {title: "综合排序", ziduan: "ordering", not: true},
-                {title: "人气排序", ziduan: "", not: true},
-                {title: "价格", ziduan: "price_sale"},
-                {title: "销量排序", ziduan: "orders"}
-            ],
-            filter: ["尺寸", "厚度", "镀膜", "材料"],
-            orderByColumn: "ordering", //选择的排序方式
-            categoryList: [], // 商品分类
-            secondLevelCategory: [], // 二级分类
-            thirdLevelCategory: [], // 三级分类
-            selectFilterList: [], // 当前筛选
-            commodityList: [], // 商品列表
-            pagination: {
-                page: 1,
-                pageNum: 30
-            },
-            count: 0
-        };
+  name: "allCommodities",
+  data() {
+    return {
+      allRow: [false, false, false], // 是否显示全部
+      sortList: [ // 排序列表
+        {title: "综合排序", ziduan: "ordering", not: true},
+        {title: "人气排序", ziduan: "", not: true},
+        {title: "价格", ziduan: "price_sale"},
+        {title: "销量排序", ziduan: "orders"}
+      ],
+      filter: ["尺寸", "厚度", "镀膜", "材料"],
+      orderByColumn: "ordering", //选择的排序方式
+      categoryList: [], // 商品分类
+      secondLevelCategory: [], // 二级分类
+      thirdLevelCategory: [], // 三级分类
+      selectFilterList: [], // 当前筛选
+      commodityList: [], // 商品列表
+      pagination: {
+        page: 1,
+        pageNum: 30
+      },
+      count: 0
+    };
+  },
+  components: {
+    breadcrumb
+  },
+  created() {
+    this.getProductChannel(0);
+    this.setView();
+  },
+  methods: {
+    async setView() {
+      const {code, data} = await this.$api("product_plist", {
+        ...this.pagination,
+        channelId: this.selectFilterList[0] ? this.selectFilterList[0].id : 0,
+        orderType: this.getOrderType(this.orderByColumn),
+      })
+      if (code === 200) {
+        this.commodityList = data.list;
+        this.count = data.count;
+      }
     },
-    components: {
-        breadcrumb
-    },
-    created() {
-        this.getProductChannel(0);
-        this.setView();
-    },
-    methods: {
-        async setView() {
-            const {code, data} = await this.$api("product_plist", {
-                ...this.pagination,
-                channelId: this.selectFilterList[0] ? this.selectFilterList[0].id : 0,
-                orderType: this.getOrderType(this.orderByColumn),
-            })
-            if (code === 200) {
-                this.commodityList = data.list;
-                this.count = data.count;
-            }
+    // 获取商品分类
+    async getProductChannel(level, parentId = 0) {
+      const {code, data} = await this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_channel",
+          parentId: parentId,
         },
-        // 获取商品分类
-        async getProductChannel(level, parentId = 0) {
-            const {code, data} = await this.$api({
-                url: "/service.php",
-                method: "get",
-                data: {
-                    action: "product_channel",
-                    parentId: parentId,
-                },
-            });
-            if (code === 200) {
-                if (level === 0) {
-                    this.categoryList = data;
-                } else if (level === 1) {
-                    this.secondLevelCategory = data;
-                } else if (level === 2) {
-                    this.thirdLevelCategory = data;
-                }
-            }
-        },
-        // 筛选点击
-        handleItemClick(event, level) {
-            const target = event.target;
-            if (target.tagName === "SPAN" && target.className.includes('item')) {
-                const name = target.getAttribute("data-name");
-                const id = target.getAttribute("data-id");
-                if (!this.selectFilterList.includes(name)) {
-                    this.selectFilterList = [{name: name, id: id}];
-                }
-
-                if (level === 0) {
-                    this.secondLevelCategory = [];
-                    this.thirdLevelCategory = [];
-                    this.getProductChannel(1, id);
-                } else if (level === 1) {
-                    this.thirdLevelCategory = [];
-                    this.getProductChannel(2, id);
-                }
-            }
-        },
-        // 清空当前筛选
-        close(item) {
-            const index = item;
-            if (index !== -1) {
-                this.selectFilterList.splice(index, 1);
-            }
-        },
-        // 跳转详情
-        onRouteTo(item) {
-            this.$router.push(`/productDetail?id=${item.inventoryId}`);
-        },
-        // 翻页
-        changePage() {
-            this.setView();
-        },
-        // 排序
-        onClickSort(item) {
-            if (item.ziduan == this.orderByColumn) {
-                this.isAsc = this.isAsc == "asc" ? "desc" : "asc";
-            } else {
-                this.isAsc = "asc";
-            }
-            this.orderByColumn = item.ziduan;
-            this.setView();
-        },
-        // 获取排序方式
-        getOrderType(item) {
-            if (item === "ordering") { // 综合
-                return 0;
-            } else if (item === "price_sale") { // 单价
-                return this.isAsc === "asc" ? 2 : 3;
-            } else if (item === "orders") { // 库存
-                return 1;
-            }
-        },
-        // 是否显示全部
-        hiddenRow(index) {
-            this.$set(this.allRow, index, !this.allRow[index])
+      });
+      if (code === 200) {
+        if (level === 0) {
+          this.categoryList = data;
+        } else if (level === 1) {
+          this.secondLevelCategory = data;
+        } else if (level === 2) {
+          this.thirdLevelCategory = data;
         }
+      }
     },
+    // 筛选点击
+    handleItemClick(event, level) {
+      const target = event.target;
+      if (target.tagName === "SPAN" && target.className.includes('item')) {
+        const name = target.getAttribute("data-name");
+        const id = target.getAttribute("data-id");
+        if (!this.selectFilterList.includes(name)) {
+          this.selectFilterList = [{name: name, id: id}];
+        }
+
+        if (level === 0) {
+          this.secondLevelCategory = [];
+          this.thirdLevelCategory = [];
+          this.getProductChannel(1, id);
+        } else if (level === 1) {
+          this.thirdLevelCategory = [];
+          this.getProductChannel(2, id);
+        }
+      }
+    },
+    // 清空当前筛选
+    close(item) {
+      const index = item;
+      if (index !== -1) {
+        this.selectFilterList.splice(index, 1);
+      }
+    },
+    // 跳转详情
+    onRouteTo(item) {
+      this.$router.push(`/productDetail?id=${item.inventoryId}`);
+    },
+    // 翻页
+    changePage() {
+      this.setView();
+    },
+    // 排序
+    onClickSort(item) {
+      if (item.ziduan == this.orderByColumn) {
+        this.isAsc = this.isAsc == "asc" ? "desc" : "asc";
+      } else {
+        this.isAsc = "asc";
+      }
+      this.orderByColumn = item.ziduan;
+      this.setView();
+    },
+    // 获取排序方式
+    getOrderType(item) {
+      if (item === "ordering") { // 综合
+        return 0;
+      } else if (item === "price_sale") { // 单价
+        return this.isAsc === "asc" ? 2 : 3;
+      } else if (item === "orders") { // 库存
+        return 1;
+      }
+    },
+    // 是否显示全部
+    hiddenRow(index) {
+      this.$set(this.allRow, index, !this.allRow[index])
+    }
+  },
 };
 </script>
 

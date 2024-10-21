@@ -45,7 +45,7 @@
         <el-carousel indicator-position="none" arrow="never">
           <el-carousel-item class="product-carousel" v-for="(item, index) in productList" :key="index">
             <div class="product-wrap" v-for="it in item" :key="it.src">
-              <div class="img-wrap" @click="goUrl(`/productDetail?id=${it.inventoryId}`)">
+              <div class="img-wrap" @click="goUrl(`/productDetail?id=${item.inventoryId}`)">
                 <img :src="it.images" alt=""/>
               </div>
               <div class="desc-wrap">
