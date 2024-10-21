@@ -36,7 +36,7 @@
           <div class="label">图片上传</div>
 
           <div class="upload-box">
-            <el-upload class="upload-demo" list-type="picture-card" multiple accept="image/*" :name="upload_col_name" :action="uploadAction" :on-success="uploadSuccess_pingjia" :before-upload="beforeUpload_pingjia" :data="uploadExtraData">
+            <el-upload class="upload-demo" list-type="picture-card" multiple accept="image/*" :name="upload_col_name" action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload" :on-success="uploadSuccess_pingjia" :before-upload="beforeUpload_pingjia" :data="uploadExtraData">
               <!-- <i class="el-icon-upload"></i> -->
               上传图片
               <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
@@ -66,7 +66,7 @@ export default {
   },
   data() {
     return {
-      order_id: this.$route.query.order_id,
+      orderId: this.$route.query.orderId,
       type: this.$route.query.type,
       orderObj: {}, //
 
@@ -94,7 +94,7 @@ export default {
     orders_detail() {
       order.orders_detail({
         params: {
-          id: this.order_id,
+          id: this.orderId,
         },
         success: (data) => {
           //console.log("orders_detail", data);
@@ -126,7 +126,7 @@ export default {
       }
 
       let formData = {
-        order_id: this.order_id,
+        orderId: this.orderId,
         type: this.type,
         reason: this.reason,
         remark: this.remark,
@@ -151,7 +151,7 @@ export default {
     uploadSuccess_pingjia(res, file) {
       //console.log("上传结果", res);
       let { code, image, message } = res;
-  
+
       if (code == 200) {
         this.images.push(image);
       }
@@ -226,11 +226,11 @@ export default {
   &.step-1 {
     .step-item {
       &:nth-child(1) {
-        background: #4CA5E4;
+        background: @theme;
         color: #fff;
 
         .right-arrow {
-          border-left-color: #4CA5E4;
+          border-left-color: @theme;
         }
       }
     }
@@ -238,11 +238,11 @@ export default {
   &.step-2 {
     .step-item {
       &:nth-child(2) {
-        background: #4CA5E4;
+        background: @theme;
         color: #fff;
 
         .right-arrow {
-          border-left-color: #4CA5E4;
+          border-left-color: @theme;
         }
       }
     }
@@ -250,11 +250,11 @@ export default {
   &.step-3 {
     .step-item {
       &:nth-child(3) {
-        background: #4CA5E4;
+        background: @theme;
         color: #fff;
 
         .right-arrow {
-          border-left-color: #4CA5E4;
+          border-left-color: @theme;
         }
       }
     }

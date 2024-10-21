@@ -1,7 +1,9 @@
 <template>
   <div class="modal-container">
-    <el-dialog class="modal-address" title="新增收货地址" width="500px" :visible.sync="show_modal" :before-close="onModal_close"
-      :close-on-press-escape="false" :close-on-click-modal="false" custom-class="modal-custom" @closed="onclosed">
+    <el-dialog class="modal-address" title="新增收货地址" width="500px" :visible.sync="show_modal"
+               :before-close="onModal_close"
+               :close-on-press-escape="false" :close-on-click-modal="false" custom-class="modal-custom"
+               @closed="onclosed">
       <div class="modal-inner">
         <div class="item">
           <span class="text required">收货人</span>
@@ -9,7 +11,7 @@
         </div>
         <div class="item">
           <span class="text required">所在地区</span>
-          <area_select ref="area_select" @change="changeSelectAddress" />
+          <area_select ref="area_select" @change="changeSelectAddress"/>
         </div>
         <div class="item">
           <span class="text required">详细地址</span>
@@ -21,15 +23,15 @@
         </div>
         <div class="item">
           <span class="text required">固定电话</span>
-          <el-input clearable v-model="form.phone" placeholder="请输入固定电话"></el-input>
+          <el-input clearable v-model="form.fixed_phone" placeholder="请输入固定电话"></el-input>
         </div>
         <div class="item">
           <span class="text required">邮政编码</span>
-          <el-input clearable v-model="form.phone" placeholder="请输入邮政编码"></el-input>
+          <el-input clearable v-model="form.zipCode" placeholder="请输入邮政编码"></el-input>
         </div>
         <div class="item">
           <span class="text"></span>
-          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#A66600"
+          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#27417C"
                      inactive-color="#eeeeee">
           </el-switch>
           <span style="margin-left: 15px;">设置为默认地址</span>
@@ -46,7 +48,8 @@
 <script>
 import area_select from "@/components/address/area_select.vue";
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
+
 export default {
   name: "address-add",
   components: {
@@ -73,6 +76,8 @@ export default {
         latitude: '',
         shequId: '',
         addressType: 1,
+        fixed_phone: "",
+        zipCode: ''
       },
 
       loading: false,
@@ -81,9 +86,7 @@ export default {
   computed: {
     ...mapState(["baseInfo"]),
   },
-  watch: {
-
-  },
+  watch: {},
 
   created() {
     this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
@@ -108,7 +111,7 @@ export default {
       this.$api("userAddress_detail", {
         id: this.form.id
       }).then((res) => {
-        let { code, data, msg } = res;
+        let {code, data, msg} = res;
         if (code == 200) {
 
           this.form = {
@@ -127,6 +130,8 @@ export default {
             latitude: data.latitude,
             shequId: data.shequId,
             addressType: data.addressType,
+            fixed_phone: data.fixed_phone,
+            zipCode: data.zipCode
           }
 
           this.$nextTick(() => {
@@ -154,6 +159,8 @@ export default {
         latitude: '',
         shequId: '',
         addressType: 1,
+        fixed_phone: "",
+        zipCode: ''
       }
     },
 
@@ -161,7 +168,7 @@ export default {
     //更新当前父组件数据
     changeSelectAddress(data) {
       this.$log("更新省市区数据", data);
-      let { sheng, shi, qu } = data;
+      let {sheng, shi, qu} = data;
       this.form.province = sheng.title;
       this.form.city = shi.title;
       this.form.area = qu.title;
@@ -171,7 +178,6 @@ export default {
       this.form.areaCode = qu.id;
       // debugger
     },
-
 
 
     // 新建地址 / 编辑地址

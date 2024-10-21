@@ -63,7 +63,7 @@ export default {
                 },
                 {
                     title: "售后订单",
-                    route: "/after-sales-order",
+                    route: "/refund-list",
                 },
                 {
                     title: "购物车",

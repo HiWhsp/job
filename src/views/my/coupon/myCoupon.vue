@@ -23,27 +23,33 @@
           </div>
         </div>
 
-        <!-- <div class="ctx-box">
-          <div class="yhq-list" v-if="list_yhq.length">
+        <div class="ctx-box">
+          <div class="yhq-list flex-between" v-if="list_yhq.length">
             <div class="yhq-item-box" v-for="(item, index) in list_yhq" :key="index">
-              <img v-if="item.status == 1" src="@/static/order/coupon-used.png" alt="" class="used-img"/>
-              <img v-if="item.status == 2" src="@/static/order/coupon-guoqi.png" alt="" class="used-img"/>
+              <img v-if="item.status == 0" src="@/static/order/coupon-used.png" alt="" class="used-img"/>
+              <img v-if="item.status == 1 || item.status == 2" src="@/static/order/coupon-guoqi.png"
+                   alt=""
+                   class="used-img"/>
 
-              <div class="yhq-item" :class="{ used: item.status == 1 || item.status == 2  }">
+              <div class="yhq-item" :class="{ used: item.status == 0 || item.status == 1  }">
                 <div class="yhq-left">
-                  <img :src="item.originalPic" alt=""/>
-                </div>
-                <div class="yhq-right">
                   <div class="money">
                     <div class="currency">{{ vuex_huobi }}</div>
                     <div class="num">{{ item.jian }}</div>
                   </div>
+                </div>
+                <div class="yhq-right">
                   <div class="tiaojian">使用条件： 满{{ item.man }}可用</div>
                   <div class="shijian">有效时间： {{ item.startTime }} - {{ item.endTime }}</div>
                   <div class="action">
-                    <button v-if="status == 1" class="btn-ripple btn-pick btn-lingqu" @click="coupon_use(item)">
+                    <button v-if="item.status == 0" class="btn-ripple btn-pick btn-lingqu"
+                            @click="coupon_use(item)">
                       立即使用
                     </button>
+                    <img v-if="item.status == 1" src="@/static/order/yishiyong.png"
+                         class="status-img" alt="">
+                    <img v-if="item.status == 2" src="@/static/order/yiguoqi.png" class="status-img"
+                         alt="">
                   </div>
                 </div>
               </div>
@@ -60,97 +66,26 @@
                   <span class="num">{{ item.jian }}</span>
                 </div>
                 <div class="tiaojian">
+                  <!-- 使用条件： -->
                   满{{ item.man }}可用
                 </div>
                 <div class="shijian">
+                  <!-- 有效时间： -->
                   {{ item.startTime }}-{{ item.endTime }}
                 </div>
               </div>
               <div class="action">
-                <button :disabled="status != 1" @click="coupon_use(item)">立即使用</button>
+                <button :disabled="status != 0" @click="coupon_use(item)">立即使用</button>
               </div>
               <div class="guoqi">
-                <img v-if="status == 2" :src="yishiyong" alt/>
-                <img v-if="status == 3" :src="yiguoqi" alt/>
+                <img v-if="status == 1" :src="yishiyong" alt/>
+                <img v-if="status == 2" :src="yiguoqi" alt/>
               </div>
             </div>
           </div>
-        </div> -->
-
-        <!-- <div class="ctx-box">
-          <div class="yhq-list" v-if="list_yhq.length">
-            <div class="yhq-item-box" v-for="(item, index) in list_yhq" :key="index">
-
-            </div>
-          </div>
-        </div> -->
-
-        <div class="coupon-container">
-
-          <template v-if="status == 1">
-            <div class="coupon" v-for="(item, index) in list_yhq" :key="index" >
-              <div class="coupon-left">
-                  <img src="@/static/order/coupon-used.png" alt="" class="coupon-img">
-                  <div class="coupon-left-price">
-                    <span style="font-size: 14px; display: inline-block; vertical-align: 20px; margin-right: -8px; ">¥</span>
-                    20
-                  </div> 
-                  <div class="coupon-left-text">无门槛优惠券</div>
-              </div>
-              <div class="coupon-right">
-                  <div class="coupon-right-title">自营20元无门槛券</div>
-                  <div class="coupon-right-time" >2020.12.21 11:18 - 2020.12.28 23:59</div>
-                  <button class="button">立即使用</button>
-              </div>            
-          </div>
-          </template>
-
-          <template v-if="status == 2">
-            <div class="coupon" v-for="(item, index) in list_yhq" :key="index">
-              <div class="coupon-left">
-                  <img src="@/static/order/coupon-guoqi.png" alt="" class="coupon-img">
-                  <div class="coupon-left-price">
-                    <span style="font-size: 14px; display: inline-block; vertical-align: 20px; margin-right: -8px; ">¥</span>
-                    20
-                  </div> 
-                  <div class="coupon-left-text">无门槛优惠券</div>
-              </div>
-              <div class="coupon-right">
-                  <div class="coupon-right-title">自营20元无门槛券</div>
-                  <div class="coupon-right-time" >2020.12.21 11:18 - 2020.12.28 23:59</div>
-                  <div class="coupon-right-state">
-                    <img src="@/static/order/yishiyong.png"/>
-                  </div>
-              </div>            
-          </div>
-          </template>
-
-          <template v-if="status == 3">
-            <div class="coupon" v-for="(item, index) in list_yhq" :key="index">
-              <div class="coupon-left">
-                  <img src="@/static/order/coupon-guoqi.png" alt="" class="coupon-img">
-                  <div class="coupon-left-price">
-                    <span style="font-size: 14px; display: inline-block; vertical-align: 20px; margin-right: -8px; ">¥</span>
-                    20
-                  </div> 
-                  <div class="coupon-left-text">无门槛优惠券</div>
-              </div>
-              <div class="coupon-right">
-                  <div class="coupon-right-title">自营20元无门槛券</div>
-                  <div class="coupon-right-time" >2020.12.21 11:18 - 2020.12.28 23:59</div>
-                  <div class="coupon-right-state">
-                    <img src="@/static/order/yiguoqi.png"/>
-                  </div>
-              </div>            
-          </div>
-          </template>
-
         </div>
-
-
       </div>
     </div>
-    
   </div>
 </template>
 
@@ -169,35 +104,14 @@ export default {
       yishiyong,
 
       status: 1,
-
       list_tab: [
+        // { title: "全部", status: 0 },
         {title: "未使用", status: 1},
         {title: "已使用", status: 2},
         {title: "已过期", status: 3},
       ],
 
-      list_yhq: Array.from({length: 10}, (_, i) => ({
-                id: i+1,
-                status: 1, 
-                originalPic: "../../static/order/coupon-used.png", 
-                vuex_huobi:20,
-                jian: "无门槛优惠劵",
-                man:"自营20元无门槛劵",
-                startTime:"2020.12.21 11:18",
-                endTime:"2020.12.28 23:59"
-            })),
-
-      list_ysy: Array.from({length: 10}, (_, i) => ({
-          id: i+1,
-          status: 2, 
-          originalPic: "../../static/order/coupon-guoqi.png", 
-          vuex_huobi:20,
-          jian: "无门槛优惠劵",
-          man:"自营20元无门槛劵",
-          startTime:"2020.12.21 11:18",
-          endTime:"2020.12.28 23:59",
-          state:"../../static/order/yishiyong.png"
-      }))
+      list_yhq: [],
     };
   },
   computed: {
@@ -210,19 +124,20 @@ export default {
   methods: {
     tab_toggle(item) {
       if (this.status != item.status) {
-        //this.list_yhq = [];
+        this.list_yhq = [];
         this.status = item.status;
-        console.log(this.status);
         this.setView();
       }
     },
     setView() {
-      this.$api("users_myYhqList", {
+      this.$api("yhq_myList", {
         scene: this.status,
+        page: 1,
+        pageSize: 1000,
       }).then((res) => {
         let {code, data} = res;
         if (code == 200) {
-          this.list_yhq = data;
+          this.list_yhq = data.list;
         }
       });
     },
@@ -239,6 +154,7 @@ export default {
 <style scoped lang="less">
 .page {
   text-align: left;
+  padding-top: 0;
   padding-bottom: 80px;
 
   .main-title {
@@ -257,7 +173,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #4CA5E4;
+      background: @theme;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -297,9 +213,9 @@ export default {
         color: #333333;
 
         &.active {
-          border-bottom: 3px solid #27417C;
+          border-bottom: 3px solid @theme;
           font-weight: bold;
-          color: #27417C;
+          color: @theme;
         }
       }
     }
@@ -316,8 +232,7 @@ export default {
       }
 
       .arrow {
-        height: 10px;
-        width: 10px;
+        width: 14px;
         margin-left: 8px;
       }
 
@@ -326,8 +241,8 @@ export default {
         font-size: 14px;
         font-family: PingFang SC;
         font-weight: 400;
-        line-height: 18px;
-        color: #27417C;
+        line-height: 36px;
+        color: @theme;
       }
     }
   }
@@ -435,245 +350,126 @@ export default {
   }
 }
 
-// .yhq-list {
-//   .yhq-item-box {
-//     position: relative;
-//   }
+.yhq-list {
+  .flex();
+  flex-wrap: wrap;
+  .flex-between();
 
-//   .yhq-item {
-//     .flex();
-//     margin-bottom: 30px;
+  .yhq-item-box {
+    position: relative;
+    width: 419px;
+    height: 128px;
+    background: #FFFFFF;
+    border-radius: 10px 10px 10px 10px;
+    border: 1px solid #E6E6E6;
+    margin-bottom: 20px;
 
-//     .yhq-left {
-//       width: 786px;
-//       height: 252px;
-
-//       img {
-//         width: 100%;
-//         height: 100%;
-//       }
-//     }
-
-//     .yhq-right {
-//       flex: 1;
-//       height: 252px;
-//       padding: 20px;
-//       background: #f9f9f9;
-
-//       .money {
-//         display: flex;
-//         align-items: flex-start;
-
-//         .currency {
-//           font-size: 42px;
-//           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-//           font-weight: bold;
-//           color: #4CA5E4;
-//         }
-
-//         .num {
-//           font-size: 42px;
-//           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-//           font-weight: bold;
-//           color: #4CA5E4;
-//         }
-//       }
-
-//       .tiaojian {
-//         margin-top: 10px;
-//         font-size: 12px;
-//         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-//         font-weight: 400;
-//         color: #999999;
-//         line-height: 28px;
-//       }
-
-//       .shijian {
-//         font-size: 12px;
-//         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-//         font-weight: 400;
-//         color: #999999;
-//         line-height: 28px;
-//       }
-
-//       .action {
-//         margin-top: 30px;
-
-//         button {
-//           width: 127px;
-//           height: 36px;
-//           background: #4CA5E4;
-//           border-radius: 4px 4px 4px 4px;
-//           font-size: 14px;
-//           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-//           font-weight: 400;
-//           color: #ffffff;
-
-//           &:disabled {
-//             background: #aaa;
-//             cursor: not-allowed;
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
-
-.ctx-box{
-  border: 1px solid red;
-  padding-left: 24px;
-  padding-right: 34px;
-  
-  .yhq-list{
-
-    // border: 1px solid red;
-    // width: 530px;
-    // height: 128px;
-    
-    .yhq-item-box{
-      border: 1px solid red;
-      width: 530px;
-      height: 128px;
-      display: flex;
-      position: relative;
+    img {
+      width: 140px;
+      height: 100%;
     }
   }
 
-}
+  .yhq-item {
+    .flex();
+    margin-bottom: 30px;
 
+    .yhq-left {
+      position: absolute;
+      width: 140px;
 
-.coupon-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-
-    .coupon {
-      display: flex;
-      border: 1px dashed #ccc;
-      width: 49%;
-      background-color: #fff;
-      justify-content: space-between;
-      position: relative;
-      //padding: 10px 0;
-      box-sizing: border-box;
-    }
-    .coupon-left {
-        color: #fff;
-        //background-color: #ff4400;
-        width: 140px;
-        height: 128px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
+      .money {
+        .flex();
         justify-content: center;
-        position: relative;
-        
-        .coupon-img{
-          position: relative;
-          width: 100%;
-          height: 100%;
+
+        .currency {
+          font-size: 42px;
+          font-weight: bold;
+          color: #fff;
         }
 
-        .coupon-left-price {
-            font-weight: 400;
-            font-size: 30px;
-            color: #FFFFFF;
-            line-height: 43px;
-            text-align: left;
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-
+        .num {
+          font-size: 42px;
+          font-weight: bold;
+          color: #fff;
         }
-
-        .coupon-left-text {
-            width: 100%;
-            font-weight: 400;
-            font-size: 14px;
-            color: #FFFFFF;
-            line-height: 43px;
-            text-align: left;
-            position: absolute;
-            top: 70%;
-            left: 50%;
-            transform: translate(-30%, -50%);
-        }
-
+      }
     }
-        
-        .coupon-right {
-            flex-grow: 1;
-            padding: 0 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
 
-            .coupon-right-title {
-              font-weight: 400;
-              font-size: 16px;
-              color: #000000;
-              line-height: 20px;
-              text-align: left;
-              font-style: normal;
-              text-transform: none;
-              margin-bottom: 12px;
-            }
+    .yhq-right {
+      flex: 1;
+      padding: 15px;
+      margin-left: 140px;
+      height: 128px;
 
-            .coupon-right-time {
-              font-weight: 400;
-              font-size: 14px;
-              color: #979797;
-              line-height: 16px;
-              text-align: left;
-              font-style: normal;
-              text-transform: none;
-              
-            }
+      .money {
+        display: flex;
+        align-items: flex-start;
 
-            .button {
-              color: white;
-              background: #FF4000;
-              border-radius: 4px 4px 4px 4px;
-              cursor: pointer;
-              width: 94px;
-              height: 32px;
-              font-weight: 400;
-              font-size: 14px;
-              color: #FFFFFF;
-              line-height: 20px;
-              text-align: center;
-              font-style: normal;
-              text-transform: none;
-              margin-top: 16px;
-          }
+        .currency {
+          font-size: 42px;
+          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-weight: bold;
+          color: @theme;
+        }
 
-          .coupon-right-state{
-            width: 64.72px;
-            height: 53.67px;
-            margin-left: 302px;
+        .num {
+          font-size: 42px;
+          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-weight: bold;
+          color: @theme;
+        }
+      }
 
-            img{
-              width: 100%;
-              height: 100%;
-            }
+      .tiaojian {
+        font-size: 12px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #000;
+        line-height: 28px;
+      }
+
+      .shijian {
+        font-size: 12px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #979797;
+        line-height: 28px;
+      }
+
+      .action {
+
+        button {
+          width: 127px;
+          height: 36px;
+          background: #FF4000;
+          border-radius: 4px 4px 4px 4px;
+          font-size: 14px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #ffffff;
+
+          &:disabled {
+            background: #aaa;
+            cursor: not-allowed;
           }
         }
 
-        
+        .status-img {
+          width: 65px;
+          height: 54px;
+          position: absolute;
+          right: 5px;
+          bottom: 5px;
+        }
+      }
     }
-       
-
-.used {
-  filter: grayscale(1);
-  opacity: 0.3;
+  }
 }
+
 
 .used-img {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
 }
 </style>
 

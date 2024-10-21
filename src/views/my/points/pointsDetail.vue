@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+
     <div class="main-title">
       <div class="left">我的积分</div>
     </div>
@@ -9,7 +10,7 @@
         <div class="text-box">
           <div class="text-1">我的积分</div>
           <div class="text-2">
-            {{ baseInfo.jifen || 50000 }}
+            {{ baseInfo.jifen || 0 }}
             <!-- <span class="currency">元</span> -->
           </div>
         </div>
@@ -19,99 +20,59 @@
         <div class="inner">
           <div class="tab-box">
             <div
-              class="tab-item"
-              v-for="(item, index) in list_tab"
-              :key="index"
-              @click="selectTab = item"
-              :class="item.title == selectTab.title ? 'active' : ''"
+                class="tab-item"
+                v-for="(item, index) in list_tab"
+                :key="index"
+                @click="selectTab = item"
+                :class="item.title == selectTab.title ? 'active' : ''"
             >
               {{ item.title }}
             </div>
           </div>
 
           <div class="bottom-info">
-            <div class="list-wrap">
+            <div class="list-wrap" v-if="count">
               <div class="jilu-list">
                 <div class="item item-title">
                   <div class="item-1">来源/用途</div>
                   <div class="item-2">积分变化</div>
                   <div class="item-3">日期</div>
                   <div class="item-4">备注</div>
-                  <div class="item-4">备注</div>
                 </div>
 
-                <div
-                  class="item-box"
-                  v-for="(item, index) in currentList"
-                  :key="index"
-                  @click="$router.push(`/order-detail?order_id=${order.id}`)"
+                <div class="item-box" v-for="(item, index) in list_jilu.list" :key="index"
+                     @click="$router.push(`/order-detail?orderId=${order.id}`)"
                 >
-                  <template v-if="item.product_info && item.product_info.length">
-
-                    <div class="item item_cahnpin">
-                      <div class="item-1">
-                        <div
-                          class="goods-info"
-                          v-for="(goods, goods_index) in item.product_info"
-                          :key="goods_index"
-                        >
-                          <div class="img-box">
-                            <img src="../../../static/home/featuredRecommendations/product3.png" alt="" />
-                          </div>
-                          <div class="info-box">
-                            <div class="info">订单号：546465454565</div>
-                            <div class="info">订单号：546465454565</div>
-                            <div class="title">{{ goods.title }}</div>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="item-2 val"
-                        :class="{ plus: item.type == 1, minus: item.type == 2 }"
-                      >
-                          {{ item.type == 1 ? "+" : "-" }}{{ item.jifen }}
-                      </div>
-                      <div class="item-3">{{ item.dtTime }}</div>
-                      <div class="item-4">{{ item.remark }}</div>
-                      <div class="item-4">{{ item.remark }}</div>
+                  <div class="item item_other">
+                    <div class="item-1">
+                      <div class="text-1">{{ item.remark }}</div>
+                      <!-- <div class="text-2">{{ item.jifen }}</div> -->
                     </div>
-
-                  </template>
-
-
-                  <!-- <template v-else>
-                    <div class="item item_other">
-                      <div class="item-1">
-                        <div class="text-1">{{ item.remark }}</div>
-                        <div class="text-2">{{ item.jifen }}</div>
-                      </div>
-                      <div
-                        class="item-2 val"
-                        :class="{ plus: item.type == 1, minus: item.type == 2 }"
-                      >
-                        {{ item.jifen }}
-                      </div>
-                      <div class="item-3">{{ item.dtTime }}</div>
-                      <div class="item-4">
-                        {{ item.remark }}
-                      </div>
+                    <div class="item-2 val"
+                         :class="{ plus: item.logType == 1, minus: item.logType == 2 }">
+                      {{ item.logType == 1 ? "+" : "-" }}{{ item.jifen }}
                     </div>
-                  </template> -->
+                    <div class="item-3">{{ item.createdTime }}</div>
+                    <div class="item-4">
+                      {{ item.remark }}
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <div class="pagination-box" v-if="count">
                 <el-pagination
-                  background
-                  layout="total, prev, pager, next"
-                  :total="count"
-                  :current-page="pagination.page"
-                  :page-size="pagination.pageNum"
-                  @current-change="changePage"
+                    background
+                    layout="total, prev, pager, next"
+                    :total="count"
+                    :current-page="pagination.page"
+                    :page-size="pagination.pageNum"
+                    @current-change="changePage"
                 >
                 </el-pagination>
               </div>
             </div>
+            <el-empty v-else description="暂无记录..."></el-empty>
           </div>
         </div>
       </div>
@@ -119,73 +80,22 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+
+import {mapState} from "vuex";
+
 export default {
   name: "jifen-jilu",
   data() {
     return {
-      selectTab: { title: "积分明细", status: "0" },
+      selectTab: {title: "积分明细", status: "0"},
 
       //type   1-收入  2-支出
       list_tab: [
-        { title: "积分明细", status: "0" },
-        { title: "积分收入", status: "1" },
-        { title: "积分支出", status: "2" },
+        {title: "积分明细", status: "0"},
+        {title: "积分收入", status: "1"},
+        {title: "积分支出", status: "2"},
       ],
-      list_jilu: [
-        {
-        product_info: [
-            {
-              image: require("@/static/home/featuredRecommendations/product3.png"),
-              title: "激光平面窗口 中5.0mm 厚度=2.0mm"
-            }
-          ],
-        type:1,
-        jifen:2400,
-        dtTime:"2022-10-10 10:12:30",
-        remark:"积分来源"
-        },
-        {
-        product_info: [
-            {
-              image: require("@/static/home/featuredRecommendations/product3.png"),
-              title: "激光平面窗口 中5.0mm 厚度=2.0mm"
-            }
-          ],
-        type:2,
-        jifen:2400,
-        dtTime:"2022-10-10 10:12:30",
-        remark:"积分兑换"
-        },
-      ],
-      list_zengjiajilu: [
-        {
-        product_info: [
-            {
-              image: require("@/static/home/featuredRecommendations/product3.png"),
-              title: "激光平面窗口 中5.0mm 厚度=2.0mm"
-            }
-          ],
-        type:1,
-        jifen:2400,
-        dtTime:"2022-10-10 10:12:30",
-        remark:"积分来源"
-        },
-      ],
-      list_jianshaojilu: [
-        {
-        product_info: [
-            {
-              image: require("@/static/home/featuredRecommendations/product3.png"),
-              title: "激光平面窗口 中5.0mm 厚度=2.0mm"
-            }
-          ],
-        type:2,
-        jifen:2400,
-        dtTime:"2022-10-10 10:12:30",
-        remark:"积分兑换"
-        },
-      ],
+      list_jilu: [],
 
       pagination: {
         page: 1,
@@ -194,20 +104,8 @@ export default {
       count: 0,
     };
   },
-
   computed: {
     ...mapState(["baseInfo"]),
-
-    currentList() {
-    switch (this.selectTab.status) {
-      case '0':
-        return this.list_jilu;
-      case '1':
-        return this.list_zengjiajilu;
-      default:
-        return this.list_jianshaojilu; 
-    }
-  }
   },
   watch: {
     selectTab() {
@@ -221,14 +119,14 @@ export default {
 
   methods: {
     setView() {
-      this.$api("users_jifenRecord", {
+      this.$api("jiFen_lists", {
         ...this.pagination,
         type: this.selectTab.status, //类型：0-全部   1-收入  2-支出
       }).then((res) => {
-        let { code, data, count } = res;
+        let {code, data, count} = res;
         if (code == 200) {
           this.list_jilu = data;
-          this.count = count;
+          this.count = data.count;
         }
       });
     },
@@ -239,11 +137,11 @@ export default {
 <style scoped lang="less">
 .plus {
   color: #FC5A00;
-  color: #FC5A00;
   font-weight: bold;
 }
+
 .minus {
-  color: #52C41A;
+  color: #52c41a;
   font-weight: bold;
 }
 
@@ -262,6 +160,7 @@ export default {
 .page {
   text-align: left;
   padding-bottom: 80px;
+
   .main-title {
     .flex-between();
     padding: 0 32px;
@@ -278,7 +177,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #4ca5e4;
+      background: @theme;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -293,47 +192,46 @@ export default {
 }
 
 .yue-box {
+  position: relative;
+  width: 100%;
   height: 142px;
-  //background: url(~@/static/order/jifen-bg.png) no-repeat center / cover;
-  background: linear-gradient( 229deg, #4B73CE 0%, #27417C 100%);
-  border-radius: 12px 12px 12px 12px;
+  background: url(~@/static/order/jifen-bg.png) no-repeat center / cover;
   background-size: 100% 100%;
-  padding-left: 40px;
-  padding-left: 40px;
   flex-direction: column;
   .flex-center();
-  align-items: flex-start;
- 
+  justify-content: center;
+  align-items: center;
+
   .text-box {
-    width: 100%;
+    text-align: center;
 
     .text-1 {
-      padding-top: 26px;
-      text-align: center;
-      font-family: Microsoft YaHei, Microsoft YaHei;
-      font-weight: bold;
       font-size: 16px;
-      color: #ffffff;
-      text-align: center;
-
-    }
-    .text-2 {
-      text-align: center;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: PingFang SC;
       font-weight: bold;
-      font-size: 42px;
+      line-height: 40px;
       color: #ffffff;
-      text-align: center;
+    }
 
+    .text-2 {
+      margin-top: 10px;
+
+      font-size: 40px;
+      font-family: PingFang SC;
+      font-weight: bold;
+      line-height: 40px;
+      color: #ffffff;
 
       .currency {
         font-size: 18px;
       }
     }
+
     .text-3 {
       position: absolute;
       right: 24px;
       bottom: 20px;
+
       button {
         border-radius: 20px;
         width: 128px;
@@ -352,7 +250,11 @@ export default {
 
 .tab-box {
   margin-top: 24px;
+  flex: 2;
+  // border-bottom: 1px solid #eee;
+
   .flex();
+
   .tab-item {
     cursor: pointer;
     padding-bottom: 10px;
@@ -364,9 +266,9 @@ export default {
     color: #333333;
 
     &.active {
-      border-bottom: 3px solid #27417c;
+      border-bottom: 3px solid @theme;
       font-weight: bold;
-      color: #27417c;
+      color: @theme;
     }
   }
 }
@@ -375,6 +277,7 @@ export default {
   margin-top: 20px;
   margin-bottom: 50px;
 }
+
 .jilu-list {
   margin-bottom: 30px;
   border: 1px solid #e5e5e5;
@@ -388,6 +291,9 @@ export default {
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
     color: #666666;
+
+    &:last-child {
+    }
 
     &.item-title {
       background: #f5f5f5;
@@ -410,30 +316,29 @@ export default {
       }
 
       .info-box {
-        height: 81px;
         padding-left: 15px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
+
+        .title {
+          .ellipsis-2();
+          font-size: 14px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #333333;
+          line-height: 24px;
+        }
+
         .info {
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          line-height: 16px;
           color: #999999;
-        }
-        .title {
-          .ellipsis-2();
-          font-size: 16px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-          font-weight: 400;
-          color: #999999;
-          margin-bottom: 14px;
         }
       }
     }
+
     .item-2 {
-      width: 254px;
+      width: 150px;
+
       &.val {
         font-size: 18px;
         font-family: Microsoft YaHei-Bold, Microsoft YaHei;
@@ -443,10 +348,11 @@ export default {
     }
 
     .item-3 {
-      width: 138px;
+      width: 200px;
     }
+
     .item-4 {
-      width: 298px;
+      width: 150px;
     }
   }
 }

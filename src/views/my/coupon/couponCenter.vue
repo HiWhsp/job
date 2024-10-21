@@ -5,29 +5,103 @@
       <!-- <b @click="$router.push('/mycoupon')">我的优惠券</b> -->
     </div>
 
-
-    <div class="coupon-container">
-      <div class="coupon" v-for="(item, index) in list_yhq" :key="index" v-show="status == 1">
-          <div class="coupon-left">
-              <img src="@/static/order/coupon-used.png" alt="" class="coupon-img">
-              <div class="coupon-left-price">
-                <span style="font-size: 14px; display: inline-block; vertical-align: 20px; margin-right: -8px; ">¥</span>
-                20
-              </div> 
-              <div class="coupon-left-text">无门槛优惠券</div>
+    <div class="page-ctx">
+      <div class="inner">
+        <div class="yhq-list" v-if="list_yhq.length">
+          <div class="yhq-item" v-for="(item, index) in list_yhq" :key="index">
+            <div class="yhq-left">
+              <div class="money">
+                <div class="currency">{{ vuex_huobi }}</div>
+                <div class="num">{{ item.money }}</div>
+              </div>
+              <!--                            <img src="@/static/order/coupon-used.png" alt=""/>-->
+            </div>
+            <div class="yhq-right">
+              <div class="tiaojian">使用条件： 满{{ item.man }}可用</div>
+              <div class="shijian">
+                有效时间： {{ item.startTime }} - {{ item.endTime }}
+              </div>
+              <div class="action">
+                <button
+                    class="btn-ripple btn-pick btn-lingqu"
+                    v-if="item.if_ke_lingqu == 1"
+                    @click="coupon_pick(item)"
+                >
+                  立即领取
+                </button>
+                <button class="btn-ripple btn-pick btn-yilingqu" disabled v-else>
+                  已领取
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="coupon-right">
-              <div class="coupon-right-title">自营200元无门槛券</div>
-              <div class="coupon-right-time" >2020.12.21 11:18 - 2020.12.28 23:59</div>
-              <button class="button">立即领取</button>
-          </div>            
+        </div>
+
+        <el-empty v-if="!list_yhq.length" description="暂无优惠券信息..."></el-empty>
+
+        <!-- <div class="bg-box">
+          <img src="@img/my/bg-coupon.png" alt="" />
+        </div> -->
+
+        <!-- <div class="tab-box">
+        <div
+          class="tab-item"
+          v-for="(item, index) in list_tab"
+          :key="index"
+          @click="status = item.status"
+          :class="status == item.status ? 'active' : ''"
+        >
+          {{ item.title }}
+        </div>
+      </div> -->
+
+        <div class="list-box" v-if="false">
+          <div
+              class="item"
+              :class="'state-' + status"
+              v-for="(item, index) in list_yhq"
+              :key="index"
+          >
+            <div class="info">
+              <div class="title">
+                <span class="huobi">{{ vuex_huobi }} </span>
+                <span class="num">{{ item.money }}</span>
+              </div>
+              <div class="tiaojian">
+                <!-- 使用条件： -->
+                满{{ item.man }}可用
+              </div>
+              <div class="shijian">
+                <!-- 有效时间： -->
+                {{ item.startTime }}-{{ item.endTime }}
+              </div>
+            </div>
+            <div class="action">
+              <button
+                  class="btn-lingqu"
+                  v-if="item.if_ke_lingqu == 1"
+                  @click="coupon_pick(item)"
+              >
+                立即领取
+              </button>
+              <button class="btn-yilingqu" v-else>已领取</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- <el-empty v-if="!list_yhq.length" description="暂无优惠券信息..."></el-empty> -->
+
+        <!-- <div class="lingquan" @click="$router.push('/mycoupon')">
+        <img src="@img/other/mycoupon-to-center.png" alt="" />
+        <span>我的优惠券 ></span>
+      </div> -->
       </div>
-   </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "servicePage",
@@ -37,22 +111,12 @@ export default {
       status: 1,
       list_tab: [
         // { title: "全部", status: 0 },
-        { title: "未使用", status: 1 },
-        { title: "已使用", status: 2 },
-        { title: "已过期", status: 3 },
+        {title: "未使用", status: 1},
+        {title: "已使用", status: 2},
+        {title: "已过期", status: 3},
       ],
 
-      list_yhq: Array.from({length: 10}, (_, i) => ({
-                id: i+1,
-                status: 1, 
-                originalPic: "../../static/order/coupon-used.png", 
-                vuex_huobi:20,
-                jian: "无门槛优惠劵",
-                man:"自营20元无门槛劵",
-                startTime:"2020.12.21 11:18",
-                endTime:"2020.12.28 23:59"
-            })),
-
+      list_yhq: [],
 
       pagination: {
         page: 1,
@@ -73,22 +137,22 @@ export default {
   },
   methods: {
     setView() {
-      this.$api("users_yhqList", {
+      this.$api("yhq_list", {
         scene: 0,
         ...this.pagination,
       }).then((res) => {
-        let { code, data, msg} = res;
+        let {code, data, msg} = res;
         if (code == 200) {
-          this.list_yhq = data;
+          this.list_yhq = data.list;
         }
       });
     },
 
     coupon_pick(item) {
-      this.$api("users_yhqLingqu", {
+      this.$api("yhq_lingQu", {
         id: item.id,
       }).then((res) => {
-        let { code, data, msg} = res;
+        let {code, data, msg} = res;
 
         if (code == 200) {
           this.setView();
@@ -103,6 +167,8 @@ export default {
 .page {
   text-align: left;
   padding-bottom: 80px;
+  padding-top: 0px;
+
   .main-title {
     .flex-between();
     padding: 0 32px;
@@ -119,7 +185,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #4CA5E4;
+      background: @theme;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -136,8 +202,10 @@ export default {
 
 .inner {
   padding-bottom: 80px;
+
   .bg-box {
     margin-bottom: 30px;
+
     img {
       max-width: 100%;
     }
@@ -146,6 +214,7 @@ export default {
   .tab-box {
     margin-bottom: 30px;
     .flex();
+
     .tab-item {
       cursor: pointer;
       padding-bottom: 5px;
@@ -175,6 +244,7 @@ export default {
       &.state-2 {
         background: url(~@img/coupon/bg-yishiyong.png) center / cover no-repeat;
       }
+
       &.state-3 {
         background: url(~@img/coupon/bg-yiguoqi.png) center / cover no-repeat;
       }
@@ -192,6 +262,7 @@ export default {
 
         .title {
           margin-top: 25px;
+
           .huobi {
             font-size: 24px;
             font-family: Microsoft YaHei;
@@ -199,6 +270,7 @@ export default {
             line-height: 20px;
             color: #ffffff;
           }
+
           .num {
             font-size: 36px;
             font-family: Microsoft YaHei;
@@ -207,15 +279,19 @@ export default {
             color: #ffffff;
           }
         }
+
         .tiaojian {
           margin: 20px 0 10px;
         }
+
         .shijian {
         }
       }
+
       .action {
         margin-top: 43px;
         text-align: center;
+
         button {
           width: 122px;
           height: 34px;
@@ -249,6 +325,7 @@ export default {
         position: absolute;
         bottom: 0;
         right: 0;
+
         img {
           width: 60px;
           vertical-align: bottom;
@@ -267,6 +344,7 @@ export default {
   img {
     width: 25px;
   }
+
   span {
     margin-left: 10px;
     font-size: 16px;
@@ -278,49 +356,68 @@ export default {
 }
 
 .yhq-list {
+  position: relative;
+  .flex();
+  flex-wrap: wrap;
+  .flex-between();
+
   .yhq-item {
+    width: 420px;
+    height: 128px;
+    background: #FFFFFF;
+    border-radius: 10px 10px 10px 10px;
+    border: 1px solid #E6E6E6;
     .flex();
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 
     .yhq-left {
-      width: 786px;
-      height: 252px;
+      width: 140px;
+      height: 128px;
+      background-image: url("~@/static/order/coupon-used.png");
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      .flex();
+      justify-content: center;
+
       img {
-        width: 100%;
-        height: 100%;
+        width: 140px;
+        height: 128px;
+        position: absolute;
+        bottom: 0;
       }
-    }
-    .yhq-right {
-      flex: 1;
-      height: 252px;
-      padding: 20px;
-      background: #f9f9f9;
 
       .money {
-        display: flex;
-        align-items: flex-start;
+        .flex();
+        justify-content: center;
+
         .currency {
           font-size: 42px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #4CA5E4;
+          color: #fff;
         }
+
         .num {
           font-size: 42px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #4CA5E4;
+          color: #fff;
         }
       }
+    }
+
+    .yhq-right {
+      flex: 1;
+      width: 280px;
+      height: 128px;
+      padding: 10px;
 
       .tiaojian {
-        margin-top: 10px;
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
+        color: #000;
         line-height: 28px;
       }
+
       .shijian {
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -328,12 +425,14 @@ export default {
         color: #999999;
         line-height: 28px;
       }
+
       .action {
-        margin-top: 30px;
+        margin-top: 15px;
+
         button {
           width: 127px;
           height: 36px;
-          background: #4CA5E4;
+          background: #FF4000;
           border-radius: 4px 4px 4px 4px;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -349,131 +448,6 @@ export default {
     }
   }
 }
-
-.coupon-container {
-  display: flex;
-  flex-wrap: wrap;
-  background-color: #fff;
-  margin-top: 13px;
-  padding: 27px 26px;
-  gap: 20px;
-
-    .coupon {
-      display: flex;
-      width: 49%;
-      background-color: #fff;
-      justify-content: space-between;
-      position: relative;
-      //padding: 10px 0;
-      box-sizing: border-box;
-      border: 1px solid #E6E6E6;
-      border-radius: 10px 10px 10px 10px;
-    }
-    .coupon-left {
-        color: #fff;
-        //background-color: #ff4400;
-        width: 140px;
-        height: 128px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        position: relative;
-        
-        .coupon-img{
-          position: relative;
-          width: 100%;
-          height: 100%;
-        }
-
-        .coupon-left-price {
-            font-weight: 400;
-            font-size: 30px;
-            color: #FFFFFF;
-            line-height: 43px;
-            text-align: left;
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-
-        }
-
-        .coupon-left-text {
-            width: 100%;
-            font-weight: 400;
-            font-size: 14px;
-            color: #FFFFFF;
-            line-height: 43px;
-            text-align: left;
-            position: absolute;
-            top: 70%;
-            left: 50%;
-            transform: translate(-30%, -50%);
-        }
-
-    }
-        
-        .coupon-right {
-            flex-grow: 1;
-            padding: 0 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-
-            .coupon-right-title {
-              font-weight: 400;
-              font-size: 16px;
-              color: #000000;
-              line-height: 20px;
-              text-align: left;
-              font-style: normal;
-              text-transform: none;
-              margin-bottom: 12px;
-            }
-
-            .coupon-right-time {
-              font-weight: 400;
-              font-size: 14px;
-              color: #979797;
-              line-height: 16px;
-              text-align: left;
-              font-style: normal;
-              text-transform: none;
-              
-            }
-
-            .button {
-              color: white;
-              background: #FF4000;
-              border-radius: 4px 4px 4px 4px;
-              cursor: pointer;
-              width: 94px;
-              height: 32px;
-              font-weight: 400;
-              font-size: 14px;
-              color: #FFFFFF;
-              line-height: 20px;
-              text-align: center;
-              font-style: normal;
-              text-transform: none;
-              margin-top: 16px;
-          }
-
-          .coupon-right-state{
-            width: 64.72px;
-            height: 53.67px;
-            margin-left: 302px;
-
-            img{
-              width: 100%;
-              height: 100%;
-            }
-          }
-        }
-
-        
-    }
 </style>
 
 <style scoped lang="less" src="@/assets/h5css/user/couponCenter.less"></style>

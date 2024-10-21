@@ -1,90 +1,121 @@
 <template>
   <div class="page">
-    <div class="main-title">申请售后</div>
+    <div class="main-title">售后订单</div>
 
-    <div class="refund-info page-ctx">
-      <!-- 商品信息 -->
-      <refundGoodsInfo :order="order" />
-
-      <!-- 服务类型 -->
-      <div class="service-box">
-        <div class="service-title">选择服务类型</div>
-        <div class="service-list">
-        <!-- 退换货类型(1-退款 2-退货退款 3-换货) -->
-          <div class="service-item" @click="jump_apply_shouhou('1')">
-            <div class="img-box">
-              <img src="@img/refund/refund-type-money.png" alt />
-            </div>
-            <div class="text-box">
-              <div class="type">我要退款（无需退货）</div>
-              <div class="desc">没收到货，或与卖家协商同意不用退货只退款</div>
-            </div>
+    <div class="page-ctx">
+      <div class="info-item" v-for="(item, index) in list_order" :key="index">
+        <div class="info-title">
+          <div class="date">{{ item.dtTime }}</div>
+          <div class="order-code">
+            订单号：
+            <span>{{ item.order_no }}</span>
           </div>
-          <!-- <div class="service-item" @click="jump_apply_shouhou('3')">
-            <div class="img-box">
-              <img src="@img/refund/refund-type-money.png" alt />
-            </div>
-            <div class="text-box">
-              <div class="type">我要换货</div>
-              <div class="desc">已收到货，需要更换已收到的货物</div>
-            </div>
-          </div> -->
-          <div class="service-item" @click="jump_apply_shouhou('2')">
-            <div class="img-box">
-              <img src="@img/refund/refund-type-tui.png" alt />
-            </div>
-            <div class="text-box">
-              <div class="type">我要退货退款</div>
-              <div class="desc">已收到货，需要退还收到的货物</div>
+        </div>
+        <div class="info-good">
+          <div class="list-good">
+            <div
+                class="item-good flex"
+                v-for="(product_item, product_index) in item.products"
+                :key="product_index"
+            >
+              <div
+                  class="box-image cover"
+                  @click="mix_to_product(product_item)"
+              >
+                <!-- <img :src="good.img" alt /> -->
+                <el-image :src="product_item.image">
+                  <div slot="error" class="image-slot">
+                    <img :src="product_item.image"/>
+                  </div>
+                </el-image>
+              </div>
+
+              <div class="box-title">
+                <div class="goods-title" @click="mix_to_product(product_item)">
+                  {{ product_item.title }}
+                </div>
+                <div class="goods-sku">{{ product_item.keyVals }}</div>
+              </div>
+              <div class="box-sku">
+                <div class="goods-sku">
+                  {{ vuex_huobi }}{{ product_item.priceSale }}
+                </div>
+              </div>
+              <div class="box-num">
+                {{ product_item.num }}
+              </div>
+              <div class="box-price">
+                {{ vuex_huobi }}
+                {{ product_item.priceSale * product_item.num }}
+              </div>
+              <div class="apply-after-sale">
+                <div @click="applyAfterSale(item)">申请售后</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <div v-if="count" class="pagination-box">
+        <el-pagination
+            @current-change="changePage"
+            :current-page.sync="pagination.page"
+            :page-size="pagination.pageNum" layout="total, prev, pager, next, jumper"
+            :total="count"
+        >
+        </el-pagination>
+      </div>
+
+      <el-empty v-if="!count" description="没有查询到售后信息..."></el-empty>
     </div>
   </div>
 </template>
 
 <script>
-import refundGoodsInfo from "@/components/refund/refundGoodsInfo.vue"; //
-import { mapState } from "vuex";
-
 export default {
   name: "servicePage",
-  components: {
-    refundGoodsInfo,
-  },
+  components: {},
   data() {
     return {
-      order_id: this.$route.query.order_id,
-      inventoryId: this.$route.query.inventoryId,
-      order: {},
+      list_order: [], // 售后订单列表
+      count: 0,
+      pagination: {
+        page: 1,
+        pageNum: 10,
+      }
     };
   },
-  computed: {
-    ...mapState([""]),
-  },
+
+  computed: {},
+
   created() {
-    this.setView();
+    this.query_shouhou_order();
   },
+
   methods: {
-    setView() {
-      this.$api("orders_detail", {
-        id: this.order_id,
+    //售后列表
+    query_shouhou_order() {
+      this.$api("refund_afterSaleList", {
+        ...this.pagination,
       }).then((res) => {
-        //console.log("订单详情", res);
-        let { code, data, msg} = res;
+        //console.log("退换货列表", res);
+        let {code, data} = res;
         if (code == 200) {
-          this.order = data;
+          let {list} = data;
+          this.list_order = list;
         }
       });
     },
-
-    jump_apply_shouhou(type) {
-      //退换货类型(1-退款   2-退货退款  3-换货)
-      this.$router.push(
-        `/refundSubmit?order_id=${this.order_id}&inventoryId=${this.inventoryId}&refund_type=${type}`
-      );
+    // 申请售后
+    applyAfterSale() {
+      this.$router.push({
+        path: `apply-after-sales?order_id=${order.order_id}&inventoryId=${order.inventoryId}`,
+      });
     },
+
+    changePage() {
+      this.query_shouhou_order();
+    }
   },
 };
 </script>
@@ -92,7 +123,7 @@ export default {
 
 <style scoped lang="less">
 .page {
-  padding-bottom: 50px;
+  padding: 0;
 
   .main-title {
     margin-bottom: 20px;
@@ -111,77 +142,160 @@ export default {
     padding: 24px 32px;
     background: #fff;
   }
-
 }
 
-
-
-
-
-.refund-info {
- 
-  min-height: 370px;
-
+.info-item {
+  border: 1px solid #f5f5f5;
+  margin-bottom: 30px;
 }
 
-// 售后类型
-.service-box {
-  border-top: 1px solid #eee;
-  padding-top: 20px;
+.info-title {
+  .flex-between();
+  height: 48px;
+  padding: 0 24px;
+  background: #f9f9f9;
+  border-bottom: 1px solid #f5f5f5;
 
-  .service-title {
-    font-size: 14px;
-    font-family: Microsoft YaHei;
-    font-weight: 400;
-    line-height: 30px;
-    color: #333333;
-    margin-bottom: 20px;
+  font-size: 14px;
+  font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+  font-weight: bold;
+  color: #333333;
+
+  .order-code {
+    flex: 2;
     text-align: left;
+    padding-left: 20px;
   }
-  .service-list {
-    .flex-between();
+}
 
-    .service-item {
-      width: 450px;
-      height: 120px;
-      background: #ffffff;
-      border: 1px solid #eeeeee;
-      opacity: 1;
-      border-radius: 4px;
-      padding-left: 20px;
-      cursor: pointer;
-      transition: 0.3s;
+.info-good {
+  .list-good {
+    .item {
+      border-bottom: 1px solid #f5f5f5;
 
-      &:hover {
-        background: #eee;
-        // background: #FF9312;
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    .item-good {
+      padding: 20px;
+      border-bottom: 1px dashed #f5f5f5;
+
+      &:last-child {
+        border: none;
       }
 
-      .flex();
-      .img-box {
+      .box-image {
+        width: 100px;
+        height: 100px;
+        cursor: pointer;
+        border: 1px solid #f5f5f5;
+
+        /deep/ img {
+          width: 100px;
+          height: 100px;
+          object-fit: contain;
+          object-fit: cover;
+        }
+
         img {
-          width: 48px;
+          width: 100px;
+          height: 100px;
+          object-fit: contain;
+          object-fit: cover;
         }
       }
-      .text-box {
+
+      .box-title {
+        flex: 1;
         text-align: left;
-        padding-left: 20px;
-        flex: 2;
+        padding-left: 40px;
 
-        .type {
-          font-size: 16px;
-          font-family: Microsoft YaHei;
-          font-weight: bold;
-          line-height: 20px;
-          color: #333333;
+        .title {
+          width: fit-content;
+          cursor: pointer;
+
+          &:hover {
+            color: #4ca5e4;
+          }
         }
-        .desc {
-          margin-top: 10px;
-          font-size: 16px;
-          font-family: Microsoft YaHei;
-          font-weight: 400;
 
-          color: #9f9f9f;
+        .goods-title {
+          width: 300px;
+          height: 38px;
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: 400;
+          font-size: 16px;
+          color: #333333;
+          line-height: 18px;
+          text-align: left;
+          font-style: normal;
+          text-transform: none;
+        }
+
+        .goods-sku {
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: 400;
+          font-size: 14px;
+          color: #999999;
+          line-height: 16px;
+          text-align: left;
+          font-style: normal;
+          text-transform: none;
+        }
+      }
+
+      .box-sku {
+        margin-left: 52px;
+      }
+
+      .box-num {
+        margin-left: 133px;
+      }
+
+      .box-price {
+        margin-left: 104px;
+        font-weight: bold;
+        font-size: 13px;
+        color: #333333;
+      }
+
+      .apply-after-sale {
+        margin-left: 111px;
+        font-weight: 400;
+        font-size: 14px;
+        color: #27417c;
+        line-height: 24px;
+        cursor: pointer;
+      }
+    }
+
+    .goods-action {
+      .flex();
+      justify-content: flex-end;
+      padding: 10px;
+
+      .btn-goods-action {
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-left: 10px;
+        min-width: 96px;
+        height: 30px;
+        background: #4ca5e4;
+        font-size: 14px;
+        font-family: Microsoft YaHei;
+        color: #ffffff;
+        // border-radius: 14px;
+        transition: 0.3s;
+        border-radius: 4px;
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &.disabled {
+          background: #e5e5e5;
         }
       }
     }

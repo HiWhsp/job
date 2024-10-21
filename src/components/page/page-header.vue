@@ -70,7 +70,7 @@
               v-show="isLogin && showUserMenu"
               @mouseleave="showUserMenu = false"
             >
-              <div class="user-item" @click="onRouteTo({ name: 'member-Center' })">
+              <div class="user-item" @click="onRouteTo({ name: 'my' })">
                 个人中心
               </div>
               <div class="user-item" @click="onRouteTo({ name: 'order-list' })">我的订单</div>

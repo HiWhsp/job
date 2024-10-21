@@ -1,13 +1,13 @@
 <template>
   <div class="goods-info">
-    <div class="info-title">
-      <div class="date">{{ order.dtTime }}</div>
-      <div class="order-code">
-        订单号：
-        <span>{{ order.order_id }}</span>
-      </div>
-      <div class="order-state">{{ order.status_info }}</div>
-    </div>
+<!--    <div class="info-title">-->
+<!--      <div class="date">{{ order.dtTime }}</div>-->
+<!--      <div class="order-code">-->
+<!--        订单号：-->
+<!--        <span>{{ order.order_id }}</span>-->
+<!--      </div>-->
+<!--      <div class="order-state">{{ order.status_info }}</div>-->
+<!--    </div>-->
     <div class="info-good">
       <div class="list-good">
         <div class="item">
@@ -66,6 +66,7 @@ export default {
 
 <style scoped lang="less">
 .goods-info {
+  border: 1px solid #E5E5E5;
   .info-title {
     .flex-between();
     height: 48px;

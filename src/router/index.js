@@ -148,12 +148,6 @@ const routes = [
     name: "integralWinGoods",
     component: () => import("@/views/integral/integral-win-goods.vue"),
   },
-  //积分商城详情
-  {
-    path: "/integralShopDetail",
-    name: "integralShopDetail",
-    component: () => import("@/views/integral/integral-shop-detail.vue"),
-  },
   // 积分详情
   {
     path: "/pointsMallDetail",
@@ -217,83 +211,36 @@ const routes = [
         },
       },
       {
-        path: "/after-sales-order",
-        name: "after-sales-order",
-        component: () => import("@/views/my/refund/after-sales-order.vue"),
+        path: "/refund-list",
+        name: "refund-list",
+        component: () => import('@/views/my/refund/myRefund.vue'),
         meta: {
           title: "售后订单",
           requireAuth: true,
         },
       },
       {
-        path: "/apply-after-sales",
-        name: "apply-after-sales",
-        component: () => import("@/views/my/refund/apply-after-sales.vue"),
+        path: '/refundType',
+        name: 'refundType',
+        component: () => import('@/views/my/refund/refundType.vue'),
         meta: {
-          title: "申请售后",
+          title: "售后类型",
           requireAuth: true,
-        },
+        }
       },
       {
-        path: "/after-sale-exchange-goods",
-        name: "after-sale-exchange-goods",
-        component: () => import("@/views/my/refund/after-sale-exchange-goods.vue"),
+        path: '/refundSubmit',
+        name: 'refundSubmit',
+        component: () => import('@/views/my/refund/refundSubmit.vue'),
         meta: {
-          title: "申请换货",
+          title: "售后提交",
           requireAuth: true,
-        },
-      },
-      {
-        path: "/exchange-goods-result",
-        name: "exchange-goods-result",
-        component: () => import("@/views/my/refund/exchange-goods-result.vue"),
-        meta: {
-          title: "换货结果",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/apply-result",
-        name: "apply-result",
-        component: () => import("@/views/my/refund/apply-result.vue"),
-        meta: {
-          title: "申请结果",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/after-sale-order",
-        name: "after-sale-order",
-        component: () => import("@/views/my/refund/after-sale-order.vue"),
-        meta: {
-          title: "售后订单",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/after-sale-refund-return",
-        name: "after-sale-refund-return",
-        component: () =>
-          import("@/views/my/refund/after-sale-refund-return.vue"),
-        meta: {
-          title: "售后订单",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/after-sale-refund-detail",
-        name: "after-sale-refund-detail",
-        component: () =>
-          import("@/views/my/refund/after-sale-refund-detail.vue"),
-        meta: {
-          title: "售后订单",
-          requireAuth: true,
-        },
+        }
       },
       {
         path: "/refund-detail",
         name: "refund-detail",
-        component: () => import("@/views/my/refund/refundServiceDetail.vue"),
+        component: () => import('@/views/my/refund/refundServiceDetail.vue'),
         meta: {
           title: "售后详情",
           requireAuth: true,
@@ -318,24 +265,6 @@ const routes = [
         },
       },
       {
-        path: "/invoice-list",
-        name: "invoice-list",
-        component: () => import("@/views/my/invoice-list.vue"),
-        meta: {
-          title: "发票信息",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/invoice-detail",
-        name: "invoice-detail",
-        component: () => import("@/views/my/invoice-detail.vue"),
-        meta: {
-          title: "发票信息",
-          requireAuth: true,
-        },
-      },
-      {
         path: "/laser-order",
         name: "laser-order",
         component: () => import("@/views/my/laser/laser-order.vue"),
@@ -350,24 +279,6 @@ const routes = [
         component: () => import("@/views/my/laser/laser-detail.vue"),
         meta: {
           title: "激光加工订单详情",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/review-list",
-        name: "review-list",
-        component: () => import("@/views/my/order/my-review-list.vue"),
-        meta: {
-          title: "评价列表",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/review-submit",
-        name: "review-submit",
-        component: () => import("@/views/my/order/order-review-submit.vue"),
-        meta: {
-          title: "评价提交",
           requireAuth: true,
         },
       },
@@ -395,16 +306,6 @@ const routes = [
         component: () => import("@/views/my/points/pointsDetail.vue"),
         meta: {
           title: "我的积分",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/pointsMall",
-        name: "pointsMall",
-        component: () => import("@/views/my/points/pointsMall.vue"),
-        //component: () => import("@/views/integral/integral-win-goods.vue"),
-        meta: {
-          title: "积分商城",
           requireAuth: true,
         },
       },

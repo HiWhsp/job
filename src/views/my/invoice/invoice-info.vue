@@ -6,110 +6,43 @@
       <div class="tab-box">
         <div class="tab-list">
           <div
-            v-for="(item, index) in tabList"
-            :key="index"
-            class="tab-item"
-            :class="tabSelect.value == item.value ? 'active' : ''"
-            @click="do_toggle_tab(item)"
+              v-for="(item, index) in tabList"
+              :key="index"
+              class="tab-item"
+              :class="tabSelect.value == item.value ? 'active' : ''"
+              @click="do_toggle_tab(item)"
           >
             {{ item.title }}
             <span class="number" v-if="item.num">{{ item.num }}</span>
           </div>
         </div>
         <div class="search-box">
-          <input v-model="keyword" type="text" placeholder="输入名称、订单号" />
-          <div class="search-wrap">
-            <img src="@/static/order/search.png" alt="" />
+          <input v-model="keyword" type="text" placeholder="输入名称、订单号"/>
+          <div class="search-wrap" @click="do_search()">
+            <img src="@/static/order/search.png" alt=""/>
           </div>
         </div>
       </div>
 
-      <div class="order-list-wrap">
-        <div class="info-item" v-for="(item, index) in list" :key="index">
-          <div class="info-title">
-            <div class="order-code">
-              2022-10-21 12:24:30
-              <span>订单号：{{ item.orderNo }}</span>
-            </div>
-            <div class="order-state" :class="'state-' + item.orderStatus">
-              待开票
-            </div>
-          </div>
-          <div class="info-good">
-            <div class="list-good">
-              <div
-                class="item-good flex"
-                v-for="(product_item, product_index) in item.products"
-                :key="product_index"
-              >
-                <div
-                  class="box-image cover"
-                  @click="mix_to_product(product_item)"
-                >
-                  <!-- <img :src="good.img" alt /> -->
-                  <el-image :src="product_item.image">
-                    <div slot="error" class="image-slot">
-                      <img :src="product_item.image" />
-                    </div>
-                  </el-image>
-                </div>
-
-                <div class="box-title">
-                  <div
-                    class="goods-title"
-                    @click="mix_to_product(product_item)"
-                  >
-                    {{ product_item.title }}
-                  </div>
-                  <div class="goods-sku">{{ product_item.keyVals }}</div>
-                </div>
-                <div class="box-sku">
-                  <div class="goods-sku">
-                    {{ vuex_huobi }}{{ product_item.priceSale }}
-                  </div>
-                </div>
-                <div class="box-num">
-                  {{ product_item.num }}
-                </div>
-                <div class="box-price">
-                  {{ vuex_huobi }}
-                  {{ product_item.priceSale * product_item.num }}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="desc-wrap">
-            <div
-              class="invoice-details"
-              @click="onRouteTo('invoice-details')"
-            >
-              开票详情
-            </div>
-          </div>
+      <div class="center">
+        <invoiceList :list="list"></invoiceList>
+        <div v-if="count" class="pagination-box">
+          <el-pagination background layout="total, prev, pager, next" @current-change="changePage"
+                         :current-page.sync="pagination.page" :page-size="pagination.pageNum"
+                         :total="count"></el-pagination>
         </div>
-      </div>
-
-      <div
-        class="pagination-box"
-        style="margin-top: 40px; text-align: right; text-align: center"
-      >
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage4"
-          layout="total,  prev, pager, next, jumper"
-          :total="400"
-        >
-        </el-pagination>
+        <el-empty v-if="!count" description="没有查询到发票信息..."></el-empty>
       </div>
     </div>
   </div>
 </template>
-  
-  <script>
+
+<script>
+import invoiceList from "@/components/order/invoiceList.vue";
+
 export default {
   name: "servicePage",
-  components: {},
+  components: {invoiceList},
   data() {
     return {
       tabSelect: {
@@ -118,55 +51,12 @@ export default {
       },
       keyword: "",
       user_index: {},
+      list: [],
       pagination: {
         page: 1,
         pageNum: 10,
       },
-      list: [
-        {
-          createdTime: "2022-10-21 12:24:30",
-          orderNo: "154545456456456",
-          orderStatus: "-5",
-          statusInfo: "待付款",
-          products: [
-            {
-              image: "",
-              title: "激光平面窗口 Φ5.0mm 厚度=2.0mm",
-              keyVals: "GCL-010158",
-              num: 1,
-              priceSale: "5000.00",
-            },
-          ],
-          count_goods: 2,
-          price: "10000.00",
-          ifPay: 1,
-          ifCancel: 1,
-        },
-        {
-          createdTime: "2022-10-21 12:24:30",
-          orderNo: "154545456456456",
-          orderStatus: "-5",
-          statusInfo: "待付款",
-          products: [
-            {
-              image: "",
-              title: "激光平面窗口 Φ5.0mm 厚度=2.0mm",
-              keyVals: "GCL-010158",
-              num: 1,
-              priceSale: "5000.00",
-            },
-          ],
-          count_goods: 2,
-          price: "10000.00",
-          ifPay: 1,
-          ifCancel: 1,
-        },
-      ],
-      pagination: {
-        page: 1,
-        pageNum: 10,
-      },
-      currentPage4: 1,
+      count: 0,
     };
   },
 
@@ -178,17 +68,22 @@ export default {
       //订单状态：-5-待支付  -1-已取消  2-待发货  3-待收货  4-待自提  5-已完成
       let user_index = {} || this.user_index;
       let tabList = [
-        { value: 0, title: "全部" },
-        { value: 1, title: "待开票", num: user_index.order_num_1 || 1 },
-        { value: 2, title: "已开票", num: user_index.order_num_4 || 1 },
+        {value: 0, title: "全部"},
+        {value: 1, title: "待开票", num: user_index.order_num_1 || 0},
+        {value: 2, title: "已开票", num: user_index.order_num_4 || 0},
       ];
       return tabList;
     },
   },
 
-  created() {},
+  created() {
+  },
 
   methods: {
+    do_search() {
+      this.pagination.page = 1;
+      this.query_order();
+    },
     do_toggle_tab(item) {
       this.tabSelect = item;
       this.pagination.page = 1;
@@ -196,57 +91,28 @@ export default {
     },
     query_order() {
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: '/service.php',
+        method: 'post',
         data: {
-          action: "orders_lists",
+          action: 'invoices_getList',
           ...this.pagination,
-          scene: this.tabSelect.value,
-          // keyword: this.keyword,
+          status: this.tabSelect.value,
+          keyword: this.keyword
         },
       }).then((res) => {
-        let { code, data } = res;
+        let {code, data} = res;
         if (code == 200) {
-          let list = data.list;
-
-          list.forEach((order) => {
-            order.isPay = order.value >= 0;
-            order.actions = this.getOrderActions({
-              ...order,
-            });
-
-            let count_goods = 0;
-            order.products.forEach((product) => {
-              count_goods = count_goods + +product.num;
-            });
-            order.count_goods = count_goods;
-          });
-
-          this.orders = list;
+          this.list = data.list;
           this.count = data.count;
         }
-      });
-    },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-    },
-    onRouteTo(path) {
-      this.$router.push({
-        name: path,
-        query: {
-          status: "return-refund-success",
-        },
       });
     },
   },
 };
 </script>
-  
-  
-  <style scoped lang="less">
+
+
+<style scoped lang="less">
 .page {
   padding: 0;
 
@@ -318,27 +184,26 @@ export default {
     .flex();
     min-width: 260px;
     height: 32px;
-    background: #fff;
+    border: 1px solid #e2e2e2;
+
 
     input {
-      background: #fff;
       flex: 2;
       height: 100%;
-      border: 1px solid #b8c4d1;
+      border-right: none;
       outline: none;
       padding-left: 10px;
       font-size: 12px;
     }
 
-    button {
-      width: 50px;
-      height: 32px;
-      background: #ffffff;
-      border: 1px solid #e2e2e2;
-      color: #7d7d7d;
+    .search-wrap {
+      .flex();
+      height: 100%;
+      width: 30px;
 
-      &:last-child {
-        border-left: 0;
+      img {
+        width: 18px;
+        height: 18px;
       }
     }
   }
@@ -346,6 +211,7 @@ export default {
 
 .order-list-wrap {
   margin-top: 34px;
+
   .info-item {
     border: 1px solid #e5e5e5;
     margin-bottom: 30px;
@@ -536,6 +402,7 @@ export default {
   position: relative;
   gap: 39px;
   border-top: 1px solid #cecece;
+
   .invoice-details {
     width: 127px;
     height: 32px;
@@ -551,20 +418,9 @@ export default {
   }
 }
 </style>
-  
-  <style lang="less" scoped>
+
+<style lang="less" scoped>
 .goods-sku {
   margin: 15px 0;
 }
-
-.search-box {
-  position: relative;
-}
-
-.search-wrap {
-  position: absolute;
-  right: 13px;
-  top: 7px;
-}
 </style>
-  

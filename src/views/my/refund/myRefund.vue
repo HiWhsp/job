@@ -12,7 +12,9 @@
         </div>
         <div class="search-box">
           <input type="text" placeholder="输入商品名称、订单号" v-model="keyword"/>
-          <button @click="click_order_search">搜索</button>
+          <div class="search-wrap">
+            <img src="@/static/order/search.png" alt=""/>
+          </div>
         </div>
       </div>
       <div class="center ctx-box">
@@ -56,9 +58,8 @@ export default {
     return {
       refund_status: -10,
       list_status_refund: [
-        {status: -10, title: "全部"},
-        {status: 2, title: "申请记录"},
-        {status: 0, title: "待处理"},
+        {status: -10, title: "售后申请"},
+        {status: 0, title: "处理中"},
         {status: 1, title: "已完成"},
       ],
       list_order: [], //订单列表
@@ -103,12 +104,11 @@ export default {
     query_shouhou_order() {
       this.$api("refund_afterSaleList", {
         ...this.pagination,
+        keyword: this.keyword
       }).then((res) => {
-        //console.log("退换货列表", res);
         let {code, data} = res;
         if (code == 200) {
-          let {list} = data;
-          this.list_order = list;
+          this.list_order = data.list || [];
         }
       });
     },
@@ -118,11 +118,11 @@ export default {
       this.$api("refund_lists", {
         ...this.pagination,
         status: this.refund_status, //(0待处理  1已完成  -1无效)
+        keyword: this.keyword
       }).then((res) => {
-        //console.log("退换货列表", res);
         let {code, data} = res;
         if (code == 200) {
-          let {list} = data;
+          let list = data.list || [];
           list.forEach((v) => {
             v.is_jifen = v.products.jifen ? 1 : 0;
           });
@@ -160,7 +160,7 @@ export default {
     //售后进度
     onRefundServiceDetail(refund) {
       this.$router.push({
-        path: "/refundDetail",
+        path: "/refund-detail",
         query: {
           id: refund.id,
         },
@@ -170,7 +170,7 @@ export default {
     //订单详情
     refund_detail(item) {
       this.$router.push({
-        // path: "/refundDetail",
+        // path: "/refund-detail",
         path: "/refundProgress",
         query: {
           refund_id: item.id,
@@ -187,7 +187,7 @@ export default {
     //售后申请
     refund_apply(item) {
       //console.log({ ...item });
-      this.$router.push(`/refundType?order_id=${item.order_id}&inventoryId=${item.inventoryId}`);
+      this.$router.push(`/refundType?orderId=${item.orderId}&inventoryId=${item.inventoryId}`);
     },
   },
 };
@@ -218,11 +218,9 @@ export default {
 
 }
 
-
 .ctx-box {
   margin-top: 30px;
 }
-
 
 .tab-box {
   padding-right: 20px;
@@ -247,14 +245,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #4CA5E4;
+        color: @theme;
       }
 
       &.active {
-        // background: #4CA5E4;
+        // background: @theme;
         // color: #fff;
         font-weight: bold;
-        color: #4CA5E4;
+        color: @theme;
 
         &::after {
           content: "";
@@ -263,7 +261,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #4CA5E4;
+          background: @theme;
         }
       }
     }
@@ -273,30 +271,32 @@ export default {
     .flex();
     min-width: 260px;
     height: 32px;
-    background: #f9f9f9;
+    border: 1px solid #e2e2e2;
+
 
     input {
-      background: #f9f9f9;
       flex: 2;
       height: 100%;
-      border: 1px solid #e2e2e2;
       border-right: none;
       outline: none;
       padding-left: 10px;
       font-size: 12px;
     }
 
-    button {
-      width: 50px;
-      height: 32px;
-      background: #ffffff;
-      border: 1px solid #e2e2e2;
-      color: #7d7d7d;
+    .search-wrap {
+      .flex();
+      height: 100%;
+      width: 30px;
 
-      &:last-child {
-        border-left: 0;
+      img {
+        width: 18px;
+        height: 18px;
       }
     }
   }
+}
+
+.pagination-box {
+
 }
 </style>
