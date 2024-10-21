@@ -1,0 +1,426 @@
+<template>
+  <div class="page">
+    <div class="main-title">发票信息</div>
+
+    <div class="page-ctx">
+      <div class="tab-box">
+        <div class="tab-list">
+          <div
+              v-for="(item, index) in tabList"
+              :key="index"
+              class="tab-item"
+              :class="tabSelect.value == item.value ? 'active' : ''"
+              @click="do_toggle_tab(item)"
+          >
+            {{ item.title }}
+            <span class="number" v-if="item.num">{{ item.num }}</span>
+          </div>
+        </div>
+        <div class="search-box">
+          <input v-model="keyword" type="text" placeholder="输入名称、订单号"/>
+          <div class="search-wrap" @click="do_search()">
+            <img src="@/static/order/search.png" alt=""/>
+          </div>
+        </div>
+      </div>
+
+      <div class="center">
+        <invoiceList :list="list"></invoiceList>
+        <div v-if="count" class="pagination-box">
+          <el-pagination background layout="total, prev, pager, next" @current-change="changePage"
+                         :current-page.sync="pagination.page" :page-size="pagination.pageNum"
+                         :total="count"></el-pagination>
+        </div>
+        <el-empty v-if="!count" description="没有查询到发票信息..."></el-empty>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import invoiceList from "@/components/order/invoiceList.vue";
+
+export default {
+  name: "servicePage",
+  components: {invoiceList},
+  data() {
+    return {
+      tabSelect: {
+        title: "全部",
+        value: 0,
+      },
+      keyword: "",
+      user_index: {},
+      list: [],
+      pagination: {
+        page: 1,
+        pageNum: 10,
+      },
+      count: 0,
+    };
+  },
+
+  computed: {
+    tabList() {
+      //scene
+      //筛选状态：0-全部 1-待支付 2-待发货 3-待收货 4-待核销 5-已完成 6-待评价 7-已取消
+      //orderStatus
+      //订单状态：-5-待支付  -1-已取消  2-待发货  3-待收货  4-待自提  5-已完成
+      let user_index = {} || this.user_index;
+      let tabList = [
+        {value: 0, title: "全部"},
+        {value: 1, title: "待开票", num: user_index.order_num_1 || 1},
+        {value: 2, title: "已开票", num: user_index.order_num_4 || 1},
+      ];
+      return tabList;
+    },
+  },
+
+  created() {
+  },
+
+  methods: {
+    do_search() {
+      this.pagination.page = 1;
+      this.query_order();
+    },
+    do_toggle_tab(item) {
+      this.tabSelect = item;
+      this.pagination.page = 1;
+      this.query_order();
+    },
+    query_order() {
+      this.$api({
+        url: '/service.php',
+        method: 'post',
+        data: {
+          action: 'invoices_getList',
+          ...this.pagination,
+          status: this.tabSelect.value,
+          keyword: this.keyword
+        },
+      }).then((res) => {
+        let {code, data} = res;
+        if (code == 200) {
+          this.list = data.list;
+          this.count = data.count;
+        }
+      });
+    },
+  },
+};
+</script>
+
+
+<style scoped lang="less">
+.page {
+  padding: 0;
+
+  .main-title {
+    margin-bottom: 13px;
+    padding: 0 32px;
+    text-align: left;
+    height: 56px;
+    font-weight: bold;
+    line-height: 56px;
+    background: #ffffff;
+    font-size: 16px;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    color: #333333;
+  }
+
+  .page-ctx {
+    padding: 24px 32px;
+    background: #fff;
+  }
+}
+
+.tab-box {
+  padding-right: 20px;
+  .flex-between();
+  background: #ffffff;
+  // border: 1px solid #cccccc;
+
+  .tab-list {
+    .flex();
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #7d7d7d;
+
+    .tab-item {
+      position: relative;
+      // min-width: 96px;
+      height: 48px;
+      line-height: 48px;
+      cursor: pointer;
+      margin-right: 40px;
+
+      .number {
+        color: @theme;
+      }
+
+      &.active {
+        // background: @theme;
+        // color: #fff;
+        font-weight: bold;
+        color: @theme;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: @theme;
+        }
+      }
+    }
+  }
+
+  .search-box {
+    .flex();
+    min-width: 260px;
+    height: 32px;
+    border: 1px solid #e2e2e2;
+
+
+    input {
+      flex: 2;
+      height: 100%;
+      border-right: none;
+      outline: none;
+      padding-left: 10px;
+      font-size: 12px;
+    }
+
+    .search-wrap {
+      .flex();
+      height: 100%;
+      width: 30px;
+
+      img {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}
+
+.order-list-wrap {
+  margin-top: 34px;
+
+  .info-item {
+    border: 1px solid #e5e5e5;
+    margin-bottom: 30px;
+  }
+
+  .info-title {
+    .flex-between();
+    height: 48px;
+    padding: 0 15px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #e5e5e5;
+
+    .date {
+      font-size: 14px;
+      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-weight: bold;
+      color: #333333;
+    }
+
+    .order-code {
+      flex: 2;
+      text-align: left;
+      padding-left: 20px;
+
+      font-size: 14px;
+      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+      font-weight: bold;
+      color: #333333;
+
+      span {
+        padding-left: 20px;
+        color: #333333;
+      }
+    }
+
+    .order-state {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: #f00;
+      padding: 3px 6px;
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
+
+  .info-good {
+    .list-good {
+      .item-good {
+        padding: 20px;
+        border-bottom: 1px solid #e5e5e5;
+
+        font-family: OPPOSans, OPPOSans;
+        font-weight: 400;
+        font-size: 14px;
+        color: #333333;
+
+        &:last-child {
+          border: none;
+        }
+
+        .box-image {
+          width: 100px;
+          height: 100px;
+          cursor: pointer;
+          border: 1px solid #f5f5f5;
+
+          /deep/ img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            object-fit: cover;
+          }
+
+          img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            object-fit: cover;
+          }
+        }
+
+        .box-title {
+          flex: 1;
+          text-align: left;
+          padding-left: 40px;
+
+          .goods-title {
+            width: fit-content;
+            cursor: pointer;
+
+            &:hover {
+              color: @theme;
+            }
+          }
+        }
+
+        .box-sku {
+          text-align: center;
+          min-width: 200px;
+        }
+
+        .box-num {
+          text-align: center;
+          min-width: 200px;
+        }
+
+        .box-price {
+          text-align: center;
+          min-width: 200px;
+
+          font-family: OPPOSans, OPPOSans;
+          font-weight: bold;
+          font-size: 14px;
+          color: #333;
+        }
+      }
+    }
+  }
+
+  .info-heji {
+    padding: 15px;
+    border-top: 1px solid #e5e5e5;
+    .flex-between();
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #7d7d7d;
+
+    .heji {
+      .flex();
+      font-size: 14px;
+      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-weight: 400;
+      color: #333333;
+
+      .heji-num {
+        margin-right: 30px;
+
+        b {
+          color: #ea3200;
+        }
+      }
+
+      .heji-money {
+        b {
+          color: #ea3200;
+        }
+      }
+    }
+
+    .btn-actions {
+      button {
+        transition: 0.3s;
+        min-width: 120px;
+        height: 32px;
+        background: #ffffff;
+        border-radius: 4px;
+        border: 1px solid @theme;
+        font-family: Arial, Arial;
+        font-weight: 400;
+        font-size: 14px;
+        color: @theme;
+
+        & + button {
+          margin-left: 20px;
+        }
+
+        &:hover {
+          opacity: 0.7;
+        }
+
+        &.btn-bg {
+          background: @theme;
+          color: #ffffff;
+        }
+      }
+    }
+  }
+}
+
+.desc-wrap {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 37px 22px 0;
+  position: relative;
+  gap: 39px;
+  border-top: 1px solid #cecece;
+
+  .invoice-details {
+    width: 127px;
+    height: 32px;
+    background: #ffffff;
+    border-radius: 4px 4px 4px 4px;
+    border: 1px solid #cecece;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #676767;
+    cursor: pointer;
+  }
+}
+</style>
+
+<style lang="less" scoped>
+.goods-sku {
+  margin: 15px 0;
+}
+</style>

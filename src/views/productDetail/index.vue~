@@ -189,7 +189,7 @@ export default {
                     this.count_comments = data.comment_num;
 
                     this.set_sku(data);
-                    this.query_comments(); //评论
+                    // this.query_comments(); //评论
 
                 } else {
                     if (message == "商品不存在或已下架") {
@@ -376,7 +376,7 @@ export default {
             let str_data = JSON.stringify(data_format);
             this.$store.commit('set_cache_payment_products', str_data)
             this.$router.push({
-                path: "/orderSubmit",
+                path: "/order",
             });
         },
 
@@ -479,7 +479,7 @@ export default {
                     <!--      商品图片轮播      -->
                     <div class="ctx-left">
                         <div class="preview-wrap">
-                            <detailLunbo :imageList="detailImages"></detailLunbo>
+                            <detailLunbo :imageList="detailImages" :ifShouCang="curr" :productId="curr.productId"></detailLunbo>
                         </div>
                     </div>
                     <!--            规格-->
