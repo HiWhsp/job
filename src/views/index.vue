@@ -1,160 +1,155 @@
 <template>
-  <div class="page">
-    <!--    操作区-->
-    <div class="index-box-first-content flex">
-      <div class="CategoryLayout">
-        <ul class="category-wrapper">
-          <li class="category-list" v-for="(item, index) in filterList" :key="index">
-            <a :title="item.title" class="link pointer">
-              <span>{{ item.title }}</span>
-              <img src="../static/home/right-row.png" alt="">
-            </a>
-            <div class="category-list-submenu active">
-              <div class="submenu-item">
-                <div class="submenu-item-name">{{ item.title }}</div>
-                <div class="submenu-item-content">
-                  <a :title="it.title" class="submenu-item-content__a pointer"
-                     v-for="(it, i) in item.children"
-                     :key="i">
-                    <span>{{ it.title }}</span>
-                  </a></div>
-              </div>
+    <div class="page">
+        <!--    操作区-->
+        <div class="index-box-first-content flex">
+            <div class="CategoryLayout">
+                <ul class="category-wrapper">
+                    <li class="category-list" v-for="(item, index) in filterList" :key="index" @click="toProduct(item)">
+                        <a :title="item.title" class="link pointer">
+                            <span>{{ item.title }}</span>
+                            <img src="../static/home/right-row.png" alt="">
+                        </a>
+                        <div class="category-list-submenu active">
+                            <div class="submenu-item">
+                                <div class="submenu-item-name">{{ item.title }}</div>
+                                <div class="submenu-item-content">
+                                    <a :title="it.title" class="submenu-item-content__a pointer"
+                                       v-for="(it, i) in item.children"
+                                       :key="i">
+                                        <span>{{ it.title }}</span>
+                                    </a></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
-          </li>
-        </ul>
-      </div>
 
-      <div class="banner">
-        <el-carousel height="100%">
-          <el-carousel-item v-for="(it, i) in index_banners" :key="i">
-            <img :src="it.image" alt="banner"/>
-          </el-carousel-item>
-        </el-carousel>
-      </div>
+            <div class="banner">
+                <el-carousel height="100%">
+                    <el-carousel-item v-for="(it, i) in index_banners" :key="i">
+                        <img :src="it.image" alt="banner"/>
+                    </el-carousel-item>
+                </el-carousel>
+            </div>
 
-      <div class="info-panel">
-        <div class="info-box">
-          <p>Hi 欢迎来到富俊商城</p>
-          <div class="info-btn flex flex-between" v-if="!userInfo.id">
-            <div class="login-btn pointer" @click="goUrl({url: '/login'})">登录</div>
-            <div class="register-btn pointer" @click="goUrl({url: '/register'})">注册</div>
-          </div>
-          <div v-else class="info-btn flex flex-between">
-            <div class="register-btn pointer" @click="onunload">退出登录</div>
-          </div>
-        </div>
-        <div class="my-serve">
-          <div class="title flex flex-between">
-            <div class="name">我的订单</div>
-            <div class="more flex" @click="goUrl({url: '/order-list'})">
-              <span>更多</span>
-              <img src="../static/home/right.png" alt="right">
-            </div>
-          </div>
-          <div class="list">
-            <div class="item" v-for="(item, index) in orderNav" :key="index" @click="goUrl({url: item.router})">
-              <img :src="item.imgUrl" alt="">
-              <span>{{ item.name }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="notice">
-          <div class="title flex flex-between">
-            <div class="name flex">
-              <p class="tip pointer" :class="{'active': noticeType == 1}">公告</p>
-              <div class="col"></div>
-              <p class="tip pointer" :class="{'active': noticeType == 2}">新闻</p>
-            </div>
-            <div class="more flex ">
-              <span>全部</span>
-              <img src="../static/home/right.png" alt="right">
-            </div>
-          </div>
-          <div class="list">
-            <div class="item flex">
-              <div class="hot">最新</div>
-              <p class="text ellipsis-1">安装直线滑轨时直线滑轨采用</p>
-            </div>
-            <div class="item flex">
-              <div class="hot">最新</div>
-              <p class="text ellipsis-1">安装直线滑轨时直线滑轨采用</p>
-            </div>
-            <div class="item flex">
-              <div class="hot">最新</div>
-              <p class="text ellipsis-1">安装直线滑轨时直线滑轨采用</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--    推荐产品-->
-    <div class="promation-area flex">
-      <div class="ordinary-desc pointer">
-        <div class="title">
-          <p>推荐产品</p>
-          <img src="../static/home/area-right.png" alt="area-right">
-        </div>
-      </div>
-      <div class="promation-product-box">
-        <el-carousel :interval="5000" arrow="always" height="100%" indicator-position="none">
-          <el-carousel-item v-for="(item,index) in promationList" :key="index" >
-            <div class="item-wrap flex">
-              <template v-for="it in item">
-                <div class="item pointer" @click="goUrl({url: `/productDetail?id=${it.inventoryId}`})">
-                  <img :src="it.thumb" alt="">
-                  <div class="pointer">
-                    <p class="title">{{ it.title }}</p>
-                    <p class="money">￥{{ it.priceSale }}</p>
-                  </div>
+            <div class="info-panel">
+                <div class="info-box">
+                    <p>Hi 欢迎来到富俊商城</p>
+                    <div class="info-btn flex flex-between" v-if="!userInfo.id">
+                        <div class="login-btn pointer" @click="goUrl({url: '/login'})">登录</div>
+                        <div class="register-btn pointer" @click="goUrl({url: '/register'})">注册</div>
+                    </div>
+                    <div v-else class="info-btn flex flex-between">
+                        <div class="register-btn pointer" @click="onunload">退出登录</div>
+                    </div>
                 </div>
-                <div class="col" v-if="index < 5"></div>
-              </template>
+                <div class="my-serve">
+                    <div class="title flex flex-between">
+                        <div class="name">我的订单</div>
+                        <div class="more flex" @click="goUrl({url: '/order-list'})">
+                            <span>更多</span>
+                            <img src="../static/home/right.png" alt="right">
+                        </div>
+                    </div>
+                    <div class="list">
+                        <div class="item" v-for="(item, index) in orderNav" :key="index"
+                             @click="goUrl({url: item.router})">
+                            <img :src="item.imgUrl" alt="">
+                            <span>{{ item.name }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="notice">
+                    <div class="title flex flex-between">
+                        <div class="name flex">
+                            <p class="tip pointer" :class="{'active': noticeType == 1}" @click="noticeClick(1)">公告</p>
+                            <div class="col"></div>
+                            <p class="tip pointer" :class="{'active': noticeType == 2}" @click="noticeClick(2)">新闻</p>
+                        </div>
+                        <div class="more flex" @click="goUrl({url: '/about'})">
+                            <span>全部</span>
+                            <img src="../static/home/right.png" alt="right">
+                        </div>
+                    </div>
+                    <div class="list">
+                        <div class="item flex" v-for="(item, index) in noticeList" :key="index">
+                            <div class="hot">最新</div>
+                            <p class="text ellipsis-1">{{ item.title }}</p>
+                        </div>
+                        <div class="item flex" v-if="noticeList.length == 0">
+                            暂无更多
+                        </div>
+                    </div>
+                </div>
             </div>
-          </el-carousel-item>
-        </el-carousel>
-      </div>
+        </div>
+        <!--    推荐产品-->
+        <div class="promation-area flex">
+            <div class="ordinary-desc pointer">
+                <div class="title">
+                    <p>推荐产品</p>
+                    <img src="../static/home/area-right.png" alt="area-right">
+                </div>
+            </div>
+            <div class="promation-product-box">
+                <el-carousel :interval="5000" arrow="always" height="100%" indicator-position="none">
+                    <el-carousel-item v-for="(item,index) in promationList" :key="index">
+                        <div class="item-wrap flex">
+                            <template v-for="it in item">
+                                <div class="item pointer" @click="goUrl({url: `/productDetail?id=${it.inventoryId}`})">
+                                    <img :src="it.thumb" alt="">
+                                    <div class="pointer">
+                                        <p class="title">{{ it.title }}</p>
+                                        <p class="money">￥{{ it.priceSale }}</p>
+                                    </div>
+                                </div>
+                                <div class="col" v-if="index < 5"></div>
+                            </template>
+                        </div>
+                    </el-carousel-item>
+                </el-carousel>
+            </div>
+        </div>
+        <!--    精选产品-->
+        <div class="recommend-area">
+            <div class="title flex flex-between">
+                <div class="left flex">
+                    <img src="../static/home/37454.png" alt="">
+                    <p class="tip">精选产品</p>
+                    <p class="desc">爆款精选 价格优越</p>
+                </div>
+                <div class="more flex pointer">
+                    <p>更多</p>
+                    <img src="../static/home/right-row.png" alt="">
+                </div>
+            </div>
+            <div class="list flex">
+                <div class="item pointer" v-for="item in product_list" :key="item.id"
+                     @click="goUrl({url: `/productDetail?id=${item.inventoryId}`})">
+                    <img :src="item.thumb" alt="">
+                    <p class="tit">{{ item.title }}</p>
+                    <p class="money">￥{{ item.priceSale }}</p>
+                </div>
+            </div>
+        </div>
+        <!--    定制组件-->
+        <div class="DIY-area">
+            <div class="title flex flex-center">
+                <img src="../static/home/19655.png" alt="">
+                <p>DIY定制组件</p>
+                <img src="../static/home/19656.png" alt="">
+            </div>
+            <div class="list flex">
+                <div class="item pointer" v-for="item in product_list" :key="item.id"
+                     @click="goUrl({url: `/productDetail?id=${item.inventoryId}`})">
+                    <img :src="item.thumb" alt="">
+                    <p class="tit">{{ item.title }}</p>
+                    <p class="money">￥{{ item.priceSale }}</p>
+                </div>
+            </div>
+        </div>
+        <pageAside></pageAside>
     </div>
-    <!--    精选产品-->
-    <div class="recommend-area">
-      <div class="title flex flex-between">
-        <div class="left flex">
-          <img src="../static/home/37454.png" alt="">
-          <p class="tip">精选产品</p>
-          <p class="desc">爆款精选 价格优越</p>
-        </div>
-        <div class="more flex pointer">
-          <p>更多</p>
-          <img src="../static/home/right-row.png" alt="">
-        </div>
-      </div>
-      <div class="list flex">
-        <div class="item pointer" v-for="item in product_list" :key="item.id"
-             @click="goUrl({url: `/productDetail?id=${item.inventoryId}`})">
-          <img :src="item.thumb" alt="">
-          <p class="tit">{{ item.title }}</p>
-          <p class="money">￥{{ item.priceSale }}</p>
-        </div>
-      </div>
-    </div>
-    <!--    定制组件-->
-    <div class="DIY-area">
-      <div class="title flex flex-center">
-        <img src="../static/home/19655.png" alt="">
-        <p>DIY定制组件</p>
-        <img src="../static/home/19656.png" alt="">
-      </div>
-      <div class="list flex">
-        <div class="item pointer" v-for="item in product_list" :key="item.id"
-             @click="goUrl({url: `/productDetail?id=${item.inventoryId}`})">
-          <img :src="item.thumb" alt="">
-          <p class="tit">{{ item.title }}</p>
-          <p class="money">￥{{ item.priceSale }}</p>
-        </div>
-      </div>
-    </div>
-
-    <pageAside></pageAside>
-  </div>
 </template>
 
 <script>
@@ -163,138 +158,174 @@ import {mapState} from "vuex";
 import dayjs from 'dayjs'
 
 export default {
-  name: "index",
-  components: {
-    pageAside
-  },
-  data() {
-    return {
-      // 首屏展示类型
-      noticeType: 1,
-      // 商品分类
-      // filterList: [
-      //     {
-      //         title: '简易丝杆模组',
-      //         children: [{
-      //             title: '平键'
-      //         }]
-      //     }
-      // ],
-      // 订单选项菜单
-      orderNav: [
-        {
-          name: '待报价',
-          imgUrl: require('../static/home/daibaojia.png'),
-          router: '/order-quotation-list'
-        }, {
-          name: '已报价',
-          imgUrl: require('../static/home/yibaojia.png'),
-          router: '/order-quotation-list'
-        }, {
-          name: '待付款',
-          imgUrl: require('../static/home/daifukuan.png'),
-          router: '/order-quotation-list'
-        }, {
-          name: '待发货',
-          imgUrl: require('../static/home/daifahuo.png'),
-          router: '/order-list'
-        }, {
-          name: '待收货',
-          imgUrl: require('../static/home/daishouhuo.png'),
-          router: 'order-list'
-        }, {
-          name: '待开票',
-          imgUrl: require('../static/home/daikaipiao.png'),
-          router: '/invoice-list'
-        }],
-      // 推荐商品列表
-      promationList: [],
-      product_list: [],
-      reviews_group: []
-    };
-  },
-  computed: {
-    ...mapState({
-      userInfo: state => state.userInfo,
-      filterList: state => state.vuexTreeCates,
-      index_banners: state => state.index_banners
-    }),
-  },
-  mounted() {
-    this.setView();
-  },
-  methods: {
-    setView() {
-      this.query_product_cate()
-      this.query_reviews()
+    name: "index",
+    components: {
+        pageAside
     },
-    // 获取商品列表
-    query_product_cate() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "product_plist",
-          ifShowSku: 1,
-          channelId: 0,
-          page: 1,
-          pageNum: 10,
-        },
-      }).then((res) => {
-        let {code, data} = res;
-        if (code == 200) {
-          let {list, count} = data;
-          this.product_list = list;
-          this.count = count;
-
-          for (let i = 0; i < list.length; i += 5) {
-            this.promationList.push(list.slice(i, i + 5));
-          }
-          console.log(this.promationList)
-        }
-      });
+    data() {
+        return {
+            // 首屏展示类型
+            noticeType: 1,
+            noticeList: [],
+            // 订单选项菜单
+            orderNav: [
+                {
+                    name: '待报价',
+                    imgUrl: require('../static/home/daibaojia.png'),
+                    router: '/order-quotation-list'
+                }, {
+                    name: '已报价',
+                    imgUrl: require('../static/home/yibaojia.png'),
+                    router: '/order-quotation-list'
+                }, {
+                    name: '待付款',
+                    imgUrl: require('../static/home/daifukuan.png'),
+                    router: '/order-quotation-list'
+                }, {
+                    name: '待发货',
+                    imgUrl: require('../static/home/daifahuo.png'),
+                    router: '/order-list'
+                }, {
+                    name: '待收货',
+                    imgUrl: require('../static/home/daishouhuo.png'),
+                    router: 'order-list'
+                }, {
+                    name: '待开票',
+                    imgUrl: require('../static/home/daikaipiao.png'),
+                    router: '/invoice-list'
+                }],
+            // 推荐商品列表
+            promationList: [],
+            product_list: [],
+            reviews_group: []
+        };
     },
-    // 评论
-    query_reviews() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "product_comments",
-          page: 1,
-          pageNum: 12,
-          productId: 0,
-          ifIndex: 1,
+    computed: {
+        ...mapState({
+            userInfo: state => state.userInfo,
+            filterList: state => state.vuexTreeCates,
+            index_banners: state => state.index_banners
+        }),
+    },
+    mounted() {
+        this.setView();
+    },
+    methods: {
+        setView() {
+            this.query_product_cate()
+            this.query_reviews()
+            this.noticeClick(1);
         },
-      }).then((res) => {
-        let {code, data, count} = res;
-        if (code == 200) {
-          let {list, count, pages} = data;
-          this.reviews = list;
-
-
-          let reviews_group = [];
-          let items_length = 4;//4个一组
-          list.forEach((v, i) => {
-            let group_index = Math.floor(i / items_length);
-            if (!reviews_group[group_index]) {
-              reviews_group[group_index] = [];
+        // 公告 新闻
+        noticeClick(type) {
+            this.noticeType = type;
+            if (type == 1) {
+                this.$api({
+                    url: '/service.php',
+                    method: 'get',
+                    data: {
+                        action: 'news_lists',
+                        ...{
+                            channelId: 52,
+                            page: 1,
+                            pageNum: 5,
+                        }
+                    }
+                }).then(res => {
+                    if (res.code == 200) {
+                        this.noticeList = res.data.list;
+                    }
+                })
+            } else if (type == 2) {
+                this.$api({
+                    url: '/service.php',
+                    method: 'get',
+                    data: {
+                        action: 'news_lists',
+                        ...{
+                            channelId: 50,
+                            page: 1,
+                            pageNum: 5,
+                        }
+                    }
+                }).then(res => {
+                    if (res.code == 200) {
+                        this.noticeList = res.data.list;
+                    }
+                })
             }
-            reviews_group[group_index].push(v);
-          });
-          this.reviews_group = reviews_group;
+        },
+        // 获取商品列表
+        query_product_cate() {
+            this.$api({
+                url: "/service.php",
+                method: "get",
+                data: {
+                    action: "product_plist",
+                    ifShowSku: 1,
+                    channelId: 0,
+                    page: 1,
+                    pageNum: 10,
+                },
+            }).then((res) => {
+                let {code, data} = res;
+                if (code == 200) {
+                    let {list, count} = data;
+                    this.product_list = list;
+                    this.count = count;
+
+                    for (let i = 0; i < list.length; i += 5) {
+                        this.promationList.push(list.slice(i, i + 5));
+                    }
+                    console.log(this.promationList)
+                }
+            });
+        },
+        // 评论
+        query_reviews() {
+            this.$api({
+                url: "/service.php",
+                method: "get",
+                data: {
+                    action: "product_comments",
+                    page: 1,
+                    pageNum: 12,
+                    productId: 0,
+                    ifIndex: 1,
+                },
+            }).then((res) => {
+                let {code, data, count} = res;
+                if (code == 200) {
+                    let {list, count, pages} = data;
+                    this.reviews = list;
+
+
+                    let reviews_group = [];
+                    let items_length = 4;//4个一组
+                    list.forEach((v, i) => {
+                        let group_index = Math.floor(i / items_length);
+                        if (!reviews_group[group_index]) {
+                            reviews_group[group_index] = [];
+                        }
+                        reviews_group[group_index].push(v);
+                    });
+                    this.reviews_group = reviews_group;
+                }
+            });
+        },
+        // 跳转链接
+        goUrl(item) {
+            this.$router.push(item.url);
+        },
+        // 跳转商品
+        toProduct(item) {
+            this.$router.push(`/productCategories?ids=${item.id}`);
+        },
+        // 退出登录
+        onunload() {
+            this.$store.commit("clear_loginInfo");
         }
-      });
     },
-    // 跳转链接
-    goUrl(item) {
-      this.$router.push(item.url);
-    },
-    // 退出登录
-    onunload() {
-      this.$store.commit("clear_loginInfo");
-    }
-  },
 }
 
 </script>

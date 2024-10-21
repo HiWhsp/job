@@ -281,7 +281,7 @@ export default {
 
       .title {
         .ellipsis-1();
-        width: 100%;
+        width: 180px;
         font-family: Roboto, Roboto;
         font-weight: 400;
         font-size: 16px;

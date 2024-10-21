@@ -3,7 +3,7 @@
         <div class="nav-bar">
             <el-breadcrumb separator=">">
                 <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>商品列表</el-breadcrumb-item>
+                <el-breadcrumb-item>定制组件</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <!--    条件筛选-->
@@ -85,7 +85,6 @@ export default {
     },
     data() {
         return {
-            keyword: '',
             activeIndex: 0,
             count: 0, // 总和
             pages: 1,
@@ -110,7 +109,6 @@ export default {
         }),
     },
     mounted() {
-        this.keyword = this.$route.query.keyword;
         this.activeIndex = Number(this.$route.query.ids);
         this.setView();
     },
@@ -142,7 +140,6 @@ export default {
             this.$api("product_plist", {
                 ...this.pagination,
                 channelId: this.activeIndex,
-                keyword: this.keyword,
                 orderType: this.getOrderType(this.orderByColumn),
             }).then((res) => {
                 let data = res.data;
