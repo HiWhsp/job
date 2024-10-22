@@ -44,10 +44,34 @@ export default {
         this.data = res.data.info;
       }
     })
-    this.productsToBuy = JSON.parse(sessionStorage.getItem("productsToBuy"));
-    this.allToBuy = JSON.parse(sessionStorage.getItem("allToBuy"));
+    this.setView();
   },
   methods: {
+    setView() {
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'news_lists',
+          ...{
+            channelId: 50,
+            page: 1,
+            pageNum: 12,
+            isIndex: 0,
+            orderType: 0
+          }
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.allToBuy = res.data.list;
+          this.allToBuy.forEach((item, index) => {
+            if (item.id == this.$route.query.id) {
+              this.productsToBuy = [this.allToBuy[index - 1] ? this.allToBuy[index - 1] : null, this.allToBuy[index + 1] ? this.allToBuy[index + 1] : null];
+            }
+          })
+        }
+      })
+    },
     toBuy(type) {
       if (type == 'down') {
         const start = this.productsToBuy[1];

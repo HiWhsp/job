@@ -321,7 +321,10 @@ export default {
 
       } else if (this.noticeType == 2) { // 新闻
         this.goUrl({
-          url: '/xinhun-detail?id=' + item.id,
+          url: '/xinhun-detail',
+          query: {
+            id: item.id
+          }
         })
       }
     },

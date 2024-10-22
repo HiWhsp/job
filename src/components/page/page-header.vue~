@@ -188,7 +188,8 @@ export default {
       this.$router.push(item.url);
     },
     searchClick(item) {
-      this.$router.push(item.url + `&hash=${Math.random()}`);
+      this.$router.push(item.url);
+      location.reload();
     },
     // 退出登录
     onunload() {

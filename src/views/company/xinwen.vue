@@ -20,10 +20,6 @@ export default {
   },
   methods: {
     go_url(item, index) {
-      const start = this.dataList[index - 1] ? this.dataList[index - 1] : null;
-      const end = this.dataList[index + 1] ? this.dataList[index + 1] : null;
-      sessionStorage.setItem("productsToBuy", JSON.stringify([start, end]));
-      sessionStorage.setItem("allToBuy", JSON.stringify(this.dataList));
       this.$router.push('/xinhun-detail?id=' + item.id)
     },
     getList() {
@@ -80,13 +76,14 @@ export default {
     margin: 0 auto;
     .flex();
     flex-wrap: wrap;
-    justify-content: space-between;
+    //justify-content: space-between;
 
     .item {
       width: 380px;
       height: 383px;
       background: #F8F8F8;
       margin-top: 31px;
+      margin-right: 20px;
 
       img {
         width: 380px;

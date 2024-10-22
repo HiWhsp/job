@@ -106,7 +106,7 @@ export default {
   },
   watch: {
     "$route"() {
-      this.keyword = this.$route.query.keyword;
+      console.log(123)
       this.setView();
     },
   },
