@@ -178,7 +178,6 @@ export default {
     .popup {
       position: absolute;
       right: 88px;
-      top: -76px;
       background-color: #fff;
       border: 1px solid #e6e6e6;
       border-radius: 4px;

@@ -3,54 +3,54 @@
     <div class="main">
       <div class="left">
         <img
-          :src="iconImgSrc"
-          alt="Logo"
-          @click="onRouteTo({ name: 'index' })"
+            :src="iconImgSrc"
+            alt="Logo"
+            @click="onRouteTo({ name: 'index' })"
         />
       </div>
       <div class="mid">
         <ul class="nav-list">
           <li
-            v-for="(item, index) in navLists"
-            :key="index"
-            :class="['li', { active: activeIndex === index }]"
-            @click="onRouteTo({ name: item.path, index })"
-            @mouseenter="mouseenterChat(index)"
-            :style="{ color: color, '--active-color': color }"
+              v-for="(item, index) in navLists"
+              :key="index"
+              :class="['li', { active: activeIndex === index }]"
+              @click="onRouteTo({ name: item.path, index })"
+              @mouseenter="mouseenterChat(index)"
+              :style="{ color: color, '--active-color': color }"
           >
             {{ item.text }}
           </li>
           <img
-            src="../../assets/img/head/icon.png"
-            v-show="activeIndex === 0 && color !== '#fff'"
-            class="icon"
-            alt=""
+              src="../../assets/img/head/icon.png"
+              v-show="activeIndex === 0 && color !== '#fff'"
+              class="icon"
+              alt=""
           />
         </ul>
       </div>
       <div class="right">
         <div class="img-wrap" @mousedown="showSearchBox = true">
-          <img :src="searchImgSrc" alt="search" />
+          <img :src="searchImgSrc" alt="search"/>
           <transition name="fade">
             <div
-              class="search-box"
-              v-show="showSearchBox"
-              @mouseleave="showSearchBox = false"
+                class="search-box"
+                v-show="showSearchBox"
+                @mouseleave="showSearchBox = false"
             >
               <div class="input-wrap">
-                <el-input v-model="input"> </el-input>
+                <el-input v-model="input"></el-input>
                 <div class="icon-wrap">
                   <img
-                    src="../../assets/img/head/search-icon.png"
-                    alt="search-icon"
+                      src="../../assets/img/head/search-icon.png"
+                      alt="search-icon"
                   />
                 </div>
               </div>
               <ul class="keyword-list">
                 <li
-                  v-for="(keyword, index) in keywordList"
-                  :key="index"
-                  class="keyword-li"
+                    v-for="(keyword, index) in keywordList"
+                    :key="index"
+                    class="keyword-li"
                 >
                   <span class="span">{{ keyword }}</span>
                 </li>
@@ -60,15 +60,15 @@
           </transition>
         </div>
         <div class="img-wrap" @click="onRouteTo({ name: 'productCart' })">
-          <img :src="cartImgSrc" alt="cart" />
+          <img :src="cartImgSrc" alt="cart"/>
         </div>
         <div class="img-wrap" @mousedown="showUserMenu = true">
-          <img :src="personImgSrc" alt="user" />
+          <img :src="personImgSrc" alt="user"/>
           <transition name="fade">
             <div
-              class="user-menu"
-              v-show="isLogin && showUserMenu"
-              @mouseleave="showUserMenu = false"
+                class="user-menu"
+                v-show="isLogin && showUserMenu"
+                @mouseleave="showUserMenu = false"
             >
               <div class="user-item" @click="onRouteTo({ name: 'my' })">
                 个人中心
@@ -81,19 +81,19 @@
           </transition>
           <transition name="fade">
             <div
-              v-show="!isLogin && showUserMenu"
-              class="user-menu"
-              @mouseleave="showUserMenu = false"
+                v-show="!isLogin && showUserMenu"
+                class="user-menu"
+                @mouseleave="showUserMenu = false"
             >
               <div
-                class="user-item"
-                @click="onRouteTo({ name: 'login', query: 'login' })"
+                  class="user-item"
+                  @click="onRouteTo({ name: 'login', query: 'login' })"
               >
                 会员登录
               </div>
               <div
-                class="user-item"
-                @click="onRouteTo({ name: 'login', query: 'register' })"
+                  class="user-item"
+                  @click="onRouteTo({ name: 'login', query: 'register' })"
               >
                 会员注册
               </div>
@@ -103,19 +103,19 @@
       </div>
       <transition name="fade">
         <div
-          class="chat-with-up-pop"
-          v-show="showChatWithUp"
-          @mouseleave="showChatWithUp = false"
+            class="chat-with-up-pop"
+            v-show="showChatWithUp"
+            @mouseleave="showChatWithUp = false"
         >
           <div class="chat-list">
             <div
-              class="chat-item"
-              :class="{ active: chatActiveIndex === index }"
-              v-for="(item, index) in chatList"
-              :key="index"
-              @click="onClickChatItem(index)"
+                class="chat-item"
+                :class="{ active: chatActiveIndex === index }"
+                v-for="(item, index) in chatList"
+                :key="index"
+                @click="onClickChatItem(item, index)"
             >
-              {{ item.text }}
+              <i class="el-icon-arrow-right"></i> {{ item.text }}
             </div>
           </div>
         </div>
@@ -125,7 +125,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import {mapGetters} from "vuex";
 
 export default {
   data() {
@@ -137,24 +137,7 @@ export default {
       keywordList: ["激光器", "飞秒激光器", "科研激光器"],
       input: "",
       showUserMenu: false,
-      chatList: [
-        {
-          path: "company-profile",
-          text: "公司简介",
-        },
-        {
-          path: "company-news",
-          text: "公司新闻",
-        },
-        {
-          path: "exhibition-information",
-          text: "展会信息",
-        },
-        {
-          path: "contact-us",
-          text: "联系我们",
-        },
-      ],
+      chatList: [],
     };
   },
   computed: {
@@ -187,27 +170,78 @@ export default {
         text: "服务支持",
       },
       {
-        path: "chat-us",
+        path: "company",
         text: "联系我们",
       },
     ];
   },
   methods: {
     onRouteTo(params) {
-      const { index, name, query } = params;
+      const {index, name, query} = params;
       this.activeIndex = index;
-      this.$router.push({ name, query: { to: query } });
+      this.$router.push({name, query: {to: query}});
     },
     mouseenterChat(index) {
+      this.showChatWithUp = true;
       if (index === 4) {
-        this.showChatWithUp = true;
+        this.chatList = [
+          {
+            path: "company-profile",
+            text: "公司简介",
+          },
+          {
+            path: "company-news",
+            text: "公司新闻",
+          },
+          {
+            path: "exhibition-information",
+            text: "展会信息",
+          },
+          {
+            path: "contact-us",
+            text: "联系我们",
+          }
+        ];
+      } else if (index == 3) {
+        this.chatList = [
+          {
+            path: "light-computing",
+            text: "光电计算",
+            icon: true
+          }, {
+            path: "laser-processing",
+            text: "激光加工",
+            icon: true
+          }, {
+            path: "download-materials",
+            text: "资料下载",
+            icon: true
+          }, {
+            path: "complaints-suggestions",
+            text: "投诉建议",
+            icon: true
+          }, {
+            path: "merchant-cooperation",
+            text: "商家合作",
+            icon: true
+          }, {
+            path: "member-benefits",
+            text: "会员权益",
+            icon: true
+          }, {
+            path: "technical-article",
+            text: "技术文章",
+            icon: true
+          }
+        ];
       } else {
         this.showChatWithUp = false;
       }
     },
-    onClickChatItem(index) {
+    onClickChatItem(item, index) {
       this.chatActiveIndex = index;
-      this.$router.push({ path: this.chatList[index].path });
+      console.log("/" + item.path)
+      this.$router.push("/" + item.path);
     },
   },
 };
@@ -409,24 +443,51 @@ export default {
   top: 114px;
   left: 0;
   width: 100%;
-  height: 152px;
-  padding: 48px 260px 0;
+  min-height: 152px;
   background: #fff;
+
   .chat-list {
+    width: 1400px;
+    margin: 48px auto 0 auto;
+    flex-wrap: wrap;
     display: flex;
-    justify-content: space-around;
     font-size: 18px;
     color: #333333;
     line-height: 30px;
+
     .chat-item {
       cursor: pointer;
+      width: 287px;
+      font-size: 18px;
+      margin-right: 84px;
+      margin-bottom: 20px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid #E8E8E8;
+
+      i {
+        color: #77797B;
+      }
+
+      &:nth-child(4n) {
+        margin-right: 0;
+      }
+
       &.active {
         color: #27417c;
         font-weight: bold;
+
+        i {
+          color: #27417c;
+        }
       }
+
       &:hover {
         color: #27417c;
         font-weight: bold;
+
+        i {
+          color: #27417c;
+        }
       }
     }
   }

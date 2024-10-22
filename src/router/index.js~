@@ -48,32 +48,72 @@ const routes = [
     redirect: "/download-materials",
     children: [
       {
-        path: "/download-materials",
+        path: "/download-materials", // 资料下载
         name: "download-materials",
         component: () => import("@/views/service/download-materials.vue"),
       },
       {
-        path: "/merchant-cooperation",
+        path: "/merchant-cooperation", // 商家合作
         name: "merchant-cooperation",
         component: () => import("@/views/service/merchant-cooperation.vue"),
       },
       {
-        path: "/member-benefits",
+        path: "/member-benefits",  // 会员权益
         name: "member-benefits",
         component: () => import("@/views/service/member-benefits.vue"),
       },
       {
-        path: "/technical-article",
+        path: "/technical-article", // 技术文档
         name: "technical-article",
         component: () => import("@/views/service/technical-article.vue"),
       },
       {
-        path: "/complaints-suggestions",
+        path: "/complaints-suggestions", // 投诉与建议
         name: "complaints-suggestions",
         component: () => import("@/views/service/complaints-suggestions.vue"),
       },
     ],
   },
+
+  // 联系我们
+  {
+    path: "/company",
+    name: "company",
+    component: () => import("@/views/chat-us/index.vue"),
+    redirect: "/company-profile",
+    children: [
+      {
+        path: "/company-profile", // 公司简介
+        name: "company-profile",
+        component: () => import("@/views/chat-us/company-profile.vue"),
+      }, {
+        path: "/company-news", // 公司简介
+        name: "company-news",
+        component: () => import("@/views/chat-us/company-news.vue"),
+      }, {
+        path: "/exhibition-information", // 公司简介
+        name: "exhibition-information",
+        component: () => import("@/views/chat-us/exhibition-information.vue"),
+      }, {
+        path: "/contact-us", // 公司简介
+        name: "contact-us",
+        component: () => import("@/views/chat-us/contact-us.vue"),
+      },  // 光电计算
+      {
+        path: "/light-computing",
+        name: "light-computing",
+        component: () => import("@/views/chat-us/light-computing.vue"),
+      },
+      // 激光加工
+      {
+        path: "/laser-processing",
+        name: "laser-processing",
+        component: () => import("@/views/chat-us/laser-processing.vue"),
+      },
+    ]
+  },
+
+  // 登录
   {
     path: "/login",
     name: "login",
@@ -282,24 +322,6 @@ const routes = [
           requireAuth: true,
         },
       },
-      // {
-      //   path: "/review-list",
-      //   name: "review-list",
-      //   component: () => import("@/views/my/order/my-review-list.vue"),
-      //   meta: {
-      //     title: "评价列表",
-      //     requireAuth: true,
-      //   },
-      // },
-      // {
-      //   path: "/review-submit",
-      //   name: "review-submit",
-      //   component: () => import("@/views/my/order/order-review-submit.vue"),
-      //   meta: {
-      //     title: "评价提交",
-      //     requireAuth: true,
-      //   },
-      // },
       {
         path: "/coupon-list",
         name: "coupon-list",
