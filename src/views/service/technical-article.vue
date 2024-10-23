@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="filter-wrap">
-      <el-select v-model="value" placeholder="请选择文章分类" class="select">
+      <el-select v-model="keyword" placeholder="请选择文章分类" class="select">
         <el-option
             v-for="item in options"
             :key="item.value"
@@ -10,7 +10,7 @@
         >
         </el-option>
       </el-select>
-      <el-select v-model="value" placeholder="请选择文章分类" class="select">
+      <el-select v-model="keyword" placeholder="请选择文章分类" class="select">
         <el-option
             v-for="item in options"
             :key="item.value"
@@ -20,7 +20,7 @@
         </el-option>
       </el-select>
       <el-input
-          v-model="value"
+          v-model="keyword"
           placeholder="请输入关键词"
           class="input"
       ></el-input>
@@ -28,12 +28,12 @@
       <div class="reset-btn" @click="reset">重置</div>
     </div>
     <div class="article-list">
-      <div class="article-item" v-for="(item, index) in 10" :key="index">
-        <div class="article-img" @click="toDetail(item)">
-          <img src="" alt=""/>
+      <div class="article-item" v-for="(item, index) in list" :key="index" @click="toDetail(item)">
+        <div class="article-img">
+          <img :src="item.thumb" alt=""/>
         </div>
-        <div class="article-title-wrap">
-          <div class="article-title">液态透镜技术在工业镜头中的应用</div>
+        <div class="article-title-wrap pointer">
+          <div class="article-title ellipsis-1">{{ item.title }}</div>
           <div class="article-sub-title">
             <div class="article-sub-title-img-wrap">
               <img src="@/assets/img/service/icon1.png" alt=""/>
@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <div class="pagination">
+    <div class="pagination-box">
       <el-pagination
           @current-change="changePage"
           :current-page.sync="pagination.page"
@@ -65,31 +65,32 @@ export default {
         {
           value: "选项1",
           label: "黄金糕",
-        },
-        {
-          value: "选项2",
-          label: "双皮奶",
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎",
-        },
-        {
-          value: "选项4",
-          label: "龙须面",
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭",
-        },
+        }
       ],
-      value: "",
+      keyword: "",
+      list: [], // 文章列表
       pagination: {
         page: 1,
         pageNum: 10,
       },
-      count: 100,
+      count: 0,
     };
+  },
+  mounted() {
+    // 获取文章分类
+    this.$api({
+      url: '/service.php',
+      method: 'get',
+      data: {
+        action: 'news_lists',
+        channelId: 5
+      },
+    }).then(res => {
+      if (res.code == 200) {
+        this.list = res.data.list
+        this.count = res.data.count
+      }
+    })
   },
   methods: {
     search() {
@@ -103,7 +104,7 @@ export default {
     },
     toDetail(item) {
       this.$router.push({
-        path: "/technical-article-detail",
+        path: `/technical-article-detail?id=${item.id}`,
       })
     }
   },
@@ -111,6 +112,10 @@ export default {
 </script>
 
 <style scoped lang="less">
+.page {
+  padding-bottom: 50px;
+}
+
 .filter-wrap {
   width: 100%;
   height: 123px;
@@ -183,7 +188,7 @@ export default {
     }
 
     .article-title {
-      padding: 24px 0 0 26px;
+      padding: 24px 26px 0;
       font-weight: 400;
       font-size: 20px;
       color: #333333;
@@ -193,14 +198,14 @@ export default {
     .article-sub-title {
       padding: 21px 0 0 26px;
       display: flex;
-      gap: 9px;
+      align-items: center;
       font-size: 14px;
       color: #27417c;
-      line-height: 19px;
 
       .article-sub-title-img-wrap {
         width: 13px;
-        height: 13px;
+        height: 14px;
+        margin-right: 5px;
 
         img {
           width: 100%;

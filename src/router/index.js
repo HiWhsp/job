@@ -75,6 +75,14 @@ const routes = [
     ],
   },
 
+  {
+    path: "/technical-article-detail", // 技术文档详情
+    name: "technical-article-detail",
+    component: () =>
+      import("@/views/service/technical-article-detail.vue"),
+  },
+
+
   // 联系我们
   {
     path: "/company",

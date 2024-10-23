@@ -158,7 +158,7 @@ export default {
           }).then((res) => {
             if (res.code === 200) {
               this.$message.success("提交成功");
-              this.resetForm('ruleForm');
+              this.resetForm();
             }
           })
         } else {

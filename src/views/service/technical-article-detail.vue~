@@ -100,8 +100,9 @@ export default {
         path: `/technical-article-detail?id=${this.newsList[i].id}`,
       })
     },
-    goUrl(item) {
-      this.$router.push(item.url);
+    goUrl(url) {
+      console.log(url)
+      this.$router.push(url);
     }
   },
 };

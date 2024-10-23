@@ -69,7 +69,7 @@
               <td @click="goUrl('/laser-processing')">激光加工</td>
               <td>支付宝支付</td>
               <td @click="goUrl('/complaints-suggestions')">投诉建议</td>
-              <td @click="goUrl('/company-news')">公司动态</td>
+              <td>公司动态</td>
               <td>手机:13277960367</td>
             </tr>
             <tr>

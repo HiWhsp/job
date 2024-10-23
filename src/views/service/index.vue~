@@ -114,12 +114,12 @@ export default {
       this.curBannerIndex = index;
     },
   },
-  mounted() {
-    const path = this.$route.path;
-    const index = this.tabList.findIndex((item) => item.path === path);
-    this.activeIndex = index;
-    this.curBannerIndex = index;
-  },
+  // created() {
+  //   const path = this.$route.path;
+  //   const index = this.tabList.findIndex((item) => item.path === path);
+  //   this.activeIndex = index;
+  //   this.curBannerIndex = index;
+  // },
 };
 </script>
 

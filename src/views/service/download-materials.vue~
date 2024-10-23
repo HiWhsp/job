@@ -8,11 +8,11 @@
         <div class="left-blank"></div>
         <div class="left-content">
           <div
-              class="left-content-item"
-              :class="{ active: activeLeftIndex === index }"
-              v-for="(item, index) in leftContentList"
-              :key="item.id"
-              @click="onLeftContentClick(item, index)"
+            class="left-content-item"
+            :class="{ active: activeLeftIndex === index }"
+            v-for="(item, index) in leftContentList"
+            :key="item.id"
+            @click="onLeftContentClick(item, index)"
           >
             <div>{{ item.title }}</div>
             <div class="icon"></div>
@@ -22,19 +22,19 @@
       </div>
       <div class="right">
         <div
-            class="list-item"
-            v-for="(item, index) in rightContentList"
-            :key="index"
+          class="list-item"
+          v-for="(item, index) in rightContentList"
+          :key="index"
         >
           <div class="list-item-title">
             <div class="title-img-wrap">
-              <img src="@/assets/img/service/file.png" alt="file"/>
+              <img src="@/assets/img/service/file.png" alt="file" />
             </div>
             <div class="text">{{ item.title }}</div>
           </div>
           <div class="list-item-content">
             <div class="content-img-wrap">
-              <img src="@/assets/img/service/download.png" alt="download"/>
+              <img src="@/assets/img/service/download.png" alt="download" />
             </div>
             <div class="content-item-value pointer" @click="onDownload(item)">立即下载</div>
           </div>
@@ -44,12 +44,12 @@
 
     <div class="pagination-box">
       <el-pagination
-          @current-change="changePage"
-          :current-page.sync="pagination.page"
-          :page-size="pagination.pageNum"
-          layout="total, prev, pager, next, jumper"
-          :total="count"
-          size="large"
+        @current-change="changePage"
+        :current-page.sync="pagination.page"
+        :page-size="pagination.pageNum"
+        layout="total, prev, pager, next, jumper"
+        :total="count"
+        size="large"
       ></el-pagination>
     </div>
   </div>
@@ -106,7 +106,7 @@ export default {
           page: this.pagination.page,
           pageSize: this.pagination.pageNum,
         },
-      }).then(res => {
+      }).then(res=>{
         if (res.code == 200) {
           this.rightContentList = res.data.list;
           this.count = res.data.count;
@@ -118,7 +118,7 @@ export default {
     },
 
     onDownload(item) {
-      if (!item.url) {
+      if(!item.url) {
         this.$message({
           message: '暂无下载链接',
           type: 'warning',
@@ -135,19 +135,16 @@ export default {
 .page {
   padding-bottom: 30px;
 }
-
 .main {
   margin: 63px 260px 65px;
   display: flex;
   gap: 28px;
-
   .left {
     width: 270px;
     background: #ffffff;
     border-radius: 20px 0px 20px 0px;
     overflow: hidden;
     box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.16);
-
     .left-title {
       height: 73px;
       padding: 21px 0 0 46px;
@@ -157,15 +154,12 @@ export default {
       color: #ffffff;
       line-height: 25px;
     }
-
     .left-blank {
       height: 10px;
       background: #fff;
     }
-
     .left-content {
       background: #27417c;
-
       .left-content-item {
         height: 46px;
         padding: 11px 0 0 23px;
@@ -174,7 +168,6 @@ export default {
         background: #fff;
         cursor: pointer;
         border-bottom: 1px solid #707070;
-
         &.active {
           font-weight: bold;
           color: #ffffff;
@@ -182,18 +175,15 @@ export default {
         }
       }
     }
-
     .left-bottom-blank {
       height: 34px;
       background: #fff;
     }
   }
-
   .right {
     display: flex;
     flex-direction: column;
     gap: 20px;
-
     .list-item {
       width: 1102px;
       height: 109px;
@@ -206,44 +196,36 @@ export default {
       box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.11);
       border-radius: 8px 8px 8px 8px;
       border: 1px solid #dfdfdf;
-
       .list-item-title {
         display: flex;
         align-items: center;
         gap: 27px;
-
         .title-img-wrap {
           width: 46px;
           height: 53px;
-
           img {
             width: 100%;
             height: 100%;
           }
         }
-
         .text {
           font-size: 18px;
           color: #333333;
           line-height: 32px;
         }
       }
-
       .list-item-content {
         display: flex;
         align-items: center;
         gap: 20px;
-
         .content-img-wrap {
           width: 21px;
           height: 19px;
-
           img {
             width: 100%;
             height: 100%;
           }
         }
-
         .content-item-value {
           height: 24px;
           font-size: 18px;

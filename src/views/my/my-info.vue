@@ -1,15 +1,15 @@
 <template>
-    <div class="page">
-        <div class="main-title">
-            <span>个人资料</span>
-        </div>
-        <div class="page-ctx">
-            <div class="section">
-                <div class="section-title">基本信息</div>
-                <div class="section-ctx">
-                    <div class="item upload-box">
-                        <span class="text">头像：</span>
-                        <span class="info">
+  <div class="page">
+    <div class="main-title">
+      <span>个人资料</span>
+    </div>
+    <div class="page-ctx">
+      <div class="section">
+        <div class="section-title">基本信息</div>
+        <div class="section-ctx">
+          <div class="item upload-box">
+            <span class="text">头像：</span>
+            <span class="info">
               <div class="upload-box">
                 <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="img"
                            action="http://wuhanjingmi.new.zhishangez.com//service.php?action=index_ossUpload"
@@ -20,72 +20,72 @@
                 </el-upload>
               </div>
             </span>
-                    </div>
+          </div>
 
-                    <div class="item">
-                        <span class="text">手机：</span>
-                        <span class="info">{{ my_info.phone }}</span>
-                        <span class="action" @click="open_phone_update()">
+          <div class="item">
+            <span class="text">手机：</span>
+            <span class="info">{{ my_info.phone }}</span>
+            <span class="action" @click="open_phone_update()">
               <span>修改</span>
             </span>
-                    </div>
+          </div>
 
 
-                    <div class="item">
-                        <span class="text"><span>*</span> 真实姓名：</span>
-                        <span class="info">
+          <div class="item">
+            <span class="text"><span>*</span> 真实姓名：</span>
+            <span class="info">
               <el-input clearable type="text" v-model="form.realName"/>
             </span>
-                        <span class="action"> </span>
-                    </div>
-                    <div class="item">
-                        <span class="text"><span>*</span> 所在地区：</span>
-                        <span class="info">
+            <span class="action"> </span>
+          </div>
+          <div class="item">
+            <span class="text"><span>*</span> 所在地区：</span>
+            <span class="info">
               <area_select ref="area_select" @change="changeSelectAddress"/>
             </span>
-                        <span class="action"> </span>
-                    </div>
-                    <div class="item">
-                        <span class="text"><span>*</span> 公司名称：</span>
-                        <span class="info">
+            <span class="action"> </span>
+          </div>
+          <div class="item">
+            <span class="text"><span>*</span> 公司名称：</span>
+            <span class="info">
               <el-input clearable type="text" v-model="form.nickname"/>
             </span>
-                        <span class="action">
+            <span class="action">
             </span>
-                    </div>
+          </div>
 
-                    <div class="item">
-                        <span class="text"><span>*</span> 邮箱：</span>
-                        <span class="info">
+          <div class="item">
+            <span class="text"><span>*</span> 邮箱：</span>
+            <span class="info">
               <el-input clearable type="text" v-model="form.email"/>
             </span>
-                        <span class="action">
+            <span class="action">
             </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="other">
-                <!-- <div class="section-title">个人信息</div> -->
-                <div class="section-ctx">
-                    <div class="item btn-box">
-                        <span class="text" style="visibility: hidden">-</span>
-                        <div class="info">
-                            <el-button class="btn-ripple fit-text btn-cancel " @click="throttle_do_submit()"
-                                       :loading="loading">保存
-                            </el-button>
-                            <button class="btn-ripple fit-text btn-save" @click="do_reset()">清空</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
 
-        <phone_bind_old_check_modal ref="phone_bind_old_check_modal" data-title="校验" @confirm="confirm_old_pass"/>
-        <phone_bind_new_set_modal ref="phone_bind_new_set_modal" data-title="绑定" @confirm="confirm_new"/>
-
-
+      <div class="other">
+        <!-- <div class="section-title">个人信息</div> -->
+        <div class="section-ctx">
+          <div class="item btn-box">
+            <span class="text" style="visibility: hidden">-</span>
+            <div class="info">
+              <el-button class="btn-ripple fit-text btn-cancel " @click="throttle_do_submit()"
+                         :loading="loading">保存
+              </el-button>
+              <button class="btn-ripple fit-text btn-save" @click="do_reset()">清空</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <phone_bind_old_check_modal ref="phone_bind_old_check_modal" data-title="校验" @confirm="confirm_old_pass"/>
+    <phone_bind_new_set_modal ref="phone_bind_new_set_modal" data-title="绑定" @confirm="confirm_new"/>
+
+
+  </div>
 </template>
 
 <script>
@@ -96,164 +96,164 @@ import phone_bind_new_set_modal from "@/components/account/phone_bind_new_set_mo
 import area_select from "@/components/address/area_select.vue";
 
 export default {
-    name: "servicePage",
-    components: {
-        area_select,
-        phone_bind_old_check_modal,
-        phone_bind_new_set_modal,
+  name: "servicePage",
+  components: {
+    area_select,
+    phone_bind_old_check_modal,
+    phone_bind_new_set_modal,
+  },
+  data() {
+    return {
+      UPLOAD_ACTION,
+      UPLOAD_NAME,
+
+      my_info: {},
+      form: {
+        image: '',
+        realName: "",
+        nickname: "",
+        email: "",
+        province: '',
+        city: '',
+        areaId: '',
+        provinceCode: '',
+        cityCode: '',
+        areaCode: '',
+      },
+      loading: false,
+    };
+  },
+  watch: {},
+  created() {
+    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
+    this.setView();
+  },
+  methods: {
+    throttle_do_submit() {
+
     },
-    data() {
-        return {
-            UPLOAD_ACTION,
-            UPLOAD_NAME,
 
-            my_info: {},
-            form: {
-                image: '',
-                realName: "",
-                nickname: "",
-                email: "",
-                province: '',
-                city: '',
-                areaId: '',
-                provinceCode: '',
-                cityCode: '',
-                areaCode: '',
-            },
-            loading: false,
-        };
+    open_phone_update() {
+      this.$refs.phone_bind_old_check_modal.init();
     },
-    watch: {},
-    created() {
-        this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
-        this.setView();
+    confirm_old_pass() {
+      this.$refs.phone_bind_new_set_modal.init();
     },
-    methods: {
-        throttle_do_submit() {
-
-        },
-
-        open_phone_update() {
-            this.$refs.phone_bind_old_check_modal.init();
-        },
-        confirm_old_pass() {
-            this.$refs.phone_bind_new_set_modal.init();
-        },
-        confirm_new() {
-            this.query_user()
-        },
-
-        setView() {
-            this.query_user();
-        },
-        query_user() {
-            this.$api({
-                url: '/service.php',
-                method: 'get',
-                data: {
-                    action: 'users_userInfo',
-                },
-            }).then(res => {
-                if (res.code == 200) {
-                    let data = res.data;
-                    this.my_info = data;
-
-                    this.form = {
-                        image: data.image,
-                        realName: data.realName,
-                        nickname: data.nickname,
-                        email: data.email,
-                        province: data.province,
-                        city: data.city,
-                        areaId: data.areaId,
-                        provinceCode: data.provinceCode,
-                        cityCode: data.cityCode,
-                        areaCode: data.areaCode,
-                    }
-                    this.$refs.area_select.init({province: data.province, city: data.city, area: data.areaId});
-                    this.$store.commit("set_baseInfo", res.data);
-                }
-            })
-        },
-
-        do_submit() {
-
-            if (!this.form.realName) {
-                alertErr("请填写真实姓名");
-                return;
-            }
-
-            if (!this.form.areaId) {
-                alertErr("请填写所在地区");
-                return;
-            }
-
-            if (!this.form.email) {
-                alertErr("请填写邮箱");
-                return;
-            }
-            this.loading = true;
-            this.$api({
-                url: '/service.php',
-                method: 'get',
-                data: {
-                    action: 'users_editInfo',
-                    ...this.form
-                },
-            }).then((res) => {
-                let {code, msg, data} = res;
-                alert(res).then(() => {
-                    this.loading = false;
-                });
-                if (code == 200) {
-                    this.setView();
-                }
-            });
-        },
-
-        do_reset() {
-            this.form = {
-                image: this.my_info.image,
-                realName: "",
-                nickName: "",
-                email: "",
-                province: '',
-                city: '',
-                areaId: '',
-                provinceCode: '',
-                cityCode: '',
-                areaCode: '',
-            };
-        },
-
-
-        //上传相关
-        upload_on_success(res, file) {
-            //console.log("上传结果", res);
-            let {code, data, msg} = res;
-            alert(res);
-            if (code == 200) {
-                this.form.image = res.data;
-            }
-        },
-        upload_before_upload(file) {
-            const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
-            return isLt2M;
-        },
-
-        changeSelectAddress(data) {
-            this.$log("更新省市区数据", data);
-            let {sheng, shi, qu} = data;
-            this.form.province = sheng.id;
-            this.form.city = shi.id;
-            this.form.areaId = qu.id;
-
-            this.form.provinceCode = sheng.id;
-            this.form.cityCode = shi.id;
-            this.form.areaCode = qu.id;
-            // debugger
-        },
+    confirm_new() {
+      this.query_user()
     },
+
+    setView() {
+      this.query_user();
+    },
+    query_user() {
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'users_userInfo',
+        },
+      }).then(res => {
+        if (res.code == 200) {
+          let data = res.data;
+          this.my_info = data;
+
+          this.form = {
+            image: data.image,
+            realName: data.realName,
+            nickname: data.nickname,
+            email: data.email,
+            province: data.province,
+            city: data.city,
+            areaId: data.areaId,
+            provinceCode: data.provinceCode,
+            cityCode: data.cityCode,
+            areaCode: data.areaCode,
+          }
+          this.$refs.area_select.init({province: data.province, city: data.city, area: data.areaId});
+          this.$store.commit("set_baseInfo", res.data);
+        }
+      })
+    },
+
+    do_submit() {
+
+      if (!this.form.realName) {
+        alertErr("请填写真实姓名");
+        return;
+      }
+
+      if (!this.form.areaId) {
+        alertErr("请填写所在地区");
+        return;
+      }
+
+      if (!this.form.email) {
+        alertErr("请填写邮箱");
+        return;
+      }
+      this.loading = true;
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'users_editInfo',
+          ...this.form
+        },
+      }).then((res) => {
+        let {code, msg, data} = res;
+        alert(res).then(() => {
+          this.loading = false;
+        });
+        if (code == 200) {
+          this.setView();
+        }
+      });
+    },
+
+    do_reset() {
+      this.form = {
+        image: this.my_info.image,
+        realName: "",
+        nickName: "",
+        email: "",
+        province: '',
+        city: '',
+        areaId: '',
+        provinceCode: '',
+        cityCode: '',
+        areaCode: '',
+      };
+    },
+
+
+    //上传相关
+    upload_on_success(res, file) {
+      //console.log("上传结果", res);
+      let {code, data, msg} = res;
+      alert(res);
+      if (code == 200) {
+        this.form.image = res.data;
+      }
+    },
+    upload_before_upload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
+      return isLt2M;
+    },
+
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      let {sheng, shi, qu} = data;
+      this.form.province = sheng.id;
+      this.form.city = shi.id;
+      this.form.areaId = qu.id;
+
+      this.form.provinceCode = sheng.id;
+      this.form.cityCode = shi.id;
+      this.form.areaCode = qu.id;
+      // debugger
+    },
+  },
 };
 </script>
 

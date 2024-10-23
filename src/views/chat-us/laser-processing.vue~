@@ -918,6 +918,7 @@ export default {
     .agreement {
       .flex();
       justify-content: center;
+      text-align: center;
       color: #61666D;
       font-size: 16px;
 

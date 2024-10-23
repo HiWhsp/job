@@ -9,15 +9,18 @@
     </el-carousel>
 
     <div class="activity-area">
-      <div class="img-wrap-left">
-        <img src="../static/home/activity-area/left.png" alt="activity-img"/>
+      <div class="area-wrap">
+        <div class="img-wrap-left">
+          <img src="../static/home/activity-area/left.png" alt="activity-img"/>
+        </div>
+        <div class="img-wrap">
+          <img src="../static/home/activity-area/mid.png" alt="activity-img"/>
+        </div>
+        <div class="img-wrap">
+          <img src="../static/home/activity-area/right.png" alt="activity-img"/>
+        </div>
       </div>
-      <div class="img-wrap">
-        <img src="../static/home/activity-area/mid.png" alt="activity-img"/>
-      </div>
-      <div class="img-wrap">
-        <img src="../static/home/activity-area/right.png" alt="activity-img"/>
-      </div>
+
     </div>
 
     <div class="featuredRecommendations">
@@ -45,7 +48,7 @@
         <el-carousel indicator-position="none" arrow="never">
           <el-carousel-item class="product-carousel" v-for="(item, index) in productList" :key="index">
             <div class="product-wrap" v-for="it in item" :key="it.src">
-              <div class="img-wrap" @click="goUrl(`/productDetail?id=${item.inventoryId}`)">
+              <div class="img-wrap" @click="goUrl(`/productDetail?id=${it.inventoryId}`)">
                 <img :src="it.images" alt=""/>
               </div>
               <div class="desc-wrap">
@@ -67,88 +70,94 @@
 
     <!-- 仪器查看更多 -->
     <div class="pic">
-      <div class="pic-row-1">
-        <div class="img-wrap-1">
-          <img src="../static/home/pic/pic_01.png" alt=""/>
-          <span class="pic-title">光源</span>
-          <div class="pic-content">
-            概要文字概要文字概要文字概要文字概要文字概要文字
+      <div class="pic-wrap">
+        <div class="pic-row-1">
+          <div class="img-wrap-1">
+            <img src="../static/home/pic/pic_01.png" alt=""/>
+            <span class="pic-title">光源</span>
+            <div class="pic-content">
+              概要文字概要文字概要文字概要文字概要文字概要文字
+            </div>
+            <div class="pic-readmore">
+              <div class="readmore">查看更多</div>
+              <div class="arrow">
+                <img src="../static/home/pic/right_arrow.png"/>
+              </div>
+            </div>
           </div>
-          <div class="pic-readmore">
-            <div class="readmore">查看更多</div>
-            <div class="arrow">
-              <img src="../static/home/pic/right_arrow.png"/>
+          <div class="img-wrap-2">
+            <img src="../static/home/pic/pic_02.png" alt=""/>
+            <span class="pic-title">实验室解决方案</span>
+            <div class="pic-content">
+              概要文字概要文字概要文字概要文字概要文字概要文字
             </div>
           </div>
         </div>
-        <div class="img-wrap-2">
-          <img src="../static/home/pic/pic_02.png" alt=""/>
-          <span class="pic-title">实验室解决方案</span>
-          <div class="pic-content">
-            概要文字概要文字概要文字概要文字概要文字概要文字
+        <div class="pic-row-2">
+          <div class="img-wrap-3">
+            <img src="../static/home/pic/pic_03.png" alt=""/>
+            <span class="pic-title">配件</span>
+            <div class="pic-content">
+              概要文字概要文字概要文字概要文字概要文字概要文字
+            </div>
+          </div>
+          <div class="img-wrap-4">
+            <img src="../static/home/pic/pic_04.png" alt=""/>
+            <span class="pic-title">仪器</span>
+            <div class="pic-content">
+              概要文字概要文字概要文字概要文字概要文字概要文字
+            </div>
           </div>
         </div>
       </div>
-      <div class="pic-row-2">
-        <div class="img-wrap-3">
-          <img src="../static/home/pic/pic_03.png" alt=""/>
-          <span class="pic-title">配件</span>
-          <div class="pic-content">
-            概要文字概要文字概要文字概要文字概要文字概要文字
-          </div>
-        </div>
-        <div class="img-wrap-4">
-          <img src="../static/home/pic/pic_04.png" alt=""/>
-          <span class="pic-title">仪器</span>
-          <div class="pic-content">
-            概要文字概要文字概要文字概要文字概要文字概要文字
-          </div>
-        </div>
-      </div>
+
     </div>
 
     <!-- 新闻和活动 -->
     <section class="news-activity">
-      <div class="news-header">
-        <div class="header-left">
-          <div class="header-title">
-            <span style="color: #27417c">新闻</span>与活动
+      <div class="news-wrap">
+        <div class="news-header">
+          <div class="header-left">
+            <div class="header-title">
+              <span style="color: #27417c">新闻</span>与活动
+            </div>
+            <div class="header-subtitle">我们从未停止探索</div>
           </div>
-          <div class="header-subtitle">我们从未停止探索</div>
+          <div class="header-right">
+            <div class="img-wrap">
+              <i class="el-icon-arrow-left"></i>
+            </div>
+            <div class="img-wrap">
+              <i class="el-icon-arrow-right"></i>
+            </div>
+          </div>
         </div>
-        <div class="header-right">
-          <div class="img-wrap">
-            <i class="el-icon-arrow-left"></i>
-          </div>
-          <div class="img-wrap">
-            <i class="el-icon-arrow-right"></i>
+        <div class="news-container">
+          <div class="news-card" v-for="(item, index) in newsEvents" :key="index">
+            <div class="time-icon">
+              <img src="../static/home/new/time_icon.png"/>
+            </div>
+            <p class="date">{{ item.dtTime }}</p>
+            <p class="category">{{ '新闻' }}</p>
+            <div class="new-title">{{ item.title || '无' }}</div>
+            <div class="detail-link">
+              <div class="detail-text" @click="onViewMore">了解详情</div>
+              <div class="detail-icon">
+                <img src="../static/home/new/arrow.png"/>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="news-container">
-        <div class="news-card" v-for="(item, index) in newsEvents" :key="index">
-          <div class="time-icon">
-            <img src="../static/home/new/time_icon.png"/>
-          </div>
-          <p class="date">{{ item.dtTime }}</p>
-          <p class="category">{{ '新闻' }}</p>
-          <div class="new-title">{{ item.title || '无' }}</div>
-          <div class="detail-link">
-            <div class="detail-text" @click="onViewMore">了解详情</div>
-            <div class="detail-icon">
-              <img src="../static/home/new/arrow.png"/>
+        <div class="news-readmore-wrap">
+          <div class="news-readmore">
+            <div class="readmore">查看更多</div>
+            <div class="arrow">
+              <img src="../static/home/new/arrow_black.png"/>
             </div>
           </div>
         </div>
       </div>
-      <div class="news-readmore-wrap">
-        <div class="news-readmore">
-          <div class="readmore">查看更多</div>
-          <div class="arrow">
-            <img src="../static/home/new/arrow_black.png"/>
-          </div>
-        </div>
-      </div>
+
     </section>
     <pageAside></pageAside>
   </div>
@@ -238,6 +247,7 @@ export default {
   background: #f2f3f7;
 
   .banner {
+    min-width: 1400px;
     height: 680px;
 
 
@@ -252,6 +262,7 @@ export default {
 
     .banner-img-wrap {
       width: 100%;
+      height: 100%;
 
       img {
         width: 100%;
@@ -261,12 +272,17 @@ export default {
   }
 
   .activity-area {
-    padding: 0 260px;
-    display: flex;
     gap: 20px;
     padding-top: 41px;
     padding-bottom: 44px;
     background: #fff;
+
+    .area-wrap {
+      width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      
+    }
 
     .img-wrap-left {
       width: 520px;
@@ -290,8 +306,10 @@ export default {
   }
 
   .featuredRecommendations {
+    width: 1400px;
+    margin: 0 auto;
     height: 510px;
-    padding: 0 260px 55px;
+    padding: 0 0 55px;
     background: #f2f3f7;
 
     .title-wrap {
@@ -411,8 +429,13 @@ export default {
   }
 
   .pic {
-    padding: 48px 260px 51px;
+    padding: 48px 0 51px;
     background: #fff;
+
+    .pic-wrap {
+      width: 1400px;
+      margin: 0 auto;
+    }
 
     .pic-row-1 {
       display: flex;
@@ -585,10 +608,14 @@ export default {
   }
 
   .news-activity {
-    padding: 20px;
     height: 502px;
     background: #fff;
-    padding: 49px 260px 51px;
+    padding: 49px 0 51px;
+
+    .news-wrap {
+      width: 1400px;
+      margin: 0 auto;
+    }
 
     .news-header {
       //height: 100px;

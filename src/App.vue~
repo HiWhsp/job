@@ -60,10 +60,7 @@ export default {
   min-width: 30px !important;
   height: 30px;
   line-height: 30px;
-  margin-left: 10px !important;
-}
-.el-pager li:last-child {
-  margin-right: 10px !important;
+  margin: 0 10px !important;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled):hover {

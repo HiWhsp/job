@@ -74,6 +74,14 @@ const routes = [
       },
     ],
   },
+  
+  {
+    path: "/technical-article-detail", // 技术文档详情
+    name: "technical-article-detail",
+    component: () =>
+      import("@/views/service/technical-article-detail.vue"),
+  },
+
 
   // 联系我们
   {
@@ -98,19 +106,20 @@ const routes = [
         path: "/contact-us", // 公司简介
         name: "contact-us",
         component: () => import("@/views/chat-us/contact-us.vue"),
-      },  // 光电计算
-      {
-        path: "/light-computing",
-        name: "light-computing",
-        component: () => import("@/views/chat-us/light-computing.vue"),
-      },
-      // 激光加工
-      {
-        path: "/laser-processing",
-        name: "laser-processing",
-        component: () => import("@/views/chat-us/laser-processing.vue"),
-      },
+      }
     ]
+  },
+  // 光电计算
+  {
+    path: "/light-computing",
+    name: "light-computing",
+    component: () => import("@/views/chat-us/light-computing.vue"),
+  },
+  // 激光加工
+  {
+    path: "/laser-processing",
+    name: "laser-processing",
+    component: () => import("@/views/chat-us/laser-processing.vue"),
   },
 
   // 登录
