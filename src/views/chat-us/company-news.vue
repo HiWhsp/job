@@ -1,19 +1,19 @@
 <template>
   <div class="page">
     <div class="list-wrap">
-      <div class="list-item" v-for="(i, index) in 5" :key="index">
+      <div class="list-item" v-for="(item, index) in news_list" :key="index" @click="toDetail(item)">
         <div class="img-wrap">
-          <img src="" alt="" />
+          <img :src="item.thumb" alt="" />
         </div>
-        <div class="title-wrap">现场直击 | 华日激光亮相上海慕尼黑光博会！</div>
+        <div class="title-wrap">{{ item.title }}</div>
         <div class="desc-wrap">
           <div class="left">
             <div class="icon-wrap">
-              <img src="@/assets/img/chat-us/icon1.png" alt="" />
+              <img :src="item.thumb" alt="" />
             </div>
-            <div class="time">2024-05-07</div>
+            <div class="time">{{ item.dtTime }}</div>
           </div>
-          <div class="right" @click="toDetail">
+          <div class="right" >
             <div class="text">了解详情</div>
             <div class="next-wrap">
               <img src="@/assets/img/chat-us/icon1.png" alt="" />
@@ -29,9 +29,9 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        :page-size="10"
+        layout="total,  prev, pager, next, jumper"
+        :total="count"
       >
       </el-pagination>
     </div>
@@ -42,15 +42,42 @@
 export default {
   data() {
     return {
-      currentPage: 0
+      currentPage: 0,
+
+      news_list: [],
+      count: 0
     };
   },
-  created() {},
+  created() {
+    this.setView()
+  },
   methods: {
+    setView() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "news_lists",
+          channelId: 8,
+          page: 1,
+          pageSize: 4,
+        },
+      }).then(res => {
+        if(res.code == 200) {
+          this.news_list = res.data.list;
+          this.count = res.data.count
+        }
+      })
+    },
     handleSizeChange() {},
     handleCurrentChange() {},
-    toDetail() {
-      this.$router.push("company-news-detail");
+    toDetail(item) {
+      this.$router.push({
+        path: 'company-news-detail',
+        query: {
+          id: item.id
+        }
+      });
     }
   },
 };

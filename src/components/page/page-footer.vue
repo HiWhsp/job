@@ -4,7 +4,7 @@
       <div class="container-1">
         <div class="icon-text">
           <div class="icon">
-            <img src="../../static/home/footer/footer_img01.png"/>
+            <img src="../../static/home/footer/footer_img01.png" />
           </div>
           <div class="text">
             <div class="text-1">质量保证</div>
@@ -13,7 +13,7 @@
         </div>
         <div class="icon-text">
           <div class="icon">
-            <img src="../../static/home/footer/footer_img02.png"/>
+            <img src="../../static/home/footer/footer_img02.png" />
           </div>
           <div class="text">
             <div class="text-1">标品现货</div>
@@ -22,7 +22,7 @@
         </div>
         <div class="icon-text">
           <div class="icon">
-            <img src="../../static/home/footer/footer_img03.png"/>
+            <img src="../../static/home/footer/footer_img03.png" />
           </div>
           <div class="text">
             <div class="text-1">非标定制</div>
@@ -31,7 +31,7 @@
         </div>
         <div class="icon-text">
           <div class="icon">
-            <img src="../../static/home/footer/footer_img04.png"/>
+            <img src="../../static/home/footer/footer_img04.png" />
           </div>
           <div class="text">
             <div class="text-1">产品研发</div>
@@ -96,7 +96,7 @@
           </table>
         </div>
         <div class="table-right">
-          <img src="../../static/home/footer/footer_img05.png"/>
+          <img src="../../static/home/footer/footer_img05.png" />
         </div>
       </div>
     </div>

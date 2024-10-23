@@ -36,7 +36,7 @@
           <div class="label">图片上传</div>
 
           <div class="upload-box">
-            <el-upload class="upload-demo" list-type="picture-card" multiple accept="image/*" :name="upload_col_name" action="http://wuhanjingmi.new.zhishangez.com//service.php?action=index_ossUpload" :on-success="uploadSuccess_pingjia" :before-upload="beforeUpload_pingjia" :data="uploadExtraData">
+            <el-upload class="upload-demo" list-type="picture-card" multiple accept="image/*" :name="upload_col_name" action="https://wuhanjingmi.new.zhishangez.com//service.php?action=index_ossUpload" :on-success="uploadSuccess_pingjia" :before-upload="beforeUpload_pingjia" :data="uploadExtraData">
               <!-- <i class="el-icon-upload"></i> -->
               上传图片
               <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->

@@ -1,70 +1,69 @@
 <template>
-  <div>
-    <div class="title-wrap">
-      <breadcrumb :list="['首页', '公司新闻']"> </breadcrumb>
-      <div class="title">
-        荣誉 | 华日激光Femto-1000 工业级飞秒激光器”斩获金耀奖新产品金奖！
-      </div>
-      <div class="time-wrap">
-        <div class="time">发布时间：2022-10-10</div>
-        <div>来源：华锐科仪</div>
-      </div>
-    </div>
-    <div class="content-wrap">
-      <div class="content"></div>
-    </div>
-    <div class="step-wrap">
-      <div class="last">上一条：液态透镜技术在工业镜头中的应用</div>
-      <div class="next">下一条：液态透镜技术在工业镜头中的应用</div>
-    </div>
-
-    <div class="wrap">
-      <div class="related-news">相关新闻</div>
-      <div class="sub-related-news">用激光工具改变生活</div>
-
-      <div class="list-wrap">
-        <div class="card-item" v-for="(item, index) in cardList" :key="index">
-          <div class="card-img-wrap">
-            <img :src="item.cardImg" alt="" class="card-img" />
-          </div>
-          <div class="card-text">{{ item.cardText }}</div>
-          <div class="card-bottom">
-            <div class="bottom-left">
-              <div class="time-img-wrap">
-                <img
-                  class="time"
-                  src="@/assets/img/productDetail/time.png"
-                  alt=""
-                />
-              </div>
-              <div class="time-text">2024-05-07</div>
+    <div>
+        <div class="title-wrap">
+            <breadcrumb :list="['首页', '公司新闻']"></breadcrumb>
+            <div class="title">
+                {{ info.title }}
             </div>
-            <div class="bottom-right">
-              <div class="arrow-text" :class="{ active: index === 0 }">
-                了解详情
-              </div>
-              <div class="arrow-wrap">
-                <img
-                  class="arrow"
-                  src="@/assets/img/productDetail/arrow.png"
-                  alt=""
-                />
-              </div>
+            <div class="time-wrap">
+                <div class="time">发布时间：{{ info.dtTime }}</div>
+                <div>来源：华锐科仪</div>
             </div>
-          </div>
         </div>
-      </div>
+        <div class="content-wrap">
+            <div class="content" v-html="info.content">
 
-      <div class="bottom-btn-wrap">
-        <div class="pic-readmore">
-          <div class="readmore">查看更多</div>
-          <div class="arrow">
-            <img src="@/static/home/pic/right_arrow.png" />
-          </div>
+            </div>
         </div>
-      </div>
+        <div class="step-wrap">
+            <div class="last" @click="to_prev(last_news)">上一条：{{ next_news.title  || '无' }}</div>
+            <div class="next" @click="to_next(next_news)">下一条：{{ last_news.title || '无' }}</div>
+        </div>
+
+        <div class="wrap">
+            <div class="related-news">相关新闻</div>
+            <div class="sub-related-news">用激光工具改变生活</div>
+
+            <div class="list-wrap">
+                <div class="card-item pointer" v-for="(item, index) in cardList" :key="index"
+                     @click="toNewsDetail(item)">
+                    <div class="card-img-wrap">
+                        <img :src="item.thumb" alt="" class="card-img"/>
+                    </div>
+                    <div class="card-text ellipsis-1">{{ item.title }}</div>
+                    <div class="card-bottom">
+                        <div class="bottom-left">
+                            <div class="time-img-wrap">
+                                <img class="time" src="@/assets/img/productDetail/time.png" alt=""/>
+                            </div>
+                            <div class="time-text">{{ item.dtTime }}</div>
+                        </div>
+                        <div class="bottom-right">
+                            <div class="arrow-text" :class="{ active: index === 0 }">
+                                了解详情
+                            </div>
+                            <div class="arrow-wrap">
+                                <img
+                                        class="arrow"
+                                        src="@/assets/img/productDetail/arrow.png"
+                                        alt=""
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-btn-wrap">
+                <div class="pic-readmore" @click="toUrl('/company-news')">
+                    <div class="readmore">查看更多</div>
+                    <div class="arrow">
+                        <img src="@/static/home/pic/right_arrow.png"/>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -74,29 +73,95 @@ import card2 from "@/assets/img/productDetail/card2.png";
 import card3 from "@/assets/img/productDetail/card3.png";
 
 export default {
-  components: {
-    breadcrumb,
-  },
-  data() {
-    return {};
-  },
-  created() {
-    this.cardList = [
-      {
-        cardImg: card1,
-        cardText: "现场直击 | 华日激光亮相上海慕尼黑光博会！",
-      },
-      {
-        cardImg: card2,
-        cardText: "现场直击 | 华日激光亮相上海慕尼黑光博会！",
-      },
-      {
-        cardImg: card3,
-        cardText: "现场直击 | 华日激光亮相上海慕尼黑光博会！",
-      },
-    ];
-  },
-  methods: {},
+    components: {
+        breadcrumb,
+    },
+    data() {
+        return {
+            id: this.$route.query.id,
+            info: {},
+            last_news: {},
+            next_news: {},
+        };
+    },
+    watch: {
+        '$route'() {
+
+            this.setView()
+        }
+    },
+    created() {
+        this.setView()
+        this.cardList = [];
+    },
+    methods: {
+        setView() {
+            this.id = this.$route.query.id || ''
+            this.$api({
+                url: "/service.php",
+                method: "get",
+                data: {
+                    action: "news_detail",
+                    id: this.id
+                },
+            }).then(res => {
+                if (res.code == 200) {
+                    this.info = res.data.info;
+                    this.last_news = res.data.last_news || {};
+                    this.next_news = res.data.next_news || {};
+                }
+            })
+
+            this.$api({
+                url: "/service.php",
+                method: "get",
+                data: {
+                    action: "news_lists",
+                    channelId: 8,
+                    page: 1,
+                    pageSize: 3,
+                },
+            }).then(res => {
+                if (res.code == 200) {
+                    this.cardList = res.data.list;
+                }
+            })
+        },
+
+        to_prev(item) {
+            if (item.id) {
+                this.$router.push({
+                    path: 'company-news-detail',
+                    query: {
+                        id: item.id
+                    }
+                })
+            }
+        },
+        to_next(item) {
+            if (item.id) {
+                this.$router.push({
+                    path: 'company-news-detail',
+                    query: {
+                        id: item.id
+                    }
+                })
+            }
+        },
+        toNewsDetail(item) {
+            this.$router.push({
+                path: 'company-news-detail',
+                query: {
+                    id: item.id
+                }
+            })
+        },
+        toUrl(url) {
+            this.$router.push({
+                path: url
+            })
+        }
+    },
 };
 </script>
 
@@ -104,14 +169,17 @@ export default {
 .title-wrap {
   padding: 0 260px 57px;
   background: #f4f4f6;
+
   .title {
     margin-top: 42px;
     font-size: 32px;
     color: #333333;
   }
+
   .time-wrap {
     margin-top: 22px;
     display: flex;
+
     .time {
       margin-right: 19px;
       font-size: 14px;
@@ -123,6 +191,7 @@ export default {
 .content-wrap {
   background: #fff;
   padding: 48px 260px 0;
+
   .content {
     padding-bottom: 53px;
     border-bottom: 1px solid #c9c9c9;
@@ -135,10 +204,12 @@ export default {
   font-size: 14px;
   color: #000000;
   line-height: 28px;
+
   .last {
     cursor: pointer;
     margin-bottom: 26px;
   }
+
   .next {
     cursor: pointer;
   }
@@ -200,17 +271,18 @@ export default {
       display: flex;
       align-items: center;
       border-top: 1px solid #e5e5e5;
+      justify-content: space-between;
+      padding: 0 20px;
 
       .bottom-left {
         height: 100%;
         display: flex;
         align-items: center;
-        margin-right: 158px;
 
         .time-img-wrap {
           width: 15px;
           height: 15px;
-          margin: 0 9px 0 20px;
+          margin-right: 9px;
 
           .time {
             width: 100%;
@@ -230,6 +302,7 @@ export default {
         display: flex;
         align-items: center;
         cursor: pointer;
+
         .arrow-text {
           margin-right: 14px;
           font-size: 18px;
@@ -259,6 +332,7 @@ export default {
   display: flex;
   justify-content: center;
   margin: 33px 0 0 0;
+
   .pic-readmore {
     height: 56px;
     width: 187px;

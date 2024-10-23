@@ -50,7 +50,7 @@ export default {
     },
 
     queryDetail() {
-      this.$api("index_newsDetail", {
+      this.$api("news_detail", {
         id: this.id,
       }).then((res) => {
         //console.log("协议内容", res);

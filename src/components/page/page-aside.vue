@@ -1,16 +1,13 @@
 <template>
     <div class="aside">
         <div class="list">
-            <div
-                    class="item"
-                    v-for="(item, index) in itemList"
-                    :key="item.text"
-                    @click="onClickItem(index)"
-                    @mouseenter="onMouseEnter(index)"
-                    @mouseleave="onMouseLeave(index)"
-                    :class="{ active: selectedIndex === index && item.text != '返回顶部' }"
+            <div class="item" v-for="(item, index) in itemList" :key="item.text"
+                 @click="onClickItem(item, index)"
+                 @mouseenter="onMouseEnter(index)"
+                 @mouseleave="onMouseLeave(index)"
+                 :class="{ active: selectedIndex === index && item.text != '返回顶部' }"
             >
-                <div class="img-wrap" @click="onRouteTo({ name: item.routeName })">
+                <div class="img-wrap">
                     <img :src="selectedIndex === index ? item.activeIconSrc : item.iconSrc" alt="icon"/>
                 </div>
                 <div>{{ item.text }}</div>
@@ -52,12 +49,11 @@
 import icon1 from "@/assets/img/aside/icon1.png";
 import icon1Active from "@/assets/img/aside/icon1-active.png";
 import icon2 from "@/assets/img/aside/icon2.png";
-import icon2Active from "@/assets/img/aside/icon1-active.png";
+import icon2Active from "@/assets/img/aside/icon2-active.png";
 import icon3 from "@/assets/img/aside/icon3.png";
-import icon3Active from "@/assets/img/aside/icon1-active.png";
+import icon3Active from "@/assets/img/aside/icon3-active.png";
 import icon4 from "@/assets/img/aside/icon4.png";
-import icon4Active from "@/assets/img/aside/icon1-active.png";
-import icon5 from "@/assets/img/aside/icon5.png";
+import icon4Active from "@/assets/img/aside/icon4-active.png";
 import icon5Active from "@/assets/img/aside/top.png";
 
 export default {
@@ -88,6 +84,7 @@ export default {
                     iconSrc: icon4,
                     activeIconSrc: icon4Active,
                     text: "在线咨询",
+                    routeName: 'contact-us'
                 },
                 {
                     iconSrc: icon5Active,
@@ -106,8 +103,9 @@ export default {
     created() {
     },
     methods: {
-        onClickItem(index) {
+        onClickItem(item, index) {
             this.selectedIndex = index;
+            this.onRouteTo({name: item.routeName});
         },
         onMouseEnter(index) {
             this.selectedIndex = index;

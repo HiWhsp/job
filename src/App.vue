@@ -62,6 +62,7 @@ export default {
   line-height: 30px;
   margin-left: 10px !important;
 }
+
 .el-pager li:last-child {
   margin-right: 10px !important;
 }
@@ -73,5 +74,9 @@ export default {
 .el-pagination.is-background .el-pager li:not(.disabled).active {
   background-color: @theme !important;
   color: #fff !important;
+}
+
+.el-empty {
+  width: 100%;
 }
 </style>

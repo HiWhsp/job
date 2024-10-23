@@ -1,166 +1,136 @@
 <template>
-  <div class="page">
-    <el-carousel class="banner" indicator-position="none" arrow="always">
-      <el-carousel-item v-for="item in bannerList.length" :key="item">
-        <div class="banner-img-wrap">
-          <img :src="bannerList[item - 1]" alt="banner"/>
-        </div>
-      </el-carousel-item>
-    </el-carousel>
-
-    <div class="activity-area">
-      <div class="area-wrap">
-        <div class="img-wrap-left">
-          <img src="../static/home/activity-area/left.png" alt="activity-img"/>
-        </div>
-        <div class="img-wrap">
-          <img src="../static/home/activity-area/mid.png" alt="activity-img"/>
-        </div>
-        <div class="img-wrap">
-          <img src="../static/home/activity-area/right.png" alt="activity-img"/>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="featuredRecommendations">
-      <div class="title-wrap">
-        <div class="title">
-          <span class="main-title">精品<span style="color: #27417c">推荐</span></span>
-          <span class="sub-title">精挑细选 省心省力</span>
-        </div>
-        <div class="arrow-wrap">
-          <div class="img-wrap">
-            <img
-                src="../static/home/featuredRecommendations/left-arrow.png"
-                alt="arrow"
-            />
-          </div>
-          <div class="img-wrap">
-            <img
-                src="../static/home/featuredRecommendations/right-arrow.png"
-                alt="arrow"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="high-quality-products">
-        <el-carousel indicator-position="none" arrow="never">
-          <el-carousel-item class="product-carousel" v-for="(item, index) in productList" :key="index">
-            <div class="product-wrap" v-for="it in item" :key="it.src">
-              <div class="img-wrap" @click="goUrl(`/productDetail?id=${it.inventoryId}`)">
-                <img :src="it.images" alt=""/>
-              </div>
-              <div class="desc-wrap">
-                <div class="desc ellipsis-2">{{ it.title }}</div>
-                <div class="price-wrap">
-                  <div class="price">
-                    <span style="font-size: 14px">￥</span>{{ it.priceSale }}
-                  </div>
-                  <div class="cart pointer" @click="goUrl('/cart')">
-                    <img src="../static/home/featuredRecommendations/cart.png" alt=""/>
-                  </div>
+    <div class="page">
+        <el-carousel class="banner" indicator-position="none" arrow="always">
+            <el-carousel-item v-for="(item, index) in bannerList" :key="index">
+                <div class="banner-img-wrap">
+                    <img :src="item.image" alt="banner"/>
                 </div>
-              </div>
-            </div>
-          </el-carousel-item>
+            </el-carousel-item>
         </el-carousel>
-      </div>
+
+        <div class="activity-area">
+            <div class="area-wrap">
+                <div class="img-wrap" v-for="(item, index) in adv_list" @click="to_adv(item, index)">
+                    <img :src="item.image" alt="activity-img"/>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="featuredRecommendations">
+            <div class="title-wrap">
+                <div class="title">
+                    <span class="main-title">精品<span style="color: #27417c">推荐</span></span>
+                    <span class="sub-title">精挑细选 省心省力</span>
+                </div>
+                <!--                <div class="arrow-wrap">-->
+                <!--                    <div class="img-wrap">-->
+                <!--                        <img src="../static/home/featuredRecommendations/left-arrow.png" alt="arrow"/>-->
+                <!--                    </div>-->
+                <!--                    <div class="img-wrap">-->
+                <!--                        <img src="../static/home/featuredRecommendations/right-arrow.png" alt="arrow"/>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+            </div>
+            <div class="high-quality-products">
+                <el-carousel indicator-position="none" arrow="never">
+                    <el-carousel-item class="product-carousel" v-for="(item, index) in productList" :key="index">
+                        <div class="product-wrap" v-for="it in item" :key="it.src"
+                             @click="goUrl(`/productDetail?id=${it.inventoryId}`)">
+                            <div class="img-wrap">
+                                <img :src="it.images" alt=""/>
+                            </div>
+                            <div class="desc-wrap">
+                                <div class="desc ellipsis-2">{{ it.title }}</div>
+                                <div class="price-wrap">
+                                    <div class="price">
+                                        <span style="font-size: 14px">￥</span>{{ it.priceSale }}
+                                    </div>
+                                    <!-- @click="goUrl('/cart')" -->
+                                    <div class="cart pointer">
+                                        <img src="../static/home/featuredRecommendations/cart.png" alt=""/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </el-carousel-item>
+                </el-carousel>
+            </div>
+        </div>
+
+        <!-- 仪器查看更多 -->
+        <div class="pic">
+            <div class="pic-wrap pic-row-1 pic-row-2">
+                <div class="img-wrap" :class="'img-wrap-' + (index + 1)" v-for="(item, index) in scene_list"
+                     :key="index">
+                    <div class="poster-box">
+                        <img :src="item.image" alt=""/>
+                    </div>
+                    <div class="info-box">
+                        <span class="pic-title">{{ item.title }}</span>
+                        <div class="pic-content">
+                            {{ item.description }}
+                        </div>
+                        <div class="pic-readmore" @click="onLearnMore(item)">
+                            <div class="readmore">查看更多</div>
+                            <div class="arrow">
+                                <img src="../static/home/pic/right_arrow.png"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新闻和活动 -->
+        <section class="news-activity">
+            <div class="news-wrap">
+                <div class="news-header">
+                    <div class="header-left">
+                        <div class="header-title">
+                            <span style="color: #27417c">新闻</span>与活动
+                        </div>
+                        <div class="header-subtitle">我们从未停止探索</div>
+                    </div>
+                    <!--                    <div class="header-right">-->
+                    <!--                        <div class="img-wrap">-->
+                    <!--                            <i class="el-icon-arrow-left"></i>-->
+                    <!--                        </div>-->
+                    <!--                        <div class="img-wrap">-->
+                    <!--                            <i class="el-icon-arrow-right"></i>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                </div>
+                <div class="news-container">
+                    <div class="news-card" v-for="(item, index) in newsEvents" :key="index"
+                         @click="to_news_detail(item)">
+                        <div class="time-icon">
+                            <img src="../static/home/new/time_icon.png"/>
+                        </div>
+                        <p class="date">{{ item.dtTime }}</p>
+                        <p class="category">{{ '新闻' }}</p>
+                        <div class="new-title">{{ item.title || '无' }}</div>
+                        <div class="detail-link">
+                            <div class="detail-text">了解详情</div>
+                            <div class="detail-icon">
+                                <img src="../static/home/new/arrow.png"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-readmore-wrap">
+                    <div class="news-readmore" @click="to_more_news()">
+                        <div class="readmore">查看更多</div>
+                        <div class="arrow">
+                            <img src="../static/home/new/arrow_black.png"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        <pageAside></pageAside>
     </div>
-
-    <!-- 仪器查看更多 -->
-    <div class="pic">
-      <div class="pic-wrap">
-        <div class="pic-row-1">
-          <div class="img-wrap-1">
-            <img src="../static/home/pic/pic_01.png" alt=""/>
-            <span class="pic-title">光源</span>
-            <div class="pic-content">
-              概要文字概要文字概要文字概要文字概要文字概要文字
-            </div>
-            <div class="pic-readmore">
-              <div class="readmore">查看更多</div>
-              <div class="arrow">
-                <img src="../static/home/pic/right_arrow.png"/>
-              </div>
-            </div>
-          </div>
-          <div class="img-wrap-2">
-            <img src="../static/home/pic/pic_02.png" alt=""/>
-            <span class="pic-title">实验室解决方案</span>
-            <div class="pic-content">
-              概要文字概要文字概要文字概要文字概要文字概要文字
-            </div>
-          </div>
-        </div>
-        <div class="pic-row-2">
-          <div class="img-wrap-3">
-            <img src="../static/home/pic/pic_03.png" alt=""/>
-            <span class="pic-title">配件</span>
-            <div class="pic-content">
-              概要文字概要文字概要文字概要文字概要文字概要文字
-            </div>
-          </div>
-          <div class="img-wrap-4">
-            <img src="../static/home/pic/pic_04.png" alt=""/>
-            <span class="pic-title">仪器</span>
-            <div class="pic-content">
-              概要文字概要文字概要文字概要文字概要文字概要文字
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- 新闻和活动 -->
-    <section class="news-activity">
-      <div class="news-wrap">
-        <div class="news-header">
-          <div class="header-left">
-            <div class="header-title">
-              <span style="color: #27417c">新闻</span>与活动
-            </div>
-            <div class="header-subtitle">我们从未停止探索</div>
-          </div>
-          <div class="header-right">
-            <div class="img-wrap">
-              <i class="el-icon-arrow-left"></i>
-            </div>
-            <div class="img-wrap">
-              <i class="el-icon-arrow-right"></i>
-            </div>
-          </div>
-        </div>
-        <div class="news-container">
-          <div class="news-card" v-for="(item, index) in newsEvents" :key="index">
-            <div class="time-icon">
-              <img src="../static/home/new/time_icon.png"/>
-            </div>
-            <p class="date">{{ item.dtTime }}</p>
-            <p class="category">{{ '新闻' }}</p>
-            <div class="new-title">{{ item.title || '无' }}</div>
-            <div class="detail-link">
-              <div class="detail-text" @click="onViewMore">了解详情</div>
-              <div class="detail-icon">
-                <img src="../static/home/new/arrow.png"/>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="news-readmore-wrap">
-          <div class="news-readmore">
-            <div class="readmore">查看更多</div>
-            <div class="arrow">
-              <img src="../static/home/new/arrow_black.png"/>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </section>
-    <pageAside></pageAside>
-  </div>
 </template>
 
 <script>
@@ -170,73 +140,135 @@ import banner2 from "@/static/home/banner/banner2.png";
 import banner3 from "@/static/home/banner/banner3.png";
 
 export default {
-  name: "index",
-  components: {
-    pageAside,
-  },
-  data() {
-    return {
-      bannerList: [],
-      productList: [],
-      newsEvents: [],
-    };
-  },
-  async created() {
-    this.bannerList = [banner1, banner2, banner3];
-    this.getProductList();
-    this.getNewsEvents();
-  },
-  methods: {
-    onLearnMore(item) {
-      console.log("查看详情: ", item);
-      // 跳转或显示详情逻辑
+    name: "index",
+    components: {
+        pageAside,
     },
-    onViewMore() {
-      console.log("查看更多新闻与活动");
-      // 跳转到更多新闻页面
-    },
+    data() {
+        return {
+            bannerList: [],
+            productList: [],
+            newsEvents: [],
 
-    goUrl(url) {
-      this.$router.push(url);
+            adv_list: [],
+            scene_list: [],
+        };
     },
-    // 获取产品列表
-    async getProductList() {
-      const {code, data} = await this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "product_plist",
-          channelId: 0,
-          page: 1,
-          pageSize: 12,
+    async created() {
+        this.query_adv();
+        this.getProductList();
+        this.getNewsEvents();
+    },
+    methods: {
+        onLearnMore(item) {
+            this.$router.push({
+                path: 'allCommodities',
+            })
         },
-      });
 
-      if (code === 200) {
-        const result = data.list;
-        for (let i = 0, len = result.length; i < len; i += 6) {
-          this.productList.push(result.slice(i, i + 6));
+        goUrl(url) {
+            this.$router.push(url);
+        },
+
+        query_adv() {
+            this.$api({
+                url: "/service.php",
+                method: "get",
+                data: {
+                    action: "banner_index",
+                    position: 0,
+                },
+            }).then(res => {
+                if (res.data) {
+                    if (res.data[3]) {
+                        this.adv_list = res.data[3].images
+                    }
+                    if (res.data[4]) {
+                        this.scene_list = res.data[4].images
+                    }
+                    if (res.data[0]) {
+                        this.bannerList = res.data[0].images
+                    }
+                }
+            })
+        },
+
+        // 获取产品列表
+        async getProductList() {
+            const {code, data} = await this.$api({
+                url: "/service.php",
+                method: "get",
+                data: {
+                    action: "product_plist",
+                    channelId: 0,
+                    page: 1,
+                    pageSize: 12,
+                },
+            });
+
+            if (code === 200) {
+                const result = data.list;
+                for (let i = 0, len = result.length; i < len; i += 6) {
+                    this.productList.push(result.slice(i, i + 6));
+                }
+            }
+        },
+        // 获取新闻列表
+        async getNewsEvents() {
+            const {code, data} = await this.$api({
+                url: "/service.php",
+                method: "get",
+                data: {
+                    action: "news_lists",
+                    channelId: 8,
+                    page: 1,
+                    pageSize: 4,
+                },
+            });
+
+            if (code === 200) {
+                this.newsEvents = data.list;
+            }
+        },
+
+        to_adv(item, index) {
+            // if (item.url) {
+            //     window.open(item.url, '_blank')
+            // }
+            switch (index) {
+                case 0:
+                    this.$router.push({
+                        path: '/couponCenter',
+                    })
+                    break;
+                case 1:
+                    this.$router.push({
+                        path: 'allCommodities',
+                    })
+                    break;
+                case 2:
+                    this.$router.push({
+                        path: 'salesPromotion',
+                        query: {}
+                    })
+            }
+        },
+
+        to_news_detail(item) {
+            this.$router.push({
+                path: 'company-news-detail',
+                query: {
+                    id: item.id
+                }
+            })
+        },
+        to_more_news() {
+            this.$router.push({
+                path: 'company-news',
+                query: {}
+            })
         }
-      }
-    },
-    // 获取新闻列表
-    async getNewsEvents() {
-      const {code, data} = await this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "news_lists",
-          channelId: 8,
-          page: 1,
-          pageSize: 4,
-        },
-      });
-
-      if (code === 200) {
-        this.newsEvents = data.list;
-      }
     }
-  }
 };
 </script>
 
@@ -439,45 +471,49 @@ export default {
 
     .pic-row-1 {
       display: flex;
+      flex-wrap: wrap;
       margin-bottom: 20px;
 
-      .img-wrap-1 {
-        width: 805px;
-        height: 500px;
-        margin-right: 20px;
+      .img-wrap {
         position: relative;
-        display: inline-block;
 
-        img {
+        .poster-box {
           width: 100%;
           height: 100%;
+
+          img {
+            width: 100%;
+            height: 100%;
+          }
         }
 
-        .pic-title {
+        .info-box {
           position: absolute;
-          top: 74px;
-          left: 96px;
-          color: white;
-          font-size: 36px;
-          font-weight: bold;
-        }
+          left: 0;
+          top: 0;
+          right: 0;
+          bottom: 0;
 
-        .pic-content {
-          position: absolute;
-          top: 139px;
-          left: 96px;
-          color: white;
-          font-size: 18px;
-          width: 324px;
-          font-weight: lighter;
+          padding-top: 74px;
+          padding-left: 86px;
+
+
+          .pic-title {
+          }
+
+          .pic-content {
+            margin-top: 18px;
+          }
         }
 
         .pic-readmore {
-          position: absolute;
+
+          margin-top: 40px;
+          // position: absolute;
           height: 56px;
           width: 187px;
-          top: 242px;
-          left: 96px;
+          // top: 242px;
+          // left: 96px;
           font-weight: lighter;
           color: white;
           font-size: 18px;
@@ -486,6 +522,7 @@ export default {
           border-top-right-radius: 20px;
           border-bottom-left-radius: 20px;
           cursor: pointer;
+          display: none;
 
           .readmore {
             height: 24px;
@@ -504,10 +541,71 @@ export default {
               height: 100%;
             }
           }
+
+        }
+
+        &:hover {
+          .pic-readmore {
+            display: flex;
+
+            .readmore {
+              height: 24px;
+              width: 72px;
+              margin-right: 14px;
+              margin: 16px 14px 16px 41px;
+            }
+
+            .arrow {
+              height: 16.35px;
+              width: 20.33px;
+              margin: 20px 0px 20px 0px;
+
+              img {
+                width: 100%;
+                height: 100%;
+              }
+            }
+          }
         }
       }
 
+      .img-wrap-1 {
+        margin-bottom: 20px;
+        width: 805px;
+        height: 500px;
+        margin-right: 20px;
+        position: relative;
+        display: inline-block;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+
+        .pic-title {
+          // position: absolute;
+          top: 74px;
+          left: 96px;
+          color: white;
+          font-size: 36px;
+          font-weight: bold;
+        }
+
+        .pic-content {
+          // position: absolute;
+          // top: 139px;
+          // left: 96px;
+          color: white;
+          font-size: 18px;
+          width: 324px;
+          font-weight: lighter;
+        }
+
+
+      }
+
       .img-wrap-2 {
+        margin-bottom: 20px;
         width: 575px;
         height: 500px;
         position: relative;
@@ -519,7 +617,7 @@ export default {
         }
 
         .pic-title {
-          position: absolute;
+          // position: absolute;
           top: 178px;
           left: 89px;
           color: white;
@@ -528,7 +626,7 @@ export default {
         }
 
         .pic-content {
-          position: absolute;
+          // position: absolute;
           top: 243px;
           left: 89px;
           color: white;
@@ -555,7 +653,7 @@ export default {
         }
 
         .pic-title {
-          position: absolute;
+          // position: absolute;
           top: 107px;
           left: 96px;
           color: white;
@@ -564,7 +662,7 @@ export default {
         }
 
         .pic-content {
-          position: absolute;
+          // position: absolute;
           top: 176px;
           left: 96px;
           color: white;
@@ -586,7 +684,7 @@ export default {
         }
 
         .pic-title {
-          position: absolute;
+          // position: absolute;
           top: 97px;
           left: 79px;
           color: black;
@@ -595,7 +693,7 @@ export default {
         }
 
         .pic-content {
-          position: absolute;
+          // position: absolute;
           top: 166px;
           left: 79px;
           color: black;
@@ -666,7 +764,7 @@ export default {
       margin-bottom: 20px;
       overflow: auto;
       width: 100%;
-      justify-content: space-between;
+      //justify-content: space-between;
       /* 平均分配剩余空间 */
 
       .news-card {
@@ -676,8 +774,12 @@ export default {
         height: 172px;
         border-radius: 8px;
         border: 1px solid #d7dadc;
-        float: left;
+        margin-right: 19px;
+        //float: left;
         //margin-right: 10px;
+        &:last-child {
+          margin-right: 0;
+        }
 
         .time-icon {
           display: inline-block;

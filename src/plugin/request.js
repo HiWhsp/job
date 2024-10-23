@@ -128,10 +128,10 @@ function api(action, data, method, uploaderConfig) {
 
   if (process.env.NODE_ENV !== "production") {
     reqUrl = "/api/service.php";
-    reqUrl = "http://wuhanjingmi.new.zhishangez.com/service.php"; //请求地址
+    reqUrl = "https://wuhanjingmi.new.zhishangez.com/service.php"; //请求地址
   } else {
     reqUrl = "/service.php";
-    reqUrl = "http://wuhanjingmi.new.zhishangez.com/service.php"; //请求地址
+    reqUrl = "https://wuhanjingmi.new.zhishangez.com/service.php"; //请求地址
   }
 
   // debugger

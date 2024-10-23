@@ -103,20 +103,7 @@ export default {
                     tagText: "满减",
                 },
             ],
-            cardList: [
-                {
-                    cardImg: card1,
-                    cardText: "现场直击 | 华日激光亮相上海慕尼黑光博会！",
-                },
-                {
-                    cardImg: card2,
-                    cardText: "现场直击 | 华日激光亮相上海慕尼黑光博会！",
-                },
-                {
-                    cardImg: card3,
-                    cardText: "现场直击 | 华日激光亮相上海慕尼黑光博会！",
-                },
-            ]
+            cardList: []
         };
     },
 
@@ -198,6 +185,21 @@ export default {
                 }
 
             });
+
+            this.$api({
+                url: "/service.php",
+                method: "get",
+                data: {
+                    action: "news_lists",
+                    channelId: 8,
+                    page: 1,
+                    pageSize: 3,
+                },
+            }).then((res) => {
+                if (res.code == 200) {
+                    this.cardList = res.data.list;
+                }
+            })
         },
 
         showLoading() {
@@ -458,6 +460,15 @@ export default {
             // var element = document.querySelector(".wenxian-box");
             var element = document.querySelector(clsName);
         },
+
+        toNewsDetail(item) {
+            this.$router.push({
+                path: 'company-news-detail',
+                query: {
+                    id: item.id
+                }
+            })
+        }
     },
 };
 </script>
@@ -568,13 +579,13 @@ export default {
                                 </div>
 
                                 <div class="detail-content-box" v-if="active_panel == '详情'">
-                                    <!-- <div class="section-title" data-title="详情">产品信息</div> -->
                                     <div class="rich-html" v-html="detail.content"></div>
-                                    <div class="rich-html" v-html="detail.cont2"></div>
-                                    <div class="rich-html" v-html="detail.cont3"></div>
                                 </div>
-
-                                <div class="comment-box" v-if="active_panel == '评价'">
+                                <div class="comment-box" v-if="active_panel == '技术参数'">
+                                    <div class="rich-html" v-html="detail.cont2"></div>
+                                </div>
+                                <div class="comment-box" v-if="active_panel == '相关资讯'">
+                                    <div class="rich-html" v-html="detail.cont3"></div>
                                 </div>
                             </div>
                         </div>
@@ -586,17 +597,17 @@ export default {
                 <div class="sub-related-news">用激光工具改变生活</div>
 
                 <div class="list-wrap">
-                    <div class="card-item" v-for="(item, index) in cardList" :key="index">
+                    <div class="card-item" v-for="(item, index) in cardList" :key="index" @click="toNewsDetail(item)">
                         <div class="card-img-wrap">
-                            <img :src="item.cardImg" alt="" class="card-img">
+                            <img :src="item.thumb" alt="" class="card-img">
                         </div>
-                        <div class="card-text">{{ item.cardText }}</div>
+                        <div class="card-text ellipsis-1">{{ item.title }}</div>
                         <div class="card-bottom">
                             <div class="bottom-left">
                                 <div class="time-img-wrap">
                                     <img class="time" src="@/assets/img/productDetail/time.png" alt="">
                                 </div>
-                                <div class="time-text">2024-05-07</div>
+                                <div class="time-text">{{ item.dtTime }}</div>
                             </div>
                             <div class="bottom-right">
                                 <div class="arrow-text" :class="{ active: index === 0 }">了解详情</div>
@@ -1054,7 +1065,6 @@ export default {
       }
 
       .price-wrap {
-        width: 888px;
         height: 142px;
         // padding: 20px 0 0 32px;
         background: #ffffff;
@@ -1226,6 +1236,8 @@ export default {
       background: #ffffff;
       border-radius: 10px 0px 10px 10px;
       border: 1px solid #e4e4e4;
+      cursor: pointer;
+
 
       .card-img-wrap {
         width: 416px;
@@ -1251,17 +1263,19 @@ export default {
         display: flex;
         align-items: center;
         border-top: 1px solid #e5e5e5;
+        justify-content: space-between;
+        padding: 0 20px;
 
         .bottom-left {
           height: 100%;
           display: flex;
           align-items: center;
-          margin-right: 158px;
+          //margin-right: 158px;
 
           .time-img-wrap {
             width: 15px;
             height: 15px;
-            margin: 0 9px 0 20px;
+            margin-right: 9px;
 
             .time {
               width: 100%;

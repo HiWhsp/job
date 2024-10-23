@@ -1,109 +1,111 @@
 <template>
-  <div class="page">
-    <div class="title-wrap">
-      <breadcrumb :list="['首页', '技术文章']"></breadcrumb>
-      <div class="title">{{ detail.title }}</div>
-      <div class="sub-title">
-        <div class="time">发布时间：{{ detail.dtTime }}</div>
-        <img src="@/assets/img/service/icon1.png" alt=""/>
-        <div class="text">原理及产品介绍</div>
-      </div>
-    </div>
-
-    <div class="content-wrap">
-      <div class="content">
-        <div class="text" v-html="detail.content"></div>
-        <div class="step-wrap pointer">
-          <div class="last" @click="toDetail(0)" v-if="newsList[0]">上一条：{{ newsList[0].title }}</div>
-          <div class="next" @click="toDetail(1)" v-if="newsList[1]">下一条：{{ newsList[1].title }}</div>
-        </div>
-      </div>
-
-    </div>
-
-
-    <div class="related-wrap">
-      <div class="related-title">相关文章</div>
-      <div class="related-sub-title">
-        技术文章内容包括产品参数说明、原理说明，以及产品的应用等
-      </div>
-      <div class="article-list">
-        <div class="article-item" v-for="(item, index) in recommend_proudcts" :key="index">
-          <div class="article-img" @click="toDetail(item)">
-            <img :src="item.thumb" alt=""/>
-          </div>
-          <div class="article-title-wrap">
-            <div class="article-title">{{ item.title }}</div>
-            <div class="article-sub-title">
-              <div class="article-sub-title-img-wrap">
+    <div class="page">
+        <div class="title-wrap">
+            <breadcrumb :list="['首页', '技术文章']"></breadcrumb>
+            <div class="title">{{ detail.title }}</div>
+            <div class="sub-title">
+                <div class="time">发布时间：{{ detail.dtTime }}</div>
                 <img src="@/assets/img/service/icon1.png" alt=""/>
-              </div>
-              <div>原理及产品介绍</div>
+                <div class="text">原理及产品介绍</div>
             </div>
-          </div>
         </div>
-      </div>
-      <div class="btn-wrap">
-        <div class="pic-readmore" @click="goUrl({url: '/technical-article'})">
-          <div class="readmore">查看更多</div>
-          <div class="arrow">
-            <img src="@/static/home/pic/right_arrow.png"/>
-          </div>
+
+        <div class="content-wrap">
+            <div class="content">
+                <div class="text" v-html="detail.content"></div>
+                <div class="step-wrap pointer">
+                    <div class="last" @click="toDetail(0)">上一条：{{ newsList[0] ? newsList[0].title : '无' }}</div>
+                    <div class="next" @click="toDetail(1)">下一条：{{ newsList[1] ? newsList[1].title : '无' }}</div>
+                </div>
+            </div>
+
         </div>
-      </div>
+
+
+        <div class="related-wrap">
+            <div class="related-title">相关文章</div>
+            <div class="related-sub-title">
+                技术文章内容包括产品参数说明、原理说明，以及产品的应用等
+            </div>
+            <div class="article-list">
+                <div class="article-item" v-for="(item, index) in recommend_proudcts" :key="index">
+                    <div class="article-img" @click="toDetail(item)">
+                        <img :src="item.thumb" alt=""/>
+                    </div>
+                    <div class="article-title-wrap">
+                        <div class="article-title">{{ item.title }}</div>
+                        <div class="article-sub-title">
+                            <div class="article-sub-title-img-wrap">
+                                <img src="@/assets/img/service/icon1.png" alt=""/>
+                            </div>
+                            <div>原理及产品介绍</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-wrap">
+                <div class="pic-readmore" @click="goUrl({url: '/technical-article'})">
+                    <div class="readmore">查看更多</div>
+                    <div class="arrow">
+                        <img src="@/static/home/pic/right_arrow.png"/>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 import breadcrumb from "@/components/breadcrumb";
 
 export default {
-  components: {
-    breadcrumb,
-  },
-  data() {
-    return {
-      detail: {},
-      recommend_proudcts: [],
-      newsList: [],
-    };
-  },
-  watch: {
-    $route() {
-      this.setView();
+    components: {
+        breadcrumb,
     },
-  },
-  mounted() {
-    this.setView();
-  },
-  methods: {
-    setView() {
-      // 获取文章分类
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "news_detail",
-          id: this.$route.query.id,
+    data() {
+        return {
+            detail: {},
+            recommend_proudcts: [],
+            newsList: [],
+        };
+    },
+    watch: {
+        $route() {
+            this.setView();
         },
-      }).then((res) => {
-        if (res.code == 200) {
-          this.detail = res.data.info;
-          this.newsList = [res.data.next_news, res.data.last_news];
-          this.recommend_proudcts = res.data.recommend_proudcts;
+    },
+    mounted() {
+        this.setView();
+    },
+    methods: {
+        setView() {
+            // 获取文章分类
+            this.$api({
+                url: "/service.php",
+                method: "get",
+                data: {
+                    action: "news_detail",
+                    id: this.$route.query.id,
+                },
+            }).then((res) => {
+                if (res.code == 200) {
+                    this.detail = res.data.info;
+                    this.newsList = [res.data.next_news, res.data.last_news];
+                    this.recommend_proudcts = res.data.recommend_proudcts;
+                }
+            });
+        },
+        toDetail(i) {
+            if (this.newsList[i]) {
+                this.$router.push({
+                    path: `/technical-article-detail?id=${this.newsList[i].id}`,
+                })
+            }
+        },
+        goUrl(item) {
+            this.$router.push(item.url);
         }
-      });
     },
-    toDetail(i) {
-      this.$router.push({
-        path: `/technical-article-detail?id=${this.newsList[i].id}`,
-      })
-    },
-    goUrl(item) {
-      this.$router.push(item.url);
-    }
-  },
 };
 </script>
 

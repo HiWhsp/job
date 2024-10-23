@@ -1,207 +1,249 @@
 <template>
-  <div class="page">
-    <div class="title">合作优势</div>
-    <div class="sub-title">用激光工具改变生活</div>
+    <div class="page">
+        <div class="title">合作优势</div>
+        <div class="sub-title">用激光工具改变生活</div>
 
-    <div class="advantage-list">
-      <div class="advantage-item" v-for="(item, index) in 4" :key="index">
-        <div class="img-wrap">
-          <img src="@/assets/img/service/list-img.png" alt="" />
+        <div class="advantage-list">
+            <div class="advantage-item" v-for="(item, index) in advantageList" :key="index">
+                <div class="img-wrap">
+                    <img :src="item.thumb" alt=""/>
+                </div>
+                <div class="wrap">
+                    <div class="advantage-item-title">{{ item.title }}</div>
+                    <div class="line"></div>
+                    <div class="advantage-item-desc">{{ item.description }}</div>
+                </div>
+            </div>
         </div>
-        <div class="wrap">
-          <div class="advantage-item-title">覆盖全球的销售及服务渠道</div>
-          <div class="line"></div>
-          <div class="advantage-item-desc">
-            覆盖全球的销售及服务渠道， 为全球用户提供快速需求响应
-            和贴身服务覆盖全球的销售及 服务渠道，为全球用户提供快
-            速需求响应和贴身服务
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="cooperation-wrap">
-      <div class="cooperation-item">
-        <div class="cooperation-title">合作流程</div>
-        <div class="cooperation-sub-title">用激光工具改变生活</div>
-        <div class="one-list">
-          <div class="one-list-item">
-            <div class="one-list-icon-img">
-              <img src="@/assets/img/service/icon-1.png" alt="" />
+        <div class="cooperation-wrap">
+            <div class="cooperation-item">
+                <div class="cooperation-title">合作流程</div>
+                <div class="cooperation-sub-title">用激光工具改变生活</div>
+                <div class="one-list">
+                    <div class="one-list-item">
+                        <div class="one-list-icon-img">
+                            <img src="@/assets/img/service/icon-1.png" alt=""/>
+                        </div>
+                        <div class="one-list-item-desc-1">申请入驻</div>
+                        <div class="one-list-item-desc-2">提交申请资料</div>
+                    </div>
+                    <div class="one-list-item">
+                        <div class="one-list-icon-img">
+                            <img src="@/assets/img/service/icon-2.png" alt=""/>
+                        </div>
+                        <div class="one-list-item-desc-1">专人接洽</div>
+                        <div class="one-list-item-desc-2">专门负责</div>
+                        <div class="one-list-item-desc-3">接洽与办理入驻相关手续</div>
+                    </div>
+                    <div class="one-list-item">
+                        <div class="one-list-icon-img">
+                            <img src="@/assets/img/service/icon-3.png" alt=""/>
+                        </div>
+                        <div class="one-list-item-desc-1">申请入驻</div>
+                        <div class="one-list-item-desc-2">提交申请资料</div>
+                    </div>
+                </div>
+                <div class="two-list">
+                    <div class="two-list-item">
+                        <div class="two-top">
+                            <img src="@/assets/img/service/icon-4.png" alt=""/>
+                        </div>
+                        <div class="two-bottom">公众号</div>
+                    </div>
+                    <div class="two-list-item two-list-center">
+                        <div class="two-top">
+                            <img src="@/assets/img/service/icon-5.png" alt=""/>
+                        </div>
+                        <div class="two-bottom">微信客服</div>
+                    </div>
+                    <div class="last-list-item">
+                        <div class="last-top">
+                            <img src="@/assets/img/service/icon-6.png" alt=""/>
+                        </div>
+                        <div class="last-bottom">联系电话</div>
+                        <div class="last-sub-bottom">027-87180496</div>
+                    </div>
+                </div>
+                <div class="btn-wrap">
+                    <a class="btn" href="#add_wrap">立即入驻</a>
+                </div>
             </div>
-            <div class="one-list-item-desc-1">申请入驻</div>
-            <div class="one-list-item-desc-2">提交申请资料</div>
-          </div>
-          <div class="one-list-item">
-            <div class="one-list-icon-img">
-              <img src="@/assets/img/service/icon-2.png" alt="" />
-            </div>
-            <div class="one-list-item-desc-1">专人接洽</div>
-            <div class="one-list-item-desc-2">专门负责</div>
-            <div class="one-list-item-desc-3">接洽与办理入驻相关手续</div>
-          </div>
-          <div class="one-list-item">
-            <div class="one-list-icon-img">
-              <img src="@/assets/img/service/icon-3.png" alt="" />
-            </div>
-            <div class="one-list-item-desc-1">申请入驻</div>
-            <div class="one-list-item-desc-2">提交申请资料</div>
-          </div>
         </div>
-        <div class="two-list">
-          <div class="two-list-item">
-            <div class="two-top">
-              <img src="@/assets/img/service/icon-4.png" alt="" />
-            </div>
-            <div class="two-bottom">公众号</div>
-          </div>
-          <div class="two-list-item two-list-center">
-            <div class="two-top">
-              <img src="@/assets/img/service/icon-5.png" alt="" />
-            </div>
-            <div class="two-bottom">微信客服</div>
-          </div>
-          <div class="last-list-item">
-            <div class="last-top">
-              <img src="@/assets/img/service/icon-6.png" alt="" />
-            </div>
-            <div class="last-bottom">联系电话</div>
-            <div class="last-sub-bottom">027-87180496</div>
-          </div>
-        </div>
-        <div class="btn-wrap">
-          <div class="btn">立即入驻</div>
-        </div>
-      </div>
-    </div>
 
-    <div class="add-wrap">
-      <div class="add-left">
-        <div class="add-left-title">加入我们</div>
-        <div class="add-left-desc">
-          用我们的力量，放大您的优势， 成为合作伙伴，共享未来成果！
-        </div>
-        <div class="left-btn">了解华锐科仪</div>
-      </div>
-      <div class="add-right">
-        <div class="mask"></div>
-        <el-form
-          class="application-form"
-          :model="formData"
-          :rules="formRules"
-          label-width="118px"
-          ref="applicationForm"
-        >
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item label="公司名称" prop="companyName">
-                <el-input
-                  style="width: 198px"
-                  v-model="formData.companyName"
-                  placeholder="请输入公司名称"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="公司地址" prop="companyAddress">
-                <el-input
-                  style="width: 198px"
-                  v-model="formData.companyAddress"
-                  placeholder="请输入公司地址"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item label="联系人" prop="contactPerson">
-                <el-input
-                  style="width: 198px"
-                  v-model="formData.contactPerson"
-                  placeholder="请输入联系人姓名"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="联系电话" prop="contactPhone">
-                <el-input
-                  style="width: 198px"
-                  v-model="formData.contactPhone"
-                  placeholder="请输入联系电话"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="公司网址" prop="companyWebsite">
-            <el-input
-              style="width: 546px"
-              v-model="formData.companyWebsite"
-              placeholder="请输入公司网址"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="营业执照" prop="companyImage">
-            <div class="upload-wrap">
-              <input type="file" />
+        <div id="add_wrap" class="add-wrap">
+            <div class="add-left">
+                <div class="add-left-title">加入我们</div>
+                <div class="add-left-desc">
+                    用我们的力量，放大您的优势， 成为合作伙伴，共享未来成果！
+                </div>
+                <div class="left-btn" @click="goUrl('/company-profile')">了解华锐科仪</div>
             </div>
-          </el-form-item>
-          <el-form-item>
-            <div class="apply-btn" @click="submitForm">马上申请</div>
-          </el-form-item>
-        </el-form>
-      </div>
+            <div class="add-right">
+                <div class="mask"></div>
+                <el-form
+                        class="application-form"
+                        :model="formData"
+                        :rules="formRules"
+                        label-width="118px"
+                        ref="applicationForm"
+                >
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                            <el-form-item label="公司名称" prop="company">
+                                <el-input
+                                        style="width: 198px"
+                                        v-model="formData.company"
+                                        placeholder="请输入公司名称"
+                                ></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="公司地址" prop="address">
+                                <el-input
+                                        style="width: 198px"
+                                        v-model="formData.address"
+                                        placeholder="请输入公司地址"
+                                ></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                            <el-form-item label="联系人" prop="name">
+                                <el-input
+                                        style="width: 198px"
+                                        v-model="formData.name"
+                                        placeholder="请输入联系人姓名"
+                                ></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="联系电话" prop="phone">
+                                <el-input
+                                        style="width: 198px"
+                                        v-model="formData.phone"
+                                        placeholder="请输入联系电话"
+                                ></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-form-item label="公司网址" prop="email">
+                        <el-input
+                                style="width: 546px"
+                                v-model="formData.email"
+                                placeholder="请输入公司网址"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="营业执照" prop="images">
+                        <el-upload class="upload-wrap" accept="image/*" :show-file-list="false" name="img"
+                                   action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload"
+                                   :data="mix_upload_data" :on-success="upload_on_success"
+                                   :before-upload="upload_before_upload">
+                            <img v-if="formData.images" :src="formData.images" class="user-avatar"/>
+                            <img v-else src="@/assets/img/service/upload.png" class="user-avatar"/>
+                        </el-upload>
+                    </el-form-item>
+                    <el-form-item>
+                        <div class="apply-btn" @click="submitForm">马上申请</div>
+                    </el-form-item>
+                </el-form>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: "merchant-cooperation",
-  data() {
-    return {
-      formData: {
-        companyName: "",
-        companyAddress: "",
-        contactPerson: "",
-        contactPhone: "",
-        companyWebsite: "",
-        companyImage: "",
-      },
-      formRules: {
-        companyName: [
-          { required: true, message: "请输入公司名称", trigger: "blur" },
-        ],
-        companyAddress: [
-          { required: true, message: "请输入公司地址", trigger: "blur" },
-        ],
-        contactPerson: [
-          { required: true, message: "请输入联系人姓名", trigger: "blur" },
-        ],
-        contactPhone: [
-          { required: true, message: "请输入联系电话", trigger: "blur" },
-        ],
-        companyWebsite: [
-          { required: true, message: "请输入公司网址", trigger: "blur" },
-        ],
-        companyImage: [
-          { required: true, message: "请上传图片", trigger: "blur" },
-        ],
-      },
-    };
-  },
-  methods: {
-    submitForm() {
-      this.$refs.applicationForm.validate((valid) => {
-        if (valid) {
-          console.log("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+    name: "merchant-cooperation",
+    data() {
+        return {
+            formData: {
+                company: '',
+                address: '',
+                name: '',
+                phone: '',
+                email: '',
+                images: '',
+                feedType: '加入我们',
+                content: '加入我们'
+            },
+            formRules: {
+                company: [
+                    {required: true, message: "请输入公司名称", trigger: "blur"},
+                ],
+                address: [
+                    {required: true, message: "请输入公司地址", trigger: "blur"},
+                ],
+                name: [
+                    {required: true, message: "请输入联系人姓名", trigger: "blur"},
+                ],
+                phone: [
+                    {required: true, message: "请输入联系电话", trigger: "blur"},
+                ],
+                email: [
+                    {required: true, message: "请输入公司网址", trigger: "blur"},
+                ],
+                images: [
+                    {required: true, message: "请上传图片", trigger: "blur"},
+                ],
+            },
+            advantageList: [],
+        };
     },
-    handleImageSuccess() {},
-    beforeImageUpload() {},
-  },
+    mounted() {
+        this.setView();
+    },
+    methods: {
+        async setView() {
+            const {code, data} = await this.$api({
+                url: "/service.php",
+                method: "get",
+                data: {
+                    action: "news_lists",
+                    channelId: 3,
+                },
+            });
+            if (code === 200) {
+                this.advantageList = data.list;
+            }
+        },
+        //上传相关
+        upload_on_success(res, file) {
+            let {code, data, msg} = res;
+            alert(res);
+            if (code == 200) {
+                this.formData.images = res.data;
+            }
+        },
+        upload_before_upload(file) {
+            const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
+            return isLt2M;
+        },
+        submitForm() {
+            this.$refs.applicationForm.validate((valid) => {
+                if (valid) {
+                    this.$api("feedback_add", {
+                        ...this.formData
+                    }).then((res) => {
+                        if (res.code === 200) {
+                            this.$message.success("提交成功");
+                            this.resetForm('applicationForm');
+                        }
+                    })
+                } else {
+                    console.log("error submit!!");
+                    return false;
+                }
+            });
+        },
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
+        },
+        goUrl(url) {
+            this.$router.push(url);
+        }
+    },
 };
 </script>
 
@@ -225,6 +267,7 @@ export default {
   margin: 58px 260px 79px;
   display: flex;
   gap: 22px;
+
   .advantage-item {
     width: 334px;
     height: 427px;
@@ -232,27 +275,33 @@ export default {
     box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.11);
     border-radius: 3px 3px 3px 3px;
     border: 1px solid #f3f3f3;
+
     .img-wrap {
       width: 100%;
       height: 190px;
+
       img {
         width: 100%;
         height: 100%;
       }
     }
+
     .wrap {
       padding: 0 28px;
+
       .advantage-item-title {
         margin: 32px 0 17px 0;
         font-size: 20px;
         color: #000000;
         font-weight: bold;
       }
+
       .line {
         width: 24px;
         height: 2px;
         background: #e6e6e6;
       }
+
       .advantage-item-desc {
         margin-top: 17px;
         font-size: 16px;
@@ -268,9 +317,9 @@ export default {
   width: 100%;
   height: 767px;
   padding-top: 64px;
-  background: url("../../assets/img/service/cooperation-bg.png") no-repeat
-    center center;
+  background: url("../../assets/img/service/cooperation-bg.png") no-repeat center center;
   background-size: 100% 100%;
+
   .cooperation-item {
     .cooperation-title {
       font-weight: bold;
@@ -278,28 +327,34 @@ export default {
       color: #ffffff;
       text-align: center;
     }
+
     .cooperation-sub-title {
       margin-top: 14px;
       font-size: 16px;
       color: #ffffff;
       text-align: center;
     }
+
     .one-list {
       margin: 62px 361px 0 375px;
       display: flex;
       gap: 403px;
+
       .one-list-item {
         display: flex;
         flex-direction: column;
         align-items: center;
+
         .one-list-icon-img {
           width: 95px;
           height: 95px;
+
           img {
             width: 100%;
             height: 100%;
           }
         }
+
         .one-list-item-desc-1 {
           margin-top: 28px;
           font-size: 18px;
@@ -308,6 +363,7 @@ export default {
           font-weight: bold;
           text-align: center;
         }
+
         .one-list-item-desc-2 {
           font-weight: bold;
           font-size: 14px;
@@ -315,6 +371,7 @@ export default {
           line-height: 25px;
           text-align: center;
         }
+
         .one-list-item-desc-3 {
           width: 154px;
           font-weight: bold;
@@ -325,18 +382,22 @@ export default {
         }
       }
     }
+
     .two-list {
       margin: 56px 361px 0 375px;
       display: flex;
+
       .two-list-item {
         .two-top {
           width: 111px;
           height: 111px;
+
           img {
             width: 100%;
             height: 100%;
           }
         }
+
         .two-bottom {
           margin-top: 16px;
           font-weight: bold;
@@ -346,22 +407,27 @@ export default {
           text-align: center;
         }
       }
+
       .two-list-center {
         margin-left: 408px;
         margin-right: 401px;
       }
+
       .last-list-item {
         display: flex;
         flex-direction: column;
         align-items: center;
+
         .last-top {
           width: 67px;
           height: 67px;
+
           img {
             width: 100%;
             height: 100%;
           }
         }
+
         .last-bottom {
           margin-top: 19px;
           font-weight: bold;
@@ -370,6 +436,7 @@ export default {
           line-height: 25px;
           text-align: center;
         }
+
         .last-sub-bottom {
           width: 145px;
           margin-top: 12px;
@@ -381,10 +448,12 @@ export default {
         }
       }
     }
+
     .btn-wrap {
       display: flex;
       justify-content: center;
       margin-top: 55px;
+
       .btn {
         width: 191px;
         height: 38px;
@@ -402,13 +471,13 @@ export default {
 }
 
 .add-wrap {
-  background: url("../../assets/img/service/cooperation-bg-1.png") no-repeat
-    center center;
+  background: url("../../assets/img/service/cooperation-bg-1.png") no-repeat center center;
   background-size: cover;
   width: 100%;
   height: 753px;
   padding: 127px 260px 149px 260px;
   display: flex;
+
   .add-left {
     .add-left-title {
       font-weight: bold;
@@ -416,6 +485,7 @@ export default {
       color: #27417c;
       line-height: 71px;
     }
+
     .add-left-desc {
       width: 280px;
       height: 66px;
@@ -424,6 +494,7 @@ export default {
       color: #808080;
       line-height: 40px;
     }
+
     .left-btn {
       margin-top: 53px;
       width: 179px;
@@ -449,6 +520,7 @@ export default {
     border-radius: 6px 6px 6px 6px;
     opacity: 0.27;
   }
+
   .add-right {
     position: relative;
     width: 693px;
@@ -466,8 +538,8 @@ export default {
 .upload-wrap {
   width: 90px;
   height: 90px;
-  background: url("../../assets/img/service/upload.png");
-  border-right: 1px solid #ccc;
+
+
   input {
     width: 100%;
     height: 100%;
@@ -491,6 +563,6 @@ export default {
 
 <style>
 .el-form-item__label {
-  color: #000;
+    color: #000;
 }
 </style>

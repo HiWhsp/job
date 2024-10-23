@@ -6,7 +6,8 @@
                 <ul class="row" @click="handleItemClick($event, 0)">
                     <li class="one">分类</li>
                     <div class="li-wrap" :class="{'li-wrap__all': allRow[0]}">
-                        <li :class="['row-li']" v-for="(item, index) in categoryList" :key="index">
+                        <li :class="{'row-li': true, 'active_li': activeId == item.id}"
+                            v-for="(item, index) in categoryList" :key="index">
                         <span class="pointer item" :data-id="item.id"
                               :data-name="item.title">{{ item.title }}</span>
                         </li>
@@ -19,7 +20,8 @@
                 <ul class="row" v-if="secondLevelCategory.length" @click="handleItemClick($event, 1)">
                     <li class="one">二级分类</li>
                     <div class="li-wrap" :class="{'li-wrap__all': allRow[1]}">
-                        <li :class="['row-li']" v-for="(item, index) in secondLevelCategory"
+                        <li :class="{'row-li': true, 'active_li': activeId == item.id}"
+                            v-for="(item, index) in secondLevelCategory"
                             :key="index">
                         <span class="pointer item" :data-id="item.id"
                               :data-name="item.title">{{ item.title }}</span>
@@ -33,7 +35,8 @@
                 <ul class="row" v-if="thirdLevelCategory.length" @click="handleItemClick($event, 2)">
                     <li class="one">三级分类</li>
                     <div class="li-wrap" :class="{'li-wrap__all': allRow[2]}">
-                        <li :class="['row-li']" v-for="(item, index) in thirdLevelCategory" :key="index">
+                        <li :class="{'row-li': true, 'active_li': activeId == item.id}"
+                            v-for="(item, index) in thirdLevelCategory" :key="index">
                             <span class="pointer item" :data-id="item.id" :data-name="item.title">{{
                                 item.title
                                 }}</span>
@@ -124,6 +127,7 @@
                         </div>
                     </div>
                 </div>
+                <el-empty v-if="!commodityList.length" description="暂无数据..."></el-empty>
             </div>
             <!--分页器-->
             <div class="pagination-box" v-if="count">
@@ -142,6 +146,7 @@ export default {
     name: "allCommodities",
     data() {
         return {
+            activeId: '',
             allRow: [false, false, false], // 是否显示全部
             sortList: [ // 排序列表
                 {title: "综合排序", ziduan: "ordering", not: true},
@@ -162,10 +167,15 @@ export default {
                 pageNum: 30,
                 channelId: 0,
             },
-            count: 0
+            count: 0,
+            keyword: ''
         };
     },
     watch: {
+        "$route"() {
+            this.keyword = this.$route.query.keyword;
+            this.setView();
+        },
         selectFilterList() {
             this.pagination = {
                 page: 1,
@@ -208,6 +218,7 @@ export default {
             const {code, data} = await this.$api("product_plist", {
                 ...this.pagination,
                 orderType: this.getOrderType(this.orderByColumn),
+                keyword: this.keyword
             })
             if (code === 200) {
                 this.commodityList = data.list;
@@ -245,6 +256,7 @@ export default {
                 arr.push({name: name, id: id});
                 if (!this.selectFilterList.includes(name)) {
                     this.selectFilterList = [{name: name, id: id, type: 'channelId'}];
+                    this.activeId = id;
                 }
 
                 if (level === 0) {
@@ -497,6 +509,7 @@ export default {
       }
     }
 
+
     .icon-wrap {
       display: flex;
       align-items: center;
@@ -682,5 +695,10 @@ export default {
       }
     }
   }
+}
+
+.active_li {
+  font-weight: bold;
+  color: @theme !important;
 }
 </style>

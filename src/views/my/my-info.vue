@@ -12,7 +12,7 @@
             <span class="info">
               <div class="upload-box">
                 <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="img"
-                           action="http://wuhanjingmi.new.zhishangez.com//service.php?action=index_ossUpload"
+                           action="https://wuhanjingmi.new.zhishangez.com//service.php?action=index_ossUpload"
                            :data="mix_upload_data" :on-success="upload_on_success"
                            :before-upload="upload_before_upload">
                   <img v-if="form.image" :src="form.image" class="user-avatar"/>
