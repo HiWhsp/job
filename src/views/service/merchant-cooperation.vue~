@@ -126,9 +126,9 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-form-item label="公司网址" prop="web_url">
+            <el-form-item label="公司网址" prop="email">
               <el-input
-                  v-model="formData.web_url"
+                  v-model="formData.email"
                   placeholder="请输入公司网址"
               ></el-input>
             </el-form-item>
@@ -162,7 +162,7 @@ export default {
         address: '',
         name: '',
         phone: '',
-        web_url: '',
+        email: '',
         images: '',
         feedType: '加入我们',
         content: '加入我们'
@@ -180,7 +180,7 @@ export default {
         phone: [
           {required: true, message: "请输入联系电话", trigger: "blur"},
         ],
-        web_url: [
+        email: [
           {required: true, message: "请输入公司网址", trigger: "blur"},
         ],
         images: [

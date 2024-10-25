@@ -255,7 +255,7 @@ export default {
     },
     // 筛选点击
     handleItemClick(event, level) {
-      console.log(this.$refs.liWrap1)
+      console.log(this.$refs)
       const target = event.target;
       if (target.tagName === "SPAN" && target.className.includes('item')) {
         const name = target.getAttribute("data-name");

@@ -11,6 +11,7 @@
                     <img :src="selectedIndex === index ? item.activeIconSrc : item.iconSrc" alt="icon"/>
                 </div>
                 <div>{{ item.text }}</div>
+                <div class="tip" v-if="item.text == '购物车'">{{ shopcart_count }}</div>
                 <div
                         class="popup"
                         v-if="popupIndex === index && item.text == '产品对比'"
@@ -62,17 +63,20 @@ export default {
     props: [],
     data() {
         return {
+            shopcart_count: 0,
             itemList: [
                 {
                     iconSrc: icon1,
                     activeIconSrc: icon1Active,
                     text: "快速报价",
+                    routeName: 'oneClickSelection'
                 },
                 {
                     iconSrc: icon2,
                     activeIconSrc: icon2Active,
                     text: "产品对比",
                     subItems: ["子选项1", "子选项2", "子选项3", "子选项4", "子选项5"],
+                    routeName: 'productComparison'
                 },
                 {
                     iconSrc: icon3,
@@ -101,6 +105,19 @@ export default {
     },
     watch: {},
     created() {
+        this.$api({
+            url: "/service.php",
+            method: "get",
+            data: {
+                action: "gouwuche_lists",
+            }
+        }).then(res => {
+            if (res.code == 200) {
+                res.data.forEach((v) => {
+                    this.shopcart_count += +v.num;
+                });
+            }
+        })
     },
     methods: {
         onClickItem(item, index) {
@@ -128,7 +145,7 @@ export default {
         onRouteTo(params) {
             const {name} = params;
             this.$router.push({name});
-        },
+        }
     },
 };
 </script>
@@ -160,6 +177,18 @@ export default {
     &.active {
       background-color: #27417c;
       color: #fff;
+    }
+
+    .tip {
+      position: absolute;
+      right: 10px;
+      top: 5px;
+      width: 17px;
+      height: 15px;
+      color: #fff;
+      text-align: center;
+      background: #FF7B23;
+      border-radius: 7px 7px 7px 7px;
     }
 
     .img-wrap {

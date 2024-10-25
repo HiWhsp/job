@@ -13,7 +13,7 @@
                 <div class="product-img-wrap">
                   <img :src="item.thumb" alt=""/>
                 </div>
-                <div class="product-desc-wrap ellipsis-2">
+                <div class="product-desc-wrap">
                   <div class="product-name">{{ item.title }}</div>
                 </div>
               </div>

@@ -86,7 +86,6 @@
             style="padding: 0 251px 0 140px"
         >
           <el-input
-              style="width: 514px"
               v-model="ruleForm.content"
               type="textarea"
               placeholder="请输入投诉问题"
@@ -115,9 +114,10 @@ export default {
         feedType: "",
         content: ""
       },
+      feedTypeList: [],
       rules: {
         name: [
-          {required: true, message: "请输入活动名称", trigger: "blur"},
+          {required: true, message: "请输入姓名", trigger: "blur"},
         ],
         phone: [{required: true, message: "请输入电话", trigger: "blur"}],
         company: [
@@ -144,10 +144,8 @@ export default {
       }
     };
   },
-  computed: {
-    ...mapState({
-      feedTypeList: (state) => JSON.parse(state.configInfo.feedType),
-    }),
+  mounted() {
+    this.feedTypeList = JSON.parse(this.$store.state.configInfo.feedType);
   },
   methods: {
     submitForm(formName) {
@@ -175,7 +173,8 @@ export default {
 
 <style scoped lang="less">
 .page {
-  margin: 70px 260px 109px;
+  width: 1400px;
+  margin: 70px auto 109px;
   display: flex;
   align-items: center;
 }

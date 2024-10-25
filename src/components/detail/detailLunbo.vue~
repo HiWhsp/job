@@ -38,8 +38,7 @@
 
     <!-- 下载 -->
     <div class="down">
-      <div class="it flex flex-center pointer" v-for="(item, index) in detail.pr_pdf_url" :key="index"
-           @click="download(item)">
+      <div class="it flex flex-center pointer" v-for="(item, index) in detail.pr_pdf_url" :key="index">
         <img src="@/assets/img/productDetail/download.png" alt="pdf">
         <span>产品说明书</span>
       </div>
@@ -140,10 +139,6 @@ export default {
         }
       })
     },
-
-    download(item) {
-      window.open(item);
-    }
   },
 };
 </script>

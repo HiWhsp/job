@@ -4,7 +4,7 @@
       <div class="container-1">
         <div class="icon-text">
           <div class="icon">
-            <img src="../../static/home/footer/footer_img01.png" />
+            <img src="../../static/home/footer/footer_img01.png"/>
           </div>
           <div class="text">
             <div class="text-1">质量保证</div>
@@ -13,7 +13,7 @@
         </div>
         <div class="icon-text">
           <div class="icon">
-            <img src="../../static/home/footer/footer_img02.png" />
+            <img src="../../static/home/footer/footer_img02.png"/>
           </div>
           <div class="text">
             <div class="text-1">标品现货</div>
@@ -22,7 +22,7 @@
         </div>
         <div class="icon-text">
           <div class="icon">
-            <img src="../../static/home/footer/footer_img03.png" />
+            <img src="../../static/home/footer/footer_img03.png"/>
           </div>
           <div class="text">
             <div class="text-1">非标定制</div>
@@ -31,7 +31,7 @@
         </div>
         <div class="icon-text">
           <div class="icon">
-            <img src="../../static/home/footer/footer_img04.png" />
+            <img src="../../static/home/footer/footer_img04.png"/>
           </div>
           <div class="text">
             <div class="text-1">产品研发</div>
@@ -61,34 +61,34 @@
             </tr>
             <tr>
               <td style="color: #ff7b23" @click="goUrl('/oneClickSelection')">一键选型</td>
-              <td>微信支付</td>
+              <td @click="goUrl('/technical-article-detail?id=35')">微信支付</td>
               <td @click="goUrl('/download-materials')">产品资料</td>
               <td @click="goUrl('/company-profile')">公司简介</td>
             </tr>
             <tr>
               <td @click="goUrl('/laser-processing')">激光加工</td>
-              <td>支付宝支付</td>
+              <td @click="goUrl('/technical-article-detail?id=36')">支付宝支付</td>
               <td @click="goUrl('/complaints-suggestions')">投诉建议</td>
               <td @click="goUrl('/company-news')">公司动态</td>
               <td>手机:13277960367</td>
             </tr>
             <tr>
               <td @click="goUrl('/light-computing')">光电计算</td>
-              <td>对公转账</td>
+              <td @click="goUrl('/technical-article-detail?id=112')">对公转账</td>
               <td @click="goUrl('/merchant-cooperation')">商家合作</td>
               <td @click="goUrl('/exhibition-information')">展会信息</td>
               <td>邮箱:info@huaraylaser.com</td>
             </tr>
             <tr>
               <td></td>
-              <td>月结支付</td>
+              <td @click="goUrl('/technical-article-detail?id=113')">月结支付</td>
               <td @click="goUrl('/member-benefits')">会员权益</td>
               <td @click="goUrl('/contact-us')">联系我们</td>
               <td>工作时间</td>
             </tr>
             <tr>
               <td></td>
-              <td>发票说明</td>
+              <td @click="goUrl('/technical-article-detail?id=114')">发票说明</td>
               <td></td>
               <td></td>
               <td>周一到周六 9:00-18:00</td>
@@ -96,7 +96,8 @@
           </table>
         </div>
         <div class="table-right">
-          <img src="../../static/home/footer/footer_img05.png" />
+          <img src="../../static/home/footer/footer_img05.png"/>
+          <span>小程序</span>
         </div>
       </div>
     </div>
@@ -200,6 +201,14 @@ export default {
         img {
           width: 100%;
           height: 100%;
+        }
+
+        span {
+          width: 100%;
+          display: inline-block;
+          font-size: 14px;
+          color: #77797B;
+          text-align: center;
         }
       }
     }

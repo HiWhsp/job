@@ -1,8 +1,8 @@
 <template>
   <div class="page">
     <div
-      class="banner"
-      :style="{ backgroundImage: `url(${bannerList[curBannerIndex]?.img})` }"
+        class="banner"
+        :style="{ backgroundImage: `url(${bannerList[curBannerIndex]?.img})` }"
     >
       <div class="title">{{ bannerList[curBannerIndex].title }}</div>
       <div class="sub-title">{{ bannerList[curBannerIndex].subTitle }}</div>
@@ -10,11 +10,11 @@
 
     <div class="tab-list">
       <div
-        class="tab-item"
-        :class="{ active: activeIndex === index }"
-        @click="onTabClick(index)"
-        v-for="(item, index) in tabList"
-        :key="item.id"
+          class="tab-item"
+          :class="{ active: activeIndex === index }"
+          @click="onTabClick(index)"
+          v-for="(item, index) in tabList"
+          :key="item.id"
       >
         <span>{{ item.name }}</span>
       </div>
@@ -102,7 +102,7 @@ export default {
   methods: {
     onTabClick(index) {
       this.activeIndex = index;
-      this.$router.push({ path: this.tabList[index].path });
+      this.$router.push({path: this.tabList[index].path});
       this.curBannerIndex = index;
     },
   },
@@ -124,16 +124,22 @@ export default {
 </script>
 
 <style scoped lang="less">
+.page {
+  min-width: 1400px;
+}
+
 .banner {
   width: 100%;
   height: 500px;
   padding-top: 174px;
+
   .title {
     font-weight: bold;
     font-size: 36px;
     color: #ffffff;
     text-align: center;
   }
+
   .sub-title {
     margin-top: 24px;
     font-weight: 400;
@@ -149,7 +155,9 @@ export default {
   display: flex;
   gap: 79px;
   align-items: center;
+  background-color: #fff;
   box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.16);
+
   .tab-item {
     width: 81px;
     height: 100%;
@@ -159,6 +167,7 @@ export default {
     font-size: 18px;
     line-height: 30px;
     cursor: pointer;
+
     &.active {
       font-weight: bold;
       color: #fff;

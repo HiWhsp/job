@@ -38,7 +38,7 @@
                         <div class="product-wrap" v-for="it in item" :key="it.src"
                              @click="goUrl(`/productDetail?id=${it.inventoryId}`)">
                             <div class="img-wrap">
-                                <img :src="it.images" alt=""/>
+                                <img :src="it.thumb" alt=""/>
                             </div>
                             <div class="desc-wrap">
                                 <div class="desc ellipsis-2">{{ it.title }}</div>
@@ -779,6 +779,15 @@ export default {
         //margin-right: 10px;
         &:last-child {
           margin-right: 0;
+        }
+
+        &:hover {
+          .new-title {
+            color: @theme;
+          }
+          .detail-text {
+            color: @theme;
+          }
         }
 
         .time-icon {

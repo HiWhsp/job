@@ -118,14 +118,14 @@ export default {
     },
 
     onDownload(item) {
-      if (!item.url) {
+      if (!item.pdf_url && !item.url) {
         this.$message({
           message: '暂无下载链接',
           type: 'warning',
         })
         return
       }
-      window.open(item.url)
+      window.open(item.pdf_url || item.url)
     }
   },
 };

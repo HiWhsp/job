@@ -1,7 +1,7 @@
 <template>
-  <div class="page">
+  <div>
     <div class="title-wrap">
-      <breadcrumb :list="['首页', '公司新闻']"></breadcrumb>
+      <breadcrumb :list="['首页', '展会详情']"></breadcrumb>
       <div class="title">
         {{ info.title }}
       </div>
@@ -23,7 +23,7 @@
     </div>
 
     <div class="wrap">
-      <div class="related-news">相关新闻</div>
+      <div class="related-news">相关展会</div>
       <div class="sub-related-news">用激光工具改变生活</div>
 
       <div class="list-wrap">
@@ -119,13 +119,13 @@ export default {
         method: "get",
         data: {
           action: "news_lists",
-          channelId: 8,
+          channelId: 9,
           page: 1,
           pageSize: 3,
         },
       }).then(res => {
         if (res.code == 200) {
-          this.cardList = res.data.list;
+          this.cardList = res.data.list.slice(0, 3);
         }
       })
     },
@@ -133,7 +133,7 @@ export default {
     to_prev(item) {
       if (item.id) {
         this.$router.push({
-          path: 'company-news-detail',
+          path: 'exhibition-information-detail',
           query: {
             id: item.id
           }
@@ -143,7 +143,7 @@ export default {
     to_next(item) {
       if (item.id) {
         this.$router.push({
-          path: 'company-news-detail',
+          path: 'exhibition-information-detail',
           query: {
             id: item.id
           }
@@ -152,7 +152,7 @@ export default {
     },
     toNewsDetail(item) {
       this.$router.push({
-        path: 'company-news-detail',
+        path: 'exhibition-information-detail',
         query: {
           id: item.id
         }
@@ -208,6 +208,7 @@ export default {
 }
 
 .step-wrap {
+
   padding-top: 45px;
   padding-bottom: 72px;
   font-size: 14px;

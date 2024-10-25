@@ -295,9 +295,6 @@ export default {
         path: "/allCommodities",
         query: {keyword: text, hash: Math.random()},
       });
-      this.showUserMenu = false;
-      this.showSearchBox = false;
-      this.showChatWithUp = false;
     }
   },
 };

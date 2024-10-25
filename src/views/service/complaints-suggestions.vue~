@@ -86,7 +86,6 @@
             style="padding: 0 251px 0 140px"
         >
           <el-input
-              style="width: 514px"
               v-model="ruleForm.content"
               type="textarea"
               placeholder="请输入投诉问题"
@@ -158,7 +157,7 @@ export default {
           }).then((res) => {
             if (res.code === 200) {
               this.$message.success("提交成功");
-              this.resetForm();
+              this.resetForm('ruleForm');
             }
           })
         } else {
@@ -175,7 +174,8 @@ export default {
 
 <style scoped lang="less">
 .page {
-  margin: 70px 260px 109px;
+  width: 1400px;
+  margin: 70px auto 109px;
   display: flex;
   align-items: center;
 }

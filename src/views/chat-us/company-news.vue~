@@ -90,9 +90,7 @@ export default {
 }
 
 .list-wrap {
-  width: 1400px;
-  margin: 0 auto;
-  padding: 57px 0 50px;
+  padding: 57px 260px 50px;
   display: flex;
   row-gap: 20px;
   column-gap: 36px;

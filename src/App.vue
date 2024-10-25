@@ -79,4 +79,9 @@ export default {
 .el-empty {
   width: 100%;
 }
+
+.el-textarea__inner {
+  font-size: 14px !important;
+  font-family: Microsoft YaHei, Microsoft YaHei;
+}
 </style>

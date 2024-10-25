@@ -197,7 +197,7 @@ export default {
                 },
             }).then((res) => {
                 if (res.code == 200) {
-                    this.cardList = res.data.list;
+                    this.cardList = res.data.list.slice(0, 3);
                 }
             })
         },
@@ -509,7 +509,7 @@ export default {
                         </div>
 
                         <div class="number-wrap">
-                            商品编码：45645641456456
+                            商品编码：{{ detail.sn }}
                         </div>
                         <div class="price-wrap">
                             <div class="original-price-wrap">
@@ -619,14 +619,14 @@ export default {
                     </div>
                 </div>
 
-                <div class="bottom-btn-wrap">
-                    <div class="left-arrow">
-                        <img src="@/assets/img/productDetail/left-arrow.png" alt="">
-                    </div>
-                    <div class="right-arrow">
-                        <img src="@/assets/img/productDetail/right-arrow.png" alt="">
-                    </div>
-                </div>
+                <!--                <div class="bottom-btn-wrap">-->
+                <!--                    <div class="left-arrow">-->
+                <!--                        <img src="@/assets/img/productDetail/left-arrow.png" alt="">-->
+                <!--                    </div>-->
+                <!--                    <div class="right-arrow">-->
+                <!--                        <img src="@/assets/img/productDetail/right-arrow.png" alt="">-->
+                <!--                    </div>-->
+                <!--                </div>-->
             </div>
         </div>
 
@@ -637,6 +637,7 @@ export default {
 <style scoped lang="less">
 .main {
   padding-top: 23px;
+  padding-bottom: 50px;
 }
 
 .page-box {
@@ -911,6 +912,7 @@ export default {
           margin-top: 18px;
           .flex();
 
+
           .label {
             width: 80px;
           }
@@ -1016,8 +1018,8 @@ export default {
           }
 
           .list {
+            flex: 1;
             max-height: 178px;
-            //height: 100%;
             overflow-y: auto;
             padding-right: 50px;
             display: flex;
@@ -1036,6 +1038,7 @@ export default {
               color: #000;
               border: 1px solid #CCCCCC;
               margin-right: 15px;
+              margin-top: 5px;
             }
 
             .item.active {
@@ -1229,6 +1232,8 @@ export default {
     display: flex;
     gap: 44px;
     margin-top: 26px;
+    justify-content: center;
+    padding-bottom: 50px;
 
     .card-item {
       width: 416px;

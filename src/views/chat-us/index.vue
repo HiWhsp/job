@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page">
     <div class="banner-wrap">
       <img src="@/assets/img/chat-us/banner1.png" alt=""/>
       <div class="title-wrap">
@@ -67,9 +67,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.page {
+  min-width: 1400px;
+}
+
 .banner-wrap {
   width: 100%;
   height: 500px;
+  position: relative;
 
   img {
     width: 100%;

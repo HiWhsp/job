@@ -1,21 +1,12 @@
 <template>
   <div class="page">
     <div class="filter-wrap">
-      <el-select v-model="keyword" placeholder="请选择文章分类" class="select">
+      <el-select v-model="classId" placeholder="请选择文章分类" class="select" @change="getList">
         <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-        >
-        </el-option>
-      </el-select>
-      <el-select v-model="keyword" placeholder="请选择文章分类" class="select">
-        <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="item in options1"
+            :key="item.id"
+            :label="item.title"
+            :value="item.id"
         >
         </el-option>
       </el-select>
@@ -43,6 +34,7 @@
         </div>
       </div>
     </div>
+    <el-empty v-if="!list.length" description="暂无数据..."></el-empty>
     <div class="pagination-box">
       <el-pagination
           @current-change="changePage"
@@ -61,12 +53,9 @@ export default {
   name: "technical-article",
   data() {
     return {
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕",
-        }
-      ],
+      options1: [],
+      options2: [],
+      classId: '',
       keyword: "",
       list: [], // 文章列表
       pagination: {
@@ -82,22 +71,43 @@ export default {
       url: '/service.php',
       method: 'get',
       data: {
-        action: 'news_lists',
+        action: 'news_channel',
         channelId: 5
       },
     }).then(res => {
       if (res.code == 200) {
-        this.list = res.data.list
-        this.count = res.data.count
+        this.options1 = res.data;
       }
     })
+
+    this.getList();
   },
   methods: {
     search() {
-      console.log("search");
+      this.getList();
     },
     reset() {
-      console.log("reset");
+      this.classId = '';
+      this.keyword = '';
+      this.getList();
+    },
+
+    getList() {
+      // 获取文章列表
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'news_lists',
+          channelId: this.classId || 5,
+          keyword: this.keyword
+        },
+      }).then(res => {
+        if (res.code == 200) {
+          this.list = res.data.list
+          this.count = res.data.count
+        }
+      })
     },
     changePage(page) {
       this.pagination.page = page;
@@ -114,6 +124,7 @@ export default {
 <style scoped lang="less">
 .page {
   padding-bottom: 50px;
+  margin-top: 2px;
 }
 
 .filter-wrap {

@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <div class="one-wrap pointer" @click="toDetail(topDetail)">
+        <div class="one-wrap" @click="toDetail(topDetail)">
             <div class="left">
                 <div class="time">{{ topDetail.dtTime }}</div>
                 <div class="title ellipsis-1">{{ topDetail.title }}</div>
@@ -19,7 +19,7 @@
                         展会地址：慕尼黑上海光博会在上海新国际博览中心
                     </div>
                 </div>
-                <div class="detail-wrap">
+                <div class="detail-wrap pointer">
                     了解详情
                     <div class="icon-right">
                         <img src="@/assets/img/chat-us/right-to.png" alt=""/>
