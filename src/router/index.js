@@ -90,6 +90,8 @@ const routes = [
         name: 'fastQuotation',
         component: () => import('@/views/nav/fastQuotation.vue')
     },
+
+
     /** 积分商城相关 **/
     {
         path: '/pointsMall',
@@ -164,6 +166,18 @@ const routes = [
         path: '/xinhun-detail',
         name: 'xinhun-detail',
         component: () => import('@/views/company/xinwen_detail.vue')
+    },
+
+    /** 公告 **/
+    {
+        path: '/notice',
+        name: 'notice',
+        component: () => import('@/views/notice/index.vue')
+    },
+    {
+        path: '/notice-detail',
+        name: 'notice-detail',
+        component: () => import('@/views/notice/notice-detail.vue')
     },
 
     /** 个人中心 **/

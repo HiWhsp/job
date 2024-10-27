@@ -318,7 +318,9 @@ export default {
     // 公告/新闻点击
     noticeItemClick(item) {
       if (this.noticeType == 1) { // 公告
-
+          this.goUrl({
+              url: '/notice-detail?id=' + item.id
+          })
       } else if (this.noticeType == 2) { // 新闻
         this.goUrl({
           url: '/xinhun-detail?id=' + item.id,
