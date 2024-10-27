@@ -1,92 +1,92 @@
 <template>
-  <div class="page">
-    <div class="nav-bar">
-      <el-breadcrumb separator=">">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>帮助中心</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
-    <div class="inner flex flex-between">
-      <div class="detail-content">
-        <div class="nav-title">{{ current }}</div>
-        <div class="html-box">
-          购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容
-          购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容
-          购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容
-          购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容
-          购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容
-          购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容购物流程介绍内容
+    <div class="page">
+        <div class="nav-bar">
+            <el-breadcrumb separator=">">
+                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                <el-breadcrumb-item>帮助中心</el-breadcrumb-item>
+            </el-breadcrumb>
         </div>
-      </div>
-      <div class="right-box">
-        <div class="nav-title">帮助中心</div>
-        <div class="nav-item" v-for="(item, index) in list" :key="index">
-          <p class="item-title pointer">{{ item.title }}</p>
-          <div class="item pointer" :class="{'active': current === it.title}" v-for="(it, i) in item.list" :key="i"
-               @click="currentChange(it)">
-            <p class="text">{{ it.title }}</p>
-          </div>
+        <div class="inner flex flex-between">
+            <div class="detail-content">
+                <div class="nav-title">{{ current }}</div>
+                <div class="html-box">
+                    {{ current }}
+                </div>
+            </div>
+            <div class="right-box">
+                <div class="nav-title">帮助中心</div>
+                <div class="nav-item" v-for="(item, index) in list" :key="index">
+                    <p class="item-title pointer">{{ item.title }}</p>
+                    <div class="item pointer" :class="{'active': current === it.title}" v-for="(it, i) in item.child"
+                         :key="i"
+                         @click="currentChange(it)">
+                        <p class="text">{{ it.title }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: "helpCenter",
-  components: {},
-  data() {
-    return {
-      current: '',
-      list: [
-        {
-          title: "购物指南",
-          list: [
-            {
-              title: "购物流程",
-              url: "",
-            },
-            {
-              title: "关于报价",
-              url: "",
-            },
-          ]
-        },
-        {
-          title: "支付方式",
-          list: [
-            {
-              title: "微信支付",
-              url: "",
-            },
-            {
-              title: "支付宝支付",
-              url: "",
-            },
-            {
-              title: "线下转款",
-              url: "",
+    name: "helpCenter",
+    components: {},
+    data() {
+        return {
+            current: '',
+            list: [],
+        };
+    },
+    mounted() {
+        this.setView();
+    },
+    methods: {
+        async setView() {
+            const res = await this.$api({
+                url: "/service.php",
+                method: "get",
+                data: {
+                    action: "news_channel",
+                    page: 1,
+                    pageNum: 12,
+                    channelId: 53
+                },
+            })
+            if (res.code === 200) {
+                this.list = res.data;
+                this.list.forEach((item, index) => {
+                    this.$api({
+                        url: "/service.php",
+                        method: "get",
+                        data: {
+                            action: "news_lists",
+                            channelId: item.id
+                        },
+                    }).then(r => {
+                        if (r.code === 200) {
+                            this.list[index].child = r.data.list;
+                            if (index === 0) {
+                                this.current = this.list[0].child[0].title;
+                                this.currentChange(this.list[0].child[0])
+                            }
+                        }
+                    })
+                })
             }
-          ]
+        },
+        currentChange(row) {
+            this.current = row.title;
+            this.$api({
+                url: "/service.php",
+                method: "get",
+                data: {
+                    action: "news_detail",
+                    channelId: row.id
+                },
+            })
         }
-      ],
-    };
-  },
-
-  beforeRouteUpdate(to, from, next) {
-    next({
-      query: to.query,
-    });
-  },
-  created() {
-    this.current = this.list[0].list[0].title;
-  },
-  methods: {
-    currentChange(row) {
-      this.current = row.title;
-    }
-  },
+    },
 };
 </script>
 
