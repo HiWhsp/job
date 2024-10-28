@@ -228,9 +228,10 @@ export default {
       flex: 1;
 
       .item {
-        width: 123px;
-        height: 29px;
-        line-height: 29px;
+        padding: 5px 10px;
+        //width: 123px;
+        //height: 29px;
+        //line-height: 29px;
         border-radius: 2px 2px 2px 2px;
         font-family: Roboto, Roboto;
         font-weight: 400;
@@ -240,12 +241,13 @@ export default {
         text-transform: none;
         margin: 0 60px 20px 0;
         border: 1px solid #fff;
-        text-align: center;
+        text-align: left;
       }
 
       .item.active {
         border: 1px solid @theme;
         color: @theme;
+        font-weight: bold;
       }
     }
   }
@@ -374,9 +376,14 @@ export default {
         width: 160px;
         height: 160px;
 
+        &:hover > .scale-img {
+          transform: scale(1.1);
+        }
+
         .poster {
           width: 160px;
           height: 160px;
+          transition: 0.25s linear;
         }
       }
 

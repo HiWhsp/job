@@ -84,7 +84,7 @@ export default {
         </div>
         <div class="list flex">
           <div class="item" v-for="(item, index) in dataList" :key="index">
-            <img :src="item.thumb" alt="">
+            <img :src="item.thumb" alt="" class="scale-img">
             <div class="info">
               <p class="title">{{ item.title }}</p>
               <p class="desc ellipsis-1">型号：{{ item.keyVals }}</p>
@@ -194,11 +194,22 @@ export default {
       border-radius: 8px 8px 8px 8px;
       margin-bottom: 30px;
 
+      &:hover > .scale-img {
+        transform: scale(1.1);
+      }
+
+      &:hover {
+        .title {
+          color: @theme !important;
+        }
+      }
+
       img {
         margin: 0 15px 8px;
         width: 160px;
         height: 160px;
         border-radius: 0px 0px 0px 0px;
+        transition: 0.25s linear;
       }
 
       .info {
@@ -231,6 +242,7 @@ export default {
           color: #FF4000;
           font-style: normal;
           text-transform: none;
+
           span {
             font-size: 18px;
           }

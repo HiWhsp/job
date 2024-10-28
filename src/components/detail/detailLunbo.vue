@@ -12,11 +12,11 @@
       </div>
     </div>
 
-    <!--        <div class="mask-modal" v-if="showMaskModal">-->
-    <!--            <div class="mask-inner">-->
-    <!--                <img :src="imageList[activeSwipeIndex]" alt/>-->
-    <!--            </div>-->
-    <!--        </div>-->
+    <div class="mask-modal" v-if="showMaskModal">
+      <div class="mask-inner">
+        <img :src="imageList[activeSwipeIndex].image" alt/>
+      </div>
+    </div>
 
     <div class="tip">图片仅供参考</div>
 

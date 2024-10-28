@@ -10,15 +10,16 @@
               <img src="../static/home/right-row.png" alt="">
             </a>
             <div class="category-list-submenu active">
-              <div class="submenu-item">
-                <div class="submenu-item-name">{{ item.title }}</div>
-                <div class="submenu-item-content">
-                  <a :title="it.title" class="submenu-item-content__a pointer"
-                     v-for="(it, i) in item.children"
-                     :key="i">
-                    <span>{{ it.title }}</span>
-                  </a></div>
-              </div>
+              <img :src="item.thumb" alt="">
+              <!--              <div class="submenu-item">-->
+              <!--                <div class="submenu-item-name">{{ item.title }}</div>-->
+              <!--                <div class="submenu-item-content">-->
+              <!--                  <a :title="it.title" class="submenu-item-content__a pointer"-->
+              <!--                     v-for="(it, i) in item.children"-->
+              <!--                     :key="i">-->
+              <!--                    <span>{{ it.title }}</span>-->
+              <!--                  </a></div>-->
+              <!--              </div>-->
             </div>
           </li>
         </ul>
@@ -94,11 +95,11 @@
       </div>
       <div class="promation-product-box">
         <el-carousel :interval="5000" arrow="always" height="100%" indicator-position="none">
-          <el-carousel-item v-for="(item,index) in promationList" :key="index">
+          <el-carousel-item v-for="(item,index) in promationList" :key="index" v-if="promationList.length">
             <div class="item-wrap flex">
               <template v-for="it in item">
                 <div class="item pointer" @click="goUrl({url: `/productDetail?id=${it.inventoryId}`})">
-                  <img :src="it.thumb" alt="">
+                  <img :src="it.thumb" alt="" class="scale-img">
                   <div class="pointer">
                     <p class="title">{{ it.title }}</p>
                     <p class="money">￥{{ it.priceSale }}</p>
@@ -107,6 +108,9 @@
                 <div class="col" v-if="index < 5"></div>
               </template>
             </div>
+          </el-carousel-item>
+          <el-carousel-item v-if="promationList.length == 0">
+            <el-empty description="暂无数据..."></el-empty>
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -127,7 +131,7 @@
       <div class="list flex">
         <div class="item pointer" v-for="item in product_list" :key="item.id"
              @click="goUrl({url: `/productDetail?id=${item.inventoryId}`})">
-          <img :src="item.thumb" alt="">
+          <img :src="item.thumb" alt="" class="scale-img">
           <p class="tit">{{ item.title }}</p>
           <p class="money">￥{{ item.priceSale }}</p>
         </div>
@@ -143,7 +147,7 @@
       <div class="list flex">
         <div class="item pointer" v-for="item in product_list" :key="item.id"
              @click="goUrl({url: `/productDetail?id=${item.inventoryId}`})">
-          <img :src="item.thumb" alt="">
+          <img :src="item.thumb" alt="" class="scale-img">
           <p class="tit">{{ item.title }}</p>
           <p class="money">￥{{ item.priceSale }}</p>
         </div>
@@ -214,7 +218,7 @@ export default {
   methods: {
     setView() {
       this.query_product_cate()
-      this.query_reviews()
+      // this.query_reviews()
       this.noticeClick(1);
     },
     // 公告 新闻
@@ -283,12 +287,32 @@ export default {
           this.product_list = list;
           this.count = count;
 
+          // for (let i = 0; i < list.length; i += 5) {
+          //   this.promationList.push(list.slice(i, i + 5));
+          // }
+          // console.log(this.promationList)
+        }
+      });
+      // 推荐商品
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_plist",
+          ifShowSku: 1,
+          channelId: 811,
+          page: 1,
+          pageNum: 10,
+        },
+      }).then((res) => {
+        let {code, data} = res;
+        let {list, count} = data;
+        if (code == 200) {
           for (let i = 0; i < list.length; i += 5) {
             this.promationList.push(list.slice(i, i + 5));
           }
-          console.log(this.promationList)
         }
-      });
+      })
     },
     // 评论
     query_reviews() {
@@ -411,7 +435,7 @@ export default {
       }
 
       .category-list:hover .active {
-        //display: block !important; // 菜单二级展示
+        display: block !important; // 菜单二级展示
       }
 
       .category-list-submenu {
@@ -427,6 +451,11 @@ export default {
         background: #fff;
         border-radius: 0 8px 8px 0;
         box-shadow: 0 2px 16px 0 rgba(1, 66, 104, .2);
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
 
         .submenu-item {
           padding-bottom: 16px;
@@ -755,6 +784,13 @@ export default {
       img {
         width: 146px;
         height: 146px;
+        transition: 0.25s linear;
+      }
+
+      &:hover {
+        .title {
+          color: @theme !important;
+        }
       }
 
       .pointer {
@@ -779,10 +815,18 @@ export default {
           text-transform: none;
         }
       }
+
+      &:hover > .scale-img {
+        transform: scale(1.1);
+      }
     }
 
     .el-carousel__item {
       padding: 17px 15.5px;
+
+      .el-empty {
+        padding: 0;
+      }
     }
 
     /deep/ .el-carousel__indicators {
@@ -885,21 +929,33 @@ export default {
 
     .item {
       width: 217px;
-      height: 256px;
+      //height: 256px;
       background: #FFFFFF;
       border-radius: 8px 8px 8px 8px;
       padding: 15px;
       margin-bottom: 20px;
       margin-right: 16px;
 
+      &:hover > .scale-img {
+        transform: scale(1.1);
+      }
+
+      &:hover {
+        .tit {
+          color: @theme !important;
+        }
+      }
+
       img {
         width: 160px;
         height: 160px;
         border-radius: 0px 0px 0px 0px;
         margin: 0 16px;
+        transition: 0.25s linear;
       }
 
       .tit {
+        margin-top: 10px;
         font-family: Roboto, Roboto;
         font-weight: 400;
         font-size: 16px;
@@ -959,20 +1015,32 @@ export default {
 
     .item {
       width: 217px;
-      height: 256px;
+      //height: 256px;
       background: #FFFFFF;
       border-radius: 8px 8px 8px 8px;
       padding: 15px;
       margin-bottom: 20px;
+
+      &:hover > .scale-img {
+        transform: scale(1.1);
+      }
+
+      &:hover {
+        .tit {
+          color: @theme !important;
+        }
+      }
 
       img {
         width: 160px;
         height: 160px;
         border-radius: 0px 0px 0px 0px;
         margin: 0 16px;
+        transition: 0.25s linear;
       }
 
       .tit {
+        margin-top: 10px;
         font-family: Roboto, Roboto;
         font-weight: 400;
         font-size: 16px;

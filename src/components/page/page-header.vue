@@ -42,20 +42,20 @@
           <!--              <img src="../../static/home/down.png" class="img-2">-->
           <!--            </div>-->
           <!--          </el-popover>-->
-          <div class="flex" slot="reference" @click="goUrl({url: '/message'})">
+          <div class="flex tit" slot="reference" @click="goUrl({url: '/message'})">
             我的消息<span class="color-a6">({{ userInfo.msgNum }})</span>
             <img src="../../static/home/down.png" class="img-2">
           </div>
           <div class="col"></div>
-          <div @click="goUrl({url: '/order-list'})">我的订单<span class="color-a6">({{
+          <div class="tit" @click="goUrl({url: '/order-list'})">我的订单<span class="color-a6">({{
               userInfo.orderNum
             }})</span></div>
           <div class="col"></div>
-          <div @click="goUrl({url: '/pointsMall'})">积分商城</div>
+          <div class="tit" @click="goUrl({url: '/pointsMall'})">积分商城</div>
           <div class="col"></div>
-          <div @click="goUrl({url: '/about'})">关于富俊</div>
+          <div class="tit" @click="goUrl({url: '/about'})">关于富俊</div>
           <div class="col"></div>
-          <div @click="goUrl({url: '/help'})">帮助中心</div>
+          <div class="tit" @click="goUrl({url: '/help'})">帮助中心</div>
         </div>
       </div>
     </div>
@@ -137,13 +137,13 @@ export default {
           url: '/newMonthShop'
         },
         {
-          title: '定制组件专区', // 名称
+          title: '定制单轴模组组件', // 名称
           icon: null,
           position: null,
           url: '/customization'
         },
         {
-          title: 'DIY 组件专区', // 名称
+          title: '定制多轴模组组件', // 名称
           icon: null,
           position: null,
           url: '/diy'
@@ -154,12 +154,13 @@ export default {
           position: null,
           url: '/nonstandard'
         },
-        {
-          title: '快速报价', // 名称
-          icon: null,
-          position: null,
-          url: '/fastQuotation'
-        }],
+        // {
+        //   title: '快速报价', // 名称
+        //   icon: null,
+        //   position: null,
+        //   url: '/fastQuotation'
+        // }
+      ],
       // 小标数据
       numList: {
         orderIndex: 0,
@@ -234,6 +235,10 @@ export default {
 
     .r-box {
       color: #77797B;
+
+      .tit:hover {
+        color: @theme !important;
+      }
 
       .img-1 {
         width: 16px;
@@ -352,6 +357,10 @@ export default {
         text-align: left;
         font-style: normal;
         text-transform: none;
+      }
+
+      &:hover > .name {
+        color: @theme !important;
       }
     }
 
