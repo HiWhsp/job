@@ -3,7 +3,8 @@
         <div class="nav-bar">
             <el-breadcrumb separator=">">
                 <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item>帮助中心</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{ path: '/notice' }">公告列表</el-breadcrumb-item>
+              <el-breadcrumb-item>{{ data.title }}</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="content">
