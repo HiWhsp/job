@@ -72,13 +72,15 @@
         </div>
         <div class="qrcode flex">
           <div class="qrcode-item">
-            <div class="img"></div>
-            <p>微信公众号</p>
+            <div class="img">
+              <img :src="kefu_img" alt="">
+            </div>
+            <p>客服二维码</p>
           </div>
-          <div class="qrcode-item">
-            <div class="img"></div>
-            <p>抖音号</p>
-          </div>
+          <!--          <div class="qrcode-item">-->
+          <!--            <div class="img"></div>-->
+          <!--            <p>抖音号</p>-->
+          <!--          </div>-->
         </div>
       </div>
       <div class="len"></div>
@@ -101,10 +103,26 @@
 </template>
 
 <script>
+import {mapState} from "vuex";
+
 export default {
   data() {
     return {}
   },
+  computed: {
+    ...mapState({
+      map_banners: state => state.map_banners
+    }),
+    kefu_img() {
+      const img = this.map_banners['客服'];
+      return img ? img[0].image : '';
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      console.log(this.map_banners);
+    }, 1000)
+  }
 }
 </script>
 
@@ -209,7 +227,11 @@ export default {
           .img {
             width: 87px;
             height: 85px;
-            background-color: #000;
+            //background-color: #000;
+            img {
+              width: 100%;
+              height: 100%;
+            }
           }
 
           p {
