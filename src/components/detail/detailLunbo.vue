@@ -99,16 +99,19 @@ export default {
       this.$refs.carousel.next();
     },
     pdfDown() {
-      // console.log(this.$store.state.configInfo.productPdf)
+      if (!this.$store.state.configInfo.productPdf) {
+        alertInfo('暂无pdf图例');
+        return;
+      }
       window.open(this.$store.state.configInfo.productPdf);
     },
     img3DDown() {
-      if (this.img3D.length == 0) {
+      if (!this.img3D) {
         alertInfo('暂无3D模型');
         return;
       }
       this.img3D.forEach(item => {
-        window.open(item);
+        window.open(item.image3d);
       })
     }
   },

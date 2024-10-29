@@ -412,7 +412,6 @@ export default {
       });
     },
 
-
     // 切换面板
     togglePanel(name) {
       // return;
@@ -439,6 +438,21 @@ export default {
       // var element = document.querySelector(".wenxian-box");
       var element = document.querySelector(clsName);
     },
+
+    pdfDown() {
+      if (!this.$store.state.configInfo.productPdf) {
+        alertInfo('暂无pdf图例');
+        return;
+      }
+      window.open(this.$store.state.configInfo.productPdf);
+    },
+    imgDown3d(item) {
+      if (!item.image3d) {
+        alertInfo('暂无3D模型');
+        return;
+      }
+      window.open(item.image3d);
+    }
   },
 };
 </script>
@@ -461,7 +475,7 @@ export default {
             <!--      商品图片轮播      -->
             <div class="ctx-left">
               <div class="preview-wrap">
-                <detailLunbo :imageList="detailImages" :img3D="detail.images3d"/>
+                <detailLunbo :imageList="detailImages" :img3D="sku_select.image3d"/>
               </div>
             </div>
             <!--            规格-->
@@ -476,7 +490,16 @@ export default {
                   <div class="item ellipsis-1"
                        :class="{active: item.inventoryId == sku_select.inventoryId, disabled: !item.kucun }"
                        v-for="(item,index) in sku_list" :key="index" @click="toggle_sku(item)">
-                    {{ item.keyVals | f_guige }}
+                    <el-popover
+                        placement="right"
+                        width="150"
+                        trigger="hover">
+                      <div class="flex pointer">
+                        <div style="padding: 2px 4px; background-color: #E4E4E4;margin-right: 5px;" @click="pdfDown">pdf图例</div>
+                        <div style="padding: 2px 4px; background-color: #E4E4E4;" @click="imgDown3d(item)">3D模型</div>
+                      </div>
+                      <span slot="reference">{{ item.keyVals | f_guige }}</span>
+                    </el-popover>
                   </div>
                 </div>
               </div>
@@ -832,6 +855,7 @@ export default {
               border: 1px solid @theme;
               color: @theme;
             }
+
             .item.disabled {
               cursor: not-allowed;
               color: #999;
