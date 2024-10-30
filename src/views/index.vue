@@ -123,7 +123,7 @@
           <p class="tip">精选产品</p>
           <p class="desc">爆款精选 价格优越</p>
         </div>
-        <div class="more flex pointer">
+        <div class="more flex pointer" @click="goUrl({url: '/productCategories'})">
           <p>更多</p>
           <img src="../static/home/right-row.png" alt="">
         </div>

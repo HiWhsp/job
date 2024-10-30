@@ -5,15 +5,21 @@ export default {
   name: "nonstandard",
   data() {
     return {
-      formLabelAlign: {},
+      formLabelAlign: {
+        company: '',
+        address: '',
+        name: '',
+        phone: '',
+        images: '',
+        feedType: '非标定制',
+        content: ''
+      },
       rules: {
-        type1: [{required: true, message: '请选择定制类型', trigger: 'blur'}],
-        type2: [{required: true, message: '请选择分类', trigger: 'blur'}],
-        type3: [{required: true, message: '请输入型号', trigger: 'blur'}],
-        type4: [{required: true, message: '请输入品牌', trigger: 'blur'}],
-        type5: [{required: true, message: '请输入定制数量', trigger: 'blur'}],
-        type6: [{required: true, message: '请输入尺寸或封装', trigger: 'blur'}],
-        type7: [{required: true, message: '请选择交付日期', trigger: 'blur'}],
+        company: [{required: true, message: '请输入公司名称', trigger: 'blur'}],
+        name: [{required: true, message: '请输入联系人', trigger: 'blur'}],
+        phone: [{required: true, message: '请输入联系方式', trigger: 'blur'}],
+        content: [{required: true, message: '请输入内容要求', trigger: 'blur'}],
+        images: [{required: true, message: '请上传设计图纸', trigger: 'blur'}]
       }
     }
   },
@@ -22,11 +28,29 @@ export default {
     submit() {
       this.$refs['ruleForm'].validate(valid => {
         if (valid) {
-          alertSucc('提交成功')
-          this.$refs['ruleForm'].resetFields();
+          this.$api("feedback_add", {
+            ...this.formLabelAlign
+          }).then((res) => {
+            if (res.code === 200) {
+              this.$message.success("提交成功");
+              this.$refs['ruleForm'].resetFields();
+            }
+          })
         }
       })
-    }
+    },
+    //上传相关
+    upload_on_success(res, file) {
+      let {code, data, msg} = res;
+      alert(res);
+      if (code == 200) {
+        this.formLabelAlign.images = res.data;
+      }
+    },
+    upload_before_upload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
+      return isLt2M;
+    },
   }
 
 }
@@ -50,61 +74,32 @@ export default {
         <el-form ref="ruleForm" :label-position="'top'" label-width="100px" :model="formLabelAlign"
                  :rules="rules">
           <div class="item flex flex-between">
-            <el-form-item label="定制类型" prop="type1" class="type">
-              <el-select v-model="formLabelAlign.type1">
-                <el-option value="1">类型1</el-option>
-                <el-option value="2">类型2</el-option>
-                <el-option value="3">类型3</el-option>
-              </el-select>
+            <el-form-item label="公司名称" prop="company" class="type">
+              <el-input v-model="formLabelAlign.company" placeholder="请输入公司名称"></el-input>
             </el-form-item>
-            <el-form-item label="分类" prop="type2" class="type">
-              <el-select v-model="formLabelAlign.type2">
-                <el-option value="1">分类1</el-option>
-                <el-option value="2">分类2</el-option>
-                <el-option value="3">分类3</el-option>
-              </el-select>
+            <el-form-item label="联系人" prop="name" class="type">
+              <el-input v-model="formLabelAlign.name" placeholder="请输入联系人名称"></el-input>
             </el-form-item>
-            <el-form-item label="型号" prop="type3" class="type">
-              <el-input v-model="formLabelAlign.type3"></el-input>
+            <el-form-item label="联系方式" prop="phone" class="type">
+              <el-input v-model="formLabelAlign.phone" placeholder="请输入联系方式"></el-input>
             </el-form-item>
-          </div>
-          <div class="item flex flex-between">
-            <el-form-item label="品牌" prop="type4" class="type">
-              <el-input v-model="formLabelAlign.type4"></el-input>
-            </el-form-item>
-            <el-form-item label="定制数量" prop="type5" class="type">
-              <el-input v-model="formLabelAlign.type5"></el-input>
-            </el-form-item>
-            <el-form-item label="尺寸或封装" prop="type6" class="type">
-              <el-input v-model="formLabelAlign.type6"></el-input>
-            </el-form-item>
-          </div>
-          <div class="item flex flex-between">
-            <el-form-item label="交付时间" prop="type7" class="type">
-              <el-date-picker v-model="formLabelAlign.type7" type="date" placeholder="选择日期">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="期望单价">
-              <el-input v-model="formLabelAlign.type8"></el-input>
-            </el-form-item>
-            <el-form-item label="应用场景">
-              <el-input v-model="formLabelAlign.type9"></el-input>
-            </el-form-item>
-          </div>
-          <div class="item flex flex-between">
-            <el-form-item label="单季用量">
-              <el-input v-model="formLabelAlign.type0"></el-input>
-            </el-form-item>
-            <el-form-item label="年度用量">
-              <el-input v-model="formLabelAlign.type11"></el-input>
-            </el-form-item>
-            <div style="width: 324px; opacity: 0;"></div>
           </div>
           <div class="item">
-            <el-form-item label="备注" class="textarea">
+            <el-form-item label="内容要求" prop="content" class="textarea type">
               <el-input type="textarea" :rows="5" placeholder="请输入内容"
-                        v-model="formLabelAlign.type12">
+                        v-model="formLabelAlign.content">
               </el-input>
+            </el-form-item>
+          </div>
+          <div class="item flex flex-between">
+            <el-form-item label="上传设计图纸" prop="images" class="type">
+              <el-upload class="upload-wrap" accept="image/*" :show-file-list="false" name="img"
+                         action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload"
+                         :data="mix_upload_data" :on-success="upload_on_success"
+                         :before-upload="upload_before_upload">
+                <img v-if="formLabelAlign.images" :src="formLabelAlign.images" class="user-avatar"/>
+                <img v-else src="@/assets/img/index/upload.png" class="user-avatar"/>
+              </el-upload>
             </el-form-item>
           </div>
         </el-form>
@@ -202,5 +197,10 @@ export default {
     text-transform: none;
     border-radius: 4px 4px 4px 4px;
   }
+}
+
+.user-avatar {
+  width: 90px;
+  height: 90px;
 }
 </style>

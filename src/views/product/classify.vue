@@ -240,12 +240,12 @@ export default {
         font-style: normal;
         text-transform: none;
         margin: 0 60px 20px 0;
-        border: 1px solid #fff;
+        border: 3px solid #fff;
         text-align: left;
       }
 
       .item.active {
-        border: 1px solid @theme;
+        border: 3px solid @theme;
         color: @theme;
         font-weight: bold;
       }
