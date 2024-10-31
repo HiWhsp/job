@@ -89,8 +89,8 @@
     <div class="promation-area flex">
       <div class="ordinary-desc pointer">
         <div class="title">
-          <p>推荐产品</p>
-          <img src="../static/home/area-right.png" alt="area-right">
+          <p>精密电动滑台</p>
+<!--          <img src="../static/home/area-right.png" alt="area-right">-->
         </div>
       </div>
       <div class="promation-product-box">

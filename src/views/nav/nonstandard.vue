@@ -93,12 +93,25 @@ export default {
           </div>
           <div class="item flex flex-between">
             <el-form-item label="上传设计图纸" prop="images" class="type">
-              <el-upload class="upload-wrap" accept="image/*" :show-file-list="false" name="img"
-                         action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload"
-                         :data="mix_upload_data" :on-success="upload_on_success"
-                         :before-upload="upload_before_upload">
-                <img v-if="formLabelAlign.images" :src="formLabelAlign.images" class="user-avatar"/>
-                <img v-else src="@/assets/img/index/upload.png" class="user-avatar"/>
+              <!--              <el-upload class="upload-wrap" accept="image/*" :show-file-list="false" name="img"-->
+              <!--                         action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload"-->
+              <!--                         :data="mix_upload_data" :on-success="upload_on_success"-->
+              <!--                         :before-upload="upload_before_upload">-->
+              <!--                <img v-if="formLabelAlign.images" :src="formLabelAlign.images" class="user-avatar"/>-->
+              <!--                <img v-else src="@/assets/img/index/upload.png" class="user-avatar"/>-->
+              <!--              </el-upload>-->
+
+              <el-upload
+                  class="upload-wrap"
+                  accept="image/*"
+                  name="img"
+                  action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload"
+                  :data="mix_upload_data"
+                  :on-success="upload_on_success"
+                  :before-upload="upload_before_upload"
+                  multiple
+                  :limit="6">
+                <el-button size="small" type="primary"><img src="@/static/prod/upload.png" alt=""> 上传</el-button>
               </el-upload>
             </el-form-item>
           </div>
@@ -196,6 +209,22 @@ export default {
     font-style: normal;
     text-transform: none;
     border-radius: 4px 4px 4px 4px;
+  }
+
+  .upload-wrap {
+    .el-button--primary {
+      color: #333;
+      width: 96px;
+      background: #D6D6D6;
+      border-radius: 4px 4px 4px 4px;
+      border: 1px solid #C5C5C5;
+    }
+
+    img {
+      width: 12px;
+      height: 13px;
+      margin-right: 8px;
+    }
   }
 }
 
