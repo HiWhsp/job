@@ -1,11 +1,11 @@
 <template>
-  <div id="app">
-    <pageHeader/>
-    <div class="layout-box">
-      <router-view></router-view>
+    <div id="app">
+        <pageHeader/>
+        <div class="layout-box">
+            <router-view></router-view>
+        </div>
+        <pageFooter/>
     </div>
-    <pageFooter/>
-  </div>
 </template>
 
 <script>
@@ -16,61 +16,61 @@ import pageFooter from "@/components/page/page-footer.vue";
 import {mapState} from "vuex";
 
 export default {
-  components: {
-    pageHeader,
-    pageFooter
-  },
-  data() {
-    return {};
-  },
-  computed: {},
-  watch: {},
-  beforeCreate() {
-  },
-  created() {
-
-  },
-  mounted() {
-    this.initScale();
-    this.queryConfig();
-  },
-  methods: {
-    // scrollToTop() {
-    //   let disallowScrollPages = ["product-detail"];
-    //   if (disallowScrollPages.includes(this.$route.name)) {
-    //   } else {
-    //     document.querySelector("#app-wrap").scrollTop = 0;
-    //   }
-    // },
-    initScale() {
-      if (document && document.documentElement && document.documentElement.clientWidth) {
-        let clientWidth = document.documentElement.clientWidth;
-        if (clientWidth <= 1366 && clientWidth >= 1024) {
-          // document.querySelector("body").style.overflowX = "auto";
-          // var $target = document.querySelector('[name="viewport"]');
-          // document
-          //   .querySelector('[name="viewport"]')
-          //   .setAttribute("content", "width=device-width,  initial-scale=0.15");
-        }
-
-        // 笔记本电脑端  150% 缩放比例的问题
-        if (window.devicePixelRatio == 1.5) {
-          let fontSize = 10 / window.devicePixelRatio;
-          document.documentElement.style.fontSize = fontSize + "px";
-        }
-      }
+    components: {
+        pageHeader,
+        pageFooter
     },
-
-    queryConfig() {
-      this.$api("index_config").then((res) => {
-        if (res.data && res.data.com_logo) {
-          document
-              .querySelector('meta[property="og:image"]')
-              .setAttribute("content", res.data.com_logo);
-        }
-      });
+    data() {
+        return {};
     },
-  },
+    computed: {},
+    watch: {},
+    beforeCreate() {
+    },
+    created() {
+
+    },
+    mounted() {
+        this.initScale();
+        this.queryConfig();
+    },
+    methods: {
+        // scrollToTop() {
+        //   let disallowScrollPages = ["product-detail"];
+        //   if (disallowScrollPages.includes(this.$route.name)) {
+        //   } else {
+        //     document.querySelector("#app-wrap").scrollTop = 0;
+        //   }
+        // },
+        initScale() {
+            if (document && document.documentElement && document.documentElement.clientWidth) {
+                let clientWidth = document.documentElement.clientWidth;
+                if (clientWidth <= 1366 && clientWidth >= 1024) {
+                    // document.querySelector("body").style.overflowX = "auto";
+                    // var $target = document.querySelector('[name="viewport"]');
+                    // document
+                    //   .querySelector('[name="viewport"]')
+                    //   .setAttribute("content", "width=device-width,  initial-scale=0.15");
+                }
+
+                // 笔记本电脑端  150% 缩放比例的问题
+                if (window.devicePixelRatio == 1.5) {
+                    let fontSize = 10 / window.devicePixelRatio;
+                    document.documentElement.style.fontSize = fontSize + "px";
+                }
+            }
+        },
+
+        queryConfig() {
+            this.$api("index_config").then((res) => {
+                if (res.data && res.data.com_logo) {
+                    document
+                        .querySelector('meta[property="og:image"]')
+                        .setAttribute("content", res.data.com_logo);
+                }
+            });
+        },
+    },
 };
 </script>
 
@@ -95,6 +95,7 @@ body {
   padding: 21px 0 53px 0;
   margin: auto;
 }
+
 .layout-box {
   background-color: #F6F5F4;
 }

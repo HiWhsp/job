@@ -2,7 +2,7 @@
     <div class="bread-box">
       <div class="bread-inner">
         <router-link to="/">
-          <img src="@/static/common/home.png" alt="" />
+<!--          <img src="@/static/common/home.png" alt="" />-->
           首页</router-link
         >
   

@@ -7,7 +7,7 @@
       </div>
       <div class="item flex" v-if="showTop" @click="toTop()">
         <div class="item-inner flex">
-          <img src="../../static/home/up-row.png" alt=""/>
+<!--          <img src="../../static/home/up-row.png" alt=""/>-->
           <p>顶部</p>
         </div>
       </div>
@@ -34,9 +34,9 @@ export default {
     return {
       hoverIndex: "",
       list_util: [
-        {title: "微信咨询", icon: require("../../static/home/wexin.png")},
-        {title: "电话咨询", icon: require("../../static/home/dianhua.png")},
-        {title: "在线咨询", icon: require("../../static/home/im.png")},
+        // {title: "微信咨询", icon: require("../../static/home/wexin.png")},
+        // {title: "电话咨询", icon: require("../../static/home/dianhua.png")},
+        // {title: "在线咨询", icon: require("../../static/home/im.png")},
       ],
 
       showTop: false,

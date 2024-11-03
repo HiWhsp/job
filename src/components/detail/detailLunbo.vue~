@@ -45,7 +45,7 @@
         <img src="@/static/prod/lock_pdf.png" alt="pdf">
         <span>PDF图档</span>
       </div>
-      <div class="it flex flex-center pointer" @click="img3DDown">
+      <div class="it flex flex-center pointer">
         <img src="@/static/prod/down.png" alt="down">
         <span>3D模型</span>
       </div>
@@ -57,7 +57,7 @@
 export default {
   name: "carouselComponent",
   components: {},
-  props: ["imageList", "img3D"],
+  props: ["imageList"],
   data() {
     return {
       showMaskModal: false, //是否展示模态框
@@ -101,15 +101,6 @@ export default {
     pdfDown() {
       // console.log(this.$store.state.configInfo.productPdf)
       window.open(this.$store.state.configInfo.productPdf);
-    },
-    img3DDown() {
-      if (this.img3D.length == 0) {
-        alertInfo('暂无3D模型');
-        return;
-      }
-      this.img3D.forEach(item => {
-        window.open(item);
-      })
     }
   },
 };
