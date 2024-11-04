@@ -1,86 +1,101 @@
 <template>
-  <div class="aside">
-    <div class="list flex flex-between">
-      <div class="item flex" v-for="(item, index) in list_util" :key="index" @mouseenter="on_mouseenter(index + 1)" @mouseleave="on_mouseleave">
-        <img :src="item.icon" alt="">
-        <p>{{ item.title }}</p>
-      </div>
-      <div class="item flex" v-if="showTop" @click="toTop()">
-        <div class="item-inner flex">
-<!--          <img src="../../static/home/up-row.png" alt=""/>-->
-          <p>顶部</p>
+    <div class="aside">
+        <div class="list" :class="{'active': showClose}">
+            <div class="item flex" v-for="(item, index) in list_util" :key="index"
+                 @mouseenter="on_mouseenter(index + 1)" @mouseleave="on_mouseleave">
+                <img :src="item.icon" alt="" :style="item.style">
+                <p>{{ item.title }}</p>
+            </div>
         </div>
-      </div>
+        <div class="item flex top" :class="{'active': showClose}" v-if="showTop" @click="toTop()">
+            <div class="item-inner">
+                <img src="@/assets/img/base/aside/top.png" alt=""/>
+            </div>
+        </div>
+        <!--        收起-->
+        <div class="item flex" @click="showClose = !showClose">
+            <div class="item-inner" :class="{'active': showClose}">
+                <svg t="1718706732177" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                     xmlns="http://www.w3.org/2000/svg" p-id="6857" width="128" height="128">
+                    <path d="M512 64h-5.8c-9.6 0.2-19.2 0.6-28.7 1.3l-5.6 0.5C313.1 79.9 178.2 176.7 110.6 312.9l-2.4 4.9a445.7 445.7 0 0 0-20.7 50.5c-0.5 1.7-1.1 3.5-1.7 5.2l-3.3 10.6c-3.1 10.5-5.9 21.3-8.2 32.2-0.8 3.6-1.6 7.2-2.3 10.9a455.7 455.7 0 0 0-8 84.8v5.8c3 231.3 181.1 420.3 407.9 440.4l5.6 0.5c9.5 0.7 19.1 1.1 28.7 1.3h5.8c15.5 0 30.7-0.8 45.8-2.3l11.3-1.3c9.3-1.2 18.6-2.7 27.7-4.4l10.9-2.3c1.9-0.3 3.7-0.8 5.5-1.2 12.6-2.9 25.1-6.3 37.3-10.3l5.2-1.7C830.9 877.2 957.5 712.4 960 517.8V512c0-247.4-200.6-448-448-448z m346.5 594.3a377.1 377.1 0 0 1-200.2 200.2 377.5 377.5 0 0 1-292.6 0 377.1 377.1 0 0 1-200.2-200.2 377.5 377.5 0 0 1 0-292.6 377.1 377.1 0 0 1 200.2-200.2 377.5 377.5 0 0 1 292.6 0 377.1 377.1 0 0 1 200.2 200.2 377.5 377.5 0 0 1 0 292.6zM418.2 266.2a4 4 0 0 0-5.7 0l-45.3 45.2a3.9 3.9 0 0 0 0 5.6l192.6 192.2a3.9 3.9 0 0 1 0 5.6L367.2 707a3.9 3.9 0 0 0 0 5.6l45.3 45.2a4 4 0 0 0 5.7 0l195.4-194.9 39.7-39.6a15.9 15.9 0 0 0 0-22.6z"
+                          p-id="6858" fill="#00479d"></path>
+                </svg>
+            </div>
+        </div>
     </div>
-    <div class="modal" v-show="hoverIndex == 1">
-      <div class="qrcode"></div>
-      <p>微信咨询 李先生</p>
-    </div>
-
-    <div class="pop-kefu" v-show="hoverIndex == 2">
-      <p>业务咨询： </p>
-      <p>13953657709 李先生</p>
-    </div>
-  </div>
 </template>
 
 <script>
 
 export default {
-  name: "common-aside",
-  components: {},
-  props: [],
-  data() {
-    return {
-      hoverIndex: "",
-      list_util: [
-        // {title: "微信咨询", icon: require("../../static/home/wexin.png")},
-        // {title: "电话咨询", icon: require("../../static/home/dianhua.png")},
-        // {title: "在线咨询", icon: require("../../static/home/im.png")},
-      ],
-
-      showTop: false,
-    };
-  },
-  watch: {},
-
-  mounted() {
-    this.watchPageScroll();
-  },
-
-  methods: {
-    watchPageScroll() {
-      var that = this;
-      if (document && document.documentElement) {
-        document.addEventListener("scroll", that.scrollEvent);
-      }
+    name: "common-aside",
+    data() {
+        return {
+            hoverIndex: "",
+            list_util: [
+                {
+                    title: "发布需求",
+                    icon: require("@/assets/img/base/aside/1.png"),
+                    style: "width: 26.62px; height: 29.87px;"
+                },
+                {
+                    title: "投诉建议",
+                    icon: require("@/assets/img/base/aside/2.png"),
+                    style: "width: 32.35px; height: 28.18px;"
+                },
+                {
+                    title: "公众号",
+                    icon: require("@/assets/img/base/aside/3.png"),
+                    style: "width: 36.35px; height: 29.87px;"
+                },
+                {
+                    title: "小程序",
+                    icon: require("@/assets/img/base/aside/4.png"),
+                    style: "width: 32.35px; height: 32.39px;"
+                },
+            ],
+            showTop: false,
+            showClose: false,
+        };
     },
 
-    scrollEvent() {
-      var that = this;
-      var scrollTop = document.documentElement.scrollTop;
-      var clientHeight = document.documentElement.clientHeight;
-
-      if (scrollTop >= 400) {
-        this.showTop = true;
-      } else {
-        this.showTop = false;
-      }
+    mounted() {
+        this.watchPageScroll();
     },
 
-    toTop() {
-      document.documentElement.scrollTop = 0;
-    },
+    methods: {
+        watchPageScroll() {
+            var that = this;
+            if (document && document.documentElement) {
+                document.addEventListener("scroll", that.scrollEvent);
+            }
+        },
 
-    on_mouseenter(item) {
-      //console.log("鼠标移入", item);
-      this.hoverIndex = item;
+        scrollEvent() {
+            var that = this;
+            var scrollTop = document.documentElement.scrollTop;
+            var clientHeight = document.documentElement.clientHeight;
+
+            if (scrollTop >= 400) {
+                this.showTop = true;
+            } else {
+                this.showTop = false;
+            }
+        },
+
+        toTop() {
+            document.documentElement.scrollTop = 0;
+        },
+
+        on_mouseenter(item) {
+            //console.log("鼠标移入", item);
+            this.hoverIndex = item;
+        },
+        on_mouseleave(item) {
+            //console.log("鼠标移出", item);
+            this.hoverIndex = "";
+        },
     },
-    on_mouseleave(item) {
-      //console.log("鼠标移出", item);
-      this.hoverIndex = "";
-    },
-  },
 };
 </script>
 
@@ -94,89 +109,70 @@ export default {
 
 // 工具列表
 .list {
-  flex-direction: column;
-  width: 63px;
+  width: 73px;
+  height: 346px;
   background: #FFFFFF;
-  border-radius: 8px 8px 8px 8px;
-  padding: 0 5px;
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.16);
+  border-radius: 100px 100px 100px 100px;
+  transition: all 0.3s;
 
   .item {
+    height: 80px;
     position: relative;
     cursor: pointer;
-    width: 60px;
-    height: 62px;
     background: #ffffff;
     transition: 0.3s;
     flex-direction: column;
     justify-content: center;
-    border-bottom: 1px solid #eee;;
 
-    &:hover {
-      opacity: 0.6;
+    p {
+      margin-top: 5px;
     }
+  }
 
-    img {
-      height: 20px;
-      width: 22px;
-    }
+  &.active {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
 
+.top {
+  transition: all 0.3s;
+
+  &.active {
+    transform: translateX(100%);
+    opacity: 0;
   }
 }
 
 .item-inner {
-  flex-direction: column;
+  margin-top: 20px;
+  cursor: pointer;
+  width: 73px;
+  height: 73px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
 
   img {
-    width: 13.52px !important;
-    height: 7.39px !important;
-    margin-bottom: 5px;
-  }
-}
-
-// 弹窗
-.modal {
-  position: absolute;
-  border: 1px solid #eee;
-  top: -68px;
-  right: 65px;
-  width: 110px;
-  height: 130px;
-  background: #fff;
-  padding: 10px;
-
-  .qrcode {
-    width: 87px;
-    height: 85px;
-    background: #333333;
-    border-radius: 0px 0px 0px 0px;
+    width: 20px;
+    height: 25px;
   }
 
-  p {
-    font-size: 12px;
-    color: #333333;
-    margin-top: 10px;
+  svg {
+    width: 34px;
+    height: 34px;
+    transition: all 0.3s;
   }
-}
 
-// 联系客服
-.pop-kefu {
-  position: absolute;
-  top: 72px;
-  right: 65px;
-  background: #fff;
-  padding: 7px;
-
-  width: 132px;
-  height: 52px;
-  border-radius: 0px 0px 0px 0px;
-
-  font-weight: 400;
-  font-size: 12px;
-  color: #333333;
-  font-style: normal;
-  text-transform: none;
-  p:last-child {
-    margin-top: 8px;
+  &.active {
+    svg {
+      transform: rotate(180deg);
+    }
   }
 }
 </style>

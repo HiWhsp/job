@@ -49,7 +49,7 @@ module.exports = {
 
   configureWebpack: (config) => {
     return {
-      name: "富俊机械",
+      name: "嘉析检测技术服务（ 厦门） 有限公司",
       resolve: {
         // 配置解析别名
         extensions: [".js", ".vue", ".json"],

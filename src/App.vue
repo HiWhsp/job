@@ -5,6 +5,7 @@
             <router-view></router-view>
         </div>
         <pageFooter/>
+        <pageAside></pageAside>
     </div>
 </template>
 
@@ -12,13 +13,15 @@
 
 import pageHeader from "@/components/page/page-header.vue"; //顶部
 import pageFooter from "@/components/page/page-footer.vue";
+import pageAside from "@/components/page/page-aside.vue";
 
 import {mapState} from "vuex";
 
 export default {
     components: {
         pageHeader,
-        pageFooter
+        pageFooter,
+        pageAside
     },
     data() {
         return {};
@@ -101,6 +104,11 @@ body {
   width: 1200px;
   padding: 21px 0 53px 0;
   margin: auto;
+}
+
+.main {
+    width: 1400px;
+    margin: 0 auto;
 }
 
 .layout-box {

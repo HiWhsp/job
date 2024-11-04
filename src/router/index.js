@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-
+import {baseRouter} from "@/router/baseRouter";
 // 解决报错
 const originalPush = VueRouter.prototype.push;
 const originalReplace = VueRouter.prototype.replace;
@@ -19,6 +19,7 @@ VueRouter.prototype.replace = function push(location, onResolve, onReject) {
 Vue.use(VueRouter);
 
 const routes = [
+    ...baseRouter,
     // 首页
     {
         path: "/",
@@ -26,7 +27,6 @@ const routes = [
         component: () => import(/* webpackChunkName: "index" */ "@/views/index.vue"),
         meta: {},
     },
-
 
     /** 登录相关 **/
     {
