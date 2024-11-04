@@ -75,6 +75,13 @@ export default {
 </script>
 
 <style lang="less">
+* {
+  font-family:'MiSans','PingFang SC ', '微软雅黑', sans-serif;
+  font-weight: 400;
+  word-break: normal;
+  word-wrap: normal;
+}
+
 body {
   background-color: #000;
   font-size: 14px;
