@@ -1,81 +1,89 @@
 <template>
-    <div class="container">
-        <div class="main">
-            <div class="logo">
-                <img src="" alt="">
-            </div>
-            <div class="search">
-                <div class="search-btn">
-                    <el-input placeholder="请输入关键词">
-                        <el-button slot="append" icon="el-icon-search"></el-button>
-                    </el-input>
-                </div>
-            </div>
-            <div class="info">
-                <div class="language">
-                    <span>中文</span>
-                    <i class="col"></i>
-                    <span>English</span>
-                </div>
-                <div class="operate pointer">
-                    <div class="btn-wrap">
-                        <div class="btn">阳光预付</div>
-                        <div class="btn">线上咨询</div>
-                    </div>
-                    <div class="login">
-                        <div class="login-btn pointer" @click="goUrl({url: '/login'})">登录</div>
-                        <i class="col"></i>
-                        <div class="register-btn pointer" @click="goUrl({url: '/register'})">注册</div>
-                        <i class="col"></i>
-                        <div class="login-btn pointer" @click="goUrl({url: '/login'})">登录</div>
-                    </div>
-                </div>
-            </div>
+  <div class="container">
+    <div class="main">
+      <div class="logo">
+        <img src="@/assets/img/base/logo.jpg" alt="">
+      </div>
+      <div class="search">
+        <div class="search-btn">
+          <el-input placeholder="请输入关键词">
+            <el-button slot="append" icon="el-icon-search"></el-button>
+          </el-input>
         </div>
-        <div class="nav-content">
-            <div class="nav-list">
-                <div class="nav-item" v-for="(item, index) in navList" :key="index">{{ item.title }}</div>
-            </div>
+      </div>
+      <div class="info">
+        <div class="language">
+          <span>中文</span>
+          <i class="col"></i>
+          <span>English</span>
         </div>
+        <div class="operate pointer">
+          <div class="btn-wrap">
+            <div class="btn">阳光预付</div>
+            <div class="btn">线上咨询</div>
+          </div>
+          <div class="login">
+            <div class="login-btn pointer" @click="goUrl({url: '/login'})">登录</div>
+            <i class="col"></i>
+            <div class="register-btn pointer" @click="goUrl({url: '/register'})">注册</div>
+            <i class="col"></i>
+            <div class="login-btn pointer" @click="goUrl({url: '/login'})">登录</div>
+          </div>
+        </div>
+      </div>
     </div>
+    <div class="nav-content">
+      <div class="nav-list">
+        <div class="nav-item" v-for="(item, index) in navList" :key="index">{{ item.title }}</div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
-    name: "index",
-    data() {
-        return {
-            navList: [{
-                title: '首页',
-                path: ''
-            }, {
-                title: '分析测试',
-                path: ''
-            }, {
-                title: '智算服务',
-                path: ''
-            }, {
-                title: '微纳加工',
-                path: ''
-            }, {
-                title: '培训服务',
-                path: ''
-            }, {
-                title: '专家队伍',
-                path: ''
-            }, {
-                title: '论坛',
-                path: ''
-            }, {
-                title: '公司信息',
-                path: ''
-            }]
-        }
-    },
-    methods: {
-        goUrl() {
-        }
+  name: "index",
+  data() {
+    return {
+      navList: [{
+        title: '首页',
+        path: ''
+      }, {
+        title: '分析测试',
+        path: ''
+      }, {
+        title: '智算服务',
+        path: ''
+      }, {
+        title: '微纳加工',
+        path: ''
+      }, {
+        title: '培训服务',
+        path: ''
+      }, {
+        title: '专家队伍',
+        path: ''
+      }, {
+        title: '论坛',
+        path: ''
+      }, {
+        title: '公司信息',
+        path: ''
+      }]
     }
+  },
+  mounted() {
+    // 监听页面滚动
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  methods: {
+    goUrl() {
+    },
+    handleScroll(e) {
+      let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      // console.log(scrollTop);
+    }
+  }
 }
 </script>
 
@@ -225,13 +233,12 @@ export default {
         line-height: 50px;
         text-align: center;
         color: #fff;
-        font-family: Microsoft YaHei, Microsoft YaHei;
         font-size: 18px;
         border-right: 1px solid #707070;
 
         &:hover {
-          color: @theme;
-          background-color: #fff;
+          color: #fff;
+          background-color: @theme;
         }
 
         &:first-child {
