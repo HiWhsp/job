@@ -34,7 +34,7 @@
     </div>
     <div class="nav-content">
       <div class="nav-list">
-        <div class="nav-item" v-for="(item, index) in navList" :key="index">{{ item.title }}</div>
+        <div class="nav-item" v-for="(item, index) in navList" :key="index" @click="goUrl({url: item.path})">{{ item.title }}</div>
       </div>
     </div>
   </div>
@@ -48,7 +48,7 @@ export default {
       navList: [
         {
           title: '首页',
-          path: ''
+          path: '/'
         }, {
           title: '分析测试',
           path: ''
