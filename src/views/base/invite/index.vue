@@ -1,109 +1,139 @@
 <template>
-    <div class="container">
-        <div class="top-box">
-            <img src="@/assets/img/base/invite/top-box.png" alt="">
-        </div>
-        <div class="main content">
-            <div class="btn-box">
-                <div class="pointer btn" :class="{'active': index === 1}" @click="index = 1">我的收益</div>
-                <div class="pointer btn" :class="{'active': index === 2}" @click="index = 2">我的好友</div>
-            </div>
-            <div class="info-box" v-if="index === 1">
-                <div class="info">
-                    <div class="item">
-                        <div class="text">
-                            <div class="title">好友注册奖励</div>
-                            <div class="subtitle">邀请好友注册并加入会员（注册30天内），双方均可获得<span>5 元优惠券</span>奖励
-                            </div>
-                        </div>
-                        <img src="@/assets/img/base/01/banner6.png" alt="">
-                    </div>
-                    <div class="item">
-                        <div class="text">
-                            <div class="title">好友下单奖励</div>
-                            <div class="subtitle">好友注册30天内下单（不限量），邀请人可获得订单金额的<span>10%</span>现金奖励
-                            </div>
-                        </div>
-                        <img src="@/assets/img/base/01/banner4.png" alt="">
-                    </div>
-                </div>
-                <div class="process">
-                    <p class="title">获得奖励流程</p>
-                    <div class="step">
-                        <div class="item" v-for="(item, index) in step" :key="index">
-                            <img :src="item.img" alt="">
-                            <div class="text">
-                                <div class="title">{{ item.title }}</div>
-                                <div class="subtitle" v-html="item.subtitle"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="desc">
-                        <div class="item">
-                            <div class="title">活动时间</div>
-                            <div class="subtitle">长期有效</div>
-                        </div>
-                        <div class="item">
-                            <div class="title">活动人群</div>
-                            <div class="subtitle">
-                                <p>1. 邀请人需为科学指南针平台注册用户。</p>
-                                <p>2.
-                                    被邀请人需为科学指南针平台未注册用户，且为科研相关的高校/科研院所/企业/医院人员。</p>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="title">活动详情</div>
-                            <div class="subtitle">
-                                <p>1.
-                                    被邀请人通过邀请人所分享的邀请链接注册成功，并在注册后30天内成功开通会员，邀请人和被邀请人均可获得5元现金奖励，可直接提现；</p>
-                                <p>2.
-                                    被邀请人通过邀请人所分享的邀请链接注册成功，并在注册后30天内下单（不限量），邀请人即可获得订单金额的10%现金奖励（冻结状态）；待被邀请人的订单完成（若使用先享后付服务进行支付还需进行还款），邀请人的订单现金奖励将自动解冻，可直接提现；</p>
-                                <p>3. 邀请人可邀请多个人参与活动，每邀请成功1个好友均可获得对应的奖励，奖励上不封顶；</p>
-                                <p>4. 邀请人和被邀请人不得为同一人，如发现作</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="open flex flex-center">立即邀请</div>
-
-                </div>
-
-            </div>
-            <div class="info-list" v-if="index === 2"></div>
-        </div>
+  <div class="container">
+    <div class="top-box">
+      <img src="@/assets/img/base/invite/top-box.png" alt="">
     </div>
+    <div class="main content">
+      <div class="btn-box">
+        <div class="pointer btn" :class="{'active': index === 1}" @click="index = 1">我的收益</div>
+        <div class="pointer btn" :class="{'active': index === 2}" @click="index = 2">我的好友</div>
+      </div>
+      <div class="info-box" v-if="index === 1">
+        <div class="info">
+          <div class="item">
+            <div class="text">
+              <div class="title">好友注册奖励</div>
+              <div class="subtitle">邀请好友注册并加入会员（注册30天内），双方均可获得<span>5 元优惠券</span>奖励
+              </div>
+            </div>
+            <img src="@/assets/img/base/01/banner6.png" alt="">
+          </div>
+          <div class="item">
+            <div class="text">
+              <div class="title">好友下单奖励</div>
+              <div class="subtitle">好友注册30天内下单（不限量），邀请人可获得订单金额的<span>10%</span>现金奖励
+              </div>
+            </div>
+            <img src="@/assets/img/base/01/banner4.png" alt="">
+          </div>
+        </div>
+        <div class="process">
+          <p class="title">获得奖励流程</p>
+          <div class="step">
+            <div class="item" v-for="(item, index) in step" :key="index">
+              <img :src="item.img" alt="">
+              <div class="text">
+                <div class="title">{{ item.title }}</div>
+                <div class="subtitle" v-html="item.subtitle"></div>
+              </div>
+            </div>
+          </div>
+          <div class="desc">
+            <div class="item">
+              <div class="title">活动时间</div>
+              <div class="subtitle">长期有效</div>
+            </div>
+            <div class="item">
+              <div class="title">活动人群</div>
+              <div class="subtitle">
+                <p>1. 邀请人需为科学指南针平台注册用户。</p>
+                <p>2.
+                  被邀请人需为科学指南针平台未注册用户，且为科研相关的高校/科研院所/企业/医院人员。</p>
+              </div>
+            </div>
+            <div class="item">
+              <div class="title">活动详情</div>
+              <div class="subtitle">
+                <p>1.
+                  被邀请人通过邀请人所分享的邀请链接注册成功，并在注册后30天内成功开通会员，邀请人和被邀请人均可获得5元现金奖励，可直接提现；</p>
+                <p>2.
+                  被邀请人通过邀请人所分享的邀请链接注册成功，并在注册后30天内下单（不限量），邀请人即可获得订单金额的10%现金奖励（冻结状态）；待被邀请人的订单完成（若使用先享后付服务进行支付还需进行还款），邀请人的订单现金奖励将自动解冻，可直接提现；</p>
+                <p>3. 邀请人可邀请多个人参与活动，每邀请成功1个好友均可获得对应的奖励，奖励上不封顶；</p>
+                <p>4. 邀请人和被邀请人不得为同一人，如发现作</p>
+              </div>
+            </div>
+          </div>
+          <div class="open flex flex-center" @click="invite">立即邀请</div>
+        </div>
+      </div>
+      <div class="info-list" v-if="index === 2">
+        <p class="title">我的好友</p>
+        <div class="table">
+          <el-table :data="tableData" style="width: 100%">
+            <el-table-column prop="date" label="好友姓名/ID"></el-table-column>
+            <el-table-column prop="date" label="成交金额"></el-table-column>
+            <el-table-column prop="date" label="入驻时间"></el-table-column>
+            <el-table-column prop="date" label="返佣金额"></el-table-column>
+          </el-table>
+        </div>
+      </div>
+    </div>
+
+    <el-dialog
+        title="邀请好友"
+        :visible.sync="dialogVisible"
+        width="30%">
+      <div class="dialog-txt">
+        <p class="title">复制下方链接，发送给好友 <span>（建议在电脑端打开链接）</span></p>
+        <p class="link">https://www.shiyanjia.com/activity/invite-register.html?invitecode=13599519926</p>
+      </div>
+      <span slot="footer" class="dialog-footer flex flex-center">
+        <el-button type="primary" @click="oncopy">复制链接</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
 export default {
-    name: "index",
+  name: "index",
 
-    data() {
-        return {
-            index: 1,
-            step: [
-                {
-                    title: "邀请好友完成注册",
-                    subtitle: '<p>好友需通过您的邀请链接注册，否则邀请奖励无法下发</p>',
-                    img: require('@/assets/img/base/invite/1.png')
-                }, {
-                    title: "好友开通会员（注册后30天内）",
-                    subtitle: '<p>双方均可获得<span style="color: #3399FF;">5元优惠券</span>奖励</p>',
-                    img: require('@/assets/img/base/invite/2.png')
-                }, {
-                    title: "邀请好友完成注册",
-                    subtitle: '<p>您可获得订单金额的<span style="color: #3399FF;">10%</span>现金奖励（冻结状态）</p>',
-                    img: require('@/assets/img/base/invite/3.png')
-                }, {
-                    title: "邀请好友完成注册",
-                    subtitle: '<p>10%现金奖励解冻 <span style="color: #3399FF;">（可提现）</span></p>',
-                    img: require('@/assets/img/base/invite/4.png')
-                }
-            ]
+  data() {
+    return {
+      index: 1,
+      dialogVisible: false,
+      step: [
+        {
+          title: "邀请好友完成注册",
+          subtitle: '<p>好友需通过您的邀请链接注册，否则邀请奖励无法下发</p>',
+          img: require('@/assets/img/base/invite/1.png')
+        }, {
+          title: "好友开通会员（注册后30天内）",
+          subtitle: '<p>双方均可获得<span style="color: #3399FF;">5元优惠券</span>奖励</p>',
+          img: require('@/assets/img/base/invite/2.png')
+        }, {
+          title: "邀请好友完成注册",
+          subtitle: '<p>您可获得订单金额的<span style="color: #3399FF;">10%</span>现金奖励（冻结状态）</p>',
+          img: require('@/assets/img/base/invite/3.png')
+        }, {
+          title: "邀请好友完成注册",
+          subtitle: '<p>10%现金奖励解冻 <span style="color: #3399FF;">（可提现）</span></p>',
+          img: require('@/assets/img/base/invite/4.png')
         }
-    },
+      ],
+      tableData: [1, 2, 3, 4]
+    }
+  },
 
-    methods: {},
+  methods: {
+    invite() {
+      this.dialogVisible = true;
+    },
+    oncopy() {
+      // 复制
+      this.dialogVisible = false;
+    }
+  },
 }
 </script>
 
@@ -289,6 +319,54 @@ export default {
         color: #fff;
       }
     }
+  }
+
+  .info-list {
+    margin-top: 33px;
+    height: 1288px;
+    padding: 90px 124px;
+    background-color: #fff;
+
+    .title {
+      text-align: center;
+      font-weight: bold;
+      font-size: 22px;
+      color: #333333;
+    }
+
+    .table {
+      margin-top: 70px;
+
+      /deep/ .el-table {
+        thead {
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: bold;
+          font-size: 16px;
+          color: #333333;
+        }
+      }
+    }
+  }
+}
+
+.dialog-txt {
+  .title {
+    font-weight: bold;
+    font-size: 20px;
+    color: #777777;
+
+    span {
+      font-weight: 400;
+      color: #777777;
+    }
+  }
+
+  .link {
+    margin-top: 35px;
+    font-weight: 400;
+    font-size: 18px;
+    color: #282828;
+    text-align: center;
   }
 }
 </style>

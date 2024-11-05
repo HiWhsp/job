@@ -79,7 +79,7 @@ export default {
 
 <style lang="less">
 * {
-  font-family:'MiSans','PingFang SC ', '微软雅黑', sans-serif;
+  font-family: Microsoft YaHei, Microsoft YaHei;
   font-weight: 400;
   word-break: normal;
   word-wrap: normal;

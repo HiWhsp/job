@@ -19,13 +19,13 @@
         </div>
         <div class="operate pointer">
           <div class="btn-wrap">
-            <div class="btn">阳光预付</div>
+            <div class="btn" :class="{'active': $route.path == '/sunPay'}" @click="goUrl({url: '/sunPay'})">阳光预付</div>
             <div class="btn">线上咨询</div>
           </div>
           <div class="login">
             <div class="login-btn pointer" @click="goUrl({url: '/login'})">登录</div>
             <i class="col"></i>
-            <div class="register-btn pointer" @click="goUrl({url: '/register'})">注册</div>
+            <div class="login-btn pointer" @click="goUrl({url: '/register'})">注册</div>
             <i class="col"></i>
             <div class="login-btn pointer" @click="goUrl({url: '/login'})">登录</div>
           </div>
@@ -45,31 +45,33 @@ export default {
   name: "index",
   data() {
     return {
-      navList: [{
-        title: '首页',
-        path: ''
-      }, {
-        title: '分析测试',
-        path: ''
-      }, {
-        title: '智算服务',
-        path: ''
-      }, {
-        title: '微纳加工',
-        path: ''
-      }, {
-        title: '培训服务',
-        path: ''
-      }, {
-        title: '专家队伍',
-        path: ''
-      }, {
-        title: '论坛',
-        path: ''
-      }, {
-        title: '公司信息',
-        path: ''
-      }]
+      navList: [
+        {
+          title: '首页',
+          path: ''
+        }, {
+          title: '分析测试',
+          path: ''
+        }, {
+          title: '智算服务',
+          path: ''
+        }, {
+          title: '微纳加工',
+          path: ''
+        }, {
+          title: '培训服务',
+          path: ''
+        }, {
+          title: '专家队伍',
+          path: ''
+        }, {
+          title: '论坛',
+          path: ''
+        }, {
+          title: '公司信息',
+          path: ''
+        }
+      ]
     }
   },
   mounted() {
@@ -77,7 +79,9 @@ export default {
     window.addEventListener('scroll', this.handleScroll)
   },
   methods: {
-    goUrl() {
+    goUrl(item) {
+      console.log(this.$route)
+      this.$router.push(item.url);
     },
     handleScroll(e) {
       let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
@@ -188,9 +192,14 @@ export default {
             cursor: pointer;
             padding: 5px 10px;
             border-radius: 50px;
-            background-color: @theme;
-            color: #fff;
+            background-color: #EEEEEE;
+            color: #222;
             margin-right: 15px;
+
+            &.active {
+              background-color: @theme;
+              color: #fff;
+            }
           }
         }
 
