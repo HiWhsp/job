@@ -1,374 +1,515 @@
 <script>
 export default {
-  name: "index",
-  data() {
-    return {
-      imageUrl: '',
-      info: {
-        payType: 1, // 支付方式
-        prepaidAccount: 1, // 预付账户
-        prepaidBenefits: '', // 预付福利
-        prepaidAmount: '', // 预付金额
-        prepaidGift: '', // 预付赠送金
-        prepaidRemark: '', // 预付备注
-      },
-      step: [
-        {
-          title: "提交预付申请",
-          subtitle: '<p>填写开票相关信息，如有特殊要求可以备注</p>',
-          img: require('@/assets/img/base/invite/1.png')
-        }, {
-          title: "预付申请通过",
-          subtitle: '<p>对接经理与您沟通，确认预付优惠和开票信息</p>',
-          img: require('@/assets/img/base/invite/2.png')
-        }, {
-          title: "发票",
-          subtitle: '<p>对接经理与您沟通，确认预付优惠和开票信息</p>',
-          img: require('@/assets/img/base/invite/3.png')
-        }, {
-          title: "支付",
-          subtitle: '<p>对接经理与您沟通，确认预付优惠和开票信息</p>',
-          img: require('@/assets/img/base/invite/4.png')
-        }, {
-          title: "预付到账",
-          subtitle: '<p>我司财务确认收到转账，给您的账户充值</p>',
-          img: require('@/assets/img/base/invite/5.png')
+    name: "index",
+    data() {
+        return {
+            imageUrl: '',
+            info: {
+                payType: 1, // 支付方式
+                prepaidAccount: 1, // 预付账户
+                prepaidBenefits: '', // 预付福利
+                prepaidAmount: '', // 预付金额
+                prepaidGift: '', // 预付赠送金
+                prepaidRemark: '', // 预付备注
+            },
+            step: [
+                {
+                    title: "提交预付申请",
+                    subtitle: '<p>填写开票相关信息，如有特殊要求可以备注</p>',
+                    img: require('@/assets/img/base/invite/1.png')
+                }, {
+                    title: "预付申请通过",
+                    subtitle: '<p>对接经理与您沟通，确认预付优惠和开票信息</p>',
+                    img: require('@/assets/img/base/invite/2.png')
+                }, {
+                    title: "发票",
+                    subtitle: '<p>对接经理与您沟通，确认预付优惠和开票信息</p>',
+                    img: require('@/assets/img/base/invite/3.png')
+                }, {
+                    title: "支付",
+                    subtitle: '<p>对接经理与您沟通，确认预付优惠和开票信息</p>',
+                    img: require('@/assets/img/base/invite/4.png')
+                }, {
+                    title: "预付到账",
+                    subtitle: '<p>我司财务确认收到转账，给您的账户充值</p>',
+                    img: require('@/assets/img/base/invite/5.png')
+                }
+            ],
+            // 发票类型
+            invoiceTypeOption: [
+                {value: '0', title: '不开票', icon: ''},
+                {value: '1', title: '普通发票', icon: ''},
+                {value: '2', title: '专用发票', icon: ''},
+            ],
+            payTypeOption: [
+                {value: 'weixin', title: '微信支付', icon: require("@/assets/img/base/invite/wxPay.png")},
+                {value: 'zhifubao', title: '支付宝支付', icon: require("@/assets/img/base/invite/zfbPay.png")},
+                {value: 'paypal', title: '对公转账', icon: require("@/assets/img/base/invite/zfbPay.png")},
+            ],
+            // 发票类型
+            prepaidTypeOption: [
+                {value: '0', title: '个人账户', icon: ''},
+                {value: '1', title: '团体账户', icon: ''},
+            ],
+            // 发票信息
+            invoice_info: {
+                invoiceStatus: 1, //是否开票 0-不需要 1-需要发票
+                invoiceType: '1', //发票类型：1-普通发票 2-专用发票
+                titleType: '1', //抬头：1-个人 2-单位
+                title: '', // 公司名称
+                shibiema: '', // 识别码
+                companyAddress: '', // 注册地址
+                companyPhone: '', // 注册电话
+                bankName: '', // 开户银行
+                bankNo: '', // 银行账号
+                email: '', // 电子邮箱
+                orderId: '', // 关联订单
+            },
         }
-      ],
-      // 发票类型
-      invoiceTypeOption: [
-        {value: '0', title: '不开票', icon: ''},
-        {value: '1', title: '普通发票', icon: ''},
-        {value: '2', title: '专用发票', icon: ''},
-      ],
-      payTypeOption: [
-        {value: 'weixin', title: '微信支付', icon: require("@/assets/img/base/invite/wxPay.png")},
-        {value: 'zhifubao', title: '支付宝支付', icon: require("@/assets/img/base/invite/zfbPay.png")},
-        {value: 'paypal', title: '对公转账', icon: require("@/assets/img/base/invite/zfbPay.png")},
-      ],
-      // 发票类型
-      prepaidTypeOption: [
-        {value: '0', title: '个人账户', icon: ''},
-        {value: '1', title: '团体账户', icon: ''},
-      ],
-      // 发票信息
-      invoice_info: {
-        invoiceStatus: 1, //是否开票 0-不需要 1-需要发票
-        invoiceType: '1', //发票类型：1-普通发票 2-专用发票
-        titleType: '1', //抬头：1-个人 2-单位
-        title: '', // 公司名称
-        shibiema: '', // 识别码
-        companyAddress: '', // 注册地址
-        companyPhone: '', // 注册电话
-        bankName: '', // 开户银行
-        bankNo: '', // 银行账号
-        email: '', // 电子邮箱
-        orderId: '', // 关联订单
-      },
+    },
+    methods: {
+        do_toggle_paytype(item) {
+            this.info.payType = item.value
+        },
+        do_toggle_prepaid(item) {
+            this.info.prepaidAccount = item.value
+        },
+        // 发票信息选择
+        do_toggle_invoice(item) {
+            if (item != 0) {
+                this.invoice_info.invoiceStatus = 1;
+            } else {
+                this.invoice_info.invoiceStatus = 0
+            }
+            this.invoice_info.invoiceType = item;
+        },
     }
-  },
-  methods: {
-    do_toggle_paytype(item) {
-      this.info.payType = item.value
-    },
-    do_toggle_prepaid(item) {
-      this.info.prepaidAccount = item.value
-    },
-    // 发票信息选择
-    do_toggle_invoice(item) {
-      if (item != 0) {
-        this.invoice_info.invoiceStatus = 1;
-      } else {
-        this.invoice_info.invoiceStatus = 0
-      }
-      this.invoice_info.invoiceType = item;
-    },
-  }
 }
 </script>
 
 <template>
-  <div class="container">
-    <div class="top-box">
-      <img src="@/assets/img/base/invite/sunPay-box.png" alt="">
-    </div>
-    <div class="step">
-      <div class="main">
-        <p class="title">预付流程指引</p>
-        <div class="flex flex-between">
-          <div class="item" v-for="(item, index) in step" :key="index">
-            <img :src="item.img" alt="">
-            <div class="text">
-              <div class="tit">{{ item.title }}</div>
-              <div class="subtitle" v-html="item.subtitle"></div>
-            </div>
-          </div>
+    <div class="container">
+        <div class="top-box">
+            <img src="@/assets/img/base/invite/sunPay-box.png" alt="">
         </div>
-
-      </div>
-
-    </div>
-
-    <div class="tip-box main">
-      <div class="item">
-        <div>
-          <p class="title">什么是预付</p>
-          <p class="desc">
-            预付款是指在科学指南针预先存入的一笔专用于科学指南针服务的金额。后续做测试或进行数据分析中，可以使用预付款付费的方式进行费用支付。</p>
-        </div>
-        <div class="btn">立即预付</div>
-      </div>
-      <div class="item">
-        <div>
-          <p class="title">预付款有什么好处</p>
-          <div class="desc">
-            <div>
-              <p>1，集中开票报账，节约您的科研时间。</p>
-              <p>2，我们会为您安排一位专属客服，尽可能的帮助您解决问题</p>
-              <p>3，预付可以享受折扣价格，具体优惠见【预付优惠】列表</p>
-            </div>
-          </div>
-        </div>
-        <div class="btn">查看预付历史</div>
-      </div>
-      <div class="item">
-        <div>
-          <p class="title">
-            预付限时赠送
-            <span class="date">活动时间:2024-07-01至10-31</span>
-          </p>
-          <div class="desc">
-            <div class="it">
-              <p class="tit">预付金额</p>
-              <span>5000-9999元</span>
-              <span>10000-29999元</span>
-              <span>30000-49999元</span>
-              <span>100000元以上</span>
-            </div>
-            <div class="it">
-              <p class="tit">赠送金额</p>
-              <span>200.00元</span>
-              <span>500.00元</span>
-              <span>800.00元</span>
-              <span>1500.00元</span>
-            </div>
-          </div>
-        </div>
-        <div class="btn">立即预付</div>
-      </div>
-    </div>
-
-    <div class="info-box main">
-      <div class="pay-info">
-        <div class="section-title">发票信息</div>
-        <div class="section-ctx">
-          <div class="pay-group">
-            <div class="title"><span>*</span>支付方式：</div>
-            <div class="pay-items">
-              <div class="item" v-for="(item, index) in payTypeOption" @click="do_toggle_paytype(item)"
-                   :class="{ checked: info.payType == item.value }">
-                <img class="img-check check-0 check-img check-img-0" src="@/assets/img/base/invite/check0.png" alt=""/>
-                <img class="img-check check-1 check-img check-img-1" src="@/assets/img/base/invite/check1.png" alt=""/>
-                <img class="marker-img" :src="item.icon" alt=""/>
-                <span>{{ item.title }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="account" v-if="info.payType === 'paypal'">
-          <p>请转账至以下账户：</p>
-          <div class="it">
-            <p><span>户名：</span>这里是户名</p>
-            <p><span>账号：</span>1234567890000000000</p>
-            <p><span>开户行：</span>这里是开户行</p>
-          </div>
-        </div>
-        <div class="section-ctx">
-          <div class="pay-group">
-            <div class="title"><span>*</span>预付账户：</div>
-            <div class="pay-items">
-              <div class="item" v-for="(item, index) in prepaidTypeOption" @click="do_toggle_prepaid(item)"
-                   :class="{ checked: info.prepaidAccount == item.value }">
-                <div class="invoice">{{ item.title }}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="section-ctx">
-          <div class="pay-group">
-            <div class="title"><span>*</span>预付福利：</div>
-            <div class="pay-items">
-              <el-input type="text" placeholder="请输入预付福利" v-model="info.prepaidBenefits"></el-input>
-            </div>
-          </div>
-        </div>
-        <div class="section-ctx">
-          <div class="pay-group">
-            <div class="title"><span>*</span>预付金额：</div>
-            <div class="pay-items">
-              <el-input type="text" placeholder="请输入预付金额" v-model="info.prepaidAmount"></el-input>
-              <span style="margin-left: 5px">元</span>
-            </div>
-          </div>
-        </div>
-        <div class="section-ctx">
-          <div class="pay-group">
-            <div class="title"><span>*</span>预付赠送金：</div>
-            <div class="pay-items">
-              <el-input type="text" placeholder="预付赠送金" disabled v-model="info.prepaidGift"></el-input>
-              <span style="margin-left: 5px">元</span>
-            </div>
-          </div>
-        </div>
-        <div class="section-ctx">
-          <div class="pay-group">
-            <div class="title"><span>*</span>上传凭证 :</div>
-            <div class="upload-ctx">
-              <el-upload
-                  class="avatar-uploader"
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  :show-file-list="false">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                <div class="box" v-else>
-                  <i class="el-icon-plus avatar-uploader-icon"></i>
+        <div class="step">
+            <div class="main">
+                <p class="title">预付流程指引</p>
+                <div class="flex flex-between">
+                    <div class="item" v-for="(item, index) in step" :key="index">
+                        <img :src="item.img" alt="">
+                        <div class="text">
+                            <div class="tit">{{ item.title }}</div>
+                            <div class="subtitle" v-html="item.subtitle"></div>
+                        </div>
+                    </div>
                 </div>
-              </el-upload>
-            </div>
-          </div>
-        </div>
-        <div class="section-ctx">
-          <div class="pay-group">
-            <div class="title"><span>*</span>预付备注：</div>
-            <div class="pay-items">
-              <el-input type="textarea"
-                        placeholder="1、若以下没有您需要的发票类型，请备注所需发票类型；2、若需要加急开票，请填写【加急】字样；3、其他需求请留言"
-                        v-model="info.prepaidRemark" :rows="4" maxlength="200" show-word-limit>
-              </el-input>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="invoice-box">
-        <div class="section-title">发票信息</div>
-        <div class="section-ctx section-ctx-type">
-          <div class="pay-group">
-            <div class="title">是否开票 ：</div>
-            <div class="pay-items">
-              <el-radio-group v-model="invoice_info.invoiceType" @input="do_toggle_invoice">
-                <el-radio :label="item.value" v-for="(item, index) in invoiceTypeOption">{{ item.title }}</el-radio>
-              </el-radio-group>
-            </div>
-          </div>
-          <!--  -->
-          <div class="invoice-info" v-if="invoice_info.invoiceType === '1'">
-            <div class="info-item">
-              <div class="info-label">发票抬头类型</div>
-              <div class="info-val">
-                <el-radio-group v-model="invoice_info.titleType" fill="#A66600">
-                  <el-radio label="1">个人</el-radio>
-                  <el-radio label="2">企业</el-radio>
-                </el-radio-group>
-              </div>
-            </div>
-            <div class="info-item">
-              <div class="info-label"><span>*</span> 发票抬头</div>
-              <div class="info-val">
-                <el-input v-model="invoice_info.title"
-                          placeholder="请填写准确的抬头名称 必填"></el-input>
-              </div>
-            </div>
-            <div class="info-item" v-if="invoice_info.titleType === '2'">
-              <div class="info-label"><span>*</span> 纳税人识别号</div>
-              <div class="info-val">
-                <el-input v-model="invoice_info.shibiema"
-                          placeholder="请填写准确的纳税人识别号 必填"></el-input>
-                <el-checkbox v-model="checked" style="margin-left: 10px">无税号单位</el-checkbox>
-              </div>
-            </div>
-            <div class="info-item">
-              <div class="info-label"><span>*</span> 电子邮箱：</div>
-              <div class="info-val">
-                <el-input v-model="invoice_info.shibiema"
-                          placeholder="请填写电子邮箱"></el-input>
-              </div>
-            </div>
-            <div class="info-item">
-              <div class="info-label"><span>*</span> 发票张数</div>
-              <div class="info-val">
-                <el-radio-group v-model="invoice_info.titleType" fill="#A66600">
-                  <el-radio label="1">一张发票</el-radio>
-                  <el-radio label="2">多张发票</el-radio>
-                </el-radio-group>
-              </div>
-            </div>
-          </div>
 
-          <div class="invoice-info" v-if="invoice_info.invoiceType === '2'">
-            <div class="info-item">
-              <div class="info-label"><span>*</span> 发票抬头</div>
-              <div class="info-val">
-                <el-input v-model="invoice_info.title"
-                          placeholder="请填写准确的抬头名称 必填"></el-input>
-              </div>
             </div>
-            <div class="info-item">
-              <div class="info-label"><span>*</span> 纳税人识别号</div>
-              <div class="info-val">
-                <el-input v-model="invoice_info.shibiema"
-                          placeholder="请填写准确的纳税人识别号 必填"></el-input>
-                <el-checkbox v-model="checked" style="margin-left: 10px">无税号单位</el-checkbox>
-              </div>
-            </div>
-            <div class="info-item">
-              <div class="info-label"><span>*</span> 注册地址</div>
-              <div class="info-val">
-                <el-input v-model="invoice_info.companyAddress"
-                          placeholder="输入单位注册地址 必填"></el-input>
-              </div>
-            </div>
-            <div class="info-item">
-              <div class="info-label"><span>*</span> 注册电话</div>
-              <div class="info-val">
-                <el-input v-model="invoice_info.companyPhone"
-                          placeholder="输入单位注册电话 必填"></el-input>
-              </div>
-            </div>
-            <div class="info-item">
-              <div class="info-label"><span>*</span> 开户银行</div>
-              <div class="info-val">
-                <el-input v-model="invoice_info.bankName" placeholder="输入开户银行 必填"></el-input>
-              </div>
-            </div>
-            <div class="info-item">
-              <div class="info-label"><span>*</span> 账户银行</div>
-              <div class="info-val">
-                <el-input v-model="invoice_info.bankNo" placeholder="输入银行账户 必填"></el-input>
-              </div>
-            </div>
-            <div class="info-item">
-              <div class="info-label"><span>*</span> 电子邮箱：</div>
-              <div class="info-val">
-                <el-input v-model="invoice_info.shibiema"
-                          placeholder="请填写电子邮箱"></el-input>
-              </div>
-            </div>
-            <div class="info-item">
-              <div class="info-label"><span>*</span> 发票张数</div>
-              <div class="info-val">
-                <el-radio-group v-model="invoice_info.titleType" fill="#A66600">
-                  <el-radio label="1">一张发票</el-radio>
-                  <el-radio label="2">多张发票</el-radio>
-                </el-radio-group>
-              </div>
-            </div>
-          </div>
+
         </div>
-      </div>
+
+        <div class="tip-box main">
+            <div class="item">
+                <div>
+                    <p class="title">什么是预付</p>
+                    <p class="desc">
+                        预付款是指在科学指南针预先存入的一笔专用于科学指南针服务的金额。后续做测试或进行数据分析中，可以使用预付款付费的方式进行费用支付。</p>
+                </div>
+                <div class="btn">立即预付</div>
+            </div>
+            <div class="item">
+                <div>
+                    <p class="title">预付款有什么好处</p>
+                    <div class="desc">
+                        <div>
+                            <p>1，集中开票报账，节约您的科研时间。</p>
+                            <p>2，我们会为您安排一位专属客服，尽可能的帮助您解决问题</p>
+                            <p>3，预付可以享受折扣价格，具体优惠见【预付优惠】列表</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn">查看预付历史</div>
+            </div>
+            <div class="item">
+                <div>
+                    <p class="title">
+                        预付限时赠送
+                        <span class="date">活动时间:2024-07-01至10-31</span>
+                    </p>
+                    <div class="desc">
+                        <div class="it">
+                            <p class="tit">预付金额</p>
+                            <span>5000-9999元</span>
+                            <span>10000-29999元</span>
+                            <span>30000-49999元</span>
+                            <span>100000元以上</span>
+                        </div>
+                        <div class="it">
+                            <p class="tit">赠送金额</p>
+                            <span>200.00元</span>
+                            <span>500.00元</span>
+                            <span>800.00元</span>
+                            <span>1500.00元</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn">立即预付</div>
+            </div>
+        </div>
+
+        <div class="info-box main">
+            <div class="pay-info">
+                <div class="section-title">发票信息</div>
+                <div class="section-ctx">
+                    <div class="pay-group">
+                        <div class="title"><span>*</span>支付方式：</div>
+                        <div class="pay-items">
+                            <div class="item" v-for="(item, index) in payTypeOption" @click="do_toggle_paytype(item)"
+                                 :class="{ checked: info.payType == item.value }">
+                                <img class="img-check check-0 check-img check-img-0"
+                                     src="@/assets/img/base/invite/check0.png" alt=""/>
+                                <img class="img-check check-1 check-img check-img-1"
+                                     src="@/assets/img/base/invite/check1.png" alt=""/>
+                                <img class="marker-img" :src="item.icon" alt=""/>
+                                <span>{{ item.title }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="account" v-if="info.payType === 'paypal'">
+                    <p>请转账至以下账户：</p>
+                    <div class="it">
+                        <p><span>户名：</span>这里是户名</p>
+                        <p><span>账号：</span>1234567890000000000</p>
+                        <p><span>开户行：</span>这里是开户行</p>
+                    </div>
+                </div>
+                <div class="section-ctx">
+                    <div class="pay-group">
+                        <div class="title"><span>*</span>预付账户：</div>
+                        <div class="pay-items">
+                            <div class="item" v-for="(item, index) in prepaidTypeOption"
+                                 @click="do_toggle_prepaid(item)"
+                                 :class="{ checked: info.prepaidAccount == item.value }">
+                                <div class="invoice">{{ item.title }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-ctx">
+                    <div class="pay-group">
+                        <div class="title"><span>*</span>预付福利：</div>
+                        <div class="pay-items">
+                            <el-input type="text" placeholder="请输入预付福利"
+                                      v-model="info.prepaidBenefits"></el-input>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-ctx">
+                    <div class="pay-group">
+                        <div class="title"><span>*</span>预付金额：</div>
+                        <div class="pay-items">
+                            <el-input type="text" placeholder="请输入预付金额" v-model="info.prepaidAmount"></el-input>
+                            <span style="margin-left: 5px">元</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-ctx">
+                    <div class="pay-group">
+                        <div class="title"><span>*</span>预付赠送金：</div>
+                        <div class="pay-items">
+                            <el-input type="text" placeholder="预付赠送金" disabled
+                                      v-model="info.prepaidGift"></el-input>
+                            <span style="margin-left: 5px">元</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-ctx">
+                    <div class="pay-group">
+                        <div class="title"><span>*</span>上传凭证 :</div>
+                        <div class="upload-ctx">
+                            <el-upload
+                                    class="avatar-uploader"
+                                    action="https://jsonplaceholder.typicode.com/posts/"
+                                    :show-file-list="false">
+                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                <div class="box" v-else>
+                                    <i class="el-icon-plus avatar-uploader-icon"></i>
+                                </div>
+                            </el-upload>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-ctx">
+                    <div class="pay-group">
+                        <div class="title"><span>*</span>预付备注：</div>
+                        <div class="pay-items">
+                            <el-input type="textarea"
+                                      placeholder="1、若以下没有您需要的发票类型，请备注所需发票类型；2、若需要加急开票，请填写【加急】字样；3、其他需求请留言"
+                                      v-model="info.prepaidRemark" :rows="4" maxlength="200" show-word-limit>
+                            </el-input>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="invoice-box">
+                <div class="section-title">发票信息</div>
+                <div class="section-ctx section-ctx-type">
+                    <div class="pay-group">
+                        <div class="title">是否开票 ：</div>
+                        <div class="pay-items">
+                            <el-radio-group v-model="invoice_info.invoiceType" @input="do_toggle_invoice">
+                                <el-radio :label="item.value" v-for="(item, index) in invoiceTypeOption">{{
+                                    item.title
+                                    }}
+                                </el-radio>
+                            </el-radio-group>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <div class="invoice-info" v-if="invoice_info.invoiceType === '1'">
+                        <div class="info-item">
+                            <div class="info-label">发票抬头类型</div>
+                            <div class="info-val">
+                                <el-radio-group v-model="invoice_info.titleType" fill="#A66600">
+                                    <el-radio label="1">个人</el-radio>
+                                    <el-radio label="2">企业</el-radio>
+                                </el-radio-group>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label"><span>*</span> 发票抬头</div>
+                            <div class="info-val">
+                                <el-input v-model="invoice_info.title"
+                                          placeholder="请填写准确的抬头名称 必填"></el-input>
+                            </div>
+                        </div>
+                        <div class="info-item" v-if="invoice_info.titleType === '2'">
+                            <div class="info-label"><span>*</span> 纳税人识别号</div>
+                            <div class="info-val">
+                                <el-input v-model="invoice_info.shibiema"
+                                          placeholder="请填写准确的纳税人识别号 必填"></el-input>
+                                <el-checkbox v-model="checked" style="margin-left: 10px">无税号单位</el-checkbox>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label"><span>*</span> 电子邮箱：</div>
+                            <div class="info-val">
+                                <el-input v-model="invoice_info.shibiema"
+                                          placeholder="请填写电子邮箱"></el-input>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label"><span>*</span> 发票张数</div>
+                            <div class="info-val">
+                                <el-radio-group v-model="invoice_info.titleType" fill="#A66600">
+                                    <el-radio label="1">一张发票</el-radio>
+                                    <el-radio label="2">多张发票</el-radio>
+                                </el-radio-group>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="invoice-info" v-if="invoice_info.invoiceType === '2'">
+                        <div class="info-item">
+                            <div class="info-label"><span>*</span> 发票抬头</div>
+                            <div class="info-val">
+                                <el-input v-model="invoice_info.title"
+                                          placeholder="请填写准确的抬头名称 必填"></el-input>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label"><span>*</span> 纳税人识别号</div>
+                            <div class="info-val">
+                                <el-input v-model="invoice_info.shibiema"
+                                          placeholder="请填写准确的纳税人识别号 必填"></el-input>
+                                <el-checkbox v-model="checked" style="margin-left: 10px">无税号单位</el-checkbox>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label"><span>*</span> 注册地址</div>
+                            <div class="info-val">
+                                <el-input v-model="invoice_info.companyAddress"
+                                          placeholder="输入单位注册地址 必填"></el-input>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label"><span>*</span> 注册电话</div>
+                            <div class="info-val">
+                                <el-input v-model="invoice_info.companyPhone"
+                                          placeholder="输入单位注册电话 必填"></el-input>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label"><span>*</span> 开户银行</div>
+                            <div class="info-val">
+                                <el-input v-model="invoice_info.bankName" placeholder="输入开户银行 必填"></el-input>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label"><span>*</span> 账户银行</div>
+                            <div class="info-val">
+                                <el-input v-model="invoice_info.bankNo" placeholder="输入银行账户 必填"></el-input>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label"><span>*</span> 电子邮箱：</div>
+                            <div class="info-val">
+                                <el-input v-model="invoice_info.shibiema"
+                                          placeholder="请填写电子邮箱"></el-input>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label"><span>*</span> 发票张数</div>
+                            <div class="info-val">
+                                <el-radio-group v-model="invoice_info.titleType" fill="#A66600">
+                                    <el-radio label="1">一张发票</el-radio>
+                                    <el-radio label="2">多张发票</el-radio>
+                                </el-radio-group>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="submit-btn main">提交预付申请</div>
     </div>
-  </div>
 </template>
 
 <style scoped lang="less">
+.container {
+  background: #F2F6FA;
+  padding-bottom: 90px;
+}
+
+.top-box {
+  height: 350px;
+
+  img {
+    height: 100%;
+  }
+}
+
+.step {
+  background-color: #fff;
+  height: 380px;
+  padding: 87px 0 95px;
+
+  .title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 30px;
+    color: #000000;
+    margin-bottom: 80px;
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 80px;
+      height: 80px;
+    }
+
+    .text {
+      .tit {
+        text-align: left;
+        font-weight: bold;
+        font-size: 20px;
+        color: #333333;
+      }
+
+      .subtitle {
+        width: 150px;
+        font-weight: 400;
+        font-size: 14px;
+        color: #333333;
+      }
+    }
+  }
+}
+
+.tip-box {
+  display: flex;
+  justify-content: space-between;
+  margin: 90px auto;
+
+  .item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 420px;
+    height: 420px;
+    padding: 50px;
+    background: #FFFFFF;
+    box-shadow: 0px 3px 15px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 15px 15px 15px 15px;
+
+    .title {
+      text-align: center;
+      font-weight: bold;
+      font-size: 22px;
+      color: #00479D;
+      margin-bottom: 45px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      span {
+        margin-top: 10px;
+        display: inline-block;
+        font-weight: 400;
+        font-size: 12px;
+        color: #00479D;
+      }
+    }
+
+    .desc {
+      font-weight: 400;
+      font-size: 16px;
+      color: #333333;
+      line-height: 39px;
+      display: flex;
+      justify-content: space-between;
+
+      .it {
+        width: 160px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .tit {
+          font-weight: 400;
+          font-size: 16px;
+          color: #3399FF;
+        }
+
+        span {
+          font-weight: 400;
+          font-size: 16px;
+          color: #333333;
+          line-height: 30px;
+        }
+      }
+    }
+
+    .btn {
+      cursor: pointer;
+      width: 140px;
+      height: 40px;
+      background: linear-gradient(90deg, #00479D 0%, #3399FF 100%);
+      border-radius: 3px 3px 3px 3px;
+      text-align: center;
+      line-height: 40px;
+      color: #fff;
+    }
+  }
+}
+
 .info-box {
 
   .section-title {
@@ -626,134 +767,17 @@ export default {
   }
 }
 
-.container {
-  background: #F2F6FA;
-  padding-bottom: 90px;
-}
-
-.top-box {
-  height: 350px;
-
-  img {
-    height: 100%;
-  }
-}
-
-.step {
-  background-color: #fff;
-  height: 380px;
-  padding: 87px 0 95px;
-
-  .title {
-    text-align: center;
-    font-weight: bold;
-    font-size: 30px;
-    color: #000000;
-    margin-bottom: 80px;
-  }
-
-  .item {
-    display: flex;
-    align-items: center;
-
-    img {
-      width: 80px;
-      height: 80px;
-    }
-
-    .text {
-      .tit {
-        text-align: left;
-        font-weight: bold;
-        font-size: 20px;
-        color: #333333;
-      }
-
-      .subtitle {
-        width: 150px;
-        font-weight: 400;
-        font-size: 14px;
-        color: #333333;
-      }
-    }
-  }
-}
-
-.tip-box {
-  display: flex;
-  justify-content: space-between;
-  margin: 90px auto;
-
-  .item {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    width: 420px;
-    height: 420px;
-    padding: 50px;
-    background: #FFFFFF;
-    box-shadow: 0px 3px 15px 1px rgba(0, 0, 0, 0.1);
-    border-radius: 15px 15px 15px 15px;
-
-    .title {
-      text-align: center;
-      font-weight: bold;
-      font-size: 22px;
-      color: #00479D;
-      margin-bottom: 45px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      span {
-        margin-top: 10px;
-        display: inline-block;
-        font-weight: 400;
-        font-size: 12px;
-        color: #00479D;
-      }
-    }
-
-    .desc {
-      font-weight: 400;
-      font-size: 16px;
-      color: #333333;
-      line-height: 39px;
-      display: flex;
-      justify-content: space-between;
-
-      .it {
-        width: 160px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        .tit {
-          font-weight: 400;
-          font-size: 16px;
-          color: #3399FF;
-        }
-
-        span {
-          font-weight: 400;
-          font-size: 16px;
-          color: #333333;
-          line-height: 30px;
-        }
-      }
-    }
-
-    .btn {
-      cursor: pointer;
-      width: 140px;
-      height: 40px;
-      background: linear-gradient(90deg, #00479D 0%, #3399FF 100%);
-      border-radius: 3px 3px 3px 3px;
-      text-align: center;
-      line-height: 40px;
-      color: #fff;
-    }
-  }
+.submit-btn {
+  cursor: pointer;
+  margin-top: 48px;
+  width: 200px;
+  height: 45px;
+  text-align: center;
+  line-height: 45px;
+  background: linear-gradient(90deg, #00479D 0%, #3399FF 100%);
+  border-radius: 3px 3px 3px 3px;
+  font-weight: 400;
+  font-size: 16px;
+  color: #FFFFFF;
 }
 </style>
