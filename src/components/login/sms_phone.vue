@@ -1,7 +1,7 @@
 <template>
   <div class="sms-box">
     <div class="input-box">
-      <img src="@/assets/img/login/pass.png" alt="">
+      <img src="@/assets/img/login/code.png" alt="">
       <el-input type="text" placeholder="请输入验证码" v-model="form.code"/>
 
       <button
@@ -91,7 +91,7 @@ export default {
 <style scoped lang="less">
 .input-box {
   position: relative;
-  margin-bottom: 20px;
+  //margin-bottom: 20px;
   width: 100%;
   height: 40px;
   border-radius: 4px;

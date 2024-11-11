@@ -1,12 +1,12 @@
 <template>
-    <div id="app">
-        <pageHeader/>
-        <div class="layout-box">
-            <router-view></router-view>
-        </div>
-        <pageFooter/>
-        <pageAside></pageAside>
+  <div id="app">
+    <pageHeader/>
+    <div class="layout-box">
+      <router-view></router-view>
     </div>
+    <pageFooter/>
+    <pageAside v-if="pathList.includes(activePath)"></pageAside>
+  </div>
 </template>
 
 <script>
@@ -18,62 +18,70 @@ import pageAside from "@/components/page/page-aside.vue";
 import {mapState} from "vuex";
 
 export default {
-    components: {
-        pageHeader,
-        pageFooter,
-        pageAside
-    },
-    data() {
-        return {};
-    },
-    computed: {},
-    watch: {},
-    beforeCreate() {
-    },
-    created() {
+  components: {
+    pageHeader,
+    pageFooter,
+    pageAside
+  },
+  data() {
+    return {
+      activePath: '',
+      // 黑名单
+      pathList: ['/login', '/register'],
+    };
+  },
+  computed: {},
+  watch: {
+    '$route'() {
+      this.activePath = this.$route.path;
+    }
+  },
+  beforeCreate() {
+  },
+  created() {
 
-    },
-    mounted() {
-        this.initScale();
-        this.queryConfig();
-    },
-    methods: {
-        // scrollToTop() {
-        //   let disallowScrollPages = ["product-detail"];
-        //   if (disallowScrollPages.includes(this.$route.name)) {
-        //   } else {
-        //     document.querySelector("#app-wrap").scrollTop = 0;
-        //   }
-        // },
-        initScale() {
-            if (document && document.documentElement && document.documentElement.clientWidth) {
-                let clientWidth = document.documentElement.clientWidth;
-                if (clientWidth <= 1366 && clientWidth >= 1024) {
-                    // document.querySelector("body").style.overflowX = "auto";
-                    // var $target = document.querySelector('[name="viewport"]');
-                    // document
-                    //   .querySelector('[name="viewport"]')
-                    //   .setAttribute("content", "width=device-width,  initial-scale=0.15");
-                }
+  },
+  mounted() {
+    this.initScale();
+    this.queryConfig();
+  },
+  methods: {
+    // scrollToTop() {
+    //   let disallowScrollPages = ["product-detail"];
+    //   if (disallowScrollPages.includes(this.$route.name)) {
+    //   } else {
+    //     document.querySelector("#app-wrap").scrollTop = 0;
+    //   }
+    // },
+    initScale() {
+      if (document && document.documentElement && document.documentElement.clientWidth) {
+        let clientWidth = document.documentElement.clientWidth;
+        if (clientWidth <= 1366 && clientWidth >= 1024) {
+          // document.querySelector("body").style.overflowX = "auto";
+          // var $target = document.querySelector('[name="viewport"]');
+          // document
+          //   .querySelector('[name="viewport"]')
+          //   .setAttribute("content", "width=device-width,  initial-scale=0.15");
+        }
 
-                // 笔记本电脑端  150% 缩放比例的问题
-                if (window.devicePixelRatio == 1.5) {
-                    let fontSize = 10 / window.devicePixelRatio;
-                    document.documentElement.style.fontSize = fontSize + "px";
-                }
-            }
-        },
-
-        queryConfig() {
-            this.$api("index_config").then((res) => {
-                if (res.data && res.data.com_logo) {
-                    document
-                        .querySelector('meta[property="og:image"]')
-                        .setAttribute("content", res.data.com_logo);
-                }
-            });
-        },
+        // 笔记本电脑端  150% 缩放比例的问题
+        if (window.devicePixelRatio == 1.5) {
+          let fontSize = 10 / window.devicePixelRatio;
+          document.documentElement.style.fontSize = fontSize + "px";
+        }
+      }
     },
+
+    queryConfig() {
+      this.$api("index_config").then((res) => {
+        if (res.data && res.data.com_logo) {
+          document
+              .querySelector('meta[property="og:image"]')
+              .setAttribute("content", res.data.com_logo);
+        }
+      });
+    },
+  },
 };
 </script>
 
@@ -107,8 +115,8 @@ body {
 }
 
 .main {
-    width: 1400px;
-    margin: 0 auto;
+  width: 1400px;
+  margin: 0 auto;
 }
 
 .layout-box {

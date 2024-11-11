@@ -37,7 +37,7 @@
           <sms_phone :form="form"/>
 
           <div class="item">
-            <el-button type="primary" @click="login_submit">登录</el-button>
+            <el-button type="primary" @click="login_submit" style="margin-top: 20px">登录</el-button>
           </div>
         </div>
         <div class="input-wrap" v-if="tabType == 'WX'">
@@ -305,6 +305,7 @@ export default {
 
 <style lang="less" scoped>
 .container {
+  position: relative;
   width: 100%;
   height: 700px;
   background-image: url("~@/assets/img/login/login-bg.png");
@@ -313,6 +314,10 @@ export default {
 }
 
 .center {
+  position: absolute;
+  right: 262px;
+  top: 50%;
+  margin-top: -192px;
   width: 447px;
   height: 384px;
   background: #FFFFFF;
