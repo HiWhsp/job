@@ -1,17 +1,16 @@
 <template>
   <div class="sms-box">
     <div class="input-box">
-      <span class="label">验证码</span>
-      <input type="text" placeholder="请输入验证码" v-model="form.code" />
+      <img src="@/assets/img/login/pass.png" alt="">
+      <el-input type="text" placeholder="请输入验证码" v-model="form.code"/>
 
       <button
-        :disabled="disabledBtn"
-        class="btn-validate-box"
-        @click="getCode"
-        :class="time != 60 ? 'disabled' : ''"
+          :disabled="disabledBtn"
+          class="btn-validate-box"
+          @click="getCode"
+          :class="time != 60 ? 'disabled' : ''"
       >
-        获取验证码
-        <span>（{{ time }}）</span>
+        <span>{{ time == 60 ? "获取验证码" : time }}</span>
       </button>
     </div>
   </div>
@@ -42,7 +41,7 @@ export default {
       }
 
       //console.log("发送验证码");
-      let { phone, email } = this.form;
+      let {phone, email} = this.form;
       let reg_email = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
       let reg_phone = /^1[3-9]\d{9}$/;
 
@@ -65,7 +64,7 @@ export default {
         phone: this.form.phone,
       }).then((res) => {
         //console.log("验证码", res);
-        let { code, message } = res;
+        let {code, message} = res;
       });
     },
 
@@ -94,112 +93,42 @@ export default {
   position: relative;
   margin-bottom: 20px;
   width: 100%;
-  height: 50px;
-  background: #ffffff;
-  border: 1px solid #eeeeee;
+  height: 40px;
   border-radius: 4px;
   .flex-between();
   overflow: hidden;
+
   img {
-    width: 36px;
+    position: absolute;
+    width: 22px;
+    height: 24px;
+    z-index: 2;
+    left: 16px;
   }
 
-  .label {
-    display: inline-block;
-    width: 90px; /*no */
-    border-right: 1px solid #eee;
-    font-size: 14px;
-    font-family: Microsoft YaHei;
-    font-weight: 400;
-    line-height: 24px;
-    color: #999999;
-    text-indent: 1em;
-  }
 
-  input {
+  /deep/ .el-input__inner {
     flex: 2;
-    height: 100%;
-    padding-left: 16px;
+    height: 40px;
     font-size: 14px;
-    color: #000;
-
-    &::-webkit-input-placeholder {
-      font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-      font-weight: 400;
-      color: #d7d7d7;
-    }
+    color: #606266;
+    padding-left: 50px;
+    border: 1px solid #DCDFE6;
   }
 }
 
 .btn-validate-box {
   .flex();
-  background: transparent;
-  position: absolute;
-  right: 0;
-  cursor: pointer;
-  color: #EA3200;
-  font-size: 1.4rem;
-
+  justify-content: center;
+  width: 117px;
+  height: 40px;
+  background: #FFFFFF;
+  border-radius: 2px 2px 2px 2px;
+  border: 1px solid #00479D;
+  margin-left: 15px;
+  color: #00479D;
   &.disabled {
     color: #ccc;
-  }
-}
-
-@media screen and (max-width: 1199px) {
-  .input-box {
-    position: relative;
-    margin-bottom: 20px;
-    width: 100%;
-    height: 40px;
-    background: #ffffff;
-    border: 1px solid #eeeeee;
-    border-radius: 4px;
-    .flex-between();
-    overflow: hidden;
-    img {
-      width: 36px;
-    }
-
-    .label {
-      display: inline-block;
-      width: 90px; /*no */
-      border-right: 1px solid #ccc;
-      font-size: 14px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      line-height: 24px;
-      color: #999999;
-      text-indent: 1em;
-    }
-
-    input {
-      flex: 2;
-      height: 100%;
-      padding-left: 16px;
-      font-size: 14px;
-      color: #000;
-
-      &::-webkit-input-placeholder {
-        font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #d7d7d7;
-      }
-    }
-  }
-
-  .btn-validate-box {
-    background: transparent;
-    position: absolute;
-    right: 0;
-    .flex();
-    cursor: pointer;
-    color: #EA3200;
-
-    &.disabled {
-      color: #ccc;
-    }
   }
 }
 </style>
