@@ -5,7 +5,7 @@
       <router-view></router-view>
     </div>
     <pageFooter/>
-    <pageAside v-if="pathList.includes(activePath)"></pageAside>
+    <pageAside v-if="!pathList.includes(activePath)"></pageAside>
   </div>
 </template>
 

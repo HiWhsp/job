@@ -28,5 +28,11 @@ export const baseRouter = [
         name: "appointment",
         meta: {},
         component: () => import("@/views/base/appointment/index.vue"),
+    },
+    {
+        path: "/appointment-pay", // 预约流程
+        name: "appointment-pay",
+        meta: {},
+        component: () => import("@/views/base/appointment/pay.vue"),
     }
 ];
