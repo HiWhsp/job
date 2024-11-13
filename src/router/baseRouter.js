@@ -42,9 +42,21 @@ export const baseRouter = [
         component: () => import("@/views/base/appointment/invoice.vue"),
     },
     {
-        path: "/appointment-pay", // 预约流程 成功
+        path: "/appointment-pay", // 预约流程 支付方式
         name: "appointment-pay",
         meta: {},
         component: () => import("@/views/base/appointment/pay.vue"),
+    },
+    {
+        path: "/appointment-status", // 预约流程 状态
+        name: "appointment-status",
+        meta: {},
+        component: () => import("@/views/base/appointment/status.vue"),
+    },
+    {
+        path: "/appointment-payment", // 预约流程 其他支付
+        name: "appointment-payment",
+        meta: {},
+        component: () => import("@/views/base/appointment/payment.vue"),
     },
 ];

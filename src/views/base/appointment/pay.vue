@@ -3,15 +3,22 @@ export default {
   name: "pay",
   data() {
     return {
-      radio: '',
+      paymentType: '', // 支付方式 1个人预存 2团体预存 3个人信用支付 4团体信用支付 5微信支付 6支付宝
+      integral: '', //
       isShow: true,
     }
   },
   methods: {
     goUrl() {
-      this.$router.push({
-        path: '/appointment-pay'
-      })
+      if (['5', '6'].includes(this.paymentType)) {
+        this.$router.push({
+          path: `/appointment-payment?paymentType=${this.paymentType}`
+        })
+      } else {
+        this.$router.push({
+          path: `/appointment-status?paymentType=${this.paymentType}&status=1`
+        })
+      }
     }
   }
 }
@@ -58,7 +65,7 @@ export default {
         <div class="section-title">积分抵现</div>
         <div class="section-ctx">
           <div class="item">
-            <el-radio v-model="radio">
+            <el-radio v-model="integral">
               <span>使用积分抵现</span>
               <span class="num">777</span>
               <span>本次可抵现金</span>
@@ -73,14 +80,14 @@ export default {
         <div class="section-ctx">
           <div class="item">
             <div class="item-title">预存支付</div>
-            <el-radio-group v-model="radio">
-              <el-radio v-model="radio">
+            <el-radio-group v-model="paymentType">
+              <el-radio label="1">
                 <img src="@/assets/img/base/appointment/pay-1.png" alt="">
                 <span>个人预存</span>
                 <span class="num">¥50.00元</span>
                 <span class="tip pointer">我要预存</span>
               </el-radio>
-              <el-radio v-model="radio">
+              <el-radio label="2">
                 <img src="@/assets/img/base/appointment/pay-2.png" alt="">
                 <span>团体预存</span>
                 <span class="num">¥50.00元</span>
@@ -91,13 +98,13 @@ export default {
           </div>
           <div class="item">
             <div class="item-title">信用支付</div>
-            <el-radio-group v-model="radio">
-              <el-radio v-model="radio">
+            <el-radio-group v-model="paymentType">
+              <el-radio label="3">
                 <img src="@/assets/img/base/appointment/pay-3.png" alt="">
                 <span>个人信用支付</span>
                 <span class="tip">立即实名认证</span>
               </el-radio>
-              <el-radio v-model="radio">
+              <el-radio label="4">
                 <img src="@/assets/img/base/appointment/pay-4.png" alt="">
                 <span>团体信用支付</span>
                 <span class="tip">申请加入团体</span>
@@ -106,14 +113,14 @@ export default {
           </div>
           <div class="item">
             <div class="item-title">其他支付方式</div>
-            <el-radio-group v-model="radio">
-              <el-radio v-model="radio">
+            <el-radio-group v-model="paymentType">
+              <el-radio label="5">
                 <img src="@/assets/img/base/appointment/pay-wx.png" alt="">
-                <span>使用积分抵现</span>
+                <span>微信支付</span>
               </el-radio>
-              <el-radio v-model="radio">
+              <el-radio label="6">
                 <img src="@/assets/img/base/appointment/pay-zfb.png" alt="">
-                <span>使用积分抵现</span>
+                <span>支付宝支付</span>
               </el-radio>
             </el-radio-group>
           </div>
