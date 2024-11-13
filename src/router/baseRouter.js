@@ -30,9 +30,21 @@ export const baseRouter = [
         component: () => import("@/views/base/appointment/index.vue"),
     },
     {
-        path: "/appointment-pay", // 预约流程
+        path: "/appointment-info", // 预约流程 详情
+        name: "appointment-info",
+        meta: {},
+        component: () => import("@/views/base/appointment/info.vue"),
+    },
+    {
+        path: "/appointment-invoice", // 预约流程 发票
+        name: "appointment-invoice",
+        meta: {},
+        component: () => import("@/views/base/appointment/invoice.vue"),
+    },
+    {
+        path: "/appointment-pay", // 预约流程 成功
         name: "appointment-pay",
         meta: {},
         component: () => import("@/views/base/appointment/pay.vue"),
-    }
+    },
 ];

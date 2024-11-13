@@ -5,6 +5,7 @@ export default {
     return {
       typeId: '',
       selectType: '',
+      isShow: true,
       contentList: [{
         isShow: true
       }],
@@ -47,7 +48,7 @@ export default {
     },
     goUrl() {
       this.$router.push({
-        path: '/appointment-pay'
+        path: '/appointment-info'
       })
     }
   }
@@ -209,12 +210,31 @@ export default {
           </div>
         </div>
       </div>
+
       <div class="all-money">
         <div class="money-info">
           <p>合计费用: <span>{{ vuex_huobi }}0.00</span></p>
-          <i class="el-icon-arrow-down"></i>
+          <i class="el-icon-arrow-down" :class="{'hide': isShow}" @click="isShow = !isShow"></i>
         </div>
         <div class="next-btn" @click="goUrl()">下一步</div>
+
+        <div class="popup" :class="{'hide': isShow}">
+          <div class="item">
+            <span>A组样品</span>
+            <span class="num">样品数量：1</span>
+            <span class="money">¥40.00 * 1</span>
+          </div>
+          <div class="item">
+            <span>A组样品</span>
+            <span class="num">样品数量：1</span>
+            <span class="money">¥40.00 * 1</span>
+          </div>
+          <div class="item">
+            <span>A组样品</span>
+            <span class="num"></span>
+            <span class="money">¥40.00 * 1</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -329,6 +349,7 @@ export default {
   }
 
   .all-money {
+    position: relative;
     margin-top: 20px;
     padding: 0 30px;
     height: 95px;
@@ -353,6 +374,12 @@ export default {
         font-size: 18px;
         font-weight: bold;
         color: #818181;
+        transition: all 0.5s ease-in-out;
+
+        &.hide {
+          transform: rotate(180deg);
+          transition: all 0.5s ease-in-out;
+        }
       }
     }
 
@@ -367,6 +394,51 @@ export default {
       color: #FFFFFF;
       text-align: center;
       line-height: 49px;
+    }
+
+    .popup {
+      width: 100%;
+      padding: 40px;
+      background-color: #fff;
+      box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.11);
+      position: absolute;
+      left: 0;
+      bottom: 95px;
+      transition: all 0.5s ease-in-out;
+
+      .item {
+        margin-bottom: 28px;
+        display: flex;
+
+        span {
+          font-weight: 400;
+          font-size: 16px;
+          color: #333333;
+          margin-right: 30px;
+        }
+
+        .num {
+          width: 200px;
+        }
+
+        .money {
+          font-weight: 400;
+          font-size: 18px;
+          color: #00479D;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      &.hide {
+        // 慢慢收起
+        height: 0;
+        overflow: hidden;
+        transition: all 0.5s ease-in-out;
+        padding: 0 45px;
+      }
     }
   }
 

@@ -3,8 +3,16 @@ export default {
   name: "pay",
   data() {
     return {
-      radioList: []
-    };
+      radio: '',
+      isShow: true,
+    }
+  },
+  methods: {
+    goUrl() {
+      this.$router.push({
+        path: '/appointment-pay'
+      })
+    }
   }
 }
 </script>
@@ -12,67 +20,111 @@ export default {
 <template>
   <div class="container main">
     <div class="title">下单：原子力显微镜</div>
+
     <div class="content">
-      <div class="item">
-        <p class="label">是否曾与工作人员联系？</p>
-        <div class="val">
-          <div class="sel">
-            <el-radio-group v-model="radioList[0]">
-              <el-radio :label="3">是</el-radio>
-              <el-radio :label="6">否</el-radio>
-            </el-radio-group>
+      <div class="section">
+        <div class="section-title">费用明细</div>
+        <div class="section-ctx">
+          <div class="item">
+            <div class="item-title">总金额 <span>¥800.00</span></div>
+            <div class="item-val">
+              <p><span>A组样品</span><span>样品数量：1</span></p>
+              <p>¥40.00 * 1</p>
+            </div>
+            <div class="item-val">
+              <p><span>B组样品</span><span>样品数量：1</span></p>
+              <p>¥40.00 * 1</p>
+            </div>
+            <div class="item-val">
+              <p>加急服务</p>
+              <p>¥40.00 * 1</p>
+            </div>
+            <div class="item-val">
+              <p>运费</p>
+              <p>¥40.00 * 1</p>
+            </div>
+            <div class="item-val">
+              <p>积分抵现</p>
+              <p>¥40.00 * 1</p>
+            </div>
+            <div class="item-val">
+              <p>优惠</p>
+              <p>¥40.00 * 1</p>
+            </div>
           </div>
-          <div class="info"></div>
         </div>
       </div>
-      <div class="item">
-        <p class="label">是否需要回收样品？</p>
-        <div class="val">
-          <div class="sel">
-            <el-radio-group v-model="radioList[1]">
-              <el-radio :label="3">不回收</el-radio>
-              <el-radio :label="6">回收</el-radio>
-            </el-radio-group>
+      <div class="section">
+        <div class="section-title">积分抵现</div>
+        <div class="section-ctx">
+          <div class="item">
+            <el-radio v-model="radio">
+              <span>使用积分抵现</span>
+              <span class="num">777</span>
+              <span>本次可抵现金</span>
+              <span class="num">¥50.00元</span>
+              <span class="tip">（单次最多可抵现50.00元）</span>
+            </el-radio>
           </div>
-          <div class="info"></div>
         </div>
       </div>
-      <div class="item">
-        <p class="label">实验有问题联系谁？</p>
-        <div class="val">
-          <div class="sel">
-            <el-radio-group v-model="radioList[0]">
-              <el-radio :label="3">本人</el-radio>
-              <el-radio :label="6">其他人 <span>（请填写实验人员联系方式，以便沟通实验信息）</span></el-radio>
+      <div class="section">
+        <div class="section-title">请选择支付方式</div>
+        <div class="section-ctx">
+          <div class="item">
+            <div class="item-title">预存支付</div>
+            <el-radio-group v-model="radio">
+              <el-radio v-model="radio">
+                <img src="@/assets/img/base/appointment/pay-1.png" alt="">
+                <span>个人预存</span>
+                <span class="num">¥50.00元</span>
+                <span class="tip pointer">我要预存</span>
+              </el-radio>
+              <el-radio v-model="radio">
+                <img src="@/assets/img/base/appointment/pay-2.png" alt="">
+                <span>团体预存</span>
+                <span class="num">¥50.00元</span>
+                <span class="tip">申请加入团体（仅普通用户账号有）</span>
+                <span class="tip">立即充值（仅团长账号有）</span>
+              </el-radio>
             </el-radio-group>
           </div>
-          <div class="info"></div>
-        </div>
-      </div>
-      <div class="item">
-        <p class="label">是否与之前的测试同设备？</p>
-        <div class="val">
-          <div class="sel">
-            <el-radio-group v-model="radioList[0]">
-              <el-radio :label="3">不需要/之前未在平台做过该测试</el-radio>
-              <el-radio :label="6">需要</el-radio>
+          <div class="item">
+            <div class="item-title">信用支付</div>
+            <el-radio-group v-model="radio">
+              <el-radio v-model="radio">
+                <img src="@/assets/img/base/appointment/pay-3.png" alt="">
+                <span>个人信用支付</span>
+                <span class="tip">立即实名认证</span>
+              </el-radio>
+              <el-radio v-model="radio">
+                <img src="@/assets/img/base/appointment/pay-4.png" alt="">
+                <span>团体信用支付</span>
+                <span class="tip">申请加入团体</span>
+              </el-radio>
             </el-radio-group>
           </div>
-          <div class="info"></div>
-        </div>
-      </div>
-      <div class="item">
-        <p class="label">加急服务</p>
-        <div class="val">
-          <div class="sel">
-            <el-radio-group v-model="radioList[0]">
-              <el-radio :label="3">3个工作日完成，1.5倍费用</el-radio>
-              <el-radio :label="6">24小时完成，2倍费用</el-radio>
+          <div class="item">
+            <div class="item-title">其他支付方式</div>
+            <el-radio-group v-model="radio">
+              <el-radio v-model="radio">
+                <img src="@/assets/img/base/appointment/pay-wx.png" alt="">
+                <span>使用积分抵现</span>
+              </el-radio>
+              <el-radio v-model="radio">
+                <img src="@/assets/img/base/appointment/pay-zfb.png" alt="">
+                <span>使用积分抵现</span>
+              </el-radio>
             </el-radio-group>
           </div>
-          <div class="info"></div>
         </div>
       </div>
+    </div>
+
+    <div class="all-money">
+      <div class="money-info">
+      </div>
+      <div class="next-btn" @click="goUrl()">确认并支付</div>
     </div>
   </div>
 </template>
@@ -95,39 +147,139 @@ export default {
   .content {
     margin-top: 20px;
     background-color: #fff;
-    padding: 54px 90px;
+    padding: 30px 35px;
 
-    .item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 30px;
+    .section {
+      margin-bottom: 50px;
 
-      .label {
-        width: 220px;
+      .section-title {
         font-weight: 400;
-        font-size: 16px;
+        font-size: 18px;
         color: #333333;
-        text-align: right;
-        margin-right: 100px;
+        margin-bottom: 40px;
       }
 
-      .sel {
-        .el-radio {
-          min-width: 150px;
+      .section-ctx {
+        margin-left: 40px;
 
-          /deep/ .el-radio__label {
-            font-weight: 400;
-            font-size: 16px;
-            color: #333333;
+        .item {
+          .item-title {
+            font-weight: bold;
+            font-size: 18px;
+            color: #000000;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #E8E8E8;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+
+            span {
+              font-weight: 400;
+              font-size: 24px;
+              color: #FF8000;
+            }
+          }
+
+          .item-val {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 26px;
+
+            p {
+              font-weight: 400;
+              font-size: 16px;
+              color: #333333;
+
+              span {
+                display: inline-block;
+                width: 100px;
+              }
+
+              &:last-child {
+                font-weight: 400;
+                font-size: 18px;
+                color: #888888;
+              }
+            }
+          }
+
+          .el-radio {
+            display: flex;
+            align-items: center;
+            margin-left: 100px;
+            margin-bottom: 30px;
+
+            span {
+              font-weight: 400;
+              font-size: 20px;
+              color: #333333;
+              margin-left: 10px;
+
+              &.num {
+                font-size: 24px;
+                color: #FF8000;
+              }
+
+              &.tip {
+                font-size: 16px;
+                color: #00479D;
+              }
+            }
+
+            img {
+              width: 34px;
+              height: 34px;
+            }
+
+            /deep/ .is-checked {
+              .el-radio__inner {
+                background-color: #fff !important;
+
+                &:after {
+                  width: 11px;
+                  height: 10px;
+                  background: #6093D2;
+                }
+              }
+            }
+
+            /deep/ .el-radio__inner {
+              width: 25px;
+              height: 25px;
+            }
+
+            /deep/ .el-radio__label {
+              display: flex;
+              align-items: center;
+            }
           }
         }
-
-        span {
-          font-weight: 400;
-          font-size: 14px;
-          color: #818181;
-        }
       }
+    }
+  }
+
+  .all-money {
+    position: relative;
+    margin-top: 20px;
+    padding: 0 30px;
+    height: 95px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.11);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .next-btn {
+      cursor: pointer;
+      width: 140px;
+      height: 49px;
+      background: #00479D;
+      border-radius: 8px;
+      font-weight: 400;
+      font-size: 18px;
+      color: #FFFFFF;
+      text-align: center;
+      line-height: 49px;
     }
   }
 }
