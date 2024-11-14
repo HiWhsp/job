@@ -19,7 +19,8 @@
         </div>
         <div class="operate pointer">
           <div class="btn-wrap">
-            <div class="btn" :class="{'active': $route.path == '/sunPay'}" @click="goUrl({url: '/sunPay'})">阳光预付</div>
+            <div class="btn" :class="{'active': $route.path == '/sunPay'}" @click="goUrl({url: '/sunPay'})">阳光预付
+            </div>
             <div class="btn">线上咨询</div>
           </div>
           <div class="login">
@@ -34,7 +35,9 @@
     </div>
     <div class="nav-content">
       <div class="nav-list">
-        <div class="nav-item" v-for="(item, index) in navList" :key="index" @click="goUrl({url: item.path})">{{ item.title }}</div>
+        <div class="nav-item" v-for="(item, index) in navList" :key="index" @click="goUrl({url: item.path})">
+          {{ item.title }}
+        </div>
       </div>
     </div>
   </div>
@@ -51,25 +54,25 @@ export default {
           path: '/'
         }, {
           title: '分析测试',
-          path: ''
+          path: '/analyze'
         }, {
           title: '智算服务',
-          path: ''
+          path: '/analyze'
         }, {
           title: '微纳加工',
-          path: ''
+          path: '/analyze'
         }, {
           title: '培训服务',
-          path: ''
+          path: '/training'
         }, {
           title: '专家队伍',
-          path: ''
+          path: '/training'
         }, {
           title: '论坛',
-          path: ''
+          path: '/training'
         }, {
           title: '公司信息',
-          path: ''
+          path: '/training'
         }
       ]
     }
