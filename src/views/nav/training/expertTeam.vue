@@ -1,6 +1,16 @@
 <script>
 export default {
-  name: "expertTeam"
+  name: "expertTeam",
+  data() {
+    return {
+
+    }
+  },
+  methods: {
+    goUrl() {
+      this.$router.push('/expertDetail')
+    }
+  }
 }
 </script>
 
@@ -12,7 +22,7 @@ export default {
         <img src="@/assets/img/base/appointment/expertTeam.png" alt="Machine Image">
         <p class="name">李先生</p>
         <p class="desc">这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介</p>
-        <div class="btn">了解更多</div>
+        <div class="btn" @click="goUrl">了解更多</div>
       </div>
     </div>
   </div>

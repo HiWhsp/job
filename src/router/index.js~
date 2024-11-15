@@ -61,9 +61,6 @@ const routes = [
       },
       {
         path: '/expertDetail', // 专家详情
-        name: 'expertDetail',
-        component: () => import(/* webpackChunkName: "info" */ '@/views/nav/training/expertDetail.vue'),
-        meta: {}
       },
       {
         path: "/technologyExpress", // 技术快递

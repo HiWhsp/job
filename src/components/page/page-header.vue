@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     goUrl(item) {
-      console.log(this.$route)
+      console.log(item)
       this.$router.push(item.url);
     },
     handleScroll(e) {
