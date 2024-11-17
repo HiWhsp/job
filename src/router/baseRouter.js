@@ -24,6 +24,12 @@ export const baseRouter = [
         component: () => import("@/views/base/coupon/index.vue"),
     },
     {
+        path: "/activity", // 活动专区
+        name: "activity",
+        meta: {},
+        component: () => import("@/views/member/activity.vue"),
+    },
+    {
         path: "/appointment", // 预约流程
         name: "appointment",
         meta: {},

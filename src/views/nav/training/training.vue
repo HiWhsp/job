@@ -22,6 +22,7 @@ export default {
         }, {
           title: '资料下载',
           index: '4',
+          path: '/materialDownload'
         }, {
           title: '活动信息',
           index: '5',

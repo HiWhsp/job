@@ -28,7 +28,7 @@
             <i class="col"></i>
             <div class="login-btn pointer" @click="goUrl({url: '/register'})">注册</div>
             <i class="col"></i>
-            <div class="login-btn pointer" @click="goUrl({url: '/login'})">登录</div>
+            <div class="login-btn pointer" @click="goUrl({url: '/login'})">供应商登录</div>
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@ export default {
           path: '/training'
         }, {
           title: '论坛',
-          path: '/training'
+          path: '/forum'
         }, {
           title: '公司信息',
           path: '/training'
