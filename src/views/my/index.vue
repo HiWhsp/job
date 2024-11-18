@@ -9,35 +9,42 @@ export default {
         {
           title: '首页',
           index: '1',
+          path: '/my-home'
         },
         {
           title: '阳光预付',
           index: '2',
-          tip: '充值赠送'
+          tip: '充值赠送',
+          path: '/sunPay'
         },
         {
           title: '活动专区',
           index: '3',
-          tip: '近期活动'
+          tip: '近期活动',
+          path: '/activity'
         },
         {
           title: '优惠券',
           index: '4',
-          tip: '好券定期领'
+          tip: '好券定期领',
+          path: '/couponCenter'
         },
         {
           title: '致谢返利',
           index: '5',
-          tip: '返利10%'
+          tip: '返利10%',
+          path: '/thesis'
         },
         {
           title: '邀请好友',
           index: '6',
-          tip: '返利10%'
+          tip: '返利10%',
+          path: '/invite'
         },
         {
           title: '个人资料',
-          index: '7'
+          index: '7',
+          path: '/profile'
         },
         {
           title: '我的订单',
@@ -74,8 +81,13 @@ export default {
           index: '11',
           children: [
             {
-              title: '待付款',
-              index: '11-1'
+              title: '加入团体',
+              index: '11-1',
+              path: '/joinGroup'
+            },
+            {
+              title: '新建团体',
+              index: '11-2'
             }
           ]
         },
@@ -131,6 +143,8 @@ export default {
           })
         }
       })
+
+      this.$router.push({path: this.selectItem.path})
     }
   }
 }
@@ -229,14 +243,16 @@ export default {
 
         span {
           display: inline-block;
+
           &:first-child {
             width: 70px;
           }
+
           &:nth-child(2) {
             height: 20px;
             padding: 0 8px;
             line-height: 20px;
-            background: linear-gradient( 180deg, #FFE7C0 0%, #FFBD57 100%);
+            background: linear-gradient(180deg, #FFE7C0 0%, #FFBD57 100%);
             border-radius: 3px 3px 3px 3px;
             font-weight: 400;
             font-size: 12px;

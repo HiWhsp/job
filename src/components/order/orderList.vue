@@ -2,7 +2,10 @@
   <div class="order-list-wrap">
     <div class="info-item" v-for="(item, index) in list" :key="index">
       <div class="info-title">
-        <div class="date">{{ item.createdTime }}</div>
+        <div class="date">
+          下单时间：
+          {{ item.createdTime }}
+        </div>
         <div class="order-code">
           订单号：
           <span>{{ item.orderNo }}</span>
@@ -27,9 +30,9 @@
               <div class="goods-title" @click="mix_to_product(product_item)">{{ product_item.title }}</div>
               <div class="goods-sku">型号：{{ product_item.keyVals }}</div>
             </div>
-<!--            <div class="box-sku">-->
-<!--              <div class="goods-sku">{{ product_item.keyVals }}</div>-->
-<!--            </div>-->
+            <!--            <div class="box-sku">-->
+            <!--              <div class="goods-sku">{{ product_item.keyVals }}</div>-->
+            <!--            </div>-->
             <div class="box-num">
               {{ product_item.num }}
             </div>
@@ -54,9 +57,9 @@
           <button v-if="item.ifCancel == 1" class="btn-ripple fit-text btn-bg" @click="doCancel(item)">
             取消订单
           </button>
-<!--          <button v-if="item.ifPay == 1" class="btn-ripple fit-text btn-bg" @click="doPay(item)">-->
-<!--            去支付-->
-<!--          </button>-->
+          <!--          <button v-if="item.ifPay == 1" class="btn-ripple fit-text btn-bg" @click="doPay(item)">-->
+          <!--            去支付-->
+          <!--          </button>-->
           <button v-if="item.ifDel == 1" class="btn-ripple fit-text btn-bg" @click="doDelete(item)">
             删除订单
           </button>
@@ -255,7 +258,7 @@ export default {
 
   span {
     cursor: pointer;
-    display: inlin-block;
+    display: inline-block;
     padding: 2px 4px;
     background: coral;
     color: #fff;
@@ -264,7 +267,7 @@ export default {
 
 .order-list-wrap {
   .info-item {
-    border: 1px solid #e5e5e5;
+    border: 1px solid #DFEEFF;
     margin-bottom: 30px;
   }
 
@@ -272,8 +275,7 @@ export default {
     .flex-between();
     height: 48px;
     padding: 0 15px;
-    background: #f5f5f5;
-    border-bottom: 1px solid #e5e5e5;
+    background: #DFEEFF;
 
     .date {
       font-size: 14px;
@@ -397,7 +399,6 @@ export default {
 
   .info-heji {
     padding: 15px;
-    border-top: 1px solid #e5e5e5;
     .flex-between();
     font-size: 14px;
     font-family: Microsoft YaHei;

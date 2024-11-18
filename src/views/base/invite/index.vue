@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="top-box">
-      <img src="@/assets/img/base/invite/top-box.png" alt="">
+      <span>邀请好友赚现金</span>
     </div>
     <div class="main content">
       <div class="btn-box">
@@ -145,10 +145,13 @@ export default {
 
 .top-box {
   height: 350px;
-
-  img {
-    height: 100%;
-  }
+  background: url("~@/assets/img/base/invite/top-box.png") no-repeat 100% 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 50px;
+  color: #FFFFFF;
 }
 
 .content {

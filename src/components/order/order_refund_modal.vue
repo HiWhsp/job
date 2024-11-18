@@ -4,7 +4,7 @@
       :visible.sync="show_modal" :before-close="onbeforeclose" @closed="onclosed">
       <div class="modal-inner">
         <div class="success-box">
-          <img src="@/static/common/success.png" alt="">
+<!--          <img src="@/static/common/success.png" alt="">-->
         </div>
         <div class="text-1">
           {{ vuex_config.comEmail }}
