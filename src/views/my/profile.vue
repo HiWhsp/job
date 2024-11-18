@@ -16,6 +16,10 @@
                 <img v-if="form.image" :src="form.image" class="user-avatar"/>
                 <img v-else src="@/assets/img/my/avatar.png" class="user-avatar"/>
               </el-upload>
+              <div class="update-img">
+                <img src="@/assets/img/my/update.png" alt="">
+                更换头像
+              </div>
             </div>
           </div>
           <div class="item">
@@ -361,6 +365,23 @@ export default {
         height: 137px;
         border-radius: 50%;
       }
+
+      .update-img {
+        cursor: pointer;
+        border: 1px solid #DDDDDD;
+        padding: 5px 8px;
+        text-align: center;
+
+        img {
+          width: 17px;
+          height: 17px;
+          border-radius: inherit;
+        }
+
+        font-weight: 400;
+        font-size: 14px;
+        color: #818181;
+      }
     }
 
     .item {
@@ -404,6 +425,7 @@ export default {
       }
 
       .action {
+        margin-top: 25px;
         margin-left: 20px;
         font-size: 14px;
         font-family: Microsoft YaHei;
