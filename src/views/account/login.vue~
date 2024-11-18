@@ -83,15 +83,19 @@
 import QRCode from "qrcodejs2";
 import CryptoJS from "crypto-js";
 
+// import SmsLogin from "@/components/login/SmsLogin.vue"; //短信验证码
 import modalTerms from "@/components/modals/modalTerms.vue"; //协议弹窗
+// import modalRich from "@/components/modals/modalRich.vue"; //协议弹窗
 
 import {mapState} from "vuex";
 
 export default {
   name: "login",
   components: {
+    // SmsLogin,
     modalTerms,
     QRCode,
+    // modalRich,
   },
   data() {
     return {
