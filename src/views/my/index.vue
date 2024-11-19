@@ -51,8 +51,17 @@ export default {
           index: '8',
           children: [
             {
-              title: '待付款',
-              index: '8-1'
+              title: '正常订单',
+              index: '8-1',
+              path: '/order'
+            }, {
+              title: '审批订单',
+              index: '8-2',
+              path: '/approvalOrder'
+            }, {
+              title: '积分兑换订单',
+              index: '8-3',
+              path: '/exchangeOrder'
             }
           ]
         },
