@@ -8,60 +8,50 @@ export default {
       menuList: [
         {
           title: '首页',
-          index: '1',
-          path: '/my-home'
+          index: '/my-home'
         },
         {
           title: '阳光预付',
-          index: '2',
           tip: '充值赠送',
-          path: '/sunPay'
+          index: '/sunPay'
         },
         {
           title: '活动专区',
-          index: '3',
           tip: '近期活动',
-          path: '/activity'
+          index: '/activity'
         },
         {
           title: '优惠券',
-          index: '4',
           tip: '好券定期领',
-          path: '/couponCenter'
+          index: '/couponCenter'
         },
         {
           title: '致谢返利',
-          index: '5',
           tip: '返利10%',
-          path: '/thesis'
+          index: '/thesis'
         },
         {
           title: '邀请好友',
-          index: '6',
           tip: '返利10%',
-          path: '/invite'
+          index: '/invite'
         },
         {
           title: '个人资料',
-          index: '7',
-          path: '/profile'
+          index: '/profile'
         },
         {
           title: '我的订单',
-          index: '8',
+          index: '/order',
           children: [
             {
               title: '正常订单',
-              index: '8-1',
-              path: '/order'
+              index: '/order'
             }, {
               title: '审批订单',
-              index: '8-2',
-              path: '/approvalOrder'
+              index: '/approvalOrder'
             }, {
               title: '积分兑换订单',
-              index: '8-3',
-              path: '/exchangeOrder'
+              index: '/exchangeOrder'
             }
           ]
         },
@@ -133,6 +123,18 @@ export default {
       ]
     }
   },
+  computed: {
+    activeMenu() {
+      const route = this.$route;
+      const {meta, path} = route;
+      // if set path, the sidebar will highlight the path you set
+      if (meta.activeMenu) {
+        return meta.activeMenu;
+      }
+      console.log(path)
+      return path;
+    },
+  },
   mounted() {
     this.selectItem = this.menuList[0];
     this.form = {type: ''};
@@ -153,7 +155,7 @@ export default {
         }
       })
 
-      this.$router.push({path: this.selectItem.path})
+      this.$router.push({path: this.selectItem.index})
     }
   }
 }
@@ -165,7 +167,7 @@ export default {
       <div class="left">
         <div class="title">会员中心</div>
         <div class="menu">
-          <el-menu default-active="1" :unique-opened="true" @select="menuSelect">
+          <el-menu :default-active="activeMenu" :unique-opened="true" @select="menuSelect">
             <template v-for="(item, index) in menuList">
               <el-submenu :index="item.index" v-if="item.children">
                 <template slot="title">
