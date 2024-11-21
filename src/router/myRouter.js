@@ -37,7 +37,7 @@ export const myRouter = [
         component: () => import("@/views/my/order/index.vue"),
       },
       {
-        path: "/approvalOrder", // 订单审批
+        path: "/approvalOrder", // 审批订单
         name: "approvalOrder",
         meta: {},
         component: () => import("@/views/my/order/approval.vue"),
@@ -49,10 +49,22 @@ export const myRouter = [
         component: () => import("@/views/my/order/exchange.vue"),
       },
       {
+        path: "/exchangeDetail", // 积分兑换详情
+        name: "exchangeDetail",
+        meta: {},
+        component: () => import("@/views/my/order/exchange-detail.vue"),
+      },
+      {
         path: "/orderDetail", // 订单详情
         name: "orderDetail",
         meta: {},
         component: () => import("@/views/my/order/detail.vue"),
+      },
+      {
+        path: "/afterSales", // 售后服务
+        name: "afterSales",
+        meta: {},
+        component: () => import("@/views/my/order/afterSales.vue"),
       }
     ]
   }

@@ -60,7 +60,23 @@ export default {
           index: '9',
           children: [
             {
-              title: '待付款',
+              title: '预存管理',
+              index: '9-1'
+            },
+            {
+              title: '信用额度',
+              index: '9-1'
+            },
+            {
+              title: '我的积分',
+              index: '9-1'
+            },
+            {
+              title: '我的佣金',
+              index: '9-1'
+            },
+            {
+              title: '我的优惠券',
               index: '9-1'
             }
           ]

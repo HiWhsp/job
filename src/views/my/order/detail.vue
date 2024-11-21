@@ -11,6 +11,9 @@ export default {
     // 下载报告
     download_report() {
       this.downloadVisible = true
+    },
+    goUrl(item) {
+      this.$router.push(item.url)
     }
   }
 }
@@ -35,7 +38,7 @@ export default {
             <div class="btn btn-bg" v-if="process == 3 || process == 4">申请开票</div>
             <div class="btn" v-if="process == 3">下载预约单</div>
             <div class="btn btn-bg" @click="download_report" v-if="process == 4">下载报告</div>
-            <div class="btn" @click="download_report" v-if="process == 4">售后服务</div>
+            <div class="btn" @click="goUrl({url: '/afterSales'})" v-if="process == 4">售后服务</div>
             <div class="btn" @click="download_report" v-if="process == 4">提交异议</div>
           </div>
         </div>
