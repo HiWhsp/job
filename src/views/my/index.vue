@@ -61,7 +61,7 @@ export default {
           children: [
             {
               title: '预存管理',
-              index: '9-1'
+              index: '/preSave'
             },
             {
               title: '信用额度',
