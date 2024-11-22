@@ -112,6 +112,19 @@ const routes = [
         name: "retrieve",
         component: () => import('@/views/account/retrieve.vue')
     },
+
+    {
+        path: '/orderPay', // 订单支付
+        name: 'orderPay',
+        meta: {},
+        component: () => import("@/views/order/pay.vue"),
+    },
+    {
+        path: '/pay-status', // 支付状态
+        name: 'pay-status',
+        meta: {},
+        component: () => import("@/views/order/status.vue"),
+    },
     ...baseRouter,
     ...myRouter,
 

@@ -101,7 +101,7 @@ export default {
       <div class="order-box">
         <div class="empty-info" v-if="!list_order.length">
           <div class="empty-img">
-            <img src="@/assets/img/my/empty-img.png" alt=""/>
+            <img src="../../../../assets/img/my/empty-img.png" alt=""/>
           </div>
           <div class="empty-text">您还没有订单</div>
         </div>
@@ -124,7 +124,7 @@ export default {
                   <div class="box-image cover">
                     <el-image src="@/assets/img/my/order-img.png">
                       <div slot="error" class="image-slot">
-                        <img src="@/assets/img/my/order-img.png"/>
+                        <img src="../../../../assets/img/my/order-img.png"/>
                       </div>
                     </el-image>
                   </div>

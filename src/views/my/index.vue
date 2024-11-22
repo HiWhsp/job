@@ -65,19 +65,19 @@ export default {
             },
             {
               title: '信用额度',
-              index: '9-1'
+              index: '/creditLine'
             },
             {
               title: '我的积分',
-              index: '9-1'
+              index: '/point'
             },
             {
               title: '我的佣金',
-              index: '9-1'
+              index: '/commission'
             },
             {
               title: '我的优惠券',
-              index: '9-1'
+              index: '/myCoupon'
             }
           ]
         },
@@ -86,7 +86,15 @@ export default {
           index: '10',
           children: [
             {
-              title: '待付款',
+              title: '我的帖子',
+              index: '/myPost'
+            },
+            {
+              title: '我的评论',
+              index: '10-1'
+            },
+            {
+              title: '我的点赞',
               index: '10-1'
             }
           ]

@@ -44,7 +44,7 @@ export default {
             payTypeOption: [
                 {value: 'weixin', title: '微信支付', icon: require("@/assets/img/base/invite/wxPay.png")},
                 {value: 'zhifubao', title: '支付宝支付', icon: require("@/assets/img/base/invite/zfbPay.png")},
-                {value: 'paypal', title: '对公转账', icon: require("@/assets/img/base/invite/zfbPay.png")},
+                {value: 'paypal', title: '对公转账', icon: require("@/assets/img/base/invite/duigong.png")},
             ],
             // 发票类型
             prepaidTypeOption: [
@@ -185,6 +185,33 @@ export default {
                         <p><span>开户行：</span>这里是开户行</p>
                     </div>
                 </div>
+              <div class="section-ctx" v-if="info.payType === 'paypal'">
+                <div class="pay-group">
+                  <div class="title">上传凭证 :</div>
+                  <div class="upload-ctx">
+                    <el-upload
+                        class="avatar-uploader"
+                        action="https://jsonplaceholder.typicode.com/posts/"
+                        :show-file-list="false">
+                      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                      <div class="box" v-else>
+                        <i class="el-icon-plus avatar-uploader-icon"></i>
+                      </div>
+                    </el-upload>
+                  </div>
+                </div>
+              </div>
+              <div class="section-ctx" v-if="info.payType === 'paypal'">
+                <div class="pay-group">
+                  <div class="title">备注：</div>
+                  <div class="pay-items">
+                    <el-input type="textarea"
+                              placeholder="1、若以下没有您需要的发票类型，请备注所需发票类型；2、若需要加急开票，请填写【加急】字样；3、其他需求请留言"
+                              v-model="info.prepaidRemark" :rows="4" maxlength="200" show-word-limit>
+                    </el-input>
+                  </div>
+                </div>
+              </div>
                 <div class="section-ctx">
                     <div class="pay-group">
                         <div class="title"><span>*</span>预付账户：</div>
@@ -225,22 +252,22 @@ export default {
                         </div>
                     </div>
                 </div>
-                <div class="section-ctx">
-                    <div class="pay-group">
-                        <div class="title"><span>*</span>上传凭证 :</div>
-                        <div class="upload-ctx">
-                            <el-upload
-                                    class="avatar-uploader"
-                                    action="https://jsonplaceholder.typicode.com/posts/"
-                                    :show-file-list="false">
-                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                <div class="box" v-else>
-                                    <i class="el-icon-plus avatar-uploader-icon"></i>
-                                </div>
-                            </el-upload>
-                        </div>
-                    </div>
-                </div>
+<!--                <div class="section-ctx">-->
+<!--                    <div class="pay-group">-->
+<!--                        <div class="title"><span>*</span>上传凭证 :</div>-->
+<!--                        <div class="upload-ctx">-->
+<!--                            <el-upload-->
+<!--                                    class="avatar-uploader"-->
+<!--                                    action="https://jsonplaceholder.typicode.com/posts/"-->
+<!--                                    :show-file-list="false">-->
+<!--                                <img v-if="imageUrl" :src="imageUrl" class="avatar">-->
+<!--                                <div class="box" v-else>-->
+<!--                                    <i class="el-icon-plus avatar-uploader-icon"></i>-->
+<!--                                </div>-->
+<!--                            </el-upload>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="section-ctx">
                     <div class="pay-group">
                         <div class="title"><span>*</span>预付备注：</div>
