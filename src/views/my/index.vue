@@ -91,11 +91,11 @@ export default {
             },
             {
               title: '我的评论',
-              index: '10-1'
+              index: '/myComment'
             },
             {
               title: '我的点赞',
-              index: '10-1'
+              index: '/myPraise'
             }
           ]
         },
@@ -105,12 +105,11 @@ export default {
           children: [
             {
               title: '加入团体',
-              index: '11-1',
-              path: '/joinGroup'
+              index: 'joinGroup',
             },
             {
               title: '新建团体',
-              index: '11-2'
+              index: '/createGroup',
             }
           ]
         },
@@ -119,26 +118,30 @@ export default {
           index: '12',
           children: [
             {
-              title: '待付款',
-              index: '12-1'
+              title: '订单发票',
+              index: '/invoice'
+            },
+            {
+              title: '预付发票',
+              index: '/prepaymentInvoice'
             }
           ]
         },
         {
           title: '报告管理',
-          index: '13'
+          index: '/reportManage'
         },
         {
           title: '地址管理',
-          index: '14'
+          index: '/address'
         },
         {
           title: '电子邮箱',
-          index: '15'
+          index: '/myEmail'
         },
         {
-          title: '个人资料',
-          index: '16'
+          title: '修改密码',
+          index: '/changePassword'
         },
         {
           title: '退出登录',
@@ -166,6 +169,9 @@ export default {
   methods: {
     // 选择菜单
     menuSelect(index) {
+      if (index === 17) {
+        this.logout();
+      }
       this.form = {type: ''};
       this.menuList.forEach((item, i) => {
         if (item.index === index) {
@@ -178,9 +184,15 @@ export default {
           })
         }
       })
-
       this.$router.push({path: this.selectItem.index})
-    }
+    },
+    logout() {
+      this.$store.commit("clear_loginInfo");
+      // debugger
+      if (this.$route.meta.requireAuth) {
+        this.$router.push("/");
+      }
+    },
   }
 }
 </script>

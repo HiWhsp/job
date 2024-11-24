@@ -11,12 +11,6 @@ export default {
       PostVisible: false, // 发帖
       editVisible: false, // 编辑
       listData: [{isShow: false, status: '1'}, {isShow: false, status: '2'}],
-      selectTab: {title: "全部帖子", status: "0"},
-      list_tab: [
-        {title: "全部帖子", status: "0"},
-        {title: "已通过", status: "1"},
-        {title: "被驳回", status: "2"},
-      ],
     }
   },
   watch: {
@@ -50,7 +44,7 @@ export default {
 <template>
   <div class="container">
     <div class="filter">
-      <div class="left">我的帖子</div>
+      <div class="left">我的点赞</div>
       <div class="right">
         <div class="search-bar">
           <el-input
@@ -63,20 +57,7 @@ export default {
               <el-button class="search-btn">搜索</el-button>
             </template>
           </el-input>
-          <el-button type="primary" class="post-btn" @click="PostVisible = true">发帖</el-button>
         </div>
-      </div>
-    </div>
-
-    <div class="tab-box">
-      <div
-          class="tab-item"
-          v-for="(item, index) in list_tab"
-          :key="index"
-          @click="selectTab = item"
-          :class="item.title === selectTab.title ? 'active' : ''"
-      >
-        {{ item.title }}
       </div>
     </div>
 
@@ -101,34 +82,13 @@ export default {
                 <span class="post-time">2024-08-31 18:30:02</span>
               </div>
             </div>
-            <div class="right status">
-              <p :class="{'success': item.status === '1', 'error': item.status === '2'}">
-                {{ item.status === '1' ? '已通过' : item.status === '2' ? '被驳回' : '' }}</p>
-              <p class="pointer" v-if="item.status === '2'" @click="editVisible = true">修改</p>
-              <div class="isHide" @click="item.isShow = !item.isShow">
-                <i class="el-icon-arrow-down"></i>
-              </div>
+            <div class="right">
+              <p class="pointer">取消点赞</p>
+<!--              <div class="isHide" @click="item.isShow = !item.isShow">-->
+<!--                <i class="el-icon-arrow-down"></i>-->
+<!--              </div>-->
             </div>
             <el-button type="primary" size="small" class="action-btn">科研工具</el-button>
-          </div>
-          <div class="comment-wrap">
-            <div class="comment-item" v-for="i in 3">
-              <div class="post-header">
-                <el-avatar src="https://via.placeholder.com/50" class="avatar"></el-avatar>
-                <span>郭菲菲</span>
-              </div>
-              <div class="post-info">
-                <p class="post-meta ellipsis-2">
-                  这里是关于X射线光电子能谱仪（X-ray Photoelectron Spectroscopy）是根据光电效应原理，
-                  实现辐射的表面几个原子层（1-10nm厚的表面）的化学组成、价态、深度剖析及成像综合
-                  分析与表征技术的设备。主要应用于高分子聚合物、陶瓷、玻璃、薄膜、纳米材料、金属、生物材料。
-                </p>
-              </div>
-              <div class="post-footer">
-                <span class="post-time">2024-08-31 18:30:02</span>
-                <span class="post-details" @click="detailFormChick(i)">详情</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -370,6 +330,7 @@ export default {
         .right {
           margin-left: 80px;
           text-align: center;
+          color: #00479D;
 
           .success {
             color: #00A527;
@@ -523,9 +484,11 @@ export default {
       font-size: 16px;
       color: #333333;
       margin-bottom: 15px;
+
       span {
         margin-right: 10px;
       }
+
       .red {
         color: red;
       }

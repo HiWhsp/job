@@ -6,14 +6,13 @@ export default {
     return {
       keyword: '', // 搜索
       detailForm: {}, // 详情
-      commentVisible: false, // 评论弹框
       detailVisible: false, // 详情弹框
-      PostVisible: false, // 发帖
       editVisible: false, // 编辑
       listData: [{isShow: false, status: '1'}, {isShow: false, status: '2'}],
-      selectTab: {title: "全部帖子", status: "0"},
+      selectTab: {title: "全部评论", status: "0"},
+      selectItem: {isShow: false},
       list_tab: [
-        {title: "全部帖子", status: "0"},
+        {title: "全部评论", status: "0"},
         {title: "已通过", status: "1"},
         {title: "被驳回", status: "2"},
       ],
@@ -24,21 +23,8 @@ export default {
     },
   },
   methods: {
-    detailFormChick(data) {
-      this.detailForm = data;
-      this.detailVisible = true;
-    },
-    // 评论
-    commentAdd(item) {
-      this.commentVisible = true
-    },
-    // 排序
-    onClickSort(item) {
-      this.orderByColumn = item.ziduan;
-    },
-    postSubmit() {
-      this.PostVisible = false
-      this.$router.push('/forum-success')
+    lockDetail() {
+      this.detailVisible = true
     },
     editSubmit() {
       this.editVisible = false
@@ -50,7 +36,7 @@ export default {
 <template>
   <div class="container">
     <div class="filter">
-      <div class="left">我的帖子</div>
+      <div class="left">我的评论</div>
       <div class="right">
         <div class="search-bar">
           <el-input
@@ -63,7 +49,7 @@ export default {
               <el-button class="search-btn">搜索</el-button>
             </template>
           </el-input>
-          <el-button type="primary" class="post-btn" @click="PostVisible = true">发帖</el-button>
+          <!--          <el-button type="primary" class="post-btn" @click="PostVisible = true">发帖</el-button>-->
         </div>
       </div>
     </div>
@@ -86,7 +72,6 @@ export default {
           <div class="info-wrap">
             <div class="left">
               <div class="post-info">
-                <h3 class="post-title">这里是帖子标题文案</h3>
                 <p class="post-meta ellipsis-2">
                   这里是关于X射线光电子能谱仪（X-ray Photoelectron Spectroscopy）是根据光电效应原理，
                   实现辐射的表面几个原子层（1-10nm厚的表面）的化学组成、价态、深度剖析及成像综合
@@ -95,8 +80,7 @@ export default {
               </div>
               <div class="post-footer">
                 <span class="post-details">
-                  <span @click="detailFormChick(item)">详情</span><span
-                    @click="commentAdd(item)">评论(20)</span><span>点赞(35)</span>
+                  <span @click="lockDetail">查看原帖</span>
                 </span>
                 <span class="post-time">2024-08-31 18:30:02</span>
               </div>
@@ -105,86 +89,57 @@ export default {
               <p :class="{'success': item.status === '1', 'error': item.status === '2'}">
                 {{ item.status === '1' ? '已通过' : item.status === '2' ? '被驳回' : '' }}</p>
               <p class="pointer" v-if="item.status === '2'" @click="editVisible = true">修改</p>
-              <div class="isHide" @click="item.isShow = !item.isShow">
-                <i class="el-icon-arrow-down"></i>
-              </div>
-            </div>
-            <el-button type="primary" size="small" class="action-btn">科研工具</el-button>
-          </div>
-          <div class="comment-wrap">
-            <div class="comment-item" v-for="i in 3">
-              <div class="post-header">
-                <el-avatar src="https://via.placeholder.com/50" class="avatar"></el-avatar>
-                <span>郭菲菲</span>
-              </div>
-              <div class="post-info">
-                <p class="post-meta ellipsis-2">
-                  这里是关于X射线光电子能谱仪（X-ray Photoelectron Spectroscopy）是根据光电效应原理，
-                  实现辐射的表面几个原子层（1-10nm厚的表面）的化学组成、价态、深度剖析及成像综合
-                  分析与表征技术的设备。主要应用于高分子聚合物、陶瓷、玻璃、薄膜、纳米材料、金属、生物材料。
-                </p>
-              </div>
-              <div class="post-footer">
-                <span class="post-time">2024-08-31 18:30:02</span>
-                <span class="post-details" @click="detailFormChick(i)">详情</span>
-              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!--    评论-->
-    <el-dialog
-        title="评论"
-        :visible.sync="commentVisible">
-      <el-input type="textarea" rows="10"></el-input>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="commentVisible = false">取 消</el-button>
-        <el-button type="primary" @click="commentVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
-
     <!--    详情-->
     <el-dialog
-        title="详情"
+        title="帖子详情"
         :visible.sync="detailVisible">
-      <div class="detailDialog">
+      <div class="detailDialog" :class="{'hide': selectItem.isShow}">
+        <div class="edit-box">
+          <p><span>帖子分类：</span><span>学术交流区-分类名称</span></p>
+        </div>
+        <div class="title">这里是帖子标题</div>
+        <div class="content">这里是帖子内容</div>
 
+        <div class="info">
+          <span>2024-08-31 18:30:02</span>
+          <div class="item">
+            <span>详情</span>
+            <span>评论(20)</span>
+            <span>点赞(35)</span>
+          </div>
+        </div>
+        <div class="icon-wrap" @click="selectItem.isShow = !selectItem.isShow">
+          <i class="el-icon-arrow-down isHide"></i>
+        </div>
+        <div class="comment-wrap">
+          <div class="comment-item" v-for="i in 3">
+            <div class="post-header">
+              <el-avatar src="https://via.placeholder.com/50" class="avatar"></el-avatar>
+              <span>郭菲菲</span>
+            </div>
+            <div class="post-info">
+              <p class="post-meta ellipsis-2">
+                这里是关于X射线光电子能谱仪（X-ray Photoelectron Spectroscopy）是根据光电效应原理，
+                实现辐射的表面几个原子层（1-10nm厚的表面）的化学组成、价态、深度剖析及成像综合
+                分析与表征技术的设备。主要应用于高分子聚合物、陶瓷、玻璃、薄膜、纳米材料、金属、生物材料。
+              </p>
+              <div class="post-footer">
+                <span class="post-time">2024-08-31 18:30:02</span>
+<!--                <span class="post-details" @click="detailFormChick(i)">详情</span>-->
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="detailVisible = false">取 消</el-button>
         <el-button type="primary" @click="detailVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
-
-    <!--    发帖-->
-    <el-dialog
-        title="发帖"
-        :visible.sync="PostVisible">
-      <div class="postDialog">
-        <div class="top-box">
-          <div class="type">选择分类： 学术交流区-分类名称</div>
-          <div class="type-list">
-            <el-popover
-                v-for="i in 3"
-                :key="i"
-                placement="bottom-start"
-                width="400"
-                trigger="hover">
-              <div class="type-popover">
-                <div class="type-item" v-for="j in 3" :key="j">分类名称</div>
-              </div>
-              <div slot="reference" class="type-item" :class="{'active': i === 1}">学术交流区</div>
-            </el-popover>
-          </div>
-        </div>
-        <el-input type="text" placeholder="请输入帖子标题" class="title"></el-input>
-        <el-input type="textarea" placeholder="请输入帖子内容" rows="10" class="content"></el-input>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="PostVisible = false">取消</el-button>
-        <el-button type="primary" @click="postSubmit">提交</el-button>
       </span>
     </el-dialog>
 
@@ -198,13 +153,8 @@ export default {
             <span class="red">驳回原因：</span>
             <span>这里是一段驳回原因</span>
           </p>
-          <p>
-            <span>帖子分类：</span>
-            <span>学术交流区-分类名称</span>
-          </p>
         </div>
-        <el-input type="text" placeholder="请输入帖子标题" class="title"></el-input>
-        <el-input type="textarea" placeholder="请输入帖子内容" rows="10" class="content"></el-input>
+        <el-input type="textarea" placeholder="这里是评论内容" rows="10" class="content"></el-input>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editVisible = false">取消</el-button>
@@ -305,21 +255,6 @@ export default {
       margin-bottom: 30px;
       border: 1px solid #B7B7B7;
 
-      &.hide {
-        .comment-wrap {
-          // 慢慢收起
-          transition: all 0.5s ease-in-out;
-          border-top: 1px solid #00479D;
-          padding: 35px 88px;
-          height: 100%;
-        }
-
-        .isHide {
-          transform: rotate(180deg);
-          transition: all 0.5s ease-in-out;
-        }
-      }
-
       .info-wrap {
         display: flex;
         align-items: center;
@@ -397,14 +332,6 @@ export default {
       }
     }
 
-    .isHide {
-      margin-top: 10px;
-      cursor: pointer;
-      font-size: 26px;
-      font-weight: bold;
-      transition: all 0.5s ease-in-out;
-    }
-
     .action-btn {
       position: absolute;
       top: 0;
@@ -415,66 +342,98 @@ export default {
       border-radius: 0px 0px 0px 15px;
       border: none;
     }
-
-    .comment-wrap {
-      box-shadow: 0px 3px 6px 1px rgba(0, 0, 0, 0.16);
-      background-color: #fff;
-      padding: 0 88px;
-      height: 0;
-      overflow: hidden;
-      transition: all 0.5s ease-in-out;
-
-      .comment-item {
-        display: flex;
-        align-items: center;
-        padding-bottom: 20px;
-        margin-bottom: 20px;
-        border-bottom: 1px solid #EDEDED;
-
-        .post-footer {
-          align-items: center;
-        }
-
-        .post-info {
-          flex: 1;
-
-          .post-title {
-            font-size: 18px;
-            margin: 0 0 10px;
-            color: #00479D;
-          }
-
-          .post-meta {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.5;
-          }
-        }
-
-        .post-footer {
-          display: flex;
-          flex-direction: column;
-          font-size: 14px;
-          color: #999;
-          margin: 0 40px;
-
-          .post-time {
-            color: #999;
-          }
-
-          .post-details {
-            color: #444;
-            cursor: pointer;
-          }
-        }
-      }
-    }
   }
 }
 
 .detailDialog {
   height: 500px;
   overflow-y: auto;
+  padding-right: 20px;
+
+  .icon-wrap {
+    text-align: right;
+  }
+
+  .isHide {
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 26px;
+    font-weight: bold;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .comment-wrap {
+    height: 0;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
+    margin-top: 60px;
+
+
+    .comment-item {
+      display: flex;
+      align-items: center;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #EDEDED;
+
+      .post-header {
+        display: flex;
+        flex-direction: column;
+        margin-right: 40px;
+
+        .avatar {
+          flex-shrink: 0;
+          margin-bottom: 12px;
+        }
+      }
+
+
+      .post-info {
+        flex: 1;
+
+        .post-title {
+          font-size: 18px;
+          margin: 0 0 10px;
+          color: #00479D;
+        }
+
+        .post-meta {
+          font-size: 14px;
+          color: #666;
+          line-height: 1.5;
+        }
+      }
+
+      .post-footer {
+        display: flex;
+        font-size: 14px;
+        color: #999;
+        margin-top: 20px;
+
+        .post-time {
+          color: #999;
+          margin-right: 20px;
+        }
+
+        .post-details {
+          color: #444;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  &.hide {
+    .comment-wrap {
+      // 慢慢收起
+      height: 100%;
+    }
+
+    .isHide {
+      transform: rotate(180deg);
+      transition: all 0.5s ease-in-out;
+    }
+  }
 }
 
 .postDialog {
@@ -523,9 +482,11 @@ export default {
       font-size: 16px;
       color: #333333;
       margin-bottom: 15px;
+
       span {
         margin-right: 10px;
       }
+
       .red {
         color: red;
       }
