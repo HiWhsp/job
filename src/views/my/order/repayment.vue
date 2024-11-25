@@ -138,7 +138,19 @@
           </div>
         </div>
       </div>
-      <div class="section-ctx" v-if="info.payType === 'paypal'">
+      <div class="section-ctx" v-if="info.payType === 'bank'">
+        <div class="pay-group">
+          <div class="title">支付团体：</div>
+          <div class="pay-items">
+            <el-radio-group v-model="radio">
+              <el-radio :label="3">备选项</el-radio>
+              <el-radio :label="6">备选项</el-radio>
+              <el-radio :label="9">备选项</el-radio>
+            </el-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class="section-ctx" v-if="info.payType === 'paypal' || info.payType === 'bank'">
         <div class="pay-group">
           <div class="title">备注：</div>
           <div class="pay-items">
@@ -174,6 +186,7 @@ export default {
         {value: 'weixin', title: '微信支付', icon: require("@/assets/img/base/invite/wxPay.png")},
         {value: 'zhifubao', title: '支付宝支付', icon: require("@/assets/img/base/invite/zfbPay.png")},
         {value: 'paypal', title: '对公转账', icon: require("@/assets/img/base/invite/duigong.png")},
+        {value: 'bank', title: '团体余额', icon: require("@/assets/img/base/invite/pay4.png")},
       ],
       checked_all: false, // 是否全选
       list_shopcart: [], // 购物车商品列表
@@ -455,10 +468,10 @@ export default {
 
 .page {
   width: 100%;
-  background: #f4f4f6;
+  background: #fff;
   text-align: center;
   font-size: 14px;
-  padding-top: 33px;
+  padding-bottom: 100px;
 
   .inner {
     padding: 20px 22px 0 22px;

@@ -4,10 +4,13 @@ export default {
   data() {
     return {
       tabIndex: 1,
+      changeGroupVisible: false, // 转为团体
+      teamApplyVisible: true, // 团员申请
       promoteVisible: false, // 提升额度
       realVisible: false, // 实名认证
       isReal: false, // 是否实名
       realSuccessVisible: false, // 实名认证成功
+      dialogTitle: '身份验证',
       list_order: [{}], // 订单
       realForm: {}, // 实名认证
       tabList: [
@@ -45,6 +48,18 @@ export default {
     // 提升额度
     promoteConfirm() {
       this.promoteVisible = true
+    },
+    // 转为团体
+    changeGroup() {
+      this.changeGroupVisible = true
+    },
+    // 转为团体
+    changeGroupSubmit() {
+      if (this.dialogTitle == '身份验证') {
+        this.dialogTitle = '个人预付转团体预付'
+      }else {
+        this.changeGroupVisible = false
+      }
     }
   }
 }
@@ -68,7 +83,10 @@ export default {
         </div>
         <div class="column-flex-center">
           <span>普通会员</span>
-          <el-button type="primary" class="membership-btn" @click="realClick">{{ isReal ? '查看认证信息' : '实名认证' }}</el-button>
+          <el-button type="primary" class="membership-btn" @click="realClick">{{
+              isReal ? '查看认证信息' : '实名认证'
+            }}
+          </el-button>
         </div>
       </div>
 
@@ -108,6 +126,8 @@ export default {
             <p class="a-item">去充值</p>
             <i class="line"></i>
             <p class="a-item">预付记录</p>
+            <i class="line"></i>
+            <p class="a-item" @click="changeGroup">转为团体预付</p>
           </div>
         </div>
         <div class="finance-item">
@@ -290,6 +310,37 @@ export default {
       <span slot="footer" class="dialog-footer">
          <el-button @click="lockRealInfo">查看信息</el-button>
         <el-button type="primary" @click="realSuccessVisible = false">继续浏览</el-button>
+      </span>
+    </el-dialog>
+    <!--    团员申请-->
+    <el-dialog title="团员申请" :visible.sync="teamApplyVisible" center width="700px">
+      <div class="team-apply">
+        <div class="title"><span>10</span>位用户申请加入您的团队</div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="teamApplyVisible = false">立即处理</el-button>
+      </span>
+    </el-dialog>
+    <!--    转为团体-->
+    <el-dialog :title="dialogTitle" :visible.sync="changeGroupVisible" center width="500px">
+      <div class="changeGroup" v-if="dialogTitle == '身份验证'">
+        <p>手机号：15200007777</p>
+        <el-input placeholder="请输入验证码" v-model="realForm.name">
+          <template slot="append">获取验证码</template>
+        </el-input>
+      </div>
+      <div class="changeGroup" v-else>
+        <p>个人账户余额：0元</p>
+        <p>团体账户余额：0元</p>
+        <div class="money-inp">
+          <span>转到团体账户金额：</span>
+          <el-input placeholder="请输入金额" v-model="realForm.name"></el-input>
+          <span>元</span>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="changeGroupSubmit">提交</el-button>
+        <el-button @click="changeGroupVisible = false">取消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -708,14 +759,17 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+
   .item {
     display: flex;
     align-items: start;
     margin-bottom: 30px;
+
     .label {
       width: 220px;
       text-align: right;
     }
+
     .value {
       padding-left: 20px;
       width: 350px;
@@ -743,6 +797,43 @@ export default {
     font-weight: 400;
     font-size: 14px;
     color: #FF0000;
+  }
+}
+
+.team-apply {
+  text-align: center;
+
+  span {
+    color: #3399FF;
+    margin-right: 10px;
+  }
+
+  .title {
+    font-weight: bold;
+    font-size: 20px;
+    color: #282828;
+  }
+}
+
+.changeGroup {
+  p {
+    font-weight: 400;
+    font-size: 14px;
+    color: #333333;
+    margin-bottom: 20px;
+  }
+
+  .money-inp {
+    display: flex;
+    align-items: center;
+
+    .el-input {
+      width: 150px;
+    }
+  }
+
+  span:last-child {
+    margin-left: 10px;
   }
 }
 

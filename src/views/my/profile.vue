@@ -371,6 +371,7 @@ export default {
         border: 1px solid #DDDDDD;
         padding: 5px 8px;
         text-align: center;
+        margin-top: 20px;
 
         img {
           width: 17px;

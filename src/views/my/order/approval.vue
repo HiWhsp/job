@@ -4,6 +4,7 @@ export default {
   data() {
     return {
       tabIndex: 1,
+      rejectVisible: false, // 驳回
       queryParams: {}, // 查询参数
       list_order: [{}], // 订单
       tabList: [
@@ -37,6 +38,9 @@ export default {
     // 切换tab
     tabClick(item) {
       this.tabIndex = item.value
+    },
+    orderReject() {
+      this.rejectVisible = true;
     }
   }
 }
@@ -226,6 +230,10 @@ export default {
                     <button class="btn-ripple fit-text" v-if="tabIndex == 1">
                       取消订单
                     </button>
+                    <div class="action-btn" v-if="tabIndex == 2">
+                      <span>通过</span>
+                      <span @click="orderReject">驳回</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -234,6 +242,17 @@ export default {
         </div>
       </div>
     </div>
+
+    <el-dialog
+        title="驳回原因"
+        :visible.sync="rejectVisible"
+        width="30%">
+      <el-input type="textarea" rows="5" placeholder="请输入驳回原因"></el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="rejectVisible = false">取 消</el-button>
+        <el-button type="primary" @click="rejectVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -538,6 +557,22 @@ export default {
               &.btn-bg {
                 background: @theme;
                 color: #FFFFFF;
+              }
+            }
+
+            .action-btn {
+              span {
+                display: inline-block;
+                width: 40px;
+                height: 29px;
+                background: #FFFFFF;
+                border-radius: 4px;
+                font-family: Arial, Arial;
+                font-weight: 400;
+                font-size: 14px;
+                color: #333333;
+                text-align: center;
+                cursor: pointer;
               }
             }
           }

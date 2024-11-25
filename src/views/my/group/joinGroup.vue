@@ -53,7 +53,7 @@ export default {
       <!--      </div>-->
       <div class="audit" v-if="Object.keys(info).length">
         <!--        <img src="@/assets/img/base/appointment/pay-success.png" alt="">-->
-        <img src="@/assets/img/base/appointment/pay-error.png" alt="">
+        <img src="../../../assets/img/base/appointment/pay-error.png" alt="">
         <p class="status-text">很抱歉，加入团队未成功！</p>
         <!--        <p class="status-text">申请已提交成功</p>-->
         <!--        <p class="status-detail">请耐心等待团长审核！</p>-->
@@ -64,7 +64,7 @@ export default {
       </div>
       <div class="empty-info" v-else>
         <div class="empty-img">
-          <img src="@/assets/img/my/empty-img.png" alt=""/>
+          <img src="../../../assets/img/my/empty-img.png" alt=""/>
         </div>
         <div class="empty-text">暂无加入任何团体，快去加入团体/创建团体吧</div>
       </div>
