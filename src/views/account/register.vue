@@ -91,7 +91,7 @@ export default {
 .center {
   position: absolute;
   right: 262px;
-  top: 50%;
+  top: 30%;
   margin-top: -192px;
   width: 541px;
   background: #FFFFFF;
