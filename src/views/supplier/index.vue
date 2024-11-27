@@ -22,10 +22,10 @@ export default {
               index: '/assign-order'
             }, {
               title: '运输中订单',
-              index: '/exchangeOrder'
+              index: '/transit-order'
             }, {
               title: '待上传结果订单',
-              index: '/exchangeOrder'
+              index: '/waitUploadResult-order'
             }, {
               title: '报告审核订单',
               index: '/exchangeOrder'

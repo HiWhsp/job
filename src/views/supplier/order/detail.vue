@@ -4,16 +4,16 @@ export default {
   data() {
     return {
       process: 4,
-      downloadVisible: false
+      remarkDialogVisible: false
     }
   },
   methods: {
-    // 下载报告
-    download_report() {
-      this.downloadVisible = true
-    },
     goUrl(item) {
       this.$router.push(item.url)
+    },
+    // 备注
+    remarkDialog() {
+      this.remarkDialogVisible = true
     }
   }
 }
@@ -32,28 +32,46 @@ export default {
     </div>
     <div class="address-item">
       <div class="sample-delivery">
-        <!-- 左侧内容 -->
-        <div class="left-content">
-          <p class="delivery-method">寄样方式: 自行寄样 (运费自付)</p>
-          <p class="detail">
-            <span>收货人：</span>徐老师
-          </p>
-          <p class="detail">
-            <span>联系方式：</span>15931263165
-          </p>
-          <p class="detail">
-            <span>寄送地址：</span>厦门市集美区杏林湾路465号1号楼2560单元
-          </p>
-        </div>
-
-        <!-- 右侧内容 -->
-        <div class="right-content">
-          <p class="payment-status">
-            支付方式：<span>待支付</span>
-          </p>
-          <p class="payment-amount">
-            支付金额：<span class="amount">¥40.00</span>
-          </p>
+        <h3 class="section-title">基本信息</h3>
+        <div class="info-wrap">
+          <div class="left-content">
+            <p class="detail">
+              <span>项目名称：</span>氧氮氢分析仪
+            </p>
+            <p class="detail">
+              <span>仪器型号：</span>这里是仪器型号
+            </p>
+            <p class="detail">
+              <span>订单收入：</span>2000.00元
+            </p>
+          </div>
+          <div class="left-content">
+            <p class="detail">
+              <span>对接人：</span>徐老师
+            </p>
+            <p class="detail">
+              <span>联系方式：</span>15931263165
+            </p>
+            <p class="detail">
+              <span>寄送地址：</span>厦门市集美区杏林湾路465号1号楼2560单元
+            </p>
+          </div>
+          <div class="left-content">
+            <p class="detail">
+              <span>样品状态：</span>待寄送
+            </p>
+            <p class="detail">
+              <span>寄样时间：</span>-
+            </p>
+            <p class="detail">
+              <span>完成时间：</span>-
+            </p>
+          </div>
+          <!--          <div class="btn-wrap">-->
+          <!--            <div class="btn" @click="checkDialog">-->
+          <!--              查看预约单-->
+          <!--            </div>-->
+          <!--          </div>-->
         </div>
       </div>
     </div>
@@ -122,19 +140,22 @@ export default {
       </div>
     </div>
 
-    <!--    下载报告-->
-    <el-dialog title="下载报告" :visible.sync="downloadVisible" center width="630px">
-      <div class="real-content">
-        <div class="tip">提示：报告文件只保存180天</div>
-        <div class="info">
-          <p>订单号：4545121232</p>
-          <p>预约仪器：氧氮氢分析仪</p>
-          <p>实验结果：2</p>
-        </div>
-        <div class="report">
-          <p>1、报告文件1 <span>下载</span></p>
-          <p>2、仪器测试结果 <span>下载</span></p>
-        </div>
+    <!--    操作-->
+    <div class="operation">
+      <div class="btn back">收到样品</div>
+      <div class="btn" @click="remarkDialog">备注</div>
+      <div class="btn">问题反馈</div>
+    </div>
+
+    <el-dialog title="备注" :visible.sync="remarkDialogVisible">
+      <div class="dialog-title">
+        <p><span>平台备注：</span>这里是一段平台备注</p>
+        <p class="date">2024-08-20</p>
+      </div>
+      <el-input type="textarea" rows="10" placeholder="请在这里输入您的备注"></el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="remarkDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="remarkDialogVisible = false">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -172,8 +193,6 @@ export default {
       height: 60px;
       line-height: 60px;
       background: #DFEEFF;
-      border-radius: 0px 0px 0px 0px;
-
 
       .order-id, .time {
         font-weight: bold;
@@ -187,15 +206,47 @@ export default {
   .address-item {
     margin-top: 20px;
     width: 100%;
-    height: 289px;
+    padding: 0 130px;
 
     .sample-delivery {
       height: 100%;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: flex-start;
       background: #fff;
-      padding: 32px 130px;
+
+      .section-title {
+        width: 100%;
+        padding-left: 35px;
+        height: 63px;
+        line-height: 63px;
+        font-size: 18px;
+        color: #000000;
+        border-bottom: 1px solid #E5E5E5;
+      }
+
+      .info-wrap {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 20px 35px;
+
+        .btn-wrap {
+          .btn {
+            cursor: pointer;
+            width: 100px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            background: #00479D;
+            border: 1px solid #00479D;
+
+            font-weight: 400;
+            font-size: 14px;
+            color: #FFFFFF;
+          }
+        }
+      }
 
       .left-content {
         flex: 2;
@@ -215,38 +266,6 @@ export default {
           span {
             //font-weight: bold;
           }
-        }
-      }
-
-      .right-content {
-        height: 100%;
-        flex: 1;
-        text-align: right;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-
-        .payment-status,
-        .payment-amount {
-          padding-top: 25px;
-          font-size: 14px;
-          color: #666;
-          margin-bottom: 10px;
-
-          span {
-            font-weight: bold;
-            color: #333;
-          }
-
-          .amount {
-            margin-left: 25px;
-            color: #00479D;
-            font-size: 16px;
-          }
-        }
-
-        .payment-amount {
-          border-top: 1px solid #E5E5E5;
         }
       }
     }
@@ -395,5 +414,61 @@ export default {
       }
     }
   }
+
+  .operation {
+    width: 100%;
+    padding: 30px 130px 50px;
+    display: flex;
+    justify-content: end;
+
+    .btn {
+      cursor: pointer;
+      margin-right: 10px;
+      width: 100px;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      border: 1px solid #00479D;
+
+      font-weight: 400;
+      font-size: 14px;
+      color: #00479D;
+    }
+
+    .back {
+      background: #00479D;
+      color: #fff;
+    }
+  }
+
+  .dialog-title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+
+    p {
+      font-weight: 400;
+      font-size: 16px;
+      color: #333333;
+
+      span {
+        font-weight: 400;
+        font-size: 16px;
+        color: #FF0000;
+      }
+
+      &.date {
+        font-weight: 400;
+        font-size: 14px;
+        color: #999999;
+      }
+    }
+  }
+}
+
+/deep/ .el-button--primary {
+  background-color: #00479D;
+  color: #fff;
+  border-color: #00479D;
 }
 </style>

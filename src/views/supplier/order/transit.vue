@@ -1,48 +1,16 @@
 <script>
 export default {
-  name: "index",
+  name: "transit",
   data() {
     return {
       tabIndex: 1,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
       queryParams: {}, // 查询参数
       list_order: [{}], // 订单
       payList: [], // 测试项目
-      isRePay: [
-        {
-          value: '',
-          label: "全部"
-        }, {
-          value: 1,
-          label: "已分派"
-        }, {
-          value: 2,
-          label: "运输中"
-        }, {
-          value: 3,
-          label: "待上传结果"
-        }, {
-          value: 1,
-          label: "待审核结果"
-        }, {
-          value: 1,
-          label: "已完成"
-        }, {
-          value: 1,
-          label: "复测"
-        }, {
-          value: 1,
-          label: "待结算"
-        }, {
-          value: 1,
-          label: "样品回收"
-        }, {
-          value: 1,
-          label: "差评/异议"
-        }, {
-          value: 1,
-          label: "超期/即将超期"
-        }
-      ], // 订单状态
       count: 1,
       pagination: {
         page: 1,
@@ -67,7 +35,13 @@ export default {
     },
     goUrl(url) {
       this.$router.push(url);
-    }
+    },
+
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.postId)
+      this.single = selection.length != 1
+    },
   }
 }
 </script>
@@ -78,7 +52,7 @@ export default {
       <div class="section-title">
         <div class="label">
           <div class="label-item pointer">
-            全部订单
+            运输中订单
           </div>
         </div>
         <div class="search">
@@ -107,16 +81,6 @@ export default {
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="订单状态" prop="goodsName">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择订单状态">
-              <el-option
-                  v-for="item in isRePay"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
           <el-form-item label="日期筛选" prop="goodsName">
             <el-date-picker
                 v-model="queryParams.date"
@@ -132,20 +96,25 @@ export default {
           </el-form-item>
         </el-form>
       </div>
-
+      <el-row :gutter="10">
+        <el-col :span="1.5">
+          <el-button type="primary" size="mini" :disabled="single">
+            批量收到样品
+          </el-button>
+        </el-col>
+      </el-row>
       <div class="order-box">
-        <el-table :data="list_order" style="width: 100%">
+        <el-table :data="list_order" style="width: 100%" @selection-change="handleSelectionChange">
+          <el-table-column type="selection"/>
           <el-table-column prop="date" label="订单号"></el-table-column>
           <el-table-column prop="date" label="项目名称"></el-table-column>
           <el-table-column prop="date" label="仪器型号"></el-table-column>
+          <el-table-column prop="date" label="寄样分部"></el-table-column>
           <el-table-column prop="date" label="金额"></el-table-column>
           <el-table-column prop="date" label="样品数"></el-table-column>
           <el-table-column prop="date" label="对接人"></el-table-column>
           <el-table-column prop="date" label="回收"></el-table-column>
-          <el-table-column prop="date" label="订单状态"></el-table-column>
-          <el-table-column prop="date" label="样品状态"></el-table-column>
           <el-table-column prop="date" label="寄样时间"></el-table-column>
-          <el-table-column prop="date" label="完成时间"></el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
               <el-button size="mini" @click="goUrl('/supplier-order-detail')">查看</el-button>
@@ -259,8 +228,13 @@ export default {
     }
   }
 
+  .el-row {
+    margin-top: 10px;
+    margin-left: 35px !important;
+  }
+
   .order-box {
-    margin-top: 50px;
+    margin-top: 10px;
     padding: 0 40px;
 
     /deep/ .el-table th.el-table__cell {
@@ -268,5 +242,11 @@ export default {
       color: #333333;
     }
   }
+}
+
+.el-button--primary {
+  background-color: #00479D;
+  color: #fff;
+  border-color: #00479D;
 }
 </style>
