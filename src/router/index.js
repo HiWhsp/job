@@ -113,6 +113,11 @@ const routes = [
     name: "retrieve",
     component: () => import('@/views/account/retrieve.vue')
   },
+  {
+    path: "/supplier-login", // 供应商登录
+    name: "supplier-login",
+    component: () => import("@/views/account/supplier-login.vue"),
+  },
 
   {
     path: '/orderPay', // 订单支付
@@ -125,6 +130,12 @@ const routes = [
     name: 'pay-status',
     meta: {},
     component: () => import("@/views/order/status.vue"),
+  },
+  {
+    path: '/supplier-status', // 供应商入驻
+    name: 'supplier-status',
+    meta: {},
+    component: () => import("@/views/supplier/status.vue"),
   },
   ...baseRouter,
   ...myRouter,

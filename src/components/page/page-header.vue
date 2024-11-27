@@ -28,7 +28,7 @@
             <i class="col"></i>
             <div class="login-btn pointer" @click="goUrl({url: '/register'})">注册</div>
             <i class="col"></i>
-            <div class="login-btn pointer" @click="goUrl({url: '/login'})">供应商登录</div>
+            <div class="login-btn pointer" @click="goUrl({url: '/supplier-login'})">供应商登录</div>
           </div>
         </div>
       </div>

@@ -15,13 +15,37 @@ export default {
           index: '/order',
           children: [
             {
-              title: '正常订单',
-              index: '/order'
+              title: '全部订单',
+              index: '/supplier-order'
             }, {
-              title: '审批订单',
-              index: '/approvalOrder'
+              title: '已分派订单',
+              index: '/assign-order'
             }, {
-              title: '积分兑换订单',
+              title: '运输中订单',
+              index: '/exchangeOrder'
+            }, {
+              title: '待上传结果订单',
+              index: '/exchangeOrder'
+            }, {
+              title: '报告审核订单',
+              index: '/exchangeOrder'
+            }, {
+              title: '已完成订单',
+              index: '/exchangeOrder'
+            }, {
+              title: '复测订单',
+              index: '/exchangeOrder'
+            }, {
+              title: '待结算订单',
+              index: '/exchangeOrder'
+            }, {
+              title: '样品回收订单',
+              index: '/exchangeOrder'
+            }, {
+              title: '差评/异议订单',
+              index: '/exchangeOrder'
+            }, {
+              title: '超期/即将超期订单',
               index: '/exchangeOrder'
             }
           ]
@@ -242,6 +266,7 @@ export default {
 
   .right {
     margin-left: 20px;
+    margin-right: 20px;
     margin-top: 30px;
     flex: 1;
     background: #FFFFFF;
