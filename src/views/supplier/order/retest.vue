@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "uploadResult",
+  name: "retest",
   data() {
     return {
       tabIndex: 1,
@@ -11,10 +11,11 @@ export default {
       queryParams: {}, // 查询参数
       list_order: [{}], // 订单
       payList: [], // 测试项目
-      selectTab: {title: "普通订单", status: "0"},
+      selectTab: {title: "全部", status: "0"},
       list_tab: [
-        {title: "普通订单", status: "0"},
-        {title: "分批测订单", status: "1"}
+        {title: "全部", status: "0"},
+        {title: "复测中", status: "1"},
+        {title: '复测已完成', status: '2'}
       ],
       count: 1,
       pagination: {
@@ -127,7 +128,11 @@ export default {
           <el-table-column type="selection"/>
           <el-table-column prop="date" label="订单号"></el-table-column>
           <el-table-column prop="date" label="项目名称"></el-table-column>
-          <el-table-column prop="date" label="要求出结果时间"></el-table-column>
+          <el-table-column prop="date" label="仪器型号"></el-table-column>
+          <el-table-column prop="date" label="订单完成时间" width="120"></el-table-column>
+          <el-table-column prop="date" label="置为复测时间" width="120"></el-table-column>
+          <el-table-column prop="date" label="要求出结果时间" width="120"></el-table-column>
+          <el-table-column prop="date" label="是否重新寄样" width="120"></el-table-column>
           <el-table-column prop="date" label="寄样分部"></el-table-column>
           <el-table-column prop="date" label="金额"></el-table-column>
           <el-table-column prop="date" label="样品数"></el-table-column>
@@ -135,9 +140,12 @@ export default {
           <el-table-column prop="date" label="回收"></el-table-column>
           <el-table-column prop="date" label="加急"></el-table-column>
           <el-table-column prop="date" label="寄样时间"></el-table-column>
+          <el-table-column prop="date" label="复测状态"></el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
-              <el-button size="mini" @click="goUrl('/supplier-order-detail?type=4')">查看</el-button>
+              <el-button type="text" size="mini"
+                         @click="goUrl('/supplier-order-detail?type=8&status=' + selectTab.status)">详情
+              </el-button>
             </template>
           </el-table-column>
         </el-table>

@@ -28,31 +28,31 @@ export default {
               index: '/waitUploadResult-order'
             }, {
               title: '报告审核订单',
-              index: '/exchangeOrder'
+              index: '/reportAudit-order'
             }, {
               title: '已完成订单',
-              index: '/exchangeOrder'
+              index: '/finish-order'
             }, {
               title: '复测订单',
-              index: '/exchangeOrder'
+              index: '/retest-order'
             }, {
               title: '待结算订单',
-              index: '/exchangeOrder'
+              index: '/waitSettlement-order'
             }, {
               title: '样品回收订单',
-              index: '/exchangeOrder'
+              index: '/sampleRecovery-order'
             }, {
               title: '差评/异议订单',
-              index: '/exchangeOrder'
+              index: '/objection-order'
             }, {
               title: '超期/即将超期订单',
-              index: '/exchangeOrder'
+              index: '/overdue-order'
             }
           ]
         },
         {
           title: '报告管理',
-          index: '/reportManage'
+          index: '/supplier-reportManage'
         },
         {
           title: '设备管理',

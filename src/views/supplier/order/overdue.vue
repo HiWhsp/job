@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "uploadResult",
+  name: "overdue",
   data() {
     return {
       tabIndex: 1,
@@ -11,10 +11,12 @@ export default {
       queryParams: {}, // 查询参数
       list_order: [{}], // 订单
       payList: [], // 测试项目
-      selectTab: {title: "普通订单", status: "0"},
+      selectTab: {title: "全部", status: "0"},
       list_tab: [
-        {title: "普通订单", status: "0"},
-        {title: "分批测订单", status: "1"}
+        {title: "全部", status: "0"},
+        {title: "已超期", status: "1"},
+        {title: '即将超期', status: '2'},
+        {title: '已完成的超期订单', status: '3'}
       ],
       count: 1,
       pagination: {
@@ -57,7 +59,7 @@ export default {
       <div class="section-title">
         <div class="label">
           <div class="label-item pointer">
-            运输中订单
+            差评/异议订单
           </div>
         </div>
         <div class="search">
@@ -69,15 +71,18 @@ export default {
 
       <div class="search-filter">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
-          <el-form-item label="订单编号" prop="orderSn">
-            <el-input
-                v-model="queryParams.orderSn"
-                placeholder="请输入订单号"
-                clearable
-            />
-          </el-form-item>
           <el-form-item label="测试项目" prop="phone">
             <el-select v-model="queryParams.orderUrl" placeholder="请选择测试项目">
+              <el-option
+                  v-for="item in payList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="订单状态" prop="orderSn">
+            <el-select v-model="queryParams.orderUrl" placeholder="请选择订单状态">
               <el-option
                   v-for="item in payList"
                   :key="item.value"
@@ -102,14 +107,6 @@ export default {
         </el-form>
       </div>
 
-      <!--      <el-row :gutter="10">-->
-      <!--        <el-col :span="1.5">-->
-      <!--          <el-button type="primary" size="mini" :disabled="single">-->
-      <!--            批量收到样品-->
-      <!--          </el-button>-->
-      <!--        </el-col>-->
-      <!--      </el-row>-->
-
       <div class="tab-box">
         <div
             class="tab-item"
@@ -124,20 +121,21 @@ export default {
 
       <div class="order-box">
         <el-table :data="list_order" style="width: 100%" @selection-change="handleSelectionChange">
-          <el-table-column type="selection"/>
           <el-table-column prop="date" label="订单号"></el-table-column>
           <el-table-column prop="date" label="项目名称"></el-table-column>
-          <el-table-column prop="date" label="要求出结果时间"></el-table-column>
-          <el-table-column prop="date" label="寄样分部"></el-table-column>
+          <el-table-column prop="date" label="仪器型号"></el-table-column>
           <el-table-column prop="date" label="金额"></el-table-column>
           <el-table-column prop="date" label="样品数"></el-table-column>
           <el-table-column prop="date" label="对接人"></el-table-column>
-          <el-table-column prop="date" label="回收"></el-table-column>
-          <el-table-column prop="date" label="加急"></el-table-column>
-          <el-table-column prop="date" label="寄样时间"></el-table-column>
+          <el-table-column prop="date" label="订单状态"></el-table-column>
+          <el-table-column prop="date" label="收到样品时间"></el-table-column>
+          <el-table-column prop="date" label="要求出结果时间"></el-table-column>
+          <el-table-column prop="date" label="完成时间" width="120"></el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
-              <el-button size="mini" @click="goUrl('/supplier-order-detail?type=4')">查看</el-button>
+              <el-button type="text" size="mini"
+                         @click="goUrl('/supplier-order-detail?type=12&status=' + selectTab.status)">详情
+              </el-button>
             </template>
           </el-table-column>
         </el-table>

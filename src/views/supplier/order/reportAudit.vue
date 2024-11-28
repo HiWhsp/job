@@ -1,21 +1,49 @@
 <script>
 export default {
-  name: "uploadResult",
+  name: "reportAudit",
   data() {
     return {
       tabIndex: 1,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
+      rejectUpdateVisible: false, // 驳回-修改
       queryParams: {}, // 查询参数
       list_order: [{}], // 订单
       payList: [], // 测试项目
-      selectTab: {title: "普通订单", status: "0"},
-      list_tab: [
-        {title: "普通订单", status: "0"},
-        {title: "分批测订单", status: "1"}
-      ],
+      isRePay: [
+        {
+          value: '',
+          label: "全部"
+        }, {
+          value: 1,
+          label: "已分派"
+        }, {
+          value: 2,
+          label: "运输中"
+        }, {
+          value: 3,
+          label: "待上传结果"
+        }, {
+          value: 4,
+          label: "待审核结果"
+        }, {
+          value: 5,
+          label: "已完成"
+        }, {
+          value: 6,
+          label: "复测"
+        }, {
+          value: 7,
+          label: "待结算"
+        }, {
+          value: 8,
+          label: "样品回收"
+        }, {
+          value: 9,
+          label: "差评/异议"
+        }, {
+          value: 10,
+          label: "超期/即将超期"
+        }
+      ], // 订单状态
       count: 1,
       pagination: {
         page: 1,
@@ -40,13 +68,7 @@ export default {
     },
     goUrl(url) {
       this.$router.push(url);
-    },
-
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.postId)
-      this.single = selection.length != 1
-    },
+    }
   }
 }
 </script>
@@ -57,7 +79,7 @@ export default {
       <div class="section-title">
         <div class="label">
           <div class="label-item pointer">
-            运输中订单
+            报告审核订单
           </div>
         </div>
         <div class="search">
@@ -69,17 +91,20 @@ export default {
 
       <div class="search-filter">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
-          <el-form-item label="订单编号" prop="orderSn">
-            <el-input
-                v-model="queryParams.orderSn"
-                placeholder="请输入订单号"
-                clearable
-            />
-          </el-form-item>
           <el-form-item label="测试项目" prop="phone">
             <el-select v-model="queryParams.orderUrl" placeholder="请选择测试项目">
               <el-option
                   v-for="item in payList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="审核状态" prop="goodsName">
+            <el-select v-model="queryParams.orderUrl" placeholder="请选择结果审核状态">
+              <el-option
+                  v-for="item in isRePay"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -102,42 +127,20 @@ export default {
         </el-form>
       </div>
 
-      <!--      <el-row :gutter="10">-->
-      <!--        <el-col :span="1.5">-->
-      <!--          <el-button type="primary" size="mini" :disabled="single">-->
-      <!--            批量收到样品-->
-      <!--          </el-button>-->
-      <!--        </el-col>-->
-      <!--      </el-row>-->
-
-      <div class="tab-box">
-        <div
-            class="tab-item"
-            v-for="(item, index) in list_tab"
-            :key="index"
-            @click="selectTab = item"
-            :class="item.title === selectTab.title ? 'active' : ''"
-        >
-          {{ item.title }}
-        </div>
-      </div>
-
       <div class="order-box">
-        <el-table :data="list_order" style="width: 100%" @selection-change="handleSelectionChange">
-          <el-table-column type="selection"/>
+        <el-table :data="list_order" style="width: 100%">
           <el-table-column prop="date" label="订单号"></el-table-column>
           <el-table-column prop="date" label="项目名称"></el-table-column>
-          <el-table-column prop="date" label="要求出结果时间"></el-table-column>
-          <el-table-column prop="date" label="寄样分部"></el-table-column>
+          <el-table-column prop="date" label="仪器型号"></el-table-column>
           <el-table-column prop="date" label="金额"></el-table-column>
           <el-table-column prop="date" label="样品数"></el-table-column>
           <el-table-column prop="date" label="对接人"></el-table-column>
           <el-table-column prop="date" label="回收"></el-table-column>
-          <el-table-column prop="date" label="加急"></el-table-column>
-          <el-table-column prop="date" label="寄样时间"></el-table-column>
+          <el-table-column prop="date" label="报告审核状态"></el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
-              <el-button size="mini" @click="goUrl('/supplier-order-detail?type=4')">查看</el-button>
+              <el-button type="text" size="mini" @click="goUrl('/supplier-order-detail?type=6')">详情</el-button>
+              <el-button type="text" size="mini" @click="rejectUpdateVisible = true">修改</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -149,6 +152,37 @@ export default {
                        :total="count"></el-pagination>
       </div>
     </div>
+
+    <el-dialog title="驳回-修改" :visible.sync="rejectUpdateVisible" center>
+      <div class="updateResult">
+        <div class="tip">
+          <p>
+            <span class="red">驳回原因：</span>
+            <span>这里是一段驳回原因</span>
+          </p>
+        </div>
+        <div class="title">
+          <p>订单号：4545121232</p>
+          <p>项目名称：氧氮氢分析仪</p>
+        </div>
+        <el-upload
+            class="upload-demo"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            list-type="picture">
+          <div class="upload-tit">点击上传报告 +</div>
+        </el-upload>
+        <el-upload
+            class="upload-demo"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            list-type="picture">
+          <div class="upload-tit">点击上传仪器测试结果 +</div>
+        </el-upload>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="rejectUpdateVisible = false">取 消</el-button>
+        <el-button type="primary" @click="rejectUpdateVisible">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -248,32 +282,8 @@ export default {
     }
   }
 
-  .tab-box {
-    margin-top: 10px;
-    margin-bottom: 20px;
-    padding-left: 40px;
-    .flex();
-
-    .tab-item {
-      cursor: pointer;
-      padding-bottom: 10px;
-      border-bottom: 3px solid transparent;
-      margin-right: 55px;
-      font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-      font-weight: 400;
-      color: #333333;
-
-      &.active {
-        border-bottom: 3px solid @theme;
-        font-weight: bold;
-        color: @theme;
-      }
-    }
-  }
-
   .order-box {
-    margin-top: 10px;
+    margin-top: 50px;
     padding: 0 40px;
 
     /deep/ .el-table th.el-table__cell {
@@ -283,7 +293,41 @@ export default {
   }
 }
 
-.el-button--primary {
+.updateResult {
+  padding: 0 250px 0 70px;
+
+  .tip {
+    font-weight: 400;
+    font-size: 16px;
+    color: #333333;
+    margin-bottom: 35px;
+
+    .red {
+      color: #FF0000;
+    }
+  }
+
+  .title {
+    padding-left: 45px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .upload-demo {
+    padding-left: 45px;
+
+    margin-bottom: 20px;
+  }
+
+  .upload-tit {
+    font-weight: 400;
+    font-size: 14px;
+    color: #00479D;
+  }
+}
+
+/deep/ .el-button--primary {
   background-color: #00479D;
   color: #fff;
   border-color: #00479D;
