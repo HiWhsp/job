@@ -56,19 +56,41 @@ export default {
         },
         {
           title: '设备管理',
-          index: '/profile'
+          index: "/supplier-equipmentManage"
         },
         {
           title: '历史结算',
-          index: '/profile'
+          index: "/supplier-historySettlement"
         },
         {
           title: '个人资料',
-          index: '/profile'
+          index: '/personal',
+          children: [
+            {
+              title: '基本信息',
+              index: "/supplier-basicInfo"
+            },
+            {
+              title: '营业信息',
+              index: "/supplier-businessInfo"
+            },
+            {
+              title: '收货地址',
+              index: "/supplier-address"
+            },
+            {
+              title: '结算信息',
+              index: "/supplier-settlementInfo"
+            },
+            {
+              title: '修改密码',
+              index: "/supplier-password"
+            }
+          ]
         },
         {
           title: '平台协议',
-          index: '/profile'
+          index: "/supplier-protocol"
         },
         {
           title: '退出登录',

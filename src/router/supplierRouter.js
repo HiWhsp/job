@@ -95,6 +95,54 @@ export const supplierRouter = [
         name: "supplier-reportManage",
         meta: {},
         component: () => import("@/views/supplier/reportManage/index.vue")
+      },
+      {
+        path: "/supplier-equipmentManage", // 设备管理
+        name: "supplier-equipmentManage",
+        meta: {},
+        component: () => import("@/views/supplier/equipmentManage/index.vue")
+      },
+      {
+        path: "/supplier-historySettlement", // 历史结算
+        name: "supplier-historySettlement",
+        meta: {},
+        component: () => import("@/views/supplier/historySettlement/index.vue")
+      },
+      {
+        path: "/supplier-basicInfo", // 基本信息
+        name: "supplier-basicInfo",
+        meta: {},
+        component: () => import("@/views/supplier/personal/basicInfo.vue")
+      },
+      {
+        path: "/supplier-businessInfo", // 营业信息
+        name: "supplier-businessInfo",
+        meta: {},
+        component: () => import("@/views/supplier/personal/businessInfo.vue")
+      },
+      {
+        path: "/supplier-address", // 地址管理
+        name: "supplier-address",
+        meta: {},
+        component: () => import("@/views/supplier/personal/address.vue")
+      },
+      {
+        path: "/supplier-settlementInfo", // 结算信息
+        name: "supplier-settlementInfo",
+        meta: {},
+        component: () => import("@/views/supplier/personal/settlementInfo.vue")
+      },
+      {
+        path: "/supplier-password", // 修改密码
+        name: "supplier-password",
+        meta: {},
+        component: () => import("@/views/supplier/personal/password.vue")
+      },
+      {
+        path: "/supplier-protocol", // 服务协议
+        name: "supplier-protocol",
+        meta: {},
+        component: () => import("@/views/supplier/protocol/index.vue")
       }
     ]
   }

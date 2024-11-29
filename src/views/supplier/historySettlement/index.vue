@@ -20,30 +20,8 @@ export default {
         }, {
           value: 3,
           label: "待上传结果"
-        }, {
-          value: 1,
-          label: "待审核结果"
-        }, {
-          value: 1,
-          label: "已完成"
-        }, {
-          value: 1,
-          label: "复测"
-        }, {
-          value: 1,
-          label: "待结算"
-        }, {
-          value: 1,
-          label: "样品回收"
-        }, {
-          value: 1,
-          label: "差评/异议"
-        }, {
-          value: 1,
-          label: "超期/即将超期"
         }
       ], // 订单状态
-      updateResultVisible: false,
       count: 1,
       pagination: {
         page: 1,
@@ -79,7 +57,7 @@ export default {
       <div class="section-title">
         <div class="label">
           <div class="label-item pointer">
-            报告管理
+            历史结算
           </div>
         </div>
         <div class="search">
@@ -91,18 +69,8 @@ export default {
 
       <div class="search-filter">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
-          <el-form-item label="测试项目" prop="phone">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择测试项目">
-              <el-option
-                  v-for="item in payList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="审核状态" prop="goodsName">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择报告审核状态">
+          <el-form-item label="处理状态" prop="goodsName">
+            <el-select v-model="queryParams.orderUrl" placeholder="请选择处理状态">
               <el-option
                   v-for="item in isRePay"
                   :key="item.value"
@@ -129,22 +97,15 @@ export default {
 
       <div class="order-box">
         <el-table :data="list_order" style="width: 100%">
-          <el-table-column prop="date" label="订单号"></el-table-column>
-          <el-table-column prop="date" label="项目名称"></el-table-column>
-          <el-table-column prop="date" label="金额"></el-table-column>
-          <el-table-column prop="date" label="样品数"></el-table-column>
-          <el-table-column prop="date" label="对接人"></el-table-column>
-          <el-table-column prop="date" label="回收"></el-table-column>
-          <el-table-column prop="date" label="订单状态"></el-table-column>
-          <el-table-column prop="date" label="样品状态"></el-table-column>
-          <el-table-column prop="date" label="报告审核状态"></el-table-column>
-          <el-table-column prop="date" label="寄样时间"></el-table-column>
-          <el-table-column prop="date" label="完成时间"></el-table-column>
-          <el-table-column label="操作" fixed="right" width="220">
+          <el-table-column prop="date" label="申请人"></el-table-column>
+          <el-table-column prop="date" label="申请时间"></el-table-column>
+          <el-table-column prop="date" label="申请金额"></el-table-column>
+          <el-table-column prop="date" label="订单金额"></el-table-column>
+          <el-table-column prop="date" label="税点"></el-table-column>
+          <el-table-column prop="date" label="处理状态"></el-table-column>
+          <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
-              <el-button type="text" size="mini" @click="goUrl('/supplier-order-detail')">详情</el-button>
-              <el-button type="text" size="mini" @click="updateResultVisible = true">查看报告</el-button>
-              <el-button type="text" size="mini" @click="goUrl('/supplier-order-detail')">修改</el-button>
+              <el-button type="text" size="mini" @click="goUrl('/')">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -156,31 +117,6 @@ export default {
                        :total="count"></el-pagination>
       </div>
     </div>
-
-    <el-dialog title="查看报告" :visible.sync="updateResultVisible">
-      <div class="updateResult">
-        <p class="tip">
-          <span class="red">驳回原因：</span>
-          <span>这里是一段驳回原因</span>
-        </p>
-        <div class="title">
-          <p>订单号：4545121232</p>
-          <p>项目名称：氧氮氢分析仪</p>
-        </div>
-        <el-upload
-            class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            list-type="picture">
-          <div class="upload-tit">点击上传报告 +</div>
-        </el-upload>
-        <el-upload
-            class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            list-type="picture">
-          <div class="upload-tit">点击上传仪器测试结果 +</div>
-        </el-upload>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -288,38 +224,6 @@ export default {
       background: #EAECEE;;
       color: #333333;
     }
-  }
-}
-
-.updateResult {
-  padding: 0 250px 0 70px;
-
-  .tip {
-    margin-bottom: 20px;
-
-    font-weight: 400;
-    font-size: 14px;
-    color: #333333;
-
-    .red {
-      color: #FF0000;
-    }
-  }
-
-  .title {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-
-  .upload-demo {
-    margin-bottom: 20px;
-  }
-
-  .upload-tit {
-    font-weight: 400;
-    font-size: 14px;
-    color: #00479D;
   }
 }
 </style>
