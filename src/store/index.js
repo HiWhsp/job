@@ -191,7 +191,6 @@ export default new Vuex.Store({
 
         //设置基本信息
         set_baseInfo(state, data) {
-            // //console.log("设置用户信息", { ...data });
             let {token, user_id, id, level, levelRules} = data;
 
             state.vuex_is_login = true;
@@ -230,21 +229,25 @@ export default new Vuex.Store({
         },
 
         set_vuex_login_status(state, value) {
-            // //console.log("--------------- 用户是否登录 ---------------", value);
             state.vuex_is_login = value;
         },
         //清空登录信息
         clear_loginInfo(state) {
-            state.shopcart_count = "0";
-            state.token = "";
-            state.userId = "";
-            state.baseInfo = {};
-            state.vuex_is_login = false;
-            localStorage.removeItem('user_id');
-            localStorage.removeItem('userInfo');
-            localStorage.removeItem('baseInfo');
-            localStorage.removeItem('token');
-            location.reload();
+            api({
+                url: "user_logout",
+                method: "post",
+            }).then(res => {
+                state.shopcart_count = "0";
+                state.token = "";
+                state.userId = "";
+                state.baseInfo = {};
+                state.vuex_is_login = false;
+                localStorage.removeItem('user_id');
+                localStorage.removeItem('userInfo');
+                localStorage.removeItem('baseInfo');
+                localStorage.removeItem('token');
+                location.reload();
+            })
         },
 
         change_store_keyword(state, val) {
@@ -283,17 +286,14 @@ export default new Vuex.Store({
         //获取登录后的信息
         async getUserloginedInfo({commit, state, dispatch}, data) {
             dispatch("query_user");
-            dispatch("query_cart");
+            // dispatch("query_cart");
         },
 
         // 获取用户信息
         async query_user({commit, state, dispatch}) {
             api({
-                url: "/service.php",
-                method: "get",
-                data: {
-                    action: "users_userInfo",
-                },
+                url: "user_info",
+                method: "post",
             }).then((res) => {
                 if (res.code == 200) {
                     commit("set_vuex_login_status", true);
@@ -330,67 +330,47 @@ export default new Vuex.Store({
         async appInitGetAssets({commit, state, dispatch}, data) {
             dispatch("query_user");
 
-            api({
-                url: "/service.php",
-                method: "get",
-                data: {
-                    action: "index_config",
-                },
-            }).then((res) => {
-                let {code, data} = res;
-                if (code === 200) {
-                    commit("set_vuex_configInfo", data);
-                }
-            });
+            // api({
+            //     url: "/service.php",
+            //     method: "get",
+            //     data: {
+            //         action: "index_config",
+            //     },
+            // }).then((res) => {
+            //     let {code, data} = res;
+            //     if (code === 200) {
+            //         commit("set_vuex_configInfo", data);
+            //     }
+            // });
 
             //首页数据接口
-            api({
-                url: "/service.php",
-                method: "get",
-                data: {
-                    action: "banner_index",
-                    position: 0, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
-                },
-            }).then((res) => {
-                if (res.code == 200) {
-                    commit("set_vuex_banner", res.data);
-                }
-            });
+            // api({
+            //     url: "/service.php",
+            //     method: "get",
+            //     data: {
+            //         action: "banner_index",
+            //         position: 0, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
+            //     },
+            // }).then((res) => {
+            //     if (res.code == 200) {
+            //         commit("set_vuex_banner", res.data);
+            //     }
+            // });
 
             //产品分类
-            api({
-                url: "/service.php",
-                method: "get",
-                data: {
-                    action: "product_channel",
-                    parentId: 0,
-                },
-            }).then((res) => {
-                if (res.code == 200) {
-                    let catesInfo = handle_product_cate_data(res.data);
-                    console.log(catesInfo)
-                    commit("set_vuex_product_cate", catesInfo);
-                }
-            });
-
-            //新闻分类
             // api({
-            //   url: "/service.php",
-            //   method: "get",
-            //   data: {
-            //     action: "news_channel",
-            //   },
+            //     url: "/service.php",
+            //     method: "get",
+            //     data: {
+            //         action: "product_channel",
+            //         parentId: 0,
+            //     },
             // }).then((res) => {
-            //   let { code, data } = res;
-            //   if (code == 200) {
-            //     res.data.forEach((v) => {
-            //       v.route = "/news?id=" + v.id;
-            //     });
-            //     commit("set_vuex_data", {
-            //       key: "vuexNewsCates",
-            //       val: res.data,
-            //     });
-            //   }
+            //     if (res.code == 200) {
+            //         let catesInfo = handle_product_cate_data(res.data);
+            //         console.log(catesInfo)
+            //         commit("set_vuex_product_cate", catesInfo);
+            //     }
             // });
         },
     },

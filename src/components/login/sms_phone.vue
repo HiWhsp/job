@@ -4,14 +4,14 @@
       <img src="@/assets/img/login/code.png" alt="">
       <el-input type="text" placeholder="请输入验证码" v-model="form.code"/>
 
-      <button
+      <el-button
           :disabled="disabledBtn"
           class="btn-validate-box"
           @click="getCode"
           :class="time != 60 ? 'disabled' : ''"
       >
         <span>{{ time == 60 ? "获取验证码" : time }}</span>
-      </button>
+      </el-button>
     </div>
   </div>
 </template>
@@ -40,15 +40,12 @@ export default {
         return;
       }
 
-      //console.log("发送验证码");
       let {phone, email} = this.form;
-      let reg_email = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
       let reg_phone = /^1[3-9]\d{9}$/;
 
       let is_true_phone = reg_phone.test(phone);
+      console.log(phone)
 
-      // debugger
-      // var isEmail = reg_email.test(email);
       if (!is_true_phone) {
         alertErr("请输入正确的手机号");
         return;
@@ -60,11 +57,17 @@ export default {
 
     //修改绑定邮箱
     retrieveByEmail() {
-      this.$api("login_phoneYzm", {
+      this.$api("sendsms", {
         phone: this.form.phone,
-      }).then((res) => {
-        //console.log("验证码", res);
-        let {code, message} = res;
+        scene: 'login'
+      }, 'post').then((res) => {
+        let {code, msg} = res;
+
+        if (code === 200) {
+          this.$message.success(msg);
+        } else {
+          this.$message.error(msg);
+        }
       });
     },
 
@@ -127,6 +130,7 @@ export default {
   border: 1px solid #00479D;
   margin-left: 15px;
   color: #00479D;
+
   &.disabled {
     color: #ccc;
   }

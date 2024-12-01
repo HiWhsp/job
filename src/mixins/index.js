@@ -15,6 +15,12 @@ export default {
       //函数节流和防抖
       firstTime_mix_throttle: true,
       timer_mix_throttle: null,
+      list_sheng: [
+        {id: 1, title: "学生"},
+        {id: 2, title: "教职工"},
+        {id: 3, title: "企业"},
+        {id: 4, title: "医院"},
+      ],
     };
   },
   computed: {

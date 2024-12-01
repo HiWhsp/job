@@ -73,13 +73,7 @@ export default {
     },
 
     queryConfig() {
-      this.$api("index_config").then((res) => {
-        if (res.data && res.data.com_logo) {
-          document
-              .querySelector('meta[property="og:image"]')
-              .setAttribute("content", res.data.com_logo);
-        }
-      });
+
     },
   },
 };

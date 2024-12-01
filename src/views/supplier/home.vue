@@ -191,69 +191,18 @@ export default {
     },
     //
     query_user() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "users_userInfo",
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          this.my_info = res.data;
-        }
-      });
     },
     //用户主页数据
     query_userIndex() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "users_index",
-        },
-      }).then((res) => {
-        let {code, data} = res;
-        if (res.code == 200) {
-          this.user_index = res.data;
-        }
-      });
+
     },
     //订单查询
     query_order() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "orders_lists",
-          page: 1,
-          pageNum: 2,
-          scene: 0,
-        },
-      }).then((res) => {
-        let {code, data} = res;
-        if (code == 200) {
-          this.list_order = data.list;
-        }
-      });
+
     },
     //商品信息
     query_goods() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "product_plist",
-          ifShowSku: 1,
-          ...this.pagination,
-        },
-      }).then((res) => {
-        let {code, data, count} = res;
-        if (code == 200) {
-          let {list, count, pages} = data;
-          this.list_goods = list;
-          this.count = count;
-        }
-      });
+
     },
 
     changeSugges() {

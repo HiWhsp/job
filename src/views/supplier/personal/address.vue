@@ -102,33 +102,7 @@ export default {
       this.query_user();
     },
     query_user() {
-      this.$api({
-        url: '/service.php',
-        method: 'get',
-        data: {
-          action: 'users_userInfo',
-        },
-      }).then(res => {
-        if (res.code == 200) {
-          let data = res.data;
-          this.my_info = data;
 
-          this.form = {
-            image: data.image,
-            realName: data.realName,
-            nickname: data.nickname,
-            email: data.email,
-            province: data.province,
-            city: data.city,
-            areaId: data.areaId,
-            provinceCode: data.provinceCode,
-            cityCode: data.cityCode,
-            areaCode: data.areaCode,
-          }
-          this.$refs.area_select.init({province: data.province, city: data.city, area: data.areaId});
-          this.$store.commit("set_baseInfo", res.data);
-        }
-      })
     },
 
     do_submit() {

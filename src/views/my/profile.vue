@@ -9,12 +9,12 @@
         <div class="section-ctx">
           <div class="item upload-box">
             <div class="info">
-              <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="img"
+              <el-upload class="upload-demo" accept="image/*" :show-file-list="false" :name="UPLOAD_NAME"
                          action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload"
                          :data="mix_upload_data" :on-success="upload_on_success"
                          :before-upload="upload_before_upload">
-                <img v-if="form.image" :src="form.image" class="user-avatar"/>
-                <img v-else src="@/assets/img/my/avatar.png" class="user-avatar"/>
+                <img v-if="form.avatar" :src="form.avatar" class="user-avatar"/>
+                <img v-else src="@/assets/img/supplier/avatar.png" class="user-avatar"/>
               </el-upload>
               <div class="update-img">
                 <img src="@/assets/img/my/update.png" alt="">
@@ -25,7 +25,7 @@
           <div class="item">
             <div class="info">
               <span class="text">真实姓名：</span>
-              <el-input clearable type="text" v-model="form.realName"/>
+              <el-input clearable type="text" placeholder="请输入真实姓名" v-model="form.name"/>
             </div>
             <span class="action"> </span>
           </div>
@@ -33,7 +33,7 @@
           <div class="item">
             <div class="info">
               <span class="text">手机：</span>
-              <el-input disabled type="text" v-model="my_info.phone"/>
+              <el-input disabled type="text" v-model="form.phone"/>
             </div>
             <span class="action" @click="open_phone_update()">
               <span>修改</span>
@@ -50,7 +50,7 @@
           <div class="item">
             <div class="info">
               <span class="text">身份：</span>
-              <el-select v-model="form.sheng" placeholder="请选择" clearable>
+              <el-select v-model="form.role" placeholder="请选择" clearable>
                 <el-option v-for="item in list_sheng" :key="item.id" :label="item.title" :value="item.id"></el-option>
               </el-select>
               <span class="tip">！身份请如实填写，若系统检测您的身份不相符，将禁用账户。请慎重选择</span>
@@ -65,33 +65,33 @@
             </span>
             <span class="action"> </span>
           </div>
-          <div class="item" v-if="form.sheng === 1">
+          <div class="item" v-if="form.role === 1 || form.role === 2">
             <div class="info">
               <span class="text">所在高校：</span>
               <div class="flex">
-                <el-input clearable v-model="form.nickName" placeholder="请填写学校"
+                <el-input clearable v-model="form.unit_name" placeholder="请填写学校"
                           style="margin-right: 15px;"></el-input>
-                <el-input clearable v-model="form.nickName" placeholder="请填写院系"></el-input>
+                <el-input clearable v-model="form.unit_group" placeholder="请填写院系"></el-input>
               </div>
             </div>
             <span class="action">
             </span>
           </div>
-          <div class="item" v-if="form.sheng === 2">
+          <div class="item" v-if="form.role === 4">
             <div class="info">
               <span class="text">医院：</span>
               <div class="flex">
-                <el-input clearable v-model="form.nickName" placeholder="请填写医院"></el-input>
+                <el-input clearable v-model="form.unit_name" placeholder="请填写医院"></el-input>
               </div>
             </div>
             <span class="action">
             </span>
           </div>
-          <div class="item" v-if="form.sheng === 3">
+          <div class="item" v-if="form.role === 3">
             <div class="info">
               <span class="text">企业：</span>
               <div class="flex">
-                <el-input clearable v-model="form.nickName" placeholder="请填写企业"></el-input>
+                <el-input clearable v-model="form.unit_name" placeholder="请填写企业"></el-input>
               </div>
             </div>
             <span class="action">
@@ -101,7 +101,7 @@
             <div class="info">
               <span class="text">详细地址：</span>
               <div class="flex">
-                <el-input clearable v-model="form.nickName" placeholder="请输入详细地址"
+                <el-input clearable v-model="form.address" placeholder="请输入详细地址"
                           style="margin-right: 15px;"></el-input>
               </div>
             </div>
@@ -153,24 +153,15 @@ export default {
       UPLOAD_ACTION,
       UPLOAD_NAME,
 
-      list_sheng: [
-        {id: 1, title: "教职工"},
-        {id: 2, title: "医院"},
-        {id: 3, title: "企业"},
-      ],
-
       my_info: {},
       form: {
-        image: '',
-        realName: "",
-        nickname: "",
-        email: "",
-        province: '',
-        city: '',
-        area: '',
-        provinceCode: '',
-        cityCode: '',
-        areaCode: '',
+        "avatar": "", // 头像
+        "name": "", // 姓名
+        "email": "", // 邮箱
+        "phone": "150****0032", // 手机号
+        "role": 1, //1学生2教职工3企业4医院
+        "unit_name": "", // 学校名称
+        "unit_group": "", // 院系
       },
       loading: false,
     };
@@ -199,46 +190,19 @@ export default {
       this.query_user();
     },
     query_user() {
-      this.$api({
-        url: '/service.php',
-        method: 'get',
-        data: {
-          action: 'users_userInfo',
-        },
-      }).then(res => {
-        if (res.code == 200) {
-          let data = res.data;
-          this.my_info = data;
-
-          this.form = {
-            image: data.image,
-            realName: data.realName,
-            nickname: data.nickname,
-            email: data.email,
-            province: data.province,
-            city: data.city,
-            area: data.areaId,
-            provinceCode: data.provinceCode,
-            cityCode: data.cityCode,
-            areaCode: data.areaCode,
-          }
-          this.$refs.area_select.init({province: data.province, city: data.city, area: data.areaId});
-          this.$store.commit("set_baseInfo", res.data);
-        }
-      })
     },
 
     do_submit() {
 
-      if (!this.form.realName) {
+      if (!this.form.name) {
         alertErr("请填写真实姓名");
         return;
       }
 
-      if (!this.form.area) {
-        alertErr("请填写所在地区");
-        return;
-      }
+      // if (!this.form.area) {
+      //   alertErr("请填写所在地区");
+      //   return;
+      // }
 
       if (!this.form.email) {
         alertErr("请填写邮箱");
@@ -246,10 +210,9 @@ export default {
       }
       this.loading = true;
       this.$api({
-        url: '/service.php',
+        url: 'edit_user',
         method: 'get',
         data: {
-          action: 'users_editInfo',
           ...this.form
         },
       }).then((res) => {
@@ -265,16 +228,13 @@ export default {
 
     do_reset() {
       this.form = {
-        image: this.my_info.image,
-        realName: "",
-        nickName: "",
-        email: "",
-        province: '',
-        city: '',
-        area: '',
-        provinceCode: '',
-        cityCode: '',
-        areaCode: '',
+        "avatar": "",
+        "name": "",
+        "email": "",
+        "phone": "",
+        "role": "", //1学生2教职工3企业4医院
+        "unit_name": "",
+        "unit_group": "",
       };
     },
 

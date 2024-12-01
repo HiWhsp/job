@@ -99,17 +99,17 @@ const routes = [
 
   /** 登录相关 **/
   {
-    path: '/register',
+    path: '/register', // 注册
     name: "register",
     component: () => import('@/views/account/register.vue')
   },
   {
-    path: '/login',
+    path: '/login', // 登录
     name: "login",
     component: () => import('@/views/account/login.vue')
   },
   {
-    path: '/retrieve',
+    path: '/retrieve', // 找回
     name: "retrieve",
     component: () => import('@/views/account/retrieve.vue')
   },
