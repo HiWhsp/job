@@ -20,21 +20,63 @@ export default {
       ],
       realRules: {
         name: [
-          {required: true, message: '请输入活动名称', trigger: 'blur'},
+          {required: true, message: '请输入姓名', trigger: 'blur'},
+        ],
+        idcard: [
+          {required: true, message: '请输入身份证号', trigger: 'blur'}
+        ],
+        phone: [
+          {required: true, message: '请输入手机号', trigger: 'blur'}
+        ],
+        code: [
+          {required: true, message: '请输入验证码', trigger: 'blur'}
+        ],
+        idcard_pic1: [
+          {required: true, message: '请上传身份证正面照', trigger: 'blur'}
+        ],
+        idcard_pic2: [
+          {required: true, message: '请上传身份证正反面照', trigger: 'blur'}
         ]
       }
     }
   },
+  mounted() {
+    this.setView();
+  },
   methods: {
+    setView() {
+      this.$api({
+        url: "show_real_auth",
+        method: "post",
+      }).then(res => {
+        if (res.code === 200) {
+          this.isReal = res.data.status
+          this.realForm = res.data;
+        }
+      })
+    },
     // 实名认证
     realClick() {
       this.realVisible = true
     },
     // 实名认证提交
     realVisibleSubmit() {
-      this.realVisible = false
-      this.isReal = true
-      this.realSuccessVisible = true
+      this.$refs["ruleForm"].validate((valid) => {
+        if (valid) {
+          this.$api({
+            url: "real_auth",
+            method: "post",
+            data: this.realForm
+          }).then(res => {
+            if (res.code === 200) {
+              this.$message.success('实名认证成功')
+              this.realVisible = false
+              this.isReal = true
+              this.realSuccessVisible = true
+            }
+          })
+        }
+      })
     },
     // 查看实名信息
     lockRealInfo() {
@@ -57,9 +99,15 @@ export default {
     changeGroupSubmit() {
       if (this.dialogTitle == '身份验证') {
         this.dialogTitle = '个人预付转团体预付'
-      }else {
+      } else {
         this.changeGroupVisible = false
       }
+    },
+    upload_on_success(response, file, fileList) {
+      console.log(response, file);
+    },
+    upload_on_success_2(response, file, fileList) {
+      console.log(response, file);
     }
   }
 }
@@ -240,32 +288,38 @@ export default {
             <el-input v-model="realForm.name" placeholder="请输入姓名"></el-input>
           </el-form-item>
           <el-form-item label="身份证号：" prop="name">
-            <el-input v-model="realForm.name" placeholder="请输入准确身份证号"></el-input>
+            <el-input v-model="realForm.idcard" placeholder="请输入准确身份证号"></el-input>
           </el-form-item>
           <el-form-item label="手机号：" prop="name">
-            <el-input placeholder="请输入手机号" v-model="realForm.name">
+            <el-input placeholder="请输入手机号" v-model="realForm.phone">
               <template slot="append">获取验证码</template>
             </el-input>
           </el-form-item>
           <el-form-item label="验证码：" prop="name">
-            <el-input placeholder="请输入验证码" v-model="realForm.name"></el-input>
+            <el-input placeholder="请输入验证码" v-model="realForm.code"></el-input>
           </el-form-item>
-          <el-form-item label="身份证照片：" prop="name">
+          <el-form-item label="身份证照片：" prop="idcard_pic2">
             <div class="flex">
               <el-upload style="margin-right: 20px" class="upload-wrap" accept="image/*" :show-file-list="false"
-                         name="img"
-                         action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload">
-                <!--                <img src="@/assets/img/base/upload.png" class="user-avatar"/>-->
-                <span>上传人像面照片</span>
+                         name="file"
+                         :on-success="upload_on_success"
+                         action="http://jxjsjc.dx.hdapp.com.cn/api/upload">
+                <div class="upload" v-if="!realForm.idcard_pic1">
+                  <i class="el-icon-plus"></i>
+                  <span>上传人像面照片</span>
+                </div>
+                <img :src="realForm.idcard_pic2" alt="" v-else>
               </el-upload>
-              <el-upload class="upload-wrap" accept="image/*" :show-file-list="false" name="img"
-                         action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload">
-                <span>上传国徽面照片</span>
-
-                <!--                <img src="@/assets/img/base/upload.png" class="user-avatar"/>-->
+              <el-upload class="upload-wrap" accept="image/*" :show-file-list="false" name="file"
+                         :on-success="upload_on_success_2"
+                         action="http://jxjsjc.dx.hdapp.com.cn/api/upload">
+                <div class="upload" v-if="!realForm.idcard_pic2">
+                  <i class="el-icon-plus"></i>
+                  <span>上传国徽面照片</span>
+                </div>
+                <img :src="realForm.idcard_pic2" alt="" v-else>
               </el-upload>
             </div>
-
           </el-form-item>
         </el-form>
       </div>
@@ -752,6 +806,15 @@ export default {
     background: #FFFFFF;
     border-radius: 2px 2px 2px 2px;
     border: 1px solid #DEDEDE;
+
+    .upload {
+      width: 150px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
   }
 }
 

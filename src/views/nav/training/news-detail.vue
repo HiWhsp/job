@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "materialDownload-detail",
+  name: "news-detail",
   data() {
     return {
       id: '',
@@ -14,7 +14,7 @@ export default {
   methods: {
     getDetail() {
       this.$api({
-        url: 'download_detail',
+        url: 'article_detail',
         method: 'post',
         data: {
           id: this.id
@@ -22,9 +22,6 @@ export default {
       }).then(res => {
         this.detail = res.data
       })
-    },
-    down() {
-      window.open(this.detail.url, "_blank")
     }
   }
 }
@@ -33,19 +30,10 @@ export default {
 <template>
   <div class="content-wrap">
     <div class="title">{{ detail.title }}</div>
-    <div class="file-type">文件格式-ZIP</div>
-    <div class="download-wrap">
-      <img src="@/assets/img/base/appointment/zip.png" alt="">
-      <div class="info">
-        <div class="title">{{ detail.title }}</div>
-        <div class="size">{{ detail.filesize }}</div>
-      </div>
-      <div class="down-btn" @click="down">
-        <img src="@/assets/img/base/appointment/PDF.png" alt="">
-        <span>点击下载</span>
-      </div>
+    <div class="file-type">{{ detail.year + "-" + detail.month + "-" + detail.day }}</div>
+    <div class="detail-text">
+      这里是专家简介这里是专家简介，这里是专家简介这里是专家简介这里是专家简介，这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介，这里是专家简介这里是专家简介这里是专家简介，这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介，这里是专家简介这里是专家简介这里是专家简介，这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介
     </div>
-    <div class="detail-text">{{ detail.description }}</div>
     <!--    <div class="prev-btn">-->
     <!--      <p>上一个 这里是文件名称</p>-->
     <!--      <p>下一个 这里是文件名称</p>-->

@@ -67,6 +67,18 @@ const routes = [
         meta: {}
       },
       {
+        path: '/news', // 新闻动态
+        name: 'news',
+        component: () => import(/* webpackChunkName: "info" */ '@/views/nav/training/news.vue'),
+        meta: {}
+      },
+      {
+        path: '/newsDetail', // 新闻详情
+        name: 'newsDetail',
+        component: () => import(/* webpackChunkName: "info" */ '@/views/nav/training/news-detail.vue'),
+        meta: {}
+      },
+      {
         path: "/technologyExpress", // 技术快递
         name: "technologyExpress",
         component: () => import(/* webpackChunkName: "info" */ "@/views/nav/training/technologyExpress.vue"),

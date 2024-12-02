@@ -126,8 +126,8 @@ function api(action, data, method, uploaderConfig) {
     let reqData = {};
 
     reqData = {
-        userId: localStorage.getItem("userId") || "",
-        token: localStorage.getItem("token") || "",
+        userId: localStorage.getItem("userId") || undefined,
+        token: localStorage.getItem("token") || undefined,
         ...data,
     }; //请求数据
 

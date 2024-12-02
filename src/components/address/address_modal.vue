@@ -7,7 +7,7 @@
       <div class="modal-inner">
         <div class="item">
           <span class="text required">收货人</span>
-          <el-input clearable v-model="form.name" placeholder="请输入收货人姓名"></el-input>
+          <el-input clearable v-model="form.receive_name" placeholder="请输入收货人姓名"></el-input>
         </div>
         <div class="item">
           <span class="text required">所在地区</span>
@@ -19,19 +19,19 @@
         </div>
         <div class="item">
           <span class="text required">手机号</span>
-          <el-input clearable v-model="form.phone" placeholder="请输入手机号"></el-input>
+          <el-input clearable v-model="form.receive_phone" placeholder="请输入手机号"></el-input>
         </div>
-        <div class="item">
-          <span class="text required">固定电话</span>
-          <el-input clearable v-model="form.tel" placeholder="请输入固定电话"></el-input>
-        </div>
-        <div class="item">
-          <span class="text required">邮政编码</span>
-          <el-input clearable v-model="form.zipCode" placeholder="请输入邮政编码"></el-input>
-        </div>
+        <!--        <div class="item">-->
+        <!--          <span class="text required">固定电话</span>-->
+        <!--          <el-input clearable v-model="form.tel" placeholder="请输入固定电话"></el-input>-->
+        <!--        </div>-->
+        <!--        <div class="item">-->
+        <!--          <span class="text required">邮政编码</span>-->
+        <!--          <el-input clearable v-model="form.zipCode" placeholder="请输入邮政编码"></el-input>-->
+        <!--        </div>-->
         <div class="item">
           <span class="text"></span>
-          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#A66600"
+          <el-switch v-model="form.is_default" :inactive-value="0" :active-value="1" active-color="#00479D"
                      inactive-color="#eeeeee">
           </el-switch>
           <span style="margin-left: 15px;">设置为默认地址</span>
@@ -61,8 +61,8 @@ export default {
       show_modal: false,
 
       form: {
-        name: "",
-        phone: "",
+        receive_name: "",
+        receive_phone: "",
         provinceCode: "",
         province: "",
         cityCode: "",
@@ -70,7 +70,7 @@ export default {
         areaCode: "",
         area: "",
         address: "",
-        moren: 0,
+        is_default: 0,
         id: 0,
         longitude: '',
         latitude: '',
@@ -108,14 +108,14 @@ export default {
     },
     //获取地址详情
     query_address_detail() {
-      this.$api("userAddress_detail", {
+      this.$api("address_info", {
         id: this.form.id
       }).then((res) => {
         let {code, data, msg} = res;
         if (code == 200) {
           this.form = {
-            name: data.name,
-            phone: data.phone,
+            receive_name: data.receive_name,
+            receive_phone: data.receive_phone,
             provinceCode: data.provinceCode,
             province: data.province,
             cityCode: data.cityCode,
@@ -123,7 +123,7 @@ export default {
             areaCode: data.areaCode,
             area: data.area,
             address: data.address,
-            moren: data.moren,
+            is_default: data.is_default,
             id: data.id,
             longitude: data.longitude,
             latitude: data.latitude,
@@ -143,8 +143,8 @@ export default {
     onclosed() {
       this.$refs.area_select.clear();
       this.form = {
-        name: "",
-        phone: "",
+        receive_name: "",
+        receive_phone: "",
         provinceCode: "",
         province: "",
         cityCode: "",
@@ -152,7 +152,7 @@ export default {
         areaCode: "",
         area: "",
         address: "",
-        moren: 0,
+        is_default: 0,
         id: 0,
         longitude: '',
         latitude: '',
@@ -182,10 +182,10 @@ export default {
     // 新建地址 / 编辑地址
     do_submit() {
       let reg_phone = /^1[3-9]\d{9}$/;
-      let is_true_phone = reg_phone.test(this.form.phone);
+      let is_true_phone = reg_phone.test(this.form.receive_phone);
 
       //console.log("要保存的信息", form_data);
-      if (!this.form.name) {
+      if (!this.form.receive_name) {
         alertErr("请输入收货人姓名");
         return;
       }
@@ -208,10 +208,9 @@ export default {
 
       this.loading = true;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'edit_address',
+        method: 'post',
         data: {
-          action: 'userAddress_add',
           ...this.form
         },
       }).then((res) => {

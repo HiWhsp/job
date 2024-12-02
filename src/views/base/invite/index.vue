@@ -70,10 +70,10 @@
         <p class="title">我的好友</p>
         <div class="table">
           <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="date" label="好友姓名/ID"></el-table-column>
-            <el-table-column prop="date" label="成交金额"></el-table-column>
-            <el-table-column prop="date" label="入驻时间"></el-table-column>
-            <el-table-column prop="date" label="返佣金额"></el-table-column>
+            <el-table-column prop="name" label="好友姓名/ID"></el-table-column>
+            <el-table-column prop="orderAmount" label="成交金额"></el-table-column>
+            <el-table-column prop="created_at" label="入驻时间"></el-table-column>
+            <el-table-column prop="rebateAmount" label="返佣金额"></el-table-column>
           </el-table>
         </div>
       </div>
@@ -125,7 +125,21 @@ export default {
     }
   },
 
+  mounted() {
+    this.setView()
+  },
   methods: {
+    setView() {
+      //   获取邀请列表
+      this.$api({
+        url: 'invite_list',
+        methods: "post"
+      }).then(res => {
+        if (res.code === 200) {
+          this.tableData = res.data
+        }
+      })
+    },
     invite() {
       this.dialogVisible = true;
     },

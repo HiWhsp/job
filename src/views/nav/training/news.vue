@@ -1,10 +1,9 @@
 <script>
 export default {
-  name: "materialDownload",
+  name: "news",
   data() {
     return {
       list: [],
-      sortList: [],
       pagination: {
         page: 1,
         limit: 5,
@@ -17,20 +16,21 @@ export default {
   },
   methods: {
     setView() {
+      //   获取新闻列表
       this.$api({
-        url: 'download_list',
-        method: 'post',
+        url: "article_list",
+        method: "post",
         data: {
           ...this.pagination
         }
       }).then(res => {
-        if (res.code === 200) {
-          this.list = res.data;
+        if (res.code == 200) {
           this.count = res.count;
+          this.list = res.data
         }
       })
     },
-    goUrl(item) {
+    getUrl(item) {
       this.$router.push(`${item.url}?id=${item.params.id}`)
     }
   }
@@ -39,22 +39,22 @@ export default {
 
 <template>
   <div class="list-wrap">
-    <div class="title">
-      <span>资料下载</span>
-      <div class="sort">
-        <div class="sort-item" v-for="(item, index) in sortList" :key="index">分类名称</div>
+    <div class="title">新闻动态</div>
+    <div class="card" v-for="(item, index) in list" :key="index"
+         @click="getUrl({url: '/newsDetail', params: { id: item.id }})">
+      <div class="card-left">
+        <img :src="item.thumb" alt="">
       </div>
-    </div>
-    <div class="card" @click="goUrl({url: '/materialDownload-detail', params: {id: item.id}})"
-         v-for="(item, index) in list" :key="index">
       <div class="card-right">
+        <div class="date-badge">{{ item.created_at }}</div>
         <div class="card-header">
           <h3>{{ item.title }}</h3>
         </div>
         <p>{{ item.description }}</p>
       </div>
-      <div class="download-btn">
-      </div>
+      <!--      <div class="download-btn">-->
+      <!--        <img src="@/assets/img/base/appointment/PDF.png" alt="">下载PDF-->
+      <!--      </div>-->
     </div>
     <div class="pagination-box" v-if="count">
       <el-pagination
@@ -84,16 +84,40 @@ export default {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     background-color: #fff;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px 50px;
-    margin-bottom: 20px;
+    padding: 20px;
+    margin-bottom: 15px;
+
+    .card-left {
+      flex: 1;
+
+      img {
+        width: 100%;
+        height: 200px;
+        border-radius: 5px;
+      }
+    }
 
     .card-right {
-      width: 840px;
+      flex: 2;
+      padding: 0 20px;
       display: flex;
       flex-direction: column;
+
+      .date-badge {
+        position: absolute;
+        right: 0;
+        top: 0;
+        text-align: center;
+        width: 114px;
+        height: 30px;
+        line-height: 30px;
+        background: #707070;
+        border-radius: 0px 0px 0px 15px;
+        color: #fff;
+        font-size: 14px;
+      }
 
       .card-header {
         display: flex;
@@ -117,12 +141,20 @@ export default {
     }
 
     .download-btn {
-      cursor: pointer;
-      width: 40px;
-      height: 40px;
-      background-image: url("~@/assets/img/base/appointment/down.png");
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
+      width: 100px;
+      height: 35px;
+      background: #FFFFFF;
+      border-radius: 3px 3px 3px 3px;
+      border: 1px solid #999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        width: 14px;
+        height: 12px;
+        margin-right: 5px;
+      }
     }
 
     &:before {
@@ -137,16 +169,17 @@ export default {
     }
 
     &:hover {
+      .date-badge {
+        transition: all 0.5s;
+        background-color: #00479D;
+      }
+
       &:before {
         width: 100%;
       }
 
       h3 {
         color: #00479D !important;
-      }
-
-      .download-btn {
-        background-image: url("~@/assets/img/base/appointment/down-active.png");
       }
     }
   }

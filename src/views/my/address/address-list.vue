@@ -33,10 +33,10 @@
             </div>
             <div class="bottom">
               <div class="left">
-                <span v-if="item.moren == 1" class="moren">默认地址</span>
+                <span v-if="item.is_default == 1" class="moren">默认地址</span>
               </div>
               <div class="right">
-                <span class="action" v-if="item.moren != 1"
+                <span class="action" v-if="item.is_default != 1"
                       @click="do_address_set_default(item.id)">设置为默认地址</span>
                 <span class="action" @click="do_address_edit(item)">编辑</span>
                 <span class="action" @click="do_address_delete(item.id)">删除</span>
@@ -72,7 +72,7 @@ export default {
         page: 1,
         pageNum: 100,
       },
-      list_address: [1],
+      list_address: [],
     };
   },
   computed: {
@@ -84,10 +84,9 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'address_list',
+        method: 'post',
         data: {
-          action: 'userAddress_lists',
           ...this.pagination,
         },
       }).then(res => {
@@ -101,7 +100,7 @@ export default {
 
           this.list_address = data;
 
-          let obj = data.find((v) => v.if_default) || {};
+          let obj = data.find((v) => v.is_default) || {};
           this.select_address = obj || {};
 
           this.$store.commit("set_vuex_data", {
@@ -120,10 +119,9 @@ export default {
     },
     do_address_delete(id) {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'delete_address',
+        method: 'post',
         data: {
-          action: 'userAddress_delete',
           id: id,
         },
       }).then((res) => {

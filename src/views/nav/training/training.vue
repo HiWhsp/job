@@ -14,28 +14,37 @@ export default {
           index: '1',
         }, {
           title: '新闻动态',
-          index: '2',
+          index: '/news',
         }, {
           title: '技术快递',
-          index: '3',
-          path: '/technologyExpress'
+          index: '/technologyExpress',
         }, {
           title: '资料下载',
-          index: '4',
-          path: '/materialDownload'
+          index: '/materialDownload'
         }, {
           title: '活动信息',
           index: '5',
         }, {
           title: '专家团队',
-          index: '6',
-          path: '/expertTeam'
+          index: '/expertTeam',
         }, {
           title: '联系我们',
           index: '7',
         }
       ]
     }
+  },
+  computed: {
+    activeMenu() {
+      const route = this.$route;
+      const {meta, path} = route;
+      // if set path, the sidebar will highlight the path you set
+      if (meta.activeMenu) {
+        return meta.activeMenu;
+      }
+      console.log(path)
+      return path;
+    },
   },
   mounted() {
     this.selectItem = this.menuList[0];
@@ -50,7 +59,7 @@ export default {
           this.selectItem = item;
         }
       })
-      this.$router.push({path: this.selectItem.path})
+      this.$router.push({path: this.selectItem.index})
     }
   }
 }
@@ -64,7 +73,7 @@ export default {
       <div class="left">
         <div class="title">公司信息</div>
         <div class="menu">
-          <el-menu default-active="1-1" :unique-opened="true" @select="menuSelect">
+          <el-menu :default-active="activeMenu" :unique-opened="true" @select="menuSelect">
             <el-menu-item :index="item.index" v-for="(item, index) in menuList" :key="index">
               <template slot="title">
                 <span>{{ item.title }}</span>

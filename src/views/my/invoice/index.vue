@@ -5,9 +5,9 @@ export default {
     return {
       selectTab: {title: "全部明细", status: "0"},
       list_tab: [
-        {title: "全部明细", status: "0"},
-        {title: "支付记录", status: "1"},
-        {title: "充值记录", status: "2"},
+        {title: "全部发票", status: "0"},
+        {title: "已开票", status: "1"},
+        {title: "待开票", status: "2"},
       ],
 
       list_jilu: [{}],
@@ -20,7 +20,26 @@ export default {
       requestVisible: false
     }
   },
+  mounted() {
+    this.setView()
+  },
   methods: {
+    setView() {
+      this.$api({
+        url: "invoice_list",
+        method: "post",
+        data: {
+          type: this.selectTab.status,
+          ...this.pagination
+        }
+      }).then(res => {
+        let {code, data, count} = res;
+        if (code == 200) {
+          this.list_jilu = data;
+          this.count = count;
+        }
+      })
+    },
     onDetail() {
       this.$router.push("/invoiceDetail");
     },
