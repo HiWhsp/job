@@ -248,15 +248,18 @@ export default {
           return;
         }
 
-        this.$api("users_phoneLogin", {
-          type: 0, //0-账号密码 登录     1-账号 验证码登录
-          phone: phone,
-          password: password,
+        this.$api({
+          url: 'login',
+          method: 'post',
+          data: {
+            type: 1, // 1密码登录 2验证码登录
+            phone: phone,
+            password: password,
+          }
         }).then((res) => {
           //console.log("登录", res);
           let {code, data, message} = res;
-          if (code == 0) {
-          } else if (code == 1) {
+          if (code == 200) {
             if (this.savePass) {
               localStorage.setItem("save1", this.encodeString(this.form.phone));
               localStorage.setItem("save2", this.encodeString(this.form.password));
@@ -264,6 +267,8 @@ export default {
               localStorage.setItem("save1", "");
               localStorage.setItem("save2", "");
             }
+
+            localStorage.setItem("token", data.token);
 
             this.$store.commit("set_baseInfo", data);
             this.$store.dispatch("getUserloginedInfo");

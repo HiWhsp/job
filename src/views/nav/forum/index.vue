@@ -11,18 +11,92 @@ export default {
       commentVisible: false, // 评论弹框
       detailVisible: false, // 详情弹框
       PostVisible: false, // 发帖
-      listData: [{isShow: false}, {isShow: false}],
+      listData: [], // 列表
       orderByColumn: "ordering", //选择的排序方式
       sortList: [ // 排序列表
         {title: "发表排序", ziduan: "ordering", not: true},
         {title: "热度排序", ziduan: "orders", not: true},
       ],
+      pagination: {
+        page: 1,
+        limit: 5,
+      },
+      count: 0,
+      categoryList: [], // 板块列表
+      commentList: [], // 评论列表
     }
   },
+  mounted() {
+    this.setView();
+  },
   methods: {
+    setView() {
+      //   获取板块列表
+      this.$api({
+        url: 'bbs_category',
+        method: 'post'
+      }).then(res => {
+        if (res.code === 200) {
+          this.categoryList = res.data;
+          this.count = res.data.total;
+        }
+      });
+      this.getList();
+    },
+    // 获取列表
+    getList() {
+      this.$api({
+        url: 'bbs_list',
+        method: 'post',
+        data: {
+          keywords: this.keyword,
+          ...this.pagination
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.listData = res.data.data;
+          this.count = res.data.total;
+          this.listData.forEach((item, index) => {
+            this.$set(this.listData[index], 'isShow', false)
+          })
+        }
+      })
+    },
+    // 查看评论
+    showComment(item) {
+      this.$api({
+        url: 'bbs_reply_list',
+        method: 'post',
+        data: {
+          id: item.id,
+          ...this.pagination
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.commentList = res.data.data
+          this.listData.forEach((i, index) => {
+            if (i.id === item.id) {
+              this.$set(this.listData[index], 'isShow', !item.isShow)
+            } else {
+              this.$set(this.listData[index], 'isShow', false)
+            }
+          })
+        }
+      })
+    },
+    // 查看详情
     detailFormChick(data) {
-      this.detailForm = data;
-      this.detailVisible = true;
+      this.$api({
+        url: 'bbs_detail',
+        method: 'post',
+        data: {
+          id: data.id
+        }
+      }).then(res => {
+        this.detailForm = res.data;
+        this.detailVisible = true;
+      })
+
     },
     // 评论
     commentAdd(item) {
@@ -43,7 +117,7 @@ export default {
 <template>
   <div class="container main">
     <breadcrumb
-        :list="[{path: '/', name: '首页'}, { name: '服务内容'}, {path: '/analyze', name: '分析测试'}]"></breadcrumb>
+        :list="[{path: '/', name: '首页'}, { name: '论坛'}]"></breadcrumb>
     <div class="content">
       <div class="filter">
         <div class="left">
@@ -75,29 +149,27 @@ export default {
         <div class="post-card" :class="{'hide': item.isShow}" v-for="(item, index) in listData" :key="index">
           <div class="info-wrap">
             <div class="post-header">
-              <el-avatar src="https://via.placeholder.com/50" class="avatar"></el-avatar>
-              <span>郭菲菲</span>
+              <el-avatar :src="item.user.avatar" class="avatar"></el-avatar>
+              <span>{{ item.user.name }}</span>
             </div>
             <div class="post-info">
-              <h3 class="post-title">这里是帖子标题文案</h3>
-              <p class="post-meta ellipsis-2">
-                这里是关于X射线光电子能谱仪（X-ray Photoelectron Spectroscopy）是根据光电效应原理，
-                实现辐射的表面几个原子层（1-10nm厚的表面）的化学组成、价态、深度剖析及成像综合
-                分析与表征技术的设备。主要应用于高分子聚合物、陶瓷、玻璃、薄膜、纳米材料、金属、生物材料。
-              </p>
+              <h3 class="post-title">{{ item.title }}</h3>
+              <p class="post-meta ellipsis-2">{{ item.description }}</p>
             </div>
             <div class="post-footer">
-              <span class="post-time">2024-08-31 18:30:02</span>
+              <span class="post-time">{{ item.created_at }}</span>
               <span class="post-details"><span @click="detailFormChick(item)">详情</span> | <span
-                  @click="commentAdd(item)">评论(20)</span> | <span>点赞(35)</span></span>
+                  @click="commentAdd(item)">评论({{ item.comment_no }})</span> | <span>点赞({{
+                  item.like_no
+                }})</span></span>
             </div>
-            <div class="isHide" @click="item.isShow = !item.isShow">
+            <div class="isHide" @click="showComment(item)">
               <i class="el-icon-arrow-down"></i>
             </div>
             <el-button type="primary" size="small" class="action-btn">科研工具</el-button>
           </div>
           <div class="comment-wrap">
-            <div class="comment-item" v-for="i in 3">
+            <div class="comment-item" v-for="(i, ix) in commentList" :key="ix">
               <div class="post-header">
                 <el-avatar src="https://via.placeholder.com/50" class="avatar"></el-avatar>
                 <span>郭菲菲</span>
@@ -114,10 +186,24 @@ export default {
                 <span class="post-details" @click="detailFormChick(i)">详情</span>
               </div>
             </div>
+            <el-empty v-if="!commentList.length" description="暂无记录..."></el-empty>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="pagination-box" v-if="count">
+      <el-pagination
+          background
+          layout="total, prev, pager, next"
+          :total="count"
+          :current-page="pagination.page"
+          :page-size="pagination.limit"
+          @current-change="changePage"
+      >
+      </el-pagination>
+    </div>
+    <el-empty v-else description="暂无记录..."></el-empty>
 
     <!--    评论-->
     <el-dialog
@@ -134,7 +220,7 @@ export default {
     <el-dialog
         title="详情"
         :visible.sync="detailVisible">
-      <div class="detailDialog">
+      <div class="detailDialog" v-html="detailForm.detail ? detailForm.detail.detail : ''">
 
       </div>
       <span slot="footer" class="dialog-footer">
@@ -152,15 +238,15 @@ export default {
           <div class="type">选择分类： 学术交流区-分类名称</div>
           <div class="type-list">
             <el-popover
-                v-for="i in 3"
-                :key="i"
+                v-for="(item, index) in categoryList"
+                :key="index"
                 placement="bottom-start"
                 width="400"
                 trigger="hover">
               <div class="type-popover">
-                <div class="type-item" v-for="j in 3" :key="j">分类名称</div>
+                <div class="type-item" v-for="it in item.children" :key="it.id">{{ it.title }}</div>
               </div>
-              <div slot="reference" class="type-item" :class="{'active': i === 1}">学术交流区</div>
+              <div slot="reference" class="type-item active">{{ item.title }}</div>
             </el-popover>
           </div>
         </div>
@@ -289,6 +375,7 @@ export default {
       display: flex;
       flex-direction: column;
       margin-right: 40px;
+      text-align: center;
 
       .avatar {
         flex-shrink: 0;

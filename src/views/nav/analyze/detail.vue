@@ -3,10 +3,30 @@ export default {
   name: "detail",
   data() {
     return {
-      dialogVisible: false
+      id: this.$route.query.id,
+      inventoryId: this.$route.query.inventoryId,
+      dialogVisible: false,
+      detail: {}
     }
   },
+  mounted() {
+    this.setView();
+  },
   methods: {
+    setView() {
+      //   获取设备详情
+      this.$api({
+        url: 'cms_product_detail',
+        method: "post",
+        data: {
+          id: this.id
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.detail = res.data
+        }
+      })
+    },
     // 立即预约
     submit() {
       this.dialogVisible = true

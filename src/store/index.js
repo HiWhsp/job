@@ -147,7 +147,6 @@ export default new Vuex.Store({
       state.isLogin = true;
       state.userInfo = data;
       state.vuex_user = data;
-      localStorage.setItem("token", token);
       localStorage.setItem("userId", userId || id);
       localStorage.setItem("userInfo", JSON.stringify(data));
     },
@@ -191,14 +190,13 @@ export default new Vuex.Store({
 
     //设置基本信息
     set_baseInfo(state, data) {
-      let {token, user_id, id, level, levelRules} = data;
+      let {token, userId, id, level, levelRules} = data;
 
       state.vuex_is_login = true;
       state.token = token;
-      state.user_id = user_id || id;
+      state.userId = userId || id;
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("user_id", user_id || id);
+      localStorage.setItem("userId", userId || id);
 
       if (levelRules) {
         //处理
@@ -242,7 +240,7 @@ export default new Vuex.Store({
         state.userId = "";
         state.baseInfo = {};
         state.vuex_is_login = false;
-        localStorage.removeItem('user_id');
+        localStorage.removeItem('userId');
         localStorage.removeItem('userInfo');
         localStorage.removeItem('baseInfo');
         localStorage.removeItem('token');

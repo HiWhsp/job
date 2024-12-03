@@ -4,15 +4,30 @@ export default {
   data() {
     return {
       count: 0,
+      list: [],
       pagination: {
         page: 1,
-        pageNum: 10
+        limit: 10
       }
     }
   },
+  mounted() {
+    this.setView();
+  },
   methods: {
-    goUrl() {
-      this.$router.push({path: '/analyze_detail'})
+    setView() {
+      this.$api({
+        url: 'promotion_product_list',
+        method: 'post'
+      }).then(res => {
+        if (res.code === 200) {
+          this.list = res.data;
+          this.count = res.count;
+        }
+      })
+    },
+    goUrl(url) {
+      this.$router.push({path: url})
     }
   }
 }
@@ -24,30 +39,31 @@ export default {
       <p>活动专区</p>
     </div>
     <div class="content main">
-      <div class="product-card" v-for="i in 3">
+      <div class="product-card" v-for="(item, index) in list" :key="index" @click="goUrl">
         <!-- 左侧图片 -->
         <div class="product-image">
-          <img src="https://via.placeholder.com/150" alt="商品图片"/>
+          <img :src="item.product.thumb" alt=""/>
         </div>
         <!-- 中间商品信息 -->
         <div class="product-info">
-          <h3 class="product-title">双束聚焦电子显微镜</h3>
-          <p class="product-description">
-            双束聚焦显微镜，是基于SEM, 提供了更精确的粒子分析。能够输出3D工具、TEM研究的辅助特性。
-          </p>
-          <p class="product-stats">
-            已完成 <span class="highlight">11967</span>次，收到好评率高达 <span class="highlight">99.1%</span>。
-          </p>
-          <div class="product-date">活动时间：2024-08-10至2024-08-31</div>
+          <h3 class="product-title">{{ item.product.title }}</h3>
+          <p class="product-description">{{ item.product.description }}</p>
+          <div class="product-stats flex">
+            <p v-html="item.product.period"></p>
+            <p style="margin-left: 5px;">好评率 <span>{{ item.product.comments }}</span></p>
+          </div>
+          <div class="product-date">活动时间：{{ item.start_time }}至{{ item.end_time }}</div>
         </div>
 
         <!-- 右侧价格与按钮 -->
         <div class="product-action">
           <div class="price">
-            <span class="current-price">¥800.00</span>
-            <span class="original-price">¥1000.00</span>
+            <span class="current-price">¥{{ item.product.price }}</span>
+            <span class="original-price">¥{{ item.price }}</span>
           </div>
-          <div class="buy-btn" @click="goUrl">立即预约</div>
+          <div class="buy-btn" @click="goUrl(`/analyze_detail?id=${item.id}&inventoryId=${item.inventoryId}`)">
+            立即预约
+          </div>
         </div>
       </div>
       <div v-if="count" class="pagination-box" style="margin-top: 40px; text-align: center">
@@ -56,7 +72,7 @@ export default {
             layout="total, prev, pager, next"
             @current-change="changePage"
             :current-page.sync="pagination.page"
-            :page-size="pagination.pageNum"
+            :page-size="pagination.limit"
             :total="count"
         ></el-pagination>
       </div>
@@ -127,11 +143,11 @@ export default {
         .product-stats {
           font-size: 14px;
           color: #999;
-        }
 
-        .product-stats .highlight {
-          color: #f56c6c;
-          font-weight: bold;
+          span {
+            color: #f56c6c;
+            font-weight: bold;
+          }
         }
 
         .product-date {
