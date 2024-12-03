@@ -21,8 +21,10 @@ export default {
         page: 1,
         limit: 5,
       },
+      categoryParams: {}, // 板块表单
       count: 0,
       categoryList: [], // 板块列表
+      categoryItem: {}, // 选择的板块
       commentList: [], // 评论列表
     }
   },
@@ -106,9 +108,42 @@ export default {
     onClickSort(item) {
       this.orderByColumn = item.ziduan;
     },
+    // 发帖
     postSubmit() {
-      this.PostVisible = false
-      this.$router.push('/forum-success')
+      if (!this.categoryItem.children || !this.categoryItem.children.id) {
+        this.$message.error('请选择分类')
+        return
+      }
+      if (!this.categoryParams.title) {
+        this.$message.error('请输入标题')
+        return
+      }
+      if (!this.categoryParams.content) {
+        this.$message.error('请输入内容')
+        return
+      }
+      this.$api({
+        url: 'bbs_do_publish',
+        method: 'post',
+        data: {
+          cate_id: this.categoryItem.children.id,
+          ...this.categoryParams
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.PostVisible = false
+          this.$router.push('/forum-success')
+        }
+      })
+    },
+    // 点击板块
+    categoryItemClick(origin, target) {
+      const obj = {...origin}
+      this.categoryItem = Object.assign(obj, {children: target})
+    },
+    categoryClose() {
+      this.categoryItem = {}
+      this.categoryParams = {}
     }
   }
 }
@@ -171,18 +206,14 @@ export default {
           <div class="comment-wrap">
             <div class="comment-item" v-for="(i, ix) in commentList" :key="ix">
               <div class="post-header">
-                <el-avatar src="https://via.placeholder.com/50" class="avatar"></el-avatar>
-                <span>郭菲菲</span>
+                <el-avatar :src="i.data.user.avatar" class="avatar"></el-avatar>
+                <span>{{ i.data.user.name }}</span>
               </div>
               <div class="post-info">
-                <p class="post-meta ellipsis-2">
-                  这里是关于X射线光电子能谱仪（X-ray Photoelectron Spectroscopy）是根据光电效应原理，
-                  实现辐射的表面几个原子层（1-10nm厚的表面）的化学组成、价态、深度剖析及成像综合
-                  分析与表征技术的设备。主要应用于高分子聚合物、陶瓷、玻璃、薄膜、纳米材料、金属、生物材料。
-                </p>
+                <p class="post-meta ellipsis-2">{{ i.data.content }}</p>
               </div>
               <div class="post-footer">
-                <span class="post-time">2024-08-31 18:30:02</span>
+                <span class="post-time">{{ i.data.created_at }}</span>
                 <span class="post-details" @click="detailFormChick(i)">详情</span>
               </div>
             </div>
@@ -232,10 +263,13 @@ export default {
     <!--    发帖-->
     <el-dialog
         title="发帖"
-        :visible.sync="PostVisible">
+        :visible.sync="PostVisible"
+        @close="categoryClose">
       <div class="postDialog">
         <div class="top-box">
-          <div class="type">选择分类： 学术交流区-分类名称</div>
+          <div class="type">选择分类：
+            {{ categoryItem.title ? categoryItem.title + '-' + categoryItem.children.title : '无' }}
+          </div>
           <div class="type-list">
             <el-popover
                 v-for="(item, index) in categoryList"
@@ -244,14 +278,18 @@ export default {
                 width="400"
                 trigger="hover">
               <div class="type-popover">
-                <div class="type-item" v-for="it in item.children" :key="it.id">{{ it.title }}</div>
+                <div class="type-item active" v-for="it in item.children" :key="it.id"
+                     @click="categoryItemClick(item, it)">
+                  {{ it.title }}
+                </div>
               </div>
               <div slot="reference" class="type-item active">{{ item.title }}</div>
             </el-popover>
           </div>
         </div>
-        <el-input type="text" placeholder="请输入帖子标题" class="title"></el-input>
-        <el-input type="textarea" placeholder="请输入帖子内容" rows="10" class="content"></el-input>
+        <el-input type="text" placeholder="请输入帖子标题" class="title" v-model="categoryParams.title"></el-input>
+        <el-input type="textarea" placeholder="请输入帖子内容" rows="10" class="content"
+                  v-model="categoryParams.content"></el-input>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="PostVisible = false">取消</el-button>

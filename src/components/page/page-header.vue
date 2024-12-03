@@ -24,9 +24,10 @@
             <div class="btn">线上咨询</div>
           </div>
           <div class="login">
-            <div class="login-btn pointer" @click="goUrl({url: '/login'})">登录</div>
-            <i class="col"></i>
-            <div class="login-btn pointer" @click="goUrl({url: '/register'})">注册</div>
+            <div class="login-btn pointer" @click="goUrl({url: '/login'})" v-if="!baseInfo.id">登录</div>
+            <i class="col" v-if="!baseInfo.id"></i>
+            <div class="login-btn pointer" @click="goUrl({url: '/register'})" v-if="!baseInfo.id">注册</div>
+            <div class="login-btn pointer" @click="goUrl({url: '/my-home'})" v-if="baseInfo.id">{{ baseInfo.name }}</div>
             <i class="col"></i>
             <div class="login-btn pointer" @click="goUrl({url: '/supplier-login'})">供应商登录</div>
           </div>
@@ -44,6 +45,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "index",
   data() {
@@ -76,6 +78,9 @@ export default {
         }
       ]
     }
+  },
+  computed: {
+    ...mapState(["baseInfo"]),
   },
   mounted() {
     // 监听页面滚动
