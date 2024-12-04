@@ -8,8 +8,17 @@ export default {
       list_shopcart: [{}], // 购物车商品列表
       realForm: {},
       realRules: {
-        name: [
-          {required: true, message: '请输入活动名称', trigger: 'blur'},
+        t_role: [
+          {required: true, message: '请选择成员身份', trigger: 'change'},
+        ],
+        pay_limit: [
+          {required: true, message: '请选择是否限制', trigger: 'change'},
+        ],
+        one_limit: [
+          {required: true, message: '请输入单笔支付限额', trigger: 'blur'},
+        ],
+        month_limit: [
+          {required: true, message: '请输入月度支付限额', trigger: 'blur'},
         ]
       },
       pagination: {
@@ -66,9 +75,6 @@ export default {
         }
       })
     },
-    editMember(index) {
-      alert(`编辑成员：${this.members[index].name}`);
-    },
     // 删除成员
     deleteMember(row) {
       this.$confirm('确定要删除该成员?', '提示', {
@@ -111,8 +117,37 @@ export default {
         v.checked = val;
       });
     },
-    do_cart_set_row() {
+    // 编辑成员信息
+    do_cart_set_row(row) {
+      this.realForm = row
       this.createVisible = true
+    },
+    // 设置成员信息提交
+    setRealForm() {
+      this.$refs['ruleForm'].validate((valid) => {
+        if (valid) {
+          this.$api({
+            url: 'team_user_setting',
+            method: 'post',
+            data: {
+              t_role: this.realForm.t_role,
+              pay_limit: this.realForm.pay_limit,
+              one_limit: this.realForm.one_limit,
+              month_limit: this.realForm.month_limit,
+              id: this.realForm.user_id
+            }
+          }).then(res => {
+            if (res.code === 200) {
+              this.$message({
+                type: 'success',
+                message: '操作成功!'
+              })
+              this.createVisible = false
+              this.setView()
+            }
+          })
+        }
+      })
     }
   },
 }
@@ -223,7 +258,7 @@ export default {
               </div>
               <div class="box-act">
                 <div class="goods-action-box">
-                  <span class="goods-action pointer" @click="do_cart_set_row(item.inventoryId)">设置</span>
+                  <span class="goods-action pointer" @click="do_cart_set_row(item)">设置</span>
                 </div>
               </div>
             </div>
@@ -240,29 +275,29 @@ export default {
     <el-dialog title="设置" :visible.sync="createVisible" center width="700px">
       <div class="real-content">
         <el-form :model="realForm" :rules="realRules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
-          <el-form-item label="成员身份：" prop="name">
-            <el-radio-group v-model="realForm.radio">
-              <el-radio :label="3">备选项</el-radio>
-              <el-radio :label="6">备选项</el-radio>
+          <el-form-item label="成员身份：" prop="t_role">
+            <el-radio-group v-model="realForm.t_role"> //0普通 1管理员
+              <el-radio :label="0">成员</el-radio>
+              <el-radio :label="1">管理员</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="*是否限制：" prop="name">
-            <el-radio-group v-model="realForm.radio">
-              <el-radio :label="3">备选项</el-radio>
-              <el-radio :label="6">备选项</el-radio>
+          <el-form-item label="*是否限制：" prop="pay_limit">
+            <el-radio-group v-model="realForm.pay_limit"> //0不限 1限制
+              <el-radio :label="0">不限</el-radio>
+              <el-radio :label="1">限制</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="单笔支付限额：" prop="name" v-if="realForm.radio === 3">
-            <el-input placeholder="请输入单笔支付限额" v-model="realForm.name"></el-input>
+          <el-form-item label="单笔支付限额：" prop="one_limit" v-if="realForm.pay_limit === 1">
+            <el-input placeholder="请输入单笔支付限额" v-model="realForm.one_limit"></el-input>
           </el-form-item>
-          <el-form-item label="月支付限额：" prop="name" v-if="realForm.radio === 3">
-            <el-input placeholder="请输入月支付限额" v-model="realForm.name"></el-input>
+          <el-form-item label="月支付限额：" prop="month_limit" v-if="realForm.pay_limit === 1">
+            <el-input placeholder="请输入月支付限额" v-model="realForm.month_limit"></el-input>
           </el-form-item>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
          <el-button @click="createVisible = false">取消</el-button>
-        <el-button type="primary" @click="createVisible">确定</el-button>
+        <el-button type="primary" @click="setRealForm">确定</el-button>
       </span>
     </el-dialog>
   </div>

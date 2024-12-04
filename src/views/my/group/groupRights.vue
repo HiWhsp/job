@@ -1,6 +1,29 @@
 <script>
 export default {
-  name: "groupRights"
+  name: "groupRights",
+  data() {
+    return {
+      list: []
+    }
+  },
+  mounted() {
+    this.setView();
+  },
+  methods: {
+    setView() {
+      this.$api({
+        url: 'module_content',
+        method: 'post',
+        data: {
+          id: '22'
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.list = res.data.content;
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -12,10 +35,10 @@ export default {
     <div class="content">
       <p class="title">团体权益</p>
       <div class="list">
-        <div class="item" v-for="item in 10" :key="item">
-          <img :src="require(`@/assets/img/my/group/${item}.png`)" alt="">
-          <span class="text">免费试样-临时</span>
-          <span class="desc">这里是二级文案</span>
+        <div class="item" v-for="(item, index) in list" :key="index">
+          <img :src="item.icon1" alt="">
+          <span class="text">{{ item.text1 }}</span>
+          <span class="desc">{{ item.desc }}</span>
         </div>
       </div>
     </div>

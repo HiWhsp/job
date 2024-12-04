@@ -3,7 +3,37 @@ export default {
   name: "index",
   data() {
     return {
-      list_yhq: [1, 2, 3, 3, 3],
+      list_yhq: [],
+    }
+  },
+  mounted() {
+    this.setView()
+  },
+  methods: {
+    setView() {
+      this.$api({
+        url: 'coupon_list',
+        method: 'post',
+      }).then(res => {
+        if (res.code === 200) {
+          this.list_yhq = res.data
+        }
+      })
+    },
+    coupon_pick(item) {
+      this.$api({
+        url: 'collect_coupon',
+        method: 'post',
+        data: {
+          couponId: item.id
+        },
+        success: res => {
+          if (res.code === 200) {
+            this.$message.success('领取成功')
+            this.setView()
+          }
+        }
+      })
     }
   }
 }
@@ -23,17 +53,18 @@ export default {
               <div class="currency">{{ vuex_huobi }}</div>
               <div class="num">{{ item.money }}</div>
             </div>
-            <!--                            <img src="@/static/order/coupon-used.png" alt=""/>-->
+            <div class="tiaojian" v-if="item.dis_type == 1">满{{ item.min_money }}可用</div>
+            <div class="tiaojian" v-if="item.dis_type == 2">优惠金额 {{ item.money }}</div>
           </div>
           <div class="yhq-right">
-            <div class="tiaojian">使用条件： 满{{ item.man }}可用</div>
+            <div class="tiaojian">{{ item.title }}</div>
             <div class="shijian">
-              有效时间： {{ item.startTime }} - {{ item.endTime }}
+              {{ item.start_time }} - {{ item.end_time }}
             </div>
             <div class="action">
               <button
                   class="btn-ripple btn-pick btn-lingqu"
-                  v-if="item.if_ke_lingqu == 1"
+                  v-if="item.is_get == 0"
                   @click="coupon_pick(item)"
               >
                 立即领取
@@ -110,6 +141,7 @@ export default {
         background-size: 100% 100%;
         background-repeat: no-repeat;
         .flex();
+        flex-direction: column;
         justify-content: center;
 
         img {
@@ -124,16 +156,20 @@ export default {
           justify-content: center;
 
           .currency {
-            font-size: 42px;
+            font-size: 30px;
             font-weight: bold;
             color: #fff;
           }
 
           .num {
-            font-size: 42px;
+            font-size: 30px;
             font-weight: bold;
             color: #fff;
           }
+        }
+
+        .tiaojian {
+          color: #fff;
         }
       }
 
