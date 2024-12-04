@@ -8,27 +8,82 @@ export default {
       detailForm: {}, // 详情
       detailVisible: false, // 详情弹框
       editVisible: false, // 编辑
-      listData: [{isShow: false, status: '1'}, {isShow: false, status: '2'}],
-      selectTab: {title: "全部评论", status: "0"},
+      listData: [],
+      selectTab: {title: "待审核", status: "1"},
       selectItem: {isShow: false},
       list_tab: [
-        {title: "全部评论", status: "0"},
-        {title: "已通过", status: "1"},
-        {title: "被驳回", status: "2"},
+        {title: "待审核", status: "1"},
+        {title: "已通过", status: "2"},
+        {title: "被驳回", status: "3"},
       ],
+      commentList: [], // 评论列表
+      pagination: {
+        page: 1,
+        limit: 5,
+      },
+      count: 0,
     }
   },
   watch: {
     selectTab() {
+      this.getList()
     },
   },
+  mounted() {
+    this.getList();
+  },
   methods: {
-    lockDetail() {
-      this.detailVisible = true
+    // 获取列表
+    getList() {
+      this.$api({
+        url: 'bbs_my_reply',
+        method: 'post',
+        data: {
+          ...this.pagination,
+          status: this.selectTab.status,
+        }
+      }).then(res => {
+        let {code, data} = res;
+        if (code === 200) {
+          this.listData = data.data;
+          this.count = data.total;
+        }
+      })
+    },
+    lockDetail(item) {
+      this.$api({
+        url: 'bbs_detail',
+        method: 'post',
+        data: {
+          id: item.postId
+        }
+      }).then(res => {
+        let {code, data} = res;
+        if (code === 200) {
+          this.detailForm = data
+          this.detailVisible = true
+        }
+      })
     },
     editSubmit() {
       this.editVisible = false
-    }
+    },
+    // 查看评论
+    showComment() {
+      this.$api({
+        url: 'bbs_reply_list',
+        method: 'post',
+        data: {
+          id: this.detailForm.id,
+          ...this.pagination
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.commentList = res.data.data
+          this.selectItem.isShow = !this.selectItem.isShow
+        }
+      })
+    },
   }
 }
 </script>
@@ -49,7 +104,6 @@ export default {
               <el-button class="search-btn">搜索</el-button>
             </template>
           </el-input>
-          <!--          <el-button type="primary" class="post-btn" @click="PostVisible = true">发帖</el-button>-->
         </div>
       </div>
     </div>
@@ -72,26 +126,34 @@ export default {
           <div class="info-wrap">
             <div class="left">
               <div class="post-info">
-                <p class="post-meta ellipsis-2">
-                  这里是关于X射线光电子能谱仪（X-ray Photoelectron Spectroscopy）是根据光电效应原理，
-                  实现辐射的表面几个原子层（1-10nm厚的表面）的化学组成、价态、深度剖析及成像综合
-                  分析与表征技术的设备。主要应用于高分子聚合物、陶瓷、玻璃、薄膜、纳米材料、金属、生物材料。
-                </p>
+                <p class="post-meta ellipsis-2">{{ item.content }}</p>
               </div>
               <div class="post-footer">
                 <span class="post-details">
-                  <span @click="lockDetail">查看原帖</span>
+                  <span @click="lockDetail(item)">查看原帖</span>
                 </span>
-                <span class="post-time">2024-08-31 18:30:02</span>
+                <span class="post-time">{{ item.created_at }}</span>
               </div>
             </div>
             <div class="right status">
-              <p :class="{'success': item.status === '1', 'error': item.status === '2'}">
-                {{ item.status === '1' ? '已通过' : item.status === '2' ? '被驳回' : '' }}</p>
-              <p class="pointer" v-if="item.status === '2'" @click="editVisible = true">修改</p>
+              <p :class="{'success': item.status == '2', 'error': item.status == '3'}">
+                {{ item.status == '2' ? '已通过' : item.status == '3' ? '被驳回' : '' }}</p>
+              <p class="pointer" v-if="item.status == '3'" @click="editVisible = true">修改</p>
             </div>
           </div>
         </div>
+        <div class="pagination-box" v-if="count">
+          <el-pagination
+              background
+              layout="total, prev, pager, next"
+              :total="count"
+              :current-page.sync="pagination.page"
+              :page-size.sync="pagination.limit"
+              @current-change="getList"
+          >
+          </el-pagination>
+        </div>
+        <el-empty v-else description="暂无记录..."></el-empty>
       </div>
     </div>
 
@@ -103,35 +165,30 @@ export default {
         <div class="edit-box">
           <p><span>帖子分类：</span><span>学术交流区-分类名称</span></p>
         </div>
-        <div class="title">这里是帖子标题</div>
-        <div class="content">这里是帖子内容</div>
+        <div class="title">{{ detailForm.title }}</div>
+        <div class="content">{{ detailForm.description }}</div>
 
         <div class="info">
-          <span>2024-08-31 18:30:02</span>
+          <span>{{ detailForm.created_at }}</span>
           <div class="item">
             <span>详情</span>
-            <span>评论(20)</span>
-            <span>点赞(35)</span>
+            <span>评论({{ detailForm.comment_no }})</span>
+            <span>点赞({{ detailForm.like_no }})</span>
           </div>
         </div>
-        <div class="icon-wrap" @click="selectItem.isShow = !selectItem.isShow">
+        <div class="icon-wrap" @click="showComment">
           <i class="el-icon-arrow-down isHide"></i>
         </div>
         <div class="comment-wrap">
-          <div class="comment-item" v-for="i in 3">
+          <div class="comment-item" v-for="(it, i) in commentList" :key="i">
             <div class="post-header">
-              <el-avatar src="https://via.placeholder.com/50" class="avatar"></el-avatar>
-              <span>郭菲菲</span>
+              <el-avatar :src="it.user.avatar" class="avatar"></el-avatar>
+              <span>{{  it.user.name }}</span>
             </div>
             <div class="post-info">
-              <p class="post-meta ellipsis-2">
-                这里是关于X射线光电子能谱仪（X-ray Photoelectron Spectroscopy）是根据光电效应原理，
-                实现辐射的表面几个原子层（1-10nm厚的表面）的化学组成、价态、深度剖析及成像综合
-                分析与表征技术的设备。主要应用于高分子聚合物、陶瓷、玻璃、薄膜、纳米材料、金属、生物材料。
-              </p>
+              <p class="post-meta ellipsis-2">{{ it.content }}</p>
               <div class="post-footer">
-                <span class="post-time">2024-08-31 18:30:02</span>
-<!--                <span class="post-details" @click="detailFormChick(i)">详情</span>-->
+                <span class="post-time">{{ it.created_at }}</span>
               </div>
             </div>
           </div>
@@ -354,6 +411,34 @@ export default {
     text-align: right;
   }
 
+  .title {
+    margin-top: 30px;
+  }
+
+  .content {
+    margin-top: 20px;
+    padding: 0;
+  }
+
+  .info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 16px;
+
+    span {
+      color: #999999;
+    }
+
+    .item {
+      span {
+        cursor: pointer;
+        color: #333333;
+        margin-left: 10px;
+      }
+    }
+  }
+
   .isHide {
     margin-top: 10px;
     cursor: pointer;
@@ -364,11 +449,7 @@ export default {
 
   .comment-wrap {
     height: 0;
-    overflow: hidden;
     transition: all 0.5s ease-in-out;
-    margin-top: 60px;
-
-
     .comment-item {
       display: flex;
       align-items: center;

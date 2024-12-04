@@ -5,7 +5,7 @@ export default {
     return {
       tabIndex: 1,
       changeGroupVisible: false, // 转为团体
-      teamApplyVisible: true, // 团员申请
+      teamApplyVisible: false, // 团员申请
       promoteVisible: false, // 提升额度
       realVisible: false, // 实名认证
       isReal: false, // 是否实名
@@ -40,23 +40,34 @@ export default {
       }
     }
   },
+  watch: {
+    baseInfo() {
+      // 判断是否是团长且有团员申请
+      if (this.baseInfo.if_leader == 1 && this.baseInfo.new_team_user) {
+        this.teamApplyVisible = true
+      }
+    }
+  },
   mounted() {
     this.setView();
   },
   methods: {
     setView() {
-      this.$api({
-        url: "show_real_auth",
-        method: "post",
-      }).then(res => {
-        if (res.code === 200) {
-          this.isReal = res.data.status
-          this.realForm = res.data;
-        }
-      })
+
     },
     // 实名认证
     realClick() {
+      if (this.isReal) {
+        this.$api({
+          url: "show_real_auth",
+          method: "post",
+        }).then(res => {
+          if (res.code === 200) {
+            this.isReal = res.data.status == 2 //1未实名  2已实名
+            this.realForm = res.data;
+          }
+        })
+      }
       this.realVisible = true
     },
     // 实名认证提交
@@ -103,11 +114,21 @@ export default {
         this.changeGroupVisible = false
       }
     },
-    upload_on_success(response, file, fileList) {
-      console.log(response, file);
+    upload_on_success(response) {
+      if (response.code != 200) {
+        alertErr(response.msg)
+      } else {
+        this.$set(this.realForm, 'idcard_pic1', response.data.url)
+        alertSucc('上传成功')
+      }
     },
     upload_on_success_2(response, file, fileList) {
-      console.log(response, file);
+      if (response.code != 200) {
+        alertErr(response.msg)
+      } else {
+        this.$set(this.realForm, 'idcard_pic2', response.data.url)
+        alertSucc('上传成功')
+      }
     }
   }
 }
@@ -125,8 +146,8 @@ export default {
               class="avatar"
           ></el-avatar>
           <div class="info-text">
-            <p class="name">郭菲菲</p>
-            <p class="phone">15200007777</p>
+            <p class="name">{{ baseInfo.name }}</p>
+            <p class="phone">{{ baseInfo.phone }}</p>
           </div>
         </div>
         <div class="column-flex-center">
@@ -303,16 +324,18 @@ export default {
               <el-upload style="margin-right: 20px" class="upload-wrap" accept="image/*" :show-file-list="false"
                          name="file"
                          :on-success="upload_on_success"
-                         action="http://jxjsjc.dx.hdapp.com.cn/api/upload">
+                         action="http://jxjsjc.dx.hdapp.com.cn/api/upload"
+                         :data="mix_upload_data">
                 <div class="upload" v-if="!realForm.idcard_pic1">
                   <i class="el-icon-plus"></i>
                   <span>上传人像面照片</span>
                 </div>
-                <img :src="realForm.idcard_pic2" alt="" v-else>
+                <img :src="realForm.idcard_pic1" alt="" v-else>
               </el-upload>
               <el-upload class="upload-wrap" accept="image/*" :show-file-list="false" name="file"
                          :on-success="upload_on_success_2"
-                         action="http://jxjsjc.dx.hdapp.com.cn/api/upload">
+                         action="http://jxjsjc.dx.hdapp.com.cn/api/upload"
+                         :data="mix_upload_data">
                 <div class="upload" v-if="!realForm.idcard_pic2">
                   <i class="el-icon-plus"></i>
                   <span>上传国徽面照片</span>
@@ -326,22 +349,22 @@ export default {
       <div class="real-info" v-else>
         <div class="item">
           <div class="label">姓名：</div>
-          <div class="value">郭**</div>
+          <div class="value">{{ realForm.name }}</div>
         </div>
         <div class="item">
           <div class="label">身份证号：</div>
-          <div class="value">130625********</div>
+          <div class="value">{{ realForm.idcard }}</div>
         </div>
         <div class="item">
           <div class="label">手机号：</div>
-          <div class="value">152****7777</div>
+          <div class="value">{{ realForm.phone }}</div>
         </div>
         <div class="item">
           <div class="label">身份证照片：</div>
           <div class="value">
             <div class="flex">
-              <img src="@/assets/img/my/avatar.png" alt="">
-              <img src="@/assets/img/my/avatar.png" alt="">
+              <img :src="realForm.idcard_pic1" alt="">
+              <img :src="realForm.idcard_pic2" alt="">
             </div>
           </div>
         </div>
@@ -369,7 +392,7 @@ export default {
     <!--    团员申请-->
     <el-dialog title="团员申请" :visible.sync="teamApplyVisible" center width="700px">
       <div class="team-apply">
-        <div class="title"><span>10</span>位用户申请加入您的团队</div>
+        <div class="title"><span>{{ baseInfo.new_team_user }}</span>位用户申请加入您的团队</div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="teamApplyVisible = false">立即处理</el-button>

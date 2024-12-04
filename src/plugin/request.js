@@ -29,7 +29,6 @@ axios.interceptors.response.use(
     function (response) {
         let res = response.data;
         let {code, data} = res
-
         if (code === 402 || code === 401) {
             alertErr(res.msg);
             // router.push("/login");

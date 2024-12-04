@@ -3,34 +3,8 @@ export default {
   name: "groupManage",
   data() {
     return {
-      group: {
-        name: "这是团体名称",
-        id: "99000123",
-        organization: "北京工业大学",
-        leader: "郭菲菲",
-        phone: "152****7777",
-        memberCount: 10,
-      },
-      members: [
-        {
-          name: "郭菲菲",
-          organization: "北京工业大学",
-          contact: "15200007777",
-          role: "-",
-          prepaidAmount: "-",
-          creditAmount: "-",
-          status: "待审批",
-        },
-        {
-          name: "郭菲菲",
-          organization: "北京工业大学",
-          contact: "15200007777",
-          role: "普通成员",
-          prepaidAmount: 1522.0,
-          creditAmount: 270.0,
-          status: "已审批",
-        },
-      ],
+      group: {},
+      members: [],
       list_shopcart: [{}], // 购物车商品列表
       realForm: {},
       realRules: {
@@ -38,17 +12,87 @@ export default {
           {required: true, message: '请输入活动名称', trigger: 'blur'},
         ]
       },
+      pagination: {
+        page: 1,
+        limit: 5,
+      },
+      count: 0,
       currentTab: "allMembers",
       checked_all: false, // 是否全选
       createVisible: false,
     }
   },
+  watch: {
+    currentTab() {
+      this.getList();
+    }
+  },
+  mounted() {
+    this.setView();
+  },
   methods: {
+    setView() {
+      // 获取团体信息
+      this.$api({
+        url: 'my_team',
+        method: 'post',
+      }).then(res => {
+        let {code, data} = res;
+        if (code === 200) {
+          this.group = res.data
+        }
+      })
+      this.getList();
+    },
+    getList() {
+      this.$api({
+        url: 'team_user_list',
+        method: 'post',
+        data: {
+          status: this.currentTab == 'allMembers' ? 0 : 1,
+          ...this.pagination
+        }
+      }).then(res => {
+        let {code, data} = res;
+        if (code === 200) {
+          this.members = res.data;
+          this.members.forEach((v) => {
+            v.user_id = v.user.id
+            v.user_name = v.user.name
+            v.user_phone = v.user.phone
+            v.unit_name = v.user.unit_name
+            v.unit_group = v.user.unit_group
+          })
+        }
+      })
+    },
     editMember(index) {
       alert(`编辑成员：${this.members[index].name}`);
     },
-    deleteMember(index) {
-      this.members.splice(index, 1);
+    // 删除成员
+    deleteMember(row) {
+      this.$confirm('确定要删除该成员?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api({
+          url: 'team_user_audit',
+          method: 'post',
+          data: {
+            id: row.user_id,
+            action: 4
+          }
+        }).then(res => {
+          if (res.code === 200) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          }
+        })
+      }).catch(() => {
+      });
     },
     //商品勾选 单项选择
     on_change_checked_item() {
@@ -89,12 +133,12 @@ export default {
     <div class="group-info">
       <h3>团体信息</h3>
       <div class="info">
-        <p>团体名称：{{ group.name }}</p>
-        <p>团体编号：{{ group.id }}</p>
-        <p>所在高校/单位：{{ group.organization }}</p>
+        <p>团体名称：{{ group.title }}</p>
+        <p>团体编号：{{ group.sn }}</p>
+        <p>所在高校/单位：{{ baseInfo.unit_group }}</p>
         <p>团体负责人：{{ group.leader }}</p>
-        <p>负责人电话：{{ group.phone }}</p>
-        <p>团体成员数：{{ group.memberCount }}</p>
+        <p>负责人电话：{{ group.tel }}</p>
+        <p>团体成员数：{{ group.teamer_no }}</p>
       </div>
     </div>
 
@@ -113,17 +157,22 @@ export default {
       </div>
 
       <el-table :data="members" style="width: 100%" v-if="currentTab === 'allMembers'">
-        <el-table-column prop="name" label="姓名"></el-table-column>
-        <el-table-column prop="organization" label="所属高校/单位" width="120"></el-table-column>
-        <el-table-column prop="contact" label="联系方式"></el-table-column>
-        <el-table-column prop="role" label="成员身份"></el-table-column>
-        <el-table-column prop="prepaidAmount" label="预存支付总金额"></el-table-column>
-        <el-table-column prop="creditAmount" label="信用支付总金额"></el-table-column>
-        <el-table-column prop="status" label="审批状态"></el-table-column>
+        <el-table-column prop="user_name" label="姓名"></el-table-column>
+        <el-table-column prop="unit_group" label="所属高校/单位" width="120"></el-table-column>
+        <el-table-column prop="user_phone" label="联系方式"></el-table-column>
+        <el-table-column prop="t_role" label="成员身份">
+          <template slot-scope="scope">
+            <span v-if="scope.row.t_role == 0">成员</span>
+            <span v-if="scope.row.t_role == 1">管理员</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="pay_money" label="预存支付总金额"></el-table-column>
+        <el-table-column prop="credit_money" label="信用支付总金额"></el-table-column>
+        <el-table-column prop="status_txt" label="审批状态"></el-table-column>
         <el-table-column prop="address" label="操作" width="150">
           <template slot-scope="scope">
-            <el-button size="mini" @click="editMember(scope.$index)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="deleteMember(scope.$index)">删除</el-button>
+            <el-button size="mini" @click="do_cart_set_row(scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="deleteMember(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

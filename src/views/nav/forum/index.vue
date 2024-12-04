@@ -21,8 +21,9 @@ export default {
         page: 1,
         limit: 5,
       },
-      categoryParams: {}, // 板块表单
       count: 0,
+      commentParams: {}, // 评论
+      categoryParams: {}, // 板块表单
       categoryList: [], // 板块列表
       categoryItem: {}, // 选择的板块
       commentList: [], // 评论列表
@@ -102,7 +103,28 @@ export default {
     },
     // 评论
     commentAdd(item) {
+      this.commentParams.parentId = item.id;
+      this.commentParams.replyUserId = item.userId;
       this.commentVisible = true
+    },
+    // 添加评论
+    commentAddSubmit() {
+      if (!this.commentParams.content) {
+        this.$message.error('请输入内容')
+        return
+      }
+      this.$api({
+        url: 'bbs_do_reply',
+        method: 'post',
+        data: {
+          ...this.commentParams
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.commentVisible = false
+          this.getList()
+        }
+      })
     },
     // 排序
     onClickSort(item) {
@@ -141,6 +163,7 @@ export default {
       const obj = {...origin}
       this.categoryItem = Object.assign(obj, {children: target})
     },
+    // 关闭
     categoryClose() {
       this.categoryItem = {}
       this.categoryParams = {}
@@ -240,10 +263,10 @@ export default {
     <el-dialog
         title="评论"
         :visible.sync="commentVisible">
-      <el-input type="textarea" rows="10"></el-input>
+      <el-input type="textarea" rows="10" v-model="commentParams.content"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="commentVisible = false">取 消</el-button>
-        <el-button type="primary" @click="commentVisible = false">确 定</el-button>
+        <el-button type="primary" @click="commentAddSubmit">确 定</el-button>
       </span>
     </el-dialog>
 

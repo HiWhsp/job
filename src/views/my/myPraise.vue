@@ -11,13 +11,38 @@ export default {
       PostVisible: false, // 发帖
       editVisible: false, // 编辑
       listData: [{isShow: false, status: '1'}, {isShow: false, status: '2'}],
+      pagination: {
+        page: 1,
+        limit: 5,
+      },
+      count: 0,
     }
   },
   watch: {
     selectTab() {
     },
   },
+  mounted() {
+    this.getList();
+  },
   methods: {
+    // 获取列表
+    getList() {
+      this.$api({
+        url: 'bbs_my_like',
+        method: 'post',
+        data: {
+          keyword: this.keyword,
+          ...this.pagination
+        }
+      }).then(res => {
+        let {code, data} = res;
+        if (code === 200) {
+          this.listData = data.data;
+          this.count = data.total;
+        }
+      })
+    },
     detailFormChick(data) {
       this.detailForm = data;
       this.detailVisible = true;
@@ -54,7 +79,7 @@ export default {
               clearable
           >
             <template #append>
-              <el-button class="search-btn">搜索</el-button>
+              <el-button class="search-btn" @click="getList">搜索</el-button>
             </template>
           </el-input>
         </div>
@@ -67,31 +92,39 @@ export default {
           <div class="info-wrap">
             <div class="left">
               <div class="post-info">
-                <h3 class="post-title">这里是帖子标题文案</h3>
-                <p class="post-meta ellipsis-2">
-                  这里是关于X射线光电子能谱仪（X-ray Photoelectron Spectroscopy）是根据光电效应原理，
-                  实现辐射的表面几个原子层（1-10nm厚的表面）的化学组成、价态、深度剖析及成像综合
-                  分析与表征技术的设备。主要应用于高分子聚合物、陶瓷、玻璃、薄膜、纳米材料、金属、生物材料。
-                </p>
+                <h3 class="post-title">{{ item.posts.title }}</h3>
+                <p class="post-meta ellipsis-2">{{ item.posts.description }}</p>
               </div>
               <div class="post-footer">
                 <span class="post-details">
                   <span @click="detailFormChick(item)">详情</span><span
-                    @click="commentAdd(item)">评论(20)</span><span>点赞(35)</span>
+                    @click="commentAdd(item)">评论({{ item.posts.comment_no }})</span><span>点赞({{
+                    item.posts.like_no
+                  }})</span>
                 </span>
-                <span class="post-time">2024-08-31 18:30:02</span>
+                <span class="post-time">{{ item.created_at }}</span>
               </div>
             </div>
             <div class="right">
               <p class="pointer">取消点赞</p>
-<!--              <div class="isHide" @click="item.isShow = !item.isShow">-->
-<!--                <i class="el-icon-arrow-down"></i>-->
-<!--              </div>-->
             </div>
             <el-button type="primary" size="small" class="action-btn">科研工具</el-button>
           </div>
         </div>
       </div>
+
+      <div class="pagination-box" v-if="count">
+        <el-pagination
+            background
+            layout="total, prev, pager, next"
+            :total="count"
+            :current-page.sync="pagination.page"
+            :page-size.sync="pagination.limit"
+            @current-change="getList"
+        >
+        </el-pagination>
+      </div>
+      <el-empty v-else description="暂无记录..."></el-empty>
     </div>
 
     <!--    评论-->

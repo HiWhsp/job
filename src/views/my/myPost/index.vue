@@ -10,38 +10,207 @@ export default {
       detailVisible: false, // 详情弹框
       PostVisible: false, // 发帖
       editVisible: false, // 编辑
-      listData: [{isShow: false, status: '1'}, {isShow: false, status: '2'}],
-      selectTab: {title: "全部帖子", status: "0"},
+      listData: [],
+      selectTab: {title: "待审核", status: "1"},
       list_tab: [
-        {title: "全部帖子", status: "0"},
-        {title: "已通过", status: "1"},
-        {title: "被驳回", status: "2"},
+        {title: "待审核", status: "1"},
+        {title: "已通过", status: "2"},
+        {title: "被驳回", status: "3"},
       ],
+      commentParams: {}, // 评论
+      categoryParams: {}, // 板块表单
+      categoryList: [], // 板块列表
+      categoryItem: {}, // 选择的板块
+      commentList: [], // 评论列表
+      pagination: {
+        page: 1,
+        limit: 5,
+      },
+      count: 0,
     }
   },
   watch: {
     selectTab() {
+      this.getList()
     },
   },
+  mounted() {
+    //   获取板块列表
+    this.$api({
+      url: 'bbs_category',
+      method: 'post'
+    }).then(res => {
+      if (res.code === 200) {
+        this.categoryList = res.data;
+        this.count = res.data.total;
+      }
+    });
+    this.getList();
+  },
   methods: {
+    // 获取列表
+    getList() {
+      this.$api({
+        url: 'bbs_my_list',
+        method: 'post',
+        data: {
+          status: this.selectTab.status,
+          keywords: this.keyword,
+          ...this.pagination
+        }
+      }).then(res => {
+        let {code, data} = res;
+        if (code === 200) {
+          this.listData = data.data;
+          this.count = data.total;
+          this.listData.forEach((item, index) => {
+            this.$set(this.listData[index], 'isShow', false)
+          })
+        }
+      })
+    },
     detailFormChick(data) {
-      this.detailForm = data;
-      this.detailVisible = true;
+      this.$api({
+        url: 'bbs_detail',
+        method: 'post',
+        data: {
+          id: data.id
+        }
+      }).then(res => {
+        this.detailForm = res.data;
+        this.detailVisible = true;
+      })
     },
     // 评论
     commentAdd(item) {
+      console.log(item)
+      this.commentParams.parentId = item.id;
+      this.commentParams.replyUserId = item.user_id;
       this.commentVisible = true
     },
-    // 排序
-    onClickSort(item) {
-      this.orderByColumn = item.ziduan;
-    },
+    // 发帖
     postSubmit() {
-      this.PostVisible = false
-      this.$router.push('/forum-success')
+      if (!this.categoryItem.children || !this.categoryItem.children.id) {
+        this.$message.error('请选择分类')
+        return
+      }
+      if (!this.categoryParams.title) {
+        this.$message.error('请输入标题')
+        return
+      }
+      if (!this.categoryParams.content) {
+        this.$message.error('请输入内容')
+        return
+      }
+      this.$api({
+        url: 'bbs_do_publish',
+        method: 'post',
+        data: {
+          cate_id: this.categoryItem.children.id,
+          ...this.categoryParams
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.PostVisible = false
+          this.$router.push('/forum-success')
+        }
+      })
     },
+    // 编辑帖子提交
     editSubmit() {
-      this.editVisible = false
+      // if (!this.categoryItem.children || !this.categoryItem.children.id) {
+      //   this.$message.error('请选择分类')
+      //   return
+      // }
+      if (!this.categoryParams.title) {
+        this.$message.error('请输入标题')
+        return
+      }
+      if (!this.categoryParams.content) {
+        this.$message.error('请输入内容')
+        return
+      }
+      this.$api({
+        url: 'bbs_do_publish',
+        method: 'post',
+        data: {
+          cate_id: 1303,
+          title: this.categoryParams.title,
+          content: this.categoryParams.content,
+          id: this.categoryParams.id
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.editVisible = false;
+          this.$message.success('编辑成功');
+        }
+      })
+    },
+    // 点击板块
+    categoryItemClick(origin, target) {
+      const obj = {...origin}
+      this.categoryItem = Object.assign(obj, {children: target})
+    },
+    // 关闭
+    categoryClose() {
+      this.categoryItem = {}
+      this.categoryParams = {}
+    },
+    // 查看评论
+    showComment(item) {
+      this.$api({
+        url: 'bbs_reply_list',
+        method: 'post',
+        data: {
+          id: item.id,
+          ...this.pagination
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.commentList = res.data.data
+          this.listData.forEach((i, index) => {
+            if (i.id === item.id) {
+              this.$set(this.listData[index], 'isShow', !item.isShow)
+            } else {
+              this.$set(this.listData[index], 'isShow', false)
+            }
+          })
+        }
+      })
+    },
+    // 编辑帖子
+    editClick(item) {
+      this.$api({
+        url: 'bbs_my_detail',
+        method: 'post',
+        data: {
+          id: item.id
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.categoryParams = res.data
+          this.editVisible = true
+        }
+      })
+    },
+    // 添加评论
+    commentAddSubmit() {
+      if (!this.commentParams.content) {
+        this.$message.error('请输入内容')
+        return
+      }
+      this.$api({
+        url: 'bbs_do_reply',
+        method: 'post',
+        data: {
+          ...this.commentParams
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.commentVisible = false
+          this.getList()
+        }
+      })
     }
   }
 }
@@ -60,7 +229,7 @@ export default {
               clearable
           >
             <template #append>
-              <el-button class="search-btn">搜索</el-button>
+              <el-button class="search-btn" @click="getList">搜索</el-button>
             </template>
           </el-input>
           <el-button type="primary" class="post-btn" @click="PostVisible = true">发帖</el-button>
@@ -86,62 +255,69 @@ export default {
           <div class="info-wrap">
             <div class="left">
               <div class="post-info">
-                <h3 class="post-title">这里是帖子标题文案</h3>
-                <p class="post-meta ellipsis-2">
-                  这里是关于X射线光电子能谱仪（X-ray Photoelectron Spectroscopy）是根据光电效应原理，
-                  实现辐射的表面几个原子层（1-10nm厚的表面）的化学组成、价态、深度剖析及成像综合
-                  分析与表征技术的设备。主要应用于高分子聚合物、陶瓷、玻璃、薄膜、纳米材料、金属、生物材料。
-                </p>
+                <h3 class="post-title">{{ item.title }}</h3>
+                <p class="post-meta ellipsis-2">{{ item.description }}</p>
               </div>
               <div class="post-footer">
                 <span class="post-details">
-                  <span @click="detailFormChick(item)">详情</span><span
-                    @click="commentAdd(item)">评论(20)</span><span>点赞(35)</span>
+                  <span @click="detailFormChick(item)">详情</span><span>评论({{
+                    item.comment_no
+                  }})</span><span>点赞({{ item.like_no }})</span>
                 </span>
-                <span class="post-time">2024-08-31 18:30:02</span>
+                <span class="post-time">{{ item.created_at }}</span>
               </div>
             </div>
             <div class="right status">
-              <p :class="{'success': item.status === '1', 'error': item.status === '2'}">
-                {{ item.status === '1' ? '已通过' : item.status === '2' ? '被驳回' : '' }}</p>
-              <p class="pointer" v-if="item.status === '2'" @click="editVisible = true">修改</p>
-              <div class="isHide" @click="item.isShow = !item.isShow">
+              <p :class="{'success': item.status == '2', 'error': item.status == '3'}">
+                {{ item.status == '2' ? '已通过' : item.status == '3' ? '被驳回' : '待审核' }}</p>
+              <p class="pointer" v-if="item.status == '3'" @click="editClick(item)">修改</p>
+              <div class="isHide" @click="showComment(item)">
                 <i class="el-icon-arrow-down"></i>
               </div>
             </div>
             <el-button type="primary" size="small" class="action-btn">科研工具</el-button>
           </div>
           <div class="comment-wrap">
-            <div class="comment-item" v-for="i in 3">
+            <div class="comment-item" v-for="(i, ix) in commentList" :key="ix">
               <div class="post-header">
                 <el-avatar src="https://via.placeholder.com/50" class="avatar"></el-avatar>
-                <span>郭菲菲</span>
+                <span>{{ i.user.name }}</span>
               </div>
               <div class="post-info">
-                <p class="post-meta ellipsis-2">
-                  这里是关于X射线光电子能谱仪（X-ray Photoelectron Spectroscopy）是根据光电效应原理，
-                  实现辐射的表面几个原子层（1-10nm厚的表面）的化学组成、价态、深度剖析及成像综合
-                  分析与表征技术的设备。主要应用于高分子聚合物、陶瓷、玻璃、薄膜、纳米材料、金属、生物材料。
-                </p>
+                <p class="post-meta ellipsis-2">{{ i.content }}</p>
               </div>
               <div class="post-footer">
-                <span class="post-time">2024-08-31 18:30:02</span>
+                <span class="post-time">{{ i.created_at }}</span>
                 <span class="post-details" @click="detailFormChick(i)">详情</span>
               </div>
             </div>
+            <el-empty v-if="!commentList.length" description="暂无记录..."></el-empty>
           </div>
         </div>
       </div>
     </div>
 
+    <div class="pagination-box" v-if="count">
+      <el-pagination
+          background
+          layout="total, prev, pager, next"
+          :total="count"
+          :current-page="pagination.page"
+          :page-size="pagination.limit"
+          @current-change="changePage"
+      >
+      </el-pagination>
+    </div>
+    <el-empty v-else description="暂无记录..."></el-empty>
+
     <!--    评论-->
     <el-dialog
         title="评论"
         :visible.sync="commentVisible">
-      <el-input type="textarea" rows="10"></el-input>
+      <el-input type="textarea" rows="10" v-model="commentParams.content"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="commentVisible = false">取 消</el-button>
-        <el-button type="primary" @click="commentVisible = false">确 定</el-button>
+        <el-button type="primary" @click="commentAddSubmit">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -149,7 +325,7 @@ export default {
     <el-dialog
         title="详情"
         :visible.sync="detailVisible">
-      <div class="detailDialog">
+      <div class="detailDialog" v-html="detailForm.detail ? detailForm.detail.detail : ''">
 
       </div>
       <span slot="footer" class="dialog-footer">
@@ -161,26 +337,33 @@ export default {
     <!--    发帖-->
     <el-dialog
         title="发帖"
-        :visible.sync="PostVisible">
+        :visible.sync="PostVisible"
+        @close="categoryClose">
       <div class="postDialog">
         <div class="top-box">
-          <div class="type">选择分类： 学术交流区-分类名称</div>
+          <div class="type">选择分类：
+            {{ categoryItem.title ? categoryItem.title + '-' + categoryItem.children.title : '无' }}
+          </div>
           <div class="type-list">
             <el-popover
-                v-for="i in 3"
-                :key="i"
+                v-for="(item, index) in categoryList"
+                :key="index"
                 placement="bottom-start"
                 width="400"
                 trigger="hover">
               <div class="type-popover">
-                <div class="type-item" v-for="j in 3" :key="j">分类名称</div>
+                <div class="type-item active" v-for="it in item.children" :key="it.id"
+                     @click="categoryItemClick(item, it)">
+                  {{ it.title }}
+                </div>
               </div>
-              <div slot="reference" class="type-item" :class="{'active': i === 1}">学术交流区</div>
+              <div slot="reference" class="type-item active">{{ item.title }}</div>
             </el-popover>
           </div>
         </div>
-        <el-input type="text" placeholder="请输入帖子标题" class="title"></el-input>
-        <el-input type="textarea" placeholder="请输入帖子内容" rows="10" class="content"></el-input>
+        <el-input type="text" placeholder="请输入帖子标题" class="title" v-model="categoryParams.title"></el-input>
+        <el-input type="textarea" placeholder="请输入帖子内容" rows="10" class="content"
+                  v-model="categoryParams.content"></el-input>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="PostVisible = false">取消</el-button>
@@ -196,15 +379,16 @@ export default {
         <div class="edit-box">
           <p>
             <span class="red">驳回原因：</span>
-            <span>这里是一段驳回原因</span>
+            <span>{{ categoryParams.audit_remark || '无' }}</span>
           </p>
           <p>
             <span>帖子分类：</span>
             <span>学术交流区-分类名称</span>
           </p>
         </div>
-        <el-input type="text" placeholder="请输入帖子标题" class="title"></el-input>
-        <el-input type="textarea" placeholder="请输入帖子内容" rows="10" class="content"></el-input>
+        <el-input type="text" placeholder="请输入帖子标题" class="title" v-model="categoryParams.title"></el-input>
+        <el-input type="textarea" placeholder="请输入帖子内容" rows="10" class="content"
+                  v-model="categoryParams.content"></el-input>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editVisible = false">取消</el-button>
@@ -523,9 +707,11 @@ export default {
       font-size: 16px;
       color: #333333;
       margin-bottom: 15px;
+
       span {
         margin-right: 10px;
       }
+
       .red {
         color: red;
       }

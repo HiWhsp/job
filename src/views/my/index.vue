@@ -114,10 +114,12 @@ export default {
             {
               title: '团体管理',
               index: '/groupManage',
+              if_leader: 1
             },
             {
               title: '团体权益',
               index: '/groupRights',
+              if_leader: 1
             }
           ]
         },
@@ -217,7 +219,7 @@ export default {
                 <template slot="title">
                   <span>{{ item.title }}</span>
                 </template>
-                <el-menu-item :index="it.index" v-for="(it, i) in item.children" :key="i">
+                <el-menu-item :index="it.index" v-for="(it, i) in item.children" v-if="it.if_leader == undefined || baseInfo.if_leader == it.if_leader" :key="i">
                   {{ it.title }}
                 </el-menu-item>
               </el-submenu>

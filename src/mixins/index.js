@@ -1,6 +1,6 @@
 // import router from "@/router";
-import { mapState } from "vuex";
-import { UPLOAD_PARAMS_ACTION } from "@/config/env.js";
+import {mapState} from "vuex";
+import {UPLOAD_PARAMS_ACTION} from "@/config/env.js";
 
 export default {
   data() {
@@ -56,7 +56,8 @@ export default {
 
     mix_upload_data() {
       let data = {
-        action: UPLOAD_PARAMS_ACTION,
+        token: localStorage.getItem("token"),
+        fileType: "image",
       };
       return data;
     },
@@ -95,9 +96,12 @@ export default {
       return ret;
     },
   },
-  created() {},
-  mounted() {},
-  destroyed() {},
+  created() {
+  },
+  mounted() {
+  },
+  destroyed() {
+  },
 
   methods: {
     // if(!this.mix_get_login_status()){
@@ -278,7 +282,7 @@ export default {
 
     //商品详情页
     mix_to_product(item) {
-      let { inventoryId, id } = item;
+      let {inventoryId, id} = item;
       if (inventoryId) {
         this.$router.push(`/product-detail?id=${inventoryId}`);
       } else if (id) {
@@ -304,7 +308,7 @@ export default {
       this.$api("users_yhqLingqu", {
         id: item.id,
       }).then((res) => {
-        let { code, message } = res;
+        let {code, message} = res;
         alert(res);
         if (this.$route.name == "product-detail") {
           this.show_coupon = false;
@@ -318,7 +322,7 @@ export default {
       this.$api("orders_detail", {
         id: orderId,
       }).then((res) => {
-        let { code, data, msg } = res;
+        let {code, data, msg} = res;
         if (code == 200) {
           data.actions = this.getOrderActionsByStatus({
             ...data,
@@ -336,7 +340,7 @@ export default {
       this.$api("orders_qxOrder", {
         orderId: orderId,
       }).then((res) => {
-        let { code, data, msg } = res;
+        let {code, data, msg} = res;
         if (code == 200) {
           if (callback) {
             callback();
@@ -350,7 +354,7 @@ export default {
       this.$api("orders_del", {
         orderId: orderId,
       }).then((res) => {
-        let { code, data, msg } = res;
+        let {code, data, msg} = res;
         if (code == 200) {
           if (callback) {
             callback();
@@ -364,7 +368,7 @@ export default {
       this.$api("orders_qrshouhuo", {
         orderId: orderId,
       }).then((res) => {
-        let { code, data, msg } = res;
+        let {code, data, msg} = res;
         if (code == 200) {
           if (callback) {
             callback();
@@ -413,7 +417,7 @@ export default {
     //banner 跳转
     mix_banner_click(item) {
       //console.log(" do_banner_click item", { ...item });
-      let { url, inventoryId, channel_id } = item;
+      let {url, inventoryId, channel_id} = item;
       // return
       if (url) {
         location.href = url;
@@ -427,7 +431,7 @@ export default {
     // 自定义导航跳转
     mix_cus_nav_click(item) {
       //console.log(" indexNavClick item", { ...item });
-      let { url, inventoryId, channel_id } = item;
+      let {url, inventoryId, channel_id} = item;
 
       // return
       if (url) {
@@ -449,9 +453,9 @@ export default {
 
     //订单中的单个商品允许的操作类型
     mix_getOrderProductsAllowActions(order, product) {
-      let { status } = order;
+      let {status} = order;
 
-      let { ifpingjia, ifshouhou } = product;
+      let {ifpingjia, ifshouhou} = product;
 
       let allow_review = !ifpingjia && status == 4; //是否允许评价
       let allow_refund =
@@ -476,7 +480,7 @@ export default {
 
     //根据订单状态获取订单操作结果
     getOrderActionsByStatus(order) {
-      let { status, statusInfo, ifpingjia } = order;
+      let {status, statusInfo, ifpingjia} = order;
       let actions = [];
       // let actions = [
       //   { name: "取消订单",type: 'quxiao' },
@@ -491,22 +495,22 @@ export default {
       if (status == -5) {
         //待支付
         if (statusInfo == "无效") {
-          actions = [{ name: "取消订单", type: "quxiao" }];
+          actions = [{name: "取消订单", type: "quxiao"}];
         } else if (statusInfo == "待支付") {
           actions = [
-            { name: "立即支付", type: "zhifu" },
-            { name: "取消订单", type: "quxiao" },
+            {name: "立即支付", type: "zhifu"},
+            {name: "取消订单", type: "quxiao"},
           ];
         }
       } else if (status == -3) {
         //-3售后处理中
-        actions = [{ name: "删除订单", type: "shanchu" }];
+        actions = [{name: "删除订单", type: "shanchu"}];
       } else if (status == -1) {
         //无效
-        actions = [{ name: "删除订单", type: "shanchu" }];
+        actions = [{name: "删除订单", type: "shanchu"}];
       } else if (status == 0) {
         //0待成团
-        actions = [{ name: "取消订单", type: "quxiao" }];
+        actions = [{name: "取消订单", type: "quxiao"}];
       } else if (status == 2) {
         //2待发货
         actions = [
@@ -515,8 +519,8 @@ export default {
       } else if (status == 3) {
         //3待收货
         actions = [
-          { name: "确认收货", type: "shouhuo" },
-          { name: "查看物流", type: "wuliu" },
+          {name: "确认收货", type: "shouhuo"},
+          {name: "查看物流", type: "wuliu"},
         ];
       } else if (status == 4) {
         //4已收货
@@ -530,7 +534,7 @@ export default {
           actions = [
             // { name: "删除订单", type: "shanchu" },
             // { name: "查看物流", type: "wuliu" },
-            { name: "评价", type: "pingjia" },
+            {name: "评价", type: "pingjia"},
             // { name: "售后", type: "shouhou" },
           ];
         }
