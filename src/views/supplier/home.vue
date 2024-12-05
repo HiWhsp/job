@@ -8,14 +8,14 @@
               <img src="@/assets/img/my/avatar.png" alt/>
             </div>
             <div class="name">
-              {{ my_info.nickname || "郭菲菲" }}
+              {{ baseInfo.name || "无" }}
             </div>
           </div>
         </div>
         <div class="right">
-          <div class="text-1">{{ my_info.phone || "15931263145" }}</div>
+          <div class="text-1">{{ baseInfo.phone || "****" }}</div>
           <div class="text-2">
-            <span>{{ my_info.levelTitle || "普通会员" }}</span>
+            <span>{{ "普通会员" }}</span>
           </div>
         </div>
       </div>
@@ -24,25 +24,25 @@
         <div class="list">
           <div class="item" @click="$router.push('/order-list?order_status=1')">
             <div class="val">
-              <span>{{ my_info.orderNum || "0" }}</span>
+              <span>{{ user_index.top4_jinriyy || "0" }}</span>
             </div>
             <div class="label">今日寄样</div>
           </div>
           <div class="item" @click="$router.push('/order-list?order_status=1')">
             <div class="val">
-              <span>{{ user_index.order_num_1 || "0" }}</span>
+              <span>{{ user_index.top4_daishiyan || "0" }}</span>
             </div>
             <div class="label">待实验</div>
           </div>
           <div class="item" @click="$router.push('/order-list?order_status=3')">
             <div class="val">
-              <span>{{ user_index.order_num_3 || "0" }}</span>
+              <span>{{ user_index.top4_jjcq || "0" }}</span>
             </div>
             <div class="label">即将超期</div>
           </div>
           <div class="item" @click="$router.push('/order-list?order_status=4')">
             <div class="val">
-              <span>{{ user_index.order_num_3 || "0" }}</span>
+              <span>{{ user_index.top4_daihuishou || "0" }}</span>
             </div>
             <div class="label">待回收</div>
           </div>
@@ -54,38 +54,38 @@
       <div class="item">
         <div class="info">
           <span class="tit">待结算金额</span>
-          <span class="val">2000.00</span>
+          <span class="val">{{ user_index.c4_daijisuan }}</span>
         </div>
         <div class="box">
-          <p>申请结算</p>
+          <p class="pointer">申请结算</p>
         </div>
       </div>
       <div class="item">
         <div class="info">
           <span class="tit">已结算金额</span>
-          <span class="val">2000.00</span>
+          <span class="val">{{ user_index.c4_yijiesuan }}</span>
         </div>
         <div class="box">
-          <p>查看详情</p>
+          <p class="pointer">查看详情</p>
         </div>
       </div>
       <div class="item">
         <div class="info">
           <span class="tit">可结算订单</span>
-          <span class="val">20</span>
+          <span class="val">{{ user_index.c4_kejieorder }}</span>
         </div>
         <div class="box">
-          <p>申请结算</p>
+          <p class="pointer">申请结算</p>
         </div>
       </div>
       <div class="item">
         <div class="info">
           <span class="tit">当月好评率</span>
-          <span class="val">90%</span>
+          <span class="val">{{ user_index.c4_haoping }}%</span>
         </div>
-        <div class="box">
-          <p>当月差评率 <span>0%</span></p>
-          <p><span>查看详情</span></p>
+        <div class="box flex">
+          <p>当月差评率 <span>{{ user_index.c4_chaping }}%</span></p>
+          <p class="pointer" style="margin-left: 10px;"><span>查看详情</span></p>
         </div>
       </div>
     </div>
@@ -108,8 +108,8 @@
         </div>
         <div class="order-info" v-else>
           <div class="info-item" v-for="(item, index) in list_order" :key="index">
-            <span>这里是消息标题这里是消息标题这里是消息标题</span>
-            <span class="date">{{ item.createdTime }}</span>
+            <span>{{ item.title }}</span>
+            <span class="date">{{ item.created_at }}</span>
           </div>
         </div>
       </div>
@@ -118,109 +118,54 @@
 </template>
 
 <script>
-
 export default {
   name: "home",
   data() {
     return {
       pagination: {
         page: "1",
-        pageNum: "8",
+        limit: "8",
       },
       count: 0,
-
       my_info: {},
       user_index: {}, //用户首页数据
-      list_order: [],
-      list_goods: [],
-
-      uploadImg: "",
-      youhui_code: "",
-      youhui_msg: "",
-
-      ruleForm: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      },
-      rules: {
-        name: [
-          {required: true, message: '请输入活动名称', trigger: 'blur'},
-          {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
-        ],
-        region: [
-          {required: true, message: '请选择活动区域', trigger: 'change'}
-        ],
-        date1: [
-          {type: 'date', required: true, message: '请选择日期', trigger: 'change'}
-        ],
-        date2: [
-          {type: 'date', required: true, message: '请选择时间', trigger: 'change'}
-        ],
-        type: [
-          {type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change'}
-        ],
-        resource: [
-          {required: true, message: '请选择活动资源', trigger: 'change'}
-        ],
-        desc: [
-          {required: true, message: '请填写活动形式', trigger: 'blur'}
-        ]
-      }
+      list_order: [], // 消息
     };
   },
-  computed: {},
   mounted() {
     this.setView();
   },
   methods: {
-    emitConfirm() {
-      this.query_order();
-    },
-
     setView() {
       this.query_userIndex();
       this.query_order();
-      this.query_goods();
     },
-    //用户主页数据
+    // 供应商主页数据
     query_userIndex() {
-
-    },
-    //订单查询
-    query_order() {
-
-    },
-    //商品信息
-    query_goods() {
-
-    },
-
-    changeSugges() {
-      if (this.count > this.pagination.pageNum * this.pagination.page) {
-        this.pagination.page++;
-        this.query_goods();
-      } else {
-        alertErr("没有更多了...");
-      }
-    },
-
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.$router.push('/supplier-status')
-        } else {
-          return false;
+      this.$api({
+        url: 'store/my_index',
+        method: 'post',
+        data: {},
+      }).then(res => {
+        if (res.code === 200) {
+          this.user_index = res.data;
         }
-      });
+      })
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+    // 消息查询
+    query_order() {
+      this.$api({
+        url: 'store/message_list',
+        method: 'post',
+        data: {
+          status: 0,
+          ...this.pagination
+        },
+      }).then(res => {
+        if (res.code === 200) {
+          this.list_order = res.data;
+        }
+      })
     }
   },
 };

@@ -5,28 +5,57 @@ export default {
   data() {
     return {
       keyword: '', // 搜索
-      count: 1,
+      count: 0,
       pagination: {
         page: 1,
-        pageNum: 10
+        limit: 10
       },
       detail: {},
-      listData: [{}, {}],
+      listData: [],
       selectTab: {title: "全部消息", status: "0"},
       list_tab: [
         {title: "全部消息", status: "0"},
-        {title: "已读", status: "1"},
-        {title: "未读", status: "2"},
+        {title: "已读", status: "2"},
+        {title: "未读", status: "1"},
       ],
     }
   },
   watch: {
     selectTab() {
+      this.setView()
     },
+  },
+  mounted() {
+    this.setView();
   },
   methods: {
     setView() {
-
+      this.$api({
+        url: 'store/message_list',
+        method: 'post',
+        data: {
+          status: this.selectTab.status,
+          ...this.pagination,
+        },
+      }).then(res => {
+        if (res.code == 200) {
+          this.listData = res.data;
+          this.count = res.count;
+        }
+      })
+    },
+    getDetail(item) {
+      this.$api({
+        url: 'store/message_detail',
+        method: 'post',
+        data: {
+          id: item.id
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.detail = res.data;
+        }
+      })
     },
     selectTabClick(item) {
       this.selectTab = item;
@@ -42,7 +71,7 @@ export default {
 <template>
   <div class="container">
     <div class="filter">
-      <div class="left">我的帖子</div>
+      <div class="left">我的消息</div>
       <div class="right">
         <div class="search-bar">
           <el-input
@@ -74,31 +103,29 @@ export default {
     <div class="content">
       <div class="list">
         <div class="post-card" v-for="(item, index) in listData" :key="index" v-if="!Object.keys(detail).length">
-          <div class="title-box" @click="detail = {a: 1}">
-            <div class="content">这里是消息标题这里是消息标题这里是消息标题</div>
-            <div class="date">2024-08-31</div>
+          <div class="title-box" @click="getDetail(item)">
+            <div class="content">{{ item.title }}</div>
+            <div class="date">{{ item.created_at }}</div>
           </div>
         </div>
       </div>
       <div class="detail" v-if="Object.keys(detail).length">
-        <p class="title">这里是消息标题这里是消息标题这里是消息标题</p>
-        <p class="date">2024-08-31</p>
-        <p class="desc">
-          这里是消息详情文案这里是消息详情文案这里是消息详情文案，这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案，这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案，这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案</p>
-
+        <p class="title">{{ detail.title }}</p>
+        <p class="date">{{ detail.created_at }}</p>
+        <p class="desc" v-html="detail.content"></p>
         <div class="to">
-          <div class="btn">上一篇 这里是消息标题</div>
-          <div class="btn">下一篇 这里是消息标题</div>
+          <div class="btn" @click="detail(detail.prev_item)">上一篇 {{ detail.prev_item.title }}</div>
+          <div class="btn" @click="detail(detail.next_item)">下一篇 {{ detail.next_item.title }}</div>
         </div>
       </div>
 
       <div v-if="count && !Object.keys(detail).length" class="pagination-box"
            style="margin-top: 40px; text-align: center;">
         <el-pagination background layout="total, prev, pager, next" @current-change="setView"
-                       :current-page.sync="pagination.page" :page-size="pagination.pageNum"
+                       :current-page.sync="pagination.page" :page-size="pagination.limit"
                        :total="count"></el-pagination>
       </div>
-      <el-empty v-if="!count" description="没有查询到订单信息..."></el-empty>
+      <el-empty v-if="!count" description="没有查询到信息..."></el-empty>
     </div>
   </div>
 </template>
