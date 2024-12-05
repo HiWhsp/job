@@ -11,7 +11,6 @@
           </div>
 
           <div class="lingquan" @click="$router.push('/couponCenter')">
-            <!-- <img src="@img/other/mycoupon-to-center.png" alt="" class="coupon" /> -->
             <span>进入领券中心 ></span>
           </div>
         </div>
@@ -23,17 +22,18 @@
               <img v-if="item.status == 1 || item.status == 2" src="@/assets/img/my/coupon/coupon-guoqi.png"
                    alt=""
                    class="used-img"/>
-
               <div class="yhq-item" :class="{ used: item.status == 0 || item.status == 1  }">
                 <div class="yhq-left">
                   <div class="money">
                     <div class="currency">{{ vuex_huobi }}</div>
-                    <div class="num">{{ item.jian }}</div>
+                    <div class="num">{{ item.money }}</div>
                   </div>
+                  <div class="tiaojian" v-if="item.dis_type == 1">满{{ item.min_money }}可用</div>
+                  <div class="tiaojian" v-if="item.dis_type == 2">优惠金额 {{ item.money }}</div>
                 </div>
                 <div class="yhq-right">
-                  <div class="tiaojian">使用条件： 满{{ item.man }}可用</div>
-                  <div class="shijian">有效时间： {{ item.startTime }} - {{ item.endTime }}</div>
+                  <div class="tiaojian">{{ item.title }}</div>
+                  <div class="shijian">{{ item.start_time }} - {{ item.end_time }}</div>
                   <div class="action">
                     <button v-if="item.status == 0" class="btn-ripple btn-pick btn-lingqu"
                             @click="coupon_use(item)">
@@ -96,12 +96,12 @@ export default {
       // yiguoqi,
       // yishiyong,
 
-      status: 1,
+      status: 0,
       list_tab: [
         // { title: "全部", status: 0 },
-        {title: "未使用", status: 1},
-        {title: "已使用", status: 2},
-        {title: "已过期", status: 3},
+        {title: "未使用", status: 0},
+        {title: "已使用", status: 1},
+        {title: "已过期", status: 2},
       ],
 
       list_yhq: [],
@@ -123,21 +123,24 @@ export default {
       }
     },
     setView() {
-      this.$api("yhq_myList", {
-        scene: this.status,
-        page: 1,
-        pageSize: 1000,
+      this.$api({
+        url: 'user_coupon_list',
+        method: 'post',
+        data: {
+          status: this.status,
+          page: 1,
+          limit: 100
+        }
       }).then((res) => {
         let {code, data} = res;
         if (code == 200) {
-          this.list_yhq = data.list;
+          this.list_yhq = data;
         }
       });
     },
 
     coupon_use(item) {
-      //console.log("使用优惠券", { ...item });
-      this.$router.push("/product-cates?id=853");
+      // this.$router.push("/product-cates?id=853");
     },
   },
 };
@@ -368,22 +371,29 @@ export default {
     .yhq-left {
       position: absolute;
       width: 140px;
+      .flex();
+      flex-direction: column;
+      justify-content: center;
 
       .money {
         .flex();
         justify-content: center;
 
         .currency {
-          font-size: 42px;
+          font-size: 30px;
           font-weight: bold;
           color: #fff;
         }
 
         .num {
-          font-size: 42px;
+          font-size: 30px;
           font-weight: bold;
           color: #fff;
         }
+      }
+
+      .tiaojian {
+        color: #fff;
       }
     }
 

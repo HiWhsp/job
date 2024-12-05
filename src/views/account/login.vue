@@ -269,12 +269,12 @@ export default {
             }
 
             localStorage.setItem("token", data.token);
-
+            localStorage.setItem("isSupplier", 'false');
             this.$store.commit("set_baseInfo", data);
             this.$store.dispatch("getUserloginedInfo");
 
             // this.$router.push("/");
-            this.$router.push("/myOrder");
+            this.$router.push("/my");
           }
         });
       } else {

@@ -24,12 +24,24 @@
             <div class="btn">线上咨询</div>
           </div>
           <div class="login">
-            <div class="login-btn pointer" @click="goUrl({url: '/login'})" v-if="!baseInfo.id">登录</div>
-            <i class="col" v-if="!baseInfo.id"></i>
-            <div class="login-btn pointer" @click="goUrl({url: '/register'})" v-if="!baseInfo.id">注册</div>
-            <div class="login-btn pointer" @click="goUrl({url: '/my-home'})" v-if="baseInfo.id">{{ baseInfo.name }}</div>
+            <div class="login-btn pointer" @click="goUrl({url: '/login'})" v-if="!baseInfo.id || isSupplier != 'false'">
+              登录
+            </div>
+            <i class="col" v-if="!baseInfo.id || isSupplier != 'false'"></i>
+            <div class="login-btn pointer" @click="goUrl({url: '/register'})"
+                 v-if="!baseInfo.id || isSupplier != 'false'">注册
+            </div>
+            <div class="login-btn pointer" @click="goUrl({url: '/my-home'})" v-if="baseInfo.id && isSupplier != 'true'">
+              {{ baseInfo.name }}
+            </div>
             <i class="col"></i>
-            <div class="login-btn pointer" @click="goUrl({url: '/supplier-login'})">供应商登录</div>
+            <div class="login-btn pointer" @click="goUrl({url: '/supplier-login'})"
+                 v-if="!baseInfo.id || isSupplier != 'true'">供应商登录
+            </div>
+            <div class="login-btn pointer" @click="goUrl({url: '/supplier-login'})"
+                 v-if="baseInfo.id && isSupplier == 'true'">
+              供应商-{{ baseInfo.name }}
+            </div>
           </div>
         </div>
       </div>
@@ -45,11 +57,13 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
+
 export default {
   name: "index",
   data() {
     return {
+      isSupplier: false,
       navList: [
         {
           title: '首页',
@@ -77,6 +91,11 @@ export default {
           path: '/training'
         }
       ]
+    }
+  },
+  watch: {
+    baseInfo(val) {
+      this.isSupplier = localStorage.getItem('isSupplier');
     }
   },
   computed: {

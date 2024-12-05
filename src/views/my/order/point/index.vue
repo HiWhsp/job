@@ -5,7 +5,7 @@
       <div class="left">我的积分</div>
       <div class="money">
         <img src="@/assets/img/my/order/point.png" alt="">
-        <span>1000.00</span>
+        <span>{{ baseInfo.points }}</span>
       </div>
       <div class="flex">
         <div class="btn" @click="goUrl({url: '/pointMall'})">积分商城</div>
@@ -38,21 +38,18 @@
                   <div class="item-4">剩余积分</div>
                 </div>
 
-                <div class="item-box" v-for="(item, index) in list_jilu.list" :key="index"
-                     @click="$router.push(`/order-detail?orderId=${order.id}`)"
-                >
+                <div class="item-box" v-for="(item, index) in list_jilu" :key="index">
                   <div class="item item_other">
                     <div class="item-1">
-                      <div class="text-1">{{ item.remark }}</div>
-                      <!-- <div class="text-2">{{ item.jifen }}</div> -->
+                      <div class="text-1">{{ item.title }}</div>
                     </div>
-                    <div class="item-3">{{ item.createdTime }}</div>
+                    <div class="item-3">{{ item.created_at }}</div>
                     <div class="item-2 val"
-                         :class="{ plus: item.logType == 1, minus: item.logType == 2 }">
-                      {{ item.logType == 1 ? "+" : "-" }}{{ item.jifen }}
+                         :class="{ plus: item.type == 1, minus: item.type == 2 }">
+                      {{ item.type == 1 ? "+" : "" }}{{ item.money }}
                     </div>
                     <div class="item-4">
-                      {{ item.remark }}
+                      {{ item.before_money }}
                     </div>
                   </div>
                 </div>
@@ -63,8 +60,8 @@
                     background
                     layout="total, prev, pager, next"
                     :total="count"
-                    :current-page="pagination.page"
-                    :page-size="pagination.pageNum"
+                    :current-page.sync="pagination.page"
+                    :page-size.sync="pagination.limit"
                     @current-change="changePage"
                 >
                 </el-pagination>
@@ -117,14 +114,18 @@ export default {
 
   methods: {
     setView() {
-      this.$api("jiFen_lists", {
-        ...this.pagination,
-        type: this.selectTab.status, //类型：0-全部   1-收入  2-支出
+      this.$api({
+        url: 'point_detail_list',
+        method: 'post',
+        data: {
+          ...this.pagination,
+          type: this.selectTab.status, //类型：0-全部   1-收入  2-支出
+        }
       }).then((res) => {
         let {code, data, count} = res;
         if (code == 200) {
           this.list_jilu = data;
-          this.count = data.count;
+          this.count = count;
         }
       });
     },

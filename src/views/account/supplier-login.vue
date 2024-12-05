@@ -24,7 +24,7 @@
 
       <div class="register-box">
         <p class="pointer">还没账号？<span @click="dialogVisible = true">立即成为供应商</span></p>
-        <router-link to="/retrieve">忘记密码</router-link>
+        <router-link to="/retrieve?type=supplier">忘记密码</router-link>
       </div>
     </div>
 
@@ -67,7 +67,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -287,15 +287,18 @@ export default {
           return;
         }
 
-        this.$api("users_phoneLogin", {
-          type: 0, //0-账号密码 登录     1-账号 验证码登录
-          phone: phone,
-          password: password,
+        this.$api({
+          url: "store/login",
+          method: "post",
+          data: {
+            phone: phone,
+            password: password,
+          }
         }).then((res) => {
           //console.log("登录", res);
           let {code, data, message} = res;
           if (code == 0) {
-          } else if (code == 1) {
+          } else if (code == 200) {
             if (this.savePass) {
               localStorage.setItem("save1", this.encodeString(this.form.phone));
               localStorage.setItem("save2", this.encodeString(this.form.password));
@@ -304,11 +307,12 @@ export default {
               localStorage.setItem("save2", "");
             }
 
-            this.$store.commit("set_baseInfo", data);
-            this.$store.dispatch("getUserloginedInfo");
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("isSupplier", 'true');
+            this.$store.dispatch("getSupplierInfo");
 
             // this.$router.push("/");
-            this.$router.push("/myOrder");
+            this.$router.push("/supplier-home");
           }
         });
       } else {
@@ -342,7 +346,25 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$router.push('/supplier-status')
+          this.$api({
+            url: 'store/register',
+            method: 'post',
+            data: {
+              company_name: '海视频',
+              name: '姓名1',
+              phone: '15100000002',
+              password: '123456',
+              service_info: '服务信息',
+              province: '北京',
+              city: '北京',
+              area: '朝阳区',
+              address: '地址地址',
+              notes: '123'
+            }
+          }).then(res => {
+            alertSucc(res.msg);
+            this.$router.push('/supplier-status')
+          })
         } else {
           return false;
         }

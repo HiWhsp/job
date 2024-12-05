@@ -176,14 +176,17 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   let token = localStorage.getItem("token");
-  let userId = localStorage.getItem("user_id");
+  let userId = localStorage.getItem("userId");
   let user_is_login = token && userId;
-
   // debugger
   if (!user_is_login && to.meta.requireAuth) {
     // debugger
     alertErr("请先登录");
     next("/login");
+  } else if (['/login', '/retrieve', '/register'].includes(to.path) && localStorage.getItem('isSupplier') === 'false') {
+    next('/my-home');
+  } else if (to.path === '/supplier-login' && localStorage.getItem('isSupplier') === 'true') {
+    next('/supplier-home');
   } else {
     next();
   }

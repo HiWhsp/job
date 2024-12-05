@@ -302,8 +302,8 @@ export default {
           background
           layout="total, prev, pager, next"
           :total="count"
-          :current-page="pagination.page"
-          :page-size="pagination.limit"
+          :current-page.sync="pagination.page"
+          :page-size.sync="pagination.limit"
           @current-change="changePage"
       >
       </el-pagination>

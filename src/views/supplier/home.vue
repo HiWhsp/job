@@ -175,7 +175,7 @@ export default {
     };
   },
   computed: {},
-  created() {
+  mounted() {
     this.setView();
   },
   methods: {
@@ -184,13 +184,9 @@ export default {
     },
 
     setView() {
-      this.query_user();
       this.query_userIndex();
       this.query_order();
       this.query_goods();
-    },
-    //
-    query_user() {
     },
     //用户主页数据
     query_userIndex() {

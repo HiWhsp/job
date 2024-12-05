@@ -269,13 +269,15 @@ export default new Vuex.Store({
     async appInit({commit, state, dispatch}, data) {
       dispatch("appInitGetAssets");
 
-
       let token = localStorage.getItem("token");
       let userId = localStorage.getItem("userId");
 
-      if (token && userId) {
+      if (token && userId && localStorage.getItem('isSupplier') === 'false') {
         commit("set_vuex_login_status", true);
         dispatch("getUserloginedInfo");
+      } else if (token && userId && localStorage.getItem('isSupplier') === 'true') {
+        commit("set_vuex_login_status", true);
+        dispatch("getSupplierInfo");
       } else {
         commit("set_vuex_login_status", false);
       }
@@ -284,7 +286,6 @@ export default new Vuex.Store({
     //获取登录后的信息
     async getUserloginedInfo({commit, state, dispatch}, data) {
       dispatch("query_user");
-      // dispatch("query_cart");
     },
 
     // 获取用户信息
@@ -301,33 +302,23 @@ export default new Vuex.Store({
         }
       });
     },
-    // 获取用户信息
-    async query_cart({commit, state, dispatch}) {
+
+    async getSupplierInfo({commit, state, dispatch}, data) {
       api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "gouwuche_lists",
-        },
-      })
-        .then((res) => {
-          let {code, data} = res;
-          if (code == 200) {
-            let count = 0;
-            data.forEach((v) => {
-              count += v.num * 1;
-            });
-
-            commit("set_vuex_cart_number", count);
-          }
-        });
+        url: "store/info",
+        method: "post",
+      }).then((res) => {
+        if (res.code == 200) {
+          commit("set_vuex_login_status", true);
+          commit("set_baseInfo", res.data);
+        } else {
+          commit("set_vuex_login_status", false);
+        }
+      });
     },
-
 
     //初始化资源
     async appInitGetAssets({commit, state, dispatch}, data) {
-      dispatch("query_user");
-
       api({
         url: "setting",
         method: "post",
