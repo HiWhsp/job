@@ -10,21 +10,21 @@
           <div class="item">
             <span class="text">旧密码：</span>
             <span class="info">
-              <el-input clearable placeholder="请输入旧密码" type="password" v-model="form.oldPass" class="" />
+              <el-input clearable placeholder="请输入旧密码" type="password" v-model="form.old_password" class=""/>
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">新密码：</span>
             <span class="info">
-              <el-input clearable placeholder="请输入新密码" type="password" v-model="form.pass" class="" />
+              <el-input clearable placeholder="请输入新密码" type="password" v-model="form.password" class=""/>
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">重复新密码：</span>
             <span class="info">
-              <el-input clearable placeholder="请输入重复新密码" type="password" v-model="form.pass2" class="" />
+              <el-input clearable placeholder="请输入重复新密码" type="password" v-model="form.password_confirm" class=""/>
             </span>
             <span class="action"> </span>
           </div>
@@ -32,7 +32,8 @@
             <span class="text" style="visibility: hidden">-</span>
             <div class="info">
               <el-button class="btn-ripple fit-text btn-save" @click="throttle_do_submit()"
-                         :loading="loading">确认</el-button>
+                         :loading="loading">确认
+              </el-button>
               <button class="btn-ripple fit-text btn-cancel" @click="do_clear()">清空</button>
             </div>
           </div>
@@ -43,7 +44,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "password",
@@ -71,37 +72,36 @@ export default {
 
     },
     do_submit() {
-      if (!this.form.oldPass) {
+      if (!this.form.old_password) {
         alertErr("请输入旧密码");
         return;
       }
-      if (!this.form.pass) {
+      if (!this.form.password) {
         alertErr("请输入新密码");
         return;
       }
-      if (!this.form.pass2) {
+      if (!this.form.password_confirm) {
         alertErr("请输入确认密码");
         return;
       }
-      if (this.form.pass != this.form.pass2) {
+      if (this.form.password != this.form.password_confirm) {
         alertErr("两次密码不一致");
         return;
       }
 
       this.loading = true;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'store/edit',
+        method: 'post',
         data: {
-          action: 'users_editPass',
+          action: '4',
           ...this.form,
         }
       }).then((res) => {
-        alert(res).then(() => {
-          this.loading = false;
-        });
+        this.loading = false;
         if (res.code == 200) {
           this.do_clear()
+          alertSucc("修改成功");
         }
       });
     },
@@ -151,7 +151,8 @@ export default {
   .page-ctx {
     padding-bottom: 80px;
 
-    .section {}
+    .section {
+    }
 
     .item {
       margin-bottom: 20px;
@@ -210,7 +211,8 @@ export default {
 .btn-box {
   margin-top: 46px;
 
-  button {}
+  button {
+  }
 
   .btn-save {
     width: 120px;

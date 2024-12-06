@@ -2,7 +2,7 @@
   <div class="container">
     <div class="main">
       <div class="logo">
-        <img src="@/assets/img/base/logo.jpg" alt="">
+        <img :src="webConfig.site_logo" alt="">
       </div>
       <div class="search">
         <div class="search-btn">
@@ -38,7 +38,7 @@
             <div class="login-btn pointer" @click="goUrl({url: '/supplier-login'})"
                  v-if="!baseInfo.id || isSupplier != 'true'">供应商登录
             </div>
-            <div class="login-btn pointer" @click="goUrl({url: '/supplier-login'})"
+            <div class="login-btn pointer" @click="goUrl({url: '/supplier-home'})"
                  v-if="baseInfo.id && isSupplier == 'true'">
               供应商-{{ baseInfo.name }}
             </div>
@@ -133,11 +133,11 @@ export default {
     justify-content: space-between;
 
     .logo {
-      width: 419px;
+      //width: 419px;
       height: 77px;
 
       img {
-        width: 100%;
+        width: auto;
         height: 100%;
       }
     }

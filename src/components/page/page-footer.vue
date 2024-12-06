@@ -1,74 +1,72 @@
 <template>
-    <div class="container">
-        <div class="main info">
-            <div class="item1">
-                <p class="tit">
-                    <i></i>
-                    <span>0592-2882590</span>
-                </p>
-                <div class="e-richText">
-                    <p>
-                        <span>电话： 13599519926(微信同号）</span>
-                    </p>
-                    <p>
-                        <span>邮箱：chueh@xmu.edu.cn;</span>
-                    </p>
-                    <p>
-                        <span>wangwb@xmu.edu.cn</span>
-                    </p>
-                    <p>
-                        <span>地址：厦门大学翔安校区能源材料大楼3号楼3309</span>
-                    </p>
-                </div>
-            </div>
-            <div class="item2">
-                <div class="tit">
-                    <p>友情链接</p>
-                </div>
-                <div class="link">
-                    <span>嘉庚创新实验室</span>
-                    <span>厦门大学</span>
-                    <span>厦门市科学技术局</span>
-                    <span>福建省科技厅</span>
-                </div>
-            </div>
-            <div class="item3">
-                <div class="tit">
-                    <p>订阅我们，获取更多行业动态</p>
-                </div>
-                <div class="content">
-                    <div class="input-group">
-                        <el-input placeholder="请输入您的邮箱"></el-input>
-                        <div class="formItem">
+  <div class="container">
+    <div class="main info">
+      <div class="item1">
+        <p class="tit">
+          <i></i>
+          <span>{{ webConfig.site_tel }}</span>
+        </p>
+        <div class="e-richText">
+          <p>
+            <span>电话：{{ webConfig.site_tel }}</span>
+          </p>
+          <p>
+            <span>邮箱：{{ webConfig.site_mail }}</span>
+          </p>
+          <p>
+            <span>地址：{{  webConfig.site_address }}</span>
+          </p>
+        </div>
+      </div>
+      <div class="item2">
+        <div class="tit">
+          <p>友情链接</p>
+        </div>
+        <div class="link">
+          <span>嘉庚创新实验室</span>
+          <span>厦门大学</span>
+          <span>厦门市科学技术局</span>
+          <span>福建省科技厅</span>
+        </div>
+      </div>
+      <div class="item3">
+        <div class="tit">
+          <p>订阅我们，获取更多行业动态</p>
+        </div>
+        <div class="content">
+          <div class="input-group">
+            <el-input placeholder="请输入您的邮箱"></el-input>
+            <div class="formItem">
 
-                        </div>
-                    </div>
-                    <div class="websiteShare">
-                        <a href="#">
-                            <img src="@/assets/img/base/Share/share-weibo.png" alt="">
-                        </a>
-                        <a href="#">
-                            <img src="@/assets/img/base/Share/share-wechat.png" alt="">
-                        </a>
-                        <a href="#">
-                            <img src="@/assets/img/base/Share/share-qq.png" alt="">
-                        </a>
-                        <a href="#">
-                            <img src="@/assets/img/base/Share/share-qzone.png" alt="">
-                        </a>
-                        <a href="#">
-                            <img src="@/assets/img/base/Share/share-copyLink.png" alt="">
-                        </a>
-                    </div>
-                </div>
             </div>
+          </div>
+          <div class="websiteShare">
+            <a href="#">
+              <img src="@/assets/img/base/Share/share-weibo.png" alt="">
+            </a>
+            <a href="#">
+              <img src="@/assets/img/base/Share/share-wechat.png" alt="">
+            </a>
+            <a href="#">
+              <img src="@/assets/img/base/Share/share-qq.png" alt="">
+            </a>
+            <a href="#">
+              <img src="@/assets/img/base/Share/share-qzone.png" alt="">
+            </a>
+            <a href="#">
+              <img src="@/assets/img/base/Share/share-copyLink.png" alt="">
+            </a>
+          </div>
         </div>
-        <div class="cbox">
-            <div class="main">
-                Copyright ©嘉析检测技术服务（ 厦门） 有限公司 闽ICP备2022011529号-1
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="cbox">
+      <div class="main">
+        {{  webConfig.site_copyright }}
+        <span v-html="webConfig.site_icp_no"></span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -204,7 +202,7 @@ export default {}
 
         .websiteShare {
           margin-top: 20px;
-            text-align: right;
+          text-align: right;
 
           a {
             height: 100%;

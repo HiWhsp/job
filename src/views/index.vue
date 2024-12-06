@@ -1,127 +1,163 @@
 <template>
-    <div class="container">
-        <!--    轮播-->
-        <div class="banner">
-            <el-carousel height="450px">
-                <el-carousel-item v-for="(item, index) in 2" :key="item">
-                    <img :src="require(`@/assets/img/base/banner/${index + 1}.jpg`)" alt="">
-                </el-carousel-item>
-            </el-carousel>
-        </div>
-
-        <div class="p-item">
-            <div class="tit-content flex">
-                <div class="item flex" v-for="(item, index) in titList" :key="index">
-                    <div class="cont">
-                        <div class="title">{{ item.title }}</div>
-                        <div class="content">{{ item.content }}</div>
-                    </div>
-                    <div class="img">
-                        <img :src="item.img" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="e_container">
-            <div class="p-item">
-                <div class="c_box">
-                    <p class="title">您最好的研发伙伴</p>
-                    <p class="content">及时、准确、定制、解析</p>
-                    <div class="c_container flex">
-                        <div class="c_item" v-for="(item, index) in 8" :key="index">
-                            <img src="" alt="">
-                            <div class="info">
-                                <p class="title">材料分析测试</p>
-                                <p class="content ellipsis-3">
-                                    可以对各类材料的成分、结构、热学和电学等进行原位、非原位和工况性能进行表征。</p>
-                                <div class="tip">
-                                    <ul>
-                                        <li>
-                                            <i class="el-icon-check"></i><span>成分分析</span></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="e-container2">
-            <div class="p-item">
-                <div class="info">
-                    <p class="title">部分用户致谢论文 <span>（合计共<i>4650</i>条）</span></p>
-                    <p class="content">论文致谢，最高奖励5000元红包。</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="client">
-            <div class="p-item">
-                <div class="c_box">
-                    <p class="title">服务客户</p>
-                    <div class="list">
-                        <div class="item" v-for="(item, index) in 24" :key="index">
-                            <img :src="require(`@/assets/img/base/client/${index + 1}.jpg`)" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="connect">
-            <div class="p-item flex flex-between flex-center">
-                <div class="text">Best R&D Partner</div>
-                <div class="fa_morelink">
-                    <span>立即联系我们</span>
-                    <i></i>
-                </div>
-            </div>
-        </div>
+  <div class="container">
+    <!--    轮播-->
+    <div class="banner">
+      <el-carousel height="450px">
+        <el-carousel-item v-for="(item, index) in bannerList" :key="item">
+          <img :src="item.image" :alt="item.title">
+        </el-carousel-item>
+      </el-carousel>
     </div>
+
+    <div class="p-item">
+      <div class="tit-content flex">
+        <div class="item flex" v-for="(item, index) in titList" :key="index">
+          <div class="cont">
+            <div class="title">{{ item.title }}</div>
+            <div class="content">{{ item.content }}</div>
+          </div>
+          <div class="img">
+            <img :src="item.img" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="e_container">
+      <div class="p-item">
+        <div class="c_box">
+          <p class="title">您最好的研发伙伴</p>
+          <p class="content">及时、准确、定制、解析</p>
+          <div class="c_container flex">
+            <div class="c_item" v-for="(item, index) in moduleList" :key="index">
+              <img :src="item.icon1" alt="">
+              <div class="info">
+                <p class="title">{{ item.text1 }}</p>
+                <p class="content ellipsis-3">{{ item.desc }}</p>
+                <div class="tip">
+                  <ul>
+                    <li v-for="(i, ix) in item.desc2" :key="ix">
+                      <i class="el-icon-check"></i><span>{{ i }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="e-container2">
+      <div class="p-item">
+        <div class="info">
+          <p class="title">部分用户致谢论文 <span>（合计共<i>4650</i>条）</span></p>
+          <p class="content">论文致谢，最高奖励5000元红包。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="client">
+      <div class="p-item">
+        <div class="c_box">
+          <p class="title">服务客户</p>
+          <div class="list">
+            <div class="item" v-for="(item, index) in 24" :key="index">
+              <img :src="require(`@/assets/img/base/client/${index + 1}.jpg`)" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connect">
+      <div class="p-item flex flex-between flex-center">
+        <div class="text">Best R&D Partner</div>
+        <div class="fa_morelink">
+          <span>立即联系我们</span>
+          <i></i>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
-    data() {
-        return {
-            titList: [
-                {
-                    id: 1,
-                    title: '注册会员',
-                    content: '注册立得10元',
-                    img: require('@/assets/img/base/01/banner1.png')
-                }, {
-                    id: 1,
-                    title: '阳光预付',
-                    content: '先存后用最高赠送13%',
-                    img: require('@/assets/img/base/01/banner2.png')
-                }, {
-                    id: 1,
-                    title: '团队管理',
-                    content: '这里是二级文案',
-                    img: require('@/assets/img/base/01/banner6.png')
-                }, {
-                    id: 1,
-                    title: '论文致谢',
-                    content: '最高奖励5000元',
-                    img: require('@/assets/img/base/01/banner6.png')
-                }, {
-                    id: 1,
-                    title: '邀请好友赚现金',
-                    content: '注册立得10元，下单10%返利',
-                    img: require('@/assets/img/base/01/banner6.png')
-                }, {
-                    id: 1,
-                    title: '优惠券天天领',
-                    content: '不定期发放优惠券',
-                    img: require('@/assets/img/base/01/banner6.png')
-                }
-            ]
+  data() {
+    return {
+      titList: [
+        {
+          id: 1,
+          title: '注册会员',
+          content: '注册立得10元',
+          img: require('@/assets/img/base/01/banner1.png')
+        }, {
+          id: 1,
+          title: '阳光预付',
+          content: '先存后用最高赠送13%',
+          img: require('@/assets/img/base/01/banner2.png')
+        }, {
+          id: 1,
+          title: '团队管理',
+          content: '这里是二级文案',
+          img: require('@/assets/img/base/01/banner6.png')
+        }, {
+          id: 1,
+          title: '论文致谢',
+          content: '最高奖励5000元',
+          img: require('@/assets/img/base/01/banner6.png')
+        }, {
+          id: 1,
+          title: '邀请好友赚现金',
+          content: '注册立得10元，下单10%返利',
+          img: require('@/assets/img/base/01/banner6.png')
+        }, {
+          id: 1,
+          title: '优惠券天天领',
+          content: '不定期发放优惠券',
+          img: require('@/assets/img/base/01/banner6.png')
         }
+      ],
+      bannerList: [], // 轮播
+      moduleList: [], // 研发伙伴
+    }
+  },
+  mounted() {
+    this.setView();
+  },
+  methods: {
+    setView() {
+      this.getBanner();
+      this.getModule();
     },
-    methods: {}
+    getBanner() {
+      this.$api({
+        url: 'banners',
+        method: 'post',
+        data: {
+          position: '首页轮播图'
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.bannerList = res.data;
+        }
+      })
+    },
+    getModule() {
+      this.$api({
+        url: 'module_content',
+        method: 'post',
+        data: {
+          id: 18
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.moduleList = res.data.content;
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -244,7 +280,9 @@ export default {
             margin-top: 20px;
 
             ul {
+              width: 100%;
               li {
+                width: 100%;
                 display: inline-block;
                 margin-right: 20px;
 

@@ -10,7 +10,8 @@
           <div class="item upload-box">
             <div class="info">
               <el-upload class="upload-demo" accept="image/*" :show-file-list="false" :name="UPLOAD_NAME"
-                         action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload"
+                         name="file"
+                         action="http://jxjsjc.dx.hdapp.com.cn/api/upload"
                          :data="mix_upload_data" :on-success="upload_on_success"
                          :before-upload="upload_before_upload">
                 <img v-if="form.avatar" :src="form.avatar" class="user-avatar"/>

@@ -5,32 +5,46 @@ export default {
   data() {
     return {
       keyword: '', // 搜索
-      count: 1,
+      count: 0,
       pagination: {
         page: 1,
-        pageNum: 10
+        limit: 10
       },
       detail: {},
-      listData: [{}, {}],
-      selectTab: {title: "全部消息", status: "0"},
-      list_tab: [
-        {title: "全部消息", status: "0"},
-        {title: "已读", status: "1"},
-        {title: "未读", status: "2"},
-      ],
+      listData: [],
     }
   },
-  watch: {
-    selectTab() {
-    },
+  mounted() {
+    this.setView();
   },
   methods: {
     setView() {
-
+      this.$api({
+        url: 'article_list',
+        method: 'post',
+        data: {
+          column_id: this.detail.id || '',
+          ...this.pagination,
+        },
+      }).then(res => {
+        if (res.code == 200) {
+          this.listData = res.data;
+          this.count = res.count;
+        }
+      })
     },
-    selectTabClick(item) {
-      this.selectTab = item;
-      this.detail = {}
+    setDetail(item) {
+      this.$api({
+        url: 'article_detail',
+        method: 'post',
+        data: {
+          id: item.id || '',
+        },
+      }).then(res => {
+        if (res.code == 200) {
+          this.detail = res.data;
+        }
+      })
     },
     goUrl(item) {
       this.$router.push(item.url);
@@ -43,59 +57,36 @@ export default {
   <div class="container">
     <div class="filter">
       <div class="left">平台协议</div>
-      <!--      <div class="right">-->
-      <!--        <div class="search-bar">-->
-      <!--          <el-input-->
-      <!--              v-model="keyword"-->
-      <!--              placeholder="请输入仪器名/订单号"-->
-      <!--              class="search-input"-->
-      <!--              clearable-->
-      <!--          >-->
-      <!--            <template #append>-->
-      <!--              <el-button class="search-btn">搜索</el-button>-->
-      <!--            </template>-->
-      <!--          </el-input>-->
-      <!--        </div>-->
-      <!--      </div>-->
+      <div class="right">
+        <el-button type="primary" class="search-btn" @click="detail = {}" v-if="Object.keys(detail).length">返回
+        </el-button>
+      </div>
     </div>
-
-    <!--    <div class="tab-box">-->
-    <!--      <div-->
-    <!--          class="tab-item"-->
-    <!--          v-for="(item, index) in list_tab"-->
-    <!--          :key="index"-->
-    <!--          @click="selectTabClick(item)"-->
-    <!--          :class="item.title === selectTab.title ? 'active' : ''"-->
-    <!--      >-->
-    <!--        {{ item.title }}-->
-    <!--      </div>-->
-    <!--    </div>-->
 
     <div class="content">
       <div class="list">
         <div class="post-card" v-for="(item, index) in listData" :key="index" v-if="!Object.keys(detail).length">
-          <div class="title-box" @click="detail = {a: 1}">
-            <div class="content">这里是协议名称这里是协议名称这里是协议名称</div>
-            <div class="date">2024-08-31</div>
+          <div class="title-box" @click="setDetail(item)">
+            <div class="content">{{ item.title }}</div>
+            <div class="date">{{ item.created_at }}</div>
           </div>
         </div>
       </div>
       <div class="detail" v-if="Object.keys(detail).length">
-        <p class="title">这里是协议名称这里是协议名称这里是协议名称</p>
-        <p class="date">2024-08-31</p>
-        <p class="desc">
-          这里是消息详情文案这里是消息详情文案这里是消息详情文案，这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案，这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案，这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案这里是消息详情文案</p>
+        <p class="title">{{ detail.title }}</p>
+        <p class="date">{{ detail.created_at }}</p>
+        <p class="desc" v-html="detail.content"></p>
 
-        <div class="to">
-          <div class="btn">上一篇 这里是消息标题</div>
-          <div class="btn">下一篇 这里是消息标题</div>
-        </div>
+        <!--        <div class="to">-->
+        <!--          <div class="btn">上一篇 这里是消息标题</div>-->
+        <!--          <div class="btn">下一篇 这里是消息标题</div>-->
+        <!--        </div>-->
       </div>
 
       <div v-if="count && !Object.keys(detail).length" class="pagination-box"
            style="margin-top: 40px; text-align: center;">
         <el-pagination background layout="total, prev, pager, next" @current-change="setView"
-                       :current-page.sync="pagination.page" :page-size="pagination.pageNum"
+                       :current-page.sync="pagination.page" :page-size="pagination.limit"
                        :total="count"></el-pagination>
       </div>
       <el-empty v-if="!count" description="没有查询到订单信息..."></el-empty>

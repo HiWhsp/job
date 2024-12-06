@@ -10,12 +10,12 @@
             <span class="text">头像：</span>
             <span class="info">
               <div class="upload-box">
-                <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="img"
-                           action="https://wuhanjingmi.new.zhishangez.com//service.php?action=index_ossUpload"
+                <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="file"
+                           action="http://jxjsjc.dx.hdapp.com.cn/api/upload"
                            :data="mix_upload_data" :on-success="upload_on_success"
                            :before-upload="upload_before_upload">
                   <img v-if="form.image" :src="form.image" class="user-avatar"/>
-                  <img v-else src="@/assets/img/my/avatar.png" class="user-avatar"/>
+                  <img v-else src="@/assets/img/supplier/avatar.png" class="user-avatar"/>
                 </el-upload>
               </div>
             </span>
@@ -55,7 +55,6 @@
     </div>
 
     <phone_bind_old_check_modal ref="phone_bind_old_check_modal" data-title="校验" @confirm="confirm_old_pass"/>
-    <phone_bind_new_set_modal ref="phone_bind_new_set_modal" data-title="绑定" @confirm="confirm_new"/>
 
 
   </div>
@@ -65,15 +64,11 @@
 import {UPLOAD_ACTION, UPLOAD_NAME} from '@/config/env.js'
 
 import phone_bind_old_check_modal from "@/components/account/phone_bind_old_check_modal.vue";
-import phone_bind_new_set_modal from "@/components/account/phone_bind_new_set_modal.vue";
-import area_select from "@/components/address/area_select.vue";
 
 export default {
   name: "basicInfo",
   components: {
-    area_select,
     phone_bind_old_check_modal,
-    phone_bind_new_set_modal,
   },
   data() {
     return {
@@ -107,13 +102,10 @@ export default {
     },
 
     open_phone_update() {
-      this.$refs.phone_bind_old_check_modal.init();
+      this.$refs.phone_bind_old_check_modal.init('供应商');
     },
     confirm_old_pass() {
-      this.$refs.phone_bind_new_set_modal.init();
-    },
-    confirm_new() {
-      this.query_user()
+      this.setView();
     },
 
     setView() {
@@ -121,11 +113,8 @@ export default {
     },
     query_user() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
-        data: {
-          action: 'users_userInfo',
-        },
+        url: 'store/info',
+        method: 'post',
       }).then(res => {
         if (res.code == 200) {
           let data = res.data;
@@ -133,54 +122,40 @@ export default {
 
           this.form = {
             image: data.image,
-            realName: data.realName,
-            nickname: data.nickname,
-            email: data.email,
-            province: data.province,
-            city: data.city,
-            areaId: data.areaId,
-            provinceCode: data.provinceCode,
-            cityCode: data.cityCode,
-            areaCode: data.areaCode,
+            realName: data.name,
           }
-          this.$refs.area_select.init({province: data.province, city: data.city, area: data.areaId});
           this.$store.commit("set_baseInfo", res.data);
         }
       })
     },
 
     do_submit() {
-
       if (!this.form.realName) {
         alertErr("请填写真实姓名");
         return;
       }
-
-      if (!this.form.areaId) {
-        alertErr("请填写所在地区");
-        return;
+      if (!this.form.image) {
+        alertErr("请上传头像");
+        return
       }
 
-      if (!this.form.email) {
-        alertErr("请填写邮箱");
-        return;
-      }
       this.loading = true;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'store/edit',
+        method: 'post',
         data: {
-          action: 'users_editInfo',
-          ...this.form
+          action: '1',
+          name: this.form.realName,
+          avatar: this.form.image
         },
       }).then((res) => {
         let {code, msg, data} = res;
-        alert(res).then(() => {
-          this.loading = false;
-        });
+        this.loading = false;
         if (code == 200) {
           this.setView();
         }
+      }).catch(err => {
+        this.loading = false;
       });
     },
 
@@ -189,22 +164,13 @@ export default {
         image: this.my_info.image,
         realName: "",
         nickName: "",
-        email: "",
-        province: '',
-        city: '',
-        areaId: '',
-        provinceCode: '',
-        cityCode: '',
-        areaCode: '',
       };
     },
 
-
     //上传相关
     upload_on_success(res, file) {
-      //console.log("上传结果", res);
       let {code, data, msg} = res;
-      alert(res);
+      alertSucc(res.msg);
       if (code == 200) {
         this.form.image = res.data;
       }
@@ -212,19 +178,6 @@ export default {
     upload_before_upload(file) {
       const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
       return isLt2M;
-    },
-
-    changeSelectAddress(data) {
-      this.$log("更新省市区数据", data);
-      let {sheng, shi, qu} = data;
-      this.form.province = sheng.id;
-      this.form.city = shi.id;
-      this.form.areaId = qu.id;
-
-      this.form.provinceCode = sheng.id;
-      this.form.cityCode = shi.id;
-      this.form.areaCode = qu.id;
-      // debugger
     },
   },
 };
@@ -376,6 +329,7 @@ export default {
     color: @theme;
 
   }
+
   .back {
     margin-left: 10px;
     background-color: @theme;

@@ -231,21 +231,19 @@ export default new Vuex.Store({
     },
     //清空登录信息
     clear_loginInfo(state) {
-      api({
-        url: "user_logout",
-        method: "post",
-      }).then(res => {
-        state.shopcart_count = "0";
-        state.token = "";
-        state.userId = "";
-        state.baseInfo = {};
-        state.vuex_is_login = false;
-        localStorage.removeItem('userId');
-        localStorage.removeItem('userInfo');
-        localStorage.removeItem('baseInfo');
-        localStorage.removeItem('token');
+      state.shopcart_count = "0";
+      state.token = "";
+      state.userId = "";
+      state.baseInfo = {};
+      state.vuex_is_login = false;
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userInfo');
+      localStorage.removeItem('baseInfo');
+      localStorage.removeItem('token');
+      localStorage.removeItem("isSupplier");
+      setTimeout(() => {
         location.reload();
-      })
+      }, 500)
     },
 
     change_store_keyword(state, val) {

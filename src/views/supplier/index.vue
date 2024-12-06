@@ -118,7 +118,7 @@ export default {
   methods: {
     // 选择菜单
     menuSelect(index) {
-      if (index === 17) {
+      if (index == 17) {
         this.logout();
       }
       this.form = {type: ''};
@@ -137,10 +137,7 @@ export default {
     },
     logout() {
       this.$store.commit("clear_loginInfo");
-      // debugger
-      if (this.$route.meta.requireAuth) {
-        this.$router.push("/");
-      }
+      this.$router.push({path: '/'});
     },
   }
 }

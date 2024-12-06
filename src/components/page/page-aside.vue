@@ -5,7 +5,20 @@
            @mouseenter="on_mouseenter(index + 1)" @mouseleave="on_mouseleave">
         <img :src="item.icon" alt="" :style="item.style">
         <p>{{ item.title }}</p>
+        <div class="fa_info" v-if="index > 1">
+          <div class="fa_wrap">
+            <div class="fa_tit">
+              <img
+                  :src="hoverIndex == 3 ? webConfig.mp_qrcode : webConfig.mppro_qrcode"
+                  alt="" title="" la="la">
+              <p class="gzhtc">
+                {{ hoverIndex == 3 ? '扫描关注公众号' : "扫描关注小程序" }}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
     <div class="item flex top" :class="{'active': showClose}" v-if="showTop" @click="toTop()">
       <div class="item-inner">
@@ -89,7 +102,6 @@ export default {
     },
 
     on_mouseenter(item) {
-      //console.log("鼠标移入", item);
       this.hoverIndex = item;
     },
     on_mouseleave(item) {
@@ -131,6 +143,13 @@ export default {
 
     p {
       margin-top: 5px;
+    }
+
+    &:hover .fa_info {
+      transition: all 0.6s ease;
+      opacity: 1 !important;
+      transform: translateY(0%) !important;
+      visibility: visible !important;
     }
   }
 
@@ -177,6 +196,49 @@ export default {
     svg {
       transform: rotate(180deg);
     }
+  }
+}
+
+.fa_info {
+  position: absolute;
+  top: 0;
+  right: 100px;
+  min-width: 150px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100%);
+  transition: all 0.6s ease;
+  width: 170px;
+  background: #FFFFFF;
+  box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.16);
+  border-radius: 8px;
+
+  .fa_tit {
+    img {
+      margin: 16px auto 0;
+      display: block;
+      width: 120px;
+      filter: blur(0);
+      transition: filter 1s;
+    }
+
+    .gzhtc {
+      text-align: center;
+      margin: 5px 0 10px;
+    }
+  }
+
+  &::after {
+    content: " ";
+    position: absolute;
+    right: -9px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-left: 10px solid #fff;
+    border-bottom: 10px solid transparent;
   }
 }
 </style>
