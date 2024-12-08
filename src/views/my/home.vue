@@ -324,7 +324,7 @@ export default {
               <el-upload style="margin-right: 20px" class="upload-wrap" accept="image/*" :show-file-list="false"
                          name="file"
                          :on-success="upload_on_success"
-                         action="http://jxjsjc.dx.hdapp.com.cn/api/upload"
+                         action="https://jxjsjc.dx.hdapp.com.cn/api/upload"
                          :data="mix_upload_data">
                 <div class="upload" v-if="!realForm.idcard_pic1">
                   <i class="el-icon-plus"></i>
@@ -334,7 +334,7 @@ export default {
               </el-upload>
               <el-upload class="upload-wrap" accept="image/*" :show-file-list="false" name="file"
                          :on-success="upload_on_success_2"
-                         action="http://jxjsjc.dx.hdapp.com.cn/api/upload"
+                         action="https://jxjsjc.dx.hdapp.com.cn/api/upload"
                          :data="mix_upload_data">
                 <div class="upload" v-if="!realForm.idcard_pic2">
                   <i class="el-icon-plus"></i>

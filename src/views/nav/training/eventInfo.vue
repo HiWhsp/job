@@ -21,7 +21,7 @@ export default {
         url: "article_list",
         method: "post",
         data: {
-          column_id: 508,
+          column_id: 507,
           ...this.pagination
         }
       }).then(res => {
@@ -40,9 +40,9 @@ export default {
 
 <template>
   <div class="list-wrap">
-    <div class="title">新闻动态</div>
+    <div class="title">活动信息</div>
     <div class="card" v-for="(item, index) in list" :key="index"
-         @click="getUrl({url: '/newsDetail', params: { id: item.id }})">
+         @click="getUrl({url: '/eventInfoDetail', params: { id: item.id }})">
       <div class="card-left">
         <img :src="item.thumb" alt="">
       </div>

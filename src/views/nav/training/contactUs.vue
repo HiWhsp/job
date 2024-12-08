@@ -1,23 +1,21 @@
 <script>
 export default {
-  name: "news-detail",
+  name: "contactUs",
   data() {
     return {
-      id: '',
       detail: {}
     }
   },
   mounted() {
-    this.id = this.$route.query.id;
     this.getDetail();
   },
   methods: {
     getDetail() {
       this.$api({
-        url: 'article_detail',
+        url: 'page_content',
         method: 'post',
         data: {
-          id: this.id
+          id: 39
         }
       }).then(res => {
         this.detail = res.data
@@ -30,12 +28,8 @@ export default {
 <template>
   <div class="content-wrap">
     <div class="title">{{ detail.title }}</div>
-    <div class="file-type">{{ detail.year + "-" + detail.month + "-" + detail.day }}</div>
+    <div class="file-type">{{ detail.created_at }}</div>
     <div class="detail-text" v-html="detail.content"></div>
-    <!--    <div class="prev-btn">-->
-    <!--      <p>上一个 这里是文件名称</p>-->
-    <!--      <p>下一个 这里是文件名称</p>-->
-    <!--    </div>-->
   </div>
 </template>
 

@@ -1,26 +1,68 @@
 <script>
 export default {
-  name: "technologyExpress"
+  name: "technologyExpress",
+  data() {
+    return {
+      list: [],
+      pagination: {
+        page: 1,
+        limit: 5,
+      },
+      count: 0,
+    }
+  },
+  mounted() {
+    this.setView();
+  },
+  methods: {
+    setView() {
+      this.$api({
+        url: 'download_list',
+        method: 'post',
+        data: {
+          column_id: '506',
+          ...this.pagination
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.list = res.data;
+          this.count = res.count;
+        }
+      })
+    },
+    download(item) {
+      if (item.url) {
+        window.open(item.url, "_blank")
+      } else {
+        this.$message({
+          message: '文件不存在',
+          type: 'warning'
+        })
+      }
+    },
+    goUrl(item) {
+      this.$router.push(`${item.url}?id=${item.params.id}`)
+    }
+  }
 }
 </script>
 
 <template>
   <div class="list-wrap">
-    <div class="title">分析测试</div>
-    <div class="card">
+    <div class="title">技术快递</div>
+    <div class="card" v-for="item in list" :key="item.id">
       <div class="card-left">
-        <img src="@/assets/img/base/appointment/express.png" alt="Machine Image">
+        <img :src="item.thumb" alt="Machine Image">
       </div>
       <div class="card-right">
-        <div class="date-badge">2024-01-03</div>
+        <div class="date-badge">{{ item.created_at }}</div>
         <div class="card-header">
-          <h3>X射线光电子能谱仪投入使用</h3>
+          <h3>{{ item.title }}</h3>
         </div>
-        <p>X射线光电子能谱仪（X-ray Photoelectron
-          Spectroscopy）是根据光电子效应原理，实现材料的表面几个原子层（1-10nm厚的表面）的化学组成、价态、深层剖析及成像等综合分析与表征技术的研究。</p>
+        <p>{{ item.description }}</p>
       </div>
-      <div class="download-btn">
-        <img src="@/assets/img/base/appointment/PDF.png" alt="">下载PDF
+      <div class="download-btn pointer" @click="download(item)">
+        <img src="@/assets/img/base/appointment/PDF.png" alt="">下载文件
       </div>
     </div>
   </div>
@@ -33,6 +75,7 @@ export default {
   color: #00479D;
   margin-bottom: 30px;
 }
+
 .list-wrap {
   .card {
     position: relative;
@@ -47,7 +90,7 @@ export default {
 
       img {
         width: 100%;
-        height: auto;
+        height: 120px;
         border-radius: 5px;
       }
     }
@@ -126,11 +169,13 @@ export default {
         transition: all 0.5s;
         background-color: #00479D;
       }
+
       &:before {
         width: 100%;
       }
+
       h3 {
-        color: #00479D!important;
+        color: #00479D !important;
       }
     }
   }

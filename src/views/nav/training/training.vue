@@ -11,7 +11,7 @@ export default {
       menuList: [
         {
           title: '公司简介',
-          index: '1',
+          index: '/introduction',
         }, {
           title: '新闻动态',
           index: '/news',
@@ -23,13 +23,13 @@ export default {
           index: '/materialDownload'
         }, {
           title: '活动信息',
-          index: '5',
+          index: '/eventInfo',
         }, {
           title: '专家团队',
           index: '/expertTeam',
         }, {
           title: '联系我们',
-          index: '7',
+          index: '/contactUs',
         }
       ]
     }
@@ -42,7 +42,6 @@ export default {
       if (meta.activeMenu) {
         return meta.activeMenu;
       }
-      console.log(path)
       return path;
     },
   },
@@ -68,7 +67,7 @@ export default {
 <template>
   <div class="container main">
     <breadcrumb
-        :list="[{path: '/', name: '首页'}, { name: '服务内容'}, {path: '/analyze', name: '分析测试'}]"></breadcrumb>
+        :list="[{path: '/', name: '首页'}, {path: '/analyze', name: '分析测试'}]"></breadcrumb>
     <div class="content">
       <div class="left">
         <div class="title">公司信息</div>

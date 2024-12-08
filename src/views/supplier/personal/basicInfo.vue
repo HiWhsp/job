@@ -11,7 +11,7 @@
             <span class="info">
               <div class="upload-box">
                 <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="file"
-                           action="http://jxjsjc.dx.hdapp.com.cn/api/upload"
+                           action="https://jxjsjc.dx.hdapp.com.cn/api/store/upload"
                            :data="mix_upload_data" :on-success="upload_on_success"
                            :before-upload="upload_before_upload">
                   <img v-if="form.image" :src="form.image" class="user-avatar"/>
@@ -121,7 +121,7 @@ export default {
           this.my_info = data;
 
           this.form = {
-            image: data.image,
+            image: data.avatar,
             realName: data.name,
           }
           this.$store.commit("set_baseInfo", res.data);
@@ -172,7 +172,7 @@ export default {
       let {code, data, msg} = res;
       alertSucc(res.msg);
       if (code == 200) {
-        this.form.image = res.data;
+        this.form.image = res.data.url;
       }
     },
     upload_before_upload(file) {

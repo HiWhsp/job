@@ -172,10 +172,9 @@ export default {
 
     address_getAreaList({ params, success } = opt) {
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: "region_list",
+        method: "post",
         data: {
-          action: "users_getAreaList",
           ...params
         }
       }).then((res) => {

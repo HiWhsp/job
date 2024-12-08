@@ -131,9 +131,9 @@ function api(action, data, method, uploaderConfig) {
     }; //请求数据
 
     if (process.env.NODE_ENV !== "production") {
-        reqUrl = "http://jxjsjc.dx.hdapp.com.cn/api/"; //请求地址
+        reqUrl = "https://jxjsjc.dx.hdapp.com.cn/api/"; //请求地址
     } else {
-        reqUrl = "http://jxjsjc.dx.hdapp.com.cn/api/"; //请求地址
+        reqUrl = "https://jxjsjc.dx.hdapp.com.cn/api/"; //请求地址
     }
 
     // debugger

@@ -21,6 +21,7 @@ export default {
         url: 'download_list',
         method: 'post',
         data: {
+          column_id: '530',
           ...this.pagination
         }
       }).then(res => {
