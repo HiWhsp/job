@@ -14,7 +14,7 @@
             <span>邮箱：{{ webConfig.site_mail }}</span>
           </p>
           <p>
-            <span>地址：{{  webConfig.site_address }}</span>
+            <span>地址：{{ webConfig.site_address }}</span>
           </p>
         </div>
       </div>
@@ -23,10 +23,7 @@
           <p>友情链接</p>
         </div>
         <div class="link">
-          <span>嘉庚创新实验室</span>
-          <span>厦门大学</span>
-          <span>厦门市科学技术局</span>
-          <span>福建省科技厅</span>
+          <span v-for="item in friend_list" :key="item.id" @click="goUrl(item.url)">{{ item.title }}</span>
         </div>
       </div>
       <div class="item3">
@@ -62,7 +59,7 @@
     </div>
     <div class="cbox">
       <div class="main">
-        {{  webConfig.site_copyright }}
+        {{ webConfig.site_copyright }}
         <span v-html="webConfig.site_icp_no"></span>
       </div>
     </div>
@@ -70,7 +67,35 @@
 </template>
 
 <script>
-export default {}
+export default {
+  name: "page-footer",
+  data() {
+    return {
+      friend_list: [],
+    };
+  },
+  mounted() {
+    this.setView();
+  },
+  methods: {
+    setView() {
+      this.$api({
+        url: 'friend_list',
+        method: 'post',
+        data: {
+          id: 1
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.friend_list = res.data;
+        }
+      })
+    },
+    goUrl(item) {
+      window.open(item, "_blank");
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

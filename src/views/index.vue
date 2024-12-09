@@ -3,7 +3,7 @@
     <!--    轮播-->
     <div class="banner">
       <el-carousel height="450px">
-        <el-carousel-item v-for="(item, index) in bannerList" :key="item">
+        <el-carousel-item v-for="(item, index) in bannerList" :key="item.id">
           <img :src="item.image" :alt="item.title">
         </el-carousel-item>
       </el-carousel>
@@ -29,7 +29,7 @@
           <p class="title">您最好的研发伙伴</p>
           <p class="content">及时、准确、定制、解析</p>
           <div class="c_container flex">
-            <div class="c_item" v-for="(item, index) in moduleList" :key="index">
+            <div class="c_item" v-for="(item, index) in moduleList" :key="item.id">
               <img :src="item.icon1" alt="">
               <div class="info">
                 <p class="title">{{ item.text1 }}</p>
@@ -281,6 +281,7 @@ export default {
 
             ul {
               width: 100%;
+
               li {
                 width: 100%;
                 display: inline-block;

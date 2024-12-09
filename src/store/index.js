@@ -163,17 +163,7 @@ export default new Vuex.Store({
     },
 
     set_vuex_product_cate(state, data) {
-      let {cateFlatList, cateTreeList} = data;
-      console.warn(
-        "cateTreeList 产品分类数据",
-        JSON.parse(JSON.stringify(cateTreeList))
-      );
-
-      state.vuexTreeCates = cateTreeList;
-      state.vuexFlatCates = cateFlatList;
-
-      state.vuex_product_cate_1 = cateTreeList[0]
-      state.vuex_product_cate_2 = cateTreeList[1]
+      state.vuexTreeCates = data
     },
 
     //设置购物车商品数量
@@ -301,6 +291,7 @@ export default new Vuex.Store({
       });
     },
 
+    // 获取供应商信息
     async getSupplierInfo({commit, state, dispatch}, data) {
       api({
         url: "store/info",
@@ -327,35 +318,15 @@ export default new Vuex.Store({
         }
       });
 
-      //首页数据接口
-      // api({
-      //     url: "/service.php",
-      //     method: "get",
-      //     data: {
-      //         action: "banner_index",
-      //         position: 0, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
-      //     },
-      // }).then((res) => {
-      //     if (res.code == 200) {
-      //         commit("set_vuex_banner", res.data);
-      //     }
-      // });
-
       //产品分类
-      // api({
-      //     url: "/service.php",
-      //     method: "get",
-      //     data: {
-      //         action: "product_channel",
-      //         parentId: 0,
-      //     },
-      // }).then((res) => {
-      //     if (res.code == 200) {
-      //         let catesInfo = handle_product_cate_data(res.data);
-      //         console.log(catesInfo)
-      //         commit("set_vuex_product_cate", catesInfo);
-      //     }
-      // });
+      api({
+        url: "cms_product_column",
+        method: "post",
+      }).then((res) => {
+        if (res.code == 200) {
+          commit("set_vuex_product_cate", res.data);
+        }
+      });
     },
   },
 });

@@ -7,18 +7,34 @@ export default {
       queryParams: {}, // 查询参数
       list_order: [{}], // 订单
       tabList: [
-        {value: 1, title: "全部订单"},
-        {value: 2, title: "待支付"},
-        {value: 3, title: "待实验"},
-        {value: 4, title: "实验中"},
+        {value: '', title: "全部订单"},
+        {value: 10, title: "待支付"},
+        {value: 20, title: "待实验"},
+        {value: 30, title: "实验中"},
         {value: 5, title: "已取消"},
-        {value: 6, title: "已完成"},
-        {value: 7, title: "售后"},
+        {value: 40, title: "已完成"},
+        {value: 50, title: "售后"},
       ],
       testList: [], // 实验人员
       payList: [], // 支付方式
-      isRePay: [], // 是否还款
-      isInvoice: [], // 是否已开票
+      isRePay: [
+        {
+          value: 1,
+          label: '未还款'
+        }, {
+          value: 2,
+          label: '已还款'
+        }
+      ], // 是否还款
+      isInvoice: [
+        {
+          value: 1,
+          label: '待开'
+        }, {
+          value: 2,
+          label: '已开'
+        }
+      ], // 是否已开票
       realRules: {
         name: [
           {required: true, message: '请输入活动名称', trigger: 'blur'},
@@ -28,7 +44,11 @@ export default {
   },
   methods: {
     handleQuery() {
-
+      this.$api({
+        url: 'user_order_list',
+        method: 'post',
+        data: this.queryParams
+      })
     },
     resetQuery() {
 

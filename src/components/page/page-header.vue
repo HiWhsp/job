@@ -70,16 +70,16 @@ export default {
           path: '/'
         }, {
           title: '分析测试',
-          path: '/analyze'
+          path: '/analyze?type=523'
         }, {
           title: '智算服务',
-          path: '/analyze'
+          path: '/analyze?type=528'
         }, {
           title: '微纳加工',
-          path: '/analyze'
+          path: '/analyze?type=527'
         }, {
           title: '培训服务',
-          path: '/training'
+          path: '/analyze?type=533'
         }, {
           title: '专家队伍',
           path: '/training'
@@ -88,7 +88,7 @@ export default {
           path: '/forum'
         }, {
           title: '公司信息',
-          path: '/training'
+          path: '/introduction'
         }
       ]
     }
@@ -107,7 +107,6 @@ export default {
   },
   methods: {
     goUrl(item) {
-      console.log(item)
       this.$router.push(item.url);
     },
     handleScroll(e) {

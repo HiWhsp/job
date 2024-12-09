@@ -1,28 +1,82 @@
 <script>
 export default {
-  name: "list"
+  name: "list",
+  props: ["selectItem"],
+  data() {
+    return {
+      list: [],
+      pagination: {
+        page: 1,
+        limit: 10
+      },
+      count: 0
+    }
+  },
+  watch: {
+    selectItem(val) {
+      if (val.id) {
+        this.getList();
+      }
+    }
+  },
+  mounted() {
+    if (this.selectItem.id) {
+      this.getList();
+    }
+  },
+  methods: {
+    // 获取列表
+    getList() {
+      this.$api({
+        url: 'cms_product_list',
+        method: 'post',
+        data: {
+          column_id: this.selectItem.id,
+          ...this.pagination
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.list = res.data;
+          this.count = res.count;
+        }
+      })
+    },
+    goUrl(id) {
+      this.$router.push('/analyze_detail?id=' + id)
+    }
+  }
 }
 </script>
 
 <template>
   <div>
-    <div class="title">分析测试</div>
+    <div class="title">{{ selectItem.title }}</div>
     <div class="tip">可出具CMA/CNAS报告</div>
     <div class="list">
-      <div class="list-item" v-for="(i, index) in 6" :key="index" @click="$router.push('/analyze_detail')">
+      <div class="list-item" v-for="(it, index) in list" :key="it.id">
         <img src="../../../assets/img/base/appointment/play-img.png" alt="">
-        <div class="title ellipsis-1">双束聚焦电子离子显微镜</div>
-        <div class="desc ellipsis-1">高精度高分辨率，主要应用于SEM...描电子显微镜结构分析，微纳结构加工，TEM透射电镜样品、原子探针样品制备，材料和微结构在微米和纳米尺度的力学性能分
-          析。
-        </div>
-        <div class="btn">立即预约</div>
+        <div class="title ellipsis-1">{{ it.title }}</div>
+        <div class="desc ellipsis-1">{{ it.description }}</div>
+        <div class="btn" @click="goUrl(it.id)">立即预约</div>
         <div class="tip">
-          <p>已测试<span>119677</span>次</p>
-          <p>收到样品后平均<span>2.6-5.0</span>工作日完成</p>
-          <p><span>99.1%</span>%对测试结果满意</p>
+          <p>已测试<span>{{ it.orders || 0 }}</span>次</p>
+          <p v-html="it.period"></p>
+          <p><span>{{ it.comments }}</span>%对测试结果满意</p>
         </div>
       </div>
     </div>
+    <div class="pagination-box" v-if="count">
+      <el-pagination
+          background
+          layout="total, prev, pager, next"
+          :total="count"
+          :current-page="pagination.page"
+          :page-size="pagination.limit"
+          @current-change="changePage"
+      >
+      </el-pagination>
+    </div>
+    <el-empty v-else description="暂无记录..."></el-empty>
   </div>
 </template>
 
@@ -124,5 +178,9 @@ export default {
       }
     }
   }
+}
+
+.pagination-box {
+  margin-top: 40px;
 }
 </style>

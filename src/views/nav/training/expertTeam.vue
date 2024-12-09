@@ -3,12 +3,28 @@ export default {
   name: "expertTeam",
   data() {
     return {
-
+      list: []
     }
   },
+  mounted() {
+    this.setView();
+  },
   methods: {
-    goUrl() {
-      this.$router.push('/expertDetail')
+    setView() {
+      this.$api({
+        url: 'article_list',
+        method: 'post',
+        data: {
+          column_id: 532
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.list = res.data
+        }
+      })
+    },
+    goUrl(item) {
+      this.$router.push('/expertDetail?id=' + item)
     }
   }
 }
@@ -18,11 +34,11 @@ export default {
   <div class="list-wrap">
     <div class="title">专家团队</div>
     <div class="card">
-      <div class="item" v-for="item in 4">
-        <img src="@/assets/img/base/appointment/expertTeam.png" alt="Machine Image">
-        <p class="name">李先生</p>
-        <p class="desc">这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介</p>
-        <div class="btn" @click="goUrl">了解更多</div>
+      <div class="item" v-for="item in list" :key="item.id">
+        <img :src="item.thumb" alt="Machine Image">
+        <p class="name">{{ item.title }}</p>
+        <p class="desc">{{ item.description }}</p>
+        <div class="btn" @click="goUrl(item.id)">了解更多</div>
       </div>
     </div>
   </div>

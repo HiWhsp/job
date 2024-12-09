@@ -1,6 +1,29 @@
 <script>
 export default {
-  name: "expertTeam_detail"
+  name: "expertTeam_detail",
+  data() {
+    return {
+      id: '',
+      detail: {}
+    }
+  },
+  mounted() {
+    this.id = this.$route.query.id;
+    this.getDetail();
+  },
+  methods: {
+    getDetail() {
+      this.$api({
+        url: 'article_detail',
+        method: 'post',
+        data: {
+          id: this.id
+        }
+      }).then(res => {
+        this.detail = res.data
+      })
+    },
+  }
 }
 </script>
 
@@ -9,16 +32,13 @@ export default {
     <div class="top-box">
       <img src="@/assets/img/base/appointment/expertTeam.png" alt="">
       <div class="text">
-        <p class="name">郭菲菲</p>
-        <p>
-          这里是专家简介这里是专家简介，这里是专家简介这里是专家简介这里是专家简介，这里是专家简介这里是专家简介这里是专家简介，这里是专家简介</p>
+        <p class="name">{{ detail.title }}</p>
+        <p class="desc">{{ detail.description }}</p>
       </div>
     </div>
     <div class="desc">
       <div class="tit">详细描述</div>
-      <div class="detail">
-        这里是专家简介这里是专家简介，这里是专家简介这里是专家简介这里是专家简介，这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介，这里是专家简介这里是专家简介这里是专家简介，这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介，这里是专家简介这里是专家简介这里是专家简介，这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家简介这里是专家
-      </div>
+      <div class="detail" v-html="detail.content"></div>
     </div>
   </div>
 </template>

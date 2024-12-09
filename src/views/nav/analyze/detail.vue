@@ -9,6 +9,14 @@ export default {
       detail: {}
     }
   },
+  watch: {
+    $route() {
+      this.id = this.$route.query.id;
+      if (this.id !== this.detail.id) {
+        this.setView();
+      }
+    }
+  },
   mounted() {
     this.setView();
   },
@@ -30,6 +38,11 @@ export default {
     // 立即预约
     submit() {
       this.dialogVisible = true
+    },
+    goUrl(item) {
+      if (item) {
+        this.$router.push('/analyze_detail?id=' + item.id)
+      }
     }
   }
 }
@@ -42,22 +55,26 @@ export default {
         <img src="@/assets/img/base/appointment/play-img.png" alt="">
       </div>
       <div class="info">
-        <p class="title">双束聚焦电子离子显微镜</p>
+        <p class="title">{{ detail.title }}</p>
         <p><span>仪器型号</span> <span>FETecnal F20, TF30, JEOL JEM 200F, FETalos F00</span></p>
-        <p><span>预约次数</span> <span>608854次</span></p>
-        <p><span>服务周期</span> <span>收到样品后平均2.6-5.0工作日完成</span></p>
-        <p><span>好评率</span> <span>98.6%</span></p>
-        <div class="btn pointer" @click="submit">立即预约</div>
+        <p><span>预约次数</span> <span>{{ detail.orders }}次</span></p>
+        <p><span>服务周期</span> <span v-html="detail.period"></span></p>
+        <p><span>好评率</span> <span>{{ detail.comments }}</span></p>
+        <div class="btn pointer" @click="submit" v-if="detail.if_yueyue == 1">立即预约</div>
       </div>
     </div>
     <div class="detail">
       <div class="title">详细描述</div>
-      <div class="content">
-        asdfadsfas
-      </div>
+      <div class="content" v-html="detail.content"></div>
       <div class="prev">
-        <div class="last">上一个 XPS X射线光电子能谱仪</div>
-        <div class="next">下一个 XPS X射线光电子能谱仪</div>
+        <div class="last" @click="goUrl(detail.prev_item)">上一个 {{
+            detail.prev_item ? detail.prev_item.title : '无'
+          }}
+        </div>
+        <div class="next" @click="goUrl(detail.next_item)">下一个 {{
+            detail.next_item ? detail.next_item.title : '无'
+          }}
+        </div>
       </div>
     </div>
     <div class="tip-box">

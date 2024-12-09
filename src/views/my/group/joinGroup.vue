@@ -3,7 +3,26 @@ export default {
   name: "joinGroup",
   data() {
     return {
+      keyword: '',
+      list: [],
       info: {a: 1}
+    }
+  },
+  methods: {
+    getList() {
+      console.log(123)
+      this.$api({
+        url: 'search_team',
+        method: 'post',
+        data: {
+          keyword: this.keyword
+        }
+      }).then(res => {
+        let {code, data} = res;
+        if (code === 200) {
+          this.list = data || [];
+        }
+      })
     }
   }
 }
@@ -13,44 +32,44 @@ export default {
   <div class="section-order">
     <div class="section-title">
       <div class="label">我的团体</div>
-      <div class="search">
-        <el-input placeholder="请输入负责人手机号/邮箱/团号/完整的团体名称">
-          <template slot="append">搜索</template>
+      <div class="search flex">
+        <el-input placeholder="请输入负责人手机号/邮箱/团号/完整的团体名称" v-model="keyword">
         </el-input>
+        <el-button type="primary" @click="getList">搜索</el-button>
       </div>
     </div>
 
     <div class="order-box">
-      <!--      <div class="info-add" v-if="Object.keys(info).length">-->
-      <!--        <div class="team-info-container">-->
-      <!--          <div class="team-details">-->
-      <!--            <p><span>团体编号:</span> <span>99000123</span></p>-->
-      <!--            <p><span>团体名称:</span> <span>1</span></p>-->
-      <!--            <p><span>所在高校/单位:</span> <span>北京工业大学</span></p>-->
-      <!--            <p><span>团体负责人:</span> <span>郭菲菲</span></p>-->
-      <!--            <p><span>负责人电话:</span> <span>152****7777</span></p>-->
-      <!--            <p><span>团体总成员:</span> <span>1</span></p>-->
-      <!--          </div>-->
-      <!--          <div class="team-actions">-->
-      <!--            <button class="apply-button">申请加入</button>-->
-      <!--            <button class="rights-button">团队权益</button>-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--      </div>-->
-      <!--      <div class="info" v-if="Object.keys(info).length">-->
-      <!--        <div class="team-info-container">-->
-      <!--          <div class="title">团队信息</div>-->
-      <!--          <div class="info-grid">-->
-      <!--            <div class="info-item">团体名称: <span>这是是团体名称</span></div>-->
-      <!--            <div class="info-item">团体编号: <span>99000123</span></div>-->
-      <!--            <div class="info-item">所在高校/单位: <span>北京工业大学</span></div>-->
-      <!--            <div class="info-item">团体负责人: <span>郭菲菲</span></div>-->
-      <!--            <div class="info-item">负责人电话: <span>152****7777</span></div>-->
-      <!--            <div class="info-item">团体成员数: <span>10</span></div>-->
-      <!--          </div>-->
-      <!--        </div>-->
+      <div class="info-add" v-for="item in list" :key="item.id">
+        <div class="team-info-container">
+          <div class="team-details">
+            <p><span>团体编号:</span> <span>{{ item.sn }}</span></p>
+            <p><span>团体名称:</span> <span>{{ item.title }}</span></p>
+            <p><span>所在高校/单位:</span> <span>{{ item.unit_name }}</span></p>
+            <p><span>团体负责人:</span> <span>{{ item.leader }}</span></p>
+            <p><span>负责人电话:</span> <span>{{ item.data.tel }}</span></p>
+            <p><span>团体总成员:</span> <span>{{ item.teamer_no }}</span></p>
+          </div>
+          <div class="team-actions">
+            <button class="apply-button">申请加入</button>
+            <button class="rights-button">团队权益</button>
+          </div>
+        </div>
+      </div>
+      <div class="info" v-if="Object.keys(info).length">
+        <div class="team-info-container">
+          <div class="title">团队信息</div>
+          <div class="info-grid">
+            <div class="info-item">团体名称: <span>这是是团体名称</span></div>
+            <div class="info-item">团体编号: <span>99000123</span></div>
+            <div class="info-item">所在高校/单位: <span>北京工业大学</span></div>
+            <div class="info-item">团体负责人: <span>郭菲菲</span></div>
+            <div class="info-item">负责人电话: <span>152****7777</span></div>
+            <div class="info-item">团体成员数: <span>10</span></div>
+          </div>
+        </div>
 
-      <!--      </div>-->
+      </div>
       <div class="audit" v-if="Object.keys(info).length">
         <!--        <img src="@/assets/img/base/appointment/pay-success.png" alt="">-->
         <img src="../../../assets/img/base/appointment/pay-error.png" alt="">
@@ -98,8 +117,8 @@ export default {
       border: none;
     }
 
-    /deep/ .el-input-group__append {
-      cursor: pointer;
+    .el-button--primary {
+      height: 42px;
       background: #00479D;
       color: #fff;
       border-radius: 0;

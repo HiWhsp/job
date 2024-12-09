@@ -61,7 +61,7 @@ export default {
             <span class="current-price">¥{{ item.product.price }}</span>
             <span class="original-price">¥{{ item.price }}</span>
           </div>
-          <div class="buy-btn" @click="goUrl(`/analyze_detail?id=${item.id}&inventoryId=${item.inventoryId}`)">
+          <div class="buy-btn" @click="goUrl(`/analyze_detail?id=${item.product.id}&inventoryId=${item.inventoryId}`)">
             立即预约
           </div>
         </div>

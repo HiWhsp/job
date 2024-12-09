@@ -16,14 +16,26 @@
 
     <div class="list">
       <div class="item" v-for="(item, index) in list_jilu" :key="index">
-        <img src="@/assets/img/my/order/point-item.png" alt="">
+        <img :src="item.thumb" alt="">
         <div class="right">
-          999积分
+          {{ item.point_sale }}积分
         </div>
-        <div class="title">这里是礼品名称礼品名称</div>
+        <div class="title">{{ item.title }}</div>
         <div class="btn" @click="goUrl({url: '/orderPay'})">立即兑换</div>
       </div>
     </div>
+    <div class="pagination-box" v-if="count">
+      <el-pagination
+          background
+          layout="total, prev, pager, next"
+          :total="count"
+          :current-page.sync="pagination.page"
+          :page-size.sync="pagination.limit"
+          @current-change="changePage"
+      >
+      </el-pagination>
+    </div>
+    <el-empty v-else description="暂无记录..."></el-empty>
   </div>
 </template>
 <script>
@@ -34,19 +46,11 @@ export default {
   name: "index",
   data() {
     return {
-      selectTab: {title: "全部明细", status: "0"},
-
-      //type   1-收入  2-支出
-      list_tab: [
-        {title: "全部明细", status: "0"},
-        {title: "获得记录", status: "1"},
-        {title: "兑换记录", status: "2"},
-      ],
       list_jilu: [],
 
       pagination: {
         page: 1,
-        pageNum: 10,
+        limit: 10,
       },
       count: 0,
     };
@@ -66,14 +70,17 @@ export default {
 
   methods: {
     setView() {
-      this.$api("jiFen_lists", {
-        ...this.pagination,
-        type: this.selectTab.status, //类型：0-全部   1-收入  2-支出
+      this.$api({
+        url: 'point_product_list',
+        method: 'post',
+        data: {
+          ...this.pagination,
+        }
       }).then((res) => {
         let {code, data, count} = res;
         if (code == 200) {
           this.list_jilu = data;
-          this.count = data.count;
+          this.count = count;
         }
       });
     },
@@ -204,6 +211,10 @@ export default {
         color: #FFFFFF;
       }
     }
+  }
+
+  .el-empty {
+    width: 100%;
   }
 }
 </style>

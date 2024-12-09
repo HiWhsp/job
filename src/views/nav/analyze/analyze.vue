@@ -7,39 +7,52 @@ export default {
   data() {
     return {
       selectItem: {},
-      form: {},
-      menuList: [
-        {
-          title: '超快激光常用换算',
-          index: '1',
-          children: [{
-            title: '光谱分析',
-            index: '1-1'
-          }]
-        }
-      ]
+      list: [],
+      pagination: {
+        page: 1,
+        limit: 10
+      },
+      count: 0
     }
   },
-  mounted() {
-    this.selectItem = this.menuList[0].children[0];
-    this.form = {type: ''};
+  computed: {
+    activeMenu() {
+      const route = this.$route;
+      const {meta, path, query} = route;
+      if (meta.activeMenu) {
+        return meta.activeMenu;
+      }
+      if (path == '/analyze_list' && query.type) {
+        this.menuSelect(query.type);
+      }
+      return query.type;
+    },
+  },
+  watch: {
+    vuexTreeCates() {
+      if (this.$route.query.type) {
+        this.menuSelect(this.$route.query.type);
+      }
+    },
   },
   methods: {
     // 选择菜单
     menuSelect(index) {
-      this.form = {type: ''};
-      this.menuList.forEach((item, i) => {
-        if (item.index === index) {
-          this.selectItem = item;
-        } else {
-          item.children.forEach((it, j) => {
-            if (it.index === index) {
-              this.selectItem = it;
-            }
-          })
-        }
-      })
-    }
+      if (this.vuexTreeCates.length != 0) {
+        this.vuexTreeCates.forEach((item, i) => {
+          if (item.id == index) {
+            this.selectItem = item;
+          } else {
+            item.children ? item.children.forEach((it, j) => {
+              if (it.id == index) {
+                this.selectItem = it;
+              }
+            }) : ''
+          }
+        })
+        this.$router.push({path: '/analyze_list', query: {type: this.selectItem.id}});
+      }
+    },
   }
 }
 </script>
@@ -47,25 +60,30 @@ export default {
 <template>
   <div class="container main">
     <breadcrumb
-        :list="[{path: '/', name: '首页'}, { name: '服务内容'}, {path: '/analyze', name: '分析测试'}]"></breadcrumb>
+        :list="[{path: '/', name: '首页'}, { name: '服务内容'}, {path: '/analyze?type=' + selectItem.id, name: selectItem.title}]"></breadcrumb>
     <div class="content">
       <div class="left">
         <div class="title">服务内容</div>
         <div class="menu">
-          <el-menu default-active="1-1" :unique-opened="true" @select="menuSelect">
-            <el-submenu :index="item.index" v-for="(item, index) in menuList" :key="index">
-              <template slot="title">
+          <el-menu :default-active="activeMenu" :unique-opened="true" @select="menuSelect">
+            <template v-for="(item, index) in vuexTreeCates">
+              <el-submenu :index="item.id + ''" v-if="item.children">
+                <template slot="title">
+                  <span>{{ item.title }}</span>
+                </template>
+                <el-menu-item :index="it.id" v-for="(it, i) in item.children" :key="i">
+                  {{ it.title }}
+                </el-menu-item>
+              </el-submenu>
+              <el-menu-item :index="item.id + ''" v-else>
                 <span>{{ item.title }}</span>
-              </template>
-              <el-menu-item :index="it.index" v-for="(it, i) in item.children" :key="i">
-                {{ it.title }}
               </el-menu-item>
-            </el-submenu>
+            </template>
           </el-menu>
         </div>
       </div>
       <div class="right">
-        <router-view></router-view>
+        <router-view :selectItem="selectItem"></router-view>
       </div>
     </div>
   </div>
@@ -131,8 +149,7 @@ export default {
       /deep/ .el-menu-item {
         font-size: 16px;
         color: #000000;
-        padding: 0 !important;
-        margin: 0 20px !important;
+        padding: 0 20px !important;
         border-bottom: 1px solid #E7E7E7;
 
         &:hover {
@@ -146,8 +163,8 @@ export default {
 
       /deep/ .el-menu-item.is-active {
         font-size: 16px;
-        color: #27417C;
-        background-color: transparent;
+        color: #fff;
+        background: #3399FF;
       }
     }
   }
@@ -155,7 +172,6 @@ export default {
   .right {
     margin-left: 40px;
     flex: 1;
-
   }
 }
 </style>
