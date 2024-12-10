@@ -5,18 +5,19 @@ export default {
     return {
       tabIndex: 1,
       queryParams: {}, // 查询参数
-      list_order: [{}], // 订单
+      list_order: [], // 订单
       tabList: [
         {value: '', title: "全部订单"},
         {value: 10, title: "待支付"},
         {value: 20, title: "待实验"},
         {value: 30, title: "实验中"},
-        {value: 5, title: "已取消"},
+        {value: 60, title: "已取消"},
         {value: 40, title: "已完成"},
         {value: 50, title: "售后"},
       ],
       testList: [], // 实验人员
       payList: [], // 支付方式
+      date: [],
       isRePay: [
         {
           value: 1,
@@ -35,23 +36,66 @@ export default {
           label: '已开'
         }
       ], // 是否已开票
-      realRules: {
-        name: [
-          {required: true, message: '请输入活动名称', trigger: 'blur'},
-        ]
+      pagination: {
+        page: 1,
+        limit: 5,
+      },
+      count: 0,
+    }
+  },
+  mounted() {
+    this.handleQuery()
+  },
+  computed: {
+    orderStatus() {
+      return (status) => {
+        switch (status) {
+          case 10:
+            return '待支付'
+          case 20:
+            return '待实验'
+          case 30:
+            return '实验中'
+          case 40:
+            return '已完成'
+          case 50:
+            return '售后'
+          case 60:
+            return '已取消'
+        }
       }
     }
   },
   methods: {
+    search() {
+      this.pagination.page = 1;
+      this.handleQuery()
+    },
     handleQuery() {
+      if (this.date && this.date.length) {
+        this.queryParams.start_time = this.date[0]
+        this.queryParams.end_time = this.date[1]
+      } else {
+        this.queryParams.start_time = ''
+        this.queryParams.end_time = ''
+      }
       this.$api({
         url: 'user_order_list',
         method: 'post',
-        data: this.queryParams
+        data: {
+          ...this.pagination,
+          ...this.queryParams
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.list_order = res.data
+          this.count = res.count;
+        }
       })
     },
     resetQuery() {
-
+      this.queryParams = {}
+      this.date = [];
     },
     goUrl(url) {
       this.$router.push(url);
@@ -75,18 +119,17 @@ export default {
             {{ item.title }}<span>{{ item.num }}</span>
           </div>
         </div>
-        <div class="search">
-          <el-input placeholder="请输入仪器名/订单号">
-            <template slot="append">搜索</template>
-          </el-input>
+        <div class="search flex">
+          <el-input placeholder="请输入仪器名/订单号" v-model="queryParams.keyword"></el-input>
+          <el-button type="primary" @click="search">搜索</el-button>
         </div>
       </div>
 
       <div class="search-filter">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
-          <el-form-item label="订单编号" prop="orderSn">
+          <el-form-item label="订单编号" prop="keyword">
             <el-input
-                v-model="queryParams.orderSn"
+                v-model="queryParams.keyword"
                 placeholder="订单编号"
                 clearable
             />
@@ -94,20 +137,20 @@ export default {
           <el-form-item label="实付款区间" prop="orderSnLt">
             <div class="flex interval">
               <el-input
-                  v-model="queryParams.orderSnLt"
+                  v-model="queryParams.price1"
                   placeholder="请输入"
                   clearable
               />
               <span>-</span>
               <el-input
-                  v-model="queryParams.orderSnLt"
+                  v-model="queryParams.price2"
                   placeholder="请输入"
                   clearable
               />
             </div>
           </el-form-item>
-          <el-form-item label="实验人" prop="orderUrl">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择">
+          <el-form-item label="实验人" prop="shiyanren">
+            <el-select v-model="queryParams.shiyanren" placeholder="请选择" clearable>
               <el-option
                   v-for="item in testList"
                   :key="item.value"
@@ -117,7 +160,7 @@ export default {
             </el-select>
           </el-form-item>
           <el-form-item label="支付方式" prop="phone">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择">
+            <el-select v-model="queryParams.pay_type" placeholder="请选择" clearable>
               <el-option
                   v-for="item in payList"
                   :key="item.value"
@@ -127,7 +170,7 @@ export default {
             </el-select>
           </el-form-item>
           <el-form-item label="是否还款" prop="goodsName">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择">
+            <el-select v-model="queryParams.if_hk" placeholder="请选择" clearable>
               <el-option
                   v-for="item in isRePay"
                   :key="item.value"
@@ -137,7 +180,7 @@ export default {
             </el-select>
           </el-form-item>
           <el-form-item label="是否已开票" prop="goodsName">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择">
+            <el-select v-model="queryParams.if_fapiao" placeholder="请选择" clearable>
               <el-option
                   v-for="item in isInvoice"
                   :key="item.value"
@@ -148,15 +191,17 @@ export default {
           </el-form-item>
           <el-form-item label="下单时间" prop="goodsName">
             <el-date-picker
-                v-model="queryParams.date"
+                v-model="date"
                 type="datetimerange"
                 range-separator="至"
                 start-placeholder="开始日期"
-                end-placeholder="结束日期">
+                end-placeholder="结束日期"
+                value-format="yyyy-MM-dd"
+            >
             </el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button size="mini" @click="handleQuery">搜索</el-button>
+            <el-button size="mini" @click="search">搜索</el-button>
             <el-button type="primary" size="mini" @click="resetQuery">导出订单</el-button>
           </el-form-item>
         </el-form>
@@ -192,11 +237,11 @@ export default {
             <div class="info-title">
               <div class="date">
                 下单时间：
-                {{ item.createdTime }}
+                {{ item.created_at }}
               </div>
               <div class="order-code">
                 订单号：
-                <span>{{ item.orderNo }}</span>
+                <span>{{ item.orderno }}</span>
               </div>
             </div>
             <div class="info-good">
@@ -204,7 +249,7 @@ export default {
                 <!--                  <div class="item-good flex" v-for="(product_item, product_index) in item.products" :key="product_index">-->
                 <div class="item-good flex">
                   <div class="box-image cover">
-                    <el-image src="@/assets/img/my/order-img.png">
+                    <el-image :src="item.cover">
                       <div slot="error" class="image-slot">
                         <img src="@/assets/img/my/order-img.png"/>
                       </div>
@@ -212,37 +257,81 @@ export default {
                   </div>
 
                   <div class="box-title">
-                    <div class="goods-title">{{ '氧氮氢分析仪' }}</div>
+                    <div class="goods-title">{{ item.title }}</div>
                     <div class="goods-sku">型号：{{ 111 }}</div>
                   </div>
-                  <div class="box-price">{{ vuex_huobi }} {{ 1 }}</div>
-                  <div class="order-state" :class="'state-' + item.orderStatus">
-                    {{ '待支付' }}
+                  <div class="box-price">{{ vuex_huobi }} {{ item.price }}</div>
+                  <div class="order-state" :class="'state-' + item.status">
+                    {{ orderStatus(item.status) }}
                   </div>
                   <div class="order-state">
-                    {{ '已开票' }}
+                    {{ item.kaipiao }}
                   </div>
                   <div class="btn-actions">
-                    <button class="btn-ripple fit-text btn-bg" v-if="tabIndex == 3">
-                      还款
-                    </button>
-                    <button class="btn-ripple fit-text btn-bg" v-if="tabIndex == 2">
-                      申请开票
-                    </button>
-                    <button class="btn-ripple fit-text" @click="goUrl('/orderDetail')">
-                      查看订单
-                    </button>
-                    <button class="btn-ripple fit-text btn-bg" v-if="tabIndex == 1">
-                      立即支付
-                    </button>
-                    <button class="btn-ripple fit-text" v-if="tabIndex == 1">
-                      取消订单
-                    </button>
+                    <template v-if="item.status == 10">
+                      <button class="btn-ripple fit-text" @click="goUrl('/orderDetail?orderno=' + item.orderno)">
+                        查看订单
+                      </button>
+                      <button class="btn-ripple fit-text btn-bg">
+                        立即支付
+                      </button>
+                      <button class="btn-ripple fit-text">
+                        取消订单
+                      </button>
+                    </template>
+
+                    <template v-if="item.status == 20">
+                      <button class="btn-ripple fit-text" @click="goUrl('/orderDetail?orderno=' + item.orderno)">
+                        查看订单
+                      </button>
+                    </template>
+
+                    <template v-if="item.status == 30">
+                      <button class="btn-ripple fit-text" v-if="item.kaipiao == '待开票'">
+                        申请开票
+                      </button>
+                      <button class="btn-ripple fit-text btn-bg">
+                        下载预约单
+                      </button>
+                      <button class="btn-ripple fit-text" @click="goUrl('/orderDetail?orderno=' + item.orderno)">
+                        查看订单
+                      </button>
+                    </template>
+
+                    <template v-if="item.status == 40">
+                      <button class="btn-ripple fit-text" v-if="item.kaipiao == '待开票'">
+                        申请开票
+                      </button>
+                      <button class="btn-ripple fit-text btn-bg">
+                        下载报告
+                      </button>
+                      <button class="btn-ripple fit-text" @click="goUrl('/orderDetail')">
+                        售后服务
+                      </button>
+                    </template>
+
+                    <template v-if="item.status == 60">
+                      <button class="btn-ripple fit-text" @click="goUrl('/orderDetail?orderno=' + item.orderno)">
+                        查看订单
+                      </button>
+                    </template>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="pagination-box" v-if="count">
+          <el-pagination
+              background
+              layout="total, prev, pager, next"
+              :total="count"
+              :current-page.sync="pagination.page"
+              :page-size.sync="pagination.limit"
+              @current-change="handleQuery"
+          >
+          </el-pagination>
         </div>
       </div>
     </div>
@@ -252,6 +341,7 @@ export default {
 <style scoped lang="less">
 .content {
   background: #fff;
+  padding-bottom: 50px;
 }
 
 .section-order {
@@ -310,8 +400,8 @@ export default {
         border: none;
       }
 
-      /deep/ .el-input-group__append {
-        cursor: pointer;
+      .el-button--primary {
+        height: 42px;
         background: #00479D;
         color: #fff;
         border-radius: 0;

@@ -3,11 +3,28 @@ export default {
   name: "detail",
   data() {
     return {
+      orderno: '',
+      detail: {},
       process: 4,
       downloadVisible: false
     }
   },
+  mounted() {
+    this.orderno = this.$route.query.orderno;
+    this.getDetail();
+  },
   methods: {
+    getDetail() {
+      this.$api({
+        url: 'order_detail',
+        method: 'post',
+        data: {
+          orderno: this.orderno
+        }
+      }).then(res => {
+        this.detail = res.data;
+      })
+    },
     // 下载报告
     download_report() {
       this.downloadVisible = true
@@ -23,13 +40,13 @@ export default {
   <div class="content">
     <div class="status-item">
       <div class="status">
-        <span>氧氮氢分析仪</span>
-        <span>等待支付</span>
+        <span>{{ detail.product_info.title }}</span>
+        <span>{{ detail.status_txt }}</span>
       </div>
       <div class="info">
         <div class="left">
-          <p class="order-id">订单号：5456412312312</p>
-          <p class="time">下单时间：2023-04-14 15:37</p>
+          <p class="order-id">订单号：{{ detail.orderno }}</p>
+          <p class="time">下单时间：{{ detail.created_at }}</p>
           <div class="btn-wrap">
             <div class="btn" v-if="process == 1">修改订单</div>
             <div class="btn" v-if="process == 1">立即支付</div>
@@ -99,20 +116,18 @@ export default {
         <div class="info-row">
           <span class="label">实验有问题联系人</span>
           <div class="content">
-            联系人：郭菲菲 联系方式：15931263145 地址：北京市朝阳区数码庄园 .....
+            联系人：{{ detail.contact_user }} 联系方式：{{ detail.contact_tel }} 地址：{{ detail.contact_address }}
           </div>
         </div>
         <!-- 样品是否回收 -->
         <div class="info-row">
           <span class="label">样品是否回收</span>
-          <div class="content">不需要回收</div>
+          <div class="content">{{ detail.recover_address_txt }}</div>
         </div>
         <!-- 实验留言 -->
         <div class="info-row">
           <span class="label">实验留言</span>
-          <div class="content">
-            这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容
-          </div>
+          <div class="content">{{ detail.message }}</div>
         </div>
       </div>
     </div>
@@ -212,7 +227,7 @@ export default {
       display: flex;
 
       .left {
-        width: 300px;
+        width: 320px;
         padding-right: 80px;
         border-right: 1px solid #D5D5D5;
 

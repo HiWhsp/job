@@ -3,26 +3,58 @@ export default {
   name: "exchange",
   data() {
     return {
-      tabIndex: 1,
+      tabIndex: 0,
       queryParams: {}, // 查询参数
-      list_order: [{}], // 订单
+      list_order: [], // 订单
+      date: [],
       tabList: [
-        {value: 1, title: "全部订单"},
+        {value: 0, title: "全部订单"},
         {value: 2, title: "待发货"},
         {value: 3, title: "已发货"},
         {value: 4, title: "已完成"}
       ],
-      isAudit: [], // 审核状态
-      realRules: {
-        name: [
-          {required: true, message: '请输入活动名称', trigger: 'blur'},
-        ]
-      }
+      isAudit: [
+        {value: 0, title: "全部"},
+        {value: 2, title: "待发货"},
+        {value: 3, title: "已发货"},
+        {value: 4, title: "已完成"}
+      ], // 审核状态
+      pagination: {
+        page: 1,
+        limit: 5,
+      },
+      count: 0,
     }
   },
+  mounted() {
+    this.handleQuery();
+  },
   methods: {
+    search() {
+      this.pagination.page = 1;
+      this.handleQuery()
+    },
     handleQuery() {
-
+      if (this.date && this.date.length) {
+        this.queryParams.start_time = this.date[0]
+        this.queryParams.end_time = this.date[1]
+      } else {
+        this.queryParams.start_time = ''
+        this.queryParams.end_time = ''
+      }
+      this.$api({
+        url: 'point_order_list',
+        method: 'post',
+        data: {
+          ...this.pagination,
+          ...this.queryParams
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.list_order = res.data;
+          this.count = res.count;
+        }
+      })
     },
     resetQuery() {
 
@@ -33,6 +65,8 @@ export default {
     // 切换tab
     tabClick(item) {
       this.tabIndex = item.value
+      this.queryParams.status = item.value;
+      this.handleQuery();
     }
   }
 }
@@ -49,10 +83,9 @@ export default {
             {{ item.title }}<span>{{ item.num }}</span>
           </div>
         </div>
-        <div class="search">
-          <el-input placeholder="请输入订单号">
-            <template slot="append">搜索</template>
-          </el-input>
+        <div class="search flex">
+          <el-input placeholder="请输入订单号" v-model="queryParams.keyword"></el-input>
+          <el-button type="primary" @click="search">搜索</el-button>
         </div>
       </div>
 
@@ -60,7 +93,7 @@ export default {
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
           <el-form-item label="下单时间" prop="goodsName">
             <el-date-picker
-                v-model="queryParams.date"
+                v-model="date"
                 type="datetimerange"
                 range-separator="至"
                 start-placeholder="开始日期"
@@ -68,17 +101,19 @@ export default {
             </el-date-picker>
           </el-form-item>
           <el-form-item label="订单状态" prop="goodsName">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择">
+            <el-select v-model="queryParams.status" placeholder="请选择" clearable>
               <el-option
                   v-for="item in isAudit"
                   :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
+                  :label="item.title"
+                  :value="item.value"
+                  value-format="yyyy-MM-dd"
+              >
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button size="primary" @click="handleQuery">搜索</el-button>
+            <el-button type="primary" size="mini" @click="handleQuery">搜索</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -110,11 +145,11 @@ export default {
             <div class="info-title">
               <div class="date">
                 下单时间：
-                {{ item.createdTime }}
+                {{ item.created_at }}
               </div>
               <div class="order-code">
                 订单号：
-                <span>{{ item.orderNo }}</span>
+                <span>{{ item.order_sn }}</span>
               </div>
             </div>
             <div class="info-good">
@@ -122,23 +157,22 @@ export default {
                 <!--                  <div class="item-good flex" v-for="(product_item, product_index) in item.products" :key="product_index">-->
                 <div class="item-good flex">
                   <div class="box-image cover">
-                    <el-image src="@/assets/img/my/order-img.png">
+                    <el-image :src="item.orderdetail[0].pdt_info.image">
                       <div slot="error" class="image-slot">
                         <img src="../../../../assets/img/my/order-img.png"/>
                       </div>
                     </el-image>
                   </div>
-
                   <div class="box-title">
-                    <div class="goods-title">{{ '氧氮氢分析仪' }}</div>
+                    <div class="goods-title">{{ item.orderdetail[0].pdt_info.title }}</div>
                     <div class="goods-sku">型号：{{ 111 }}</div>
                   </div>
-                  <div class="box-price">{{ vuex_huobi }} {{ 1 }}</div>
-                  <div class="order-state" :class="'state-' + item.orderStatus">
-                    {{ '待支付' }}
+                  <div class="box-price">{{ item.jifenPrice }}积分</div>
+                  <div class="order-state" :class="'state-' + item.status">
+                    {{ item.status_txt }}
                   </div>
                   <div class="btn-actions">
-                    <button class="btn-ripple fit-text" @click="goUrl('/exchangeDetail')">
+                    <button class="btn-ripple fit-text" @click="goUrl('/exchangeDetail?orderno=' + item.order_sn)">
                       查看订单
                     </button>
                   </div>
@@ -146,6 +180,17 @@ export default {
               </div>
             </div>
           </div>
+        </div>
+        <div class="pagination-box" v-if="count">
+          <el-pagination
+              background
+              layout="total, prev, pager, next"
+              :total="count"
+              :current-page.sync="pagination.page"
+              :page-size.sync="pagination.limit"
+              @current-change="handleQuery"
+          >
+          </el-pagination>
         </div>
       </div>
     </div>
@@ -155,6 +200,7 @@ export default {
 <style scoped lang="less">
 .content {
   background: #fff;
+  padding-bottom: 50px;
 }
 
 .section-order {
@@ -213,8 +259,8 @@ export default {
         border: none;
       }
 
-      /deep/ .el-input-group__append {
-        cursor: pointer;
+      .el-button--primary {
+        height: 42px;
         background: #00479D;
         color: #fff;
         border-radius: 0;

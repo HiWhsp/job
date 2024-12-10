@@ -11,7 +11,7 @@ export default {
       isReal: false, // 是否实名
       realSuccessVisible: false, // 实名认证成功
       dialogTitle: '身份验证',
-      list_order: [{}], // 订单
+      list_order: [], // 订单
       realForm: {}, // 实名认证
       tabList: [
         {value: 1, title: "待处理订单", num: 0},
@@ -37,7 +37,8 @@ export default {
         idcard_pic2: [
           {required: true, message: '请上传身份证正反面照', trigger: 'blur'}
         ]
-      }
+      },
+      orderForm: {}
     }
   },
   watch: {
@@ -53,7 +54,15 @@ export default {
   },
   methods: {
     setView() {
-
+      this.$api({
+        url: 'my_index',
+        method: 'post',
+      }).then(res => {
+        let {code, data} = res;
+        if (code === 200) {
+          this.orderForm = res.data
+        }
+      })
     },
     // 实名认证
     realClick() {
@@ -129,6 +138,12 @@ export default {
         this.$set(this.realForm, 'idcard_pic2', response.data.url)
         alertSucc('上传成功')
       }
+    },
+
+    goUrl(url) {
+      this.$router.push({
+        path: url
+      })
     }
   }
 }
@@ -163,21 +178,21 @@ export default {
       <div class="user-finance">
         <div class="finance-item">
           <div class="circle">
-            <p class="amount">500.00元</p>
+            <p class="amount">{{ orderForm.debt_money }}元</p>
             <p class="description">欠款金额</p>
-            <p class="extra">剩余可用额度：1000.00元</p>
+            <p class="extra">剩余可用额度：{{  orderForm.credit_money }}元</p>
           </div>
           <div class="actions">
-            <p class="a-item">还款</p>
+            <p class="a-item" @click="goUrl('/repayment')">还款</p>
             <i class="line"></i>
-            <p class="a-item">交易记录</p>
+            <p class="a-item" @click="goUrl('/creditLine')">交易记录</p>
             <i class="line"></i>
             <p class="a-item" @click="promoteConfirm">提升额度</p>
           </div>
         </div>
         <div class="finance-item">
           <div class="circle">
-            <p class="amount">800.00元</p>
+            <p class="amount">{{ orderForm.kekaipiao_money }}元</p>
             <p class="description">可开票金额</p>
             <p class="extra">已开票待还款：500.00元</p>
           </div>
@@ -187,28 +202,28 @@ export default {
         </div>
         <div class="finance-item">
           <div class="circle">
-            <p class="amount">777.00元</p>
+            <p class="amount">{{ orderForm.money }}元</p>
             <p class="description">账户余额</p>
-            <p class="extra">预付款：500.00元+赠送金200.00元</p>
+            <p class="extra">预付款：{{  orderForm.money }}元</p>
           </div>
           <div class="actions">
-            <p class="a-item">去充值</p>
+            <p class="a-item" @click="goUrl('/preSave-pay')">去充值</p>
             <i class="line"></i>
-            <p class="a-item">预付记录</p>
+            <p class="a-item" @click="goUrl('/preSave')">预付记录</p>
             <i class="line"></i>
             <p class="a-item" @click="changeGroup">转为团体预付</p>
           </div>
         </div>
         <div class="finance-item">
           <div class="circle">
-            <p class="amount">800.00元</p>
+            <p class="amount">{{ orderForm.rebate }}元</p>
             <p class="description">我的零钱包</p>
-            <p class="extra">累计金额：5000.00元</p>
+            <p class="extra">累计金额：{{ orderForm.cash_rebate }}元</p>
           </div>
           <div class="actions">
-            <p class="a-item">立即提现</p>
+            <p class="a-item" @click="goUrl('/commission')">立即提现</p>
             <i class="line"></i>
-            <p class="a-item">佣金明细</p>
+            <p class="a-item" @click="goUrl('/commission')">佣金明细</p>
           </div>
         </div>
       </div>

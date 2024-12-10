@@ -60,6 +60,34 @@ export default {
       }
       this.invoice_info.invoiceType = item;
     },
+    // 提交
+    submit() {
+      const params = {
+        f_type: this.invoice_info.invoiceStatus != 0 ? this.invoice_info.invoiceType : 0,
+        title_type: this.invoice_info.titleType,
+        reg_address: this.invoice_info.companyAddress,
+        reg_tel: this.invoice_info.companyPhone,
+        name: this.invoice_info.title,
+        company_no: this.invoice_info.shibiema,
+        bank_name: this.invoice_info.bankName,
+        bank_no: this.invoice_info.bankNo,
+        email: this.invoice_info.shibiema,
+        money: this.info.prepaidAmount,
+        notes: this.info.prepaidRemark,
+        utype: this.info.prepaidAccount,
+      }
+      this.$api({
+        url: 'do_recharge',
+        method: 'post',
+        data: params
+      }).then(res => {
+        // if (res.code === 200) {
+        //   this.$router.push({
+        //     name: 'preSave'
+        //   })
+        // }
+      })
+    }
   }
 }
 </script>
@@ -294,6 +322,10 @@ export default {
           </div>
         </div>
       </div>
+
+      <div class="invoice-box">
+        <el-button type="primary" @click="submit">提交</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -312,8 +344,10 @@ export default {
     color: #333333;
     border-bottom: 1px solid #dbdbdb;
   }
+
   .info-box {
     width: 100%;
+
     .section-title {
       font-weight: bold;
       font-size: 22px;
@@ -565,7 +599,14 @@ export default {
           }
         }
       }
+
+      /deep/ .el-button--primary {
+        background-color: @theme;
+        border-color: @theme;
+        margin-left: 120px;
+      }
     }
   }
+
 }
 </style>
