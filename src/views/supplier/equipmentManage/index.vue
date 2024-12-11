@@ -3,17 +3,148 @@ export default {
   name: "index",
   data() {
     return {
-      value: 5,
+      keyword: '',
       settlementDialogVisible: false,// 新增/修改设备
       starDetailVisible: false,// 设备星级
       setDateDialogVisible: false,// 设置不派单时间
       historyVisible: false, // 不派单时间历史记录
-      setDate: {},
-      tableData: [{}],
+      setDate: null,
+      setDateId: '', // 设置不派单时间
+      historyId: '', // 不派单时间历史记录
+      tableData: [], // 设备列表
       settlementRruleForm: {}, // 结算
       starDetail: {},// 设备星级详情
-      settlementRules: {}, // 结算
-      historyDate: [{}], //
+      settlementRules: {
+        title: [
+          {required: true, message: '请输入设备名称', trigger: 'blur'},
+        ],
+        // star: [
+        //   {required: true, message: '请输入设备星级', trigger: 'blur'},
+        // ],
+        model: [
+          {required: true, message: '请输入设备型号', trigger: 'blur'},
+        ],
+        price: [
+          {required: true, message: '请输入报价', trigger: 'blur'},
+        ],
+        pnum: [
+          {required: true, message: '请输入数量', trigger: 'blur'},
+        ],
+        power: [
+          {required: true, message: '请输入星级', trigger: 'blur'},
+        ]
+      }, // 结算
+      historyDate: [], // 不派单时间历史记录
+      pagination: {
+        page: 1,
+        limit: 5,
+      },
+      historyPagination: {
+        page: 1,
+        limit: 5,
+        count: 0,
+        total_day: 0
+      },
+      count: 0,
+    }
+  },
+  mounted() {
+    this.setView();
+  },
+  methods: {
+    setView() {
+      this.$api({
+        url: 'store/device_list',
+        method: 'post',
+        data: {
+          ...this.pagination
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.tableData = res.data;
+        }
+      })
+    },
+
+    // 设置不派单时间
+    setDateOpen(row) {
+      this.setDateId = row.id;
+      this.setDateDialogVisible = true
+    },
+
+    // 设置不派单时间
+    setDateDialogSubmit() {
+      if (!this.setDate) {
+        this.$message.error('请选择时间区间');
+        return
+      }
+      this.$api({
+        url: 'store/device_time_edit',
+        method: 'post',
+        data: {
+          id: this.setDateId,
+          start_time: this.setDate[0],
+          end_time: this.setDate[1],
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.msg);
+          this.setDate = null
+          this.setDateId = ''
+          this.setView();
+          this.setDateDialogVisible = false
+        }
+      })
+    },
+
+    historyVisibleOpen() {
+      this.$api({
+        url: 'store/device_time_list',
+        method: 'post',
+        data: {
+          id: this.historyId,
+          limit: this.historyPagination.limit,
+          page: this.historyPagination.page
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.historyDate = res.data;
+          this.historyPagination.total_day = res.total_day;
+          this.historyPagination.count = res.count;
+          this.historyVisible = true
+        }
+      })
+    },
+    // 不派单时间历史记录
+    setHistoryVisibleOpen(row) {
+      this.historyId = row.id;
+      this.historyVisibleOpen()
+    },
+    // 新增/修改设备
+    settlementDialogOpen(row) {
+      this.settlementDialogVisible = true;
+      this.settlementRruleForm = {...row};
+    },
+
+    // 结算提交
+    settlementDialogSubmit() {
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.$api({
+            url: 'store/device_edit',
+            method: 'post',
+            data: {
+              ...this.settlementRruleForm
+            }
+          }).then(res => {
+            if (res.code === 200) {
+              this.$message.success(res.msg);
+              this.setView();
+              this.settlementDialogVisible = false;
+            }
+          })
+        }
+      })
     }
   }
 }
@@ -28,10 +159,11 @@ export default {
         </div>
       </div>
       <div class="search">
-        <el-input placeholder="请输入仪器名/订单号">
-          <template slot="append">搜索</template>
-        </el-input>
-        <el-button type="primary" @click="settlementDialogVisible = true">新增设备</el-button>
+        <div class="flex search-item">
+          <el-input placeholder="请输入仪器名/订单号" v-model="keyword"></el-input>
+          <el-button type="primary">搜索</el-button>
+        </div>
+        <el-button type="primary" @click="settlementDialogOpen()">新增设备</el-button>
       </div>
     </div>
 
@@ -48,7 +180,7 @@ export default {
       </div>
       <div class="option">
         <div class="btn back" @click="setDateDialogVisible = true">设置不派单时间</div>
-        <div class="btn" @click="historyVisible = true">不派单时间历史记录</div>
+        <div class="btn" @click="historyVisibleOpen">不派单时间历史记录</div>
       </div>
     </div>
 
@@ -63,10 +195,10 @@ export default {
         <el-table-column prop="date" label="设备名称及星级" width="200">
           <template slot-scope="scope">
             <div class="column-flex-center ">
-              <p>氧氮氢分析仪</p>
+              <p>{{ scope.row.name }}</p>
               <div class="flex">
                 <el-rate
-                    v-model="value"
+                    v-model="scope.row.power"
                     disabled
                     text-color="#ff9900">
                 </el-rate>
@@ -77,12 +209,12 @@ export default {
         </el-table-column>
         <el-table-column prop="date" label="设备型号" width="320">
           <template slot-scope="scope">
-            <p>美国Thermo 1290美国Thermo 1290</p>
+            <p>{{ scope.row.model }}</p>
           </template>
         </el-table-column>
         <el-table-column prop="date" label="数量" width="100">
           <template slot-scope="scope">
-            <p>2台</p>
+            <p>{{ scope.row.pnum }}台</p>
           </template>
         </el-table-column>
         <el-table-column prop="date" label="检测能力" width="180">
@@ -97,9 +229,9 @@ export default {
         </el-table-column>
         <el-table-column prop="date" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="text" @click="settlementDialogVisible = true">修改</el-button>
-            <el-button size="mini" type="text">设置不派单时间</el-button>
-            <el-button size="mini" type="text">不派单时间历史记录</el-button>
+            <el-button size="mini" type="text" @click="settlementDialogOpen(scope.row)">修改</el-button>
+            <el-button size="mini" type="text" @click="setDateOpen(scope.row)">设置不派单时间</el-button>
+            <el-button size="mini" type="text" @click="setHistoryVisibleOpen(scope.row)">不派单时间历史记录</el-button>
             <el-button size="mini" type="text">符合实情无需修改</el-button>
           </template>
         </el-table-column>
@@ -110,29 +242,31 @@ export default {
     <el-dialog title="新增设备" :visible.sync="settlementDialogVisible" width="900px" center>
       <div class="settlement-box">
         <el-form :model="settlementRruleForm" :rules="settlementRules" ref="ruleForm" label-width="100px">
-          <el-form-item label="设备名称：" prop="name">
-            <el-select v-model="settlementRruleForm.region" placeholder="请选择设备">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
+          <el-form-item label="设备名称：" prop="title">
+            <el-input v-model="settlementRruleForm.title" placeholder="请输入设备名称"></el-input>
+            <!--            <el-select v-model="settlementRruleForm.region" placeholder="请选择设备">-->
+            <!--              <el-option label="区域一" value="shanghai"></el-option>-->
+            <!--              <el-option label="区域二" value="beijing"></el-option>-->
+            <!--            </el-select>-->
           </el-form-item>
-          <el-form-item label="设备型号：" prop="name">
-            <el-select v-model="settlementRruleForm.region" placeholder="请选择设备型号">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
+          <el-form-item label="设备型号：" prop="model">
+            <el-input v-model="settlementRruleForm.model" placeholder="请输入设备型号"></el-input>
+            <!--            <el-select v-model="settlementRruleForm.region" placeholder="请选择设备型号">-->
+            <!--              <el-option label="区域一" value="shanghai"></el-option>-->
+            <!--              <el-option label="区域二" value="beijing"></el-option>-->
+            <!--            </el-select>-->
           </el-form-item>
-          <el-form-item label="设备数量：" prop="region">
-            <el-input v-model="settlementRruleForm.name" placeholder="请输入设备数量"></el-input>
+          <el-form-item label="设备数量：" prop="pnum">
+            <el-input v-model="settlementRruleForm.pnum" placeholder="请输入设备数量"></el-input>
           </el-form-item>
-          <el-form-item label="设备数量：" prop="region">
-            <el-input v-model="settlementRruleForm.name" placeholder="请输入设备数量"></el-input>
+          <!--          <el-form-item label="设备星级：" prop="power">-->
+          <!--            <el-input v-model="settlementRruleForm.power" placeholder="请输入设备星级"></el-input>-->
+          <!--          </el-form-item>-->
+          <el-form-item label="检测能力：" prop="power">
+            <el-input v-model="settlementRruleForm.power" placeholder="请输入每台设备每天可检测的样品数量"></el-input>
           </el-form-item>
-          <el-form-item label="检测能力：" prop="region">
-            <el-input v-model="settlementRruleForm.name" placeholder="请输入每台设备每天可检测的样品数量"></el-input>
-          </el-form-item>
-          <el-form-item label="报价：" prop="region">
-            <el-input v-model="settlementRruleForm.name" placeholder="请输入报价">
+          <el-form-item label="报价：" prop="price">
+            <el-input v-model="settlementRruleForm.price" placeholder="请输入报价">
               <template slot="append">/ 次</template>
             </el-input>
           </el-form-item>
@@ -140,7 +274,7 @@ export default {
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="settlementDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="settlementDialogVisible = false">确定</el-button>
+        <el-button type="primary" @click="settlementDialogSubmit">确定</el-button>
       </div>
     </el-dialog>
 
@@ -188,12 +322,14 @@ export default {
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
-            end-placeholder="结束日期">
+            end-placeholder="结束日期"
+            value-format="yyyy-MM-dd"
+        >
         </el-date-picker>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="setDateDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="setDateDialogVisible = false">确定</el-button>
+        <el-button type="primary" @click="setDateDialogSubmit">确定</el-button>
       </div>
     </el-dialog>
 
@@ -201,11 +337,24 @@ export default {
     <el-dialog title="不派单时间历史记录" :visible.sync="historyVisible" width="800px" center>
       <div class="history-table">
         <el-table :data="historyDate" ref="historyForm">
-          <el-table-column prop="date" label="开始时间" align="center"></el-table-column>
-          <el-table-column prop="date" label="结束时间" align="center"></el-table-column>
-          <el-table-column prop="date" label="天数" align="center"></el-table-column>
+          <el-table-column prop="start_time" label="开始时间" align="center"></el-table-column>
+          <el-table-column prop="end_time" label="结束时间" align="center"></el-table-column>
+          <el-table-column prop="day" label="天数" align="center"></el-table-column>
         </el-table>
-        <p class="all">共计不派单天数：<span>365天</span></p>
+        <p class="all">共计不派单天数：<span>{{ historyPagination.total_day }}天</span></p>
+
+        <div class="pagination-box" v-if="historyPagination.count">
+          <el-pagination
+              background
+              layout="total, prev, pager, next"
+              :total="historyPagination.count"
+              :current-page.sync="historyPagination.page"
+              :page-size.sync="historyPagination.limit"
+              @current-change="historyVisibleOpen"
+          >
+          </el-pagination>
+        </div>
+        <el-empty v-else description="暂无记录..."></el-empty>
       </div>
     </el-dialog>
   </div>
@@ -265,6 +414,13 @@ export default {
 
     .el-input {
       border: 1px solid #00479D;
+    }
+
+    .search-item {
+      /deep/ .el-button--primary {
+        margin: 0;
+        height: 42px;
+      }
     }
 
     /deep/ .el-button--primary {

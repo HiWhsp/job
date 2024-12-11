@@ -68,7 +68,7 @@ export default {
         cityCode: "",
         city: "",
         areaCode: "",
-        area: "",
+        dist: "",
         address: "",
         is_default: 0,
         id: 0,
@@ -108,8 +108,12 @@ export default {
     },
     //获取地址详情
     query_address_detail() {
-      this.$api("address_info", {
-        id: this.form.id
+      this.$api({
+        url: 'address_info',
+        method: 'post',
+        data: {
+          id: this.form.id
+        }
       }).then((res) => {
         let {code, data, msg} = res;
         if (code == 200) {
@@ -121,7 +125,7 @@ export default {
             cityCode: data.cityCode,
             city: data.city,
             areaCode: data.areaCode,
-            area: data.area,
+            dist: data.dist,
             address: data.address,
             is_default: data.is_default,
             id: data.id,
@@ -150,7 +154,7 @@ export default {
         cityCode: "",
         city: "",
         areaCode: "",
-        area: "",
+        dist: "",
         address: "",
         is_default: 0,
         id: 0,
@@ -168,13 +172,13 @@ export default {
     changeSelectAddress(data) {
       this.$log("更新省市区数据", data);
       let {sheng, shi, qu} = data;
-      this.form.province = sheng.title;
-      this.form.city = shi.title;
-      this.form.area = qu.title;
+      this.form.province = sheng.name;
+      this.form.city = shi.name;
+      this.form.dist = qu.name;
 
-      this.form.provinceCode = sheng.id;
-      this.form.cityCode = shi.id;
-      this.form.areaCode = qu.id;
+      this.form.provinceCode = sheng.code;
+      this.form.cityCode = shi.code;
+      this.form.areaCode = qu.code;
       // debugger
     },
 
@@ -189,15 +193,11 @@ export default {
         alertErr("请输入收货人姓名");
         return;
       }
-      // if (!is_true_phone) {
-      //   alertErr("请输入正确的收货人电话");
-      //   return;
-      // }
       if (!is_true_phone) {
         alertErr("请输入正确的收货人电话");
         return;
       }
-      if (!this.form.area) {
+      if (!this.form.dist) {
         alertErr("请选择所在地区");
         return;
       }

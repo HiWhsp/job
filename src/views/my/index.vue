@@ -179,7 +179,7 @@ export default {
   methods: {
     // 选择菜单
     menuSelect(index) {
-      if (index === 17) {
+      if (index === '17') {
         this.logout();
       }
       this.form = {type: ''};
@@ -198,10 +198,7 @@ export default {
     },
     logout() {
       this.$store.commit("clear_loginInfo");
-      // debugger
-      if (this.$route.meta.requireAuth) {
-        this.$router.push("/");
-      }
+      this.$router.push({path: '/'});
     },
   }
 }
@@ -219,7 +216,8 @@ export default {
                 <template slot="title">
                   <span>{{ item.title }}</span>
                 </template>
-                <el-menu-item :index="it.index" v-for="(it, i) in item.children" v-if="it.if_leader == undefined || baseInfo.if_leader == it.if_leader" :key="i">
+                <el-menu-item :index="it.index" v-for="(it, i) in item.children"
+                              v-if="it.if_leader == undefined || baseInfo.if_leader == it.if_leader" :key="i">
                   {{ it.title }}
                 </el-menu-item>
               </el-submenu>

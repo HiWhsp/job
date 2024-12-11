@@ -89,7 +89,7 @@ export default {
                        :current-page.sync="pagination.page" :page-size="pagination.limit"
                        :total="count"></el-pagination>
       </div>
-      <el-empty v-if="!count" description="没有查询到订单信息..."></el-empty>
+      <el-empty v-if="!count" description="没有查询到信息..."></el-empty>
     </div>
   </div>
 </template>

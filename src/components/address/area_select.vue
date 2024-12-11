@@ -2,13 +2,13 @@
   <div class="sanji-wrap">
     <div class="sanji-box">
       <el-select v-model="sheng" placeholder="请选择省" @change="change_sheng">
-        <el-option v-for="item in list_sheng" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        <el-option v-for="item in list_sheng" :key="item.code" :label="item.name" :value="item.code"></el-option>
       </el-select>
       <el-select v-model="shi" placeholder="请选择市" @change="change_shi">
-        <el-option v-for="item in list_shi" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        <el-option v-for="item in list_shi" :key="item.code" :label="item.name" :value="item.code"></el-option>
       </el-select>
       <el-select v-model="qu" placeholder="请选择区" @change="change_qu">
-        <el-option v-for="item in list_qu" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        <el-option v-for="item in list_qu" :key="item.code" :label="item.name" :value="item.code"></el-option>
       </el-select>
     </div>
   </div>
@@ -81,13 +81,13 @@ export default {
       let obj_shi = {};
       let obj_qu = {};
       if (this.sheng) {
-        obj_sheng = this.list_sheng.find((v) => v.id == this.sheng);
+        obj_sheng = this.list_sheng.find((v) => v.code == this.sheng);
       }
       if (this.shi) {
-        obj_shi = this.list_shi.find((v) => v.id == this.shi);
+        obj_shi = this.list_shi.find((v) => v.code == this.shi);
       }
       if (this.qu) {
-        obj_qu = this.list_qu.find((v) => v.id == this.qu);
+        obj_qu = this.list_qu.find((v) => v.code == this.qu);
       }
 
       let obj = {
@@ -102,50 +102,50 @@ export default {
     async init(data) {
       this.$log('初始化', data)
       //console.log("父组件设置当前组件省市区数据", data);
-      let { province, city, area, provinceCode, cityCode, areaCode } = data;
+      let { province, city, dist } = data;
       // this.sheng = province_id;
       // this.shi = city_id;
       // this.qu = area_id;
 
       //省
-      let obj_sheng = this.list_sheng.find((v) => v.id == provinceCode || v.id == province) || {};
+      let obj_sheng = this.list_sheng.find((v) => v.name == province) || {};
       console.log(obj_sheng)
-      this.sheng = obj_sheng.id;
+      this.sheng = obj_sheng.code;
 
       //解决初始回显慢的问题
-      this.list_shi = [{id: cityCode, title: city}]
-      this.shi = cityCode
-      this.list_qu = [{id: areaCode, title: area}]
-      this.qu = areaCode
+      this.list_shi = [{code: '', name: city}]
+      this.shi = ''
+      this.list_qu = [{code: '', name: dist}]
+      this.qu = ''
       //解决初始回显慢的问题
 
       //市
-      let res_shi = await this.$api("users_getAreaList", { parent_id: this.sheng });
+      let res_shi = await this.$api("region_list", { parent_code: this.sheng }, 'post');
       this.list_shi = res_shi.data || [];
-      let obj_shi = this.list_shi.find((v) => v.id == cityCode || v.id == city) || {};
-      this.shi = obj_shi.id;
+      let obj_shi = this.list_shi.find((v) => v.name == city) || {};
+      this.shi = obj_shi.code;
 
       //区
-      let res_qu = await this.$api("users_getAreaList", { parent_id: this.shi });
+      let res_qu = await this.$api("region_list", { parent_code: this.shi }, 'post');
       this.list_qu = res_qu.data || [];
-      let obj_qu = this.list_qu.find((v) => v.id == areaCode || v.id == area) || {};
-      this.qu = obj_qu.id;
+      let obj_qu = this.list_qu.find((v) => v.name == dist) || {};
+      this.qu = obj_qu.code;
 
       //console.log("查询城市数据 res_shi", res_shi);
       //console.log("查询区县数据 res_qu", res_qu);
     },
 
     //查询城市
-    change_sheng(id) {
+    change_sheng(code) {
       //省份被修改了
-      if (this.sheng_prev && id != this.sheng_prev) {
+      if (this.sheng_prev && code != this.sheng_prev) {
         this.shi = "";
         this.qu = "";
       }
-      this.sheng_prev = id;
+      this.sheng_prev = code;
 
       this.address_getAreaList({
-        params: { parent_id: id },
+        params: { parent_code: code },
         success: (data) => {
           this.list_shi = data;
         },
@@ -153,22 +153,22 @@ export default {
     },
 
     //查询区县
-    change_shi(id) {
+    change_shi(code) {
       //城市被修改了
-      if (this.shi_prev && id != this.shi_prev) {
+      if (this.shi_prev && code != this.shi_prev) {
         this.qu = "";
       }
-      this.shi_prev = id;
+      this.shi_prev = code;
 
       this.address_getAreaList({
-        params: { parent_id: id },
+        params: { parent_code: code },
         success: (data) => {
           this.list_qu = data;
         },
       });
     },
 
-    change_qu(id) { },
+    change_qu(code) { },
 
     address_getAreaList({ params, success } = opt) {
       this.$api({

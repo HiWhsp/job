@@ -115,13 +115,45 @@ export default {
     changeGroup() {
       this.changeGroupVisible = true
     },
+    changeGroupClose() {
+      this.dialogTitle = '身份验证';
+      this.realForm = {}
+    },
+    changeGroupNext() {
+      if (!this.realForm.code) {
+        alertErr('请输入验证码');
+        return;
+      }
+      this.dialogTitle = '个人预付转团体预付'
+    },
     // 转为团体
     changeGroupSubmit() {
-      if (this.dialogTitle == '身份验证') {
-        this.dialogTitle = '个人预付转团体预付'
-      } else {
-        this.changeGroupVisible = false
+      if (!this.realForm.money) {
+        alertErr('请输入金额');
+        return;
       }
+      if (this.realForm.money <= 0) {
+        alertErr('金额必须大于0');
+        return
+      }
+      if (this.realForm.money > this.baseInfo.money) {
+        alertErr('转出金额不能大于个人余额');
+        return;
+      }
+      this.$api({
+        url: "money_transfer",
+        method: "post",
+        data: {
+          money: this.realForm.money,
+          code: this.realForm.code
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.$message.success('转账成功')
+        }
+        this.changeGroupVisible = false
+
+      })
     },
     upload_on_success(response) {
       if (response.code != 200) {
@@ -140,6 +172,19 @@ export default {
       }
     },
 
+    getCode() {
+      this.$api({
+        url: 'sendsms',
+        method: 'post',
+        data: {
+          phone: this.baseInfo.phone
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          alertSucc('发送成功')
+        }
+      })
+    },
     goUrl(url) {
       this.$router.push({
         path: url
@@ -180,7 +225,7 @@ export default {
           <div class="circle">
             <p class="amount">{{ orderForm.debt_money }}元</p>
             <p class="description">欠款金额</p>
-            <p class="extra">剩余可用额度：{{  orderForm.credit_money }}元</p>
+            <p class="extra">剩余可用额度：{{ orderForm.credit_money }}元</p>
           </div>
           <div class="actions">
             <p class="a-item" @click="goUrl('/repayment')">还款</p>
@@ -204,7 +249,7 @@ export default {
           <div class="circle">
             <p class="amount">{{ orderForm.money }}元</p>
             <p class="description">账户余额</p>
-            <p class="extra">预付款：{{  orderForm.money }}元</p>
+            <p class="extra">预付款：{{ orderForm.money }}元</p>
           </div>
           <div class="actions">
             <p class="a-item" @click="goUrl('/preSave-pay')">去充值</p>
@@ -414,24 +459,27 @@ export default {
       </span>
     </el-dialog>
     <!--    转为团体-->
-    <el-dialog :title="dialogTitle" :visible.sync="changeGroupVisible" center width="500px">
+    <el-dialog :title="dialogTitle" :visible.sync="changeGroupVisible" center width="500px" @close="changeGroupClose">
       <div class="changeGroup" v-if="dialogTitle == '身份验证'">
-        <p>手机号：15200007777</p>
-        <el-input placeholder="请输入验证码" v-model="realForm.name">
-          <template slot="append">获取验证码</template>
-        </el-input>
+        <p>手机号：{{ baseInfo.phone }}</p>
+        <div class="flex">
+          <el-input placeholder="请输入验证码" v-model="realForm.code"></el-input>
+          <el-button type="primary" class="code-btn" @click="getCode">获取验证码</el-button>
+        </div>
       </div>
       <div class="changeGroup" v-else>
-        <p>个人账户余额：0元</p>
-        <p>团体账户余额：0元</p>
+        <p>个人账户余额：{{ baseInfo.money }}元</p>
+        <p>团体账户余额：{{ baseInfo.team_money }}元</p>
         <div class="money-inp">
           <span>转到团体账户金额：</span>
-          <el-input placeholder="请输入金额" v-model="realForm.name"></el-input>
+          <el-input placeholder="请输入金额" v-model="realForm.money"></el-input>
           <span>元</span>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="changeGroupSubmit">提交</el-button>
+        <el-button type="primary" @click="changeGroupNext"
+                   v-if="dialogTitle == '身份验证'">下一步</el-button>
+        <el-button type="primary" @click="changeGroupSubmit" v-if="dialogTitle == '个人预付转团体预付'">提交</el-button>
         <el-button @click="changeGroupVisible = false">取消</el-button>
       </span>
     </el-dialog>

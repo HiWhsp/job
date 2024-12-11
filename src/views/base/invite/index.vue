@@ -69,13 +69,25 @@
       <div class="info-list" v-if="index === 2">
         <p class="title">我的好友</p>
         <div class="table">
-          <el-table :data="tableData" style="width: 100%">
+          <el-table :data="tableData" style="width: 100%" v-if="count">
             <el-table-column prop="name" label="好友姓名/ID"></el-table-column>
             <el-table-column prop="orderAmount" label="成交金额"></el-table-column>
             <el-table-column prop="created_at" label="入驻时间"></el-table-column>
             <el-table-column prop="rebateAmount" label="返佣金额"></el-table-column>
           </el-table>
         </div>
+        <div class="pagination-box" v-if="count">
+          <el-pagination
+              background
+              layout="total, prev, pager, next"
+              :total="count"
+              :current-page.sync="pagination.page"
+              :page-size.sync="pagination.limit"
+              @current-change="getList"
+          >
+          </el-pagination>
+        </div>
+        <el-empty v-else description="暂无记录..."></el-empty>
       </div>
     </div>
 
@@ -121,7 +133,12 @@ export default {
           img: require('@/assets/img/base/invite/4.png')
         }
       ],
-      tableData: [1, 2, 3, 4]
+      tableData: [],
+      count: 0,
+      pagination: {
+        page: 1,
+        limit: 10
+      }
     }
   },
 
@@ -133,10 +150,11 @@ export default {
       //   获取邀请列表
       this.$api({
         url: 'invite_list',
-        methods: "post"
+        method: "post"
       }).then(res => {
         if (res.code === 200) {
           this.tableData = res.data
+          this.count = res.count;
         }
       })
     },
@@ -362,6 +380,10 @@ export default {
           color: #333333;
         }
       }
+    }
+
+    .pagination-box {
+      margin-top: 40px;
     }
   }
 }

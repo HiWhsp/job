@@ -20,10 +20,10 @@
           <div class="address-item" v-for="(item, index) in list_address" :key="index">
             <div class="top">
               <div>
-                {{ item.name }}
+                {{ item.receive_name }}
               </div>
               <div>
-                {{ item.phone }}
+                {{ item.receive_phone }}
               </div>
               <div class="ellipsis-1">
                 {{ item.full_addr }}{{ item.address }}
@@ -37,7 +37,7 @@
               </div>
               <div class="right">
                 <span class="action" v-if="item.is_default != 1"
-                      @click="do_address_set_default(item.id)">设置为默认地址</span>
+                      @click="do_address_set_default(item)">设置为默认地址</span>
                 <span class="action" @click="do_address_edit(item)">编辑</span>
                 <span class="action" @click="do_address_delete(item.id)">删除</span>
               </div>
@@ -126,21 +126,23 @@ export default {
         },
       }).then((res) => {
         if (res.code == 200) {
+          alertSucc(res.msg)
           this.setView();
         }
       });
     },
     //设置默认地址
-    do_address_set_default(id) {
+    do_address_set_default(item) {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'edit_address',
+        method: 'post',
         data: {
-          action: 'userAddress_setDefault',
-          id: id,
+          ...item,
+          is_default: 1
         },
       }).then((res) => {
         if (res.code == 200) {
+          alertSucc('设置成功')
           this.setView();
         }
       });

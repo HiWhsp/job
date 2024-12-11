@@ -84,9 +84,9 @@ export default {
       form: {},
       pagination: {
         page: 1,
-        pageNum: 100,
+        limit: 100,
       },
-      list_address: [1],
+      list_address: [],
     };
   },
   computed: {
@@ -98,10 +98,9 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'edit_list',
+        method: 'post',
         data: {
-          action: 'userAddress_lists',
           ...this.pagination,
         },
       }).then(res => {

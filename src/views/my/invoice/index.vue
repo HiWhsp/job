@@ -3,7 +3,7 @@ export default {
   name: "index",
   data() {
     return {
-      selectTab: {title: "全部明细", status: "0"},
+      selectTab: {title: "全部发票", status: "0"},
       list_tab: [
         {title: "全部发票", status: "0"},
         {title: "已开票", status: "1"},
@@ -18,6 +18,11 @@ export default {
       },
       count: 1,
       requestVisible: false
+    }
+  },
+  watch: {
+    selectTab() {
+      this.setView()
     }
   },
   mounted() {
@@ -36,7 +41,7 @@ export default {
         let {code, data, count} = res;
         if (code == 200) {
           this.list_jilu = data;
-          this.count = count;
+          this.count = data.length;
         }
       })
     },
@@ -132,15 +137,14 @@ export default {
               </div>
             </div>
           </div>
-
           <div class="pagination-box" v-if="count">
             <el-pagination
                 background
                 layout="total, prev, pager, next"
                 :total="count"
-                :current-page="pagination.page"
-                :page-size="pagination.pageNum"
-                @current-change="changePage"
+                :current-page.sync="pagination.page"
+                :page-size.sync="pagination.pageNum"
+                @current-change="setView"
             >
             </el-pagination>
           </div>
