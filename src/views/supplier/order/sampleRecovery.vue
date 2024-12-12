@@ -19,27 +19,53 @@ export default {
         {title: '寄回中', status: '3'},
         {title: '完成回收', status: '4'},
       ],
+      keyword: '',
       count: 1,
       pagination: {
         page: 1,
-        pageNum: 10
-      },
-      realRules: {
-        name: [
-          {required: true, message: '请输入活动名称', trigger: 'blur'},
-        ]
+        limit: 10
       }
     }
   },
+  mounted() {
+    this.setView();
+  },
   methods: {
     setView() {
-
+      this.$api({
+        url: 'store/order_list',
+        method: 'post',
+        data: {
+          keyword: this.keyword,
+          status: 8,
+          start_time: this.queryParams.start_time,
+          end_time: this.queryParams.end_time,
+          orderId: this.queryParams.orderId,
+          title: this.queryParams.title,
+          ...this.pagination,
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.list_order = res.data;
+          this.count = res.count;
+        }
+      })
     },
     handleQuery() {
-
+      this.pagination.page = 1
+      if (this.queryParams.date) {
+        this.queryParams.start_time = this.queryParams.date[0]
+        this.queryParams.end_time = this.queryParams.date[1]
+      } else {
+        this.queryParams.start_time = ''
+        this.queryParams.end_time = ''
+      }
+      this.setView()
     },
     resetQuery() {
-
+      this.pagination.page = 1
+      this.queryParams = {}
+      this.setView()
     },
     goUrl(url) {
       this.$router.push(url);
@@ -63,17 +89,16 @@ export default {
             运输中订单
           </div>
         </div>
-        <div class="search">
-          <el-input placeholder="请输入仪器名/订单号">
-            <template slot="append">搜索</template>
-          </el-input>
+        <div class="search flex">
+          <el-input placeholder="请输入仪器名/订单号" v-model="keyword"></el-input>
+          <el-button type="primary" @click="handleQuery">搜索</el-button>
         </div>
       </div>
 
       <div class="search-filter">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
           <el-form-item label="测试项目" prop="phone">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择测试项目">
+            <el-select v-model="queryParams.title" placeholder="请选择测试项目">
               <el-option
                   v-for="item in payList"
                   :key="item.value"
@@ -98,7 +123,9 @@ export default {
                 type="datetimerange"
                 range-separator="至"
                 start-placeholder="开始日期"
-                end-placeholder="结束日期">
+                end-placeholder="结束日期"
+                value-format="yyyy-MM-dd"
+            >
             </el-date-picker>
           </el-form-item>
           <el-form-item>
@@ -143,7 +170,7 @@ export default {
       <div v-if="count" class="pagination-box"
            style="margin-top: 40px; text-align: center;">
         <el-pagination background layout="total, prev, pager, next" @current-change="setView"
-                       :current-page.sync="pagination.page" :page-size="pagination.pageNum"
+                       :current-page.sync="pagination.page" :page-size="pagination.limit"
                        :total="count"></el-pagination>
       </div>
     </div>
@@ -212,12 +239,12 @@ export default {
         border: none;
       }
 
-      /deep/ .el-input-group__append {
-        cursor: pointer;
+      /deep/ .el-button--primary {
         background: #00479D;
         color: #fff;
+        border-color: #00479D;
         border-radius: 0;
-        border: none;
+        height: 42px;
       }
     }
   }

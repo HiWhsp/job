@@ -5,11 +5,11 @@ export default {
     return {
       tabIndex: 1,
       queryParams: {}, // 查询参数
-      list_order: [{}], // 订单
+      list_order: [], // 订单
       payList: [], // 测试项目
       isRePay: [
         {
-          value: '',
+          value: '0',
           label: "全部"
         }, {
           value: 1,
@@ -21,49 +21,130 @@ export default {
           value: 3,
           label: "待上传结果"
         }, {
-          value: 1,
+          value: 4,
           label: "待审核结果"
         }, {
-          value: 1,
+          value: 5,
           label: "已完成"
         }, {
-          value: 1,
+          value: 6,
           label: "复测"
         }, {
-          value: 1,
+          value: 7,
           label: "待结算"
         }, {
-          value: 1,
+          value: 8,
           label: "样品回收"
         }, {
-          value: 1,
+          value: 9,
           label: "差评/异议"
         }, {
-          value: 1,
+          value: 10,
           label: "超期/即将超期"
         }
       ], // 订单状态
-      count: 1,
+      // isRePay: [
+      //   {
+      //     value: '',
+      //     label: "全部"
+      //   }, {
+      //     value: 10,
+      //     label: "待支付"
+      //   }, {
+      //     value: 20,
+      //     label: "待实验"
+      //   }, {
+      //     value: 30,
+      //     label: "实验中"
+      //   }, {
+      //     value: 40,
+      //     label: "已完成"
+      //   }, {
+      //     value: 50,
+      //     label: "售后"
+      //   }
+      // ], // 订单状态
+      keyword: '',
+      count: 0,
       pagination: {
         page: 1,
-        pageNum: 10
-      },
-      realRules: {
-        name: [
-          {required: true, message: '请输入活动名称', trigger: 'blur'},
-        ]
+        limit: 10
+      }
+    }
+  },
+  mounted() {
+    this.setView();
+  },
+  computed: {
+    // 订单状态
+    getStatus() {
+      return function (status) {
+        switch (status) {
+          case 10:
+            return '待支付';
+          case 20:
+            return '待实验';
+          case 30:
+            return '实验中';
+          case 40:
+            return '已完成';
+          case 50:
+            return '售后';
+        }
+      }
+    },
+    // 样品状态 1待寄送 2待接收 3 已接收 4待回收
+    getYpStatus() {
+      return function (status) {
+        switch (status) {
+          case 1:
+            return '待寄送';
+          case 2:
+            return '待接收';
+          case 3:
+            return '已接收';
+          case 4:
+            return '待回收';
+        }
       }
     }
   },
   methods: {
     setView() {
-
+      this.$api({
+        url: 'store/order_list',
+        method: 'post',
+        data: {
+          keyword: this.keyword,
+          status: this.queryParams.status || 0,
+          start_time: this.queryParams.start_time,
+          end_time: this.queryParams.end_time,
+          orderId: this.queryParams.orderId,
+          title: this.queryParams.title,
+          ...this.pagination,
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.list_order = res.data;
+          this.count = res.count;
+        }
+      })
     },
     handleQuery() {
-
+      this.pagination.page = 1
+      if (this.queryParams.date) {
+        this.queryParams.start_time = this.queryParams.date[0]
+        this.queryParams.end_time = this.queryParams.date[1]
+      } else {
+        this.queryParams.start_time = ''
+        this.queryParams.end_time = ''
+      }
+      this.setView()
     },
     resetQuery() {
-
+      this.pagination.page = 1
+      this.queryParams = {}
+      this.setView()
     },
     goUrl(url) {
       this.$router.push(url);
@@ -81,10 +162,9 @@ export default {
             全部订单
           </div>
         </div>
-        <div class="search">
-          <el-input placeholder="请输入仪器名/订单号">
-            <template slot="append">搜索</template>
-          </el-input>
+        <div class="search flex">
+          <el-input placeholder="请输入仪器名/订单号" v-model="keyword"></el-input>
+          <el-button type="primary" @click="handleQuery">搜索</el-button>
         </div>
       </div>
 
@@ -92,23 +172,28 @@ export default {
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
           <el-form-item label="订单编号" prop="orderSn">
             <el-input
-                v-model="queryParams.orderSn"
+                v-model="queryParams.orderId"
                 placeholder="请输入订单号"
                 clearable
             />
           </el-form-item>
           <el-form-item label="测试项目" prop="phone">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择测试项目">
-              <el-option
-                  v-for="item in payList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
+            <el-input
+                v-model="queryParams.title"
+                placeholder="请输入测试项目"
+                clearable
+            />
+            <!--            <el-select v-model="queryParams.title" placeholder="请选择测试项目">-->
+            <!--              <el-option-->
+            <!--                  v-for="item in payList"-->
+            <!--                  :key="item.value"-->
+            <!--                  :label="item.label"-->
+            <!--                  :value="item.value">-->
+            <!--              </el-option>-->
+            <!--            </el-select>-->
           </el-form-item>
-          <el-form-item label="订单状态" prop="goodsName">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择订单状态">
+          <el-form-item label="订单状态" prop="status">
+            <el-select v-model="queryParams.status" placeholder="请选择订单状态">
               <el-option
                   v-for="item in isRePay"
                   :key="item.value"
@@ -123,7 +208,9 @@ export default {
                 type="datetimerange"
                 range-separator="至"
                 start-placeholder="开始日期"
-                end-placeholder="结束日期">
+                end-placeholder="结束日期"
+                value-format="yyyy-MM-dd"
+            >
             </el-date-picker>
           </el-form-item>
           <el-form-item>
@@ -135,17 +222,42 @@ export default {
 
       <div class="order-box">
         <el-table :data="list_order" style="width: 100%">
-          <el-table-column prop="date" label="订单号"></el-table-column>
-          <el-table-column prop="date" label="项目名称"></el-table-column>
+          <el-table-column prop="orderId" label="订单号"></el-table-column>
+          <el-table-column prop="title" label="项目名称">
+            <template slot-scope="scope">
+              <p>{{ scope.row.order.title }}</p>
+            </template>
+          </el-table-column>
           <el-table-column prop="date" label="仪器型号"></el-table-column>
-          <el-table-column prop="date" label="金额"></el-table-column>
-          <el-table-column prop="date" label="样品数"></el-table-column>
-          <el-table-column prop="date" label="对接人"></el-table-column>
-          <el-table-column prop="date" label="回收"></el-table-column>
-          <el-table-column prop="date" label="订单状态"></el-table-column>
-          <el-table-column prop="date" label="样品状态"></el-table-column>
-          <el-table-column prop="date" label="寄样时间"></el-table-column>
-          <el-table-column prop="date" label="完成时间"></el-table-column>
+          <el-table-column prop="price" label="金额">
+            <template slot-scope="scope">
+              <p>{{ scope.row.order.price }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="price" label="样品数">
+            <template slot-scope="scope">
+              <p>{{ scope.row.order.price }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="contact_user" label="对接人"></el-table-column>
+          <el-table-column prop="if_recover" label="回收">
+            <template slot-scope="scope">
+              <p v-if="scope.row.if_recover == 1">是</p>
+              <p v-else>否</p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="date" label="订单状态">
+            <template slot-scope="scope">
+              <p>{{ getStatus(scope.row.status) }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="yp_status" label="样品状态">
+            <template slot-scope="scope">
+              <p>{{ getYpStatus(scope.row.yp_status) }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="created_at" label="寄样时间"></el-table-column>
+          <el-table-column prop="updated_at" label="完成时间"></el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
               <el-button size="mini" @click="goUrl('/supplier-order-detail')">查看</el-button>
@@ -156,7 +268,7 @@ export default {
       <div v-if="count" class="pagination-box"
            style="margin-top: 40px; text-align: center;">
         <el-pagination background layout="total, prev, pager, next" @current-change="setView"
-                       :current-page.sync="pagination.page" :page-size="pagination.pageNum"
+                       :current-page.sync="pagination.page" :page-size.sync="pagination.limit"
                        :total="count"></el-pagination>
       </div>
     </div>
@@ -225,12 +337,12 @@ export default {
         border: none;
       }
 
-      /deep/ .el-input-group__append {
-        cursor: pointer;
+      /deep/ .el-button--primary {
         background: #00479D;
         color: #fff;
+        border-color: #00479D;
         border-radius: 0;
-        border: none;
+        height: 42px;
       }
     }
   }

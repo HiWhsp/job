@@ -15,7 +15,8 @@
           </div>
           <div class="item">
             <span class="text">详细地址</span>
-            <span class="info"><el-input clearable type="text" v-model="form.realName"/></span>
+            <span class="info"><el-input clearable type="text" v-model="form.address"
+                                         placeholder="请输入详细地址"/></span>
           </div>
         </div>
       </div>
@@ -38,8 +39,6 @@
 
     <phone_bind_old_check_modal ref="phone_bind_old_check_modal" data-title="校验" @confirm="confirm_old_pass"/>
     <phone_bind_new_set_modal ref="phone_bind_new_set_modal" data-title="绑定" @confirm="confirm_new"/>
-
-
   </div>
 </template>
 
@@ -51,7 +50,7 @@ import phone_bind_new_set_modal from "@/components/account/phone_bind_new_set_mo
 import area_select from "@/components/address/area_select.vue";
 
 export default {
-  name: "address",
+  name: "index",
   components: {
     area_select,
     phone_bind_old_check_modal,
@@ -61,36 +60,24 @@ export default {
     return {
       UPLOAD_ACTION,
       UPLOAD_NAME,
-
-      my_info: {},
       form: {
-        image: '',
-        realName: "",
-        nickname: "",
-        email: "",
         province: '',
         city: '',
-        areaId: '',
-        provinceCode: '',
-        cityCode: '',
-        areaCode: '',
+        dist: '',
+        address: '',
       },
+      my_info: {},
       loading: false,
     };
   },
-  watch: {},
-  created() {
+  mounted() {
     this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
     this.setView();
   },
   methods: {
     throttle_do_submit() {
-
     },
 
-    open_phone_update() {
-      this.$refs.phone_bind_old_check_modal.init();
-    },
     confirm_old_pass() {
       this.$refs.phone_bind_new_set_modal.init();
     },
@@ -102,38 +89,43 @@ export default {
       this.query_user();
     },
     query_user() {
-
+      this.$api({
+        url: 'store/info',
+        method: 'post',
+      }).then((res) => {
+        if (res.code == 200) {
+          let data = res.data;
+          this.form = {
+            province: data.province,
+            city: data.city,
+            dist: data.dist,
+            address: data.address
+          };
+          this.$refs.area_select.init({
+            province: data.province,
+            city: data.city,
+            dist: data.dist
+          });
+        }
+      })
     },
 
     do_submit() {
-
-      if (!this.form.realName) {
-        alertErr("请填写真实姓名");
-        return;
-      }
-
-      if (!this.form.areaId) {
+      if (!this.form.dist) {
         alertErr("请填写所在地区");
-        return;
-      }
-
-      if (!this.form.email) {
-        alertErr("请填写邮箱");
         return;
       }
       this.loading = true;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'store/edit',
+        method: 'post',
         data: {
-          action: 'users_editInfo',
+          action: '3',
           ...this.form
         },
       }).then((res) => {
         let {code, msg, data} = res;
-        alert(res).then(() => {
-          this.loading = false;
-        });
+        this.loading = false;
         if (code == 200) {
           this.setView();
         }
@@ -142,45 +134,19 @@ export default {
 
     do_reset() {
       this.form = {
-        image: this.my_info.image,
-        realName: "",
-        nickName: "",
-        email: "",
         province: '',
         city: '',
-        areaId: '',
-        provinceCode: '',
-        cityCode: '',
-        areaCode: '',
+        dist: '',
+        address: '',
       };
-    },
-
-
-    //上传相关
-    upload_on_success(res, file) {
-      //console.log("上传结果", res);
-      let {code, data, msg} = res;
-      alert(res);
-      if (code == 200) {
-        this.form.image = res.data;
-      }
-    },
-    upload_before_upload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
-      return isLt2M;
     },
 
     changeSelectAddress(data) {
       this.$log("更新省市区数据", data);
       let {sheng, shi, qu} = data;
-      this.form.province = sheng.id;
-      this.form.city = shi.id;
-      this.form.areaId = qu.id;
-
-      this.form.provinceCode = sheng.id;
-      this.form.cityCode = shi.id;
-      this.form.areaCode = qu.id;
-      // debugger
+      this.form.province = sheng.name;
+      this.form.city = shi.name;
+      this.form.dist = qu.name;
     },
   },
 };
@@ -250,7 +216,8 @@ export default {
     }
 
     .upload-box {
-      align-items: start!important;
+      align-items: start !important;
+
       img {
         width: 100px;
         height: 150px;
@@ -332,6 +299,7 @@ export default {
     color: @theme;
 
   }
+
   .back {
     margin-left: 10px;
     background-color: @theme;

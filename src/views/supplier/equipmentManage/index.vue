@@ -123,7 +123,7 @@ export default {
     // 新增/修改设备
     settlementDialogOpen(row) {
       this.settlementDialogVisible = true;
-      this.settlementRruleForm = {...row};
+      this.settlementRruleForm = {...row}; 
     },
 
     // 结算提交
