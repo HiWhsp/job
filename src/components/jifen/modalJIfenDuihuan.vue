@@ -1,49 +1,49 @@
 <template>
-    <div class="modal-container">
-        <el-dialog
-                class="modal-duihuan"
-                title="积分兑换"
-                width="580px"
-                custom-class="modal-wrap"
-                :close-on-click-modal="true"
-                :visible.sync="showModal"
-                :before-close="onModal_close"
-        >
-            <div class="modal-inner">
-                <div class="img-box">
-                    <img :src="detail.images ? detail.images[0] : ''" alt=""/>
-                </div>
+  <div class="modal-container">
+    <el-dialog
+        class="modal-duihuan"
+        title="积分兑换"
+        width="580px"
+        custom-class="modal-wrap"
+        :close-on-click-modal="true"
+        :visible.sync="showModal"
+        :before-close="onModal_close"
+    >
+      <div class="modal-inner">
+        <div class="img-box">
+          <img :src="detail.thumb" alt=""/>
+        </div>
 
-                <div class="section-ctx">
-                    <div class="address-list p-l-30">
-                        <div class="address-item" v-for="(item, index) in list_address" :key="index"
-                             :class="{ active: item.id == address_selected.id }" @click="do_toggle_address(item)">
-                            <div class="address-top">{{ item.name_phone }}</div>
-                            <div class="address-bottom">
-                                {{ item.full_addr }}
-                            </div>
-                            <img src="@/static/order/addr-select.png" alt="" class="marker"/>
-                        </div>
-                        <div v-if="list_address.length == 0" class="empty-dev">还没有收件地址</div>
-                    </div>
-                    <!--                    <div class="btn-box p-l-30">-->
-                    <!--                        <button class="btn-ripple" @click="open_addr_add()">+ 新增地址</button>-->
-                    <!--                    </div>-->
-                </div>
-                <!-- <div class="tip">请您输入要兑换的积分商品数量。</div> -->
-                <div class="form-box">
-                    <div class="input-box">
-                        <span class="label">兑换数量</span>
-                        <input type="text" placeholder="" v-model="number"/>
-                    </div>
-                </div>
+        <div class="section-ctx">
+          <div class="address-list p-l-30">
+            <div class="address-item" v-for="(item, index) in list_address" :key="index"
+                 :class="{ active: item.id == address_selected.id }" @click="do_toggle_address(item)">
+              <div class="address-top">{{ item.name_phone }}</div>
+              <div class="address-bottom">
+                {{ item.full_addr }}
+              </div>
+              <img src="@/assets/img/base/appointment/address-select.png" alt="" class="marker"/>
             </div>
-            <span slot="footer" class="dialog-footer">
+            <div v-if="list_address.length == 0" class="empty-dev">还没有收件地址</div>
+          </div>
+          <!--                    <div class="btn-box p-l-30">-->
+          <!--                        <button class="btn-ripple" @click="open_addr_add()">+ 新增地址</button>-->
+          <!--                    </div>-->
+        </div>
+        <!-- <div class="tip">请您输入要兑换的积分商品数量。</div> -->
+        <div class="form-box">
+          <div class="input-box">
+            <span class="label">兑换数量</span>
+            <input type="text" placeholder="" v-model="number"/>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
         <button class="btn-ripple quxiao" @click="showModal = false">取消</button>
         <button class="btn-ripple queding" @click="confirm_duihuan">确认</button>
       </span>
-        </el-dialog>
-    </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -51,114 +51,134 @@ import {mapState} from "vuex";
 import {SHOP_TYPE} from "@/config/env";
 
 export default {
-    name: "commonShare",
-    components: {},
-    props: ["curr"],
-    data() {
-        return {
-            showModal: false,
-            // showModal: true,
-            number: 1,
-            detail: {},
-            address_selected: {},
-            list_address: []
-        };
+  name: "commonShare",
+  components: {},
+  props: ["curr"],
+  data() {
+    return {
+      showModal: false,
+      // showModal: true,
+      number: 1,
+      detail: {},
+      address_selected: {},
+      list_address: []
+    };
+  },
+  computed: {
+    ...mapState(["baseInfo"]),
+  },
+  watch: {
+    showModal(val) {
+      if (!val) {
+        this.number = 1;
+        this.detail = {};
+      }
     },
-    computed: {
-        ...mapState(["baseInfo"]),
+  },
+
+  beforeDestroy() {
+    clearInterval(this.timer);
+    this.timer = null;
+  },
+
+  methods: {
+    init(data) {
+      this.detail = data;
+      this.showModal = true;
+      this.query_address();
     },
-    watch: {
-        showModal(val) {
-            if (!val) {
-                this.number = 1;
-                this.detail = {};
+    //获取地址列表
+    query_address() {
+      this.$api({
+        url: 'address_list',
+        method: 'post',
+        data: {
+          page: 1,
+          limit: 20
+        },
+      }).then(res => {
+        if (res.code == 200) {
+          let data = res.data
+          data.forEach((v) => {
+            if (SHOP_TYPE == 'foreign') {//海外商城
+              v.full_addr = [v.country, v.province, v.city, v.area, v.address].filter(v => !!v).join(',');
+              v.name_phone = `${v.firstName} ${v.lastName} (${v.phone})`
+            } else {
+              v.full_addr = [v.country, v.province, v.city, v.area, v.address].filter(v => !!v).join(',');
+              v.name_phone = `${v.receive_name} (${v.receive_phone})`
             }
-        },
+          });
+          this.list_address = data;
+
+          let obj = data.find((v) => v.moren) || {};
+          this.address_selected = obj || {};
+        }
+      })
     },
-
-    beforeDestroy() {
-        clearInterval(this.timer);
-        this.timer = null;
+    //选择收货地址
+    do_toggle_address(item) {
+      this.address_selected = item;
     },
+    onModal_close() {
+      this.showModal = false;
+    },
+    //确认兑换
+    confirm_duihuan() {
+      if (!this.number) {
+        alertErr("请输入要兑换的积分商品数量");
+        return;
+      }
+      if (!this.address_selected.id) {
+        alertErr("请选择收货地址");
+        return;
+      }
 
-    methods: {
-        init(data) {
-            this.detail = data;
-            this.showModal = true;
-            this.query_address();
-        },
-        //获取地址列表
-        query_address() {
-            this.$api({
-                url: '/service.php',
-                method: 'get',
-                data: {
-                    action: 'userAddress_lists',
-                    page: 1,
-                    pagenum: 20
-                },
-            }).then(res => {
-                if (res.code == 200) {
-                    let data = res.data
-                    data.forEach((v) => {
-                        if (SHOP_TYPE == 'foreign') {//海外商城
-                            v.full_addr = [v.country, v.province, v.city, v.area, v.address].filter(v => !!v).join(',');
-                            v.name_phone = `${v.firstName} ${v.lastName} (${v.phone})`
-                        } else {
-                            v.full_addr = [v.country, v.province, v.city, v.area, v.address].filter(v => !!v).join(',');
-                            v.name_phone = `${v.name} (${v.phone})`
-                        }
-                    });
-                    this.list_address = data;
+      var payment_products =
+          {
+            num: this.number, //数量
+            id: this.detail.id,
+            addressId: this.address_selected.id,
+          };
 
-                    let obj = data.find((v) => v.moren) || {};
-                    this.address_selected = obj || {};
-                }
-            })
-        },
-        //选择收货地址
-        do_toggle_address(item) {
-            this.address_selected = item;
-        },
-        onModal_close() {
-            this.showModal = false;
-        },
-        //确认兑换
-        confirm_duihuan() {
-            if (!this.number) {
-                alertErr("请输入要兑换的积分商品数量");
-                return;
+      this.$api({
+        url: 'point_order_create',
+        method: 'post',
+        data: {
+          ...payment_products
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          // this.showModal = false;
+          // this.$message.success('兑换成功');
+          this.$api({
+            url: 'point_order_confirm',
+            method: 'post',
+            data: {
+              ...payment_products
             }
-            if (!this.address_selected.id) {
-                alertErr("请选择收货地址");
-                return;
+          }).then(res => {
+            if (res.code == 200) {
+              this.showModal = false;
+              this.$message.success('兑换成功');
             }
+          })
+        }
+      })
 
-            var item = {...this.detail};
+      // this.$api("jiFen_order", {
+      //   ...payment_products,
+      // }).then((res) => {
+      //   let {code, data, pages, msg} = res;
+      //   if (code == 200) {
+      //     this.showModal = false;
+      //     this.$message.success('兑换成功');
+      //   } else {
+      //     this.$message.error(msg);
+      //   }
+      // });
 
-            let {image, inventoryId, jifen, key_vals, title} = item;
-
-            var payment_products =
-                {
-                    num: this.number, //数量
-                    inventoryId,
-                    addressId: this.address_selected.id,
-                };
-
-            this.$api("jiFen_order", {
-                ...payment_products,
-            }).then((res) => {
-                let {code, data, pages, msg} = res;
-                if (code == 200) {
-                    this.showModal = false;
-                    this.$message.success('兑换成功');
-                } else {
-                    this.$message.error(msg);
-                }
-            });
-
-        },
     },
+  },
 };
 </script>
 
@@ -417,5 +437,3 @@ export default {
   }
 }
 </style>
-
-<style scoped lang="less" src="@/assets/h5css/modals/modalJIfenDuihuan.less"></style>

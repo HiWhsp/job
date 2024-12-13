@@ -5,7 +5,7 @@
       <div class="left">我的积分</div>
       <div class="money">
         <img src="@/assets/img/my/order/point.png" alt="">
-        <span>1000.00</span>
+        <span>{{ baseInfo.points }}</span>
       </div>
       <div class="flex">
         <div class="btn" style="margin-left: 20px;" @click="goUrl({url: '/repayment'})">下单得积分</div>
@@ -21,7 +21,7 @@
           {{ item.point_sale }}积分
         </div>
         <div class="title">{{ item.title }}</div>
-        <div class="btn" @click="goUrl({url: '/orderPay'})">立即兑换</div>
+        <div class="btn" @click="payNow(item)">立即兑换</div>
       </div>
     </div>
     <div class="pagination-box" v-if="count">
@@ -36,14 +36,18 @@
       </el-pagination>
     </div>
     <el-empty v-else description="暂无记录..."></el-empty>
+
+    <modalJIfenDuihuan ref="modalJIfenDuihuan"></modalJIfenDuihuan>
   </div>
 </template>
 <script>
 
 import {mapState} from "vuex";
+import modalJIfenDuihuan from "@/components/jifen/modalJIfenDuihuan.vue";
 
 export default {
   name: "index",
+  components: {modalJIfenDuihuan},
   data() {
     return {
       list_jilu: [],
@@ -86,6 +90,9 @@ export default {
     },
     goUrl(item) {
       this.$router.push(item.url);
+    },
+    payNow(item) {
+      this.$refs.modalJIfenDuihuan.init(item);
     }
   },
 };
