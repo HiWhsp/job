@@ -13,29 +13,29 @@
           <div class="address-item" v-for="(item, index) in list_address" :key="index">
             <div class="top">
               <div>
-                <span>收货人：</span>
-                {{ item.name }}
+                <span>结算方式：</span>
+                {{ item.type == 1 ? '对公' : '个人' }}
               </div>
               <div>
-                <span>所在地区：</span>
-                {{ item.full_addr }}
+                <span>开户行：</span>
+                {{ item.bank_title }}
               </div>
               <div>
-                <span>详细地址：</span>
-                {{ item.address }}
+                <span>账号：</span>
+                {{ item.bank_no }}
               </div>
               <div>
-                <span>手机号码：</span>
-                {{ item.phone }}
+                <span>户名：</span>
+                {{ item.bank_name }}
               </div>
             </div>
             <div class="bottom">
               <div class="left">
-                <span v-if="item.moren == 1" class="moren">默认结算账户</span>
+                <span v-if="item.is_default == 1" class="moren">默认结算账户</span>
               </div>
               <div class="right">
-                <span class="action" v-if="item.moren != 1"
-                      @click="do_address_set_default(item.id)">设置为默认结算账户</span>
+                <span class="action" v-if="item.is_default != 1"
+                      @click="do_address_set_default(item)">设置为默认结算账户</span>
                 <span class="action" @click="do_address_edit(item)">编辑</span>
                 <span class="action" @click="do_address_delete(item.id)">删除</span>
               </div>
@@ -46,30 +46,31 @@
         <el-empty v-if="!list_address.length" description="尚未添加结算账户"></el-empty>
       </div>
     </div>
+
     <!--    新增/修改设备-->
-    <el-dialog title="新增设备" :visible.sync="addDialogVisible" width="900px" center>
+    <el-dialog title="新增设备" :visible.sync="addDialogVisible" width="900px" center @close="addDialogClose">
       <div class="settlement-box">
         <el-form :model="addRuleForm" :rules="addRules" ref="ruleForm" label-width="100px">
-          <el-form-item label="结算方式：" prop="name">
-            <el-select v-model="addRuleForm.region" placeholder="请选择结算方式（对公户/个人银行卡）">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+          <el-form-item label="结算方式：" prop="type">
+            <el-select v-model="addRuleForm.type" placeholder="请选择结算方式（对公户/个人银行卡）">
+              <el-option label="对公" :value="1"></el-option>
+              <el-option label="个人" :value="2"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="开户行：" prop="name">
-            <el-input v-model="addRuleForm.name" placeholder="请填入开户行"></el-input>
+          <el-form-item label="开户行：" prop="bank_title">
+            <el-input v-model="addRuleForm.bank_title" placeholder="请填入开户行"></el-input>
           </el-form-item>
-          <el-form-item label="账号：" prop="region">
-            <el-input v-model="addRuleForm.name" placeholder="请填入账号"></el-input>
+          <el-form-item label="账号：" prop="bank_no">
+            <el-input v-model="addRuleForm.bank_no" placeholder="请填入账号"></el-input>
           </el-form-item>
-          <el-form-item label="户名：" prop="region">
-            <el-input v-model="addRuleForm.name" placeholder="请填入户名"></el-input>
+          <el-form-item label="户名：" prop="bank_name">
+            <el-input v-model="addRuleForm.bank_name" placeholder="请填入户名"></el-input>
           </el-form-item>
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="addDialogVisible = false">确定</el-button>
+        <el-button type="primary" @click="addDialogVisibleSubmit">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -85,12 +86,25 @@ export default {
     return {
       pagination: {
         page: 1,
-        pageNum: 100,
+        limit: 100,
       },
       addDialogVisible: false,
-      list_address: [1],
+      list_address: [],
       addRuleForm: {},
-      addRules: {}
+      addRules: {
+        type: [
+          {required: true, message: '请选择结算方式（对公户/个人银行卡）', trigger: 'change'}
+        ],
+        bank_title: [
+          {required: true, message: '请填入开户行', trigger: 'blur'}
+        ],
+        bank_no: [
+          {required: true, message: '请填入账号', trigger: 'blur'}
+        ],
+        bank_name: [
+          {required: true, message: '请填入户名', trigger: 'blur'}
+        ],
+      }
     };
   },
   computed: {
@@ -102,10 +116,9 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'store/bank_list',
+        method: 'post',
         data: {
-          action: 'userAddress_lists',
           ...this.pagination,
         },
       }).then(res => {
@@ -114,18 +127,11 @@ export default {
 
           data.forEach((v) => {
             v.full_addr = [v.country, v.province, v.city, v.area].filter(v => !!v).join('-');
-            // v.selected =  v.if_default
           });
 
           this.list_address = data;
 
           let obj = data.find((v) => v.if_default) || {};
-          this.select_address = obj || {};
-
-          this.$store.commit("set_vuex_data", {
-            key: "default_address",
-            val: obj,
-          });
         }
       })
 
@@ -134,33 +140,61 @@ export default {
       this.addDialogVisible = true
     },
     do_address_edit(item) {
+      this.addRuleForm = {...item};
       this.addDialogVisible = true
+    },
+
+    addDialogVisibleSubmit() {
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.$api({
+            url: 'store/edit_bank',
+            method: 'post',
+            data: {
+              ...this.addRuleForm,
+            },
+          }).then((res) => {
+            if (res.code == 200) {
+              alertSucc(res.msg)
+              this.addDialogVisible = false;
+              this.setView();
+            }
+          });
+        }
+      });
+    },
+    addDialogClose() {
+      this.addRuleForm = {};
     },
     do_address_delete(id) {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'store/delete_bank',
+        method: 'post',
         data: {
-          action: 'userAddress_delete',
           id: id,
         },
       }).then((res) => {
         if (res.code == 200) {
+          alertSucc(res.msg)
           this.setView();
         }
       });
     },
     //设置默认地址
-    do_address_set_default(id) {
+    do_address_set_default(row) {
+      const params = {
+        ...row
+      }
+      params.is_default = 1;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'store/edit_bank',
+        method: 'post',
         data: {
-          action: 'userAddress_setDefault',
-          id: id,
+          ...params
         },
       }).then((res) => {
         if (res.code == 200) {
+          alertSucc(res.msg)
           this.setView();
         }
       });

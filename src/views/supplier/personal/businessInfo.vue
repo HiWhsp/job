@@ -10,12 +10,12 @@
             <span class="text">营业执照</span>
             <span class="info">
               <div class="upload-box">
-                <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="img"
-                           action="https://wuhanjingmi.new.zhishangez.com//service.php?action=index_ossUpload"
+                <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="file"
+                           action="https://jxjsjc.dx.hdapp.com.cn/api/store/upload"
                            :data="mix_upload_data" :on-success="upload_on_success"
                            :before-upload="upload_before_upload">
-                  <img v-if="form.image" :src="form.image" class="user-avatar"/>
-                  <img v-else src="@/assets/img/my/avatar.png" class="user-avatar"/>
+                  <img v-if="form.bus_pic" :src="form.bus_pic" class="user-avatar"/>
+                  <img v-else src="@/assets/img/supplier/avatar.png" class="user-avatar"/>
                 </el-upload>
               </div>
             </span>
@@ -23,21 +23,22 @@
           <div class="item">
             <span class="text">公司名称</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.realName"/>
+              <el-input clearable type="text" v-model="form.company_name" placeholder="请输入公司名称"/>
             </span>
           </div>
 
           <div class="item">
             <span class="text">注册资金</span>
-            <span class="info"><el-input clearable type="text" v-model="form.realName"/></span>
+            <span class="info"><el-input clearable type="text" v-model="form.bus_capital" placeholder="请输入注册资金"/></span>
           </div>
           <div class="item">
             <span class="text">法人</span>
-            <span class="info"><el-input clearable type="text" v-model="form.realName"/></span>
+            <span class="info"><el-input clearable type="text" v-model="form.bus_legal"
+                                         placeholder="请输入法人"/></span>
           </div>
           <div class="item">
             <span class="text">纳税人识别号</span>
-            <span class="info"><el-input clearable type="text" v-model="form.realName"/></span>
+            <span class="info"><el-input clearable type="text" v-model="form.bus_no" placeholder="请输入纳税人识别号"/></span>
           </div>
         </div>
       </div>
@@ -57,28 +58,14 @@
         </div>
       </div>
     </div>
-
-    <phone_bind_old_check_modal ref="phone_bind_old_check_modal" data-title="校验" @confirm="confirm_old_pass"/>
-    <phone_bind_new_set_modal ref="phone_bind_new_set_modal" data-title="绑定" @confirm="confirm_new"/>
-
-
   </div>
 </template>
 
 <script>
 import {UPLOAD_ACTION, UPLOAD_NAME} from '@/config/env.js'
 
-import phone_bind_old_check_modal from "@/components/account/phone_bind_old_check_modal.vue";
-import phone_bind_new_set_modal from "@/components/account/phone_bind_new_set_modal.vue";
-import area_select from "@/components/address/area_select.vue";
-
 export default {
   name: "businessInfo",
-  components: {
-    area_select,
-    phone_bind_old_check_modal,
-    phone_bind_new_set_modal,
-  },
   data() {
     return {
       UPLOAD_ACTION,
@@ -86,22 +73,16 @@ export default {
 
       my_info: {},
       form: {
-        image: '',
-        realName: "",
-        nickname: "",
-        email: "",
-        province: '',
-        city: '',
-        areaId: '',
-        provinceCode: '',
-        cityCode: '',
-        areaCode: '',
+        bus_pic: '',
+        company_name: '',
+        bus_capital: '',
+        bus_legal: '',
+        bus_no: ''
       },
       loading: false,
     };
   },
-  watch: {},
-  created() {
+  mounted() {
     this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
     this.setView();
   },
@@ -110,45 +91,58 @@ export default {
 
     },
 
-    open_phone_update() {
-      this.$refs.phone_bind_old_check_modal.init();
-    },
-    confirm_old_pass() {
-      this.$refs.phone_bind_new_set_modal.init();
-    },
-    confirm_new() {
-      this.query_user()
-    },
-
     setView() {
       this.query_user();
     },
     query_user() {
-
+      this.$api({
+        url: 'store/info',
+        method: 'post',
+      }).then(res => {
+        if (res.code == 200) {
+          let data = res.data;
+          this.form = {
+            bus_pic: data.bus_pic,
+            company_name: data.company_name,
+            bus_capital: data.bus_capital,
+            bus_legal: data.bus_legal,
+            bus_no: data.bus_no
+          }
+          this.$store.commit("set_baseInfo", res.data);
+        }
+      })
     },
 
     do_submit() {
 
-      if (!this.form.realName) {
-        alertErr("请填写真实姓名");
+      if (!this.form.bus_pic) {
+        alertErr("请上传营业执照");
+        return;
+      }
+      if (!this.form.company_name) {
+        alertErr("请输入公司名称");
+        return;
+      }
+      if (!this.form.bus_capital) {
+        alertErr("请输入注册资金");
+        return;
+      }
+      if (!this.form.bus_legal) {
+        alertErr("请输入法人");
+        return;
+      }
+      if (!this.form.bus_no) {
+        alertErr("请输入纳税人识别号");
         return;
       }
 
-      if (!this.form.areaId) {
-        alertErr("请填写所在地区");
-        return;
-      }
 
-      if (!this.form.email) {
-        alertErr("请填写邮箱");
-        return;
-      }
       this.loading = true;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'store/edit',
+        method: 'post',
         data: {
-          action: 'users_editInfo',
+          action: '2',
           ...this.form
         },
       }).then((res) => {
@@ -184,26 +178,13 @@ export default {
       let {code, data, msg} = res;
       alert(res);
       if (code == 200) {
-        this.form.image = res.data;
+        this.form.bus_pic = res.data.url;
       }
     },
     upload_before_upload(file) {
       const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
       return isLt2M;
-    },
-
-    changeSelectAddress(data) {
-      this.$log("更新省市区数据", data);
-      let {sheng, shi, qu} = data;
-      this.form.province = sheng.id;
-      this.form.city = shi.id;
-      this.form.areaId = qu.id;
-
-      this.form.provinceCode = sheng.id;
-      this.form.cityCode = shi.id;
-      this.form.areaCode = qu.id;
-      // debugger
-    },
+    }
   },
 };
 </script>
@@ -272,7 +253,8 @@ export default {
     }
 
     .upload-box {
-      align-items: start!important;
+      align-items: start !important;
+
       img {
         width: 100px;
         height: 150px;
@@ -354,6 +336,7 @@ export default {
     color: @theme;
 
   }
+
   .back {
     margin-left: 10px;
     background-color: @theme;
