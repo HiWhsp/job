@@ -7,7 +7,11 @@ export default {
       tabIndex: 1, // 选中的标签
       address_selected: {}, // 选择的收货地址
       radioList: [], // 选中的单选框
-      list_address: [] // 收货地址
+      list_address: [], // 收货地址
+      pagination_address: {
+        page: 1,
+        limit: 10
+      },
     };
   },
   mounted() {
@@ -24,10 +28,9 @@ export default {
     //获取地址列表
     query_address() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'address_list',
+        method: 'post',
         data: {
-          action: 'userAddress_lists',
           ...this.pagination_address,
         },
       }).then(res => {
@@ -35,11 +38,11 @@ export default {
           let data = res.data
           data.forEach((v) => {
             v.full_addr = [v.country, v.province, v.city, v.area, v.address].filter(v => !!v).join('');
-            v.name_phone = `${v.name} ${v.phone}`
+            v.name_phone = `${v.receive_name} ${v.receive_phone}`
           });
           this.list_address = data;
 
-          let obj = data.find((v) => v.moren) || {};
+          let obj = data.find((v) => v.is_default) || {};
           this.address_selected = obj || {};
         }
       })
@@ -103,7 +106,7 @@ export default {
                    :class="{ active: item.id == address_selected.id }" @click="do_toggle_address(item)">
                 <div class="address-top">{{ item.name_phone }}</div>
                 <div class="address-bottom">
-                  <div class="more" v-if="item.moren">默认</div>
+                  <div class="more" v-if="item.is_default">默认</div>
                   <span>{{ item.full_addr }}</span>
                   <div class="updateAddr pointer">修改</div>
                 </div>

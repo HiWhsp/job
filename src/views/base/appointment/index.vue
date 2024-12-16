@@ -29,6 +29,7 @@ export default {
     }
   },
   mounted() {
+    this.preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
     // this.setView();
   },
   methods: {
@@ -47,10 +48,24 @@ export default {
       this.elementList.splice(this.elementList.indexOf(item), 1)
     },
     goUrl() {
+      localStorage.setItem('preOrderDetail', JSON.stringify(this.preOrderDetail));
       this.$router.push({
         path: '/appointment-info'
       })
-    }
+    },
+    //上传相关
+    upload_on_success(res, file) {
+      //console.log("上传结果", res);
+      let {code, data, msg} = res;
+      alert(res);
+      if (code == 200) {
+        this.form.image = res.data;
+      }
+    },
+    upload_before_upload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
+      return isLt2M;
+    },
   }
 }
 </script>
@@ -189,7 +204,7 @@ export default {
             <span>实验留言</span>
           </div>
           <div class="value">
-            <el-input type="textarea" :rows="4" placeholder="请输入"></el-input>
+            <el-input type="textarea" :rows="4" placeholder="请输入" v-model="preOrderDetail.message"></el-input>
           </div>
         </div>
         <div class="sel-item">
@@ -199,7 +214,10 @@ export default {
           <div class="value">
             <el-upload
                 class="upload-demo"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                name="file"
+                action="https://jxjsjc.dx.hdapp.com.cn/api/upload"
+                :data="mix_upload_data" :on-success="upload_on_success"
+                :before-upload="upload_before_upload"
                 multiple
                 :limit="3">
               <div class="upload-box">
@@ -275,6 +293,7 @@ export default {
 
   .content-item {
     margin-top: 20px;
+
     &:first-child {
       margin-top: 0;
     }
@@ -307,6 +326,7 @@ export default {
       color: #5D5D5D;
       font-size: 24px;
       transition: all 0.5s ease-in-out;
+
       &.hide {
         transform: rotate(180deg);
         transition: all 0.5s ease-in-out;
