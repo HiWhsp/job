@@ -7,14 +7,14 @@ export default {
       // 发票信息
       invoice_info: {
         invoiceStatus: 0, //是否开票 0-不需要 1-需要发票
-        invoiceType: '', //发票类型：1-普通发票 2-专用发票
-        titleType: '1', //抬头：1-个人 2-单位
-        title: '', // 公司名称
-        shibiema: '', // 识别码
-        companyAddress: '', // 注册地址
-        companyPhone: '', // 注册电话
-        bankName: '', // 开户银行
-        bankNo: '', // 银行账号
+        f_type: '', //发票类型：1-普通发票 2-专用发票
+        title_type: '1', //抬头：1-个人 2-单位
+        name: '', // 公司名称
+        company_no: '', // 识别码
+        reg_address: '', // 注册地址
+        reg_tel: '', // 注册电话
+        bank_name: '', // 开户银行
+        bank_no: '', // 银行账号
         email: '', // 电子邮箱
         orderId: '', // 关联订单
       },
@@ -27,7 +27,23 @@ export default {
       ],
     }
   },
+  mounted() {
+    this.setView();
+  },
   methods: {
+    setView() {
+      const preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
+      this.invoice_info.f_type = preOrderDetail.f_type || '';
+      this.invoice_info.title_type = preOrderDetail.title_type || '';
+      this.invoice_info.name = preOrderDetail.name || '';
+      this.invoice_info.company_no = preOrderDetail.company_no || '';
+      this.invoice_info.reg_address = preOrderDetail.reg_address || '';
+      this.invoice_info.reg_tel = preOrderDetail.reg_tel || '';
+      this.invoice_info.bank_name = preOrderDetail.bank_name || '';
+      this.invoice_info.bank_no = preOrderDetail.bank_no || '';
+      this.invoice_info.email = preOrderDetail.email || '';
+    },
+
     // 发票信息选择
     do_toggle_invoice(item) {
       if (item.value != 0) {
@@ -35,10 +51,11 @@ export default {
       } else {
         this.invoice_info.invoiceStatus = 0
       }
-      this.invoice_info.invoiceType = item.value;
+      this.invoice_info.f_type = item.value;
     },
 
-    goUrl () {
+    goUrl() {
+      localStorage.setItem('preOrderDetail', JSON.stringify({...this.preOrderDetail, ...this.invoice_info}));
       this.$router.push({
         path: '/appointment-pay'
       })
@@ -57,17 +74,21 @@ export default {
           <div class="info-item">
             <div class="info-label">是否开票</div>
             <div class="info-val">
-              <el-radio-group v-model="invoice_info.invoiceType" fill="#A66600">
-                <el-radio :label="item.value" v-for="(item, index) in invoiceTypeOption" :key="index">{{ item.title }}</el-radio>
+              <el-radio-group v-model="invoice_info.f_type" fill="#A66600">
+                <el-radio :label="item.value" v-for="(item, index) in invoiceTypeOption" :key="index"
+                          @change="do_toggle_invoice(item)">{{
+                    item.title
+                  }}
+                </el-radio>
               </el-radio-group>
             </div>
           </div>
         </div>
-        <div class="invoice-info" v-if="invoice_info.invoiceType === '1'">
+        <div class="invoice-info" v-if="invoice_info.f_type === '1'">
           <div class="info-item">
             <div class="info-label">发票抬头类型</div>
             <div class="info-val">
-              <el-radio-group v-model="invoice_info.titleType" fill="#A66600">
+              <el-radio-group v-model="invoice_info.title_type" fill="#A66600">
                 <el-radio label="1">个人</el-radio>
                 <el-radio label="2">企业</el-radio>
               </el-radio-group>
@@ -76,58 +97,58 @@ export default {
           <div class="info-item">
             <div class="info-label"><span>*</span> 发票抬头</div>
             <div class="info-val">
-              <el-input v-model="invoice_info.title"
+              <el-input v-model="invoice_info.name"
                         placeholder="请填写准确的抬头名称 必填"></el-input>
             </div>
           </div>
-          <div class="info-item" v-if="invoice_info.titleType === '2'">
+          <div class="info-item" v-if="invoice_info.title_type === '2'">
             <div class="info-label"><span>*</span> 纳税人识别号</div>
             <div class="info-val">
-              <el-input v-model="invoice_info.shibiema"
+              <el-input v-model="invoice_info.company_no"
                         placeholder="请填写准确的纳税人识别号 必填"></el-input>
             </div>
           </div>
         </div>
 
-        <div class="invoice-info" v-if="invoice_info.invoiceType === '2'">
+        <div class="invoice-info" v-if="invoice_info.f_type === '2'">
           <div class="info-item">
             <div class="info-label"><span>*</span> 发票抬头</div>
             <div class="info-val">
-              <el-input v-model="invoice_info.title"
+              <el-input v-model="invoice_info.name"
                         placeholder="请填写准确的抬头名称 必填"></el-input>
             </div>
           </div>
           <div class="info-item">
             <div class="info-label"><span>*</span> 纳税人识别号</div>
             <div class="info-val">
-              <el-input v-model="invoice_info.shibiema"
+              <el-input v-model="invoice_info.company_no"
                         placeholder="请填写准确的纳税人识别号 必填"></el-input>
             </div>
           </div>
           <div class="info-item">
             <div class="info-label"><span>*</span> 注册地址</div>
             <div class="info-val">
-              <el-input v-model="invoice_info.companyAddress"
+              <el-input v-model="invoice_info.reg_address"
                         placeholder="输入单位注册地址 必填"></el-input>
             </div>
           </div>
           <div class="info-item">
             <div class="info-label"><span>*</span> 注册电话</div>
             <div class="info-val">
-              <el-input v-model="invoice_info.companyPhone"
+              <el-input v-model="invoice_info.reg_tel"
                         placeholder="输入单位注册电话 必填"></el-input>
             </div>
           </div>
           <div class="info-item">
             <div class="info-label"><span>*</span> 开户银行</div>
             <div class="info-val">
-              <el-input v-model="invoice_info.bankName" placeholder="输入开户银行 必填"></el-input>
+              <el-input v-model="invoice_info.bank_name" placeholder="输入开户银行 必填"></el-input>
             </div>
           </div>
           <div class="info-item">
             <div class="info-label"><span>*</span> 账户银行</div>
             <div class="info-val">
-              <el-input v-model="invoice_info.bankNo" placeholder="输入银行账户 必填"></el-input>
+              <el-input v-model="invoice_info.bank_no" placeholder="输入银行账户 必填"></el-input>
             </div>
           </div>
         </div>
@@ -210,8 +231,10 @@ export default {
               color: #FF5F00;
             }
           }
+
           .info-val {
             margin-left: 100px;
+
             .el-input {
               width: 400px;
             }

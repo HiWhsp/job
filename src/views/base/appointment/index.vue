@@ -31,6 +31,7 @@ export default {
   mounted() {
     this.preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
     // this.setView();
+    this.preOrderDetail.product_id = this.$route.query.id
   },
   methods: {
     // 增加样品 防抖

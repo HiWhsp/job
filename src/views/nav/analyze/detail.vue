@@ -36,8 +36,12 @@ export default {
       })
     },
     // 立即预约
-    submit() {
-      this.dialogVisible = true
+    submit(temp) {
+      this.dialogVisible = temp;
+      if (!temp) {
+        localStorage.setItem('preOrderDetail', JSON.stringify({}));
+        this.$router.push('/appointment?id=' + this.id)
+      }
     },
     goUrl(item) {
       if (item) {
@@ -60,7 +64,7 @@ export default {
         <p><span>预约次数</span> <span>{{ detail.orders }}次</span></p>
         <p><span>服务周期</span> <span v-html="detail.period"></span></p>
         <p><span>好评率</span> <span>{{ detail.comments }}</span></p>
-        <div class="btn pointer" @click="submit" v-if="detail.if_yueyue == 1">立即预约</div>
+        <div class="btn pointer" @click="submit(true)" v-if="detail.if_yueyue == 1">立即预约</div>
       </div>
     </div>
     <div class="detail">
@@ -96,7 +100,7 @@ export default {
         center>
       <span>这是一段信息</span>
       <span slot="footer" class="dialog-footer">
-        <el-button class="sub-btn" type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button class="sub-btn" type="primary" @click="submit(false)">确 定</el-button>
       </span>
     </el-dialog>
   </div>

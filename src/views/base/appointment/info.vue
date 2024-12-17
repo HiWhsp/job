@@ -6,6 +6,15 @@ export default {
       isShow: true,
       tabIndex: 1, // 选中的标签
       address_selected: {}, // 选择的收货地址
+      params: {
+        if_contact_user: '',// 是否曾与工作人员联系
+        if_recover: '',// 是否需要回收
+        tongshebei: '',// 设备类型
+        if_urgent: '',// 是否加急
+        contact_user: '',// 联系人
+        contact_tel: '',// 联系电话
+        contact_address: '',// 联系地址
+      },
       radioList: [], // 选中的单选框
       list_address: [], // 收货地址
       pagination_address: {
@@ -19,11 +28,21 @@ export default {
   },
   methods: {
     setView() {
+      const preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
+      this.params.if_recover = preOrderDetail.if_recover || '否';
+      this.params.if_contact_user = preOrderDetail.if_contact_user || '否';
+      this.params.tongshebei = preOrderDetail.tongshebei || '否';
+      this.params.if_urgent = preOrderDetail.if_urgent || '0';
+      this.params.contact_user = preOrderDetail.contact_user || '';
+      this.params.contact_tel = preOrderDetail.contact_tel || '';
+      this.params.contact_address = preOrderDetail.contact_address || '';
+      this.params.addressId = preOrderDetail.addressId || '';
       this.query_address();
     },
     //选择收货地址
     do_toggle_address(item) {
       this.address_selected = item;
+      this.params.addressId = item.addressId
     },
     //获取地址列表
     query_address() {
@@ -44,10 +63,12 @@ export default {
 
           let obj = data.find((v) => v.is_default) || {};
           this.address_selected = obj || {};
+          this.params.addressId = this.address_selected.addressId
         }
       })
     },
     goUrl() {
+      localStorage.setItem('preOrderDetail', JSON.stringify({...this.preOrderDetail, ...this.params}));
       this.$router.push({
         path: '/appointment-invoice'
       })
@@ -64,9 +85,9 @@ export default {
         <p class="label">是否曾与工作人员联系？</p>
         <div class="val">
           <div class="sel">
-            <el-radio-group v-model="radioList[0]">
-              <el-radio :label="3">是</el-radio>
-              <el-radio :label="6">否</el-radio>
+            <el-radio-group v-model="params.if_contact_user">
+              <el-radio label="是">是</el-radio>
+              <el-radio label="否">否</el-radio>
             </el-radio-group>
           </div>
           <div class="info"></div>
@@ -76,16 +97,16 @@ export default {
         <p class="label">是否需要回收样品？</p>
         <div class="val">
           <div class="sel">
-            <el-radio-group v-model="radioList[1]">
-              <el-radio :label="3">不回收 <img
-                  :src="require(`@/assets/img/base/appointment/${radioList[1] !== 3 ? 'recycle' : 'Recycle-active'}.png`)"
+            <el-radio-group v-model="params.if_recover">
+              <el-radio label="否">不回收 <img
+                  :src="require(`@/assets/img/base/appointment/${params.if_recover !== '是' ? 'recycle' : 'Recycle-active'}.png`)"
                   alt=""></el-radio>
-              <el-radio :label="6">回收 <img
-                  :src="require(`@/assets/img/base/appointment/${radioList[1] !== 6 ? 'recycle' : 'Recycle-active'}.png`)"
+              <el-radio label="是">回收 <img
+                  :src="require(`@/assets/img/base/appointment/${params.if_recover !== '否' ? 'recycle' : 'Recycle-active'}.png`)"
                   alt=""></el-radio>
             </el-radio-group>
           </div>
-          <div class="info" v-if="radioList[1] === 6">
+          <div class="info" v-if="params.if_recover === '是'">
             <div class="tip">
               <p>回收时没法保证样品100%不被污染</p>
               <p>回收流程较繁琐，且部分测试对样品有破坏，如您的样品足够，建议不要选择回收</p>
@@ -93,7 +114,7 @@ export default {
           </div>
         </div>
       </div>
-      <div class="item" v-if="radioList[1] === 6">
+      <div class="item" v-if="params.if_recover === '是'">
         <p class="label">回收地址</p>
         <div class="val">
           <div class="sel">
@@ -129,15 +150,15 @@ export default {
             <div class="other-addr">
               <div class="it">
                 <label>联系人</label>
-                <el-input placeholder="请填写实验人员姓名"></el-input>
+                <el-input placeholder="请填写实验人员姓名" v-model="params.contact_user"></el-input>
               </div>
               <div class="it">
                 <label>联系电话</label>
-                <el-input placeholder="请填写实验人员联系方式"></el-input>
+                <el-input placeholder="请填写实验人员联系方式" v-model="params.contact_tel"></el-input>
               </div>
               <div class="it">
                 <label>地址</label>
-                <el-input placeholder="请填写联系人地址"></el-input>
+                <el-input placeholder="请填写联系人地址" v-model="params.contact_address"></el-input>
               </div>
             </div>
           </div>
@@ -147,17 +168,17 @@ export default {
         <p class="label">是否与之前的测试同设备？</p>
         <div class="val">
           <div class="sel">
-            <el-radio-group v-model="radioList[3]">
-              <el-radio :label="3">不需要/之前未在平台做过该测试</el-radio>
-              <el-radio :label="6">需要</el-radio>
+            <el-radio-group v-model="params.tongshebei">
+              <el-radio label="否">不需要/之前未在平台做过该测试</el-radio>
+              <el-radio label="是">需要</el-radio>
             </el-radio-group>
           </div>
           <div class="info">
-            <div class="tip tip3" v-if="radioList[3] === 3">
+            <div class="tip tip3" v-if="params.tongshebei === '否'">
               <p>如果您需要和历史订单使用相同的设备测试，请填写之前的订单号。</p>
             </div>
             <div class="other-addr">
-              <el-input placeholder="请填写相对应的订单号" v-if="radioList[3] === 6"></el-input>
+              <el-input placeholder="请填写相对应的订单号" v-if="params.tongshebei === '是'"></el-input>
             </div>
           </div>
         </div>
@@ -166,9 +187,9 @@ export default {
         <p class="label">加急服务</p>
         <div class="val">
           <div class="sel">
-            <el-radio-group v-model="radioList[4]">
-              <el-radio :label="3">3个工作日完成，1.5倍费用</el-radio>
-              <el-radio :label="6">24小时完成，2倍费用</el-radio>
+            <el-radio-group v-model="params.if_urgent">
+              <el-radio label="0">3个工作日完成，1.5倍费用</el-radio>
+              <el-radio label="1">24小时完成，2倍费用</el-radio>
             </el-radio-group>
           </div>
           <div class="info"></div>
@@ -192,8 +213,21 @@ export default {
             <el-radio :label="3">自付</el-radio>
             <el-radio :label="6">到付</el-radio>
           </el-radio-group>
-        </div>
 
+          <div class="item">
+            <p class="label">加急服务</p>
+            <div class="val">
+              <div class="info">
+                <span>赖真舜</span>
+              </div>
+              <div class="col"></div>
+              <div class="info">
+                <span>15394458044</span>
+                <span>收件地址：福建省厦门市翔安区翔安南路厦门大学翔安校区能源材料大楼1号楼</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="all-money">
@@ -496,6 +530,40 @@ export default {
         .img {
           width: 21px;
           height: 21px;
+        }
+
+        .item {
+          margin-top: 30px;
+          display: flex;
+          align-items: start;
+          margin-bottom: 20px;
+
+          .label {
+            width: 180px;
+            font-weight: 400;
+            font-size: 16px;
+            color: #333333;
+            text-align: left;
+          }
+
+          .val {
+            .info {
+              display: flex;
+              flex-direction: column;
+
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 16px;
+              color: #333333;
+            }
+
+            .col {
+              margin: 20px 0;
+              width: 450px;
+              height: 1px;
+              border: 1px solid #D6D6D6;
+            }
+          }
         }
       }
     }
