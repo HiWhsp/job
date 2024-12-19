@@ -6,11 +6,64 @@ export default {
       paymentType: '', // 支付方式 1个人预存 2团体预存 3个人信用支付 4团体信用支付 5微信支付 6支付宝
       integral: '', //
       isShow: true,
+      preOrderDetail: {}, // 订单信息
     }
   },
+  mounted() {
+    this.preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
+    this.setView();
+  },
   methods: {
+    setView() {
+      this.$api({
+        url: 'order_pay_info',
+        method: 'post',
+        data: {
+          yf_type: this.preOrderDetail.yf_type || '1',
+          tongshebei: this.preOrderDetail.tongshebei || '',
+          if_urgent: this.preOrderDetail.if_urgent || '',
+          sample_type: this.preOrderDetail.sample_type || '',
+          product_id: this.preOrderDetail.product_id || '',
+        }
+      })
+    },
+    // 支付提交
+    submit() {
+      if (!this.paymentType) {
+        this.$message.error('请选择支付方式');
+        return;
+      }
+      // 创建订单
+      this.$api({
+        url: 'order_create',
+        method: 'post',
+        data: {
+          ...this.preOrderDetail
+        }
+      }).then(res=>{
+        if (res.code === 200) {
+          this.pay(res.data);
+        }
+      })
+    },
+    // 支付
+    pay(item) {
+      this.$api({
+        url: 'pay',
+        method: 'post',
+        data: {
+          order_type: 'check_order',
+          pay_type: this.paymentType,
+          orderno: item.orderno
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.goUrl();
+        }
+      })
+    },
     goUrl() {
-      if (['5', '6'].includes(this.paymentType)) {
+      if (['wx_scan', 'alipay_web'].includes(this.paymentType)) {
         this.$router.push({
           path: `/appointment-payment?paymentType=${this.paymentType}`
         })
@@ -81,44 +134,44 @@ export default {
           <div class="item">
             <div class="item-title">预存支付</div>
             <el-radio-group v-model="paymentType">
-              <el-radio label="1">
+              <el-radio label="yue">
                 <img src="@/assets/img/base/appointment/pay-1.png" alt="">
                 <span>个人预存</span>
-                <span class="num">¥50.00元</span>
+                <span class="num">¥{{ baseInfo.money }}元</span>
                 <span class="tip pointer">我要预存</span>
               </el-radio>
-              <el-radio label="2">
+              <el-radio label="yue">
                 <img src="@/assets/img/base/appointment/pay-2.png" alt="">
                 <span>团体预存</span>
-                <span class="num">¥50.00元</span>
-                <span class="tip">申请加入团体（仅普通用户账号有）</span>
-                <span class="tip">立即充值（仅团长账号有）</span>
+                <span class="num">¥{{ baseInfo.team_money }}元</span>
+                <span class="tip" v-if="baseInfo.if_leader == 0">申请加入团体</span>
+                <span class="tip" v-if="baseInfo.if_leader == 1">立即充值</span>
               </el-radio>
             </el-radio-group>
           </div>
           <div class="item">
             <div class="item-title">信用支付</div>
             <el-radio-group v-model="paymentType">
-              <el-radio label="3">
+              <el-radio label="credit_pay">
                 <img src="@/assets/img/base/appointment/pay-3.png" alt="">
                 <span>个人信用支付</span>
-                <span class="tip">立即实名认证</span>
+                <span class="tip" v-if="baseInfo.real_auth != 2">立即实名认证</span>
               </el-radio>
-              <el-radio label="4">
+              <el-radio label="credit_pay">
                 <img src="@/assets/img/base/appointment/pay-4.png" alt="">
                 <span>团体信用支付</span>
-                <span class="tip">申请加入团体</span>
+                <span class="tip" v-if="baseInfo.if_leader == 0">申请加入团体</span>
               </el-radio>
             </el-radio-group>
           </div>
           <div class="item">
             <div class="item-title">其他支付方式</div>
             <el-radio-group v-model="paymentType">
-              <el-radio label="5">
+              <el-radio label="wx_scan">
                 <img src="@/assets/img/base/appointment/pay-wx.png" alt="">
                 <span>微信支付</span>
               </el-radio>
-              <el-radio label="6">
+              <el-radio label="alipay_web">
                 <img src="@/assets/img/base/appointment/pay-zfb.png" alt="">
                 <span>支付宝支付</span>
               </el-radio>
@@ -131,7 +184,7 @@ export default {
     <div class="all-money">
       <div class="money-info">
       </div>
-      <div class="next-btn" @click="goUrl()">确认并支付</div>
+      <div class="next-btn" @click="submit()">确认并支付</div>
     </div>
   </div>
 </template>

@@ -21,6 +21,7 @@ export default {
         page: 1,
         limit: 10
       },
+      preOrderDetail: {},
     };
   },
   mounted() {
@@ -28,15 +29,15 @@ export default {
   },
   methods: {
     setView() {
-      const preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
-      this.params.if_recover = preOrderDetail.if_recover || '否';
-      this.params.if_contact_user = preOrderDetail.if_contact_user || '否';
-      this.params.tongshebei = preOrderDetail.tongshebei || '否';
-      this.params.if_urgent = preOrderDetail.if_urgent || '0';
-      this.params.contact_user = preOrderDetail.contact_user || '';
-      this.params.contact_tel = preOrderDetail.contact_tel || '';
-      this.params.contact_address = preOrderDetail.contact_address || '';
-      this.params.addressId = preOrderDetail.addressId || '';
+      this.preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
+      this.params.if_recover = this.preOrderDetail.if_recover || '否';
+      this.params.if_contact_user = this.preOrderDetail.if_contact_user || '否';
+      this.params.tongshebei = this.preOrderDetail.tongshebei || '否';
+      this.params.if_urgent = this.preOrderDetail.if_urgent || '0';
+      this.params.contact_user = this.preOrderDetail.contact_user || '';
+      this.params.contact_tel = this.preOrderDetail.contact_tel || '';
+      this.params.contact_address = this.preOrderDetail.contact_address || '';
+      this.params.addressId = this.preOrderDetail.addressId || '';
       this.query_address();
     },
     //选择收货地址

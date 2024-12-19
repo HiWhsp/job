@@ -25,6 +25,7 @@ export default {
         {value: '1', title: '普通发票', icon: ''},
         {value: '2', title: '专用发票', icon: ''},
       ],
+      preOrderDetail: {}
     }
   },
   mounted() {
@@ -32,16 +33,16 @@ export default {
   },
   methods: {
     setView() {
-      const preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
-      this.invoice_info.f_type = preOrderDetail.f_type || '';
-      this.invoice_info.title_type = preOrderDetail.title_type || '';
-      this.invoice_info.name = preOrderDetail.name || '';
-      this.invoice_info.company_no = preOrderDetail.company_no || '';
-      this.invoice_info.reg_address = preOrderDetail.reg_address || '';
-      this.invoice_info.reg_tel = preOrderDetail.reg_tel || '';
-      this.invoice_info.bank_name = preOrderDetail.bank_name || '';
-      this.invoice_info.bank_no = preOrderDetail.bank_no || '';
-      this.invoice_info.email = preOrderDetail.email || '';
+      this.preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
+      this.invoice_info.f_type = this.preOrderDetail.f_type || '';
+      this.invoice_info.title_type = this.preOrderDetail.title_type || '';
+      this.invoice_info.name = this.preOrderDetail.name || '';
+      this.invoice_info.company_no = this.preOrderDetail.company_no || '';
+      this.invoice_info.reg_address = this.preOrderDetail.reg_address || '';
+      this.invoice_info.reg_tel = this.preOrderDetail.reg_tel || '';
+      this.invoice_info.bank_name = this.preOrderDetail.bank_name || '';
+      this.invoice_info.bank_no = this.preOrderDetail.bank_no || '';
+      this.invoice_info.email = this.preOrderDetail.email || '';
     },
 
     // 发票信息选择

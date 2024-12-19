@@ -28,7 +28,11 @@ export default {
   mounted() {
     this.option = this.$route.query
   },
-  methods: {}
+  methods: {
+    goUrl(url) {
+      this.$router.push({path: url})
+    }
+  }
 }
 </script>
 
@@ -40,10 +44,10 @@ export default {
       <p class="status-text">{{ option.status == 1 ? '支付成功' : '支付失败' }}</p>
       <p class="status-detail">{{ detail }}</p>
       <div class="btn-box" v-if="option.status == 1">
-        <div class="btn">订单详情</div>
-        <div class="btn back">下载预约单</div>
-        <div class="btn">申请发票</div>
-        <div class="btn">继续预约</div>
+        <div class="btn" @click="goUrl('/order')">订单详情</div>
+<!--        <div class="btn back">下载预约单</div>-->
+<!--        <div class="btn">申请发票</div>-->
+        <div class="btn" @click="goUrl('/analyze_list?type=523')">继续预约</div>
       </div>
       <div class="btn-box" v-else>
         <div class="btn back">立即充值</div>
