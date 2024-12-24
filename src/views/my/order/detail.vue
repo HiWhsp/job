@@ -5,8 +5,13 @@ export default {
     return {
       orderno: '',
       detail: {},
-      process: 4,
       downloadVisible: false
+    }
+  },
+  computed: {
+    // 10待支付 20待实验，30实验中，40已完成，50售后
+    process: function () {
+      return this.detail.status
     }
   },
   mounted() {
@@ -40,7 +45,7 @@ export default {
   <div class="content">
     <div class="status-item">
       <div class="status">
-        <span>{{ detail.product_info.title }}</span>
+        <span>{{ detail.product_info ? detail.product_info.title : '' }}</span>
         <span>{{ detail.status_txt }}</span>
       </div>
       <div class="info">
@@ -48,15 +53,15 @@ export default {
           <p class="order-id">订单号：{{ detail.orderno }}</p>
           <p class="time">下单时间：{{ detail.created_at }}</p>
           <div class="btn-wrap">
-            <div class="btn" v-if="process == 1">修改订单</div>
-            <div class="btn" v-if="process == 1">立即支付</div>
-            <div class="btn" v-if="process == 1">取消订单</div>
+            <div class="btn" v-if="process == 10">修改订单</div>
+            <div class="btn" v-if="process == 10">立即支付</div>
+            <div class="btn" v-if="process == 10">取消订单</div>
 
-            <div class="btn btn-bg" v-if="process == 3 || process == 4">申请开票</div>
-            <div class="btn" v-if="process == 3">下载预约单</div>
-            <div class="btn btn-bg" @click="download_report" v-if="process == 4">下载报告</div>
-            <div class="btn" @click="goUrl({url: '/afterSales'})" v-if="process == 4">售后服务</div>
-            <div class="btn" @click="download_report" v-if="process == 4">提交异议</div>
+            <div class="btn btn-bg" v-if="process == 30 || process == 40">申请开票</div>
+            <div class="btn" v-if="process == 30">下载预约单</div>
+            <div class="btn btn-bg" @click="download_report" v-if="process == 40">下载报告</div>
+            <div class="btn" @click="goUrl({url: '/afterSales'})" v-if="process == 40">售后服务</div>
+            <div class="btn" @click="download_report" v-if="process == 40">提交异议</div>
           </div>
         </div>
         <div class="right">
@@ -64,18 +69,18 @@ export default {
             <img src="@/assets/img/my/order/1.png" alt="">
             <span>提交订单</span>
           </div>
-          <div class="process" :class="{'active': process >= 2}">
-            <img src="@/assets/img/my/order/2-active.png" alt="" v-if="process >= 2">
+          <div class="process" :class="{'active': process >= 20}">
+            <img src="@/assets/img/my/order/2-active.png" alt="" v-if="process >= 20">
             <img src="@/assets/img/my/order/2.png" alt="" v-else>
             <span>支付成功</span>
           </div>
-          <div class="process" :class="{'active': process >= 3}">
-            <img src="@/assets/img/my/order/3-active.png" alt="" v-if="process >= 3">
+          <div class="process" :class="{'active': process >= 30}">
+            <img src="@/assets/img/my/order/3-active.png" alt="" v-if="process >= 30">
             <img src="@/assets/img/my/order/3.png" alt="" v-else>
             <span>实验中</span>
           </div>
-          <div class="process" :class="{'active': process >= 4}">
-            <img src="@/assets/img/my/order/4-active.png" alt="" v-if="process >= 4">
+          <div class="process" :class="{'active': process >= 40}">
+            <img src="@/assets/img/my/order/4-active.png" alt="" v-if="process >= 40">
             <img src="@/assets/img/my/order/4.png" alt="" v-else>
             <span>实验完成</span>
           </div>

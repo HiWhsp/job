@@ -4,7 +4,7 @@ export default {
   data() {
     return {
       isShow: true,
-      tabIndex: 1, // 选中的标签
+
       address_selected: {}, // 选择的收货地址
       params: {
         if_contact_user: '',// 是否曾与工作人员联系
@@ -14,6 +14,7 @@ export default {
         contact_user: '',// 联系人
         contact_tel: '',// 联系电话
         contact_address: '',// 联系地址
+        sample_type: 1, //1自行寄样2上门取样3自己送样
       },
       radioList: [], // 选中的单选框
       list_address: [], // 收货地址
@@ -22,6 +23,7 @@ export default {
         limit: 10
       },
       preOrderDetail: {},
+      orderNo: ''
     };
   },
   mounted() {
@@ -69,6 +71,14 @@ export default {
       })
     },
     goUrl() {
+      if (this.params.tongshebei === '是') {
+        if (!this.orderNo) {
+          this.$message.error('请填写相对应的订单号');
+          return
+        } else {
+          this.params.tongshebei = this.orderNo
+        }
+      }
       localStorage.setItem('preOrderDetail', JSON.stringify({...this.preOrderDetail, ...this.params}));
       this.$router.push({
         path: '/appointment-invoice'
@@ -178,8 +188,8 @@ export default {
             <div class="tip tip3" v-if="params.tongshebei === '否'">
               <p>如果您需要和历史订单使用相同的设备测试，请填写之前的订单号。</p>
             </div>
-            <div class="other-addr">
-              <el-input placeholder="请填写相对应的订单号" v-if="params.tongshebei === '是'"></el-input>
+            <div class="other-addr" v-else>
+              <el-input placeholder="请填写相对应的订单号" v-model="orderNo"></el-input>
             </div>
           </div>
         </div>
@@ -200,8 +210,12 @@ export default {
 
     <div class="tabs-wrap">
       <div class="tabs">
-        <div class="tab-item pointer" :class="{'tab-active': tabIndex === 1}" @click="tabIndex = 1">自行寄样</div>
-        <div class="tab-item pointer" :class="{'tab-active': tabIndex === 2}" @click="tabIndex = 2">自行送样</div>
+        <div class="tab-item pointer" :class="{'tab-active': params.sample_type === 1}" @click="params.sample_type = 1">
+          自行寄样
+        </div>
+        <div class="tab-item pointer" :class="{'tab-active': params.sample_type === 3}" @click="params.sample_type = 3">
+          自行送样
+        </div>
       </div>
       <div class="tab-content">
         <div class="tip-box">

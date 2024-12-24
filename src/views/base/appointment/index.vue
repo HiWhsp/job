@@ -26,14 +26,25 @@ export default {
       ],
       elementList: [1, 2, 3, 4],
       preOrderDetail: {},
+      fileList: [],
+      uploadList: [],
     }
   },
   mounted() {
     this.preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
-    // this.setView();
-    this.preOrderDetail.product_id = this.$route.query.id
+    this.setView();
+
   },
   methods: {
+    setView() {
+      this.preOrderDetail.product_id = this.$route.query.id;
+      if (this.preOrderDetail.attachment && JSON.parse(this.preOrderDetail.attachment).length) {
+        const list = JSON.parse(this.preOrderDetail.attachment);
+        list.forEach(item => {
+          this.uploadList.push({url: item.furl, name: item.fname})
+        })
+      }
+    },
     // 增加样品 防抖
     addContent() {
       this.contentList.push({
@@ -49,24 +60,29 @@ export default {
       this.elementList.splice(this.elementList.indexOf(item), 1)
     },
     goUrl() {
+      this.preOrderDetail.attachment = JSON.stringify(this.fileList);
       localStorage.setItem('preOrderDetail', JSON.stringify(this.preOrderDetail));
       this.$router.push({
         path: '/appointment-info'
       })
     },
     //上传相关
-    upload_on_success(res, file) {
+    upload_on_success(res, file, fileList) {
       //console.log("上传结果", res);
       let {code, data, msg} = res;
-      alert(res);
       if (code == 200) {
-        this.form.image = res.data;
+        fileList.forEach(item => {
+          this.fileList.push({fname: item.response.data.name, furl: item.response.data.url})
+        })
       }
     },
     upload_before_upload(file) {
       const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
       return isLt2M;
     },
+    handleRemove(file, fileList) {
+      this.fileList = fileList
+    }
   }
 }
 </script>
@@ -216,9 +232,11 @@ export default {
             <el-upload
                 class="upload-demo"
                 name="file"
+                :file-list="uploadList"
                 action="https://jxjsjc.dx.hdapp.com.cn/api/upload"
                 :data="mix_upload_data" :on-success="upload_on_success"
                 :before-upload="upload_before_upload"
+                :on-remove="handleRemove"
                 multiple
                 :limit="3">
               <div class="upload-box">

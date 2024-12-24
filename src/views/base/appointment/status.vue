@@ -39,7 +39,7 @@ export default {
 <template>
   <div class="container main">
     <div class="content">
-      <img src="@/assets/img/base/appointment/pay-success.png" alt="" v-if="option.status == 1">
+      <img   src="@/assets/img/base/appointment/pay-success.png" alt="" v-if="option.status == 1">
       <img src="@/assets/img/base/appointment/pay-error.png" alt="" v-if="option.status == 2">
       <p class="status-text">{{ option.status == 1 ? '支付成功' : '支付失败' }}</p>
       <p class="status-detail">{{ detail }}</p>
