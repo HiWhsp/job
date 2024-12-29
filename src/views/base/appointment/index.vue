@@ -6,9 +6,16 @@ export default {
       typeId: '',
       selectType: '',
       isShow: true,
-      contentList: [{
-        isShow: true
-      }],
+      // 样品列表
+      contentList: [
+        // {
+        //   isShow: true,
+        //   // 表单
+        //   product_form: {}
+        // }
+      ],
+      formData: {},
+      product_form: [],
       list: [
         {
           id: 1,
@@ -24,7 +31,7 @@ export default {
           title: 'A组样品'
         }
       ],
-      elementList: [1, 2, 3, 4],
+      elementList: [],
       preOrderDetail: {},
       fileList: [],
       uploadList: [],
@@ -44,21 +51,39 @@ export default {
           this.uploadList.push({url: item.furl, name: item.fname})
         })
       }
+      this.$api({
+        url: 'get_product_form',
+        method: 'post',
+        data: {
+          product_id: this.preOrderDetail.product_id
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.product_form = res.data;
+        }
+      })
     },
     // 增加样品 防抖
     addContent() {
+      const form = this.setForm();
       this.contentList.push({
-        remark: '',
-        isShow: true
+        isShow: true,
+        product_form: form
       })
     },
-    typeClick(item) {
-      this.typeId = item.id
+    // 设置表单的选择项
+    setForm() {
+      const form = {};
+      this.product_form.forEach(item => {
+        form[item.title] = '';
+      })
+      return form
     },
     // 删除元素
     elementDel(item) {
       this.elementList.splice(this.elementList.indexOf(item), 1)
     },
+    // 下一步
     goUrl() {
       this.preOrderDetail.attachment = JSON.stringify(this.fileList);
       localStorage.setItem('preOrderDetail', JSON.stringify(this.preOrderDetail));
@@ -97,119 +122,51 @@ export default {
           <i class="el-icon-arrow-down pointer" :class="{'hide': item.isShow}" @click="item.isShow = !item.isShow"></i>
         </div>
         <div class="select" :class="{'hide': item.isShow}">
-          <div class="sel-item">
+          <div class="sel-item" v-for="(field, fieldIndex) in product_form" :key="fieldIndex">
             <div class="label">
-              <i>*</i>
-              <span>样品数量</span>
+              <i v-if="field.is_require">*</i>
+              <span>{{ field.title }}</span>
             </div>
             <div class="value">
-              <el-input v-model="item.remark" type="number" placeholder="请输入"></el-input>
-            </div>
-          </div>
-          <div class="sel-item">
-            <div class="label">
-              <span>样品编码</span>
-            </div>
-            <div class="value">
-              <el-input v-model="item.remark" type="number" placeholder="请输入"></el-input>
-            </div>
-          </div>
-          <div class="sel-item">
-            <div class="label">
-              <i>*</i>
-              <span>样品名称</span>
-            </div>
-            <div class="value">
-              <el-input v-model="item.remark" type="number" placeholder="请输入"></el-input>
-            </div>
-          </div>
-          <div class="sel-item">
-            <div class="label">
-              <i>*</i>
-              <span>样品具体成分</span>
-            </div>
-            <div class="value">
-              <el-input v-model="item.remark" type="number" placeholder="请输入"></el-input>
-            </div>
-          </div>
-          <div class="sel-item">
-            <div class="label">
-              <i>*</i>
-              <span>样品稳定性</span>
-            </div>
-            <div class="value">
-              <div class="t-item column-flex-center wrap" :class="{'active': typeId == item.id}"
-                   v-for="(item, index) in list" :key="index" @click="typeClick(item)">
-                <span class="desc">{{ item.title }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="sel-item">
-            <div class="label">
-              <i>*</i>
-              <span>样品状态</span>
-            </div>
-            <div class="value">
-              <div class="t-item column-flex-center wrap" :class="{'active': typeId == item.id}"
-                   v-for="(item, index) in list" :key="index" @click="typeClick(item)">
-                <span class="desc">{{ item.title }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="sel-item">
-            <div class="label">
-              <i>*</i>
-              <span>测试内容</span>
-            </div>
-            <div class="value">
-              <div class="t-item column-flex-center wrap" :class="{'active': typeId == item.id}"
-                   v-for="(item, index) in list" :key="index" @click="typeClick(item)">
-                <span class="desc">{{ item.title }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="sel-item">
-            <div class="label">
-              <i>*</i>
-              <span>测试要求</span>
-            </div>
-            <div class="value">
-              <el-input v-model="item.remark" type="textarea" :rows="4" placeholder="请输入"></el-input>
-            </div>
-          </div>
-          <div class="sel-item">
-            <div class="label">
-              <i>*</i>
-              <span>扫描区域大小</span>
-            </div>
-            <div class="value">
-              <el-input v-model="item.remark" type="text" placeholder="请输入"></el-input>
-            </div>
-          </div>
-          <div class="sel-item">
-            <div class="label">
-              <i>*</i>
-              <span>需要测试精细谱哪些元素</span>
-            </div>
-            <div class="value">
-              <div class="t-item column-flex-center wrap"
-                   v-for="(item, index) in elementList" :key="index" @click="typeClick(item)">
-                <span class="desc">氦(He)</span>
-                <img src="@/assets/img/base/appointment/element-del.png" class="element-del" @click="elementDel(item)"
-                     alt="">
-              </div>
-              <div class="sel-element">选择元素</div>
-            </div>
-          </div>
-          <div class="sel-item">
-            <div class="label">
-              <span>期望设备</span>
-            </div>
-            <div class="value">
-              <el-select v-model="selectType" placeholder="请选择期望设备">
-                <el-option value="1">1</el-option>
-                <el-option value="2">2</el-option>
-              </el-select>
+              <!--              文本-->
+              <el-input v-if="field.field_type === 'text'" v-model="contentList[index].product_form[field.title]"
+                        type="text" :placeholder="'请输入' + field.title"></el-input>
+              <!--              数字-->
+              <el-input v-if="field.field_type === 'number'" v-model="contentList[index].product_form[field.title]"
+                        type="text"
+                        @input="(e)=>contentList[index].product_form[field.title] = e.replace(/[^0-9]/g, '')"
+                        :placeholder="'请输入' + field.title"></el-input>
+              <!--              数字区间-->
+              <template v-if="field.field_type === 'number_range'">
+                <el-input v-model="contentList[index].product_form[field.title]"
+                          type="text"
+                          @input="(e)=>contentList[index].product_form[field.title] = e.replace(/[^0-9]/g, '')"
+                          :placeholder="'请输入' + field.title"></el-input>
+                <span class="col">—</span>
+                <el-input v-model="contentList[index].product_form[field.title]"
+                          type="text"
+                          @input="(e)=>contentList[index].product_form[field.title] = e.replace(/[^0-9]/g, '')"
+                          :placeholder="'请输入' + field.title"></el-input>
+              </template>
+              <!--              文本域-->
+              <el-input v-if="field.field_type === 'textarea' || field.field_type === 'richtext'"
+                        v-model="contentList[index].product_form[field.title]"
+                        type="textarea" :rows="4" :placeholder="'请输入' + field.title"></el-input>
+              <!--              单选-->
+              <el-radio-group v-if="field.field_type === 'radio'"
+                              v-model="contentList[index].product_form[field.title]">
+                <el-radio :label="it.text" v-for="(it, i) in field.content" :key="it.text">{{ it.text }}</el-radio>
+              </el-radio-group>
+              <!--              元素周期表-->
+              <template v-if="field.field_type === 'element'">
+                <div class="t-item column-flex-center wrap"
+                     v-for="(item, index) in elementList" :key="index">
+                  <span class="desc">氦(He)</span>
+                  <img src="@/assets/img/base/appointment/element-del.png" class="element-del" @click="elementDel(item)"
+                       alt="">
+                </div>
+                <div class="sel-element" v-if="field.field_type === 'element'">选择元素</div>
+              </template>
             </div>
           </div>
         </div>
@@ -311,11 +268,7 @@ export default {
   width: 1100px;
 
   .content-item {
-    margin-top: 20px;
-
-    &:first-child {
-      margin-top: 0;
-    }
+    margin-bottom: 20px;
   }
 
   .title-top {
@@ -368,7 +321,6 @@ export default {
   }
 
   .add-item {
-    margin-top: 25px;
     padding: 40px 45px;
     background: #FFFFFF;
 
@@ -511,6 +463,10 @@ export default {
       .flex();
       flex-wrap: wrap;
       cursor: pointer;
+
+      .col {
+        margin-right: 10px;
+      }
 
       .v-item {
         margin-top: 5px;

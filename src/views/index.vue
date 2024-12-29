@@ -62,8 +62,8 @@
         <div class="c_box">
           <p class="title">服务客户</p>
           <div class="list">
-            <div class="item" v-for="(item, index) in 24" :key="index">
-              <img :src="require(`@/assets/img/base/client/${index + 1}.jpg`)" alt="">
+            <div class="item" v-for="(item, index) in friendList" :key="item.id">
+              <img :src="item.thumb" alt="">
             </div>
           </div>
         </div>
@@ -121,6 +121,7 @@ export default {
       ],
       bannerList: [], // 轮播
       moduleList: [], // 研发伙伴
+      friendList: [], // 合作好友
     }
   },
   mounted() {
@@ -130,6 +131,7 @@ export default {
     setView() {
       this.getBanner();
       this.getModule();
+      this.getFriendList();
     },
     getBanner() {
       this.$api({
@@ -154,6 +156,19 @@ export default {
       }).then(res => {
         if (res.code === 200) {
           this.moduleList = res.data.content;
+        }
+      })
+    },
+    getFriendList() {
+      this.$api({
+        url: 'friend_list',
+        method: 'post',
+        data: {
+          type: 2
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.friendList = res.data;
         }
       })
     }

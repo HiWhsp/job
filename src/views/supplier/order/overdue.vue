@@ -22,7 +22,7 @@ export default {
       count: 1,
       pagination: {
         page: 1,
-        pageNum: 10
+        limit: 10
       }
     }
   },
@@ -170,7 +170,7 @@ export default {
       <div v-if="count" class="pagination-box"
            style="margin-top: 40px; text-align: center;">
         <el-pagination background layout="total, prev, pager, next" @current-change="setView"
-                       :current-page.sync="pagination.page" :page-size="pagination.pageNum"
+                       :current-page.sync="pagination.page" :page-size="pagination.limit"
                        :total="count"></el-pagination>
       </div>
     </div>
