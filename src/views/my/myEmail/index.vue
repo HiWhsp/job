@@ -20,22 +20,14 @@
               <div>
                 {{ item.name }}
               </div>
-              <div>
-                {{ item.phone }}
-              </div>
-              <div class="ellipsis-1">
-                {{ item.full_addr }}{{ item.address }}
-              </div>
-
-
             </div>
             <div class="bottom">
               <div class="left">
-                <span v-if="item.moren == 1" class="moren">默认邮箱</span>
+                <span v-if="item.is_default == 1" class="moren">默认邮箱</span>
               </div>
               <div class="right">
-                <span class="action" v-if="item.moren != 1"
-                      @click="do_address_set_default(item.id)">设置为默认邮箱</span>
+                <span class="action" v-if="item.is_default != 1"
+                      @click="do_address_set_default(item)">设置为默认邮箱</span>
                 <span class="action" @click="do_address_edit(item)">编辑</span>
                 <span class="action" @click="do_address_delete(item.id)">删除</span>
               </div>
@@ -50,15 +42,15 @@
       </div>
     </div>
 
-    <el-dialog title="提示" :visible.sync="dialogVisible" width="900px">
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="900px" center>
       <div class="modal-inner">
         <div class="item">
-          <span class="text required">邮政编码</span>
-          <el-input clearable v-model="form.zipCode" placeholder="请输入邮政编码"></el-input>
+          <span class="text required">邮箱</span>
+          <el-input clearable v-model="form.name" placeholder="请输入邮箱"></el-input>
         </div>
         <div class="item">
           <span class="text"></span>
-          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#A66600"
+          <el-switch v-model="form.is_default" :inactive-value="0" :active-value="1" active-color="#A66600"
                      inactive-color="#eeeeee">
           </el-switch>
           <span style="margin-left: 15px;">设置为默认邮箱</span>
@@ -66,7 +58,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="clearDialog">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -98,7 +90,7 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: 'edit_list',
+        url: 'email_list',
         method: 'post',
         data: {
           ...this.pagination,
@@ -106,37 +98,24 @@ export default {
       }).then(res => {
         if (res.code == 200) {
           let data = res.data
-
-          data.forEach((v) => {
-            v.full_addr = [v.country, v.province, v.city, v.area].filter(v => !!v).join('-');
-            // v.selected =  v.if_default
-          });
-
           this.list_address = data;
 
-          let obj = data.find((v) => v.if_default) || {};
-          this.select_address = obj || {};
-
-          this.$store.commit("set_vuex_data", {
-            key: "default_address",
-            val: obj,
-          });
         }
       })
-
     },
     do_address_add() {
+      this.form = {}
       this.dialogVisible = true
     },
     do_address_edit(item) {
-      this.$refs.address_modal.init(item);
+      this.dialogVisible = true;
+      this.form = item;
     },
     do_address_delete(id) {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'delete_email',
+        method: 'post',
         data: {
-          action: 'userAddress_delete',
           id: id,
         },
       }).then((res) => {
@@ -146,13 +125,14 @@ export default {
       });
     },
     //设置默认邮箱
-    do_address_set_default(id) {
+    do_address_set_default(item) {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'edit_email',
+        method: 'post',
         data: {
-          action: 'userAddress_setDefault',
-          id: id,
+          id: item.id,
+          email: item.name,
+          is_default: 1
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -160,6 +140,38 @@ export default {
         }
       });
     },
+    clearDialog() {
+      if (this.form.id) {
+        this.$api({
+          url: 'edit_email',
+          method: 'post',
+          data: {
+            id: this.form.id,
+            email: this.form.name,
+            is_default: this.form.is_default
+          },
+        }).then((res) => {
+          if (res.code == 200) {
+            this.setView();
+            this.dialogVisible = false
+          }
+        });
+      } else {
+        this.$api({
+          url: 'edit_email',
+          method: 'post',
+          data: {
+            email: this.form.name,
+            is_default: this.form.is_default
+          },
+        }).then((res) => {
+          if (res.code == 200) {
+            this.setView();
+            this.dialogVisible = false
+          }
+        });
+      }
+    }
   },
 };
 </script>
