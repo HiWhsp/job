@@ -5,6 +5,7 @@ export default {
     return {
       orderno: '',
       detail: {},
+      orderDetail: {},
       downloadVisible: false
     }
   },
@@ -28,6 +29,7 @@ export default {
         }
       }).then(res => {
         this.detail = res.data;
+        this.orderDetail = res.data.orderdetail
       })
     },
     // 下载报告
@@ -91,25 +93,25 @@ export default {
       <div class="sample-delivery">
         <!-- 左侧内容 -->
         <div class="left-content">
-          <p class="delivery-method">寄样方式: 自行寄样 (运费自付)</p>
+          <p class="delivery-method">寄样方式: {{ detail.sample_type == 1 ? '自行寄样 (运费自付)' : detail.sample_type == 2 ? '上门取样' : '自己送样' }}</p>
           <p class="detail">
-            <span>收货人：</span>徐老师
+            <span>收货人：</span>{{ detail.jy_address ? detail.jy_address.receive_name : '' }}
           </p>
           <p class="detail">
-            <span>联系方式：</span>15931263165
+            <span>联系方式：</span>{{ detail.jy_address ? detail.jy_address.receive_tel : '' }}
           </p>
           <p class="detail">
-            <span>寄送地址：</span>厦门市集美区杏林湾路465号1号楼2560单元
+            <span>寄送地址：</span>{{ detail.jy_address ? detail.jy_address.receive_address : '' }}
           </p>
         </div>
 
         <!-- 右侧内容 -->
         <div class="right-content">
           <p class="payment-status">
-            支付方式：<span>待支付</span>
+            支付方式：<span>{{ detail.pay_type }}</span>
           </p>
           <p class="payment-amount">
-            支付金额：<span class="amount">¥40.00</span>
+            支付金额：<span class="amount">¥{{ detail.price }}</span>
           </p>
         </div>
       </div>
@@ -139,38 +141,14 @@ export default {
     <div class="orderInfo-item">
       <div class="order-info">
         <h3 class="section-title">下单信息</h3>
-        <p class="sample-info">A组样品，数量：1，样品编号：1</p>
+        <p class="sample-info">{{ orderDetail[0] ? orderDetail[0].index : '' }}，数量：{{ orderDetail[0] ? orderDetail[0].num : '' }}，样品编号：{{ orderDetail[0] ? orderDetail[0].order_id : '' }}</p>
 
         <!-- 表格 -->
         <table class="info-table">
           <tbody>
-          <tr>
-            <td class="label">样品主要成分</td>
-            <td class="value">氯化锂</td>
-          </tr>
-          <tr>
-            <td class="label">样品是否含有磁性元素，如铁钴镍等</td>
-            <td class="value">否</td>
-          </tr>
-          <tr>
-            <td class="label">样品形态</td>
-            <td class="value">粉末</td>
-          </tr>
-          <tr>
-            <td class="label">测试靶材</td>
-            <td class="value">铜靶</td>
-          </tr>
-          <tr>
-            <td class="label">扫描范围选择</td>
-            <td class="value">常规（10-80度）</td>
-          </tr>
-          <tr>
-            <td class="label">具体扫描角度范围（°）</td>
-            <td class="value">10~50</td>
-          </tr>
-          <tr>
-            <td class="label">扫描速度</td>
-            <td class="value">10°/min</td>
+          <tr v-for="(item, index) in orderDetail[0] ? orderDetail[0].content : []" :key="index">
+            <td class="label">{{ item.title }}</td>
+            <td class="value">{{ item.value }}</td>
           </tr>
           </tbody>
         </table>
