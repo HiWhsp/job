@@ -191,6 +191,21 @@ export default {
       this.query_user();
     },
     query_user() {
+      this.$api({
+        url: 'user_info',
+        method: 'post',
+      }).then((res) => {
+        let {code, msg, data} = res;
+        if (code == 200) {
+          this.my_info = data;
+          this.form = {...this.my_info};
+          this.$refs.area_select.init({
+            province: data.province,
+            city: data.city,
+            dist: data.dist
+          });
+        }
+      });
     },
 
     do_submit() {
@@ -212,18 +227,18 @@ export default {
       this.loading = true;
       this.$api({
         url: 'edit_user',
-        method: 'get',
+        method: 'post',
         data: {
           ...this.form
         },
       }).then((res) => {
         let {code, msg, data} = res;
-        alert(res).then(() => {
-          this.loading = false;
-        });
+        this.loading = false;
         if (code == 200) {
           this.setView();
         }
+      }).catch(err => {
+        this.loading = false;
       });
     },
 
@@ -257,13 +272,13 @@ export default {
     changeSelectAddress(data) {
       this.$log("更新省市区数据", data);
       let {sheng, shi, qu} = data;
-      this.form.province = sheng.title;
-      this.form.city = shi.title;
-      this.form.area = qu.title;
+      this.form.province = sheng.name;
+      this.form.city = shi.name;
+      this.form.area = qu.name;
 
-      this.form.provinceCode = sheng.id;
-      this.form.cityCode = shi.id;
-      this.form.areaCode = qu.id;
+      this.form.provinceCode = sheng.code;
+      this.form.cityCode = shi.code;
+      this.form.areaCode = qu.code;
       // debugger
     },
   },

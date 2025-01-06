@@ -4,7 +4,7 @@ export default {
   data() {
     return {
       isShow: true,
-
+      priceList: [], // 样品价格
       address_selected: {}, // 选择的收货地址
       params: {
         if_contact_user: '',// 是否曾与工作人员联系
@@ -41,6 +41,27 @@ export default {
       this.params.contact_address = this.preOrderDetail.contact_address || '';
       this.params.addressId = this.preOrderDetail.addressId || '';
       this.query_address();
+      if (this.preOrderDetail.form.length) {
+        this.getPriceList(this.preOrderDetail.form);
+      }
+    },
+    getPriceList(form) {
+      this.$api({
+        url: 'order_pay_info',
+        method: 'post',
+        data: {
+          yf_type: this.preOrderDetail.yf_type || '1',
+          tongshebei: this.preOrderDetail.tongshebei || '',
+          if_urgent: this.preOrderDetail.if_urgent || '',
+          sample_type: this.preOrderDetail.sample_type || '',
+          product_id: this.preOrderDetail.product_id || '',
+          form
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.priceList = res.data;
+        }
+      })
     },
     //选择收货地址
     do_toggle_address(item) {
@@ -230,7 +251,7 @@ export default {
           </el-radio-group>
 
           <div class="item">
-            <p class="label">加急服务</p>
+            <p class="label">收获地址</p>
             <div class="val">
               <div class="info">
                 <span>赖真舜</span>
@@ -247,26 +268,16 @@ export default {
     </div>
     <div class="all-money">
       <div class="money-info">
-        <p>合计费用: <span>{{ vuex_huobi }}0.00</span></p>
+        <p>合计费用: <span>{{ vuex_huobi }}{{ priceList.total || 0 }}</span></p>
         <i class="el-icon-arrow-down" :class="{'hide': isShow}" @click="isShow = !isShow"></i>
       </div>
       <div class="next-btn" @click="goUrl()">下一步</div>
 
       <div class="popup" :class="{'hide': isShow}">
-        <div class="item">
-          <span>A组样品</span>
-          <span class="num">样品数量：1</span>
-          <span class="money">¥40.00 * 1</span>
-        </div>
-        <div class="item">
-          <span>A组样品</span>
-          <span class="num">样品数量：1</span>
-          <span class="money">¥40.00 * 1</span>
-        </div>
-        <div class="item">
-          <span>A组样品</span>
-          <span class="num"></span>
-          <span class="money">¥40.00 * 1</span>
+        <div class="item" v-for="(item, index) in priceList.data" :key="index">
+          <span>{{ item.sample_title || '暂无' }}</span>
+          <span class="num">样品数量：{{ item.num || 0 }}</span>
+          <span class="money">¥{{ item.unit_price || 0 }}</span>
         </div>
       </div>
     </div>

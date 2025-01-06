@@ -14,33 +14,37 @@ export default {
         //   product_form: {}
         // }
       ],
-      formData: {},
-      product_form: [],
-      list: [
-        {
-          id: 1,
-          title: 'A组样品'
-        }, {
-          id: 2,
-          title: 'A组样品'
-        }, {
-          id: 3,
-          title: 'A组样品'
-        }, {
-          id: 4,
-          title: 'A组样品'
+      product_form: [], // 样品表单
+      elementList: [], // 元素列表
+      preOrderDetail: {}, // 订单信息
+      fileList: [],  // 上传的文件
+      uploadList: [], // 上传的文件
+      priceList: [], // 样品价格列表
+    }
+  },
+  watch: {
+    isShow() {
+      this.$api({
+        url: 'order_pay_info',
+        method: 'post',
+        data: {
+          yf_type: this.preOrderDetail.yf_type || '1',
+          tongshebei: this.preOrderDetail.tongshebei || '',
+          if_urgent: this.preOrderDetail.if_urgent || '',
+          sample_type: this.preOrderDetail.sample_type || '',
+          product_id: this.preOrderDetail.product_id || '',
+          form: this.contentList.map(item => item.product_form)
         }
-      ],
-      elementList: [],
-      preOrderDetail: {},
-      fileList: [],
-      uploadList: [],
+      }).then(res => {
+        if (res.code === 200) {
+          this.priceList = res.data;
+        }
+      })
     }
   },
   mounted() {
     this.preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
     this.setView();
-
   },
   methods: {
     setView() {
@@ -50,6 +54,14 @@ export default {
         list.forEach(item => {
           this.uploadList.push({url: item.furl, name: item.fname})
         })
+      }
+      if (this.preOrderDetail.form.length) {
+        this.contentList = this.preOrderDetail.form.map(item=> {
+          return {
+            isShow: true,
+            product_form: item
+          }
+        });
       }
       this.$api({
         url: 'get_product_form',
@@ -75,7 +87,7 @@ export default {
     setForm() {
       const form = {};
       this.product_form.forEach(item => {
-        form[item.title] = '';
+        form[item.id] = '';
       })
       return form
     },
@@ -86,6 +98,7 @@ export default {
     // 下一步
     goUrl() {
       this.preOrderDetail.attachment = JSON.stringify(this.fileList);
+      this.preOrderDetail.form = this.contentList.map(item => item.product_form);
       localStorage.setItem('preOrderDetail', JSON.stringify(this.preOrderDetail));
       this.$router.push({
         path: '/appointment-info'
@@ -118,7 +131,7 @@ export default {
     <div class="content">
       <div class="content-item" v-for="(item, index) in contentList" :key="index">
         <div class="title-top">
-          <span>A组样品 <i class="el-icon-delete" @click="contentList.splice(index, 1)"></i></span>
+          <span>样品{{ index + 1 }} <i class="el-icon-delete" @click="contentList.splice(index, 1)"></i></span>
           <i class="el-icon-arrow-down pointer" :class="{'hide': item.isShow}" @click="item.isShow = !item.isShow"></i>
         </div>
         <div class="select" :class="{'hide': item.isShow}">
@@ -129,32 +142,32 @@ export default {
             </div>
             <div class="value">
               <!--              文本-->
-              <el-input v-if="field.field_type === 'text'" v-model="contentList[index].product_form[field.title]"
+              <el-input v-if="field.field_type === 'text'" v-model="contentList[index].product_form[field.id]"
                         type="text" :placeholder="'请输入' + field.title"></el-input>
               <!--              数字-->
-              <el-input v-if="field.field_type === 'number'" v-model="contentList[index].product_form[field.title]"
+              <el-input v-if="field.field_type === 'number'" v-model="contentList[index].product_form[field.id]"
                         type="text"
-                        @input="(e)=>contentList[index].product_form[field.title] = e.replace(/[^0-9]/g, '')"
+                        @input="(e)=>contentList[index].product_form[field.id] = e.replace(/[^0-9]/g, '')"
                         :placeholder="'请输入' + field.title"></el-input>
               <!--              数字区间-->
               <template v-if="field.field_type === 'number_range'">
-                <el-input v-model="contentList[index].product_form[field.title]"
+                <el-input v-model="contentList[index].product_form[field.id]"
                           type="text"
-                          @input="(e)=>contentList[index].product_form[field.title] = e.replace(/[^0-9]/g, '')"
+                          @input="(e)=>contentList[index].product_form[field.id] = e.replace(/[^0-9]/g, '')"
                           :placeholder="'请输入' + field.title"></el-input>
                 <span class="col">—</span>
-                <el-input v-model="contentList[index].product_form[field.title]"
+                <el-input v-model="contentList[index].product_form[field.id]"
                           type="text"
-                          @input="(e)=>contentList[index].product_form[field.title] = e.replace(/[^0-9]/g, '')"
+                          @input="(e)=>contentList[index].product_form[field.id] = e.replace(/[^0-9]/g, '')"
                           :placeholder="'请输入' + field.title"></el-input>
               </template>
               <!--              文本域-->
               <el-input v-if="field.field_type === 'textarea' || field.field_type === 'richtext'"
-                        v-model="contentList[index].product_form[field.title]"
+                        v-model="contentList[index].product_form[field.id]"
                         type="textarea" :rows="4" :placeholder="'请输入' + field.title"></el-input>
               <!--              单选-->
               <el-radio-group v-if="field.field_type === 'radio'"
-                              v-model="contentList[index].product_form[field.title]">
+                              v-model="contentList[index].product_form[field.id]">
                 <el-radio :label="it.text" v-for="(it, i) in field.content" :key="it.text">{{ it.text }}</el-radio>
               </el-radio-group>
               <!--              元素周期表-->
@@ -207,26 +220,16 @@ export default {
 
       <div class="all-money">
         <div class="money-info">
-          <p>合计费用: <span>{{ vuex_huobi }}0.00</span></p>
+          <p>合计费用: <span>{{ vuex_huobi }}{{ priceList.total || 0 }}</span></p>
           <i class="el-icon-arrow-down" :class="{'hide': isShow}" @click="isShow = !isShow"></i>
         </div>
         <div class="next-btn" @click="goUrl()">下一步</div>
 
         <div class="popup" :class="{'hide': isShow}">
-          <div class="item">
-            <span>A组样品</span>
-            <span class="num">样品数量：1</span>
-            <span class="money">¥40.00 * 1</span>
-          </div>
-          <div class="item">
-            <span>A组样品</span>
-            <span class="num">样品数量：1</span>
-            <span class="money">¥40.00 * 1</span>
-          </div>
-          <div class="item">
-            <span>A组样品</span>
-            <span class="num"></span>
-            <span class="money">¥40.00 * 1</span>
+          <div class="item" v-for="(item, index) in priceList.data" :key="index">
+            <span>{{ item.sample_title || '暂无' }}</span>
+            <span class="num">样品数量：{{ item.num || 0 }}</span>
+            <span class="money">¥{{ item.unit_price || 0 }}</span>
           </div>
         </div>
       </div>
