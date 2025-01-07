@@ -7,6 +7,7 @@ export default {
       integral: '', //
       isShow: true,
       preOrderDetail: {}, // 订单信息
+      priceList: []
     }
   },
   mounted() {
@@ -24,6 +25,11 @@ export default {
           if_urgent: this.preOrderDetail.if_urgent || '',
           sample_type: this.preOrderDetail.sample_type || '',
           product_id: this.preOrderDetail.product_id || '',
+          form: this.preOrderDetail.form
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.priceList = res.data;
         }
       })
     },
@@ -79,37 +85,33 @@ export default {
 
 <template>
   <div class="container main">
-    <div class="title">下单：原子力显微镜</div>
+    <div class="title">下单：{{ preOrderDetail.title }}</div>
 
     <div class="content">
       <div class="section">
         <div class="section-title">费用明细</div>
         <div class="section-ctx">
           <div class="item">
-            <div class="item-title">总金额 <span>¥800.00</span></div>
-            <div class="item-val">
-              <p><span>A组样品</span><span>样品数量：1</span></p>
-              <p>¥40.00 * 1</p>
-            </div>
-            <div class="item-val">
-              <p><span>B组样品</span><span>样品数量：1</span></p>
-              <p>¥40.00 * 1</p>
+            <div class="item-title">总金额 <span>¥{{  priceList.total }}</span></div>
+            <div class="item-val" v-for="(item, index) in priceList.data" :key="index">
+              <p><span>{{ item.sample_title }}</span><span>样品数量：{{ item.num }}</span></p>
+              <p>¥{{ item.unit_price }} * {{ item.num }}</p>
             </div>
             <div class="item-val">
               <p>加急服务</p>
-              <p>¥40.00 * 1</p>
+              <p>{{ preOrderDetail.if_urgent == 1 ? priceList.urgent_txt : '¥0.00' }}</p>
             </div>
             <div class="item-val">
               <p>运费</p>
-              <p>¥40.00 * 1</p>
+              <p>¥{{  priceList.yunfei || '0.00' }}</p>
             </div>
             <div class="item-val">
               <p>积分抵现</p>
-              <p>¥40.00 * 1</p>
+              <p>¥{{ integral ? priceList.max_point_pay : '0.00' }}</p>
             </div>
             <div class="item-val">
               <p>优惠</p>
-              <p>¥40.00 * 1</p>
+              <p>¥{{ priceList.discount || '0.00' }}</p>
             </div>
           </div>
         </div>
@@ -120,9 +122,9 @@ export default {
           <div class="item">
             <el-radio v-model="integral">
               <span>使用积分抵现</span>
-              <span class="num">777</span>
+              <span class="num">{{ baseInfo.points }}</span>
               <span>本次可抵现金</span>
-              <span class="num">¥50.00元</span>
+              <span class="num">¥{{ priceList.max_point_pay }}元</span>
               <span class="tip">（单次最多可抵现50.00元）</span>
             </el-radio>
           </div>

@@ -39,7 +39,7 @@ export default {
     submit(temp) {
       this.dialogVisible = temp;
       if (!temp) {
-        localStorage.setItem('preOrderDetail', JSON.stringify({}));
+        localStorage.setItem('preOrderDetail', JSON.stringify({title: this.detail.title }));
         this.$router.push('/appointment?id=' + this.id)
       }
     },

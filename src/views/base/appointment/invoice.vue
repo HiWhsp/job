@@ -18,6 +18,7 @@ export default {
         email: '', // 电子邮箱
         orderId: '', // 关联订单
       },
+      priceList: [],
 
       // 发票类型
       invoiceTypeOption: [
@@ -43,6 +44,27 @@ export default {
       this.invoice_info.bank_name = this.preOrderDetail.bank_name || '';
       this.invoice_info.bank_no = this.preOrderDetail.bank_no || '';
       this.invoice_info.email = this.preOrderDetail.email || '';
+      if (this.preOrderDetail.form.length) {
+        this.getPriceList(this.preOrderDetail.form);
+      }
+    },
+    getPriceList(form) {
+      this.$api({
+        url: 'order_pay_info',
+        method: 'post',
+        data: {
+          yf_type: this.preOrderDetail.yf_type || '1',
+          tongshebei: this.preOrderDetail.tongshebei || '',
+          if_urgent: this.preOrderDetail.if_urgent || '',
+          sample_type: this.preOrderDetail.sample_type || '',
+          product_id: this.preOrderDetail.product_id || '',
+          form
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.priceList = res.data;
+        }
+      })
     },
 
     // 发票信息选择
@@ -67,7 +89,7 @@ export default {
 
 <template>
   <div class="container main">
-    <div class="title">下单：原子力显微镜</div>
+    <div class="title">下单：{{ preOrderDetail.title }}</div>
     <div class="content">
       <div class="section-title">发票信息</div>
       <div class="section-ctx section-ctx-type">
@@ -158,26 +180,16 @@ export default {
 
     <div class="all-money">
       <div class="money-info">
-        <p>合计费用: <span>{{ vuex_huobi }}0.00</span></p>
+        <p>合计费用: <span>{{ vuex_huobi }}{{ priceList.total || 0 }}</span></p>
         <i class="el-icon-arrow-down" :class="{'hide': isShow}" @click="isShow = !isShow"></i>
       </div>
       <div class="next-btn" @click="goUrl()">下一步</div>
 
       <div class="popup" :class="{'hide': isShow}">
-        <div class="item">
-          <span>A组样品</span>
-          <span class="num">样品数量：1</span>
-          <span class="money">¥40.00 * 1</span>
-        </div>
-        <div class="item">
-          <span>A组样品</span>
-          <span class="num">样品数量：1</span>
-          <span class="money">¥40.00 * 1</span>
-        </div>
-        <div class="item">
-          <span>A组样品</span>
-          <span class="num"></span>
-          <span class="money">¥40.00 * 1</span>
+        <div class="item" v-for="(item, index) in priceList.data" :key="index">
+          <span>{{ item.sample_title || '暂无' }}</span>
+          <span class="num">样品数量：{{ item.num || 0 }}</span>
+          <span class="money">¥{{ item.unit_price || 0 }}</span>
         </div>
       </div>
     </div>

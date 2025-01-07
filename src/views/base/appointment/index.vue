@@ -55,7 +55,23 @@ export default {
           this.uploadList.push({url: item.furl, name: item.fname})
         })
       }
-      if (this.preOrderDetail.form.length) {
+      if (this.preOrderDetail.form && this.preOrderDetail.form.length) {
+        this.$api({
+          url: 'order_pay_info',
+          method: 'post',
+          data: {
+            yf_type: this.preOrderDetail.yf_type || '1',
+            tongshebei: this.preOrderDetail.tongshebei || '',
+            if_urgent: this.preOrderDetail.if_urgent || '',
+            sample_type: this.preOrderDetail.sample_type || '',
+            product_id: this.preOrderDetail.product_id || '',
+            form: this.preOrderDetail.form
+          }
+        }).then(res => {
+          if (res.code === 200) {
+            this.priceList = res.data;
+          }
+        })
         this.contentList = this.preOrderDetail.form.map(item=> {
           return {
             isShow: true,

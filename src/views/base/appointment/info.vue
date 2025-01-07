@@ -111,7 +111,7 @@ export default {
 
 <template>
   <div class="container main">
-    <div class="title">下单：原子力显微镜</div>
+    <div class="title">下单：{{ preOrderDetail.title }}</div>
     <div class="content">
       <div class="item">
         <p class="label">是否曾与工作人员联系？</p>
