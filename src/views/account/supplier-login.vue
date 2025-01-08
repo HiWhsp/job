@@ -32,32 +32,29 @@
       <div class="dialog-box">
         <p class="title">立即申请成为嘉析检测的合作伙伴</p>
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="公司名称：" prop="name">
-            <el-input v-model="ruleForm.name" placeholder="请输入公司名称"></el-input>
+          <el-form-item label="公司名称：" prop="company_name">
+            <el-input v-model="ruleForm.company_name" placeholder="请输入公司名称"></el-input>
           </el-form-item>
           <el-form-item label="联系人：" prop="name">
             <el-input v-model="ruleForm.name" placeholder="请输入联系人姓名"></el-input>
           </el-form-item>
-          <el-form-item label="联系电话：" prop="name">
-            <el-input v-model="ruleForm.name" placeholder="请输入联系电话"></el-input>
+          <el-form-item label="联系电话：" prop="phone">
+            <el-input v-model="ruleForm.phone" placeholder="请输入联系电话"></el-input>
           </el-form-item>
-          <el-form-item label="服务方向：" prop="region">
-            <el-select v-model="ruleForm.region" placeholder="请选择服务方向">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+          <el-form-item label="服务方向：" prop="service_info">
+            <el-select v-model="ruleForm.service_info" placeholder="请选择服务方向">
+              <el-option label="1" value="shanghai"></el-option>
+              <el-option label="2" value="beijing"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="选择地区：" prop="region">
-            <el-select v-model="ruleForm.region" placeholder="请选择地区">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
+          <el-form-item label="选择地区：">
+            <area_select ref="area_select" @change="changeSelectAddress"/>
           </el-form-item>
-          <el-form-item label="详细地址：" prop="name">
-            <el-input v-model="ruleForm.name" placeholder="请输入详细地址"></el-input>
+          <el-form-item label="详细地址：" prop="address">
+            <el-input v-model="ruleForm.address" placeholder="请输入详细地址"></el-input>
           </el-form-item>
-          <el-form-item label="备注：" prop="desc">
-            <el-input type="textarea" v-model="ruleForm.desc" placeholder="请输入"></el-input>
+          <el-form-item label="备注：" prop="notes">
+            <el-input type="textarea" v-model="ruleForm.notes" placeholder="请输入"></el-input>
           </el-form-item>
         </el-form>
         <div class="agreement">
@@ -78,9 +75,11 @@
 import QRCode from "qrcodejs2";
 import CryptoJS from "crypto-js";
 import {mapState} from "vuex";
+import area_select from "@/components/address/area_select.vue";
 
 export default {
   name: "login",
+  components: {area_select},
   data() {
     return {
       dialogVisible: false,
@@ -98,39 +97,14 @@ export default {
 
       interval_wx_scan: null,
 
-      ruleForm: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      },
+      ruleForm: {},
       rules: {
-        name: [
-          {required: true, message: '请输入活动名称', trigger: 'blur'},
-          {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
-        ],
-        region: [
-          {required: true, message: '请选择活动区域', trigger: 'change'}
-        ],
-        date1: [
-          {type: 'date', required: true, message: '请选择日期', trigger: 'change'}
-        ],
-        date2: [
-          {type: 'date', required: true, message: '请选择时间', trigger: 'change'}
-        ],
-        type: [
-          {type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change'}
-        ],
-        resource: [
-          {required: true, message: '请选择活动资源', trigger: 'change'}
-        ],
-        desc: [
-          {required: true, message: '请填写活动形式', trigger: 'blur'}
-        ]
+        company_name: [{required: true, message: '请输入公司名称', trigger: 'blur'},],
+        name: [{required: true, message: '请输入联系人姓名', trigger: 'blur'},],
+        phone: [{required: true, message: '请输入联系电话', trigger: 'blur'},],
+        service_info: [{required: true, message: '请选择服务方向', trigger: 'blur'},],
+        address: [{required: true, message: '请输入详细地址', trigger: 'blur'},],
+        notes: [{required: true, message: '请输入', trigger: 'blur'},],
       }
     }
   },
@@ -346,29 +320,37 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if(!this.ruleForm.province) {
+            alertErr("请选择省市区");
+            return
+          }
           this.$api({
             url: 'store/register',
             method: 'post',
-            data: {
-              company_name: '海视频',
-              name: '姓名1',
-              phone: '15100000002',
-              password: '123456',
-              service_info: '服务信息',
-              province: '北京',
-              city: '北京',
-              area: '朝阳区',
-              address: '地址地址',
-              notes: '123'
-            }
+            data: this.ruleForm
           }).then(res => {
             alertSucc(res.msg);
             this.$router.push('/supplier-status')
           })
+
         } else {
           return false;
         }
       });
+    },
+
+    // 地区选择
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      let {sheng, shi, qu} = data;
+      this.ruleForm.province = sheng.name;
+      this.ruleForm.city = shi.name;
+      this.ruleForm.area = qu.name;
+
+      this.ruleForm.provinceCode = sheng.code;
+      this.ruleForm.cityCode = shi.code;
+      this.ruleForm.areaCode = qu.code;
+      // debugger
     },
   }
 }
