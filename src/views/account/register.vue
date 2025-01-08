@@ -27,10 +27,10 @@
             </div>
           </el-form-item>
           <el-form-item label="医院:" prop="code" v-if="form.role === 4">
-            <el-input clearable v-model="form.nickName" placeholder="请填写医院"></el-input>
+            <el-input clearable v-model="form.unit_name" placeholder="请填写医院"></el-input>
           </el-form-item>
           <el-form-item label="企业:" prop="code" v-if="form.role === 3">
-            <el-input clearable v-model="form.nickName" placeholder="请填写企业"></el-input>
+            <el-input clearable v-model="form.unit_name" placeholder="请填写企业"></el-input>
           </el-form-item>
           <el-form-item label="密码:" prop="code">
             <el-input clearable v-model="form.password" placeholder="请输入密码"></el-input>
@@ -43,7 +43,8 @@
         <!--        协议-->
         <div class="agreement">
           <el-checkbox v-model="agreement"></el-checkbox>
-          <span style="margin-left: 10px;" class="pointer">已阅读并同意《用户注册协议》</span>
+          <p style="margin-left: 10px;" class="pointer">已阅读并同意<span @click="dialogAgreement">《用户注册协议》</span>
+          </p>
         </div>
         <div class="submit pointer" @click="submit">注册</div>
         <div class="register-box">
@@ -51,6 +52,9 @@
         </div>
       </div>
     </div>
+    <el-dialog title="用户注册协议" :visible.sync="dialogAgreementVisible" width="900px" center>
+      <div class="protocol" v-html="protocol.content"></div>
+    </el-dialog>
   </div>
 </template>
 
@@ -64,6 +68,8 @@ export default {
   data() {
     return {
       agreement: false,
+      dialogAgreementVisible: false,
+      protocol: {},
       form: {},
       list_sheng: [
         {id: 1, title: "学生"},
@@ -75,8 +81,22 @@ export default {
       formRules: {},
     }
   },
+  mounted() {
+    // 获取用户协议
+    this.$api({
+      url: 'page_content',
+      method: 'post',
+      data: {
+        id: 41
+      },
+    }).then(res => {
+      if (res.code === 200) {
+        console.log(res)
+        this.protocol = res.data
+      }
+    })
+  },
   methods: {
-
     //   注册
     submit() {
       if (!this.agreement) {
@@ -89,6 +109,9 @@ export default {
           this.$router.push("/login");
         }
       });
+    },
+    dialogAgreement() {
+      this.dialogAgreementVisible = true
     }
   }
 }
@@ -118,7 +141,7 @@ export default {
   .title {
     font-weight: bold;
     font-size: 18px;
-    color: #00479D;
+    color: @theme;
     display: flex;
     text-align: center;
     flex-direction: column;
@@ -130,7 +153,7 @@ export default {
       width: 52px;
       height: 2px;
       margin-top: 10px;
-      background-color: #00479D;
+      background-color: @theme;
     }
   }
 
@@ -141,9 +164,15 @@ export default {
     align-items: center;
 
     .agreement {
+      display: flex;
+      align-items: center;
       font-weight: 400;
       font-size: 16px;
       color: #333333;
+
+      span {
+        color: @theme;
+      }
     }
 
     .submit {
@@ -152,7 +181,7 @@ export default {
       height: 43px;
       text-align: center;
       line-height: 43px;
-      background: #00479D;
+      background: @theme;
       border-radius: 4px 4px 4px 4px;
       font-weight: 400;
       font-size: 16px;
@@ -171,7 +200,7 @@ export default {
         color: #333333;
 
         span {
-          color: #00479D;
+          color: @theme;
         }
       }
     }

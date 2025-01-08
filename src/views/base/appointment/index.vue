@@ -6,6 +6,7 @@ export default {
       typeId: '',
       selectType: '',
       isShow: true,
+      dialogElementVisible: false,
       // 样品列表
       contentList: [
         // {
@@ -16,6 +17,7 @@ export default {
       ],
       product_form: [], // 样品表单
       elementList: [], // 元素列表
+      selectElementList: [], // 选中的元素
       preOrderDetail: {}, // 订单信息
       fileList: [],  // 上传的文件
       uploadList: [], // 上传的文件
@@ -72,7 +74,7 @@ export default {
             this.priceList = res.data;
           }
         })
-        this.contentList = this.preOrderDetail.form.map(item=> {
+        this.contentList = this.preOrderDetail.form.map(item => {
           return {
             isShow: true,
             product_form: item
@@ -107,9 +109,41 @@ export default {
       })
       return form
     },
+    // 选择元素
+    selectElement(list) {
+      this.dialogElementVisible = true;
+      if (!this.elementList.length) {
+        this.elementList = list || [];
+      }
+    },
+    // 元素选择
+    elementPick(item) {
+      for (let i = 0; i < this.elementList.length; i++) {
+        if (this.elementList[i].id === item.id && this.elementList[i].isActive) {
+          this.selectElementList.splice(i, 1);
+          this.$set(this.elementList, i, {
+            ...item,
+            isActive: false
+          })
+        } else if (this.elementList[i].id === item.id) {
+          this.$set(this.selectElementList, i, {
+            ...item,
+            isActive: true
+          })
+          this.$set(this.elementList, i, {
+            ...item,
+            isActive: true
+          });
+        }
+      }
+    },
     // 删除元素
-    elementDel(item) {
-      this.elementList.splice(this.elementList.indexOf(item), 1)
+    elementDel(item, index) {
+      this.$set(this.elementList, index, {
+        ...item,
+        isActive: false
+      })
+      this.selectElementList.splice(index, 1);
     },
     // 下一步
     goUrl() {
@@ -189,12 +223,15 @@ export default {
               <!--              元素周期表-->
               <template v-if="field.field_type === 'element'">
                 <div class="t-item column-flex-center wrap"
-                     v-for="(item, index) in elementList" :key="index">
-                  <span class="desc">氦(He)</span>
-                  <img src="@/assets/img/base/appointment/element-del.png" class="element-del" @click="elementDel(item)"
+                     v-for="(item, index) in selectElementList" :key="index" v-if="item">
+                  <span class="desc">{{ item.name }}</span>
+                  <img src="@/assets/img/base/appointment/element-del.png" class="element-del"
+                       @click="elementDel(item, index)"
                        alt="">
                 </div>
-                <div class="sel-element" v-if="field.field_type === 'element'">选择元素</div>
+                <div class="sel-element" v-if="field.field_type === 'element'" @click="selectElement(field.content)">
+                  选择元素
+                </div>
               </template>
             </div>
           </div>
@@ -271,6 +308,16 @@ export default {
         <div class="down">点击下载文件</div>
       </div>
     </div>
+
+    <el-dialog title="选择元素" :visible.sync="dialogElementVisible" width="800px" center>
+      <div class="element-list">
+        <div class="item" :class="{ active: item.isActive }"
+             v-for="(item, index) in elementList"
+             :key="index" @click="elementPick(item, index)">
+          <span class="desc">{{ item ? item.name : '' }}</span>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -678,5 +725,35 @@ export default {
   }
 
 
+}
+
+.element-list {
+  display: flex;
+
+  .item {
+    cursor: pointer;
+    width: 68px;
+    height: 68px;
+    background: #FFFFFF;
+    border: 1px solid #00479D;
+    text-align: center;
+    line-height: 68px;
+    margin: 2px;
+
+    .desc {
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: bold;
+      font-size: 20px;
+      color: #00479D;
+    }
+
+    &.active {
+      background-color: #00479D;
+
+      .desc {
+        color: #fff;
+      }
+    }
+  }
 }
 </style>
