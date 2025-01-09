@@ -1,12 +1,13 @@
 <script>
-
+import periodic from '@/components/periodic';
 export default {
+  components: {periodic},
   data() {
     return {
       typeId: '',
       selectType: '',
       isShow: true,
-      dialogElementVisible: false,
+      dialogElementVisible: true,
       // 样品列表
       contentList: [
         // {
@@ -21,7 +22,7 @@ export default {
       preOrderDetail: {}, // 订单信息
       fileList: [],  // 上传的文件
       uploadList: [], // 上传的文件
-      priceList: [], // 样品价格列表
+      priceList: [], // 样品价格列 表
     }
   },
   watch: {
@@ -298,7 +299,7 @@ export default {
         <div class="lock-detail">查看仪器详情 ></div>
       </div>
       <div class="right-item">
-        <p>仪器图片</p>
+        <p>技术顾问</p>
         <div class="idea">
           <span class="tit">一对一为您答疑解惑</span>
           <img src="@/assets/img/base/appointment/code.png" alt="">
@@ -309,14 +310,15 @@ export default {
       </div>
     </div>
 
-    <el-dialog title="选择元素" :visible.sync="dialogElementVisible" width="800px" center>
-      <div class="element-list">
-        <div class="item" :class="{ active: item.isActive }"
-             v-for="(item, index) in elementList"
-             :key="index" @click="elementPick(item, index)">
-          <span class="desc">{{ item ? item.name : '' }}</span>
-        </div>
-      </div>
+    <el-dialog title="选择元素" :visible.sync="dialogElementVisible" width="1300px" center>
+<!--      <div class="element-list">-->
+<!--        <div class="item" :class="{ active: item.isActive }"-->
+<!--             v-for="(item, index) in elementList"-->
+<!--             :key="index" @click="elementPick(item, index)">-->
+<!--          <span class="desc">{{ item ? item.name : '' }}</span>-->
+<!--        </div>-->
+<!--      </div>-->
+      <periodic></periodic>
     </el-dialog>
   </div>
 </template>
