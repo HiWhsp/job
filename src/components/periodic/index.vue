@@ -7,8 +7,8 @@
         <div
             v-for="element in column.elementArr"
             :key="element.seq"
-            class="base-element column-element"
-            :class="'color-' + element.color"
+            class="base-element column-element color-bottom"
+            :class="{ 'isSelect': element.isSelect, 'isActive': element.isActive }"
             @click="handleClickElement(element)"
         >
           <p class="text">
@@ -26,6 +26,7 @@
             v-for="element in LaColumn"
             :key="element.seq"
             class="base-element line-element color-bottom"
+            :class="{ 'isSelect': element.isSelect, 'isActive': element.isActive }"
             @click="handleClickElement(element)"
         >
           <p class="text">
@@ -41,6 +42,7 @@
             v-for="element in AcColumn"
             :key="element.seq"
             class="base-element line-element color-bottom"
+            :class="{ 'isSelect': element.isSelect, 'isActive': element.isActive }"
             @click="handleClickElement(element)"
         >
           <p class="text">
@@ -56,6 +58,16 @@
 <script>
 export default {
   name: "periodic",
+  props: {
+    elementList: {
+      type: Array,
+      default: () => []
+    },
+    selectElementList: {
+      type: Array,
+      default: () => []
+    }
+  },
   data() {
     return {
       topColumn: [
@@ -128,7 +140,7 @@ export default {
           ],
         },
         {
-          name: 'Ⅷ',
+          name: 'f',
           elementArr: [
             {name: 'Fe', mc: '铁', seq: 26, color: 3},
             {name: 'Ru', mc: '钌', seq: 44, color: 3},
@@ -137,7 +149,7 @@ export default {
           ],
         },
         {
-          name: 'Ⅷ',
+          name: 'c',
           elementArr: [
             {name: 'Co', mc: '钴', seq: 27, color: 3},
             {name: 'Rh', mc: '铑', seq: 45, color: 3},
@@ -146,7 +158,7 @@ export default {
           ],
         },
         {
-          name: 'Ⅷ',
+          name: 'n',
           elementArr: [
             {name: 'Ni', mc: '镍', seq: 28, color: 3},
             {name: 'Pd', mc: '钯', seq: 46, color: 3},
@@ -276,9 +288,73 @@ export default {
       ]
     }
   },
+  watch: {
+    elementList(old, nList) {
+      this.$nextTick(() => {
+        if(this.elementList.length) {
+          this.init()
+        }
+      })
+    },
+    selectElementList(old, nList) {
+      this.$nextTick(() => {
+        this.selectElement()
+      })
+    }
+  },
+  mounted() {
+    this.init()
+  },
   methods: {
+    // 初始化
+    init() {
+      // 设置可选元素
+      this.topColumn.forEach((item, i) => {
+        item.elementArr.forEach((element, j) => {
+          if (this.elementList.find(it => it.mc === element.mc)) {
+            this.$set(this.topColumn[i].elementArr[j], 'isSelect', true)
+          }
+        })
+      })
+      this.LaColumn.forEach((item, i) => {
+        if (this.elementList.find(it => item.mc === it.mc)) {
+          this.$set(this.LaColumn[i], 'isSelect', true)
+        }
+      })
+      this.AcColumn.forEach((item, i) => {
+        if (this.elementList.find(it => item.mc === it.mc)) {
+          this.$set(this.AcColumn[i], 'isSelect', true)
+        }
+      })
+    },
+    selectElement() {
+      // 设置选择元素
+      this.topColumn.forEach((item, i) => {
+        item.elementArr.forEach((element, j) => {
+          if (this.selectElementList.length && this.selectElementList.find(it => it.mc === element.mc)) {
+            this.$set(this.topColumn[i].elementArr[j], 'isActive', true)
+          }else {
+            this.$set(this.topColumn[i].elementArr[j], 'isActive', false)
+          }
+        })
+      })
+      this.LaColumn.forEach((item, i) => {
+        if (this.selectElementList.length && this.selectElementList.find(it => item.mc === it.mc)) {
+          this.$set(this.LaColumn[i], 'isActive', true)
+        } else {
+          this.$set(this.LaColumn[i], 'isActive', false)
+        }
+      })
+      this.AcColumn.forEach((item, i) => {
+        if (this.selectElementList.length && this.selectElementList.find(it => item.mc === it.mc)) {
+          this.$set(this.AcColumn[i], 'isActive', true)
+        } else {
+          this.$set(this.AcColumn[i], 'isActive', false)
+        }
+      })
+    },
     handleClickElement(element) {
-      // emits('clickElement', element);
+      this.$emit('handleClickElement', element)
     }
   }
 }
@@ -328,12 +404,12 @@ export default {
 
 
 .base-element {
+  cursor: not-allowed;
   width: 60px;
   height: 60px;
   font-size: 18px;
   font-weight: bolder;
   text-align: center;
-  cursor: pointer;
   display: flex;
   position: relative;
   justify-content: center;
@@ -341,6 +417,7 @@ export default {
   align-items: center;
   padding-top: 8px;
   border-radius: 2px;
+  background-color: #e5e5e5;
 
   .text {
     display: flex;
@@ -357,6 +434,11 @@ export default {
   }
 }
 
+.isSelect {
+  background-color: #fff;
+  cursor: pointer;
+}
+
 .seq {
   font-size: 12px;
   font-weight: normal;
@@ -365,7 +447,6 @@ export default {
   left: 5px;
   color: #FF0000;
 }
-
 
 .column-element {
   margin-top: 0.2rem;
@@ -376,57 +457,27 @@ export default {
   margin: 0.2rem;
 }
 
-.base-element:hover {
+.base-element.isSelect:hover {
   background-color: @theme;
   color: #fff;
   transition: 0.2s;
   font-weight: bolder;
+  .seq {
+    color: #fff;
+  }
 }
 
 
-.color-bottom {
+.color-bottom.isSelect {
   //background-color: #d9e98e;
   border: 1px solid @theme;
   color: @theme;
 }
-
-.color-0 {
-  border: 1px solid @theme;
-  color: @theme;
-}
-
-.color-1 {
-  border: 1px solid @theme;
-  color: @theme;
-}
-
-.color-2 {
-  border: 1px solid @theme;
-  color: @theme;
-}
-
-.color-3 {
-  border: 1px solid @theme;
-  color: @theme;
-}
-
-.color-4 {
-  border: 1px solid @theme;
-  color: @theme;
-}
-
-.color-5 {
-  border: 1px solid @theme;
-  color: @theme;
-}
-
-.color-6 {
-  border: 1px solid @theme;
-  color: @theme;
-}
-
-.color-7 {
-  border: 1px solid @theme;
-  color: @theme;
+.color-bottom.isActive {
+  background-color: @theme;
+  color: #fff;
+  .seq {
+    color: #fff;
+  }
 }
 </style>

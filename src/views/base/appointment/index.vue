@@ -7,7 +7,7 @@ export default {
       typeId: '',
       selectType: '',
       isShow: true,
-      dialogElementVisible: true,
+      dialogElementVisible: false,
       // 样品列表
       contentList: [
         // {
@@ -112,31 +112,28 @@ export default {
     },
     // 选择元素
     selectElement(list) {
-      this.dialogElementVisible = true;
-      if (!this.elementList.length) {
-        this.elementList = list || [];
+      if (list.length) {
+        this.elementList = list.map(item=>{
+          return {
+            mc: item,
+            isActive: false,
+            isSelect: false
+          }
+        });
       }
+      this.dialogElementVisible = true;
     },
     // 元素选择
     elementPick(item) {
-      for (let i = 0; i < this.elementList.length; i++) {
-        if (this.elementList[i].id === item.id && this.elementList[i].isActive) {
-          this.selectElementList.splice(i, 1);
-          this.$set(this.elementList, i, {
-            ...item,
-            isActive: false
-          })
-        } else if (this.elementList[i].id === item.id) {
-          this.$set(this.selectElementList, i, {
-            ...item,
-            isActive: true
-          })
-          this.$set(this.elementList, i, {
-            ...item,
-            isActive: true
-          });
+      // 查找元素是否已存在 如果存在则删除 没有则新增
+      const len = this.selectElementList.length;
+      for (let i = 0; i < len; i++) {
+        if (this.selectElementList[i].mc === item.mc) {
+          this.elementDel(this.selectElementList[i], i);
+          return
         }
       }
+      this.selectElementList.push(item);
     },
     // 删除元素
     elementDel(item, index) {
@@ -169,6 +166,7 @@ export default {
       const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
       return isLt2M;
     },
+    // 删除
     handleRemove(file, fileList) {
       this.fileList = fileList
     }
@@ -225,7 +223,7 @@ export default {
               <template v-if="field.field_type === 'element'">
                 <div class="t-item column-flex-center wrap"
                      v-for="(item, index) in selectElementList" :key="index" v-if="item">
-                  <span class="desc">{{ item.name }}</span>
+                  <span class="desc">{{ item.mc }}</span>
                   <img src="@/assets/img/base/appointment/element-del.png" class="element-del"
                        @click="elementDel(item, index)"
                        alt="">
@@ -310,15 +308,18 @@ export default {
       </div>
     </div>
 
-    <el-dialog title="选择元素" :visible.sync="dialogElementVisible" width="1300px" center>
-<!--      <div class="element-list">-->
-<!--        <div class="item" :class="{ active: item.isActive }"-->
-<!--             v-for="(item, index) in elementList"-->
-<!--             :key="index" @click="elementPick(item, index)">-->
-<!--          <span class="desc">{{ item ? item.name : '' }}</span>-->
-<!--        </div>-->
-<!--      </div>-->
-      <periodic></periodic>
+    <el-dialog title="选择元素" :visible.sync="dialogElementVisible" width="1200px" center>
+      <periodic :elementList="elementList" :selectElementList="selectElementList" @handleClickElement="elementPick"></periodic>
+      <div class="sel_element">
+        <p class="title">您已选择 <span>{{ selectElementList.length }}</span> 个元素</p>
+        <p class="el_it">
+          <span v-for="(item, index) in selectElementList" :key="index">{{ item.mc }}({{item.name}})</span>
+        </p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogElementVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogElementVisible = false">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -757,5 +758,39 @@ export default {
       }
     }
   }
+}
+
+.sel_element {
+  margin-top: 20px;
+  p {
+    font-size: 20px;
+    text-align: right;
+    color: #000;
+    span {
+      color: @theme;
+      font-weight: bold;
+    }
+  }
+  .el_it {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+    .el-input {
+      width: 220px;
+      margin-right: 10px;
+    }
+    span {
+      font-weight: 400;
+      margin-right: 10px;
+      display: inline-block;
+      font-size: 16px;
+      color: #555;
+    }
+  }
+}
+.el-button--primary {
+  background-color: #00479D;
+  color: #fff;
+  border-color: #00479D;
 }
 </style>
