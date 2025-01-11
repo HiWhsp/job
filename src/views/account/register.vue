@@ -3,39 +3,39 @@
     <div class="center">
       <div class="title">注册账户</div>
       <div class="form">
-        <el-form label-width="80px" label-position="right" :data="formData" :rules="formRules">
+        <el-form label-width="90px" label-position="right" :model="form" :rules="formRules">
           <el-form-item label="手机号:" prop="phone">
             <el-input clearable v-model="form.phone" placeholder="请输入手机号"></el-input>
           </el-form-item>
           <el-form-item label="验证码:" prop="code">
             <sms_phone :form="form"/>
           </el-form-item>
-          <el-form-item label="姓名:" prop="code">
+          <el-form-item label="姓名:" prop="name">
             <el-input clearable v-model="form.name" placeholder="请输入姓名"></el-input>
           </el-form-item>
-          <el-form-item label="身份:" prop="code">
+          <el-form-item label="身份:" prop="role">
             <el-select v-model="form.role" placeholder="请选择" clearable>
               <el-option v-for="item in list_sheng" :key="item.id" :label="item.title" :value="item.id"></el-option>
             </el-select>
             <span class="tip">*身份后期不能修改，请谨慎选择！</span>
           </el-form-item>
-          <el-form-item label="学校-院系:" prop="code" v-if="form.role === 1 || form.role === 2">
+          <el-form-item label="学校-院系:" prop="unit_name" v-if="form.role === 1 || form.role === 2">
             <div class="flex">
               <el-input clearable v-model="form.unit_name" placeholder="请填写学校"
                         style="margin-right: 15px;"></el-input>
               <el-input clearable v-model="form.unit_group" placeholder="请填写院系"></el-input>
             </div>
           </el-form-item>
-          <el-form-item label="医院:" prop="code" v-if="form.role === 4">
+          <el-form-item label="医院:" prop="unit_name" v-if="form.role === 4">
             <el-input clearable v-model="form.unit_name" placeholder="请填写医院"></el-input>
           </el-form-item>
-          <el-form-item label="企业:" prop="code" v-if="form.role === 3">
+          <el-form-item label="企业:" prop="unit_name" v-if="form.role === 3">
             <el-input clearable v-model="form.unit_name" placeholder="请填写企业"></el-input>
           </el-form-item>
-          <el-form-item label="密码:" prop="code">
+          <el-form-item label="密码:" prop="password">
             <el-input clearable v-model="form.password" placeholder="请输入密码"></el-input>
           </el-form-item>
-          <el-form-item label="确认密码:" prop="code">
+          <el-form-item label="确认密码:" prop="password_confirm">
             <el-input clearable v-model="form.password_confirm" placeholder="请确认密码"></el-input>
           </el-form-item>
         </el-form>
@@ -77,8 +77,32 @@ export default {
         {id: 3, title: "企业"},
         {id: 4, title: "医院"},
       ],
-      formData: [],
-      formRules: {},
+      formRules: {
+        phone: [
+            {required: true, message: "请输入手机号", trigger: "blur"},
+            {pattern: /^1[3456789]\d{9}$/, message: "请输入正确的手机号", trigger: "blur"}
+        ],
+        code: [{required: true, message: "请输入验证码", trigger: "change"}],
+        name: [
+            {required: true, message: "请输入姓名", trigger: "change"},
+            {min: 2, max: 10, message: "长度在 2 到 10 个字符", trigger: "change"}
+        ],
+        role: [{required: true, message: "请选择身份", trigger: "change"}],
+        unit_name: [{required: true, message: "请输入学校/医院/企业", trigger: "change"}],
+        password: [{required: true, message: "请输入密码", trigger: "change"}],
+        password_confirm: [
+          {required: true, message: "请输入确认密码", trigger: "change"},
+          {
+            validator: (rule, value, callback) => {
+              if (value !== this.form.password) {
+                callback(new Error("两次密码输入不一致"));
+              } else {
+                callback();
+              }
+            }
+          }
+        ],
+      },
     }
   },
   mounted() {

@@ -233,7 +233,7 @@ export default {
     // 登录
     login_submit() {
       // debugger;
-      let {phone, password} = this.form;
+      let {phone, password, code} = this.form;
       let reg_phone = /^1[3-9]\d{9}$/;
       let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
 
@@ -284,18 +284,32 @@ export default {
           return;
         }
 
-        this.$api("users_codeLogin", {
-          phone,
-          code,
+        this.$api({
+          url: 'login',
+          method: 'post',
+          data: {
+            type: 2, // 1密码登录 2验证码登录
+            phone,
+            code,
+          }
         }).then((res) => {
-          //console.log("登录", res);
           let {code, data, message} = res;
+          if (code == 200) {
+            if (this.savePass) {
+              localStorage.setItem("save1", this.encodeString(this.form.phone));
+              localStorage.setItem("save2", this.encodeString(this.form.password));
+            } else {
+              localStorage.setItem("save1", "");
+              localStorage.setItem("save2", "");
+            }
 
-          if (code == 1) {
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("isSupplier", 'false');
             this.$store.commit("set_baseInfo", data);
             this.$store.dispatch("getUserloginedInfo");
 
-            this.$router.push("/");
+            // this.$router.push("/");
+            this.$router.push("/my");
           }
         });
       }

@@ -122,9 +122,11 @@ export default {
           display: inline-block;
           width: 50px;
           height: 50px;
-          background: #fff;
           border-radius: 50%;
           margin-right: 10px;
+          background-image: url("~@/assets/img/base/kefu.png");
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
         }
 
         span {

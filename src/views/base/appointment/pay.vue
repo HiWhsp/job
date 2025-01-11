@@ -66,6 +66,7 @@ export default {
         if (res.code === 200) {
           this.goUrl();
         }
+      }).catch(err => {
       })
     },
     goUrl() {
@@ -78,6 +79,9 @@ export default {
           path: `/appointment-status?paymentType=${this.paymentType}&status=1`
         })
       }
+    },
+    toURL(item) {
+      this.$router.push(item.url);
     }
   }
 }
@@ -140,14 +144,14 @@ export default {
                 <img src="@/assets/img/base/appointment/pay-1.png" alt="">
                 <span>个人预存</span>
                 <span class="num">¥{{ baseInfo.money }}元</span>
-                <span class="tip pointer">我要预存</span>
+                <span class="tip pointer" @click="toURL({url: '/preSave-pay'})">我要预存</span>
               </el-radio>
-              <el-radio label="yue">
+              <el-radio label="team_yue">
                 <img src="@/assets/img/base/appointment/pay-2.png" alt="">
                 <span>团体预存</span>
                 <span class="num">¥{{ baseInfo.team_money }}元</span>
-                <span class="tip" v-if="baseInfo.if_leader == 0">申请加入团体</span>
-                <span class="tip" v-if="baseInfo.if_leader == 1">立即充值</span>
+                <span class="tip" v-if="baseInfo.if_leader == 0" @click="toURL({url: '/joinGroup'})">申请加入团体</span>
+                <span class="tip" v-if="baseInfo.if_leader == 1" @click="toURL({url: '/preSave-pay'})">立即充值</span>
               </el-radio>
             </el-radio-group>
           </div>
@@ -157,12 +161,12 @@ export default {
               <el-radio label="credit_pay">
                 <img src="@/assets/img/base/appointment/pay-3.png" alt="">
                 <span>个人信用支付</span>
-                <span class="tip" v-if="baseInfo.real_auth != 2">立即实名认证</span>
+                <span class="tip" v-if="baseInfo.real_auth != 2" @click="toURL({url: '/my-home'})">立即实名认证</span>
               </el-radio>
-              <el-radio label="credit_pay">
+              <el-radio label="team_credit_pay">
                 <img src="@/assets/img/base/appointment/pay-4.png" alt="">
                 <span>团体信用支付</span>
-                <span class="tip" v-if="baseInfo.if_leader == 0">申请加入团体</span>
+                <span class="tip" v-if="baseInfo.if_leader == 0" @click="toURL({url: '/joinGroup'})">申请加入团体</span>
               </el-radio>
             </el-radio-group>
           </div>

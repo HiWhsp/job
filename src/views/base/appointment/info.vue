@@ -220,8 +220,8 @@ export default {
         <div class="val">
           <div class="sel">
             <el-radio-group v-model="params.if_urgent">
-              <el-radio label="0">3个工作日完成，1.5倍费用</el-radio>
-              <el-radio label="1">24小时完成，2倍费用</el-radio>
+              <el-radio label="0">不加急</el-radio>
+              <el-radio label="1">3个工作日完成，1.5倍费用</el-radio>
             </el-radio-group>
           </div>
           <div class="info"></div>

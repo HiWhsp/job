@@ -98,7 +98,7 @@ export default {
         :visible.sync="dialogVisible"
         width="30%"
         center>
-      <span>这是一段信息</span>
+      <span>预约前请先联系工作人员</span>
       <span slot="footer" class="dialog-footer">
         <el-button class="sub-btn" type="primary" @click="submit(false)">确 定</el-button>
       </span>

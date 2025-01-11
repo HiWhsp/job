@@ -1,7 +1,11 @@
 <script>
 import periodic from '@/components/periodic';
+import {quillEditor} from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+
 export default {
-  components: {periodic},
+  components: {periodic, quillEditor},
   data() {
     return {
       typeId: '',
@@ -18,31 +22,21 @@ export default {
       ],
       product_form: [], // 样品表单
       elementList: [], // 元素列表
-      selectElementList: [], // 选中的元素
+      selectElementList: [], // 选中的元素 多个样品
+      selectElementIndex: 0, // 元素样品下标
+      elementFieldId: '', // 元素id
       preOrderDetail: {}, // 订单信息
       fileList: [],  // 上传的文件
       uploadList: [], // 上传的文件
-      priceList: [], // 样品价格列 表
+      priceList: [], // 样品价格列表
     }
   },
   watch: {
-    isShow() {
-      this.$api({
-        url: 'order_pay_info',
-        method: 'post',
-        data: {
-          yf_type: this.preOrderDetail.yf_type || '1',
-          tongshebei: this.preOrderDetail.tongshebei || '',
-          if_urgent: this.preOrderDetail.if_urgent || '',
-          sample_type: this.preOrderDetail.sample_type || '',
-          product_id: this.preOrderDetail.product_id || '',
-          form: this.contentList.map(item => item.product_form)
-        }
-      }).then(res => {
-        if (res.code === 200) {
-          this.priceList = res.data;
-        }
-      })
+    contentList: {
+      handler() {
+        this.getPrice();
+      },
+      deep: true
     }
   },
   mounted() {
@@ -91,6 +85,7 @@ export default {
       }).then(res => {
         if (res.code === 200) {
           this.product_form = res.data;
+          this.elementFieldId = this.product_form.find(item => item.field_type === 'element').id
         }
       })
     },
@@ -101,19 +96,26 @@ export default {
         isShow: true,
         product_form: form
       })
+      this.selectElementList.push([])
     },
     // 设置表单的选择项
     setForm() {
       const form = {};
       this.product_form.forEach(item => {
-        form[item.id] = '';
+        console.log(item.field_type)
+        if (item.field_type == 'number_range') {
+          form[item.id] = ['', ''];
+        } else {
+          form[item.id] = '';
+        }
       })
       return form
     },
     // 选择元素
-    selectElement(list) {
+    selectElement(list, index) {
+      this.selectElementIndex = index;
       if (list.length) {
-        this.elementList = list.map(item=>{
+        this.elementList = list.map(item => {
           return {
             mc: item,
             isActive: false,
@@ -126,14 +128,15 @@ export default {
     // 元素选择
     elementPick(item) {
       // 查找元素是否已存在 如果存在则删除 没有则新增
-      const len = this.selectElementList.length;
+      const len = this.selectElementList[this.selectElementIndex].length;
       for (let i = 0; i < len; i++) {
-        if (this.selectElementList[i].mc === item.mc) {
-          this.elementDel(this.selectElementList[i], i);
+        if (this.selectElementList[this.selectElementIndex][i].mc === item.mc) {
+          this.elementDel(this.selectElementList[this.selectElementIndex][i], i);
           return
         }
       }
-      this.selectElementList.push(item);
+      this.selectElementList[this.selectElementIndex].push(item);
+      this.contentList[this.selectElementIndex].product_form[this.elementFieldId] = this.selectElementList[this.selectElementIndex].map(item => item.mc).join('$');
     },
     // 删除元素
     elementDel(item, index) {
@@ -141,15 +144,51 @@ export default {
         ...item,
         isActive: false
       })
-      this.selectElementList.splice(index, 1);
+      this.selectElementList[this.selectElementIndex].splice(index, 1);
+      this.contentList[this.selectElementIndex].product_form[this.elementFieldId] = this.selectElementList[this.selectElementIndex].map(item => item.mc).join('$');
     },
     // 下一步
     goUrl() {
-      this.preOrderDetail.attachment = JSON.stringify(this.fileList);
-      this.preOrderDetail.form = this.contentList.map(item => item.product_form);
-      localStorage.setItem('preOrderDetail', JSON.stringify(this.preOrderDetail));
-      this.$router.push({
-        path: '/appointment-info'
+      this.$api({
+        url: 'order_pay_info',
+        method: 'post',
+        data: {
+          yf_type: this.preOrderDetail.yf_type || '1',
+          tongshebei: this.preOrderDetail.tongshebei || '',
+          if_urgent: this.preOrderDetail.if_urgent || '',
+          sample_type: this.preOrderDetail.sample_type || '',
+          product_id: this.preOrderDetail.product_id || '',
+          form: this.contentList.map(item => item.product_form)
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.preOrderDetail.attachment = JSON.stringify(this.fileList);
+          this.preOrderDetail.form = this.contentList.map(item => item.product_form);
+          localStorage.setItem('preOrderDetail', JSON.stringify(this.preOrderDetail));
+          this.$router.push({
+            path: '/appointment-info'
+          })
+        }
+      })
+
+    },
+    // 获取价格
+    getPrice() {
+      this.$api({
+        url: 'order_pay_info',
+        method: 'post',
+        data: {
+          yf_type: this.preOrderDetail.yf_type || '1',
+          tongshebei: this.preOrderDetail.tongshebei || '',
+          if_urgent: this.preOrderDetail.if_urgent || '',
+          sample_type: this.preOrderDetail.sample_type || '',
+          product_id: this.preOrderDetail.product_id || '',
+          form: this.contentList.map(item => item.product_form)
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.priceList = res.data;
+        }
       })
     },
     //上传相关
@@ -169,6 +208,11 @@ export default {
     // 删除
     handleRemove(file, fileList) {
       this.fileList = fileList
+    },
+    delContent(index) {
+      this.contentList.splice(index, 1);
+      this.selectElementList.splice(index, 1);
+      this.contentList[this.selectElementIndex].product_form[this.elementFieldId] = '';
     }
   }
 }
@@ -180,7 +224,7 @@ export default {
     <div class="content">
       <div class="content-item" v-for="(item, index) in contentList" :key="index">
         <div class="title-top">
-          <span>样品{{ index + 1 }} <i class="el-icon-delete" @click="contentList.splice(index, 1)"></i></span>
+          <span>样品{{ index + 1 }} <i class="el-icon-delete" @click="delContent(index)"></i></span>
           <i class="el-icon-arrow-down pointer" :class="{'hide': item.isShow}" @click="item.isShow = !item.isShow"></i>
         </div>
         <div class="select" :class="{'hide': item.isShow}">
@@ -200,20 +244,23 @@ export default {
                         :placeholder="'请输入' + field.title"></el-input>
               <!--              数字区间-->
               <template v-if="field.field_type === 'number_range'">
-                <el-input v-model="contentList[index].product_form[field.id]"
+                <el-input v-model="contentList[index].product_form[field.id][0]"
                           type="text"
-                          @input="(e)=>contentList[index].product_form[field.id] = e.replace(/[^0-9]/g, '')"
+                          @input="(e)=>contentList[index].product_form[field.id][0] = e.replace(/[^0-9]/g, '')"
                           :placeholder="'请输入' + field.title"></el-input>
                 <span class="col">—</span>
-                <el-input v-model="contentList[index].product_form[field.id]"
+                <el-input v-model="contentList[index].product_form[field.id][1]"
                           type="text"
-                          @input="(e)=>contentList[index].product_form[field.id] = e.replace(/[^0-9]/g, '')"
+                          @input="(e)=>contentList[index].product_form[field.id][1] = e.replace(/[^0-9]/g, '')"
                           :placeholder="'请输入' + field.title"></el-input>
               </template>
               <!--              文本域-->
-              <el-input v-if="field.field_type === 'textarea' || field.field_type === 'richtext'"
+              <el-input v-if="field.field_type === 'textarea'"
                         v-model="contentList[index].product_form[field.id]"
                         type="textarea" :rows="4" :placeholder="'请输入' + field.title"></el-input>
+              <!--富文本-->
+              <quillEditor v-if="field.field_type === 'richtext'"
+                           v-model="contentList[index].product_form[field.id]"></quillEditor>
               <!--              单选-->
               <el-radio-group v-if="field.field_type === 'radio'"
                               v-model="contentList[index].product_form[field.id]">
@@ -222,13 +269,14 @@ export default {
               <!--              元素周期表-->
               <template v-if="field.field_type === 'element'">
                 <div class="t-item column-flex-center wrap"
-                     v-for="(item, index) in selectElementList" :key="index" v-if="item">
-                  <span class="desc">{{ item.mc }}</span>
+                     v-for="(xItem, xI) in selectElementList[index]" :key="xI" v-if="xItem">
+                  <span class="desc">{{ xItem.mc }}</span>
                   <img src="@/assets/img/base/appointment/element-del.png" class="element-del"
-                       @click="elementDel(item, index)"
+                       @click="elementDel(xItem, xI)"
                        alt="">
                 </div>
-                <div class="sel-element" v-if="field.field_type === 'element'" @click="selectElement(field.content)">
+                <div class="sel-element" v-if="field.field_type === 'element'"
+                     @click="selectElement(field.content, index)">
                   选择元素
                 </div>
               </template>
@@ -309,11 +357,16 @@ export default {
     </div>
 
     <el-dialog title="选择元素" :visible.sync="dialogElementVisible" width="1200px" center>
-      <periodic :elementList="elementList" :selectElementList="selectElementList" @handleClickElement="elementPick"></periodic>
+      <periodic :elementList="elementList" :selectElementList="selectElementList[selectElementIndex]"
+                @handleClickElement="elementPick"></periodic>
       <div class="sel_element">
-        <p class="title">您已选择 <span>{{ selectElementList.length }}</span> 个元素</p>
+        <p class="title">您已选择 <span>{{
+            selectElementList[selectElementIndex] ? selectElementList[selectElementIndex].length : 0
+          }}</span> 个元素</p>
         <p class="el_it">
-          <span v-for="(item, index) in selectElementList" :key="index">{{ item.mc }}({{item.name}})</span>
+          <span v-for="(item, index) in selectElementList[selectElementIndex]" :key="index">{{ item.mc }}({{
+              item.name
+            }})</span>
         </p>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -762,23 +815,28 @@ export default {
 
 .sel_element {
   margin-top: 20px;
+
   p {
     font-size: 20px;
     text-align: right;
     color: #000;
+
     span {
       color: @theme;
       font-weight: bold;
     }
   }
+
   .el_it {
     display: flex;
     justify-content: flex-end;
     margin-top: 10px;
+
     .el-input {
       width: 220px;
       margin-right: 10px;
     }
+
     span {
       font-weight: 400;
       margin-right: 10px;
@@ -788,6 +846,7 @@ export default {
     }
   }
 }
+
 .el-button--primary {
   background-color: #00479D;
   color: #fff;
