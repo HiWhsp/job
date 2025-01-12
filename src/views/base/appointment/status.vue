@@ -5,7 +5,8 @@ export default {
     return {
       option: {
         paymentType: '', // 支付方式 1个人预存 2团体预存 3个人信用支付 4团体信用支付 5微信支付 6支付宝
-        status: '' // 支付状态 1成功 2失败
+        status: '', // 支付状态 1成功 2失败
+        preOrderDetail: {}
       }
     }
   },
@@ -26,11 +27,27 @@ export default {
     }
   },
   mounted() {
-    this.option = this.$route.query
+    this.option = this.$route.query;
+    this.preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
   },
   methods: {
     goUrl(url) {
       this.$router.push({path: url})
+    },
+    downLoad() {
+      this.$api({
+        url: 'download_order',
+        method: 'post',
+        data: {
+          orderno: this.preOrderDetail.payInfo.orderno
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          window.open(res.data.url, "_blank")
+        }
+      }).catch(err => {
+        this.$message.error('下载失败')
+      })
     }
   }
 }
@@ -39,14 +56,14 @@ export default {
 <template>
   <div class="container main">
     <div class="content">
-      <img   src="@/assets/img/base/appointment/pay-success.png" alt="" v-if="option.status == 1">
+      <img src="@/assets/img/base/appointment/pay-success.png" alt="" v-if="option.status == 1">
       <img src="@/assets/img/base/appointment/pay-error.png" alt="" v-if="option.status == 2">
       <p class="status-text">{{ option.status == 1 ? '支付成功' : '支付失败' }}</p>
       <p class="status-detail">{{ detail }}</p>
       <div class="btn-box" v-if="option.status == 1">
         <div class="btn" @click="goUrl('/order')">订单详情</div>
-<!--        <div class="btn back">下载预约单</div>-->
-<!--        <div class="btn">申请发票</div>-->
+        <div class="btn back" @click="downLoad()">下载预约单</div>
+        <div class="btn" @click="goUrl('/order')">申请发票</div>
         <div class="btn" @click="goUrl('/analyze_list?type=523')">继续预约</div>
       </div>
       <div class="btn-box" v-else>

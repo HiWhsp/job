@@ -6,6 +6,7 @@ export default {
       paymentType: '', // 支付方式 1个人预存 2团体预存 3个人信用支付 4团体信用支付 5微信支付 6支付宝
       integral: '', //
       isShow: true,
+      alipay_web: '',
       preOrderDetail: {}, // 订单信息
       priceList: []
     }
@@ -46,7 +47,7 @@ export default {
         data: {
           ...this.preOrderDetail
         }
-      }).then(res=>{
+      }).then(res => {
         if (res.code === 200) {
           this.pay(res.data);
         }
@@ -64,16 +65,23 @@ export default {
         }
       }).then(res => {
         if (res.code === 200) {
+          this.preOrderDetail.orderno = item.orderno;
+          this.preOrderDetail.priceList = this.priceList;
+          this.preOrderDetail.payInfo = res.data;
+          localStorage.setItem('preOrderDetail', JSON.stringify(this.preOrderDetail));
+          this.alipay_web = res.data.qrcode;
           this.goUrl();
         }
       }).catch(err => {
       })
     },
     goUrl() {
-      if (['wx_scan', 'alipay_web'].includes(this.paymentType)) {
+      if (this.paymentType == 'wx_scan') {
         this.$router.push({
           path: `/appointment-payment?paymentType=${this.paymentType}`
         })
+      } else if (this.paymentType == 'alipay_web') {
+        document.forms[0].submit()
       } else {
         this.$router.push({
           path: `/appointment-status?paymentType=${this.paymentType}&status=1`
@@ -96,7 +104,7 @@ export default {
         <div class="section-title">费用明细</div>
         <div class="section-ctx">
           <div class="item">
-            <div class="item-title">总金额 <span>¥{{  priceList.total }}</span></div>
+            <div class="item-title">总金额 <span>¥{{ priceList.total }}</span></div>
             <div class="item-val" v-for="(item, index) in priceList.data" :key="index">
               <p><span>{{ item.sample_title }}</span><span>样品数量：{{ item.num }}</span></p>
               <p>¥{{ item.unit_price }} * {{ item.num }}</p>
@@ -107,7 +115,7 @@ export default {
             </div>
             <div class="item-val">
               <p>运费</p>
-              <p>¥{{  priceList.yunfei || '0.00' }}</p>
+              <p>¥{{ priceList.yunfei || '0.00' }}</p>
             </div>
             <div class="item-val">
               <p>积分抵现</p>
@@ -192,6 +200,7 @@ export default {
       </div>
       <div class="next-btn" @click="submit()">确认并支付</div>
     </div>
+    <div v-html="alipay_web"></div>
   </div>
 </template>
 

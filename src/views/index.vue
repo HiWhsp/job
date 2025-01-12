@@ -190,7 +190,9 @@ export default {
   justify-content: space-between;
   margin-top: 45px;
   height: 130px;
-  background: #FFFFFF;
+  background-image: url("~@/assets/img/base/tab_bg.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   box-shadow: 0px 3px 6px 1px rgba(0, 71, 157, 0.2);
   border-radius: 13px 13px 13px 13px;
   padding: 28px 30px;

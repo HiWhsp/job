@@ -1,6 +1,9 @@
 <script>
+import address_modal from "@/components/address/address_modal.vue";
+
 export default {
   name: "pay",
+  components: {address_modal},
   data() {
     return {
       isShow: true,
@@ -104,6 +107,9 @@ export default {
       this.$router.push({
         path: '/appointment-invoice'
       })
+    },
+    do_address_add() {
+      this.$refs.address_modal.init();
     }
   }
 }
@@ -150,7 +156,7 @@ export default {
         <p class="label">回收地址</p>
         <div class="val">
           <div class="sel">
-            <div class="btn-ripple" v-if="list_address.length === 0">
+            <div class="btn-ripple" v-if="list_address.length === 0" @click="do_address_add()">
               <img src="@/assets/img/base/appointment/address.png" alt="">
               <span>新增地址</span>
             </div>
@@ -251,7 +257,7 @@ export default {
           </el-radio-group>
 
           <div class="item">
-            <p class="label">收获地址</p>
+            <p class="label">寄样地址</p>
             <div class="val">
               <div class="info">
                 <span>赖真舜</span>
@@ -279,8 +285,15 @@ export default {
           <span class="num">样品数量：{{ item.num || 0 }}</span>
           <span class="money">¥{{ item.unit_price || 0 }}</span>
         </div>
+        <div class="item">
+          <span>运费</span>
+          <span class="num"> </span>
+          <span class="money">¥{{ priceList.yunfei || 0 }}</span>
+        </div>
       </div>
     </div>
+
+    <address_modal ref="address_modal" @confirm="setView"/>
   </div>
 </template>
 
@@ -658,6 +671,7 @@ export default {
         display: flex;
 
         span {
+          min-width: 50px;
           font-weight: 400;
           font-size: 16px;
           color: #333333;

@@ -21,12 +21,15 @@ export default {
       realRules: {
         name: [
           {required: true, message: '请输入姓名', trigger: 'blur'},
+          {min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur'}
         ],
         idcard: [
-          {required: true, message: '请输入身份证号', trigger: 'blur'}
+          {required: true, message: '请输入身份证号', trigger: 'blur'},
+          {pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/, message: "请输入正确的身份证号", trigger: "blur"}
         ],
         phone: [
-          {required: true, message: '请输入手机号', trigger: 'blur'}
+          {required: true, message: '请输入手机号', trigger: 'blur'},
+          {pattern: /^1[3456789]\d{9}$/, message: "请输入正确的手机号", trigger: "blur"}
         ],
         code: [
           {required: true, message: '请输入验证码', trigger: 'blur'}
@@ -173,10 +176,19 @@ export default {
     },
 
     getCode() {
+      if (!this.realForm.phone) {
+        alertErr('请输入手机号');
+        return;
+      }
+      if (!/^1[3456789]\d{9}$/.test(this.realForm.phone)) {
+        alertErr('手机号格式有误');
+        return;
+      }
       this.$api({
         url: 'sendsms',
         method: 'post',
         data: {
+          scene: 'edit',
           phone: this.baseInfo.phone
         }
       }).then(res => {
@@ -189,7 +201,7 @@ export default {
       this.$router.push({
         path: url
       })
-    }
+    },
   }
 }
 </script>
@@ -368,15 +380,16 @@ export default {
           <el-form-item label="姓名：" prop="name">
             <el-input v-model="realForm.name" placeholder="请输入姓名"></el-input>
           </el-form-item>
-          <el-form-item label="身份证号：" prop="name">
+          <el-form-item label="身份证号：" prop="idcard">
             <el-input v-model="realForm.idcard" placeholder="请输入准确身份证号"></el-input>
           </el-form-item>
-          <el-form-item label="手机号：" prop="name">
-            <el-input placeholder="请输入手机号" v-model="realForm.phone">
-              <template slot="append">获取验证码</template>
-            </el-input>
+          <el-form-item label="手机号：" prop="phone">
+            <div class="flex">
+              <el-input placeholder="请输入手机号" v-model="realForm.phone"></el-input>
+              <el-button type="primary" @click="getCode">发送验证码</el-button>
+            </div>
           </el-form-item>
-          <el-form-item label="验证码：" prop="name">
+          <el-form-item label="验证码：" prop="code">
             <el-input placeholder="请输入验证码" v-model="realForm.code"></el-input>
           </el-form-item>
           <el-form-item label="身份证照片：" prop="idcard_pic2">

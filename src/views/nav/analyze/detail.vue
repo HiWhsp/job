@@ -6,7 +6,8 @@ export default {
       id: this.$route.query.id,
       inventoryId: this.$route.query.inventoryId,
       dialogVisible: false,
-      detail: {}
+      detail: {},
+      prodList: []
     }
   },
   watch: {
@@ -34,12 +35,26 @@ export default {
           this.detail = res.data
         }
       })
+
+      this.$api({
+        url: 'cms_product_list',
+        method: 'post',
+        data: {
+          column_id: 523,
+          page: 1,
+          limit: 4
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.prodList = res.data;
+        }
+      })
     },
     // 立即预约
     submit(temp) {
       this.dialogVisible = temp;
       if (!temp) {
-        localStorage.setItem('preOrderDetail', JSON.stringify({title: this.detail.title }));
+        localStorage.setItem('preOrderDetail', JSON.stringify({title: this.detail.title}));
         this.$router.push('/appointment?id=' + this.id)
       }
     },
@@ -56,11 +71,11 @@ export default {
   <div>
     <div class="top-box">
       <div class="img">
-        <img src="@/assets/img/base/appointment/play-img.png" alt="">
+        <img :src="detail.thumb" alt="">
       </div>
       <div class="info">
         <p class="title">{{ detail.title }}</p>
-        <p><span>仪器型号</span> <span>FETecnal F20, TF30, JEOL JEM 200F, FETalos F00</span></p>
+        <p><span>仪器型号</span> <span>{{ detail.models || '无' }}</span></p>
         <p><span>预约次数</span> <span>{{ detail.orders }}次</span></p>
         <p><span>服务周期</span> <span v-html="detail.period"></span></p>
         <p><span>好评率</span> <span>{{ detail.comments }}</span></p>
@@ -84,11 +99,11 @@ export default {
     <div class="tip-box">
       <div class="title">其他设备</div>
       <div class="content">
-        <div class="it" v-for="i in 4">
+        <div class="it" v-for="i in prodList" :key="i.id" @click="goUrl(i)">
           <div class="img-box">
-            <img src="@/assets/img/base/appointment/play-img.png" alt="">
+            <img :src="i.thumb" alt="">
           </div>
-          <p>双束聚焦电子离子显微镜</p>
+          <p class="ellipsis-1">{{ i.title }}</p>
         </div>
       </div>
     </div>
@@ -98,7 +113,7 @@ export default {
         :visible.sync="dialogVisible"
         width="30%"
         center>
-      <span>预约前请先联系工作人员</span>
+      <span>{{ detail.content2 }}</span>
       <span slot="footer" class="dialog-footer">
         <el-button class="sub-btn" type="primary" @click="submit(false)">确 定</el-button>
       </span>

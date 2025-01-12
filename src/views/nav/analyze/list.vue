@@ -54,7 +54,7 @@ export default {
     <div class="tip">可出具CMA/CNAS报告</div>
     <div class="list">
       <div class="list-item" v-for="(it, index) in list" :key="it.id">
-        <img src="../../../assets/img/base/appointment/play-img.png" alt="">
+        <img :src="it.thumb" alt="">
         <div class="title ellipsis-1">{{ it.title }}</div>
         <div class="desc ellipsis-1">{{ it.description }}</div>
         <div class="btn" @click="goUrl(it.id)">立即预约</div>

@@ -191,6 +191,11 @@ export default {
           <span class="num">样品数量：{{ item.num || 0 }}</span>
           <span class="money">¥{{ item.unit_price || 0 }}</span>
         </div>
+        <div class="item">
+          <span>运费</span>
+          <span class="num"> </span>
+          <span class="money">¥{{ priceList.yunfei || 0 }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -321,6 +326,7 @@ export default {
         display: flex;
 
         span {
+          min-width: 50px;
           font-weight: 400;
           font-size: 16px;
           color: #333333;

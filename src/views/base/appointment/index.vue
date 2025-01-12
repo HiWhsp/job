@@ -12,6 +12,8 @@ export default {
       selectType: '',
       isShow: true,
       dialogElementVisible: false,
+      dialogVisible: false,
+      detail: {}, // 预约详情
       // 样品列表
       contentList: [
         // {
@@ -86,6 +88,18 @@ export default {
         if (res.code === 200) {
           this.product_form = res.data;
           this.elementFieldId = this.product_form.find(item => item.field_type === 'element').id
+        }
+      })
+      //   获取设备详情
+      this.$api({
+        url: 'cms_product_detail',
+        method: "post",
+        data: {
+          id: this.preOrderDetail.product_id
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.detail = res.data
         }
       })
     },
@@ -213,6 +227,21 @@ export default {
       this.contentList.splice(index, 1);
       this.selectElementList.splice(index, 1);
       this.contentList[this.selectElementIndex].product_form[this.elementFieldId] = '';
+    },
+
+    // 跳转
+    toUrl(url) {
+      this.$router.push({
+        path: url
+      })
+    },
+    // 申请单下载
+    Download() {
+      window.open(this.detail.paper, "_blank")
+    },
+    // 播放
+    playVideo() {
+      this.dialogVisible = true;
     }
   }
 }
@@ -264,7 +293,7 @@ export default {
               <!--              单选-->
               <el-radio-group v-if="field.field_type === 'radio'"
                               v-model="contentList[index].product_form[field.id]">
-                <el-radio :label="it.text" v-for="(it, i) in field.content" :key="it.text">{{ it.text }}</el-radio>
+                <el-radio style="margin-bottom: 5px;" :label="it.text" v-for="(it, i) in field.content" :key="it.text">{{ it.text }}</el-radio>
               </el-radio-group>
               <!--              元素周期表-->
               <template v-if="field.field_type === 'element'">
@@ -331,6 +360,11 @@ export default {
             <span class="num">样品数量：{{ item.num || 0 }}</span>
             <span class="money">¥{{ item.unit_price || 0 }}</span>
           </div>
+          <div class="item">
+            <span>运费</span>
+            <span class="num"> </span>
+            <span class="money">¥{{ priceList.yunfei || 0 }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -339,20 +373,20 @@ export default {
       <div class="right-item">
         <p>仪器图片</p>
         <div class="play">
-          <img src="@/assets/img/base/appointment/play-img.png" alt="">
-          <img src="@/assets/img/base/appointment/play.png" class="play-btn" alt="">
+          <img :src="detail.thumb" alt="">
+          <img src="@/assets/img/base/appointment/play.png" class="play-btn" alt="" @click="playVideo">
         </div>
-        <div class="lock-detail">查看仪器详情 ></div>
+        <div class="lock-detail" @click="toUrl('/analyze_detail?id=' + detail.id)">查看仪器详情 ></div>
       </div>
       <div class="right-item">
         <p>技术顾问</p>
         <div class="idea">
           <span class="tit">一对一为您答疑解惑</span>
-          <img src="@/assets/img/base/appointment/code.png" alt="">
+          <img :src="detail.guwen" alt="">
           <span class="consult">立即扫码咨询</span>
         </div>
         <p style="margin-top: 40px;">申请单下载</p>
-        <div class="down">点击下载文件</div>
+        <div class="down" @click="Download">点击下载文件</div>
       </div>
     </div>
 
@@ -373,6 +407,14 @@ export default {
         <el-button @click="dialogElementVisible = false">取 消</el-button>
         <el-button type="primary" @click="dialogElementVisible = false">确 定</el-button>
       </span>
+    </el-dialog>
+
+    <el-dialog
+        title="仪器视频"
+        :visible.sync="dialogVisible"
+        width="30%"
+        center>
+      <video :src="detail.video" controls="controls" width="100%"></video>
     </el-dialog>
   </div>
 </template>
@@ -524,6 +566,7 @@ export default {
         display: flex;
 
         span {
+          min-width: 50px;
           font-weight: 400;
           font-size: 16px;
           color: #333333;

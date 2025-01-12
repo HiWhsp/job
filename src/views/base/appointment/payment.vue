@@ -3,8 +3,15 @@ export default {
   name: "payment",
   data() {
     return {
-      isShow: false
+      isShow: false,
+      preOrderDetail: {},
     }
+  },
+  mounted() {
+    this.preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
+  },
+  methods: {
+
   }
 }
 </script>
@@ -12,9 +19,9 @@ export default {
 <template>
   <div class="container main">
     <div class="title">
-      <span>下单：原子力显微镜</span>
+      <span>下单：{{ preOrderDetail.title }}</span>
       <div class="money-info">
-        <p>合计费用: <span>{{ vuex_huobi }}0.00</span></p>
+        <p>合计费用: <span>{{ vuex_huobi }}{{ preOrderDetail.priceList.total }}</span></p>
         <i class="el-icon-arrow-down" :class="{'hide': isShow}" @click="isShow = !isShow"></i>
       </div>
     </div>
@@ -28,8 +35,8 @@ export default {
         <p>扫一扫付款（元）</p>
         <div class="flex">
           <div class="left">
-            <span>79.11</span>
-            <img class="code" src="@/assets/img/base/appointment/pay-code.png" alt="">
+            <span>{{ preOrderDetail.payInfo.paymoney }}</span>
+            <img class="code" :src="preOrderDetail.payInfo.qrcode" alt="">
             <img class="info" src="@/assets/img/base/appointment/sao.png" alt="">
           </div>
           <div class="right">
