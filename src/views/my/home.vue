@@ -189,7 +189,7 @@ export default {
         method: 'post',
         data: {
           scene: 'edit',
-          phone: this.baseInfo.phone
+          phone: this.realForm.phone
         }
       }).then(res => {
         if (res.code === 200) {
@@ -913,6 +913,10 @@ export default {
       flex-direction: column;
       align-items: center;
       justify-content: center;
+    }
+    img {
+      width: 150px;
+      height: 100px;
     }
   }
 }

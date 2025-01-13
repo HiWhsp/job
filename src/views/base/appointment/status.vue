@@ -35,19 +35,11 @@ export default {
       this.$router.push({path: url})
     },
     downLoad() {
-      this.$api({
-        url: 'download_order',
-        method: 'post',
-        data: {
-          orderno: this.preOrderDetail.payInfo.orderno
-        }
-      }).then(res => {
-        if (res.code === 200) {
-          window.open(res.data.url, "_blank")
-        }
-      }).catch(err => {
-        this.$message.error('下载失败')
-      })
+      const userId = localStorage.getItem('userId');
+      const token = localStorage.getItem('token');
+      const orderno = this.preOrderDetail.payInfo.orderno;
+      const url = `https://jxjsjc.dx.hdapp.com.cn/api/download_order?userId=${userId}&token=${token}&orderno=${orderno}`
+      window.open(url, "_blank")
     }
   }
 }
@@ -59,11 +51,11 @@ export default {
       <img src="@/assets/img/base/appointment/pay-success.png" alt="" v-if="option.status == 1">
       <img src="@/assets/img/base/appointment/pay-error.png" alt="" v-if="option.status == 2">
       <p class="status-text">{{ option.status == 1 ? '支付成功' : '支付失败' }}</p>
-      <p class="status-detail">{{ detail }}</p>
+      <p class="status-detail">请下载预约单，打印后随样品一同寄送！</p>
       <div class="btn-box" v-if="option.status == 1">
         <div class="btn" @click="goUrl('/order')">订单详情</div>
         <div class="btn back" @click="downLoad()">下载预约单</div>
-        <div class="btn" @click="goUrl('/order')">申请发票</div>
+        <div class="btn" @click="goUrl('/invoice')">申请发票</div>
         <div class="btn" @click="goUrl('/analyze_list?type=523')">继续预约</div>
       </div>
       <div class="btn-box" v-else>

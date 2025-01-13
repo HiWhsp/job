@@ -103,6 +103,42 @@ export default {
     // 切换tab
     tabClick(item) {
       this.tabIndex = item.value
+    },
+    toPay(item) {
+      this.$api({
+        url: 'order_detail',
+        method: 'post',
+        data: {
+          orderno: item.orderno
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          const params = {
+            ...res.data,
+            title: res.data.product_info.title,
+          }
+          localStorage.setItem('preOrderDetail', JSON.stringify(params));
+          this.$router.push('/appointment-pay');
+        }
+      })
+    },
+    // 取消订单
+    resetPay(item) {
+      this.$alert('确定要取消当前订单', '取消订单', {
+        confirmButtonText: '确定',
+        callback: action => {
+          if(action) {
+            this.$api({
+              url: 'order_cancel',
+              method: 'post',
+              data: {
+                orderno: item.orderno
+              }
+            })
+            this.search();
+          }
+        }
+      });
     }
   }
 }
@@ -272,10 +308,10 @@ export default {
                       <button class="btn-ripple fit-text" @click="goUrl('/orderDetail?orderno=' + item.orderno)">
                         查看订单
                       </button>
-                      <button class="btn-ripple fit-text btn-bg">
+                      <button class="btn-ripple fit-text btn-bg" @click="toPay(item)">
                         立即支付
                       </button>
-                      <button class="btn-ripple fit-text">
+                      <button class="btn-ripple fit-text" @click="resetPay(item)">
                         取消订单
                       </button>
                     </template>

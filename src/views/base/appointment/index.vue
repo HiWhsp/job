@@ -414,7 +414,7 @@ export default {
         :visible.sync="dialogVisible"
         width="30%"
         center>
-      <video :src="detail.video" controls="controls" width="100%"></video>
+      <video :src="'https://jxjsjc.dx.hdapp.com.cn/' + detail.video" controls="controls" width="100%" class="video-mask"></video>
     </el-dialog>
   </div>
 </template>
@@ -888,6 +888,10 @@ export default {
       color: #555;
     }
   }
+}
+
+.video-mask {
+  height: 300px;
 }
 
 .el-button--primary {

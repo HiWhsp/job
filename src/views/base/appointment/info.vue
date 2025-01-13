@@ -42,7 +42,7 @@ export default {
       this.params.contact_user = this.preOrderDetail.contact_user || '';
       this.params.contact_tel = this.preOrderDetail.contact_tel || '';
       this.params.contact_address = this.preOrderDetail.contact_address || '';
-      this.params.addressId = this.preOrderDetail.addressId || '';
+      this.params.address_id = this.preOrderDetail.address_id || '';
       this.query_address();
       if (this.preOrderDetail.form.length) {
         this.getPriceList(this.preOrderDetail.form);
@@ -68,8 +68,9 @@ export default {
     },
     //选择收货地址
     do_toggle_address(item) {
+      console.log(item)
       this.address_selected = item;
-      this.params.addressId = item.addressId
+      this.params.address_id = item.id
     },
     //获取地址列表
     query_address() {
@@ -90,7 +91,7 @@ export default {
 
           let obj = data.find((v) => v.is_default) || {};
           this.address_selected = obj || {};
-          this.params.addressId = this.address_selected.addressId
+          this.params.address_id = this.address_selected.id
         }
       })
     },
@@ -136,15 +137,15 @@ export default {
         <div class="val">
           <div class="sel">
             <el-radio-group v-model="params.if_recover">
-              <el-radio label="否">不回收 <img
-                  :src="require(`@/assets/img/base/appointment/${params.if_recover !== '是' ? 'recycle' : 'Recycle-active'}.png`)"
+              <el-radio label="0">不回收 <img
+                  :src="require(`@/assets/img/base/appointment/${params.if_recover != '1' ? 'recycle' : 'Recycle-active'}.png`)"
                   alt=""></el-radio>
-              <el-radio label="是">回收 <img
-                  :src="require(`@/assets/img/base/appointment/${params.if_recover !== '否' ? 'recycle' : 'Recycle-active'}.png`)"
+              <el-radio label="1">回收 <img
+                  :src="require(`@/assets/img/base/appointment/${params.if_recover != '0' ? 'recycle' : 'Recycle-active'}.png`)"
                   alt=""></el-radio>
             </el-radio-group>
           </div>
-          <div class="info" v-if="params.if_recover === '是'">
+          <div class="info" v-if="params.if_recover == '1'">
             <div class="tip">
               <p>回收时没法保证样品100%不被污染</p>
               <p>回收流程较繁琐，且部分测试对样品有破坏，如您的样品足够，建议不要选择回收</p>
@@ -152,7 +153,7 @@ export default {
           </div>
         </div>
       </div>
-      <div class="item" v-if="params.if_recover === '是'">
+      <div class="item" v-if="params.if_recover == '1'">
         <p class="label">回收地址</p>
         <div class="val">
           <div class="sel">
@@ -260,12 +261,12 @@ export default {
             <p class="label">寄样地址</p>
             <div class="val">
               <div class="info">
-                <span>赖真舜</span>
+                <span>{{ vuex_config.receive_name }}</span>
               </div>
               <div class="col"></div>
               <div class="info">
-                <span>15394458044</span>
-                <span>收件地址：福建省厦门市翔安区翔安南路厦门大学翔安校区能源材料大楼1号楼</span>
+                <span>{{ vuex_config.receive_tel }}</span>
+                <span>收件地址：{{ vuex_config.receive_address }}</span>
               </div>
             </div>
           </div>

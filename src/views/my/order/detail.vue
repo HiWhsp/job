@@ -29,7 +29,7 @@ export default {
         }
       }).then(res => {
         this.detail = res.data;
-        this.orderDetail = res.data.orderdetail
+        this.orderDetail = res.data.orderdetail;
       })
     },
     // 下载报告
@@ -38,6 +38,31 @@ export default {
     },
     goUrl(item) {
       this.$router.push(item.url)
+    },
+    // 取消订单
+    resetPay(item) {
+      this.$alert('确定要取消当前订单', '取消订单', {
+        confirmButtonText: '确定',
+        callback: action => {
+          if(action) {
+            this.$api({
+              url: 'order_cancel',
+              method: 'post',
+              data: {
+                orderno: item.orderno
+              }
+            })
+            this.search();
+          }
+        }
+      });
+    },
+    downLoad() {
+      const userId = localStorage.getItem('userId');
+      const token = localStorage.getItem('token');
+      const orderno = this.orderno;
+      const url = `https://jxjsjc.dx.hdapp.com.cn/api/download_order?userId=${userId}&token=${token}&orderno=${orderno}`
+      window.open(url, "_blank")
     }
   }
 }
@@ -57,10 +82,10 @@ export default {
           <div class="btn-wrap">
             <div class="btn" v-if="process == 10">修改订单</div>
             <div class="btn" v-if="process == 10">立即支付</div>
-            <div class="btn" v-if="process == 10">取消订单</div>
+            <div class="btn" v-if="process == 10" @click="resetPay(detail)">取消订单</div>
 
-            <div class="btn btn-bg" v-if="process == 30 || process == 40">申请开票</div>
-            <div class="btn" v-if="process == 30">下载预约单</div>
+            <div class="btn btn-bg" v-if="process == 30 || process == 40" @click="goUrl({url: '/invoice'})">申请开票</div>
+            <div class="btn" v-if="process == 30" @click="downLoad">下载预约单</div>
             <div class="btn btn-bg" @click="download_report" v-if="process == 40">下载报告</div>
             <div class="btn" @click="goUrl({url: '/afterSales'})" v-if="process == 40">售后服务</div>
             <div class="btn" @click="download_report" v-if="process == 40">提交异议</div>
@@ -129,7 +154,7 @@ export default {
         <!-- 样品是否回收 -->
         <div class="info-row">
           <span class="label">样品是否回收</span>
-          <div class="content">{{ detail.recover_address_txt }}</div>
+          <div class="content">{{ detail.if_recover == 1 ? '是' : '否' }}</div>
         </div>
         <!-- 实验留言 -->
         <div class="info-row">
@@ -139,16 +164,15 @@ export default {
       </div>
     </div>
     <div class="orderInfo-item">
-      <div class="order-info">
+      <div class="order-info" v-for="(item, index) in orderDetail" :key="index">
         <h3 class="section-title">下单信息</h3>
-        <p class="sample-info">{{ orderDetail[0] ? orderDetail[0].index : '' }}，数量：{{ orderDetail[0] ? orderDetail[0].num : '' }}，样品编号：{{ orderDetail[0] ? orderDetail[0].order_id : '' }}</p>
-
+        <p class="sample-info">{{ item.index }}，数量：{{ item.num }}，样品编号：{{ item.order_id }}</p>
         <!-- 表格 -->
         <table class="info-table">
           <tbody>
-          <tr v-for="(item, index) in orderDetail[0] ? orderDetail[0].content : []" :key="index">
-            <td class="label">{{ item.title }}</td>
-            <td class="value">{{ item.value }}</td>
+          <tr v-for="(it, i) in item.content" :key="i">
+            <td class="label">{{ it.title }}</td>
+            <td class="value">{{ it.value }}</td>
           </tr>
           </tbody>
         </table>

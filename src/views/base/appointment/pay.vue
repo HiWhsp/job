@@ -11,6 +11,11 @@ export default {
       priceList: []
     }
   },
+  computed: {
+    maxHeaderSize() {
+      return Math.round(+this.baseInfo.points / +this.vuex_config.point_rate) > 50 ? 50 : Math.round(+this.baseInfo.points / +this.vuex_config.point_rate);
+    },
+  },
   mounted() {
     this.preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
     this.setView();
@@ -119,7 +124,7 @@ export default {
             </div>
             <div class="item-val">
               <p>积分抵现</p>
-              <p>¥{{ integral ? priceList.max_point_pay : '0.00' }}</p>
+              <p>¥{{ integral ? maxHeaderSize : '0.00' }}</p>
             </div>
             <div class="item-val">
               <p>优惠</p>
@@ -132,13 +137,13 @@ export default {
         <div class="section-title">积分抵现</div>
         <div class="section-ctx">
           <div class="item">
-            <el-radio v-model="integral">
-              <span>使用积分抵现</span>
+            <el-checkbox v-model="integral" class="el-radio">
+              <span>我的积分</span>
               <span class="num">{{ baseInfo.points }}</span>
               <span>本次可抵现金</span>
-              <span class="num">¥{{ priceList.max_point_pay }}元</span>
-              <span class="tip">（单次最多可抵现50.00元）</span>
-            </el-radio>
+              <span class="num">¥{{ maxHeaderSize }}元</span>
+              <span class="tip">（单次最多可抵现{{ vuex_config.max_point_pay }}元）</span>
+            </el-checkbox>
           </div>
         </div>
       </div>
