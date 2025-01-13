@@ -40,19 +40,22 @@ export default {
       this.$router.push(item.url)
     },
     // 取消订单
-    resetPay(item) {
+    resetPay() {
       this.$alert('确定要取消当前订单', '取消订单', {
         confirmButtonText: '确定',
         callback: action => {
-          if(action) {
+          if (action) {
             this.$api({
               url: 'order_cancel',
               method: 'post',
               data: {
-                orderno: item.orderno
+                orderno: this.orderno
               }
             })
-            this.search();
+            this.$message({
+              type: 'success',
+              message: '取消成功!'
+            })
           }
         }
       });
@@ -63,7 +66,37 @@ export default {
       const orderno = this.orderno;
       const url = `https://jxjsjc.dx.hdapp.com.cn/api/download_order?userId=${userId}&token=${token}&orderno=${orderno}`
       window.open(url, "_blank")
-    }
+    },
+    // 立即支付， 修改订单
+    toPay(item) {
+      const params = {
+        ...this.detail,
+        attachment: JSON.stringify(this.detail.attachment),
+        title: this.detail.product_info.title,
+        form: []
+      }
+      this.detail.orderdetail.forEach((item, index) => {
+        if (item.content.length) {
+          // 将id作为key value作为值 存储到数组中 {id: 1252, value: "1", title: "样本数量", price: 0}
+          item.content.forEach((subItem, subIndex) => {
+            if (params.form[index]) {
+              params.form[index][subItem.id] = subItem.value
+            } else {
+              params.form[index] = {
+                [subItem.id]: subItem.value,
+              }
+            }
+          })
+        }
+      })
+      localStorage.setItem('preOrderDetail', JSON.stringify(params));
+      if (item) {
+        this.$router.push('/appointment?id=' + this.detail.product_id);
+      } else {
+        this.$router.push('/appointment-pay');
+
+      }
+    },
   }
 }
 </script>
@@ -80,11 +113,12 @@ export default {
           <p class="order-id">订单号：{{ detail.orderno }}</p>
           <p class="time">下单时间：{{ detail.created_at }}</p>
           <div class="btn-wrap">
-            <div class="btn" v-if="process == 10">修改订单</div>
-            <div class="btn" v-if="process == 10">立即支付</div>
-            <div class="btn" v-if="process == 10" @click="resetPay(detail)">取消订单</div>
+            <div class="btn" v-if="process == 10" @click="toPay(true)">修改订单</div>
+            <div class="btn" v-if="process == 10" @click="toPay(false)">立即支付</div>
+            <div class="btn" v-if="process == 10" @click="resetPay()">取消订单</div>
 
-            <div class="btn btn-bg" v-if="process == 30 || process == 40" @click="goUrl({url: '/invoice'})">申请开票</div>
+            <div class="btn btn-bg" v-if="process == 30 || process == 40" @click="goUrl({url: '/invoice'})">申请开票
+            </div>
             <div class="btn" v-if="process == 30" @click="downLoad">下载预约单</div>
             <div class="btn btn-bg" @click="download_report" v-if="process == 40">下载报告</div>
             <div class="btn" @click="goUrl({url: '/afterSales'})" v-if="process == 40">售后服务</div>
@@ -118,7 +152,9 @@ export default {
       <div class="sample-delivery">
         <!-- 左侧内容 -->
         <div class="left-content">
-          <p class="delivery-method">寄样方式: {{ detail.sample_type == 1 ? '自行寄样 (运费自付)' : detail.sample_type == 2 ? '上门取样' : '自己送样' }}</p>
+          <p class="delivery-method">寄样方式: {{
+              detail.sample_type == 1 ? '自行寄样 (运费自付)' : detail.sample_type == 2 ? '上门取样' : '自己送样'
+            }}</p>
           <p class="detail">
             <span>收货人：</span>{{ detail.jy_address ? detail.jy_address.receive_name : '' }}
           </p>
@@ -164,18 +200,20 @@ export default {
       </div>
     </div>
     <div class="orderInfo-item">
-      <div class="order-info" v-for="(item, index) in orderDetail" :key="index">
+      <div class="order-info">
         <h3 class="section-title">下单信息</h3>
-        <p class="sample-info">{{ item.index }}，数量：{{ item.num }}，样品编号：{{ item.order_id }}</p>
-        <!-- 表格 -->
-        <table class="info-table">
-          <tbody>
-          <tr v-for="(it, i) in item.content" :key="i">
-            <td class="label">{{ it.title }}</td>
-            <td class="value">{{ it.value }}</td>
-          </tr>
-          </tbody>
-        </table>
+        <div class="info-row" v-for="(item, index) in orderDetail" :key="index">
+          <p class="sample-info">{{ item.index }}，数量：{{ item.num }}，样品编号：{{ item.order_id }}</p>
+          <!-- 表格 -->
+          <table class="info-table">
+            <tbody>
+            <tr v-for="(it, i) in item.content" :key="i">
+              <td class="label">{{ it.title }}</td>
+              <td class="value">{{ it.value }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 

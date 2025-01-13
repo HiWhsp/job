@@ -34,6 +34,9 @@ export default {
           }
         }
       })
+    },
+    goUrl(item) {
+      this.$router.push(item.url)
     }
   }
 }
@@ -45,7 +48,7 @@ export default {
       <img src="@/assets/img/base/coupon/bg.png" alt="">
     </div>
     <div class="content main">
-      <div class="to-box">我的优惠券</div>
+      <div class="to-box pointer" @click="goUrl({url: '/myCoupon'})">我的优惠券</div>
       <div class="yhq-list" v-if="list_yhq.length">
         <div class="yhq-item" v-for="(item, index) in list_yhq" :key="index">
           <div class="yhq-left">

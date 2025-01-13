@@ -3,7 +3,7 @@ export default {
   name: "index",
   data() {
     return {
-      tabIndex: 1,
+      tabIndex: '',
       queryParams: {}, // 查询参数
       list_order: [], // 订单
       tabList: [
@@ -103,6 +103,8 @@ export default {
     // 切换tab
     tabClick(item) {
       this.tabIndex = item.value
+      this.queryParams.status = item.value;
+      this.handleQuery();
     },
     toPay(item) {
       this.$api({
@@ -116,7 +118,22 @@ export default {
           const params = {
             ...res.data,
             title: res.data.product_info.title,
+            form: []
           }
+          res.data.orderdetail.forEach((item, index) => {
+            if (item.content.length) {
+              // 将id作为key value作为值 存储到数组中 {id: 1252, value: "1", title: "样本数量", price: 0}
+              item.content.forEach((subItem, subIndex) => {
+                if (params.form[index]) {
+                  params.form[index][subItem.id] = subItem.value
+                } else {
+                  params.form[index] = {
+                    [subItem.id]: subItem.value,
+                  }
+                }
+              })
+            }
+          })
           localStorage.setItem('preOrderDetail', JSON.stringify(params));
           this.$router.push('/appointment-pay');
         }
@@ -127,7 +144,7 @@ export default {
       this.$alert('确定要取消当前订单', '取消订单', {
         confirmButtonText: '确定',
         callback: action => {
-          if(action) {
+          if (action) {
             this.$api({
               url: 'order_cancel',
               method: 'post',
@@ -139,6 +156,14 @@ export default {
           }
         }
       });
+    },
+    // 下载预约单
+    downLoad(item) {
+      const userId = localStorage.getItem('userId');
+      const token = localStorage.getItem('token');
+      const orderno = item.orderno;
+      const url = `https://jxjsjc.dx.hdapp.com.cn/api/download_order?userId=${userId}&token=${token}&orderno=${orderno}`
+      window.open(url, "_blank")
     }
   }
 }
@@ -285,7 +310,7 @@ export default {
                 <!--                  <div class="item-good flex" v-for="(product_item, product_index) in item.products" :key="product_index">-->
                 <div class="item-good flex">
                   <div class="box-image cover">
-                    <el-image :src="item.cover">
+                    <el-image :src="item.cover" :preview-src-list="[item.cover]">
                       <div slot="error" class="image-slot">
                         <img src="@/assets/img/my/order-img.png"/>
                       </div>
@@ -323,10 +348,10 @@ export default {
                     </template>
 
                     <template v-if="item.status == 30">
-                      <button class="btn-ripple fit-text" v-if="item.kaipiao == '待开票'">
+                      <button class="btn-ripple fit-text" v-if="item.kaipiao == '待开票'" @click="goUrl('/invoice')">
                         申请开票
                       </button>
-                      <button class="btn-ripple fit-text btn-bg">
+                      <button class="btn-ripple fit-text btn-bg" @click="downLoad(item)">
                         下载预约单
                       </button>
                       <button class="btn-ripple fit-text" @click="goUrl('/orderDetail?orderno=' + item.orderno)">
@@ -335,10 +360,10 @@ export default {
                     </template>
 
                     <template v-if="item.status == 40">
-                      <button class="btn-ripple fit-text" v-if="item.kaipiao == '待开票'">
+                      <button class="btn-ripple fit-text" v-if="item.kaipiao == '待开票'" @click="goUrl('/invoice')">
                         申请开票
                       </button>
-                      <button class="btn-ripple fit-text btn-bg">
+                      <button class="btn-ripple fit-text btn-bg" @click="downLoad(item)">
                         下载报告
                       </button>
                       <button class="btn-ripple fit-text" @click="goUrl('/orderDetail')">

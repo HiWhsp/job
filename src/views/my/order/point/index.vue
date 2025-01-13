@@ -9,7 +9,7 @@
       </div>
       <div class="flex">
         <div class="btn" @click="goUrl({url: '/pointMall'})">积分商城</div>
-        <div class="btn" style="margin-left: 20px;" @click="goUrl({url: '/repayment'})">下单得积分</div>
+        <div class="btn" style="margin-left: 20px;" @click="goUrl({url: '/analyze_list?type=523'})">下单得积分</div>
       </div>
     </div>
 
@@ -49,7 +49,7 @@
                       {{ item.type == 1 ? "+" : "" }}{{ item.money }}
                     </div>
                     <div class="item-4">
-                      {{ item.before_money }}
+                      {{ item.after_money }}
                     </div>
                   </div>
                 </div>

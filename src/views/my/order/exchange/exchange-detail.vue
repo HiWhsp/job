@@ -61,7 +61,7 @@
             <div class="item-content">
               <div class="date">
                 <span>支付方式：</span>
-                <span class="val"> Paypal </span>
+                <span class="val">{{ info.pay_type || '积分支付' }}</span>
               </div>
 
               <div class="date">
@@ -77,11 +77,11 @@
             <div class="item-content">
               <div class="wuliu-name">
                 <span>快递公司：</span>
-                {{ info.fahuo_json ? info.fahuo_json.kuaidi_company : '无' }}
+                {{ info.fahuo_json.length ? info.fahuo_json.kuaidi_company : '无' }}
               </div>
               <div class="wuliu-code">
                 <span>物流单号：</span>
-                {{ info.fahuo_json ? info.fahuo_json.kuaidi_code : '无' }}
+                {{ info.fahuo_json.length ? info.fahuo_json.kuaidi_code : '无' }}
               </div>
               <div class="wuliu-code">
                 <span>邮寄时间：</span>
@@ -109,9 +109,9 @@
                 <div class="item" v-for="(product_item, index) in info.orderdetail" :key="index">
                   <div class="item-good flex">
                     <div class="box-image cover">
-                      <el-image :src="product_item.image">
+                      <el-image :src="product_item.pdt_info.image">
                         <div slot="error" class="image-slot">
-                          <img :src="product_item.image"/>
+                          <img :src="product_item.pdt_info.image"/>
                         </div>
                       </el-image>
                     </div>
@@ -138,19 +138,19 @@
                 <div class="money-item">
                   <span class="label">商品总价：</span>
                   <div class="value">
-                    <span class="money-num">{{ vuex_huobi }}{{ payInfo.goods }}</span>
+                    <span class="money-num">{{ vuex_huobi }}{{ 0 }}</span>
                   </div>
                 </div>
                 <div class="money-item">
                   <span class="label">满减：</span>
                   <div class="value">
-                    <span class="money-num">{{ vuex_huobi }}{{ payInfo.foreignManjian }}</span>
+                    <span class="money-num">{{ vuex_huobi }}{{ 0 }}</span>
                   </div>
                 </div>
                 <div class="money-item">
                   <span class="label">运费：</span>
                   <div class="value">
-                    <span class="money-num">{{ vuex_huobi }}{{ payInfo.foreignYunfei }}</span>
+                    <span class="money-num">{{ vuex_huobi }}{{ info.yunfei }}</span>
                   </div>
                 </div>
                 <div class="money-item">
