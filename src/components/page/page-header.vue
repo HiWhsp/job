@@ -5,10 +5,9 @@
         <img :src="webConfig.site_logo" alt="">
       </div>
       <div class="search">
-        <div class="search-btn">
-          <el-input placeholder="请输入关键词">
-            <el-button slot="append" icon="el-icon-search"></el-button>
-          </el-input>
+        <div class="search-btn flex">
+          <el-input placeholder="请输入关键词" v-model="keyword"></el-input>
+          <el-button type="primary" icon="el-icon-search" @click="search"></el-button>
         </div>
       </div>
       <div class="info">
@@ -64,6 +63,7 @@ export default {
   data() {
     return {
       isSupplier: false,
+      keyword: '',
       navList: [
         {
           title: '首页',
@@ -112,6 +112,13 @@ export default {
     handleScroll(e) {
       let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
       // console.log(scrollTop);
+    },
+    search() {
+      if (this.keyword.trim() === '') {
+        this.$message.error('请输入关键词');
+        return
+      }
+      this.$router.push({path: '/search', query: {keyword: this.keyword, 'hash': Math.random()}});
     }
   }
 }
@@ -150,6 +157,20 @@ export default {
       .search-btn {
         width: 411px;
         height: 41px;
+
+        /deep/ .el-input__inner {
+          border-radius: 0;
+          border: none;
+        }
+
+        .el-button--primary {
+          height: 42px;
+          background: #00479D;
+          color: #fff;
+          border: none;
+          border-top-right-radius: 15px;
+          border-bottom-right-radius: 15px;
+        }
       }
 
       .el-input {

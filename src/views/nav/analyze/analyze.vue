@@ -39,6 +39,16 @@ export default {
       }
     },
   },
+  mounted() {
+    const route = this.$route;
+    const {meta, path, query} = route;
+    if (meta.activeMenu) {
+      return meta.activeMenu;
+    }
+    if (path == '/analyze_list' && query.type) {
+      this.menuSelect(query.type);
+    }
+  },
   methods: {
     // 选择菜单
     menuSelect(index) {

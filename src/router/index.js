@@ -132,6 +132,11 @@ const routes = [
         name: 'forum-success',
         component: () => import(/* webpackChunkName: "info" */ '@/views/nav/forum/success.vue'),
     },
+    {
+        path: '/search',
+        name: 'search',
+        component: () => import('@/views/nav/analyze/search.vue')
+    },
 
     /** 登录相关 **/
     {

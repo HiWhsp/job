@@ -2,7 +2,9 @@
   <div id="app">
     <pageHeader/>
     <div class="layout-box">
-      <router-view></router-view>
+      <keep-alive include="analyze_list">
+        <router-view></router-view>
+      </keep-alive>
     </div>
     <pageFooter/>
     <pageAside v-if="!pathList.includes(activePath)"></pageAside>
