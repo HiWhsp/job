@@ -77,6 +77,13 @@ export default {
             product_form: item
           }
         });
+      } else {
+        const form = this.setForm();
+        this.contentList.push({
+          isShow: false,
+          product_form: form
+        })
+        this.selectElementList.push([])
       }
       this.$api({
         url: 'get_product_form',
@@ -358,7 +365,7 @@ export default {
           <div class="item" v-for="(item, index) in priceList.data" :key="index">
             <span>{{ item.sample_title || '暂无' }}</span>
             <span class="num">样品数量：{{ item.num || 0 }}</span>
-            <span class="money">¥{{ item.unit_price || 0 }}</span>
+            <span class="money">¥{{ item.unit_price || 0 }} * {{  item.num || 0 }}</span>
           </div>
           <div class="item">
             <span>运费</span>
@@ -373,8 +380,13 @@ export default {
       <div class="right-item">
         <p>仪器图片</p>
         <div class="play">
-          <img :src="detail.thumb" alt="">
-          <img src="@/assets/img/base/appointment/play.png" class="play-btn" alt="" @click="playVideo">
+<!--          <img :src="detail.thumb" alt="">-->
+          <el-image :src="detail.thumb" :preview-src-list="[detail.thumb]">
+            <div slot="error" class="image-slot">
+              <img src="@/assets/img/my/order-img.png"/>
+            </div>
+          </el-image>
+          <img src="@/assets/img/base/appointment/play.png" class="play-btn" alt="" @click="playVideo" v-if="detail.video">
         </div>
         <div class="lock-detail" @click="toUrl('/analyze_detail?id=' + detail.id)">查看仪器详情 ></div>
       </div>

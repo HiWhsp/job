@@ -284,7 +284,7 @@ export default {
         <div class="item" v-for="(item, index) in priceList.data" :key="index">
           <span>{{ item.sample_title || '暂无' }}</span>
           <span class="num">样品数量：{{ item.num || 0 }}</span>
-          <span class="money">¥{{ item.unit_price || 0 }}</span>
+          <span class="money">¥{{ item.unit_price || 0 }} * {{  item.num || 0 }}</span>
         </div>
         <div class="item">
           <span>运费</span>

@@ -140,7 +140,7 @@ export default {
     },
 
     coupon_use(item) {
-      // this.$router.push("/product-cates?id=853");
+      this.$router.push("/analyze_list?type=523");
     },
   },
 };

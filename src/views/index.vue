@@ -2,7 +2,7 @@
   <div class="container">
     <!--    轮播-->
     <div class="banner">
-      <el-carousel height="450px">
+      <el-carousel height="450px" arrow="always">
         <el-carousel-item v-for="(item, index) in bannerList" :key="item.id">
           <img :src="item.image" :alt="item.title">
         </el-carousel-item>
@@ -11,7 +11,7 @@
 
     <div class="p-item">
       <div class="tit-content flex">
-        <div class="item flex" v-for="(item, index) in titList" :key="index">
+        <div class="item flex pointer" v-for="(item, index) in titList" :key="index" @click="goUrl(item)">
           <div class="cont">
             <div class="title">{{ item.title }}</div>
             <div class="content">{{ item.content }}</div>
@@ -73,7 +73,7 @@
     <div class="connect">
       <div class="p-item flex flex-between flex-center">
         <div class="text">Best R&D Partner</div>
-        <div class="fa_morelink">
+        <div class="fa_morelink" @click="goUrl({url:'/contactUs'})">
           <span>立即联系我们</span>
           <i></i>
         </div>
@@ -91,32 +91,38 @@ export default {
           id: 1,
           title: '注册会员',
           content: '注册立得10元',
-          img: require('@/assets/img/base/01/banner1.png')
+          img: require('@/assets/img/base/01/banner1.png'),
+          url: '/invite'
         }, {
           id: 1,
           title: '阳光预付',
           content: '先存后用最高赠送13%',
-          img: require('@/assets/img/base/01/banner2.png')
+          img: require('@/assets/img/base/01/banner2.png'),
+          url: '/sunPay'
         }, {
           id: 1,
           title: '团队管理',
           content: '这里是二级文案',
-          img: require('@/assets/img/base/01/banner6.png')
+          img: require('@/assets/img/base/01/banner6.png'),
+          url: '/groupManage'
         }, {
           id: 1,
           title: '论文致谢',
           content: '最高奖励5000元',
-          img: require('@/assets/img/base/01/banner6.png')
+          img: require('@/assets/img/base/01/banner6.png'),
+          url: '/thesis'
         }, {
           id: 1,
           title: '邀请好友赚现金',
           content: '注册立得10元，下单10%返利',
-          img: require('@/assets/img/base/01/banner6.png')
+          img: require('@/assets/img/base/01/banner6.png'),
+          url: '/invite'
         }, {
           id: 1,
           title: '优惠券天天领',
           content: '不定期发放优惠券',
-          img: require('@/assets/img/base/01/banner6.png')
+          img: require('@/assets/img/base/01/banner6.png'),
+          url: '/couponCenter'
         }
       ],
       bannerList: [], // 轮播
@@ -171,7 +177,12 @@ export default {
           this.friendList = res.data;
         }
       })
-    }
+    },
+    goUrl(item) {
+      this.$router.push({
+        path: item.url
+      })
+    },
   }
 }
 </script>
@@ -179,6 +190,15 @@ export default {
 <style lang="less" scoped>
 .container {
   background: #fff;
+}
+
+.banner {
+  /deep/ .el-carousel__arrow {
+    background-color: #fff;
+    color: @theme;
+    font-size: 14px;
+    font-weight: bold;
+  }
 }
 
 .p-item {
@@ -441,27 +461,26 @@ export default {
       transition: all 0.5s;
 
       &:before {
-        content: "\e739";
+        content: "\e6e7";
         position: absolute;
         color: #fff;
-        font-family: "iconfont1";
+        font-family: element-icons !important;
         left: 50%;
         top: 50%;
         transition: all 0.5s;
-        transform: translate(-50%, -50%) rotate(-55deg);
-
+        transform: translate(-50%, -50%);
         transition-delay: 0.2s;
       }
 
       &:after {
-        content: "\e739";
+        content: "\e6e7";
         position: absolute;
         color: #fff;
-        font-family: "iconfont1";
+        font-family: element-icons !important;
         left: 50%;
         top: 56%;
         transition: all 0.5s;
-        transform: translate(-150%, 50%) rotate(-55deg);
+        transform: translate(-150%, 50%);
         box-sizing: border-box;
       }
     }
@@ -524,12 +543,12 @@ export default {
         background: #0c8d5b;
 
         &:before {
-          transform: translate(50%, -150%) rotate(-45deg);
+          transform: translate(50%, -150%);
           transition-delay: 0s;
         }
 
         &:after {
-          transform: translate(-50%, -50%) rotate(-45deg);
+          transform: translate(-50%, -50%);
           transition-delay: 0.2s;
         }
       }

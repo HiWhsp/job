@@ -67,7 +67,7 @@ export default {
 <template>
   <div class="container main">
     <breadcrumb
-        :list="[{path: '/', name: '首页'}, {path: '/analyze', name: '分析测试'}]"></breadcrumb>
+        :list="[{path: '/', name: '首页'}, {path: '/analyze', name: selectItem.title}]"></breadcrumb>
     <div class="content">
       <div class="left">
         <div class="title">公司信息</div>

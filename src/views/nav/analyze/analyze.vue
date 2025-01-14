@@ -12,6 +12,10 @@ export default {
         page: 1,
         limit: 10
       },
+      defaultProps: {
+        children: "children",
+        label: "title",
+      },
       count: 0
     }
   },
@@ -39,17 +43,28 @@ export default {
     // 选择菜单
     menuSelect(index) {
       if (this.vuexTreeCates.length != 0) {
-        this.vuexTreeCates.forEach((item, i) => {
-          if (item.id == index) {
-            this.selectItem = item;
-          } else {
-            item.children ? item.children.forEach((it, j) => {
-              if (it.id == index) {
-                this.selectItem = it;
+        // 判断是数字还是对象
+        if(typeof index == 'object') {
+          this.selectItem = index;
+        }else {
+          // 递归循环vuexTreeCates 通过index找到指定内容
+          this.selectItem = findById(this.vuexTreeCates, +index);
+          this.$refs.tree.setCurrentNode(this.selectItem);
+        }
+        function findById(data, id) {
+          for (const item of data) {
+            if (item.id === id) {
+              return item; // 找到目标内容，直接返回
+            }
+            if (item.children && item.children.length > 0) {
+              const result = findById(item.children, id); // 递归查找子节点
+              if (result) {
+                return result; // 如果在子节点中找到，返回结果
               }
-            }) : ''
+            }
           }
-        })
+          return null; // 如果没有找到，返回 null
+        }
         this.$router.push({path: '/analyze_list', query: {type: this.selectItem.id}});
       }
     },
@@ -65,21 +80,20 @@ export default {
       <div class="left">
         <div class="title">服务内容</div>
         <div class="menu">
-          <el-menu :default-active="activeMenu" :unique-opened="true" @select="menuSelect">
-            <template v-for="(item, index) in vuexTreeCates">
-              <el-submenu :index="item.id + ''" v-if="item.children">
-                <template slot="title">
-                  <span>{{ item.title }}</span>
-                </template>
-                <el-menu-item :index="it.id" v-for="(it, i) in item.children" :key="i">
-                  {{ it.title }}
-                </el-menu-item>
-              </el-submenu>
-              <el-menu-item :index="item.id + ''" v-else>
-                <span>{{ item.title }}</span>
-              </el-menu-item>
-            </template>
-          </el-menu>
+          <el-tree
+              v-if="selectItem.id"
+              ref="tree"
+              :data="vuexTreeCates"
+              :props="defaultProps"
+              node-key="id"
+              highlight-current
+              accordion
+              @node-click="menuSelect"
+          >
+            <span slot-scope="{ node, data }">
+              <span>{{ data.title }}</span>
+            </span>
+          </el-tree>
         </div>
       </div>
       <div class="right">
@@ -117,54 +131,8 @@ export default {
     }
 
     .menu {
-      //padding-bottom: 48px;
-
-      /deep/ .el-submenu {
-        border-bottom: 1px solid #E7E7E7;
-      }
-
-      /deep/ .el-submenu.is-active {
-        background: #3399FF;
-
-        .el-submenu__title {
-          padding-left: 14px !important;
-          height: 41px;
-          line-height: 41px;
-          background: #3399FF;
-          font-weight: 400;
-          font-size: 14px;
-          color: #FFFFFF;
-        }
-
-        .el-submenu__icon-arrow {
-          color: #fff;
-          font-size: 16px;
-        }
-      }
-
-      /deep/ .el-submenu__title:hover {
-        background: transparent;
-      }
-
-      /deep/ .el-menu-item {
-        font-size: 16px;
-        color: #000000;
-        padding: 0 20px !important;
-        border-bottom: 1px solid #E7E7E7;
-
-        &:hover {
-          background-color: transparent;
-        }
-
-        &:last-child {
-          border-bottom: none;
-        }
-      }
-
-      /deep/ .el-menu-item.is-active {
-        font-size: 16px;
-        color: #fff;
-        background: #3399FF;
+      /deep/ .el-tree-node__content {
+        height: 40px;
       }
     }
   }

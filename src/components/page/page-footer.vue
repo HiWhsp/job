@@ -32,9 +32,8 @@
         </div>
         <div class="content">
           <div class="input-group">
-            <el-input placeholder="请输入您的邮箱"></el-input>
-            <div class="formItem">
-
+            <el-input placeholder="请输入您的邮箱" v-model="email"></el-input>
+            <div class="formItem pointer el-icon-s-promotion" @click="toUrl">
             </div>
           </div>
           <div class="websiteShare">
@@ -72,6 +71,7 @@ export default {
   data() {
     return {
       friend_list: [],
+      email: ''
     };
   },
   mounted() {
@@ -93,6 +93,31 @@ export default {
     },
     goUrl(item) {
       window.open(item, "_blank");
+    },
+    toUrl() {
+      // 判断邮箱是否合法
+      let reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      if (this.email === '') {
+        this.$message.error('请输入邮箱');
+        return false;
+      } else if (!reg.test(this.email)) {
+        this.$message.error('请输入正确的邮箱');
+        return false;
+      }
+      this.email = '';
+      this.$message.success('提交成功')
+      // this.$api({
+      //   url: 'subscribe',
+      //   method: 'post',
+      //   data: {
+      //     email: this.email
+      //   }
+      // }).then(res => {
+      //   if (res.code === 200) {
+      //     this.$message.success(res.msg);
+      //     this.email = '';
+      //   }
+      // })
     }
   }
 }
@@ -211,6 +236,7 @@ export default {
             height: 46px;
             background: rgba(255, 255, 255, 0.1);
             border: none;
+            color: #fff;
           }
 
           .formItem {
@@ -222,7 +248,7 @@ export default {
             height: 46px;
             border: none;
             background: @theme;
-            font-size: 20px;
+            font-size: 24px;
             color: #fff;
           }
         }

@@ -5,6 +5,7 @@ export default {
     return {
       paymentType: '', // 支付方式 1个人预存 2团体预存 3个人信用支付 4团体信用支付 5微信支付 6支付宝
       integral: '', //
+      loading: '',
       isShow: true,
       alipay_web: '',
       preOrderDetail: {}, // 订单信息
@@ -45,6 +46,14 @@ export default {
         this.$message.error('请选择支付方式');
         return;
       }
+      if(['wx_scan', 'alipay_web'].includes(this.paymentType)) {
+        this.loading = this.$loading({
+          lock: true,
+          text: '订单正在生成中，请稍等！',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+      }
       // 创建订单
       this.$api({
         url: 'order_create',
@@ -55,7 +64,11 @@ export default {
       }).then(res => {
         if (res.code === 200) {
           this.pay(res.data);
+        }else {
+          this.loading.close();
         }
+      }).catch(err=>{
+        this.loading.close();
       })
     },
     // 支付
@@ -70,6 +83,7 @@ export default {
         }
       }).then(res => {
         if (res.code === 200) {
+          this.loading.close();
           this.preOrderDetail.orderno = item.orderno;
           this.preOrderDetail.priceList = this.priceList;
           this.preOrderDetail.payInfo = res.data;
@@ -78,6 +92,7 @@ export default {
           this.goUrl();
         }
       }).catch(err => {
+        this.loading.close();
       })
     },
     goUrl() {
