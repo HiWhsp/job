@@ -154,7 +154,7 @@ export default {
   }
 
   &.active {
-    transform: translateX(100%);
+    transform: translateX(170%);
     opacity: 0;
   }
 }

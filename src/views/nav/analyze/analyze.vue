@@ -101,7 +101,7 @@ export default {
               @node-click="menuSelect"
           >
             <span slot-scope="{ node, data }">
-              <span>{{ data.title }}</span>
+              <span style="font-size: 16px;">{{ data.title }}</span>
             </span>
           </el-tree>
         </div>
@@ -142,7 +142,7 @@ export default {
 
     .menu {
       /deep/ .el-tree-node__content {
-        height: 40px;
+        height: 56px;
       }
     }
   }

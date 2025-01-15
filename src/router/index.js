@@ -133,9 +133,14 @@ const routes = [
         component: () => import(/* webpackChunkName: "info" */ '@/views/nav/forum/success.vue'),
     },
     {
-        path: '/search',
+        path: '/search', // 搜索产品
         name: 'search',
         component: () => import('@/views/nav/analyze/search.vue')
+    },
+    {
+      path: '/release', // 发布需求
+      name: 'release',
+      component: () => import('@/views/base/release/index.vue')
     },
 
     /** 登录相关 **/

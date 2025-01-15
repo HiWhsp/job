@@ -77,13 +77,6 @@ export default {
             product_form: item
           }
         });
-      } else {
-        const form = this.setForm();
-        this.contentList.push({
-          isShow: false,
-          product_form: form
-        })
-        this.selectElementList.push([])
       }
       this.$api({
         url: 'get_product_form',
@@ -94,7 +87,13 @@ export default {
       }).then(res => {
         if (res.code === 200) {
           this.product_form = res.data;
-          this.elementFieldId = this.product_form.find(item => item.field_type === 'element').id
+          const form = this.setForm();
+          this.contentList.push({
+            isShow: false,
+            product_form: form
+          })
+          this.selectElementList.push([])
+          this.elementFieldId = this.product_form.find(item => item.field_type === 'element') && this.product_form.find(item => item.field_type === 'element').id
         }
       })
       //   获取设备详情
@@ -126,7 +125,10 @@ export default {
         console.log(item.field_type)
         if (item.field_type == 'number_range') {
           form[item.id] = ['', ''];
-        } else {
+        } else if(item.field_type == 'radio' && item.is_multiple){
+          form[item.id] = [];
+        }
+        else {
           form[item.id] = '';
         }
       })
@@ -298,10 +300,15 @@ export default {
               <quillEditor v-if="field.field_type === 'richtext'"
                            v-model="contentList[index].product_form[field.id]"></quillEditor>
               <!--              单选-->
-              <el-radio-group v-if="field.field_type === 'radio'"
+              <el-radio-group v-if="field.field_type === 'radio' && field.is_multiple === 0"
                               v-model="contentList[index].product_form[field.id]">
                 <el-radio style="margin-bottom: 5px;" :label="it.text" v-for="(it, i) in field.content" :key="it.text">{{ it.text }}</el-radio>
               </el-radio-group>
+              <!--              多选-->
+              <el-checkbox-group v-if="field.field_type === 'radio' && field.is_multiple === 1"
+                              v-model="contentList[index].product_form[field.id]">
+                <el-checkbox style="margin-bottom: 5px;" :label="it.text" v-for="(it, i) in field.content" :key="it.text">{{ it.text }}</el-checkbox>
+              </el-checkbox-group>
               <!--              元素周期表-->
               <template v-if="field.field_type === 'element'">
                 <div class="t-item column-flex-center wrap"
@@ -768,8 +775,7 @@ export default {
       margin-top: 28px;
       width: 100%;
       height: 234px;
-
-      img {
+      .el-image {
         width: 100%;
         height: 100%;
       }

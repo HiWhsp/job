@@ -29,7 +29,7 @@
           <p class="title">您最好的研发伙伴</p>
           <p class="content">及时、准确、定制、解析</p>
           <div class="c_container flex">
-            <div class="c_item" v-for="(item, index) in moduleList" :key="item.id">
+            <div class="c_item pointer" v-for="(item, index) in moduleList" :key="item.id" @click="goUrl(item, 2)">
               <img :src="item.icon1" alt="">
               <div class="info">
                 <p class="title">{{ item.text1 }}</p>
@@ -92,7 +92,7 @@ export default {
           title: '注册会员',
           content: '注册立得10元',
           img: require('@/assets/img/base/01/banner1.png'),
-          url: '/invite'
+          url: '/register'
         }, {
           id: 1,
           title: '阳光预付',
@@ -178,7 +178,11 @@ export default {
         }
       })
     },
-    goUrl(item) {
+    goUrl(item, type) {
+      if(type) {
+        window.open(item.url, "_blank");
+        return;
+      }
       this.$router.push({
         path: item.url
       })
@@ -301,7 +305,7 @@ export default {
           .title {
             text-align: left;
             font-size: 18px;
-            color: #10233e;
+            color: @theme;
             font-weight: 500;
           }
 
