@@ -104,6 +104,22 @@ export default {
   },
 
   methods: {
+    // 传递参数过滤
+    filterForm(arr) {
+      const list = [];
+      arr.forEach(item => {
+        const obj = {};
+        for (let key in item) {
+          if (item[key] instanceof Array) {
+            obj[key] = item[key].join('$')
+          } else {
+            obj[key] = item[key]
+          }
+        }
+        list.push(obj);
+      })
+      return list
+    },
     // if(!this.mix_get_login_status()){
     //   return
     // }
@@ -269,9 +285,6 @@ export default {
       if (item.url) {
         location.href = item.url;
       }
-    },
-    toRoute(route) {
-      this.$router.push(route);
     },
 
     //打开弹窗

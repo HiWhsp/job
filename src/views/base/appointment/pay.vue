@@ -16,6 +16,19 @@ export default {
     maxHeaderSize() {
       return Math.round(+this.baseInfo.points / +this.vuex_config.point_rate) > 50 ? 50 : Math.round(+this.baseInfo.points / +this.vuex_config.point_rate);
     },
+    // 加急服务
+    ifUrgent() {
+      return (value) => {
+        switch (value) {
+          case 0 || '0':
+            return '不加急'
+          case 1 || '1':
+            return '三个工作日'
+          case 2 || '2':
+            return '24小时'
+        }
+      }
+    }
   },
   mounted() {
     this.preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
@@ -27,12 +40,12 @@ export default {
         url: 'order_pay_info',
         method: 'post',
         data: {
-          yf_type: this.preOrderDetail.yf_type || '1',
+          yf_type: this.preOrderDetail.yf_type || '0',
           tongshebei: this.preOrderDetail.tongshebei || '',
           if_urgent: this.preOrderDetail.if_urgent || '',
           sample_type: this.preOrderDetail.sample_type || '',
           product_id: this.preOrderDetail.product_id || '',
-          form: this.preOrderDetail.form
+          form: this.filterForm(this.preOrderDetail.form)
         }
       }).then(res => {
         if (res.code === 200) {
@@ -46,7 +59,7 @@ export default {
         this.$message.error('请选择支付方式');
         return;
       }
-      if(['wx_scan', 'alipay_web'].includes(this.paymentType)) {
+      if (['wx_scan', 'alipay_web'].includes(this.paymentType)) {
         this.loading = this.$loading({
           lock: true,
           text: '订单正在生成中，请稍等！',
@@ -64,10 +77,10 @@ export default {
       }).then(res => {
         if (res.code === 200) {
           this.pay(res.data);
-        }else {
+        } else {
           this.loading.close();
         }
-      }).catch(err=>{
+      }).catch(err => {
         this.loading.close();
       })
     },
@@ -131,7 +144,7 @@ export default {
             </div>
             <div class="item-val">
               <p>加急服务</p>
-              <p>{{ preOrderDetail.if_urgent == 1 ? priceList.urgent_txt : '¥0.00' }}</p>
+              <p>{{ ifUrgent(preOrderDetail.if_urgent) }}</p>
             </div>
             <div class="item-val">
               <p>运费</p>

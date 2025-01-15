@@ -47,37 +47,6 @@ export default {
   },
   methods: {
     setView() {
-      this.preOrderDetail.product_id = this.$route.query.id;
-      if (this.preOrderDetail.attachment && JSON.parse(this.preOrderDetail.attachment).length) {
-        const list = JSON.parse(this.preOrderDetail.attachment);
-        list.forEach(item => {
-          this.uploadList.push({url: item.furl, name: item.fname})
-        })
-      }
-      if (this.preOrderDetail.form && this.preOrderDetail.form.length) {
-        this.$api({
-          url: 'order_pay_info',
-          method: 'post',
-          data: {
-            yf_type: this.preOrderDetail.yf_type || '1',
-            tongshebei: this.preOrderDetail.tongshebei || '',
-            if_urgent: this.preOrderDetail.if_urgent || '',
-            sample_type: this.preOrderDetail.sample_type || '',
-            product_id: this.preOrderDetail.product_id || '',
-            form: this.preOrderDetail.form
-          }
-        }).then(res => {
-          if (res.code === 200) {
-            this.priceList = res.data;
-          }
-        })
-        this.contentList = this.preOrderDetail.form.map(item => {
-          return {
-            isShow: true,
-            product_form: item
-          }
-        });
-      }
       this.$api({
         url: 'get_product_form',
         method: 'post',
@@ -87,13 +56,50 @@ export default {
       }).then(res => {
         if (res.code === 200) {
           this.product_form = res.data;
-          const form = this.setForm();
-          this.contentList.push({
-            isShow: false,
-            product_form: form
-          })
-          this.selectElementList.push([])
           this.elementFieldId = this.product_form.find(item => item.field_type === 'element') && this.product_form.find(item => item.field_type === 'element').id
+          this.preOrderDetail.product_id = this.$route.query.id;
+          if (this.preOrderDetail.attachment && JSON.parse(this.preOrderDetail.attachment).length) {
+            const list = JSON.parse(this.preOrderDetail.attachment);
+            list.forEach(item => {
+              this.uploadList.push({url: item.furl, name: item.fname})
+            })
+          }
+          if (this.preOrderDetail.form && this.preOrderDetail.form.length) {
+            this.$api({
+              url: 'order_pay_info',
+              method: 'post',
+              data: {
+                yf_type: this.preOrderDetail.yf_type || '1',
+                tongshebei: this.preOrderDetail.tongshebei || '',
+                if_urgent: this.preOrderDetail.if_urgent || '',
+                sample_type: this.preOrderDetail.sample_type || '',
+                product_id: this.preOrderDetail.product_id || '',
+                form: this.preOrderDetail.form
+              }
+            }).then(res => {
+              if (res.code === 200) {
+                this.priceList = res.data;
+              }
+            })
+            this.contentList = this.preOrderDetail.form.map(item => {
+              this.product_form.forEach((prodItem, prodI) => {
+                if (prodItem.is_custom == 1) {
+                  item[prodItem.id + '-custom'] = false
+                }
+              })
+              return {
+                isShow: true,
+                product_form: item
+              }
+            });
+          } else {
+            const form = this.setForm();
+            this.contentList.push({
+              isShow: false,
+              product_form: form
+            })
+            this.selectElementList.push([])
+          }
         }
       })
       //   获取设备详情
@@ -122,13 +128,13 @@ export default {
     setForm() {
       const form = {};
       this.product_form.forEach(item => {
-        console.log(item.field_type)
         if (item.field_type == 'number_range') {
           form[item.id] = ['', ''];
-        } else if(item.field_type == 'radio' && item.is_multiple){
+        } else if (item.field_type == 'radio' && item.is_multiple) {
           form[item.id] = [];
-        }
-        else {
+        } else if (item.is_custom == 1) {
+          form[item.id + '-custom'] = false
+        } else {
           form[item.id] = '';
         }
       })
@@ -181,7 +187,7 @@ export default {
           if_urgent: this.preOrderDetail.if_urgent || '',
           sample_type: this.preOrderDetail.sample_type || '',
           product_id: this.preOrderDetail.product_id || '',
-          form: this.contentList.map(item => item.product_form)
+          form: this.filterForm(this.contentList.map(item => item.product_form))
         }
       }).then(res => {
         if (res.code === 200) {
@@ -193,10 +199,10 @@ export default {
           })
         }
       })
-
     },
     // 获取价格
     getPrice() {
+      console.log(this.contentList)
       this.$api({
         url: 'order_pay_info',
         method: 'post',
@@ -251,6 +257,14 @@ export default {
     // 播放
     playVideo() {
       this.dialogVisible = true;
+    },
+    // 自定义
+    showCustom(index, id, customId) {
+      this.contentList[index].product_form[id] = '';
+      this.contentList[index].product_form[customId] = !this.contentList[index].product_form[customId];
+    },
+    input(e) {
+      this.$forceUpdate()
     }
   }
 }
@@ -272,57 +286,78 @@ export default {
               <span>{{ field.title }}</span>
             </div>
             <div class="value">
-              <!--              文本-->
-              <el-input v-if="field.field_type === 'text'" v-model="contentList[index].product_form[field.id]"
-                        type="text" :placeholder="'请输入' + field.title"></el-input>
-              <!--              数字-->
-              <el-input v-if="field.field_type === 'number'" v-model="contentList[index].product_form[field.id]"
-                        type="text"
-                        @input="(e)=>contentList[index].product_form[field.id] = e.replace(/[^0-9]/g, '')"
+              <div class="col" v-if="!contentList[index].product_form[field.id+'-custom']">
+                <!--              文本-->
+                <el-input v-if="field.field_type === 'text'" v-model="contentList[index].product_form[field.id]"
+                          type="text" :placeholder="'请输入' + field.title"></el-input>
+                <!--              数字-->
+                <div class="flex" v-if="field.field_type === 'number'">
+                  <el-input v-model="contentList[index].product_form[field.id]"
+                            type="text"
+                            @input="(e)=>contentList[index].product_form[field.id] = e.replace(/[^0-9]/g, '')"
+                            :placeholder="'请输入' + field.title"></el-input>
+                  <span v-if="field.unit">{{ field.unit }}</span>
+                </div>
+                <!--              数字区间-->
+                <template v-if="field.field_type === 'number_range'">
+                  <el-input v-model="contentList[index].product_form[field.id][0]"
+                            type="text"
+                            @input="(e)=>contentList[index].product_form[field.id][0] = e.replace(/[^0-9]/g, '')"
+                            :placeholder="'请输入' + field.title"></el-input>
+                  <span class="col">—</span>
+                  <el-input v-model="contentList[index].product_form[field.id][1]"
+                            type="text"
+                            @input="(e)=>contentList[index].product_form[field.id][1] = e.replace(/[^0-9]/g, '')"
+                            :placeholder="'请输入' + field.title"></el-input>
+                </template>
+                <!--              文本域-->
+                <el-input v-if="field.field_type === 'textarea'"
+                          v-model="contentList[index].product_form[field.id]"
+                          type="textarea" :rows="4" :placeholder="'请输入' + field.title"></el-input>
+                <!--富文本-->
+                <quillEditor v-if="field.field_type === 'richtext'"
+                             v-model="contentList[index].product_form[field.id]"></quillEditor>
+                <!--              单选-->
+                <el-radio-group v-if="field.field_type === 'radio' && field.is_multiple === 0"
+                                v-model="contentList[index].product_form[field.id]">
+                  <el-radio style="margin-bottom: 5px;" :label="it.text" v-for="(it, i) in field.content"
+                            :key="it.text">
+                    {{ it.text }}
+                  </el-radio>
+                </el-radio-group>
+                <!--              多选-->
+                <el-checkbox-group v-if="field.field_type === 'radio' && field.is_multiple === 1"
+                                   v-model="contentList[index].product_form[field.id]">
+                  <el-checkbox style="margin-bottom: 5px;" :label="it.text" v-for="(it, i) in field.content"
+                               :key="it.text">{{ it.text }}
+                  </el-checkbox>
+                </el-checkbox-group>
+                <!--              元素周期表-->
+                <template v-if="field.field_type === 'element'">
+                  <div class="t-item column-flex-center wrap"
+                       v-for="(xItem, xI) in selectElementList[index]" :key="xI" v-if="xItem">
+                    <span class="desc">{{ xItem.mc }}</span>
+                    <img src="@/assets/img/base/appointment/element-del.png" class="element-del"
+                         @click="elementDel(xItem, xI)"
+                         alt="">
+                  </div>
+                  <div class="sel-element" v-if="field.field_type === 'element'"
+                       @click="selectElement(field.content, index)">
+                    选择元素
+                  </div>
+                </template>
+
+                <div class="helps" v-if="field.helps">{{ field.helps }}</div>
+              </div>
+              <el-input v-if="contentList[index].product_form[field.id+'-custom']"
+                        v-model="contentList[index].product_form[field.id]" type="text"
+                        @input="input"
                         :placeholder="'请输入' + field.title"></el-input>
-              <!--              数字区间-->
-              <template v-if="field.field_type === 'number_range'">
-                <el-input v-model="contentList[index].product_form[field.id][0]"
-                          type="text"
-                          @input="(e)=>contentList[index].product_form[field.id][0] = e.replace(/[^0-9]/g, '')"
-                          :placeholder="'请输入' + field.title"></el-input>
-                <span class="col">—</span>
-                <el-input v-model="contentList[index].product_form[field.id][1]"
-                          type="text"
-                          @input="(e)=>contentList[index].product_form[field.id][1] = e.replace(/[^0-9]/g, '')"
-                          :placeholder="'请输入' + field.title"></el-input>
-              </template>
-              <!--              文本域-->
-              <el-input v-if="field.field_type === 'textarea'"
-                        v-model="contentList[index].product_form[field.id]"
-                        type="textarea" :rows="4" :placeholder="'请输入' + field.title"></el-input>
-              <!--富文本-->
-              <quillEditor v-if="field.field_type === 'richtext'"
-                           v-model="contentList[index].product_form[field.id]"></quillEditor>
-              <!--              单选-->
-              <el-radio-group v-if="field.field_type === 'radio' && field.is_multiple === 0"
-                              v-model="contentList[index].product_form[field.id]">
-                <el-radio style="margin-bottom: 5px;" :label="it.text" v-for="(it, i) in field.content" :key="it.text">{{ it.text }}</el-radio>
-              </el-radio-group>
-              <!--              多选-->
-              <el-checkbox-group v-if="field.field_type === 'radio' && field.is_multiple === 1"
-                              v-model="contentList[index].product_form[field.id]">
-                <el-checkbox style="margin-bottom: 5px;" :label="it.text" v-for="(it, i) in field.content" :key="it.text">{{ it.text }}</el-checkbox>
-              </el-checkbox-group>
-              <!--              元素周期表-->
-              <template v-if="field.field_type === 'element'">
-                <div class="t-item column-flex-center wrap"
-                     v-for="(xItem, xI) in selectElementList[index]" :key="xI" v-if="xItem">
-                  <span class="desc">{{ xItem.mc }}</span>
-                  <img src="@/assets/img/base/appointment/element-del.png" class="element-del"
-                       @click="elementDel(xItem, xI)"
-                       alt="">
-                </div>
-                <div class="sel-element" v-if="field.field_type === 'element'"
-                     @click="selectElement(field.content, index)">
-                  选择元素
-                </div>
-              </template>
+              <!--              点击按钮出现文本框 隐藏上面的选择项-->
+              <el-button class="custom" v-if="field.is_custom == 1"
+                         @click="showCustom(index, field.id, field.id+'-custom')">
+                {{ contentList[index].product_form[field.id + '-custom'] ? '取消' : '其他选项' }}
+              </el-button>
             </div>
           </div>
         </div>
@@ -372,7 +407,7 @@ export default {
           <div class="item" v-for="(item, index) in priceList.data" :key="index">
             <span>{{ item.sample_title || '暂无' }}</span>
             <span class="num">样品数量：{{ item.num || 0 }}</span>
-            <span class="money">¥{{ item.unit_price || 0 }} * {{  item.num || 0 }}</span>
+            <span class="money">¥{{ item.unit_price || 0 }} * {{ item.num || 0 }}</span>
           </div>
           <div class="item">
             <span>运费</span>
@@ -387,13 +422,14 @@ export default {
       <div class="right-item">
         <p>仪器图片</p>
         <div class="play">
-<!--          <img :src="detail.thumb" alt="">-->
+          <!--          <img :src="detail.thumb" alt="">-->
           <el-image :src="detail.thumb" :preview-src-list="[detail.thumb]">
             <div slot="error" class="image-slot">
               <img src="@/assets/img/my/order-img.png"/>
             </div>
           </el-image>
-          <img src="@/assets/img/base/appointment/play.png" class="play-btn" alt="" @click="playVideo" v-if="detail.video">
+          <img src="@/assets/img/base/appointment/play.png" class="play-btn" alt="" @click="playVideo"
+               v-if="detail.video">
         </div>
         <div class="lock-detail" @click="toUrl('/analyze_detail?id=' + detail.id)">查看仪器详情 ></div>
       </div>
@@ -433,7 +469,8 @@ export default {
         :visible.sync="dialogVisible"
         width="30%"
         center>
-      <video :src="'https://jxjsjc.dx.hdapp.com.cn/' + detail.video" controls="controls" width="100%" class="video-mask"></video>
+      <video :src="'https://jxjsjc.dx.hdapp.com.cn/' + detail.video" controls="controls" width="100%"
+             class="video-mask"></video>
     </el-dialog>
   </div>
 </template>
@@ -652,6 +689,12 @@ export default {
         margin-right: 10px;
       }
 
+      .helps {
+        margin-top: 10px;
+        font-size: 14px;
+        color: @theme;
+      }
+
       .v-item {
         margin-top: 5px;
         padding: 7px 25px;
@@ -775,6 +818,7 @@ export default {
       margin-top: 28px;
       width: 100%;
       height: 234px;
+
       .el-image {
         width: 100%;
         height: 100%;

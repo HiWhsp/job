@@ -58,7 +58,7 @@ export default {
           if_urgent: this.preOrderDetail.if_urgent || '',
           sample_type: this.preOrderDetail.sample_type || '',
           product_id: this.preOrderDetail.product_id || '',
-          form
+          form: this.filterForm(form)
         }
       }).then(res => {
         if (res.code === 200) {
@@ -228,7 +228,8 @@ export default {
           <div class="sel">
             <el-radio-group v-model="params.if_urgent">
               <el-radio label="0">不加急</el-radio>
-              <el-radio label="1">3个工作日完成，1.5倍费用</el-radio>
+              <el-radio label="1">3个工作日完成</el-radio>
+              <el-radio label="2">24小时</el-radio>
             </el-radio-group>
           </div>
           <div class="info"></div>
@@ -252,9 +253,9 @@ export default {
         </div>
 
         <div class="sel">
-          <el-radio-group v-model="radioList[0]">
-            <el-radio :label="3">自付</el-radio>
-            <el-radio :label="6">到付</el-radio>
+          <el-radio-group v-model="params.yf_type">
+            <el-radio :label="0">自付</el-radio>
+            <el-radio :label="1">到付</el-radio>
           </el-radio-group>
 
           <div class="item">
