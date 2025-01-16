@@ -2,7 +2,7 @@
   <div class="aside">
     <div class="list" :class="{'active': showClose}">
       <div class="item flex" v-for="(item, index) in list_util" :key="index"
-           @mouseenter="on_mouseenter(index + 1)" @mouseleave="on_mouseleave">
+           @mouseenter="on_mouseenter(index + 1)" @mouseleave="on_mouseleave" @click="goUrl(item.url)">
         <img :src="item.icon" alt="" :style="item.style">
         <p>{{ item.title }}</p>
         <div class="fa_info" v-if="index > 1">
@@ -50,7 +50,8 @@ export default {
         {
           title: "发布需求",
           icon: require("@/assets/img/base/aside/1.png"),
-          style: "width: 26.62px; height: 29.87px;"
+          style: "width: 26.62px; height: 29.87px;",
+          url: '/release'
         },
         {
           title: "投诉建议",
@@ -78,6 +79,9 @@ export default {
   },
 
   methods: {
+    goUrl(url) {
+      this.$router.push(url);
+    },
     watchPageScroll() {
       var that = this;
       if (document && document.documentElement) {
