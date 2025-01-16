@@ -36,6 +36,39 @@
         </svg>
       </div>
     </div>
+
+    <el-dialog title="投诉建议" width="680px" center :visible.sync="dialogVisible" :close-on-click-modal="false"
+               @closed="onclosed">
+      <div class="dialog-content">
+        <div class="tip">
+          亲爱的用户，您也可以直接拨打我们的官方电话：0592-2882590，我们将及时为您解答问题
+        </div>
+        <div class="form">
+          <el-form :model="form" :rules="rules" ref="ruleForm" label-position="left" label-width="100px">
+            <el-form-item label="问题类型:" prop="questType">
+              <el-radio-group v-model="form.questType">
+                <el-radio label="测试售后">测试售后</el-radio>
+                <el-radio label="网站功能">网站功能</el-radio>
+                <el-radio label="开票报销">开票报销</el-radio>
+                <el-radio label="其他">其他</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="反馈内容：" prop="content">
+              <el-input type="textarea" v-model="form.content" placeholder="请输入反馈内容"></el-input>
+            </el-form-item>
+            <el-form-item label="联系人" prop="name">
+              <el-input v-model="form.name" placeholder="请输入联系人"></el-input>
+            </el-form-item>
+            <el-form-item label="联系方式" prop="phone">
+              <el-input v-model="form.phone" placeholder="请输入联系方式"></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <div class="btn flex-center">
+          <el-button type="primary" @click="dialogSubmit">提交</el-button>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -56,7 +89,8 @@ export default {
         {
           title: "投诉建议",
           icon: require("@/assets/img/base/aside/2.png"),
-          style: "width: 32.35px; height: 28.18px;"
+          style: "width: 32.35px; height: 28.18px;",
+          url: '/feedback'
         },
         {
           title: "公众号",
@@ -71,6 +105,23 @@ export default {
       ],
       showTop: false,
       showClose: false,
+      dialogVisible: false,
+      form: {},
+      rules: {
+        questType: [
+          {required: true, message: '请选择问题类型', trigger: 'change'}
+        ],
+        content: [
+          {required: true, message: '请输入反馈内容', trigger: 'blur'}
+        ],
+        name: [
+          {required: true, message: '请输入联系人', trigger: 'blur'}
+        ],
+        phone: [
+          {required: true, message: '请输入联系方式', trigger: 'blur'},
+          {pattern: /^1(3\d|4[5-9]|5[0-35-9]|6[2567]|7[0-8]|8\d|9[0-35-9])\d{8}$/, message: '请输入正确的手机号码'}
+        ]
+      }
     };
   },
 
@@ -80,7 +131,11 @@ export default {
 
   methods: {
     goUrl(url) {
-      this.$router.push(url);
+      if (url === '/feedback') {
+        this.dialogVisible = true
+      } else {
+        this.$router.push(url);
+      }
     },
     watchPageScroll() {
       var that = this;
@@ -88,7 +143,6 @@ export default {
         document.addEventListener("scroll", that.scrollEvent);
       }
     },
-
     scrollEvent() {
       var that = this;
       var scrollTop = document.documentElement.scrollTop;
@@ -100,11 +154,9 @@ export default {
         this.showTop = false;
       }
     },
-
     toTop() {
       document.documentElement.scrollTop = 0;
     },
-
     on_mouseenter(item) {
       this.hoverIndex = item;
     },
@@ -112,6 +164,27 @@ export default {
       //console.log("鼠标移出", item);
       this.hoverIndex = "";
     },
+
+    dialogSubmit() {
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.$api({
+            url: 'feedback',
+            method: 'post',
+            data: this.form
+          }).then(res => {
+            if (res.code === 200) {
+              this.dialogVisible = false;
+              this.$refs["ruleForm"].resetFields();
+              this.$message.success('提交成功');
+            }
+          })
+        }
+      });
+    },
+    onclosed() {
+      this.$refs["ruleForm"].resetFields();
+    }
   },
 };
 </script>
@@ -243,6 +316,24 @@ export default {
     border-top: 10px solid transparent;
     border-left: 10px solid #fff;
     border-bottom: 10px solid transparent;
+  }
+}
+
+.dialog-content {
+  .tip {
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #FF8000;
+    background-color: #FFF1D9;
+  }
+
+  /deep/ .el-button--primary {
+    background-color: @theme;
+    border-color: @theme;
   }
 }
 </style>

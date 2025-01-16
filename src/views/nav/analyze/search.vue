@@ -14,6 +14,7 @@ export default {
   },
   watch: {
     "$route.query.hash"() {
+      this.keyword = this.$route.query.keyword
       if (this.keyword) {
         this.getList();
       }

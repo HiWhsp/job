@@ -3,7 +3,10 @@ export default {
   name: "preSave-pay",
   data() {
     return {
-      imageUrl: '',
+      alipay_web: '',
+      dialogWxPay: false,
+      isWxPay: false,
+      timer: null,
       info: {
         payType: 1, // 支付方式
         prepaidAccount: 1, // 预付账户
@@ -11,6 +14,8 @@ export default {
         prepaidAmount: '', // 预付金额
         prepaidGift: '', // 预付赠送金
         prepaidRemark: '', // 预付备注
+        file: '', // 凭证
+        message: '' // 凭证备注
       },
       // 发票信息
       invoice_info: {
@@ -25,6 +30,8 @@ export default {
         bankNo: '', // 银行账号
         email: '', // 电子邮箱
         orderId: '', // 关联订单
+        fnum: '1',
+        wsh: false
       },
       // 发票类型
       invoiceTypeOption: [
@@ -38,11 +45,15 @@ export default {
         {value: '1', title: '团体账户', icon: ''},
       ],
       payTypeOption: [
-        {value: 'weixin', title: '微信支付', icon: require("@img/base/invite/wxPay.png")},
-        {value: 'zhifubao', title: '支付宝支付', icon: require("@img/base/invite/zfbPay.png")},
-        {value: 'paypal', title: '对公转账', icon: require("@img/base/invite/duigong.png")},
+        {value: 'wx_scan', title: '微信支付', icon: require("@img/base/invite/wxPay.png")},
+        {value: 'alipay_web', title: '支付宝支付', icon: require("@img/base/invite/zfbPay.png")},
+        {value: 'offline', title: '对公转账', icon: require("@img/base/invite/duigong.png")},
       ],
     }
+  },
+  // 页面卸载后清除定时器
+  beforeDestroy() {
+    this.clearIntervalWx();
   },
   methods: {
     do_toggle_paytype(item) {
@@ -75,18 +86,86 @@ export default {
         money: this.info.prepaidAmount,
         notes: this.info.prepaidRemark,
         utype: this.info.prepaidAccount,
+        fnum: this.invoice_info.fnum,
+        wsh: this.invoice_info.wsh ? 1 : ''
       }
       this.$api({
         url: 'do_recharge',
         method: 'post',
         data: params
       }).then(res => {
-        // if (res.code === 200) {
-        //   this.$router.push({
-        //     name: 'preSave'
-        //   })
-        // }
+        if (res.code === 200) {
+          this.pay(res.data);
+        }
       })
+    },
+    pay(data) {
+      if (['wx_scan', 'alipay_web'].includes(this.info.payType)) {
+        this.loading = this.$loading({
+          lock: true,
+          text: '订单正在生成中，请稍等！',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+      }
+      this.$api({
+        url: 'pay',
+        method: 'post',
+        data: {
+          order_type: 'recharge_order',
+          pay_type: this.info.payType,
+          orderno: data.orderno,
+          pay_pic: this.info.payType === 'offline' ? this.info.file : '',
+          message: this.info.payType === 'offline' ? this.info.message : '',
+        }
+      }).then(res => {
+        this.alipay_web = res.data.qrcode;
+        if (this.info.payType == 'wx_scan') {
+          this.loading.close();
+          this.dialogWxPay = true;
+          // 启动轮询
+          this.polling(data.orderno);
+        } else if (this.info.payType == 'alipay_web') {
+          setTimeout(() => {
+            this.loading.close();
+            document.forms['alipaysubmit'].submit();
+          }, 1000)
+        }
+      }).catch(() => {
+        this.loading.close();
+      })
+    },
+    // 轮询
+    polling(orderno) {
+      let that = this;
+      this.timer = setInterval(function () {
+        that.$api({
+          url: 'order_pay_check',
+          method: 'post',
+          data: {
+            orderno: orderno,
+          } // 参数
+        }).then(res => {
+          if (res.code === 200) {
+            clearInterval(this.timer);
+            that.isWxPay = true;
+            setTimeout(() => {
+              that.$router.push('/preSave')
+            }, 2000)
+          }
+        })
+      }, 3000);
+    },
+    //上传相关
+    upload_on_success(res, file) {
+      //console.log("上传结果", res);
+      let {code, data, msg} = res;
+      if (code == 200) {
+        this.info.file = res.data.url;
+      }
+    },
+    wxPayClose() {
+      clearInterval(this.timer);
     }
   }
 }
@@ -116,7 +195,7 @@ export default {
             </div>
           </div>
         </div>
-        <div class="account" v-if="info.payType === 'paypal'">
+        <div class="account" v-if="info.payType === 'offline'">
           <p>请转账至以下账户：</p>
           <div class="it">
             <p><span>户名：</span>{{ webConfig.company_name }}</p>
@@ -124,15 +203,15 @@ export default {
             <p><span>开户行：</span>{{ webConfig.bank_name }}</p>
           </div>
         </div>
-        <div class="section-ctx" v-if="info.payType === 'paypal'">
+        <div class="section-ctx" v-if="info.payType === 'offline'">
           <div class="pay-group">
             <div class="title">上传凭证 :</div>
             <div class="upload-ctx">
-              <el-upload
-                  class="avatar-uploader"
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  :show-file-list="false">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <el-upload class="upload-wrap" accept="image/*" :show-file-list="false" name="file"
+                         :on-success="upload_on_success"
+                         action="https://jxjsjc.dx.hdapp.com.cn/api/upload"
+                         :data="mix_upload_data">
+                <img v-if="info.file" :src="info.file" class="avatar">
                 <div class="box" v-else>
                   <i class="el-icon-plus avatar-uploader-icon"></i>
                 </div>
@@ -140,7 +219,7 @@ export default {
             </div>
           </div>
         </div>
-        <div class="section-ctx" v-if="info.payType === 'paypal'">
+        <div class="section-ctx" v-if="info.payType === 'offline'">
           <div class="pay-group">
             <div class="title">备注：</div>
             <div class="pay-items">
@@ -240,7 +319,7 @@ export default {
               <div class="info-val">
                 <el-input v-model="invoice_info.shibiema"
                           placeholder="请填写准确的纳税人识别号 必填"></el-input>
-                <el-checkbox v-model="checked" style="margin-left: 10px">无税号单位</el-checkbox>
+                <el-checkbox v-model="invoice_info.wsh" style="margin-left: 10px">无税号单位</el-checkbox>
               </div>
             </div>
             <div class="info-item">
@@ -253,7 +332,7 @@ export default {
             <div class="info-item">
               <div class="info-label"><span>*</span> 发票张数</div>
               <div class="info-val">
-                <el-radio-group v-model="invoice_info.titleType" fill="#A66600">
+                <el-radio-group v-model="invoice_info.fnum" fill="#A66600">
                   <el-radio label="1">一张发票</el-radio>
                   <el-radio label="2">多张发票</el-radio>
                 </el-radio-group>
@@ -327,6 +406,16 @@ export default {
         <el-button type="primary" @click="submit">提交</el-button>
       </div>
     </div>
+
+    <div v-html="alipay_web" style="opacity: 0;"></div>
+
+    <el-dialog title="微信支付" :visible.sync="dialogWxPay" width="30%" center :close-on-click-modal="false"
+               @close="wxPayClose">
+      <div class="wxPay-box">
+        <img :src="alipay_web" alt="">
+        <span>{{ isWxPay ? '已支付，正在跳转' : '请使用微信扫码支付' }}</span>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -607,6 +696,20 @@ export default {
       }
     }
   }
+}
 
+.wxPay-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  img {
+    width: 200px;
+    height: 200px;
+  }
+
+  span {
+    margin-top: 10px;
+  }
 }
 </style>

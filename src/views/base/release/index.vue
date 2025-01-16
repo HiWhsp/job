@@ -1,10 +1,12 @@
 <script>
 import breadcrumb from "@/components/breadcrumb/index.vue";
+
 export default {
   name: "index",
   components: {breadcrumb},
   data() {
     return {
+      categoryList: ['分析检测', '微纳加工', '模拟计算', '化工安全评估', '培训服务', '其他'],
       ruleForm: {
         category: '', // 需求类别
         contact: '', // 联系人
@@ -44,7 +46,16 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.resetForm();
+          this.$api({
+            url: 'apply_require',
+            method: 'post',
+            data: this.ruleForm
+          }).then(res => {
+            if (res.code === 200) {
+              this.$message.success('提交成功')
+              this.resetForm(formName);
+            }
+          })
         } else {
           return false;
         }
@@ -72,24 +83,26 @@ export default {
       <div class="sub-title">尊敬的用户： 您好！欢迎提交需求给我们！平台会尽快与您联系！</div>
     </div>
     <div class="form">
-      <el-form label-position="top" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form label-position="top" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px"
+               class="demo-ruleForm">
         <el-form-item label="需求类别" prop="category">
           <el-radio-group v-model="ruleForm.category" placeholder="请选择">
-            <el-radio label="线上品牌商赞助"></el-radio>
-            <el-radio label="线下场地免费"></el-radio>
+            <el-radio :label="item" v-for="item in categoryList" :key="item"></el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="联系人" prop="contact">
           <el-input type="text" v-model="ruleForm.contact" placeholder="请输入联系人"></el-input>
         </el-form-item>
         <el-form-item label="联系电话" prop="phone">
-          <el-input type="text" v-model="ruleForm.phone" placeholder="请输入联系电话" @input="() => (ruleForm.phone = ruleForm.phone.replace(/\D/g, ''))"></el-input>
+          <el-input type="text" v-model="ruleForm.phone" placeholder="请输入联系电话"
+                    @input="() => (ruleForm.phone = ruleForm.phone.replace(/\D/g, ''))"></el-input>
         </el-form-item>
         <el-form-item label="联系邮箱" prop="email">
           <el-input type="text" v-model="ruleForm.email" placeholder="请输入联系邮箱"></el-input>
         </el-form-item>
         <el-form-item label="样品数量" prop="num">
-          <el-input type="text" @input="() => (ruleForm.num = ruleForm.num.replace(/\D/g, ''))" v-model="ruleForm.num" placeholder="请输入样品数量"></el-input>
+          <el-input type="text" @input="() => (ruleForm.num = ruleForm.num.replace(/\D/g, ''))" v-model="ruleForm.num"
+                    placeholder="请输入样品数量"></el-input>
         </el-form-item>
         <el-form-item label="预算范围" prop="budgetRange">
           <el-input type="text" v-model="ruleForm.budgetRange" placeholder="请输入预算范围"></el-input>
@@ -125,14 +138,17 @@ export default {
 <style scoped lang="less">
 .container {
 }
+
 .title-wrap {
   background-color: #fff;
   padding: 50px 50px 0;
   text-align: center;
+
   .title {
     font-size: 28px;
     font-weight: bold;
     color: #333;
+
     &::after {
       margin: 20px auto;
       height: 3px;
@@ -143,11 +159,13 @@ export default {
       max-width: 50px;
     }
   }
+
   .sub-title {
     font-size: 16px;
     color: #333;
   }
 }
+
 .form {
   background-color: #fff;
   padding: 50px 100px;
@@ -170,6 +188,7 @@ export default {
       align-items: center;
       justify-content: center;
     }
+
     img {
       width: 150px;
       height: 100px;
@@ -179,9 +198,11 @@ export default {
   /deep/ .el-form-item {
     margin-bottom: 10px;
   }
+
   /deep/ .el-form-item__label {
     padding: 0;
   }
+
   /deep/ .el-button--primary {
     background-color: @theme;
     border-color: @theme;

@@ -101,10 +101,28 @@ export default {
       })
 
     },
+    // 点赞
+    likeAdd(item) {
+      this.$api({
+        url: 'bbs_do_like',
+        method: 'post',
+        data: {
+          id: item.id
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.msg)
+          this.getList()
+        }
+      }).catch(()=>{
+        this.getList()
+      })
+    },
     // 评论
     commentAdd(item) {
-      this.commentParams.parentId = item.id;
-      this.commentParams.replyUserId = item.userId;
+      this.commentParams.id = item.id;
+      // this.commentParams.parentId = item.id;
+      this.commentParams.replyUserId = item.user.id;
       this.commentVisible = true
     },
     // 添加评论
@@ -195,7 +213,7 @@ export default {
                 clearable
             >
               <template #append>
-                <el-button icon="el-icon-search" class="search-btn"></el-button>
+                <el-button icon="el-icon-search" class="search-btn" @click="getList"></el-button>
               </template>
             </el-input>
             <el-button type="primary" class="post-btn" @click="PostVisible = true">发帖</el-button>
@@ -217,27 +235,30 @@ export default {
             <div class="post-footer">
               <span class="post-time">{{ item.created_at }}</span>
               <span class="post-details"><span @click="detailFormChick(item)">详情</span> | <span
-                  @click="commentAdd(item)">评论({{ item.comment_no }})</span> | <span>点赞({{
+                  @click="commentAdd(item)">评论({{ item.comment_no }})</span> | <span @click="likeAdd(item)">点赞({{
                   item.like_no
                 }})</span></span>
             </div>
             <div class="isHide" @click="showComment(item)">
               <i class="el-icon-arrow-down"></i>
             </div>
-            <el-button type="primary" size="small" class="action-btn">科研工具</el-button>
+            <el-button type="primary" size="small" class="action-btn">{{
+                item.cate ? item.cate.title : '无'
+              }}
+            </el-button>
           </div>
           <div class="comment-wrap">
             <div class="comment-item" v-for="(i, ix) in commentList" :key="ix">
               <div class="post-header">
-                <el-avatar :src="i.data.user.avatar" class="avatar"></el-avatar>
-                <span>{{ i.data.user.name }}</span>
+                <el-avatar :src="i.user.avatar" class="avatar"></el-avatar>
+                <span>{{ i.user.name }}</span>
               </div>
               <div class="post-info">
-                <p class="post-meta ellipsis-2">{{ i.data.content }}</p>
+                <p class="post-meta ellipsis-2">{{ i.content }}</p>
               </div>
               <div class="post-footer">
-                <span class="post-time">{{ i.data.created_at }}</span>
-                <span class="post-details" @click="detailFormChick(i)">详情</span>
+                <span class="post-time">{{ i.created_at }}</span>
+                <!--                <span class="post-details" @click="detailFormChick(i)">详情</span>-->
               </div>
             </div>
             <el-empty v-if="!commentList.length" description="暂无记录..."></el-empty>
@@ -297,7 +318,7 @@ export default {
             <el-popover
                 v-for="(item, index) in categoryList"
                 :key="index"
-                placement="bottom-start"
+                placement="bottom-end"
                 width="400"
                 trigger="hover">
               <div class="type-popover">
