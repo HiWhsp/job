@@ -51,7 +51,7 @@ export default {
 <template>
   <div>
     <div class="title">{{ selectItem.title }}</div>
-    <div class="tip">可出具CMA/CNAS报告</div>
+    <div class="tip">{{ selectItem.content }}</div>
     <div class="list">
       <div class="list-item" v-for="(it, index) in list" :key="it.id">
         <img :src="it.thumb" alt="">

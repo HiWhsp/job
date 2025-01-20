@@ -251,7 +251,7 @@ export default {
           <div class="circle">
             <p class="amount">{{ orderForm.kekaipiao_money }}元</p>
             <p class="description">可开票金额</p>
-            <p class="extra">已开票待还款：500.00元</p>
+            <p class="extra">已开票待还款：0.00元</p>
           </div>
           <div class="actions">
             <p class="a-item">立即开票</p>

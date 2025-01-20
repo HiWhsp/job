@@ -144,7 +144,7 @@ export default {
             </div>
             <div class="item-val">
               <p>加急服务</p>
-              <p>{{ ifUrgent(preOrderDetail.if_urgent) }}</p>
+              <p>{{ priceList.urgent_txt || '不加急' }}</p>
             </div>
             <div class="item-val">
               <p>运费</p>

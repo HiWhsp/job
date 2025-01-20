@@ -53,7 +53,7 @@ export default {
         url: 'order_pay_info',
         method: 'post',
         data: {
-          yf_type: this.preOrderDetail.yf_type || '1',
+          yf_type: this.preOrderDetail.yf_type || '0',
           tongshebei: this.preOrderDetail.tongshebei || '',
           if_urgent: this.preOrderDetail.if_urgent || '',
           sample_type: this.preOrderDetail.sample_type || '',

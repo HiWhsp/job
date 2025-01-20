@@ -241,6 +241,7 @@ export default {
         border: 1px solid #E8E8E8;
 
         img {
+          width: 100%;
           height: 100%;
         }
       }

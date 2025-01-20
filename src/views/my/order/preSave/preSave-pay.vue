@@ -407,7 +407,7 @@ export default {
       </div>
     </div>
 
-    <div v-html="alipay_web" style="opacity: 0;"></div>
+    <div v-html="alipay_web" style="opacity: 0; width: 100px;"></div>
 
     <el-dialog title="微信支付" :visible.sync="dialogWxPay" width="30%" center :close-on-click-modal="false"
                @close="wxPayClose">

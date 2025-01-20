@@ -73,7 +73,7 @@ export default {
           path: '/analyze?type=523'
         }, {
           title: '智算服务',
-          path: '/analyze?type=528'
+          path: '/analyze?type=534'
         }, {
           title: '微纳加工',
           path: '/analyze?type=527'

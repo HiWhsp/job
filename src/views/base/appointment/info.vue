@@ -53,7 +53,7 @@ export default {
         url: 'order_pay_info',
         method: 'post',
         data: {
-          yf_type: this.preOrderDetail.yf_type || '1',
+          yf_type: this.preOrderDetail.yf_type || '0',
           tongshebei: this.preOrderDetail.tongshebei || '',
           if_urgent: this.preOrderDetail.if_urgent || '',
           sample_type: this.preOrderDetail.sample_type || '',
@@ -111,6 +111,10 @@ export default {
     },
     do_address_add() {
       this.$refs.address_modal.init();
+    },
+    yfChange() {
+      this.preOrderDetail.yf_type = this.params.yf_type;
+      this.getPriceList(this.preOrderDetail.form);
     }
   }
 }
@@ -253,9 +257,9 @@ export default {
         </div>
 
         <div class="sel">
-          <el-radio-group v-model="params.yf_type">
-            <el-radio :label="0">自付</el-radio>
-            <el-radio :label="1">到付</el-radio>
+          <el-radio-group v-model="params.yf_type" @change="yfChange">
+            <el-radio :label="1">自付</el-radio>
+            <el-radio :label="0">到付</el-radio>
           </el-radio-group>
 
           <div class="item">

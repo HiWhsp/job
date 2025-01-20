@@ -38,6 +38,11 @@ export default {
         this.menuSelect(this.$route.query.type);
       }
     },
+    $route() {
+      if (this.$route.query.type) {
+        this.menuSelect(this.$route.query.type);
+      }
+    }
   },
   mounted() {
     const route = this.$route;

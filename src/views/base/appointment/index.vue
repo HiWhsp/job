@@ -43,6 +43,7 @@ export default {
   },
   mounted() {
     this.preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
+    this.preOrderDetail.product_id = this.$route.query.id;
     this.setView();
   },
   methods: {
@@ -57,7 +58,6 @@ export default {
         if (res.code === 200) {
           this.product_form = res.data;
           this.elementFieldId = this.product_form.find(item => item.field_type === 'element') && this.product_form.find(item => item.field_type === 'element').id
-          this.preOrderDetail.product_id = this.$route.query.id;
           if (this.preOrderDetail.attachment && JSON.parse(this.preOrderDetail.attachment).length) {
             const list = JSON.parse(this.preOrderDetail.attachment);
             list.forEach(item => {
@@ -69,7 +69,7 @@ export default {
               url: 'order_pay_info',
               method: 'post',
               data: {
-                yf_type: this.preOrderDetail.yf_type || '1',
+                yf_type: this.preOrderDetail.yf_type || '0',
                 tongshebei: this.preOrderDetail.tongshebei || '',
                 if_urgent: this.preOrderDetail.if_urgent || '',
                 sample_type: this.preOrderDetail.sample_type || '',
@@ -182,7 +182,7 @@ export default {
         url: 'order_pay_info',
         method: 'post',
         data: {
-          yf_type: this.preOrderDetail.yf_type || '1',
+          yf_type: this.preOrderDetail.yf_type || '0',
           tongshebei: this.preOrderDetail.tongshebei || '',
           if_urgent: this.preOrderDetail.if_urgent || '',
           sample_type: this.preOrderDetail.sample_type || '',
@@ -207,7 +207,7 @@ export default {
         url: 'order_pay_info',
         method: 'post',
         data: {
-          yf_type: this.preOrderDetail.yf_type || '1',
+          yf_type: this.preOrderDetail.yf_type || '0',
           tongshebei: this.preOrderDetail.tongshebei || '',
           if_urgent: this.preOrderDetail.if_urgent || '',
           sample_type: this.preOrderDetail.sample_type || '',
