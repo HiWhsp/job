@@ -354,7 +354,11 @@ export default {
       })
     },
     handleClickElement(element) {
-      this.$emit('handleClickElement', element)
+      this.elementList.forEach((item)=>{
+        if(item.mc === element.mc) {
+          this.$emit('handleClickElement', element)
+        }
+      })
     }
   }
 }

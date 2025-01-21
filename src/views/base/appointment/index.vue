@@ -334,16 +334,18 @@ export default {
                 </el-checkbox-group>
                 <!--              元素周期表-->
                 <template v-if="field.field_type === 'element'">
-                  <div class="t-item column-flex-center wrap"
-                       v-for="(xItem, xI) in selectElementList[index]" :key="xI" v-if="xItem">
-                    <span class="desc">{{ xItem.mc }}</span>
-                    <img src="@/assets/img/base/appointment/element-del.png" class="element-del"
-                         @click="elementDel(xItem, xI)"
-                         alt="">
-                  </div>
-                  <div class="sel-element" v-if="field.field_type === 'element'"
-                       @click="selectElement(field.content, index)">
-                    选择元素
+                  <div class="flex">
+                    <div class="t-item column-flex-center wrap"
+                         v-for="(xItem, xI) in selectElementList[index]" :key="xI" v-if="xItem">
+                      <span class="desc">{{ xItem.mc }}</span>
+                      <img src="@/assets/img/base/appointment/element-del.png" class="element-del"
+                           @click="elementDel(xItem, xI)"
+                           alt="">
+                    </div>
+                    <div class="sel-element" v-if="field.field_type === 'element'"
+                         @click="selectElement(field.content, index)">
+                      选择元素
+                    </div>
                   </div>
                 </template>
 

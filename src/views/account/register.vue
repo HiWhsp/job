@@ -127,6 +127,7 @@ export default {
         this.$message.error("请同意用户注册协议!");
         return;
       }
+      this.form.icode = this.$route.query.inviteCode
       this.$api("register", this.form, "post").then(res => {
         if (res.code === 200) {
           this.$message.success("注册成功!");

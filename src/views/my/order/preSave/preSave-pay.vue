@@ -7,8 +7,9 @@ export default {
       dialogWxPay: false,
       isWxPay: false,
       timer: null,
+      prepaidAmount: '',
       info: {
-        payType: 1, // 支付方式
+        payType: '', // 支付方式
         prepaidAccount: 1, // 预付账户
         prepaidBenefits: '', // 预付福利
         prepaidAmount: '', // 预付金额
@@ -49,11 +50,23 @@ export default {
         {value: 'alipay_web', title: '支付宝支付', icon: require("@img/base/invite/zfbPay.png")},
         {value: 'offline', title: '对公转账', icon: require("@img/base/invite/duigong.png")},
       ],
+      // 充值福利
+      rechargeList: []
     }
   },
   // 页面卸载后清除定时器
   beforeDestroy() {
     this.clearIntervalWx();
+  },
+  mounted() {
+    this.$api({
+      url: 'recharge_list',
+      method: 'post'
+    }).then(res => {
+      if (res.code === 200) {
+        this.rechargeList = res.data;
+      }
+    })
   },
   methods: {
     do_toggle_paytype(item) {
@@ -61,6 +74,16 @@ export default {
     },
     do_toggle_prepaid(item) {
       this.info.prepaidAccount = item.value
+    },
+    do_toggle_prepaidAmount(item) {
+      if(item != '其他') {
+        this.info.prepaidAmount = item.price
+        this.info.id = item.id;
+        this.prepaidAmount = item.gift_amount
+      }else {
+        this.info.id = null;
+        this.info.prepaidAmount = this.prepaidAmount
+      }
     },
     // 发票信息选择
     do_toggle_invoice(item) {
@@ -73,6 +96,20 @@ export default {
     },
     // 提交
     submit() {
+      if(!this.info.payType) {
+        this.$message({
+          message: '请选择支付方式',
+          type: 'warning'
+        });
+        return
+      }
+      if(!this.info.prepaidAmount) {
+        this.$message({
+          message: '请选择预付金额',
+          type: 'warning'
+        });
+        return
+      }
       const params = {
         f_type: this.invoice_info.invoiceStatus != 0 ? this.invoice_info.invoiceType : 0,
         title_type: this.invoice_info.titleType,
@@ -87,7 +124,8 @@ export default {
         notes: this.info.prepaidRemark,
         utype: this.info.prepaidAccount,
         fnum: this.invoice_info.fnum,
-        wsh: this.invoice_info.wsh ? 1 : ''
+        wsh: this.invoice_info.wsh ? 1 : '',
+        id: this.info.id
       }
       this.$api({
         url: 'do_recharge',
@@ -242,21 +280,24 @@ export default {
             </div>
           </div>
         </div>
-        <div class="section-ctx">
-          <div class="pay-group">
-            <div class="title"><span>*</span>预付福利：</div>
-            <div class="pay-items">
-              <el-input type="text" placeholder="请输入预付福利"
-                        v-model="info.prepaidBenefits"></el-input>
-            </div>
-          </div>
-        </div>
+<!--        <div class="section-ctx">-->
+<!--          <div class="pay-group">-->
+<!--            <div class="title"><span>*</span>预付福利：</div>-->
+<!--            <div class="pay-items">-->
+<!--              <el-input type="text" placeholder="请输入预付福利"-->
+<!--                        v-model="info.prepaidBenefits"></el-input>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="section-ctx">
           <div class="pay-group">
             <div class="title"><span>*</span>预付金额：</div>
             <div class="pay-items">
-              <el-input type="text" placeholder="请输入预付金额" v-model="info.prepaidAmount"></el-input>
-              <span style="margin-left: 5px">元</span>
+              <div class="item" v-for="(item, index) in rechargeList"
+                   @click="do_toggle_prepaidAmount(item)"
+                   :class="{ checked: info.prepaidAmount == item.price }">
+                <div class="invoice">{{ item.price }}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -265,7 +306,7 @@ export default {
             <div class="title"><span>*</span>预付赠送金：</div>
             <div class="pay-items">
               <el-input type="text" placeholder="预付赠送金" disabled
-                        v-model="info.prepaidGift"></el-input>
+                        v-model="prepaidAmount"></el-input>
               <span style="margin-left: 5px">元</span>
             </div>
           </div>

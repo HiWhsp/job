@@ -7,8 +7,9 @@ export default {
       dialogWxPay: false,
       isWxPay: false,
       timer: null,
+      prepaidAmount: '', // 其他预付金额
       info: {
-        payType: 1, // 支付方式
+        payType: '', // 支付方式
         prepaidAccount: 1, // 预付账户
         prepaidBenefits: '', // 预付福利
         prepaidAmount: '', // 预付金额
@@ -72,14 +73,40 @@ export default {
         fnum: '', // 发票数量
         wsh: false
       },
+      // 充值福利
+      rechargeList: []
     }
   },
   // 页面卸载后清除定时器
   beforeDestroy() {
     this.clearIntervalWx();
   },
+  mounted() {
+    this.$api({
+      url: 'recharge_list',
+      method: 'post'
+    }).then(res => {
+      if (res.code === 200) {
+        this.rechargeList = res.data;
+      }
+    })
+  },
   methods: {
     submit() {
+      if(!this.info.payType) {
+        this.$message({
+          message: '请选择支付方式',
+          type: 'warning'
+        });
+        return
+      }
+      if(!this.info.prepaidAmount) {
+        this.$message({
+          message: '请选择预付金额',
+          type: 'warning'
+        });
+        return
+      }
       const params = {
         f_type: this.invoice_info.invoiceStatus != 0 ? this.invoice_info.invoiceType : 0,
         title_type: this.invoice_info.titleType,
@@ -94,7 +121,8 @@ export default {
         notes: this.info.prepaidRemark,
         utype: this.info.prepaidAccount,
         fnum: this.invoice_info.fnum,
-        wsh: this.invoice_info.wsh ? 1 : ''
+        wsh: this.invoice_info.wsh ? 1 : '',
+        id: this.info.id
       }
       this.$api({
         url: 'do_recharge',
@@ -168,6 +196,16 @@ export default {
     },
     do_toggle_prepaid(item) {
       this.info.prepaidAccount = item.value
+    },
+    do_toggle_prepaidAmount(item) {
+      if(item != '其他') {
+        this.info.prepaidAmount = item.price
+        this.info.id = item.id;
+        this.prepaidAmount = item.gift_amount
+      }else {
+        this.info.id = null;
+        this.info.prepaidAmount = this.prepaidAmount
+      }
     },
     // 发票信息选择
     do_toggle_invoice(item) {
@@ -249,17 +287,11 @@ export default {
           <div class="desc">
             <div class="it">
               <p class="tit">预付金额</p>
-              <span>5000-9999元</span>
-              <span>10000-29999元</span>
-              <span>30000-49999元</span>
-              <span>100000元以上</span>
+              <span v-for="item in rechargeList" :key="item.id">{{ item.price }}元</span>
             </div>
             <div class="it">
               <p class="tit">赠送金额</p>
-              <span>200.00元</span>
-              <span>500.00元</span>
-              <span>800.00元</span>
-              <span>1500.00元</span>
+              <span v-for="item in rechargeList" :key="item.id">{{ item.gift_amount }}元</span>
             </div>
           </div>
         </div>
@@ -269,7 +301,7 @@ export default {
 
     <div class="info-box main">
       <div class="pay-info">
-        <div class="section-title">发票信息</div>
+        <div class="section-title">预付信息</div>
         <div class="section-ctx">
           <div class="pay-group">
             <div class="title"><span>*</span>支付方式：</div>
@@ -333,21 +365,26 @@ export default {
             </div>
           </div>
         </div>
-        <div class="section-ctx">
-          <div class="pay-group">
-            <div class="title"><span>*</span>预付福利：</div>
-            <div class="pay-items">
-              <el-input type="text" placeholder="请输入预付福利"
-                        v-model="info.prepaidBenefits"></el-input>
-            </div>
-          </div>
-        </div>
+<!--        <div class="section-ctx">-->
+<!--          <div class="pay-group">-->
+<!--            <div class="title"><span>*</span>预付福利：</div>-->
+<!--            <div class="pay-items">-->
+<!--              <el-input type="text" placeholder="请输入预付福利"-->
+<!--                        v-model="info.prepaidBenefits"></el-input>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="section-ctx">
           <div class="pay-group">
             <div class="title"><span>*</span>预付金额：</div>
             <div class="pay-items">
-              <el-input type="text" placeholder="请输入预付金额" v-model="info.prepaidAmount"></el-input>
-              <span style="margin-left: 5px">元</span>
+              <div class="item" v-for="(item, index) in rechargeList"
+                   @click="do_toggle_prepaidAmount(item)"
+                   :class="{ checked: info.prepaidAmount == item.price }">
+                <div class="invoice">{{ item.price }}</div>
+              </div>
+<!--              <el-input type="text" placeholder="其他预付金额" v-model="prepaidAmount" @change="do_toggle_prepaidAmount('其他')"></el-input>-->
+<!--              <span style="margin-left: 5px">元</span>-->
             </div>
           </div>
         </div>
@@ -356,7 +393,7 @@ export default {
             <div class="title"><span>*</span>预付赠送金：</div>
             <div class="pay-items">
               <el-input type="text" placeholder="预付赠送金" disabled
-                        v-model="info.prepaidGift"></el-input>
+                        v-model="prepaidAmount"></el-input>
               <span style="margin-left: 5px">元</span>
             </div>
           </div>
@@ -676,7 +713,7 @@ export default {
 
           .item {
             .flex();
-            margin-right: 60px;
+            margin-right: 30px;
             cursor: pointer;
 
             .check-img {
@@ -811,7 +848,7 @@ export default {
 
           .item {
             .flex();
-            margin-right: 60px;
+            margin-right: 30px;
             cursor: pointer;
 
             .check-img {

@@ -97,7 +97,7 @@
         width="30%">
       <div class="dialog-txt">
         <p class="title">复制下方链接，发送给好友 <span>（建议在电脑端打开链接）</span></p>
-        <p class="link">https://www.shiyanjia.com/activity/invite-register.html?invitecode=13599519926</p>
+        <p class="link">{{ inviteCode }}</p>
       </div>
       <span slot="footer" class="dialog-footer flex flex-center">
         <el-button type="primary" @click="oncopy">复制链接</el-button>
@@ -114,6 +114,7 @@ export default {
     return {
       index: 1,
       dialogVisible: false,
+      inviteCode: '',
       step: [
         {
           title: "邀请好友完成注册",
@@ -141,7 +142,12 @@ export default {
       }
     }
   },
-
+  watch: {
+    baseInfo() {
+      const url = location.origin + '/register?inviteCode=' + this.baseInfo.icode
+      this.inviteCode = url;
+    }
+  },
   mounted() {
     this.setView()
   },
@@ -162,7 +168,17 @@ export default {
       this.dialogVisible = true;
     },
     oncopy() {
-      // 复制
+      // 利用原生方法实现复制
+      let input = document.createElement('input');
+      input.value = this.inviteCode;
+      document.body.appendChild(input);
+      input.select(); // 选择对象;
+      document.execCommand("Copy"); // 执行浏览器复制命令
+      this.$message({
+        message: '复制成功',
+        type: 'success'
+      });
+
       this.dialogVisible = false;
     }
   },
