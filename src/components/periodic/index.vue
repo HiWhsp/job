@@ -510,8 +510,6 @@ export default {
   position: absolute;
   top: 100px;
   left: 40%;
-  width: 100%;
-  height: 100%;
   display: flex;
   cursor: pointer;
 
