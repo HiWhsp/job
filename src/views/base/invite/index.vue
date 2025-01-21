@@ -142,17 +142,20 @@ export default {
       }
     }
   },
-  watch: {
-    baseInfo() {
-      const url = location.origin + '/register?inviteCode=' + this.baseInfo.icode
-      this.inviteCode = url;
-    }
-  },
   mounted() {
     this.setView()
   },
   methods: {
     setView() {
+      this.$api({
+        url: 'user_info',
+        method: "post",
+      }).then(res => {
+        if (res.code === 200) {
+          const url = location.origin + '/register?inviteCode=' + res.data.icode
+          this.inviteCode = url;
+        }
+      })
       //   获取邀请列表
       this.$api({
         url: 'invite_list',

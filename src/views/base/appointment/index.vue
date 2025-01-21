@@ -447,7 +447,7 @@ export default {
       </div>
     </div>
 
-    <el-dialog title="选择元素" :visible.sync="dialogElementVisible" width="1200px" center>
+    <el-dialog title="选择元素" :visible.sync="dialogElementVisible" width="1350px" center>
       <periodic :elementList="elementList" :selectElementList="selectElementList[selectElementIndex]"
                 @handleClickElement="elementPick"></periodic>
       <div class="sel_element">
