@@ -131,6 +131,12 @@ export default {
 
   methods: {
     goUrl(url) {
+      // 校验是否登录
+      if (url && !this.baseInfo.id) {
+        this.$message.error("请先登录");
+        this.$router.push('/login')
+        return
+      }
       if (url === '/feedback') {
         this.dialogVisible = true
       } else {

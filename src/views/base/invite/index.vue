@@ -59,7 +59,7 @@
                 <p>2.
                   被邀请人通过邀请人所分享的邀请链接注册成功，并在注册后30天内下单（不限量），邀请人即可获得订单金额的10%现金奖励（冻结状态）；待被邀请人的订单完成（若使用先享后付服务进行支付还需进行还款），邀请人的订单现金奖励将自动解冻，可直接提现；</p>
                 <p>3. 邀请人可邀请多个人参与活动，每邀请成功1个好友均可获得对应的奖励，奖励上不封顶；</p>
-                <p>4. 邀请人和被邀请人不得为同一人，如发现作</p>
+                <p>4. 邀请人和被邀请人不得为同一人，如发现作弊，科学指南针有权撤销奖励。</p>
               </div>
             </div>
           </div>
@@ -125,11 +125,11 @@ export default {
           subtitle: '<p>双方均可获得<span style="color: #3399FF;">5元优惠券</span>奖励</p>',
           img: require('@/assets/img/base/invite/2.png')
         }, {
-          title: "邀请好友完成注册",
+          title: "好友注册30天内下单(不限量)",
           subtitle: '<p>您可获得订单金额的<span style="color: #3399FF;">10%</span>现金奖励（冻结状态）</p>',
           img: require('@/assets/img/base/invite/3.png')
         }, {
-          title: "邀请好友完成注册",
+          title: "好友订单完成",
           subtitle: '<p>10%现金奖励解冻 <span style="color: #3399FF;">（可提现）</span></p>',
           img: require('@/assets/img/base/invite/4.png')
         }

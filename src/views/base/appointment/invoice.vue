@@ -58,7 +58,7 @@ export default {
           if_urgent: this.preOrderDetail.if_urgent || '',
           sample_type: this.preOrderDetail.sample_type || '',
           product_id: this.preOrderDetail.product_id || '',
-          form
+          form: this.filterForm(form)
         }
       }).then(res => {
         if (res.code === 200) {

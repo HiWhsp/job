@@ -202,7 +202,6 @@ export default {
     },
     // 获取价格
     getPrice() {
-      console.log(this.contentList)
       this.$api({
         url: 'order_pay_info',
         method: 'post',
@@ -212,13 +211,30 @@ export default {
           if_urgent: this.preOrderDetail.if_urgent || '',
           sample_type: this.preOrderDetail.sample_type || '',
           product_id: this.preOrderDetail.product_id || '',
-          form: this.contentList.map(item => item.product_form)
+          form: this.setProductForm(this.contentList)
         }
       }).then(res => {
         if (res.code === 200) {
           this.priceList = res.data;
         }
       })
+    },
+    setProductForm(data) {
+      const form = [];
+      data.forEach((item, index) => {
+        for (const itemKey in item.product_form) {
+          if(itemKey.includes('-custom')) {
+            return;
+          }
+          if(form[index] && Object.keys(form[index]).length) {
+            form[index][itemKey] = typeof item.product_form[itemKey] === 'object' ? item.product_form[itemKey].join('$') : item.product_form[itemKey]
+          } else {
+            form[index] = {};
+            form[index][itemKey] = typeof item.product_form[itemKey] === 'object' ? item.product_form[itemKey].join('$') : item.product_form[itemKey]
+          }
+        }
+      })
+      return form
     },
     //上传相关
     upload_on_success(res, file, fileList) {
