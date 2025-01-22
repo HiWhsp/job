@@ -59,20 +59,21 @@ export default {
         this.$message.error('请选择支付方式');
         return;
       }
-      if (['wx_scan', 'alipay_web'].includes(this.paymentType)) {
-        this.loading = this.$loading({
-          lock: true,
-          text: '订单正在生成中，请稍等！',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
-      }
+      // if (['wx_scan', 'alipay_web'].includes(this.paymentType)) {
+      this.loading = this.$loading({
+        lock: true,
+        text: '订单正在生成中，请稍等！',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+      // }
       // 创建订单
       this.$api({
         url: 'order_create',
         method: 'post',
         data: {
-          ...this.preOrderDetail
+          ...this.preOrderDetail,
+          form: this.filterForm(this.preOrderDetail.form)
         }
       }).then(res => {
         if (res.code === 200) {

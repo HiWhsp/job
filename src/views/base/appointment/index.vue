@@ -197,6 +197,8 @@ export default {
           this.$router.push({
             path: '/appointment-info'
           })
+        } else {
+          this.$message.error(res.msg);
         }
       })
     },
@@ -223,10 +225,10 @@ export default {
       const form = [];
       data.forEach((item, index) => {
         for (const itemKey in item.product_form) {
-          if(itemKey.includes('-custom')) {
+          if (itemKey.includes('-custom')) {
             return;
           }
-          if(form[index] && Object.keys(form[index]).length) {
+          if (form[index] && Object.keys(form[index]).length) {
             form[index][itemKey] = typeof item.product_form[itemKey] === 'object' ? item.product_form[itemKey].join('$') : item.product_form[itemKey]
           } else {
             form[index] = {};
