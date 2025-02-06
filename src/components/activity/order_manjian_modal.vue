@@ -38,7 +38,7 @@ export default {
   },
   watch: {},
   created() {
-
+   
   },
   methods: {
     init() {
@@ -92,11 +92,11 @@ export default {
     width: 150px;
 height: 45px;
 border-radius: 0px 0px 0px 0px;
-border: 1px solid @theme;
+border: 1px solid #F74747;
 font-family: Arial, Arial;
 font-weight: 400;
 font-size: 17px;
-color: @theme;
+color: #F74747;
 
 
     &+button {
@@ -109,14 +109,14 @@ color: @theme;
   .btn-2 {}
 
   .btn-bg {
-    background: @theme;
+    background: #F74747;
     color: #ffffff;
   }
 }
 
 .cus-modal-wrap {
   .modal-inner {
-    padding: 0 0;
+    padding: 0 0; 
     text-align: center;
 
     .img-list {

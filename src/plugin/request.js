@@ -1,7 +1,8 @@
 import Vue from "vue";
 import axios from "axios";
-import store from "@/store";
-import router from "@/router";
+// import store from "@/store";
+// import router from "@/router";
+
 
 
 let ApiList_successActionTip = [];
@@ -29,13 +30,6 @@ axios.interceptors.response.use(
   function (response) {
     let res = response.data;
     let {code, data} = res
-    if (code === 402) {
-      alertErr(res.msg);
-      router.push("/login");
-      return Promise.reject(res);
-    } else {
-      return res;
-    }
     // debugger
     // if (res && (code == 2 || code == -1 || code == -2)) {
     //   //微信授权项目 重新微信授权
@@ -102,51 +96,44 @@ axios.interceptors.response.use(
     //   }
     // }
 
+    return res;
     // return res;
   },
   function (error) {
+    //console.log("-------------- axios拦截 error----------------");
   }
 );
 
 function api(action, data, method, uploaderConfig) {
-  // 是否是对象
-  if (action instanceof Object) {
-    data = action.data;
-    method = action.method;
-    uploaderConfig = action.uploaderConfig;
-    action = action.url;
-  }
+  console.log("接口请求", action);
 
   let option = action;
 
-  let reqUrl = ''; //请求地址
+  let reqUrl = "/api/service.php"; //请求地址
   let reqMethod = method ? method.toLowerCase() : "get"; //请求方式
 
   let reqData = {};
+  if (typeof action == "object") {
+    method = option.method;
+    reqData = option.data; //请求数据
 
-  for (let dataKey in data) {
-    if (data[dataKey] === null || data[dataKey] === undefined) {
-      delete data[dataKey];
-    } else if (data[dataKey] instanceof Array) {
-      const arr = flattenObjectArray(data[dataKey], 'form');
-      data = {
-        ...data,
-        ...arr,
-      };
-      delete data[dataKey];
-    }
+    reqData.userId = localStorage.getItem("userId") || "";
+    reqData.token = localStorage.getItem("token") || "";
+  } else {
+    reqData = {
+      action: action,
+      userId: localStorage.getItem("userId") || "",
+      token: localStorage.getItem("token") || "",
+      ...data,
+    }; //请求数据
   }
 
-  reqData = {
-    userId: localStorage.getItem("userId") || undefined,
-    token: localStorage.getItem("token") || undefined,
-    ...data,
-  }; //请求数据
-
   if (process.env.NODE_ENV !== "production") {
-    reqUrl = "https://jxjsjc.dx.hdapp.com.cn/api/"; //请求地址
+    reqUrl = "/api/service.php";
+    reqUrl = "https://vuesc.new.zhishangez.com/service.php"; //请求地址
   } else {
-    reqUrl = "https://jxjsjc.dx.hdapp.com.cn/api/"; //请求地址
+    reqUrl = "/service.php";
+    reqUrl = "https://vuesc.new.zhishangez.com/service.php"; //请求地址
   }
 
   // debugger
@@ -160,23 +147,34 @@ function api(action, data, method, uploaderConfig) {
     transformRequest: uploaderConfig
       ? []
       : [
-        function (data) {
-          let ret = "";
-          for (let it in data) {
-            ret +=
-              encodeURIComponent(it) +
-              "=" +
-              encodeURIComponent(data[it]) +
-              "&";
-          }
-          return ret;
-        },
-      ],
+          function (data) {
+            let ret = "";
+            for (let it in data) {
+              ret +=
+                encodeURIComponent(it) +
+                "=" +
+                encodeURIComponent(data[it]) +
+                "&";
+            }
+            return ret;
+          },
+        ],
   };
 
   if (reqMethod == "get") {
+    // return axios({
+    //   url: reqUrl,
+    //   method: reqMethod,
+    //   params: reqData,
+    //   ...otherConfig,
+    //   ...uploaderConfig,
+    // });
+
+    // return axios.get(reqUrl, {
+    //   params: reqData,
+    // });
     return axios({
-      url: reqUrl + option,
+      url: reqUrl,
       method: reqMethod,
       params: uploaderConfig ? data : reqData,
       ...otherConfig,
@@ -185,25 +183,13 @@ function api(action, data, method, uploaderConfig) {
 
   } else if (reqMethod == "post") {
     return axios({
-      url: reqUrl + option,
+      url: reqUrl,
       method: reqMethod,
       data: uploaderConfig ? data : reqData,
       ...otherConfig,
       ...uploaderConfig,
     });
   }
-}
-
-// 方法：将对象数组展平为键值对
-function flattenObjectArray(array, prefix = "items") {
-  const result = {};
-  array.forEach((obj, index) => {
-    Object.keys(obj).forEach((key) => {
-      const newKey = `${prefix}[${index}][${key}]`;
-      result[newKey] = obj[key];
-    });
-  });
-  return result;
 }
 
 Vue.prototype.$axios = axios;

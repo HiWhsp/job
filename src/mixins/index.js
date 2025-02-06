@@ -1,30 +1,30 @@
 // import router from "@/router";
-import {mapState} from "vuex";
-import {UPLOAD_PARAMS_ACTION} from "@/config/env.js";
+import { mapState } from "vuex";
+import { UPLOAD_PARAMS_ACTION } from "@/config/env.js";
+import {API_ROOT} from '@/config/env.js'
+
 
 export default {
   data() {
     return {
       // 上传
-      upload_name: "img",
-      upload_action:
+      mix_upload_name: "img",
+      mix_upload_action:
         process.env.NODE_ENV !== "production"
           ? "/api/service.php"
-          : process.env.VUE_APP_API_ROOT + "/service.php",
+          :  API_ROOT + "/service.php",
 
       //函数节流和防抖
       firstTime_mix_throttle: true,
       timer_mix_throttle: null,
-      list_sheng: [
-        {id: 1, title: "学生"},
-        {id: 2, title: "教职工"},
-        {id: 3, title: "企业"},
-        {id: 4, title: "医院"},
-      ],
+
+
     };
   },
   computed: {
     ...mapState([
+      //
+      "vuex_news_cates",
       //
       "vuex_user",
       "vuex_config",
@@ -42,25 +42,27 @@ export default {
       "child_about",
       "vuexTreeCates",
       "vuexFlatCates",
-      "vuexNewsCates",
+
 
       //
       "vuex_h5",
       "lang",
-      "webConfig",
 
       "baseInfo",
       "defaultAvatar",
       "shopcart_count",
     ]),
-
+ 
     mix_upload_data() {
       let data = {
-        token: localStorage.getItem("token"),
-        fileType: "image",
+        action: "index_localUpload",
+        userId: localStorage.getItem("userId") || "",
+        token: localStorage.getItem("token") || "",
       };
       return data;
     },
+
+
     mix_user_phone() {
       return this.vuex_user.phone || "";
     },
@@ -77,14 +79,8 @@ export default {
     //
     //
     //
-    uploadExtraData() {
-      let data = {
-        action: "index_upload",
-        user_id: localStorage.getItem("user_id") || "",
-        token: localStorage.getItem("token") || "",
-      };
-      return data;
-    },
+   
+ 
   },
 
   filters: {
@@ -96,30 +92,11 @@ export default {
       return ret;
     },
   },
-  created() {
-  },
-  mounted() {
-  },
-  destroyed() {
-  },
+  created() {},
+  mounted() {},
+  destroyed() {},
 
   methods: {
-    // 传递参数过滤
-    filterForm(arr) {
-      const list = [];
-      arr.forEach(item => {
-        const obj = {};
-        for (let key in item) {
-          if (item[key] instanceof Array) {
-            obj[key] = item[key].join('$')
-          } else {
-            obj[key] = item[key]
-          }
-        }
-        list.push(obj);
-      })
-      return list
-    },
     // if(!this.mix_get_login_status()){
     //   return
     // }
@@ -134,6 +111,17 @@ export default {
         loginStatus = false;
       }
       return loginStatus;
+    },
+
+    mix_toRoute(option) {
+      // this.mix_toRoute({
+      //   path: '/refund-type',
+      //   query: {
+      //     orderId: item.orderId,
+      //     inventoryId: item.inventoryId,
+      //   }
+      // })
+      this.toRoute(option)
     },
 
     toRoute(option) {
@@ -245,13 +233,14 @@ export default {
       return true;
     },
 
-    changePage(page) {
+    mix_current_change(value) {
       if (this.pagination && this.pagination.page) {
-        this.pagination.page = page;
+        this.pagination.page = value;
         this.setView();
         document.documentElement.scrollTop = 0;
       }
     },
+
 
     mix_logout() {
       this.$store.commit("clear_loginInfo");
@@ -286,6 +275,9 @@ export default {
         location.href = item.url;
       }
     },
+    toRoute(route) {
+      this.$router.push(route);
+    },
 
     //打开弹窗
     mix_openModal(refName, data) {
@@ -295,7 +287,7 @@ export default {
 
     //商品详情页
     mix_to_product(item) {
-      let {inventoryId, id} = item;
+      let { inventoryId, id } = item;
       if (inventoryId) {
         this.$router.push(`/product-detail?id=${inventoryId}`);
       } else if (id) {
@@ -321,7 +313,7 @@ export default {
       this.$api("users_yhqLingqu", {
         id: item.id,
       }).then((res) => {
-        let {code, message} = res;
+        let { code, message } = res;
         alert(res);
         if (this.$route.name == "product-detail") {
           this.show_coupon = false;
@@ -331,11 +323,11 @@ export default {
 
     //订单
     //订单详情
-    mix_order_detail(orderId, callback) {
+    mix_order_detail(order_id, callback) {
       this.$api("orders_detail", {
-        id: orderId,
+        id: order_id,
       }).then((res) => {
-        let {code, data, msg} = res;
+        let { code, data, msg } = res;
         if (code == 200) {
           data.actions = this.getOrderActionsByStatus({
             ...data,
@@ -349,11 +341,11 @@ export default {
     },
 
     //订单取消
-    mix_order_cancel(orderId, callback) {
+    mix_order_cancel(order_id, callback) {
       this.$api("orders_qxOrder", {
-        orderId: orderId,
+        order_id: order_id,
       }).then((res) => {
-        let {code, data, msg} = res;
+        let { code, data, msg } = res;
         if (code == 200) {
           if (callback) {
             callback();
@@ -363,11 +355,11 @@ export default {
     },
 
     //订单删除
-    mix_order_delete(orderId, callback) {
+    mix_order_delete(order_id, callback) {
       this.$api("orders_del", {
-        orderId: orderId,
+        order_id: order_id,
       }).then((res) => {
-        let {code, data, msg} = res;
+        let { code, data, msg } = res;
         if (code == 200) {
           if (callback) {
             callback();
@@ -377,11 +369,11 @@ export default {
     },
 
     //订单确认收货
-    mix_order_qianshou(orderId, callback) {
+    mix_order_qianshou(order_id, callback) {
       this.$api("orders_qrshouhuo", {
-        orderId: orderId,
+        orderId: order_id,
       }).then((res) => {
-        let {code, data, msg} = res;
+        let { code, data, msg } = res;
         if (code == 200) {
           if (callback) {
             callback();
@@ -391,20 +383,20 @@ export default {
     },
 
     //订单详情页
-    mix_order_detail_link(orderId) {
-      this.toRoute(`/order-detail?orderId=${orderId}`);
+    mix_order_detail_link(order_id) {
+      this.toRoute(`/order-detail?order_id=${order_id}`);
     },
     //订单去支付
-    mix_order_payment_link(orderId) {
-      this.toRoute(`/orderSubmit?orderId=${orderId}`);
+    mix_order_payment_link(order_id) {
+      this.toRoute(`/payment-methods?order_id=${order_id}`);
     },
     //订单去评价
-    mix_order_review_link(orderId) {
-      this.toRoute(`/order-review-submit?orderId=${orderId}`);
+    mix_order_review_link(order_id) {
+      this.toRoute(`/order-review-submit?order_id=${order_id}`);
     },
     //订单去售后
-    mix_order_refund_link(orderId) {
-      this.toRoute(`/orderRefund?orderId=${orderId}`);
+    mix_order_refund_link(order_id) {
+      this.toRoute(`/orderRefund?order_id=${order_id}`);
     },
 
     //上传文件
@@ -430,7 +422,7 @@ export default {
     //banner 跳转
     mix_banner_click(item) {
       //console.log(" do_banner_click item", { ...item });
-      let {url, inventoryId, channel_id} = item;
+      let { url, inventoryId, channel_id } = item;
       // return
       if (url) {
         location.href = url;
@@ -444,7 +436,7 @@ export default {
     // 自定义导航跳转
     mix_cus_nav_click(item) {
       //console.log(" indexNavClick item", { ...item });
-      let {url, inventoryId, channel_id} = item;
+      let { url, inventoryId, channel_id } = item;
 
       // return
       if (url) {
@@ -466,9 +458,9 @@ export default {
 
     //订单中的单个商品允许的操作类型
     mix_getOrderProductsAllowActions(order, product) {
-      let {status} = order;
+      let { status } = order;
 
-      let {ifpingjia, ifshouhou} = product;
+      let { ifpingjia, ifshouhou } = product;
 
       let allow_review = !ifpingjia && status == 4; //是否允许评价
       let allow_refund =
@@ -493,7 +485,7 @@ export default {
 
     //根据订单状态获取订单操作结果
     getOrderActionsByStatus(order) {
-      let {status, statusInfo, ifpingjia} = order;
+      let { status, status_info, ifpingjia } = order;
       let actions = [];
       // let actions = [
       //   { name: "取消订单",type: 'quxiao' },
@@ -507,23 +499,23 @@ export default {
 
       if (status == -5) {
         //待支付
-        if (statusInfo == "无效") {
-          actions = [{name: "取消订单", type: "quxiao"}];
-        } else if (statusInfo == "待支付") {
+        if (status_info == "无效") {
+          actions = [{ name: "取消订单", type: "quxiao" }];
+        } else if (status_info == "待支付") {
           actions = [
-            {name: "立即支付", type: "zhifu"},
-            {name: "取消订单", type: "quxiao"},
+            { name: "立即支付", type: "zhifu" },
+            { name: "取消订单", type: "quxiao" },
           ];
         }
       } else if (status == -3) {
         //-3售后处理中
-        actions = [{name: "删除订单", type: "shanchu"}];
+        actions = [{ name: "删除订单", type: "shanchu" }];
       } else if (status == -1) {
         //无效
-        actions = [{name: "删除订单", type: "shanchu"}];
+        actions = [{ name: "删除订单", type: "shanchu" }];
       } else if (status == 0) {
         //0待成团
-        actions = [{name: "取消订单", type: "quxiao"}];
+        actions = [{ name: "取消订单", type: "quxiao" }];
       } else if (status == 2) {
         //2待发货
         actions = [
@@ -532,8 +524,8 @@ export default {
       } else if (status == 3) {
         //3待收货
         actions = [
-          {name: "确认收货", type: "shouhuo"},
-          {name: "查看物流", type: "wuliu"},
+          { name: "确认收货", type: "shouhuo" },
+          { name: "查看物流", type: "wuliu" },
         ];
       } else if (status == 4) {
         //4已收货
@@ -547,7 +539,7 @@ export default {
           actions = [
             // { name: "删除订单", type: "shanchu" },
             // { name: "查看物流", type: "wuliu" },
-            {name: "评价", type: "pingjia"},
+            { name: "评价", type: "pingjia" },
             // { name: "售后", type: "shouhou" },
           ];
         }

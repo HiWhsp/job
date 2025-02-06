@@ -1,95 +1,99 @@
 <template>
-  <div class="container">
-    <modalTerms ref="modalTerms"/>
+  <div class="page">
+    <terms_modal ref="terms_modal" />
 
-    <div class="center">
-      <div class="login-type">
-        <div class="type" :class="{'active': tabType == 'WX'}" @click="loginTypeClick('WX')">微信登录</div>
-        <div class="type" :class="{'active': tabType == 'PASS'}" @click="loginTypeClick('PASS')">密码登录</div>
-        <div class="type" :class="{'active': tabType == 'CODE'}" @click="loginTypeClick('CODE')">验证码登录</div>
-      </div>
+    <div class="page-bg">
+      <img src="@img/login/login-bg.png" alt="">
+    </div>
 
-      <div class="login-wrap">
-        <div class="input-wrap" v-if="tabType == 'PASS'">
-          <div class="item">
-            <img src="@/assets/img/login/phone.png" alt="">
-            <el-input clearable v-model="form.phone" placeholder="手机号"></el-input>
-          </div>
-          <div class="item">
-            <img src="@/assets/img/login/pass.png" alt="">
-            <el-input clearable v-model="form.password" type="password" placeholder="密码"></el-input>
-          </div>
-          <div class="item">
-            <el-button type="primary" @click="login_submit">登录</el-button>
-          </div>
+    <div class="page-ctx">
+      <div class="center page-inner flex-between w-1200">
+        <div class="page-poster">
+          <!-- <img src="@/static/login/poster.png" alt=""> -->
         </div>
-        <div class="input-wrap" v-if="tabType == 'CODE'">
-          <div class="item">
-            <img src="@/assets/img/login/phone.png" alt="">
-            <el-input clearable v-model="form.phone" placeholder="手机号"></el-input>
-          </div>
-          <!--          <div class="item">-->
-          <!--            <img src="@/assets/img/login/pass.png" alt="">-->
-          <!--            <el-input clearable v-model="form.code" type="text" placeholder="验证码"></el-input>-->
-          <!--            <el-button></el-button>-->
-          <!--          </div>-->
-          <!-- 验证码 -->
-          <sms_phone :form="form"/>
 
-          <div class="item">
-            <el-button type="primary" @click="login_submit" style="margin-top: 20px">登录</el-button>
-          </div>
-        </div>
-        <div class="input-wrap" v-if="tabType == 'WX'">
-          <div class="item">
-            <div class="wx-wrap">
-              <img src="@/assets/img/login/wx-code.png" class="wx-code" alt="">
+        <div class="inner form-box">
+          <div class="input-wrap">
+            <div class="tab-box">
+              <div class="tab-item">
+                登录账号
+              </div>
+            </div>
+            <div class="input-box">
+              <span>手机号</span>
+              <input type="text" placeholder="请输入手机号" v-model="form.phone" />
+            </div>
+            <div class="input-box">
+              <span>密码</span>
+              <input type="password" placeholder="请输入密码" v-model="form.password" />
+            </div>
+
+            <div class="pass-act-box">
+              <span class="save">
+                <el-checkbox v-model="savePass">记住密码</el-checkbox>
+              </span>
+              <router-link to="retrieve" class="forget">忘记密码</router-link>
+            </div>
+
+            <div class="btn-box">
+              <button class="btn-ripple" @click="do_submit()">登录</button>
+            </div>
+
+            <div class="register-box">
+              <span> <router-link to="/register">没有账号，去注册 ></router-link> </span>
+            </div>
+
+            <div class="terms-box">
+              <span class="terms-check" @click="is_agree = !is_agree">
+                <img v-if="is_agree" src="@/static/common/check1.png" alt="">
+                <img v-else src="@/static/common/check0.png" alt="">
+                登录注册即表示同意
+              </span>
+              <span class="terms-text" @click="terms_open(92)">《隐私政策》</span>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="register-box">
-        <router-link to="/register" v-if="tabType != 'WX'">还没账号？<span>立即注册</span></router-link>
-        <router-link to="/retrieve" v-if="tabType == 'PASS'">忘记密码</router-link>
-      </div>
-      <div class="wx-box" v-if="tabType == 'WX'">
-        <span>微信扫码登录</span>
-        <p><span>手机号登录</span>|<span>立即注册</span></p>
-      </div>
     </div>
+
   </div>
 </template>
 
 <script>
-import QRCode from "qrcodejs2";
-import CryptoJS from "crypto-js";
-import {mapState} from "vuex";
+// import SmsLogin from "@/components/login/SmsLogin.vue"; //短信验证码
+// import modalTerms from "@/components/modals/modalTerms.vue"; //协议弹窗
+import terms_modal from "@/components/account/terms_modal.vue"; //协议弹窗
 
-import modalTerms from "@/components/modals/modalTerms.vue"; //协议弹窗
-import sms_phone from "@/components/login/sms_phone.vue"; //短信验证码
+import { mapState } from "vuex";
+
 export default {
   name: "login",
   components: {
-    modalTerms,
-    sms_phone
+    // SmsLogin,
+    // modalTerms,
+
+    terms_modal,
   },
   data() {
     return {
+      is_agree: true,
+
       mode: "账号密码", //微信扫码
       tabType: "PASS", //登录方式
       agreed: false,
       savePass: true, //记住密码
 
       form: {
-        type: "0", //类型：0-账号密码 登录     1-账号 验证码登录
+        loginType: "0", //登录方式：1-手机验证码登录 0-手机密码登录
         phone: "",
         password: "",
-        code: ""
+        code: "",
       },
 
       interval_wx_scan: null,
-    }
+
+
+    };
   },
   computed: {
     ...mapState(["logo"]),
@@ -104,23 +108,15 @@ export default {
       }
     },
   },
-  mounted() {
+  created() {
     this.setView();
   },
+
   beforeDestroy() {
     this.clearIntervalWx();
   },
-  methods: {
-    setView() {
-      if (localStorage.getItem("save1")) {
-        //console.log("回显密码");
-        var save1 = localStorage.getItem("save1");
-        var save2 = localStorage.getItem("save2");
 
-        this.form.phone = this.decodeString(save1);
-        this.form.password = this.decodeString(save2);
-      }
-    },
+  methods: {
     //移除轮询
     clearIntervalWx() {
       clearInterval(this.interval_wx_scan);
@@ -160,80 +156,56 @@ export default {
       this.$api("users_codeLogin", {
         wx_scaner_marker: this.wx_scaner_marker, //扫码者标识
       })
-          .then((res) => {
-            if (res.code == 1) {
-              // if (res.data.data.user != undefined && res.data.data.user.id) {
-              //   clearInterval(this.interval_token);
-              //   this.interval_token = null;
-              //   let hasBindPhone = false; //是否绑定手机号
-              //   if (hasBindPhone) {
-              //     if (index == 0) {
-              //       this.$store.dispatch("setToken_active", {
-              //         admin_token: res.data.data.user.remember_token,
-              //       });
-              //       this.getUserInfoFn();
-              //     }
-              //   } else {
-              //     if (index == 0) {
-              //       this.scan_qrcode();
-              //       this.$Notice.error({
-              //         title: "提示",
-              //         desc: "绑定手机号后请重新扫码登录",
-              //       });
-              //       this.$Message.error("绑定手机号后请重新扫码登录");
-              //     } else {
-              //       this.bd_mobile = true;
-              //       this.$Message.error("请先绑定手机号后重新扫码登录");
-              //     }
-              //   }
-              // }
-            }
-          })
-          .catch((err) => {
-            // reject(err)
-            //console.log(err);
-          });
+        .then((res) => {
+          if (res.code == 200) {
+            // if (res.data.data.user != undefined && res.data.data.user.id) {
+            //   clearInterval(this.interval_token);
+            //   this.interval_token = null;
+            //   let hasBindPhone = false; //是否绑定手机号
+            //   if (hasBindPhone) {
+            //     if (index == 0) {
+            //       this.$store.dispatch("setToken_active", {
+            //         admin_token: res.data.data.user.remember_token,
+            //       });
+            //     }
+            //   } else {
+            //     if (index == 0) {
+            //       this.scan_qrcode();
+            //       this.$Notice.error({
+            //         title: "提示",
+            //         desc: "绑定手机号后请重新扫码登录",
+            //       });
+            //       this.$Message.error("绑定手机号后请重新扫码登录");
+            //     } else {
+            //       this.bd_mobile = true;
+            //       this.$Message.error("请先绑定手机号后重新扫码登录");
+            //     }
+            //   }
+            // }
+          }
+        })
+        .catch((err) => {
+          // reject(err)
+          //console.log(err);
+        });
     },
 
     terms_open(id) {
-      this.$refs.modalTerms.init(id);
-      // this.$refs.modalRich.init(id);
+      this.$refs.terms_modal.init(id);
+    },
+    setView() {
+
     },
 
-    //加密
-    encodeString(code) {
-      var secretKey = "com.beiyinlai.key";
+    //
+    do_submit() {
+      if (!this.is_agree) {
+        alertErr('请阅读并勾选协议条款')
+        return
+      }
 
-      // //console.log("CryptoJS", CryptoJS);
-      var secretKey = "com.beiyinlai.key";
-      var afterEncrypt = CryptoJS.DES.encrypt(code, CryptoJS.enc.Utf8.parse(secretKey), {
-        mode: CryptoJS.mode.ECB,
-        padding: CryptoJS.pad.Pkcs7,
-      }).toString();
-      //console.log("加密 afterEncrypt", afterEncrypt); //8/nZ2vZXxOzPhU7ZHBwz7w==
-
-      return afterEncrypt;
-    },
-
-    //解密
-    decodeString(code) {
-      var secretKey = "com.beiyinlai.key";
-      //console.log("CryptoJS", CryptoJS);
-
-      var afterDecrypt = CryptoJS.DES.decrypt(code, CryptoJS.enc.Utf8.parse(secretKey), {
-        mode: CryptoJS.mode.ECB,
-        padding: CryptoJS.pad.Pkcs7,
-      }).toString(CryptoJS.enc.Utf8);
-
-      //console.log("解密 afterDecrypt", afterDecrypt); //encryptCode
-
-      return afterDecrypt;
-    },
-
-    // 登录
-    login_submit() {
       // debugger;
-      let {phone, password, code} = this.form;
+      let { phone, password } = this.form;
       let reg_phone = /^1[3-9]\d{9}$/;
       let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
 
@@ -248,35 +220,25 @@ export default {
           return;
         }
 
+
         this.$api({
-          url: 'login',
-          method: 'post',
+          url: "/service.php",
+          method: "get",
           data: {
-            type: 1, // 1密码登录 2验证码登录
-            phone: phone,
-            password: password,
+            action: "login_phoneLogin",
+            ...this.form
           }
-        }).then((res) => {
-          //console.log("登录", res);
-          let {code, data, message} = res;
-          if (code == 200) {
-            if (this.savePass) {
-              localStorage.setItem("save1", this.encodeString(this.form.phone));
-              localStorage.setItem("save2", this.encodeString(this.form.password));
+        })
+          .then((res) => {
+            alert(res)
+            if (res.code == 200) {
+              this.$store.commit("set_baseInfo", res.data);
+              this.$store.dispatch("getUserloginedInfo");
+              this.$router.push("/order-list");
             } else {
-              localStorage.setItem("save1", "");
-              localStorage.setItem("save2", "");
+
             }
-
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("isSupplier", 'false');
-            this.$store.commit("set_baseInfo", data);
-            this.$store.dispatch("getUserloginedInfo");
-
-            // this.$router.push("/");
-            this.$router.push("/my");
-          }
-        });
+          });
       } else {
         //手机号验证码登录
         if (!code) {
@@ -284,190 +246,290 @@ export default {
           return;
         }
 
-        this.$api({
-          url: 'login',
-          method: 'post',
-          data: {
-            type: 2, // 1密码登录 2验证码登录
-            phone,
-            code,
-          }
+        this.$api("users_codeLogin", {
+          phone,
+          code,
         }).then((res) => {
-          let {code, data, message} = res;
-          if (code == 200) {
-            if (this.savePass) {
-              localStorage.setItem("save1", this.encodeString(this.form.phone));
-              localStorage.setItem("save2", this.encodeString(this.form.password));
-            } else {
-              localStorage.setItem("save1", "");
-              localStorage.setItem("save2", "");
-            }
-
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("isSupplier", 'false');
-            this.$store.commit("set_baseInfo", data);
+          alert(res)
+          if (res.code == 200) {
+            this.$store.commit("set_baseInfo", res.data);
             this.$store.dispatch("getUserloginedInfo");
 
-            // this.$router.push("/");
-            this.$router.push("/my");
+            this.$router.push("/");
           }
         });
       }
     },
 
-    loginTypeClick(type) {
-      this.tabType = type;
-    }
-  }
-}
+    //条款
+    onClick_shengming() {
+      this.$router.push("/banquan");
+    },
+    onClick_yinsi() {
+      this.$router.push("/yinsi");
+    },
+  },
+};
 </script>
 
-<style lang="less" scoped>
-.container {
+<style scoped lang="less">
+.page {
   position: relative;
-  width: 100%;
-  height: 700px;
-  background-image: url("~@/assets/img/login/login-bg.jpg");
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-}
 
-.center {
-  position: absolute;
-  right: 262px;
-  top: 50%;
-  margin-top: -192px;
-  width: 447px;
-  height: 384px;
-  background: #FFFFFF;
-  box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.16);
-  border-radius: 12px 12px 12px 12px;
-  padding: 30px 60px;
-
-  .login-type {
-    margin: 0 20px 45px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .type {
-      font-size: 16px;
-      font-weight: 400;
-      color: #818181;
-      cursor: pointer;
-      margin-bottom: 10px;
-
-      &:after {
-        content: "";
-        display: block;
-        width: 100%;
-        height: 2px;
-        background: #fff;
-        margin-top: 10px;
-      }
-
-      &.active {
-        color: #00479D;
-        font-weight: bold;
-
-        &:after {
-          content: "";
-          display: block;
-          width: 100%;
-          height: 2px;
-          background: #00479D;
-          margin-top: 10px;
-        }
-      }
+  .page-bg {
+    img {
+      width: 100%;
+      min-height: 665px;
     }
   }
 
-  .login-wrap {
-    .input-wrap {
-      .item {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 20px;
+  .page-ctx {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    display: flex;
+    align-items: center;
+  }
+
+
+  .page-poster {
+    margin-left: 46px;
+    img {
+      width: 664px;
+      height: 664px;
+    }
+  }
+
+  .page-inner {
+    height: auto;
+    margin: 0 auto;
+    background: transparent;
+    align-items: center;
+    position: relative;
+
+    .inner {
+      position: relative;
+
+      width: 560px;
+      min-height: 520px;
+      background: #F9FAFC;
+      box-shadow: 0px 2px 15px 1px rgba(79, 79, 79, 0.15);
+      border: 1px solid rgba(76, 165, 228, 0.1);
+
+      padding: 40px 40px 100px;
+      opacity: 1;
+      border-radius: 10px;
+
+      .mode-toggle {
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        transition: 0.3s;
+
+        &:hover {
+          opacity: 0.7;
+        }
 
         img {
-          position: absolute;
-          width: 22px;
-          height: 24px;
-          z-index: 2;
-          left: 16px;
+          width: 64px;
+          cursor: pointer;
+        }
+      }
+
+      .left {}
+
+      .right {
+        // width: 480px;
+        // height: 480px;
+        // background: #ffffff;
+        // box-shadow: 0px 10px 20px rgba(1, 100, 98, 0.2);
+        // opacity: 1;
+        // border-radius: 10px;
+
+        // padding: 40px 40px 30px 40px;
+      }
+    }
+
+    .tab-box {
+      margin-bottom: 40px;
+      .flex-center();
+
+      .tab-item {
+        font-family: Poppins, Poppins;
+        font-weight: 600;
+        font-size: 26px;
+        color: #333333;
+
+
+        &:first-child {
+          // &:after {
+          //   content: "";
+          //   display: inline-block;
+          //   width: 2px;
+          //   height: 24px;
+          //   background-color: #ccc;
+          //   margin: 0 30px;
+          //   position: relative;
+          //   top: 3px;
+          // }
         }
 
-        .wx-wrap {
-          position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 158px;
-          height: 158px;
-          background-image: url("~@/assets/img/login/wx-card.png");
-          background-repeat: no-repeat;
-          background-size: 100% 100%;
-
-          .wx-code {
-            position: absolute;
-            width: 132px;
-            height: 132px;
-          }
-        }
-
-        /deep/ .el-input__inner {
-          padding-left: 50px;
-        }
-
-        .el-button {
-          width: 100%;
-        }
-
-        .el-button--primary {
-          background: #00479D;
-          border-color: #00479D;
+        &.active {
+          color: #333333;
         }
       }
     }
-  }
 
-  .register-box {
-    .flex();
-    justify-content: space-between;
-    margin-top: 30px;
+    .input-wrap {
+      width: 400px;
+      margin: 0 auto;
+    }
 
-    a {
-      font-weight: 400;
-      font-size: 14px;
-      color: #333333;
+    .input-box {
+      margin-bottom: 20px;
+      width: 100%;
+      height: 50px;
+      background: #ffffff;
+      border: 1px solid #eeeeee;
+      border-radius: 4px;
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
+      overflow: hidden;
 
       span {
-        color: #00479D;
+        display: inline-block;
+        width: 95px;
+
+        border-right: 1px solid #ccc;
+        font-family: OPPOSans, OPPOSans;
+        font-weight: 400;
+        font-size: 14px;
+        color: #7D7D7D;
+        text-indent: 1em;
+      }
+
+      img {
+        width: 36px;
+      }
+
+      input {
+        flex: 2;
+        height: 100%;
+        padding-left: 16px;
+        font-size: 14px;
+        color: #000;
+
+        &::-webkit-input-placeholder {
+          font-size: 14px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #d7d7d7;
+        }
+      }
+    }
+
+    .pass-act-box {
+      text-align: left;
+      margin-top: 26px;
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+      font-size: 14px;
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      line-height: 24px;
+      color: #999999;
+
+
+      .save {
+        color: #999999;
+      }
+
+      .forget {
+        color: #F74747;
+      }
+    }
+
+    .btn-box {
+      margin-top: 60px;
+
+      button {
+        width: 100%;
+        height: 44px;
+        background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
+        background: #F74747;
+        background: #F74747;
+        font-size: 18px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #ffffff;
+      }
+    }
+
+    .register-box {
+      text-align: center;
+      margin-top: 20px;
+      text-align: cetner;
+      font-size: 14px;
+
+      a {
+        font-size: 14px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        line-height: 24px;
+        color: #F74747;
+        border-bottom: 1px solid #F74747;
       }
     }
   }
+}
 
-  .wx-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.terms-box {
+  position: absolute;
+  height: 40px;
+  background: #f5f6f8;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-content: flex-start;
+  padding-left: 20px;
+  text-align: center;
+
+
+  .terms-check {
+    cursor: pointer;
+    font-family: OPPOSans, OPPOSans;
     font-weight: 400;
-    font-size: 14px;
-    color: #333333;
+    font-size: 12px;
+    color: #999999;
 
-    p {
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 118px;
-      margin-top: 15px;
-      font-weight: 400;
-      font-size: 12px;
-      color: #00479D;
+    img {
+      margin-right: 10px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .terms-text {
+    cursor: pointer;
+    font-family: OPPOSans, OPPOSans;
+    font-weight: 400;
+    font-size: 12px;
+    color: #999999;
+
+    &:hover {
+      color: #F74747;
     }
   }
 }
 </style>
+
+<style scoped lang="less" src="@/assets/h5css/page/login.less"></style>

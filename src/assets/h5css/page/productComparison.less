@@ -52,7 +52,7 @@
           color: #999999;
 
           &:hover {
-            color: @theme;
+            color: #F74747;
           }
         }
       }
@@ -134,7 +134,8 @@
       .checks {
         .check-item {
           margin-bottom: 13px;
-          .flex();
+            display: flex;
+  align-items: center;
           cursor: pointer;
           user-select: none;
 
@@ -192,14 +193,18 @@
             height: 250px;
 
             a {
-              .ellipsis-2();
+               display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
               font-size: 14px;
               font-family: Microsoft YaHei-Regular, Microsoft YaHei;
               font-weight: 400;
               color: #666666;
 
               &:hover {
-                color: @theme;
+                color: #F74747;
               }
             }
 
@@ -265,7 +270,8 @@
     .checks {
       .check-item {
         margin-bottom: 13px;
-        .flex();
+          display: flex;
+  align-items: center;
         cursor: pointer;
         user-select: none;
 
@@ -377,7 +383,11 @@
           align-items: center;
 
           a {
-            .ellipsis-5();
+             display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 5;
             text-align: center;
             font-size: 12px;
             font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -385,7 +395,7 @@
             color: #666666;
 
             &:hover {
-              color: @theme;
+              color: #F74747;
             }
           }
 

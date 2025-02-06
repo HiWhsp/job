@@ -21,7 +21,9 @@
     }
     .info-title {
       position: relative;
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       flex-wrap: wrap;
       height: auto;
       padding: 10px;
@@ -61,7 +63,7 @@
         font-weight: 400;
         line-height: 20px;
         color: #999999;
-        color: @theme;
+        color: #F74747;
 
         // 待付款
         &.state--5 {
@@ -70,8 +72,8 @@
           // color: #fff;
         }
         &.state-2 {
-          color: @theme;
-          border-color: @theme;
+          color: #F74747;
+          border-color: #F74747;
         }
       }
     }
@@ -80,7 +82,8 @@
         .item-good {
           padding: 10px;
           border-bottom: 1px dashed #ccc;
-          .flex();
+            display: flex;
+  align-items: center;
 
           &:last-child {
             border: none;
@@ -108,7 +111,7 @@
               width: fit-content;
               cursor: pointer;
               &:hover {
-                color: @theme;
+                color: #F74747;
               }
             }
           }
@@ -134,7 +137,9 @@
       }
     }
     .info-heji {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       flex-wrap: wrap;
       padding: 10px;
       border-top: 1px solid #e5e5e5;
@@ -147,7 +152,8 @@
 
       .heji {
         width: 100%;
-        .flex();
+          display: flex;
+  align-items: center;
         justify-content: space-between;
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -157,13 +163,13 @@
         .heji-num {
           margin-right: 30px;
           b {
-            color: @theme;
+            color: #F74747;
           }
         }
         .heji-money {
           b {
             font-size: 14px;
-            color: @theme;
+            color: #F74747;
           }
         }
       }
@@ -196,25 +202,25 @@
           line-height: 20px;
           color: #7d7d7d;
 
-          border: 1px solid @theme;
-          color: @theme;
+          border: 1px solid #F74747;
+          color: #F74747;
         }
 
         .order-action {
           background: #fff;
-          border: 1px solid @theme;
+          border: 1px solid #F74747;
           font-size: 12px;
-          color: @theme;
+          color: #F74747;
 
           &.zhifu {
-            background: @theme;
-            border-color: @theme;
+            background: #F74747;
+            border-color: #F74747;
             color: #fff;
           }
 
           &.shanchu {
-            background: @theme;
-            border-color: @theme;
+            background: #F74747;
+            border-color: #F74747;
             color: #fff;
           }
         }

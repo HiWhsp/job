@@ -61,7 +61,8 @@ export default {
 
 <style scoped lang="less">
 .section-list {
-  .flex();
+    display: flex;
+  align-items: center;
   flex-wrap: wrap;
   .item {
     margin-right: 32px;
@@ -108,7 +109,9 @@ export default {
     .title {
       text-align: left;
       width: 100%;
-      .ellipsis-1();
+       white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 
       min-height: 40px;
       font-size: 14px;
@@ -125,9 +128,10 @@ export default {
     }
     .price {
       margin-top: 10px;
-      .flex();
+        display: flex;
+  align-items: center;
       .sale {
-        color: @theme;
+        color: #F74747;
         font-size: 20px;
         font-family: PingFang SC;
         font-weight: bold;
@@ -154,7 +158,8 @@ export default {
 <style scoped lang="less">
 @media screen and (max-width: 1199px) {
   .section-list {
-    .flex();
+      display: flex;
+  align-items: center;
     flex-wrap: wrap;
     justify-content: space-between;
     .item {
@@ -206,7 +211,11 @@ export default {
       .title {
         text-align: left;
         width: 100%;
-        .ellipsis-2();
+         display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
 
         font-size: 12px;
         font-family: PingFang SC;
@@ -223,9 +232,10 @@ export default {
       }
       .price {
         margin-top: 10px;
-        .flex();
+          display: flex;
+  align-items: center;
         .sale {
-          color: @theme;
+          color: #F74747;
           font-size: 14px;
           font-family: PingFang SC;
           font-weight: bold;

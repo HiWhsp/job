@@ -4,7 +4,7 @@
       :visible.sync="show" :before-close="onModalClose">
 
       <div class="modal-inner">
-        <div class="modall-ctx">
+        <div class="modal-ctx">
           <!-- <div class="tip">密码要求至少包含字母，符号或数字中的两项且长度超过6位，</div> -->
 
           <div class="input-box flex">
@@ -186,7 +186,7 @@ export default {
 
 
 
-  .modall-ctx {
+  .modal-ctx {
     .input-box {
       margin-bottom: 30px;
       position: relative;
@@ -252,11 +252,11 @@ export default {
     height: 32px;
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid @theme;
+    border: 1px solid #F74747;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: @theme;
+    color: #F74747;
 
     &+button {
       margin-left: 20px;
@@ -264,7 +264,7 @@ export default {
   }
 
   .btn-bg {
-    background: @theme;
+    background: #F74747;
     color: #FFFFFF;
   }
 }
@@ -278,7 +278,7 @@ export default {
   padding: 0 10px;
   height: 40px;
   background: #fff;
-  color: @theme;
+  color: #F74747;
   font-size: 14px;
   margin-left: 15px;
   border-radius: 5px;

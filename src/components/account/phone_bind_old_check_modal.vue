@@ -1,23 +1,23 @@
 <template>
   <div class="modal-container">
     <el-dialog title="验证手机号" width="596px" custom-class="modal-custom" :close-on-click-modal="false"
-               :visible.sync="show" :before-close="onModalClose">
+      :visible.sync="show" :before-close="onModalClose">
 
       <div class="modal-inner">
-        <div class="modall-ctx">
+        <div class="modal-ctx">
           <!-- <div class="tip">密码要求至少包含字母，符号或数字中的两项且长度超过6位，</div> -->
 
           <div class="input-box flex">
             <div class="label">新手机号</div>
             <div class="input-item">
-              <el-input type="text" v-model="phone" placeholder="手机号"></el-input>
-              <!--              {{ mix_user_phone }}-->
+              <!-- <el-input type="text" v-model="phone" placeholder="手机号"> </el-input> -->
+              {{ mix_user_phone }}
             </div>
           </div>
           <div class="input-box flex">
             <div class="label">验证码</div>
             <div class="input-item">
-              <el-input type="text" v-model="code" placeholder="验证码"></el-input>
+              <el-input type="text" v-model="code" placeholder="验证码"> </el-input>
 
               <button class="btn-send" @click="query_code()" :disabled="disabledBtn">
                 获取验证码
@@ -37,11 +37,13 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "modal-hetong",
-  components: {},
+  components: {
+
+  },
   props: ["curr"],
   data() {
     return {
@@ -49,7 +51,6 @@ export default {
 
       phone: "",
       code: "",
-      text: "",
 
       disabledBtn: false, //按钮是否可点击
       timer: null, //定时器 验证码
@@ -75,7 +76,7 @@ export default {
   methods: {
     query_code() {
       //console.log("发送验证码");
-      let phone = this.phone;
+      let phone = this.mix_user_phone;
       if (this.timer) {
         alertErr("验证码发送频繁，请稍后再试");
         return;
@@ -107,6 +108,8 @@ export default {
       });
     },
 
+
+
     //倒计时
     countdown() {
       let that = this;
@@ -125,7 +128,6 @@ export default {
     },
 
     init(text) {
-      this.text = text
       this.show = true;
     },
     onModalClose() {
@@ -142,49 +144,32 @@ export default {
       let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
       let is_true_phone = reg_phone.test(this.phone);
 
-      if (!is_true_phone) {
-        alertErr("请输入正确的手机号码");
-        return;
-      }
+      // if (!is_true_phone) {
+      //   alertErr("请输入正确的手机号码");
+      //   return;
+      // }
       if (!this.code) {
         alertErr("请输入验证码");
         return;
       }
 
-      if (this.text === '供应商') {
-        this.$api({
-          url: 'store/edit',
-          method: 'post',
-          data: {
-            action: '5',
-            phone: this.phone,
-            code: this.code
-          },
-        }).then(res => {
-          if (res.code == 200) {
-            this.$emit('confirm')
-            this.show = false;
-          }
-        })
-      } else {
-        this.$api({
-          url: '/service.php',
-          method: 'get',
-          data: {
-            action: 'users_checkOld',
-            editType: '1',//类型：1-手机号 2-邮箱
-            code: this.code,
-          },
-        }).then((res) => {
-          //console.log("修改密码", res);
-          alert(res)
-          let {code, data} = res;
-          if (code == 200) {
-            this.$emit('confirm')
-            this.show = false;
-          }
-        });
-      }
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'users_checkOld',
+          editType: '1',//类型：1-手机号 2-邮箱
+          code: this.code,
+        },
+      }).then((res) => {
+        //console.log("修改密码", res);
+        alert(res)
+        let { code, data } = res;
+        if (code == 200) {
+          this.$emit('confirm')
+          this.show = false;
+        }
+      });
     },
   },
 };
@@ -197,7 +182,8 @@ export default {
   }
 
 
-  .modall-ctx {
+
+  .modal-ctx {
     .input-box {
       margin-bottom: 30px;
       position: relative;
@@ -233,6 +219,8 @@ export default {
 }
 
 
+
+
 /deep/ .el-dialog__header {
   padding: 16px 24px;
   border-bottom: 1px solid #eee;
@@ -248,11 +236,11 @@ export default {
   }
 }
 
-/deep/ .el-dialog__body {
+/deep/  .el-dialog__body {
   padding: 36px 60px 36px 60px;
 }
 
-/deep/ .el-dialog__footer {
+/deep/  .el-dialog__footer {
   text-align: center;
   padding-bottom: 50px;
 
@@ -261,19 +249,19 @@ export default {
     height: 32px;
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid @theme;
+    border: 1px solid #F74747;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: @theme;
+    color: #F74747;
 
-    & + button {
+    &+button {
       margin-left: 20px;
     }
   }
 
   .btn-bg {
-    background: @theme;
+    background: #F74747;
     color: #FFFFFF;
   }
 }
@@ -283,10 +271,11 @@ export default {
   // position: absolute;
   // right: -50px;
   // top: 10px;
-  min-width: 120px;
+  min-width: 90px;
+  padding: 0 10px;
   height: 40px;
   background: #fff;
-  color: @theme;
+  color: #F74747;
   font-size: 14px;
   margin-left: 15px;
   border-radius: 5px;

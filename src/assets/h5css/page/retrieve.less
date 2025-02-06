@@ -4,7 +4,7 @@
     // background: rgba(255, 76, 41, 0.95);
 
     .mask {
-
+  
       background-size: cover;
       position: absolute;
       content: "";
@@ -109,7 +109,9 @@
         background: #ffffff;
         border: 1px solid #eeeeee;
         border-radius: 4px;
-        .flex-between();
+          display: flex;
+  align-items: center;
+  justify-content: space-between;
         overflow: hidden;
 
         span {
@@ -147,7 +149,9 @@
       .agree-box {
         text-align: left;
         margin-top: 20px;
-        .flex-between();
+          display: flex;
+  align-items: center;
+  justify-content: space-between;
 
         font-size: 14px;
         font-family: Microsoft YaHei;
@@ -156,7 +160,7 @@
         color: #999999;
 
         a {
-          color: @theme;
+          color: #F74747;
         }
       }
 
@@ -183,8 +187,8 @@
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 24px;
-          color: @theme;
-          border-bottom: 1px solid @theme;
+          color: #F74747;
+          border-bottom: 1px solid #F74747;
         }
       }
     }
@@ -207,7 +211,7 @@
     span {
       cursor: pointer;
       &:hover {
-        color: @theme;
+        color: #F74747;
       }
     }
   }

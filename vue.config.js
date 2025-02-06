@@ -2,11 +2,7 @@
 // const Renderer = PrerenderSPAPlugin.PuppeteerRenderer;
 
 const path = require("path");
-const opt = {
-  proxyTarget: process.env.VUE_APP_API_ROOT,
-  hostArr: ["localhost"],
-  hostIndex: 0,
-};
+
 
 module.exports = {
   // 部署应用包时的基本 URL,从 Vue CLI 3.3 起已弃用baseUrl
@@ -18,6 +14,7 @@ module.exports = {
   outputDir: "dist_pc",
 
   // build时放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录
+  // assetsDir: "dist_pc_hemeixin",
   assetsDir: "",
 
   // 指定生成的 index.html 的输出路径 (相对于 outputDir)。也可以是一个绝对路径。
@@ -49,13 +46,14 @@ module.exports = {
 
   configureWebpack: (config) => {
     return {
-      name: "嘉析检测技术服务（ 厦门） 有限公司",
+      name: "东莞市锋扬礼品",
       resolve: {
         // 配置解析别名
         extensions: [".js", ".vue", ".json"],
         alias: {
           "@": path.resolve(__dirname, "./src"),
           "@img": path.resolve(__dirname, "./src/assets/img"),
+          "@pro": path.resolve(__dirname, "./src/assets/pro"),
           "@ying": path.resolve(__dirname, "./src/assets/ying"),
           vue$: "vue/dist/vue.esm.js",
           api: path.resolve(__dirname, "../src/api"),
@@ -115,7 +113,6 @@ module.exports = {
 
   devServer: {
     // host: 'localhost',
-    // host: opt.hostArr[opt.hostIndex],
     disableHostCheck: true,
     port: 80,
     https: false,
@@ -125,7 +122,7 @@ module.exports = {
     },
     proxy: {
       "/api": {
-        target: opt.proxyTarget,
+        target: 'http://vuesc.new.zhishangez.com',
         ws: true,
         changeOrigin: true,
         pathRewrite: {

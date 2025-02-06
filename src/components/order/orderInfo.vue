@@ -9,9 +9,9 @@
         <div class="date">{{ order.dtTime }}</div>
         <div class="order-code">
           订单号：
-          <span>{{ order.orderId }}</span>
+          <span>{{ order.order_id }}</span>
         </div>
-        <div class="order-state">{{ order.statusInfo }}</div>
+        <div class="order-state">{{ order.status_info }}</div>
       </div>
       <div class="info-good">
         <div class="list-good">
@@ -48,7 +48,7 @@
             ">
               <!-- <button v-if="!is_jifen_goods && item.allow_actions.allow_refund" class="btn-goods-action" @click="refundApply(item)">申请售后</button> -->
               <!-- <button v-if="item.ifshouhou" class="btn-goods-action disabled">已售后</button> -->
-              <!-- <button v-if="item.allow_actions.allow_logistics" class="btn-goods-action" @click="toRoute(`/orderLogistics?orderId=${orderId}&logistics_id=${fahuo_id}`)">查看物流</button> -->
+              <!-- <button v-if="item.allow_actions.allow_logistics" class="btn-goods-action" @click="toRoute(`/orderLogistics?order_id=${order_id}&logistics_id=${fahuo_id}`)">查看物流</button> -->
               <button v-if="product_item.allow_actions.allow_review" class="btn-goods-action"
                 @click="to_review(product_item)">
                 商品评价
@@ -143,7 +143,7 @@
 </template>
 
 <script>
-import order from "@/shop-actions/order";
+
 import { mapState } from "vuex";
 import order_receive_modal from "@/components/order/order_receive_modal.vue"; //确认收货
 
@@ -155,7 +155,7 @@ export default {
   props: ["order"],
   data() {
     return {
-      orderId: this.$route.query.orderId,
+      order_id: this.$route.query.order_id,
     };
   },
   computed: {
@@ -319,25 +319,25 @@ export default {
 
     //处理订单行为
     handleOrderAction(action) {
-      let orderId = this.orderId;
+      let order_id = this.order_id;
 
       //console.log({ ...action });
       let name = action.name;
       if (name == "取消订单") {
-        this.orders_qxOrder(orderId);
+        this.orders_qxOrder(order_id);
       } else if (name == "删除订单") {
-        this.orders_del(orderId);
+        this.orders_del(order_id);
       } else if (name == "立即支付") {
-        this.order_payment(orderId);
+        this.order_payment(order_id);
       } else if (name == "确认收货") {
-        this.order_qianshou(orderId);
+        this.order_qianshou(order_id);
       } else if (name == "评价订单" || name == "评价") {
-        this.jump_pingjia(orderId);
+        this.jump_pingjia(order_id);
       } else if (name == "申请售后" || name == "售后") {
-        this.jump_shouhou(orderId);
+        this.jump_shouhou(order_id);
       } else if (name == "查看物流") {
         this.$router.push(
-          `/orderLogistics?orderId=${orderId}&logistics_id=${this.fahuo_id}`
+          `/orderLogistics?order_id=${order_id}&logistics_id=${this.fahuo_id}`
         );
 
         // window.open('https://www.kuaidi100.com/', '_blank')
@@ -345,34 +345,34 @@ export default {
     },
 
     //取消订单
-    orders_qxOrder(orderId) {
+    orders_qxOrder(order_id) {
       order.orders_qxOrder({
-        params: { orderId },
+        params: { order_id },
         success: () => {
           this.updateView();
         },
       });
     },
     //删除订单
-    orders_del(orderId) {
+    orders_del(order_id) {
       order.orders_del({
-        params: { orderId },
+        params: { order_id },
         success: () => {
           this.updateView();
         },
       });
     },
     //订单支付
-    order_payment(orderId) {
-      this.$router.push(`/orderSubmit?orderId=${orderId}`);
+    order_payment(order_id) {
+      this.$router.push(`/payment-methods?order_id=${order_id}`);
     },
 
     //订单确认收货
-    order_qianshou(orderId) {
+    order_qianshou(order_id) {
       // debugger
-      // let order = this.list.find((v) => v.id == orderId);
+      // let order = this.list.find((v) => v.id == order_id);
       let order = this.order;
-      order.id = orderId;
+      order.id = order_id;
       this.$refs.order_receive_modal.showModal = true;
       this.$refs.order_receive_modal.order = order;
       // debugger
@@ -380,27 +380,27 @@ export default {
     },
 
     //订单评价
-    jump_pingjia(orderId) {
-      this.$router.push(`/order-review-submit?orderId=${orderId}`);
+    jump_pingjia(order_id) {
+      this.$router.push(`/order-review-submit?order_id=${order_id}`);
     },
     //订单评价
-    jump_shouhou(orderId) {
-      // this.$router.push(`/orderRefund?orderId=${orderId}`);
+    jump_shouhou(order_id) {
+      // this.$router.push(`/orderRefund?order_id=${order_id}`);
 
       this.$router.push("/refundFeedback");
     },
 
     refundApply(item) {
-      let orderId = this.$route.query.orderId;
+      let order_id = this.$route.query.order_id;
       let inventoryId = item.id;
 
-      this.$router.push(`/refundType?orderId=${orderId}&inventoryId=${inventoryId}`);
+      this.$router.push(`/refund-type?order_id=${order_id}&inventoryId=${inventoryId}`);
     },
 
     to_review(item) {
       //console.log("评价", { ...item });
-      let orderId = this.$route.query.orderId;
-      this.$router.push(`/order-review-submit?orderId=${orderId}&inventoryId=${item.id}`);
+      let order_id = this.$route.query.order_id;
+      this.$router.push(`/order-review-submit?order_id=${order_id}&inventoryId=${item.id}`);
     },
 
     //单个商品添加到购物车
@@ -446,7 +446,7 @@ export default {
 
 .money-heji {
   span {
-    color: @theme;
+    color: #F74747;
     font-weight: bold;
   }
 }
@@ -456,21 +456,24 @@ export default {
   padding: 10px 0;
   width: 100%;
   border-top: 1px dashed #e5e5e5;
-  .flex();
+    display: flex;
+  align-items: center;
   justify-content: flex-end;
 
   .zhifufangshi {
-    .flex();
+      display: flex;
+  align-items: center;
 
     .pay-item {
-      .flex();
+        display: flex;
+  align-items: center;
       margin-left: 10px;
 
       font-size: 14px;
       font-family: Microsoft YaHei;
       font-weight: bold;
       line-height: 24px;
-      color: @theme;
+      color: #F74747;
 
       .pay-title {
         margin-right: 5px;
@@ -488,7 +491,9 @@ export default {
   }
 
   .info-title {
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     height: 48px;
     padding: 0 24px;
     background: #f9f9f9;
@@ -513,8 +518,8 @@ export default {
       // min-width: 96px;
       height: 30px;
       line-height: 30px;
-      // background: @theme;
-      color: @theme;
+      // background: #F74747;
+      color: #F74747;
       // color: #fff;
       font-size: 14px;
     }
@@ -572,7 +577,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: @theme;
+              color: #F74747;
             }
           }
         }
@@ -599,7 +604,8 @@ export default {
       }
 
       .goods-action {
-        .flex();
+          display: flex;
+  align-items: center;
         justify-content: flex-end;
         padding: 10px;
 
@@ -611,7 +617,7 @@ export default {
           margin-left: 10px;
           min-width: 96px;
           height: 30px;
-          background: @theme;
+          background: #F74747;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;
@@ -638,7 +644,9 @@ export default {
   background: #fafafa;
   padding: 24px 40px;
   border-top: 1px solid #F5F5F5;
-  // .flex-between();
+  //   display: flex;
+  align-items: center;
+  justify-content: space-between;
   align-items: flex-start;
   font-size: 14px;
   font-family: Microsoft YaHei;
@@ -652,7 +660,7 @@ export default {
 
     .count {
       font-weight: bold;
-      color: @theme;
+      color: #F74747;
     }
 
     .money-item {
@@ -721,8 +729,8 @@ export default {
     line-height: 20px;
     color: #7d7d7d;
 
-    border: 1px solid #A66600;
-    color: #A66600;
+    border: 1px solid #F74747;
+    color: #F74747;
   }
 
   .order-action {
@@ -731,28 +739,28 @@ export default {
     font-size: 14px;
     color: #7d7d7d;
 
-    border: 1px solid @theme;
-    color: @theme;
+    border: 1px solid #F74747;
+    color: #F74747;
 
     &:hover {
       opacity: 0.8;
     }
 
     &.zhifu {
-      background: @theme;
-      border-color: @theme;
+      background: #F74747;
+      border-color: #F74747;
       color: #fff;
     }
 
     &.shanchu {
-      background: @theme;
-      border-color: @theme;
+      background: #F74747;
+      border-color: #F74747;
       color: #fff;
     }
 
     &.shouhuo {
-      background: @theme;
-      border-color: @theme;
+      background: #F74747;
+      border-color: #F74747;
       color: #fff;
     }
   }

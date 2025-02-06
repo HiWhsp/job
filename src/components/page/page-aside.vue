@@ -1,154 +1,91 @@
 <template>
   <div class="aside">
-    <div class="list" :class="{'active': showClose}">
-      <div class="item flex" v-for="(item, index) in list_util" :key="index"
-           @mouseenter="on_mouseenter(index + 1)" @mouseleave="on_mouseleave" @click="goUrl(item.url)">
-        <img :src="item.icon" alt="" :style="item.style">
-        <p>{{ item.title }}</p>
-        <div class="fa_info" v-if="index > 1">
-          <div class="fa_wrap">
-            <div class="fa_tit">
-              <img
-                  :src="hoverIndex == 3 ? webConfig.mp_qrcode : webConfig.mppro_qrcode"
-                  alt="" title="" la="la">
-              <p class="gzhtc">
-                {{ hoverIndex == 3 ? '扫描关注公众号' : "扫描关注小程序" }}
-              </p>
-            </div>
+    <div class="inner">
+      <div class="list">
+        <div class="item" v-if="showTop" @click="toTop()">
+          <div class="item-inner">
+            <img src="@img/to-top.png" alt="" />
           </div>
         </div>
-      </div>
 
-    </div>
-    <div class="item flex top" :class="{'active': showClose}" v-if="showTop" @click="toTop()">
-      <div class="item-inner">
-        <img src="@/assets/img/base/aside/top.png" alt=""/>
-      </div>
-    </div>
-    <!--        收起-->
-    <div class="item flex" @click="showClose = !showClose">
-      <div class="item-inner" :class="{'active': showClose}">
-        <svg t="1718706732177" class="icon" viewBox="0 0 1024 1024" version="1.1"
-             xmlns="http://www.w3.org/2000/svg" p-id="6857" width="128" height="128">
-          <path
-              d="M512 64h-5.8c-9.6 0.2-19.2 0.6-28.7 1.3l-5.6 0.5C313.1 79.9 178.2 176.7 110.6 312.9l-2.4 4.9a445.7 445.7 0 0 0-20.7 50.5c-0.5 1.7-1.1 3.5-1.7 5.2l-3.3 10.6c-3.1 10.5-5.9 21.3-8.2 32.2-0.8 3.6-1.6 7.2-2.3 10.9a455.7 455.7 0 0 0-8 84.8v5.8c3 231.3 181.1 420.3 407.9 440.4l5.6 0.5c9.5 0.7 19.1 1.1 28.7 1.3h5.8c15.5 0 30.7-0.8 45.8-2.3l11.3-1.3c9.3-1.2 18.6-2.7 27.7-4.4l10.9-2.3c1.9-0.3 3.7-0.8 5.5-1.2 12.6-2.9 25.1-6.3 37.3-10.3l5.2-1.7C830.9 877.2 957.5 712.4 960 517.8V512c0-247.4-200.6-448-448-448z m346.5 594.3a377.1 377.1 0 0 1-200.2 200.2 377.5 377.5 0 0 1-292.6 0 377.1 377.1 0 0 1-200.2-200.2 377.5 377.5 0 0 1 0-292.6 377.1 377.1 0 0 1 200.2-200.2 377.5 377.5 0 0 1 292.6 0 377.1 377.1 0 0 1 200.2 200.2 377.5 377.5 0 0 1 0 292.6zM418.2 266.2a4 4 0 0 0-5.7 0l-45.3 45.2a3.9 3.9 0 0 0 0 5.6l192.6 192.2a3.9 3.9 0 0 1 0 5.6L367.2 707a3.9 3.9 0 0 0 0 5.6l45.3 45.2a4 4 0 0 0 5.7 0l195.4-194.9 39.7-39.6a15.9 15.9 0 0 0 0-22.6z"
-              p-id="6858" fill="#00479d"></path>
-        </svg>
+        <!-- <div class="item" v-for="(item, index) in list_util" :key="index" @mouseenter="on_mouseenter(item)" @mouseleave="on_mouseleave(item)" @click="on_click_util(item)">
+          <div class="item-inner" v-if="item.title != '客服'">
+            <div class="cart-num" v-if="item.title == '购物车'">
+              {{ shopcart_count }}
+            </div>
+            <img :src="item.icon" alt="" />
+          </div>
+
+          <template v-if="item.title == '客服'">
+            <el-popover placement="right" trigger="hover">
+              <div class="pop-kefu">
+                <div class="pop-kefu-inner">
+                  <div class="kefu-tip">请微信扫描下方二维码</div>
+                  <img class="kefu-code" :src="vuex_config.kefu_code" />
+                </div>
+              </div>
+
+              <div class="item-inner" slot="reference">
+                <img :src="item.icon" alt="" />
+              </div>
+            </el-popover>
+          </template>
+        </div> -->
       </div>
     </div>
 
-    <el-dialog title="投诉建议" width="680px" center :visible.sync="dialogVisible" :close-on-click-modal="false"
-               @closed="onclosed">
-      <div class="dialog-content">
-        <div class="tip">
-          亲爱的用户，您也可以直接拨打我们的官方电话：0592-2882590，我们将及时为您解答问题
+    <div class="modal" v-show="hoverIndex == 2 || hoverIndex == 3">
+      <template v-if="hoverIndex == 2">
+        <div class="text-box">
+          <div class="text">联系方式</div>
+          <div class="phone">{{ "xxxxx" }}</div>
         </div>
-        <div class="form">
-          <el-form :model="form" :rules="rules" ref="ruleForm" label-position="left" label-width="100px">
-            <el-form-item label="问题类型:" prop="questType">
-              <el-radio-group v-model="form.questType">
-                <el-radio label="测试售后">测试售后</el-radio>
-                <el-radio label="网站功能">网站功能</el-radio>
-                <el-radio label="开票报销">开票报销</el-radio>
-                <el-radio label="其他">其他</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="反馈内容：" prop="content">
-              <el-input type="textarea" v-model="form.content" placeholder="请输入反馈内容"></el-input>
-            </el-form-item>
-            <el-form-item label="联系人" prop="name">
-              <el-input v-model="form.name" placeholder="请输入联系人"></el-input>
-            </el-form-item>
-            <el-form-item label="联系方式" prop="phone">
-              <el-input v-model="form.phone" placeholder="请输入联系方式"></el-input>
-            </el-form-item>
-          </el-form>
+      </template>
+      <template v-if="hoverIndex == 3">
+        <div class="img-box">
+          <!-- <img :src="fixInfo.wechat" alt /> -->
         </div>
-        <div class="btn flex-center">
-          <el-button type="primary" @click="dialogSubmit">提交</el-button>
-        </div>
-      </div>
-    </el-dialog>
+      </template>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 
 export default {
   name: "common-aside",
+  components: {},
+  props: [],
   data() {
     return {
       hoverIndex: "",
       list_util: [
-        {
-          title: "发布需求",
-          icon: require("@/assets/img/base/aside/1.png"),
-          style: "width: 26.62px; height: 29.87px;",
-          url: '/release'
-        },
-        {
-          title: "投诉建议",
-          icon: require("@/assets/img/base/aside/2.png"),
-          style: "width: 32.35px; height: 28.18px;",
-          url: '/feedback'
-        },
-        {
-          title: "公众号",
-          icon: require("@/assets/img/base/aside/3.png"),
-          style: "width: 36.35px; height: 29.87px;"
-        },
-        {
-          title: "小程序",
-          icon: require("@/assets/img/base/aside/4.png"),
-          style: "width: 32.35px; height: 32.39px;"
-        },
+        // { title: "购物车", icon: require("@img/other/aside-shopcart.png") },
+        // { title: "客服", icon: require("@img/other/aside-kefu.png") },
+        // { title: "收藏", icon: require("@img/other/aside-favourite.png") },
       ],
+
       showTop: false,
-      showClose: false,
-      dialogVisible: false,
-      form: {},
-      rules: {
-        questType: [
-          {required: true, message: '请选择问题类型', trigger: 'change'}
-        ],
-        content: [
-          {required: true, message: '请输入反馈内容', trigger: 'blur'}
-        ],
-        name: [
-          {required: true, message: '请输入联系人', trigger: 'blur'}
-        ],
-        phone: [
-          {required: true, message: '请输入联系方式', trigger: 'blur'},
-          {pattern: /^1(3\d|4[5-9]|5[0-35-9]|6[2567]|7[0-8]|8\d|9[0-35-9])\d{8}$/, message: '请输入正确的手机号码'}
-        ]
-      }
     };
   },
+  computed: {
+    ...mapState(["shopcart_count", ""]),
+  },
+  watch: {},
 
   mounted() {
     this.watchPageScroll();
   },
 
   methods: {
-    goUrl(url) {
-      // 校验是否登录
-      if (url && !this.baseInfo.id) {
-        this.$message.error("请先登录");
-        this.$router.push('/login')
-        return
-      }
-      if (url === '/feedback') {
-        this.dialogVisible = true
-      } else {
-        this.$router.push(url);
-      }
-    },
     watchPageScroll() {
       var that = this;
       if (document && document.documentElement) {
         document.addEventListener("scroll", that.scrollEvent);
       }
     },
+
     scrollEvent() {
       var that = this;
       var scrollTop = document.documentElement.scrollTop;
@@ -159,11 +96,15 @@ export default {
       } else {
         this.showTop = false;
       }
+      // //console.log("滚动监听", new Date(), scrollTop);
     },
+
     toTop() {
       document.documentElement.scrollTop = 0;
     },
+
     on_mouseenter(item) {
+      //console.log("鼠标移入", item);
       this.hoverIndex = item;
     },
     on_mouseleave(item) {
@@ -171,26 +112,24 @@ export default {
       this.hoverIndex = "";
     },
 
-    dialogSubmit() {
-      this.$refs.ruleForm.validate((valid) => {
-        if (valid) {
-          this.$api({
-            url: 'feedback',
-            method: 'post',
-            data: this.form
-          }).then(res => {
-            if (res.code === 200) {
-              this.dialogVisible = false;
-              this.$refs["ruleForm"].resetFields();
-              this.$message.success('提交成功');
-            }
-          })
-        }
-      });
+    on_click_util(item) {
+      //console.log("点击", item);
+
+      document.documentElement.scrollTop = 0;
+
+      return;
+
+      let title = item.title;
+
+      if (title == "回到顶部") {
+        document.documentElement.scrollTop = 0;
+      } else if (title == "购物车") {
+        this.$router.push("/cart");
+      }
+      //  else if (title == "客服") {
+      //   this.$router.push("/contact");
+      // }
     },
-    onclosed() {
-      this.$refs["ruleForm"].resetFields();
-    }
   },
 };
 </script>
@@ -201,145 +140,117 @@ export default {
   position: fixed;
   right: 50px;
   bottom: 150px;
+
+  // height: 151.45px;
+  // height: 50px;
+  background: #cccccc;
+  border-radius: 0;
+
+  .inner {
+  }
 }
 
 // 工具列表
 .list {
-  background: #FFFFFF;
-  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.16);
-  border-radius: 100px;
-  transition: all 0.3s;
-  padding: 25px 10px;
-
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   .item {
-    height: 80px;
     position: relative;
     cursor: pointer;
-    transition: 0.3s;
-    flex-direction: column;
-    justify-content: center;
-    border-bottom: 1px solid #E9E9E9;
+    .flex-center();
+    // width: 50px;
+    // height: 50px;
+    // transition: 0.3s;
 
-    &:last-child {
-      border-bottom: 0;
+    width: 60px;
+    height: 60px;
+    background: #ffffff;
+    box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 4px 4px 4px 4px;
+
+    &:nth-child(1) {
+      background: #ff9312;
+    }
+    &:nth-child(1) {
+      background: #fff;
+    }
+    &:nth-child(2) {
+      background: #ea5959;
+    }
+    &:nth-child(3) {
+      background: #f13f17;
     }
 
-    p {
-      margin-top: 5px;
+    &:hover {
+      opacity: 0.6;
     }
 
-    &:hover .fa_info {
-      transition: all 0.6s ease;
-      opacity: 1 !important;
-      transform: translateY(0%) !important;
-      visibility: visible !important;
+    img {
+      height: 32px;
     }
-  }
 
-  &.active {
-    transform: translateX(170%);
-    opacity: 0;
+    .cart-num {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 19px;
+      height: 19px;
+      background: #ffffff;
+      border: 1px solid #ff9312;
+      border-radius: 50%;
+      font-size: 10px;
+      color: #ff9312;
+    }
   }
 }
 
-.top {
-  transition: all 0.3s;
+// 弹窗
+.modal {
+  position: absolute;
+  border: 1px solid #eee;
+  top: 70px;
+  right: 49px;
+  width: 130px;
+  height: 130px;
+  background: #fff;
+  padding: 7px;
 
-  &.active {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-}
-
-.item-inner {
-  margin-top: 20px;
-  cursor: pointer;
-  width: 73px;
-  height: 73px;
-  border-radius: 50%;
-  background: #FFFFFF;
-  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.16);
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  transition: all 0.3s;
+  align-items: center;
+  color: #000;
 
   img {
-    width: 20px;
-    height: 25px;
+    width: 100%;
+    height: 100%;
   }
 
-  svg {
-    width: 34px;
-    height: 34px;
-    transition: all 0.3s;
-  }
-
-  &.active {
-    svg {
-      transform: rotate(180deg);
+  .text-box {
+    font-size: 16px;
+    .text {
+    }
+    .phone {
+      margin-top: 30px;
     }
   }
 }
 
-.fa_info {
-  position: absolute;
-  top: 0;
-  right: 100px;
-  min-width: 150px;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(100%);
-  transition: all 0.6s ease;
-  width: 170px;
-  background: #FFFFFF;
-  box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.16);
-  border-radius: 8px;
-
-  .fa_tit {
-    img {
-      margin: 16px auto 0;
-      display: block;
-      width: 120px;
-      filter: blur(0);
-      transition: filter 1s;
-    }
-
-    .gzhtc {
-      text-align: center;
-      margin: 5px 0 10px;
-    }
-  }
-
-  &::after {
-    content: " ";
-    position: absolute;
-    right: -9px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-left: 10px solid #fff;
-    border-bottom: 10px solid transparent;
-  }
-}
-
-.dialog-content {
-  .tip {
+// 联系客服
+.pop-kefu {
+  .pop-kefu-inner {
     text-align: center;
-    height: 40px;
-    line-height: 40px;
-    margin-bottom: 20px;
-    font-size: 14px;
-    font-weight: 400;
-    color: #FF8000;
-    background-color: #FFF1D9;
-  }
-
-  /deep/ .el-button--primary {
-    background-color: @theme;
-    border-color: @theme;
+    .kefu-tip {
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .kefu-code {
+      width: 200px;
+    }
   }
 }
 </style>
+
+<style scoped lang="less" src="@/assets/h5css/common/pageAside.less"></style>

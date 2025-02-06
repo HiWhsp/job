@@ -1,5 +1,5 @@
 @media screen and (max-width: 1199px) {
-
+ 
 
   .page {
     padding-bottom: 20px;
@@ -38,11 +38,11 @@
           height: 40px;
           background: #ffffff;
           border-radius: 4px 4px 4px 4px;
-          border: 1px solid @theme;
+          border: 1px solid #F74747;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: @theme;
+          color: #F74747;
         }
       }
 
@@ -50,7 +50,7 @@
         width: 80px;
         margin: 24px auto;
         height: 5px;
-        background: @theme;
+        background: #F74747;
         border-radius: 3px 3px 3px 3px;
       }
     }
@@ -82,7 +82,7 @@
       }
 
       &.active {
-        background: @theme;
+        background: #F74747;
         color: #fff;
       }
     }
@@ -95,7 +95,7 @@
       margin-bottom: 15px;
       &.expand {
         .ques-title {
-          background: @theme !important;
+          background: #F74747 !important;
           .text {
             color: #fff !important;
           }
@@ -126,11 +126,13 @@
         height: 50px;
         background: #f4f4f4;
         transition: 0.3s;
-        .flex-between();
+          display: flex;
+  align-items: center;
+  justify-content: space-between;
         cursor: pointer;
 
         &:hover {
-          background: @theme;
+          background: #F74747;
           color: #fff;
 
           .text {
@@ -188,7 +190,9 @@ display: none;
     flex-wrap: wrap;
 
     .buzhou-item {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       width: 100%;
       height: 50px;
       padding: 0 10px;

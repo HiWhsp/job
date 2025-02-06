@@ -1,14 +1,14 @@
 // import {API_ROOT} from '@/config/env.js'
 
-const ROOT = "https://shbxx.dx.hdapp.com.cn";
+const ROOT = "http://vuesc.new.zhishangez.com";
 
 /**
  * 全局接口请求根域名
  */
 export const API_ROOT = ROOT;
 
-// 商城类型 - 空-默认国内普通商城  foreign-海外商城 (地址管理不一样 账号登录注册等)
-export const SHOP_TYPE = '';
+// 商城类型 - 空-默认国内普通商城  foreign-东莞市锋扬礼品 (地址管理不一样 账号登录注册等)
+export const SHOP_TYPE = 'foreign';
 
 
 // 上传
@@ -18,7 +18,7 @@ export const UPLOAD_NAME = "img";
 export const UPLOAD_ACTION =
   process.env.NODE_ENV !== "production"
     ? "/api/service.php"
-    : process.env.VUE_APP_API_ROOT + "/service.php";
+    : ROOT + "/service.php";
 
 export const UPLOAD_PARAMS_ACTION = IS_OPEN_OSS_UPLOAD ? "index_ossUpload" : 'index_localUpload';
 // 上传

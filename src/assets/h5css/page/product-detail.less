@@ -38,7 +38,7 @@
     //       color: #999999;
 
     //       &:hover {
-    //         color: @theme;
+    //         color: #F74747;
     //       }
     //     }
     //   }
@@ -60,7 +60,8 @@
   }
 
   .phone-tip-inner {
-    .flex();
+      display: flex;
+  align-items: center;
     cursor: pointer;
   }
 
@@ -95,21 +96,23 @@
               font-weight: normal;
               font-size: 14px;
               color: #999;
-              color: @theme;
+              color: #F74747;
             }
           }
           .product-other-action {
             padding: 15px 0;
-            .flex();
+              display: flex;
+  align-items: center;
 
             .action-item {
-              .flex();
+                display: flex;
+  align-items: center;
               margin-right: 5px;
               cursor: pointer;
 
               &:hover {
                 span {
-                  color: @theme;
+                  color: #F74747;
                 }
               }
 
@@ -130,7 +133,9 @@
           }
 
           .product-filter {
-            .flex-between();
+              display: flex;
+  align-items: center;
+  justify-content: space-between;
             // flex-direction: column;
             padding: 15px 0;
             border: 1px solid #d5d8de;
@@ -146,13 +151,16 @@
             }
 
             .tabs {
-              .flex();
+                display: flex;
+  align-items: center;
               flex: 1;
               overflow: hidden;
               flex-wrap: wrap;
 
               .tab-item {
-                .ellipsis-1();
+                 white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
                 margin-bottom: 10px;
                 // .flex-center();
                 margin-right: 5px;
@@ -173,9 +181,9 @@
                 max-width: 70%;
 
                 &.active {
-                  background: @theme;
+                  background: #F74747;
                   color: #fff;
-                  border-color: @theme;
+                  border-color: #F74747;
                 }
               }
             }
@@ -203,7 +211,7 @@
               width: 100%;
               .limit-end-box {
                 font-size: 0.3rem;
-                color: @theme;
+                color: #F74747;
                 font-weight: bold;
                 text-align: center;
                 padding-bottom: 0.5rem;
@@ -212,7 +220,9 @@
 
             .shoucang-box {
               margin-top: 20px;
-              .flex-between();
+                display: flex;
+  align-items: center;
+  justify-content: space-between;
               width: 100%;
 
               .yes {
@@ -224,7 +234,8 @@
 
               .shoucang-left {
                 cursor: pointer;
-                .flex();
+                  display: flex;
+  align-items: center;
 
                 img {
                   width: 20px;
@@ -240,7 +251,8 @@
               }
               .shoucang-right {
                 cursor: pointer;
-                .flex();
+                  display: flex;
+  align-items: center;
 
                 img {
                   width: 20px;
@@ -282,20 +294,23 @@
               background: #f7f7f7;
 
               .price {
-                .flex();
+                  display: flex;
+  align-items: center;
 
                 .number {
                   font-size: 20px;
                   font-family: Microsoft YaHei-Bold, Microsoft YaHei;
                   font-weight: bold;
-                  color: @theme;
+                  color: #F74747;
                 }
               }
 
               .sku-list {
                 margin-top: 20px;
                 .sku-item {
-                  .flex-between();
+                    display: flex;
+  align-items: center;
+  justify-content: space-between;
                   position: relative;
                   width: 100%;
                   margin-bottom: 15px;
@@ -317,17 +332,17 @@
                   }
 
                   &.active {
-                    border: 1px solid @theme;
+                    border: 1px solid #F74747;
                     .img-box {
                       img {
                         visibility: visible !important;
                       }
                     }
                     .text {
-                      color: @theme;
+                      color: #F74747;
                     }
                     .price {
-                      color: @theme;
+                      color: #F74747;
                     }
                   }
 
@@ -365,7 +380,7 @@
                     position: absolute;
                     right: 0;
                     font-size: 12px;
-                    color: @theme;
+                    color: #F74747;
                   }
                 }
               }
@@ -404,7 +419,9 @@
               }
 
               .info-1 {
-                .flex-between();
+                  display: flex;
+  align-items: center;
+  justify-content: space-between;
                 .left {
                 }
                 .right {
@@ -415,7 +432,8 @@
                 }
               }
               .info-2 {
-                .flex();
+                  display: flex;
+  align-items: center;
                 .left {
                 }
                 button {
@@ -445,7 +463,8 @@
 
             .shuliang-box {
               margin-top: 10px;
-              .flex();
+                display: flex;
+  align-items: center;
               .sel-num-title {
                 min-width: 60px;
                 font-size: 14px;
@@ -456,7 +475,8 @@
 
               .shuliang {
                 min-width: 105px;
-                .flex();
+                  display: flex;
+  align-items: center;
                 div {
                   width: 30px;
                   height: 30px;
@@ -469,7 +489,7 @@
                   img {
                     width: 30px;
                     height: 30px;
-                    vertical-align: bottom;
+                    vertical-align: middle;
                   }
                 }
                 .minus {
@@ -506,7 +526,8 @@
 
             .params {
               margin-top: 20px;
-              .flex();
+                display: flex;
+  align-items: center;
               .params-title {
                 min-width: 100px;
               }
@@ -515,7 +536,8 @@
                 .dan-guige-wrap {
                   .guige-list {
                     margin-top: 10px;
-                    .flex();
+                      display: flex;
+  align-items: center;
                     flex-wrap: wrap;
                     font-size: 12px;
 
@@ -534,7 +556,7 @@
                       color: #333;
 
                       &.active {
-                        border-color: @theme;
+                        border-color: #F74747;
                         color: #333;
                       }
                     }
@@ -548,7 +570,8 @@
                       margin-bottom: 10px;
                     }
                     .shuxing-list {
-                      .flex();
+                        display: flex;
+  align-items: center;
                       flex-wrap: wrap;
                       margin-bottom: 10px;
                       .shuxing-item {
@@ -561,7 +584,7 @@
                         margin-bottom: 5px;
 
                         &.active {
-                          background: @theme;
+                          background: #F74747;
                           color: #fff;
                         }
 
@@ -599,7 +622,7 @@
                   font-size: 12px;
 
                   &:hover {
-                    border-color: @theme;
+                    border-color: #F74747;
                   }
 
                   .coupon-info {
@@ -628,9 +651,9 @@
                 min-width: 142px;
                 height: 48px;
                 background: #fff7f2;
-                border: 1px solid @theme;
+                border: 1px solid #F74747;
                 // border-radius: 24px;
-                color: @theme;
+                color: #F74747;
               }
 
               .huoqi {
@@ -645,7 +668,7 @@
                 width: 266px;
                 height: 36px;
                 line-height: 36px;
-                background: @theme;
+                background: #F74747;
                 border-radius: 4px 4px 4px 4px;
                 font-size: 14px;
                 font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -679,13 +702,13 @@
 
   .bottom-nav {
     position: relative;
-    // border-bottom: 2px solid @theme;
+    // border-bottom: 2px solid #F74747;
     display: flex;
     height: 40px; /*no */
     line-height: 40px; /*no */
 
     .count-num {
-      color: @theme;
+      color: #F74747;
     }
 
     .nav-item {
@@ -704,7 +727,7 @@
       }
 
       &.active {
-        background-color: @theme !important;
+        background-color: #F74747 !important;
         color: #fff !important;
 
         .count-num {
@@ -722,7 +745,7 @@
       height: 32px; /*no */
 
       &.contact {
-        background: @theme;
+        background: #F74747;
         .flex-center();
         right: 20px;
 
@@ -732,7 +755,7 @@
         img {
           width: 20px;
           margin-right: 10px;
-          vertical-align: bottom;
+          vertical-align: middle;
         }
         span {
           font-size: 14px;
@@ -776,7 +799,8 @@
       margin-bottom: 32px;
       .params-box {
         .params-item {
-          .flex();
+            display: flex;
+  align-items: center;
           border: 1px solid #ccc;
           border-bottom: none;
           &:last-child {
@@ -893,7 +917,7 @@
       .comment-title-text {
         padding: 5px 30px;
         margin-right: 20px;
-        background-color: @theme;
+        background-color: #F74747;
         color: #fff;
       }
     }
@@ -1048,7 +1072,7 @@
 
         &:hover {
           .title {
-            color: @theme;
+            color: #F74747;
           }
         }
 
@@ -1056,13 +1080,15 @@
           width: 100%;
           height: auto;
           img {
-            vertical-align: bottom;
+            vertical-align: middle;
             height: 42vmin;
             object-fit: contain;
           }
         }
         .title {
-          .ellipsis-1();
+           white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
           padding-left: 5px;
           padding-right: 5px;
           text-align: center;
@@ -1120,7 +1146,7 @@
     display: none;
   }
   /deep/ .swiper-pagination-bullet-active {
-    background: @theme;
+    background: #F74747;
   }
 
   .swiper-wenxian {
@@ -1143,7 +1169,7 @@
 
     &:hover {
       .title {
-        color: @theme;
+        color: #F74747;
       }
     }
 
@@ -1157,7 +1183,11 @@
       color: #333333;
       line-height: 1.7;
       .text {
-        .ellipsis-2();
+         display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
       }
     }
     .info-box {
@@ -1166,7 +1196,8 @@
       flex-wrap: wrap;
 
       .info-item {
-        .flex();
+          display: flex;
+  align-items: center;
         width: 50%;
         width: 100%;
         font-size: 14px;
@@ -1189,7 +1220,9 @@
           min-width: 60px;
         }
         .text {
-          .ellipsis-1();
+           white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 
           &.zazhi {
             font-size: 12px;

@@ -1,50 +1,57 @@
 <template>
-  <div class="order-list-wrap">
-    <div class="info-item" v-for="(order, index) in list" :key="index">
-      <div class="info-title">
-        <div class="date">{{ order.createdTime }}</div>
+  <div class="service-list">
+    <div class="service-item" v-for="(order, index) in list" :key="index">
+      <div class="base-box flex">
+        <div class="refund-type">
+          {{ order.type_info }}
+        </div>
+        <div class="date">{{ order.dtTime }}</div>
         <div class="order-code">
-          售后单号：
+          服务编码：
           <span>{{ order.sn }}</span>
         </div>
-        <div class="refund-type">
-          <img :src="require(`@/static/order/refund-type-${order.type == 1 ? 'money' : order.type == 2 ? 'tui' : 'huan'}.png`)" alt="">
-          {{ order.typeInfo }}
+        <div class="order-state" :class="'state' + order.status">
+          {{ order.status_info }}
         </div>
       </div>
-      <div class="info-good">
-        <div class="list-good">
-          <div class="item-good">
-            <div class="img-box">
-              <img :src="order.products.image" alt/>
+      <div class="product-box">
+        <div class="product-list">
+
+
+          <div class="product-item flex">
+            <div class="box-pic">
+              <div class="img-box">
+                <img :src="order.products.image" alt />
+              </div>
             </div>
-            <div class="title">{{ order.products.title }}</div>
-            <div class="num">x {{ order.products.num }}</div>
-            <div class="price">
-              {{ order.is_jifen ? "积分" : "￥" }}
-              {{ order.is_jifen ? order.products.jifen : order.products.priceSale }}
+            <div class="box-title">
+              <div class="title">{{ order.products.title }}</div>
+              <div class="sku">{{ order.products.keyVals }}</div>
+            </div>
+            <div class="box-price">
+              <div class="price">
+                {{ order.is_jifen ? "积分" : "￥" }}
+                {{ order.is_jifen ? order.products.jifen : order.products.priceSale }}
+              </div>
+            </div>
+            <div class="box-num">
+              <div class="num">x {{ order.products.num }}</div>
+            </div>
+            <div class="box-xiaoji">
+              <div class="price">{{ vuex_huobi }} {{ order.products.priceSale * order.products.num }}</div>
             </div>
           </div>
         </div>
       </div>
-      <div class="info-heji">
-        <div class="status">
-          {{ order.statusInfo }}
-          <span>{{ order.type == 1 ? "退款金额：" + order.money : '' }}</span>
-          <span>{{ order.type != 1 && order.status == 6 ? order.typeInfo + '已完成' : '' }}</span>
-          <span>{{ order.status == -1 ? order.typeInfo : '' }}</span>
-        </div>
-        <div class="btn-actions">
-          <button class="order-detail" @click="$router.push(`/refund-detail?refund_id=${order.id}`)">售后详情
-          </button>
-        </div>
+      <div class="actions-box">
+        <button class="btn btn-ripple" @click="$router.push(`/refund-service-detail?refund_id=${order.id}`)">售后详情</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "orderList",
@@ -60,29 +67,22 @@ export default {
 
 
 <style scoped lang="less">
-.order-list-wrap {
-  .info-item {
+.service-list {
+  .service-item {
     border: 1px solid #cccccc;
     margin-bottom: 30px;
   }
 
-  .info-title {
-    .flex();
+  .base-box {
     height: 48px;
     padding: 0 15px;
-    background: #e5e5e5;
+    background: #f9f9f9;
     border-bottom: 1px solid #cccccc;
 
     .refund-type {
+      min-width: 80px;
       text-align: left;
-      color: @theme;
-      display: flex;
-      align-items: center;
-      img {
-        width: 24px;
-        height: 24px;
-        margin-right: 5px;
-      }
+      color: #F74747;
     }
 
     .date {
@@ -90,8 +90,7 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
-      color: #333;
-      font-weight: bold;
+      color: #7d7d7d;
     }
 
     .order-code {
@@ -103,8 +102,7 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
-      color: #333;
-      font-weight: bold;
+      color: #7d7d7d;
 
       span {
         color: #333333;
@@ -121,18 +119,19 @@ export default {
       color: #999999;
 
       &.state2 {
-        color: @theme;
-        border-color: @theme;
+        color: #F74747;
+        border-color: #F74747;
       }
     }
   }
 
-  .info-good {
-    .list-good {
-      .item-good {
+
+  .product-box {
+    .product-list {
+      .product-item {
         padding: 20px;
         border-bottom: 1px dashed #ccc;
-        .flex();
+
 
         &:last-child {
           border: none;
@@ -182,23 +181,22 @@ export default {
 
   .info-heji {
     padding: 15px;
-    height: 40px;
     border-top: 1px solid #ccc;
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
+    justify-content: flex-end;
     font-size: 14px;
     font-family: Microsoft YaHei;
+    font-weight: 400;
     line-height: 20px;
-    color: #333;
-    background-color: #e5e5e5;
-    .status {
-      color: #333;
-    }
+    color: #7d7d7d;
 
     .order-detail {
       min-width: 96px;
       height: 30px;
-      background: @theme;
-      border: 1px solid @theme;
+      background: #F74747;
+      border: 1px solid #F74747;
       font-size: 14px;
       color: #fff;
       transition: 0.3s;

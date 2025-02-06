@@ -86,7 +86,7 @@ export default {
     user-select: none;
 
     &.active {
-      background: @theme;
+      background: #F74747;
       color: #fff;
     }
 

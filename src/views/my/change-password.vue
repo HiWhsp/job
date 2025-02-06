@@ -10,21 +10,21 @@
           <div class="item">
             <span class="text">旧密码：</span>
             <span class="info">
-              <el-input clearable placeholder="请输入旧密码" type="password" v-model="form.oldPass" class=""/>
+              <el-input clearable type="password" v-model="form.oldPass" class="" />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">新密码：</span>
             <span class="info">
-              <el-input clearable placeholder="请输入新密码" type="password" v-model="form.pass" class=""/>
+              <el-input clearable type="password" v-model="form.pass" class="" />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
-            <span class="text">重复新密码：</span>
+            <span class="text">确认密码：</span>
             <span class="info">
-              <el-input clearable placeholder="请输入重复新密码" type="password" v-model="form.pass2" class=""/>
+              <el-input clearable type="password" v-model="form.pass2" class="" />
             </span>
             <span class="action"> </span>
           </div>
@@ -32,8 +32,7 @@
             <span class="text" style="visibility: hidden">-</span>
             <div class="info">
               <el-button class="btn-ripple fit-text btn-save" @click="throttle_do_submit()"
-                         :loading="loading">确认
-              </el-button>
+                :loading="loading">确认</el-button>
               <button class="btn-ripple fit-text btn-cancel" @click="do_clear()">清空</button>
             </div>
           </div>
@@ -44,7 +43,7 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "change-password",
@@ -131,13 +130,14 @@ export default {
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
     color: #333333;
-    border-bottom: 1px solid #E8E8E8;
   }
 
   .page-ctx {
     min-height: 600px;
+    margin-top: 14px;
     padding: 80px 0;
     background: #fff;
   }
@@ -147,8 +147,7 @@ export default {
   .page-ctx {
     padding-bottom: 80px;
 
-    .section {
-    }
+    .section {}
 
     .item {
       margin-bottom: 20px;
@@ -192,7 +191,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: @theme;
+        color: #F74747;
 
         span {
           margin-right: 20px;
@@ -207,19 +206,18 @@ export default {
 .btn-box {
   margin-top: 46px;
 
-  button {
-  }
+  button {}
 
   .btn-save {
     width: 120px;
     height: 32px;
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid @theme;
+    border: 1px solid #F74747;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: @theme;
+    color: #F74747;
 
   }
 
@@ -227,7 +225,7 @@ export default {
     margin-left: 24px;
     width: 120px;
     height: 32px;
-    background: @theme;
+    background: #F74747;
     border-radius: 50px 50px 50px 50px;
     font-family: Arial, Arial;
     font-weight: 400;

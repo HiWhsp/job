@@ -104,7 +104,9 @@ export default {
   background: #ffffff;
   border: 1px solid #eeeeee;
   border-radius: 4px;
-  .flex-between();
+    display: flex;
+  align-items: center;
+  justify-content: space-between;
   overflow: hidden;
 
   img {
@@ -141,12 +143,13 @@ export default {
 }
 
 .btn-validate-box {
-  .flex();
+    display: flex;
+  align-items: center;
   background: transparent;
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: @theme;
+  color: #F74747;
   font-size: 1.4rem;
 
   &.disabled {
@@ -163,7 +166,9 @@ export default {
     background: #ffffff;
     border: 1px solid #eeeeee;
     border-radius: 4px;
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     overflow: hidden;
 
     img {
@@ -203,9 +208,10 @@ export default {
     background: transparent;
     position: absolute;
     right: 0;
-    .flex();
+      display: flex;
+  align-items: center;
     cursor: pointer;
-    color: @theme;
+    color: #F74747;
 
     &.disabled {
       color: #ccc;
