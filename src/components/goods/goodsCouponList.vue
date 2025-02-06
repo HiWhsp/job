@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import coupon from "@/shop-actions/coupon";
+
 
 export default {
   name: "goods-yhq",
@@ -71,7 +71,8 @@ export default {
   padding: 15px;
 
   .title {
-    .flex();
+      display: flex;
+  align-items: center;
     .text {
       flex: 2;
       font-size: 14px;
@@ -90,7 +91,8 @@ export default {
     }
   }
   .list-title {
-    .flex();
+      display: flex;
+  align-items: center;
     .text {
       flex: 2;
       font-size: 14px;

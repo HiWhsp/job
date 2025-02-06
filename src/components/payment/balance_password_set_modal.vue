@@ -233,7 +233,7 @@ export default {
     text-align: left;
 
     .tip {
-      color: #4CA5E4;
+      color: #F74747;
       margin-bottom: 20px;
     }
   }
@@ -251,7 +251,8 @@ export default {
   background: #ffffff;
   border: 1px solid #eeeeee;
   border-radius: 4px;
-  .flex();
+    display: flex;
+  align-items: center;
   overflow: hidden;
 
   .label {
@@ -293,7 +294,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #4CA5E4;
+  // background: #F74747;
   background: #f7f7f7;
   text-align: left;
 
@@ -324,11 +325,11 @@ export default {
     font-size: 14px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
-    color: #4CA5E4;
-    border: 1px solid #4CA5E4;
+    color: #F74747;
+    border: 1px solid #F74747;
   }
   .queding {
-    background: #4CA5E4;
+    background: #F74747;
     color: #fff;
   }
 }
@@ -337,9 +338,10 @@ export default {
   background: transparent;
   position: absolute;
   right: 0;
-  .flex();
+    display: flex;
+  align-items: center;
   cursor: pointer;
-  color: #4CA5E4;
+  color: #F74747;
 
   &.disabled {
     color: #ccc;

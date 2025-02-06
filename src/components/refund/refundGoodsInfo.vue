@@ -67,7 +67,9 @@ export default {
 <style scoped lang="less">
 .goods-info {
   .info-title {
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     height: 48px;
     padding: 0 15px;
     background: #f9f9f9;
@@ -106,7 +108,8 @@ export default {
       .item-good {
         padding: 20px;
         border-bottom: 1px dashed #ccc;
-        .flex();
+          display: flex;
+  align-items: center;
 
         &:last-child {
           border: none;
@@ -150,14 +153,15 @@ export default {
       }
 
       .goods-action {
-        .flex();
+          display: flex;
+  align-items: center;
         justify-content: flex-end;
         padding: 10px;
         .btn-goods-action {
           margin-left: 10px;
           width: 96px;
           height: 30px;
-          background: #4CA5E4;
+          background: #F74747;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;

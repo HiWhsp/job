@@ -59,8 +59,8 @@
               <el-input v-model="form.content" placeholder="留言内容" clearable type="textarea" :autosize="{ minRows: 6 }">
               </el-input>
               <!-- <div class="upload-box">
-                <el-upload class="upload-demo" multiple :limit="6" name="file" :data="uploadExtraData"
-                  :action="uploadAction" :on-success="onSuccess_upload" :on-preview="handlePreview"
+                <el-upload class="upload-demo" multiple :limit="6" name="file" :data="mix_upload_data"
+                  :action="mix_upload_action" :on-success="onSuccess_upload" :on-preview="handlePreview"
                   :on-remove="handleRemove" :before-remove="beforeRemove" :on-exceed="handleExceed"
                   :file-list="fileList">
                   <button class="btn-ripple btn-upload">
@@ -272,7 +272,7 @@ export default {
   width: 80px;
   margin: 24px auto;
   height: 5px;
-  background: #4CA5E4;
+  background: #F74747;
   border-radius: 3px 3px 3px 3px;
 }
 
@@ -329,7 +329,7 @@ export default {
     button {
       width: 200px;
       height: 50px;
-      background: #4CA5E4;
+      background: #F74747;
       border-radius: 0px 0px 0px 0px;
 
       font-family: OPPOSans, OPPOSans;
@@ -346,11 +346,11 @@ export default {
   height: 40px;
   background: #ffffff;
   border-radius: 4px 4px 4px 4px;
-  border: 1px solid #4CA5E4;
+  border: 1px solid #F74747;
   font-size: 14px;
   font-family: Microsoft YaHei-Regular, Microsoft YaHei;
   font-weight: 400;
-  color: #4CA5E4;
+  color: #F74747;
 
   img {
     margin-right: 10px;

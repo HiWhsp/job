@@ -2,20 +2,16 @@
 // const Renderer = PrerenderSPAPlugin.PuppeteerRenderer;
 
 const path = require("path");
-const opt = {
-  proxyTarget: process.env.VUE_APP_API_ROOT,
-  hostArr: ["localhost"],
-  hostIndex: 0,
-};
+
 
 module.exports = {
   // 部署应用包时的基本 URL,从 Vue CLI 3.3 起已弃用baseUrl
   // publicPath: process.env.NODE_ENV !== "production" ? "./" : '/',
   // publicPath: process.env.NODE_ENV !== "production" ? "/" : "/", //本地开发用
-  publicPath: process.env.NODE_ENV !== "production" ? "/" : "/dist_pc_baiyuan", //本地开发用
+  publicPath: process.env.NODE_ENV !== "production" ? "/" : "/dist_pc", //本地开发用
 
   // build时构建文件的目录 构建时传入 --no-clean 可关闭该行为
-  outputDir: "dist_pc_baiyuan",
+  outputDir: "dist_pc",
 
   // build时放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录
   // assetsDir: "dist_pc_hemeixin",
@@ -50,13 +46,14 @@ module.exports = {
 
   configureWebpack: (config) => {
     return {
-      name: "海外商城",
+      name: "东莞市锋扬礼品",
       resolve: {
         // 配置解析别名
         extensions: [".js", ".vue", ".json"],
         alias: {
           "@": path.resolve(__dirname, "./src"),
           "@img": path.resolve(__dirname, "./src/assets/img"),
+          "@pro": path.resolve(__dirname, "./src/assets/pro"),
           "@ying": path.resolve(__dirname, "./src/assets/ying"),
           vue$: "vue/dist/vue.esm.js",
           api: path.resolve(__dirname, "../src/api"),
@@ -116,7 +113,6 @@ module.exports = {
 
   devServer: {
     // host: 'localhost',
-    // host: opt.hostArr[opt.hostIndex],
     disableHostCheck: true,
     port: 80,
     https: false,
@@ -126,7 +122,7 @@ module.exports = {
     },
     proxy: {
       "/api": {
-        target: opt.proxyTarget,
+        target: 'http://vuesc.new.zhishangez.com',
         ws: true,
         changeOrigin: true,
         pathRewrite: {

@@ -7,8 +7,8 @@
           <span>{{ item.nickname }}</span>
         </div>
         <div class="right">
-          <el-rate v-model="item.star" disabled :colors="['#4CA5E4', '#4CA5E4', '#4CA5E4']"
-            text-color="#4CA5E4"></el-rate>
+          <el-rate v-model="item.star" disabled :colors="['#F74747', '#F74747', '#F74747']"
+            text-color="#F74747"></el-rate>
         </div>
       </div>
       <div class="content">{{ item.content }}</div>
@@ -92,7 +92,8 @@ export default {
     }
 
     .img-list {
-      .flex();
+        display: flex;
+  align-items: center;
       padding-left: 150px;
       text-align: left;
 
@@ -137,7 +138,8 @@ export default {
       border-bottom: 1px solid #eee;
 
       .avatar-info {
-        .flex();
+          display: flex;
+  align-items: center;
         justify-content: space-between;
 
         .left {
@@ -180,7 +182,8 @@ export default {
       }
 
       .img-list {
-        .flex();
+          display: flex;
+  align-items: center;
         padding-left: 0;
         text-align: left;
 

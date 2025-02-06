@@ -20,17 +20,17 @@
 
         <!-- 缩略图 -->
         <div class="slt-wrap">
-            <div class="lunbo-arrow arrow-left" @click="toPrev()">
-                <i class="el-icon-arrow-left"></i>
-            </div>
-            <div class="lunbo-arrow arrow-right" @click="toNext()">
-                <i class="el-icon-arrow-right"></i>
-            </div>
+<!--            <div class="lunbo-arrow arrow-left" @click="toPrev()">-->
+<!--                <i class="el-icon-arrow-left"></i>-->
+<!--            </div>-->
+<!--            <div class="lunbo-arrow arrow-right" @click="toNext()">-->
+<!--                <i class="el-icon-arrow-right"></i>-->
+<!--            </div>-->
 
             <div class="lunbo-slt-list">
                 <div class="lunbo-slt-item cover hidden" v-for="(item, index) in imageList" :key="index" :class="{
                     active: item.index == activeSwipeIndex,
-                    shown: Math.floor(item.index / 6) == shownGroupIndex,
+                    shown: Math.floor(item.index / 4) == shownGroupIndex,
                 }" @click="onClickSwipeItem(item.index)">
                     <img :src="item.image" />
                 </div>
@@ -90,8 +90,8 @@ export default {
 
 <style scoped lang="less">
 /deep/ .el-carousel {
-    width: 520px;
-    height: 520px;
+  width: 582px;
+  height: 389px;
 }
 
 /deep/ .el-carousel__container {
@@ -103,14 +103,12 @@ export default {
 }
 
 .zhutu-wrap {
-    width: 610px;
-    padding: 0 45px;
+    width: 582px;
 
     .zhutu-inner {
-        border: 1px solid #eee;
         overflow: hidden;
-        width: 520px;
-        height: 520px;
+        width: 582px;
+        height: 389px;
         margin: 0 auto;
         user-select: none;
     }
@@ -119,9 +117,8 @@ export default {
 
 .lunbo-box {
     position: relative;
-    width: 610px;
-    height: 642px;
-    // border: 1px solid #eee;
+    width: 582px;
+    height: 490px;
     // padding-top: 20px;
 
     .img-box {
@@ -159,7 +156,6 @@ export default {
         left: 401px;
         top: 0;
         background-color: #eee;
-        border: 1px solid #bbb;
 
         .mask-inner {
             width: 700px;
@@ -174,22 +170,19 @@ export default {
 }
 
 .lunbo-slt-list {
-    margin-left: 66px;
-    margin-right: 66px;
     width: 100%;
-    margin-top: 36px;
+  height: 92px;
+    margin-top: 10px;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
 
     .lunbo-slt-item {
-        width: 60px;
-        height: 60px;
+        width: 138px;
+        height: 92px;
         padding: 0;
         cursor: pointer;
-        border: 1px solid transparent;
         margin-right: 10px;
-        border: 1px solid #dddddd;
 
         &.hidden {
             display: none;
@@ -199,12 +192,12 @@ export default {
             display: block;
         }
 
-        &:nth-child(6n) {
+        &:nth-child(4n) {
             margin-right: 0;
         }
 
         &.active {
-            border: 1px solid #4CA5E4;
+            border: 1px solid #F74747;
         }
 
         img {

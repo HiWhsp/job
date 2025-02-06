@@ -16,13 +16,13 @@
             </div>
             <div class="title">{{ order.products.title }}</div>
             <div class="num">x {{ order.products.num }}</div>
-            <div class="price">{{vuex_huobi}} {{ order.products.unit_price }}</div>
+            <div class="price">{{vuex_huobi}} {{ order.products.priceSale }}</div>
           </div>
         </div>
       </div>
       <div class="info-heji">
         <div class="btn-actions">
-          <button class="order-detail" @click="$router.push(`/refundType?order_id=${order.order_id}&inventoryId=${order.inventoryId}`)">申请售后</button>
+          <button class="order-detail" @click="$router.push(`/refund-type?order_id=${order.orderId}&inventoryId=${order.inventoryId}`)">申请售后</button>
         </div>
       </div>
     </div>
@@ -52,7 +52,9 @@ export default {
     margin-bottom: 30px;
   }
   .info-title {
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     height: 48px;
     padding: 0 15px;
     background: #f9f9f9;
@@ -89,8 +91,8 @@ export default {
       color: #999999;
 
       &.state2 {
-        color: #4CA5E4;
-        border-color: #4CA5E4;
+        color: #F74747;
+        border-color: #F74747;
       }
     }
   }
@@ -99,7 +101,8 @@ export default {
       .item-good {
         padding: 20px;
         border-bottom: 1px dashed #ccc;
-        .flex();
+          display: flex;
+  align-items: center;
 
         &:last-child {
           border: none;
@@ -145,7 +148,9 @@ export default {
   .info-heji {
     padding: 15px;
     border-top: 1px solid #ccc;
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     justify-content: flex-end;
     font-size: 14px;
     font-family: Microsoft YaHei;
@@ -156,8 +161,8 @@ export default {
     .order-detail {
       min-width: 96px;
       height: 30px;
-      background: #4CA5E4;
-      border: 1px solid #4CA5E4;
+      background: #F74747;
+      border: 1px solid #F74747;
       font-size: 14px;
       color: #fff;
       transition: 0.3s;

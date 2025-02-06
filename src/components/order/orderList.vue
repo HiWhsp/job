@@ -1,8 +1,5 @@
 <template>
   <div class="order-list-wrap">
-
-
-
     <div class="info-item" v-for="(item, index) in list" :key="index">
       <div class="info-title">
         <div class="date">{{ item.createdTime }}</div>
@@ -87,7 +84,7 @@
 </template>
 
 <script>
-import order from "@/shop-actions/order";
+
 
 import order_cancel_modal from "@/components/order/order_cancel_modal.vue"; //取消
 import order_delete_modal from "@/components/order/order_delete_modal.vue"; //删除
@@ -254,7 +251,9 @@ export default {
   }
 
   .info-title {
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     height: 48px;
     padding: 0 15px;
     background: #f5f5f5;
@@ -290,7 +289,7 @@ export default {
       font-weight: 400;
       line-height: 20px;
       color: #999999;
-      color: #4CA5E4;
+      color: #F74747;
 
       // 待付款
       &.state--5 {
@@ -300,8 +299,8 @@ export default {
       }
 
       &.state-2 {
-        color: #4CA5E4;
-        border-color: #4CA5E4;
+        color: #F74747;
+        border-color: #F74747;
       }
     }
   }
@@ -354,7 +353,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #4CA5E4;
+              color: #F74747;
             }
           }
         }
@@ -385,7 +384,9 @@ export default {
   .info-heji {
     padding: 15px;
     border-top: 1px solid #e5e5e5;
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: 400;
@@ -393,7 +394,8 @@ export default {
     color: #7d7d7d;
 
     .heji {
-      .flex();
+        display: flex;
+  align-items: center;
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
@@ -403,13 +405,13 @@ export default {
         margin-right: 30px;
 
         b {
-          color: #4CA5E4;
+          color: #F74747;
         }
       }
 
       .heji-money {
         b {
-          color: #4CA5E4;
+          color: #F74747;
         }
       }
     }
@@ -421,11 +423,11 @@ export default {
         height: 32px;
         background: #FFFFFF;
         border-radius: 50px 50px 50px 50px;
-        border: 1px solid #4CA5E4;
+        border: 1px solid #F74747;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #4CA5E4;
+        color: #F74747;
 
         &+button {
           margin-left: 20px;
@@ -436,7 +438,7 @@ export default {
         }
 
         &.btn-bg {
-          background: #4CA5E4;
+          background: #F74747;
           color: #FFFFFF;
         }
       }

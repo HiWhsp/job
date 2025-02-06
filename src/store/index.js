@@ -69,25 +69,27 @@ export default new Vuex.Store({
 
     //
     vuex_config: {},
-    configInfo: {}, //
+    vuex_huobi: "￥",
+    vuex_news_cates: [],
+
     //
     vuex_user: {},
     userInfo: {}, //
     baseInfo: {}, //
     //
     vuex_is_login: false, //是否登录
-    isLogin: false,
+    vuex_is_login: false,
     //
-    // avatar_default: require("@/static/common/avatar.png"),
-    // vuex_avatar_default: require("@/static/common/avatar.png"),
-    // defaultAvatar: require("@/static/common/avatar.png"),
+    avatar_default: require("@/static/common/avatar.png"),
+    vuex_avatar_default: require("@/static/common/avatar.png"),
+    defaultAvatar: require("@/static/common/avatar.png"),
     //
     //
     //商城部分
     vuex_cart_number: 0,
 
     //
-    vuex_huobi: "$",
+
     index_banners: [],
     map_banners: {
       关于我们: [],
@@ -108,15 +110,14 @@ export default new Vuex.Store({
       route: "/product-cates?id=792",
     },
 
-    //
-    //
-    //
-    webConfig: {}, //站点设置
+
 
     shopcart_count: 0,
     if_calc_yunfei: false, //是否需要计算运费
     default_address: {}, //默认收货地址
     store_keyword: {},
+
+    footer_logo_friend_link:[]
   },
 
   getters: {},
@@ -128,9 +129,7 @@ export default new Vuex.Store({
       let val = obj.val;
       state[key] = val;
     },
-    set_vuex_configInfo(state, data) {
-      state.configInfo = data;
-      state.webConfig = data;
+    set_vuex_config(state, data) {
       state.vuex_config = data;
     },
 
@@ -144,7 +143,7 @@ export default new Vuex.Store({
       let { token, userId, id } = data;
 
       state.vuex_is_login = true;
-      state.isLogin = true;
+      state.vuex_is_login = true;
       state.userInfo = data;
       state.vuex_user = data;
       localStorage.setItem("token", token);
@@ -334,7 +333,7 @@ export default new Vuex.Store({
       }).then((res) => {
         let { code, data } = res;
         if (code == 200) {
-          commit("set_vuex_configInfo", data);
+          commit("set_vuex_config", data);
         }
       });
 
@@ -368,24 +367,25 @@ export default new Vuex.Store({
       });
 
       //新闻分类
-      // api({
-      //   url: "/service.php",
-      //   method: "get",
-      //   data: {
-      //     action: "news_channel",
-      //   },
-      // }).then((res) => {
-      //   let { code, data } = res;
-      //   if (code == 200) {
-      //     res.data.forEach((v) => {
-      //       v.route = "/news?id=" + v.id;
-      //     });
-      //     commit("set_vuex_data", {
-      //       key: "vuexNewsCates",
-      //       val: res.data,
-      //     });
-      //   }
-      // });
+      api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "news_channel",
+          channelId: 49
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          let data = res.data
+          data.forEach((v) => {
+            v.route = "/news?id=" + v.id;
+          });
+          commit("set_vuex_data", {
+            key: "vuex_news_cates",
+            val: data,
+          });
+        }
+      });
     },
   },
 });

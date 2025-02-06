@@ -10,7 +10,9 @@
     // padding-top: 50px;
     padding-top: 0;
     .product-item {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       flex-direction: column-reverse;
       align-items: flex-start;
       margin-bottom: 24px;
@@ -36,7 +38,7 @@
           color: #333333;
 
           &:hover {
-            color: #4CA5E4;
+            color: #F74747;
           }
         }
         .biaoqian {
@@ -46,10 +48,12 @@
         }
         .shuoming {
           margin: 10px 0;
-          .flex();
+            display: flex;
+  align-items: center;
 
           .shuoming-item {
-            .flex();
+              display: flex;
+  align-items: center;
             font-size: 12px;
             font-family: Microsoft YaHei-Regular, Microsoft YaHei;
             font-weight: 400;
@@ -58,7 +62,7 @@
             font-size: 12px;
 
             &:hover {
-              color: #4CA5E4;
+              color: #F74747;
             }
 
             img {
@@ -69,7 +73,8 @@
         }
 
         .tags {
-          .flex();
+            display: flex;
+  align-items: center;
 
           .tag {
             margin-right: 10px;
@@ -77,7 +82,7 @@
             width: 32px;
             height: 18px;
             line-height: 18px;
-            background: #4CA5E4;
+            background: #F74747;
             border-radius: 3px 3px 3px 3px;
 
             font-size: 12px;
@@ -88,7 +93,8 @@
         }
 
         .text-box {
-          .flex();
+            display: flex;
+  align-items: center;
           align-items: flex-start;
           flex-wrap: nowrap;
 
@@ -115,7 +121,7 @@
               font-size: 1.4rem;
 
               &:hover {
-                color: #4CA5E4;
+                color: #F74747;
               }
             }
           }
@@ -207,7 +213,7 @@
       }
 
       height: 50px;
-      background: linear-gradient(180deg, #4CA5E4 0%, #fe6927 100%) !important;
+      background: linear-gradient(180deg, #F74747 0%, #fe6927 100%) !important;
       .item {
         font-size: 14px;
         font-family: Microsoft YaHei-Bold, Microsoft YaHei;
@@ -224,7 +230,8 @@
       height: 48px;
       height: 40px;
       height: 60px;
-      .flex();
+        display: flex;
+  align-items: center;
 
       &:nth-child(1) {
         height: 48px;
@@ -235,7 +242,11 @@
       }
 
       .item {
-        .ellipsis-2();
+         display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
         flex: 1;
         text-align: center;
         font-size: 12px;
@@ -259,7 +270,7 @@
           color: #666666;
 
           &:hover {
-            color: #4CA5E4;
+            color: #F74747;
           }
         }
       }
@@ -281,7 +292,7 @@
     cursor: pointer;
 
     &:hover {
-      background: #4CA5E4;
+      background: #F74747;
       color: #fff;
     }
   }
@@ -309,7 +320,7 @@
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #4CA5E4;
+      color: #F74747;
       cursor: pointer;
     }
 
@@ -317,7 +328,9 @@
       width: 100%;
       margin: 0 auto;
       padding: 25px 0;
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       flex-direction: column;
 
       .compare-list {
@@ -362,7 +375,7 @@
               cursor: pointer;
               font-size: 14px;
               &:hover {
-                color: #4CA5E4;
+                color: #F74747;
               }
             }
 
@@ -384,7 +397,7 @@
         .btn-compare {
           width: 100px;
           height: 36px;
-          background: #4CA5E4;
+          background: #F74747;
           border-radius: 4px 4px 4px 4px;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -402,11 +415,11 @@
           height: 36px;
           background: #ffffff;
           border-radius: 4px 4px 4px 4px;
-          border: 1px solid #4CA5E4;
+          border: 1px solid #F74747;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #4CA5E4;
+          color: #F74747;
         }
       }
     }

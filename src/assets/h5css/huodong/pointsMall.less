@@ -3,7 +3,9 @@
     text-align: left;
     padding-bottom: 80px;
     .main-title {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       padding: 0 32px;
       text-align: left;
       height: 56px;
@@ -18,7 +20,7 @@
         min-width: 96px;
         height: 30px;
         line-height: 30px;
-        background: #4CA5E4;
+        background: #F74747;
         color: #fff;
         font-size: 14px;
         font-weight: bold;
@@ -37,7 +39,7 @@
     position: relative;
     width: 100%;
     height: auto;
-    background: url(~@img/jifen-bg.png) no-repeat center / cover;
+    // background: url(~@img/jifen-bg.png) no-repeat center / cover;
     background-size: 100% 100%;
     padding: 15px;
     // padding-left: 40px;
@@ -95,7 +97,8 @@
     flex: 2;
     // border-bottom: 1px solid #eee;
 
-    .flex();
+      display: flex;
+  align-items: center;
     .tab-item {
       cursor: pointer;
       padding-bottom: 10px;
@@ -107,9 +110,9 @@
       color: #333333;
 
       &.active {
-        border-bottom: 3px solid #4CA5E4;
+        border-bottom: 3px solid #F74747;
         font-weight: bold;
-        color: #4CA5E4;
+        color: #F74747;
       }
     }
   }
@@ -120,7 +123,8 @@
   }
 
   .good-list {
-    .flex();
+      display: flex;
+  align-items: center;
     flex-wrap: wrap;
     margin-top: 20px;
     text-align: left;
@@ -150,7 +154,9 @@
         text-align: left;
         padding: 15px;
         .title {
-          .ellipsis-1();
+           white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
           margin-top: 0;
           font-size: 13px;
           color: #222;
@@ -162,7 +168,9 @@
 
         .duihuan-info {
           margin-top: 10px;
-          .flex-between();
+            display: flex;
+  align-items: center;
+  justify-content: space-between;
 
           .jifen {
             font-size: 14px;
@@ -199,7 +207,7 @@
         button {
           width: 51px;
           height: 22px;
-          background: #4CA5E4;
+          background: #F74747;
           border-radius: 2px;
           color: #fff;
           font-size: 12px;

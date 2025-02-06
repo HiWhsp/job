@@ -21,7 +21,7 @@
         </div>
         <div class="item">
           <span class="text">默认地址</span>
-          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#4CA5E4"
+          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#F74747"
             inactive-color="#eeeeee">
           </el-switch>
         </div>
@@ -233,7 +233,8 @@ export default {
 
     .item {
       margin-bottom: 20px;
-      .flex();
+        display: flex;
+  align-items: center;
 
       .text {
         min-width: 190px;
@@ -331,17 +332,17 @@ export default {
     height: 32px;
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #4CA5E4;
+    border: 1px solid #F74747;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #4CA5E4;
+    color: #F74747;
   }
 
   .btn-2 {
     min-width: 120px;
     height: 32px;
-    background: #4CA5E4;
+    background: #F74747;
     border-radius: 50px 50px 50px 50px;
     font-family: Arial, Arial;
     font-weight: 400;

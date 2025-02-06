@@ -99,7 +99,9 @@ export default {
   opacity: 1;
   border-radius: 4px;
 
-  .flex-between();
+    display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   .text {
     display: inline-block;
@@ -137,7 +139,8 @@ export default {
   .box {
     padding-right: 10px;
     height: 50px;
-    .flex();
+      display: flex;
+  align-items: center;
   }
 }
 

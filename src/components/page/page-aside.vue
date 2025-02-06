@@ -21,7 +21,7 @@
               <div class="pop-kefu">
                 <div class="pop-kefu-inner">
                   <div class="kefu-tip">请微信扫描下方二维码</div>
-                  <img class="kefu-code" :src="webConfig.kefu_code" />
+                  <img class="kefu-code" :src="vuex_config.kefu_code" />
                 </div>
               </div>
 
@@ -70,7 +70,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["shopcart_count", "webConfig"]),
+    ...mapState(["shopcart_count", ""]),
   },
   watch: {},
 

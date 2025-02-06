@@ -14,11 +14,13 @@
   }
 
   .section-box {
-    .flex();
+      display: flex;
+  align-items: center;
   }
 
   .section-1 {
-    // .flex();
+    //   display: flex;
+  align-items: center;
     // height: 72px;
 
     .flex-center();
@@ -52,7 +54,9 @@
       }
     }
     .right {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       position: absolute;
       bottom: 0;
       left: 0;
@@ -61,7 +65,7 @@
       background: #ffffff;
       text-align: left;
       padding: 0 15px;
-      border: 1px solid #4CA5E4;
+      border: 1px solid #F74747;
       border-radius: 0 0 11px 11px;
 
       .text-1 {
@@ -71,7 +75,8 @@
         color: #333333;
       }
       .text-2 {
-        .flex();
+          display: flex;
+  align-items: center;
 
         img {
           width: 24px;
@@ -81,7 +86,7 @@
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #4CA5E4;
+          color: #F74747;
         }
       }
     }
@@ -89,7 +94,9 @@
   .section-2 {
     flex: 1;
     .list {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       height: auto;
       background: #ffffff;
       border: 1px solid #eee9e4;
@@ -120,7 +127,7 @@
             font-size: 16px;
             font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
             font-weight: normal;
-            color: #4CA5E4;
+            color: #F74747;
           }
         }
       }
@@ -133,7 +140,9 @@
 
   .section-title {
     border-bottom: 1px solid #dedede;
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     height: 44px;
     padding: 0 15px;
 
@@ -144,11 +153,12 @@
       color: #333333;
     }
     .action {
-      .flex();
+        display: flex;
+  align-items: center;
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #4CA5E4;
+      color: #F74747;
       cursor: pointer;
       img {
         width: 14px;
@@ -182,7 +192,7 @@
 
         .empty-action {
           font-size: 14px;
-          color: #4CA5E4;
+          color: #F74747;
         }
       }
     }

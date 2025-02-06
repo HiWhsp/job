@@ -22,7 +22,9 @@
   .page {
     padding-bottom: 80px;
     .main-title {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       padding: 0 32px;
       text-align: left;
       height: 56px;
@@ -37,7 +39,7 @@
         min-width: 96px;
         height: 30px;
         line-height: 30px;
-        background: #4CA5E4;
+        background: #F74747;
         color: #fff;
         font-size: 14px;
         font-weight: bold;
@@ -63,7 +65,8 @@
     margin-bottom: 50px;
   }
   .goods-list {
-    .flex();
+      display: flex;
+  align-items: center;
     flex-wrap: wrap;
     .item {
       position: relative;
@@ -108,7 +111,9 @@
         margin-top: 12px;
         .title {
           width: 228px;
-          .ellipsis-1();
+           white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
           font-size: 14px;
           font-family: PingFang SC;
           font-weight: 400;
@@ -116,7 +121,8 @@
           color: #222222;
         }
         .price-box {
-          .flex();
+            display: flex;
+  align-items: center;
           margin-top: 8px;
           .price {
             font-size: 14px;
@@ -142,14 +148,16 @@
     .fav-titles {
       // margin-bottom: 20px;
       padding: 0 15px;
-      .flex();
+        display: flex;
+  align-items: center;
       border: 1px solid #e5e5e5;
       height: 44px;
       background: #f5f5f5;
       color: #666666;
       font-size: 14px;
       .fav-check {
-        .flex();
+          display: flex;
+  align-items: center;
 
         img {
           width: 13px;
@@ -213,7 +221,7 @@
             font-size: 12px;
             font-family: Microsoft YaHei-Bold, Microsoft YaHei;
             font-weight: bold;
-            color: #4CA5E4;
+            color: #F74747;
           }
         }
 
@@ -233,8 +241,8 @@
             }
             &.btn-detail {
               display: none;
-              border: 1px solid #4CA5E4;
-              color: #4CA5E4;
+              border: 1px solid #F74747;
+              color: #F74747;
             }
           }
         }

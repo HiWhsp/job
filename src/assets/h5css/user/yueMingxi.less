@@ -3,7 +3,9 @@
     text-align: left;
     padding-bottom: 80px;
     .main-title {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       padding: 0 32px;
       text-align: left;
       height: 56px;
@@ -18,7 +20,7 @@
         min-width: 96px;
         height: 30px;
         line-height: 30px;
-        background: #4CA5E4;
+        background: #F74747;
         color: #fff;
         font-size: 14px;
         font-weight: bold;
@@ -95,7 +97,8 @@
     flex: 2;
     // border-bottom: 1px solid #eee;
 
-    .flex();
+      display: flex;
+  align-items: center;
     .tab-item {
       cursor: pointer;
       padding-bottom: 10px;
@@ -108,9 +111,9 @@
       color: #333333;
 
       &.active {
-        border-bottom: 3px solid #4CA5E4;
+        border-bottom: 3px solid #F74747;
         font-weight: bold;
-        color: #4CA5E4;
+        color: #F74747;
       }
     }
   }
@@ -159,7 +162,7 @@
           font-size: 14px;
         }
         &.plus {
-          color: #4CA5E4;
+          color: #F74747;
         }
 
         &.minus {

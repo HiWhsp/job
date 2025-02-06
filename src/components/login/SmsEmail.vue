@@ -96,7 +96,9 @@ export default {
   border-bottom: 1px solid #eeeeee;
   opacity: 1;
   border-radius: 4px;
-  .flex-between();
+    display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   img {
     width: 36px;
@@ -114,9 +116,10 @@ export default {
 .btn-validate-box {
   position: absolute;
   right: 0;
-  .flex();
+    display: flex;
+  align-items: center;
   cursor: pointer;
-  color: #4CA5E4;
+  color: #F74747;
 
   &.disabled {
     color: #ccc;

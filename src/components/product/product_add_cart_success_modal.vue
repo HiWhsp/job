@@ -79,7 +79,7 @@ export default {
   .btn-1 {
     width: 200px;
     height: 45px;
-    background: #4CA5E4;
+    background: #F74747;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 17px;
@@ -89,11 +89,11 @@ export default {
     width: 200px;
     height: 45px;
     border-radius: 0px 0px 0px 0px;
-    border: 1px solid #4CA5E4;
+    border: 1px solid #F74747;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 17px;
-    color: #4CA5E4;
+    color: #F74747;
   }
 }
 

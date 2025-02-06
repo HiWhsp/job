@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import address from "@/shop-actions/address";
+
 
 import { mapState } from "vuex";
 import shengshiqu from "@/components/address/area_select.vue"; //新增地址
@@ -78,7 +78,8 @@ export default {
     padding: 40px;
     .item {
       margin-bottom: 20px;
-      .flex();
+        display: flex;
+  align-items: center;
       .text {
         min-width: 120px;
         text-align: left;

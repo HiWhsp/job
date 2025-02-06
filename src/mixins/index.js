@@ -1,24 +1,30 @@
 // import router from "@/router";
 import { mapState } from "vuex";
 import { UPLOAD_PARAMS_ACTION } from "@/config/env.js";
+import {API_ROOT} from '@/config/env.js'
+
 
 export default {
   data() {
     return {
       // 上传
-      upload_name: "img",
-      upload_action:
+      mix_upload_name: "img",
+      mix_upload_action:
         process.env.NODE_ENV !== "production"
           ? "/api/service.php"
-          : process.env.VUE_APP_API_ROOT + "/service.php",
+          :  API_ROOT + "/service.php",
 
       //函数节流和防抖
       firstTime_mix_throttle: true,
       timer_mix_throttle: null,
+
+
     };
   },
   computed: {
     ...mapState([
+      //
+      "vuex_news_cates",
       //
       "vuex_user",
       "vuex_config",
@@ -36,24 +42,27 @@ export default {
       "child_about",
       "vuexTreeCates",
       "vuexFlatCates",
-      "vuexNewsCates",
+
 
       //
       "vuex_h5",
       "lang",
-      "webConfig",
 
       "baseInfo",
       "defaultAvatar",
       "shopcart_count",
     ]),
-
+ 
     mix_upload_data() {
       let data = {
-        action: UPLOAD_PARAMS_ACTION,
+        action: "index_localUpload",
+        userId: localStorage.getItem("userId") || "",
+        token: localStorage.getItem("token") || "",
       };
       return data;
     },
+
+
     mix_user_phone() {
       return this.vuex_user.phone || "";
     },
@@ -70,14 +79,8 @@ export default {
     //
     //
     //
-    uploadExtraData() {
-      let data = {
-        action: "index_upload",
-        userId: localStorage.getItem("userId") || "",
-        token: localStorage.getItem("token") || "",
-      };
-      return data;
-    },
+   
+ 
   },
 
   filters: {
@@ -108,6 +111,17 @@ export default {
         loginStatus = false;
       }
       return loginStatus;
+    },
+
+    mix_toRoute(option) {
+      // this.mix_toRoute({
+      //   path: '/refund-type',
+      //   query: {
+      //     orderId: item.orderId,
+      //     inventoryId: item.inventoryId,
+      //   }
+      // })
+      this.toRoute(option)
     },
 
     toRoute(option) {
@@ -219,13 +233,14 @@ export default {
       return true;
     },
 
-    changePage(page) {
+    mix_current_change(value) {
       if (this.pagination && this.pagination.page) {
-        this.pagination.page = page;
+        this.pagination.page = value;
         this.setView();
         document.documentElement.scrollTop = 0;
       }
     },
+
 
     mix_logout() {
       this.$store.commit("clear_loginInfo");
