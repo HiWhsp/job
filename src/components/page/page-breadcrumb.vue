@@ -87,7 +87,7 @@ export default {
       font-family: OPPOSans, OPPOSans;
       // font-weight: bold;
       font-size: 15px;
-      color: #999999;
+      color: #fff;
 
       img {
         margin-right: 10px;
@@ -98,14 +98,14 @@ export default {
       font-family: OPPOSans, OPPOSans;
       // font-weight: bold;
       font-size: 15px;
-      color: #999999;
+      color: #fff;
     }
 
     .route-link {
       font-family: OPPOSans, OPPOSans;
       // font-weight: bold;
       font-size: 15px;
-      color: #999999;
+      color: #fff;
     }
 
     .arrow {
@@ -117,7 +117,7 @@ export default {
       font-family: OPPOSans, OPPOSans;
       // font-weight: bold;
       font-size: 15px;
-      color: #000000;
+      color: #fff;
     }
   }
 }

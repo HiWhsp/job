@@ -120,7 +120,7 @@ export default {
       var arr = [
         { title: "首页", route: "/" },
         { title: "产品展示", route: "/product-cates" },
-        { title: "预约商品", route: "/product-reserve" },
+        { title: "预约商品", route: "/xunjia" },
         { title: "工艺鉴赏", route: "/suggest" },
         { title: "联系我们", route: "/scene" },
       ];

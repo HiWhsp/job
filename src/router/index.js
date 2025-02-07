@@ -63,6 +63,10 @@ const product_detail = () =>
   import(
     /* webpackChunkName: "product-detail" */ "@/views/product/product-detail.vue"
   );
+const product_reserve = () =>
+  import(
+    /* webpackChunkName: "product-reserve" */ "@/views/product/product-reserve.vue"
+  );
 
 // 个人中心
 const my_layout = () => import("@/views/my/my-layout.vue");
@@ -236,6 +240,14 @@ const routes = [
     component: product_detail,
     meta: {
       title: "产品详情",
+    },
+  },
+  {
+    path: "/product-reserve",
+    name: "product-reserve",
+    component: product_reserve,
+    meta: {
+      title: "产品预约",
     },
   },
   {

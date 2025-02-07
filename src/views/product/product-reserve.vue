@@ -1,16 +1,22 @@
 <template>
   <div class="page">
-    <!-- <div class="bread-box">
-      <router-link to="/">首页</router-link>
-      <template v-if="list_bread[0]">
-        <span class="bread-divider">&gt;</span>
-        <a href="javascript:void(0)" @click="toBread(list_bread[0].route)">{{ list_bread[0].title }}</a>
-      </template>
-<template v-if="list_bread[1]">
-        <span class="bread-divider">&gt;</span>
-        <a href="javascript:void(0)" @click="toBread(list_bread[1].route)">{{ list_bread[1].title }}</a>
-      </template>
-</div> -->
+    <div class="top-banner">
+      <div class="title">预约商品</div>
+      <div class="box">
+        <div class="item">
+          <div class="text">新品预购</div>
+          <div class="desc">25 产品</div>
+        </div>
+        <div class="item">
+          <div class="text">现货预售</div>
+          <div class="desc">32 产品</div>
+        </div>
+        <div class="item">
+          <div class="text">会展版限定限购</div>
+          <div class="desc">48 产品</div>
+        </div>
+      </div>
+    </div>
     <div class="inner">
       <pageBreadcrumb :option="nav_option" />
       <!-- <div class="category-box filter-box">
@@ -114,7 +120,7 @@
 import pageBreadcrumb from '@/components/page/page-breadcrumb.vue'
 import productList from "@/components/product/productList.vue"; //
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "category",
@@ -146,9 +152,9 @@ export default {
       isAsc: "", //升asc 降序desc
       orderByColumn: "ordering", //选择的排序方式
       sortList: [
-        { title: "销量", ziduan: "orders" },
-        { title: "价格", ziduan: "priceSale" },
-        { title: "综合", ziduan: "ordering" },
+        {title: "销量", ziduan: "orders"},
+        {title: "价格", ziduan: "priceSale"},
+        {title: "综合", ziduan: "ordering"},
       ],
     };
   },
@@ -162,8 +168,8 @@ export default {
       let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
 
       let option = [
-        { route : '/product-cates', title: '产品展示'},
-        { route: '', title: cate_info.title || '' }
+        {route: '/product-cates', title: '产品展示'},
+        {route: '', title: cate_info.title || ''}
       ]
       console.log(option)
       return option
@@ -201,9 +207,9 @@ export default {
           ...this.pagination
         },
       }).then((res) => {
-        let { code, data, count } = res;
+        let {code, data, count} = res;
         if (code == 200) {
-          let { list, count, pages } = data;
+          let {list, count, pages} = data;
           this.product_list = list;
           this.count = count;
         }
@@ -279,6 +285,47 @@ export default {
   background: #FFFFFF;
   text-align: left;
 
+  .top-banner {
+    background-image: url("~@/assets/image/productReserve.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 36px 0;
+
+    .title {
+      font-weight: bold;
+      font-size: 64px;
+      color: #FFFFFF;
+      letter-spacing: 10px;
+      text-stroke: 1px rgba(0,0,0,0);
+      text-align: center;
+    }
+    .box {
+      display: flex;
+      width: 900px;
+      justify-content: space-between;
+      .item {
+        .text {
+          font-weight: 500;
+          font-size: 20px;
+          color: #FFFFFF;
+          text-align: left;
+        }
+        .desc {
+          margin-top: 10px;
+          font-weight: 400;
+          font-size: 16px;
+          color: #D1D1D1;
+        }
+      }
+    }
+  }
+
   .inner {
     padding-bottom: 100px;
     background-color: #000000;
@@ -286,6 +333,7 @@ export default {
     .page-ctx {
       padding-top: 32px;
       align-items: start;
+
       .aside {
         width: 260px;
         margin-right: 32px;
@@ -299,6 +347,7 @@ export default {
           /deep/ .el-submenu__title {
             color: #fff;
           }
+
           /deep/ .el-submenu__title:hover {
             background-color: #000000;
           }
@@ -307,25 +356,32 @@ export default {
             color: #fff;
             border-top: 1px dashed #ffffff;
           }
+
           /deep/ .el-menu-item:last-child {
             border-bottom: 1px dashed #ffffff;
           }
+
           /deep/ .el-menu-item.is-active {
             color: #FF2727;
             background-color: #000000;
           }
+
           /deep/ .el-menu-item:hover {
             background-color: #000000;
           }
+
           .menu-item-one {
-            padding-left: 0!important;
+            padding-left: 0 !important;
+
             /deep/ .el-submenu__title {
-              padding-left: 0px!important;
+              padding-left: 0px !important;
             }
           }
-          .menu-item-one,.menu-item-one.is-active {
+
+          .menu-item-one, .menu-item-one.is-active {
             border: none;
           }
+
           .menu-item-one:last-child {
             border-bottom: none;
           }
@@ -333,6 +389,7 @@ export default {
 
         .search {
           margin-bottom: 25px;
+
           p {
             font-weight: 500;
             font-size: 16px;
@@ -348,6 +405,7 @@ export default {
             background: #666666;
             border-color: #666666;
           }
+
           /deep/ .el-button {
             width: 58px;
             height: 40px;
@@ -355,6 +413,7 @@ export default {
             border-radius: 0px 0px 0px 0px;
             color: #fff;
           }
+
           /deep/ .el-input-group__append {
             border: none;
           }
@@ -456,7 +515,8 @@ export default {
         color: #A76737;
       }
 
-      .text {}
+      .text {
+      }
 
       .sanjiao-box {
         margin-left: 5px;
@@ -486,11 +546,10 @@ export default {
   }
 }
 
-
 .page-title {
   margin-top: 20px;
   margin-bottom: 20px;
-    display: flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   height: 42px;
@@ -503,8 +562,8 @@ export default {
   }
 
   .title-act {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 
     .text-1 {
       font-size: 14px;
@@ -527,8 +586,8 @@ export default {
     }
 
     .arrow-box {
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
       cursor: pointer;
 
       img {
@@ -579,9 +638,9 @@ export default {
       padding: 13px 15px 0;
 
       .title {
-         white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
         font-weight: 400;
         font-size: 14px;
         color: #333333;
@@ -589,13 +648,13 @@ export default {
 
       .pirce-box {
         margin-top: 15px;
-          display: flex;
-  align-items: center;
-  justify-content: space-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         .price-info {
-            display: flex;
-  align-items: center;
+          display: flex;
+          align-items: center;
 
           .price-1 {
             margin-right: 10px;
@@ -626,9 +685,9 @@ export default {
         margin-top: 15px;
         border-top: 1px solid #ddd;
         padding-top: 5px;
-          display: flex;
-  align-items: center;
-  justify-content: space-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         .fav-box {
           .flex-center();
@@ -657,6 +716,3 @@ export default {
   }
 }
 </style>
-
-
-<style scoped lang="less" src="@/assets/h5css/mobile/product-cates.less"></style>
