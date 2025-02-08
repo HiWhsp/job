@@ -1,5 +1,4 @@
 import Vue from "vue";
-import store from "../store/index";
 import VueRouter from "vue-router";
 
 // 解决报错
@@ -66,6 +65,10 @@ const product_detail = () =>
 const product_reserve = () =>
   import(
     /* webpackChunkName: "product-reserve" */ "@/views/product/product-reserve.vue"
+  );
+const reserve_detail = () =>
+  import(
+    /* webpackChunkName: "reserve-detail" */ "@/views/product/reserve-detail.vue"
   );
 
 // 个人中心
@@ -249,6 +252,14 @@ const routes = [
     meta: {
       title: "产品预约",
     },
+  },
+  {
+    path: "/reserve-detail",
+    name: "reserve_detail",
+    component: reserve_detail,
+    meta: {
+      title: "预约详情",
+    }
   },
   {
     path: "/cart",

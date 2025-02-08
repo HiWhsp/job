@@ -73,6 +73,7 @@ export default {
 .bread-box {
   height: 60px;
   line-height: 60px;
+  background-color: #000;
   border-top: 1px solid #313131;
   border-bottom: 1px solid #313131;
 

@@ -16,9 +16,19 @@
               <span class="huobi"> {{ vuex_huobi }} </span>
               <span class="value"> {{ item.priceSale }} </span>
             </div>
-            <div class="market">
-              限量50台
-<!--              <span class="value"> {{ item.priceSale }} </span>-->
+            <div class="box-info">
+              <div class="left">
+                <div class="market">
+                  限量50台
+                </div>
+                <div class="market back">
+                  限购1台
+                </div>
+              </div>
+              <div class="right">
+                <div class="kucun">库存：{{ item.kucun || 0 }}</div>
+                <div class="add-cart current"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -66,7 +76,7 @@ export default {
   methods: {
     to_product(item) {
       this.$router.push({
-        path: "/product-detail",
+        path: "/reserve-detail",
         query: {
           id: item.inventoryId,
         },
@@ -86,7 +96,7 @@ export default {
   .product-item {
     position: relative;
     width: 442px;
-    height: 416px;
+    height: 454px;
     background: #1F1C1F;
     margin-right: 20px;
     margin-top: 20px;
@@ -128,7 +138,7 @@ export default {
 
     .info-box {
       width: 100%;
-      height: 120px;
+      height: 158px;
       padding: 15px;
       display: flex;
       flex-direction: column;
@@ -137,8 +147,6 @@ export default {
       .title {
         text-align: center;
         width: 100%;
-        font-family: Poppins, Poppins;
-        font-weight: 600;
         font-size: 16px;
         color: #fff;
       }
@@ -147,8 +155,9 @@ export default {
       .price-box {
         margin-top: 5px;
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
         .sale {
+          text-align: left;
           span {
             font-family: OPPOSans, OPPOSans;
             font-weight: bold;
@@ -158,13 +167,44 @@ export default {
 
         }
 
-        .market {
-          width: 75px;
-          height: 24px;
-          line-height: 24px;
-          background: #1F1C1F;
-          color: #fff;
-          border: 1px solid #7B7B7B;
+        .box-info {
+          margin-top: 20px;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+
+          .left {
+            display: flex;
+          }
+          .right {
+            display: flex;
+            .kucun {
+              color: #EAEAEA;
+              line-height: 24px;
+            }
+            .add-cart {
+              width: 24px;
+              height: 24px;
+              margin-left: 30px;
+              background-image: url("~@/assets/image/product/cart.png");
+              background-repeat: no-repeat;
+              background-size: 100% 100%;
+            }
+          }
+          .market {
+            width: 75px;
+            height: 24px;
+            line-height: 24px;
+            background: #1F1C1F;
+            color: #fff;
+            border: 1px solid #7B7B7B;
+          }
+          .back {
+            margin-left: 10px;
+            background-color: #DF1626;
+            color: #fff;
+            border: none;
+          }
         }
       }
 

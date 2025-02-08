@@ -104,7 +104,7 @@
         </div>
         <div class="prod-wrap">
           <div class="product-wrap">
-            <productList :list="product_list" />
+            <productReserveList :list="product_list" />
           </div>
 
           <div class="pagination-box" v-if="count" style="margin-top: 50px;">
@@ -118,15 +118,15 @@
 </template>
 <script>
 import pageBreadcrumb from '@/components/page/page-breadcrumb.vue'
-import productList from "@/components/product/productList.vue"; //
 
 import {mapState} from "vuex";
+import productReserveList from "@/components/product/productReserveList.vue";
 
 export default {
   name: "category",
   components: {
     pageBreadcrumb,
-    productList
+    productReserveList
   },
   data() {
     return {

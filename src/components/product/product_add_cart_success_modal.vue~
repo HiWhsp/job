@@ -125,7 +125,7 @@ export default {
       font-family: Arial, Arial;
       font-weight: 400;
       font-size: 22px;
-      color: #fff;
+      color: #000000;
     }
 
     .text-box-2 {

@@ -15,7 +15,7 @@
           <img src="@/static/common/product-home.png" alt="" />
           <router-link to="/">首页</router-link>
           <span class="bread-divider">&gt;</span>
-          <router-link :to="activeCate.route">产品展示</router-link>
+          <router-link :to="activeCate.route">预约产品</router-link>
           <span class="bread-divider">&gt;</span>
           <template v-if="activeCate.title">
             <router-link :to="activeCate.route">{{ activeCate.title }}</router-link>
@@ -57,13 +57,30 @@
                 </div>
               </div>
               <div class="detail-desc">
-                限量50台
+                <div class="market">
+                  限量50台
+                </div>
+                <div class="market back">
+                  限购1台
+                </div>
               </div>
               <div class="detail-code">
-                货号: K340001
+                <span>货号: K340001</span>
+                <span>库存：298</span>
               </div>
               <div class="detail-price">
                 ￥298.00
+              </div>
+              <div class="detail-num">
+                <el-input-number :min="1" :max="view_info.kucun"
+                                 v-model="selected_num"></el-input-number>
+              </div>
+              <div class="detail-btn">
+                <button class="btn-ripple flex-center btn-add-cart" @click="do_add_cart()">
+                  <img src="@/assets/image/home/cart.png" alt="" class="cart">
+                  加入购物车
+                </button>
+                <button class="btn-ripple flex-center btn-buy" @click="do_pay_now()">立即购买</button>
               </div>
               <div class="detail-txt ellipsis-3">
                 基於R.Salvadori / C.Shelby駕駛的5號車，該車贏得了1959年勒芒24小時耐力賽。 也可以從該套件中製造出由M.Trintignant /P.Frère駕駛的＃6賽車和由S.Moss / J.Fairman駕駛
@@ -94,8 +111,6 @@
             </div>
           </div>
 
-
-
           <div class="ctx-bottom-container">
 
 
@@ -113,34 +128,33 @@
                     <div class="rich-html" v-html="info.cont2"></div>
                     <div class="rich-html" v-html="info.cont3"></div>
                   </div>
-                              <div class="bottom-left">
-                                <div class="main-title">相关产品</div>
+                  <div class="bottom-left">
+                    <div class="main-title">相关产品</div>
 
-                                <div class="product-list">
-                                  <div class="product-item" v-for="(item, index)  in list_goods" :key="index" @click="toDetail(item)">
-                                    <div class="poster-box scale-box">
-                                      <img :src="item.img" alt="" class="poster scale-img">
-                                    </div>
-                                    <div class="info-box">
-                                      <div class="title ellipsis-2">12323</div>
-                                      <div class="pirce-box">
-                                        <div class="price-info">
-                                          <div class="price-1">￥298.00</div>
-                                        </div>
-                                        <div class="yishou">
-                                          限量50台
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
+                    <div class="product-list">
+                      <div class="product-item" v-for="(item, index)  in list_goods" :key="index" @click="toDetail(item)">
+                        <div class="poster-box scale-box">
+                          <img :src="item.img" alt="" class="poster scale-img">
+                        </div>
+                        <div class="info-box">
+                          <div class="title ellipsis-2">12323</div>
+                          <div class="pirce-box">
+                            <div class="price-info">
+                              <div class="price-1">￥298.00</div>
+                            </div>
+                            <div class="yishou">
+                              限量50台
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
           </div>
-
         </div>
       </div>
     </div>
@@ -157,7 +171,7 @@ import { mapState } from "vuex";
 import { Loading } from "element-ui";
 
 export default {
-  name: "goods-detail",
+  name: "reserve-detail",
   components: {
     product_add_cart_success_modal,
     carouselComponent,
@@ -173,10 +187,6 @@ export default {
         page: 1,
         pageNum: 10,
       },
-      //
-      //
-      //
-      //
 
       is_prod: process.env.NODE_ENV == "production",
 
@@ -234,7 +244,6 @@ export default {
       isFavourite: false, //未收藏
 
       selectedSkuComb: {}, //选择的商品规格信息 立即购买需要金额
-      show_sku: false,
       curr: {}, //产品
       detail: {}, //产品
       current: 0, //轮播图指示器
@@ -300,6 +309,12 @@ export default {
     document.removeEventListener("scroll", this.handleScrollEvent);
   },
 
+  mounted() {
+    this.$refs.product_add_cart_success_modal.init({
+      num: this.selected_num,
+      ...this.sku_select,
+    });
+  },
   methods: {
     toDetail(item) {
       this.$router.push(`/product-detail?id=${item.inventoryId}`)
@@ -470,7 +485,7 @@ export default {
       if (Object.keys(this.info.skus).length == this.select_shuxing_list.length) {
         let key_ids = this.select_shuxing_list.map((v) => v.id).join("-");
         this.sku_select =
-          this.sku_list.find((v) => v.key_ids == key_ids) || {};
+            this.sku_list.find((v) => v.key_ids == key_ids) || {};
       }
 
       //console.log("已选的商品属性值 select_shuxing_list", this.select_shuxing_list);
@@ -597,7 +612,7 @@ export default {
       } else {
         // this.sku_select = {};
         this.sku_select =
-          sku_list.find((v) => v.inventoryId == this.id) || {};
+            sku_list.find((v) => v.inventoryId == this.id) || {};
       }
       this.sku_list = sku_list;
 
@@ -709,7 +724,6 @@ export default {
       if (!this.mix_get_login_status()) {
         return
       }
-
 
       //console.log("shopcart_add 加入购物车");
       if (!this.sku_select.inventoryId) {
@@ -904,7 +918,7 @@ export default {
 }
 
 .phone-tip-inner {
-    display: flex;
+  display: flex;
   align-items: center;
   cursor: pointer;
 }
@@ -960,9 +974,9 @@ export default {
 
           .shoucang-box {
             margin-top: 20px;
-              display: flex;
-  align-items: center;
-  justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             width: 100%;
 
             .yes {
@@ -975,8 +989,8 @@ export default {
 
             .shoucang-left {
               cursor: pointer;
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               img {
                 width: 20px;
@@ -994,8 +1008,8 @@ export default {
 
             .shoucang-right {
               cursor: pointer;
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               img {
                 width: 20px;
@@ -1027,24 +1041,97 @@ export default {
           }
 
           .detail-desc {
-            width: 75px;
-            height: 24px;
-            color: #fff;
-            text-align: center;
-            line-height: 24px;
-            background: #1F1C1F;
-            border: 1px solid #7B7B7B;
-            margin-top: 10px;
+            display: flex;
+            .market {
+              width: 75px;
+              height: 24px;
+              color: #fff;
+              text-align: center;
+              line-height: 24px;
+              background: #1F1C1F;
+              border: 1px solid #7B7B7B;
+              margin-top: 10px;
+            }
+            .back {
+              background-color: #DF1626;
+              color: #fff;
+              margin-left: 10px;
+              border: none;
+            }
           }
           .detail-code {
             color: #fff;
             margin: 20px 0;
+            span {
+              margin-right: 30px;
+            }
           }
           .detail-price {
             font-weight: bold;
             font-size: 26px;
-            color: #FFFFFF;
+            color: #FF0000;
             margin-bottom: 20px;
+          }
+          .detail-num {
+            .el-input-number {
+              width: 123px;
+              border-radius: 3px 3px 3px 3px;
+              margin-right: 11px;
+            }
+
+            /deep/ .el-input-number__decrease, /deep/ .el-input-number__increase {
+              background-color: #0C0A0A;
+            }
+            /deep/ .el-input__inner {
+              border: 1px solid #7B7B7B;
+              background-color: #1F1C1F;
+            }
+          }
+          .detail-btn {
+            display: flex;
+            margin: 20px 0;
+            button {
+              margin-right: 20px;
+              font-size: 16px;
+              transition: 0.3s;
+
+              &:hover {
+                opacity: 0.8;
+              }
+            }
+
+            .btn-buy {
+              width: 256px;
+              height: 48px;
+              background: #DF1626;
+              border-radius: 4px 4px 4px 4px;
+              border: 1px solid #DF1626;
+              font-family: Roboto, Roboto;
+              font-size: 16px;
+              color: #FFFFFF;
+              font-style: normal;
+              text-transform: none;
+            }
+
+            .btn-add-cart {
+              width: 256px;
+              height: 48px;
+              background: #000;
+              border-radius: 4px 4px 4px 4px;
+              border: 1px solid #7B7B7B;
+              font-family: Roboto, Roboto;
+              font-weight: bold;
+              font-size: 16px;
+              color: #fff;
+              font-style: normal;
+              text-transform: none;
+
+              img {
+                width: 22.6px;
+                height: 22.6px;
+                margin-right: 8px;
+              }
+            }
           }
           .detail-txt {
             font-weight: 400;
@@ -1061,8 +1148,8 @@ export default {
 
             .list {
               .item {
-                  display: flex;
-                  align-items: center;
+                display: flex;
+                align-items: center;
 
                 .label {
                   width: 80px;
@@ -1073,8 +1160,8 @@ export default {
                 }
 
                 .vals {
-                    display: flex;
-  align-items: center;
+                  display: flex;
+                  align-items: center;
                   flex: 1;
 
                   font-size: 16px;
@@ -1097,8 +1184,8 @@ export default {
             }
 
             .price {
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               .number {
                 font-size: 28px;
@@ -1111,16 +1198,16 @@ export default {
 
 
           .info-texts {
-              display: flex;
-  align-items: center;
-  justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             padding: 0 32px;
             height: 45px;
             background: #F8F8F8;
 
             .text-item {
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               .label {
                 font-size: 14px;
@@ -1162,8 +1249,8 @@ export default {
 
           .sku-list {
             flex: 1;
-              display: flex;
-  align-items: center;
+            display: flex;
+            align-items: center;
             flex-wrap: wrap;
 
             .sku-item {
@@ -1237,12 +1324,10 @@ export default {
             }
           }
 
-
-
           .shuliang-box {
             margin-top: 0px;
-              display: flex;
-  align-items: center;
+            display: flex;
+            align-items: center;
 
             .sel-num-title {
               min-width: 84px;
@@ -1253,8 +1338,8 @@ export default {
 
             .shuliang {
               min-width: 105px;
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               div {
                 width: 30px;
@@ -1312,7 +1397,9 @@ export default {
           }
 
           .btn-box {
+            border-top: 1px solid #696969;
             margin-top: 20px;
+            padding-top: 20px;
             display: flex;
             align-items: end;
             justify-content: space-between;
@@ -1534,8 +1621,8 @@ export default {
 
     .params-box {
       .params-item {
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
         border: 1px solid #ccc;
         border-bottom: none;
 
@@ -1708,9 +1795,9 @@ export default {
 
       .pirce-box {
         margin-top: 15px;
-          display: flex;
-  align-items: center;
-  justify-content: space-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         .price-info {
           display: flex;
@@ -1739,9 +1826,9 @@ export default {
         margin-top: 15px;
         border-top: 1px solid #ddd;
         padding-top: 5px;
-          display: flex;
-  align-items: center;
-  justify-content: space-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         .fav-box {
           .flex-center();
