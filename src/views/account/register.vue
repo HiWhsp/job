@@ -1,23 +1,15 @@
 <template>
   <div class="page">
     <terms_modal ref="terms_modal" />
-
-
-    <div class="page-bg">
-      <img src="@img/login/login-bg.png" alt="">
-    </div>
+    <pageBreadcrumb :option="nav_option" />
 
     <div class="page-ctx">
-      <div class="center page-inner flex-between w-1200">
-        <div class="page-poster">
-          <!-- <img src="@/static/login/poster.png" alt=""> -->
-        </div>
-
+      <div class="center page-inner flex-between">
         <div class="inner form-box">
           <div class="input-wrap">
             <div class="tab-box">
               <div class="tab-item">
-                会员注册
+                注册
               </div>
             </div>
 
@@ -39,49 +31,43 @@
                 <input type="password" placeholder="请输入密码" v-model="form.pass2" />
               </div>
 
+              <div class="terms-box">
+                <span class="terms-check" @click="is_agree = !is_agree">
+                  <img v-if="is_agree" src="@/assets/image/common/check1.png" alt="">
+                  <img v-else src="@/static/common/check0.png" alt="">
+                  我已阅读并同意
+                </span>
+                <span class="terms-text" @click="terms_open(92)">《隐私政策》</span>
+              </div>
+
               <div class="btn-box">
                 <button class="btn-ripple" @click="do_submit()">确定</button>
               </div>
 
               <div class="register-box">
-                <span> <router-link to="/login">已有账号，去登录 ></router-link> </span>
-              </div>
-
-              <div class="terms-box">
-                <span class="terms-check" @click="is_agree = !is_agree">
-                  <img v-if="is_agree" src="@/static/common/check1.png" alt="">
-                  <img v-else src="@/static/common/check0.png" alt="">
-                  登录注册即表示同意
-                </span>
-                <span class="terms-text" @click="terms_open(92)">《隐私政策》</span>
+                <span> <router-link to="/login">已有账号，去登录</router-link> </span>
               </div>
             </template>
           </div>
         </div>
       </div>
     </div>
-
-
-    <register_type_modal data-title="注册类型" ref="register_type_modal" />
   </div>
 </template>
 
 <script>
-import register_type_modal from "@/components/account/register_type_modal.vue"; //短信验证码
 import mobile_sms from "@/components/login/mobile_sms.vue"; //短信验证码
 import utilForm from "@/util/utilForm.js";
-// import SmsLogin from "@/components/login/SmsLogin.vue"; //短信验证码
-// import modalTerms from "@/components/modals/modalTerms.vue"; //协议弹窗
 import terms_modal from "@/components/account/terms_modal.vue"; //协议弹窗
 
 import { mapState } from "vuex";
+import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
 
 export default {
   name: "login",
   components: {
-    register_type_modal,
+    pageBreadcrumb,
     mobile_sms,
-    // modalTerms,
     terms_modal,
   },
   data() {
@@ -103,6 +89,20 @@ export default {
   },
   computed: {
     ...mapState(["logo"]),
+    nav_option() {
+      let channelId_arr = this.$route.query.ids ? this.$route.query.ids.split('-') : []
+      let channelId = channelId_arr.pop()
+      console.log(channelId)
+
+      let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
+
+      let option = [
+        { route : '/product-cates', title: '注册'},
+        { route: '', title: cate_info.title || '' }
+      ]
+      console.log(option)
+      return option
+    },
   },
   created() { },
 
@@ -174,19 +174,11 @@ export default {
   }
 
   .page-ctx {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-
+    height: 543px;
     display: flex;
     align-items: center;
+    background-color: #1F1C1F;
   }
-
-
-
-
 
   .page-poster {
     margin-left: 46px;
@@ -198,9 +190,7 @@ export default {
   }
 
   .center {
-    height: 780px;
     margin: 0 auto;
-    background: transparent;
     align-items: center;
     position: relative;
 
@@ -209,14 +199,6 @@ export default {
 
 
       width: 560px;
-      min-height: 520px;
-      background: #F9FAFC;
-      box-shadow: 0px 2px 15px 1px rgba(79, 79, 79, 0.15);
-      border: 1px solid rgba(76, 165, 228, 0.1);
-
-      padding: 40px 40px 70px;
-      opacity: 1;
-      border-radius: 10px;
 
 
       .mode-toggle {
@@ -250,9 +232,9 @@ export default {
 
       .tab-item {
         font-family: Poppins, Poppins;
-        font-weight: 600;
-        font-size: 26px;
-        color: #333333;
+        font-weight: 500;
+        font-size: 32px;
+        color: #fff;
 
 
         &:first-child {
@@ -283,12 +265,11 @@ export default {
       margin-bottom: 20px;
       width: 100%;
       height: 50px;
-      background: #ffffff;
-      border: 1px solid #eeeeee;
+      border: 1px solid #7B7B7B;
       border-radius: 4px;
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       overflow: hidden;
 
       span {
@@ -299,7 +280,7 @@ export default {
         font-family: OPPOSans, OPPOSans;
         font-weight: 400;
         font-size: 14px;
-        color: #7D7D7D;
+        color: #fff;
         text-indent: 1em;
       }
 
@@ -312,7 +293,8 @@ export default {
         height: 100%;
         padding-left: 16px;
         font-size: 14px;
-        color: #000;
+        color: #fff;
+        background-color: transparent;
 
         &::-webkit-input-placeholder {
           font-size: 14px;
@@ -326,9 +308,9 @@ export default {
     .agree-box {
       text-align: left;
       margin-top: 20px;
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
       font-size: 14px;
       font-family: Microsoft YaHei;
@@ -337,18 +319,17 @@ export default {
       color: #999999;
 
       a {
-        color: #F74747;
+        color: #DF1626;
       }
     }
 
     .btn-box {
-      margin-top: 40px;
+      margin-top: 20px;
 
       button {
         width: 100%;
         height: 44px;
-        background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
-        background: #F74747;
+        background: #DF1626;
         font-size: 18px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
@@ -358,7 +339,7 @@ export default {
 
     .register-box {
       text-align: center;
-      margin-top: 30px;
+      margin-top: 20px;
       font-size: 14px;
 
       a {
@@ -366,8 +347,8 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 24px;
-        color: #F74747;
-        border-bottom: 1px solid #F74747;
+        color: #fff;
+        border-bottom: 1px solid #fff;
       }
     }
   }
@@ -375,19 +356,10 @@ export default {
 
 
 .terms-box {
-  position: absolute;
-  height: 40px;
-  background: #f5f6f8;
-  bottom: 0;
-  left: 0;
-  right: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  justify-content: flex-start;
-  padding-left: 20px;
   text-align: center;
-
+  line-height: 24px;
 
   .terms-check {
     cursor: pointer;

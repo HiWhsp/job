@@ -1,30 +1,7 @@
 <template>
   <div class="page">
+    <pageBreadcrumb :option="nav_option"/>
     <div class="inner w-1200">
-      <div class="main-title flex-between">
-        <div class="left">
-          <span>我的购物车</span>
-        </div>
-        <!-- <div class="right">
-          <div class="step-box">
-            <div class="step step-1 active">1.我的购物车</div>
-            <div class="step step-2">2.填写/核对订单信息</div>
-            <div class="step step-3">3.成功提交订单</div>
-          </div>
-        </div> -->
-      </div>
-
-      <!-- <div class="search-wrap">
-        <div class="search-tip">我知道货号，可直接输入货号快速添加产品..</div>
-        <div class="search-box">
-          <div class="text-1">请输入货号：</div>
-          <div class="input-box">
-            <input type="text" v-model="keyword" />
-          </div>
-          <button class="btn-ripple" @click="searchGoodsAddCart">加入购物车</button>
-        </div>
-      </div> -->
-
       <!-- 商品列表 -->
       <div class="ctx-box">
         <div class="list cart-list">
@@ -34,7 +11,6 @@
               <div class="title-1">选择</div>
               <!-- <div class="title-3">货号</div> -->
               <div class="title-2" style="text-align: left; padding-left: 0px">产品名称</div>
-              <div class="title-3">规格</div>
               <div class="title-4">单价</div>
               <div class="title-5">数量</div>
               <div class="title-6">小计</div>
@@ -53,7 +29,7 @@
                   <!-- <img :src="item.image" @click="mix_to_product(item)" /> -->
                   <el-image :src="item.image" @click="mix_to_product(item)">
                     <div slot="error" class="image-slot">
-                      <img :src="item.default_img" />
+                      <img :src="item.default_img"/>
                     </div>
                   </el-image>
                 </div>
@@ -61,17 +37,14 @@
                   <div class="goods-title" @click="mix_to_product(item)">
                     {{ item.title }}
                   </div>
-                  <!-- <div class="sku-info">
-                    {{ item.key_vals }}
-                  </div> -->
                 </div>
-                <div class="box-sku">
-                  {{ item.keyVals }}
-                </div>
+                <!--                <div class="box-sku">-->
+                <!--                  {{ item.keyVals }}-->
+                <!--                </div>-->
                 <div class="box-unit-price">{{ vuex_huobi }} {{ item.priceSale }}</div>
                 <div class="box-number">
                   <button @click="do_number_minus(item)">-</button>
-                  <input type="number" min="1" v-model="item.num" @blur="on_blur_input(item)" />
+                  <input type="number" min="1" v-model="item.num" @blur="on_blur_input(item)"/>
                   <button @click="do_number_plus(item)">+</button>
                 </div>
                 <div class="box-subtotal">{{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}</div>
@@ -104,8 +77,9 @@
         <div class="bottom-action-box">
           <div class="all-select">
             <el-checkbox v-model="checked_all" @change="on_change_checked_all">{{
-              checked_all ? "反选" : "全选"
-            }}</el-checkbox>
+                checked_all ? "反选" : "全选"
+              }}
+            </el-checkbox>
           </div>
           <div class="delete-box">
             <span @click="do_cart_remove_select()">删除选中</span>
@@ -134,11 +108,12 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
+import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
 
 export default {
   name: "cart",
-  components: {},
+  components: {pageBreadcrumb},
   data() {
     return {
       address: "", //选择的地址
@@ -150,6 +125,20 @@ export default {
   },
   computed: {
     ...mapState(["defaultAvatar", "shopcart_count"]),
+    nav_option() {
+      let channelId_arr = this.$route.query.ids ? this.$route.query.ids.split('-') : []
+      let channelId = channelId_arr.pop()
+      console.log(channelId)
+
+      let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
+
+      let option = [
+        {route: '/product-reserve', title: '预约产品'},
+        {route: '', title: '购物车'}
+      ]
+      console.log(option)
+      return option
+    },
 
     canSubmit() {
       return this.form.name;
@@ -159,10 +148,10 @@ export default {
     shopcart_money() {
       let money = 0;
       this.list_shopcart
-        .filter((v) => v.checked)
-        .forEach((v) => {
-          money += v.num * v.priceSale;
-        });
+          .filter((v) => v.checked)
+          .forEach((v) => {
+            money += v.num * v.priceSale;
+          });
       return money.toFixed(2);
     },
 
@@ -211,20 +200,20 @@ export default {
           action: "gouwuche_lists",
         }
       })
-        .then((res) => {
-          let { code, data } = res;
-          if (code == 200) {
-            data.forEach((v) => {
-              v.checked = true;
-            });
-            this.list_shopcart = data;
-            if (data.length) {
-              this.checked_all = true;
-            }
+          .then((res) => {
+            let {code, data} = res;
+            if (code == 200) {
+              data.forEach((v) => {
+                v.checked = true;
+              });
+              this.list_shopcart = data;
+              if (data.length) {
+                this.checked_all = true;
+              }
 
-            this.do_update_vuex_cart_number()
-          }
-        });
+              this.do_update_vuex_cart_number()
+            }
+          });
     },
 
     favouriteDelete(item) {
@@ -232,7 +221,7 @@ export default {
         inventoryId: item.inventoryId,
         collect_type: 1,
       }).then((res) => {
-        let { code, message } = res;
+        let {code, message} = res;
 
         if (code == 200) {
           this.setView();
@@ -244,7 +233,7 @@ export default {
         inventoryId: item.inventoryId,
         collect_type: 0,
       }).then((res) => {
-        let { code, message } = res;
+        let {code, message} = res;
 
         if (code == 200) {
           this.setView();
@@ -305,7 +294,7 @@ export default {
     },
     //购物车修改数量
     do_updateNum(item) {
-      let { inventoryId, num } = item;
+      let {inventoryId, num} = item;
 
       this.$api({
         url: "/service.php",
@@ -421,10 +410,9 @@ export default {
 }
 
 .page {
-  background: #FFFFFF;
+  background: #000;
   text-align: center;
   font-size: 14px;
-  padding-top: 45px;
 
   .inner {
     min-height: 50vh;
@@ -438,145 +426,23 @@ export default {
     color: #333333;
   }
 
-  .main-title {
-    padding-bottom: 15px;
-    border-bottom: 1px solid #d5d8de;
-    text-align: left;
-
-
-
-    .left {
-      font-family: Poppins, Poppins;
-      font-weight: bold;
-      font-size: 24px;
-      color: #333333;
-
-
-      .num {
-        margin-left: 10px;
-        color: #ff9312;
-      }
-    }
-
-    .right {
-      font-size: 12px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      line-height: 24px;
-      color: #333333;
-
-      .el-select {
-        width: 250px;
-      }
-
-      .step-box {
-        width: 500px;
-        margin: 0 auto;
-        font-size: 14px;
-          display: flex;
-  align-items: center;
-
-        .step {
-          flex: 1;
-          height: 30px;
-          line-height: 30px;
-          text-align: center;
-          background: #eee;
-          cursor: pointer;
-          transition: 0.3s;
-
-          &:hover {
-            opacity: 0.75;
-          }
-
-          &.step-1 {
-            clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%);
-          }
-
-          &.step-2 {
-            clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%, 3% 50%);
-          }
-
-          &.step-3 {
-            clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%, 3% 50%);
-          }
-
-          &.active {
-            background: #F74747;
-            color: #fff;
-          }
-        }
-      }
-    }
-  }
-
-  .search-wrap {
-    text-align: left;
-
-    .search-tip {
-      font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-      font-weight: 400;
-      color: #999999;
-    }
-
-    .search-box {
-      margin-top: 20px;
-      margin-bottom: 40px;
-        display: flex;
-  align-items: center;
-
-      .text-1 {
-        font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #666666;
-      }
-
-      .input-box {
-        input {
-          padding: 0 15px;
-          display: inline-block;
-          width: 256px;
-          height: 36px;
-          background: #ffffff;
-          border-radius: 4px 4px 4px 4px;
-          border: 1px solid #d5d8de;
-        }
-      }
-
-      button {
-        margin-left: 10px;
-        display: inline-block;
-        width: 128px;
-        height: 36px;
-        background: #F74747;
-        border-radius: 4px 4px 4px 4px;
-        font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #ffffff;
-      }
-    }
-  }
-
   .ctx-box {
-    background: #fff;
-    padding: 60px 0;
+    background: #1D1D1D;
+    margin-top: 32px;
+    padding-bottom: 20px;
 
     .list {
-      border: 1px solid #eee;
+      padding: 20px 0;
 
       .list-title {
         text-align: center;
         height: 48px;
-        background: #f9f9f9;
-        background: #F5F5F5;
-        padding: 15px 0;
+        margin: 0 20px 20px;
+        background-color: #000;
+        color: #fff;
 
-          display: flex;
-  align-items: center;
-        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
 
         .title-1 {
           width: 100px;
@@ -584,7 +450,6 @@ export default {
         }
 
         .title-2 {
-          // width: 150px;
           flex: 2;
 
         }
@@ -618,8 +483,8 @@ export default {
         }
 
         .item-title {
-            display: flex;
-  align-items: center;
+          display: flex;
+          align-items: center;
           text-align: left;
           padding: 12px 40px;
           border-bottom: 1px solid #eee;
@@ -635,7 +500,7 @@ export default {
           font-family: OPPOSans, OPPOSans;
           // font-weight: bold;
           font-size: 14px;
-          color: #666666;
+          color: #fff;
 
 
           .box-select {
@@ -673,11 +538,11 @@ export default {
               width: fit-content;
               cursor: pointer;
               // height: 40px;
-               display: -webkit-box;
-  -webkit-box-orient: vertical;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  -webkit-line-clamp: 2;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              -webkit-line-clamp: 2;
 
             }
 
@@ -694,7 +559,7 @@ export default {
 
           .box-unit-price {
             width: 200px;
-            color: #FF0000;
+            color: #fff;
           }
 
           .box-number {
@@ -704,10 +569,12 @@ export default {
             input {
               width: 48px;
               height: 30px;
-              border: 1px solid #d5d8de;
+              border: 1px solid #7B7B7B;
               text-align: center;
               border-left: 0;
               border-right: 0;
+              background-color: transparent;
+              color: #fff;
 
               &::-webkit-outer-spin-button,
               &::-webkit-inner-spin-button {
@@ -718,13 +585,14 @@ export default {
             button {
               width: 30px;
               height: 30px;
-              border: 1px solid #d5d8de;
+              border: 1px solid #7B7B7B;
+              color: #fff;
             }
           }
 
           .box-subtotal {
             width: 200px;
-            color: #FC0D1B;
+            color: #fff;
           }
 
           .box-act {
@@ -732,16 +600,13 @@ export default {
             font-size: 16px;
 
             div {
-              &+div {
+              & + div {
                 margin-top: 10px;
               }
 
               span {
                 cursor: pointer;
-
-                &:hover {
-                  color: #F74747;
-                }
+                color: #FF1F31;
               }
             }
           }
@@ -771,15 +636,13 @@ export default {
 }
 
 .bottom-action-box {
-    display: flex;
+  display: flex;
   align-items: center;
-  padding-right: 40px;
+  background-color: #000;
   height: 86px;
-  background: #FAFBFC;
-  // border: 1px solid #eeeeee;
-  // box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.08);
-  opacity: 1;
-  margin-top: 40px;
+  padding-right: 45px;
+  margin: 40px 20px 0;
+
 
   .all-select {
     cursor: pointer;
@@ -788,7 +651,10 @@ export default {
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 14px;
-    color: #666666;
+
+    .el-checkbox {
+      color: #fff;
+    }
   }
 
   .delete-box {
@@ -799,7 +665,7 @@ export default {
       font-family: OPPOSans, OPPOSans;
       font-weight: 400;
       font-size: 14px;
-      color: #666666;
+      color: #fff;
 
       &:hover {
         color: #F74747;
@@ -817,7 +683,7 @@ export default {
       font-family: OPPOSans, OPPOSans;
       font-weight: 400;
       font-size: 14px;
-      color: #666666;
+      color: #fff;
 
       &:hover {
         color: #F74747;
@@ -830,14 +696,14 @@ export default {
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 14px;
-    color: #666666;
+    color: #fff;
 
     b {
       font-size: 16px;
       font-family: Microsoft YaHei;
       font-weight: bold;
       line-height: 20px;
-      color: #f13f17;
+      color: #fff;
     }
   }
 
@@ -849,14 +715,14 @@ export default {
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 14px;
-    color: #666666;
+    color: #fff;
 
     b {
       font-size: 16px;
       font-family: Microsoft YaHei;
       font-weight: bold;
       line-height: 20px;
-      color: #f13f17;
+      color: #fff;
     }
   }
 

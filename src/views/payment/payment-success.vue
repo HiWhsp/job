@@ -1,7 +1,7 @@
 <template>
   <div class="page">
+    <pageBreadcrumb :option="nav_option" />
     <div class="inner w-1200">
-      <div class="page-title">支付结果</div>
       <div class="pay-info">
         <div class="img-box">
           <img v-if="payState == '支付成功' || payState == '提交成功'" src="@/static/payment/pay-succ.png" alt />
@@ -11,14 +11,16 @@
         <div class="text-2" v-if="payState == '提交成功'">
           您的转账凭证已提交，请等待后台审核！
         </div>
-        <div class="text-2">订单号：{{ info.orderNo }}</div>
-
+        <div class="text-2">订单编号：{{ info.orderNo || '无' }}</div>
+        <div class="text-2">下单时间：{{ info.orderNo || '无' }}</div>
+        <div class="text-2">支付方式：{{ info.orderNo || '无' }}</div>
+        <div class="text-2">获得积分：{{ info.orderNo || '无' }}</div>
         <div class="btns flex-center">
-          <button class="btn-ripple fit-text" @click="to_order()">
-            查看订单
+          <button class="btn-ripple fit-text " @click="to_liulan()">
+            继续购物
           </button>
-          <button class="btn-ripple fit-text btn-bg" @click="to_liulan()">
-            继续浏览
+          <button class="btn-ripple fit-text btn-bg" @click="to_order()">
+            查看订单
           </button>
         </div>
       </div>
@@ -28,10 +30,11 @@
 
 <script>
 import { mapState } from "vuex";
+import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
 
 export default {
   name: "order-pay-done",
-  components: {},
+  components: {pageBreadcrumb},
   data() {
     return {
       id: this.$route.query.id || this.$route.query.orderId,
@@ -41,6 +44,20 @@ export default {
   },
   computed: {
     ...mapState([""]),
+    nav_option() {
+      let channelId_arr = this.$route.query.ids ? this.$route.query.ids.split('-') : []
+      let channelId = channelId_arr.pop()
+      console.log(channelId)
+
+      let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
+
+      let option = [
+        { route : '/product-reserve', title: '预约产品'},
+        { route: '', title: '提交' }
+      ]
+      console.log(option)
+      return option
+    },
   },
   watch: {},
   created() {
@@ -51,7 +68,7 @@ export default {
       this.$router.push('/order-list')
     },
     to_liulan() {
-      this.$router.push('/')
+      this.$router.push('/product-reserve')
     },
     setView() {
       this.$api({
@@ -93,18 +110,14 @@ export default {
 
 
 .page {
-  background: #FFFFFF;
+  background: #1D1D1D;
   text-align: center;
   font-size: 14px;
   padding-bottom: 100px;
 
 
   .inner {
-    // width: 100%;
     margin: 0 auto;
-    min-height: 50vh;
-    padding: 48px 0 80px;
-    background: #fff;
   }
 
   .pay-info {
@@ -121,7 +134,7 @@ export default {
       font-family: Arial, Arial;
       font-weight: 400;
       font-size: 24px;
-      color: #000000;
+      color: #fff;
     }
 
     .text-2 {
@@ -129,7 +142,7 @@ export default {
       font-family: Arial, Arial;
       font-weight: 400;
       font-size: 14px;
-      color: #999999;
+      color: #fff;
     }
 
     .btns {
@@ -138,16 +151,16 @@ export default {
       button {
         width: 200px;
         height: 45px;
-        background: #FFFFFF;
-        border-radius: 0px 0px 0px 0px;
-        border: 1px solid #F74747;
+        background: #000;
+        border: 1px solid #7B7B7B;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 17px;
-        color: #F74747;
+        color: #fff;
 
         &.btn-bg {
-          background: #F74747;
+          background: #DF1626;
+          border: none;
           color: #FFFFFF;
         }
 

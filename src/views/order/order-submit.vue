@@ -1,11 +1,7 @@
 <template>
   <div class="page">
+    <pageBreadcrumb :option="nav_option"/>
     <div class="inner w-1200">
-      <div class="page-title flex-between" v-if="false">
-        <div class="left">
-          <span>提交订单</span>
-        </div>
-      </div>
       <div class="page-ctx">
         <div class="section sec-addr">
           <div class="section-title">选择收货人地址</div>
@@ -31,12 +27,12 @@
           <div class="section-title">支付和配送信息</div>
           <div class="section-ctx section-ctx-type">
             <div class="pay-group">
-              <!-- <div class="title">支付方式：</div> -->
+               <div class="title">支付方式：</div>
               <div class="pay-items">
                 <div class="item" v-for="(item, index) in pay_method_list" @click="do_toggle_paytype(item)"
                   :class="{ checked: pay_type_value == item.value }">
-                  <img class="img-check check-0 check-img check-img-0" src="@/static/common/check0.png" alt="" />
-                  <img class="img-check check-1 check-img check-img-1" src="@/static/common/check1.png" alt="" />
+                  <img class="img-check check-0 check-img check-img-0" src="@/assets/image/common/check0.png" alt="" />
+                  <img class="img-check check-1 check-img check-img-1" src="@/assets/image/common/check1.png" alt="" />
                   <img class="marker-img" :src="item.icon" alt="" />
                   <span>{{ item.title }}</span>
                 </div>
@@ -91,77 +87,77 @@
               </div>
             </div>
 
-            <!-- <div class="pay-group" style="margin-top: 32px">
+            <div class="pay-group" style="margin-top: 32px">
             <div class="title">配送方式：</div>
             <div class="peisong-items">
               <div class="item">快递配送</div>
             </div>
-          </div> -->
+          </div>
           </div>
         </div>
 
 
         <!-- 发票信息 -->
-        <div class="section invoiceBox">
-          <div class="section-title">发票信息</div>
-          <div class="fill40"></div>
-          <div class="invoiceLineBox">
-            <div class="title">是否开票:</div>
-            <div class="flexBox">
-              <div @click="invoiceSwitch(0)" class="inItem btn-ripple" :class="{ active: invoicType == 0 }">不开票
-              </div>
-              <div @click="invoiceSwitch(1)" class="inItem btn-ripple" :class="{ active: invoicType == 1 }">普通发票
-              </div>
-              <div @click="invoiceSwitch(2)" class="inItem btn-ripple" :class="{ active: invoicType == 2 }">专用发票
-              </div>
-            </div>
-          </div>
-          <!-- 普通发票 -->
-          <el-form ref="invoiceForm" v-if="invoicType == 1" class="invoiceForm" label-position="right"
-            label-width="120px">
-            <el-form-item label="发票抬头类型:" prop="radio">
-              <el-radio-group v-model="invoiceForm.radio">
-                <el-radio label="1">个人</el-radio>
-                <el-radio label="2">企业</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="发票抬头:" prop="input">
-              <el-input v-model="invoiceForm.input" placeholder="请填写准确的抬头名称"></el-input>
-            </el-form-item>
-            <el-form-item label="纳税人识别号:" prop="input3" v-if="invoiceForm.radio == 2">
-              <el-input v-model="invoiceForm.input3" placeholder="请填写纳税人识别号"></el-input>
-            </el-form-item>
-            <!-- <el-form-item label="电子邮箱:" prop="input2">
-										<el-input v-model="invoiceForm.input2" placeholder="请填写电子邮箱，用于接收电子发票"></el-input>
-									</el-form-item> -->
-          </el-form>
+<!--        <div class="section invoiceBox">-->
+<!--          <div class="section-title">发票信息</div>-->
+<!--          <div class="fill40"></div>-->
+<!--          <div class="invoiceLineBox">-->
+<!--            <div class="title">是否开票:</div>-->
+<!--            <div class="flexBox">-->
+<!--              <div @click="invoiceSwitch(0)" class="inItem btn-ripple" :class="{ active: invoicType == 0 }">不开票-->
+<!--              </div>-->
+<!--              <div @click="invoiceSwitch(1)" class="inItem btn-ripple" :class="{ active: invoicType == 1 }">普通发票-->
+<!--              </div>-->
+<!--              <div @click="invoiceSwitch(2)" class="inItem btn-ripple" :class="{ active: invoicType == 2 }">专用发票-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          &lt;!&ndash; 普通发票 &ndash;&gt;-->
+<!--          <el-form ref="invoiceForm" v-if="invoicType == 1" class="invoiceForm" label-position="right"-->
+<!--            label-width="120px">-->
+<!--            <el-form-item label="发票抬头类型:" prop="radio">-->
+<!--              <el-radio-group v-model="invoiceForm.radio">-->
+<!--                <el-radio label="1">个人</el-radio>-->
+<!--                <el-radio label="2">企业</el-radio>-->
+<!--              </el-radio-group>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="发票抬头:" prop="input">-->
+<!--              <el-input v-model="invoiceForm.input" placeholder="请填写准确的抬头名称"></el-input>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="纳税人识别号:" prop="input3" v-if="invoiceForm.radio == 2">-->
+<!--              <el-input v-model="invoiceForm.input3" placeholder="请填写纳税人识别号"></el-input>-->
+<!--            </el-form-item>-->
+<!--            &lt;!&ndash; <el-form-item label="电子邮箱:" prop="input2">-->
+<!--										<el-input v-model="invoiceForm.input2" placeholder="请填写电子邮箱，用于接收电子发票"></el-input>-->
+<!--									</el-form-item> &ndash;&gt;-->
+<!--          </el-form>-->
 
-          <!-- 专用发票 -->
-          <el-form ref="invoiceForm2" v-if="invoicType == 2" class="invoiceForm2" label-position="right"
-            label-width="120px">
-            <el-form-item label="发票抬头:" prop="input">
-              <el-input v-model="invoiceForm2.input" placeholder="请填写准确的抬头名称"></el-input>
-            </el-form-item>
-            <el-form-item label="纳税人识别号:" prop="input2">
-              <el-input v-model="invoiceForm2.input2" placeholder="请填写准确的纳税人识别号"></el-input>
-            </el-form-item>
-            <el-form-item label="注册地址:" prop="input3">
-              <el-input v-model="invoiceForm2.input3" placeholder="请输入单位注册地址"></el-input>
-            </el-form-item>
-            <el-form-item label="注册电话:" prop="input4">
-              <el-input v-model="invoiceForm2.input4" placeholder="请输入单位注册电话"></el-input>
-            </el-form-item>
-            <el-form-item label="开户银行:" prop="input5">
-              <el-input v-model="invoiceForm2.input5" placeholder="请输入开户银行"></el-input>
-            </el-form-item>
-            <el-form-item label="银行账户:" prop="input6">
-              <el-input v-model="invoiceForm2.input6" placeholder="请输入银行账户"></el-input>
-            </el-form-item>
-            <!-- <el-form-item label="邮箱:" prop="input7">
-										<el-input v-model="invoiceForm2.input7" placeholder="请输入邮箱"></el-input>
-									</el-form-item> -->
-          </el-form>
-        </div>
+<!--          &lt;!&ndash; 专用发票 &ndash;&gt;-->
+<!--          <el-form ref="invoiceForm2" v-if="invoicType == 2" class="invoiceForm2" label-position="right"-->
+<!--            label-width="120px">-->
+<!--            <el-form-item label="发票抬头:" prop="input">-->
+<!--              <el-input v-model="invoiceForm2.input" placeholder="请填写准确的抬头名称"></el-input>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="纳税人识别号:" prop="input2">-->
+<!--              <el-input v-model="invoiceForm2.input2" placeholder="请填写准确的纳税人识别号"></el-input>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="注册地址:" prop="input3">-->
+<!--              <el-input v-model="invoiceForm2.input3" placeholder="请输入单位注册地址"></el-input>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="注册电话:" prop="input4">-->
+<!--              <el-input v-model="invoiceForm2.input4" placeholder="请输入单位注册电话"></el-input>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="开户银行:" prop="input5">-->
+<!--              <el-input v-model="invoiceForm2.input5" placeholder="请输入开户银行"></el-input>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="银行账户:" prop="input6">-->
+<!--              <el-input v-model="invoiceForm2.input6" placeholder="请输入银行账户"></el-input>-->
+<!--            </el-form-item>-->
+<!--            &lt;!&ndash; <el-form-item label="邮箱:" prop="input7">-->
+<!--										<el-input v-model="invoiceForm2.input7" placeholder="请输入邮箱"></el-input>-->
+<!--									</el-form-item> &ndash;&gt;-->
+<!--          </el-form>-->
+<!--        </div>-->
 
 
 
@@ -213,7 +209,7 @@
                     <div class="box-title">
                       <div class="title-text">产品标题</div>
                     </div>
-                    <div class="box-sku">规格</div>
+<!--                    <div class="box-sku">规格</div>-->
                     <div class="box-unit">价格</div>
                     <div class="box-num">数量</div>
                     <div class="box-subtitle">小计</div>
@@ -234,9 +230,9 @@
                           {{ item.title }}
                         </div>
                       </div>
-                      <div class="box-sku">
-                        {{ item.keyVals }}
-                      </div>
+<!--                      <div class="box-sku">-->
+<!--                        {{ item.keyVals }}-->
+<!--                      </div>-->
                       <div class="box-unit">{{ vuex_huobi }} {{ item.priceSale }}</div>
                       <div class="box-num">{{ item.num }}</div>
                       <div class="box-subtitle">
@@ -249,107 +245,25 @@
 
               <div class="order-action">
                 <div class="order-action-inner">
-                  <div class="section-item" v-if="list_coupon.length">
-                    <div class="sub-title" @click="showCoupon = !showCoupon" :class="{ 'expand-0': !showCoupon }">
-                      <div class="text">使用优惠</div>
-                      <img src="@/static/common/pay-arrow-top.png" alt="" />
-                    </div>
-                    <!-- <div class="section-input">
-                    <el-select v-model="coupon_select_id" placeholder="请选择优惠券">
-                      <el-option v-for="item in list_coupon" :key="item.id" :label="`${item.title} 【${item.miaoshu}】`" :value="item.id"> </el-option>
-                    </el-select>
-                  </div> -->
+                  <div class="section-item">
+                    <div class="sub-title">使用积分</div>
+                    <div class="sub-info">
+                      <div class="section-tip" v-if="jifen_pay.jifen">
+                        我的积分：{{ +baseInfo.jifen || 0 }}
+                      </div>
+                      <div class="section-tip" v-else>当前没有可抵扣的积分</div>
 
-                    <div class="yhq-list" v-if="showCoupon">
-                      <div class="yhq-item" v-for="(item, index) in list_coupon" :key="index"
-                        :class="{ active: coupon_select_id == item.id }" @click="handleCouponSelect(item)">
-                        <img src="@/static/address/dizhi-check-1.png" alt="" class="marker" />
-
-                        <div class="yhq-top">
-                          <div class="yhq-1">
-                            <div class="text-1">{{ vuex_huobi }}{{ +item.jian }}</div>
-                            <div class="text-2">满{{ +item.man }}</div>
-                          </div>
-                          <div class="yhq-2">
-                            有效期至 {{ item.endTime && item.endTime.substr(0, 10) }}
-                          </div>
-                        </div>
-                        <div class="yhq-bottom">
-                          <div class="yhq-3">[{{ item.title }}]</div>
-                        </div>
+                      <div class="section-btn-actions">
+                        <p>可抵金额 ¥5 </p>
+                        <p>100积分抵用5人民币</p>
+                      </div>
+                      <div class="use-jifen-num">
+                        <img class="img-check check-0 check-img check-img-0" src="@/assets/image/common/check0.png" alt="" />
+                        <img class="img-check check-1 check-img check-img-1" src="@/assets/image/common/check1.png" alt="" />
                       </div>
                     </div>
-
-                    <div class="yhq-select-info">
-                      <b>金额抵用</b>
-                      <template v-if="coupon_select.id">
-                        <b class="number">{{ vuex_huobi }}{{ +coupon_select.jian }}</b>, 使用【{{ coupon_select.title
-                        }}】优惠券
-                        1张，优惠
-                        {{ +coupon_select.jian }} 元
-                      </template>
-                      <template v-else> 无 </template>
-                    </div>
                   </div>
 
-                  <div class="section-item" v-if="false">
-                    <div class="sub-title">使用积分</div>
-                    <div class="section-tip" v-if="jifen_pay.jifen">
-                      可用积分：{{ +baseInfo.jifen || 0 }}, 本单最多可用
-                      {{ jifen_pay.jifen }} 积分抵扣 {{ currency }}{{ jifen_pay.money }}
-                    </div>
-                    <div class="section-tip" v-else>当前没有可抵扣的积分</div>
-
-                    <div class="section-btn-actions">
-                      <button class="btn" :class="{ active: if_use_jifen }" @click="if_use_jifen = true">
-                        使用积分
-                      </button>
-                      <button class="btn" :class="{ active: !if_use_jifen }" @click="if_use_jifen = false">
-                        不使用积分
-                      </button>
-                    </div>
-                    <div class="use-jifen-num">
-                      本单将扣减积分 <b>{{ use_jifen_num }}</b>
-                    </div>
-                    <!-- <div class="section-input" v-if="jifen_pay.jifen">
-                <el-input type="number" :disabled="jifen_pay.jifen <= 0" v-model="use_jifen_num" @input="onInput_jifen" placeholder="请填写要抵扣的积分"></el-input>
-              </div> -->
-                  </div>
-
-                  <div class="section-item" v-if="false">
-                    <div class="sub-title">使用佣金</div>
-                    <div class="section-tip">可用佣金：{{ +baseInfo.yongjin || 0 }}</div>
-                    <div class="section-btn-actions">
-                      <button class="btn" :class="{ active: if_use_yongjin }" @click="if_use_yongjin = true">
-                        使用佣金
-                      </button>
-                      <button class="btn" :class="{ active: !if_use_yongjin }" @click="if_use_yongjin = false">
-                        不使用佣金
-                      </button>
-                    </div>
-                    <div class="use-jifen-num">
-                      本单将扣减佣金 <b>{{ money_yongjin_dixian }}</b>
-                    </div>
-                    <!-- <div class="section-input" v-if="jifen_pay.jifen">
-                <el-input type="number" :disabled="jifen_pay.jifen <= 0" v-model="use_jifen_num" @input="onInput_jifen" placeholder="请填写要抵扣的积分"></el-input>
-              </div> -->
-                  </div>
-
-                  <!-- 
-            <div class="section-item">
-              <div class="section-title">优惠码</div>
-              <div class="section-input">
-                <el-input v-model="yh_code" placeholder="请填写优惠码"></el-input>
-              </div>
-              <div class="section-tip">优惠码填写完成后, 请点击下方使用按钮查询优惠信息。</div>
-              <div class="section-input">
-                <div class="btn-actions">
-                  <el-button size="small" type="warning" @click="query_yh">使用优惠</el-button>
-                  <el-button size="small" type="warning" @click="not_use_yh">不使用</el-button>
-                </div>
-              </div>
-            </div>
-          -->
                   <div class="section-item remark-box" v-if="false">
                     <div class="sub-title">
                       <b> 订单备注 </b>
@@ -364,10 +278,7 @@
               </div>
 
               <div class="huizong">
-                <!-- <div class="item">
-            积分抵扣：
-            <b>{{vuex_huobi}} {{ jifen_pay.money || 0 }}</b>
-          </div> -->
+
                 <!-- <div class="order-tip">
             {{ vuex_config.yunfei_msg }}
           </div> -->
@@ -393,15 +304,19 @@
                 <b>-{{ vuex_huobi }} {{ money_yongjin_dixian || 0 }}</b>
               </div> -->
                 <div class="item">
-                  <span class="text">运费：</span>
+                  <span class="text">配送费：</span>
                   <b>{{ vuex_huobi }} {{ pay_info.foreignYunfei || 0 }}</b>
                 </div>
                 <div class="item">
-                  <span class="text">满减：</span>
-                  <b>- {{ vuex_huobi }} {{ pay_info.foreignManjian || 0 }}</b>
+                  积分抵扣：
+                  <b>{{vuex_huobi}} {{ jifen_pay.money || 0 }}</b>
                 </div>
+<!--                <div class="item">-->
+<!--                  <span class="text">满减：</span>-->
+<!--                  <b>- {{ vuex_huobi }} {{ pay_info.foreignManjian || 0 }}</b>-->
+<!--                </div>-->
                 <div class="item total">
-                  <span class="text">总计：</span>
+                  <span class="text">合计应付：</span>
                   <b>{{ vuex_huobi }} {{ pay_info.orderPrice }}</b>
                 </div>
               </div>
@@ -414,7 +329,7 @@
           <button class="btn-ripple fit-text btn-1" @click="$router.push('/cart')">
             返回购物车
           </button>
-          <button class="btn-ripple fit-text btn-2" @click="do_submit()">去支付</button>
+          <button class="btn-ripple fit-text btn-2" @click="do_submit()">提交订单</button>
         </div>
       </div>
     </div>
@@ -472,10 +387,12 @@ import orderPayWxCode from "@/components/order/orderPayWxCode.vue";
 import orderPayWaiting from "@/components/order/orderPayWaiting.vue";
 
 import { mapState } from "vuex";
+import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
 
 export default {
   name: "order-submit",
   components: {
+    pageBreadcrumb,
 
     address_modal,
     foreign_address_modal,
@@ -491,17 +408,13 @@ export default {
       is_order_test: false, //订单测试
       //
       from: '', //product-detail  ||  cart
-      //
-      address_selected: {}, //地址
       pagination_address: {
         page: 1,
         pagenum: 20
       },
       coupon_selected: {}, //优惠券
       coupons_for_allow_use: [],
-      remark: '',
-      //
-      payment_products: [],
+
       total_product_number: 0,
       total_product_price: 0, //商品总金额
       total_order_price: 0, //订单总金额
@@ -562,7 +475,6 @@ export default {
 
       if_use_jifen: true, //是否使用积分抵扣
       if_use_yongjin: true, //是否使用佣金扣减
-      jifen_pay: {}, //积分抵扣信息
       currency: "￥", //货币
 
       money_yunfei: 0,
@@ -636,7 +548,20 @@ export default {
   },
   computed: {
     ...mapState(["if_calc_yunfei"]),
+    nav_option() {
+      let channelId_arr = this.$route.query.ids ? this.$route.query.ids.split('-') : []
+      let channelId = channelId_arr.pop()
+      console.log(channelId)
 
+      let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
+
+      let option = [
+        {route: '/product-reserve', title: '预约产品'},
+        {route: '', title: '下单'}
+      ]
+      console.log(option)
+      return option
+    },
     real_payment_money() {
       let money = parseFloat((this.total_order_price - this.order_points_dixian_price).toFixed(2))
       return money
@@ -1327,13 +1252,13 @@ export default {
       this.timer = null;
     },
     //支付成功操作
-    toPaySuccess() {
-      if (this.mode == "yue") {
-        this.$router.push(`/yue`);
-      } else {
-        this.$router.push(`/payment-success?order_id=${this.order_id}`);
-      }
-    },
+    // toPaySuccess() {
+    //   if (this.mode == "yue") {
+    //     this.$router.push(`/yue`);
+    //   } else {
+    //     this.$router.push(`/payment-success?order_id=${this.order_id}`);
+    //   }
+    // },
 
     order_pay_step() {
       //支付步骤
@@ -1597,14 +1522,14 @@ export default {
 }
 
 .page {
-  background: #FFFFFF;
+  background: #000;
   text-align: center;
   font-size: 14px;
 
   .inner {
-    margin: 0 auto;
-    padding: 40px 0 100px 0;
-    background: #fff;
+    margin: 30px auto 0;
+    padding: 40px;
+    background: #1D1D1D;
   }
 
   .page-title {
@@ -1644,14 +1569,13 @@ export default {
         font-size: 14px;
         text-align: center;
         height: 48px;
-        background: #f9f9f9;
-        background: #F5F5F5;
+        background: #000;
         padding: 15px 0;
 
         font-family: OPPOSans, OPPOSans;
         // font-weight: bold;
         font-size: 14px;
-        color: #666666;
+        color: #fff;
 
         // border-bottom: 1px solid #ddd;
         .box-title {
@@ -1693,7 +1617,7 @@ export default {
           font-family: OPPOSans, OPPOSans;
           // font-weight: bold;
           font-size: 14px;
-          color: #666666;
+          color: #fff;
 
 
           .box-title {
@@ -1722,12 +1646,12 @@ export default {
             font-size: 12px;
             font-family: Microsoft YaHei-Regular, Microsoft YaHei;
             font-weight: 400;
-            color: #999999;
+            color: #fff;
           }
 
           .box-unit {
             width: 240px;
-            color: #FF0000;
+            color: #fff;
           }
 
           .box-num {
@@ -1736,23 +1660,22 @@ export default {
 
           .box-subtitle {
             width: 240px;
-            color: #FF0000;
+            color: #fff;
           }
         }
       }
     }
 
     .huizong {
-      padding: 24px 45px;
-      background: #f9f9f9;
-
+      padding-top: 20px;
       .item {
         margin-bottom: 16px;
         text-align: right;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #666666;
+        color: #fff;
+        padding-right: 22px;
 
         &:last-child {
           margin-bottom: 0;
@@ -1764,18 +1687,20 @@ export default {
           font-family: Arial, Arial;
           font-weight: 400;
           font-size: 14px;
-          color: #666666;
+          color: #fff;
         }
       }
 
       .total {
         text-align: right;
-
+        height: 56px;
+        line-height: 56px;
+        background: #000000;
         b {
           font-family: Arial, Arial;
           font-weight: bold;
           font-size: 20px;
-          color: #FF0000;
+          color: #fff;
         }
       }
     }
@@ -1793,20 +1718,20 @@ export default {
       &.btn-1 {
         min-width: 200px;
         height: 45px;
-        background: #FFFFFF;
+        background: #000;
         border-radius: 0px 0px 0px 0px;
-        border: 1px solid #F74747;
+        border: 1px solid #7B7B7B;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 17px;
-        color: #F74747;
+        color: #fff;
       }
 
       &.btn-2 {
 
         width: 200px;
         height: 45px;
-        background: #F74747;
+        background: #DF1626;
         border-radius: 0px 0px 0px 0px;
         font-family: Arial, Arial;
         font-weight: 400;
@@ -1942,17 +1867,29 @@ export default {
 
 // 订单优惠等
 .order-action {
-  background: #f9f9f9;
-  background: #fff;
+  background: #000;
   padding: 0 0;
 
   .order-action-inner {
-    // border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
   }
 
   .section-item {
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+    .sub-title {
+      background-color: #000;
+      height: 100%;
+      line-height: 70px;
+      color: #fff;
+      font-size: 16px;
+    }
+    .sub-info {
+      display: flex;
+      margin-right: 40px;
+    }
   }
 
   .section-title {
@@ -1960,16 +1897,16 @@ export default {
     font-family: Poppins, Poppins;
     font-weight: bold;
     font-size: 24px;
-    color: #333333;
+    color: #fff;
   }
 
   .section-tip {
-    margin-bottom: 5px;
     font-size: 14px;
     font-family: Microsoft YaHei;
-    font-weight: 400;
-    line-height: 25px;
-    color: #666666;
+    font-weight: 500;
+    color: #fff;
+    line-height: 70px;
+    margin-right: 140px;
   }
 
   .section-input {
@@ -2013,31 +1950,24 @@ export default {
   }
 
   .use-jifen-num {
-    margin-top: 10px;
-    margin-bottom: 10px;
-
-    b {
-      color: #F74747;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 20px;
+      height: 20px;
     }
   }
 
   .section-btn-actions {
-      display: flex;
-  align-items: center;
-
-    .btn {
-      width: 160px;
-      height: 32px;
-      margin-right: 20px;
-      font-size: 16px;
-      font-weight: bold;
-      background: #e1e1e1;
-      color: #333333;
-
-      &.active {
-        background: #009a44;
-        color: #ffffff;
-      }
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+    margin-right: 50px;
+    p:last-child {
+      color: #999;
     }
   }
 }
@@ -2053,7 +1983,7 @@ export default {
     font-family: Poppins, Poppins;
     font-weight: bold;
     font-size: 24px;
-    color: #333333;
+    color: #fff;
   }
 
   .section-ctx {
@@ -2073,14 +2003,14 @@ export default {
     .address-item {
       position: relative;
       margin-top: 20px;
-      margin-right: 30px;
-      margin-bottom: 40px;
+      margin-right: 20px;
+      margin-bottom: 20px;
       width: 440px;
       min-height: 130px;
       padding: 15px 20px;
-      background: #ffffff;
+      background: #000;
       border-radius: 4px 4px 4px 4px;
-      border: 2px solid #d5d8de;
+      border: 2px solid #7B7B7B;
       overflow: hidden;
       cursor: pointer;
 
@@ -2110,11 +2040,11 @@ export default {
 
       .address-top {
         padding-bottom: 15px;
-        border-bottom: 1px solid #d5d8de;
+        border-bottom: 1px solid #666;
         font-size: 14px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #000000;
+        color: #fff;
       }
 
       .address-bottom {
@@ -2122,7 +2052,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
+        color: #fff;
       }
     }
   }
@@ -2133,13 +2063,13 @@ export default {
     button {
       min-width: 124px;
       min-height: 32px;
-      background: #ffffff;
+      background: #000;
       border-radius: 2px 2px 2px 2px;
-      border: 1px solid #b9b9b9;
+      border: 1px solid #7B7B7B;
       font-size: 14px;
       font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
       font-weight: normal;
-      color: #666666;
+      color: #fff;
     }
   }
 }
@@ -2190,24 +2120,24 @@ export default {
 .section-pay {
   .pay-group {
       display: flex;
-  align-items: center;
+      align-items: center;
 
     .title {
       min-width: 120px;
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #666666;
+      color: #fff;
     }
 
     .pay-items {
       flex: 1;
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
 
       .item {
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
         margin-right: 60px;
         cursor: pointer;
 
@@ -2228,7 +2158,7 @@ export default {
           font-size: 16px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #000000;
+          color: #fff;
         }
       }
     }
@@ -2239,13 +2169,13 @@ export default {
         width: 144px;
         height: 40px;
         line-height: 40px;
-        background: #ffffff;
+        background: #000;
         border-radius: 3px 3px 3px 3px;
-        border: 1px solid #F74747;
+        border: 1px solid #7B7B7B;
         font-size: 14px;
         font-family: Microsoft YaHei-Bold, Microsoft YaHei;
         font-weight: bold;
-        color: #F74747;
+        color: #fff;
       }
     }
   }

@@ -1,28 +1,12 @@
 <template>
   <div class="page">
-    <div class="page-top">
-      <div class="banner-box">
-        <div class="banner-img-box" v-if="banners.length == 1">
-          <img :src="banners[0].image" alt="" />
-        </div>
-        <pageBanner v-if="banners.length > 1" />
-
-        <div class="banner-content-wrap">
-          <div class="banner-content">
-            <div class="banner-title">
-              Contact Us
-            </div>
-            <div class="banner-line">
-
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="top-banner">
+      <div class="title">联系我们</div>
     </div>
     <div class="inner">
-      <div class="page-ctx">
-        <pageBreadcrumb :option="nav_option" />
+      <pageBreadcrumb :option="nav_option" />
 
+      <div class="page-ctx">
         <div class="contact-info">
           <div class="info-list flex-between">
             <div class="info-item">
@@ -63,7 +47,6 @@
           <div class="contact-form-box">
             <contactForm />
           </div>
-
         </div>
       </div>
     </div>
@@ -98,7 +81,7 @@ export default {
     },
     nav_option() {
       let option = [
-        { route: '/contact', title: '联系我们', title: 'Contact Us' }
+        { route: '/contact', title: '联系我们' }
       ]
       return option
     }
@@ -124,7 +107,6 @@ export default {
       element.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
     },
 
-    
     setView() {
 
     },
@@ -133,55 +115,29 @@ export default {
 </script>
 
 <style scoped lang="less">
-.page-top {
-  position: relative;
+.page {
+  background-color: #000;
 
-  .banner-box {
-    position: relative;
-
-    .banner-img-box {
-      img {
-        width: 100%;
-        height: 700px;
-        object-fit: cover;
-      }
-    }
-
-    .banner-content-wrap {
-      position: absolute;
-      z-index: 2;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      padding-top: 173px;
-
-      .banner-content {
-        width: 1200px;
-        margin: 0 auto;
-        text-align: left;
-
-        .banner-title {
-          font-family: Poppins, Poppins;
-          font-weight: bold;
-          font-size: 60px;
-          line-height: 80px;
-          color: #FFFFFF;
-        }
-
-        .banner-line {
-          margin-top: 30px;
-          width: 180px;
-          height: 13px;
-          background: #FFFFFF;
-        }
-      }
+  .top-banner {
+    background-image: url("~@/assets/image/contact.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 36px 0;
+    .title {
+      font-weight: bold;
+      font-size: 64px;
+      color: #FFFFFF;
+      letter-spacing: 10px;
+      text-stroke: 1px rgba(0,0,0,0);
+      text-align: center;
     }
   }
-}
-
-.page {
-  .inner {}
 }
 
 .page-ctx {
@@ -189,12 +145,13 @@ export default {
   margin: 0 auto;
 
 
-  padding-top: 35px;
   padding-bottom: 90px;
 
   .contact-info {
     padding-top: 70px;
     background: #fff;
+    display: flex;
+
   }
 }
 

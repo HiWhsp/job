@@ -1,13 +1,9 @@
 <template>
   <div class="page">
-    <!-- <modalLoading ref="modalLoading" /> -->
     <product_add_cart_success_modal ref="product_add_cart_success_modal" :curr="curr" />
-    <!-- 邀请好友 -->
-    <!-- <modalYaoqing ref="modalYaoqing" /> -->
-    <!-- 添加成功提示 -->
-    <!-- 右侧优惠券列表 -->
-    <!-- <goodsCouponList ref="goodsCouponList" :list="info.yhq_list" /> -->
-    <!-- <pageProductTop /> -->
+    <div class="top-banner">
+      <div class="title">工艺鉴赏</div>
+    </div>
 
     <div class="page-top">
       <div class="page-bread w-1200">
@@ -15,7 +11,7 @@
           <img src="@/static/common/product-home.png" alt="" />
           <router-link to="/">首页</router-link>
           <span class="bread-divider">&gt;</span>
-          <router-link :to="activeCate.route">预约产品</router-link>
+          <router-link :to="activeCate.route">工艺鉴赏</router-link>
           <span class="bread-divider">&gt;</span>
           <template v-if="activeCate.title">
             <router-link :to="activeCate.route">{{ activeCate.title }}</router-link>
@@ -29,107 +25,19 @@
     <div class="page-box">
       <div class="page-inner w-1200">
         <div class="main-content">
-          <div class="ctx-top">
-            <div class="ctx-left">
-              <!-- 商品预览 -->
-              <!-- <carouselComponent :swiperImgs="swiperImgs" /> -->
-              <div class="preview-wrap">
-                <detailLunbo :imageList="detailImages" />
-              </div>
-
-              <!-- <div class="shoucang-box" v-if="false">
-                <div class="shoucang-left" @click="favourite_toggle">
-                  <img v-if="if_shoucang" src="@img/yishoucang.png" alt="" />
-                  <img v-else src="@img/weishoucang.png" alt="" />
-                  <span>{{ if_shoucang ? "取消收藏" : "收藏商品" }}</span>
-                </div>
-                <div class="shoucang-right" @click="show_yaoqing">
-                  <img src="@img/fenxiang.png" alt="" />
-                  <span>分享</span>
-                </div>
-              </div> -->
-            </div>
-
-            <div class="ctx-right">
-              <div class="detail-title">
-                <div class="title-text ellipsis-3">
-                  {{ info.title }}
-                </div>
-              </div>
-              <div class="detail-desc">
-                <div class="market">
-                  限量50台
-                </div>
-                <div class="market back">
-                  限购1台
-                </div>
-              </div>
-              <div class="detail-code">
-                <span>货号: K340001</span>
-                <span>库存：298</span>
-              </div>
-              <div class="detail-price">
-                ￥298.00
-              </div>
-              <div class="detail-num">
-                <el-input-number :min="1" :max="view_info.kucun"
-                                 v-model="selected_num"></el-input-number>
-              </div>
-              <div class="detail-btn">
-                <button class="btn-ripple flex-center btn-add-cart" @click="do_add_cart()">
-                  <img src="@/assets/image/home/cart.png" alt="" class="cart">
-                  加入购物车
-                </button>
-                <button class="btn-ripple flex-center btn-buy" @click="do_pay_now()">立即购买</button>
-              </div>
-              <div class="detail-txt ellipsis-3">
-                基於R.Salvadori / C.Shelby駕駛的5號車，該車贏得了1959年勒芒24小時耐力賽。 也可以從該套件中製造出由M.Trintignant /P.Frère駕駛的＃6賽車和由S.Moss / J.Fairman駕駛
-                完整詳細的多材料套件，包括鉛錫合金金屬，樹脂，蝕刻，橡膠輪胎的翻折零件
-              </div>
-
-              <div class="btn-box">
-                <div class="btn-buy">图片一键下载</div>
-                <div class="left-articles">
-                  <span>分享：</span>
-                  <div class="article-item">
-                    <a href="/terms?id=100" >
-                      <img src="@/assets/image/footer/fackback.png" alt="">
-                    </a>
-                  </div>
-                  <div class="article-item">
-                    <a href="/terms?id=100" >
-                      <img src="@/assets/image/footer/feishu.png" alt="">
-                    </a>
-                  </div>
-                  <div class="article-item">
-                    <a href="/terms?id=100" >
-                      <img src="@/assets/image/footer/weibo.png" alt="">
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           <div class="ctx-bottom-container">
-
-
-
             <div class="bottom-right">
               <div class="ctx-bottom">
                 <div class="ctx-bottom-inner">
                   <!-- v-if="active_panel == '详情'" -->
                   <div class="detail-content-box">
-                    <div class="panel-title" data-title="详情">
-                      详情说明
-                    </div>
-                    <div class="panel-title-line"></div>
                     <div class="rich-html" v-html="info.content"></div>
                     <div class="rich-html" v-html="info.cont2"></div>
                     <div class="rich-html" v-html="info.cont3"></div>
                   </div>
                   <div class="bottom-left">
-                    <div class="main-title">相关产品</div>
+                    <div class="main-title">更多资讯</div>
 
                     <div class="product-list">
                       <div class="product-item" v-for="(item, index)  in list_goods" :key="index" @click="toDetail(item)">
@@ -140,10 +48,7 @@
                           <div class="title ellipsis-2">12323</div>
                           <div class="pirce-box">
                             <div class="price-info">
-                              <div class="price-1">￥298.00</div>
-                            </div>
-                            <div class="yishou">
-                              限量50台
+                              <div class="price-1">298.00</div>
                             </div>
                           </div>
                         </div>
@@ -171,7 +76,7 @@ import { mapState } from "vuex";
 import { Loading } from "element-ui";
 
 export default {
-  name: "reserve-detail",
+  name: "art-detail",
   components: {
     product_add_cart_success_modal,
     carouselComponent,
@@ -200,7 +105,7 @@ export default {
         route: "/",
       },
 
-      list_goods: [],
+      list_goods: [1],
       product_list: [],
       group_list_wenxian: [],
       list_wenxian: [],
@@ -308,7 +213,6 @@ export default {
 
     document.removeEventListener("scroll", this.handleScrollEvent);
   },
-
   methods: {
     toDetail(item) {
       this.$router.push(`/product-detail?id=${item.inventoryId}`)
@@ -923,8 +827,28 @@ export default {
   min-height: 50vh;
   font-size: 14px;
 
+  .top-banner {
+    background-image: url("~@/assets/image/art.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 36px 0;
+    .title {
+      font-weight: bold;
+      font-size: 64px;
+      color: #FFFFFF;
+      letter-spacing: 10px;
+      text-stroke: 1px rgba(0,0,0,0);
+      text-align: center;
+    }
+  }
+
   .page-box {
-    padding-top: 32px;
   }
 
   .page-inner {
@@ -1448,7 +1372,6 @@ export default {
       }
 
       .ctx-bottom {
-        margin-top: 50px;
       }
 
       .ctx-bottom-inner {

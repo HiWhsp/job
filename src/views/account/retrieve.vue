@@ -2,12 +2,8 @@
   <div class="page">
     <terms_modal ref="terms_modal" />
 
-    <div class="page-bg">
-      <img src="@img/login/login-bg.png" alt="">
-    </div>
-
     <div class="page-ctx">
-      <div class="center page-inner flex-between w-1200">
+      <div class="center page-inner flex-between">
         <div class="page-poster">
           <!-- <img src="@/static/login/poster.png" alt=""> -->
         </div>
@@ -45,18 +41,17 @@
               </div>
 
               <div class="register-box">
-                <span> <router-link to="/login">返回登录 ></router-link> </span>
+                <span> <router-link to="/login">返回登录</router-link> </span>
               </div>
 
-              <div class="terms-box">
-                <span class="terms-check" @click="is_agree = !is_agree">
-                  <img v-if="is_agree" src="@/static/common/check1.png" alt="">
-                  <img v-else src="@/static/common/check0.png" alt="">
-                  登录注册即表示同意
-                </span>
-                <span class="terms-text" @click="terms_open(92)">《隐私政策》</span>
-              </div>
-
+<!--              <div class="terms-box">-->
+<!--                <span class="terms-check" @click="is_agree = !is_agree">-->
+<!--                  <img v-if="is_agree" src="@/static/common/check1.png" alt="">-->
+<!--                  <img v-else src="@/static/common/check0.png" alt="">-->
+<!--                  登录注册即表示同意-->
+<!--                </span>-->
+<!--                <span class="terms-text" @click="terms_open(92)">《隐私政策》</span>-->
+<!--              </div>-->
             </template>
           </div>
         </div>
@@ -168,9 +163,6 @@ export default {
 .page {
   position: relative;
 
-
-
-
   .page-bg {
     img {
       width: 100%;
@@ -179,14 +171,10 @@ export default {
   }
 
   .page-ctx {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-
+    height: 543px;
     display: flex;
     align-items: center;
+    background-color: #1F1C1F;
   }
 
   .page-inner {}
@@ -215,12 +203,7 @@ export default {
     .inner {
       position: relative;
       width: 560px;
-      min-height: 520px;
-      background: #F9FAFC;
-      box-shadow: 0px 2px 15px 1px rgba(79, 79, 79, 0.15);
-      border: 1px solid rgba(76, 165, 228, 0.1);
 
-      padding: 40px 40px 100px;
       opacity: 1;
       border-radius: 10px;
 
@@ -259,7 +242,7 @@ export default {
         font-family: Poppins, Poppins;
         font-weight: 600;
         font-size: 26px;
-        color: #333333;
+        color: #fff;
 
         &:first-child {
           // &:after {
@@ -289,12 +272,11 @@ export default {
       margin-bottom: 20px;
       width: 100%;
       height: 50px;
-      background: #ffffff;
-      border: 1px solid #eeeeee;
+      border: 1px solid #7B7B7B;
       border-radius: 4px;
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       overflow: hidden;
 
       span {
@@ -302,10 +284,9 @@ export default {
         width: 95px;
 
         border-right: 1px solid #ccc;
-        font-family: OPPOSans, OPPOSans;
         font-weight: 400;
         font-size: 14px;
-        color: #7D7D7D;
+        color: #fff;
 
         text-indent: 1em;
       }
@@ -319,13 +300,14 @@ export default {
         height: 100%;
         padding-left: 16px;
         font-size: 14px;
-        color: #000;
+        color: #fff;
+        background-color: transparent;
 
         &::-webkit-input-placeholder {
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #d7d7d7;
+          color: #fff;
         }
       }
     }
@@ -333,9 +315,9 @@ export default {
     .agree-box {
       text-align: left;
       margin-top: 20px;
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
       font-size: 14px;
       font-family: Microsoft YaHei;
@@ -355,8 +337,7 @@ export default {
       button {
         width: 100%;
         height: 44px;
-        background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
-        background: #F74747;
+        background: #DF1626;
         font-size: 18px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
@@ -374,8 +355,8 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 24px;
-        color: #F74747;
-        border-bottom: 1px solid #F74747;
+        color: #fff;
+        border-bottom: 1px solid #fff;
       }
     }
   }

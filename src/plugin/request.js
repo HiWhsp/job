@@ -1,8 +1,7 @@
 import Vue from "vue";
 import axios from "axios";
-// import store from "@/store";
-// import router from "@/router";
-
+import store from "@/store";
+import router from "@/router";
 
 
 let ApiList_successActionTip = [];
@@ -31,70 +30,70 @@ axios.interceptors.response.use(
     let res = response.data;
     let {code, data} = res
     // debugger
-    // if (res && (code == 2 || code == -1 || code == -2)) {
-    //   //微信授权项目 重新微信授权
-    //   //非微信授权登录项目  跳转登录页
-    //   if (store.state.is_weChat_auth) {
-    //     res.message = "登录过期或未登录，请您先登录";
-    //     store.commit("clear_loginInfo"); //清除登录数据
-    //   } else {
-    //     res.message = "登录过期或未登录，请您先登录";
-    //     store.commit("clear_loginInfo"); //清除登录数据
+    if (res && (code == 2 || code == -1 || code == -2)) {
+      //微信授权项目 重新微信授权
+      //非微信授权登录项目  跳转登录页
+      if (store.state.is_weChat_auth) {
+        res.message = "登录过期或未登录，请您先登录";
+        store.commit("clear_loginInfo"); //清除登录数据
+      } else {
+        res.message = "登录过期或未登录，请您先登录";
+        store.commit("clear_loginInfo"); //清除登录数据
 
-    //     // 开发时需取消注释
-    //     // router.push({
-    //     //   path: "/login",
-    //     //   query: {
-    //     //     mode: "noLogin",
-    //     //   },
-    //     // });
-    //   }
-    // } else if (res && code == 0) {
-    //   //操作失败提示
-    //   let is_upload = response.config.data instanceof FormData;
-    //   let actionStr = "";
-    //   let actionName = "";
-    //   if (is_upload) {
-    //     actionStr = "";
-    //     actionName = "index_upload";
-    //   } else {
-    //     actionStr = response.config.data
-    //       .split("&")
-    //       .find((v) => v.includes("action"));
-    //     actionName = actionStr.split("=")[1];
-    //   }
+        // 开发时需取消注释
+        // router.push({
+        //   path: "/login",
+        //   query: {
+        //     mode: "noLogin",
+        //   },
+        // });
+      }
+    } else if (res && code == 0) {
+      //操作失败提示
+      let is_upload = response.config.data instanceof FormData;
+      let actionStr = "";
+      let actionName = "";
+      if (is_upload) {
+        actionStr = "";
+        actionName = "index_upload";
+      } else {
+        actionStr = response.config.data
+          .split("&")
+          .find((v) => v.includes("action"));
+        actionName = actionStr.split("=")[1];
+      }
 
-    //   if (actionName) {
-    //     if (ApiList_failActionTip.includes(actionName)) {
-    //       alertErr(res.data.message);
-    //     }
-    //   }
-    // } else if (data && data.code == 200) {
-    //   //操作成功提示
-    //   let is_upload = res.config.data instanceof FormData;
-    //   let actionStr = "";
-    //   let actionName = "";
-    //   let _no_tip_str = "";
-    //   let _no_tip = "";
+      if (actionName) {
+        if (ApiList_failActionTip.includes(actionName)) {
+          alertErr(res.data.message);
+        }
+      }
+    } else if (data && data.code == 200) {
+      //操作成功提示
+      let is_upload = res.config.data instanceof FormData;
+      let actionStr = "";
+      let actionName = "";
+      let _no_tip_str = "";
+      let _no_tip = "";
 
-    //   if (is_upload) {
-    //     actionStr = "";
-    //     actionName = "index_upload";
-    //   } else {
-    //     let arr_params = res.config.data.split("&");
-    //     actionStr = arr_params.find((v) => v.includes("action"));
-    //     actionName = actionStr.split("=")[1];
+      if (is_upload) {
+        actionStr = "";
+        actionName = "index_upload";
+      } else {
+        let arr_params = res.config.data.split("&");
+        actionStr = arr_params.find((v) => v.includes("action"));
+        actionName = actionStr.split("=")[1];
 
-    //     _no_tip_str = arr_params.find((v) => v.includes("_no_tip"));
-    //     if (_no_tip_str) {
-    //       _no_tip = _no_tip_str.split("=")[1];
-    //     }
-    //   }
-    //   if (actionName) {
-    //     if (ApiList_successActionTip.includes(actionName) && _no_tip != 1) {
-    //     }
-    //   }
-    // }
+        _no_tip_str = arr_params.find((v) => v.includes("_no_tip"));
+        if (_no_tip_str) {
+          _no_tip = _no_tip_str.split("=")[1];
+        }
+      }
+      if (actionName) {
+        if (ApiList_successActionTip.includes(actionName) && _no_tip != 1) {
+        }
+      }
+    }
 
     return res;
     // return res;
@@ -130,10 +129,10 @@ function api(action, data, method, uploaderConfig) {
 
   if (process.env.NODE_ENV !== "production") {
     reqUrl = "/api/service.php";
-    reqUrl = "https://vuesc.new.zhishangez.com/service.php"; //请求地址
+    reqUrl = "https://fengyang.dx.hdapp.com.cn//service.php"; //请求地址
   } else {
     reqUrl = "/service.php";
-    reqUrl = "https://vuesc.new.zhishangez.com/service.php"; //请求地址
+    reqUrl = "https://fengyang.dx.hdapp.com.cn//service.php"; //请求地址
   }
 
   // debugger
@@ -147,18 +146,18 @@ function api(action, data, method, uploaderConfig) {
     transformRequest: uploaderConfig
       ? []
       : [
-          function (data) {
-            let ret = "";
-            for (let it in data) {
-              ret +=
-                encodeURIComponent(it) +
-                "=" +
-                encodeURIComponent(data[it]) +
-                "&";
-            }
-            return ret;
-          },
-        ],
+        function (data) {
+          let ret = "";
+          for (let it in data) {
+            ret +=
+              encodeURIComponent(it) +
+              "=" +
+              encodeURIComponent(data[it]) +
+              "&";
+          }
+          return ret;
+        },
+      ],
   };
 
   if (reqMethod == "get") {

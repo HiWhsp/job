@@ -70,6 +70,12 @@ const reserve_detail = () =>
   import(
     /* webpackChunkName: "reserve-detail" */ "@/views/product/reserve-detail.vue"
   );
+// 工艺鉴赏
+const art_list = () =>
+  import(/* webpackChunkName: "art-list" */ "@/views/art/art-list.vue");
+const art_detail = () =>
+  import(/* webpackChunkName: "art-detail" */ "@/views/art/art-detail.vue");
+
 
 // 个人中心
 const my_layout = () => import("@/views/my/my-layout.vue");
@@ -259,6 +265,22 @@ const routes = [
     component: reserve_detail,
     meta: {
       title: "预约详情",
+    }
+  },
+  {
+    path: "/art_list",
+    name: "art_list",
+    component: art_list,
+    meta: {
+      title: "工艺鉴赏",
+    }
+  },
+  {
+    path: "/art_detail",
+    name: "art_detail",
+    component: art_detail,
+    meta: {
+      title: "工艺鉴赏",
     }
   },
   {

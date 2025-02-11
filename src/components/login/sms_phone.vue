@@ -101,10 +101,10 @@ export default {
   margin-bottom: 20px;
   width: 100%;
   height: 50px;
-  background: #ffffff;
-  border: 1px solid #eeeeee;
+  background: transparent;
+  border: 1px solid #7B7B7B;
   border-radius: 4px;
-    display: flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   overflow: hidden;
@@ -122,7 +122,7 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 24px;
-    color: #999999;
+    color: #fff;
     text-indent: 1em;
   }
 
@@ -131,7 +131,8 @@ export default {
     height: 100%;
     padding-left: 16px;
     font-size: 14px;
-    color: #000;
+    color: #fff;
+    background-color: transparent;
 
     &::-webkit-input-placeholder {
       font-size: 14px;
@@ -143,13 +144,13 @@ export default {
 }
 
 .btn-validate-box {
-    display: flex;
+  display: flex;
   align-items: center;
   background: transparent;
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: #F74747;
+  color: #fff;
   font-size: 1.4rem;
 
   &.disabled {

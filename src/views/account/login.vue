@@ -47,7 +47,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -99,7 +98,7 @@ export default {
       let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
 
       let option = [
-        { route : '/product-cates', title: '产品展示'},
+        { route : '/product-cates', title: '登录'},
         { route: '', title: cate_info.title || '' }
       ]
       console.log(option)
@@ -422,7 +421,7 @@ export default {
         height: 100%;
         padding-left: 16px;
         font-size: 14px;
-        color: #000;
+        color: #fff;
         background-color: transparent;
 
         &::-webkit-input-placeholder {

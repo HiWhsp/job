@@ -344,19 +344,21 @@ button {
 .el-pagination.is-background .btn-next,
 .el-pagination.is-background .btn-prev,
 .el-pagination.is-background .el-pager li {
-  background-color: #f4f4f5 !important;
   min-width: 30px !important;
   height: 30px;
   line-height: 30px;
+  background-color: #000 !important;
+  border: 1px solid #555;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled):hover {
-  color: #F74747 !important;
+  color: #DF1626 !important;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #F74747 !important;
+  background-color: #DF1626 !important;
   color: #fff !important;
+  border: none;
 }
 
 .el-pager li.active {}
@@ -499,6 +501,8 @@ button {
     height: 24px;
     line-height: 24px;
     font-size: 12px !important;
+    background-color: #000;
+    border: 1px solid #555;
   }
 
   // 提示框

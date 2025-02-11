@@ -42,7 +42,7 @@
               <router-link to="">
                 <img src="@/assets/image/home/user.png" alt="" />
               </router-link>
-              <router-link to="/shopcart">
+              <router-link to="/cart">
                 <img src="@/assets/image/home/cart.png" alt="" />
               </router-link>
               <router-link to="/shopcart" class="flex-center">
@@ -121,8 +121,8 @@ export default {
         { title: "首页", route: "/" },
         { title: "产品展示", route: "/product-cates" },
         { title: "预约商品", route: "/product-reserve" },
-        { title: "工艺鉴赏", route: "/suggest" },
-        { title: "联系我们", route: "/scene" },
+        { title: "工艺鉴赏", route: "/art_list" },
+        { title: "联系我们", route: "/contact" },
       ];
       return arr;
     },
