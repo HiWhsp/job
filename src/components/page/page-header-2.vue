@@ -36,10 +36,10 @@
 
           <div class="right-box">
             <div class="cart-box">
-              <router-link to="">
+              <router-link to="/product-search">
                 <img src="@/assets/image/home/search.png" alt="" />
               </router-link>
-              <router-link to="">
+              <router-link to="/my-index">
                 <img src="@/assets/image/home/user.png" alt="" />
               </router-link>
               <router-link to="/cart">

@@ -4,48 +4,41 @@
       <div class="title">联系我们</div>
     </div>
     <div class="inner">
-      <pageBreadcrumb :option="nav_option" />
+      <pageBreadcrumb :option="nav_option"/>
 
       <div class="page-ctx">
         <div class="contact-info">
-          <div class="info-list flex-between">
+          <div class="info-list">
+            <div class="title">联系方式</div>
+            <div class="desc">如果您有任何问题，可以通过以下方式找到我们</div>
             <div class="info-item">
               <div class="icon-box">
-                <img src="@/static/contact/addr.png" alt="">
+                <img src="@/assets/image/contact/mail.png" alt="">
               </div>
               <div class="title">
-                Address
-              </div>
-              <div class="desc">
-                {{ vuex_config.comAddress }}
+                info@hotmail.com
               </div>
             </div>
             <div class="info-item">
               <div class="icon-box">
-                <img src="@/static/contact/phone.png" alt="">
+                <img src="@/assets/image/contact/facebook.png" alt="">
               </div>
               <div class="title">
-                Phone
-              </div>
-              <div class="desc">
-                {{ vuex_config.comPhone }}
+                Facebook
               </div>
             </div>
             <div class="info-item">
               <div class="icon-box">
-                <img src="@/static/contact/email.png" alt="">
+                <img src="@/assets/image/contact/facebook.png" alt="">
               </div>
               <div class="title">
-                E-mail
-              </div>
-              <div class="desc">
-                {{ vuex_config.comEmail }}
+                WhatsApp
               </div>
             </div>
           </div>
 
           <div class="contact-form-box">
-            <contactForm />
+            <contactForm/>
           </div>
         </div>
       </div>
@@ -56,7 +49,7 @@
 import pageBanner from '@/components/page/page-banner.vue'
 import pageBreadcrumb from '@/components/page/page-breadcrumb.vue'
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 import contactForm from '@/components/contact/contact-form.vue';
 
 export default {
@@ -81,7 +74,7 @@ export default {
     },
     nav_option() {
       let option = [
-        { route: '/contact', title: '联系我们' }
+        {route: '/contact', title: '联系我们'}
       ]
       return option
     }
@@ -104,7 +97,7 @@ export default {
     scrollToTarget(clsName) {
       // var element = document.querySelector(".wenxian-box");
       var element = document.querySelector(clsName);
-      element.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+      element.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
     },
 
     setView() {
@@ -129,12 +122,13 @@ export default {
     justify-content: center;
     align-items: center;
     padding: 36px 0;
+
     .title {
       font-weight: bold;
       font-size: 64px;
       color: #FFFFFF;
       letter-spacing: 10px;
-      text-stroke: 1px rgba(0,0,0,0);
+      text-stroke: 1px rgba(0, 0, 0, 0);
       text-align: center;
     }
   }
@@ -149,38 +143,45 @@ export default {
 
   .contact-info {
     padding-top: 70px;
-    background: #fff;
     display: flex;
-
+    justify-content: space-between;
   }
 }
 
 .info-list {
+  .title {
+    font-weight: bold;
+    font-size: 44px;
+    color: #FFFFFF;
+    margin-bottom: 30px;
+  }
+
+  .desc {
+    font-weight: 400;
+    font-size: 18px;
+    color: #F2F2F2;
+    margin-bottom: 22px;
+  }
   .info-item {
-    flex: 1;
-    padding: 0 10px;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
 
     .icon-box {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 80px;
-      height: 80px;
-      margin: 0 auto;
+      width: 24px;
+      height: 24px;
+      margin-right: 5px;
 
       img {
-        width: 60px;
+        width: 24px;
       }
     }
 
     .title {
-      margin-top: 30px;
-      margin-bottom: 30px;
-      font-family: Poppins, Poppins;
-      font-weight: bold;
-      font-size: 25px;
-      color: #0D398A;
+      font-weight: 400;
+      font-size: 16px;
+      color: #FFFFFF;
+      margin-bottom: 0;
     }
 
     .desc {
@@ -193,7 +194,6 @@ export default {
 }
 
 .contact-form-box {
-  margin-top: 123px;
 }
 </style>
 
