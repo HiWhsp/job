@@ -10,30 +10,30 @@
           <div class="item">
             <span class="text">旧密码：</span>
             <span class="info">
-              <el-input clearable type="password" v-model="form.oldPass" class="" />
+              <el-input clearable type="password" v-model="form.oldPass" placeholder="请输入旧密码" class="" />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">新密码：</span>
             <span class="info">
-              <el-input clearable type="password" v-model="form.pass" class="" />
+              <el-input clearable type="password" v-model="form.pass" placeholder="请输入新密码" class="" />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">确认密码：</span>
             <span class="info">
-              <el-input clearable type="password" v-model="form.pass2" class="" />
+              <el-input clearable type="password" v-model="form.pass2" placeholder="请重复输入新密码" class="" />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item btn-box">
             <span class="text" style="visibility: hidden">-</span>
             <div class="info">
+              <button class="btn-ripple fit-text btn-cancel" @click="do_clear()">清空</button>
               <el-button class="btn-ripple fit-text btn-save" @click="throttle_do_submit()"
                 :loading="loading">确认</el-button>
-              <button class="btn-ripple fit-text btn-cancel" @click="do_clear()">清空</button>
             </div>
           </div>
         </div>
@@ -128,18 +128,18 @@ export default {
     text-align: left;
     height: 56px;
     line-height: 56px;
-    background: #ffffff;
+    background: #1D1D1D;
     font-size: 16px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #333333;
+    color: #fff;
   }
 
   .page-ctx {
     min-height: 600px;
-    margin-top: 14px;
+    margin-top: 10px;
     padding: 80px 0;
-    background: #fff;
+    background: #1D1D1D;
   }
 }
 
@@ -159,7 +159,7 @@ export default {
         min-width: 260px;
         text-align: right;
         font-size: 14px;
-        color: #666;
+        color: #fff;
       }
 
       .info {
@@ -171,12 +171,12 @@ export default {
         display: inline-block;
         min-width: 120px;
 
-        input {
-          // width: 400px;
-          // height: 40px;
-          // background: #ffffff;
-          // border-radius: 4px 4px 4px 4px;
-          // border: 1px solid #d4d4d4;
+        /deep/ .el-input__inner {
+          width: 400px;
+          height: 40px;
+          background: transparent;
+          border: 1px solid #7B7B7B;
+          color: #fff;
         }
 
 
@@ -211,26 +211,27 @@ export default {
   .btn-save {
     width: 120px;
     height: 32px;
-    background: #FFFFFF;
-    border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    border: 1px solid #DF1626;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
+    color: #fff;
+    margin-left: 24px;
 
+    background: #DF1626;
+    border-radius: 4px 4px 4px 4px;
   }
 
   .btn-cancel {
-    margin-left: 24px;
     width: 120px;
     height: 32px;
-    background: #F74747;
-    border-radius: 50px 50px 50px 50px;
+    background: transparent;
     font-family: Arial, Arial;
+    border-radius: 4px 4px 4px 4px;
     font-weight: 400;
     font-size: 14px;
-    color: #FFFFFF;
+    color: #fff;
+    border: 1px solid #7B7B7B;
   }
 }
 </style>

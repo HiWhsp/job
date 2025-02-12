@@ -39,7 +39,7 @@
               <router-link to="/product-search">
                 <img src="@/assets/image/home/search.png" alt="" />
               </router-link>
-              <router-link to="/my-index">
+              <router-link to="/order-list">
                 <img src="@/assets/image/home/user.png" alt="" />
               </router-link>
               <router-link to="/cart">

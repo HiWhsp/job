@@ -20,7 +20,7 @@
               </div>
               <div>
                 <span>所在地区：</span>
-                {{ item.full_addr }} 
+                {{ item.full_addr }}
               </div>
               <div>
                 <span>详细地址：</span>
@@ -48,14 +48,15 @@
       </div>
     </div>
 
-    <address_modal ref="address_modal" @confirm="setView" />
+    <address_modal ref="address_modal" @confirm="setView"/>
   </div>
 </template>
 
 <script>
 import address_modal from "@/components/address/address_modal.vue"; //新增地址
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
+
 export default {
   name: "servicePage",
   components: {
@@ -152,29 +153,26 @@ export default {
   padding-bottom: 80px;
 
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 32px;
     text-align: left;
     height: 56px;
     line-height: 56px;
-    background: #ffffff;
+    background: #1D1D1D;
     font-size: 16px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #333333;
+    color: #fff;
 
     button {
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
       color: #fff;
-      background: #fff;
-      color: #F74747;
       font-size: 14px;
       // font-weight: bold;
 
@@ -185,6 +183,7 @@ export default {
       .el-icon-circle-plus {
         font-size: 18px;
       }
+
       .add-text {
         margin-left: 5px;
       }
@@ -192,9 +191,9 @@ export default {
   }
 
   .page-ctx {
-    margin-top: 24px;
+    margin-top: 10px;
     padding: 32px 32px 55px 32px;
-    background: #fff;
+    background: #1D1D1D;
   }
 }
 
@@ -204,17 +203,15 @@ export default {
 
   .address-item {
     min-height: 190px;
-    background: #ffffff;
-    border: 1px solid #e5e5e5;
+    background: #2F2F2F;
     padding: 20px;
     margin-bottom: 20px;
 
     .top {
       padding-bottom: 20px;
-
-      >div {
+      > div {
         margin-bottom: 10px;
-        color: #333333;
+        color: #fff;
 
         &:last-child {
           margin-bottom: 0;
@@ -224,16 +221,16 @@ export default {
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #666666;
+          color: #fff;
         }
       }
     }
 
     .bottom {
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
-      border-top: 1px solid #eeeeee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid #4D4D4D;
       padding-top: 20px;
 
       .left {
@@ -244,7 +241,7 @@ export default {
           line-height: 30px;
           text-align: center;
           // background: rgba(255, 90, 0, 0.68);
-          background: #F74747;
+          background: #DF1626;
           font-size: 14px;
           color: #ffffff;
         }
@@ -255,7 +252,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 20px;
-        color: #F74747;
+        color: #fff;
 
         .action {
           margin-left: 20px;

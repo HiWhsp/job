@@ -10,12 +10,14 @@
 
     <div class="page-ctx">
       <div class="yue-box">
-        <div class="text-box">
-          <div class="text-1">我的积分</div>
+        <div class="text-box flex-center">
+          <div class="text-1">可用积分：</div>
           <div class="text-2">
             {{ info.jifen || 0 }}
             <!-- <span class="currency">元</span> -->
           </div>
+          <img src="@/assets/image/record.png" alt="">
+
           <!-- <div class="text-3">
             <button @click="openInvite()">邀请赚取积分</button>
           </div> -->
@@ -26,11 +28,11 @@
         <div class="inner">
           <div class="tab-box">
             <div
-              class="tab-item"
-              v-for="(item, index) in list_tab"
-              :key="index"
-              @click="selectTab = item"
-              :class="item.title == selectTab.title ? 'active' : ''"
+                v-for="(item, index) in list_tab"
+                :key="index"
+                :class="item.title == selectTab.title ? 'active' : ''"
+                class="tab-item"
+                @click="selectTab = item"
             >
               {{ item.title }}
             </div>
@@ -47,21 +49,21 @@
                 </div>
 
                 <div
-                  class="item-box"
-                  v-for="(item, index) in list_jilu"
-                  :key="index"
-                  @click="$router.push(`/order-detail?order_id=${order.id}`)"
+                    v-for="(item, index) in list_jilu"
+                    :key="index"
+                    class="item-box"
+                    @click="$router.push(`/order-detail?order_id=${order.id}`)"
                 >
                   <template v-if="item.product_info && item.product_info.length">
                     <div class="item item_cahnpin">
                       <div class="item-1">
                         <div
-                          class="goods-info"
-                          v-for="(goods, goods_index) in item.product_info"
-                          :key="goods_index"
+                            v-for="(goods, goods_index) in item.product_info"
+                            :key="goods_index"
+                            class="goods-info"
                         >
                           <div class="img-box">
-                            <img :src="goods.image" alt="" />
+                            <img :src="goods.image" alt=""/>
                           </div>
                           <div class="info-box">
                             <div class="title">{{ goods.title }}</div>
@@ -70,8 +72,8 @@
                         </div>
                       </div>
                       <div
-                        class="item-2 val"
-                        :class="{ plus: item.type == 1, minus: item.type == 2 }"
+                          :class="{ plus: item.type == 1, minus: item.type == 2 }"
+                          class="item-2 val"
                       >
                         {{ item.jifen }}
                       </div>
@@ -86,8 +88,8 @@
                         <!-- <div class="text-2">{{ item.jifen }}</div> -->
                       </div>
                       <div
-                        class="item-2 val"
-                        :class="{ plus: item.type == 1, minus: item.type == 2 }"
+                          :class="{ plus: item.type == 1, minus: item.type == 2 }"
+                          class="item-2 val"
                       >
                         {{ item.jifen }}
                       </div>
@@ -100,14 +102,14 @@
                 </div>
               </div>
 
-              <div class="pagination-box" v-if="count">
+              <div v-if="count" class="pagination-box">
                 <el-pagination
-                  background
-                  layout="total, prev, pager, next"
-                  :total="count"
-                  :current-page="pagination.page"
-                  :page-size="pagination.pageNum"
-                  @current-change="mix_current_change"
+                    :current-page="pagination.page"
+                    :page-size="pagination.pageNum"
+                    :total="count"
+                    background
+                    layout="total, prev, pager, next"
+                    @current-change="mix_current_change"
                 >
                 </el-pagination>
               </div>
@@ -120,20 +122,19 @@
 </template>
 <script>
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
+
 export default {
   name: "jifen-jilu",
-  components: {
-
-  },
+  components: {},
   data() {
     return {
-      selectTab: { title: "全部", status: "0" },
+      selectTab: {title: "积分明细", status: "0"},
       //type   1-收入  2-支出
       list_tab: [
-        { title: "全部", status: "0" },
-        { title: "收入", status: "1" },
-        { title: "支出", status: "2" },
+        {title: "积分明细", status: "0"},
+        {title: "积分收入", status: "1"},
+        {title: "积分支出", status: "2"},
       ],
       list_jilu: [],
 
@@ -142,7 +143,7 @@ export default {
         pageNum: 10,
       },
       count: 0,
-      info:{}
+      info: {}
     };
   },
   computed: {
@@ -176,23 +177,24 @@ export default {
       });
     },
 
- 
+
   },
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .plus {
   color: #F74747;
   font-weight: bold;
 }
+
 .minus {
   color: #52c41a;
   font-weight: bold;
 }
 
 .goods-info {
-    display: flex;
+  display: flex;
   align-items: center;
 
   .img-box {
@@ -207,19 +209,20 @@ export default {
 .page {
   text-align: left;
   padding-bottom: 80px;
+
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 32px;
     text-align: left;
     height: 56px;
     line-height: 56px;
-    background: #ffffff;
+    background: #1D1D1D;
     font-size: 16px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #333333;
+    color: #fff;
 
     button {
       min-width: 96px;
@@ -233,20 +236,18 @@ export default {
   }
 
   .page-ctx {
-    margin-top: 24px;
+    margin-top: 10px;
     padding: 32px 32px 55px 32px;
-    background: #fff;
+    background: #1D1D1D;
   }
 }
 
 .yue-box {
   position: relative;
   width: 100%;
-  height: 142px;
-  // background: url(~@img/jifen/jifen-bg.png) no-repeat center / cover;
-  background: coral;
-  background-size: 100% 100%;
-  padding-left: 40px;
+  height: 112px;
+  //background: url(~@/assets/image/record.png) no-repeat center / cover;
+  background-color: #DF1626;
   padding-left: 40px;
   flex-direction: column;
   .flex-center();
@@ -254,6 +255,7 @@ export default {
 
   .text-box {
     text-align: left;
+
     .text-1 {
       font-size: 16px;
       font-family: PingFang SC;
@@ -261,10 +263,10 @@ export default {
       line-height: 40px;
       color: #ffffff;
     }
-    .text-2 {
-      margin-top: 10px;
 
-      font-size: 40px;
+    .text-2 {
+      margin-left: 10px;
+      font-size: 32px;
       font-family: PingFang SC;
       font-weight: bold;
       line-height: 40px;
@@ -274,10 +276,12 @@ export default {
         font-size: 18px;
       }
     }
+
     .text-3 {
       position: absolute;
       right: 24px;
       bottom: 20px;
+
       button {
         border-radius: 20px;
         width: 128px;
@@ -291,6 +295,11 @@ export default {
         color: #666;
       }
     }
+
+    img {
+      height: 100%;
+      width: 500px;
+    }
   }
 }
 
@@ -299,8 +308,9 @@ export default {
   flex: 2;
   // border-bottom: 1px solid #eee;
 
-    display: flex;
+  display: flex;
   align-items: center;
+
   .tab-item {
     cursor: pointer;
     padding-bottom: 10px;
@@ -309,12 +319,12 @@ export default {
     font-size: 14px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
-    color: #333333;
+    color: #fff;
 
     &.active {
-      border-bottom: 3px solid #F74747;
+      border-bottom: 3px solid #fff;
       font-weight: bold;
-      color: #F74747;
+      color: #fff;
     }
   }
 }
@@ -323,38 +333,36 @@ export default {
   margin-top: 20px;
   margin-bottom: 50px;
 }
+
 .jilu-list {
   margin-bottom: 30px;
-  border: 1px solid #e5e5e5;
 
   .item {
     text-align: center;
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 20px;
-    border-bottom: 1px solid #eee;
     font-size: 14px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
-    color: #666666;
 
     &:last-child {
     }
+
     &.item-title {
-      background: #f5f5f5;
-      border-bottom: 1px solid #e5e5e5;
+      background: #5A5A5A;
       font-size: 14px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
       font-weight: bold;
-      color: #666666;
+      color: #fff;
     }
 
     .item-1 {
       text-align: left;
       flex: 1;
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
 
       .img-box {
         img {
@@ -364,18 +372,20 @@ export default {
 
       .info-box {
         padding-left: 15px;
+
         .title {
-           display: -webkit-box;
-  -webkit-box-orient: vertical;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  -webkit-line-clamp: 2;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          -webkit-line-clamp: 2;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
           color: #333333;
           line-height: 24px;
         }
+
         .info {
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -384,8 +394,10 @@ export default {
         }
       }
     }
+
     .item-2 {
       width: 150px;
+
       &.val {
         font-size: 18px;
         font-family: Microsoft YaHei-Bold, Microsoft YaHei;
@@ -397,6 +409,7 @@ export default {
     .item-3 {
       width: 200px;
     }
+
     .item-4 {
       width: 150px;
     }
@@ -404,4 +417,4 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/huodong/pointsDetail.less"></style>
+<style lang="less" scoped src="@/assets/h5css/huodong/pointsDetail.less"></style>

@@ -1,33 +1,31 @@
 <template>
   <div class="page-user-wrap">
-    <div class="inner w-1200">
-      <page_breadcrumb :option="nav_option" />
+    <page_breadcrumb :option="nav_option" />
 
+    <div class="inner w-1200">
       <div class="page-ctx">
         <div class="menu-wrap">
           <div class="left-title">
             个人中心
           </div>
-          <div class="title-line">
 
-          </div>
           <div class="nav-wrap">
             <div class="nav-group" v-for="(group, gindex) in page_menu" :key="gindex">
-              <div class="group-title-box flex">
-                <div class="icon-box">
-                  <img :src="group.icon" alt="">
-                </div>
-                <div class="group-title">
-                  {{ group.title }}
-                </div>
-                <div class="arrow-box">
-                  <img class="arrow-right" src="@img/my/arrow-right.png" alt="">
-                  <!-- <img class="arrow-down" src="@img/my/arrow-down.png" alt=""> -->
-                </div>
-              </div>
+<!--              <div class="group-title-box flex">-->
+<!--                <div class="icon-box">-->
+<!--                  <img :src="group.icon" alt="">-->
+<!--                </div>-->
+<!--                <div class="group-title">-->
+<!--                  {{ group.title }}-->
+<!--                </div>-->
+<!--                <div class="arrow-box">-->
+<!--                  <img class="arrow-right" src="@img/my/arrow-right.png" alt="">-->
+<!--                  &lt;!&ndash; <img class="arrow-down" src="@img/my/arrow-down.png" alt=""> &ndash;&gt;-->
+<!--                </div>-->
+<!--              </div>-->
               <div class="sub-child" v-if="group.child && group.child.length">
-                <div class="sub-item" v-for="(item, index) in group.child" :key="index" @click="do_toggle_nav(item)">
-                  <div class="sub-title" :class="$route.name == item.route ? 'active' : ''">
+                <div class="sub-item" :class="$route.name == item.route ? 'active' : ''" v-for="(item, index) in group.child" :key="index" @click="do_toggle_nav(item)">
+                  <div class="sub-title">
                     {{ item.title }}
                   </div>
                 </div>
@@ -71,11 +69,6 @@ export default {
     return {
       //个人中心导航
       all_menu: [
-        // {
-        //   title: "个人中心",
-        //   route: "my-index",
-        //   is_main: true,
-        // },
         {
           title: "订单管理",
           route: "",
@@ -86,69 +79,86 @@ export default {
               route: "order-list",
             },
             {
-              title: "我的售后",
-              route: "refund-list",
-            },
-          ]
-        },
-        {
-          title: "我的活动",
-          route: "",
-          icon: require('@img/my/nav-2.png'),
-          child: [
-            {
-              title: "我的收藏",
-              route: "favorite-list",
-            },
-            {
-              title: "我的足迹",
-              route: "browse-history",
-            },
-          ]
-        },
-        {
-          title: "个人资料",
-          route: "",
-          icon: require('@img/my/nav-3.png'),
-          child: [
-            {
-              title: "地址管理",
-              route: "address-list",
-            },
-            {
-              title: "我的发票",
-              route: "invoice-list",
+              title: "我的积分",
+              route: "points-record",
             },
             {
               title: "个人资料",
               route: "my-info",
             },
             {
+              title: "地址管理",
+              route: "address-list",
+            },
+            {
               title: "修改密码",
               route: "change-password",
             },
+            // {
+            //   title: "我的售后",
+            //   route: "refund-list",
+            // },
           ]
         },
-        {
-          title: "其他",
-          route: "",
-          icon: require('@img/my/nav-3.png'),
-          child: [
-            {
-              title: "我的积分",
-              route: "points-record",
-            },
-            {
-              title: "我的优惠券",
-              route: "coupon-list",
-            },
-            {
-              title: "领券中心",
-              route: "coupon-center",
-            },
 
-          ]
-        },
+        // {
+        //   title: "我的活动",
+        //   route: "",
+        //   icon: require('@img/my/nav-2.png'),
+        //   child: [
+        //     {
+        //       title: "我的收藏",
+        //       route: "favorite-list",
+        //     },
+        //     {
+        //       title: "我的足迹",
+        //       route: "browse-history",
+        //     },
+        //   ]
+        // },
+        // {
+        //   title: "个人资料",
+        //   route: "",
+        //   icon: require('@img/my/nav-3.png'),
+        //   child: [
+        //     {
+        //       title: "地址管理",
+        //       route: "address-list",
+        //     },
+        //     {
+        //       title: "我的发票",
+        //       route: "invoice-list",
+        //     },
+        //     {
+        //       title: "个人资料",
+        //       route: "my-info",
+        //     },
+        //     {
+        //       title: "修改密码",
+        //       route: "change-password",
+        //     },
+        //   ]
+        // },
+        // {
+        //   title: "其他",
+        //   route: "",
+        //   icon: require('@img/my/nav-3.png'),
+        //   child: [
+        //     {
+        //       title: "我的积分",
+        //       route: "points-record",
+        //     },
+        //     {
+        //       title: "我的优惠券",
+        //       route: "coupon-list",
+        //     },
+        //     {
+        //       title: "领券中心",
+        //       route: "coupon-center",
+        //     },
+        //
+        //   ]
+        // },
 
         // {
         //   title: "评价晒单",
@@ -260,7 +270,7 @@ export default {
 
 <style scoped lang="less">
 .page-user-wrap {
-  background: #F9FAFC;
+  background: #000;
   padding-top: 35px;
 
   .inner {
@@ -275,42 +285,23 @@ export default {
 
     .menu-wrap {
       width: 220px;
-      min-width: 220px;
-      margin-bottom: 50px;
-      background: #f9f9f9;
-      background: #fff;
-      padding-bottom: 20px;
+      height: 100%;
+      background: #1D1D1D;
+      padding-bottom: 65px;
 
 
       .left-title {
-        padding: 18px 0;
-        text-align: center;
+        padding: 0 16px;
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
-        font-size: 18px;
-        color: #333333;
-      }
-
-      .title-line {
-        margin: 0 auto;
-        width: 196px;
-        background: #F0F0F0;
-        height: 1px;
+        font-size: 16px;
+        height: 46px;
+        line-height: 46px;
+        color: #fff;
       }
 
       .nav-wrap {
         .nav-group {
-
-          // margin-bottom: 10px;
-          &::after {
-            content: '';
-            display: inline-block;
-            margin: 0 auto;
-            width: 196px;
-            height: 1px;
-            background: #F0F0F0;
-          }
-
           .group-title-box {
             padding: 14px 14px;
             cursor: pointer;
@@ -350,19 +341,21 @@ export default {
 
           .sub-child {
             .sub-item {
-              padding: 8px 45px;
+              height: 40px;
+              line-height: 40px;
+
+              padding: 0px 34px;
               cursor: pointer;
 
               .sub-title {
-
                 font-family: Microsoft YaHei, Microsoft YaHei;
                 font-weight: 400;
                 font-size: 14px;
-                color: #666666;
-
-                &.active {
-                  color: #F74747;
-                }
+                color: #fff;
+              }
+              &.active {
+                background: #5A5A5A;
+                font-weight: bold;
               }
             }
           }

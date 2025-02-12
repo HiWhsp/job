@@ -7,7 +7,7 @@
             <div class="input-item">
               <div class="label">你的名字：</div>
               <div class="input-box">
-                <el-input clearable v-model="form.firstName" placeholder="名"></el-input>
+                <el-input clearable v-model="form.firstName" placeholder="名字"></el-input>
               </div>
             </div>
             <div class="input-item">

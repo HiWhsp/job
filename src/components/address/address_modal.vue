@@ -1,7 +1,9 @@
 <template>
   <div class="modal-container">
-    <el-dialog class="modal-address" title="新增地址" width="500px" :visible.sync="show_modal" :before-close="onModal_close"
-      :close-on-press-escape="false" :close-on-click-modal="false" custom-class="modal-custom" @closed="onclosed">
+    <el-dialog class="modal-address" title="新增地址" width="500px" :visible.sync="show_modal"
+               :before-close="onModal_close"
+               :close-on-press-escape="false" :close-on-click-modal="false" custom-class="modal-custom"
+               @closed="onclosed">
       <div class="modal-inner">
         <div class="item">
           <span class="text required">收货人</span>
@@ -13,7 +15,7 @@
         </div>
         <div class="item">
           <span class="text required">所在地区</span>
-          <area_select ref="area_select" @change="changeSelectAddress" />
+          <area_select ref="area_select" @change="changeSelectAddress"/>
         </div>
         <div class="item">
           <span class="text required">详细地址</span>
@@ -22,13 +24,13 @@
         <div class="item">
           <span class="text">默认地址</span>
           <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#F74747"
-            inactive-color="#eeeeee">
+                     inactive-color="#eeeeee">
           </el-switch>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <button class="btn-ripple fit-text btn-1" @click="throttle_do_submit()" :loading="loading">保 存</button>
-        <button class="btn-ripple fit-text btn-2" @click="show_modal = false">取 消</button>
+        <button class="btn-ripple fit-text btn-1" @click="show_modal = false">取 消</button>
+        <button class="btn-ripple fit-text btn-2" @click="throttle_do_submit()" :loading="loading">保 存</button>
       </span>
     </el-dialog>
   </div>
@@ -37,7 +39,8 @@
 <script>
 import area_select from "@/components/address/area_select.vue";
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
+
 export default {
   name: "address-add",
   components: {
@@ -72,9 +75,7 @@ export default {
   computed: {
     ...mapState(["baseInfo"]),
   },
-  watch: {
-
-  },
+  watch: {},
 
   created() {
     this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
@@ -99,7 +100,7 @@ export default {
       this.$api("userAddress_detail", {
         id: this.form.id
       }).then((res) => {
-        let { code, data, msg } = res;
+        let {code, data, msg} = res;
         if (code == 200) {
 
           this.form = {
@@ -152,7 +153,7 @@ export default {
     //更新当前父组件数据
     changeSelectAddress(data) {
       this.$log("更新省市区数据", data);
-      let { sheng, shi, qu } = data;
+      let {sheng, shi, qu} = data;
       this.form.province = sheng.title;
       this.form.city = shi.title;
       this.form.area = qu.title;
@@ -162,7 +163,6 @@ export default {
       this.form.areaCode = qu.id;
       // debugger
     },
-
 
 
     // 新建地址 / 编辑地址
@@ -229,18 +229,16 @@ export default {
 
   .modal-inner {
     padding: 0;
-
-
     .item {
       margin-bottom: 20px;
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
 
       .text {
         min-width: 190px;
-        text-align: left;
         text-align: right;
         padding-right: 10px;
+        color: #fff;
 
         &.required {
           &::before {
@@ -259,12 +257,18 @@ export default {
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
           font-size: 14px;
-          color: #999999;
+          color: #fff;
         }
       }
 
       .default-text {
         margin-left: 20px;
+      }
+
+      .el-input__inner {
+        background-color: transparent;
+        border: 1px solid #7B7B7B;
+        color: #fff;
       }
 
       .el-select {
@@ -284,21 +288,30 @@ export default {
 
 /deep/ .el-dialog__header {
   padding: 16px 24px;
-  border-bottom: 1px solid #eee;
-  background: #F7F7F7;
+  border-top: 5px solid #666666;
+  border-right: 5px solid #666666;
+  border-left: 5px solid #666666;
+  background: #000;
 
   font-family: Poppins, Poppins;
   font-weight: 600;
   font-size: 18px;
-  color: #333333;
+  color: #fff;
+
 
   .el-dialog__close {
     font-size: 20px;
+  }
+  .el-dialog__title {
+    color: #fff;
   }
 }
 
 /deep/ .el-dialog__body {
   padding: 36px 60px 36px 0;
+  border-right: 5px solid #666;
+  border-left: 5px solid #666;
+  background-color: #000;
 }
 
 
@@ -322,6 +335,10 @@ export default {
 /deep/ .el-dialog__footer {
   text-align: center;
   padding-bottom: 50px;
+  background-color: #000;
+  border-right: 5px solid #666;
+  border-left: 5px solid #666;
+  border-bottom: 5px solid #666;
 
   button {
     margin: 0 12px;
@@ -330,20 +347,18 @@ export default {
   .btn-1 {
     min-width: 120px;
     height: 32px;
-    background: #FFFFFF;
-    border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    background: #000;
+    border: 1px solid #7B7B7B;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
+    color: #fff;
   }
 
   .btn-2 {
     min-width: 120px;
     height: 32px;
-    background: #F74747;
-    border-radius: 50px 50px 50px 50px;
+    background: #DF1626;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;

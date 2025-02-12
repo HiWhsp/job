@@ -1,54 +1,54 @@
 <template>
   <div class="page">
-    <div class="page-title">我的订单</div>
+    <!--    <div class="page-title">我的订单</div>-->
 
     <div class="page-ctx">
       <div class="tab-box">
         <div class="tab-list">
-          <div v-for="(item, index) in tabList" :key="index" class="tab-item"
-            :class="tabSelect.value == item.value ? 'active' : ''" @click="do_toggle_tab(item)">
+          <div v-for="(item, index) in tabList" :key="index" :class="tabSelect.value == item.value ? 'active' : ''"
+               class="tab-item" @click="do_toggle_tab(item)">
             {{ item.title }}
-            <span class="number" v-if="item.num">{{ item.num }}</span>
+            <span v-if="item.num" class="number">{{ item.num }}</span>
           </div>
         </div>
-        <!-- <div class="search-box">
-          <input v-model="keyword" type="text" placeholder="输入商品名称、订单号" />
+        <div class="search-box">
+          <input v-model="keyword" placeholder="输入商品名称、订单号" type="text"/>
           <button @click="do_search()">搜索</button>
           <button @click="do_reset()">重置</button>
-        </div> -->
+        </div>
       </div>
 
       <div class="page-sec">
         <!-- <orderList :list="orders" @confirm="emitConfirm"/> -->
 
         <div class="order-list-wrap">
-          <div class="info-item" v-for="(item, index) in orders" :key="index">
+          <div v-for="(item, index) in orders" :key="index" class="info-item">
             <div class="base-box flex-between">
               <div class="date">{{ item.createdTime }}</div>
               <div class="order-code">
                 订单号：
                 <span>{{ item.orderNo }}</span>
               </div>
-              <div class="order-state" :class="'state-' + item.orderStatus">
+              <div :class="'state-' + item.orderStatus" class="order-state">
                 {{ item.statusInfo }}
               </div>
             </div>
 
             <div class="product-box">
               <div class="product-list">
-                <div class="product-item flex" v-for="(product_item, product_index) in item.products"
-                  :key="product_index">
+                <div v-for="(product_item, product_index) in item.products" :key="product_index"
+                     class="product-item flex">
                   <div class="box-image cover" @click="mix_to_product(product_item)">
                     <!-- <img :src="good.img" alt /> -->
                     <el-image :src="product_item.image">
                       <div slot="error" class="image-slot">
-                        <img :src="product_item.image" />
+                        <img :src="product_item.image"/>
                       </div>
                     </el-image>
                   </div>
                   <div class="box-title">
                     <div class="product-title" @click="mix_to_product(product_item)">{{ product_item.title }}</div>
-                    <div class="product-sku">{{ product_item.keyVals }}</div>
+<!--                    <div class="product-sku">{{ product_item.keyVals }}</div>-->
                   </div>
                   <!-- <div class="box-sku">
                     <div class="product-sku">{{ product_item.keyVals }}</div>
@@ -57,7 +57,7 @@
                   <div class="box-num">
                     x {{ product_item.num }}
                   </div>
-                  <div class="box-subtotal">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
+                  <div class="box-subtotal">{{ vuex_huobi }} {{ product_item.priceSale * product_item.num }}</div>
                   <!-- <div class="box-refund">
                     <div class="refund-act">
                       申请售后
@@ -109,22 +109,22 @@
 
         </div>
 
-        <div v-if="count" class="pagination-box" style="margin-top: 40px; text-align: right;">
-          <el-pagination background layout="total, prev, pager, next" @current-change="on_current_change"
-            :current-page.sync="pagination.page" :page-size="pagination.pageNum" :total="count"></el-pagination>
+        <div v-if="count" class="pagination-box" style="margin-top: 40px; text-align: center;">
+          <el-pagination :current-page.sync="pagination.page" :page-size="pagination.pageNum" :total="count"
+                         background layout="total, prev, pager, next"
+                         @current-change="on_current_change"></el-pagination>
         </div>
 
         <el-empty v-if="!count" description="没有查询到订单信息..."></el-empty>
       </div>
-      
+
     </div>
 
 
-
-    <order_cancel_modal ref="order_cancel_modal" @confirm="emitConfirm" data-type="取消" />
-    <order_delete_modal ref="order_delete_modal" @confirm="emitConfirm" data-type="删除" />
-    <order_receive_modal ref="order_receive_modal" @confirm="emitConfirm" data-type="收货" />
-    <order_refund_modal ref="order_refund_modal" @confirm="emitConfirm" data-type="售后" />
+    <order_cancel_modal ref="order_cancel_modal" data-type="取消" @confirm="emitConfirm"/>
+    <order_delete_modal ref="order_delete_modal" data-type="删除" @confirm="emitConfirm"/>
+    <order_receive_modal ref="order_receive_modal" data-type="收货" @confirm="emitConfirm"/>
+    <order_refund_modal ref="order_refund_modal" data-type="售后" @confirm="emitConfirm"/>
 
   </div>
 </template>
@@ -137,7 +137,7 @@ import order_receive_modal from "@/components/order/order_receive_modal.vue"; //
 import order_refund_modal from "@/components/order/order_refund_modal.vue"; //售后
 
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "servicePage",
@@ -169,20 +169,20 @@ export default {
     ...mapState([""]),
 
     tabList() {
-      //scene 
+      //scene
       //筛选状态：0-全部 1-待支付 2-待发货 3-待收货 4-待核销 5-已完成 6-待评价 7-已取消
-      //orderStatus 
+      //orderStatus
       //订单状态：-5-待支付  -1-已取消  2-待发货  3-待收货  4-待自提  5-已完成
       let user_index = {} || this.user_index;
       let tabList = [
-        { value: 0, title: "全部订单" },
-        { value: 1, title: "待付款", num: user_index.order_num_1 || 0 },
-        { value: 2, title: "待发货", num: user_index.order_num_2 || 0 },
-        { value: 3, title: "待收货", num: user_index.order_num_3 || 0 },
+        {value: 0, title: "全部订单"},
+        {value: 1, title: "待付款", num: user_index.order_num_1 || 0},
+        {value: 2, title: "待发货", num: user_index.order_num_2 || 0},
+        {value: 3, title: "待收货", num: user_index.order_num_3 || 0},
         // { value: 4, title: "待核销", num: user_index.order_num_4 || 0 },
-        { value: 6, title: "待评价", num: user_index.order_num_4 || 0 },
-        { value: 5, title: "已完成", num: user_index.order_num_4 || 0 },
-        { value: 7, title: "已取消", num: user_index.order_num_4 || 0 },
+        {value: 6, title: "待评价", num: user_index.order_num_4 || 0},
+        {value: 5, title: "已完成", num: user_index.order_num_4 || 0},
+        {value: 7, title: "已取消", num: user_index.order_num_4 || 0},
         // { value: 6, title: "待审核", num: user_index.order_num_6 || 0 },
       ];
       return tabList;
@@ -208,7 +208,7 @@ export default {
     //用户主页数据
     query_userIndex() {
       this.$api("users_index").then((res) => {
-        let { code, data } = res;
+        let {code, data} = res;
         if (code == 200) {
           this.user_index = data;
         }
@@ -227,7 +227,7 @@ export default {
           // keyword: this.keyword,
         },
       }).then((res) => {
-        let { code, data } = res;
+        let {code, data} = res;
         if (code == 200) {
           let list = data.list
 
@@ -252,7 +252,7 @@ export default {
 
     //根据订单状态获取订单操作结果
     getOrderActions(order) {
-      let { status, status_info, ifpingjia } = order;
+      let {status, status_info, ifpingjia} = order;
       let actions = [];
       // let actions = [
       //   { name: "取消订单",type: 'quxiao' },
@@ -267,22 +267,22 @@ export default {
       if (status == -5) {
         //待支付
         if (status_info == "无效") {
-          actions = [{ name: "取消订单", type: "quxiao" }];
+          actions = [{name: "取消订单", type: "quxiao"}];
         } else if (status_info == "待支付") {
           actions = [
-            { name: "立即支付", type: "zhifu" },
-            { name: "取消订单", type: "quxiao" },
+            {name: "立即支付", type: "zhifu"},
+            {name: "取消订单", type: "quxiao"},
           ];
         }
       } else if (status == -3) {
         //-3售后处理中
-        actions = [{ name: "删除订单", type: "shanchu" }];
+        actions = [{name: "删除订单", type: "shanchu"}];
       } else if (status == -1) {
         //无效
-        actions = [{ name: "删除订单", type: "shanchu" }];
+        actions = [{name: "删除订单", type: "shanchu"}];
       } else if (status == 0) {
         //0待成团
-        actions = [{ name: "取消订单", type: "quxiao" }];
+        actions = [{name: "取消订单", type: "quxiao"}];
       } else if (status == 2) {
         //2待发货
         actions = [
@@ -291,8 +291,8 @@ export default {
       } else if (status == 3) {
         //3待收货
         actions = [
-          { name: "确认收货", type: "shouhuo" },
-          { name: "查看物流", type: "wuliu" },
+          {name: "确认收货", type: "shouhuo"},
+          {name: "查看物流", type: "wuliu"},
         ];
       } else if (status == 4) {
         //4已收货
@@ -343,7 +343,6 @@ export default {
     },
 
 
-
     toDetail(item) {
       // this.$router.push(`/order-detail?id=${item.id}`);
       this.toRoute({
@@ -370,7 +369,8 @@ export default {
     doReceive(item) {
       this.$refs.order_receive_modal.init(item);
     },
-    doReview(item) { },
+    doReview(item) {
+    },
     doRefund(item) {
       this.$refs.order_refund_modal.init(item);
     },
@@ -400,7 +400,7 @@ export default {
         this.jump_shouhou(order_id);
       } else if (name == "查看物流") {
         this.$router.push(
-          `/orderLogistics?order_id=${order_id}&logistics_id=${fahuo_id}`
+            `/orderLogistics?order_id=${order_id}&logistics_id=${fahuo_id}`
         );
       } else if (name == "售后") {
         this.$router.push(`/refundFeedback?order_id=${order_id}`);
@@ -422,7 +422,7 @@ export default {
     //删除订单
     orders_del(order_id) {
       order.orders_del({
-        params: { order_id },
+        params: {order_id},
         success: () => {
           this.updateView();
         },
@@ -462,7 +462,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 /deep/ .order-list-wrap {
   margin-top: 30px;
 }
@@ -483,48 +483,40 @@ export default {
   }
 
   .page-ctx {
-    margin-top: 14px;
     padding: 24px 32px;
-    background: #fff;
+    background: #1D1D1D;
   }
 }
 
 
-
 .tab-box {
   padding-right: 20px;
-    display: flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #ffffff;
-  // border: 1px solid #cccccc;
 
   .tab-list {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 20px;
-    color: #7d7d7d;
+    color: #fff;
 
     .tab-item {
       position: relative;
-      // min-width: 96px;
       height: 48px;
       line-height: 48px;
       cursor: pointer;
       margin-right: 40px;
 
       .number {
-        color: #F74747;
+        color: #fff;
       }
 
       &.active {
-        // background: #F74747;
-        // color: #fff;
         font-weight: bold;
-        color: #F74747;
 
         &::after {
           content: "";
@@ -533,36 +525,35 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #F74747;
+          background: #fff;
         }
       }
     }
   }
 
   .search-box {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     min-width: 260px;
     height: 32px;
-    background: #f9f9f9;
 
     input {
-      background: #f9f9f9;
+      background: transparent;
       flex: 2;
       height: 100%;
-      border: 1px solid #e2e2e2;
+      border: 1px solid #656565;
       border-right: none;
       outline: none;
       padding-left: 10px;
       font-size: 12px;
+      color: #ccc;
     }
 
     button {
       width: 50px;
       height: 32px;
-      background: #ffffff;
-      border: 1px solid #e2e2e2;
-      color: #7d7d7d;
+      border: 1px solid #656565;
+      color: #ccc;
 
       &:last-child {
         border-left: 0;
@@ -570,10 +561,6 @@ export default {
     }
   }
 }
-
-
-
-
 
 
 .goods-sku {
@@ -593,26 +580,22 @@ export default {
 }
 
 
-
-
-
 .order-list-wrap {
   .info-item {
-    border: 1px solid #e5e5e5;
+    border: 1px solid #4D4D4D;
     margin-bottom: 30px;
   }
 
   .base-box {
     height: 48px;
     padding: 0 15px;
-    background: #f5f5f5;
-    border-bottom: 1px solid #e5e5e5;
+    background: #5A5A5A;
 
     .date {
       font-size: 14px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
       font-weight: bold;
-      color: #333333;
+      color: #fff;
     }
 
     .order-code {
@@ -623,10 +606,10 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
       font-weight: bold;
-      color: #333333;
+      color: #fff;
 
       span {
-        color: #333333;
+        color: #fff;
       }
     }
 
@@ -637,8 +620,7 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
-      color: #999999;
-      color: #F74747;
+      color: #fff;
 
       // 待付款
       &.state--5 {
@@ -648,8 +630,7 @@ export default {
       }
 
       &.state-2 {
-        color: #F74747;
-        border-color: #F74747;
+        color: #fff;
       }
     }
   }
@@ -658,14 +639,13 @@ export default {
     .product-list {
       .product-item {
         padding: 20px;
-        border-bottom: 1px dashed #ccc;
 
-        font-family: OPPOSans, OPPOSans;
         font-weight: 400;
         font-size: 14px;
         color: #333333;
+        border-top: 1px solid #4D4D4D;
 
-        &:last-child {
+        &:first-child {
           border: none;
         }
 
@@ -700,7 +680,7 @@ export default {
           .product-title {
             width: fit-content;
             cursor: pointer;
-
+            color: #fff;
             &:hover {
               color: #F74747;
             }
@@ -721,6 +701,7 @@ export default {
         .box-num {
           text-align: center;
           min-width: 150px;
+          color: #fff;
         }
 
         .box-price {
@@ -730,8 +711,9 @@ export default {
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
           font-size: 14px;
-          color: #777;
+          color: #fff;
         }
+
         .box-subtotal {
           text-align: center;
           min-width: 150px;
@@ -739,19 +721,20 @@ export default {
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
           font-size: 14px;
-          color: #777;
+          color: #fff;
         }
-        .box-refund{
+
+        .box-refund {
           .refund-act {
             text-align: center;
-          min-width: 150px;
+            min-width: 150px;
 
-          font-family: OPPOSans, OPPOSans;
-          font-weight: 400;
-          font-size: 14px;
-          color: #FF0000;
+            font-family: OPPOSans, OPPOSans;
+            font-weight: 400;
+            font-size: 14px;
+            color: #fff;
           }
-        
+
         }
       }
     }
@@ -759,10 +742,10 @@ export default {
 
   .info-heji {
     padding: 15px;
-    border-top: 1px solid #e5e5e5;
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    border-top: 1px solid #4D4D4D;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: 400;
@@ -770,8 +753,8 @@ export default {
     color: #7d7d7d;
 
     .heji {
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
@@ -779,15 +762,16 @@ export default {
 
       .heji-num {
         margin-right: 30px;
-
+        color: #fff;
         b {
-          color: #F74747;
+          font-weight: bold;
         }
       }
 
       .heji-money {
+        color: #fff;
         b {
-          color: #F74747;
+          font-weight: bold;
         }
       }
     }
@@ -797,16 +781,13 @@ export default {
         transition: 0.3s;
         min-width: 120px;
         height: 32px;
-        background: #FFFFFF;
-        border-radius: 50px 50px 50px 50px;
-        border-radius: 4px;
-        border: 1px solid #F74747;
+        border: 1px solid #939393;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #F74747;
+        color: #fff;
 
-        &+button {
+        & + button {
           margin-left: 20px;
         }
 
@@ -815,7 +796,8 @@ export default {
         }
 
         &.btn-bg {
-          background: #F74747;
+          border: none;
+          background: #DF1626;
           color: #FFFFFF;
         }
       }
@@ -824,6 +806,6 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/shop/order-list.less"></style>
+<style lang="less" scoped src="@/assets/h5css/shop/order-list.less"></style>
 
-<style scoped lang="less" src="@/assets/h5css/shop/orderList.less"></style>
+<style lang="less" scoped src="@/assets/h5css/shop/orderList.less"></style>

@@ -5,38 +5,55 @@
       <img width="100%" :src="dialogImageUrl" alt="" />
     </el-dialog> -->
     <div class="page-title flex-between">
-      <span>订单详情</span>
-      <button @click="$router.push('/order-list')">返回</button>
+      <span>查看订单详情</span>
+      <!--      <button @click="$router.push('/order-list')">返回</button>-->
     </div>
 
     <div class="page-ctx">
-      <div class="step-box">
-        <div class="step-item active">
-          <div class="step-number">
-            <div class="step-line step-line-1"></div>
-            <div class="step-num">1</div>
-            <div class="step-line step-line-2"></div>
-          </div>
-          <div class="step-title">订购时间</div>
-          <div class="step-date">{{ info.createdTime }}</div>
+
+      <!--      <div class="step-box">-->
+      <!--        <div class="step-item active">-->
+      <!--          <div class="step-number">-->
+      <!--            <div class="step-line step-line-1"></div>-->
+      <!--            <div class="step-num">1</div>-->
+      <!--            <div class="step-line step-line-2"></div>-->
+      <!--          </div>-->
+      <!--          <div class="step-title">订购时间</div>-->
+      <!--          <div class="step-date">{{ info.createdTime }}</div>-->
+      <!--        </div>-->
+      <!--        <div :class="{ active: info.orderStatus >= 3 }" class="step-item">-->
+      <!--          <div class="step-number">-->
+      <!--            <div class="step-line step-line-3"></div>-->
+      <!--            <div class="step-num">2</div>-->
+      <!--            <div class="step-line step-line-4"></div>-->
+      <!--          </div>-->
+      <!--          <div class="step-title">商品发货</div>-->
+      <!--          <div class="step-date" style="visibility: hidden">-</div>-->
+      <!--        </div>-->
+      <!--        <div :class="{ active: info.orderStatus >= 5 }" class="step-item">-->
+      <!--          <div class="step-number">-->
+      <!--            <div class="step-line step-line-5"></div>-->
+      <!--            <div class="step-num">3</div>-->
+      <!--            <div class="step-line step-line-6"></div>-->
+      <!--          </div>-->
+      <!--          <div class="step-title">订单收货</div>-->
+      <!--          <div class="step-date" style="visibility: hidden">-</div>-->
+      <!--        </div>-->
+      <!--      </div>-->
+
+      <div class="base-ctx">
+        <div class="base-title flex">
+          <p style="margin-right: 40px;">运单号码 : {{ fahuo_info.order_id }}</p>
+          <p>物流公司 : {{ fahuo_info.company }}</p>
         </div>
-        <div class="step-item" :class="{ active: info.orderStatus >= 3 }">
-          <div class="step-number">
-            <div class="step-line step-line-3"></div>
-            <div class="step-num">2</div>
-            <div class="step-line step-line-4"></div>
+        <div class="base-items">
+          <div class="timeline">
+            <div v-for="(item, index) in timelineItems" :key="index" class="timeline-item">
+              <div class="timeline-item__dot"></div>
+              <div class="timeline-item__time">{{ item.time }}</div>
+              <div class="timeline-item__content">{{ item.content }}</div>
+            </div>
           </div>
-          <div class="step-title">商品发货</div>
-          <div class="step-date" style="visibility: hidden">-</div>
-        </div>
-        <div class="step-item" :class="{ active: info.orderStatus >= 5 }">
-          <div class="step-number">
-            <div class="step-line step-line-5"></div>
-            <div class="step-num">3</div>
-            <div class="step-line step-line-6"></div>
-          </div>
-          <div class="step-title">订单收货</div>
-          <div class="step-date" style="visibility: hidden">-</div>
         </div>
       </div>
 
@@ -73,7 +90,7 @@
           <div class="base-item">
             <div class="info-title">支付及配送方式</div>
             <div class="info-content">
-              <div class="info-item" v-if="is_finish_pay">
+              <div v-if="is_finish_pay" class="info-item">
                 <div class="label">支付方式：</div>
                 <div class="val">
                   <span v-if="payInfo.balance">余额</span>
@@ -96,112 +113,113 @@
             </div>
           </div>
 
-          <div class="base-item" v-if="invioceJson.invoiceType">
-            <div class="info-title">发票信息</div>
-            <div class="info-content">
-              <div class="info-item">
-                <div class="label">发票抬头:</div>
-                <div class="val">{{ invioceJson.title }}</div>
-              </div>
-              <div class="info-item">
-                <div class="label">纳税人识别号:</div>
-                <div class="val">{{ invioceJson.shibiema }}</div>
-              </div>
-              <div class="info-item">
-                <div class="label">注册地址:</div>
-                <div class="val">{{ invioceJson.companyAddress }}</div>
-              </div>
-              <div class="info-item">
-                <div class="label">注册电话:</div>
-                <div class="val">{{ invioceJson.companyPhone }}</div>
-              </div>
-              <div class="info-item">
-                <div class="label">开户银行:</div>
-                <div class="val">{{ invioceJson.bankName }}</div>
-              </div>
-              <div class="info-item">
-                <div class="label">银行账户:</div>
-                <div class="val">{{ invioceJson.bankNo }}</div>
-              </div>
-            </div>
-          </div>
+          <!--          <div v-if="invioceJson.invoiceType" class="base-item">-->
+          <!--            <div class="info-title">发票信息</div>-->
+          <!--            <div class="info-content">-->
+          <!--              <div class="info-item">-->
+          <!--                <div class="label">发票抬头:</div>-->
+          <!--                <div class="val">{{ invioceJson.title }}</div>-->
+          <!--              </div>-->
+          <!--              <div class="info-item">-->
+          <!--                <div class="label">纳税人识别号:</div>-->
+          <!--                <div class="val">{{ invioceJson.shibiema }}</div>-->
+          <!--              </div>-->
+          <!--              <div class="info-item">-->
+          <!--                <div class="label">注册地址:</div>-->
+          <!--                <div class="val">{{ invioceJson.companyAddress }}</div>-->
+          <!--              </div>-->
+          <!--              <div class="info-item">-->
+          <!--                <div class="label">注册电话:</div>-->
+          <!--                <div class="val">{{ invioceJson.companyPhone }}</div>-->
+          <!--              </div>-->
+          <!--              <div class="info-item">-->
+          <!--                <div class="label">开户银行:</div>-->
+          <!--                <div class="val">{{ invioceJson.bankName }}</div>-->
+          <!--              </div>-->
+          <!--              <div class="info-item">-->
+          <!--                <div class="label">银行账户:</div>-->
+          <!--                <div class="val">{{ invioceJson.bankNo }}</div>-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--          </div>-->
 
           <!-- 物流信息 -->
-          <div class="item" v-if="fahuo_info.company">
-            <div class="info-title">发货信息</div>
-            <div class="info-content">
-              <div class="wuliu-name">
-                <span>快递公司：</span>
-                {{ fahuo_info.company }}
-              </div>
-              <div class="wuliu-code">
-                <span>物流单号：</span>
-                {{ fahuo_info.order_id }}
-              </div>
-            </div>
-          </div>
+          <!--          <div v-if="fahuo_info.company" class="item">-->
+          <!--            <div class="info-title">发货信息</div>-->
+          <!--            <div class="info-content">-->
+          <!--              <div class="wuliu-name">-->
+          <!--                <span>快递公司：</span>-->
+          <!--                {{ fahuo_info.company }}-->
+          <!--              </div>-->
+          <!--              <div class="wuliu-code">-->
+          <!--                <span>物流单号：</span>-->
+          <!--                {{ fahuo_info.order_id }}-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--          </div>-->
+
           <!-- 物流信息 -->
-          <div class="item" v-if="orderObj.remark">
-            <div class="info-title">订单备注</div>
-            <div class="info-content">
-              <div class="wuliu-name">
-                <span>备注：</span>
-                {{ orderObj.remark }}
-              </div>
-            </div>
-          </div>
+          <!--          <div v-if="orderObj.remark" class="item">-->
+          <!--            <div class="info-title">订单备注</div>-->
+          <!--            <div class="info-content">-->
+          <!--              <div class="wuliu-name">-->
+          <!--                <span>备注：</span>-->
+          <!--                {{ orderObj.remark }}-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--          </div>-->
 
-          <div class="item" v-if="peisong_type_text == '上门自提'">
-            <div class="info-title">取货人信息</div>
-            <div class="info-content">
-              <div class="name">
-                <span>取货人：</span>
-                {{ shouhuoInfo.name }}
-              </div>
-              <div class="phone">
-                <span>手机号码：</span>
-                {{ shouhuoInfo.phone }}
-              </div>
-            </div>
-          </div>
+          <!--          <div v-if="peisong_type_text == '上门自提'" class="item">-->
+          <!--            <div class="info-title">取货人信息</div>-->
+          <!--            <div class="info-content">-->
+          <!--              <div class="name">-->
+          <!--                <span>取货人：</span>-->
+          <!--                {{ shouhuoInfo.name }}-->
+          <!--              </div>-->
+          <!--              <div class="phone">-->
+          <!--                <span>手机号码：</span>-->
+          <!--                {{ shouhuoInfo.phone }}-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--          </div>-->
 
-          <div class="item" v-if="peisong_type_text == '上门自提'">
-            <div class="info-title">厂家信息</div>
-            <div class="info-content">
-              <div class="phone">
-                <span>联系方式：</span>
-                {{ shequ.phone }}
-              </div>
-              <div class="address">
-                <span>厂家地址：</span>
-                {{ shequ.address }}
-              </div>
-            </div>
-          </div>
+          <!--          <div v-if="peisong_type_text == '上门自提'" class="item">-->
+          <!--            <div class="info-title">厂家信息</div>-->
+          <!--            <div class="info-content">-->
+          <!--              <div class="phone">-->
+          <!--                <span>联系方式：</span>-->
+          <!--                {{ shequ.phone }}-->
+          <!--              </div>-->
+          <!--              <div class="address">-->
+          <!--                <span>厂家地址：</span>-->
+          <!--                {{ shequ.address }}-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--          </div>-->
 
           <!-- 转款凭证 -->
-          <div class="item" v-if="is_xianxia">
-            <div class="info-title">转账凭证</div>
-            <div class="info-content">
-              <div class="wuliu-name">
-                <!-- <span>转账凭证：</span> -->
-                <div class="pingzheng-box">
-                  <div
-                    class="pingzheng-item"
-                    v-for="(item, index) in xianxia_imgs"
-                    :key="index"
-                  >
-                    <el-image
-                      style="width: 100px; height: 100px"
-                      :src="item"
-                      :preview-src-list="xianxia_imgs"
-                    >
-                    </el-image>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <!--          <div v-if="is_xianxia" class="item">-->
+          <!--            <div class="info-title">转账凭证</div>-->
+          <!--            <div class="info-content">-->
+          <!--              <div class="wuliu-name">-->
+          <!--                &lt;!&ndash; <span>转账凭证：</span> &ndash;&gt;-->
+          <!--                <div class="pingzheng-box">-->
+          <!--                  <div-->
+          <!--                      v-for="(item, index) in xianxia_imgs"-->
+          <!--                      :key="index"-->
+          <!--                      class="pingzheng-item"-->
+          <!--                  >-->
+          <!--                    <el-image-->
+          <!--                        :preview-src-list="xianxia_imgs"-->
+          <!--                        :src="item"-->
+          <!--                        style="width: 100px; height: 100px"-->
+          <!--                    >-->
+          <!--                    </el-image>-->
+          <!--                  </div>-->
+          <!--                </div>-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--          </div>-->
         </div>
       </div>
 
@@ -221,16 +239,16 @@
             <div class="info-good">
               <div class="list-good">
                 <div
-                  class="item"
-                  v-for="(product_item, index) in info.products"
-                  :key="index"
+                    v-for="(product_item, index) in info.products"
+                    :key="index"
+                    class="item"
                 >
                   <div class="item-good flex">
                     <div class="box-image cover" @click="mix_to_product(product_item)">
                       <!-- <img :src="item.image" alt /> -->
                       <el-image :src="product_item.image">
                         <div slot="error" class="image-slot">
-                          <img :src="product_item.image" />
+                          <img :src="product_item.image"/>
                         </div>
                       </el-image>
                     </div>
@@ -239,22 +257,25 @@
                         {{ product_item.title }}
                       </div>
                     </div>
-                    <div class="box-sku">
-                      <div class="goods-sku">{{ product_item.keyVals }}</div>
-                    </div>
-                    <div class="box-num">x {{ product_item.num }}</div>
+                    <!--                    <div class="box-sku">-->
+                    <!--                      <div class="goods-sku">{{ product_item.keyVals }}</div>-->
+                    <!--                    </div>-->
                     <div class="box-price">
                       {{ vuex_huobi }} {{ product_item.priceSale }}
                     </div>
+                    <div class="box-num">x {{ product_item.num }}</div>
+                    <div class="box-price">
+                      {{ vuex_huobi }} {{ product_item.priceSale * product_item.num }}
+                    </div>
                   </div>
-                  <div class="goods-action" v-if="info.orderStatus == 5">
+                  <div v-if="info.orderStatus == 5" class="goods-action">
                     <!-- <button v-if="!is_jifen_goods && item.allow_actions.allow_refund" class="btn-goods-action" @click="refundApply(item)">申请售后</button> -->
                     <!-- <button v-if="item.ifshouhou" class="btn-goods-action disabled">已售后</button> -->
                     <!-- <button v-if="item.allow_actions.allow_logistics" class="btn-goods-action" @click="toRoute(`/orderLogistics?order_id=${order_id}&logistics_id=${fahuo_id}`)">查看物流</button> -->
                     <button
-                      v-if="product_item.ifComment == 0"
-                      class="btn-goods-action"
-                      @click="to_review(product_item)"
+                        v-if="product_item.ifComment == 0"
+                        class="btn-goods-action"
+                        @click="to_review(product_item)"
                     >
                       商品评价
                     </button>
@@ -279,33 +300,33 @@
                   </div>
                 </div>
                 <div class="money-item">
-                  <span class="label">满减：</span>
+                  <span class="label">配送费：</span>
                   <div class="value">
                     <span class="money-num"
-                      >{{ vuex_huobi }}{{ payInfo.foreignManjian }}</span
+                    >{{ vuex_huobi }}{{ payInfo.foreignYunfei }}</span
                     >
                   </div>
                 </div>
                 <div class="money-item">
-                  <span class="label">运费：</span>
+                  <span class="label">积分抵扣：</span>
                   <div class="value">
                     <span class="money-num"
-                      >{{ vuex_huobi }}{{ payInfo.foreignYunfei }}</span
+                    >{{ vuex_huobi }}{{ payInfo.foreignManjian || 0 }}</span
                     >
                   </div>
                 </div>
                 <div class="money-item">
-                  <span class="label">总计：</span>
+                  <span class="label">合计应付：</span>
                   <div class="value">
                     <span class="money-num money-total"
-                      >{{ vuex_huobi }}{{ info.price }}</span
+                    >{{ vuex_huobi }}{{ info.price }}</span
                     >
                   </div>
                 </div>
-                <div class="zhifufangshi-wrap" v-if="is_finish_pay">
+                <div v-if="is_finish_pay" class="zhifufangshi-wrap">
                   <span>支付方式：</span>
                   <div class="zhifufangshi">
-                    <div class="pay-item" v-if="payInfo.balance">
+                    <div v-if="payInfo.balance" class="pay-item">
                       <span class="pay-title">余额支付</span>
                       <span class="pay-money">
                         -{{ vuex_huobi }}{{ payInfo.balance }}</span
@@ -343,37 +364,37 @@
           <div class="order-action-box">
             <div class="btn-box">
               <button
-                v-if="info.ifCancel == 1"
-                class="btn-ripple fit-text"
-                @click="doCancel(info)"
+                  v-if="info.ifCancel == 1"
+                  class="btn-ripple fit-text"
+                  @click="doCancel(info)"
               >
                 取消订单
               </button>
               <button
-                v-if="info.ifPay == 1"
-                class="btn-ripple fit-text btn-bg"
-                @click="doPay(info)"
+                  v-if="info.ifPay == 1"
+                  class="btn-ripple fit-text btn-bg"
+                  @click="doPay(info)"
               >
                 去支付
               </button>
               <button
-                v-if="info.ifDel == 1"
-                class="btn-ripple fit-text btn-bg"
-                @click="doDelete(info)"
+                  v-if="info.ifDel == 1"
+                  class="btn-ripple fit-text btn-bg"
+                  @click="doDelete(info)"
               >
                 删除订单
               </button>
               <button
-                v-if="info.ifReceive == 1"
-                class="btn-ripple fit-text btn-bg"
-                @click="doReceive(info)"
+                  v-if="info.ifReceive == 1"
+                  class="btn-ripple fit-text btn-bg"
+                  @click="doReceive(info)"
               >
                 确认收货
               </button>
               <button
-                v-if="info.orderStatus >= 5"
-                class="btn-ripple fit-text btn-bg"
-                @click="doRefund(info)"
+                  v-if="info.orderStatus >= 5"
+                  class="btn-ripple fit-text btn-bg"
+                  @click="doRefund(info)"
               >
                 售后
               </button>
@@ -384,24 +405,24 @@
     </div>
 
     <order_cancel_modal
-      ref="order_cancel_modal"
-      @confirm="emitConfirm"
-      data-type="取消"
+        ref="order_cancel_modal"
+        data-type="取消"
+        @confirm="emitConfirm"
     />
     <order_delete_modal
-      ref="order_delete_modal"
-      @confirm="emitConfirm"
-      data-type="删除"
+        ref="order_delete_modal"
+        data-type="删除"
+        @confirm="emitConfirm"
     />
     <order_receive_modal
-      ref="order_receive_modal"
-      @confirm="emitConfirm"
-      data-type="收货"
+        ref="order_receive_modal"
+        data-type="收货"
+        @confirm="emitConfirm"
     />
     <order_refund_modal
-      ref="order_refund_modal"
-      @confirm="emitConfirm"
-      data-type="售后"
+        ref="order_refund_modal"
+        data-type="售后"
+        @confirm="emitConfirm"
     />
   </div>
 </template>
@@ -413,7 +434,7 @@ import order_receive_modal from "@/components/order/order_receive_modal.vue"; //
 import order_refund_modal from "@/components/order/order_refund_modal.vue"; //售后
 
 // import orderInfo from "@/components/order/orderInfo.vue"; //
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "order-detail",
@@ -460,6 +481,12 @@ export default {
       xianxia_imgs: [], //线下凭证信息
       is_xianxia: false, //是否线下转款
       pay_type: "", //支付方式
+      timelineItems: [
+        {time: '2022-10-14 08:21', content: '确认收货'},
+        {time: '2022-10-12 19:22', content: '已到达北京'},
+        {time: '2022-10-10 14:59', content: '包裹正在等待接收'},
+        {time: '2022-10-10 14:00', content: '商品下单'}
+      ]
     };
   },
   computed: {
@@ -467,7 +494,7 @@ export default {
   },
   watch: {
     orderObj(data) {
-      let { shouhuoInfo, status, pay_info, fahuo_info, peisong_type, shequ } = data;
+      let {shouhuoInfo, status, pay_info, fahuo_info, peisong_type, shequ} = data;
 
       this.peisong_type = peisong_type;
       this.shequ = shequ;
@@ -524,7 +551,7 @@ export default {
           id: this.id,
         },
       }).then((res) => {
-        let { code, data, msg } = res;
+        let {code, data, msg} = res;
         if (code == 200) {
           this.info = data;
 
@@ -537,10 +564,10 @@ export default {
           //
           this.shouhuoInfo = data.shouhuoInfo;
           if (data.shouhuoInfo) {
-            let { country, province, city, area, address } = data.shouhuoInfo;
+            let {country, province, city, area, address} = data.shouhuoInfo;
             this.full_receive_address = [country, province, city, area, address]
-              .filter((v) => v)
-              .join(" ");
+                .filter((v) => v)
+                .join(" ");
           }
 
           //
@@ -590,18 +617,20 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .page {
+  width: 956px;
+
   .page-title {
     padding: 0 32px;
     text-align: left;
     height: 56px;
     line-height: 56px;
-    background: #ffffff;
+    background: #1D1D1D;
     font-size: 16px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #333333;
+    color: #fff;
 
     button {
       min-width: 96px;
@@ -618,7 +647,7 @@ export default {
 .page-ctx {
   margin-top: 24px;
   padding: 24px 32px;
-  background: #fff;
+  background: #1D1D1D;
 }
 
 .step-box {
@@ -695,22 +724,20 @@ export default {
 .base-ctx {
   margin-bottom: 24px;
   min-height: 156px;
-  background: #ffffff;
-  border: 1px solid #f5f5f5;
+  border: 1px solid #4D4D4D;
 
   .base-title {
     text-align: left;
     padding-left: 24px;
     height: 48px;
     line-height: 48px;
-    background: #f9f9f9;
-    border-bottom: 1px solid #f5f5f5;
+    background: #5A5A5A;
 
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: bold;
 
-    color: #333333;
+    color: #fff;
   }
 
   .base-items {
@@ -732,8 +759,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
-        color: #333;
+        color: #fff;
         margin-bottom: 10px;
       }
 
@@ -743,7 +769,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 20px;
-        color: #666;
+        color: #fff;
 
         > div {
           margin-bottom: 5px;
@@ -766,6 +792,69 @@ export default {
           .val {
             flex: 1;
           }
+        }
+      }
+    }
+
+    .timeline {
+      padding: 20px;
+      position: relative;
+
+      .timeline-item {
+        display: flex;
+        align-items: start;
+        position: relative;
+        color: #fff;
+        font-size: 14px;
+        padding-left: 40px;
+        height: 50px;
+        line-height: 21px;
+
+        &:last-child {
+          .timeline-item__dot::before {
+            display: none;
+          }
+        }
+
+        &__dot {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 21px;
+          height: 21px;
+          border-radius: 50%;
+          background: #A8A8A8;
+        }
+
+        &__dot::before {
+          content: '';
+          position: absolute;
+          left: 10px;
+          top: 23px;
+          width: 2px;
+          height: 25px;
+          background: #A8A8A8;
+        }
+
+        .active::after {
+          content: '';
+          position: absolute;
+          left: 5px;
+          top: 5px;
+          width: 11px;
+          height: 11px;
+          border-radius: 50%;
+          background: #DF1626;
+        }
+
+        &__time {
+          width: 150px;
+          font-weight: bold;
+        }
+
+        &__content {
+          flex: 1;
+          padding-left: 20px;
         }
       }
     }
@@ -838,7 +927,7 @@ export default {
 
   .order-list-wrap {
     .info-item {
-      border: 1px solid #f5f5f5;
+      border: 1px solid #4D4D4D;
       margin-bottom: 30px;
     }
 
@@ -848,13 +937,12 @@ export default {
       justify-content: space-between;
       height: 48px;
       padding: 0 24px;
-      background: #f9f9f9;
-      border-bottom: 1px solid #f5f5f5;
+      background: #5a5a5a;
 
       font-size: 14px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
       font-weight: bold;
-      color: #333333;
+      color: #fff;
 
       .date {
       }
@@ -873,7 +961,7 @@ export default {
         height: 30px;
         line-height: 30px;
         // background: #F74747;
-        color: #f74747;
+        color: #fff;
         // color: #fff;
         font-size: 14px;
       }
@@ -882,9 +970,10 @@ export default {
     .info-good {
       .list-good {
         .item {
-          border-bottom: 1px solid #f5f5f5;
 
-          &:last-child {
+          border-top: 1px solid #4D4D4D;
+
+          &:first-child {
             border-bottom: none;
           }
         }
@@ -892,6 +981,7 @@ export default {
         .item-good {
           padding: 20px;
           border-bottom: 1px dashed #f5f5f5;
+          font-size: 14px;
 
           &:last-child {
             border: none;
@@ -922,6 +1012,7 @@ export default {
             flex: 1;
             text-align: left;
             padding-left: 40px;
+            color: #fff;
 
             .title {
               width: fit-content;
@@ -941,6 +1032,7 @@ export default {
           .box-num {
             text-align: center;
             min-width: 200px;
+            color: #fff;
           }
 
           .box-price {
@@ -950,7 +1042,7 @@ export default {
             font-family: OPPOSans, OPPOSans;
             font-weight: 400;
             font-size: 14px;
-            color: #ff0000;
+            color: #fff;
           }
         }
 
@@ -993,25 +1085,23 @@ export default {
   // 商品信息汇总和订单操作
 
   .info-heji {
-    background: #fafafa;
+    background: #2F2F2F;
     padding: 24px 40px;
-    border-top: 1px solid #f5f5f5;
     //   display: flex;
-    align-items: center;
     justify-content: space-between;
     align-items: flex-start;
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 20px;
-    color: #666;
+    color: #fff;
 
     .money-box {
       text-align: right;
 
       .count {
         font-weight: bold;
-        color: #f74747;
+        color: #fff;
       }
 
       .money-item {
@@ -1027,7 +1117,7 @@ export default {
           font-family: Arial, Arial;
           font-weight: 400;
           font-size: 14px;
-          color: #666666;
+          color: #fff;
         }
 
         .value {
@@ -1035,7 +1125,7 @@ export default {
           font-family: Arial, Arial;
           font-weight: 400;
           font-size: 14px;
-          color: #666666;
+          color: #fff;
         }
 
         .money-num {
@@ -1043,7 +1133,7 @@ export default {
             font-family: Arial, Arial;
             font-weight: bold;
             font-size: 20px;
-            color: #ff0000;
+            color: #fff;
           }
         }
       }
@@ -1058,24 +1148,23 @@ export default {
       // margin-top: 10px;
 
       button {
+        width: 263px;
+        height: 44px;
         transition: 0.3s;
         min-width: 120px;
-        height: 32px;
-        background: #ffffff;
-        border-radius: 50px 50px 50px 50px;
-        border: 1px solid #f74747;
-        font-family: Arial, Arial;
+        border: 1px solid #4D4D4D;
         font-weight: 400;
         font-size: 14px;
-        color: #f74747;
+        color: #fff;
 
         & + button {
           margin-left: 20px;
         }
 
         &.btn-bg {
-          background: #f74747;
+          background: #DF1626;
           color: #fff;
+          border: none;
         }
 
         &:hover {
@@ -1087,5 +1176,5 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/shop/order-detail.less"></style>
-<style scoped lang="less" src="@/assets/h5css/shop/orderInfo.less"></style>
+<style lang="less" scoped src="@/assets/h5css/shop/order-detail.less"></style>
+<style lang="less" scoped src="@/assets/h5css/shop/orderInfo.less"></style>
