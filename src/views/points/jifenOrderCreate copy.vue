@@ -3,7 +3,7 @@
     <!-- 新增收货地址 -->
     <address_modal ref="address_modal" />
 
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <!-- 收货人地址 -->
       <div class="dizhi-select">
         <div class="dizhi-title">

@@ -1,6 +1,6 @@
 <template>
   <div class="header-box">
-    <div class="header w-1200">
+    <div class="header w-1400">
       <div class="left">
         <div class="logo" @click="$router.push('/')">
           <img :src="logo" />

@@ -1,7 +1,7 @@
 <template>
   <div class="footer-wrap">
     <div class="footer-tip">
-      <div class="footer-icons w-1200">
+      <div class="footer-icons w-1400">
         <div class="icon-item" v-for="(item, index) in footerTips" :key="index">
           <div class="icon-box">
             <img :src="item.icon" alt="" />
@@ -17,7 +17,7 @@
     </div>
 
     <div class="page-footer">
-      <div class="web-footer w-1200">
+      <div class="web-footer w-1400">
         <!-- 底部链接 -->
         <div class="footer-center">
           <div class="nav-group" v-for="(group, index) in groupList" :key="index">

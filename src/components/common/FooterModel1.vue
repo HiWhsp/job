@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
     <div class="baozhang-box">
-      <div class="footer-top-list1 w-1200">
+      <div class="footer-top-list1 w-1400">
         <div class="list1-item">
           <!-- <img src="@pro/index/down1.png" alt /> -->
           <div class="item-con">
@@ -34,7 +34,7 @@
     </div>
 
     <div class="footer-top">
-      <div class="link-box w-1200">
+      <div class="link-box w-1400">
         <div class="left-link">
           <!-- 左侧链接 -->
           <div class="list-link">
@@ -341,7 +341,7 @@ export default {
     .friend-links {
       .flex-center();
       flex-wrap: wrap;
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       padding-bottom: 10px;
 

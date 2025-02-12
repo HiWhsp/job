@@ -3,7 +3,7 @@
     <orderPayWxCode ref="orderPayWxCode" :payment_money="payment_money" />
     <orderPayWaiting ref="orderPayWaiting" />
 
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="order-info">
         <div class="left">
           <img src="@img/pay/create-success.png" alt="" />

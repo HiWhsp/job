@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <pageBreadcrumb :option="nav_option" />
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="pay-info">
         <div class="img-box">
           <img v-if="payState == '支付成功' || payState == '提交成功'" src="@/static/payment/pay-succ.png" alt />

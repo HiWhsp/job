@@ -1,6 +1,6 @@
 <template>
   <div class="header-box">
-    <div class="header w-1200">
+    <div class="header w-1400">
       <!-- 没登录 -->
       <div class="left" v-if="!vuex_is_login">您好，欢迎您来本站购物!</div>
 

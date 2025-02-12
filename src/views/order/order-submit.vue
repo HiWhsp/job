@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <pageBreadcrumb :option="nav_option"/>
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="page-ctx">
         <div class="section sec-addr">
           <div class="section-title">选择收货人地址</div>

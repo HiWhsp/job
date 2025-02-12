@@ -2,7 +2,7 @@
   <div class="page-user-wrap">
     <page_breadcrumb :option="nav_option" />
 
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="page-ctx">
         <div class="menu-wrap">
           <div class="left-title">

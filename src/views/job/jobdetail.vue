@@ -7,7 +7,7 @@
     <!-- <pageAboutTop /> -->
 
     <div class="page-box">
-      <div class="page-inner w-1200">
+      <div class="page-inner w-1400">
         <div class="job-title">
           <div class="left">
             {{ detail.title }}

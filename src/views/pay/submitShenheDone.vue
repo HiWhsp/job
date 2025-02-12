@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <PopKefu ref="PopKefu"/>
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="pay-info">
         <!-- 成功 -->
         <div class="img-box">

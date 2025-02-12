@@ -1,6 +1,6 @@
 <template>
   <div class="wrap" :class="1">
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="center">
         <!-- 全部分类下拉 -->
         <div class="quanbu" @mouseover="on_mouseover" @mouseleave="on_mouseleave">

@@ -5,7 +5,7 @@
     <!-- <pageBread /> -->
 
     <div class="page-box">
-      <div class="page-inner w-1200">
+      <div class="page-inner w-1400">
         <div class="p-page-title">
           人才招聘
         </div>

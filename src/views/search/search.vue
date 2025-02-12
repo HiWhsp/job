@@ -1,6 +1,6 @@
 <template>
   <div class="wrap">
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <listGood :list_goods="list_goods" />
       <div
         v-if="list_goods.length"

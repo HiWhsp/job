@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <pageBreadcrumb :option="nav_option"/>
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <!-- 商品列表 -->
       <div class="ctx-box">
         <div class="list cart-list">

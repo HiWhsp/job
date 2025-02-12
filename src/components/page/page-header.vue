@@ -2,7 +2,7 @@
   <div class="page-head">
     <div class="head-base">
       <div class="base-inner">
-        <div class="header w-1200">
+        <div class="header w-1400">
           <!-- 没登录 -->
           <div class="left flex" v-if="!vuex_is_login">
             <div class="web-title">
@@ -102,8 +102,8 @@
     </div>
 
     <div class="head-search">
-      <div class="header-box w-1200">
-        <div class="header w-1200">
+      <div class="header-box w-1400">
+        <div class="header w-1400">
           <div class="left-logo">
             <img src="@/static/common/logo.png" @click="$router.push('/')" />
             <!-- <span @click="$router.push('/')">网站名</span> -->
@@ -863,7 +863,7 @@ export default {
 
 .header-inner {
   position: relative;
-  width: 1200px;
+  width: 1400px;
   height: 150px;
   margin: 0 auto;
   display: flex;

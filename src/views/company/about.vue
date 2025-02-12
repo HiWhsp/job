@@ -174,7 +174,7 @@ export default {
       padding-top: 173px;
 
       .banner-content {
-        width: 1200px;
+        width: 1400px;
         margin: 0 auto;
         text-align: left;
 
@@ -212,7 +212,7 @@ export default {
 }
 
 .page-ctx {
-  width: 1200px;
+  width: 1400px;
   margin: 0 auto;
 
   padding-top: 35px;

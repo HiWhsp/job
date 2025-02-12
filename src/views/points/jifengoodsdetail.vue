@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="detail-container">
-      <div class="content w-1200">
+      <div class="content w-1400">
         <div class="main-content">
           <div class="content-top">
             <div class="left">

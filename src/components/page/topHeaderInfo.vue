@@ -1,6 +1,6 @@
 <template>
   <div class="header-box">
-    <div class="header w-1200">
+    <div class="header w-1400">
       <!-- 没登录 -->
       <!-- <div class="left" v-if="!vuex_is_login">
         <router-link class="login" to="/login">请登录</router-link>

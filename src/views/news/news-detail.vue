@@ -3,7 +3,7 @@
     <news_banner />
 
     <div class="inner">
-      <div class="page-ctx w-1200">
+      <div class="page-ctx w-1400">
         <div class="ctx-box ">
           <div class="ctx-left">
             <div class="news-ctx">

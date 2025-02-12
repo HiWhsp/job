@@ -5,7 +5,7 @@
     </div>
 
     <div class="page-top-text-wrap">
-      <div class="page-top-text-inner w-1200">
+      <div class="page-top-text-inner w-1400">
         <div class="main-title">{{ config.title }}</div>
         <div class="main-title-en">{{ config.title_en }}</div>
         <div class="title-line"></div>
@@ -30,7 +30,7 @@
 
     <!-- 子级导航 -->
     <div class="child-nav-wrap" v-if="config.nav_list">
-      <div class="child-nav-inner w-1200">
+      <div class="child-nav-inner w-1400">
         <router-link :to="item.route" class="child-item" :class="checkClass(item)"
           v-for="(item, index) in config.nav_list" :key="index">
           {{ item.title }}

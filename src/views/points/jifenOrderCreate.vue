@@ -3,7 +3,7 @@
     <!-- 新增收货地址 -->
     <addressAdd ref="addressAdd" />
 
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="section">
         <div class="section-title">选择收货人地址</div>
         <div class="section-ctx">

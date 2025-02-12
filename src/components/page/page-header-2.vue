@@ -1,8 +1,8 @@
 <template>
   <div class="page-head">
     <div class="head-search">
-      <div class="header-box w-1200">
-        <div class="header w-1200 flex">
+      <div class="header-box">
+        <div class="header flex">
           <div class="left-logo" @click="$router.push('/')"></div>
 
           <div class="center-search">
@@ -10,10 +10,10 @@
               <!-- 导航列表 -->
               <div class="nav-box nav-box-1">
                 <div
-                  data-title="导航样式1"
-                  class="nav-item nav-item-type-1"
-                  v-for="(item, index) in page_nav_list"
-                  :key="index"
+                    data-title="导航样式1"
+                    class="nav-item nav-item-type-1"
+                    v-for="(item, index) in page_nav_list"
+                    :key="index"
                 >
                   <template v-if="!item.route.includes('http')">
                     <router-link :to="item.route" class="nav-title">
@@ -23,9 +23,9 @@
                   <template v-else>
                     <div @click="jump_nav(item)">
                       <span
-                        class="nav-title text"
-                        :class="check_nav_class(item)"
-                        >{{ item.title }}</span
+                          class="nav-title text"
+                          :class="check_nav_class(item)"
+                      >{{ item.title }}</span
                       >
                     </div>
                   </template>
@@ -36,20 +36,29 @@
 
           <div class="right-box">
             <div class="cart-box">
-              <router-link to="/product-search">
-                <img src="@/assets/image/home/search.png" alt="" />
+              <div class="search-wrap">
+                <el-select v-model="keyword" filterable placeholder="请输入要搜索的商品" @change="click_search">
+                </el-select>
+                <el-input placeholder="输入关键字"></el-input>
+                <img src="@/assets/image/home/search.png" alt=""/>
+              </div>
+              <router-link to="/shopcart" class="flex-center language">
+                <!--                <img class="en-icon" src="@/assets/image/home/en.png" alt="" />-->
+                <span class="cart-text">中文</span>
+                <span class="col"></span>
+                <span class="cart-text">EN</span>
+                <!--                <img class="en-icon" src="@/assets/image/home/down-icon.png" alt="" />-->
               </router-link>
               <router-link to="/order-list">
-                <img src="@/assets/image/home/user.png" alt="" />
+                <img src="@/assets/image/home/user.png" alt=""/>
+              </router-link>
+              <router-link to="/product-search">
+                <img src="@/assets/image/home/search.png" alt=""/>
               </router-link>
               <router-link to="/cart">
-                <img src="@/assets/image/home/cart.png" alt="" />
+                <img src="@/assets/image/home/cart.png" alt=""/>
               </router-link>
-              <router-link to="/shopcart" class="flex-center">
-                <img class="en-icon" src="@/assets/image/home/en.png" alt="" />
-                <span class="cart-text">中文</span>
-                <img class="en-icon" src="@/assets/image/home/down-icon.png" alt="" />
-              </router-link>
+
             </div>
           </div>
         </div>
@@ -61,7 +70,7 @@
 <script>
 import topNavModel1 from "@/components/common/topNavModel1.vue";
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "HeaderIndex",
@@ -76,8 +85,8 @@ export default {
       show_shoujiban: false, //手机版
 
       list_lang: [
-        { title: "中文", lang: "zh" },
-        { title: "English", lang: "en" },
+        {title: "中文", lang: "zh"},
+        {title: "English", lang: "en"},
       ],
 
       keyword: "",
@@ -100,8 +109,8 @@ export default {
 
     userMenu() {
       return [
-        { title: "我的主页", route: "userIndex" },
-        { title: "我的订单", route: "myOrder" },
+        {title: "我的主页", route: "userIndex"},
+        {title: "我的订单", route: "myOrder"},
       ];
     },
     suggestKeywods() {
@@ -118,11 +127,11 @@ export default {
         route_news = "/news?cid=" + this.vuex_news_cates[0].id;
       }
       var arr = [
-        { title: "首页", route: "/" },
-        { title: "产品展示", route: "/product-cates" },
-        { title: "预约商品", route: "/product-reserve" },
-        { title: "工艺鉴赏", route: "/art_list" },
-        { title: "联系我们", route: "/contact" },
+        {title: "首页", route: "/"},
+        {title: "产品展示", route: "/product-cates"},
+        {title: "预约商品", route: "/product-reserve"},
+        {title: "工艺鉴赏", route: "/art_list"},
+        {title: "联系我们", route: "/contact"},
       ];
       return arr;
     },
@@ -158,7 +167,7 @@ export default {
     },
 
     jump_nav(item) {
-      console.log({ ...item });
+      console.log({...item});
       if (item.route.includes("http")) {
         window.open(item.route, "_blank");
       }
@@ -204,10 +213,10 @@ export default {
     },
 
     goCart() {
-      this.$router.push({ path: "/cart" });
+      this.$router.push({path: "/cart"});
     },
     goOrderAll() {
-      this.$router.push({ path: "/orderAll" });
+      this.$router.push({path: "/orderAll"});
     },
     mouseover() {
       this.showSiteMap = true;
@@ -224,11 +233,11 @@ export default {
 
     goModule(name) {
       if (name == "index") {
-        this.$router.push({ path: "/" });
+        this.$router.push({path: "/"});
       } else if (name == "my") {
-        this.$router.push({ path: "/info" });
+        this.$router.push({path: "/info"});
       } else if (name == "login") {
-        this.$router.push({ path: "login" });
+        this.$router.push({path: "login"});
       }
     },
     logout() {
@@ -261,7 +270,7 @@ export default {
 
     //自定义 banner跳转
     jump_banner(item) {
-      console.log({ ...item });
+      console.log({...item});
       let url = item.url;
       if (!url) {
         return;
@@ -270,8 +279,10 @@ export default {
     },
     ///
 
-    setView() {},
-    mouseoutSearch() {},
+    setView() {
+    },
+    mouseoutSearch() {
+    },
     handleSearchInput() {
       this.searchLock = false;
     },
@@ -369,9 +380,9 @@ export default {
   left: 0;
   right: 0;
   line-height: 110px;
-  padding: 0;
   height: 110px;
   background: #000;
+  padding: 0 60px;
 }
 
 .left-logo {
@@ -388,7 +399,7 @@ export default {
 
 .header-inner {
   position: relative;
-  width: 1200px;
+  width: 1400px;
   height: 150px;
   margin: 0 auto;
   display: flex;
@@ -483,14 +494,40 @@ export default {
   align-items: center;
   text-align: center;
 
+  .search-wrap {
+    width: 380px;
+    height: 38px;
+    background: #222629;
+    border-radius: 233px 233px 233px 233px;
+    border: 1px solid #3E3E3E;
+    margin-right: 32px;
+    display: flex;
+    .el-select {
+      height: 38px;
+    }
+  }
+
+  .language {
+    margin-right: 32px;
+  }
+
+  .col {
+    width: 1px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.24);
+    margin: 0 7px;
+  }
+
   img {
     width: 24px;
-    margin-right: 36px;
+    margin-right: 32px;
   }
+
   .en-icon {
     width: 20px;
     margin: 0;
   }
+
   .cart-text {
     color: #fff;
     margin: 0 8px;

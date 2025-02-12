@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
     <div class="inner-content">
-      <div class="inner w-1200">
+      <div class="inner w-1400">
         <!-- 面包屑导航 -->
         <!-- <breadCrumb /> -->
 

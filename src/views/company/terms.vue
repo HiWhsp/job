@@ -2,7 +2,7 @@
     <div class="page">
         <pageBread />
 
-        <div class="inner w-1200">
+        <div class="inner w-1400">
             <div class="page-ctx">
                 <div class="rich-box">
                     <div class="rich-title">

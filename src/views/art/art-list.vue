@@ -5,7 +5,7 @@
     </div>
     <div class="inner">
       <pageBreadcrumb :option="nav_option" />
-      <div class="page-ctx w-1200 flex">
+      <div class="page-ctx w-1400 flex">
         <div class="prod-wrap">
           <div class="product-wrap">
             <div class="product-item" v-for="(item, index) in product_list" :key="index" @click="toDetail(item)">

@@ -79,7 +79,7 @@
           </div>
         </div>
       </div> -->
-      <div class="page-ctx w-1200 flex">
+      <div class="page-ctx w-1400 flex">
         <div class="aside">
           <!-- 侧边栏 -->
           <div class="search">

@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="section-title">
         支付成功
       </div>

@@ -3,8 +3,8 @@
     <div class="inner">
       <pageBreadcrumb :option="nav_option" />
 
-      <div class="search-title w-1200">搜索结果：检索到 <span>{{ count }}</span> 条结果</div>
-      <div class="page-ctx w-1200 flex">
+      <div class="search-title w-1400">搜索结果：检索到 <span>{{ count }}</span> 条结果</div>
+      <div class="page-ctx w-1400 flex">
         <div class="aside">
           <!-- 侧边栏 -->
           <div class="search">

@@ -6,7 +6,7 @@
     </div>
 
     <div class="page-top">
-      <div class="page-bread w-1200">
+      <div class="page-bread w-1400">
         <div class="bread-box">
           <img src="@/static/common/product-home.png" alt="" />
           <router-link to="/">首页</router-link>
@@ -23,7 +23,7 @@
     </div>
 
     <div class="page-box">
-      <div class="page-inner w-1200">
+      <div class="page-inner w-1400">
         <div class="main-content">
 
           <div class="ctx-bottom-container">
@@ -1367,7 +1367,7 @@ export default {
         }
 
         .bottom-right {
-          width: 1200px;
+          width: 1400px;
         }
       }
 

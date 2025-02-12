@@ -98,8 +98,8 @@ export default {
 </script>
 
 <style lang="less">
-.w-1200 {
-  width: 1200px;
+.w-1400 {
+  width: 1400px;
   margin: 0 auto;
 }
 .btn {
