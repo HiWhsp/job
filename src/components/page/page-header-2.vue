@@ -38,6 +38,7 @@
             <div class="cart-box">
               <div class="search-wrap">
                 <el-select v-model="keyword" filterable placeholder="请输入要搜索的商品" @change="click_search">
+                  <el-option label="所有产品" value="所有产品"></el-option>
                 </el-select>
                 <el-input placeholder="输入关键字"></el-input>
                 <img src="@/assets/image/home/search.png" alt=""/>
@@ -53,7 +54,7 @@
                 <img src="@/assets/image/home/user.png" alt=""/>
               </router-link>
               <router-link to="/product-search">
-                <img src="@/assets/image/home/search.png" alt=""/>
+                <img src="@/assets/image/home/lack.png" alt=""/>
               </router-link>
               <router-link to="/cart">
                 <img src="@/assets/image/home/cart.png" alt=""/>
@@ -89,7 +90,7 @@ export default {
         {title: "English", lang: "en"},
       ],
 
-      keyword: "",
+      keyword: "所有产品",
       //
 
       showSearch: false,
@@ -127,10 +128,14 @@ export default {
         route_news = "/news?cid=" + this.vuex_news_cates[0].id;
       }
       var arr = [
-        {title: "首页", route: "/"},
-        {title: "产品展示", route: "/product-cates"},
-        {title: "预约商品", route: "/product-reserve"},
-        {title: "工艺鉴赏", route: "/art_list"},
+        // {title: "首页", route: "/"},
+        // {title: "产品展示", route: "/product-cates"},
+        // {title: "预约商品", route: "/product-reserve"},
+        // {title: "工艺鉴赏", route: "/art_list"},
+        {title: "关于我们", route: "/contact"},
+        {title: "限定商品", route: "/contact"},
+        {title: "特价商品", route: "/contact"},
+        {title: "会员注册", route: "/contact"},
         {title: "联系我们", route: "/contact"},
       ];
       return arr;
@@ -379,8 +384,8 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  line-height: 110px;
-  height: 110px;
+  line-height: 88px;
+  height: 88px;
   background: #000;
   padding: 0 60px;
 }
@@ -502,8 +507,19 @@ export default {
     border: 1px solid #3E3E3E;
     margin-right: 32px;
     display: flex;
+    align-items: center;
+    line-height: 38px;
     .el-select {
+    }
+    /deep/ .el-input__inner {
+      background-color: transparent;
+      border: none;
       height: 38px;
+      color: #fff;
+    }
+    img {
+      cursor: pointer;
+      height: 24px;
     }
   }
 

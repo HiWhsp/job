@@ -1,23 +1,22 @@
 <template>
   <div class="page">
-    <terms_modal ref="terms_modal" />
-    <pageBreadcrumb :option="nav_option" />
+    <terms_modal ref="terms_modal"/>
     <div class="page-ctx">
       <div class="center page-inner flex-between">
         <div class="inner form-box">
           <div class="input-wrap">
             <div class="tab-box">
               <div class="tab-item">
-                会员登录
+                登录
               </div>
             </div>
             <div class="input-box">
-              <span>手机号</span>
-              <input type="text" placeholder="请输入邮箱或手机号" v-model="form.phone" />
+              <p>手机号</p>
+              <input type="text" placeholder="Account number" v-model="form.phone"/>
             </div>
             <div class="input-box">
-              <span>密码</span>
-              <input type="password" placeholder="输入密码" v-model="form.password" />
+              <p>密码</p>
+              <input type="password" placeholder="Password" v-model="form.password"/>
             </div>
 
             <div class="pass-act-box">
@@ -26,23 +25,22 @@
               </span>
               <router-link to="retrieve" class="forget">忘记密码</router-link>
             </div>
-
-            <div class="btn-box">
-              <button class="btn-ripple" @click="do_submit()">登录</button>
-            </div>
-
-            <div class="register-box">
-              <span> <router-link to="/register">没有账号，去注册</router-link> </span>
-            </div>
-
-<!--            <div class="terms-box">-->
+            <div class="terms-box">
 <!--              <span class="terms-check" @click="is_agree = !is_agree">-->
 <!--                <img v-if="is_agree" src="@/static/common/check1.png" alt="">-->
 <!--                <img v-else src="@/static/common/check0.png" alt="">-->
 <!--                登录注册即表示同意-->
 <!--              </span>-->
-<!--              <span class="terms-text" @click="terms_open(92)">《隐私政策》</span>-->
-<!--            </div>-->
+
+              <el-checkbox v-model="is_agree">登录注册即表示同意<span class="terms-text" @click="terms_open(92)">《隐私政策》</span></el-checkbox>
+            </div>
+            <div class="btn-box">
+              <button class="btn-ripple" @click="do_submit()">登录</button>
+            </div>
+
+            <div class="register-box">
+              <router-link to="/register">没有账号? <span>去注册</span></router-link>
+            </div>
           </div>
         </div>
       </div>
@@ -55,7 +53,7 @@
 // import modalTerms from "@/components/modals/modalTerms.vue"; //协议弹窗
 import terms_modal from "@/components/account/terms_modal.vue"; //协议弹窗
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
 
 export default {
@@ -98,8 +96,8 @@ export default {
       let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
 
       let option = [
-        { route : '/product-cates', title: '登录'},
-        { route: '', title: cate_info.title || '' }
+        {route: '/product-cates', title: '登录'},
+        {route: '', title: cate_info.title || ''}
       ]
       console.log(option)
       return option
@@ -163,38 +161,38 @@ export default {
       this.$api("users_codeLogin", {
         wx_scaner_marker: this.wx_scaner_marker, //扫码者标识
       })
-        .then((res) => {
-          if (res.code == 200) {
-            // if (res.data.data.user != undefined && res.data.data.user.id) {
-            //   clearInterval(this.interval_token);
-            //   this.interval_token = null;
-            //   let hasBindPhone = false; //是否绑定手机号
-            //   if (hasBindPhone) {
-            //     if (index == 0) {
-            //       this.$store.dispatch("setToken_active", {
-            //         admin_token: res.data.data.user.remember_token,
-            //       });
-            //     }
-            //   } else {
-            //     if (index == 0) {
-            //       this.scan_qrcode();
-            //       this.$Notice.error({
-            //         title: "提示",
-            //         desc: "绑定手机号后请重新扫码登录",
-            //       });
-            //       this.$Message.error("绑定手机号后请重新扫码登录");
-            //     } else {
-            //       this.bd_mobile = true;
-            //       this.$Message.error("请先绑定手机号后重新扫码登录");
-            //     }
-            //   }
-            // }
-          }
-        })
-        .catch((err) => {
-          // reject(err)
-          //console.log(err);
-        });
+          .then((res) => {
+            if (res.code == 200) {
+              // if (res.data.data.user != undefined && res.data.data.user.id) {
+              //   clearInterval(this.interval_token);
+              //   this.interval_token = null;
+              //   let hasBindPhone = false; //是否绑定手机号
+              //   if (hasBindPhone) {
+              //     if (index == 0) {
+              //       this.$store.dispatch("setToken_active", {
+              //         admin_token: res.data.data.user.remember_token,
+              //       });
+              //     }
+              //   } else {
+              //     if (index == 0) {
+              //       this.scan_qrcode();
+              //       this.$Notice.error({
+              //         title: "提示",
+              //         desc: "绑定手机号后请重新扫码登录",
+              //       });
+              //       this.$Message.error("绑定手机号后请重新扫码登录");
+              //     } else {
+              //       this.bd_mobile = true;
+              //       this.$Message.error("请先绑定手机号后重新扫码登录");
+              //     }
+              //   }
+              // }
+            }
+          })
+          .catch((err) => {
+            // reject(err)
+            //console.log(err);
+          });
     },
 
     terms_open(id) {
@@ -212,7 +210,7 @@ export default {
       }
 
       // debugger;
-      let { phone, password } = this.form;
+      let {phone, password} = this.form;
       let reg_phone = /^1[3-9]\d{9}$/;
       let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
 
@@ -236,16 +234,16 @@ export default {
             ...this.form
           }
         })
-          .then((res) => {
-            alert(res)
-            if (res.code == 200) {
-              this.$store.commit("set_baseInfo", res.data);
-              this.$store.dispatch("getUserloginedInfo");
-              this.$router.push("/order-list");
-            } else {
+            .then((res) => {
+              alert(res)
+              if (res.code == 200) {
+                this.$store.commit("set_baseInfo", res.data);
+                this.$store.dispatch("getUserloginedInfo");
+                this.$router.push("/order-list");
+              } else {
 
-            }
-          });
+              }
+            });
       } else {
         //手机号验证码登录
         if (!code) {
@@ -282,7 +280,7 @@ export default {
 <style scoped lang="less">
 .page {
   position: relative;
-  background-color: #1F1C1F;
+  background-color: #fff;
 
   .page-bg {
     img {
@@ -292,7 +290,6 @@ export default {
   }
 
   .page-ctx {
-    height: 543px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -301,6 +298,7 @@ export default {
 
   .page-poster {
     margin-left: 46px;
+
     img {
       width: 664px;
       height: 664px;
@@ -340,17 +338,11 @@ export default {
         }
       }
 
-      .left {}
+      .left {
+      }
 
       .right {
-        // width: 480px;
-        // height: 480px;
-        // background: #ffffff;
-        // box-shadow: 0px 10px 20px rgba(1, 100, 98, 0.2);
-        // opacity: 1;
-        // border-radius: 10px;
 
-        // padding: 40px 40px 30px 40px;
       }
     }
 
@@ -361,21 +353,12 @@ export default {
       .tab-item {
         font-family: Poppins, Poppins;
         font-weight: 500;
-        font-size: 32px;
-        color: #fff;
+        font-size: 26px;
+        color: #000;
 
 
         &:first-child {
-          // &:after {
-          //   content: "";
-          //   display: inline-block;
-          //   width: 2px;
-          //   height: 24px;
-          //   background-color: #ccc;
-          //   margin: 0 30px;
-          //   position: relative;
-          //   top: 3px;
-          // }
+
         }
 
         &.active {
@@ -385,31 +368,24 @@ export default {
     }
 
     .input-wrap {
-      width: 400px;
       margin: 0 auto;
     }
 
     .input-box {
       margin-bottom: 20px;
       width: 100%;
-      height: 50px;
-      border: 1px solid #7B7B7B;
       border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
 
-      span {
+      p {
         display: inline-block;
-        width: 95px;
-
-        border-right: 1px solid #ccc;
         font-family: OPPOSans, OPPOSans;
         font-weight: 400;
         font-size: 14px;
-        color: #fff;
-        text-indent: 1em;
+        color: #4C4C4C;
+        margin-bottom: 10px;
       }
 
       img {
@@ -417,12 +393,12 @@ export default {
       }
 
       input {
-        flex: 2;
-        height: 100%;
-        padding-left: 16px;
-        font-size: 14px;
-        color: #fff;
-        background-color: transparent;
+        padding-left: 24px;
+        width: 478px;
+        height: 63px;
+        background: #F0F1F2;
+        border: 1px solid rgba(0, 0, 0, 0.22);
+        color: #B5B5B5;
 
         &::-webkit-input-placeholder {
           font-size: 14px;
@@ -452,23 +428,24 @@ export default {
       }
 
       .forget {
-        color: #fff;
+        color: #D41C17;
       }
     }
 
     .btn-box {
-      margin-top: 60px;
+      margin-top: 18px;
+      padding-bottom: 30px;
 
       button {
         width: 100%;
         height: 44px;
-        background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
-        background: #F74747;
+        background: #000;
         font-size: 18px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
+        font-weight: bold;
         color: #ffffff;
       }
+      border-bottom: 1px solid #E0E0E0;
     }
 
     .register-box {
@@ -481,48 +458,41 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 24px;
-        color: #fff;
-        border-bottom: 1px solid #fff;
+        color: #3D3D3D;
+      }
+      span {
+        color: #A9151C;
+        border-bottom: 1px solid #A9151C;
       }
     }
   }
 }
 
 .terms-box {
-  position: absolute;
-  height: 40px;
-  background: #f5f6f8;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  margin-top: 50px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  justify-content: flex-start;
-  padding-left: 20px;
   text-align: center;
+  color: #999;
+  /deep/ .el-checkbox__input.is-checked .el-checkbox__inner {
+    background: #000 !important;
+    border-color: #000 !important;
+  }
 
+  /deep/ .el-checkbox__input.is-focus .el-checkbox__inner {
+    border-color: #000 !important;
+  }
 
-  .terms-check {
-    cursor: pointer;
-    font-family: OPPOSans, OPPOSans;
-    font-weight: 400;
-    font-size: 12px;
-    color: #999999;
-
-    img {
-      margin-right: 10px;
-      width: 18px;
-      height: 18px;
-    }
+  /deep/ .el-checkbox__input.is-checked + .el-checkbox__label {
+    color: #000 !important;
   }
 
   .terms-text {
     cursor: pointer;
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
-    font-size: 12px;
-    color: #999999;
+    font-size: 14px;
+    color: #000;
 
     &:hover {
       color: #F74747;
