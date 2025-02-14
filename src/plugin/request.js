@@ -33,7 +33,10 @@ axios.interceptors.response.use(
       alertErr(res.msg);
       router.push("/login");
       return Promise.reject(res);
-    } else {
+    } else if(code === 401) {
+      alertErr(res.msg);
+      return Promise.reject(res);
+    }else {
       return res;
     }
     // debugger

@@ -131,6 +131,11 @@ export default {
       }).then(res => {
         if (res.code === 200) {
           this.pay(res.data);
+        }else {
+          this.$message({
+            message: res.msg,
+            type: 'warning'
+          });
         }
       })
     },

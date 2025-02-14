@@ -119,7 +119,7 @@ export default {
         company_no: this.invoice_info.shibiema,
         bank_name: this.invoice_info.bankName,
         bank_no: this.invoice_info.bankNo,
-        email: this.invoice_info.shibiema,
+        email: this.invoice_info.email,
         money: this.info.prepaidAmount,
         notes: this.info.prepaidRemark,
         utype: this.info.prepaidAccount,
@@ -366,7 +366,7 @@ export default {
             <div class="info-item">
               <div class="info-label"><span>*</span> 电子邮箱：</div>
               <div class="info-val">
-                <el-input v-model="invoice_info.shibiema"
+                <el-input v-model="invoice_info.email"
                           placeholder="请填写电子邮箱"></el-input>
               </div>
             </div>
@@ -426,7 +426,7 @@ export default {
             <div class="info-item">
               <div class="info-label"><span>*</span> 电子邮箱：</div>
               <div class="info-val">
-                <el-input v-model="invoice_info.shibiema"
+                <el-input v-model="invoice_info.email"
                           placeholder="请填写电子邮箱"></el-input>
               </div>
             </div>
