@@ -132,11 +132,11 @@ export default {
         // {title: "产品展示", route: "/product-cates"},
         // {title: "预约商品", route: "/product-reserve"},
         // {title: "工艺鉴赏", route: "/art_list"},
-        {title: "关于我们", route: "/contact"},
-        {title: "限定商品", route: "/contact"},
-        {title: "特价商品", route: "/contact"},
-        {title: "会员注册", route: "/contact"},
-        {title: "联系我们", route: "/contact"},
+        {title: "关于我们", route: "/about"},
+        {title: "限定商品", route: "/product-cates"},
+        {title: "特价商品", route: "/specialOffer"},
+        {title: "会员注册", route: "/register"},
+        {title: "联系我们", route: "/connect"},
       ];
       return arr;
     },
@@ -569,30 +569,28 @@ export default {
     cursor: pointer;
     // min-width: 108px;
     font-size: 16px;
-    color: #000;
     color: #fff;
     height: 47px;
     line-height: 47px;
 
     .nav-title {
       font-size: 16px;
-      color: #333;
       color: #fff;
 
-      &.active {
-        color: #f74747;
-        font-weight: bold;
-      }
 
       &.router-link-exact-active {
-        color: #f74747;
         font-weight: bold;
       }
-    }
-
-    .text:hover {
-      color: #f74747;
-      font-weight: bold;
+      &.router-link-exact-active::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%);
+        width: 36px;
+        height: 2px;
+        background: #fff;
+      }
     }
   }
 }

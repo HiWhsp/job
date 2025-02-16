@@ -46,9 +46,6 @@ const contact = () =>
 const terms = () =>
   import(/* webpackChunkName: "terms" */ "@/views/company/terms.vue");
 
-const demand = () =>
-  import(/* webpackChunkName: "demand" */ "@/views/company/demand.vue");
-
 //产品
 const product_cates = () =>
   import(
@@ -186,12 +183,6 @@ const routes = [
     path: "/contact",
     name: "contact",
     component: contact,
-    meta: {},
-  },
-  {
-    path: "/demand",
-    name: "demand",
-    component: demand,
     meta: {},
   },
   {

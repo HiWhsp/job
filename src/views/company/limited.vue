@@ -5,9 +5,8 @@
 
       <div class="page-ctx w-1400 flex">
         <div class="aside">
-          <h2 class="title">比例模型产品</h2>
           <!-- 侧边栏 -->
-          <el-aside width="360px" class="sidebar">
+          <el-aside width="260px" class="sidebar">
             <el-menu :default-active="defaultActive" :router="true">
               <template v-for="(item, index) in vuexFlatCates">
                 <el-submenu :index="item.route" v-if="item.channels.length" class="menu-item-one">
@@ -25,13 +24,14 @@
           </el-aside>
         </div>
         <div class="prod-wrap">
+
           <div class="bread-box">
-            <!--            <router-link to="/">首页</router-link>-->
+            <router-link to="/">首页</router-link>
             <template v-if="nav_option[0]">
-              <!--              <span class="bread-divider">&gt;</span>-->
+              <span class="bread-divider">&gt;</span>
               <a href="javascript:void(0)" @click="toBread(list_bread[0].route)">{{ nav_option[0].title }}</a>
             </template>
-            <template v-if="nav_option[1].title">
+            <template v-if="nav_option[1]">
               <span class="bread-divider">&gt;</span>
               <a href="javascript:void(0)" @click="toBread(nav_option[1].route)">{{ nav_option[1].title }}</a>
             </template>
@@ -226,30 +226,10 @@ export default {
       padding-top: 32px;
       align-items: start;
 
-      .title {
-        font-family: Microsoft YaHei, Microsoft YaHei;
-        font-weight: 700;
-        font-size: 18px;
-        color: #000000;
-      }
-
-      .title::after {
-        content: '';
-        display: block;
-        width: 100%;
-        height: 2px;
-        background: #000;
-        margin-top: 10px;
-      }
-
       .aside {
-        width: 360px;
+        width: 260px;
         margin-right: 32px;
         height: 100%;
-
-        /deep/ .el-menu--inline {
-          border-left: 1px solid #CCCCCC;
-        }
 
         .el-menu {
           border: none;
@@ -264,12 +244,12 @@ export default {
           }
 
           /deep/ .el-menu-item {
-            color: #000;
-            //border-top: 1px dashed #000;
+            color: #fff;
+            border-top: 1px dashed #ffffff;
           }
 
           /deep/ .el-menu-item:last-child {
-            //border-bottom: 1px dashed #000;
+            border-bottom: 1px dashed #ffffff;
           }
 
           /deep/ .el-menu-item.is-active {
@@ -333,30 +313,13 @@ export default {
 
       .prod-wrap {
         flex: 1;
-
-        .bread-box {
-          margin-bottom: 20px;
-          height: 42px;
-          background: #F4F4F4;
-          line-height: 42px;
-          padding: 0 18px;
-          font-size: 20px;
-          color: #000;
-
-          a {
-            color: #000;
-          }
-
-          span {
-            margin: 0 5px;
-          }
-        }
       }
     }
   }
 }
 
 /deep/ .el-menu {
+  background-color: #000000;
   border: none;
 }
 
