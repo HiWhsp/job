@@ -347,8 +347,9 @@ button {
   min-width: 30px !important;
   height: 30px;
   line-height: 30px;
-  background-color: #000 !important;
-  border: 1px solid #555;
+  background-color: #fff !important;
+  border: 1px solid #000;
+  color: #000 !important;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled):hover {
@@ -356,8 +357,9 @@ button {
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #DF1626 !important;
+  background-color: #000 !important;
   color: #fff !important;
+  font-weight: 400;
   border: none;
 }
 

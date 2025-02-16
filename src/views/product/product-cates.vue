@@ -145,7 +145,7 @@ export default {
         if (code == 200) {
           let {list, count, pages} = data;
           this.product_list = list;
-          this.count = count;
+          this.count = 100;
         }
       });
     },
