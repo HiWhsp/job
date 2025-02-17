@@ -365,7 +365,8 @@ export default {
               <div class="item" v-for="(item, index) in prepaidTypeOption"
                    @click="do_toggle_prepaid(item)"
                    :class="{ checked: info.prepaidAccount == item.value }">
-                <div class="invoice">{{ item.title }}</div>
+                <div class="invoice" style="width: 100%;padding: 0 10px;" v-if="item.title === '团体账户'">{{ item.title }}: {{ baseInfo.team_title }}</div>
+                <div class="invoice" style="width: 100%;padding: 0 10px;" v-if="item.title === '个人账户'">{{ item.title }}: {{ baseInfo.money }}</div>
               </div>
             </div>
           </div>

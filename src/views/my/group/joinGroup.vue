@@ -5,12 +5,26 @@ export default {
     return {
       keyword: '',
       list: [],
-      info: {a: 1}
+      group: {},
+      status: 0
     }
   },
+  mounted() {
+    this.getInfo();
+  },
   methods: {
+    getInfo() {
+      // 获取团体信息
+      this.$api({
+        url: 'my_team',
+        method: 'post',
+      }).then(res => {
+        let {code, data} = res;
+        this.status = data.msg
+        this.group = res.data
+      })
+    },
     getList() {
-      console.log(123)
       this.$api({
         url: 'search_team',
         method: 'post',
@@ -22,6 +36,31 @@ export default {
         if (code === 200) {
           this.list = data || [];
         }
+      })
+    },
+    // 加入团队
+    joinGroup(id) {
+      this.$api({
+        url: 'join_team',
+        method: 'post',
+        data: {
+          id
+        }
+      }).then(res => {
+        let {code, data} = res;
+        if (code === 200) {
+          this.$message({
+            type: 'success',
+            message: '申请成功'
+          })
+        }else {
+          this.$message({
+            type: 'error',
+            message: '申请失败'
+          })
+        }
+        this.getInfo();
+        this.list = []
       })
     }
   }
@@ -51,12 +90,12 @@ export default {
             <p><span>团体总成员:</span> <span>{{ item.teamer_no }}</span></p>
           </div>
           <div class="team-actions">
-            <button class="apply-button">申请加入</button>
+            <button class="apply-button" @click="joinGroup(item.id)">申请加入</button>
             <button class="rights-button">团队权益</button>
           </div>
         </div>
       </div>
-      <div class="info" v-if="Object.keys(info).length">
+      <div class="info" v-if="Object.keys(group).length">
         <div class="team-info-container">
           <div class="title">团队信息</div>
           <div class="info-grid">
@@ -70,14 +109,14 @@ export default {
         </div>
 
       </div>
-      <div class="audit" v-if="Object.keys(info).length">
-        <!--        <img src="@/assets/img/base/appointment/pay-success.png" alt="">-->
-        <img src="../../../assets/img/base/appointment/pay-error.png" alt="">
-        <p class="status-text">很抱歉，加入团队未成功！</p>
-        <!--        <p class="status-text">申请已提交成功</p>-->
-        <!--        <p class="status-detail">请耐心等待团长审核！</p>-->
+      <div class="audit" v-if="Object.keys(group).length">
+        <img src="@/assets/img/base/appointment/pay-success.png" alt="" v-if="status == '入团申请审核中...'">
+        <img src="../../../assets/img/base/appointment/pay-error.png" alt="" v-if="status == '很抱歉，加入团队未成功！'">
+        <p class="status-text" v-if="status == '很抱歉，加入团队未成功！'">很抱歉，加入团队未成功！</p>
+        <p class="status-text" v-if="status == '入团申请审核中...'">申请已提交成功</p>
+        <p class="status-detail" v-if="status == '入团申请审核中...'">请耐心等待团长审核！</p>
         <div class="btn-box">
-          <div class="btn back">重新申请</div>
+          <div class="btn back" v-if="status == '很抱歉，加入团队未成功！'">重新申请</div>
           <!--          <div class="btn back">撤销申请</div>-->
         </div>
       </div>
@@ -209,28 +248,6 @@ export default {
         }
       }
 
-      .empty-info {
-        text-align: center;
-        padding: 40px 0;
-
-        // border-top: 1px solid #dedede;
-        .empty-img {
-          text-align: center;
-
-          img {
-            width: 190px;
-          }
-        }
-
-        .empty-text {
-          margin-top: 10px;
-          margin-bottom: 20px;
-          font-size: 14px;
-          font-family: Roboto, Roboto;
-          font-weight: 400;
-          color: #999999;
-        }
-      }
     }
 
     .info {
@@ -326,6 +343,30 @@ export default {
         }
       }
     }
+
+    .empty-info {
+      text-align: center;
+      padding: 40px 0;
+
+      // border-top: 1px solid #dedede;
+      .empty-img {
+        text-align: center;
+
+        img {
+          width: 190px;
+        }
+      }
+
+      .empty-text {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        font-family: Roboto, Roboto;
+        font-weight: 400;
+        color: #999999;
+      }
+    }
+
   }
 }
 </style>

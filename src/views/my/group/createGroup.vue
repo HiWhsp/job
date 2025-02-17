@@ -6,10 +6,43 @@ export default {
       createVisible: false,
       realForm: {},
       realRules: {
-        name: [
-          {required: true, message: '请输入活动名称', trigger: 'blur'},
-        ]
+        sn: [
+          {required: true, message: '请输入团体编号', trigger: 'blur'},
+        ],
+        title: [
+          {required: true, message: '请输入团体名称', trigger: 'blur'},
+        ],
+        unit_name: [
+          {required: true, message: '请输入所在高校/单位', trigger: 'blur'},
+        ],
+        leader: [
+          {required: true, message: '请输入团体负责人', trigger: 'blur'},
+        ],
+        tel: [
+          {required: true, message: '请输入负责人电话', trigger: 'blur'},
+        ],
       }
+    }
+  },
+  methods: {
+    submit() {
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.$api({
+            url: 'create_team',
+            method: 'post',
+            data: this.realForm
+          }).then(res => {
+            if (res.code === 200) {
+              this.$message({
+                type: 'success',
+                message: '创建成功',
+              })
+              this.createVisible = false
+            }
+          })
+        }
+      })
     }
   }
 }
@@ -36,26 +69,26 @@ export default {
     <el-dialog title="新建团体" :visible.sync="createVisible" center width="950px">
       <div class="real-content">
         <el-form :model="realForm" :rules="realRules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
-          <el-form-item label="团体编号：" prop="name">
-            <el-input v-model="realForm.name" placeholder="请输入团体编号"></el-input>
+          <el-form-item label="团体编号：" prop="sn">
+            <el-input v-model="realForm.sn" placeholder="请输入团体编号"></el-input>
           </el-form-item>
-          <el-form-item label="*团体名称：" prop="name">
-            <el-input v-model="realForm.name" placeholder="请输入团体名称"></el-input>
+          <el-form-item label="*团体名称：" prop="title">
+            <el-input v-model="realForm.title" placeholder="请输入团体名称"></el-input>
           </el-form-item>
-          <el-form-item label="所在高校/单位：" prop="name">
-            <el-input placeholder="请输入所在高校/单位" v-model="realForm.name"></el-input>
+          <el-form-item label="所在高校/单位：" prop="unit_name">
+            <el-input placeholder="请输入所在高校/单位" v-model="realForm.unit_name"></el-input>
           </el-form-item>
-          <el-form-item label="团体负责人：" prop="name">
-            <el-input placeholder="请输入团体负责人" v-model="realForm.name"></el-input>
+          <el-form-item label="团体负责人：" prop="leader">
+            <el-input placeholder="请输入团体负责人" v-model="realForm.leader"></el-input>
           </el-form-item>
-          <el-form-item label="负责人电话：" prop="name">
-            <el-input placeholder="请输入负责人电话" v-model="realForm.name"></el-input>
+          <el-form-item label="负责人电话：" prop="tel">
+            <el-input placeholder="请输入负责人电话" v-model="realForm.tel"></el-input>
           </el-form-item>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
          <el-button @click="createVisible = false">取消</el-button>
-        <el-button type="primary" @click="createVisible">确定</el-button>
+        <el-button type="primary" @click="submit">确定</el-button>
       </span>
     </el-dialog>
   </div>
