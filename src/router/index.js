@@ -72,6 +72,7 @@ const art_list = () =>
   import(/* webpackChunkName: "art-list" */ "@/views/art/art-list.vue");
 const art_detail = () =>
   import(/* webpackChunkName: "art-detail" */ "@/views/art/art-detail.vue");
+const special_offer = () => import("@/views/company/special-offer.vue");
 
 
 // 个人中心
@@ -190,6 +191,11 @@ const routes = [
     name: "terms",
     component: terms,
     meta: {},
+  },
+  {
+    path: "/special-offer",
+    name: "special-offer",
+    component: special_offer,
   },
 
   {

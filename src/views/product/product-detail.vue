@@ -1,30 +1,13 @@
 <template>
   <div class="page">
+    <cart></cart>
     <!-- <modalLoading ref="modalLoading" /> -->
-    <product_add_cart_success_modal ref="product_add_cart_success_modal" :curr="curr" />
     <!-- 邀请好友 -->
     <!-- <modalYaoqing ref="modalYaoqing" /> -->
     <!-- 添加成功提示 -->
     <!-- 右侧优惠券列表 -->
     <!-- <goodsCouponList ref="goodsCouponList" :list="info.yhq_list" /> -->
     <!-- <pageProductTop /> -->
-
-    <div class="page-top">
-      <div class="page-bread w-1400">
-        <div class="bread-box">
-          <img src="@/static/common/product-home.png" alt="" />
-          <router-link to="/">首页</router-link>
-          <span class="bread-divider">&gt;</span>
-          <router-link :to="activeCate.route">产品展示</router-link>
-          <span class="bread-divider">&gt;</span>
-          <template v-if="activeCate.title">
-            <router-link :to="activeCate.route">{{ activeCate.title }}</router-link>
-            <span class="bread-divider">&gt;</span>
-          </template>
-          <a href="javascirpt:void(0);">{{ info.title }}</a>
-        </div>
-      </div>
-    </div>
 
     <div class="page-box">
       <div class="page-inner w-1400">
@@ -34,107 +17,120 @@
               <!-- 商品预览 -->
               <!-- <carouselComponent :swiperImgs="swiperImgs" /> -->
               <div class="preview-wrap">
-                <detailLunbo :imageList="detailImages" />
+                <detailLunbo :imageList="detailImages"/>
               </div>
-
-              <!-- <div class="shoucang-box" v-if="false">
-                <div class="shoucang-left" @click="favourite_toggle">
-                  <img v-if="if_shoucang" src="@img/yishoucang.png" alt="" />
-                  <img v-else src="@img/weishoucang.png" alt="" />
-                  <span>{{ if_shoucang ? "取消收藏" : "收藏商品" }}</span>
-                </div>
-                <div class="shoucang-right" @click="show_yaoqing">
-                  <img src="@img/fenxiang.png" alt="" />
-                  <span>分享</span>
-                </div>
-              </div> -->
             </div>
 
             <div class="ctx-right">
               <div class="detail-title">
                 <div class="title-text ellipsis-3">
                   {{ info.title }}
+                  <div class="hot">限量50台</div>
+                  <div class="hot">限购2台</div>
                 </div>
               </div>
-              <div class="detail-desc">
-                限量50台
-              </div>
+              <!--              <div class="detail-desc">-->
+              <!--                限量50台-->
+              <!--              </div>-->
               <div class="detail-code">
-                货号: K340001
+                官方指导价
               </div>
               <div class="detail-price">
-                ￥298.00
+                CN ￥298.00
               </div>
               <div class="detail-txt ellipsis-3">
-                基於R.Salvadori / C.Shelby駕駛的5號車，該車贏得了1959年勒芒24小時耐力賽。 也可以從該套件中製造出由M.Trintignant /P.Frère駕駛的＃6賽車和由S.Moss / J.Fairman駕駛
+                基於R.Salvadori / C.Shelby駕駛的5號車，該車贏得了1959年勒芒24小時耐力賽。 也可以從該套件中製造出由M.Trintignant
+                /P.Frère駕駛的＃6賽車和由S.Moss / J.Fairman駕駛
                 完整詳細的多材料套件，包括鉛錫合金金屬，樹脂，蝕刻，橡膠輪胎的翻折零件
               </div>
 
               <div class="btn-box">
-                <div class="btn-buy">图片一键下载</div>
-                <div class="left-articles">
-                  <span>分享：</span>
-                  <div class="article-item">
-                    <a href="/terms?id=100" >
-                      <img src="@/assets/image/footer/fackback.png" alt="">
-                    </a>
-                  </div>
-                  <div class="article-item">
-                    <a href="/terms?id=100" >
-                      <img src="@/assets/image/footer/feishu.png" alt="">
-                    </a>
-                  </div>
-                  <div class="article-item">
-                    <a href="/terms?id=100" >
-                      <img src="@/assets/image/footer/weibo.png" alt="">
-                    </a>
-                  </div>
+                <el-input-number :min="1" :max="view_info.kucun" v-model="selected_num"></el-input-number>
+                <div class="btn-buy" @click="do_add_cart"><img src="@/assets/image/product/cart.png" alt="">添加到购物车</div>
+                <div class="like">
+                  <img src="@/assets/image/product/like.png" alt="">
                 </div>
               </div>
+              <div class="left-articles">
+                <span>分享：</span>
+                <div class="article-item">
+                  <a href="/terms?id=100">
+                    <img src="@/assets/image/product/article1.png" alt="">
+                  </a>
+                </div>
+                <div class="article-item">
+                  <a href="/terms?id=100">
+                    <img src="@/assets/image/product/article2.png" alt="">
+                  </a>
+                </div>
+              </div>
+              <div class="down-btn-buy"><img src="@/assets/image/product/down.png" alt="">图片高清下载</div>
             </div>
           </div>
 
-
-
           <div class="ctx-bottom-container">
-
-
-
             <div class="bottom-right">
-              <div class="ctx-bottom">
-                <div class="ctx-bottom-inner">
-                  <!-- v-if="active_panel == '详情'" -->
-                  <div class="detail-content-box">
-                    <div class="panel-title" data-title="详情">
-                      详情说明
-                    </div>
-                    <div class="panel-title-line"></div>
-                    <div class="rich-html" v-html="info.content"></div>
-                    <div class="rich-html" v-html="info.cont2"></div>
-                    <div class="rich-html" v-html="info.cont3"></div>
-                  </div>
-                              <div class="bottom-left">
-                                <div class="main-title">相关产品</div>
+              <div class="ctx-bottom-inner">
+                <div class="ctx-bottom">
+                  <div class="ctx-bottom-inner">
+                    <div class="bottom-nav flex">
+                      <div class="nav-item" @click="togglePanel('型号说明')"
+                           :class="active_panel == '型号说明' ? 'active' : ''">
+                        型号说明
+                      </div>
 
-                                <div class="product-list">
-                                  <div class="product-item" v-for="(item, index)  in list_goods" :key="index" @click="toDetail(item)">
-                                    <div class="poster-box scale-box">
-                                      <img :src="item.img" alt="" class="poster scale-img">
-                                    </div>
-                                    <div class="info-box">
-                                      <div class="title ellipsis-2">12323</div>
-                                      <div class="pirce-box">
-                                        <div class="price-info">
-                                          <div class="price-1">￥298.00</div>
-                                        </div>
-                                        <div class="yishou">
-                                          限量50台
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
+                      <div class="nav-item" @click="togglePanel('车辆描述')"
+                           :class="active_panel == '车辆描述' ? 'active' : ''">
+                        车辆描述
+                      </div>
+                    </div>
+
+                    <div class="detail-content-box" v-if="active_panel == '型号说明'">
+                      <div class="rich-html" v-html="detail.content"></div>
+                    </div>
+                    <div class="comment-box" v-if="active_panel == '车辆描述'">
+                      <div class="rich-html" v-html="detail.cont2"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="bottom-left">
+                  <div class="main-title">相关产品</div>
+
+                  <div class="product-list">
+                    <div class="product-item" v-for="(item, index) in list_goods" :key="index">
+                      <div class="product-item-info">
+                        <div class="img-box" @click="toDetail(item)">
+                          <img :src="item.thumb" class="product-img" />
+                          <!-- <shouqing :kucun="goods.kucun" /> -->
+                        </div>
+                        <div class="info-box">
+                          <div class="title ellipsis-2">
+                            {{ item.title }}
+                            <div class="hot">限量50台</div>
+                            <div class="hot">限购2台</div>
+                          </div>
+
+                          <div class="price-box">
+                            <div class="sale">
+                              <span class="huobi">CN {{ vuex_huobi }} </span>
+                              <span class="value"> {{ item.priceSale }} </span>
+                            </div>
+                            <div class="market">
+                              <img src="@/assets/image/product/like.png" alt="">
+                              <img src="@/assets/image/product/cartAdd.png" alt="">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="act-info" v-if="is_show_check">
+                          <div class="img-check-box flex-center" @click.stop="do_toggle_check(item)">
+                            <img v-if="item.checked" src="@/static/common/check1.png" alt="" class="img-check check-1" />
+                            <!-- <img v-else src="@/static/common/check0.png" alt="" class="img-check check-0" /> -->
+                            <img v-else src="@/static/common/check00.png" alt="" class="img-check check-0" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -148,18 +144,18 @@
 </template>
 
 <script>
-import product_add_cart_success_modal from "@/components/product/product_add_cart_success_modal.vue";
 import carouselComponent from "@/components/goods/carouselComponent.vue"; //左侧轮播
 import review_list from "@/components/review/review_list.vue";
 import detailLunbo from "@/components/detail/detailLunbo.vue";
+import cart from '@/components/product/cart.vue';
 
-import { mapState } from "vuex";
-import { Loading } from "element-ui";
+import {mapState} from "vuex";
+import {Loading} from "element-ui";
 
 export default {
   name: "goods-detail",
   components: {
-    product_add_cart_success_modal,
+    cart,
     carouselComponent,
     review_list,
     detailLunbo,
@@ -173,10 +169,6 @@ export default {
         page: 1,
         pageNum: 10,
       },
-      //
-      //
-      //
-      //
 
       is_prod: process.env.NODE_ENV == "production",
 
@@ -245,7 +237,6 @@ export default {
 
   computed: {
     ...mapState(["kefu_qq"]),
-
     //预览信息
     view_info() {
       let view_info = this.curr;
@@ -282,9 +273,6 @@ export default {
   },
 
   beforeRouteUpdate(to, from, next) {
-    //console.log("组件复用");
-    //console.log(to, from);
-
     next(to.query);
     this.id = this.$route.query.id || ""; //规格id
     this.setView();
@@ -321,13 +309,12 @@ export default {
         },
       }).then((res) => {
         //console.log("商品详情", res);
-        let { code, data, msg } = res;
+        let {code, data, msg} = res;
         if (res.code == 200) {
           this.info = data;
           this.add_history_record()
           // this.reviews = data.commentList;
           this.query_reviews(); //评论
-
 
 
           this.curr = data;
@@ -348,8 +335,6 @@ export default {
         this.hideLoading();
       });
     },
-
-
 
     showLoading() {
       this.loadingInstance = Loading.service({
@@ -375,7 +360,6 @@ export default {
       // });
     },
 
-
     //查询评论列表
     query_reviews() {
       this.$api({
@@ -387,13 +371,12 @@ export default {
           ...this.pagination
         },
       }).then((res) => {
-        let { code, data, count } = res;
+        let {code, data, count} = res;
         if (code == 200) {
           this.reviews = data.list;
         }
       });
     },
-
 
     add_history_record() {
       this.$api({
@@ -432,9 +415,6 @@ export default {
       });
     },
 
-
-
-
     //商品sku 属性选择
     onSelectShuXing(item) {
       //console.log("商品属性选择", { ...item });
@@ -470,7 +450,7 @@ export default {
       if (Object.keys(this.info.skus).length == this.select_shuxing_list.length) {
         let key_ids = this.select_shuxing_list.map((v) => v.id).join("-");
         this.sku_select =
-          this.sku_list.find((v) => v.key_ids == key_ids) || {};
+            this.sku_list.find((v) => v.key_ids == key_ids) || {};
       }
 
       //console.log("已选的商品属性值 select_shuxing_list", this.select_shuxing_list);
@@ -597,7 +577,7 @@ export default {
       } else {
         // this.sku_select = {};
         this.sku_select =
-          sku_list.find((v) => v.inventoryId == this.id) || {};
+            sku_list.find((v) => v.inventoryId == this.id) || {};
       }
       this.sku_list = sku_list;
 
@@ -631,7 +611,6 @@ export default {
     },
 
 
-
     //商品是否选择规格检测
     checkedSelected() {
       //console.log("检测是否选择了商品", this.sku_select);
@@ -652,7 +631,7 @@ export default {
     //处理购物车列表数据
     handlePiPrice(item) {
       let v = item;
-      let { nums1, nums2 } = v;
+      let {nums1, nums2} = v;
       let num = this.selected_num;
       let priceSale = 0;
       if (+nums2 && +nums1) {
@@ -692,7 +671,7 @@ export default {
         priceMarket: sku_item.priceMarket,
       }];
       let str_data = JSON.stringify(data_format);
-      this.$store.commit('set_cache_payment_products',str_data)
+      this.$store.commit('set_cache_payment_products', str_data)
       this.$router.push({
         path: "/order-submit",
       });
@@ -737,14 +716,9 @@ export default {
         },
       }).then((res) => {
         alert(res)
-        let { code, data, msg } = res;
+        let {code, data, msg} = res;
         if (code == 200) {
-          this.$refs.product_add_cart_success_modal.init({
-            num: this.selected_num,
-            ...this.sku_select,
-          });
 
-          this.$store.commit('set_vuex_cart_number', data.count)
         }
       });
     },
@@ -785,7 +759,6 @@ export default {
     },
 
 
-
     //
     togglePanel(name) {
       // return;
@@ -796,7 +769,6 @@ export default {
         this.scrollToTarget(".comment-box");
       }
     },
-
 
 
     //商品评价分页
@@ -810,21 +782,13 @@ export default {
     scrollToTarget(clsName) {
       // var element = document.querySelector(".wenxian-box");
       var element = document.querySelector(clsName);
-      element.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+      element.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
     },
   },
 };
 </script>
 
 <style lang="less">
-.pop-kefu-inner {
-  padding: 25px;
-
-  .kefu-tip {
-    margin-bottom: 20px;
-  }
-}
-
 .detail-qrcode {
   .flex-center();
   text-align: center;
@@ -897,20 +861,22 @@ export default {
       font-size: 14px;
     }
 
-    .kefu-code {}
+    .kefu-code {
+    }
 
-    .erweima {}
+    .erweima {
+    }
   }
 }
 
 .phone-tip-inner {
-    display: flex;
+  display: flex;
   align-items: center;
   cursor: pointer;
 }
 
 .page {
-  background: #000;
+  background: #fff;
   // padding-top: 32px;
   min-height: 50vh;
   font-size: 14px;
@@ -938,7 +904,6 @@ export default {
       .ctx-top {
         padding: 0;
         display: flex;
-        justify-content: space-between;
 
         .ctx-left {
           width: 582px;
@@ -960,9 +925,9 @@ export default {
 
           .shoucang-box {
             margin-top: 20px;
-              display: flex;
-  align-items: center;
-  justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             width: 100%;
 
             .yes {
@@ -975,8 +940,8 @@ export default {
 
             .shoucang-left {
               cursor: pointer;
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               img {
                 width: 20px;
@@ -994,8 +959,8 @@ export default {
 
             .shoucang-right {
               cursor: pointer;
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               img {
                 width: 20px;
@@ -1014,43 +979,63 @@ export default {
         }
 
         .ctx-right {
+          flex: 1;
           width: 572px;
-          margin-left: 46px;
+          margin-left: 38px;
           text-align: left;
 
           .detail-title {
             .title-text {
               font-weight: 500;
               font-size: 24px;
-              color: #FFFFFF;
+              color: #000;
+
+              .hot {
+                text-align: center;
+                background-image: url("~@/assets/image/product/hot.png");
+                background-repeat: no-repeat;
+                background-size: 100% 100%;
+                width: 63px;
+                height: 18px;
+                line-height: 18px;
+                display: inline-block;
+                font-size: 12px;
+                color: #fff;
+                font-weight: 400;
+              }
             }
           }
 
           .detail-desc {
             width: 75px;
             height: 24px;
-            color: #fff;
+            color: #000;
             text-align: center;
             line-height: 24px;
             background: #1F1C1F;
             border: 1px solid #7B7B7B;
             margin-top: 10px;
           }
+
           .detail-code {
-            color: #fff;
-            margin: 20px 0;
+            color: #666;
+            margin: 10px 0;
           }
+
           .detail-price {
             font-weight: bold;
             font-size: 26px;
-            color: #FFFFFF;
+            color: #000;
             margin-bottom: 20px;
           }
+
           .detail-txt {
             font-weight: 400;
             font-size: 14px;
             line-height: 24px;
-            color: #fff;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #EEEEEE;
+            color: #000;
           }
 
           .info-box {
@@ -1061,8 +1046,8 @@ export default {
 
             .list {
               .item {
-                  display: flex;
-                  align-items: center;
+                display: flex;
+                align-items: center;
 
                 .label {
                   width: 80px;
@@ -1073,8 +1058,8 @@ export default {
                 }
 
                 .vals {
-                    display: flex;
-  align-items: center;
+                  display: flex;
+                  align-items: center;
                   flex: 1;
 
                   font-size: 16px;
@@ -1097,8 +1082,8 @@ export default {
             }
 
             .price {
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               .number {
                 font-size: 28px;
@@ -1111,16 +1096,16 @@ export default {
 
 
           .info-texts {
-              display: flex;
-  align-items: center;
-  justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             padding: 0 32px;
             height: 45px;
             background: #F8F8F8;
 
             .text-item {
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               .label {
                 font-size: 14px;
@@ -1162,8 +1147,8 @@ export default {
 
           .sku-list {
             flex: 1;
-              display: flex;
-  align-items: center;
+            display: flex;
+            align-items: center;
             flex-wrap: wrap;
 
             .sku-item {
@@ -1182,7 +1167,6 @@ export default {
               font-family: PingFang SC, PingFang SC;
               font-weight: 500;
               color: #333333;
-
 
 
               &:disabled {
@@ -1238,11 +1222,10 @@ export default {
           }
 
 
-
           .shuliang-box {
             margin-top: 0px;
-              display: flex;
-  align-items: center;
+            display: flex;
+            align-items: center;
 
             .sel-num-title {
               min-width: 84px;
@@ -1253,8 +1236,8 @@ export default {
 
             .shuliang {
               min-width: 105px;
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               div {
                 width: 30px;
@@ -1273,7 +1256,8 @@ export default {
                 }
               }
 
-              .minus {}
+              .minus {
+              }
 
               input {
                 outline: none;
@@ -1298,12 +1282,14 @@ export default {
               }
 
               /* chrome */
+
               input[type="number"] {
                 -moz-appearance: textfield;
                 /* firefox */
               }
 
-              .plus {}
+              .plus {
+              }
             }
           }
 
@@ -1314,39 +1300,80 @@ export default {
           .btn-box {
             margin-top: 20px;
             display: flex;
-            align-items: end;
-            justify-content: space-between;
-
+            align-items: center;
 
             .btn-buy {
+              margin: 0 10px;
               cursor: pointer;
-              width: 256px;
-              height: 48px;
-              background: #DF1626;
+              width: 252px;
+              height: 52px;
+              background: #D41C17;
               text-align: center;
-              line-height: 48px;
+              line-height: 52px;
               color: #fff;
+              font-size: 14px;
+
+              img {
+                width: 20px;
+                margin-right: 10px;
+              }
             }
-            .left-articles {
+
+            .like {
+              cursor: pointer;
+              border-radius: 50%;
+              border: 1px solid #DEDEDE;
+              width: 50px;
+              height: 50px;
               display: flex;
-              flex-direction: row;
-              color: #E6E6E6;
-              .article-item {
-                a {
-                  color: #666;
-                  font-size: 14px;
-                  img {
-                    width: 24px;
-                    height: 24px;
-                    margin-right: 16px;
-                  }
+              align-items: center;
+              justify-content: center;
+
+              img {
+                width: 25px;
+              }
+            }
+          }
+
+          .left-articles {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            color: #666;
+            margin-top: 26px;
+
+            .article-item {
+              a {
+                color: #666;
+                font-size: 14px;
+
+                img {
+                  width: 34px;
+                  margin-right: 5px;
                 }
               }
             }
           }
+
+          .down-btn-buy {
+            margin-top: 20px;
+            cursor: pointer;
+            width: 169px;
+            height: 36px;
+            background: #000000;
+            text-align: center;
+            line-height: 36px;
+            color: #fff;
+            font-size: 14px;
+
+            img {
+              width: 14px;
+              margin-right: 10px;
+            }
+          }
+
         }
       }
-
 
 
       .ctx-bottom-container {
@@ -1358,7 +1385,7 @@ export default {
           width: 100%;
           font-weight: 400;
           font-size: 16px;
-          color: #fff;
+          color: #000;
         }
 
         .bottom-right {
@@ -1367,7 +1394,7 @@ export default {
       }
 
       .ctx-bottom {
-        margin-top: 50px;
+        margin-top: 20px;
       }
 
       .ctx-bottom-inner {
@@ -1409,14 +1436,12 @@ export default {
 }
 
 .bottom-nav {
-  background: #F9F9F9;
   position: relative;
   border-bottom: 1px solid #ddd;
   display: flex;
   height: 48px;
-  /*no */
   line-height: 48px;
-  /*no */
+  margin-bottom: 20px;
 
   .count-num {
     color: #F74747;
@@ -1439,23 +1464,21 @@ export default {
     }
 
     &.active {
-
       font-weight: bold;
       position: relative;
-      background: #333333;
-      color: #FFFFFF;
+      color: #000;
 
-      // &::after {
-      //   content: "";
-      //   position: absolute;
-      //   left: 50%;
-      //   transform: translate(-50%);
-      //   bottom: 0;
-      //   width: 40px;
-      //   height: 4px;
-      //   background: #eb0611;
-      //   border-radius: 50px 50px 50px 50px;
-      // }
+      &::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        background: #000;
+        border-radius: 50px 50px 50px 50px;
+      }
 
       .count-num {
         color: #fff;
@@ -1534,8 +1557,8 @@ export default {
 
     .params-box {
       .params-item {
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
         border: 1px solid #ccc;
         border-bottom: none;
 
@@ -1636,13 +1659,14 @@ export default {
 
 .bottom-left {
   margin-top: 50px;
+
   .main-title {
     position: relative;
     border-bottom: 1px solid #696969;
     line-height: 45px;
     font-weight: 400;
-    font-size: 24px;
-    color: #fff;
+    font-size: 20px;
+    color: #000;
 
     &::after {
       position: absolute;
@@ -1661,13 +1685,16 @@ export default {
   display: flex;
 
   .product-item {
-
-    margin-bottom: 10px;
-    margin-right: 16px;
-    margin-top: 16px;
-    width: 285px;
-    background: #1F1C1F;
+    position: relative;
+    width: 322px;
+    height: 346px;
+    margin-right: 20px;
+    margin-top: 20px;
+    text-align: center;
+    overflow: hidden;
     cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: #FFFFFF;
 
     &:nth-child(4n) {
       margin-right: 0;
@@ -1678,91 +1705,136 @@ export default {
     }
 
     &:hover {
-      .title {
-        color: #F74747 !important;
+      .img-box {
+        img {
+          transform: scale(1.1);
+        }
       }
     }
 
-    .poster-box {
-      width: 285px;
-      height: 190px;
+    .img-box {
+      width: 100%;
+      height: 217px;
+      padding-bottom: 23px;
+      margin: 0 auto;
+      overflow: hidden;
+      position: relative;
 
-      .poster {
-        width: 285px;
-        height: 190px;
+      img {
+        width: 100%;
+        height: 296px;
+        object-fit: cover;
+        transition: 0.3s;
       }
     }
 
     .info-box {
-      height: 113px;
-      padding: 13px 15px 15px;
+      width: 100%;
+      height: 120px;
+      padding: 15px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
 
       .title {
-        font-weight: 400;
+        text-align: left;
+        width: 100%;
+        font-family: Poppins, Poppins;
+        font-weight: 600;
         font-size: 16px;
-        color: #fff;
-      }
+        color: #000;
 
-      .pirce-box {
-        margin-top: 15px;
-          display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-        .price-info {
-          display: flex;
-          align-items: center;
-
-          .price-1 {
-            font-weight: 400;
-            font-size: 18px;
-            color: #fff;
-          }
-        }
-
-        .yishou {
-          width: 75px;
-          height: 24px;
-          background: #1F1C1F;
-          border: 1px solid #7B7B7B;
-          font-size: 12px;
+        .hot {
           text-align: center;
-          line-height: 24px;
+          background-image: url("~@/assets/image/product/hot.png");
+          background-repeat: no-repeat;
+          background-size: 100% 100%;
+          width: 63px;
+          height: 18px;
+          line-height: 18px;
+          display: inline-block;
+          font-size: 12px;
+          color: #fff;
+          font-weight: 400;
         }
       }
 
 
-      .act-box {
-        margin-top: 15px;
-        border-top: 1px solid #ddd;
-        padding-top: 5px;
-          display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-        .fav-box {
-          .flex-center();
-          width: fit-content;
-          height: 32px;
-
-          img {
-            margin-right: 5px;
-            width: 18px;
-            height: 18px;
+      .price-box {
+        margin-top: 5px;
+        display: flex;
+        justify-content: space-between;
+        .sale {
+          span {
+            font-family: OPPOSans, OPPOSans;
+            font-weight: bold;
+            font-size: 18px;
+            color: #000;
           }
+
         }
 
-        .cart-box {
-          .flex-center();
-          width: 32px;
-          height: 32px;
-
+        .market {
           img {
-            width: 32px;
-            height: 32px;
+            width: 21px;
+          }
+          img:first-child {
+            margin-right: 30px;
+          }
+        }
+      }
+
+      .sku-box {
+        min-height: 50px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+
+        .sku-item {
+          position: relative;
+          padding: 4px 0;
+          width: 50%;
+          text-align: center;
+          font-family: Arial, Arial;
+          font-weight: 400;
+          font-size: 12px;
+          color: #444444;
+
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0px;
+            height: 1px;
+            transform: translate(-50%);
+            background: #ccc;
+          }
+
+          &:hover {
+            &::after {
+              width: 40px;
+            }
+          }
+        }
+      }
+
+      .btn-box {
+        margin-top: 20px;
+
+        .btn-cart {
+          width: 226px;
+          width: 100%;
+          height: 27px;
+          border-radius: 0px 0px 0px 0px;
+          border: 1px solid #F74747;
+          font-family: OPPOSans, OPPOSans;
+          font-weight: bold;
+          font-size: 12px;
+          color: #F74747;
+
+          &:hover {
+            background: #F74747;
+            color: #fff;
           }
         }
       }

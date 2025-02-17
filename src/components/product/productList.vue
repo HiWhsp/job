@@ -1,24 +1,26 @@
 <template>
   <div class="product-list flex">
     <div class="product-item" v-for="(item, index) in list" :key="index">
-      <div class="product-item-info" @click="to_product(item)">
-        <div class="img-box">
+      <div class="product-item-info">
+        <div class="img-box" @click="to_product(item)">
           <img :src="item.thumb" class="product-img" />
           <!-- <shouqing :kucun="goods.kucun" /> -->
         </div>
         <div class="info-box">
           <div class="title ellipsis-2">
             {{ item.title }}
+            <div class="hot">限量50台</div>
+            <div class="hot">限购2台</div>
           </div>
 
           <div class="price-box">
             <div class="sale">
-              <span class="huobi"> {{ vuex_huobi }} </span>
+              <span class="huobi">CN {{ vuex_huobi }} </span>
               <span class="value"> {{ item.priceSale }} </span>
             </div>
             <div class="market">
-              限量50台
-<!--              <span class="value"> {{ item.priceSale }} </span>-->
+              <img src="@/assets/image/product/like.png" alt="">
+              <img src="@/assets/image/product/cartAdd.png" alt="">
             </div>
           </div>
         </div>
@@ -85,20 +87,21 @@ export default {
 
   .product-item {
     position: relative;
-    width: 442px;
-    height: 416px;
-    background: #1F1C1F;
+    width: 322px;
+    height: 346px;
     margin-right: 20px;
     margin-top: 20px;
     text-align: center;
     overflow: hidden;
     cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: #FFFFFF;
 
-    &:nth-child(2n) {
+    &:nth-child(3n) {
       margin-right: 0;
     }
 
-    &:nth-child(-n + 2) {
+    &:nth-child(-n + 3) {
       margin-top: 0;
     }
 
@@ -112,7 +115,7 @@ export default {
 
     .img-box {
       width: 100%;
-      height: 296px;
+      height: 217px;
       padding-bottom: 23px;
       margin: 0 auto;
       overflow: hidden;
@@ -135,12 +138,26 @@ export default {
       justify-content: space-between;
 
       .title {
-        text-align: center;
+        text-align: left;
         width: 100%;
         font-family: Poppins, Poppins;
         font-weight: 600;
         font-size: 16px;
-        color: #fff;
+        color: #000;
+
+        .hot {
+          text-align: center;
+          background-image: url("~@/assets/image/product/hot.png");
+          background-repeat: no-repeat;
+          background-size: 100% 100%;
+          width: 63px;
+          height: 18px;
+          line-height: 18px;
+          display: inline-block;
+          font-size: 12px;
+          color: #fff;
+          font-weight: 400;
+        }
       }
 
 
@@ -153,18 +170,18 @@ export default {
             font-family: OPPOSans, OPPOSans;
             font-weight: bold;
             font-size: 18px;
-            color: #fff;
+            color: #000;
           }
 
         }
 
         .market {
-          width: 75px;
-          height: 24px;
-          line-height: 24px;
-          background: #1F1C1F;
-          color: #fff;
-          border: 1px solid #7B7B7B;
+          img {
+            width: 21px;
+          }
+          img:first-child {
+            margin-right: 30px;
+          }
         }
       }
 

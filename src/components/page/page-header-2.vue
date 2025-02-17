@@ -134,7 +134,7 @@ export default {
         // {title: "工艺鉴赏", route: "/art_list"},
         {title: "关于我们", route: "/about"},
         {title: "限定商品", route: "/product-cates"},
-        {title: "特价商品", route: "/specialOffer"},
+        {title: "特价商品", route: "/special-offer"},
         {title: "会员注册", route: "/register"},
         {title: "联系我们", route: "/connect"},
       ];
