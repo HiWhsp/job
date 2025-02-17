@@ -301,10 +301,6 @@ export default {
 
   created() {
     this.setView();
-    this.$refs.product_add_cart_success_modal.init({
-      num: this.selected_num,
-      ...this.sku_select,
-    });
   },
 
   beforeDestroy() {
@@ -312,7 +308,7 @@ export default {
 
     document.removeEventListener("scroll", this.handleScrollEvent);
   },
-
+  
   methods: {
     toDetail(item) {
       this.$router.push(`/product-detail?id=${item.inventoryId}`)
