@@ -1,10 +1,6 @@
 <template>
   <div class="page">
-    <div class="top-banner">
-      <div class="title">联系我们</div>
-    </div>
     <div class="inner">
-      <pageBreadcrumb :option="nav_option"/>
 
       <div class="page-ctx">
         <div class="contact-info">
