@@ -366,7 +366,7 @@ export default {
                    @click="do_toggle_prepaid(item)"
                    :class="{ checked: info.prepaidAccount == item.value }">
                 <div class="invoice" style="width: 100%;padding: 0 10px;" v-if="item.title === '团体账户'">{{ item.title }}: {{ baseInfo.team_title }}</div>
-                <div class="invoice" style="width: 100%;padding: 0 10px;" v-if="item.title === '个人账户'">{{ item.title }}: {{ baseInfo.money }}</div>
+                <div class="invoice" style="width: 100%;padding: 0 10px;" v-if="item.title === '个人账户'">{{ item.title }}</div>
               </div>
             </div>
           </div>
@@ -454,6 +454,13 @@ export default {
                 <el-input v-model="invoice_info.shibiema"
                           placeholder="请填写准确的纳税人识别号 必填"></el-input>
                 <el-checkbox v-model="checked" style="margin-left: 10px">无税号单位</el-checkbox>
+              </div>
+            </div>
+            <div class="info-item" v-if="invoice_info.titleType === '2'">
+              <div class="info-label"><span>*</span> 注册电话</div>
+              <div class="info-val">
+                <el-input v-model="invoice_info.companyPhone"
+                          placeholder="输入单位注册电话 必填"></el-input>
               </div>
             </div>
             <div class="info-item">
