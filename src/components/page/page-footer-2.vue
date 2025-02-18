@@ -46,7 +46,7 @@
                 <a href="/special-offer">特价商品</a>
               </div>
               <div class="info-item">
-                <a href="/connect">联系我们</a>
+                <a href="/contact">联系我们</a>
               </div>
             </div>
           </div>

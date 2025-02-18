@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <cart></cart>
+    <cart ref="add-cart"></cart>
     <!-- <modalLoading ref="modalLoading" /> -->
     <!-- 邀请好友 -->
     <!-- <modalYaoqing ref="modalYaoqing" /> -->
@@ -226,7 +226,6 @@ export default {
       isFavourite: false, //未收藏
 
       selectedSkuComb: {}, //选择的商品规格信息 立即购买需要金额
-      show_sku: false,
       curr: {}, //产品
       detail: {}, //产品
       current: 0, //轮播图指示器
@@ -610,7 +609,6 @@ export default {
       }
     },
 
-
     //商品是否选择规格检测
     checkedSelected() {
       //console.log("检测是否选择了商品", this.sku_select);
@@ -689,7 +687,6 @@ export default {
         return
       }
 
-
       //console.log("shopcart_add 加入购物车");
       if (!this.sku_select.inventoryId) {
         alertErr("请选择商品规格！");
@@ -718,11 +715,10 @@ export default {
         alert(res)
         let {code, data, msg} = res;
         if (code == 200) {
-
+          this.$refs["add-cart"].init();
         }
       });
     },
-
 
     //商品评价页面
     go_comments() {
@@ -733,7 +729,6 @@ export default {
         },
       });
     },
-
 
     //预览图片
     previewImage(src, index, swiperImgs) {
@@ -758,7 +753,6 @@ export default {
       }
     },
 
-
     //
     togglePanel(name) {
       // return;
@@ -770,13 +764,11 @@ export default {
       }
     },
 
-
     //商品评价分页
     changePage_comment(page) {
       this.pagination.page = page;
       this.query_comments();
     },
-
 
     //滚动到指定位置
     scrollToTarget(clsName) {

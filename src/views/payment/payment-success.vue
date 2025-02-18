@@ -1,26 +1,22 @@
 <template>
   <div class="page">
-    <pageBreadcrumb :option="nav_option" />
     <div class="inner w-1400">
+      <div class="page-title">支付成功</div>
       <div class="pay-info">
         <div class="img-box">
-          <img v-if="payState == '支付成功' || payState == '提交成功'" src="@/static/payment/pay-succ.png" alt />
-          <img v-else src="@/static/payment/pay-fail.png" alt />
+          <img v-if="payState == '支付成功' || payState == '提交成功'" src="@/static/payment/pay-succ.png" alt/>
+          <img v-else src="@/static/payment/pay-fail.png" alt/>
         </div>
         <div class="text-1">{{ payState }}</div>
-        <div class="text-2" v-if="payState == '提交成功'">
-          您的转账凭证已提交，请等待后台审核！
+        <div class="text-2" v-if="payState == '支付成功'">
+          请在“我的订单”中查看商品状态。
         </div>
-        <div class="text-2">订单编号：{{ info.orderNo || '无' }}</div>
-        <div class="text-2">下单时间：{{ info.orderNo || '无' }}</div>
-        <div class="text-2">支付方式：{{ info.orderNo || '无' }}</div>
-        <div class="text-2">获得积分：{{ info.orderNo || '无' }}</div>
         <div class="btns flex-center">
-          <button class="btn-ripple fit-text " @click="to_liulan()">
-            继续购物
-          </button>
           <button class="btn-ripple fit-text btn-bg" @click="to_order()">
-            查看订单
+            我的订单
+          </button>
+          <button class="btn-ripple fit-text " @click="to_liulan()">
+            继续浏览
           </button>
         </div>
       </div>
@@ -29,7 +25,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
 
 export default {
@@ -52,8 +48,8 @@ export default {
       let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
 
       let option = [
-        { route : '/product-reserve', title: '预约产品'},
-        { route: '', title: '提交' }
+        {route: '/product-reserve', title: '预约产品'},
+        {route: '', title: '提交'}
       ]
       console.log(option)
       return option
@@ -79,7 +75,7 @@ export default {
           id: this.id
         },
       }).then((res) => {
-        let { code, data, msg } = res;
+        let {code, data, msg} = res;
         if (code == 200) {
           this.info = data;
           if (data.status_info == "待支付") {
@@ -98,19 +94,22 @@ export default {
 
 <style scoped lang="less">
 .page-title {
-  text-align: left;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #d5d8de;
+  height: 52px;
+  line-height: 52px;
+  background: #F4F4F4;
+  padding-left: 20px;
 
   font-family: Poppins, Poppins;
-  font-weight: bold;
-  font-size: 24px;
-  color: #333333;
+  font-weight: 400;
+  font-size: 20px;
+  color: #000;
+  text-align: left;
+  margin-top: 20px;
 }
 
 
 .page {
-  background: #1D1D1D;
+  background: #fff;
   text-align: center;
   font-size: 14px;
   padding-bottom: 100px;
@@ -151,22 +150,22 @@ export default {
       button {
         width: 200px;
         height: 45px;
-        background: #000;
-        border: 1px solid #7B7B7B;
+        border: 1px solid #000;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 17px;
-        color: #fff;
+        color: #000;
 
         &.btn-bg {
-          background: #DF1626;
+          background: #000;
           border: none;
           color: #FFFFFF;
         }
 
-        &+button {
+        & + button {
           margin-left: 16px;
         }
+
         &:hover {
           opacity: 0.8;
         }

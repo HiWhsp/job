@@ -136,7 +136,7 @@ export default {
         {title: "限定商品", route: "/product-cates"},
         {title: "特价商品", route: "/special-offer"},
         {title: "会员注册", route: "/register"},
-        {title: "联系我们", route: "/connect"},
+        {title: "联系我们", route: "/contact"},
       ];
       return arr;
     },
