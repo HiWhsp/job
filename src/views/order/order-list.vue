@@ -11,16 +11,19 @@
             <span v-if="item.num" class="number">{{ item.num }}</span>
           </div>
         </div>
-        <div class="search-box">
-          <input v-model="keyword" placeholder="输入商品名称、订单号" type="text"/>
-          <button @click="do_search()">搜索</button>
-          <button @click="do_reset()">重置</button>
-        </div>
+        <!--        <div class="search-box">-->
+        <!--          <input v-model="keyword" placeholder="输入商品名称、订单号" type="text"/>-->
+        <!--          <button @click="do_search()">搜索</button>-->
+        <!--          <button @click="do_reset()">重置</button>-->
+        <!--        </div>-->
       </div>
-
+      <div class="list-title">
+        <div class="t1">产品</div>
+        <div class="t2">订单金额</div>
+        <div class="t3">订单状态</div>
+        <div class="t4">操作</div>
+      </div>
       <div class="page-sec">
-        <!-- <orderList :list="orders" @confirm="emitConfirm"/> -->
-
         <div class="order-list-wrap">
           <div v-for="(item, index) in orders" :key="index" class="info-item">
             <div class="base-box flex-between">
@@ -28,9 +31,6 @@
               <div class="order-code">
                 订单号：
                 <span>{{ item.orderNo }}</span>
-              </div>
-              <div :class="'state-' + item.orderStatus" class="order-state">
-                {{ item.statusInfo }}
               </div>
             </div>
 
@@ -48,64 +48,24 @@
                   </div>
                   <div class="box-title">
                     <div class="product-title" @click="mix_to_product(product_item)">{{ product_item.title }}</div>
-<!--                    <div class="product-sku">{{ product_item.keyVals }}</div>-->
+                    <div class="product-sku">x {{ product_item.num }}</div>
                   </div>
-                  <!-- <div class="box-sku">
-                    <div class="product-sku">{{ product_item.keyVals }}</div>
-                  </div> -->
-                  <div class="box-price">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
-                  <div class="box-num">
-                    x {{ product_item.num }}
+                  <div class="box-price">CN {{ vuex_huobi }} {{ product_item.priceSale * product_item.num }}</div>
+                  <div :class="'state-' + item.orderStatus" class="order-state">
+                    {{ item.statusInfo }}
                   </div>
-                  <div class="box-subtotal">{{ vuex_huobi }} {{ product_item.priceSale * product_item.num }}</div>
-                  <!-- <div class="box-refund">
-                    <div class="refund-act">
-                      申请售后
-                    </div>
-                  </div> -->
+                  <div class="btn-actions">
+                    <button class="btn-ripple fit-text " @click="toDetail(item)">
+                      订单详情
+                    </button>
+                    <button v-if="item.ifCancel == 1" class="btn-ripple fit-text btn-bg" @click="doCancel(item)">
+                      取消
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </div>
-
-            <div class="info-heji">
-              <div class="heji">
-                <div class="heji-num">
-                  共 <b>{{ item.count_goods }}</b> 个商品
-                </div>
-                <div class="heji-money">
-                  合计金额： <b>{{ item.price }} 元</b>
-                </div>
-              </div>
-
-              <div class="btn-actions">
-                <button class="btn-ripple fit-text " @click="toDetail(item)">
-                  订单详情
-                </button>
-                <button v-if="item.ifCancel == 1" class="btn-ripple fit-text btn-bg" @click="doCancel(item)">
-                  取消订单
-                </button>
-                <button v-if="item.ifPay == 1" class="btn-ripple fit-text btn-bg" @click="doPay(item)">
-                  去支付
-                </button>
-                <button v-if="item.ifDel == 1" class="btn-ripple fit-text btn-bg" @click="doDelete(item)">
-                  删除订单
-                </button>
-                <button v-if="item.ifReceive == 1" class="btn-ripple fit-text btn-bg" @click="doReceive(item)">
-                  确认收货
-                </button>
-                <button v-if="item.ifComment == 1" class="btn-ripple fit-text btn-bg" @click="doReview(item)">
-                  去评价
-                </button>
-                <button v-if="item.orderStatus >= 5" class="btn-ripple fit-text btn-bg" @click="doRefund(item)">
-                  售后
-                </button>
-                <!-- <button v-if="item.is_aa == 1" class="btn-ripple fit-text btn-bg" @click="toDetail(item)">
-            查看物流
-          </button> -->
               </div>
             </div>
           </div>
-
 
         </div>
 
@@ -464,7 +424,33 @@ export default {
 
 <style lang="less" scoped>
 /deep/ .order-list-wrap {
-  margin-top: 30px;
+  margin-top: 15px;
+}
+
+.list-title {
+  margin-top: 15px;
+  display: flex;
+  height: 62px;
+  line-height: 62px;
+  background: #F4F4F4;
+  padding: 0 20px;
+
+  font-weight: 400;
+  font-size: 16px;
+  color: #000000;
+
+  .t1 {
+    flex: 1;
+  }
+
+  .t2, .t3 {
+    width: 200px;
+    text-align: center;
+  }
+
+  .t4 {
+    width: 200px;
+  }
 }
 
 .page {
@@ -481,19 +467,13 @@ export default {
     font-weight: bold;
     color: #333333;
   }
-
-  .page-ctx {
-    padding: 24px 32px;
-    background: #1D1D1D;
-  }
 }
 
-
 .tab-box {
-  padding-right: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid #E4E7ED;
 
   .tab-list {
     display: flex;
@@ -502,17 +482,16 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 20px;
-    color: #fff;
+    color: #000;
 
     .tab-item {
       position: relative;
-      height: 48px;
-      line-height: 48px;
+      height: 30px;
       cursor: pointer;
       margin-right: 40px;
 
       .number {
-        color: #fff;
+        color: #000;
       }
 
       &.active {
@@ -525,7 +504,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #fff;
+          background: #000;
         }
       }
     }
@@ -562,7 +541,6 @@ export default {
   }
 }
 
-
 .goods-sku {
   margin: 15px 0;
 }
@@ -572,30 +550,30 @@ export default {
 
   span {
     cursor: pointer;
-    display: inlin-block;
+    display: inline-block;
     padding: 2px 4px;
     background: coral;
-    color: #fff;
+    color: #000;
   }
 }
 
 
 .order-list-wrap {
   .info-item {
-    border: 1px solid #4D4D4D;
-    margin-bottom: 30px;
+    border: 1px solid #E4E7ED;
+    margin-bottom: 17px;
   }
 
   .base-box {
     height: 48px;
     padding: 0 15px;
-    background: #5A5A5A;
+    border-bottom: 1px solid #E4E7ED;
 
     .date {
       font-size: 14px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
       font-weight: bold;
-      color: #fff;
+      color: #000;
     }
 
     .order-code {
@@ -606,31 +584,10 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
       font-weight: bold;
-      color: #fff;
+      color: #000;
 
       span {
-        color: #fff;
-      }
-    }
-
-    .order-state {
-      padding: 3px 6px;
-      // border: 1px solid #ccc;
-      font-size: 14px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      line-height: 20px;
-      color: #fff;
-
-      // 待付款
-      &.state--5 {
-        // background: #ff4c29;
-        // border-color: #ff4c29;
-        // color: #fff;
-      }
-
-      &.state-2 {
-        color: #fff;
+        color: #000;
       }
     }
   }
@@ -680,7 +637,8 @@ export default {
           .product-title {
             width: fit-content;
             cursor: pointer;
-            color: #fff;
+            color: #000;
+
             &:hover {
               color: #F74747;
             }
@@ -701,17 +659,17 @@ export default {
         .box-num {
           text-align: center;
           min-width: 150px;
-          color: #fff;
+          color: #000;
         }
 
         .box-price {
           text-align: center;
-          min-width: 150px;
+          width: 200px;
 
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
           font-size: 14px;
-          color: #fff;
+          color: #000;
         }
 
         .box-subtotal {
@@ -721,20 +679,40 @@ export default {
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
           font-size: 14px;
-          color: #fff;
+          color: #000;
         }
 
-        .box-refund {
-          .refund-act {
-            text-align: center;
-            min-width: 150px;
 
-            font-family: OPPOSans, OPPOSans;
+        .order-state {
+          margin: 0 55px;
+          width: 90px;
+          height: 32px;
+          line-height: 32px;
+          text-align: center;
+          color: #fff;
+          font-size: 12px;
+          background: #000000;
+          border: 1px solid #CCCCCC;
+        }
+
+        .btn-actions {
+          width: 200px;
+
+          button {
+            height: 32px;
             font-weight: 400;
             font-size: 14px;
-            color: #fff;
-          }
+            color: #666666;
+            text-decoration: underline;
 
+            & + button {
+              margin-left: 20px;
+            }
+
+            &:hover {
+              opacity: 0.7;
+            }
+          }
         }
       }
     }
@@ -762,43 +740,18 @@ export default {
 
       .heji-num {
         margin-right: 30px;
-        color: #fff;
+        color: #000;
+
         b {
           font-weight: bold;
         }
       }
 
       .heji-money {
-        color: #fff;
+        color: #000;
+
         b {
           font-weight: bold;
-        }
-      }
-    }
-
-    .btn-actions {
-      button {
-        transition: 0.3s;
-        min-width: 120px;
-        height: 32px;
-        border: 1px solid #939393;
-        font-family: Arial, Arial;
-        font-weight: 400;
-        font-size: 14px;
-        color: #fff;
-
-        & + button {
-          margin-left: 20px;
-        }
-
-        &:hover {
-          opacity: 0.7;
-        }
-
-        &.btn-bg {
-          border: none;
-          background: #DF1626;
-          color: #FFFFFF;
         }
       }
     }

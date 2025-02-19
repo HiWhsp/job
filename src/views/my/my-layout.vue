@@ -19,7 +19,7 @@
           </div>
         </div>
         <div class="view-wrap">
-          <!--          <page_breadcrumb :option="nav_option"/>-->
+          <page_breadcrumb :option="nav_option"/>
           <router-view></router-view>
         </div>
       </div>
@@ -101,7 +101,7 @@ export default {
   computed: {
     nav_option() {
       let option = [
-        {route: '/my-index', title: '用户中心'},
+        {route: '/order-list', title: '会员中心'},
         {route: '', title: this.$route.meta.title}
       ]
       return option

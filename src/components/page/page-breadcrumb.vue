@@ -1,34 +1,30 @@
 <template>
   <div class="bread-box">
-    <div class="bread-inner flex w-1400">
+    <div class="bread-inner flex">
       <router-link to="/">
-         <img src="@/static/common/home.png" alt="" />
         首页
-        <!-- Home -->
       </router-link>
-
       <template v-if="level1.title">
         <span class="arrow">&gt;</span>
         <a v-if="!level1.route" class="link" href="javascript: void(0)">{{
-          level1.title
-        }}</a>
+            level1.title
+          }}</a>
         <router-link v-else :to="level1.route" class="route-link">{{
-          level1.title
-        }}</router-link>
+            level1.title
+          }}
+        </router-link>
       </template>
 
       <template v-if="level2.title">
         <span class="arrow">&gt;</span>
-        <!-- <a href="javascript: void(0)">{{ level2.title }}</a> -->
-
         <a v-if="!level2.route" class="link" href="javascript: void(0)">{{
-          level2.title
-        }}</a>
+            level2.title
+          }}</a>
         <router-link v-else :to="level2.route" class="route-link">{{
-          level2.title
-        }}</router-link>
+            level2.title
+          }}
+        </router-link>
       </template>
-
       <template v-if="level3.title">
         <span class="arrow">&gt;</span>
         <a href="javascript: void(0)">{{ level3.title }}</a>
@@ -38,7 +34,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 
 export default {
   name: "page-bread",
@@ -56,13 +51,13 @@ export default {
   },
   computed: {
     level1() {
-      return this.option[0] || { title: this.$route.meta.title };
+      return this.option[0] || {title: this.$route.meta.title};
     },
     level2() {
-      return this.option[1] || { title: "" };
+      return this.option[1] || {title: ""};
     },
     level3() {
-      return this.option[2] || { title: "" };
+      return this.option[2] || {title: ""};
     },
   },
   methods: {},
@@ -71,15 +66,10 @@ export default {
 
 <style scoped lang="less">
 .bread-box {
-  height: 60px;
-  line-height: 60px;
-  background-color: #000;
-  border-top: 1px solid #313131;
-  border-bottom: 1px solid #313131;
+  height: 45px;
 
   .bread-inner {
     margin: 0 auto;
-    // width: 95%;
 
     a {
       display: inline-flex;
@@ -87,8 +77,8 @@ export default {
 
       font-family: OPPOSans, OPPOSans;
       // font-weight: bold;
-      font-size: 15px;
-      color: #fff;
+      font-size: 14px;
+      color: #444;
 
       img {
         margin-right: 10px;
@@ -98,27 +88,27 @@ export default {
     .link {
       font-family: OPPOSans, OPPOSans;
       // font-weight: bold;
-      font-size: 15px;
-      color: #fff;
+      font-size: 14px;
+      color: #444;
     }
 
     .route-link {
       font-family: OPPOSans, OPPOSans;
       // font-weight: bold;
-      font-size: 15px;
-      color: #fff;
+      font-size: 14px;
+      color: #444;
     }
 
     .arrow {
       margin: 0 6px;
-      color: #aeaeae;
+      color: #999;
     }
 
-    >*:last-child {
+    > *:last-child {
       font-family: OPPOSans, OPPOSans;
       // font-weight: bold;
-      font-size: 15px;
-      color: #fff;
+      font-size: 14px;
+      color: #999;
     }
   }
 }
