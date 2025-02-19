@@ -17,10 +17,18 @@
               </div>
             </div>
           </div>
-          <div class="input-item">
-            <div class="label">你的电话：</div>
-            <div class="input-box">
-              <el-input clearable v-model="form.phone" placeholder="电话"></el-input>
+          <div class="row">
+            <div class="input-item">
+              <div class="label">你的电话：</div>
+              <div class="input-box">
+                <el-input clearable v-model="form.phone" placeholder="电话"></el-input>
+              </div>
+            </div>
+            <div class="input-item">
+              <div class="label">组织：</div>
+              <div class="input-box">
+                <el-input clearable v-model="form.phone" placeholder="电话"></el-input>
+              </div>
             </div>
           </div>
 
@@ -238,7 +246,7 @@ export default {
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #fff;
+        color: #565656;
 
         &.required {
           &::after {
@@ -251,8 +259,8 @@ export default {
 
       .input-box {
         /deep/ .el-input__inner, /deep/ .el-textarea__inner {
-          background-color: #000;
-          border: 1px solid #7B7B7B;
+          background: #F5F7FA;
+          border: 1px solid #E3E3E3;
           color: #fff;
         }
 

@@ -1,35 +1,16 @@
 <template>
   <div class="page">
     <div class="inner">
-
       <div class="page-ctx">
         <div class="contact-info">
-          <div class="info-list">
-            <div class="title">联系方式</div>
-            <div class="desc">如果您有任何问题，可以通过以下方式找到我们</div>
-            <div class="info-item">
-              <div class="icon-box">
-                <img src="@/assets/image/contact/mail.png" alt="">
-              </div>
-              <div class="title">
-                info@hotmail.com
-              </div>
+          <div>
+            <div class="info-list">
+              <div class="title">关于合作</div>
+              <div class="desc">如果您有任何问题，可以通过以下方式找到我们</div>
             </div>
-            <div class="info-item">
-              <div class="icon-box">
-                <img src="@/assets/image/contact/facebook.png" alt="">
-              </div>
-              <div class="title">
-                Facebook
-              </div>
-            </div>
-            <div class="info-item">
-              <div class="icon-box">
-                <img src="@/assets/image/contact/facebook.png" alt="">
-              </div>
-              <div class="title">
-                WhatsApp
-              </div>
+            <div class="info-list">
+              <div class="title">联系我们</div>
+              <div class="desc">如果您有任何问题，可以通过以下方式找到我们</div>
             </div>
           </div>
 
@@ -105,7 +86,7 @@ export default {
 
 <style scoped lang="less">
 .page {
-  background-color: #000;
+  background-color: #fff;
 
   .top-banner {
     background-image: url("~@/assets/image/contact.png");
@@ -145,47 +126,21 @@ export default {
 }
 
 .info-list {
+  width: 700px;
   .title {
     font-weight: bold;
-    font-size: 44px;
-    color: #FFFFFF;
+    font-size: 26px;
+    color: #1A212A;
     margin-bottom: 30px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #EAEAEA;
   }
 
   .desc {
     font-weight: 400;
     font-size: 18px;
-    color: #F2F2F2;
+    color: #414851;
     margin-bottom: 22px;
-  }
-  .info-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 24px;
-
-    .icon-box {
-      width: 24px;
-      height: 24px;
-      margin-right: 5px;
-
-      img {
-        width: 24px;
-      }
-    }
-
-    .title {
-      font-weight: 400;
-      font-size: 16px;
-      color: #FFFFFF;
-      margin-bottom: 0;
-    }
-
-    .desc {
-      font-family: OPPOSans, OPPOSans;
-      // font-weight: bold;
-      font-size: 16px;
-      color: #555555;
-    }
   }
 }
 

@@ -19,7 +19,7 @@ VueRouter.prototype.replace = function push(location, onResolve, onReject) {
 Vue.use(VueRouter);
 
 // 官网页面1
-const index = () => import(/* webpackChunkName: "index" */ "@/views/index.vue");
+const index = () => import(/* webpackChunkName: "index" */ "@/views/company/about.vue");
 const news = () =>
   import(/* webpackChunkName: "news" */ "@/views/news/news.vue");
 const news_detail = () =>

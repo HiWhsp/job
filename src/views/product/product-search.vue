@@ -1,40 +1,46 @@
 <template>
   <div class="page">
     <div class="inner">
-      <pageBreadcrumb :option="nav_option" />
 
-      <div class="search-title w-1400">搜索结果：检索到 <span>{{ count }}</span> 条结果</div>
+      <div class="search-title w-1400">
+        <p>所有产品 > <span>搜索 "{{ keyword }}"</span></p>
+        <span class="count">检索到 <span>{{ count }}</span> 条结果</span></div>
       <div class="page-ctx w-1400 flex">
-        <div class="aside">
-          <!-- 侧边栏 -->
-          <div class="search">
-            <p>搜索</p>
-            <el-input placeholder="Search Here" v-model="keyword" class="input-with-select">
-              <el-button slot="append" icon="el-icon-search" @click="doSearch()"></el-button>
-            </el-input>
-          </div>
-          <el-aside width="260px" class="sidebar">
-            <el-menu :default-active="defaultActive" :router="true">
-              <template v-for="(item, index) in vuexFlatCates">
-                <el-submenu :index="item.route" v-if="item.channels.length" class="menu-item-one">
-                  <template #title>{{ item.title }}</template>
-                  <el-menu-item :index="it.route" v-for="(it, i) in item.channels" :key="i">{{ it.title }}</el-menu-item>
-                </el-submenu>
-                <el-menu-item :index="item.route" v-else class="menu-item-one">
-                  <span slot="title">{{ item.title }}</span>
-                </el-menu-item>
-              </template>
-            </el-menu>
-          </el-aside>
-        </div>
         <div class="prod-wrap">
           <div class="product-wrap">
-            <productList :list="product_list" />
+            <div class="product-list flex">
+              <div class="product-item" v-for="(item, index) in product_list" :key="index">
+                <div class="product-item-info">
+                  <div class="img-box" @click="to_product(item)">
+                    <img :src="item.thumb" class="product-img"/>
+                    <!-- <shouqing :kucun="goods.kucun" /> -->
+                  </div>
+                  <div class="info-box">
+                    <div class="title ellipsis-2">
+                      {{ item.title }}
+                      <div class="hot">限量50台</div>
+                      <div class="hot">限购2台</div>
+                    </div>
+
+                    <div class="price-box">
+                      <div class="sale">
+                        <span class="huobi">CN {{ vuex_huobi }} </span>
+                        <span class="value"> {{ item.priceSale }} </span>
+                      </div>
+                      <div class="market">
+                        <img src="@/assets/image/product/like.png" alt="">
+                        <img src="@/assets/image/product/cartAdd.png" alt="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="pagination-box" v-if="count" style="margin-top: 50px;">
             <el-pagination background layout="prev, pager, next" :total="count" :current-page="pagination.page"
-                           :page-size="pagination.pageNum" @current-change="mix_current_change"> </el-pagination>
+                           :page-size="pagination.pageNum" @current-change="mix_current_change"></el-pagination>
           </div>
         </div>
       </div>
@@ -45,7 +51,7 @@
 import pageBreadcrumb from '@/components/page/page-breadcrumb.vue'
 import productList from "@/components/product/productList.vue"; //
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "category",
@@ -77,9 +83,9 @@ export default {
       isAsc: "", //升asc 降序desc
       orderByColumn: "ordering", //选择的排序方式
       sortList: [
-        { title: "销量", ziduan: "orders" },
-        { title: "价格", ziduan: "priceSale" },
-        { title: "综合", ziduan: "ordering" },
+        {title: "销量", ziduan: "orders"},
+        {title: "价格", ziduan: "priceSale"},
+        {title: "综合", ziduan: "ordering"},
       ],
     };
   },
@@ -93,10 +99,9 @@ export default {
       let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
 
       let option = [
-        { route : '/product-cates', title: '产品展示'},
-        { route: '', title: cate_info.title || '' }
+        {route: '/product-cates', title: '产品展示'},
+        {route: '', title: cate_info.title || ''}
       ]
-      console.log(option)
       return option
     },
   },
@@ -132,9 +137,9 @@ export default {
           ...this.pagination
         },
       }).then((res) => {
-        let { code, data, count } = res;
+        let {code, data, count} = res;
         if (code == 200) {
-          let { list, count, pages } = data;
+          let {list, count, pages} = data;
           this.product_list = list;
           this.count = count;
         }
@@ -150,57 +155,17 @@ export default {
       this.query_product();
     },
 
-    doSearch() {
-
+    to_product(item) {
+      this.$router.push({
+        path: "/product-detail",
+        query: {
+          id: item.inventoryId,
+        },
+      });
     },
-
-    toCate(item) {
-      this.$router.push(item.route)
-    },
-
-    //切换一级分类
-    toggleLevel(item) {
-      this.pagination.page = 1;
-
-      this.select_level_1 = item;
-      this.query_product();
-    },
-
-    //排序方式
-    onClickSort(item) {
-      if (item.ziduan == this.orderByColumn) {
-        this.isAsc = this.isAsc == "asc" ? "desc" : "asc";
-      } else {
-        this.isAsc = "asc";
-      }
-      this.orderByColumn = item.ziduan;
-
-      let sortParams = {
-        // orderByColumn: this.orderByColumn,
-        // isAsc: this.isAsc,
-
-        order1: this.orderByColumn,
-        order2: this.orderByColumn != 'ordering' ? this.isAsc : '',
-      };
-      //console.log("排序参数", sortParams);
-
-      this.$parent.set_sortParams(sortParams);
-    },
-
-    doPagePrev() {
-      if (this.pagination.page > 1) {
-        this.pagination.page--
-
-        this.query_product();
-      }
-    },
-    doPageNext() {
-      if (this.pagination.page < this.pages) {
-        this.pagination.page++
-        this.query_product();
-      }
-    },
-
+    do_toggle_check(item) {
+      this.$emit('toggle_check', item)
+    }
   },
 };
 </script>
@@ -212,21 +177,36 @@ export default {
 
   .inner {
     padding-bottom: 100px;
-    background-color: #000000;
 
     .search-title {
-      font-weight: 500;
-      font-size: 20px;
-      color: #FFFFFF;
-      margin-top: 32px;
-      span {
-        color: #FF2727;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 40px;
+      padding: 0 26px;
+      height: 42px;
+      line-height: 42px;
+      background: #F4F4F4;
+
+      p {
+        font-size: 20px;
+        color: #838383;
+
+        span {
+          color: #000;
+        }
+      }
+
+      .count {
+        font-weight: 400;
+        font-size: 12px;
+        color: #000000;
       }
     }
 
     .page-ctx {
-      padding-top: 32px;
+      padding-top: 30px;
       align-items: start;
+
       .aside {
         width: 260px;
         margin-right: 32px;
@@ -240,6 +220,7 @@ export default {
           /deep/ .el-submenu__title {
             color: #fff;
           }
+
           /deep/ .el-submenu__title:hover {
             background-color: #000000;
           }
@@ -248,25 +229,32 @@ export default {
             color: #fff;
             border-top: 1px dashed #ffffff;
           }
+
           /deep/ .el-menu-item:last-child {
             border-bottom: 1px dashed #ffffff;
           }
+
           /deep/ .el-menu-item.is-active {
             color: #FF2727;
             background-color: #000000;
           }
+
           /deep/ .el-menu-item:hover {
             background-color: #000000;
           }
+
           .menu-item-one {
-            padding-left: 0!important;
+            padding-left: 0 !important;
+
             /deep/ .el-submenu__title {
-              padding-left: 0px!important;
+              padding-left: 0px !important;
             }
           }
-          .menu-item-one,.menu-item-one.is-active {
+
+          .menu-item-one, .menu-item-one.is-active {
             border: none;
           }
+
           .menu-item-one:last-child {
             border-bottom: none;
           }
@@ -274,6 +262,7 @@ export default {
 
         .search {
           margin-bottom: 25px;
+
           p {
             font-weight: 500;
             font-size: 16px;
@@ -289,6 +278,7 @@ export default {
             background: #666666;
             border-color: #666666;
           }
+
           /deep/ .el-button {
             width: 58px;
             height: 40px;
@@ -296,6 +286,7 @@ export default {
             border-radius: 0px 0px 0px 0px;
             color: #fff;
           }
+
           /deep/ .el-input-group__append {
             border: none;
           }
@@ -397,7 +388,8 @@ export default {
         color: #A76737;
       }
 
-      .text {}
+      .text {
+      }
 
       .sanjiao-box {
         margin-left: 5px;
@@ -426,7 +418,6 @@ export default {
     }
   }
 }
-
 
 .page-title {
   margin-top: 20px;
@@ -480,117 +471,158 @@ export default {
 }
 
 .product-list {
-  display: flex;
   flex-wrap: wrap;
 
   .product-item {
-    margin-right: 16px;
-    margin-top: 16px;
-    width: 220px;
-    height: 349px;
-    background: #FFFFFF;
+    position: relative;
+    width: 326px;
+    height: 346px;
+    margin-right: 32px;
+    margin-bottom: 22px;
+    text-align: center;
+    overflow: hidden;
     cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: #FFFFFF;
 
-    &:nth-child(6n) {
+    &:nth-child(4n) {
       margin-right: 0;
     }
 
-    &:nth-child(-n + 6) {
-      margin-top: 0;
-    }
 
     &:hover {
-      .title {
-        color: #F74747 !important;
+      .img-box {
+        img {
+          transform: scale(1.1);
+        }
       }
-
     }
 
-    .poster-box {
-      width: 220px;
-      height: 220px;
+    .img-box {
+      width: 100%;
+      height: 217px;
+      padding-bottom: 23px;
+      margin: 0 auto;
+      overflow: hidden;
+      position: relative;
 
-      .poster {
-        width: 220px;
-        height: 220px;
+      img {
+        width: 100%;
+        height: 296px;
+        object-fit: cover;
+        transition: 0.3s;
       }
     }
 
     .info-box {
-      padding: 13px 15px 0;
+      width: 100%;
+      height: 120px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
 
       .title {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        font-weight: 400;
-        font-size: 14px;
-        color: #333333;
+        text-align: left;
+        width: 100%;
+        font-family: Poppins, Poppins;
+        font-weight: 600;
+        font-size: 16px;
+        color: #000;
+
+        .hot {
+          text-align: center;
+          background-image: url("~@/assets/image/product/hot.png");
+          background-repeat: no-repeat;
+          background-size: 100% 100%;
+          width: 63px;
+          height: 18px;
+          line-height: 18px;
+          display: inline-block;
+          font-size: 12px;
+          color: #fff;
+          font-weight: 400;
+        }
       }
 
-      .pirce-box {
-        margin-top: 15px;
+
+      .price-box {
+        margin-top: 5px;
         display: flex;
-        align-items: center;
         justify-content: space-between;
 
-        .price-info {
-          display: flex;
-          align-items: center;
-
-          .price-1 {
-            margin-right: 10px;
-            font-family: Arial, Arial;
-            font-weight: 400;
-            font-size: 16px;
-            color: #FF3A30;
+        .sale {
+          span {
+            font-family: OPPOSans, OPPOSans;
+            font-weight: bold;
+            font-size: 18px;
+            color: #000;
           }
 
-          .price-2 {
-            text-decoration: line-through;
-            font-family: PingFang SC, PingFang SC;
-            font-weight: 400;
-            font-size: 14px;
-            color: #999999;
-          }
         }
 
-        .yishou {
+        .market {
+          img {
+            width: 21px;
+          }
+
+          img:first-child {
+            margin-right: 30px;
+          }
+        }
+      }
+
+      .sku-box {
+        min-height: 50px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+
+        .sku-item {
+          position: relative;
+          padding: 4px 0;
+          width: 50%;
+          text-align: center;
+          font-family: Arial, Arial;
           font-weight: 400;
           font-size: 12px;
-          color: #999999;
+          color: #444444;
+
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0px;
+            height: 1px;
+            transform: translate(-50%);
+            background: #ccc;
+          }
+
+          &:hover {
+            &::after {
+              width: 40px;
+            }
+          }
         }
       }
 
+      .btn-box {
+        margin-top: 20px;
 
-      .act-box {
-        margin-top: 15px;
-        border-top: 1px solid #ddd;
-        padding-top: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        .btn-cart {
+          width: 226px;
+          width: 100%;
+          height: 27px;
+          border-radius: 0px 0px 0px 0px;
+          border: 1px solid #F74747;
+          font-family: OPPOSans, OPPOSans;
+          font-weight: bold;
+          font-size: 12px;
+          color: #F74747;
 
-        .fav-box {
-          .flex-center();
-          width: fit-content;
-          height: 32px;
-
-          img {
-            margin-right: 5px;
-            width: 18px;
-            height: 18px;
-          }
-        }
-
-        .cart-box {
-          .flex-center();
-          width: 32px;
-          height: 32px;
-
-          img {
-            width: 32px;
-            height: 32px;
+          &:hover {
+            background: #F74747;
+            color: #fff;
           }
         }
       }
@@ -598,6 +630,4 @@ export default {
   }
 }
 </style>
-
-
 <style scoped lang="less" src="@/assets/h5css/mobile/product-cates.less"></style>
