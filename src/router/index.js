@@ -27,7 +27,7 @@ const news_detail = () =>
 const product_brand = () =>
   import(
     /* webpackChunkName: "product_brand" */ "@/views/product/product-brand.vue"
-  );
+    );
 
 // 账号相关
 const register = () =>
@@ -50,23 +50,23 @@ const terms = () =>
 const product_cates = () =>
   import(
     /* webpackChunkName: "product-cates" */ "@/views/product/product-cates.vue"
-  );
+    );
 const product_search = () =>
   import(
     /* webpackChunkName: "product-search" */ "@/views/product/product-search.vue"
-  );
+    );
 const product_detail = () =>
   import(
     /* webpackChunkName: "product-detail" */ "@/views/product/product-detail.vue"
-  );
+    );
 const product_reserve = () =>
   import(
     /* webpackChunkName: "product-reserve" */ "@/views/product/product-reserve.vue"
-  );
+    );
 const reserve_detail = () =>
   import(
     /* webpackChunkName: "reserve-detail" */ "@/views/product/reserve-detail.vue"
-  );
+    );
 // 工艺鉴赏
 const art_list = () =>
   import(/* webpackChunkName: "art-list" */ "@/views/art/art-list.vue");
@@ -86,38 +86,38 @@ const cart = () =>
 const order_submit = () =>
   import(
     /* webpackChunkName: "order-submit" */ "@/views/order/order-submit.vue"
-  );
+    );
 const payment_methods = () =>
   import(
     /* webpackChunkName: "payment-methods" */ "@/views/payment/payment-methods.vue"
-  );
+    );
 // 支付
 // const zfbPay = () => import(/* webpackChunkName: "zfbPay" */ "@/views/pay/zfbPay.vue");
 const payment_success = () =>
   import(
     /* webpackChunkName: "payment-success" */ "@/views/payment/payment-success.vue"
-  );
+    );
 const order_list = () =>
   import(/* webpackChunkName: "order-list" */ "@/views/order/order-list.vue");
 const order_detail = () =>
   import(
     /* webpackChunkName: "order-detail" */ "@/views/order/order-detail.vue"
-  );
+    );
 // const points-order-detail = () => import(/* webpackChunkName: "points-order-detail" */ "@/views/order/points-order-detail.vue");
 const order_review_submit = () =>
   import(
     /* webpackChunkName: "order-review-submit" */ "@/views/review/order-review-submit.vue"
-  );
+    );
 
 // 发票
 const invoice_list = () =>
   import(
     /* webpackChunkName: "invoice-list" */ "@/views/invoice/invoice-list.vue"
-  );
+    );
 const invoice_detail = () =>
   import(
     /* webpackChunkName: "invoice-detail" */ "@/views/invoice/invoice-detail.vue"
-  );
+    );
 
 // 售后
 const refund_list = () => import("@/views/refund/refund-list.vue");
@@ -129,13 +129,17 @@ const refund_service_detail = () =>
 const address_list = () =>
   import(
     /* webpackChunkName: "address-list" */ "@/views/address/address-list.vue"
-  );
+    );
 const foreign_address_list = () =>
   import(
     /* webpackChunkName: "foreign-address-list" */ "@/views/address/foreign-address-list.vue"
-  );
+    );
 const my_info = () =>
   import(/* webpackChunkName: "my-info" */ "@/views/my/my-info.vue");
+const my_commission = () =>
+  import(/* webpackChunkName: "my-commission" */ "@/views/my/myCommission/myCommission.vue");
+const account_safe = () =>
+  import(/* webpackChunkName: "account-safety" */ "@/views/my/account-safe.vue");
 
 const my_review_list = () => import("@/views/review/my-review-list.vue");
 const change_password = () => import("@/views/my/change-password.vue");
@@ -143,11 +147,11 @@ const change_password = () => import("@/views/my/change-password.vue");
 const browse_history = () =>
   import(
     /* webpackChunkName: "browse-history" */ "@/views/browse/browse-history.vue"
-  );
+    );
 const favorite_list = () =>
   import(
     /* webpackChunkName: "favorite-list" */ "@/views/favorite/favorite-list.vue"
-  );
+    );
 
 //
 const points_record = () => import("@/views/points/points-record.vue");
@@ -496,6 +500,24 @@ const routes = [
         },
       },
       {
+        path: "/my-commission",
+        name: "my-commission",
+        component: my_commission,
+        meta: {
+          title: "个人信息",
+          requireAuth: true,
+        },
+      },
+      {
+        path: '/account-safe',
+        name: 'account-safe',
+        component: account_safe,
+        meta: {
+          title: "账户安全",
+          requireAuth: true,
+        },
+      },
+      {
         path: "/change-password",
         name: "change-password",
         component: change_password,
@@ -546,9 +568,9 @@ const scrollBehavior = (to, from, savedPosition) => {
   //console.log('router 处理滚动')
   if (to.name == "technologyCenter") {
     let scrollTop = document.documentElement.scrollTop;
-    return { x: 0, y: scrollTop };
+    return {x: 0, y: scrollTop};
   }
-  return { x: 0, y: 0 };
+  return {x: 0, y: 0};
 };
 
 const router = new VueRouter({

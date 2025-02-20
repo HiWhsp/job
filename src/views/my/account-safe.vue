@@ -1,9 +1,8 @@
 <template>
   <div class="page">
     <div class="main-title">
-      <span>基本信息</span>
+      <span>账户安全</span>
     </div>
-
     <div class="page-ctx">
       <div class="title-wrap">
         <div class="info flex">
@@ -25,60 +24,19 @@
         <div class="date">期限：剩余 <span>50</span> 天 2023-06-12 到期</div>
       </div>
       <div class="section">
-        <el-form ref="form" :model="form" label-position="top" label-width="100px">
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item label="名字">
-                <el-input v-model="form.firstName"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="姓氏">
-                <el-input v-model="form.lastName"/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item label="电话">
-                <div class="flex">
-                  <el-input v-model="form.phone" disabled/>
-                  <p style="width: 50px; text-align: center" @click="open_phone_update()">
-                    <span>修改</span>
-                  </p>
-                </div>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="邮箱">
-                <el-input v-model="form.email"/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="国家/地区">
-            <el-select v-model="form.country" placeholder="选择国家">
-              <el-option label="中国" value="China"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="详细地址">
-            <el-input v-model="form.address"/>
-          </el-form-item>
-          <el-form-item label="邮政编码">
-            <el-input v-model="form.postCode"/>
-          </el-form-item>
-        </el-form>
-      </div>
-
-      <div class="other">
-        <div class="section-ctx">
-          <div class="item btn-box">
-            <div class="info">
-              <el-button :loading="loading" class="btn-ripple fit-text btn-save"
-                         @click="throttle_do_submit()">保存
-              </el-button>
-<!--              <button class="btn-ripple fit-text btn-cancel" @click="do_reset()">清空</button>-->
-            </div>
+        <div class="item">
+          <div class="left">
+            <h3>修改密码</h3>
+            <span>为了您的购物安全，建议您定期修改密码</span>
           </div>
+          <div class="right" @click="open_update('password')">修改</div>
+        </div>
+        <div class="item">
+          <div class="left">
+            <h3>修改邮箱</h3>
+            <span>您的电子邮箱是：815625979@qq.com</span>
+          </div>
+          <div class="right" @click="open_update('email')">修改</div>
         </div>
       </div>
     </div>
@@ -115,6 +73,14 @@ export default {
         address: "",
       },
       loading: false,
+      pay_type_value: '',
+      pay_method_list: [
+        {value: 'weixin', title: '微信支付', icon: require('@img/pay-method/type-weixin.png')},
+        {value: 'zhifubao', title: '支付宝支付', icon: require('@img/pay-method/type-zfb.png')},
+        // { value: 'xianxia', title: '线下转款', icon: require('@img/pay-method/type-xianxia.png') },
+        {value: 'paypal', title: 'PayPal', icon: require('@img/pay-method/type-paypal.png')},
+        // {value: 'yue', title: '余额支付', icon: require('@img/pay-method/type-yue.png')},
+      ],
     };
   },
   computed: {
@@ -129,9 +95,10 @@ export default {
     throttle_do_submit() {
 
     },
-
-    open_phone_update() {
-      this.$refs.phone_bind_old_check_modal.init();
+    open_update(type) {
+      if (type == "password") {
+        this.$refs.phone_bind_old_check_modal.init();
+      }
     },
     confirm_old_pass() {
       this.$refs.phone_bind_new_set_modal.init();
@@ -196,6 +163,23 @@ export default {
       };
     },
 
+    do_toggle_paytype(item) {
+      this.pay_type_value = item.value
+      this.payType = item.title
+      let value = item.title
+      if (value == "余额支付") {
+        if (this.baseInfo.is_pay_pass == 0) {
+          //未设置支付密码
+          this.$refs.balance_password_set_modal.init(this.baseInfo);
+        } else if (this.total_balance < this.real_payment_money) {
+          //余额不足提示
+          this.$refs.balance_pay_disable_modal.init({
+            money: this.real_payment_money,
+          });
+        }
+      }
+
+    },
 
     //上传相关
     upload_on_success(res, file) {
@@ -234,7 +218,6 @@ export default {
 
 .page {
   .page-ctx {
-    padding-bottom: 80px;
     border: 1px solid #E5E5E5;
 
     .title-wrap {
@@ -298,103 +281,83 @@ export default {
     }
 
     .section {
-      width: 782px;
-      margin-left: 28px;
-      margin-top: 28px;
-    }
+      .item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 32px;
+        height: 104px;
+        border-bottom: 1px solid #EBEBEB;
 
-    .section-title {
-      margin-bottom: 50px;
-      font-size: 16px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        &:last-child {
+          border: none;
+        }
+
+        .left {
+          h3 {
+            font-weight: 400;
+            font-size: 16px;
+            color: #000000;
+            text-align: left;
+            margin-bottom: 15px;
+          }
+
+          span {
+            font-weight: 400;
+            font-size: 12px;
+            color: #3E4E5E;
+            text-align: left;
+          }
+        }
+
+        .right {
+          cursor: pointer;
+          width: 122px;
+          height: 32px;
+          background: #F8F8F8;
+          border: 1px solid #E2E2E2;
+          color: #3D3D3D;
+          text-align: center;
+          line-height: 32px;
+        }
+      }
+    }
+  }
+
+  .total {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    line-height: 42px;
+
+    p {
+      width: 220px;
+      display: flex;
+      justify-content: space-between;
+
       font-weight: 400;
+      font-size: 14px;
       color: #666666;
     }
 
-    .section-ctx {
-      margin-left: 28px;
+    .sum {
+      color: #000;
+      font-size: 20px;
+      font-weight: 700;
     }
 
-    .upload-box {
-      img {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-      }
+    .pay {
+      cursor: pointer;
+      margin-top: 30px;
+      width: 191px;
+      height: 46px;
+      line-height: 46px;
+      text-align: center;
+      color: #fff;
+      font-size: 14px;
+      background: #D41C17;
+      border-radius: 4px 4px 4px 4px;
     }
-
-    .item {
-      margin-bottom: 32px;
-      display: flex;
-      align-items: center;
-
-      .text {
-        display: inline-block;
-        min-width: 134px;
-        text-align: right;
-        font-size: 14px;
-        color: #fff;
-      }
-
-      .info {
-        font-size: 14px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        color: #fff;
-        display: inline-block;
-        min-width: 120px;
-
-
-        /deep/ .el-input__inner {
-          width: 400px;
-          height: 40px;
-          background: transparent;
-          border: 1px solid #7B7B7B;
-          color: #fff;
-        }
-      }
-
-      .action {
-        margin-left: 20px;
-        font-size: 14px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        color: #F74747;
-
-        span {
-          margin-right: 20px;
-          cursor: pointer;
-        }
-      }
-    }
-  }
-}
-
-
-.btn-box {
-  button {
-    width: 76px;
-    height: 40px;
-  }
-
-  .btn-save {
-    width: 264px;
-    height: 48px;
-    line-height: 48px;
-    background: #000000;
-    text-align: center;
-    color: #fff;
-  }
-
-  .btn-cancel {
-    margin-left: 20px;
-    width: 130px;
-    height: 40px;
-    background: #DF1626;
-    font-family: Arial, Arial;
-    font-weight: 400;
-    font-size: 14px;
-    color: #FFFFFF;
   }
 }
 </style>

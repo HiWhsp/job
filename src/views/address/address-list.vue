@@ -1,46 +1,27 @@
 <template>
   <div class="page">
+    <div class="title">收货地址</div>
     <div class="main-title">
-      <span>地址管理</span>
+      <p><span>保存的收获地址</span><span>您已经创建了{{ list_address.length }}个地址</span></p>
       <button @click="do_address_add()">
-        <!-- <img src="@img/address-add.png" alt="" /> -->
-        <i class="el-icon-circle-plus"></i>
         <span class="add-text">添加收货地址</span>
       </button>
     </div>
 
     <div class="page-ctx">
       <div class="center">
-        <div class="wrap-address">
-          <div class="address-item" v-for="(item, index) in list_address" :key="index">
-            <div class="top">
-              <div>
-                <span>收货人：</span>
-                {{ item.name }}
-              </div>
-              <div>
-                <span>所在地区：</span>
-                {{ item.full_addr }}
-              </div>
-              <div>
-                <span>详细地址：</span>
-                {{ item.address }}
-              </div>
-              <div>
-                <span>手机号码：</span>
-                {{ item.phone }}
-              </div>
+        <div class="address-list">
+          <div v-for="(item, index) in list_address" :key="index" class="address-item">
+            <div class="address-top">{{ item.lastName || item.firstName }}</div>
+            <div class="address-bottom">
+              {{ item.full_addr }}
             </div>
-            <div class="bottom">
-              <div class="left">
-                <span v-if="item.moren == 1" class="moren">默认地址</span>
-              </div>
-              <div class="right">
-                <span class="action" v-if="item.moren != 1" @click="do_address_set_default(item.id)">设为默认</span>
-                <span class="action" @click="do_address_edit(item)">编辑</span>
-                <span class="action" @click="do_address_delete(item.id)">删除</span>
-              </div>
+            <div class="address-phone">
+              <span>{{ item.phone }}</span>
+              <div class="edit" @click="do_address_edit(item)">修改</div>
             </div>
+            <img alt="" class="marker" src="@/static/order/addr-select.png"/>
+            <div v-if="item.moren" class="moren">默认地址</div>
           </div>
         </div>
 
@@ -147,30 +128,47 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .page {
   text-align: left;
   padding-bottom: 80px;
+
+  .title {
+    width: 64px;
+    font-weight: 400;
+    font-size: 16px;
+    color: #000000;
+    margin-bottom: 15px;
+  }
 
   .main-title {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 32px;
-    text-align: left;
-    height: 56px;
-    line-height: 56px;
-    background: #1D1D1D;
-    font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-    font-weight: bold;
-    color: #fff;
+    padding: 0 12px;
+    height: 52px;
+    line-height: 52px;
+    background: #FFFFFF;
+    border: 1px solid rgba(29, 32, 136, 0.2);
+
+    font-weight: 400;
+    font-size: 14px;
+    color: #2C3E50;
+
+    p {
+      span {
+        margin-right: 20px;
+      }
+    }
 
     button {
+      width: 124px;
+      height: 30px;
+      background: #000000;
       display: flex;
       align-items: center;
+      justify-content: center;
       min-width: 96px;
-      height: 30px;
       line-height: 30px;
       color: #fff;
       font-size: 14px;
@@ -191,77 +189,114 @@ export default {
   }
 
   .page-ctx {
-    margin-top: 10px;
-    padding: 32px 32px 55px 32px;
-    background: #1D1D1D;
+    padding: 17px;
+    border: 1px solid #E5E5E5;
+    border-top: none;
   }
 }
 
 // 地址列表
-.wrap-address {
-  text-align: left;
+.address-list {
+  display: flex;
+  flex-wrap: wrap;
+  height: 220px;
+  overflow: auto;
 
   .address-item {
-    min-height: 190px;
-    background: #2F2F2F;
-    padding: 20px;
+    position: relative;
     margin-bottom: 20px;
+    margin-right: 30px;
+    width: 376px;
+    height: 192px;
+    background-color: #F8F8F8;
+    border: 1px solid #D2D2D2;
+    overflow: hidden;
+    cursor: pointer;
 
-    .top {
-      padding-bottom: 20px;
-      > div {
-        margin-bottom: 10px;
-        color: #fff;
+    &:nth-child(2n) {
+      margin-right: 0;
+    }
 
-        &:last-child {
-          margin-bottom: 0;
-        }
+    &:nth-child(-n + 2) {
+      margin-top: 0;
+    }
 
-        span {
-          font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-          font-weight: 400;
-          color: #fff;
-        }
+    &.active {
+      .marker {
+        display: block;
       }
     }
 
-    .bottom {
+    .marker {
+      position: absolute;
+      right: -1px;
+      bottom: -1px;
+      display: none;
+      width: 42px;
+      height: 38px;
+    }
+
+    .address-top {
+      border-bottom: 1px dashed #D2D2D2;
+      font-size: 14px;
+      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-weight: 400;
+      color: #3D3D3D;
+      height: 50px;
+      line-height: 50px;
+      padding: 0 20px;
+      display: flex;
+    }
+
+    .address-bottom {
+      flex: 1;
+      font-size: 14px;
+      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-weight: 400;
+      color: #3D3D3D;
+      height: 90px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .address-phone {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-top: 1px solid #4D4D4D;
-      padding-top: 20px;
+      border-top: 1px dashed #D2D2D2;
+      height: 50px;
+      line-height: 50px;
+      padding: 0 20px;
+      font-weight: 400;
+      font-size: 14px;
+      color: #3D3D3D;
 
-      .left {
-        .moren {
-          display: inline-block;
-          width: 104px;
-          height: 30px;
-          line-height: 30px;
-          text-align: center;
-          // background: rgba(255, 90, 0, 0.68);
-          background: #DF1626;
-          font-size: 14px;
-          color: #ffffff;
-        }
-      }
-
-      .right {
+      .edit {
+        width: 88px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        background: #FFFFFF;
+        color: #000;
         font-size: 14px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        line-height: 20px;
-        color: #fff;
-
-        .action {
-          margin-left: 20px;
-          cursor: pointer;
-        }
+        border: 1px solid #000000;
       }
+    }
+
+    .moren {
+      width: 88px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      background: #000000;
+      color: #fff;
+      position: absolute;
+      top: 0;
+      right: 10px;
     }
   }
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/user/address-list.less"></style>
+<style lang="less" scoped src="@/assets/h5css/user/address-list.less"></style>

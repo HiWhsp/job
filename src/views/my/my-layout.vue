@@ -56,7 +56,7 @@ export default {
               route: "favorite-list",
             },
             {
-              title: "地址管理",
+              title: "购物地址",
               route: "address-list",
             },
           ]
@@ -79,15 +79,15 @@ export default {
           child: [
             {
               title: "基本信息",
-              route: " my-info",
+              route: "my-info",
             },
             {
-              title: "会员管理",
-              route: "change-password",
+               title: "会员管理",
+              route: "my-commission",
             },
             {
               title: "账户安全",
-              route: "change-password",
+              route: "account-safe",
             },
           ]
         },

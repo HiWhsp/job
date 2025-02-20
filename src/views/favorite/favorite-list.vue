@@ -3,68 +3,17 @@
     <div class="main-title">
       <div class="left">我的收藏</div>
     </div>
-
     <div class="page-ctx">
       <div class="fav-box">
-        <div class="fav-titles flex">
-          <div class="fav-check flex" @click="do_toggle_all()" :class="{ checked: checkedAll }">
-            <img src="@/static/common/check0.png" alt="" class="img-check check-0" />
-            <img src="@/static/common/check1.png" alt="" class="img-check check-1" />
-            <span>全选</span>
-          </div>
-          <div class="fav-delete" @click="do_delete_checked()">移除选中</div>
-        </div>
-
-        <div class="fav-data-box" v-if="count">
-          <div class="fav-list">
-            <div class="fav-item" v-for="(item, index) in product_list" :key="index">
-              <div class="fav-check" @click.stop="do_toggle_item(item)" :class="{ checked: item.checked }">
-                <img src="@/static/common/check0.png" alt="" class="img-check check-0" />
-                <img src="@/static/common/check1.png" alt="" class="img-check check-1" />
-              </div>
-
-              <div class="goods-img scale-box" @click="to_product(item)">
-                <img class="scale-img" :src="item.thumb" alt="" />
-                <!-- <el-image :src="item.thumb">
-                  <div slot="error" class="image-slot">
-                    <img :src="item.thumb" />
-                  </div>
-                </el-image> -->
-              </div>
-
-              <div class="goods-title">
-                <div class="text-1" @click="to_product(item)">
-                  {{ item.title }}
-                </div>
-                <div class="text-2">
-                  {{ item.keyVals }}
-                </div>
-              </div>
-
-              <div class="goods-price">
-                {{ vuex_huobi }} {{ item.priceSale }}
-              </div>
-
-              <div class="goods-actions flex-center">
-                <!-- <button class="btn btn-detail btn-ripple" @click="addCart(item)">
-                  加入购物车
-                </button> -->
-                <button class="btn btn-cancel" @click.stop="do_fav_cancel_item(item)">
-                  取消收藏
-                </button>
-                <button class="btn btn-detail btn-ripple" @click="to_product(item)">
-                  查看详情
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="pagination-box" style="margin-top: 40px;text-align: right;">
-            <el-pagination background layout="total, prev, pager, next" @current-change="mix_current_change"
-              :current-page.sync="pagination.page" :page-size="pagination.pageNum" :total="count"></el-pagination>
+        <div v-if="count" class="fav-data-box">
+          <productList :list="product_list"/>
+          <div class="pagination-box" style="margin-top: 40px;text-align: center;">
+            <el-pagination :current-page.sync="pagination.page" :page-size="pagination.pageNum" :total="count"
+                           background layout="total, prev, pager, next"
+                           @current-change="mix_current_change"></el-pagination>
           </div>
         </div>
-        <div class="fav-empty" v-if="!count">
+        <div v-if="!count" class="fav-empty">
           <el-empty description="没有查询到收藏信息..."></el-empty>
         </div>
       </div>
@@ -72,10 +21,11 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import productList from "@/components/product/productList.vue";
+
 export default {
   name: "favourite-list",
-  components: {},
+  components: {productList},
   data() {
     return {
       product_list: [],
@@ -117,9 +67,9 @@ export default {
           ...this.pagination,
         },
       }).then((res) => {
-        let { code, data, count } = res;
+        let {code, data, count} = res;
         if (code == 200) {
-          let { count, list } = data;
+          let {count, list} = data;
           list.forEach((v) => {
             v.checked = false;
           });
@@ -189,7 +139,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .img-check {
   cursor: pointer;
 
@@ -218,25 +168,21 @@ export default {
   padding-bottom: 80px;
 
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
-    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     text-align: left;
     height: 56px;
     line-height: 56px;
-    background: #ffffff;
     font-family: Poppins, Poppins;
     font-weight: bold;
     font-size: 16px;
-    color: #333333;
-
+    color: #000;
+    border-bottom: 1px solid #E4E7ED;
   }
 
   .page-ctx {
     margin-top: 14px;
-    padding: 46px 32px;
-    background: #fff;
   }
 }
 
@@ -260,7 +206,6 @@ export default {
     font-weight: 400;
     font-size: 14px;
     color: #666666;
-
 
 
     .fav-check {
@@ -374,7 +319,7 @@ export default {
       min-width: 300px;
 
       button {
-        &+button {
+        & + button {
           margin-left: 32px;
         }
 
@@ -403,4 +348,4 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/user/myFavourite.less"></style>
+<style lang="less" scoped src="@/assets/h5css/user/myFavourite.less"></style>

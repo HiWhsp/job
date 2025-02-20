@@ -53,7 +53,7 @@
               <el-form-item label="地址">
                 <el-input v-model="form.address"/>
               </el-form-item>
-              <el-form-item label="邮递区号">
+              <el-form-item label="邮政编码">
                 <el-input v-model="form.postCode"/>
               </el-form-item>
             </el-form>
