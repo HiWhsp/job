@@ -225,7 +225,6 @@ export default {
 <style scoped lang="less">
 /deep/ .modal-custom {
   min-width: 40vw;
-  // margin-top: 5vh !important;
 
   .modal-inner {
     padding: 0;
