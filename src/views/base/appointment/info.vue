@@ -18,6 +18,7 @@ export default {
         contact_tel: '',// 联系电话
         contact_address: '',// 联系地址
         sample_type: 1, //1自行寄样2上门取样3自己送样
+        yf_type: 0, //0自付1到付
       },
       radioList: [], // 选中的单选框
       list_address: [], // 收货地址
@@ -258,8 +259,8 @@ export default {
 
         <div class="sel">
           <el-radio-group v-model="params.yf_type" @change="yfChange">
-            <el-radio :label="1">自付</el-radio>
-            <el-radio :label="0">到付</el-radio>
+            <el-radio :label="0">自付</el-radio>
+            <el-radio :label="1">到付</el-radio>
           </el-radio-group>
 
           <div class="item">

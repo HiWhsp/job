@@ -34,7 +34,7 @@ export default {
       }).then(res => {
         let {code, data} = res;
         if (code === 200) {
-          this.list = data || [];
+          this.list = [data] || [];
         }
       })
     },
@@ -86,25 +86,25 @@ export default {
             <p><span>团体名称:</span> <span>{{ item.title }}</span></p>
             <p><span>所在高校/单位:</span> <span>{{ item.unit_name }}</span></p>
             <p><span>团体负责人:</span> <span>{{ item.leader }}</span></p>
-            <p><span>负责人电话:</span> <span>{{ item.data.tel }}</span></p>
+            <p><span>负责人电话:</span> <span>{{ item.tel }}</span></p>
             <p><span>团体总成员:</span> <span>{{ item.teamer_no }}</span></p>
           </div>
           <div class="team-actions">
             <button class="apply-button" @click="joinGroup(item.id)">申请加入</button>
-            <button class="rights-button">团队权益</button>
+            <button class="rights-button" @click="$router.push('/groupRights')">团队权益</button>
           </div>
         </div>
       </div>
-      <div class="info" v-if="Object.keys(group).length">
+      <div class="info" v-if="Object.keys(group).length && list.length == 0">
         <div class="team-info-container">
           <div class="title">团队信息</div>
           <div class="info-grid">
-            <div class="info-item">团体名称: <span>这是是团体名称</span></div>
-            <div class="info-item">团体编号: <span>99000123</span></div>
-            <div class="info-item">所在高校/单位: <span>北京工业大学</span></div>
-            <div class="info-item">团体负责人: <span>郭菲菲</span></div>
-            <div class="info-item">负责人电话: <span>152****7777</span></div>
-            <div class="info-item">团体成员数: <span>10</span></div>
+            <div class="info-item">团体名称: <span>{{ group.title }}</span></div>
+            <div class="info-item">团体编号: <span>{{ group.sn }}</span></div>
+            <div class="info-item">所在高校/单位: <span>{{ group.unit_name }}</span></div>
+            <div class="info-item">团体负责人: <span>{{ group.leader }}</span></div>
+            <div class="info-item">负责人电话: <span>{{ group.tel }}</span></div>
+            <div class="info-item">团体成员数: <span>{{ group.teamer_no }}</span></div>
           </div>
         </div>
 

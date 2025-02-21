@@ -79,7 +79,7 @@ export default {
   },
   // 页面卸载后清除定时器
   beforeDestroy() {
-    this.clearIntervalWx();
+    this.clearInterval(this.timer);
   },
   mounted() {
     this.$api({
@@ -187,7 +187,7 @@ export default {
           } // 参数
         }).then(res => {
           if (res.code === 200) {
-            clearInterval(this.timer);
+            clearInterval(that.timer);
             that.isWxPay = true;
             setTimeout(() => {
               that.$router.push('/preSave')
