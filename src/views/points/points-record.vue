@@ -2,25 +2,16 @@
   <div class="page">
     <div class="main-title">
       <div class="left">我的积分</div>
-      <!-- <div class="right" @click="$router.push('/pointsMall')">
-        <img src="@img/jifen/jifen-mingxi.png" alt="" />
-        <span>积分商城</span>
-      </div> -->
     </div>
 
     <div class="page-ctx">
       <div class="yue-box">
         <div class="text-box flex-center">
-          <div class="text-1">可用积分：</div>
+          <div class="text-1">可用积分</div>
           <div class="text-2">
             {{ info.jifen || 0 }}
             <!-- <span class="currency">元</span> -->
           </div>
-          <img src="@/assets/image/record.png" alt="">
-
-          <!-- <div class="text-3">
-            <button @click="openInvite()">邀请赚取积分</button>
-          </div> -->
         </div>
       </div>
 
@@ -45,7 +36,6 @@
                   <div class="item-1">来源/用途</div>
                   <div class="item-2">积分变化</div>
                   <div class="item-3">日期</div>
-                  <!-- <div class="item-4">备注</div> -->
                 </div>
 
                 <div
@@ -214,63 +204,43 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 32px;
     text-align: left;
-    height: 56px;
-    line-height: 56px;
-    background: #1D1D1D;
+    height: 20px;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-    font-weight: bold;
-    color: #fff;
-
-    button {
-      min-width: 96px;
-      height: 30px;
-      line-height: 30px;
-      background: #F74747;
-      color: #fff;
-      font-size: 14px;
-      font-weight: bold;
-    }
+    color: #000;
   }
 
   .page-ctx {
     margin-top: 10px;
-    padding: 32px 32px 55px 32px;
-    background: #1D1D1D;
   }
 }
 
 .yue-box {
   position: relative;
-  width: 100%;
-  height: 112px;
-  //background: url(~@/assets/image/record.png) no-repeat center / cover;
-  background-color: #DF1626;
-  padding-left: 40px;
+  height: 148px;
+  background: #F8F8F8;
   flex-direction: column;
   .flex-center();
-  align-items: flex-start;
 
   .text-box {
     text-align: left;
+    flex-direction: column;
 
     .text-1 {
       font-size: 16px;
       font-family: PingFang SC;
       font-weight: bold;
       line-height: 40px;
-      color: #ffffff;
+      color: #000;
     }
 
     .text-2 {
-      margin-left: 10px;
+      margin-top: 15px;
       font-size: 32px;
       font-family: PingFang SC;
       font-weight: bold;
       line-height: 40px;
-      color: #ffffff;
+      color: #000;
 
       .currency {
         font-size: 18px;
@@ -337,6 +307,10 @@ export default {
 .jilu-list {
   margin-bottom: 30px;
 
+  .item-box {
+    border-bottom: 1px solid #EEEEEE;
+  }
+
   .item {
     text-align: center;
     display: flex;
@@ -351,11 +325,11 @@ export default {
     }
 
     &.item-title {
-      background: #5A5A5A;
+      background: #F8F8F8;
       font-size: 14px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
       font-weight: bold;
-      color: #fff;
+      color: #000;
     }
 
     .item-1 {
@@ -382,7 +356,7 @@ export default {
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #333333;
+          color: #000;
           line-height: 24px;
         }
 
@@ -390,7 +364,7 @@ export default {
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #999999;
+          color: #000;
         }
       }
     }

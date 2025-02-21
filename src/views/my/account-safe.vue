@@ -97,7 +97,9 @@ export default {
     },
     open_update(type) {
       if (type == "password") {
-        this.$refs.phone_bind_old_check_modal.init();
+        this.$router.push("/change-password");
+      }else {
+        this.$router.push("/change-email");
       }
     },
     confirm_old_pass() {

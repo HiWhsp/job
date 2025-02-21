@@ -381,6 +381,7 @@ export default {
         font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
         font-weight: normal;
         color: #333333;
+
       }
 
       .val {
@@ -404,7 +405,7 @@ export default {
   border-bottom: 1px solid #dedede;
     display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content:   space-between;
   height: 56px;
   padding: 0 32px;
 

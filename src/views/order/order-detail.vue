@@ -626,9 +626,7 @@ export default {
     text-align: left;
     height: 56px;
     line-height: 56px;
-    background: #1D1D1D;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
     color: #fff;
 
@@ -647,7 +645,6 @@ export default {
 .page-ctx {
   margin-top: 24px;
   padding: 24px 32px;
-  background: #1D1D1D;
 }
 
 .step-box {

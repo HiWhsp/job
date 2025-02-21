@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="title">修改密码</div>
+    <div class="title">修改邮箱</div>
     <div class="main-title">
       <p><span>身份验证</span></p>
     </div>
@@ -9,14 +9,14 @@
       <!-- 步骤条 -->
       <el-steps :active="nextIndex" align-center>
         <el-step title="身份验证"></el-step>
-        <el-step title="填写资料"></el-step>
+        <el-step title="验证新邮箱"></el-step>
         <el-step title="完成"></el-step>
       </el-steps>
 
       <!-- 表单部分 -->
       <div class="form-container" v-if="nextIndex === 1">
-        <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-          <el-form-item label="验证邮箱：" prop="email">
+        <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+          <el-form-item label="验证电子邮箱：" prop="email">
             <span>815625979@qq.com</span>
           </el-form-item>
           <el-form-item label="验证码：" prop="code">
@@ -32,12 +32,15 @@
       </div>
 
       <div class="form-container" v-if="nextIndex === 2">
-        <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-          <el-form-item label="新密码：" prop="email">
-            <el-input v-model="form.email" placeholder="请输入新密码"></el-input>
+        <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+          <el-form-item label="验证电子邮箱：" prop="email">
+            <el-input v-model="form.email" placeholder="请输入验证码"></el-input>
           </el-form-item>
-          <el-form-item label="确认密码：" prop="email">
-            <el-input v-model="form.email" placeholder="请再次输入新密码"></el-input>
+          <el-form-item label="验证码：" prop="code">
+            <div class="flex">
+              <el-input v-model="form.code" placeholder="请输入验证码"></el-input>
+              <el-button style="margin-left: 10px">获取验证码</el-button>
+            </div>
           </el-form-item>
         </el-form>
         <!-- 提交按钮 -->
@@ -46,8 +49,7 @@
 
       <div class="form-container" v-if="nextIndex === 3">
         <img src="@/assets/image/common/success.png" alt="">
-        <p class="tit">密码修改成功</p>
-        <p class="desc">请牢记您的新密码，下次登录将用您新设置的密码登录</p>
+        <p class="tit">邮箱修改成功</p>
       </div>
 
     </div>

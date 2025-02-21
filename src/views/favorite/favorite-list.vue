@@ -169,13 +169,10 @@ export default {
 
   .main-title {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     text-align: left;
-    height: 56px;
-    line-height: 56px;
+    height: 40px;
     font-family: Poppins, Poppins;
-    font-weight: bold;
     font-size: 16px;
     color: #000;
     border-bottom: 1px solid #E4E7ED;

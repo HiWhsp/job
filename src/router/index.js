@@ -143,6 +143,7 @@ const account_safe = () =>
 
 const my_review_list = () => import("@/views/review/my-review-list.vue");
 const change_password = () => import("@/views/my/change-password.vue");
+const change_email = () => import("@/views/my/change-email.vue");
 
 const browse_history = () =>
   import(
@@ -525,6 +526,15 @@ const routes = [
           title: "修改密码",
           requireAuth: true,
         },
+      },
+      {
+        path: '/change-email',
+        name: 'change-email',
+        component: change_email,
+        meta: {
+          title: "修改邮箱",
+          requireAuth: true,
+        }
       },
       {
         path: "/points-record",
