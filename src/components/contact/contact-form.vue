@@ -27,7 +27,7 @@
             <div class="input-item">
               <div class="label">组织：</div>
               <div class="input-box">
-                <el-input clearable v-model="form.phone" placeholder="电话"></el-input>
+                <el-input clearable v-model="form.country" placeholder="电话"></el-input>
               </div>
             </div>
           </div>

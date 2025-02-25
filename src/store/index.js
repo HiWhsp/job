@@ -367,25 +367,25 @@ export default new Vuex.Store({
       });
 
       //新闻分类
-      api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "news_channel",
-          channelId: 49
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          let data = res.data
-          data.forEach((v) => {
-            v.route = "/news?id=" + v.id;
-          });
-          commit("set_vuex_data", {
-            key: "vuex_news_cates",
-            val: data,
-          });
-        }
-      });
+      // api({
+      //   url: "/service.php",
+      //   method: "get",
+      //   data: {
+      //     action: "news_channel",
+      //     channelId: 49
+      //   },
+      // }).then((res) => {
+      //   if (res.code == 200) {
+      //     let data = res.data
+      //     data.forEach((v) => {
+      //       v.route = "/news?id=" + v.id;
+      //     });
+      //     commit("set_vuex_data", {
+      //       key: "vuex_news_cates",
+      //       val: data,
+      //     });
+      //   }
+      // });
     },
   },
 });

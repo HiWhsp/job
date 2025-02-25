@@ -108,6 +108,8 @@ export default {
   align-items: center;
   justify-content: space-between;
   overflow: hidden;
+  background-color: #F0F1F2;
+
 
   img {
     width: 36px;
@@ -122,7 +124,7 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 24px;
-    color: #fff;
+    color: #4c4c4c;
     text-indent: 1em;
   }
 
@@ -138,7 +140,7 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #d7d7d7;
+      color: #4c4c4c;
     }
   }
 }
@@ -150,7 +152,7 @@ export default {
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: #fff;
+  color: #4c4c4c;
   font-size: 1.4rem;
 
   &.disabled {

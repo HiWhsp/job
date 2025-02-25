@@ -733,7 +733,6 @@ export default {
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: bold;
-
     color: #fff;
   }
 

@@ -209,7 +209,7 @@ export default {
       show_coupon: false,
 
       // 其他
-      active_panel: "详情", //详情
+      active_panel: "型号说明", //详情
 
 
       pagination_relative: {

@@ -3,8 +3,8 @@
     <div class="page-ctx">
       <!-- 轮播图 element -->
       <el-carousel :interval="4000" height="638px">
-        <el-carousel-item v-for="item in 4" :key="item">
-          <img src="@/assets/image/home/banner.png" alt="" />
+        <el-carousel-item v-for="item in this.index_banners" :key="item.id">
+          <img :src="item.image" alt="" />
         </el-carousel-item>
       </el-carousel>
       <!-- 轮播图 end -->
@@ -12,28 +12,28 @@
       <!-- 产品列表 start -->
       <div class="product-list w-1400">
         <h2 class="title">公司介绍</h2>
-        <p>
-          “我们希望我们的模型的完美能给全世界的收藏家带来惊喜，这样他们也能体验到拥有一件独一无二的物品的难以置信的情感。”“我们对汽车和细节的热情，服务于最苛刻和最成熟的收藏家的热情。”通过传统与创新之间的微妙平衡，我们努力在我们的模型中表达意大利制造的所有优雅，风格和创造力。
-          对细节的最准确的关注，优质的材料和生产技术的不断发展，确保了TOPART已成为公认的点
-          供大型汽车制造商和汽车爱好者参考。
-        </p>
+        <p v-html="vuex_config.comDesc"></p>
       </div>
       <!-- 产品列表 end -->
     </div>
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
   name: "index",
   data() {
     return {};
   },
 
-  watch: {},
+  computed: {
+    ...mapState(["index_banners"]),
+  },
   created() {
     this.setView();
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     setView() {},
   },

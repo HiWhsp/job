@@ -137,22 +137,24 @@
       <div class="agreement-box">
         <div class="wrap">
           <el-checkbox v-model="registerForm.agree" class="agreement">
-            我已阅读并同意 <a href="#">《隐私政策》</a>
+            我已阅读并同意 <a href="#" @click="terms_open(92)">《隐私政策》</a>
           </el-checkbox>
 
           <el-button type="primary" class="submit-btn" :disabled="!registerForm.agree">支付并注册</el-button>
 
           <!-- 已有账号提示 -->
           <div class="login-link">
-            我有账号？ <a href="#">去登录</a>
+            我有账号？ <a href="/login">去登录</a>
           </div>
         </div>
       </div>
     </div>
+    <terms_modal ref="terms_modal"/>
   </div>
 </template>
 
 <script>
+import terms_modal from "@/components/account/terms_modal.vue"; //协议弹窗
 export default {
   data() {
     return {
@@ -180,10 +182,13 @@ export default {
         {value: 'weixin', title: '微信支付', icon: require('@img/pay-method/type-weixin.png')},
         {value: 'zhifubao', title: '支付宝支付', icon: require('@img/pay-method/type-zfb.png')},
         // { value: 'xianxia', title: '线下转款', icon: require('@img/pay-method/type-xianxia.png') },
-        //{ value: 'paypal', title: 'PayPal', icon: require('@img/pay-method/type-paypal.png') },
-        {value: 'yue', title: '余额支付', icon: require('@img/pay-method/type-yue.png')},
+        { value: 'paypal', title: 'PayPal', icon: require('@img/pay-method/type-paypal.png') },
+        // {value: 'yue', title: '余额支付', icon: require('@img/pay-method/type-yue.png')},
       ],
     };
+  },
+  components: {
+    terms_modal
   },
   methods: {
     do_toggle_paytype(item) {
@@ -201,7 +206,9 @@ export default {
           });
         }
       }
-
+    },
+    terms_open(id) {
+      this.$refs.terms_modal.init(id);
     },
   }
 };

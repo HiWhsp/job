@@ -1,9 +1,9 @@
 <template>
   <div class="product-list flex">
-    <div class="product-item" v-for="(item, index) in list" :key="index">
+    <div v-for="(item, index) in list" :key="index" class="product-item">
       <div class="product-item-info">
         <div class="img-box" @click="to_product(item)">
-          <img :src="item.thumb" class="product-img" />
+          <img :src="item.thumb" class="product-img"/>
           <!-- <shouqing :kucun="goods.kucun" /> -->
         </div>
         <div class="info-box">
@@ -19,16 +19,10 @@
               <span class="value"> {{ item.priceSale }} </span>
             </div>
             <div class="market">
-              <img src="@/assets/image/product/like.png" alt="">
-              <img src="@/assets/image/product/cartAdd.png" alt="">
+              <img alt="" src="@/assets/image/product/like.png" @click="goLike(item)">
+              <!--              <img src="@/assets/image/product/like-active.png" alt="">-->
+              <img alt="" src="@/assets/image/product/cartAdd.png" @click="do_add_cart(item)">
             </div>
-          </div>
-        </div>
-        <div class="act-info" v-if="is_show_check">
-          <div class="img-check-box flex-center" @click.stop="do_toggle_check(item)">
-            <img v-if="item.checked" src="@/static/common/check1.png" alt="" class="img-check check-1" />
-            <!-- <img v-else src="@/static/common/check0.png" alt="" class="img-check check-0" /> -->
-            <img v-else src="@/static/common/check00.png" alt="" class="img-check check-0" />
           </div>
         </div>
       </div>
@@ -74,14 +68,55 @@ export default {
         },
       });
     },
-    do_toggle_check(item) {
-      this.$emit('toggle_check', item)
-    }
+    goLike(item) {
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'product_operate',
+          productId: item.id,
+          operateType: '1',
+          operateSence: '0'
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          alertSucc('操作成功')
+        }
+      })
+    },
+    //购车添加商品
+    do_add_cart(item) {
+      if (!this.mix_get_login_status()) {
+        return
+      }
+
+      if (item.kucun <= 0) {
+        alertErr("当前商品库存不足！");
+        return;
+      }
+
+      // debugger
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "gouwuche_add",
+          inventoryId: item.inventoryId,
+          num: 1,
+        },
+      }).then((res) => {
+        alert(res)
+        let {code, data, msg} = res;
+        if (code == 200) {
+          alertSucc('操作成功！');
+        }
+      });
+    },
   },
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .product-list {
   flex-wrap: wrap;
 
@@ -94,7 +129,7 @@ export default {
     text-align: center;
     overflow: hidden;
     cursor: pointer;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     background: #FFFFFF;
 
     &:nth-child(3n) {
@@ -165,6 +200,7 @@ export default {
         margin-top: 5px;
         display: flex;
         justify-content: space-between;
+
         .sale {
           span {
             font-family: OPPOSans, OPPOSans;
@@ -179,6 +215,7 @@ export default {
           img {
             width: 21px;
           }
+
           img:first-child {
             margin-right: 30px;
           }
@@ -244,7 +281,6 @@ export default {
 }
 
 
-
 .img-check-box {
   position: absolute;
   z-index: 10;
@@ -260,7 +296,7 @@ export default {
 }
 </style>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 @media screen and (max-width: 1199px) {
   .product-list {
     .flex();

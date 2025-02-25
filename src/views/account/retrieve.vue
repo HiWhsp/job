@@ -57,9 +57,6 @@
         </div>
       </div>
     </div>
-
-
-
   </div>
 </template>
 
@@ -174,7 +171,7 @@ export default {
     height: 543px;
     display: flex;
     align-items: center;
-    background-color: #1F1C1F;
+    background-color: #fff;
   }
 
   .page-inner {}
@@ -242,7 +239,7 @@ export default {
         font-family: Poppins, Poppins;
         font-weight: 600;
         font-size: 26px;
-        color: #fff;
+        color: #000;
 
         &:first-child {
           // &:after {
@@ -278,6 +275,8 @@ export default {
       align-items: center;
       justify-content: space-between;
       overflow: hidden;
+      background-color: #F0F1F2;
+
 
       span {
         display: inline-block;
@@ -286,7 +285,7 @@ export default {
         border-right: 1px solid #ccc;
         font-weight: 400;
         font-size: 14px;
-        color: #fff;
+        color: #4C4C4C;
 
         text-indent: 1em;
       }
@@ -300,14 +299,13 @@ export default {
         height: 100%;
         padding-left: 16px;
         font-size: 14px;
-        color: #fff;
-        background-color: transparent;
+        background-color: #F0F1F2;
 
         &::-webkit-input-placeholder {
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #fff;
+          color: #4c4c4c;
         }
       }
     }
@@ -337,11 +335,11 @@ export default {
       button {
         width: 100%;
         height: 44px;
-        background: #DF1626;
+        background: #000;
         font-size: 18px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #ffffff;
+        font-weight: 600;
+        color: #fff;
       }
     }
 
