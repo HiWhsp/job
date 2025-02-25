@@ -37,11 +37,11 @@
           <div class="right-box">
             <div class="cart-box">
               <div class="search-wrap">
-                <el-select v-model="keyword" filterable placeholder="请输入要搜索的商品" @change="click_search">
+                <el-select filterable placeholder="请输入要搜索的商品">
                   <el-option label="所有产品" value="所有产品"></el-option>
                 </el-select>
-                <el-input placeholder="输入关键字"></el-input>
-                <img src="@/assets/image/home/search.png" alt=""/>
+                <el-input placeholder="输入关键字" v-model="keyword"></el-input>
+                <img src="@/assets/image/home/search.png" alt="" @click="click_search" />
               </div>
               <router-link to="/shopcart" class="flex-center language">
                 <!--                <img class="en-icon" src="@/assets/image/home/en.png" alt="" />-->
@@ -266,9 +266,10 @@ export default {
     },
     handleSearch(keyword) {
       this.$router.push({
-        path: "/search",
+        path: "/product-search",
         query: {
           keyword: keyword,
+          ms: new Date().getTime(),
         },
       });
     },

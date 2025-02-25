@@ -112,13 +112,12 @@ export default {
       this.setView()
     }
   },
-
   created() {
     this.setView();
   },
-
   methods: {
     async setView() {
+      this.keyword = this.$route.query.keyword;
       this.defaultActive = this.$route.fullPath
       this.query_product();
     },
@@ -132,6 +131,7 @@ export default {
           action: "product_plist",
           ifShowSku: 1,
           channelId: channelId,
+          keyword: this.keyword,
           // page: 1,
           // pageNum: 8,
           ...this.pagination

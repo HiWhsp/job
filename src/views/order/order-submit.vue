@@ -33,12 +33,12 @@
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item label="名字">
-                    <el-input v-model="form.firstName"/>
+                    <el-input v-model="form.name"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="姓氏">
-                    <el-input v-model="form.lastName"/>
+                    <el-input v-model="form.surname"/>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -47,14 +47,15 @@
               </el-form-item>
               <el-form-item label="国家/地区">
                 <el-select v-model="form.country" placeholder="选择国家">
-                  <el-option label="中国" value="China"></el-option>
+                  <el-option v-for="item in countryList" :key="item.id" :label="item.name"
+                             :value="item.name"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="地址">
                 <el-input v-model="form.address"/>
               </el-form-item>
               <el-form-item label="邮政编码">
-                <el-input v-model="form.postCode"/>
+                <el-input v-model="form.zipcode"/>
               </el-form-item>
             </el-form>
           </div>
@@ -62,7 +63,7 @@
           <!-- 额外信息 -->
           <div class="card">
             <h3>附加信息</h3>
-            <el-input type="textarea" v-model="form.notes" :rows="5" placeholder="请输入备注信息"/>
+            <el-input type="textarea" v-model="form.remark" :rows="5" placeholder="请输入备注信息"/>
           </div>
         </el-col>
         <!-- 右侧订单详情 -->
@@ -136,14 +137,8 @@ export default {
         {detail: "光托中国北京东直门外大街", phone: "+86 15810590312"},
         {detail: "光托中国北京朝阳区", phone: "+86 15810590312"}
       ],
-      form: {
-        firstName: "",
-        lastName: "",
-        phone: "",
-        country: "",
-        address: "",
-        notes: ""
-      },
+      form: {}, // 表单数据
+      countryList: [], // 国家列表
       cartItems: [
         {
           image: "https://via.placeholder.com/50",
@@ -187,6 +182,18 @@ export default {
     this.from = this.$route.query.from || '';
     this.getCacheProduct();
     this.query_address();
+    this.$api({
+      url: '/service.php',
+      method: 'get',
+      data: {
+        action: 'index_getArea',
+        country: 1
+      },
+    }).then(res => {
+      if (res.code == 200) {
+        this.countryList = res.data
+      }
+    })
   },
   methods: {
     //获取缓存的产品信息
@@ -341,11 +348,6 @@ export default {
 
     //提交订单
     do_submit() {
-      let params_info = {
-        ...this.form,
-      };
-      delete params_info.phone;
-
       if (!this.address_selected.id) {
         alertErr("请选择收货地址");
         return;
@@ -378,11 +380,12 @@ export default {
         data: {
           action: 'orders_create',
           ...params,
+          billInfo: JSON.stringify(this.form)
         },
       }).then((res) => {
         if (res.code == 200) {
-          let { id, orderNo } = res.data;
-          this.order_id = id;
+          let {id, orderNo} = res.data;
+          this.order_id = orderNo;
           this.do_order_pay();
         }
       });
@@ -430,13 +433,12 @@ export default {
 
     //微信支付 pc
     order_payment_wx_pc() {
-      this.$api("orders_wxScanCodePay", {
+      this.$api("pay_wxScanCodePay", {
         order_id: this.order_id,
       }).then((res) => {
         //console.log("pc 微信扫码", res);
-        // alert(res);
-        let { code, data } = res;
-        if (res.code == 200) {
+        let {code, data, msg} = res;
+        if (code == 200) {
           let info = {
             // ...res,
             qrcode: data.qrcode,
@@ -446,8 +448,10 @@ export default {
           // this.$refs.orderPayWxCode.qrcode = data.qrcode;
           // this.$refs.orderPayWxCode.showModal = true;
           // this.showWaiting();
+        } else {
+          this.$message.error(msg);
         }
-      });
+      })
     },
 
     //pc 支付宝支付
@@ -456,13 +460,13 @@ export default {
 
       this.showWaiting();
 
-      this.$api("orders_aliScanCodePay", {
+      this.$api("pay_aliScanCodePay", {
         order_id: this.order_id,
       }).then((res) => {
         //console.log("支付宝支付", res);
-        let { code, msg, data } = res;
+        let {code, msg, data} = res;
         if (code == 200) {
-          const { href } = this.$router.resolve({
+          const {href} = this.$router.resolve({
             path: "/zfbPay",
             query: {
               htmlData: data,
@@ -476,6 +480,8 @@ export default {
           //     htmlData: data,
           //   },
           // });
+        } else {
+          this.$message.error(msg);
         }
       });
     },
@@ -497,10 +503,11 @@ export default {
         },
       }).then((res) => {
         alert(res)
-        let { code, message } = res;
+        let {code, message} = res;
         if (code == 200) {
           this.toPaySuccess();
         } else {
+          this.$message.error(msg);
         }
       });
     },

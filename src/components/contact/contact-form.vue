@@ -7,7 +7,7 @@
             <div class="input-item">
               <div class="label">你的名字：</div>
               <div class="input-box">
-                <el-input clearable v-model="form.firstName" placeholder="名字"></el-input>
+                <el-input clearable v-model="form.name" placeholder="名字"></el-input>
               </div>
             </div>
             <div class="input-item">
@@ -62,33 +62,25 @@ export default {
   data() {
     return {
       form: {
-        firstName: "",
-        lastName: "",
-        phone: "",
-        applyType: "1",//类型：1-代理
-        country: "",
-        subject: "",
-        content: "",
+        feedType: "留言咨询",//类型：1-代理
+        name: "",
         email: "",
+        phone: "",
+        country: "",
+        content: ""
       },
 
       //
-      fileList: [
-        // { name: "food2.jpeg", url: "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100" }
-      ],
+      fileList: [],
       list_sheng: [],
       uploadList: [],
 
       loading: false
     };
   },
-  computed: {
-    ...mapState([""]),
-  },
 
   watch: {
     uploadList(list, prev) {
-      //console.log("询价咨询 watch, uploadList", list);
       this.form.file_info = list.map((v) => v.data).join("|");
     },
   },
@@ -102,7 +94,6 @@ export default {
 
     },
 
-
     throttle_do_submit() {
 
     },
@@ -113,7 +104,7 @@ export default {
       let is_true_email = reg_email.test(this.form.email)
       let is_true_phone = reg_phone.test(this.form.phone)
 
-      if (!this.form.firstName) {
+      if (!this.form.name) {
         alertErr("请填写姓名");
         return;
       }
@@ -135,7 +126,7 @@ export default {
         url: '/service.php',
         method: 'get',
         data: {
-          action: 'agent_apply',
+          action: 'feedback_add',
           ...this.form,
         }
       }).then((res) => {
@@ -261,7 +252,7 @@ export default {
         /deep/ .el-input__inner, /deep/ .el-textarea__inner {
           background: #F5F7FA;
           border: 1px solid #E3E3E3;
-          color: #fff;
+          color: #000;
         }
 
         .el-select {

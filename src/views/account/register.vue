@@ -18,10 +18,10 @@
         <el-form-item label="姓名" required>
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-input v-model="registerForm.name" placeholder="请输入姓"></el-input>
+              <el-input v-model="registerForm.firstName" placeholder="请输入姓"></el-input>
             </el-col>
             <el-col :span="12">
-              <el-input v-model="registerForm.name" placeholder="请输入名字"></el-input>
+              <el-input v-model="registerForm.lastName" placeholder="请输入名字"></el-input>
             </el-col>
           </el-row>
         </el-form-item>
@@ -37,25 +37,25 @@
         <el-form-item label="地址" required>
           <el-row :gutter="24" style="margin-bottom: 12px;">
             <el-col :span="12">
-              <el-input v-model="registerForm.company" placeholder="邮政编码"></el-input>
+              <el-input v-model="registerForm.zipCode" placeholder="邮政编码"></el-input>
             </el-col>
           </el-row>
           <el-row :gutter="24" style="margin-bottom: 12px;">
             <el-col :span="12">
               <el-select v-model="registerForm.country" placeholder="请选择国家">
-                <el-option label="中国" value="china"></el-option>
-                <el-option label="美国" value="usa"></el-option>
+                <el-option v-for="item in countryList" :key="item.id" :label="item.name"
+                           :value="item.name"></el-option>
               </el-select>
             </el-col>
           </el-row>
           <el-row :gutter="24" style="margin-bottom: 12px;">
             <el-col :span="12">
-              <el-input v-model="registerForm.city" placeholder="请输入城市"></el-input>
+              <el-input v-model="registerForm.local" placeholder="省/市/区、县"></el-input>
             </el-col>
           </el-row>
           <el-row :gutter="24">
             <el-col :span="24">
-              <el-input v-model="registerForm.detail" placeholder="详细地址"></el-input>
+              <el-input v-model="registerForm.address" placeholder="详细地址"></el-input>
             </el-col>
           </el-row>
         </el-form-item>
@@ -68,7 +68,7 @@
           </el-col>
           <el-col :span="11">
             <el-form-item label="Instagram" required>
-              <el-input v-model="registerForm.phone" placeholder="请输入账号"></el-input>
+              <el-input v-model="registerForm.instagram" placeholder="请输入账号"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -81,7 +81,7 @@
           </el-col>
           <el-col :span="11">
             <el-form-item label="Facebook" required>
-              <el-input v-model="registerForm.email" placeholder="请输入账号"></el-input>
+              <el-input v-model="registerForm.facebook" placeholder="请输入账号"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -95,7 +95,7 @@
           </el-row>
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-input v-model="registerForm.password" type="password" placeholder="请再次输入密码"></el-input>
+              <el-input v-model="registerForm.newPassword" type="password" placeholder="请再次输入密码"></el-input>
             </el-col>
           </el-row>
         </el-form-item>
@@ -140,7 +140,7 @@
             我已阅读并同意 <a href="#" @click="terms_open(92)">《隐私政策》</a>
           </el-checkbox>
 
-          <el-button type="primary" class="submit-btn" :disabled="!registerForm.agree">支付并注册</el-button>
+          <el-button type="primary" class="submit-btn" :disabled="!registerForm.agree" @click="do_confirm_submit">支付并注册</el-button>
 
           <!-- 已有账号提示 -->
           <div class="login-link">
@@ -178,6 +178,7 @@ export default {
         },
         agree: false,
       },
+      countryList: [],
       pay_method_list: [
         {value: 'weixin', title: '微信支付', icon: require('@img/pay-method/type-weixin.png')},
         {value: 'zhifubao', title: '支付宝支付', icon: require('@img/pay-method/type-zfb.png')},
@@ -189,6 +190,20 @@ export default {
   },
   components: {
     terms_modal
+  },
+  mounted() {
+    this.$api({
+      url: '/service.php',
+      method: 'get',
+      data: {
+        action: 'index_getArea',
+        country: 1
+      },
+    }).then(res => {
+      if (res.code == 200) {
+        this.countryList = res.data
+      }
+    })
   },
   methods: {
     do_toggle_paytype(item) {
@@ -207,6 +222,26 @@ export default {
         }
       }
     },
+
+    do_confirm_submit() {
+      let params = this.get_pay_params();
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'orders_create',
+          ...params,
+          billInfo: JSON.stringify(this.form)
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          let {id, orderNo} = res.data;
+          this.order_id = orderNo;
+          this.do_order_pay();
+        }
+      });
+    },
+
     terms_open(id) {
       this.$refs.terms_modal.init(id);
     },

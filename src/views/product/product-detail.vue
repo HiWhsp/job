@@ -25,8 +25,8 @@
               <div class="detail-title">
                 <div class="title-text ellipsis-3">
                   {{ info.title }}
-                  <div class="hot">限量50台</div>
-                  <div class="hot">限购2台</div>
+                  <div class="hot">限量{{ detail.kucun }}台</div>
+                  <div class="hot">限购{{ detail.maxNum }}台</div>
                 </div>
               </div>
               <!--              <div class="detail-desc">-->
@@ -36,18 +36,14 @@
                 官方指导价
               </div>
               <div class="detail-price">
-                CN ￥298.00
+                CN ￥{{  info.priceSale }}
               </div>
-              <div class="detail-txt ellipsis-3">
-                基於R.Salvadori / C.Shelby駕駛的5號車，該車贏得了1959年勒芒24小時耐力賽。 也可以從該套件中製造出由M.Trintignant
-                /P.Frère駕駛的＃6賽車和由S.Moss / J.Fairman駕駛
-                完整詳細的多材料套件，包括鉛錫合金金屬，樹脂，蝕刻，橡膠輪胎的翻折零件
-              </div>
+              <div class="detail-txt ellipsis-3">{{ detail.jianjie }}</div>
 
               <div class="btn-box">
-                <el-input-number :min="1" :max="view_info.kucun" v-model="selected_num"></el-input-number>
+                <el-input-number :min="1" :max="detail.kucun" v-model="selected_num"></el-input-number>
                 <div class="btn-buy" @click="do_add_cart"><img src="@/assets/image/product/cart.png" alt="">添加到购物车</div>
-                <div class="like">
+                <div class="like" @click="goLike">
                   <img src="@/assets/image/product/like.png" alt="">
                 </div>
               </div>
@@ -64,7 +60,7 @@
                   </a>
                 </div>
               </div>
-              <div class="down-btn-buy"><img src="@/assets/image/product/down.png" alt="">图片高清下载</div>
+              <div class="down-btn-buy" @click="downImg"><img src="@/assets/image/product/down.png" alt="">图片高清下载</div>
             </div>
           </div>
 
@@ -290,6 +286,40 @@ export default {
   methods: {
     toDetail(item) {
       this.$router.push(`/product-detail?id=${item.inventoryId}`)
+    },
+
+    // 收藏
+    goLike() {
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'product_operate',
+          productId: this.detail.id,
+          operateType: '1',
+          operateSence: '0'
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          alertSucc('操作成功')
+        }
+      })
+    },
+
+    // 图片下载
+    downImg() {
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'product_downloadImage',
+          id: this.detail.productId
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          alertSucc('操作成功')
+        }
+      })
     },
 
     setView() {
