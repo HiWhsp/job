@@ -14,8 +14,8 @@
                   <img :src="item.thumb" alt />
                 </div>
               </div>
-              <div class="box-title ellipsis-1">
-                <div class="title">{{ item.title }}</div>
+              <div class="box-title">
+                <div class="title ellipsis-1">{{ item.title }}</div>
               </div>
               <div class="box-price">
                 <div class="price">{{ item.subtitle }}</div>

@@ -17,7 +17,7 @@
               <span class="value"> {{ item.priceSale }} </span>
             </div>
             <div class="market">
-              限量50台
+              限量{{ item.kucun }}台
 <!--              <span class="value"> {{ item.priceSale }} </span>-->
             </div>
           </div>
@@ -135,7 +135,7 @@ export default {
       justify-content: space-between;
 
       .title {
-        text-align: center;
+        text-align: left;
         width: 100%;
         font-family: Poppins, Poppins;
         font-weight: 600;

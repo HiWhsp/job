@@ -19,7 +19,7 @@
             <div class="box-info">
               <div class="left">
                 <div class="market">
-                  限量50台
+                  限量{{ item.kucun }}台
                 </div>
                 <div class="market back">
                   限购1台
@@ -145,7 +145,7 @@ export default {
       justify-content: space-between;
 
       .title {
-        text-align: center;
+        text-align: left;
         width: 100%;
         font-size: 16px;
         color: #fff;

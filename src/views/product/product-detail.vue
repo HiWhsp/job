@@ -1377,7 +1377,6 @@ export default {
         .panel-title {
           margin-bottom: 15px;
           font-family: Poppins, Poppins;
-          font-weight: bold;
           font-size: 25px;
           color: #fff;
         }

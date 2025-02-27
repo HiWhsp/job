@@ -1311,8 +1311,10 @@ export default {
     },
     //新增地址
     open_addr_add() {
+      console.log(SHOP_TYPE == 'foreign')
       if (SHOP_TYPE == 'foreign') {
-        this.$refs.foreign_address_modal.init();
+        this.$refs.address_modal.init();
+        // this.$refs.foreign_address_modal.init();
       } else {
         this.$refs.address_modal.init();
       }

@@ -96,9 +96,9 @@
                 <button v-if="item.ifComment == 1" class="btn-ripple fit-text btn-bg" @click="doReview(item)">
                   去评价
                 </button>
-                <button v-if="item.orderStatus >= 5" class="btn-ripple fit-text btn-bg" @click="doRefund(item)">
-                  售后
-                </button>
+<!--                <button v-if="item.orderStatus >= 5" class="btn-ripple fit-text btn-bg" @click="doRefund(item)">-->
+<!--                  售后-->
+<!--                </button>-->
                 <!-- <button v-if="item.is_aa == 1" class="btn-ripple fit-text btn-bg" @click="toDetail(item)">
             查看物流
           </button> -->
@@ -180,9 +180,9 @@ export default {
         {value: 2, title: "待发货", num: user_index.order_num_2 || 0},
         {value: 3, title: "待收货", num: user_index.order_num_3 || 0},
         // { value: 4, title: "待核销", num: user_index.order_num_4 || 0 },
-        {value: 6, title: "待评价", num: user_index.order_num_4 || 0},
+        // {value: 6, title: "待评价", num: user_index.order_num_4 || 0},
         {value: 5, title: "已完成", num: user_index.order_num_4 || 0},
-        {value: 7, title: "已取消", num: user_index.order_num_4 || 0},
+        // {value: 7, title: "已取消", num: user_index.order_num_4 || 0},
         // { value: 6, title: "待审核", num: user_index.order_num_6 || 0 },
       ];
       return tabList;
@@ -224,7 +224,7 @@ export default {
           action: 'orders_lists',
           ...this.pagination,
           scene: this.tabSelect.value,
-          // keyword: this.keyword,
+          keyword: this.keyword,
         },
       }).then((res) => {
         let {code, data} = res;

@@ -16,17 +16,17 @@
             <div class="left-articles">
               <div class="article-item">
                 <router-link to="/terms?id=100">
-                  <img src="@/assets/image/footer/fackback.png" alt="" />
+                  <img src="@/assets/image/footer/fackback.png" alt=""/>
                 </router-link>
               </div>
               <div class="article-item">
                 <router-link to="/terms?id=101">
-                  <img src="@/assets/image/footer/feishu.png" alt="" />
+                  <img src="@/assets/image/footer/feishu.png" alt=""/>
                 </router-link>
               </div>
               <div class="article-item">
                 <router-link to="/terms?id=101">
-                  <img src="@/assets/image/footer/weibo.png" alt="" />
+                  <img src="@/assets/image/footer/weibo.png" alt=""/>
                 </router-link>
               </div>
             </div>
@@ -46,11 +46,9 @@
             <div class="info-box">
               <div class="info-item">
                 <span>
-                  <a
-                    target="_blank"
-                    :href="'https://wa.me/' + vuex_config.comPhone"
-                  >
-                    {{ vuex_config.comPhone }}
+                  <a target="_blank">
+                    <p>TOPART模型商店</p>
+                    <p>Via Grieg，73 21047-萨罗尼奥（弗吉尼亚州）意大利</p>
                   </a>
                 </span>
               </div>
@@ -63,7 +61,7 @@
                   <!-- <div class="desc-item" v-for="(item, index) in address_list" :key="index">
                     {{ item }}
                   </div> -->
-                  <img src="@/assets/image/footer/play.png" alt="" />
+                  <img src="@/assets/image/footer/play.png" alt=""/>
                 </div>
 
                 <!-- <span> 
@@ -95,15 +93,15 @@
               </div>
 
               <div class="info-item">
-                <el-input v-model="email" placeholder="请输入邮箱" />
+                <el-input v-model="email" placeholder="请输入邮箱"/>
               </div>
 
               <div class="info-item">
                 <div class="desc-box">
                   <p
-                    >我同意接收有关bbrmodelstore产品、活动和促销（包括优惠和折扣）的个性化营销信息。</p
+                  >我同意接收有关bbrmodelstore产品、活动和促销（包括优惠和折扣）的个性化营销信息。</p
                   >
-                  <el-button>发送</el-button>
+                  <el-button @click="do_submit()">发送</el-button>
                 </div>
               </div>
             </div>
@@ -121,7 +119,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "web-footer",
@@ -177,9 +175,36 @@ export default {
         }
       });
     },
-    toNav(item) {
-      this.$router.push(item.route);
-    },
+    do_submit() {
+      if (!this.email) {
+        this.$message({
+          message: "请输入邮箱",
+          type: "warning",
+        });
+        return;
+      }
+
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "feedback_add",
+          email: this.email,
+          feedType: '底部邮箱',
+          content: '',
+          name: '',
+          phone: ''
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.email = "";
+          this.$message({
+            message: "发送成功",
+            type: "success",
+          });
+        }
+      });
+    }
   },
 };
 </script>
@@ -282,6 +307,12 @@ export default {
           align-items: flex-start;
           margin-bottom: 18px;
 
+          p {
+            font-size: 14px;
+            line-height: 28px;
+            font-weight: normal;
+          }
+
           img {
             margin-right: 8px;
             width: 20px;
@@ -290,14 +321,12 @@ export default {
 
           span {
             font-family: OPPOSans, OPPOSans;
-            font-weight: bold;
             font-size: 16px;
             color: #fff;
             font-weight: normal;
 
             a {
               font-family: OPPOSans, OPPOSans;
-              font-weight: bold;
               font-size: 16px;
               color: #fff;
               font-weight: normal;
@@ -309,6 +338,7 @@ export default {
               width: 100%;
               height: 26px;
             }
+
             .desc-item {
               margin-bottom: 10px;
               font-family: OPPOSans, OPPOSans;
@@ -336,14 +366,16 @@ export default {
 
           .el-input {
             width: 288px;
-            background: #ffffff;
             border-radius: 2px 2px 2px 2px;
-            border: 1px solid #e6e5e5;
-            opacity: 0.2;
+            border: 1px solid #333;
+            color: #fff;
           }
+
           /deep/ .el-input__inner {
+            background-color: #333;
+            color: #fff;
             border-radius: 0;
-            border: 1px solid #e6e5e5;
+            border: 1px solid #333;
           }
         }
 
@@ -501,8 +533,10 @@ export default {
 .left-articles {
   display: flex;
   flex-direction: row;
+
   .article-item {
     margin-top: 10px;
+
     img {
       width: 24px;
       height: 24px;

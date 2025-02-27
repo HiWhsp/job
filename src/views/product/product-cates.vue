@@ -13,66 +13,7 @@
 </div> -->
     <div class="inner">
       <pageBreadcrumb :option="nav_option" />
-      <!-- <div class="category-box filter-box">
-        <div class="filter-item">
-          <div class="label">
-            石磨坊产品
-          </div>
-          <div class="val">
-            <div class="cate-box">
-              <div class="cate-item" v-for="(item, index) in vuexTreeCates" :key="index"
-                :class="{ active: item.id == $route.query.ids }" @click="toCate(item)">{{ item.title }}</div>
-            </div>
-          </div>
-        </div>
-        <div class="filter-item">
-          <div class="label">
-            价格
-          </div>
-          <div class="val">
-            <div class="cate-box">
-              <div class="cate-item" v-for="(item, index) in list_price" :key="index"
-                :class="{ active: item.id == select_level_1.id }" @click="toggleLevel(item)">{{ item.title }}</div>
-            </div>
-          </div>
-        </div>
-        <div class="filter-item">
-          <div class="label">
-            产品排序
-          </div>
-          <div class="val">
-            <div class="sort-box">
-              <div class="item" v-for="(item, index) in sortList" :key="index"
-                :class="orderByColumn == item.ziduan ? 'active' : ''" @click="onClickSort(item)">
-                <div class="text">{{ item.title }}</div>
-                <div class="sanjiao-box" v-if="item.title != '综合'">
-                  <div class="top" :class="orderByColumn == item.ziduan && isAsc == 'asc' ? 'active' : ''"></div>
-                  <div class="bottom" :class="orderByColumn == item.ziduan && isAsc == 'desc' ? 'active' : ''"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> -->
-      <!-- <div class="page-title">
-        <div class="title-text">产品列表</div>
-        <div class="title-act">
-          <div class="text-1">
-            共 <span class="num"> {{ count }}</span> 件商品
-          </div>
-          <div class="pagi-box">
-            <span class="num">{{ pagination.page }}</span>/ {{ pages }}
-          </div>
-          <div class="arrow-box">
-            <div class="arrow-left" @click="doPagePrev()">
-              <img src="@img/arrow-left.png" alt="">
-            </div>
-            <div class="arrow-right" @click="doPageNext()">
-              <img src="@img/arrow-right.png" alt="">
-            </div>
-          </div>
-        </div>
-      </div> -->
+
       <div class="page-ctx w-1200 flex">
         <div class="aside">
           <!-- 侧边栏 -->
@@ -89,9 +30,9 @@
                   <template #title>{{ item.title }}</template>
                   <el-menu-item :index="it.route" v-for="(it, i) in item.channels" :key="i">{{ it.title }}</el-menu-item>
                 </el-submenu>
-                <el-menu-item :index="item.route" v-else class="menu-item-one">
-                  <span slot="title">{{ item.title }}</span>
-                </el-menu-item>
+<!--                <el-menu-item :index="item.route" v-if="!item.channels.length" class="menu-item-one">-->
+<!--                  <span slot="title">{{ item.title }} {{ item.channels.length }}</span>-->
+<!--                </el-menu-item>-->
               </template>
             </el-menu>
           </el-aside>
