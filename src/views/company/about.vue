@@ -54,13 +54,15 @@ export default {
   }
 
   .product-list {
-    margin-top: 48px;
     color: #414851;
     h2 {
       font-size: 44px;
       color: #000;
       font-weight: 600;
       margin-bottom: 24px;
+    }
+    p {
+      line-height: 28px;
     }
   }
 
