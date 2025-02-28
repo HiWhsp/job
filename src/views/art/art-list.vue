@@ -115,7 +115,7 @@ export default {
         data: {
           action: "product_plist",
           ifShowSku: 1,
-          channelId: channelId,
+          channelId: '819',
           // page: 1,
           // pageNum: 8,
           ...this.pagination

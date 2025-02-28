@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <!-- <modalLoading ref="modalLoading" /> -->
-    <product_add_cart_success_modal ref="product_add_cart_success_modal" :curr="curr" />
+    <product_add_cart_success_modal ref="product_add_cart_success_modal" :curr="curr"/>
     <!-- 邀请好友 -->
     <!-- <modalYaoqing ref="modalYaoqing" /> -->
     <!-- 添加成功提示 -->
@@ -12,7 +12,7 @@
     <div class="page-top">
       <div class="page-bread w-1200">
         <div class="bread-box">
-          <img src="@/static/common/product-home.png" alt="" />
+          <img alt="" src="@/static/common/product-home.png"/>
           <router-link to="/">首页</router-link>
           <span class="bread-divider">&gt;</span>
           <router-link :to="activeCate.route">产品展示</router-link>
@@ -34,7 +34,7 @@
               <!-- 商品预览 -->
               <!-- <carouselComponent :swiperImgs="swiperImgs" /> -->
               <div class="preview-wrap">
-                <detailLunbo :imageList="detailImages" />
+                <detailLunbo :imageList="detailImages"/>
               </div>
 
               <!-- <div class="shoucang-box" v-if="false">
@@ -57,36 +57,33 @@
                 </div>
               </div>
               <div class="detail-desc">
-                限量50台
+                限量{{ info.maxNum }}台
               </div>
               <div class="detail-code">
-                货号: K340001
+                货号: {{ info.inventoryId }}
               </div>
               <div class="detail-price">
-                ￥298.00
+                ￥{{ info.priceSale }}
               </div>
-              <div class="detail-txt ellipsis-3">
-                基於R.Salvadori / C.Shelby駕駛的5號車，該車贏得了1959年勒芒24小時耐力賽。 也可以從該套件中製造出由M.Trintignant /P.Frère駕駛的＃6賽車和由S.Moss / J.Fairman駕駛
-                完整詳細的多材料套件，包括鉛錫合金金屬，樹脂，蝕刻，橡膠輪胎的翻折零件
-              </div>
+              <div class="detail-txt ellipsis-3">{{ info.jianjie || '暂无简介' }}</div>
 
               <div class="btn-box">
-                <div class="btn-buy">图片一键下载</div>
+                <div class="btn-buy" @click="downLoadPic">图片一键下载</div>
                 <div class="left-articles">
                   <span>分享：</span>
                   <div class="article-item">
-                    <a href="/terms?id=100" >
-                      <img src="@/assets/image/footer/fackback.png" alt="">
+                    <a href="/terms?id=100">
+                      <img alt="" src="@/assets/image/footer/fackback.png">
                     </a>
                   </div>
                   <div class="article-item">
-                    <a href="/terms?id=100" >
-                      <img src="@/assets/image/footer/feishu.png" alt="">
+                    <a href="/terms?id=100">
+                      <img alt="" src="@/assets/image/footer/feishu.png">
                     </a>
                   </div>
                   <div class="article-item">
-                    <a href="/terms?id=100" >
-                      <img src="@/assets/image/footer/weibo.png" alt="">
+                    <a href="/terms?id=100">
+                      <img alt="" src="@/assets/image/footer/weibo.png">
                     </a>
                   </div>
                 </div>
@@ -94,12 +91,7 @@
             </div>
           </div>
 
-
-
           <div class="ctx-bottom-container">
-
-
-
             <div class="bottom-right">
               <div class="ctx-bottom">
                 <div class="ctx-bottom-inner">
@@ -113,28 +105,29 @@
                     <div class="rich-html" v-html="info.cont2"></div>
                     <div class="rich-html" v-html="info.cont3"></div>
                   </div>
-                              <div class="bottom-left">
-                                <div class="main-title">相关产品</div>
+                  <div class="bottom-left">
+                    <div class="main-title">相关产品</div>
 
-                                <div class="product-list">
-                                  <div class="product-item" v-for="(item, index)  in list_goods" :key="index" @click="toDetail(item)">
-                                    <div class="poster-box scale-box">
-                                      <img :src="item.img" alt="" class="poster scale-img">
-                                    </div>
-                                    <div class="info-box">
-                                      <div class="title ellipsis-2">12323</div>
-                                      <div class="pirce-box">
-                                        <div class="price-info">
-                                          <div class="price-1">￥298.00</div>
-                                        </div>
-                                        <div class="yishou">
-                                          限量50台
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
+                    <div class="product-list">
+                      <div v-for="(item, index)  in list_goods" :key="index" class="product-item"
+                           @click="toDetail(item)">
+                        <div class="poster-box scale-box">
+                          <img :src="item.img" alt="" class="poster scale-img">
+                        </div>
+                        <div class="info-box">
+                          <div class="title ellipsis-2">12323</div>
+                          <div class="pirce-box">
+                            <div class="price-info">
+                              <div class="price-1">￥298.00</div>
+                            </div>
+                            <div class="yishou">
+                              限量50台
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -153,8 +146,8 @@ import carouselComponent from "@/components/goods/carouselComponent.vue"; //左�
 import review_list from "@/components/review/review_list.vue";
 import detailLunbo from "@/components/detail/detailLunbo.vue";
 
-import { mapState } from "vuex";
-import { Loading } from "element-ui";
+import {mapState} from "vuex";
+import {Loading} from "element-ui";
 
 export default {
   name: "goods-detail",
@@ -173,10 +166,6 @@ export default {
         page: 1,
         pageNum: 10,
       },
-      //
-      //
-      //
-      //
 
       is_prod: process.env.NODE_ENV == "production",
 
@@ -234,7 +223,6 @@ export default {
       isFavourite: false, //未收藏
 
       selectedSkuComb: {}, //选择的商品规格信息 立即购买需要金额
-      show_sku: false,
       curr: {}, //产品
       detail: {}, //产品
       current: 0, //轮播图指示器
@@ -301,6 +289,31 @@ export default {
   },
 
   methods: {
+    downLoadPic() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_downloadImage",
+          id: this.info.productId
+        },
+      }).then(res=>{
+        // 创建 Blob 对象
+        const blob = new Blob([res]);
+        let fileName = 'downloaded_img.tar'; // 默认文件名
+        // 创建临时下载链接
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', fileName); // 设置下载文件名
+        document.body.appendChild(link);
+        link.click();
+
+        // 清理临时链接
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      })
+    },
     toDetail(item) {
       this.$router.push(`/product-detail?id=${item.inventoryId}`)
     },
@@ -321,13 +334,12 @@ export default {
         },
       }).then((res) => {
         //console.log("商品详情", res);
-        let { code, data, msg } = res;
+        let {code, data, msg} = res;
         if (res.code == 200) {
           this.info = data;
           this.add_history_record()
           // this.reviews = data.commentList;
           this.query_reviews(); //评论
-
 
 
           this.curr = data;
@@ -348,8 +360,6 @@ export default {
         this.hideLoading();
       });
     },
-
-
 
     showLoading() {
       this.loadingInstance = Loading.service({
@@ -375,7 +385,6 @@ export default {
       // });
     },
 
-
     //查询评论列表
     query_reviews() {
       this.$api({
@@ -387,13 +396,12 @@ export default {
           ...this.pagination
         },
       }).then((res) => {
-        let { code, data, count } = res;
+        let {code, data, count} = res;
         if (code == 200) {
           this.reviews = data.list;
         }
       });
     },
-
 
     add_history_record() {
       this.$api({
@@ -433,8 +441,6 @@ export default {
     },
 
 
-
-
     //商品sku 属性选择
     onSelectShuXing(item) {
       //console.log("商品属性选择", { ...item });
@@ -470,7 +476,7 @@ export default {
       if (Object.keys(this.info.skus).length == this.select_shuxing_list.length) {
         let key_ids = this.select_shuxing_list.map((v) => v.id).join("-");
         this.sku_select =
-          this.sku_list.find((v) => v.key_ids == key_ids) || {};
+            this.sku_list.find((v) => v.key_ids == key_ids) || {};
       }
 
       //console.log("已选的商品属性值 select_shuxing_list", this.select_shuxing_list);
@@ -597,7 +603,7 @@ export default {
       } else {
         // this.sku_select = {};
         this.sku_select =
-          sku_list.find((v) => v.inventoryId == this.id) || {};
+            sku_list.find((v) => v.inventoryId == this.id) || {};
       }
       this.sku_list = sku_list;
 
@@ -631,7 +637,6 @@ export default {
     },
 
 
-
     //商品是否选择规格检测
     checkedSelected() {
       //console.log("检测是否选择了商品", this.sku_select);
@@ -652,7 +657,7 @@ export default {
     //处理购物车列表数据
     handlePiPrice(item) {
       let v = item;
-      let { nums1, nums2 } = v;
+      let {nums1, nums2} = v;
       let num = this.selected_num;
       let priceSale = 0;
       if (+nums2 && +nums1) {
@@ -692,7 +697,7 @@ export default {
         priceMarket: sku_item.priceMarket,
       }];
       let str_data = JSON.stringify(data_format);
-      this.$store.commit('set_cache_payment_products',str_data)
+      this.$store.commit('set_cache_payment_products', str_data)
       this.$router.push({
         path: "/order-submit",
       });
@@ -737,7 +742,7 @@ export default {
         },
       }).then((res) => {
         alert(res)
-        let { code, data, msg } = res;
+        let {code, data, msg} = res;
         if (code == 200) {
           this.$refs.product_add_cart_success_modal.init({
             num: this.selected_num,
@@ -785,7 +790,6 @@ export default {
     },
 
 
-
     //
     togglePanel(name) {
       // return;
@@ -796,7 +800,6 @@ export default {
         this.scrollToTarget(".comment-box");
       }
     },
-
 
 
     //商品评价分页
@@ -810,7 +813,7 @@ export default {
     scrollToTarget(clsName) {
       // var element = document.querySelector(".wenxian-box");
       var element = document.querySelector(clsName);
-      element.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+      element.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
     },
   },
 };
@@ -836,7 +839,7 @@ export default {
 }
 </style>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .page-top {
   padding: 24px 0;
   position: relative;
@@ -897,14 +900,16 @@ export default {
       font-size: 14px;
     }
 
-    .kefu-code {}
+    .kefu-code {
+    }
 
-    .erweima {}
+    .erweima {
+    }
   }
 }
 
 .phone-tip-inner {
-    display: flex;
+  display: flex;
   align-items: center;
   cursor: pointer;
 }
@@ -960,9 +965,9 @@ export default {
 
           .shoucang-box {
             margin-top: 20px;
-              display: flex;
-  align-items: center;
-  justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             width: 100%;
 
             .yes {
@@ -975,8 +980,8 @@ export default {
 
             .shoucang-left {
               cursor: pointer;
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               img {
                 width: 20px;
@@ -994,8 +999,8 @@ export default {
 
             .shoucang-right {
               cursor: pointer;
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               img {
                 width: 20px;
@@ -1036,16 +1041,19 @@ export default {
             border: 1px solid #7B7B7B;
             margin-top: 10px;
           }
+
           .detail-code {
             color: #fff;
             margin: 20px 0;
           }
+
           .detail-price {
             font-weight: bold;
             font-size: 26px;
             color: #FFFFFF;
             margin-bottom: 20px;
           }
+
           .detail-txt {
             font-weight: 400;
             font-size: 14px;
@@ -1061,8 +1069,8 @@ export default {
 
             .list {
               .item {
-                  display: flex;
-                  align-items: center;
+                display: flex;
+                align-items: center;
 
                 .label {
                   width: 80px;
@@ -1073,8 +1081,8 @@ export default {
                 }
 
                 .vals {
-                    display: flex;
-  align-items: center;
+                  display: flex;
+                  align-items: center;
                   flex: 1;
 
                   font-size: 16px;
@@ -1097,8 +1105,8 @@ export default {
             }
 
             .price {
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               .number {
                 font-size: 28px;
@@ -1111,16 +1119,16 @@ export default {
 
 
           .info-texts {
-              display: flex;
-  align-items: center;
-  justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             padding: 0 32px;
             height: 45px;
             background: #F8F8F8;
 
             .text-item {
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               .label {
                 font-size: 14px;
@@ -1162,8 +1170,8 @@ export default {
 
           .sku-list {
             flex: 1;
-              display: flex;
-  align-items: center;
+            display: flex;
+            align-items: center;
             flex-wrap: wrap;
 
             .sku-item {
@@ -1182,7 +1190,6 @@ export default {
               font-family: PingFang SC, PingFang SC;
               font-weight: 500;
               color: #333333;
-
 
 
               &:disabled {
@@ -1238,11 +1245,10 @@ export default {
           }
 
 
-
           .shuliang-box {
             margin-top: 0px;
-              display: flex;
-  align-items: center;
+            display: flex;
+            align-items: center;
 
             .sel-num-title {
               min-width: 84px;
@@ -1253,8 +1259,8 @@ export default {
 
             .shuliang {
               min-width: 105px;
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               div {
                 width: 30px;
@@ -1273,7 +1279,8 @@ export default {
                 }
               }
 
-              .minus {}
+              .minus {
+              }
 
               input {
                 outline: none;
@@ -1298,12 +1305,14 @@ export default {
               }
 
               /* chrome */
+
               input[type="number"] {
                 -moz-appearance: textfield;
                 /* firefox */
               }
 
-              .plus {}
+              .plus {
+              }
             }
           }
 
@@ -1327,14 +1336,17 @@ export default {
               line-height: 48px;
               color: #fff;
             }
+
             .left-articles {
               display: flex;
               flex-direction: row;
               color: #E6E6E6;
+
               .article-item {
                 a {
                   color: #666;
                   font-size: 14px;
+
                   img {
                     width: 24px;
                     height: 24px;
@@ -1346,7 +1358,6 @@ export default {
           }
         }
       }
-
 
 
       .ctx-bottom-container {
@@ -1533,8 +1544,8 @@ export default {
 
     .params-box {
       .params-item {
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
         border: 1px solid #ccc;
         border-bottom: none;
 
@@ -1635,6 +1646,7 @@ export default {
 
 .bottom-left {
   margin-top: 50px;
+
   .main-title {
     position: relative;
     border-bottom: 1px solid #696969;
@@ -1707,9 +1719,9 @@ export default {
 
       .pirce-box {
         margin-top: 15px;
-          display: flex;
-  align-items: center;
-  justify-content: space-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         .price-info {
           display: flex;
@@ -1738,9 +1750,9 @@ export default {
         margin-top: 15px;
         border-top: 1px solid #ddd;
         padding-top: 5px;
-          display: flex;
-  align-items: center;
-  justify-content: space-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         .fav-box {
           .flex-center();
@@ -1770,6 +1782,6 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/page/product-detail.less"></style>
+<style lang="less" scoped src="@/assets/h5css/page/product-detail.less"></style>
 
-<style scoped lang="less" src="@/assets/h5css/mobile/product-detail.less"></style>
+<style lang="less" scoped src="@/assets/h5css/mobile/product-detail.less"></style>
