@@ -106,7 +106,7 @@ export default {
         route: "/",
       },
 
-      list_goods: [1],
+      list_goods: [],
       product_list: [],
       group_list_wenxian: [],
       list_wenxian: [],

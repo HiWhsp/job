@@ -30,7 +30,7 @@
           </div>
           <el-aside width="260px" class="sidebar">
             <el-menu :default-active="defaultActive" :router="true">
-              <template v-for="(item, index) in vuexFlatCates">
+              <template v-for="(item, index) in [vuexTreeCates[2]]">
                 <el-submenu :index="item.route" v-if="item.channels.length" class="menu-item-one">
                   <template #title>{{ item.title }}</template>
                   <el-menu-item :index="it.route" v-for="(it, i) in item.channels" :key="i">{{ it.title }}</el-menu-item>
@@ -99,13 +99,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(["vuexFlatCates"]),
+    ...mapState(["vuexTreeCates"]),
     nav_option() {
       let channelId_arr = this.$route.query.ids ? this.$route.query.ids.split('-') : []
       let channelId = channelId_arr.pop()
       console.log(channelId)
 
-      let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
+      let cate_info = this.vuexTreeCates.find(v => v.id == channelId) || {}
 
       let option = [
         {route: '/product-cates', title: '产品展示'},
@@ -141,7 +141,7 @@ export default {
         data: {
           action: "product_plist",
           ifShowSku: 1,
-          channelId: channelId,
+          channelId: '821',
           // page: 1,
           // pageNum: 8,
           ...this.pagination

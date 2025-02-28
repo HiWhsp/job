@@ -4,7 +4,7 @@
       <!-- 轮播图 element -->
       <el-carousel :interval="4000" height="600px">
         <el-carousel-item v-for="(item, index) in index_banners" :key="index">
-          <img :src="item.image" alt="" />
+          <img :src="item.image" alt=""/>
         </el-carousel-item>
       </el-carousel>
       <!-- 轮播图 end -->
@@ -12,34 +12,46 @@
       <!-- 产品列表 start -->
       <div class="product-list w-1200">
         <h2 class="title">公司介绍</h2>
-        <p>{{  vuex_config.comDesc}}</p>
+        <div v-html="content"></div>
       </div>
       <!-- 产品列表 end -->
     </div>
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
+
 export default {
   name: "index",
   data() {
-    return {};
+    return {
+      content: ''
+    };
   },
   computed: {
     ...mapState(['index_banners'])
   },
   mounted() {
     this.setView();
-
   },
   methods: {
     setView() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "news_detail",
+          id: 95
+        },
+      }).then((res) => {
+        this.content = res.data.info.content
+      })
     },
   },
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .page {
   padding-top: 0;
   padding-bottom: 80px;
@@ -54,12 +66,14 @@ export default {
   .product-list {
     margin-top: 48px;
     color: #fff;
+
     h2 {
       font-size: 44px;
       color: #fff;
       font-weight: 600;
       margin-bottom: 24px;
     }
+
     p {
       line-height: 28px;
     }
