@@ -9,21 +9,21 @@
           <div class="group-item">
             <div class="group-title">
               <router-link to="/contact" class="group-title">
-                <img src="" alt="">
+                <img src="@/assets/image/footer/fj.png" alt="">
                 DREAM CAR MODEL Social
               </router-link>
             </div>
             <div class="info-box">
               <div class="info-item">
-                <img src="" alt="">
+                <img src="@/assets/image/footer/fackback.png" alt="">
                 <span>– DREAM CAR MODEL</span>
               </div>
               <div class="info-item">
-                <img src="" alt="">
+                <img src="@/assets/image/footer/feishu.png" alt="">
                 <span>– DREAM CAR MODEL</span>
               </div>
               <div class="info-item">
-                <img src="" alt="">
+                <img src="@/assets/image/footer/weibo.png" alt="">
                 <span>– DREAM CAR MODEL</span>
               </div>
             </div>
@@ -31,7 +31,7 @@
           <div class="group-item">
             <div class="group-title">
               <router-link to="/contact" class="group-title">
-                <img src="" alt="">
+                <img src="@/assets/image/footer/hj.png" alt="">
                 快速查找
               </router-link>
             </div>
@@ -56,13 +56,13 @@
         <div class="group-item">
           <div class="group-title">
             <router-link to="/contact" class="group-title">
-              <img src="" alt="">
+              <img src="@/assets/image/footer/wx.png" alt="">
               微信公众号
             </router-link>
           </div>
           <div class="info-box">
             <div class="info-item">
-              <img src="" alt="" class="qrcode">
+              <img :src="vuex_config.accountImg" alt="" class="qrcode">
               <span>Dream Car Model</span>
             </div>
           </div>

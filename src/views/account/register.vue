@@ -14,8 +14,9 @@
       </div>
 
       <!-- 注册表单 -->
-      <el-form ref="registerForm" :model="registerForm" label-width="100px" class="register-form">
-        <el-form-item label="姓名" required>
+      <el-form ref="registerForm" :model="registerForm" :rules="registerRules" class="register-form"
+               label-width="100px">
+        <el-form-item label="姓名" prop="firstName" required>
           <el-row :gutter="24">
             <el-col :span="12">
               <el-input v-model="registerForm.firstName" placeholder="请输入姓"></el-input>
@@ -26,7 +27,7 @@
           </el-row>
         </el-form-item>
 
-        <el-form-item label="公司名称">
+        <el-form-item label="公司名称" prop="company" required>
           <el-row :gutter="24">
             <el-col :span="12">
               <el-input v-model="registerForm.company" placeholder="请输入公司名称"></el-input>
@@ -42,15 +43,16 @@
           </el-row>
           <el-row :gutter="24" style="margin-bottom: 12px;">
             <el-col :span="12">
-              <el-select v-model="registerForm.country" placeholder="请选择国家">
+              <el-select v-model="registerForm.countryId" placeholder="请选择国家">
                 <el-option v-for="item in countryList" :key="item.id" :label="item.name"
-                           :value="item.name"></el-option>
+                           :value="item.id"></el-option>
               </el-select>
             </el-col>
           </el-row>
           <el-row :gutter="24" style="margin-bottom: 12px;">
             <el-col :span="12">
-              <el-input v-model="registerForm.local" placeholder="省/市/区、县"></el-input>
+              <!--              <el-input v-model="registerForm.local" placeholder="省/市/区、县"></el-input>-->
+              <area_select ref="area_select" @change="changeSelectAddress"/>
             </el-col>
           </el-row>
           <el-row :gutter="24">
@@ -62,12 +64,12 @@
 
         <el-row :gutter="24">
           <el-col :span="13">
-            <el-form-item label="电话号码" required>
+            <el-form-item label="电话号码" prop="phone" required>
               <el-input v-model="registerForm.phone" placeholder="请输入电话号码"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="11">
-            <el-form-item label="Instagram" required>
+            <el-form-item label="Instagram" prop="instagram" required>
               <el-input v-model="registerForm.instagram" placeholder="请输入账号"></el-input>
             </el-form-item>
           </el-col>
@@ -75,63 +77,62 @@
 
         <el-row :gutter="24">
           <el-col :span="13">
-            <el-form-item label="电子邮件" required>
+            <el-form-item label="电子邮件" prop="email" required>
               <el-input v-model="registerForm.email" placeholder="请输入电子邮件"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="11">
-            <el-form-item label="Facebook" required>
+            <el-form-item label="Facebook" prop="facebook" required>
               <el-input v-model="registerForm.facebook" placeholder="请输入账号"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
 
-
-        <el-form-item label="密码" required>
+        <el-form-item label="密码" prop="pass" required>
           <el-row :gutter="24" style="margin-bottom: 12px;">
             <el-col :span="12">
-              <el-input v-model="registerForm.password" type="password" placeholder="请输入密码"></el-input>
+              <el-input v-model="registerForm.pass" placeholder="请输入密码" type="password"></el-input>
             </el-col>
           </el-row>
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-input v-model="registerForm.newPassword" type="password" placeholder="请再次输入密码"></el-input>
+              <el-input v-model="registerForm.newPassword" placeholder="请再次输入密码" type="password"></el-input>
             </el-col>
           </el-row>
         </el-form-item>
       </el-form>
 
       <!-- 会员费用信息 -->
-      <div class="membership-card">
-        <div class="wrap">
-          <div class="top flex">
-            <div class="price-section">
-              <h3>会员制度 📝</h3>
-              <div class="column-flex-center price-info">
-                <p class="price">￥365</p>
-                <p class="date">会员期限：12个月</p>
-              </div>
-            </div>
-            <div class="terms">
-              <h3>会员权益说明</h3>
-              <p>这里可以填写会员权益的具体描述信息……</p>
-            </div>
-          </div>
-          <div class="pay-group">
-            <div class="title">支付方式：</div>
-            <div class="pay-items">
-              <div class="item" v-for="(item, index) in pay_method_list" @click="do_toggle_paytype(item)"
-                   :class="{ checked: pay_type_value == item.value }">
-                <img class="img-check check-0 check-img check-img-0" src="@/assets/image/common/check0.png" alt=""/>
-                <img class="img-check check-1 check-img check-img-1" src="@/assets/image/common/check1.png" alt=""/>
-                <span>{{ item.title }}</span>
-                <img class="marker-img" :src="item.icon" alt=""/>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <!--      <div class="membership-card">-->
+      <!--        <div class="wrap">-->
+      <!--          <div class="top flex">-->
+      <!--            <div class="price-section">-->
+      <!--              <h3>会员制度 📝</h3>-->
+      <!--              <div class="column-flex-center price-info">-->
+      <!--                <p class="price">￥365</p>-->
+      <!--                <p class="date">会员期限：12个月</p>-->
+      <!--              </div>-->
+      <!--            </div>-->
+      <!--            <div class="terms">-->
+      <!--              <h3>会员权益说明</h3>-->
+      <!--              <p>这里可以填写会员权益的具体描述信息……</p>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <div class="pay-group">-->
+      <!--            <div class="title">支付方式：</div>-->
+      <!--            <div class="pay-items">-->
+      <!--              <div v-for="(item, index) in pay_method_list" :class="{ checked: pay_type_value == item.value }"-->
+      <!--                   class="item"-->
+      <!--                   @click="do_toggle_paytype(item)">-->
+      <!--                <img alt="" class="img-check check-0 check-img check-img-0" src="@/assets/image/common/check0.png"/>-->
+      <!--                <img alt="" class="img-check check-1 check-img check-img-1" src="@/assets/image/common/check1.png"/>-->
+      <!--                <span>{{ item.title }}</span>-->
+      <!--                <img :src="item.icon" alt="" class="marker-img"/>-->
+      <!--              </div>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
 
       <!-- 同意条款 & 按钮 -->
       <div class="agreement-box">
@@ -140,7 +141,9 @@
             我已阅读并同意 <a href="#" @click="terms_open(92)">《隐私政策》</a>
           </el-checkbox>
 
-          <el-button type="primary" class="submit-btn" :disabled="!registerForm.agree" @click="do_confirm_submit">支付并注册</el-button>
+          <el-button :disabled="!registerForm.agree" class="submit-btn" type="primary" @click="do_confirm_submit">
+            支付并注册
+          </el-button>
 
           <!-- 已有账号提示 -->
           <div class="login-link">
@@ -154,41 +157,52 @@
 </template>
 
 <script>
-import terms_modal from "@/components/account/terms_modal.vue"; //协议弹窗
+import terms_modal from "@/components/account/terms_modal.vue";
+import area_select from "@/components/address/area_select.vue"; //协议弹窗
 export default {
   data() {
     return {
-      pay_type_value: 'paypal',
-      registerForm: {
-        name: "",
-        company: "",
-        country: "",
-        city: "",
-        detail: "",
-        phone: "",
-        email: "",
-        password: "",
-        instagram: "",
-        facebook: "",
-        payment: {
-          wechat: false,
-          alipay: false,
-          paypal: false,
-          bank: false,
-        },
-        agree: false,
+      pay_type_value: '',
+      registerForm: {},
+      registerRules: {
+        name: [
+          {required: true, message: "请输入姓名", trigger: "blur"},
+          {min: 2, max: 10, message: "长度在 2 到 10 个字符", trigger: "blur"},
+        ],
+        company: [
+          {required: true, message: "请输入公司名称", trigger: "blur"},
+          {min: 2, max: 10, message: "长度在 2 到 10 个字符", trigger: "blur"},
+        ],
+        zipCode: [
+          {required: true, message: "请输入邮政编码", trigger: "blur"},
+          {min: 6, max: 6, message: "长度为 6 位", trigger: "blur"},
+        ],
+        phone: [
+          {required: true, message: "请输入电话号码", trigger: "blur"},
+          {min: 11, max: 11, message: "长度为 11 位", trigger: "blur"},
+        ],
+        email: [
+          {required: true, message: "请输入邮箱", trigger: "blur"},
+          {type: "email", message: "请输入正确的邮箱地址", trigger: ["blur", "change"]},
+        ],
+        password: [{required: true, message: "请输入密码", trigger: "blur"}],
+        newPassword: [{required: true, message: "请再次输入密码", trigger: "blur"}],
+        agree: [{required: true, message: "请同意隐私政策", trigger: "change"}],
+        instagram: [{required: true, message: "请输入Instagram账号", trigger: "blur"}],
+        facebook: [{required: true, message: "请输入Facebook账号", trigger: "blur"}]
       },
       countryList: [],
       pay_method_list: [
         {value: 'weixin', title: '微信支付', icon: require('@img/pay-method/type-weixin.png')},
         {value: 'zhifubao', title: '支付宝支付', icon: require('@img/pay-method/type-zfb.png')},
         // { value: 'xianxia', title: '线下转款', icon: require('@img/pay-method/type-xianxia.png') },
-        { value: 'paypal', title: 'PayPal', icon: require('@img/pay-method/type-paypal.png') },
+        {value: 'paypal', title: 'PayPal', icon: require('@img/pay-method/type-paypal.png')},
         // {value: 'yue', title: '余额支付', icon: require('@img/pay-method/type-yue.png')},
       ],
     };
   },
   components: {
+    area_select,
     terms_modal
   },
   mounted() {
@@ -224,13 +238,44 @@ export default {
     },
 
     do_confirm_submit() {
-      let params = this.get_pay_params();
+      this.$refs.registerForm.validate((valid) => {
+        if (valid) {
+          this.login();
+          // if (this.pay_type_value) {
+          //   this.login();
+          // } else {
+          //   alertErr("请选择支付方式");
+          // }
+        }
+      })
+    },
+
+    login() {
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'login_emailAndPhoneReg',
+          ...this.registerForm
+        },
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message.success(res.msg);
+          setTimeout(() => {
+            this.$router.push('/login');
+          }, 2000)
+          // this.do_submit();
+        }
+      })
+    },
+
+    do_submit() {
       this.$api({
         url: '/service.php',
         method: 'get',
         data: {
           action: 'orders_create',
-          ...params,
+          ...this.registerForm,
           billInfo: JSON.stringify(this.form)
         },
       }).then((res) => {
@@ -244,6 +289,19 @@ export default {
 
     terms_open(id) {
       this.$refs.terms_modal.init(id);
+    },
+    //更新当前父组件数据
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      let {sheng, shi, qu} = data;
+      // this.registerForm.province = sheng.title;
+      // this.registerForm.city = shi.title;
+      // this.registerForm.area = qu.title;
+
+      this.registerForm.province = sheng.id;
+      this.registerForm.city = shi.id;
+      this.registerForm.areaId = qu.id;
+      // debugger
     },
   }
 };
@@ -433,13 +491,17 @@ export default {
 
 .agreement-box {
   padding-bottom: 50px;
+
   .wrap {
     width: 478px;
     margin: 0 auto;
   }
+
   background-color: #fff;
+
   .agreement {
     margin-top: 20px;
+
     a {
       color: #000;
     }
@@ -460,6 +522,7 @@ export default {
     font-size: 18px;
     text-align: center;
     margin-top: 60px;
+
     a {
       color: red;
       border-bottom: 1px solid #A9151C;

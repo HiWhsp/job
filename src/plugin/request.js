@@ -68,7 +68,7 @@ axios.interceptors.response.use(
                     alertErr(res.data.message);
                 }
             }
-        } else if (code !== 200) {
+        } else if (code && code !== 200) {
             alertErr(res.msg)
         }
         return res;

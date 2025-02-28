@@ -36,31 +36,34 @@
                 官方指导价
               </div>
               <div class="detail-price">
-                CN ￥{{  info.priceSale }}
+                CN ￥{{ info.priceSale }}
               </div>
-              <div class="detail-txt ellipsis-3">{{ detail.jianjie }}</div>
+              <div class="detail-txt ellipsis-3">{{ detail.jianjie || '暂无简介' }}</div>
 
               <div class="btn-box">
-                <el-input-number :min="1" :max="detail.kucun" v-model="selected_num"></el-input-number>
-                <div class="btn-buy" @click="do_add_cart"><img src="@/assets/image/product/cart.png" alt="">添加到购物车</div>
+                <el-input-number v-model="selected_num" :max="detail.kucun" :min="1"></el-input-number>
+                <div class="btn-buy" @click="do_add_cart"><img alt="" src="@/assets/image/product/cart.png">添加到购物车
+                </div>
                 <div class="like" @click="goLike">
-                  <img src="@/assets/image/product/like.png" alt="">
+                  <img v-if="detail.ifShoucang == 0" alt="" src="@/assets/image/product/like.png">
+                  <img v-else alt="" src="@/assets/image/product/like-active.png">
                 </div>
               </div>
               <div class="left-articles">
                 <span>分享：</span>
                 <div class="article-item">
-                  <a href="/terms?id=100">
-                    <img src="@/assets/image/product/article1.png" alt="">
+                  <a :href="vuex_config.shareImg">
+                    <img alt="" src="@/assets/image/product/article1.png">
                   </a>
                 </div>
                 <div class="article-item">
-                  <a href="/terms?id=100">
-                    <img src="@/assets/image/product/article2.png" alt="">
+                  <a :href="vuex_config.shareImg">
+                    <img alt="" src="@/assets/image/product/article2.png">
                   </a>
                 </div>
               </div>
-              <div class="down-btn-buy" @click="downImg"><img src="@/assets/image/product/down.png" alt="">图片高清下载</div>
+              <div class="down-btn-buy" @click="downImg"><img alt="" src="@/assets/image/product/down.png">图片高清下载
+              </div>
             </div>
           </div>
 
@@ -70,21 +73,21 @@
                 <div class="ctx-bottom">
                   <div class="ctx-bottom-inner">
                     <div class="bottom-nav flex">
-                      <div class="nav-item" @click="togglePanel('型号说明')"
-                           :class="active_panel == '型号说明' ? 'active' : ''">
+                      <div :class="active_panel == '型号说明' ? 'active' : ''" class="nav-item"
+                           @click="togglePanel('型号说明')">
                         型号说明
                       </div>
 
-                      <div class="nav-item" @click="togglePanel('车辆描述')"
-                           :class="active_panel == '车辆描述' ? 'active' : ''">
+                      <div :class="active_panel == '车辆描述' ? 'active' : ''" class="nav-item"
+                           @click="togglePanel('车辆描述')">
                         车辆描述
                       </div>
                     </div>
 
-                    <div class="detail-content-box" v-if="active_panel == '型号说明'">
+                    <div v-if="active_panel == '型号说明'" class="detail-content-box">
                       <div class="rich-html" v-html="detail.content"></div>
                     </div>
-                    <div class="comment-box" v-if="active_panel == '车辆描述'">
+                    <div v-if="active_panel == '车辆描述'" class="comment-box">
                       <div class="rich-html" v-html="detail.cont2"></div>
                     </div>
                   </div>
@@ -93,10 +96,10 @@
                   <div class="main-title">相关产品</div>
 
                   <div class="product-list">
-                    <div class="product-item" v-for="(item, index) in list_goods" :key="index">
+                    <div v-for="(item, index) in list_goods" :key="index" class="product-item">
                       <div class="product-item-info">
                         <div class="img-box" @click="toDetail(item)">
-                          <img :src="item.thumb" class="product-img" />
+                          <img :src="item.thumb" class="product-img"/>
                           <!-- <shouqing :kucun="goods.kucun" /> -->
                         </div>
                         <div class="info-box">
@@ -112,16 +115,16 @@
                               <span class="value"> {{ item.priceSale }} </span>
                             </div>
                             <div class="market">
-                              <img src="@/assets/image/product/like.png" alt="">
-                              <img src="@/assets/image/product/cartAdd.png" alt="">
+                              <img alt="" src="@/assets/image/product/like.png">
+                              <img alt="" src="@/assets/image/product/cartAdd.png">
                             </div>
                           </div>
                         </div>
-                        <div class="act-info" v-if="is_show_check">
+                        <div v-if="is_show_check" class="act-info">
                           <div class="img-check-box flex-center" @click.stop="do_toggle_check(item)">
-                            <img v-if="item.checked" src="@/static/common/check1.png" alt="" class="img-check check-1" />
+                            <img v-if="item.checked" alt="" class="img-check check-1" src="@/static/common/check1.png"/>
                             <!-- <img v-else src="@/static/common/check0.png" alt="" class="img-check check-0" /> -->
-                            <img v-else src="@/static/common/check00.png" alt="" class="img-check check-0" />
+                            <img v-else alt="" class="img-check check-0" src="@/static/common/check00.png"/>
                           </div>
                         </div>
                       </div>
@@ -295,13 +298,19 @@ export default {
         method: 'get',
         data: {
           action: 'product_operate',
-          productId: this.detail.id,
+          productId: this.detail.productId,
           operateType: '1',
-          operateSence: '0'
+          operateSence: this.detail.ifShoucang == 0 ? '0' : '1'
         }
       }).then(res => {
         if (res.code == 200) {
-          alertSucc('操作成功')
+          if (this.detail.ifShoucang == 0) {
+            this.detail.ifShoucang = 1
+            this.$message.success('收藏成功')
+          } else {
+            this.detail.ifShoucang = 0;
+            this.$message.success('已取消收藏')
+          }
         }
       })
     },
@@ -316,9 +325,20 @@ export default {
           id: this.detail.productId
         }
       }).then(res => {
-        if (res.code == 200) {
-          alertSucc('操作成功')
-        }
+        // 创建 Blob 对象，设置正确的 MIME 类型
+        const blob = new Blob([res], {type: 'application/x-tar'});
+        let fileName = 'archive.tar'; // 默认文件名
+        // 创建临时下载链接
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', fileName); // 设置下载文件名
+        document.body.appendChild(link);
+        link.click();
+
+        // 清理临时链接
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
       })
     },
 
@@ -822,7 +842,7 @@ export default {
 }
 </style>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .page-top {
   padding: 24px 0;
   position: relative;
@@ -1715,7 +1735,7 @@ export default {
     text-align: center;
     overflow: hidden;
     cursor: pointer;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     background: #FFFFFF;
 
     &:nth-child(4n) {
@@ -1786,6 +1806,7 @@ export default {
         margin-top: 5px;
         display: flex;
         justify-content: space-between;
+
         .sale {
           span {
             font-family: OPPOSans, OPPOSans;
@@ -1800,6 +1821,7 @@ export default {
           img {
             width: 21px;
           }
+
           img:first-child {
             margin-right: 30px;
           }
@@ -1865,6 +1887,6 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/page/product-detail.less"></style>
+<style lang="less" scoped src="@/assets/h5css/page/product-detail.less"></style>
 
-<style scoped lang="less" src="@/assets/h5css/mobile/product-detail.less"></style>
+<style lang="less" scoped src="@/assets/h5css/mobile/product-detail.less"></style>
