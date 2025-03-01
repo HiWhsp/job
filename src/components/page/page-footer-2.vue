@@ -15,19 +15,19 @@
 
             <div class="left-articles">
               <div class="article-item">
-                <router-link to="/terms?id=100">
-                  <img src="@/assets/image/footer/fackback.png" alt=""/>
-                </router-link>
+                <a :href="vuex_config.twitter_url">
+                  <img :src="vuex_config.twitter_img" alt=""/>
+                </a>
               </div>
               <div class="article-item">
-                <router-link to="/terms?id=101">
-                  <img src="@/assets/image/footer/feishu.png" alt=""/>
-                </router-link>
+                <a :href="vuex_config.facebook_url">
+                  <img :src="vuex_config.facebook_img" alt=""/>
+                </a>
               </div>
               <div class="article-item">
-                <router-link to="/terms?id=101">
-                  <img src="@/assets/image/footer/weibo.png" alt=""/>
-                </router-link>
+                <a :href="vuex_config.weibo_url">
+                  <img :src="vuex_config.weibo_img" alt=""/>
+                </a>
               </div>
             </div>
           </div>
@@ -64,7 +64,7 @@
                   <img src="@/assets/image/footer/play.png" alt=""/>
                 </div>
 
-                <!-- <span> 
+                <!-- <span>
                   {{ vuex_config.comAddress }}
                 </span> -->
               </div>
