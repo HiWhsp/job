@@ -43,13 +43,13 @@
                       <div v-for="(item, index)  in list_goods" :key="index" class="product-item"
                            @click="toDetail(item)">
                         <div class="poster-box scale-box">
-                          <img :src="item.img" alt="" class="poster scale-img">
+                          <img :src="item.thumb" alt="" class="poster scale-img">
                         </div>
                         <div class="info-box">
-                          <div class="title ellipsis-2">12323</div>
+                          <div class="title ellipsis-2">{{ item.title }}</div>
                           <div class="pirce-box">
                             <div class="price-info">
-                              <div class="price-1">298.00</div>
+                              <div class="price-1">{{ vuex_huobi }}{{ item.priceSale }}</div>
                             </div>
                           </div>
                         </div>
@@ -220,6 +220,23 @@ export default {
     },
 
     setView() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_plist",
+          ifShowSku: 1,
+          channelId: '819',
+          page: 1,
+          pageNum: 4,
+        },
+      }).then((res) => {
+        let {code, data, count} = res;
+        if (code == 200) {
+          let {list, count, pages} = data;
+          this.list_goods = list;
+        }
+      });
       this.query_product_detail()
     },
 
@@ -262,7 +279,6 @@ export default {
       });
     },
 
-
     showLoading() {
       this.loadingInstance = Loading.service({
         lock: true,
@@ -287,7 +303,6 @@ export default {
       // });
     },
 
-
     //查询评论列表
     query_reviews() {
       this.$api({
@@ -305,7 +320,6 @@ export default {
         }
       });
     },
-
 
     add_history_record() {
       this.$api({

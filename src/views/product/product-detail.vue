@@ -112,16 +112,16 @@
                       <div v-for="(item, index)  in list_goods" :key="index" class="product-item"
                            @click="toDetail(item)">
                         <div class="poster-box scale-box">
-                          <img :src="item.img" alt="" class="poster scale-img">
+                          <img :src="item.thumb" alt="" class="poster scale-img">
                         </div>
                         <div class="info-box">
-                          <div class="title ellipsis-2">12323</div>
+                          <div class="title ellipsis-2">{{ item.title }}</div>
                           <div class="pirce-box">
                             <div class="price-info">
-                              <div class="price-1">￥298.00</div>
+                              <div class="price-1">￥{{ item.priceSale }}</div>
                             </div>
                             <div class="yishou">
-                              限量50台
+                              限量{{ item.kucun }}台
                             </div>
                           </div>
                         </div>
@@ -297,7 +297,7 @@ export default {
           action: "product_downloadImage",
           id: this.info.productId
         },
-      }).then(res=>{
+      }).then(res => {
         // 创建 Blob 对象
         const blob = new Blob([res]);
         let fileName = 'downloaded_img.tar'; // 默认文件名
@@ -341,7 +341,6 @@ export default {
           // this.reviews = data.commentList;
           this.query_reviews(); //评论
 
-
           this.curr = data;
           this.detail = data;
           this.swiperImgs = data.images;
@@ -352,6 +351,24 @@ export default {
 
           this.posterSrc = data.images[0];
           this.set_sku(data);
+
+          this.$api({
+            url: "/service.php",
+            method: "get",
+            data: {
+              action: "product_plist",
+              ifShowSku: 1,
+              channelId: this.info.channelId,
+              page: 1,
+              pageNum: 4
+            },
+          }).then((res) => {
+            let {code, data, count} = res;
+            if (code == 200) {
+              let {list, count, pages} = data;
+              this.list_goods = list;
+            }
+          });
         } else {
           if (message == "商品不存在或已下架") {
             this.$router.push("/");

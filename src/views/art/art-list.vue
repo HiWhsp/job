@@ -239,6 +239,7 @@ export default {
             height: 302px;
             background: #1F1C1F;
             margin-bottom: 20px;
+            margin-right: 10px;
 
             .box-image {
               width: 100%;
