@@ -4,10 +4,10 @@
     <!-- <el-dialog :visible.sync="dialogVisible">
       <img width="100%" :src="dialogImageUrl" alt="" />
     </el-dialog> -->
-    <div class="page-title flex-between">
-      <span>查看订单详情</span>
-      <!--      <button @click="$router.push('/order-list')">返回</button>-->
-    </div>
+<!--    <div class="page-title flex-between">-->
+<!--      <span>查看订单详情</span>-->
+<!--      &lt;!&ndash;      <button @click="$router.push('/order-list')">返回</button>&ndash;&gt;-->
+<!--    </div>-->
 
     <div class="page-ctx">
 
@@ -628,7 +628,7 @@ export default {
     line-height: 56px;
     font-size: 16px;
     font-weight: bold;
-    color: #fff;
+    color: #000;
 
     button {
       min-width: 96px;
@@ -643,8 +643,6 @@ export default {
 }
 
 .page-ctx {
-  margin-top: 24px;
-  padding: 24px 32px;
 }
 
 .step-box {
@@ -728,12 +726,12 @@ export default {
     padding-left: 24px;
     height: 48px;
     line-height: 48px;
-    background: #5A5A5A;
+    border-bottom: 1px solid #4D4D4D;
 
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: bold;
-    color: #fff;
+    color: #000;
   }
 
   .base-items {
@@ -755,7 +753,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #fff;
+        color: #000;
         margin-bottom: 10px;
       }
 
@@ -765,7 +763,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 20px;
-        color: #fff;
+        color: #000;
 
         > div {
           margin-bottom: 5px;
@@ -800,7 +798,7 @@ export default {
         display: flex;
         align-items: start;
         position: relative;
-        color: #fff;
+        color: #000;
         font-size: 14px;
         padding-left: 40px;
         height: 50px;
@@ -933,12 +931,11 @@ export default {
       justify-content: space-between;
       height: 48px;
       padding: 0 24px;
-      background: #5a5a5a;
 
       font-size: 14px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
       font-weight: bold;
-      color: #fff;
+      color: #000;
 
       .date {
       }
@@ -957,8 +954,7 @@ export default {
         height: 30px;
         line-height: 30px;
         // background: #F74747;
-        color: #fff;
-        // color: #fff;
+        color: #000;
         font-size: 14px;
       }
     }
@@ -1008,7 +1004,7 @@ export default {
             flex: 1;
             text-align: left;
             padding-left: 40px;
-            color: #fff;
+            color: #000;
 
             .title {
               width: fit-content;
@@ -1028,7 +1024,7 @@ export default {
           .box-num {
             text-align: center;
             min-width: 200px;
-            color: #fff;
+            color: #000;
           }
 
           .box-price {
@@ -1038,7 +1034,7 @@ export default {
             font-family: OPPOSans, OPPOSans;
             font-weight: 400;
             font-size: 14px;
-            color: #fff;
+            color: #000;
           }
         }
 
@@ -1060,7 +1056,7 @@ export default {
             background: #f74747;
             font-size: 14px;
             font-family: Microsoft YaHei;
-            color: #ffffff;
+            color: #000;
             // border-radius: 14px;
             transition: 0.3s;
             border-radius: 4px;
@@ -1081,7 +1077,6 @@ export default {
   // 商品信息汇总和订单操作
 
   .info-heji {
-    background: #2F2F2F;
     padding: 24px 40px;
     //   display: flex;
     justify-content: space-between;
@@ -1090,14 +1085,14 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 20px;
-    color: #fff;
+    color: #000;
 
     .money-box {
       text-align: right;
 
       .count {
         font-weight: bold;
-        color: #fff;
+        color: #000;
       }
 
       .money-item {
@@ -1113,7 +1108,7 @@ export default {
           font-family: Arial, Arial;
           font-weight: 400;
           font-size: 14px;
-          color: #fff;
+          color: #000;
         }
 
         .value {
@@ -1121,7 +1116,7 @@ export default {
           font-family: Arial, Arial;
           font-weight: 400;
           font-size: 14px;
-          color: #fff;
+          color: #000;
         }
 
         .money-num {
@@ -1129,7 +1124,7 @@ export default {
             font-family: Arial, Arial;
             font-weight: bold;
             font-size: 20px;
-            color: #fff;
+            color: #000;
           }
         }
       }
@@ -1151,7 +1146,7 @@ export default {
         border: 1px solid #4D4D4D;
         font-weight: 400;
         font-size: 14px;
-        color: #fff;
+        color: #000;
 
         & + button {
           margin-left: 20px;

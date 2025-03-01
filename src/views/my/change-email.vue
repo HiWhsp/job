@@ -17,7 +17,7 @@
       <div class="form-container" v-if="nextIndex === 1">
         <el-form ref="form" :model="form" :rules="rules" label-width="110px">
           <el-form-item label="验证电子邮箱：" prop="email">
-            <span>815625979@qq.com</span>
+            <span>{{ baseInfo.email }}</span>
           </el-form-item>
           <el-form-item label="验证码：" prop="code">
             <div class="flex">
@@ -63,7 +63,7 @@ export default {
     return {
       nextIndex: 1,
       form: {
-        email: '815625979@qq.com',
+        email: "",
         code: ''
       },
       rules: {
@@ -79,6 +79,7 @@ export default {
         this.$refs.form.validate((valid) => {
           if (valid) {
             this.nextIndex++
+            this.form.code = ''
           } else {
             return false
           }

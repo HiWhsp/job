@@ -16,12 +16,15 @@
           <span class="name">{{ my_info.realName || "未设置" }}</span>
           <div class="vip">
             <img alt="" src="@/assets/image/product/vip.png"/>
-            <span>已开通</span>
+            <span>{{ baseInfo.is_member ? "已开通" : '未开通' }}</span>
           </div>
         </div>
-        <div class="card">会员卡号：2023123456789</div>
+        <div class="card">会员卡号：{{  baseInfo.sn || '无' }}</div>
         <div class="status">状态：正常</div>
-        <div class="date">期限：剩余 <span>50</span> 天 2023-06-12 到期</div>
+        <div class="date flex">期限：
+          <p v-if="baseInfo.expire_time">剩余 <span>50</span> 天 2023-06-12 到期</p>
+          <p v-else>暂未开通</p>
+        </div>
       </div>
       <div class="section">
         <div class="item">
@@ -34,7 +37,7 @@
         <div class="item">
           <div class="left">
             <h3>修改邮箱</h3>
-            <span>您的电子邮箱是：815625979@qq.com</span>
+            <span>您的电子邮箱是：{{ baseInfo.email }}</span>
           </div>
           <div class="right" @click="open_update('email')">修改</div>
         </div>

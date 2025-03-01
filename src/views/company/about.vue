@@ -12,7 +12,7 @@
       <!-- 产品列表 start -->
       <div class="product-list w-1400">
         <h2 class="title">公司介绍</h2>
-        <p v-html="vuex_config.comDesc"></p>
+        <p v-html="content"></p>
       </div>
       <!-- 产品列表 end -->
     </div>
@@ -23,7 +23,9 @@ import { mapState } from "vuex";
 export default {
   name: "index",
   data() {
-    return {};
+    return {
+      content: ''
+    };
   },
 
   computed: {
@@ -35,7 +37,18 @@ export default {
   mounted() {
   },
   methods: {
-    setView() {},
+    setView() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "news_detail",
+          id: 95
+        },
+      }).then((res) => {
+        this.content = res.data.info.content
+      })
+    },
   },
 };
 </script>

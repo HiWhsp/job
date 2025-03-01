@@ -17,12 +17,15 @@
           <span class="name">{{ my_info.realName || "未设置" }}</span>
           <div class="vip">
             <img alt="" src="@/assets/image/product/vip.png"/>
-            <span>已开通</span>
+            <span>{{ baseInfo.is_member ? "已开通" : '未开通' }}</span>
           </div>
         </div>
-        <div class="card">会员卡号：2023123456789</div>
+        <div class="card">会员卡号：{{  baseInfo.sn || '无' }}</div>
         <div class="status">状态：正常</div>
-        <div class="date">期限：剩余 <span>50</span> 天 2023-06-12 到期</div>
+        <div class="date flex">期限：
+          <p v-if="baseInfo.expire_time">剩余 <span>50</span> 天 2023-06-12 到期</p>
+          <p v-else>暂未开通</p>
+        </div>
       </div>
       <div class="section">
         <el-form ref="form" :model="form" label-position="top" label-width="100px">
@@ -56,9 +59,13 @@
             </el-col>
           </el-row>
           <el-form-item label="国家/地区">
-            <el-select v-model="form.country" placeholder="选择国家">
-              <el-option label="中国" value="China"></el-option>
+            <el-select v-model="form.countryId" placeholder="选择国家">
+              <el-option v-for="item in countryList" :key="item.id" :label="item.name"
+                         :value="item.id"></el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="详细地址">
+            <area_select ref="area_select" @change="changeSelectAddress"/>
           </el-form-item>
           <el-form-item label="详细地址">
             <el-input v-model="form.address"/>
@@ -76,7 +83,7 @@
               <el-button :loading="loading" class="btn-ripple fit-text btn-save"
                          @click="throttle_do_submit()">保存
               </el-button>
-<!--              <button class="btn-ripple fit-text btn-cancel" @click="do_reset()">清空</button>-->
+              <!--              <button class="btn-ripple fit-text btn-cancel" @click="do_reset()">清空</button>-->
             </div>
           </div>
         </div>
@@ -90,7 +97,7 @@
 
 <script>
 import {UPLOAD_ACTION, UPLOAD_NAME} from '@/config/env.js'
-
+import area_select from "@/components/address/area_select.vue"; //协议弹窗
 import phone_bind_old_check_modal from "@/components/account/phone_bind_old_check_modal.vue";
 import phone_bind_new_set_modal from "@/components/account/phone_bind_new_set_modal.vue";
 
@@ -102,18 +109,15 @@ export default {
   components: {
     phone_bind_old_check_modal,
     phone_bind_new_set_modal,
+    area_select
   },
   data() {
     return {
       UPLOAD_ACTION,
       UPLOAD_NAME,
-
+      countryList: [],
       my_info: {},
-      form: {
-        image: "",
-        realName: "",
-        address: "",
-      },
+      form: {},
       loading: false,
     };
   },
@@ -141,8 +145,31 @@ export default {
     },
 
     setView() {
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'index_getArea',
+          country: 1
+        },
+      }).then(res => {
+        if (res.code == 200) {
+          this.countryList = res.data
+        }
+      })
       this.query_user();
     },
+
+    //更新当前父组件数据
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      let {sheng, shi, qu} = data;
+      this.form.province = sheng.id;
+      this.form.city = shi.id;
+      this.form.areaId = qu.id;
+      // debugger
+    },
+
     query_user() {
       // this.$store.dispatch("query_user");
       this.$api({
@@ -155,13 +182,16 @@ export default {
         if (res.code == 200) {
           let data = res.data;
           this.my_info = data;
-
-          this.form = {
-            image: data.image || "",
-            realName: data.realName || "",
-            address: data.address || "",
-          };
-
+          this.form = data
+          const addrData = {
+            provinceCode: data.province,
+            province: data.province,
+            cityCode: data.city,
+            city: data.city,
+            areaCode: data.area,
+            area: data.area,
+          }
+          this.$refs.area_select.init(addrData);
 
           this.$store.commit("set_baseInfo", res.data);
         }
@@ -175,7 +205,15 @@ export default {
         method: 'get',
         data: {
           action: 'users_editInfo',
-          ...this.form
+          ...{
+            firstName: this.form.firstName,
+            lastName: this.form.lastName,
+            phone: this.form.phone,
+            email: this.form.email,
+            countryId: this.form.countryId,
+            address: this.form.address,
+            postCode: this.form.postCode
+          }
         },
       }).then((res) => {
         let {code, msg, data} = res;
@@ -195,7 +233,6 @@ export default {
         address: "",
       };
     },
-
 
     //上传相关
     upload_on_success(res, file) {

@@ -140,7 +140,7 @@ export default {
         {value: 2, title: "待发货", num: user_index.order_num_2 || 0},
         {value: 3, title: "待收货", num: user_index.order_num_3 || 0},
         // { value: 4, title: "待核销", num: user_index.order_num_4 || 0 },
-        {value: 6, title: "待评价", num: user_index.order_num_4 || 0},
+        // {value: 6, title: "待评价", num: user_index.order_num_4 || 0},
         {value: 5, title: "已完成", num: user_index.order_num_4 || 0},
         {value: 7, title: "已取消", num: user_index.order_num_4 || 0},
         // { value: 6, title: "待审核", num: user_index.order_num_6 || 0 },
