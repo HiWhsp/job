@@ -29,7 +29,7 @@
             </div>
             <div class="info-item">
               <div class="icon-box">
-                <img src="@/assets/image/contact/facebook.png" alt="">
+                <img src="@/assets/image/contact/WhatsApp.png" alt="">
               </div>
               <div class="title">
                 WhatsApp

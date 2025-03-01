@@ -346,9 +346,7 @@ export default {
     font-size: 14px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
-
-    &:last-child {
-    }
+    color: #fff;
 
     &.item-title {
       background: #5A5A5A;
@@ -401,8 +399,6 @@ export default {
       &.val {
         font-size: 18px;
         font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-        font-weight: bold;
-        // color: #fc5a00;
       }
     }
 
