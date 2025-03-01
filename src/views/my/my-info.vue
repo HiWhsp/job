@@ -189,7 +189,7 @@ export default {
             cityCode: data.city,
             city: data.city,
             areaCode: data.area,
-            area: data.area,
+            area: data.areaId,
           }
           this.$refs.area_select.init(addrData);
 
@@ -212,7 +212,10 @@ export default {
             email: this.form.email,
             countryId: this.form.countryId,
             address: this.form.address,
-            postCode: this.form.postCode
+            postCode: this.form.postCode,
+            province: this.form.province,
+            city: this.form.city,
+            areaId: this.form.areaId
           }
         },
       }).then((res) => {
