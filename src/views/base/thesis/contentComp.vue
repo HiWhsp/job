@@ -224,7 +224,7 @@ export default {
         this.form = {
           phone: val.phone,
           name: val.name,
-          unit_school: val.unit_school,
+          unit_school: val.unit_group || val.unit_name,
           email: val.email
         }
       },
