@@ -85,6 +85,38 @@ export default {
       };
       return data;
     },
+    // 订单状态
+    getStatus() {
+      return function (status) {
+        switch (status) {
+          case 10:
+            return '待支付';
+          case 20:
+            return '待实验';
+          case 30:
+            return '实验中';
+          case 40:
+            return '已完成';
+          case 50:
+            return '售后';
+        }
+      }
+    },
+    // 样品状态 1待寄送 2待接收 3 已接收 4待回收
+    getYpStatus() {
+      return function (status) {
+        switch (status) {
+          case 1:
+            return '待寄送';
+          case 2:
+            return '待接收';
+          case 3:
+            return '已接收';
+          case 4:
+            return '待回收';
+        }
+      }
+    }
   },
 
   filters: {

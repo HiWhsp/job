@@ -170,14 +170,14 @@ export default {
 
       <div class="search-filter">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
-          <el-form-item label="订单编号" prop="orderSn">
+          <el-form-item label="订单编号" prop="orderId">
             <el-input
                 v-model="queryParams.orderId"
                 placeholder="请输入订单号"
                 clearable
             />
           </el-form-item>
-          <el-form-item label="测试项目" prop="phone">
+          <el-form-item label="测试项目" prop="title">
             <el-input
                 v-model="queryParams.title"
                 placeholder="请输入测试项目"
@@ -228,7 +228,7 @@ export default {
               <p>{{ scope.row.order.title }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="date" label="仪器型号"></el-table-column>
+          <el-table-column prop="model_no" label="仪器型号"></el-table-column>
           <el-table-column prop="price" label="金额">
             <template slot-scope="scope">
               <p>{{ scope.row.order.price }}</p>
@@ -236,7 +236,7 @@ export default {
           </el-table-column>
           <el-table-column prop="price" label="样品数">
             <template slot-scope="scope">
-              <p>{{ scope.row.order.price }}</p>
+              <p>{{ scope.row.order.yp_num }}</p>
             </template>
           </el-table-column>
           <el-table-column prop="contact_user" label="对接人"></el-table-column>
@@ -253,14 +253,14 @@ export default {
           </el-table-column>
           <el-table-column prop="yp_status" label="样品状态">
             <template slot-scope="scope">
-              <p>{{ getYpStatus(scope.row.yp_status) }}</p>
+              <p>{{ getYpStatus(scope.row.yp_status) || '--' }}</p>
             </template>
           </el-table-column>
           <el-table-column prop="created_at" label="寄样时间"></el-table-column>
           <el-table-column prop="updated_at" label="完成时间"></el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
-              <el-button size="mini" @click="goUrl('/supplier-order-detail')">查看</el-button>
+              <el-button size="mini" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">查看</el-button>
             </template>
           </el-table-column>
         </el-table>

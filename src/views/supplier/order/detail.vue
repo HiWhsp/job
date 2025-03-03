@@ -3,7 +3,10 @@ export default {
   name: "detail",
   data() {
     return {
-      process: 1,
+      process: 1, // 订单类型
+      orderId: '', // 订单号
+      orderDetail: {}, // 订单详情
+      storeOrderInfo: {}, // 订单信息
       remarkDialogVisible: false, // 备注
       updateResultVisible: false, // 上传结果
       dissentDialogVisible: false, // 异议
@@ -15,7 +18,7 @@ export default {
   },
   computed: {
     typeType() {
-      switch (this.process) {
+      switch (this.orderDetail.status) {
         case '1':
           return '待寄送'
         case '2':
@@ -44,11 +47,23 @@ export default {
     }
   },
   mounted() {
-    this.process = this.$route.query.type
+    this.orderId = this.$route.query.orderId;
+    this.setView();
   },
   methods: {
-    goUrl(item) {
-      this.$router.push(item.url)
+    setView() {
+      this.$api({
+        url: 'store/order_detail',
+        method: 'post',
+        data: {
+          orderId: this.orderId
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.orderDetail = res.data;
+          this.storeOrderInfo = res.data.storeOrderInfo || {};
+        }
+      })
     },
     // 备注
     remarkDialog() {
@@ -72,7 +87,13 @@ export default {
     },
     // 查看预约单
     checkDialog() {
-
+      this.$api({
+        url: 'download_order',
+        method: 'post',
+        data: {
+          orderno: this.orderDetail.orderno
+        }
+      })
     },
     // 申请结算
     applySettlement() {
@@ -90,7 +111,7 @@ export default {
       </div>
       <div class="info">
         <p class="order-id">订单号：5456412312312</p>
-        <p class="time">{{ typeType }}</p>
+        <p class="time">{{ getStatus(orderDetail.status) }}</p>
       </div>
     </div>
     <div class="address-item">
@@ -99,35 +120,35 @@ export default {
         <div class="info-wrap">
           <div class="left-content">
             <p class="detail">
-              <span>项目名称：</span>氧氮氢分析仪
+              <span>项目名称：</span>{{ orderDetail.product_info ? orderDetail.product_info.title : '-' }}
             </p>
             <p class="detail">
-              <span>仪器型号：</span>这里是仪器型号
+              <span>仪器型号：</span>{{ storeOrderInfo.model_no }}
             </p>
             <p class="detail">
-              <span>订单收入：</span>2000.00元
-            </p>
-          </div>
-          <div class="left-content">
-            <p class="detail">
-              <span>对接人：</span>徐老师
-            </p>
-            <p class="detail">
-              <span>联系方式：</span>15931263165
-            </p>
-            <p class="detail">
-              <span>寄送地址：</span>厦门市集美区杏林湾路465号1号楼2560单元
+              <span>订单收入：</span>{{ orderDetail.price }}元
             </p>
           </div>
           <div class="left-content">
             <p class="detail">
-              <span>样品状态：</span>待寄送
+              <span>对接人：</span>{{ storeOrderInfo.contact_user }}
             </p>
             <p class="detail">
-              <span>寄样时间：</span>-
+              <span>联系方式：</span>{{ storeOrderInfo.contact_tel }}
             </p>
             <p class="detail">
-              <span>完成时间：</span>-
+              <span>寄送地址：</span>{{ storeOrderInfo.fenbu }}
+            </p>
+          </div>
+          <div class="left-content">
+            <p class="detail">
+              <span>样品状态：</span>{{ getYpStatus(storeOrderInfo.yp_status) || '--' }}
+            </p>
+            <p class="detail">
+              <span>寄样时间：</span>{{ orderDetail.created_at }}
+            </p>
+            <p class="detail">
+              <span>完成时间：</span>{{ orderDetail.updated_at }}
             </p>
           </div>
           <div class="btn-wrap">
@@ -145,65 +166,42 @@ export default {
         <div class="info-row">
           <span class="label">实验有问题联系人</span>
           <div class="content">
-            联系人：郭菲菲 联系方式：15931263145 地址：北京市朝阳区数码庄园 .....
+            联系人：{{ orderDetail.contact_user || '--' }} 联系方式：{{ orderDetail.contact_tel || '--' }}
+            地址：{{ orderDetail.contact_address || '--' }}
           </div>
         </div>
         <!-- 样品是否回收 -->
         <div class="info-row">
           <span class="label">样品是否回收</span>
-          <div class="content">不需要回收</div>
+          <div class="content">{{ orderDetail.recover_address_txt || '--' }}</div>
         </div>
         <!-- 实验留言 -->
         <div class="info-row">
           <span class="label">实验留言</span>
-          <div class="content">
-            这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容这里是实验留言内容
-          </div>
+          <div class="content">{{ orderDetail.remark || '--' }}</div>
         </div>
       </div>
     </div>
     <div class="orderInfo-item">
       <div class="order-info">
         <h3 class="section-title">样品信息</h3>
-        <p class="sample-info">A组样品，数量：1，样品编号：1</p>
-
-        <!-- 表格 -->
-        <table class="info-table">
-          <tbody>
-          <tr>
-            <td class="label">样品主要成分</td>
-            <td class="value">氯化锂</td>
-          </tr>
-          <tr>
-            <td class="label">样品是否含有磁性元素，如铁钴镍等</td>
-            <td class="value">否</td>
-          </tr>
-          <tr>
-            <td class="label">样品形态</td>
-            <td class="value">粉末</td>
-          </tr>
-          <tr>
-            <td class="label">测试靶材</td>
-            <td class="value">铜靶</td>
-          </tr>
-          <tr>
-            <td class="label">扫描范围选择</td>
-            <td class="value">常规（10-80度）</td>
-          </tr>
-          <tr>
-            <td class="label">具体扫描角度范围（°）</td>
-            <td class="value">10~50</td>
-          </tr>
-          <tr>
-            <td class="label">扫描速度</td>
-            <td class="value">10°/min</td>
-          </tr>
-          </tbody>
-        </table>
+        <div v-for="item in orderDetail.detail" :key="item.id">
+          <p class="sample-info"> {{ item.index }}，数量: {{ item.num }}，样品编号：{{ item.order_id }}</p>
+          <!-- 表格 -->
+          <table class="info-table">
+            <tbody>
+            <tr v-for="it in item.content" :key="it.id">
+              <td class="label">{{ it.title }}</td>
+              <td class="value">{{ it.value }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
+
     <!--   报告情况 -->
-    <div class="order-item" v-if="['6','9','10','11'].includes(process)">
+    <div v-if="['6','9','10','11'].includes(process)" class="order-item">
       <div class="order-requirements">
         <h3 class="section-title">报告情况</h3>
         <!-- 实验联系人 -->
@@ -215,7 +213,7 @@ export default {
           </div>
         </div>
         <!-- 样品是否回收 -->
-        <div class="info-row" v-if="process == 6">
+        <div v-if="process == 6" class="info-row">
           <span class="label">审核状态</span>
           <div class="content">
             <p class="status-2">被驳回</p>
@@ -226,7 +224,7 @@ export default {
       </div>
     </div>
     <!--   样品回收情况 -->
-    <div class="order-item" v-if="['10'].includes(process)">
+    <div v-if="['10'].includes(process)" class="order-item">
       <div class="order-requirements">
         <h3 class="section-title">样品回收情况</h3>
         <div class="flex" style="align-items: start">
@@ -260,11 +258,11 @@ export default {
       </div>
     </div>
     <!--   结算情况 -->
-    <div class="order-item" v-if="process == 7 || process == 11">
+    <div v-if="process == 7 || process == 11" class="order-item">
       <div class="order-requirements">
         <h3 class="section-title">结算情况</h3>
         <div class="flex" style="align-items: start">
-          <div style="flex: 1;" class="info-row">
+          <div class="info-row" style="flex: 1;">
             <span class="label">结算信息</span>
             <div class="content">
               <p>结算账户：银行卡-对公户-中国工商银行厦大支行-1234567898887777-嘉庚创新实验室</p>
@@ -274,7 +272,7 @@ export default {
               <p>户名：嘉庚创新实验室</p>
             </div>
           </div>
-          <div style="flex: 1;" class="info-row">
+          <div class="info-row" style="flex: 1;">
             <span class="label">结算状态</span>
             <div class="content">
               <p class="status-1">已结算</p>
@@ -285,7 +283,7 @@ export default {
     </div>
 
     <!--   差评/异议信息 -->
-    <div class="order-item" v-if="['11'].includes(process)">
+    <div v-if="['11'].includes(process)" class="order-item">
       <div class="order-requirements">
         <h3 class="section-title">差评/异议信息</h3>
         <div class="flex" style="align-items: start">
@@ -307,14 +305,22 @@ export default {
       </div>
     </div>
 
+
     <!--    操作-->
-    <div class="operation" v-if="process == 3">
+    <div v-if="process == 1" class="operation">
+      <div class="btn back">接单</div>
+      <div class="btn">驳回</div>
+      <div class="btn" @click="remarkDialog">备注</div>
+      <div class="btn">问题反馈</div>
+    </div>
+
+    <div v-if="process == 3" class="operation">
       <div class="btn back">收到样品</div>
       <div class="btn" @click="remarkDialog">备注</div>
       <div class="btn">问题反馈</div>
     </div>
 
-    <div class="operation" v-if="process == 4">
+    <div v-if="process == 4" class="operation">
       <div class="btn back">上传结果</div>
       <div class="btn" @click="updateResult">已传结果（1）</div>
       <div class="btn">分批测已完成</div>
@@ -322,10 +328,10 @@ export default {
       <div class="btn" @click="dissentDialog">问题反馈（1）</div>
     </div>
 
-    <div class="operation" v-if="process == 6">
+    <div v-if="process == 6" class="operation">
       <div class="btn back" @click="remarkDialog">备注</div>
     </div>
-    <div class="operation" v-if="process == 8">
+    <div v-if="process == 8" class="operation">
       <div class="btn back" @click="remarkDialog">备注</div>
       <div class="btn" @click="remarkDialog">已传结果（1）</div>
       <div class="btn" @click="remarkDialog">复测完成</div>
@@ -333,25 +339,25 @@ export default {
       <div class="btn" @click="remarkDialog">问题反馈（0）</div>
     </div>
 
-    <div class="operation" v-if="process == 9">
+    <div v-if="process == 9" class="operation">
       <div class="btn back" @click="applySettlement">申请结算</div>
       <div class="btn" @click="remarkDialog">备注</div>
     </div>
 
-    <div class="operation" v-if="process == 10">
+    <div v-if="process == 10" class="operation">
       <div class="btn back" @click="applySettlement">寄样</div>
       <div class="btn" @click="remarkDialog">备注</div>
     </div>
 
-    <div class="operation" v-if="process == 11">
+    <div v-if="process == 11" class="operation">
       <div class="btn back" @click="applySettlement">已处理</div>
       <div class="btn" @click="remarkDialog">备注</div>
     </div>
-    <div class="operation" v-if="process == 12">
+    <div v-if="process == 12" class="operation">
       <div class="btn back" @click="remarkDialog">备注</div>
     </div>
 
-    <el-dialog title="备注" :visible.sync="remarkDialogVisible">
+    <el-dialog :visible.sync="remarkDialogVisible" title="备注">
       <div class="dialog-title">
         <p><span>平台备注：</span>这里是一段平台备注</p>
         <p class="date">2024-08-20</p>
@@ -360,59 +366,59 @@ export default {
         <p><span>供应商备注：</span>这里是一段平台备注</p>
         <p class="date">2024-08-20</p>
       </div>
-      <el-input type="textarea" rows="10" placeholder="请在这里输入您的备注"></el-input>
+      <el-input placeholder="请在这里输入您的备注" rows="10" type="textarea"></el-input>
       <div slot="footer" class="dialog-footer">
         <el-button @click="remarkDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="remarkDialogVisible = false">确 定</el-button>
       </div>
     </el-dialog>
 
-    <el-dialog title="上传报告" :visible.sync="updateResultVisible" center>
-      <div class="updateResult" v-if="updateResultType === 0">
+    <el-dialog :visible.sync="updateResultVisible" center title="上传报告">
+      <div v-if="updateResultType === 0" class="updateResult">
         <div class="title">
           <p>订单号：4545121232</p>
           <p>项目名称：氧氮氢分析仪</p>
         </div>
         <el-upload
-            class="upload-demo"
             action="https://jsonplaceholder.typicode.com/posts/"
+            class="upload-demo"
             list-type="picture">
           <div class="upload-tit">点击上传报告 +</div>
         </el-upload>
         <el-upload
-            class="upload-demo"
             action="https://jsonplaceholder.typicode.com/posts/"
+            class="upload-demo"
             list-type="picture">
           <div class="upload-tit">点击上传仪器测试结果 +</div>
         </el-upload>
       </div>
 
-      <div class="success-content" v-if="updateResultType === 1">
-        <img src="@/assets/img/my/success.png" alt="">
+      <div v-if="updateResultType === 1" class="success-content">
+        <img alt="" src="@/assets/img/my/success.png">
         <p>实名认证提交成功</p>
         <p class="tip">请耐心等待管理员审核！</p>
       </div>
-      <span slot="footer" class="dialog-footer" v-if="updateResultType === 1">
+      <span v-if="updateResultType === 1" slot="footer" class="dialog-footer">
          <el-button @click="lockRealInfo">查看报告</el-button>
         <el-button type="primary" @click="updateResultVisible = false">继续浏览</el-button>
       </span>
-      <div slot="footer" class="dialog-footer" v-if="updateResultType === 0">
+      <div v-if="updateResultType === 0" slot="footer" class="dialog-footer">
         <el-button @click="updateResultVisible = false">取 消</el-button>
         <el-button type="primary" @click="updateResultSubmit">确 定</el-button>
       </div>
     </el-dialog>
 
-    <el-dialog title="提交异议" :visible.sync="dissentDialogVisible">
-      <el-input type="textarea" rows="10" placeholder="请输入异议内容"></el-input>
+    <el-dialog :visible.sync="dissentDialogVisible" title="提交异议">
+      <el-input placeholder="请输入异议内容" rows="10" type="textarea"></el-input>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dissentDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dissentDialogVisible = false">确 定</el-button>
       </div>
     </el-dialog>
 
-    <el-dialog title="结算信息" :visible.sync="settlementDialogVisible" width="900px" center>
+    <el-dialog :visible.sync="settlementDialogVisible" center title="结算信息" width="900px">
       <div class="settlement-box">
-        <el-form :model="settlementRruleForm" :rules="settlementRules" ref="ruleForm" label-width="100px">
+        <el-form ref="ruleForm" :model="settlementRruleForm" :rules="settlementRules" label-width="100px">
           <el-form-item label="结算账户：" prop="name">
             <el-select v-model="settlementRruleForm.region" placeholder="请选择活动区域">
               <el-option label="区域一" value="shanghai"></el-option>
@@ -441,7 +447,7 @@ export default {
   </div>
 </template>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .content {
   display: flex;
   flex-direction: column;

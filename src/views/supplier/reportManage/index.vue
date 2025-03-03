@@ -5,7 +5,7 @@ export default {
     return {
       tabIndex: 1,
       queryParams: {}, // 查询参数
-      list_order: [{}], // 订单
+      list_order: [], // 订单
       payList: [], // 测试项目
       isRePay: [
         {
@@ -21,50 +21,81 @@ export default {
           value: 3,
           label: "待上传结果"
         }, {
-          value: 1,
+          value: 4,
           label: "待审核结果"
         }, {
-          value: 1,
+          value: 5,
           label: "已完成"
         }, {
-          value: 1,
+          value: 6,
           label: "复测"
         }, {
-          value: 1,
+          value: 7,
           label: "待结算"
         }, {
-          value: 1,
+          value: 8,
           label: "样品回收"
         }, {
-          value: 1,
+          value: 9,
           label: "差评/异议"
         }, {
-          value: 1,
+          value: 10,
           label: "超期/即将超期"
         }
       ], // 订单状态
       updateResultVisible: false,
-      count: 1,
+      count: 0,
       pagination: {
         page: 1,
         pageNum: 10
-      },
-      realRules: {
-        name: [
-          {required: true, message: '请输入活动名称', trigger: 'blur'},
-        ]
       }
     }
   },
+  mounted() {
+    this.setView();
+  },
   methods: {
     setView() {
-
+      this.$api({
+        url: 'store/order_list',
+        method: 'post',
+        data: {
+          status: 11
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          this.list_order = res.data;
+          this.count = res.count;
+        }
+      })
+    },
+    // 查看报告
+    lock(id) {
+      this.$api({
+        url: 'store/order_detail',
+        method: 'post',
+        data: {
+          orderId: id
+        }
+      }).then(res => {
+        this.updateResultVisible = true
+      })
     },
     handleQuery() {
-
+      this.pagination.page = 1;
+      if (this.queryParams.date) {
+        this.queryParams.start_time = this.queryParams.date[0]
+        this.queryParams.end_time = this.queryParams.date[1]
+      } else {
+        this.queryParams.start_time = ''
+        this.queryParams.end_time = ''
+      }
+      this.setView();
     },
     resetQuery() {
-
+      this.pagination.page = 1
+      this.queryParams = {}
+      this.handleQuery()
     },
     goUrl(url) {
       this.$router.push(url);
@@ -90,7 +121,7 @@ export default {
       </div>
 
       <div class="search-filter">
-        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
+        <el-form ref="queryForm" :inline="true" :model="queryParams" label-width="100px" size="small">
           <el-form-item label="测试项目" prop="phone">
             <el-select v-model="queryParams.orderUrl" placeholder="请选择测试项目">
               <el-option
@@ -114,50 +145,79 @@ export default {
           <el-form-item label="日期筛选" prop="goodsName">
             <el-date-picker
                 v-model="queryParams.date"
-                type="datetimerange"
+                end-placeholder="结束日期"
                 range-separator="至"
                 start-placeholder="开始日期"
-                end-placeholder="结束日期">
+                type="datetimerange">
             </el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="mini" @click="handleQuery">搜索</el-button>
-            <el-button type="primary" size="mini" @click="resetQuery">重置</el-button>
+            <el-button size="mini" type="primary" @click="handleQuery">搜索</el-button>
+            <el-button size="mini" type="primary" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
       </div>
 
       <div class="order-box">
         <el-table :data="list_order" style="width: 100%">
-          <el-table-column prop="date" label="订单号"></el-table-column>
-          <el-table-column prop="date" label="项目名称"></el-table-column>
-          <el-table-column prop="date" label="金额"></el-table-column>
-          <el-table-column prop="date" label="样品数"></el-table-column>
-          <el-table-column prop="date" label="对接人"></el-table-column>
-          <el-table-column prop="date" label="回收"></el-table-column>
-          <el-table-column prop="date" label="订单状态"></el-table-column>
-          <el-table-column prop="date" label="样品状态"></el-table-column>
-          <el-table-column prop="date" label="报告审核状态"></el-table-column>
-          <el-table-column prop="date" label="寄样时间"></el-table-column>
-          <el-table-column prop="date" label="完成时间"></el-table-column>
-          <el-table-column label="操作" fixed="right" width="220">
+          <el-table-column label="订单号" prop="orderId"></el-table-column>
+          <el-table-column label="项目名称" prop="title">
             <template slot-scope="scope">
-              <el-button type="text" size="mini" @click="goUrl('/supplier-order-detail')">详情</el-button>
-              <el-button type="text" size="mini" @click="updateResultVisible = true">查看报告</el-button>
-              <el-button type="text" size="mini" @click="goUrl('/supplier-order-detail')">修改</el-button>
+              <p>{{ scope.row.order ? scope.row.order.title : '--' }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="金额" prop="price">
+            <template slot-scope="scope">
+              <p>{{ scope.row.order ? scope.row.order.price : '--' }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="样品数" prop="price">
+            <template slot-scope="scope">
+              <p>{{ scope.row.order ? scope.row.order.yp_num : '--' }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="对接人" prop="contact_user"></el-table-column>
+          <el-table-column label="回收" prop="if_recover">
+            <template slot-scope="scope">
+              <p v-if="scope.row.if_recover == 1">是</p>
+              <p v-else>否</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="订单状态" prop="date">
+            <template slot-scope="scope">
+              <p>{{ getStatus(scope.row.status) }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="样品状态" prop="yp_status">
+            <template slot-scope="scope">
+              <p>{{ getYpStatus(scope.row.yp_status) || '--' }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="报告审核状态" prop="yp_status">
+            <template slot-scope="scope">
+              <p>{{ getYpStatus(scope.row.yp_status) || '--' }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="寄样时间" prop="created_at"></el-table-column>
+          <el-table-column label="完成时间" prop="updated_at"></el-table-column>
+          <el-table-column fixed="right" label="操作" width="220">
+            <template slot-scope="scope">
+              <el-button size="mini" type="text" @click="goUrl('/supplier-order-detail')">详情</el-button>
+              <el-button size="mini" type="text" @click="lock(scope.row.id)">查看报告</el-button>
+              <el-button size="mini" type="text" @click="goUrl('/supplier-order-detail')">修改</el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div v-if="count" class="pagination-box"
            style="margin-top: 40px; text-align: center;">
-        <el-pagination background layout="total, prev, pager, next" @current-change="setView"
-                       :current-page.sync="pagination.page" :page-size="pagination.pageNum"
-                       :total="count"></el-pagination>
+        <el-pagination :current-page.sync="pagination.page" :page-size="pagination.pageNum" :total="count"
+                       background layout="total, prev, pager, next"
+                       @current-change="setView"></el-pagination>
       </div>
     </div>
 
-    <el-dialog title="查看报告" :visible.sync="updateResultVisible">
+    <el-dialog :visible.sync="updateResultVisible" title="查看报告">
       <div class="updateResult">
         <p class="tip">
           <span class="red">驳回原因：</span>
@@ -168,14 +228,14 @@ export default {
           <p>项目名称：氧氮氢分析仪</p>
         </div>
         <el-upload
-            class="upload-demo"
             action="https://jsonplaceholder.typicode.com/posts/"
+            class="upload-demo"
             list-type="picture">
           <div class="upload-tit">点击上传报告 +</div>
         </el-upload>
         <el-upload
-            class="upload-demo"
             action="https://jsonplaceholder.typicode.com/posts/"
+            class="upload-demo"
             list-type="picture">
           <div class="upload-tit">点击上传仪器测试结果 +</div>
         </el-upload>
@@ -184,7 +244,7 @@ export default {
   </div>
 </template>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .content {
   background: #fff;
   padding-bottom: 100px;

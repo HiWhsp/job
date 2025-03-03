@@ -1,56 +1,91 @@
 <template>
-    <div class="container">
-        <div class="top-img">
-            <img src="@/assets/img/base/thesis_bg.png" alt="">
-            <span>论文致谢</span>
-        </div>
-        <div class="nav-wrap main">
-            <div class="item pointer" :class="{'active': item.id === navIndex}" v-for="(item, index) in navList"
-                 @click="navClick(item)">
-                {{ item.title }}
-            </div>
-        </div>
-        <contentComp :index="navIndex"></contentComp>
+  <div class="container">
+    <div class="top-img">
+      <img alt="" src="@/assets/img/base/thesis_bg.png">
+      <span>论文致谢</span>
     </div>
+    <div class="nav-wrap main">
+      <div v-for="(item, index) in navList" :class="{'active': item.id === navIndex}" class="item pointer"
+           @click="navClick(item)">
+        {{ item.title }}
+      </div>
+    </div>
+    <contentComp :index="navIndex" :content="protocol" @check="navClick"></contentComp>
+  </div>
 </template>
 
 <script>
 import contentComp from './contentComp.vue';
 
 export default {
-    name: "index",
-    components: {
-        contentComp
-    },
-    data() {
-        return {
-            navIndex: 1,
-            navList: [
-                {
-                    title: '申请致谢奖励',
-                    id: 1
-                }, {
-                    title: '论文致谢说明',
-                    id: 2
-                }, {
-                    title: '用户致谢论文',
-                    id: 3
-                }, {
-                    title: '致谢奖励记录',
-                    id: 4
-                }
-            ]
+  name: "index",
+  components: {
+    contentComp
+  },
+  data() {
+    return {
+      navIndex: 1,
+      protocol: '',
+      navList: [
+        {
+          title: '申请致谢奖励',
+          id: 1
+        }, {
+          title: '论文致谢说明',
+          id: 2
+        }, {
+          title: '用户致谢论文',
+          id: 3
+        }, {
+          title: '致谢奖励记录',
+          id: 4
         }
-    },
-    methods: {
-        navClick(item) {
-            this.navIndex = item.id;
-        }
+      ]
     }
+  },
+  methods: {
+    navClick(item) {
+      this.navIndex = item.id;
+      if (item.id === 1) {
+
+      } else if (item.id === 2) {
+        this.$api({
+          url: 'page_content',
+          method: 'post',
+          data: {
+            id: 42
+          },
+        }).then(res => {
+          if (res.code === 200) {
+            this.protocol = res.data
+          }
+        })
+      } else if (item.id === 3) {
+        this.$api({
+          url: 'my_paper',
+          method: 'post'
+        }).then(res => {
+          if (res.code === 200) {
+            this.protocol = res.data
+          }
+        })
+      } else if (item.id === 4) {
+        this.$api({
+          url: 'my_paper_reward',
+          method: 'post'
+        }).then(res => {
+          if (res.code === 200) {
+            this.protocol = res.data
+          }
+        })
+      }
+
+    }
+  }
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .container {
   padding-bottom: 70px;
 

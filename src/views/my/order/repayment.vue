@@ -13,8 +13,8 @@
             <!-- 标题 -->
             <div class="list-title">
               <el-checkbox
-                  class="title-1"
                   v-model="checked_all"
+                  class="title-1"
                   @change="on_change_checked_all"
               >{{ checked_all ? "反选" : "全选" }}
               </el-checkbox>
@@ -28,9 +28,9 @@
 
             <!-- 商品列表 -->
             <div
-                class="item"
                 v-for="(item, index) in list_shopcart"
                 :key="index"
+                class="item"
             >
               <div class="item-detail flex">
                 <div class="box-select">
@@ -100,19 +100,19 @@
         <div class="pay-group">
           <div class="title"><span>*</span>支付方式：</div>
           <div class="pay-items">
-            <div class="item" v-for="(item, index) in payTypeOption" @click="do_toggle_paytype(item)"
-                 :class="{ checked: info.payType == item.value }">
-              <img class="img-check check-0 check-img check-img-0"
-                   src="@/assets/img/base/invite/check0.png" alt=""/>
-              <img class="img-check check-1 check-img check-img-1"
-                   src="@/assets/img/base/invite/check1.png" alt=""/>
-              <img class="marker-img" :src="item.icon" alt=""/>
+            <div v-for="(item, index) in payTypeOption" :class="{ checked: info.payType == item.value }" class="item"
+                 @click="do_toggle_paytype(item)">
+              <img alt=""
+                   class="img-check check-0 check-img check-img-0" src="@/assets/img/base/invite/check0.png"/>
+              <img alt=""
+                   class="img-check check-1 check-img check-img-1" src="@/assets/img/base/invite/check1.png"/>
+              <img :src="item.icon" alt="" class="marker-img"/>
               <span>{{ item.title }}</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="account" v-if="info.payType === 'paypal'">
+      <div v-if="info.payType === 'paypal'" class="account">
         <p style="color: #666666;">注：您在发票提交财务报销或通过直接向我司转账后，可取得对公转账凭证。
           <br>
           上传转账凭证，有利于我司财务人员快速核对还款情况，迅速恢复信用金。</p>
@@ -122,23 +122,23 @@
           <p><span>开户行：</span>这里是开户行</p>
         </div>
       </div>
-      <div class="section-ctx" v-if="info.payType === 'paypal'">
+      <div v-if="info.payType === 'paypal'" class="section-ctx">
         <div class="pay-group">
           <div class="title">上传凭证 :</div>
           <div class="upload-ctx">
             <el-upload
-                class="avatar-uploader"
+                :show-file-list="false"
                 action="https://jsonplaceholder.typicode.com/posts/"
-                :show-file-list="false">
+                class="avatar-uploader">
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
-              <div class="box" v-else>
+              <div v-else class="box">
                 <i class="el-icon-plus avatar-uploader-icon"></i>
               </div>
             </el-upload>
           </div>
         </div>
       </div>
-      <div class="section-ctx" v-if="info.payType === 'bank'">
+      <div v-if="info.payType === 'bank'" class="section-ctx">
         <div class="pay-group">
           <div class="title">支付团体：</div>
           <div class="pay-items">
@@ -150,13 +150,13 @@
           </div>
         </div>
       </div>
-      <div class="section-ctx" v-if="info.payType === 'paypal' || info.payType === 'bank'">
+      <div v-if="info.payType === 'paypal' || info.payType === 'bank'" class="section-ctx">
         <div class="pay-group">
           <div class="title">备注：</div>
           <div class="pay-items">
-            <el-input type="textarea"
-                      placeholder="您可以填写欠款、回款的相关说明，以便平台和财务核对"
-                      v-model="info.prepaidRemark" :rows="4" maxlength="200" show-word-limit>
+            <el-input v-model="info.prepaidRemark"
+                      :rows="4"
+                      maxlength="200" placeholder="您可以填写欠款、回款的相关说明，以便平台和财务核对" show-word-limit type="textarea">
             </el-input>
           </div>
         </div>
@@ -253,10 +253,11 @@ export default {
 
     setView() {
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: "user_order_list",
+        method: "post",
         data: {
-          action: "gouwuche_lists",
+          ...this.pagination,
+          if_hk: 1
         },
       }).then((res) => {
         let {code, data} = res;
@@ -461,7 +462,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 /deep/ .order-list-wrap {
   margin-top: 30px;
 }

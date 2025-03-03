@@ -5,8 +5,7 @@ export default {
     return {
       tabIndex: 1,
       queryParams: {}, // 查询参数
-      list_order: [{}], // 订单
-      payList: [], // 测试项目
+      list_order: [], // 订单
       isRePay: [
         {
           value: '',
@@ -22,7 +21,7 @@ export default {
           label: "待上传结果"
         }
       ], // 订单状态
-      count: 1,
+      count: 0,
       pagination: {
         page: 1,
         pageNum: 10
@@ -34,9 +33,20 @@ export default {
       }
     }
   },
+  mounted() {
+    this.setView();
+  },
   methods: {
     setView() {
-
+      this.$api({
+        url: 'store/history_settle',
+        method: 'post'
+      }).then(res => {
+        if (res.code === 200) {
+          this.list_order = res.data;
+          this.count = res.count;
+        }
+      })
     },
     handleQuery() {
 
@@ -68,7 +78,7 @@ export default {
       </div>
 
       <div class="search-filter">
-        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
+        <el-form ref="queryForm" :inline="true" :model="queryParams" label-width="100px" size="small">
           <el-form-item label="处理状态" prop="goodsName">
             <el-select v-model="queryParams.orderUrl" placeholder="请选择处理状态">
               <el-option
@@ -82,45 +92,50 @@ export default {
           <el-form-item label="日期筛选" prop="goodsName">
             <el-date-picker
                 v-model="queryParams.date"
-                type="datetimerange"
+                end-placeholder="结束日期"
                 range-separator="至"
                 start-placeholder="开始日期"
-                end-placeholder="结束日期">
+                type="datetimerange">
             </el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="mini" @click="handleQuery">搜索</el-button>
-            <el-button type="primary" size="mini" @click="resetQuery">重置</el-button>
+            <el-button size="mini" type="primary" @click="handleQuery">搜索</el-button>
+            <el-button size="mini" type="primary" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
       </div>
 
       <div class="order-box">
         <el-table :data="list_order" style="width: 100%">
-          <el-table-column prop="date" label="申请人"></el-table-column>
-          <el-table-column prop="date" label="申请时间"></el-table-column>
-          <el-table-column prop="date" label="申请金额"></el-table-column>
-          <el-table-column prop="date" label="订单金额"></el-table-column>
-          <el-table-column prop="date" label="税点"></el-table-column>
-          <el-table-column prop="date" label="处理状态"></el-table-column>
-          <el-table-column label="操作" fixed="right">
+          <el-table-column label="申请人" prop="name"></el-table-column>
+          <el-table-column label="申请时间" prop="created_at"></el-table-column>
+          <el-table-column label="申请金额" prop="apply_money"></el-table-column>
+          <el-table-column label="订单金额" prop="order_money"></el-table-column>
+          <el-table-column label="税点" prop="tax_money"></el-table-column>
+          <el-table-column label="处理状态" prop="status">
             <template slot-scope="scope">
-              <el-button type="text" size="mini" @click="goUrl('/')">详情</el-button>
+              <p v-if="scope.row.status == 1">待结算</p>
+              <p v-if="scope.row.status == 2">已结算</p>
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" label="操作">
+            <template slot-scope="scope">
+              <el-button size="mini" type="text" @click="goUrl('/')">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div v-if="count" class="pagination-box"
            style="margin-top: 40px; text-align: center;">
-        <el-pagination background layout="total, prev, pager, next" @current-change="setView"
-                       :current-page.sync="pagination.page" :page-size="pagination.pageNum"
-                       :total="count"></el-pagination>
+        <el-pagination :current-page.sync="pagination.page" :page-size="pagination.pageNum" :total="count"
+                       background layout="total, prev, pager, next"
+                       @current-change="setView"></el-pagination>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .content {
   background: #fff;
   padding-bottom: 100px;

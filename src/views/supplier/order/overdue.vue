@@ -148,16 +148,32 @@ export default {
 
       <div class="order-box">
         <el-table :data="list_order" style="width: 100%" @selection-change="handleSelectionChange">
-          <el-table-column prop="date" label="订单号"></el-table-column>
-          <el-table-column prop="date" label="项目名称"></el-table-column>
-          <el-table-column prop="date" label="仪器型号"></el-table-column>
-          <el-table-column prop="date" label="金额"></el-table-column>
-          <el-table-column prop="date" label="样品数"></el-table-column>
-          <el-table-column prop="date" label="对接人"></el-table-column>
-          <el-table-column prop="date" label="订单状态"></el-table-column>
-          <el-table-column prop="date" label="收到样品时间"></el-table-column>
-          <el-table-column prop="date" label="要求出结果时间"></el-table-column>
-          <el-table-column prop="date" label="完成时间" width="120"></el-table-column>
+          <el-table-column prop="orderId" label="订单号"></el-table-column>
+          <el-table-column prop="title" label="项目名称">
+            <template slot-scope="scope">
+              <p>{{ scope.row.order ? scope.row.order.title : '--' }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="model_no" label="仪器型号"></el-table-column>
+          <el-table-column prop="price" label="金额">
+            <template slot-scope="scope">
+              <p>{{ scope.row.order ? scope.row.order.price : '--' }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="price" label="样品数">
+            <template slot-scope="scope">
+              <p>{{ scope.row.order ? scope.row.order.yp_num : '--' }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="contact_user" label="对接人"></el-table-column>
+          <el-table-column prop="date" label="订单状态">
+            <template slot-scope="scope">
+              <p>{{ getStatus(scope.row.status) }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="yd_date" label="收到样品时间"></el-table-column>
+          <el-table-column prop="created_at" label="要求出结果时间"></el-table-column>
+          <el-table-column prop="updated_at" label="完成时间" width="120"></el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
               <el-button type="text" size="mini"
