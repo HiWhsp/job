@@ -5,16 +5,16 @@
       <div class="form">
         <el-form label-width="90px" label-position="right" :model="formData" :rules="formRules" ref="form">
           <el-form-item label="手机号:" prop="phone">
-            <el-input clearable v-model="form.phone" placeholder="请输入手机号"></el-input>
+            <el-input clearable v-model="formData.phone" placeholder="请输入手机号"></el-input>
           </el-form-item>
           <el-form-item label="验证码:" prop="code">
-            <sms_phone :form="form"/>
+            <sms_phone :form="formData"/>
           </el-form-item>
           <el-form-item label="密码:" prop="password">
-            <el-input clearable v-model="form.password" placeholder="请输入密码"></el-input>
+            <el-input clearable v-model="formData.password" placeholder="请输入密码"></el-input>
           </el-form-item>
           <el-form-item label="确认密码:" prop="password_confirm">
-            <el-input clearable v-model="form.password_confirm" placeholder="请确认密码"></el-input>
+            <el-input clearable v-model="formData.password_confirm" placeholder="请确认密码"></el-input>
           </el-form-item>
         </el-form>
         <div class="submit pointer" @click="submit">提交</div>
@@ -56,29 +56,16 @@ export default {
   methods: {
     //   提交
     submit() {
-      if (!this.type) {
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            this.$api("retrieve", this.form, "post").then(res => {
-              if (res.code === 200) {
-                this.$message.success("修改成功!");
-                this.$router.push("/login");
-              }
-            });
-          }
-        })
-      } else {
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            this.$api("store/edit", {...this.form, action: 4}, "post").then(res => {
-              if (res.code === 200) {
-                this.$message.success("修改成功!");
-                this.$router.push("/supplier-login");
-              }
-            });
-          }
-        })
-      }
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.$api("retrieve", this.formData, "post").then(res => {
+            if (res.code === 200) {
+              this.$message.success("修改成功!");
+              this.$router.push("/login");
+            }
+          });
+        }
+      })
     }
   }
 }

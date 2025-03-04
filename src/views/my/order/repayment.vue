@@ -186,7 +186,7 @@ export default {
         {value: 'weixin', title: '微信支付', icon: require("@/assets/img/base/invite/wxPay.png")},
         {value: 'zhifubao', title: '支付宝支付', icon: require("@/assets/img/base/invite/zfbPay.png")},
         {value: 'paypal', title: '对公转账', icon: require("@/assets/img/base/invite/duigong.png")},
-        {value: 'bank', title: '团体余额', icon: require("@/assets/img/base/invite/pay4.png")},
+        // {value: 'bank', title: '团体余额', icon: require("@/assets/img/base/invite/pay4.png")},
       ],
       checked_all: false, // 是否全选
       list_shopcart: [], // 购物车商品列表
