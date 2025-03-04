@@ -85,20 +85,21 @@ export default {
       };
       return data;
     },
-    // 订单状态
     getStatus() {
       return function (status) {
         switch (status) {
           case 10:
-            return '待支付';
+          case 11:
           case 20:
-            return '待实验';
+            return '已分派';
+          case 21:
+            return '运输中';
           case 30:
-            return '实验中';
+            return '待上传结果订单';
+          case 31:
+            return '待审核结果订单';
           case 40:
             return '已完成';
-          case 50:
-            return '售后';
         }
       }
     },

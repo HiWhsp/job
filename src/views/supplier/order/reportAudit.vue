@@ -159,7 +159,11 @@ export default {
 
       <div class="order-box">
         <el-table :data="list_order" style="width: 100%">
-          <el-table-column prop="orderId" label="订单号"></el-table-column>
+          <el-table-column prop="orderId" label="订单号" width="150px">
+            <template slot-scope="scope">
+              <p>{{ scope.row.order ? scope.row.order.orderno : '--' }}</p>
+            </template>
+          </el-table-column>
           <el-table-column prop="title" label="项目名称">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.title : '--' }}</p>
@@ -183,11 +187,11 @@ export default {
               <p v-else>否</p>
             </template>
           </el-table-column>
-          <el-table-column prop="yp_status" label="报告审核状态"></el-table-column>
+          <el-table-column prop="status_txt" label="报告审核状态"></el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
-              <el-button type="text" size="mini" @click="goUrl('/supplier-order-detail?type=6')">详情</el-button>
-              <el-button type="text" size="mini" @click="rejectUpdateVisible = true">修改</el-button>
+              <el-button type="text" size="mini" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">详情</el-button>
+<!--              <el-button type="text" size="mini" @click="rejectUpdateVisible = true">修改</el-button>-->
             </template>
           </el-table-column>
         </el-table>
@@ -330,7 +334,8 @@ export default {
   }
 
   .order-box {
-    margin-top: 50px;
+    width: 1650px;
+    margin-top: 20px;
     padding: 0 40px;
 
     /deep/ .el-table th.el-table__cell {

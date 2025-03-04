@@ -143,7 +143,11 @@ export default {
       <div class="order-box">
         <el-table :data="list_order" style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection"/>
-          <el-table-column prop="orderId" label="订单号"></el-table-column>
+          <el-table-column prop="orderId" label="订单号" width="150px">
+            <template slot-scope="scope">
+              <p>{{ scope.row.order ? scope.row.order.orderno : '--' }}</p>
+            </template>
+          </el-table-column>
           <el-table-column prop="title" label="项目名称">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.title : '--' }}</p>
@@ -168,10 +172,10 @@ export default {
               <p v-else>否</p>
             </template>
           </el-table-column>
-          <el-table-column prop="created_at" label="寄样时间"></el-table-column>
+          <el-table-column prop="yp_at" label="寄样时间"></el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
-              <el-button size="mini" @click="goUrl('/supplier-order-detail')">查看</el-button>
+              <el-button type="text" size="mini" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">查看</el-button>
             </template>
           </el-table-column>
         </el-table>

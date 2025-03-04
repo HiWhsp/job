@@ -7,13 +7,24 @@ export default {
       orderId: '', // 订单号
       orderDetail: {}, // 订单详情
       storeOrderInfo: {}, // 订单信息
+      updateResultInfo: {}, // 上传结果信息
+      acceptType: "", // 操作类型 1 接单 2驳回
+      notes: '', // 驳回原因
+      feedback: '', // 异议
+      dialogTitle: '', // 弹框标题
+      acceptVisible: false, // 操作
       remarkDialogVisible: false, // 备注
       updateResultVisible: false, // 上传结果
       dissentDialogVisible: false, // 异议
       settlementDialogVisible: false, // 申请结算
-      updateResultType: 0,
+      checkDialogVisible: false, // 查看预约单
+      checkDialogContent: '', // 查看预约单内容
+      updateResultType: 0, // 上传结果类型
       settlementRruleForm: {}, // 结算
       settlementRules: {}, // 结算
+
+      fileList: [], // 上传文件列表
+      fileList2: [], //
     }
   },
   computed: {
@@ -70,34 +81,176 @@ export default {
       this.remarkDialogVisible = true
     },
     // 已传结果
-    updateResult() {
+    updateResult(temp) {
+      if (temp) {
+        this.$api({
+          url: 'store/report_detail',
+          method: 'post',
+          data: {
+            orderId: this.orderId
+          }
+        }).then(res => {
+          if (res.code == 200) {
+            this.updateResultInfo = res.data;
+          }
+        })
+      } else {
+        this.updateResultInfo = {};
+      }
       this.updateResultVisible = true
     },
     // 报告提交
-    updateResultSubmit() {
-      this.updateResultType = 1
+    async updateResultSubmit() {
+      const res = await this.$api({
+        url: 'store/upload_report',
+        method: 'post',
+        data: {
+          orderId: this.orderId,
+          title: this.fileList[0].name,
+          path: this.fileList[0].url,
+          type: 1
+        }
+      })
+
+      const res1 = await this.$api({
+        url: 'store/upload_report',
+        method: 'post',
+        data: {
+          orderId: this.orderId,
+          title: this.fileList2[0].name,
+          path: this.fileList2[0].url,
+          type: 2
+        }
+      })
+      Promise.all([res, res1]).then(res => {
+        this.$api({
+          url: 'store/accept_order',
+          method: 'post',
+          data: {
+            ids: this.orderId,
+            type: 4
+          }
+        }).then(res => {
+          if (res.code === 200) {
+            this.updateResultType = 1
+          }
+        })
+      })
+
     },
     // 查看报告
     lockRealInfo() {
-      this.updateResultType = 0
+      this.$api({
+        url: 'store/report_detail',
+        orderId: this.orderId
+      }).then(res => {
+        if (res.code === 200) {
+          this.fileList = res.data.list[0];
+          this.fileList2 = res.data.list[1];
+        }
+        this.updateResultType = 3
+      })
     },
     // 异议
-    dissentDialog() {
+    dissentDialog(title) {
+      this.dialogTitle = title;
       this.dissentDialogVisible = true
     },
     // 查看预约单
     checkDialog() {
       this.$api({
-        url: 'download_order',
+        url: 'store/download_order',
         method: 'post',
         data: {
-          orderno: this.orderDetail.orderno
+          orderno: this.orderDetail.orderno,
+          html: 1
         }
+      }).then(res => {
+        this.checkDialogContent = res;
+        this.checkDialogVisible = true;
       })
     },
     // 申请结算
     applySettlement() {
       this.settlementDialogVisible = true;
+    },
+    //   接单/驳回
+    throttle_do_submit(type, submit) {
+      this.acceptVisible = true;
+      this.acceptType = type;
+      if (submit) {
+        this.$api({
+          url: 'store/accept_order',
+          method: 'post',
+          data: {
+            ids: this.orderId,
+            type: this.acceptType,
+            notes: this.notes
+          }
+        }).then(res => {
+          if (res.code == 200) {
+            this.$message({
+              message: res.msg,
+              type: 'success'
+            });
+            this.acceptVisible = false;
+            this.setView();
+          }
+        })
+      }
+    },
+
+    // 异议
+    dissentDialogSubmit() {
+      if (!this.feedback) {
+        this.$message.error('请输入' + this.dialogTitle + '内容');
+        return
+      }
+      this.$api({
+        url: 'store/order_feedback',
+        method: 'post',
+        data: {
+          orderId: this.orderId,
+          content: this.feedback
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.dissentDialogVisible = false
+        }
+      })
+    },
+
+    // 收到样品
+    sampleReceived() {
+      this.$api({
+        url: 'store/accept_order',
+        method: 'post',
+        data: {
+          ids: this.orderId,
+          type: 3
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+        }
+      })
+    },
+
+    // 上传成功的回调
+    handleSuccess(response, file, fileList) {
+      this.fileList = [response.data];
+      this.$message.success('上传成功');
+    },
+    handleSuccess2(response, file, fileList) {
+      this.fileList2 = [response.data];
+      this.$message.success('上传成功');
     }
   }
 }
@@ -110,8 +263,8 @@ export default {
         <span>订单详情</span>
       </div>
       <div class="info">
-        <p class="order-id">订单号：5456412312312</p>
-        <p class="time">{{ getStatus(orderDetail.status) }}</p>
+        <p class="order-id">订单号：{{ orderDetail.orderno }}</p>
+        <p class="time">{{ getStatus(orderDetail.storeOrderInfo ? orderDetail.storeOrderInfo.status : '') }}</p>
       </div>
     </div>
     <div class="address-item">
@@ -201,7 +354,7 @@ export default {
     </div>
 
     <!--   报告情况 -->
-    <div v-if="['6','9','10','11'].includes(process)" class="order-item">
+    <div v-if="['待审核结果订单'].includes(getStatus(orderDetail.storeOrderInfo ? orderDetail.storeOrderInfo.status : ''))" class="order-item">
       <div class="order-requirements">
         <h3 class="section-title">报告情况</h3>
         <!-- 实验联系人 -->
@@ -307,28 +460,31 @@ export default {
 
 
     <!--    操作-->
-    <div v-if="process == 1" class="operation">
-      <div class="btn back">接单</div>
-      <div class="btn">驳回</div>
+    <div v-if="getStatus(orderDetail.storeOrderInfo ? orderDetail.storeOrderInfo.status : '') == '已分派'"
+         class="operation">
+      <div class="btn back" @click="throttle_do_submit(1)">接单</div>
+      <div class="btn" @click="throttle_do_submit(2)">驳回</div>
       <div class="btn" @click="remarkDialog">备注</div>
-      <div class="btn">问题反馈</div>
+      <div class="btn" @click="dissentDialog('问题反馈')">问题反馈</div>
     </div>
 
-    <div v-if="process == 3" class="operation">
-      <div class="btn back">收到样品</div>
+    <div v-if="getStatus(orderDetail.storeOrderInfo ? orderDetail.storeOrderInfo.status : '') == '运输中'"
+         class="operation">
+      <div class="btn back" @click="sampleReceived">收到样品</div>
       <div class="btn" @click="remarkDialog">备注</div>
-      <div class="btn">问题反馈</div>
+      <div class="btn" @click="dissentDialog('问题反馈')">问题反馈</div>
     </div>
 
-    <div v-if="process == 4" class="operation">
-      <div class="btn back">上传结果</div>
-      <div class="btn" @click="updateResult">已传结果（1）</div>
-      <div class="btn">分批测已完成</div>
+    <div v-if="getStatus(orderDetail.storeOrderInfo ? orderDetail.storeOrderInfo.status : '') == '待上传结果订单'"
+         class="operation">
+      <div class="btn back" @click="updateResult()">上传结果</div>
+      <div class="btn" @click="lockRealInfo">已传结果</div>
+      <!--      <div class="btn">分批测已完成</div>-->
       <div class="btn" @click="remarkDialog">备注</div>
-      <div class="btn" @click="dissentDialog">问题反馈（1）</div>
+      <div class="btn" @click="dissentDialog('问题反馈')">问题反馈</div>
     </div>
 
-    <div v-if="process == 6" class="operation">
+    <div v-if="getStatus(orderDetail.storeOrderInfo ? orderDetail.storeOrderInfo.status : '') == '待审核结果订单'" class="operation">
       <div class="btn back" @click="remarkDialog">备注</div>
     </div>
     <div v-if="process == 8" class="operation">
@@ -373,29 +529,38 @@ export default {
       </div>
     </el-dialog>
 
+    <!--    上传报告-->
     <el-dialog :visible.sync="updateResultVisible" center title="上传报告">
-      <div v-if="updateResultType === 0" class="updateResult">
+      <div v-if="updateResultType === 0 || updateResultType === 3" class="updateResult">
         <div class="title">
-          <p>订单号：4545121232</p>
-          <p>项目名称：氧氮氢分析仪</p>
+          <p>订单号：{{ orderDetail.orderno }}</p>
+          <p>项目名称：{{ orderDetail.product_info ? orderDetail.product_info.title : '-' }}</p>
         </div>
         <el-upload
-            action="https://jsonplaceholder.typicode.com/posts/"
+            :data="mix_upload_data"
+            :file-list="fileList"
+            :on-success="handleSuccess"
+            accept="image/*"
+            action="https://jxjsjc.dx.hdapp.com.cn/api/store/upload"
             class="upload-demo"
-            list-type="picture">
+        >
           <div class="upload-tit">点击上传报告 +</div>
         </el-upload>
         <el-upload
-            action="https://jsonplaceholder.typicode.com/posts/"
+            :data="mix_upload_data"
+            :file-list="fileList2"
+            :on-success="handleSuccess2"
+            accept="image/*"
+            action="https://jxjsjc.dx.hdapp.com.cn/api/store/upload"
             class="upload-demo"
-            list-type="picture">
+        >
           <div class="upload-tit">点击上传仪器测试结果 +</div>
         </el-upload>
       </div>
 
       <div v-if="updateResultType === 1" class="success-content">
         <img alt="" src="@/assets/img/my/success.png">
-        <p>实名认证提交成功</p>
+        <p>报告上传成功</p>
         <p class="tip">请耐心等待管理员审核！</p>
       </div>
       <span v-if="updateResultType === 1" slot="footer" class="dialog-footer">
@@ -408,11 +573,11 @@ export default {
       </div>
     </el-dialog>
 
-    <el-dialog :visible.sync="dissentDialogVisible" title="提交异议">
-      <el-input placeholder="请输入异议内容" rows="10" type="textarea"></el-input>
+    <el-dialog :title="dialogTitle" :visible.sync="dissentDialogVisible">
+      <el-input v-model="feedback" :placeholder="'请输入' + dialogTitle + '内容'" rows="5" type="textarea"></el-input>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dissentDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dissentDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="dissentDialogSubmit">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -443,6 +608,25 @@ export default {
         <el-button type="primary" @click="settlementDialogVisible = false">确定</el-button>
         <el-button @click="settlementDialogVisible = false">变更结算信息</el-button>
       </div>
+    </el-dialog>
+
+    <el-dialog :visible.sync="checkDialogVisible" center title="报告预约单">
+      <div class="checkDialog" v-html="checkDialogContent">
+      </div>
+    </el-dialog>
+
+    <!--    接单/驳回-->
+    <el-dialog :visible.sync="acceptVisible" center title="操作" width="600px">
+      <el-radio-group v-model="acceptType">
+        <el-radio :label="1">接单</el-radio>
+        <el-radio :label="2">驳回</el-radio>
+      </el-radio-group>
+      <el-input v-if="acceptType === 2" v-model="notes" placeholder="请输入驳回原因" rows="3" style="margin-top: 20px;"
+                type="textarea"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="acceptVisible = false">取 消</el-button>
+        <el-button type="primary" @click="throttle_do_submit(acceptType, true)">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -822,5 +1006,9 @@ export default {
   background-color: #00479D;
   color: #fff;
   border-color: #00479D;
+}
+
+.checkDialog {
+  overflow: auto;
 }
 </style>

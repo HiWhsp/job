@@ -111,7 +111,7 @@
       </div>
       <div class="table-data">
         <el-row v-for="(item, index) in content" :key="index" :gutter="24">
-          <el-col :span="2">{{ item.index + 1 }}</el-col>
+          <el-col :span="2">{{ index + 1 }}</el-col>
           <el-col :span="4">{{ item.p_title }}</el-col>
           <el-col :span="4">{{ item.name }} {{ item.unit_school }}</el-col>
           <el-col :span="7" class="ellipsis-5">{{ item.content }}</el-col>
@@ -193,13 +193,16 @@ export default {
           {required: true, message: '请输入收款人姓名', trigger: 'blur'}
         ],
         alipay: [
-          {required: true, message: '请输入收款账号', trigger: 'blur'}
+          {required: true, message: '请输入支付宝账号', trigger: 'blur'}
         ],
         sci_info: [
           {required: true, message: '请输入影响因子', trigger: 'blur'}
         ],
         url: [
           {required: true, message: '请输入论文链接', trigger: 'blur'}
+        ],
+        art_format: [
+          {required: true, message: '请输入文章引用格式', trigger: 'blur'}
         ]
       }
     }
@@ -218,18 +221,20 @@ export default {
       }
     }
   },
-  watch: {
-    baseInfo: {
-      handler(val) {
+  mounted() {
+    this.$api({
+      url: 'user_info',
+      method: 'post'
+    }).then(res => {
+      if (res.code === 200) {
         this.form = {
-          phone: val.phone,
-          name: val.name,
-          unit_school: val.unit_group || val.unit_name,
-          email: val.email
+          phone: res.data.phone,
+          name: res.data.name,
+          unit_school: res.data.unit_group || res.data.unit_name,
+          email: res.data.email
         }
-      },
-      deep: true
-    }
+      }
+    })
   },
   methods: {
     //上传相关
@@ -259,7 +264,7 @@ export default {
             data: this.form
           }).then(res => {
             if (res.code === 200) {
-              this.$message.success('提交成功')
+              this.$message.success('您已提交成功，等待管理员审核！')
               this.$refs.form.resetFields();
               this.form.pz_pic = ""
             }
@@ -388,7 +393,6 @@ export default {
 
     .table-data {
       width: 100%;
-      padding: 20px 0 20px 30px;
       border-bottom: 1px solid #707070;
 
       p {
@@ -398,8 +402,16 @@ export default {
       }
 
       .el-row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
         display: flex;
         align-items: center;
+        border-bottom: 1px solid #707070;
+        padding: 10px 0 10px 20px;
+
+        &:last-child {
+          border-bottom: none;
+        }
       }
     }
 

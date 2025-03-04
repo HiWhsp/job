@@ -88,19 +88,19 @@ export default {
       </div>
 
       <div class="search-filter">
-        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
+        <el-form ref="queryForm" :inline="true" :model="queryParams" label-width="100px" size="small">
           <el-form-item label="订单编号">
             <el-input
                 v-model="queryParams.orderId"
-                placeholder="请输入订单号"
                 clearable
+                placeholder="请输入订单号"
             />
           </el-form-item>
           <el-form-item label="测试项目">
             <el-input
                 v-model="queryParams.title"
-                placeholder="请输入测试项目"
                 clearable
+                placeholder="请输入测试项目"
             />
             <!--            <el-select v-model="queryParams.orderUrl" placeholder="请选择测试项目">-->
             <!--              <el-option-->
@@ -114,89 +114,110 @@ export default {
           <el-form-item label="日期筛选" prop="goodsName">
             <el-date-picker
                 v-model="queryParams.date"
-                type="datetimerange"
+                end-placeholder="结束日期"
                 range-separator="至"
                 start-placeholder="开始日期"
-                end-placeholder="结束日期"
+                type="datetimerange"
                 value-format="yyyy-MM-dd"
             >
             </el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="mini" @click="handleQuery">搜索</el-button>
-            <el-button type="primary" size="mini" @click="resetQuery">重置</el-button>
+            <el-button size="mini" type="primary" @click="handleQuery">搜索</el-button>
+            <el-button size="mini" type="primary" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
       </div>
       <el-row :gutter="10">
         <el-col :span="1.5">
-          <el-button type="primary" size="mini" :disabled="single">
+          <el-button :disabled="single" size="mini" type="primary">
             批量接单
           </el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button type="primary" size="mini" :disabled="single">
+          <el-button :disabled="single" size="mini" type="primary">
             批量驳回
           </el-button>
         </el-col>
       </el-row>
       <div class="order-box">
-        <el-table :data="list_order" style="width: 100%" @selection-change="handleSelectionChange">
-          <el-table-column type="selection"/>
-          <el-table-column prop="orderId" label="订单号"></el-table-column>
-          <el-table-column prop="title" label="项目名称">
+        <el-table :data="list_order" style="width: 100%">
+          <el-table-column label="订单号" prop="orderId" width="150px">
+            <template slot-scope="scope">
+              <p>{{ scope.row.order ? scope.row.order.orderno : '--' }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="项目名称" prop="title" width="150px">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.title : '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="model_no" label="仪器型号"></el-table-column>
-          <el-table-column prop="price" label="金额">
+          <el-table-column label="仪器型号" prop="model_no" width="120px"></el-table-column>
+          <el-table-column label="金额" prop="price">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.price : '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="price" label="样品数">
+          <el-table-column label="样品数" prop="price">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.yp_num : '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="contact_user" label="对接人"></el-table-column>
-          <el-table-column prop="if_recover" label="回收">
+          <el-table-column label="寄样分部" prop="fenbu" width="150px"></el-table-column>
+          <el-table-column label="对接人" prop="contact_user"></el-table-column>
+          <el-table-column label="回收" prop="if_recover">
             <template slot-scope="scope">
               <p v-if="scope.row.if_recover == 1">是</p>
               <p v-else>否</p>
             </template>
           </el-table-column>
-          <el-table-column prop="date" label="订单状态">
+          <el-table-column label="加急" prop="if_urgent" width="120px">
+            <template slot-scope="scope">
+              <p v-if="scope.row.if_recover == 0">不加急</p>
+              <p v-if="scope.row.if_recover == 1">3个工作日完成</p>
+              <p v-if="scope.row.if_recover == 2">24小时</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="订单状态" prop="date">
             <template slot-scope="scope">
               <p>{{ getStatus(scope.row.status) }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="yp_status" label="样品状态">
+          <el-table-column label="样品状态" prop="yp_status">
             <template slot-scope="scope">
               <p>{{ getYpStatus(scope.row.yp_status) || '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="created_at" label="寄样时间"></el-table-column>
-          <el-table-column prop="updated_at" label="完成时间"></el-table-column>
-          <el-table-column label="操作" fixed="right">
+          <el-table-column label="寄样时间" prop="created_at" width="180px"></el-table-column>
+          <el-table-column label="完成时间" prop="updated_at" width="180px"></el-table-column>
+          <el-table-column fixed="right" label="操作" width="220px">
             <template slot-scope="scope">
-              <el-button size="mini" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">查看</el-button>
+              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">查看
+              </el-button>
+<!--              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">接单-->
+<!--              </el-button>-->
+<!--              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">驳回-->
+<!--              </el-button>-->
+<!--              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">备注-->
+<!--              </el-button>-->
+<!--              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">-->
+<!--                问题反馈-->
+<!--              </el-button>-->
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div v-if="count" class="pagination-box"
            style="margin-top: 40px; text-align: center;">
-        <el-pagination background layout="total, prev, pager, next" @current-change="setView"
-                       :current-page.sync="pagination.page" :page-size.sync="pagination.limit"
-                       :total="count"></el-pagination>
+        <el-pagination :current-page.sync="pagination.page" :page-size.sync="pagination.limit" :total="count"
+                       background layout="total, prev, pager, next"
+                       @current-change="setView"></el-pagination>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .content {
   background: #fff;
   padding-bottom: 100px;
@@ -298,6 +319,7 @@ export default {
   }
 
   .order-box {
+    width: 1700px;
     margin-top: 10px;
     padding: 0 40px;
 

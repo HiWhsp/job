@@ -149,13 +149,17 @@ export default {
       <div class="order-box">
         <el-table :data="list_order" style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection"/>
-          <el-table-column prop="orderId" label="订单号"></el-table-column>
+          <el-table-column prop="orderId" label="订单号" width="150px">
+            <template slot-scope="scope">
+              <p>{{ scope.row.order ? scope.row.order.orderno : '--' }}</p>
+            </template>
+          </el-table-column>
           <el-table-column prop="title" label="项目名称">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.title : '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="updated_at" label="要求出结果时间"></el-table-column>
+          <el-table-column prop="u_result_a" label="要求出结果时间" width="180px"></el-table-column>
           <el-table-column prop="fenbu" label="寄样分部"></el-table-column>
           <el-table-column prop="price" label="金额">
             <template slot-scope="scope">
@@ -174,11 +178,17 @@ export default {
               <p v-else>否</p>
             </template>
           </el-table-column>
-          <el-table-column prop="if_urgent" label="加急"></el-table-column>
-          <el-table-column prop="created_at" label="寄样时间"></el-table-column>
+          <el-table-column prop="if_urgent" label="加急">
+            <template slot-scope="scope">
+              <p v-if="scope.row.if_recover == 0">不加急</p>
+              <p v-if="scope.row.if_recover == 1">3个工作日完成</p>
+              <p v-if="scope.row.if_recover == 2">24小时</p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="yp_at" label="寄样时间" width="180px"></el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
-              <el-button size="mini" @click="goUrl('/supplier-order-detail?type=4')">查看</el-button>
+              <el-button type="text" size="mini" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">查看</el-button>
             </template>
           </el-table-column>
         </el-table>
