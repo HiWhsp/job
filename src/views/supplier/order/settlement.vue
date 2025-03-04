@@ -164,7 +164,7 @@ export default {
           <el-table-column prop="updated_at" label="完成时间"></el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
-              <el-button type="text" size="mini" @click="goUrl('/supplier-order-detail?type=9')">详情</el-button>
+              <el-button type="text" size="mini" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>

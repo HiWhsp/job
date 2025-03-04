@@ -87,6 +87,7 @@ export default {
     },
     getStatus() {
       return function (status) {
+        console.log(status)
         switch (status) {
           case 10:
           case 11:
@@ -98,6 +99,8 @@ export default {
             return '待上传结果订单';
           case 31:
             return '待审核结果订单';
+          case 32:
+            return '待结算订单';
           case 40:
             return '已完成';
         }

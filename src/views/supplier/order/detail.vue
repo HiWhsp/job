@@ -3,11 +3,13 @@ export default {
   name: "detail",
   data() {
     return {
+      statusText: '',
       process: 1, // 订单类型
       orderId: '', // 订单号
       orderDetail: {}, // 订单详情
       storeOrderInfo: {}, // 订单信息
       updateResultInfo: {}, // 上传结果信息
+      reportDetail: {}, // 报告数据
       acceptType: "", // 操作类型 1 接单 2驳回
       notes: '', // 驳回原因
       feedback: '', // 异议
@@ -72,6 +74,20 @@ export default {
       }).then(res => {
         if (res.code == 200) {
           this.orderDetail = res.data;
+          this.statusText = this.getStatus(this.orderDetail.storeOrderInfo ? this.orderDetail.storeOrderInfo.status : '');
+          if(this.statusText == '待审核结果订单') {
+            this.$api({
+              url: 'store/report_detail',
+              method: 'post',
+              data: {
+                orderId: this.orderId
+              }
+            }).then(res => {
+              if (res.code === 200) {
+                this.reportDetail = res.data;
+              }
+            })
+          }
           this.storeOrderInfo = res.data.storeOrderInfo || {};
         }
       })
@@ -92,6 +108,7 @@ export default {
         }).then(res => {
           if (res.code == 200) {
             this.updateResultInfo = res.data;
+            this.setView();
           }
         })
       } else {
@@ -133,6 +150,7 @@ export default {
         }).then(res => {
           if (res.code === 200) {
             this.updateResultType = 1
+            this.setView();
           }
         })
       })
@@ -142,11 +160,15 @@ export default {
     lockRealInfo() {
       this.$api({
         url: 'store/report_detail',
-        orderId: this.orderId
+        method: 'post',
+        data: {
+          orderId: this.orderId
+        }
       }).then(res => {
         if (res.code === 200) {
           this.fileList = res.data.list[0];
           this.fileList2 = res.data.list[1];
+          this.setView();
         }
         this.updateResultType = 3
       })
@@ -219,7 +241,8 @@ export default {
             message: res.msg,
             type: 'success'
           });
-          this.dissentDialogVisible = false
+          this.dissentDialogVisible = false;
+          this.setView();
         }
       })
     },
@@ -239,6 +262,7 @@ export default {
             message: res.msg,
             type: 'success'
           });
+          this.setView();
         }
       })
     },
@@ -264,7 +288,7 @@ export default {
       </div>
       <div class="info">
         <p class="order-id">订单号：{{ orderDetail.orderno }}</p>
-        <p class="time">{{ getStatus(orderDetail.storeOrderInfo ? orderDetail.storeOrderInfo.status : '') }}</p>
+        <p class="time">{{ statusText }}</p>
       </div>
     </div>
     <div class="address-item">
@@ -354,24 +378,26 @@ export default {
     </div>
 
     <!--   报告情况 -->
-    <div v-if="['待审核结果订单'].includes(getStatus(orderDetail.storeOrderInfo ? orderDetail.storeOrderInfo.status : ''))" class="order-item">
+    <div v-if="['待审核结果订单'].includes(statusText)" class="order-item">
       <div class="order-requirements">
         <h3 class="section-title">报告情况</h3>
         <!-- 实验联系人 -->
         <div class="info-row">
           <span class="label">报告列表</span>
           <div class="content">
-            <p>1、报告文件1</p>
-            <p>2、仪器及结果说明</p>
+            <p v-for="item in reportDetail.list" :key="item.id">{{ item.title }}</p>
           </div>
         </div>
         <!-- 样品是否回收 -->
-        <div v-if="process == 6" class="info-row">
+        <div class="info-row">
           <span class="label">审核状态</span>
           <div class="content">
-            <p class="status-2">被驳回</p>
-            <p>驳回原因：这里是一段驳回原因</p>
-            <p class="edit">修改</p>
+            <p :class="{
+              'status-1': reportDetail.status_txt.includes('成功'),
+              'status-2': reportDetail.status_txt.includes('失败')
+            }">{{ reportDetail.status_txt }}</p>
+            <p v-if="reportDetail.notes">驳回原因：{{ reportDetail.notes }}</p>
+            <p class="edit" v-if="reportDetail.status_txt.includes('失败')">修改</p>
           </div>
         </div>
       </div>
@@ -458,24 +484,23 @@ export default {
       </div>
     </div>
 
-
     <!--    操作-->
-    <div v-if="getStatus(orderDetail.storeOrderInfo ? orderDetail.storeOrderInfo.status : '') == '已分派'"
+    <div v-if="statusText == '已分派'"
          class="operation">
-      <div class="btn back" @click="throttle_do_submit(1)">接单</div>
+      <div class="btn back" @click="throttle_do_submit(1)" v-if="orderDetail.storeOrderInfo.status == 10">接单</div>
       <div class="btn" @click="throttle_do_submit(2)">驳回</div>
       <div class="btn" @click="remarkDialog">备注</div>
       <div class="btn" @click="dissentDialog('问题反馈')">问题反馈</div>
     </div>
 
-    <div v-if="getStatus(orderDetail.storeOrderInfo ? orderDetail.storeOrderInfo.status : '') == '运输中'"
+    <div v-if="statusText == '运输中'"
          class="operation">
       <div class="btn back" @click="sampleReceived">收到样品</div>
       <div class="btn" @click="remarkDialog">备注</div>
       <div class="btn" @click="dissentDialog('问题反馈')">问题反馈</div>
     </div>
 
-    <div v-if="getStatus(orderDetail.storeOrderInfo ? orderDetail.storeOrderInfo.status : '') == '待上传结果订单'"
+    <div v-if="statusText == '待上传结果订单'"
          class="operation">
       <div class="btn back" @click="updateResult()">上传结果</div>
       <div class="btn" @click="lockRealInfo">已传结果</div>
@@ -484,7 +509,7 @@ export default {
       <div class="btn" @click="dissentDialog('问题反馈')">问题反馈</div>
     </div>
 
-    <div v-if="getStatus(orderDetail.storeOrderInfo ? orderDetail.storeOrderInfo.status : '') == '待审核结果订单'" class="operation">
+    <div v-if="statusText == '待审核结果订单'" class="operation">
       <div class="btn back" @click="remarkDialog">备注</div>
     </div>
     <div v-if="process == 8" class="operation">
@@ -610,6 +635,7 @@ export default {
       </div>
     </el-dialog>
 
+    <!--    报告预约单-->
     <el-dialog :visible.sync="checkDialogVisible" center title="报告预约单">
       <div class="checkDialog" v-html="checkDialogContent">
       </div>
