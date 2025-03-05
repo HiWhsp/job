@@ -6,7 +6,22 @@ export default {
       tabIndex: 1,
       queryParams: {}, // 查询参数
       list_order: [{}], // 订单
-      payList: [], // 测试项目
+      payList: [{
+        value: '',
+        label: "全部"
+      }, {
+        value: 1,
+        label: "已结算"
+      }, {
+        value: 2,
+        label: "结算中"
+      }, {
+        value: 3,
+        label: "待结算"
+      }, {
+        value: 4,
+        label: "暂不可结算"
+      }], // 测试项目
       isRePay: [
         {
           value: '',
@@ -181,15 +196,18 @@ export default {
               <p v-else>否</p>
             </template>
           </el-table-column>
-          <el-table-column prop="date" label="结算状态">
+          <el-table-column prop="status_txt" label="结算状态">
             <template slot-scope="scope">
-              <p>{{ getStatus(scope.row.status) }}</p>
+              <el-tag v-if="scope.row.status_txt == '已完成'" type="success">{{ scope.row.status_txt }}</el-tag>
+              <el-tag v-if="scope.row.status_txt == '结算中'" type="warning">{{ scope.row.status_txt }}</el-tag>
+              <el-tag v-if="scope.row.status_txt == '暂不可结算'" type="danger">{{ scope.row.status_txt }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="complate_at" label="完成时间"></el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
-              <el-button type="text" size="mini" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">详情</el-button>
+              <el-button type="text" size="mini" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">详情
+              </el-button>
             </template>
           </el-table-column>
         </el-table>

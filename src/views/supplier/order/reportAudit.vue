@@ -14,34 +14,13 @@ export default {
           label: "全部"
         }, {
           value: 1,
-          label: "已分派"
+          label: "已通过"
         }, {
           value: 2,
-          label: "运输中"
+          label: "被驳回"
         }, {
-          value: 3,
-          label: "待上传结果"
-        }, {
-          value: 4,
-          label: "待审核结果"
-        }, {
-          value: 5,
-          label: "已完成"
-        }, {
-          value: 6,
-          label: "复测"
-        }, {
-          value: 7,
-          label: "待结算"
-        }, {
-          value: 8,
-          label: "样品回收"
-        }, {
-          value: 9,
-          label: "差评/异议"
-        }, {
-          value: 10,
-          label: "超期/即将超期"
+          value: 2,
+          label: "待审核"
         }
       ], // 订单状态
       keyword: '',

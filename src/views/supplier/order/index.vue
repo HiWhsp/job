@@ -252,9 +252,9 @@ export default {
               <p v-else>否</p>
             </template>
           </el-table-column>
-          <el-table-column label="订单状态" prop="date">
+          <el-table-column label="订单状态" prop="status_txt">
             <template slot-scope="scope">
-              <p>{{ getStatus(scope.row.status) }}</p>
+              <p>{{ scope.row.status_txt || '--' }}</p>
             </template>
           </el-table-column>
           <el-table-column label="样品状态" prop="yp_status">

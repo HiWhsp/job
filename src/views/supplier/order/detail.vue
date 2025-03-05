@@ -75,7 +75,7 @@ export default {
         if (res.code == 200) {
           this.orderDetail = res.data;
           this.statusText = this.getStatus(this.orderDetail.storeOrderInfo ? this.orderDetail.storeOrderInfo.status : '');
-          if(this.statusText == '待审核结果订单') {
+          if(this.statusText == '待审核结果订单' || this.statusText == '已完成') {
             this.$api({
               url: 'store/report_detail',
               method: 'post',
@@ -112,6 +112,7 @@ export default {
           }
         })
       } else {
+        this.updateResultType = 0;
         this.updateResultInfo = {};
       }
       this.updateResultVisible = true
@@ -166,10 +167,16 @@ export default {
         }
       }).then(res => {
         if (res.code === 200) {
-          this.fileList = res.data.list[0];
-          this.fileList2 = res.data.list[1];
-          this.setView();
+          this.fileList = [{
+            name: res.data.list[0].title,
+            url: res.data.list[0].path
+          }];
+          this.fileList2 = [{
+            name: res.data.list[1].title,
+            url: res.data.list[1].path
+          }];
         }
+        this.updateResultVisible = true;
         this.updateResultType = 3
       })
     },
@@ -378,7 +385,7 @@ export default {
     </div>
 
     <!--   报告情况 -->
-    <div v-if="['待审核结果订单'].includes(statusText)" class="order-item">
+    <div v-if="['待审核结果订单', '已完成'].includes(statusText)" class="order-item">
       <div class="order-requirements">
         <h3 class="section-title">报告情况</h3>
         <!-- 实验联系人 -->
@@ -437,18 +444,18 @@ export default {
       </div>
     </div>
     <!--   结算情况 -->
-    <div v-if="process == 7 || process == 11" class="order-item">
+    <div v-if="['已完成'].includes(statusText)" class="order-item">
       <div class="order-requirements">
         <h3 class="section-title">结算情况</h3>
         <div class="flex" style="align-items: start">
           <div class="info-row" style="flex: 1;">
             <span class="label">结算信息</span>
             <div class="content">
-              <p>结算账户：银行卡-对公户-中国工商银行厦大支行-1234567898887777-嘉庚创新实验室</p>
+<!--              <p>结算账户：银行卡-对公户-中国工商银行厦大支行-1234567898887777-嘉庚创新实验室</p>-->
               <p>结算方式：对公户</p>
-              <p>开户行：中国工商银行厦大支行</p>
-              <p>账号：1234567898887777</p>
-              <p>户名：嘉庚创新实验室</p>
+              <p>开户行：{{ webConfig.bank_name }}</p>
+              <p>账号：{{ webConfig.bank_no }}</p>
+              <p>户名：{{ webConfig.company_name }}</p>
             </div>
           </div>
           <div class="info-row" style="flex: 1;">
@@ -488,7 +495,7 @@ export default {
     <div v-if="statusText == '已分派'"
          class="operation">
       <div class="btn back" @click="throttle_do_submit(1)" v-if="orderDetail.storeOrderInfo.status == 10">接单</div>
-      <div class="btn" @click="throttle_do_submit(2)">驳回</div>
+      <div class="btn" @click="throttle_do_submit(2)" v-if="orderDetail.storeOrderInfo.status == 11">驳回</div>
       <div class="btn" @click="remarkDialog">备注</div>
       <div class="btn" @click="dissentDialog('问题反馈')">问题反馈</div>
     </div>
@@ -520,7 +527,7 @@ export default {
       <div class="btn" @click="remarkDialog">问题反馈（0）</div>
     </div>
 
-    <div v-if="process == 9" class="operation">
+    <div v-if="statusText == '待结算订单'" class="operation">
       <div class="btn back" @click="applySettlement">申请结算</div>
       <div class="btn" @click="remarkDialog">备注</div>
     </div>
