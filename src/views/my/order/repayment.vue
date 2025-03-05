@@ -117,9 +117,9 @@
           <br>
           上传转账凭证，有利于我司财务人员快速核对还款情况，迅速恢复信用金。</p>
         <div class="it">
-          <p><span>户名：</span>这里是户名</p>
-          <p><span>账号：</span>1234567890000000000</p>
-          <p><span>开户行：</span>这里是开户行</p>
+          <p><span>户名：</span>{{ webConfig.company_name }}</p>
+          <p><span>账号：</span>{{ webConfig.bank_no }}</p>
+          <p><span>开户行：</span>{{ webConfig.bank_name }}</p>
         </div>
       </div>
       <div v-if="info.payType === 'paypal'" class="section-ctx">
