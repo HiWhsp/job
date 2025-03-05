@@ -326,9 +326,9 @@ export default {
         <div class="account" v-if="info.payType === 'offline'">
           <p>请转账至以下账户：</p>
           <div class="it">
-            <p><span>户名：</span>这里是户名</p>
-            <p><span>账号：</span>1234567890000000000</p>
-            <p><span>开户行：</span>这里是开户行</p>
+            <p><span>户名：</span>{{ webConfig.company_name }}</p>
+            <p><span>账号：</span>{{ webConfig.bank_no }}</p>
+            <p><span>开户行：</span>{{ webConfig.bank_name }}</p>
           </div>
         </div>
         <div class="section-ctx" v-if="info.payType === 'offline'">
