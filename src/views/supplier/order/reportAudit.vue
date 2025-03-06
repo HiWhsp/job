@@ -19,7 +19,7 @@ export default {
           value: 2,
           label: "被驳回"
         }, {
-          value: 2,
+          value: 3,
           label: "待审核"
         }
       ], // 订单状态

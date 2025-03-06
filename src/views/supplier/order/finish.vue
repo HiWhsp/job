@@ -4,24 +4,26 @@ export default {
   data() {
     return {
       tabIndex: 1,
+      selectRow: {}, // 当前选中
       queryParams: {}, // 查询参数
       list_order: [{}], // 订单
-      payList: [{
-        value: '',
-        label: "全部"
-      }, {
-        value: 1,
-        label: "已结算"
-      }, {
-        value: 2,
-        label: "结算中"
-      }, {
-        value: 3,
-        label: "待结算"
-      }, {
-        value: 4,
-        label: "暂不可结算"
-      }], // 测试项目
+      payList: [
+        {
+          value: '',
+          label: "全部"
+        }, {
+          value: 1,
+          label: "已结算"
+        }, {
+          value: 2,
+          label: "结算中"
+        }, {
+          value: 3,
+          label: "待结算"
+        }, {
+          value: 4,
+          label: "暂不可结算"
+        }], // 测试项目
       isRePay: [
         {
           value: '',
@@ -60,6 +62,12 @@ export default {
       ], // 订单状态
       count: 1,
       keyword: '',
+      feedback: '', // 异议
+      dialogTitle: '', // 弹框标题
+      dissentDialogVisible: false, // 异议
+      notesList: [], // 备注列表
+      notesContent: '', // 备注
+      remarkDialogVisible: false, // 备注
       pagination: {
         page: 1,
         limit: 10
@@ -106,6 +114,74 @@ export default {
       this.queryParams = {}
       this.setView()
     },
+
+    // 异议
+    dissentDialog(title, row) {
+      this.selectRow = row;
+      this.dialogTitle = title;
+      this.dissentDialogVisible = true
+    },
+    // 异议提交
+    dissentDialogSubmit() {
+      if (!this.feedback) {
+        this.$message.error('请输入' + this.dialogTitle + '内容');
+        return
+      }
+      this.$api({
+        url: 'store/order_feedback',
+        method: 'post',
+        data: {
+          orderId: this.selectRow.id,
+          content: this.feedback
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.dissentDialogVisible = false;
+          this.setView();
+        }
+      })
+    },
+    // 备注
+    remarkDialog(row) {
+      this.selectRow = row;
+      this.$api({
+        url: 'store/order_notes',
+        method: 'post',
+        data: {
+          id: row.id
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.notesList = res.data;
+        }
+      })
+      this.remarkDialogVisible = true
+    },
+    // 备注提交
+    remarkDialogSubmit() {
+      this.$api({
+        url: 'store/submit_notes',
+        method: 'post',
+        data: {
+          id: this.selectRow.id,
+          content: this.notesContent
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.notesContent = '';
+          this.remarkDialogVisible = false;
+          this.setView();
+        }
+      })
+    },
     goUrl(url) {
       this.$router.push(url);
     }
@@ -123,18 +199,18 @@ export default {
           </div>
         </div>
         <div class="search flex">
-          <el-input placeholder="请输入仪器名/订单号" v-model="keyword"></el-input>
+          <el-input v-model="keyword" placeholder="请输入仪器名/订单号"></el-input>
           <el-button type="primary" @click="handleQuery">搜索</el-button>
         </div>
       </div>
 
       <div class="search-filter">
-        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
+        <el-form ref="queryForm" :inline="true" :model="queryParams" label-width="100px" size="small">
           <el-form-item label="订单编号" prop="orderSn">
             <el-input
                 v-model="queryParams.orderId"
-                placeholder="请输入订单号"
                 clearable
+                placeholder="请输入订单号"
             />
           </el-form-item>
           <el-form-item label="结算状态" prop="phone">
@@ -150,63 +226,69 @@ export default {
           <el-form-item label="日期筛选" prop="goodsName">
             <el-date-picker
                 v-model="queryParams.date"
-                type="datetimerange"
+                end-placeholder="结束日期"
                 range-separator="至"
                 start-placeholder="开始日期"
-                end-placeholder="结束日期"
+                type="datetimerange"
                 value-format="yyyy-MM-dd"
             >
             </el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="mini" @click="handleQuery">搜索</el-button>
-            <el-button type="primary" size="mini" @click="resetQuery">重置</el-button>
+            <el-button size="mini" type="primary" @click="handleQuery">搜索</el-button>
+            <el-button size="mini" type="primary" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
       </div>
 
       <div class="order-box">
         <el-table :data="list_order" style="width: 100%">
-          <el-table-column prop="orderId" label="订单号" width="150px">
+          <el-table-column label="订单号" prop="orderId" width="150px">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.orderno : '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="title" label="项目名称">
+          <el-table-column label="项目名称" prop="title">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.title : '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="model_no" label="仪器型号"></el-table-column>
-          <el-table-column prop="price" label="金额">
+          <el-table-column label="仪器型号" prop="model_no"></el-table-column>
+          <el-table-column label="金额" prop="price">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.price : '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="fenbu" label="寄样分部"></el-table-column>
-          <el-table-column prop="yp_num" label="样品数">
+          <el-table-column label="寄样分部" prop="fenbu"></el-table-column>
+          <el-table-column label="样品数" prop="yp_num">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.yp_num : '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="contact_user" label="对接人"></el-table-column>
-          <el-table-column prop="if_recover" label="回收">
+          <el-table-column label="对接人" prop="contact_user"></el-table-column>
+          <el-table-column label="回收" prop="if_recover">
             <template slot-scope="scope">
               <p v-if="scope.row.if_recover == 1">是</p>
               <p v-else>否</p>
             </template>
           </el-table-column>
-          <el-table-column prop="status_txt" label="结算状态">
+          <el-table-column label="结算状态" prop="status_txt">
             <template slot-scope="scope">
               <el-tag v-if="scope.row.status_txt == '已完成'" type="success">{{ scope.row.status_txt }}</el-tag>
               <el-tag v-if="scope.row.status_txt == '结算中'" type="warning">{{ scope.row.status_txt }}</el-tag>
               <el-tag v-if="scope.row.status_txt == '暂不可结算'" type="danger">{{ scope.row.status_txt }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="complate_at" label="完成时间"></el-table-column>
-          <el-table-column label="操作" fixed="right">
+          <el-table-column label="完成时间" prop="complate_at"></el-table-column>
+          <el-table-column fixed="right" label="操作" width="210px">
             <template slot-scope="scope">
-              <el-button type="text" size="mini" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">详情
+              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">详情
+              </el-button>
+              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">查看结果
+              </el-button>
+              <el-button size="mini" type="text" @click="remarkDialog(scope.row)">备注
+              </el-button>
+              <el-button size="mini" type="text" @click="dissentDialog('问题反馈', scope.row)">问题反馈
               </el-button>
             </template>
           </el-table-column>
@@ -214,15 +296,36 @@ export default {
       </div>
       <div v-if="count" class="pagination-box"
            style="margin-top: 40px; text-align: center;">
-        <el-pagination background layout="total, prev, pager, next" @current-change="setView"
-                       :current-page.sync="pagination.page" :page-size="pagination.limit"
-                       :total="count"></el-pagination>
+        <el-pagination :current-page.sync="pagination.page" :page-size="pagination.limit" :total="count"
+                       background layout="total, prev, pager, next"
+                       @current-change="setView"></el-pagination>
       </div>
     </div>
+
+    <!--    异议-->
+    <el-dialog :title="dialogTitle" :visible.sync="dissentDialogVisible">
+      <el-input v-model="feedback" :placeholder="'请输入' + dialogTitle + '内容'" rows="5" type="textarea"></el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dissentDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dissentDialogSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!--    备注-->
+    <el-dialog :visible.sync="remarkDialogVisible" title="备注">
+      <div v-for="item in notesList" :key="item.id" class="dialog-title">
+        <p><span>{{ item.type_txt }}：</span>{{ item.content }}</p>
+        <p class="date">{{ item.created_at }}</p>
+      </div>
+      <el-input v-model="notesContent" placeholder="请在这里输入您的备注" rows="10" type="textarea"></el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="remarkDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="remarkDialogSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .content {
   background: #fff;
   padding-bottom: 100px;
@@ -325,6 +428,30 @@ export default {
     /deep/ .el-table th.el-table__cell {
       background: #EAECEE;;
       color: #333333;
+    }
+  }
+}
+
+.dialog-title {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+
+  p {
+    font-weight: 400;
+    font-size: 16px;
+    color: #333333;
+
+    span {
+      font-weight: 400;
+      font-size: 16px;
+      color: #FF0000;
+    }
+
+    &.date {
+      font-weight: 400;
+      font-size: 14px;
+      color: #999999;
     }
   }
 }

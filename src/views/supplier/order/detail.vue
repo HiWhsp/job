@@ -10,6 +10,8 @@ export default {
       storeOrderInfo: {}, // 订单信息
       updateResultInfo: {}, // 上传结果信息
       reportDetail: {}, // 报告数据
+      notesList: [], // 备注列表
+      notesContent: '', // 备注
       acceptType: "", // 操作类型 1 接单 2驳回
       notes: '', // 驳回原因
       feedback: '', // 异议
@@ -23,7 +25,20 @@ export default {
       checkDialogContent: '', // 查看预约单内容
       updateResultType: 0, // 上传结果类型
       settlementRruleForm: {}, // 结算
-      settlementRules: {}, // 结算
+      settlementRules: {
+        type: [
+          { required: true, message: '请选择结算类型', trigger: 'change' }
+        ],
+        bank_title: [
+          { required: true, message: '请输入开户行', trigger: 'blur' }
+        ],
+        bank_name: [
+          { required: true, message: '请输入户名', trigger: 'blur' }
+        ],
+        bank_no: [
+          { required: true, message: '请输入账号', trigger: 'blur' }
+        ]
+      }, // 结算
 
       fileList: [], // 上传文件列表
       fileList2: [], //
@@ -75,7 +90,7 @@ export default {
         if (res.code == 200) {
           this.orderDetail = res.data;
           this.statusText = this.getStatus(this.orderDetail.storeOrderInfo ? this.orderDetail.storeOrderInfo.status : '');
-          if(this.statusText == '待审核结果订单' || this.statusText == '已完成') {
+          if (this.statusText == '待审核结果订单' || this.statusText == '已完成') {
             this.$api({
               url: 'store/report_detail',
               method: 'post',
@@ -94,6 +109,17 @@ export default {
     },
     // 备注
     remarkDialog() {
+      this.$api({
+        url: 'store/order_notes',
+        method: 'post',
+        data: {
+          id: this.orderId
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.notesList = res.data;
+        }
+      })
       this.remarkDialogVisible = true
     },
     // 已传结果
@@ -167,14 +193,16 @@ export default {
         }
       }).then(res => {
         if (res.code === 200) {
-          this.fileList = [{
-            name: res.data.list[0].title,
-            url: res.data.list[0].path
-          }];
-          this.fileList2 = [{
-            name: res.data.list[1].title,
-            url: res.data.list[1].path
-          }];
+          if(res.data.list.length) {
+            this.fileList = [{
+              name: res.data.list[0].title,
+              url: res.data.list[0].path
+            }];
+            this.fileList2 = [{
+              name: res.data.list[1].title,
+              url: res.data.list[1].path
+            }];
+          }
         }
         this.updateResultVisible = true;
         this.updateResultType = 3
@@ -203,7 +231,7 @@ export default {
     applySettlement() {
       this.settlementDialogVisible = true;
     },
-    //   接单/驳回
+    // 接单/驳回
     throttle_do_submit(type, submit) {
       this.acceptVisible = true;
       this.acceptType = type;
@@ -274,14 +302,68 @@ export default {
       })
     },
 
+    // 结算账户提交
+    settlementDialogSubmit() {
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.$api({
+            url: 'store/apply_settle',
+            method: 'post',
+            data: {
+              ids: this.orderId,
+              ...this.settlementRruleForm
+            }
+          }).then(res => {
+            if (res.code === 200) {
+              this.$message.success(res.msg);
+              this.setView();
+              this.settlementDialogVisible = false;
+            }
+          })
+        }
+        this.$refs.ruleForm.resetFields();
+      })
+    },
+    // 备注
+    remarkDialogSubmit() {
+      this.$api({
+        url: 'store/submit_notes',
+        method: 'post',
+        data: {
+          id: this.orderId,
+          content: this.notesContent
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.notesContent = '';
+          this.remarkDialogVisible = false;
+          this.setView();
+        }
+      })
+    },
     // 上传成功的回调
     handleSuccess(response, file, fileList) {
-      this.fileList = [response.data];
-      this.$message.success('上传成功');
+      if(response.code === 200) {
+        this.fileList = [response.data];
+        this.$message.success('上传成功');
+      }else {
+        this.$message.error(response.msg);
+      }
     },
     handleSuccess2(response, file, fileList) {
-      this.fileList2 = [response.data];
-      this.$message.success('上传成功');
+      if(response.code === 200) {
+        this.fileList2 = [response.data];
+        this.$message.success('上传成功');
+      }else {
+        this.$message.error(response.msg);
+      }
+    },
+    handleError(err, file, fileList) {
+      this.$message.error('上传失败');
     }
   }
 }
@@ -400,11 +482,11 @@ export default {
           <span class="label">审核状态</span>
           <div class="content">
             <p :class="{
-              'status-1': reportDetail.status_txt.includes('成功'),
-              'status-2': reportDetail.status_txt.includes('失败')
+              'status-1': reportDetail.status_txt == '已完成',
+              'status-2': reportDetail.status_txt == '审核失败'
             }">{{ reportDetail.status_txt }}</p>
             <p v-if="reportDetail.notes">驳回原因：{{ reportDetail.notes }}</p>
-            <p class="edit" v-if="reportDetail.status_txt.includes('失败')">修改</p>
+            <p v-if="reportDetail.status_txt == '审核失败'" class="edit">修改</p>
           </div>
         </div>
       </div>
@@ -451,7 +533,7 @@ export default {
           <div class="info-row" style="flex: 1;">
             <span class="label">结算信息</span>
             <div class="content">
-<!--              <p>结算账户：银行卡-对公户-中国工商银行厦大支行-1234567898887777-嘉庚创新实验室</p>-->
+              <!--              <p>结算账户：银行卡-对公户-中国工商银行厦大支行-1234567898887777-嘉庚创新实验室</p>-->
               <p>结算方式：对公户</p>
               <p>开户行：{{ webConfig.bank_name }}</p>
               <p>账号：{{ webConfig.bank_no }}</p>
@@ -494,8 +576,8 @@ export default {
     <!--    操作-->
     <div v-if="statusText == '已分派'"
          class="operation">
-      <div class="btn back" @click="throttle_do_submit(1)" v-if="orderDetail.storeOrderInfo.status == 10">接单</div>
-      <div class="btn" @click="throttle_do_submit(2)" v-if="orderDetail.storeOrderInfo.status == 11">驳回</div>
+      <div v-if="orderDetail.storeOrderInfo.status == 10" class="btn back" @click="throttle_do_submit(1)">接单</div>
+      <div v-if="orderDetail.storeOrderInfo.status == 11" class="btn" @click="throttle_do_submit(2)">驳回</div>
       <div class="btn" @click="remarkDialog">备注</div>
       <div class="btn" @click="dissentDialog('问题反馈')">问题反馈</div>
     </div>
@@ -546,18 +628,14 @@ export default {
     </div>
 
     <el-dialog :visible.sync="remarkDialogVisible" title="备注">
-      <div class="dialog-title">
-        <p><span>平台备注：</span>这里是一段平台备注</p>
-        <p class="date">2024-08-20</p>
+      <div class="dialog-title" v-for="item in notesList" :key="item.id">
+        <p><span>{{ item.type_txt }}：</span>{{ item.content }}</p>
+        <p class="date">{{ item.created_at }}</p>
       </div>
-      <div class="dialog-title">
-        <p><span>供应商备注：</span>这里是一段平台备注</p>
-        <p class="date">2024-08-20</p>
-      </div>
-      <el-input placeholder="请在这里输入您的备注" rows="10" type="textarea"></el-input>
+      <el-input placeholder="请在这里输入您的备注" rows="10" type="textarea" v-model="notesContent"></el-input>
       <div slot="footer" class="dialog-footer">
         <el-button @click="remarkDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="remarkDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="remarkDialogSubmit">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -572,6 +650,7 @@ export default {
             :data="mix_upload_data"
             :file-list="fileList"
             :on-success="handleSuccess"
+            :on-error="handleError"
             accept="image/*"
             action="https://jxjsjc.dx.hdapp.com.cn/api/store/upload"
             class="upload-demo"
@@ -582,6 +661,7 @@ export default {
             :data="mix_upload_data"
             :file-list="fileList2"
             :on-success="handleSuccess2"
+            :on-error="handleError"
             accept="image/*"
             action="https://jxjsjc.dx.hdapp.com.cn/api/store/upload"
             class="upload-demo"
@@ -616,29 +696,32 @@ export default {
     <el-dialog :visible.sync="settlementDialogVisible" center title="结算信息" width="900px">
       <div class="settlement-box">
         <el-form ref="ruleForm" :model="settlementRruleForm" :rules="settlementRules" label-width="100px">
-          <el-form-item label="结算账户：" prop="name">
-            <el-select v-model="settlementRruleForm.region" placeholder="请选择活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+          <!--          <el-form-item label="结算账户：" prop="name">-->
+          <!--            <el-select v-model="settlementRruleForm.region" placeholder="请选择活动区域">-->
+          <!--              <el-option label="区域一" value="shanghai"></el-option>-->
+          <!--              <el-option label="区域二" value="beijing"></el-option>-->
+          <!--            </el-select>-->
+          <!--          </el-form-item>-->
+          <el-form-item label="结算方式：" prop="type">
+            <el-select v-model="settlementRruleForm.type" placeholder="请选择结算方式">
+              <el-option label="对公" value="1"></el-option>
+              <el-option label="个人" value="2"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="结算方式：" prop="region">
-            <el-input v-model="settlementRruleForm.name"></el-input>
+          <el-form-item label="开户行：" prop="bank_title">
+            <el-input v-model="settlementRruleForm.bank_title" placeholder="请输入开户行"></el-input>
           </el-form-item>
-          <el-form-item label="开户行：" prop="region">
-            <el-input v-model="settlementRruleForm.name"></el-input>
+          <el-form-item label="账号：" prop="bank_no">
+            <el-input v-model="settlementRruleForm.bank_no" placeholder="请输入账号"></el-input>
           </el-form-item>
-          <el-form-item label="账号：" prop="region">
-            <el-input v-model="settlementRruleForm.name"></el-input>
-          </el-form-item>
-          <el-form-item label="户名：" prop="region">
-            <el-input v-model="settlementRruleForm.name"></el-input>
+          <el-form-item label="户名：" prop="bank_name">
+            <el-input v-model="settlementRruleForm.bank_name" placeholder="请输入户名"></el-input>
           </el-form-item>
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="settlementDialogVisible = false">确定</el-button>
-        <el-button @click="settlementDialogVisible = false">变更结算信息</el-button>
+        <el-button type="primary" @click="settlementDialogSubmit">确定</el-button>
+        <el-button @click="$refs.ruleForm.resetFields()">变更结算信息</el-button>
       </div>
     </el-dialog>
 
