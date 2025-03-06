@@ -277,6 +277,7 @@ export default {
             type: 'success'
           });
           this.dissentDialogVisible = false;
+          this.feedback = ""
           this.setView();
         }
       })

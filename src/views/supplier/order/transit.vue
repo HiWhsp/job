@@ -8,9 +8,16 @@ export default {
       ids: [],
       // 非单个禁用
       single: true,
+      feedback: '',
+      dialogTitle: '',
+      dissentDialogVisible: false,
+      remarkDialogVisible: false,
+      notesList: [], // 备注列表
+      notesContent: '', // 备注
       queryParams: {}, // 查询参数
       list_order: [{}], // 订单
       payList: [], // 测试项目
+      selectRow: {},
       keyword: '',
       count: 1,
       pagination: {
@@ -72,6 +79,99 @@ export default {
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.postId)
       this.single = selection.length != 1
+    },
+
+    // 收到样品
+    sampleReceived(row) {
+      this.selectRow = row;
+      this.$api({
+        url: 'store/accept_order',
+        method: 'post',
+        data: {
+          ids: this.selectRow.id,
+          type: 3
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.setView();
+        }
+      })
+    },
+
+    // 备注
+    remarkDialog(row) {
+      this.selectRow = row;
+      this.$api({
+        url: 'store/order_notes',
+        method: 'post',
+        data: {
+          id: this.selectRow.id
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.notesList = res.data;
+        }
+      })
+      this.remarkDialogVisible = true
+    },
+
+    // 备注
+    remarkDialogSubmit() {
+      this.$api({
+        url: 'store/submit_notes',
+        method: 'post',
+        data: {
+          id: this.selectRow.id,
+          content: this.notesContent
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.notesContent = '';
+          this.remarkDialogVisible = false;
+          this.setView();
+        }
+      })
+    },
+
+    // 异议
+    dissentDialog(title, row) {
+      this.selectRow = row;
+      this.dialogTitle = title;
+      this.dissentDialogVisible = true
+    },
+
+    // 异议
+    dissentDialogSubmit() {
+      if (!this.feedback) {
+        this.$message.error('请输入' + this.dialogTitle + '内容');
+        return
+      }
+      this.$api({
+        url: 'store/order_feedback',
+        method: 'post',
+        data: {
+          orderId: this.selectRow.id,
+          content: this.feedback
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.dissentDialogVisible = false;
+          this.feedback = ""
+          this.setView();
+        }
+      })
     },
   }
 }
@@ -173,9 +273,13 @@ export default {
             </template>
           </el-table-column>
           <el-table-column prop="yp_at" label="寄样时间"></el-table-column>
-          <el-table-column label="操作" fixed="right">
+          <el-table-column label="操作" fixed="right" width="230px">
             <template slot-scope="scope">
-              <el-button type="text" size="mini" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">查看</el-button>
+              <el-button type="text" size="mini" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">详情
+              </el-button>
+              <el-button type="text" size="mini" @click="sampleReceived(scope.row)">收到样品</el-button>
+              <el-button type="text" size="mini" @click="remarkDialog(scope.row)">备注</el-button>
+              <el-button type="text" size="mini" @click="dissentDialog('问题反馈', scope.row)">问题反馈</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -187,6 +291,25 @@ export default {
                        :total="count"></el-pagination>
       </div>
     </div>
+    <el-dialog :visible.sync="remarkDialogVisible" title="备注">
+      <div class="dialog-title" v-for="item in notesList" :key="item.id">
+        <p><span>{{ item.type_txt }}：</span>{{ item.content }}</p>
+        <p class="date">{{ item.created_at }}</p>
+      </div>
+      <el-input placeholder="请在这里输入您的备注" rows="10" type="textarea" v-model="notesContent"></el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="remarkDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="remarkDialogSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="dialogTitle" :visible.sync="dissentDialogVisible">
+      <el-input v-model="feedback" :placeholder="'请输入' + dialogTitle + '内容'" rows="5" type="textarea"></el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dissentDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dissentDialogSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -298,6 +421,30 @@ export default {
     /deep/ .el-table th.el-table__cell {
       background: #EAECEE;;
       color: #333333;
+    }
+  }
+}
+
+.dialog-title {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+
+  p {
+    font-weight: 400;
+    font-size: 16px;
+    color: #333333;
+
+    span {
+      font-weight: 400;
+      font-size: 16px;
+      color: #FF0000;
+    }
+
+    &.date {
+      font-weight: 400;
+      font-size: 14px;
+      color: #999999;
     }
   }
 }

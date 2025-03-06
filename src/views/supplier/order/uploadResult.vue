@@ -11,6 +11,10 @@ export default {
       notesList: [], // 备注列表
       notesContent: '', // 备注
       remarkDialogVisible: false, // 备注
+
+      feedback: '',
+      dialogTitle: '',
+      dissentDialogVisible: false,
       // 选中数组
       ids: [],
       fileList: [],
@@ -186,6 +190,39 @@ export default {
       })
     },
 
+    // 异议
+    dissentDialog(title, row) {
+      this.orderDetail = row
+      this.dialogTitle = title;
+      this.dissentDialogVisible = true
+    },
+
+    // 异议
+    dissentDialogSubmit() {
+      if (!this.feedback) {
+        this.$message.error('请输入' + this.dialogTitle + '内容');
+        return
+      }
+      this.$api({
+        url: 'store/order_feedback',
+        method: 'post',
+        data: {
+          orderId: this.orderDetail.id,
+          content: this.feedback
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.dissentDialogVisible = false;
+          this.feedback = ""
+          this.setView();
+        }
+      })
+    },
+
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.postId)
@@ -328,7 +365,7 @@ export default {
               <el-button size="mini" type="text" @click="lockRealInfo(scope.row)">上传报告和结果</el-button>
               <el-button size="mini" type="text" @click="lockRealInfo(scope.row)">已传结果</el-button>
               <el-button size="mini" type="text" @click="remarkDialog(scope.row)">备注</el-button>
-              <el-button size="mini" type="text">问题反馈</el-button>
+              <el-button size="mini" type="text" @click="dissentDialog('问题反馈', scope.row)">问题反馈</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -394,6 +431,14 @@ export default {
       <div slot="footer" class="dialog-footer">
         <el-button @click="remarkDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="remarkDialogSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="dialogTitle" :visible.sync="dissentDialogVisible">
+      <el-input v-model="feedback" :placeholder="'请输入' + dialogTitle + '内容'" rows="5" type="textarea"></el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dissentDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dissentDialogSubmit">确 定</el-button>
       </div>
     </el-dialog>
   </div>

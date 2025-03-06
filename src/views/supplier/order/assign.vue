@@ -8,6 +8,16 @@ export default {
       ids: [],
       // 非单个禁用
       single: true,
+      acceptVisible: false,
+      remarkDialogVisible: false, // 备注
+      acceptType: "", // 操作类型 1 接单 2驳回
+      notes: '', // 驳回原因
+      notesList: [], // 备注列表
+      notesContent: '', // 备注
+      feedback: '', // 异议
+      dissentDialogVisible: false, // 异议
+      dialogTitle: '', // 弹框标题
+      slectRow: {},
       queryParams: {}, // 查询参数
       list_order: [{}], // 订单
       payList: [], // 测试项目
@@ -61,6 +71,105 @@ export default {
     },
     goUrl(url) {
       this.$router.push(url);
+    },
+
+    // 接单/驳回
+    throttle_do_submit(type, submit, row) {
+      this.selectRow = row ? row : this.selectRow;
+      this.acceptVisible = true;
+      this.acceptType = type;
+      if (submit) {
+        this.$api({
+          url: 'store/accept_order',
+          method: 'post',
+          data: {
+            ids: this.selectRow.id,
+            type: this.acceptType,
+            notes: this.notes
+          }
+        }).then(res => {
+          if (res.code == 200) {
+            this.$message({
+              message: res.msg,
+              type: 'success'
+            });
+            this.acceptVisible = false;
+            this.setView();
+          }
+        })
+      }
+    },
+
+    // 备注
+    remarkDialog(row) {
+      this.selectRow = row
+      this.$api({
+        url: 'store/order_notes',
+        method: 'post',
+        data: {
+          id: this.selectRow.id
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.notesList = res.data;
+        }
+      })
+      this.remarkDialogVisible = true
+    },
+
+    // 备注
+    remarkDialogSubmit() {
+      this.$api({
+        url: 'store/submit_notes',
+        method: 'post',
+        data: {
+          id: this.selectRow.id,
+          content: this.notesContent
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.notesContent = '';
+          this.remarkDialogVisible = false;
+          this.setView();
+        }
+      })
+    },
+
+    // 异议
+    dissentDialogSubmit() {
+      if (!this.feedback) {
+        this.$message.error('请输入' + this.dialogTitle + '内容');
+        return
+      }
+      this.$api({
+        url: 'store/order_feedback',
+        method: 'post',
+        data: {
+          orderId: this.selectRow.id,
+          content: this.feedback
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.dissentDialogVisible = false;
+          this.feedback = ""
+          this.setView();
+        }
+      })
+    },
+
+    // 异议
+    dissentDialog(title, row) {
+      this.selectRow = row;
+      this.dialogTitle = title;
+      this.dissentDialogVisible = true
     },
 
     // 多选框选中数据
@@ -190,19 +299,21 @@ export default {
           </el-table-column>
           <el-table-column label="寄样时间" prop="created_at" width="180px"></el-table-column>
           <el-table-column label="完成时间" prop="updated_at" width="180px"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="220px">
+          <el-table-column fixed="right" label="操作" width="250px">
             <template slot-scope="scope">
               <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">查看
               </el-button>
-<!--              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">接单-->
-<!--              </el-button>-->
-<!--              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">驳回-->
-<!--              </el-button>-->
-<!--              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">备注-->
-<!--              </el-button>-->
-<!--              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">-->
-<!--                问题反馈-->
-<!--              </el-button>-->
+              <el-button size="mini" type="text" v-if="scope.row.status == 10"
+                         @click="throttle_do_submit(1, false, scope.row)">接单
+              </el-button>
+              <el-button size="mini" type="text" v-if="scope.row.status == 11"
+                         @click="throttle_do_submit(2, false, scope.row)">驳回
+              </el-button>
+              <el-button size="mini" type="text" @click="remarkDialog(scope.row)">备注
+              </el-button>
+              <el-button size="mini" type="text" @click="dissentDialog('问题反馈', scope.row)">
+                问题反馈
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -214,6 +325,40 @@ export default {
                        @current-change="setView"></el-pagination>
       </div>
     </div>
+
+    <!--    接单/驳回-->
+    <el-dialog :visible.sync="acceptVisible" center title="操作" width="600px">
+      <el-radio-group v-model="acceptType">
+        <el-radio :label="1">接单</el-radio>
+        <el-radio :label="2">驳回</el-radio>
+      </el-radio-group>
+      <el-input v-if="acceptType === 2" v-model="notes" placeholder="请输入驳回原因" rows="3" style="margin-top: 20px;"
+                type="textarea"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="acceptVisible = false">取 消</el-button>
+        <el-button type="primary" @click="throttle_do_submit(acceptType, true)">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog :visible.sync="remarkDialogVisible" title="备注">
+      <div class="dialog-title" v-for="item in notesList" :key="item.id">
+        <p><span>{{ item.type_txt }}：</span>{{ item.content }}</p>
+        <p class="date">{{ item.created_at }}</p>
+      </div>
+      <el-input placeholder="请在这里输入您的备注" rows="10" type="textarea" v-model="notesContent"></el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="remarkDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="remarkDialogSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="dialogTitle" :visible.sync="dissentDialogVisible">
+      <el-input v-model="feedback" :placeholder="'请输入' + dialogTitle + '内容'" rows="5" type="textarea"></el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dissentDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dissentDialogSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -326,6 +471,30 @@ export default {
     /deep/ .el-table th.el-table__cell {
       background: #EAECEE;;
       color: #333333;
+    }
+  }
+}
+
+.dialog-title {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+
+  p {
+    font-weight: 400;
+    font-size: 16px;
+    color: #333333;
+
+    span {
+      font-weight: 400;
+      font-size: 16px;
+      color: #FF0000;
+    }
+
+    &.date {
+      font-weight: 400;
+      font-size: 14px;
+      color: #999999;
     }
   }
 }

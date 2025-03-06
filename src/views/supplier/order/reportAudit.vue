@@ -13,13 +13,13 @@ export default {
           value: '',
           label: "全部"
         }, {
-          value: 1,
+          value: 40,
           label: "已通过"
         }, {
-          value: 2,
+          value: 32,
           label: "被驳回"
         }, {
-          value: 3,
+          value: 31,
           label: "待审核"
         }
       ], // 订单状态
@@ -111,7 +111,7 @@ export default {
             <!--            </el-select>-->
           </el-form-item>
           <el-form-item label="审核状态" prop="goodsName">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择结果审核状态">
+            <el-select v-model="queryParams.report_status" placeholder="请选择结果审核状态">
               <el-option
                   v-for="item in isRePay"
                   :key="item.value"

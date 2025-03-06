@@ -199,7 +199,7 @@ export default {
 .aside {
   z-index: 10000;
   position: fixed;
-  right: 50px;
+  right: 20px;
   bottom: 150px;
 }
 
