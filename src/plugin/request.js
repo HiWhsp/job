@@ -104,7 +104,6 @@ axios.interceptors.response.use(
 );
 
 function api(action, data, method, uploaderConfig) {
-  console.log("接口请求", action);
 
   let option = action;
 

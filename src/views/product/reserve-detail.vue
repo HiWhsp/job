@@ -58,18 +58,18 @@
               </div>
               <div class="detail-desc">
                 <div class="market">
-                  限量50台
+                  限量{{ info.maxNum }}台
                 </div>
                 <div class="market back">
-                  限购1台
+                  限购{{ info.maxNum }}台
                 </div>
               </div>
               <div class="detail-code">
-                <span>货号: K340001</span>
-                <span>库存：298</span>
+                <span>货号: {{ info.inventoryId }}</span>
+                <span>库存：{{ info.kucun }}</span>
               </div>
               <div class="detail-price">
-                ￥298.00
+                ￥{{ info.priceSale }}
               </div>
               <div class="detail-num">
                 <el-input-number :min="1" :max="view_info.kucun"
@@ -82,13 +82,10 @@
                 </button>
                 <button class="btn-ripple flex-center btn-buy" @click="do_pay_now()">立即购买</button>
               </div>
-              <div class="detail-txt ellipsis-3">
-                基於R.Salvadori / C.Shelby駕駛的5號車，該車贏得了1959年勒芒24小時耐力賽。 也可以從該套件中製造出由M.Trintignant /P.Frère駕駛的＃6賽車和由S.Moss / J.Fairman駕駛
-                完整詳細的多材料套件，包括鉛錫合金金屬，樹脂，蝕刻，橡膠輪胎的翻折零件
-              </div>
+              <div class="detail-txt ellipsis-3">{{ info.jianjie || '暂无简介' }}</div>
 
               <div class="btn-box">
-                <div class="btn-buy">图片一键下载</div>
+                <div class="btn-buy" @click="downLoadPic">图片一键下载</div>
                 <div class="left-articles">
                   <span>分享：</span>
                   <div class="article-item">
@@ -358,8 +355,6 @@ export default {
       });
     },
 
-
-
     showLoading() {
       this.loadingInstance = Loading.service({
         lock: true,
@@ -371,6 +366,7 @@ export default {
       //   this.$refs.modalLoading.init();
       // }
     },
+
     hideLoading() {
       this.loadingInstance.close();
 
@@ -383,7 +379,6 @@ export default {
       //   background: "rgba(0, 0, 0, 0.7)",
       // });
     },
-
 
     //查询评论列表
     query_reviews() {
@@ -402,7 +397,6 @@ export default {
         }
       });
     },
-
 
     add_history_record() {
       this.$api({
@@ -440,9 +434,6 @@ export default {
         }
       });
     },
-
-
-
 
     //商品sku 属性选择
     onSelectShuXing(item) {
@@ -639,8 +630,6 @@ export default {
       }
     },
 
-
-
     //商品是否选择规格检测
     checkedSelected() {
       //console.log("检测是否选择了商品", this.sku_select);
@@ -757,7 +746,6 @@ export default {
       });
     },
 
-
     //商品评价页面
     go_comments() {
       this.$router.push({
@@ -767,7 +755,6 @@ export default {
         },
       });
     },
-
 
     //预览图片
     previewImage(src, index, swiperImgs) {
@@ -792,8 +779,6 @@ export default {
       }
     },
 
-
-
     //
     togglePanel(name) {
       // return;
@@ -805,20 +790,23 @@ export default {
       }
     },
 
-
-
     //商品评价分页
     changePage_comment(page) {
       this.pagination.page = page;
       this.query_comments();
     },
 
-
     //滚动到指定位置
     scrollToTarget(clsName) {
       // var element = document.querySelector(".wenxian-box");
       var element = document.querySelector(clsName);
       element.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+    },
+
+    downLoadPic() {
+      // 获取当前地址
+      const href = window.location.origin;
+      window.open(`${href}/service.php?action=product_downloadImage&id=${this.info.productId}&userId=${localStorage.getItem("userId")}&token=${localStorage.getItem("token")}`, "_blank");
     },
   },
 };

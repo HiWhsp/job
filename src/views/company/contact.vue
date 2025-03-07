@@ -11,29 +11,11 @@
           <div class="info-list">
             <div class="title">联系方式</div>
             <div class="desc">如果您有任何问题，可以通过以下方式找到我们</div>
-            <div class="info-item">
+            <div v-for="(item, index) in infoList" :key="index" class="info-item" @click="goUrl(item.url)">
               <div class="icon-box">
-                <img src="@/assets/image/contact/mail.png" alt="">
+                <img :src="item.thumb" alt="">
               </div>
-              <div class="title">
-                info@hotmail.com
-              </div>
-            </div>
-            <div class="info-item">
-              <div class="icon-box">
-                <img src="@/assets/image/contact/facebook.png" alt="">
-              </div>
-              <div class="title">
-                Facebook
-              </div>
-            </div>
-            <div class="info-item">
-              <div class="icon-box">
-                <img src="@/assets/image/contact/WhatsApp.png" alt="">
-              </div>
-              <div class="title">
-                WhatsApp
-              </div>
+              <div class="title">{{ item.title }}</div>
             </div>
           </div>
 
@@ -61,6 +43,7 @@ export default {
   },
   data() {
     return {
+      infoList: [],
       form: {
         feed_type: '',
         content: '',
@@ -86,6 +69,19 @@ export default {
     this.setView();
   },
   mounted() {
+    this.$api({
+      url: '/service.php',
+      method: 'get',
+      data: {
+        action: 'news_lists',
+        channelId: 52,
+      }
+    }).then(res => {
+      if (res.code == 200) {
+        this.infoList = res.data.list
+      }
+    })
+
     if (this.$route.query.apply == 1) {
       this.$nextTick(() => {
         this.scrollToTarget(".contact-form-box .detail-title");
@@ -93,6 +89,9 @@ export default {
     }
   },
   methods: {
+    goUrl(url) {
+      window.open(url, '_blank');
+    },
     //滚动到指定位置
     scrollToTarget(clsName) {
       // var element = document.querySelector(".wenxian-box");
@@ -107,7 +106,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .page {
   background-color: #000;
 
@@ -162,10 +161,12 @@ export default {
     color: #F2F2F2;
     margin-bottom: 22px;
   }
+
   .info-item {
     display: flex;
     align-items: center;
     margin-bottom: 24px;
+    cursor: pointer;
 
     .icon-box {
       width: 24px;
@@ -198,4 +199,4 @@ export default {
 </style>
 
 
-<style scoped lang="less" src="@/assets/h5css/mobile/contact.less"></style>
+<style lang="less" scoped src="@/assets/h5css/mobile/contact.less"></style>

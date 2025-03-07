@@ -29,17 +29,19 @@
             </el-input>
           </div>
           <el-aside width="260px" class="sidebar">
-            <el-menu :default-active="defaultActive" :router="true">
-              <template v-for="(item, index) in [vuexTreeCates[2]]">
-                <el-submenu :index="item.route" v-if="item.channels.length" class="menu-item-one">
-                  <template #title>{{ item.title }}</template>
-                  <el-menu-item :index="it.route" v-for="(it, i) in item.channels" :key="i">{{ it.title }}</el-menu-item>
-                </el-submenu>
-<!--                <el-menu-item :index="item.route" v-else class="menu-item-one">-->
-<!--                  <span slot="title">{{ item.title }}</span>-->
-<!--                </el-menu-item>-->
-              </template>
-            </el-menu>
+            <el-tree
+                ref="tree"
+                :data="vuexTreeCates[2].channels"
+                node-key="id"
+                @node-click="menuSelect"
+                :props="defaultProps"
+                highlight-current
+                accordion
+            >
+              <span slot-scope="{ node, data }">
+                <span style="font-size: 16px;">{{ data.title }}</span>
+              </span>
+            </el-tree>
           </el-aside>
         </div>
         <div class="prod-wrap">
@@ -78,7 +80,10 @@ export default {
         pageNum: 16,
       },
       count: 0,
-
+      defaultProps: {
+        children: "channels",
+        label: "title",
+      },
       //
       id: this.$route.query.id || "",
       useCache: false, // 是否使用缓存
@@ -169,50 +174,33 @@ export default {
 
     },
 
-    toCate(item) {
-      this.$router.push(item.route)
-    },
+    menuSelect(index) {
+      if (this.vuexTreeCates.length != 0) {
+        // 判断是数字还是对象
+        if (typeof index == 'object') {
+          this.selectItem = index;
+        } else {
+          // 递归循环vuexTreeCates 通过index找到指定内容
+          this.selectItem = findById(this.vuexTreeCates, +index);
+          this.$refs.tree.setCurrentNode(this.selectItem);
+        }
 
-    //切换一级分类
-    toggleLevel(item) {
-      this.pagination.page = 1;
+        function findById(data, id) {
+          for (const item of data) {
+            if (item.id === id) {
+              return item; // 找到目标内容，直接返回
+            }
+            if (item.children && item.children.length > 0) {
+              const result = findById(item.children, id); // 递归查找子节点
+              if (result) {
+                return result; // 如果在子节点中找到，返回结果
+              }
+            }
+          }
+          return null; // 如果没有找到，返回 null
+        }
 
-      this.select_level_1 = item;
-      this.query_product();
-    },
-
-    //排序方式
-    onClickSort(item) {
-      if (item.ziduan == this.orderByColumn) {
-        this.isAsc = this.isAsc == "asc" ? "desc" : "asc";
-      } else {
-        this.isAsc = "asc";
-      }
-      this.orderByColumn = item.ziduan;
-
-      let sortParams = {
-        // orderByColumn: this.orderByColumn,
-        // isAsc: this.isAsc,
-
-        order1: this.orderByColumn,
-        order2: this.orderByColumn != 'ordering' ? this.isAsc : '',
-      };
-      //console.log("排序参数", sortParams);
-
-      this.$parent.set_sortParams(sortParams);
-    },
-
-    doPagePrev() {
-      if (this.pagination.page > 1) {
-        this.pagination.page--
-
-        this.query_product();
-      }
-    },
-    doPageNext() {
-      if (this.pagination.page < this.pages) {
-        this.pagination.page++
-        this.query_product();
+        this.$router.push({path: '/product-cates', query: {ids: this.selectItem.id}});
       }
     },
 
@@ -279,52 +267,42 @@ export default {
         margin-right: 32px;
         height: 100%;
 
-        .el-menu {
-          background-color: #000000;
-          border: none;
-          padding-bottom: 10px;
-
-          /deep/ .el-submenu__title {
+        .sidebar {
+          /deep/ .el-tree {
+            background-color: #000;
+          }
+          /deep/ .el-tree-node {
+            border-bottom: 1px solid #ccc;
+            margin: 10px 0;
+            padding-bottom: 10px;
+          }
+          /deep/ .el-tree-node.is-current {
             color: #fff;
           }
 
-          /deep/ .el-submenu__title:hover {
-            background-color: #000000;
-          }
+          /deep/ .el-tree-node__children {
+            border-left: 1px solid #ccc;
+            margin: 15px 0 15px 10px;
+            padding-left: 20px;
 
-          /deep/ .el-menu-item {
-            color: #fff;
-            border-top: 1px dashed #ffffff;
-          }
-
-          /deep/ .el-menu-item:last-child {
-            border-bottom: 1px dashed #ffffff;
-          }
-
-          /deep/ .el-menu-item.is-active {
-            color: #FF2727;
-            background-color: #000000;
-          }
-
-          /deep/ .el-menu-item:hover {
-            background-color: #000000;
-          }
-
-          .menu-item-one {
-            padding-left: 0 !important;
-
-            /deep/ .el-submenu__title {
-              padding-left: 0px !important;
+            .el-tree-node {
+              margin: 0;
+              border-bottom: none;
             }
           }
 
-          .menu-item-one, .menu-item-one.is-active {
-            border: none;
+          /deep/ .el-tree-node__content {
+            height: 50px;
+            background-color: #000;
           }
 
-          .menu-item-one:last-child {
-            border-bottom: none;
+          /deep/ .el-tree-node__content:hover {
+            color: #fff;
           }
+
+          ///deep/ .el-tree-node__expand-icon {
+          //  display: none;
+          //}
         }
 
         .search {

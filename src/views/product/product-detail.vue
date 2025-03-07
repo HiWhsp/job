@@ -290,29 +290,9 @@ export default {
 
   methods: {
     downLoadPic() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "product_downloadImage",
-          id: this.info.productId
-        },
-      }).then(res => {
-        // 创建 Blob 对象
-        const blob = new Blob([res]);
-        let fileName = 'downloaded_img.tar'; // 默认文件名
-        // 创建临时下载链接
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', fileName); // 设置下载文件名
-        document.body.appendChild(link);
-        link.click();
-
-        // 清理临时链接
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
+      // 获取当前地址
+      const href = window.location.origin;
+      window.open(`${href}/service.php?action=product_downloadImage&id=${this.info.productId}&userId=${localStorage.getItem("userId")}&token=${localStorage.getItem("token")}`, "_blank");
     },
     toDetail(item) {
       this.$router.push(`/product-detail?id=${item.inventoryId}`)
