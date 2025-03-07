@@ -80,8 +80,6 @@ axios.interceptors.response.use(
 );
 
 function api(action, data, method, uploaderConfig) {
-    console.log("接口请求", action);
-
     let option = action;
 
     let reqUrl = "/api/service.php"; //请求地址

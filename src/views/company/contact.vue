@@ -11,6 +11,12 @@
             <div class="info-list">
               <div class="title">联系我们</div>
               <div class="desc">如果您有任何问题，可以通过以下方式找到我们</div>
+              <div class="info-item" v-for="(item, index) in infoList" :key="index" @click="goUrl(item.url)">
+                <div class="icon-box">
+                  <img :src="item.thumb" alt="">
+                </div>
+                <div class="title_tip">{{ item.title }}</div>
+              </div>
             </div>
           </div>
 
@@ -38,6 +44,7 @@ export default {
   },
   data() {
     return {
+      infoList: [],
       form: {
         feed_type: '',
         content: '',
@@ -63,6 +70,18 @@ export default {
     this.setView();
   },
   mounted() {
+    this.$api({
+      url: '/service.php',
+      method: 'get',
+      data: {
+        action: 'news_lists',
+        channelId: 52,
+      }
+    }).then(res=>{
+      if (res.code == 200) {
+        this.infoList = res.data.list
+      }
+    })
     if (this.$route.query.apply == 1) {
       this.$nextTick(() => {
         this.scrollToTarget(".contact-form-box .detail-title");
@@ -70,6 +89,9 @@ export default {
     }
   },
   methods: {
+    goUrl(url) {
+      window.open(url, '_blank');
+    },
     //滚动到指定位置
     scrollToTarget(clsName) {
       // var element = document.querySelector(".wenxian-box");
@@ -141,6 +163,37 @@ export default {
     font-size: 18px;
     color: #414851;
     margin-bottom: 22px;
+  }
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    cursor: pointer;
+
+    .icon-box {
+      width: 24px;
+      height: 24px;
+      margin-right: 5px;
+
+      img {
+        width: 24px;
+      }
+    }
+
+    .title_tip {
+      font-weight: 400;
+      font-size: 16px;
+      color: #000;
+      margin-bottom: 0;
+    }
+
+    .desc {
+      font-family: OPPOSans, OPPOSans;
+      // font-weight: bold;
+      font-size: 16px;
+      color: #000;
+    }
   }
 }
 

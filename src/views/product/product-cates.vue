@@ -7,15 +7,15 @@
         <div class="aside">
           <h2 class="title">比例模型产品</h2>
           <!-- 侧边栏 -->
-          <el-aside width="360px" class="sidebar">
+          <el-aside class="sidebar" width="360px">
             <el-tree
                 ref="tree"
                 :data="vuexTreeCates"
+                :props="defaultProps"
+                accordion
+                highlight-current
                 node-key="id"
                 @node-click="menuSelect"
-                :props="defaultProps"
-                highlight-current
-                accordion
             >
               <span slot-scope="{ node, data }">
                 <span style="font-size: 16px;">{{ data.title }}</span>
@@ -40,9 +40,9 @@
             <productList :list="product_list"/>
           </div>
 
-          <div class="pagination-box" v-if="count" style="margin-top: 50px;">
-            <el-pagination background layout="prev, pager, next" :total="count" :current-page="pagination.page"
-                           :page-size="pagination.pageNum" @current-change="mix_current_change"></el-pagination>
+          <div v-if="count" class="pagination-box" style="margin-top: 50px;">
+            <el-pagination :current-page="pagination.page" :page-size="pagination.pageNum" :total="count" background
+                           layout="prev, pager, next" @current-change="mix_current_change"></el-pagination>
           </div>
         </div>
       </div>
@@ -99,7 +99,6 @@ export default {
     nav_option() {
       let channelId_arr = this.$route.query.ids ? this.$route.query.ids.split('-') : []
       let channelId = channelId_arr.pop()
-      console.log(channelId)
 
       let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
 
@@ -107,7 +106,6 @@ export default {
         {route: '/product-cates', title: '产品展示'},
         {route: '', title: cate_info.title || ''}
       ]
-      console.log(option)
       return option
     },
   },
@@ -194,7 +192,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .page {
   background: #FFFFFF;
   text-align: left;
@@ -598,4 +596,4 @@ export default {
 </style>
 
 
-<style scoped lang="less" src="@/assets/h5css/mobile/product-cates.less"></style>
+<style lang="less" scoped src="@/assets/h5css/mobile/product-cates.less"></style>

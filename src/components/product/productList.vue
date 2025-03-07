@@ -9,8 +9,8 @@
         <div class="info-box">
           <div class="title ellipsis-2">
             {{ item.title }}
-            <div class="hot">限量50台</div>
-            <div class="hot">限购2台</div>
+            <div class="hot">限量{{ item.kucun }}台</div>
+            <div class="hot">限购{{ item.kucun }}台</div>
           </div>
 
           <div class="price-box">
@@ -158,7 +158,7 @@ export default {
 
       img {
         width: 100%;
-        height: 296px;
+        height: 217px;
         object-fit: cover;
         transition: 0.3s;
       }
