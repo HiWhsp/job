@@ -46,6 +46,7 @@ export default {
           end_time: this.queryParams.end_time,
           orderId: this.queryParams.orderId,
           title: this.queryParams.title,
+          report_status: this.queryParams.report_status,
           ...this.pagination,
         }
       }).then(res => {

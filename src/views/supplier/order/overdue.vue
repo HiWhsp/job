@@ -10,10 +10,24 @@ export default {
       single: true,
       queryParams: {}, // 查询参数
       list_order: [{}], // 订单
-      payList: [], // 测试项目
-      selectTab: {title: "全部", status: "0"},
+      payList: [
+        {
+          value: '',
+          label: "全部"
+        }, {
+          value: 1,
+          label: "已超期"
+        }, {
+          value: 2,
+          label: "即将超期"
+        }, {
+          value: 3,
+          label: "已完成的超期订单"
+        }
+      ], // 测试项目
+      selectTab: {title: "全部", status: ""},
       list_tab: [
-        {title: "全部", status: "0"},
+        {title: "全部", status: ""},
         {title: "已超期", status: "1"},
         {title: '即将超期', status: '2'},
         {title: '已完成的超期订单', status: '3'}
@@ -24,6 +38,12 @@ export default {
         page: 1,
         limit: 10
       }
+    }
+  },
+  watch: {
+    selectTab() {
+      this.queryParams.if_expire = this.selectTab.status ? +this.selectTab.status : ''
+      this.setView()
     }
   },
   mounted() {
@@ -41,6 +61,7 @@ export default {
           end_time: this.queryParams.end_time,
           orderId: this.queryParams.orderId,
           title: this.queryParams.title,
+          if_expire: this.queryParams.if_expire,
           ...this.pagination,
         }
       }).then(res => {
@@ -106,8 +127,8 @@ export default {
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="订单状态" prop="orderSn">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择订单状态">
+          <el-form-item label="订单状态" prop="if_expire">
+            <el-select v-model="queryParams.if_expire" placeholder="请选择订单状态">
               <el-option
                   v-for="item in payList"
                   :key="item.value"
@@ -175,8 +196,8 @@ export default {
               <p>{{ getStatus(scope.row.status) }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="yd_date" label="收到样品时间"></el-table-column>
-          <el-table-column prop="created_at" label="要求出结果时间"></el-table-column>
+          <el-table-column prop="yp_rec_at" label="收到样品时间"></el-table-column>
+          <el-table-column prop="u_result_at" label="要求出结果时间"></el-table-column>
           <el-table-column prop="updated_at" label="完成时间" width="120"></el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">

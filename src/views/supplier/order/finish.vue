@@ -13,16 +13,10 @@ export default {
           label: "全部"
         }, {
           value: 1,
-          label: "已结算"
-        }, {
-          value: 2,
-          label: "结算中"
-        }, {
-          value: 3,
           label: "待结算"
         }, {
-          value: 4,
-          label: "暂不可结算"
+          value: 2,
+          label: "已结算"
         }], // 测试项目
       isRePay: [
         {
@@ -89,6 +83,7 @@ export default {
           end_time: this.queryParams.end_time,
           orderId: this.queryParams.orderId,
           title: this.queryParams.title,
+          settle_status: this.queryParams.settle_status,
           ...this.pagination,
         }
       }).then(res => {
@@ -214,7 +209,7 @@ export default {
             />
           </el-form-item>
           <el-form-item label="结算状态" prop="phone">
-            <el-select v-model="queryParams.orderUrl" placeholder="结算状态">
+            <el-select v-model="queryParams.settle_status" placeholder="结算状态">
               <el-option
                   v-for="item in payList"
                   :key="item.value"
@@ -272,11 +267,11 @@ export default {
               <p v-else>否</p>
             </template>
           </el-table-column>
-          <el-table-column label="结算状态" prop="status_txt">
+          <el-table-column label="结算状态" prop="settle_status">
             <template slot-scope="scope">
-              <el-tag v-if="scope.row.status_txt == '已完成'" type="success">{{ scope.row.status_txt }}</el-tag>
-              <el-tag v-if="scope.row.status_txt == '结算中'" type="warning">{{ scope.row.status_txt }}</el-tag>
-              <el-tag v-if="scope.row.status_txt == '暂不可结算'" type="danger">{{ scope.row.status_txt }}</el-tag>
+              <el-tag v-if="scope.row.settle_status == 2" type="success">{{ scope.row.status_txt }}</el-tag>
+              <el-tag v-if="scope.row.settle_status == 1" type="warning">{{ scope.row.status_txt }}</el-tag>
+              <el-tag v-if="scope.row.settle_status == 0" type="warning">{{ scope.row.status_txt }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="完成时间" prop="complate_at"></el-table-column>

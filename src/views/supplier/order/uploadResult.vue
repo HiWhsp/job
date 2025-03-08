@@ -331,7 +331,7 @@ export default {
               <p>{{ scope.row.order ? scope.row.order.title : '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column label="要求出结果时间" prop="u_result_a" width="180px"></el-table-column>
+          <el-table-column label="要求出结果时间" prop="u_result_at" width="180px"></el-table-column>
           <el-table-column label="寄样分部" prop="fenbu"></el-table-column>
           <el-table-column label="金额" prop="price">
             <template slot-scope="scope">

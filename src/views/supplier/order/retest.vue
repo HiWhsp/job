@@ -170,7 +170,7 @@ export default {
           <el-table-column prop="model_no" label="仪器型号"></el-table-column>
           <el-table-column prop="updated_at" label="订单完成时间" width="120"></el-table-column>
           <el-table-column prop="updated_at" label="置为复测时间" width="120"></el-table-column>
-          <el-table-column prop="updated_at" label="要求出结果时间" width="120"></el-table-column>
+          <el-table-column prop="u_result_at" label="要求出结果时间" width="120"></el-table-column>
           <el-table-column prop="date" label="是否重新寄样" width="120"></el-table-column>
           <el-table-column prop="fenbu" label="寄样分部"></el-table-column>
           <el-table-column prop="price" label="金额">
