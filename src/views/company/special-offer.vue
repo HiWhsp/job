@@ -10,7 +10,7 @@
           <el-aside width="360px" class="sidebar">
             <el-tree
                 ref="tree"
-                :data="vuexTreeCates"
+                :data="[vuexTreeCates[1]]"
                 node-key="id"
                 @node-click="menuSelect"
                 :props="defaultProps"
@@ -38,6 +38,7 @@
 
           <div class="product-wrap">
             <productList :list="product_list"/>
+            <el-empty v-if="!product_list.length" description="没有查询到产品信息..."></el-empty>
           </div>
 
           <div class="pagination-box" v-if="count" style="margin-top: 50px;">

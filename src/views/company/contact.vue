@@ -11,12 +11,7 @@
             <div class="info-list">
               <div class="title">联系我们</div>
               <div class="desc">如果您有任何问题，可以通过以下方式找到我们</div>
-              <div class="info-item" v-for="(item, index) in infoList" :key="index" @click="goUrl(item.url)">
-                <div class="icon-box">
-                  <img :src="item.thumb" alt="">
-                </div>
-                <div class="title_tip">{{ item.title }}</div>
-              </div>
+              <div class="info-item" v-html="infoList.content"></div>
             </div>
           </div>
 
@@ -74,12 +69,12 @@ export default {
       url: '/service.php',
       method: 'get',
       data: {
-        action: 'news_lists',
-        channelId: 52,
+        action: 'news_detail',
+        id: 114
       }
     }).then(res=>{
       if (res.code == 200) {
-        this.infoList = res.data.list
+        this.infoList = res.data.info
       }
     })
     if (this.$route.query.apply == 1) {

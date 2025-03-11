@@ -10,7 +10,7 @@
           <el-aside class="sidebar" width="360px">
             <el-tree
                 ref="tree"
-                :data="vuexTreeCates"
+                :data="[vuexTreeCates[0]]"
                 :props="defaultProps"
                 accordion
                 highlight-current
@@ -38,6 +38,7 @@
 
           <div class="product-wrap">
             <productList :list="product_list"/>
+            <el-empty v-if="!product_list.length" description="没有查询到产品信息..."></el-empty>
           </div>
 
           <div v-if="count" class="pagination-box" style="margin-top: 50px;">
