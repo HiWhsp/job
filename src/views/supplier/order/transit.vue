@@ -77,8 +77,28 @@ export default {
 
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.postId)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length != 1
+    },
+
+    // 批量收到样品
+    allReceived() {
+      this.$api({
+        url: 'store/accept_order',
+        method: 'post',
+        data: {
+          ids: this.ids.join(),
+          type: 3
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.setView();
+        }
+      })
     },
 
     // 收到样品
@@ -235,7 +255,7 @@ export default {
       </div>
       <el-row :gutter="10">
         <el-col :span="1.5">
-          <el-button type="primary" size="mini" :disabled="single">
+          <el-button type="primary" size="mini" :disabled="single" @click="allReceived">
             批量收到样品
           </el-button>
         </el-col>

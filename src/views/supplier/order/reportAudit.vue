@@ -47,7 +47,7 @@ export default {
           orderId: this.queryParams.orderId,
           title: this.queryParams.title,
           report_status: this.queryParams.report_status,
-          ...this.pagination,
+          report_status: this.queryParams.report_status
         }
       }).then(res => {
         if (res.code == 200) {
@@ -167,7 +167,13 @@ export default {
               <p v-else>否</p>
             </template>
           </el-table-column>
-          <el-table-column prop="status_txt" label="报告审核状态"></el-table-column>
+          <el-table-column prop="status_txt" label="报告审核状态">
+            <template slot-scope="scope">
+              <el-tag v-if="scope.row.status_txt == '已完成'" type="success">已完成</el-tag>
+              <el-tag v-if="scope.row.status_txt == '报告审核不通过'" type="danger">报告审核不通过</el-tag>
+              <el-tag v-if="scope.row.status_txt == '结果审核中'" type="warning">结果审核中</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
               <el-button type="text" size="mini" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">详情</el-button>

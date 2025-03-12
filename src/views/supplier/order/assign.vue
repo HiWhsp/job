@@ -99,6 +99,27 @@ export default {
         })
       }
     },
+    // 批量操作
+    allSubmit(type) {
+      this.$api({
+        url: 'store/accept_order',
+        method: 'post',
+        data: {
+          ids: this.ids.join(),
+          type: type,
+          notes: type == 2 ? '批量驳回' : ''
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.acceptVisible = false;
+          this.setView();
+        }
+      })
+    },
 
     // 备注
     remarkDialog(row) {
@@ -174,7 +195,7 @@ export default {
 
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.postId)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length != 1
     },
   }
@@ -239,18 +260,19 @@ export default {
       </div>
       <el-row :gutter="10">
         <el-col :span="1.5">
-          <el-button :disabled="single" size="mini" type="primary">
+          <el-button :disabled="single" size="mini" type="primary" @click="allSubmit(1)">
             批量接单
           </el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button :disabled="single" size="mini" type="primary">
+          <el-button :disabled="single" size="mini" type="primary" @click="allSubmit(2)">
             批量驳回
           </el-button>
         </el-col>
       </el-row>
       <div class="order-box">
-        <el-table :data="list_order" style="width: 100%">
+        <el-table :data="list_order" style="width: 100%" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column label="订单号" prop="orderId" width="150px">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.orderno : '--' }}</p>
@@ -297,16 +319,16 @@ export default {
               <p>{{ getYpStatus(scope.row.yp_status) || '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column label="寄样时间" prop="created_at" width="180px"></el-table-column>
-          <el-table-column label="完成时间" prop="updated_at" width="180px"></el-table-column>
+          <el-table-column label="寄样时间" prop="yp_at" width="180px"></el-table-column>
+          <el-table-column label="完成时间" prop="complate_at" width="180px"></el-table-column>
           <el-table-column fixed="right" label="操作" width="250px">
             <template slot-scope="scope">
               <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">查看
               </el-button>
-              <el-button size="mini" type="text" v-if="scope.row.status == 10"
+              <el-button v-if="scope.row.status == 10" size="mini" type="text"
                          @click="throttle_do_submit(1, false, scope.row)">接单
               </el-button>
-              <el-button size="mini" type="text" v-if="scope.row.status == 11"
+              <el-button v-if="scope.row.status == 10 || scope.row.status == 20" size="mini" type="text"
                          @click="throttle_do_submit(2, false, scope.row)">驳回
               </el-button>
               <el-button size="mini" type="text" @click="remarkDialog(scope.row)">备注
@@ -341,11 +363,11 @@ export default {
     </el-dialog>
 
     <el-dialog :visible.sync="remarkDialogVisible" title="备注">
-      <div class="dialog-title" v-for="item in notesList" :key="item.id">
+      <div v-for="item in notesList" :key="item.id" class="dialog-title">
         <p><span>{{ item.type_txt }}：</span>{{ item.content }}</p>
         <p class="date">{{ item.created_at }}</p>
       </div>
-      <el-input placeholder="请在这里输入您的备注" rows="10" type="textarea" v-model="notesContent"></el-input>
+      <el-input v-model="notesContent" placeholder="请在这里输入您的备注" rows="10" type="textarea"></el-input>
       <div slot="footer" class="dialog-footer">
         <el-button @click="remarkDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="remarkDialogSubmit">确 定</el-button>

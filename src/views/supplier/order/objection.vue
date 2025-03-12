@@ -180,7 +180,7 @@ export default {
           <el-table-column label="操作" fixed="right">
             <template slot-scope="scope">
               <el-button type="text" size="mini"
-                         @click="goUrl('/supplier-order-detail?type=11&status=' + selectTab.status)">详情
+                         @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">详情
               </el-button>
             </template>
           </el-table-column>

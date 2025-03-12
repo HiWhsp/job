@@ -27,16 +27,16 @@ export default {
       settlementRruleForm: {}, // 结算
       settlementRules: {
         type: [
-          { required: true, message: '请选择结算类型', trigger: 'change' }
+          {required: true, message: '请选择结算类型', trigger: 'change'}
         ],
         bank_title: [
-          { required: true, message: '请输入开户行', trigger: 'blur' }
+          {required: true, message: '请输入开户行', trigger: 'blur'}
         ],
         bank_name: [
-          { required: true, message: '请输入户名', trigger: 'blur' }
+          {required: true, message: '请输入户名', trigger: 'blur'}
         ],
         bank_no: [
-          { required: true, message: '请输入账号', trigger: 'blur' }
+          {required: true, message: '请输入账号', trigger: 'blur'}
         ]
       }, // 结算
 
@@ -193,7 +193,7 @@ export default {
         }
       }).then(res => {
         if (res.code === 200) {
-          if(res.data.list.length) {
+          if (res.data.list.length) {
             this.fileList = [{
               name: res.data.list[0].title,
               url: res.data.list[0].path
@@ -321,8 +321,8 @@ export default {
               this.settlementDialogVisible = false;
             }
           })
+          this.$refs.ruleForm.resetFields();
         }
-        this.$refs.ruleForm.resetFields();
       })
     },
     // 备注
@@ -348,23 +348,29 @@ export default {
     },
     // 上传成功的回调
     handleSuccess(response, file, fileList) {
-      if(response.code === 200) {
+      if (response.code === 200) {
         this.fileList = [response.data];
         this.$message.success('上传成功');
-      }else {
+      } else {
         this.$message.error(response.msg);
       }
     },
     handleSuccess2(response, file, fileList) {
-      if(response.code === 200) {
+      if (response.code === 200) {
         this.fileList2 = [response.data];
         this.$message.success('上传成功');
-      }else {
+      } else {
         this.$message.error(response.msg);
       }
     },
     handleError(err, file, fileList) {
       this.$message.error('上传失败');
+    },
+
+    // 下载报告
+    downReport(path) {
+      // 地址域名 + path
+      window.open(location.origin + path, '_blank');
     }
   }
 }
@@ -412,10 +418,10 @@ export default {
               <span>样品状态：</span>{{ getYpStatus(storeOrderInfo.yp_status) || '--' }}
             </p>
             <p class="detail">
-              <span>寄样时间：</span>{{ orderDetail.created_at }}
+              <span>寄样时间：</span>{{ orderDetail.yp_at || '--' }}
             </p>
             <p class="detail">
-              <span>完成时间：</span>{{ orderDetail.updated_at }}
+              <span>完成时间：</span>{{ orderDetail.complate_at || '--' }}
             </p>
           </div>
           <div class="btn-wrap">
@@ -475,7 +481,9 @@ export default {
         <div class="info-row">
           <span class="label">报告列表</span>
           <div class="content">
-            <p v-for="item in reportDetail.list" :key="item.id">{{ item.title }}</p>
+            <p v-for="item in reportDetail.list" :key="item.id">{{ item.title }} <span class="down"
+                                                                                       @click="downReport(item.path)">下载</span>
+            </p>
           </div>
         </div>
         <!-- 样品是否回收 -->
@@ -578,7 +586,7 @@ export default {
     <div v-if="statusText == '已分派'"
          class="operation">
       <div v-if="orderDetail.storeOrderInfo.status == 10" class="btn back" @click="throttle_do_submit(1)">接单</div>
-      <div v-if="orderDetail.storeOrderInfo.status == 11" class="btn" @click="throttle_do_submit(2)">驳回</div>
+      <div v-if="orderDetail.storeOrderInfo.status == 10 || orderDetail.storeOrderInfo.status == 20" class="btn" @click="throttle_do_submit(2)">驳回</div>
       <div class="btn" @click="remarkDialog">备注</div>
       <div class="btn" @click="dissentDialog('问题反馈')">问题反馈</div>
     </div>
@@ -611,7 +619,7 @@ export default {
     </div>
 
     <div v-if="statusText == '待结算订单'" class="operation">
-      <div class="btn back" @click="applySettlement">申请结算</div>
+      <div class="btn back" @click="applySettlement" v-if="this.orderDetail.storeOrderInfo.status != 32">申请结算</div>
       <div class="btn" @click="remarkDialog">备注</div>
     </div>
 
@@ -629,11 +637,11 @@ export default {
     </div>
 
     <el-dialog :visible.sync="remarkDialogVisible" title="备注">
-      <div class="dialog-title" v-for="item in notesList" :key="item.id">
+      <div v-for="item in notesList" :key="item.id" class="dialog-title">
         <p><span>{{ item.type_txt }}：</span>{{ item.content }}</p>
         <p class="date">{{ item.created_at }}</p>
       </div>
-      <el-input placeholder="请在这里输入您的备注" rows="10" type="textarea" v-model="notesContent"></el-input>
+      <el-input v-model="notesContent" placeholder="请在这里输入您的备注" rows="10" type="textarea"></el-input>
       <div slot="footer" class="dialog-footer">
         <el-button @click="remarkDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="remarkDialogSubmit">确 定</el-button>
@@ -650,8 +658,8 @@ export default {
         <el-upload
             :data="mix_upload_data"
             :file-list="fileList"
-            :on-success="handleSuccess"
             :on-error="handleError"
+            :on-success="handleSuccess"
             accept="image/*"
             action="https://jxjsjc.dx.hdapp.com.cn/api/store/upload"
             class="upload-demo"
@@ -661,8 +669,8 @@ export default {
         <el-upload
             :data="mix_upload_data"
             :file-list="fileList2"
-            :on-success="handleSuccess2"
             :on-error="handleError"
+            :on-success="handleSuccess2"
             accept="image/*"
             action="https://jxjsjc.dx.hdapp.com.cn/api/store/upload"
             class="upload-demo"
@@ -904,6 +912,11 @@ export default {
 
           p {
             margin-bottom: 10px;
+          }
+
+          .down {
+            color: #00479D;
+            cursor: pointer;
           }
 
           .status-1 {

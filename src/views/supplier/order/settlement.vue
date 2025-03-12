@@ -8,9 +8,12 @@ export default {
       ids: [],
       // 非单个禁用
       single: true,
+      selectRow: {},
       queryParams: {}, // 查询参数
       list_order: [{}], // 订单
       payList: [], // 测试项目
+      settlementRruleForm: {}, // 结算
+      settlementDialogVisible: false,
       keyword: '',
       count: 1,
       pagination: {
@@ -21,7 +24,21 @@ export default {
         name: [
           {required: true, message: '请输入活动名称', trigger: 'blur'},
         ]
-      }
+      },
+      settlementRules: {
+        type: [
+          {required: true, message: '请选择结算类型', trigger: 'change'}
+        ],
+        bank_title: [
+          {required: true, message: '请输入开户行', trigger: 'blur'}
+        ],
+        bank_name: [
+          {required: true, message: '请输入户名', trigger: 'blur'}
+        ],
+        bank_no: [
+          {required: true, message: '请输入账号', trigger: 'blur'}
+        ]
+      }, // 结算
     }
   },
   mounted() {
@@ -70,8 +87,41 @@ export default {
 
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.postId)
-      this.single = selection.length != 1
+      this.ids = selection.map(item => item.id)
+      this.single = selection.length == 0
+    },
+
+    // 批量结算
+    allJS() {
+
+    },
+
+    applySettlement(row) {
+      this.selectRow = row;
+      this.settlementDialogVisible = true;
+    },
+
+    // 结算账户提交
+    settlementDialogSubmit() {
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.$api({
+            url: 'store/apply_settle',
+            method: 'post',
+            data: {
+              ids: this.orderId,
+              ...this.settlementRruleForm
+            }
+          }).then(res => {
+            if (res.code === 200) {
+              this.$message.success(res.msg);
+              this.setView();
+              this.settlementDialogVisible = false;
+            }
+          })
+          this.$refs.ruleForm.resetFields();
+        }
+      })
     },
   }
 }
@@ -87,18 +137,18 @@ export default {
           </div>
         </div>
         <div class="search flex">
-          <el-input placeholder="请输入仪器名/订单号" v-model="keyword"></el-input>
+          <el-input v-model="keyword" placeholder="请输入仪器名/订单号"></el-input>
           <el-button type="primary" @click="handleQuery">搜索</el-button>
         </div>
       </div>
 
       <div class="search-filter">
-        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
+        <el-form ref="queryForm" :inline="true" :model="queryParams" label-width="100px" size="small">
           <el-form-item label="订单编号" prop="orderSn">
             <el-input
                 v-model="queryParams.orderId"
-                placeholder="请输入订单号"
                 clearable
+                placeholder="请输入订单号"
             />
           </el-form-item>
           <el-form-item label="测试项目" prop="phone">
@@ -114,23 +164,23 @@ export default {
           <el-form-item label="日期筛选" prop="goodsName">
             <el-date-picker
                 v-model="queryParams.date"
-                type="datetimerange"
+                end-placeholder="结束日期"
                 range-separator="至"
                 start-placeholder="开始日期"
-                end-placeholder="结束日期"
+                type="datetimerange"
                 value-format="yyyy-MM-dd"
             >
             </el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="mini" @click="handleQuery">搜索</el-button>
-            <el-button type="primary" size="mini" @click="resetQuery">重置</el-button>
+            <el-button size="mini" type="primary" @click="handleQuery">搜索</el-button>
+            <el-button size="mini" type="primary" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
       </div>
       <el-row :gutter="10">
         <el-col :span="1.5">
-          <el-button type="primary" size="mini" :disabled="single">
+          <el-button :disabled="single" size="mini" type="primary" @click="allJS">
             批量申请结算
           </el-button>
         </el-col>
@@ -138,48 +188,94 @@ export default {
       <div class="order-box">
         <el-table :data="list_order" style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection"/>
-          <el-table-column prop="orderId" label="订单号" width="150px">
+          <el-table-column label="订单号" prop="orderId" width="150px">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.orderno : '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="title" label="项目名称">
+          <el-table-column label="项目名称" prop="title">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.title : '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="model_no" label="仪器型号"></el-table-column>
-          <el-table-column prop="fenbu" label="寄样分部"></el-table-column>
-          <el-table-column prop="price" label="金额">
+          <el-table-column label="仪器型号" prop="model_no"></el-table-column>
+          <el-table-column label="寄样分部" prop="fenbu"></el-table-column>
+          <el-table-column label="金额" prop="price">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.price : '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="price" label="样品数">
+          <el-table-column label="样品数" prop="price">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.yp_num : '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="contact_user" label="对接人"></el-table-column>
-          <el-table-column prop="updated_at" label="完成时间"></el-table-column>
-          <el-table-column label="操作" fixed="right">
+          <el-table-column label="对接人" prop="contact_user"></el-table-column>
+          <el-table-column label="完成时间" prop="updated_at"></el-table-column>
+          <el-table-column fixed="right" label="操作" width="280px">
             <template slot-scope="scope">
-              <el-button type="text" size="mini" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">详情</el-button>
+              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">详情
+              </el-button>
+              <el-button size="mini" type="text" @click="applySettlement(scope.row)">申请结算</el-button>
+              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">
+                查看报告
+              </el-button>
+              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">
+                提交异议
+              </el-button>
+              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">备注
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div v-if="count" class="pagination-box"
            style="margin-top: 40px; text-align: center;">
-        <el-pagination background layout="total, prev, pager, next" @current-change="setView"
-                       :current-page.sync="pagination.page" :page-size.sync="pagination.limit"
-                       :total="count"></el-pagination>
+        <el-pagination :current-page.sync="pagination.page" :page-size.sync="pagination.limit" :total="count"
+                       background layout="total, prev, pager, next"
+                       @current-change="setView"></el-pagination>
       </div>
     </div>
+
+    <el-dialog :visible.sync="settlementDialogVisible" center title="结算信息" width="900px">
+      <div class="settlement-box">
+        <el-form ref="ruleForm" :model="settlementRruleForm" :rules="settlementRules" label-width="100px">
+          <!--          <el-form-item label="结算账户：" prop="name">-->
+          <!--            <el-select v-model="settlementRruleForm.region" placeholder="请选择活动区域">-->
+          <!--              <el-option label="区域一" value="shanghai"></el-option>-->
+          <!--              <el-option label="区域二" value="beijing"></el-option>-->
+          <!--            </el-select>-->
+          <!--          </el-form-item>-->
+          <el-form-item label="结算方式：" prop="type">
+            <el-select v-model="settlementRruleForm.type" placeholder="请选择结算方式">
+              <el-option label="对公" value="1"></el-option>
+              <el-option label="个人" value="2"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="开户行：" prop="bank_title">
+            <el-input v-model="settlementRruleForm.bank_title" placeholder="请输入开户行"></el-input>
+          </el-form-item>
+          <el-form-item label="账号：" prop="bank_no">
+            <el-input v-model="settlementRruleForm.bank_no" placeholder="请输入账号"></el-input>
+          </el-form-item>
+          <el-form-item label="户名：" prop="bank_name">
+            <el-input v-model="settlementRruleForm.bank_name" placeholder="请输入户名"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="settlementDialogSubmit">确定</el-button>
+        <el-button @click="$refs.ruleForm.resetFields()">变更结算信息</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
-<style scoped lang="less">
+<style lang="less" scoped>
+.settlement-box {
+  padding: 0 150px;
+}
 .content {
   background: #fff;
   padding-bottom: 100px;
