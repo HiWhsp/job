@@ -51,6 +51,13 @@ export default {
       }
     }
   },
+  computed: {
+    isRePayFilter() {
+      return function (status) {
+        return this.isRePay.find(item => item.value === status)
+      }
+    }
+  },
   mounted() {
     this.setView();
   },
@@ -60,7 +67,8 @@ export default {
         url: 'store/order_list',
         method: 'post',
         data: {
-          status: 11
+          status: 11,
+          ...this.queryParams
         }
       }).then(res => {
         if (res.code === 200) {
@@ -122,18 +130,19 @@ export default {
 
       <div class="search-filter">
         <el-form ref="queryForm" :inline="true" :model="queryParams" label-width="100px" size="small">
-          <el-form-item label="测试项目" prop="phone">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择测试项目">
-              <el-option
-                  v-for="item in payList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
+          <el-form-item label="项目名称" prop="phone">
+            <el-input v-model="queryParams.title" placeholder="请输入项目名称"></el-input>
+<!--            <el-select v-model="queryParams.orderUrl" placeholder="请选择测试项目">-->
+<!--              <el-option-->
+<!--                  v-for="item in payList"-->
+<!--                  :key="item.value"-->
+<!--                  :label="item.label"-->
+<!--                  :value="item.value">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
           </el-form-item>
           <el-form-item label="审核状态" prop="goodsName">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择报告审核状态">
+            <el-select v-model="queryParams.yp_status" placeholder="请选择报告审核状态">
               <el-option
                   v-for="item in isRePay"
                   :key="item.value"
@@ -161,7 +170,7 @@ export default {
       <div class="order-box">
         <el-table :data="list_order" style="width: 100%">
           <el-table-column label="订单号" prop="orderId"></el-table-column>
-          <el-table-column label="项目名称" prop="title">
+          <el-table-column label="项目名称" prop="title" width="220px">
             <template slot-scope="scope">
               <p>{{ scope.row.order ? scope.row.order.title : '--' }}</p>
             </template>
@@ -195,16 +204,16 @@ export default {
           </el-table-column>
           <el-table-column label="报告审核状态" prop="yp_status">
             <template slot-scope="scope">
-              <p>{{ getYpStatus(scope.row.yp_status) || '--' }}</p>
+              <p>{{ isRePayFilter(scope.row.status).label || '--' }}</p>
             </template>
           </el-table-column>
-          <el-table-column label="寄样时间" prop="created_at"></el-table-column>
-          <el-table-column label="完成时间" prop="updated_at"></el-table-column>
+          <el-table-column label="寄样时间" prop="yp_at"></el-table-column>
+          <el-table-column label="完成时间" prop="complate_at"></el-table-column>
           <el-table-column fixed="right" label="操作" width="220">
             <template slot-scope="scope">
-              <el-button size="mini" type="text" @click="goUrl('/supplier-order-detail')">详情</el-button>
+              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">详情</el-button>
               <el-button size="mini" type="text" @click="lock(scope.row.id)">查看报告</el-button>
-              <el-button size="mini" type="text" @click="goUrl('/supplier-order-detail')">修改</el-button>
+<!--              <el-button size="mini" type="text" @click="goUrl('/supplier-order-detail')">修改</el-button>-->
             </template>
           </el-table-column>
         </el-table>

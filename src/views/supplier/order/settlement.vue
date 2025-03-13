@@ -14,6 +14,19 @@ export default {
       payList: [], // 测试项目
       settlementRruleForm: {}, // 结算
       settlementDialogVisible: false,
+      updateResultVisible: false,
+      orderDetail: {},
+      fileList: [], // 上传文件列表
+      fileList2: [], // 上传文件列表
+
+      notesList: [], // 备注列表
+      notesContent: '', // 备注
+      remarkDialogVisible: false, // 备注
+
+      feedback: '',
+      dialogTitle: '',
+      dissentDialogVisible: false,
+
       keyword: '',
       count: 1,
       pagination: {
@@ -93,7 +106,9 @@ export default {
 
     // 批量结算
     allJS() {
-
+      this.settlementDialogVisible = true;
+      this.settlementRruleForm = {};
+      this.selectRow = this.ids;
     },
 
     applySettlement(row) {
@@ -105,11 +120,18 @@ export default {
     settlementDialogSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+          const ids = [];
+          // this.selectRow 可能是个对象可能是个数组 需要取出id
+          if (Array.isArray(this.selectRow)) {
+            ids.push(...this.selectRow)
+          } else {
+            ids.push(this.selectRow.id)
+          }
           this.$api({
             url: 'store/apply_settle',
             method: 'post',
             data: {
-              ids: this.orderId,
+              ids: ids.join(),
               ...this.settlementRruleForm
             }
           }).then(res => {
@@ -120,6 +142,110 @@ export default {
             }
           })
           this.$refs.ruleForm.resetFields();
+        }
+      })
+    },
+
+    // 查看报告
+    lockRealInfo(row) {
+      this.orderDetail = row;
+      this.$api({
+        url: 'store/report_detail',
+        method: 'post',
+        data: {
+          orderId: row.id
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          if (res.data.list.length) {
+            this.fileList = [{
+              name: res.data.list[0].title,
+              url: res.data.list[0].path
+            }];
+            this.fileList2 = [{
+              name: res.data.list[1].title,
+              url: res.data.list[1].path
+            }];
+          }
+        }
+        this.updateResultVisible = true;
+      })
+    },
+
+    // 下载报告
+    downReport(path) {
+      // 地址域名 + path
+      window.open(location.origin + path, '_blank');
+    },
+
+    // 备注
+    remarkDialog(row) {
+      this.orderDetail = row
+      this.$api({
+        url: 'store/order_notes',
+        method: 'post',
+        data: {
+          id: this.orderDetail.id
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.notesList = res.data;
+        }
+      })
+      this.remarkDialogVisible = true
+    },
+
+    // 备注
+    remarkDialogSubmit() {
+      this.$api({
+        url: 'store/submit_notes',
+        method: 'post',
+        data: {
+          id: this.orderDetail.id,
+          content: this.notesContent
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.notesContent = '';
+          this.remarkDialogVisible = false;
+          this.setView();
+        }
+      })
+    },
+
+    // 异议
+    dissentDialog(title, row) {
+      this.orderDetail = row
+      this.dialogTitle = title;
+      this.dissentDialogVisible = true
+    },
+
+    // 异议
+    dissentDialogSubmit() {
+      if (!this.feedback) {
+        this.$message.error('请输入' + this.dialogTitle + '内容');
+        return
+      }
+      this.$api({
+        url: 'store/order_feedback',
+        method: 'post',
+        data: {
+          orderId: this.orderDetail.id,
+          content: this.feedback
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.dissentDialogVisible = false;
+          this.feedback = ""
+          this.setView();
         }
       })
     },
@@ -217,13 +343,13 @@ export default {
               <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">详情
               </el-button>
               <el-button size="mini" type="text" @click="applySettlement(scope.row)">申请结算</el-button>
-              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">
+              <el-button size="mini" type="text" @click="lockRealInfo(scope.row)">
                 查看报告
               </el-button>
-              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">
+              <el-button size="mini" type="text" @click="dissentDialog('异议', scope.row)">
                 提交异议
               </el-button>
-              <el-button size="mini" type="text" @click="goUrl(`/supplier-order-detail?orderId=${scope.row.id}`)">备注
+              <el-button size="mini" type="text" @click="remarkDialog(scope.row)">备注
               </el-button>
             </template>
           </el-table-column>
@@ -269,6 +395,41 @@ export default {
       </div>
     </el-dialog>
 
+
+    <!--    上传报告-->
+    <el-dialog :visible.sync="updateResultVisible" center title="上传报告">
+      <div class="updateResult">
+        <div class="title">
+          <p>订单号：{{ orderDetail.order ? orderDetail.order.orderno : '-' }}</p>
+          <p>项目名称：{{ orderDetail.order ? orderDetail.order.title : '-' }}</p>
+        </div>
+        <div class="upload-tit">报告</div>
+        <p style="margin-bottom: 10px">{{ fileList[0] ? fileList[0].name : '' }}<span class="down"
+                                                                    @click="downReport(fileList[0].url)">下载</span></p>
+        <div class="upload-tit">测试结果</div>
+        <p>{{ fileList2[0] ? fileList2[0].name : '' }} <span class="down" @click="downReport(fileList2[0].url)">下载</span></p>
+      </div>
+    </el-dialog>
+
+    <el-dialog :visible.sync="remarkDialogVisible" title="备注">
+      <div v-for="item in notesList" :key="item.id" class="dialog-title">
+        <p><span>{{ item.type_txt }}：</span>{{ item.content }}</p>
+        <p class="date">{{ item.created_at }}</p>
+      </div>
+      <el-input v-model="notesContent" placeholder="请在这里输入您的备注" rows="10" type="textarea"></el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="remarkDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="remarkDialogSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="dialogTitle" :visible.sync="dissentDialogVisible">
+      <el-input v-model="feedback" :placeholder="'请输入' + dialogTitle + '内容'" rows="5" type="textarea"></el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dissentDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dissentDialogSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -276,6 +437,7 @@ export default {
 .settlement-box {
   padding: 0 150px;
 }
+
 .content {
   background: #fff;
   padding-bottom: 100px;
@@ -391,5 +553,54 @@ export default {
   background-color: #00479D;
   color: #fff;
   border-color: #00479D;
+}
+
+.updateResult {
+  padding: 0 250px 0 70px;
+
+  .title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .upload-demo {
+    margin-bottom: 20px;
+  }
+
+  .upload-tit {
+    font-weight: 400;
+    font-size: 14px;
+    color: #00479D;
+  }
+  .down {
+    margin-left: 10px;
+    color: #00479D;
+    cursor: pointer;
+  }
+}
+
+.dialog-title {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+
+  p {
+    font-weight: 400;
+    font-size: 16px;
+    color: #333333;
+
+    span {
+      font-weight: 400;
+      font-size: 16px;
+      color: #FF0000;
+    }
+
+    &.date {
+      font-weight: 400;
+      font-size: 14px;
+      color: #999999;
+    }
+  }
 }
 </style>

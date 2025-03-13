@@ -123,7 +123,7 @@ export default {
     // 新增/修改设备
     settlementDialogOpen(row) {
       this.settlementDialogVisible = true;
-      this.settlementRruleForm = {...row}; 
+      this.settlementRruleForm = {...row};
     },
 
     // 结算提交
@@ -168,10 +168,10 @@ export default {
     </div>
 
     <div class="card-container">
-      <img src="@/assets/img/supplier/avatar.png" alt="">
+      <img :src="baseInfo.avatar" alt="">
       <div class="info">
         <div class="title">
-          <p class="name">郭菲菲</p>
+          <p class="name">{{ baseInfo.name }}</p>
           <p>信誉分 <span>100分</span></p>
         </div>
         <div class="status">
@@ -194,8 +194,8 @@ export default {
         </el-table-column>
         <el-table-column prop="date" label="设备名称及星级" width="200">
           <template slot-scope="scope">
-            <div class="column-flex-center ">
-              <p>{{ scope.row.name }}</p>
+            <div class="column-flex-center">
+              <p>{{ scope.row.title }}</p>
               <div class="flex">
                 <el-rate
                     v-model="scope.row.power"
@@ -219,12 +219,12 @@ export default {
         </el-table-column>
         <el-table-column prop="date" label="检测能力" width="180">
           <template slot-scope="scope">
-            <p>10个样品/台/天</p>
+            <p>{{ scope.row.power }}</p>
           </template>
         </el-table-column>
         <el-table-column prop="date" label="派单状态" width="180">
           <template slot-scope="scope">
-            <p>正常派单</p>
+            <p>{{ scope.row.status_txt }}</p>
           </template>
         </el-table-column>
         <el-table-column prop="date" label="操作">
