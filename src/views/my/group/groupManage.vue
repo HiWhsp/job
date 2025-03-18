@@ -5,7 +5,7 @@ export default {
     return {
       group: {},
       members: [],
-      list_shopcart: [{}], // 购物车商品列表
+      list_shopcart: [], // 待审批
       realForm: {},
       realRules: {
         t_role: [
@@ -72,6 +72,9 @@ export default {
             v.unit_name = v.user.unit_name
             v.unit_group = v.user.unit_group
           })
+          if (this.currentTab != 'allMembers') {
+            this.list_shopcart = res.data
+          }
         }
       })
     },
@@ -182,29 +185,29 @@ export default {
       <div class="top-box">
         <h3>团队管理</h3>
         <div class="tabs">
-          <div @click="currentTab = 'allMembers'" :class="{ active: currentTab === 'allMembers' }">全部成员</div>
-          <div @click="currentTab = 'pending'" :class="{ active: currentTab === 'pending' }">待审批</div>
+          <div :class="{ active: currentTab === 'allMembers' }" @click="currentTab = 'allMembers'">全部成员</div>
+          <div :class="{ active: currentTab === 'pending' }" @click="currentTab = 'pending'">待审批</div>
         </div>
         <div class="btn-wrap">
-          <el-button type="primary" v-if="currentTab !== 'allMembers'">添加成员</el-button>
-          <el-button type="primary" v-if="currentTab !== 'allMembers'">批量导入</el-button>
+          <el-button v-if="currentTab !== 'allMembers'" type="primary">添加成员</el-button>
+          <el-button v-if="currentTab !== 'allMembers'" type="primary">批量导入</el-button>
         </div>
       </div>
 
-      <el-table :data="members" style="width: 100%" v-if="currentTab === 'allMembers'">
-        <el-table-column prop="user_name" label="姓名"></el-table-column>
-        <el-table-column prop="unit_group" label="所属高校/单位" width="120"></el-table-column>
-        <el-table-column prop="user_phone" label="联系方式"></el-table-column>
-        <el-table-column prop="t_role" label="成员身份">
+      <el-table v-if="currentTab === 'allMembers'" :data="members" style="width: 100%">
+        <el-table-column label="姓名" prop="user_name"></el-table-column>
+        <el-table-column label="所属高校/单位" prop="unit_group" width="120"></el-table-column>
+        <el-table-column label="联系方式" prop="user_phone"></el-table-column>
+        <el-table-column label="成员身份" prop="t_role">
           <template slot-scope="scope">
             <span v-if="scope.row.t_role == 0">成员</span>
             <span v-if="scope.row.t_role == 1">管理员</span>
           </template>
         </el-table-column>
-        <el-table-column prop="pay_money" label="预存支付总金额"></el-table-column>
-        <el-table-column prop="credit_money" label="信用支付总金额"></el-table-column>
-        <el-table-column prop="status_txt" label="审批状态"></el-table-column>
-        <el-table-column prop="address" label="操作" width="150">
+        <el-table-column label="预存支付总金额" prop="pay_money"></el-table-column>
+        <el-table-column label="信用支付总金额" prop="credit_money"></el-table-column>
+        <el-table-column label="审批状态" prop="status_txt"></el-table-column>
+        <el-table-column label="操作" prop="address" width="150">
           <template slot-scope="scope">
             <el-button size="mini" @click="do_cart_set_row(scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" @click="deleteMember(scope.row)">删除</el-button>
@@ -212,13 +215,13 @@ export default {
         </el-table-column>
       </el-table>
 
-      <div class="list cart-list" v-else>
+      <div v-else class="list cart-list">
         <div class="cart-list-inner">
           <!-- 标题 -->
           <div class="list-title">
             <el-checkbox
-                class="title-1"
                 v-model="checked_all"
+                class="title-1"
                 @change="on_change_checked_all"
             >{{ checked_all ? "反选" : "全选" }}
             </el-checkbox>
@@ -233,9 +236,9 @@ export default {
 
           <!-- 商品列表 -->
           <div
-              class="item"
               v-for="(item, index) in list_shopcart"
               :key="index"
+              class="item"
           >
             <div class="item-detail flex">
               <div class="box-select">
@@ -245,16 +248,16 @@ export default {
                 ></el-checkbox>
               </div>
               <div class="box-image cover">
-                1
+                {{ item.user ? item.user.name : '' }}
               </div>
               <div class="box-title">
-                1
+                {{ item.user ? item.user.unit_name : '' }}
               </div>
               <div class="box-unit-price">
-                1
+                {{ item.user ? item.user.phone : '' }}
               </div>
               <div class="box-subtotal">
-                1
+                {{ item.status_txt }}
               </div>
               <div class="box-act">
                 <div class="goods-action-box">
@@ -272,9 +275,9 @@ export default {
       </div>
     </div>
 
-    <el-dialog title="设置" :visible.sync="createVisible" center width="700px">
+    <el-dialog :visible.sync="createVisible" center title="设置" width="700px">
       <div class="real-content">
-        <el-form :model="realForm" :rules="realRules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
+        <el-form ref="ruleForm" :model="realForm" :rules="realRules" class="demo-ruleForm" label-width="130px">
           <el-form-item label="成员身份：" prop="t_role">
             <el-radio-group v-model="realForm.t_role"> //0普通 1管理员
               <el-radio :label="0">成员</el-radio>
@@ -287,11 +290,11 @@ export default {
               <el-radio :label="1">限制</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="单笔支付限额：" prop="one_limit" v-if="realForm.pay_limit === 1">
-            <el-input placeholder="请输入单笔支付限额" v-model="realForm.one_limit"></el-input>
+          <el-form-item v-if="realForm.pay_limit === 1" label="单笔支付限额：" prop="one_limit">
+            <el-input v-model="realForm.one_limit" placeholder="请输入单笔支付限额"></el-input>
           </el-form-item>
-          <el-form-item label="月支付限额：" prop="month_limit" v-if="realForm.pay_limit === 1">
-            <el-input placeholder="请输入月支付限额" v-model="realForm.month_limit"></el-input>
+          <el-form-item v-if="realForm.pay_limit === 1" label="月支付限额：" prop="month_limit">
+            <el-input v-model="realForm.month_limit" placeholder="请输入月支付限额"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -303,7 +306,7 @@ export default {
   </div>
 </template>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .section-order {
 }
 

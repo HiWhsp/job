@@ -116,8 +116,8 @@
           <el-col :span="4">{{ item.name }} {{ item.unit_school }}</el-col>
           <el-col :span="7" class="ellipsis-5">{{ item.content }}</el-col>
           <el-col :span="7">
-            <p>查看文章</p>
-            {{ item.art_format }}
+            <p v-if="item.url" class="pointer" @click="ToUrl(item.url)">查看文章</p>
+            <p v-else>暂无文章</p>
           </el-col>
         </el-row>
         <el-empty v-if="!content.length" description="暂无记录..."></el-empty>
@@ -138,8 +138,8 @@
           <el-col :span="4">{{ item.reward_money }}元</el-col>
           <el-col :span="8">{{ item.audit_at }}</el-col>
           <el-col :span="8">
-            <!--            <p>查看证书</p>-->
-            {{ item.reward_cert }}
+            <p v-if="item.url" class="pointer" @click="ToUrl(item.reward_cert)">查看证书</p>
+            <p v-else>暂无证书</p>
           </el-col>
         </el-row>
         <el-empty v-if="!content.length" description="暂无记录..."></el-empty>
@@ -250,6 +250,9 @@ export default {
     },
     goUrl() {
       this.$emit('check', {id: 1})
+    },
+    ToUrl(url) {
+      window.open(url, '_blank')
     },
     submit() {
       this.$refs.form.validate((valid) => {

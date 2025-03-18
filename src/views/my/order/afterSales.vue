@@ -1,6 +1,40 @@
 <script>
 export default {
-  name: "afterSales"
+  name: "afterSales",
+  data() {
+    return {
+      title: '',
+      content: ''
+    }
+  },
+  methods: {
+    submit() {
+      if(this.title === '' || this.content === '') {
+        this.$message({
+          message: '请输入完整信息',
+          type: 'warning'
+        })
+      } else {
+        this.$api({
+          url: 'order_objection',
+          method: 'post',
+          data: {
+            orderno: this.$route.query.orderno,
+            title: this.title,
+            content: this.content
+          }
+        }).then(res=>{
+          this.$message({
+            message: '提交成功',
+            type: 'success'
+          })
+          this.title = "";
+          this.content = "";
+        })
+
+      }
+    }
+  }
 }
 </script>
 
@@ -18,6 +52,7 @@ export default {
               type="text"
               id="service-title"
               placeholder="请输入"
+              v-model="title"
           />
         </div>
 
@@ -28,12 +63,13 @@ export default {
                     rows="10"
                     id="service-description"
                     placeholder="请输入"
+                    v-model="content"
           ></el-input>
         </div>
 
         <!-- 提交按钮 -->
         <div class="form-item">
-          <el-button type="primary" class="submit-btn">提交</el-button>
+          <el-button type="primary" class="submit-btn" @click="submit">提交</el-button>
         </div>
       </form>
     </div>

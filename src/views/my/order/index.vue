@@ -3,6 +3,12 @@ export default {
   name: "index",
   data() {
     return {
+      orderDetail: {},
+      fileList: [],
+      fileList2: [],
+      feedback: '',
+      updateResultVisible: false,
+      dissentDialogVisible: false,
       tabIndex: '',
       queryParams: {}, // 查询参数
       list_order: [], // 订单
@@ -164,7 +170,68 @@ export default {
       const orderno = item.orderno;
       const url = `https://jxjsjc.dx.hdapp.com.cn/api/download_order?userId=${userId}&token=${token}&orderno=${orderno}`
       window.open(url, "_blank")
-    }
+    },
+
+    // 查看报告
+    lockRealInfo(row) {
+      this.orderDetail = row;
+      this.$api({
+        url: 'order_reports',
+        method: 'post',
+        data: {
+          orderno: row.orderno
+        }
+      }).then(res => {
+        if (res.code === 200) {
+          if (res.data.length) {
+            this.fileList = [{
+              name: res.data[0].title,
+              url: res.data[0].path
+            }];
+            this.fileList2 = [{
+              name: res.data[1].title,
+              url: res.data[1].path
+            }];
+          }
+        }
+        this.updateResultVisible = true;
+      })
+    },
+    // 下载报告
+    downReport(path) {
+      // 地址域名 + path
+      window.open(location.origin + path, '_blank');
+    },
+    // 异议
+    dissentDialog(row) {
+      this.orderDetail = row;
+      this.dissentDialogVisible = true
+    },
+    // 异议
+    dissentDialogSubmit() {
+      if (!this.feedback) {
+        this.$message.error('请输入异议内容');
+        return
+      }
+      this.$api({
+        url: 'order_objection',
+        method: 'post',
+        data: {
+          orderno: this.orderDetail.orderno,
+          title: '异议',
+          content: this.feedback
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.dissentDialogVisible = false;
+          this.feedback = ""
+        }
+      })
+    },
   }
 }
 </script>
@@ -309,7 +376,7 @@ export default {
               <div class="list-good">
                 <!--                  <div class="item-good flex" v-for="(product_item, product_index) in item.products" :key="product_index">-->
                 <div class="item-good flex">
-                  <div class="box-image cover">
+                  <div class="box-image cover" @click="goUrl('/orderDetail?orderno=' + item.orderno)">
                     <el-image :src="item.cover" :preview-src-list="[item.cover]">
                       <div slot="error" class="image-slot">
                         <img src="@/assets/img/my/order-img.png"/>
@@ -318,8 +385,8 @@ export default {
                   </div>
 
                   <div class="box-title">
-                    <div class="goods-title">{{ item.title }}</div>
-                    <div class="goods-sku">型号：{{ 111 }}</div>
+                    <div class="goods-title" @click="goUrl('/orderDetail?orderno=' + item.orderno)">{{ item.title }}</div>
+                    <div class="goods-sku">型号：{{ item.models || '无' }}</div>
                   </div>
                   <div class="box-price">{{ vuex_huobi }} {{ item.price }}</div>
                   <div class="order-state" :class="'state-' + item.status">
@@ -363,11 +430,14 @@ export default {
                       <button class="btn-ripple fit-text" v-if="item.kaipiao == '待开票'" @click="goUrl('/invoice')">
                         申请开票
                       </button>
-                      <button class="btn-ripple fit-text btn-bg" @click="downLoad(item)">
+                      <button class="btn-ripple fit-text btn-bg" @click="lockRealInfo(item)">
                         下载报告
                       </button>
-                      <button class="btn-ripple fit-text" @click="goUrl('/orderDetail')">
+                      <button class="btn-ripple fit-text" @click="goUrl('/afterSales?orderno=' + item.orderno)">
                         售后服务
+                      </button>
+                      <button class="btn-ripple fit-text" @click="dissentDialog(item)">
+                        提交异议
                       </button>
                     </template>
 
@@ -395,6 +465,28 @@ export default {
           </el-pagination>
         </div>
       </div>
+      <!--    上传报告-->
+      <el-dialog :visible.sync="updateResultVisible" center title="下载报告">
+        <div class="updateResult">
+          <div class="title">
+            <p>订单号：{{ orderDetail.orderno || '-' }}</p>
+            <p>项目名称：{{ orderDetail.title || '-' }}</p>
+          </div>
+          <div class="upload-tit">报告</div>
+          <p style="margin-bottom: 10px">{{ fileList[0] ? fileList[0].name : '' }}<span class="down"
+                                                                                        @click="downReport(fileList[0].url)">下载</span></p>
+          <div class="upload-tit">测试结果</div>
+          <p>{{ fileList2[0] ? fileList2[0].name : '' }} <span class="down" @click="downReport(fileList2[0].url)">下载</span></p>
+        </div>
+      </el-dialog>
+
+      <el-dialog title="提交异议" :visible.sync="dissentDialogVisible">
+        <el-input v-model="feedback" placeholder="请输入异议内容" rows="5" type="textarea"></el-input>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dissentDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dissentDialogSubmit">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -709,4 +801,29 @@ export default {
     }
   }
 }
+.updateResult {
+  padding: 0 250px 0 70px;
+
+  .title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .upload-demo {
+    margin-bottom: 20px;
+  }
+
+  .upload-tit {
+    font-weight: 400;
+    font-size: 14px;
+    color: #00479D;
+  }
+  .down {
+    margin-left: 10px;
+    color: #00479D;
+    cursor: pointer;
+  }
+}
+
 </style>

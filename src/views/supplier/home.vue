@@ -22,25 +22,25 @@
 
       <div class="section-2">
         <div class="list">
-          <div class="item" @click="$router.push('/order-list?order_status=1')">
+          <div class="item" @click="$router.push('/transit-order')">
             <div class="val">
               <span>{{ user_index.top4_jinriyy || "0" }}</span>
             </div>
             <div class="label">今日寄样</div>
           </div>
-          <div class="item" @click="$router.push('/order-list?order_status=1')">
+          <div class="item" @click="$router.push('/waitUploadResult-order')">
             <div class="val">
               <span>{{ user_index.top4_daishiyan || "0" }}</span>
             </div>
             <div class="label">待实验</div>
           </div>
-          <div class="item" @click="$router.push('/order-list?order_status=3')">
+          <div class="item" @click="$router.push('/overdue-order')">
             <div class="val">
               <span>{{ user_index.top4_jjcq || "0" }}</span>
             </div>
             <div class="label">即将超期</div>
           </div>
-          <div class="item" @click="$router.push('/order-list?order_status=4')">
+          <div class="item" @click="$router.push('/sampleRecovery-order')">
             <div class="val">
               <span>{{ user_index.top4_daihuishou || "0" }}</span>
             </div>
@@ -57,7 +57,7 @@
           <span class="val">{{ user_index.c4_daijisuan }}</span>
         </div>
         <div class="box">
-          <p class="pointer">申请结算</p>
+          <p class="pointer" @click="$router.push('/waitSettlement-order')">申请结算</p>
         </div>
       </div>
       <div class="item">
@@ -66,7 +66,7 @@
           <span class="val">{{ user_index.c4_yijiesuan }}</span>
         </div>
         <div class="box">
-          <p class="pointer">查看详情</p>
+          <p class="pointer" @click="$router.push('/finish-order')">查看详情</p>
         </div>
       </div>
       <div class="item">
@@ -75,7 +75,7 @@
           <span class="val">{{ user_index.c4_kejieorder }}</span>
         </div>
         <div class="box">
-          <p class="pointer">申请结算</p>
+          <p class="pointer" @click="$router.push('/waitSettlement-order')">申请结算</p>
         </div>
       </div>
       <div class="item">

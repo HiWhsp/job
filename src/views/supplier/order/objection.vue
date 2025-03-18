@@ -10,7 +10,17 @@ export default {
       single: true,
       queryParams: {}, // 查询参数
       list_order: [{}], // 订单
-      payList: [], // 测试项目
+      payList: [{
+        value: '',
+        label: "全部"
+      },{
+        value: 1,
+        label: "未处理"
+      }, {
+        value: 2,
+        label: "已处理"
+      }
+      ], // 测试项目
       selectTab: {title: "全部", status: "0"},
       list_tab: [
         {title: "全部", status: "0"},
@@ -38,10 +48,7 @@ export default {
         data: {
           keyword: this.keyword,
           status: 9,
-          start_time: this.queryParams.start_time,
-          end_time: this.queryParams.end_time,
-          orderId: this.queryParams.orderId,
-          title: this.queryParams.title,
+          ...this.queryParams,
           ...this.pagination,
         }
       }).then(res => {
@@ -97,18 +104,19 @@ export default {
 
       <div class="search-filter">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
-          <el-form-item label="测试项目" prop="phone">
-            <el-select v-model="queryParams.title" placeholder="请选择测试项目">
-              <el-option
-                  v-for="item in payList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
+          <el-form-item label="项目名称" prop="phone">
+<!--            <el-select v-model="queryParams.title" placeholder="请选择测试项目">-->
+<!--              <el-option-->
+<!--                  v-for="item in payList"-->
+<!--                  :key="item.value"-->
+<!--                  :label="item.label"-->
+<!--                  :value="item.value">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
+            <el-input v-model="queryParams.title" placeholder="请输入项目名称"></el-input>
           </el-form-item>
           <el-form-item label="处理状态" prop="orderSn">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择处理状态">
+            <el-select v-model="queryParams.yy_status" placeholder="请选择处理状态">
               <el-option
                   v-for="item in payList"
                   :key="item.value"
@@ -171,10 +179,10 @@ export default {
             </template>
           </el-table-column>
           <el-table-column prop="contact_user" label="对接人"></el-table-column>
-          <el-table-column prop="updated_at" label="完成时间" width="120"></el-table-column>
+          <el-table-column prop="updated_at" label="完成时间" width="180"></el-table-column>
           <el-table-column prop="date" label="处理状态">
             <template slot-scope="scope">
-              <p>{{ getYpStatus(scope.row.yp_status) || '--' }}</p>
+              <p>{{ scope.row.yy_status == 1 ? '未处理' : '已处理' || '--' }}</p>
             </template>
           </el-table-column>
           <el-table-column label="操作" fixed="right">

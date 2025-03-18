@@ -6,7 +6,9 @@ export default {
       orderno: '',
       detail: {},
       orderDetail: {},
-      downloadVisible: false
+      downloadVisible: false,
+      feedback: '',
+      dissentDialogVisible: false
     }
   },
   computed: {
@@ -97,6 +99,36 @@ export default {
 
       }
     },
+
+    // 异议
+    dissentDialog(title, row) {
+      this.dissentDialogVisible = true
+    },
+    // 异议
+    dissentDialogSubmit() {
+      if (!this.feedback) {
+        this.$message.error('请输入异议内容');
+        return
+      }
+      this.$api({
+        url: 'order_objection',
+        method: 'post',
+        data: {
+          orderno: this.detail.orderno,
+          title: '异议',
+          content: this.feedback
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+          this.dissentDialogVisible = false;
+          this.feedback = ""
+        }
+      })
+    },
   }
 }
 </script>
@@ -121,8 +153,8 @@ export default {
             </div>
             <div class="btn" v-if="process == 30" @click="downLoad">下载预约单</div>
             <div class="btn btn-bg" @click="download_report" v-if="process == 40">下载报告</div>
-            <div class="btn" @click="goUrl({url: '/afterSales'})" v-if="process == 40">售后服务</div>
-            <div class="btn" @click="download_report" v-if="process == 40">提交异议</div>
+            <div class="btn" @click="goUrl({url: '/afterSales?orderno='+ detail.orderno})" v-if="process == 40">售后服务</div>
+            <div class="btn" @click="dissentDialog('异议', detail)" v-if="process == 40">提交异议</div>
           </div>
         </div>
         <div class="right">
@@ -230,6 +262,14 @@ export default {
           <p>1、报告文件1 <span>下载</span></p>
           <p>2、仪器测试结果 <span>下载</span></p>
         </div>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="提交异议" :visible.sync="dissentDialogVisible">
+      <el-input v-model="feedback" placeholder="请输入异议内容" rows="5" type="textarea"></el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dissentDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dissentDialogSubmit">确 定</el-button>
       </div>
     </el-dialog>
   </div>

@@ -77,6 +77,18 @@ export default {
   mounted() {
     this.orderId = this.$route.query.orderId;
     this.setView();
+    this.$api({
+      url: 'store/bank_list',
+      method: 'post',
+      data: {
+        page: 1,
+        limit: 1
+      }
+    }).then(res => {
+      if (res.code == 200) {
+        this.settlementRruleForm = res.data[0];
+      }
+    })
   },
   methods: {
     setView() {
@@ -660,7 +672,7 @@ export default {
             :file-list="fileList"
             :on-error="handleError"
             :on-success="handleSuccess"
-            accept="image/*"
+            accept="*"
             action="https://jxjsjc.dx.hdapp.com.cn/api/store/upload"
             class="upload-demo"
         >
@@ -671,7 +683,7 @@ export default {
             :file-list="fileList2"
             :on-error="handleError"
             :on-success="handleSuccess2"
-            accept="image/*"
+            accept="*"
             action="https://jxjsjc.dx.hdapp.com.cn/api/store/upload"
             class="upload-demo"
         >
@@ -713,8 +725,8 @@ export default {
           <!--          </el-form-item>-->
           <el-form-item label="结算方式：" prop="type">
             <el-select v-model="settlementRruleForm.type" placeholder="请选择结算方式">
-              <el-option label="对公" value="1"></el-option>
-              <el-option label="个人" value="2"></el-option>
+              <el-option label="对公" :value="1"></el-option>
+              <el-option label="个人" :value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="开户行：" prop="bank_title">

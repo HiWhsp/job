@@ -389,7 +389,7 @@ export default {
             :data="mix_upload_data"
             :file-list="fileList"
             :on-success="handleSuccess"
-            accept="image/*"
+            accept="*"
             action="https://jxjsjc.dx.hdapp.com.cn/api/store/upload"
             class="upload-demo"
         >
@@ -399,7 +399,7 @@ export default {
             :data="mix_upload_data"
             :file-list="fileList2"
             :on-success="handleSuccess2"
-            accept="image/*"
+            accept="*"
             action="https://jxjsjc.dx.hdapp.com.cn/api/store/upload"
             class="upload-demo"
         >

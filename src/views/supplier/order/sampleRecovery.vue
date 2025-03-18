@@ -10,7 +10,18 @@ export default {
       single: true,
       queryParams: {}, // 查询参数
       list_order: [{}], // 订单
-      payList: [], // 测试项目
+      payList: [
+        {
+          value: '',
+          label: "全部"
+        },  {
+          value: '1',
+          label: "是"
+        }, {
+          value: '0',
+          label: "否"
+        }
+      ], // 测试项目
       selectTab: {title: "全部", status: "0"},
       list_tab: [
         {title: "全部", status: "0"},
@@ -98,17 +109,18 @@ export default {
       <div class="search-filter">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
           <el-form-item label="测试项目" prop="phone">
-            <el-select v-model="queryParams.title" placeholder="请选择测试项目">
-              <el-option
-                  v-for="item in payList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-              </el-option>
-            </el-select>
+<!--            <el-select v-model="queryParams.title" placeholder="请选择测试项目">-->
+<!--              <el-option-->
+<!--                  v-for="item in payList"-->
+<!--                  :key="item.value"-->
+<!--                  :label="item.label"-->
+<!--                  :value="item.value">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
+            <el-input v-model="queryParams.title" placeholder="请输入项目名称"></el-input>
           </el-form-item>
           <el-form-item label="回收状态" prop="orderSn">
-            <el-select v-model="queryParams.orderUrl" placeholder="请选择回收状态">
+            <el-select v-model="queryParams.if_recover" placeholder="请选择回收状态">
               <el-option
                   v-for="item in payList"
                   :key="item.value"

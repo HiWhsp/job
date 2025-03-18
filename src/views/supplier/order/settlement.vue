@@ -106,12 +106,36 @@ export default {
 
     // 批量结算
     allJS() {
+      this.$api({
+        url: 'store/bank_list',
+        method: 'post',
+        data: {
+          page: 1,
+          limit: 1
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.settlementRruleForm = res.data[0];
+        }
+      })
       this.settlementDialogVisible = true;
       this.settlementRruleForm = {};
       this.selectRow = this.ids;
     },
 
     applySettlement(row) {
+      this.$api({
+        url: 'store/bank_list',
+        method: 'post',
+        data: {
+          page: 1,
+          limit: 1
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.settlementRruleForm = res.data[0];
+        }
+      })
       this.selectRow = row;
       this.settlementDialogVisible = true;
     },
@@ -374,8 +398,8 @@ export default {
           <!--          </el-form-item>-->
           <el-form-item label="结算方式：" prop="type">
             <el-select v-model="settlementRruleForm.type" placeholder="请选择结算方式">
-              <el-option label="对公" value="1"></el-option>
-              <el-option label="个人" value="2"></el-option>
+              <el-option label="对公" :value="1"></el-option>
+              <el-option label="个人" :value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="开户行：" prop="bank_title">
@@ -405,9 +429,11 @@ export default {
         </div>
         <div class="upload-tit">报告</div>
         <p style="margin-bottom: 10px">{{ fileList[0] ? fileList[0].name : '' }}<span class="down"
-                                                                    @click="downReport(fileList[0].url)">下载</span></p>
+                                                                                      @click="downReport(fileList[0].url)">下载</span>
+        </p>
         <div class="upload-tit">测试结果</div>
-        <p>{{ fileList2[0] ? fileList2[0].name : '' }} <span class="down" @click="downReport(fileList2[0].url)">下载</span></p>
+        <p>{{ fileList2[0] ? fileList2[0].name : '' }} <span class="down"
+                                                             @click="downReport(fileList2[0].url)">下载</span></p>
       </div>
     </el-dialog>
 
@@ -573,6 +599,7 @@ export default {
     font-size: 14px;
     color: #00479D;
   }
+
   .down {
     margin-left: 10px;
     color: #00479D;
