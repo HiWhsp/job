@@ -31,6 +31,9 @@ export default {
       fileList: [],  // 上传的文件
       uploadList: [], // 上传的文件
       priceList: [], // 样品价格列表
+      element2Value: [], // 样品厚度
+      element2ValueCopy: [],
+      element2Id: '', // 样品厚度id
     }
   },
   watch: {
@@ -86,6 +89,26 @@ export default {
                 if (prodItem.is_custom == 1) {
                   item[prodItem.id + '-custom'] = false
                 }
+                if(prodItem.field_type === 'element2') {
+                  this.element2Id = prodItem.id;
+                  this.element2ValueCopy = prodItem.content4;
+                  this.element2Value.push(new Array(prodItem.content4.length).fill(''));
+                  this.preOrderDetail.form.forEach((item2, index2) => {
+                    if(item2[this.element2Id] !== "" && item2[this.element2Id].length) {
+                      const newArr = []
+                      item2[this.element2Id].forEach((item3, index3) => {
+                        const arr = item3.split('*');
+                        this.element2ValueCopy.forEach((item4, index4) => {
+                          if(item4.text === arr[0]) {
+                            this.element2Value[index2][index4] = arr[1];
+                            newArr.push(arr[0]);
+                          }
+                        })
+                      })
+                      item[this.element2Id] = newArr;
+                    }
+                  })
+                }
               })
               return {
                 isShow: true,
@@ -134,6 +157,11 @@ export default {
           form[item.id] = [];
         } else if (item.is_custom == 1) {
           form[item.id + '-custom'] = false
+        } else if (item.field_type == 'element2') {
+          form[item.id] = [];
+          this.element2Id = item.id;
+          this.element2ValueCopy = item.content4;
+          this.element2Value.push(new Array(item.content4.length).fill(''));
         } else {
           form[item.id] = '';
         }
@@ -178,6 +206,28 @@ export default {
     },
     // 下一步
     goUrl() {
+      if (this.element2Id) {
+        this.contentList.forEach((item, index) => {
+          item.product_form[this.element2Id].forEach((item2, index2) => {
+            if (item.product_form[this.element2Id][index2] !== "") {
+              // 已选中样品厚度，查找选择的样品下标
+              this.element2ValueCopy.forEach((item3, index3) => {
+                if (item3.text === item.product_form[this.element2Id][index2]) {
+                  // 输入框不为空
+                  if(this.element2Value[index][index3] !== "") {
+                    item.product_form[this.element2Id][index2] = item2 + '*' + this.element2Value[index][index3];
+                  }else {
+                    item.product_form[this.element2Id][index2] = "";
+                  }
+                }
+              })
+            }else {
+              item.product_form[this.element2Id][index2] = "";
+            }
+          })
+        })
+      }
+
       this.$api({
         url: 'order_pay_info',
         method: 'post',
@@ -283,6 +333,10 @@ export default {
     },
     input(e) {
       this.$forceUpdate()
+    },
+    // 样品厚度修改
+    element2Click(it, index) {
+      console.log(it, index)
     }
   }
 }
@@ -366,6 +420,16 @@ export default {
                     </div>
                   </div>
                 </template>
+
+                <!--              样品厚度-->
+                <el-checkbox-group v-if="field.field_type === 'element2'"
+                                   v-model="contentList[index].product_form[field.id]">
+                  <el-checkbox style="margin-bottom: 5px;" :label="it.text" v-for="(it, i) in field.content4"
+                               :key="it.text">{{ it.text }}
+                    <el-input style="width: 100px;" v-if="contentList[index].product_form[field.id].includes(it.text)"
+                              v-model="element2Value[index][i]"></el-input>
+                  </el-checkbox>
+                </el-checkbox-group>
 
                 <div class="helps" v-if="field.helps">{{ field.helps }}</div>
               </div>
