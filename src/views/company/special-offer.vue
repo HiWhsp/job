@@ -18,7 +18,7 @@
                 accordion
             >
               <span slot-scope="{ node, data }">
-                <span style="font-size: 16px;">{{ data.title }}</span>
+                <span style="font-size: 16px;">{{ data.title }}({{ data.num }})</span>
               </span>
             </el-tree>
           </el-aside>
@@ -188,7 +188,7 @@ export default {
           return null; // 如果没有找到，返回 null
         }
 
-        this.$router.push({path: '/product-cates', query: {ids: this.selectItem.id}});
+        this.$router.push({path: '/special-offer', query: {ids: this.selectItem.id}});
       }
     },
   },
