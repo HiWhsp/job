@@ -12,16 +12,17 @@
     <div class="page-top">
       <div class="page-bread w-1200">
         <div class="bread-box">
-          <img alt="" src="@/static/common/product-home.png"/>
-          <router-link to="/">首页</router-link>
-          <span class="bread-divider">&gt;</span>
-          <router-link :to="activeCate.route">产品展示</router-link>
-          <span class="bread-divider">&gt;</span>
-          <template v-if="activeCate.title">
-            <router-link :to="activeCate.route">{{ activeCate.title }}</router-link>
-            <span class="bread-divider">&gt;</span>
-          </template>
-          <a href="javascirpt:void(0);">{{ info.title }}</a>
+          <pageBreadcrumb :option="nav_option"/>
+          <!--          <img alt="" src="@/static/common/product-home.png"/>-->
+          <!--          <router-link to="/">首页</router-link>-->
+          <!--          <span class="bread-divider">&gt;</span>-->
+          <!--          <router-link :to="activeCate.route">产品展示</router-link>-->
+          <!--          <span class="bread-divider">&gt;</span>-->
+          <!--          <template v-if="activeCate.title">-->
+          <!--            <router-link :to="activeCate.route">{{ activeCate.title }}</router-link>-->
+          <!--            <span class="bread-divider">&gt;</span>-->
+          <!--          </template>-->
+          <!--          <a href="javascirpt:void(0);">{{ info.title }}</a>-->
         </div>
       </div>
     </div>
@@ -148,10 +149,12 @@ import detailLunbo from "@/components/detail/detailLunbo.vue";
 
 import {mapState} from "vuex";
 import {Loading} from "element-ui";
+import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
 
 export default {
   name: "goods-detail",
   components: {
+    pageBreadcrumb,
     product_add_cart_success_modal,
     carouselComponent,
     review_list,
@@ -260,6 +263,19 @@ export default {
         }
       }
       return text;
+    },
+
+    nav_option() {
+      let channelId_arr = this.info.channelId ? this.info.channelId.split(',') : []
+      let channelId = channelId_arr.pop()
+      let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
+
+      let option = [
+        {route: '/product-cates', title: '产品展示'},
+        {route: '/product-cates?ids=' + this.info.channelId, title: cate_info.title || ''},
+        {route: '', title: this.info.title || ''}
+      ]
+      return option
     },
   },
 
@@ -1042,6 +1058,7 @@ export default {
           .detail-code {
             color: #fff;
             margin: 20px 0;
+            font-size: 18px;
           }
 
           .detail-price {

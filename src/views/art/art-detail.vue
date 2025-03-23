@@ -48,9 +48,9 @@
                         <div class="info-box">
                           <div class="title ellipsis-2">{{ item.title }}</div>
                           <div class="pirce-box">
-                            <div class="price-info">
-                              <div class="price-1">{{ vuex_huobi }}{{ item.priceSale }}</div>
-                            </div>
+<!--                            <div class="price-info">-->
+<!--                              <div class="price-1">{{ vuex_huobi }}{{ item.priceSale }}</div>-->
+<!--                            </div>-->
                           </div>
                         </div>
                       </div>

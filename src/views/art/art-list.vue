@@ -82,7 +82,7 @@ export default {
       let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
 
       let option = [
-        {route: '/product-cates', title: '产品展示'},
+        {route: '/art_list', title: '工艺鉴赏'},
         {route: '', title: cate_info.title || ''}
       ]
       console.log(option)

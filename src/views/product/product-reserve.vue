@@ -3,17 +3,9 @@
     <div class="top-banner">
       <div class="title">预约商品</div>
       <div class="box">
-        <div class="item">
-          <div class="text">新品预购</div>
-          <div class="desc">25 产品</div>
-        </div>
-        <div class="item">
-          <div class="text">现货预售</div>
-          <div class="desc">32 产品</div>
-        </div>
-        <div class="item">
-          <div class="text">会展版限定限购</div>
-          <div class="desc">48 产品</div>
+        <div class="item" v-for="item in vuexTreeCates[2].channels" :key="item.id">
+          <div class="text">{{ item.title }}</div>
+          <div class="desc">{{ item.num }} 产品</div>
         </div>
       </div>
     </div>
@@ -39,7 +31,7 @@
                 accordion
             >
               <span slot-scope="{ node, data }">
-                <span style="font-size: 16px;">{{ data.title }}</span>
+                <span style="font-size: 16px;">{{ data.title }}({{ data.num }})</span>
               </span>
             </el-tree>
           </el-aside>
@@ -47,6 +39,7 @@
         <div class="prod-wrap">
           <div class="product-wrap">
             <productReserveList :list="product_list" />
+            <el-empty v-if="!count" description="没有查询到产品信息..."></el-empty>
           </div>
 
           <div class="pagination-box" v-if="count" style="margin-top: 50px;">
@@ -106,7 +99,7 @@ export default {
   computed: {
     ...mapState(["vuexTreeCates"]),
     nav_option() {
-      let channelId_arr = this.$route.query.ids ? this.$route.query.ids.split('-') : []
+      let channelId_arr = this.$route.query.ids ? this.$route.query.ids.split(',') : []
       let channelId = channelId_arr.pop()
       console.log(channelId)
 
@@ -146,7 +139,8 @@ export default {
         data: {
           action: "product_plist",
           ifShowSku: 1,
-          channelId: '821',
+          channelId: channelId,
+          keyword: this.keyword,
           // page: 1,
           // pageNum: 8,
           ...this.pagination
@@ -171,7 +165,8 @@ export default {
     },
 
     doSearch() {
-
+      this.pagination.page = 1;
+      this.query_product();
     },
 
     menuSelect(index) {
@@ -200,7 +195,7 @@ export default {
           return null; // 如果没有找到，返回 null
         }
 
-        this.$router.push({path: '/product-cates', query: {ids: this.selectItem.id}});
+        this.$router.push({path: '/product-reserve', query: {ids: this.selectItem.id}});
       }
     },
 
@@ -322,6 +317,7 @@ export default {
           /deep/ .el-input__inner {
             background: #666666;
             border-color: #666666;
+            color: #fff;
           }
 
           /deep/ .el-button {

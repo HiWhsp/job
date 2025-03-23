@@ -34,7 +34,7 @@
                 accordion
             >
               <span slot-scope="{ node, data }">
-                <span style="font-size: 16px;">{{ data.title }}</span>
+                <span style="font-size: 16px;">{{ data.title }}({{ data.num }})</span>
               </span>
             </el-tree>
           </el-aside>
@@ -42,6 +42,7 @@
         <div class="prod-wrap">
           <div class="product-wrap">
             <productList :list="product_list" />
+            <el-empty v-if="!count" description="没有查询到产品信息..."></el-empty>
           </div>
 
           <div class="pagination-box" v-if="count" style="margin-top: 50px;">
@@ -101,10 +102,9 @@ export default {
   computed: {
     ...mapState(["vuexTreeCates"]),
     nav_option() {
-      let channelId_arr = this.$route.query.ids ? this.$route.query.ids.split('-') : []
+      let channelId_arr = this.$route.query.ids ? this.$route.query.ids.split(',') : []
       let channelId = channelId_arr.pop()
-
-      let cate_info = this.vuexTreeCates.find(v => v.id == channelId) || {}
+      let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
 
       let option = [
         { route : '/product-cates', title: '产品展示'},
@@ -140,6 +140,7 @@ export default {
           action: "product_plist",
           ifShowSku: 1,
           channelId: channelId,
+          keyword: this.keyword,
           // page: 1,
           // pageNum: 8,
           ...this.pagination
@@ -164,7 +165,8 @@ export default {
     },
 
     doSearch() {
-
+      this.pagination.page = 1;
+      this.query_product();
     },
 
     menuSelect(index) {
@@ -272,6 +274,7 @@ export default {
           /deep/ .el-input__inner {
             background: #666666;
             border-color: #666666;
+            color: #fff;
           }
           /deep/ .el-button {
             width: 58px;

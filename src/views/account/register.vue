@@ -1,7 +1,7 @@
 <template>
   <div class="page">
-    <terms_modal ref="terms_modal" />
-    <pageBreadcrumb :option="nav_option" />
+    <terms_modal ref="terms_modal"/>
+    <pageBreadcrumb :option="nav_option"/>
 
     <div class="page-ctx">
       <div class="center page-inner flex-between">
@@ -16,19 +16,21 @@
             <template>
               <div class="input-box">
                 <span>手机号</span>
-                <input type="text" placeholder="请输入手机号码" v-model="form.phone" />
+                <input type="text" placeholder="请输入手机号码" v-model="form.phone"/>
               </div>
 
-              <mobile_sms :form="form" />
+              <mobile_sms :form="form"/>
 
               <div class="input-box">
                 <span>设置密码</span>
-                <input type="password" placeholder="请输入密码" v-model="form.pass" />
+                <!--                <input type="password" placeholder="请输入密码" v-model="form.pass" />-->
+                <el-input placeholder="请输入密码" v-model="form.pass" show-password></el-input>
               </div>
 
               <div class="input-box">
                 <span>确认密码</span>
-                <input type="password" placeholder="请输入密码" v-model="form.pass2" />
+                <!--                <input type="password" placeholder="请输入密码" v-model="form.pass2" />-->
+                <el-input placeholder="请输入密码" v-model="form.pass2" show-password></el-input>
               </div>
 
               <div class="terms-box">
@@ -60,7 +62,7 @@ import mobile_sms from "@/components/login/mobile_sms.vue"; //短信验证码
 import utilForm from "@/util/utilForm.js";
 import terms_modal from "@/components/account/terms_modal.vue"; //协议弹窗
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
 
 export default {
@@ -97,14 +99,15 @@ export default {
       let cate_info = this.vuexFlatCates.find(v => v.id == channelId) || {}
 
       let option = [
-        { route : '/product-cates', title: '注册'},
-        { route: '', title: cate_info.title || '' }
+        {route: '/product-cates', title: '注册'},
+        {route: '', title: cate_info.title || ''}
       ]
       console.log(option)
       return option
     },
   },
-  created() { },
+  created() {
+  },
 
   methods: {
     terms_open(id) {
@@ -212,7 +215,8 @@ export default {
         }
       }
 
-      .left {}
+      .left {
+      }
 
       .right {
         // width: 480px;
@@ -286,6 +290,17 @@ export default {
 
       img {
         width: 36px;
+      }
+
+      .el-input {
+        width: 300px;
+      }
+
+      /deep/ .el-input__inner {
+        background-color: transparent;
+        border: none;
+        color: #fff;
+        width: 300px;
       }
 
       input {

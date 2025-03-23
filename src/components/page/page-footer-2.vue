@@ -244,7 +244,7 @@ export default {
   padding-bottom: 60px;
 
   .footer-left {
-    width: 540px;
+    width: 420px;
     padding-right: 180px;
 
     .left-info {
