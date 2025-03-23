@@ -14,17 +14,9 @@
               </router-link>
             </div>
             <div class="info-box">
-              <div class="info-item">
-                <img src="@/assets/image/footer/fackback.png" alt="">
-                <span>– DREAM CAR MODEL</span>
-              </div>
-              <div class="info-item">
-                <img src="@/assets/image/footer/feishu.png" alt="">
-                <span>– DREAM CAR MODEL</span>
-              </div>
-              <div class="info-item">
-                <img src="@/assets/image/footer/weibo.png" alt="">
-                <span>– DREAM CAR MODEL</span>
+              <div class="info-item" v-for="(item, index) in article" :key="index">
+                <img :src="item.thumb" alt="">
+                <span>– {{ item.title }}</span>
               </div>
             </div>
           </div>
@@ -90,6 +82,7 @@ export default {
       info_return: {},
       info_ship: {},
       email: "",
+      article: []
     };
   },
   computed: {
@@ -102,6 +95,18 @@ export default {
   watch: {},
 
   created() {
+    this.$api({
+      url: "/service.php",
+      method: "get",
+      data: {
+        action: "news_lists",
+        channelId: 53
+      },
+    }).then(res=>{
+      if(res.code == 200){
+        this.article = res.data.list
+      }
+    })
     this.setView();
   },
 

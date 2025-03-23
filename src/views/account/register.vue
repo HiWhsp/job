@@ -27,10 +27,10 @@
           </el-row>
         </el-form-item>
 
-        <el-form-item label="公司名称" prop="company" required>
+        <el-form-item label="公司名称">
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-input v-model="registerForm.company" placeholder="请输入公司名称"></el-input>
+              <el-input v-model="registerForm.company" placeholder="请输入公司名称(如有)"></el-input>
             </el-col>
           </el-row>
         </el-form-item>

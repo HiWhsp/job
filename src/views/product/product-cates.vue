@@ -18,7 +18,7 @@
                 @node-click="menuSelect"
             >
               <span slot-scope="{ node, data }">
-                <span style="font-size: 16px;">{{ data.title }}</span>
+                <span style="font-size: 16px;">{{ data.title }}({{ data.num }})</span>
               </span>
             </el-tree>
           </el-aside>

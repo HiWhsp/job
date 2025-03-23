@@ -7,12 +7,18 @@
             <div class="info-list">
               <div class="title">关于合作</div>
               <div class="desc">如果您有任何问题，可以通过以下方式找到我们</div>
+              <div class="info-box">
+                <div class="info-item" v-for="(item, index) in article" :key="index">
+                  <img :src="item.thumb" alt="">
+                  <span>– {{ item.title }}</span>
+                </div>
+              </div>
             </div>
-            <div class="info-list">
-              <div class="title">联系我们</div>
-              <div class="desc">如果您有任何问题，可以通过以下方式找到我们</div>
-              <div class="info-item" v-html="infoList.content"></div>
-            </div>
+<!--            <div class="info-list">-->
+<!--              <div class="title">联系我们</div>-->
+<!--              <div class="desc">如果您有任何问题，可以通过以下方式找到我们</div>-->
+<!--              <div class="info-item" v-html="infoList.content"></div>-->
+<!--            </div>-->
           </div>
 
           <div class="contact-form-box">
@@ -40,6 +46,7 @@ export default {
   data() {
     return {
       infoList: [],
+      article: [],
       form: {
         feed_type: '',
         content: '',
@@ -62,6 +69,18 @@ export default {
   watch: {},
 
   created() {
+    this.$api({
+      url: "/service.php",
+      method: "get",
+      data: {
+        action: "news_lists",
+        channelId: 53
+      },
+    }).then(res=>{
+      if(res.code == 200){
+        this.article = res.data.list
+      }
+    })
     this.setView();
   },
   mounted() {
@@ -188,6 +207,33 @@ export default {
       // font-weight: bold;
       font-size: 16px;
       color: #000;
+    }
+  }
+
+  .info-box {
+    .info-item {
+      cursor: pointer;
+      margin-left: 25px;
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 18px;
+
+      img {
+        margin-right: 8px;
+        width: 20px;
+        height: 20px;
+      }
+
+      span,a {
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-weight: 400;
+        font-size: 14px;
+        color: #000;
+        line-height: 18px;
+        text-align: left;
+        font-style: normal;
+        text-transform: none;
+      }
     }
   }
 }

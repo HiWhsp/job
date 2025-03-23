@@ -51,16 +51,12 @@
               </div>
               <div class="left-articles">
                 <span>分享：</span>
-                <div class="article-item">
-                  <a :href="vuex_config.shareImg">
-                    <img alt="" src="@/assets/image/product/article1.png">
+                <div class="article-item" v-for="(item, index) in article" :key="index">
+                  <a :href="item.url">
+                    <img alt="" :src="item.thumb">
                   </a>
                 </div>
-                <div class="article-item">
-                  <a :href="vuex_config.shareImg">
-                    <img alt="" src="@/assets/image/product/article2.png">
-                  </a>
-                </div>
+
               </div>
               <div class="down-btn-buy" @click="downImg"><img alt="" src="@/assets/image/product/down.png">图片高清下载
               </div>
@@ -168,6 +164,7 @@ export default {
         page: 1,
         pageNum: 10,
       },
+      article: [],
 
       is_prod: process.env.NODE_ENV == "production",
 
@@ -343,6 +340,18 @@ export default {
     },
 
     setView() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "news_lists",
+          channelId: 53
+        },
+      }).then(res=>{
+        if(res.code == 200){
+          this.article = res.data.list
+        }
+      })
       this.query_product_detail()
     },
 
