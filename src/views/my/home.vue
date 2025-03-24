@@ -53,6 +53,15 @@ export default {
     }
   },
   mounted() {
+    this.$api({
+      url: "show_real_auth",
+      method: "post",
+    }).then(res => {
+      if (res.code === 200) {
+        this.isReal = res.data.status == 2 //1未实名  2已实名
+        this.realForm = res.data;
+      }
+    })
     this.setView();
   },
   methods: {
@@ -436,7 +445,7 @@ export default {
           <div class="label">身份证照片：</div>
           <div class="value">
             <div class="flex">
-              <img :src="realForm.idcard_pic1" alt="">
+              <img :src="realForm.idcard_pic1" alt="" style="margin-right: 20px">
               <img :src="realForm.idcard_pic2" alt="">
             </div>
           </div>

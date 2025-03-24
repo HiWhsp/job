@@ -16,7 +16,7 @@
                   v-model="checked_all"
                   class="title-1"
                   @change="on_change_checked_all"
-              >{{ checked_all ? "反选" : "全选" }}
+              >{{ checked_all ? '反选' : '全选' }}
               </el-checkbox>
               <div class="title-2" style="text-align: left; padding-left: 0px">
                 项目名称
@@ -43,7 +43,7 @@
 
                 <div class="box-image cover">
                   <!-- <img :src="item.image" @click="mix_to_product(item)" /> -->
-                  <el-image :src="item.image" @click="mix_to_product(item)">
+                  <el-image :src="item.cover" @click="mix_to_product(item)">
                     <div slot="error" class="image-slot">
                       <img :src="item.default_img"/>
                     </div>
@@ -55,19 +55,15 @@
                   </div>
                   <div class="goods-sub-title">{{ item.subtitle }}</div>
                 </div>
-                <div class="box-unit-price">
-                  {{ vuex_huobi }} {{ item.priceSale }}
+                <div class="box-unit-price">{{ item.orderno }}
                 </div>
                 <div class="box-subtotal">
-                  {{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}
+                  {{ vuex_huobi }} {{ item.price }}
                 </div>
                 <div class="box-act">
                   <div class="goods-action-box">
-                    <span
-                        class="goods-action"
-                        @click="do_cart_delete_row(item.inventoryId)"
-                    >
-                      删除
+                    <span class="goods-action">
+                      {{ item.if_fapiao == 1 ? "未开票" : item.if_fapiao == 1 ?  "已开票" : '未申请' }}
                     </span>
                   </div>
                 </div>
@@ -91,7 +87,7 @@
           </div>
           <div class="total-price">
             本次还款：
-            <b>{{ vuex_huobi }} {{ shopcart_money }}</b>
+            <b>{{ vuex_huobi }} {{ count_shopcart_checked }}</b>
             元
           </div>
         </div>
@@ -101,11 +97,14 @@
           <div class="title"><span>*</span>支付方式：</div>
           <div class="pay-items">
             <div v-for="(item, index) in payTypeOption" :class="{ checked: info.payType == item.value }" class="item"
-                 @click="do_toggle_paytype(item)">
+                 @click="do_toggle_paytype(item)"
+            >
               <img alt=""
-                   class="img-check check-0 check-img check-img-0" src="@/assets/img/base/invite/check0.png"/>
+                   class="img-check check-0 check-img check-img-0" src="@/assets/img/base/invite/check0.png"
+              />
               <img alt=""
-                   class="img-check check-1 check-img check-img-1" src="@/assets/img/base/invite/check1.png"/>
+                   class="img-check check-1 check-img check-img-1" src="@/assets/img/base/invite/check1.png"
+              />
               <img :src="item.icon" alt="" class="marker-img"/>
               <span>{{ item.title }}</span>
             </div>
@@ -129,7 +128,8 @@
             <el-upload
                 :show-file-list="false"
                 action="https://jsonplaceholder.typicode.com/posts/"
-                class="avatar-uploader">
+                class="avatar-uploader"
+            >
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
               <div v-else class="box">
                 <i class="el-icon-plus avatar-uploader-icon"></i>
@@ -156,7 +156,9 @@
           <div class="pay-items">
             <el-input v-model="info.prepaidRemark"
                       :rows="4"
-                      maxlength="200" placeholder="您可以填写欠款、回款的相关说明，以便平台和财务核对" show-word-limit type="textarea">
+                      maxlength="200" placeholder="您可以填写欠款、回款的相关说明，以便平台和财务核对" show-word-limit
+                      type="textarea"
+            >
             </el-input>
           </div>
         </div>
@@ -166,10 +168,10 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from 'vuex'
 
 export default {
-  name: "cart",
+  name: 'cart',
   components: {},
   data() {
     return {
@@ -180,198 +182,198 @@ export default {
         prepaidBenefits: '', // 预付福利
         prepaidAmount: '', // 预付金额
         prepaidGift: '', // 预付赠送金
-        prepaidRemark: '', // 预付备注
+        prepaidRemark: '' // 预付备注
       },
       payTypeOption: [
-        {value: 'weixin', title: '微信支付', icon: require("@/assets/img/base/invite/wxPay.png")},
-        {value: 'zhifubao', title: '支付宝支付', icon: require("@/assets/img/base/invite/zfbPay.png")},
-        {value: 'paypal', title: '对公转账', icon: require("@/assets/img/base/invite/duigong.png")},
+        { value: 'weixin', title: '微信支付', icon: require('@/assets/img/base/invite/wxPay.png') },
+        { value: 'zhifubao', title: '支付宝支付', icon: require('@/assets/img/base/invite/zfbPay.png') },
+        { value: 'paypal', title: '对公转账', icon: require('@/assets/img/base/invite/duigong.png') }
         // {value: 'bank', title: '团体余额', icon: require("@/assets/img/base/invite/pay4.png")},
       ],
       checked_all: false, // 是否全选
       list_shopcart: [], // 购物车商品列表
-      keyword: "",
-    };
+      keyword: ''
+    }
   },
   computed: {
-    ...mapState(["defaultAvatar", "shopcart_count", "webConfig"]),
+    ...mapState(['defaultAvatar', 'shopcart_count', 'webConfig']),
 
     canSubmit() {
-      return this.form.name;
+      return this.form.name
     },
 
     //购物车商品总金额
     shopcart_money() {
-      let money = 0;
+      let money = 0
       this.list_shopcart
           .filter((v) => v.checked)
           .forEach((v) => {
-            money += v.num * v.priceSale;
-          });
-      return money.toFixed(2);
+            money += v.num * v.price
+          })
+      return money.toFixed(2)
     },
 
     //购物车被选择的商品
     list_shopcart_checked() {
-      return this.list_shopcart.filter((v) => v.checked);
+      return this.list_shopcart.filter((v) => v.checked)
     },
     //购物车被选择的商品
     count_shopcart_checked() {
-      let count = 0;
+      let count = 0
       if (this.list_shopcart_checked.length) {
         this.list_shopcart_checked.forEach((v) => {
-          count += +v.num;
-        });
+          count += +v.price
+        })
       }
-      return count;
+      return count
     },
 
     jiesuanDisabled() {
-      return !this.list_shopcart_checked.length;
-    },
+      return !this.list_shopcart_checked.length
+    }
   },
   watch: {
     address(val) {
       //console.log("当前地址", val);
-    },
+    }
   },
   created() {
-    this.setView();
+    this.setView()
   },
   methods: {
     do_toggle_paytype(item) {
       this.info.payType = item.value
     },
     do_update_vuex_cart_number() {
-      let count = 0;
+      let count = 0
       this.list_shopcart.forEach((v) => {
-        count += v.num * 1;
-      });
+        count += v.num * 1
+      })
 
-      this.$store.commit("set_vuex_cart_number", count);
+      this.$store.commit('set_vuex_cart_number', count)
     },
 
     setView() {
       this.$api({
-        url: "user_order_list",
-        method: "post",
+        url: 'user_order_list',
+        method: 'post',
         data: {
           ...this.pagination,
           if_hk: 1
-        },
+        }
       }).then((res) => {
-        let {code, data} = res;
+        let { code, data } = res
         if (code == 200) {
           data.forEach((v) => {
-            v.checked = true;
-          });
-          this.list_shopcart = data;
+            v.checked = true
+          })
+          this.list_shopcart = data
           if (data.length) {
-            this.checked_all = true;
+            this.checked_all = true
           }
 
-          this.do_update_vuex_cart_number();
+          this.do_update_vuex_cart_number()
         }
-      });
+      })
     },
 
     favouriteDelete(item) {
-      this.$api("product_collect", {
+      this.$api('product_collect', {
         inventoryId: item.inventoryId,
-        collect_type: 1,
+        collect_type: 1
       }).then((res) => {
-        let {code, message} = res;
+        let { code, message } = res
 
         if (code == 200) {
-          this.setView();
+          this.setView()
         }
-      });
+      })
     },
     favouriteAdd(item) {
-      this.$api("product_collect", {
+      this.$api('product_collect', {
         inventoryId: item.inventoryId,
-        collect_type: 0,
+        collect_type: 0
       }).then((res) => {
-        let {code, message} = res;
+        let { code, message } = res
 
         if (code == 200) {
-          this.setView();
+          this.setView()
         }
-      });
+      })
     },
 
     //购物车 删除选中
     do_cart_remove_select() {
       if (!this.list_shopcart_checked.length) {
-        alertErr("请先选择要删除的商品");
-        return;
+        alertErr('请先选择要删除的商品')
+        return
       }
-      let ids = this.list_shopcart_checked.map((v) => v.inventoryId);
+      let ids = this.list_shopcart_checked.map((v) => v.inventoryId)
       //console.log("要删除的商品id", ids);
-      let id = ids.join();
-      this.do_cart_delete_row(id);
+      let id = ids.join()
+      this.do_cart_delete_row(id)
     },
 
     //购车车 删除商品
     do_cart_delete_row(inventoryId) {
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: '/service.php',
+        method: 'get',
         data: {
-          action: "gouwuche_del",
-          inventoryId: inventoryId,
-        },
+          action: 'gouwuche_del',
+          inventoryId: inventoryId
+        }
       }).then((res) => {
         if (res.code == 200) {
-          let list = this.list_shopcart;
-          let ids = (inventoryId + "").split(",");
+          let list = this.list_shopcart
+          let ids = (inventoryId + '').split(',')
           //可能删除多项商品
           ids.forEach((inventoryId) => {
-            let index = list.findIndex((v) => v.inventoryId == inventoryId);
-            list.splice(index, 1);
-          });
+            let index = list.findIndex((v) => v.inventoryId == inventoryId)
+            list.splice(index, 1)
+          })
 
-          this.do_update_vuex_cart_number();
+          this.do_update_vuex_cart_number()
         }
-      });
+      })
     },
 
     //购物车商品数量减少
     do_number_minus(item) {
       if (item.num == 1) {
-        return;
+        return
       }
-      item.num = --item.num;
-      this.do_updateNum(item);
+      item.num = --item.num
+      this.do_updateNum(item)
     },
 
     //购物车商品数量增加
     do_number_plus(item) {
-      item.num = ++item.num;
-      this.do_updateNum(item);
+      item.num = ++item.num
+      this.do_updateNum(item)
     },
     //购物车修改数量
     do_updateNum(item) {
-      let {inventoryId, num} = item;
+      let { inventoryId, num } = item
 
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: '/service.php',
+        method: 'get',
         data: {
-          action: "gouwuche_updateNum",
+          action: 'gouwuche_updateNum',
           inventoryId: inventoryId,
-          num: num,
-        },
+          num: num
+        }
       }).then((res) => {
         if (res.code == 200) {
           let index = this.list_shopcart.findIndex(
               (v) => v.inventoryId == inventoryId
-          );
-          this.list_shopcart.splice(index, 1, item);
+          )
+          this.list_shopcart.splice(index, 1, item)
 
-          this.do_update_vuex_cart_number();
+          this.do_update_vuex_cart_number()
         }
-      });
+      })
     },
 
     // 购物车商品更新数量
@@ -379,53 +381,53 @@ export default {
     //清空购物车
     do_cart_clear() {
       if (!this.list_shopcart.length) {
-        alertErr("购物车是空的！");
-        return;
+        alertErr('购物车是空的！')
+        return
       }
 
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: '/service.php',
+        method: 'get',
         data: {
-          action: "gouwuche_delAll",
-        },
+          action: 'gouwuche_delAll'
+        }
       }).then((res) => {
         if (res.code == 200) {
-          this.list_shopcart = [];
-          this.do_update_vuex_cart_number();
+          this.list_shopcart = []
+          this.do_update_vuex_cart_number()
         }
-      });
+      })
     },
 
     //商品勾选 全选与取消
     on_change_checked_all(val) {
       //console.log("更新后的值", val);
       this.list_shopcart.forEach((v) => {
-        v.checked = val;
-      });
+        v.checked = val
+      })
     },
 
     //商品勾选 单项选择
     on_change_checked_item() {
       // //console.log('监视单项选择', item)
-      let checkLength = this.list_shopcart_checked.length;
+      let checkLength = this.list_shopcart_checked.length
       if (checkLength == this.list_shopcart.length) {
-        this.checked_all = true;
+        this.checked_all = true
       } else {
-        this.checked_all = false;
+        this.checked_all = false
       }
     },
 
     //去结算
     to_pay() {
       if (!this.list_shopcart.length) {
-        alertErr("您的购物车是空的，快去选购商品吧！");
-        return;
+        alertErr('您的购物车是空的，快去选购商品吧！')
+        return
       }
 
       if (!this.list_shopcart_checked.length) {
-        alertErr("请选择要结算的商品");
-        return;
+        alertErr('请选择要结算的商品')
+        return
       }
 
       let data_format = this.list_shopcart_checked.map((v) => ({
@@ -436,30 +438,30 @@ export default {
         keyVals: v.keyVals,
         num: v.num,
         priceSale: v.priceSale,
-        priceMarket: v.priceMarket,
-      }));
+        priceMarket: v.priceMarket
+      }))
 
       this.$store.commit(
-          "set_cache_payment_products",
+          'set_cache_payment_products',
           JSON.stringify(data_format)
-      );
+      )
 
       this.$router.push({
-        name: "order",
+        name: 'order',
         query: {
-          from: "cart",
-        },
-      });
+          from: 'cart'
+        }
+      })
     },
 
     on_blur_input(item) {
       if (item.num < 1) {
-        item.num = 1;
+        item.num = 1
       }
-      this.shopcart_updateNum(item);
-    },
-  },
-};
+      this.shopcart_updateNum(item)
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

@@ -204,6 +204,7 @@ export default {
                 <img src="@/assets/img/base/appointment/pay-3.png" alt="">
                 <span>个人信用支付</span>
                 <span class="tip" v-if="baseInfo.real_auth != 2" @click="toURL({url: '/my-home'})">立即实名认证</span>
+                <span style="color: #00A527;" v-else>已实名</span>
               </el-radio>
               <el-radio label="team_credit_pay">
                 <img src="@/assets/img/base/appointment/pay-4.png" alt="">
