@@ -138,7 +138,7 @@ export default {
         <div class="section-title">费用明细</div>
         <div class="section-ctx">
           <div class="item">
-            <div class="item-title">总金额 <span>¥{{ priceList.total }}</span></div>
+            <div class="item-title">预计金额 <span>¥{{ priceList.total }}</span></div>
             <div class="item-val" v-for="(item, index) in priceList.data" :key="index">
               <p><span>{{ item.sample_title }}</span><span>样品数量：{{ item.num }}</span></p>
               <p>¥{{ item.unit_price }} * {{ item.num }}</p>

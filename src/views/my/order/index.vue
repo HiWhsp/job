@@ -255,9 +255,16 @@ export default {
 
       <div class="search-filter">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="100px">
-          <el-form-item label="订单编号" prop="keyword">
+          <el-form-item label="设备名称" prop="title">
             <el-input
-                v-model="queryParams.keyword"
+                v-model="queryParams.title"
+                placeholder="设备名称(关键字查询)"
+                clearable
+            />
+          </el-form-item>
+          <el-form-item label="订单编号" prop="orderno">
+            <el-input
+                v-model="queryParams.orderno"
                 placeholder="订单编号"
                 clearable
             />
