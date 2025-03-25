@@ -85,8 +85,9 @@ export default {
       //type   1-收入  2-支出
       list_tab: [
         {title: "全部明细", status: "0"},
-        {title: "支付记录", status: "1"},
-        {title: "还款记录", status: "2"},
+        {title: "收入记录", status: "1"},
+        {title: "支出记录", status: "2"},
+        {title: "还款记录", status: "3"},
       ],
       list_jilu: [],
 

@@ -1,11 +1,11 @@
 <script>
-import periodic from '@/components/periodic';
-import {quillEditor} from 'vue-quill-editor'
+import periodic from '@/components/periodic'
+import { quillEditor } from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 
 export default {
-  components: {periodic, quillEditor},
+  components: { periodic, quillEditor },
   data() {
     return {
       typeId: '',
@@ -33,21 +33,21 @@ export default {
       priceList: [], // 样品价格列表
       element2Value: [], // 样品厚度
       element2ValueCopy: [],
-      element2Id: '', // 样品厚度id
+      element2Id: '' // 样品厚度id
     }
   },
   watch: {
     contentList: {
       handler() {
-        this.getPrice();
+        this.getPrice()
       },
       deep: true
     }
   },
   mounted() {
-    this.preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {};
-    this.preOrderDetail.product_id = this.$route.query.id;
-    this.setView();
+    this.preOrderDetail = JSON.parse(localStorage.getItem('preOrderDetail')) || {}
+    this.preOrderDetail.product_id = this.$route.query.id
+    this.setView()
   },
   methods: {
     setView() {
@@ -59,12 +59,12 @@ export default {
         }
       }).then(res => {
         if (res.code === 200) {
-          this.product_form = res.data;
+          this.product_form = res.data
           this.elementFieldId = this.product_form.find(item => item.field_type === 'element') && this.product_form.find(item => item.field_type === 'element').id
           if (this.preOrderDetail.attachment && JSON.parse(this.preOrderDetail.attachment).length) {
-            const list = JSON.parse(this.preOrderDetail.attachment);
+            const list = JSON.parse(this.preOrderDetail.attachment)
             list.forEach(item => {
-              this.uploadList.push({url: item.furl, name: item.fname})
+              this.uploadList.push({ url: item.furl, name: item.fname })
             })
           }
           if (this.preOrderDetail.form && this.preOrderDetail.form.length) {
@@ -81,7 +81,7 @@ export default {
               }
             }).then(res => {
               if (res.code === 200) {
-                this.priceList = res.data;
+                this.priceList = res.data
               }
             })
             this.contentList = this.preOrderDetail.form.map(item => {
@@ -89,23 +89,23 @@ export default {
                 if (prodItem.is_custom == 1) {
                   item[prodItem.id + '-custom'] = false
                 }
-                if(prodItem.field_type === 'element2') {
-                  this.element2Id = prodItem.id;
-                  this.element2ValueCopy = prodItem.content4;
-                  this.element2Value.push(new Array(prodItem.content4.length).fill(''));
+                if (prodItem.field_type === 'element2') {
+                  this.element2Id = prodItem.id
+                  this.element2ValueCopy = prodItem.content4
+                  this.element2Value.push(new Array(prodItem.content4.length).fill(''))
                   this.preOrderDetail.form.forEach((item2, index2) => {
-                    if(item2[this.element2Id] !== "" && item2[this.element2Id].length) {
+                    if (item2[this.element2Id] !== '' && item2[this.element2Id].length) {
                       const newArr = []
                       item2[this.element2Id].forEach((item3, index3) => {
-                        const arr = item3.split('*');
+                        const arr = item3.split('*')
                         this.element2ValueCopy.forEach((item4, index4) => {
-                          if(item4.text === arr[0]) {
-                            this.element2Value[index2][index4] = arr[1];
-                            newArr.push(arr[0]);
+                          if (item4.text === arr[0]) {
+                            this.element2Value[index2][index4] = arr[1]
+                            newArr.push(arr[0])
                           }
                         })
                       })
-                      item[this.element2Id] = newArr;
+                      item[this.element2Id] = newArr
                     }
                   })
                 }
@@ -114,9 +114,9 @@ export default {
                 isShow: true,
                 product_form: item
               }
-            });
+            })
           } else {
-            const form = this.setForm();
+            const form = this.setForm()
             this.contentList.push({
               isShow: false,
               product_form: form
@@ -128,7 +128,7 @@ export default {
       //   获取设备详情
       this.$api({
         url: 'cms_product_detail',
-        method: "post",
+        method: 'post',
         data: {
           id: this.preOrderDetail.product_id
         }
@@ -140,7 +140,7 @@ export default {
     },
     // 增加样品 防抖
     addContent() {
-      const form = this.setForm();
+      const form = this.setForm()
       this.contentList.push({
         isShow: true,
         product_form: form
@@ -149,28 +149,28 @@ export default {
     },
     // 设置表单的选择项
     setForm() {
-      const form = {};
+      const form = {}
       this.product_form.forEach(item => {
         if (item.field_type == 'number_range') {
-          form[item.id] = ['', ''];
+          form[item.id] = ['', '']
         } else if (item.field_type == 'radio' && item.is_multiple) {
-          form[item.id] = [];
+          form[item.id] = []
         } else if (item.is_custom == 1) {
           form[item.id + '-custom'] = false
         } else if (item.field_type == 'element2') {
-          form[item.id] = [];
-          this.element2Id = item.id;
-          this.element2ValueCopy = item.content4;
-          this.element2Value.push(new Array(item.content4.length).fill(''));
+          form[item.id] = []
+          this.element2Id = item.id
+          this.element2ValueCopy = item.content4
+          this.element2Value.push(new Array(item.content4.length).fill(''))
         } else {
-          form[item.id] = '';
+          form[item.id] = ''
         }
       })
       return form
     },
     // 选择元素
     selectElement(list, index) {
-      this.selectElementIndex = index;
+      this.selectElementIndex = index
       if (list.length) {
         this.elementList = list.map(item => {
           return {
@@ -178,22 +178,22 @@ export default {
             isActive: false,
             isSelect: false
           }
-        });
+        })
       }
-      this.dialogElementVisible = true;
+      this.dialogElementVisible = true
     },
     // 元素选择
     elementPick(item) {
       // 查找元素是否已存在 如果存在则删除 没有则新增
-      const len = this.selectElementList[this.selectElementIndex].length;
+      const len = this.selectElementList[this.selectElementIndex].length
       for (let i = 0; i < len; i++) {
         if (this.selectElementList[this.selectElementIndex][i].mc === item.mc) {
-          this.elementDel(this.selectElementList[this.selectElementIndex][i], i);
+          this.elementDel(this.selectElementList[this.selectElementIndex][i], i)
           return
         }
       }
-      this.selectElementList[this.selectElementIndex].push(item);
-      this.contentList[this.selectElementIndex].product_form[this.elementFieldId] = this.selectElementList[this.selectElementIndex].map(item => item.mc).join('$');
+      this.selectElementList[this.selectElementIndex].push(item)
+      this.contentList[this.selectElementIndex].product_form[this.elementFieldId] = this.selectElementList[this.selectElementIndex].map(item => item.mc).join('$')
     },
     // 删除元素
     elementDel(item, index) {
@@ -201,28 +201,28 @@ export default {
         ...item,
         isActive: false
       })
-      this.selectElementList[this.selectElementIndex].splice(index, 1);
-      this.contentList[this.selectElementIndex].product_form[this.elementFieldId] = this.selectElementList[this.selectElementIndex].map(item => item.mc).join('$');
+      this.selectElementList[this.selectElementIndex].splice(index, 1)
+      this.contentList[this.selectElementIndex].product_form[this.elementFieldId] = this.selectElementList[this.selectElementIndex].map(item => item.mc).join('$')
     },
     // 下一步
     goUrl() {
       if (this.element2Id) {
         this.contentList.forEach((item, index) => {
           item.product_form[this.element2Id].forEach((item2, index2) => {
-            if (item.product_form[this.element2Id][index2] !== "") {
+            if (item.product_form[this.element2Id][index2] !== '') {
               // 已选中样品厚度，查找选择的样品下标
               this.element2ValueCopy.forEach((item3, index3) => {
                 if (item3.text === item.product_form[this.element2Id][index2]) {
                   // 输入框不为空
-                  if(this.element2Value[index][index3] !== "") {
-                    item.product_form[this.element2Id][index2] = item2 + '*' + this.element2Value[index][index3];
-                  }else {
-                    item.product_form[this.element2Id][index2] = "";
+                  if (this.element2Value[index][index3] !== '') {
+                    item.product_form[this.element2Id][index2] = item2 + '*' + this.element2Value[index][index3]
+                  } else {
+                    item.product_form[this.element2Id][index2] = ''
                   }
                 }
               })
-            }else {
-              item.product_form[this.element2Id][index2] = "";
+            } else {
+              item.product_form[this.element2Id][index2] = ''
             }
           })
         })
@@ -241,14 +241,14 @@ export default {
         }
       }).then(res => {
         if (res.code === 200) {
-          this.preOrderDetail.attachment = JSON.stringify(this.fileList);
-          this.preOrderDetail.form = this.contentList.map(item => item.product_form);
-          localStorage.setItem('preOrderDetail', JSON.stringify(this.preOrderDetail));
+          this.preOrderDetail.attachment = JSON.stringify(this.fileList)
+          this.preOrderDetail.form = this.contentList.map(item => item.product_form)
+          localStorage.setItem('preOrderDetail', JSON.stringify(this.preOrderDetail))
           this.$router.push({
             path: '/appointment-info'
           })
         } else {
-          this.$message.error(res.msg);
+          this.$message.error(res.msg)
         }
       })
     },
@@ -267,49 +267,75 @@ export default {
         }
       }).then(res => {
         if (res.code === 200) {
-          this.priceList = res.data;
+          this.priceList = res.data
         }
       })
     },
     setProductForm(data) {
-      const form = [];
+      const form = []
       data.forEach((item, index) => {
         for (const itemKey in item.product_form) {
           if (itemKey.includes('-custom')) {
-            return;
+            return
           }
           if (form[index] && Object.keys(form[index]).length) {
             form[index][itemKey] = typeof item.product_form[itemKey] === 'object' ? item.product_form[itemKey].join('$') : item.product_form[itemKey]
           } else {
-            form[index] = {};
+            form[index] = {}
             form[index][itemKey] = typeof item.product_form[itemKey] === 'object' ? item.product_form[itemKey].join('$') : item.product_form[itemKey]
           }
         }
+
+        form.forEach((item, index) => {
+          for (const itemKey in item) {
+            // 找到样品厚度
+            if (this.element2Id == itemKey) {
+              if (item[itemKey]) {
+                const ypList = item[itemKey].split('$')
+                ypList.forEach((item2, index2) => {
+                  this.element2ValueCopy.forEach((item3, index3) => {
+                    // 找到指定样品
+                    if (item3.text == item2) {
+                      // 判断样品输入框是否有值
+                      if (this.element2Value[index][index3] !== '') {
+                        // 拼接到指定样品后面
+                        ypList[index2] = item2 + '*' + this.element2Value[index][index3]
+                      }
+                    }
+                  })
+                })
+                item[itemKey] = ypList.join('$')
+              }
+            }
+          }
+        })
+        console.log(form)
       })
+
       return form
     },
     //上传相关
     upload_on_success(res, file, fileList) {
       //console.log("上传结果", res);
-      let {code, data, msg} = res;
+      let { code, data, msg } = res
       if (code == 200) {
         fileList.forEach(item => {
-          this.fileList.push({fname: item.response.data.name, furl: item.response.data.url})
+          this.fileList.push({ fname: item.response.data.name, furl: item.response.data.url })
         })
       }
     },
     upload_before_upload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
-      return isLt2M;
+      const isLt2M = file.size / 1024 / 1024 < 20 //文件大小
+      return isLt2M
     },
     // 删除
     handleRemove(file, fileList) {
       this.fileList = fileList
     },
     delContent(index) {
-      this.contentList.splice(index, 1);
-      this.selectElementList.splice(index, 1);
-      this.contentList[this.selectElementIndex].product_form[this.elementFieldId] = '';
+      this.contentList.splice(index, 1)
+      this.selectElementList.splice(index, 1)
+      this.contentList[this.selectElementIndex].product_form[this.elementFieldId] = ''
     },
 
     // 跳转
@@ -320,24 +346,20 @@ export default {
     },
     // 申请单下载
     Download() {
-      window.open(this.detail.paper, "_blank")
+      window.open(this.detail.paper, '_blank')
     },
     // 播放
     playVideo() {
-      this.dialogVisible = true;
+      this.dialogVisible = true
     },
     // 自定义
     showCustom(index, id, customId) {
-      this.contentList[index].product_form[id] = '';
-      this.contentList[index].product_form[customId] = !this.contentList[index].product_form[customId];
+      this.contentList[index].product_form[id] = ''
+      this.contentList[index].product_form[customId] = !this.contentList[index].product_form[customId]
     },
     input(e) {
       this.$forceUpdate()
     },
-    // 样品厚度修改
-    element2Click(it, index) {
-      console.log(it, index)
-    }
   }
 }
 </script>
@@ -346,76 +368,89 @@ export default {
 <template>
   <div class="page">
     <div class="content">
-      <div class="content-item" v-for="(item, index) in contentList" :key="index">
+      <div v-for="(item, index) in contentList" :key="index" class="content-item">
         <div class="title-top">
           <span>样品{{ index + 1 }} <i class="el-icon-delete" @click="delContent(index)"></i></span>
-          <i class="el-icon-arrow-down pointer" :class="{'hide': item.isShow}" @click="item.isShow = !item.isShow"></i>
+          <i :class="{'hide': item.isShow}" class="el-icon-arrow-down pointer" @click="item.isShow = !item.isShow"></i>
         </div>
-        <div class="select" :class="{'hide': item.isShow}">
-          <div class="sel-item" v-for="(field, fieldIndex) in product_form" :key="fieldIndex">
+        <div :class="{'hide': item.isShow}" class="select">
+          <div v-for="(field, fieldIndex) in product_form" :key="fieldIndex" class="sel-item">
             <div class="label">
               <i v-if="field.is_require">*</i>
               <span>{{ field.title }}</span>
             </div>
             <div class="value">
-              <div class="col" v-if="!contentList[index].product_form[field.id+'-custom']">
+              <div v-if="!contentList[index].product_form[field.id+'-custom']" class="col">
                 <!--              文本-->
                 <el-input v-if="field.field_type === 'text'" v-model="contentList[index].product_form[field.id]"
-                          type="text" :placeholder="'请输入' + field.title"></el-input>
+                          :placeholder="'请输入' + field.title" type="text"
+                ></el-input>
                 <!--              数字-->
-                <div class="flex" v-if="field.field_type === 'number'">
+                <div v-if="field.field_type === 'number'" class="flex">
                   <el-input v-model="contentList[index].product_form[field.id]"
+                            :placeholder="'请输入' + field.title"
                             type="text"
                             @input="(e)=>contentList[index].product_form[field.id] = e.replace(/[^0-9]/g, '')"
-                            :placeholder="'请输入' + field.title"></el-input>
+                  ></el-input>
                   <span v-if="field.unit">{{ field.unit }}</span>
                 </div>
                 <!--              数字区间-->
                 <template v-if="field.field_type === 'number_range'">
                   <el-input v-model="contentList[index].product_form[field.id][0]"
+                            :placeholder="'请输入' + field.title"
                             type="text"
                             @input="(e)=>contentList[index].product_form[field.id][0] = e.replace(/[^0-9]/g, '')"
-                            :placeholder="'请输入' + field.title"></el-input>
+                  ></el-input>
                   <span class="col">—</span>
                   <el-input v-model="contentList[index].product_form[field.id][1]"
+                            :placeholder="'请输入' + field.title"
                             type="text"
                             @input="(e)=>contentList[index].product_form[field.id][1] = e.replace(/[^0-9]/g, '')"
-                            :placeholder="'请输入' + field.title"></el-input>
+                  ></el-input>
                 </template>
                 <!--              文本域-->
                 <el-input v-if="field.field_type === 'textarea'"
                           v-model="contentList[index].product_form[field.id]"
-                          type="textarea" :rows="4" :placeholder="'请输入' + field.title"></el-input>
+                          :placeholder="'请输入' + field.title" :rows="4" type="textarea"
+                ></el-input>
                 <!--富文本-->
                 <quillEditor v-if="field.field_type === 'richtext'"
-                             v-model="contentList[index].product_form[field.id]"></quillEditor>
+                             v-model="contentList[index].product_form[field.id]"
+                ></quillEditor>
                 <!--              单选-->
                 <el-radio-group v-if="field.field_type === 'radio' && field.is_multiple === 0"
-                                v-model="contentList[index].product_form[field.id]">
-                  <el-radio style="margin-bottom: 5px;" :label="it.text" v-for="(it, i) in field.content"
-                            :key="it.text">
+                                v-model="contentList[index].product_form[field.id]"
+                >
+                  <el-radio v-for="(it, i) in field.content" :key="it.text" :label="it.text"
+                            style="margin-bottom: 5px;"
+                  >
                     {{ it.text }}
                   </el-radio>
                 </el-radio-group>
                 <!--              多选-->
                 <el-checkbox-group v-if="field.field_type === 'radio' && field.is_multiple === 1"
-                                   v-model="contentList[index].product_form[field.id]">
-                  <el-checkbox style="margin-bottom: 5px;" :label="it.text" v-for="(it, i) in field.content"
-                               :key="it.text">{{ it.text }}
+                                   v-model="contentList[index].product_form[field.id]"
+                >
+                  <el-checkbox v-for="(it, i) in field.content" :key="it.text" :label="it.text"
+                               style="margin-bottom: 5px;"
+                  >{{ it.text }}
                   </el-checkbox>
                 </el-checkbox-group>
                 <!--              元素周期表-->
                 <template v-if="field.field_type === 'element'">
                   <div class="flex">
-                    <div class="t-item column-flex-center wrap"
-                         v-for="(xItem, xI) in selectElementList[index]" :key="xI" v-if="xItem">
+                    <div v-for="(xItem, xI) in selectElementList[index]"
+                         v-if="xItem" :key="xI" class="t-item column-flex-center wrap"
+                    >
                       <span class="desc">{{ xItem.mc }}</span>
-                      <img src="@/assets/img/base/appointment/element-del.png" class="element-del"
+                      <img alt="" class="element-del"
+                           src="@/assets/img/base/appointment/element-del.png"
                            @click="elementDel(xItem, xI)"
-                           alt="">
+                      >
                     </div>
-                    <div class="sel-element" v-if="field.field_type === 'element'"
-                         @click="selectElement(field.content, index)">
+                    <div v-if="field.field_type === 'element'" class="sel-element"
+                         @click="selectElement(field.content, index)"
+                    >
                       选择元素
                     </div>
                   </div>
@@ -423,23 +458,29 @@ export default {
 
                 <!--              样品厚度-->
                 <el-checkbox-group v-if="field.field_type === 'element2'"
-                                   v-model="contentList[index].product_form[field.id]">
-                  <el-checkbox style="margin-bottom: 5px;" :label="it.text" v-for="(it, i) in field.content4"
-                               :key="it.text">{{ it.text }}
-                    <el-input style="width: 100px;" v-if="contentList[index].product_form[field.id].includes(it.text)"
-                              v-model="element2Value[index][i]"></el-input>
+                                   v-model="contentList[index].product_form[field.id]"
+                >
+                  <el-checkbox v-for="(it, i) in field.content4" :key="it.text" :label="it.text"
+                               style="margin-bottom: 5px;"
+                  >{{ it.text }} {{ it.value1 + '' + it.helps }}
+                    <el-input @change="getPrice" v-if="contentList[index].product_form[field.id].includes(it.text)"
+                              v-model="element2Value[index][i]"
+                              style="width: 100px;" type="number" min="0"
+                    ></el-input>
                   </el-checkbox>
                 </el-checkbox-group>
 
-                <div class="helps" v-if="field.helps">{{ field.helps }}</div>
+                <div v-if="field.helps" class="helps">{{ field.helps }}</div>
               </div>
               <el-input v-if="contentList[index].product_form[field.id+'-custom']"
-                        v-model="contentList[index].product_form[field.id]" type="text"
+                        v-model="contentList[index].product_form[field.id]" :placeholder="'请输入' + field.title"
+                        type="text"
                         @input="input"
-                        :placeholder="'请输入' + field.title"></el-input>
+              ></el-input>
               <!--              点击按钮出现文本框 隐藏上面的选择项-->
-              <el-button class="custom" v-if="field.is_custom == 1"
-                         @click="showCustom(index, field.id, field.id+'-custom')">
+              <el-button v-if="field.is_custom == 1" class="custom"
+                         @click="showCustom(index, field.id, field.id+'-custom')"
+              >
                 {{ contentList[index].product_form[field.id + '-custom'] ? '取消' : '其他选项' }}
               </el-button>
             </div>
@@ -453,7 +494,7 @@ export default {
             <span>实验留言</span>
           </div>
           <div class="value">
-            <el-input type="textarea" :rows="4" placeholder="请输入" v-model="preOrderDetail.message"></el-input>
+            <el-input v-model="preOrderDetail.message" :rows="4" placeholder="请输入" type="textarea"></el-input>
           </div>
         </div>
         <div class="sel-item">
@@ -462,17 +503,18 @@ export default {
           </div>
           <div class="value">
             <el-upload
-                class="upload-demo"
-                name="file"
-                :file-list="uploadList"
-                action="https://jxjsjc.dx.hdapp.com.cn/api/upload"
-                :data="mix_upload_data" :on-success="upload_on_success"
                 :before-upload="upload_before_upload"
-                :on-remove="handleRemove"
+                :data="mix_upload_data"
+                :file-list="uploadList"
+                :limit="3"
+                :on-remove="handleRemove" :on-success="upload_on_success"
+                action="https://jxjsjc.dx.hdapp.com.cn/api/upload"
+                class="upload-demo"
                 multiple
-                :limit="3">
+                name="file"
+            >
               <div class="upload-box">
-                <img src="@/assets/img/base/appointment/load-img.png" alt="">
+                <img alt="" src="@/assets/img/base/appointment/load-img.png">
                 <span>上传</span>
               </div>
             </el-upload>
@@ -483,12 +525,12 @@ export default {
       <div class="all-money">
         <div class="money-info">
           <p>合计费用: <span>{{ vuex_huobi }}{{ priceList.total || 0 }}</span></p>
-          <i class="el-icon-arrow-down" :class="{'hide': isShow}" @click="isShow = !isShow"></i>
+          <i :class="{'hide': isShow}" class="el-icon-arrow-down" @click="isShow = !isShow"></i>
         </div>
         <div class="next-btn" @click="goUrl()">下一步</div>
 
-        <div class="popup" :class="{'hide': isShow}">
-          <div class="item" v-for="(item, index) in priceList.data" :key="index">
+        <div :class="{'hide': isShow}" class="popup">
+          <div v-for="(item, index) in priceList.data" :key="index" class="item">
             <span>{{ item.sample_title || '暂无' }}</span>
             <span class="num">样品数量：{{ item.num || 0 }}</span>
             <span class="money">¥{{ item.unit_price || 0 }} * {{ item.num || 0 }}</span>
@@ -507,13 +549,14 @@ export default {
         <p>仪器图片</p>
         <div class="play">
           <!--          <img :src="detail.thumb" alt="">-->
-          <el-image :src="detail.thumb" :preview-src-list="[detail.thumb]">
+          <el-image :preview-src-list="[detail.thumb]" :src="detail.thumb">
             <div slot="error" class="image-slot">
               <img src="@/assets/img/my/order-img.png"/>
             </div>
           </el-image>
-          <img src="@/assets/img/base/appointment/play.png" class="play-btn" alt="" @click="playVideo"
-               v-if="detail.video">
+          <img v-if="detail.video" alt="" class="play-btn" src="@/assets/img/base/appointment/play.png"
+               @click="playVideo"
+          >
         </div>
         <div class="lock-detail" @click="toUrl('/analyze_detail?id=' + detail.id)">查看仪器详情 ></div>
       </div>
@@ -529,9 +572,10 @@ export default {
       </div>
     </div>
 
-    <el-dialog title="选择元素" :visible.sync="dialogElementVisible" width="1350px" center>
+    <el-dialog :visible.sync="dialogElementVisible" center title="选择元素" width="1350px">
       <periodic :elementList="elementList" :selectElementList="selectElementList[selectElementIndex]"
-                @handleClickElement="elementPick"></periodic>
+                @handleClickElement="elementPick"
+      ></periodic>
       <div class="sel_element">
         <p class="title">您已选择 <span>{{
             selectElementList[selectElementIndex] ? selectElementList[selectElementIndex].length : 0
@@ -549,17 +593,19 @@ export default {
     </el-dialog>
 
     <el-dialog
-        title="仪器视频"
         :visible.sync="dialogVisible"
+        center
+        title="仪器视频"
         width="30%"
-        center>
-      <video :src="'https://jxjsjc.dx.hdapp.com.cn/' + detail.video" controls="controls" width="100%"
-             class="video-mask"></video>
+    >
+      <video :src="'https://jxjsjc.dx.hdapp.com.cn/' + detail.video" class="video-mask" controls="controls"
+             width="100%"
+      ></video>
     </el-dialog>
   </div>
 </template>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .page {
   width: 1400px;
   margin: 0 auto;
