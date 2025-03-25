@@ -100,9 +100,7 @@ export default {
 
     .item {
       margin-top: 20px;
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      .flex-between();
       font-size: 14px;
     }
   }
@@ -143,7 +141,7 @@ export default {
   }
   .queding {
     width: 270px;
-    background: #F74747;
+    background: @theme;
     border-radius: 3px;
 
     font-size: 16px;

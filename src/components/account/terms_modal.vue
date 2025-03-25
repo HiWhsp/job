@@ -214,8 +214,7 @@ export default {
 
 .el-checkbox {
   cursor: pointer;
-    display: flex;
-  align-items: center;
+  .flex();
 
   img {
     margin-right: 5px;
@@ -223,8 +222,8 @@ export default {
 }
 
 .btn-confirm:not(:disabled) {
-  background: #F74747;
-  border-color: #F74747;
+  background: @theme;
+  border-color: @theme;
   color: #fff;
 }
 

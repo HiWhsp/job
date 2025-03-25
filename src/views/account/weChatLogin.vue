@@ -104,7 +104,7 @@ export default {
   },
 
   methods: {
-    ...mapActions([""]),
+    ...mapActions(["getUserInfo"]),
 
     onWeChatLogin() {
       WeChatLogin.handleAuthorize();
@@ -173,7 +173,7 @@ export default {
           // if (res_wx_login && res_wx_login.code == 200) {
           //console.log("4 查询用户信息判断绑定手机号情况");
 
-          // this.query_user().then((res) => {
+          // this.getUserInfo().then((res) => {
           this.has_bind_phone = info.mobile;
           if (!this.has_bind_phone) {
             //console.log("5 未绑定手机 ");
@@ -193,8 +193,8 @@ export default {
           // //有登陆信息
           // if (localStorage.getItem("token")) {
           //   let resUser = await this.$api("users_userInfo");
-          //   if (resUser && resUser.code == 200) {
-          //     this.$store.commit("set_vuex_is_login", true);
+          //   if (resUser && resUser.code == 1) {
+          //     this.$store.commit("set_isLogin", true);
           //     this.$store.commit("set_baseInfo", resUser.data);
           //     this.$store.dispatch("appInit"); //重新初始化
           //   } else {
@@ -208,14 +208,14 @@ export default {
         } else {
           // this.$store.commit("set_wx_code", this.wx_code_curr);
           // //授权后已拿到code
-          // let resUser = await this.$api("query_user");
+          // let resUser = await this.$api("getUserInfo");
           // if (resUser && resUser.code == 200) {
-          //   if (resUser.code == 200) {
-          //     // this.$store.commit("set_vuex_is_login", true);
+          //   if (resUser.code == 1) {
+          //     // this.$store.commit("set_isLogin", true);
           //     // this.$store.commit("set_baseInfo", resUser.data);
           //     // this.$store.dispatch("appInit"); //重新初始化
           //   } else {
-          //     // this.$store.commit("set_vuex_is_login", false);
+          //     // this.$store.commit("set_isLogin", false);
           //     // this.$store.commit("clear_loginInfo", false);
           //     // this.$store.dispatch("appInit"); //重新初始化
           //   }
@@ -266,7 +266,11 @@ export default {
             });
 
             // 重新调取获取用户信息的接口
-          
+            // this.getUserInfo().then((res) => {
+            //   this.$router.push({
+            //     name: this.$config.homeName,
+            //   });
+            // });
           } else {
             this.$Message.error(data.msg);
           }

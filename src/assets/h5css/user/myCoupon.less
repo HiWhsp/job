@@ -3,9 +3,7 @@
     text-align: left;
     padding-bottom: 80px;
     .main-title {
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      .flex-between();
       padding: 0 32px;
       text-align: left;
       height: 56px;
@@ -20,7 +18,7 @@
         min-width: 96px;
         height: 30px;
         line-height: 30px;
-        background: #F74747;
+        background: @theme;
         color: #fff;
         font-size: 14px;
         font-weight: bold;
@@ -41,16 +39,13 @@
     .tab-wrap {
       position: relative;
       margin-bottom: 30px;
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      .flex-between();
 
       .tab-box {
         flex: 2;
         // border-bottom: 1px solid #eee;
 
-          display: flex;
-  align-items: center;
+        .flex();
         .tab-item {
           cursor: pointer;
           padding-bottom: 10px;
@@ -63,9 +58,9 @@
           color: #333333;
 
           &.active {
-            border-bottom: 3px solid #F74747;
+            border-bottom: 3px solid @theme;
             font-weight: bold;
-            color: #F74747;
+            color: @theme;
           }
         }
       }
@@ -73,8 +68,7 @@
       .lingquan {
         position: absolute;
         right: 0;
-          display: flex;
-  align-items: center;
+        .flex();
         cursor: pointer;
         width: fit-content;
 
@@ -98,8 +92,7 @@
     }
 
     .list-box {
-        display: flex;
-  align-items: center;
+      .flex();
       flex-wrap: wrap;
 
       .item {
@@ -186,7 +179,7 @@
           right: 0;
           img {
             width: 60px;
-            vertical-align: middle;
+            vertical-align: bottom;
           }
         }
       }
@@ -199,8 +192,7 @@
     }
 
     .yhq-item {
-        display: flex;
-  align-items: center;
+      .flex();
       flex-wrap: wrap;
       margin-bottom: 20px;
 
@@ -226,13 +218,13 @@
             font-size: 24px;
             font-family: Microsoft YaHei-Bold, Microsoft YaHei;
             font-weight: bold;
-            color: #F74747;
+            color: @theme;
           }
           .num {
             font-size: 24px;
             font-family: Microsoft YaHei-Bold, Microsoft YaHei;
             font-weight: bold;
-            color: #F74747;
+            color: @theme;
           }
         }
 
@@ -256,7 +248,7 @@
           button {
             width: 127px;
             height: 36px;
-            background: #F74747;
+            background: @theme;
             border-radius: 4px 4px 4px 4px;
             font-size: 14px;
             font-family: Microsoft YaHei-Regular, Microsoft YaHei;

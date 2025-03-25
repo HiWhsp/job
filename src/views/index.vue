@@ -1,80 +1,1064 @@
 <template>
   <div class="page">
-    <div class="page-ctx">
-      <!-- 轮播图 element -->
-      <el-carousel :interval="4000" height="600px">
-        <el-carousel-item v-for="item in 4" :key="item">
-          <img src="@/assets/image/home/banner.png" alt="" />
-        </el-carousel-item>
-      </el-carousel>
-      <!-- 轮播图 end -->
-
-      <!-- 产品列表 start -->
-      <div class="product-list w-1200">
-        <h2 class="title">公司介绍</h2>
-        <p>
-          “我们希望我们的模型的完美能给全世界的收藏家带来惊喜，这样他们也能体验到拥有一件独一无二的物品的难以置信的情感。”“我们对汽车和细节的热情，服务于最苛刻和最成熟的收藏家的热情。”通过传统与创新之间的微妙平衡，我们努力在我们的模型中表达意大利制造的所有优雅，风格和创造力。
-          对细节的最准确的关注，优质的材料和生产技术的不断发展，确保了TOPART已成为公认的点
-          供大型汽车制造商和汽车爱好者参考。
-        </p>
+    <!--    操作区-->
+    <div class="index-box-first-content flex">
+      <div class="CategoryLayout">
+        <ul class="category-wrapper">
+          <li class="category-list" v-for="(item, index) in filterList" :key="index" @click="toProduct(item)">
+            <a :title="item.title" class="link pointer">
+              <span>{{ item.title }}</span>
+              <img src="../static/home/right-row.png" alt="">
+            </a>
+            <div class="category-list-submenu active">
+              <img :src="item.thumb" alt="">
+              <!--              <div class="submenu-item">-->
+              <!--                <div class="submenu-item-name">{{ item.title }}</div>-->
+              <!--                <div class="submenu-item-content">-->
+              <!--                  <a :title="it.title" class="submenu-item-content__a pointer"-->
+              <!--                     v-for="(it, i) in item.children"-->
+              <!--                     :key="i">-->
+              <!--                    <span>{{ it.title }}</span>-->
+              <!--                  </a></div>-->
+              <!--              </div>-->
+            </div>
+          </li>
+        </ul>
       </div>
-      <!-- 产品列表 end -->
+
+      <div class="banner">
+        <el-carousel height="100%">
+          <el-carousel-item v-for="(it, i) in index_banners" :key="i">
+            <img :src="it.image" alt="banner"/>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+
+      <div class="info-panel">
+        <div class="info-box">
+          <p>Hi 欢迎来到富俊商城</p>
+          <div class="info-btn flex flex-between" v-if="!userInfo.id">
+            <div class="login-btn pointer" @click="goUrl({url: '/login'})">登录</div>
+            <div class="register-btn pointer" @click="goUrl({url: '/register'})">注册</div>
+          </div>
+          <div v-else class="info-btn flex flex-between">
+            <div class="register-btn pointer" @click="onunload">退出登录</div>
+          </div>
+        </div>
+        <div class="my-serve">
+          <div class="title flex flex-between">
+            <div class="name">我的订单</div>
+            <div class="more flex" @click="goUrl({url: '/order-list'})">
+              <span>更多</span>
+              <img src="../static/home/right.png" alt="right">
+            </div>
+          </div>
+          <div class="list">
+            <div class="item" v-for="(item, index) in orderNav" :key="index"
+                 @click="goUrl({url: item.router})">
+              <img :src="item.imgUrl" alt="">
+              <span>{{ item.name }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="notice">
+          <div class="title flex flex-between">
+            <div class="name flex">
+              <p class="tip pointer" :class="{'active': noticeType == 1}" @click="noticeClick(1)">公告</p>
+              <div class="col"></div>
+              <p class="tip pointer" :class="{'active': noticeType == 2}" @click="noticeClick(2)">新闻</p>
+            </div>
+            <div class="more flex" @click="allClick">
+              <span>全部</span>
+              <img src="../static/home/right.png" alt="right">
+            </div>
+          </div>
+          <div class="list">
+            <div class="item flex pointer" v-for="(item, index) in noticeList" :key="index"
+                 @click="noticeItemClick(item)">
+              <div class="hot">最新</div>
+              <p class="text ellipsis-1">{{ item.title }}</p>
+            </div>
+            <div class="item flex" v-if="noticeList.length == 0">
+              暂无更多
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <!--    推荐产品-->
+    <div class="promation-area flex">
+      <div class="ordinary-desc pointer">
+        <div class="title">
+          <p>精密电动滑台</p>
+<!--          <img src="../static/home/area-right.png" alt="area-right">-->
+        </div>
+      </div>
+      <div class="promation-product-box">
+        <el-carousel :interval="5000" arrow="always" height="100%" indicator-position="none">
+          <el-carousel-item v-for="(item,index) in promationList" :key="index" v-if="promationList.length">
+            <div class="item-wrap flex">
+              <template v-for="it in item">
+                <div class="item pointer" @click="goUrl({url: `/productDetail?id=${it.inventoryId}`})">
+                  <img :src="it.thumb" alt="" class="scale-img">
+                  <div class="pointer">
+                    <p class="title">{{ it.title }}</p>
+                    <p class="money">￥{{ it.priceSale }}</p>
+                  </div>
+                </div>
+                <div class="col" v-if="index < 5"></div>
+              </template>
+            </div>
+          </el-carousel-item>
+          <el-carousel-item v-if="promationList.length == 0">
+            <el-empty description="暂无数据..."></el-empty>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+    </div>
+    <!--    精选产品-->
+    <div class="recommend-area">
+      <div class="title flex flex-between">
+        <div class="left flex">
+          <img src="../static/home/37454.png" alt="">
+          <p class="tip">精选产品</p>
+          <p class="desc">爆款精选 价格优越</p>
+        </div>
+        <div class="more flex pointer" @click="goUrl({url: '/productCategories'})">
+          <p>更多</p>
+          <img src="../static/home/right-row.png" alt="">
+        </div>
+      </div>
+      <div class="list flex">
+        <div class="item pointer" v-for="item in product_list" :key="item.id"
+             @click="goUrl({url: `/productDetail?id=${item.inventoryId}`})">
+          <img :src="item.thumb" alt="" class="scale-img">
+          <p class="tit">{{ item.title }}</p>
+          <p class="money">￥{{ item.priceSale }}</p>
+        </div>
+      </div>
+    </div>
+    <!--    定制组件-->
+    <div class="DIY-area">
+      <div class="title flex flex-center">
+        <img src="../static/home/19655.png" alt="">
+        <p>DIY定制组件</p>
+        <img src="../static/home/19656.png" alt="">
+      </div>
+      <div class="list flex">
+        <div class="item pointer" v-for="item in product_list" :key="item.id"
+             @click="goUrl({url: `/productDetail?id=${item.inventoryId}`})">
+          <img :src="item.thumb" alt="" class="scale-img">
+          <p class="tit">{{ item.title }}</p>
+          <p class="money">￥{{ item.priceSale }}</p>
+        </div>
+      </div>
+    </div>
+    <pageAside></pageAside>
   </div>
 </template>
+
 <script>
+import pageAside from "@/components/page/page-aside.vue";
+import {mapState} from "vuex";
+import dayjs from 'dayjs'
+
 export default {
   name: "index",
-  data() {
-    return {};
+  components: {
+    pageAside
   },
-
-  watch: {},
-  created() {
+  data() {
+    return {
+      // 首屏展示类型
+      noticeType: 1,
+      noticeList: [],
+      // 订单选项菜单
+      orderNav: [
+        {
+          name: '待报价',
+          imgUrl: require('../static/home/daibaojia.png'),
+          router: '/order-quotation-list'
+        }, {
+          name: '已报价',
+          imgUrl: require('../static/home/yibaojia.png'),
+          router: '/order-quotation-list'
+        }, {
+          name: '待付款',
+          imgUrl: require('../static/home/daifukuan.png'),
+          router: '/order-quotation-list'
+        }, {
+          name: '待发货',
+          imgUrl: require('../static/home/daifahuo.png'),
+          router: '/order-list'
+        }, {
+          name: '待收货',
+          imgUrl: require('../static/home/daishouhuo.png'),
+          router: 'order-list'
+        }, {
+          name: '待开票',
+          imgUrl: require('../static/home/daikaipiao.png'),
+          router: '/invoice-list'
+        }],
+      // 推荐商品列表
+      promationList: [],
+      product_list: [],
+      reviews_group: []
+    };
+  },
+  computed: {
+    ...mapState({
+      userInfo: state => state.userInfo,
+      filterList: state => state.vuexTreeCates,
+      index_banners: state => state.index_banners
+    }),
+  },
+  mounted() {
     this.setView();
   },
-  mounted() {},
   methods: {
-    setView() {},
+    setView() {
+      this.query_product_cate()
+      // this.query_reviews()
+      this.noticeClick(1);
+    },
+    // 公告 新闻
+    noticeClick(type) {
+      this.noticeType = type;
+      if (type == 1) {
+        this.$api({
+          url: '/service.php',
+          method: 'get',
+          data: {
+            action: 'news_lists',
+            ...{
+              channelId: 52,
+              page: 1,
+              pageNum: 5,
+            }
+          }
+        }).then(res => {
+          if (res.code == 200) {
+            this.noticeList = res.data.list;
+          }
+        })
+      } else if (type == 2) {
+        this.$api({
+          url: '/service.php',
+          method: 'get',
+          data: {
+            action: 'news_lists',
+            ...{
+              channelId: 50,
+              page: 1,
+              pageNum: 5,
+            }
+          }
+        }).then(res => {
+          if (res.code == 200) {
+            this.noticeList = res.data.list;
+          }
+        })
+      }
+    },
+    // 公告 新闻全部
+    allClick() {
+      if (this.noticeType == 1) {
+        this.$router.push('/notice');
+      } else if (this.noticeType == 2) {
+        this.$router.push('/about');
+      }
+    },
+    // 获取商品列表
+    query_product_cate() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_plist",
+          ifShowSku: 1,
+          channelId: 0,
+          page: 1,
+          pageNum: 10,
+        },
+      }).then((res) => {
+        let {code, data} = res;
+        if (code == 200) {
+          let {list, count} = data;
+          this.product_list = list;
+          this.count = count;
+
+          // for (let i = 0; i < list.length; i += 5) {
+          //   this.promationList.push(list.slice(i, i + 5));
+          // }
+          // console.log(this.promationList)
+        }
+      });
+      // 推荐商品
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_plist",
+          ifShowSku: 1,
+          channelId: 811,
+          page: 1,
+          pageNum: 10,
+        },
+      }).then((res) => {
+        let {code, data} = res;
+        let {list, count} = data;
+        if (code == 200) {
+          for (let i = 0; i < list.length; i += 5) {
+            this.promationList.push(list.slice(i, i + 5));
+          }
+        }
+      })
+    },
+    // 评论
+    query_reviews() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_comments",
+          page: 1,
+          pageNum: 12,
+          productId: 0,
+          ifIndex: 1,
+        },
+      }).then((res) => {
+        let {code, data, count} = res;
+        if (code == 200) {
+          let {list, count, pages} = data;
+          this.reviews = list;
+
+
+          let reviews_group = [];
+          let items_length = 4;//4个一组
+          list.forEach((v, i) => {
+            let group_index = Math.floor(i / items_length);
+            if (!reviews_group[group_index]) {
+              reviews_group[group_index] = [];
+            }
+            reviews_group[group_index].push(v);
+          });
+          this.reviews_group = reviews_group;
+        }
+      });
+    },
+
+    // 公告/新闻点击
+    noticeItemClick(item) {
+      if (this.noticeType == 1) { // 公告
+        this.goUrl({
+          url: '/notice-detail?id=' + item.id
+        })
+      } else if (this.noticeType == 2) { // 新闻
+        this.goUrl({
+          url: '/xinhun-detail?id=' + item.id,
+        })
+      }
+    },
+    // 跳转链接
+    goUrl(item) {
+      this.$router.push(item.url);
+    },
+    // 跳转商品
+    toProduct(item) {
+      this.$router.push(`/productCategories?ids=${item.id}`);
+    },
+    // 退出登录
+    onunload() {
+      this.$store.commit("clear_loginInfo");
+    }
   },
-};
+}
+
 </script>
 
 <style scoped lang="less">
-.page {
-  padding-top: 0;
-  padding-bottom: 80px;
-  background: #000;
+.el-carousel {
+  height: 100%;
+}
 
-  .inner {
-    padding-top: 0;
-    margin: 0 auto;
+.index-box-first-content {
+  // 左侧分类
+  .CategoryLayout {
     position: relative;
-  }
+    width: 192px;
+    height: 466px;
+    background: #fff;
+    border-radius: 4px;
 
-  .product-list {
-    margin-top: 48px;
-    color: #fff;
-    h2 {
-      font-size: 44px;
-      color: #fff;
-      font-weight: 600;
-      margin-bottom: 24px;
+    .category-wrapper {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+
+      .category-list {
+        min-height: 46px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+
+        .link {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 100%;
+          text-decoration-line: none;
+          color: #000;
+          padding: 0 17px 0 11px;
+
+          span {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          img {
+            width: 6.3px;
+            height: 11.28px;
+          }
+        }
+
+        .link:hover span {
+          color: @theme;
+        }
+      }
+
+      .category-list:last-child {
+        border: none;
+      }
+
+      .category-list:hover .active {
+        display: block !important; // 菜单二级展示
+      }
+
+      .category-list-submenu {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 190px;
+        z-index: 98;
+        box-sizing: border-box;
+        width: 808px;
+        height: 100%;
+        padding: 15px 30px 8px;
+        background: #fff;
+        border-radius: 0 8px 8px 0;
+        box-shadow: 0 2px 16px 0 rgba(1, 66, 104, .2);
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+
+        .submenu-item {
+          padding-bottom: 16px;
+          border-bottom: .5px solid #e6e9ea;
+        }
+
+        .submenu-item:last-child {
+          border-bottom: none;
+        }
+
+        .submenu-item-name {
+          font-weight: 600;
+          color: #000;
+        }
+
+        .submenu-item-content {
+          box-sizing: border-box;
+          display: flex;
+          flex-wrap: wrap;
+          margin-top: 8px;
+        }
+
+        .submenu-item-content__a:hover {
+          color: @theme;
+        }
+
+        .submenu-item-content__a span {
+          display: flex;
+          align-items: center;
+          flex: 1;
+        }
+
+      }
     }
   }
 
-  // 轮播图高度600px
-  .el-carousel__container {
-    height: 600px;
+  // 轮播图
+  .banner {
+    width: 796px;
+    height: 466px;
+    border-radius: 4px 4px 4px 4px;
+    background-color: #C4005B;
+    margin: 0 10px;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+
+    /deep/ .is-active {
+      .el-carousel__button {
+        background: #F8C268;
+      }
+    }
+
+    /deep/ .el-carousel__button {
+      width: 20px;
+      height: 6px;
+      background: #FFFFFF;
+      border-radius: 0px 0px 0px 0px;
+      opacity: 0.7;
+    }
   }
 
-  .el-carousel__item {
-    height: 600px;
+  //右侧操作
+  .info-panel {
+    width: 192px;
+    height: 466px;
+    background: #FFFFFF;
+    border-radius: 4px 4px 4px 4px;
+    padding: 17px 10px 11px;
+
+    .info-box {
+      p {
+        font-family: Roboto, Roboto;
+        font-weight: 400;
+        font-size: 16px;
+        color: #333333;
+        font-style: normal;
+        text-transform: none;
+      }
+
+      .hello {
+        //font-size: 14px;
+        margin-top: 10px;
+      }
+
+      .info-btn {
+        padding: 21px 0 23px 0;
+        border-bottom: 1px solid #eee;
+
+        .login-btn {
+          width: 82px;
+          height: 29px;
+          background: @theme;
+          border-radius: 20px 20px 20px 20px;
+          border: 1px solid @theme;
+
+          font-family: Roboto, Roboto;
+          font-weight: 400;
+          font-size: 14px;
+          text-align: center;
+          line-height: 29px;
+          color: #FFFFFF;
+          font-style: normal;
+          text-transform: none;
+        }
+
+        .register-btn {
+          width: 81px;
+          height: 29px;
+          background: #F8C268;
+          border-radius: 20px 20px 20px 20px;
+          font-family: Roboto, Roboto;
+          font-weight: 400;
+          text-align: center;
+          line-height: 29px;
+          font-size: 14px;
+          color: #FFFFFF;
+          font-style: normal;
+          text-transform: none;
+        }
+      }
+    }
+
+    .my-serve {
+      margin-top: 10px;
+      border-bottom: 1px solid #eee;
+
+      .title {
+        margin-bottom: 17px;
+
+        .name {
+          font-family: Roboto, Roboto;
+          font-weight: bold;
+          font-size: 16px;
+          color: #333333;
+          font-style: normal;
+          text-transform: none;
+        }
+
+        .more {
+          cursor: pointer;
+
+          img {
+            width: 5.28px;
+            height: 9.46px;
+          }
+
+          span {
+            font-family: Roboto, Roboto;
+            font-weight: 400;
+            font-size: 12px;
+            color: #5E5E5E;
+            font-style: normal;
+            text-transform: none;
+            margin-right: 5px;
+          }
+        }
+      }
+
+      .list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        .item {
+          width: 53px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 17px;
+          cursor: pointer;
+
+          img {
+            width: 24px;
+            height: 24px;
+          }
+
+          span {
+            font-family: Roboto, Roboto;
+            font-weight: 400;
+            font-size: 14px;
+            color: #333333;
+            font-style: normal;
+            text-transform: none;
+            margin-top: 5px;
+            margin-top: 5px;
+          }
+        }
+      }
+    }
+
+    .notice {
+      margin-top: 16px;
+
+      .title {
+        margin-bottom: 17px;
+
+        .name {
+          .tip {
+            font-family: Roboto, Roboto;
+            font-size: 16px;
+            color: #333333;
+            font-style: normal;
+            text-transform: none;
+          }
+
+          .col {
+            width: 0px;
+            height: 14px;
+            border: 1px solid #707070;
+            margin: 0 8px;
+          }
+
+          .tip.active {
+            font-weight: bold;
+          }
+        }
+
+        .more {
+          cursor: pointer;
+
+          img {
+            width: 5.28px;
+            height: 9.46px;
+          }
+
+          span {
+            font-family: Roboto, Roboto;
+            font-weight: 400;
+            font-size: 12px;
+            color: #5E5E5E;
+            font-style: normal;
+            text-transform: none;
+            margin-right: 5px;
+          }
+        }
+      }
+
+      .list {
+        height: 112px;
+        overflow-y: auto;
+
+        .item {
+          margin-bottom: 10px;
+
+          .hot {
+            width: 28px;
+            height: 16px;
+            font-family: Roboto, Roboto;
+            font-weight: 400;
+            font-size: 12px;
+            color: @theme;
+            line-height: 16px;
+            text-align: center;
+            font-style: normal;
+            text-transform: none;
+
+            background: #EDE0CC;
+            border-radius: 2px 2px 2px 2px;
+          }
+
+          .text {
+            margin-left: 8px;
+            width: 130px;
+            font-family: Roboto, Roboto;
+            font-weight: 400;
+            font-size: 14px;
+            color: #5E5E5E;
+            font-style: normal;
+            text-transform: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+.promation-area {
+  margin-top: 21px;
+
+  .ordinary-desc {
+    width: 192px;
+    height: 261px;
+    background-image: url("../static/home/ordinary.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    padding: 20px 24px;
+
+    .title {
+      display: flex;
+      align-items: center;
+
+      p {
+        font-family: Roboto, Roboto;
+        font-weight: bold;
+        font-size: 20px;
+        color: #000000;
+        font-style: normal;
+        text-transform: none;
+        margin-right: 11px;
+      }
+
+      img {
+        width: 17px;
+        height: 17px;
+      }
+    }
   }
 
-  .el-carousel__item img {
-    width: 100%;
-    height: 100%;
+  .promation-product-box {
+    width: 1008px;
+    height: 261px;
+    background-color: #fff;
+
+    .col {
+      width: 1px;
+      height: 238px;
+      border: 1px solid #EFECEC;
+      margin: 0 31px;
+    }
+
+    .item {
+      img {
+        width: 146px;
+        height: 146px;
+        transition: 0.25s linear;
+      }
+
+      &:hover {
+        .title {
+          color: @theme !important;
+        }
+      }
+
+      .pointer {
+        margin-top: 8px;
+
+        .title {
+          font-family: Roboto, Roboto;
+          font-weight: 400;
+          font-size: 16px;
+          color: #3D4248;
+          font-style: normal;
+          text-transform: none;
+        }
+
+        .money {
+          margin-top: 20px;
+          font-family: Roboto, Roboto;
+          font-weight: 400;
+          font-size: 18px;
+          color: #FF4000;
+          font-style: normal;
+          text-transform: none;
+        }
+      }
+
+      &:hover > .scale-img {
+        transform: scale(1.1);
+      }
+    }
+
+    .el-carousel__item {
+      padding: 17px 15.5px;
+
+      .el-empty {
+        padding: 0;
+      }
+    }
+
+    /deep/ .el-carousel__indicators {
+      display: none;
+    }
+
+    /deep/ .el-carousel__arrow--left {
+      width: 45px;
+      height: 49px;
+      background-image: url("../static/home/back-left.png");
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      background-color: transparent;
+      left: -7px;
+
+      .el-icon-arrow-left {
+        display: none;
+      }
+    }
+
+    .el-carousel__arrow:hover {
+      background-color: transparent;
+    }
+
+    /deep/ .el-carousel__arrow--right {
+      background-image: url("../static/home/back-right.png");
+      width: 45px;
+      height: 49px;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      background-color: transparent;
+      right: -7px;
+
+      .el-icon-arrow-right {
+        display: none;
+      }
+    }
+  }
+}
+
+.recommend-area {
+  margin-top: 35px;
+  //height: 648px;
+  background-image: url("../static/home/19648.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  border-radius: 8px;
+
+
+  .title {
+    .left {
+      width: 1054px;
+      height: 54px;
+      background: linear-gradient(90deg, #F8C268 0%, rgba(248, 194, 104, 0) 100%);
+      border-radius: 8px 0px 0px 0px;
+      padding: 7px 23px;
+
+      img {
+        width: 35.13px;
+        height: 38px;
+      }
+
+      .tip {
+        font-family: Roboto, Roboto;
+        font-weight: bold;
+        font-size: 24px;
+        color: #000000;
+        font-style: normal;
+        text-transform: none;
+        margin-left: 17px;
+      }
+
+      .desc {
+        height: 13px;
+        font-family: Roboto, Roboto;
+        font-weight: 400;
+        font-size: 16px;
+        color: #000000;
+        font-style: normal;
+        text-transform: none;
+        margin-left: 11px;
+      }
+    }
+
+    .more {
+      height: 54px;
+      padding: 7px 23px;
+
+      img {
+        width: 6.35px;
+        height: 11.38px;
+        margin-left: 8px;
+      }
+    }
+  }
+
+  .list {
+    padding: 25px;
+    flex-wrap: wrap;
+
+    .item {
+      width: 217px;
+      //height: 256px;
+      background: #FFFFFF;
+      border-radius: 8px 8px 8px 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      margin-right: 16px;
+
+      &:hover > .scale-img {
+        transform: scale(1.1);
+      }
+
+      &:hover {
+        .tit {
+          color: @theme !important;
+        }
+      }
+
+      img {
+        width: 160px;
+        height: 160px;
+        border-radius: 0px 0px 0px 0px;
+        margin: 0 16px;
+        transition: 0.25s linear;
+      }
+
+      .tit {
+        margin-top: 10px;
+        font-family: Roboto, Roboto;
+        font-weight: 400;
+        font-size: 16px;
+        color: #3D4248;
+        font-style: normal;
+        text-transform: none;
+      }
+
+      .money {
+        margin-top: 15px;
+        font-family: Roboto, Roboto;
+        font-weight: 400;
+        font-size: 18px;
+        color: #FF4000;
+        font-style: normal;
+        text-transform: none;
+      }
+    }
+
+    .item:nth-child(5n) {
+      margin-right: 0;
+    }
+
+  }
+}
+
+.DIY-area {
+  width: 1200px;
+  //height: 935px;
+  background: #FFFFFF;
+  border-radius: 8px;
+  margin-top: 30px;
+  padding: 30px;
+
+  .title {
+    height: 37px;
+
+    img {
+      width: 31px;
+      height: 22px;
+    }
+
+    p {
+      font-family: Roboto, Roboto;
+      font-weight: bold;
+      font-size: 28px;
+      color: #000000;
+      font-style: normal;
+      text-transform: none;
+      margin: 0 15px;
+    }
+  }
+
+  .list {
+    padding: 25px;
+    flex-wrap: wrap;
+
+    .item {
+      width: 217px;
+      //height: 256px;
+      background: #FFFFFF;
+      border-radius: 8px 8px 8px 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+
+      &:hover > .scale-img {
+        transform: scale(1.1);
+      }
+
+      &:hover {
+        .tit {
+          color: @theme !important;
+        }
+      }
+
+      img {
+        width: 160px;
+        height: 160px;
+        border-radius: 0px 0px 0px 0px;
+        margin: 0 16px;
+        transition: 0.25s linear;
+      }
+
+      .tit {
+        margin-top: 10px;
+        font-family: Roboto, Roboto;
+        font-weight: 400;
+        font-size: 16px;
+        color: #3D4248;
+        font-style: normal;
+        text-transform: none;
+      }
+
+      .money {
+        margin-top: 15px;
+        font-family: Roboto, Roboto;
+        font-weight: 400;
+        font-size: 18px;
+        color: #FF4000;
+        font-style: normal;
+        text-transform: none;
+      }
+    }
   }
 }
 </style>

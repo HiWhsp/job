@@ -1,11 +1,8 @@
 <template>
   <div class="page">
-
-
     <div class="main-title">
       <span>个人资料</span>
     </div>
-
     <div class="page-ctx">
       <div class="section">
         <div class="section-title">基本信息</div>
@@ -14,11 +11,11 @@
             <span class="text">头像：</span>
             <span class="info">
               <div class="upload-box">
-                <el-upload class="upload-demo" accept="image/*" :show-file-list="false" :name="UPLOAD_NAME"
-                  :action="UPLOAD_ACTION" :data="mix_upload_data" :on-success="upload_on_success"
-                  :before-upload="upload_before_upload">
-                  <img v-if="form.image" :src="form.image" class="user-avatar" />
-                  <img v-else src="@/static/my/avatar.png" class="user-avatar" />
+                <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="img"
+                           action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload" :data="mix_upload_data" :on-success="upload_on_success"
+                           :before-upload="upload_before_upload">
+                  <img v-if="form.image" :src="form.image" class="user-avatar"/>
+                  <img v-else src="@/static/common/head-user-login.png" class="user-avatar"/>
                 </el-upload>
               </div>
             </span>
@@ -34,45 +31,36 @@
 
 
           <div class="item">
-            <span class="text">真实姓名：</span>
+            <span class="text">真实姓名：<span>*</span></span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.realName" />
+              <el-input clearable type="text" v-model="form.realName"/>
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
-            <span class="text">所在地区：</span>
+            <span class="text">所在地区：<span>*</span></span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.address" />
+              <area_select ref="area_select" @change="changeSelectAddress"/>
             </span>
             <span class="action"> </span>
           </div>
-
-
-          <!-- <div class="item">
-            <span class="text">昵称：</span>
-            <span class="info">
-              <input type="text" v-model="nickname" class="" />
-            </span>
-            <span class="action">
-
-            </span>
-          </div> -->
-
-          <!-- <div class="item">
-            <span class="text">密码：</span>
-            <span class="info">******</span>
-            <span class="action">
-              <span @click="$router.push('/retrieve')">修改</span>
-            </span>
-          </div> 
           <div class="item">
-            <span class="text">账号：</span>
-            <span class="info" style="visibility: hidden">******</span>
-            <span class="action">
-              <span @click="mix_logout">退出登录</span>
+            <span class="text">公司名称：</span>
+            <span class="info">
+              <el-input clearable type="text" v-model="form.nickname"/>
             </span>
-          </div> -->
+            <span class="action">
+            </span>
+          </div>
+
+          <div class="item">
+            <span class="text"> 邮箱：<span>*</span></span>
+            <span class="info">
+              <el-input clearable type="text" v-model="form.email"/>
+            </span>
+            <span class="action">
+            </span>
+          </div>
         </div>
       </div>
 
@@ -82,34 +70,34 @@
           <div class="item btn-box">
             <span class="text" style="visibility: hidden">-</span>
             <div class="info">
-              <el-button class="btn-ripple fit-text btn-save" @click="throttle_do_submit()"
-                :loading="loading">保存</el-button>
-              <button class="btn-ripple fit-text btn-cancel" @click="do_reset()">清空</button>
+              <el-button class="btn-ripple fit-text btn-cancel " @click="throttle_do_submit()"
+                         :loading="loading">保存
+              </el-button>
+              <button class="btn-ripple fit-text btn-save" @click="do_reset()">清空</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <phone_bind_old_check_modal ref="phone_bind_old_check_modal" data-title="校验" @confirm="confirm_old_pass" />
-    <phone_bind_new_set_modal ref="phone_bind_new_set_modal" data-title="绑定" @confirm="confirm_new" />
+    <phone_bind_old_check_modal ref="phone_bind_old_check_modal" data-title="校验" @confirm="confirm_old_pass"/>
+    <phone_bind_new_set_modal ref="phone_bind_new_set_modal" data-title="绑定" @confirm="confirm_new"/>
 
 
   </div>
 </template>
 
 <script>
-import { UPLOAD_ACTION, UPLOAD_NAME } from '@/config/env.js'
+import {UPLOAD_ACTION, UPLOAD_NAME} from '@/config/env.js'
 
 import phone_bind_old_check_modal from "@/components/account/phone_bind_old_check_modal.vue";
 import phone_bind_new_set_modal from "@/components/account/phone_bind_new_set_modal.vue";
-
-
-import { mapState } from "vuex";
+import area_select from "@/components/address/area_select.vue";
 
 export default {
   name: "servicePage",
   components: {
+    area_select,
     phone_bind_old_check_modal,
     phone_bind_new_set_modal,
   },
@@ -120,15 +108,19 @@ export default {
 
       my_info: {},
       form: {
-        image: "",
+        image: '',
         realName: "",
-        address: "",
+        nickname: "",
+        email: "",
+        province: '',
+        city: '',
+        area: '',
+        provinceCode: '',
+        cityCode: '',
+        areaCode: '',
       },
       loading: false,
     };
-  },
-  computed: {
-    ...mapState(["baseInfo"]),
   },
   watch: {},
   created() {
@@ -154,7 +146,6 @@ export default {
       this.query_user();
     },
     query_user() {
-      // this.$store.dispatch("query_user");
       this.$api({
         url: '/service.php',
         method: 'get',
@@ -167,18 +158,39 @@ export default {
           this.my_info = data;
 
           this.form = {
-            image: data.image || "",
-            realName: data.realName || "",
-            address: data.address || "",
-          };
-
-
+            image: data.image,
+            realName: data.realName,
+            nickname: data.nickname,
+            email: data.email,
+            province: data.province,
+            city: data.city,
+            area: data.areaId,
+            provinceCode: data.provinceCode,
+            cityCode: data.cityCode,
+            areaCode: data.areaCode,
+          }
+          this.$refs.area_select.init({province: data.province, city: data.city, area: data.areaId});
           this.$store.commit("set_baseInfo", res.data);
         }
       })
     },
 
     do_submit() {
+
+      if (!this.form.realName) {
+        alertErr("请填写真实姓名");
+        return;
+      }
+
+      if (!this.form.area) {
+        alertErr("请填写所在地区");
+        return;
+      }
+
+      if (!this.form.email) {
+        alertErr("请填写邮箱");
+        return;
+      }
       this.loading = true;
       this.$api({
         url: '/service.php',
@@ -188,7 +200,7 @@ export default {
           ...this.form
         },
       }).then((res) => {
-        let { code, msg, data } = res;
+        let {code, msg, data} = res;
         alert(res).then(() => {
           this.loading = false;
         });
@@ -202,7 +214,14 @@ export default {
       this.form = {
         image: this.my_info.image,
         realName: "",
-        address: "",
+        nickName: "",
+        email: "",
+        province: '',
+        city: '',
+        area: '',
+        provinceCode: '',
+        cityCode: '',
+        areaCode: '',
       };
     },
 
@@ -210,7 +229,7 @@ export default {
     //上传相关
     upload_on_success(res, file) {
       //console.log("上传结果", res);
-      let { code, data, msg } = res;
+      let {code, data, msg} = res;
       alert(res);
       if (code == 200) {
         this.form.image = res.data;
@@ -219,6 +238,19 @@ export default {
     upload_before_upload(file) {
       const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
       return isLt2M;
+    },
+
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      let {sheng, shi, qu} = data;
+      this.form.province = sheng.title;
+      this.form.city = shi.title;
+      this.form.area = qu.title;
+
+      this.form.provinceCode = sheng.id;
+      this.form.cityCode = shi.id;
+      this.form.areaCode = qu.id;
+      // debugger
     },
   },
 };
@@ -232,11 +264,10 @@ export default {
 .page {
   text-align: left;
   padding-bottom: 80px;
+  padding-top: 0;
 
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -251,7 +282,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: ;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -260,7 +291,7 @@ export default {
 
   .page-ctx {
     margin-top: 24px;
-    padding: 80px 100px;
+    padding: 20px 30px;
     background: #fff;
   }
 }
@@ -276,7 +307,7 @@ export default {
     }
 
     .section-title {
-      margin-bottom: 50px;
+      margin-bottom: 30px;
       font-size: 16px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
@@ -289,8 +320,8 @@ export default {
 
     .upload-box {
       img {
-        width: 100px;
-        height: 100px;
+        width: 88px;
+        height: 88px;
         border-radius: 50%;
       }
     }
@@ -306,6 +337,10 @@ export default {
         text-align: right;
         font-size: 14px;
         color: #666;
+
+        span {
+          color: #ff0000;
+        }
       }
 
       .info {
@@ -336,7 +371,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: #F74747;
+        color: @theme;
 
         span {
           margin-right: 20px;
@@ -358,21 +393,21 @@ export default {
     width: 120px;
     height: 32px;
     background: #FFFFFF;
-    border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    border-radius: 4px;
+    border: 1px solid @theme;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
+    color: @theme;
 
   }
 
   .btn-cancel {
-    margin-left: 20px;
+    margin-right: 20px;
     width: 120px;
     height: 32px;
-    background: #F74747;
-    border-radius: 50px 50px 50px 50px;
+    background: @theme;
+    border-radius: 4px;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
@@ -381,4 +416,3 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/user/my-info.less"></style>

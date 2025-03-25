@@ -4,14 +4,14 @@
       :visible.sync="show" :before-close="onModalClose">
 
       <div class="modal-inner">
-        <div class="modal-ctx">
+        <div class="modall-ctx">
           <!-- <div class="tip">密码要求至少包含字母，符号或数字中的两项且长度超过6位，</div> -->
 
           <div class="input-box flex">
             <div class="label">新手机号</div>
             <div class="input-item">
-              <!-- <el-input type="text" v-model="phone" placeholder="手机号"> </el-input> -->
-              {{ mix_user_phone }}
+               <el-input type="text" v-model="phone" placeholder="手机号"> </el-input>
+<!--              {{ mix_user_phone }}-->
             </div>
           </div>
           <div class="input-box flex">
@@ -76,7 +76,7 @@ export default {
   methods: {
     query_code() {
       //console.log("发送验证码");
-      let phone = this.mix_user_phone;
+      let phone = this.phone;
       if (this.timer) {
         alertErr("验证码发送频繁，请稍后再试");
         return;
@@ -183,7 +183,7 @@ export default {
 
 
 
-  .modal-ctx {
+  .modall-ctx {
     .input-box {
       margin-bottom: 30px;
       position: relative;
@@ -249,11 +249,11 @@ export default {
     height: 32px;
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    border: 1px solid @theme;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
+    color: @theme;
 
     &+button {
       margin-left: 20px;
@@ -261,7 +261,7 @@ export default {
   }
 
   .btn-bg {
-    background: #F74747;
+    background: @theme;
     color: #FFFFFF;
   }
 }
@@ -271,11 +271,10 @@ export default {
   // position: absolute;
   // right: -50px;
   // top: 10px;
-  min-width: 90px;
-  padding: 0 10px;
+  min-width: 120px;
   height: 40px;
   background: #fff;
-  color: #F74747;
+  color: @theme;
   font-size: 14px;
   margin-left: 15px;
   border-radius: 5px;

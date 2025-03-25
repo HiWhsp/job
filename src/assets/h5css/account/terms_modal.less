@@ -145,8 +145,7 @@
   }
   .el-checkbox {
     cursor: pointer;
-      display: flex;
-  align-items: center;
+    .flex();
     font-size: 14px;
     word-wrap: break-word;
     white-space: break-spaces;
@@ -158,8 +157,8 @@
   }
 
   .btn-confirm:not(:disabled) {
-    background: #F74747;
-    border-color: #F74747;
+    background: @theme;
+    border-color: @theme;
     color: #fff;
   }
 

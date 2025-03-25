@@ -18,19 +18,20 @@
               <!-- <img :src="good.img" alt /> -->
               <el-image :src="product_item.image">
                 <div slot="error" class="image-slot">
-                  <img :src="product_item.image" />
+                  <img :src="product_item.image"/>
                 </div>
               </el-image>
             </div>
 
             <div class="box-title">
               <div class="goods-title" @click="mix_to_product(product_item)">{{ product_item.title }}</div>
+              <div class="goods-sku">型号：{{ product_item.keyVals }}</div>
             </div>
-            <div class="box-sku">
-              <div class="goods-sku">{{ product_item.keyVals }}</div>
-            </div>
+<!--            <div class="box-sku">-->
+<!--              <div class="goods-sku">{{ product_item.keyVals }}</div>-->
+<!--            </div>-->
             <div class="box-num">
-              x {{ product_item.num }}
+              {{ product_item.num }}
             </div>
             <div class="box-price">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
           </div>
@@ -53,9 +54,9 @@
           <button v-if="item.ifCancel == 1" class="btn-ripple fit-text btn-bg" @click="doCancel(item)">
             取消订单
           </button>
-          <button v-if="item.ifPay == 1" class="btn-ripple fit-text btn-bg" @click="doPay(item)">
-            去支付
-          </button>
+<!--          <button v-if="item.ifPay == 1" class="btn-ripple fit-text btn-bg" @click="doPay(item)">-->
+<!--            去支付-->
+<!--          </button>-->
           <button v-if="item.ifDel == 1" class="btn-ripple fit-text btn-bg" @click="doDelete(item)">
             删除订单
           </button>
@@ -65,7 +66,8 @@
           <button v-if="item.ifComment == 1" class="btn-ripple fit-text btn-bg" @click="doReview(item)">
             去评价
           </button>
-          <button v-if="item.orderStatus >= 5" class="btn-ripple fit-text btn-bg" @click="doRefund(item)">
+          <button v-if="item.orderStatus >= 5 && item.ifComment != 1" class="btn-ripple fit-text btn-bg"
+                  @click="doRefund(item)">
             售后
           </button>
           <!-- <button v-if="item.is_aa == 1" class="btn-ripple fit-text btn-bg" @click="toDetail(item)">
@@ -75,23 +77,23 @@
       </div>
     </div>
 
-    <order_cancel_modal ref="order_cancel_modal" @confirm="emitConfirm" data-type="取消" />
-    <order_delete_modal ref="order_delete_modal" @confirm="emitConfirm" data-type="删除" />
-    <order_receive_modal ref="order_receive_modal" @confirm="emitConfirm" data-type="收货" />
+    <order_cancel_modal ref="order_cancel_modal" @confirm="emitConfirm" data-type="取消"/>
+    <order_delete_modal ref="order_delete_modal" @confirm="emitConfirm" data-type="删除"/>
+    <order_receive_modal ref="order_receive_modal" @confirm="emitConfirm" data-type="收货"/>
     <order_refund_modal ref="order_refund_modal" @confirm="emitConfirm" data-type="售后"/>
-    
+
   </div>
 </template>
 
 <script>
-
+import order from "@/shop-actions/order";
 
 import order_cancel_modal from "@/components/order/order_cancel_modal.vue"; //取消
 import order_delete_modal from "@/components/order/order_delete_modal.vue"; //删除
 import order_receive_modal from "@/components/order/order_receive_modal.vue"; //收货
 import order_refund_modal from "@/components/order/order_refund_modal.vue"; //售后
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "orderList",
@@ -125,7 +127,7 @@ export default {
     },
     doPay(item) {
       this.$router.push({
-        path: '/payment-methods',
+        path: '/orderSubmit',
         query: {
           id: item.id
         }
@@ -137,9 +139,25 @@ export default {
     doReceive(item) {
       this.$refs.order_receive_modal.init(item);
     },
-    doReview(item) { },
+    doReview(item) {
+      this.$router.push({
+        path: '/review-submit',
+        query: {
+          orderId: item.id,
+          inventoryId: item.products[0].id
+        }
+      });
+    },
     doRefund(item) {
-      this.$refs.order_refund_modal.init(item);
+      // this.$refs.order_refund_modal.init(item);
+
+      this.toRoute({
+        path: '/refundType',
+        query: {
+          orderId: item.id,
+          invoiceType: item.id
+        },
+      })
     },
 
 
@@ -148,73 +166,73 @@ export default {
     },
 
     //处理订单行为
-    handleOrderAction(action, order_id, order) {
+    handleOrderAction(action, orderId, order) {
 
       let fahuo_id = order.fahuo_id || "";
       //console.log({ ...action });
       let name = action.name;
       if (name == "取消订单") {
-        this.orders_qxOrder(order_id);
+        this.orders_qxOrder(orderId);
       } else if (name == "删除订单") {
-        this.orders_del(order_id);
+        this.orders_del(orderId);
       } else if (name == "立即支付") {
-        this.order_payment(order_id);
+        this.order_payment(orderId);
       } else if (name == "确认收货") {
-        this.order_qianshou(order_id);
+        this.order_qianshou(orderId);
       } else if (name == "评价") {
-        this.jump_pingjia(order_id);
+        this.jump_pingjia(orderId);
       } else if (name == "申请售后") {
-        this.jump_shouhou(order_id);
+        this.jump_shouhou(orderId);
       } else if (name == "查看物流") {
         this.$router.push(
-          `/orderLogistics?order_id=${order_id}&logistics_id=${fahuo_id}`
+            `/orderLogistics?orderId=${orderId}&logistics_id=${fahuo_id}`
         );
       } else if (name == "售后") {
-        this.$router.push(`/refundFeedback?order_id=${order_id}`);
+        this.$router.push(`/refundFeedback?orderId=${orderId}`);
       }
     },
 
     //取消订单
-    orders_qxOrder(order_id) {
-      let order = this.list.find((v) => v.id == order_id);
+    orders_qxOrder(orderId) {
+      let order = this.list.find((v) => v.id == orderId);
 
 
       // order.orders_qxOrder({
-      //   params: { order_id },
+      //   params: { orderId },
       //   success: () => {
       //     this.updateView();
       //   }
       // });
     },
     //删除订单
-    orders_del(order_id) {
+    orders_del(orderId) {
       order.orders_del({
-        params: { order_id },
+        params: {orderId},
         success: () => {
           this.updateView();
         },
       });
     },
     //订单支付
-    order_payment(order_id) {
-      this.$router.push(`/payment-methods?order_id=${order_id}`);
+    order_payment(orderId) {
+      this.$router.push(`/orderSubmit?orderId=${orderId}`);
     },
 
     //订单确认收货
-    order_qianshou(order_id) {
-      let order = this.list.find((v) => v.id == order_id);
+    order_qianshou(orderId) {
+      let order = this.list.find((v) => v.id == orderId);
       this.$refs.order_receive_modal.showModal = true;
       this.$refs.order_receive_modal.order = order;
       //console.log("订单信息", { ...order });
     },
 
     //订单评价
-    jump_pingjia(order_id) {
-      this.$router.push(`/order-review-submit?order_id=${order_id}`);
+    jump_pingjia(orderId) {
+      this.$router.push(`/order-review-submit?orderId=${orderId}`);
     },
     //订单售后申请
-    jump_shouhou(order_id) {
-      this.$router.push(`/orderRefund?order_id=${order_id}`);
+    jump_shouhou(orderId) {
+      this.$router.push(`/orderRefund?orderId=${orderId}`);
     },
     jump_order_detail(order) {
 
@@ -251,9 +269,7 @@ export default {
   }
 
   .info-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     height: 48px;
     padding: 0 15px;
     background: #f5f5f5;
@@ -288,19 +304,17 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
-      color: #999999;
-      color: #F74747;
 
       // 待付款
       &.state--5 {
-        // background: #ff4c29;
-        // border-color: #ff4c29;
-        // color: #fff;
+        //background: #ff4c29;
+        //border-color: #ff4c29;
+        color: #EA3200;
       }
 
       &.state-2 {
-        color: #F74747;
-        border-color: #F74747;
+        color: @theme;
+        border-color: @theme;
       }
     }
   }
@@ -309,7 +323,7 @@ export default {
     .list-good {
       .item-good {
         padding: 20px;
-        border-bottom: 1px dashed #ccc;
+        border-bottom: 1px solid #e5e5e5;
 
         font-family: OPPOSans, OPPOSans;
         font-weight: 400;
@@ -353,7 +367,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #F74747;
+              color: @theme;
             }
           }
         }
@@ -373,9 +387,9 @@ export default {
           min-width: 200px;
 
           font-family: OPPOSans, OPPOSans;
-          font-weight: 400;
+          font-weight: bold;
           font-size: 14px;
-          color: #FF0000;
+          color: #333;
         }
       }
     }
@@ -384,9 +398,7 @@ export default {
   .info-heji {
     padding: 15px;
     border-top: 1px solid #e5e5e5;
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: 400;
@@ -394,8 +406,7 @@ export default {
     color: #7d7d7d;
 
     .heji {
-        display: flex;
-  align-items: center;
+      .flex();
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
@@ -405,13 +416,13 @@ export default {
         margin-right: 30px;
 
         b {
-          color: #F74747;
+          color: #EA3200;
         }
       }
 
       .heji-money {
         b {
-          color: #F74747;
+          color: #EA3200;
         }
       }
     }
@@ -422,14 +433,14 @@ export default {
         min-width: 120px;
         height: 32px;
         background: #FFFFFF;
-        border-radius: 50px 50px 50px 50px;
-        border: 1px solid #F74747;
+        border-radius: 4px;
+        border: 1px solid @theme;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #F74747;
+        color: @theme;
 
-        &+button {
+        & + button {
           margin-left: 20px;
         }
 
@@ -438,7 +449,7 @@ export default {
         }
 
         &.btn-bg {
-          background: #F74747;
+          background: @theme;
           color: #FFFFFF;
         }
       }

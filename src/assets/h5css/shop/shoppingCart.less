@@ -22,9 +22,7 @@
     .main-title {
       padding-bottom: 16px;
       border-bottom: 1px solid #d5d8de;
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      .flex-between();
       margin-bottom: 20px;
       text-align: left;
       flex-direction: column;
@@ -57,8 +55,7 @@
           width: 500px;
           margin: 0 auto;
           font-size: 14px;
-            display: flex;
-  align-items: center;
+          .flex();
           .step {
             flex: 1;
             height: 30px;
@@ -82,7 +79,7 @@
             }
 
             &.active {
-              background: #F74747;
+              background: @theme;
               color: #fff;
             }
           }
@@ -102,8 +99,7 @@
       .search-box {
         margin-top: 20px;
         margin-bottom: 20px;
-          display: flex;
-  align-items: center;
+        .flex();
         .text-1 {
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -127,7 +123,7 @@
           width: fit-content;
           height: 36px;
           padding: 0 10px;
-          background: #F74747;
+          background: @theme;
           border-radius: 4px 4px 4px 4px;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -156,8 +152,7 @@
           padding: 15px;
           font-size: 12px;
 
-            display: flex;
-  align-items: center;
+          .flex();
           border-bottom: 1px solid #ddd;
           .title-1 {
             width: 38px;
@@ -192,8 +187,7 @@
           }
 
           .item-title {
-              display: flex;
-  align-items: center;
+            .flex();
             text-align: left;
             padding: 12px 40px;
             border-bottom: 1px solid #eee;
@@ -219,8 +213,7 @@
             width: 1000px;
 
             padding: 15px;
-              display: flex;
-  align-items: center;
+            .flex();
 
             font-size: 12px;
 
@@ -247,7 +240,7 @@
 
               div {
                 &:hover {
-                  color: #F74747;
+                  color: @theme;
                 }
               }
 
@@ -255,11 +248,7 @@
                 width: fit-content;
                 cursor: pointer;
                 height: 40px;
-                 display: -webkit-box;
-  -webkit-box-orient: vertical;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  -webkit-line-clamp: 2;
+                .ellipsis-2();
                 font-size: 12px;
                 font-family: Microsoft YaHei-Regular, Microsoft YaHei;
                 font-weight: 400;
@@ -280,7 +269,7 @@
             }
             .item-5 {
               width: 100px;
-              color: #F74747;
+              color: @theme;
             }
             .item-6 {
               width: 150px;
@@ -309,7 +298,7 @@
             .item-7 {
               width: 100px;
               font-size: 12px;
-              color: #F74747;
+              color: @theme;
             }
             .item-8 {
               width: 100px;
@@ -323,7 +312,7 @@
                   cursor: pointer;
 
                   &:hover {
-                    color: #F74747;
+                    color: @theme;
                   }
                 }
               }
@@ -350,8 +339,7 @@
   }
 
   .action-box {
-      display: flex;
-  align-items: center;
+    .flex();
     padding: 15px;
     flex-wrap: wrap;
     height: auto;
@@ -376,7 +364,7 @@
         color: #333333;
         cursor: pointer;
         &:hover {
-          color: #F74747;
+          color: @theme;
         }
       }
     }
@@ -390,7 +378,7 @@
         color: #333333;
         cursor: pointer;
         &:hover {
-          color: #F74747;
+          color: @theme;
         }
       }
     }
@@ -430,7 +418,7 @@
       height: 40px;
       line-height: 40px;
       background: #ff9312;
-      background: #F74747;
+      background: @theme;
 
       font-size: 14px;
       font-family: Microsoft YaHei;

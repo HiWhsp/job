@@ -69,27 +69,22 @@ export default new Vuex.Store({
 
     //
     vuex_config: {},
-    vuex_huobi: "￥",
-    vuex_news_cates: [],
-
+    configInfo: {}, //
     //
     vuex_user: {},
     userInfo: {}, //
     baseInfo: {}, //
     //
     vuex_is_login: false, //是否登录
-    vuex_is_login: false,
-    //
-    avatar_default: require("@/static/common/avatar.png"),
-    vuex_avatar_default: require("@/static/common/avatar.png"),
-    defaultAvatar: require("@/static/common/avatar.png"),
+    isLogin: false,
+    defaultAvatar: require("@/static/common/head-user-login.png"),
     //
     //
     //商城部分
     vuex_cart_number: 0,
 
     //
-
+    vuex_huobi: "￥",
     index_banners: [],
     map_banners: {
       关于我们: [],
@@ -110,14 +105,15 @@ export default new Vuex.Store({
       route: "/product-cates?id=792",
     },
 
-
+    //
+    //
+    //
+    webConfig: {}, //站点设置
 
     shopcart_count: 0,
     if_calc_yunfei: false, //是否需要计算运费
     default_address: {}, //默认收货地址
     store_keyword: {},
-
-    footer_logo_friend_link:[]
   },
 
   getters: {},
@@ -129,7 +125,9 @@ export default new Vuex.Store({
       let val = obj.val;
       state[key] = val;
     },
-    set_vuex_config(state, data) {
+    set_vuex_configInfo(state, data) {
+      state.configInfo = data;
+      state.webConfig = data;
       state.vuex_config = data;
     },
 
@@ -140,10 +138,10 @@ export default new Vuex.Store({
       });
 
       // debugger
-      let { token, userId, id } = data;
+      let {token, userId, id} = data;
 
       state.vuex_is_login = true;
-      state.vuex_is_login = true;
+      state.isLogin = true;
       state.userInfo = data;
       state.vuex_user = data;
       localStorage.setItem("token", token);
@@ -159,11 +157,12 @@ export default new Vuex.Store({
       state.map_banners = {
         关于我们: pos_1.images,
         联系我们: pos_2.images,
+        客服: data[3].images
       };
     },
 
     set_vuex_product_cate(state, data) {
-      let { cateFlatList, cateTreeList } = data;
+      let {cateFlatList, cateTreeList} = data;
       console.warn(
         "cateTreeList 产品分类数据",
         JSON.parse(JSON.stringify(cateTreeList))
@@ -183,43 +182,43 @@ export default new Vuex.Store({
       state.vuex_cart_number = value;
     },
 
-    set_cache_payment_products(state, str_products)  {
-      console.log('vuex 缓存商品信息',str_products)
+    set_cache_payment_products(state, str_products) {
+      console.log('vuex 缓存商品信息', str_products)
       sessionStorage.setItem("cache_payment_products", str_products);
     },
 
     //设置基本信息
     set_baseInfo(state, data) {
       // //console.log("设置用户信息", { ...data });
-      let { token, userId, id, level, level_rules } = data;
+      let {token, user_id, id, level, levelRules} = data;
 
       state.vuex_is_login = true;
       state.token = token;
-      state.userId = userId || id;
+      state.user_id = user_id || id;
 
       localStorage.setItem("token", token);
-      localStorage.setItem("userId", userId || id);
+      localStorage.setItem("user_id", user_id || id);
 
-      // if (level_rules) {
-      //   //处理
-      //   let curr_level = level_rules.find((v) => v.title == level) || {};
-      //   let level_id = curr_level.id || "";
+      if (levelRules) {
+        //处理
+        let curr_level = levelRules.find((v) => v.title == level) || {};
+        let level_id = curr_level.id || "";
 
-      //   data = {
-      //     ...data,
-      //     phone: data.username,
-      //     name: data.name || "未设置",
-      //     yue: data.money || 0, //余额
-      //     jifen: +data.jifen || 0, //积分
-      //     yongjin: +data.money || 0, //佣金
+        data = {
+          ...data,
+          phone: data.username,
+          name: data.name || "未设置",
+          yue: data.money || 0, //余额
+          jifen: +data.jifen || 0, //积分
+          yongjin: +data.money || 0, //佣金
 
-      //     yongjin_leiji: +data.earn || 0, //佣金累计
+          yongjin_leiji: +data.earn || 0, //佣金累计
 
-      //     level_title: level || "", //会员级别
-      //     level_id: level_id || "", //会员级别
-      //     curr_level: curr_level, //当前级别
-      //   };
-      // }
+          level_title: level || "", //会员级别
+          level_id: level_id || "", //会员级别
+          curr_level: curr_level, //当前级别
+        };
+      }
 
       state.baseInfo = data;
       state.userInfo = data;
@@ -239,7 +238,11 @@ export default new Vuex.Store({
       state.userId = "";
       state.baseInfo = {};
       state.vuex_is_login = false;
-      localStorage.clear();
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('userInfo');
+      localStorage.removeItem('baseInfo');
+      localStorage.removeItem('token');
+      location.reload();
     },
 
     change_store_keyword(state, val) {
@@ -260,9 +263,8 @@ export default new Vuex.Store({
   },
 
   actions: {
-    async appInit({ commit, state, dispatch }, data) {
+    async appInit({commit, state, dispatch}, data) {
       dispatch("appInitGetAssets");
-
 
 
       let token = localStorage.getItem("token");
@@ -277,13 +279,13 @@ export default new Vuex.Store({
     },
 
     //获取登录后的信息
-    async getUserloginedInfo({ commit, state, dispatch }, data) {
+    async getUserloginedInfo({commit, state, dispatch}, data) {
       dispatch("query_user");
       dispatch("query_cart");
     },
 
     // 获取用户信息
-    async query_user({ commit, state, dispatch }) {
+    async query_user({commit, state, dispatch}) {
       api({
         url: "/service.php",
         method: "get",
@@ -300,7 +302,7 @@ export default new Vuex.Store({
       });
     },
     // 获取用户信息
-    async query_cart({ commit, state, dispatch }) {
+    async query_cart({commit, state, dispatch}) {
       api({
         url: "/service.php",
         method: "get",
@@ -308,22 +310,24 @@ export default new Vuex.Store({
           action: "gouwuche_lists",
         },
       })
-      .then((res) => {
-        let { code, data } = res;
-        if (code == 200) {
-          let count = 0;
-          data.forEach((v) => {
-            count += v.num * 1;
-          });
+        .then((res) => {
+          let {code, data} = res;
+          if (code == 200) {
+            let count = 0;
+            data.forEach((v) => {
+              count += v.num * 1;
+            });
 
-          commit("set_vuex_cart_number", count);
-        }
-      });
+            commit("set_vuex_cart_number", count);
+          }
+        });
     },
 
 
     //初始化资源
-    async appInitGetAssets({ commit, state, dispatch }, data) {
+    async appInitGetAssets({commit, state, dispatch}, data) {
+      dispatch("query_user");
+
       api({
         url: "/service.php",
         method: "get",
@@ -331,9 +335,9 @@ export default new Vuex.Store({
           action: "index_config",
         },
       }).then((res) => {
-        let { code, data } = res;
-        if (code == 200) {
-          commit("set_vuex_config", data);
+        let {code, data} = res;
+        if (code === 200) {
+          commit("set_vuex_configInfo", data);
         }
       });
 
@@ -362,30 +366,30 @@ export default new Vuex.Store({
       }).then((res) => {
         if (res.code == 200) {
           let catesInfo = handle_product_cate_data(res.data);
+          console.log(catesInfo)
           commit("set_vuex_product_cate", catesInfo);
         }
       });
 
       //新闻分类
-      api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "news_channel",
-          channelId: 49
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          let data = res.data
-          data.forEach((v) => {
-            v.route = "/news?id=" + v.id;
-          });
-          commit("set_vuex_data", {
-            key: "vuex_news_cates",
-            val: data,
-          });
-        }
-      });
+      // api({
+      //   url: "/service.php",
+      //   method: "get",
+      //   data: {
+      //     action: "news_channel",
+      //   },
+      // }).then((res) => {
+      //   let { code, data } = res;
+      //   if (code == 200) {
+      //     res.data.forEach((v) => {
+      //       v.route = "/news?id=" + v.id;
+      //     });
+      //     commit("set_vuex_data", {
+      //       key: "vuexNewsCates",
+      //       val: res.data,
+      //     });
+      //   }
+      // });
     },
   },
 });

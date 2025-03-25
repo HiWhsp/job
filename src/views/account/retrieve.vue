@@ -1,104 +1,104 @@
 <template>
   <div class="page">
-    <terms_modal ref="terms_modal" />
+    <modalTerms ref="modalTerms"/>
+    <!--    <modalRich ref="modalRich" />-->
+    <div class="mask"></div>
 
-    <div class="page-bg">
-      <img src="@img/login/login-bg.png" alt="">
-    </div>
+    <div class="center">
+      <div class="inner">
+        <!--        <div class="mode-toggle">-->
+        <!--          <img v-if="mode == '账号密码'" @click="mode = '微信扫码'" src="../../static/account/login-qrcode.png" alt="" />-->
+        <!--          <img v-if="mode == '微信扫码'" @click="mode = '账号密码'" src="../../static/account/login-pc.png" alt="" />-->
+        <!--        </div>-->
 
-    <div class="page-ctx">
-      <div class="center page-inner flex-between w-1200">
-        <div class="page-poster">
-          <!-- <img src="@/static/login/poster.png" alt=""> -->
-        </div>
+        <div class="input-wrap">
+          <div class="tab-box">
+            <div
+                class="tab-item"
+                :class="tabType == 'PASS' ? 'active' : ''"
+                @click="tabType = 'PASS'"
+            >
+              重置密码
+            </div>
+            <!-- <div
+                class="tab-item"
+                :class="tabType == 'CODE' ? 'active' : ''"
+                @click="tabType = 'CODE'"
+              >
+                验证码登录
+              </div> -->
+          </div>
 
-        <div class="inner form-box">
-
-
-          <div class="input-wrap">
-            <div class="tab-box">
-              <div class="tab-item">
-                忘记密码
-              </div>
+          <template>
+            <div class="input-box">
+              <span>手机号</span>
+              <!-- <img src="@img/other/icon-email.png" alt="" /> -->
+              <input type="text" placeholder="请输入手机号码" v-model="form.phone"/>
             </div>
 
-            <template>
-              <div class="input-box">
-                <span>手机号</span>
-                <input type="text" placeholder="请输入手机号码" v-model="form.phone" />
-              </div>
+            <!-- 验证码 -->
+            <sms_phone :form="form"/>
 
-              <!-- 验证码 -->
-              <sms_phone :form="form" />
+            <div class="input-box" v-if="tabType == 'PASS'">
+              <span>新密码</span>
+              <!-- <img src="@img/other/icon-lock.png" alt="" /> -->
+              <input type="password" placeholder="请输入新密码" v-model="form.pass"/>
+            </div>
+            <div class="input-box" v-if="tabType == 'PASS'">
+              <span>确认密码</span>
+              <input
+                  type="password"
+                  placeholder="请输入确认密码"
+                  v-model="form.confirm_pass"
+              />
+            </div>
 
-              <div class="input-box" v-if="tabType == 'PASS'">
-                <span>新密码</span>
-                <input type="password" placeholder="请输入新密码" v-model="form.pass" />
-              </div>
-              <div class="input-box" v-if="tabType == 'PASS'">
-                <span>确认密码</span>
-                <input type="password" placeholder="请输入确认密码" v-model="form.confirm_pass" />
-              </div>
+            <div class="btn-box">
+              <button class="btn-ripple" @click="retrieve_submit">确定</button>
+            </div>
 
-              <div class="btn-box">
-                <button class="btn-ripple" @click="do_submit()">确定</button>
-              </div>
+            <div class="register-box flex flex-center">
+              <span> <router-link to="/login"><img src="../../static/account/left-row.png" alt="">返回登录</router-link> </span>
+            </div>
 
-              <div class="register-box">
-                <span> <router-link to="/login">返回登录 ></router-link> </span>
-              </div>
-
-              <div class="terms-box">
-                <span class="terms-check" @click="is_agree = !is_agree">
-                  <img v-if="is_agree" src="@/static/common/check1.png" alt="">
-                  <img v-else src="@/static/common/check0.png" alt="">
-                  登录注册即表示同意
-                </span>
-                <span class="terms-text" @click="terms_open(92)">《隐私政策》</span>
-              </div>
-
-            </template>
-          </div>
+<!--            <div class="terms-box">-->
+<!--              登录注册即表示同意 <span @click="terms_open(83)">《隐私政策》</span>-->
+<!--            </div>-->
+          </template>
         </div>
       </div>
     </div>
-
-
-
   </div>
 </template>
 
 <script>
 import sms_phone from "@/components/login/sms_phone.vue"; //短信验证码
 // import SmsLogin from "@/components/login/SmsLogin.vue"; //短信验证码
-// import modalTerms from "@/components/modals/modalTerms.vue"; //协议弹窗
-import terms_modal from "@/components/account/terms_modal.vue"; //协议弹窗
+import modalTerms from "@/components/modals/modalTerms.vue"; //协议弹窗
+// import modalRich from "@/components/modals/modalRich.vue"; //协议弹窗
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "login",
   components: {
     sms_phone,
-    // modalTerms,
-    terms_modal,
+    modalTerms,
+    // modalRich,
   },
   data() {
     return {
-      is_agree: true,
-
-
       mode: "账号密码", //微信扫码
       tabType: "PASS", //登录方式
       agreed: false,
 
       form: {
+        type: "1",
         phone: "",
-        resetType: 0, //忘记方式：0-手机验证码忘记 1-邮箱验证码忘记
-        pass: "",
         code: "",
+        pass: "",
         confirm_pass: "",
-        // email: "",
+        source: 1, //类型：0-邮箱验证  1-短信验证  2-不需要验证
       },
     };
   },
@@ -111,12 +111,13 @@ export default {
 
   methods: {
     terms_open(id) {
-      this.$refs.terms_modal.init(id);
+      this.$refs.modalRich.init(id);
     },
-    setView() { },
+    setView() {
+    },
 
     //
-    do_submit() {
+    retrieve_submit() {
       let reg_phone = /^1[3-9]\d{9}$/;
       let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
 
@@ -137,17 +138,12 @@ export default {
         return;
       }
 
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "login_resetPass",
-          ...this.form,
-        },
+      this.$api("users_changePass", {
+        ...this.form,
       }).then((res) => {
-        alert(res)
-        let { code, data, msg } = res;
-        if (code == 200) {
+        //console.log("找回密码", res);
+        let {code, data, message} = res;
+        if (code == 1) {
           this.$router.push("/login");
         }
       });
@@ -166,65 +162,44 @@ export default {
 
 <style scoped lang="less">
 .page {
+  width: 100%;
   position: relative;
 
-
-
-
-  .page-bg {
-    img {
-      width: 100%;
-      min-height: 665px;
-    }
-  }
-
-  .page-ctx {
+  .mask {
+    background: url(../../static/account/login-bg.png) 100% 100% no-repeat;
+    background-size: cover;
     position: absolute;
+    content: "";
     left: 0;
-    top: 0;
-    right: 0;
     bottom: 0;
-
-    display: flex;
-    align-items: center;
+    width: 100%;
+    height: 100%;
+    // opacity: 0.1;
+    pointer-events: none;
   }
-
-  .page-inner {}
-
-  .page-poster {
-    margin-left: 46px;
-
-    img {
-      width: 664px;
-      height: 664px;
-    }
-  }
-
-
 
   .center {
     height: 780px;
-
+    width: @width;
     margin: 0 auto;
+    display: flex;
+    justify-content: flex-end;
     background: transparent;
     align-items: center;
     position: relative;
 
-
-
     .inner {
       position: relative;
-      width: 560px;
+      width: 480px;
       min-height: 520px;
-      background: #F9FAFC;
-      box-shadow: 0px 2px 15px 1px rgba(79, 79, 79, 0.15);
-      border: 1px solid rgba(76, 165, 228, 0.1);
 
-      padding: 40px 40px 100px;
+      padding: 40px;
+      background: #ffffff;
       opacity: 1;
       border-radius: 10px;
-
-
+      overflow: hidden;
+      background: #fff;
+      // margin: 0 auto;
 
       .mode-toggle {
         position: absolute;
@@ -237,7 +212,8 @@ export default {
         }
       }
 
-      .left {}
+      .left {
+      }
 
       .right {
         // width: 480px;
@@ -256,9 +232,9 @@ export default {
       .flex-center();
 
       .tab-item {
-        font-family: Poppins, Poppins;
-        font-weight: 600;
-        font-size: 26px;
+        font-size: 24px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
         color: #333333;
 
         &:first-child {
@@ -292,21 +268,18 @@ export default {
       background: #ffffff;
       border: 1px solid #eeeeee;
       border-radius: 4px;
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      .flex-between();
       overflow: hidden;
 
       span {
         display: inline-block;
-        width: 95px;
-
-        border-right: 1px solid #ccc;
-        font-family: OPPOSans, OPPOSans;
-        font-weight: 400;
+        width: 90px; /*no */
+        border-right: 1px solid #eee;
         font-size: 14px;
-        color: #7D7D7D;
-
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        line-height: 24px;
+        color: #999999;
         text-indent: 1em;
       }
 
@@ -333,9 +306,7 @@ export default {
     .agree-box {
       text-align: left;
       margin-top: 20px;
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      .flex-between();
 
       font-size: 14px;
       font-family: Microsoft YaHei;
@@ -344,7 +315,7 @@ export default {
       color: #999999;
 
       a {
-        color: #F74747;
+        color: @theme;
       }
     }
 
@@ -356,7 +327,7 @@ export default {
         width: 100%;
         height: 44px;
         background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
-        background: #F74747;
+        background: @theme;
         font-size: 18px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
@@ -368,19 +339,24 @@ export default {
       margin-top: 30px;
       text-align: center;
       font-size: 14px;
+      img {
+        width: 17.5px;
+        height: 12px;
+        margin-bottom: 6px;
+        margin-right: 5px;
+      }
 
       a {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 24px;
-        color: #F74747;
-        border-bottom: 1px solid #F74747;
+        color: @theme;
+        border-bottom: 1px solid @theme;
       }
     }
   }
 }
-
 
 .terms-box {
   position: absolute;
@@ -392,34 +368,40 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  justify-content: flex-start;
-  padding-left: 20px;
+  // padding-left: 40px;
   text-align: center;
 
-
-  .terms-check {
+  span {
     cursor: pointer;
-    font-family: OPPOSans, OPPOSans;
-    font-weight: 400;
-    font-size: 12px;
-    color: #999999;
 
+    &:hover {
+      color: @theme;
+    }
+  }
+}
+
+.qrcode-cit {
+  .qrcode-box {
     img {
-      margin-right: 10px;
-      width: 18px;
-      height: 18px;
+      width: 240px;
+      height: 240px;
     }
   }
 
-  .terms-text {
-    cursor: pointer;
-    font-family: OPPOSans, OPPOSans;
-    font-weight: 400;
-    font-size: 12px;
-    color: #999999;
+  .text-box {
+    margin-top: 24px;
+    .flex-center();
 
-    &:hover {
-      color: #F74747;
+    img {
+      width: 32px;
+      margin-right: 10px;
+    }
+
+    .text {
+      font-size: 16px;
+      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-weight: 400;
+      color: #333333;
     }
   }
 }

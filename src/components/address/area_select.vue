@@ -108,7 +108,8 @@ export default {
       // this.qu = area_id;
 
       //省
-      let obj_sheng = this.list_sheng.find((v) => v.id == provinceCode || v.title == province) || {};
+      let obj_sheng = this.list_sheng.find((v) => v.id == provinceCode || v.id == province) || {};
+      console.log(obj_sheng)
       this.sheng = obj_sheng.id;
 
       //解决初始回显慢的问题
@@ -121,13 +122,13 @@ export default {
       //市
       let res_shi = await this.$api("users_getAreaList", { parent_id: this.sheng });
       this.list_shi = res_shi.data || [];
-      let obj_shi = this.list_shi.find((v) => v.id == cityCode || v.title == city) || {};
+      let obj_shi = this.list_shi.find((v) => v.id == cityCode || v.id == city) || {};
       this.shi = obj_shi.id;
 
       //区
       let res_qu = await this.$api("users_getAreaList", { parent_id: this.shi });
       this.list_qu = res_qu.data || [];
-      let obj_qu = this.list_qu.find((v) => v.id == areaCode || v.title == area) || {};
+      let obj_qu = this.list_qu.find((v) => v.id == areaCode || v.id == area) || {};
       this.qu = obj_qu.id;
 
       //console.log("查询城市数据 res_shi", res_shi);
@@ -194,8 +195,8 @@ export default {
 
 <style scoped lang="less">
 /deep/ .el-switch.is-checked .el-switch__core {
-  background-color: #F74747 !important;
-  border-color: #F74747 !important;
+  background-color: @theme !important;
+  border-color: @theme !important;
 }
 
 /deep/ .el-input {

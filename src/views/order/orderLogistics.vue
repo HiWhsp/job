@@ -8,7 +8,7 @@
     <div class="page-ctx">
       <div class="section-danhao">
         <div class="section-title">
-          <div class="date">运单号码：{{ fahuo_info.order_id }}</div>
+          <div class="date">运单号码：{{ fahuo_info.orderId }}</div>
           <div class="code">物流公司： {{ fahuo_info.company }}</div>
         </div>
         <div class="section-wuliu">
@@ -123,7 +123,7 @@
                 </div>
                 <div class="wuliu-code">
                   <span>物流单号：</span>
-                  {{ fahuo_info.order_id }}
+                  {{ fahuo_info.orderId }}
                 </div>
               </div>
             </div>
@@ -203,7 +203,7 @@ export default {
   },
   data() {
     return {
-      order_id: this.$route.query.order_id || "", //订单id
+      orderId: this.$route.query.orderId || "", //订单id
       fahuo_id: this.$route.query.logistics_id || "", //物流id
       orderObj: {}, //订单信息
       order: {}, //订单信息
@@ -357,7 +357,7 @@ export default {
     //获取订单详情
     orders_detail() {
       this.$api("orders_detail", {
-        id: this.order_id,
+        id: this.orderId,
       }).then((res) => {
         let { code, data, msg} = res;
         if (code == 200) {
@@ -433,9 +433,7 @@ export default {
 .page {
   padding-bottom: 80px;
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -450,7 +448,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: @theme;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -512,8 +510,7 @@ export default {
 
 .section-danhao {
   .section-title {
-      display: flex;
-  align-items: center;
+    .flex();
     padding-left: 24px;
     text-align: left;
     height: 44px;
@@ -534,8 +531,7 @@ export default {
 
 .section-goods {
   .section-title {
-      display: flex;
-  align-items: center;
+    .flex();
     padding-left: 24px;
     text-align: left;
     height: 44px;
@@ -620,8 +616,7 @@ export default {
       .item-good {
         padding: 20px;
         border-bottom: 1px dashed #ccc;
-          display: flex;
-  align-items: center;
+        .flex();
 
         &:last-child {
           border: none;
@@ -669,8 +664,7 @@ export default {
       }
 
       .goods-action {
-          display: flex;
-  align-items: center;
+        .flex();
         justify-content: flex-end;
         padding: 10px;
         .btn-goods-action {
@@ -679,7 +673,7 @@ export default {
           margin-left: 10px;
           min-width: 96px;
           height: 30px;
-          background: #F74747;
+          background: @theme;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;
@@ -719,9 +713,7 @@ export default {
   }
 
   .section-other {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     padding: 20px 25px;
 
     .item {
@@ -777,9 +769,7 @@ export default {
   }
 
   .other {
-    //   display: flex;
-  align-items: center;
-  justify-content: space-between;
+    // .flex-between();
     display: flex;
     padding: 20px 25px;
 

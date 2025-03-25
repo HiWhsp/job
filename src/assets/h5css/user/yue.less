@@ -1,9 +1,7 @@
 @media screen and (max-width: 1199px) {
   .page {
     .main-title {
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      .flex-between();
       margin-bottom: 20px;
       text-align: left;
       font-size: 16px;
@@ -15,8 +13,7 @@
       .left {
       }
       .right {
-          display: flex;
-  align-items: center;
+        .flex();
         img {
           margin-right: 15px;
           width: 16px;
@@ -105,8 +102,7 @@
   }
 
   .list {
-      display: flex;
-  align-items: center;
+    .flex();
     flex-wrap: wrap;
     .item {
       .flex-center();

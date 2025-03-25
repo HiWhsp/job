@@ -60,9 +60,7 @@
       .main-title {
         height: 36px;
         padding: 0 10px;
-          display: flex;
-  align-items: center;
-  justify-content: space-between;
+        .flex-between();
         border-bottom: 1px solid #ebeef5;
 
         .text {
@@ -75,7 +73,7 @@
           font-size: 12px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #F74747;
+          color: @theme;
         }
       }
 
@@ -88,8 +86,7 @@
           }
           .item-title {
             position: relative;
-              display: flex;
-  align-items: center;
+            .flex();
             height: 36px;
             padding: 0 23px;
             img {
@@ -105,7 +102,7 @@
               font-size: 12px;
               font-family: Microsoft YaHei-Regular, Microsoft YaHei;
               font-weight: 400;
-              color: #F74747;
+              color: @theme;
             }
           }
 
@@ -137,8 +134,7 @@
             }
 
             .sub-item {
-                display: flex;
-  align-items: center;
+              .flex();
               margin-bottom: 5px;
               line-height: 28px;
               font-size: 12px;
@@ -189,13 +185,12 @@
             }
 
             &:hover {
-              border-color: #F74747;
+              border-color: @theme;
             }
           }
 
           .level-1 {
-              display: flex;
-  align-items: center;
+            .flex();
             height: 36px;
             padding: 0 10px;
 
@@ -220,7 +215,7 @@
               }
 
               &:hover {
-                color: #F74747;
+                color: @theme;
               }
             }
           }
@@ -252,8 +247,7 @@
               // margin-bottom: 12px;
 
               .level-2 {
-                  display: flex;
-  align-items: center;
+                .flex();
                 // height: 43px;
                 // padding: 0 23px;
 
@@ -295,14 +289,13 @@
                   }
 
                   &:hover {
-                    color: #F74747;
+                    color: @theme;
                   }
                 }
               }
 
               .level-3 {
-                  display: flex;
-  align-items: center;
+                .flex();
                 // height: 43px;
                 // padding: 0 23px;
 
@@ -336,7 +329,7 @@
                   }
 
                   &:hover {
-                    color: #F74747;
+                    color: @theme;
                   }
                 }
               }

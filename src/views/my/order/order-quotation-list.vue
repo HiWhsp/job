@@ -1,0 +1,442 @@
+<template>
+  <div class="page">
+    <div class="main-title flex flex-between">
+      报价单
+      <div class="search-box">
+        <input v-model="keyword" type="text" placeholder="输入商品名称、订单号"/>
+        <button @click="do_search()">搜索</button>
+        <button @click="do_reset()">重置</button>
+      </div>
+    </div>
+
+    <div class="page-ctx">
+      <div class="tab-box">
+        <div class="tab-list">
+          <div v-for="(item, index) in tabList" :key="index" class="tab-item"
+               :class="tabSelect.value == item.value ? 'active' : ''" @click="do_toggle_tab(item)">
+            {{ item.title }}
+            <span class="number" v-if="item.num">{{ item.num }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="center">
+        <div class="order-list-wrap">
+          <div class="info-item">
+            <div class="info-title flex flex-between">
+              <div>报价单号：154545456456456</div>
+              <div>制单时间：2022-10-21 12:24:30</div>
+            </div>
+            <div class="title flex">
+              <div class="tit1">商品信息</div>
+              <div class="tit2">状态</div>
+              <div class="tit2">单价/含税</div>
+              <div class="tit2">小计/含税</div>
+              <div class="tit2">订货日</div>
+            </div>
+            <div class="info flex">
+              <div class="box-img">
+                <img src="" alt="">
+                <div class="">
+                  <p>我的型号: fj</p>
+                  <p>FJ型号: ---</p>
+                </div>
+              </div>
+              <div class="box-status">待报价</div>
+              <div class="box-money">--</div>
+              <div class="box-num">--</div>
+              <div class="box-date">--</div>
+            </div>
+            <div class="btn-actions flex flex-between">
+              <div>报价有效期：2024-08-18 15:30</div>
+              <div class="right">
+                <button class="btn-ripple fit-text">
+                  报价详情
+                </button>
+                <button class="btn-ripple fit-text">
+                  取消报价
+                </button>
+                <button class="btn-ripple fit-text">
+                  下载报价单
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="count" class="pagination-box" style="margin-top: 40px; text-align: right;">
+          <el-pagination background layout="total, prev, pager, next" @current-change="changePage"
+                         :current-page.sync="pagination.page" :page-size="pagination.pageNum"
+                         :total="count"></el-pagination>
+        </div>
+
+        <el-empty v-if="!count" description="没有查询到订单信息..."></el-empty>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import {mapState} from "vuex";
+
+export default {
+  name: "order-quotation-list",
+  data() {
+    return {
+      tabSelect: {
+        title: '全部',
+        value: 0,
+      },
+      //
+      orders: [],
+      pagination: {
+        page: 1,
+        pageNum: 10,
+      },
+      count: 0,
+      keyword: "",
+      user_index: {},
+    };
+  },
+  computed: {
+    ...mapState([""]),
+
+    tabList() {
+      //scene
+      //筛选状态：0-全部 1-待支付 2-待发货 3-待收货 4-待核销 5-已完成 6-待评价 7-已取消
+      //orderStatus
+      //订单状态：-5-待支付  -1-已取消  2-待发货  3-待收货  4-待自提  5-已完成
+      let user_index = {} || this.user_index;
+      let tabList = [
+        {value: 0, title: "全部报价"},
+        {value: 1, title: "待报价", num: user_index.order_num_1 || 0},
+        {value: 2, title: "已报价", num: user_index.order_num_2 || 0},
+        {value: 3, title: "待付款", num: user_index.order_num_3 || 0},
+        {value: 6, title: "已支付", num: user_index.order_num_4 || 0},
+        {value: 5, title: "已取消", num: user_index.order_num_4 || 0},
+        {value: 7, title: "超报价有效期", num: user_index.order_num_4 || 0},
+      ];
+      return tabList;
+    },
+  },
+  created() {
+
+    this.setView();
+  },
+
+  methods: {
+    emitConfirm() {
+      this.query_order()
+    },
+    setView() {
+      if (this.$route.query.status) {
+        this.tabSelect = this.tabList.find(v => v.value == this.$route.query.status) || this.tabList[0]
+      }
+
+      this.query_userIndex();
+      this.query_order();
+    },
+
+    //用户主页数据
+    query_userIndex() {
+      this.$api("users_index").then((res) => {
+        let {code, data} = res;
+        if (code == 200) {
+          this.user_index = data;
+        }
+      });
+    },
+
+    //订单列表
+    query_order() {
+
+    },
+
+    //根据订单状态获取订单操作结果
+    getOrderActions(order) {
+      let {status, statusInfo, ifpingjia} = order;
+      let actions = [];
+      // let actions = [
+      //   { name: "取消订单",type: 'quxiao' },
+      //   { name: "立即支付",type: 'zhifu' },
+      //   { name: "确认收货",type: 'shouhuo' },
+      //   { name: "评价订单",type: 'pingjia' },
+      //   { name: "申请售后",type: 'shouhou' },
+      //   { name: "删除订单",type: 'shanchu' },
+      //   { name: "再次购买",type: 'goumai' },
+      // ];
+
+      if (status == -5) {
+        //待支付
+        if (statusInfo == "无效") {
+          actions = [{name: "取消订单", type: "quxiao"}];
+        } else if (statusInfo == "待支付") {
+          actions = [
+            {name: "立即支付", type: "zhifu"},
+            {name: "取消订单", type: "quxiao"},
+          ];
+        }
+      } else if (status == -3) {
+        //-3售后处理中
+        actions = [{name: "删除订单", type: "shanchu"}];
+      } else if (status == -1) {
+        //无效
+        actions = [{name: "删除订单", type: "shanchu"}];
+      } else if (status == 0) {
+        //0待成团
+        actions = [{name: "取消订单", type: "quxiao"}];
+      } else if (status == 2) {
+        //2待发货
+        actions = [
+          // { name: "取消订单", type: "quxiao" }
+        ];
+      } else if (status == 3) {
+        //3待收货
+        actions = [
+          {name: "确认收货", type: "shouhuo"},
+          {name: "查看物流", type: "wuliu"},
+        ];
+      } else if (status == 4) {
+        //4已收货
+        if (ifpingjia) {
+          actions = [
+            // { name: "删除订单", type: "shanchu" },
+            // { name: "查看物流", type: "wuliu" },
+            // { name: "售后", type: "shouhou" },
+          ];
+        } else {
+          actions = [
+            // { name: "删除订单", type: "shanchu" },
+            // { name: "查看物流", type: "wuliu" },
+            // { name: "售后", type: "shouhou" },
+            //  { name: "评价", type: 'pingjia' }
+          ];
+        }
+      }
+      return actions;
+    },
+
+    do_toggle_tab(item) {
+      this.tabSelect = item;
+      this.pagination.page = 1;
+      this.query_order();
+    },
+
+
+    //分页
+    changePage() {
+      this.query_order();
+    },
+
+    //搜索
+    do_search() {
+      this.query_order();
+    },
+
+    //重置
+    do_reset() {
+      this.keyword = "";
+      this.pagination.page = 1;
+      this.query_order();
+    },
+
+    updateView() {
+      this.query_order();
+    },
+  },
+};
+</script>
+
+<style scoped lang="less">
+.order-list-wrap {
+  margin-top: 30px;
+
+  .info-item {
+    background: #FFFFFF;
+    border-radius: 4px;
+    border: 1px solid #E5E5E5;
+
+    .info-title {
+      height: 50px;
+      padding: 0 10px;
+    }
+
+    .title {
+      height: 44px;
+      background: #F5F5F5;
+      border: 1px solid #E5E5E5;
+      padding: 0 10px;
+
+
+      .tit1 {
+        flex: 1;
+      }
+
+      .tit2 {
+        width: 100px;
+        text-align: center;
+      }
+    }
+
+    .info {
+      padding: 0 10px;
+      height: 110px;
+      border-bottom: 1px solid #E5E5E5;
+
+      .box-img {
+        flex: 1;
+      }
+
+      .box-status {
+        width: 100px;
+        text-align: center;
+      }
+
+      .box-money {
+        width: 100px;
+        text-align: center;
+      }
+
+      .box-num {
+        width: 100px;
+        text-align: center;
+      }
+
+      .box-date {
+        width: 100px;
+        text-align: center;
+      }
+    }
+
+    .btn-actions {
+      height: 64px;
+      padding: 0 10px;
+      button {
+        transition: 0.3s;
+        min-width: 120px;
+        height: 32px;
+        background: #FFFFFF;
+        border-radius: 4px;
+        border: 1px solid @theme;
+        font-family: Arial, Arial;
+        font-weight: 400;
+        font-size: 14px;
+        color: @theme;
+
+        & + button {
+          margin-left: 20px;
+        }
+
+        &:hover {
+          opacity: 0.7;
+        }
+
+        &.btn-bg {
+          background: @theme;
+          color: #FFFFFF;
+        }
+      }
+    }
+  }
+}
+
+.page {
+  padding: 0;
+
+  .main-title {
+    padding: 0 32px;
+    text-align: left;
+    height: 56px;
+    line-height: 56px;
+    background: #ffffff;
+    font-size: 16px;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+
+    .search-box {
+      .flex();
+      min-width: 260px;
+      height: 32px;
+      background: #f9f9f9;
+
+      input {
+        background: #f9f9f9;
+        flex: 2;
+        height: 100%;
+        border: 1px solid #e2e2e2;
+        border-right: none;
+        outline: none;
+        padding-left: 10px;
+        font-size: 12px;
+      }
+
+      button {
+        width: 50px;
+        height: 32px;
+        background: #ffffff;
+        border: 1px solid #e2e2e2;
+        color: #7d7d7d;
+
+        &:last-child {
+          border-left: 0;
+        }
+      }
+    }
+
+  }
+
+  .page-ctx {
+    margin-top: 14px;
+    padding: 24px 32px;
+    background: #fff;
+  }
+}
+
+.tab-box {
+  padding-right: 20px;
+  .flex-between();
+  background: #ffffff;
+  // border: 1px solid #cccccc;
+
+  .tab-list {
+    .flex();
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #7d7d7d;
+
+    .tab-item {
+      position: relative;
+      // min-width: 96px;
+      height: 48px;
+      line-height: 48px;
+      cursor: pointer;
+      margin-right: 40px;
+
+      .number {
+        color: @theme;
+      }
+
+      &.active {
+        // background: @theme;
+        // color: #fff;
+        font-weight: bold;
+        color: @theme;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: @theme;
+        }
+      }
+    }
+  }
+}
+</style>
+
+<style scoped lang="less" src="@/assets/h5css/shop/order-list.less"></style>

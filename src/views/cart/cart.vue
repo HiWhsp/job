@@ -1,29 +1,11 @@
 <template>
   <div class="page">
-    <div class="inner w-1200">
-      <div class="main-title flex-between">
+    <div class="inner">
+      <div class="main-title">
         <div class="left">
-          <span>我的购物车</span>
+          <span>购物车</span>
         </div>
-        <!-- <div class="right">
-          <div class="step-box">
-            <div class="step step-1 active">1.我的购物车</div>
-            <div class="step step-2">2.填写/核对订单信息</div>
-            <div class="step step-3">3.成功提交订单</div>
-          </div>
-        </div> -->
       </div>
-
-      <!-- <div class="search-wrap">
-        <div class="search-tip">我知道货号，可直接输入货号快速添加产品..</div>
-        <div class="search-box">
-          <div class="text-1">请输入货号：</div>
-          <div class="input-box">
-            <input type="text" v-model="keyword" />
-          </div>
-          <button class="btn-ripple" @click="searchGoodsAddCart">加入购物车</button>
-        </div>
-      </div> -->
 
       <!-- 商品列表 -->
       <div class="ctx-box">
@@ -32,12 +14,11 @@
             <!-- 标题 -->
             <div class="list-title">
               <div class="title-1">选择</div>
-              <!-- <div class="title-3">货号</div> -->
-              <div class="title-2" style="text-align: left; padding-left: 0px">产品名称</div>
-              <div class="title-3">规格</div>
-              <div class="title-4">单价</div>
+              <div class="title-2" style="text-align: left; padding-left: 0px">商品信息</div>
+              <div class="title-4">单价(含税)</div>
               <div class="title-5">数量</div>
-              <div class="title-6">小计</div>
+              <div class="title-6">小计(含税)</div>
+              <div class="title-3">库存/交期</div>
               <div class="title-7">操作</div>
             </div>
 
@@ -47,34 +28,36 @@
                 <div class="box-select">
                   <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
                 </div>
-                <!-- <div class="box-sku" @click="mix_to_product(item)">{{ item.skuId }}</div> -->
 
-                <div class="box-image cover">
-                  <!-- <img :src="item.image" @click="mix_to_product(item)" /> -->
+                <div class="box-image cover flex">
                   <el-image :src="item.image" @click="mix_to_product(item)">
                     <div slot="error" class="image-slot">
-                      <img :src="item.default_img" />
+                      <img :src="item.default_img"/>
                     </div>
                   </el-image>
-                </div>
-                <div class="box-title">
-                  <div class="goods-title" @click="mix_to_product(item)">
-                    {{ item.title }}
+                  <div class="box-title">
+                    <div class="goods-title" @click="mix_to_product(item)">
+                      {{ item.title }}
+                    </div>
+                    <div class="sku-info">
+                      {{ item.keyVals }}
+                    </div>
                   </div>
-                  <!-- <div class="sku-info">
-                    {{ item.key_vals }}
-                  </div> -->
                 </div>
-                <div class="box-sku">
-                  {{ item.keyVals }}
-                </div>
+
                 <div class="box-unit-price">{{ vuex_huobi }} {{ item.priceSale }}</div>
                 <div class="box-number">
                   <button @click="do_number_minus(item)">-</button>
-                  <input type="number" min="1" v-model="item.num" @blur="on_blur_input(item)" />
+                  <input type="number" min="1" v-model="item.num" @blur="on_blur_input(item)"/>
                   <button @click="do_number_plus(item)">+</button>
                 </div>
-                <div class="box-subtotal">{{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}</div>
+                <div class="box-subtotal">{{ vuex_huobi }} {{
+                    (item.priceSale * item.num).toFixed(2)
+                  }}
+                </div>
+                <div class="box-inventory">
+                  {{ item.num < 10 ? '7个工日内' : '7-10个工日内' }}
+                </div>
                 <div class="box-act">
                   <!-- <div class="goods-action-box" v-if="false">
                     <span class="goods-action" v-if="item.if_collect" @click="favouriteDelete(item)">
@@ -87,8 +70,8 @@
                   </div> -->
                   <div class="goods-action-box">
                     <span class="goods-action" @click="do_cart_delete_row(item.inventoryId)">
-                      <!-- <img src="@img/other/shopcart-goods-delete.png" alt="" /> -->
-                      删除</span>
+                      删除
+                    </span>
                   </div>
                 </div>
               </div>
@@ -104,8 +87,9 @@
         <div class="bottom-action-box">
           <div class="all-select">
             <el-checkbox v-model="checked_all" @change="on_change_checked_all">{{
-              checked_all ? "反选" : "全选"
-            }}</el-checkbox>
+                checked_all ? "反选" : "全选"
+              }}
+            </el-checkbox>
           </div>
           <div class="delete-box">
             <span @click="do_cart_remove_select()">删除选中</span>
@@ -134,7 +118,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "cart",
@@ -149,7 +133,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar", "shopcart_count"]),
+    ...mapState(["defaultAvatar", "shopcart_count", "webConfig"]),
 
     canSubmit() {
       return this.form.name;
@@ -159,10 +143,10 @@ export default {
     shopcart_money() {
       let money = 0;
       this.list_shopcart
-        .filter((v) => v.checked)
-        .forEach((v) => {
-          money += v.num * v.priceSale;
-        });
+          .filter((v) => v.checked)
+          .forEach((v) => {
+            money += v.num * v.priceSale;
+          });
       return money.toFixed(2);
     },
 
@@ -211,20 +195,20 @@ export default {
           action: "gouwuche_lists",
         }
       })
-        .then((res) => {
-          let { code, data } = res;
-          if (code == 200) {
-            data.forEach((v) => {
-              v.checked = true;
-            });
-            this.list_shopcart = data;
-            if (data.length) {
-              this.checked_all = true;
-            }
+          .then((res) => {
+            let {code, data} = res;
+            if (code == 200) {
+              data.forEach((v) => {
+                v.checked = true;
+              });
+              this.list_shopcart = data;
+              if (data.length) {
+                this.checked_all = true;
+              }
 
-            this.do_update_vuex_cart_number()
-          }
-        });
+              this.do_update_vuex_cart_number()
+            }
+          });
     },
 
     favouriteDelete(item) {
@@ -232,7 +216,7 @@ export default {
         inventoryId: item.inventoryId,
         collect_type: 1,
       }).then((res) => {
-        let { code, message } = res;
+        let {code, message} = res;
 
         if (code == 200) {
           this.setView();
@@ -244,7 +228,7 @@ export default {
         inventoryId: item.inventoryId,
         collect_type: 0,
       }).then((res) => {
-        let { code, message } = res;
+        let {code, message} = res;
 
         if (code == 200) {
           this.setView();
@@ -305,7 +289,7 @@ export default {
     },
     //购物车修改数量
     do_updateNum(item) {
-      let { inventoryId, num } = item;
+      let {inventoryId, num} = item;
 
       this.$api({
         url: "/service.php",
@@ -396,7 +380,7 @@ export default {
       this.$store.commit('set_cache_payment_products', JSON.stringify(data_format))
 
       this.$router.push({
-        path: "/order-submit",
+        path: "/orderSubmit",
         query: {
           from: "cart",
         },
@@ -421,13 +405,14 @@ export default {
 }
 
 .page {
+  width: 100%;
   background: #FFFFFF;
   text-align: center;
   font-size: 14px;
-  padding-top: 45px;
+  padding-top: 40px;
 
   .inner {
-    min-height: 50vh;
+    width: @width;
     margin: 0 auto;
     padding: 0 0 80px;
 
@@ -439,144 +424,37 @@ export default {
   }
 
   .main-title {
-    padding-bottom: 15px;
-    border-bottom: 1px solid #d5d8de;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #D5D8DE;
     text-align: left;
-
-
 
     .left {
-      font-family: Poppins, Poppins;
-      font-weight: bold;
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: 400;
       font-size: 24px;
       color: #333333;
-
-
-      .num {
-        margin-left: 10px;
-        color: #ff9312;
-      }
-    }
-
-    .right {
-      font-size: 12px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      line-height: 24px;
-      color: #333333;
-
-      .el-select {
-        width: 250px;
-      }
-
-      .step-box {
-        width: 500px;
-        margin: 0 auto;
-        font-size: 14px;
-          display: flex;
-  align-items: center;
-
-        .step {
-          flex: 1;
-          height: 30px;
-          line-height: 30px;
-          text-align: center;
-          background: #eee;
-          cursor: pointer;
-          transition: 0.3s;
-
-          &:hover {
-            opacity: 0.75;
-          }
-
-          &.step-1 {
-            clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%);
-          }
-
-          &.step-2 {
-            clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%, 3% 50%);
-          }
-
-          &.step-3 {
-            clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%, 3% 50%);
-          }
-
-          &.active {
-            background: #F74747;
-            color: #fff;
-          }
-        }
-      }
-    }
-  }
-
-  .search-wrap {
-    text-align: left;
-
-    .search-tip {
-      font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-      font-weight: 400;
-      color: #999999;
-    }
-
-    .search-box {
-      margin-top: 20px;
-      margin-bottom: 40px;
-        display: flex;
-  align-items: center;
-
-      .text-1 {
-        font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #666666;
-      }
-
-      .input-box {
-        input {
-          padding: 0 15px;
-          display: inline-block;
-          width: 256px;
-          height: 36px;
-          background: #ffffff;
-          border-radius: 4px 4px 4px 4px;
-          border: 1px solid #d5d8de;
-        }
-      }
-
-      button {
-        margin-left: 10px;
-        display: inline-block;
-        width: 128px;
-        height: 36px;
-        background: #F74747;
-        border-radius: 4px 4px 4px 4px;
-        font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #ffffff;
-      }
+      font-style: normal;
+      text-transform: none;
     }
   }
 
   .ctx-box {
     background: #fff;
-    padding: 60px 0;
+    padding: 18px 0;
 
     .list {
-      border: 1px solid #eee;
+      border-bottom: 1px solid #E6E4E1;
 
       .list-title {
         text-align: center;
-        height: 48px;
-        background: #f9f9f9;
-        background: #F5F5F5;
-        padding: 15px 0;
+        background: #E9E9E9;
+        color: #333;
+        font-weight: bold;
+        padding: 11px 0;
+        font-size: 14px;
 
-          display: flex;
-  align-items: center;
-        border-bottom: 1px solid #eee;
+        .flex();
+        border-radius: 4px;
 
         .title-1 {
           width: 100px;
@@ -584,29 +462,27 @@ export default {
         }
 
         .title-2 {
-          // width: 150px;
           flex: 2;
-
         }
 
         .title-3 {
-          width: 200px;
+          width: 150px;
         }
 
         .title-4 {
-          width: 200px;
+          width: 150px;
         }
 
         .title-5 {
-          width: 200px;
+          width: 150px;
         }
 
         .title-6 {
-          width: 200px;
+          width: 150px;
         }
 
         .title-7 {
-          width: 200px;
+          width: 150px;
         }
       }
 
@@ -618,8 +494,7 @@ export default {
         }
 
         .item-title {
-            display: flex;
-  align-items: center;
+          .flex();
           text-align: left;
           padding: 12px 40px;
           border-bottom: 1px solid #eee;
@@ -639,11 +514,21 @@ export default {
 
 
           .box-select {
-            width: 58px;
             width: 100px;
+
+            /deep/ .el-checkbox__inner {
+              border-color: @theme !important;
+            }
+
+            /deep/ .is-checked .el-checkbox__inner {
+              background: @theme !important;
+              border-color: @theme !important;
+            }
           }
 
           .box-image {
+            flex: 2;
+
             img {
               width: 70px;
               height: 70px;
@@ -665,7 +550,7 @@ export default {
 
             div {
               &:hover {
-                color: #F74747;
+                color: @theme;
               }
             }
 
@@ -673,11 +558,8 @@ export default {
               width: fit-content;
               cursor: pointer;
               // height: 40px;
-               display: -webkit-box;
-  -webkit-box-orient: vertical;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  -webkit-line-clamp: 2;
+              .ellipsis-2();
+              color: #333;
 
             }
 
@@ -685,6 +567,7 @@ export default {
               width: fit-content;
               cursor: pointer;
               margin-top: 10px;
+              color: #77797B;
             }
           }
 
@@ -693,12 +576,12 @@ export default {
           }
 
           .box-unit-price {
-            width: 200px;
-            color: #FF0000;
+            width: 150px;
+            color: #EA3200;
           }
 
           .box-number {
-            width: 200px;
+            width: 150px;
             .flex-center();
 
             input {
@@ -723,16 +606,25 @@ export default {
           }
 
           .box-subtotal {
-            width: 200px;
-            color: #FC0D1B;
+            width: 150px;
+            color: #EA3200;
+          }
+
+          .box-inventory {
+            width: 150px;
+            font-family: Roboto, Roboto;
+            font-weight: 400;
+            font-size: 14px;
+            color: #666666;
+            line-height: 24px;
           }
 
           .box-act {
-            width: 200px;
+            width: 150px;
             font-size: 16px;
 
             div {
-              &+div {
+              & + div {
                 margin-top: 10px;
               }
 
@@ -740,7 +632,7 @@ export default {
                 cursor: pointer;
 
                 &:hover {
-                  color: #F74747;
+                  color: @theme;
                 }
               }
             }
@@ -771,24 +663,38 @@ export default {
 }
 
 .bottom-action-box {
-    display: flex;
-  align-items: center;
-  padding-right: 40px;
+  .flex();
+  padding: 20px 35px;
+  margin-top: 18px;
   height: 86px;
   background: #FAFBFC;
-  // border: 1px solid #eeeeee;
-  // box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.08);
-  opacity: 1;
-  margin-top: 40px;
 
   .all-select {
     cursor: pointer;
-    min-width: 120px;
+    min-width: 80px;
+    text-align: left;
     width: fit-content;
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 14px;
     color: #666666;
+
+    /deep/ .el-checkbox__inner {
+      border-color: @theme !important;
+    }
+
+    /deep/ .is-checked .el-checkbox__inner {
+      background: @theme !important;
+      border-color: @theme !important;
+    }
+
+    /deep/ .el-checkbox__label {
+      color: #666666;
+    }
+
+    /deep/ .is-checked .el-checkbox__label {
+      color: @theme !important;
+    }
   }
 
   .delete-box {
@@ -802,14 +708,14 @@ export default {
       color: #666666;
 
       &:hover {
-        color: #F74747;
+        color: @theme;
       }
     }
   }
 
   .clear-box {
     cursor: pointer;
-    margin-left: 64px;
+    margin-left: 34px;
     flex: 2;
     text-align: left;
 
@@ -820,7 +726,7 @@ export default {
       color: #666666;
 
       &:hover {
-        color: #F74747;
+        color: @theme;
       }
     }
   }
@@ -864,10 +770,10 @@ export default {
     cursor: pointer;
     width: 191px;
     height: 46px;
-    background: #F74747;
+    background: @theme;
 
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: Roboto, Roboto;
     font-weight: bold;
     color: #ffffff;
     transition: 0.3s;

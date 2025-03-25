@@ -1,28 +1,34 @@
 <template>
   <div class="goods-info">
-    <div class="info-title">
-      <div class="date">{{ order.dtTime }}</div>
-      <div class="order-code">
-        订单号：
-        <span>{{ order.order_id }}</span>
-      </div>
-      <div class="order-state">{{ order.status_info }}</div>
-    </div>
+    <!--        <div class="info-title">-->
+    <!--            <div class="date">{{ order.dtTime }}</div>-->
+    <!--            <div class="order-code">-->
+    <!--                订单号：-->
+    <!--                <span>{{ order.orderId }}</span>-->
+    <!--            </div>-->
+    <!--            <div class="order-state">{{ order.statusInfo }}</div>-->
+    <!--        </div>-->
     <div class="info-good">
       <div class="list-good">
         <div class="item">
           <div class="item-good">
             <div class="img-box">
-              <img :src="refund_goods.image" alt />
+              <img :src="refund_goods.image" alt/>
             </div>
-            <div class="title">{{ refund_goods.title }}</div>
-            <div class="num">x {{ refund_goods.num }}</div>
+            <div class="title">
+              {{ refund_goods.title }}
+              <div class="desc">型号：{{ refund_goods.keyVals }}</div>
+            </div>
+            <div class="num">
+              {{ refund_goods.num }}
+            </div>
             <div class="price">
-              {{ currency
+              {{
+                currency
               }}{{
                 currency != "积分"
-                  ? refund_goods.priceSale
-                  : refund_goods.jifen
+                    ? refund_goods.priceSale
+                    : refund_goods.jifen
               }}
             </div>
           </div>
@@ -33,7 +39,8 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
+
 export default {
   name: "refundGoodsInfo",
   props: ["order"],
@@ -45,9 +52,7 @@ export default {
     refund_goods() {
       let obj = {};
       if (this.order && this.order.products) {
-        obj = this.order.products.find(
-          (v) => v.id == this.$route.query.inventoryId
-        );
+        obj = this.order.products[0]
       }
       return obj;
     },
@@ -66,35 +71,36 @@ export default {
 
 <style scoped lang="less">
 .goods-info {
+  border: 1px solid #eee;
+
   .info-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     height: 48px;
     padding: 0 15px;
     background: #f9f9f9;
 
     .date {
       font-size: 14px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
+      font-weight: bold;
       line-height: 20px;
       color: #7d7d7d;
     }
+
     .order-code {
       flex: 2;
       text-align: left;
       padding-left: 20px;
 
       font-size: 14px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
+      font-weight: bold;
       line-height: 20px;
       color: #7d7d7d;
+
       span {
         color: #333333;
       }
     }
+
     .order-state {
       font-size: 14px;
       font-family: Microsoft YaHei;
@@ -103,13 +109,12 @@ export default {
       color: #999999;
     }
   }
+
   .info-good {
     .list-good {
       .item-good {
         padding: 20px;
-        border-bottom: 1px dashed #ccc;
-          display: flex;
-  align-items: center;
+        .flex();
 
         &:last-child {
           border: none;
@@ -117,11 +122,13 @@ export default {
 
         .img-box {
           width: 100px;
+
           img {
             width: 100px;
             height: 100px;
           }
         }
+
         .title {
           text-align: left;
           padding-left: 20px;
@@ -130,9 +137,14 @@ export default {
           font-weight: 400;
           line-height: 20px;
           color: #333333;
+          flex: 1;
 
-          flex: 2;
+          .desc {
+            margin-top: 10px;
+            color: #77797B;
+          }
         }
+
         .num {
           width: 100px;
           font-size: 16px;
@@ -140,9 +152,10 @@ export default {
           font-weight: 400;
           line-height: 20px;
           color: #999999;
+
         }
+
         .price {
-          text-align: right;
           width: 150px;
           font-size: 16px;
           font-family: Microsoft YaHei;
@@ -153,15 +166,15 @@ export default {
       }
 
       .goods-action {
-          display: flex;
-  align-items: center;
+        .flex();
         justify-content: flex-end;
         padding: 10px;
+
         .btn-goods-action {
           margin-left: 10px;
           width: 96px;
           height: 30px;
-          background: #F74747;
+          background: @theme;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;
@@ -171,6 +184,7 @@ export default {
           &:hover {
             opacity: 0.8;
           }
+
           &.disabled {
             background: #ccc;
           }

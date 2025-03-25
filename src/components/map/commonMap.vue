@@ -14,8 +14,8 @@ export default {
 
     webInfo() {
       let obj = {
-        longitude: this.vuex_config.jdu || 119.178887,
-        latitude: this.vuex_config.wdu || 36.932801,
+        longitude: this.webConfig.jdu || 119.178887,
+        latitude: this.webConfig.wdu || 36.932801,
       };
 
       return obj;

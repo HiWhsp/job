@@ -2,10 +2,14 @@
   <div class="sms-box">
     <div class="input-box">
       <span class="label">验证码</span>
-      <!-- <img src="/common/icon-code.png" alt="" /> -->
       <input type="text" placeholder="请输入验证码" v-model="form.code" />
 
-      <button :disabled="disabledBtn" class="btn-validate-box" @click="getCode" :class="time != 60 ? 'disabled' : ''">
+      <button
+        :disabled="disabledBtn"
+        class="btn-validate-box"
+        @click="getCode"
+        :class="time != 60 ? 'disabled' : ''"
+      >
         获取验证码
         <span>（{{ time }}）</span>
       </button>
@@ -50,28 +54,18 @@ export default {
         alertErr("请输入正确的手机号");
         return;
       }
-      if (this.disabledBtn) {
-        return
-      }
-      this.disabledBtn = true;
-      this.query_code();
+
+      this.retrieveByEmail();
+      this.countdown();
     },
 
-    query_code() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "login_phoneYzm",
-          phone: this.form.phone,
-        },
+    //修改绑定邮箱
+    retrieveByEmail() {
+      this.$api("login_phoneYzm", {
+        phone: this.form.phone,
       }).then((res) => {
-        alert(res)
-        if (res.code == 200) {
-          this.countdown();
-        } else {
-          this.disabledBtn = false;
-        }
+        //console.log("验证码", res);
+        let { code, message } = res;
       });
     },
 
@@ -104,20 +98,16 @@ export default {
   background: #ffffff;
   border: 1px solid #eeeeee;
   border-radius: 4px;
-    display: flex;
-  align-items: center;
-  justify-content: space-between;
+  .flex-between();
   overflow: hidden;
-
   img {
     width: 36px;
   }
 
   .label {
     display: inline-block;
-    width: 90px;
-    /*no */
-    border-right: 1px solid #ccc;
+    width: 90px; /*no */
+    border-right: 1px solid #eee;
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: 400;
@@ -143,13 +133,12 @@ export default {
 }
 
 .btn-validate-box {
-    display: flex;
-  align-items: center;
+  .flex();
   background: transparent;
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: #F74747;
+  color: #EA3200;
   font-size: 1.4rem;
 
   &.disabled {
@@ -166,19 +155,15 @@ export default {
     background: #ffffff;
     border: 1px solid #eeeeee;
     border-radius: 4px;
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     overflow: hidden;
-
     img {
       width: 36px;
     }
 
     .label {
       display: inline-block;
-      width: 90px;
-      /*no */
+      width: 90px; /*no */
       border-right: 1px solid #ccc;
       font-size: 14px;
       font-family: Microsoft YaHei;
@@ -208,10 +193,9 @@ export default {
     background: transparent;
     position: absolute;
     right: 0;
-      display: flex;
-  align-items: center;
+    .flex();
     cursor: pointer;
-    color: #F74747;
+    color: #EA3200;
 
     &.disabled {
       color: #ccc;

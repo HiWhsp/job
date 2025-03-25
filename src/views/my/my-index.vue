@@ -4,53 +4,23 @@
       <div class="section-1">
         <div class="left">
           <div class="img-box">
-            <!-- <cusUploader col="uploadimg"> -->
             <div>
-              <img :src="mix_user_avatar" alt />
+              <img src="@/static/order/user.png" alt/>
             </div>
-            <!-- </cusUploader> -->
             <div class="name">
-              {{ mix_user_phone }}
+              {{ my_info.nickname }}
             </div>
           </div>
         </div>
         <div class="right">
-          <div class="text-1">{{ mix_user_name }}</div>
-          <!-- <div class="text-2">
-            <img src="@img/level-0.png" alt="" />
-            <span>{{ baseInfo.level }}</span>
-          </div> -->
+          <div class="text-1">{{ my_info.phone }}</div>
+          <div class="text-2">
+            <span>{{ my_info.levelTitle }}</span>
+          </div>
         </div>
       </div>
 
       <div class="section-2">
-        <!-- <div class="list">
-          <div class="item" @click="$router.push('/order-list?order_status=1')">
-            <div class="val">
-              <span>{{ user_index.order_num_1 || "0" }}</span>
-            </div>
-            <div class="label">待付款</div>
-          </div>
-          <div class="item" @click="$router.push('/order-list?order_status=2')">
-            <div class="val">
-              <span>{{ user_index.order_num_2 || "0" }}</span>
-            </div>
-            <div class="label">待发货</div>
-          </div>
-          <div class="item" @click="$router.push('/order-list?order_status=3')">
-            <div class="val">
-              <span>{{ user_index.order_num_3 || "0" }}</span>
-            </div>
-            <div class="label">待收货</div>
-          </div>
-          <div class="item" @click="$router.push('/order-list?order_status=4')">
-            <div class="val">
-              <span>{{ user_index.order_num_4 || "0" }}</span>
-            </div>
-            <div class="label">待评价</div>
-          </div>
-        </div> -->
-
         <div class="list">
           <div class="item" @click="$router.push('/order-list?order_status=1')">
             <div class="val">
@@ -58,26 +28,19 @@
             </div>
             <div class="label">全部订单</div>
           </div>
-          <div class="item" @click="$router.push('/cart')">
+          <div class="item" @click="$router.push('/order-list?order_status=1')">
             <div class="val">
-              <span>{{ my_info.cartNum || "0" }}</span>
+              <span>{{ my_info.orderNeedPay || "0" }}</span>
             </div>
-            <div class="label">购物车</div>
+            <div class="label">待付款</div>
           </div>
-          <div class="item" @click="$router.push('/favorite-list')">
+          <div class="item" @click="$router.push('/order-list?order_status=3')">
             <div class="val">
-              <span>{{ my_info.shoucangNum || "0" }}</span>
+              <span>{{ my_info.orderNeedShouhuo || "0" }}</span>
             </div>
-            <div class="label">我的收藏</div>
-          </div>
-          <div class="item" @click="$router.push('/order-list?status=6')">
-            <div class="val">
-              <span>{{ my_info.orderNeedComment || "0" }}</span>
-            </div>
-            <div class="label">待评价</div>
+            <div class="label">待收货</div>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -86,14 +49,14 @@
         <div class="label">最近订单</div>
         <router-link to="/order-list" class="action">
           <span>全部订单</span>
-          <img src="@/static/my-index/more.png" alt="" />
+          <img src="@/static/order/more.png" alt/>
         </router-link>
       </div>
 
       <div class="order-box">
         <div class="empty-info" v-if="!list_order.length">
           <div class="empty-img">
-            <img src="@/static/common/empty-img.png" alt="" />
+            <img src="@/static/order/empty-img.png" alt=""/>
           </div>
           <div class="empty-text">您还没有订单，赶快去逛逛吧！</div>
           <router-link to="/product-cates" class="empty-action">
@@ -106,34 +69,16 @@
       </div>
     </div>
 
-    <div class="suggest-goods">
-      <div class="section-title">
-        <div class="label">我们向您推荐</div>
-        <div class="action" @click="changeSugges">
-          <span>换一组</span>
-          <img src="@/static/my-index/refresh.png" alt="" />
-        </div>
-      </div>
-
-      <div class="list-wrap">
-        <productList :list="list_goods" />
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
-import productList from "@/components/product/productList.vue";
-// import cusUploader from "@/components/uploader/cusUploader.vue"; //上传
 import orderList from "@/components/order/orderList.vue"; //
-import { mapState } from "vuex";
 
 export default {
   name: "servicePage",
   components: {
-    productList,
     orderList,
-    // cusUploader,
   },
   data() {
     return {
@@ -144,7 +89,7 @@ export default {
       count: 0,
 
       my_info: {},
-      user_index: {}, //用户首页数据
+      // user_index: {}, //用户首页数据
       list_order: [],
       list_goods: [],
 
@@ -163,20 +108,15 @@ export default {
     emitConfirm() {
       this.query_order()
     },
-    // uploadSuccess(col, data) {
-    //   if (data.code == 200) {
-    //     this.uploadImg = data.image;
-    //   }
-    // },
 
     setView() {
       this.query_user();
-      this.query_userIndex();
+      // this.query_userIndex();
       this.query_order();
       this.query_goods();
     },
+    //
     query_user() {
-      // this.$store.dispatch("query_user");
       this.$api({
         url: '/service.php',
         method: 'get',
@@ -185,26 +125,26 @@ export default {
         },
       }).then(res => {
         if (res.code == 200) {
-          this.my_info = res.data
+          this.my_info = res.data;
         }
       })
     },
 
     //用户主页数据
-    query_userIndex() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "users_index",
-        },
-      }).then((res) => {
-        let { code, data } = res;
-        if (res.code == 200) {
-          this.user_index = res.data;
-        }
-      });
-    },
+    // query_userIndex() {
+    //   this.$api({
+    //     url: "/service.php",
+    //     method: "get",
+    //     data: {
+    //       action: "users_index",
+    //     },
+    //   }).then((res) => {
+    //     let {code, data} = res;
+    //     if (res.code == 200) {
+    //       this.user_index = res.data;
+    //     }
+    //   });
+    // },
 
     //订单查询
     query_order() {
@@ -218,7 +158,7 @@ export default {
           scene: 0,
         },
       }).then((res) => {
-        let { code, data } = res;
+        let {code, data} = res;
         if (code == 200) {
           this.list_order = data.list;
         }
@@ -236,9 +176,9 @@ export default {
           ...this.pagination,
         },
       }).then((res) => {
-        let { code, data, count } = res;
+        let {code, data, count} = res;
         if (code == 200) {
-          let { list, count, pages } = data;
+          let {list, count, pages} = data;
           this.list_goods = list;
           this.count = count;
         }
@@ -275,14 +215,13 @@ export default {
 }
 
 .section-box {
-    display: flex;
-  align-items: center;
+  .flex();
 }
 
 .section-1 {
   .flex-center();
   position: relative;
-  background: #ffffff url("~@/static/my-index/user-bg.png");
+  background: #ffffff url("~@/static/order/user-bg.png");
   background-size: 100% 100%;
   padding: 0 15px;
   width: 256px;
@@ -303,16 +242,14 @@ export default {
     .name {
       margin-top: 10px;
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Roboto, Roboto;
       font-weight: 400;
       color: #ffffff;
     }
   }
 
   .right {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     position: absolute;
     bottom: 0;
     left: 0;
@@ -321,19 +258,18 @@ export default {
     background: #ffffff;
     text-align: left;
     padding: 0 15px;
-    border: 1px solid #F74747;
+    border: 1px solid @theme;
     border-radius: 0 0 11px 11px;
 
     .text-1 {
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: Roboto, Roboto;
       font-weight: 400;
       color: #333333;
     }
 
     .text-2 {
-        display: flex;
-  align-items: center;
+      .flex();
 
       img {
         width: 24px;
@@ -342,9 +278,9 @@ export default {
 
       span {
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: Roboto, Roboto;
         font-weight: 400;
-        color: #F74747;
+        color: @theme;
       }
     }
   }
@@ -354,9 +290,7 @@ export default {
   flex: 1;
 
   .list {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     height: 185px;
     background: #ffffff;
     border: 1px solid #eee9e4;
@@ -378,7 +312,7 @@ export default {
       .label {
         margin-top: 20px;
         font-size: 16px;
-        font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+        font-family: Roboto, Roboto;
         font-weight: normal;
         color: #333333;
       }
@@ -387,9 +321,9 @@ export default {
         span {
           // margin-left: 5px;
           font-size: 32px;
-          font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+          font-family: Roboto, Roboto;
           font-weight: normal;
-          color: #F74747;
+          color: @theme;
         }
       }
     }
@@ -397,31 +331,28 @@ export default {
 }
 
 .page {
-  padding-bottom: 70px;
+  padding: 0;
 }
 
 .section-title {
   border-bottom: 1px solid #dedede;
-    display: flex;
-  align-items: center;
-  justify-content: space-between;
+  .flex-between();
   height: 56px;
   padding: 0 32px;
 
   .label {
     font-size: 18px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Roboto, Roboto;
     font-weight: 400;
     color: #333333;
   }
 
   .action {
-      display: flex;
-  align-items: center;
+    .flex();
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: Roboto, Roboto;
     font-weight: 400;
-    color: #F74747;
+    color: @theme;
     cursor: pointer;
 
     img {
@@ -453,14 +384,14 @@ export default {
         margin-top: 10px;
         margin-bottom: 20px;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: Roboto, Roboto;
         font-weight: 400;
         color: #999999;
       }
 
       .empty-action {
         font-size: 14px;
-        color: #F74747;
+        color: @theme;
       }
     }
   }
