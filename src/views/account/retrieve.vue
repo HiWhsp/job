@@ -40,18 +40,18 @@
             <sms_phone :form="form"/>
 
             <div class="input-box" v-if="tabType == 'PASS'">
-              <span>新密码</span>
+              <span>设置密码</span>
               <!-- <img src="@img/other/icon-lock.png" alt="" /> -->
               <input type="password" placeholder="请输入新密码" v-model="form.pass"/>
             </div>
-            <div class="input-box" v-if="tabType == 'PASS'">
-              <span>确认密码</span>
-              <input
-                  type="password"
-                  placeholder="请输入确认密码"
-                  v-model="form.confirm_pass"
-              />
-            </div>
+<!--            <div class="input-box" v-if="tabType == 'PASS'">-->
+<!--              <span>确认密码</span>-->
+<!--              <input-->
+<!--                  type="password"-->
+<!--                  placeholder="请输入确认密码"-->
+<!--                  v-model="form.confirm_pass"-->
+<!--              />-->
+<!--            </div>-->
 
             <div class="btn-box">
               <button class="btn-ripple" @click="retrieve_submit">确定</button>
@@ -61,9 +61,10 @@
               <span> <router-link to="/login"><img src="../../static/account/left-row.png" alt="">返回登录</router-link> </span>
             </div>
 
-<!--            <div class="terms-box">-->
-<!--              登录注册即表示同意 <span @click="terms_open(83)">《隐私政策》</span>-->
-<!--            </div>-->
+            <div class="terms-box">
+              <el-checkbox v-model="agreed" style="margin-right: 5px;"></el-checkbox>
+              我已阅读并同意 <span @click="terms_open(83)">《隐私政策》</span>
+            </div>
           </template>
         </div>
       </div>
@@ -367,10 +368,8 @@ export default {
   right: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  // padding-left: 40px;
+  padding-left: 40px;
   text-align: center;
-
   span {
     cursor: pointer;
 

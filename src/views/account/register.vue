@@ -6,12 +6,6 @@
 
     <div class="center">
       <div class="inner">
-        <div class="mode-toggle">
-          <img v-if="mode == '账号密码'" @click="mode = '微信扫码'"
-               src="../../static/account/login-qrcode.png" alt=""/>
-          <img v-if="mode == '微信扫码'" @click="mode = '账号密码'" src="../../static/account/login-pc.png"
-               alt=""/>
-        </div>
 
         <div class="input-wrap">
           <div class="tab-box">
@@ -20,7 +14,7 @@
                 :class="tabType == 'PASS' ? 'active' : ''"
                 @click="tabType = 'PASS'"
             >
-              {{ mode == "账号密码" ? "手机号注册" : "微信注册" }}
+              {{ mode == "账号密码" ? "用户注册" : "微信注册" }}
             </div>
           </div>
           <!--          手机号注册-->
@@ -55,12 +49,12 @@
 
             <div class="register-box">
               <!-- <router-link to="/">回到主页 ></router-link> -->
-              <span> <router-link to="/login">已有账号，去登录 ></router-link> </span>
+              <span> <router-link to="/login">已有账号，直接登录</router-link> </span>
             </div>
 
             <div class="terms-box">
               <el-checkbox v-model="agreed"></el-checkbox>
-              我已认真阅读并同意 <span>《用户协议》</span>和<span>《隐私政策》</span>
+              我已阅读并同意<span>《隐私政策》</span>
             </div>
           </template>
           <!-- 扫码登录 -->
@@ -267,7 +261,7 @@ export default {
         font-size: 24px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #333333;
+        color: @theme;
 
         &:first-child {
           // &:after {
@@ -283,7 +277,7 @@ export default {
         }
 
         &.active {
-          color: #333333;
+          color: @theme;
         }
       }
     }
