@@ -92,7 +92,7 @@ export default {
     .nav {
       position: absolute;
       bottom: 0;
-      width: 1200px;
+      width: 1400px;
       height: 75px;
       background: rgba(0, 0, 0, 0.5);
       border-radius: 0px 0px 0px 0px;

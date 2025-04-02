@@ -58,7 +58,7 @@ export default {
           title: '首页', // 名称
           icon: null,
           position: 'l',
-          url: '/discountShop'
+          url: '/'
         },
         {
           title: '意见反馈', // 名称
@@ -106,7 +106,7 @@ export default {
 
 <style lang="less" scoped>
 .content {
-  width: 1200px;
+  width: 1400px;
   margin: 0 auto;
 }
 
@@ -196,7 +196,7 @@ export default {
           width: 383px;
 
           /deep/ .el-input__inner {
-            border: 3px solid @theme;
+            //border: 3px solid @theme;
             border-radius: 4px 0px 0px 4px;
           }
         }

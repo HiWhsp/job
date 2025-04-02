@@ -70,7 +70,7 @@ export default {
 
   .col {
     margin: 82px 0 57px 0;
-    width: 1200px;
+    width: 1400px;
     border: 1px solid #707070;
   }
 

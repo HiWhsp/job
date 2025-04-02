@@ -91,12 +91,12 @@ body {
 }
 
 .page {
-  width: 1200px;
+  width: 1400px;
   padding: 21px 0 53px 0;
   margin: auto;
 }
 .layout-box {
-  background-color: #F6F5F4;
+  background-color: #F1F3F4;
 }
 
 #app-wrap {

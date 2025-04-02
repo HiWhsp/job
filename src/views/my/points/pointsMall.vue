@@ -174,7 +174,7 @@ export default {
 
   .page-ctx {
     position: relative;
-    width: 1200px;
+    width: 1400px;
     margin: -182px auto 0;
 
     padding-top: 28px;

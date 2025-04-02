@@ -126,7 +126,7 @@ export default {
 
 <style scoped lang="less">
 .content-wrap {
-  width: 1200px;
+  width: 1400px;
   min-height: 764px;
   background: #FFFFFF;
   border-radius: 8px 8px 8px 8px;

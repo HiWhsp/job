@@ -122,7 +122,7 @@ export default {
   .flex();
   flex-direction: column;
   align-items: center;
-  width: 1200px;
+  width: 1400px;
   margin: 20px auto;
 
   .top {

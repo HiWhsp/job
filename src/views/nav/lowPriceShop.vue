@@ -160,7 +160,7 @@ export default {
 }
 
 .commodity-list {
-  width: 1200px;
+  width: 1400px;
   margin: 76px auto;
   background: #FFFFFF;
   border-radius: 20px 20px 20px 20px;

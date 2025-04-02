@@ -3,24 +3,22 @@
     <div class="list flex flex-between">
       <div class="item flex" v-for="(item, index) in list_util" :key="index" @mouseenter="on_mouseenter(index + 1)" @mouseleave="on_mouseleave">
         <img :src="item.icon" alt="">
-        <p>{{ item.title }}</p>
       </div>
       <div class="item flex" v-if="showTop" @click="toTop()">
         <div class="item-inner flex">
-          <img src="../../static/home/up-row.png" alt=""/>
-          <p>顶部</p>
+          <img src="../../static/home/top-home.png" alt=""/>
         </div>
       </div>
     </div>
-    <div class="modal" v-show="hoverIndex == 1">
-      <div class="qrcode"></div>
-      <p>微信咨询 李先生</p>
-    </div>
+<!--    <div class="modal" v-show="hoverIndex == 1">-->
+<!--      <div class="qrcode"></div>-->
+<!--      <p>微信咨询 李先生</p>-->
+<!--    </div>-->
 
-    <div class="pop-kefu" v-show="hoverIndex == 2">
-      <p>业务咨询： </p>
-      <p>13953657709 李先生</p>
-    </div>
+<!--    <div class="pop-kefu" v-show="hoverIndex == 2">-->
+<!--      <p>业务咨询： </p>-->
+<!--      <p>13953657709 李先生</p>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -34,9 +32,9 @@ export default {
     return {
       hoverIndex: "",
       list_util: [
-        {title: "微信咨询", icon: require("../../static/home/wexin.png")},
-        {title: "电话咨询", icon: require("../../static/home/dianhua.png")},
-        {title: "在线咨询", icon: require("../../static/home/im.png")},
+        {title: "微信咨询", icon: require("../../static/home/card.png")},
+        {title: "电话咨询", icon: require("../../static/home/im.png")},
+        // {title: "在线咨询", icon: require("../../static/home/im.png")},
       ],
 
       showTop: false,
@@ -96,28 +94,27 @@ export default {
 .list {
   flex-direction: column;
   width: 63px;
-  background: #FFFFFF;
-  border-radius: 8px 8px 8px 8px;
   padding: 0 5px;
 
   .item {
     position: relative;
     cursor: pointer;
-    width: 60px;
-    height: 62px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
     background: #ffffff;
-    transition: 0.3s;
     flex-direction: column;
     justify-content: center;
-    border-bottom: 1px solid #eee;;
+    margin-bottom: 14px;
+    margin-bottom: 14px;
 
     &:hover {
       opacity: 0.6;
     }
 
     img {
-      height: 20px;
-      width: 22px;
+      height: 28px;
+      width: 28px;
     }
 
   }
@@ -127,8 +124,8 @@ export default {
   flex-direction: column;
 
   img {
-    width: 13.52px !important;
-    height: 7.39px !important;
+    width: 32px;
+    height: 32px;
     margin-bottom: 5px;
   }
 }

@@ -100,7 +100,7 @@ export default {
     }
 
     .desc {
-      width: 1200px;
+      width: 1400px;
       .flex();
       justify-content: space-between;
 
@@ -136,7 +136,7 @@ export default {
 
     .line {
       margin-top: 63px;
-      width: 1200px;
+      width: 1400px;
       padding: 0 77px;
       .flex();
       justify-content: space-between;

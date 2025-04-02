@@ -983,7 +983,7 @@ export default {
 }
 
 .DIY-area {
-  width: 1200px;
+  width: 1400px;
   //height: 935px;
   background: #FFFFFF;
   border-radius: 8px;

@@ -72,7 +72,7 @@ export default {
   padding: 46px 0 56px;
 
   .item-wrap {
-    width: 1200px;
+    width: 1400px;
     margin: 0 auto;
     .flex();
     flex-wrap: wrap;
