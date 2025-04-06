@@ -7,6 +7,13 @@
           订单号：
           <span>{{ item.orderNo }}</span>
         </div>
+        <div class="order-name">
+          <img src="@/static/home/supplier.png" alt="">
+          <span>惠州市精瑞砂轮有限公司</span>
+        </div>
+        <div class="order-payType">
+          货到付款（付款期限：货到15天内）
+        </div>
         <div class="order-state" :class="'state-' + item.orderStatus">
           {{ item.statusInfo }}
         </div>
@@ -283,7 +290,6 @@ export default {
     }
 
     .order-code {
-      flex: 2;
       text-align: left;
       padding-left: 20px;
 
@@ -295,6 +301,23 @@ export default {
       span {
         color: #333333;
       }
+    }
+
+    .order-name {
+      font-weight: 500;
+      font-size: 16px;
+      color: #000000;
+      img {
+        width: 56px;
+        height: 20px;
+        margin-right: 10px;
+      }
+    }
+
+    .order-payType {
+      font-weight: 400;
+      font-size: 14px;
+      color: #FF0000;
     }
 
     .order-state {

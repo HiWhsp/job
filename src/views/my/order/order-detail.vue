@@ -1,46 +1,11 @@
 <template>
   <div class="page">
-    <!-- 图片预览 -->
-    <!-- <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt="" />
-    </el-dialog> -->
-
     <div class="main-title">
       <span>查看订单详情</span>
       <button @click="$router.push('/order-list')">返回</button>
     </div>
 
     <div class="page-ctx">
-      <div class="step-box">
-        <div class="step-item active">
-          <div class="step-number">
-            <div class="step-line step-line-1"></div>
-            <div class="step-num">1</div>
-            <div class="step-line step-line-2"></div>
-          </div>
-          <div class="step-title">订购时间</div>
-          <div class="step-date">{{ info.createdTime }}</div>
-        </div>
-        <div class="step-item" :class="{ active: info.orderStatus >= 3 }">
-          <div class="step-number">
-            <div class="step-line step-line-3"></div>
-            <div class="step-num">2</div>
-            <div class="step-line step-line-4"></div>
-          </div>
-          <div class="step-title">商品发货</div>
-          <div class="step-date" style="visibility: hidden">-</div>
-        </div>
-        <div class="step-item" :class="{ active: info.orderStatus >= 5 }">
-          <div class="step-number">
-            <div class="step-line step-line-5"></div>
-            <div class="step-num">3</div>
-            <div class="step-line step-line-6"></div>
-          </div>
-          <div class="step-title">订单收货</div>
-          <div class="step-date" style="visibility: hidden">-</div>
-        </div>
-      </div>
-
       <div class="order-other">
         <div class="title">订单信息</div>
         <div class="other">
@@ -67,12 +32,25 @@
             </div>
           </div>
 
-          <div class="item" v-if="peisong_type_text == '线下支付'">
+          <div class="item" v-if="peisong_type_text">
             <div class="item-title">支付及支付方式</div>
             <div class="item-content">
               <div class="date">
                 <span>支付方式：</span>
                 <span class="val">{{ peisong_type_text }}</span>
+              </div>
+              <div class="date">
+                <span>下单时间：</span>
+                {{ orderObj.createdTime }}
+              </div>
+              <div class="pay-type">
+                <span>配送方式：</span>
+                供应商自有物流
+                <!--                {{ fahuoInfo.expressName || '' }} {{ fahuoInfo.expressOrder || '' }}-->
+              </div>
+              <div class="date">
+                <span>付款方式：</span>
+                货到付款
               </div>
 
               <div class="data flex payImg">
@@ -83,10 +61,6 @@
                 </div>
               </div>
 
-              <div class="date">
-                <span>下单时间：</span>
-                {{ orderObj.createdTime }}
-              </div>
 
               <!--              <div class="pay-type">-->
               <!--                <span>配送方式：</span>-->
@@ -97,6 +71,28 @@
               <span>配送时间:</span>
               {{ orderObj.peisong_time }}
             </div> -->
+            </div>
+          </div>
+
+          <!-- 对公信息 -->
+          <div class="item back-card" v-if="true">
+            <div class="item-title">收款对公账户</div>
+            <div class="item-content">
+              <div class="date">
+                <span>收款单位名称：</span>
+                <span class="val">{{ bankList[0].company }}</span>
+                <img src="@/static/order/copy.png" alt="" @click="copyText(bankList[0].company)">
+              </div>
+              <div class="date">
+                <span>收款单位号码：</span>
+                <span class="val">{{ bankList[0].bankAccount }}</span>
+                <img src="@/static/order/copy.png" alt="" @click="copyText(bankList[0].bankAccount)">
+              </div>
+              <div class="date">
+                <span>开户银行：</span>
+                <span class="val">{{ bankList[0].bankName }}</span>
+                <img src="@/static/order/copy.png" alt="" @click="copyText(bankList[0].bankName)">
+              </div>
             </div>
           </div>
 
@@ -175,10 +171,7 @@
 
       <!-- 订单商品信息 -->
       <div class="order-product order-info">
-
-
         <div class="order-list-wrap">
-
           <!-- 商品信息 -->
           <div class="info-item">
             <div class="info-title">
@@ -187,7 +180,14 @@
                 订单号：
                 <span>{{ info.orderNo }}</span>
               </div>
-              <!--              <div class="order-state">{{ info.statusInfo }}</div>-->
+              <div class="order-name">
+                <img src="@/static/home/supplier.png" alt="">
+                <span>惠州市精瑞砂轮有限公司</span>
+              </div>
+              <div class="order-payType">
+                货到付款（付款期限：货到15天内）
+              </div>
+              <div class="order-state">{{ info.statusInfo }}</div>
             </div>
             <div class="info-good">
               <div class="list-good">
@@ -207,18 +207,11 @@
                       </div>
                       <div class="goods-sku">型号: {{ product_item.keyVals }}</div>
                     </div>
-
-                    <!--                    <div class="box-sku">-->
-                    <!--                      <div class="goods-sku">{{ product_item.keyVals }}</div>-->
-                    <!--                    </div>-->
                     <div class="box-num">{{ product_item.num }}</div>
                     <div class="box-price">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
                   </div>
 
                   <div class="goods-action" v-if="info.orderStatus == 5">
-                    <!-- <button v-if="!is_jifen_goods && item.allow_actions.allow_refund" class="btn-goods-action" @click="refundApply(item)">申请售后</button> -->
-                    <!-- <button v-if="item.ifshouhou" class="btn-goods-action disabled">已售后</button> -->
-                    <!-- <button v-if="item.allow_actions.allow_logistics" class="btn-goods-action" @click="toRoute(`/orderLogistics?orderId=${orderId}&logistics_id=${fahuo_id}`)">查看物流</button> -->
                     <button v-if="product_item.ifComment == 0" class="btn-goods-action"
                             @click="to_review(product_item)">
                       商品评价
@@ -236,29 +229,30 @@
                 <div class="label"></div>
                 <div class="value">共 <b class="count">{{ total_product_number }}</b> 件</div>
               </div>
+              <!--              <div class="money-item">-->
+              <!--                <span class="label">商品总价：</span>-->
+              <!--                <div class="value">-->
+              <!--                  <span class="money-num">{{ vuex_huobi }}{{ payInfo.goods }}</span>-->
+              <!--                </div>-->
+              <!--              </div>-->
+              <!--              <div class="money-item">-->
+              <!--                <span class="label">运费：</span>-->
+              <!--                <div class="value">-->
+              <!--                  <span class="money-num">{{ vuex_huobi }}{{ payInfo.foreignYunfei || 0 }}</span>-->
+              <!--                </div>-->
+              <!--              </div>-->
+              <!--              <div class="money-item">-->
+              <!--                <span class="label">满减：</span>-->
+              <!--                <div class="value">-->
+              <!--                  <span class="money-num">{{ vuex_huobi }}{{ payInfo.foreignManjian || 0 }}</span>-->
+              <!--                </div>-->
+              <!--              </div>-->
               <div class="money-item">
-                <span class="label">商品总价：</span>
-                <div class="value">
-                  <span class="money-num">{{ vuex_huobi }}{{ payInfo.goods }}</span>
-                </div>
-              </div>
-              <div class="money-item">
-                <span class="label">运费：</span>
-                <div class="value">
-                  <span class="money-num">{{ vuex_huobi }}{{ payInfo.foreignYunfei || 0 }}</span>
-                </div>
-              </div>
-              <div class="money-item">
-                <span class="label">满减：</span>
-                <div class="value">
-                  <span class="money-num">{{ vuex_huobi }}{{ payInfo.foreignManjian || 0 }}</span>
-                </div>
-              </div>
-              <div class="money-item">
-                <span class="label">合计：</span>
+                <span class="label">合计应付：</span>
                 <div class="value">
                   <span class="money-num money-total">{{ vuex_huobi }}{{ info.price }}</span>
                 </div>
+                （含税）
               </div>
 
               <!--              <div class="zhifufangshi-wrap" v-if="is_finish_pay">-->
@@ -270,29 +264,6 @@
               <!--                  </div>-->
               <!--                </div>-->
               <!--              </div>-->
-
-              <!-- <div class="money-item">
-          <span class="label">优惠券： </span>
-          <span class="money-num">- {{vuex_huobi}}{{ money_coupon }}</span>
-        </div>
-        <div class="money-item">
-          <span class="label">积分抵扣： </span>
-          <span class="money-num">- {{vuex_huobi}}{{ money_jifen_dixian }}</span>
-        </div>
-        <div class="money-item">
-          <span class="label">佣金： </span>
-          <span class="money-num">- {{vuex_huobi}}{{ money_yongjin_dixian }}</span>
-        </div> -->
-
-              <!-- <div class="zhifufangshi-wrap" v-if="isPayed">
-          <span>支付方式：</span>
-          <div class="zhifufangshi">
-            <div class="pay-item" v-for="(pay, index) in shiji_list_pay_info" :key="index">
-              <span class="pay-title">{{ pay.title }} </span>
-              <span class="pay-money">{{vuex_huobi}}{{ pay.money }}</span>
-            </div>
-          </div>
-        </div> -->
             </div>
           </div>
 
@@ -314,11 +285,31 @@
               <button class="btn-ripple fit-text btn-bg" @click="doRefund(info)">
                 售后
               </button>
+              <button class="btn-ripple fit-text btn-bg" @click="uploadPay(info)">
+                上传支付凭证
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <el-dialog title="上传支付凭证" :visible.sync="uploadPayModal" width="500px"
+               :before-close="handleClose">
+      <el-upload
+          class="upload-demo"
+          drag
+          action="https://jsonplaceholder.typicode.com/posts/"
+          multiple>
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">可添加JPG、PNG、PDF文件，大小限制10M以内</div>
+      </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="uploadPayModal = false">取 消</el-button>
+        <el-button type="primary" @click="uploadPayModal = false">确 定</el-button>
+      </div>
+    </el-dialog>
 
 
     <order_cancel_modal ref="order_cancel_modal" @confirm="emitConfirm" data-type="取消"/>
@@ -379,6 +370,8 @@ export default {
       xianxia_imgs: [], //线下凭证信息
       is_xianxia: false, //是否线下转款
       pay_type: "", //支付方式
+      bankList: [], // 线下卡列表
+      uploadPayModal: false
     };
   },
   computed: {
@@ -388,10 +381,25 @@ export default {
     this.setView();
   },
   methods: {
+    uploadPay(info) {
+      this.uploadPayModal = true
+    },
+    handleClose() {
+      this.uploadPayModal = false
+    },
+    // 获取线下卡列
+    getBankList() {
+      this.$api('pay_getOfflineBanks').then(res => {
+        if (res.code == 200) {
+          this.bankList = res.data
+        }
+      })
+    },
     emitConfirm() {
       this.setView();
     },
     setView() {
+      this.getBankList();
       this.query_order()
     },
 
@@ -539,79 +547,9 @@ export default {
 }
 
 .page-ctx {
-  margin-top: 24px;
+  margin-top: 10px;
   padding: 24px 32px;
   background: #fff;
-}
-
-.step-box {
-  .flex-center();
-  padding: 55px 0;
-
-  .step-item {
-    text-align: center;
-
-    &.active {
-      .step-number {
-        .step-num {
-          background: @theme;
-          color: #fff;
-        }
-
-        .step-line {
-          background: @theme;
-        }
-      }
-    }
-
-    .step-number {
-      margin: 0 auto;
-      .flex();
-
-      .step-line {
-        width: 147px;
-        height: 2px;
-        background: #f5f5f5;
-
-        &.step-line-1 {
-          visibility: hidden;
-        }
-
-        &.step-line-6 {
-          visibility: hidden;
-        }
-      }
-
-      .step-num {
-        width: 44px;
-        height: 44px;
-        line-height: 44px;
-        background: #FAF6F0;
-        border-radius: 50%;
-
-        font-size: 20px;
-        font-family: Roboto, Roboto-Regular, Roboto, Roboto;
-        font-weight: 400;
-        color: #999999;
-      }
-    }
-
-    .step-title {
-      margin-top: 14px;
-      margin-bottom: 10px;
-      font-family: Roboto, Roboto;
-      font-weight: 400;
-      font-size: 14px;
-      color: #808080;
-    }
-
-    .step-date {
-      font-family: Roboto, Roboto;
-      font-weight: 400;
-      font-size: 12px;
-      color: #808080;
-    }
-  }
 }
 
 .order-other {
@@ -642,7 +580,7 @@ export default {
     padding: 20px 25px;
 
     .item {
-      width: 50%;
+      width: 340px;
       margin-bottom: 10px;
       text-align: left;
       padding-right: 40px;
@@ -693,6 +631,43 @@ export default {
         }
       }
     }
+
+    .back-card {
+      background: #F8E9D2;
+      padding: 16px 20px;
+
+      .item-title {
+        font-weight: 500;
+        font-size: 18px;
+        color: #000000;
+        margin-bottom: 14px;
+      }
+
+      .item-content {
+        color: #000;
+
+        .date {
+          display: flex;
+          align-items: center;
+        }
+
+        span:first-child {
+          width: 110px;
+          text-align: right;
+        }
+
+        .val {
+          text-align: left;
+        }
+
+        img {
+          width: 12px !important;
+          height: 12px !important;
+          margin-left: 10px;
+          cursor: pointer;
+        }
+      }
+    }
   }
 }
 
@@ -710,10 +685,7 @@ export default {
   }
 }
 
-
 .order-info {
-
-
   .money-yh {
     span {
       color: #04be02;
@@ -781,12 +753,28 @@ export default {
       }
 
       .order-code {
-        flex: 2;
         text-align: left;
         //padding-left: 20px;
-
         span {
         }
+      }
+
+      .order-name {
+        font-weight: 500;
+        font-size: 16px;
+        color: #000000;
+
+        img {
+          width: 56px;
+          height: 20px;
+          margin-right: 10px;
+        }
+      }
+
+      .order-payType {
+        font-weight: 400;
+        font-size: 14px;
+        color: #FF0000;
       }
 
       .order-state {
@@ -1016,6 +1004,10 @@ export default {
 
     }
   }
+}
+
+.upload-demo {
+  text-align: center;
 }
 </style>
 

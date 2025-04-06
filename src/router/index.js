@@ -34,6 +34,11 @@ const routes = [
         name: "productCategories",
         component: () => import('@/views/product/classify.vue')
     },
+    {
+        path: "/product-all",
+        name: 'product-all',
+        component: () => import('@/views/product/classify-all.vue')
+    },
     // 商品详情
     {
         path: '/productDetail',
@@ -42,76 +47,31 @@ const routes = [
     },
 
     /** 导航路由 **/
-    // 特惠商城
+    // 意见反馈
     {
-        path: '/discountShop',
-        name: 'discountShop',
-        component: () => import('@/views/nav/discountShop.vue')
-    },
-    // 低价商城
-    {
-        path: '/lowPriceShop',
-        name: 'lowPriceShop',
-        component: () => import('@/views/nav/lowPriceShop.vue')
-    },
-    // 每月新款
-    {
-        path: '/newMonthShop',
-        name: 'newMonthShop',
-        component: () => import('@/views/nav/newMonthShop.vue')
-    },
-    // 定制组件专区
-    {
-        path: '/customization',
-        name: 'customization',
-        component: () => import('@/views/nav/customization.vue')
-    },
-    // diy组件专区
-    {
-        path: '/diy',
-        name: 'diy',
-        component: () => import('@/views/nav/diy.vue')
-    },
-    // 非标定制
-    {
-        path: '/nonstandard',
-        name: 'nonstandard',
-        component: () => import('@/views/nav/nonstandard.vue')
-    },
-    // 非标定制提交成功页面
-    {
-        path: '/nonstandard_success',
-        name: 'nonstandard_success',
-        component: () => import('@/views/nav/nonstandard_success.vue')
-    },
-    // 快速报价
-    {
-        path: '/fastQuotation',
-        name: 'fastQuotation',
-        component: () => import('@/views/nav/fastQuotation.vue')
-    },
-
-
-    /** 积分商城相关 **/
-    {
-        path: '/pointsMall',
-        name: 'pointsMall',
-        component: () => import('@/views/my/points/pointsMall.vue'),
+        path: '/feedback',
+        name: 'feedback',
+        component: () => import('@/views/nav/feedback.vue'),
         meta: {
-            title: "积分商城",
+            title: "意见反馈",
             requireAuth: true
         }
     },
     {
-        path: '/pointsMallDetail',
-        name: 'pointsMallDetail',
-        component: () => import('@/views/my/points/jifengoodsdetail.vue'),
+        path: '/about',
+        name: 'about',
+        component: () => import('@/views/nav/about.vue'),
         meta: {
-            title: "积分商品详情",
+            title: "关于我们",
             requireAuth: true
         }
     },
 
+    {
+        path: '/policy',
+        name: 'Policy',
+        component: () => import('@/views/company/policy.vue'),
+    },
 
     /** 登录相关 **/
     {
@@ -149,36 +109,6 @@ const routes = [
         component: () => import('@/views/order/payment-success.vue')
     },
 
-    /** 帮助中心 **/
-    {
-        path: '/help',
-        name: 'help',
-        component: () => import('@/views/service/helpCenter.vue')
-    },
-
-    /** 关于 **/
-    {
-        path: '/about',
-        name: 'about',
-        component: () => import('@/views/company/companyProfile.vue')
-    },
-    {
-        path: '/xinhun-detail',
-        name: 'xinhun-detail',
-        component: () => import('@/views/company/xinwen_detail.vue')
-    },
-
-    /** 公告 **/
-    {
-        path: '/notice',
-        name: 'notice',
-        component: () => import('@/views/notice/index.vue')
-    },
-    {
-        path: '/notice-detail',
-        name: 'notice-detail',
-        component: () => import('@/views/notice/notice-detail.vue')
-    },
 
     /** 个人中心 **/
     {
@@ -218,137 +148,11 @@ const routes = [
                 },
             },
             {
-                path: "/order-quotation-list",
-                name: "order-quotation-list",
-                component: () => import('@/views/my/order/order-quotation-list.vue'),
+                path: '/collect',
+                name: 'collect',
+                component: () => import('@/views/my/collect.vue'),
                 meta: {
-                    title: "报价单列表",
-                    requireAuth: true,
-                },
-            },
-            {
-                path: "/order-quotation-detail",
-                name: "order-quotation-detail",
-                component: () => import('@/views/my/order/order-quotation-detail.vue'),
-                meta: {
-                    title: "报价单详情",
-                    requireAuth: true,
-                },
-            },
-            {
-                path: "/refund-list",
-                name: "refund-list",
-                component: () => import('@/views/my/refund/myRefund.vue'),
-                meta: {
-                    title: "售后订单",
-                    requireAuth: true,
-                },
-            },
-            {
-                path: '/refundType',
-                name: 'refundType',
-                component: () => import('@/views/my/refund/refundType.vue'),
-                meta: {
-                    title: "售后类型",
-                    requireAuth: true,
-                }
-            },
-            {
-                path: '/refundSubmit',
-                name: 'refundSubmit',
-                component: () => import('@/views/my/refund/refundSubmit.vue'),
-                meta: {
-                    title: "售后提交",
-                    requireAuth: true,
-                }
-            },
-            {
-                path: "/refund-detail",
-                name: "refund-detail",
-                component: () => import('@/views/my/refund/refundServiceDetail.vue'),
-                meta: {
-                    title: "售后详情",
-                    requireAuth: true,
-                },
-            },
-            {
-                path: "/invoice-list",
-                name: "invoice-list",
-                component: () => import('@/views/my/invoice-list.vue'),
-                meta: {
-                    title: "发票信息",
-                    requireAuth: true,
-                }
-            },
-            {
-                path: "/invoice-detail",
-                name: "invoice-detail",
-                component: () => import('@/views/my/invoice-detail.vue'),
-                meta: {
-                    title: "发票信息",
-                    requireAuth: true,
-                }
-            },
-            {
-                path: '/review-list',
-                name: 'review-list',
-                component: () => import('@/views/my/order/my-review-list.vue'),
-                meta: {
-                    title: "评价列表",
-                    requireAuth: true,
-                },
-            },
-            {
-                path: '/review-submit',
-                name: 'review-submit',
-                component: () => import('@/views/my/order/order-review-submit.vue'),
-                meta: {
-                    title: "评价提交",
-                    requireAuth: true,
-                },
-            },
-            {
-                path: '/coupon-list',
-                name: 'coupon-list',
-                component: () => import('@/views/my/coupon/myCoupon.vue'),
-                meta: {
-                    title: "我的优惠券",
-                    requireAuth: true,
-                },
-            },
-            {
-                path: '/couponCenter',
-                name: 'couponCenter',
-                component: () => import('@/views/my/coupon/couponCenter.vue'),
-                meta: {
-                    title: "领券中心",
-                    requireAuth: true,
-                },
-            },
-            {
-                path: '/pointsDetail',
-                name: 'pointsDetail',
-                component: () => import('@/views/my/points/pointsDetail.vue'),
-                meta: {
-                    title: "我的积分",
-                    requireAuth: true
-                }
-            },
-            {
-                path: '/feedback',
-                name: 'feedback',
-                component: () => import('@/views/my/feedback/feedback.vue'),
-                meta: {
-                    title: "积分商城",
-                    requireAuth: true
-                }
-            },
-            {
-                path: '/my-feedback',
-                name: 'my-feedback',
-                component: () => import('@/views/my/feedback/my-feedback.vue'),
-                meta: {
-                    title: "积分商城",
+                    title: "我的收藏",
                     requireAuth: true
                 }
             },
@@ -380,12 +184,12 @@ const routes = [
                 },
             },
             {
-                path: '/message',
-                name: 'message',
-                component: () => import('@/views/my/myMessage.vue'),
+                path: "/purchase-count",
+                name: "purchase-count",
+                component: () => import('@/views/my/purchase-count.vue'),
                 meta: {
-                    title: "消息",
-                    requireAuth: true
+                    title: "采购统计",
+                    requireAuth: true,
                 }
             }
         ]

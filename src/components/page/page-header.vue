@@ -22,7 +22,7 @@
           <div class="search flex">
             <el-input v-model="searchInput" placeholder="请输入您要搜索的产品"></el-input>
             <el-button type="primary" icon="el-icon-search"
-                       @click="searchClick({url: `/productCategories?keyword=${searchInput}`})">搜索
+                       @click="searchClick({url: `/product-all?keyword=${searchInput}`})">搜索
             </el-button>
           </div>
         </div>
@@ -64,13 +64,13 @@ export default {
           title: '意见反馈', // 名称
           icon: null,
           position: null,
-          url: '/lowPriceShop'
+          url: '/feedback'
         },
         {
           title: '联系我们', // 名称
           icon: null,
           position: 'l',
-          url: '/newMonthShop'
+          url: '/about'
         }
       ],
       // 热门搜索

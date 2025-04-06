@@ -5,7 +5,7 @@
     </div>
     <div class="page-ctx">
       <div class="section">
-        <div class="section-title">基本信息</div>
+<!--        <div class="section-title">基本信息</div>-->
         <div class="section-ctx">
           <div class="item upload-box">
             <span class="text">头像：</span>
@@ -282,7 +282,6 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: ;
       color: #fff;
       font-size: 14px;
       font-weight: bold;

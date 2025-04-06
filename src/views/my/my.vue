@@ -3,10 +3,11 @@
     <div class="inner">
       <div class="page-ctx">
         <div class="user-left">
-          <div class="nav-wrap">
-            <div class="nav-item" v-for="(item, index) in filter_userMenu" :key="index">
-              <div class="nav-title main-title" v-if="!item.route || item.is_main"
+          <div class="nav-wrap" v-for="(it, i) in filter_userMenu" :key="i">
+            <div class="nav-item" v-for="(item, index) in it" :key="index">
+              <div class="nav-title main-title" v-if="!item.route || item.is_main" :style="{'paddingLeft': item.route == 'my-index' ? '10px' : '25px'}"
                    :class="$route.name == item.route ? 'active' : ''" @click="do_toggle_nav(item)">
+                <img src="@/static/prod/vip.png" alt="" v-if="item.route == 'my-index'">
                 {{ item.title }}
               </div>
               <div v-else class="nav-title link" :class="$route.name == item.route ? 'active' : ''"
@@ -34,140 +35,44 @@ export default {
     return {
       //个人中心导航
       userMenu: [
-        {
-          title: "会员中心",
-          route: "my-index",
-          is_main: true
-        },
-
-        //订单中心
-        {
-          title: "订单中心",
-          route: "",
-        },
-        {
-          title: "订单列表",
-          route: "order-list",
-        },
-        {
-          title: "报价单列表",
-          route: "order-quotation-list",
-        },
-        {
-          title: "售后订单",
-          route: "refund-list",
-        },
-        {
-          title: "购物车下单",
-          route: "cart",
-        },
-        {
-          title: "我的评价",
-          route: "review-list",
-        },
-        {
-          title: "发票信息",
-          route: "invoice-list",
-        },
-
-        //我的活动
-        {
-          title: "我的活动",
-          route: "",
-        },
-        {
-          title: "我的优惠券",
-          route: "coupon-list",
-        },
-        {
-          title: "领券中心",
-          route: "couponCenter",
-        },
-        {
-          title: "我的积分",
-          route: "pointsDetail",
-        },
-        {
-          title: "积分商城",
-          route: "pointsMall",
-        },
-
-        //反馈问题
-        {
-          title: "问题反馈",
-          route: "",
-        },
-        {
-          title: "反馈问题",
-          route: "feedback",
-        },
-        {
-          title: "我的问题",
-          route: "my-feedback",
-        },
-
-        //个人设置
-        {
-          title: "个人设置",
-          route: "",
-        },
-        {
-          title: "收货地址",
-          route: SHOP_TYPE == 'foreign' ? "foreign-address-list" : "address-list",
-        },
-
-        {
-          title: "个人资料",
-          route: "my-info",
-        },
-
-        {
-          title: "修改密码",
-          route: "change-password",
-        },
-
-
-        // {
-        //   title: "意见反馈",
-        //   route: "feedback",
-        // },
-        // {
-        //   title: "我的优惠券",
-        //   route: "myCoupon",
-        // },
-        // {
-        //   title: "领券中心",
-        //   route: "couponCenter",
-        // },
-        // {
-        //   title: "账户资金",
-        //   route: "",
-        // },
-        // {
-        //   title: "我的佣金",
-        //   route: "myCommission",
-        // },
-        // {
-        //   title: "我的业绩",
-        //   route: "myYeJi",
-        // },
-
-        // {
-        //   title: "我的团队",
-        //   route: "myTeam",
-        // },
-        // {
-        //   title: "分润统计",
-        //   route: "myFenRun",
-        // },
-        // {
-        //   title: "在线充值",
-        //   route: "yueChongzhi",
-        // },
-        // {
-        //   title: "余额明细",
-        //   route: "yueMingxi",
-        // },
+          [
+            {
+              title: "采购会员",
+              route: "my-index",
+              is_main: true
+            },
+            {
+              title: "我的订单",
+              route: "order-list",
+            },
+            {
+              title: "我的收藏",
+              route: "collect",
+            },
+            {
+              title: "个人信息",
+              route: "my-info",
+            },
+            {
+              title: "地址管理",
+              route: SHOP_TYPE == 'foreign' ? "foreign-address-list" : "address-list",
+            },
+            {
+              title: "修改密码",
+              route: "change-password",
+            }
+          ],
+          [
+            {
+              title: "数据统据",
+              route: "",
+              is_main: true
+            },
+            {
+              title: "采购统计",
+              route: "purchase-count",
+            },
+          ]
       ],
 
       activeRoute: "",
@@ -227,6 +132,7 @@ export default {
     width: @width;
     margin: 0 auto;
     min-height: 70vh;
+    padding-bottom: 50px;
 
     .page-ctx {
       padding-top: 30px;
@@ -239,7 +145,7 @@ export default {
       margin-bottom: 50px;
 
       .nav-wrap {
-        background: #f9f9f9;
+        margin-top: 10px;
         background: #fff;
         padding-bottom: 20px;
         padding-top: 15px;
@@ -259,6 +165,10 @@ export default {
             font-size: 12px;
             color: #808080;
 
+            img {
+              width: 24px;
+              height: 24px;
+            }
 
             &.link {
               margin-bottom: 4px;
@@ -318,10 +228,13 @@ export default {
           }
         }
       }
+      .nav-wrap:first-child {
+        margin-top: 0;
+      }
     }
 
     .user-right {
-      width: 960px;
+      flex: 1;
       margin-left: 20px;
       min-height: 50vh;
       .page {

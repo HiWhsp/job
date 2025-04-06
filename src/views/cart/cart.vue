@@ -1,12 +1,14 @@
 <template>
   <div class="page">
-    <div class="inner">
-      <div class="main-title">
-        <div class="left">
-          <span>购物车</span>
-        </div>
-      </div>
+    <div class="nav-bar">
+      <el-breadcrumb separator=">">
+        <el-breadcrumb-item><img src="@/static/home/home.png" alt="">当前位置</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>购物车</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
 
+    <div class="inner">
       <!-- 商品列表 -->
       <div class="ctx-box">
         <div class="list cart-list">
@@ -14,11 +16,10 @@
             <!-- 标题 -->
             <div class="list-title">
               <div class="title-1">选择</div>
-              <div class="title-2" style="text-align: left; padding-left: 0px">商品信息</div>
-              <div class="title-4">单价(含税)</div>
+              <div class="title-2" style="text-align: left; padding-left: 0px">产品信息</div>
+              <div class="title-4">单价</div>
               <div class="title-5">数量</div>
-              <div class="title-6">小计(含税)</div>
-              <div class="title-3">库存/交期</div>
+              <div class="title-6">小计</div>
               <div class="title-7">操作</div>
             </div>
 
@@ -54,9 +55,6 @@
                 <div class="box-subtotal">{{ vuex_huobi }} {{
                     (item.priceSale * item.num).toFixed(2)
                   }}
-                </div>
-                <div class="box-inventory">
-                  {{ item.num < 10 ? '7个工日内' : '7-10个工日内' }}
                 </div>
                 <div class="box-act">
                   <!-- <div class="goods-action-box" v-if="false">
@@ -94,9 +92,9 @@
           <div class="delete-box">
             <span @click="do_cart_remove_select()">删除选中</span>
           </div>
-          <div class="clear-box">
-            <span @click="do_cart_clear()">清空购物车</span>
-          </div>
+<!--          <div class="clear-box">-->
+<!--            <span @click="do_cart_clear()">清空购物车</span>-->
+<!--          </div>-->
 
           <div class="total-number">
             已选择
@@ -393,8 +391,6 @@ export default {
       }
       this.shopcart_updateNum(item);
     },
-
-
   },
 };
 </script>
@@ -403,13 +399,18 @@ export default {
 /deep/ .order-list-wrap {
   margin-top: 30px;
 }
+.nav-bar {
+  img {
+    width: 14px;
+    margin-right: 10px;
+  }
+  margin-bottom: 20px;
+}
 
 .page {
-  width: 100%;
-  background: #FFFFFF;
   text-align: center;
   font-size: 14px;
-  padding-top: 40px;
+
 
   .inner {
     width: @width;
@@ -423,24 +424,9 @@ export default {
     color: #333333;
   }
 
-  .main-title {
-    padding-bottom: 16px;
-    border-bottom: 1px solid #D5D8DE;
-    text-align: left;
-
-    .left {
-      font-family: Microsoft YaHei, Microsoft YaHei;
-      font-weight: 400;
-      font-size: 24px;
-      color: #333333;
-      font-style: normal;
-      text-transform: none;
-    }
-  }
-
   .ctx-box {
     background: #fff;
-    padding: 18px 0;
+    padding: 20px;
 
     .list {
       border-bottom: 1px solid #E6E4E1;
@@ -577,7 +563,7 @@ export default {
 
           .box-unit-price {
             width: 150px;
-            color: #EA3200;
+            color: #0B0B0B;
           }
 
           .box-number {
@@ -607,7 +593,7 @@ export default {
 
           .box-subtotal {
             width: 150px;
-            color: #EA3200;
+            color: #0B0B0B;
           }
 
           .box-inventory {
@@ -667,7 +653,6 @@ export default {
   padding: 20px 35px;
   margin-top: 18px;
   height: 86px;
-  background: #FAFBFC;
 
   .all-select {
     cursor: pointer;
@@ -699,7 +684,8 @@ export default {
 
   .delete-box {
     cursor: pointer;
-    width: fit-content;
+    text-align: left;
+    flex: 2;
 
     span {
       font-family: OPPOSans, OPPOSans;
@@ -717,7 +703,7 @@ export default {
     cursor: pointer;
     margin-left: 34px;
     flex: 2;
-    text-align: left;
+
 
     span {
       font-family: OPPOSans, OPPOSans;
