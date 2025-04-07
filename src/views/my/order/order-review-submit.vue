@@ -58,7 +58,7 @@
 
           <div class="upload-box">
             <el-upload class="upload-demo" list-type="picture-card" accept="image/*" multiple name="img"
-                       action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload"
+                       action="https://shalunxiehui.dx.hdapp.com.cn/api?action=index_ossUpload"
                        :limit="upload_limit_number" :data="mix_upload_data"
                        :on-success="upload_on_success" :on-remove="upload_on_remove"
                        :before-upload="upload_before_upload">

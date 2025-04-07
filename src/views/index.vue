@@ -16,26 +16,26 @@
     <div class="sand-materials main">
       <!-- 分类标签 -->
       <div class="category-tabs">
-        <button v-for="(item, index) in categories" :key="index" :class="{ active: selectedCategory === item }"
+        <button v-for="(item, index) in vuexFlatCates" :key="index" :class="{ active: selectedCategory.name === item.name }"
                 @click="selectedCategory = item">
-          {{ item }}
+          {{ item.name }}
         </button>
       </div>
 
-      <div class="column-flex-center wrap">
+      <div class="column-flex-center wrap" v-for="(item, index) in product_list" :key="index">
         <!-- 材料详情 -->
         <div class="material-info">
           <div class="text-section">
-            <h3>{{ selectedCategory }}</h3>
+            <h3>{{ item.name }}</h3>
             <p class="description">
-              棕刚玉，又名金刚砂，是一种棕褐色人造刚玉。它主要由铝矾土（煅土）、碳素材料（如无烟煤/硬质焦炭）、铁屑等原料在电弧炉中经过2200度高温冶炼然后再加工制成，耐火度达1850度以上。
+              {{ item.introduce }}
             </p>
             <p class="features">
-              特征：硬度高、韧性大、高密度、高耐磨、高耐火、耐腐蚀。
+              特征：{{ item.feature }}
             </p>
           </div>
           <div class="image-section">
-            <img src="@/static/home/material.png" alt="棕刚玉"/>
+            <img :src="item.cover_url_full" :alt="item.name"/>
           </div>
         </div>
 
@@ -50,9 +50,9 @@
             <a href="/product-all" class="more-link">查看全部供应商 ></a>
           </div>
           <div class="supplier-grid">
-            <div v-for="(supplier, index) in suppliers" :key="index" class="supplier" @click="toProduct(supplier)">
+            <div v-for="(supplier, i) in item.user_list" :key="i" class="supplier" @click="toProduct(supplier)">
               <img src="@/static/home/supplier.png" alt="">
-              {{ supplier }}
+              {{ supplier.name }}
             </div>
           </div>
         </div>
@@ -74,18 +74,10 @@ export default {
   },
   data() {
     return {
+      keyword: "",
       // 首屏展示类型
       product_list: [],
-      selectedCategory: "棕刚玉（A）",
-      categories: [
-        "棕刚玉（A）", "白刚玉（WA）", "铬刚玉（PA）", "微晶刚玉（MA）", "单晶刚玉（SA）", "绿碳化硅（GC）", "黑碳化硅（C）",
-        "陶瓷刚玉（CA）", "高岭土", "锆长石", "碳玻璃", "滑石粉", "轻质碳酸钙", "石英粉"
-      ],
-      suppliers: [
-        "江西西亿研磨股份有限公司", "贵州南杰砂轮有限公司", "惠州市精瑞砂轮有限公司", "衢州中润川兴五金有限公司",
-        "江西西亿研磨股份有限公司", "贵州南杰砂轮有限公司", "惠州市精瑞砂轮有限公司", "江西西亿研磨股份有限公司",
-        "衢州中润川兴五金有限公司", "惠州市精瑞砂轮有限公司"
-      ]
+      selectedCategory: {}
     };
   },
   computed: {
@@ -94,6 +86,15 @@ export default {
       filterList: state => state.vuexTreeCates,
       index_banners: state => state.index_banners
     }),
+  },
+  watch: {
+    vuexFlatCates() {
+      this.selectedCategory = this.vuexFlatCates[0];
+    },
+    selectedCategory() {
+      this.keyword = this.selectedCategory.name;
+      this.setView();
+    }
   },
   mounted() {
     this.setView();
@@ -105,14 +106,12 @@ export default {
     // 获取商品列表
     query_product_cate() {
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: "index",
+        method: "post",
         data: {
-          action: "product_plist",
-          ifShowSku: 1,
-          channelId: 0,
           page: 1,
-          pageNum: 10,
+          pageSize: 10,
+          keyword: this.keyword
         },
       }).then((res) => {
         let {code, data} = res;
@@ -120,33 +119,8 @@ export default {
           let {list, count} = data;
           this.product_list = list;
           this.count = count;
-
-          // for (let i = 0; i < list.length; i += 5) {
-          //   this.promationList.push(list.slice(i, i + 5));
-          // }
-          // console.log(this.promationList)
         }
       });
-      // 推荐商品
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "product_plist",
-          ifShowSku: 1,
-          channelId: 811,
-          page: 1,
-          pageNum: 10,
-        },
-      }).then((res) => {
-        let {code, data} = res;
-        let {list, count} = data;
-        if (code == 200) {
-          for (let i = 0; i < list.length; i += 5) {
-            this.promationList.push(list.slice(i, i + 5));
-          }
-        }
-      })
     },
     // 跳转链接
     goUrl(item) {
@@ -154,7 +128,7 @@ export default {
     },
     // 跳转商品
     toProduct(item) {
-      this.$router.push(`/productCategories?ids=${item.id}`);
+      this.$router.push(`/productCategories?ids=${item.user_id}`);
     }
   },
 }
@@ -244,6 +218,7 @@ export default {
   }
 
   .material-info {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -283,6 +258,7 @@ export default {
   }
 
   .suppliers {
+    width: 100%;
     margin-top: 30px;
 
     .title-section {

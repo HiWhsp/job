@@ -3,10 +3,24 @@ export default {
   name: "policy",
   data() {
     return {
-
+      content: ''
     }
   },
-  methods: {}
+  mounted() {
+    this.setView();
+  },
+  methods: {
+    setView() {
+      this.$api({
+        url: 'privacyAgreement',
+        method: 'get',
+      }).then(res=>{
+        if(res.code == 200){
+          this.content = res.data.privacy_agreement;
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -21,7 +35,7 @@ export default {
     </div>
     <div class="item-wrap">
       <div class="title">隐私协议</div>
-      <div class="content"></div>
+      <div class="content" v-html="content"></div>
     </div>
   </div>
 </template>

@@ -52,19 +52,11 @@ const routes = [
         path: '/feedback',
         name: 'feedback',
         component: () => import('@/views/nav/feedback.vue'),
-        meta: {
-            title: "意见反馈",
-            requireAuth: true
-        }
     },
     {
         path: '/about',
         name: 'about',
         component: () => import('@/views/nav/about.vue'),
-        meta: {
-            title: "关于我们",
-            requireAuth: true
-        }
     },
 
     {
@@ -101,12 +93,20 @@ const routes = [
     {
         path: '/orderSubmit',
         name: 'orderSubmit',
-        component: () => import('@/views/order/order-submit.vue')
+        component: () => import('@/views/order/order-submit.vue'),
+        meta: {
+            title: "下单",
+            requireAuth: true
+        }
     },
     {
         path: '/payment-success',
         name: 'payment-success',
-        component: () => import('@/views/order/payment-success.vue')
+        component: () => import('@/views/order/payment-success.vue'),
+        meta: {
+            title: "支付成功",
+            requireAuth: true
+        }
     },
 
 

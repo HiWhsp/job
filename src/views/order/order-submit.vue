@@ -75,7 +75,7 @@ z`
             <el-upload
                 multiple
                 name="img"
-                action="https://fjjx.dx.hdapp.com.cn/service.php?action=index_ossUpload"
+                action="https://shalunxiehui.dx.hdapp.com.cn/api?action=index_ossUpload"
                 list-type="picture-card"
                 :on-success="handleSuccessImg"
             >

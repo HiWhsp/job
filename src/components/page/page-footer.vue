@@ -7,21 +7,21 @@
             <img src="../../static/home/icon1.png" alt="" style="width: 34px;height: 40px">
             <div class="service-content">
               <p>地址</p>
-              <p>江西省宜春市奉新县高新技术产业园</p>
+              <p>{{ webConfig.site_address }}</p>
             </div>
           </div>
           <div class="service">
             <img src="../../static/home/icon2.png" alt="" style="width: 40px;height: 40px">
             <div class="service-content">
               <p>服务热线</p>
-              <p>400-006-XXXX（业务咨询）</p>
+              <p>{{  webConfig.site_tel }}</p>
             </div>
           </div>
           <div class="service">
             <img src="../../static/home/icon3.png" alt="" style="width: 40px;height: 30px">
             <div class="service-content">
               <p>期待您的来信</p>
-              <p>dexinggongcheng@188.com</p>
+              <p>{{  webConfig.email }}</p>
             </div>
           </div>
         </div>
@@ -29,9 +29,9 @@
       <div class="len"></div>
       <div class="copyright flex flex-center">
         <p class="info">
-          Copyright © 2024 奉新砂轮行业协会 All Rights Reserved.
+          Copyright © 2025 奉新砂轮行业协会 All Rights Reserved.
           <span style="margin: 0 10px;">|</span>
-          <a href="">蜀ICP备11019833号</a>
+          <a href="">{{  webConfig.beian }}</a>
         </p>
       </div>
     </div>

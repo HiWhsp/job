@@ -3,7 +3,7 @@
     <div class="top-box">
       <div class="content flex flex-between">
         <div class="l-box flex">
-          <span class="name">欢迎来到奉新县砂轮行业协会-砂轮原辅材料交易采购平台！</span>
+          <span class="name">{{ webConfig.shouye_welcome }}</span>
         </div>
         <div class="r-box flex pointer">
           <div class="tit" @click="goUrl({url: '/about'})">采购会员中心</div>
@@ -80,13 +80,7 @@ export default {
   computed: {
     ...mapState({
       userInfo: state => state.userInfo,
-      configInfo: state => state.configInfo
     })
-  },
-  watch: {
-    configInfo(val) {
-      this.searchHot = JSON.parse(val.hotSearch);
-    }
   },
   methods: {
     // 跳转链接

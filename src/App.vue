@@ -32,7 +32,6 @@ export default {
   },
   mounted() {
     this.initScale();
-    this.queryConfig();
   },
   methods: {
     // scrollToTop() {
@@ -59,16 +58,6 @@ export default {
           document.documentElement.style.fontSize = fontSize + "px";
         }
       }
-    },
-
-    queryConfig() {
-      this.$api("index_config").then((res) => {
-        if (res.data && res.data.com_logo) {
-          document
-              .querySelector('meta[property="og:image"]')
-              .setAttribute("content", res.data.com_logo);
-        }
-      });
     },
   },
 };

@@ -8,10 +8,10 @@
       <div class="inner">
         <div class="input-wrap">
           <div class="tab-box">
-            <div class="tab-item" :class="{'active': tabType == '供应商'}" @click="tabType = '供应商'">
+            <div :class="{'active': tabType == '供应商'}" class="tab-item" @click="tabType = '供应商'">
               供应商
             </div>
-            <div class="tab-item" :class="{'active': tabType == '采购商'}" @click="tabType = '采购商'">
+            <div :class="{'active': tabType == '采购商'}" class="tab-item" @click="tabType = '采购商'">
               采购商
             </div>
           </div>
@@ -50,10 +50,12 @@
         </div>
         <div class="terms-box">
           <el-checkbox v-model="agreed" style="margin-right: 5px;"></el-checkbox>
-          我已阅读并同意 <span @click="terms_open(83)">《隐私政策》</span>
+          我已阅读并同意 <span @click="terms_open()">《隐私政策》</span>
         </div>
       </div>
     </div>
+
+    <img alt="" class="tit-logo" src="@/static/account/logo.png">
   </div>
 </template>
 
@@ -187,9 +189,8 @@ export default {
           });
     },
 
-    terms_open(id) {
-      this.$refs.modalTerms.init(id);
-      // this.$refs.modalRich.init(id);
+    terms_open() {
+      this.$router.push('/policy');
     },
     setView() {
       if (localStorage.getItem("save1")) {
@@ -240,63 +241,39 @@ export default {
       let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
 
       //手机号密码登录
-      if (this.tabType == "PASS") {
-        if (!reg_phone.test(this.form.phone)) {
-          alertErr("请输入正确的手机号");
-          return;
-        }
-        if (!this.form.password) {
-          alertErr("请输入密码");
-          return;
-        }
-
-        this.$api("users_phoneLogin", {
-          type: 0, //0-账号密码 登录     1-账号 验证码登录
-          phone: phone,
-          password: password,
-        }).then((res) => {
-          //console.log("登录", res);
-          let {code, data, message} = res;
-          if (code == 0) {
-            this.$message.error(res.message);
-          } else if (code == 1) {
-            if (this.savePass) {
-              localStorage.setItem("save1", this.encodeString(this.form.phone));
-              localStorage.setItem("save2", this.encodeString(this.form.password));
-            } else {
-              localStorage.setItem("save1", "");
-              localStorage.setItem("save2", "");
-            }
-
-            this.$store.commit("set_baseInfo", data);
-            this.$store.dispatch("getUserloginedInfo");
-
-            // this.$router.push("/");
-            this.$router.push("/myOrder");
-          }
-        });
-      } else {
-        //手机号验证码登录
-        if (!code) {
-          alertErr("请输入短信验证码");
-          return;
-        }
-
-        this.$api("users_codeLogin", {
-          phone,
-          code,
-        }).then((res) => {
-          //console.log("登录", res);
-          let {code, data, message} = res;
-
-          if (code == 1) {
-            this.$store.commit("set_baseInfo", data);
-            this.$store.dispatch("getUserloginedInfo");
-
-            this.$router.push("/");
-          }
-        });
+      if (!reg_phone.test(this.form.phone)) {
+        alertErr("请输入正确的手机号");
+        return;
       }
+      if (!this.form.password) {
+        alertErr("请输入密码");
+        return;
+      }
+
+      this.$api("web_login", {
+        mobile: phone,
+        password: password,
+      }).then((res) => {
+        //console.log("登录", res);
+        let {code, data, message} = res;
+        if (code == 0) {
+          this.$message.error(res.message);
+        } else if (code == 1) {
+          if (this.savePass) {
+            localStorage.setItem("save1", this.encodeString(this.form.phone));
+            localStorage.setItem("save2", this.encodeString(this.form.password));
+          } else {
+            localStorage.setItem("save1", "");
+            localStorage.setItem("save2", "");
+          }
+
+          this.$store.commit("set_baseInfo", data);
+          this.$store.dispatch("getUserloginedInfo");
+
+          // this.$router.push("/");
+          this.$router.push("/myOrder");
+        }
+      });
     },
 
     //条款
@@ -314,6 +291,15 @@ export default {
 .page {
   width: 100%;
   position: relative;
+
+  .tit-logo {
+    position: absolute;
+    width: 640px;
+    height: 84px;
+    z-index: 999;
+    top: 260px;
+    left: 520px;
+  }
 
   .mask {
     background: rgba(0, 0, 0, 0.6) url(../../static/account/login-bg.png) 100% 100% no-repeat;

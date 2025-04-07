@@ -9,51 +9,10 @@ const api = ajax.api; //请求方法
 
 // 处理产品分类数据
 function handle_product_cate_data(cateTreeList) {
-  let root_route = "/product-cates?ids="; //配件产品
-
-  let cateFlatList = [];
-  cateTreeList.forEach((level1) => {
-    level1.level = "1";
-    level1.idlist = [level1.id];
-    level1.ids = level1.idlist.join("-");
-    level1.route = root_route + level1.ids;
-
-    cateFlatList.push({
-      ...level1,
-    });
-
-    let list_cates_level2 = level1.channels; //.filter(v => v.is_show || 1);
-    if (list_cates_level2.length) {
-      list_cates_level2.forEach((level2) => {
-        level2.level = "2";
-        level2.idlist = [level1.id, level2.id];
-        level2.ids = level2.idlist.join("-");
-        level2.route = root_route + level2.ids;
-
-        cateFlatList.push({
-          ...level2,
-        });
-
-        let list_cates_level3 = level2.channels; //.filter(v => v.is_show || 1);
-        if (list_cates_level3.length) {
-          list_cates_level3.forEach((level3) => {
-            level3.level = "3";
-            level3.idlist = [level1.id, level2.id, level3.id];
-            level3.ids = level3.idlist.join("-");
-            level3.route = root_route + level3.ids;
-
-            cateFlatList.push({
-              ...level3,
-            });
-          });
-        }
-      });
-    }
-  });
 
   return {
-    cateFlatList: cateFlatList,
-    cateTreeList: cateTreeList,
+    cateFlatList: cateTreeList.all_material_type,
+    cateTreeList: cateTreeList.all_supply,
   };
 }
 
@@ -93,17 +52,6 @@ export default new Vuex.Store({
     //
     vuexTreeCates: [],
     vuexFlatCates: [],
-
-    vuex_product_cate_1: {
-      id: 780,
-      title: "Cream Charger",
-      route: "/product-cates?id=780",
-    },
-    vuex_product_cate_2: {
-      id: 792,
-      title: "Cream Dispenser",
-      route: "/product-cates?id=792",
-    },
 
     //
     //
@@ -151,28 +99,20 @@ export default new Vuex.Store({
 
     set_vuex_banner(state, data) {
       let [pos_0, pos_1, pos_2] = data;
-      console.log("首页轮播", pos_0.images);
-      state.index_banners = pos_0.images;
+      state.index_banners = data;
 
-      state.map_banners = {
-        关于我们: pos_1.images,
-        联系我们: pos_2.images,
-        客服: data[3].images
-      };
+      // state.map_banners = {
+      //   关于我们: pos_1.images,
+      //   联系我们: pos_2.images,
+      //   客服: data[3].images
+      // };
     },
 
     set_vuex_product_cate(state, data) {
       let {cateFlatList, cateTreeList} = data;
-      console.warn(
-        "cateTreeList 产品分类数据",
-        JSON.parse(JSON.stringify(cateTreeList))
-      );
 
       state.vuexTreeCates = cateTreeList;
       state.vuexFlatCates = cateFlatList;
-
-      state.vuex_product_cate_1 = cateTreeList[0]
-      state.vuex_product_cate_2 = cateTreeList[1]
     },
 
     //设置购物车商品数量
@@ -287,11 +227,9 @@ export default new Vuex.Store({
     // 获取用户信息
     async query_user({commit, state, dispatch}) {
       api({
-        url: "/service.php",
+        url: "userInfo",
         method: "get",
-        data: {
-          action: "users_userInfo",
-        },
+        data: {},
       }).then((res) => {
         if (res.code == 200) {
           commit("set_vuex_login_status", true);
@@ -304,11 +242,8 @@ export default new Vuex.Store({
     // 获取用户信息
     async query_cart({commit, state, dispatch}) {
       api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "gouwuche_lists",
-        },
+        url: "getCart",
+        method: "post",
       })
         .then((res) => {
           let {code, data} = res;
@@ -329,11 +264,8 @@ export default new Vuex.Store({
       dispatch("query_user");
 
       api({
-        url: "/service.php",
+        url: "setting",
         method: "get",
-        data: {
-          action: "index_config",
-        },
       }).then((res) => {
         let {code, data} = res;
         if (code === 200) {
@@ -343,11 +275,10 @@ export default new Vuex.Store({
 
       //首页数据接口
       api({
-        url: "/service.php",
+        url: "getBanner",
         method: "get",
         data: {
-          action: "banner_index",
-          position: 0, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
+          position: 1, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -357,16 +288,11 @@ export default new Vuex.Store({
 
       //产品分类
       api({
-        url: "/service.php",
+        url: "basicList",
         method: "get",
-        data: {
-          action: "product_channel",
-          parentId: 0,
-        },
       }).then((res) => {
         if (res.code == 200) {
           let catesInfo = handle_product_cate_data(res.data);
-          console.log(catesInfo)
           commit("set_vuex_product_cate", catesInfo);
         }
       });
