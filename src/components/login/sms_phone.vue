@@ -2,13 +2,13 @@
   <div class="sms-box">
     <div class="input-box">
       <span class="label">验证码</span>
-      <input type="text" placeholder="请输入验证码" v-model="form.code" />
+      <input type="text" placeholder="请输入验证码" v-model="form.code"/>
 
       <button
-        :disabled="disabledBtn"
-        class="btn-validate-box"
-        @click="getCode"
-        :class="time != 60 ? 'disabled' : ''"
+          :disabled="disabledBtn"
+          class="btn-validate-box"
+          @click="getCode"
+          :class="time != 60 ? 'disabled' : ''"
       >
         获取验证码
         <span>（{{ time }}）</span>
@@ -42,7 +42,7 @@ export default {
       }
 
       //console.log("发送验证码");
-      let { phone, email } = this.form;
+      let {phone, email} = this.form;
       let reg_email = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
       let reg_phone = /^1[3-9]\d{9}$/;
 
@@ -61,11 +61,15 @@ export default {
 
     //修改绑定邮箱
     retrieveByEmail() {
-      this.$api("login_phoneYzm", {
-        phone: this.form.phone,
+      this.$api({
+        url: "sendCode",
+        method: 'post',
+        data: {
+          mobile: this.form.phone,
+        }
       }).then((res) => {
         //console.log("验证码", res);
-        let { code, message } = res;
+        let {code, message} = res;
       });
     },
 
@@ -100,6 +104,7 @@ export default {
   border-radius: 4px;
   .flex-between();
   overflow: hidden;
+
   img {
     width: 36px;
   }
@@ -157,6 +162,7 @@ export default {
     border-radius: 4px;
     .flex-between();
     overflow: hidden;
+
     img {
       width: 36px;
     }

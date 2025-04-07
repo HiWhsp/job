@@ -8,11 +8,7 @@ export default {
       keyword: '',
       count: 0,
       activeIndex: 0,
-      selectedCategory: "棕刚玉（A）",
-      categories: [
-        "棕刚玉（A）", "白刚玉（WA）", "铬刚玉（PA）", "微晶刚玉（MA）", "单晶刚玉（SA）", "绿碳化硅（GC）", "黑碳化硅（C）",
-        "陶瓷刚玉（CA）", "高岭土", "锆长石", "碳玻璃", "滑石粉", "轻质碳酸钙", "石英粉"
-      ],
+      selectedCategory: {},
       suppliers: [
         "江西西亿研磨股份有限公司", "贵州南杰砂轮有限公司", "惠州市精瑞砂轮有限公司", "衢州中润川兴五金有限公司",
         "江西西亿研磨股份有限公司", "贵州南杰砂轮有限公司", "惠州市精瑞砂轮有限公司", "江西西亿研磨股份有限公司",
@@ -27,8 +23,19 @@ export default {
   },
   computed: {
     ...mapState({
-      filterList: state => state.vuexTreeCates,// 商品分类
+      filterList: state => state.vuexFlatCates,// 商品分类
     }),
+  },
+  methods: {
+    itemNav(item) {
+      if (this.activeIndex === item.id) {
+        this.activeIndex = 0;
+        this.selectedCategory = {};
+      } else {
+        this.selectedCategory = item;
+        this.activeIndex = item.id;
+      }
+    }
   }
 }
 </script>
@@ -54,7 +61,7 @@ export default {
                v-for="(item, index) in filterList"
                :key="index"
                @click="itemNav(item)">
-            {{ item.title }}
+            {{ item.name }}
           </div>
         </div>
       </div>
@@ -107,6 +114,7 @@ export default {
 .search {
   margin-top: 20px;
   font-size: 20px;
+
   span {
     color: #EF1F1F;
   }
@@ -246,6 +254,7 @@ export default {
       padding-left: 16px;
       display: flex;
       align-items: center;
+
       img {
         width: 56px;
         height: 20px;

@@ -24,13 +24,13 @@
             <img alt="" src="@/assets/image/login/pass.png"/>
             <input v-model="form.password" placeholder="请输入密码" type="password"/>
           </div>
-          <div class="flex" style="align-items: start;">
-            <div class="input-box">
-              <img alt="" src="@/assets/image/login/code.png"/>
-              <input v-model="form.code" placeholder="请输入验证码" type="text"/>
-            </div>
-            <img alt="" src="@/assets/image/login/code-img.png" style="width: 98px; height: 44px; margin-left: 10px;">
-          </div>
+          <!--          <div class="flex" style="align-items: start;">-->
+          <!--            <div class="input-box">-->
+          <!--              <img alt="" src="@/assets/image/login/code.png"/>-->
+          <!--              <input v-model="form.code" placeholder="请输入验证码" type="text"/>-->
+          <!--            </div>-->
+          <!--            <img alt="" src="@/assets/image/login/code-img.png" style="width: 98px; height: 44px; margin-left: 10px;">-->
+          <!--          </div>-->
 
 
           <div class="agree-box">
@@ -249,16 +249,24 @@ export default {
         alertErr("请输入密码");
         return;
       }
+      if (!this.agreed) {
+        alertErr("请勾选同意协议");
+        return;
+      }
 
-      this.$api("web_login", {
-        mobile: phone,
-        password: password,
+      this.$api({
+        url: "web_login",
+        method: 'post',
+        data: {
+          mobile: phone,
+          password: password,
+        }
       }).then((res) => {
         //console.log("登录", res);
         let {code, data, message} = res;
-        if (code == 0) {
+        if (code != 200) {
           this.$message.error(res.message);
-        } else if (code == 1) {
+        } else if (code == 200) {
           if (this.savePass) {
             localStorage.setItem("save1", this.encodeString(this.form.phone));
             localStorage.setItem("save2", this.encodeString(this.form.password));
@@ -267,11 +275,12 @@ export default {
             localStorage.setItem("save2", "");
           }
 
+          localStorage.setItem("token", data.token);
           this.$store.commit("set_baseInfo", data);
           this.$store.dispatch("getUserloginedInfo");
 
           // this.$router.push("/");
-          this.$router.push("/myOrder");
+          this.$router.push("/order-list");
         }
       });
     },

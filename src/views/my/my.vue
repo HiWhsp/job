@@ -38,7 +38,7 @@ export default {
           [
             {
               title: "采购会员",
-              route: "my-index",
+              route: "",
               is_main: true
             },
             {

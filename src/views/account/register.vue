@@ -64,7 +64,7 @@
                 <img src="@/static/account/login-wx.png" alt="">使用微信扫码后点击【关注公众号】注册账号
               </div>
               <div class="qrcode-box">
-                <img src="../../static/account/demo-code.png" alt=""/>
+                <!--                <img src="../../static/account/demo-code.png" alt=""/>-->
                 <!--                <div ref="qrCodeUrl" class="erweima"></div>-->
               </div>
               <div class="text-box flex">
@@ -74,7 +74,7 @@
                   <div class="col"></div>
                 </div>
                 <div class="check flex pointer" @click="mode = '账号密码'">
-                  <img src="../../static/account/phone.png" alt="">
+                  <!--                  <img src="../../static/account/phone.png" alt="">-->
                   <span>手机号注册</span>
                 </div>
               </div>
@@ -83,6 +83,8 @@
         </div>
       </div>
     </div>
+
+    <img alt="" class="tit-logo" src="@/static/account/logo.png">
   </div>
 </template>
 
@@ -156,15 +158,20 @@ export default {
         return;
       }
 
-      this.$api("login_phoneReg", {
-        ...this.form,
-        invite_id: this.$route.query.invite || "",
+      this.$api({
+        url: 'register',
+        method: 'post',
+        data: {
+          mobile: this.form.phone,
+          password: this.form.pass,
+          captcha: this.form.code
+        }
       }).then((res) => {
         //console.log("注册", res);
         let {code, data, msg} = res;
         if (code == 200) {
           alertSucc(msg);
-          this.$router.push("/");
+          this.$router.push("/login");
         } else {
           alertErr(msg);
         }
@@ -186,6 +193,15 @@ export default {
 .page {
   width: 100%;
   position: relative;
+
+  .tit-logo {
+    position: absolute;
+    width: 640px;
+    height: 84px;
+    z-index: 999;
+    top: 260px;
+    left: 520px;
+  }
 
   .mask {
     background: url(../../static/account/login-bg.png) 100% 100% no-repeat;

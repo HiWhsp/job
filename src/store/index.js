@@ -136,29 +136,8 @@ export default new Vuex.Store({
       state.token = token;
       state.user_id = user_id || id;
 
-      localStorage.setItem("token", token);
+      // localStorage.setItem("token", token);
       localStorage.setItem("user_id", user_id || id);
-
-      if (levelRules) {
-        //处理
-        let curr_level = levelRules.find((v) => v.title == level) || {};
-        let level_id = curr_level.id || "";
-
-        data = {
-          ...data,
-          phone: data.username,
-          name: data.name || "未设置",
-          yue: data.money || 0, //余额
-          jifen: +data.jifen || 0, //积分
-          yongjin: +data.money || 0, //佣金
-
-          yongjin_leiji: +data.earn || 0, //佣金累计
-
-          level_title: level || "", //会员级别
-          level_id: level_id || "", //会员级别
-          curr_level: curr_level, //当前级别
-        };
-      }
 
       state.baseInfo = data;
       state.userInfo = data;
@@ -233,7 +212,7 @@ export default new Vuex.Store({
       }).then((res) => {
         if (res.code == 200) {
           commit("set_vuex_login_status", true);
-          commit("set_baseInfo", res.data);
+          commit("set_baseInfo", res.data.user_info);
         } else {
           commit("set_vuex_login_status", false);
         }

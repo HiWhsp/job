@@ -16,10 +16,14 @@
                v-for="(item, index) in filterList"
                :key="index"
                @click="itemNav(item)">
-            {{ item.title }}
+            {{ item.name }}
           </div>
         </div>
       </div>
+    </div>
+    <div class="company_info">
+      <div class="company_name">{{ company_info.name }} <img src="@/static/home/supplier.png" alt=""></div>
+      <div class="company_content">{{ company_info.introduce }}</div>
     </div>
     <!-- 筛选-->
     <div class="page-list">
@@ -72,10 +76,10 @@
               <div class="box-index">{{ index + 1 }}</div>
 
               <div class="box-title">
-                {{ item.title }}
+                {{ item.name }}
               </div>
               <div class="box-sku">
-                {{ item.keyVals }}
+                {{ item.guige }}
               </div>
 
               <div class="box-kucun">
@@ -86,7 +90,16 @@
                 查看
               </div>
 
-              <div class="box-unit-price">{{ vuex_huobi }} {{ item.priceSale }}</div>
+              <div class="box-unit-price">
+                <p>
+                  <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
+                  {{ vuex_huobi }} {{ item.includeTaxPrice }}(含税)
+                </p>
+                <p>
+                  <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
+                  {{ vuex_huobi }} {{ item.noTaxPrice }}(不含税)
+                </p>
+              </div>
               <div class="box-number">
                 <button @click="do_number_minus(item)">-</button>
                 <input type="number" min="1" v-model="item.num" @blur="on_blur_input(item)"/>
@@ -100,7 +113,7 @@
                 <img src="@/static/prod/goods-cart.png" alt="" @click="doCart(item)">
               </div>
               <div class="box-data">
-                5-10天
+                {{ item.daohuo_time }}
               </div>
               <div class="box-act">
                 <img src="@/static/prod/no-action.png" alt="">
@@ -122,12 +135,12 @@
             }}
           </el-checkbox>
         </div>
-<!--        <div class="delete-box">-->
-<!--          <span @click="do_cart_remove_select()">删除选中</span>-->
-<!--        </div>-->
-<!--        <div class="clear-box">-->
-<!--          <span @click="do_cart_clear()">清空购物车</span>-->
-<!--        </div>-->
+        <!--        <div class="delete-box">-->
+        <!--          <span @click="do_cart_remove_select()">删除选中</span>-->
+        <!--        </div>-->
+        <!--        <div class="clear-box">-->
+        <!--          <span @click="do_cart_clear()">清空购物车</span>-->
+        <!--        </div>-->
 
         <div class="total-number">
           已选择
@@ -150,7 +163,6 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
 import productAddCartSuccessModal from "@/components/product/product_add_cart_success_modal.vue";
 
 export default {
@@ -160,7 +172,7 @@ export default {
   },
   data() {
     return {
-      activeIndex: 0,
+      activeIndex: '1',
       count: 0, // 总和
       pages: 1,
       isAsc: "", //升asc 降序desc
@@ -176,13 +188,21 @@ export default {
       },
       // 商品列表
       list_goods: [],
+      filterList: [],
+      company_info: {},
       checked_all: false, //是否全选
     }
   },
+  watch: {
+    // filterList() {
+    //   this.activeIndex = this.filterList[0].id;
+    //   this.setView();
+    // }
+  },
   computed: {
-    ...mapState({
-      filterList: state => state.vuexTreeCates,// 商品分类
-    }),
+    // ...mapState({
+    //   filterList: state => state.vuexFlatCates,// 商品分类
+    // }),
     //购物车商品总金额
     shopcart_money() {
       let money = 0;
@@ -221,7 +241,7 @@ export default {
     // 条件点击
     itemNav(item) {
       if (this.activeIndex === item.id) {
-        this.activeIndex = 0;
+        this.activeIndex = '';
       } else {
         this.activeIndex = item.id;
       }
@@ -239,23 +259,33 @@ export default {
     },
     //商品查询
     queryGoods() {
-      this.$api("product_plist", {
-        ...this.pagination,
-        channelId: this.activeIndex,
-        orderType: this.getOrderType(this.orderByColumn),
+      this.$api({
+        url: 'supplyProductPage',
+        method: 'post',
+        data: {
+          supply_user_id: this.$route.query.ids,
+          material_type_id: this.activeIndex,
+          keyword: '',
+          collect_sort: 1,
+          price_sort: 1,
+          sale_num_sort: 1,
+          new_sort: 1
+        }
       }).then((res) => {
         let data = res.data;
-        this.list_goods = data.list;
-        this.count = data.count;
-        this.pages = data.pages;
+        this.company_info = data.company_info;
+        this.filterList = data.has_type;
+        this.list_goods = data.material_list;
       });
     },
     // 加入购物车
     doCart(item) {
-      this.$api("gouwuche_add", {
-        inventoryId: item.inventoryId,
-        num: 1,
-        _no_tip: 1,
+      this.$api({
+        url: 'addCart',
+        method: 'post',
+        data: {
+          material_id: item.id,
+        }
       }).then((res) => {
         let {code} = res;
         if (code === 200) {
@@ -309,6 +339,33 @@ export default {
   img {
     width: 14px;
     margin-right: 10px;
+  }
+}
+
+.company_info {
+  margin: 16px 0;
+  padding: 36px 50px;
+  background: #fff;
+
+  .company_name {
+    font-weight: 600;
+    font-size: 36px;
+    color: #000000;
+
+    img {
+      margin-left: 16px;
+      margin-bottom: 10px;
+      width: 56px;
+      height: 20px;
+    }
+  }
+
+  .company_content {
+    margin-top: 20px;
+    font-weight: 400;
+    font-size: 18px;
+    color: #333333;
+    line-height: 32px;
   }
 }
 
@@ -584,7 +641,7 @@ export default {
 
         .box-unit-price {
           width: 180px;
-          text-align: center;
+          text-align: left;
         }
 
         .box-number {
@@ -631,6 +688,7 @@ export default {
           width: 150px;
           text-align: center;
           cursor: pointer;
+
           img {
             width: 18px;
             height: 16px;

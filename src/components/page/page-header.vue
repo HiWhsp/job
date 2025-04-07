@@ -6,9 +6,9 @@
           <span class="name">{{ webConfig.shouye_welcome }}</span>
         </div>
         <div class="r-box flex pointer">
-          <div class="tit" @click="goUrl({url: '/about'})">采购会员中心</div>
+          <div class="tit" @click="goUrl({url: '/order-list'})">采购会员中心</div>
           <div class="col"></div>
-          <div class="tit" @click="goUrl({url: '/help'})">我是供应商</div>
+          <div class="tit" @click="goUrl({url: '/product-all'})">我是供应商</div>
         </div>
       </div>
     </div>
