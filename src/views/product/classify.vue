@@ -86,7 +86,7 @@
                 {{ item.kucun }}
               </div>
 
-              <div class="div box-file">
+              <div class="div box-file" @click="lockFile(item)">
                 查看
               </div>
 
@@ -122,7 +122,7 @@
             </div>
           </div>
 
-          <el-empty v-if="!list_goods.length" description="购物车是空的..."></el-empty>
+          <el-empty v-if="!list_goods.length" description="暂无数据..."></el-empty>
           <!-- <div class="empty" v-if="!list_goods.length">暂无数据...</div> -->
         </div>
       </div>
@@ -157,6 +157,32 @@
         </button>
       </div>
     </div>
+    <el-dialog :visible.sync="lockFIleVisible" width="400px">
+      <div class="footer">
+        <div class="content">
+          <div class="file-item" v-for="(item, index) in lockFileList" :key="index">
+            <a :href="item.url_full" target="_blank" class="pointer"
+               v-if="item.url_full.includes('.pdf')">{{
+                item.name
+              }}</a>
+            <a :href="item.url_full" target="_blank" class="pointer"
+               v-else-if="item.url_full.includes('.xlsx')">{{
+                item.name
+              }}</a>
+            <a :href="item.url_full" target="_blank" class="pointer"
+               v-else-if="item.url_full.includes('.text')">{{
+                item.name
+              }}</a>
+            <el-image
+                v-else-if="item.url_full.includes('.png')"
+                style="width: 100px; height: 100px"
+                :src="item.url_full"
+                :preview-src-list="item.url_full">
+            </el-image>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
     <productAddCartSuccessModal ref="modalAddSuccess"></productAddCartSuccessModal>
   </div>
 </template>
@@ -171,6 +197,7 @@ export default {
   },
   data() {
     return {
+      lockFIleVisible: false,
       activeIndex: '',
       count: 0, // 总和
       pages: 1,
@@ -178,13 +205,16 @@ export default {
       orderByColumn: "ordering", //选择的排序方式
       sortList: [
         {title: "综合排序", ziduan: "ordering"},
-        {title: "单价", ziduan: "price_sale"},
-        {title: "库存", ziduan: "orders"}
+        {title: "人气排序", ziduan: "collect_sort"},
+        {title: "价格", ziduan: "price_sort"},
+        {title: "销量", ziduan: "sale_num_sort"},
+        {title: "新品", ziduan: "new_sort"}
       ],
       pagination: {
         page: 1,
         pagenum: 10
       },
+      lockFileList: [],
       // 商品列表
       list_goods: [],
       filterList: [],
@@ -192,16 +222,8 @@ export default {
       checked_all: false, //是否全选
     }
   },
-  watch: {
-    // filterList() {
-    //   this.activeIndex = this.filterList[0].id;
-    //   this.setView();
-    // }
-  },
+  watch: {},
   computed: {
-    // ...mapState({
-    //   filterList: state => state.vuexFlatCates,// 商品分类
-    // }),
     //购物车商品总金额
     shopcart_money() {
       let money = 0;
@@ -269,10 +291,10 @@ export default {
           supply_user_id: this.$route.query.ids,
           material_type_id: this.activeIndex,
           keyword: '',
-          collect_sort: 1,
-          price_sort: 1,
-          sale_num_sort: 1,
-          new_sort: 1
+          collect_sort: this.orderByColumn === 'collect_sort' ? this.isAsc === 'asc' ? 1 : 2 : '',
+          price_sort: this.orderByColumn === 'price_sort' ? this.isAsc === 'asc' ? 1 : 2 : '',
+          sale_num_sort: this.orderByColumn === 'sale_num_sort' ? this.isAsc === 'asc' ? 1 : 2 : '',
+          new_sort: this.orderByColumn === 'new_sort' ? this.isAsc === 'asc' ? 1 : 2 : ''
         }
       }).then((res) => {
         let data = res.data;
@@ -370,12 +392,18 @@ export default {
           material_id: item.id,
           type: type
         }
-      }).then(res=>{
+      }).then(res => {
         let {code} = res;
-        if(code === 200){
+        if (code === 200) {
           this.setView();
         }
       })
+    },
+    // 查看报告
+    lockFile(item) {
+      console.log(item)
+      this.lockFileList = item.jiance_files_url
+      this.lockFIleVisible = true;
     }
   }
 

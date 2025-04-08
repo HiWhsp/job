@@ -7,7 +7,7 @@
       <div class="modal-inner">
         <div class="item">
           <span class="text required">收货人</span>
-          <el-input clearable v-model="form.name" placeholder="请输入收货人姓名"></el-input>
+          <el-input clearable v-model="form.username" placeholder="请输入收货人姓名"></el-input>
         </div>
         <div class="item">
           <span class="text required">所在地区</span>
@@ -19,19 +19,19 @@
         </div>
         <div class="item">
           <span class="text required">手机号</span>
-          <el-input clearable v-model="form.phone" placeholder="请输入手机号"></el-input>
+          <el-input clearable v-model="form.mobile" placeholder="请输入手机号"></el-input>
         </div>
-        <div class="item">
-          <span class="text required">固定电话</span>
-          <el-input clearable v-model="form.tel" placeholder="请输入固定电话"></el-input>
-        </div>
-        <div class="item">
-          <span class="text required">邮政编码</span>
-          <el-input clearable v-model="form.zipCode" placeholder="请输入邮政编码"></el-input>
-        </div>
+<!--        <div class="item">-->
+<!--          <span class="text required">固定电话</span>-->
+<!--          <el-input clearable v-model="form.tel" placeholder="请输入固定电话"></el-input>-->
+<!--        </div>-->
+<!--        <div class="item">-->
+<!--          <span class="text required">邮政编码</span>-->
+<!--          <el-input clearable v-model="form.zipCode" placeholder="请输入邮政编码"></el-input>-->
+<!--        </div>-->
         <div class="item">
           <span class="text"></span>
-          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#014BC4"
+          <el-switch v-model="form.is_default" :inactive-value="0" :active-value="1" active-color="#014BC4"
                      inactive-color="#eeeeee">
           </el-switch>
           <span style="margin-left: 15px;">设置为默认地址</span>
@@ -61,23 +61,17 @@ export default {
       show_modal: false,
 
       form: {
-        name: "",
-        phone: "",
-        provinceCode: "",
-        province: "",
-        cityCode: "",
-        city: "",
-        areaCode: "",
-        area: "",
-        address: "",
-        moren: 0,
-        id: 0,
-        longitude: '',
-        latitude: '',
-        shequId: '',
-        addressType: 1,
-        tel: '',
-        zipCode: ''
+        username: '',
+        mobile: '',
+        province_id: '',
+        city_id: '',
+        area_id: '',
+        province: '',
+        city: '',
+        area: '',
+        address: '',
+        is_default: '',
+        id: undefined,
       },
 
       loading: false,
@@ -108,29 +102,27 @@ export default {
     },
     //获取地址详情
     query_address_detail() {
-      this.$api("userAddress_detail", {
-        id: this.form.id
+      this.$api({
+        url: 'addAddress',
+        method: 'post',
+        data: {
+          id: this.form.id
+        }
       }).then((res) => {
         let {code, data, msg} = res;
         if (code == 200) {
           this.form = {
-            name: data.name,
-            phone: data.phone,
-            provinceCode: data.provinceCode,
+            username: data.name,
+            mobile: data.phone,
+            province_id: data.provinceCode,
+            city_id: data.cityCode,
+            area_id: data.areaCode,
             province: data.province,
-            cityCode: data.cityCode,
             city: data.city,
-            areaCode: data.areaCode,
             area: data.area,
             address: data.address,
-            moren: data.moren,
+            is_default: data.moren,
             id: data.id,
-            longitude: data.longitude,
-            latitude: data.latitude,
-            shequId: data.shequId,
-            addressType: data.addressType,
-            tel: data.tel,
-            zipCode: data.zipCode
           }
 
           this.$nextTick(() => {
@@ -168,13 +160,13 @@ export default {
     changeSelectAddress(data) {
       this.$log("更新省市区数据", data);
       let {sheng, shi, qu} = data;
-      this.form.province = sheng.title;
-      this.form.city = shi.title;
-      this.form.area = qu.title;
+      this.form.province = sheng.label;
+      this.form.city = shi.label;
+      this.form.area = qu.label;
 
-      this.form.provinceCode = sheng.id;
-      this.form.cityCode = shi.id;
-      this.form.areaCode = qu.id;
+      this.form.province_id = sheng.value;
+      this.form.city_id = shi.value;
+      this.form.area_id = qu.value;
       // debugger
     },
 
@@ -182,17 +174,13 @@ export default {
     // 新建地址 / 编辑地址
     do_submit() {
       let reg_phone = /^1[3-9]\d{9}$/;
-      let is_true_phone = reg_phone.test(this.form.phone);
+      let is_true_phone = reg_phone.test(this.form.mobile);
 
       //console.log("要保存的信息", form_data);
-      if (!this.form.name) {
+      if (!this.form.username) {
         alertErr("请输入收货人姓名");
         return;
       }
-      // if (!is_true_phone) {
-      //   alertErr("请输入正确的收货人电话");
-      //   return;
-      // }
       if (!is_true_phone) {
         alertErr("请输入正确的收货人电话");
         return;
@@ -208,10 +196,9 @@ export default {
 
       this.loading = true;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'addAddress',
+        method: 'post',
         data: {
-          action: 'userAddress_add',
           ...this.form
         },
       }).then((res) => {

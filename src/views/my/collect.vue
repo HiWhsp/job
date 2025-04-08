@@ -4,7 +4,7 @@ export default {
   data() {
     return {
       tableData: [],
-      list_shopcart: [{}],
+      list_shopcart: [],
       checked_all: false, //是否全选
     }
   },
@@ -14,7 +14,20 @@ export default {
       return this.list_shopcart.filter((v) => v.checked);
     },
   },
+  mounted() {
+    this.setView();
+  },
   methods: {
+    setView() {
+      this.$api({
+        url: 'getMyCollect',
+        method: 'post',
+      }).then(res => {
+        if (res.code == 200) {
+          this.list_shopcart = res.data.list
+        }
+      })
+    },
     //商品勾选 单项选择
     on_change_checked_item() {
       // //console.log('监视单项选择', item)
@@ -32,9 +45,7 @@ export default {
         v.checked = val;
       });
     },
-    handleSelectionChange() {
 
-    }
   }
 }
 </script>

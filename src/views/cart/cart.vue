@@ -31,7 +31,7 @@
             <div v-for="(item, index) in it.material_list" :key="index" class="item">
               <div class="item-detail flex">
                 <div class="box-select">
-                  <el-checkbox v-model="it.checked" @change="on_change_checked_item"></el-checkbox>
+                  <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
                 </div>
 
                 <div class="box-image cover flex">
@@ -62,11 +62,11 @@
                 </div>
                 <div class="box-number">
                   <button @click="do_number_minus(item)">-</button>
-                  <input v-model="item.num" min="1" type="number" @blur="on_blur_input(item)"/>
+                  <input v-model="item.cart_info.num" min="1" type="number" @blur="on_blur_input(item)"/>
                   <button @click="do_number_plus(item)">+</button>
                 </div>
                 <div class="box-subtotal">{{ vuex_huobi }} {{
-                    (item.cart_info.includeTaxPricee * item.cart_info.num).toFixed(2)
+                    (+item.cart_info.num * item.cart_info.includeTaxPrice).toFixed(2)
                   }}
                 </div>
                 <div class="box-act">
@@ -152,24 +152,32 @@ export default {
     //购物车商品总金额
     shopcart_money() {
       let money = 0;
-      this.list_shopcart
-          .filter((v) => v.checked)
-          .forEach((v) => {
-            money += v.num * v.priceSale;
-          });
+      if (this.list_shopcart_checked.length) {
+        this.list_shopcart_checked.forEach((v) => {
+          money += +v.cart_info.num * v.cart_info.includeTaxPrice;
+        });
+      }
       return money.toFixed(2);
     },
 
     //购物车被选择的商品
     list_shopcart_checked() {
-      return this.list_shopcart.filter((v) => v.checked);
+      const list = [];
+      this.list_shopcart.forEach((v) => {
+        v.material_list.forEach((vv) => {
+          if (vv.checked === true) {
+            list.push(vv)
+          }
+        })
+      });
+      return list;
     },
     //购物车被选择的商品
     count_shopcart_checked() {
       let count = 0;
       if (this.list_shopcart_checked.length) {
         this.list_shopcart_checked.forEach((v) => {
-          count += +v.num;
+          count += +v.cart_info.num;
         });
       }
       return count;
@@ -205,12 +213,14 @@ export default {
         let {code, data} = res;
         if (code == 200) {
           data.list.forEach((v) => {
-            v.checked = true;
+            v.material_list.forEach((vv) => {
+              vv.checked = false;
+            })
           });
           this.list_shopcart = data.list;
-          if (data.list.length) {
-            this.checked_all = true;
-          }
+          // if (data.list.length) {
+          //   this.checked_all = true;
+          // }
 
           this.do_update_vuex_cart_number()
         }
@@ -281,17 +291,19 @@ export default {
 
     //购物车商品数量减少
     do_number_minus(item) {
-      if (item.num == 1) {
+      let num = Number(item.cart_info.num);
+      if (num === 1) {
         return;
       }
-      item.num = --item.num;
+      item.cart_info.num = --num;
       this.do_updateNum(item);
     },
 
     //购物车商品数量增加
     do_number_plus(item) {
-      item.num = ++item.num;
-      this.do_updateNum(item);
+      let num = Number(item.cart_info.num);
+      item.cart_info.num = ++num;
+      // this.do_updateNum(item);
     },
     //购物车修改数量
     do_updateNum(item) {
@@ -344,7 +356,9 @@ export default {
     on_change_checked_all(val) {
       //console.log("更新后的值", val);
       this.list_shopcart.forEach((v) => {
-        v.checked = val;
+        v.material_list.forEach((vv) => {
+          vv.checked = val;
+        })
       });
     },
 
@@ -371,17 +385,18 @@ export default {
         return;
       }
 
-      let data_format = this.list_shopcart_checked.map(v => ({
-        title: v.title,
-        image: v.image,
-        inventoryId: v.inventoryId,
-        productId: v.productId,
-        keyVals: v.keyVals,
-        num: v.num,
-        priceSale: v.priceSale,
-        priceMarket: v.priceMarket,
-      }));
+      let data_format = [];
 
+      this.list_shopcart.forEach((v) => {
+        const list = []
+        v.material_list.forEach((vv) => {
+          if (vv.checked) {
+            list.push(vv)
+          }
+        })
+        v.material_list = list;
+        data_format.push(v)
+      })
 
       this.$store.commit('set_cache_payment_products', JSON.stringify(data_format))
 
@@ -444,6 +459,7 @@ export default {
       font-size: 18px;
       color: #000000;
       margin-bottom: 20px;
+
       img {
         width: 56px;
         height: 20px;

@@ -92,13 +92,12 @@ z`
       <div class="section section-product">
         <div class="section-title">订单商品</div>
         <div class="section-ctx">
-          <div class="goods-list ">
-            <!-- <div class="title">订单商品</div> -->
+          <div class="goods-list">
             <div class="list">
-              <div class="goods-list-inner">
+              <div class="goods-list-inner" v-for="(it, i) in payment_products" :key="i">
                 <div class="comp-title">
                   <img src="@/static/home/supplier.png" alt="">
-                  <span>惠州市精瑞砂轮有限公司</span>
+                  <span>{{ it.supply_user_info.name }}</span>
                 </div>
                 <!-- 标题 -->
                 <div class="list-title flex p-l-30">
@@ -110,27 +109,27 @@ z`
                   <div class="box-subtitle">小计</div>
                 </div>
                 <!-- 商品列表 -->
-                <div class="item p-l-30" v-for="(item, index) in payment_products" :key="index">
+                <div class="item p-l-30" v-for="(item, index) in it.material_list" :key="index">
                   <div class="item-detail flex">
                     <div class="box-title flex">
                       <div class="poster-box">
-                        <el-image :src="item.image">
+                        <el-image :src="item.material_info.images_url">
                           <div slot="error" class="image-slot">
-                            <img :src="item.image"/>
+                            <img :src="item.material_info.images_url"/>
                           </div>
                         </el-image>
                       </div>
                       <div class="title-box">
-                        {{ item.title }}
+                        {{ item.material_info.name }}
                         <div class="box-sku">
-                          {{ item.keyVals }}
+                          {{ item.material_info.guige }}
                         </div>
                       </div>
                     </div>
-                    <div class="box-unit">{{ vuex_huobi }} {{ item.priceSale }}</div>
-                    <div class="box-num">{{ item.num }}</div>
+                    <div class="box-unit">{{ vuex_huobi }} {{ item.material_info.includeTaxPrice }}</div>
+                    <div class="box-num">{{ item.cart_info.num }}</div>
                     <div class="box-subtitle">
-                      {{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}
+                      {{ vuex_huobi }} {{ (item.material_info.includeTaxPrice * +item.cart_info.num).toFixed(2) }}
                     </div>
                   </div>
                 </div>
@@ -146,28 +145,9 @@ z`
           <!-- <span class="text">共：</span> -->
           <b class="val">共 {{ total_product_number || 0 }} 件</b>
         </div>
-
-        <!--        <div class="item">-->
-        <!--          <span class="text">商品总价：</span>-->
-        <!--          <b class="val">{{ vuex_huobi }} {{ pay_info.goodsPrice || 0 }}</b>-->
-        <!--        </div>-->
-
-        <!--        <div class="item">-->
-        <!--          <span class="text">优惠券：</span>-->
-        <!--          <b class="val">-{{ vuex_huobi }} {{ money_yhq || 0 }}</b>-->
-        <!--        </div>-->
-
-        <!--        <div class="item">-->
-        <!--          <span class="text">运费：</span>-->
-        <!--          <b>{{ vuex_huobi }} {{ pay_info.foreignYunfei || 0 }}</b>-->
-        <!--        </div>-->
-        <!--        <div class="item">-->
-        <!--          <span class="text">满减：</span>-->
-        <!--          <b>- {{ vuex_huobi }} {{ pay_info.foreignManjian || 0 }}</b>-->
-        <!--        </div>-->
         <div class="item total">
           <span class="text">合计应付：</span>
-          <b>{{ vuex_huobi }} {{ pay_info.orderPrice }}</b>
+          <b>{{ vuex_huobi }} {{ total_product_price }}</b>
           (含税)
         </div>
       </div>
@@ -294,12 +274,11 @@ export default {
         orderId: '', // 关联订单
       },
       // 支付方式
-      payTypeValue: 2,
-      pay_type_value: 'paypal',
+      pay_type_value: '1',
       Invoice_type_value: '0', // 开票类型
       payTypeOption: [
-        {value: 'xianxia', title: '对公转账（含税）', icon: require("@/static/order/duihong.png")},
-        {value: 'paypal', title: '银行卡转款（不含税）', icon: require("@/static/order/card.png")}
+        {value: '1', title: '对公转账（含税）', icon: require("@/static/order/duihong.png")},
+        {value: '2', title: '银行卡转款（不含税）', icon: require("@/static/order/card.png")}
       ],
       // 发票类型
       invoiceTypeOption: [
@@ -459,12 +438,7 @@ export default {
     this.query_address();
     //获取线下卡列
     this.getBankList();
-    // 获取优惠券列表
-    this.query_coupon();
-
     this.query_pay_info();
-
-
   },
   methods: {
     //获取缓存的产品信息
@@ -473,17 +447,12 @@ export default {
       let cache_payment_products = sessionStorage.getItem('cache_payment_products');
       if (cache_payment_products) {
         this.payment_products = JSON.parse(cache_payment_products)
-
-        let total_product_number = 0;
-        let total_product_price = 0;
         this.payment_products.forEach(v => {
-          total_product_number += parseInt(v.num)
-          total_product_price += v.price_sale * parseInt(v.num)
+          v.material_list.forEach(vv => {
+            this.total_product_number += +vv.cart_info.num;
+            this.total_product_price += vv.cart_info.includeTaxPrice * +vv.cart_info.num;
+          })
         })
-        this.total_product_number = total_product_number;
-        this.total_product_price = total_product_price;
-        console.log(total_product_price, 's数量11')
-        this.$log('缓存 待下单产品', this.payment_products)
       } else {
 
       }
@@ -491,16 +460,12 @@ export default {
 
     //获取缓存的地址信息
     query_user() {
-      // this.$store.dispatch("query_user");
       this.$api({
-        url: '/service.php',
+        url: 'userInfo',
         method: 'get',
-        data: {
-          action: 'users_userInfo',
-        },
       }).then(res => {
         if (res.code == 200) {
-          this.my_info = res.data;
+          this.my_info = res.data.user_info;
           this.total_balance = parseFloat(this.my_info.money) || 0;
         }
       })
@@ -509,48 +474,23 @@ export default {
     //获取地址列表
     query_address() {
       this.$api({
-        url: '/service.php',
+        url: 'myAddressList',
         method: 'get',
-        data: {
-          action: 'userAddress_lists',
-          ...this.pagination_address,
-          // shop_id: this.id,
-        },
       }).then(res => {
         if (res.code == 200) {
-          let data = res.data
+          let data = res.data.list
 
           data.forEach((v) => {
-            if (SHOP_TYPE == 'foreign') {//海外商城
-              v.full_addr = [v.country, v.province, v.city, v.area, v.address].filter(v => !!v).join(',');
-              v.name_phone = `${v.firstName} ${v.lastName} (${v.phone})`
-            } else {
-              v.full_addr = [v.country, v.province, v.city, v.area, v.address].filter(v => !!v).join(',');
-              v.name_phone = `${v.name} (${v.phone})`
-            }
+            v.full_addr = [v.province, v.city, v.area, v.address].join('-');
+            v.name_phone = v.username + '(收)' + v.mobile;
           });
+          console.log(data)
           this.list_address = data;
 
-          let obj = data.find((v) => v.moren) || {};
+          let obj = data.find((v) => v.is_default) || {};
           this.address_selected = obj || {};
         }
       })
-    },
-
-    get_pay_info_params() {
-      let product_items = this.payment_products.map(v => ({
-        "inventoryId": v.inventoryId,
-        "productId": v.productId,
-        "num": v.num
-      }))
-      let productInfo = JSON.stringify(product_items)
-
-      let params = {
-        productInfo: productInfo,
-        addressId: this.address_selected.id || '',
-        yhqId: this.coupon_select_id,//优惠券记录ID
-      }
-      return params
     },
 
     get_pay_params() {
@@ -576,54 +516,12 @@ export default {
 
     //根据下单商品获取确认订单信息
     query_pay_info() {
-      let params = this.get_pay_info_params();
 
-      this.$api({
-        url: '/service.php',
-        method: 'get',
-        data: {
-          action: 'orders_getPayInfo',
-          ...params
-        },
-      }).then((res) => {
-        let {code, data, msg} = res;
-        if (code == 200) {
-          this.pay_info = data;
-          this.jifen_pay = data.jifenPay || {}; //积分信息
-
-          //
-          this.total_order_price = data.orderPrice || 0
-          //this.total_product_price = data.goods_price || 0;
-          this.order_zhekou_bili = parseFloat(data.zhekou) || 10
-          this.order_zhekou_price = parseFloat(data.zhekouPrice) || 0
-          this.order_yunfei = data.yunfei || 0;
-
-          if (this.coupon_selected.id) {
-            this.total_order_price = (this.total_order_price - this.coupon_selected.jian).toFixed(2)
-          }
-
-          this.order_price = data.orderPrice;
-          this.money_yunfei = +data.yunfei || 0;
-          this.jifen_pay = data.jifenPay;
-        }
-      });
     },
 
     do_toggle_paytype(item) {
       this.pay_type_value = item.value
       this.payType = item.title
-      let value = item.title
-      if (value == "余额支付") {
-        if (this.baseInfo.is_pay_pass == 0) {
-          //未设置支付密码
-          this.$refs.balance_password_set_modal.init(this.baseInfo);
-        } else if (this.total_balance < this.real_payment_money) {
-          //余额不足提示
-          this.$refs.balance_pay_disable_modal.init({
-            money: this.real_payment_money,
-          });
-        }
-      }
     },
 
     //提交订单
@@ -947,25 +845,15 @@ export default {
 
     // 获取线下卡列
     getBankList() {
-      this.$api('pay_getOfflineBanks').then(res => {
+      this.$api({
+        url: 'supplyAccountList',
+        method: 'post',
+        supply_user_id: this.baseInfo.id
+      }).then(res => {
         if (res.code == 200) {
           this.bankList = res.data
         }
       })
-    },
-
-    // 查询优惠券
-    query_coupon() {
-      this.$api("yhq_myList", {
-        scene: 1,
-        page: 1,
-        pageSize: 1000,
-      }).then((res) => {
-        let {code, data} = res;
-        if (code == 200) {
-          this.list_coupon = data.list;
-        }
-      });
     },
 
     // 上传凭证
@@ -1070,6 +958,15 @@ export default {
 
     .list {
       padding: 0 24px;
+
+      .goods-list-inner {
+        margin-top: 10px;
+
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+
       .comp-title {
         height: 48px;
         background: #F5F5F5;
@@ -1509,7 +1406,7 @@ export default {
           font-size: 14px;
           font-family: Roboto, Roboto;;
           font-weight: 400;
-          color: #999999;
+          color: #000;
         }
       }
 
