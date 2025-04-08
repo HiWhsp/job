@@ -14,8 +14,8 @@ export default {
       this.$api({
         url: 'privacyAgreement',
         method: 'get',
-      }).then(res=>{
-        if(res.code == 200){
+      }).then(res => {
+        if (res.code == 200) {
           this.content = res.data.privacy_agreement;
         }
       })
@@ -28,7 +28,7 @@ export default {
   <div class="content">
     <div class="nav-bar">
       <el-breadcrumb separator=">">
-        <el-breadcrumb-item><img src="@/static/home/home.png" alt="">当前位置</el-breadcrumb-item>
+        <el-breadcrumb-item><img alt="" src="@/static/home/home.png">当前位置</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>隐私协议</el-breadcrumb-item>
       </el-breadcrumb>
@@ -40,7 +40,7 @@ export default {
   </div>
 </template>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .content {
   padding: 20px 0 56px;
   width: 1400px;
@@ -69,6 +69,7 @@ export default {
       padding-bottom: 20px;
       border-bottom: 1px solid #DDDDDD;
     }
+
     .content {
       margin-top: 40px;
     }

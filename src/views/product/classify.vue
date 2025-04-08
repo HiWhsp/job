@@ -2,9 +2,9 @@
   <div class="page">
     <div class="nav-bar">
       <el-breadcrumb separator=">">
-        <el-breadcrumb-item><img src="@/static/home/home.png" alt="">当前位置</el-breadcrumb-item>
+        <el-breadcrumb-item><img alt="" src="@/static/home/home.png">当前位置</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>贵州达众第七砂轮有限责任公司</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ company_info.name }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!--    条件筛选-->
@@ -12,9 +12,9 @@
       <div class="filter flex">
         <p class="name">类目</p>
         <div class="item-wrap flex">
-          <div class="item pointer" :class="{ 'active': activeIndex === item.id }"
-               v-for="(item, index) in filterList"
-               :key="index"
+          <div v-for="(item, index) in filterList" :key="index"
+               :class="{ 'active': activeIndex == item.id }"
+               class="item pointer"
                @click="itemNav(item)">
             {{ item.name }}
           </div>
@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="company_info">
-      <div class="company_name">{{ company_info.name }} <img src="@/static/home/supplier.png" alt=""></div>
+      <div class="company_name">{{ company_info.name }} <img alt="" src="@/static/home/supplier.png"></div>
       <div class="company_content">{{ company_info.introduce }}</div>
     </div>
     <!-- 筛选-->
@@ -33,14 +33,14 @@
         <!--        </div>-->
         <div class="val">
           <div class="sort-box">
-            <div class="item" v-for="(item, index) in sortList" :key="index"
-                 :class="orderByColumn == item.ziduan ? 'active' : ''" @click="onClickSort(item)">
+            <div v-for="(item, index) in sortList" :key="index" :class="orderByColumn == item.ziduan ? 'active' : ''"
+                 class="item" @click="onClickSort(item)">
               <div class="text">{{ item.title }}</div>
-              <div class="sanjiao-box" v-if="item.title != '综合排序'">
-                <div class="top"
-                     :class="orderByColumn == item.ziduan && isAsc == 'asc' ? 'active' : ''"></div>
-                <div class="bottom"
-                     :class="orderByColumn == item.ziduan && isAsc == 'desc' ? 'active' : ''"></div>
+              <div v-if="item.title != '综合排序'" class="sanjiao-box">
+                <div :class="orderByColumn == item.ziduan && isAsc == 'asc' ? 'active' : ''"
+                     class="top"></div>
+                <div :class="orderByColumn == item.ziduan && isAsc == 'desc' ? 'active' : ''"
+                     class="bottom"></div>
               </div>
             </div>
           </div>
@@ -68,7 +68,7 @@
           </div>
 
           <!-- 商品列表 -->
-          <div class="item" v-for="(item, index) in list_goods" :key="index">
+          <div v-for="(item, index) in list_goods" :key="index" class="item">
             <div class="item-detail flex">
               <div class="box-select">
                 <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
@@ -102,7 +102,7 @@
               </div>
               <div class="box-number">
                 <button @click="do_number_minus(item)">-</button>
-                <input type="number" min="1" v-model="item.num" @blur="on_blur_input(item)"/>
+                <input v-model="item.num" min="1" type="number" @blur="on_blur_input(item)"/>
                 <button @click="do_number_plus(item)">+</button>
               </div>
               <!--              <div class="box-subtotal">{{ vuex_huobi }} {{-->
@@ -110,13 +110,14 @@
               <!--                }}-->
               <!--              </div>-->
               <div class="box-card">
-                <img src="@/static/prod/goods-cart.png" alt="" @click="doCart(item)">
+                <img alt="" src="@/static/prod/goods-cart.png" @click="doCart(item)">
               </div>
               <div class="box-data">
                 {{ item.daohuo_time }}
               </div>
               <div class="box-act">
-                <img src="@/static/prod/no-action.png" alt="">
+                <img v-if="!item.had_collect" alt="" src="@/static/prod/no-action.png" @click="favouriteAdd(item, 1)">
+                <img v-else="item.had_collect" alt="" src="@/static/prod/action.png" @click="favouriteAdd(item, 2)">
               </div>
             </div>
           </div>
@@ -125,7 +126,6 @@
           <!-- <div class="empty" v-if="!list_goods.length">暂无数据...</div> -->
         </div>
       </div>
-
 
       <!-- 底部操作 -->
       <div class="bottom-action-box">
@@ -156,7 +156,6 @@
           加入购物车
         </button>
       </div>
-
     </div>
     <productAddCartSuccessModal ref="modalAddSuccess"></productAddCartSuccessModal>
   </div>
@@ -172,7 +171,7 @@ export default {
   },
   data() {
     return {
-      activeIndex: '1',
+      activeIndex: '',
       count: 0, // 总和
       pages: 1,
       isAsc: "", //升asc 降序desc
@@ -206,10 +205,12 @@ export default {
     //购物车商品总金额
     shopcart_money() {
       let money = 0;
+      console.log(this.list_goods
+          .filter((v) => v.checked))
       this.list_goods
           .filter((v) => v.checked)
           .forEach((v) => {
-            money += v.num * v.priceSale;
+            money += v.num * v.includeTaxPrice;
           });
       return money.toFixed(2);
     },
@@ -232,6 +233,7 @@ export default {
     },
   },
   mounted() {
+    this.activeIndex = this.$route.query.type_id;
     this.setView();
   },
   methods: {
@@ -245,7 +247,8 @@ export default {
       } else {
         this.activeIndex = item.id;
       }
-      this.setView();
+      -
+          this.setView();
     },
     //排序方式
     onClickSort(item) {
@@ -275,23 +278,41 @@ export default {
         let data = res.data;
         this.company_info = data.company_info;
         this.filterList = data.has_type;
-        this.list_goods = data.material_list;
+        this.list_goods = data.material_list.map((v) => {
+          v.checked = false;
+          v.num = 0;
+          return v;
+        });
       });
     },
     // 加入购物车
     doCart(item) {
+      let list = [];
+      if (item) {
+        list.push({
+          id: item.id,
+          num: item.num
+        });
+      } else {
+        list = this.list_shopcart_checked.map((v) => {
+          return {
+            id: v.id,
+            num: v.num
+          };
+        });
+      }
       this.$api({
         url: 'addCart',
         method: 'post',
         data: {
-          material_id: item.id,
+          material_list: list,
         }
       }).then((res) => {
         let {code} = res;
         if (code === 200) {
           this.$refs.modalAddSuccess.init({
             num: 1,
-            shopcart_count: res.data.count
+            shopcart_count: res.data.cart_count
           });
         }
       });
@@ -327,8 +348,35 @@ export default {
       if (item.num < 1) {
         item.num = 1;
       }
-      this.shopcart_updateNum(item);
     },
+    //购物车商品数量减少
+    do_number_minus(item) {
+      if (item.num == 1) {
+        return;
+      }
+      item.num = --item.num;
+    },
+
+    //购物车商品数量增加
+    do_number_plus(item) {
+      item.num = ++item.num;
+    },
+    //
+    favouriteAdd(item, type) {
+      this.$api({
+        url: 'addCollect',
+        method: 'post',
+        data: {
+          material_id: item.id,
+          type: type
+        }
+      }).then(res=>{
+        let {code} = res;
+        if(code === 200){
+          this.setView();
+        }
+      })
+    }
   }
 
 }

@@ -2,7 +2,7 @@
   <div class="page">
     <div class="nav-bar">
       <el-breadcrumb separator=">">
-        <el-breadcrumb-item><img src="@/static/home/home.png" alt="">当前位置</el-breadcrumb-item>
+        <el-breadcrumb-item><img alt="" src="@/static/home/home.png">当前位置</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>购物车</el-breadcrumb-item>
       </el-breadcrumb>
@@ -10,7 +10,11 @@
 
     <div class="inner">
       <!-- 商品列表 -->
-      <div class="ctx-box">
+      <div class="ctx-box" v-for="(it, i) in list_shopcart" :key="i">
+        <div class="supplier">
+          <img src="@/static/home/supplier.png" alt="">
+          <span>{{ it.supply_user_info.name }}</span>
+        </div>
         <div class="list cart-list">
           <div class="cart-list-inner">
             <!-- 标题 -->
@@ -24,36 +28,45 @@
             </div>
 
             <!-- 商品列表 -->
-            <div class="item" v-for="(item, index) in list_shopcart" :key="index">
+            <div v-for="(item, index) in it.material_list" :key="index" class="item">
               <div class="item-detail flex">
                 <div class="box-select">
-                  <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
+                  <el-checkbox v-model="it.checked" @change="on_change_checked_item"></el-checkbox>
                 </div>
 
                 <div class="box-image cover flex">
                   <el-image :src="item.image" @click="mix_to_product(item)">
                     <div slot="error" class="image-slot">
-                      <img :src="item.default_img"/>
+                      <img :src="item.material_info.images_url"/>
                     </div>
                   </el-image>
                   <div class="box-title">
                     <div class="goods-title" @click="mix_to_product(item)">
-                      {{ item.title }}
+                      {{ item.material_info.name }}
                     </div>
                     <div class="sku-info">
-                      {{ item.keyVals }}
+                      规格: {{ item.material_info.guige }}
                     </div>
                   </div>
                 </div>
 
-                <div class="box-unit-price">{{ vuex_huobi }} {{ item.priceSale }}</div>
+                <div class="box-unit-price">
+                  <p>
+                    <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
+                    {{ vuex_huobi }} {{ item.cart_info.includeTaxPrice }}(含税)
+                  </p>
+                  <p>
+                    <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
+                    {{ vuex_huobi }} {{ item.cart_info.noTaxPrice }}(不含税)
+                  </p>
+                </div>
                 <div class="box-number">
                   <button @click="do_number_minus(item)">-</button>
-                  <input type="number" min="1" v-model="item.num" @blur="on_blur_input(item)"/>
+                  <input v-model="item.num" min="1" type="number" @blur="on_blur_input(item)"/>
                   <button @click="do_number_plus(item)">+</button>
                 </div>
                 <div class="box-subtotal">{{ vuex_huobi }} {{
-                    (item.priceSale * item.num).toFixed(2)
+                    (item.cart_info.includeTaxPricee * item.cart_info.num).toFixed(2)
                   }}
                 </div>
                 <div class="box-act">
@@ -80,7 +93,6 @@
           </div>
         </div>
 
-
         <!-- 底部操作 -->
         <div class="bottom-action-box">
           <div class="all-select">
@@ -92,9 +104,9 @@
           <div class="delete-box">
             <span @click="do_cart_remove_select()">删除选中</span>
           </div>
-<!--          <div class="clear-box">-->
-<!--            <span @click="do_cart_clear()">清空购物车</span>-->
-<!--          </div>-->
+          <!--          <div class="clear-box">-->
+          <!--            <span @click="do_cart_clear()">清空购物车</span>-->
+          <!--          </div>-->
 
           <div class="total-number">
             已选择
@@ -187,26 +199,22 @@ export default {
 
     setView() {
       this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "gouwuche_lists",
-        }
-      })
-          .then((res) => {
-            let {code, data} = res;
-            if (code == 200) {
-              data.forEach((v) => {
-                v.checked = true;
-              });
-              this.list_shopcart = data;
-              if (data.length) {
-                this.checked_all = true;
-              }
-
-              this.do_update_vuex_cart_number()
-            }
+        url: "getCart",
+        method: "post",
+      }).then((res) => {
+        let {code, data} = res;
+        if (code == 200) {
+          data.list.forEach((v) => {
+            v.checked = true;
           });
+          this.list_shopcart = data.list;
+          if (data.list.length) {
+            this.checked_all = true;
+          }
+
+          this.do_update_vuex_cart_number()
+        }
+      });
     },
 
     favouriteDelete(item) {
@@ -395,15 +403,17 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 /deep/ .order-list-wrap {
   margin-top: 30px;
 }
+
 .nav-bar {
   img {
     width: 14px;
     margin-right: 10px;
   }
+
   margin-bottom: 20px;
 }
 
@@ -427,6 +437,19 @@ export default {
   .ctx-box {
     background: #fff;
     padding: 20px;
+
+    .supplier {
+      text-align: left;
+      font-weight: 500;
+      font-size: 18px;
+      color: #000000;
+      margin-bottom: 20px;
+      img {
+        width: 56px;
+        height: 20px;
+        margin-right: 10px;
+      }
+    }
 
     .list {
       border-bottom: 1px solid #E6E4E1;
@@ -564,6 +587,7 @@ export default {
           .box-unit-price {
             width: 150px;
             color: #0B0B0B;
+            text-align: left;
           }
 
           .box-number {
@@ -784,5 +808,5 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/shop/shoppingCart.less"></style>
-<style scoped lang="less" src="@/assets/h5css/mobile/shoppingCart.less"></style>
+<style lang="less" scoped src="@/assets/h5css/shop/shoppingCart.less"></style>
+<style lang="less" scoped src="@/assets/h5css/mobile/shoppingCart.less"></style>

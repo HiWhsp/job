@@ -97,6 +97,7 @@ export default {
     }
   },
   mounted() {
+    this.selectedCategory = this.vuexFlatCates[0];
     this.setView();
   },
   methods: {
@@ -128,7 +129,7 @@ export default {
     },
     // 跳转商品
     toProduct(item) {
-      this.$router.push(`/productCategories?ids=${item.user_id}`);
+      this.$router.push(`/productCategories?ids=${item.user_id}&type_id=${this.selectedCategory.id}`);
     }
   },
 }

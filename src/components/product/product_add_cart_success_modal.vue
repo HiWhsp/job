@@ -1,11 +1,11 @@
 <template>
   <div class="modal-container">
-    <el-dialog :title="number + '件商品加入购物车'" width="580px" custom-class="cus-modal-wrap"
-               :close-on-click-modal="true"
-               :visible.sync="show_modal" :before-close="onBeforeClose">
+    <el-dialog :before-close="onBeforeClose" :close-on-click-modal="true" :title="number + '件商品加入购物车'"
+               :visible.sync="show_modal"
+               custom-class="cus-modal-wrap" width="580px">
       <div class="modal-inner">
         <div class="tip-box">
-          <img src="../../static/prod/product-add-success.png" alt/>
+          <img alt src="../../static/prod/product-add-success.png"/>
         </div>
         <div class="text-box-1">该商品已成功加入购物车</div>
         <div class="text-box-2">购物车共 <span>{{ shopcart_count }}</span> 件商品</div>
@@ -35,20 +35,13 @@ export default {
     init(select_sku) {
       this.number = select_sku.num;
       this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "gouwuche_lists",
-        }
+        url: "getCart",
+        method: "post",
       }).then(res => {
         if (res.code == 200) {
-          res.data.forEach((v) => {
-            this.shopcart_count += +v.num;
-          });
-          // this.shopcart_count = res.data.length;
+          this.shopcart_count = res.data.list.length;
         }
       })
-      // this.shopcart_count = select_sku.shopcart_count;
       this.show_modal = true;
     },
     onBeforeClose() {
@@ -58,7 +51,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 /deep/ .el-dialog__header {
   padding: 16px 24px;
   border-bottom: 1px solid #eee;
@@ -155,4 +148,4 @@ export default {
 
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/modals/product_add_cart_success_modal.less"></style>
+<style lang="less" scoped src="@/assets/h5css/modals/product_add_cart_success_modal.less"></style>

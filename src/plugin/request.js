@@ -133,7 +133,7 @@ function api(action, data, method, uploaderConfig) {
     if (data[dataKey] === null || data[dataKey] === undefined) {
       delete data[dataKey];
     } else if (data[dataKey] instanceof Array) {
-      const arr = flattenObjectArray(data[dataKey], 'form');
+      const arr = flattenObjectArray(data[dataKey], dataKey);
       data = {
         ...data,
         ...arr,
