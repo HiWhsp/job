@@ -5,14 +5,15 @@
     </div>
     <div class="page-ctx">
       <div class="section">
-<!--        <div class="section-title">基本信息</div>-->
+        <!--        <div class="section-title">基本信息</div>-->
         <div class="section-ctx">
           <div class="item upload-box">
             <span class="text">头像：</span>
             <span class="info">
               <div class="upload-box">
                 <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="img"
-                           action="https://shalunxiehui.dx.hdapp.com.cn/api?action=index_ossUpload" :data="mix_upload_data" :on-success="upload_on_success"
+                           action="https://shalunxiehui.dx.hdapp.com.cn/api?action=index_ossUpload"
+                           :data="mix_upload_data" :on-success="upload_on_success"
                            :before-upload="upload_before_upload">
                   <img v-if="form.image" :src="form.image" class="user-avatar"/>
                   <img v-else src="@/static/common/head-user-login.png" class="user-avatar"/>
@@ -23,17 +24,26 @@
 
           <div class="item">
             <span class="text">手机：</span>
-            <span class="info">{{ my_info.phone }}</span>
-            <span class="action" @click="open_phone_update()">
-              <span>修改</span>
-            </span>
+            <span class="info">{{ form.mobile }}</span>
+            <!--            <span class="action" @click="open_phone_update()">-->
+            <!--              <span>修改</span>-->
+            <!--            </span>-->
           </div>
 
+          <div class="item">
+            <span class="text">性别：<span>*</span></span>
+            <span class="info">
+                <el-radio-group v-model="form.sex">
+                  <el-radio :label="1">男</el-radio>
+                  <el-radio :label="2">女</el-radio>
+                </el-radio-group>
+            </span>
+          </div>
 
           <div class="item">
             <span class="text">真实姓名：<span>*</span></span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.realName"/>
+              <el-input clearable type="text" v-model="form.real_name"/>
             </span>
             <span class="action"> </span>
           </div>
@@ -44,14 +54,14 @@
             </span>
             <span class="action"> </span>
           </div>
-          <div class="item">
-            <span class="text">公司名称：</span>
-            <span class="info">
-              <el-input clearable type="text" v-model="form.nickname"/>
-            </span>
-            <span class="action">
-            </span>
-          </div>
+          <!--          <div class="item">-->
+          <!--            <span class="text">公司名称：</span>-->
+          <!--            <span class="info">-->
+          <!--              <el-input clearable type="text" v-model="form.name"/>-->
+          <!--            </span>-->
+          <!--            <span class="action">-->
+          <!--            </span>-->
+          <!--          </div>-->
 
           <div class="item">
             <span class="text"> 邮箱：<span>*</span></span>
@@ -109,8 +119,8 @@ export default {
       my_info: {},
       form: {
         image: '',
-        realName: "",
-        nickname: "",
+        real_name: "",
+        name: "",
         email: "",
         province: '',
         city: '',
@@ -147,29 +157,28 @@ export default {
     },
     query_user() {
       this.$api({
-        url: '/service.php',
+        url: 'userInfo',
         method: 'get',
-        data: {
-          action: 'users_userInfo',
-        },
       }).then(res => {
         if (res.code == 200) {
-          let data = res.data;
+          let data = res.data.user_info;
           this.my_info = data;
 
           this.form = {
             image: data.image,
-            realName: data.realName,
-            nickname: data.nickname,
+            real_name: data.real_name,
+            name: data.name,
             email: data.email,
             province: data.province,
             city: data.city,
-            area: data.areaId,
+            area: data.area,
             provinceCode: data.provinceCode,
             cityCode: data.cityCode,
             areaCode: data.areaCode,
+            mobile: data.mobile,
+            sex: data.sex
           }
-          this.$refs.area_select.init({province: data.province, city: data.city, area: data.areaId});
+          this.$refs.area_select.init({province: data.provinceCode, city: data.cityCode, area: data.areaCode});
           this.$store.commit("set_baseInfo", res.data);
         }
       })
@@ -177,7 +186,7 @@ export default {
 
     do_submit() {
 
-      if (!this.form.realName) {
+      if (!this.form.real_name) {
         alertErr("请填写真实姓名");
         return;
       }
@@ -213,8 +222,8 @@ export default {
     do_reset() {
       this.form = {
         image: this.my_info.image,
-        realName: "",
-        nickName: "",
+        real_name: "",
+        name: "",
         email: "",
         province: '',
         city: '',

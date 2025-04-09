@@ -4,26 +4,20 @@
       <span>查看订单详情</span>
       <button @click="$router.push('/order-list')">返回</button>
     </div>
-
     <div class="page-ctx">
       <div class="order-other">
         <div class="title">订单信息</div>
         <div class="other">
-          <!--     3: "快递配送",
-        4: "门店自取",
-        5: "同城配送", -->
-
-          <!-- v-if="peisong_type_text == '普通快递'" -->
           <div class="item">
             <div class="item-title">收货人信息</div>
             <div class="item-content">
               <div class="name">
                 <span>收货人：</span>
-                {{ shouhuoInfo['name'] }}
+                {{ shouhuoInfo['username'] }}
               </div>
               <div class="phone">
                 <span>手机号码：</span>
-                {{ shouhuoInfo['phone'] }}
+                {{ shouhuoInfo['mobile'] }}
               </div>
               <div class="address">
                 <span>详细地址：</span>
@@ -31,7 +25,6 @@
               </div>
             </div>
           </div>
-
           <div class="item" v-if="peisong_type_text">
             <div class="item-title">支付及支付方式</div>
             <div class="item-content">
@@ -41,7 +34,7 @@
               </div>
               <div class="date">
                 <span>下单时间：</span>
-                {{ orderObj.createdTime }}
+                {{ payInfo.created_at }}
               </div>
               <div class="pay-type">
                 <span>配送方式：</span>
@@ -50,79 +43,43 @@
               </div>
               <div class="date">
                 <span>付款方式：</span>
-                货到付款
+                {{
+                  info.order_info.jiesuan_type == 1 ? `货到付款 ${(info.order_info.jiesuan_days)}` : info.order_info.jiesuan_type == 2 ?
+                      `款到发货 ${(info.order_info.jiesuan_end_time)}` : ''
+                }}
               </div>
-
               <div class="data flex payImg">
                 <span>支付凭证：</span>
-                <div class="pingzheng-item" v-for="(item, index) in orderObj.offlineInfo" :key="index">
-                  <el-image style="width: 100px; height: 100px" :src="item" :preview-src-list="orderObj.offlineInfo">
-                  </el-image>
-                </div>
+                <!--                <div class="pingzheng-item" v-for="(item, index) in info.order_info.pay_prove_url" :key="index">-->
+                <el-image style="width: 100px; height: 100px" :src="info.order_info.pay_prove_url_full"
+                          :preview-src-list="info.order_info.pay_prove_url_full">
+                </el-image>
+                <!--                </div>-->
               </div>
-
-
-              <!--              <div class="pay-type">-->
-              <!--                <span>配送方式：</span>-->
-              <!--                {{ fahuoInfo.expressName || '' }} {{ fahuoInfo.expressOrder || '' }}-->
-              <!--              </div>-->
-
-              <!-- <div class="date" v-if="orderObj.peisong_time">
-              <span>配送时间:</span>
-              {{ orderObj.peisong_time }}
-            </div> -->
             </div>
           </div>
-
           <!-- 对公信息 -->
-          <div class="item back-card" v-if="true">
+          <div class="item back-card" v-if="info.pay_type == 1">
             <div class="item-title">收款对公账户</div>
             <div class="item-content">
               <div class="date">
                 <span>收款单位名称：</span>
-                <span class="val">{{ bankList[0].company }}</span>
-                <img src="@/static/order/copy.png" alt="" @click="copyText(bankList[0].company)">
+                <span class="val">{{ bankList[0] ? bankList[0].company_name : '' }}</span>
+                <img src="@/static/order/copy.png" alt=""
+                     @click="copyText(bankList[0] ? bankList[0].company_name : '')">
               </div>
               <div class="date">
                 <span>收款单位号码：</span>
-                <span class="val">{{ bankList[0].bankAccount }}</span>
-                <img src="@/static/order/copy.png" alt="" @click="copyText(bankList[0].bankAccount)">
+                <span class="val">{{ bankList[0] ? bankList[0].account : '' }}</span>
+                <img src="@/static/order/copy.png" alt="" @click="copyText(bankList[0] ? bankList[0].account : '')">
               </div>
               <div class="date">
                 <span>开户银行：</span>
-                <span class="val">{{ bankList[0].bankName }}</span>
-                <img src="@/static/order/copy.png" alt="" @click="copyText(bankList[0].bankName)">
+                <span class="val">{{ bankList[0] ? bankList[0].bank : '' }}</span>
+                <img src="@/static/order/copy.png" alt="" @click="copyText(bankList[0] ? bankList[0].bank : '')">
               </div>
             </div>
           </div>
-
-          <!--          <div class="item" v-if="peisong_type_text == '上门自提'">-->
-          <!--            <div class="item-title">取货人信息</div>-->
-          <!--            <div class="item-content">-->
-          <!--              <div class="name">-->
-          <!--                <span>取货人：</span>-->
-          <!--                {{ shouhuoInfo.name }}-->
-          <!--              </div>-->
-          <!--              <div class="phone">-->
-          <!--                <span>手机号码：</span>-->
-          <!--                {{ shouhuoInfo.phone }}-->
-          <!--              </div>-->
-          <!--            </div>-->
-          <!--          </div>-->
-
-          <!--          <div class="item" v-if="peisong_type_text == '上门自提'">-->
-          <!--            <div class="item-title">厂家信息</div>-->
-          <!--            <div class="item-content">-->
-          <!--              <div class="phone">-->
-          <!--                <span>联系方式：</span>-->
-          <!--                {{ shequ.phone }}-->
-          <!--              </div>-->
-          <!--              <div class="address">-->
-          <!--                <span>厂家地址：</span>-->
-          <!--                {{ shequ.address }}-->
-          <!--              </div>-->
-          <!--            </div>-->
-          <!--          </div>-->
 
           <!-- 转款凭证 -->
           <!--          <div class="item" v-if="is_xianxia">-->
@@ -178,16 +135,19 @@
               <!--              <div class="date">{{ info.createdTime }}</div>-->
               <div class="order-code">
                 订单号：
-                <span>{{ info.orderNo }}</span>
+                <span>{{ info.order_info ? info.order_info.order_no : '' }}</span>
               </div>
               <div class="order-name">
                 <img src="@/static/home/supplier.png" alt="">
-                <span>惠州市精瑞砂轮有限公司</span>
+                <span>{{ info.order_info ? info.order_info.supply_user_info.name : '' }}</span>
               </div>
               <div class="order-payType">
-                货到付款（付款期限：货到15天内）
+                {{
+                  info.order_info.jiesuan_type == 1 ? `货到付款 ${(info.order_info.jiesuan_days)}` : info.order_info.jiesuan_type == 2 ?
+                      `款到发货 ${(info.order_info.jiesuan_end_time)}` : ''
+                }}
               </div>
-              <div class="order-state">{{ info.statusInfo }}</div>
+              <div class="order-state">{{ orderStatusInfo(info.order_info.order_status) }}</div>
             </div>
             <div class="info-good">
               <div class="list-good">
@@ -229,28 +189,10 @@
                 <div class="label"></div>
                 <div class="value">共 <b class="count">{{ total_product_number }}</b> 件</div>
               </div>
-              <!--              <div class="money-item">-->
-              <!--                <span class="label">商品总价：</span>-->
-              <!--                <div class="value">-->
-              <!--                  <span class="money-num">{{ vuex_huobi }}{{ payInfo.goods }}</span>-->
-              <!--                </div>-->
-              <!--              </div>-->
-              <!--              <div class="money-item">-->
-              <!--                <span class="label">运费：</span>-->
-              <!--                <div class="value">-->
-              <!--                  <span class="money-num">{{ vuex_huobi }}{{ payInfo.foreignYunfei || 0 }}</span>-->
-              <!--                </div>-->
-              <!--              </div>-->
-              <!--              <div class="money-item">-->
-              <!--                <span class="label">满减：</span>-->
-              <!--                <div class="value">-->
-              <!--                  <span class="money-num">{{ vuex_huobi }}{{ payInfo.foreignManjian || 0 }}</span>-->
-              <!--                </div>-->
-              <!--              </div>-->
               <div class="money-item">
                 <span class="label">合计应付：</span>
                 <div class="value">
-                  <span class="money-num money-total">{{ vuex_huobi }}{{ info.price }}</span>
+                  <span class="money-num money-total">{{ vuex_huobi }}{{ info.order_info.all_price }}</span>
                 </div>
                 （含税）
               </div>
@@ -376,6 +318,26 @@ export default {
   },
   computed: {
     ...mapState(["defaultAvatar"]),
+    orderStatusInfo() {
+      return (status) => {
+        switch (status) {
+          case -1:
+            return "取消";
+          case 0:
+            return "已下单"
+          case 1:
+            return "待支付";
+          case 2:
+            return "待发货";
+          case 3:
+            return "待收货";
+          case 4:
+            return "已支付";
+          case 5:
+            return "已完成(确认收货)";
+        }
+      }
+    }
   },
   created() {
     this.setView();
@@ -389,9 +351,15 @@ export default {
     },
     // 获取线下卡列
     getBankList() {
-      this.$api('pay_getOfflineBanks').then(res => {
+      this.$api({
+        url: 'supplyAccountList',
+        method: 'post',
+        data: {
+          supply_user_id: this.info.order_info.supply_user_info.id
+        }
+      }).then(res => {
         if (res.code == 200) {
-          this.bankList = res.data
+          this.bankList = res.data.account_list
         }
       })
     },
@@ -399,56 +367,51 @@ export default {
       this.setView();
     },
     setView() {
-      this.getBankList();
       this.query_order()
     },
 
     query_order() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'orderDetail',
+        method: 'post',
         data: {
-          action: 'orders_detail',
-          id: this.id
+          order_id: this.id
         },
       }).then((res) => {
         let {code, data, msg} = res;
         if (code == 200) {
           this.info = data;
-          let {payInfo, products, shouhuoInfo, fahuoInfo, payType} = data;
+          let {order_info, orderDetail} = data;
 
-          this.payInfo = payInfo;
-          this.products = products;
-          this.fahuo_info = fahuoInfo;
-          this.is_finish_pay = parseFloat(data.pricePayed) > 0;
+          this.payInfo = order_info.pay_json;
+          this.products = orderDetail;
+          // this.fahuo_info = fahuoInfo;
+          // this.is_finish_pay = parseFloat(data.pricePayed) > 0;
 
           // 收货地址
-          this.shouhuoInfo = shouhuoInfo;
-          if (shouhuoInfo) {
-            let {country, province, city, area, address} = shouhuoInfo;
-            this.full_receive_address = [country, province, city, area, address].filter(v => v).join(' ')
+          this.shouhuoInfo = order_info.address_json;
+          if (order_info.address_json) {
+            let {province, city, area, address} = order_info.address_json;
+            this.full_receive_address = [province, city, area, address].filter(v => v).join(' ')
           }
 
           // 总数
-          products.forEach((item) => {
-            this.total_product_number += item.num;
+          this.products.forEach((item) => {
+            this.total_product_number += Number(item.num);
           })
 
           //
           //支付方式
           let payType_map = {
-            1: "微信支付",
-            2: "余额支付",
-            3: "佣金支付",
-            4: "线下支付",
-            5: "积分支付",
-            6: "PayPal支付",
-            7: "货到付款",
+            1: "对公转账(含税)",
+            2: "银行卡转账(不含税)"
           };
-          this.peisong_type_text = payType_map[data.payType] || "";
+          this.peisong_type_text = payType_map[order_info.pay_type] || "";
 
           //凭证图片
           this.orderObj = data;
+
+          this.getBankList();
         }
       });
     },
@@ -513,6 +476,15 @@ export default {
         this.$message.success('复制成功')
       }
       document.body.removeChild(textarea);
+    },
+    copyText(text) {
+      let input = document.createElement('input');
+      input.value = text;
+      document.body.appendChild(input);
+      input.select(); // 选择对象;
+      document.execCommand("Copy"); // 执行浏览器复制命令
+      this.$message.success('复制成功');
+      input.remove();
     }
   },
 };

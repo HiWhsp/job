@@ -1,123 +1,121 @@
 <template>
-    <div class="page">
-        <div class="main-title flex-between">
-            <span>修改密码</span>
-        </div>
-
-        <div class="page-ctx">
-            <div class="other">
-                <div class="section-ctx">
-                    <div class="item">
-                        <span class="text">旧密码：</span>
-                        <span class="info">
-              <el-input clearable type="password" v-model="form.oldPass" class=""/>
-            </span>
-                        <span class="action"> </span>
-                    </div>
-                    <div class="item">
-                        <span class="text">新密码：</span>
-                        <span class="info">
-              <el-input clearable type="password" v-model="form.pass" class=""/>
-            </span>
-                        <span class="action"> </span>
-                    </div>
-                    <div class="item">
-                        <span class="text">确认密码：</span>
-                        <span class="info">
-              <el-input clearable type="password" v-model="form.pass2" class=""/>
-            </span>
-                        <span class="action"> </span>
-                    </div>
-                    <div class="item btn-box">
-                        <span class="text" style="visibility: hidden">-</span>
-                        <div class="info">
-                            <el-button class="btn-ripple fit-text btn-cancel" @click="throttle_do_submit()"
-                                       :loading="loading">确认
-                            </el-button>
-                            <button class="btn-ripple fit-text btn-save" @click="do_clear()">清空</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="page">
+    <div class="main-title flex-between">
+      <span>修改密码</span>
     </div>
+
+    <div class="page-ctx">
+      <div class="other">
+        <div class="section-ctx">
+          <div class="item">
+            <span class="text">旧密码：</span>
+            <span class="info">
+              <el-input clearable type="password" v-model="form.old_password" class=""/>
+            </span>
+            <span class="action"> </span>
+          </div>
+          <div class="item">
+            <span class="text">新密码：</span>
+            <span class="info">
+              <el-input clearable type="password" v-model="form.new_password1" class=""/>
+            </span>
+            <span class="action"> </span>
+          </div>
+          <div class="item">
+            <span class="text">确认密码：</span>
+            <span class="info">
+              <el-input clearable type="password" v-model="form.new_password2" class=""/>
+            </span>
+            <span class="action"> </span>
+          </div>
+          <div class="item btn-box">
+            <span class="text" style="visibility: hidden">-</span>
+            <div class="info">
+              <el-button class="btn-ripple fit-text btn-cancel" @click="throttle_do_submit()"
+                         :loading="loading">确认
+              </el-button>
+              <button class="btn-ripple fit-text btn-save" @click="do_clear()">清空</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import {mapState} from "vuex";
 
 export default {
-    name: "change-password",
-    components: {},
-    data() {
-        return {
-            form: {
-                editType: '1',//修改类型：1-老密码验证 2-手机短信验证 3-邮箱验证码验证
-                oldPass: "",
-                pass: "",//验证码 类型2/类型3-必传
-                pass2: "",
-            },
-            loading: false,
-        };
-    },
-    computed: {
-        // ...mapState([""]),
-    },
-    watch: {},
-    created() {
-        this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
-    },
-    methods: {
-        throttle_do_submit() {
+  name: "change-password",
+  components: {},
+  data() {
+    return {
+      form: {
+        old_password: "",
+        new_password1: "",//验证码 类型2/类型3-必传
+        new_password2: "",
+      },
+      loading: false,
+    };
+  },
+  computed: {
+    // ...mapState([""]),
+  },
+  watch: {},
+  created() {
+    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
+  },
+  methods: {
+    throttle_do_submit() {
 
-        },
-        do_submit() {
-            if (!this.form.oldPass) {
-                alertErr("请输入旧密码");
-                return;
-            }
-            if (!this.form.pass) {
-                alertErr("请输入新密码");
-                return;
-            }
-            if (!this.form.pass2) {
-                alertErr("请输入确认密码");
-                return;
-            }
-            if (this.form.pass != this.form.pass2) {
-                alertErr("两次密码不一致");
-                return;
-            }
+    },
+    do_submit() {
+      if (!this.form.old_password) {
+        alertErr("请输入旧密码");
+        return;
+      }
+      if (!this.form.new_password1) {
+        alertErr("请输入新密码");
+        return;
+      }
+      if (!this.form.new_password2) {
+        alertErr("请输入确认密码");
+        return;
+      }
+      if (this.form.new_password1 != this.form.new_password2) {
+        alertErr("两次密码不一致");
+        return;
+      }
 
-            this.loading = true;
-            this.$api({
-                url: '/service.php',
-                method: 'get',
-                data: {
-                    action: 'users_editPass',
-                    ...this.form,
-                }
-            }).then((res) => {
-                alert(res).then(() => {
-                    this.loading = false;
-                });
-                if (res.code == 200) {
-                    this.do_clear()
-                }
-            });
-        },
-
-        do_clear() {
-            this.form = {
-                editType: '1',
-                oldPass: "",
-                pass: "",
-                pass2: "",
-            };
-            this.$store.commit("clear_loginInfo");
-            this.$router.push({path: "/login"});
+      this.loading = true;
+      this.$api({
+        url: 'editPassword',
+        method: 'post',
+        data: {
+          ...this.form,
         }
+      }).then((res) => {
+        alert(res).then(() => {
+          this.loading = false;
+        });
+        if (res.code == 200) {
+          this.do_clear()
+        }
+      });
     },
+
+    do_clear() {
+      this.form = {
+        editType: '1',
+        oldPass: "",
+        pass: "",
+        pass2: "",
+      };
+      this.$store.commit("clear_loginInfo");
+      this.$router.push({path: "/login"});
+    }
+  },
 };
 </script>
 

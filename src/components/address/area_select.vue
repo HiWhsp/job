@@ -112,7 +112,7 @@ export default {
       //省
       let obj_sheng = this.list_sheng.find((v) => v.value == provinceCode || v.value == province) || {};
       console.log(obj_sheng)
-      this.sheng = obj_sheng.id;
+      this.sheng = obj_sheng.value;
 
       //解决初始回显慢的问题
       this.list_shi = [{value: cityCode, label: city}]
@@ -125,13 +125,13 @@ export default {
       let res_shi = this.change_sheng(this.sheng);
       this.list_shi = res_shi || [];
       let obj_shi = this.list_shi.find((v) => v.id == cityCode || v.id == city) || {};
-      this.shi = obj_shi.id;
+      this.shi = obj_shi.value;
 
       //区
       let res_qu = this.change_shi(this.shi);
-      this.list_qu = res_qu.data || [];
+      this.list_qu = res_qu || [];
       let obj_qu = this.list_qu.find((v) => v.id == areaCode || v.id == area) || {};
-      this.qu = obj_qu.id;
+      this.qu = obj_qu.value;
 
       //console.log("查询城市数据 res_shi", res_shi);
       //console.log("查询区县数据 res_qu", res_qu);

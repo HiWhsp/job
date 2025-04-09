@@ -15,7 +15,7 @@
             <div class="top">
               <div>
                 <span>收货人：</span>
-                {{ item.name }}
+                {{ item.username }}
               </div>
               <div>
                 <span>所在地区：</span>
@@ -27,15 +27,15 @@
               </div>
               <div>
                 <span>手机号码：</span>
-                {{ item.phone }}
+                {{ item.mobile }}
               </div>
             </div>
             <div class="bottom">
               <div class="left">
-                <span v-if="item.moren == 1" class="moren">默认地址</span>
+                <span v-if="item.is_default == 1" class="moren">默认地址</span>
               </div>
               <div class="right">
-                <span class="action" v-if="item.moren != 1" @click="do_address_set_default(item.id)">设为默认</span>
+                <span class="action" v-if="item.is_default != 1" @click="do_address_set_default(item.id)">设为默认</span>
                 <span class="action" @click="do_address_edit(item)">编辑</span>
                 <span class="action" @click="do_address_delete(item.id)">删除</span>
               </div>
@@ -47,14 +47,15 @@
       </div>
     </div>
 
-    <address_modal ref="address_modal" @confirm="setView" />
+    <address_modal ref="address_modal" @confirm="setView"/>
   </div>
 </template>
 
 <script>
 import address_modal from "@/components/address/address_modal.vue"; //新增地址
 
-import { mapState } from "vuex";
+import {mapState} from "vuex";
+
 export default {
   name: "servicePage",
   components: {
@@ -66,7 +67,7 @@ export default {
         page: 1,
         pageNum: 100,
       },
-      list_address: [1],
+      list_address: [],
     };
   },
   computed: {
@@ -78,24 +79,19 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: '/service.php',
+        url: 'myAddressList',
         method: 'get',
-        data: {
-          action: 'userAddress_lists',
-          ...this.pagination,
-        },
       }).then(res => {
         if (res.code == 200) {
-          let data = res.data
+          let data = res.data.list
 
           data.forEach((v) => {
-            v.full_addr = [v.country, v.province, v.city, v.area].filter(v => !!v).join('-');
-            // v.selected =  v.if_default
+            v.full_addr = [v.province, v.city, v.area].filter(v => !!v).join('-');
           });
 
           this.list_address = data;
 
-          let obj = data.find((v) => v.if_default) || {};
+          let obj = data.find((v) => v.is_default) || {};
           this.select_address = obj || {};
 
           this.$store.commit("set_vuex_data", {
@@ -129,10 +125,9 @@ export default {
     //设置默认地址
     do_address_set_default(id) {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'setDefaultAddress',
+        method: 'post',
         data: {
-          action: 'userAddress_setDefault',
           id: id,
         },
       }).then((res) => {
@@ -180,6 +175,7 @@ export default {
       .el-icon-circle-plus {
         font-size: 18px;
       }
+
       .add-text {
         margin-left: 5px;
       }
@@ -207,7 +203,7 @@ export default {
     .top {
       padding-bottom: 20px;
 
-      >div {
+      > div {
         margin-bottom: 10px;
         color: #333333;
 

@@ -98,6 +98,7 @@ export default {
           </div>
         </div>
       </div>
+      <el-empty v-if="!list_shopcart.length" description="暂无数据..."></el-empty>
     </div>
   </div>
 </template>

@@ -107,7 +107,13 @@ export default {
         let {code, data} = res;
         if (code == 200) {
           let list = data.list
-
+          let count_goods = 0;
+          list.forEach((v) => {
+            v.order_detail.forEach(vv => {
+              count_goods += Number(vv.num)
+            })
+            v.count_goods = count_goods
+          })
           this.orders = list;
           this.count = data.count;
         }

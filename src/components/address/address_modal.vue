@@ -21,14 +21,6 @@
           <span class="text required">手机号</span>
           <el-input clearable v-model="form.mobile" placeholder="请输入手机号"></el-input>
         </div>
-<!--        <div class="item">-->
-<!--          <span class="text required">固定电话</span>-->
-<!--          <el-input clearable v-model="form.tel" placeholder="请输入固定电话"></el-input>-->
-<!--        </div>-->
-<!--        <div class="item">-->
-<!--          <span class="text required">邮政编码</span>-->
-<!--          <el-input clearable v-model="form.zipCode" placeholder="请输入邮政编码"></el-input>-->
-<!--        </div>-->
         <div class="item">
           <span class="text"></span>
           <el-switch v-model="form.is_default" :inactive-value="0" :active-value="1" active-color="#014BC4"
@@ -60,19 +52,7 @@ export default {
     return {
       show_modal: false,
 
-      form: {
-        username: '',
-        mobile: '',
-        province_id: '',
-        city_id: '',
-        area_id: '',
-        province: '',
-        city: '',
-        area: '',
-        address: '',
-        is_default: '',
-        id: undefined,
-      },
+      form: {},
 
       loading: false,
     };
@@ -96,63 +76,20 @@ export default {
         this.show_modal = true;
       } else {
         this.show_modal = true;
-        this.form.id = row.id;
-        this.query_address_detail();
+        this.form = {...row}
+        this.$nextTick(() => {
+          this.$refs.area_select.init({
+            provinceCode: row.province_id,
+            cityCode: row.city_id,
+            areaCode: row.area_id
+          });
+        })
       }
-    },
-    //获取地址详情
-    query_address_detail() {
-      this.$api({
-        url: 'addAddress',
-        method: 'post',
-        data: {
-          id: this.form.id
-        }
-      }).then((res) => {
-        let {code, data, msg} = res;
-        if (code == 200) {
-          this.form = {
-            username: data.name,
-            mobile: data.phone,
-            province_id: data.provinceCode,
-            city_id: data.cityCode,
-            area_id: data.areaCode,
-            province: data.province,
-            city: data.city,
-            area: data.area,
-            address: data.address,
-            is_default: data.moren,
-            id: data.id,
-          }
-
-          this.$nextTick(() => {
-            this.$refs.area_select.init(data);
-          })
-        }
-      });
     },
 
     onclosed() {
       this.$refs.area_select.clear();
-      this.form = {
-        name: "",
-        phone: "",
-        provinceCode: "",
-        province: "",
-        cityCode: "",
-        city: "",
-        areaCode: "",
-        area: "",
-        address: "",
-        moren: 0,
-        id: 0,
-        longitude: '',
-        latitude: '',
-        shequId: '',
-        addressType: 1,
-        tel: '',
-        zipCode: ''
-      }
+      this.form = {}
     },
 
 

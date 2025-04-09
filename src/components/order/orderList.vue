@@ -2,45 +2,47 @@
   <div class="order-list-wrap">
     <div class="info-item" v-for="(item, index) in list" :key="index">
       <div class="info-title">
-        <div class="date">{{ item.createdTime }}</div>
+        <div class="date">{{ item.created_at }}</div>
         <div class="order-code">
           订单号：
-          <span>{{ item.orderNo }}</span>
+          <span>{{ item.order_no }}</span>
         </div>
         <div class="order-name">
           <img src="@/static/home/supplier.png" alt="">
-          <span>惠州市精瑞砂轮有限公司</span>
+          <span>{{ item.supply_user_info.name }}</span>
         </div>
         <div class="order-payType">
-          货到付款（付款期限：货到15天内）
+          {{
+            item.jiesuan_type == 1 ? `货到付款 ${(item.jiesuan_days)}` : item.jiesuan_type == 2 ? `款到发货 ${(item.jiesuan_end_time)}` : ''
+          }}
         </div>
-        <div class="order-state" :class="'state-' + item.orderStatus">
-          {{ item.statusInfo }}
+        <div class="order-state" :class="'state-' + item.order_status">
+          {{ orderStatusInfo(item.order_status) }}
         </div>
       </div>
       <div class="info-good">
         <div class="list-good">
-          <div class="item-good flex" v-for="(product_item, product_index) in item.products" :key="product_index">
+          <div class="item-good flex" v-for="(product_item, product_index) in item.order_detail" :key="product_index">
             <div class="box-image cover" @click="mix_to_product(product_item)">
               <!-- <img :src="good.img" alt /> -->
-              <el-image :src="product_item.image">
+              <el-image :src="product_item.material_coverurl_full">
                 <div slot="error" class="image-slot">
-                  <img :src="product_item.image"/>
+                  <img :src="product_item.material_coverurl_full"/>
                 </div>
               </el-image>
             </div>
 
             <div class="box-title">
-              <div class="goods-title" @click="mix_to_product(product_item)">{{ product_item.title }}</div>
-              <div class="goods-sku">型号：{{ product_item.keyVals }}</div>
+              <div class="goods-title" @click="mix_to_product(product_item)">{{ product_item.material_name }}</div>
+              <div class="goods-sku">规格：{{ product_item.guige }}</div>
             </div>
-<!--            <div class="box-sku">-->
-<!--              <div class="goods-sku">{{ product_item.keyVals }}</div>-->
-<!--            </div>-->
+            <!--            <div class="box-sku">-->
+            <!--              <div class="goods-sku">{{ product_item.keyVals }}</div>-->
+            <!--            </div>-->
             <div class="box-num">
               {{ product_item.num }}
             </div>
-            <div class="box-price">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
+            <div class="box-price">{{ vuex_huobi }} {{ product_item.all_price }}</div>
           </div>
         </div>
       </div>
@@ -50,7 +52,7 @@
             共 <b>{{ item.count_goods }}</b> 个商品
           </div>
           <div class="heji-money">
-            合计金额： <b>{{ item.price }} 元</b>
+            合计金额： <b>{{ item.all_price }} 元</b>
           </div>
         </div>
 
@@ -61,9 +63,9 @@
           <button v-if="item.ifCancel == 1" class="btn-ripple fit-text btn-bg" @click="doCancel(item)">
             取消订单
           </button>
-<!--          <button v-if="item.ifPay == 1" class="btn-ripple fit-text btn-bg" @click="doPay(item)">-->
-<!--            去支付-->
-<!--          </button>-->
+          <!--          <button v-if="item.ifPay == 1" class="btn-ripple fit-text btn-bg" @click="doPay(item)">-->
+          <!--            去支付-->
+          <!--          </button>-->
           <button v-if="item.ifDel == 1" class="btn-ripple fit-text btn-bg" @click="doDelete(item)">
             删除订单
           </button>
@@ -114,7 +116,28 @@ export default {
   data() {
     return {};
   },
-  computed: {},
+  computed: {
+    orderStatusInfo() {
+      return (status) => {
+        switch (status) {
+          case -1:
+            return "取消";
+          case 0:
+            return "已下单"
+          case 1:
+            return "待支付";
+          case 2:
+            return "待发货";
+          case 3:
+            return "待收货";
+          case 4:
+            return "已支付";
+          case 5:
+            return "已完成(确认收货)";
+        }
+      }
+    }
+  },
   methods: {
     emitConfirm() {
       this.$emit('confirm')
@@ -307,6 +330,7 @@ export default {
       font-weight: 500;
       font-size: 16px;
       color: #000000;
+
       img {
         width: 56px;
         height: 20px;
