@@ -2,7 +2,7 @@
   <div class="page">
     <div class="nav-bar">
       <el-breadcrumb separator=">">
-        <el-breadcrumb-item><img src="@/static/home/home.png" alt="">当前位置</el-breadcrumb-item>
+        <el-breadcrumb-item><img alt="" src="@/static/home/home.png">当前位置</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>下单结果</el-breadcrumb-item>
       </el-breadcrumb>
@@ -11,17 +11,17 @@
       <!--      <div class="page-title">支付结果</div>-->
       <div class="pay-info">
         <div class="img-box">
-          <img v-if="payState == '支付成功' || payState == '提交成功'" src="@/static/prod/nonstandard_add_success.png"
-               alt/>
+          <img alt
+               src="@/static/prod/nonstandard_add_success.png"/>
           <!--          <img v-else src="@/static/payment/pay-fail.png" alt/>-->
         </div>
         <div class="text-1">{{ payState }}</div>
-        <div class="text-2" v-if="payState == '提交成功'">
-          您的转账凭证已提交，请等待后台审核！
-        </div>
-        <div class="text-2">订单编号：{{ info.orderNo }}</div>
-        <div class="text-2">下单时间：{{ info.createdTime }}</div>
-        <div class="text-2">支付方式：{{ info.payType }}</div>
+<!--        <div v-if="payState == '提交成功'" class="text-2">-->
+<!--          您的转账凭证已提交，请等待后台审核！-->
+<!--        </div>-->
+        <div class="text-2">订单编号：{{ info.order_no }}</div>
+        <div class="text-2">下单时间：{{ info.created_at }}</div>
+        <div class="text-2">支付方式：{{ info.pay_type == 1 ? '对公转账（含税）' : '银行卡转款（不含税）' }}</div>
         <div class="btns flex-center">
           <button class="btn-ripple fit-text " @click="to_liulan()">
             继续购物
@@ -32,22 +32,22 @@
         </div>
 
         <!-- 线下转款信息 -->
-        <div class="xianxia-info" v-if="info.payType == 7">
+        <div v-if="info.pay_type == 1" class="xianxia-info">
           <div class="title">收款对公账户</div>
           <div class="info-item">
             <div class="info-label">收款单位名称：</div>
-            <div class="info-val">{{ bankList[0].company }}
-              <img src="@/static/order/copy.png" alt="" @click="copyText(bankList[0].company)"></div>
+            <div class="info-val">{{ info.pay_json.company_name }}
+              <img alt="" src="@/static/order/copy.png" @click="copyText(info.pay_json.company_name)"></div>
           </div>
           <div class="info-item">
             <div class="info-label">收款单位号码：</div>
-            <div class="info-val">{{ bankList[0].bankAccount }}
-              <img src="@/static/order/copy.png" alt="" @click="copyText(bankList[0].bankAccount)"></div>
+            <div class="info-val">{{ info.pay_json.account }}
+              <img alt="" src="@/static/order/copy.png" @click="copyText(info.pay_json.account)"></div>
           </div>
           <div class="info-item">
             <div class="info-label">开户银行：</div>
-            <div class="info-val">{{ bankList[0].bankName }}
-              <img src="@/static/order/copy.png" alt="" @click="copyText(bankList[0].bankName)"></div>
+            <div class="info-val">{{ info.pay_json.bank }}
+              <img alt="" src="@/static/order/copy.png" @click="copyText(info.pay_json.bank)"></div>
           </div>
         </div>
       </div>
@@ -75,17 +75,8 @@ export default {
   watch: {},
   created() {
     this.setView();
-    this.getBankList();
   },
   methods: {
-    // 获取线下卡列
-    getBankList() {
-      this.$api('pay_getOfflineBanks').then(res => {
-        if (res.code == 200) {
-          this.bankList = res.data
-        }
-      })
-    },
     copyText(text) {
       let input = document.createElement('input');
       input.value = text;
@@ -103,23 +94,23 @@ export default {
     },
     setView() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'orderDetail',
+        method: 'post',
         data: {
-          action: 'orders_detail',
-          id: this.id
+          order_id: this.id
         },
       }).then((res) => {
         let {code, data, msg} = res;
         if (code == 200) {
-          this.info = data;
-          if (data.statusInfo == "待支付") {
-            this.payState = "支付失败";
-          } else if (data.statusInfo == "待审核") {
-            this.payState = "提交成功";
-          } else {
-            this.payState = "支付成功";
-          }
+          this.info = data.order_info;
+          this.payState = "恭喜您下单成功！";
+          // if (data.statusInfo == "待支付") {
+          //   this.payState = "支付失败";
+          // } else if (data.statusInfo == "待审核") {
+          //   this.payState = "提交成功";
+          // } else {
+          //   this.payState = "支付成功";
+          // }
         }
       });
     },
@@ -127,7 +118,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .page-title {
   text-align: left;
   padding-bottom: 16px;
@@ -186,7 +177,7 @@ export default {
     }
 
     .btns {
-      margin-top: 50px;
+      margin-top: 20px;
 
       button {
         width: 200px;
@@ -221,6 +212,7 @@ export default {
       width: 400px;
       background: #FEF8EE;
       border: 1px solid #F1E2CA;
+
       .title {
         font-family: PingFang SC, PingFang SC;
         font-weight: 500;
@@ -267,4 +259,4 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/shop/payment-success.less"></style>
+<style lang="less" scoped src="@/assets/h5css/shop/payment-success.less"></style>

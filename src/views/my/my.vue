@@ -38,7 +38,7 @@ export default {
           [
             {
               title: "采购会员",
-              route: "",
+              route: "my-index",
               is_main: true
             },
             {
@@ -112,7 +112,7 @@ export default {
 
   methods: {
     do_toggle_nav(item) {
-      if (!item.route) {
+      if (!item.route || item.route === 'my-index') {
         // let route = item.sub[0].route;
         // this.$router.push("/" + route);
       } else {

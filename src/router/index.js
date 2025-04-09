@@ -115,20 +115,20 @@ const routes = [
         path: "/my",
         name: "my",
         component: () => import('@/views/my/my.vue'),
-        redirect: '/my-index',
+        redirect: '/order-list',
         meta: {
             requireAuth: true,
         },
         children: [
-            {
-                path: "/my-index",
-                name: "my-index",
-                component: () => import('@/views/my/my-index.vue'),
-                meta: {
-                    title: "会员中心",
-                    requireAuth: true,
-                }
-            },
+            // {
+            //     path: "/my-index",
+            //     name: "my-index",
+            //     component: () => import('@/views/my/my-index.vue'),
+            //     meta: {
+            //         title: "会员中心",
+            //         requireAuth: true,
+            //     }
+            // },
             {
                 path: "/order-list",
                 name: "order-list",

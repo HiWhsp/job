@@ -3,7 +3,7 @@ z`
   <div class="page">
     <div class="nav-bar">
       <el-breadcrumb separator=">">
-        <el-breadcrumb-item><img src="@/static/home/home.png" alt="">当前位置</el-breadcrumb-item>
+        <el-breadcrumb-item><img alt="" src="@/static/home/home.png">当前位置</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>下单</el-breadcrumb-item>
       </el-breadcrumb>
@@ -18,13 +18,13 @@ z`
         </div>
         <div class="section-ctx">
           <div class="address-list">
-            <div class="address-item" v-for="(item, index) in list_address" :key="index"
-                 :class="{ active: item.id == address_selected.id }" @click="do_toggle_address(item)">
+            <div v-for="(item, index) in list_address" :key="index" :class="{ active: item.id == address_selected.id }"
+                 class="address-item" @click="do_toggle_address(item)">
               <div class="address-top">{{ item.name_phone }}</div>
               <div class="address-bottom">
                 {{ item.full_addr }}
               </div>
-              <img src="@/static/order/addr-select.png" alt="" class="marker"/>
+              <img alt="" class="marker" src="@/static/order/addr-select.png"/>
             </div>
             <div v-if="list_address.length == 0" class="empty-dev">还没有收件地址</div>
           </div>
@@ -37,19 +37,19 @@ z`
           <div class="pay-group">
             <div class="title">支付方式 ：</div>
             <div class="pay-items">
-              <div class="item" v-for="(item, index) in payTypeOption" @click="do_toggle_paytype(item)"
-                   :class="{ checked: pay_type_value == item.value }">
-                <img class="img-check check-0 check-img check-img-0" src="@/static/common/check0.png"
-                     alt=""/>
-                <img class="img-check check-1 check-img check-img-1" src="@/static/common/check1.png"
-                     alt=""/>
-                <img class="marker-img" :src="item.icon" alt=""/>
+              <div v-for="(item, index) in payTypeOption" :class="{ checked: pay_type_value == item.value }" class="item"
+                   @click="do_toggle_paytype(item)">
+                <img alt="" class="img-check check-0 check-img check-img-0"
+                     src="@/static/common/check0.png"/>
+                <img alt="" class="img-check check-1 check-img check-img-1"
+                     src="@/static/common/check1.png"/>
+                <img :src="item.icon" alt="" class="marker-img"/>
                 <span>{{ item.title }}</span>
               </div>
             </div>
           </div>
           <!-- 线下转款信息 -->
-          <div class="xianxia-info" v-if="payType == '对公转账（含税）'">
+          <div v-if="payType == '对公转账（含税）'" class="xianxia-info">
             <div class="title">收款对公账户</div>
             <!--            <div class="info-item">-->
             <!--              <div class="info-label">收款人信息：</div>-->
@@ -57,27 +57,27 @@ z`
             <!--            </div>-->
             <div class="info-item">
               <div class="info-label">收款单位名称：</div>
-              <div class="info-val">{{ bankList[0].company }}
-                <img src="@/static/order/copy.png" alt="" @click="copyText(bankList[0].company)"></div>
+              <div class="info-val">{{ bankList[0].company_name }}
+                <img alt="" src="@/static/order/copy.png" @click="copyText(bankList[0].company_name)"></div>
             </div>
             <div class="info-item">
               <div class="info-label">收款单位号码：</div>
-              <div class="info-val">{{ bankList[0].bankAccount }}
-                <img src="@/static/order/copy.png" alt="" @click="copyText(bankList[0].bankAccount)"></div>
+              <div class="info-val">{{ bankList[0].account }}
+                <img alt="" src="@/static/order/copy.png" @click="copyText(bankList[0].account)"></div>
             </div>
             <div class="info-item">
               <div class="info-label">开户银行：</div>
-              <div class="info-val">{{ bankList[0].bankName }}
-                <img src="@/static/order/copy.png" alt="" @click="copyText(bankList[0].bankName)"></div>
+              <div class="info-val">{{ bankList[0].bank }}
+                <img alt="" src="@/static/order/copy.png" @click="copyText(bankList[0].bank)"></div>
             </div>
           </div>
           <div v-if="payType == '线下支付'" class="pay-img scroll-target-pingzheng">
             <el-upload
-                multiple
-                name="img"
+                :on-success="handleSuccessImg"
                 action="https://shalunxiehui.dx.hdapp.com.cn/api?action=index_ossUpload"
                 list-type="picture-card"
-                :on-success="handleSuccessImg"
+                multiple
+                name="img"
             >
               <div slot="default" class="flex upload__text">
                 <p><i class="el-icon-plus"></i></p>
@@ -94,9 +94,9 @@ z`
         <div class="section-ctx">
           <div class="goods-list">
             <div class="list">
-              <div class="goods-list-inner" v-for="(it, i) in payment_products" :key="i">
+              <div v-for="(it, i) in payment_products" :key="i" class="goods-list-inner">
                 <div class="comp-title">
-                  <img src="@/static/home/supplier.png" alt="">
+                  <img alt="" src="@/static/home/supplier.png">
                   <span>{{ it.supply_user_info.name }}</span>
                 </div>
                 <!-- 标题 -->
@@ -109,7 +109,7 @@ z`
                   <div class="box-subtitle">小计</div>
                 </div>
                 <!-- 商品列表 -->
-                <div class="item p-l-30" v-for="(item, index) in it.material_list" :key="index">
+                <div v-for="(item, index) in it.material_list" :key="index" class="item p-l-30">
                   <div class="item-detail flex">
                     <div class="box-title flex">
                       <div class="poster-box">
@@ -179,12 +179,12 @@ z`
 
     <!-- 图片预览 -->
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt=""/>
+      <img :src="dialogImageUrl" alt="" width="100%"/>
     </el-dialog>
 
     <!-- 订单支付提示 -->
-    <el-dialog class="modal-pay-tip" title="订单提醒" :visible.sync="order_confirm_tip" width="30%"
-               :before-close="handleClose" :close-on-click-modal="false" :append-to-body="true">
+    <el-dialog :append-to-body="true" :before-close="handleClose" :close-on-click-modal="false" :visible.sync="order_confirm_tip"
+               class="modal-pay-tip" title="订单提醒" width="30%">
       <span>确认支付当前订单？</span>
       <span slot="footer" class="dialog-footer">
         <button class="btn-ripple btn-cancel" @click="order_confirm_tip = false">
@@ -274,7 +274,7 @@ export default {
         orderId: '', // 关联订单
       },
       // 支付方式
-      pay_type_value: '1',
+      pay_type_value: '2',
       Invoice_type_value: '0', // 开票类型
       payTypeOption: [
         {value: '1', title: '对公转账（含税）', icon: require("@/static/order/duihong.png")},
@@ -334,16 +334,6 @@ export default {
       let money = parseFloat((this.total_order_price - this.order_points_dixian_price).toFixed(2))
       return money
     },
-    //
-
-    coupon_select() {
-      return this.list_coupon.find((v) => v.id == this.coupon_select_id) || {};
-    },
-
-    opts_peisong() {
-      let arr = ["快递配送", "上门自提"];
-      return arr;
-    },
 
     //使用积分支付要抵扣的积分
     use_jifen_num() {
@@ -401,31 +391,6 @@ export default {
       }
       return +money;
     },
-
-    //佣金抵现金额
-    money_yongjin_dixian() {
-      if (!this.if_use_yongjin) {
-        return 0;
-      }
-      if (!this.baseInfo.yongjin) {
-        return 0;
-      }
-      // debugger
-      let money_yongjin = 0;
-      let money_last = 0; //剩余待支付金额
-      if (this.order_price) {
-        money_last = this.order_price - this.money_yhq - this.money_jifen_dixian;
-
-        if (money_last > this.baseInfo.yongjin) {
-          money_yongjin = this.baseInfo.yongjin;
-        } else {
-          money_yongjin = money_last;
-        }
-      }
-
-      return money_yongjin.toFixed(2);
-    },
-
   },
   watch: {},
   created() {
@@ -494,22 +459,21 @@ export default {
     },
 
     get_pay_params() {
-      let product_items = this.payment_products.map(v => ({
-        "inventoryId": v.inventoryId,
-        "productId": v.productId,
-        "num": v.num
-      }))
-      let productInfo = JSON.stringify(product_items)
-
+      const list = [];
+      this.payment_products.forEach(v => {
+        v.material_list.forEach(vv => {
+          list.push({
+            id: vv.cart_info.id,
+            num: vv.cart_info.num
+          })
+        })
+      })
       let params = {
-        invoiceStatus: this.invoice_info.invoiceStatus,//是否开票 0-不需要 1-需要发票
-        productInfo: productInfo,
-        addressId: this.address_selected.id || '',
-        peisongType: 1,//配送类型：1-快递物流 2-上门自提
-        peisongTime: '',//配送时间
-        yhqId: this.coupon_select_id,//优惠券记录ID
-        remark: '',//备注
-        cash_on_delivery: this.pay_type_value == 'paypal' ? 1 : 0,//是否货到付款 0-否 1-是
+        "supply_user_id": this.payment_products[0].supply_user_info.id,
+        "address_id": this.address_selected.id,
+        "pay_type": this.pay_type_value,
+        "supply_account_id": this.bankList[0].id,
+        "material_list": list
       }
       return params
     },
@@ -526,11 +490,6 @@ export default {
 
     //提交订单
     do_submit() {
-      let params_info = {
-        ...this.form,
-      };
-      delete params_info.phone;
-
       if (!this.address_selected.id) {
         alertErr("请选择收货地址");
         return;
@@ -539,27 +498,6 @@ export default {
       if (!this.pay_type_value) {
         alertErr("请选择支付方式");
         return;
-      }
-
-      if (this.pay_type_value == "xianxia") {
-        console.log(this.xianxia_file_list)
-        if (!this.xianxia_file_list.length) {
-          alertErr("请上传转款凭证信息");
-          this.scrollToTarget(".scroll-target-pingzheng");
-          return;
-        }
-      }
-
-      if (this.pay_type_value == "balance") {
-        if (this.total_balance < +this.real_payment_money) {
-          alertErr("您的余额不足，请选择其他支付方式");
-          return;
-        }
-        // if (!this.is_pay_pass) {
-        //   alertErr("请先设置余额支付密码");
-        //   this.$refs.balance_password_set_modal.init(this.baseInfo);
-        //   return;
-        // }
       }
 
       this.order_confirm_tip = true;
@@ -581,172 +519,18 @@ export default {
       let params = this.get_pay_params();
 
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'createOrder',
+        method: 'post',
         data: {
-          action: 'orders_create',
           ...params,
         },
       }).then((res) => {
         if (res.code == 200) {
-          let {id, orderNo} = res.data;
-          this.orderId = id;
-          this.invoice_info.orderId = id;
-          this.invoice_pay(orderNo); // 发票支付
-          this.do_order_pay();
-        }
-      });
-    },
-
-    //支付方式调取
-    do_order_pay() {
-      if (this.is_order_test) {
-        this.pay_use_yue()
-      } else {
-        if (this.pay_type_value == "weixin") {
-          this.order_payment_wx_pc();
-        } else if (this.pay_type_value == "zhifubao") {
-          this.order_payment_zfb();
-        } else if (this.pay_type_value == "yue") {
-          this.pay_use_yue()
-        } else if (this.pay_type_value == "xianxia") {
-          this.order_payment_xianxia();
-        } else if (this.pay_type_value == "paypal") {
-          // this.pay_use_paypal();
+          let {id, order_id} = res.data;
+          this.orderId = order_id;
           this.toPaySuccess();
         }
-      }
-    },
-
-    invoice_pay(orderNo) {
-      if (this.invoice_info.invoiceType == 0) {
-        return;
-      }
-
-      this.$api({
-        url: '/service.php',
-        method: 'get',
-        data: {
-          action: 'invoices_add',
-          id: 0,
-          ...this.invoice_info
-        },
-      })
-    },
-
-    pay_use_yue() {
-      // this.$refs.balance_pay_modal.init({
-      //   orderId: this.orderId,
-      //   money: this.real_payment_money,
-      // });
-
-      this.$api({
-        url: '/service.php',
-        method: 'get',
-        data: {
-          action: 'pay_balance',
-          orderType: 1,
-          orderId: this.orderId,
-        },
-      }).then((res) => {
-        alert(res)
-        let {code, message} = res;
-        if (code == 200) {
-          this.toPaySuccess();
-        } else {
-        }
       });
-    },
-
-    //微信支付 pc
-    order_payment_wx_pc() {
-      this.$api("pay_weixin", {
-        orderId: this.orderId,
-        orderType: 1
-      }).then((res) => {
-        //console.log("pc 微信扫码", res);
-        // alert(res);
-        let {code, data} = res;
-        if (res.code == 200) {
-          let info = {
-            // ...res,
-            qrcode: data.qrcode,
-            orderId: this.orderId,
-          };
-          this.$refs.orderPayWxCode.init(info);
-          // this.$refs.orderPayWxCode.qrcode = data.qrcode;
-          // this.$refs.orderPayWxCode.showModal = true;
-          // this.showWaiting();
-        } else {
-          alert(res.msg);
-        }
-      });
-    },
-
-    //pc 支付宝支付
-    order_payment_zfb() {
-      // alertErr('尚未开通支付宝支付');
-
-      this.showWaiting();
-
-      this.$api("orders_aliScanCodePay", {
-        orderId: this.orderId,
-      }).then((res) => {
-        //console.log("支付宝支付", res);
-        let {code, msg, data} = res;
-        if (code == 200) {
-          const {href} = this.$router.resolve({
-            path: "/zfbPay",
-            query: {
-              htmlData: data,
-            },
-          });
-          window.open(href, "_blank");
-
-          // this.$router.push({
-          //   path: "/zfbPay",
-          //   query: {
-          //     htmlData: data,
-          //   },
-          // });
-        }
-      });
-    },
-
-    //线下转款
-    order_payment_xianxia() {
-      this.$api("pay_offline", {
-        orderType: 1,
-        orderId: this.orderId,
-        bankId: this.bankList[0].id,
-        images: this.xianxia_file_list.join(','),
-      }).then((res) => {
-        let {code, message} = res;
-
-        if (code == 200) {
-          this.toPaySuccess();
-        } else {
-          // this.toFail();
-        }
-      });
-    },
-
-    showWaiting() {
-      this.clearTimer();
-      let that = this;
-
-      this.$refs.orderPayWaiting.show = true;
-
-      this.timer = setInterval(() => {
-        this.$api("orders_detail", {
-          id: this.orderId,
-        }).then((res) => {
-          let {code, data, msg} = res;
-          if (data.status == 2 || data.status == 3) {
-            that.toPaySuccess();
-          }
-        });
-      }, 2000);
     },
 
     clearTimer() {
@@ -848,10 +632,12 @@ export default {
       this.$api({
         url: 'supplyAccountList',
         method: 'post',
-        supply_user_id: this.baseInfo.id
+        data: {
+          supply_user_id: this.payment_products[0].supply_user_info.id
+        }
       }).then(res => {
         if (res.code == 200) {
-          this.bankList = res.data
+          this.bankList = res.data.account_list
         }
       })
     },
@@ -873,7 +659,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .nav-bar {
   margin-bottom: 20px;
 
@@ -1712,7 +1498,7 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/shop/order-submit.less"></style>
+<style lang="less" scoped src="@/assets/h5css/shop/order-submit.less"></style>
 
 <style lang="less">
 @media screen and (max-width: 1199px) {

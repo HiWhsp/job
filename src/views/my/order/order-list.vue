@@ -5,14 +5,14 @@
     <div class="page-ctx">
       <div class="tab-box">
         <div class="tab-list">
-          <div v-for="(item, index) in tabList" :key="index" class="tab-item"
-               :class="tabSelect.value == item.value ? 'active' : ''" @click="do_toggle_tab(item)">
+          <div v-for="(item, index) in tabList" :key="index" :class="tabSelect.value == item.value ? 'active' : ''"
+               class="tab-item" @click="do_toggle_tab(item)">
             {{ item.title }}
-            <span class="number" v-if="item.num">{{ item.num }}</span>
+            <span v-if="item.num" class="number">{{ item.num }}</span>
           </div>
         </div>
         <div class="search-box">
-          <input v-model="keyword" type="text" placeholder="输入商品名称、订单号"/>
+          <input v-model="keyword" placeholder="输入商品名称、订单号" type="text"/>
           <button @click="do_search()">搜索</button>
           <button @click="do_reset()">重置</button>
         </div>
@@ -22,9 +22,9 @@
         <orderList :list="orders" @confirm="emitConfirm"/>
 
         <div v-if="count" class="pagination-box" style="margin-top: 40px; text-align: right;">
-          <el-pagination background layout="total, prev, pager, next" @current-change="changePage"
-                         :current-page.sync="pagination.page" :page-size="pagination.pageSize"
-                         :total="count"></el-pagination>
+          <el-pagination :current-page.sync="pagination.page" :page-size="pagination.pageSize" :total="count"
+                         background layout="total, prev, pager, next"
+                         @current-change="changePage"></el-pagination>
         </div>
 
         <el-empty v-if="!count" description="没有查询到订单信息..."></el-empty>
@@ -107,19 +107,6 @@ export default {
         let {code, data} = res;
         if (code == 200) {
           let list = data.list
-
-          list.forEach((order) => {
-            order.isPay = order.value >= 0;
-            order.actions = this.getOrderActions({
-              ...order,
-            });
-
-            let count_goods = 0;
-            order.products.forEach((product) => {
-              count_goods = count_goods + +product.num;
-            });
-            order.count_goods = count_goods;
-          });
 
           this.orders = list;
           this.count = data.count;
@@ -222,7 +209,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 /deep/ .order-list-wrap {
   margin-top: 30px;
 }
@@ -326,4 +313,4 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/shop/order-list.less"></style>
+<style lang="less" scoped src="@/assets/h5css/shop/order-list.less"></style>
