@@ -9,16 +9,17 @@ export default {
       count: 0,
       activeIndex: 0,
       selectedCategory: {},
-      suppliers: [
-        "江西西亿研磨股份有限公司", "贵州南杰砂轮有限公司", "惠州市精瑞砂轮有限公司", "衢州中润川兴五金有限公司",
-        "江西西亿研磨股份有限公司", "贵州南杰砂轮有限公司", "惠州市精瑞砂轮有限公司", "江西西亿研磨股份有限公司",
-        "衢州中润川兴五金有限公司", "惠州市精瑞砂轮有限公司"
-      ]
+      suppliers: []
     }
   },
   watch: {
     '$route'() {
       this.keyword = this.$route.query.keyword
+    },
+    filterList() {
+      this.selectedCategory = this.filterList[0];
+      this.activeIndex = this.selectedCategory.id;
+      this.getList();
     }
   },
   computed: {
@@ -27,6 +28,10 @@ export default {
     }),
   },
   methods: {
+    toProduct(item) {
+      console.log(item)
+      this.$router.push(`/productCategories?ids=${item.user_id}&type_id=${this.activeIndex}`);
+    },
     itemNav(item) {
       if (this.activeIndex === item.id) {
         this.activeIndex = 0;
@@ -35,6 +40,20 @@ export default {
         this.selectedCategory = item;
         this.activeIndex = item.id;
       }
+      this.getList();
+    },
+    getList() {
+      this.$api({
+        url: 'getSupplyUserByType',
+        method: 'post',
+        data: {
+          material_type_id: this.activeIndex
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.suppliers = res.data.all_material_type[0].supply_user_list;
+        }
+      })
     }
   }
 }
@@ -44,12 +63,12 @@ export default {
   <div class="page">
     <div class="nav-bar">
       <el-breadcrumb separator=">">
-        <el-breadcrumb-item><img src="@/static/home/home.png" alt="">当前位置</el-breadcrumb-item>
+        <el-breadcrumb-item><img alt="" src="@/static/home/home.png">当前位置</el-breadcrumb-item>
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>产品展示</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="search" v-if="keyword">
+    <div v-if="keyword" class="search">
       共搜索到“<span>{{ keyword }}</span>”相关的 <span>{{ count }}</span> 个供应商
     </div>
     <!--    条件筛选-->
@@ -57,9 +76,9 @@ export default {
       <div class="filter flex">
         <p class="name">类目</p>
         <div class="item-wrap flex">
-          <div class="item pointer" :class="{ 'active': activeIndex === item.id }"
-               v-for="(item, index) in filterList"
-               :key="index"
+          <div v-for="(item, index) in filterList" :key="index"
+               :class="{ 'active': activeIndex === item.id }"
+               class="item pointer"
                @click="itemNav(item)">
             {{ item.name }}
           </div>
@@ -71,16 +90,14 @@ export default {
       <!-- 材料详情 -->
       <div class="material-info">
         <div class="text-section">
-          <h3>{{ selectedCategory }}</h3>
-          <p class="description">
-            棕刚玉，又名金刚砂，是一种棕褐色人造刚玉。它主要由铝矾土（煅土）、碳素材料（如无烟煤/硬质焦炭）、铁屑等原料在电弧炉中经过2200度高温冶炼然后再加工制成，耐火度达1850度以上。
-          </p>
+          <h3>{{ selectedCategory.name }}</h3>
+          <p class="description">{{ selectedCategory.introduce }}</p>
           <p class="features">
-            特征：硬度高、韧性大、高密度、高耐磨、高耐火、耐腐蚀。
+            特征：{{ selectedCategory.feature }}
           </p>
         </div>
         <div class="image-section">
-          <img src="@/static/home/material.png" alt="棕刚玉"/>
+          <img :alt="selectedCategory.name" :src="selectedCategory.images_url"/>
         </div>
       </div>
 
@@ -94,8 +111,8 @@ export default {
         </div>
         <div class="supplier-grid">
           <div v-for="(supplier, index) in suppliers" :key="index" class="supplier" @click="toProduct(supplier)">
-            <img src="@/static/home/supplier.png" alt="">
-            {{ supplier }}
+            <img alt="" src="@/static/home/supplier.png">
+            {{ supplier.name }}
           </div>
         </div>
       </div>
@@ -103,7 +120,7 @@ export default {
   </div>
 </template>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .nav-bar {
   img {
     width: 14px;
@@ -178,9 +195,11 @@ export default {
   background: #fff;
   padding: 40px 50px;
   margin-bottom: 20px;
+  display: flex;
 }
 
 .material-info {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -220,6 +239,7 @@ export default {
 }
 
 .suppliers {
+  width: 100%;
   margin-top: 30px;
 
   .title-section {

@@ -8,20 +8,20 @@
         <div class="r-box flex pointer">
           <div class="tit" @click="goUrl({url: '/order-list'})">采购会员中心</div>
           <div class="col"></div>
-          <div class="tit" @click="goUrl({url: '/product-all'})">我是供应商</div>
+          <div class="tit" @click="goUrl({url: '/G_product_list'})">我是供应商</div>
         </div>
       </div>
     </div>
     <div class="info-box">
       <div class="content flex flex-between">
         <div class="l-box">
-          <img src="../../static/home/logo.png" alt="logo" class="img-1 pointer" @click="goUrl({url: '/'})">
+          <img alt="logo" class="img-1 pointer" src="../../static/home/logo.png" @click="goUrl({url: '/'})">
           <span>奉新县砂轮行业协会</span>
         </div>
         <div class="m-box">
           <div class="search flex">
             <el-input v-model="searchInput" placeholder="请输入您要搜索的产品"></el-input>
-            <el-button type="primary" icon="el-icon-search"
+            <el-button icon="el-icon-search" type="primary"
                        @click="searchClick({url: `/product-all?keyword=${searchInput}`})">搜索
             </el-button>
           </div>
@@ -29,7 +29,7 @@
         <div class="r-box">
           <div class="flex">
             <div class="tools-btn pointer flex" @click="goUrl({url: '/cart'})">
-              <img class="img-2" src="../../static/home/gouwuche.png" alt="">购物车
+              <img alt="" class="img-2" src="../../static/home/gouwuche.png">购物车
             </div>
           </div>
         </div>
@@ -37,8 +37,8 @@
     </div>
     <div class="nav-box">
       <div class="content flex">
-        <div class="nav flex pointer" v-for="(item, index) in navList" :key="index" @click="goUrl(item)">
-          <span class="name" :class="{'active': item.url == $route.path}">{{ item.title }}</span>
+        <div v-for="(item, index) in navList" :key="index" class="nav flex pointer" @click="goUrl(item)">
+          <span :class="{'active': item.url == $route.path}" class="name">{{ item.title }}</span>
         </div>
       </div>
     </div>
@@ -261,6 +261,7 @@ export default {
         font-style: normal;
         text-transform: none;
         border-bottom: 4px solid @theme;
+
         &:after {
           top: 29px;
           position: absolute;
@@ -272,6 +273,7 @@ export default {
           border-radius: 4px 4px 0px 0px;
         }
       }
+
       .active:after {
         background: #fff;
       }

@@ -1,7 +1,7 @@
 <template>
   <div class="modal-container">
-    <el-dialog title="操作提示" width="580px" custom-class="cus-modal-wrap" :close-on-click-modal="true"
-      :visible.sync="show_modal" :before-close="onbeforeclose" @closed="onclosed">
+    <el-dialog :before-close="onbeforeclose" :close-on-click-modal="true" :visible.sync="show_modal" custom-class="cus-modal-wrap"
+               title="操作提示" width="580px" @closed="onclosed">
       <div class="modal-inner">
         <!-- <div class="img-list flex-center">
           <div class="img-box" v-for="(item, index) in imgs" :key="index">
@@ -9,12 +9,13 @@
           </div>
         </div> -->
         <div class="text-box">
-          是否确认收货？请仔细检查到货商品。
+          是否确认发货？请仔细检查发货商品。
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <button class="btn btn-ripple fit-text btn-1" @click="show_modal = false">取消</button>
-        <el-button class="btn btn-ripple fit-text btn-2 btn-bg" @click="throttle_do_confirm()" :loading="loading">确认</el-button>
+        <el-button :loading="loading" class="btn btn-ripple fit-text btn-2 btn-bg"
+                   @click="throttle_do_confirm()">确认</el-button>
 
       </span>
     </el-dialog>
@@ -22,7 +23,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "order-receive-modal",
@@ -66,10 +67,10 @@ export default {
     do_confirm() {
       this.loading = true;
       this.$api({
-        url: 'confirmReceipt',
+        url: 'sendGoods',
         method: 'post',
         data: {
-          order_id: this.info.order_info.id
+          order_id: this.info.id
         },
       }).then((res) => {
         alert(res).then(() => {
@@ -77,7 +78,7 @@ export default {
         });
         if (res.code == 200) {
           this.$emit('confirm')
-          this.show_modal  = false;
+          this.show_modal = false;
         }
       });
     }
@@ -86,7 +87,7 @@ export default {
 </script>
 
 
-<style scoped lang="less">
+<style lang="less" scoped>
 /deep/ .el-dialog__header {
   padding: 16px 24px;
   border-bottom: 1px solid #eee;
@@ -122,14 +123,16 @@ export default {
     font-size: 14px;
     color: @theme;
 
-    &+button {
+    & + button {
       margin-left: 16px;
     }
   }
 
-  .btn-1 {}
+  .btn-1 {
+  }
 
-  .btn-2 {}
+  .btn-2 {
+  }
 
   .btn-bg {
     background: @theme;
@@ -165,7 +168,7 @@ export default {
       // font-weight: bold;
       line-height: 20px;
       color: #333333;
-          text-align: center;
+      text-align: center;
 
       img {
         width: 25px;

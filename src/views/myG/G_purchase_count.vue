@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "purchase-count",
+  name: "G_purchase_count",
   data() {
     return {
       tableData: [],
@@ -15,7 +15,7 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: 'cgOrderStatistics',
+        url: 'spOrderStatistics',
         method: 'post',
         data: {
           start_time: this.data ? this.data[0] : '',
@@ -59,7 +59,7 @@ export default {
           height="250"
           style="width: 100%">
         <el-table-column
-            label="供应商名称"
+            label="采购商名称"
             prop="supply_name"
             width="180">
         </el-table-column>
@@ -87,14 +87,14 @@ export default {
       </el-table>
       <div class="money-box">
         <div class="money-num">
-          总采购数量：<span class="num">{{ total.total_num }}</span>
+          总销量：<span class="num">{{ total.total_num }}</span>
         </div>
         <div class="money-item">
           <div class="item">
-            合计采购额：<span class="num">￥{{ total.total_taxed_price }}</span>（含税）
+            合计金额：<span class="num">￥{{ total.total_taxed_price }}</span>（含税）
           </div>
           <div class="item">
-            合计采购额：<span class="num">￥{{ total.total_notax_price }}</span>（不含税）
+            合计金额：<span class="num">￥{{ total.total_notax_price }}</span>（不含税）
           </div>
         </div>
       </div>

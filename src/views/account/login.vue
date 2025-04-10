@@ -260,6 +260,7 @@ export default {
         data: {
           mobile: phone,
           password: password,
+          type: this.tabType == "供应商" ? 2 : 1
         }
       }).then((res) => {
         //console.log("登录", res);
@@ -280,7 +281,11 @@ export default {
           this.$store.dispatch("getUserloginedInfo");
 
           // this.$router.push("/");
-          this.$router.push("/order-list");
+          if(data.type == 1) {
+            this.$router.push("/order-list");
+          }else {
+            this.$router.push("/G_product_list");
+          }
         }
       });
     },

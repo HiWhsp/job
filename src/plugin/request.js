@@ -29,11 +29,11 @@ axios.interceptors.response.use(
     function (response) {
         let res = response.data;
         let {code, data} = res
-        if (code === 401) {
+        if (code === 402) {
             alertErr(res.msg);
             router.push("/login");
             return Promise.reject(res);
-        } else if (code === 402) {
+        } else if (code === 401) {
             alertErr(res.msg);
             return Promise.reject(res);
         } else {

@@ -3,14 +3,15 @@
     <div class="inner">
       <div class="page-ctx">
         <div class="user-left">
-          <div class="nav-wrap" v-for="(it, i) in filter_userMenu" :key="i">
-            <div class="nav-item" v-for="(item, index) in it" :key="index">
-              <div class="nav-title main-title" v-if="!item.route || item.is_main" :style="{'paddingLeft': item.route == 'my-index' ? '10px' : '25px'}"
-                   :class="$route.name == item.route ? 'active' : ''" @click="do_toggle_nav(item)">
-                <img src="@/static/prod/vip.png" alt="" v-if="item.route == 'my-index'">
+          <div v-for="(it, i) in filter_userMenu" :key="i" class="nav-wrap">
+            <div v-for="(item, index) in it" :key="index" class="nav-item">
+              <div v-if="!item.route || item.is_main" :class="$route.name == item.route ? 'active' : ''"
+                   :style="{'paddingLeft': item.route == 'my-index' ? '10px' : '25px'}"
+                   class="nav-title main-title" @click="do_toggle_nav(item)">
+                <img v-if="item.route == 'my-index'" alt="" src="@/static/prod/vip.png">
                 {{ item.title }}
               </div>
-              <div v-else class="nav-title link" :class="$route.name == item.route ? 'active' : ''"
+              <div v-else :class="$route.name == item.route ? 'active' : ''" class="nav-title link"
                    @click="do_toggle_nav(item)">
                 {{ item.title }}
               </div>
@@ -35,45 +36,46 @@ export default {
     return {
       //个人中心导航
       userMenu: [
-          [
-            {
-              title: "采购会员",
-              route: "my-index",
-              is_main: true
-            },
-            {
-              title: "我的订单",
-              route: "order-list",
-            },
-            {
-              title: "我的收藏",
-              route: "collect",
-            },
-            {
-              title: "个人信息",
-              route: "my-info",
-            },
-            {
-              title: "地址管理",
-              route: SHOP_TYPE == 'foreign' ? "foreign-address-list" : "address-list",
-            },
-            {
-              title: "修改密码",
-              route: "change-password",
-            }
-          ],
-          [
-            {
-              title: "数据统据",
-              route: "",
-              is_main: true
-            },
-            {
-              title: "采购统计",
-              route: "purchase-count",
-            },
-          ]
+        [
+          {
+            title: "供应商专区",
+            route: "my-index",
+            is_main: true
+          },
+          {
+            title: "商品列表",
+            route: "G_product_list",
+          },
+          {
+            title: "新增商品",
+            route: "G_product_add",
+          },
+          {
+            title: "我的订单",
+            route: "G_order_list",
+          },
+          {
+            title: "收款账户管理",
+            route: "G_account_list",
+          },
+          {
+            title: "修改密码",
+            route: "G_change_password",
+          }
+        ],
+        [
+          {
+            title: "数据统据",
+            route: "",
+            is_main: true
+          },
+          {
+            title: "商品销量统计",
+            route: "G_purchase_count",
+          },
+        ]
       ],
+
       activeRoute: "",
       openeds: [
         "order-list",
@@ -124,7 +126,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .page-user-wrap {
 
   .inner {
@@ -227,6 +229,7 @@ export default {
           }
         }
       }
+
       .nav-wrap:first-child {
         margin-top: 0;
       }
@@ -236,6 +239,7 @@ export default {
       flex: 1;
       margin-left: 20px;
       min-height: 50vh;
+
       .page {
         width: 100%;
       }
@@ -244,4 +248,4 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/user/index.less"></style>
+<style lang="less" scoped src="@/assets/h5css/user/index.less"></style>

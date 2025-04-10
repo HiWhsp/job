@@ -1,28 +1,24 @@
 <template>
   <div class="order-list-wrap">
-    <div class="info-item" v-for="(item, index) in list" :key="index">
+    <div v-for="(item, index) in list" :key="index" class="info-item">
       <div class="info-title">
         <div class="date">{{ item.created_at }}</div>
         <div class="order-code">
           订单号：
           <span>{{ item.order_no }}</span>
         </div>
-        <div class="order-name">
-          <img src="@/static/home/supplier.png" alt="">
-          <span>{{ item.supply_user_info.name }}</span>
-        </div>
         <div class="order-payType">
           {{
             item.jiesuan_type == 1 ? `货到付款 ${(item.jiesuan_days)}` : item.jiesuan_type == 2 ? `款到发货 ${(item.jiesuan_end_time)}` : ''
           }}
         </div>
-        <div class="order-state" :class="'state-' + item.order_status">
+        <div :class="'state-' + item.order_status" class="order-state">
           {{ orderStatusInfo(item.order_status) }}
         </div>
       </div>
       <div class="info-good">
         <div class="list-good">
-          <div class="item-good flex" v-for="(product_item, product_index) in item.order_detail" :key="product_index">
+          <div v-for="(product_item, product_index) in item.order_detail" :key="product_index" class="item-good flex">
             <div class="box-image cover" @click="mix_to_product(product_item)">
               <!-- <img :src="good.img" alt /> -->
               <el-image :src="product_item.material_coverurl_full">
@@ -42,7 +38,8 @@
             <div class="box-num">
               {{ product_item.num }}
             </div>
-            <div class="box-price">{{ vuex_huobi }} {{ product_item.subtotal  }}</div>
+            <div class="box-price">{{ vuex_huobi }} {{ product_item.single_price }}</div>
+            <div class="box-price">{{ vuex_huobi }} {{ product_item.subtotal }}</div>
           </div>
         </div>
       </div>
@@ -63,15 +60,16 @@
           <button v-if="item.ifCancel == 1" class="btn-ripple fit-text btn-bg" @click="doCancel(item)">
             取消订单
           </button>
+          <button v-if="item.order_status == 2" class="btn-ripple fit-text btn-bg" @click="doReceive(item)">
+            发货
+          </button>
           <!--          <button v-if="item.ifPay == 1" class="btn-ripple fit-text btn-bg" @click="doPay(item)">-->
           <!--            去支付-->
           <!--          </button>-->
           <button v-if="item.ifDel == 1" class="btn-ripple fit-text btn-bg" @click="doDelete(item)">
             删除订单
           </button>
-          <button v-if="item.ifReceive == 1" class="btn-ripple fit-text btn-bg" @click="doReceive(item)">
-            确认收货
-          </button>
+
           <button v-if="item.ifComment == 1" class="btn-ripple fit-text btn-bg" @click="doReview(item)">
             去评价
           </button>
@@ -86,10 +84,10 @@
       </div>
     </div>
 
-    <order_cancel_modal ref="order_cancel_modal" @confirm="emitConfirm" data-type="取消"/>
-    <order_delete_modal ref="order_delete_modal" @confirm="emitConfirm" data-type="删除"/>
-    <order_receive_modal ref="order_receive_modal" @confirm="emitConfirm" data-type="收货"/>
-    <order_refund_modal ref="order_refund_modal" @confirm="emitConfirm" data-type="售后"/>
+    <order_cancel_modal ref="order_cancel_modal" data-type="取消" @confirm="emitConfirm"/>
+    <order_delete_modal ref="order_delete_modal" data-type="删除" @confirm="emitConfirm"/>
+    <order_receive_modal ref="order_receive_modal" data-type="收货" @confirm="emitConfirm"/>
+    <order_refund_modal ref="order_refund_modal" data-type="售后" @confirm="emitConfirm"/>
 
   </div>
 </template>
@@ -146,7 +144,7 @@ export default {
     toDetail(item) {
       // this.$router.push(`/order-detail?id=${item.id}`);
       this.toRoute({
-        path: '/order-detail',
+        path: '/G_order_detail',
         query: {
           id: item.id
         },
@@ -193,33 +191,6 @@ export default {
 
     updateView() {
       this.$parent.updateView();
-    },
-
-    //处理订单行为
-    handleOrderAction(action, orderId, order) {
-
-      let fahuo_id = order.fahuo_id || "";
-      //console.log({ ...action });
-      let name = action.name;
-      if (name == "取消订单") {
-        this.orders_qxOrder(orderId);
-      } else if (name == "删除订单") {
-        this.orders_del(orderId);
-      } else if (name == "立即支付") {
-        this.order_payment(orderId);
-      } else if (name == "确认收货") {
-        this.order_qianshou(orderId);
-      } else if (name == "评价") {
-        this.jump_pingjia(orderId);
-      } else if (name == "申请售后") {
-        this.jump_shouhou(orderId);
-      } else if (name == "查看物流") {
-        this.$router.push(
-            `/orderLogistics?orderId=${orderId}&logistics_id=${fahuo_id}`
-        );
-      } else if (name == "售后") {
-        this.$router.push(`/refundFeedback?orderId=${orderId}`);
-      }
     },
 
     //取消订单
@@ -275,7 +246,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .goods-sku {
   margin: 15px 0;
 }
@@ -505,4 +476,4 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/shop/orderList.less"></style>
+<style lang="less" scoped src="@/assets/h5css/shop/orderList.less"></style>

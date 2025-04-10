@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import orderList from "@/components/order/orderList.vue"; //订单列表
+import orderList from "@/components/order/orderListG.vue"; //订单列表
 import {mapState} from "vuex";
 
 export default {
@@ -96,7 +96,7 @@ export default {
     //订单列表
     query_order() {
       this.$api({
-        url: 'myOrderList',
+        url: 'supplyOrderList',
         method: 'post',
         data: {
           ...this.pagination,
@@ -115,7 +115,7 @@ export default {
             v.count_goods = count_goods
           })
           this.orders = list;
-          this.count = data.count;
+          this.count = data.totalCount;
         }
       });
     },
