@@ -6,9 +6,11 @@
           <span class="name">{{ webConfig.shouye_welcome }}</span>
         </div>
         <div class="r-box flex pointer">
-          <div class="tit" @click="goUrl({url: '/order-list'})">采购会员中心</div>
+          <div class="tit" @click="goUrl({url: '/order-list'})" v-if="!baseInfo.id || baseInfo.type != 1">采购会员中心</div>
+          <div class="tit" @click="goUrl({url: '/order-list'})" v-if="baseInfo.id && baseInfo.type == 1">采购会员-{{ baseInfo.name }}</div>
           <div class="col"></div>
-          <div class="tit" @click="goUrl({url: '/G_product_list'})">我是供应商</div>
+          <div class="tit" @click="goUrl({url: '/G_product_list'})" v-if="!baseInfo.id || baseInfo.type != 2">我是供应商</div>
+          <div class="tit" @click="goUrl({url: '/G_product_list'})" v-if="baseInfo.id && baseInfo.type == 2">供应商-{{ baseInfo.name }}</div>
         </div>
       </div>
     </div>
@@ -35,7 +37,7 @@
         </div>
       </div>
     </div>
-    <div class="nav-box">
+    <div class="nav-box" v-if="!['/login', '/register', '/retrieve'].includes($route.path)">
       <div class="content flex">
         <div v-for="(item, index) in navList" :key="index" class="nav flex pointer" @click="goUrl(item)">
           <span :class="{'active': item.url == $route.path}" class="name">{{ item.title }}</span>

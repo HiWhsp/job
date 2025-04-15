@@ -73,6 +73,10 @@ export default {
             title: "商品销量统计",
             route: "G_purchase_count",
           },
+          {
+            title: "退出登录",
+            route: "purchase-count",
+          },
         ]
       ],
 
@@ -116,6 +120,9 @@ export default {
       if (!item.route || item.route === 'my-index') {
         // let route = item.sub[0].route;
         // this.$router.push("/" + route);
+      } else if (item.title === '退出登录') {
+        this.$store.commit("clear_loginInfo");
+        this.$router.push("/login");
       } else {
         this.$router.push("/" + item.route);
       }
