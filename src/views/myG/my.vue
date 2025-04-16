@@ -75,7 +75,7 @@ export default {
           },
           {
             title: "退出登录",
-            route: "purchase-count",
+            route: "loginOut",
           },
         ]
       ],

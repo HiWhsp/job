@@ -13,6 +13,32 @@ export default {
         daohuo_time: '',
         jiance_files_url: []
       },
+      rules: {
+        material_type_id: [
+          {required: true, message: '请选择类目', trigger: 'change'}
+        ],
+        is_shangjia: [
+          {required: true, message: '请选择上下架状态', trigger: 'change'}
+        ],
+        guige: [
+          {required: true, message: '请输入规格', trigger: 'blur'}
+        ],
+        kucun: [
+          {required: true, message: '请输入库存', trigger: 'blur'}
+        ],
+        includeTaxPrice: [
+          {required: true, message: '请输入含税价', trigger: 'blur'}
+        ],
+        noTaxPrice: [
+          {required: true, message: '请输入不含税价', trigger: 'blur'}
+        ],
+        daohuo_time: [
+          {required: true, message: '请输入到货时间', trigger: 'blur'}
+        ],
+        jiance_files_url: [
+          {required: true, message: '请上传检测报告', trigger: 'change'}
+        ]
+      }
     }
   },
   methods: {
@@ -68,12 +94,12 @@ export default {
     </div>
     <div class="page-ctx">
       <el-form ref="form" :model="form" label-width="100px">
-        <el-form-item label="类目：">
+        <el-form-item label="类目：" prop="material_type_id">
           <el-select v-model="form.material_type_id" placeholder="请选择商品分类">
             <el-option v-for="item in vuexFlatCates" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="上下架状态：">
+        <el-form-item label="上下架状态：" prop="is_shangjia">
           <el-radio-group v-model="form.is_shangjia">
             <el-radio :label="1">上架</el-radio>
             <el-radio :label="0">下架</el-radio>
@@ -81,12 +107,12 @@ export default {
         </el-form-item>
         <el-row :gutter="12">
           <el-col :span="12">
-            <el-form-item label="规格：">
+            <el-form-item label="规格：" prop="guige">
               <el-input v-model="form.guige" placeholder="请输入规格"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="库存：">
+            <el-form-item label="库存：" prop="kucun">
               <el-input v-model="form.kucun" placeholder="请输入库存">
                 <template slot="prepend">>=</template>
               </el-input>
@@ -95,21 +121,21 @@ export default {
         </el-row>
         <el-row :gutter="12">
           <el-col :span="12">
-            <el-form-item label="含税价：">
+            <el-form-item label="含税价：" prop="includeTaxPrice">
               <el-input v-model="form.includeTaxPrice" placeholder="请输入含税价">
                 <template slot="prepend">¥</template>
               </el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="不含税价：">
+            <el-form-item label="不含税价：" prop="noTaxPrice">
               <el-input v-model="form.noTaxPrice" placeholder="请输入不含税价">
                 <template slot="prepend">¥</template>
               </el-input>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="到货时间：">
+        <el-form-item label="到货时间：" prop="daohuo_time">
           <el-input v-model="form.daohuo_time" placeholder="请输入到货时间"></el-input>
         </el-form-item>
         <el-form-item label="检测报告：">

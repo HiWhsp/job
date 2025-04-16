@@ -35,9 +35,9 @@
                 </div>
 
                 <div class="box-image cover flex">
-                  <el-image :src="item.image" @click="mix_to_product(item)">
+                  <el-image :src="item.material_info.cover_url_full" @click="mix_to_product(item)">
                     <div slot="error" class="image-slot">
-                      <img :src="item.material_info.images_url"/>
+                      <img :src="item.material_info.cover_url_full"/>
                     </div>
                   </el-image>
                   <div class="box-title">

@@ -3,9 +3,15 @@ export default {
   name: "G_product_list",
   data() {
     return {
+      dialogVisible: false,
       material_type_id: "",
+      selectRow: {},
       list_shopcart: [],
       checked_all: false, //是否全选
+      pagination: {
+        page: 1,
+        pageSize: 10,
+      },
     }
   },
   computed: {
@@ -28,15 +34,15 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: 'supplyProductPage',
+        url: 'myMaterialList',
         method: 'post',
         data: {
-          supply_user_id: this.baseInfo.id,
-          material_type_id: this.material_type_id ? this.material_type_id : this.vuexFlatCates[0].id
+          ...this.pagination,
+          material_type: this.material_type_id ? this.material_type_id : this.vuexFlatCates[0].id
         }
       }).then(res => {
         if (res.code == 200) {
-          this.list_shopcart = res.data.material_list.map(it => {
+          this.list_shopcart = res.data.list.map(it => {
             it.checked = false;
             return it
           })
@@ -154,8 +160,10 @@ export default {
       }
     },
     // 编辑
-    do_edit() {
-
+    do_edit(item) {
+      console.log(item)
+      this.selectRow = item;
+      this.dialogVisible = true;
     },
     // 删除
     do_remove(item) {
@@ -170,6 +178,49 @@ export default {
           this.$message.success(res.msg);
           this.setView();
         }
+      })
+    },
+    clear() {
+      this.dialogVisible = false;
+      this.$refs.form.resetFields(); // 清空form
+    },
+    submit() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.$api({
+            url: 'addMaterial',
+            method: 'post',
+            data: {...this.selectRow, material_id: this.selectRow.id}
+          }).then(res => {
+            if (res.code == 200) {
+              this.$message({
+                message: res.msg,
+                type: 'success',
+              })
+              this.selectRow = {
+                material_type_id: '',
+                is_shangjia: '',
+                guige: '',
+                kucun: '',
+                includeTaxPrice: '',
+                noTaxPrice: '',
+                daohuo_time: '',
+                jiance_files_url: []
+              }
+              this.dialogVisible = false;
+            }
+          })
+        } else {
+          return false;
+        }
+      });
+    },
+    handleSuccess(response, file, fileList) {
+      fileList.forEach(item => {
+        this.selectRow.jiance_files_url.push({
+          name: item.response.data.origin_name,
+          url: item.response.data.visit_url
+        })
       })
     }
   }
@@ -210,9 +261,9 @@ export default {
           </div>
 
           <div class="box-image cover flex">
-            <el-image :src="item.images_url">
+            <el-image :src="item.material_type_info.cover_url_full">
               <div slot="error" class="image-slot">
-                <img :src="item.images_url"/>
+                <img :src="item.material_type_info.cover_url_full"/>
               </div>
             </el-image>
           </div>
@@ -223,7 +274,7 @@ export default {
           <div class="box-act">
             <div class="goods-action-box">
               <div :class="'status_' + item.approve_status" class="collect-no">
-                {{ item.approve_status == 1 ? '审核通过' : '审核不通过' }}
+                {{ item.approve_status == 1 ? '审核通过' : '审核未通过' }}
               </div>
               <div :class="'text_' + item.is_shangjia" class="collect-no" @click="do_shangjia(item, item.is_shangjia)">
                 {{ item.is_shangjia == 1 ? '已上架' : '下架' }}
@@ -241,6 +292,73 @@ export default {
           </div>
         </div>
       </div>
+      <el-dialog title="编辑" :visible.sync="dialogVisible" width="30%">
+        <el-form ref="form" :model="selectRow" label-width="100px">
+          <el-form-item label="类目：" prop="material_type_id">
+            <el-select v-model="selectRow.material_type_id" placeholder="请选择商品分类">
+              <el-option v-for="item in vuexFlatCates" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="上下架状态：" prop="is_shangjia">
+            <el-radio-group v-model="selectRow.is_shangjia">
+              <el-radio :label="1">上架</el-radio>
+              <el-radio :label="0">下架</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-row :gutter="12">
+            <el-col :span="12">
+              <el-form-item label="规格：" prop="guige">
+                <el-input v-model="selectRow.guige" placeholder="请输入规格"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="库存：" prop="kucun">
+                <el-input v-model="selectRow.kucun" placeholder="请输入库存">
+                  <template slot="prepend">>=</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="12">
+            <el-col :span="12">
+              <el-form-item label="含税价：" prop="includeTaxPrice">
+                <el-input v-model="selectRow.includeTaxPrice" placeholder="请输入含税价">
+                  <template slot="prepend">¥</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="不含税价：" prop="noTaxPrice">
+                <el-input v-model="selectRow.noTaxPrice" placeholder="请输入不含税价">
+                  <template slot="prepend">¥</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item label="到货时间：" prop="daohuo_time">
+            <el-input v-model="selectRow.daohuo_time" placeholder="请输入到货时间"></el-input>
+          </el-form-item>
+          <el-form-item label="检测报告：">
+            <el-upload
+                :on-success="handleSuccess"
+                action="https://shalunxiehui.dx.hdapp.com.cn/api/uploadFile"
+                class="upload-demo"
+                drag
+                multiple
+                :file-list="selectRow.jiance_files_url"
+                name="file"
+            >
+              <i class="el-icon-upload"></i>
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+              <div slot="tip" class="el-upload__tip">可添加JPG、PNG、PDF文件，大小限制2M以内</div>
+            </el-upload>
+          </el-form-item>
+          <div class="btn-wrap">
+            <el-button @click="clear">取消</el-button>
+            <el-button type="primary" @click="submit">提交</el-button>
+          </div>
+        </el-form>
+      </el-dialog>
       <el-empty v-if="!list_shopcart.length" description="暂无数据..."></el-empty>
     </div>
   </div>
