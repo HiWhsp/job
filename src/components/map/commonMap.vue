@@ -7,27 +7,39 @@ import { mapState } from "vuex";
 export default {
   components: {},
   data() {
-    return {};
+    return {
+      webInfo: {
+        longitude: "",
+        latitude: "",
+      },
+    };
   },
   computed: {
     // ...mapState(["webInfo"]),
-
-    webInfo() {
-      let obj = {
-        longitude: this.webConfig.jdu || 119.178887,
-        latitude: this.webConfig.wdu || 36.932801,
-      };
-
-      return obj;
-    },
+    // webInfo() {
+    //   let obj = {
+    //     longitude: this.webConfig.jdu || 119.178887,
+    //     latitude: this.webConfig.wdu || 36.932801,
+    //   };
+    //   return obj;
+    // },
   },
   watch: {},
   mounted() {
     // 百度地图API功能
-    this.initMap();
+    // this.initMap();
   },
 
   methods: {
+    init(info) {
+      this.webInfo = {
+        longitude: info.longitude,
+        latitude: info.latitude,
+      };
+
+      this.initMap();
+    },
+
     async initMap() {
       // await this.$('api')
 
@@ -50,9 +62,9 @@ export default {
       // map.centerAndZoom(new BMap.Point(116, 40), zoom); // 初始化地图,设置中心点坐标和地图级别
       //添加地图类型控件
       map.addControl(
-        new window.BMap.MapTypeControl({
-          mapTypes: [window.BMAP_NORMAL_MAP, window.BMAP_HYBRID_MAP],
-        })
+          new window.BMap.MapTypeControl({
+            mapTypes: [window.BMAP_NORMAL_MAP, window.BMAP_HYBRID_MAP],
+          })
       );
 
       // map.setCurrentCity("北京"); // 设置地图显示的城市 此项是必须设置的

@@ -390,7 +390,7 @@ export default {
         method: 'post',
         data: {
           material_id: item.id,
-          type: type
+          status: type
         }
       }).then(res => {
         let {code} = res;

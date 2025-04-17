@@ -52,7 +52,7 @@
                 <span>支付凭证：</span>
                 <!--                <div class="pingzheng-item" v-for="(item, index) in info.order_info.pay_prove_url" :key="index">-->
                 <el-image style="width: 100px; height: 100px" :src="info.order_info.pay_prove_url_full"
-                          :preview-src-list="info.order_info.pay_prove_url_full">
+                          :preview-src-list="[info.order_info.pay_prove_url_full]">
                 </el-image>
                 <!--                </div>-->
               </div>
@@ -80,23 +80,6 @@
               </div>
             </div>
           </div>
-
-          <!-- 转款凭证 -->
-          <!--          <div class="item" v-if="is_xianxia">-->
-          <!--            <div class="item-title">转账凭证</div>-->
-          <!--            <div class="item-content">-->
-          <!--              <div class="wuliu-name">-->
-          <!--                &lt;!&ndash; <span>转账凭证：</span> &ndash;&gt;-->
-
-          <!--                <div class="pingzheng-box">-->
-          <!--                  <div class="pingzheng-item" v-for="(item, index) in xianxia_imgs" :key="index">-->
-          <!--                    <el-image style="width: 100px; height: 100px" :src="item" :preview-src-list="xianxia_imgs">-->
-          <!--                    </el-image>-->
-          <!--                  </div>-->
-          <!--                </div>-->
-          <!--              </div>-->
-          <!--            </div>-->
-          <!--          </div>-->
 
           <!-- 物流信息 -->
           <div class="item" v-if="fahuo_info.expressName">
@@ -151,24 +134,24 @@
             </div>
             <div class="info-good">
               <div class="list-good">
-                <div class="item" v-for="(product_item, index) in info.products" :key="index">
+                <div class="item" v-for="(product_item, index) in info.orderDetail" :key="index">
                   <div class="item-good flex">
-                    <div class="box-image cover" @click="mix_to_product(product_item)">
-                      <el-image :src="product_item.image">
+                    <div class="box-image cover">
+                      <el-image :src="product_item.material_coverurl_full">
                         <div slot="error" class="image-slot">
-                          <img :src="product_item.image"/>
+                          <img :src="product_item.material_coverurl_full"/>
                         </div>
                       </el-image>
                     </div>
 
                     <div class="box-title">
-                      <div class="title" @click="mix_to_product(product_item)">
-                        {{ product_item.title }}
+                      <div class="title">
+                        {{ product_item.material_name }}
                       </div>
-                      <div class="goods-sku">型号: {{ product_item.keyVals }}</div>
+                      <div class="goods-sku">规格: {{ product_item.guige }}</div>
                     </div>
                     <div class="box-num">{{ product_item.num }}</div>
-                    <div class="box-price">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
+                    <div class="box-price">{{ vuex_huobi }} {{ product_item.subtotal }}</div>
                   </div>
 
                   <div class="goods-action" v-if="info.orderStatus == 5">
@@ -215,17 +198,14 @@
               <button class="btn-ripple fit-text " @click="doCancel(info)">
                 取消订单
               </button>
-              <button class="btn-ripple fit-text btn-bg" v-if="orderObj.statusInfo == '待支付'" @click="doPay(info)">
-                去支付
-              </button>
-              <button class="btn-ripple fit-text btn-bg" @click="doDelete(info)">
-                删除订单
-              </button>
-              <button class="btn-ripple fit-text btn-bg" @click="doReceive(info)">
+<!--              <button class="btn-ripple fit-text btn-bg" v-if="orderObj.statusInfo == '待支付'" @click="doPay(info)">-->
+<!--                去支付-->
+<!--              </button>-->
+<!--              <button class="btn-ripple fit-text btn-bg" @click="doDelete(info)">-->
+<!--                删除订单-->
+<!--              </button>-->
+              <button class="btn-ripple fit-text btn-bg" v-if="info.order_info.order_status == 3" @click="doReceive(info)">
                 确认收货
-              </button>
-              <button class="btn-ripple fit-text btn-bg" @click="doRefund(info)">
-                售后
               </button>
               <button class="btn-ripple fit-text btn-bg" @click="uploadPay(info)">
                 上传支付凭证
@@ -241,15 +221,18 @@
       <el-upload
           class="upload-demo"
           drag
-          action="https://jsonplaceholder.typicode.com/posts/"
-          multiple>
+          limit="1"
+          name="file"
+          action="https://shalunxiehui.dx.hdapp.com.cn/api/uploadFile"
+          :on-success="handleSuccess"
+      >
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <div class="el-upload__tip" slot="tip">可添加JPG、PNG、PDF文件，大小限制10M以内</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button @click="uploadPayModal = false">取 消</el-button>
-        <el-button type="primary" @click="uploadPayModal = false">确 定</el-button>
+        <el-button type="primary" @click="submitPay">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -257,7 +240,6 @@
     <order_cancel_modal ref="order_cancel_modal" @confirm="emitConfirm" data-type="取消"/>
     <order_delete_modal ref="order_delete_modal" @confirm="emitConfirm" data-type="删除"/>
     <order_receive_modal ref="order_receive_modal" @confirm="emitConfirm" data-type="收货"/>
-    <order_refund_modal ref="order_refund_modal" @confirm="emitConfirm" data-type="售后"/>
 
   </div>
 </template>
@@ -266,7 +248,6 @@
 import order_cancel_modal from "@/components/order/order_cancel_modal.vue"; //取消订单
 import order_delete_modal from "@/components/order/order_delete_modal.vue"; //删除
 import order_receive_modal from "@/components/order/order_receive_modal.vue"; //收货
-import order_refund_modal from "@/components/order/order_refund_modal.vue"; //售后
 
 // import orderInfo from "@/components/order/orderInfo.vue"; //
 import {mapState} from "vuex";
@@ -277,8 +258,6 @@ export default {
     order_cancel_modal,
     order_delete_modal,
     order_receive_modal,
-    order_refund_modal
-    // orderInfo,
   },
   data() {
     return {
@@ -343,11 +322,31 @@ export default {
     this.setView();
   },
   methods: {
+    handleSuccess(response, file, fileList) {
+      fileList.forEach(item => {
+        this.xianxia_imgs = [item.response.data.visit_url];
+      })
+    },
     uploadPay(info) {
       this.uploadPayModal = true
     },
     handleClose() {
       this.uploadPayModal = false
+    },
+    submitPay() {
+      this.$api({
+        url: 'uploadPayProve',
+        method: 'post',
+        data: {
+          order_id: this.id,
+          pay_prove_url: this.xianxia_imgs.join(',')
+        }
+      }).then(res=>{
+        if (res.code == 200) {
+          this.uploadPayModal = false
+          this.setView();
+        }
+      })
     },
     // 获取线下卡列
     getBankList() {
@@ -442,21 +441,7 @@ export default {
     doReceive(item) {
       this.$refs.order_receive_modal.init(item);
     },
-    doRefund(item) {
-      // this.$refs.order_refund_modal.init(item);
-      this.$router.push({
-        path: '/refundType',
-        query: {
-          orderId: this.info.id,
-          inventoryId: this.info.id
-        }
 
-      })
-    },
-
-    emitConfirmDelete() {
-      this.$router.back()
-    },
     // 复制
     copy(text) {
       // 动态创建 textarea 标签

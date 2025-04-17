@@ -113,9 +113,9 @@ z`
                   <div class="item-detail flex">
                     <div class="box-title flex">
                       <div class="poster-box">
-                        <el-image :src="item.material_info.images_url">
+                        <el-image :src="item.material_info.cover_url_full">
                           <div slot="error" class="image-slot">
-                            <img :src="item.material_info.images_url"/>
+                            <img :src="item.material_info.cover_url_full"/>
                           </div>
                         </el-image>
                       </div>

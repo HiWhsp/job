@@ -395,9 +395,10 @@ export default {
           }
         })
         v.material_list = list;
-        data_format.push(v)
+        if(list.length) {
+          data_format.push(v)
+        }
       })
-
       this.$store.commit('set_cache_payment_products', JSON.stringify(data_format))
 
       this.$router.push({

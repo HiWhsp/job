@@ -1,6 +1,11 @@
 <script>
+import commonMap from '@/components/map/commonMap.vue'
+
 export default {
   name: "lianxi",
+  components: {
+    commonMap
+  },
   data() {
     return {
       list: [{
@@ -17,6 +22,9 @@ export default {
         imgUrl: require('@/static/about/map.png')
       }],
     }
+  },
+  mounted() {
+    this.$refs.commonMap.init({longitude: this.vuex_config.site_lng, latitude: this.vuex_config.site_lat})
   },
   methods: {}
 }
@@ -40,7 +48,9 @@ export default {
           <p class="desc" v-html="item.desc"></p>
         </div>
       </div>
-      <div class="map"></div>
+      <div class="map">
+        <commonMap ref="commonMap"></commonMap>
+      </div>
     </div>
   </div>
 </template>
@@ -113,7 +123,6 @@ export default {
       width: 100%;
       height: 400px;
       margin-top: 50px;
-      border: 1px solid #000;
     }
   }
 }

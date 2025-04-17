@@ -6,11 +6,19 @@
           <span class="name">{{ webConfig.shouye_welcome }}</span>
         </div>
         <div class="r-box flex pointer">
-          <div class="tit" @click="goUrl({url: '/order-list'})" v-if="!baseInfo.id || baseInfo.type != 1">采购会员中心</div>
-          <div class="tit" @click="goUrl({url: '/order-list'})" v-if="baseInfo.id && baseInfo.type == 1">采购会员-{{ baseInfo.name }}</div>
+          <div class="tit" @click="ToUrl({url: '/order-list', type: 1})" v-if="!baseInfo.id || baseInfo.type != 1">
+            采购会员中心
+          </div>
+          <div class="tit" @click="ToUrl({url: '/order-list', type: 1})" v-if="baseInfo.id && baseInfo.type == 1">
+            采购会员-{{ baseInfo.name }}
+          </div>
           <div class="col"></div>
-          <div class="tit" @click="goUrl({url: '/G_product_list'})" v-if="!baseInfo.id || baseInfo.type != 2">我是供应商</div>
-          <div class="tit" @click="goUrl({url: '/G_product_list'})" v-if="baseInfo.id && baseInfo.type == 2">供应商-{{ baseInfo.name }}</div>
+          <div class="tit" @click="ToUrl({url: '/G_product_list', type: 2})" v-if="!baseInfo.id || baseInfo.type != 2">
+            我是供应商
+          </div>
+          <div class="tit" @click="ToUrl({url: '/G_product_list', type: 2})" v-if="baseInfo.id && baseInfo.type == 2">
+            供应商-{{ baseInfo.name }}
+          </div>
         </div>
       </div>
     </div>
@@ -88,6 +96,13 @@ export default {
     // 跳转链接
     goUrl(item) {
       this.$router.push(item.url);
+    },
+    ToUrl(item) {
+      if (this.userInfo.type == item.type) {
+        this.$router.push(item.url);
+      } else {
+        this.$router.push("/login");
+      }
     },
     searchClick(item) {
       this.$router.push(item.url + `&hash=${Math.random()}`);

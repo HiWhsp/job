@@ -123,7 +123,6 @@ export default new Vuex.Store({
     },
 
     set_cache_payment_products(state, str_products) {
-      console.log('vuex 缓存商品信息', str_products)
       sessionStorage.setItem("cache_payment_products", str_products);
     },
 

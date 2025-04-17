@@ -46,6 +46,67 @@ export default {
       });
     },
 
+    doCart(item) {
+      let list = [];
+      list.push({
+        id: item.material_id,
+        num: 1
+      });
+
+      this.$api({
+        url: 'addCart',
+        method: 'post',
+        data: {
+          material_list: list,
+        }
+      }).then((res) => {
+        let {code} = res;
+        if (code === 200) {
+          this.$message.success('加入购物车成功');
+          this.setView();
+        }
+      });
+    },
+    // 取消收藏
+    favouriteAdd(item) {
+      this.$api({
+        url: 'addCollect',
+        method: 'post',
+        data: {
+          material_id: item.material_id,
+          status: 2
+        }
+      }).then(res => {
+        let {code} = res;
+        if (code === 200) {
+          this.$message.success('取消收藏成功');
+          this.setView();
+        }
+      })
+    },
+    // 批量删除
+    do_cart_remove_select() {
+      if (this.list_shopcart_checked.length === 0) {
+        this.$message.warning('请选择要取消收藏的商品');
+        return;
+      }
+      let list = this.list_shopcart_checked.map((v) => {
+        return v.material_id;
+      })
+      this.$api({
+        url: 'qxCollect',
+        method: 'post',
+        data: {
+          ids: list.join(","),
+        }
+      }).then(res => {
+        let {code} = res;
+        if (code === 200) {
+          this.$message.success('取消收藏成功');
+          this.setView();
+        }
+      })
+    }
   }
 }
 </script>
@@ -64,7 +125,7 @@ export default {
           </el-checkbox>
         </div>
         <div class="delete-box">
-          <span @click="do_cart_remove_select()">删除选中</span>
+          <span @click="do_cart_remove_select()">批量取消收藏</span>
         </div>
       </div>
 
@@ -76,22 +137,22 @@ export default {
           </div>
 
           <div class="box-image cover flex">
-            惠州市精瑞砂轮有限公司
+            {{ item.supply_user_name }}
           </div>
-          <div class="box-unit-price">陶瓷刚玉（CA）</div>
+          <div class="box-unit-price">{{ item.material_type_name }}</div>
           <div class="box-number">
-            40#
+            {{ item.guige }}
           </div>
           <div class="box-subtotal">{{ vuex_huobi }} {{
-              (item.priceSale * item.num).toFixed(2)
+              item.includeTaxPrice
             }}
           </div>
           <div class="box-act">
             <div class="goods-action-box">
-              <div class="add-card">
+              <div class="add-card" @click="doCart(item)">
                 加入购物车
               </div>
-              <div class="collect-no">
+              <div class="collect-no" @click="favouriteAdd(item)">
                 取消收藏
               </div>
             </div>

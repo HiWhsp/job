@@ -66,7 +66,7 @@ export default {
     do_confirm() {
       this.loading = true;
       this.$api({
-        url: 'order_info',
+        url: 'cancelOrder',
         method: 'post',
         data: {
           order_id: this.info.order_info.id
