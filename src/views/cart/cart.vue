@@ -10,9 +10,9 @@
 
     <div class="inner">
       <!-- 商品列表 -->
-      <div class="ctx-box" v-for="(it, i) in list_shopcart" :key="i">
+      <div v-for="(it, i) in list_shopcart" :key="i" class="ctx-box">
         <div class="supplier">
-          <img src="@/static/home/supplier.png" alt="">
+          <img alt="" src="@/static/home/supplier.png">
           <span>{{ it.supply_user_info.name }}</span>
         </div>
         <div class="list cart-list">
@@ -31,7 +31,7 @@
             <div v-for="(item, index) in it.material_list" :key="index" class="item">
               <div class="item-detail flex">
                 <div class="box-select">
-                  <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
+                  <el-checkbox v-model="item.checked" @change="on_change_checked_item(i)"></el-checkbox>
                 </div>
 
                 <div class="box-image cover flex">
@@ -52,11 +52,11 @@
 
                 <div class="box-unit-price">
                   <p>
-                    <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
+                    <el-checkbox v-model="item.checked"></el-checkbox>
                     {{ vuex_huobi }} {{ item.cart_info.includeTaxPrice }}(含税)
                   </p>
                   <p>
-                    <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
+                    <el-checkbox v-model="item.checked"></el-checkbox>
                     {{ vuex_huobi }} {{ item.cart_info.noTaxPrice }}(不含税)
                   </p>
                 </div>
@@ -80,7 +80,7 @@
                       收藏</span>
                   </div> -->
                   <div class="goods-action-box">
-                    <span class="goods-action" @click="do_cart_delete_row(item.inventoryId)">
+                    <span class="goods-action" @click="do_cart_delete_row(item.material_info.id)">
                       删除
                     </span>
                   </div>
@@ -96,8 +96,8 @@
         <!-- 底部操作 -->
         <div class="bottom-action-box">
           <div class="all-select">
-            <el-checkbox v-model="checked_all" @change="on_change_checked_all">{{
-                checked_all ? "反选" : "全选"
+            <el-checkbox v-model="checked_all[i]" @change="on_change_checked_all(i)">{{
+                checked_all[i] ? "反选" : "全选"
               }}
             </el-checkbox>
           </div>
@@ -136,7 +136,7 @@ export default {
   data() {
     return {
       address: "", //选择的地址
-      checked_all: false, //是否全选
+      checked_all: [], //是否全选
       list_shopcart: [], //购物车商品列表
       list_address: [], //地址列表
       keyword: "",
@@ -222,6 +222,10 @@ export default {
           //   this.checked_all = true;
           // }
 
+          this.list_shopcart.forEach((v, i) => {
+            this.checked_all[i] = false;
+          });
+
           this.do_update_vuex_cart_number()
         }
       });
@@ -258,31 +262,29 @@ export default {
         alertErr("请先选择要删除的商品");
         return;
       }
-      let ids = this.list_shopcart_checked.map((v) => v.inventoryId);
-      //console.log("要删除的商品id", ids);
+      let ids = this.list_shopcart_checked.map((v) => v.material_info.id);
       let id = ids.join();
       this.do_cart_delete_row(id);
     },
 
     //购车车 删除商品
     do_cart_delete_row(inventoryId) {
-
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: "delCart",
+        method: "post",
         data: {
-          action: "gouwuche_del",
-          inventoryId: inventoryId,
+          ids: inventoryId,
         }
       }).then(res => {
         if (res.code == 200) {
-          let list = this.list_shopcart;
-          let ids = (inventoryId + "").split(",");
-          //可能删除多项商品
-          ids.forEach((inventoryId) => {
-            let index = list.findIndex((v) => v.inventoryId == inventoryId);
-            list.splice(index, 1);
-          });
+          // let list = this.list_shopcart;
+          // let ids = (inventoryId + "").split(",");
+          // //可能删除多项商品
+          // ids.forEach((inventoryId) => {
+          //   let index = list.findIndex((v) => v.inventoryId == inventoryId);
+          //   list.splice(index, 1);
+          // });
+          this.setView();
 
           this.do_update_vuex_cart_number()
         }
@@ -353,23 +355,25 @@ export default {
     },
 
     //商品勾选 全选与取消
-    on_change_checked_all(val) {
+    on_change_checked_all(index) {
       //console.log("更新后的值", val);
-      this.list_shopcart.forEach((v) => {
-        v.material_list.forEach((vv) => {
-          vv.checked = val;
-        })
+      this.list_shopcart.forEach((v, i) => {
+        if (index == i) {
+          v.material_list.forEach((vv) => {
+            vv.checked = !vv.checked;
+          })
+        }
       });
     },
 
     //商品勾选 单项选择
-    on_change_checked_item() {
+    on_change_checked_item(i) {
       // //console.log('监视单项选择', item)
       let checkLength = this.list_shopcart_checked.length;
       if (checkLength == this.list_shopcart.length) {
-        this.checked_all = true;
+        this.checked_all[i] = true;
       } else {
-        this.checked_all = false;
+        this.checked_all[i] = false;
       }
     },
 
@@ -395,7 +399,7 @@ export default {
           }
         })
         v.material_list = list;
-        if(list.length) {
+        if (list.length) {
           data_format.push(v)
         }
       })

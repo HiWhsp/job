@@ -67,10 +67,10 @@ export default {
     do_confirm() {
       this.loading = true;
       this.$api({
-        url: 'confirmReceipt',
+        url: 'sendGoods',
         method: 'post',
         data: {
-          order_id: this.info.order_info.id
+          order_id: this.info.id
         },
       }).then((res) => {
         alert(res).then(() => {
