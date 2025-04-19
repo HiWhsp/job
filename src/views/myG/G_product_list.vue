@@ -161,7 +161,6 @@ export default {
     },
     // 编辑
     do_edit(item) {
-      console.log(item)
       this.selectRow = item;
       this.dialogVisible = true;
     },
@@ -187,6 +186,7 @@ export default {
     submit() {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          this.selectRow.jiance_files_url = JSON.parse(this.selectRow.jiance_files_name);
           this.$api({
             url: 'addMaterial',
             method: 'post',
@@ -194,7 +194,7 @@ export default {
           }).then(res => {
             if (res.code == 200) {
               this.$message({
-                message: res.msg,
+                message: '编辑成功',
                 type: 'success',
               })
               this.selectRow = {
@@ -207,6 +207,7 @@ export default {
                 daohuo_time: '',
                 jiance_files_url: []
               }
+              this.setView();
               this.dialogVisible = false;
             }
           })
@@ -216,6 +217,7 @@ export default {
       });
     },
     handleSuccess(response, file, fileList) {
+      console.log(fileList)
       fileList.forEach(item => {
         this.selectRow.jiance_files_url.push({
           name: item.response.data.origin_name,
@@ -270,6 +272,13 @@ export default {
           <div class="box-title">
             <div class="goods-title">{{ item.name }}</div>
             <div class="goods-sku">规格：{{ item.guige }}</div>
+          </div>
+          <div class="box-title">
+            <div class="goods-title">{{ vuex_huobi }}{{ item.includeTaxPrice }}含税价</div>
+            <div class="goods-title">{{ vuex_huobi }}{{ item.noTaxPrice }}不含税价</div>
+          </div>
+          <div class="box-title">
+            <div class="goods-title">库存： {{ item.kucun }}</div>
           </div>
           <div class="box-act">
             <div class="goods-action-box">
@@ -343,14 +352,12 @@ export default {
                 :on-success="handleSuccess"
                 action="https://shalunxiehui.dx.hdapp.com.cn/api/uploadFile"
                 class="upload-demo"
-                drag
+                list-type="picture-card"
                 multiple
-                :file-list="selectRow.jiance_files_url"
+                :file-list="JSON.parse(selectRow.jiance_files_name ? selectRow.jiance_files_name : '[]')"
                 name="file"
             >
               <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-              <div slot="tip" class="el-upload__tip">可添加JPG、PNG、PDF文件，大小限制2M以内</div>
             </el-upload>
           </el-form-item>
           <div class="btn-wrap">

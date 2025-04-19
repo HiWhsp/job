@@ -16,6 +16,8 @@
               <p>收款单位名称：<span>{{ item.company_name }}</span></p>
               <p>收款单位号码：<span>{{ item.account }}</span></p>
               <p>开户银行：<span>{{ item.bank }}</span></p>
+              <p>单位地址：<span>{{ item.address }}</span></p>
+              <p>电话：<span>{{ item.mobile }}</span></p>
             </div>
             <div class="right">
               <span class="action" @click="do_address_edit(item)">编辑</span>
@@ -39,6 +41,12 @@
         </el-form-item>
         <el-form-item label="开户银行" prop="bank">
           <el-input v-model="form.bank" placeholder="请输入开户银行"></el-input>
+        </el-form-item>
+        <el-form-item label="单位地址" prop="address">
+          <el-input v-model="form.address" placeholder="请输入单位地址"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="mobile">
+          <el-input v-model="form.mobile" placeholder="请输入电话"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -72,7 +80,13 @@ export default {
         ],
         bank: [
           {required: true, message: '请输入开户银行', trigger: 'blur'},
-        ]
+        ],
+        address: [
+          {required: true, message: '请输入单位地址', trigger: 'blur'},
+        ],
+        mobile: [
+          {required: true, message: '请输入电话', trigger: 'blur'},
+        ],
       },
       dialogFormVisible: false
     };
@@ -138,7 +152,7 @@ export default {
             }
           }).then(res => {
             if (res.code === 200) {
-              this.$message.success(res.msg);
+              this.$message.success('提交成功');
               this.dialogFormVisible = false;
               this.setView()
             }

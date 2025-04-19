@@ -58,6 +58,7 @@ export default {
                 message: res.msg,
                 type: 'success',
               })
+              this.$router.push("/G_product_list")
               this.form = {
                 material_type_id: '',
                 is_shangjia: '',
