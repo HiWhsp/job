@@ -94,7 +94,7 @@ export default {
       <span>新增产品</span>
     </div>
     <div class="page-ctx">
-      <el-form ref="form" :model="form" label-width="100px">
+      <el-form ref="form" :model="form" label-width="110px" :rules="rules">
         <el-form-item label="类目：" prop="material_type_id">
           <el-select v-model="form.material_type_id" placeholder="请选择商品分类">
             <el-option v-for="item in vuexFlatCates" :key="item.id" :label="item.name" :value="item.id"></el-option>
