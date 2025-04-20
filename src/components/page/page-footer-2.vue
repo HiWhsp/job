@@ -24,11 +24,18 @@
                   <img :src="vuex_config.facebook_img" alt=""/>
                 </a>
               </div>
-              <div class="article-item">
-                <a :href="vuex_config.weibo_url">
-                  <img :src="vuex_config.weibo_img" alt=""/>
-                </a>
-              </div>
+
+              <el-popover
+                  placement="top-start"
+                  width="100"
+                  trigger="hover">
+                <img src="https://vuesc.new.zhishangez.com/upload/20241226/2024122611352556553.jpg" style="width: 100px;height: 100px" alt="">
+                <div class="article-item" slot="reference">
+                  <a :href="vuex_config.weibo_url">
+                    <img :src="vuex_config.weibo_img" alt=""/>
+                  </a>
+                </div>
+              </el-popover>
             </div>
           </div>
         </div>
@@ -56,17 +63,9 @@
               <div class="info-item">支付方式</div>
 
               <div class="info-item">
-                <!-- <img src="@/static/common/foot-addr.png" alt=""> -->
-                <div class="desc-box">
-                  <!-- <div class="desc-item" v-for="(item, index) in address_list" :key="index">
-                    {{ item }}
-                  </div> -->
-                  <img src="@/assets/image/footer/play.png" alt=""/>
+                <div class="desc-box" style="margin-right: 10px" v-for="item in info_ship" :key="item.id">
+                  <img :src="item.thumb" alt=""/>
                 </div>
-
-                <!-- <span>
-                  {{ vuex_config.comAddress }}
-                </span> -->
               </div>
 
               <div class="links">
@@ -141,8 +140,9 @@ export default {
   },
   watch: {},
 
-  created() {
+  mounted() {
     this.setView();
+
   },
 
   methods: {
@@ -166,12 +166,12 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "news_detail",
-          id: 101,
+          action: "news_lists",
+          channelId: 55,
         },
       }).then((res) => {
         if (res.code == 200) {
-          this.info_ship = res.data.info;
+          this.info_ship = res.data.list;
         }
       });
     },
