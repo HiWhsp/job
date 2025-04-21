@@ -13,18 +13,9 @@ export default {
     }
   },
   watch: {
-    '$route'() {
+    "$route.query.hash"() {
       this.keyword = this.$route.query.keyword;
-      this.$api({
-        url: 'supplyProductPage',
-        method: 'post',
-        data: {
-          keyword: this.keyword
-        }
-      }).then(res => {
-        if (res.code == 200) {
-        }
-      })
+      this.getList();
     },
     filterList() {
       this.selectedCategory = this.filterList[0];
@@ -36,6 +27,10 @@ export default {
     ...mapState({
       filterList: state => state.vuexFlatCates,// 商品分类
     }),
+  },
+  mounted() {
+    this.keyword = this.$route.query.keyword;
+    this.getList();
   },
   methods: {
     toProduct(item) {
@@ -54,14 +49,15 @@ export default {
     },
     getList() {
       this.$api({
-        url: 'getSupplyUserByType',
+        url: 'index',
         method: 'post',
         data: {
-          material_type_id: this.activeIndex
+          keyword: this.keyword
         }
       }).then(res => {
         if (res.code == 200) {
-          this.suppliers = res.data.all_material_type[0].supply_user_list;
+          this.suppliers = res.data.list.length ? res.data.list[0] : {};
+          this.count = this.suppliers.user_list ? this.suppliers.user_list.length : 0;
         }
       })
     }
@@ -99,20 +95,20 @@ export default {
     <div class="column-flex-center wrap">
       <!-- 材料详情 -->
       <div class="material-info">
-        <div class="text-section">
-          <h3>{{ selectedCategory.name }}</h3>
-          <p class="description">{{ selectedCategory.introduce }}</p>
+        <div class="text-section" v-if="suppliers.name">
+          <h3>{{ suppliers.name }}</h3>
+          <p class="description">{{ suppliers.introduce }}</p>
           <p class="features">
-            特征：{{ selectedCategory.feature }}
+            特征：{{ suppliers.feature }}
           </p>
         </div>
-        <div class="image-section">
-          <img :alt="selectedCategory.name" :src="selectedCategory.cover_url" />
+        <div class="image-section" v-if="suppliers.name">
+          <img :alt="suppliers.name" :src="suppliers.cover_url_full" />
         </div>
       </div>
 
       <!-- 供应商选择 -->
-      <div class="suppliers">
+      <div class="suppliers" v-if="suppliers.name">
         <div class="title-section">
           <div>
             <span class="tit">供应商选择</span>
@@ -120,12 +116,13 @@ export default {
           </div>
         </div>
         <div class="supplier-grid">
-          <div v-for="(supplier, index) in suppliers" :key="index" class="supplier" @click="toProduct(supplier)">
+          <div v-for="(supplier, index) in suppliers.user_list" :key="index" class="supplier" @click="toProduct(supplier)">
             <img alt="" src="@/static/home/supplier.png">
             {{ supplier.name }}
           </div>
         </div>
       </div>
+      <el-empty v-else description="暂无数据..."></el-empty>
     </div>
   </div>
 </template>
