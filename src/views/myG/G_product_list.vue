@@ -282,15 +282,15 @@ export default {
           </div>
           <div class="box-act">
             <div class="goods-action-box">
-              <div :class="'status_' + item.approve_status" class="collect-no">
-                {{ item.approve_status == 1 ? '审核通过' : '审核未通过' }}
-              </div>
-              <div :class="'text_' + item.is_shangjia" class="collect-no" @click="do_shangjia(item, item.is_shangjia)">
-                {{ item.is_shangjia == 1 ? '已上架' : '下架' }}
-              </div>
-              <div :class="'textA_' + item.is_shangjia" class="collect-no" @click="do_xiajia(item, item.is_shangjia)">
-                {{ item.is_shangjia == 2 ? '已下架' : '下架' }}
-              </div>
+<!--              <div :class="'status_' + item.approve_status" class="collect-no">-->
+<!--                {{ item.approve_status == 1 ? '审核通过' : '审核未通过' }}-->
+<!--              </div>-->
+<!--              <div :class="'text_' + item.is_shangjia" class="collect-no" @click="do_shangjia(item, item.is_shangjia)">-->
+<!--                {{ item.is_shangjia == 1 ? '已上架' : '下架' }}-->
+<!--              </div>-->
+<!--              <div :class="'textA_' + item.is_shangjia" class="collect-no" @click="do_xiajia(item, item.is_shangjia)">-->
+<!--                {{ item.is_shangjia == 2 ? '已下架' : '下架' }}-->
+<!--              </div>-->
               <div class="collect-no" @click="do_edit(item)">
                 编辑
               </div>

@@ -21,19 +21,19 @@ export default {
           {required: true, message: '请选择上下架状态', trigger: 'change'}
         ],
         guige: [
-          {required: true, message: '请输入规格', trigger: 'blur'}
+          {required: true, message: '请输入规格(例：F46)', trigger: 'blur'}
         ],
         kucun: [
-          {required: true, message: '请输入库存', trigger: 'blur'}
+          {required: true, message: '请输入库存(KG)', trigger: 'blur'}
         ],
         includeTaxPrice: [
-          {required: true, message: '请输入含税价', trigger: 'blur'}
+          {required: true, message: '请输入含税价(元)', trigger: 'blur'}
         ],
         noTaxPrice: [
-          {required: true, message: '请输入不含税价', trigger: 'blur'}
+          {required: true, message: '请输入不含税价(元)', trigger: 'blur'}
         ],
         daohuo_time: [
-          {required: true, message: '请输入到货时间', trigger: 'blur'}
+          {required: true, message: '请输入到货时间(天)', trigger: 'blur'}
         ],
         jiance_files_url: [
           {required: true, message: '请上传检测报告', trigger: 'change'}
@@ -54,11 +54,13 @@ export default {
             data: this.form
           }).then(res => {
             if (res.code == 200) {
-              this.$message({
-                message: res.msg,
-                type: 'success',
-              })
-              this.$router.push("/G_product_list")
+              this.$alert('<h3 style="color: #014BC4;">产品添加成功</h3>', '成功', {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '确定',
+                callback: action => {
+                  this.$router.push("/G_product_list")
+                }
+              });
               this.form = {
                 material_type_id: '',
                 is_shangjia: '',
@@ -94,7 +96,7 @@ export default {
       <span>新增产品</span>
     </div>
     <div class="page-ctx">
-      <el-form ref="form" :model="form" label-width="110px" :rules="rules">
+      <el-form ref="form" :model="form" label-width="130px" :rules="rules">
         <el-form-item label="类目：" prop="material_type_id">
           <el-select v-model="form.material_type_id" placeholder="请选择商品分类">
             <el-option v-for="item in vuexFlatCates" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -108,12 +110,12 @@ export default {
         </el-form-item>
         <el-row :gutter="12">
           <el-col :span="12">
-            <el-form-item label="规格：" prop="guige">
+            <el-form-item label="规格(例：F46)：" prop="guige">
               <el-input v-model="form.guige" placeholder="请输入规格"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="库存：" prop="kucun">
+            <el-form-item label="库存(KG)：" prop="kucun">
               <el-input v-model="form.kucun" placeholder="请输入库存">
                 <template slot="prepend">>=</template>
               </el-input>
@@ -122,21 +124,21 @@ export default {
         </el-row>
         <el-row :gutter="12">
           <el-col :span="12">
-            <el-form-item label="含税价：" prop="includeTaxPrice">
+            <el-form-item label="含税价(元)：" prop="includeTaxPrice">
               <el-input v-model="form.includeTaxPrice" placeholder="请输入含税价">
                 <template slot="prepend">¥</template>
               </el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="不含税价：" prop="noTaxPrice">
+            <el-form-item label="不含税价(元)：" prop="noTaxPrice">
               <el-input v-model="form.noTaxPrice" placeholder="请输入不含税价">
                 <template slot="prepend">¥</template>
               </el-input>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="到货时间：" prop="daohuo_time">
+        <el-form-item label="到货时间(天)：" prop="daohuo_time">
           <el-input v-model="form.daohuo_time" placeholder="请输入到货时间"></el-input>
         </el-form-item>
         <el-form-item label="检测报告：">

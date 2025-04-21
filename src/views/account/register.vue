@@ -25,7 +25,7 @@
             </div>
 
             <!-- 验证码 -->
-            <sms_phone :form="form"/>
+<!--            <sms_phone :form="form"/>-->
 
             <div class="input-box">
               <span>设置密码</span>
@@ -137,10 +137,10 @@ export default {
         alertErr("请输入正确的手机号");
         return;
       }
-      if (!this.form.code) {
-        alertErr("请输入验证码");
-        return;
-      }
+      // if (!this.form.code) {
+      //   alertErr("请输入验证码");
+      //   return;
+      // }
       if (!this.form.pass) {
         alertErr("请输入密码");
         return;

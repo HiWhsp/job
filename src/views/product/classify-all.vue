@@ -14,7 +14,17 @@ export default {
   },
   watch: {
     '$route'() {
-      this.keyword = this.$route.query.keyword
+      this.keyword = this.$route.query.keyword;
+      this.$api({
+        url: 'supplyProductPage',
+        method: 'post',
+        data: {
+          keyword: this.keyword
+        }
+      }).then(res => {
+        if (res.code == 200) {
+        }
+      })
     },
     filterList() {
       this.selectedCategory = this.filterList[0];
@@ -97,7 +107,7 @@ export default {
           </p>
         </div>
         <div class="image-section">
-          <img :alt="selectedCategory.name" :src="selectedCategory.images_url"/>
+          <img :alt="selectedCategory.name" :src="selectedCategory.cover_url" />
         </div>
       </div>
 
