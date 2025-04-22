@@ -1,85 +1,81 @@
 <template>
   <div class="page">
-    <modalTerms ref="modalTerms"/>
-    <!--    <modalRich ref="modalRich"/>-->
     <div class="mask"></div>
-
     <div class="center">
       <div class="inner">
-
         <div class="input-wrap">
           <div class="tab-box">
-            <div
-                class="tab-item"
-                :class="tabType == 'PASS' ? 'active' : ''"
-                @click="tabType = 'PASS'"
-            >
-              {{ mode == "账号密码" ? "用户注册" : "微信注册" }}
+            <div class="tab-item active">
+              用户注册
             </div>
           </div>
-          <!--          手机号注册-->
-          <template v-if="mode == '账号密码'">
-            <div class="input-box">
-              <span>手机号</span>
-              <input type="text" placeholder="请输入手机号码" v-model="form.phone"/>
-            </div>
+          <el-form ref="form" :model="form" :rules="rules" class="demo-ruleForm" label-width="0px">
+            <el-form-item prop="mobile">
+              <el-input v-model="form.mobile" placeholder="请输入账号"></el-input>
+            </el-form-item>
+            <el-form-item prop="password">
+              <el-input v-model="form.password" placeholder="请输入密码"></el-input>
+            </el-form-item>
+            <el-form-item prop="type">
+              <el-select v-model="form.type" placeholder="请选择注册角色">
+                <el-option label="采购用户" value="1"></el-option>
+                <el-option label="供应商" value="2"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-if="form.type == 1">
+              <el-select v-model="form.materialTypeNames" multiple placeholder="请选择产品类别">
+                <el-option v-for="(item, index) in typeSelect.caigou_type_list" :key="index" :label="item"
+                           :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-if="form.type == 2">
+              <el-select v-model="form.materialTypeIds" multiple placeholder="请选择商品类目">
+                <el-option v-for="(item, index) in typeSelect.material_type_list" :key="index" :label="item.name"
+                           :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item prop="farenName">
+              <el-input v-model="form.farenName" placeholder="请输入法人姓名"></el-input>
+            </el-form-item>
+            <el-form-item prop="code">
+              <el-input v-model="form.code" placeholder="请输入统一识别代码"></el-input>
+            </el-form-item>
+            <el-form-item prop="username">
+              <el-input v-model="form.username" placeholder="请输入联系人"></el-input>
+            </el-form-item>
+            <el-form-item prop="contact">
+              <el-input v-model="form.contact" placeholder="请输入联系方式"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <area_select ref="area_select" @change="changeSelectAddress"/>
+            </el-form-item>
+            <el-form-item prop="licenseUrl">
+              <el-upload
+                  :limit="1"
+                  :on-success="handleSuccess"
+                  action="https://shalunxiehui.dx.hdapp.com.cn/api/uploadFile"
+                  class="upload-demo"
+                  drag
+                  name="file"
+              >
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+              </el-upload>
+            </el-form-item>
+          </el-form>
 
-            <!-- 验证码 -->
-<!--            <sms_phone :form="form"/>-->
+          <div class="btn-box">
+            <button class="btn-ripple" @click="retrieve_submit">确定</button>
+          </div>
 
-            <div class="input-box">
-              <span>设置密码</span>
-              <!-- <img src="@img/other/icon-lock.png" alt="" /> -->
-              <input type="password" placeholder="请输入密码" v-model="form.pass"/>
-            </div>
+          <div class="register-box">
+            <span> <router-link to="/login">已有账号，直接登录</router-link> </span>
+          </div>
 
-            <div class="input-box">
-              <span>确认密码</span>
-              <!-- <img src="@img/other/icon-lock.png" alt="" /> -->
-              <input
-                  type="password"
-                  placeholder="请输入密码"
-                  v-model="form.confirm_pass"
-              />
-            </div>
-
-            <div class="btn-box">
-              <button class="btn-ripple" @click="retrieve_submit">确定</button>
-            </div>
-
-            <div class="register-box">
-              <!-- <router-link to="/">回到主页 ></router-link> -->
-              <span> <router-link to="/login">已有账号，直接登录</router-link> </span>
-            </div>
-
-            <div class="terms-box">
-              <el-checkbox v-model="agreed"></el-checkbox>
-              我已阅读并同意<span>《隐私政策》</span>
-            </div>
-          </template>
-          <!-- 扫码登录 -->
-          <template v-else>
-            <div class="qrcode-cit flex">
-              <div class="title">
-                <img src="@/static/account/login-wx.png" alt="">使用微信扫码后点击【关注公众号】注册账号
-              </div>
-              <div class="qrcode-box">
-                <!--                <img src="../../static/account/demo-code.png" alt=""/>-->
-                <!--                <div ref="qrCodeUrl" class="erweima"></div>-->
-              </div>
-              <div class="text-box flex">
-                <div class="title flex">
-                  <div class="col"></div>
-                  <span>其他注册方式</span>
-                  <div class="col"></div>
-                </div>
-                <div class="check flex pointer" @click="mode = '账号密码'">
-                  <!--                  <img src="../../static/account/phone.png" alt="">-->
-                  <span>手机号注册</span>
-                </div>
-              </div>
-            </div>
-          </template>
+          <div class="terms-box">
+            <el-checkbox v-model="agreed"></el-checkbox>
+            我已阅读并同意<span @click="terms_open">《隐私政策》</span>
+          </div>
         </div>
       </div>
     </div>
@@ -89,107 +85,138 @@
 </template>
 
 <script>
-import sms_phone from "@/components/login/sms_phone.vue"; //短信验证码
-import utilForm from "@/util/utilForm.js";
-// import SmsLogin from "@/components/login/SmsLogin.vue"; //短信验证码
-import modalTerms from "@/components/modals/modalTerms.vue"; //协议弹窗
-// import modalRich from "@/components/modals/modalRich.vue"; //协议弹窗
+
 
 import {mapState} from "vuex";
+import area_select from "@/components/address/area_select.vue";
 
 export default {
   name: "login",
-  components: {
-    sms_phone,
-    modalTerms,
-    // modalRich,
-  },
+  components: {area_select},
   data() {
     return {
-      mode: "账号密码", //微信扫码
-      tabType: "PASS", //登录方式
+      typeSelect: {},
       agreed: false,
-
-      form: {
-        phone: "",
-        code: "",
-        pass: "",
-        confirm_pass: "",
-      },
+      rules: {
+        mobile: [
+          {required: true, message: "请输入手机号", trigger: "blur"},
+        ],
+        password: [
+          {required: true, message: "请输入密码", trigger: "blur"},
+        ],
+        farenName: [
+          {required: true, message: "请输入法人姓名", trigger: "blur"},
+        ],
+        code: [
+          {required: true, message: "请输入统一识别代码", trigger: "blur"},
+        ],
+        username: [
+          {required: true, message: "请输入联系人", trigger: "blur"},
+        ],
+        contact: [
+          {required: true, message: "请输入联系方式", trigger: "blur"},
+        ]
+      }, //rules
+      form: {},
     };
   },
   computed: {
     ...mapState(["logo"]),
   },
-  created() {
+  mounted() {
+    this.$api({
+      url: 'typeSelect',
+      method: 'get',
+    }).then((res) => {
+      //console.log("注册", res);
+      let {code, data, msg} = res;
+      if (code == 200) {
+        this.typeSelect = data;
+      }
+    })
   },
 
   methods: {
-    terms_open(id) {
-      this.$refs.modalRich.init(id);
-    },
-
     retrieve_submit() {
       let reg_phone = /^1[3-9]\d{9}$/;
-      let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          if (!reg_phone.test(this.form.mobile)) {
+            alertErr("请输入正确的注册手机号");
+            return;
+          }
+          if (!reg_phone.test(this.form.contact)) {
+            alertErr("请输入正确的联系方式");
+            return;
+          }
+          if (this.form.type == 1 && this.form.materialTypeNames.length == 0) {
+            alertErr("请选择产品类别");
+            return;
+          }
+          if (this.form.type == 2 && this.form.materialTypeIds.length == 0) {
+            alertErr("请选择商品类目");
+            return;
+          }
+          if (!this.form.licenseUrl) {
+            alertErr("请上传营业执照");
+            return;
+          }
+          if (!this.agreed) {
+            alertErr("请勾选同意协议");
+            return;
+          }
+          this.form.materialTypeNames = this.form.materialTypeNames ? this.form.materialTypeNames.join(",") : '';
+          this.form.materialTypeIds = this.form.materialTypeIds ? this.form.materialTypeIds.join(",") : "";
 
-      if (!reg_phone.test(this.form.phone)) {
-        alertErr("请输入正确的手机号");
-        return;
-      }
-      // if (!this.form.code) {
-      //   alertErr("请输入验证码");
+          this.$api({
+            url: 'register',
+            method: 'post',
+            data: this.form
+          }).then((res) => {
+            //console.log("注册", res);
+            let {code, data, msg} = res;
+            if (code == 200) {
+              alertSucc(msg);
+              this.$router.push("/login");
+            } else {
+              alertErr(msg);
+            }
+          });
+        }
+      })
+
+      // if (!reg_phone.test(this.form.phone)) {
+      //   alertErr("请输入正确的手机号");
       //   return;
       // }
-      if (!this.form.pass) {
-        alertErr("请输入密码");
-        return;
-      }
-      if (!this.form.confirm_pass) {
-        alertErr("请输入确认密码");
-        return;
-      }
-      if (this.form.pass != this.form.confirm_pass) {
-        alertErr("两次密码不一致");
-        return;
-      }
-      if (!this.agreed) {
-        alertErr("请勾选同意协议");
-        return;
-      }
-
-      this.$api({
-        url: 'register',
-        method: 'post',
-        data: {
-          mobile: this.form.phone,
-          password: this.form.pass,
-          captcha: this.form.code
-        }
-      }).then((res) => {
-        //console.log("注册", res);
-        let {code, data, msg} = res;
-        if (code == 200) {
-          alertSucc(msg);
-          this.$router.push("/login");
-        } else {
-          alertErr(msg);
-        }
-      });
     },
-
-    //条款
-    onClick_shengming() {
-      this.$router.push("/banquan");
+    handleSuccess(response, file, fileList) {
+      fileList.forEach(item => {
+        console.log(item)
+        this.form.licenseUrl = item.response.data.save_url;
+      })
     },
-    onClick_yinsi() {
-      this.$router.push("/yinsi");
+    //更新当前父组件数据
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      let {sheng, shi, qu} = data;
+      this.form.province = sheng.label;
+      this.form.city = shi.label;
+      this.form.area = qu.label;
+
+      this.form.province_id = sheng.value;
+      this.form.city_id = shi.value;
+      this.form.area_id = qu.value;
+      // debugger
+    },
+    terms_open() {
+      this.$router.push('/policy');
     },
   },
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .page {
   width: 100%;
   position: relative;
@@ -228,19 +255,13 @@ export default {
 
     .inner {
       position: relative;
-      // position: absolute;
-      // left: 50%;
-      // top: 50%;
-      // transform: translate(-50%, -50%);
       width: 480px;
       min-height: 520px;
-      height: auto;
       padding: 40px 40px 60px;
       background: #ffffff;
       opacity: 1;
       border-radius: 10px;
       overflow: hidden;
-      background: #fff;
       // margin: 0 auto;
 
       .mode-toggle {
@@ -254,18 +275,14 @@ export default {
         }
       }
 
-      .left {
-      }
+      .demo-ruleForm {
+        padding-right: 20px;
+        height: 250px;
+        overflow: auto;
 
-      .right {
-        // width: 480px;
-        // height: 480px;
-        // background: #ffffff;
-        // box-shadow: 0px 10px 20px rgba(1, 100, 98, 0.2);
-        // opacity: 1;
-        // border-radius: 10px;
-
-        // padding: 40px 40px 30px 40px;
+        .el-select {
+          width: 100%;
+        }
       }
     }
 
@@ -279,19 +296,6 @@ export default {
         font-weight: 400;
         color: @theme;
 
-        &:first-child {
-          // &:after {
-          //   content: "";
-          //   display: inline-block;
-          //   width: 2px;
-          //   height: 24px;
-          //   background-color: #ccc;
-          //   margin: 0 30px;
-          //   position: relative;
-          //   top: 3px;
-          // }
-        }
-
         &.active {
           color: @theme;
         }
@@ -301,49 +305,6 @@ export default {
     .input-wrap {
       width: 400px;
       margin: 0 auto;
-    }
-
-    .input-box {
-      margin-bottom: 20px;
-      width: 100%;
-      height: 50px;
-      background: #ffffff;
-      border: 1px solid #eeeeee;
-      border-radius: 4px;
-      .flex-between();
-      overflow: hidden;
-
-      span {
-        display: inline-block;
-        width: 90px; /*no */
-        border-right: 1px solid #eee;
-
-        font-size: 14px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        line-height: 24px;
-        color: #999999;
-        text-indent: 1em;
-      }
-
-      img {
-        width: 36px;
-      }
-
-      input {
-        flex: 2;
-        height: 100%;
-        padding-left: 16px;
-        font-size: 14px;
-        color: #000;
-
-        &::-webkit-input-placeholder {
-          font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-          font-weight: 400;
-          color: #d7d7d7;
-        }
-      }
     }
 
     .agree-box {
@@ -397,14 +358,13 @@ export default {
 .terms-box {
   position: absolute;
   height: 40px;
+  width: 100%;
   background: #f5f6f8;
   bottom: 0;
   left: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
   padding-left: 40px;
-  text-align: center;
 
   .el-checkbox {
     margin-right: 5px;
@@ -501,4 +461,4 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/page/register.less"></style>
+<style lang="less" scoped src="@/assets/h5css/page/register.less"></style>
