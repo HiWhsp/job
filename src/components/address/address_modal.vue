@@ -1,17 +1,13 @@
 <template>
   <div class="modal-container">
-    <el-dialog class="modal-address" title="新增地址" width="500px" :visible.sync="show_modal"
+    <el-dialog class="modal-address" title="新增收货地址" width="500px" :visible.sync="show_modal"
                :before-close="onModal_close"
                :close-on-press-escape="false" :close-on-click-modal="false" custom-class="modal-custom"
                @closed="onclosed">
       <div class="modal-inner">
         <div class="item">
           <span class="text required">收货人</span>
-          <el-input clearable v-model="form.name" placeholder="收货人姓名"></el-input>
-        </div>
-        <div class="item">
-          <span class="text required">联系电话</span>
-          <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
+          <el-input clearable v-model="form.username" placeholder="请输入收货人姓名"></el-input>
         </div>
         <div class="item">
           <span class="text required">所在地区</span>
@@ -19,18 +15,23 @@
         </div>
         <div class="item">
           <span class="text required">详细地址</span>
-          <el-input clearable v-model="form.address" placeholder="详细地址"></el-input>
+          <el-input clearable v-model="form.address" placeholder="请输入详细地址"></el-input>
         </div>
         <div class="item">
-          <span class="text">默认地址</span>
-          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#F74747"
+          <span class="text required">手机号</span>
+          <el-input clearable v-model="form.mobile" placeholder="请输入手机号"></el-input>
+        </div>
+        <div class="item">
+          <span class="text"></span>
+          <el-switch v-model="form.is_default" :inactive-value="0" :active-value="1" active-color="#014BC4"
                      inactive-color="#eeeeee">
           </el-switch>
+          <span style="margin-left: 15px;">设置为默认地址</span>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <button class="btn-ripple fit-text btn-1" @click="show_modal = false">取 消</button>
-        <button class="btn-ripple fit-text btn-2" @click="throttle_do_submit()" :loading="loading">保 存</button>
+        <button class="btn-ripple fit-text btn-1" @click="throttle_do_submit()" :loading="loading">保 存</button>
+        <button class="btn-ripple fit-text btn-2" @click="show_modal = false">取 消</button>
       </span>
     </el-dialog>
   </div>
@@ -51,23 +52,7 @@ export default {
     return {
       show_modal: false,
 
-      form: {
-        name: "",
-        phone: "",
-        provinceCode: "",
-        province: "",
-        cityCode: "",
-        city: "",
-        areaCode: "",
-        area: "",
-        address: "",
-        moren: 0,
-        id: 0,
-        longitude: '',
-        latitude: '',
-        shequId: '',
-        addressType: 1,
-      },
+      form: {},
 
       loading: false,
     };
@@ -91,62 +76,20 @@ export default {
         this.show_modal = true;
       } else {
         this.show_modal = true;
-        this.form.id = row.id;
-        this.query_address_detail();
+        this.form = {...row}
+        this.$nextTick(() => {
+          this.$refs.area_select.init({
+            provinceCode: row.province_id,
+            cityCode: row.city_id,
+            areaCode: row.area_id
+          });
+        })
       }
-    },
-    //获取地址详情
-    query_address_detail() {
-      this.$api("userAddress_detail", {
-        id: this.form.id
-      }).then((res) => {
-        let {code, data, msg} = res;
-        if (code == 200) {
-
-          this.form = {
-            name: data.name,
-            phone: data.phone,
-            provinceCode: data.provinceCode,
-            province: data.province,
-            cityCode: data.cityCode,
-            city: data.city,
-            areaCode: data.areaCode,
-            area: data.area,
-            address: data.address,
-            moren: data.moren,
-            id: data.id,
-            longitude: data.longitude,
-            latitude: data.latitude,
-            shequId: data.shequId,
-            addressType: data.addressType,
-          }
-
-          this.$nextTick(() => {
-            this.$refs.area_select.init(data);
-          })
-        }
-      });
     },
 
     onclosed() {
       this.$refs.area_select.clear();
-      this.form = {
-        name: "",
-        phone: "",
-        provinceCode: "",
-        province: "",
-        cityCode: "",
-        city: "",
-        areaCode: "",
-        area: "",
-        address: "",
-        moren: 0,
-        id: 0,
-        longitude: '',
-        latitude: '',
-        shequId: '',
-        addressType: 1,
-      }
+      this.form = {}
     },
 
 
@@ -154,13 +97,13 @@ export default {
     changeSelectAddress(data) {
       this.$log("更新省市区数据", data);
       let {sheng, shi, qu} = data;
-      this.form.province = sheng.title;
-      this.form.city = shi.title;
-      this.form.area = qu.title;
+      this.form.province = sheng.label;
+      this.form.city = shi.label;
+      this.form.area = qu.label;
 
-      this.form.provinceCode = sheng.id;
-      this.form.cityCode = shi.id;
-      this.form.areaCode = qu.id;
+      this.form.province_id = sheng.value;
+      this.form.city_id = shi.value;
+      this.form.area_id = qu.value;
       // debugger
     },
 
@@ -168,17 +111,13 @@ export default {
     // 新建地址 / 编辑地址
     do_submit() {
       let reg_phone = /^1[3-9]\d{9}$/;
-      let is_true_phone = reg_phone.test(this.form.phone);
+      let is_true_phone = reg_phone.test(this.form.mobile);
 
       //console.log("要保存的信息", form_data);
-      if (!this.form.name) {
+      if (!this.form.username) {
         alertErr("请输入收货人姓名");
         return;
       }
-      // if (!is_true_phone) {
-      //   alertErr("请输入正确的收货人电话");
-      //   return;
-      // }
       if (!is_true_phone) {
         alertErr("请输入正确的收货人电话");
         return;
@@ -194,10 +133,9 @@ export default {
 
       this.loading = true;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'addAddress',
+        method: 'post',
         data: {
-          action: 'userAddress_add',
           ...this.form
         },
       }).then((res) => {
@@ -229,16 +167,17 @@ export default {
 
   .modal-inner {
     padding: 0;
+
+
     .item {
       margin-bottom: 20px;
-      display: flex;
-      align-items: center;
+      .flex();
 
       .text {
         min-width: 190px;
+        text-align: left;
         text-align: right;
         padding-right: 10px;
-        color: #fff;
 
         &.required {
           &::before {
@@ -251,24 +190,18 @@ export default {
           }
         }
 
-        &::after {
-          margin-left: 3px;
-          content: ':';
-          font-family: OPPOSans, OPPOSans;
-          font-weight: 400;
-          font-size: 14px;
-          color: #fff;
-        }
+        //&::after {
+        //  margin-left: 3px;
+        //  content: ':';
+        //  font-family: OPPOSans, OPPOSans;
+        //  font-weight: 400;
+        //  font-size: 14px;
+        //  color: #999999;
+        //}
       }
 
       .default-text {
         margin-left: 20px;
-      }
-
-      .el-input__inner {
-        background-color: transparent;
-        border: 1px solid #7B7B7B;
-        color: #fff;
       }
 
       .el-select {
@@ -288,30 +221,21 @@ export default {
 
 /deep/ .el-dialog__header {
   padding: 16px 24px;
-  border-top: 5px solid #666666;
-  border-right: 5px solid #666666;
-  border-left: 5px solid #666666;
-  background: #000;
+  border-bottom: 1px solid #eee;
+  background: #F7F7F7;
 
   font-family: Poppins, Poppins;
   font-weight: 600;
   font-size: 18px;
-  color: #fff;
-
+  color: #333333;
 
   .el-dialog__close {
     font-size: 20px;
-  }
-  .el-dialog__title {
-    color: #fff;
   }
 }
 
 /deep/ .el-dialog__body {
   padding: 36px 60px 36px 0;
-  border-right: 5px solid #666;
-  border-left: 5px solid #666;
-  background-color: #000;
 }
 
 
@@ -335,34 +259,38 @@ export default {
 /deep/ .el-dialog__footer {
   text-align: center;
   padding-bottom: 50px;
-  background-color: #000;
-  border-right: 5px solid #666;
-  border-left: 5px solid #666;
-  border-bottom: 5px solid #666;
 
   button {
     margin: 0 12px;
   }
 
   .btn-1 {
-    min-width: 120px;
-    height: 32px;
-    background: #000;
-    border: 1px solid #7B7B7B;
-    font-family: Arial, Arial;
-    font-weight: 400;
-    font-size: 14px;
-    color: #fff;
-  }
-
-  .btn-2 {
-    min-width: 120px;
-    height: 32px;
-    background: #DF1626;
-    font-family: Arial, Arial;
+    width: 104px;
+    height: 40px;
+    background: @theme;
+    border-radius: 4px 4px 4px 4px;
+    text-align: center;
+    font-family: Roboto, Roboto;
     font-weight: 400;
     font-size: 14px;
     color: #FFFFFF;
+    line-height: 40px;
+    font-style: normal;
+    text-transform: none;
+  }
+
+  .btn-2 {
+    width: 104px;
+    height: 40px;
+    border-radius: 4px 4px 4px 4px;
+    border: 1px solid @theme;
+    font-family: Roboto, Roboto;
+    font-weight: 400;
+    font-size: 14px;
+    color: @theme;
+    line-height: 40px;
+    font-style: normal;
+    text-transform: none;
   }
 }
 </style>

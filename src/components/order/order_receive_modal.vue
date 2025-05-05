@@ -9,13 +9,13 @@
           </div>
         </div> -->
         <div class="text-box">
-          是否确认发货？请仔细检查发货商品。
+          是否确认收货？请仔细检查收货商品。
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <button class="btn btn-ripple fit-text btn-1" @click="show_modal = false">取消</button>
         <el-button :loading="loading" class="btn btn-ripple fit-text btn-2 btn-bg"
-                   @click="throttle_do_confirm()">确认</el-button>
+                   @click="do_confirm()">确认</el-button>
 
       </span>
     </el-dialog>
@@ -48,7 +48,7 @@ export default {
   },
   watch: {},
   created() {
-    this.throttle_do_confirm = this.mix_throttle(this.do_confirm, 1500)
+    // this.throttle_do_confirm = this.mix_throttle(this.do_confirm, 1500)
   },
   methods: {
     init(info) {
@@ -65,16 +65,16 @@ export default {
 
     },
     do_confirm() {
-      this.loading = true;
+      // this.loading = true;
       this.$api({
-        url: 'sendGoods',
+        url: 'confirmReceipt',
         method: 'post',
         data: {
-          order_id: this.info.id
+          order_id: this.info.order_info.id
         },
       }).then((res) => {
         alert(res).then(() => {
-          this.loading = false;
+          // this.loading = false;
         });
         if (res.code == 200) {
           this.$emit('confirm')

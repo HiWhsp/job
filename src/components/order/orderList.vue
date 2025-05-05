@@ -13,7 +13,7 @@
         </div>
         <div class="order-payType">
           {{
-            item.jiesuan_type == 1 ? `货到付款 ${(item.jiesuan_days)}` : item.jiesuan_type == 2 ? `款到发货 ${(item.jiesuan_end_time)}` : ''
+            item.jiesuan_type == 1 ? `货到付款 ${(item.jiesuan_days)}` : item.jiesuan_type == 2 ? `款到发货 ${(item.jiesuan_end_time||'')}` : ''
           }}
         </div>
         <div class="order-state" :class="'state-' + item.order_status">
@@ -49,7 +49,7 @@
       <div class="info-heji">
         <div class="heji">
           <div class="heji-num">
-            共 <b>{{ item.count_goods }}</b> 个商品
+            共 <b>{{ item.count_goods }}</b> 吨商品
           </div>
           <div class="heji-money">
             合计金额： <b>{{ item.all_price }} 元</b>

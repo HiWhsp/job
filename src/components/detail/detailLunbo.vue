@@ -2,7 +2,7 @@
   <div class="lunbo-box">
     <div class="zhutu-wrap">
       <div class="zhutu-inner" @mouseover="showMaskModal = true" @mouseout="showMaskModal = false">
-        <el-carousel ref="carousel" :autoplay="false" :interval="4000" @change="onCarouseChange">
+        <el-carousel ref="carousel" :autoplay="false" :interval="4000" @change="onCarouseChange" height="100%">
           <el-carousel-item v-for="item in imageViewList" :key="item">
             <div class="img-box">
               <el-image :src="item" :preview-src-list="imageViewList"></el-image>
@@ -12,11 +12,13 @@
       </div>
     </div>
 
-    <!-- <div class="mask-modal" v-if="showMaskModal">
+    <div class="mask-modal" v-if="showMaskModal">
       <div class="mask-inner">
-        <img :src="imageList[activeSwipeIndex]" alt />
+        <img :src="imageList[activeSwipeIndex].image" alt/>
       </div>
-    </div> -->
+    </div>
+
+    <div class="tip">图片仅供参考</div>
 
     <!-- 缩略图 -->
     <div class="slt-wrap">
@@ -30,10 +32,22 @@
       <div class="lunbo-slt-list">
         <div class="lunbo-slt-item cover hidden" v-for="(item, index) in imageList" :key="index" :class="{
                     active: item.index == activeSwipeIndex,
-                    shown: Math.floor(item.index / 4) == shownGroupIndex,
+                    shown: Math.floor(item.index / 6) == shownGroupIndex,
                 }" @click="onClickSwipeItem(item.index)">
           <img :src="item.image"/>
         </div>
+      </div>
+    </div>
+
+    <!-- 下载 -->
+    <div class="down flex flex-center">
+      <div class="it flex flex-center pointer" @click="pdfDown">
+        <img src="@/static/prod/lock_pdf.png" alt="pdf">
+        <span>PDF图档</span>
+      </div>
+      <div class="it flex flex-center pointer" @click="img3DDown">
+        <img src="@/static/prod/down.png" alt="down">
+        <span>3D模型</span>
       </div>
     </div>
   </div>
@@ -43,7 +57,7 @@
 export default {
   name: "carouselComponent",
   components: {},
-  props: ["imageList"],
+  props: ["imageList", "img3D"],
   data() {
     return {
       showMaskModal: false, //是否展示模态框
@@ -84,14 +98,30 @@ export default {
     toNext() {
       this.$refs.carousel.next();
     },
+    pdfDown() {
+      if (!this.$store.state.configInfo.productPdf) {
+        alertInfo('暂无pdf图例');
+        return;
+      }
+      window.open(this.$store.state.configInfo.productPdf);
+    },
+    img3DDown() {
+      if (!this.img3D) {
+        alertInfo('暂无3D模型');
+        return;
+      }
+      this.img3D.forEach(item => {
+        window.open(item.image3d);
+      })
+    }
   },
 };
 </script>
 
 <style scoped lang="less">
 /deep/ .el-carousel {
-  width: 582px;
-  height: 389px;
+  width: 100%;
+  height: 100%;
 }
 
 /deep/ .el-carousel__container {
@@ -103,12 +133,13 @@ export default {
 }
 
 .zhutu-wrap {
-  width: 582px;
+  width: 355px;
 
   .zhutu-inner {
+    border: 1px solid #eee;
     overflow: hidden;
-    width: 582px;
-    height: 389px;
+    width: 355px;
+    height: 355px;
     margin: 0 auto;
     user-select: none;
   }
@@ -117,9 +148,8 @@ export default {
 
 .lunbo-box {
   position: relative;
-  width: 582px;
-  height: 490px;
-  // padding-top: 20px;
+  width: 355px;
+  height: 355px;
 
   .img-box {
     .flex-center();
@@ -156,6 +186,7 @@ export default {
     left: 401px;
     top: 0;
     background-color: #eee;
+    border: 1px solid #bbb;
 
     .mask-inner {
       width: 700px;
@@ -170,19 +201,21 @@ export default {
 }
 
 .lunbo-slt-list {
+  margin-left: 66px;
+  margin-right: 66px;
   width: 100%;
-  height: 92px;
-  margin-top: 10px;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
 
   .lunbo-slt-item {
-    width: 138px;
-    height: 92px;
+    width: 60px;
+    height: 60px;
     padding: 0;
     cursor: pointer;
+    border: 1px solid transparent;
     margin-right: 10px;
+    border: 1px solid #dddddd;
 
     &.hidden {
       display: none;
@@ -192,12 +225,12 @@ export default {
       display: block;
     }
 
-    &:nth-child(4n) {
+    &:nth-child(6n) {
       margin-right: 0;
     }
 
     &.active {
-      border: 1px solid #F74747;
+      border: 1px solid @theme;
     }
 
     img {
@@ -205,6 +238,17 @@ export default {
       height: 100%;
     }
   }
+}
+
+.tip {
+  font-family: Roboto, Roboto;
+  font-weight: 400;
+  font-size: 12px;
+  color: #77797B;
+  line-height: 46px;
+  text-align: center;
+  font-style: normal;
+  text-transform: none;
 }
 
 .slt-wrap {
@@ -219,23 +263,51 @@ export default {
   top: 50%;
   transform: translate(0, -50%);
 
+  //   height: 74p  rgba(0, 0, 0, 0.3);
+
   width: 24px;
   height: 24px;
-  //background: #fff;
+  background: #fff;
   border-radius: 50%;
-  //border: 1px solid #aaa;
+  border: 1px solid #aaa;
 
   &.arrow-left {
-    left: -40px;
+    left: 20px;
   }
 
   &.arrow-right {
-    right: -40px;
+    right: 20px;
   }
 
   i {
     color: #fff;
-    font-size: 24px;
+    font-size: 20px;
+    font-size: 14px;
+    color: #aaa;
+  }
+}
+
+.down {
+  margin-top: 22px;
+
+  .it {
+    padding: 2px 5px;
+    border-radius: 2px;
+    border: 1px solid #E6E4E1;
+    margin-right: 15px;
+
+    img {
+      width: 15px;
+      height: 15px;
+      margin-right: 3px;
+    }
+
+    span {
+      font-family: Roboto, Roboto;
+      font-weight: 400;
+      font-size: 14px;
+      color: #77797B;
+    }
   }
 }
 </style>

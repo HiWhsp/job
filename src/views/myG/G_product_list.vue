@@ -254,7 +254,12 @@ export default {
           <span @click="do_prod_xiajia_select(2)">批量下架</span>
         </div>
       </div>
-
+      <div class="head-box flex">
+        <div class="head-item head-item-1">产品类目</div>
+        <div class="head-item head-item-2">单价（元）</div>
+        <div class="head-item head-item-3">库存（吨）</div>
+        <div class="head-item head-item-4">检测报告</div>
+      </div>
       <!-- 商品列表 -->
       <div v-for="(item, index) in list_shopcart" :key="index" class="item">
         <div class="item-detail flex">
@@ -270,7 +275,7 @@ export default {
             </el-image>
           </div>
           <div class="box-title">
-            <div class="goods-title">{{ item.name }}</div>
+            <div class="goods-title">{{ item.name||item.material_type_info.name }}</div>
             <div class="goods-sku">规格：{{ item.guige }}</div>
           </div>
           <div class="box-title">
@@ -279,6 +284,14 @@ export default {
           </div>
           <div class="box-title">
             <div class="goods-title">库存： {{ item.kucun }}</div>
+          </div>
+          <div class="box-title">
+            <el-image 
+              v-if="item.jiance_files_url.url"
+              style="width: 50px; height: 50px"
+              :src="item.jiance_files_url.url" 
+              :preview-src-list="[item.jiance_files_url.url]">
+            </el-image>
           </div>
           <div class="box-act">
             <div class="goods-action-box">
@@ -601,6 +614,26 @@ export default {
           color: #A5A5A5;
         }
       }
+    }
+  }
+}
+.head-box{
+  background: #E9E9E9;
+  padding: 10px 20px;
+  .head-item{
+    width: 100px;
+    text-align: center;
+    &-1{
+      margin-left: 80px;
+    }
+    &-2{
+      margin-left: 140px;
+    }
+    &-3{
+      margin-left: 70px;
+    }
+    &-4{
+      margin-left: 65px;
     }
   }
 }

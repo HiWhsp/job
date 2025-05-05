@@ -10,14 +10,14 @@
             采购会员中心
           </div>
           <div class="tit" @click="ToUrl({url: '/order-list', type: 1})" v-if="baseInfo.id && baseInfo.type == 1">
-            采购会员-{{ baseInfo.name }}
+            采购会员-{{ baseInfo.company_name }}
           </div>
           <div class="col"></div>
           <div class="tit" @click="ToUrl({url: '/G_product_list', type: 2})" v-if="!baseInfo.id || baseInfo.type != 2">
             我是供应商
           </div>
           <div class="tit" @click="ToUrl({url: '/G_product_list', type: 2})" v-if="baseInfo.id && baseInfo.type == 2">
-            供应商-{{ baseInfo.name }}
+            供应商-{{ baseInfo.company_name }}
           </div>
         </div>
       </div>
@@ -38,7 +38,7 @@
         </div>
         <div class="r-box">
           <div class="flex">
-            <div class="tools-btn pointer flex" @click="goUrl({url: '/cart'})">
+            <div class="tools-btn pointer flex" @click="goUrl({url: '/cart'})"  v-if="userInfo.type==1">
               <img alt="" class="img-2" src="../../static/home/gouwuche.png">购物车
             </div>
           </div>

@@ -230,7 +230,7 @@ export default {
     mix_logout() {
       this.$store.commit("clear_loginInfo");
       alertSucc("已退出登录");
-      this.$router.push("/");
+      this.$router.push("/login");
     },
 
     mix_userinfo_query() {

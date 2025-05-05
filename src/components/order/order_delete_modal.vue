@@ -63,17 +63,17 @@ export default {
 
     },
     do_confirm() {
-      this.loading = true;
+      // this.loading = true;
       this.$api({
         url: '/service.php',
         method: 'get',
         data: {
           action: 'orders_del',
-          id: this.info.id
+          id: this.info.order_info.id
         },
       }).then((res) => {
         alert(res).then(() => {
-          this.loading = false;
+          // this.loading = false;
         });
         if (res.code == 200) {
           this.$emit('confirm')

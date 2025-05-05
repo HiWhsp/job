@@ -73,17 +73,21 @@ export default {
             prop="guige">
         </el-table-column>
         <el-table-column
-            label="单价"
+            label="单价(元)"
             prop="notax_single_price">
         </el-table-column>
         <el-table-column
-            label="采购数量"
+            label="采购数量(吨)"
             prop="notax_num">
         </el-table-column>
         <el-table-column
-            label="采购额"
+            label="采购额(元)"
             prop="notax_subtotal">
         </el-table-column>
+        <!-- <el-table-column
+            label="订单时间"
+            prop="notax_subtotal">
+        </el-table-column> -->
       </el-table>
       <div class="money-box">
         <div class="money-num">

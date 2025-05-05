@@ -1,9 +1,8 @@
 <template>
   <div class="page">
     <div class="main-title">
-      <span>地址管理</span>
+      <span>收货地址</span>
       <button @click="do_address_add()">
-        <!-- <img src="@img/address-add.png" alt="" /> -->
         <i class="el-icon-circle-plus"></i>
         <span class="add-text">添加收货地址</span>
       </button>
@@ -16,7 +15,7 @@
             <div class="top">
               <div>
                 <span>收货人：</span>
-                {{ item.name }}
+                {{ item.username }}
               </div>
               <div>
                 <span>所在地区：</span>
@@ -28,15 +27,15 @@
               </div>
               <div>
                 <span>手机号码：</span>
-                {{ item.phone }}
+                {{ item.mobile }}
               </div>
             </div>
             <div class="bottom">
               <div class="left">
-                <span v-if="item.moren == 1" class="moren">默认地址</span>
+                <span v-if="item.is_default == 1" class="moren">默认地址</span>
               </div>
               <div class="right">
-                <span class="action" v-if="item.moren != 1" @click="do_address_set_default(item.id)">设为默认</span>
+                <span class="action" v-if="item.is_default != 1" @click="do_address_set_default(item.id)">设为默认</span>
                 <span class="action" @click="do_address_edit(item)">编辑</span>
                 <span class="action" @click="do_address_delete(item.id)">删除</span>
               </div>
@@ -80,24 +79,19 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: '/service.php',
+        url: 'myAddressList',
         method: 'get',
-        data: {
-          action: 'userAddress_lists',
-          ...this.pagination,
-        },
       }).then(res => {
         if (res.code == 200) {
-          let data = res.data
+          let data = res.data.list
 
           data.forEach((v) => {
-            v.full_addr = [v.country, v.province, v.city, v.area].filter(v => !!v).join('-');
-            // v.selected =  v.if_default
+            v.full_addr = [v.province, v.city, v.area].filter(v => !!v).join('-');
           });
 
           this.list_address = data;
 
-          let obj = data.find((v) => v.if_default) || {};
+          let obj = data.find((v) => v.is_default) || {};
           this.select_address = obj || {};
 
           this.$store.commit("set_vuex_data", {
@@ -131,10 +125,9 @@ export default {
     //设置默认地址
     do_address_set_default(id) {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'setDefaultAddress',
+        method: 'post',
         data: {
-          action: 'userAddress_setDefault',
           id: id,
         },
       }).then((res) => {
@@ -149,30 +142,29 @@ export default {
 
 <style scoped lang="less">
 .page {
-  text-align: left;
-  padding-bottom: 80px;
+  padding: 0;
 
   .main-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    .flex-between();
     padding: 0 32px;
     text-align: left;
     height: 56px;
     line-height: 56px;
-    background: #1D1D1D;
+    background: #ffffff;
     font-size: 16px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #fff;
+    color: #333333;
 
     button {
-      display: flex;
-      align-items: center;
+      .flex();
       min-width: 96px;
       height: 30px;
       line-height: 30px;
+      background: @theme;
       color: #fff;
+      background: #fff;
+      color: @theme;
       font-size: 14px;
       // font-weight: bold;
 
@@ -191,9 +183,9 @@ export default {
   }
 
   .page-ctx {
-    margin-top: 10px;
+    margin-top: 24px;
     padding: 32px 32px 55px 32px;
-    background: #1D1D1D;
+    background: #fff;
   }
 }
 
@@ -203,15 +195,17 @@ export default {
 
   .address-item {
     min-height: 190px;
-    background: #2F2F2F;
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
     padding: 20px;
     margin-bottom: 20px;
 
     .top {
       padding-bottom: 20px;
+
       > div {
         margin-bottom: 10px;
-        color: #fff;
+        color: #333333;
 
         &:last-child {
           margin-bottom: 0;
@@ -221,16 +215,14 @@ export default {
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #fff;
+          color: #666666;
         }
       }
     }
 
     .bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-top: 1px solid #4D4D4D;
+      .flex-between();
+      border-top: 1px solid #eeeeee;
       padding-top: 20px;
 
       .left {
@@ -241,7 +233,7 @@ export default {
           line-height: 30px;
           text-align: center;
           // background: rgba(255, 90, 0, 0.68);
-          background: #DF1626;
+          background: @theme;
           font-size: 14px;
           color: #ffffff;
         }
@@ -252,7 +244,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 20px;
-        color: #fff;
+        color: @theme;
 
         .action {
           margin-left: 20px;

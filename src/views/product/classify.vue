@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
     <!--    条件筛选-->
-    <div class="condition-filter">
+    <div class="condition-filter" v-if="userInfo.type==2">
       <div class="filter flex">
         <p class="name">类目</p>
         <div class="item-wrap flex">
@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="company_info">
-      <div class="company_name">{{ company_info.name }} <img alt="" src="@/static/home/supplier.png"></div>
+      <div class="company_name">{{ userInfo.type==1?company_info.username: company_info.company_name}} <img alt="" src="@/static/home/supplier.png"></div>
       <div class="company_content">{{ company_info.introduce }}</div>
     </div>
     <!-- 筛选-->
@@ -58,12 +58,12 @@
             <div class="title-2">序号</div>
             <div class="title-3">产品类目</div>
             <div class="title-4">产品规格</div>
-            <div class="title-5">库存</div>
+            <div class="title-5">库存(吨)</div>
             <div class="title-6">检测报告</div>
-            <div class="title-7">单价</div>
-            <div class="title-8">订购数量</div>
-            <div class="title-9">加入购物车</div>
-            <div class="title-10">到货时间</div>
+            <div class="title-7">单价(元)</div>
+            <div class="title-8">订购数量(吨)</div>
+            <div class="title-9" v-if="userInfo.type==1">加入购物车</div>
+            <div class="title-10">到货时间(天)</div>
             <div class="title-11">收藏</div>
           </div>
 
@@ -76,7 +76,7 @@
               <div class="box-index">{{ index + 1 }}</div>
 
               <div class="box-title">
-                {{ item.name }}
+                {{ item.material_type_name }}
               </div>
               <div class="box-sku">
                 {{ item.guige }}
@@ -92,24 +92,25 @@
 
               <div class="box-unit-price">
                 <p>
-                  <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
+                  <!-- <el-checkbox v-model="item.is_tax" @change="on_change_checked_item"></el-checkbox> -->
                   {{ vuex_huobi }} {{ item.includeTaxPrice }}(含税)
                 </p>
                 <p>
-                  <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
+                  <!-- <el-checkbox v-model="item.is_notax" @change="on_change_checked_item"></el-checkbox> -->
                   {{ vuex_huobi }} {{ item.noTaxPrice }}(不含税)
                 </p>
               </div>
               <div class="box-number">
-                <button @click="do_number_minus(item)">-</button>
-                <input v-model="item.num" min="1" type="number" @blur="on_blur_input(item)"/>
-                <button @click="do_number_plus(item)">+</button>
+                <el-input-number v-model="item.num" :min="0" :precision="2"></el-input-number>
+                <!-- <button @click="do_number_minus(item)">-</button> -->
+                <!-- <input v-model="item.num" min="1" type="number"  @input="inputChange(item)" @blur="on_blur_input(item)"/> -->
+                <!-- <button @click="do_number_plus(item)">+</button> -->
               </div>
               <!--              <div class="box-subtotal">{{ vuex_huobi }} {{-->
               <!--                  (item.priceSale * item.num).toFixed(2)-->
               <!--                }}-->
               <!--              </div>-->
-              <div class="box-card">
+              <div class="box-card" v-if="userInfo.type==1">
                 <img alt="" src="@/static/prod/goods-cart.png" @click="doCart(item)">
               </div>
               <div class="box-data">
@@ -117,7 +118,7 @@
               </div>
               <div class="box-act">
                 <img v-if="!item.had_collect" alt="" src="@/static/prod/no-action.png" @click="favouriteAdd(item, 1)">
-                <img v-else="item.had_collect" alt="" src="@/static/prod/action.png" @click="favouriteAdd(item, 2)">
+                <img v-else alt="" src="@/static/prod/action.png" @click="favouriteAdd(item, 2)">
               </div>
             </div>
           </div>
@@ -144,15 +145,15 @@
 
         <div class="total-number">
           已选择
-          <b>{{ count_shopcart_checked }}</b>
-          件商品
+          <b>{{ count_shopcart_checked.toFixed(2) }}</b>
+          吨商品
         </div>
         <div class="total-price">
           总计：
           <b>{{ vuex_huobi }} {{ shopcart_money }}</b>
           （含税）
         </div>
-        <button :disabled="jiesuanDisabled" class="btn-ripple btn-order" @click="doCart()">
+        <button :disabled="jiesuanDisabled" class="btn-ripple btn-order" @click="doCart()"  v-if="userInfo.type==1">
           加入购物车
         </button>
       </div>
@@ -189,7 +190,7 @@
 
 <script>
 import productAddCartSuccessModal from "@/components/product/product_add_cart_success_modal.vue";
-
+import {mapState} from "vuex";
 export default {
   name: '',
   components: {
@@ -224,6 +225,7 @@ export default {
   },
   watch: {},
   computed: {
+    ...mapState(["userInfo"]),
     //购物车商品总金额
     shopcart_money() {
       let money = 0;
@@ -302,6 +304,8 @@ export default {
         this.filterList = data.has_type;
         this.list_goods = data.material_list.map((v) => {
           v.checked = false;
+          v.is_tax = false;
+          v.is_notax = false;
           v.num = 0;
           return v;
         });
@@ -310,6 +314,7 @@ export default {
     // 加入购物车
     doCart(item) {
       let list = [];
+      let nums=0
       if (item) {
         list.push({
           id: item.id,
@@ -317,6 +322,7 @@ export default {
         });
       } else {
         list = this.list_shopcart_checked.map((v) => {
+          nums+=Number(v.num)
           return {
             id: v.id,
             num: v.num
@@ -333,7 +339,7 @@ export default {
         let {code} = res;
         if (code === 200) {
           this.$refs.modalAddSuccess.init({
-            num: 1,
+            num: nums,
             shopcart_count: res.data.cart_count
           });
         }
@@ -365,6 +371,10 @@ export default {
       } else {
         this.checked_all = false;
       }
+    },
+
+    inputChange(item) {
+        item.num = item.num.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');
     },
     on_blur_input(item) {
       if (item.num < 1) {
@@ -722,6 +732,7 @@ export default {
 
         .box-number {
           width: 180px;
+          padding: 5px;
           .flex-center();
 
           input {
@@ -729,8 +740,6 @@ export default {
             height: 30px;
             border: 1px solid #d5d8de;
             text-align: center;
-            border-left: 0;
-            border-right: 0;
 
             &::-webkit-outer-spin-button,
             &::-webkit-inner-spin-button {

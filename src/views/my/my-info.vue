@@ -1,11 +1,8 @@
 <template>
   <div class="page">
-
-
     <div class="main-title">
       <span>个人资料</span>
     </div>
-
     <div class="page-ctx">
       <div class="section">
         <!--        <div class="section-title">基本信息</div>-->
@@ -14,81 +11,66 @@
             <span class="text">头像：</span>
             <span class="info">
               <div class="upload-box">
-                <el-upload :action="UPLOAD_ACTION" :before-upload="upload_before_upload" :data="mix_upload_data"
-                           :name="UPLOAD_NAME"
-                           :on-success="upload_on_success" :show-file-list="false" accept="image/*"
-                           class="upload-demo">
+                <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="img"
+                           action="https://shalunxiehui.dx.hdapp.com.cn/api?action=index_ossUpload"
+                           :data="mix_upload_data" :on-success="upload_on_success"
+                           :before-upload="upload_before_upload">
                   <img v-if="form.image" :src="form.image" class="user-avatar"/>
-                  <img v-else class="user-avatar" src="@/static/my/avatar.png"/>
+                  <img v-else src="@/static/common/head-user-login.png" class="user-avatar"/>
                 </el-upload>
               </div>
             </span>
           </div>
+
           <div class="item">
-            <span class="text">姓名：</span>
-            <span class="info">
-              <el-input v-model="form.realName" clearable type="text"/>
-            </span>
-            <span class="action"> </span>
+            <span class="text">手机：</span>
+            <span class="info">{{ form.mobile }}</span>
+            <!--            <span class="action" @click="open_phone_update()">-->
+            <!--              <span>修改</span>-->
+            <!--            </span>-->
           </div>
+
           <div class="item">
-            <span class="text">性别：</span>
+            <span class="text">性别：<span>*</span></span>
             <span class="info">
-                <el-radio-group v-model="form.realName">
-                  <el-radio :label="0">男</el-radio>
-                  <el-radio :label="1">女</el-radio>
+                <el-radio-group v-model="form.sex">
+                  <el-radio :label="1">男</el-radio>
+                  <el-radio :label="2">女</el-radio>
                 </el-radio-group>
             </span>
-            <span class="action"> </span>
           </div>
+
           <div class="item">
-            <span class="text">手机号：</span>
+            <span class="text">{{my_info.type==1?"采购商名称":"供应商名称"}}<span>*</span></span>
             <span class="info">
-              <el-input v-model="my_info.phone" disabled/></span>
-            <span class="action" @click="open_phone_update()">
-              <span>修改</span>
-            </span>
-          </div>
-          <div class="item">
-            <span class="text">城市：</span>
-            <span class="info">
-              <el-input v-model="form.address" clearable type="text"/>
+              <el-input clearable type="text" v-model="form.real_name"/>
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
-            <span class="text">邮箱：</span>
+            <span class="text">所在地区：<span>*</span></span>
             <span class="info">
-              <el-input v-model="form.address" clearable type="text"/>
+              <area_select ref="area_select" @change="changeSelectAddress"/>
             </span>
             <span class="action"> </span>
           </div>
+          <!--          <div class="item">-->
+          <!--            <span class="text">公司名称：</span>-->
+          <!--            <span class="info">-->
+          <!--              <el-input clearable type="text" v-model="form.name"/>-->
+          <!--            </span>-->
+          <!--            <span class="action">-->
+          <!--            </span>-->
+          <!--          </div>-->
 
-
-          <!-- <div class="item">
-            <span class="text">昵称：</span>
+          <div class="item">
+            <span class="text"> 邮箱：<span>*</span></span>
             <span class="info">
-              <input type="text" v-model="nickname" class="" />
+              <el-input clearable type="text" v-model="form.email"/>
             </span>
             <span class="action">
-
-            </span>
-          </div> -->
-
-          <!-- <div class="item">
-            <span class="text">密码：</span>
-            <span class="info">******</span>
-            <span class="action">
-              <span @click="$router.push('/retrieve')">修改</span>
             </span>
           </div>
-          <div class="item">
-            <span class="text">账号：</span>
-            <span class="info" style="visibility: hidden">******</span>
-            <span class="action">
-              <span @click="mix_logout">退出登录</span>
-            </span>
-          </div> -->
         </div>
       </div>
 
@@ -98,10 +80,10 @@
           <div class="item btn-box">
             <span class="text" style="visibility: hidden">-</span>
             <div class="info">
-              <el-button :loading="loading" class="btn-ripple fit-text btn-save"
-                         @click="throttle_do_submit()">保存
+              <el-button class="btn-ripple fit-text btn-cancel " @click="throttle_do_submit()"
+                         :loading="loading">保存
               </el-button>
-              <button class="btn-ripple fit-text btn-cancel" @click="do_reset()">清空</button>
+              <button class="btn-ripple fit-text btn-save" @click="do_reset()">清空</button>
             </div>
           </div>
         </div>
@@ -120,13 +102,12 @@ import {UPLOAD_ACTION, UPLOAD_NAME} from '@/config/env.js'
 
 import phone_bind_old_check_modal from "@/components/account/phone_bind_old_check_modal.vue";
 import phone_bind_new_set_modal from "@/components/account/phone_bind_new_set_modal.vue";
-
-
-import {mapState} from "vuex";
+import area_select from "@/components/address/area_select.vue";
 
 export default {
   name: "servicePage",
   components: {
+    area_select,
     phone_bind_old_check_modal,
     phone_bind_new_set_modal,
   },
@@ -137,15 +118,19 @@ export default {
 
       my_info: {},
       form: {
-        image: "",
-        realName: "",
-        address: "",
+        image: '',
+        real_name: "",
+        name: "",
+        email: "",
+        province: '',
+        city: '',
+        area: '',
+        provinceCode: '',
+        cityCode: '',
+        areaCode: '',
       },
       loading: false,
     };
-  },
-  computed: {
-    ...mapState(["baseInfo"]),
   },
   watch: {},
   created() {
@@ -171,31 +156,50 @@ export default {
       this.query_user();
     },
     query_user() {
-      // this.$store.dispatch("query_user");
       this.$api({
-        url: '/service.php',
+        url: 'userInfo',
         method: 'get',
-        data: {
-          action: 'users_userInfo',
-        },
       }).then(res => {
         if (res.code == 200) {
-          let data = res.data;
+          let data = res.data.user_info;
           this.my_info = data;
 
           this.form = {
-            image: data.image || "",
-            realName: data.realName || "",
-            address: data.address || "",
-          };
-
-
-          this.$store.commit("set_baseInfo", res.data);
+            image: data.image,
+            real_name: data.real_name,
+            name: data.name,
+            email: data.email,
+            province: data.province,
+            city: data.city,
+            area: data.area,
+            provinceCode: data.provinceCode,
+            cityCode: data.cityCode,
+            areaCode: data.areaCode,
+            mobile: data.mobile,
+            sex: data.sex
+          }
+          this.$refs.area_select.init({province: data.provinceCode, city: data.cityCode, area: data.areaCode});
+          this.$store.commit("set_baseInfo", res.data.user_info);
         }
       })
     },
 
     do_submit() {
+
+      if (!this.form.real_name) {
+        alertErr("请填写真实姓名");
+        return;
+      }
+
+      if (!this.form.area) {
+        alertErr("请填写所在地区");
+        return;
+      }
+
+      if (!this.form.email) {
+        alertErr("请填写邮箱");
+        return;
+      }
       this.loading = true;
       this.$api({
         url: '/service.php',
@@ -218,8 +222,15 @@ export default {
     do_reset() {
       this.form = {
         image: this.my_info.image,
-        realName: "",
-        address: "",
+        real_name: "",
+        name: "",
+        email: "",
+        province: '',
+        city: '',
+        area: '',
+        provinceCode: '',
+        cityCode: '',
+        areaCode: '',
       };
     },
 
@@ -237,11 +248,24 @@ export default {
       const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
       return isLt2M;
     },
+
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      let {sheng, shi, qu} = data;
+      this.form.province = sheng.title;
+      this.form.city = shi.title;
+      this.form.area = qu.title;
+
+      this.form.provinceCode = sheng.id;
+      this.form.cityCode = shi.id;
+      this.form.areaCode = qu.id;
+      // debugger
+    },
   },
 };
 </script>
 
-<style lang="less" scoped>
+<style scoped lang="less">
 .user-avatar {
   object-fit: cover;
 }
@@ -249,26 +273,24 @@ export default {
 .page {
   text-align: left;
   padding-bottom: 80px;
+  padding-top: 0;
 
   .main-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    .flex-between();
     padding: 0 32px;
     text-align: left;
     height: 56px;
     line-height: 56px;
-    background: #1D1D1D;
+    background: #ffffff;
     font-size: 16px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #fff;
+    color: #333333;
 
     button {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -276,9 +298,9 @@ export default {
   }
 
   .page-ctx {
-    margin-top: 10px;
-    padding: 80px 100px;
-    background: #1D1D1D;
+    margin-top: 24px;
+    padding: 20px 30px;
+    background: #fff;
   }
 }
 
@@ -293,7 +315,7 @@ export default {
     }
 
     .section-title {
-      margin-bottom: 50px;
+      margin-bottom: 30px;
       font-size: 16px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
@@ -306,8 +328,8 @@ export default {
 
     .upload-box {
       img {
-        width: 100px;
-        height: 100px;
+        width: 88px;
+        height: 88px;
         border-radius: 50%;
       }
     }
@@ -322,7 +344,11 @@ export default {
         min-width: 134px;
         text-align: right;
         font-size: 14px;
-        color: #fff;
+        color: #666;
+
+        span {
+          color: #ff0000;
+        }
       }
 
       .info {
@@ -330,17 +356,21 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: #fff;
+        color: #333333;
         display: inline-block;
         min-width: 120px;
 
+        input {
+          // width: 400px;
+          // height: 40px;
+          // background: #ffffff;
+          // border-radius: 4px 4px 4px 4px;
+          // border: 1px solid #d4d4d4;
+        }
 
-        /deep/ .el-input__inner {
-           width: 400px;
-           height: 40px;
-           background: transparent;
-           border: 1px solid #7B7B7B;
-          color: #fff;
+        .el-input {
+          width: 400px;
+          // height: 40px;
         }
       }
 
@@ -349,7 +379,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: #F74747;
+        color: @theme;
 
         span {
           margin-right: 20px;
@@ -368,21 +398,24 @@ export default {
   }
 
   .btn-save {
-    width: 130px;
-    height: 40px;
-    background-color: transparent;
-    border: 1px solid #7B7B7B;
+    width: 120px;
+    height: 32px;
+    background: #FFFFFF;
+    border-radius: 4px;
+    border: 1px solid @theme;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #fff;
+    color: @theme;
+
   }
 
   .btn-cancel {
-    margin-left: 20px;
-    width: 130px;
-    height: 40px;
-    background: #DF1626;
+    margin-right: 20px;
+    width: 120px;
+    height: 32px;
+    background: @theme;
+    border-radius: 4px;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
@@ -391,4 +424,3 @@ export default {
 }
 </style>
 
-<style lang="less" scoped src="@/assets/h5css/user/my-info.less"></style>

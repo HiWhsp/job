@@ -14,7 +14,7 @@
           <div v-for="(item, index) in list_address" :key="index" class="address-item">
             <div class="left">
               <p>收款单位名称：<span>{{ item.company_name }}</span></p>
-              <p>收款单位号码：<span>{{ item.account }}</span></p>
+              <p>银行账户：<span>{{ item.account }}</span></p>
               <p>开户银行：<span>{{ item.bank }}</span></p>
               <p>单位地址：<span>{{ item.address }}</span></p>
               <p>电话：<span>{{ item.mobile }}</span></p>
@@ -36,8 +36,8 @@
         <el-form-item label="收款单位名称" prop="company_name">
           <el-input v-model="form.company_name" placeholder="请输入收款单位名称"></el-input>
         </el-form-item>
-        <el-form-item label="收款单位号码" prop="account">
-          <el-input v-model="form.account" placeholder="请输入收款单位号码"></el-input>
+        <el-form-item label="银行账户" prop="account">
+          <el-input v-model="form.account" placeholder="请输入银行账户"></el-input>
         </el-form-item>
         <el-form-item label="开户银行" prop="bank">
           <el-input v-model="form.bank" placeholder="请输入开户银行"></el-input>

@@ -1,13 +1,14 @@
 <template>
   <div class="modal-container">
-    <el-dialog :title="number + '件商品加入购物车'" width="580px" custom-class="cus-modal-wrap" :close-on-click-modal="true"
-      :visible.sync="show_modal" :before-close="onBeforeClose">
+    <el-dialog :before-close="onBeforeClose" :close-on-click-modal="true" :title="number + '吨商品加入购物车'"
+               :visible.sync="show_modal"
+               custom-class="cus-modal-wrap" width="580px">
       <div class="modal-inner">
         <div class="tip-box">
-          <img src="@/static/product/product-add-success.png" alt />
+          <img alt src="../../static/prod/product-add-success.png"/>
         </div>
         <div class="text-box-1">该商品已成功加入购物车</div>
-        <div class="text-box-2">购物车共{{ shopcart_count }}件商品</div>
+        <div class="text-box-2">购物车共 <span>{{ shopcart_count }}</span> 件商品</div>
       </div>
       <span slot="footer" class="dialog-footer">
         <button class="btn btn-ripple btn-1" @click="$router.push('/cart')">查看购物车</button>
@@ -18,27 +19,29 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 
 export default {
   name: "add-success",
   components: {},
-  // props: ["curr"],
   data() {
     return {
       show_modal: false,
-      select_sku: {},
       number: 1,
+      shopcart_count: 0
     };
-  },
-  computed: {
-    ...mapState([""]),
   },
   watch: {},
   methods: {
     init(select_sku) {
       this.number = select_sku.num;
-      this.select_sku = select_sku;
+      this.$api({
+        url: "getCart",
+        method: "post",
+      }).then(res => {
+        if (res.code == 200) {
+          this.shopcart_count = res.data.list.length;
+        }
+      })
       this.show_modal = true;
     },
     onBeforeClose() {
@@ -48,62 +51,59 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 /deep/ .el-dialog__header {
   padding: 16px 24px;
-  border: 4px solid #666;
-  border-bottom: none;
-  background: #000;
+  border-bottom: 1px solid #eee;
+  background: #F7F7F7;
 
   font-family: Poppins, Poppins;
   font-weight: 600;
   font-size: 18px;
-  color: #fff;
+  color: #333333;
 
   .el-dialog__close {
     font-size: 20px;
-  }
-  .el-dialog__title {
-    color: #fff;
   }
 }
 
 /deep/ .el-dialog__body {
   padding: 34px 60px 53px;
-  background: #000;
-  border-left: 4px solid #666;
-  border-right: 4px solid #666;
 }
 
 /deep/ .el-dialog__footer {
   text-align: center;
   padding-bottom: 60px;
-  background: #000;
-  border: 4px solid #666;
-  border-top: none;
 
   button {
     margin: 0 8px;
   }
 
   .btn-1 {
-    width: 200px;
-    height: 45px;
-    background: #DF1626;
-    font-family: Arial, Arial;
+    width: 133px;
+    height: 40px;
+    background: @theme;
+    border-radius: 4px 4px 4px 4px;
+    font-family: Roboto, Roboto;
     font-weight: 400;
-    font-size: 17px;
+    font-size: 14px;
     color: #FFFFFF;
+    font-style: normal;
+    text-transform: none;
   }
+
   .btn-2 {
-    width: 200px;
-    height: 45px;
-    border-radius: 0px 0px 0px 0px;
-    border: 1px solid #7B7B7B;
-    font-family: Arial, Arial;
+    width: 133px;
+    height: 40px;
+    background: linear-gradient(180deg, #FFFEFE 0%, #E8E8E8 100%);
+    border-radius: 4px 4px 4px 4px;
+    border: 1px solid #E5E5E5;
+    font-family: Roboto, Roboto;
     font-weight: 400;
-    font-size: 17px;
-    color: #fff;
+    font-size: 14px;
+    color: #333333;
+    font-style: normal;
+    text-transform: none;
   }
 }
 
@@ -112,32 +112,40 @@ export default {
     padding: 0;
     text-align: center;
 
-    .img-box {
+    .tip-box {
       img {
-        width: 150px;
-        height: 150px;
+        width: 44px;
+        height: 44px;
         object-fit: contain;
       }
     }
 
     .text-box-1 {
       margin-top: 18px;
-      font-family: Arial, Arial;
-      font-weight: 400;
-      font-size: 22px;
-      color: #fff;
+      font-family: Roboto, Roboto;
+      font-weight: bold;
+      font-size: 20px;
+      color: @theme;
+      font-style: normal;
+      text-transform: none;
     }
 
     .text-box-2 {
       margin-top: 18px;
-      font-family: Arial, Arial;
+      font-family: Roboto, Roboto;
       font-weight: 400;
       font-size: 14px;
-      color: #fff;
+      color: #333333;
+      font-style: normal;
+      text-transform: none;
+
+      span {
+        color: #E6170B;
+      }
     }
   }
 }
 
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/modals/product_add_cart_success_modal.less"></style>
+<style lang="less" scoped src="@/assets/h5css/modals/product_add_cart_success_modal.less"></style>

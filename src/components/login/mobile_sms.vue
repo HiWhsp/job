@@ -101,12 +101,10 @@ export default {
   margin-bottom: 20px;
   width: 100%;
   height: 50px;
-  background: transparent;
-  border: 1px solid #7B7B7B;
+  background: #ffffff;
+  border: 1px solid #eeeeee;
   border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  .flex-between();
   overflow: hidden;
 
   img {
@@ -122,7 +120,7 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 24px;
-    color: #fff;
+    color: #999999;
     text-indent: 1em;
   }
 
@@ -131,8 +129,7 @@ export default {
     height: 100%;
     padding-left: 16px;
     font-size: 14px;
-    color: #fff;
-    background-color: transparent;
+    color: #000;
 
     &::-webkit-input-placeholder {
       font-size: 14px;
@@ -144,13 +141,12 @@ export default {
 }
 
 .btn-validate-box {
-    display: flex;
-  align-items: center;
+  .flex();
   background: transparent;
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: #fff;
+  color: @theme;
   font-size: 1.4rem;
 
   &.disabled {
@@ -167,9 +163,7 @@ export default {
     background: #ffffff;
     border: 1px solid #eeeeee;
     border-radius: 4px;
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     overflow: hidden;
 
     img {
@@ -209,10 +203,9 @@ export default {
     background: transparent;
     position: absolute;
     right: 0;
-      display: flex;
-  align-items: center;
+    .flex();
     cursor: pointer;
-    color: #F74747;
+    color: @theme;
 
     &.disabled {
       color: #ccc;

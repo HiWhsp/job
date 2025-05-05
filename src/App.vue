@@ -1,61 +1,37 @@
 <template>
   <div id="app">
-    <!-- <webHeaderModel1 v-if="1" />
-    <webHeaderModel3 v-else-if="1" />
-    <webHeaderModel2 v-else-if="1" /> -->
-
-
-    <!-- <page_header v-if="!vuex_h5" /> -->
-    <page_header_2 v-if="!vuex_h5" />
-
-
+    <pageHeader/>
     <div class="layout-box">
       <router-view></router-view>
     </div>
-    <page_footer_2 />
+    <pageFooter/>
   </div>
 </template>
 
 <script>
-import webHeaderModel1 from "@/components/common/webHeaderModel1.vue";
-import webHeaderModel2 from "@/components/common/webHeaderModel2.vue";
-import webHeaderModel3 from "@/components/common/webHeaderModel3.vue";
 
+import pageHeader from "@/components/page/page-header.vue"; //顶部
+import pageFooter from "@/components/page/page-footer.vue";
 
-import page_header from "@/components/page/page-header.vue"; //顶部搜索
-import page_header_2 from "@/components/page/page-header-2.vue"; //顶部搜索
-import page_footer_2 from "@/components/page/page-footer-2.vue";
+import {mapState} from "vuex";
 
 export default {
   components: {
-    webHeaderModel1,
-    webHeaderModel2,
-    webHeaderModel3,
-
-
-    //
-    page_header,
-    page_header_2,
-    page_footer_2
+    pageHeader,
+    pageFooter
   },
   data() {
-    return {
-
-    };
+    return {};
   },
-  computed: {
-
+  computed: {},
+  watch: {},
+  beforeCreate() {
   },
-  watch: {
-
-  },
-  beforeCreate() { },
   created() {
 
   },
   mounted() {
     this.initScale();
-    this.queryConfig();
   },
   methods: {
     // scrollToTop() {
@@ -83,42 +59,13 @@ export default {
         }
       }
     },
-
-    queryConfig() {
-      this.$api("index_config").then((res) => {
-        if (res.data && res.data.com_logo) {
-          document
-            .querySelector('meta[property="og:image"]')
-            .setAttribute("content", res.data.com_logo);
-        }
-      });
-    },
   },
 };
 </script>
 
 <style lang="less">
-.w-1200 {
-  width: 1200px;
-  margin: 0 auto;
-}
-.btn {
-  cursor: pointer;
-}
-.tab-item {
-  cursor: pointer;
-}
-
-.layout-box {
-  background: #F5F5F5;
-}
-
-.poster-box .poster {
-  object-fit: cover;
-}
-
 body {
-  background-color: #fff;
+  background-color: #000;
   font-size: 14px;
   min-width: fit-content;
   width: 100%;
@@ -130,6 +77,15 @@ body {
   &.lock {
     overflow: hidden;
   }
+}
+
+.page {
+  width: 1400px;
+  padding: 21px 0 53px 0;
+  margin: auto;
+}
+.layout-box {
+  background-color: #F1F3F4;
 }
 
 #app-wrap {
@@ -176,35 +132,53 @@ body {
 
 
 .el-rate__icon {
-  color: #F7BB04 !important;
+  //color: #F7BB04 !important;
 }
 
 
 .el-textarea__inner:focus {
-  border-color: #F74747 !important;
+  border-color: @theme !important;
 }
 
 .el-radio__input.is-checked .el-radio__inner {
-  background: #F74747 !important;
-  border-color: #F74747 !important;
+  background: @theme !important;
+  border-color: @theme !important;
 }
 
-.el-radio__input.is-checked+.el-radio__label {
+.el-radio__input.is-checked + .el-radio__label {
   color: #000 !important;
 }
 
 .el-checkbox__input.is-focus .el-checkbox__inner {
-  border-color: #F74747 !important;
+  border-color: @theme !important;
 }
 
-.el-checkbox__input.is-checked+.el-checkbox__label {
-  color: #F74747 !important;
+.el-checkbox__input.is-checked + .el-checkbox__label {
+  color: @theme !important;
 }
 
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-  background: #F74747 !important;
-  border-color: #F74747 !important;
+  background: @theme !important;
+  border-color: @theme !important;
+}
+
+.el-pagination.is-background .btn-next,
+.el-pagination.is-background .btn-prev,
+.el-pagination.is-background .el-pager li {
+  background-color: #f4f4f5 !important;
+  min-width: 30px !important;
+  height: 30px;
+  line-height: 30px;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled):hover {
+  color: @theme !important;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background-color: @theme !important;
+  color: #fff !important;
 }
 
 .pagination-box {
@@ -247,7 +221,7 @@ a {
 }
 
 img {
-  vertical-align: middle;
+  vertical-align: bottom;
 }
 
 button {
@@ -266,348 +240,25 @@ button {
   }
 }
 
-.scale-box {
-  overflow: hidden;
-
-  &>.scale-img {
-    width: 100%;
-    height: 100%;
-    transition: 0.25s linear;
-    cursor: pointer;
-    object-fit: cover;
-  }
-
-  &:hover {
-    &>.scale-img {
-      transform: scale(1.1);
-    }
-  }
+/* 针对整个页面 */
+::-webkit-scrollbar {
+  width: 12px; /* 宽度 */
+  height: 12px; /* 高度 */
 }
 
-.img-bg-ani {
-  animation: bg_img_scale 8s infinite;
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+  background-color: @theme; /* 颜色 */
+  border-radius: 6px; /* 边角弧度 */
 }
 
-@keyframes bg_img_scale {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.05);
-  }
-
-  100% {
-    transform: scale(1);
-  }
+/* 在悬停时 */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* 悬停颜色 */
 }
 
-//按钮 水波涟漪效果
-.btn-ripple {
-  vertical-align: middle;
-}
-
-.btn-ripple:not(:disabled):hover {
-  opacity: 1;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    animation: ani_ripple 0.75s;
-    z-index: 1;
-    content: "";
-    position: absolute;
-    display: block;
-    transition: all 0.6s;
-    width: 100%;
-    height: 0;
-    border-radius: 50%;
-    left: 50%;
-    top: 50%;
-    padding-top: 100%;
-    transform: translateX(-50%) translateY(-50%);
-  }
-}
-
-@keyframes ani_ripple {
-  0% {
-    background: rgba(0, 0, 0, 0.25);
-    transform: translateX(-50%) translateY(-50%) scale(0);
-  }
-
-  to {
-    background: transparent;
-    transform: translateX(-50%) translateY(-50%) scale(1);
-  }
-}
-
-.el-pagination.is-background .btn-next,
-.el-pagination.is-background .btn-prev,
-.el-pagination.is-background .el-pager li {
-  min-width: 30px !important;
-  height: 30px;
-  line-height: 30px;
-  background-color: #000 !important;
-  border: 1px solid #555;
-}
-
-.el-pagination.is-background .el-pager li:not(.disabled):hover {
-  color: #DF1626 !important;
-}
-
-.el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #DF1626 !important;
-  color: #fff !important;
-  border: none;
-}
-
-.el-pager li.active {}
-
-// //PC  加载中
-// .el-loading-spinner {
-//   background-image: url("~@img/loading.gif");
-//   background-position: center;
-// }
-
-//通用 移动端适配开始
-@media screen and (max-width: 1199px) {
-  #app {
-    padding-top: 50px !important;
-
-    &.technologyPdf {
-      padding-top: 0 !important;
-    }
-
-    &.productSpecification {
-      padding-top: 0 !important;
-    }
-
-    &.productSpecificationPdf {
-      padding-top: 0 !important;
-    }
-  }
-
-  .page-app {
-    * {
-      max-width: 100vw;
-    }
-  }
-
-  .layout-box {
-    min-height: 40vh;
-  }
-
-  // 输入框
-  body .el-input__inner {
-    font-size: 14px;
-    text-align: left;
-  }
-
-  body .el-input__inner::-webkit-input-placeholder {
-    font-size: 14px;
-  }
-
-  body .el-textarea__inner::-webkit-input-placeholder {
-    font-size: 14px;
-  }
-
-  body .el-textarea__inner {
-    font-size: 14px;
-  }
-
-  .el-upload__tip {
-    font-size: 14px !important;
-  }
-
-  // 下拉选
-  .el-select-dropdown__empty {
-    font-size: 12px;
-    height: 32px;
-    line-height: 32px;
-  }
-
-  .el-select-dropdown__wrap {
-    max-height: 230px !important;
-  }
-
-  .el-select-dropdown__item {
-    line-height: 32px !important;
-    height: 32px !important;
-    padding-left: 10px !important;
-    font-size: 14px !important;
-  }
-
-  .el-input__suffix {
-    width: 32px !important;
-    height: 32px !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-  }
-
-  .el-select__caret {
-    width: 12px;
-    height: 12px;
-    width: 32px !important;
-    height: 32px !important;
-    line-height: 0;
-  }
-
-  // 复选框样式
-  .el-checkbox__inner {
-    width: 14px !important;
-    height: 14px !important;
-  }
-
-  .el-checkbox__inner::after {
-    width: 3px !important;
-    height: 8px !important;
-    left: 4px !important;
-  }
-
-  .el-checkbox__label {
-    font-size: 14px !important;
-  }
-
-  // 空列表
-  .el-empty__image {
-    width: 80px !important;
-  }
-
-  .el-empty__description {
-    margin-top: 20px !important;
-  }
-
-  .el-empty__description p {
-    font-size: 14px !important;
-  }
-
-  // 分页
-  .el-pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .el-pagination button,
-  .el-pagination span:not([class*="suffix"]) {
-    font-size: 12px !important;
-  }
-
-  .el-pagination.is-background .btn-next,
-  .el-pagination.is-background .btn-prev,
-  .el-pagination.is-background .el-pager li {
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
-    font-size: 12px !important;
-    background-color: #000;
-    border: 1px solid #555;
-  }
-
-  // 提示框
-  .el-message {
-    padding: 10px !important;
-  }
-
-  .el-icon-error:before {
-    font-size: 14px !important;
-  }
-
-  .el-message__content {
-    font-size: 14px !important;
-  }
-
-  .el-loading-spinner i {
-    font-size: 20px !important;
-  }
-
-  .el-loading-text {
-    font-size: 14px !important;
-    margin-top: 10px !important;
-  }
-
-  // 大图预览  图片查看
-  .el-image-viewer__actions {
-    display: none;
-  }
-
-  .el-image-viewer__wrapper .el-image-viewer__close {
-    top: 20px;
-    right: 20px;
-  }
-
-  .el-image-viewer__wrapper .el-icon-close {
-    font-size: 24px;
-  }
-
-  .el-image-viewer__next {
-    width: 36px !important;
-    height: 36px !important;
-
-    .el-icon-arrow-left:before {
-      font-size: 16px;
-    }
-  }
-
-  .el-image-viewer__prev {
-    width: 36px !important;
-    height: 36px !important;
-
-    .el-icon-arrow-right:before {
-      font-size: 16px;
-    }
-  }
-
-  // 弹窗样式
-  .el-dialog__wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .el-dialog {
-      margin-top: 0 !important;
-      margin-bottom: 0 !important;
-    }
-  }
-}
-
-@media screen and (max-width: 1199px) {
-
-  // 商品详情弹窗
-  .pop-kefu-inner {
-    padding: 25px !important;
-
-    .kefu-tip {
-      margin-bottom: 20px !important;
-    }
-  }
-
-  .detail-qrcode {
-    .flex-center();
-    text-align: center;
-
-    img {
-      border: 1px solid #ddd;
-      width: 150px !important;
-      height: 150px !important;
-    }
-  }
-}
-
-@media screen and (max-width: 1199px) and (min-width: 768px) {
-  #mobile_icon_div>div {
-    width: 70px !important;
-    height: 70px !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    &>div {
-      margin: 0 !important;
-      width: 35px !important;
-      height: 35px !important;
-    }
-  }
+/* 滚动条轨道 */
+::-webkit-scrollbar-track {
+  background: #E6E4E1; /* 轨道颜色 */
 }
 </style>

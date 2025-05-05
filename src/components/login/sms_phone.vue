@@ -2,10 +2,14 @@
   <div class="sms-box">
     <div class="input-box">
       <span class="label">验证码</span>
-      <!-- <img src="/common/icon-code.png" alt="" /> -->
-      <input type="text" placeholder="请输入验证码" v-model="form.code" />
+      <input type="text" placeholder="请输入验证码" v-model="form.code"/>
 
-      <button :disabled="disabledBtn" class="btn-validate-box" @click="getCode" :class="time != 60 ? 'disabled' : ''">
+      <button
+          :disabled="disabledBtn"
+          class="btn-validate-box"
+          @click="getCode"
+          :class="time != 60 ? 'disabled' : ''"
+      >
         获取验证码
         <span>（{{ time }}）</span>
       </button>
@@ -38,7 +42,7 @@ export default {
       }
 
       //console.log("发送验证码");
-      let { phone, email } = this.form;
+      let {phone, email} = this.form;
       let reg_email = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
       let reg_phone = /^1[3-9]\d{9}$/;
 
@@ -50,28 +54,22 @@ export default {
         alertErr("请输入正确的手机号");
         return;
       }
-      if (this.disabledBtn) {
-        return
-      }
-      this.disabledBtn = true;
-      this.query_code();
+
+      this.retrieveByEmail();
+      this.countdown();
     },
 
-    query_code() {
+    //修改绑定邮箱
+    retrieveByEmail() {
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: "sendCode",
+        method: 'post',
         data: {
-          action: "login_phoneYzm",
-          phone: this.form.phone,
-        },
-      }).then((res) => {
-        alert(res)
-        if (res.code == 200) {
-          this.countdown();
-        } else {
-          this.disabledBtn = false;
+          mobile: this.form.phone,
         }
+      }).then((res) => {
+        //console.log("验证码", res);
+        let {code, message} = res;
       });
     },
 
@@ -101,12 +99,10 @@ export default {
   margin-bottom: 20px;
   width: 100%;
   height: 50px;
-  background: transparent;
-  border: 1px solid #7B7B7B;
+  background: #ffffff;
+  border: 1px solid #eeeeee;
   border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  .flex-between();
   overflow: hidden;
 
   img {
@@ -115,14 +111,13 @@ export default {
 
   .label {
     display: inline-block;
-    width: 90px;
-    /*no */
-    border-right: 1px solid #ccc;
+    width: 90px; /*no */
+    border-right: 1px solid #eee;
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 24px;
-    color: #fff;
+    color: #999999;
     text-indent: 1em;
   }
 
@@ -131,8 +126,7 @@ export default {
     height: 100%;
     padding-left: 16px;
     font-size: 14px;
-    color: #fff;
-    background-color: transparent;
+    color: #000;
 
     &::-webkit-input-placeholder {
       font-size: 14px;
@@ -144,13 +138,12 @@ export default {
 }
 
 .btn-validate-box {
-  display: flex;
-  align-items: center;
+  .flex();
   background: transparent;
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: #fff;
+  color: #EA3200;
   font-size: 1.4rem;
 
   &.disabled {
@@ -167,9 +160,7 @@ export default {
     background: #ffffff;
     border: 1px solid #eeeeee;
     border-radius: 4px;
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     overflow: hidden;
 
     img {
@@ -178,8 +169,7 @@ export default {
 
     .label {
       display: inline-block;
-      width: 90px;
-      /*no */
+      width: 90px; /*no */
       border-right: 1px solid #ccc;
       font-size: 14px;
       font-family: Microsoft YaHei;
@@ -209,10 +199,9 @@ export default {
     background: transparent;
     position: absolute;
     right: 0;
-      display: flex;
-  align-items: center;
+    .flex();
     cursor: pointer;
-    color: #F74747;
+    color: #EA3200;
 
     &.disabled {
       color: #ccc;

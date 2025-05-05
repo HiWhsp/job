@@ -161,7 +161,7 @@ export default {
       this.$store.commit("clear_loginInfo");
       // debugger
       if (this.$route.meta.requireAuth) {
-        this.$router.push("/");
+        this.$router.push("/login");
       }
     },
   },

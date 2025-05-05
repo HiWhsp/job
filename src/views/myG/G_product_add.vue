@@ -13,6 +13,7 @@ export default {
         daohuo_time: '',
         jiance_files_url: []
       },
+      material_type_list: [],
       rules: {
         material_type_id: [
           {required: true, message: '请选择类目', trigger: 'change'}
@@ -24,7 +25,7 @@ export default {
           {required: true, message: '请输入规格(例：F46)', trigger: 'blur'}
         ],
         kucun: [
-          {required: true, message: '请输入库存(KG)', trigger: 'blur'}
+          {required: true, message: '请输入库存(吨)', trigger: 'blur'}
         ],
         includeTaxPrice: [
           {required: true, message: '请输入含税价(元)', trigger: 'blur'}
@@ -40,6 +41,9 @@ export default {
         ]
       }
     }
+  },
+  created(){
+    this.getTypeList()
   },
   methods: {
     clear() {
@@ -85,6 +89,17 @@ export default {
           url: item.response.data.visit_url
         })
       })
+    },
+    getTypeList(){
+      this.$api({
+            url: 'myMaterialTypeList',
+            method: 'post',
+          }).then((res) => {
+            console.log("类目", res);
+            this.material_type_list=res.data.my_material_type
+            console.log(this.material_type_list);
+            
+          });
     }
   }
 }
@@ -99,7 +114,7 @@ export default {
       <el-form ref="form" :model="form" label-width="130px" :rules="rules">
         <el-form-item label="类目：" prop="material_type_id">
           <el-select v-model="form.material_type_id" placeholder="请选择商品分类">
-            <el-option v-for="item in vuexFlatCates" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in material_type_list" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="上下架状态：" prop="is_shangjia">
@@ -115,7 +130,7 @@ export default {
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="库存(KG)：" prop="kucun">
+            <el-form-item label="库存(吨)：" prop="kucun">
               <el-input v-model="form.kucun" placeholder="请输入库存">
                 <template slot="prepend">>=</template>
               </el-input>

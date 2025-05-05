@@ -195,7 +195,7 @@
           <!-- 订单操作 -->
           <div class="order-action-box">
             <div class="btn-box">
-              <button class="btn-ripple fit-text " @click="doCancel(info)">
+              <button class="btn-ripple fit-text " @click="doCancel(info)"  v-if="info.order_info.order_status != 5">
                 取消订单
               </button>
 <!--              <button class="btn-ripple fit-text btn-bg" v-if="orderObj.statusInfo == '待支付'" @click="doPay(info)">-->
@@ -207,7 +207,7 @@
               <button class="btn-ripple fit-text btn-bg" v-if="info.order_info.order_status == 3" @click="doReceive(info)">
                 确认收货
               </button>
-              <button class="btn-ripple fit-text btn-bg" @click="uploadPay(info)">
+              <button class="btn-ripple fit-text btn-bg" @click="uploadPay(info)"  v-if="info.order_info.order_status != 5">
                 上传支付凭证
               </button>
             </div>

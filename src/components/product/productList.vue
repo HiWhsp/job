@@ -7,21 +7,33 @@
           <!-- <shouqing :kucun="goods.kucun" /> -->
         </div>
         <div class="info-box">
-          <div class="title ellipsis-2">
+          <div class="title ellipsis-1">
             {{ item.title }}
           </div>
-
-          <div class="price-box">
+          <div class="price-box flex-center">
             <div class="sale">
               <span class="huobi"> {{ vuex_huobi }} </span>
               <span class="value"> {{ item.priceSale }} </span>
             </div>
             <div class="market">
-              限量{{ item.kucun }}台
-<!--              <span class="value"> {{ item.priceSale }} </span>-->
+              <span class="huobi"> {{ vuex_huobi }} </span>
+              <span class="value"> {{ item.priceSale }} </span>
             </div>
           </div>
+
+          <div class="sku-box flex">
+            <div class="sku-item ellipsis-1" v-for="(sku_item, sku_index) in item.skus">
+              {{ sku_item.keyVals }}
+            </div>
+          </div>
+
+          <div class="btn-box">
+            <button class="btn-ripple btn-cart">
+              Add To Cart
+            </button>
+          </div>
         </div>
+
         <div class="act-info" v-if="is_show_check">
           <div class="img-check-box flex-center" @click.stop="do_toggle_check(item)">
             <img v-if="item.checked" src="@/static/common/check1.png" alt="" class="img-check check-1" />
@@ -29,12 +41,15 @@
             <img v-else src="@/static/common/check00.png" alt="" class="img-check check-0" />
           </div>
         </div>
+
       </div>
     </div>
   </div>
 </template>
 
 <script>
+// import shouqing from "@/components/common/shouqing.vue";
+
 export default {
   name: "product-list",
   components: {
@@ -85,20 +100,24 @@ export default {
 
   .product-item {
     position: relative;
-    width: 442px;
-    height: 416px;
-    background: #1F1C1F;
+    width: 280px;
+    height: 404px;
+    background: #FFFFFF;
+    border-radius: 0px 0px 0px 0px;
+    border: 1px solid #CBCBCB;
+    padding: 24px;
     margin-right: 20px;
-    margin-top: 20px;
+    margin-top: 32px;
     text-align: center;
+    border: 1px solid #e5e5e5;
     overflow: hidden;
     cursor: pointer;
 
-    &:nth-child(2n) {
+    &:nth-child(4n) {
       margin-right: 0;
     }
 
-    &:nth-child(-n + 2) {
+    &:nth-child(-n + 4) {
       margin-top: 0;
     }
 
@@ -111,16 +130,16 @@ export default {
     }
 
     .img-box {
-      width: 100%;
-      height: 296px;
+      width: 202px;
+      height: 202px;
       padding-bottom: 23px;
       margin: 0 auto;
       overflow: hidden;
       position: relative;
 
       img {
-        width: 100%;
-        height: 296px;
+        width: 202px;
+        height: 202px;
         object-fit: cover;
         transition: 0.3s;
       }
@@ -128,43 +147,47 @@ export default {
 
     .info-box {
       width: 100%;
-      height: 120px;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      background: #fff;
+      // border: 1px solid #e5e5e5;
+      // border-top: none;
+      padding: 15px 0px;
 
       .title {
-        text-align: left;
+        text-align: center;
         width: 100%;
         font-family: Poppins, Poppins;
         font-weight: 600;
-        font-size: 16px;
-        color: #fff;
+        font-size: 13px;
+        color: #000000;
       }
 
 
       .price-box {
         margin-top: 5px;
-        display: flex;
-        justify-content: space-between;
+
+
         .sale {
           span {
             font-family: OPPOSans, OPPOSans;
             font-weight: bold;
-            font-size: 18px;
-            color: #fff;
+            font-size: 12px;
+            color: #FF0000;
           }
 
         }
 
         .market {
-          width: 75px;
-          height: 24px;
-          line-height: 24px;
-          background: #1F1C1F;
-          color: #fff;
-          border: 1px solid #7B7B7B;
+          // text-decoration: line-through;
+          margin-left: 17px;
+          color: #BFBFBF;
+
+          span {
+            text-decoration: line-through;
+            font-family: OPPOSans, OPPOSans;
+            font-weight: 400;
+            font-size: 12px;
+            color: #BFBFBF;
+          }
         }
       }
 
@@ -210,14 +233,14 @@ export default {
           width: 100%;
           height: 27px;
           border-radius: 0px 0px 0px 0px;
-          border: 1px solid #F74747;
+          border: 1px solid @theme;
           font-family: OPPOSans, OPPOSans;
           font-weight: bold;
           font-size: 12px;
-          color: #F74747;
+          color: @theme;
 
           &:hover {
-            background: #F74747;
+            background: @theme;
             color: #fff;
           }
         }

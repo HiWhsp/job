@@ -64,7 +64,7 @@ export default {
 
     },
     do_confirm() {
-      this.loading = true;
+      // this.loading = true;
       this.$api({
         url: 'cancelOrder',
         method: 'post',
@@ -73,7 +73,7 @@ export default {
         },
       }).then((res) => {
         alert(res).then(() => {
-          this.loading = false;
+          // this.loading = false;
         });
         if (res.code == 200) {
           this.$emit('confirm')
