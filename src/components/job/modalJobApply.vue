@@ -25,8 +25,8 @@
           <div class="label">简历附件：</div>
           <div class="val">
             <div class="upload-box">
-              <el-upload class="upload-demo" multiple :limit="1" name="img" :data="mix_upload_data"
-                :action="mix_upload_action" :on-success="onSuccess_upload" :on-preview="handlePreview"
+              <el-upload class="upload-demo" multiple :limit="1" name="img" :data="uploadExtraData"
+                action="https://shalunxiehui.dx.hdapp.com.cn/api?action=index_ossUpload" :on-success="onSuccess_upload" :on-preview="handlePreview"
                 :on-remove="handleRemove" :before-remove="beforeRemove" :on-exceed="handleExceed" :file-list="fileList">
                 <button class="btn-ripple btn-upload">
                   <img src="@img/upload.png" alt="" />
@@ -204,11 +204,11 @@ export default {
   height: 40px;
   background: #ffffff;
   border-radius: 4px 4px 4px 4px;
-  border: 1px solid #F74747;
+  border: 1px solid @theme;
   font-size: 14px;
   font-family: Microsoft YaHei-Regular, Microsoft YaHei;
   font-weight: 400;
-  color: #F74747;
+  color: @theme;
 
   img {
     margin-right: 10px;
@@ -220,8 +220,7 @@ export default {
     padding: 0 25px;
 
     .item {
-      //   display: flex;
-  align-items: center;
+      // .flex();
       margin-bottom: 20px;
       text-align: left;
 
@@ -240,7 +239,7 @@ export default {
           font-size: 20px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: @theme;
         }
 
         input {
@@ -260,7 +259,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #F74747;
+  // background: @theme;
   background: #f7f7f7;
   text-align: left;
 
@@ -288,13 +287,13 @@ export default {
 
   .quxiao {
     margin-right: 24px;
-    color: #F74747;
-    border: 1px solid #F74747;
+    color: @theme;
+    border: 1px solid @theme;
   }
 
   .queding {
     // margin-right: 24px;
-    background: #F74747;
+    background: @theme;
     color: #fff;
   }
 }

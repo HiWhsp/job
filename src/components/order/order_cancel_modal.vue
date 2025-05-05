@@ -1,7 +1,7 @@
 <template>
   <div class="modal-container">
     <el-dialog title="操作提示" width="580px" custom-class="cus-modal-wrap" :close-on-click-modal="true"
-      :visible.sync="show_modal" :before-close="onbeforeclose" @closed="onclosed">
+               :visible.sync="show_modal" :before-close="onbeforeclose" @closed="onclosed">
       <div class="modal-inner">
         <!-- <div class="img-list flex-center">
           <div class="img-box" v-for="(item, index) in imgs" :key="index">
@@ -14,14 +14,15 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <button class="btn btn-ripple fit-text btn-1" @click="show_modal = false">取消</button>
-        <el-button class="btn btn-ripple fit-text btn-2 btn-bg" @click="throttle_do_confirm()"  :loading="loading">确认</el-button>
+        <el-button class="btn btn-ripple fit-text btn-2 btn-bg" @click="throttle_do_confirm()"
+                   :loading="loading">确认</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "order-cancel-modal",
@@ -65,11 +66,10 @@ export default {
     do_confirm() {
       this.loading = true;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'cancelOrder',
+        method: 'post',
         data: {
-          action: 'orders_cancel',
-          id: this.info.id
+          order_id: this.info.order_info.id
         },
       }).then((res) => {
         alert(res).then(() => {
@@ -77,7 +77,7 @@ export default {
         });
         if (res.code == 200) {
           this.$emit('confirm')
-          this.show_modal  = false;
+          this.show_modal = false;
         }
       });
     }
@@ -114,12 +114,12 @@ export default {
     height: 32px;
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    border: 1px solid @theme;
 
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
+    color: @theme;
 
     & + button {
       margin-left: 16px;
@@ -127,15 +127,15 @@ export default {
   }
 
   .btn-1 {
-  
+
   }
 
   .btn-2 {
-  
+
   }
 
   .btn-bg {
-    background: #F74747;
+    background: @theme;
     color: #ffffff;
   }
 }

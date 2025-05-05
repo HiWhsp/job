@@ -22,7 +22,7 @@
       }
 
       &.active {
-        background: #F74747;
+        background: @theme;
         color: #fff;
       }
     }
@@ -30,8 +30,7 @@
 
   .job-list {
     margin-top: 20px;
-      display: flex;
-  align-items: center;
+    .flex();
     flex-wrap: wrap;
     flex-direction: column;
 
@@ -68,8 +67,7 @@
 
           .desc-item {
             margin-bottom: 10px;
-              display: flex;
-  align-items: center;
+            .flex();
             img {
               margin-right: 10px;
             }
@@ -90,11 +88,11 @@
           padding: 0 10px;
           background: #ffffff;
           border-radius: 4px 4px 4px 4px;
-          border: 1px solid #F74747;
+          border: 1px solid @theme;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #F74747;
+          color: @theme;
         }
       }
     }

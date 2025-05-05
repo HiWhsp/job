@@ -3,7 +3,7 @@
     <div class="upload-box">
       <!-- <input type="text" disabled placeholder="点击右侧上传文件"/> -->
       <div class="action">
-        <el-upload name="img" :data="mix_upload_data" :action="mix_upload_action"  :show-file-list="false" :on-success="onSuccess_upload" :before-upload="onBefore_upload">
+        <el-upload name="img" :data="uploadExtraData" action="https://shalunxiehui.dx.hdapp.com.cn/api?action=index_ossUpload"  :show-file-list="false" :on-success="onSuccess_upload" :before-upload="onBefore_upload">
           <slot></slot>
         </el-upload>
       </div>
@@ -56,8 +56,7 @@ input {
 .wrap-zujian {
   // 上传类型
   .upload-box {
-      display: flex;
-  align-items: center;
+    .flex();
     input {
       width: 280px;
       height: 48px;
@@ -68,8 +67,7 @@ input {
       margin-right: 20px;
     }
     .action {
-        display: flex;
-  align-items: center;
+      .flex();
       .btn-upload {
         min-width: 100px;
         height: 48px;

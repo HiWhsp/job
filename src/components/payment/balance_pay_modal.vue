@@ -43,7 +43,7 @@ export default {
 
       paypass: "",
       money: "",
-      order_id: "",
+      orderId: "",
     };
   },
   computed: {
@@ -52,7 +52,7 @@ export default {
   watch: {
     showModal(val) {
       if (!val) {
-        this.order_id = "";
+        this.orderId = "";
         this.money = "";
         this.paypass = "";
       }
@@ -63,7 +63,7 @@ export default {
     init(data) {
       this.showModal = true;
       this.money = data.money;
-      this.order_id = data.order_id;
+      this.orderId = data.orderId;
     },
     onModal_close() {
       this.showModal = false;
@@ -74,10 +74,10 @@ export default {
 
     cancelPay() {
       // this.showModal= false;
-      // this.order_id =
+      // this.orderId =
       if (this.$route.name == "order-submit") {
         //创建订单页
-        this.$router.push("/payment-success?order_id=" + this.order_id);
+        this.$router.push("/payment-success?orderId=" + this.orderId);
       } else {
         this.showModal = false;
       }
@@ -95,7 +95,7 @@ export default {
       }
 
       this.$api("orders_yuePay", {
-        order_id: this.order_id,
+        orderId: this.orderId,
         pay_pass: this.paypass,
       }).then((res) => {
         //console.log("余额支付", res);
@@ -105,14 +105,14 @@ export default {
           this.toPaySuccess();
         } else {
           alert(res);
-          this.$router.push(`/payment-success?order_id=${this.order_id}`);
+          this.$router.push(`/payment-success?orderId=${this.orderId}`);
         }
       });
     },
 
     //支付成功操作
     toPaySuccess() {
-      this.$router.push(`/payment-success?order_id=${this.order_id}`);
+      this.$router.push(`/payment-success?orderId=${this.orderId}`);
     },
   },
 };
@@ -125,8 +125,7 @@ export default {
     padding: 20px;
 
     .item {
-        display: flex;
-  align-items: center;
+      .flex();
       margin-bottom: 20px;
 
       .label {
@@ -142,7 +141,7 @@ export default {
           font-size: 20px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: @theme;
         }
 
         input {
@@ -161,7 +160,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #F74747;
+  // background: @theme;
   background: #f7f7f7;
   text-align: left;
 
@@ -188,12 +187,12 @@ export default {
 
   .quxiao {
     margin-right: 24px;
-    color: #F74747;
-    border: 1px solid #F74747;
+    color: @theme;
+    border: 1px solid @theme;
   }
   .queding {
     // margin-right: 24px;
-    background: #F74747;
+    background: @theme;
     color: #fff;
   }
 }

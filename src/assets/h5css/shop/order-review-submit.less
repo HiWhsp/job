@@ -1,16 +1,14 @@
 @media screen and (max-width: 1199px) {
 
-  
+
 /deep/ .el-rate__icon {
-  color: #F74747 !important;
+  //color: @theme !important;
 }
 
 .page {
   padding-bottom: 80px;
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -25,7 +23,7 @@
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: @theme;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -78,9 +76,7 @@
   margin-bottom: 25px;
   .info-title {
     position: relative;
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     flex-wrap: wrap;
     height: auto;
     padding: 10px;
@@ -120,7 +116,7 @@
       font-weight: 400;
       line-height: 20px;
       color: #999999;
-      color: #F74747;
+      color: @theme;
 
       // 待付款
       &.state--5 {
@@ -129,8 +125,8 @@
         // color: #fff;
       }
       &.state-2 {
-        color: #F74747;
-        border-color: #F74747;
+        color: @theme;
+        border-color: @theme;
       }
     }
   }
@@ -141,8 +137,7 @@
       .item-good {
         padding: 10px;
         border-bottom: 1px dashed #ccc;
-          display: flex;
-  align-items: center;
+        .flex();
 
         &:last-child {
           border: none;
@@ -170,7 +165,7 @@
             width: fit-content;
             cursor: pointer;
             &:hover {
-              color: #F74747;
+              color: @theme;
             }
           }
         }
@@ -204,8 +199,7 @@
     border: 1px solid #e5e5e5;
 
     .title {
-        display: flex;
-  align-items: center;
+      .flex();
       height: 48px;
       padding-left: 10px;
       background: #f5f5f5;
@@ -236,7 +230,7 @@
     .btn {
       width: 300px;
       height: 48px;
-      background: #F74747;
+      background: @theme;
       border-radius: 4px 4px 4px 4px;
       transition: 0.3s;
       font-size: 14px;

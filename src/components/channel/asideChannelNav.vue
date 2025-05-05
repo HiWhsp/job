@@ -75,13 +75,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(["vuexTreeCates"]),
+    ...mapState(["list_channel"]),
 
     //京东优惠区分类
     list_channel_youhuiqu() {
       let arr = [];
-      if (this.vuexTreeCates.length) {
-        arr = this.vuexTreeCates;
+      if (this.list_channel.length) {
+        arr = this.list_channel.find((v) => v.is_youhuiqu).channels;
       }
       return arr;
     },
@@ -169,7 +169,7 @@ export default {
 
           &:hover {
             text-decoration: underline;
-            color: #F74747;
+            color: @theme;
           }
           &.active {
             color: #f07f00;
@@ -185,7 +185,7 @@ export default {
 
             &:hover {
               text-decoration: underline;
-              color: #F74747;
+              color: @theme;
             }
             &.active {
               color: #f07f00;
@@ -206,12 +206,12 @@ export default {
     padding: 20px;
 
     background-color: #fff;
-    border: 1px solid #F74747;
+    border: 1px solid @theme;
     border-left: none;
     text-align: left;
 
     &.need-border-top {
-      border-top: 1px solid #F74747;
+      border-top: 1px solid @theme;
     }
 
     .pannel-item {
@@ -224,7 +224,7 @@ export default {
 
         &:hover {
           text-decoration: underline;
-          color: #F74747;
+          color: @theme;
         }
       }
       .pannel-content {

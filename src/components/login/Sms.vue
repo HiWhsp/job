@@ -88,9 +88,7 @@ export default {
   opacity: 1;
   border-radius: 4px;
 
-    display: flex;
-  align-items: center;
-  justify-content: space-between;
+  .flex-between();
 
   .text {
     display: inline-block;

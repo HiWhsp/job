@@ -48,7 +48,7 @@
           top: 0;
           bottom: 0;
           width: 80px;
-          background: #F74747;
+          background: @theme;
           color: #fff;
         }
       }
@@ -66,14 +66,13 @@
       .news-list {
         .news-item {
           width: 100%;
-            display: flex;
-  align-items: center;
+          .flex();
           padding: 10px 0;
           border-bottom: 1px solid #eee;
 
           &:hover {
             .news-title {
-              color: #F74747 !important;
+              color: @theme !important;
             }
           }
 
@@ -89,9 +88,7 @@
             padding: 0 10px;
             padding-right: 0;
             .news-title {
-               white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+              .ellipsis-1();
               font-size: 14px;
               font-family: MicrosoftYaHei-, MicrosoftYaHei;
               font-weight: normal;
@@ -99,11 +96,7 @@
             }
             .desc {
               margin-top: 12px;
-               display: -webkit-box;
-  -webkit-box-orient: vertical;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  -webkit-line-clamp: 2;
+              .ellipsis-2();
               font-size: 14px;
               font-size: 12px;
               font-family: MicrosoftYaHei-, MicrosoftYaHei;

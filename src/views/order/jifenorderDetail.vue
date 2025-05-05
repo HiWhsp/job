@@ -56,7 +56,7 @@
             </div>
             <div class="物流单号">
               <span>手机号码：</span>
-              {{fahuo_info.order_id}}
+              {{fahuo_info.orderId}}
             </div>
           </div>
         </div>
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-
+import order from "@/shop-actions/order";
 
 import orderInfo from "@/components/order/orderInfo.vue"; //
 import { mapState } from "vuex";
@@ -78,7 +78,7 @@ export default {
   },
   data() {
     return {
-      order_id: this.$route.query.order_id,
+      orderId: this.$route.query.orderId,
       orderObj: {}, //订单信息
       shouhuo_info: {}, //收货人信息
       pay_info: {}, //支付信息
@@ -119,7 +119,7 @@ export default {
     orders_detail() {
       order.orders_detail({
         params: {
-          id: this.order_id,
+          id: this.orderId,
         },
         success: (data) => {
           //console.log("orders_detail", data);
@@ -140,9 +140,7 @@ export default {
 .page {
   padding-bottom: 80px;
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     margin-bottom: 20px;
     text-align: left;
 
@@ -178,9 +176,7 @@ export default {
   }
 
   .other {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     padding: 20px 25px;
 
     .item {

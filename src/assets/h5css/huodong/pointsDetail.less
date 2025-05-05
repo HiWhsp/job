@@ -1,6 +1,6 @@
 @media screen and (max-width: 1199px) {
   .plus {
-    color: #F74747;
+    color: @theme;
     font-weight: bold;
   }
   .minus {
@@ -9,8 +9,7 @@
   }
 
   .goods-info {
-      display: flex;
-  align-items: center;
+    .flex();
 
     .img-box {
       img {
@@ -25,9 +24,7 @@
     text-align: left;
     padding-bottom: 80px;
     .main-title {
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      .flex-between();
       padding: 0 32px;
       text-align: left;
       height: 56px;
@@ -42,7 +39,7 @@
         min-width: 96px;
         height: 30px;
         line-height: 30px;
-        background: #F74747;
+        background: @theme;
         color: #fff;
         font-size: 14px;
         font-weight: bold;
@@ -61,7 +58,7 @@
     position: relative;
     width: 100%;
     height: auto;
-    // background: url(~@img/jifen-bg.png) no-repeat center / cover;
+    background: url(~@img/jifen-bg.png) no-repeat center / cover;
     background-size: 100% 100%;
     padding: 15px;
     // padding-left: 40px;
@@ -119,8 +116,7 @@
     flex: 2;
     // border-bottom: 1px solid #eee;
 
-      display: flex;
-  align-items: center;
+    .flex();
     .tab-item {
       cursor: pointer;
       padding-bottom: 10px;
@@ -132,9 +128,9 @@
       color: #333333;
 
       &.active {
-        border-bottom: 3px solid #F74747;
+        border-bottom: 3px solid @theme;
         font-weight: bold;
-        color: #F74747;
+        color: @theme;
       }
     }
   }
@@ -150,9 +146,7 @@
     .item {
       position: relative;
       text-align: center;
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      .flex-between();
       flex-wrap: wrap;
       padding: 10px;
       border-bottom: 1px solid #eee;
@@ -176,8 +170,7 @@
       .item-1 {
         text-align: left;
         flex: 1;
-          display: flex;
-  align-items: center;
+        .flex();
 
         .img-box {
           img {
@@ -188,11 +181,7 @@
         .info-box {
           padding-left: 15px;
           .title {
-             display: -webkit-box;
-  -webkit-box-orient: vertical;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  -webkit-line-clamp: 2;
+            .ellipsis-2();
             font-size: 12px;
             font-family: Microsoft YaHei-Regular, Microsoft YaHei;
             font-weight: 400;

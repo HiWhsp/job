@@ -30,8 +30,8 @@
   .btn-cancel {
     min-width: 100px;
     height: 40px;
-    border: 1px solid #F74747;
-    color: #F74747;
+    border: 1px solid @theme;
+    color: @theme;
     font-size: 14px;
   }
 
@@ -39,7 +39,7 @@
     margin-left: 20px;
     min-width: 100px;
     height: 40px;
-    background: #F74747;
+    background: @theme;
     color: #fff;
     font-size: 14px;
   }
@@ -80,9 +80,7 @@
     }
 
     .main-title {
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      .flex-between();
       margin-bottom: 30px;
       text-align: left;
 
@@ -112,8 +110,7 @@
           width: 500px;
           margin: 0 auto;
           font-size: 14px;
-            display: flex;
-  align-items: center;
+          .flex();
 
           .step {
             flex: 1;
@@ -141,7 +138,7 @@
             }
 
             &.active {
-              background: #F74747;
+              background: @theme;
               color: #fff;
             }
           }
@@ -178,8 +175,7 @@
           max-width: 10000vw;
           width: 600px;
 
-            display: flex;
-  align-items: center;
+          .flex();
           font-size: 14px;
           text-align: center;
           height: 48px;
@@ -226,8 +222,7 @@
             font-size: 16px;
             color: #333333;
 
-              display: flex;
-  align-items: center;
+            .flex();
 
             .item-1 {
               width: 100px;
@@ -263,7 +258,7 @@
             .item-3 {
               width: 100px;
 
-              color: #F74747;
+              color: @theme;
             }
 
             .item-4 {
@@ -272,7 +267,7 @@
 
             .item-5 {
               width: 100px;
-              color: #F74747;
+              color: @theme;
             }
           }
         }
@@ -324,7 +319,7 @@
         border: 1px solid #cccccc;
         font-size: 14px;
         font-weight: 400;
-        color: #F74747;
+        color: @theme;
 
         transition: 0.3s;
 
@@ -334,16 +329,16 @@
 
         &.back {
           margin-right: 24px;
-          border: 1px solid #F74747;
+          border: 1px solid @theme;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #F74747;
+          color: @theme;
         }
 
         &.tijiao {
           color: #ffffff;
-          background: #F74747;
+          background: @theme;
         }
       }
     }
@@ -357,9 +352,7 @@
     border: 1px solid #cccccc;
 
     .ziti-title {
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      .flex-between();
       padding-left: 20px;
       padding-right: 20px;
       height: 48px;
@@ -377,8 +370,7 @@
 
       .ziti-info {
         margin-bottom: 15px;
-          display: flex;
-  align-items: center;
+        .flex();
 
         span {
           display: inline-block;
@@ -405,9 +397,7 @@
     border: 1px solid #cccccc;
 
     .dizhi-title {
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      .flex-between();
       padding-left: 20px;
       padding-right: 20px;
       height: 48px;
@@ -422,7 +412,7 @@
       .add {
         b {
           font-weight: bold;
-          color: #F74747;
+          color: @theme;
           cursor: pointer;
         }
       }
@@ -436,7 +426,7 @@
         color: #7d7d7d;
 
         b {
-          color: #F74747;
+          color: @theme;
           cursor: pointer;
         }
       }
@@ -464,8 +454,7 @@
             background: #eee;
           }
 
-            display: flex;
-  align-items: center;
+          .flex();
 
           .name {
             width: 120px;
@@ -497,7 +486,7 @@
 
           .checked {
             flex: 2;
-            color: #F74747;
+            color: @theme;
             text-align: right;
           }
         }
@@ -531,8 +520,7 @@
       padding: 30px 20px;
 
       .select-1 {
-          display: flex;
-  align-items: center;
+        .flex();
 
         & + .select-1 {
           margin-top: 30px;
@@ -556,7 +544,7 @@
             border: 1px solid #cccccc;
 
             &.active {
-              border: 1px solid #F74747;
+              border: 1px solid @theme;
             }
           }
         }
@@ -654,13 +642,12 @@
       margin-bottom: 10px;
 
       b {
-        color: #F74747;
+        color: @theme;
       }
     }
 
     .section-btn-actions {
-        display: flex;
-  align-items: center;
+      .flex();
 
       .btn {
         width: 160px;
@@ -729,7 +716,7 @@
           }
 
           &.active {
-            border: 2px solid #F74747;
+            border: 2px solid @theme;
 
             .marker {
               display: block;
@@ -807,7 +794,7 @@
           color: #666666;
 
           span {
-            color: #F74747;
+            color: @theme;
           }
         }
 
@@ -825,8 +812,7 @@
   // 支付配送
   .section-pay {
     .pay-group {
-        display: flex;
-  align-items: center;
+      .flex();
       align-items: flex-start;
 
       & + .pay-group {
@@ -843,15 +829,13 @@
 
       .pay-items {
         flex: 1;
-          display: flex;
-  align-items: center;
+        .flex();
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
 
         .item {
-            display: flex;
-  align-items: center;
+          .flex();
           margin-right: 5px;
           cursor: pointer;
           margin-bottom: 15px;
@@ -886,11 +870,11 @@
           line-height: 32px;
           background: #ffffff;
           border-radius: 3px 3px 3px 3px;
-          border: 1px solid #F74747;
+          border: 1px solid @theme;
           font-size: 14px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: normal;
-          color: #F74747;
+          color: @theme;
         }
       }
     }
@@ -898,8 +882,7 @@
 
   .section-huizong {
     .sub-title {
-        display: flex;
-  align-items: center;
+      .flex();
       padding-left: 20px;
       height: 50px;
       background: #fafbfc;
@@ -937,7 +920,7 @@
         cursor: pointer;
 
         &.active {
-          border-color: #F74747;
+          border-color: @theme;
 
           .marker {
             display: block;
@@ -957,15 +940,14 @@
           padding: 10px 15px;
 
           .yhq-1 {
-              display: flex;
-  align-items: center;
+            .flex();
             align-items: flex-end;
 
             .text-1 {
               font-size: 24px;
               font-family: Microsoft YaHei-Bold, Microsoft YaHei;
               font-weight: bold;
-              color: #F74747;
+              color: @theme;
             }
 
             .text-2 {
@@ -993,7 +975,7 @@
           font-size: 12px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #F74747;
+          color: @theme;
         }
       }
     }
@@ -1005,7 +987,7 @@
       padding: 0 30px;
 
       .number {
-        color: #F74747;
+        color: @theme;
         margin: 0 10px;
       }
     }
@@ -1029,8 +1011,7 @@
     border: 1px dashed #ccc;
 
     .info-item {
-        display: flex;
-  align-items: center;
+      .flex();
       align-items: flex-start;
       margin-bottom: 10px;
 
@@ -1052,7 +1033,7 @@
       }
 
       .yue-warn-tip {
-        color: #F74747;
+        color: @theme;
         font-size: 14px;
       }
     }
@@ -1066,8 +1047,7 @@
     border: 1px dashed #ccc;
 
     .info-item {
-        display: flex;
-  align-items: center;
+      .flex();
       align-items: flex-start;
       margin-bottom: 5px;
 

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-
+import order from "@/shop-actions/order";
 
 import { mapState } from "vuex";
 
@@ -43,7 +43,7 @@ export default {
   props: ["payment_money"],
   data() {
     return {
-      order_id: "",
+      orderId: "",
       showModal: false,
       qrcode: "",
       payDone: false,
@@ -73,7 +73,7 @@ export default {
 
   methods: {
     init(data) {
-      this.order_id = data.order_id;
+      this.orderId = data.orderId;
       this.qrcode = data.qrcode;
 
       this.showModal = true;
@@ -84,10 +84,10 @@ export default {
     },
     cancelPay() {
       // this.showModal= false;
-      // this.order_id =
-      if (this.$route.name == "order-submit" || this.$route.name == "payment-methods") {
+      // this.orderId =
+      if (this.$route.name == "order-submit" || this.$route.name == "orderSubmit") {
         //创建订单页
-        this.$router.push("/payment-success?order_id=" + this.order_id);
+        this.$router.push("/payment-success?orderId=" + this.orderId);
       } else {
         this.showModal = false;
       }
@@ -96,7 +96,7 @@ export default {
     orders_detail() {
       this.timer = setInterval(() => {
         this.$api("orders_detail", {
-          id: this.order_id,
+          id: this.orderId,
         }).then((res) => {
           let { code, data, msg} = res;
 
@@ -119,8 +119,8 @@ export default {
       }
     },
     toPaySuccess() {
-      // this.$router.push(`/payment-success?order_id=${this.order_id}`);
-      this.$router.push(`/payment-success?order_id=${this.order_id}`);
+      // this.$router.push(`/payment-success?orderId=${this.orderId}`);
+      this.$router.push(`/payment-success?orderId=${this.orderId}`);
     },
   },
 };
@@ -140,7 +140,7 @@ export default {
 
       .pay-info {
         b {
-          color: #F74747;
+          color: @theme;
           font-size: 20px;
         }
       }
@@ -150,7 +150,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  background: #F74747;
+  background: @theme;
 
   .el-dialog__title {
     color: #fff;
@@ -175,7 +175,7 @@ export default {
     margin-right: 20px;
   }
   .queding {
-    background: #F74747;
+    background: @theme;
     color: #fff;
 
     &:disabled {

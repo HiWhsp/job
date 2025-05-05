@@ -1,1226 +1,400 @@
 <template>
-  <div class="page-head">
-    <div class="head-base">
-      <div class="base-inner">
-        <div class="header w-1200">
-          <!-- 没登录 -->
-          <div class="left flex" v-if="!vuex_is_login">
-            <div class="web-title">
-              欢迎访问氿洲工品
-            </div>
-            <router-link class="login" to="/login">请登录</router-link>
-            <router-link class="register" to="/register">免费注册</router-link>
+  <div class="page-header">
+    <div class="top-box">
+      <div class="content flex flex-between">
+        <div class="l-box flex">
+          <span class="name">{{ webConfig.shouye_welcome }}</span>
+        </div>
+        <div class="r-box flex pointer">
+          <div class="tit" @click="ToUrl({url: '/order-list', type: 1})" v-if="!baseInfo.id || baseInfo.type != 1">
+            采购会员中心
           </div>
-          <div class="left flex" v-if="vuex_is_login">
-            <div class="web-title">
-              欢迎访问氿洲工品
-            </div>
-            <span>
-              <b class="user-index" @click="$router.push('/userIndex')">{{ baseInfo.name }}</b>
-              <span class="text-1">{{ "您好！" }}</span>
-            </span>
-            <!-- <span class="logout" @click="logout">退出登录</span> -->
+          <div class="tit" @click="ToUrl({url: '/order-list', type: 1})" v-if="baseInfo.id && baseInfo.type == 1">
+            采购会员-{{ baseInfo.name }}
           </div>
-
-          <div class="right">
-            <!-- <div class="login-action" v-if="!vuex_is_login">
-              <router-link class="login" to="/login">登录</router-link>
-            </div>
-            <div class="login-action" v-if="!vuex_is_login">
-              <router-link class="register" to="/register">注册</router-link>
-            </div> -->
-            <div class="login-action" v-if="vuex_is_login">
-              <span class="logout" @click="logout">退出登录</span>
-            </div>
-            <div>
-              <router-link to="/order-list">我的订单</router-link>
-              <i class="el-icon-caret-bottom"></i>
-            </div>
-            <div>
-              <router-link to="/my-message">我的消息</router-link>
-            </div>
-            <div>
-              <router-link to="/terms?id=1">购物指南</router-link>
-            </div>
-
-            <!-- <div
-          v-if="$route.name != 'Login'"
-          class="cart-box"
-          @click="jump('shopcart')"
-        >
-          <img src="@fei/common/cart.png" alt />
-          <router-link to="/shopcart">购物车</router-link>
-          <b class="cart-num">{{ shopcart_count }}</b>
-        </div> -->
-
-            <!-- <div @mouseover="mouseover" @mouseout="mouseout" style="position: relative">
-              <span @click="$router.push('/userIndex')"> 用户 </span>
-              <i class="el-icon-caret-bottom"></i>
-              <ul class="hide-box" v-show="showSiteMap">
-                <li v-for="(item, index) in userMenu" :key="index">
-                  <router-link :to="item.route"> {{ item.title }}</router-link>
-                </li>
-              </ul>
-            </div> -->
-
-            <!-- <div class="shoujiban" @mouseover="show_shoujiban = true" @mouseout="show_shoujiban = false">
-              手机版
-              <i class="el-icon-caret-bottom"></i>
-              <div class="hide-box-contact" v-show="show_shoujiban">
-                <img :src="vuex_config.phone_code" alt />
-              </div>
-            </div> -->
-
-            <!-- <div class="language-box" @mouseover="mouseoverLang" @mouseout="mouseoutLang" style="position: relative">
-              <span> 中文 </span>
-              <i class="el-icon-caret-bottom"></i>
-              <ul class="hide-box" v-show="showLanguage">
-                <li v-for="(item, index) in list_lang" :key="index" @click="toggleLanguage(item.lang)">
-                  <a href="javascript:void(0);">
-                    {{ item.title }}
-                  </a>
-                </li>
-              </ul>
-            </div> -->
-
-            <!-- <div
-                class="contact"
-                @mouseover="showContact = true"
-                @mouseout="showContact = false"
-              >
-                联系客服
-                <i class="el-icon-caret-bottom"></i>
-
-                <div class="hide-box-contact" v-show="showContact">
-                  <img :src="config.qrcode_lianxi" alt />
-                </div>
-              </div> -->
+          <div class="col"></div>
+          <div class="tit" @click="ToUrl({url: '/G_product_list', type: 2})" v-if="!baseInfo.id || baseInfo.type != 2">
+            我是供应商
+          </div>
+          <div class="tit" @click="ToUrl({url: '/G_product_list', type: 2})" v-if="baseInfo.id && baseInfo.type == 2">
+            供应商-{{ baseInfo.name }}
           </div>
         </div>
       </div>
-
     </div>
-
-    <div class="head-search">
-      <div class="header-box w-1200">
-        <div class="header w-1200">
-          <div class="left-logo">
-            <img src="@/static/common/logo.png" @click="$router.push('/')" />
-            <!-- <span @click="$router.push('/')">网站名</span> -->
+    <div class="info-box">
+      <div class="content flex flex-between">
+        <div class="l-box">
+          <img alt="logo" class="img-1 pointer" src="../../static/home/logo.png" @click="goUrl({url: '/'})">
+          <span>奉新县砂轮行业协会</span>
+        </div>
+        <div class="m-box">
+          <div class="search flex">
+            <el-input v-model="searchInput" placeholder="请输入您要搜索的产品"></el-input>
+            <el-button icon="el-icon-search" type="primary"
+                       @click="searchClick({url: `/product-all?keyword=${searchInput}`})">搜索
+            </el-button>
           </div>
-
-          <div class="center-search">
-            <div class="search-wrap">
-              <div class="search-box">
-                <input type="text" v-model="keyword" @keyup.enter="click_search" placeholder="请输入要搜索的商品" />
-                <button @click="click_search">
-                  <!-- <i class="el-icon-search"></i> -->
-                  搜索
-                </button>
-              </div>
-
-              <div class="search-suggest">
-                <!-- <b>热搜词:</b> -->
-                <div class="suggest-list">
-                  <div class="item" v-for="(item, index) in suggestKeywods" :key="index"
-                    @click="click_search_suggest(item)">
-                    {{ item }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="cart-box">
-              <router-link to="/shopcart">
-                <img src="@/static/common/head-cart.png" alt="" />
-                <span class="cart-text">购物车</span>
-                <span class="cart-num">（{{ shopcart_count }}）</span>
-              </router-link>
-            </div>
-
-          </div>
-
-          <div class="right-phone flex-between">
-            <div class="hotline-box flex">
-              <img src="@/static/head/hotline.png" alt="">
-              <div class="text-box">
-                <div class="hotline-text">
-                  咨询热线
-                </div>
-                <div class="hotline-phone">
-                  15510765923
-                </div>
-              </div>
+        </div>
+        <div class="r-box">
+          <div class="flex">
+            <div class="tools-btn pointer flex" @click="goUrl({url: '/cart'})">
+              <img alt="" class="img-2" src="../../static/home/gouwuche.png">购物车
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="head-nav">
-      <topNavModel1 />
+    <div class="nav-box" v-if="!['/login', '/register', '/retrieve'].includes($route.path)">
+      <div class="content flex">
+        <div v-for="(item, index) in navList" :key="index" class="nav flex pointer" @click="goUrl(item)">
+          <span :class="{'active': item.url == $route.path}" class="name">{{ item.title }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import topNavModel1 from "@/components/common/topNavModel1.vue";
-
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
-  name: "HeaderIndex",
-  components: {
-    topNavModel1
-  },
   data() {
     return {
-      showSiteMap: false, //个人中心 菜单
-      showLanguage: false, //语言切换
-      showContact: false, //联系我们
-      show_shoujiban: false, //手机版
-
-      list_lang: [
-        { title: "中文", lang: "zh" },
-        { title: "English", lang: "en" },
-      ],
-
-      keyword: "",
-      //
-
-      showSearch: false,
-      keyword: "",
-
-      search_suggest_list: [],
-      disabledSearchQuery: false,
-      searchLock: false, //锁定搜素
-    };
-  },
-
-  computed: {
-
-    ...mapState([
-      //
-      "vuex_product_cate_1",
-      'vuex_product_cate_2',
-    ]),
-
-    userMenu() {
-      return [
-        { title: "我的主页", route: "userIndex" },
-        { title: "我的订单", route: "myOrder" },
-      ];
-    },
-    suggestKeywods() {
-      let arr = [];
-      if (this.vuex_config.reci) {
-        arr = this.vuex_config.reci || [];
-      }
-      return arr;
-    },
-
-
-  },
-
-  watch: {
-    $route(to, from) {
-      if (to.name == "product-search") {
-        if (to.query.id) {
-
-        }
-      }
-      this.searchLock = true;
-      this.keyword = to.query.keyword;
-    },
-  },
-
-  created() {
-    this.keyword = this.$route.query.keyword || "";
-    this.setView();
-  },
-
-  methods: {
-
-    //语言切换
-    toggleLanguage(lang_curr) {
-      // let lang_prev = localStorage.getItem("lang") || "zh";
-      // let lang_curr = "";
-      // if (lang_prev == "zh") {
-      //   lang_curr = "en";
-      // } else if (lang_prev == "en") {
-      //   lang_curr = "zh";
-      // }
-
-      if (localStorage.getItem("lang") == lang_curr) {
-        return;
-      }
-
-      this.$store.commit("set_lang", lang_curr);
-      this.$i18n.locale = lang_curr;
-
-      location.reload();
-    },
-
-    jump(route) {
-      // debugger
-      this.$router.push("/" + route);
-    },
-
-    goCart() {
-      this.$router.push({ path: "/cart" });
-    },
-    goOrderAll() {
-      this.$router.push({ path: "/orderAll" });
-    },
-    mouseover() {
-      this.showSiteMap = true;
-    },
-    mouseout() {
-      this.showSiteMap = false;
-    },
-    mouseoverLang() {
-      this.showLanguage = true;
-    },
-    mouseoutLang() {
-      this.showLanguage = false;
-    },
-
-    goModule(name) {
-      if (name == "index") {
-        this.$router.push({ path: "/" });
-      } else if (name == "my") {
-        this.$router.push({ path: "/info" });
-      } else if (name == "login") {
-        this.$router.push({ path: "login" });
-      }
-    },
-    logout() {
-      this.$store.commit("clear_loginInfo");
-      // debugger
-      if (this.$route.meta.requireAuth) {
-        this.$router.push("/");
-      }
-    },
-
-    //
-
-
-
-    //搜索
-    click_search() {
-      this.handleSearch(this.keyword);
-    },
-    //热搜
-    click_search_suggest(item) {
-      this.keyword = item;
-      this.handleSearch(item);
-    },
-    handleSearch(keyword) {
-      this.$router.push({
-        path: "/search",
-        query: {
-          keyword: keyword,
+      searchInput: '', // 搜索条件
+      // 头部导航列表
+      navList: [
+        {
+          title: '首页', // 名称
+          icon: null,
+          position: 'l',
+          url: '/'
         },
-      });
-    },
-
-    //自定义 banner跳转
-    jump_banner(item) {
-      console.log({ ...item });
-      let url = item.url;
-      if (!url) {
-        return;
-      }
-      window.open(url, "_blank");
-    },
-    ///
-
-
-    setView() {
-
-    },
-    mouseoutSearch() {
-
-    },
-    handleSearchInput() {
-      this.searchLock = false;
-    },
-
-    toHome() {
-      if (this.$route.name != "index") {
-        this.$router.push("/");
-      } else {
-        document.documentElement.scrollTop = 0;
-      }
-    },
-
-    checkClass(item) {
-      let pagePath = this.$route.fullPath;
-
-      let obj = {
-        active: item.route == pagePath || item.title == this.$route.meta.root,
-        "nav-item-static": "/product-cates" == item.path,
-      };
-      return obj;
-    },
-
-    toSearch() {
-      // if (!this.keyword) {
-      //   alertErr("请输入搜索关键字");
-      //   return;
-      // }
-      let query = {};
-      if (this.selectCate) {
-        query.id = this.selectCate;
-      }
-
-      let keyword = (this.keyword || '').trim() || ""
-      query.keyword = keyword;
-      query.ms = new Date().getTime();
-      this.$router.push({
-        path: "/product-search",
-        query: query,
-      });
-    },
-
-    logout() {
-      this.$store.commit("clear_loginInfo");
-      // if (this.$route.meta.requireAuth) {
-      //   this.$router.push("/login");
-      // }
-      this.$router.push("/login");
-      alertSucc("退出成功");
-    },
+        {
+          title: '意见反馈', // 名称
+          icon: null,
+          position: null,
+          url: '/feedback'
+        },
+        {
+          title: '联系我们', // 名称
+          icon: null,
+          position: 'l',
+          url: '/about'
+        }
+      ],
+      // 热门搜索
+      searchHot: []
+    }
   },
-};
+  computed: {
+    ...mapState({
+      userInfo: state => state.userInfo,
+    })
+  },
+  methods: {
+    // 跳转链接
+    goUrl(item) {
+      this.$router.push(item.url);
+    },
+    ToUrl(item) {
+      if (this.userInfo.type == item.type) {
+        this.$router.push(item.url);
+      } else {
+        this.$router.push("/login");
+      }
+    },
+    searchClick(item) {
+      this.$router.push(item.url + `&hash=${Math.random()}`);
+    },
+    // 退出登录
+    onunload() {
+      this.$store.commit("clear_loginInfo");
+    }
+  }
+}
 </script>
 
-<style lang="less">
-.w-nav-popover .popper__arrow {
-  display: none !important;
-}
-
-.w-nav-popover {
-  padding: 0 !important;
-  margin-top: 2px !important;
-  // border: none !important;
-}
-
-.pop-child {
-  .child-item {
-    text-align: center;
-    display: block;
-    height: 40px;
-    line-height: 40px;
-
-    background: #fff;
-    font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-    font-weight: 400;
-    color: #000000;
-
-    &:hover {
-      background: #F74747;
-      color: #fff;
-    }
-  }
-}
-</style>
-
-<style scoped lang="less">
-.head-base {
-
-  .hide-box {
-    position: absolute;
-    z-index: 100;
-    background: #fff;
-    min-width: 100px;
-    padding-left: 5px;
-    padding-right: 5px;
-    border: 1px solid #ccc;
-    top: 30px;
-    left: 50%;
-    transform: translate(-50%);
-
-    li:hover {
-      a {
-        color: #333;
-      }
-    }
-  }
-
-  .header-box {
-    background: #f5f5f5;
-  }
-
-  .header {
-
-    height: 36px;
-    line-height: 36px;
-    padding: 0 10px;
-    margin: 0 auto;
-    color: #c2c2c2;
-    font-size: 12px;
-
-
-  }
-}
-
-//
-//
-//
-//
-
-
-
-.head-base {
-  background: #0C0A0A;
-
-  .base-inner {
-    .left {
-      float: left;
-      min-width: 20%;
-      text-align: left;
-
-      .web-title {
-        margin-right: 20px;
-        color: #fff;
-      }
-
-
-      .logout {
-        color: #333;
-        cursor: pointer;
-      }
-
-      .login {
-        color: #fff;
-        margin-right: 15px;
-      }
-
-      .register {
-        color: #fff;
-        margin-left: 10px;
-        text-decoration: none;
-        font-weight: bold;
-      }
-
-      .user-index {
-        color: #333;
-        cursor: pointer;
-
-        &:hover {
-          color: #333;
-        }
-      }
-
-
-    }
-
-    .right {
-      float: right;
-      display: flex;
-      justify-content: flex-end;
-      width: 60%;
-      padding: 0 0;
-      color: #333;
-      color: #FFFFFF;
-
-      a {
-        color: #333;
-        color: #FFFFFF;
-      }
-
-      .login-action {
-        .login {
-          color: #333;
-          color: #FFFFFF;
-        }
-
-        .logout {
-          color: #333;
-          color: #FFFFFF;
-        }
-      }
-
-      >div {
-        margin-right: 20px;
-        cursor: pointer;
-
-        &:last-child {
-          margin-right: 0;
-        }
-      }
-
-      .shoujiban {
-        position: relative;
-
-        .hide-box-contact {
-          position: absolute;
-          left: 0;
-          transform: translateX(-40px);
-
-          z-index: 1000;
-          width: 150px;
-          height: 150px;
-          border: 1px solid #eee;
-          background: #fff;
-          padding: 10px;
-
-          img {
-            width: 100%;
-            height: 100%;
-          }
-        }
-      }
-
-      .language-box {
-        min-width: 60px;
-      }
-
-      .contact {
-        position: relative;
-
-        .hide-box-contact {
-          position: absolute;
-          width: 100px;
-          height: 100px;
-          border: 1px solid #ccc;
-
-          img {
-            width: 100%;
-            height: 100%;
-          }
-        }
-      }
-
-      .cart-box {
-        display: flex;
-        align-items: center;
-        text-align: center;
-
-        img {
-          width: 14px;
-          margin-right: 5px;
-        }
-      }
-
-      .tri-icon {
-        display: inline-box;
-        width: 0;
-        /*border-right: 2px solid #ccc;
-      border-bottom: 2px solid #ccc;*/
-      }
-
-      .cart-num {
-        margin-left: 5px;
-      }
-
-      .phone {
-        color: #333;
-        font-weight: bold;
-        margin-left: 10px;
-      }
-    }
-  }
-}
-
-
-
-.head-search {
-  background: #0C0A0A;
-
-
-  .header-box {
-    height: auto;
-    padding: 32px 0;
-  }
-
-  .header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-
-    .left-logo {
-      cursor: pointer;
-      justify-content: flex-start;
-
-      img {
-        height: 56px;
-        cursor: pointer;
-      }
-
-      span {
-        margin-left: 10px;
-        font-size: 30px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        line-height: 30px;
-        color: #333333;
-      }
-    }
-
-    .center-search {
-      flex: 1;
-      margin-left: 100px;
-      display: flex;
-      align-items: flex-start;
-
-      .search-wrap {
-        width: 428px;
-      }
-
-      .cart-box {
-        margin-left: 20px;
-
-        a {
-          display: inline-block;
-          .flex-center();
-          width: 152px;
-          height: 40px;
-          background: #FFFFFF;
-          border-radius: 0px 0px 0px 0px;
-          border: 1px solid #DDDDDD;
-
-
-          transition: .3s;
-
-          &:hover {}
-
-          img {
-            width: 17px;
-            margin-right: 11px;
-          }
-
-          span {
-            font-family: MicrosoftYaHei, MicrosoftYaHei;
-            font-weight: normal;
-            font-size: 16px;
-            color: #044FA0;
-          }
-
-          .cart-text {
-            margin-right: 0;
-          }
-        }
-      }
-    }
-
-    .right-phone {
-
-      margin-left: 20px;
-
-      .hotline-box {
-        img {
-          width: 40px;
-        }
-
-        .text-box {
-          margin-left: 12px;
-          line-height: 1.1;
-
-          .hotline-text {
-            font-family: MicrosoftYaHei;
-            font-weight: normal;
-            font-size: 14px;
-            color: #747474;
-          }
-
-          .hotline-phone {
-            margin-top: 5px;
-            font-family: Avenir, Avenir;
-            font-weight: 800;
-            font-size: 24px;
-            color: #F42424;
-          }
-        }
-      }
-    }
-  }
-
-  .center-search {
-    .search-box {
-      border: 1px solid #044FA0;
-      display: flex;
-      align-items: center;
-      width: 428px;
-      height: 40px;
-      background: #ffffff;
-      opacity: 1;
-      background: #efefef;
-      overflow: hidden;
-      overflow: hidden;
-
-      input {
-        flex: 2;
-        height: 100%;
-        height: 40px;
-        border: none;
-        outline: none;
-        background: #fff;
-        padding-left: 30px;
-        padding-right: 30px;
-        // border: 2px solid #333;
-        font-size: 14px;
-        font-family: Microsoft YaHei;
-        color: #000;
-      }
-
-      button {
-        width: 85px;
-        height: 40px;
-        background: #044FA0;
-        // border: 2px solid #333;
-        border: none;
-        outline: none;
-        cursor: pointer;
-
-        font-family: PingFang SC, PingFang SC;
-        font-weight: 500;
-        font-size: 16px;
-        color: #FFFFFF;
-
-        i {
-          color: #fff;
-          font-size: 22px;
-        }
-
-        &:hover {
-          filter: opacity(0.8);
-        }
-
-        img {
-          width: 31px;
-          height: 31px;
-        }
-      }
-    }
-
-    .search-suggest {
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-      font-size: 12px;
-
-      b {
-        color: #000;
-        display: inline-block;
-        min-width: 40px;
-      }
-
-      .suggest-list {
-        display: flex;
-        color: #9f9f9f;
-
-        .item {
-          margin-left: 10px;
-          cursor: pointer;
-
-          font-size: 14px;
-          font-family: Microsoft YaHei;
-          font-weight: 400;
-          line-height: 26px;
-          color: #9f9f9f;
-
-          &:hover {
-            color: #333;
-            font-weight: bold;
-          }
-        }
-      }
-    }
-  }
-}
-
-
-//
-//
-//
-//
-//
-
-
-.head-nav {
-  background: #202020;
-}
-
-
-
-.page-head {
-  position: sticky;
-  z-index: 100;
-  top: 0;
-  left: 0;
-  right: 0;
-  line-height: 0;
-  padding: 0;
-  // border-bottom: 4px solid #009a44;
-  // box-shadow: 0px 3px 10px 1px rgba(0, 0, 0, 0.16);
-  background: #fff;
-}
-
-.header-inner {
-  position: relative;
-  width: 1200px;
-  height: 150px;
+<style lang="less" scoped>
+.content {
+  width: 1400px;
   margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  .logo-wrap {
-    display: flex;
-    align-items: center;
-
-    .logo-box {
-      cursor: pointer;
-
-      img {
-        width: 141px;
-        height: 82px;
-      }
-    }
-  }
-
-
-
-  .nav-wrap {
-    flex: 1;
-    margin-left: 60px;
-    margin-right: 92px;
-  }
-
-  .nav-list {
-    height: 100%;
-
-    .nav-item {
-      // flex: 1;
-      text-align: center;
-
-      &.nav-item-static {
-        position: static;
-      }
-
-      .nav-link {
-        position: relative;
-        display: inline-block;
-        height: 50px;
-        line-height: 50px;
-        font-family: Poppins, Poppins;
-        font-weight: 600;
-        font-size: 17px;
-        color: #333333;
-
-
-        &::after {
-          content: "";
-          position: absolute;
-          bottom: 0;
-          left: 50%;
-          transform: translate(-50%);
-          width: 0;
-          height: 2px;
-          background: #F74747;
-          transition: 0.3s;
-        }
-      }
-
-      &:hover {
-        .nav-link::after {
-          width: 36px;
-        }
-      }
-
-      &.active {
-        .nav-link {
-          // font-weight: bold;
-          color: #F74747;
-
-          &::after {
-            // width: 36px;
-          }
-        }
-      }
-
-      a {
-        color: #222;
-        width: 100%;
-        font-size: 16px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #333;
-      }
-    }
-  }
 }
 
-.user-act {
-  width: 440px;
-  width: fit-content;
+.col {
+  width: 0px;
+  height: 12px;
+  border: 1px solid #C6CACD;
+  margin: 0 10px;
 }
 
-
-.center-search-wrap {
-  position: relative;
-  margin-right: 25px;
-
-  &:hover {
-    .search-suggest-list {
-      display: block;
-    }
-  }
-
-  .center-search {
-    width: 270px;
-    border-bottom: 1px solid #999999;
-
-    display: flex;
-    align-items: center;
-    align-items: stretch;
-
-    border-radius: 5px;
-    position: relative;
-    overflow: hidden;
-
-
-    .search-box {
-      // border: 1px solid #aaa;
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-      // height: 100%;
-
-      input {
-        display: block;
-        width: 317px;
-        height: 38px;
-        padding-left: 10px;
-
-        &::-webkit-input-placeholder {
-          font-weight: normal;
-          font-size: 14px;
-          color: #909090;
-        }
-      }
-
-      .btn-search {
-        .flex-center();
-        position: absolute;
-        right: 0;
-        width: 40px;
-        height: 40px;
-        background: #F74747;
-        border-radius: 0px 6px 6px 0px;
-        font-weight: normal;
-        font-size: 16px;
-        color: #FFFFFF;
-        background: transparent;
-
-        &:hover {
-          opacity: 1 !important;
-        }
-
-        .img-search {
-          width: 20px;
-          height: 20px;
-          cursor: pointer;
-          transition: 0.3s;
-          margin-right: 11px;
-
-          &:hover {
-            opacity: 0.85;
-          }
-        }
-      }
-
-
-    }
-  }
-
-  .search-suggest-list {
-    display: none;
-    position: absolute;
-    z-index: 100;
-    left: 0;
-    right: 0;
-    top: 43px;
-    border: 1px solid #ddd;
-    border-top: none;
-    background: #fff;
-    border-radius: 6px;
-    overflow: hidden;
-
-    .search-suggest-item {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      line-height: 3.5rem;
-      height: 3.5rem;
-      padding: 0 5px;
-      text-align: left;
-      transition: 0.3s;
-
-      &:hover {
-        background: #f5f5f5;
-      }
-
-      a {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        display: block;
-        width: 100%;
-        height: 100%;
-        color: #888;
-        font-size: 1.3rem;
-
-        &:hover {
-          color: #F74747;
-        }
-      }
-    }
-  }
-
+.color-a6 {
+  color: @theme;
 }
 
+.page-header {
+  width: 100%;
 
-.info-right {
-  display: flex;
-  align-items: center;
+  .top-box {
+    background: #F1F1F1;
+    border-radius: 0px 0px 0px 0px;
 
+    .l-box {
+      .name {
+        margin-right: 21px;
+      }
 
-  .log-box {
-    display: flex;
-    align-items: center;
-  }
-
-
-  a {
-    color: #fff;
-    display: flex;
-    align-items: center;
-
-    img {
-      width: 30px;
-      height: 30px;
-    }
-  }
-
-  .user-login {
-    width: 30px;
-    height: 30px;
-  }
-
-  .user-reg {
-    margin: 0 16px;
-    width: 30px;
-    height: 30px;
-  }
-
-  .cart-image {
-    width: 30px;
-    height: 30px;
-  }
-
-  .shopcart {
-    position: relative;
-    width: 30px;
-    height: 30px;
-    .flex-center();
-
-    img {
-      width: 30px;
-      height: 30px;
+      .register-btn {
+        margin-left: 10px;
+      }
     }
 
-    .cart-num {
-      .flex-center();
-      position: absolute;
-      right: -10px;
-      top: -10px;
-      min-width: 18px;
-      min-height: 18px;
-      padding: 0 3px;
-      background: #FF3B30;
-      border: 1px solid #FFFFFF;
-      border-radius: 50%;
+    .r-box {
+      color: #77797B;
+
+      .tit:hover {
+        color: @theme !important;
+      }
+
+      .img-1 {
+        width: 16px;
+        height: 16px;
+        margin-right: 5px;
+      }
+
+      .img-2 {
+        width: 9.01px;
+        height: 5.22px;
+        margin-left: 5px;
+        margin-top: 3px;
+      }
+    }
+
+    .content {
+      height: 37px;
+      color: #77797B;
       font-size: 12px;
     }
   }
+
+  .info-box {
+    width: 100%;
+    height: 99px;
+    background: #FFFFFF;
+
+    .l-box {
+      display: flex;
+      align-items: center;
+      margin-right: 200px;
+
+      .img-1 {
+        width: 108px;
+        height: 80px;
+        margin-right: 10px;
+      }
+
+      font-weight: bold;
+      font-size: 28px;
+      color: #000;
+      text-align: left;
+      font-style: normal;
+      text-transform: none;
+    }
+
+    .m-box {
+      .search {
+        .el-input {
+          width: 383px;
+
+          /deep/ .el-input__inner {
+            //border: 3px solid @theme;
+            border-radius: 4px 0px 0px 4px;
+          }
+        }
+
+        .el-button--primary {
+          background-color: @theme;
+          border-color: @theme;
+          border-radius: 0px 4px 4px 0px;
+        }
+      }
+
+      .search-hot {
+        margin-top: 7px;
+        font-size: 12px;
+
+        .hot {
+          margin-right: 16px;
+          color: #86888A;
+        }
+      }
+    }
+
+    .r-box {
+      .tools-btn {
+        padding: 10px;
+        background: #FFFFFF;
+        border-radius: 4px;
+        border: 1px solid #E9EBEE;
+        font-size: 16px;
+      }
+
+      .hot {
+        height: 20px;
+      }
+
+      .img-2 {
+        width: 21.9px;
+        height: 17.45px;
+        margin-right: 10px;
+      }
+
+      .img-3 {
+        width: 22.13px;
+        height: 17.84px;
+        margin-right: 10px;
+      }
+
+    }
+
+    .content {
+      height: 99px;
+    }
+  }
+
+  .nav-box {
+    background: @theme;
+
+    .nav {
+      margin-right: 60px;
+
+      .name {
+        position: relative;
+        font-family: Roboto, Roboto;
+        font-weight: bold;
+        font-size: 16px;
+        color: #fff;
+        text-align: left;
+        font-style: normal;
+        text-transform: none;
+        border-bottom: 4px solid @theme;
+
+        &:after {
+          top: 29px;
+          position: absolute;
+          content: '';
+          display: block;
+          width: 100%;
+          height: 4px;
+          background: @theme;
+          border-radius: 4px 4px 0px 0px;
+        }
+      }
+
+      .active:after {
+        background: #fff;
+      }
+
+      &:hover > .name:after {
+        background: #fff;
+      }
+    }
+
+    .nav:last-child {
+      margin-right: 0;
+    }
+
+    .img-0 {
+      width: 21.7px;
+      height: 21.68px;
+      margin-right: 5px;
+    }
+
+    .img-1 {
+      width: 9.45px;
+      height: 6.69px;
+      margin-left: 5px;
+    }
+
+    .content {
+      height: 42px;
+    }
+  }
+
 }
 
+.InfomationPopover {
+  padding: 10px;
+  color: #77797b;
 
+  .InfomationPopover-title {
+    height: 30px;
+    color: #1c2023;
+    font-size: 14px;
+    font-weight: 700;
+    border-bottom: 1px solid #e6e9ea;
+  }
 
-.user-login-info {
-  position: absolute;
-  right: 0;
-  top: 12px;
+  .InfomationPopover-content {
+    max-height: 180px;
+    margin-top: 15px;
+    overflow-y: scroll;
+    font-size: 14px;
+    color: #77797B;
 
+    .content-item {
+      display: flex;
+      height: 20px;
+      line-height: 20px;
+      cursor: pointer;
 
-  .avatar-box {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    overflow: hidden;
-    cursor: pointer;
+      .content-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .content-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .item-title {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 10px
+      }
+
+      .item-time {
+        width: 110px;
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+    }
+
+  }
+
+  .InfomationPopover-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: #fff;
+  }
+
+  .InfomationPopover-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin-top: 12px;
 
     img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      width: 5.28px;
+      height: 9.46px;
     }
-  }
 
-  .phone {
-    margin: 0 16px;
-    font-family: Arial, Arial;
-    font-weight: 400;
-    font-size: 16px;
-    color: #999999;
-
-    &:hover {
-      color: #F74747;
+    .msg-more {
+      color: @theme;
+      margin-right: 5px;
     }
-  }
-
-  .logout {
-    font-family: Arial, Arial;
-    font-weight: 400;
-    font-size: 16px;
-    color: #999999;
-
-    &:hover {
-      color: #F74747;
-    }
-  }
-}
-
-
-
-
-@media screen and (max-width: 1600px) {
-  .header-inner .nav-list .nav-item {
-    margin-left: 10px;
-    min-width: 80px;
-  }
-
-  .left-select {
-    width: 160px !important;
-  }
-}
-
-@media screen and (max-width: 1520px) {
-  .header-inner .nav-list .nav-item {
-    margin-left: 10px;
-    min-width: 80px;
-  }
-
-  .left-select {
-    width: 150px !important;
   }
 }
 </style>
-
-<style scoped lang="less" src="@/assets/h5css/zujian/pageHeader.less"></style>

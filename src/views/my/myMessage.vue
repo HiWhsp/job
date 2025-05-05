@@ -1,42 +1,69 @@
 <template>
   <div class="page">
     <div class="main-title">
-      <span>我的留言</span>
+      <span>我的消息</span>
     </div>
 
     <div class="page-ctx">
+      <div class="tab-box">
+        <div class="tab-list">
+          <div v-for="(item, index) in tabList" :key="index" class="tab-item"
+               :class="tabSelect.value == item.value ? 'active' : ''" @click="do_toggle_tab(item)">
+            {{ item.title }}
+            <span class="number" v-if="item.num">{{ item.num }}</span>
+          </div>
+        </div>
+        <div class="search-box">
+          <button class="lock btn" @click="do_mark_read()">全部标记已读</button>
+          <button class="clear btn">清空</button>
+        </div>
+      </div>
+
       <div class="mess-list">
         <div class="mess-item" v-for="(item, index) in messList" :key="index">
           <div class="title-box">
-            <div class="title">
-              {{ item.feed_type }}
+            <div class="content">
+              {{ item.content }}
             </div>
             <div class="date">
               {{ item.dtTime }}
             </div>
           </div>
-          <div class="content">
-            {{ item.content }}
-          </div>
         </div>
       </div>
+
+      <div v-if="count" class="pagination-box" style="margin-top: 40px; text-align: right;">
+        <el-pagination background layout="total, prev, pager, next" @current-change="setView"
+                       :current-page.sync="pagination.page" :page-size="pagination.pageNum"
+                       :total="count"></el-pagination>
+      </div>
+      <el-empty v-if="!count" description="没有查询到订单信息..."></el-empty>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
-  name: "servicePage",
+  name: "myMessage",
   components: {},
   data() {
     return {
+      count: 0,
+      tabSelect: {
+        title: '未读',
+        value: 1,
+      },
       messList: [],
       pagination: {
         page: 1,
-        page_num: 10
-      }
+        pageNum: 10
+      },
+      tabList: [
+        {value: 1, title: "未读"},
+        {value: 0, title: "全部"}
+      ]
     };
   },
   computed: {
@@ -48,33 +75,46 @@ export default {
   },
   methods: {
     setView() {
-
-      this.$api("index_getFeedback", {
-
+      this.$api("users_msgRecord", {
         ...this.pagination,
+        scene: this.tabSelect.value
       }).then((res) => {
-        let { code, data, pages, count } = res;
-        this.messList = res.data
-
+        this.messList = res.data.list
+        this.count = res.data.count;
       });
     },
 
-
-
-
+    do_toggle_tab(item) {
+      this.tabSelect = item;
+      this.pagination.page = 1;
+      this.setView();
+    },
+    // 标记已读
+    do_mark_read() {
+      if (this.messList.length == 0) {
+        alertErr("没有可标记的消息")
+        return
+      }
+      this.$api("users_msgRead", {
+        ids: this.messList.map(v => v.id).join(",")
+      }).then(res => {
+        if (res.code == 200) {
+          alertSucc(res.msg)
+          this.setView();
+        }
+      })
+    }
   },
 };
 </script>
 
 <style scoped lang="less">
 .page {
-  text-align: left;
   padding-bottom: 80px;
+  padding-top: 0;
 
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    .flex-between();
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -89,7 +129,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: @theme;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -98,23 +138,17 @@ export default {
 
   .page-ctx {
     min-height: 400px;
-    margin-top: 24px;
-    padding: 32px 32px 40px 32px;
+    margin-top: 14px;
+    padding: 8px 32px 40px 32px;
     background: #fff;
   }
 }
 
 .page {
   .page-ctx {
-    padding-bottom: 80px;
-
-
-
+    padding-bottom: 40px;
   }
 }
-
-
-
 
 .mess-list {
   .mess-item {
@@ -122,28 +156,105 @@ export default {
     padding: 25px 0;
 
     .title-box {
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      .flex-between();
+      position: relative;
 
-      .title {
-        font-weight: 400;
-        font-size: 16px;
-        color: #333333;
+      .content {
+        width: 730px;
+        font-size: 14px;
       }
 
       .date {
+        width: 150px;
         font-weight: 400;
         font-size: 14px;
         color: #999999;
       }
+
+      &:before {
+        content: "";
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        background: #E4E4E4;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+.tab-box {
+  .flex-between();
+  background: #ffffff;
+  border-bottom: 1px solid #D9D9D9;
+
+  .tab-list {
+    .flex();
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #7d7d7d;
+
+    .tab-item {
+      position: relative;
+      width: 84px;
+      height: 48px;
+      line-height: 48px;
+      cursor: pointer;
+      margin-right: 40px;
+      text-align: center;
+
+      .number {
+        color: @theme;
+      }
+
+      &.active {
+        font-weight: bold;
+        color: @theme;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: @theme;
+        }
+      }
+    }
+  }
+
+  .search-box {
+    .flex();
+    align-items: center;
+    justify-content: end;
+    min-width: 260px;
+    height: 32px;
+
+    button {
+      width: 133px;
+      height: 40px;
+      border-radius: 4px 4px 4px 4px;
+      background: #ffffff;
+      color: #333;
+      border: 1px solid #EFEFEF;
     }
 
-    .content {
-      margin-top: 20px;
+    .lock {
+      background: #F4A116;
+      color: #fff;
+      border: 1px solid #F4A116;
+    }
+
+    .clear {
+      margin-left: 10px;
+      width: 74px;
+      height: 40px;
+      border-radius: 2px 2px 2px 2px;
     }
   }
 }
 </style>
-
-<style scoped lang="less" src="@/assets/h5css/user/change-password.less"></style>

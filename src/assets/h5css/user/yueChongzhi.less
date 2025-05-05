@@ -23,9 +23,7 @@
     text-align: left;
     padding-bottom: 80px;
     .main-title {
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      .flex-between();
       padding: 0 32px;
       text-align: left;
       height: 56px;
@@ -40,7 +38,7 @@
         min-width: 96px;
         height: 30px;
         line-height: 30px;
-        background: #F74747;
+        background: @theme;
         color: #fff;
         font-size: 14px;
         font-weight: bold;
@@ -112,8 +110,7 @@
   }
 
   .list {
-      display: flex;
-  align-items: center;
+    .flex();
     flex-wrap: wrap;
     .item {
       .flex-center();
@@ -204,7 +201,7 @@
       margin-right: 15px;
       padding-bottom: 0;
 
-      border: 2px solid #F74747;
+      border: 2px solid @theme;
       border: 2px solid transparent;
       background: #f6f6f6;
 
@@ -217,7 +214,7 @@
       }
 
       &.selected {
-        border: 2px solid #F74747;
+        border: 2px solid @theme;
       }
       .song-marker {
         position: absolute;
@@ -227,7 +224,7 @@
         height: 30px;
         line-height: 30px;
         text-align: center;
-        background: linear-gradient(61deg, #F74747 0%, #fe6927 100%);
+        background: linear-gradient(61deg, @theme 0%, #fe6927 100%);
         border-radius: 20px 0px 20px 0px;
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -241,7 +238,7 @@
         font-size: 16px;
         font-family: Microsoft YaHei-Bold, Microsoft YaHei;
         font-weight: bold;
-        color: #F74747;
+        color: @theme;
       }
       .tip {
         margin-top: 10px;
@@ -262,12 +259,10 @@
   }
 
   .type-box {
-      display: flex;
-  align-items: center;
+    .flex();
 
     .type-item {
-        display: flex;
-  align-items: center;
+      .flex();
       cursor: pointer;
 
       & + .type-item {
@@ -297,7 +292,7 @@
       height: 40px;
       line-height: 40px;
       background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
-      background: #F74747;
+      background: @theme;
       border-radius: 4px;
       font-size: 14px;
       font-family: PingFang SC;
