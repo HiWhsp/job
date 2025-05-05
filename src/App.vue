@@ -1,10 +1,15 @@
 <template>
   <div id="app">
-    <pageHeader/>
-    <div class="layout-box">
+    <template v-if="$route.meta.title !== '登录'">
+      <pageHeader/>
+      <div class="layout-box">
+        <router-view></router-view>
+      </div>
+      <pageFooter/>
+    </template>
+    <template v-else>
       <router-view></router-view>
-    </div>
-    <pageFooter/>
+    </template>
   </div>
 </template>
 
@@ -65,7 +70,7 @@ export default {
 
 <style lang="less">
 body {
-  background-color: #000;
+  background-color: #fff;
   font-size: 14px;
   min-width: fit-content;
   width: 100%;
@@ -80,12 +85,13 @@ body {
 }
 
 .page {
-  width: 1400px;
+  width: 1200px;
   padding: 21px 0 53px 0;
   margin: auto;
 }
 .layout-box {
-  background-color: #F1F3F4;
+  margin-top: 80px;
+  background-color: #fff;
 }
 
 #app-wrap {

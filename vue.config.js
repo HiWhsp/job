@@ -49,7 +49,7 @@ module.exports = {
 
   configureWebpack: (config) => {
     return {
-      name: "奉新县砂轮行业协会",
+      name: "新徽教育",
       resolve: {
         // 配置解析别名
         extensions: [".js", ".vue", ".json"],

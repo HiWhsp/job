@@ -4,34 +4,16 @@
       <div class="footer-nav">
         <div class="footer-nav_service flex flex-start">
           <div class="service">
-            <img src="../../static/home/icon1.png" alt="" style="width: 34px;height: 40px">
-            <div class="service-content">
-              <p>地址</p>
-              <p>{{ webConfig.site_address }}</p>
-            </div>
-          </div>
-          <div class="service">
-            <img src="../../static/home/icon2.png" alt="" style="width: 40px;height: 40px">
-            <div class="service-content">
-              <p>服务热线</p>
-              <p>{{  webConfig.site_tel }}</p>
-            </div>
-          </div>
-          <div class="service">
-            <img src="../../static/home/icon3.png" alt="" style="width: 40px;height: 30px">
-            <div class="service-content">
-              <p>期待您的来信</p>
-              <p>{{  webConfig.email }}</p>
-            </div>
+            <img src="../../static/home/logo.png" alt="">
           </div>
         </div>
       </div>
       <div class="len"></div>
       <div class="copyright flex flex-center">
         <p class="info">
-          Copyright © 2025 奉新砂轮行业协会 All Rights Reserved.
+          Copyright © 2018 广东弘儒投资有限责任公司
           <span style="margin: 0 10px;">|</span>
-          <a href="">{{  webConfig.beian }}</a>
+          <a href="">粤ICP备14039237号</a>
         </p>
       </div>
     </div>
@@ -72,10 +54,10 @@ export default {
 
 .page-footer {
   height: 208px;
-  background: #044FA0;
+  background: #F3F3F3;
 
   .len {
-    //width: 1400px;
+    //width: 1200px;
     height: 1px;
     background-color: #ABADB2;
     opacity: 0.4;
@@ -83,27 +65,25 @@ export default {
 
   .content {
     .footer-nav {
-      width: 1400px;
+      width: 1200px;
       height: 132px;
       margin: 0 auto;
       display: flex;
       align-items: center;
+      justify-content: center;
 
       .footer-nav_service {
-        flex: 1;
         .service {
           cursor: pointer;
-          flex: 1;
           display: flex;
           align-items: center;
           color: #fff;
           font-size: 16px;
+
           img {
-            margin-right: 16px;
+            width: 208px;
+            height: 62px;
           }
-        }
-        .service:first-child {
-          margin-left: 80px;
         }
       }
 
@@ -142,11 +122,11 @@ export default {
 
     .copyright {
       font-size: 14px;
-      color: #9AB7D9;
+      color: #000;
       height: 76px;
 
       a {
-        color: #9AB7D9;
+        color: #000;
         margin-right: 5px;
       }
     }

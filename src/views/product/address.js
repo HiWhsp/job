@@ -1097,7 +1097,7 @@ const list = [
     },
     {
         "label": "山西省",
-        "value": "140000",
+        "value": "120000",
         "children": [
             {
                 "label": "太原市",
@@ -2909,7 +2909,7 @@ const list = [
             },
             {
                 "label": "葫芦岛市",
-                "value": "211400",
+                "value": "211200",
                 "children": [
                     {
                         "label": "连山区",
@@ -7500,7 +7500,7 @@ const list = [
             },
             {
                 "label": "德州市",
-                "value": "371400",
+                "value": "371200",
                 "children": [
                     {
                         "label": "德城区",
@@ -8373,7 +8373,7 @@ const list = [
             },
             {
                 "label": "商丘市",
-                "value": "411400",
+                "value": "411200",
                 "children": [
                     {
                         "label": "梁园区",
@@ -10370,7 +10370,7 @@ const list = [
             },
             {
                 "label": "梅州市",
-                "value": "441400",
+                "value": "441200",
                 "children": [
                     {
                         "label": "梅江区",
@@ -11544,7 +11544,7 @@ const list = [
             },
             {
                 "label": "崇左市",
-                "value": "451400",
+                "value": "451200",
                 "children": [
                     {
                         "label": "江州区",
@@ -12561,7 +12561,7 @@ const list = [
             },
             {
                 "label": "眉山市",
-                "value": "511400",
+                "value": "511200",
                 "children": [
                     {
                         "label": "东坡区",
@@ -18046,7 +18046,7 @@ const list = [
             },
             {
                 "label": "桃园县",
-                "value": "711400",
+                "value": "711200",
                 "children": [
                     {
                         "label": "中坜市",

@@ -43,7 +43,7 @@ export default {
 <style lang="less" scoped>
 .content {
   padding: 20px 0 56px;
-  width: 1400px;
+  width: 1200px;
   margin: 0 auto;
 
   .nav-bar {
@@ -56,7 +56,7 @@ export default {
   }
 
   .item-wrap {
-    width: 1400px;
+    width: 1200px;
     background: #fff;
     padding: 48px 30px 50px;
 

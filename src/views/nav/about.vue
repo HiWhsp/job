@@ -40,7 +40,7 @@ export default {
       </el-breadcrumb>
     </div>
     <div class="item-wrap">
-      <!--      <div class="title">山东奉新县砂轮行业协会科技有限公司</div>-->
+      <!--      <div class="title">山东新徽教育科技有限公司</div>-->
       <div class="flex flex-between">
         <div class="item" v-for="(item, index) in list" :key="index">
           <img :src="item.imgUrl" alt="">
@@ -58,7 +58,7 @@ export default {
 <style scoped lang="less">
 .content {
   padding: 20px 0 56px;
-  width: 1400px;
+  width: 1200px;
   margin: 0 auto;
 
   .nav-bar {
@@ -71,7 +71,7 @@ export default {
   }
 
   .item-wrap {
-    width: 1400px;
+    width: 1200px;
     background: #fff;
     padding: 70px 40px 50px;
 

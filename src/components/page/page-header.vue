@@ -1,54 +1,26 @@
 <template>
   <div class="page-header">
-    <div class="top-box">
-      <div class="content flex flex-between">
-        <div class="l-box flex">
-          <span class="name">{{ webConfig.shouye_welcome }}</span>
-        </div>
-        <div class="r-box flex pointer">
-          <div class="tit" @click="ToUrl({url: '/order-list', type: 1})" v-if="!baseInfo.id || baseInfo.type != 1">
-            采购会员中心
-          </div>
-          <div class="tit" @click="ToUrl({url: '/order-list', type: 1})" v-if="baseInfo.id && baseInfo.type == 1">
-            采购会员-{{ baseInfo.company_name }}
-          </div>
-          <div class="col"></div>
-          <div class="tit" @click="ToUrl({url: '/G_product_list', type: 2})" v-if="!baseInfo.id || baseInfo.type != 2">
-            我是供应商
-          </div>
-          <div class="tit" @click="ToUrl({url: '/G_product_list', type: 2})" v-if="baseInfo.id && baseInfo.type == 2">
-            供应商-{{ baseInfo.company_name }}
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="info-box">
       <div class="content flex flex-between">
         <div class="l-box">
           <img alt="logo" class="img-1 pointer" src="../../static/home/logo.png" @click="goUrl({url: '/'})">
-          <span>奉新县砂轮行业协会</span>
         </div>
         <div class="m-box">
-          <div class="search flex">
-            <el-input v-model="searchInput" placeholder="请输入您要搜索的产品"></el-input>
-            <el-button icon="el-icon-search" type="primary"
-                       @click="searchClick({url: `/product-all?keyword=${searchInput}`})">搜索
-            </el-button>
+          <div class="nav-box">
+            <div class="flex">
+              <div v-for="(item, index) in navList" :key="index" class="nav flex pointer" @click="goUrl(item)">
+                <span :class="{'active': item.url == $route.path}" class="name">{{ item.title }}</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="r-box">
           <div class="flex">
-            <div class="tools-btn pointer flex" @click="goUrl({url: '/cart'})"  v-if="userInfo.type==1">
-              <img alt="" class="img-2" src="../../static/home/gouwuche.png">购物车
+            <div class="tools-btn pointer flex" @click="goUrl({url: '/my-info'})">
+              <span>学员名称/姓名</span>
+              <img alt="" class="img-2" src="../../static/common/head-user-login.png">
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="nav-box" v-if="!['/login', '/register', '/retrieve'].includes($route.path)">
-      <div class="content flex">
-        <div v-for="(item, index) in navList" :key="index" class="nav flex pointer" @click="goUrl(item)">
-          <span :class="{'active': item.url == $route.path}" class="name">{{ item.title }}</span>
         </div>
       </div>
     </div>
@@ -71,16 +43,16 @@ export default {
           url: '/'
         },
         {
-          title: '意见反馈', // 名称
+          title: '全部课程', // 名称
           icon: null,
           position: null,
-          url: '/feedback'
+          url: '/course-list'
         },
         {
-          title: '联系我们', // 名称
+          title: '我的考试', // 名称
           icon: null,
-          position: 'l',
-          url: '/about'
+          position: null,
+          url: '/my-exam'
         }
       ],
       // 热门搜索
@@ -117,7 +89,7 @@ export default {
 
 <style lang="less" scoped>
 .content {
-  width: 1400px;
+  width: 1200px;
   margin: 0 auto;
 }
 
@@ -133,53 +105,15 @@ export default {
 }
 
 .page-header {
+  position: fixed;
+  top: 0;
+  z-index: 99;
   width: 100%;
-
-  .top-box {
-    background: #F1F1F1;
-    border-radius: 0px 0px 0px 0px;
-
-    .l-box {
-      .name {
-        margin-right: 21px;
-      }
-
-      .register-btn {
-        margin-left: 10px;
-      }
-    }
-
-    .r-box {
-      color: #77797B;
-
-      .tit:hover {
-        color: @theme !important;
-      }
-
-      .img-1 {
-        width: 16px;
-        height: 16px;
-        margin-right: 5px;
-      }
-
-      .img-2 {
-        width: 9.01px;
-        height: 5.22px;
-        margin-left: 5px;
-        margin-top: 3px;
-      }
-    }
-
-    .content {
-      height: 37px;
-      color: #77797B;
-      font-size: 12px;
-    }
-  }
+  box-shadow: 0px 4px 10px 0px rgba(8,58,34,0.12);
 
   .info-box {
     width: 100%;
-    height: 99px;
+    height: 80px;
     background: #FFFFFF;
 
     .l-box {
@@ -188,82 +122,36 @@ export default {
       margin-right: 200px;
 
       .img-1 {
-        width: 108px;
-        height: 80px;
+        width: 168px;
+        height: 50px;
         margin-right: 10px;
       }
-
-      font-weight: bold;
-      font-size: 28px;
-      color: #000;
-      text-align: left;
-      font-style: normal;
-      text-transform: none;
     }
 
     .m-box {
-      .search {
-        .el-input {
-          width: 383px;
-
-          /deep/ .el-input__inner {
-            //border: 3px solid @theme;
-            border-radius: 4px 0px 0px 4px;
-          }
-        }
-
-        .el-button--primary {
-          background-color: @theme;
-          border-color: @theme;
-          border-radius: 0px 4px 4px 0px;
-        }
-      }
-
-      .search-hot {
-        margin-top: 7px;
-        font-size: 12px;
-
-        .hot {
-          margin-right: 16px;
-          color: #86888A;
-        }
-      }
     }
 
     .r-box {
       .tools-btn {
-        padding: 10px;
-        background: #FFFFFF;
-        border-radius: 4px;
-        border: 1px solid #E9EBEE;
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-weight: 400;
         font-size: 16px;
-      }
-
-      .hot {
-        height: 20px;
+        color: #262626;
       }
 
       .img-2 {
-        width: 21.9px;
-        height: 17.45px;
-        margin-right: 10px;
+        margin-left: 15px;
+        width: 46px;
+        height: 46px;
       }
-
-      .img-3 {
-        width: 22.13px;
-        height: 17.84px;
-        margin-right: 10px;
-      }
-
     }
 
     .content {
-      height: 99px;
+      height: 80px;
     }
   }
 
   .nav-box {
-    background: @theme;
 
     .nav {
       margin-right: 60px;
@@ -271,13 +159,11 @@ export default {
       .name {
         position: relative;
         font-family: Roboto, Roboto;
-        font-weight: bold;
-        font-size: 16px;
-        color: #fff;
+        font-size: 18px;
+        color: #4D555D;
         text-align: left;
         font-style: normal;
         text-transform: none;
-        border-bottom: 4px solid @theme;
 
         &:after {
           top: 29px;
@@ -285,18 +171,22 @@ export default {
           content: '';
           display: block;
           width: 100%;
-          height: 4px;
-          background: @theme;
+          height: 2px;
+          background: #fff;
           border-radius: 4px 4px 0px 0px;
         }
       }
 
       .active:after {
-        background: #fff;
+        background: @theme;
+      }
+      .active.name {
+        color: @theme;
+        font-weight: bold;
       }
 
       &:hover > .name:after {
-        background: #fff;
+        background: @theme;
       }
     }
 
@@ -318,82 +208,6 @@ export default {
 
     .content {
       height: 42px;
-    }
-  }
-
-}
-
-.InfomationPopover {
-  padding: 10px;
-  color: #77797b;
-
-  .InfomationPopover-title {
-    height: 30px;
-    color: #1c2023;
-    font-size: 14px;
-    font-weight: 700;
-    border-bottom: 1px solid #e6e9ea;
-  }
-
-  .InfomationPopover-content {
-    max-height: 180px;
-    margin-top: 15px;
-    overflow-y: scroll;
-    font-size: 14px;
-    color: #77797B;
-
-    .content-item {
-      display: flex;
-      height: 20px;
-      line-height: 20px;
-      cursor: pointer;
-
-      .content-item:last-child {
-        margin-bottom: 0;
-      }
-
-      .content-item:last-child {
-        margin-bottom: 0;
-      }
-
-      .item-title {
-        flex: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding-right: 10px
-      }
-
-      .item-time {
-        width: 110px;
-        font-size: 12px;
-        flex-shrink: 0;
-      }
-    }
-
-  }
-
-  .InfomationPopover-content::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-    background-color: #fff;
-  }
-
-  .InfomationPopover-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    margin-top: 12px;
-
-    img {
-      width: 5.28px;
-      height: 9.46px;
-    }
-
-    .msg-more {
-      color: @theme;
-      margin-right: 5px;
     }
   }
 }
