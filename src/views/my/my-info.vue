@@ -12,7 +12,7 @@
             <span class="info">
               <div class="upload-box">
                 <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="img"
-                           action="https://shalunxiehui.dx.hdapp.com.cn/api?action=index_ossUpload"
+                           action="https://zsxhxxpx.dx.hdapp.com.cn/api?action=index_ossUpload"
                            :data="mix_upload_data" :on-success="upload_on_success"
                            :before-upload="upload_before_upload">
                   <img v-if="form.image" :src="form.image" class="user-avatar"/>
@@ -157,7 +157,7 @@ export default {
     },
     query_user() {
       this.$api({
-        url: 'userInfo',
+        url: 'getUserInfo',
         method: 'get',
       }).then(res => {
         if (res.code == 200) {

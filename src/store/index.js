@@ -199,13 +199,13 @@ export default new Vuex.Store({
     //获取登录后的信息
     async getUserloginedInfo({commit, state, dispatch}, data) {
       dispatch("query_user");
-      dispatch("query_cart");
+      // dispatch("query_cart");
     },
 
     // 获取用户信息
     async query_user({commit, state, dispatch}) {
       api({
-        url: "userInfo",
+        url: "getUserInfo",
         method: "get",
         data: {},
       }).then((res) => {
@@ -265,15 +265,15 @@ export default new Vuex.Store({
       });
 
       //产品分类
-      api({
-        url: "basicList",
-        method: "get",
-      }).then((res) => {
-        if (res.code == 200) {
-          let catesInfo = handle_product_cate_data(res.data);
-          commit("set_vuex_product_cate", catesInfo);
-        }
-      });
+      // api({
+      //   url: "basicList",
+      //   method: "get",
+      // }).then((res) => {
+      //   if (res.code == 200) {
+      //     let catesInfo = handle_product_cate_data(res.data);
+      //     commit("set_vuex_product_cate", catesInfo);
+      //   }
+      // });
 
       //新闻分类
       // api({

@@ -286,10 +286,10 @@ export default {
             <div class="goods-title">库存： {{ item.kucun }}</div>
           </div>
           <div class="box-title">
-            <el-image 
+            <el-image
               v-if="item.jiance_files_url.url"
               style="width: 50px; height: 50px"
-              :src="item.jiance_files_url.url" 
+              :src="item.jiance_files_url.url"
               :preview-src-list="[item.jiance_files_url.url]">
             </el-image>
           </div>
@@ -363,7 +363,7 @@ export default {
           <el-form-item label="检测报告：">
             <el-upload
                 :on-success="handleSuccess"
-                action="https://shalunxiehui.dx.hdapp.com.cn/api/uploadFile"
+                action="https://zsxhxxpx.dx.hdapp.com.cn/api/uploadFile"
                 class="upload-demo"
                 list-type="picture-card"
                 multiple

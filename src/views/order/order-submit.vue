@@ -119,7 +119,7 @@ z`
           >
             <el-upload
               :on-success="handleSuccessImg"
-              action="https://shalunxiehui.dx.hdapp.com.cn/api?action=index_ossUpload"
+              action="https://zsxhxxpx.dx.hdapp.com.cn/api?action=index_ossUpload"
               list-type="picture-card"
               multiple
               name="img"
@@ -220,7 +220,7 @@ z`
         </div>
         <div class="item total">
           <span class="text">合计应付：</span>
-          
+
           <b>{{ vuex_huobi }} {{ total_product_price }}</b>
           ({{pay_type_value==1?'含税':'不含税'}})
         </div>
@@ -524,7 +524,7 @@ export default {
               this.total_product_price +=
               vv.cart_info.noTaxPrice * +vv.cart_info.num;
             }
-            
+
           });
         });
       } else {
@@ -534,7 +534,7 @@ export default {
     //获取缓存的地址信息
     query_user() {
       this.$api({
-        url: "userInfo",
+        url: "getUserInfo",
         method: "get",
       }).then((res) => {
         if (res.code == 200) {
@@ -577,7 +577,7 @@ export default {
         });
       });
       console.log(list,'1');
-      
+
       let params = {
         supply_user_id: this.payment_products[0].supply_user_info.id,
         address_id: this.address_selected.id,

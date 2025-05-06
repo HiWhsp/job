@@ -223,7 +223,7 @@
           drag
           limit="1"
           name="file"
-          action="https://shalunxiehui.dx.hdapp.com.cn/api/uploadFile"
+          action="https://zsxhxxpx.dx.hdapp.com.cn/api/uploadFile"
           :on-success="handleSuccess"
       >
         <i class="el-icon-upload"></i>

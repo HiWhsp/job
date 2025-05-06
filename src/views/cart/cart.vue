@@ -242,30 +242,30 @@ export default {
     },
 
     setView() {
-      this.$api({
-        url: "getCart",
-        method: "post",
-      }).then((res) => {
-        let { code, data } = res;
-        if (code == 200) {
-          data.list.forEach((v) => {
-            v.material_list.forEach((vv) => {
-              vv.checked = false;
-            });
-          });
-          this.list_shopcart = data.list;
-          // if (data.list.length) {
-          //   this.checked_all = true;
-          // }
-
-          // this.list_shopcart.forEach((v, i) => {
-          //   this.checked_all[i] = false;
-          // });
-          
-          this.checked_all = false;
-          this.do_update_vuex_cart_number();
-        }
-      });
+      // this.$api({
+      //   url: "getCart",
+      //   method: "post",
+      // }).then((res) => {
+      //   let { code, data } = res;
+      //   if (code == 200) {
+      //     data.list.forEach((v) => {
+      //       v.material_list.forEach((vv) => {
+      //         vv.checked = false;
+      //       });
+      //     });
+      //     this.list_shopcart = data.list;
+      //     // if (data.list.length) {
+      //     //   this.checked_all = true;
+      //     // }
+      //
+      //     // this.list_shopcart.forEach((v, i) => {
+      //     //   this.checked_all[i] = false;
+      //     // });
+      //
+      //     this.checked_all = false;
+      //     this.do_update_vuex_cart_number();
+      //   }
+      // });
     },
 
     favouriteDelete(item) {

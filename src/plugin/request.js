@@ -149,9 +149,9 @@ function api(action, data, method, uploaderConfig) {
     }; //请求数据
 
     if (process.env.NODE_ENV !== "production") {
-        reqUrl = "https://shalunxiehui.dx.hdapp.com.cn/api/"; //请求地址
+        reqUrl = "https://zsxhxxpx.dx.hdapp.com.cn/api/"; //请求地址
     } else {
-        reqUrl = "https://shalunxiehui.dx.hdapp.com.cn/api/"; //请求地址
+        reqUrl = "https://zsxhxxpx.dx.hdapp.com.cn/api/"; //请求地址
     }
 
     // debugger

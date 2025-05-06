@@ -1,37 +1,50 @@
 <template>
   <div class="page-container">
     <div class="search-bar">
-      <el-input placeholder="输入关键字" v-model="searchText" class="search-input" />
-      <el-button type="primary">搜索</el-button>
-      <div class="status-options">
-        <el-radio-group v-model="status">
-          <el-radio :label="'done'">已学完</el-radio>
-          <el-radio :label="'not-started'">未开始</el-radio>
-          <el-radio :label="'in-progress'">学习中</el-radio>
-        </el-radio-group>
+      <div class="search-wrap">
+        <el-input v-model="searchText" class="search-input" placeholder="输入关键字"/>
+        <el-button type="primary">搜索</el-button>
       </div>
     </div>
 
     <div class="content-wrapper">
       <div class="tab-bar">
-        <el-tabs v-model="activeTab">
-          <el-tab-pane label="综合" name="all" />
-          <el-tab-pane label="文档类课程" name="doc" />
-          <el-tab-pane label="视频类课程" name="video" />
-        </el-tabs>
+        <div class="type-options">
+          <div :class="{'active': activeTab === 'all'}" class="tab-item" @click="activeTab = 'all'">综合</div>
+          <div :class="{'active': activeTab === 'doc'}" class="tab-item" @click="activeTab = 'doc'">文档类课程</div>
+          <div :class="{'active': activeTab === 'video'}" class="tab-item" @click="activeTab = 'video'">视频类课程</div>
+        </div>
+        <div class="status-options">
+          <el-radio-group v-model="status">
+            <el-radio :label="'done'">已学完</el-radio>
+            <el-radio :label="'not-started'">未开始</el-radio>
+            <el-radio :label="'in-progress'">学习中</el-radio>
+          </el-radio-group>
+        </div>
       </div>
 
-      <div class="course-list">
-        <div class="course-item" v-for="i in 10" :key="i">
+      <div class="course-list doc-list">
+        <div class="course-item" @click="toUrl">
           <div class="course-box">
-            <img :src="getIcon(i)" class="icon" />
+            <img class="icon" src="@/static/home/file3.png"/>
             <div class="text">
               <div class="title">师德师风建设，强化职业道德</div>
-              <div class="desc">课程简介内容、课程简介内容、课程简介内容……</div>
+              <div class="desc ellipsis-1">课程简介内容、课程简介内容、课程简介内容</div>
             </div>
           </div>
-          <div class="course-action">
-            <el-button type="success" size="mini">教育技术学导论</el-button>
+        </div>
+      </div>
+      <div class="video-list">
+        <div class="course-item" @click="toUrl">
+          <div class="course-box">
+            <div class="text">
+              <div class="title">
+                <img class="icon" src="@/static/home/file3.png"/>
+                <span class="ellipsis-1">师德师风建设，强化职业道德</span>
+              </div>
+              <div class="desc ellipsis-3">课程简介内容、课程简介内容、课程简介内容</div>
+            </div>
+            <img class="image" src="@/static/home/file3.png"/>
           </div>
         </div>
       </div>
@@ -44,20 +57,22 @@ export default {
   name: 'course-list',
   data() {
     return {
-      searchText: '',
-      status: '',
-      activeTab: 'all',
+      searchText: '', // 搜索词
+      status: '', // 学习状态
+      activeTab: 'all', // 当前选中的tab
     };
   },
+  watch: {
+    activeTab() {
+
+    }
+  },
   methods: {
-    getIcon(index) {
-      const icons = [
-        'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4c4.png', // word
-        'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4d1.png', // pdf
-        'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4d6.png', // book
-      ];
-      return icons[index % icons.length];
-    },
+    toUrl() {
+      this.$router.push({
+        path: '/course-detail'
+      });
+    }
   },
 };
 </script>
@@ -65,26 +80,73 @@ export default {
 <style lang="less" scoped>
 .page-container {
   width: 1200px;
+  min-height: 630px;
   margin: 0 auto;
   padding: 20px;
 
   .search-bar {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    justify-content: center;
 
-    .search-input {
-      width: 300px;
-      margin-right: 10px;
-    }
+    .search-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 480px;
+      height: 42px;
+      background: #FFFFFF;
+      border-radius: 8px 8px 8px 8px;
+      border: 1px solid rgba(0, 0, 0, 0.14);
 
-    .status-options {
-      margin-left: auto;
+      .search-input {
+        width: 350px;
+
+        /deep/ .el-input__inner {
+          height: 35px;
+          border: none;
+        }
+      }
+
+      .el-button {
+        width: 88px;
+        height: 36px;
+        background: #175E3D;
+        border-radius: 5px 5px 5px 5px;
+        border: none;
+        margin-right: 3px;
+      }
+
     }
   }
 
   .tab-bar {
-    margin-bottom: 20px;
+    margin-top: 42px;
+    display: flex;
+    justify-content: space-between;
+
+    .type-options {
+      display: flex;
+      margin-bottom: 30px;
+
+      .tab-item {
+        cursor: pointer;
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-weight: 400;
+        font-size: 14px;
+        margin-right: 40px;
+        color: #1F253B;
+
+        &:hover {
+          color: #175E3D;
+        }
+      }
+
+      .active {
+        color: #175E3D;
+        font-weight: bold;
+      }
+    }
   }
 
   .course-list {
@@ -93,25 +155,27 @@ export default {
     justify-content: space-between;
 
     .course-item {
-      width: 48%;
+      cursor: pointer;
       display: flex;
       justify-content: space-between;
-      background: #f9f9f9;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 4px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 30px 40px;
+      margin-bottom: 30px;
+      width: 580px;
+      height: 104px;
+      background: #F7F7F7;
 
       .course-box {
         display: flex;
 
         .icon {
-          width: 50px;
-          height: 50px;
-          margin-right: 15px;
+          width: 46px;
+          height: 46px;
+          margin-right: 26px;
         }
 
         .text {
+          width: 420px;
+
           .title {
             font-weight: bold;
             font-size: 16px;
@@ -124,10 +188,68 @@ export default {
           }
         }
       }
+    }
+  }
 
-      .course-action {
+  .video-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .course-item {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      padding: 30px 40px;
+      width: 580px;
+      height: 171px;
+      background: #F7F7F7;
+      border-radius: 0px 0px 0px 0px;
+
+      .course-box {
+        width: 100%;
         display: flex;
-        align-items: center;
+        justify-content: space-between;
+
+        .text {
+          width: 310px;
+
+          .title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-weight: 400;
+            font-size: 18px;
+            color: #000000;
+            line-height: 20px;
+
+            .icon {
+              width: 20px;
+              height: 20px;
+              margin-right: 8px;
+            }
+            span {
+              display: inline-block;
+              width: 270px;
+            }
+          }
+
+          .desc {
+            height: 66px;
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-weight: 400;
+            font-size: 14px;
+            color: #929AA2;
+            line-height: 22px;
+          }
+        }
+
+        .image {
+          width: 162px;
+          height: 108px;
+          border-radius: 0;
+        }
       }
     }
   }

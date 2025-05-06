@@ -98,7 +98,7 @@ export default {
             console.log("类目", res);
             this.material_type_list=res.data.my_material_type
             console.log(this.material_type_list);
-            
+
           });
     }
   }
@@ -159,7 +159,7 @@ export default {
         <el-form-item label="检测报告：">
           <el-upload
               :on-success="handleSuccess"
-              action="https://shalunxiehui.dx.hdapp.com.cn/api/uploadFile"
+              action="https://zsxhxxpx.dx.hdapp.com.cn/api/uploadFile"
               class="upload-demo"
               drag
               multiple

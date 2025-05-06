@@ -26,6 +26,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "index" */ "@/views/index.vue"),
         meta: {},
     },
+
     /** 登录相关 **/
     {
         path: '/login',
@@ -42,6 +43,12 @@ const routes = [
         name: 'course-list',
         component: () => import('@/views/course/course-list.vue')
     },
+    {
+        path: '/course-detail',
+        name: 'course-detail',
+        component: () => import('@/views/course/course-detail.vue')
+    },
+
 
     /** 商品相关 **/
     // 商品分类
@@ -61,26 +68,6 @@ const routes = [
         name: "productCategories",
         component: () => import('@/views/product/detail.vue')
     },
-
-    /** 导航路由 **/
-    // 意见反馈
-    {
-        path: '/feedback',
-        name: 'feedback',
-        component: () => import('@/views/nav/feedback.vue'),
-    },
-    {
-        path: '/about',
-        name: 'about',
-        component: () => import('@/views/nav/about.vue'),
-    },
-
-    {
-        path: '/policy',
-        name: 'Policy',
-        component: () => import('@/views/company/policy.vue'),
-    },
-
 
     // {
     //   path: '/register',

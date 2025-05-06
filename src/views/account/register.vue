@@ -57,7 +57,7 @@
                   ref="refFile"
                   :limit="1"
                   :on-success="handleSuccess"
-                  action="https://shalunxiehui.dx.hdapp.com.cn/api/uploadFile"
+                  action="https://zsxhxxpx.dx.hdapp.com.cn/api/uploadFile"
                   class="upload-demo"
                   drag
                   name="file"
@@ -173,7 +173,7 @@ export default {
             alertErr("请勾选同意协议");
             return;
           }
-          
+
           if(this.form.materialTypeNames==''){
             this.form.materialTypeNames =  this.form.materialTypeNames.join(",")
           }

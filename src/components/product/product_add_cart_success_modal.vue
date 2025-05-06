@@ -34,14 +34,14 @@ export default {
   methods: {
     init(select_sku) {
       this.number = select_sku.num;
-      this.$api({
-        url: "getCart",
-        method: "post",
-      }).then(res => {
-        if (res.code == 200) {
-          this.shopcart_count = res.data.list.length;
-        }
-      })
+      // this.$api({
+      //   url: "getCart",
+      //   method: "post",
+      // }).then(res => {
+      //   if (res.code == 200) {
+      //     this.shopcart_count = res.data.list.length;
+      //   }
+      // })
       this.show_modal = true;
     },
     onBeforeClose() {
