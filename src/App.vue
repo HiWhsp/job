@@ -1,14 +1,14 @@
 <template>
   <div id="app">
-    <template v-if="$route.meta.title !== '登录'">
+    <template v-if="['login', 'pdf-viewer', 'video-viewer'].includes($route.name)">
+      <router-view></router-view>
+    </template>
+    <template v-else>
       <pageHeader/>
       <div class="layout-box">
         <router-view></router-view>
       </div>
       <pageFooter/>
-    </template>
-    <template v-else>
-      <router-view></router-view>
     </template>
   </div>
 </template>
@@ -89,6 +89,7 @@ body {
   padding: 21px 0 53px 0;
   margin: auto;
 }
+
 .layout-box {
   margin-top: 80px;
   background-color: #fff;

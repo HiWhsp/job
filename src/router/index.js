@@ -41,12 +41,26 @@ const routes = [
     {
         path: '/course-list',
         name: 'course-list',
+        meta: {
+            title: "全部课程",
+        },
         component: () => import('@/views/course/course-list.vue')
     },
     {
         path: '/course-detail',
         name: 'course-detail',
+        meta: {
+            title: "课程详情",
+        },
         component: () => import('@/views/course/course-detail.vue')
+    },
+    {
+        path: '/pdf-viewer',
+        name: 'pdf-viewer',
+        meta: {
+            title: "PDF学习",
+        },
+        component: () => import('@/views/course/pdf-viewer.vue')
     },
 
 
@@ -286,13 +300,13 @@ router.beforeEach((to, from, next) => {
     let user_is_login = token && userId;
 
     // debugger
-    if (!user_is_login && to.path !== '/login' && to.path !== '/register' && to.path !== '/retrieve' && to.path !== '/policy') {
-        // debugger
-        alertErr("请先登录");
-        next("/login");
-    } else {
+    // if (!user_is_login && to.path !== '/login') {
+    //     // debugger
+    //     alertErr("请先登录");
+    //     next("/login");
+    // } else {
         next();
-    }
+    // }
 });
 
 export default router;

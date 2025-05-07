@@ -24,7 +24,7 @@ export default {
   },
 
   user_regist() {
-    //console.log("== 获取url参数，处理粉丝 ==", {
+    console.log("== 获取url参数，处理粉丝 ==", {
       ...this.query,
     });
 
@@ -60,8 +60,7 @@ export default {
 
     let url_str = decodeURIComponent(window.location.search);
     //console.log(
-      "========================== 获取邀请人信息 =========================="
-    );
+    //   "========================== 获取邀请人信息 =========================="
     if (url_str.includes("fromId=")) {
       let fromId = this.getQueryVariable("fromId", url_str);
       localStorage.setItem("fromId", fromId);

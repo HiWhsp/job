@@ -79,7 +79,7 @@
                     <template slot="title">
                       <div class="index-collapse">{{ item.title }}</div>
                       <div class="progress-collapse">{{ item.progress }}</div>
-                      <div class="action-collapse"><span>学习</span><span>考试</span></div>
+                      <div class="action-collapse"><span @click="goUrl({url: '/pdf-viewer'})">学习</span><span>考试</span></div>
                     </template>
                     <div class="catalog-detail">
                       <div class="title">
@@ -115,7 +115,7 @@
                 <h3>目录</h3>
                 <div class="tab-text">
                   <div class="tab-item1">目录</div>
-                  <div class="tab-item2">时常</div>
+                  <div class="tab-item2">时长</div>
                   <div class="tab-item3">进度</div>
                   <div class="tab-item4">操作</div>
                 </div>
@@ -132,7 +132,7 @@
                         <span>04:00</span>
                       </div>
                       <div class="progress-collapse">{{ item.progress }}</div>
-                      <div class="action-collapse"><span>学习</span><span>考试</span></div>
+                      <div class="action-collapse"><span @click="goUrl({url: '/pdf-viewer'})">学习</span><span>考试</span></div>
                     </template>
                     <div class="catalog-detail">
                       <div class="title">
@@ -235,6 +235,11 @@ export default {
       ],
     };
   },
+  methods: {
+    goUrl(item) {
+      this.$router.push(item.url);
+    }
+  }
 };
 </script>
 
