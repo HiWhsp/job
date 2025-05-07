@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "pdf-viewer"
+  name: "video-viewer"
 }
 </script>
 
@@ -21,13 +21,19 @@ export default {
         <span>返回课程详情</span>
       </div>
       <div class="menu">
-        <div class="index">第一节</div>
+        <div class="index">
+          章节1
+          <div class="index-collapse">
+            课时
+          </div>
+        </div>
         <div class="line">
           <div class="line-inner">1</div>
         </div>
         <div class="text">第一节: 标题名称标题名称标题名称标题名称标题名称</div>
       </div>
-      <div class="content"></div>
+      <div class="content">
+      </div>
     </div>
     <div class="right">
       <div class="tit-info">
@@ -43,12 +49,24 @@ export default {
           <div class="menu-item active">
             <p class="index">第一节</p>
             <div class="line"></div>
-            <p class="text ellipsis-1">标题名称标题名称标题名称...</p>
+            <div class="text">
+              <p class="title ellipsis-1">标题名称标题名称标题名称...</p>
+              <p class="time">
+                <img src="@/static/common/video.png" alt="">
+                <span>08:52</span>
+              </p>
+            </div>
           </div>
           <div class="menu-item">
             <p class="index">第二节</p>
             <div class="line"></div>
-            <p class="text ellipsis-1">标题名称标题名称标题名称...</p>
+            <div class="text">
+              <p class="title ellipsis-1">标题名称标题名称标题名称...</p>
+              <p class="time">
+                <img src="@/static/common/video.png" alt="">
+                <span>08:52</span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -123,20 +141,35 @@ export default {
     align-items: center;
     position: absolute;
     top: 50px;
-    left: 65px;
+    left: 25px;
 
     .index {
-      width: 74px;
+      display: flex;
+      justify-content: space-between;
+      padding-left: 15px;
+      width: 115px;
       height: 20px;
       line-height: 20px;
-      background: #161616;
+      background: #D8D8D8;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 12px;
-      text-align: center;
-      color: #D6D6D6;
+      color: #3D3D3D;
       border-top-left-radius: 20px;
       border-bottom-left-radius: 20px;
+
+      .index-collapse {
+        width: 59px;
+        line-height: 20px;
+        background: #161616;
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-weight: 400;
+        font-size: 12px;
+        text-align: center;
+        color: #D6D6D6;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+      }
     }
 
     .line {
@@ -274,21 +307,40 @@ export default {
       }
 
       .text {
-        width: 200px;
+        display: flex;
+        justify-content: space-between;
+        width: 260px;
         height: 18px;
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 14px;
         color: #3D3D3D;
+
+        .title {
+          width: 200px;
+        }
+
+        .time {
+          display: flex;
+          align-items: center;
+
+          img {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+          }
+        }
       }
 
       &.active {
         .index {
           color: @theme;
         }
+
         .line {
           background-color: @theme;
         }
+
         .text {
           color: @theme;
         }

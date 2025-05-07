@@ -62,6 +62,14 @@ const routes = [
         },
         component: () => import('@/views/course/pdf-viewer.vue')
     },
+    {
+        path: '/video-viewer',
+        name: 'video-viewer',
+        meta: {
+            title: "视频学习",
+        },
+        component: () => import('@/views/course/video-viewer.vue')
+    },
 
 
     /** 商品相关 **/
