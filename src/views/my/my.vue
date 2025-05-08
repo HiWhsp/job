@@ -3,17 +3,28 @@
     <div class="inner">
       <div class="page-ctx">
         <div class="user-left">
-          <div class="nav-wrap" v-for="(it, i) in filter_userMenu" :key="i">
-            <div class="nav-item" v-for="(item, index) in it" :key="index">
-              <div class="nav-title main-title" v-if="!item.route || item.is_main" :style="{'paddingLeft': item.route == 'my-index' ? '10px' : '25px'}"
-                   :class="$route.name == item.route ? 'active' : ''" @click="do_toggle_nav(item)">
-                <img src="@/static/prod/vip.png" alt="" v-if="item.route == 'my-index'">
-                {{ item.title }}
+          <div class="profile">
+            <div class="profile-info">
+              <img alt="" src="@/static/prod/avatar.png">
+              <div class="info">
+                <div class="name">张洪玲</div>
+                <div class="level">
+                  <p><span>角</span><span>色</span></p>
+                  <span>:</span>
+                  <p>教师</p>
+                </div>
+                <div class="phone">
+                  <p>手机号</p>
+                  <span>:</span>
+                  <p>15810593012</p>
+                </div>
               </div>
-              <div v-else class="nav-title link" :class="$route.name == item.route ? 'active' : ''"
-                   @click="do_toggle_nav(item)">
-                {{ item.title }}
-              </div>
+            </div>
+            <div class="login-out">退出登录</div>
+          </div>
+          <div v-for="(it, i) in filter_userMenu" :key="i" class="nav-wrap">
+            <div class="title">
+              <img :src="it.icon" alt="">
             </div>
           </div>
         </div>
@@ -35,48 +46,50 @@ export default {
     return {
       //个人中心导航
       userMenu: [
-          [
-            {
-              title: "采购会员",
-              route: "my-index",
-              is_main: true
-            },
-            {
-              title: "我的订单",
-              route: "order-list",
-            },
-            {
-              title: "我的收藏",
-              route: "collect",
-            },
+        {
+          title: "个人设置",
+          icon: require("@/static/prod/user.png"),
+          children: [
             {
               title: "个人信息",
               route: "my-info",
             },
             {
-              title: "地址管理",
-              route: SHOP_TYPE == 'foreign' ? "foreign-address-list" : "address-list",
+              title: "修改密码",
+              route: "change-password",
+            }
+          ]
+        },
+        {
+          title: "我的课程",
+          icon: require("@/static/prod/user.png"),
+          children: [
+            {
+              title: "我观看过的课程",
+              route: "my-info",
+            },
+            {
+              title: "我收藏的课程",
+              route: "change-password",
+            }
+          ]
+        },
+        {
+          title: "我的考试",
+          children: [
+            {
+              title: "个人信息",
+              route: "my-info",
             },
             {
               title: "修改密码",
               route: "change-password",
             }
-          ],
-          [
-            {
-              title: "数据统据",
-              route: "",
-              is_main: true
-            },
-            {
-              title: "采购统计",
-              route: "purchase-count",
-            },
-            {
-              title: "退出登录",
-              route: "loginOut",
-            },
           ]
+        },
+        {
+          title: "我的消息",
+        }
       ],
       activeRoute: "",
       openeds: [
@@ -118,7 +131,7 @@ export default {
       if (!item.route || item.route === 'my-index') {
         // let route = item.sub[0].route;
         // this.$router.push("/" + route);
-      } else if(item.title === '退出登录') {
+      } else if (item.title === '退出登录') {
         this.$store.commit("clear_loginInfo");
         this.$router.push("/login");
       } else {
@@ -131,8 +144,9 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .page-user-wrap {
+  background-color: #F5F6F6;
 
   .inner {
     width: @width;
@@ -147,15 +161,82 @@ export default {
     }
 
     .user-left {
-      width: 220px;
+      width: 260px;
       margin-bottom: 50px;
 
+      .profile {
+        padding: 26px;
+        width: 260px;
+        background: #FFFFFF;
+        border-radius: 0px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+
+        .profile-info {
+          display: flex;
+
+          img {
+            width: 66px;
+            height: 66px;
+          }
+
+          .info {
+            margin-left: 10px;
+
+            .name {
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 700;
+              font-size: 18px;
+              color: #1F253B;
+              margin-bottom: 10px;
+            }
+
+            .level, .phone {
+              display: flex;
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 12px;
+              color: #6F6F6F;
+
+              p {
+                width: 36px;
+                display: flex;
+                justify-content: space-between;
+
+                span {
+                  margin: 0;
+                }
+              }
+
+              span {
+                display: inline-block;
+                margin: 0 5px;
+              }
+            }
+          }
+        }
+
+        .login-out {
+          cursor: pointer;
+          margin-top: 30px;
+          width: 208px;
+          height: 34px;
+          line-height: 34px;
+          text-align: center;
+          background: #FFFFFF;
+          border-radius: 6px 6px 6px 6px;
+          border: 1px solid rgba(0, 0, 0, 0.16);
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: 400;
+          font-size: 16px;
+          color: #969696;
+        }
+      }
+
       .nav-wrap {
-        margin-top: 10px;
         background: #fff;
         padding-bottom: 20px;
         padding-top: 15px;
-
 
         .nav-item {
           overflow: hidden;
@@ -234,15 +315,13 @@ export default {
           }
         }
       }
-      .nav-wrap:first-child {
-        margin-top: 0;
-      }
     }
 
     .user-right {
       flex: 1;
       margin-left: 20px;
       min-height: 50vh;
+
       .page {
         width: 100%;
       }
@@ -251,4 +330,4 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/user/index.less"></style>
+<style lang="less" scoped src="@/assets/h5css/user/index.less"></style>

@@ -18,7 +18,7 @@
           <div class="flex">
             <div class="tools-btn pointer flex" @click="goUrl({url: '/my-info'})">
               <span>学员名称/姓名</span>
-              <img alt="" class="img-2" src="../../static/common/head-user-login.png">
+              <img alt="" class="img-2" src="../../static/prod/avatar.png">
             </div>
           </div>
         </div>
