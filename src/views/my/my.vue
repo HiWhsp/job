@@ -20,11 +20,19 @@
                 </div>
               </div>
             </div>
-            <div class="login-out">退出登录</div>
+            <div class="login-out" @click="do_toggle_nav({title: '退出登录'})">退出登录</div>
           </div>
           <div v-for="(it, i) in filter_userMenu" :key="i" class="nav-wrap">
-            <div class="title">
+            <div class="title" :class="{'active': activeRoute == it.route}" @click="do_toggle_nav(it)">
               <img :src="it.icon" alt="">
+              <span>{{ it.title }}</span>
+            </div>
+            <div class="item-list">
+              <div class="item" :class="{'active': activeRoute == item.route}" @click="do_toggle_nav(item)"
+                   v-for="(item, index) in it.children"
+                   :key="index">
+                <span>{{ item.title }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -37,7 +45,6 @@
 </template>
 
 <script>
-import {SHOP_TYPE} from '@/config/env.js'
 
 export default {
   name: "my",
@@ -56,56 +63,42 @@ export default {
             },
             {
               title: "修改密码",
-              route: "change-password",
+              route: "my-password",
             }
           ]
         },
         {
           title: "我的课程",
-          icon: require("@/static/prod/user.png"),
+          icon: require("@/static/prod/kecheng.png"),
           children: [
             {
               title: "我观看过的课程",
-              route: "my-info",
+              route: "my-course-record",
             },
             {
               title: "我收藏的课程",
-              route: "change-password",
+              route: "my-course-fav",
             }
           ]
         },
         {
           title: "我的考试",
-          children: [
-            {
-              title: "个人信息",
-              route: "my-info",
-            },
-            {
-              title: "修改密码",
-              route: "change-password",
-            }
-          ]
+          icon: require("@/static/prod/kaoshi.png"),
+          route: "my-exam",
         },
         {
           title: "我的消息",
+          icon: require("@/static/prod/tongzhi.png"),
+          route: 'my-message'
         }
       ],
-      activeRoute: "",
+      activeRoute: "my-info",
       openeds: [
         "order-list",
       ],
     };
   },
   computed: {
-    nav_option() {
-      let option = [
-        {route: '/my-index', title: '用户中心'},
-        {route: '', title: this.$route.meta.title}
-      ]
-      return option
-    },
-
     filter_userMenu() {
       let navList = [];
       navList = this.userMenu
@@ -119,7 +112,6 @@ export default {
     this.activeRoute = to.path.replace("/", "");
   },
 
-  watch: {},
   created() {
   },
 
@@ -128,18 +120,14 @@ export default {
 
   methods: {
     do_toggle_nav(item) {
-      if (!item.route || item.route === 'my-index') {
-        // let route = item.sub[0].route;
-        // this.$router.push("/" + route);
+      if (item.route) {
+        this.activeRoute = item.route;
+        // this.$router.push("/" + item.route);
       } else if (item.title === '退出登录') {
         this.$store.commit("clear_loginInfo");
         this.$router.push("/login");
-      } else {
-        this.$router.push("/" + item.route);
       }
     },
-
-
   },
 };
 </script>
@@ -235,84 +223,65 @@ export default {
 
       .nav-wrap {
         background: #fff;
-        padding-bottom: 20px;
-        padding-top: 15px;
+        padding: 25px 25px 0;
+        cursor: pointer;
 
-        .nav-item {
-          overflow: hidden;
+        .title {
+          width: 208px;
+          height: 44px;
+          display: flex;
+          align-items: center;
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: 400;
+          font-size: 16px;
+          color: #000;
+          padding-left: 18px;
 
-          .nav-title {
-            position: relative;
-            cursor: pointer;
-            padding-left: 40px;
-            text-align: left;
+          img {
+            width: 20px;
+            height: 20px;
+            margin-right: 17px;
+          }
 
-            font-family: Roboto, Roboto;
+          &.active {
+            color: @theme;
+            background: #F2F9F5;
+          }
+        }
+
+        .item-list {
+          .item {
+            width: 208px;
+            height: 44px;
+            line-height: 44px;
+            padding-left: 55px;
+            background: #fff;
+            border-radius: 4px;
+            font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
-            font-size: 12px;
-            color: #808080;
+            font-size: 16px;
+            color: #000;
 
             img {
-              width: 24px;
-              height: 24px;
+              width: 20px;
+              height: 20px;
+              margin-right: 17px;
             }
 
-            &.link {
-              margin-bottom: 4px;
-              height: 32px;
-              line-height: 32px;
-              font-family: Roboto, Roboto;
-              font-weight: 400;
-              font-size: 14px;
-              color: #808080;
-              font-style: normal;
-              text-transform: none;
-
-              &:hover {
-                color: @theme;
-              }
-            }
-
-            &.main-title {
-              margin-bottom: 14px;
-              cursor: pointer;
-              padding-left: 25px;
-              user-select: none;
-              font-weight: 400;
-
-              font-family: Roboto, Roboto;
-              font-weight: 400;
-              font-size: 16px;
-              color: #333333;
-              font-style: normal;
-              text-transform: none;
+            &:hover {
+              background: #F2F9F5;
+              color: @theme;
             }
 
             &.active {
-              background: #FCFAF7;
+              background: #F2F9F5;
               color: @theme;
-
-              &:before {
-                content: "";
-                position: absolute;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                width: 4px;
-                background-color: @theme;
-              }
-            }
-
-            &[data-hide="hide"] {
-              display: none;
             }
           }
+        }
 
-          &:first-child {
-            .main-title {
-              margin-top: 0;
-            }
-          }
+        &:last-child {
+          padding-bottom: 25px;
         }
       }
     }
