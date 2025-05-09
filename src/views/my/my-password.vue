@@ -22,7 +22,7 @@
             <span class="action"> </span>
           </div>
           <div class="item">
-            <span class="text">确认密码：</span>
+            <span class="text">重复新密码：</span>
             <span class="info">
               <el-input clearable type="password" v-model="form.new_password2" class=""/>
             </span>
@@ -47,7 +47,7 @@
 import {mapState} from "vuex";
 
 export default {
-  name: "change-password",
+  name: "my-password",
   components: {},
   data() {
     return {
@@ -216,7 +216,7 @@ export default {
     width: 120px;
     height: 32px;
     background: #FFFFFF;
-    border-radius: 50px 50px 50px 50px;
+    border-radius: 5px;
     border: 1px solid @theme;
     font-family: Arial, Arial;
     font-weight: 400;
@@ -230,7 +230,7 @@ export default {
     width: 120px;
     height: 32px;
     background: @theme;
-    border-radius: 50px 50px 50px 50px;
+    border-radius: 5px;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;

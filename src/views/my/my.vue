@@ -92,10 +92,7 @@ export default {
           route: 'my-message'
         }
       ],
-      activeRoute: "my-info",
-      openeds: [
-        "order-list",
-      ],
+      activeRoute: "my-info"
     };
   },
   computed: {
@@ -106,23 +103,15 @@ export default {
     },
   },
 
-  //导航激活
-  beforeRouteUpdate(to, from, next) {
-    next();
-    this.activeRoute = to.path.replace("/", "");
-  },
-
-  created() {
-  },
-
   mounted() {
+    this.activeRoute = this.$route.path.split("/")[1];
   },
 
   methods: {
     do_toggle_nav(item) {
       if (item.route) {
         this.activeRoute = item.route;
-        // this.$router.push("/" + item.route);
+        this.$router.push("/" + item.route);
       } else if (item.title === '退出登录') {
         this.$store.commit("clear_loginInfo");
         this.$router.push("/login");

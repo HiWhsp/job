@@ -191,10 +191,6 @@ export default {
         }
       });
     },
-    // 跳转链接
-    goUrl(item) {
-      this.$router.push(item.url);
-    },
     // 跳转商品
     toProduct(item) {
       // this.$router.push(`/productCategories?ids=${item.user_id}&type_id=${this.selectedCategory.id}`);

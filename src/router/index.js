@@ -72,7 +72,7 @@ const routes = [
     },
 
 
-    /** 采购中心 **/
+    /** 个人中心 **/
     {
         path: "/my",
         name: "my",
@@ -91,7 +91,62 @@ const routes = [
                     requireAuth: true,
                 },
             },
+            {
+                path: '/my-password',
+                name: 'my-password',
+                component: () => import('@/views/my/my-password.vue'),
+                meta: {
+                    title: "修改密码",
+                    requireAuth: true,
+                },
+            },
+            {
+                path: '/my-course-record',
+                name: 'my-course-record',
+                component: () => import('@/views/my/my-course-record.vue'),
+                meta: {
+                    title: "我观看过的课程",
+                    requireAuth: true,
+                },
+            },
+            {
+                path: '/my-course-fav',
+                name: 'my-course-fav',
+                component: () => import('@/views/my/my-course-fav.vue'),
+                meta: {
+                    title: "我收藏的课程",
+                    requireAuth: true,
+                },
+            },
+            {
+                path: '/my-exam',
+                name: 'my-exam',
+                component: () => import('@/views/my/my-exam.vue'),
+                meta: {
+                    title: "我的考试",
+                    requireAuth: true,
+                },
+            },
+            {
+                path: '/my-message',
+                name: 'my-message',
+                component: () => import('@/views/my/my-message.vue'),
+                meta: {
+                    title: "我的消息",
+                    requireAuth: true,
+                },
+            }
         ]
+    },
+
+    {
+        path: '/my-exam-detail',
+        name: 'my-exam-detail',
+        component: () => import('@/views/my/my-exam-detail.vue'),
+        meta: {
+            title: "查看答题情况",
+            requireAuth: true,
+        }
     },
 
     {

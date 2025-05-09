@@ -16,55 +16,28 @@
                            :data="mix_upload_data" :on-success="upload_on_success"
                            :before-upload="upload_before_upload">
                   <img v-if="form.image" :src="form.image" class="user-avatar"/>
-                  <img v-else src="@/static/common/head-user-login.png" class="user-avatar"/>
+                  <img v-else src="@/static/prod/avatar.png" class="user-avatar"/>
                 </el-upload>
               </div>
             </span>
           </div>
 
           <div class="item">
-            <span class="text">手机：</span>
-            <span class="info">{{ form.mobile }}</span>
-            <!--            <span class="action" @click="open_phone_update()">-->
-            <!--              <span>修改</span>-->
-            <!--            </span>-->
-          </div>
-
-          <div class="item">
-            <span class="text">性别：<span>*</span></span>
+            <span class="text">姓名：</span>
             <span class="info">
-                <el-radio-group v-model="form.sex">
-                  <el-radio :label="1">男</el-radio>
-                  <el-radio :label="2">女</el-radio>
-                </el-radio-group>
+              <el-input clearable type="text" v-model="form.real_name"/>
             </span>
           </div>
 
           <div class="item">
-            <span class="text">{{my_info.type==1?"采购商名称":"供应商名称"}}<span>*</span></span>
+            <span class="text">手机：</span>
             <span class="info">
               <el-input clearable type="text" v-model="form.real_name"/>
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
-            <span class="text">所在地区：<span>*</span></span>
-            <span class="info">
-              <area_select ref="area_select" @change="changeSelectAddress"/>
-            </span>
-            <span class="action"> </span>
-          </div>
-          <!--          <div class="item">-->
-          <!--            <span class="text">公司名称：</span>-->
-          <!--            <span class="info">-->
-          <!--              <el-input clearable type="text" v-model="form.name"/>-->
-          <!--            </span>-->
-          <!--            <span class="action">-->
-          <!--            </span>-->
-          <!--          </div>-->
-
-          <div class="item">
-            <span class="text"> 邮箱：<span>*</span></span>
+            <span class="text">角色：</span>
             <span class="info">
               <el-input clearable type="text" v-model="form.email"/>
             </span>
@@ -75,7 +48,6 @@
       </div>
 
       <div class="other">
-        <!-- <div class="section-title">个人信息</div> -->
         <div class="section-ctx">
           <div class="item btn-box">
             <span class="text" style="visibility: hidden">-</span>
@@ -89,45 +61,17 @@
         </div>
       </div>
     </div>
-
-    <phone_bind_old_check_modal ref="phone_bind_old_check_modal" data-title="校验" @confirm="confirm_old_pass"/>
-    <phone_bind_new_set_modal ref="phone_bind_new_set_modal" data-title="绑定" @confirm="confirm_new"/>
-
-
   </div>
 </template>
 
 <script>
-import {UPLOAD_ACTION, UPLOAD_NAME} from '@/config/env.js'
-
-import phone_bind_old_check_modal from "@/components/account/phone_bind_old_check_modal.vue";
-import phone_bind_new_set_modal from "@/components/account/phone_bind_new_set_modal.vue";
-import area_select from "@/components/address/area_select.vue";
 
 export default {
-  name: "servicePage",
-  components: {
-    area_select,
-    phone_bind_old_check_modal,
-    phone_bind_new_set_modal,
-  },
+  name: "my-info",
   data() {
     return {
-      UPLOAD_ACTION,
-      UPLOAD_NAME,
-
       my_info: {},
       form: {
-        image: '',
-        real_name: "",
-        name: "",
-        email: "",
-        province: '',
-        city: '',
-        area: '',
-        provinceCode: '',
-        cityCode: '',
-        areaCode: '',
       },
       loading: false,
     };
@@ -138,19 +82,7 @@ export default {
     this.setView();
   },
   methods: {
-    throttle_do_submit() {
-
-    },
-
-    open_phone_update() {
-      this.$refs.phone_bind_old_check_modal.init();
-    },
-    confirm_old_pass() {
-      this.$refs.phone_bind_new_set_modal.init();
-    },
-    confirm_new() {
-      this.query_user()
-    },
+    throttle_do_submit() {},
 
     setView() {
       this.query_user();
@@ -188,16 +120,6 @@ export default {
 
       if (!this.form.real_name) {
         alertErr("请填写真实姓名");
-        return;
-      }
-
-      if (!this.form.area) {
-        alertErr("请填写所在地区");
-        return;
-      }
-
-      if (!this.form.email) {
-        alertErr("请填写邮箱");
         return;
       }
       this.loading = true;
@@ -247,20 +169,7 @@ export default {
     upload_before_upload(file) {
       const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
       return isLt2M;
-    },
-
-    changeSelectAddress(data) {
-      this.$log("更新省市区数据", data);
-      let {sheng, shi, qu} = data;
-      this.form.province = sheng.title;
-      this.form.city = shi.title;
-      this.form.area = qu.title;
-
-      this.form.provinceCode = sheng.id;
-      this.form.cityCode = shi.id;
-      this.form.areaCode = qu.id;
-      // debugger
-    },
+    }
   },
 };
 </script>
@@ -298,7 +207,7 @@ export default {
   }
 
   .page-ctx {
-    margin-top: 24px;
+    margin-top: 14px;
     padding: 20px 30px;
     background: #fff;
   }
@@ -308,22 +217,12 @@ export default {
   .page-ctx {
     padding-bottom: 80px;
 
-    .section {
-      // padding-bottom: 27px;
-      // margin-bottom: 40px;
-      // border-bottom: 1px solid #dbdbdb;
-    }
-
     .section-title {
       margin-bottom: 30px;
       font-size: 16px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
       color: #666666;
-    }
-
-    .section-ctx {
-      // padding-top: 32px;
     }
 
     .upload-box {
@@ -335,7 +234,7 @@ export default {
     }
 
     .item {
-      margin-bottom: 32px;
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
 
@@ -360,17 +259,8 @@ export default {
         display: inline-block;
         min-width: 120px;
 
-        input {
-          // width: 400px;
-          // height: 40px;
-          // background: #ffffff;
-          // border-radius: 4px 4px 4px 4px;
-          // border: 1px solid #d4d4d4;
-        }
-
         .el-input {
           width: 400px;
-          // height: 40px;
         }
       }
 
