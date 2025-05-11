@@ -8,7 +8,7 @@
       <div class="layout-box">
         <router-view></router-view>
       </div>
-      <pageFooter/>
+      <pageFooter v-if="!['my-exam-detail', 'my-exam-start', 'my-exam-submit'].includes($route.name)"/>
     </template>
   </div>
 </template>
@@ -249,13 +249,13 @@ button {
 
 /* 针对整个页面 */
 ::-webkit-scrollbar {
-  width: 12px; /* 宽度 */
+  width: 6px; /* 宽度 */
   height: 12px; /* 高度 */
 }
 
 /* 滚动条滑块 */
 ::-webkit-scrollbar-thumb {
-  background-color: @theme; /* 颜色 */
+  background-color: #D8D8D8; /* 颜色 */
   border-radius: 6px; /* 边角弧度 */
 }
 
@@ -266,6 +266,6 @@ button {
 
 /* 滚动条轨道 */
 ::-webkit-scrollbar-track {
-  background: #E6E4E1; /* 轨道颜色 */
+  background: #fff; /* 轨道颜色 */
 }
 </style>

@@ -1,15 +1,15 @@
 <script>
 export default {
-  name: "my-exam-detail",
+  name: "my-exam-submit",
   data() {
-    return {}
+    return {
+      show_modal: true
+    }
   },
   methods: {
     setActive(item) {
       if (item === 1) {
         return 'correct'
-      } else if (item === 2) {
-        return 'wrong'
       } else {
         return 'unknown'
       }
@@ -46,12 +46,6 @@ export default {
       <div class="answer">
         <div class="title">答题卡</div>
         <div class="answer-content">
-          <!--          答题          -->
-          <div class="idea-list">
-            <div class="idea1">答对</div>
-            <div class="idea2">答错</div>
-            <div class="idea3">未作答</div>
-          </div>
           <!--          题型-->
           <div class="question-list">
             <div class="question-item">
@@ -85,18 +79,21 @@ export default {
               </div>
             </div>
           </div>
-
           <div class="all-score">
-            得分：96分
+            总分：100分
+            <div class="idea-list">
+              <div class="idea1">已答（<span>1</span>）</div>
+              <div class="idea2">未答（<span>39</span>）</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="content">
       <div class="title">
-        <div class="date">总用时：2:00:00</div>
+        <div class="date">剩余时间：2:00:00</div>
         <div class="name">考试名称考试名称考试名称</div>
-        <div class="back-btn">返回</div>
+        <div class="back-btn">交卷</div>
       </div>
       <!--          题型-->
       <div class="question-list">
@@ -116,15 +113,45 @@ export default {
                   <p>坚持宪法确定的中国共产党领导地位不动摇</p>
                 </div>
               </div>
-              <div class="Answer">
-                <p class="me">正确答案：A</p>
-                <p class="your" :class="{'error': item % 2}">您的答案：A</p>
-              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!--    <el-dialog title="提示" width="580px" align="center" :close-on-click-modal="false" :visible.sync="show_modal">-->
+    <!--      <div class="modal-inner">-->
+    <!--        <div class="text-box">-->
+    <!--          还有<span>39</span>题未做，确定交卷吗？-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--      <div slot="footer" class="dialog-footer">-->
+    <!--        <button class="btn-ripple btn-1" @click="show_modal = false">继续答题</button>-->
+    <!--        <button class="btn-ripple btn-2" @click="show_modal = false">确认交卷</button>-->
+    <!--      </div>-->
+    <!--    </el-dialog>-->
+
+    <!--    <el-dialog title="提示" width="580px" align="center" :show-close="false" :close-on-click-modal="false" :visible.sync="show_modal">-->
+    <!--      <div class="modal-inner">-->
+    <!--        <div class="text-box">-->
+    <!--          考试时间已结束，系统将自动交卷-->
+    <!--        </div>-->
+    <!--        <div class="date">3秒后跳转...</div>-->
+    <!--      </div>-->
+    <!--    </el-dialog>-->
+
+    <el-dialog title="提示" width="580px" align="center" :show-close="false" :close-on-click-modal="false"
+               :visible.sync="show_modal">
+      <div class="modal-inner">
+        <div class="text-box">
+          {{ 1 === 1 ? '很遗憾，考试不及格！您的分数为：' : '恭喜您，考试及格！您的分数为：' }}
+        </div>
+        <div class="score" :class="{'wrong': true}">100分</div>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <button class="btn-ripple btn-1" @click="show_modal = false">查看答题情况</button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -134,7 +161,6 @@ export default {
   background: #F5F6F6;
   display: flex;
   align-items: start;
-
 
   .left {
     width: 362px;
@@ -217,64 +243,8 @@ export default {
       .answer-content {
         display: flex;
         flex-direction: column;
-        padding: 24px 0 0 24px;
+        padding: 14px 0 0 24px;
         height: 500px;
-
-        .idea-list {
-          display: flex;
-          font-family: Microsoft YaHei, Microsoft YaHei;
-          font-weight: 400;
-          font-size: 12px;
-          color: #9698A2;
-          padding-bottom: 5px;
-
-          .idea1 {
-            display: flex;
-            align-items: center;
-            margin-right: 26px;
-
-            &::before {
-              content: '';
-              display: inline-block;
-              width: 12px;
-              height: 12px;
-              background: #23B370;
-              border-radius: 2px 2px 2px 2px;
-              margin-right: 5px;
-            }
-          }
-
-          .idea2 {
-            display: flex;
-            align-items: center;
-            margin-right: 26px;
-
-            &::before {
-              content: '';
-              display: inline-block;
-              width: 12px;
-              height: 12px;
-              background: #FA3C3B;
-              border-radius: 2px 2px 2px 2px;
-              margin-right: 5px;
-            }
-          }
-
-          .idea3 {
-            display: flex;
-            align-items: center;
-
-            &::before {
-              content: '';
-              display: inline-block;
-              width: 12px;
-              height: 12px;
-              background: #F5F6F6;
-              border-radius: 2px 2px 2px 2px;
-              margin-right: 5px;
-            }
-          }
-        }
 
         .question-list {
           flex: 1;
@@ -307,18 +277,13 @@ export default {
                 }
 
                 &.correct {
-                  background: #23B370;
-                  color: #fff;
-                }
-
-                &.wrong {
-                  background: #FA3C3B;
+                  background: @theme;
                   color: #fff;
                 }
 
                 &.unknown {
                   border: 1px solid #DDE0E5;
-                  background-color: #F5F6F6;
+                  background-color: #fff;
                   color: #999FA4;
                 }
               }
@@ -327,6 +292,9 @@ export default {
         }
 
         .all-score {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
           height: 39px;
           line-height: 39px;
           background: #FFFFFF;
@@ -334,6 +302,64 @@ export default {
           font-weight: 400;
           font-size: 14px;
           color: #23324F;
+
+          .idea-list {
+            display: flex;
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-weight: 400;
+            font-size: 12px;
+            color: #9698A2;
+            padding-bottom: 5px;
+
+            .idea1 {
+              display: flex;
+              align-items: center;
+              margin-right: 20px;
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 14px;
+              color: #737383;
+
+              span {
+                color: #FF0101;
+              }
+
+              &::before {
+                content: '';
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                background: #fff;
+                border-radius: 2px 2px 2px 2px;
+                margin-right: 5px;
+                border: 1px solid @theme;
+              }
+            }
+
+            .idea2 {
+              display: flex;
+              align-items: center;
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 14px;
+              color: #737383;
+
+              span {
+                color: #FF0101;
+              }
+
+              &::before {
+                content: '';
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                background: #fff;
+                border-radius: 2px 2px 2px 2px;
+                margin-right: 5px;
+                border: 1px solid #DDE0E5;
+              }
+            }
+          }
         }
       }
     }
@@ -435,6 +461,7 @@ export default {
 
           .topic-list {
             .topic-item {
+              cursor: pointer;
               display: flex;
               align-items: center;
               margin: 10px 0;
@@ -468,31 +495,66 @@ export default {
             }
           }
         }
-
-        .Answer {
-          display: flex;
-
-          .me {
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: 400;
-            font-size: 16px;
-            color: #175E3D;
-            margin-right: 25px;
-          }
-
-          .your {
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: 400;
-            font-size: 16px;
-            color: #175E3D;
-
-            &.error {
-              color: #FA3C3B;
-            }
-          }
-        }
       }
     }
+  }
+
+  .modal-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-weight: 400;
+    font-size: 22px;
+    color: #23324F;
+
+    span {
+      color: #FF0D0D;
+    }
+
+    .date {
+      margin-top: 20px;
+      color: @theme;
+    }
+
+    .score {
+      font-family: Source Han Sans, Source Han Sans;
+      font-weight: 700;
+      font-size: 36px;
+      color: #175E3D;
+
+      &.wrong {
+        color: #DE1B1B;
+      }
+    }
+  }
+
+  .dialog-footer {
+    text-align: center;
+  }
+
+  .btn-ripple {
+    width: 134px;
+    height: 38px;
+    background: @theme;
+    border-radius: 4px;
+  }
+
+  .btn-1 {
+    font-family: Source Han Sans, Source Han Sans;
+    font-weight: 400;
+    font-size: 18px;
+    color: #FFFFFF;
+    margin-right: 30px;
+  }
+
+  .btn-2 {
+    font-family: Source Han Sans, Source Han Sans;
+    font-weight: 400;
+    font-size: 18px;
+    color: @theme;
+    background-color: #E6F1EC;
   }
 }
 </style>

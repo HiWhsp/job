@@ -139,12 +139,33 @@ const routes = [
         ]
     },
 
+    // 查看答题情况
     {
         path: '/my-exam-detail',
         name: 'my-exam-detail',
         component: () => import('@/views/my/my-exam-detail.vue'),
         meta: {
             title: "查看答题情况",
+            requireAuth: true,
+        }
+    },
+    // 开始考试
+    {
+        path: '/my-exam-start',
+        name: 'my-exam-start',
+        component: () => import('@/views/my/my-exam-start.vue'),
+        meta: {
+            title: "开始考试",
+            requireAuth: true,
+        }
+    },
+    // 考试中
+    {
+        path: '/my-exam-submit',
+        name: 'my-exam-submit',
+        component: () => import('@/views/my/my-exam-submit.vue'),
+        meta: {
+            title: "考试中",
             requireAuth: true,
         }
     },
@@ -181,7 +202,7 @@ router.beforeEach((to, from, next) => {
     //     alertErr("请先登录");
     //     next("/login");
     // } else {
-        next();
+    next();
     // }
 });
 

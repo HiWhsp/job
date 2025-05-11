@@ -1,7 +1,7 @@
 <template>
   <div class="page-header">
     <div class="info-box">
-      <div class="content flex flex-between">
+      <div class="content flex flex-between" v-if="!['my-exam-detail', 'my-exam-start', 'my-exam-submit'].includes($route.name)">
         <div class="l-box">
           <img alt="logo" class="img-1 pointer" src="../../static/home/logo.png" @click="goUrl({url: '/'})">
         </div>
@@ -21,6 +21,12 @@
               <img alt="" class="img-2" src="../../static/prod/avatar.png">
             </div>
           </div>
+        </div>
+      </div>
+      <div class="content2" v-else>
+        <div class="l-box">
+          <img alt="logo" class="img pointer" src="../../static/account/home-logo.png" @click="goUrl({url: '/'})">
+          <p>新徽教育集团线上学习平台</p>
         </div>
       </div>
     </div>
@@ -93,6 +99,26 @@ export default {
   margin: 0 auto;
 }
 
+.content2 {
+  height: 100%;
+  padding-left: 37px;
+  display: flex;
+
+  .l-box {
+    .img {
+      width: 52px;
+      height: 52px;
+      margin-right: 10px;
+    }
+    p {
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: 700;
+      font-size: 26px;
+      color: #175E3D;
+    }
+  }
+}
+
 .col {
   width: 0px;
   height: 12px;
@@ -109,7 +135,7 @@ export default {
   top: 0;
   z-index: 99;
   width: 100%;
-  box-shadow: 0px 4px 10px 0px rgba(8,58,34,0.12);
+  box-shadow: 0px 4px 10px 0px rgba(8, 58, 34, 0.12);
 
   .info-box {
     width: 100%;
@@ -180,6 +206,7 @@ export default {
       .active:after {
         background: @theme;
       }
+
       .active.name {
         color: @theme;
         font-weight: bold;
