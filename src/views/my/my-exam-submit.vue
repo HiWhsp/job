@@ -4,7 +4,13 @@ export default {
   data() {
     return {
       id: '',
-      show_modal: false
+      show_modal: false,
+      detail: {},
+      question: {
+        judge_content: {},
+        multiple_content: {},
+        single_content: {}
+      }
     }
   },
   mounted() {
@@ -19,17 +25,61 @@ export default {
         data: {
           question_id: this.id
         }
+      }).then(res => {
+        if (res.code == 200) {
+          this.detail = res.data;
+          this.question = res.data.question;
+          // 判断题
+          this.question.judge_content.list.forEach((item, index) => {
+            item.checked = false;
+            item.selectText = '';
+          })
+          // 多选题
+          this.question.multiple_content.list.forEach((item, index) => {
+            item.checked = false;
+            item.selectText = '';
+          })
+          // 单选题
+          this.question.single_content.list.forEach((item, index) => {
+            item.checked = false;
+            item.selectText = '';
+          })
+        }
       })
     },
-    setActive(item) {
-      if (item === 1) {
-        return 'correct'
-      } else {
-        return 'unknown'
+    /**
+     * 选项点击
+     * @param item 点击的选项
+     * @param question 当前题
+     * @param type 题型 single(单选)/multiple(多选)/judge(判断)
+     */
+    topicClick(item, question, type) {
+      if (type === 'single') {
+        question.checked = !question.checked;
+        question.selectText = item;
+      } else if (type === 'multiple') {
+        const textList = question.selectText.split(',');
+        textList.includes(item) ? textList.splice(textList.indexOf(item), 1) : textList.push(item);
+        question.selectText = textList.join(',');
+        question.checked = question.selectText !== '';
+      } else if (type === 'judge') {
+        question.checked = !question.checked;
+        question.selectText = item;
       }
+      this.selectTopicNum();
+      this.$forceUpdate()
     },
+    // 选项标识
     topicList(item) {
       return 'ABCD'.substring(item, item + 1)
+    },
+    // 已选题数
+    selectTopicNum() {
+      let num = 0;
+      num += this.question.single_content.list.filter(item => item.checked).length;
+      num += this.question.multiple_content.list.filter(item => item.checked).length;
+      num += this.question.judge_content.list.filter(item => item.checked).length;
+      return num
     }
   }
 }
@@ -64,40 +114,43 @@ export default {
           <div class="question-list">
             <div class="question-item">
               <div class="question-title">
-                单选题（共10题，总分20分）
+                单选题（共{{ question.single_content.total_num }}题，总分{{ question.single_content.total_point }}分）
               </div>
               <div class="question-content">
-                <div class="question-content-item" :class="setActive(item)" v-for="item in 10" :key="item">
-                  {{ item }}
+                <div class="question-content-item" :class="{'correct': item.checked, 'unknown': !item.checked}"
+                     v-for="(item, index) in question.single_content.list" :key="index">
+                  {{ index + 1 }}
                 </div>
               </div>
             </div>
             <div class="question-item">
               <div class="question-title">
-                判断题（共10题，总分20分）
+                判断题（共{{ question.judge_content.total_num }}题，总分{{ question.judge_content.total_point }}分）
               </div>
               <div class="question-content">
-                <div class="question-content-item" :class="setActive(item)" v-for="item in 10" :key="item">
-                  {{ item }}
+                <div class="question-content-item" :class="{'correct': item.checked, 'unknown': !item.checked}"
+                     v-for="(item, index) in question.judge_content.list" :key="index">
+                  {{ index + 1 }}
                 </div>
               </div>
             </div>
             <div class="question-item">
               <div class="question-title">
-                多选题（共10题，总分20分）
+                多选题（共{{ question.multiple_content.total_num }}题，总分{{ question.multiple_content.total_point }}分）
               </div>
               <div class="question-content">
-                <div class="question-content-item" :class="setActive(item)" v-for="item in 30" :key="item">
-                  {{ item }}
+                <div class="question-content-item" :class="{'correct': item.checked, 'unknown': !item.checked}"
+                     v-for="(item, index) in question.multiple_content.list" :key="index">
+                  {{ index + 1 }}
                 </div>
               </div>
             </div>
           </div>
           <div class="all-score">
-            总分：100分
+            总分：{{ question.total_point }}分
             <div class="idea-list">
-              <div class="idea1">已答（<span>1</span>）</div>
-              <div class="idea2">未答（<span>39</span>）</div>
+              <div class="idea1">已答（<span>{{ selectTopicNum() }}</span>）</div>
+              <div class="idea2">未答（<span>{{ detail.total_num - selectTopicNum() }}</span>）</div>
             </div>
           </div>
         </div>
@@ -106,25 +159,69 @@ export default {
     <div class="content">
       <div class="title">
         <div class="date">剩余时间：2:00:00</div>
-        <div class="name">考试名称考试名称考试名称</div>
+        <div class="name">{{ question.title }}</div>
         <div class="back-btn">交卷</div>
       </div>
       <!--          题型-->
       <div class="question-list">
+        <!--        单选-->
         <div class="question-item">
           <div class="question-title">
-            单选题（共10题，总分20分）
+            单选题（共{{ question.single_content.total_num }}题，总分{{ question.single_content.total_point }}分）
           </div>
           <div class="question-content">
-            <div class="question-content-item" v-for="item in 10" :key="item">
+            <div class="question-content-item" v-for="(item, index) in question.single_content.list" :key="index">
               <div class="topic">
                 <div class="type">单选题</div>
-                <p>1.坚持依宪治国、依宪执政，就包括（ ）。</p>
+                <p>{{ index + 1 }}.{{ item.title }}</p>
               </div>
               <div class="topic-list">
-                <div class="topic-item" v-for="item in 4" :key="item">
-                  <div class="select" :class="{'selected': item % 2}">{{ topicList(item - 1) }}</div>
-                  <p>坚持宪法确定的中国共产党领导地位不动摇</p>
+                <div class="topic-item" v-for="(it, i) in item.content" :key="i"
+                     @click="topicClick(it, item, 'single')" :class="{'selected': item.selectText === it}">
+                  <div class="select">{{ topicList(i) }}</div>
+                  <p>{{ it }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--        判断-->
+        <div class="question-item">
+          <div class="question-title">
+            判断题（共{{ question.judge_content.total_num }}题，总分{{ question.judge_content.total_point }}分）
+          </div>
+          <div class="question-content">
+            <div class="question-content-item" v-for="(item, index) in question.judge_content.list" :key="index">
+              <div class="topic">
+                <div class="type">判断题</div>
+                <p>{{ index + 1 }}.{{ item.title }}</p>
+              </div>
+              <div class="topic-list">
+                <div class="topic-item" v-for="(it, i) in item.content" :key="i"
+                     @click="topicClick(it, item, 'judge')" :class="{'selected': item.selectText === it}">
+                  <div class="select">{{ topicList(i) }}</div>
+                  <p>{{ it }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--        多选-->
+        <div class="question-item">
+          <div class="question-title">
+            多选题（共{{ question.multiple_content.total_num }}题，总分{{ question.multiple_content.total_point }}分）
+          </div>
+          <div class="question-content">
+            <div class="question-content-item" v-for="(item, index) in question.multiple_content.list" :key="index">
+              <div class="topic">
+                <div class="type">多选题</div>
+                <p>{{ index + 1 }}.{{ item.title }}</p>
+              </div>
+              <div class="topic-list">
+                <div class="topic-item" v-for="(it, i) in item.content" :key="i"
+                     @click="topicClick(it, item, 'multiple')" :class="{'selected': item.selectText.includes(it)}">
+                  <div class="select" :class="{'selected': item % 2}">{{ topicList(i) }}</div>
+                  <p>{{ it }}</p>
                 </div>
               </div>
             </div>
@@ -154,18 +251,18 @@ export default {
     <!--      </div>-->
     <!--    </el-dialog>-->
 
-    <el-dialog title="提示" width="580px" align="center" :show-close="false" :close-on-click-modal="false"
-               :visible.sync="show_modal">
-      <div class="modal-inner">
-        <div class="text-box">
-          {{ 1 === 1 ? '很遗憾，考试不及格！您的分数为：' : '恭喜您，考试及格！您的分数为：' }}
-        </div>
-        <div class="score" :class="{'wrong': true}">100分</div>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <button class="btn-ripple btn-1" @click="show_modal = false">查看答题情况</button>
-      </div>
-    </el-dialog>
+    <!--    <el-dialog title="提示" width="580px" align="center" :show-close="false" :close-on-click-modal="false"-->
+    <!--               :visible.sync="show_modal">-->
+    <!--      <div class="modal-inner">-->
+    <!--        <div class="text-box">-->
+    <!--          {{ 1 === 1 ? '很遗憾，考试不及格！您的分数为：' : '恭喜您，考试及格！您的分数为：' }}-->
+    <!--        </div>-->
+    <!--        <div class="score" :class="{'wrong': true}">100分</div>-->
+    <!--      </div>-->
+    <!--      <div slot="footer" class="dialog-footer">-->
+    <!--        <button class="btn-ripple btn-1" @click="show_modal = false">查看答题情况</button>-->
+    <!--      </div>-->
+    <!--    </el-dialog>-->
   </div>
 </template>
 
@@ -449,6 +546,12 @@ export default {
           border-bottom: 1px solid #DEDEDE;
           margin-bottom: 20px;
 
+          &:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+          }
+
           .topic {
             display: flex;
             align-items: center;
@@ -495,9 +598,15 @@ export default {
                 margin-right: 5px;
               }
 
-              .selected {
-                color: @theme;
-                border-color: @theme;
+              &.selected {
+                .select {
+                  color: @theme;
+                  border-color: @theme;
+                }
+
+                p {
+                  color: @theme;
+                }
               }
 
               p {

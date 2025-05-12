@@ -66,7 +66,7 @@ export default {
     <div class="content">
       <div class="title">
         <div class="name">考试须知</div>
-        <div class="criterion"></div>
+        <div class="criterion" v-html="vuex_config.test_question_information"></div>
         <div class="protocol">
           <el-checkbox v-model="checkbox" type="checkbox"></el-checkbox>
           <p>我已阅读并同意<span>《考试须知》</span></p>
