@@ -17,14 +17,14 @@
           <div class="item">
             <span class="text">新密码：</span>
             <span class="info">
-              <el-input clearable type="password" v-model="form.new_password1" class=""/>
+              <el-input clearable type="password" v-model="form.password" class=""/>
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">重复新密码：</span>
             <span class="info">
-              <el-input clearable type="password" v-model="form.new_password2" class=""/>
+              <el-input clearable type="password" v-model="form.confirm_password" class=""/>
             </span>
             <span class="action"> </span>
           </div>
@@ -53,14 +53,11 @@ export default {
     return {
       form: {
         old_password: "",
-        new_password1: "",//验证码 类型2/类型3-必传
-        new_password2: "",
+        password: "",
+        confirm_password: "",
       },
       loading: false,
     };
-  },
-  computed: {
-    // ...mapState([""]),
   },
   watch: {},
   created() {
@@ -75,22 +72,22 @@ export default {
         alertErr("请输入旧密码");
         return;
       }
-      if (!this.form.new_password1) {
+      if (!this.form.password) {
         alertErr("请输入新密码");
         return;
       }
-      if (!this.form.new_password2) {
+      if (!this.form.confirm_password) {
         alertErr("请输入确认密码");
         return;
       }
-      if (this.form.new_password1 != this.form.new_password2) {
+      if (this.form.password != this.form.confirm_password) {
         alertErr("两次密码不一致");
         return;
       }
 
       this.loading = true;
       this.$api({
-        url: 'editPassword',
+        url: 'updatePassword',
         method: 'post',
         data: {
           ...this.form,
@@ -107,13 +104,10 @@ export default {
 
     do_clear() {
       this.form = {
-        editType: '1',
-        oldPass: "",
-        pass: "",
-        pass2: "",
+        old_password: "",
+        password: "",
+        confirm_password: "",
       };
-      this.$store.commit("clear_loginInfo");
-      this.$router.push({path: "/login"});
     }
   },
 };

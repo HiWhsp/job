@@ -13,28 +13,28 @@
       </div>
       <div class="catalog-list" v-for="item in list" :key="item">
         <div class="title">
-          <p>考试名称考试名称考试名称考试名称考试名称</p>
-          <div class="start">进行中</div>
+          <p>{{ item.title }}</p>
+          <div class="start">{{ item.type_name }}</div>
         </div>
         <div class="catalog-wrap">
           <div class="item">
-            <span>考试次数：</span><span>5次</span>
+            <span>考试次数：</span><span>{{ item.can_test_num }}次</span>
           </div>
           <div class="item">
-            <span>已考次数：</span><span>5次</span>
+            <span>已考次数：</span><span>{{ item.has_test_num }}次</span>
           </div>
           <div class="item">
-            <span>剩余次数：</span><span>5次</span>
+            <span>剩余次数：</span><span>{{ item.limit_test_num }}次</span>
           </div>
           <div class="item">
-            <span>考试总分：</span><span>5次</span>
+            <span>考试总分：</span><span>{{ item.total_point }}分</span>
           </div>
           <div class="item">
-            <span>考试时长：</span><span>5次</span>
+            <span>考试时长：</span><span>{{ item.test_time }}分钟</span>
           </div>
         </div>
         <div class="action">
-          <p>考试起止时间：2021-04-27 08:00 到 2021-04-30 08:00</p>
+          <p>考试起止时间：{{ item.start_time }} 到 {{ item.end_time }}</p>
 <!--          <el-button type="primary">开始考试</el-button>-->
           <el-button type="primary" @click="$router.push('my-exam-detail')">查看答题情况</el-button>
         </div>
@@ -43,7 +43,7 @@
           <p>完成度：100%</p>
         </div>
       </div>
-
+      <el-empty v-if="!list.length" description="暂无数据..."></el-empty>
     </div>
   </div>
 </template>
@@ -58,7 +58,11 @@ export default {
         title: '全部',
         value: 0,
       },
-      list: [1,2]
+      pagination: {
+        page: 1,
+        limit: 10
+      },
+      list: []
     };
   },
   computed: {
@@ -71,7 +75,7 @@ export default {
         {value: 1, title: "已做的", num: user_index.order_num_1 || 0},
         {value: 2, title: "未做的", num: user_index.order_num_2 || 0},
         {value: 3, title: "进行中", num: user_index.order_num_3 || 0},
-        {value: 5, title: "已结束", num: user_index.order_num_5 || 0},
+        {value: 4, title: "已结束", num: user_index.order_num_5 || 0},
       ];
       return tabList;
     },
@@ -81,12 +85,27 @@ export default {
   },
   methods: {
     setView() {
+      this.query_order();
     },
     do_toggle_tab(item) {
       this.tabSelect = item;
       this.pagination.page = 1;
       this.query_order();
     },
+    query_order() {
+      this.$api({
+        url: 'myQuestionList',
+        method: 'get',
+        data: {
+          type: this.tabSelect.value,
+          ...this.pagination
+        }
+      }).then(res=>{
+        if (res.code == 200) {
+          this.list = res.data || [];
+        }
+      })
+    }
   },
 };
 </script>

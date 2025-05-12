@@ -15,24 +15,24 @@
     <div class="card main">
       <div class="title">
         <h2>最近学习</h2>
-        <img src="@/static/home/card-img.png" alt="">
+        <img alt="" src="@/static/home/card-img.png">
       </div>
       <div class="content">
-        <div class="item" v-for="(item, index) in product_list" :key="index" @click="toProduct(item)">
+        <div v-for="(item, index) in recent_list" :key="index" class="item" @click="toProduct(item)">
           <div class="left">
             <div class="tit">
-              <img src="@/static/home/file1.png" alt="">
-              <span>师德师风建设，强化职业道德</span>
+              <img v-if="item.course_info.course_type == 1" alt="" src="@/static/home/file3.png">
+              <img v-if="item.course_info.course_type == 2" alt="" src="@/static/home/file2.png">
+              <span>{{ item.course_info.title }}</span>
             </div>
             <div class="progress">
-              <el-progress :percentage="50" :format="format"></el-progress>
+              <el-progress :format="format" :percentage="item.course_info.learn_time"></el-progress>
             </div>
-            <div class="desc">
-              学习历史：第一节 标题标题名称标题标题名称标题标题名称
-            </div>
+            <div class="desc">{{ item.course_info.description }}</div>
           </div>
           <div class="right">继续学习</div>
         </div>
+        <el-empty v-if="!recent_list.length" description="暂无数据..."></el-empty>
       </div>
     </div>
 
@@ -40,55 +40,29 @@
     <div class="card main">
       <div class="title">
         <h2>文档类课程</h2>
-        <img src="@/static/home/card-img.png" alt="">
+        <img alt="" src="@/static/home/card-img.png">
       </div>
       <div class="content">
-        <div class="item2">
+        <div class="item2" v-if="pdf_list.length">
           <div class="left">
             <div class="tit">
               <span>课程推荐</span>
             </div>
-            <div class="text">现代教育技术应用，提高教学效果现代教育技术应用，提高教学效果</div>
-            <div class="desc">
-              课程简介详情，课程简介详情，课程简介详情，课程简介详情课程简介详情，课程简介详情，课程简介详情，课程简介详情课程简介详情，课程简介详情，课程简介详情，课程简介详情课程简介详...
-            </div>
+            <div class="text">{{ pdf_list[0].title }}</div>
+            <div class="desc">{{ pdf_list[0].description }}</div>
             <div class="btn">立即学习</div>
           </div>
           <div class="right">
-            <div class="li-item">
-              <img src="@/static/home/file2.png" alt="">
+            <div class="li-item" v-for="(item, index) in pdf_list" :key="index">
+              <img alt="" :src="item.thumb_url">
               <div class="info">
-                <p class="text">师德师风建设，强化职业道德</p>
-                <p class="desc ellipsis-1">
-                  课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程123213123123</p>
-              </div>
-            </div>
-            <div class="li-item">
-              <img src="@/static/home/file2.png" alt="">
-              <div class="info">
-                <p class="text">师德师风建设，强化职业道德</p>
-                <p class="desc ellipsis-1">
-                  课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程123213123123</p>
-              </div>
-            </div>
-            <div class="li-item">
-              <img src="@/static/home/file2.png" alt="">
-              <div class="info">
-                <p class="text">师德师风建设，强化职业道德</p>
-                <p class="desc ellipsis-1">
-                  课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程123213123123</p>
-              </div>
-            </div>
-            <div class="li-item">
-              <img src="@/static/home/file2.png" alt="">
-              <div class="info">
-                <p class="text">师德师风建设，强化职业道德</p>
-                <p class="desc ellipsis-1">
-                  课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程123213123123</p>
+                <p class="text">{{ item.title }}</p>
+                <p class="desc ellipsis-1">{{ item.description }}</p>
               </div>
             </div>
           </div>
         </div>
+        <el-empty v-if="!pdf_list.length" description="暂无数据..."></el-empty>
       </div>
     </div>
 
@@ -96,48 +70,30 @@
     <div class="card main">
       <div class="title">
         <h2>视频类课程</h2>
-        <img src="@/static/home/card-img.png" alt="">
+        <img alt="" src="@/static/home/card-img.png">
       </div>
       <div class="content">
-        <div class="item3">
+        <div class="item3" v-if="video_list.length">
           <div class="left">
-            <img src="@/static/home/file1.png" alt="">
+            <img alt="" :src="video_list[0].thumb_url">
             <div class="info">
               <div class="tit">
-                <span>教育技术学导论</span>
+                <span>{{ video_list[0].title }}</span>
               </div>
-              <div class="desc ellipsis-3">
-                课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程简介详情。
-              </div>
+              <div class="desc ellipsis-3">{{ video_list[0].description }}</div>
             </div>
           </div>
           <div class="right">
-            <div class="li-item">
+            <div class="li-item" v-for="(item, index) in video_list" :key="index">
               <div class="info">
-                <p class="text">师德师风建设，强化职业道德</p>
-                <p class="desc ellipsis-1">
-                  课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程</p>
+                <p class="text">{{ item.title }}</p>
+                <p class="desc ellipsis-1">{{ item.description }}</p>
               </div>
-              <img src="@/static/home/file2.png" alt="">
-            </div>
-            <div class="li-item">
-              <div class="info">
-                <p class="text">师德师风建设，强化职业道德</p>
-                <p class="desc ellipsis-1">
-                  课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程</p>
-              </div>
-              <img src="@/static/home/file2.png" alt="">
-            </div>
-            <div class="li-item">
-              <div class="info">
-                <p class="text">师德师风建设，强化职业道德</p>
-                <p class="desc ellipsis-1">
-                  课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程简介详情，课程</p>
-              </div>
-              <img src="@/static/home/file2.png" alt="">
+              <img alt="" :src="item.thumb_url">
             </div>
           </div>
         </div>
+        <el-empty v-if="!video_list.length" description="暂无数据..."></el-empty>
       </div>
     </div>
   </div>
@@ -151,14 +107,17 @@ export default {
   data() {
     return {
       keyword: "",
-      // 首屏展示类型
-      product_list: [1, 2],
+      // 最近学习
+      recent_list: [],
+      // 文档类课程
+      pdf_list: [],
+      // 视频类课程
+      video_list: [],
     };
   },
   computed: {
     ...mapState({
       userInfo: state => state.userInfo,
-      filterList: state => state.vuexTreeCates,
       index_banners: state => state.index_banners
     }),
   },
@@ -167,29 +126,40 @@ export default {
   },
   methods: {
     setView() {
-      // this.query_product_cate()
+      // 最近学习
+      this.$api({
+        url: "myRecentLearn",
+        method: "get",
+      }).then((res) => {
+        this.recent_list = res.data;
+      })
+      // 文档类课程
+      this.$api({
+        url: "getCourseList",
+        method: "get",
+        data: {
+          page: 1,
+          limit: 4,
+          course_type: 1
+        }
+      }).then((res) => {
+        this.pdf_list = res.data.list;
+      })
+      // 视频类课程
+      this.$api({
+        url: "getCourseList",
+        method: "get",
+        data: {
+          page: 1,
+          limit: 3,
+          course_type: 2
+        }
+      }).then((res) => {
+        this.video_list = res.data.list;
+      })
     },
     format(percentage) {
       return `已学习${percentage}%`;
-    },
-    // 获取商品列表
-    query_product_cate() {
-      this.$api({
-        url: "index",
-        method: "post",
-        data: {
-          page: 1,
-          pageSize: 10,
-          keyword: this.keyword
-        },
-      }).then((res) => {
-        let {code, data} = res;
-        if (code == 200) {
-          let {list, count} = data;
-          this.product_list = list;
-          this.count = count;
-        }
-      });
     },
     // 跳转商品
     toProduct(item) {
@@ -200,7 +170,7 @@ export default {
 
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .el-carousel {
   height: 100%;
 }
@@ -481,12 +451,14 @@ export default {
 
           .info {
             width: 390px;
+
             .text {
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: 400;
               font-size: 18px;
               color: #000000;
             }
+
             .desc {
               margin-top: 10px;
               font-family: Microsoft YaHei, Microsoft YaHei;

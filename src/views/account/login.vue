@@ -1,17 +1,17 @@
 <template>
   <div class="page">
     <div class="left">
-      <img src="@/static/account/logo.png" alt="">
-      <img src="@/static/account/img1.png" alt="">
+      <img alt="" src="@/static/account/logo.png">
+      <img alt="" src="@/static/account/img1.png">
     </div>
     <div class="right">
       <h2>登录</h2>
-      <el-form :model="form" ref="form" :rules="rules">
-        <el-form-item label="手机号" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入手机号"></el-input>
+      <el-form ref="form" :model="form" :rules="rules">
+        <el-form-item label="手机号" prop="mobile">
+          <el-input v-model="form.mobile" placeholder="请输入手机号"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="form.password" type="password" placeholder="请输入密码"></el-input>
+          <el-input v-model="form.password" placeholder="请输入密码" type="password"></el-input>
         </el-form-item>
       </el-form>
       <el-button class="btn-ripple fit-text" @click="do_submit">登录</el-button>
@@ -25,11 +25,11 @@ export default {
   data() {
     return {
       form: {
-        phone: '',
+        mobile: '',
         password: '',
       },
       rules: {
-        phone: [
+        mobile: [
           {required: true, message: '请输入手机号', trigger: 'blur'},
         ],
         password: [
@@ -43,7 +43,7 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.$api({
-            url: 'login',
+            url: 'web_login',
             method: 'post',
             data: {
               ...this.form,
@@ -52,6 +52,7 @@ export default {
             alert(res).then(() => {
               this.loading = false;
             });
+            this.$store.commit('set_baseInfo', res.data);
             if (res.code == 200) {
               this.$router.push({name: 'index'})
             }

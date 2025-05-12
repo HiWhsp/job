@@ -5,16 +5,6 @@
     </div>
 
     <div class="page-ctx">
-<!--      <div class="tab-box">-->
-<!--        <div class="tab-list">-->
-<!--          <div v-for="(item, index) in tabList" :key="index" class="tab-item"-->
-<!--               :class="tabSelect.value == item.value ? 'active' : ''" @click="do_toggle_tab(item)">-->
-<!--            {{ item.title }}-->
-<!--            <span class="number" v-if="item.num">{{ item.num }}</span>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-
       <div class="mess-list">
         <div class="mess-item" v-for="(item, index) in messList" :key="index">
           <div class="title-box">
@@ -47,59 +37,30 @@ export default {
   data() {
     return {
       count: 0,
-      tabSelect: {
-        title: '未读',
-        value: 1,
-      },
       messList: [],
       pagination: {
         page: 1,
         pageNum: 10
-      },
-      tabList: [
-        {value: 1, title: "未读"},
-        {value: 0, title: "全部"}
-      ]
+      }
     };
   },
   computed: {
     ...mapState(["baseInfo"]),
   },
   watch: {},
-  created() {
+  mounted() {
     this.setView();
   },
   methods: {
     setView() {
-      this.$api("users_msgRecord", {
-        ...this.pagination,
-        scene: this.tabSelect.value
+      this.$api({
+        url: "myMsg",
+        method: "get",
       }).then((res) => {
         this.messList = res.data.list
         this.count = res.data.count;
       });
     },
-
-    do_toggle_tab(item) {
-      this.tabSelect = item;
-      this.pagination.page = 1;
-      this.setView();
-    },
-    // 标记已读
-    do_mark_read() {
-      if (this.messList.length == 0) {
-        alertErr("没有可标记的消息")
-        return
-      }
-      this.$api("users_msgRead", {
-        ids: this.messList.map(v => v.id).join(",")
-      }).then(res => {
-        if (res.code == 200) {
-          alertSucc(res.msg)
-          this.setView();
-        }
-      })
-    }
   },
 };
 </script>

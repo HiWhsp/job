@@ -5,34 +5,34 @@
     </div>
     <div class="page-ctx">
       <template v-for="(item, index) in product_list">
-        <div class="item">
+        <div class="item" v-if="item.course_type == 1">
           <div class="left">
             <div class="tit">
-              <img alt="" src="@/static/home/file1.png">
-              <span>师德师风建设，强化职业道德</span>
+              <img alt="" src="@/static/home/file3.png">
+              <span>{{ item.title }}</span>
             </div>
             <div class="progress">
-              <el-progress :format="format" :percentage="50"></el-progress>
+              <el-progress :format="format(item.learn_time)" :percentage="item.learn_time"></el-progress>
             </div>
-            <div class="desc">
-              学习历史：第一节 标题标题名称标题标题名称标题标题名称
-            </div>
+            <div class="desc">{{ item.description }}</div>
           </div>
-          <div class="right">继续学习</div>
+          <div class="right" @click="toProduct(item)">继续学习</div>
         </div>
-        <div class="item2">
-          <img alt="" src="@/static/home/file1.png">
+
+        <div class="item2" v-if="item.course_type == 2">
+          <img alt="" :src="item.thumb_url">
           <div class="left">
             <div class="tit">
-              <span>师德师风建设，强化职业道德</span>
+              <span>{{ item.title }}</span>
             </div>
             <div class="progress">
-              <el-progress :format="format" :percentage="50"></el-progress>
+              <el-progress :format="format(item.learn_time)" :percentage="item.learn_time"></el-progress>
             </div>
           </div>
-          <div class="right">继续学习</div>
+          <div class="right" @click="toProduct(item)">继续学习</div>
         </div>
       </template>
+      <el-empty v-if="!count" description="暂无数据..." ></el-empty>
     </div>
   </div>
 </template>
@@ -43,15 +43,37 @@ export default {
   name: "my-course-fav",
   data() {
     return {
-      product_list: [1],
+      count: 0,
+      product_list: [],
     };
   },
-  watch: {},
-  created() {
+  mounted() {
     this.setView();
   },
   methods: {
     setView() {
+      this.$api({
+        url: 'getCourseList',
+        method: 'get',
+        data: {
+          page: 1,
+          limit: 10,
+          learn_type: 5,
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.product_list = res.data.list;
+          this.count = res.data.count;
+        }
+      })
+    },
+    toProduct(item) {
+      this.$router.push({
+        path: '/course-detail?id=' + item.id
+      });
+    },
+    format(percentage) {
+      return `已学习${percentage}%`;
     },
   },
 };

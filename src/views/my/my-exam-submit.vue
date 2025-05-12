@@ -3,10 +3,24 @@ export default {
   name: "my-exam-submit",
   data() {
     return {
-      show_modal: true
+      id: '',
+      show_modal: false
     }
   },
+  mounted() {
+    this.id = this.$route.query.id;
+    this.setView();
+  },
   methods: {
+    setView() {
+      this.$api({
+        url: 'startQuestion',
+        method: 'post',
+        data: {
+          question_id: this.id
+        }
+      })
+    },
     setActive(item) {
       if (item === 1) {
         return 'correct'

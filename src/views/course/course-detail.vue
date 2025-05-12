@@ -2,50 +2,55 @@
   <div class="course-detail-page">
     <div class="nav-bar">
       <el-breadcrumb separator=">">
-        <el-breadcrumb-item :to="{ path: '/' }">全部课程</el-breadcrumb-item>
-        <el-breadcrumb-item>首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/course-list' }">全部课程</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ detail.title }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="page">
       <div class="main-content">
         <!-- 课程头部信息 -->
-        <div class="course-header" v-if="type === 'doc'">
+        <div v-if="type === 'doc'" class="course-header">
           <div class="title">
-            <img src="@/static/home/file1.png"/>
-            <span>教学常规，掌握教学方法和技巧</span>
+            <img src="@/static/home/file3.png"/>
+            <span>{{ detail.title }}</span>
           </div>
           <div class="action">
             <div class="info">
-              <span>课时：26</span>
+              <span>课时：{{ tableData.length }}</span>
               <span>发布时间：2025-01-02</span>
             </div>
             <div class="actions">
-              <div class="share">
-                <img src="@/static/common/share0.png" alt="">
+              <div class="share pointer" @click="collect">
+                <img v-if="detail.is_collect === 0" alt="" src="@/static/common/share0.png">
+                <img v-if="detail.is_collect === 1" alt="" src="@/static/common/share1.png">
                 <span>收藏</span>
               </div>
-              <el-button type="primary">开始学习</el-button>
+              <el-button type="primary" @click="goUrl({url: '/pdf-viewer', query: {id: id}})">开始学习
+              </el-button>
             </div>
           </div>
         </div>
-        <div class="course-header2" v-if="type === 'video'">
-          <img src="" alt="" class="left">
+
+        <div v-if="type === 'video'" class="course-header2">
+          <img :src="detail.thumb_url" alt="" class="left">
           <div class="right">
             <div class="title">
-              <img src="@/static/home/file1.png"/>
-              <span>教学常规，掌握教学方法和技巧</span>
+              <img src="@/static/home/file2.png"/>
+              <span>{{ detail.title }}</span>
             </div>
             <div class="action">
               <div class="info">
-                <span>课时：26</span>
-                <span>发布时间：2025-01-02</span>
+                <span>课时：{{ tableData.length }}</span>
+                <span>发布时间：{{ detail.created_at }}</span>
               </div>
               <div class="actions">
-                <div class="share">
-                  <img src="@/static/common/share0.png" alt="">
+                <div class="share pointer" @click="collect">
+                  <img v-if="detail.is_collect === 0" alt="" src="@/static/common/share0.png">
+                  <img v-if="detail.is_collect === 1" alt="" src="@/static/common/share1.png">
                   <span>收藏</span>
                 </div>
-                <el-button type="primary">开始学习</el-button>
+                <el-button type="primary" @click="goUrl({url: '/video-viewer', query: {id: id}})">开始学习
+                </el-button>
               </div>
             </div>
           </div>
@@ -57,13 +62,11 @@
             <el-tab-pane label="课程介绍" name="intro">
               <div class="section">
                 <h3>课程介绍</h3>
-                <p>
-                  教师在课堂中所面临的挑战包括教学计划、教学进度、教学目标等。本课程围绕教学常规展开，帮助教师理清教学重点，掌握教学技巧。</p>
-                <p>课程目标：提升课堂效率、增强学生参与感、提升教师专业能力。</p>
+                <div v-html="detail.content"></div>
               </div>
             </el-tab-pane>
             <el-tab-pane label="目录" name="catalog">
-              <div class="section" v-if="type === 'doc'">
+              <div v-if="type === 'doc'" class="section">
                 <h3>目录</h3>
                 <div class="tab-text">
                   <div class="tab-item1">目录</div>
@@ -78,40 +81,46 @@
                   >
                     <template slot="title">
                       <div class="index-collapse">{{ item.title }}</div>
-                      <div class="progress-collapse">{{ item.progress }}</div>
-                      <div class="action-collapse"><span @click="goUrl({url: '/pdf-viewer'})">学习</span><span>考试</span></div>
+                      <div class="progress-collapse">{{ item.has_learn }}</div>
+                      <div class="action-collapse">
+                        <span @click="goUrl({url: '/pdf-viewer', query: {id: item.id, index}})">学习</span>
+                        <span>考试</span>
+                      </div>
                     </template>
-                    <div class="catalog-detail">
+                    <div v-if="Object.keys(item.test_question || {}).length" class="catalog-detail">
                       <div class="title">
-                        <p>考试名称考试名称考试名称考试名称考试名称</p>
+                        <p>{{ item.test_question.title }}</p>
                         <div class="start">进行中</div>
                       </div>
                       <div class="catalog-wrap">
                         <div class="item">
-                          <span>考试次数：</span><span>5次</span>
+                          <span>考试次数：</span><span>{{ item.test_question.can_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>已考次数：</span><span>5次</span>
+                          <span>已考次数：</span><span>{{ item.test_question.has_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>剩余次数：</span><span>5次</span>
+                          <span>剩余次数：</span><span>{{ item.test_question.limit_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>考试总分：</span><span>5次</span>
+                          <span>考试总分：</span><span>{{ item.test_question.total_point }}分</span>
                         </div>
                         <div class="item">
-                          <span>考试时长：</span><span>5次</span>
+                          <span>考试时长：</span><span>{{ item.test_question.test_time }}分钟</span>
                         </div>
                       </div>
                       <div class="action">
-                        <p>考试起止时间：2021-04-27 08:00 到 2021-04-30 08:00</p>
-                        <el-button type="primary">开始考试</el-button>
+                        <p>考试起止时间：{{ item.test_question.start_time }} 到 {{ item.test_question.end_time }}</p>
+                        <el-button type="primary"
+                                   @click="goUrl({url: '/my-exam-start', query: {id: item.test_question_id}})">开始考试
+                        </el-button>
                       </div>
                     </div>
+                    <el-empty v-else description="暂无考试内容..."></el-empty>
                   </el-collapse-item>
                 </el-collapse>
               </div>
-              <div class="section" v-if="type === 'video'">
+              <div v-if="type === 'video'" class="section">
                 <h3>目录</h3>
                 <div class="tab-text">
                   <div class="tab-item1">目录</div>
@@ -128,71 +137,77 @@
                     <template slot="title">
                       <div class="index-collapse">{{ item.title }}</div>
                       <div class="video-time">
-                        <img src="@/static/common/video.png" alt="">
-                        <span>04:00</span>
+                        <img alt="" src="@/static/common/video.png">
+                        <span>{{ item.learn_time }}</span>
                       </div>
-                      <div class="progress-collapse">{{ item.progress }}</div>
-                      <div class="action-collapse"><span @click="goUrl({url: '/pdf-viewer'})">学习</span><span>考试</span></div>
+                      <div class="progress-collapse">{{ item.has_learn }}</div>
+                      <div class="action-collapse"><span
+                          @click="goUrl({url: '/video-viewer', query: {id: item.id, index}})">学习</span><span>考试</span>
+                      </div>
                     </template>
-                    <div class="catalog-detail">
+                    <div v-if="Object.keys(item.test_question || {}).length" class="catalog-detail">
                       <div class="title">
-                        <p>考试名称考试名称考试名称考试名称考试名称</p>
+                        <p>{{ item.test_question.title }}</p>
                         <div class="start">进行中</div>
                       </div>
                       <div class="catalog-wrap">
                         <div class="item">
-                          <span>考试次数：</span><span>5次</span>
+                          <span>考试次数：</span><span>{{ item.test_question.can_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>已考次数：</span><span>5次</span>
+                          <span>已考次数：</span><span>{{ item.test_question.has_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>剩余次数：</span><span>5次</span>
+                          <span>剩余次数：</span><span>{{ item.test_question.limit_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>考试总分：</span><span>5次</span>
+                          <span>考试总分：</span><span>{{ item.test_question.total_point }}分</span>
                         </div>
                         <div class="item">
-                          <span>考试时长：</span><span>5次</span>
+                          <span>考试时长：</span><span>{{ item.test_question.test_time }}分钟</span>
                         </div>
                       </div>
                       <div class="action">
-                        <p>考试起止时间：2021-04-27 08:00 到 2021-04-30 08:00</p>
-                        <el-button type="primary">开始考试</el-button>
+                        <p>考试起止时间：{{ item.test_question.start_time }} 到 {{ item.test_question.end_time }}</p>
+                        <el-button type="primary"
+                                   @click="goUrl({url: '/my-exam-start', query: {id: item.test_question_id}})">开始考试
+                        </el-button>
                       </div>
                     </div>
+                    <el-empty v-else description="暂无考试内容..."></el-empty>
                   </el-collapse-item>
                 </el-collapse>
               </div>
             </el-tab-pane>
             <el-tab-pane label="关联考试" name="exam">
-              <div class="section">
-                <h3>主课程考试</h3>
+              <div v-for="item in detail.test_question_list" :key="item" class="section">
+                <h3>{{ item.title }}</h3>
                 <div class="catalog-list">
                   <div class="title">
-                    <p>考试名称考试名称考试名称考试名称考试名称</p>
+                    <p>{{ item.title }}</p>
                     <div class="start">进行中</div>
                   </div>
                   <div class="catalog-wrap">
                     <div class="item">
-                      <span>考试次数：</span><span>5次</span>
+                      <span>考试次数：</span><span>{{ item.can_test_num }}次</span>
                     </div>
                     <div class="item">
-                      <span>已考次数：</span><span>5次</span>
+                      <span>已考次数：</span><span>{{ item.has_test_num }}次</span>
                     </div>
                     <div class="item">
-                      <span>剩余次数：</span><span>5次</span>
+                      <span>剩余次数：</span><span>{{ item.limit_test_num }}次</span>
                     </div>
                     <div class="item">
-                      <span>考试总分：</span><span>5次</span>
+                      <span>考试总分：</span><span>{{ item.total_point }}分</span>
                     </div>
                     <div class="item">
-                      <span>考试时长：</span><span>5次</span>
+                      <span>考试时长：</span><span>{{ item.test_time }}分钟</span>
                     </div>
                   </div>
                   <div class="action">
-                    <p>考试起止时间：2021-04-27 08:00 到 2021-04-30 08:00</p>
-                    <el-button type="primary">开始考试</el-button>
+                    <p>考试起止时间：{{ item.start_time }} 到 {{ item.end_time }}</p>
+                    <el-button type="primary" @click="goUrl({url: '/my-exam-start', query: {id: item.id}})">开始考试
+                    </el-button>
                   </div>
                 </div>
               </div>
@@ -225,8 +240,10 @@ export default {
   name: 'course-detail',
   data() {
     return {
-      type: 'video',
-      tableData: [
+      id: '', // 课程id
+      type: 'video', // 课程类型
+      detail: {}, // 课程详情
+      tableData: [ // 课程目录
         {title: '第一节 - 教师规范与管理制度讲解', progress: '70%', action: '学习'},
         {title: '第二节 - 教学流程优化与策略', progress: '70%', action: '学习'},
         {title: '第三节 - 教学互动与反馈技巧', progress: '70%', action: '学习'},
@@ -235,9 +252,47 @@ export default {
       ],
     };
   },
+  mounted() {
+    this.id = this.$route.query.id;
+    this.setView();
+  },
   methods: {
+    setView() {
+      this.$api({
+        url: 'getCourse',
+        method: 'get',
+        data: {
+          id: this.id
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.detail = res.data;
+          this.type = res.data.course_type === 2 ? 'video' : 'doc';
+          this.tableData = res.data.course_list;
+        }
+      })
+    },
+    // 收藏
+    collect() {
+      this.$api({
+        url: 'addCollect',
+        method: 'post',
+        data: {
+          course_id: this.id,
+          status: this.detail.is_collect === 0 ? 1 : 0
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message.success(res.msg);
+          this.detail.is_collect = this.detail.is_collect === 0 ? 1 : 0;
+        }
+      })
+    },
     goUrl(item) {
-      this.$router.push(item.url);
+      this.$router.push({
+        path: item.url,
+        query: item.query
+      });
     }
   }
 };

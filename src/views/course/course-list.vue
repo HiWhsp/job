@@ -3,51 +3,54 @@
     <div class="search-bar">
       <div class="search-wrap">
         <el-input v-model="searchText" class="search-input" placeholder="输入关键字"/>
-        <el-button type="primary">搜索</el-button>
+        <el-button type="primary" @click="setView" @keyup.enter="setView">搜索</el-button>
       </div>
     </div>
 
     <div class="content-wrapper">
       <div class="tab-bar">
         <div class="type-options">
-          <div :class="{'active': activeTab === 'all'}" class="tab-item" @click="activeTab = 'all'">综合</div>
-          <div :class="{'active': activeTab === 'doc'}" class="tab-item" @click="activeTab = 'doc'">文档类课程</div>
-          <div :class="{'active': activeTab === 'video'}" class="tab-item" @click="activeTab = 'video'">视频类课程</div>
+          <div :class="{'active': activeTab === 0}" class="tab-item" @click="activeTab = 0">综合</div>
+          <div :class="{'active': activeTab === 1}" class="tab-item" @click="activeTab = 1">文档类课程</div>
+          <div :class="{'active': activeTab === 2}" class="tab-item" @click="activeTab = 2">视频类课程</div>
         </div>
         <div class="status-options">
           <el-radio-group v-model="status">
-            <el-radio :label="'done'">已学完</el-radio>
-            <el-radio :label="'not-started'">未开始</el-radio>
-            <el-radio :label="'in-progress'">学习中</el-radio>
+            <el-radio :label="null">全部</el-radio>
+            <el-radio :label="3">已学完</el-radio>
+            <el-radio :label="1">未开始</el-radio>
+            <el-radio :label="2">学习中</el-radio>
           </el-radio-group>
         </div>
       </div>
 
-      <div class="course-list doc-list">
-        <div class="course-item" @click="toUrl">
-          <div class="course-box">
-            <img class="icon" src="@/static/home/file3.png"/>
-            <div class="text">
-              <div class="title">师德师风建设，强化职业道德</div>
-              <div class="desc ellipsis-1">课程简介内容、课程简介内容、课程简介内容</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="video-list">
-        <div class="course-item" @click="toUrl">
-          <div class="course-box">
-            <div class="text">
-              <div class="title">
-                <img class="icon" src="@/static/home/file3.png"/>
-                <span class="ellipsis-1">师德师风建设，强化职业道德</span>
+      <template v-for="item in productList">
+        <div v-if="item.course_type === 1" class="course-list doc-list">
+          <div class="course-item" @click="toUrl(item)">
+            <div class="course-box">
+              <img class="icon" src="@/static/home/file3.png"/>
+              <div class="text">
+                <div class="title">{{ item.title }}</div>
+                <div class="desc ellipsis-1">{{ item.description }}</div>
               </div>
-              <div class="desc ellipsis-3">课程简介内容、课程简介内容、课程简介内容</div>
             </div>
-            <img class="image" src="@/static/home/file3.png"/>
           </div>
         </div>
-      </div>
+        <div v-if="item.course_type === 2" class="video-list">
+          <div class="course-item" @click="toUrl(item)">
+            <div class="course-box">
+              <div class="text">
+                <div class="title">
+                  <img class="icon" src="@/static/home/file2.png"/>
+                  <span class="ellipsis-1">{{ item.title }}</span>
+                </div>
+                <div class="desc ellipsis-3">{{ item.description }}</div>
+              </div>
+              <img :src="item.thumb_url" class="image"/>
+            </div>
+          </div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -58,19 +61,43 @@ export default {
   data() {
     return {
       searchText: '', // 搜索词
-      status: '', // 学习状态
-      activeTab: 'all', // 当前选中的tab
+      status: null, // 学习状态
+      activeTab: 0, // 当前选中的tab 0全部 1文档 2视频
+      productList: [] // 课程列表
     };
   },
   watch: {
     activeTab() {
-
+      this.setView();
+    },
+    status() {
+      this.setView();
     }
   },
+  mounted() {
+    this.setView();
+  },
   methods: {
-    toUrl() {
+    setView() {
+      this.$api({
+        url: 'getCourseList',
+        method: 'get',
+        data: {
+          page: 1,
+          limit: 10,
+          course_type: this.activeTab,
+          learn_type: this.status,
+          keyword: this.searchText
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.productList = res.data.list;
+        }
+      })
+    },
+    toUrl(item) {
       this.$router.push({
-        path: '/course-detail'
+        path: '/course-detail?id=' + item.id
       });
     }
   },
@@ -229,6 +256,7 @@ export default {
               height: 20px;
               margin-right: 8px;
             }
+
             span {
               display: inline-block;
               width: 270px;

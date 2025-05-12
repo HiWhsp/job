@@ -1,6 +1,64 @@
 <script>
 export default {
-  name: "video-viewer"
+  name: "video-viewer",
+  data() {
+    return {
+      id: '',
+      index: '',
+      detail: {},
+      tableData: [],
+      selectItem: {}
+    }
+  },
+  mounted() {
+    this.id = this.$route.query.id;
+    this.index = this.$route.query.index || 0
+    this.setView();
+  },
+  methods: {
+    setView() {
+      this.$api({
+        url: 'getCourse',
+        method: 'get',
+        data: {
+          id: this.id
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.detail = res.data;
+          this.tableData = res.data.course_list;
+          if (this.index) {
+            this.selectItem = this.tableData[this.index];
+          } else {
+            this.selectItem = this.tableData[0];
+          }
+        }
+      })
+    },
+    // 上下切换
+    arrow(type) {
+      if (type == 'up') {
+        if (this.index > 0) {
+          this.index--;
+        } else {
+          this.index = 0;
+        }
+      } else {
+        if (this.index < this.tableData.length - 1) {
+          this.index++;
+        } else {
+          this.index = this.tableData.length - 1;
+        }
+      }
+      this.selectItem = this.tableData[this.index];
+    },
+    goUrl(item) {
+      this.$router.push({
+        path: item.url,
+        query: item.query
+      })
+    }
+  }
 }
 </script>
 
@@ -8,37 +66,38 @@ export default {
   <div class="wrap">
     <div class="left">
       <div class="arrow">
-        <div class="arrow-top">
+        <div class="arrow-top" @click="arrow('up')">
           <img alt="" src="@/static/common/arrow-top.png">
         </div>
         <div class="col"></div>
-        <div class="arrow-bottom">
+        <div class="arrow-bottom" @click="arrow('down')">
           <img alt="" src="@/static/common/arrow-bottom.png">
         </div>
       </div>
-      <div class="next-btn">
+      <div class="next-btn" @click="goUrl({url: '/course-detail', query: {id: id}})">
         <img alt="" src="@/static/common/arrow-left.png">
         <span>返回课程详情</span>
       </div>
       <div class="menu">
         <div class="index">
-          章节1
+          章节{{ index + 1 }}
           <div class="index-collapse">
             课时
           </div>
         </div>
         <div class="line">
-          <div class="line-inner">1</div>
+          <div class="line-inner">{{ index + 1 }}</div>
         </div>
-        <div class="text">第一节: 标题名称标题名称标题名称标题名称标题名称</div>
+        <div class="text">第{{ index + 1 }}节: {{ selectItem.title }}</div>
       </div>
       <div class="content">
+        <video id="video-player" :src="selectItem.file_path_url" controls preload="auto"></video>
       </div>
     </div>
     <div class="right">
       <div class="tit-info">
-        <p class="title">现代教育技术应用 提高教学效果</p>
-        <p class="text">课时：26 发布时间：2025-01-02</p>
+        <p class="title">{{ detail.title }}</p>
+        <p class="text">课时：{{ tableData.length }} 发布时间：{{ detail.created_at }}</p>
       </div>
       <div class="menu-right">
         <p>目录</p>
@@ -46,25 +105,15 @@ export default {
       <div class="menu-list">
         <div class="col"></div>
         <div class="menu">
-          <div class="menu-item active">
-            <p class="index">第一节</p>
+          <div v-for="(item, index) in tableData" :key="index" :class="{active: selectItem.id == item.id}"
+               class="menu-item">
+            <p class="index">第{{ index + 1 }}节</p>
             <div class="line"></div>
             <div class="text">
-              <p class="title ellipsis-1">标题名称标题名称标题名称...</p>
+              <p class="title ellipsis-1">{{ item.title }}</p>
               <p class="time">
-                <img src="@/static/common/video.png" alt="">
-                <span>08:52</span>
-              </p>
-            </div>
-          </div>
-          <div class="menu-item">
-            <p class="index">第二节</p>
-            <div class="line"></div>
-            <div class="text">
-              <p class="title ellipsis-1">标题名称标题名称标题名称...</p>
-              <p class="time">
-                <img src="@/static/common/video.png" alt="">
-                <span>08:52</span>
+                <img alt="" src="@/static/common/video.png">
+                <span>{{ item.learn_time }}</span>
               </p>
             </div>
           </div>
@@ -212,6 +261,11 @@ export default {
     width: 1532px;
     height: 760px;
     background: #ECECEC;
+
+    #video-player {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 
@@ -303,7 +357,7 @@ export default {
         background: #FFFFFF;
         border: 1px solid #D3D3D3;
         border-radius: 50%;
-        margin: 0 10px 0 3px;
+        margin: 0 10px 0 8px;
       }
 
       .text {

@@ -11,8 +11,8 @@
             <span class="text">头像：</span>
             <span class="info">
               <div class="upload-box">
-                <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="img"
-                           action="https://zsxhxxpx.dx.hdapp.com.cn/api?action=index_ossUpload"
+                <el-upload class="upload-demo" accept="image/*" :show-file-list="false" name="file"
+                           action="https://zsxhxxpx.dx.hdapp.com.cn/api/upload"
                            :data="mix_upload_data" :on-success="upload_on_success"
                            :before-upload="upload_before_upload">
                   <img v-if="form.image" :src="form.image" class="user-avatar"/>
@@ -25,21 +25,25 @@
           <div class="item">
             <span class="text">姓名：</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.real_name"/>
+              <el-input clearable type="text" v-model="form.name"/>
             </span>
           </div>
 
           <div class="item">
             <span class="text">手机：</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.real_name"/>
+              <el-input clearable type="text" v-model="form.mobile"/>
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">角色：</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.email"/>
+<!--              <el-input clearable type="text" v-model="form.identity_name"/>-->
+              <el-select v-model="form.identity">
+                <el-option label="老师" :value="1"></el-option>
+<!--                <el-option label="学生" :value="2"></el-option>-->
+              </el-select>
             </span>
             <span class="action">
             </span>
@@ -93,69 +97,57 @@ export default {
         method: 'get',
       }).then(res => {
         if (res.code == 200) {
-          let data = res.data.user_info;
+          let data = res.data;
           this.my_info = data;
 
-          this.form = {
-            image: data.image,
-            real_name: data.real_name,
-            name: data.name,
-            email: data.email,
-            province: data.province,
-            city: data.city,
-            area: data.area,
-            provinceCode: data.provinceCode,
-            cityCode: data.cityCode,
-            areaCode: data.areaCode,
-            mobile: data.mobile,
-            sex: data.sex
-          }
-          this.$refs.area_select.init({province: data.provinceCode, city: data.cityCode, area: data.areaCode});
-          this.$store.commit("set_baseInfo", res.data.user_info);
+          this.form = this.my_info
+          this.$store.commit("set_userInfo", res.data);
         }
       })
     },
 
     do_submit() {
-
-      if (!this.form.real_name) {
+      if (!this.form.name) {
         alertErr("请填写真实姓名");
+        return;
+      }
+      if(!this.form.mobile) {
+        alertErr("请填写手机号");
+        return;
+      }
+      if(!this.form.identity) {
+        alertErr("请选择角色");
         return;
       }
       this.loading = true;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: 'updateUser',
+        method: 'post',
         data: {
-          action: 'users_editInfo',
-          ...this.form
+          image: this.form.image,
+          name: this.form.name,
+          mobile: this.form.mobile,
+          // identity: this.form.identity
         },
       }).then((res) => {
         let {code, msg, data} = res;
-        alert(res).then(() => {
-          this.loading = false;
-        });
+        this.loading = false;
         if (code == 200) {
           this.setView();
         }
+      }).catch((err) => {
+        this.loading = false;
       });
     },
 
     do_reset() {
       this.form = {
         image: this.my_info.image,
-        real_name: "",
-        name: "",
-        email: "",
-        province: '',
-        city: '',
-        area: '',
-        provinceCode: '',
-        cityCode: '',
-        areaCode: '',
+        name: this.my_info.name,
+        mobile: this.my_info.mobile,
+        identity: this.my_info.identity
       };
     },
-
 
     //上传相关
     upload_on_success(res, file) {
@@ -163,7 +155,7 @@ export default {
       let {code, data, msg} = res;
       alert(res);
       if (code == 200) {
-        this.form.image = res.data;
+        this.form.image = res.data.path;
       }
     },
     upload_before_upload(file) {

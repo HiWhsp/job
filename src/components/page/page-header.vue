@@ -17,8 +17,9 @@
         <div class="r-box">
           <div class="flex">
             <div class="tools-btn pointer flex" @click="goUrl({url: '/my-info'})">
-              <span>学员名称/姓名</span>
-              <img alt="" class="img-2" src="../../static/prod/avatar.png">
+              <span>{{ baseInfo.id ? baseInfo.name : '学员名称/姓名' }}</span>
+              <img alt="" class="img-2" src="../../static/prod/avatar.png" v-if="!baseInfo.id">
+              <img alt="" class="img-2" :src="baseInfo.image" v-else>
             </div>
           </div>
         </div>

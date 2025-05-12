@@ -79,24 +79,6 @@ export default new Vuex.Store({
       state.vuex_config = data;
     },
 
-    //设置基本信息
-    set_userInfo(state, data) {
-      console.log("vuex set_userInfo 用户信息", {
-        ...data,
-      });
-
-      // debugger
-      let {token, userId, id} = data;
-
-      state.vuex_is_login = true;
-      state.isLogin = true;
-      state.userInfo = data;
-      state.vuex_user = data;
-      localStorage.setItem("token", token);
-      localStorage.setItem("userId", userId || id);
-      localStorage.setItem("userInfo", JSON.stringify(data));
-    },
-
     set_vuex_banner(state, data) {
       let [pos_0, pos_1, pos_2] = data;
       state.index_banners = data;
@@ -129,13 +111,29 @@ export default new Vuex.Store({
     //设置基本信息
     set_baseInfo(state, data) {
       // //console.log("设置用户信息", { ...data });
-      let {token, user_id, id, level, levelRules} = data;
+      let {token, user_id, id} = data;
 
       state.vuex_is_login = true;
       state.token = token;
       state.user_id = user_id || id;
 
-      // localStorage.setItem("token", token);
+      localStorage.setItem("token", token);
+      localStorage.setItem("user_id", user_id || id);
+
+      state.baseInfo = data;
+      state.userInfo = data;
+      state.vuex_user = data;
+      localStorage.setItem("baseInfo", JSON.stringify(data));
+      localStorage.setItem("userInfo", JSON.stringify(data));
+    },
+
+    //设置基本信息
+    set_userInfo(state, data) {
+      let {user_id, id} = data;
+
+      state.vuex_is_login = true;
+      state.user_id = user_id || id;
+
       localStorage.setItem("user_id", user_id || id);
 
       state.baseInfo = data;
@@ -211,7 +209,7 @@ export default new Vuex.Store({
       }).then((res) => {
         if (res.code == 200) {
           commit("set_vuex_login_status", true);
-          commit("set_baseInfo", res.data.user_info);
+          commit("set_userInfo", res.data);
         } else {
           commit("set_vuex_login_status", false);
         }
@@ -263,37 +261,6 @@ export default new Vuex.Store({
           commit("set_vuex_banner", res.data);
         }
       });
-
-      //产品分类
-      // api({
-      //   url: "basicList",
-      //   method: "get",
-      // }).then((res) => {
-      //   if (res.code == 200) {
-      //     let catesInfo = handle_product_cate_data(res.data);
-      //     commit("set_vuex_product_cate", catesInfo);
-      //   }
-      // });
-
-      //新闻分类
-      // api({
-      //   url: "/service.php",
-      //   method: "get",
-      //   data: {
-      //     action: "news_channel",
-      //   },
-      // }).then((res) => {
-      //   let { code, data } = res;
-      //   if (code == 200) {
-      //     res.data.forEach((v) => {
-      //       v.route = "/news?id=" + v.id;
-      //     });
-      //     commit("set_vuex_data", {
-      //       key: "vuexNewsCates",
-      //       val: res.data,
-      //     });
-      //   }
-      // });
     },
   },
 });
