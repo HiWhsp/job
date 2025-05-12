@@ -19,7 +19,22 @@ export default {
         })
         return
       }
-      this.$router.push('my-exam-submit?id=' + this.id);
+      this.$api({
+        url: 'startQuestion',
+        method: 'post',
+        data: {
+          question_id: this.id
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$router.push('my-exam-submit?id=' + this.id);
+        }else {
+          this.$message({
+            message: res.msg,
+            type: 'warning'
+          })
+        }
+      })
     }
   }
 }

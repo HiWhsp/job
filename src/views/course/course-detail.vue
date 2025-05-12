@@ -25,7 +25,7 @@
                 <img v-if="detail.is_collect === 1" alt="" src="@/static/common/share1.png">
                 <span>收藏</span>
               </div>
-              <el-button type="primary" @click="goUrl({url: '/pdf-viewer', query: {id: id}})">开始学习
+              <el-button type="primary" @click="startLearn">开始学习
               </el-button>
             </div>
           </div>
@@ -49,7 +49,7 @@
                   <img v-if="detail.is_collect === 1" alt="" src="@/static/common/share1.png">
                   <span>收藏</span>
                 </div>
-                <el-button type="primary" @click="goUrl({url: '/video-viewer', query: {id: id}})">开始学习
+                <el-button type="primary" @click="startLearn">开始学习
                 </el-button>
               </div>
             </div>
@@ -285,6 +285,20 @@ export default {
         if (res.code == 200) {
           this.$message.success(res.msg);
           this.detail.is_collect = this.detail.is_collect === 0 ? 1 : 0;
+        }
+      })
+    },
+    // 开始学习
+    startLearn() {
+      this.$api({
+        url: 'addMyCourses',
+        method: 'post',
+        data: {
+          course_id: this.id
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.$message.success('已加入学习队列');
         }
       })
     },

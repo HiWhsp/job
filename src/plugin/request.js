@@ -35,7 +35,7 @@ axios.interceptors.response.use(
             return Promise.reject(res);
         } else if (code === 401) {
             alertErr(res.msg);
-            router.push("/login");
+            // router.push("/login");
             return Promise.reject(res);
         } else {
             return res;

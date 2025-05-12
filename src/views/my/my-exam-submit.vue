@@ -14,8 +14,8 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: 'startQuestion',
-        method: 'post',
+        url: 'myQuestion',
+        method: 'get',
         data: {
           question_id: this.id
         }
