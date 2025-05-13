@@ -3,14 +3,23 @@ export default {
   name: "my-exam-submit",
   data() {
     return {
-      id: '',
-      show_modal: false,
-      detail: {},
-      question: {
+      id: '', // 考试id
+      show_modal: false, // 交卷弹窗
+      modalType: null, // 交卷弹窗类型 1:没做完 2:考试时间到 3:没及格 4:及格
+      detail: {}, // 考试详情
+      question: { // 试题
         judge_content: {},
         multiple_content: {},
         single_content: {}
-      }
+      },
+      timeObj: { // 倒计时
+        targetTimestamp: 0, // 目标时间戳
+        hours: '00',
+        minutes: '00',
+        seconds: '00'
+      },
+      timer: null,
+      overTime: 3,
     }
   },
   mounted() {
@@ -29,6 +38,9 @@ export default {
         if (res.code == 200) {
           this.detail = res.data;
           this.question = res.data.question;
+          this.timeObj.targetTimestamp = res.data.test_end_time; // 考试结束时间
+          // 判断是否已停止考试
+          this.updateCountdown();
           // 判断题
           this.question.judge_content.list.forEach((item, index) => {
             item.checked = false;
@@ -47,6 +59,39 @@ export default {
         }
       })
     },
+    // 交卷
+    overSubmit() {
+      // 未做完
+      if (this.detail.has_no_answered_num !== 0) {
+        this.modalType = 1;
+        this.show_modal = true
+      } else {
+        this.$alert('确定交卷吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          callback: action => {
+            if (action === 'confirm') {
+              this.endQuestion();
+            }
+          }
+        })
+      }
+    },
+    endQuestion() {
+      this.$api({
+        url: 'endQuestion',
+        method: 'post',
+        data: {
+          question_id: this.id,
+          my_total_point: this.detail.my_total_point
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.detail.my_total_point >= 60 ? this.modalType = 4 : this.modalType = 3
+          this.show_modal = true
+        }
+      })
+    },
     /**
      * 选项点击
      * @param item 点击的选项
@@ -54,32 +99,81 @@ export default {
      * @param type 题型 single(单选)/multiple(多选)/judge(判断)
      */
     topicClick(item, question, type) {
+      const str = item;
       if (type === 'single') {
-        question.checked = !question.checked;
-        question.selectText = item;
+        question.selectText === str ? question.selectText = '' : question.selectText = item;
+        this.addMyQuestionBank(question)
       } else if (type === 'multiple') {
-        const textList = question.selectText.split(',');
+        const textList = question.selectText ? question.selectText.split(',') : [];
         textList.includes(item) ? textList.splice(textList.indexOf(item), 1) : textList.push(item);
         question.selectText = textList.join(',');
-        question.checked = question.selectText !== '';
       } else if (type === 'judge') {
-        question.checked = !question.checked;
-        question.selectText = item;
+        question.selectText === str ? question.selectText = '' : question.selectText = item;
+        this.addMyQuestionBank(question)
       }
-      this.selectTopicNum();
+      question.checked = question.selectText !== '';
       this.$forceUpdate()
+    },
+    // 提交试题答案
+    addMyQuestionBank(question) {
+      this.$api({
+        url: 'addMyQuestionBank',
+        method: 'post',
+        data: {
+          question_id: this.id,
+          question_bank_id: question.id,
+          my_answer: question.selectText
+        }
+      }).then(res => {
+        this.$api({
+          url: 'myQuestion',
+          method: 'get',
+          data: {
+            question_id: this.id
+          }
+        }).then(res => {
+          if (res.code == 200) {
+            this.detail = res.data;
+          }
+        })
+      })
     },
     // 选项标识
     topicList(item) {
       return 'ABCD'.substring(item, item + 1)
     },
-    // 已选题数
-    selectTopicNum() {
-      let num = 0;
-      num += this.question.single_content.list.filter(item => item.checked).length;
-      num += this.question.multiple_content.list.filter(item => item.checked).length;
-      num += this.question.judge_content.list.filter(item => item.checked).length;
-      return num
+    // 倒计时
+    updateCountdown() {
+      const now = Math.floor(Date.now() / 1000);
+      let timeDiff = this.timeObj.targetTimestamp - now;
+
+      if (timeDiff <= 0) {
+        this.timeObj.hours = '00';
+        this.timeObj.minutes = '00';
+        this.timeObj.seconds = '00';
+        clearInterval(this.timer);
+
+        this.modalType = 2;
+        this.show_modal = true
+        this.timer = setInterval(() => {
+          this.overTime--;
+          if (this.overTime == 0) {
+            clearInterval(this.timer);
+            this.endQuestion();
+            // this.$router.push('/my-exam');
+          }
+        }, 1000)
+
+        return;
+      } else {
+        this.timer = setInterval(this.updateCountdown, 60000);
+      }
+
+      timeDiff -= this.days * 24 * 60 * 60;
+      this.timeObj.hours = Math.floor(timeDiff / (60 * 60));
+      timeDiff -= this.timeObj.hours * 60 * 60;
+      this.timeObj.minutes = Math.floor(timeDiff / 60);
+      this.timeObj.seconds = timeDiff % 60;
     }
   }
 }
@@ -91,18 +185,18 @@ export default {
       <div class="profile">
         <div class="title">考生信息</div>
         <div class="profile-info">
-          <img alt="" src="@/static/prod/avatar.png">
+          <img :src="baseInfo.image" alt="">
           <div class="info">
-            <div class="name">张洪玲</div>
+            <div class="name">{{ baseInfo.name }}</div>
             <div class="level">
               <p><span>角</span><span>色</span></p>
               <span>:</span>
-              <p>教师</p>
+              <p>{{ baseInfo.identity_name }}</p>
             </div>
             <div class="phone">
               <p>手机号</p>
               <span>:</span>
-              <p>15810593012</p>
+              <p>{{ baseInfo.mobile }}</p>
             </div>
           </div>
         </div>
@@ -117,8 +211,8 @@ export default {
                 单选题（共{{ question.single_content.total_num }}题，总分{{ question.single_content.total_point }}分）
               </div>
               <div class="question-content">
-                <div class="question-content-item" :class="{'correct': item.checked, 'unknown': !item.checked}"
-                     v-for="(item, index) in question.single_content.list" :key="index">
+                <div v-for="(item, index) in question.single_content.list" :key="index"
+                     :class="{'correct': item.checked, 'unknown': !item.checked}" class="question-content-item">
                   {{ index + 1 }}
                 </div>
               </div>
@@ -128,8 +222,8 @@ export default {
                 判断题（共{{ question.judge_content.total_num }}题，总分{{ question.judge_content.total_point }}分）
               </div>
               <div class="question-content">
-                <div class="question-content-item" :class="{'correct': item.checked, 'unknown': !item.checked}"
-                     v-for="(item, index) in question.judge_content.list" :key="index">
+                <div v-for="(item, index) in question.judge_content.list" :key="index"
+                     :class="{'correct': item.checked, 'unknown': !item.checked}" class="question-content-item">
                   {{ index + 1 }}
                 </div>
               </div>
@@ -139,8 +233,8 @@ export default {
                 多选题（共{{ question.multiple_content.total_num }}题，总分{{ question.multiple_content.total_point }}分）
               </div>
               <div class="question-content">
-                <div class="question-content-item" :class="{'correct': item.checked, 'unknown': !item.checked}"
-                     v-for="(item, index) in question.multiple_content.list" :key="index">
+                <div v-for="(item, index) in question.multiple_content.list" :key="index"
+                     :class="{'correct': item.checked, 'unknown': !item.checked}" class="question-content-item">
                   {{ index + 1 }}
                 </div>
               </div>
@@ -149,8 +243,8 @@ export default {
           <div class="all-score">
             总分：{{ question.total_point }}分
             <div class="idea-list">
-              <div class="idea1">已答（<span>{{ selectTopicNum() }}</span>）</div>
-              <div class="idea2">未答（<span>{{ detail.total_num - selectTopicNum() }}</span>）</div>
+              <div class="idea1">已答（<span>{{ detail.has_answered_num }}</span>）</div>
+              <div class="idea2">未答（<span>{{ detail.has_no_answered_num }}</span>）</div>
             </div>
           </div>
         </div>
@@ -158,9 +252,9 @@ export default {
     </div>
     <div class="content">
       <div class="title">
-        <div class="date">剩余时间：2:00:00</div>
+        <div class="date">剩余时间：{{ timeObj.hours }}:{{ timeObj.minutes }}:{{ timeObj.seconds }}</div>
         <div class="name">{{ question.title }}</div>
-        <div class="back-btn">交卷</div>
+        <div class="back-btn" @click="overSubmit">交卷</div>
       </div>
       <!--          题型-->
       <div class="question-list">
@@ -170,14 +264,14 @@ export default {
             单选题（共{{ question.single_content.total_num }}题，总分{{ question.single_content.total_point }}分）
           </div>
           <div class="question-content">
-            <div class="question-content-item" v-for="(item, index) in question.single_content.list" :key="index">
+            <div v-for="(item, index) in question.single_content.list" :key="index" class="question-content-item">
               <div class="topic">
                 <div class="type">单选题</div>
                 <p>{{ index + 1 }}.{{ item.title }}</p>
               </div>
               <div class="topic-list">
-                <div class="topic-item" v-for="(it, i) in item.content" :key="i"
-                     @click="topicClick(it, item, 'single')" :class="{'selected': item.selectText === it}">
+                <div v-for="(it, i) in item.content" :key="i" :class="{'selected': item.selectText === it}"
+                     class="topic-item" @click="topicClick(it, item, 'single')">
                   <div class="select">{{ topicList(i) }}</div>
                   <p>{{ it }}</p>
                 </div>
@@ -191,14 +285,14 @@ export default {
             判断题（共{{ question.judge_content.total_num }}题，总分{{ question.judge_content.total_point }}分）
           </div>
           <div class="question-content">
-            <div class="question-content-item" v-for="(item, index) in question.judge_content.list" :key="index">
+            <div v-for="(item, index) in question.judge_content.list" :key="index" class="question-content-item">
               <div class="topic">
                 <div class="type">判断题</div>
                 <p>{{ index + 1 }}.{{ item.title }}</p>
               </div>
               <div class="topic-list">
-                <div class="topic-item" v-for="(it, i) in item.content" :key="i"
-                     @click="topicClick(it, item, 'judge')" :class="{'selected': item.selectText === it}">
+                <div v-for="(it, i) in item.content" :key="i" :class="{'selected': item.selectText === it}"
+                     class="topic-item" @click="topicClick(it, item, 'judge')">
                   <div class="select">{{ topicList(i) }}</div>
                   <p>{{ it }}</p>
                 </div>
@@ -212,15 +306,16 @@ export default {
             多选题（共{{ question.multiple_content.total_num }}题，总分{{ question.multiple_content.total_point }}分）
           </div>
           <div class="question-content">
-            <div class="question-content-item" v-for="(item, index) in question.multiple_content.list" :key="index">
+            <div v-for="(item, index) in question.multiple_content.list" :key="index" class="question-content-item">
               <div class="topic">
                 <div class="type">多选题</div>
                 <p>{{ index + 1 }}.{{ item.title }}</p>
+                <div v-if="item.selectText" class="add-submit" @click="addMyQuestionBank(item)">确定</div>
               </div>
               <div class="topic-list">
-                <div class="topic-item" v-for="(it, i) in item.content" :key="i"
-                     @click="topicClick(it, item, 'multiple')" :class="{'selected': item.selectText.includes(it)}">
-                  <div class="select" :class="{'selected': item % 2}">{{ topicList(i) }}</div>
+                <div v-for="(it, i) in item.content" :key="i" :class="{'selected': item.selectText.includes(it)}"
+                     class="topic-item" @click="topicClick(it, item, 'multiple')">
+                  <div :class="{'selected': item % 2}" class="select">{{ topicList(i) }}</div>
                   <p>{{ it }}</p>
                 </div>
               </div>
@@ -230,43 +325,52 @@ export default {
       </div>
     </div>
 
-    <!--    <el-dialog title="提示" width="580px" align="center" :close-on-click-modal="false" :visible.sync="show_modal">-->
-    <!--      <div class="modal-inner">-->
-    <!--        <div class="text-box">-->
-    <!--          还有<span>39</span>题未做，确定交卷吗？-->
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--      <div slot="footer" class="dialog-footer">-->
-    <!--        <button class="btn-ripple btn-1" @click="show_modal = false">继续答题</button>-->
-    <!--        <button class="btn-ripple btn-2" @click="show_modal = false">确认交卷</button>-->
-    <!--      </div>-->
-    <!--    </el-dialog>-->
-
-    <!--    <el-dialog title="提示" width="580px" align="center" :show-close="false" :close-on-click-modal="false" :visible.sync="show_modal">-->
-    <!--      <div class="modal-inner">-->
-    <!--        <div class="text-box">-->
-    <!--          考试时间已结束，系统将自动交卷-->
-    <!--        </div>-->
-    <!--        <div class="date">3秒后跳转...</div>-->
-    <!--      </div>-->
-    <!--    </el-dialog>-->
-
-    <!--    <el-dialog title="提示" width="580px" align="center" :show-close="false" :close-on-click-modal="false"-->
-    <!--               :visible.sync="show_modal">-->
-    <!--      <div class="modal-inner">-->
-    <!--        <div class="text-box">-->
-    <!--          {{ 1 === 1 ? '很遗憾，考试不及格！您的分数为：' : '恭喜您，考试及格！您的分数为：' }}-->
-    <!--        </div>-->
-    <!--        <div class="score" :class="{'wrong': true}">100分</div>-->
-    <!--      </div>-->
-    <!--      <div slot="footer" class="dialog-footer">-->
-    <!--        <button class="btn-ripple btn-1" @click="show_modal = false">查看答题情况</button>-->
-    <!--      </div>-->
-    <!--    </el-dialog>-->
+    <el-dialog :close-on-click-modal="false" :show-close="false" :visible.sync="show_modal" center="center" title="提示"
+               width="580px">
+      <template v-if="modalType === 1">
+        <div class="modal-inner">
+          <div class="text-box">
+            还有<span>{{ detail.has_no_answered_num }}</span>题未做，确定交卷吗？
+          </div>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <button class="btn-ripple btn-1" @click="show_modal = false">继续答题</button>
+          <button class="btn-ripple btn-2" @click="show_modal = false">确认交卷</button>
+        </div>
+      </template>
+      <template v-else-if="modalType === 2">
+        <div class="modal-inner">
+          <div class="text-box">
+            考试时间已结束，系统将自动交卷
+          </div>
+          <div class="date">{{ overTime }}秒后跳转...</div>
+        </div>
+      </template>
+      <template v-else-if="modalType === 3">
+        <div class="modal-inner">
+          <div class="text-box">很遗憾，考试不及格！您的分数为：</div>
+          <div :class="{'wrong': true}" class="score">{{ detail.my_total_point }}分</div>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <button class="btn-ripple btn-1" @click="$router.push('/my-exam-detail?id=' + id)">查看答题情况
+          </button>
+        </div>
+      </template>
+      <template v-else-if="modalType === 4">
+        <div class="modal-inner">
+          <div class="text-box">恭喜您，考试及格！您的分数为：</div>
+          <div class="score">{{ detail.my_total_point }}分</div>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <button class="btn-ripple btn-1" @click="$router.push('/my-exam-detail?id=' + id)">查看答题情况
+          </button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .container {
   padding: 25px 37px 0;
   background: #F5F6F6;
@@ -574,6 +678,18 @@ export default {
               font-size: 16px;
               color: #23324F;
             }
+
+            .add-submit {
+              cursor: pointer;
+              width: 50px;
+              height: 26px;
+              line-height: 26px;
+              background: linear-gradient(138deg, #175E3D 0%, #257C54 100%);
+              border-radius: 155px;
+              text-align: center;
+              color: #fff;
+              font-size: 14px;
+            }
           }
 
           .topic-list {
@@ -669,7 +785,6 @@ export default {
     font-weight: 400;
     font-size: 18px;
     color: #FFFFFF;
-    margin-right: 30px;
   }
 
   .btn-2 {
@@ -678,6 +793,7 @@ export default {
     font-size: 18px;
     color: @theme;
     background-color: #E6F1EC;
+    margin-left: 30px;
   }
 }
 </style>

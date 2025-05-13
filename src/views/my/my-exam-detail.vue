@@ -2,17 +2,73 @@
 export default {
   name: "my-exam-detail",
   data() {
-    return {}
+    return {
+      id: '', // 考试id
+      detail: {}, // 考试详情
+      question: { // 试题
+        judge_content: {},
+        multiple_content: {},
+        single_content: {}
+      },
+    }
+  },
+  mounted() {
+    this.id = this.$route.query.id;
+    this.setView();
   },
   methods: {
+    setView() {
+      this.$api({
+        url: 'myQuestion',
+        method: 'get',
+        data: {
+          question_id: this.id
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.detail = res.data;
+          this.question = res.data.question;
+          // 判断题
+          this.question.judge_content.list.forEach((item, index) => {
+            item.selectText = item.correct_answer === item.my_answer ? '1' : ['', undefined, null].includes(item.my_answer) ? 3 : '2';
+          })
+          // 多选题
+          this.question.multiple_content.list.forEach((item, index) => {
+            item.selectText = this.multipleError(item);
+          })
+          // 单选题
+          this.question.single_content.list.forEach((item, index) => {
+            item.selectText = item.correct_answer === item.my_answer ? '1' : ['', undefined, null].includes(item.my_answer) ? 3 : '2';
+          })
+        }
+      })
+    },
     setActive(item) {
-      if (item === 1) {
+      if (item.selectText === 1) {
         return 'correct'
-      } else if (item === 2) {
+      } else if (item.selectText === 2) {
         return 'wrong'
       } else {
         return 'unknown'
       }
+    },
+    multipleError(item) {
+      let index = 0;
+      // 没选
+      if (['', null, undefined].includes(item.my_answer)) {
+        return 3
+      }
+      // 选错
+      if (item.my_answer.length !== item.correct_answer.length) {
+        return 2
+      }
+      // 选错选项
+      item.my_answer.split(',').forEach((it, i) => {
+        if (!item.correct_answer.includes(it)) {
+          index++
+        }
+      })
+      return index === 0 ? 1 : 2;
     },
     topicList(item) {
       return 'ABCD'.substring(item, item + 1)
@@ -27,18 +83,18 @@ export default {
       <div class="profile">
         <div class="title">考生信息</div>
         <div class="profile-info">
-          <img alt="" src="@/static/prod/avatar.png">
+          <img :src="baseInfo.image" alt="">
           <div class="info">
-            <div class="name">张洪玲</div>
+            <div class="name">{{ baseInfo.name }}</div>
             <div class="level">
               <p><span>角</span><span>色</span></p>
               <span>:</span>
-              <p>教师</p>
+              <p>{{ baseInfo.identity_name }}</p>
             </div>
             <div class="phone">
               <p>手机号</p>
               <span>:</span>
-              <p>15810593012</p>
+              <p>{{ baseInfo.mobile }}</p>
             </div>
           </div>
         </div>
@@ -56,38 +112,41 @@ export default {
           <div class="question-list">
             <div class="question-item">
               <div class="question-title">
-                单选题（共10题，总分20分）
+                单选题（共{{ question.single_content.total_num }}题，总分{{ question.single_content.total_point }}分）
               </div>
               <div class="question-content">
-                <div class="question-content-item" :class="setActive(item)" v-for="item in 10" :key="item">
-                  {{ item }}
+                <div v-for="(item, index) in question.single_content.list" :key="index"
+                     :class="setActive(item)" class="question-content-item">
+                  {{ index + 1 }}
                 </div>
               </div>
             </div>
             <div class="question-item">
               <div class="question-title">
-                判断题（共10题，总分20分）
+                判断题（共{{ question.judge_content.total_num }}题，总分{{ question.judge_content.total_point }}分）
               </div>
               <div class="question-content">
-                <div class="question-content-item" :class="setActive(item)" v-for="item in 10" :key="item">
-                  {{ item }}
+                <div v-for="(item, index) in question.judge_content.list" :key="index"
+                     :class="setActive(item)" class="question-content-item">
+                  {{ index + 1 }}
                 </div>
               </div>
             </div>
             <div class="question-item">
               <div class="question-title">
-                多选题（共10题，总分20分）
+                多选题（共{{ question.multiple_content.total_num }}题，总分{{ question.multiple_content.total_point }}分）
               </div>
               <div class="question-content">
-                <div class="question-content-item" :class="setActive(item)" v-for="item in 30" :key="item">
-                  {{ item }}
+                <div v-for="(item, index) in question.multiple_content.list" :key="index"
+                     :class="setActive(item)" class="question-content-item">
+                  {{ index + 1 }}
                 </div>
               </div>
             </div>
           </div>
 
           <div class="all-score">
-            得分：96分
+            得分：{{ detail.my_total_point }}分
           </div>
         </div>
       </div>
@@ -95,40 +154,121 @@ export default {
     <div class="content">
       <div class="title">
         <div class="date">总用时：2:00:00</div>
-        <div class="name">考试名称考试名称考试名称</div>
-        <div class="back-btn">返回</div>
+        <div class="name">{{ question.title }}</div>
+        <div class="back-btn" @click="$router.push('/my-exam')">返回</div>
       </div>
       <!--          题型-->
       <div class="question-list">
+        <!--        单选-->
         <div class="question-item">
           <div class="question-title">
-            单选题（共10题，总分20分）
+            单选题（共{{ question.single_content.total_num }}题，总分{{ question.single_content.total_point }}分）
           </div>
           <div class="question-content">
-            <div class="question-content-item" v-for="item in 10" :key="item">
+            <div v-for="(item, index) in question.single_content.list" :key="index" class="question-content-item">
               <div class="topic">
                 <div class="type">单选题</div>
-                <p>1.坚持依宪治国、依宪执政，就包括（ ）。</p>
+                <p>{{ index + 1 }}.{{ item.title }}</p>
               </div>
               <div class="topic-list">
-                <div class="topic-item" v-for="item in 4" :key="item">
-                  <div class="select" :class="{'selected': item % 2}">{{ topicList(item - 1) }}</div>
-                  <p>坚持宪法确定的中国共产党领导地位不动摇</p>
+                <div v-for="(it, i) in item.content" :key="i" :class="{'selected': item.my_answer === it}"
+                     class="topic-item">
+                  <div class="select">{{ topicList(i) }}</div>
+                  <p>{{ it }}</p>
                 </div>
               </div>
               <div class="Answer">
-                <p class="me">正确答案：A</p>
-                <p class="your" :class="{'error': item % 2}">您的答案：A</p>
+                <p class="me">正确答案：{{ item.correct_answer }}</p>
+                <p :class="{'error': item.selectText != 1}" class="your">您的答案：{{
+                    item.my_answer || '空'
+                  }}</p>
               </div>
             </div>
           </div>
         </div>
+        <!--        判断-->
+        <div class="question-item">
+          <div class="question-title">
+            判断题（共{{ question.judge_content.total_num }}题，总分{{ question.judge_content.total_point }}分）
+          </div>
+          <div class="question-content">
+            <div v-for="(item, index) in question.judge_content.list" :key="index" class="question-content-item">
+              <div class="topic">
+                <div class="type">判断题</div>
+                <p>{{ index + 1 }}.{{ item.title }}</p>
+              </div>
+              <div class="topic-list">
+                <div v-for="(it, i) in item.content" :key="i" :class="{'selected': item.my_answer === it}"
+                     class="topic-item">
+                  <div class="select">{{ topicList(i) }}</div>
+                  <p>{{ it }}</p>
+                </div>
+              </div>
+              <div class="Answer">
+                <p class="me">正确答案：{{ item.correct_answer }}</p>
+                <p :class="{'error': item.selectText != 1}" class="your">您的答案：{{
+                    item.my_answer || '空'
+                  }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--        多选-->
+        <div class="question-item">
+          <div class="question-title">
+            多选题（共{{ question.multiple_content.total_num }}题，总分{{ question.multiple_content.total_point }}分）
+          </div>
+          <div class="question-content">
+            <div v-for="(item, index) in question.multiple_content.list" :key="index" class="question-content-item">
+              <div class="topic">
+                <div class="type">多选题</div>
+                <p>{{ index + 1 }}.{{ item.title }}</p>
+              </div>
+              <div class="topic-list">
+                <div v-for="(it, i) in item.content" :key="i" :class="{'selected': item.my_answer.includes(it)}"
+                     class="topic-item">
+                  <div class="select">{{ topicList(i) }}</div>
+                  <p>{{ it }}</p>
+                </div>
+              </div>
+              <div class="Answer">
+                <p class="me">正确答案：{{ item.correct_answer }}</p>
+                <p :class="{'error': item.selectText != 1}" class="your">您的答案：{{
+                    item.my_answer || '空'
+                  }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--        <div class="question-item">-->
+        <!--          <div class="question-title">-->
+        <!--            单选题（共10题，总分20分）-->
+        <!--          </div>-->
+        <!--          <div class="question-content">-->
+        <!--            <div class="question-content-item" v-for="item in 10" :key="item">-->
+        <!--              <div class="topic">-->
+        <!--                <div class="type">单选题</div>-->
+        <!--                <p>1.坚持依宪治国、依宪执政，就包括（ ）。</p>-->
+        <!--              </div>-->
+        <!--              <div class="topic-list">-->
+        <!--                <div class="topic-item" v-for="item in 4" :key="item">-->
+        <!--                  <div class="select" :class="{'selected': item % 2}">{{ topicList(item - 1) }}</div>-->
+        <!--                  <p>坚持宪法确定的中国共产党领导地位不动摇</p>-->
+        <!--                </div>-->
+        <!--              </div>-->
+        <!--              <div class="Answer">-->
+        <!--                <p class="me">正确答案：A</p>-->
+        <!--                <p class="your" :class="{'error': item % 2}">您的答案：A</p>-->
+        <!--              </div>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
       </div>
     </div>
   </div>
 </template>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .container {
   padding: 25px 37px 0;
   background: #F5F6F6;
@@ -409,6 +549,12 @@ export default {
           border-bottom: 1px solid #DEDEDE;
           margin-bottom: 20px;
 
+          &:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+          }
+
           .topic {
             display: flex;
             align-items: center;
@@ -454,9 +600,15 @@ export default {
                 margin-right: 5px;
               }
 
-              .selected {
-                color: @theme;
-                border-color: @theme;
+              &.selected {
+                .select {
+                  color: @theme;
+                  border-color: @theme;
+                }
+
+                p {
+                  color: @theme;
+                }
               }
 
               p {

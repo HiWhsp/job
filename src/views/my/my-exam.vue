@@ -21,10 +21,10 @@
             <span>考试次数：</span><span>{{ item.question.can_test_num }}次</span>
           </div>
           <div class="item">
-            <span>已考次数：</span><span>{{ item.question.has_test_num }}次</span>
+            <span>已考次数：</span><span>{{ item.has_test_num }}次</span>
           </div>
           <div class="item">
-            <span>剩余次数：</span><span>{{ item.question.limit_test_num }}次</span>
+            <span>剩余次数：</span><span>{{ item.question.can_test_num - item.has_test_num }}次</span>
           </div>
           <div class="item">
             <span>考试总分：</span><span>{{ item.question.total_point }}分</span>
