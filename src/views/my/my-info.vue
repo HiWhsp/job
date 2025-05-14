@@ -39,11 +39,10 @@
           <div class="item">
             <span class="text">角色：</span>
             <span class="info">
-<!--              <el-input clearable type="text" v-model="form.identity_name"/>-->
-              <el-select v-model="form.identity">
-                <el-option label="老师" :value="1"></el-option>
-<!--                <el-option label="学生" :value="2"></el-option>-->
-              </el-select>
+              <el-input clearable type="text" v-model="form.identity_name" disabled/>
+<!--              <el-select v-model="form.identity">-->
+<!--                <el-option label="老师" :value="1"></el-option>-->
+<!--              </el-select>-->
             </span>
             <span class="action">
             </span>
@@ -134,6 +133,7 @@ export default {
         this.loading = false;
         if (code == 200) {
           this.setView();
+          alertSucc('保存成功');
         }
       }).catch((err) => {
         this.loading = false;

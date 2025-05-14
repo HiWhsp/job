@@ -30,7 +30,7 @@ export default {
           this.question = res.data.question;
           // 判断题
           this.question.judge_content.list.forEach((item, index) => {
-            item.selectText = item.correct_answer === item.my_answer ? '1' : ['', undefined, null].includes(item.my_answer) ? 3 : '2';
+            item.selectText = item.correct_answer === item.my_answer ? 1 : ['', undefined, null].includes(item.my_answer) ? 3 : 2;
           })
           // 多选题
           this.question.multiple_content.list.forEach((item, index) => {
@@ -38,12 +38,13 @@ export default {
           })
           // 单选题
           this.question.single_content.list.forEach((item, index) => {
-            item.selectText = item.correct_answer === item.my_answer ? '1' : ['', undefined, null].includes(item.my_answer) ? 3 : '2';
+            item.selectText = item.correct_answer === item.my_answer ? 1 : ['', undefined, null].includes(item.my_answer) ? 3 : 2;
           })
         }
       })
     },
     setActive(item) {
+      console.log(item)
       if (item.selectText === 1) {
         return 'correct'
       } else if (item.selectText === 2) {

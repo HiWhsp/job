@@ -5,34 +5,36 @@
     </div>
     <div class="page-ctx">
       <template v-for="(item, index) in product_list">
-        <div class="item" v-if="item.course_type == 1">
+        <div v-if="item.course_type == 1" class="item">
           <div class="left">
             <div class="tit">
               <img alt="" src="@/static/home/file3.png">
               <span>{{ item.title }}</span>
             </div>
             <div class="progress">
-              <el-progress :format="format(item.learn_time)" :percentage="item.learn_time"></el-progress>
+              <el-progress v-if="item.course_schedule.split('%')[0]" :format="format(item.course_schedule.split('%')[0])"
+                           :percentage="+item.course_schedule.split('%')[0]"></el-progress>
             </div>
             <div class="desc">{{ item.description }}</div>
           </div>
           <div class="right" @click="toProduct(item)">继续学习</div>
         </div>
 
-        <div class="item2" v-if="item.course_type == 2">
-          <img alt="" :src="item.thumb_url">
+        <div v-if="item.course_type == 2" class="item2">
+          <img :src="item.thumb_url" alt="">
           <div class="left">
             <div class="tit">
               <span>{{ item.title }}</span>
             </div>
             <div class="progress">
-              <el-progress :format="format(item.learn_time)" :percentage="item.learn_time"></el-progress>
+              <el-progress :format="format(item.course_schedule.split('%')[0])"
+                           :percentage="+item.course_schedule.split('%')[0]"></el-progress>
             </div>
           </div>
           <div class="right" @click="toProduct(item)">继续学习</div>
         </div>
       </template>
-      <el-empty v-if="!count" description="暂无数据..." ></el-empty>
+      <el-empty v-if="!count" description="暂无数据..."></el-empty>
     </div>
   </div>
 </template>
@@ -73,8 +75,8 @@ export default {
       });
     },
     format(percentage) {
-      return `已学习${percentage}%`;
-    },
+      return () => `已学习${percentage}%`;
+    }
   },
 };
 </script>
@@ -174,6 +176,7 @@ export default {
       }
 
       .right {
+        margin-left: 10px;
         width: 142px;
         height: 40px;
         line-height: 40px;
@@ -254,6 +257,7 @@ export default {
       }
 
       .right {
+        margin-left: 10px;
         width: 142px;
         height: 40px;
         line-height: 40px;

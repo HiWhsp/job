@@ -14,6 +14,7 @@ export default {
       },
       timeObj: { // 倒计时
         targetTimestamp: 0, // 目标时间戳
+        days: '00',
         hours: '00',
         minutes: '00',
         seconds: '00'
@@ -21,6 +22,9 @@ export default {
       timer: null,
       overTime: 3,
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.timer);
   },
   mounted() {
     this.id = this.$route.query.id;
@@ -61,21 +65,34 @@ export default {
     },
     // 交卷
     overSubmit() {
-      // 未做完
-      if (this.detail.has_no_answered_num !== 0) {
-        this.modalType = 1;
-        this.show_modal = true
-      } else {
-        this.$alert('确定交卷吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          callback: action => {
-            if (action === 'confirm') {
-              this.endQuestion();
-            }
+      this.$api({
+        url: 'myQuestion',
+        method: 'get',
+        data: {
+          question_id: this.id
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.detail = res.data;
+          this.question = res.data.question;
+
+          // 未做完
+          if (this.detail.has_no_answered_num !== 0) {
+            this.modalType = 1;
+            this.show_modal = true
+          } else {
+            this.$alert('确定交卷吗?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              callback: action => {
+                if (action === 'confirm') {
+                  this.endQuestion();
+                }
+              }
+            })
           }
-        })
-      }
+        }
+      })
     },
     endQuestion() {
       this.$api({
@@ -87,7 +104,7 @@ export default {
         }
       }).then(res => {
         if (res.code == 200) {
-          this.detail.my_total_point >= 60 ? this.modalType = 4 : this.modalType = 3
+          (this.detail.my_total_point / this.question.total_point) * 100 >= 60 ? this.modalType = 4 : this.modalType = 3
           this.show_modal = true
         }
       })
@@ -146,8 +163,8 @@ export default {
     updateCountdown() {
       const now = Math.floor(Date.now() / 1000);
       let timeDiff = this.timeObj.targetTimestamp - now;
-
       if (timeDiff <= 0) {
+        this.timeObj.days = '00';
         this.timeObj.hours = '00';
         this.timeObj.minutes = '00';
         this.timeObj.seconds = '00';
@@ -163,17 +180,20 @@ export default {
             // this.$router.push('/my-exam');
           }
         }, 1000)
-
         return;
       } else {
-        this.timer = setInterval(this.updateCountdown, 60000);
+        this.timer = setInterval(this.updateCountdown, 1000);
       }
 
-      timeDiff -= this.days * 24 * 60 * 60;
+      timeDiff -= this.timeObj.days * 24 * 60 * 60;
       this.timeObj.hours = Math.floor(timeDiff / (60 * 60));
       timeDiff -= this.timeObj.hours * 60 * 60;
       this.timeObj.minutes = Math.floor(timeDiff / 60);
       this.timeObj.seconds = timeDiff % 60;
+    },
+    formatNumber(num) {
+      // Pad with leading zero if number is less than 10
+      return num < 10 ? `0${num}` : num;
     }
   }
 }
@@ -252,7 +272,10 @@ export default {
     </div>
     <div class="content">
       <div class="title">
-        <div class="date">剩余时间：{{ timeObj.hours }}:{{ timeObj.minutes }}:{{ timeObj.seconds }}</div>
+        <div class="date">剩余时间：{{ formatNumber(timeObj.hours) }}:{{
+            formatNumber(timeObj.minutes)
+          }}:{{ formatNumber(timeObj.seconds) }}
+        </div>
         <div class="name">{{ question.title }}</div>
         <div class="back-btn" @click="overSubmit">交卷</div>
       </div>
@@ -313,7 +336,8 @@ export default {
                 <div v-if="item.selectText" class="add-submit" @click="addMyQuestionBank(item)">确定</div>
               </div>
               <div class="topic-list">
-                <div v-for="(it, i) in item.content" :key="i" :class="{'selected': item.selectText.includes(it)}"
+                <div v-for="(it, i) in item.content" :key="i"
+                     :class="{'selected': item.selectText ? item.selectText.includes(it) : ''}"
                      class="topic-item" @click="topicClick(it, item, 'multiple')">
                   <div :class="{'selected': item % 2}" class="select">{{ topicList(i) }}</div>
                   <p>{{ it }}</p>

@@ -78,7 +78,7 @@ function api(action, data, method, uploaderConfig) {
   }
 
   reqData = {
-    userId: localStorage.getItem("user_id") || "",
+    // userId: localStorage.getItem("user_id") || "",
     token: localStorage.getItem("token") || "",
     ...data,
   }; //请求数据

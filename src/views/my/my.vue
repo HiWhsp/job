@@ -5,18 +5,18 @@
         <div class="user-left">
           <div class="profile">
             <div class="profile-info">
-              <img alt="" src="@/static/prod/avatar.png">
+              <img alt="" :src="baseInfo.image">
               <div class="info">
-                <div class="name">张洪玲</div>
+                <div class="name">{{  baseInfo.name }}</div>
                 <div class="level">
                   <p><span>角</span><span>色</span></p>
                   <span>:</span>
-                  <p>教师</p>
+                  <p>{{  baseInfo.identity_name }}</p>
                 </div>
                 <div class="phone">
                   <p>手机号</p>
                   <span>:</span>
-                  <p>15810593012</p>
+                  <p>{{ baseInfo.mobile }}</p>
                 </div>
               </div>
             </div>

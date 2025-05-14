@@ -5,15 +5,30 @@ export default {
     return {
       id: '',
       index: '',
+      totalDuration: '', // 视频总时长
       detail: {},
       tableData: [],
       selectItem: {}
     }
   },
+  unmounted() {
+    // 保存播放时长
+    this.savePlayTime();
+    // 移除事件监听器
+    window.removeEventListener('beforeunload', this.savePlayTime);
+  },
+  beforeDestroy() {
+    // 保存播放时长
+    this.savePlayTime();
+    // 移除事件监听器
+    window.removeEventListener('beforeunload', this.savePlayTime);
+  },
   mounted() {
     this.id = this.$route.query.id;
     this.index = this.$route.query.index || 0
     this.setView();
+    // 监听页面退出
+    window.addEventListener('beforeunload', this.savePlayTime);
   },
   methods: {
     setView() {
@@ -32,6 +47,8 @@ export default {
           } else {
             this.selectItem = this.tableData[0];
           }
+          // 恢复播放进度
+          this.restorePlayTime();
         }
       })
     },
@@ -57,7 +74,50 @@ export default {
         path: item.url,
         query: item.query
       })
-    }
+    },
+    // 禁止加速播放
+    handleRateChange() {
+      const video = this.$refs.videoPlayer;
+      if (video.playbackRate !== 1) {
+        video.playbackRate = 1; // 强制设置为正常速度
+        this.$message.warning('禁止调整播放速度！');
+      }
+    },
+    // 保存播放时长
+    savePlayTime() {
+      console.log(123)
+      const video = this.$refs.videoPlayer;
+      const playTime = video.currentTime.toFixed(0);
+      const progress = this.totalDuration ? ((playTime / this.totalDuration) * 100).toFixed(0) : 0;
+      this.sendToBackend(playTime, progress);
+    },
+    async sendToBackend(playTime, progress) {
+      this.$api({
+        url: 'addMyCourseLearnRecord',
+        method: 'post',
+        data: {
+          course_id: this.id,
+          course_list_id: this.selectItem.id,
+          has_learn_time: playTime,
+          schedule: progress
+        }
+      })
+    },
+    // 恢复播放进度
+    restorePlayTime() {
+      const savedTime = this.selectItem.my_course_record.has_learn_time;
+      if (savedTime) {
+        this.$refs.videoPlayer.currentTime = parseFloat(savedTime);
+      }
+    },
+    // 获取视频总时长
+    handleLoadedMetadata() {
+      const video = this.$refs.videoPlayer;
+      this.totalDuration = video.duration || 0; // 获取总时长，单位为秒
+      if (isNaN(this.totalDuration) || !this.totalDuration) {
+        console.warn('无法获取视频时长，可能视频未正确加载');
+      }
+    },
   }
 }
 </script>
@@ -91,7 +151,9 @@ export default {
         <div class="text">第{{ index + 1 }}节: {{ selectItem.title }}</div>
       </div>
       <div class="content">
-        <video id="video-player" :src="selectItem.file_path_url" controls preload="auto"></video>
+        <video id="video-player" ref="videoPlayer" :src="selectItem.file_path_url" controls
+               @loadedmetadata="handleLoadedMetadata" @ratechange="handleRateChange"></video>
+        <div class="mock"></div>
       </div>
     </div>
     <div class="right">
@@ -265,6 +327,13 @@ export default {
     #video-player {
       width: 100%;
       height: 100%;
+    }
+
+    .mock {
+      width: 100%;
+      height: 30px;
+      bottom: 0;
+      position: absolute;
     }
   }
 }

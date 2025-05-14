@@ -11,7 +11,7 @@
           <span v-if="item.num" class="number">{{ item.num }}</span>
         </div>
       </div>
-      <div class="catalog-list" v-for="item in list" :key="item">
+      <div v-for="item in list" :key="item" class="catalog-list">
         <div class="title">
           <p>{{ item.question.title }}</p>
           <div class="start">{{ item.type_name }}</div>
@@ -35,8 +35,8 @@
         </div>
         <div class="action">
           <p>考试起止时间：{{ item.question.start_time }} 到 {{ item.question.end_time }}</p>
-          <!--          <el-button type="primary">开始考试</el-button>-->
-          <el-button type="primary" @click="$router.push('my-exam-detail?id=' + item.question_id)">查看答题情况
+          <el-button type="primary" v-if="item.has_test_num === 0" @click="$router.push('my-exam-start?id=' + item.question_id)">开始考试</el-button>
+          <el-button type="primary" v-if="item.has_test_num !== 0" @click="$router.push('my-exam-detail?id=' + item.question_id)">查看答题情况
           </el-button>
         </div>
         <div class="relevance">
@@ -109,7 +109,7 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .user-avatar {
   object-fit: cover;
 }

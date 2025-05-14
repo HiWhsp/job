@@ -93,12 +93,12 @@ export default {
           ...this.form,
         }
       }).then((res) => {
-        alert(res).then(() => {
-          this.loading = false;
-        });
+        this.loading = false;
         if (res.code == 200) {
           this.do_clear()
         }
+      }).catch(()=>{
+        this.loading = false;
       });
     },
 

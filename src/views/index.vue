@@ -18,7 +18,7 @@
         <img alt="" src="@/static/home/card-img.png">
       </div>
       <div class="content">
-        <div v-for="(item, index) in recent_list" :key="index" class="item" @click="toProduct(item)">
+        <div v-for="(item, index) in recent_list" :key="index" class="item">
           <div class="left">
             <div class="tit">
               <img v-if="item.course_info.course_type == 1" alt="" src="@/static/home/file3.png">
@@ -30,7 +30,7 @@
             </div>
             <div class="desc">{{ item.course_info.description }}</div>
           </div>
-          <div class="right">继续学习</div>
+          <div class="right" @click="toProduct(item)">继续学习</div>
         </div>
         <el-empty v-if="!recent_list.length" description="暂无数据..."></el-empty>
       </div>
@@ -50,10 +50,10 @@
             </div>
             <div class="text">{{ pdf_list[0].title }}</div>
             <div class="desc">{{ pdf_list[0].description }}</div>
-            <div class="btn">立即学习</div>
+            <div class="btn" @click="toProduct(pdf_list[0])">立即学习</div>
           </div>
           <div class="right">
-            <div class="li-item" v-for="(item, index) in pdf_list" :key="index">
+            <div class="li-item" v-for="(item, index) in pdf_list" :key="index" @click="toProduct(item)">
               <img alt="" :src="item.thumb_url">
               <div class="info">
                 <p class="text">{{ item.title }}</p>
@@ -74,7 +74,7 @@
       </div>
       <div class="content">
         <div class="item3" v-if="video_list.length">
-          <div class="left">
+          <div class="left pointer" @click="toProduct(video_list[0])">
             <img alt="" :src="video_list[0].thumb_url">
             <div class="info">
               <div class="tit">
@@ -84,7 +84,7 @@
             </div>
           </div>
           <div class="right">
-            <div class="li-item" v-for="(item, index) in video_list" :key="index">
+            <div class="li-item pointer" v-for="(item, index) in video_list" :key="index" @click="toProduct(item)">
               <div class="info">
                 <p class="text">{{ item.title }}</p>
                 <p class="desc ellipsis-1">{{ item.description }}</p>
@@ -161,10 +161,12 @@ export default {
     format(percentage) {
       return `已学习${percentage}%`;
     },
-    // 跳转商品
     toProduct(item) {
-      // this.$router.push(`/productCategories?ids=${item.user_id}&type_id=${this.selectedCategory.id}`);
-    }
+      const id = item.course_id || item.id
+      this.$router.push({
+        path: '/course-detail?id=' + id
+      });
+    },
   },
 }
 
