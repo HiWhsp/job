@@ -19,6 +19,7 @@ export default {
       imgCode: "",
     };
   },
+
   mounted() {
     // 绘制图片验证码
     // this.draw();

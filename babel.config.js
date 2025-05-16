@@ -8,8 +8,11 @@ module.exports = {
     '@vue/cli-plugin-babel/preset'
   ],
   plugins: [
-    // 发布产品时候的插件数组
     ...prodPlugins,
- 
+    // ['import', {
+    //   libraryName: 'vant',
+    //   libraryDirectory: 'es',
+    //   style: true
+    // }, 'vant']
   ]
 }
