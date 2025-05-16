@@ -1,0 +1,232 @@
+.view-wrap {
+		background: #fff;
+		padding: 20px;
+		border-radius: 6px;
+	}
+
+	.actions-view, .control-view {
+		.control-box {
+			flex-wrap: wrap;
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+
+			.control-left {
+				overflow: hidden;
+				flex: 1;
+				flex-wrap: wrap;
+				display: flex;
+				align-items: center;
+			}
+
+			.control-right {
+				margin-left: 50px;
+				display: flex;
+				align-items: center;
+			}
+			
+			.control-act {
+				margin-top: 8px;
+				margin-bottom: 8px;
+				margin-right: 12px;
+				display: flex;
+				align-items: center;
+
+				&:last-child {
+					margin-right: 0;
+				}
+				
+				
+				.act-label {
+					font-size: 14px;
+					color: #606266;
+					margin-right: 12px;
+					font-weight: bold;
+					
+					// &::after {
+					// 	content: '';
+					// 	font-size: 14px;
+					// 	color: #666;	
+					// }
+				}
+				.act-form{
+					
+				}
+			}
+			
+			
+			// .action-item {
+			// 	margin-top: 8px;
+			// 	margin-bottom: 8px;
+			// 	margin-right: 12px;
+			// 	display: flex;
+			// 	align-items: center;
+
+			// 	&:last-child {
+			// 		margin-right: 0;
+			// 	}
+				
+				
+			// 	.act-label {
+			// 		font-size: 14px;
+			// 		color: #606266;
+			// 		margin-right: 12px;
+			// 		font-weight: bold;
+					
+			// 		// &::after {
+			// 		// 	content: '';
+			// 		// 	font-size: 14px;
+			// 		// 	color: #666;	
+			// 		// }
+			// 	}
+			// }
+		}
+	}
+
+
+	.table-view {
+		margin-top: 20px;
+		margin-bottom: 20px;
+		
+
+		.row-acts {
+			text-align: center;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		
+			.row-act {
+				&+.row-act:before {
+					content: "";
+					display: inline-block;
+					width: 2px;
+					height: 12px;
+					background: #aaa;
+					margin: 0 12px;
+					margin: 0 6px;
+					position: relative;
+					top: 2px;
+				}
+			}
+			.divider {}
+		}
+		.row-tags {
+			
+		}
+		.row-switch {
+			font-size: 12px;
+			.el-switch__label {
+				font-size: 12px;
+				* {
+					font-size: 12px;
+				}
+			}
+		}
+		.row-pics {
+			display: flex;
+			
+			.pic-item{
+				margin:  0 10px;
+			}
+		}
+		 .row-pic {
+			margin: 0 5px;
+			
+			.el-image{
+				width: 40px;
+				height: 40px;
+			}
+			
+			.pic-list {
+				
+			}
+		}
+		
+		
+		// .render-link:hover {
+		// 	cursor: pointer;
+		// }
+		
+		
+	
+		// .render-image-list {
+		// 	display: flex;
+		
+		// 	.render-image-item {
+		// 		margin: 0 5px;
+		// 	}
+		// }
+		
+		// .render-link:hover {
+		// 	cursor: pointer;
+		// }
+		
+		
+		
+
+		// .act-group {
+		// 	text-align: center;
+		// 	display: flex;
+		// 	align-items: center;
+		// 	justify-content: center;
+
+		// 	.act-item {
+		// 		&+.act-item:before {
+		// 			content: "";
+		// 			display: inline-block;
+		// 			width: 2px;
+		// 			height: 12px;
+		// 			background: #aaa;
+		// 			margin: 0 12px;
+		// 			margin: 0 6px;
+		// 			position: relative;
+		// 			top: 2px;
+		// 		}
+		// 	}
+
+		// 	.divider {}
+		// }
+		
+
+	
+	}
+
+
+
+	// 表格工具栏
+	.tool-view {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		.tool-left {
+			display: flex;
+			align-items: center;
+			min-width: 100px;
+
+			.tool-items {
+				display: flex;
+				align-items: center;
+
+				.item {
+					margin-right: 10px;
+				}
+			}
+		}
+
+		.tool-right {}
+	}
+	
+	
+	
+	
+	
+	// 标签后加冒号
+	.label-maohao {
+		&::after {
+			content: '：';
+			padding-right: 4px;
+		}
+	}
+	
+	

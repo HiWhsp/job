@@ -1,0 +1,380 @@
+.bg {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.dot {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/*文字显示*/
+
+.scrollbar {
+  overflow-y: auto;
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    border: 5px solid #bbb;
+    background: #fff;
+  }
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 0px;
+  }
+}
+
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  bottom: constant(safe-area-inset-bottom);
+  bottom: env(safe-area-inset-bottom);
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  background-color: #fff;
+  -webkit-user-select: none;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid #eee;
+  box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.safe-bottom {
+  bottom: 0;
+  bottom: constant(safe-area-inset-bottom);
+  bottom: env(safe-area-inset-bottom);
+}
+
+.fixed-bottom-btn-box {
+  position: fixed;
+  bottom: 0;
+  bottom: constant(safe-area-inset-bottom);
+  bottom: env(safe-area-inset-bottom);
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  background-color: #fff;
+  -webkit-user-select: none;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // border-top: 1px solid #eee;
+  padding: 12px 15px;
+  box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.line-1 {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.line-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+}
+.line-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+}
+.line-4 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+}
+.line-5 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 5;
+}
+
+
+
+
+// 文本溢出处理
+// 文本溢出处理
+.e1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.e2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+}
+.e3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+}
+.e4 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+}
+.e5 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 5;
+}
+.e6 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 6;
+}
+.e7 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 7;
+}
+.e8 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 8;
+}
+.e9 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 9;
+}
+.e10 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 10;
+}
+
+//
+//
+//
+//
+//
+.flex {
+  display: flex;
+  align-items: center;
+}
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// 新增flex 布局简写
+/**
+  三个字母拼写 
+  --------------------------------------------------------
+  第1个字符 display:flex   简写 f
+  --------------------------------------------------------
+  第2个字符 justify-content
+    stretch     简写 t
+    flex-start  简写 s
+    flex-end    简写 e
+    center      简写 c
+    space-around  简写 a
+    space-between 简写 b
+    space-evenly 简写 l
+  --------------------------------------------------------
+  第3个字符 align-items
+    stretch     简写 t
+    flex-start  简写 s
+    flex-end    简写 e
+    center      简写 c
+  --------------------------------------------------------
+*/
+.fw {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+// 第1组 justify-content: stretch;  第二个字母  简写 t
+.ftt {
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+}
+.fts {
+  display: flex;
+  justify-content: stretch;
+  align-items: flex-start;
+}
+.fte {
+  display: flex;
+  justify-content: stretch;
+  align-items: flex-end;
+}
+.ftc {
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+}
+// 第2组 justify-content: flex-start;  第二个字母  简写 s
+.fst {
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+.fss {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.fse {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+.fsc {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+// 第3组 justify-content: flex-end;  第二个字母  简写 e
+.fet {
+  display: flex;
+  justify-content: flex-end;
+  align-items: stretch;
+}
+.fes {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+.fee {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.fec {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+// 第4组 justify-content: center;  第二个字母  简写 c
+.fct {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+.fcs {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.fce {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.fcc {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// 第5组 justify-content: space-around;  第二个字母  简写 a
+.fat {
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+}
+.fas {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+.fae {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+.fac {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+// 第6组 justify-content: space-between;  第二个字母  简写 b
+.fbt {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+}
+.fbs {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.fbe {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.fbc {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+// 第7组 justify-content: space-evenly;  第二个字母  简写 l
+.flt {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: stretch;
+}
+.fls {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+}
+.fle {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-end;
+}
+.flc {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+// --------------------------------------------------------
