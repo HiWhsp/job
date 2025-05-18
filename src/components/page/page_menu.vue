@@ -254,10 +254,9 @@ export default {
         this.$log("用户菜单权限 own_map", own_map);
         this.$log("用户菜单权限 auth_role_menu", this.auth_role_menu);
 
-
         //如果当前页面路由不包含在当前角色的菜单权限中 则跳转到首页
         let is_route_in_menu = false;
-        if(is_route_in_menu == false) {
+        if (is_route_in_menu == false) {
           // this.$router.push({ path: "/index" });
         }
         // this.set_current_role_menus();

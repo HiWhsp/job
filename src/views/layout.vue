@@ -5,7 +5,8 @@
     </div>
     <div class="root-inner flex-between">
       <div class="root-left scrollbar white">
-        <page_menu />
+        <!-- <page_menu /> -->
+        <view_menu />
       </div>
       <div class="root-right">
         <div class="root-right-breadcrumb">
@@ -23,12 +24,14 @@
 import page_header from "@/components/page/page_header.vue";
 import page_menu from "@/components/page/page_menu.vue";
 import page_breadcrumb from "@/components/page/page_breadcrumb.vue";
+import view_menu from "@/components/page/view_menu.vue";
 import { mapState } from "vuex";
 export default {
   components: {
     page_header,
     page_menu,
     page_breadcrumb,
+    view_menu
   },
   data() {
     return {};
@@ -99,7 +102,6 @@ export default {
 };
 </script>
 
-
 <style lang="less">
 #root {
   padding-top: 70px;
@@ -135,7 +137,7 @@ export default {
   overflow-y: auto;
   background: #313133;
   background: #fff;
-  width: 200px;
+  width: 224px;
 
   &.scrollbar {
     overflow-y: auto;
@@ -178,7 +180,7 @@ export default {
     position: sticky;
     top: 0px;
     z-index: 10;
-    padding: 10px;
+    padding: 20px 26px;
 
     // margin-top: -10px;
     // margin-bottom: -10px;
@@ -189,7 +191,7 @@ export default {
   }
 
   .root-right-inner {
-    padding: 0 10px;
+    padding: 0 26px;
   }
 }
 

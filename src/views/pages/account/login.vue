@@ -16,7 +16,7 @@
               @keyup.enter="do_submit()"
             />
           </div>
-          <div class="input-box">
+          <div class="input-box" v-if="login_type == 2">
             <span class="label">密码</span>
             <input
               type="password"
@@ -26,7 +26,7 @@
             />
           </div>
 
-          <div class="input-box">
+          <div class="input-box" v-if="login_type == 1">
             <span class="label">验证码</span>
             <input
               type="text"
@@ -34,7 +34,6 @@
               v-model="form.code"
               @keyup.enter="do_submit()"
             />
-            <!-- <img class="code" :src="verify_pic" alt="" @click="query_code()" /> -->
 
             <button
               :disabled="disabledBtn"
@@ -51,7 +50,9 @@
 
           <div class="links flex-between">
             <div class="link">
-              <span @click="1">验证码登录</span>
+              <span @click="change_login_type()">{{
+                login_type == 1 ? "验证码登录" : "密码登录"
+              }}</span>
             </div>
             <div class="link">
               <router-link to="/retrieve">忘记密码</router-link>
@@ -97,8 +98,7 @@ export default {
         uuid: "",
       },
 
-      // beian_info: '',
-      verify_pic: "",
+      login_type: 2, //1:验证码登录 2:密码登录
 
       loading: false,
 
@@ -220,6 +220,10 @@ export default {
       });
     },
 
+    change_login_type() {
+      this.login_type = this.login_type == 1 ? 2 : 1;
+    },
+
     //倒计时
     countdown() {
       let that = this;
@@ -263,9 +267,6 @@ export default {
   .inner-content {
     width: 480px;
     // height: 420px;
-    background: #ffffff;
-    box-shadow: 0px 10px 20px rgba(181, 151, 132, 0.2);
-    opacity: 1;
     border-radius: 10px;
     padding: 30px 40px;
 
@@ -275,22 +276,20 @@ export default {
 
       .title {
         text-align: center;
+        font-family: PingFang SC, PingFang SC;
+        font-weight: 500;
         font-size: 32px;
-        font-family: PingFang SC;
-        font-weight: 400;
-        line-height: 24px;
-        color: #000000;
+        color: #333333;
       }
 
       .input-box {
         position: relative;
         margin-top: 40px;
-        width: 100%;
-        height: 50px;
-        background: #ffffff;
-        border: 1px solid #eeeeee;
-        opacity: 1;
         border-radius: 4px;
+        width: 424px;
+        height: 48px;
+        background: #f7f8fa;
+        border: 1px solid #eaeaea;
 
         display: flex;
 
@@ -300,15 +299,15 @@ export default {
 
         .label {
           display: inline-block;
-          width: 120px;
+          width: 100px;
           /*no */
-          border-right: 1px solid #000;
+          border-right: 1px solid #EEEEEE;
 
           font-size: 14px;
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 20px;
-          color: #000;
+          color: #666666;
           // text-align: center;
           text-indent: 2em;
         }
@@ -318,12 +317,13 @@ export default {
           height: 100%;
           padding-left: 20px;
           font-size: 16px;
-          color: #000;
+          color: #C6C6C6;
           border: none;
+          background: #f7f8fa;
         }
 
         .btn-validate-box {
-          background: transparent;
+          background: #f7f8fa;
           position: absolute;
           right: 0;
           display: flex;
@@ -357,9 +357,16 @@ export default {
         }
       }
 
-	  .links{
-		margin-top: 30px;
-	  }
+      .links {
+        margin-top: 30px;
+        cursor: pointer;
+        .link {
+          color: @theme_color;
+          a {
+            color: @theme_color;
+          }
+        }
+      }
 
       .btn-box {
         margin-top: 80px;
@@ -369,9 +376,9 @@ export default {
           height: 60px;
           background: #000000;
 
-          background: #954024;
+          background: linear-gradient( 90deg, #452F86 0%, #A92B83 31%, #D14F8D 67%, #E38179 100%);
 
-          font-size: 16px;
+          font-size: 18px;
           font-family: PingFang SC;
           font-weight: bold;
           line-height: 24px;

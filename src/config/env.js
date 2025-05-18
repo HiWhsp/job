@@ -1,4 +1,4 @@
-const ROOT = 'https://yaojiandan.api.dx.hdapp.com.cn'
+const ROOT = 'https://puxiangtongxun.dx.hdapp.com.cn'
 
 export const SITE_ROOT = ROOT; //站点部署域名
 

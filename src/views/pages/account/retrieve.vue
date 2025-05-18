@@ -6,22 +6,13 @@
     <div class="page-right flex-center">
       <div class="inner-content">
         <div class="inner">
-          <div class="title">登录</div>
+          <div class="title">忘记密码</div>
           <div class="input-box">
             <span class="label">账号</span>
             <input
               type="text"
               placeholder
               v-model="form.username"
-              @keyup.enter="do_submit()"
-            />
-          </div>
-          <div class="input-box">
-            <span class="label">密码</span>
-            <input
-              type="password"
-              placeholder
-              v-model="form.password"
               @keyup.enter="do_submit()"
             />
           </div>
@@ -34,7 +25,6 @@
               v-model="form.code"
               @keyup.enter="do_submit()"
             />
-            <!-- <img class="code" :src="verify_pic" alt="" @click="query_code()" /> -->
 
             <button
               :disabled="disabledBtn"
@@ -46,16 +36,14 @@
               <span>（{{ time }}）</span>
             </button>
           </div>
-
-          <!-- <sms_phone :form="form" /> -->
-
-          <div class="links flex-between">
-            <div class="link">
-              <span @click="1">验证码登录</span>
-            </div>
-            <div class="link">
-              <router-link to="/retrieve">忘记密码</router-link>
-            </div>
+          <div class="input-box">
+            <span class="label">密码</span>
+            <input
+              type="password"
+              placeholder
+              v-model="form.password"
+              @keyup.enter="do_submit()"
+            />
           </div>
 
           <div class="btn-box">
@@ -63,7 +51,7 @@
               class="btn-ripple btn-ripple"
               :loading="loading"
               @click="throttle_do_submit()"
-              >登录</el-button
+              >提交</el-button
             >
           </div>
         </div>
@@ -263,8 +251,6 @@ export default {
   .inner-content {
     width: 480px;
     // height: 420px;
-    background: #ffffff;
-    box-shadow: 0px 10px 20px rgba(181, 151, 132, 0.2);
     opacity: 1;
     border-radius: 10px;
     padding: 30px 40px;
@@ -285,12 +271,11 @@ export default {
       .input-box {
         position: relative;
         margin-top: 40px;
-        width: 100%;
-        height: 50px;
-        background: #ffffff;
-        border: 1px solid #eeeeee;
-        opacity: 1;
         border-radius: 4px;
+        width: 424px;
+        height: 48px;
+        background: #f7f8fa;
+        border: 1px solid #eaeaea;
 
         display: flex;
 
@@ -300,15 +285,15 @@ export default {
 
         .label {
           display: inline-block;
-          width: 120px;
+          width: 100px;
           /*no */
-          border-right: 1px solid #000;
+          border-right: 1px solid #EEEEEE;
 
           font-size: 14px;
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 20px;
-          color: #000;
+          color: #666666;
           // text-align: center;
           text-indent: 2em;
         }
@@ -318,12 +303,13 @@ export default {
           height: 100%;
           padding-left: 20px;
           font-size: 16px;
-          color: #000;
+          color: #C6C6C6;
           border: none;
+          background: #f7f8fa;
         }
 
         .btn-validate-box {
-          background: transparent;
+          background: #f7f8fa;
           position: absolute;
           right: 0;
           display: flex;
@@ -357,21 +343,21 @@ export default {
         }
       }
 
-	  .links{
-		margin-top: 30px;
-	  }
+      .links {
+        margin-top: 30px;
+      }
 
       .btn-box {
-        margin-top: 80px;
+        margin-top: 40px;
 
         button {
           width: 400px;
           height: 60px;
           background: #000000;
 
-          background: #954024;
+          background: linear-gradient( 90deg, #452F86 0%, #A92B83 31%, #D14F8D 67%, #E38179 100%);
 
-          font-size: 16px;
+          font-size: 18px;
           font-family: PingFang SC;
           font-weight: bold;
           line-height: 24px;

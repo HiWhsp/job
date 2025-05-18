@@ -63,7 +63,8 @@ const routes = [
 		name: "retireve",
 		component: retireve,
 		meta: {
-			title: '忘记密码'
+			title: '忘记密码',
+			requireAuth: false
 		},
 	},
 	// {
@@ -82,7 +83,7 @@ const routes = [
 			title: '内页'
 		},
 		children: [
-			
+
 			{
 				path: "/my-info",
 				name: "my-info",
@@ -106,8 +107,8 @@ const routes = [
 				name: "baojiadan-list",
 				component: baojiadan_list,
 				meta: {
-					root: "文章管理",
-					title: "文章列表",
+					root: "合计报价单列表",
+					title: "合计报价单列表",
 				},
 			},
 			{
@@ -115,8 +116,8 @@ const routes = [
 				name: "baojiadan-form",
 				component: baojiadan_form,
 				meta: {
-					root: "文章管理",
-					title: "文章分类",
+					root: "合计报价单新增",
+					title: "合计报价单新增",
 				},
 			},
 			{
@@ -124,8 +125,8 @@ const routes = [
 				name: "baojiadan-success",
 				component: baojiadan_success,
 				meta: {
-					root: "文章管理",
-					title: "文章分类",
+					root: "合计报价单提交成功",
+					title: "合计报价单提交成功",
 				},
 			},
 			{
@@ -133,8 +134,8 @@ const routes = [
 				name: "baojiadan-preview",
 				component: baojiadan_preview,
 				meta: {
-					root: "文章管理",
-					title: "文章分类",
+					root: "合计报价单预览",
+					title: "合计报价单预览",
 				},
 			},
 
@@ -170,13 +171,15 @@ router.beforeEach((to, from, next) => {
 	let is_login_curr = token && userId;
 
 	// debugger
-	if (!is_login_curr && to.meta.requireAuth) {
-		// debugger
-		alertErr("请先登录");
-		next("/login");
-	} else {
-		next();
-	}
+	// if (!is_login_curr && to.meta.requireAuth) {
+	// 	// debugger
+	// 	alertErr("请先登录");
+	// 	next("/login");
+	// } else {
+	// 	next();
+	// }
+	next();
+
 });
 
 router.afterEach((to, from) => {
