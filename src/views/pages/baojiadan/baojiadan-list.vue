@@ -6,7 +6,9 @@
           <div class="control-box">
             <div class="control-left">
               <div class="control-act">
-                <el-button type="primary" @click="do_add()"> 创建合计报价单 </el-button>
+                <div class="act-form">
+                  <el-button type="primary" @click="do_add()">创建合计报价单</el-button>
+                </div>
                 <!-- <el-button type="" @click="do_import()">
 									导入
 								</el-button> -->
@@ -15,137 +17,91 @@
 
             <div class="control-right">
               <div class="control-act">
-                <div class="act-label">关键字</div>
                 <div class="act-form">
                   <el-input
-                    clearable
-                    v-model="search_params.email"
-                    placeholder="请输入"
-                    @clear="do_search()"
+                      v-model="search_params.email"
+                      clearable
+                      placeholder="请输入搜索关键字"
+                      @clear="do_search()"
                   >
                   </el-input>
                 </div>
               </div>
-       
+
               <div class="control-act">
                 <div class="act-form">
                   <el-button
-                    type="primary"
-                    icon="el-icon-search"
-                    @click="do_search()"
+                      icon="el-icon-search"
+                      type="primary"
+                      @click="do_search()"
                   >
-                    搜索
                   </el-button>
-                  <el-button
-                    type="default"
-                    icon="el-icon-refresh"
-                    @click="do_search_reset()"
-                  >
-                    重置
-                  </el-button>
+                  <!--                  <el-button-->
+                  <!--                    type="default"-->
+                  <!--                    icon="el-icon-refresh"-->
+                  <!--                    @click="do_search_reset()"-->
+                  <!--                  >-->
+                  <!--                    重置-->
+                  <!--                  </el-button>-->
                 </div>
               </div>
             </div>
 
-      
+
           </div>
         </div>
         <div class="table-view" data-title="渲染表格">
           <div class="table-box">
-            <el-table :data="table_data" stripe border>
+            <el-table :data="table_data" :row-class-name="table_row_class">
               <el-table-column
-                prop="companyId"
-                label="ID"
-                width="100"
+                  label="序号"
+                  prop="companyId"
+                  width="100"
               ></el-table-column>
               <el-table-column
-                prop="companyCode"
-                label="企业编码"
-                width="200"
+                  label="合计报价单编号"
+                  prop="companyCode"
+                  width="200"
               ></el-table-column>
               <el-table-column
-                prop="companyName"
-                label="企业名称"
-                width="200"
+                  label="签订日期"
+                  prop="companyName"
+                  width="200"
               ></el-table-column>
               <el-table-column
-                prop="contacts"
-                label="联系人"
-                width="auto"
+                  label="客户名称"
+                  prop="contacts"
+                  width="auto"
               ></el-table-column>
               <el-table-column
-                prop="contactNumber"
-                label="联系电话"
-                width="120"
+                  label="联系人"
+                  prop="contactNumber"
+                  width="120"
               ></el-table-column>
               <el-table-column
-                prop="email"
-                label="邮箱"
-                width="150"
+                  label="手机"
+                  prop="email"
+                  width="150"
               ></el-table-column>
               <el-table-column
-                prop="address"
-                label="地址"
-                width="300"
+                  label="产品总金额"
+                  prop="address"
+                  width="300"
               ></el-table-column>
-              <el-table-column prop="images" label="营业执照" width="120">
-                <template slot-scope="scope">
-                  <div class="row-pic">
-                    <el-image
-                      fit="cover"
-                      :src="scope.row.businessLicense"
-                      :preview-src-list="[scope.row.businessLicense]"
-                    >
-                    </el-image>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="status"
-                label="状态"
-                width="auto"
-                align="center"
-              >
-                <template slot-scope="scope">
-                  <div class="row-tags">
-                    <el-tag type="primary" v-if="scope.row.status == 0"
-                      >启用</el-tag
-                    >
-                    <el-tag type="info" v-if="scope.row.status == 1"
-                      >禁用</el-tag
-                    >
-                  </div>
-                  <!-- <div class="row-switch">
-										<el-switch v-model="scope.row.status" size="mini" active-value="1"
-											inactive-value="0" active-color="#13ce66" inactive-color="#DDDDDD"
-											active-text="启用" inactive-text="禁用"
-											@change="(value) => on_change_switch(scope.row, {field: 'status', value: value})">
-										</el-switch>
-									</div> -->
-                </template>
-              </el-table-column>
               <el-table-column fixed="right" label="操作" width="300">
                 <template slot-scope="scope">
-                  <div class="row-acts">
+                  <div :class="scope.row.status == 0 ? '' : 'disabled'" class="row-acts">
                     <div class="row-act">
-                      <el-button @click="do_set_scope(scope.row)" type="text"
-                        >查看经营范围</el-button
-                      >
+                      <el-button type="text" @click="do_set_scope(scope.row)">预览</el-button>
                     </div>
                     <div class="row-act">
-                      <el-button @click="do_detail(scope.row)" type="text"
-                        >详情</el-button
-                      >
+                      <el-button type="text" @click="do_detail(scope.row)">下载</el-button>
                     </div>
-                    <div class="row-act">
-                      <el-button @click="do_edit(scope.row)" type="text"
-                        >编辑</el-button
-                      >
+                    <div class="row-act" v-if="scope.row.status == 0">
+                      <el-button type="text" @click="do_edit(scope.row)">编辑</el-button>
                     </div>
-                    <div class="row-act">
-                      <el-button @click="do_delete(scope.row)" type="text"
-                        >删除</el-button
-                      >
+                    <div class="row-act error">
+                      <el-button type="text" @click="do_delete(scope.row)">作废</el-button>
                     </div>
                   </div>
                 </template>
@@ -158,15 +114,15 @@
           <div class="tool-right">
             <div class="pagi-item">
               <el-pagination
-                :background="true"
-                :total="total"
-                :pager-count="5"
-                :current-page="search_params.pageNum"
-                :page-size="search_params.pageSize"
-                :page-sizes="[10, 20, 50, 100, 200]"
-                @size-change="on_pagi_size_change"
-                @current-change="on_pagi_current_change"
-                layout="total, sizes, prev, pager, next, jumper"
+                  :background="true"
+                  :current-page="search_params.pageNum"
+                  :page-size="search_params.pageSize"
+                  :page-sizes="[10, 20, 50, 100, 200]"
+                  :pager-count="5"
+                  :total="total"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  @size-change="on_pagi_size_change"
+                  @current-change="on_pagi_current_change"
               >
               </el-pagination>
             </div>
@@ -175,14 +131,15 @@
       </div>
     </div>
 
-    <company_detail_modal ref="company_detail_modal" />
-    <company_form_modal ref="company_form_modal" @confirm="query_view" />
+    <company_detail_modal ref="company_detail_modal"/>
+    <company_form_modal ref="company_form_modal" @confirm="query_view"/>
   </div>
 </template>
 
 <script>
 import company_detail_modal from "./components/company_detail_modal.vue";
 import company_form_modal from "./components/company_form_modal.vue";
+
 export default {
   name: "company-list",
   mixins: [],
@@ -193,7 +150,7 @@ export default {
   data() {
     return {
       unique_key: "companyId",
-      table_data: [],
+      table_data: [{status: 1}, {status: 0}, {status: 1}, {status: 0}],
       search_params: {
         keyword: "",
         pageNum: 1,
@@ -214,14 +171,21 @@ export default {
       ],
     };
   },
-  computed: {},
+  computed: {
+    table_row_class() {
+      return ({row, rowIndex}) => {
+        console.log(rowIndex)
+        return "table-row-" + (rowIndex % 2 == 0 ? "even" : "odd");
+      };
+    }
+  },
   watch: {},
   created() {
     this.set_params();
     this.query_view();
-    // this.query_options()
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     set_params() {
       this.origin_search_params = {
@@ -248,7 +212,8 @@ export default {
         }
       });
     },
-    query_options() {},
+    query_options() {
+    },
 
     do_search() {
       this.search_params.pageNum = 1;
@@ -292,19 +257,20 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       })
-        .then(() => {
-          this.$api({
-            url: `/company/info/${row.id}`,
-            method: "delete",
-            data: {},
-          }).then((res) => {
-            alert(res);
-            if (res.code == 200) {
-              this.query_view();
-            }
+          .then(() => {
+            this.$api({
+              url: `/company/info/${row.id}`,
+              method: "delete",
+              data: {},
+            }).then((res) => {
+              alert(res);
+              if (res.code == 200) {
+                this.query_view();
+              }
+            });
+          })
+          .catch(() => {
           });
-        })
-        .catch(() => {});
     },
     do_detail(row) {
       this.$refs.company_detail_modal.init(row);
@@ -340,5 +306,5 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 </style>

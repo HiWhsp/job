@@ -1,419 +1,127 @@
 <template>
-	<div class="page-wrap">
-		<div class="page-inner">
-			<div class="view-wrap">
-				<div class="base-view">
-					<div class="base-row">
-						<div class="base-item">
-							<div class="act-label">
-								企业名称
-							</div>
-							<div class="act-form">
-								<div class="value-text">{{info.companyName}}</div>
-							</div>
-						</div>
-						<div class="base-item">
-							<div class="act-label">
-								企业ID
-							</div>
-							<div class="act-form">
-								<div class="value-text">{{info.companyId}}</div>
-							</div>
-						</div>
-					</div>
-					<div class="base-row">
-						<div class="base-item">
-							<div class="act-label">
-								联系人
-							</div>
-							<div class="act-form">
-								<div class="value-text">{{info.contacts}}</div>
-							</div>
-						</div>
-						<div class="base-item">
-							<div class="act-label">
-								联系电话
-							</div>
-							<div class="act-form">
-								<div class="value-text">{{info.contactNumber}}</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-
-				<div class="control-view" data-title="顶部操作栏">
-					<div class="control-box">
-						<div class="control-left">
-
-						</div>
-						<div class="control-right">
-							<div class="control-act">
-								<el-button type="primary" @click="do_add()">
-									设置经营范围
-								</el-button>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="table-view" data-title="渲染表格">
-					<div class="table-title">
-						经营范围信息
-					</div>
-					<div class="table-box">
-						<el-table :data="table_data" stripe border>
-							<!-- <el-table-column prop="id" label="ID" width="100"></el-table-column> -->
-							<el-table-column prop="rangeId" label="ID" width="100"></el-table-column>
-							<el-table-column prop="rangeCode" label="范围分类编号" width="auto">
-								<template slot-scope="scope">
-									<div class="row-text">
-										{{scope.row.operateRange.rangeCode}}
-									</div>
-								</template>
-							</el-table-column>
-							<el-table-column prop="rangeName" label="经营范围名称" width="auto">
-								<template slot-scope="scope">
-									<div class="row-text">
-										{{scope.row.operateRange.rangeName}}
-									</div>
-								</template>
-							</el-table-column>
-							<el-table-column fixed="right" label="操作" width="300">
-								<template slot-scope="scope">
-									<div class="row-acts">
-										<!-- <div class="row-act">
-											<el-button @click="do_detail(scope.row)" type="text">查看商品</el-button>
-										</div> -->
-										<div class="row-act">
-											<el-button @click="do_delete(scope.row)" type="text">删除</el-button>
-										</div>
-									</div>
-								</template>
-							</el-table-column>
-						</el-table>
-
-					</div>
-				</div>
-				<div class="tool-view">
-					<div class="tool-left" data-title="批量操作">
-
-					</div>
-					<div class="tool-right">
-						<div class="pagi-item">
-							<el-pagination :background="true" :total="total" :pager-count="5"
-								:current-page="search_params.pageNum" :page-size="search_params.pageSize"
-								:page-sizes=" [10, 20, 50, 100, 200]" @size-change="on_pagi_size_change"
-								@current-change="on_pagi_current_change"
-								layout="total, sizes, prev, pager, next, jumper">
-							</el-pagination>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-
-		<company_set_scope_form_modal ref="company_set_scope_form_modal" @confirm="query_view" />
-	</div>
+  <div class="baojiadan-form">
+    <div class="back" @click="back">
+      <img src="@/assets/back.png" alt="" />
+      <span>创建合计报价单</span>
+    </div>
+    <div class="baojiadan-form-content" ref="baojiadanForm">
+      <div class="baojiadan-form-content-title">
+        <img src="@/assets/imgs/success.png" alt="" />
+        <span>提交成功！</span>
+      </div>
+      <!-- 操作按钮 -->
+      <div class="btn-box">
+        <el-button type="primary" @click="submit">在线预览</el-button>
+        <el-button @click="reset">取消</el-button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-	import company_set_scope_form_modal from "./components/company_set_scope_form_modal.vue";
-	export default {
-		name: "company-list",
-		mixins: [],
-		components: {
-			company_set_scope_form_modal
-		},
-		data() {
-			return {
-				id: this.$route.query.id || '',
-				table_data: [],
-				search_params: {
-					companyId: this.$route.query.id || '',
-					pageNum: 1,
-					pageSize: 100,
-				},
-				origin_search_params: {},
-				total: 0,
-
-				status_options: [{
-						value: 0,
-						title: '正常'
-					},
-					{
-						value: 1,
-						title: '禁用'
-					}
-				],
-
-				info: {}
-			};
-		},
-		computed: {
-
-		},
-		watch: {},
-		created() {
-			this.set_params()
-			this.query_detail()
-			this.query_view()
-			this.query_options()
-		},
-		mounted() {
-
-		},
-		methods: {
-			set_params() {
-				this.origin_search_params = {
-					...this.search_params
-				}
-			},
-
-			query_detail() {
-				this.$api({
-					url: `/company/info/${this.id}`,
-					method: 'get',
-					data: {
-
-					}
-				}).then(res => {
-					if (res.code == 200) {
-						let data = res.data;
-						this.info = data;
-					}
-				})
-
-
-			},
-
-
-			query_view() {
-				this.query_list()
-			},
-			query_list() {
-				// this.$api({
-				// 	url: '/medicine/operateRange/list',
-				// 	method: 'get',
-				// 	data: {
-				// 		...this.search_params
-				// 	}
-				// }).then(res => {
-				// 	if (res.code == 200) {
-				// 		let list = res.rows;
-				// 		this.mix_format_list_id(list, 'aa')
-				// 		this.total = res.total
-				// 		this.$log('数据列表', list)
-				// 		this.table_data = list
-				// 	}
-				// })
-
-				this.$api({
-					url: `/company/businessScope/list`,
-					method: 'get',
-					data: {
-						...this.search_params
-					}
-				}).then(res => {
-					if (res.code == 200) {
-						let list = res.rows;
-						// this.mix_format_list_id(list, 'aa')
-						this.total = res.total
-						this.$log('数据列表', list)
-						this.table_data = list
-					}
-				})
-
-
-			},
-			query_options() {
-
-			},
-
-			do_search() {
-				this.search_params.pageNum = 1;
-				this.query_view();
-			},
-			do_search_reset() {
-				// this.search_params.channelId = '';
-				// this.search_params.keyword = '';
-				this.search_params = {
-					...this.search_params,
-					...this.origin_search_params,
-				}
-				this.query_view()
-			},
-			on_change_status() {
-				this.search_params.pageNum = 1;
-				this.query_view();
-			},
-			on_pagi_size_change(value) {
-				this.search_params.pageSize = value
-				this.search_params.pageNum = 1
-				this.query_view();
-			},
-			on_pagi_current_change(value) {
-				this.search_params.pageNum = value
-				this.query_view();
-			},
-
-			do_import() {
-				this.$refs.w_base_import_modal.init();
-			},
-			do_add() {
-				this.$refs.company_set_scope_form_modal.init(this.info);
-			},
-			do_edit(row) {
-				this.$refs.company_set_scope_form_modal.init(row)
-			},
-			do_delete(row) {
-				this.$confirm('确认删除该条记录?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					this.$api({
-						url: `/company/businessScope/delete/${row.scopeId}`,
-						method: 'delete',
-						data: {
-
-						},
-					}).then((res) => {
-						alert(res);
-						if (res.code == 200) {
-							this.query_view();
-						}
-					});
-				}).catch(() => {
-
-				});
-			},
-			do_detail(row) {
-				this.toRoute({
-					path: '/company-scope-products',
-					query: {
-						companyId: this.id,
-						rangeId: row.rangeId,
-						scopeId: row.scopeId,
-						rangeName: row.operateRange.rangeName,
-					}
-				})
-			},
-			do_set_scope(row) {
-				this.toRoute({
-					path: '/',
-					query: {
-
-					}
-				})
-			},
-			on_change_switch(row, field_info) {
-				this.$log('row', row)
-				this.$log('field_info', field_info)
-				this.$api({
-					url: '/system/dict/type',
-					method: 'put',
-					data: {
-						[this.unique_key]: row[this.unique_key],
-						[field_info.field]: field_info.value
-					},
-				}).then((res) => {
-					alert(res);
-					if (res.code == 200) {
-						this.query_view();
-					}
-				});
-			},
-		},
-	};
+export default {
+  data() {
+    return {};
+  },
+  mounted() {
+    // 获取baojiadanForm距离可视区顶部的距离, 根据可视区高度 减去顶部距离设置高度
+    this.$nextTick(() => {
+      this.$refs.baojiadanForm.style.height = `${
+        window.innerHeight - this.$refs.baojiadanForm.offsetTop - 100
+      }px`;
+    });
+  },
+  methods: {
+    submit() {
+      // 提交逻辑
+      this.$message.success("提交成功");
+    },
+    reset() {
+      // 重置逻辑
+      this.$message.info("已取消");
+    },
+    back() {
+      this.$router.back();
+    },
+  },
+};
 </script>
 
 <style scoped lang="less">
-	.view-wrap {
-		padding-top: 30px;
-	}
+.baojiadan-form {
+  width: 100%;
+}
 
-	.act-label {
-		&::after {
-			content: '：';
-			padding-right: 4px;
-		}
-	}
+.back {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 
+  font-family: PingFang SC, PingFang SC;
+  font-weight: 500;
+  font-size: 20px;
+  color: #000000;
 
-	.base-view {
-		.base-row {
-			margin-bottom: 20px;
-			display: flex;
-			flex-wrap: wrap;
+  img {
+    width: 28px;
+    margin-right: 5px;
+  }
+}
 
-			.base-item {
-				min-width: 400px;
-				line-height: 1.2;
-			}
+.baojiadan-form-content {
+  margin-top: 20px;
+  background-color: #fff;
+  width: 100%;
+  padding: 20px;
+  border-radius: 8px;
+  overflow-y: auto;
 
-			.base-item {
-				margin-bottom: 14px;
-				min-width: 400px;
-				display: flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .baojiadan-form-content-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    img {
+      width: 80px;
+    }
+    span {
+      margin-top: 28px;
+      font-family: PingFang SC, PingFang SC;
+      font-weight: 400;
+      font-size: 20px;
+      color: #000000;
+    }
+  }
+}
 
+.btn-box {
+  margin-top: 60px;
+  .el-button--primary {
+    width: 180px;
+    height: 48px;
+    font-size: 16px;
+    background: linear-gradient(
+      90deg,
+      #452f86 0%,
+      #a92b83 31%,
+      #d14f8d 67%,
+      #e38179 100%
+    ) !important;
+    border: none;
+  }
+  .el-button--default {
+    width: 180px;
+    height: 48px;
+    font-size: 16px;
+  }
+}
 
-				.act-label {
-					font-size: 14px;
-					min-width: 160px;
-					text-align: right;
-				}
-
-
-				.act-form {
-					font-size: 14px;
-
-					.value-text {
-						font-size: 14px;
-					}
-				}
-			}
-		}
-	}
-
-	// .base-view {
-	// 	.base-title {
-	// 		margin-bottom: 20px;
-	// 		font-size: 14px;
-	// 		color: #444;
-	// 		font-weight: bold;
-
-	// 	}
-
-	// 	.base-row {
-	// 		margin-bottom: 20px;
-
-	// 		// display: flex;
-	// 		// flex-wrap: wrap;
-	// 		.base-item {
-	// 			margin-bottom: 14px;
-	// 			min-width: 400px;
-	// 			display: flex;
-
-
-	// 			.act-label {
-	// 				font-size: 14px;
-	// 				min-width: 160px;
-	// 				text-align: right;
-	// 			}
-
-	// 			.act-form {
-	// 				font-size: 14px;
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	.table-title {
-		margin-bottom: 20px;
-		font-size: 14px;
-		color: #444;
-		font-weight: bold;
-	}
+/deep/ .el-input__inner {
+  background: #fafafa;
+  border: 1px solid #e6e5e5;
+}
 </style>
