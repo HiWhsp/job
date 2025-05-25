@@ -1,11 +1,8 @@
 <template>
   <div class="baojiadan-form">
     <div class="back" @click="back">
-      <div class="back-left">
-        <img src="@/assets/back.png" alt="" />
-        <span>创建合计报价单</span>
-      </div>
-      <el-button type="primary" @click="submit">点击下载</el-button>
+      <img src="@/assets/back.png" alt="" />
+      <span>创建未税销售合同</span>
     </div>
     <div class="baojiadan-form-content" ref="baojiadanForm">
       <div class="baojiadan-form-content-title">
@@ -44,7 +41,7 @@ export default {
       this.$message.info("已取消");
     },
     back() {
-      this.$router.push("/baojiadan-list");
+      this.$router.back();
     },
   },
 };
@@ -56,9 +53,9 @@ export default {
 }
 
 .back {
+  cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: space-between;
 
   font-family: PingFang SC, PingFang SC;
   font-weight: 500;
@@ -68,25 +65,6 @@ export default {
   img {
     width: 28px;
     margin-right: 5px;
-  }
-  .back-left {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-  }
-
-  .el-button--primary {
-    width: 180px;
-    height: 48px;
-    font-size: 16px;
-    background: linear-gradient(
-      90deg,
-      #452f86 0%,
-      #a92b83 31%,
-      #d14f8d 67%,
-      #e38179 100%
-    ) !important;
-    border: none;
   }
 }
 

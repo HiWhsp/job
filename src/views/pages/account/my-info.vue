@@ -1,9 +1,5 @@
 <template>
   <div class="page">
-    <!-- <div class="main-title">
-      <span>个人资料</span>
-    </div> -->
-
     <div class="page-ctx">
       <div class="section">
         <div class="section-ctx">
@@ -16,7 +12,7 @@
                   accept="image/*"
                   :show-file-list="false"
                   :name="UPLOAD_NAME"
-                  :action="UPLOAD_ACTION"
+                  :action="UPLOAD_ROOT"
                   :data="mix_upload_data"
                   :on-success="upload_on_success"
                   :before-upload="upload_before_upload"
@@ -42,7 +38,7 @@
           <div class="item">
             <span class="text">性别：</span>
             <span class="info">
-              <el-radio-group v-model="form.gender">
+              <el-radio-group v-model="form.sex">
                 <el-radio :label="1">男</el-radio>
                 <el-radio :label="2">女</el-radio>
               </el-radio-group>
@@ -52,15 +48,15 @@
 
           <div class="item">
             <span class="text">手机号：</span>
-            <span class="info">{{ my_info.phone }}</span>
-            <span class="action" @click="open_phone_update()">
+            <span class="info">{{ form.mobile }}</span>
+            <!-- <span class="action" @click="open_phone_update()">
               <span>修改</span>
-            </span>
+            </span> -->
           </div>
 
           <div class="item">
             <span class="text">邮箱：</span>
-            <span class="info">{{ my_info.phone }}</span>
+            <span class="info">{{ form.email }}</span>
             <span class="action"></span>
           </div>
         </div>
@@ -88,25 +84,21 @@
       </div>
     </div>
 
-    <phone_bind_old_check_modal
-      ref="phone_bind_old_check_modal"
-      data-title="校验"
-      @confirm="confirm_old_pass"
-    />
-    <phone_bind_new_set_modal
-      ref="phone_bind_new_set_modal"
-      data-title="绑定"
-      @confirm="confirm_new"
-    />
+    <!--    <phone_bind_old_check_modal-->
+    <!--      ref="phone_bind_old_check_modal"-->
+    <!--      data-title="校验"-->
+    <!--      @confirm="confirm_old_pass"-->
+    <!--    />-->
+    <!--    <phone_bind_new_set_modal-->
+    <!--      ref="phone_bind_new_set_modal"-->
+    <!--      data-title="绑定"-->
+    <!--      @confirm="confirm_new"-->
+    <!--    />-->
   </div>
 </template>
 
 <script>
-import { UPLOAD_ACTION, UPLOAD_NAME } from "@/config/env.js";
-
-// import phone_bind_old_check_modal from "@/components/account/phone_bind_old_check_modal.vue";
-// import phone_bind_new_set_modal from "@/components/account/phone_bind_new_set_modal.vue";
-
+import { UPLOAD_ROOT, UPLOAD_NAME } from "@/config/env.js";
 import { mapState } from "vuex";
 
 export default {
@@ -117,14 +109,16 @@ export default {
   },
   data() {
     return {
-      UPLOAD_ACTION,
+      UPLOAD_ROOT,
       UPLOAD_NAME,
 
       my_info: {},
       form: {
         image: "",
         realName: "",
-        address: "",
+        mobile: "",
+        email: "",
+        sex: "",
       },
       loading: false,
     };
@@ -154,24 +148,19 @@ export default {
       this.query_user();
     },
     query_user() {
-      // this.$store.dispatch("query_user");
       this.$api({
-        url: "/service.php",
+        url: "getUserInfo",
         method: "get",
-        data: {
-          action: "users_userInfo",
-        },
       }).then((res) => {
         if (res.code == 200) {
-          let data = res.data;
-          this.my_info = data;
-
+          this.my_info = res.data;
           this.form = {
-            image: data.image || "",
-            realName: data.realName || "",
-            address: data.address || "",
+            image: res.data.image || "",
+            realName: res.data.real_name || "",
+            mobile: res.data.mobile || "",
+            email: res.data.email || "",
+            sex: res.data.sex || "",
           };
-
           this.$store.commit("set_vuex_user", res.data);
         }
       });
@@ -180,10 +169,10 @@ export default {
     do_submit() {
       this.loading = true;
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: "updateUser",
+        method: "post",
         data: {
-          action: "users_editInfo",
+          ...this.my_info,
           ...this.form,
         },
       }).then((res) => {
@@ -194,6 +183,8 @@ export default {
         if (code == 200) {
           this.setView();
         }
+      }).catch(() => {
+        this.loading = false;
       });
     },
 
@@ -211,7 +202,7 @@ export default {
       let { code, data, msg } = res;
       alert(res);
       if (code == 200) {
-        this.form.image = res.data;
+        this.form.image = res.data.path;
       }
     },
     upload_before_upload(file) {
@@ -305,7 +296,13 @@ export default {
   .btn-save {
     width: 180px;
     height: 48px;
-    background: linear-gradient( 90deg, #452F86 0%, #A92B83 31%, #D14F8D 67%, #E38179 100%);
+    background: linear-gradient(
+      90deg,
+      #452f86 0%,
+      #a92b83 31%,
+      #d14f8d 67%,
+      #e38179 100%
+    );
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
@@ -317,12 +314,12 @@ export default {
     margin-left: 20px;
     width: 180px;
     height: 48px;
-    border: 1px solid #9D9D9D;
+    border: 1px solid #9d9d9d;
     border-radius: 5px;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #9D9D9D;
+    color: #9d9d9d;
     background-color: #fff;
   }
 }

@@ -2,7 +2,7 @@
   <div class="baojiadan-form">
     <div class="back" @click="back">
       <img src="@/assets/back.png" alt="" />
-      <span>创建合计报价单</span>
+      <span>创建阶梯报价单</span>
     </div>
     <div class="baojiadan-form-content" ref="baojiadanForm">
       <!-- 合同信息 -->
@@ -10,15 +10,15 @@
         ref="form"
         :model="form"
         :rules="rules"
-        label-width="120px"
+        label-width="135px"
         class="section1"
       >
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="合计报价单编号" prop="quotationNo">
+            <el-form-item label="阶梯报价单编号：" prop="quotationNo">
               <el-input
                 v-model="form.quotationNo"
-                placeholder="请输入合计报价单编号"
+                placeholder="请输入阶梯报价单编号："
               ></el-input>
             </el-form-item>
           </el-col>
@@ -319,19 +319,6 @@ export default {
         if (valid) {
           this.$refs.form1.validate((valid1) => {
             if (valid1) {
-              // 校验产品
-              this.form.products.forEach((item) => {
-                if (
-                  item.title === "" ||
-                  item.name === "" ||
-                  item.unit === "" ||
-                  item.price === 0 ||
-                  item.num === 0
-                ) {
-                  this.$message.error("请输入完整的产品信息");
-                  return false;
-                }
-              });
               // 校验合同条款
               if (
                 this.form.termJson.tax === "" ||
@@ -343,9 +330,23 @@ export default {
                 this.form.termJson.min === "" ||
                 this.form.termJson.pack === ""
               ) {
-                this.$message.error("请输入完整的产品信息");
-                return false;
+                this.$message.error("请输入完整的合同条款");
+                return;
               }
+              // 校验产品
+              this.form.products.forEach((item) => {
+                if (
+                  item.title === "" ||
+                  item.name === "" ||
+                  item.unit === "" ||
+                  item.price === 0 ||
+                  item.num === 0
+                ) {
+                  this.$message.error("请输入完整的产品信息");
+                  return;
+                }
+              });
+
               // 提交
               this.$api({
                 url: "createQuotation",
@@ -368,11 +369,10 @@ export default {
       });
     },
     reset() {
-      // 重置逻辑
-      this.$message.info("已取消");
+      this.$router.push("/jietibaojiadan-list");
     },
     back() {
-      this.$router.back();
+      this.$router.push("/jietibaojiadan-list");
     },
   },
 };

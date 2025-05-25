@@ -3,7 +3,7 @@
     <div class="back" @click="back">
       <div class="back-left">
         <img src="@/assets/back.png" alt="" />
-        <span>创建合计报价单</span>
+        <span>预览阶梯报价单</span>
       </div>
       <el-button type="primary" @click="submit">点击下载</el-button>
     </div>
@@ -44,7 +44,7 @@ export default {
       this.$message.info("已取消");
     },
     back() {
-      this.$router.push("/baojiadan-list");
+      this.$router.back();
     },
   },
 };

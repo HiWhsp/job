@@ -8,7 +8,7 @@
               <div class="control-act">
                 <div class="act-form">
                   <el-button type="primary" @click="do_add()"
-                    >创建合计报价单</el-button
+                    >创建阶梯报价单</el-button
                   >
                 </div>
               </div>
@@ -47,38 +47,39 @@
                 label="序号"
                 prop="companyId"
                 width="100"
+                align="center"
               ></el-table-column>
               <el-table-column
-                label="合计报价单编号"
+                label="阶梯报价单编号"
                 prop="companyCode"
-                width="200"
+                width="auto"
+                align="center"
               ></el-table-column>
               <el-table-column
                 label="签订日期"
                 prop="companyName"
-                width="200"
+                width="auto"
+                align="center"
               ></el-table-column>
               <el-table-column
                 label="客户名称"
                 prop="contacts"
                 width="auto"
+                align="center"
               ></el-table-column>
               <el-table-column
                 label="联系人"
                 prop="contactNumber"
-                width="120"
+                width="auto"
+                align="center"
               ></el-table-column>
               <el-table-column
                 label="手机"
                 prop="email"
-                width="150"
+                width="auto"
+                align="center"
               ></el-table-column>
-              <el-table-column
-                label="产品总金额"
-                prop="address"
-                width="300"
-              ></el-table-column>
-              <el-table-column fixed="right" label="操作" width="300">
+              <el-table-column fixed="right" label="操作">
                 <template slot-scope="scope">
                   <div
                     :class="scope.row.status == 1 ? '' : 'disabled'"
@@ -101,7 +102,7 @@
                     </div>
                     <div class="row-act error">
                       <el-button type="text" @click="do_delete(scope.row)"
-                        >{{ scope.row.status == 0 ? "已作废" : "作废" }}</el-button
+                        >作废</el-button
                       >
                     </div>
                   </div>
@@ -151,13 +152,14 @@ export default {
   data() {
     return {
       unique_key: "companyId",
-      table_data: [],
+      table_data: [{ status: 1 }, { status: 0 }],
       search_params: {
         keyword: "",
         page: 1,
         limit: 10,
-        type: 1,
+        type: 2,
       },
+      origin_search_params: {},
       total: 0,
     };
   },
@@ -165,10 +167,16 @@ export default {
   },
   watch: {},
   created() {
+    this.set_params();
     this.query_view();
   },
   mounted() {},
   methods: {
+    set_params() {
+      this.origin_search_params = {
+        ...this.search_params,
+      };
+    },
     query_view() {
       this.query_list();
     },
@@ -191,18 +199,19 @@ export default {
       this.search_params.page = 1;
       this.query_view();
     },
+
     on_pagi_size_change(value) {
       this.search_params.limit = value;
       this.search_params.page = 1;
       this.query_view();
     },
     on_pagi_current_change(value) {
-      this.search_params.page = value;
+      this.search_params.pageNum = value;
       this.query_view();
     },
 
     do_add() {
-      this.$router.push("/baojiadan-form");
+      this.$router.push("/jietibaojiadan-form");
     },
     do_edit(row) {
       if (row.status == 0) {
@@ -210,7 +219,7 @@ export default {
         return;
       }
       this.$router.push({
-        path: "/baojiadan-form",
+        path: "/jietibaojiadan-form",
         query: {
           id: row.id,
         },
@@ -228,11 +237,9 @@ export default {
       })
         .then(() => {
           this.$api({
-            url: `cancelQuotation`,
-            method: "post",
-            data: {
-              id: row.id,
-            },
+            url: `/company/info/${row.id}`,
+            method: "delete",
+            data: {},
           }).then((res) => {
             alert(res);
             if (res.code == 200) {
@@ -255,7 +262,7 @@ export default {
         return;
       }
       this.toRoute({
-        path: "/baojiadan-preview",
+        path: "/jietibaojiadan-preview",
         query: {
           id: row.id,
         },
@@ -265,5 +272,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>

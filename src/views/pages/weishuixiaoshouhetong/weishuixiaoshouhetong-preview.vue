@@ -1,15 +1,16 @@
 <template>
   <div class="baojiadan-form">
-    <div class="back" @click="back">
+    <div class="back">
       <div class="back-left">
-        <img src="@/assets/back.png" alt="" />
-        <span>创建合计报价单</span>
+        <!--        <img src="@/assets/back.png" alt="" />-->
+        <span @click="type = 1" :class="type === 1 ? 'active' : ''">预览未税销售合同</span>
+        <span @click="type = 2" :class="type === 2 ? 'active' : ''">预览回签</span>
       </div>
       <el-button type="primary" @click="submit">点击下载</el-button>
     </div>
     <div class="baojiadan-form-content" ref="baojiadanForm">
       <div class="baojiadan-form-content-title">
-        <img src="@/assets/imgs/success.png" alt="" />
+        <img src="@/assets/imgs/success.png" alt=""/>
         <span>提交成功！</span>
       </div>
       <!-- 操作按钮 -->
@@ -24,13 +25,15 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      type: 1
+    };
   },
   mounted() {
     // 获取baojiadanForm距离可视区顶部的距离, 根据可视区高度 减去顶部距离设置高度
     this.$nextTick(() => {
       this.$refs.baojiadanForm.style.height = `${
-        window.innerHeight - this.$refs.baojiadanForm.offsetTop - 100
+          window.innerHeight - this.$refs.baojiadanForm.offsetTop - 100
       }px`;
     });
   },
@@ -44,7 +47,7 @@ export default {
       this.$message.info("已取消");
     },
     back() {
-      this.$router.push("/baojiadan-list");
+      this.$router.back();
     },
   },
 };
@@ -69,23 +72,42 @@ export default {
     width: 28px;
     margin-right: 5px;
   }
+
   .back-left {
     cursor: pointer;
     display: flex;
     align-items: center;
+
+    span {
+      display: inline-block;
+      margin-right: 50px;
+      position: relative;
+
+      &.active {
+        color: #D04E89;
+
+        &::after {
+          position: absolute;
+          bottom: -10px;
+          content: '';
+          display: block;
+          width: 100%;
+          height: 2px;
+          background: #D04E89;
+        }
+      }
+    }
   }
 
   .el-button--primary {
     width: 180px;
     height: 48px;
     font-size: 16px;
-    background: linear-gradient(
-      90deg,
-      #452f86 0%,
-      #a92b83 31%,
-      #d14f8d 67%,
-      #e38179 100%
-    ) !important;
+    background: linear-gradient(90deg,
+    #452f86 0%,
+    #a92b83 31%,
+    #d14f8d 67%,
+    #e38179 100%) !important;
     border: none;
   }
 }
@@ -102,14 +124,17 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
   .baojiadan-form-content-title {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     img {
       width: 80px;
     }
+
     span {
       margin-top: 28px;
       font-family: PingFang SC, PingFang SC;
@@ -122,19 +147,19 @@ export default {
 
 .btn-box {
   margin-top: 60px;
+
   .el-button--primary {
     width: 180px;
     height: 48px;
     font-size: 16px;
-    background: linear-gradient(
-      90deg,
-      #452f86 0%,
-      #a92b83 31%,
-      #d14f8d 67%,
-      #e38179 100%
-    ) !important;
+    background: linear-gradient(90deg,
+    #452f86 0%,
+    #a92b83 31%,
+    #d14f8d 67%,
+    #e38179 100%) !important;
     border: none;
   }
+
   .el-button--default {
     width: 180px;
     height: 48px;

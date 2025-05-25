@@ -1,14 +1,14 @@
 <template>
   <div class="wrap flex-center">
     <div class="page-left">
-      <img src="@imgs/bg-login.jpg" alt="" />
+      <img src="@imgs/bg-login.png" alt="" />
     </div>
     <div class="page-right flex-center">
       <div class="inner-content">
         <div class="inner">
           <div class="title">忘记密码</div>
           <div class="input-box">
-            <span class="label">账号</span>
+            <span class="label">手机号</span>
             <input
               type="text"
               placeholder
@@ -37,7 +37,7 @@
             </button>
           </div>
           <div class="input-box">
-            <span class="label">密码</span>
+            <span class="label">设置密码</span>
             <input
               type="password"
               placeholder
@@ -178,15 +178,11 @@ export default {
       }
 
       console.log("发送验证码");
-      let { phone, email } = this.form;
-      let reg_email =
-        /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+      let { username } = this.form;
       let reg_phone = /^1[3-9]\d{9}$/;
 
-      let is_true_phone = reg_phone.test(phone);
+      let is_true_phone = reg_phone.test(username);
 
-      // debugger
-      // var isEmail = reg_email.test(email);
 
       if (!is_true_phone) {
         alertErr("请输入正确的手机号");
@@ -200,8 +196,8 @@ export default {
 
     //修改绑定邮箱
     retrieveByEmail() {
-      this.$api("users_sendSms", {
-        phone: this.form.phone,
+      this.$api({
+        url: "send",
       }).then((res) => {
         console.log("验证码", res);
         let { code, message } = res;
@@ -303,7 +299,7 @@ export default {
           height: 100%;
           padding-left: 20px;
           font-size: 16px;
-          color: #C6C6C6;
+          color: #000;
           border: none;
           background: #f7f8fa;
         }

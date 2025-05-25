@@ -76,15 +76,10 @@ function api(option) {
 	let reqUrl = process.env.NODE_ENV !== "production" ? API_ROOT + option.url : API_ROOT + option.url
 	let method = option.method || "get"; //
 
-	// for (var key in option) {
-	//   reqData.append(key, option[key]);
-	// }
-
 
 	let reqData = {
 		...option.data,
-		// user_id: localStorage.getItem("user_id"),
-		// token: localStorage.getItem("token") || '',
+		token: localStorage.getItem("token") || '',
 	};
 
 	for (let key in reqData) {
@@ -93,37 +88,6 @@ function api(option) {
 		}
 	}
 
-
-
-
-	// 测试使用
-	// token = `eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX2tleSI6IjRmYmYwYjM2LTg4MWMtNDBiZC1iNjBkLWNhMjFjZGM1YjRhOSIsInVzZXJuYW1lIjoiYWRtaW4ifQ.RVRkc0pL5GSqlGIz3rFnfhO8NzUyIvqw1SlbTR8leMByI2tyXr8pulNjJnwAomIwiB0P4B2y0xz9FvQoSQ3B8g`;
-	let token = localStorage.getItem("token");
-	let otherConfig = {
-		headers: {
-			// "Content-Type": "application/x-www-form-urlencoded",
-			"Content-Type": "application/json",
-			"Authorization": "Bearer " + token,
-		},
-		// transformRequest: [
-		// 	function(data) {
-		// 		let ret = "";
-		// 		let i = 0;
-		// 		for (let key in data) {
-		// 			if (i != 0) {
-		// 				ret += "&";
-		// 			} else {}
-		// 			if (key != "action") {
-		// 				// debugger
-		// 				ret +=
-		// 					encodeURIComponent(key) + "=" + encodeURIComponent(data[key]);
-		// 				i++;
-		// 			}
-		// 		}
-		// 		return ret;
-		// 	},
-		// ],
-	};
 
 	//特殊处理上传
 	if (reqUrl.includes("/file/api/v1/app/upload")) {
@@ -135,14 +99,12 @@ function api(option) {
 			url: reqUrl,
 			method: method,
 			params: reqData,
-			...otherConfig,
 		});
 	} else if (method == "post" || method == "put" || method == "delete") {
 		return axios_ins_common({
 			url: reqUrl,
 			method: method,
 			data: reqData,
-			...otherConfig,
 		});
 	}
 }

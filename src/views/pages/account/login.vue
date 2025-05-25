@@ -1,7 +1,8 @@
 <template>
   <div class="wrap flex-center">
     <div class="page-left">
-      <img src="@imgs/bg-login.jpg" alt="" />
+      <img src="@/assets/logo.png" alt="">
+      <img src="@imgs/bg-login.png" alt=""/>
     </div>
     <div class="page-right flex-center">
       <div class="inner-content">
@@ -10,61 +11,59 @@
           <div class="input-box">
             <span class="label">账号</span>
             <input
-              type="text"
-              placeholder
-              v-model="form.username"
-              @keyup.enter="do_submit()"
+                type="text"
+                placeholder
+                v-model="form.username"
+                @keyup.enter="do_submit()"
             />
           </div>
           <div class="input-box" v-if="login_type == 2">
             <span class="label">密码</span>
             <input
-              type="password"
-              placeholder
-              v-model="form.password"
-              @keyup.enter="do_submit()"
+                type="password"
+                placeholder
+                v-model="form.password"
+                @keyup.enter="do_submit()"
             />
           </div>
 
           <div class="input-box" v-if="login_type == 1">
             <span class="label">验证码</span>
             <input
-              type="text"
-              placeholder
-              v-model="form.code"
-              @keyup.enter="do_submit()"
+                type="text"
+                placeholder
+                v-model="form.code"
+                @keyup.enter="do_submit()"
             />
 
             <button
-              :disabled="disabledBtn"
-              class="btn-validate-box"
-              @click="getCode"
-              :class="time != 60 ? 'disabled' : ''"
+                :disabled="disabledBtn"
+                class="btn-validate-box"
+                @click="getCode"
+                :class="time != 60 ? 'disabled' : ''"
             >
               获取验证码
               <span>（{{ time }}）</span>
             </button>
           </div>
-
-          <!-- <sms_phone :form="form" /> -->
-
           <div class="links flex-between">
             <div class="link">
               <span @click="change_login_type()">{{
-                login_type == 1 ? "验证码登录" : "密码登录"
-              }}</span>
+                  login_type == 1 ? "验证码登录" : "密码登录"
+                }}</span>
             </div>
             <div class="link">
-              <router-link to="/retrieve">忘记密码</router-link>
+              <router-link to="/retireve">忘记密码</router-link>
             </div>
           </div>
 
           <div class="btn-box">
             <el-button
-              class="btn-ripple btn-ripple"
-              :loading="loading"
-              @click="throttle_do_submit()"
-              >登录</el-button
+                class="btn-ripple btn-ripple"
+                :loading="loading"
+                @click="throttle_do_submit()"
+            >登录
+            </el-button
             >
           </div>
         </div>
@@ -74,7 +73,7 @@
         <!-- <a href="https://beian.miit.gov.cn/" target="_blank">备案号</a> -->
         <div class="html-box">
           <a href="https://beian.miit.gov.cn/" target="_blank"
-            >Copyright © 2025 上海浦项通讯技术有限公司</a
+          >Copyright © 2025 上海浦项通讯技术有限公司</a
           >
         </div>
       </div>
@@ -84,6 +83,7 @@
 
 <script>
 import sms_phone from "@/components/login/sms_phone.vue";
+
 export default {
   name: "login",
   components: {
@@ -95,7 +95,6 @@ export default {
         username: "", //admin
         password: "", //yjd@2025...
         code: "", //
-        uuid: "",
       },
 
       login_type: 2, //1:验证码登录 2:密码登录
@@ -127,21 +126,26 @@ export default {
         alert("请输入账号");
         return;
       }
-      if (!this.form.password) {
+
+      if (this.login_type === 2 && !this.form.password) {
         alert("请输入密码");
+        return;
+      }
+
+      if (this.login_type === 1 && !this.form.code) {
+        alert("请输入验证码");
         return;
       }
 
       this.loading = true;
 
       this.$api({
-        url: "/login",
+        url: "web_login",
         method: "post",
         data: {
-          username: this.form.username,
+          mobile: this.form.username,
           password: this.form.password,
           code: this.form.code,
-          uuid: this.form.uuid,
         },
       }).then((res) => {
         this.$logjson("登录", res);
@@ -150,33 +154,10 @@ export default {
         });
 
         if (res.code == 200) {
-          let token = res.token;
+          let token = res.data.token;
           this.$store.commit("set_vuex_token", token);
-          //
-          this.$api({
-            url: "/getInfo",
-            method: "get",
-            data: {},
-          }).then((res) => {
-            console.log("动态获取用户信息", res);
-            if (res.code == 200) {
-              this.$store.commit("set_vuex_user", res);
-              this.$router.push("/baojiadan-list");
-              //
-
-              // this.$store.commit("setAdminUserInfo", res.data);
-
-              // localStorage.setItem("is_permission_refresh", 0)
-              // if (res.data.isSup) {
-              // 	//超级管理员
-              // 	this.$router.push("/banner-list");
-              // } else {
-              // 	this.$router.push("/banner-list");
-              // }
-            } else {
-              alert(res);
-            }
-          });
+          this.$store.dispatch("appInit");
+          this.$router.push("/baojiadan-list");
         } else {
           this.query_code();
         }
@@ -190,15 +171,11 @@ export default {
       }
 
       console.log("发送验证码");
-      let { phone, email } = this.form;
-      let reg_email =
-        /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+      let {username} = this.form;
       let reg_phone = /^1[3-9]\d{9}$/;
 
-      let is_true_phone = reg_phone.test(phone);
+      let is_true_phone = reg_phone.test(username);
 
-      // debugger
-      // var isEmail = reg_email.test(email);
 
       if (!is_true_phone) {
         alertErr("请输入正确的手机号");
@@ -212,11 +189,15 @@ export default {
 
     //修改绑定邮箱
     retrieveByEmail() {
-      this.$api("users_sendSms", {
-        phone: this.form.phone,
+      this.$api({
+        url: "api/send",
+        method: 'post',
+        data: {
+          mobile: this.form.username
+        }
       }).then((res) => {
         console.log("验证码", res);
-        let { code, message } = res;
+        let {code, message} = res;
       });
     },
 
@@ -253,12 +234,20 @@ export default {
 
   .page-left {
     width: 50%;
-    img {
+
+    img:first-child {
+      position: absolute;
+      top: 50%;
+      left: 15%;
+    }
+
+    img:last-child {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
   }
+
   .page-right {
     width: 50%;
     position: relative;
@@ -317,7 +306,7 @@ export default {
           height: 100%;
           padding-left: 20px;
           font-size: 16px;
-          color: #C6C6C6;
+          color: #000;
           border: none;
           background: #f7f8fa;
         }
@@ -360,8 +349,10 @@ export default {
       .links {
         margin-top: 30px;
         cursor: pointer;
+
         .link {
           color: @theme_color;
+
           a {
             color: @theme_color;
           }
@@ -376,7 +367,7 @@ export default {
           height: 60px;
           background: #000000;
 
-          background: linear-gradient( 90deg, #452F86 0%, #A92B83 31%, #D14F8D 67%, #E38179 100%);
+          background: linear-gradient(90deg, #452F86 0%, #A92B83 31%, #D14F8D 67%, #E38179 100%);
 
           font-size: 18px;
           font-family: PingFang SC;
