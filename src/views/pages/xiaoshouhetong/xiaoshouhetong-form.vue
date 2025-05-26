@@ -1,27 +1,34 @@
 <template>
   <div class="baojiadan-form">
     <div class="back" @click="back">
-      <img src="@/assets/back.png" alt=""/>
+      <img src="@/assets/back.png" alt="" />
       <span>创建销售合同</span>
     </div>
     <div class="baojiadan-form-content" ref="baojiadanForm">
       <!-- 合同信息 -->
-      <el-form :model="form" label-width="130px" class="section1">
+      <el-form
+        ref="form"
+        :model="form.companyInfo"
+        :rules="rules"
+        label-width="130px"
+        class="section1"
+      >
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="销售合同编号：">
+            <el-form-item label="销售合同编号：" prop="contractNo">
               <el-input
-                  v-model="form.contractNo"
-                  placeholder="请输入销售合同编号"
+                v-model="form.companyInfo.contractNo"
+                placeholder="请输入销售合同编号"
               ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="签订日期">
+            <el-form-item label="签订日期" prop="signDate">
               <el-date-picker
-                  v-model="form.signDate"
-                  type="date"
-                  placeholder="请选择签订日期"
+                v-model="form.companyInfo.signDate"
+                type="date"
+                placeholder="请选择签订日期"
+                value-format="yyyy-MM-dd"
               ></el-date-picker>
             </el-form-item>
           </el-col>
@@ -33,83 +40,86 @@
         <el-button type="primary" @click="addProduct">添加产品</el-button>
         <el-table :data="form.products" style="margin-top: 12px">
           <el-table-column
-              prop="name"
-              label="项目名称"
-              width="160"
-              align="center"
+            type="index"
+            label="项目名称"
+            width="160"
+            align="center"
+          ></el-table-column>
+          <el-table-column prop="title" label="品名" width="160" align="center">
+            <template slot-scope="scope">
+              <el-input
+                v-model="scope.row.title"
+                placeholder="请输入品名"
+              ></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column prop="specNo" label="型号、规格" align="center">
+            <template slot-scope="scope">
+              <el-input
+                v-model="scope.row.specNo"
+                placeholder="请输入型号、规格"
+              ></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column prop="unit" label="单位" align="center">
+            <template slot-scope="scope">
+              <el-input
+                v-model="scope.row.unit"
+                placeholder="请输入单位"
+              ></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column prop="num" label="数量" width="160" align="center">
+            <template slot-scope="scope">
+              <el-input-number
+                v-model="scope.row.num"
+                :min="1"
+                @change="calcTotal"
+              ></el-input-number>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="price"
+            label="含税单价"
+            width="160"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-input-number
+                v-model="scope.row.price"
+                :min="0"
+                @change="calcTotal"
+              ></el-input-number>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="totalPrice"
+            label="含税总金额"
+            width="160"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.totalPrice" disabled></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="remark"
+            label="备注"
+            width="160"
+            align="center"
           >
             <template slot-scope="scope">
               <el-input
-                  v-model="scope.row.name"
-                  placeholder="请输入项目名称"
-              ></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column prop="name" label="品名" width="160" align="center">
-            <template slot-scope="scope">
-              <el-input
-                  v-model="scope.row.name"
-                  placeholder="请输入品名"
-              ></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column prop="desc" label="型号、规格" align="center">
-            <template slot-scope="scope">
-              <el-input
-                  v-model="scope.row.desc"
-                  placeholder="请输入型号、规格"
-              ></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column prop="remark" label="单位" align="center">
-            <template slot-scope="scope">
-              <el-input
-                  v-model="scope.row.remark"
-                  placeholder="请输入单位"
-              ></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column prop="qty" label="数量" width="160" align="center">
-            <template slot-scope="scope">
-              <el-input-number
-                  v-model="scope.row.qty"
-                  :min="1"
-                  @change="calcTotal"
-              ></el-input-number>
-            </template>
-          </el-table-column>
-          <el-table-column prop="price" label="含税单价" width="160" align="center">
-            <template slot-scope="scope">
-              <el-input-number
-                  v-model="scope.row.price"
-                  :min="0"
-                  @change="calcTotal"
-              ></el-input-number>
-            </template>
-          </el-table-column>
-          <el-table-column prop="price" label="含税总金额" width="160" align="center">
-            <template slot-scope="scope">
-              <el-input-number
-                  v-model="scope.row.price"
-                  :min="0"
-                  @change="calcTotal"
-              ></el-input-number>
-            </template>
-          </el-table-column>
-          <el-table-column prop="price" label="备注" width="160" align="center">
-            <template slot-scope="scope">
-              <el-input
-                  v-model="scope.row.remark"
-                  placeholder="请输入备注"
+                v-model="scope.row.remark"
+                placeholder="请输入备注"
               ></el-input>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="160" align="center">
             <template slot-scope="scope">
               <el-button type="text" @click="removeProduct(scope.$index)"
-              >删除
-              </el-button
-              >
+                >删除
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -129,33 +139,44 @@
       <!-- 合同条款 -->
       <div class="section">
         <div class="title">合同条款</div>
-        <el-form :model="form" label-width="160px">
+        <el-form
+          ref="form1"
+          :model="form.termJson"
+          :rules="rules"
+          label-width="170px"
+        >
           <el-row :gutter="20">
             <el-col :span="20">
-              <el-form-item label="质量要求和技术标准：">
+              <el-form-item label="质量要求和技术标准：" prop="standard">
                 <el-input
-                    type="textarea"
-                    v-model="form.priceClause"
-                    placeholder="请输入"
+                  type="textarea"
+                  v-model="form.termJson.standard"
+                  placeholder="请输入"
                 ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="20">
-              <el-form-item label="保修说明：">
+              <el-form-item label="保修说明：" prop="warranty">
                 <el-input
-                    v-model="form.priceClause"
-                    placeholder="请输入"
+                  type="textarea"
+                  v-model="form.termJson.warranty"
+                  placeholder="请输入"
                 ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="20">
-              <el-form-item label="相关费用：">
-                <el-radio-group v-model="form.status">
-                  <el-radio v-for="(item, index) in status_options" :key="index" :label="item.value">
+              <el-form-item label="相关费用：" prop="relatedCosts">
+                <el-radio-group v-model="form.termJson.relatedCosts">
+                  <el-radio
+                    v-for="(item, index) in status_options"
+                    :key="index"
+                    :label="item.value"
+                    :value="item.value"
+                  >
                     {{ item.title }}
                   </el-radio>
                 </el-radio-group>
@@ -164,23 +185,28 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="20">
-              <el-form-item label="需方收货人信息：">
+              <el-form-item label="需方收货人信息：" prop="shouHuo">
                 <el-input
-                    v-model="form.priceClause"
-                    placeholder="请输入"
+                  v-model="form.termJson.shouHuo"
+                  placeholder="请输入"
                 ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="20">
-              <el-form-item label="货款清算及结算方式：">
-                <el-radio-group v-model="form.status">
-                  <el-radio v-for="(item, index) in type_options" :key="index" :label="item.value" v-if="item.title !== '自定义'">
+              <el-form-item label="货款清算及结算方式：" prop="payment">
+                <el-radio-group v-model="form.termJson.payment">
+                  <el-radio
+                    v-for="(item, index) in type_options"
+                    :key="index"
+                    :label="item.value"
+                    :value="item.value"
+                  >
                     {{ item.title }}
                   </el-radio>
-                  <el-radio :label="3" v-else>
-                    <el-input></el-input>
+                  <el-radio :label="3" :value="3">
+                    <el-input v-model="form.termJson.paymentDesc"></el-input>
                   </el-radio>
                 </el-radio-group>
               </el-form-item>
@@ -192,37 +218,42 @@
       <!-- 需方信息 -->
       <div class="section">
         <div class="title">需方信息</div>
-        <el-form :model="form" label-width="120px">
+        <el-form
+          ref="form2"
+          :model="form.companyInfo"
+          :rules="rules"
+          label-width="120px"
+        >
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="需方单位名称：">
-                <el-input v-model="form.customerName"></el-input>
+              <el-form-item label="需方单位名称：" prop="company">
+                <el-input v-model="form.companyInfo.company"></el-input>
               </el-form-item>
-              <el-form-item label="法定代表人：">
-                <el-input v-model="form.mobile"></el-input>
+              <el-form-item label="法定代表人：" prop="fdName">
+                <el-input v-model="form.companyInfo.fdName"></el-input>
               </el-form-item>
-              <el-form-item label="电话：">
-                <el-input v-model="form.mobile"></el-input>
+              <el-form-item label="电话：" prop="phone">
+                <el-input v-model="form.companyInfo.phone"></el-input>
               </el-form-item>
-              <el-form-item label="开户银行：">
-                <el-input v-model="form.mobile"></el-input>
+              <el-form-item label="开户银行：" prop="bank">
+                <el-input v-model="form.companyInfo.bank"></el-input>
               </el-form-item>
-              <el-form-item label="法定代表人：">
-                <el-input v-model="form.mobile"></el-input>
+              <el-form-item label="税号：" prop="taxCode">
+                <el-input v-model="form.companyInfo.taxCode"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="单位地址：">
-                <el-input v-model="form.contact"></el-input>
+              <el-form-item label="单位地址：" prop="address">
+                <el-input v-model="form.companyInfo.address"></el-input>
               </el-form-item>
-              <el-form-item label="委托代理人：">
-                <el-input v-model="form.contact"></el-input>
+              <el-form-item label="委托代理人：" prop="wtName">
+                <el-input v-model="form.companyInfo.wtName"></el-input>
               </el-form-item>
-              <el-form-item label="邮编：">
-                <el-input v-model="form.contact"></el-input>
+              <el-form-item label="邮编：" prop="zipCode">
+                <el-input v-model="form.companyInfo.zipCode"></el-input>
               </el-form-item>
-              <el-form-item label="账号：">
-                <el-input v-model="form.contact"></el-input>
+              <el-form-item label="账号：" prop="bankCode">
+                <el-input v-model="form.companyInfo.bankCode"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -242,22 +273,32 @@
 export default {
   data() {
     return {
+      id: "",
       form: {
-        contractNo: "",
-        signDate: "",
         products: [
-          {name: "", desc: "", unit: "", price: 0, qty: 1, remark: ""},
+          { name: "", desc: "", unit: "", price: 0, qty: 1, remark: "" },
         ],
-        priceClause: "",
-        validity: "",
-        transport: "",
-        payment: "",
-        delivery: "",
-        minOrder: "",
-        package: "",
-        customerName: "",
-        contact: "",
-        mobile: "",
+        termJson: {
+          standard: "",
+          warranty: "",
+          relatedCosts: "",
+          shouHuo: "",
+          payment: "",
+          paymentDesc: "",
+        },
+        companyInfo: {
+          contractNo: "",
+          signDate: "",
+          company: "",
+          fdName: "",
+          phone: "",
+          bank: "",
+          taxCode: "",
+          address: "",
+          wtName: "",
+          zipCode: "",
+          bankCode: "",
+        },
       },
       status_options: [
         {
@@ -266,39 +307,94 @@ export default {
         },
         {
           value: 2,
-          title: '全部运费由需方承担。'
-        }
+          title: "全部运费由需方承担。",
+        },
       ],
       type_options: [
         {
           value: 1,
-          title: "收到全部货款后发货。"
+          title: "收到全部货款后发货。",
         },
         {
           value: 2,
-          title: "自收到产品之日起2日内，需方通过银行转账方式向供方一次性支付所有货款"
+          title:
+            "自收到产品之日起2日内，需方通过银行转账方式向供方一次性支付所有货款",
         },
-        {
-          value: 3,
-          title: "自定义"
-        }
-      ]
+      ],
+      rules: {
+        contractNo: [{ required: true, message: "请输入销售合同编号" }],
+        signDate: [{ required: true, message: "请选择签订日期" }],
+        company: [{ required: true, message: "请输入需方单位名称" }],
+        standard: [{ required: true, message: "请输入质量要求和技术标准" }],
+        warranty: [{ required: true, message: "请输入保修说明" }],
+        relatedCosts: [{ required: true, message: "请选择相关费用" }],
+        shouHuo: [{ required: true, message: "请输入需方收货人信息" }],
+        payment: [{ required: true, message: "请选择货款清算及结算方式" }],
+        paymentDesc: [
+          { required: true, message: "请输入货款清算及结算方式描述" },
+        ],
+        fdName: [{ required: true, message: "请输入法定代表人" }],
+        phone: [{ required: true, message: "请输入电话" }],
+        bank: [{ required: true, message: "请输入开户银行" }],
+        taxCode: [{ required: true, message: "请输入税号" }],
+        address: [{ required: true, message: "请输入单位地址" }],
+        wtName: [{ required: true, message: "请输入委托代理人" }],
+        zipCode: [{ required: true, message: "请输入邮编" }],
+        bankCode: [{ required: true, message: "请输入账号" }],
+      },
     };
   },
   computed: {
     totalAmount() {
       return this.form.products
-          .reduce((sum, item) => sum + item.price * item.qty, 0)
-          .toFixed(2);
+        .reduce((sum, item) => sum + item.price * item.qty, 0)
+        .toFixed(2);
     },
   },
   mounted() {
     // 获取baojiadanForm距离可视区顶部的距离, 根据可视区高度 减去顶部距离设置高度
     this.$nextTick(() => {
       this.$refs.baojiadanForm.style.height = `${
-          window.innerHeight - this.$refs.baojiadanForm.offsetTop - 100
+        window.innerHeight - this.$refs.baojiadanForm.offsetTop - 100
       }px`;
     });
+
+    this.id = this.$route.query.id;
+    if (this.id) {
+      this.$api({
+        url: "getContractDetail",
+        method: "post",
+        data: { id: this.id },
+      }).then((res) => {
+        if (res.code === 200) {
+          this.form = {
+            products: res.data.productJson,
+            termJson: {
+              standard: res.data.standard,
+              warranty: res.data.warranty,
+              relatedCosts: res.data.relatedCosts,
+              shouHuo: res.data.shouHuo,
+              payment: res.data.payment,
+              paymentDesc:
+                res.data.payment == 3 ? res.data.paymentDesc : "",
+            },
+            companyInfo: {
+              contractNo: res.data.contractNo,
+              signDate: res.data.signDate,
+              company: res.data.company,
+              fdName: res.data.fdName,
+              phone: res.data.phone,
+              bank: res.data.bank,
+              taxCode: res.data.taxCode,
+              address: res.data.address,
+              wtName: res.data.wtName,
+              zipCode: res.data.zipCode,
+              bankCode: res.data.bankCode,
+            },
+          };
+        }
+      });
+    }
   },
   methods: {
     addProduct() {
@@ -316,17 +412,77 @@ export default {
     },
     calcTotal() {
       // 触发合计更新
+      this.form.products.forEach((item) => {
+        item.totalPrice = item.price * item.num;
+      });
     },
     submit() {
-      // 提交逻辑
-      this.$message.success("提交成功");
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          // 依次校验form1和form2
+          this.$refs.form1.validate((valid1) => {
+            if (valid1) {
+              this.$refs.form2.validate((valid2) => {
+                if (valid2) {
+                  if (this.form.termJson.payment == 3) {
+                    if (this.form.termJson.paymentDesc == "") {
+                      this.$message.error("请输入货款清算及结算方式描述");
+                      return;
+                    }
+                  }
+                  // 检查产品列表
+                  this.form.products.forEach((item) => {
+                    if (
+                      item.title === "" ||
+                      item.specNo === "" ||
+                      item.unit === "" ||
+                      item.num === 0 ||
+                      item.price === 0
+                    ) {
+                      this.$message.error("请检查产品列表输入内容");
+                      return;
+                    }
+                    this.$api({
+                      url: "createContract",
+                      method: "post",
+                      data: {
+                        id: this.id,
+                        type: 1,
+                        ...this.form.companyInfo,
+                        ...this.form.termJson,
+                        paymentDesc:
+                          this.form.termJson.payment == 3
+                            ? this.form.termJson.paymentDesc
+                            : "",
+                        productJson: JSON.stringify(this.form.products),
+                      },
+                    }).then((res) => {
+                      if (res.code === 200) {
+                        this.$router.push("/xiaoshouhetong-success");
+                      } else {
+                        this.$message.error("创建失败");
+                      }
+                    });
+                  });
+                } else {
+                  this.$message.error("请检查需方信息输入内容");
+                }
+              });
+            } else {
+              this.$message.error("请检查合同条款输入内容");
+            }
+          });
+        } else {
+          this.$message.error("请检查合同信息输入内容");
+        }
+      });
     },
     reset() {
       // 重置逻辑
       this.$message.info("已取消");
     },
     back() {
-      this.$router.back();
+      this.$router.push("/xiaoshouhetong-list");
     },
   },
 };
@@ -423,11 +579,13 @@ export default {
     width: 180px;
     height: 48px;
     font-size: 16px;
-    background: linear-gradient(90deg,
-    #452f86 0%,
-    #a92b83 31%,
-    #d14f8d 67%,
-    #e38179 100%) !important;
+    background: linear-gradient(
+      90deg,
+      #452f86 0%,
+      #a92b83 31%,
+      #d14f8d 67%,
+      #e38179 100%
+    ) !important;
     border: none;
   }
 

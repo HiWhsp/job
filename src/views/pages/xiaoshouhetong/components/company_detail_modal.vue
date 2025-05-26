@@ -1,14 +1,14 @@
 <template>
   <div class="custom-form-modal">
     <el-dialog
-        title="上传回签"
-        width="600px"
-        custom-class="modal-form"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        :visible.sync="show_modal"
-        :append-to-body="true"
-        @closed="on_dialog_closed()"
+      title="上传回签"
+      width="600px"
+      custom-class="modal-form"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :visible.sync="show_modal"
+      :append-to-body="true"
+      @closed="on_dialog_closed()"
     >
       <div class="modal-ctx">
         <div class="f-list">
@@ -19,21 +19,21 @@
                 <div class="upload-box">
                   <div class="upload-item">
                     <el-upload
-                        class="cus-upload-image-drag"
-                        list-type="picture-card"
-                        accept="application/pdf"
-                        :multiple="false"
-                        :limit="1"
-                        :show-file-list="true"
-                        :drag="true"
-                        :disabled="false"
-                        :name="mix_upload_name"
-                        :action="mix_upload_action"
-                        :data="mix_upload_data"
-                        :headers="mix_upload_headers"
-                        :file-list="upload_file_list_map['businessLicense']"
-                        :before-upload="upload_on_before_upload"
-                        :on-success="
+                      class="cus-upload-image-drag"
+                      list-type="picture-card"
+                      accept="application/pdf"
+                      :multiple="false"
+                      :limit="1"
+                      :show-file-list="true"
+                      :drag="true"
+                      :disabled="false"
+                      :name="mix_upload_name"
+                      :action="mix_upload_action"
+                      :data="mix_upload_data"
+                      :headers="mix_upload_headers"
+                      :file-list="upload_file_list_map['businessLicense']"
+                      :before-upload="upload_on_before_upload"
+                      :on-success="
                         (res, file, fileList) =>
                           upload_on_success({
                             field_info: { field: 'businessLicense' },
@@ -42,7 +42,7 @@
                             fileList,
                           })
                       "
-                        :on-remove="
+                      :on-remove="
                         (file, fileList) =>
                           upload_on_remove({
                             field_info: { field: 'businessLicense' },
@@ -50,7 +50,7 @@
                             fileList,
                           })
                       "
-                        :on-preview="upload_on_preview"
+                      :on-preview="upload_on_preview"
                     >
                       <i class="el-icon-picture"></i>
                       <div class="el-upload__text">
@@ -69,15 +69,20 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="show_modal = false">取消</el-button>
-        <el-button type="primary" :loading="loading" @click="throttle_do_submit()">确定</el-button>
+        <el-button
+          type="primary"
+          :loading="loading"
+          @click="throttle_do_submit()"
+          >确定</el-button
+        >
       </span>
     </el-dialog>
 
     <el-dialog :visible.sync="is_preview_image">
-      <img width="100%" :src="preview_image_src" alt=""/>
+      <img width="100%" :src="preview_image_src" alt="" />
     </el-dialog>
     <el-dialog :visible.sync="is_preview_video">
-      <video width="100%" :src="preview_video_src" controls alt=""/>
+      <video width="100%" :src="preview_video_src" controls alt="" />
     </el-dialog>
   </div>
 </template>
@@ -103,7 +108,7 @@ export default {
       },
       origin_form: {},
       loading: false,
-      type: 'add',
+      type: "add",
 
       //
       rangeId_values: "",
@@ -181,11 +186,11 @@ export default {
           // this.tree_field_title_map.channelId = data.channel_title
           if (data.businessLicense) {
             this.upload_file_list_map["businessLicense"] = data.businessLicense
-                .split(",")
-                .filter((v) => !!v)
-                .map((v) => ({
-                  url: v,
-                }));
+              .split(",")
+              .filter((v) => !!v)
+              .map((v) => ({
+                url: v,
+              }));
           }
         }
       });
@@ -227,39 +232,22 @@ export default {
       // 	this.upload_file_list_map[field] = []
       // }
       this.upload_file_list_map = JSON.parse(
-          JSON.stringify(this.origin_upload_file_list_map)
+        JSON.stringify(this.origin_upload_file_list_map)
       );
       this.origin_upload_url_map = JSON.parse(
-          JSON.stringify(this.origin_upload_url_map)
+        JSON.stringify(this.origin_upload_url_map)
       );
     },
     do_submit() {
       let params = {
-        ...this.form,
-        businessLicense: this.upload_url_map["businessLicense"].join(","),
-        // rangeId: this.rangeId_values.join(',')
+        signBackPdfUrl: this.upload_url_map["businessLicense"].join(","),
       };
-      if (this.is_edit) {
-        params[this.unique_key] = this.row.id;
-      }
-
-      if (!params.companyCode) {
-        return alertErr("请填写" + "企业编码");
-      }
-      if (!params.companyName) {
-        return alertErr("请填写" + "企业名称");
-      }
-      if (!params.contacts) {
-        return alertErr("请填写" + "联系人");
-      }
-      if (!params.businessLicense) {
-        return alertErr("请上传" + "营业执照");
-      }
+      params[this.id] = this.row.id;
 
       this.loading = true;
       this.$api({
-        url: "/company/info",
-        method: this.is_edit ? "put" : "post",
+        url: "signBackContract",
+        method: "post",
         data: params,
       }).then((res) => {
         alert(res).then(() => {
@@ -280,7 +268,7 @@ export default {
       return isLt50M;
     },
     upload_on_success(option) {
-      let {field_info, res, file, fileList} = option;
+      let { field_info, res, file, fileList } = option;
       this.$log("upload_on_success option", option);
 
       if (res.code == 200) {
@@ -288,18 +276,18 @@ export default {
         this.upload_file_list_map[field_info.field] = fileList;
         // this.upload_url_map[field_info.field].push(url)
         this.upload_url_map[field_info.field] = fileList.map(
-            (v) => v.response && v.response.url
+          (v) => v.response && v.response.path
         );
       } else {
         alert(res);
       }
     },
     upload_on_remove(option) {
-      let {field_info, file, fileList} = option;
+      let { field_info, file, fileList } = option;
       this.$log("upload_on_remove option", option);
       this.upload_file_list_map[field_info.field] = fileList;
       this.upload_url_map[field_info.field] = fileList.map(
-          (v) => v.response && v.response.url
+        (v) => v.response && v.response.url
       );
     },
     upload_on_preview(file) {

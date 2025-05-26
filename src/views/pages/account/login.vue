@@ -156,6 +156,7 @@ export default {
         if (res.code == 200) {
           let token = res.data.token;
           this.$store.commit("set_vuex_token", token);
+          this.$store.commit("set_vuex_user", res.data);
           this.$store.dispatch("appInit");
           this.$router.push("/baojiadan-list");
         } else {
