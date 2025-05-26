@@ -7,9 +7,7 @@
             <div class="control-left">
               <div class="control-act">
                 <div class="act-form">
-                  <el-button type="primary" @click="do_add()"
-                    >创建合计报价单</el-button
-                  >
+                  <el-button type="primary" @click="do_add()">创建合计报价单</el-button>
                 </div>
               </div>
             </div>
@@ -29,11 +27,7 @@
 
               <div class="control-act">
                 <div class="act-form">
-                  <el-button
-                    icon="el-icon-search"
-                    type="primary"
-                    @click="do_search()"
-                  >
+                  <el-button icon="el-icon-search" type="primary" @click="do_search()">
                   </el-button>
                 </div>
               </div>
@@ -42,48 +36,41 @@
         </div>
         <div class="table-view" data-title="渲染表格">
           <div class="table-box">
-            <el-table :data="table_data">
-              <el-table-column
-                label="序号"
-                prop="companyId"
-                width="100"
-              ></el-table-column>
+            <el-table :data="table_data" ref="baojiadanForm" :height="tableHeight">
+              <el-table-column label="序号" type="index" width="100"></el-table-column>
               <el-table-column
                 label="合计报价单编号"
-                prop="companyCode"
+                prop="quotationNo"
                 width="200"
               ></el-table-column>
               <el-table-column
                 label="签订日期"
-                prop="companyName"
+                prop="signDate"
                 width="200"
               ></el-table-column>
               <el-table-column
                 label="客户名称"
-                prop="contacts"
+                prop="customerCompany"
                 width="auto"
               ></el-table-column>
               <el-table-column
                 label="联系人"
-                prop="contactNumber"
+                prop="customerName"
                 width="120"
               ></el-table-column>
               <el-table-column
                 label="手机"
-                prop="email"
+                prop="customerPhone"
                 width="150"
               ></el-table-column>
               <el-table-column
                 label="产品总金额"
-                prop="address"
+                prop="price"
                 width="300"
               ></el-table-column>
               <el-table-column fixed="right" label="操作" width="300">
                 <template slot-scope="scope">
-                  <div
-                    :class="scope.row.status == 1 ? '' : 'disabled'"
-                    class="row-acts"
-                  >
+                  <div :class="scope.row.status == 1 ? '' : 'disabled'" class="row-acts">
                     <div class="row-act">
                       <el-button type="text" @click="do_set_scope(scope.row)"
                         >预览</el-button
@@ -95,14 +82,12 @@
                       >
                     </div>
                     <div class="row-act" v-if="scope.row.status == 1">
-                      <el-button type="text" @click="do_edit(scope.row)"
-                        >编辑</el-button
-                      >
+                      <el-button type="text" @click="do_edit(scope.row)">编辑</el-button>
                     </div>
                     <div class="row-act error">
-                      <el-button type="text" @click="do_delete(scope.row)"
-                        >{{ scope.row.status == 0 ? "已作废" : "作废" }}</el-button
-                      >
+                      <el-button type="text" @click="do_delete(scope.row)">{{
+                        scope.row.status == 0 ? "已作废" : "作废"
+                      }}</el-button>
                     </div>
                   </div>
                 </template>
@@ -110,7 +95,7 @@
             </el-table>
           </div>
         </div>
-        <div class="tool-view" v-if="total">
+        <div class="tool-view" v-if="total > 0">
           <div class="tool-left" data-title="批量操作"></div>
           <div class="tool-right">
             <div class="pagi-item">
@@ -159,15 +144,24 @@ export default {
         type: 1,
       },
       total: 0,
+      tableHeight: 0,
     };
   },
-  computed: {
-  },
+  computed: {},
   watch: {},
   created() {
     this.query_view();
   },
-  mounted() {},
+  mounted() {
+    this.$nextTick(() => {
+      this.tableHeight =
+        window.innerHeight - this.$refs.baojiadanForm.$el.offsetTop - 180;
+      window.onresize = () => {
+        this.tableHeight =
+          window.innerHeight - this.$refs.baojiadanForm.$el.offsetTop - 180;
+      };
+    });
+  },
   methods: {
     query_view() {
       this.query_list();
@@ -182,7 +176,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           this.table_data = res.data.list;
-          this.total = res.count;
+          this.total = res.data.count;
         }
       });
     },
@@ -265,5 +259,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>

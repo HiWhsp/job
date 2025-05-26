@@ -40,40 +40,24 @@
         <el-button type="primary" @click="addProduct">添加产品</el-button>
         <el-table :data="form.products" style="margin-top: 12px">
           <el-table-column
-            prop="title"
+            type="index"
             label="项目名称"
             width="160"
             align="center"
-          >
+          ></el-table-column>
+          <el-table-column prop="title" label="品名" width="160" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.title"
-                placeholder="请输入项目名称"
-              ></el-input>
+              <el-input v-model="scope.row.title" placeholder="请输入品名"></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="name" label="品名" width="160" align="center">
+          <el-table-column prop="specNo" label="描述" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.name"
-                placeholder="请输入品名"
-              ></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column prop="desc" label="描述" align="center">
-            <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.desc"
-                placeholder="请输入描述"
-              ></el-input>
+              <el-input v-model="scope.row.specNo" placeholder="请输入描述"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="unit" label="单位" width="160" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.unit"
-                placeholder="请输入单位"
-              ></el-input>
+              <el-input v-model="scope.row.unit" placeholder="请输入单位"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="price" label="单价" width="160" align="center">
@@ -94,22 +78,14 @@
               ></el-input-number>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="totalPrice"
-            label="合计"
-            width="160"
-            align="center"
-          >
+          <el-table-column prop="totalPrice" label="合计" width="160" align="center">
             <template slot-scope="scope">
               <span>￥{{ scope.row.totalPrice }}</span>
             </template>
           </el-table-column>
           <el-table-column label="备注" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.remark"
-                placeholder="请输入备注"
-              ></el-input>
+              <el-input v-model="scope.row.remark" placeholder="请输入备注"></el-input>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="160" align="center">
@@ -132,10 +108,7 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="以上报价含增值税：" prop="tax">
-                <el-input
-                  v-model="form.termJson.tax"
-                  placeholder="请输入"
-                ></el-input>
+                <el-input v-model="form.termJson.tax" placeholder="请输入"></el-input>
               </el-form-item>
               <el-form-item label="价格条款：" prop="priceTerms">
                 <el-input
@@ -158,10 +131,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="付款方式" prop="payType">
-                <el-input
-                  v-model="form.termJson.payType"
-                  placeholder="请输入"
-                ></el-input>
+                <el-input v-model="form.termJson.payType" placeholder="请输入"></el-input>
               </el-form-item>
               <el-form-item label="交货时间" prop="deliveryTime">
                 <el-input
@@ -170,16 +140,10 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="最小订货量" prop="min">
-                <el-input
-                  v-model="form.termJson.min"
-                  placeholder="请输入"
-                ></el-input>
+                <el-input v-model="form.termJson.min" placeholder="请输入"></el-input>
               </el-form-item>
               <el-form-item label="包装方式" prop="pack">
-                <el-input
-                  v-model="form.termJson.pack"
-                  placeholder="请输入"
-                ></el-input>
+                <el-input v-model="form.termJson.pack" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -241,14 +205,14 @@ export default {
           },
         ], // 产品
         termJson: {
-          tax: "",
-          priceTerms: "",
-          validityTime: "",
-          transport: "",
-          payType: "",
-          deliveryTime: "",
-          min: "",
-          pack: "",
+          tax: "均含13%增值税",
+          priceTerms: "送货到客户指定仓库",
+          validityTime: "15天",
+          transport: "汽运",
+          payType: "现款",
+          deliveryTime: "签完合同以后两周内交货",
+          min: "片",
+          pack: "纸箱",
         }, // 合同条款
       },
       rules: {
@@ -262,9 +226,12 @@ export default {
   },
   computed: {
     totalAmount() {
-      return this.form.products
-        .reduce((sum, item) => sum + item.price * item.num, 0)
-        .toFixed(2);
+      if (this.form.products.length > 0) {
+        return this.form.products
+          .reduce((sum, item) => sum + item.price * item.num, 0)
+          .toFixed(2);
+      }
+      return 0;
     },
   },
   mounted() {
@@ -285,7 +252,13 @@ export default {
         },
       }).then((res) => {
         if (res.code === 200) {
-          this.form = res.data;
+          this.form.products = res.data.productJson;
+          this.form.termJson = res.data.termJson;
+          this.form.quotationNo = res.data.quotationNo;
+          this.form.signDate = res.data.signDate;
+          this.form.customerCompany = res.data.customerCompany;
+          this.form.customerPhone = res.data.customerPhone;
+          this.form.customerName = res.data.customerName;
         }
       });
     }
@@ -323,7 +296,7 @@ export default {
               this.form.products.forEach((item) => {
                 if (
                   item.title === "" ||
-                  item.name === "" ||
+                  item.specNo === "" ||
                   item.unit === "" ||
                   item.price === 0 ||
                   item.num === 0
@@ -343,7 +316,7 @@ export default {
                 this.form.termJson.min === "" ||
                 this.form.termJson.pack === ""
               ) {
-                this.$message.error("请输入完整的产品信息");
+                this.$message.error("请输入完整的合同信息");
                 return false;
               }
               // 提交
@@ -351,10 +324,15 @@ export default {
                 url: "createQuotation",
                 method: "post",
                 data: {
-                  ...this.form,
-                  products: JSON.stringify(this.form.products),
+                  quotationNo: this.form.quotationNo,
+                  signDate: this.form.signDate,
+                  customerCompany: this.form.customerCompany,
+                  customerPhone: this.form.customerPhone,
+                  customerName: this.form.customerName,
+                  productJson: JSON.stringify(this.form.products),
                   termJson: JSON.stringify(this.form.termJson),
                   id: this.id,
+                  type: 1,
                 },
               }).then((res) => {
                 if (res.code === 200) {
@@ -372,7 +350,7 @@ export default {
       this.$message.info("已取消");
     },
     back() {
-      this.$router.back();
+      this.$router.push("/baojiadan-list");
     },
   },
 };

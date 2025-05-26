@@ -2,7 +2,7 @@
   <div class="baojiadan-form">
     <div class="back" @click="back">
       <img src="@/assets/back.png" alt="" />
-      <span>创建合计报价单</span>
+      <span>创建阶梯报价单</span>
     </div>
     <div class="baojiadan-form-content" ref="baojiadanForm">
       <div class="baojiadan-form-content-title">
@@ -37,11 +37,10 @@ export default {
       this.$message.success("提交成功");
     },
     reset() {
-      // 重置逻辑
-      this.$message.info("已取消");
+      this.$router.push("/jietibaojiadan-list");
     },
     back() {
-      this.$router.back();
+      this.$router.push("/jietibaojiadan-form");
     },
   },
 };

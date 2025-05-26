@@ -7,9 +7,7 @@
             <div class="control-left">
               <div class="control-act">
                 <div class="act-form">
-                  <el-button type="primary" @click="do_add()"
-                    >创建阶梯报价单</el-button
-                  >
+                  <el-button type="primary" @click="do_add()">创建阶梯报价单</el-button>
                 </div>
               </div>
             </div>
@@ -29,11 +27,7 @@
 
               <div class="control-act">
                 <div class="act-form">
-                  <el-button
-                    icon="el-icon-search"
-                    type="primary"
-                    @click="do_search()"
-                  >
+                  <el-button icon="el-icon-search" type="primary" @click="do_search()">
                   </el-button>
                 </div>
               </div>
@@ -42,49 +36,36 @@
         </div>
         <div class="table-view" data-title="渲染表格">
           <div class="table-box">
-            <el-table :data="table_data">
-              <el-table-column
-                label="序号"
-                prop="companyId"
-                width="100"
-                align="center"
-              ></el-table-column>
+            <el-table :data="table_data" ref="baojiadanForm" :height="tableHeight">
+              <el-table-column label="序号" type="index" width="100"></el-table-column>
               <el-table-column
                 label="阶梯报价单编号"
-                prop="companyCode"
-                width="auto"
-                align="center"
+                prop="quotationNo"
+                width="200"
               ></el-table-column>
               <el-table-column
                 label="签订日期"
-                prop="companyName"
-                width="auto"
-                align="center"
+                prop="signDate"
+                width="200"
               ></el-table-column>
               <el-table-column
                 label="客户名称"
-                prop="contacts"
+                prop="customerCompany"
                 width="auto"
-                align="center"
               ></el-table-column>
               <el-table-column
                 label="联系人"
-                prop="contactNumber"
-                width="auto"
-                align="center"
+                prop="customerName"
+                width="120"
               ></el-table-column>
               <el-table-column
                 label="手机"
-                prop="email"
-                width="auto"
-                align="center"
+                prop="customerPhone"
+                width="150"
               ></el-table-column>
-              <el-table-column fixed="right" label="操作">
+              <el-table-column fixed="right" label="操作" width="300">
                 <template slot-scope="scope">
-                  <div
-                    :class="scope.row.status == 1 ? '' : 'disabled'"
-                    class="row-acts"
-                  >
+                  <div :class="scope.row.status == 1 ? '' : 'disabled'" class="row-acts">
                     <div class="row-act">
                       <el-button type="text" @click="do_set_scope(scope.row)"
                         >预览</el-button
@@ -96,14 +77,12 @@
                       >
                     </div>
                     <div class="row-act" v-if="scope.row.status == 1">
-                      <el-button type="text" @click="do_edit(scope.row)"
-                        >编辑</el-button
-                      >
+                      <el-button type="text" @click="do_edit(scope.row)">编辑</el-button>
                     </div>
                     <div class="row-act error">
-                      <el-button type="text" @click="do_delete(scope.row)"
-                        >作废</el-button
-                      >
+                      <el-button type="text" @click="do_delete(scope.row)">{{
+                        scope.row.status == 0 ? "已作废" : "作废"
+                      }}</el-button>
                     </div>
                   </div>
                 </template>
@@ -111,7 +90,7 @@
             </el-table>
           </div>
         </div>
-        <div class="tool-view" v-if="total">
+        <div class="tool-view" v-if="total > 0">
           <div class="tool-left" data-title="批量操作"></div>
           <div class="tool-right">
             <div class="pagi-item">
@@ -152,31 +131,33 @@ export default {
   data() {
     return {
       unique_key: "companyId",
-      table_data: [{ status: 1 }, { status: 0 }],
+      table_data: [],
       search_params: {
         keyword: "",
         page: 1,
         limit: 10,
         type: 2,
       },
-      origin_search_params: {},
       total: 0,
+      tableHeight: 0,
     };
   },
-  computed: {
-  },
+  computed: {},
   watch: {},
   created() {
-    this.set_params();
     this.query_view();
   },
-  mounted() {},
-  methods: {
-    set_params() {
-      this.origin_search_params = {
-        ...this.search_params,
+  mounted() {
+    this.$nextTick(() => {
+      this.tableHeight =
+        window.innerHeight - this.$refs.baojiadanForm.$el.offsetTop - 180;
+      window.onresize = () => {
+        this.tableHeight =
+          window.innerHeight - this.$refs.baojiadanForm.$el.offsetTop - 180;
       };
-    },
+    });
+  },
+  methods: {
     query_view() {
       this.query_list();
     },
@@ -190,7 +171,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           this.table_data = res.data.list;
-          this.total = res.count;
+          this.total = res.data.count;
         }
       });
     },
@@ -199,14 +180,13 @@ export default {
       this.search_params.page = 1;
       this.query_view();
     },
-
     on_pagi_size_change(value) {
       this.search_params.limit = value;
       this.search_params.page = 1;
       this.query_view();
     },
     on_pagi_current_change(value) {
-      this.search_params.pageNum = value;
+      this.search_params.page = value;
       this.query_view();
     },
 
@@ -237,9 +217,11 @@ export default {
       })
         .then(() => {
           this.$api({
-            url: `/company/info/${row.id}`,
-            method: "delete",
-            data: {},
+            url: `cancelQuotation`,
+            method: "post",
+            data: {
+              id: row.id,
+            },
           }).then((res) => {
             alert(res);
             if (res.code == 200) {

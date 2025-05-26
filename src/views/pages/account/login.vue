@@ -176,7 +176,6 @@ export default {
 
       let is_true_phone = reg_phone.test(username);
 
-
       if (!is_true_phone) {
         alertErr("请输入正确的手机号");
         return;
