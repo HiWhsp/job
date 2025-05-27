@@ -17,7 +17,11 @@
                   :on-success="upload_on_success"
                   :before-upload="upload_before_upload"
                 >
-                  <img v-if="form.image" :src="form.image" class="user-avatar" />
+                  <img
+                    v-if="form.image"
+                    :src="form.image"
+                    class="user-avatar"
+                  />
                   <img v-else src="@/assets/avatar.png" class="user-avatar" />
                 </el-upload>
               </div>
@@ -68,7 +72,10 @@
                 :loading="loading"
                 >保存</el-button
               >
-              <button class="btn-ripple fit-text btn-cancel" @click="do_reset()">
+              <button
+                class="btn-ripple fit-text btn-cancel"
+                @click="do_reset()"
+              >
                 清空
               </button>
             </div>
@@ -150,20 +157,24 @@ export default {
       this.$api({
         url: "getUserInfo",
         method: "get",
-      }).then((res) => {
-        if (res.code == 200) {
+      })
+        .then((res) => {
           loading.close();
-          this.my_info = res.data;
-          this.form = {
-            image: res.data.image || "",
-            realName: res.data.real_name || "",
-            mobile: res.data.mobile || "",
-            email: res.data.email || "",
-            sex: res.data.sex || "",
-          };
-          this.$store.commit("set_vuex_user", res.data);
-        }
-      });
+          if (res.code == 200) {
+            this.my_info = res.data;
+            this.form = {
+              image: res.data.image || "",
+              realName: res.data.real_name || "",
+              mobile: res.data.mobile || "",
+              email: res.data.email || "",
+              sex: res.data.sex || "",
+            };
+            this.$store.commit("set_vuex_user", res.data);
+          }
+        })
+        .catch(() => {
+          loading.close();
+        });
     },
 
     do_submit() {

@@ -20,39 +20,20 @@
                   <div class="upload-item">
                     <el-upload
                       class="cus-upload-image-drag"
-                      list-type="picture-card"
                       accept="application/pdf"
                       :multiple="false"
                       :limit="1"
                       :show-file-list="true"
                       :drag="true"
-                      :disabled="false"
                       :name="mix_upload_name"
                       :action="mix_upload_action"
                       :data="mix_upload_data"
                       :headers="mix_upload_headers"
                       :file-list="upload_file_list_map['businessLicense']"
-                      :before-upload="upload_on_before_upload"
-                      :on-success="
-                        (res, file, fileList) =>
-                          upload_on_success({
-                            field_info: { field: 'businessLicense' },
-                            res,
-                            file,
-                            fileList,
-                          })
-                      "
-                      :on-remove="
-                        (file, fileList) =>
-                          upload_on_remove({
-                            field_info: { field: 'businessLicense' },
-                            file,
-                            fileList,
-                          })
-                      "
-                      :on-preview="upload_on_preview"
+                      :on-success="upload_on_success"
+                      :on-remove="upload_on_remove"
                     >
-                      <i class="el-icon-picture"></i>
+                      <i class="el-icon-upload"></i>
                       <div class="el-upload__text">
                         将文件拖到此处，或<em>点击上传</em>
                       </div>
@@ -155,67 +136,8 @@ export default {
     init(row) {
       if (row) {
         this.row = row || {};
-        this.is_edit = true;
-        this.query_detail();
       }
-
       this.show_modal = true;
-
-      // this.get_tree_box_width();
-      this.query_options();
-    },
-
-    query_detail() {
-      this.$api({
-        url: `/company/info/${this.row.id}`,
-        method: "get",
-        data: {},
-      }).then((res) => {
-        if (res.code == 200) {
-          let data = res.data;
-          this.form = {
-            companyName: data.companyName || "",
-            companyCode: data.companyCode || "",
-            contacts: data.contacts || "",
-            contactNumber: data.contactNumber || "",
-            businessLicense: data.businessLicense || "",
-            address: data.address || "",
-            email: data.email || "",
-          };
-
-          // this.tree_field_title_map.channelId = data.channel_title
-          if (data.businessLicense) {
-            this.upload_file_list_map["businessLicense"] = data.businessLicense
-              .split(",")
-              .filter((v) => !!v)
-              .map((v) => ({
-                url: v,
-              }));
-          }
-        }
-      });
-    },
-
-    query_options() {
-      this.query_rangeId_options();
-    },
-
-    query_rangeId_options() {
-      this.$api({
-        url: "/medicine/operateRange/list",
-        method: "get",
-        data: {
-          pageNum: 1,
-          pageSize: 100,
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          let list = res.rows;
-          this.mix_format_list_id(list, "rangeId");
-          this.$log("数据列表", list);
-          this.rangeId_options = list;
-        }
-      });
     },
 
     // on_before_close() {
@@ -227,10 +149,6 @@ export default {
       this.form = {
         ...this.origin_form,
       };
-
-      // for (var field in this.upload_file_list_map) {
-      // 	this.upload_file_list_map[field] = []
-      // }
       this.upload_file_list_map = JSON.parse(
         JSON.stringify(this.origin_upload_file_list_map)
       );
@@ -255,41 +173,30 @@ export default {
         });
         if (res.code == 200) {
           this.$emit("confirm");
-          // this.show_modal = false;
+          this.show_modal = false;
         }
       });
     },
 
-    //
     // 图片上传
     upload_on_before_upload(file) {
       console.warn("upload_before_upload");
       const isLt50M = file.size / 1024 / 1024 < 50; //文件大小 小于 50MB
       return isLt50M;
     },
-    upload_on_success(option) {
-      let { field_info, res, file, fileList } = option;
-      this.$log("upload_on_success option", option);
-
+    upload_on_success(res) {
       if (res.code == 200) {
-        let url = res.url;
-        this.upload_file_list_map[field_info.field] = fileList;
-        // this.upload_url_map[field_info.field].push(url)
-        this.upload_url_map[field_info.field] = fileList.map(
-          (v) => v.response && v.response.path
-        );
+        let url = res.data.path;
+        this.upload_url_map["businessLicense"].push(url);
       } else {
         alert(res);
       }
     },
-    upload_on_remove(option) {
-      let { field_info, file, fileList } = option;
-      this.$log("upload_on_remove option", option);
-      this.upload_file_list_map[field_info.field] = fileList;
-      this.upload_url_map[field_info.field] = fileList.map(
-        (v) => v.response && v.response.url
+    upload_on_remove(file) {
+      this.upload_url_map.businessLicense = this.upload_url_map.businessLicense.filter(
+        (v) => v !== file.url
       );
-    },
+    },  
     upload_on_preview(file) {
       this.preview_image_src = file.url;
       this.is_preview_image = true;

@@ -47,17 +47,26 @@
           ></el-table-column>
           <el-table-column prop="title" label="品名" width="160" align="center">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.title" placeholder="请输入品名"></el-input>
+              <el-input
+                v-model="scope.row.title"
+                placeholder="请输入品名"
+              ></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="specNo" label="描述" align="center">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.specNo" placeholder="请输入描述"></el-input>
+              <el-input
+                v-model="scope.row.specNo"
+                placeholder="请输入描述"
+              ></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="unit" label="单位" width="160" align="center">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.unit" placeholder="请输入单位"></el-input>
+              <el-input
+                v-model="scope.row.unit"
+                placeholder="请输入单位"
+              ></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="price" label="单价" width="160" align="center">
@@ -78,14 +87,22 @@
               ></el-input-number>
             </template>
           </el-table-column>
-          <el-table-column prop="totalPrice" label="合计" width="160" align="center">
+          <el-table-column
+            prop="totalPrice"
+            label="合计"
+            width="160"
+            align="center"
+          >
             <template slot-scope="scope">
               <span>￥{{ scope.row.totalPrice }}</span>
             </template>
           </el-table-column>
           <el-table-column label="备注" align="center">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.remark" placeholder="请输入备注"></el-input>
+              <el-input
+                v-model="scope.row.remark"
+                placeholder="请输入备注"
+              ></el-input>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="160" align="center">
@@ -108,7 +125,10 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="以上报价含增值税：" prop="tax">
-                <el-input v-model="form.termJson.tax" placeholder="请输入"></el-input>
+                <el-input
+                  v-model="form.termJson.tax"
+                  placeholder="请输入"
+                ></el-input>
               </el-form-item>
               <el-form-item label="价格条款：" prop="priceTerms">
                 <el-input
@@ -131,7 +151,10 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="付款方式" prop="payType">
-                <el-input v-model="form.termJson.payType" placeholder="请输入"></el-input>
+                <el-input
+                  v-model="form.termJson.payType"
+                  placeholder="请输入"
+                ></el-input>
               </el-form-item>
               <el-form-item label="交货时间" prop="deliveryTime">
                 <el-input
@@ -140,10 +163,16 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="最小订货量" prop="min">
-                <el-input v-model="form.termJson.min" placeholder="请输入"></el-input>
+                <el-input
+                  v-model="form.termJson.min"
+                  placeholder="请输入"
+                ></el-input>
               </el-form-item>
               <el-form-item label="包装方式" prop="pack">
-                <el-input v-model="form.termJson.pack" placeholder="请输入"></el-input>
+                <el-input
+                  v-model="form.termJson.pack"
+                  placeholder="请输入"
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -256,18 +285,22 @@ export default {
         data: {
           id: this.id,
         },
-      }).then((res) => {
-        loading.close();
-        if (res.code === 200) {
-          this.form.products = res.data.productJson;
-          this.form.termJson = res.data.termJson;
-          this.form.quotationNo = res.data.quotationNo;
-          this.form.signDate = res.data.signDate;
-          this.form.customerCompany = res.data.customerCompany;
-          this.form.customerPhone = res.data.customerPhone;
-          this.form.customerName = res.data.customerName;
-        }
-      });
+      })
+        .then((res) => {
+          loading.close();
+          if (res.code === 200) {
+            this.form.products = res.data.productJson;
+            this.form.termJson = res.data.termJson;
+            this.form.quotationNo = res.data.quotationNo;
+            this.form.signDate = res.data.signDate;
+            this.form.customerCompany = res.data.customerCompany;
+            this.form.customerPhone = res.data.customerPhone;
+            this.form.customerName = res.data.customerName;
+          }
+        })
+        .catch(() => {
+          loading.close();
+        });
     }
   },
   methods: {

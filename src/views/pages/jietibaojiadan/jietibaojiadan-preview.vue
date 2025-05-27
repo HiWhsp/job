@@ -8,15 +8,8 @@
       <el-button type="primary" @click="submit">点击下载</el-button>
     </div>
     <div class="baojiadan-form-content" ref="baojiadanForm">
-      <div class="baojiadan-form-content-title">
-        <img src="@/assets/imgs/success.png" alt="" />
-        <span>提交成功！</span>
-      </div>
-      <!-- 操作按钮 -->
-      <div class="btn-box">
-        <el-button type="primary" @click="submit">在线预览</el-button>
-        <el-button @click="reset">取消</el-button>
-      </div>
+      <!-- 内嵌pdf -->
+      <iframe :src="pdfUrl" width="100%" height="100%"></iframe>
     </div>
   </div>
 </template>
@@ -24,7 +17,11 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      id: "",
+      pdfUrl: "",
+      detail: {},
+    };
   },
   mounted() {
     // 获取baojiadanForm距离可视区顶部的距离, 根据可视区高度 减去顶部距离设置高度
@@ -33,18 +30,35 @@ export default {
         window.innerHeight - this.$refs.baojiadanForm.offsetTop - 100
       }px`;
     });
+    this.id = this.$route.query.id;
+    this.getBaojiadan();
   },
   methods: {
-    submit() {
-      // 提交逻辑
-      this.$message.success("提交成功");
+    getBaojiadan() {
+      this.$api({
+        url: "getQuotationDetail",
+        method: "post",
+        data: {
+          id: this.id,
+        },
+      }).then((res) => {
+        if (res.code === 200) {
+          this.pdfUrl = res.data.pdfUrl;
+          this.detail = res.data;
+        }
+      });
     },
-    reset() {
-      // 重置逻辑
-      this.$message.info("已取消");
+    submit() {
+      // 下载pdf
+      const a = document.createElement("a");
+      a.href = this.pdfUrl;
+      a.download = this.detail.quotationNo + ".pdf";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     },
     back() {
-      this.$router.back();
+      this.$router.push("/jietibaojiadan-list");
     },
   },
 };

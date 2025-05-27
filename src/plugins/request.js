@@ -46,6 +46,9 @@ axios_ins_common.interceptors.response.use(
 			alertErr(data.msg)
 		} else if (code == 500) {
 			alertErr(data.msg)
+		} else if (code == 401) {
+			alertErr(data.msg)
+			window.location.href = "/login";
 		}
 		return data;
 	},

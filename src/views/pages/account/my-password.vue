@@ -9,7 +9,7 @@
               <el-input
                 clearable
                 type="password"
-                v-model="form.oldPass"
+                v-model="form.oldPassWord"
                 class=""
                 placeholder="请输入旧密码"
               />
@@ -22,7 +22,7 @@
               <el-input
                 clearable
                 type="password"
-                v-model="form.pass"
+                v-model="form.password"
                 class=""
                 placeholder="请输入新密码"
               />
@@ -35,7 +35,7 @@
               <el-input
                 clearable
                 type="password"
-                v-model="form.pass2"
+                v-model="form.rePassword"
                 class=""
                 placeholder="请重复输入新密码"
               />
@@ -73,10 +73,9 @@ export default {
   data() {
     return {
       form: {
-        editType: "1", //修改类型：1-老密码验证 2-手机短信验证 3-邮箱验证码验证
-        oldPass: "",
-        pass: "", //验证码 类型2/类型3-必传
-        pass2: "",
+        oldPassWord: "",
+        password: "",
+        rePassword: "",
       },
       loading: false,
     };
@@ -91,29 +90,28 @@ export default {
   methods: {
     throttle_do_submit() {},
     do_submit() {
-      if (!this.form.oldPass) {
+      if (!this.form.password) {
         alertErr("请输入旧密码");
         return;
       }
-      if (!this.form.pass) {
+      if (!this.form.password) {
         alertErr("请输入新密码");
         return;
       }
-      if (!this.form.pass2) {
+      if (!this.form.password) {
         alertErr("请输入确认密码");
         return;
       }
-      if (this.form.pass != this.form.pass2) {
+      if (this.form.rePassword != this.form.password) {
         alertErr("两次密码不一致");
         return;
       }
 
       this.loading = true;
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: "updatePassword",
+        method: "post",
         data: {
-          action: "users_editPass",
           ...this.form,
         },
       }).then((res) => {

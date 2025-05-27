@@ -7,8 +7,12 @@
             <div class="control-left">
               <div class="control-act">
                 <div class="act-form">
-                  <el-button type="primary" @click="do_add(1)">创建采购合同</el-button>
-                  <el-button type="primary" @click="do_add(2)">上传附件合同</el-button>
+                  <el-button type="primary" @click="do_add(1)"
+                    >创建采购合同</el-button
+                  >
+                  <el-button type="primary" @click="do_add(2)"
+                    >上传附件合同</el-button
+                  >
                 </div>
               </div>
             </div>
@@ -28,7 +32,11 @@
 
               <div class="control-act">
                 <div class="act-form">
-                  <el-button icon="el-icon-search" type="primary" @click="do_search()">
+                  <el-button
+                    icon="el-icon-search"
+                    type="primary"
+                    @click="do_search()"
+                  >
                   </el-button>
                 </div>
               </div>
@@ -81,7 +89,10 @@
               ></el-table-column>
               <el-table-column fixed="right" label="操作" width="300">
                 <template slot-scope="scope">
-                  <div :class="scope.row.status == 1 ? '' : 'disabled'" class="row-acts">
+                  <div
+                    :class="scope.row.status == 1 ? '' : 'disabled'"
+                    class="row-acts"
+                  >
                     <div class="row-act">
                       <el-button type="text" @click="do_set_scope(scope.row)"
                         >预览</el-button
@@ -93,10 +104,14 @@
                       >
                     </div>
                     <div class="row-act" v-if="scope.row.status == 1">
-                      <el-button type="text" @click="do_edit(scope.row)">编辑</el-button>
+                      <el-button type="text" @click="do_edit(scope.row)"
+                        >编辑</el-button
+                      >
                     </div>
                     <div class="row-act" v-if="scope.row.status == 1">
-                      <el-button type="text" @click="do_sign(scope.row)">回签</el-button>
+                      <el-button type="text" @click="do_sign(scope.row)"
+                        >回签</el-button
+                      >
                     </div>
                     <div class="row-act error">
                       <el-button type="text" @click="do_delete(scope.row)"
@@ -131,7 +146,7 @@
       </div>
     </div>
 
-    <company_detail_modal ref="company_detail_modal" />
+    <company_detail_modal ref="company_detail_modal" @confirm="query_view" />
     <company_form_modal ref="company_form_modal" @confirm="query_view" />
   </div>
 </template>
@@ -263,7 +278,13 @@ export default {
         this.$message.error("该条记录已作废, 无法下载");
         return;
       }
-      this.$refs.company_detail_modal.init(row);
+      // 下载pdf
+      const a = document.createElement("a");
+      a.href = row.pdfUrl;
+      a.download = row.contractNo + ".pdf";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     },
     // 回签
     do_sign(row) {
