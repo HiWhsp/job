@@ -36,7 +36,12 @@
         </div>
         <div class="table-view" data-title="渲染表格">
           <div class="table-box">
-            <el-table :data="table_data" ref="baojiadanForm" :height="tableHeight">
+            <el-table
+              :data="table_data"
+              ref="baojiadanForm"
+              :height="tableHeight"
+              v-loading="loading"
+            >
               <el-table-column label="序号" type="index" width="100"></el-table-column>
               <el-table-column
                 label="合计报价单编号"
@@ -135,6 +140,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       unique_key: "companyId",
       table_data: [],
       search_params: {
@@ -164,6 +170,7 @@ export default {
   },
   methods: {
     query_view() {
+      this.loading = true;
       this.query_list();
     },
     query_list() {
@@ -174,6 +181,7 @@ export default {
           ...this.search_params,
         },
       }).then((res) => {
+        this.loading = false;
         if (res.code == 200) {
           this.table_data = res.data.list;
           this.total = res.data.count;

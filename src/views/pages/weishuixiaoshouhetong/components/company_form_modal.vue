@@ -1,14 +1,14 @@
 <template>
   <div class="custom-form-modal">
     <el-dialog
-        title="上传附件合同"
-        width="600px"
-        custom-class="modal-form"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        :visible.sync="show_modal"
-        :append-to-body="true"
-        @closed="on_dialog_closed()"
+      title="上传附件合同"
+      width="600px"
+      custom-class="modal-form"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :visible.sync="show_modal"
+      :append-to-body="true"
+      @closed="on_dialog_closed()"
     >
       <div class="modal-ctx">
         <div class="f-list" v-if="type === 'add'">
@@ -16,9 +16,9 @@
             <div class="f-label required">未税销售合同编号：</div>
             <div class="f-ele">
               <el-input
-                  v-model="form.companyCode"
-                  type="text"
-                  placeholder="请输入销售合同编号"
+                v-model="form.contractNo"
+                type="text"
+                placeholder="请输入未税销售合同编号"
               ></el-input>
             </div>
           </div>
@@ -26,19 +26,20 @@
             <div class="f-label required">签订日期：</div>
             <div class="f-ele">
               <el-date-picker
-                  v-model="form.signDate"
-                  type="date"
-                  placeholder="选择日期"
+                v-model="form.signDate"
+                type="date"
+                placeholder="选择日期"
+                value-format="yyyy-MM-dd"
               ></el-date-picker>
             </div>
           </div>
           <div class="f-item">
-            <div class="f-label required">供方单位名称：</div>
+            <div class="f-label required">单位名称：</div>
             <div class="f-ele">
               <el-input
-                  v-model="form.contacts"
-                  type="text"
-                  placeholder="请输入单位名称"
+                v-model="form.company"
+                type="text"
+                placeholder="请输入单位名称"
               ></el-input>
             </div>
           </div>
@@ -46,9 +47,9 @@
             <div class="f-label">电话：</div>
             <div class="f-ele">
               <el-input
-                  v-model="form.contactNumber"
-                  type="text"
-                  placeholder="请输入电话"
+                v-model="form.phone"
+                type="text"
+                placeholder="请输入电话"
               ></el-input>
             </div>
           </div>
@@ -56,9 +57,9 @@
             <div class="f-label">产品总金额：</div>
             <div class="f-ele">
               <el-input
-                  v-model="form.address"
-                  type="text"
-                  placeholder="请输入产品总金额"
+                v-model="form.price"
+                type="text"
+                placeholder="请输入产品总金额"
               ></el-input>
             </div>
           </div>
@@ -69,46 +70,25 @@
                 <div class="upload-box">
                   <div class="upload-item">
                     <el-upload
-                        class="cus-upload-image-drag"
-                        list-type="picture-card"
-                        accept="application/pdf"
-                        :multiple="false"
-                        :limit="1"
-                        :show-file-list="true"
-                        :drag="true"
-                        :disabled="false"
-                        :name="mix_upload_name"
-                        :action="mix_upload_action"
-                        :data="mix_upload_data"
-                        :headers="mix_upload_headers"
-                        :file-list="upload_file_list_map['businessLicense']"
-                        :before-upload="upload_on_before_upload"
-                        :on-success="
-                        (res, file, fileList) =>
-                          upload_on_success({
-                            field_info: { field: 'businessLicense' },
-                            res,
-                            file,
-                            fileList,
-                          })
-                      "
-                        :on-remove="
-                        (file, fileList) =>
-                          upload_on_remove({
-                            field_info: { field: 'businessLicense' },
-                            file,
-                            fileList,
-                          })
-                      "
-                        :on-preview="upload_on_preview"
+                      class="cus-upload-image-drag"
+                      accept="application/pdf"
+                      :multiple="false"
+                      :limit="1"
+                      :show-file-list="true"
+                      :drag="true"
+                      :name="mix_upload_name"
+                      :action="mix_upload_action"
+                      :data="mix_upload_data"
+                      :headers="mix_upload_headers"
+                      :file-list="upload_file_list_map['businessLicense']"
+                      :on-success="upload_on_success"
+                      :on-remove="upload_on_remove"
                     >
-                      <i class="el-icon-picture"></i>
+                      <i class="el-icon-upload"></i>
                       <div class="el-upload__text">
                         将文件拖到此处，或<em>点击上传</em>
                       </div>
-                      <div class="el-upload__tip" slot="tip">
-                        请上传PDF文件。
-                      </div>
+                      <div class="el-upload__tip" slot="tip">请上传PDF文件。</div>
                     </el-upload>
                   </div>
                 </div>
@@ -117,22 +97,34 @@
           </div>
         </div>
         <div class="over" v-else>
-          <img src="@/assets/imgs/success.png" alt="">
+          <img src="@/assets/imgs/success.png" alt="" />
           <span>提交成功！</span>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" :loading="loading" @click="throttle_do_submit()" v-if="type === 'over'">在线预览</el-button>
+        <el-button
+          type="primary"
+          :loading="loading"
+          @click="throttle_do_submit()"
+          v-if="type === 'over'"
+          >在线预览</el-button
+        >
         <el-button @click="show_modal = false">取消</el-button>
-        <el-button type="primary" :loading="loading" @click="throttle_do_submit()" v-if="type === 'add'">确定</el-button>
+        <el-button
+          type="primary"
+          :loading="loading"
+          @click="throttle_do_submit()"
+          v-if="type === 'add'"
+          >确定</el-button
+        >
       </span>
     </el-dialog>
 
     <el-dialog :visible.sync="is_preview_image">
-      <img width="100%" :src="preview_image_src" alt=""/>
+      <img width="100%" :src="preview_image_src" alt="" />
     </el-dialog>
     <el-dialog :visible.sync="is_preview_video">
-      <video width="100%" :src="preview_video_src" controls alt=""/>
+      <video width="100%" :src="preview_video_src" controls alt="" />
     </el-dialog>
   </div>
 </template>
@@ -148,17 +140,15 @@ export default {
       is_edit: false, //新增 编辑
       row: {},
       form: {
-        companyName: "",
-        companyCode: "",
-        contacts: "",
-        contactNumber: "",
-        businessLicense: "",
-        address: "",
-        email: "",
+        contractNo: "",
+        signDate: "",
+        company: "",
+        phone: "",
+        price: "",
       },
       origin_form: {},
       loading: false,
-      type: 'add',
+      type: "add",
 
       //
       rangeId_values: "",
@@ -208,11 +198,7 @@ export default {
         this.is_edit = true;
         this.query_detail();
       }
-
       this.show_modal = true;
-
-      // this.get_tree_box_width();
-      this.query_options();
     },
 
     query_detail() {
@@ -236,41 +222,16 @@ export default {
           // this.tree_field_title_map.channelId = data.channel_title
           if (data.businessLicense) {
             this.upload_file_list_map["businessLicense"] = data.businessLicense
-                .split(",")
-                .filter((v) => !!v)
-                .map((v) => ({
-                  url: v,
-                }));
+              .split(",")
+              .filter((v) => !!v)
+              .map((v) => ({
+                url: v,
+              }));
           }
         }
       });
     },
 
-    query_options() {
-      this.query_rangeId_options();
-    },
-
-    query_rangeId_options() {
-      this.$api({
-        url: "/medicine/operateRange/list",
-        method: "get",
-        data: {
-          pageNum: 1,
-          pageSize: 100,
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          let list = res.rows;
-          this.mix_format_list_id(list, "rangeId");
-          this.$log("数据列表", list);
-          this.rangeId_options = list;
-        }
-      });
-    },
-
-    // on_before_close() {
-    // 	this.show_modal = false;
-    // },
     on_dialog_closed() {
       this.row = {};
       this.is_edit = false;
@@ -278,43 +239,45 @@ export default {
         ...this.origin_form,
       };
 
-      // for (var field in this.upload_file_list_map) {
-      // 	this.upload_file_list_map[field] = []
-      // }
       this.upload_file_list_map = JSON.parse(
-          JSON.stringify(this.origin_upload_file_list_map)
+        JSON.stringify(this.origin_upload_file_list_map)
       );
-      this.origin_upload_url_map = JSON.parse(
-          JSON.stringify(this.origin_upload_url_map)
-      );
+      this.origin_upload_url_map = JSON.parse(JSON.stringify(this.origin_upload_url_map));
     },
     do_submit() {
       let params = {
         ...this.form,
-        businessLicense: this.upload_url_map["businessLicense"].join(","),
-        // rangeId: this.rangeId_values.join(',')
+        pdfUrl: this.upload_url_map["businessLicense"].join(","),
+        type: 3,
       };
+
       if (this.is_edit) {
         params[this.unique_key] = this.row.id;
       }
 
-      if (!params.companyCode) {
-        return alertErr("请填写" + "企业编码");
+      if (!params.contractNo) {
+        return alertErr("请填写" + "未税销售合同编号");
       }
-      if (!params.companyName) {
-        return alertErr("请填写" + "企业名称");
+      if (!params.signDate) {
+        return alertErr("请填写" + "签订日期");
       }
-      if (!params.contacts) {
-        return alertErr("请填写" + "联系人");
+      if (!params.company) {
+        return alertErr("请填写" + "单位名称");
       }
-      if (!params.businessLicense) {
-        return alertErr("请上传" + "营业执照");
+      if (!params.phone) {
+        return alertErr("请填写" + "电话");
+      }
+      if (!params.price) {
+        return alertErr("请填写" + "产品总金额");
+      }
+      if (!params.pdfUrl) {
+        return alertErr("请上传" + "附件");
       }
 
       this.loading = true;
       this.$api({
-        url: "/company/info",
-        method: this.is_edit ? "put" : "post",
+        url: "createAnnexContract",
+        method: "post",
         data: params,
       }).then((res) => {
         alert(res).then(() => {
@@ -334,27 +297,19 @@ export default {
       const isLt50M = file.size / 1024 / 1024 < 50; //文件大小 小于 50MB
       return isLt50M;
     },
-    upload_on_success(option) {
-      let {field_info, res, file, fileList} = option;
-      this.$log("upload_on_success option", option);
+    upload_on_success(response, file, fileList) {
+      console.log(response);
 
-      if (res.code == 200) {
-        let url = res.url;
-        this.upload_file_list_map[field_info.field] = fileList;
-        // this.upload_url_map[field_info.field].push(url)
-        this.upload_url_map[field_info.field] = fileList.map(
-            (v) => v.response && v.response.url
-        );
+      if (response.code == 200) {
+        let url = response.data.path;
+        this.upload_url_map.businessLicense.push(url);
       } else {
-        alert(res);
+        alert(response);
       }
     },
-    upload_on_remove(option) {
-      let {field_info, file, fileList} = option;
-      this.$log("upload_on_remove option", option);
-      this.upload_file_list_map[field_info.field] = fileList;
-      this.upload_url_map[field_info.field] = fileList.map(
-          (v) => v.response && v.response.url
+    upload_on_remove(file, fileList) {
+      this.upload_url_map.businessLicense = this.upload_url_map.businessLicense.filter(
+        (v) => v !== file.url
       );
     },
     upload_on_preview(file) {

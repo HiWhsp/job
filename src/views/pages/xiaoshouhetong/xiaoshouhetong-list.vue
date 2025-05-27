@@ -7,12 +7,8 @@
             <div class="control-left">
               <div class="control-act">
                 <div class="act-form">
-                  <el-button type="primary" @click="do_add(1)"
-                    >创建销售合同</el-button
-                  >
-                  <el-button type="primary" @click="do_add(2)"
-                    >上传附件合同</el-button
-                  >
+                  <el-button type="primary" @click="do_add(1)">创建销售合同</el-button>
+                  <el-button type="primary" @click="do_add(2)">上传附件合同</el-button>
                 </div>
               </div>
             </div>
@@ -32,11 +28,7 @@
 
               <div class="control-act">
                 <div class="act-form">
-                  <el-button
-                    icon="el-icon-search"
-                    type="primary"
-                    @click="do_search()"
-                  >
+                  <el-button icon="el-icon-search" type="primary" @click="do_search()">
                   </el-button>
                 </div>
               </div>
@@ -46,6 +38,7 @@
         <div class="table-view" data-title="渲染表格">
           <div class="table-box">
             <el-table
+              v-loading="loading"
               :data="table_data"
               ref="baojiadanForm"
               :height="tableHeight"
@@ -88,10 +81,7 @@
               ></el-table-column>
               <el-table-column fixed="right" label="操作" width="300">
                 <template slot-scope="scope">
-                  <div
-                    :class="scope.row.status == 1 ? '' : 'disabled'"
-                    class="row-acts"
-                  >
+                  <div :class="scope.row.status == 1 ? '' : 'disabled'" class="row-acts">
                     <div class="row-act">
                       <el-button type="text" @click="do_set_scope(scope.row)"
                         >预览</el-button
@@ -103,15 +93,15 @@
                       >
                     </div>
                     <div class="row-act" v-if="scope.row.status == 1">
-                      <el-button type="text" @click="do_edit(scope.row)"
-                        >编辑</el-button
-                      >
+                      <el-button type="text" @click="do_edit(scope.row)">编辑</el-button>
                     </div>
                     <div class="row-act" v-if="scope.row.status == 1">
                       <el-button type="text" @click="do_sign(scope.row)">回签</el-button>
                     </div>
                     <div class="row-act error">
-                      <el-button type="text" @click="do_delete(scope.row)">作废</el-button>
+                      <el-button type="text" @click="do_delete(scope.row)"
+                        >作废</el-button
+                      >
                     </div>
                   </div>
                 </template>
@@ -159,6 +149,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       unique_key: "companyId",
       table_data: [],
       search_params: {
@@ -188,6 +179,7 @@ export default {
   },
   methods: {
     query_view() {
+      this.loading = true;
       this.query_list();
     },
     query_list() {
@@ -198,6 +190,7 @@ export default {
           ...this.search_params,
         },
       }).then((res) => {
+        this.loading = false;
         if (res.code == 200) {
           this.table_data = res.data.list;
           this.total = res.data.count;

@@ -47,10 +47,7 @@
           ></el-table-column>
           <el-table-column prop="title" label="品名" width="160" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.title"
-                placeholder="请输入品名"
-              ></el-input>
+              <el-input v-model="scope.row.title" placeholder="请输入品名"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="specNo" label="型号、规格" align="center">
@@ -63,10 +60,7 @@
           </el-table-column>
           <el-table-column prop="unit" label="单位" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.unit"
-                placeholder="请输入单位"
-              ></el-input>
+              <el-input v-model="scope.row.unit" placeholder="请输入单位"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="num" label="数量" width="160" align="center">
@@ -78,12 +72,7 @@
               ></el-input-number>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="price"
-            label="含税单价"
-            width="160"
-            align="center"
-          >
+          <el-table-column prop="price" label="含税单价" width="160" align="center">
             <template slot-scope="scope">
               <el-input-number
                 v-model="scope.row.price"
@@ -102,17 +91,9 @@
               <el-input v-model="scope.row.totalPrice" disabled></el-input>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="remark"
-            label="备注"
-            width="160"
-            align="center"
-          >
+          <el-table-column prop="remark" label="备注" width="160" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.remark"
-                placeholder="请输入备注"
-              ></el-input>
+              <el-input v-model="scope.row.remark" placeholder="请输入备注"></el-input>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="160" align="center">
@@ -139,17 +120,13 @@
       <!-- 合同条款 -->
       <div class="section">
         <div class="title">合同条款</div>
-        <el-form
-          ref="form1"
-          :model="form.termJson"
-          :rules="rules"
-          label-width="170px"
-        >
+        <el-form ref="form1" :model="form.termJson" :rules="rules" label-width="170px">
           <el-row :gutter="20">
             <el-col :span="20">
               <el-form-item label="质量要求和技术标准：" prop="standard">
                 <el-input
                   type="textarea"
+                  rows="3"
                   v-model="form.termJson.standard"
                   placeholder="请输入"
                 ></el-input>
@@ -186,10 +163,7 @@
           <el-row :gutter="20">
             <el-col :span="20">
               <el-form-item label="需方收货人信息：" prop="shouHuo">
-                <el-input
-                  v-model="form.termJson.shouHuo"
-                  placeholder="请输入"
-                ></el-input>
+                <el-input v-model="form.termJson.shouHuo" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -218,12 +192,7 @@
       <!-- 需方信息 -->
       <div class="section">
         <div class="title">需方信息</div>
-        <el-form
-          ref="form2"
-          :model="form.companyInfo"
-          :rules="rules"
-          label-width="120px"
-        >
+        <el-form ref="form2" :model="form.companyInfo" :rules="rules" label-width="120px">
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="需方单位名称：" prop="company">
@@ -275,15 +244,14 @@ export default {
     return {
       id: "",
       form: {
-        products: [
-          { name: "", desc: "", unit: "", price: 0, qty: 1, remark: "" },
-        ],
+        products: [{ title: "", desc: "", unit: "", price: 0, num: 1, remark: "" }],
         termJson: {
-          standard: "",
-          warranty: "",
-          relatedCosts: "",
+          standard:
+            "品质验收标准以合同规定的型号，规格，配置为标准，按产品原生产厂家的标准及方式进行验收，即按照IIS A标准，不适用其他任何的验收条款和方式。需方应认真检查包装、数量及产品、随机附件是否完好，确认并签收。需方可在收到货物之日起2日内提出产品数量异议；在收到货物之日起7日内就产品质量提出书面异议。验收完成，此后因此产品发生的任何问题，与供方无关。",
+          warranty: "自需方收到产品之日起一年内为保修期。",
+          relatedCosts: 1,
           shouHuo: "",
-          payment: "",
+          payment: 1,
           paymentDesc: "",
         },
         companyInfo: {
@@ -317,8 +285,7 @@ export default {
         },
         {
           value: 2,
-          title:
-            "自收到产品之日起2日内，需方通过银行转账方式向供方一次性支付所有货款",
+          title: "自收到产品之日起2日内，需方通过银行转账方式向供方一次性支付所有货款",
         },
       ],
       rules: {
@@ -330,9 +297,7 @@ export default {
         relatedCosts: [{ required: true, message: "请选择相关费用" }],
         shouHuo: [{ required: true, message: "请输入需方收货人信息" }],
         payment: [{ required: true, message: "请选择货款清算及结算方式" }],
-        paymentDesc: [
-          { required: true, message: "请输入货款清算及结算方式描述" },
-        ],
+        paymentDesc: [{ required: true, message: "请输入货款清算及结算方式描述" }],
         fdName: [{ required: true, message: "请输入法定代表人" }],
         phone: [{ required: true, message: "请输入电话" }],
         bank: [{ required: true, message: "请输入开户银行" }],
@@ -361,12 +326,19 @@ export default {
 
     this.id = this.$route.query.id;
     if (this.id) {
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
       this.$api({
         url: "getContractDetail",
         method: "post",
         data: { id: this.id },
       }).then((res) => {
         if (res.code === 200) {
+          loading.close();
           this.form = {
             products: res.data.productJson,
             termJson: {
@@ -375,8 +347,7 @@ export default {
               relatedCosts: res.data.relatedCosts,
               shouHuo: res.data.shouHuo,
               payment: res.data.payment,
-              paymentDesc:
-                res.data.payment == 3 ? res.data.paymentDesc : "",
+              paymentDesc: res.data.payment == 3 ? res.data.paymentDesc : "",
             },
             companyInfo: {
               contractNo: res.data.contractNo,
@@ -442,6 +413,12 @@ export default {
                       this.$message.error("请检查产品列表输入内容");
                       return;
                     }
+                    const loading = this.$loading({
+                      lock: true,
+                      text: "Loading",
+                      spinner: "el-icon-loading",
+                      background: "rgba(0, 0, 0, 0.7)",
+                    });
                     this.$api({
                       url: "createContract",
                       method: "post",
@@ -462,6 +439,7 @@ export default {
                       } else {
                         this.$message.error("创建失败");
                       }
+                      loading.close();
                     });
                   });
                 } else {

@@ -71,45 +71,24 @@
                   <div class="upload-item">
                     <el-upload
                       class="cus-upload-image-drag"
-                      list-type="picture-card"
                       accept="application/pdf"
                       :multiple="false"
                       :limit="1"
                       :show-file-list="true"
                       :drag="true"
-                      :disabled="false"
                       :name="mix_upload_name"
                       :action="mix_upload_action"
                       :data="mix_upload_data"
                       :headers="mix_upload_headers"
                       :file-list="upload_file_list_map['businessLicense']"
-                      :before-upload="upload_on_before_upload"
-                      :on-success="
-                        (res, file, fileList) =>
-                          upload_on_success({
-                            field_info: { field: 'businessLicense' },
-                            res,
-                            file,
-                            fileList,
-                          })
-                      "
-                      :on-remove="
-                        (file, fileList) =>
-                          upload_on_remove({
-                            field_info: { field: 'businessLicense' },
-                            file,
-                            fileList,
-                          })
-                      "
-                      :on-preview="upload_on_preview"
+                      :on-success="upload_on_success"
+                      :on-remove="upload_on_remove"
                     >
-                      <i class="el-icon-picture"></i>
+                      <i class="el-icon-upload"></i>
                       <div class="el-upload__text">
                         将文件拖到此处，或<em>点击上传</em>
                       </div>
-                      <div class="el-upload__tip" slot="tip">
-                        请上传PDF文件。
-                      </div>
+                      <div class="el-upload__tip" slot="tip">请上传PDF文件。</div>
                     </el-upload>
                   </div>
                 </div>
@@ -263,9 +242,7 @@ export default {
       this.upload_file_list_map = JSON.parse(
         JSON.stringify(this.origin_upload_file_list_map)
       );
-      this.origin_upload_url_map = JSON.parse(
-        JSON.stringify(this.origin_upload_url_map)
-      );
+      this.origin_upload_url_map = JSON.parse(JSON.stringify(this.origin_upload_url_map));
     },
     do_submit() {
       let params = {
@@ -293,6 +270,9 @@ export default {
       if (!params.price) {
         return alertErr("请填写" + "产品总金额");
       }
+      if (!params.pdfUrl) {
+        return alertErr("请上传" + "附件");
+      }
 
       this.loading = true;
       this.$api({
@@ -317,27 +297,19 @@ export default {
       const isLt50M = file.size / 1024 / 1024 < 50; //文件大小 小于 50MB
       return isLt50M;
     },
-    upload_on_success(option) {
-      let { field_info, res, file, fileList } = option;
-      this.$log("upload_on_success option", option);
+    upload_on_success(response, file, fileList) {
+      console.log(response);
 
-      if (res.code == 200) {
-        let url = res.url;
-        this.upload_file_list_map[field_info.field] = fileList;
-        // this.upload_url_map[field_info.field].push(url)
-        this.upload_url_map[field_info.field] = fileList.map(
-          (v) => v.response && v.response.path
-        );
+      if (response.code == 200) {
+        let url = response.data.path;
+        this.upload_url_map.businessLicense.push(url);
       } else {
-        alert(res);
+        alert(response);
       }
     },
-    upload_on_remove(option) {
-      let { field_info, file, fileList } = option;
-      this.$log("upload_on_remove option", option);
-      this.upload_file_list_map[field_info.field] = fileList;
-      this.upload_url_map[field_info.field] = fileList.map(
-        (v) => v.response && v.response.url
+    upload_on_remove(file, fileList) {
+      this.upload_url_map.businessLicense = this.upload_url_map.businessLicense.filter(
+        (v) => v !== file.url
       );
     },
     upload_on_preview(file) {

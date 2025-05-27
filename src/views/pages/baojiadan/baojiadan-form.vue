@@ -244,6 +244,12 @@ export default {
     });
     // 如果id存在, 则获取详情
     if (this.id) {
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
       this.$api({
         url: "getQuotationDetail",
         method: "post",
@@ -251,6 +257,7 @@ export default {
           id: this.id,
         },
       }).then((res) => {
+        loading.close();
         if (res.code === 200) {
           this.form.products = res.data.productJson;
           this.form.termJson = res.data.termJson;
@@ -319,6 +326,12 @@ export default {
                 this.$message.error("请输入完整的合同信息");
                 return false;
               }
+              const loading = this.$loading({
+                lock: true,
+                text: "Loading",
+                spinner: "el-icon-loading",
+                background: "rgba(0, 0, 0, 0.7)",
+              });
               // 提交
               this.$api({
                 url: "createQuotation",
@@ -335,6 +348,7 @@ export default {
                   type: 1,
                 },
               }).then((res) => {
+                loading.close();
                 if (res.code === 200) {
                   this.$message.success("提交成功");
                   this.$router.push("/baojiadan-success");

@@ -35,7 +35,7 @@ const routes = [
     {
         path: "/",
         name: "index",
-        component: my_info,
+        redirect: "/my-info",
         meta: {
             title: "网站概览",
             deep: 1,
