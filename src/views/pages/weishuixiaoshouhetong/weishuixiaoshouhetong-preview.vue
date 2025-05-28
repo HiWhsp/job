@@ -3,12 +3,8 @@
     <div class="back">
       <div class="back-left">
         <!--        <img src="@/assets/back.png" alt="" />-->
-        <span @click="type = 1" :class="type === 1 ? 'active' : ''"
-          >预览销售合同</span
-        >
-        <span @click="type = 2" :class="type === 2 ? 'active' : ''"
-          >预览回签</span
-        >
+        <span @click="type = 1" :class="type === 1 ? 'active' : ''">预览销售合同</span>
+        <span @click="type = 2" :class="type === 2 ? 'active' : ''">预览回签</span>
       </div>
       <el-button type="primary" @click="submit">点击下载</el-button>
     </div>
@@ -36,7 +32,7 @@ export default {
         if (newVal === 1) {
           this.pdfUrl = this.detail.pdfUrl;
         } else {
-          this.pdfUrl = this.detail.signPdfUrl;
+          this.pdfUrl = this.detail.signBackPdfUrl;
         }
       },
     },

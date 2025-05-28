@@ -21,9 +21,12 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      id: "",
+    };
   },
   mounted() {
+    this.id = this.$route.query.id;
     // 获取baojiadanForm距离可视区顶部的距离, 根据可视区高度 减去顶部距离设置高度
     this.$nextTick(() => {
       this.$refs.baojiadanForm.style.height = `${
@@ -33,8 +36,12 @@ export default {
   },
   methods: {
     submit() {
-      // 提交逻辑
-      this.$message.success("提交成功");
+      this.$router.push({
+        path: "/caigouhetong-preview",
+        query: {
+          id: this.id,
+        },
+      });
     },
     reset() {
       this.$router.push("/caigouhetong-form");

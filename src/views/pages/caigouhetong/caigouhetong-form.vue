@@ -435,7 +435,12 @@ export default {
                       },
                     }).then((res) => {
                       if (res.code === 200) {
-                        this.$router.push("/caigouhetong-success");
+                        this.$router.push({
+                          path: "/caigouhetong-success",
+                          query: {
+                            id: res.data.id,
+                          },
+                        });
                       } else {
                         this.$message.error("创建失败");
                       }

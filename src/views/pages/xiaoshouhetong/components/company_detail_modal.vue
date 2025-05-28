@@ -37,9 +37,7 @@
                       <div class="el-upload__text">
                         将文件拖到此处，或<em>点击上传</em>
                       </div>
-                      <div class="el-upload__tip" slot="tip">
-                        请上传PDF文件。
-                      </div>
+                      <div class="el-upload__tip" slot="tip">请上传PDF文件。</div>
                     </el-upload>
                   </div>
                 </div>
@@ -50,10 +48,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="show_modal = false">取消</el-button>
-        <el-button
-          type="primary"
-          :loading="loading"
-          @click="throttle_do_submit()"
+        <el-button type="primary" :loading="loading" @click="throttle_do_submit()"
           >确定</el-button
         >
       </span>
@@ -152,15 +147,13 @@ export default {
       this.upload_file_list_map = JSON.parse(
         JSON.stringify(this.origin_upload_file_list_map)
       );
-      this.origin_upload_url_map = JSON.parse(
-        JSON.stringify(this.origin_upload_url_map)
-      );
+      this.origin_upload_url_map = JSON.parse(JSON.stringify(this.origin_upload_url_map));
     },
     do_submit() {
       let params = {
         signBackPdfUrl: this.upload_url_map["businessLicense"].join(","),
       };
-      params[this.id] = this.row.id;
+      params.id = this.row.id;
 
       this.loading = true;
       this.$api({
@@ -196,7 +189,7 @@ export default {
       this.upload_url_map.businessLicense = this.upload_url_map.businessLicense.filter(
         (v) => v !== file.url
       );
-    },  
+    },
     upload_on_preview(file) {
       this.preview_image_src = file.url;
       this.is_preview_image = true;

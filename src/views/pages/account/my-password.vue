@@ -110,7 +110,7 @@ export default {
       this.loading = true;
       this.$api({
         url: "updatePassword",
-        method: "post",
+        method: "get",
         data: {
           ...this.form,
         },
