@@ -30,7 +30,7 @@
           <div class="item">
             <span class="text">真实姓名：</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.realName" />
+              <el-input clearable type="text" v-model="form.name" />
             </span>
             <span class="action"> </span>
           </div>
@@ -115,7 +115,7 @@ export default {
       my_info: {},
       form: {
         image: "",
-        realName: "",
+        name: "",
         mobile: "",
         email: "",
         sex: "",
@@ -164,7 +164,7 @@ export default {
             this.my_info = res.data;
             this.form = {
               image: res.data.image || "",
-              realName: res.data.real_name || "",
+              name: res.data.real_name || "",
               mobile: res.data.mobile || "",
               email: res.data.email || "",
               sex: res.data.sex || "",
@@ -204,7 +204,7 @@ export default {
     do_reset() {
       this.form = {
         image: this.my_info.image,
-        realName: "",
+        name: "",
         address: "",
       };
     },

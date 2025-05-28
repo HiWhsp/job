@@ -103,7 +103,7 @@
                         >下载</el-button
                       >
                     </div>
-                    <div class="row-act" v-if="scope.row.status == 1">
+                    <div class="row-act" v-if="scope.row.status == 1 && scope.row.source != 2">
                       <el-button type="text" @click="do_edit(scope.row)"
                         >编辑</el-button
                       >

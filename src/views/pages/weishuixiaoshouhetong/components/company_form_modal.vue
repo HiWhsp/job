@@ -88,7 +88,9 @@
                       <div class="el-upload__text">
                         将文件拖到此处，或<em>点击上传</em>
                       </div>
-                      <div class="el-upload__tip" slot="tip">请上传PDF文件。</div>
+                      <div class="el-upload__tip" slot="tip">
+                        请上传PDF文件。
+                      </div>
                     </el-upload>
                   </div>
                 </div>
@@ -242,7 +244,9 @@ export default {
       this.upload_file_list_map = JSON.parse(
         JSON.stringify(this.origin_upload_file_list_map)
       );
-      this.origin_upload_url_map = JSON.parse(JSON.stringify(this.origin_upload_url_map));
+      this.origin_upload_url_map = JSON.parse(
+        JSON.stringify(this.origin_upload_url_map)
+      );
     },
     do_submit() {
       let params = {
@@ -285,7 +289,7 @@ export default {
         });
         if (res.code == 200) {
           this.$emit("confirm");
-          // this.show_modal = false;
+          this.show_modal = false;
         }
       });
     },
@@ -308,9 +312,8 @@ export default {
       }
     },
     upload_on_remove(file, fileList) {
-      this.upload_url_map.businessLicense = this.upload_url_map.businessLicense.filter(
-        (v) => v !== file.url
-      );
+      this.upload_url_map.businessLicense =
+        this.upload_url_map.businessLicense.filter((v) => v !== file.url);
     },
     upload_on_preview(file) {
       this.preview_image_src = file.url;

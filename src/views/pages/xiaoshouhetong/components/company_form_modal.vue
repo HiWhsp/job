@@ -285,7 +285,7 @@ export default {
         });
         if (res.code == 200) {
           this.$emit("confirm");
-          // this.show_modal = false;
+          this.show_modal = false;
         }
       });
     },
