@@ -1,0 +1,64 @@
+.report-container {
+  margin: 22px 0 18px 0;
+  .filter-item {
+    margin-left: 18px;
+    display: flex;
+    align-items: center;
+
+    .filter-label {
+      font-size: 14px;
+      margin-right: 20px;
+      color: #273138;
+      background: #f3f8ff;
+    }
+
+    .filter-content {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+
+      /deep/.el-checkbox {
+        margin-right: 20px !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .el-date-picker {
+        margin-left: 15px;
+        width: 250px;
+      }
+    }
+  }
+
+  .filter-layout {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 0.5px solid #d5dce7;
+    height: 44px;
+    .filter-label {
+      width: 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 44px;
+      background-color: #f3f8ff;
+      border: 0.5px solid #d5dce7;
+      border-left: 0px;
+      &:nth-child(even) {
+        border-bottom: none;
+        border-top: none;
+      }
+      & img {
+        height: 18px;
+        width: 18px;
+        margin-right: 6px;
+      }
+    }
+    &:nth-child(even) {
+      border-bottom: none;
+      border-top: none;
+    }
+  }
+}

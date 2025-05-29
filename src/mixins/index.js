@@ -1,210 +1,267 @@
-import {
-	Loading
-} from "element-ui";
+// import router from "@/router";
+import { mapState } from "vuex";
+import { API_ROOT, UPLOAD_PARAMS_ACTION } from '@/config/env.js'
 
-
-import {
-	API_ROOT,
-	UPLOAD_ROOT,
-} from '@/config/env.js'
-
-
-import {
-	mapState
-} from "vuex";
 export default {
-	data() {
+  data() {
+    return {
+      // 上传
+      mix_upload_name: "img",
+      demo: require('@/assets/demo.jpg'),
+      mix_upload_action:
+        process.env.NODE_ENV !== "production"
+          ? "/api/service.php"
+          : API_ROOT + "/service.php",
+    };
+  },
+  computed: {
+    ...mapState([
+      "vuex_user",
+      "vuex_config",
+      "vuex_is_login",
+      "vuex_huobi",
+      "vuex_avatar_default",
+      "vuex_cart_number",
+      //
+      "vuex_h5",
+      "lang",
+      "vuex_category_tree",
+      "vuex_category_flat",
+      //
+      "vuex_news_cates",
+      "bannerMap",
+    ]),
 
-		return {
-			API_ROOT: process.env.NODE_ENV !== "production" ? API_ROOT : location.origin + '/admin_service.php',
+    mix_upload_data() {
+      let data = {
+        action: "index_localUpload",
+        userId: localStorage.getItem("userId") || "",
+        token: localStorage.getItem("token") || "",
+      };
+      return data;
+    },
+    //
+    mix_is_set_phone() { //是否绑定手机号
+      return this.vuex_user.ifNeedBindPhone != 1;
+    },
+    mix_is_set_avatar_nick() { //是否完善头像昵称
+      return !!this.vuex_user.image;
+    },
 
-			//
-			mix_upload_action: UPLOAD_ROOT,
-			mix_upload_name: 'file',
-			mix_upload_data: {
+    //用户资料
+    mix_user_phone() {
+      return this.vuex_user.phone || "";
+    },
+    mix_user_mobile() {
+      return this.vuex_user.phone || "";
+    },
+    mix_user_avatar() {
+      return this.vuex_user.image || this.vuex_avatar_default;
+    },
+    mix_user_origin_avatar() {
+      return this.vuex_user.image;
+    },
+    mix_user_name() {
+      return this.vuex_user.realName || "";
+    },
+    mix_user_nick() {
+      return this.vuex_user.nickname || "";
+    },
+  },
+  filters: {
 
-			},
-			//
-			mix_status_options: [{
-				value: 0,
-				title: '启用',
-			},
-			{
-				value: 1,
-				title: '禁用',
-			},
-			],
+  },
+  methods: {
+    // if(!this.mix_get_login_status()){
+    //   return
+    // }
+    mix_get_login_status() {
+      let loginStatus = true;
+      if (!this.vuex_is_login) {
+        alertErr("请您先登录");
+        setTimeout(() => {
+          this.toRoute("/login");
+        }, 1000);
 
+        loginStatus = false;
+      }
+      return loginStatus;
+    },
 
+    mix_toRoute(option) {
+      // this.mix_toRoute({
+      //   path: '/refund-type',
+      //   query: {
+      //     orderId: item.orderId,
+      //     inventoryId: item.inventoryId,
+      //   }
+      // })
+      this.toRoute(option)
+    },
 
-			//上传接口字段
-			// upload_col_name: "file",
-			upload_col_name: "img",
+    toRoute(option) {
+      let paramstype = typeof option;
+      let path = "";
+      let query = "";
+      let mode = "";
 
-			//上传相关
-			uploadAction: API_ROOT,
+      if (paramstype == "string") {
+        path = option;
+        let info = this.handleRoutePathQuery(path);
+        path = info.path;
+        query = info.query;
+      } else if (paramstype == "object") {
+        path = option.path || "";
+        query = option.query || {};
+        mode = option.mode || "";
+      }
 
-			// 文件上传处理
-			upload_file_url: API_ROOT,
-			upload_file_col: "file",
-			//文件上传
-		};
-	},
-	computed: {
-		...mapState([
-			//
-			"vuex_user",
-			"vuex_h5",
-			"vuex_iframe_page_data",
-			"userId",
-			"token",
-			"baseInfo",
-			"defaultAvatar",
-			"is_login",
-			"is_open_oss_upload",
-		]),
+      this.$router.push({
+        path: path,
+        query: query || {},
+      });
+    },
 
+    // 处理路由跳转参数
+    handleRoutePathQuery(path) {
+      let new_path = "";
+      let new_query = "";
+      let query = {};
 
-		mix_upload_headers() {
-			let token = localStorage.getItem("token");
-			let mix_upload_headers = {
-				// "Content-Type": "application/json",
-				"Authorization": "Bearer " + token,
-			}
-			return mix_upload_headers
-		},
+      // debugger
 
-		//文件上传
-		upload_file_data() {
-			let token = localStorage.getItem("token");
-			return {
-				action: "upload_uploadFile",
-				token: token,
-			};
-		},
+      if (path.includes("?")) {
+        let path_arr = path.split("?");
+        new_path = path_arr[0];
+        let queryStr = path_arr[1];
 
+        if (queryStr) {
+          var group_arr = queryStr.split("&");
+          group_arr.forEach((key_and_val) => {
+            var key_val_arr = key_and_val.split("=");
+            var key = key_val_arr[0];
+            var val = key_val_arr[1];
+            query[key] = val;
+          });
+        }
+      } else {
+        new_path = path;
+      }
 
-	},
-	created() {
-		// console.log('mix_upload_action', this.mix_upload_action)
-	},
-	mounted() { },
-	methods: {
-		mix_format_list_id(list, key) {
-			list.forEach(v => {
-				v.id = v[key]
-			})
-		},
-		mix_format_search_params(params) {
-			let new_params = {}
-			for (var key in params) {
-				if (params[key] !== '') {
-					new_params[key] = params[key]
-				}
-			}
-			return new_params
-		},
+      if (new_path.includes("/")) {
+        let new_path_arr = new_path.split("/");
+        new_path = new_path_arr[new_path_arr.length - 1];
+      }
 
-		mix_format_market_request_url(url, search_params) {
-			let new_url = url + `?pageNum=${search_params.pageNum}&pageSize=${search_params.pageSize}`
-			return new_url
-		},
-
-		// 为空的请求参数需要移除
-		mix_format_api_request_params(params) {
-			for (var key in params) {
-				if (params[key] === '') {
-					delete params[key];
-				}
-			}
-		},
-
-		//
-
-
-
-		showLoading(is_hide) {
-			if (is_hide) {
-				this.loadingInstance = Loading.service({
-					lock: true,
-					text: "Loading...",
-					spinner: "el-icon-loading",
-					background: "rgba(255, 255, 255, .95)",
-				});
-			} else {
-				this.loadingInstance = Loading.service({
-					lock: true,
-					text: "Loading...",
-					spinner: "el-icon-loading",
-					background: "rgba(0, 0, 0, 0.7)",
-				});
-			}
-		},
-		hideLoading() {
-			if (this.loadingInstance) {
-				this.loadingInstance.close();
-			}
-		},
-
-		mix_logout() {
-			this.$store.commit("clear_loginInfo");
-			alertSucc("已退出登录");
-			this.$router.push("/");
-		},
-
-		mix_get_token() {
-			return localStorage.getItem('token')
-		},
+      return {
+        path: new_path,
+        query: query,
+      };
+    },
 
 
-		toBack() {
-			this.$router.back();
-		},
-		toLink(item) {
-			if (item.url) {
-				location.href = item.url;
-			}
-		},
-		toRoute(route) {
-			this.$router.push(route);
-		},
+    toBack() {
+      this.$router.back();
+    },
+
+    // 全局函数节流 - 例如 点击按钮提交表单
+    // this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
+    // this.throttle_do_submit();
+    mix_throttle(fun, delay = 1500) {
+      let last, deferTimer;
+      return function (args) {
+        let that = this;
+        let _args = arguments;
+        let now = +new Date();
+        if (last && now < last + delay) {
+          clearTimeout(deferTimer);
+          deferTimer = setTimeout(function () {
+            last = now;
+            fun.apply(that, _args);
+          }, delay);
+        } else {
+          last = now;
+          fun.apply(that, _args);
+        }
+      };
+    },
+
+    // 全局函数防抖 - 例如 输入内容时搜索
+    mix_debounce(func, wait) {
+      console.log("防抖函数");
+      let timeout;
+      return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          func.apply(context, args);
+        }, wait);
+      };
+    },
+    // 使用示例
+    //  window.addEventListener('resize', debounce(function() {
+    //   console.log('Window resized!');
+    // }, 250));
+
+    checkLogin() {
+      if (!this.vuex_is_login) {
+        alertErr("请您先登录");
+        this.$router.push("/login");
+        return false;
+      }
+      return true;
+    },
+
+    mix_current_change(value) {
+      if (this.pagination && this.pagination.page) {
+        this.pagination.page = value;
+        this.setView();
+        document.documentElement.scrollTop = 0;
+      }
+    },
 
 
-		// 全局函数节流 - 例如 点击按钮提交表单
-		// this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
-		// this.throttle_do_submit();
-		mix_throttle(fun, delay = 1500) {
-			let last, deferTimer;
-			return function (args) {
-				let that = this;
-				let _args = arguments;
-				let now = +new Date();
-				if (last && now < last + delay) {
-					clearTimeout(deferTimer);
-					deferTimer = setTimeout(function () {
-						last = now;
-						fun.apply(that, _args);
-					}, delay);
-				} else {
-					last = now;
-					fun.apply(that, _args);
-				}
-			};
-		},
+    mix_logout() {
+      this.$store.commit("remove_vuex_user");
+      alertSucc("已退出登录");
+      this.$router.push("/");
+    },
 
-		// 全局函数防抖 - 例如 输入内容时搜索
-		mix_debounce(func, wait) {
-			console.log("防抖函数");
-			let timeout;
-			return function () {
-				const context = this;
-				const args = arguments;
-				clearTimeout(timeout);
-				timeout = setTimeout(() => {
-					func.apply(context, args);
-				}, wait);
-			};
-		},
 
-	},
+    toLink(item) {
+      if (item.url) {
+        location.href = item.url;
+      }
+    },
+
+    toRoute(route) {
+      this.$router.push(route);
+    },
+
+    //商品详情页
+    mix_to_product(item) {
+      let { inventoryId, id } = item;
+      if (inventoryId) {
+        this.$router.push(`/product-detail?id=${inventoryId}`);
+      } else if (id) {
+        this.$router.push(`/product-detail?id=${id}`);
+      }
+    },
+    
+    //banner 跳转
+    mix_banner_click(item) {
+      //console.log(" do_banner_click item", { ...item });
+      let { url, inventoryId, channel_id } = item;
+      // return
+      if (url) {
+        location.href = url;
+      } else if (inventoryId) {
+        this.toRoute(`/product-detail?id=${inventoryId}`);
+      } else if (channel_id) {
+        this.toRoute(`/category?id=${channel_id}`);
+      }
+    },
+
+  },
 };

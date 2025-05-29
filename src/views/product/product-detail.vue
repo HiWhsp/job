@@ -1,0 +1,2198 @@
+<template>
+  <div class="page">
+    <div class="page-top">
+      <div class="page-bread w-1400">
+        <div class="bread-box">
+          <!-- <img src="@img/common/product-home.png" alt="" /> -->
+          <router-link to="/">首页</router-link>
+          <!-- <span class="bread-divider">&gt;</span> -->
+          <!-- <router-link to="/products">产品中心</router-link>
+          <span class="bread-divider">&gt;</span> -->
+
+          <div
+            class="bread-item"
+            v-for="(item, index) in bread_list"
+            :key="index"
+          >
+            <span class="arrow">></span>
+            <template v-if="item">
+              <a
+                v-if="item && !item.route"
+                class="link"
+                href="javascript: void(0)"
+                >{{ item.title }}</a
+              >
+              <router-link
+                v-else-if="item && item.route"
+                :to="item.route"
+                class="route-link"
+                >{{ item.title }}</router-link
+              >
+            </template>
+          </div>
+          <span class="arrow">></span>
+          <a href="javascirpt:void(0);">{{ info.title }}</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-box w-1400">
+      <div class="page-inner">
+        <div class="main-content">
+          <div class="ctx-top">
+            <div class="ctx-left">
+              <!-- 商品预览 -->
+              <!-- <carouselComponent :swiperImgs="swiperImgs" /> -->
+              <div class="preview-wrap">
+                <detailLunbo :imageList="detailImages" />
+              </div>
+              <div class="detail-act-list">
+                <div class="act-item">
+                  <img src="@img/product/icon-zhengpin.png" alt="" />
+                  <span>正品保障</span>
+                </div>
+                <div class="act-item">
+                  <img src="@img/product/icon-shouhou.png" alt="" />
+                  <span>无忧售后</span>
+                </div>
+                <div class="act-item" @click="do_open_share()">
+                  <img src="@img/product/icon-share.png" alt="" />
+                  <span>分享</span>
+                </div>
+                <div class="act-item" @click="do_fav_toggle()">
+                  <img
+                    v-if="if_shoucang"
+                    src="@img/product/icon-fav1.png"
+                    alt=""
+                  />
+                  <img v-else src="@img/product/icon-fav0.png" alt="" />
+                  <span>{{ if_shoucang ? "取消收藏" : "收藏商品" }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="ctx-right">
+              <div class="detail-title flex">
+                <div class="title-text">
+                  {{ info.title }}
+                </div>
+
+                <!-- <div class="price-box">
+                  {{ vuex_huobi }} {{ info.priceSale }}
+                </div> -->
+              </div>
+              <div class="detail-desc">商品编号：{{ info.sn }}</div>
+
+              <!-- <div class="detail-desc" v-if="info.subtitle">
+                {{ info.subtitle }}
+              </div>
+              <div class="detail-desc" v-if="info.jianjie">
+                {{ info.jianjie }}
+              </div> -->
+
+              <div class="sale-info">
+                <div class="list">
+                  <div class="item price-item" style="margin-bottom: 10px">
+                    <div class="label">价格</div>
+                    <div class="vals vals-price">
+                      <div class="val">
+                        {{ vuex_huobi }} {{ view_info.priceSale }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class="label">总销量</div>
+                    <div class="vals">
+                      <div class="val">{{ info.orders }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="info-texts">
+                <div class="text-item">
+                  <div class="label">总销量</div>
+                  <div class="text">{{ info.orders }}</div>
+                </div>
+                <div class="text-item">
+                  <div class="label">累计评价</div>
+                  <div class="text">{{ info.comment_num }}</div>
+                </div>
+                <div class="text-item detail-act-list" @click="do_fav_toggle()">
+                  <div class="label">
+                    <div class="detail-act-list">
+                      <img v-if="if_shoucang" src="@img/detail-fav-1.png" alt="" />
+                      <img v-else src="@img/detail-fav-0.png" alt="" />
+                    </div>
+                  </div>
+                  <div class="text"> <span>{{ if_shoucang ? "取消收藏" : "收藏商品" }}</span></div>
+                </div>
+              </div> -->
+
+              <div class="other-box">
+                <div class="sku-box">
+                  <div class="sku-label">选择规格</div>
+                  <div class="sku-list">
+                    <button
+                      class="sku-item"
+                      :disabled="!item.kucun || item.status == -1"
+                      v-for="(item, index) in sku_list"
+                      :key="index"
+                      :class="{
+                        active: item.inventoryId == sku_select.inventoryId,
+                      }"
+                      @click="toggle_sku(item)"
+                    >
+                      <div class="text">
+                        {{ item.keyVals }}
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="shuliang-box">
+                  <div class="sel-num-title">数量</div>
+                  <div class="shuliang">
+                    <div
+                      class="btn minus"
+                      @click="
+                        selected_num > 1 ? selected_num-- : (selected_num = 1)
+                      "
+                    >
+                      <img src="@img/product/num-minus.png" alt="" />
+                    </div>
+                    <input
+                      type="number"
+                      v-model="selected_num"
+                      @blur="onBlur_selected_num"
+                    />
+                    <div class="btn plus" @click="selected_num++">
+                      <img src="@img/product/num-plus.png" alt="" />
+                    </div>
+                  </div>
+                  <span class="kucun"> 库存： {{ view_info.kucun }} </span>
+                </div>
+
+                <!-- <div class="dinghuo-box flex">
+                  <div class="label">最小订货量</div>
+                  <div class="value">1把</div>
+                </div> -->
+
+                <div class="btns flex">
+                  <button
+                    class="btn-ripple flex-center btn-buy"
+                    @click="do_pay_now()"
+                  >
+                    立即购买
+                  </button>
+                  <button
+                    class="btn-ripple flex-center btn-add-cart"
+                    @click="do_add_cart()"
+                  >
+                    <img
+                      src="@img/product/detail-cart.png"
+                      alt=""
+                      class="cart"
+                    />
+                    加入购物车
+                  </button>
+
+                  <!-- <button
+                    class="btn-ripple flex-center btn-add-fav"
+                    @click="do_add_fav()"
+                  >
+                    {{ is_fav ? "取消收藏" : "添加收藏" }}
+                  </button> -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ctx-bottom-container">
+            <div class="bottom-left">
+              <div class="main-title">相关产品</div>
+              <div class="product-list">
+                <div
+                  class="product-item"
+                  v-for="(item, index) in related_products"
+                  :key="index"
+                  @click="toDetail(item)"
+                >
+                  <div class="poster-box scale-box">
+                    <img :src="item.thumb" alt="" class="poster scale-img" />
+                  </div>
+                  <div class="info-box">
+                    <div class="title">{{ item.title }}</div>
+                    <div class="pirce-box">￥{{ item.priceSale }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bottom-right">
+              <div class="ctx-bottom">
+                <div class="ctx-bottom-inner">
+                  <div class="bottom-nav">
+                    <div
+                      class="nav-item"
+                      @click="do_toggle_tab('详情')"
+                      :class="{ active: tab_select.title == '详情' }"
+                    >
+                      商品详情
+                    </div>
+                    <div
+                      class="nav-item"
+                      @click="do_toggle_tab('评价')"
+                      :class="{ active: tab_select.title == '评价' }"
+                    >
+                      累计评价
+                      <span class="count-num">{{ info.commentNum }}</span>
+                    </div>
+
+                    <!-- <el-popover placement="bottom" trigger="click">
+                  <div class="pop-kefu">
+                    <div class="pop-kefu-inner">
+                      <div class="kefu-tip">请微信扫描下方二维码</div>
+                      <img class="kefu-code" :src="vuex_config.kefu_code" />
+                    </div>
+                  </div>
+                  <button class="contact" slot="reference">
+                    <img src="@img/other/goods-detail-kefu.png" alt />
+                    <span>联系客服</span>
+                  </button>
+                </el-popover> -->
+                    <!-- <button class="contact" slot="reference" @click="shopcart_add">
+                  <img src="@img/icon-cart-trans.png" alt />
+                  <span>加入购物车</span>
+                </button> -->
+                  </div>
+
+                  <div
+                    class="panel-detail detail-content-box"
+                    v-if="tab_select.title == '详情'"
+                  >
+                    <!-- <div class="panel-title" >
+                      商品详情
+                    </div>
+                    <div class="panel-title-line"></div> -->
+                    <div class="rich-html" v-html="info.content"></div>
+                    <div class="rich-html" v-html="info.cont2"></div>
+                    <div class="rich-html" v-html="info.cont3"></div>
+                  </div>
+
+                  <!-- v-if="tab_select.title == '评价'" -->
+                  <div
+                    class="panel-review comment-box"
+                    v-if="tab_select.title == '评价'"
+                  >
+                    <div class="panel-title">商品评价</div>
+
+                    <div class="review-gailan flex">
+                      <div class="review-total">
+                        {{ review_info.star }}
+                      </div>
+                      <div class="star-box">
+                        <el-rate
+                          v-model="review_info.star"
+                          disabled
+                          allow-half
+                          :colors="{
+                            1: '#F29F25',
+                            2: '#F29F25',
+                            3: '#F29F25',
+                            4: '#F29F25',
+                            5: '#F29F25',
+                          }"
+                          void-color="#DDDDDD"
+                          disabled-void-color="#DDDDDD"
+                        ></el-rate>
+                      </div>
+                    </div>
+
+                    <review_list :list="reviews" />
+
+                    <div
+                      class="pagination-box"
+                      style="margin-top: 80px"
+                      v-if="info.commentNum"
+                    >
+                      <el-pagination
+                        background
+                        layout="total, prev, pager, next"
+                        @current-change="changePage_comment"
+                        :current-page.sync="pagination.page"
+                        :page-size="pagination.pageNum"
+                        :total="info.commentNum"
+                      ></el-pagination>
+                    </div>
+
+                    <div class="detail-empty" v-else>
+                      <el-empty description="没有查询到评论信息..."></el-empty>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <product_add_cart_success_modal ref="product_add_cart_success_modal" />
+  </div>
+</template>
+
+<script>
+// import { Swiper, SwiperOptions, Pagination, Navigation } from "swiper";
+// import "swiper/swiper-bundle.min.css";
+
+import product_add_cart_success_modal from "@/components/product/product_add_cart_success_modal.vue";
+import detailLunbo from "@/components/detail/detailLunbo.vue";
+import carouselComponent from "@/components/goods/carouselComponent.vue"; //左侧轮播
+import review_list from "@/components/review/review_list.vue";
+
+import { mapState } from "vuex";
+import { Loading } from "element-ui";
+
+export default {
+  name: "goods-detail",
+  components: {
+    product_add_cart_success_modal,
+    carouselComponent,
+    review_list,
+    detailLunbo,
+    // QRCode,
+    // modalLoading,
+    // modalYaoqing,
+    // goodsCouponList,
+  },
+  data() {
+    return {
+      info: {},
+      is_fav: false,
+      reviews: [],
+      pagination: {
+        page: 1,
+        pageNum: 10,
+      },
+      review_info: {},
+      //
+      //
+      //
+      //
+
+      is_prod: process.env.NODE_ENV == "production",
+
+      detailImages: [],
+
+      Loading,
+      loadingInstance: null,
+
+      query_wenxian_done: false,
+      activeCate: {
+        route: "/",
+      },
+
+      list_goods: [],
+      product_list: [],
+      group_list_wenxian: [],
+      list_wenxian: [],
+      count_wenxian: 0,
+      query_field_done: false, //参数字段
+      field_list: [],
+      param_list: [],
+      all_field: [],
+
+      id: this.$route.query.id || "", //规格id
+      product_id: "", //产品id
+
+      //规格数量
+      sku_mode: "单规格",
+      sku_select: {}, //选择的规格
+      selected_num: 1, //商品数量
+      sku_list: [], //规格列表
+      show_sku: false,
+      //拆分状态下选择的商品属性
+      select_shuxing_list: [],
+
+      //优惠券
+      list_coupon: [],
+      show_coupon: false,
+
+      // 其他
+
+      tab_select: { title: "详情" },
+
+      pagination_relative: {
+        page: 1,
+        pageNum: 5,
+      },
+
+      select_inventoryId: "",
+
+      timer: null, //促销计算
+      remaining: "", //促销剩余时间
+
+      coupons: [], //可用的优惠券
+      isFavourite: false, //未收藏
+
+      selectedSkuComb: {}, //选择的商品规格信息 立即购买需要金额
+      show_sku: false,
+      curr: {}, //产品
+      detail: {}, //产品
+      current: 0, //轮播图指示器
+      swiperImgs: [], //轮播图
+      activeSwipeIndex: 0, //轮播图指示器
+
+      //
+      if_shoucang: false,
+      related_products: [],
+    };
+  },
+
+  computed: {
+    ...mapState(["kefu_qq"]),
+
+    bread_list() {
+      let option = [];
+      if (this.info.channelId) {
+        if (this.vuex_category_flat.length) {
+          let cate = this.vuex_category_flat.find(
+            (v) => v.id == this.info.channelId
+          );
+          if (cate) {
+            let ids = cate.ids || "";
+            let id_arr = ids.split("-").filter((v) => !!v);
+            id_arr.forEach((id) => {
+              let cate = this.vuex_category_flat.find((v) => v.id == id) || {};
+              option.push(cate);
+            });
+          }
+        }
+      }
+
+      return option;
+    },
+
+    //预览信息
+    view_info() {
+      let view_info = this.curr;
+      if (this.sku_select.inventoryId) {
+        view_info = this.sku_select;
+      }
+      return view_info;
+    },
+
+    poster() {
+      let ret = "";
+      if (this.info.images && this.info.images.length) {
+        ret = this.info.images[0];
+      }
+      return ret;
+    },
+
+    huoqi_text() {
+      let text = "现货";
+      if (this.info.skuDay) {
+        let num = parseInt(this.info.skuDay);
+        if (num) {
+          text = "货期" + num + "天";
+        }
+      }
+      return text;
+    },
+  },
+
+  watch: {
+    param_list(val) {
+      //console.log(" ******** 产品参数 ******** ", val);
+    },
+  },
+
+  beforeRouteUpdate(to, from, next) {
+    //console.log("组件复用");
+    //console.log(to, from);
+
+    next(to.query);
+    this.id = this.$route.query.id || ""; //规格id
+    this.setView();
+  },
+
+  created() {
+    this.setView();
+    
+  },
+
+  beforeDestroy() {
+    //console.log("销毁详情页 handleScrollEvent");
+
+    document.removeEventListener("scroll", this.handleScrollEvent);
+  },
+
+  methods: {
+    toDetail(item) {
+      this.$router.push(`/product-detail?id=${item.inventoryId}`);
+    },
+
+    setView() {
+      this.query_product_detail();
+    },
+
+    query_product_detail() {
+      this.showLoading();
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_detail",
+          inventoryId: this.id,
+          ifShowSku: 1, //是否展示全部规格skus：0-不需要展示 1-需要展示（规格以组合形式展示，即规格1,规格2 组合一起的）
+        },
+      }).then((res) => {
+        //console.log("商品详情", res);
+        let { code, data, msg } = res;
+        if (res.code == 200) {
+          this.info = data;
+          this.if_shoucang=data.ifShoucang==0?false:true
+          this.add_history_record();
+          // this.reviews = data.commentList;
+          this.query_reviews(); //评论
+
+          this.curr = data;
+          this.detail = data;
+          this.swiperImgs = data.images;
+          this.detailImages = {
+           images: data.images.map((v, i) => ({
+            index: i,
+            image: v,
+          })),
+          videoUrl:data.videoUrl
+          }
+          console.log(this.detailImages,'this.detailImages');
+          
+          this.posterSrc = data.images[0];
+          this.set_sku(data);
+
+          this.query_related_product();
+        } else {
+          if (message == "商品不存在或已下架") {
+            this.$router.push("/");
+          }
+        }
+        this.hideLoading();
+      });
+    },
+
+    showLoading() {
+      this.loadingInstance = Loading.service({
+        lock: true,
+        text: "数据查询中...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      // if (this.$refs.modalLoading) {
+      //   this.$refs.modalLoading.init();
+      // }
+    },
+    hideLoading() {
+      this.loadingInstance.close();
+
+      // this.$refs.modalLoading.close();
+
+      // this.loadingInstance = Loading.service({
+      //   lock: true,
+      //   text: "数据查询中...",
+      //   spinner: "el-icon-loading",
+      //   background: "rgba(0, 0, 0, 0.7)",
+      // });
+    },
+
+    //查询评论列表
+    query_reviews() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_comments",
+          productId: this.info.productId,
+          ...this.pagination,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          let data = res.data;
+          this.reviews = data.list;
+          data.star = +data.star;
+          this.review_info = data;
+        }
+      });
+    },
+    //相关商品信息
+    query_related_product() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_plist",
+          productId: this.info.productId,
+          ...this.pagination,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.related_products = res.data.list;
+        }
+      });
+    },
+
+    add_history_record() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_operate",
+          productId: this.info.productId,
+          operateType: 2, //1-关注 2-足迹
+          operateSence: 0, //0-关注（添加记录） 1-取消关注（删除记录）
+        },
+      }).then((res) => {});
+    },
+
+    do_add_fav() {
+      if (!this.mix_get_login_status()) {
+        return;
+      }
+
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_operate",
+          productId: this.info.productId,
+          operateType: 1, //1-关注 2-足迹
+          operateSence: 0, //0-关注（添加记录） 1-取消关注（删除记录）
+        },
+      }).then((res) => {
+        alert(res);
+        if (res.code == 200) {
+          this.is_fav = !this.is_fav;
+        }
+      });
+    },
+
+    //商品sku 属性选择
+    onSelectShuXing(item) {
+      //console.log("商品属性选择", { ...item });
+
+      //当前属性对应商品库存不足
+      if (this.if_out_stock(item)) {
+        return;
+      }
+
+      let key = item.key;
+      let index = this.select_shuxing_list.findIndex((v) => v.id == item.id);
+      if (index < 0) {
+        //已选的属性不包含当前属性
+        //需要查询是否已选过当前属性其他属性值
+        let prev_item = this.select_shuxing_list.find((v) => v.key == key);
+        let prev_item_index = this.select_shuxing_list.findIndex(
+          (v) => v.key == key
+        );
+        if (prev_item) {
+          this.select_shuxing_list.splice(prev_item_index, 1, item);
+        } else {
+          this.select_shuxing_list.push(item);
+        }
+      } else {
+        this.select_shuxing_list.splice(index, 1, {
+          key: key,
+        });
+      }
+
+      this.set_sku_select();
+    },
+
+    //设置商品选择的规格
+    set_sku_select() {
+      if (
+        Object.keys(this.info.skus).length == this.select_shuxing_list.length
+      ) {
+        let key_ids = this.select_shuxing_list.map((v) => v.id).join("-");
+        this.sku_select = this.sku_list.find((v) => v.key_ids == key_ids) || {};
+      }
+
+      //console.log("已选的商品属性值 select_shuxing_list", this.select_shuxing_list);
+      //console.log("商品规格 sku_select", { ...this.sku_select });
+    },
+
+    //是否已选择当亲属性
+    if_shuxing_list_contain(item) {
+      return !!this.select_shuxing_list.find((v) => v.id == item.id);
+    },
+
+    //当前属性商品库存是否不足
+    if_out_stock(item) {
+      //拼接目标规格的属性集合
+      //比对目标属性是否库存不足
+      let key = item.key;
+      let id_arr = [];
+      this.select_shuxing_list.forEach((v) => {
+        if (v.id && key != v.key) {
+          id_arr.push(v.id);
+        } else if (key == v.key) {
+          id_arr.push(item.id);
+        }
+      });
+
+      //从所有规格中过滤出符合目标属性的规格
+      let list_filter = this.sku_list.filter((v) => {
+        let has_pipei = id_arr.every((id) => v.key_ids.includes(id));
+
+        return has_pipei;
+      });
+
+      let ret = false;
+
+      if (list_filter.length > 1) {
+        ret = false;
+      } else if (list_filter.length == 1) {
+        let obj = list_filter[0];
+        if (+obj.kucun) {
+          ret = false;
+        } else {
+          ret = true;
+        }
+      } else {
+        ret = true;
+      }
+
+      return ret;
+    },
+
+    //处理产品图片
+    handleProductImage(image_list) {
+      //处理产品图片
+      // //console.log("产品列表数据 image_list", image_list);
+      var promise_arr = [];
+      image_list.forEach((src, index) => {
+        var promise = this.loadImageAsync(src);
+        promise_arr.push(promise);
+      });
+      Promise.all(promise_arr).then((resAll) => {
+        // //console.log("图片全部加载完成 resAll", resAll);
+
+        //设置产品图片
+        this.product_list.forEach((v, index) => {
+          if (!resAll[index]) {
+            v.img = v.default_img;
+          }
+        });
+      });
+      //产品图片处理完成
+    },
+
+    //设置分类 面包屑导航需要
+    setActiveCate() {
+      if (this.product_cates_all && this.product_cates_all.length) {
+        //实验耗材
+        var cate_id = this.info.channelId;
+        this.activeCate =
+          this.product_cates_all.find((v) => v.id == cate_id) || {};
+
+        //console.log("activeCate", { ...this.activeCate });
+
+        // this.queryCateParams();
+        this.queryFilterParams();
+      } else {
+        setTimeout(() => {
+          this.setActiveCate();
+        }, 100);
+      }
+    },
+
+    //设置规格
+    set_sku(data) {
+      //规格列表组
+      let sku_list = [];
+      if (data.inventorys && data.inventorys.length) {
+        data.inventorys.forEach((v) => {
+          sku_list.push({
+            ...v,
+            kucun: +v.kucun,
+            key_vals: v.key_vals,
+          });
+        });
+      } else {
+        sku_list = [
+          {
+            status: this.info.product_status,
+            image: this.info.images[0],
+            inventoryId: this.info.inventoryId,
+            key_vals: this.info.key_vals == "无" ? "默认" : this.info.key_vals,
+            kucun: +this.info.kucun,
+            priceMarket: this.info.priceMarket,
+            priceSale: this.info.priceSale,
+            priceSale2: this.info.priceSale2,
+            priceSale3: this.info.priceSale3,
+            nums1: this.info.nums1,
+            nums2: this.info.nums2,
+          },
+        ];
+      }
+
+      //单规格商品 默认勾选
+      if (sku_list.length == 1) {
+        this.sku_select = sku_list[0];
+      } else {
+        // this.sku_select = {};
+        this.sku_select = sku_list.find((v) => v.inventoryId == this.id) || {};
+      }
+      this.sku_list = sku_list;
+
+      //规格拆分
+      let skus = data.skus || {};
+      if (skus && Object.keys(skus).length) {
+        this.sku_mode = "多规格";
+        let select_shuxing_list = [];
+        Object.keys(skus).forEach((v) => {
+          select_shuxing_list.push({
+            key: skus[v].key,
+          });
+        });
+
+        //console.log("商品规格默认 select_shuxing_list", select_shuxing_list);
+
+        this.select_shuxing_list = select_shuxing_list;
+      } else {
+        this.sku_mode = "单规格";
+      }
+    },
+
+    //切换规格
+    toggle_sku(item) {
+      if (item.kucun) {
+        this.sku_select = item;
+        if (this.selected_num > item.kucun) {
+          this.selected_num = item.kucun;
+        }
+      }
+    },
+
+    //商品是否选择规格检测
+    checkedSelected() {
+      //console.log("检测是否选择了商品", this.sku_select);
+
+      if (!this.sku_select.inventoryId) {
+        alertErr("请选择商品规格");
+        return false;
+      }
+
+      if (this.sku_select.kucun < this.selected_num) {
+        alertErr("该商品库存不足,无法购买");
+        return false;
+      }
+
+      return true;
+    },
+
+    //处理购物车列表数据
+    handlePiPrice(item) {
+      let v = item;
+      let { nums1, nums2 } = v;
+      let num = this.selected_num;
+      let priceSale = 0;
+      if (+nums2 && +nums1) {
+        if (+num > +(+nums2)) {
+          priceSale = v.priceSale3;
+        } else if (+num >= +nums1) {
+          priceSale = v.priceSale2;
+        } else {
+          priceSale = v.price_origin;
+        }
+      }
+
+      return priceSale;
+    },
+
+    //立即购买
+    do_pay_now() {
+      if (!this.mix_get_login_status()) {
+        return;
+      }
+      var isSelect = this.checkedSelected();
+      if (!isSelect) {
+        return;
+      }
+
+      let info = this.info;
+      let sku_item = this.sku_select;
+      let data_format = [
+        {
+          title: info.title,
+          image: sku_item.image || info.thumb,
+          inventoryId: sku_item.inventoryId,
+          productId: info.productId,
+          keyVals: sku_item.keyVals,
+          num: this.selected_num,
+          priceSale: sku_item.priceSale,
+          priceMarket: sku_item.priceMarket,
+        },
+      ];
+      let str_data = JSON.stringify(data_format);
+      this.$store.commit("set_cache_payment_products", str_data);
+      this.$router.push({
+        path: "/order-submit",
+      });
+    },
+
+    onBlur_selected_num() {
+      //console.log(this.selected_num + "");
+
+      this.selected_num = parseInt(this.selected_num) || 1;
+    },
+
+    //购车添加商品
+    do_add_cart() {
+      if (!this.mix_get_login_status()) {
+        return;
+      }
+
+      //console.log("shopcart_add 加入购物车");
+      if (!this.sku_select.inventoryId) {
+        alertErr("请选择商品规格！");
+        return;
+      }
+      if (this.selected_num > this.sku_select.kucun) {
+        alertErr("当前商品库存不足！");
+        return;
+      }
+
+      if (this.sku_select.status == -1) {
+        alertErr("当前商品已下架！");
+        return;
+      }
+
+      // debugger
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "gouwuche_add",
+          inventoryId: this.sku_select.inventoryId,
+          num: this.selected_num,
+        },
+      }).then((res) => {
+        alert(res);
+        let { code, data, msg } = res;
+        if (code == 200) {
+          this.$refs.product_add_cart_success_modal.init({
+            num: this.selected_num,
+            ...this.sku_select,
+          });
+
+          this.$store.commit("set_vuex_cart_number", data.count);
+        }
+      });
+    },
+
+    //商品评价页面
+    go_comments() {
+      this.$router.push({
+        path: "/comments",
+        query: {
+          pid: this.productId,
+        },
+      });
+    },
+
+    //预览图片
+    previewImage(src, index, swiperImgs) {
+      ImagePreview({
+        images: swiperImgs,
+        startPosition: index,
+        closeable: true,
+      });
+    },
+
+    //商品详情 内含图片
+    imageEnlargement(e) {
+      if (e.target.nodeName == "IMG") {
+        //判断点击富文本内容为img图片
+        ImagePreview({
+          images: [e.target.currentSrc], //获取当前图片src
+          showIndex: false,
+          loop: false,
+        });
+      } else {
+        //console.log("点击内容不为img");
+      }
+    },
+
+    //
+    do_toggle_tab(title) {
+      this.tab_select.title = title;
+      if (title == "详情") {
+        this.scrollToTarget(".panel-detail");
+      } else if (title == "评价") {
+        this.scrollToTarget(".panel-review");
+      }
+    },
+
+    //商品评价分页
+    changePage_comment(page) {
+      this.pagination.page = page;
+      this.query_comments();
+    },
+
+    //滚动到指定位置
+    scrollToTarget(clsName) {
+      var element = document.querySelector(clsName);
+      if (element) {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "center",
+        });
+      }
+    },
+
+    do_open_share() {},
+    do_fav_toggle() {
+      this.if_shoucang = !this.if_shoucang;
+      this.$api({
+        url: "/product_operate",
+        method: "get",
+        data: {
+          action: "product_operate",
+          userId: localStorage.getItem("userId"),
+          token: localStorage.getItem("token"),
+          productId: this.info.productId,
+          operateType: 1,
+          operateSence: this.if_shoucang == true ? 0 : 1,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          alertSucc(this.if_shoucang == true ? "收藏成功" : "取消收藏");
+          
+        }
+      });
+    },
+  },
+};
+</script>
+
+<style lang="less">
+.pop-kefu-inner {
+  padding: 25px;
+
+  .kefu-tip {
+    margin-bottom: 20px;
+  }
+}
+
+.detail-qrcode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  img {
+    border: 1px solid #ddd;
+    width: 150px;
+    height: 150px;
+  }
+}
+</style>
+
+<style scoped lang="less">
+.page-top {
+  padding: 14px 0;
+  position: relative;
+
+  .page-top-banner {
+    img {
+      width: 100%;
+    }
+  }
+
+  .page-bread {
+    margin: 0 auto;
+    height: auto;
+    // background: #f5f5f5;
+    padding: 0 0;
+
+    .bread-box {
+      height: auto;
+      display: flex;
+      align-items: center;
+
+      img {
+        width: 15px;
+        margin-right: 10px;
+      }
+
+      .bread-divider {
+        margin: 0 10px;
+        font-size: 14px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #999999;
+      }
+
+      a {
+        display: inline-flex;
+        align-items: center;
+
+        font-family: OPPOSans, OPPOSans;
+        font-size: 15px;
+        color: #999999;
+
+        img {
+          margin-right: 10px;
+        }
+      }
+
+      .link {
+        font-family: OPPOSans, OPPOSans;
+        font-size: 15px;
+        color: #999999;
+      }
+
+      .route-link {
+        font-family: OPPOSans, OPPOSans;
+        font-size: 15px;
+        color: #999999;
+      }
+
+      .arrow {
+        margin: 0 6px;
+        color: #aeaeae;
+      }
+
+      > *:last-child {
+        font-family: OPPOSans, OPPOSans;
+        font-size: 15px;
+        color: #000000;
+      }
+    }
+  }
+}
+
+.pop-kefu {
+  .pop-kefu-inner {
+    text-align: center;
+
+    .kefu-tip {
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .kefu-code {
+    }
+
+    .erweima {
+    }
+  }
+}
+
+.phone-tip-inner {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.page {
+  background: #ffffff;
+  background: #f3f3f3;
+  // padding-top: 32px;
+  min-height: 50vh;
+  font-size: 14px;
+
+  .page-box {
+    padding: 36px 30px;
+    background: #ffffff;
+  }
+
+  .page-inner {
+    // overflow: hidden;
+    margin: 0 auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 50px;
+
+    .main-content {
+      // background-color: #fff;
+
+      .ctx-top {
+        background: #fff;
+        display: flex;
+        align-items: flex-start;
+      }
+
+      .top-info {
+        .product-title {
+          text-align: left;
+          font-size: 20px;
+          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-weight: bold;
+          color: #333333;
+
+          .state-xiajia {
+            margin-left: 20px;
+            font-weight: normal;
+            font-size: 14px;
+            color: #999;
+            color: #ea3200;
+          }
+        }
+
+        .product-other-action {
+          padding: 25px 0;
+          display: flex;
+          align-items: center;
+
+          .action-item {
+            display: flex;
+            align-items: center;
+            margin-right: 30px;
+            cursor: pointer;
+
+            &:hover {
+              span {
+                color: #009f39;
+              }
+            }
+
+            img {
+              margin-right: 5px;
+              max-width: 20px;
+              max-height: 20px;
+            }
+
+            span {
+              font-size: 12px;
+              font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+              font-weight: 400;
+              color: #666666;
+
+              font-size: 16px;
+            }
+          }
+        }
+
+        .product-filter {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 15px 0;
+          padding-bottom: 0;
+          border: 1px solid #d5d8de;
+          border-left: none;
+          border-right: none;
+
+          .text {
+            margin-bottom: 15px;
+          }
+
+          .tabs {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+            .tab-item {
+              margin-right: 15px;
+              margin-bottom: 15px;
+              min-width: 32px;
+              padding: 0 5px;
+              height: 24px;
+              line-height: 24px;
+              background: #ffffff;
+              border-radius: 3px 3px 3px 3px;
+              border: 1px solid #a6a6a6;
+
+              font-size: 12px;
+              font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+              font-weight: 400;
+              color: #999999;
+              font-size: 16px;
+
+              &.active {
+                background: #009f39;
+                color: #fff;
+                border-color: #009f39;
+              }
+            }
+          }
+
+          .fuli {
+            img {
+              height: 24px;
+            }
+          }
+        }
+      }
+
+      .ctx-top {
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+
+        .ctx-left {
+          width: 400px;
+          position: relative;
+
+          .detail-act-list {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+
+            .act-item {
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+
+              img {
+                width: 20px;
+                margin-right: 6px;
+              }
+              span {
+                font-size: 16px;
+                font-family: PingFang SC;
+                font-weight: 400;
+                line-height: 36px;
+                color: #333333;
+              }
+            }
+          }
+        }
+
+        .ctx-right {
+          flex: 1;
+          min-height: 364px;
+          margin-left: 36px;
+          text-align: left;
+
+          .detail-title {
+            .title-text {
+              flex: 1;
+              font-family: Poppins, Poppins;
+              font-weight: bold;
+              font-size: 30px;
+              color: #000000;
+            }
+
+            .price-box {
+              margin-left: 100px;
+              font-family: Arial, Arial;
+              font-weight: bold;
+              font-size: 30px;
+              color: #ff0000;
+            }
+          }
+
+          .detail-desc {
+            margin-top: 17px;
+            margin-bottom: 34px;
+            font-family: OPPOSans, OPPOSans;
+            // font-weight: bold;
+            font-size: 16px;
+            color: #555555;
+            line-height: 30px;
+          }
+
+          .sale-info {
+            height: 142px;
+            padding: 0px;
+            background: #f7f7f7;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+
+            .list {
+              .item {
+                display: flex;
+                align-items: center;
+                padding: 12px 32px;
+
+                &.price-item {
+                  background: url("~@img/product/sale-bg.png");
+                  padding-top: 40px;
+                }
+
+                .label {
+                  width: 80px;
+                  font-family: Microsoft YaHei, Microsoft YaHei;
+                  font-weight: 400;
+                  font-size: 14px;
+                  color: #6a6a6a;
+                }
+
+                .vals {
+                  display: flex;
+                  align-items: center;
+                  flex: 1;
+
+                  font-size: 16px;
+                  font-family: PingFang SC, PingFang SC;
+                  font-weight: 500;
+                  color: #353535;
+
+                  &.vals-price {
+                    font-size: 24px;
+                    font-family: PingFang SC, PingFang SC;
+                    font-weight: bold;
+                    color: #e1251b;
+                  }
+
+                  .val {
+                    flex: 1;
+                    font-family: Microsoft YaHei, Microsoft YaHei;
+                    font-weight: bold;
+                    font-size: 16px;
+                    color: #e1251b;
+                  }
+                }
+              }
+            }
+
+            .price {
+              display: flex;
+              align-items: center;
+
+              .number {
+                font-size: 28px;
+                font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+                font-weight: bold;
+                color: #ea3200;
+              }
+            }
+          }
+
+          .other-box {
+            padding-left: 27px;
+          }
+
+          .info-texts {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            height: 45px;
+            background: #f8f8f8;
+
+            .text-item {
+              display: flex;
+              align-items: center;
+
+              .label {
+                font-family: Microsoft YaHei, Microsoft YaHei;
+                font-weight: 400;
+                font-size: 14px;
+                color: #999999;
+              }
+
+              .text {
+                margin-left: 6px;
+                font-size: 16px;
+                color: #e1251b;
+              }
+            }
+          }
+
+          .sku-box {
+            margin-top: 35px;
+            display: flex;
+            align-items: flex-start;
+
+            .sku-label {
+              margin-top: 8px;
+              min-width: 90px;
+
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 14px;
+              color: #999999;
+            }
+          }
+
+          .sku-list {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+            .sku-item {
+              //   display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-bottom: 10px;
+              padding: 0 6px;
+              margin-right: 20px;
+              text-align: center;
+              line-height: 36px;
+              min-width: 108px;
+              height: 36px;
+              background: #ffffff;
+              border-radius: 0px 0px 0px 0px;
+              border: 1px solid #dddddd;
+              font-size: 14px;
+              font-family: PingFang SC, PingFang SC;
+              font-weight: 500;
+              color: #333333;
+
+              &:disabled {
+                cursor: not-allowed;
+                opacity: 0.6;
+                color: #ccc;
+              }
+
+              &.active {
+                border: 1px solid #009f39;
+                color: #eb0611;
+
+                .img-box {
+                  img {
+                    visibility: visible !important;
+                  }
+                }
+
+                .text {
+                  color: #009f39;
+                }
+
+                .price {
+                  color: #009f39;
+                }
+              }
+
+              .text {
+                text-align: center;
+                flex: 1;
+                font-size: 14px;
+                font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+                font-weight: 400;
+                color: #333333;
+              }
+            }
+          }
+
+          .shuliang-box {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+
+            .sel-num-title {
+              min-width: 90px;
+              font-family: Arial, Arial;
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 14px;
+              color: #999999;
+            }
+
+            .kucun {
+              margin-left: 16px;
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 14px;
+              color: #999999;
+            }
+
+            .shuliang {
+              min-width: 105px;
+              display: flex;
+              align-items: center;
+
+              .btn {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                border: 1px solid #d5d8de;
+                width: 24px;
+                height: 24px;
+                cursor: pointer;
+                user-select: none;
+
+                &:hover {
+                  opacity: 0.8;
+                }
+
+                img {
+                  width: 10px;
+                  height: 10px;
+                  vertical-align: bottom;
+                }
+              }
+
+              .minus {
+              }
+
+              input {
+                outline: none;
+                margin: 0 0;
+                display: inline-block;
+                border: 1px solid #ccc;
+                border-left: none;
+                border-right: none;
+
+                width: 40px;
+                height: 30px;
+                height: 24px;
+                line-height: 30px;
+                text-align: center;
+
+                font-size: 16px;
+                font-family: Arial;
+                font-weight: 400;
+                color: #4a4a4a;
+              }
+
+              input::-webkit-outer-spin-button,
+              input::-webkit-inner-spin-button {
+                -webkit-appearance: none !important;
+              }
+
+              /* chrome */
+              input[type="number"] {
+                -moz-appearance: textfield;
+                /* firefox */
+              }
+
+              .plus {
+              }
+            }
+          }
+
+          .dinghuo-box {
+            margin-top: 30px;
+            .label {
+              min-width: 90px;
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 14px;
+              color: #999999;
+            }
+            .value {
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 14px;
+              color: #999999;
+            }
+          }
+
+          .btns {
+            margin-top: 30px;
+            margin-left: 73px;
+
+            button {
+              margin-right: 20px;
+              font-size: 16px;
+              transition: 0.3s;
+
+              &:hover {
+                opacity: 0.8;
+              }
+            }
+
+            .btn-buy {
+              width: 164px;
+              height: 48px;
+              background: rgba(0, 159, 57, 0.04);
+              border-radius: 0px 0px 0px 0px;
+              border: 1px solid #009f39;
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: bold;
+              font-size: 16px;
+              color: #009f39;
+            }
+
+            .btn-add-cart {
+              width: 164px;
+              height: 48px;
+              background: #ff7600;
+              border-radius: 0px 0px 0px 0px;
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: bold;
+              font-size: 16px;
+              color: #ffffff;
+
+              img {
+                margin-right: 10px;
+              }
+            }
+
+            .btn-add-fav {
+              width: 164px;
+              height: 48px;
+              background: #ffffff;
+              border-radius: 0px 0px 0px 0px;
+              border: 1px solid #009f39;
+              font-family: OPPOSans, OPPOSans;
+              // font-weight: bold;
+              font-size: 18px;
+              color: #009f39;
+            }
+          }
+        }
+      }
+
+      .ctx-bottom-container {
+        margin-top: 16px;
+        margin-top: 40px;
+        display: flex;
+        justify-content: space-between;
+
+        .bottom-left {
+          border: 1px solid #d6d6d6;
+          margin-right: 24px;
+          width: 220px;
+          background: #fff;
+          font-weight: 400;
+          font-size: 16px;
+          color: #333333;
+
+          .product-list {
+            padding: 12px 16px;
+          }
+        }
+
+        .bottom-right {
+          flex: 1;
+          overflow: hidden;
+          background: #fff;
+        }
+      }
+
+      .ctx-bottom {
+      }
+
+      .ctx-bottom-inner {
+        width: 100%;
+        text-align: left;
+      }
+    }
+  }
+}
+
+.bottom-nav {
+  background: #f9f9f9;
+  position: relative;
+  border: 1px solid #ddd;
+  display: flex;
+  height: 48px;
+  line-height: 48px;
+
+  .count-num {
+    color: #009f39;
+  }
+
+  .nav-item {
+    min-width: 100px;
+    text-align: center;
+    cursor: pointer;
+    text-align: center;
+    margin-right: 10px;
+    // background: #fff;
+    font-size: 14px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #000000;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &.active {
+      font-weight: bold;
+      position: relative;
+      background: #009f39;
+      color: #ffffff;
+
+      // &::after {
+      //   content: "";
+      //   position: absolute;
+      //   left: 50%;
+      //   transform: translate(-50%);
+      //   bottom: 0;
+      //   width: 40px;
+      //   height: 4px;
+      //   background: #eb0611;
+      //   border-radius: 50px 50px 50px 50px;
+      // }
+
+      .count-num {
+        color: #fff;
+      }
+    }
+  }
+
+  button {
+    position: absolute;
+    right: 0;
+    top: 8px;
+    /*no */
+    right: 8px;
+    /*no */
+    min-width: 126px;
+    /*no */
+    height: 32px;
+    /*no */
+
+    &.contact {
+      background: #009f39;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      right: 20px;
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      img {
+        width: 20px;
+        margin-right: 10px;
+        vertical-align: bottom;
+      }
+
+      span {
+        font-size: 14px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        line-height: 20px;
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+.detail-content {
+  margin-top: 30px;
+
+  .big-img-list {
+    .big-img-item {
+      margin-bottom: 10px;
+      padding: 30px;
+      margin: 10px auto;
+
+      img {
+        width: 400px;
+        height: 300px;
+      }
+    }
+  }
+}
+
+.panel-detail {
+  min-height: 10vh;
+  padding: 20px;
+  // padding: 0;
+  text-align: left;
+
+  /deep/ img {
+    display: block;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .params-html {
+    margin-bottom: 32px;
+
+    .params-box {
+      .params-item {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-bottom: none;
+
+        &:last-child {
+          border-bottom: 1px solid #ccc;
+        }
+
+        &[data-key="target_backmsg"] {
+          display: none;
+        }
+
+        .params-label {
+          display: flex;
+          align-items: center;
+          align-self: stretch;
+          background: #f7f7f7;
+          min-height: 50px;
+          line-height: 50px;
+          width: 300px;
+          padding: 0 24px;
+          font-size: 14px;
+          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-weight: bold;
+          color: #666666;
+
+          font-size: 16px;
+        }
+
+        .params-val {
+          flex: 1;
+          min-height: 50px;
+          line-height: 50px;
+          padding: 0 24px;
+          font-size: 14px;
+          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-weight: bold;
+          color: #666666;
+
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+.rich-html {
+  line-height: 2;
+  // overflow-x: auto;
+
+  /deep/ table {
+    width: 100%;
+    margin: 0 auto;
+    table-layout: auto;
+
+    td {
+      border: 1px solid #aaa;
+      border-bottom: none;
+      border-right: none;
+      min-height: 3.6rem;
+      height: auto !important;
+      line-height: 3rem;
+
+      p,
+      span,
+      strong,
+      i {
+        font-size: 1.2rem;
+      }
+    }
+
+    tr {
+      height: auto !important;
+
+      &.firstRow {
+        td {
+          p,
+          span,
+          strong,
+          i {
+            font-size: 1.4rem;
+          }
+        }
+      }
+    }
+
+    tr td:last-child {
+      border-right: 1px solid #aaa;
+    }
+
+    tr:last-child {
+      td {
+        border-bottom: 1px solid #aaa;
+      }
+    }
+  }
+}
+
+.pagation-box {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.panel-review {
+  min-height: 10vh;
+  padding: 20px;
+  // margin-top: 20px;
+
+  .panel-title {
+    padding: 0 18px;
+    height: 48px;
+    line-height: 48px;
+    background: #f9f9f9;
+    border-radius: 0px 0px 0px 0px;
+    border: 1px solid #cccccc;
+    // border-bottom: none;
+
+    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-weight: bold;
+    font-size: 12px;
+    color: #333333;
+  }
+
+  .review-gailan {
+    padding: 20px;
+    .review-total {
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: 400;
+      font-size: 38px;
+      color: #f29f25;
+    }
+    .star-box {
+      margin-left: 20px;
+    }
+  }
+
+  .comment-title {
+    display: flex;
+    background-color: #eee;
+    align-items: center;
+    color: #fff;
+    width: 100%;
+
+    color: #000;
+
+    .comment-title-text {
+      padding: 5px 30px;
+      margin-right: 20px;
+      background-color: #009f39;
+      color: #fff;
+    }
+  }
+
+  label {
+    width: 70px;
+
+    input {
+      margin-right: 10px;
+    }
+  }
+
+  .comment-list {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #000;
+    text-align: left;
+
+    .comment-item {
+      background-color: #eee;
+      padding: 20px;
+      min-height: 50px;
+      margin-bottom: 20px;
+
+      .comment-bottom {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+
+        .left {
+          flex: 3;
+
+          .img-list {
+            display: flex;
+
+            .img-item {
+              padding: 10px;
+            }
+
+            img {
+              width: 80px;
+              height: 80px;
+              padding: 10px;
+              background-color: #fff;
+              margin-right: 10px;
+            }
+          }
+        }
+
+        .right {
+          flex: 1;
+        }
+      }
+    }
+  }
+}
+
+.bottom-left {
+  .main-title {
+    text-align: center;
+    height: 48px;
+    line-height: 48px;
+    background: #f9f9f9;
+    border-radius: 0px 0px 0px 0px;
+
+    position: relative;
+    border-bottom: 1px solid #eeeeee;
+    line-height: 45px;
+    padding-left: 16px;
+    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-weight: 400;
+    font-size: 16px;
+    color: #333333;
+
+    // &::after {
+    //   position: absolute;
+    //   content: "";
+    //   background: #333;
+    //   bottom: 0;
+    //   width: 96px;
+    //   left: 16px;
+    //   height: 2px;
+    // }
+  }
+}
+
+.product-list {
+  .product-item {
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e8e8e8;
+    margin-bottom: 20px;
+    width: 100%;
+    // height: 349px;
+    background: #ffffff;
+    cursor: pointer;
+
+    &:hover {
+      .title {
+        color: #009f39 !important;
+      }
+    }
+
+    .poster-box {
+      margin: 0 auto;
+      width: 172px;
+      height: 172px;
+
+      .poster {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .info-box {
+      padding: 13px 0 0;
+
+      .title {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-weight: 400;
+        font-size: 14px;
+        color: #333333;
+      }
+
+      .pirce-box {
+        margin-top: 15px;
+
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-weight: bold;
+        font-size: 18px;
+        color: #e1251b;
+      }
+    }
+  }
+}
+</style>
+
+<style scoped lang="less" src="@/assets/h5css/page/product-detail.less"></style>
+
+<style
+  scoped
+  lang="less"
+  src="@/assets/h5css/mobile/product-detail.less"
+></style>

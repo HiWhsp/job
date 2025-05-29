@@ -1,0 +1,53 @@
+.reportCard {
+  width: 386px;
+  height: 176px;
+  display: inline-block;
+  position: relative;
+  margin-bottom: 56px;
+  cursor: pointer;
+  .cardCover {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    z-index: 2;
+    .cardCoverImg {
+      width: 127px;
+      height: 162px;
+    }
+  }
+  .cardContent {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 386px;
+    height: 138px;
+    background: #ffffff;
+    box-shadow: 0px 8px 16px 0px rgba(0, 20, 68, 0.1);
+    padding: 16px 18px 16px 0;
+    z-index: 1;
+    .cardContentRight {
+      padding-left: 160px;
+      .cardContentTitle {
+        font-family: Microsoft YaHei;
+        font-size: 16px;
+        color: #232d35;
+      }
+      .cardContentStatus {
+        width: 34px;
+        height: 17px;
+        background: #fef1f0;
+        font-size: 12px;
+        color: #d7403c;
+        margin-left: 6px;
+        text-align: center;
+        margin: 8px 0px 16px 0px;
+      }
+
+      .cardContentTime {
+        font-family: Microsoft YaHei;
+        font-size: 12px;
+        color: #afbac4;
+      }
+    }
+  }
+}
