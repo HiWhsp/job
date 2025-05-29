@@ -3,42 +3,70 @@ export default {
   name: "my-exam-submit",
   data() {
     return {
-      id: '', // 考试id
+      id: "", // 考试id
       show_modal: false, // 交卷弹窗
       modalType: null, // 交卷弹窗类型 1:没做完 2:考试时间到 3:没及格 4:及格
       detail: {}, // 考试详情
-      question: { // 试题
+      question: {
+        // 试题
         judge_content: {},
         multiple_content: {},
-        single_content: {}
+        single_content: {},
       },
-      timeObj: { // 倒计时
+      timeObj: {
+        // 倒计时
         targetTimestamp: 0, // 目标时间戳
-        days: '00',
-        hours: '00',
-        minutes: '00',
-        seconds: '00'
+        days: "00",
+        hours: "00",
+        minutes: "00",
+        seconds: "00",
       },
       timer: null,
+      timer1: null,
       overTime: 3,
-    }
+      switchCount: 0,
+    };
   },
   beforeDestroy() {
     clearInterval(this.timer);
+    clearInterval(this.timer1);
   },
   mounted() {
     this.id = this.$route.query.id;
+    document.addEventListener("visibilitychange", this.handleBeforeUnload);
     this.setView();
   },
   methods: {
+    handleBeforeUnload() {
+      if (document.hidden) {
+        this.$api({
+          url: "recordQuestionSwitchWindow",
+          method: "post",
+          data: {
+            question_id: this.id,
+          },
+        }).then((res) => {
+          if (res.code == 200) {
+            this.switchCount++;
+            this.$message.error(
+              `已切换了 ${this.switchCount} 次标签页, 超过次数限制将自动交卷`
+            );
+          }
+        }).catch(err => {
+          setTimeout(() => {
+            this.endQuestion();
+          }, 1000);
+        });
+      }
+    },
     setView() {
       this.$api({
-        url: 'myQuestion',
-        method: 'get',
+        url: "myQuestion",
+        method: "get",
         data: {
-          question_id: this.id
-        }
-      }).then(res => {
+          question_id: this.id,
+        },
+      }).then((res) => {
         if (res.code == 200) {
           this.detail = res.data;
           this.question = res.data.question;
@@ -48,30 +76,30 @@ export default {
           // 判断题
           this.question.judge_content.list.forEach((item, index) => {
             item.checked = false;
-            item.selectText = '';
-          })
+            item.selectText = "";
+          });
           // 多选题
           this.question.multiple_content.list.forEach((item, index) => {
             item.checked = false;
-            item.selectText = '';
-          })
+            item.selectText = "";
+          });
           // 单选题
           this.question.single_content.list.forEach((item, index) => {
             item.checked = false;
-            item.selectText = '';
-          })
+            item.selectText = "";
+          });
         }
-      })
+      });
     },
     // 交卷
     overSubmit() {
       this.$api({
-        url: 'myQuestion',
-        method: 'get',
+        url: "myQuestion",
+        method: "get",
         data: {
-          question_id: this.id
-        }
-      }).then(res => {
+          question_id: this.id,
+        },
+      }).then((res) => {
         if (res.code == 200) {
           this.detail = res.data;
           this.question = res.data.question;
@@ -79,35 +107,37 @@ export default {
           // 未做完
           if (this.detail.has_no_answered_num !== 0) {
             this.modalType = 1;
-            this.show_modal = true
+            this.show_modal = true;
           } else {
-            this.$alert('确定交卷吗?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              callback: action => {
-                if (action === 'confirm') {
+            this.$alert("确定交卷吗?", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              callback: (action) => {
+                if (action === "confirm") {
                   this.endQuestion();
                 }
-              }
-            })
+              },
+            });
           }
         }
-      })
+      });
     },
     endQuestion() {
       this.$api({
-        url: 'endQuestion',
-        method: 'post',
+        url: "endQuestion",
+        method: "post",
         data: {
           question_id: this.id,
-          my_total_point: this.detail.my_total_point
-        }
-      }).then(res => {
+          my_total_point: this.detail.my_total_point,
+        },
+      }).then((res) => {
         if (res.code == 200) {
-          (this.detail.my_total_point / this.question.total_point) * 100 >= 60 ? this.modalType = 4 : this.modalType = 3
-          this.show_modal = true
+          (this.detail.my_total_point / this.question.total_point) * 100 >= 60
+            ? (this.modalType = 4)
+            : (this.modalType = 3);
+          this.show_modal = true;
         }
-      })
+      });
     },
     /**
      * 选项点击
@@ -117,69 +147,77 @@ export default {
      */
     topicClick(item, question, type) {
       const str = item;
-      if (type === 'single') {
-        question.selectText === str ? question.selectText = '' : question.selectText = item;
-        this.addMyQuestionBank(question)
-      } else if (type === 'multiple') {
-        const textList = question.selectText ? question.selectText.split(',') : [];
-        textList.includes(item) ? textList.splice(textList.indexOf(item), 1) : textList.push(item);
-        question.selectText = textList.join(',');
-      } else if (type === 'judge') {
-        question.selectText === str ? question.selectText = '' : question.selectText = item;
-        this.addMyQuestionBank(question)
+      if (type === "single") {
+        question.selectText === str
+          ? (question.selectText = "")
+          : (question.selectText = item);
+        this.addMyQuestionBank(question);
+      } else if (type === "multiple") {
+        const textList = question.selectText
+          ? question.selectText.split(",")
+          : [];
+        textList.includes(item)
+          ? textList.splice(textList.indexOf(item), 1)
+          : textList.push(item);
+        question.selectText = textList.join(",");
+      } else if (type === "judge") {
+        question.selectText === str
+          ? (question.selectText = "")
+          : (question.selectText = item);
+        this.addMyQuestionBank(question);
       }
-      question.checked = question.selectText !== '';
-      this.$forceUpdate()
+      question.checked = question.selectText !== "";
+      this.$forceUpdate();
     },
     // 提交试题答案
     addMyQuestionBank(question) {
       this.$api({
-        url: 'addMyQuestionBank',
-        method: 'post',
+        url: "addMyQuestionBank",
+        method: "post",
         data: {
           question_id: this.id,
           question_bank_id: question.id,
-          my_answer: question.selectText
-        }
-      }).then(res => {
+          my_answer: question.selectText,
+        },
+      }).then((res) => {
         this.$api({
-          url: 'myQuestion',
-          method: 'get',
+          url: "myQuestion",
+          method: "get",
           data: {
-            question_id: this.id
-          }
-        }).then(res => {
+            question_id: this.id,
+          },
+        }).then((res) => {
           if (res.code == 200) {
             this.detail = res.data;
           }
-        })
-      })
+        });
+      });
     },
     // 选项标识
     topicList(item) {
-      return 'ABCD'.substring(item, item + 1)
+      return "ABCD".substring(item, item + 1);
     },
     // 倒计时
     updateCountdown() {
       const now = Math.floor(Date.now() / 1000);
       let timeDiff = this.timeObj.targetTimestamp - now;
       if (timeDiff <= 0) {
-        this.timeObj.days = '00';
-        this.timeObj.hours = '00';
-        this.timeObj.minutes = '00';
-        this.timeObj.seconds = '00';
+        this.timeObj.days = "0";
+        this.timeObj.hours = "0";
+        this.timeObj.minutes = "0";
+        this.timeObj.seconds = "0";
         clearInterval(this.timer);
 
         this.modalType = 2;
-        this.show_modal = true
-        this.timer = setInterval(() => {
+        this.show_modal = true;
+        this.timer1 = setInterval(() => {
           this.overTime--;
           if (this.overTime == 0) {
-            clearInterval(this.timer);
+            clearInterval(this.timer1);
             this.endQuestion();
             // this.$router.push('/my-exam');
           }
-        }, 1000)
+        }, 1000);
         return;
       } else {
         this.timer = setInterval(this.updateCountdown, 1000);
@@ -194,9 +232,9 @@ export default {
     formatNumber(num) {
       // Pad with leading zero if number is less than 10
       return num < 10 ? `0${num}` : num;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <template>
@@ -205,7 +243,7 @@ export default {
       <div class="profile">
         <div class="title">考生信息</div>
         <div class="profile-info">
-          <img :src="baseInfo.image" alt="">
+          <img :src="baseInfo.image" alt="" />
           <div class="info">
             <div class="name">{{ baseInfo.name }}</div>
             <div class="level">
@@ -228,33 +266,51 @@ export default {
           <div class="question-list">
             <div class="question-item">
               <div class="question-title">
-                单选题（共{{ question.single_content.total_num }}题，总分{{ question.single_content.total_point }}分）
+                单选题（共{{ question.single_content.total_num }}题，总分{{
+                  question.single_content.total_point
+                }}分）
               </div>
               <div class="question-content">
-                <div v-for="(item, index) in question.single_content.list" :key="index"
-                     :class="{'correct': item.checked, 'unknown': !item.checked}" class="question-content-item">
+                <div
+                  v-for="(item, index) in question.single_content.list"
+                  :key="index"
+                  :class="{ correct: item.checked, unknown: !item.checked }"
+                  class="question-content-item"
+                >
                   {{ index + 1 }}
                 </div>
               </div>
             </div>
             <div class="question-item">
               <div class="question-title">
-                判断题（共{{ question.judge_content.total_num }}题，总分{{ question.judge_content.total_point }}分）
+                判断题（共{{ question.judge_content.total_num }}题，总分{{
+                  question.judge_content.total_point
+                }}分）
               </div>
               <div class="question-content">
-                <div v-for="(item, index) in question.judge_content.list" :key="index"
-                     :class="{'correct': item.checked, 'unknown': !item.checked}" class="question-content-item">
+                <div
+                  v-for="(item, index) in question.judge_content.list"
+                  :key="index"
+                  :class="{ correct: item.checked, unknown: !item.checked }"
+                  class="question-content-item"
+                >
                   {{ index + 1 }}
                 </div>
               </div>
             </div>
             <div class="question-item">
               <div class="question-title">
-                多选题（共{{ question.multiple_content.total_num }}题，总分{{ question.multiple_content.total_point }}分）
+                多选题（共{{ question.multiple_content.total_num }}题，总分{{
+                  question.multiple_content.total_point
+                }}分）
               </div>
               <div class="question-content">
-                <div v-for="(item, index) in question.multiple_content.list" :key="index"
-                     :class="{'correct': item.checked, 'unknown': !item.checked}" class="question-content-item">
+                <div
+                  v-for="(item, index) in question.multiple_content.list"
+                  :key="index"
+                  :class="{ correct: item.checked, unknown: !item.checked }"
+                  class="question-content-item"
+                >
                   {{ index + 1 }}
                 </div>
               </div>
@@ -263,8 +319,14 @@ export default {
           <div class="all-score">
             总分：{{ question.total_point }}分
             <div class="idea-list">
-              <div class="idea1">已答（<span>{{ detail.has_answered_num }}</span>）</div>
-              <div class="idea2">未答（<span>{{ detail.has_no_answered_num }}</span>）</div>
+              <div class="idea1">
+                已答（<span>{{ detail.has_answered_num }}</span
+                >）
+              </div>
+              <div class="idea2">
+                未答（<span>{{ detail.has_no_answered_num }}</span
+                >）
+              </div>
             </div>
           </div>
         </div>
@@ -272,7 +334,8 @@ export default {
     </div>
     <div class="content">
       <div class="title">
-        <div class="date">剩余时间：{{ formatNumber(timeObj.hours) }}:{{
+        <div class="date">
+          剩余时间：{{ formatNumber(timeObj.hours) }}:{{
             formatNumber(timeObj.minutes)
           }}:{{ formatNumber(timeObj.seconds) }}
         </div>
@@ -284,17 +347,28 @@ export default {
         <!--        单选-->
         <div class="question-item">
           <div class="question-title">
-            单选题（共{{ question.single_content.total_num }}题，总分{{ question.single_content.total_point }}分）
+            单选题（共{{ question.single_content.total_num }}题，总分{{
+              question.single_content.total_point
+            }}分）
           </div>
           <div class="question-content">
-            <div v-for="(item, index) in question.single_content.list" :key="index" class="question-content-item">
+            <div
+              v-for="(item, index) in question.single_content.list"
+              :key="index"
+              class="question-content-item"
+            >
               <div class="topic">
                 <div class="type">单选题</div>
                 <p>{{ index + 1 }}.{{ item.title }}</p>
               </div>
               <div class="topic-list">
-                <div v-for="(it, i) in item.content" :key="i" :class="{'selected': item.selectText === it}"
-                     class="topic-item" @click="topicClick(it, item, 'single')">
+                <div
+                  v-for="(it, i) in item.content"
+                  :key="i"
+                  :class="{ selected: item.selectText === it }"
+                  class="topic-item"
+                  @click="topicClick(it, item, 'single')"
+                >
                   <div class="select">{{ topicList(i) }}</div>
                   <p>{{ it }}</p>
                 </div>
@@ -305,17 +379,28 @@ export default {
         <!--        判断-->
         <div class="question-item">
           <div class="question-title">
-            判断题（共{{ question.judge_content.total_num }}题，总分{{ question.judge_content.total_point }}分）
+            判断题（共{{ question.judge_content.total_num }}题，总分{{
+              question.judge_content.total_point
+            }}分）
           </div>
           <div class="question-content">
-            <div v-for="(item, index) in question.judge_content.list" :key="index" class="question-content-item">
+            <div
+              v-for="(item, index) in question.judge_content.list"
+              :key="index"
+              class="question-content-item"
+            >
               <div class="topic">
                 <div class="type">判断题</div>
                 <p>{{ index + 1 }}.{{ item.title }}</p>
               </div>
               <div class="topic-list">
-                <div v-for="(it, i) in item.content" :key="i" :class="{'selected': item.selectText === it}"
-                     class="topic-item" @click="topicClick(it, item, 'judge')">
+                <div
+                  v-for="(it, i) in item.content"
+                  :key="i"
+                  :class="{ selected: item.selectText === it }"
+                  class="topic-item"
+                  @click="topicClick(it, item, 'judge')"
+                >
                   <div class="select">{{ topicList(i) }}</div>
                   <p>{{ it }}</p>
                 </div>
@@ -326,20 +411,42 @@ export default {
         <!--        多选-->
         <div class="question-item">
           <div class="question-title">
-            多选题（共{{ question.multiple_content.total_num }}题，总分{{ question.multiple_content.total_point }}分）
+            多选题（共{{ question.multiple_content.total_num }}题，总分{{
+              question.multiple_content.total_point
+            }}分）
           </div>
           <div class="question-content">
-            <div v-for="(item, index) in question.multiple_content.list" :key="index" class="question-content-item">
+            <div
+              v-for="(item, index) in question.multiple_content.list"
+              :key="index"
+              class="question-content-item"
+            >
               <div class="topic">
                 <div class="type">多选题</div>
                 <p>{{ index + 1 }}.{{ item.title }}</p>
-                <div v-if="item.selectText" class="add-submit" @click="addMyQuestionBank(item)">确定</div>
+                <div
+                  v-if="item.selectText"
+                  class="add-submit"
+                  @click="addMyQuestionBank(item)"
+                >
+                  确定
+                </div>
               </div>
               <div class="topic-list">
-                <div v-for="(it, i) in item.content" :key="i"
-                     :class="{'selected': item.selectText ? item.selectText.includes(it) : ''}"
-                     class="topic-item" @click="topicClick(it, item, 'multiple')">
-                  <div :class="{'selected': item % 2}" class="select">{{ topicList(i) }}</div>
+                <div
+                  v-for="(it, i) in item.content"
+                  :key="i"
+                  :class="{
+                    selected: item.selectText
+                      ? item.selectText.includes(it)
+                      : '',
+                  }"
+                  class="topic-item"
+                  @click="topicClick(it, item, 'multiple')"
+                >
+                  <div :class="{ selected: item % 2 }" class="select">
+                    {{ topicList(i) }}
+                  </div>
                   <p>{{ it }}</p>
                 </div>
               </div>
@@ -349,34 +456,49 @@ export default {
       </div>
     </div>
 
-    <el-dialog :close-on-click-modal="false" :show-close="false" :visible.sync="show_modal" center="center" title="提示"
-               width="580px">
+    <el-dialog
+      :close-on-click-modal="false"
+      :show-close="false"
+      :visible.sync="show_modal"
+      center="center"
+      title="提示"
+      width="580px"
+    >
       <template v-if="modalType === 1">
         <div class="modal-inner">
           <div class="text-box">
-            还有<span>{{ detail.has_no_answered_num }}</span>题未做，确定交卷吗？
+            还有<span>{{ detail.has_no_answered_num }}</span
+            >题未做，确定交卷吗？
           </div>
         </div>
         <div slot="footer" class="dialog-footer">
-          <button class="btn-ripple btn-1" @click="show_modal = false">继续答题</button>
-          <button class="btn-ripple btn-2" @click="show_modal = false">确认交卷</button>
+          <button class="btn-ripple btn-1" @click="show_modal = false">
+            继续答题
+          </button>
+          <button class="btn-ripple btn-2" @click="show_modal = false">
+            确认交卷
+          </button>
         </div>
       </template>
       <template v-else-if="modalType === 2">
         <div class="modal-inner">
-          <div class="text-box">
-            考试时间已结束，系统将自动交卷
-          </div>
+          <div class="text-box">考试时间已结束，系统将自动交卷</div>
           <div class="date">{{ overTime }}秒后跳转...</div>
         </div>
       </template>
       <template v-else-if="modalType === 3">
         <div class="modal-inner">
           <div class="text-box">很遗憾，考试不及格！您的分数为：</div>
-          <div :class="{'wrong': true}" class="score">{{ detail.my_total_point }}分</div>
+          <div :class="{ wrong: true }" class="score">
+            {{ detail.my_total_point }}分
+          </div>
         </div>
         <div slot="footer" class="dialog-footer">
-          <button class="btn-ripple btn-1" @click="$router.push('/my-exam-detail?id=' + id)">查看答题情况
+          <button
+            class="btn-ripple btn-1"
+            @click="$router.push('/my-exam-detail?id=' + id)"
+          >
+            查看答题情况
           </button>
         </div>
       </template>
@@ -386,7 +508,11 @@ export default {
           <div class="score">{{ detail.my_total_point }}分</div>
         </div>
         <div slot="footer" class="dialog-footer">
-          <button class="btn-ripple btn-1" @click="$router.push('/my-exam-detail?id=' + id)">查看答题情况
+          <button
+            class="btn-ripple btn-1"
+            @click="$router.push('/my-exam-detail?id=' + id)"
+          >
+            查看答题情况
           </button>
         </div>
       </template>
@@ -397,7 +523,7 @@ export default {
 <style lang="less" scoped>
 .container {
   padding: 25px 37px 0;
-  background: #F5F6F6;
+  background: #f5f6f6;
   display: flex;
   align-items: start;
 
@@ -410,20 +536,20 @@ export default {
 
     .title {
       height: 60px;
-      background: #FAFAFA;
-      border-bottom: 1px solid #DEDEDE;
+      background: #fafafa;
+      border-bottom: 1px solid #dedede;
       text-align: center;
       line-height: 60px;
       font-family: Source Han Sans, Source Han Sans;
       font-weight: 700;
       font-size: 20px;
-      color: #23324F;
+      color: #23324f;
     }
 
     .profile {
       width: 100%;
       background-color: #fff;
-      border: 1px solid #DEDEDE;
+      border: 1px solid #dedede;
 
       .profile-info {
         padding: 34px;
@@ -444,15 +570,16 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 700;
             font-size: 18px;
-            color: #1F253B;
+            color: #1f253b;
           }
 
-          .level, .phone {
+          .level,
+          .phone {
             display: flex;
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 12px;
-            color: #6F6F6F;
+            color: #6f6f6f;
 
             p {
               width: 36px;
@@ -476,7 +603,7 @@ export default {
     .answer {
       width: 100%;
       margin-top: 22px;
-      border: 1px solid #DEDEDE;
+      border: 1px solid #dedede;
       background-color: #fff;
 
       .answer-content {
@@ -494,7 +621,7 @@ export default {
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: 400;
               font-size: 14px;
-              color: #23324F;
+              color: #23324f;
               margin: 10px 0;
             }
 
@@ -521,9 +648,9 @@ export default {
                 }
 
                 &.unknown {
-                  border: 1px solid #DDE0E5;
+                  border: 1px solid #dde0e5;
                   background-color: #fff;
-                  color: #999FA4;
+                  color: #999fa4;
                 }
               }
             }
@@ -536,18 +663,18 @@ export default {
           align-items: center;
           height: 39px;
           line-height: 39px;
-          background: #FFFFFF;
+          background: #ffffff;
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 14px;
-          color: #23324F;
+          color: #23324f;
 
           .idea-list {
             display: flex;
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 12px;
-            color: #9698A2;
+            color: #9698a2;
             padding-bottom: 5px;
 
             .idea1 {
@@ -560,11 +687,11 @@ export default {
               color: #737383;
 
               span {
-                color: #FF0101;
+                color: #ff0101;
               }
 
               &::before {
-                content: '';
+                content: "";
                 display: inline-block;
                 width: 12px;
                 height: 12px;
@@ -584,18 +711,18 @@ export default {
               color: #737383;
 
               span {
-                color: #FF0101;
+                color: #ff0101;
               }
 
               &::before {
-                content: '';
+                content: "";
                 display: inline-block;
                 width: 12px;
                 height: 12px;
                 background: #fff;
                 border-radius: 2px 2px 2px 2px;
                 margin-right: 5px;
-                border: 1px solid #DDE0E5;
+                border: 1px solid #dde0e5;
               }
             }
           }
@@ -605,7 +732,7 @@ export default {
   }
 
   .content {
-    border: 1px solid #DEDEDE;
+    border: 1px solid #dedede;
     margin-left: 36px;
     flex: 1;
     background-color: #fff;
@@ -615,22 +742,22 @@ export default {
       align-items: center;
       justify-content: space-between;
       height: 88px;
-      background: #FFFFFF;
+      background: #ffffff;
       padding: 0 38px;
-      border-bottom: 1px solid #DEDEDE;
+      border-bottom: 1px solid #dedede;
 
       .date {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 20px;
-        color: #FF0D0D;
+        color: #ff0d0d;
       }
 
       .name {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 700;
         font-size: 24px;
-        color: #23324F;
+        color: #23324f;
       }
 
       .back-btn {
@@ -638,7 +765,7 @@ export default {
         width: 120px;
         height: 40px;
         line-height: 40px;
-        background: linear-gradient(138deg, #175E3D 0%, #257C54 100%);
+        background: linear-gradient(138deg, #175e3d 0%, #257c54 100%);
         border-radius: 155px;
         text-align: center;
         color: #fff;
@@ -655,14 +782,14 @@ export default {
           padding: 0 38px;
           height: 62px;
           line-height: 62px;
-          background: #FAFAFA;
-          border-top: 1px solid #DEDEDE;
-          border-bottom: 1px solid #DEDEDE;
+          background: #fafafa;
+          border-top: 1px solid #dedede;
+          border-bottom: 1px solid #dedede;
 
           font-family: Source Han Sans, Source Han Sans;
           font-weight: 500;
           font-size: 18px;
-          color: #23324F;
+          color: #23324f;
         }
       }
 
@@ -671,7 +798,7 @@ export default {
 
         .question-content-item {
           padding-bottom: 20px;
-          border-bottom: 1px solid #DEDEDE;
+          border-bottom: 1px solid #dedede;
           margin-bottom: 20px;
 
           &:last-child {
@@ -687,7 +814,7 @@ export default {
             .type {
               width: 57px;
               height: 26px;
-              background: #F1F8FF;
+              background: #f1f8ff;
               border-radius: 4px;
               color: @theme;
               text-align: center;
@@ -700,7 +827,7 @@ export default {
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: 400;
               font-size: 16px;
-              color: #23324F;
+              color: #23324f;
             }
 
             .add-submit {
@@ -708,7 +835,7 @@ export default {
               width: 50px;
               height: 26px;
               line-height: 26px;
-              background: linear-gradient(138deg, #175E3D 0%, #257C54 100%);
+              background: linear-gradient(138deg, #175e3d 0%, #257c54 100%);
               border-radius: 155px;
               text-align: center;
               color: #fff;
@@ -729,12 +856,12 @@ export default {
                 text-align: center;
                 line-height: 30px;
                 background-color: #fff;
-                border: 1px solid #A6ACC0;
+                border: 1px solid #a6acc0;
                 border-radius: 50%;
                 font-family: Microsoft YaHei, Microsoft YaHei;
                 font-weight: 400;
                 font-size: 16px;
-                color: #636E92;
+                color: #636e92;
                 margin-right: 5px;
               }
 
@@ -753,7 +880,7 @@ export default {
                 font-family: Microsoft YaHei, Microsoft YaHei;
                 font-weight: 400;
                 font-size: 16px;
-                color: #23324F;
+                color: #23324f;
               }
             }
           }
@@ -770,10 +897,10 @@ export default {
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;
     font-size: 22px;
-    color: #23324F;
+    color: #23324f;
 
     span {
-      color: #FF0D0D;
+      color: #ff0d0d;
     }
 
     .date {
@@ -785,10 +912,10 @@ export default {
       font-family: Source Han Sans, Source Han Sans;
       font-weight: 700;
       font-size: 36px;
-      color: #175E3D;
+      color: #175e3d;
 
       &.wrong {
-        color: #DE1B1B;
+        color: #de1b1b;
       }
     }
   }
@@ -808,7 +935,7 @@ export default {
     font-family: Source Han Sans, Source Han Sans;
     font-weight: 400;
     font-size: 18px;
-    color: #FFFFFF;
+    color: #ffffff;
   }
 
   .btn-2 {
@@ -816,7 +943,7 @@ export default {
     font-weight: 400;
     font-size: 18px;
     color: @theme;
-    background-color: #E6F1EC;
+    background-color: #e6f1ec;
     margin-left: 30px;
   }
 }

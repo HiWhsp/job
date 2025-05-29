@@ -4,11 +4,10 @@ export default {
   data() {
     return {
       id: '',
+      course_id: '',
+      course_list_id: '',
       checkbox: false
     }
-  },
-  mounted() {
-    this.id = this.$route.query.id;
   },
   methods: {
     submit() {
@@ -23,7 +22,9 @@ export default {
         url: 'startQuestion',
         method: 'post',
         data: {
-          question_id: this.id
+          question_id: this.id,
+          course_id: this.course_id,
+          course_list_id: this.course_list_id
         }
       }).then(res => {
         if (res.code == 200) {

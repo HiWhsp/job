@@ -5,42 +5,65 @@
     </div>
     <div class="page-ctx">
       <div class="tab-list">
-        <div v-for="(item, index) in tabList" :key="index" :class="{'active' : tabSelect.value === item.value}"
-             class="tab-item" @click="do_toggle_tab(item)">
+        <div
+          v-for="(item, index) in tabList"
+          :key="index"
+          :class="{ active: tabSelect.value === item.value }"
+          class="tab-item"
+          @click="do_toggle_tab(item)"
+        >
           {{ item.title }}
           <span v-if="item.num" class="number">{{ item.num }}</span>
         </div>
       </div>
-      <div v-for="item in list" :key="item" class="catalog-list">
+      <div v-for="item in list" :key="item.id" class="catalog-list">
         <div class="title">
           <p>{{ item.question.title }}</p>
           <div class="start">{{ item.type_name }}</div>
         </div>
         <div class="catalog-wrap">
           <div class="item">
-            <span>考试次数：</span><span>{{ item.question.can_test_num }}次</span>
+            <span>考试次数：</span
+            ><span>{{ item.question.can_test_num }}次</span>
           </div>
           <div class="item">
             <span>已考次数：</span><span>{{ item.has_test_num }}次</span>
           </div>
           <div class="item">
-            <span>剩余次数：</span><span>{{ item.question.can_test_num - item.has_test_num }}次</span>
+            <span>剩余次数：</span
+            ><span>{{ item.question.can_test_num - item.has_test_num }}次</span>
           </div>
           <div class="item">
-            <span>考试总分：</span><span>{{ item.question.total_point }}分</span>
+            <span>考试总分：</span
+            ><span>{{ item.question.total_point }}分</span>
           </div>
           <div class="item">
-            <span>考试时长：</span><span>{{ item.question.test_time }}分钟</span>
+            <span>考试时长：</span
+            ><span>{{ item.question.test_time }}分钟</span>
           </div>
         </div>
         <div class="action">
-          <p>考试起止时间：{{ item.question.start_time }} 到 {{ item.question.end_time }}</p>
-          <el-button type="primary" v-if="item.has_test_num === 0" @click="$router.push('my-exam-start?id=' + item.question_id)">开始考试</el-button>
-          <el-button type="primary" v-if="item.has_test_num !== 0" @click="$router.push('my-exam-detail?id=' + item.question_id)">查看答题情况
+          <p>
+            考试起止时间：{{ item.question.start_time }} 到
+            {{ item.question.end_time }}
+          </p>
+          <el-button
+            type="primary"
+            v-if="item.has_test_num === 0"
+            @click="go_exam(item)"
+            >开始考试</el-button
+          >
+          <el-button
+            type="primary"
+            v-if="item.has_test_num !== 0"
+            @click="$router.push('my-exam-detail?id=' + item.question_id)"
+            >查看答题情况
           </el-button>
         </div>
         <div class="relevance">
-          <p>关联课程：<span>{{ item.course_info[0].course_title }}</span></p>
+          <p>
+            关联课程：<span>{{ item.course_info[0].course_title }}</span>
+          </p>
           <p>完成度：100%</p>
         </div>
       </div>
@@ -50,18 +73,17 @@
 </template>
 
 <script>
-
 export default {
   name: "my-exam",
   data() {
     return {
       tabSelect: {
-        title: '全部',
+        title: "全部",
         value: 0,
       },
       pagination: {
         page: 1,
-        limit: 10
+        limit: 10,
       },
       list: []
     };
@@ -71,11 +93,11 @@ export default {
       //orderStatus
       //订单状态：-1取消 1待支付 2待发货 3待收货 4已支付 5已完成(确认收货)
       return [
-        {value: 0, title: "全部"},
-        {value: 1, title: "已做的"},
-        {value: 2, title: "未做的"},
-        {value: 3, title: "进行中"},
-        {value: 4, title: "已结束"},
+        { value: 0, title: "全部" },
+        { value: 1, title: "已做的" },
+        { value: 2, title: "未做的" },
+        { value: 3, title: "进行中" },
+        { value: 4, title: "已结束" },
       ];
     },
   },
@@ -93,18 +115,28 @@ export default {
     },
     query_order() {
       this.$api({
-        url: 'myQuestionList',
-        method: 'get',
+        url: "myQuestionList",
+        method: "get",
         data: {
           type: this.tabSelect.value,
-          ...this.pagination
-        }
-      }).then(res => {
+          ...this.pagination,
+        },
+      }).then((res) => {
         if (res.code === 200) {
           this.list = res.data;
         }
-      })
-    }
+      });
+    },
+    go_exam(row) {
+      this.$router.push({
+        path: "my-exam-start",
+        query: {
+          question_id: row.question_id,
+          course_id: row.course_id,
+          course_list_id: row.course_list_id,
+        },
+      });
+    },
   },
 };
 </script>
@@ -206,14 +238,14 @@ export default {
           height: 25px;
           text-align: center;
           line-height: 25px;
-          background-image: url('../../static/common/start.png');
+          background-image: url("../../static/common/start.png");
           background-repeat: no-repeat;
           background-size: 100% 100%;
 
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 12px;
-          color: #FFFFFF;
+          color: #ffffff;
         }
       }
 
@@ -233,7 +265,7 @@ export default {
           }
 
           span:last-child {
-            color: #175E3D;
+            color: #175e3d;
           }
         }
       }
@@ -250,7 +282,7 @@ export default {
         .el-button {
           width: 158px;
           height: 41px;
-          background: #175E3D;
+          background: #175e3d;
           border-radius: 223px 223px 223px 223px;
           border: none;
           padding: 0;
@@ -265,17 +297,17 @@ export default {
         height: 38px;
         line-height: 38px;
         padding: 0 10px;
-        background: #F5F6F6;
+        background: #f5f6f6;
         border-radius: 6px;
 
         p {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 14px;
-          color: #9D9E9D;
+          color: #9d9e9d;
 
           span {
-            color: #23324F;
+            color: #23324f;
           }
         }
       }
@@ -283,4 +315,3 @@ export default {
   }
 }
 </style>
-

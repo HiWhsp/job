@@ -44,7 +44,6 @@ export default {
       })
     },
     setActive(item) {
-      console.log(item)
       if (item.selectText === 1) {
         return 'correct'
       } else if (item.selectText === 2) {
