@@ -57,12 +57,11 @@
                 width="100"
                 align="center"
               ></el-table-column>
-              <el-table-column
-                label="采购合同编号"
-                prop="contractNo"
-                width="200"
-                align="center"
-              ></el-table-column>
+              <el-table-column label="型号、规格" prop="specNo" width="200">
+                <template slot-scope="scope">
+                  {{ JSON.parse(scope.row.productJson)[0].specNo }}
+                </template>
+              </el-table-column>
               <el-table-column
                 label="签订日期"
                 prop="signDate"
@@ -75,11 +74,15 @@
                 width="auto"
                 align="center"
               ></el-table-column>
+              <el-table-column label="数量" prop="num" width="120">
+                <template slot-scope="scope">
+                  {{ JSON.parse(scope.row.productJson)[0].num }}
+                </template>
+              </el-table-column>
               <el-table-column
-                label="电话"
-                prop="phone"
+                label="单价"
+                prop="price"
                 width="150"
-                align="center"
               ></el-table-column>
               <el-table-column
                 label="产品总金额"
@@ -103,7 +106,10 @@
                         >下载</el-button
                       >
                     </div>
-                    <div class="row-act" v-if="scope.row.status == 1 && scope.row.source != 2">
+                    <div
+                      class="row-act"
+                      v-if="scope.row.status == 1 && scope.row.source != 2"
+                    >
                       <el-button type="text" @click="do_edit(scope.row)"
                         >编辑</el-button
                       >
@@ -114,9 +120,9 @@
                       >
                     </div>
                     <div class="row-act error">
-                      <el-button type="text" @click="do_delete(scope.row)"
-                        >作废</el-button
-                      >
+                      <el-button type="text" @click="do_delete(scope.row)">{{
+                        scope.row.status == 0 ? "恢复合同" : "作废"
+                      }}</el-button>
                     </div>
                   </div>
                 </template>
@@ -237,7 +243,7 @@ export default {
 
     do_edit(row) {
       if (row.status == 0) {
-        this.$message.error("该条记录已作废, 无法编辑");
+        this.$message.error("该条记录已作废, 恢复后可编辑");
         return;
       }
       this.$router.push({
@@ -249,7 +255,26 @@ export default {
     },
     do_delete(row) {
       if (row.status == 0) {
-        this.$message.error("该条记录已作废, 无法作废");
+        this.$confirm("确认恢复该条记录?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(() => {
+            this.$api({
+              url: `recoverContract`,
+              method: "post",
+              data: {
+                id: row.id,
+              },
+            }).then((res) => {
+              alert(res);
+              if (res.code == 200) {
+                this.query_view();
+              }
+            });
+          })
+          .catch(() => {});
         return;
       }
       this.$confirm("确认作废该条记录?", "提示", {
@@ -274,10 +299,6 @@ export default {
         .catch(() => {});
     },
     do_detail(row) {
-      if (row.status == 0) {
-        this.$message.error("该条记录已作废, 无法下载");
-        return;
-      }
       // 下载pdf
       const a = document.createElement("a");
       a.href = row.pdfUrl;
@@ -291,10 +312,6 @@ export default {
       this.$refs.company_detail_modal.init(row);
     },
     do_set_scope(row) {
-      if (row.status == 0) {
-        this.$message.error("该条记录已作废, 无法预览");
-        return;
-      }
       this.toRoute({
         path: "/caigouhetong-preview",
         query: {

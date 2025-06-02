@@ -29,6 +29,7 @@
                 type="date"
                 placeholder="请选择签订日期"
                 value-format="yyyy-MM-dd"
+                disabled
               ></el-date-picker>
             </el-form-item>
           </el-col>
@@ -37,15 +38,25 @@
 
       <!-- 产品列表 -->
       <div class="section">
-        <el-button type="primary" @click="addProduct">添加产品</el-button>
+        <div class="add-product">
+          <el-button type="primary" @click="addProduct">添加产品</el-button>
+          <el-select v-model="productId" placeholder="请选择产品" style="margin-left: 15px;">
+            <el-option
+              v-for="item in productList"
+              :key="item.id"
+              :label="item.title"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </div>
         <el-table :data="form.products" style="margin-top: 12px">
           <el-table-column
             type="index"
             label="项目名称"
-            width="160"
+            width="100"
             align="center"
           ></el-table-column>
-          <el-table-column prop="title" label="品名" width="160" align="center">
+          <el-table-column prop="title" label="品名" width="260" align="center">
             <template slot-scope="scope">
               <el-input
                 v-model="scope.row.title"
@@ -53,15 +64,20 @@
               ></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="specNo" label="描述" align="center">
+          <el-table-column
+            prop="specNo"
+            label="型号、规格"
+            width="260"
+            align="center"
+          >
             <template slot-scope="scope">
               <el-input
                 v-model="scope.row.specNo"
-                placeholder="请输入描述"
+                placeholder="请输入型号、规格"
               ></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="unit" label="单位" width="160" align="center">
+          <el-table-column prop="unit" label="单位" width="260" align="center">
             <template slot-scope="scope">
               <el-input
                 v-model="scope.row.unit"
@@ -69,7 +85,7 @@
               ></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="price" label="单价" width="160" align="center">
+          <el-table-column prop="price" label="单价" align="center">
             <template slot-scope="scope">
               <el-input-number
                 v-model="scope.row.price"
@@ -78,7 +94,7 @@
               ></el-input-number>
             </template>
           </el-table-column>
-          <el-table-column prop="num" label="数量" width="160" align="center">
+          <el-table-column prop="num" label="数量" align="center">
             <template slot-scope="scope">
               <el-input-number
                 v-model="scope.row.num"
@@ -87,12 +103,7 @@
               ></el-input-number>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="totalPrice"
-            label="合计"
-            width="160"
-            align="center"
-          >
+          <el-table-column prop="totalPrice" label="合计" align="center">
             <template slot-scope="scope">
               <span>￥{{ scope.row.totalPrice }}</span>
             </template>
@@ -215,23 +226,24 @@ export default {
   data() {
     return {
       id: "",
+      productId: "",
+      productList: [],
       form: {
         quotationNo: "", // 合计报价单
-        signDate: "", // 签订日期
+        signDate: new Date(), // 签订日期
         customerCompany: "", // 需求方名称
         customerPhone: "", // 需求方手机
         customerName: "", // 需求方联系人
         products: [
-          {
-            title: "",
-            name: "",
-            desc: "",
-            unit: "",
-            price: 0,
-            num: 1,
-            remark: "",
-            totalPrice: 0,
-          },
+          // {
+          //   title: "",
+          //   specNo: "",
+          //   unit: "",
+          //   price: 0,
+          //   num: 1,
+          //   totalPrice: 0,
+          //   remark: "",
+          // },
         ], // 产品
         termJson: {
           tax: "均含13%增值税",
@@ -302,19 +314,34 @@ export default {
           loading.close();
         });
     }
+    // 获取商品列表
+    this.$api({
+      url: "getProductList",
+      method: "get",
+    }).then((res) => {
+      if (res.code === 200) {
+        this.productList = res.data.list;
+      }
+    });
   },
   methods: {
     addProduct() {
-      this.form.products.push({
-        title: "",
-        name: "",
-        desc: "",
-        unit: "",
-        price: 0,
-        num: 1,
-        remark: "",
-        totalPrice: 0,
-      });
+      if (this.productId) {
+        const product = this.productList.find(
+          (item) => item.id === this.productId
+        );
+        this.form.products.push({
+          title: product.title,
+          specNo: product.specNo,
+          unit: product.unit,
+          price: product.price,
+          num: product.num,
+          totalPrice: "",
+          remark: "",
+        });
+      } else {
+        this.$message.error("请选择产品");
+      }
     },
     removeProduct(index) {
       this.form.products.splice(index, 1);

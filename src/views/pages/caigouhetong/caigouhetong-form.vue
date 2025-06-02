@@ -29,6 +29,7 @@
                 type="date"
                 placeholder="请选择签订日期"
                 value-format="yyyy-MM-dd"
+                disabled
               ></el-date-picker>
             </el-form-item>
           </el-col>
@@ -37,20 +38,42 @@
 
       <!-- 产品列表 -->
       <div class="section">
-        <el-button type="primary" @click="addProduct">添加产品</el-button>
+        <div class="add-product">
+          <el-button type="primary" @click="addProduct">添加产品</el-button>
+          <el-select
+            v-model="productId"
+            placeholder="请选择产品"
+            style="margin-left: 15px"
+          >
+            <el-option
+              v-for="item in productList"
+              :key="item.id"
+              :label="item.title"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </div>
         <el-table :data="form.products" style="margin-top: 12px">
           <el-table-column
             type="index"
             label="项目名称"
-            width="160"
+            width="100"
             align="center"
           ></el-table-column>
-          <el-table-column prop="title" label="品名" width="160" align="center">
+          <el-table-column prop="title" label="品名" width="260" align="center">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.title" placeholder="请输入品名"></el-input>
+              <el-input
+                v-model="scope.row.title"
+                placeholder="请输入品名"
+              ></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="specNo" label="型号、规格" align="center">
+          <el-table-column
+            prop="specNo"
+            label="型号、规格"
+            width="260"
+            align="center"
+          >
             <template slot-scope="scope">
               <el-input
                 v-model="scope.row.specNo"
@@ -58,12 +81,15 @@
               ></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="unit" label="单位" align="center">
+          <el-table-column prop="unit" label="单位" width="260" align="center">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.unit" placeholder="请输入单位"></el-input>
+              <el-input
+                v-model="scope.row.unit"
+                placeholder="请输入单位"
+              ></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="num" label="数量" width="160" align="center">
+          <el-table-column prop="num" label="数量" align="center">
             <template slot-scope="scope">
               <el-input-number
                 v-model="scope.row.num"
@@ -72,7 +98,7 @@
               ></el-input-number>
             </template>
           </el-table-column>
-          <el-table-column prop="price" label="含税单价" width="160" align="center">
+          <el-table-column prop="price" label="含税单价" align="center">
             <template slot-scope="scope">
               <el-input-number
                 v-model="scope.row.price"
@@ -81,22 +107,20 @@
               ></el-input-number>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="totalPrice"
-            label="含税总金额"
-            width="160"
-            align="center"
-          >
+          <el-table-column prop="totalPrice" label="含税总金额" align="center">
             <template slot-scope="scope">
               <el-input v-model="scope.row.totalPrice" disabled></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="remark" label="备注" width="160" align="center">
+          <el-table-column prop="remark" label="备注" align="center">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.remark" placeholder="请输入备注"></el-input>
+              <el-input
+                v-model="scope.row.remark"
+                placeholder="请输入备注"
+              ></el-input>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="160" align="center">
+          <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-button type="text" @click="removeProduct(scope.$index)"
                 >删除
@@ -120,7 +144,12 @@
       <!-- 合同条款 -->
       <div class="section">
         <div class="title">合同条款</div>
-        <el-form ref="form1" :model="form.termJson" :rules="rules" label-width="170px">
+        <el-form
+          ref="form1"
+          :model="form.termJson"
+          :rules="rules"
+          label-width="170px"
+        >
           <el-row :gutter="20">
             <el-col :span="20">
               <el-form-item label="质量要求和技术标准：" prop="standard">
@@ -163,7 +192,10 @@
           <el-row :gutter="20">
             <el-col :span="20">
               <el-form-item label="需方收货人信息：" prop="shouHuo">
-                <el-input v-model="form.termJson.shouHuo" placeholder="请输入"></el-input>
+                <el-input
+                  v-model="form.termJson.shouHuo"
+                  placeholder="请输入"
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -192,7 +224,12 @@
       <!-- 需方信息 -->
       <div class="section">
         <div class="title">供方信息</div>
-        <el-form ref="form2" :model="form.companyInfo" :rules="rules" label-width="120px">
+        <el-form
+          ref="form2"
+          :model="form.companyInfo"
+          :rules="rules"
+          label-width="120px"
+        >
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="供方单位名称：" prop="company">
@@ -243,8 +280,12 @@ export default {
   data() {
     return {
       id: "",
+      productId: "",
+      productList: [],
       form: {
-        products: [{ title: "", desc: "", unit: "", price: 0, num: 1, remark: "" }],
+        products: [
+          // { title: "", desc: "", unit: "", price: 0, num: 1, remark: "" },
+        ],
         termJson: {
           standard:
             "品质验收标准以合同规定的型号，规格，配置为标准，按产品原生产厂家的标准及方式进行验收，即按照IIS A标准，不适用其他任何的验收条款和方式。需方应认真检查包装、数量及产品、随机附件是否完好，确认并签收。需方可在收到货物之日起2日内提出产品数量异议；在收到货物之日起7日内就产品质量提出书面异议。验收完成，此后因此产品发生的任何问题，与供方无关。",
@@ -256,7 +297,7 @@ export default {
         },
         companyInfo: {
           contractNo: "",
-          signDate: "",
+          signDate: new Date(),
           company: "",
           fdName: "",
           phone: "",
@@ -285,7 +326,8 @@ export default {
         },
         {
           value: 2,
-          title: "自收到产品之日起2日内，需方通过银行转账方式向供方一次性支付所有货款",
+          title:
+            "自收到产品之日起2日内，需方通过银行转账方式向供方一次性支付所有货款",
         },
       ],
       rules: {
@@ -295,9 +337,11 @@ export default {
         standard: [{ required: true, message: "请输入质量要求和技术标准" }],
         warranty: [{ required: true, message: "请输入保修说明" }],
         relatedCosts: [{ required: true, message: "请选择相关费用" }],
-        shouHuo: [{ required: true, message: "请输入需方收货人信息" }],
+        // shouHuo: [{ required: true, message: "请输入需方收货人信息" }],
         payment: [{ required: true, message: "请选择货款清算及结算方式" }],
-        paymentDesc: [{ required: true, message: "请输入货款清算及结算方式描述" }],
+        paymentDesc: [
+          { required: true, message: "请输入货款清算及结算方式描述" },
+        ],
         fdName: [{ required: true, message: "请输入法定代表人" }],
         phone: [{ required: true, message: "请输入电话" }],
         bank: [{ required: true, message: "请输入开户银行" }],
@@ -312,7 +356,7 @@ export default {
   computed: {
     totalAmount() {
       return this.form.products
-        .reduce((sum, item) => sum + item.price * item.qty, 0)
+        .reduce((sum, item) => sum + item.price * item.num, 0)
         .toFixed(2);
     },
   },
@@ -366,17 +410,34 @@ export default {
         }
       });
     }
+    // 获取商品列表
+    this.$api({
+      url: "getProductList",
+      method: "get",
+    }).then((res) => {
+      if (res.code === 200) {
+        this.productList = res.data.list;
+      }
+    });
   },
   methods: {
     addProduct() {
-      this.form.products.push({
-        name: "",
-        desc: "",
-        unit: "",
-        price: 0,
-        qty: 1,
-        remark: "",
-      });
+      if (this.productId) {
+        const product = this.productList.find(
+          (item) => item.id === this.productId
+        );
+        this.form.products.push({
+          title: product.title,
+          specNo: product.specNo,
+          unit: product.unit,
+          price: product.price,
+          num: product.num,
+          totalPrice: "",
+          remark: "",
+        });
+      } else {
+        this.$message.error("请选择产品");
+      }
     },
     removeProduct(index) {
       this.form.products.splice(index, 1);

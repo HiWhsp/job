@@ -29,6 +29,7 @@
                 type="date"
                 placeholder="请选择签订日期"
                 value-format="yyyy-MM-dd"
+                disabled
               ></el-date-picker>
             </el-form-item>
           </el-col>
@@ -37,20 +38,42 @@
 
       <!-- 产品列表 -->
       <div class="section">
-        <el-button type="primary" @click="addProduct">添加产品</el-button>
-        <el-table :data="form.products" style="margin-top: 12px">
+        <div class="add-product">
+          <el-button type="primary" @click="addProduct">添加产品</el-button>
+          <el-select
+            v-model="productId"
+            placeholder="请选择产品"
+            style="margin-left: 15px"
+          >
+            <el-option
+              v-for="item in productList"
+              :key="item.id"
+              :label="item.title"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </div>
+        <el-table :data="form.products" style="margin-top: 12px" :span-method="spanMethod">
           <el-table-column
             type="index"
             label="项目名称"
-            width="160"
+            width="100"
             align="center"
           ></el-table-column>
-          <el-table-column prop="title" label="品名" width="160" align="center">
+          <el-table-column prop="title" label="品名" width="260" align="center">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.title" placeholder="请输入品名"></el-input>
+              <el-input
+                v-model="scope.row.title"
+                placeholder="请输入品名"
+              ></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="specNo" label="型号、规格" align="center">
+          <el-table-column
+            prop="specNo"
+            label="型号、规格"
+            width="260"
+            align="center"
+          >
             <template slot-scope="scope">
               <el-input
                 v-model="scope.row.specNo"
@@ -58,7 +81,15 @@
               ></el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="price" label="单价" width="160" align="center">
+          <el-table-column prop="unit" label="单位" width="260" align="center">
+            <template slot-scope="scope">
+              <el-input
+                v-model="scope.row.unit"
+                placeholder="请输入单位"
+              ></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column prop="price" label="单价" align="center">
             <template slot-scope="scope">
               <el-input-number
                 v-model="scope.row.price"
@@ -67,7 +98,7 @@
               ></el-input-number>
             </template>
           </el-table-column>
-          <el-table-column prop="num" label="数量" width="160" align="center">
+          <el-table-column prop="num" label="数量" align="center">
             <template slot-scope="scope">
               <el-input-number
                 v-model="scope.row.num"
@@ -76,14 +107,12 @@
               ></el-input-number>
             </template>
           </el-table-column>
-          <el-table-column prop="unit" label="单位" width="160" align="center">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.unit" placeholder="请输入单位"></el-input>
-            </template>
-          </el-table-column>
           <el-table-column label="备注" align="center">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.remark" placeholder="请输入备注"></el-input>
+              <el-input
+                v-model="scope.row.remark"
+                placeholder="请输入备注"
+              ></el-input>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="160" align="center">
@@ -106,7 +135,10 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="以上报价含增值税：" prop="tax">
-                <el-input v-model="form.termJson.tax" placeholder="请输入"></el-input>
+                <el-input
+                  v-model="form.termJson.tax"
+                  placeholder="请输入"
+                ></el-input>
               </el-form-item>
               <el-form-item label="价格条款：" prop="priceTerms">
                 <el-input
@@ -129,7 +161,10 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="付款方式" prop="payType">
-                <el-input v-model="form.termJson.payType" placeholder="请输入"></el-input>
+                <el-input
+                  v-model="form.termJson.payType"
+                  placeholder="请输入"
+                ></el-input>
               </el-form-item>
               <el-form-item label="交货时间" prop="deliveryTime">
                 <el-input
@@ -138,10 +173,16 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="最小订货量" prop="min">
-                <el-input v-model="form.termJson.min" placeholder="请输入"></el-input>
+                <el-input
+                  v-model="form.termJson.min"
+                  placeholder="请输入"
+                ></el-input>
               </el-form-item>
               <el-form-item label="包装方式" prop="pack">
-                <el-input v-model="form.termJson.pack" placeholder="请输入"></el-input>
+                <el-input
+                  v-model="form.termJson.pack"
+                  placeholder="请输入"
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -184,23 +225,24 @@ export default {
   data() {
     return {
       id: "",
+      productId: "",
+      productList: [],
       form: {
         quotationNo: "", // 合计报价单
-        signDate: "", // 签订日期
+        signDate: new Date(), // 签订日期
         customerCompany: "", // 需求方名称
         customerPhone: "", // 需求方手机
         customerName: "", // 需求方联系人
         products: [
-          {
-            title: "",
-            name: "",
-            desc: "",
-            unit: "",
-            price: 0,
-            num: 1,
-            remark: "",
-            totalPrice: 0,
-          },
+          // {
+          // title: "",
+          // specNo: "",
+          // unit: "",
+          // price: 0,
+          // num: 1,
+          // totalPrice: 0,
+          // remark: "",
+          // },
         ], // 产品
         termJson: {
           tax: "均含13%增值税",
@@ -267,19 +309,53 @@ export default {
         }
       });
     }
+    this.$api({
+      url: "getProductList",
+      method: "get",
+    }).then((res) => {
+      if (res.code === 200) {
+        this.productList = res.data.list;
+      }
+    });
   },
   methods: {
     addProduct() {
-      this.form.products.push({
-        title: "",
-        name: "",
-        desc: "",
-        unit: "",
-        price: 0,
-        num: 1,
-        remark: "",
-        totalPrice: 0,
-      });
+      if (this.productId) {
+        const product = this.productList.find(
+          (item) => item.id === this.productId
+        );
+        this.form.products.push(
+          {
+            title: product.title,
+            specNo: product.specNo,
+            unit: product.unit,
+            price: product.price,
+            num: product.num,
+            remark: "",
+            totalPrice: 0,
+          },
+          {
+            title: product.title,
+            specNo: product.specNo,
+            unit: product.unit,
+            price: product.price,
+            num: product.num,
+            remark: "",
+            totalPrice: 0,
+          },
+          {
+            title: product.title,
+            specNo: product.specNo,
+            unit: product.unit,
+            price: product.price,
+            num: product.num,
+            remark: "",
+            totalPrice: 0,
+          }
+        );
+      } else {
+        this.$message.error("请选择产品");
+      }
     },
     removeProduct(index) {
       this.form.products.splice(index, 1);
@@ -363,6 +439,22 @@ export default {
     },
     back() {
       this.$router.push("/jietibaojiadan-list");
+    },
+    spanMethod({ row, column, rowIndex, columnIndex }) {
+      // 合并单元格逻辑
+      if (columnIndex === 0 || columnIndex === 1 || columnIndex === 7) {
+        if (rowIndex % 3 === 0) {
+          return {
+            rowspan: 3,
+            colspan: 1
+          };
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          };
+        }
+      }
     },
   },
 };
