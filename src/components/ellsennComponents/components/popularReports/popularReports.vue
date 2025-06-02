@@ -4,8 +4,9 @@
       <div class="title">{{ title }}</div>
       <div class="content">
         <popular-reports-card
-          v-for="item in list"
+          v-for="(item, index) in list"
           :data="item"
+          :key="index"
         ></popular-reports-card>
       </div>
     </card>

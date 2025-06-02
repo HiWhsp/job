@@ -48,5 +48,34 @@
 .report-card-list{
   display: grid;
   grid-template-columns: repeat(3, 33.33%);
+}
 
+/deep/ .el-tabs__nav-wrap::after {
+  content: "";
+  display: block;
+  width: 100%;
+  background-color: transparent;
+}
+/deep/ .el-tabs__nav {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+/deep/ .el-tabs__active-bar {
+  background-color: transparent;
+}
+/deep/ .el-tabs__item {
+  width: 120px;
+  height: 44px;
+  line-height: 44px;
+  font-family: Microsoft YaHei;
+  font-size: 16px;
+  text-align: center;
+  color: #717e8a;
+  border-radius: 32px;
+  padding: 0;
+  margin-right: 40px;
+  &.is-active {
+    color: #005aac;
+    background-color: #D8EBFF;
+  }
 }

@@ -11,7 +11,7 @@
       </div>
       <div class="activeLocation">
         <img class='activeIcon' src="@img/ellsenn/location.png" alt="" />
-        <div>活动地点：{{ data.location }}</div>
+        <div class="activeLocationText">活动地点：{{ data.location }} <img src="@/assets/home/icon1.png" alt=""></div>
       </div>
     </div>
   </div>

@@ -25,7 +25,7 @@
         <div class="tagGroup">
           <div class="tagGroupText">热门搜索：</div>
 
-          <div class="tagItem" v-for="(item, index) in list">
+          <div class="tagItem" v-for="(item, index) in list" :key="index">
             {{ item.label }}
           </div>
         </div>

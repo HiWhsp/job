@@ -11,7 +11,10 @@
           <img class="report-title-more-right" src="./img/tran.png" />
         </div>
       </div> -->
-      <comp-title title="精品报告" :icon='require("@img/ellsenn/report.png")'></comp-title>
+      <comp-title
+        title="精品报告"
+        :icon="require('@img/ellsenn/report.png')"
+      ></comp-title>
       <div class="report-top-menu">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane
@@ -24,58 +27,60 @@
               <report-card
                 v-for="(item, index) in dataList"
                 :dataItem="item"
-              ></report-card></div
-          ></el-tab-pane>
+                :key="index"
+              ></report-card>
+            </div>
+          </el-tab-pane>
         </el-tabs>
       </div>
     </div>
   </div>
 </template>
 <script>
-import compTitle from '../components/title/title.vue';
-import reportCard from './card.vue';
+import compTitle from "../components/title/title.vue";
+import reportCard from "./card.vue";
 export default {
   components: {
     reportCard,
-    compTitle
+    compTitle,
   },
   props: {},
-  name: 'report',
+  name: "report",
   data() {
     return {
       tabList: [
-        { label: '拆解报告', name: 'disassemblyReport' },
-        { label: '销量报告', name: 'salesVolumeReport' },
-        { label: '技术报告', name: 'technicalReport' },
-        { label: '调研报告', name: 'researchReport' },
-        { label: '应用报告', name: 'application Report' },
-        { label: '定制研究', name: 'customizedResearch' },
+        { label: "拆解报告", name: "disassemblyReport" },
+        { label: "销量报告", name: "salesVolumeReport" },
+        { label: "技术报告", name: "technicalReport" },
+        { label: "调研报告", name: "researchReport" },
+        { label: "应用报告", name: "application Report" },
+        { label: "定制研究", name: "customizedResearch" },
       ],
-      activeName: 'disassemblyReport',
+      activeName: "disassemblyReport",
       dataList: [
         {
-          url: require('@img/ellsenn/test.png'),
-          title: 'VR/AR产业2024年第二季度销量跟踪报告',
+          url: require("@img/ellsenn/test.png"),
+          title: "VR/AR产业2024年第二季度销量跟踪报告",
           status: 1,
-          time: '2024-08-07',
+          time: "2024-08-07",
         },
         {
-          url: require('@img/ellsenn/test.png'),
-          title: 'VR/AR产业2024年第二季度销量跟踪报告',
+          url: require("@img/ellsenn/test.png"),
+          title: "VR/AR产业2024年第二季度销量跟踪报告",
           status: 2,
-          time: '2024-08-07',
+          time: "2024-08-07",
         },
         {
-          url: require('@img/ellsenn/test.png'),
-          title: 'VR/AR产业2024年第二季度销量跟踪报告',
+          url: require("@img/ellsenn/test.png"),
+          title: "VR/AR产业2024年第二季度销量跟踪报告",
           status: 3,
-          time: '2024-08-07',
+          time: "2024-08-07",
         },
         {
-          url: require('@img/ellsenn/test.png'),
-          title: 'VR/AR产业2024年第二季度销量跟踪报告',
+          url: require("@img/ellsenn/test.png"),
+          title: "VR/AR产业2024年第二季度销量跟踪报告",
           status: 2,
-          time: '2024-08-07',
+          time: "2024-08-07",
         },
       ],
     };
@@ -84,7 +89,7 @@ export default {
   mounted() {},
   methods: {
     handleClick(tab, event) {
-      console.log(this.activeName, 'activeNameactiveName');
+      console.log(this.activeName, "activeNameactiveName");
     },
   },
 };

@@ -13,6 +13,18 @@
     display: flex;
     justify-content: space-between;
     flex-direction: column;
+
+    .rightTopBtn {
+      /deep/ .el-button {
+        width: 64px;
+        height: 28px;
+        background: #005AAC;
+        padding: 0px;
+        font-size: 12px;
+        box-sizing: border-box;
+        border-bottom: 3px solid #ABDB77;
+      }
+    }
     .rightTopTitle {
       font-family: PingFang SC;
       font-size: 32px;
@@ -101,6 +113,11 @@
         box-sizing: border-box;
         border: 1px solid #dcdfe6;
         font-size: 16px;
+      }
+      img {
+        width: 18px;
+        height: 18px;
+        margin-right: 8px;
       }
     }
   }

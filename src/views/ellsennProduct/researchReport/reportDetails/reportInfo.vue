@@ -36,9 +36,9 @@
         </div>
 
         <div class="rightTopBtnGroup">
-          <el-button class="payBtn" type="primary">立即订购</el-button>
-          <el-button class="checkBtn" type="primary">在线查看</el-button>
-          <el-button class="contactBtn">联系助理</el-button>
+          <el-button class="payBtn" type="primary"><img src="@img/ellsenn/dinggou.png" alt="">立即订购</el-button>
+          <el-button class="checkBtn" type="primary"><img src="@img/ellsenn/lock.png" alt="">在线查看</el-button>
+          <el-button class="contactBtn"><img src="@img/ellsenn/kefu.png" alt="">联系助理</el-button>
         </div>
       </div>
     </div>

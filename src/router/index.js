@@ -212,6 +212,7 @@ const newsInsights = () => import("@/views/ellsennProduct/newsInsights/index.vue
 const deepEvaluation = () => import("@/views/ellsennProduct/deepEvaluation/index.vue");
 
 const industrialActivities = () => import("@/views/ellsennProduct/industrialActivities/index.vue");
+const searchList = () => import("@/views/ellsennProduct/searchList/index.vue");
 
 const routes = [
   // 首页
@@ -253,7 +254,8 @@ const routes = [
     meta: {
       title: "维深测评",
     },
-  },{
+  }, 
+  {
     path: "/industrialActivities",
     name: "industrialActivities",
     component: industrialActivities,
@@ -261,6 +263,18 @@ const routes = [
       title: "产业活动",
     },
   },
+
+  {
+    path: "/searchList",
+    name: "searchList",
+    component: searchList,
+    meta: {
+      title: "搜索列表",
+    },
+  },
+
+
+  // 历史路由
   {
     path: "/news",
     name: "news",
@@ -764,7 +778,19 @@ router.beforeEach((to, from, next) => {
   if (!user_is_login && to.meta.requireAuth) {
     // debugger
     alertErr("请先登录");
-    next("/login");
+    Vue.prototype.$showLogin({
+      onLoginSuccess: (data) => {
+        console.log('登录成功:', data)
+        // 处理登录成功逻辑
+      },
+      onRegisterSuccess: (data) => {
+        console.log('注册成功:', data)
+      },
+      onGetCode: ({ type, account }) => {
+        console.log('获取验证码:', type, account)
+        // 调用实际的验证码接口
+      }
+    });
   } else {
     next();
   }

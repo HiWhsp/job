@@ -7,7 +7,7 @@
       <div class="cardContentRight">
         <div class="cardContentTitle">{{ dataItem.title }}</div>
         <div class="cardContentStatus">{{ statusEnum[dataItem.status] }}</div>
-        <div class="cardContentTime">{{ dataItem.time }}</div>
+        <div class="cardContentTime">{{ dataItem.time }} wellsenn XR</div>
       </div>
     </div>
   </div>

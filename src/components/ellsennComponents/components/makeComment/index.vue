@@ -20,10 +20,10 @@
         :key="index"
         class="comment-item"
       >
-        <el-avatar :src="comment.avatar" size="medium"></el-avatar>
+        <el-avatar :src="comment.avatar" :size="40"></el-avatar>
         <div class="comment-content">
-          <p>{{ comment.username }}</p>
-          <p>{{ comment.content }}</p>
+          <p class="comment-username">{{ comment.username }}</p>
+          <p class="comment-text">{{ comment.content }}</p>
           <p class="comment-meta">
             {{ comment.time }} 来自{{ comment.location }}
           </p>

@@ -3,11 +3,16 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
+// 导入登录注册弹窗插件
+import AuthModalPlugin from "@/plugin/authModal.js";
+
 // 全局组件注册
 import pageBread from "@/components/page/pageBread.vue";
 import pageTop from "@/components/page/pageTop.vue";
 Vue.component("pageTop", pageTop); //
 Vue.component("pageBread", pageBread); //
+Vue.use(AuthModalPlugin);
+
 
 // import VConsole from "vconsole";
 // if (VConsole) {
@@ -56,7 +61,6 @@ Vue.prototype.$load = {
     this.loading.close();
   },
 };
-
 
 store.dispatch("appInit"); //重新初始化
 

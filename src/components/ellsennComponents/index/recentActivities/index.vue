@@ -6,6 +6,7 @@
      <div class='activeContent'>
       <activity-card
         v-for="(item, index) in activityList"
+        :key="index"
         :data="item"
       ></activity-card>
      </div>
