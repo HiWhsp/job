@@ -62,18 +62,10 @@
           ></el-table-column>
           <el-table-column prop="title" label="品名" width="260" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.title"
-                placeholder="请输入品名"
-              ></el-input>
+              <el-input v-model="scope.row.title" placeholder="请输入品名"></el-input>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="specNo"
-            label="型号、规格"
-            width="260"
-            align="center"
-          >
+          <el-table-column prop="specNo" label="型号、规格" width="260" align="center">
             <template slot-scope="scope">
               <el-input
                 v-model="scope.row.specNo"
@@ -83,10 +75,7 @@
           </el-table-column>
           <el-table-column prop="unit" label="单位" width="260" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.unit"
-                placeholder="请输入单位"
-              ></el-input>
+              <el-input v-model="scope.row.unit" placeholder="请输入单位"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="num" label="数量" align="center">
@@ -114,10 +103,7 @@
           </el-table-column>
           <el-table-column prop="remark" label="备注" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.remark"
-                placeholder="请输入备注"
-              ></el-input>
+              <el-input v-model="scope.row.remark" placeholder="请输入备注"></el-input>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center">
@@ -138,12 +124,7 @@
       <!-- 合同条款 -->
       <div class="section">
         <div class="title">合同条款</div>
-        <el-form
-          ref="form1"
-          :model="form.termJson"
-          :rules="rules"
-          label-width="170px"
-        >
+        <el-form ref="form1" :model="form.termJson" :rules="rules" label-width="170px">
           <el-row :gutter="20">
             <el-col :span="20">
               <el-form-item label="质量要求和技术标准：" prop="standard">
@@ -186,10 +167,7 @@
           <el-row :gutter="20">
             <el-col :span="20">
               <el-form-item label="需方收货人信息：" prop="shouHuo">
-                <el-input
-                  v-model="form.termJson.shouHuo"
-                  placeholder="请输入"
-                ></el-input>
+                <el-input v-model="form.termJson.shouHuo" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -265,6 +243,7 @@
 </template>
 
 <script>
+import log from "@/plugins/log";
 export default {
   data() {
     return {
@@ -286,7 +265,7 @@ export default {
         },
         companyInfo: {
           contractNo: "",
-          signDate: new Date(),
+          signDate: "",
           company: "",
           fdName: "",
           phone: "",
@@ -315,8 +294,7 @@ export default {
         },
         {
           value: 2,
-          title:
-            "自收到产品之日起2日内，需方通过银行转账方式向供方一次性支付所有货款",
+          title: "自收到产品之日起2日内，需方通过银行转账方式向供方一次性支付所有货款",
         },
       ],
       rules: {
@@ -328,17 +306,15 @@ export default {
         relatedCosts: [{ required: true, message: "请选择相关费用" }],
         // shouHuo: [{ required: true, message: "请输入需方收货人信息" }],
         payment: [{ required: true, message: "请选择货款清算及结算方式" }],
-        paymentDesc: [
-          { required: true, message: "请输入货款清算及结算方式描述" },
-        ],
-        fdName: [{ required: true, message: "请输入法定代表人" }],
-        phone: [{ required: true, message: "请输入电话" }],
-        bank: [{ required: true, message: "请输入开户银行" }],
-        taxCode: [{ required: true, message: "请输入税号" }],
-        address: [{ required: true, message: "请输入单位地址" }],
-        wtName: [{ required: true, message: "请输入委托代理人" }],
-        zipCode: [{ required: true, message: "请输入邮编" }],
-        bankCode: [{ required: true, message: "请输入账号" }],
+        paymentDesc: [{ required: true, message: "请输入货款清算及结算方式描述" }],
+        // fdName: [{ required: true, message: "请输入法定代表人" }],
+        // phone: [{ required: true, message: "请输入电话" }],
+        // bank: [{ required: true, message: "请输入开户银行" }],
+        // taxCode: [{ required: true, message: "请输入税号" }],
+        // address: [{ required: true, message: "请输入单位地址" }],
+        // wtName: [{ required: true, message: "请输入委托代理人" }],
+        // zipCode: [{ required: true, message: "请输入邮编" }],
+        // bankCode: [{ required: true, message: "请输入账号" }],
       },
     };
   },
@@ -403,6 +379,8 @@ export default {
           loading.close();
           this.$message.error("获取数据失败");
         });
+    } else {
+      this.form.companyInfo.signDate = log.parseTime(new Date(), "{y}-{m}-{d}");
     }
     // 获取商品列表
     this.$api({
@@ -417,9 +395,7 @@ export default {
   methods: {
     addProduct() {
       if (this.productId) {
-        const product = this.productList.find(
-          (item) => item.id === this.productId
-        );
+        const product = this.productList.find((item) => item.id === this.productId);
         this.form.products.push({
           title: product.title,
           specNo: product.specNo,

@@ -53,7 +53,11 @@
             ></el-option>
           </el-select>
         </div>
-        <el-table :data="form.products" style="margin-top: 12px" :span-method="spanMethod">
+        <el-table
+          :data="form.products"
+          style="margin-top: 12px"
+          :span-method="spanMethod"
+        >
           <el-table-column
             type="index"
             label="项目名称"
@@ -62,18 +66,10 @@
           ></el-table-column>
           <el-table-column prop="title" label="品名" width="260" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.title"
-                placeholder="请输入品名"
-              ></el-input>
+              <el-input v-model="scope.row.title" placeholder="请输入品名"></el-input>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="specNo"
-            label="型号、规格"
-            width="260"
-            align="center"
-          >
+          <el-table-column prop="specNo" label="型号、规格" width="260" align="center">
             <template slot-scope="scope">
               <el-input
                 v-model="scope.row.specNo"
@@ -83,10 +79,7 @@
           </el-table-column>
           <el-table-column prop="unit" label="单位" width="260" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.unit"
-                placeholder="请输入单位"
-              ></el-input>
+              <el-input v-model="scope.row.unit" placeholder="请输入单位"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="price" label="单价" align="center">
@@ -109,10 +102,7 @@
           </el-table-column>
           <el-table-column label="备注" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.remark"
-                placeholder="请输入备注"
-              ></el-input>
+              <el-input v-model="scope.row.desc" placeholder="请输入备注"></el-input>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="160" align="center">
@@ -135,10 +125,7 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="以上报价含增值税：" prop="tax">
-                <el-input
-                  v-model="form.termJson.tax"
-                  placeholder="请输入"
-                ></el-input>
+                <el-input v-model="form.termJson.tax" placeholder="请输入"></el-input>
               </el-form-item>
               <el-form-item label="价格条款：" prop="priceTerms">
                 <el-input
@@ -161,10 +148,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="付款方式" prop="payType">
-                <el-input
-                  v-model="form.termJson.payType"
-                  placeholder="请输入"
-                ></el-input>
+                <el-input v-model="form.termJson.payType" placeholder="请输入"></el-input>
               </el-form-item>
               <el-form-item label="交货时间" prop="deliveryTime">
                 <el-input
@@ -173,16 +157,10 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="最小订货量" prop="min">
-                <el-input
-                  v-model="form.termJson.min"
-                  placeholder="请输入"
-                ></el-input>
+                <el-input v-model="form.termJson.min" placeholder="请输入"></el-input>
               </el-form-item>
               <el-form-item label="包装方式" prop="pack">
-                <el-input
-                  v-model="form.termJson.pack"
-                  placeholder="请输入"
-                ></el-input>
+                <el-input v-model="form.termJson.pack" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -221,6 +199,7 @@
 </template>
 
 <script>
+import log from "@/plugins/log";
 export default {
   data() {
     return {
@@ -229,7 +208,7 @@ export default {
       productList: [],
       form: {
         quotationNo: "", // 合计报价单
-        signDate: new Date(), // 签订日期
+        signDate: "", // 签订日期
         customerCompany: "", // 需求方名称
         customerPhone: "", // 需求方手机
         customerName: "", // 需求方联系人
@@ -241,7 +220,7 @@ export default {
           // price: 0,
           // num: 1,
           // totalPrice: 0,
-          // remark: "",
+          // desc: "",
           // },
         ], // 产品
         termJson: {
@@ -299,15 +278,29 @@ export default {
       }).then((res) => {
         loading.close();
         if (res.code === 200) {
-          this.form.products = res.data.productJson;
           this.form.termJson = res.data.termJson;
           this.form.quotationNo = res.data.quotationNo;
           this.form.signDate = res.data.signDate;
           this.form.customerCompany = res.data.customerCompany;
           this.form.customerPhone = res.data.customerPhone;
           this.form.customerName = res.data.customerName;
+
+          res.data.productJson.forEach((item) => {
+            for (let i = 0; i < 3; i++) {
+              this.form.products.push({
+                title: item.title,
+                specNo: item.specNo,
+                unit: item.unit,
+                price: item.info[i].price,
+                num: item.info[i].num,
+                desc: item.desc,
+              });
+            }
+          });
         }
       });
+    } else {
+      this.form.signDate = log.parseTime(new Date(), "{y}-{m}-{d}");
     }
     this.$api({
       url: "getProductList",
@@ -321,35 +314,33 @@ export default {
   methods: {
     addProduct() {
       if (this.productId) {
-        const product = this.productList.find(
-          (item) => item.id === this.productId
-        );
+        const product = this.productList.find((item) => item.id === this.productId);
         this.form.products.push(
           {
-            title: product.title,
-            specNo: product.specNo,
-            unit: product.unit,
-            price: product.price,
-            num: product.num,
-            remark: "",
+            title: product.title || "",
+            specNo: product.specNo || "",
+            unit: product.unit || "",
+            price: product.price || 0,
+            num: product.num || 0,
+            desc: "",
             totalPrice: 0,
           },
           {
-            title: product.title,
-            specNo: product.specNo,
-            unit: product.unit,
-            price: product.price,
-            num: product.num,
-            remark: "",
+            title: product.title || "",
+            specNo: product.specNo || "",
+            unit: product.unit || "",
+            price: product.price || 0,
+            num: product.num || 0,
+            desc: "",
             totalPrice: 0,
           },
           {
-            title: product.title,
-            specNo: product.specNo,
-            unit: product.unit,
-            price: product.price,
-            num: product.num,
-            remark: "",
+            title: product.title || "",
+            specNo: product.specNo || "",
+            unit: product.unit || "",
+            price: product.price || 0,
+            num: product.num || 0,
+            desc: "",
             totalPrice: 0,
           }
         );
@@ -358,7 +349,7 @@ export default {
       }
     },
     removeProduct(index) {
-      this.form.products.splice(index, 1);
+      this.form.products.splice(index, 3);
     },
     calcTotal() {
       // 触发合计更新
@@ -373,19 +364,48 @@ export default {
         if (valid) {
           this.$refs.form1.validate((valid1) => {
             if (valid1) {
+              let flag = true;
+
+              // 按每三条产品分组，组装成提交格式
+              const groupedProducts = [];
+              for (let i = 0; i < this.form.products.length; i += 3) {
+                const group = this.form.products.slice(i, i + 3);
+                if (group.length > 0) {
+                  // 取第一条为主信息
+                  const main = group[0];
+                  groupedProducts.push({
+                    title: main.title,
+                    specNo: main.specNo,
+                    unit: main.unit,
+                    desc: main.desc || "",
+                    info: group.map((item) => ({
+                      num: item.num,
+                      price: item.price,
+                    })),
+                  });
+                }
+              }
+
               // 校验产品
-              this.form.products.forEach((item) => {
-                if (
-                  item.title === "" ||
-                  item.specNo === "" ||
-                  item.unit === "" ||
-                  item.price === 0 ||
-                  item.num === 0
-                ) {
-                  this.$message.error("请输入完整的产品信息");
+              groupedProducts.forEach((item) => {
+                if (item.title === "" || item.specNo === "" || item.unit === "") {
+                  flag = false;
                   return false;
+                } else {
+                  // // 校验info
+                  // item.info.forEach((item) => {
+                  //   if (item.num === 0 || item.price === 0) {
+                  //     flag = false;
+                  //     return false;
+                  //   }
+                  // });
                 }
               });
+              if (!flag) {
+                this.$message.error("请输入完整的产品信息");
+                return false;
+              }
+
               // 校验合同条款
               if (
                 this.form.termJson.tax === "" ||
@@ -406,6 +426,7 @@ export default {
                 spinner: "el-icon-loading",
                 background: "rgba(0, 0, 0, 0.7)",
               });
+
               // 提交
               this.$api({
                 url: "createQuotation",
@@ -416,7 +437,7 @@ export default {
                   customerCompany: this.form.customerCompany,
                   customerPhone: this.form.customerPhone,
                   customerName: this.form.customerName,
-                  productJson: JSON.stringify(this.form.products),
+                  productJson: JSON.stringify(groupedProducts),
                   termJson: JSON.stringify(this.form.termJson),
                   id: this.id,
                   type: 2,
@@ -442,16 +463,16 @@ export default {
     },
     spanMethod({ row, column, rowIndex, columnIndex }) {
       // 合并单元格逻辑
-      if (columnIndex === 0 || columnIndex === 1 || columnIndex === 7) {
+      if (![4, 5].includes(columnIndex)) {
         if (rowIndex % 3 === 0) {
           return {
             rowspan: 3,
-            colspan: 1
+            colspan: 1,
           };
         } else {
           return {
             rowspan: 0,
-            colspan: 0
+            colspan: 0,
           };
         }
       }

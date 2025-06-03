@@ -40,7 +40,11 @@
       <div class="section">
         <div class="add-product">
           <el-button type="primary" @click="addProduct">添加产品</el-button>
-          <el-select v-model="productId" placeholder="请选择产品" style="margin-left: 15px;">
+          <el-select
+            v-model="productId"
+            placeholder="请选择产品"
+            style="margin-left: 15px"
+          >
             <el-option
               v-for="item in productList"
               :key="item.id"
@@ -58,18 +62,10 @@
           ></el-table-column>
           <el-table-column prop="title" label="品名" width="260" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.title"
-                placeholder="请输入品名"
-              ></el-input>
+              <el-input v-model="scope.row.title" placeholder="请输入品名"></el-input>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="specNo"
-            label="型号、规格"
-            width="260"
-            align="center"
-          >
+          <el-table-column prop="specNo" label="型号、规格" width="260" align="center">
             <template slot-scope="scope">
               <el-input
                 v-model="scope.row.specNo"
@@ -79,10 +75,7 @@
           </el-table-column>
           <el-table-column prop="unit" label="单位" width="260" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.unit"
-                placeholder="请输入单位"
-              ></el-input>
+              <el-input v-model="scope.row.unit" placeholder="请输入单位"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="price" label="单价" align="center">
@@ -110,10 +103,7 @@
           </el-table-column>
           <el-table-column label="备注" align="center">
             <template slot-scope="scope">
-              <el-input
-                v-model="scope.row.remark"
-                placeholder="请输入备注"
-              ></el-input>
+              <el-input v-model="scope.row.desc" placeholder="请输入备注"></el-input>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="160" align="center">
@@ -136,10 +126,7 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="以上报价含增值税：" prop="tax">
-                <el-input
-                  v-model="form.termJson.tax"
-                  placeholder="请输入"
-                ></el-input>
+                <el-input v-model="form.termJson.tax" placeholder="请输入"></el-input>
               </el-form-item>
               <el-form-item label="价格条款：" prop="priceTerms">
                 <el-input
@@ -162,10 +149,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="付款方式" prop="payType">
-                <el-input
-                  v-model="form.termJson.payType"
-                  placeholder="请输入"
-                ></el-input>
+                <el-input v-model="form.termJson.payType" placeholder="请输入"></el-input>
               </el-form-item>
               <el-form-item label="交货时间" prop="deliveryTime">
                 <el-input
@@ -174,16 +158,10 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="最小订货量" prop="min">
-                <el-input
-                  v-model="form.termJson.min"
-                  placeholder="请输入"
-                ></el-input>
+                <el-input v-model="form.termJson.min" placeholder="请输入"></el-input>
               </el-form-item>
               <el-form-item label="包装方式" prop="pack">
-                <el-input
-                  v-model="form.termJson.pack"
-                  placeholder="请输入"
-                ></el-input>
+                <el-input v-model="form.termJson.pack" placeholder="请输入"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -222,6 +200,7 @@
 </template>
 
 <script>
+import log from "@/plugins/log";
 export default {
   data() {
     return {
@@ -230,7 +209,7 @@ export default {
       productList: [],
       form: {
         quotationNo: "", // 合计报价单
-        signDate: new Date(), // 签订日期
+        signDate: "", // 签订日期
         customerCompany: "", // 需求方名称
         customerPhone: "", // 需求方手机
         customerName: "", // 需求方联系人
@@ -242,7 +221,7 @@ export default {
           //   price: 0,
           //   num: 1,
           //   totalPrice: 0,
-          //   remark: "",
+          //   desc: "",
           // },
         ], // 产品
         termJson: {
@@ -313,6 +292,8 @@ export default {
         .catch(() => {
           loading.close();
         });
+    } else {
+      this.form.signDate = log.parseTime(new Date(), "{y}-{m}-{d}");
     }
     // 获取商品列表
     this.$api({
@@ -327,9 +308,7 @@ export default {
   methods: {
     addProduct() {
       if (this.productId) {
-        const product = this.productList.find(
-          (item) => item.id === this.productId
-        );
+        const product = this.productList.find((item) => item.id === this.productId);
         this.form.products.push({
           title: product.title,
           specNo: product.specNo,
@@ -337,7 +316,7 @@ export default {
           price: product.price,
           num: product.num,
           totalPrice: "",
-          remark: "",
+          desc: "",
         });
       } else {
         this.$message.error("请选择产品");
