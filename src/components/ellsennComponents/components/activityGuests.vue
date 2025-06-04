@@ -8,7 +8,6 @@
         <div class="guest-info">
           <div class="guest-name">{{ guest.name }}</div>
           <div class="guest-position">{{ guest.position }}</div>
-          <div class="guest-company">{{ guest.company }}</div>
         </div>
       </div>
     </div>
@@ -86,90 +85,4 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
-.activity-guests {
-  margin-bottom: 40px;
-
-  .section-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 30px;
-    position: relative;
-
-    &::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -8px;
-      width: 40px;
-      height: 3px;
-      background: linear-gradient(90deg, #0066cc, #004499);
-    }
-  }
-
-  .guests-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 30px;
-
-    @media (max-width: 1200px) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    @media (max-width: 768px) {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
-
-    .guest-card {
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-      overflow: hidden;
-
-      &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      }
-
-      .guest-avatar {
-        width: 100%;
-        height: 200px;
-        overflow: hidden;
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-      }
-
-      .guest-info {
-        padding: 20px;
-        text-align: center;
-        background: linear-gradient(135deg, #0066cc, #004499);
-        color: white;
-
-        .guest-name {
-          font-size: 18px;
-          font-weight: bold;
-          margin-bottom: 8px;
-        }
-
-        .guest-position {
-          font-size: 14px;
-          opacity: 0.9;
-          margin-bottom: 4px;
-        }
-
-        .guest-company {
-          font-size: 12px;
-          opacity: 0.8;
-        }
-      }
-    }
-  }
-}
-</style>
+<style scoped lang="less" src="./activeityGuests.less"></style>
