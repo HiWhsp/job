@@ -20,22 +20,6 @@ Vue.use(VueRouter);
 
 // 官网页面1
 const index = () => import(/* webpackChunkName: "index" */ "@/views/index.vue");
-const news = () =>
-  import(/* webpackChunkName: "news" */ "@/views/news/news.vue");
-const news_detail = () =>
-  import(/* webpackChunkName: "news" */ "@/views/news/news-detail.vue");
-const product_brand = () =>
-  import(
-    /* webpackChunkName: "product_brand" */ "@/views/product/product-brand.vue"
-  );
-
-// 账号相关
-const register = () =>
-  import(/* webpackChunkName: "register" */ "@/views/account/register.vue");
-const login = () =>
-  import(/* webpackChunkName: "login" */ "@/views/account/login.vue");
-const retrieve = () =>
-  import(/* webpackChunkName: "retrieve" */ "@/views/account/retrieve.vue");
 
 const about = () =>
   import(/* webpackChunkName: "about" */ "@/views/company/about.vue");
@@ -43,87 +27,6 @@ const about = () =>
 const contact = () =>
   import(/* webpackChunkName: "contact" */ "@/views/company/contact.vue");
 
-const terms = () =>
-  import(/* webpackChunkName: "terms" */ "@/views/article/terms.vue");
-const help = () =>
-  import(/* webpackChunkName: "help" */ "@/views/article/help.vue");
-
-const demand = () =>
-  import(/* webpackChunkName: "demand" */ "@/views/company/demand.vue");
-
-//产品
-const product_cates = () =>
-  import(
-    /* webpackChunkName: "product-cates" */ "@/views/product/product-cates.vue"
-  );
-const product_remai = () =>
-  import(
-    /* webpackChunkName: "product-remai" */ "@/views/product/product-remai.vue"
-  );
-const product_youxuan = () =>
-  import(
-    /* webpackChunkName: "product-youxuan" */ "@/views/product/product-youxuan.vue"
-  );
-const product_search = () =>
-  import(
-    /* webpackChunkName: "product-search" */ "@/views/product/product-search.vue"
-  );
-const product_detail = () =>
-  import(
-    /* webpackChunkName: "product-detail" */ "@/views/product/product-detail.vue"
-  );
-const batch_search = () =>
-  import(
-    /* webpackChunkName: "batch-xiadan" */ "@/views/batch/batch-xiadan.vue"
-  );
-const batch_xunjia = () =>
-  import(
-    /* webpackChunkName: "batch-xunjia" */ "@/views/batch/batch-xunjia.vue"
-  );
-const batch_xunjia_match = () =>
-  import(
-    /* webpackChunkName: "batch-xunjia" */ "@/views/batch/batch-xunjia-match.vue"
-  );
-const batch_xunjia_result = () =>
-  import(
-    /* webpackChunkName: "batch-xunjia" */ "@/views/batch/batch-xunjia-result.vue"
-  );
-const product_xieyi = () =>
-  import(
-    /* webpackChunkName: "product-xieyi" */ "@/views/product/product-xieyi.vue"
-  );
-const product_zhenxuan = () =>
-  import(
-    /* webpackChunkName: "product-zhenxuan" */ "@/views/product/product-zhenxuan.vue"
-  );
-const scene = () =>
-  import(
-    /* webpackChunkName: "scene" */ "@/views/product/scene.vue"
-  );
-const balance = () =>
-  import(
-    /* webpackChunkName: "balance" */ "@/views/balance/balance.vue"
-  );
-const balance_list = () =>
-  import(
-    /* webpackChunkName: "balance" */ "@/views/balance/balance-list.vue"
-  );
-const card = () =>
-  import(
-    /* webpackChunkName: "card" */ "@/views/card/card.vue"
-  );
-const card_list = () =>
-  import(
-    /* webpackChunkName: "card" */ "@/views/card/card-list.vue"
-  );
-const card_goods = () =>
-  import(
-    /* webpackChunkName: "card" */ "@/views/card/card-goods.vue"
-  );
-const card_records = () =>
-  import(
-    /* webpackChunkName: "card" */ "@/views/card/card-records.vue"
-  );
 const order_logistics = () =>
   import(/* webpackChunkName: "order-logistics" */ "@/views/order/order-logistics.vue");
 // const memberCenter = () => import(/* webpackChunkName: "memberCenter" */ "@/views/my/member/memberCenter.vue");
@@ -132,10 +35,6 @@ const order_logistics = () =>
 const my_layout = () => import("@/views/my/my-layout.vue");
 const my_index = () => import("@/views/my/my-index.vue");
 
-// 订单
-// 下单
-const cart = () =>
-  import(/* webpackChunkName: "cart" */ "@/views/cart/cart.vue");
 const order_submit = () =>
   import(
     /* webpackChunkName: "order-submit" */ "@/views/order/order-submit.vue"
@@ -162,22 +61,6 @@ const order_review_submit = () =>
     /* webpackChunkName: "order-review-submit" */ "@/views/review/order-review-submit.vue"
   );
 
-// 发票
-const invoice_list = () =>
-  import(
-    /* webpackChunkName: "invoice-list" */ "@/views/invoice/invoice-list.vue"
-  );
-const invoice_detail = () =>
-  import(
-    /* webpackChunkName: "invoice-detail" */ "@/views/invoice/invoice-detail.vue"
-  );
-
-// 售后
-const refund_list = () => import("@/views/refund/refund-list.vue");
-const refund_type = () => import("@/views/refund/refund-type.vue");
-const refund_submit = () => import("@/views/refund/refund-submit.vue");
-const refund_service_detail = () =>
-  import("@/views/refund/refund-service-detail.vue");
 //
 const address_list = () =>
   import(
@@ -192,15 +75,6 @@ const my_info = () =>
 
 const my_review_list = () => import("@/views/review/my-review-list.vue");
 const change_password = () => import("@/views/my/change-password.vue");
-
-const browse_history = () =>
-  import(
-    /* webpackChunkName: "browse-history" */ "@/views/browse/browse-history.vue"
-  );
-const favorite_list = () =>
-  import(
-    /* webpackChunkName: "favorite-list" */ "@/views/favorite/favorite-list.vue"
-  );
 
 // 维深信息
 const researchReport = () => import("@/views/ellsennProduct/researchReport/index.vue"); // 研究报告
@@ -261,7 +135,7 @@ const routes = [
     meta: {
       title: "维深测评",
     },
-  }, 
+  },
   {
     path: "/deepEvaluationDetail",
     name: "deepEvaluationDetail",
@@ -269,7 +143,7 @@ const routes = [
     meta: {
       title: "维深测评详情",
     },
-  }, 
+  },
   {
     path: "/industrialActivities",
     name: "industrialActivities",
@@ -298,18 +172,6 @@ const routes = [
 
   // 历史路由
   {
-    path: "/news",
-    name: "news",
-    component: news,
-    meta: {},
-  },
-  {
-    path: "/news-detail",
-    name: "news-detail",
-    component: news_detail,
-    meta: {},
-  },
-  {
     path: "/about",
     name: "about",
     component: about,
@@ -320,172 +182,6 @@ const routes = [
     name: "contact",
     component: contact,
     meta: {},
-  },
-  {
-    path: "/demand",
-    name: "demand",
-    component: demand,
-    meta: {},
-  },
-  {
-    path: "/terms",
-    name: "terms",
-    component: terms,
-    meta: {},
-  },
-  {
-    path: "/help",
-    name: "help",
-    component: help,
-    meta: {},
-  },
-
-  {
-    path: "/register",
-    name: "register",
-    component: register,
-    meta: {},
-  },
-  {
-    path: "/login",
-    name: "login",
-    component: login,
-    meta: {},
-  },
-  {
-    path: "/retrieve",
-    name: "retrieve",
-    component: retrieve,
-    meta: {},
-  },
-  {
-    path: "/product-cates",
-    name: "product-cates",
-    component: product_cates,
-    meta: {
-      title: "产品分类",
-    },
-  },
-  {
-    path: "/product-remai",
-    name: "product-remai",
-    component: product_remai,
-    meta: {
-      title: "热卖产品",
-    },
-  },
-  {
-    path: "/product-youxuan",
-    name: "product-youxuan",
-    component: product_youxuan,
-    meta: {
-      title: "中科优选",
-    },
-  },
-  {
-    path: "/product-brand",
-    name: "product-brand",
-    component: product_brand,
-    meta: {
-      title: "产品分类",
-    },
-  },
-  {
-    path: "/product-search",
-    name: "product-search",
-    component: product_search,
-    meta: {
-      title: "产品搜索",
-    },
-  },
-  {
-    path: "/product-detail",
-    name: "product-detail",
-    component: product_detail,
-    meta: {
-      title: "产品详情",
-    },
-  },
-  {
-    path: "/batch-xiadan",
-    name: "batch-xiadan",
-    component: batch_search,
-    meta: {
-      title: "批量下单",
-    },
-  },
-  {
-    path: "/batch-xunjia",
-    name: "batch-xunjia",
-    component: batch_xunjia,
-    meta: {
-      title: "批量询价",
-    },
-  },
-  {
-    path: "/batch-xunjia-match",
-    name: "batch-xunjia-match",
-    component: batch_xunjia_match,
-    meta: {
-      title: "批量询价",
-    },
-  },
-  {
-    path: "/batch-xunjia-result",
-    name: "batch-xunjia-result",
-    component: batch_xunjia_result,
-    meta: {
-      title: "批量询价",
-    },
-  },
-  {
-    path: "/product-xieyi",
-    name: "product-xieyi",
-    component: product_xieyi,
-    meta: {
-      title: "协议商品",
-    },
-  },
-  {
-    path: "/product-zhenxuan",
-    name: "product-zhenxuan",
-    component: product_zhenxuan,
-    meta: {
-      title: "氿州甄选",
-    },
-  },
-  {
-    path: "/scene",
-    name: "scene",
-    component: scene,
-    meta: {
-      title: "场景专区",
-    },
-  },
-  {
-    path: "/balance",
-    name: "balance",
-    component: balance,
-    meta: {
-      title: "充值中心",
-    },
-  },
-  {
-    path: "/card",
-    name: "card",
-    component: card,
-    meta: {
-      title: "兑换卡",
-    },
-  },
-  {
-    path: "/cart",
-    name: "cart",
-    component: cart,
-    meta: {
-      title: "购物车",
-      requireAuth: true,
-    },
   },
   {
     path: "/order-submit",
@@ -575,111 +271,11 @@ const routes = [
       },
 
       {
-        path: "/refund-list",
-        name: "refund-list",
-        component: refund_list,
-        meta: {
-          title: "我的售后",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/refund-type",
-        name: "refund-type",
-        component: refund_type,
-        meta: {
-          title: "我的售后",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/refund-submit",
-        name: "refund-submit",
-        component: refund_submit,
-        meta: {
-          title: "我的售后",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/refund-service-detail",
-        name: "refund-service-detail",
-        component: refund_service_detail,
-        meta: {
-          title: "我的售后",
-          requireAuth: true,
-        },
-      },
-      // {
-      //   path: "/orderRefundStep3",
-      //   name: "orderRefundStep3",
-      //   component: orderRefundStep3,
-      //   meta: {
-      //     title: "我的售后",
-      //     requireAuth: true,
-      //   },
-      // },
-
-      {
         path: "/my-review-list",
         name: "my-review-list",
         component: my_review_list,
         meta: {
           title: "我的评价",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/balance-list",
-        name: "balance-list",
-        component: balance_list,
-        meta: {
-          title: "我的充值",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/card-list",
-        name: "card-list",
-        component: card_list,
-        meta: {
-          title: "我的兑换卡",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/card-goods",
-        name: "card-goods",
-        component: card_goods,
-        meta: {
-          title: "兑换商品",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/card-records",
-        name: "card-records",
-        component: card_records,
-        meta: {
-          title: "兑换记录",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/favorite-list",
-        name: "favorite-list",
-        component: favorite_list,
-        meta: {
-          title: "我的收藏",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/browse-history",
-        name: "browse-history",
-        component: browse_history,
-        meta: {
-          title: "我的足迹",
           requireAuth: true,
         },
       },
@@ -698,24 +294,6 @@ const routes = [
         component: foreign_address_list,
         meta: {
           title: "我的地址",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/invoice-list",
-        name: "invoice-list",
-        component: invoice_list,
-        meta: {
-          title: "我的发票",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/invoice-detail",
-        name: "invoice-detail",
-        component: invoice_detail,
-        meta: {
-          title: "我的发票",
           requireAuth: true,
         },
       },
