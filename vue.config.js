@@ -21,7 +21,7 @@ module.exports = {
 
   configureWebpack: (config) => {
     return {
-      name: "标准商城",
+      name: "维深信息",
       resolve: {
         // 配置解析别名
         extensions: [".js", ".vue", ".json"],

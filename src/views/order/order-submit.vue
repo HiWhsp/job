@@ -1009,7 +1009,7 @@ export default {
 
           data.forEach((v) => {
             if (SHOP_TYPE == "foreign") {
-              //标准商城
+              //维深信息
               v.full_addr = [v.country, v.province, v.city, v.area, v.address]
                 .filter((v) => !!v)
                 .join(",");

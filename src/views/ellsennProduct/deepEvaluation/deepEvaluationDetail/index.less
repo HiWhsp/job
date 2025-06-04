@@ -1,0 +1,207 @@
+.reportDetails {
+  .top {
+    width: 100%;
+    height: 70px;
+    background: #f3f8ff;
+    display: flex;
+    justify-content: center;
+    .topContent {
+      width: 1200px;
+      margin-top: 26px;
+    }
+  }
+  .bottom {
+    padding-bottom: 50px;
+    background: #f3f8ff;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    .bottomLayout {
+      width: 1200px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    .bottomLeft {
+      width: 860px;
+
+      .bottomLeftTitle {
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f2f2f2;
+        background: #fff;
+        .bottomLeftTitleText {
+          font-size: 34px;
+          font-weight: 600;
+          margin-bottom: 30px;
+        }
+        .bottomLeftTitleAuthor {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          .bottomLeftTitleAuthorName {
+            font-size: 14px;
+            color: #3d3d3d;
+          }
+          .bottomLeftTitleAuthorTime {
+            font-size: 14px;
+            color: #9295a4;
+          }
+          .bottomLeftTitleAuthorItem {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            .bottomLeftTitleAuthorItemIcon {
+              font-size: 12px;
+              color: #005aac;
+              width: 52px;
+              height: 22px;
+              background: #f3f8ff;
+              line-height: 22px;
+              text-align: center;
+              margin-right: 8px;
+            }
+          }
+          .bottomLeftTitleAuthorBottom {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            .collect {
+              font-size: 14px;
+              color: #7b8599;
+              margin-right: 30px;
+              cursor: pointer;
+              img {
+                width: 20px;
+                height: 20px;
+              }
+            }
+            .share {
+              font-size: 14px;
+              color: #3d3d3d;
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              justify-content: space-between;
+              .shareIcon {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                cursor: pointer;
+                .shareIconItem {
+                  width: 24px;
+                  height: 24px;
+                  border-radius: 50%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  img {
+                    width: 12px;
+                    height: 12px;
+                  }
+                  &:nth-child(1) {
+                    background: #005bac;
+                    margin-right: 16px;
+                  }
+                  &:nth-child(2) {
+                    background: #28a744;
+                    margin-right: 16px;
+                  }
+                  &:nth-child(3) {
+                    background: #ea5d5c;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      .bottomLeftContent {
+        padding: 40px;
+        background: #fff;
+      }
+      .bottomLeftMakeComment {
+        padding: 40px;
+        background: #fff;
+      }
+
+      .bottomLeftNextReport {
+        padding: 20px 0px;
+        display: flex;
+        justify-content: space-between;
+        .bottomLeftNextReportItem {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          width: 403px;
+          height: 232px;
+          padding: 34px;
+          background-color: #fff;
+          .top-left {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            img {
+              width: 112px;
+              height: 70px;
+            }
+            .bottomLeftNextReportItemTitle {
+              margin-left: 13px;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              h2 {
+                font-size: 16px;
+                font-weight: 600;
+                color: #000;
+              }
+              .bottomLeftNextReportItemTime {
+                font-size: 12px;
+                color: #afbac4;
+              }
+            }
+          }
+          .bottom-right {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            .btn {
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              justify-content: center;
+              width: 335px;
+              height: 45px;
+              background-color: #005aac;
+              color: #fff;
+              font-size: 14px;
+              cursor: pointer;
+              i {
+                margin-top: 2px;
+                font-size: 14px;
+                color: #fff;
+              }
+              .el-icon-back {
+                margin-right: 10px;
+              }
+              .el-icon-right {
+                margin-left: 10px;
+              }
+            }
+          }
+        }
+      }
+    }
+    .bottomRight {
+      width: 322px;
+      display: flex;
+      flex-direction: column;
+      .bottomRightPurchaseOrDownloadReport {
+        margin: 28px 0 20px 0;
+      }
+    }
+  }
+}

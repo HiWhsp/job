@@ -1,5 +1,5 @@
 <template>
-  <div class="deepEvaluation">
+  <div class="newsInsights">
     <top-search title="独家VR/AR/MR新闻" :onClick="onBtnClick"></top-search>
     <div class="container">
       <div class="layout">
@@ -14,30 +14,27 @@
   </div>
 </template>
 <script>
-import popularReports from '@/components/ellsennComponents/components/popularReports/popularReports.vue';
-import reportCardList from '@/components/ellsennComponents/components/reportCardList';
-import topSearch from '@/components/ellsennComponents/components/topSearch.vue';
+import popularReports from "@/components/ellsennComponents/components/popularReports/popularReports.vue";
+import reportCardList from "@/components/ellsennComponents/components/reportCardList";
+import topSearch from "@/components/ellsennComponents/components/topSearch.vue";
 export default {
   components: {
     topSearch,
     reportCardList,
-    popularReports
+    popularReports,
   },
-  props:{},
-  name:'deepEvaluation',
+  props: {},
+  name: "newsInsights",
   data() {
-    return {
-
-    };
+    return {};
   },
-  created() {
-
+  created() {},
+  mounted() {},
+  methods: {
+    onBtnClick(i) {
+      console.log(i, "onBtnClick");
+    },
   },
-  mounted() {
-
-  },
-}
+};
 </script>
-<style scoped lang='scss'>
-
-</style>
+<style scoped lang="less" src="./index.less"></style>

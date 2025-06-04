@@ -202,17 +202,16 @@ const favorite_list = () =>
     /* webpackChunkName: "favorite-list" */ "@/views/favorite/favorite-list.vue"
   );
 
-//
-const points_record = () => import("@/views/points/points-record.vue");
-const couponList = () => import("@/views/coupon/coupon-list.vue");
-const couponCenter = () => import("@/views/coupon/coupon-center.vue");
-const researchReport = () => import("@/views/ellsennProduct/researchReport/index.vue");
-const reportDetails = () => import("@/views/ellsennProduct/researchReport/reportDetails/index.vue");
-const newsInsights = () => import("@/views/ellsennProduct/newsInsights/index.vue");
-const deepEvaluation = () => import("@/views/ellsennProduct/deepEvaluation/index.vue");
-
-const industrialActivities = () => import("@/views/ellsennProduct/industrialActivities/index.vue");
-const searchList = () => import("@/views/ellsennProduct/searchList/index.vue");
+// 维深信息
+const researchReport = () => import("@/views/ellsennProduct/researchReport/index.vue"); // 研究报告
+const reportDetails = () => import("@/views/ellsennProduct/researchReport/reportDetails/index.vue"); // 研究报告详情
+const newsInsights = () => import("@/views/ellsennProduct/newsInsights/index.vue"); // 新闻洞察
+const newsInsightsDetail = () => import("@/views/ellsennProduct/newsInsights/newsInsightsDetail/index.vue"); // 新闻洞察详情
+const deepEvaluation = () => import("@/views/ellsennProduct/deepEvaluation/index.vue"); // 维深测评
+const deepEvaluationDetail = () => import("@/views/ellsennProduct/deepEvaluation/deepEvaluationDetail/index.vue"); // 维深测评详情
+const industrialActivities = () => import("@/views/ellsennProduct/industrialActivities/index.vue"); // 产业活动
+const industrialActivitiesDetail = () => import("@/views/ellsennProduct/industrialActivities/industrialActivitiesDetail/index.vue"); // 产业活动详情
+const searchList = () => import("@/views/ellsennProduct/searchList/index.vue"); // 搜索列表
 
 const routes = [
   // 首页
@@ -248,11 +247,27 @@ const routes = [
     },
   },
   {
+    path: "/newsInsightsDetail",
+    name: "newsInsightsDetail",
+    component: newsInsightsDetail,
+    meta: {
+      title: "新闻洞察详情",
+    },
+  },
+  {
     path: "/deepEvaluation",
     name: "deepEvaluation",
     component: deepEvaluation,
     meta: {
       title: "维深测评",
+    },
+  }, 
+  {
+    path: "/deepEvaluationDetail",
+    name: "deepEvaluationDetail",
+    component: deepEvaluationDetail,
+    meta: {
+      title: "维深测评详情",
     },
   }, 
   {
@@ -263,7 +278,14 @@ const routes = [
       title: "产业活动",
     },
   },
-
+  {
+    path: "/industrialActivitiesDetail",
+    name: "industrialActivitiesDetail",
+    component: industrialActivitiesDetail,
+    meta: {
+      title: "产业活动详情",
+    },
+  },
   {
     path: "/searchList",
     name: "searchList",
@@ -714,32 +736,7 @@ const routes = [
           title: "修改密码",
           requireAuth: true,
         },
-      },
-      {
-        path: "/points-record",
-        name: "points-record",
-        component: points_record,
-        meta: {
-          title: "我的积分",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/coupon-list",
-        name: "coupon-list",
-        component: couponList,
-        meta: {
-          title: "我的优惠券",
-        },
-      },
-      {
-        path: "/coupon-center",
-        name: "coupon-center",
-        component: couponCenter,
-        meta: {
-          title: "领券中心",
-        },
-      },
+      }
     ],
   },
 

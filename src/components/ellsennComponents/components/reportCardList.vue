@@ -1,6 +1,7 @@
 <template>
   <div class="cardList">
     <!-- 列表区域 -->
+    <div class="reportListTitle">共找到 <span>1256</span> 个报告</div>
     <div class="item" v-for="(item, index) in displayedItems" :key="index">
       <div class="item-image">
         <img :src="item.image" alt="新闻图片" />
@@ -13,9 +14,7 @@
         <div class="item-meta">
           <span>{{ item.date }}</span>
           <span>{{ item.source }}</span>
-          <el-tag type="info" v-for="tag in item.tags" :key="tag">{{
-            tag
-          }}</el-tag>
+          <el-tag type="info" v-for="tag in item.tags" :key="tag">{{ tag }}</el-tag>
         </div>
       </div>
     </div>
@@ -35,7 +34,7 @@
 
 <script>
 export default {
-  name: 'CardList',
+  name: "CardList",
   data() {
     return {
       items: [],
@@ -60,76 +59,76 @@ export default {
       setTimeout(() => {
         const mockData = [
           {
-            image: require('@img/ellsenn/test.png'),
-            title: 'Quest平台VR内容总营收已超22亿美元',
+            image: require("@img/ellsenn/test.png"),
+            title: "Quest平台VR内容总营收已超22亿美元",
             description:
-              '根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。',
-            date: '2025-04-22',
-            source: '维深 Wellsenn XR',
-            tags: ['拆解', 'VR', '快讯'],
+              "根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。",
+            date: "2025-04-22",
+            source: "维深 Wellsenn XR",
+            tags: ["拆解", "VR", "快讯"],
           },
           {
-            image: require('@img/ellsenn/test.png'),
-            title: 'Quest平台VR内容总营收已超22亿美元',
+            image: require("@img/ellsenn/test.png"),
+            title: "Quest平台VR内容总营收已超22亿美元",
             description:
-              '根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。',
-            date: '2025-04-22',
-            source: '维深 Wellsenn XR',
-            tags: ['拆解', 'VR', '快讯'],
+              "根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。",
+            date: "2025-04-22",
+            source: "维深 Wellsenn XR",
+            tags: ["拆解", "VR", "快讯"],
           },
           {
-            image: require('@img/ellsenn/test.png'),
-            title: 'Quest平台VR内容总营收已超22亿美元',
+            image: require("@img/ellsenn/test.png"),
+            title: "Quest平台VR内容总营收已超22亿美元",
             description:
-              '根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。',
-            date: '2025-04-22',
-            source: '维深 Wellsenn XR',
-            tags: ['拆解', 'VR', '快讯'],
+              "根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。",
+            date: "2025-04-22",
+            source: "维深 Wellsenn XR",
+            tags: ["拆解", "VR", "快讯"],
           },
           {
-            image: require('@img/ellsenn/test.png'),
-            title: 'Quest平台VR内容总营收已超22亿美元',
+            image: require("@img/ellsenn/test.png"),
+            title: "Quest平台VR内容总营收已超22亿美元",
             description:
-              '根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。',
-            date: '2025-04-22',
-            source: '维深 Wellsenn XR',
-            tags: ['拆解', 'VR', '快讯'],
+              "根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。",
+            date: "2025-04-22",
+            source: "维深 Wellsenn XR",
+            tags: ["拆解", "VR", "快讯"],
           },
           {
-            image: require('@img/ellsenn/test.png'),
-            title: 'Quest平台VR内容总营收已超22亿美元',
+            image: require("@img/ellsenn/test.png"),
+            title: "Quest平台VR内容总营收已超22亿美元",
             description:
-              '根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。',
-            date: '2025-04-22',
-            source: '维深 Wellsenn XR',
-            tags: ['拆解', 'VR', '快讯'],
+              "根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。",
+            date: "2025-04-22",
+            source: "维深 Wellsenn XR",
+            tags: ["拆解", "VR", "快讯"],
           },
           {
-            image: require('@img/ellsenn/test.png'),
-            title: 'Quest平台VR内容总营收已超22亿美元',
+            image: require("@img/ellsenn/test.png"),
+            title: "Quest平台VR内容总营收已超22亿美元",
             description:
-              '根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。',
-            date: '2025-04-22',
-            source: '维深 Wellsenn XR',
-            tags: ['拆解', 'VR', '快讯'],
+              "根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。",
+            date: "2025-04-22",
+            source: "维深 Wellsenn XR",
+            tags: ["拆解", "VR", "快讯"],
           },
           {
-            image: require('@img/ellsenn/test.png'),
-            title: 'Quest平台VR内容总营收已超22亿美元',
+            image: require("@img/ellsenn/test.png"),
+            title: "Quest平台VR内容总营收已超22亿美元",
             description:
-              '根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。',
-            date: '2025-04-22',
-            source: '维深 Wellsenn XR',
-            tags: ['拆解', 'VR', '快讯'],
+              "根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。",
+            date: "2025-04-22",
+            source: "维深 Wellsenn XR",
+            tags: ["拆解", "VR", "快讯"],
           },
           {
-            image: require('@img/ellsenn/test.png'),
-            title: 'Quest平台VR内容总营收已超22亿美元',
+            image: require("@img/ellsenn/test.png"),
+            title: "Quest平台VR内容总营收已超22亿美元",
             description:
-              '根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。',
-            date: '2025-04-22',
-            source: '维深 Wellsenn XR',
-            tags: ['拆解', 'VR', '快讯'],
+              "根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。",
+            date: "2025-04-22",
+            source: "维深 Wellsenn XR",
+            tags: ["拆解", "VR", "快讯"],
           },
           // 其他列表项...
         ];
