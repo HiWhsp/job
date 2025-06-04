@@ -3,20 +3,24 @@
     <div class="industrialActivitiesTop">
       <div class="topContent">
         <img src="@/assets/img/ellsenn/blueBg.png" alt="" />
-        <div class="topBtn">会议报名</div>
+        <div class="topBtn" @click="meetingRegistration">会议报名</div>
       </div>
-      <div class="bottomContent">
-        <div class="bottomContentLeft">
-          <div class="newList">
-            <div class="newListTitle">活动介绍</div>
-            <div class="newListTitle">活动嘉宾</div>
-            <div class="newListTitle">活动咨询</div>
-            <div class="newListTitle">活动图片</div>
-            <div class="newListTitle">活动报道</div>
+      <div class="bottomContent" ref="bottomContent">
+        <div class="bottomContentBox">
+          <div class="bottomContentLeft">
+            <div class="newList">
+              <div class="newListTitle">活动介绍</div>
+              <div class="newListTitle">活动嘉宾</div>
+              <div class="newListTitle">活动咨询</div>
+              <div class="newListTitle">活动图片</div>
+              <div class="newListTitle">活动报道</div>
+            </div>
           </div>
-        </div>
-        <div class="bottomContentRight">
-          <div class="bottomContentRightBtn">会议报名</div>
+          <div class="bottomContentRight">
+            <div class="bottomContentRightBtn" @click="meetingRegistration">
+              会议报名
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -36,7 +40,9 @@
                 <img src="@/assets/img/ellsenn/blueBg.png" alt="活动海报" />
               </div>
               <div class="activity-info">
-                <h1 class="activity-title">2025 AI/AR智能眼镜智能制造高峰论坛</h1>
+                <h1 class="activity-title">
+                  2025 AI/AR智能眼镜智能制造高峰论坛
+                </h1>
 
                 <div>
                   <div class="info-item">
@@ -128,10 +134,96 @@
                     <div class="timeline-time">{{ item.time }}</div>
                     <div class="timeline-content">
                       <div class="timeline-text">{{ item.text }}</div>
-                      <div class="timeline-desc" v-if="item.desc">{{ item.desc }}</div>
+                      <div class="timeline-desc" v-if="item.desc">
+                        {{ item.desc }}
+                      </div>
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 活动咨询 -->
+        <div class="activity-consult">
+          <div class="section-title">
+            <h2>活动咨询</h2>
+          </div>
+          <div class="consult-content">
+            <div class="consult-item">联系人：维深助理</div>
+            <div class="consult-item">电话号：wellsenn001</div>
+            <div class="consult-item">手机号：18611823719</div>
+            <div class="consult-item">微信号：abc@wellsenn.com</div>
+          </div>
+        </div>
+        <!-- 活动图片 -->
+        <div class="activity-images">
+          <div class="section-title">
+            <h2>活动图片</h2>
+          </div>
+          <div class="images-content">
+            <div class="images-item">
+              <img src="@/assets/img/ellsenn/blueBg.png" alt="活动图片" />
+            </div>
+            <div class="images-item">
+              <img src="@/assets/img/ellsenn/blueBg.png" alt="活动图片" />
+            </div>
+            <div class="images-item">
+              <img src="@/assets/img/ellsenn/blueBg.png" alt="活动图片" />
+            </div>
+            <div class="images-item">
+              <img src="@/assets/img/ellsenn/blueBg.png" alt="活动图片" />
+            </div>
+          </div>
+        </div>
+        <!-- 活动报道 -->
+        <div class="activity-report">
+          <div class="section-title">
+            <h2>活动报道</h2>
+          </div>
+          <div class="report-content">
+            <div class="report-item">
+              <img src="@/assets/img/ellsenn/blueBg.png" alt="活动报道" />
+              <div class="report-item-title">
+                <h3>Scaling Law的尽头是什么？</h3>
+              </div>
+              <div class="report-item-content">
+                <p class="ellipsis-2">
+                  在当日下午举行的“AI技术范式的变革：ScalingLaw的尽头是什么”圆桌环节，百度集团副总裁侯震宇、百度集团副总裁侯震宇百度集团副总裁侯震宇
+                </p>
+              </div>
+            </div>
+            <div class="report-item">
+              <img src="@/assets/img/ellsenn/blueBg.png" alt="活动报道" />
+              <div class="report-item-title">
+                <h3>Scaling Law的尽头是什么？</h3>
+              </div>
+              <div class="report-item-content">
+                <p class="ellipsis-2">
+                  在当日下午举行的“AI技术范式的变革：ScalingLaw的尽头是什么”圆桌环节，百度集团副总裁侯震宇、百度集团副总裁侯震宇百度集团副总裁侯震宇
+                </p>
+              </div>
+            </div>
+            <div class="report-item">
+              <img src="@/assets/img/ellsenn/blueBg.png" alt="活动报道" />
+              <div class="report-item-title">
+                <h3>Scaling Law的尽头是什么？</h3>
+              </div>
+              <div class="report-item-content">
+                <p class="ellipsis-2">
+                  在当日下午举行的“AI技术范式的变革：ScalingLaw的尽头是什么”圆桌环节，百度集团副总裁侯震宇、百度集团副总裁侯震宇百度集团副总裁侯震宇
+                </p>
+              </div>
+            </div>
+            <div class="report-item">
+              <img src="@/assets/img/ellsenn/blueBg.png" alt="活动报道" />
+              <div class="report-item-title">
+                <h3>Scaling Law的尽头是什么？</h3>
+              </div>
+              <div class="report-item-content">
+                <p class="ellipsis-2">
+                  在当日下午举行的“AI技术范式的变革：ScalingLaw的尽头是什么”圆桌环节，百度集团副总裁侯震宇、百度集团副总裁侯震宇百度集团副总裁侯震宇
+                </p>
               </div>
             </div>
           </div>
@@ -186,8 +278,7 @@ export default {
             {
               time: "10:30-11:45",
               text: "圆桌对话《商点、书点、着点,AI如何赋能的好科技》",
-              desc:
-                "清华大学人工智能研究院副院长长、生数科技创始人 朱军\n智联招聘CEO 郭盛\n北京智源人工智能研究院院长 王仲远\n甲子光年首席内容官 王博",
+              desc: "清华大学人工智能研究院副院长长、生数科技创始人 朱军\n智联招聘CEO 郭盛\n北京智源人工智能研究院院长 王仲远\n甲子光年首席内容官 王博",
             },
             {
               time: "11:45-12:00",
@@ -207,8 +298,7 @@ export default {
             {
               time: "14:15-14:35",
               text: "主题演讲《商用AI2.0的算力优化研究与落地探索》",
-              desc:
-                "清华大学电子工程系教授、黄土高原学者基金委杰青、IEEE Fellow、无问芯穹联合人 汪玉",
+              desc: "清华大学电子工程系教授、黄土高原学者基金委杰青、IEEE Fellow、无问芯穹联合人 汪玉",
             },
             {
               time: "14:35-14:55",
@@ -235,11 +325,37 @@ export default {
       ],
     };
   },
-  created() {},
-  mounted() {},
+  mounted() {
+    // 注册滚动事件监听
+    window.addEventListener("scroll", this.handleScroll);
+  },
   methods: {
+    // 会议报名
+    meetingRegistration() {
+      this.$router.push("/meetingRegistration");
+    },
+
     onBtnClick() {
       console.log("onBtnClick");
+    },
+    handleScroll() {
+      // 获取当前滚动位置
+      const scrollTop = window.scrollY;
+      // 获取底部内容元素
+      const bottomContent = this.$refs.bottomContent;
+      // 计算底部内容元素的距离
+      const bottomContentTop = bottomContent.offsetTop;
+      console.log(scrollTop, bottomContentTop);
+      // 如果当前滚动位置大于底部内容元素的距离，悬浮
+      if (scrollTop > 800) {
+        bottomContent.style.position = "fixed";
+        bottomContent.style.top = "0";
+        bottomContent.style.zIndex = "100";
+      } else {
+        bottomContent.style.position = "static";
+        bottomContent.style.top = "auto";
+        bottomContent.style.zIndex = "0";
+      }
     },
   },
 };

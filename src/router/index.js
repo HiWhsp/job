@@ -27,53 +27,13 @@ const about = () =>
 const contact = () =>
   import(/* webpackChunkName: "contact" */ "@/views/company/contact.vue");
 
-const order_logistics = () =>
-  import(/* webpackChunkName: "order-logistics" */ "@/views/order/order-logistics.vue");
-// const memberCenter = () => import(/* webpackChunkName: "memberCenter" */ "@/views/my/member/memberCenter.vue");
-
 // 个人中心
 const my_layout = () => import("@/views/my/my-layout.vue");
 const my_index = () => import("@/views/my/my-index.vue");
 
-const order_submit = () =>
-  import(
-    /* webpackChunkName: "order-submit" */ "@/views/order/order-submit.vue"
-  );
-const payment_methods = () =>
-  import(
-    /* webpackChunkName: "payment-methods" */ "@/views/payment/payment-methods.vue"
-  );
-// 支付
-// const zfbPay = () => import(/* webpackChunkName: "zfbPay" */ "@/views/pay/zfbPay.vue");
-const payment_success = () =>
-  import(
-    /* webpackChunkName: "payment-success" */ "@/views/payment/payment-success.vue"
-  );
-const order_list = () =>
-  import(/* webpackChunkName: "order-list" */ "@/views/order/order-list.vue");
-const order_detail = () =>
-  import(
-    /* webpackChunkName: "order-detail" */ "@/views/order/order-detail.vue"
-  );
-// const points-order-detail = () => import(/* webpackChunkName: "points-order-detail" */ "@/views/order/points-order-detail.vue");
-const order_review_submit = () =>
-  import(
-    /* webpackChunkName: "order-review-submit" */ "@/views/review/order-review-submit.vue"
-  );
-
-//
-const address_list = () =>
-  import(
-    /* webpackChunkName: "address-list" */ "@/views/address/address-list.vue"
-  );
-const foreign_address_list = () =>
-  import(
-    /* webpackChunkName: "foreign-address-list" */ "@/views/address/foreign-address-list.vue"
-  );
 const my_info = () =>
   import(/* webpackChunkName: "my-info" */ "@/views/my/my-info.vue");
 
-const my_review_list = () => import("@/views/review/my-review-list.vue");
 const change_password = () => import("@/views/my/change-password.vue");
 
 // 维深信息
@@ -86,6 +46,9 @@ const deepEvaluationDetail = () => import("@/views/ellsennProduct/deepEvaluation
 const industrialActivities = () => import("@/views/ellsennProduct/industrialActivities/index.vue"); // 产业活动
 const industrialActivitiesDetail = () => import("@/views/ellsennProduct/industrialActivities/industrialActivitiesDetail/index.vue"); // 产业活动详情
 const searchList = () => import("@/views/ellsennProduct/searchList/index.vue"); // 搜索列表
+
+// 会议报名
+const meetingRegistration = () => import("@/views/ellsennProduct/meetingRegistration/index.vue"); // 会议报名
 
 const routes = [
   // 首页
@@ -168,7 +131,15 @@ const routes = [
       title: "搜索列表",
     },
   },
-
+  // 会议报名
+  {
+    path: "/meetingRegistration",
+    name: "meetingRegistration",
+    component: meetingRegistration,
+    meta: {
+      title: "会议报名",
+    },
+  },
 
   // 历史路由
   {
@@ -182,34 +153,6 @@ const routes = [
     name: "contact",
     component: contact,
     meta: {},
-  },
-  {
-    path: "/order-submit",
-    name: "order-submit",
-    component: order_submit,
-    meta: {
-      title: "结算",
-      requireAuth: true,
-    },
-  },
-  {
-    path: "/payment-methods",
-    name: "payment-methods",
-    component: payment_methods,
-    meta: {
-      title: "订单支付",
-      requireAuth: true,
-    },
-  },
-
-  {
-    path: "/payment-success",
-    name: "payment-success",
-    component: payment_success,
-    meta: {
-      title: "支付结果",
-      requireAuth: true,
-    },
   },
 
   //用户中心
@@ -231,72 +174,6 @@ const routes = [
         },
       },
 
-      {
-        path: "/order-list",
-        name: "order-list",
-        component: order_list,
-        meta: {
-          title: "我的订单",
-          requireAuth: true,
-        },
-      },
-
-      {
-        path: "/order-detail",
-        name: "order-detail",
-        component: order_detail,
-        meta: {
-          title: "订单详情",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/order-logistics",
-        name: "order-logistics",
-        component: order_logistics,
-        meta: {
-          title: "订单物流",
-          requireAuth: true,
-
-        },
-      },
-      {
-        path: "/order-review-submit",
-        name: "order-review-submit",
-        component: order_review_submit,
-        meta: {
-          title: "订单评价",
-          requireAuth: true,
-        },
-      },
-
-      {
-        path: "/my-review-list",
-        name: "my-review-list",
-        component: my_review_list,
-        meta: {
-          title: "我的评价",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/address-list",
-        name: "address-list",
-        component: address_list,
-        meta: {
-          title: "我的地址",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/foreign-address-list",
-        name: "foreign-address-list",
-        component: foreign_address_list,
-        meta: {
-          title: "我的地址",
-          requireAuth: true,
-        },
-      },
       {
         path: "/my-info",
         name: "my-info",
@@ -325,11 +202,6 @@ const routes = [
 ];
 
 const scrollBehavior = (to, from, savedPosition) => {
-  // //console.log('滚动行为', to, from, savedPosition)
-  // if(1) {
-  //   return savedPosition;
-  // }
-  //console.log('router 处理滚动')
   if (to.name == "technologyCenter") {
     let scrollTop = document.documentElement.scrollTop;
     return { x: 0, y: scrollTop };

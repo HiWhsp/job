@@ -8,6 +8,8 @@
     .topContent {
       width: 100%;
       height: 710px;
+      position: relative;
+
       img {
         width: 100%;
         height: 100%;
@@ -30,12 +32,16 @@
       }
     }
     .bottomContent {
-      width: 1200px;
-      margin: 0 auto;
-      height: 80px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      width: 100vw;
+      background-color: #0c0827;
+      .bottomContentBox {
+        width: 1200px;
+        margin: 0 auto;
+        height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
       .bottomContentLeft {
         .newList {
           display: flex;
@@ -69,8 +75,7 @@
     .bottomContent {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 20px;
-      
+
       .section-title {
         display: flex;
         align-items: center;
@@ -100,7 +105,7 @@
         margin-bottom: 60px;
         background: #ffffff;
         border-radius: 8px;
-        padding: 40px;
+        padding: 40px 0;
 
         .activity-content {
           .activity-header {
@@ -206,7 +211,7 @@
     margin-bottom: 60px;
     background: #ffffff;
     border-radius: 8px;
-    padding: 40px;
+    padding: 40px 0;
 
     .agenda-content {
       .agenda-date-tabs {
@@ -215,10 +220,10 @@
         margin-bottom: 40px;
 
         .date-tab {
-          padding: 8px 20px;
+          padding: 8px 40px;
           background: #f5f5f5;
           border-radius: 20px;
-          font-size: 14px;
+          font-size: 18px;
           color: #666;
           cursor: pointer;
           transition: all 0.3s ease;
@@ -244,60 +249,37 @@
 
           .section-header {
             margin-bottom: 30px;
-
+            background: linear-gradient(
+              90deg,
+              rgba(0, 91, 172, 0.06) 0%,
+              rgba(0, 91, 172, 0) 100%
+            );
+            height: 58px;
+            padding-left: 30px;
+            line-height: 58px;
             .section-name {
-              display: inline-block;
-              padding: 8px 20px;
-              background: #005bac;
-              color: #fff;
-              font-size: 16px;
-              font-weight: bold;
-              border-radius: 20px;
+              color: #005bac;
+              font-size: 18px;
             }
           }
 
           .timeline-items {
             position: relative;
-            padding-left: 20px;
-
-            &::before {
-              content: '';
-              position: absolute;
-              left: 0;
-              top: 0;
-              bottom: 0;
-              width: 2px;
-              background: #e0e0e0;
-            }
-
+            padding-left: 30px;
             .timeline-item {
               position: relative;
               display: flex;
               margin-bottom: 30px;
-              padding-left: 30px;
 
               &:last-child {
                 margin-bottom: 0;
-              }
-
-              &::before {
-                content: '';
-                position: absolute;
-                left: -9px;
-                top: 8px;
-                width: 16px;
-                height: 16px;
-                background: #005bac;
-                border-radius: 50%;
-                border: 3px solid #fff;
-                box-shadow: 0 0 0 2px #005bac;
               }
 
               .timeline-time {
                 min-width: 120px;
                 font-size: 14px;
                 font-weight: bold;
-                color: #005bac;
+                color: #000;
                 margin-right: 30px;
                 flex-shrink: 0;
               }
@@ -321,6 +303,82 @@
                 }
               }
             }
+          }
+        }
+      }
+    }
+  }
+  // 活动咨询样式
+  .activity-consult {
+    margin-bottom: 60px;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 40px 0;
+    .consult-content {
+      display: flex;
+      flex-direction: column;
+      padding-left: 30px;
+      .consult-item {
+        font-size: 18px;
+        color: #000;
+        line-height: 40px;
+      }
+    }
+  }
+  // 活动图片样式
+  .activity-images {
+    margin-bottom: 60px;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 40px 0;
+    .images-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      .images-item {
+        cursor: pointer;
+        img {
+          width: 388px;
+          height: 218px;
+        }
+      }
+    }
+  }
+  // 活动报道样式
+  .activity-report {
+    margin-bottom: 60px;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 40px 0;
+    .report-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      .report-item {
+        cursor: pointer;
+        width: 385px;
+        height: 336px;
+        background-color: #f3f8ff;
+        img {
+          width: 100%;
+          height: 218px;
+          object-fit: cover;
+        }
+        .report-item-title {
+          color: #000;
+          line-height: 28px;
+          padding: 20px 20px 10px;
+          h3 {
+            font-size: 18px;
+            color: #000;
+            line-height: 28px;
+          }
+        }
+        .report-item-content {
+          padding: 0 20px;
+          p {
+            font-size: 14px;
+            color: #929aa2;
           }
         }
       }
