@@ -11,13 +11,13 @@
         <div class="tabs">
           <div class="tab-item active">
             <div class="tab-circle">
-              <img src="@/assets/img/ellsenn/order.png" alt="" />
+              <img src="@/assets/img/pay/order.png" alt="" />
             </div>
             <div class="tab-text">确认订单信息</div>
           </div>
           <div class="tab-item">
             <div class="tab-circle">
-              <img src="@/assets/img/ellsenn/card.png" alt="" />
+              <img src="@/assets/img/pay/card.png" alt="" />
             </div>
             <div class="tab-text">支付订单</div>
           </div>
@@ -39,9 +39,7 @@
 
               <div class="activity-content">
                 <div class="activity-info-left">
-                  <h4 class="activity-title">
-                    2025 AI/AR智能眼镜智能制造高峰论坛
-                  </h4>
+                  <h4 class="activity-title">2025 AI/AR智能眼镜智能制造高峰论坛</h4>
                   <div class="activity-meta">
                     <div class="meta-item">
                       <span>活动时间：2025-01-15 至 2025-01-15</span>
@@ -55,18 +53,14 @@
                 <div class="activity-info-right">
                   <div class="price">¥88.00</div>
                   <div class="quantity-control">
-                    <button class="quantity-btn" @click="decreaseQuantity">
-                      -
-                    </button>
+                    <button class="quantity-btn" @click="decreaseQuantity">-</button>
                     <input
                       type="text"
                       v-model="quantity"
                       class="quantity-input"
                       readonly
                     />
-                    <button class="quantity-btn" @click="increaseQuantity">
-                      +
-                    </button>
+                    <button class="quantity-btn" @click="increaseQuantity">+</button>
                   </div>
                   <div class="total-price">¥{{ totalPrice.toFixed(2) }}</div>
                 </div>
@@ -195,11 +189,11 @@ export default {
       }
 
       // 下一步逻辑
-      console.log("提交表单数据:", {
-        ...this.formData,
-        quantity: this.quantity,
-        totalPrice: this.totalPrice,
-      });
+      // console.log("提交表单数据:", {
+      //   ...this.formData,
+      //   quantity: this.quantity,
+      //   totalPrice: this.totalPrice,
+      // });
 
       // 这里可以添加跳转到支付页面的逻辑
       this.$message.success("信息提交成功，即将跳转到支付页面");

@@ -2,7 +2,7 @@
   <div class="page-head">
     <div class="head-search">
       <div class="header-box">
-        <div class="header-layout" >
+        <div class="header-layout">
           <div class="left-logo-content">
             <img
               class="left-logo-img"
@@ -26,19 +26,13 @@
                     <router-link :to="item.route" class="nav-title">
                       {{ item.title }}
                     </router-link>
-                    <i
-                      v-if="!!item.icon"
-                      class="nav-itm"
-                      :class="item.icon"
-                    ></i>
+                    <i v-if="!!item.icon" class="nav-itm" :class="item.icon"></i>
                   </template>
                   <template v-else>
                     <div @click="jump_nav(item)">
-                      <span
-                        class="nav-title text"
-                        :class="check_nav_class(item)"
-                        >{{ item.title }}</span
-                      >
+                      <span class="nav-title text" :class="check_nav_class(item)">{{
+                        item.title
+                      }}</span>
                     </div>
                   </template>
                 </div>
@@ -66,12 +60,12 @@
 </template>
 
 <script>
-import topNavModel1 from '@/components/common/topNavModel1.vue';
+import topNavModel1 from "@/components/common/topNavModel1.vue";
 
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 
 export default {
-  name: 'HeaderIndex',
+  name: "HeaderIndex",
   components: {
     topNavModel1,
   },
@@ -83,15 +77,15 @@ export default {
       show_shoujiban: false, //手机版
 
       list_lang: [
-        { title: '中文', lang: 'zh' },
-        { title: 'English', lang: 'en' },
+        { title: "中文", lang: "zh" },
+        { title: "English", lang: "en" },
       ],
 
-      keyword: '',
+      keyword: "",
       //
 
       showSearch: false,
-      keyword: '',
+      keyword: "",
 
       search_suggest_list: [],
       disabledSearchQuery: false,
@@ -106,8 +100,8 @@ export default {
 
     userMenu() {
       return [
-        { title: '我的主页', route: 'userIndex' },
-        { title: '我的订单', route: 'myOrder' },
+        { title: "我的主页", route: "userIndex" },
+        { title: "我的订单", route: "myOrder" },
       ];
     },
     suggestKeywods() {
@@ -119,22 +113,22 @@ export default {
     },
 
     page_nav_list() {
-      let route_news = '';
+      let route_news = "";
       if (this.vuex_news_cates.length) {
-        route_news = '/news?cid=' + this.vuex_news_cates[0].id;
+        route_news = "/news?cid=" + this.vuex_news_cates[0].id;
       }
       var arr = [
-        { title: '研究报告', route: '/researchReport', icon: 'el-icon-caret-bottom' },
-        { title: '新闻洞察', route: '/newsInsights' },
-        { title: '维深测评', route: '/deepEvaluation' },
-        { title: '产业活动', route: '/industrialActivities' },
-        { title: '维深榜单', route: '/scene' },
+        { title: "研究报告", route: "/researchReport", icon: "el-icon-caret-bottom" },
+        { title: "新闻洞察", route: "/newsInsights" },
+        { title: "维深测评", route: "/deepEvaluation" },
+        { title: "产业活动", route: "/industrialActivities" },
+        { title: "维深榜单", route: "/rankings" },
         {
-          title: '关于我们',
-          route: '/product-brand',
-          icon: 'el-icon-caret-bottom',
+          title: "关于我们",
+          route: "/product-brand",
+          icon: "el-icon-caret-bottom",
         },
-        { title: '内容资讯', route: route_news },
+        { title: "内容资讯", route: route_news },
       ];
       return arr;
     },
@@ -142,7 +136,7 @@ export default {
 
   watch: {
     $route(to, from) {
-      if (to.name == 'product-search') {
+      if (to.name == "product-search") {
         if (to.query.id) {
         }
       }
@@ -152,14 +146,14 @@ export default {
   },
 
   created() {
-    this.keyword = this.$route.query.keyword || '';
+    this.keyword = this.$route.query.keyword || "";
     this.setView();
   },
 
   methods: {
     check_nav_class(item) {
       let item_route = item.route;
-      if (item_route[0] == '/') {
+      if (item_route[0] == "/") {
         item_route = item_route.substr(1);
       }
       let obj = {
@@ -171,8 +165,8 @@ export default {
 
     jump_nav(item) {
       console.log({ ...item });
-      if (item.route.includes('http')) {
-        window.open(item.route, '_blank');
+      if (item.route.includes("http")) {
+        window.open(item.route, "_blank");
       }
     },
 
@@ -180,7 +174,7 @@ export default {
       //this.show_fenlei = true;
       //获取配置信息
       //判断当前模板是否需要鼠标悬浮显示下拉导航
-      if (this.$route.name != 'index') {
+      if (this.$route.name != "index") {
         this.show_fenlei = true;
       } else {
         this.show_fenlei = false;
@@ -200,11 +194,11 @@ export default {
       //   lang_curr = "zh";
       // }
 
-      if (localStorage.getItem('lang') == lang_curr) {
+      if (localStorage.getItem("lang") == lang_curr) {
         return;
       }
 
-      this.$store.commit('set_lang', lang_curr);
+      this.$store.commit("set_lang", lang_curr);
       this.$i18n.locale = lang_curr;
 
       location.reload();
@@ -212,14 +206,14 @@ export default {
 
     jump(route) {
       // debugger
-      this.$router.push('/' + route);
+      this.$router.push("/" + route);
     },
 
     goCart() {
-      this.$router.push({ path: '/cart' });
+      this.$router.push({ path: "/cart" });
     },
     goOrderAll() {
-      this.$router.push({ path: '/orderAll' });
+      this.$router.push({ path: "/orderAll" });
     },
     mouseover() {
       this.showSiteMap = true;
@@ -235,19 +229,19 @@ export default {
     },
 
     goModule(name) {
-      if (name == 'index') {
-        this.$router.push({ path: '/' });
-      } else if (name == 'my') {
-        this.$router.push({ path: '/info' });
-      } else if (name == 'login') {
-        this.$router.push({ path: 'login' });
+      if (name == "index") {
+        this.$router.push({ path: "/" });
+      } else if (name == "my") {
+        this.$router.push({ path: "/info" });
+      } else if (name == "login") {
+        this.$router.push({ path: "login" });
       }
     },
     logout() {
-      this.$store.commit('remove_vuex_user');
+      this.$store.commit("remove_vuex_user");
       // debugger
       if (this.$route.meta.requireAuth) {
-        this.$router.push('/');
+        this.$router.push("/");
       }
     },
 
@@ -264,7 +258,7 @@ export default {
     },
     handleSearch(keyword) {
       this.$router.push({
-        path: '/search',
+        path: "/search",
         query: {
           keyword: keyword,
         },
@@ -278,7 +272,7 @@ export default {
       if (!url) {
         return;
       }
-      window.open(url, '_blank');
+      window.open(url, "_blank");
     },
     ///
 
@@ -289,8 +283,8 @@ export default {
     },
 
     toHome() {
-      if (this.$route.name != 'index') {
-        this.$router.push('/');
+      if (this.$route.name != "index") {
+        this.$router.push("/");
       } else {
         document.documentElement.scrollTop = 0;
       }
@@ -301,7 +295,7 @@ export default {
 
       let obj = {
         active: item.route == pagePath || item.title == this.$route.meta.root,
-        'nav-item-static': '/product-cates' == item.path,
+        "nav-item-static": "/product-cates" == item.path,
       };
       return obj;
     },
@@ -316,22 +310,22 @@ export default {
         query.id = this.selectCate;
       }
 
-      let keyword = (this.keyword || '').trim() || '';
+      let keyword = (this.keyword || "").trim() || "";
       query.keyword = keyword;
       query.ms = new Date().getTime();
       this.$router.push({
-        path: '/product-search',
+        path: "/product-search",
         query: query,
       });
     },
 
     logout() {
-      this.$store.commit('remove_vuex_user');
+      this.$store.commit("remove_vuex_user");
       // if (this.$route.meta.requireAuth) {
       //   this.$router.push("/login");
       // }
-      this.$router.push('/login');
-      alertSucc('退出成功');
+      this.$router.push("/login");
+      alertSucc("退出成功");
     },
   },
 };

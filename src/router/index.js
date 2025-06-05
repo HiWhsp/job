@@ -49,6 +49,11 @@ const searchList = () => import("@/views/ellsennProduct/searchList/index.vue"); 
 
 // 会议报名
 const meetingRegistration = () => import("@/views/ellsennProduct/meetingRegistration/index.vue"); // 会议报名
+const pay = () => import("@/views/ellsennProduct/meetingRegistration/pay.vue"); // 支付
+const paySuccess = () => import("@/views/ellsennProduct/meetingRegistration/pay-success.vue"); // 支付成功
+
+// 排行榜
+const rankings = () => import("@/views/ellsennProduct/rankings/index.vue"); // 排行榜
 
 const routes = [
   // 首页
@@ -138,6 +143,31 @@ const routes = [
     component: meetingRegistration,
     meta: {
       title: "会议报名",
+    },
+  },
+  {
+    path: "/pay",
+    name: "pay",
+    component: pay,
+    meta: {
+      title: "支付",
+    },
+  },
+  {
+    path: "/paySuccess",
+    name: "paySuccess",
+    component: paySuccess,
+    meta: {
+      title: "支付成功",
+    },
+  },
+  // 排行榜
+  {
+    path: "/rankings",
+    name: "rankings",
+    component: rankings,
+    meta: {
+      title: "排行榜",
     },
   },
 
