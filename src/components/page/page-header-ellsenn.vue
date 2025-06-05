@@ -125,7 +125,7 @@ export default {
         { title: "维深榜单", route: "/rankings" },
         {
           title: "关于我们",
-          route: "/product-brand",
+          route: "/about",
           icon: "el-icon-caret-bottom",
         },
         { title: "内容资讯", route: route_news },

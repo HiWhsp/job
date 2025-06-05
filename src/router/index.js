@@ -20,13 +20,6 @@ Vue.use(VueRouter);
 
 // 官网页面1
 const index = () => import(/* webpackChunkName: "index" */ "@/views/index.vue");
-
-const about = () =>
-  import(/* webpackChunkName: "about" */ "@/views/company/about.vue");
-
-const contact = () =>
-  import(/* webpackChunkName: "contact" */ "@/views/company/contact.vue");
-
 // 个人中心
 const my_layout = () => import("@/views/my/my-layout.vue");
 const my_index = () => import("@/views/my/my-index.vue");
@@ -51,6 +44,7 @@ const searchList = () => import("@/views/ellsennProduct/searchList/index.vue"); 
 const meetingRegistration = () => import("@/views/ellsennProduct/meetingRegistration/index.vue"); // 会议报名
 const pay = () => import("@/views/ellsennProduct/meetingRegistration/pay.vue"); // 支付
 const paySuccess = () => import("@/views/ellsennProduct/meetingRegistration/pay-success.vue"); // 支付成功
+const about = () => import("@/views/ellsennProduct/about/index.vue"); // 关于我们
 
 // 排行榜
 const rankings = () => import("@/views/ellsennProduct/rankings/index.vue"); // 排行榜
@@ -170,20 +164,16 @@ const routes = [
       title: "排行榜",
     },
   },
-
-  // 历史路由
+  // 关于我们
   {
     path: "/about",
     name: "about",
     component: about,
-    meta: {},
+    meta: {
+      title: "关于我们",
+    },
   },
-  {
-    path: "/contact",
-    name: "contact",
-    component: contact,
-    meta: {},
-  },
+
 
   //用户中心
   {
