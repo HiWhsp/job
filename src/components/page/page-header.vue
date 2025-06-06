@@ -687,7 +687,7 @@ color: #FFFFFF;
 
 .header-inner {
   position: relative;
-  width: 1400px;
+  width: 1200px;
   height: 150px;
   margin: 0 auto;
   display: flex;

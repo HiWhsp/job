@@ -45,6 +45,7 @@ const meetingRegistration = () => import("@/views/ellsennProduct/meetingRegistra
 const pay = () => import("@/views/ellsennProduct/meetingRegistration/pay.vue"); // 支付
 const paySuccess = () => import("@/views/ellsennProduct/meetingRegistration/pay-success.vue"); // 支付成功
 const about = () => import("@/views/ellsennProduct/about/index.vue"); // 关于我们
+const externalCommitteeDetail = () => import("@/views/ellsennProduct/about/components/ExternalCommitteeDetail.vue"); // 外部专业委员详情
 
 // 排行榜
 const rankings = () => import("@/views/ellsennProduct/rankings/index.vue"); // 排行榜
@@ -173,8 +174,15 @@ const routes = [
       title: "关于我们",
     },
   },
-
-
+  // 外部专业委员详情
+  {
+    path: "/externalCommitteeDetail",
+    name: "externalCommitteeDetail",
+    component: externalCommitteeDetail,
+    meta: {
+      title: "外部专业委员详情",
+    },
+  },
   //用户中心
   {
     path: "/my",
@@ -256,7 +264,7 @@ router.beforeEach((to, from, next) => {
       onGetCode: ({ type, account }) => {
         console.log('获取验证码:', type, account)
         // 调用实际的验证码接口
-      }
+        }
     });
   } else {
     next();
