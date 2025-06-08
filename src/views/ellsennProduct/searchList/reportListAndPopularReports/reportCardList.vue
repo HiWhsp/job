@@ -49,7 +49,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-size="pageSize"
+      :page-size="limit"
       layout="prev, pager, next"
       :total="totalItems"
     ></el-pagination>
@@ -102,7 +102,7 @@ export default {
       filterIndex: 0,
       filterTimeIndex: 0,
       currentPage: 1,
-      pageSize: 10,
+      limit: 10,
       totalItems: 100,
       filterList: [
         {
@@ -136,7 +136,7 @@ export default {
       this.filterTimeIndex = index;
     },
     handleSizeChange(size) {
-      this.pageSize = size;
+      this.limit = size;
     },
     handleCurrentChange(page) {
       this.currentPage = page;

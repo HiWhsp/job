@@ -26,13 +26,19 @@
                     <router-link :to="item.route" class="nav-title">
                       {{ item.title }}
                     </router-link>
-                    <i v-if="!!item.icon" class="nav-itm" :class="item.icon"></i>
+                    <i
+                      v-if="!!item.icon"
+                      class="nav-itm"
+                      :class="item.icon"
+                    ></i>
                   </template>
                   <template v-else>
                     <div @click="jump_nav(item)">
-                      <span class="nav-title text" :class="check_nav_class(item)">{{
-                        item.title
-                      }}</span>
+                      <span
+                        class="nav-title text"
+                        :class="check_nav_class(item)"
+                        >{{ item.title }}</span
+                      >
                     </div>
                   </template>
                 </div>
@@ -43,10 +49,30 @@
             <div class="right-box-icon">
               <i class="el-icon-search"></i>
             </div>
-
-            <el-button size="small " class="btn btn-login">登录</el-button>
-            <el-button size="small " type="primary" class="btn btn-register"
+            <div v-if="baseInfo.user_id" class="user-name">
+              {{ baseInfo.name }}
+            </div>
+            <el-button
+              size="small "
+              class="btn btn-login"
+              @click="showLogin"
+              v-else
+              >登录</el-button
+            >
+            <el-button
+              v-if="!baseInfo.user_id"
+              size="small "
+              type="primary"
+              class="btn btn-register"
+              @click="showRegister"
               >注册</el-button
+            >
+            <el-button
+              size="small "
+              class="btn btn-login"
+              @click="logout"
+              v-if="baseInfo.user_id"
+              >退出</el-button
             >
           </div>
         </div>
@@ -61,9 +87,6 @@
 
 <script>
 import topNavModel1 from "@/components/common/topNavModel1.vue";
-
-import { mapState } from "vuex";
-
 export default {
   name: "HeaderIndex",
   components: {
@@ -71,6 +94,7 @@ export default {
   },
   data() {
     return {
+      baseInfo: {},
       showSiteMap: false, //个人中心 菜单
       showLanguage: false, //语言切换
       showContact: false, //联系我们
@@ -94,10 +118,6 @@ export default {
   },
 
   computed: {
-    ...mapState([
-      //
-    ]),
-
     userMenu() {
       return [
         { title: "我的主页", route: "userIndex" },
@@ -114,11 +134,12 @@ export default {
 
     page_nav_list() {
       let route_news = "";
-      if (this.vuex_news_cates.length) {
-        route_news = "/news?cid=" + this.vuex_news_cates[0].id;
-      }
       var arr = [
-        { title: "研究报告", route: "/researchReport", icon: "el-icon-caret-bottom" },
+        {
+          title: "研究报告",
+          route: "/researchReport",
+          icon: "el-icon-caret-bottom",
+        },
         { title: "新闻洞察", route: "/newsInsights" },
         { title: "维深测评", route: "/deepEvaluation" },
         { title: "产业活动", route: "/industrialActivities" },
@@ -128,7 +149,6 @@ export default {
           route: "/about",
           icon: "el-icon-caret-bottom",
         },
-        { title: "内容资讯", route: route_news },
       ];
       return arr;
     },
@@ -146,6 +166,7 @@ export default {
   },
 
   created() {
+    this.baseInfo = JSON.parse(localStorage.getItem("baseInfo")) || {};
     this.keyword = this.$route.query.keyword || "";
     this.setView();
   },
@@ -209,12 +230,6 @@ export default {
       this.$router.push("/" + route);
     },
 
-    goCart() {
-      this.$router.push({ path: "/cart" });
-    },
-    goOrderAll() {
-      this.$router.push({ path: "/orderAll" });
-    },
     mouseover() {
       this.showSiteMap = true;
     },
@@ -226,23 +241,6 @@ export default {
     },
     mouseoutLang() {
       this.showLanguage = false;
-    },
-
-    goModule(name) {
-      if (name == "index") {
-        this.$router.push({ path: "/" });
-      } else if (name == "my") {
-        this.$router.push({ path: "/info" });
-      } else if (name == "login") {
-        this.$router.push({ path: "login" });
-      }
-    },
-    logout() {
-      this.$store.commit("remove_vuex_user");
-      // debugger
-      if (this.$route.meta.requireAuth) {
-        this.$router.push("/");
-      }
     },
 
     //
@@ -318,14 +316,20 @@ export default {
         query: query,
       });
     },
-
+    showLogin() {
+      this.$showLogin({
+        onLoginSuccess: (data) => {
+          this.$store.commit("set_baseInfo", data);
+          this.$router.push("/");
+        },
+      });
+    },
+    showRegister() {
+      this.$showRegister();
+    },
     logout() {
-      this.$store.commit("remove_vuex_user");
-      // if (this.$route.meta.requireAuth) {
-      //   this.$router.push("/login");
-      // }
-      this.$router.push("/login");
-      alertSucc("退出成功");
+      this.$store.commit("clear_loginInfo");
+      this.$router.push("/");
     },
   },
 };

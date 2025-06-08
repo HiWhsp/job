@@ -1,89 +1,67 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-Vue.use(Vuex);
+import ajax from "@/plugin/request.js"; //导入 axios 配置
+const api = ajax.api; //请求方法
 
-import plugins_request from "@/plugin/request.js"
-let api = plugins_request.api;
+// debugger
+//console.log("========== store location ==========", location);
 
 // 处理产品分类数据
-function handle_product_cate_data(category_tree) {
-  let root_route = "/product-cates?ids="; //配件产品
-
-  let category_flat = [];
-  category_tree.forEach((level1) => {
-    level1.level = "1";
-    level1.idlist = [level1.id];
-    level1.ids = level1.idlist.join("-");
-    level1.route = root_route + level1.ids;
-
-    category_flat.push({
-      ...level1,
-    });
-
-    let list_cates_level2 = level1.channels; //.filter(v => v.is_show || 1);
-    if (list_cates_level2.length) {
-      list_cates_level2.forEach((level2) => {
-        level2.level = "2";
-        level2.idlist = [level1.id, level2.id];
-        level2.ids = level2.idlist.join("-");
-        level2.route = root_route + level2.ids;
-
-        category_flat.push({
-          ...level2,
-        });
-
-        let list_cates_level3 = level2.channels; //.filter(v => v.is_show || 1);
-        if (list_cates_level3.length) {
-          list_cates_level3.forEach((level3) => {
-            level3.level = "3";
-            level3.idlist = [level1.id, level2.id, level3.id];
-            level3.ids = level3.idlist.join("-");
-            level3.route = root_route + level3.ids;
-
-            category_flat.push({
-              ...level3,
-            });
-          });
-        }
-      });
-    }
-  });
+function handle_product_cate_data(cateTreeList) {
 
   return {
-    category_flat: category_flat,
-    category_tree: category_tree,
+    cateFlatList: cateTreeList.all_material_type,
+    cateTreeList: cateTreeList.all_supply,
   };
 }
 
 //
+
+Vue.use(Vuex);
+
 export default new Vuex.Store({
   state: {
     vuex_h5: !!navigator.userAgent.match(
       /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
     ),
-    vuex_avatar_default: require("@img/common/avatar.png"),
-    vuex_user: {},
+
     //
     vuex_config: {},
-    vuex_news_cates: [],
+    configInfo: {}, //
+    //
+    vuex_user: {},
+    userInfo: {}, //
+    baseInfo: {}, //
     //
     vuex_is_login: false, //是否登录
+    isLogin: false,
+    defaultAvatar: require("@/assets/img/my/avatar.png"),
     //
+    //
+    //商城部分
     vuex_cart_number: 0,
+
+    //
     vuex_huobi: "￥",
-    //
-    vuex_category_tree: [],
-    vuex_category_flat: [],
-    //
-    default_address: {}, //默认收货地址
-    //
-    vuex_index_banners: [],
-    vuex_map_banners: {
+    index_banners: [],
+    map_banners: {
       关于我们: [],
       联系我们: [],
     },
     //
+    vuexTreeCates: [],
+    vuexFlatCates: [],
+
+    //
+    //
+    //
+    webConfig: {}, //站点设置
+
+    shopcart_count: 0,
+    if_calc_yunfei: false, //是否需要计算运费
+    default_address: {}, //默认收货地址
+    store_keyword: {},
   },
 
   getters: {},
@@ -95,63 +73,55 @@ export default new Vuex.Store({
       let val = obj.val;
       state[key] = val;
     },
-    set_vuex_config(state, data) {
+    set_vuex_configInfo(state, data) {
+      state.configInfo = data;
+      state.webConfig = data;
       state.vuex_config = data;
     },
 
-    //设置基本信息
-    set_vuex_user(state, data) {
-      // //console.log("vuex set_vuex_user 设置用户信息", { ...data });
+    set_vuex_banner(state, data) {
+      let [pos_0, pos_1, pos_2] = data;
+      state.index_banners = data;
 
-      let token = data.token;
-      let userId = data.userId || data.id;
+      // state.map_banners = {
+      //   关于我们: pos_1.images,
+      //   联系我们: pos_2.images,
+      //   客服: data[3].images
+      // };
+    },
 
-      state.vuex_is_login = true;
-      state.token = token;
-      state.userId = userId;
-      state.vuex_user = data;
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("userId", userId);
-      localStorage.setItem("vuex_user", JSON.stringify(data));
+    set_vuex_product_cate(state, data) {
+      state.vuex_product_cate = data;
     },
 
     //设置购物车商品数量
     set_vuex_cart_number(state, value) {
+      //console.log("设置购物车商品数量", value);
+      state.shopcart_count = value;
       state.vuex_cart_number = value;
     },
 
     set_cache_payment_products(state, str_products) {
-      console.log('vuex 缓存商品信息', str_products)
       sessionStorage.setItem("cache_payment_products", str_products);
     },
 
-    set_vuex_banner(state, data) {
-      let [pos_0, pos_1, pos_2,pos_3,pos_4,pos_5,pos_6,pos_7,] = data;
-      console.log("首页轮播", pos_0.images);
-      state.vuex_index_banners = pos_0.images;
+    //设置基本信息
+    set_baseInfo(state, data) {
+      // //console.log("设置用户信息", { ...data });
+      let { token, user_id } = data;
 
-      state.vuex_map_banners = {
-        关于我们: pos_1.images,
-        联系我们: pos_2.images,
-        热卖产品: pos_4.images,
-        中科优选: pos_5.images,
-        充值中心: pos_6.images,
-        新闻中心: pos_7.images,
-      };
-      console.log(state.vuex_map_banners);
-      
-    },
-    // 产品分类树
-    set_vuex_product_cate(state, data) {
-      let { category_flat, category_tree } = data;
-      console.warn(
-        "category_tree 产品分类数据",
-        JSON.parse(JSON.stringify(category_tree))
-      );
+      state.vuex_is_login = true;
+      state.token = token ? token : localStorage.getItem("token");
+      state.user_id = user_id;
 
-      state.vuex_category_tree = category_tree;
-      state.vuex_category_flat = category_flat;
+      localStorage.setItem("token", token ? token : localStorage.getItem("token"));
+      localStorage.setItem("user_id", user_id);
+
+      state.baseInfo = data;
+      state.userInfo = data;
+      state.vuex_user = data;
+      localStorage.setItem("baseInfo", JSON.stringify(data));
+      localStorage.setItem("userInfo", JSON.stringify(data));
     },
 
     set_vuex_login_status(state, value) {
@@ -159,159 +129,149 @@ export default new Vuex.Store({
       state.vuex_is_login = value;
     },
     //清空登录信息
-    remove_vuex_user(state) {
-      state.vuex_cart_number = "0";
+    clear_loginInfo(state) {
+      state.shopcart_count = "0";
       state.token = "";
-      state.userId = "";
-      state.vuex_user = {};
+      state.user_id = "";
+      state.baseInfo = {};
       state.vuex_is_login = false;
-      localStorage.clear();
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('userInfo');
+      localStorage.removeItem('baseInfo');
+      localStorage.removeItem('token');
+      location.reload();
     },
 
+    change_store_keyword(state, val) {
+      state.store_keyword = {
+        time: new Date().getTime(),
+        keyword: val,
+      };
+    },
+
+    set_list_channel(state, value) {
+      value.forEach((v) => {
+        if (v.id == 628) {
+          v.is_youhuiqu = true;
+        }
+      });
+      state.list_channel = value;
+    },
   },
 
   actions: {
     async appInit({ commit, state, dispatch }, data) {
-      dispatch("query_assets");
+      dispatch("appInitGetAssets");
+
 
       let token = localStorage.getItem("token");
       let userId = localStorage.getItem("userId");
 
       if (token && userId) {
-        let cache_user = localStorage.getItem("vuex_user");
-        commit("set_vuex_user", cache_user);
-        dispatch("query_user_auth_info");
+        commit("set_vuex_login_status", true);
+        dispatch("getUserloginedInfo");
       } else {
-        commit("remove_vuex_user");
+        commit("set_vuex_login_status", false);
       }
     },
 
     //获取登录后的信息
-    async query_user_auth_info({ commit, state, dispatch }, data) {
+    async getUserloginedInfo({ commit, state, dispatch }, data) {
       dispatch("query_user");
-      dispatch("query_cart");
+      // dispatch("query_cart");
     },
 
     // 获取用户信息
     async query_user({ commit, state, dispatch }) {
       api({
-        url: "/service.php",
+        url: "getUserInfo",
         method: "get",
-        data: {
-          action: "users_userInfo",
-        },
+        data: {},
       }).then((res) => {
         if (res.code == 200) {
-          commit("set_vuex_user", res.data);
+          commit("set_vuex_login_status", true);
+          commit("set_baseInfo", res.data.user_info);
         } else {
-          commit("remove_vuex_user");
+          commit("set_vuex_login_status", false);
         }
       });
     },
-    // 购物车
+    // 获取用户信息
     async query_cart({ commit, state, dispatch }) {
-      api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "gouwuche_lists",
-        },
-      })
-        .then((res) => {
-          let { code, data } = res;
-          if (code == 200) {
-            let count = 0;
-            data.forEach((v) => {
-              count += v.num * 1;
-            });
-            commit("set_vuex_cart_number", count);
-          }
-        });
+      // api({
+      //   url: "getCart",
+      //   method: "post",
+      // })
+      //   .then((res) => {
+      //     let { code, data } = res;
+      //     if (code == 200) {
+      //       let count = 0;
+      //       data.forEach((v) => {
+      //         count += v.num * 1;
+      //       });
+
+      //       commit("set_vuex_cart_number", count);
+      //     }
+      //   });
     },
+
 
     //初始化资源
-    async query_assets({ commit, state, dispatch }, data) {
-      dispatch('query_config')
-      dispatch('query_banner')
-      dispatch('query_category')
-      dispatch('query_news')
-    },
+    async appInitGetAssets({ commit, state, dispatch }, data) {
+      dispatch("query_user");
 
-    // 查询
-    async query_config({ commit, state, dispatch }) {
       api({
-        url: "/service.php",
+        url: "setting",
         method: "get",
-        data: {
-          action: "index_config",
-        },
       }).then((res) => {
-        if (res.code == 200) {
-          let data = res.data;
-          commit("set_vuex_config", data);
-
-          if (data.comLogo && document) {
-            document
-              .querySelector('meta[property="og:image"]')
-              .setAttribute("content", data.comLogo);
-          }
+        let { code, data } = res;
+        if (code === 200) {
+          commit("set_vuex_configInfo", data);
         }
       });
-    },
-    // 查询
-    async query_banner({ commit, state, dispatch }) {
+
+      //轮播图
       api({
-        url: "/service.php",
+        url: "getBanner",
         method: "get",
         data: {
-          action: "banner_index",
-          position: 0, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
+          position: 1, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
         },
       }).then((res) => {
         if (res.code == 200) {
           commit("set_vuex_banner", res.data);
         }
       });
-    },
-    // 查询
-    async query_category({ commit, state, dispatch }) {
-      api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "product_channel",
-          parentId: 0,
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          let catesInfo = handle_product_cate_data(res.data);
-          commit("set_vuex_product_cate", catesInfo);
-        }
-      });
-    },
-    // 查询
-    async query_news({ commit, state, dispatch }) {
-      api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "news_channel",
-          channelId: 49
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          let data = res.data
-          data.forEach((v) => {
-            v.route = "/news?id=" + v.id;
-          });
-          commit("set_vuex_data", {
-            key: "vuex_news_cates",
-            val: data,
-          });
-        }
-      });
-    },
 
+      //产品分类
+      // api({
+      //   url: "getReportConfig",
+      //   method: "get",
+      // }).then((res) => {
+      //   if (res.code == 200) {
+      //     commit("set_vuex_product_cate", res.data);
+      //   }
+      // });
 
+      //新闻分类
+      // api({
+      //   url: "/service.php",
+      //   method: "get",
+      //   data: {
+      //     action: "news_channel",
+      //   },
+      // }).then((res) => {
+      //   let { code, data } = res;
+      //   if (code == 200) {
+      //     res.data.forEach((v) => {
+      //       v.route = "/news?id=" + v.id;
+      //     });
+      //     commit("set_vuex_data", {
+      //       key: "vuexNewsCates",
+      //       val: res.data,
+      //     });
+      //   }
+      // });
+    },
   },
 });

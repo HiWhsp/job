@@ -5,57 +5,21 @@
 
       <div class="page-ctx">
         <div class="menu-wrap">
-          <div class="left-title">个人中心</div>
-          <div class="title-line"></div>
+          <div class="left-title">
+            <img src="@img/my/avatar.png" alt="" />
+            <span>15810593012</span>
+          </div>
           <div class="nav-wrap">
             <div
-              class="nav-group"
-              v-for="(group, gindex) in page_menu"
-              :key="gindex"
+              class="nav-item"
+              :class="$route.name == item.route ? 'active' : ''"
+              v-for="(item, index) in page_menu"
+              :key="index"
             >
-              <div class="group-title-box flex">
-                <div class="icon-box">
-                  <img :src="group.icon" alt="" />
-                </div>
-                <div class="group-title">
-                  {{ group.title }}
-                </div>
-                <div class="arrow-box">
-                  <img
-                    class="arrow-right"
-                    src="@img/my/arrow-right.png"
-                    alt=""
-                  />
-                  <!-- <img class="arrow-down" src="@img/my/arrow-down.png" alt=""> -->
-                </div>
-              </div>
-              <div class="sub-child" v-if="group.child && group.child.length">
-                <div
-                  class="sub-item"
-                  v-for="(item, index) in group.child"
-                  :key="index"
-                  @click="do_toggle_nav(item)"
-                >
-                  <div
-                    class="sub-title"
-                    :class="$route.name == item.route ? 'active' : ''"
-                  >
-                    {{ item.title }}
-                  </div>
-                </div>
+              <div class="nav-title main-title" @click="do_toggle_nav(item)">
+                {{ item.title }}
               </div>
             </div>
-
-            <!-- <div class="nav-item" v-for="(item, index) in page_menu" :key="index">
-              <div class="nav-title main-title" v-if="!item.route || item.is_main"
-                :class="$route.name == item.route ? 'active' : ''" @click="do_toggle_nav(item)">
-                {{ item.title }}
-              </div>
-              <div v-else class="nav-title link" :class="$route.name == item.route ? 'active' : ''"
-                @click="do_toggle_nav(item)">
-                {{ item.title }}
-              </div>
-            </div> -->
           </div>
         </div>
         <div class="view-wrap">
@@ -67,11 +31,7 @@
 </template>
 
 <script>
-import { SHOP_TYPE } from "@/config/env.js";
-
 import page_breadcrumb from "@/components/page/page-breadcrumb.vue";
-
-import { mapState } from "vuex";
 
 export default {
   name: "my",
@@ -82,102 +42,40 @@ export default {
     return {
       //个人中心导航
       all_menu: [
-        // {
-        //   title: "个人中心",
-        //   route: "my-index",
-        //   is_main: true,
-        // },
         {
-          title: "订单管理",
-          route: "",
-          icon: require("@img/my/nav-1.png"),
-          child: [
-            {
-              title: "我的订单",
-              route: "order-list",
-            },
-            {
-              title: "我的售后",
-              route: "refund-list",
-            },
-            {
-              title: "我的评价",
-              route: "my-review-list",
-            },
-          ],
+          title: "个人信息",
+          route: "my-info",
         },
         {
-          title: "我的活动",
-          route: "",
-          icon: require("@img/my/nav-2.png"),
-          child: [
-            {
-              title: "我的充值",
-              route: "balance-list",
-            },
-            {
-              title: "我的兑换卡",
-              route: "card-list",
-            },
-            {
-              title: "我的收藏",
-              route: "favorite-list",
-            },
-            {
-              title: "我的足迹",
-              route: "browse-history",
-            },
-          ],
+          title: "会员中心",
+          route: "member-center",
         },
         {
-          title: "个人资料",
-          route: "",
-          icon: require("@img/my/nav-3.png"),
-          child: [
-            {
-              title: "地址管理",
-              route: "address-list",
-            },
-            {
-              title: "我的发票",
-              route: "invoice-list",
-            },
-            {
-              title: "个人资料",
-              route: "my-info",
-            },
-            {
-              title: "修改密码",
-              route: "change-password",
-            },
-          ],
+          title: "我的收藏",
+          route: "my-collection",
         },
-        // {
-        //   title: "其他",
-        //   route: "",
-        //   icon: require('@img/my/nav-3.png'),
-        //   child: [
-        //     {
-        //       title: "我的积分",
-        //       route: "points-record",
-        //     },
-        //     {
-        //       title: "我的优惠券",
-        //       route: "coupon-list",
-        //     },
-        //     {
-        //       title: "领券中心",
-        //       route: "coupon-center",
-        //     },
-        //   ]
-        // },
+        {
+          title: "我的评论",
+          route: "my-comment",
+        },
+        {
+          title: "我的活动报名",
+          route: "my-activity-registration",
+        },
+        {
+          title: "消息中心",
+          route: "my-message",
+        },
+        {
+          title: "账号设置",
+          route: "account-settings",
+        },
       ],
       activeRoute: "",
       openeds: ["order-list"],
     };
   },
   computed: {
-    // ...mapState(["",]),
     nav_option() {
       let option = [
         { route: "/my-index", title: "用户中心", title2: "Personal Center" },
@@ -199,11 +97,7 @@ export default {
 
   //导航激活
   beforeRouteUpdate(to, from, next) {
-    //console.log("组件复用 from", from);
-    //console.log("组件复用 to", to);
-
     next();
-
     this.activeRoute = to.path.replace("/", "");
   },
 
@@ -217,8 +111,6 @@ export default {
   methods: {
     do_toggle_nav(item) {
       if (!item.route) {
-        // let route = item.sub[0].route;
-        // this.$router.push("/" + route);
       } else {
         this.$router.push("/" + item.route);
       }
@@ -230,21 +122,21 @@ export default {
 <style scoped lang="less">
 .page-user-wrap {
   background: #f9fafc;
-  padding-top: 35px;
+  padding-top: 20px;
 
   .inner {
     margin: 0 auto;
     min-height: 70vh;
 
     .page-ctx {
-      padding-top: 30px;
+      padding-top: 20px;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
     }
 
     .menu-wrap {
-      width: 220px;
+      width: 260px;
       min-width: 220px;
       margin-bottom: 50px;
       background: #f9f9f9;
@@ -254,153 +146,49 @@ export default {
       .left-title {
         padding: 18px 0;
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 18px;
         color: #333333;
-      }
-
-      .title-line {
-        margin: 0 auto;
-        width: 196px;
-        background: #f0f0f0;
-        height: 1px;
+        img {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+        }
+        span {
+          margin-top: 20px;
+          font-size: 22px;
+          font-weight: bold;
+        }
       }
 
       .nav-wrap {
-        .nav-group {
-          // margin-bottom: 10px;
-          &::after {
-            content: "";
-            display: inline-block;
-            margin: 0 auto;
-            width: 196px;
-            height: 1px;
-            background: #f0f0f0;
-          }
-
-          &:last-child {
-            &::after {
-              display: none;
-            }
-          }
-
-          .group-title-box {
-            padding: 14px 14px;
-            cursor: pointer;
-
-            .icon-box {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 32px;
-              height: 22px;
-
-              img {
-                height: 14px;
-              }
-            }
-
-            .group-title {
-              flex: 1;
-              font-family: Microsoft YaHei, Microsoft YaHei;
-              font-weight: bold;
-              font-size: 16px;
-              color: #333333;
-            }
-
-            .arrow-box {
-              img {
-              }
-
-              .arrow-down {
-                width: 14.22px;
-              }
-
-              .arrow-right {
-                height: 14.22px;
-              }
-            }
-          }
-
-          .sub-child {
-            .sub-item {
-              padding: 8px 45px;
-              cursor: pointer;
-
-              .sub-title {
-                font-family: Microsoft YaHei, Microsoft YaHei;
-                font-weight: 400;
-                font-size: 14px;
-                color: #666666;
-
-                &.active {
-                  color: #009f39;
-                }
-              }
-            }
-          }
-        }
-
         .nav-item {
-          overflow: hidden;
-
+          width: 260px;
+          height: 52px;
+          line-height: 52px;
+          background: #fff;
+          color: #202b32;
+          border-top: 1px solid #f0f0f0;
           .nav-title {
-            position: relative;
             cursor: pointer;
-            padding-left: 30px;
-            padding-left: 70px;
+            padding-left: 60px;
             text-align: left;
 
-            font-family: OPPOSans, OPPOSans;
-            font-weight: 400;
-            font-size: 12px;
-            color: #808080;
-
-            &.link {
-              margin-bottom: 16px;
-
-              &:hover {
-                color: #009f39;
-              }
-            }
-
-            &.main-title {
-              margin-bottom: 24px;
-              cursor: pointer;
-              padding-left: 50px;
-              user-select: none;
-              font-family: OPPOSans, OPPOSans;
-              font-weight: 400;
-              font-size: 14px;
-              color: #333333;
-            }
-
-            &.active {
-              // background: #ffffff;
-              // background: #fffaf7;
-              color: #009f39;
-
-              &:before {
-                // content: "";
-                // position: absolute;
-                // left: 0;
-                // top: 0;
-                // bottom: 0;
-                // width: 3px;
-                // background-color: #009F39;
-              }
-            }
-
-            &[data-hide="hide"] {
-              display: none;
-            }
+            font-size: 16px;
           }
-
-          &:first-child {
-            .main-title {
-              margin-top: 0;
-            }
+          &:hover {
+            background: #005aac;
+            color: #fff;
+          }
+          &.active {
+            background: #005aac;
+            color: #fff;
           }
         }
       }

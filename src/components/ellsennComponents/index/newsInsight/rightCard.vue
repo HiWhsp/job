@@ -2,10 +2,10 @@
   <div class="rightCard">
     <div class="rightCardTitle">{{data.title}}</div>
     <div class="item-info">
-      <span class="item-time">{{ data.time }}</span>
-      <span class="item-status">{{ statusEnum[data.status] }}</span>
+      <span class="item-time">{{ data.created_time }}</span>
+      <span class="item-status" v-for="(item, index) in data.tab" :key="index">{{ item }}</span>
     </div>
-  </div>
+  </div> 
 </template>
 <script>
 export default {
@@ -14,7 +14,6 @@ export default {
   name: 'rightCard',
   data() {
     return {
-      statusEnum: { 0: '消费品', 1: '消费品', 2: '新闻' },
     };
   },
   created() {},

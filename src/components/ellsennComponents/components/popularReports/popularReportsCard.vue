@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
     <div class="title">{{ data.title }}</div>
-    <div class="info">{{ data.info }}</div>
+    <div class="info">{{ data.release_time || data.created_time }} {{ data.author }} {{ data.category_name }}</div>
   </div>
 </template>
 <script>
@@ -20,8 +20,9 @@ export default {
   data() {
     return {};
   },
-  created() {},
-  mounted() {},
+  mounted() {
+    console.log(this.data, 'this.data');
+  },
 };
 </script>
 <style scoped lang="less" src="./popularReportsCard.less"></style>

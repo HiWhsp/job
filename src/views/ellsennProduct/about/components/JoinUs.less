@@ -1,17 +1,228 @@
 .join-us {
-  padding: 20px;
-  
+  width: 100vw;
+  padding-bottom: 60px;
+
   .content {
-    h2 {
-      font-size: 24px;
-      color: #333;
-      margin-bottom: 20px;
-    }
-    
-    p {
-      font-size: 16px;
-      line-height: 1.6;
-      color: #666;
+    .join-us-content {
+      background-color: #f7f7f7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .join-us-content-top {
+        padding: 80px 0;
+        position: relative;
+        width: 1200px;
+
+        .left {
+          position: relative;
+          width: 891px;
+          height: 474px;
+          background-color: #d8d8d8;
+          img {
+            width: 891px;
+            height: 454px;
+            position: absolute;
+            top: 20px;
+          }
+        }
+        .right {
+          position: absolute;
+          top: 200px;
+          right: 0;
+          width: 600px;
+          height: 417px;
+          background-color: #fff;
+          img {
+            width: 118.38px;
+            height: 89.43px;
+            position: absolute;
+            top: -45px;
+            left: 190px;
+          }
+          .right-content {
+            padding: 55px;
+            h2 {
+              font-size: 26px;
+              font-weight: bold;
+              color: #000;
+              position: relative;
+              &::before {
+                content: "";
+                position: absolute;
+                width: 75px;
+                height: 3px;
+                top: 18px;
+                right: 0;
+                background-color: #005aac;
+              }
+            }
+            .desc {
+              font-size: 14px;
+              font-weight: bold;
+              color: #dddddd;
+              margin: 10px 0;
+            }
+            .info {
+              p {
+                font-size: 14px;
+                color: #797979;
+                line-height: 24px;
+              }
+            }
+            .btn {
+              margin-top: 62px;
+              font-size: 22px;
+              color: #000000;
+            }
+          }
+        }
+      }
+      .join-us-content-bottom {
+        background-color: #fff;
+        padding: 80px 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .tab {
+          width: 1200px;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          gap: 20px;
+          .tab-item {
+            width: 198px;
+            height: 48px;
+            line-height: 48px;
+            border: 1px solid #515356;
+            color: #3d3d3d;
+            font-size: 16px;
+            text-align: center;
+            cursor: pointer;
+            &.active {
+              background-color: #005aac;
+              color: #fff;
+              border: 1px solid #005aac;
+            }
+          }
+        }
+
+        .content {
+          width: 1200px;
+          height: 100%;
+          background-color: #fff;
+
+          // el-collapse 自定义样式
+          .el-collapse {
+            border: none;
+
+            .el-collapse-item {
+              margin-bottom: 20px;
+              border: 1px solid #e6e6e6;
+              border-radius: 4px;
+              overflow: hidden;
+
+              /deep/ .el-collapse-item__header {
+                line-height: normal;
+                padding: 20px;
+                height: 66px;
+                background-color: #f6f6ff;
+                border-bottom: none;
+
+                .collapse-title {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  width: 100%;
+                  margin-right: 58px;
+
+                  .job-info {
+                    flex: 1;
+
+                    .job-type {
+                      font-size: 18px;
+                      font-weight: bold;
+                      color: #005aac;
+                      margin-bottom: 10px;
+                    }
+
+                    .job-details {
+                      display: flex;
+                      gap: 30px;
+
+                      .detail-item {
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        font-size: 14px;
+                        color: #666;
+
+                        .label {
+                          color: #8a8a8a;
+                          &.tit {
+                            font-size: 16px;
+                            font-weight: bold;
+                            color: #005aac;
+                          }
+                        }
+
+                        .value {
+                          color: #3d3d3d;
+                        }
+                      }
+                    }
+                  }
+
+                  .view-btn {
+                    width: 96px;
+                    height: 32px;
+                    border-radius: 40px;
+                    background: #ffffff;
+                    box-sizing: border-box;
+                    border: 1px solid #005aac;
+                    text-align: center;
+                    line-height: 32px;
+                    font-size: 14px;
+                    color: #005aac;
+                    cursor: pointer;
+                  }
+                }
+              }
+
+              .el-collapse-item__wrap {
+                border-top: 1px solid #e6e6e6;
+              }
+
+              .el-collapse-item__content {
+                padding: 20px;
+                background-color: #fafafa;
+
+                .job-content {
+                  padding: 20px;
+                  .section {
+                    margin-bottom: 20px;
+
+                    h4 {
+                      font-size: 16px;
+                      font-weight: bold;
+                      color: #333;
+                      margin-bottom: 10px;
+                    }
+
+                    p {
+                      font-size: 14px;
+                      color: #666;
+                      line-height: 1.6;
+                      margin-bottom: 8px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
-} 
+}

@@ -1,49 +1,28 @@
 <template>
   <div id="app">
-    <template v-if="!vuex_h5">
-      <page_header_ellsenn data-title="普通页面顶部" v-if="!is_show_login_comp" />
-      <page_header_login data-title="登录页面顶部" v-else />
-    </template>
-    <page_header_mobile v-if="vuex_h5" />
+    <page_header_ellsenn data-title="普通页面顶部"/>
+    <!-- <page_header_mobile /> -->
 
     <div class="layout-box">
       <router-view></router-view>
     </div>
     
-    <page_footer_ellsenn data-title="普通页面底部" v-if="!is_show_login_comp" />
-    <!-- <page_footer data-title="普通页面底部" v-if="!is_show_login_comp" /> -->
-    <page_footer_login data-title="登录页面底部" v-else />
-
-    <!-- <page_footer_2 /> -->
-    <!-- <page_aside /> -->
-    <!-- <page_kefu /> -->
+    <page_footer_ellsenn data-title="普通页面底部"/>
   </div>
 </template>
 
 <script>
 import page_footer_ellsenn from "@/components/page/page-footer-ellsenn.vue";
-import page_footer_login from "@/components/page/page-footer-login.vue";
-import page_footer from "@/components/page/page-footer.vue";
 import page_header_ellsenn from "@/components/page/page-header-ellsenn.vue";
-import page_header_login from "@/components/page/page-header-login.vue"; //
 import page_header_mobile from "@/components/page/page-header-mobile.vue"; //移动端顶部
-import page_header from "@/components/page/page-header.vue";
 //
 // import page_aside from "@/components/page/page-aside.vue";
 // import page_kefu from "@/components/page/page-kefu.vue";
 export default {
   components: {
-    page_header,
     page_header_ellsenn,
-    page_header_login,
     page_header_mobile,
-    //
-    page_footer,
-    page_footer_login,
     page_footer_ellsenn,
-    //
-    // page_aside,
-    // page_kefu,
   },
   data() {
     let href_pathname = location.pathname;

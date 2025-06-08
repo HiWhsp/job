@@ -1,27 +1,18 @@
 <template>
   <div class="report-container">
     <div class="report-content">
-      <!-- <div class="report-title">
-        <div class="report-title-text">
-          <img class="report-title-text-img" src="./img/report.png" />
-          <div>精品报告</div>
-        </div>
-        <div class="report-title-more">
-          <div class="report-title-more-text">更多</div>
-          <img class="report-title-more-right" src="./img/tran.png" />
-        </div>
-      </div> -->
       <comp-title
         title="精品报告"
         :icon="require('@img/ellsenn/report.png')"
+        :url="'/researchReport'"
       ></comp-title>
       <div class="report-top-menu">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane
             v-for="(item, index) in tabList"
             :key="index"
-            :label="item.label"
-            :name="item.name"
+            :label="item.title"
+            :name="item.id + ''"
           >
             <div class="report-card-list">
               <report-card
@@ -48,48 +39,41 @@ export default {
   name: "report",
   data() {
     return {
-      tabList: [
-        { label: "拆解报告", name: "disassemblyReport" },
-        { label: "销量报告", name: "salesVolumeReport" },
-        { label: "技术报告", name: "technicalReport" },
-        { label: "调研报告", name: "researchReport" },
-        { label: "应用报告", name: "application Report" },
-        { label: "定制研究", name: "customizedResearch" },
-      ],
-      activeName: "disassemblyReport",
-      dataList: [
-        {
-          url: require("@img/ellsenn/test.png"),
-          title: "VR/AR产业2024年第二季度销量跟踪报告",
-          status: 1,
-          time: "2024-08-07",
-        },
-        {
-          url: require("@img/ellsenn/test.png"),
-          title: "VR/AR产业2024年第二季度销量跟踪报告",
-          status: 2,
-          time: "2024-08-07",
-        },
-        {
-          url: require("@img/ellsenn/test.png"),
-          title: "VR/AR产业2024年第二季度销量跟踪报告",
-          status: 3,
-          time: "2024-08-07",
-        },
-        {
-          url: require("@img/ellsenn/test.png"),
-          title: "VR/AR产业2024年第二季度销量跟踪报告",
-          status: 2,
-          time: "2024-08-07",
-        },
-      ],
+      tabList: [],
+      activeName: "1",
+      dataList: [],
     };
   },
-  created() {},
-  mounted() {},
+  mounted() {
+    this.$api({
+      url: "getReportConfig",
+      method: "get",
+    }).then((res) => {
+      if (res.code == 200) {
+        this.tabList = res.data.category_data;
+        this.activeName = this.tabList[0].id + "";
+      }
+    });
+    this.getReportList();
+  },
   methods: {
     handleClick(tab, event) {
-      console.log(this.activeName, "activeNameactiveName");
+      this.getReportList();
+    },
+    getReportList() {
+      this.$api({
+        url: "getReportList",
+        method: "get",
+        data: {
+          page: 1,
+          limit: 12,
+          category_id: this.activeName,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.dataList = res.data.list;
+        }
+      });
     },
   },
 };

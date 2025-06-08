@@ -39,28 +39,37 @@
 
               <div class="activity-content">
                 <div class="activity-info-left">
-                  <h4 class="activity-title">2025 AI/AR智能眼镜智能制造高峰论坛</h4>
+                  <h4 class="activity-title">
+                    {{ activityDetails.title }}
+                  </h4>
                   <div class="activity-meta">
                     <div class="meta-item">
-                      <span>活动时间：2025-01-15 至 2025-01-15</span>
+                      <span
+                        >活动时间：{{ activityDetails.start_time }} 至
+                        {{ activityDetails.end_time }}</span
+                      >
                     </div>
                     <div class="meta-item">
-                      <span>活动地点：北京市大兴区兴创国际中心</span>
+                      <span>活动地点：{{ activityDetails.location }}</span>
                     </div>
                   </div>
                 </div>
 
                 <div class="activity-info-right">
-                  <div class="price">¥88.00</div>
+                  <div class="price">¥{{ activityDetails.price }}</div>
                   <div class="quantity-control">
-                    <button class="quantity-btn" @click="decreaseQuantity">-</button>
+                    <button class="quantity-btn" @click="decreaseQuantity">
+                      -
+                    </button>
                     <input
                       type="text"
                       v-model="quantity"
                       class="quantity-input"
                       readonly
                     />
-                    <button class="quantity-btn" @click="increaseQuantity">+</button>
+                    <button class="quantity-btn" @click="increaseQuantity">
+                      +
+                    </button>
                   </div>
                   <div class="total-price">¥{{ totalPrice.toFixed(2) }}</div>
                 </div>
@@ -139,6 +148,8 @@ export default {
     return {
       quantity: 1,
       unitPrice: 88.0,
+      id: "",
+      activityDetails: {},
       formData: {
         name: "",
         phone: "",
@@ -164,8 +175,12 @@ export default {
       return option;
     },
     totalPrice() {
-      return this.quantity * this.unitPrice;
+      return this.quantity * this.activityDetails.price;
     },
+  },
+  mounted() {
+    this.id = this.$route.query.id;
+    this.getActivityDetails();
   },
   methods: {
     increaseQuantity() {
@@ -188,15 +203,41 @@ export default {
         return;
       }
 
-      // 下一步逻辑
-      // console.log("提交表单数据:", {
-      //   ...this.formData,
-      //   quantity: this.quantity,
-      //   totalPrice: this.totalPrice,
-      // });
-
-      // 这里可以添加跳转到支付页面的逻辑
-      this.$message.success("信息提交成功，即将跳转到支付页面");
+      this.$api({
+        url: "createOrder",
+        method: "post",
+        data: {
+          product_activities_id: this.id,
+          num: this.quantity,
+          name: this.formData.name,
+          mobile: this.formData.phone,
+          company_title: this.formData.company,
+          position: this.formData.position,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.$message.success("信息提交成功，即将跳转到支付页面");
+          this.$router.push({
+            path: "/pay",
+            query: {
+              order_no: res.data.order_no,
+              amount: res.data.price,
+              title: res.data.title,
+            },
+          });
+        }
+      });
+    },
+    getActivityDetails() {
+      this.$api({
+        url: "confirmOrder",
+        method: "get",
+        data: { id: this.id },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.activityDetails = res.data;
+        }
+      });
     },
   },
 };

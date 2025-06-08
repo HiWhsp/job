@@ -3,7 +3,7 @@
     <top-search title="行业峰会 为行业聚能" :onClick="onBtnClick"></top-search>
     <div class="industrialActivitiesBottom">
       <div class="bottomContent">
-        <report-filter></report-filter>
+        <report-filter @search="search"></report-filter>
         <div class="activeContent">
           <activity-card
             v-for="(item, index) in activityList"
@@ -12,6 +12,16 @@
           ></activity-card>
         </div>
       </div>
+      <!-- 分页区域 -->
+      <el-pagination
+        v-if="activityList.length > 0"
+        class="pagination"
+        @current-change="handleCurrentChange"
+        :current-page="searchData.page"
+        :page-size="searchData.limit"
+        layout="prev, pager, next"
+        :total="total"
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -29,39 +39,52 @@ export default {
   name: "industrialActivities",
   data() {
     return {
-      activityList: [
-        {
-          url: require("@img/ellsenn/i.png"),
-          title: "2025年全球AI/AR智能眼镜智能制造高峰论坛",
-          location: "北京XXXX万豪酒店",
-          time: "2025-01-01 至 2025-04-03",
-        },
-        {
-          url: require("@img/ellsenn/i.png"),
-          title: "2025年全球AI/AR智能眼镜智能制造高峰论坛",
-          location: "北京XXXX万豪酒店",
-          time: "2025-01-01 至 2025-04-03",
-        },
-        {
-          url: require("@img/ellsenn/i.png"),
-          title: "2025年全球AI/AR智能眼镜智能制造高峰论坛",
-          location: "北京XXXX万豪酒店",
-          time: "2025-01-01 至 2025-04-03",
-        },
-        {
-          url: require("@img/ellsenn/i.png"),
-          title: "2025年全球AI/AR智能眼镜智能制造高峰论坛",
-          location: "北京XXXX万豪酒店",
-          time: "2025-01-01 至 2025-04-03",
-        },
-      ],
+      searchData: {
+        type_id: "",
+        category_id: "",
+        time_id: "",
+        start_time: "",
+        end_time: "",
+        page: 1,
+        limit: 10,
+      },
+      total: 0,
+      activityList: [],
     };
   },
-  created() {},
-  mounted() {},
+  mounted() {
+    this.getReportList();
+  },
   methods: {
+    search(data) {
+      this.searchData = data;
+      this.getReportList();
+    },
+    getReportList() {
+      this.$api({
+        url: "getProductActivitiesList",
+        method: "get",
+        data: this.searchData,
+      }).then((res) => {
+        if (res.code == 200) {
+          this.activityList = res.data.list;
+          this.total = res.data.count;
+        }
+      });
+    },
     onBtnClick() {
-      console.log("onBtnClick");
+      this.searchData.keyword = i;
+      this.getReportList();
+    },
+    handleCurrentChange(page) {
+      this.searchData.page = page;
+      this.getReportList();
+    },
+    handleActivityClick(item) {
+      this.$router.push({
+        path: "/ellsennProduct/industrialActivities/detail",
+        query: { id: item.id },
+      });
     },
   },
 };

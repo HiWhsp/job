@@ -14,8 +14,8 @@
             >
             <el-checkbox
               v-for="type in reportTypes"
-              :key="type.value"
-              :label="type.label"
+              :key="type.id"
+              :label="type.title"
               v-model="type.checked"
               @change="handleReportTypeChange"
             ></el-checkbox>
@@ -33,8 +33,8 @@
             >
             <el-checkbox
               v-for="industry in industries"
-              :key="industry.value"
-              :label="industry.label"
+              :key="industry.id"
+              :label="industry.title"
               v-model="industry.checked"
               @change="handleIndustryChange"
             ></el-checkbox>
@@ -49,18 +49,19 @@
           <div class="filter-content">
             <el-radio
               v-for="item in releaseList"
+              :key="item.id"
               v-model="releaseTime"
-              :label="item.label"
+              :label="item.id"
               @change="handleRadioChange"
-              >{{ item.value }}</el-radio
+              >{{ item.title }}</el-radio
             >
             <el-date-picker
-              v-if="releaseTime === 'custom'"
               v-model="customDateRange"
               type="daterange"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              value-format="yyyy-MM-dd"
               @change="handleDatePickerChange"
             >
             </el-date-picker>
@@ -72,47 +73,40 @@
 </template>
 
 <script>
-import card from '@/components/ellsennComponents/components/card.vue';
+import card from "@/components/ellsennComponents/components/card.vue";
 export default {
-  name: 'reportFilter',
+  name: "reportFilter",
   components: {
     card,
   },
   data() {
     return {
       reportTypeAll: false,
-      reportTypes: [
-        { value: '拆解报告', label: '拆解报告', checked: false },
-        { value: '销量报告', label: '销量报告', checked: false },
-        { value: '技术报告', label: '技术报告', checked: false },
-        { value: '调研报告', label: '调研报告', checked: false },
-        { value: '应用报告', label: '应用报告', checked: false },
-        { value: '定制研究', label: '定制研究', checked: false },
-      ],
+      reportTypes: [],
       industryAll: false,
-      industries: [
-        { value: '科技传媒', label: '科技传媒', checked: false },
-        { value: '健康医疗', label: '健康医疗', checked: false },
-        { value: '金融地产', label: '金融地产', checked: false },
-        { value: '能源矿产', label: '能源矿产', checked: false },
-        { value: '工业制造', label: '工业制造', checked: false },
-        { value: '交通物流', label: '交通物流', checked: false },
-        { value: '公共服务', label: '公共服务', checked: false },
-        { value: '农林牧渔', label: '农林牧渔', checked: false },
-      ],
-      releaseList: [
-        { value: '近三天', label: 'recentThreeDays' },
-        { value: '近一周', label: 'recentWeek' },
-        { value: '近一月', label: 'recentMonth' },
-        { value: '近半年', label: 'recentHalfYear' },
-        { value: '近一年', label: 'recentYear' },
-        { value: '自定义', label: 'custom' },
-      ],
-      releaseTime: '',
-      customDateRange: '',
+      industries: [],
+      releaseList: [],
+      releaseTime: "",
+      customDateRange: "",
     };
   },
+  mounted() {
+    this.getQueryCondition();
+  },
   methods: {
+    // 获取查询条件
+    getQueryCondition() {
+      this.$api({
+        url: "getReportConfig",
+        method: "get",
+      }).then((res) => {
+        if (res.code == 200) {
+          this.reportTypes = res.data.category_data;
+          this.industries = res.data.type_data;
+          this.releaseList = res.data.create_time_data;
+        }
+      });
+    },
     //报告类型全选
     handleReportTypeAllChange(val) {
       this.reportTypes.forEach((item) => {
@@ -121,25 +115,37 @@ export default {
     },
     //报告类型选择
     handleReportTypeChange() {
-      console.log(this.reportTypes, 'this.reportTypes');
+      this.search();
     },
     //行业全选
     handleIndustryAllChange(val) {
       this.industries.forEach((item) => {
         item.checked = val;
       });
+      this.search();
     },
     //行业选择
     handleIndustryChange() {
-      console.log(this.industries, 'this.industries');
+      this.search();
     },
     //时间
     handleRadioChange() {
-      console.log(this.releaseTime, 'this.releaseTime');
+      this.customDateRange = "";
+      this.search();
     },
     //时间区间
     handleDatePickerChange() {
-      console.log(this.customDateRange, 'customDateRange');
+      this.search();
+    },
+    // 查询
+    search() {
+      this.$emit("search", {
+        type_id: this.reportTypeAll ? "" : this.reportTypes.find((item) => item.checked) ? this.reportTypes.find((item) => item.checked).id : "",
+        category_id: this.industryAll ? "" : this.industries.find((item) => item.checked) ? this.industries.find((item) => item.checked).id : "",
+        time_id: this.releaseTime ? this.releaseTime : "",
+        start_time: this.customDateRange ? this.customDateRange[0] : "",
+        end_time: this.customDateRange ? this.customDateRange[1] : "",
+      });
     },
   },
 };

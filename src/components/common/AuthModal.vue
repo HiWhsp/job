@@ -34,7 +34,7 @@
             ></el-input>
           </el-form-item>
 
-          <el-form-item prop="code">
+          <el-form-item prop="code" v-if="type === 'code'">
             <div class="code-input-group">
               <el-input
                 v-model="loginForm.code"
@@ -50,6 +50,17 @@
               >
                 {{ codeText }}
               </el-button>
+            </div>
+          </el-form-item>
+
+          <el-form-item prop="password" v-if="type === 'password'">
+            <div class="code-input-group">
+              <el-input
+                v-model="loginForm.password"
+                placeholder="密码"
+                size="large"
+                show-password
+              ></el-input>
             </div>
           </el-form-item>
 
@@ -76,15 +87,26 @@
 
         <div class="auth-footer">
           <div class="forgot-password">
-            <span @click="forgotPassword" class="link-text">忘记密码？</span>
-            <span @click="passwordLogin" class="link-text">密码登录</span>
+            <!-- <span @click="forgotPassword" class="link-text">忘记密码？</span> -->
+            <span
+              @click="passwordLogin"
+              class="link-text"
+              v-if="type === 'code'"
+              >密码登录</span
+            >
+            <span
+              @click="type = 'code'"
+              class="link-text"
+              v-if="type === 'password'"
+              >验证码登录</span
+            >
           </div>
 
           <div class="other-login">
             <p>其他登录方式</p>
             <div class="social-login">
               <div class="social-item" @click="wechatLogin">
-                <img src="@/assets/img/ellsenn/wechat.png" alt="">
+                <img src="@/assets/img/ellsenn/wechat.png" alt="" />
               </div>
             </div>
           </div>
@@ -214,6 +236,7 @@ export default {
   },
   data() {
     return {
+      type: "code",
       visible: false,
       activeTab: "login",
       loginLoading: false,
@@ -246,6 +269,10 @@ export default {
             message: "请输入正确的手机号码或邮箱格式",
             trigger: "blur",
           },
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, max: 20, message: "密码长度为6-20位", trigger: "blur" },
         ],
         code: [
           { required: true, message: "请输入验证码", trigger: "blur" },
@@ -330,13 +357,17 @@ export default {
         );
         return;
       }
-
-      // 模拟发送验证码
-      this.startCountdown();
-      this.$message.success("验证码已发送");
-
-      // 这里应该调用实际的验证码接口
-      this.$emit("get-code", { type, account });
+      this.$api({
+        url: "send",
+        method: "post",
+        data: { mobile: account, type: type },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.startCountdown();
+          this.$message.success("验证码已发送");
+          this.$emit("get-code", { type, account });
+        }
+      });
     },
 
     startCountdown() {
@@ -366,13 +397,26 @@ export default {
 
           this.loginLoading = true;
 
+          this.$api({
+            url: "web_login",
+            method: "post",
+            data: {
+              username: this.loginForm.account,
+              password: this.loginForm.password,
+              code: this.loginForm.code,
+              type: this.type === "code" ? 2 : 1,
+            },
+          }).then((res) => {
+            if (res.code == 200) {
+              this.loginLoading = false;
+              this.$message.success("登录成功");
+              this.hide();
+              this.$emit("login-success", res.data);
+            }
+          });
+
           // 模拟登录请求
-          setTimeout(() => {
-            this.loginLoading = false;
-            this.$message.success("登录成功");
-            this.hide();
-            this.$emit("login-success", this.loginForm);
-          }, 1500);
+          setTimeout(() => {}, 1500);
         }
       });
     },
@@ -382,13 +426,26 @@ export default {
         if (valid) {
           this.registerLoading = true;
 
-          // 模拟注册请求
-          setTimeout(() => {
-            this.registerLoading = false;
-            this.$message.success("注册成功");
-            this.hide();
-            this.$emit("register-success", this.registerForm);
-          }, 1500);
+          this.$api({
+            url: "register",
+            method: "post",
+            data: {
+              name: this.registerForm.username,
+              mobile: this.registerForm.phone,
+              password: this.registerForm.password,
+              real_name: this.registerForm.realName,
+              company_title: this.registerForm.company,
+              email: this.registerForm.email,
+              code: this.registerForm.code,
+            },
+          }).then((res) => {
+            if (res.code == 200) {
+              this.registerLoading = false;
+              this.$message.success("注册成功");
+              this.hide();
+              this.$emit("register-success", this.registerForm);
+            }
+          });
         }
       });
     },
@@ -399,7 +456,7 @@ export default {
     },
 
     passwordLogin() {
-      this.$message.info("密码登录功能");
+      this.type = "password";
       this.$emit("password-login");
     },
 

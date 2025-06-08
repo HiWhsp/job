@@ -2,35 +2,35 @@
   <div class="reportInfo">
     <div class="container">
       <div class="containerLeft">
-        <img class="img" src="@img/ellsenn/reportDetail.png" alt="" />
+        <img class="img" :src="data.image" alt="" />
       </div>
       <div class="containerRight">
         <div>
           <div class="rightTopBtn">
-            <el-button type="primary">拆解报告</el-button>
+            <el-button type="primary">{{ data.category_name }}</el-button>
           </div>
           <div class="rightTopTitle">{{ data.title }}</div>
           <div class="rightTopSubTitle">
-            {{ data.subTitle }}
+            {{ data.info }}
           </div>
           <div class="rightTopInfo">
             <div class="rightTopInfoLayout">
               <div class="rightTopInfoTitle">版权所有</div>
-              <div class="infoText">{{ data.author }}</div>
-              <div class="authorLabel">原创</div>
+              <div class="infoText">{{ data.copyright }}</div>
+              <div class="authorLabel">{{ data.copyright_type }}</div>
             </div>
             <div class="rightTopInfoLayout">
               <div class="rightTopInfoTitle">报告作者</div>
-              <div class="infoText">{{ data.user }}</div>
+              <div class="infoText">{{ data.author }}</div>
             </div>
             <div class="rightTopInfoLayout">
               <div class="rightTopInfoTitle">发布时间</div>
-              <div class="infoText">{{ data.time }}</div>
+              <div class="infoText">{{ data.release_time }}</div>
             </div>
             <div class="rightTopInfoLayout">
               <div class="rightTopInfoTitle">资料下载</div>
-              <div class="downLoad">下载WORD文件</div>
-              <div class="downLoad">下载PDF文件</div>
+              <div class="downLoad" @click="onDownloadClick('word')">下载WORD文件</div>
+              <div class="downLoad" @click="onDownloadClick('pdf')">下载PDF文件</div>
             </div>
           </div>
         </div>
@@ -64,8 +64,12 @@ export default {
   data() {
     return {};
   },
-  created() {},
   mounted() {},
+  methods: {
+    onDownloadClick(type) {
+      window.open(this.data[type + '_file'], '_blank');
+    },
+  },
 };
 </script>
 <style scoped lang="less" src="./reportInfo.less"></style>

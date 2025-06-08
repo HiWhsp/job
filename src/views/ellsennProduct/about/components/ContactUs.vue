@@ -4,7 +4,7 @@
       <h2>联系我们</h2>
       <div class="contact-us-content">
         <div class="map-container">
-          <div class="map-info">
+          <!-- <div class="map-info">
             <div class="company-name">深圳市龙岗区慧泰科技</div>
             <div class="company-address">
               <img src="@/assets/img/contact/addr.png" alt="地址" class="icon" />
@@ -15,7 +15,7 @@
               18611823719
             </div>
           </div>
-          <img src="@/assets/img/footer/map.png" alt="地图" class="map-image" />
+          <img src="@/assets/img/footer/map.png" alt="地图" class="map-image" /> -->
         </div>
         <div class="contact-info-section">
           <div class="section-title">

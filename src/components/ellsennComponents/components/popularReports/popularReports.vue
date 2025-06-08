@@ -11,6 +11,7 @@
           :data="item"
           :key="index"
         ></popular-reports-card>
+        <el-empty v-if="list.length === 0" description="暂无数据"></el-empty>
       </div>
     </card>
   </div>
@@ -26,16 +27,7 @@ export default {
   props: {
     list: {
       type: Array,
-      default: () => [
-        {
-          title: "2025-2031年中国锰黄铜行业市场深度研究及发展趋势预测报告",
-          info: "2025-04-22 梁昊 世界互联网大会",
-        },
-        {
-          title: "2025-2031年中国锰黄铜行业市场深度研究及发展趋势预测报告",
-          info: "2025-04-22 梁昊 世界互联网大会",
-        },
-      ],
+      default: () => [],
     },
     title: {
       type: String,

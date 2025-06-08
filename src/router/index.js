@@ -22,11 +22,21 @@ Vue.use(VueRouter);
 const index = () => import(/* webpackChunkName: "index" */ "@/views/index.vue");
 // 个人中心
 const my_layout = () => import("@/views/my/my-layout.vue");
-const my_index = () => import("@/views/my/my-index.vue");
 
 const my_info = () =>
   import(/* webpackChunkName: "my-info" */ "@/views/my/my-info.vue");
-
+const member_center = () =>
+  import(/* webpackChunkName: "member-center" */ "@/views/my/member-center.vue");
+const my_collection = () =>
+  import(/* webpackChunkName: "my-collection" */ "@/views/my/my-collection.vue");
+const my_comment = () =>
+  import(/* webpackChunkName: "my-comment" */ "@/views/my/my-comment.vue");
+const my_activity_registration = () =>
+  import(/* webpackChunkName: "my-activity-registration" */ "@/views/my/my-activity-registration.vue");
+const my_message = () =>
+  import(/* webpackChunkName: "my-message" */ "@/views/my/my-message.vue");
+const account_settings = () =>
+  import(/* webpackChunkName: "account-settings" */ "@/views/my/account-settings.vue");
 const change_password = () => import("@/views/my/change-password.vue");
 
 // 维深信息
@@ -88,7 +98,7 @@ const routes = [
     name: "newsInsightsDetail",
     component: newsInsightsDetail,
     meta: {
-      title: "新闻洞察详情",
+      title: "新闻详情",
     },
   },
   {
@@ -193,21 +203,20 @@ const routes = [
     },
     children: [
       {
-        path: "/my-index",
-        name: "my-index",
-        component: my_index,
-        meta: {
-          title: "会员中心",
-          requireAuth: true,
-        },
-      },
-
-      {
         path: "/my-info",
         name: "my-info",
         component: my_info,
         meta: {
           title: "个人信息",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/member-center",
+        name: "member-center",
+        component: member_center,
+        meta: {
+          title: "会员中心",
           requireAuth: true,
         },
       },
@@ -219,7 +228,52 @@ const routes = [
           title: "修改密码",
           requireAuth: true,
         },
-      }
+      },
+      {
+        path: "/my-collection",
+        name: "my-collection",
+        component: my_collection,
+        meta: {
+          title: "我的收藏",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/my-comment",
+        name: "my-comment",
+        component: my_comment,
+        meta: {
+          title: "我的评论",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/my-activity-registration",
+        name: "my-activity-registration",
+        component: my_activity_registration,
+        meta: {
+          title: "我的活动报名",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/my-message",
+        name: "my-message",
+        component: my_message,
+        meta: {
+          title: "消息中心",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/account-settings",
+        name: "account-settings",
+        component: account_settings,
+        meta: {
+          title: "账号设置",
+          requireAuth: true,
+        },
+      },
     ],
   },
 
@@ -264,7 +318,7 @@ router.beforeEach((to, from, next) => {
       onGetCode: ({ type, account }) => {
         console.log('获取验证码:', type, account)
         // 调用实际的验证码接口
-        }
+      }
     });
   } else {
     next();

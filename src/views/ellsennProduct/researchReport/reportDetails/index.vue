@@ -3,23 +3,23 @@
     <div class="top">
       <div class="topContent">
         <page_breadcrumb :option="nav_option" />
-        <report-info />
+        <report-info :data="reportInfo.report" />
       </div>
     </div>
     <div class="bottom">
       <div class="bottomLayout">
         <div class="bottomLeft">
-          <tab-card />
+          <tab-card :data="reportInfo.report" />
           <div>
-            <make-comment></make-comment>
+            <make-comment :id="reportInfo.report ? reportInfo.report.id : ''" :type="1"></make-comment>
           </div>
         </div>
         <div class="bottomRight">
           <div class="bottomRightPurchaseOrDownloadReport">
-            <purchaseOrDownloadReport></purchaseOrDownloadReport>
+            <purchaseOrDownloadReport :data="reportInfo"></purchaseOrDownloadReport>
           </div>
           <div>
-            <recommend> </recommend>
+            <recommend :data="reportInfo.related_recommendations"></recommend>
           </div>
         </div>
       </div>
@@ -27,12 +27,12 @@
   </div>
 </template>
 <script>
-import makeComment from '@/components/ellsennComponents/components/makeComment/index.vue';
-import page_breadcrumb from '@/components/page/page-breadcrumb.vue';
-import purchaseOrDownloadReport from './purchaseOrDownloadReport.vue';
-import recommend from './recommend.vue';
-import reportInfo from './reportInfo.vue';
-import tabCard from './tabCard.vue';
+import makeComment from "@/components/ellsennComponents/components/makeComment/index.vue";
+import page_breadcrumb from "@/components/page/page-breadcrumb.vue";
+import purchaseOrDownloadReport from "./purchaseOrDownloadReport.vue";
+import recommend from "./recommend.vue";
+import reportInfo from "./reportInfo.vue";
+import tabCard from "./tabCard.vue";
 export default {
   components: {
     page_breadcrumb,
@@ -43,20 +43,23 @@ export default {
     recommend,
   },
   props: {},
-  name: 'reportDetails',
+  name: "reportDetails",
   data() {
-    return {};
+    return {
+      reportId: "",
+      reportInfo: {},
+    };
   },
   computed: {
     nav_option() {
       let option = [
         {
-          route: '/researchReport',
-          title: '研究报告',
-          title2: 'researchReport',
+          route: "/researchReport",
+          title: "研究报告",
+          title2: "researchReport",
         },
         {
-          route: '',
+          route: "",
           title: this.$route.meta.title,
           title: this.$route.meta.title,
         },
@@ -64,8 +67,25 @@ export default {
       return option;
     },
   },
-  created() {},
-  mounted() {},
+  mounted() {
+    this.reportId = this.$route.query.id;
+    this.getReportInfo();
+  },
+  methods: {
+    getReportInfo() {
+      this.$api({
+        url: "getReportDetail",
+        method: "get",
+        data: {
+          id: this.reportId,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.reportInfo = res.data;
+        }
+      });
+    },
+  },
 };
 </script>
 <style scoped lang="less" src="./index.less"></style>

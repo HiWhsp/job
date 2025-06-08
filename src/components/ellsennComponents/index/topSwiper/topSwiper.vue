@@ -6,12 +6,12 @@
           <div v-for="(item, index) in dataList" :key="index" class="list-item">
             <div class="item-title">{{ item.title }}</div>
             <div class="item-info">
-              <span class="item-time">{{ item.time }}</span>
-              <span class="item-status">{{ statusEnum[item.status] }}</span>
+              <span class="item-time">{{ item.release_time }}</span>
+              <span class="item-status">{{ item.copyright_type }}</span>
             </div>
           </div>
         </div>
-        <el-button class="btn" type="primary">
+        <el-button class="btn" type="primary" @click="goToReportList">
           查看更多<i class="el-icon-arrow-right"></i
         ></el-button>
       </div>
@@ -24,7 +24,7 @@
         >
           <el-carousel-item
             class="right-img"
-            v-for="(item, index) in vuex_index_banners"
+            v-for="(item, index) in index_banners"
             :key="index"
             @click.native="do_banner_click(item)"
           >
@@ -43,7 +43,6 @@ export default {
   name: 'top-swiper',
   data() {
     return {
-      statusEnum: { 0: '原创', 1: '网络', 2: '新闻' },
       dataList: [],
       imgList: [{ url: '' }],
     };
@@ -51,7 +50,7 @@ export default {
   computed: {
     ...mapState([
       //
-      'vuex_index_banners',
+      'index_banners',
     ]),
   },
   created() {
@@ -61,51 +60,32 @@ export default {
 
   methods: {
     fetchData() {
-      try {
-        // 模拟接口请求
-        // const response = await axios.get(
-        //   'https://jsonplaceholder.typicode.com/users'
-        // );
-        // this.dataList = response.data;
-        this.dataList = [
-          {
-            title:
-              'AI智能眼镜拆解及BOM成本报告：Ray-Ban Stories与Ray-Ban Meta对比拆解',
-            time: '2024-08-19',
-            status: 0,
-          },
-          {
-            title:
-              'AI智能眼镜拆解及BOM成本报告：Ray-Ban Stories与Ray-Ban Meta对比拆解',
-            time: '2024-08-19',
-            status: 1,
-          },
-          {
-            title:
-              'AI智能眼镜拆解及BOM成本报告：Ray-Ban Stories与Ray-Ban Meta对比拆解',
-            time: '2024-08-19',
-            status: 2,
-          },
-          {
-            title:
-              'AI智能眼镜拆解及BOM成本报告：Ray-Ban Stories与Ray-Ban Meta对比拆解',
-            time: '2024-08-19',
-            status: 0,
-          },
-        ];
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+      this.$api({
+        url: 'getReportList',
+        method: 'get',
+        data: {
+          page: 1,
+          limit: 4,
+          is_home: 1,
+        },
+      })
+      .then(res => {
+        if (res.code == 200) {
+          this.dataList = res.data.list;
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
     },
     do_banner_click(item) {
       //console.log({ ...item });
       if (item.url) {
         window.open(item.url, '_blank');
-      } else if (item.inventoryId) {
-        this.$router.push(
-          '/product-detail/' + (item.skuId || item.inventoryId)
-        );
       }
+    },
+    goToReportList() {
+      this.$router.push('/researchReport');
     },
   },
 };

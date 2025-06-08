@@ -127,33 +127,7 @@ export default {
 
   methods: {
     setView() {
-      //退货政策
-      //配送方式
-      // this.query_refund_ship()
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "news_detail",
-          id: 100,
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          this.info_return = res.data.info;
-        }
-      });
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "news_detail",
-          id: 101,
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          this.info_ship = res.data.info;
-        }
-      });
+      
     },
     toNav(item) {
       this.$router.push(item.route);

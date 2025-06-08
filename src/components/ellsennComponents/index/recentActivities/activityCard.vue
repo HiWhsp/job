@@ -1,13 +1,13 @@
 <template>
-  <div class="activityCard">
+  <div class="activityCard" @click="handleActivityClick">
     <div>
-      <img  class="topImg" :src="data.url" alt="" />
+      <img  class="topImg" :src="data.thumb" alt="" />
     </div>
     <div class="cardContent">
       <div class="activeTitle">{{ data.title }}</div>
       <div class="activeTime">
         <img class='activeIcon' src="@img/ellsenn/time.png" alt="" />
-        <div>活动时间：{{ data.time }}</div>
+        <div>活动时间：{{ data.start_time }}至{{ data.end_time }}</div>
       </div>
       <div class="activeLocation">
         <img class='activeIcon' src="@img/ellsenn/location.png" alt="" />
@@ -24,8 +24,15 @@ export default {
   data() {
     return {};
   },
-  created() {},
   mounted() {},
+  methods: {
+    handleActivityClick() {
+      this.$router.push({
+        path: "/industrialActivitiesDetail",
+        query: { id: this.data.id },
+      });
+    },
+  },
 };
 </script>
 <style scoped lang="less" src="./activityCard.less"></style>

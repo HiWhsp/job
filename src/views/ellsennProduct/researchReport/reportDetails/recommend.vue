@@ -7,17 +7,18 @@
       <span class="titleText">相关推荐</span>
     </div>
     <div class="items">
-      <div class="item" v-for="(item, index) in recommendations" :key="index">
-        <img :src="item.image" alt="report cover" class="cover">
+      <div class="item" v-for="(item, index) in data" :key="index">
+        <img :src="item.thumb" alt="" class="cover">
         <div class="content">
           <div class="title">{{ item.title }}</div>
           <div class="info">
-            <span>{{ item.date }}</span>
+            <span>{{ item.release_time }}</span>
             <span>{{ item.author }}</span>
-            <span>{{ item.conference }}</span>
+            <span>{{ item.copyright }}</span>
           </div>
         </div>
       </div>
+      <el-empty v-if="data.length === 0" description="暂无数据"></el-empty>
     </div>
   </div>
 </template>
@@ -25,40 +26,16 @@
 
 export default {
   components: {},
-  props:{},
+  props:{
+    data: {
+      type: Array,
+      default: () => [],
+    },
+  },
   name:'recommend',
   data() {
     return {
-      recommendations: [
-        {
-          image: require('@img/ellsenn/test.png'),
-          title: 'VR/AR产业2024年第二季度销量跟踪报告',
-          date: '2025-04-22',
-          author: '梁昊',
-          conference: '世界互联网大会'
-        },
-        {
-          image: require('@img/ellsenn/test.png'),
-          title: 'VR/AR产业2024年第二季度销量跟踪报告',
-          date: '2025-04-22',
-          author: '梁昊',
-          conference: '世界互联网大会'
-        },
-        {
-          image: require('@img/ellsenn/test.png'),
-          title: 'VR/AR产业2024年第二季度销量跟踪报告',
-          date: '2025-04-22',
-          author: '梁昊',
-          conference: '世界互联网大会'
-        },
-        {
-          image: require('@img/ellsenn/test.png'),
-          title: 'VR/AR产业2024年第二季度销量跟踪报告',
-          date: '2025-04-22',
-          author: '梁昊',
-          conference: '世界互联网大会'
-        }
-      ]
+
     };
   },
   created() {

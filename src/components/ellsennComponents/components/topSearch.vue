@@ -25,8 +25,8 @@
         <div class="tagGroup">
           <div class="tagGroupText">热门搜索：</div>
 
-          <div class="tagItem" v-for="(item, index) in list" :key="index">
-            {{ item.label }}
+          <div class="tagItem" v-for="(item, index) in list" :key="index" @click="onTagClick(item)">
+            {{ item }}
           </div>
         </div>
       </div>
@@ -42,11 +42,7 @@ export default {
      */
     list: {
       type: Array,
-      default: () => [
-        { label: '精品报告', value: 1 },
-        { label: '技术报告', value: 2 },
-        { label: '拆解报告', value: 3 },
-      ],
+      default: () => [],
     },
     /**
      * 按钮触发事件
@@ -75,6 +71,10 @@ export default {
     // 触发回调函数，将inputValue传递给父组件
     onBtnClick() {
       this.onClick(this.input);
+    },
+    onTagClick(item) {
+      this.input = item;
+      this.onBtnClick();
     },
   },
 };

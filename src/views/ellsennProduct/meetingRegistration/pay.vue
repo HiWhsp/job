@@ -30,19 +30,21 @@
           </div>
           <div class="success-content">
             <div class="success-title">订单提交成功，去付款~</div>
-            <div class="success-subtitle">请在48小时内完成支付，超时后订单将自动取消</div>
+            <div class="success-subtitle">
+              请在48小时内完成支付，超时后订单将自动取消
+            </div>
           </div>
           <div class="success-amount">
             <span class="amount-label">应付金额：</span>
-            <span class="amount-value">¥88.00</span>
+            <span class="amount-value">¥{{ amount }}</span>
           </div>
         </div>
 
         <!-- 订单详情 -->
         <div class="order-details">
           <div class="order-info">
-            <div class="order-number">订单编号：154552255445521</div>
-            <div class="product-name">商品名称：2025 AI/AR智能眼镜智能眼镜高端论坛</div>
+            <div class="order-number">订单编号：{{ order_no }}</div>
+            <div class="product-name">商品名称：{{ title }}</div>
           </div>
         </div>
 
@@ -56,7 +58,10 @@
               @click="selectPayment('alipay')"
             >
               <div class="payment-radio">
-                <div class="radio-dot" v-if="selectedPayment === 'alipay'"></div>
+                <div
+                  class="radio-dot"
+                  v-if="selectedPayment === 'alipay'"
+                ></div>
               </div>
               <div class="payment-icon alipay-icon">
                 <img src="@/assets/img/pay/alipay.png" alt="支付宝" />
@@ -69,7 +74,10 @@
               @click="selectPayment('wechat')"
             >
               <div class="payment-radio">
-                <div class="radio-dot" v-if="selectedPayment === 'wechat'"></div>
+                <div
+                  class="radio-dot"
+                  v-if="selectedPayment === 'wechat'"
+                ></div>
               </div>
               <div class="payment-icon wechat-icon">
                 <img src="@/assets/img/pay/wechat.png" alt="微信支付" />
@@ -83,7 +91,7 @@
         <div class="payment-footer">
           <div class="payment-total">
             <span class="total-label">需付金额：</span>
-            <span class="total-amount">¥88.00</span>
+            <span class="total-amount">¥{{ amount }}</span>
           </div>
           <button class="pay-button" @click="handlePay">立即支付</button>
         </div>
@@ -101,8 +109,9 @@ export default {
   },
   data() {
     return {
-      quantity: 1,
-      unitPrice: 88.0,
+      order_no: this.$route.query.order_no,
+      amount: this.$route.query.amount,
+      title: this.$route.query.title,
       selectedPayment: "alipay", // 默认选择支付宝
       formData: {
         name: "",
@@ -134,10 +143,20 @@ export default {
       this.selectedPayment = type;
     },
     handlePay() {
-      // 处理支付逻辑
-      console.log("选择的支付方式:", this.selectedPayment);
       // 这里可以调用支付接口
-      this.$router.push("/paySuccess");
+      this.$api({
+        url: "createOrder",
+        method: "post",
+        data: {
+          orderno: this.order_no,
+          type: 1,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.$message.success("支付成功");
+          this.$router.push("/paySuccess");
+        }
+      });
     },
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="main-title">
-      <span>我的留言</span>
+      <span>我的收藏</span>
     </div>
 
     <div class="page-ctx">
@@ -12,7 +12,8 @@
               {{ item.feed_type }}
             </div>
             <div class="date">
-              {{ item.dtTime }}
+              <img src="@/assets/img/ellsenn/share/collect-active.png" alt="" />
+              取消收藏
             </div>
           </div>
           <div class="content">
@@ -32,11 +33,22 @@ export default {
   components: {},
   data() {
     return {
-      messList: [],
+      messList: [
+        {
+          feed_type: "留言",
+          dtTime: "2025-06-08 10:00:00",
+          content: "这是一条留言",
+        },
+        {
+          feed_type: "留言",
+          dtTime: "2025-06-08 10:00:00",
+          content: "这是一条留言",
+        },
+      ],
       pagination: {
         page: 1,
-        page_num: 10
-      }
+        page_num: 10,
+      },
     };
   },
   computed: {
@@ -48,20 +60,10 @@ export default {
   },
   methods: {
     setView() {
-
       this.$api("index_getFeedback", {
-
         ...this.pagination,
-      }).then((res) => {
-        let { code, data, pages, count } = res;
-        this.messList = res.data
-
       });
     },
-
-
-
-
   },
 };
 </script>
@@ -72,9 +74,9 @@ export default {
   padding-bottom: 80px;
 
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -83,22 +85,12 @@ export default {
     font-size: 16px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #333333;
-
-    button {
-      min-width: 96px;
-      height: 30px;
-      line-height: 30px;
-      background: #009F39;
-      color: #fff;
-      font-size: 14px;
-      font-weight: bold;
-    }
+    color: #000;
   }
 
   .page-ctx {
     min-height: 400px;
-    margin-top: 24px;
+    margin-top: 14px;
     padding: 32px 32px 40px 32px;
     background: #fff;
   }
@@ -107,43 +99,38 @@ export default {
 .page {
   .page-ctx {
     padding-bottom: 80px;
-
-
-
   }
 }
-
-
-
 
 .mess-list {
   .mess-item {
     border-bottom: 1px solid #ddd;
-    padding: 25px 0;
-
+    padding-bottom: 20px;
+    margin-bottom: 20px;
     .title-box {
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
       .title {
-        font-weight: 400;
+        font-weight: 500;
         font-size: 16px;
-        color: #333333;
+        color: #000;
       }
 
       .date {
         font-weight: 400;
         font-size: 14px;
-        color: #999999;
+        color: #7b8599;
+        cursor: pointer;
       }
     }
 
     .content {
-      margin-top: 20px;
+      color: #999999;
+      font-size: 12px;
+      margin-top: 15px;
     }
   }
 }
 </style>
-
-<style scoped lang="less" src="@/assets/h5css/user/change-password.less"></style>

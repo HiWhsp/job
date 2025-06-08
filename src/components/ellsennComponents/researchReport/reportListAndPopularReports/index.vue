@@ -2,11 +2,11 @@
   <div class="layout">
     <div class="layout-left">
       <card>
-        <report-card-list></report-card-list>
+        <report-card-list :list="reportList"></report-card-list>
       </card>
     </div>
     <div class="layout-right">
-      <popularReports></popularReports>
+      <popularReports :list="popularReportsList"></popularReports>
     </div>
   </div>
 </template>
@@ -20,7 +20,16 @@ export default {
     popularReports,
     reportCardList,
   },
-  props: {},
+  props: {
+    reportList: {
+      type: Array,
+      default: () => [],
+    },
+    popularReportsList: {
+      type: Array,
+      default: () => [],
+    },
+  },
   name: "reportListAndPopularReports",
   data() {
     return {};

@@ -9,8 +9,6 @@
   </div>
 </template>
 <script>
-//import { Swiper, SwiperOptions, Pagination, Navigation } from "swiper";
-//import "swiper/swiper-bundle.min.css";
 import newsInsight from '@/components/ellsennComponents/index/newsInsight/index.vue';
 import recentActivities from '@/components/ellsennComponents/index/recentActivities/index.vue';
 import report from '@/components/ellsennComponents/index/report/index.vue';
