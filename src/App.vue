@@ -1,13 +1,13 @@
 <template>
   <div id="app">
-    <page_header_ellsenn data-title="普通页面顶部"/>
+    <page_header_ellsenn data-title="普通页面顶部" />
     <!-- <page_header_mobile /> -->
 
     <div class="layout-box">
       <router-view></router-view>
     </div>
-    
-    <page_footer_ellsenn data-title="普通页面底部"/>
+
+    <page_footer_ellsenn data-title="普通页面底部" />
   </div>
 </template>
 
@@ -26,9 +26,7 @@ export default {
   },
   data() {
     let href_pathname = location.pathname;
-    let is_show_login_comp = ["/login", "/register", "/retrieve"].includes(
-      href_pathname
-    );
+    let is_show_login_comp = ["/login", "/register", "/retrieve"].includes(href_pathname);
     return {
       //是否展示登录页面所需组件
       is_show_login_comp: is_show_login_comp,
@@ -37,7 +35,6 @@ export default {
   computed: {},
   watch: {
     $route(to) {
-      console.log("to", to);
       if (["login", "register", "retrieve"].includes(to.name)) {
         this.is_show_login_comp = true;
       } else {
@@ -59,11 +56,7 @@ export default {
     //   }
     // },
     initScale() {
-      if (
-        document &&
-        document.documentElement &&
-        document.documentElement.clientWidth
-      ) {
+      if (document && document.documentElement && document.documentElement.clientWidth) {
         let clientWidth = document.documentElement.clientWidth;
         if (clientWidth <= 1366 && clientWidth >= 1024) {
           // document.querySelector("body").style.overflowX = "auto";

@@ -18,8 +18,8 @@
             />
             <label for="selectAll" class="select-label">全选</label>
           </div>
-          <button class="tab-btn">批量加购</button>
-          <button class="tab-btn active">标记已读</button>
+          <button class="tab-btn" @click="batchDelete">批量删除</button>
+          <button class="tab-btn active" @click="batchRead">标记已读</button>
         </div>
       </div>
 
@@ -44,15 +44,27 @@
 
           <!-- 消息内容区域 -->
           <div class="mess-content">
-            <div class="mess-title">{{ item.content }}</div>
-            <div class="mess-time">{{ item.dtTime }}</div>
+            <div class="mess-title">{{ item.title }}</div>
+            <div class="mess-time">{{ item.created_at }}</div>
+          </div>
+          <div style="color: #005aac; margin-right: 16px">
+            {{ item.is_read == 0 ? "未读" : "已读" }}
           </div>
 
           <!-- 右侧删除按钮 -->
           <div class="mess-action">
-            <button class="delete-btn">删除</button>
+            <button class="delete-btn" @click="deleteMessage(item)">删除</button>
           </div>
         </div>
+        <el-pagination
+          style="margin-top: 20px; text-align: center"
+          v-if="total > 0"
+          :total="total"
+          layout="prev, pager, next"
+          :current-page="pagination.page"
+          @current-change="handleCurrentChange"
+        />
+        <el-empty description="暂无数据" v-if="messList.length === 0" />
       </div>
     </div>
   </div>
@@ -66,36 +78,12 @@ export default {
   components: {},
   data() {
     return {
-      messList: [
-        {
-          feed_type: "留言",
-          dtTime: "2025-02-13 09:36:42",
-          content: "注册成功通知",
-          selected: false,
-        },
-        {
-          feed_type: "活动",
-          dtTime: "2025-02-13 09:36:42",
-          content: "活动优惠到期",
-          selected: false,
-        },
-        {
-          feed_type: "评论",
-          dtTime: "2025-02-13 09:36:42",
-          content: "您实话的评论已通过审核",
-          selected: false,
-        },
-        {
-          feed_type: "评论",
-          dtTime: "2025-02-13 09:36:42",
-          content: "您实话的评论已通过审核",
-          selected: false,
-        },
-      ],
+      messList: [],
       pagination: {
         page: 1,
-        page_num: 10,
+        limit: 10,
       },
+      total: 0,
     };
   },
   computed: {
@@ -103,10 +91,7 @@ export default {
     // 计算是否全选
     isAllSelected: {
       get() {
-        return (
-          this.messList.length > 0 &&
-          this.messList.every((item) => item.selected)
-        );
+        return this.messList.length > 0 && this.messList.every((item) => item.selected);
       },
       set(value) {
         // 这里不需要处理，在toggleSelectAll方法中处理
@@ -123,8 +108,20 @@ export default {
   },
   methods: {
     setView() {
-      this.$api("index_getFeedback", {
-        ...this.pagination,
+      this.$api({
+        url: "mynotice",
+        method: "get",
+        data: this.pagination,
+      }).then((res) => {
+        if (res.code == 200) {
+          this.messList = res.data.list.map((item) => {
+            return {
+              ...item,
+              selected: false,
+            };
+          });
+          this.total = res.data.count;
+        }
       });
     },
     // 切换全选状态
@@ -151,8 +148,61 @@ export default {
         this.$message.warning("请选择要删除的消息");
         return;
       }
-      // 这里可以添加删除逻辑
-      console.log("删除选中的消息:", selectedItems);
+      this.$confirm("确定删除选中的消息吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.$api({
+          url: "changenotice",
+          method: "post",
+          data: {
+            ids: selectedItems.map((item) => item.id).join(","),
+            type: 2,
+          },
+        }).then((res) => {
+          if (res.code == 200) {
+            this.setView();
+          }
+        });
+      });
+    },
+    deleteMessage(item) {
+      this.$confirm("确定删除该消息吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.$api({
+          url: "changenotice",
+          method: "post",
+          data: { ids: item.id, type: 2 },
+        }).then((res) => {
+          if (res.code == 200) {
+            this.setView();
+          }
+        });
+      });
+    },
+    handleCurrentChange(page) {
+      this.pagination.page = page;
+      this.setView();
+    },
+    batchRead() {
+      const selectedItems = this.selectedMessages;
+      if (selectedItems.length === 0) {
+        this.$message.warning("请选择要标记已读的消息");
+        return;
+      }
+      this.$api({
+        url: "changenotice",
+        method: "post",
+        data: { ids: selectedItems.map((item) => item.id).join(","), type: 1 },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.setView();
+        }
+      });
     },
   },
 };

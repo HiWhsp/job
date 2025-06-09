@@ -18,17 +18,11 @@
         </div>
         <div class="success-code">
           <div class="code-content">
-            <div class="code-title">
-              <p>2025 AI/AR智能眼镜智能制造高峰论坛</p>
-              <p>0589 3652 4526</p>
-            </div>
-            <div class="code-qrcode">
-              <!-- <img src="@/assets/img/pay/qrcode.png" alt="" /> -->
-            </div>
+            <img :src="hexiaoma" alt="" style="width: 100%" />
           </div>
         </div>
         <div class="download-code">
-          <div class="download-title">下载核销码</div>
+          <div class="download-title" @click="downloadCode">下载核销码</div>
         </div>
       </div>
     </div>
@@ -44,6 +38,7 @@ export default {
   },
   data() {
     return {
+      hexiaoma: "",
       quantity: 1,
       unitPrice: 88.0,
       selectedPayment: "alipay", // 默认选择支付宝
@@ -72,6 +67,9 @@ export default {
       return option;
     },
   },
+  mounted() {
+    this.hexiaoma = localStorage.getItem("hexiaoma") || "";
+  },
   methods: {
     selectPayment(type) {
       this.selectedPayment = type;
@@ -80,6 +78,13 @@ export default {
       // 处理支付逻辑
       console.log("选择的支付方式:", this.selectedPayment);
       // 这里可以调用支付接口
+    },
+    downloadCode() {
+      // 下载核销码
+      const a = document.createElement("a");
+      a.download = "hexiaoma.png";
+      a.href = this.hexiaoma;
+      a.click();
     },
   },
 };

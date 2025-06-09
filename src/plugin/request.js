@@ -35,19 +35,21 @@ axios.interceptors.response.use(
             return Promise.reject(res);
         } else if (code === 401) {
             alertErr(res.msg);
-            Vue.prototype.$showLogin({
-                onLoginSuccess: (data) => {
-                    store.commit("set_baseInfo", data);
-                    // 处理登录成功逻辑
-                },
-                onRegisterSuccess: (data) => {
-                    console.log('注册成功:', data)
-                },
-                onGetCode: ({ type, account }) => {
-                    console.log('获取验证码:', type, account)
-                    // 调用实际的验证码接口
-                }
-            });
+            if (res.msg == "请登录") {
+                Vue.prototype.$showLogin({
+                    onLoginSuccess: (data) => {
+                        store.commit("set_baseInfo", data);
+                        // 处理登录成功逻辑
+                    },
+                    onRegisterSuccess: (data) => {
+                        console.log('注册成功:', data)
+                    },
+                    onGetCode: ({ type, account }) => {
+                        console.log('获取验证码:', type, account)
+                        // 调用实际的验证码接口
+                    }
+                });
+            }
             return Promise.reject(res);
         } else {
             return res;
@@ -89,7 +91,7 @@ function api(action, data, method, uploaderConfig) {
     }
 
     reqData = {
-        userId: localStorage.getItem("user_id") || "",
+        // userId: localStorage.getItem("user_id") || "",
         token: localStorage.getItem("token") || "",
         ...data,
     }; //请求数据

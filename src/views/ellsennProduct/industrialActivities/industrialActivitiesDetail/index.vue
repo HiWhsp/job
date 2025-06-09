@@ -17,9 +17,7 @@
             </div>
           </div>
           <div class="bottomContentRight">
-            <div class="bottomContentRightBtn" @click="meetingRegistration">
-              会议报名
-            </div>
+            <div class="bottomContentRightBtn" @click="meetingRegistration">会议报名</div>
           </div>
         </div>
       </div>
@@ -55,9 +53,7 @@
 
                   <div class="info-item">
                     <span class="info-label">地　　点：</span>
-                    <span class="info-value">{{
-                      activityDetails.location
-                    }}</span>
+                    <span class="info-value">{{ activityDetails.location }}</span>
                     <span class="location-link">查看地图导航</span>
                   </div>
                 </div>
@@ -65,16 +61,12 @@
                 <div class="organizer-info">
                   <div class="organizer-item">
                     <span class="organizer-label">主 办 方：</span>
-                    <span class="organizer-value">{{
-                      activityDetails.sponsor
-                    }}</span>
+                    <span class="organizer-value">{{ activityDetails.sponsor }}</span>
                   </div>
 
                   <div class="organizer-item">
                     <span class="organizer-label">协 办 方：</span>
-                    <span class="organizer-value">{{
-                      activityDetails.corganizer
-                    }}</span>
+                    <span class="organizer-value">{{ activityDetails.corganizer }}</span>
                   </div>
 
                   <div class="organizer-item">
@@ -100,9 +92,7 @@
         <div class="section-title">
           <h2>活动嘉宾</h2>
         </div>
-        <activity-guests
-          :guests="activityDetails.event_guests"
-        ></activity-guests>
+        <activity-guests :guests="activityDetails.event_guests"></activity-guests>
 
         <!-- 活动议程部分 -->
         <div class="activity-agenda">
@@ -126,9 +116,9 @@
             <div class="agenda-timeline">
               <div
                 class="agenda-section"
-                v-for="(
-                  section, sectionIndex
-                ) in product_activities_program_outline[activeIndex].data"
+                v-for="(section, sectionIndex) in product_activities_program_outline[
+                  activeIndex
+                ].data"
                 :key="sectionIndex"
               >
                 <div class="section-header">
@@ -158,10 +148,18 @@
             <h2>活动咨询</h2>
           </div>
           <div class="consult-content">
-            <div class="consult-item">联系人：维深助理</div>
-            <div class="consult-item">电话号：wellsenn001</div>
-            <div class="consult-item">手机号：18611823719</div>
-            <div class="consult-item">微信号：abc@wellsenn.com</div>
+            <div class="consult-item">
+              联系人：{{ vuex_config.product_contact_us.contact_name || "维深小助理" }}
+            </div>
+            <div class="consult-item">
+              电话号：{{ vuex_config.product_contact_us.mibile }}
+            </div>
+            <div class="consult-item">
+              手机号：{{ vuex_config.product_contact_us.mibile }}
+            </div>
+            <div class="consult-item">
+              微信号：{{ vuex_config.product_contact_us.wx }}
+            </div>
           </div>
         </div>
         <!-- 活动图片 -->
@@ -170,7 +168,11 @@
             <h2>活动图片</h2>
           </div>
           <div class="images-content">
-            <div class="images-item" v-for="(item, index) in activityDetails.activities_images" :key="index">
+            <div
+              class="images-item"
+              v-for="(item, index) in activityDetails.activities_images"
+              :key="index"
+            >
               <img :src="item" alt="活动图片" />
             </div>
           </div>
@@ -181,7 +183,11 @@
             <h2>活动报道</h2>
           </div>
           <div class="report-content">
-            <div class="report-item" v-for="(item, index) in activityDetails.product_activities_report" :key="index">
+            <div
+              class="report-item"
+              v-for="(item, index) in activityDetails.product_activities_report"
+              :key="index"
+            >
               <img :src="item.thumb" alt="活动报道" />
               <div class="report-item-title">
                 <h3>{{ item.title }}</h3>

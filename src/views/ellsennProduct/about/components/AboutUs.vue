@@ -16,14 +16,9 @@
         <!-- 中间内容区域 -->
         <div class="content-section">
           <div class="description">
-            <p>
-              维河德商Wellsenn
-              XR是全球领先的XR产业基础研究发明的创意公司。公司致力为XR产业从业者，投资者以及数字媒体从业者，客表、全面、有效地进行数据分析、行业研究分析和市场。
-            </p>
+            <p>{{ data.title }}</p>
 
-            <p>
-              公司目前立以来一直专注于对XR产业的系统性思维与研究，依托中国XR全产业链优势，维河德致力于了多年技术经验积累最前沿的XR研展数致励戎，为担编级的XR健康建设，助推产业从业者找科波来前案和平了解行业发展动态。
-            </p>
+            <p>{{ data.info }}</p>
           </div>
         </div>
       </div>
@@ -31,8 +26,7 @@
       <!-- 右侧建筑图片区域 -->
       <div class="image-section">
         <div class="building-image">
-          <!-- 这里可以放置建筑物图片 -->
-          <img src="@/assets/img/ellsenn/test.png" alt="公司建筑" />
+          <img :src="data.thumb" alt="公司建筑" />
         </div>
       </div>
     </div>
@@ -43,9 +37,24 @@
 export default {
   name: "AboutUs",
   data() {
-    return {};
+    return {
+      data: {},
+    };
   },
-  methods: {},
+  mounted() {
+    this.getAboutUsData();
+  },
+  methods: {
+    getAboutUsData() {
+      this.$api({
+        url: "getCompanyProfile",
+      }).then((res) => {
+        if (res.code === 200) {
+          this.data = res.data;
+        }
+      });
+    },
+  },
 };
 </script>
 

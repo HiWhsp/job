@@ -7,7 +7,7 @@
     <div class="page-ctx" v-if="!showChangePhoneForm && !showChangePasswordForm">
       <div class="setting-item">
         <div class="item-label">手机</div>
-        <div class="item-content">158****3012</div>
+        <div class="item-content">{{ vuex_user.mobile }}</div>
         <div class="item-action">
           <span class="action-link" @click="showChangePhone">换绑手机号</span>
         </div>
@@ -38,6 +38,7 @@
           class="form-input"
           placeholder="请输入旧手机号"
           v-model="oldPhone"
+          disabled
         />
       </div>
 
@@ -48,6 +49,8 @@
           class="form-input"
           placeholder="请输入新手机号"
           v-model="newPhone"
+          @input="() => (newPhone = newPhone.replace(/\D/g, ''))"
+          maxLength="11"
         />
       </div>
 
@@ -59,7 +62,7 @@
           placeholder="请输入验证码"
           v-model="verificationCode"
         />
-        <button class="get-code-btn">获取验证码</button>
+        <button class="get-code-btn" @click="getVerificationCode">获取验证码</button>
       </div>
 
       <div class="form-buttons">
@@ -76,7 +79,7 @@
           type="text"
           class="form-input"
           placeholder="请输入旧密码"
-          v-model="newPhone"
+          v-model="oldPassword"
         />
       </div>
 
@@ -86,7 +89,7 @@
           type="text"
           class="form-input"
           placeholder="请输入新密码"
-          v-model="newPhone"
+          v-model="newPassword"
         />
       </div>
 
@@ -96,7 +99,7 @@
           type="text"
           class="form-input"
           placeholder="请输入确认新密码"
-          v-model="newPhone"
+          v-model="confirmPassword"
         />
       </div>
 
@@ -121,23 +124,60 @@ export default {
       oldPhone: "",
       newPhone: "",
       verificationCode: "",
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState(["vuex_user"]),
   },
-  watch: {},
+  watch: {
+    vuex_user: {
+      handler(newVal) {
+        this.oldPhone = newVal.mobile;
+      },
+    },
+  },
+  mounted() {
+    this.oldPhone = this.vuex_user.mobile;
+  },
   methods: {
     showChangePhone() {
       this.showChangePhoneForm = true;
     },
     confirmChange() {
-      // 实现换绑手机号的逻辑
-      console.log("确认换绑手机号");
+      if (!this.newPhone) {
+        this.$message.warning("请输入新手机号");
+        return;
+      }
+      if (!this.verificationCode) {
+        this.$message.warning("请输入验证码");
+        return;
+      }
+      if (this.newPhone == this.oldPhone) {
+        this.$message.warning("新手机号不能与旧手机号相同");
+        return;
+      }
+      this.$api({
+        url: "changePhone",
+        method: "post",
+        data: {
+          mobile: this.newPhone,
+          old_moibile: this.oldPhone,
+          code: this.verificationCode,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.$message.success("换绑手机号成功");
+        }
+      });
     },
+    // 确认换绑手机号
     showChangePassword() {
       this.showChangePasswordForm = true;
     },
+    // 取消换绑手机号
     cancelChange() {
       this.showChangePhoneForm = false;
       // 清空表单数据
@@ -146,11 +186,52 @@ export default {
       this.verificationCode = "";
     },
 
+    // 确认修改密码
     confirmChangePassword() {
-      console.log("确认修改密码");
+      if (!this.oldPassword) {
+        this.$message.warning("请输入旧密码");
+        return;
+      }
+      if (!this.newPassword) {
+        this.$message.warning("请输入新密码");
+        return;
+      }
+      if (this.newPassword != this.confirmPassword) {
+        this.$message.warning("新密码与确认密码不一致");
+        return;
+      }
+      this.$api({
+        url: "resetpassword",
+        method: "post",
+        data: {
+          old_password: this.oldPassword,
+          password: this.newPassword,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.$message.success("修改密码成功");
+          this.showChangePasswordForm = false;
+          this.oldPassword = "";
+          this.newPassword = "";
+          this.confirmPassword = "";
+        }
+      });
     },
+    // 取消修改密码
     cancelChangePassword() {
       this.showChangePasswordForm = false;
+    },
+    // 获取验证码
+    getVerificationCode() {
+      this.$api({
+        url: "send",
+        method: "post",
+        data: { mobile: this.newPhone, type: "change" },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.$message.success("验证码发送成功");
+        }
+      });
     },
   },
 };
@@ -228,7 +309,8 @@ export default {
     }
   }
 
-  .change-phone-form, .change-password-form {
+  .change-phone-form,
+  .change-password-form {
     margin-top: 14px;
     padding: 40px;
     background: #fff;

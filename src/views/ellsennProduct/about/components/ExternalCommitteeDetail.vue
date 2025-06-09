@@ -7,18 +7,18 @@
       <!-- 头部信息区域 -->
       <div class="header-section">
         <div class="avatar-section">
-          <img :src="memberInfo.avatar" alt="头像" class="avatar" />
+          <img :src="memberInfo.thumb" alt="头像" class="avatar" />
         </div>
         <div class="info-section">
           <h1 class="name">{{ memberInfo.name }}</h1>
-          <p class="title">{{ memberInfo.title }}</p>
+          <p class="title">{{ memberInfo.position }}</p>
           <div class="description">
             <h3>简介：</h3>
-            <p>{{ memberInfo.description }}</p>
+            <p>{{ memberInfo.info }}</p>
           </div>
           <div class="expertise">
             <h3>擅长领域：</h3>
-            <p>{{ memberInfo.expertise }}</p>
+            <p>{{ memberInfo.field }}</p>
           </div>
         </div>
       </div>
@@ -40,47 +40,47 @@
         <div v-if="activeTab === 0" class="tab-panel">
           <div class="content-section">
             <h4>【人物简介】</h4>
-            <p>{{ memberInfo.biography }}</p>
+            <p>{{ memberInfo.info }}</p>
           </div>
-          <div class="content-section">
+          <!-- <div class="content-section">
             <h4>【研究方向】</h4>
-            <p>{{ memberInfo.research }}</p>
+            <p>{{ memberInfo.research_direction }}</p>
           </div>
           <div class="content-section">
             <h4>【研究成果】</h4>
-            <p>{{ memberInfo.achievements }}</p>
+            <p>{{ memberInfo.achievement }}</p>
           </div>
           <div class="content-section">
             <h4>【科研项目】</h4>
-            <p>{{ memberInfo.projects }}</p>
+            <p>{{ memberInfo.research_project }}</p>
           </div>
           <div class="content-section">
             <h4>【论文著作】</h4>
             <p>{{ memberInfo.publications }}</p>
-          </div>
+          </div> -->
         </div>
         <div v-else-if="activeTab === 1" class="tab-panel">
           <div class="content-section">
-            <h4>研究方向详情</h4>
-            <p>详细的研究方向内容...</p>
+            <h4>研究方向</h4>
+            <p>{{ memberInfo.research_direction }}</p>
           </div>
         </div>
         <div v-else-if="activeTab === 2" class="tab-panel">
           <div class="content-section">
-            <h4>研究成果详情</h4>
-            <p>详细的研究成果内容...</p>
+            <h4>研究成果</h4>
+            <p>{{ memberInfo.achievement }}</p>
           </div>
         </div>
         <div v-else-if="activeTab === 3" class="tab-panel">
           <div class="content-section">
-            <h4>科研项目详情</h4>
-            <p>详细的科研项目内容...</p>
+            <h4>科研项目</h4>
+            <p>{{ memberInfo.research_project }}</p>
           </div>
         </div>
         <div v-else-if="activeTab === 4" class="tab-panel">
           <div class="content-section">
-            <h4>论文著作详情</h4>
-            <p>详细的论文著作内容...</p>
+            <h4>论文著作</h4>
+            <p>{{ memberInfo.publications }}</p>
           </div>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default {
     nav_option() {
       let option = [
         {
-          route: "/about",
+          route: "/about?activeIndex=4",
           title: "外部专业委员",
           title2: "about",
         },
@@ -143,6 +143,22 @@ export default {
           "出版专著2部，教材2部。自1994年起主要从事新材料科学技术的研究及其科研成果，发表学术论文200余篇，其中SCI收录25篇。",
       },
     };
+  },
+  mounted() {
+    this.getMemberInfo();
+  },
+  methods: {
+    getMemberInfo() {
+      this.$api({
+        url: "getCompanyMemberDetail",
+        method: "get",
+        data: {
+          id: this.$route.query.id,
+        },
+      }).then((res) => {
+        this.memberInfo = res.data;
+      });
+    },
   },
 };
 </script>

@@ -106,7 +106,9 @@ export default {
       ],
     };
   },
-  mounted() {},
+  mounted() {
+    this.activeIndex = +this.$route.query.activeIndex || 1;
+  },
   methods: {
     onBtnClick(i) {
       console.log(i, "onBtnClick");

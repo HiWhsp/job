@@ -6,19 +6,15 @@
 
     <div class="page-ctx">
       <div class="mess-list">
-        <div
-          class="activityCard"
-          v-for="(item, index) in messList"
-          :key="index"
-        >
+        <div class="activityCard" v-for="(item, index) in messList" :key="index">
           <div>
-            <img class="topImg" :src="item.url" alt="" />
+            <img class="topImg" :src="item.thumb" alt="" />
           </div>
           <div class="cardContent">
             <div class="activeTitle">{{ item.title }}</div>
             <div class="activeTime">
               <img class="activeIcon" src="@img/ellsenn/time.png" alt="" />
-              <div>活动时间：{{ item.time }}</div>
+              <div>活动时间：{{ item.start_time }}至{{ item.end_time }}</div>
             </div>
             <div class="activeLocation">
               <img class="activeIcon" src="@img/ellsenn/location.png" alt="" />
@@ -28,14 +24,34 @@
               </div>
             </div>
             <div class="activeBtn">
-              <div class="activeBtnLeft">实付：¥88</div>
-              <div class="activeBtnCenter">已完成报名</div>
-              <div class="activeBtnRight">查看核销码</div>
+              <div class="activeBtnLeft">实付：¥{{ item.price }}</div>
+              <div class="activeBtnCenter">
+                {{ item.status == 2 ? "已完成报名" : "已核销" }}
+              </div>
+              <div class="activeBtnRight" @click="handleViewCode(item)">查看核销码</div>
             </div>
           </div>
         </div>
       </div>
+      <el-pagination
+        style="margin-top: 20px; text-align: center"
+        v-if="total > 0"
+        :total="total"
+        layout="prev, pager, next"
+        :current-page="pagination.page"
+        @current-change="handleCurrentChange"
+      />
+      <el-empty description="暂无数据" v-if="messList.length === 0" />
     </div>
+
+    <el-dialog
+      :visible="dialogVisible"
+      title="核销码"
+      width="30%"
+      @close="dialogVisible = false"
+    >
+      <img :src="dialogImageUrl" alt="核销码" style="width: 100%; height: 100%" />
+    </el-dialog>
   </div>
 </template>
 
@@ -47,6 +63,8 @@ export default {
   components: {},
   data() {
     return {
+      dialogVisible: false,
+      dialogImageUrl: "",
       messList: [
         {
           url: require("@img/ellsenn/i.png"),
@@ -57,8 +75,9 @@ export default {
       ],
       pagination: {
         page: 1,
-        page_num: 10,
+        limit: 10,
       },
+      total: 0,
     };
   },
   computed: {
@@ -70,9 +89,25 @@ export default {
   },
   methods: {
     setView() {
-      this.$api("index_getFeedback", {
-        ...this.pagination,
+      this.$api({
+        url: "getActivityOrder",
+        method: "get",
+        data: this.pagination,
+      }).then((res) => {
+        if (res.code == 200) {
+          this.messList = res.data.list;
+          this.total = res.data.count;
+        }
       });
+    },
+    handleCurrentChange(page) {
+      this.pagination.page = page;
+      this.setView();
+    },
+    handleViewCode(item) {
+      // 查看核销码 弹框展示图片
+      this.dialogVisible = true;
+      this.dialogImageUrl = item.hexiaoma;
     },
   },
 };
@@ -119,7 +154,8 @@ export default {
     padding-bottom: 26px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #DBDEE4;
+    border-bottom: 1px solid #dbdee4;
+    margin-bottom: 20px;
     .topImg {
       width: 205px;
       height: 128px;
@@ -180,13 +216,13 @@ export default {
       gap: 30px;
 
       .activeBtnLeft {
-        color: #E65C06;
+        color: #e65c06;
       }
       .activeBtnCenter {
         color: #666;
       }
       .activeBtnRight {
-        color: #005AAC;
+        color: #005aac;
       }
     }
     .activeIcon {

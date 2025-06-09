@@ -6,8 +6,8 @@
       <div class="page-ctx">
         <div class="menu-wrap">
           <div class="left-title">
-            <img src="@img/my/avatar.png" alt="" />
-            <span>15810593012</span>
+            <img :src="vuex_user.image" alt="" />
+            <span>{{ vuex_user.mobile }}</span>
           </div>
           <div class="nav-wrap">
             <div

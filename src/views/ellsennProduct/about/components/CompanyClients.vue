@@ -9,8 +9,13 @@
         alt="公司客户"
       />
       <div class="clients-list">
-        <div class="client-item" v-for="(item, index) in 9" :key="index">
-          <img src="#" alt="客户1" />
+        <div
+          class="client-item"
+          v-for="(item, index) in clientList"
+          :key="index"
+          @click="handleClick(item)"
+        >
+          <img :src="item.thumb" :alt="item.title" />
         </div>
       </div>
     </div>
@@ -21,9 +26,26 @@
 export default {
   name: "CompanyClients",
   data() {
-    return {};
+    return {
+      clientList: [],
+    };
   },
-  methods: {},
+  mounted() {
+    this.getClientList();
+  },
+  methods: {
+    getClientList() {
+      this.$api({
+        url: "friendLink",
+        method: "get",
+      }).then((res) => {
+        this.clientList = res.data;
+      });
+    },
+    handleClick(item) {
+      window.open(item.url, "_blank");
+    },
+  },
 };
 </script>
 

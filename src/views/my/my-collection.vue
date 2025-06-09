@@ -9,18 +9,27 @@
         <div class="mess-item" v-for="(item, index) in messList" :key="index">
           <div class="title-box">
             <div class="title">
-              {{ item.feed_type }}
+              {{ item.title }}
             </div>
-            <div class="date">
+            <div class="date" @click="handleCancelCollect(item)">
               <img src="@/assets/img/ellsenn/share/collect-active.png" alt="" />
               取消收藏
             </div>
           </div>
           <div class="content">
-            {{ item.content }}
+            {{ item.created_at }}
           </div>
         </div>
       </div>
+      <el-pagination
+        style="margin-top: 20px; text-align: center"
+        v-if="total > 0"
+        :total="total"
+        layout="prev, pager, next"
+        :current-page="pagination.page"
+        @current-change="handleCurrentChange"
+      />
+      <el-empty description="暂无数据" v-if="messList.length === 0" />
     </div>
   </div>
 </template>
@@ -47,8 +56,9 @@ export default {
       ],
       pagination: {
         page: 1,
-        page_num: 10,
+        limit: 10,
       },
+      total: 0,
     };
   },
   computed: {
@@ -60,8 +70,30 @@ export default {
   },
   methods: {
     setView() {
-      this.$api("index_getFeedback", {
-        ...this.pagination,
+      this.$api({
+        url: "getMyCollect",
+        method: "get",
+        data: this.pagination,
+      }).then((res) => {
+        if (res.code == 200) {
+          this.messList = res.data.list;
+          this.total = res.data.count;
+        }
+      });
+    },
+    handleCurrentChange(page) {
+      this.pagination.page = page;
+      this.setView();
+    },
+    handleCancelCollect(item) {
+      this.$api({
+        url: "addCollect",
+        method: "post",
+        data: { p_id: item.id, status: 0, type: item.type },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.setView();
+        }
       });
     },
   },

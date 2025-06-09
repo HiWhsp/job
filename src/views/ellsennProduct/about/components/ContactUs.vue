@@ -4,18 +4,7 @@
       <h2>联系我们</h2>
       <div class="contact-us-content">
         <div class="map-container">
-          <!-- <div class="map-info">
-            <div class="company-name">深圳市龙岗区慧泰科技</div>
-            <div class="company-address">
-              <img src="@/assets/img/contact/addr.png" alt="地址" class="icon" />
-              广东省深圳市龙岗区珠江万里天涯创业方天下广场1603
-            </div>
-            <div class="company-phone">
-              <img src="@/assets/img/contact/phone.png" alt="电话" class="icon" />
-              18611823719
-            </div>
-          </div>
-          <img src="@/assets/img/footer/map.png" alt="地图" class="map-image" /> -->
+          <CommonMap />
         </div>
         <div class="contact-info-section">
           <div class="section-title">
@@ -27,11 +16,11 @@
               <div class="option-content">
                 <div class="contact-person">
                   <img
-                    src="@/assets/img/contact/phone.png"
+                    src="@/assets/img/contact/wx.png"
                     alt="联系人"
                     class="contact-icon"
                   />
-                  编辑小咨询
+                  {{ vuex_config.sw_contact_us.wx }}
                 </div>
                 <div class="contact-email">
                   <img
@@ -39,7 +28,7 @@
                     alt="邮箱"
                     class="contact-icon"
                   />
-                  abc@wellsenn.com
+                  {{ vuex_config.sw_contact_us.email }}
                 </div>
                 <div class="contact-phone">
                   <img
@@ -47,7 +36,7 @@
                     alt="电话"
                     class="contact-icon"
                   />
-                  18611823719
+                  {{ vuex_config.sw_contact_us.mibile }}
                 </div>
               </div>
             </div>
@@ -56,11 +45,11 @@
               <div class="option-content">
                 <div class="contact-person">
                   <img
-                    src="@/assets/img/contact/phone.png"
+                    src="@/assets/img/contact/wx.png"
                     alt="联系人"
                     class="contact-icon"
                   />
-                  编辑小咨询
+                  {{ vuex_config.product_contact_us.wx }}
                 </div>
                 <div class="contact-email">
                   <img
@@ -68,7 +57,7 @@
                     alt="邮箱"
                     class="contact-icon"
                   />
-                  abc@wellsenn.com
+                  {{ vuex_config.product_contact_us.email }}
                 </div>
                 <div class="contact-phone">
                   <img
@@ -76,7 +65,7 @@
                     alt="电话"
                     class="contact-icon"
                   />
-                  18611823719
+                  {{ vuex_config.product_contact_us.mibile }}
                 </div>
               </div>
             </div>
@@ -88,8 +77,12 @@
 </template>
 
 <script>
+import CommonMap from "@/components/map/commonMap.vue";
 export default {
   name: "ContactUs",
+  components: {
+    CommonMap,
+  },
   data() {
     return {};
   },

@@ -190,7 +190,7 @@ export default new Vuex.Store({
       }).then((res) => {
         if (res.code == 200) {
           commit("set_vuex_login_status", true);
-          commit("set_baseInfo", res.data.user_info);
+          commit("set_baseInfo", res.data);
         } else {
           commit("set_vuex_login_status", false);
         }
@@ -242,36 +242,6 @@ export default new Vuex.Store({
           commit("set_vuex_banner", res.data);
         }
       });
-
-      //产品分类
-      // api({
-      //   url: "getReportConfig",
-      //   method: "get",
-      // }).then((res) => {
-      //   if (res.code == 200) {
-      //     commit("set_vuex_product_cate", res.data);
-      //   }
-      // });
-
-      //新闻分类
-      // api({
-      //   url: "/service.php",
-      //   method: "get",
-      //   data: {
-      //     action: "news_channel",
-      //   },
-      // }).then((res) => {
-      //   let { code, data } = res;
-      //   if (code == 200) {
-      //     res.data.forEach((v) => {
-      //       v.route = "/news?id=" + v.id;
-      //     });
-      //     commit("set_vuex_data", {
-      //       key: "vuexNewsCates",
-      //       val: res.data,
-      //     });
-      //   }
-      // });
     },
   },
 });

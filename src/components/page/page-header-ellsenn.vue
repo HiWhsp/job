@@ -26,19 +26,13 @@
                     <router-link :to="item.route" class="nav-title">
                       {{ item.title }}
                     </router-link>
-                    <i
-                      v-if="!!item.icon"
-                      class="nav-itm"
-                      :class="item.icon"
-                    ></i>
+                    <i v-if="!!item.icon" class="nav-itm" :class="item.icon"></i>
                   </template>
                   <template v-else>
                     <div @click="jump_nav(item)">
-                      <span
-                        class="nav-title text"
-                        :class="check_nav_class(item)"
-                        >{{ item.title }}</span
-                      >
+                      <span class="nav-title text" :class="check_nav_class(item)">{{
+                        item.title
+                      }}</span>
                     </div>
                   </template>
                 </div>
@@ -49,18 +43,14 @@
             <div class="right-box-icon">
               <i class="el-icon-search"></i>
             </div>
-            <div v-if="baseInfo.user_id" class="user-name">
-              {{ baseInfo.name }}
+            <div v-if="vuex_user.id" class="user-name" @click="toUserCenter">
+              {{ vuex_user.name }}
             </div>
-            <el-button
-              size="small "
-              class="btn btn-login"
-              @click="showLogin"
-              v-else
+            <el-button size="small " class="btn btn-login" @click="showLogin" v-else
               >登录</el-button
             >
             <el-button
-              v-if="!baseInfo.user_id"
+              v-if="!vuex_user.id"
               size="small "
               type="primary"
               class="btn btn-register"
@@ -71,7 +61,7 @@
               size="small "
               class="btn btn-login"
               @click="logout"
-              v-if="baseInfo.user_id"
+              v-if="vuex_user.id"
               >退出</el-button
             >
           </div>
@@ -94,7 +84,6 @@ export default {
   },
   data() {
     return {
-      baseInfo: {},
       showSiteMap: false, //个人中心 菜单
       showLanguage: false, //语言切换
       showContact: false, //联系我们
@@ -166,7 +155,6 @@ export default {
   },
 
   created() {
-    this.baseInfo = JSON.parse(localStorage.getItem("baseInfo")) || {};
     this.keyword = this.$route.query.keyword || "";
     this.setView();
   },
@@ -330,6 +318,9 @@ export default {
     logout() {
       this.$store.commit("clear_loginInfo");
       this.$router.push("/");
+    },
+    toUserCenter() {
+      this.$router.push("/my-info");
     },
   },
 };

@@ -8,14 +8,10 @@
       <div class="user-info-section">
         <div class="user-avatar-info">
           <div class="avatar-wrapper">
-            <img
-              src="@/assets/img/my/avatar.png"
-              alt="用户头像"
-              class="user-avatar"
-            />
+            <img :src="my_info.image" alt="用户头像" class="user-avatar" />
           </div>
           <div class="user-details">
-            <div class="phone-number">{{ my_info.phone || "15810593012" }}</div>
+            <div class="phone-number">{{ my_info.mobile || "" }}</div>
             <div class="vip-status">
               <span class="vip-badge">
                 <img src="@/assets/img/my/no-vip.png" alt="VIP会员" />
@@ -32,9 +28,9 @@
       <div class="vip-card">
         <div class="vip-card-content">
           <div class="vip-info">
-            <h3>VIP会员</h3>
-            <div class="price">¥365.00</div>
-            <div class="promotion">今日立即享受3个月</div>
+            <h3>{{ vip_info.title }}</h3>
+            <div class="price">¥{{ vip_info.price }}</div>
+            <div class="promotion">今日注册多送{{ vip_info.month_num }}个月</div>
           </div>
         </div>
       </div>
@@ -42,10 +38,7 @@
       <!-- 会员权益 -->
       <div class="member-benefits">
         <h3>会员权益</h3>
-        <p class="benefits-text">
-          会员权益详细信息文介绍内容会员权益详细信息文介绍内容会员权益详细信息文介绍内容会员权益详细
-          图文介绍内容会员权益详细信息文介绍内容会员权益详细信息文介绍内容会员权益详细信息文介绍内容
-        </p>
+        <p class="benefits-text" v-html="vip_info.content"></p>
       </div>
 
       <!-- 支付区域 -->
@@ -60,7 +53,12 @@
               <img src="@/assets/img/my/wechat.png" alt="" />
             </div>
             <span>微信支付</span>
-            <img class="select-icon" src="@/assets/img/my/select.png" alt="" />
+            <img
+              class="select-icon"
+              src="@/assets/img/my/select.png"
+              alt=""
+              v-if="selectedPaymentMethod === 'wechat'"
+            />
           </div>
           <div
             class="payment-method"
@@ -71,7 +69,12 @@
               <img src="@/assets/img/my/alipay.png" alt="" />
             </div>
             <span>支付宝支付</span>
-            <img class="select-icon" src="@/assets/img/my/select.png" alt="" />
+            <img
+              class="select-icon"
+              src="@/assets/img/my/select.png"
+              alt=""
+              v-if="selectedPaymentMethod === 'alipay'"
+            />
           </div>
         </div>
 
@@ -83,8 +86,8 @@
             </div>
           </div>
           <div class="payment-info">
-            <div class="duration">1年3个月 金额总计：</div>
-            <div class="total-price">¥365</div>
+            <div class="duration">{{ vip_info.date }}个月 金额总计：</div>
+            <div class="total-price">¥{{ vip_info.price }}</div>
             <div class="payment-tip">支付即表示您同意《网站服务协议》</div>
           </div>
         </div>
@@ -101,19 +104,23 @@
             <span>实付款</span>
             <span>订单状态</span>
           </div>
-          <div class="table-row">
-            <div class="order-info">
-              <div class="order-number">订单号：2545122542</div>
-              <div class="order-time">下单时间：2024-05-03 09:45:54</div>
+          <template v-for="item in vip_order_list">
+            <div class="table-row" :key="item.id">
+              <div class="order-info">
+                <div class="order-number">订单号：{{ item.orderno }}</div>
+                <div class="order-time">下单时间：{{ item.pay_time }}</div>
+              </div>
             </div>
-          </div>
-          <div class="table-row order-details">
-            <span class="product-name">VIP会员</span>
-            <span class="price">¥365.00</span>
-            <span class="quantity">1</span>
-            <span class="paid-amount">¥365.00</span>
-            <span class="status completed">交易完成</span>
-          </div>
+            <div class="table-row order-details" :key="item.id">
+              <span class="product-name">{{ item.title }}</span>
+              <span class="price">¥{{ item.price }}</span>
+              <span class="quantity">{{ item.month_num }}</span>
+              <span class="paid-amount">¥{{ item.price }}</span>
+              <span class="status completed">{{
+                item.status == 1 ? "已完成" : "待支付"
+              }}</span>
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -122,9 +129,6 @@
 
 <script>
 import { UPLOAD_ACTION, UPLOAD_NAME } from "@/config/env.js";
-
-import { mapState } from "vuex";
-
 export default {
   name: "member-center",
   data() {
@@ -133,17 +137,11 @@ export default {
       UPLOAD_NAME,
 
       my_info: {},
-      form: {
-        image: "",
-        realName: "",
-        address: "",
-      },
+      vip_info: {},
+      vip_order_list: [],
       loading: false,
-      selectedPaymentMethod: "wechat", // 默认选择微信支付
+      selectedPaymentMethod: "", // 默认选择微信支付
     };
-  },
-  computed: {
-    ...mapState([""]),
   },
   watch: {},
   created() {
@@ -155,7 +153,12 @@ export default {
 
     // 选择支付方式
     selectPaymentMethod(method) {
-      this.selectedPaymentMethod = method;
+      if (this.selectedPaymentMethod == method) {
+        this.selectedPaymentMethod = "";
+      } else {
+        this.selectedPaymentMethod = method;
+        this.do_submit();
+      }
     },
 
     // 立即开通VIP
@@ -176,56 +179,50 @@ export default {
 
     setView() {
       this.query_user();
-    },
-    query_user() {
       this.$api({
-        url: "/service.php",
+        url: "vip",
         method: "get",
-        data: {
-          action: "users_userInfo",
-        },
       }).then((res) => {
         if (res.code == 200) {
-          let data = res.data;
-          this.my_info = data;
-
-          this.form = {
-            image: data.image || "",
-            realName: data.realName || "",
-            address: data.address || "",
-          };
-
-          this.$store.commit("set_vuex_user", res.data);
+          this.vip_info = res.data;
         }
       });
+      // 充值订单
+      this.$api({
+        url: "vipOrderList",
+        method: "get",
+      }).then((res) => {
+        if (res.code == 200) {
+          this.vip_order_list = res.data;
+        }
+      });
+    },
+    query_user() {
+      this.my_info = Object.assign({}, this.vuex_user);
     },
 
     do_submit() {
       this.loading = true;
       this.$api({
-        url: "/service.php",
+        url: "vipOrder",
         method: "get",
-        data: {
-          action: "users_editInfo",
-          ...this.form,
-        },
       }).then((res) => {
         let { code, msg, data } = res;
         alert(res).then(() => {
           this.loading = false;
         });
         if (code == 200) {
-          this.setView();
+          // 生成订单号之后，跳转支付页面
+          // this.$router.push({
+          //   path: "/pay",
+          //   query: {
+          //     orderno: data.orderno,
+          //     amount: data.price,
+          //     title: this.vip_info.title,
+          //   },
+          // });
         }
       });
-    },
-
-    do_reset() {
-      this.form = {
-        image: this.my_info.image,
-        realName: "",
-        address: "",
-      };
     },
 
     //上传相关
@@ -234,7 +231,7 @@ export default {
       let { code, data, msg } = res;
       alert(res);
       if (code == 200) {
-        this.form.image = res.data;
+        this.my_info.image = res.data;
       }
     },
     upload_before_upload(file) {
@@ -602,7 +599,7 @@ export default {
               font-family: Microsoft YaHei;
               text-align: center;
               font-size: 16px;
-              color: #1E1E1E;
+              color: #1e1e1e;
 
               &:first-child {
                 text-align: left;

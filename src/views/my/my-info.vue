@@ -21,11 +21,7 @@
                   :on-success="upload_on_success"
                   :before-upload="upload_before_upload"
                 >
-                  <img
-                    v-if="form.image"
-                    :src="form.image"
-                    class="user-avatar"
-                  />
+                  <img v-if="my_info.image" :src="my_info.image" class="user-avatar" />
                   <img v-else src="@img/my/avatar.png" class="user-avatar" />
                 </el-upload>
               </div>
@@ -34,41 +30,41 @@
           <div class="item">
             <span class="text">昵称</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.realName" />
+              <el-input clearable type="text" v-model="my_info.name" />
             </span>
           </div>
           <div class="item">
             <span class="text">简介</span>
             <span class="info">
-              <el-input clearable type="textarea" rows="5" v-model="form.realName" />
+              <el-input clearable type="textarea" rows="5" v-model="my_info.info" />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">姓名</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.address" />
+              <el-input clearable type="text" v-model="my_info.real_name" />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">邮箱</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.address" />
+              <el-input clearable type="text" v-model="my_info.email" />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">公司</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.address" />
+              <el-input clearable type="text" v-model="my_info.company_title" />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">职位</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.address" />
+              <el-input clearable type="text" v-model="my_info.position" />
             </span>
             <span class="action"> </span>
           </div>
@@ -126,11 +122,6 @@ export default {
       UPLOAD_NAME,
 
       my_info: {},
-      form: {
-        image: "",
-        realName: "",
-        address: "",
-      },
       loading: false,
     };
   },
@@ -159,23 +150,13 @@ export default {
       this.query_user();
     },
     query_user() {
-      // this.$store.dispatch("query_user");
       this.$api({
-        url: "/service.php",
+        url: "getUserInfo",
         method: "get",
-        data: {
-          action: "users_userInfo",
-        },
       }).then((res) => {
         if (res.code == 200) {
           let data = res.data;
           this.my_info = data;
-
-          this.form = {
-            image: data.image || "",
-            realName: data.realName || "",
-            address: data.address || "",
-          };
 
           this.$store.commit("set_vuex_user", res.data);
         }
@@ -185,17 +166,12 @@ export default {
     do_submit() {
       this.loading = true;
       this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "users_editInfo",
-          ...this.form,
-        },
+        url: "updateUser",
+        method: "post",
+        data: this.my_info,
       }).then((res) => {
         let { code, msg, data } = res;
-        alert(res).then(() => {
-          this.loading = false;
-        });
+        this.loading = false;
         if (code == 200) {
           this.setView();
         }
@@ -354,7 +330,7 @@ export default {
   .btn-save {
     width: 468px;
     height: 50px;
-    background: #1958B0;
+    background: #1958b0;
     font-size: 16px;
     color: #fff;
   }

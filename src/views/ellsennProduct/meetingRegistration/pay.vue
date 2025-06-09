@@ -30,9 +30,7 @@
           </div>
           <div class="success-content">
             <div class="success-title">订单提交成功，去付款~</div>
-            <div class="success-subtitle">
-              请在48小时内完成支付，超时后订单将自动取消
-            </div>
+            <div class="success-subtitle">请在48小时内完成支付，超时后订单将自动取消</div>
           </div>
           <div class="success-amount">
             <span class="amount-label">应付金额：</span>
@@ -58,10 +56,7 @@
               @click="selectPayment('alipay')"
             >
               <div class="payment-radio">
-                <div
-                  class="radio-dot"
-                  v-if="selectedPayment === 'alipay'"
-                ></div>
+                <div class="radio-dot" v-if="selectedPayment === 'alipay'"></div>
               </div>
               <div class="payment-icon alipay-icon">
                 <img src="@/assets/img/pay/alipay.png" alt="支付宝" />
@@ -74,10 +69,7 @@
               @click="selectPayment('wechat')"
             >
               <div class="payment-radio">
-                <div
-                  class="radio-dot"
-                  v-if="selectedPayment === 'wechat'"
-                ></div>
+                <div class="radio-dot" v-if="selectedPayment === 'wechat'"></div>
               </div>
               <div class="payment-icon wechat-icon">
                 <img src="@/assets/img/pay/wechat.png" alt="微信支付" />
@@ -97,6 +89,10 @@
         </div>
       </div>
     </div>
+    <el-dialog :visible.sync="dialogVisible" width="15%" @close="dialogVisible = false">
+      <div class="qrcode-title">请使用微信扫码支付</div>
+      <img :src="wx_qrcode" alt="" style="width: 100%" />
+    </el-dialog>
   </div>
 </template>
 
@@ -109,6 +105,8 @@ export default {
   },
   data() {
     return {
+      dialogVisible: false,
+      wx_qrcode: "",
       order_no: this.$route.query.order_no,
       amount: this.$route.query.amount,
       title: this.$route.query.title,
@@ -120,6 +118,9 @@ export default {
         position: "",
       },
     };
+  },
+  destroyed() {
+    clearInterval(this.timer);
   },
   computed: {
     nav_option() {
@@ -144,17 +145,55 @@ export default {
     },
     handlePay() {
       // 这里可以调用支付接口
+      if (!this.selectedPayment) {
+        this.$message.warning("请选择支付方式");
+        return;
+      }
+      if (!this.order_no) {
+        this.$message.warning("订单号不能为空");
+        return;
+      }
+      if (this.selectedPayment == "alipay") {
+        // this.$api({
+        //   url: "alipay",
+        //   method: "post",
+        //   data: {
+        //     orderno: this.order_no,
+        //   },
+        // });
+      } else {
+        this.$api({
+          url: "pay",
+          method: "post",
+          data: {
+            order_no: this.order_no,
+            type: 1,
+          },
+        }).then((res) => {
+          if (res.code == 200) {
+            this.dialogVisible = true;
+            this.wx_qrcode = res.data.pay_qrcode;
+            // 每10秒轮询一次
+            this.timer = setInterval(() => {
+              this.getPayStatus();
+            }, 5000);
+          }
+        });
+      }
+    },
+    getPayStatus() {
       this.$api({
-        url: "createOrder",
-        method: "post",
-        data: {
-          orderno: this.order_no,
-          type: 1,
-        },
+        url: "checkPay",
+        method: "get",
+        data: { orderno: this.order_no, type: 1 },
       }).then((res) => {
         if (res.code == 200) {
-          this.$message.success("支付成功");
-          this.$router.push("/paySuccess");
+          if (res.data.is_pay) {
+            clearInterval(this.timer);
+            localStorage.setItem("hexiaoma", res.data.hexiaoma);
+            this.$message.success("支付成功");
+            this.$router.push("/paySuccess");
+          }
         }
       });
     },

@@ -37,7 +37,6 @@ const my_message = () =>
   import(/* webpackChunkName: "my-message" */ "@/views/my/my-message.vue");
 const account_settings = () =>
   import(/* webpackChunkName: "account-settings" */ "@/views/my/account-settings.vue");
-const change_password = () => import("@/views/my/change-password.vue");
 
 // 维深信息
 const researchReport = () => import("@/views/ellsennProduct/researchReport/index.vue"); // 研究报告
@@ -217,15 +216,6 @@ const routes = [
         component: member_center,
         meta: {
           title: "会员中心",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/change-password",
-        name: "change-password",
-        component: change_password,
-        meta: {
-          title: "修改密码",
           requireAuth: true,
         },
       },

@@ -1,6 +1,8 @@
 .rankings-page {
   min-height: 100vh;
   position: relative;
+  display: flex;
+  flex-direction: column;
 
   // 添加星空背景效果
   // &::before {
@@ -87,6 +89,7 @@
 
 // 主要内容区域
 .main-content {
+  flex: 1;
   padding: 20px 20px 40px;
   position: relative;
   z-index: 2;
@@ -183,99 +186,19 @@
 
     .ranking-image {
       position: relative;
-      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-      border-radius: 16px;
       margin: 28px;
       text-align: center;
       overflow: hidden;
 
-      // 添加装饰性背景
-      &::before {
-        content: "";
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(
-          circle,
-          rgba(255, 215, 0, 0.1) 0%,
-          transparent 70%
-        );
-        animation: rotate 20s linear infinite;
-      }
-
       .award-badge {
         position: relative;
         z-index: 2;
-        margin-bottom: 32px;
-
-        .crown-icon {
-          font-size: 48px;
-          margin-bottom: 16px;
-          filter: drop-shadow(0 4px 8px rgba(255, 215, 0, 0.5));
-        }
-
-        .award-title {
-          font-size: 24px;
-          font-weight: 700;
-          color: #fff;
-          margin: 0 0 16px 0;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .top-badge {
-          display: inline-block;
-          background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-          color: #333;
-          padding: 8px 20px;
-          border-radius: 20px;
-          font-weight: 600;
-          font-size: 14px;
-          box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
-        }
-      }
-
-      .service-boxes {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        position: relative;
-        z-index: 2;
-
-        .service-box {
-          background: rgba(255, 255, 255, 0.1);
-          border: 2px solid rgba(255, 215, 0, 0.3);
-          border-radius: 12px;
-          padding: 16px 24px;
-          backdrop-filter: blur(10px);
-          transition: all 0.3s ease;
-
-          &:hover {
-            border-color: rgba(255, 215, 0, 0.6);
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
-          }
-
-          .service-name {
-            color: #fff;
-            font-size: 16px;
-            font-weight: 500;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-          }
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
         }
       }
     }
-  }
-}
-
-// 旋转动画
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }

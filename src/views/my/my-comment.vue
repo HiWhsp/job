@@ -9,20 +9,15 @@
         <div class="mess-item" v-for="(item, index) in messList" :key="index">
           <div class="user-info">
             <div class="user-avatar">
-              <img
-                :src="item.avatar || '/static/default-avatar.png'"
-                alt="用户头像"
-              />
+              <img :src="item.image || '/static/default-avatar.png'" alt="用户头像" />
             </div>
             <div class="user-details">
               <div class="user-meta">
                 <div class="user-meta-left">
-                  <span class="user-id">{{
-                    item.userId || "15810593012"
-                  }}</span>
-                  <span class="comment-time">{{ item.dtTime }}</span>
+                  <span class="user-id">{{ item.name || "15810593012" }}</span>
+                  <span class="comment-time">{{ item.time }}</span>
                 </div>
-                <div class="delete-btn" @click="deleteComment(index)">
+                <div class="delete-btn" @click="deleteComment(item)">
                   <svg viewBox="0 0 24 24" width="16" height="16">
                     <path
                       fill="#999"
@@ -34,14 +29,25 @@
               <div class="comment-content">
                 {{ item.content }}
               </div>
-              <div class="related-paper" v-if="item.paperTitle">
-                <span class="paper-label">评论文章：</span>
-                <span class="paper-title">{{ item.paperTitle }}</span>
+              <div class="related-paper" v-if="item.title">
+                <span class="paper-label"
+                  >评论{{ item.type == 1 ? "报告" : "资讯/测评" }}：</span
+                >
+                <span class="paper-title">{{ item.title }}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <el-pagination
+        style="margin-top: 20px; text-align: center"
+        v-if="total > 0"
+        :total="total"
+        layout="prev, pager, next"
+        :current-page="pagination.page"
+        @current-change="handleCurrentChange"
+      />
+      <el-empty description="暂无数据" v-if="messList.length === 0" />
     </div>
   </div>
 </template>
@@ -54,30 +60,12 @@ export default {
   components: {},
   data() {
     return {
-      messList: [
-        {
-          feed_type: "留言",
-          dtTime: "2025-05-10 09:37:26",
-          content: "我们不应该将技术机器成功，而是把它看作一个机会",
-          userId: "15810593012",
-          avatar: "",
-          paperTitle:
-            "2025年全球关中国建筑信的技术挑战现状及未来展望（精装市场来源、循企活的及高点企业）",
-        },
-        {
-          feed_type: "留言",
-          dtTime: "2025-05-10 09:37:26",
-          content: "我们不应该将技术机器成功，而是把它看作一个机会",
-          userId: "15810593012",
-          avatar: "",
-          paperTitle:
-            "2025年全球关中国建筑信的技术挑战现状及未来展望（精装市场来源、循企活的及高点企业）",
-        },
-      ],
+      messList: [],
       pagination: {
         page: 1,
-        page_num: 10,
+        limit: 10,
       },
+      total: 0,
     };
   },
   computed: {
@@ -89,13 +77,38 @@ export default {
   },
   methods: {
     setView() {
-      this.$api("index_getFeedback", {
-        ...this.pagination,
+      this.$api({
+        url: "myComment",
+        method: "get",
+        data: this.pagination,
+      }).then((res) => {
+        if (res.code == 200) {
+          this.messList = res.data.list;
+          this.total = res.data.count;
+        }
       });
     },
-    deleteComment(index) {
-      // 删除评论逻辑
-      this.messList.splice(index, 1);
+    handleCurrentChange(page) {
+      this.pagination.page = page;
+      this.setView();
+    },
+    deleteComment(item) {
+      this.$confirm("确定删除该评论吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        // 删除评论逻辑
+        this.$api({
+          url: "delComment",
+          method: "get",
+          data: { id: item.id },
+        }).then((res) => {
+          if (res.code == 200) {
+            this.setView();
+          }
+        });
+      });
     },
   },
 };
@@ -212,7 +225,7 @@ export default {
         }
 
         .related-paper {
-          background: #F7F9FA;
+          background: #f7f9fa;
           padding: 8px 12px;
           border-radius: 6px;
           font-size: 12px;

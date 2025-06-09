@@ -6,16 +6,26 @@
         <div class="guests-grid">
           <div class="guest-card" v-for="(guest, index) in guestList" :key="index">
             <div class="guest-avatar">
-              <img :src="guest.avatar" :alt="guest.name" />
+              <img :src="guest.thumb" :alt="guest.name" />
             </div>
             <div class="guest-info">
               <div class="guest-name">{{ guest.name }}</div>
-              <div class="guest-company">{{ guest.company }}</div>
-              <div class="guest-position">{{ guest.position }}</div>
+              <div class="guest-company">{{ guest.info }}</div>
+              <div class="guest-position ellipsis-1">{{ guest.info }}</div>
             </div>
           </div>
         </div>
       </div>
+      <el-pagination
+        style="text-align: center; margin-top: 36px"
+        v-if="total > 0"
+        class="pagination"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="25"
+        layout="prev, pager, next"
+        :total="total"
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -25,49 +35,33 @@ export default {
   name: "ExternalCommittee",
   data() {
     return {
-      guestList: [
-        {
-          avatar: require("@img/ellsenn/wechat.png"),
-          name: "张薇",
-          position: "AI技术专家",
-          company:
-            "亚联网董事长，中国国际光电博览会副秘书长，深圳市增强现实技术应用协会副会长兼专家委会成员，深圳市光电行业协会副会长。职场生涯，深耕商业科技领域15年以上，作为妈妈，潜心研究教育方向。",
-        },
-        {
-          avatar: require("@img/ellsenn/wechat.png"),
-          name: "张薇",
-          position: "AI技术专家",
-          company: "科技创新有限公司",
-        },
-        {
-          avatar: require("@img/ellsenn/wechat.png"),
-          name: "张薇",
-          position: "AI技术专家",
-          company: "科技创新有限公司",
-        },
-        {
-          avatar: require("@img/ellsenn/wechat.png"),
-          name: "张薇",
-          position: "AI技术专家",
-          company: "科技创新有限公司",
-        },
-        {
-          avatar: require("@img/ellsenn/wechat.png"),
-          name: "张薇",
-          position: "AI技术专家",
-          company: "科技创新有限公司",
-        },
-        {
-          avatar: require("@img/ellsenn/wechat.png"),
-          name: "张薇",
-          position: "AI技术专家",
-          company:
-            "亚联网董事长，中国国际光电博览会副秘书长，深圳市增强现实技术应用协会副会长兼专家委会成员，深圳市光电行业协会副会长。职场生涯，深耕商业科技领域15年以上，作为妈妈，潜心研究教育方向。",
-        },
-      ],
+      guestList: [],
+      currentPage: 1,
+      total: 0,
     };
   },
-  methods: {},
+  mounted() {
+    this.getCompanyTeam();
+  },
+  methods: {
+    getCompanyTeam() {
+      this.$api({
+        url: "getCompanyMemberList",
+        method: "get",
+        data: {
+          page: this.currentPage,
+          limit: 25,
+        },
+      }).then((res) => {
+        this.guestList = res.data.list;
+        this.total = res.data.count;
+      });
+    },
+    handleCurrentChange(page) {
+      this.currentPage = page;
+      this.getCompanyTeam();
+    },
+  },
 };
 </script>
 
