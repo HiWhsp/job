@@ -232,6 +232,9 @@ export default {
     this.id = this.$route.query.id;
     this.getActivityDetails();
   },
+  destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
+  },
   methods: {
     // 会议报名
     meetingRegistration() {

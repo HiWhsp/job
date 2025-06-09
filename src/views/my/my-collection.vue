@@ -87,9 +87,9 @@ export default {
     },
     handleCancelCollect(item) {
       this.$api({
-        url: "addCollect",
+        url: "qxCollect",
         method: "post",
-        data: { p_id: item.id, status: 0, type: item.type },
+        data: { ids: item.id },
       }).then((res) => {
         if (res.code == 200) {
           this.setView();

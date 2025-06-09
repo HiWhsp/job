@@ -13,15 +13,28 @@
           <div class="user-details">
             <div class="phone-number">{{ my_info.mobile || "" }}</div>
             <div class="vip-status">
-              <span class="vip-badge">
-                <img src="@/assets/img/my/no-vip.png" alt="VIP会员" />
+              <span
+                class="vip-badge"
+                :class="{ 'vip-badge-active': my_info.is_vip == 1 }"
+              >
+                <img
+                  src="@/assets/img/my/no-vip.png"
+                  alt="VIP会员"
+                  v-if="my_info.is_vip == 0"
+                />
+                <img src="@/assets/img/my/vip-active.png" alt="VIP会员" v-else />
                 VIP会员
               </span>
-              <span class="password-tip">您还没有开通付费VIP会员哦～</span>
+              <span class="password-tip" v-if="my_info.is_vip == 0"
+                >您还没有开通付费VIP会员哦～</span
+              >
+              <span class="password-tip" v-else
+                >您已开通付费VIP会员 到期日期 {{ my_info.expiration_date }}</span
+              >
             </div>
           </div>
         </div>
-        <button class="open-vip-btn" @click="openVipNow">立即开通</button>
+        <!-- <button class="open-vip-btn" @click="openVipNow" v-if="my_info.is_vip == 0">立即开通</button> -->
       </div>
 
       <!-- VIP会员卡片 -->
@@ -82,7 +95,10 @@
           <div class="qr-code">
             <div class="qr-placeholder">
               <!-- 这里应该是实际的二维码 -->
-              <div class="qr-grid"></div>
+              <div class="qr-grid">
+                <img :src="pay_qrcode" alt="" width="100%" v-if="pay_qrcode" />
+                <span v-else>请选择支付方式</span>
+              </div>
             </div>
           </div>
           <div class="payment-info">
@@ -104,23 +120,23 @@
             <span>实付款</span>
             <span>订单状态</span>
           </div>
-          <template v-for="item in vip_order_list">
-            <div class="table-row" :key="item.id">
+          <div v-for="item in vip_order_list" :key="item.id" style="margin-bottom: 10px">
+            <div class="table-row">
               <div class="order-info">
                 <div class="order-number">订单号：{{ item.orderno }}</div>
                 <div class="order-time">下单时间：{{ item.pay_time }}</div>
               </div>
             </div>
-            <div class="table-row order-details" :key="item.id">
+            <div class="table-row order-details">
               <span class="product-name">{{ item.title }}</span>
               <span class="price">¥{{ item.price }}</span>
               <span class="quantity">{{ item.month_num }}</span>
               <span class="paid-amount">¥{{ item.price }}</span>
               <span class="status completed">{{
-                item.status == 1 ? "已完成" : "待支付"
+                item.status == 2 ? "已完成" : "待支付"
               }}</span>
             </div>
-          </template>
+          </div>
         </div>
       </div>
     </div>
@@ -135,7 +151,8 @@ export default {
     return {
       UPLOAD_ACTION,
       UPLOAD_NAME,
-
+      timer: null,
+      pay_qrcode: "",
       my_info: {},
       vip_info: {},
       vip_order_list: [],
@@ -144,9 +161,12 @@ export default {
     };
   },
   watch: {},
-  created() {
+  mounted() {
     this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000);
     this.setView();
+  },
+  destroyed() {
+    clearInterval(this.timer);
   },
   methods: {
     throttle_do_submit() {},
@@ -205,38 +225,51 @@ export default {
       this.loading = true;
       this.$api({
         url: "vipOrder",
-        method: "get",
+        method: "post",
       }).then((res) => {
         let { code, msg, data } = res;
         alert(res).then(() => {
           this.loading = false;
         });
         if (code == 200) {
-          // 生成订单号之后，跳转支付页面
-          // this.$router.push({
-          //   path: "/pay",
-          //   query: {
-          //     orderno: data.orderno,
-          //     amount: data.price,
-          //     title: this.vip_info.title,
-          //   },
-          // });
+          // 支付方式
+          if (this.selectedPaymentMethod == "wechat") {
+            this.$api({
+              url: "pay",
+              method: "post",
+              data: {
+                order_no: data.orderno,
+                type: 2,
+              },
+            }).then((res) => {
+              if (res.code == 200) {
+                this.pay_qrcode = res.data.pay_qrcode;
+                // 每5秒轮询一次
+                this.timer = setInterval(() => {
+                  this.getPayStatus(data.orderno);
+                }, 5000);
+              }
+            });
+          }
         }
       });
     },
-
-    //上传相关
-    upload_on_success(res, file) {
-      //console.log("上传结果", res);
-      let { code, data, msg } = res;
-      alert(res);
-      if (code == 200) {
-        this.my_info.image = res.data;
-      }
-    },
-    upload_before_upload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
-      return isLt2M;
+    getPayStatus(order_no) {
+      this.$api({
+        url: "checkVipPay",
+        method: "get",
+        data: {
+          orderno: order_no,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          if (res.data.is_pay) {
+            clearInterval(this.timer);
+            this.$message.success("支付成功");
+            this.setView();
+          }
+        }
+      });
     },
   },
 };
@@ -313,6 +346,9 @@ export default {
 
             .vip-badge {
               color: #6c6d6d;
+              &.vip-badge-active {
+                color: #d7ad70;
+              }
               padding: 2px 8px;
               border-radius: 12px;
               font-size: 12px;
@@ -494,7 +530,11 @@ export default {
             .qr-grid {
               width: 110px;
               height: 110px;
-              background: #000;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 14px;
+              color: #999;
             }
           }
         }
