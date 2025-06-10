@@ -11,7 +11,7 @@
         <!-- 课程头部信息 -->
         <div v-if="type === 'doc'" class="course-header">
           <div class="title">
-            <img src="@/static/home/file3.png"/>
+            <img src="@/static/home/file3.png" />
             <span>{{ detail.title }}</span>
           </div>
           <div class="action">
@@ -21,21 +21,28 @@
             </div>
             <div class="actions">
               <div class="share pointer" @click="collect">
-                <img v-if="detail.is_collect === 0" alt="" src="@/static/common/share0.png">
-                <img v-if="detail.is_collect === 1" alt="" src="@/static/common/share1.png">
+                <img
+                  v-if="detail.is_collect === 0"
+                  alt=""
+                  src="@/static/common/share0.png"
+                />
+                <img
+                  v-if="detail.is_collect === 1"
+                  alt=""
+                  src="@/static/common/share1.png"
+                />
                 <span>收藏</span>
               </div>
-              <el-button type="primary" @click="startLearn">开始学习
-              </el-button>
+              <el-button type="primary" @click="startLearn">开始学习 </el-button>
             </div>
           </div>
         </div>
 
         <div v-if="type === 'video'" class="course-header2">
-          <img :src="detail.thumb_url" alt="" class="left">
+          <img :src="detail.thumb_url" alt="" class="left" />
           <div class="right">
             <div class="title">
-              <img src="@/static/home/file2.png"/>
+              <img src="@/static/home/file2.png" />
               <span>{{ detail.title }}</span>
             </div>
             <div class="action">
@@ -45,12 +52,19 @@
               </div>
               <div class="actions">
                 <div class="share pointer" @click="collect">
-                  <img v-if="detail.is_collect === 0" alt="" src="@/static/common/share0.png">
-                  <img v-if="detail.is_collect === 1" alt="" src="@/static/common/share1.png">
+                  <img
+                    v-if="detail.is_collect === 0"
+                    alt=""
+                    src="@/static/common/share0.png"
+                  />
+                  <img
+                    v-if="detail.is_collect === 1"
+                    alt=""
+                    src="@/static/common/share1.png"
+                  />
                   <span>收藏</span>
                 </div>
-                <el-button type="primary" @click="startLearn">开始学习
-                </el-button>
+                <el-button type="primary" @click="startLearn">开始学习 </el-button>
               </div>
             </div>
           </div>
@@ -64,6 +78,7 @@
                 <h3>课程介绍</h3>
                 <div v-html="detail.content"></div>
               </div>
+              <!-- 文档类型 -->
               <div v-if="type === 'doc'" class="section">
                 <h3>目录</h3>
                 <div class="tab-text">
@@ -73,47 +88,78 @@
                 </div>
                 <el-collapse accordion>
                   <el-collapse-item
-                      v-for="(item, index) in tableData"
-                      :key="index"
-                      :name="index.toString()"
+                    v-for="(item, index) in tableData"
+                    :key="index"
+                    :name="index.toString()"
                   >
                     <template slot="title">
                       <div class="index-collapse">{{ item.title }}</div>
-                      <div class="progress-collapse">{{
-                          item.my_course_record ? item.my_course_record.schedule : 0
+                      <div class="progress-collapse">
+                        {{
+                          item.my_course_record ? item.my_course_record.schedule || 0 : 0
                         }}%
                       </div>
                       <div class="action-collapse">
-                        <span @click="goUrl({url: '/pdf-viewer', query: {id: id, index}})">学习</span>
+                        <span
+                          @click="
+                            goUrl({
+                              url: '/pdf-viewer',
+                              query: { id: id, index },
+                            })
+                          "
+                          >学习</span
+                        >
                         <span>考试</span>
                       </div>
                     </template>
-                    <div v-if="Object.keys(item.test_question || {}).length" class="catalog-detail">
+                    <div
+                      v-if="Object.keys(item.test_question || {}).length"
+                      class="catalog-detail"
+                    >
                       <div class="title">
                         <p>{{ item.test_question.title }}</p>
-                        <div class="start">进行中</div>
+                        <div class="start">{{ status(item) }}</div>
                       </div>
                       <div class="catalog-wrap">
                         <div class="item">
-                          <span>考试次数：</span><span>{{ item.test_question.can_test_num }}次</span>
+                          <span>考试次数：</span
+                          ><span>{{ item.test_question.can_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>已考次数：</span><span>{{ item.test_question.has_test_num }}次</span>
+                          <span>已考次数：</span
+                          ><span>{{ item.test_question.has_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>剩余次数：</span><span>{{ item.test_question.limit_test_num }}次</span>
+                          <span>剩余次数：</span
+                          ><span>{{ item.test_question.limit_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>考试总分：</span><span>{{ item.test_question.total_point }}分</span>
+                          <span>考试总分：</span
+                          ><span>{{ item.test_question.total_point }}分</span>
                         </div>
                         <div class="item">
-                          <span>考试时长：</span><span>{{ item.test_question.test_time }}分钟</span>
+                          <span>考试时长：</span
+                          ><span>{{ item.test_question.test_time }}分钟</span>
                         </div>
                       </div>
                       <div class="action">
-                        <p>考试起止时间：{{ item.test_question.start_time }} 到 {{ item.test_question.end_time }}</p>
-                        <el-button type="primary"
-                                   @click="goUrl({url: '/my-exam-start', query: {id: item.test_question_id}})">开始考试
+                        <p>
+                          考试起止时间：{{ item.test_question.start_time }} 到
+                          {{ item.test_question.end_time }}
+                        </p>
+                        <el-button
+                          type="primary"
+                          @click="
+                            goUrl({
+                              url: '/my-exam-start',
+                              query: {
+                                question_id: item.test_question_id,
+                                course_id: item.course_id,
+                                course_list_id: item.id,
+                              },
+                            })
+                          "
+                          >开始考试
                         </el-button>
                       </div>
                     </div>
@@ -121,6 +167,8 @@
                   </el-collapse-item>
                 </el-collapse>
               </div>
+
+              <!-- 视频类型 -->
               <div v-if="type === 'video'" class="section">
                 <h3>目录</h3>
                 <div class="tab-text">
@@ -131,50 +179,81 @@
                 </div>
                 <el-collapse accordion>
                   <el-collapse-item
-                      v-for="(item, index) in tableData"
-                      :key="index"
-                      :name="index.toString()"
+                    v-for="(item, index) in tableData"
+                    :key="index"
+                    :name="index.toString()"
                   >
                     <template slot="title">
                       <div class="index-collapse">{{ item.title }}</div>
                       <div class="video-time">
-                        <img alt="" src="@/static/common/video.png">
+                        <img alt="" src="@/static/common/video.png" />
                         <span>{{ item.learn_time }}</span>
                       </div>
-                      <div class="progress-collapse">{{
-                          item.my_course_record ? item.my_course_record.schedule : 0
+                      <div class="progress-collapse">
+                        {{
+                          item.my_course_record ? item.my_course_record.schedule || 0 : 0
                         }}%
                       </div>
-                      <div class="action-collapse"><span
-                          @click="goUrl({url: '/video-viewer', query: {id: id, index}})">学习</span><span>考试</span>
+                      <div class="action-collapse">
+                        <span
+                          @click="
+                            goUrl({
+                              url: '/video-viewer',
+                              query: { id: id, index },
+                            })
+                          "
+                          >学习</span
+                        ><span>考试</span>
                       </div>
                     </template>
-                    <div v-if="Object.keys(item.test_question || {}).length" class="catalog-detail">
+                    <div
+                      v-if="Object.keys(item.test_question || {}).length"
+                      class="catalog-detail"
+                    >
                       <div class="title">
                         <p>{{ item.test_question.title }}</p>
-                        <div class="start">进行中</div>
+                        <div class="start">{{ status(item) }}</div>
                       </div>
                       <div class="catalog-wrap">
                         <div class="item">
-                          <span>考试次数：</span><span>{{ item.test_question.can_test_num }}次</span>
+                          <span>考试次数：</span
+                          ><span>{{ item.test_question.can_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>已考次数：</span><span>{{ item.test_question.has_test_num }}次</span>
+                          <span>已考次数：</span
+                          ><span>{{ item.test_question.has_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>剩余次数：</span><span>{{ item.test_question.limit_test_num }}次</span>
+                          <span>剩余次数：</span
+                          ><span>{{ item.test_question.limit_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>考试总分：</span><span>{{ item.test_question.total_point }}分</span>
+                          <span>考试总分：</span
+                          ><span>{{ item.test_question.total_point }}分</span>
                         </div>
                         <div class="item">
-                          <span>考试时长：</span><span>{{ item.test_question.test_time }}分钟</span>
+                          <span>考试时长：</span
+                          ><span>{{ item.test_question.test_time }}分钟</span>
                         </div>
                       </div>
                       <div class="action">
-                        <p>考试起止时间：{{ item.test_question.start_time }} 到 {{ item.test_question.end_time }}</p>
-                        <el-button type="primary"
-                                   @click="goUrl({url: '/my-exam-start', query: {id: item.test_question_id}})">开始考试
+                        <p>
+                          考试起止时间：{{ item.test_question.start_time }} 到
+                          {{ item.test_question.end_time }}
+                        </p>
+                        <el-button
+                          type="primary"
+                          @click="
+                            goUrl({
+                              url: '/my-exam-start',
+                              query: {
+                                question_id: item.test_question_id,
+                                course_id: item.course_id,
+                                course_list_id: item.id,
+                              },
+                            })
+                          "
+                          >开始考试
                         </el-button>
                       </div>
                     </div>
@@ -182,12 +261,16 @@
                   </el-collapse-item>
                 </el-collapse>
               </div>
-              <div v-for="(item, index) in detail.test_question_list" :key="index" class="section">
+              <div
+                v-for="(item, index) in detail.test_question_list"
+                :key="index"
+                class="section"
+              >
                 <h3>{{ item.title }}</h3>
                 <div class="catalog-list">
                   <div class="title">
                     <p>{{ item.title }}</p>
-                    <div class="start">进行中</div>
+                    <div class="start">{{ status(item) }}</div>
                   </div>
                   <div class="catalog-wrap">
                     <div class="item">
@@ -208,7 +291,18 @@
                   </div>
                   <div class="action">
                     <p>考试起止时间：{{ item.start_time }} 到 {{ item.end_time }}</p>
-                    <el-button type="primary" @click="goUrl({url: '/my-exam-start', query: {id: item.id}})">开始考试
+                    <el-button
+                      type="primary"
+                      @click="
+                        goUrl({
+                          url: '/my-exam-start',
+                          query: {
+                            question_id: item.id,
+                            course_id: detail.id,
+                          },
+                        })
+                      "
+                      >开始考试
                     </el-button>
                   </div>
                 </div>
@@ -224,47 +318,78 @@
                 </div>
                 <el-collapse accordion>
                   <el-collapse-item
-                      v-for="(item, index) in tableData"
-                      :key="index"
-                      :name="index.toString()"
+                    v-for="(item, index) in tableData"
+                    :key="index"
+                    :name="index.toString()"
                   >
                     <template slot="title">
                       <div class="index-collapse">{{ item.title }}</div>
-                      <div class="progress-collapse">{{
-                          item.my_course_record ? item.my_course_record.schedule : 0
+                      <div class="progress-collapse">
+                        {{
+                          item.my_course_record ? item.my_course_record.schedule || 0 : 0
                         }}%
                       </div>
                       <div class="action-collapse">
-                        <span @click="goUrl({url: '/pdf-viewer', query: {id: id, index}})">学习</span>
+                        <span
+                          @click="
+                            goUrl({
+                              url: '/pdf-viewer',
+                              query: { id: id, index },
+                            })
+                          "
+                          >学习</span
+                        >
                         <span>考试</span>
                       </div>
                     </template>
-                    <div v-if="Object.keys(item.test_question || {}).length" class="catalog-detail">
+                    <div
+                      v-if="Object.keys(item.test_question || {}).length"
+                      class="catalog-detail"
+                    >
                       <div class="title">
                         <p>{{ item.test_question.title }}</p>
-                        <div class="start">进行中</div>
+                        <div class="start">{{ status(item) }}</div>
                       </div>
                       <div class="catalog-wrap">
                         <div class="item">
-                          <span>考试次数：</span><span>{{ item.test_question.can_test_num }}次</span>
+                          <span>考试次数：</span
+                          ><span>{{ item.test_question.can_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>已考次数：</span><span>{{ item.test_question.has_test_num }}次</span>
+                          <span>已考次数：</span
+                          ><span>{{ item.test_question.has_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>剩余次数：</span><span>{{ item.test_question.limit_test_num }}次</span>
+                          <span>剩余次数：</span
+                          ><span>{{ item.test_question.limit_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>考试总分：</span><span>{{ item.test_question.total_point }}分</span>
+                          <span>考试总分：</span
+                          ><span>{{ item.test_question.total_point }}分</span>
                         </div>
                         <div class="item">
-                          <span>考试时长：</span><span>{{ item.test_question.test_time }}分钟</span>
+                          <span>考试时长：</span
+                          ><span>{{ item.test_question.test_time }}分钟</span>
                         </div>
                       </div>
                       <div class="action">
-                        <p>考试起止时间：{{ item.test_question.start_time }} 到 {{ item.test_question.end_time }}</p>
-                        <el-button type="primary"
-                                   @click="goUrl({url: '/my-exam-start', query: {id: item.test_question_id}})">开始考试
+                        <p>
+                          考试起止时间：{{ item.test_question.start_time }} 到
+                          {{ item.test_question.end_time }}
+                        </p>
+                        <el-button
+                          type="primary"
+                          @click="
+                            goUrl({
+                              url: '/my-exam-start',
+                              query: {
+                                question_id: item.test_question_id,
+                                course_id: id,
+                                course_list_id: item.id,
+                              },
+                            })
+                          "
+                          >开始考试
                         </el-button>
                       </div>
                     </div>
@@ -282,50 +407,81 @@
                 </div>
                 <el-collapse accordion>
                   <el-collapse-item
-                      v-for="(item, index) in tableData"
-                      :key="index"
-                      :name="index.toString()"
+                    v-for="(item, index) in tableData"
+                    :key="index"
+                    :name="index.toString()"
                   >
                     <template slot="title">
                       <div class="index-collapse">{{ item.title }}</div>
                       <div class="video-time">
-                        <img alt="" src="@/static/common/video.png">
+                        <img alt="" src="@/static/common/video.png" />
                         <span>{{ item.learn_time }}</span>
                       </div>
-                      <div class="progress-collapse">{{
-                          item.my_course_record ? item.my_course_record.schedule : 0
+                      <div class="progress-collapse">
+                        {{
+                          item.my_course_record ? item.my_course_record.schedule || 0 : 0
                         }}%
                       </div>
-                      <div class="action-collapse"><span
-                          @click="goUrl({url: '/video-viewer', query: {id: id, index}})">学习</span><span>考试</span>
+                      <div class="action-collapse">
+                        <span
+                          @click="
+                            goUrl({
+                              url: '/video-viewer',
+                              query: { id: id, index },
+                            })
+                          "
+                          >学习</span
+                        ><span>考试</span>
                       </div>
                     </template>
-                    <div v-if="Object.keys(item.test_question || {}).length" class="catalog-detail">
+                    <div
+                      v-if="Object.keys(item.test_question || {}).length"
+                      class="catalog-detail"
+                    >
                       <div class="title">
                         <p>{{ item.test_question.title }}</p>
-                        <div class="start">进行中</div>
+                        <div class="start">{{ status(item) }}</div>
                       </div>
                       <div class="catalog-wrap">
                         <div class="item">
-                          <span>考试次数：</span><span>{{ item.test_question.can_test_num }}次</span>
+                          <span>考试次数：</span
+                          ><span>{{ item.test_question.can_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>已考次数：</span><span>{{ item.test_question.has_test_num }}次</span>
+                          <span>已考次数：</span
+                          ><span>{{ item.test_question.has_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>剩余次数：</span><span>{{ item.test_question.limit_test_num }}次</span>
+                          <span>剩余次数：</span
+                          ><span>{{ item.test_question.limit_test_num }}次</span>
                         </div>
                         <div class="item">
-                          <span>考试总分：</span><span>{{ item.test_question.total_point }}分</span>
+                          <span>考试总分：</span
+                          ><span>{{ item.test_question.total_point }}分</span>
                         </div>
                         <div class="item">
-                          <span>考试时长：</span><span>{{ item.test_question.test_time }}分钟</span>
+                          <span>考试时长：</span
+                          ><span>{{ item.test_question.test_time }}分钟</span>
                         </div>
                       </div>
                       <div class="action">
-                        <p>考试起止时间：{{ item.test_question.start_time }} 到 {{ item.test_question.end_time }}</p>
-                        <el-button type="primary"
-                                   @click="goUrl({url: '/my-exam-start', query: {id: item.test_question_id}})">开始考试
+                        <p>
+                          考试起止时间：{{ item.test_question.start_time }} 到
+                          {{ item.test_question.end_time }}
+                        </p>
+                        <el-button
+                          type="primary"
+                          @click="
+                            goUrl({
+                              url: '/my-exam-start',
+                              query: {
+                                question_id: item.test_question_id,
+                                course_id: item.course_id,
+                                course_list_id: item.id,
+                              },
+                            })
+                          "
+                          >开始考试
                         </el-button>
                       </div>
                     </div>
@@ -335,12 +491,16 @@
               </div>
             </el-tab-pane>
             <el-tab-pane label="关联考试" name="exam">
-              <div v-for="(item, index) in detail.test_question_list" :key="index" class="section">
+              <div
+                v-for="(item, index) in detail.test_question_list"
+                :key="index"
+                class="section"
+              >
                 <h3>{{ item.title }}</h3>
                 <div class="catalog-list">
                   <div class="title">
                     <p>{{ item.title }}</p>
-                    <div class="start">进行中</div>
+                    <div class="start">{{ status(item) }}</div>
                   </div>
                   <div class="catalog-wrap">
                     <div class="item">
@@ -361,7 +521,15 @@
                   </div>
                   <div class="action">
                     <p>考试起止时间：{{ item.start_time }} 到 {{ item.end_time }}</p>
-                    <el-button type="primary" @click="goUrl({url: '/my-exam-start', query: {id: item.id}})">开始考试
+                    <el-button
+                      type="primary"
+                      @click="
+                        goUrl({
+                          url: '/my-exam-start',
+                          query: { question_id: item.id, course_id: detail.id },
+                        })
+                      "
+                      >开始考试
                     </el-button>
                   </div>
                 </div>
@@ -373,15 +541,19 @@
       <!-- 右侧推荐课程 -->
       <div class="main-right">
         <div class="recommend-header">
-          <img alt="" src="@/static/account/tuijian.png">
+          <img alt="" src="@/static/account/tuijian.png" />
           <span>推荐课程</span>
         </div>
         <div class="recommend-list">
-          <div v-for="(item, index) in hotList" :key="index" class="recommend-item pointer"
-               @click="goUrl({url: '/course-detail', query: {id: item.id}})">
+          <div
+            v-for="(item, index) in hotList"
+            :key="index"
+            class="recommend-item pointer"
+            @click="goUrl({ url: '/course-detail', query: { id: item.id } })"
+          >
             <div class="title">
-              <img v-if="item.course_type === 1" alt="" src="@/static/home/file3.png">
-              <img v-if="item.course_type === 2" alt="" src="@/static/home/file2.png">
+              <img v-if="item.course_type === 1" alt="" src="@/static/home/file3.png" />
+              <img v-if="item.course_type === 2" alt="" src="@/static/home/file2.png" />
               <span class="ellipsis-1">{{ item.title }}</span>
             </div>
             <div class="date">{{ item.created_at }}</div>
@@ -394,13 +566,13 @@
 
 <script>
 export default {
-  name: 'course-detail',
+  name: "course-detail",
   data() {
     return {
-      id: '', // 课程id
-      type: 'video', // 课程类型
+      id: "", // 课程id
+      type: "video", // 课程类型
       detail: {}, // 课程详情
-      tableData: [],// 课程目录
+      tableData: [], // 课程目录
       hotList: [], // 热门课程
     };
   },
@@ -408,84 +580,100 @@ export default {
     "$route.query.id"() {
       this.id = this.$route.query.id;
       this.setView();
-    }
+    },
   },
   mounted() {
     this.id = this.$route.query.id;
     this.setView();
   },
   methods: {
+    status(item) {
+      // 根据当前时间判断是否开始结束 取值 item.start_time 和 item.end_time / 或者 item.test_question.start_time 和 item.test_question.end_time
+      const now = new Date();
+      const start_time = new Date(item.start_time || item.test_question.start_time);
+      const end_time = new Date(item.end_time || item.test_question.end_time);
+      if (now >= start_time && now <= end_time) {
+        return "进行中";
+      }
+      if (now < start_time) {
+        return "未开始";
+      }
+      if (now > end_time) {
+        return "已结束";
+      }
+    },
+
     setView() {
       this.$api({
-        url: 'getCourse',
-        method: 'get',
+        url: "getCourse",
+        method: "get",
         data: {
-          id: this.id
-        }
-      }).then(res => {
+          id: this.id,
+        },
+      }).then((res) => {
         if (res.code == 200) {
           this.detail = res.data;
-          this.type = res.data.course_type === 2 ? 'video' : 'doc';
+          this.type = res.data.course_type === 2 ? "video" : "doc";
           this.tableData = res.data.course_list;
         }
-      })
+      });
       this.$api({
-        url: 'getCourseList',
-        method: 'get',
+        url: "getCourseList",
+        method: "get",
         data: {
           page: 1,
           limit: 5,
           course_type: 0,
-        }
-      }).then(res => {
+        },
+      }).then((res) => {
         if (res.code == 200) {
           this.hotList = res.data.list;
         }
-      })
+      });
     },
     // 收藏
     collect() {
       this.$api({
-        url: 'addCollect',
-        method: 'post',
+        url: "addCollect",
+        method: "post",
         data: {
           course_id: this.id,
-          status: this.detail.is_collect === 0 ? 1 : 2
-        }
-      }).then(res => {
+          status: this.detail.is_collect === 0 ? 1 : 2,
+        },
+      }).then((res) => {
         if (res.code == 200) {
           this.$message.success(res.msg);
           this.detail.is_collect = this.detail.is_collect === 0 ? 1 : 0;
         }
-      })
+      });
     },
     // 开始学习
     startLearn() {
       this.$api({
-        url: 'addMyCourses',
-        method: 'post',
+        url: "addMyCourses",
+        method: "post",
         data: {
-          course_id: this.id
-        }
-      }).then(res => {
+          course_id: this.id,
+        },
+      }).then((res) => {
         if (res.code == 200) {
-          this.$message.success('已加入学习队列');
+          this.$message.success("已加入学习队列");
         }
-      })
+      });
     },
     goUrl(item) {
       this.$router.push({
         path: item.url,
-        query: item.query
+        query: item.query,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .course-detail-page {
-  background-color: #F5F6F6;
+  background-color: #f5f6f6;
   padding-bottom: 60px;
 
   .nav-bar {
@@ -509,7 +697,7 @@ export default {
     padding: 40px;
     width: 904px;
     height: 158px;
-    background: #FFFFFF;
+    background: #ffffff;
 
     .title {
       display: flex;
@@ -531,7 +719,7 @@ export default {
 
     .info {
       font-size: 12px;
-      color: #4E5969;
+      color: #4e5969;
 
       span {
         margin-right: 10px;
@@ -556,7 +744,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 16px;
-          color: #696D80;
+          color: #696d80;
         }
       }
 
@@ -564,7 +752,7 @@ export default {
         margin-left: 10px;
         width: 94px;
         height: 34px;
-        background: #175E3D;
+        background: #175e3d;
         border-radius: 8px;
         border: none;
       }
@@ -577,14 +765,13 @@ export default {
     padding: 40px;
     width: 904px;
     height: 232px;
-    background: #FFFFFF;
+    background: #ffffff;
 
     .left {
       width: 264px;
       height: 149px;
       margin-right: 24px;
     }
-
 
     .right {
       flex: 1;
@@ -612,7 +799,7 @@ export default {
 
       .info {
         font-size: 12px;
-        color: #4E5969;
+        color: #4e5969;
 
         span {
           margin-right: 10px;
@@ -637,7 +824,7 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 16px;
-            color: #696D80;
+            color: #696d80;
           }
         }
 
@@ -645,14 +832,12 @@ export default {
           margin-left: 10px;
           width: 94px;
           height: 34px;
-          background: #175E3D;
+          background: #175e3d;
           border-radius: 8px;
           border: none;
         }
       }
     }
-
-
   }
 
   .main-content {
@@ -697,12 +882,12 @@ export default {
           width: 822px;
           height: 68px;
           line-height: 68px;
-          background: #F5F6F6;
+          background: #f5f6f6;
           border-radius: 8px 8px 8px 8px;
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 14px;
-          color: #77798D;
+          color: #77798d;
           padding: 0 21px;
 
           .tab-item1 {
@@ -730,11 +915,11 @@ export default {
           padding-left: 10px;
 
           &:before {
-            content: '';
+            content: "";
             display: block;
             width: 3px;
             height: 18px;
-            background: #175E3D;
+            background: #175e3d;
             border-radius: 60px 60px 60px 60px;
             position: absolute;
             top: 5px;
@@ -752,7 +937,7 @@ export default {
         .catalog-detail {
           width: 730px;
           height: 169px;
-          background: #F5F6F6;
+          background: #f5f6f6;
           margin-left: 100px;
           padding: 25px;
 
@@ -772,14 +957,14 @@ export default {
               height: 21px;
               text-align: center;
               line-height: 21px;
-              background-image: url('../../static/common/start.png');
+              background-image: url("../../static/common/start.png");
               background-repeat: no-repeat;
               background-size: 100% 100%;
 
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: 400;
               font-size: 12px;
-              color: #FFFFFF;
+              color: #ffffff;
             }
           }
 
@@ -799,7 +984,7 @@ export default {
               }
 
               span:last-child {
-                color: #175E3D;
+                color: #175e3d;
               }
             }
           }
@@ -816,7 +1001,7 @@ export default {
             .el-button {
               width: 122px;
               height: 31px;
-              background: #175E3D;
+              background: #175e3d;
               border-radius: 223px 223px 223px 223px;
               border: none;
               padding: 0;
@@ -828,7 +1013,7 @@ export default {
         .catalog-list {
           height: 150px;
           padding-bottom: 25px;
-          border-bottom: 1px solid #E6E6E6;
+          border-bottom: 1px solid #e6e6e6;
 
           .title {
             display: flex;
@@ -846,14 +1031,14 @@ export default {
               height: 25px;
               text-align: center;
               line-height: 25px;
-              background-image: url('../../static/common/start.png');
+              background-image: url("../../static/common/start.png");
               background-repeat: no-repeat;
               background-size: 100% 100%;
 
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: 400;
               font-size: 12px;
-              color: #FFFFFF;
+              color: #ffffff;
             }
           }
 
@@ -873,7 +1058,7 @@ export default {
               }
 
               span:last-child {
-                color: #175E3D;
+                color: #175e3d;
               }
             }
           }
@@ -890,7 +1075,7 @@ export default {
             .el-button {
               width: 158px;
               height: 41px;
-              background: #175E3D;
+              background: #175e3d;
               border-radius: 223px 223px 223px 223px;
               border: none;
               padding: 0;
@@ -946,7 +1131,7 @@ export default {
 
   .main-right {
     width: 276px;
-    background: #FFFFFF;
+    background: #ffffff;
 
     .recommend-header {
       height: 60px;
@@ -955,10 +1140,9 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 18px;
-      color: #3D3D3D;
+      color: #3d3d3d;
       padding-left: 20px;
-      border-bottom: 1px dashed #D8D8D8;
-
+      border-bottom: 1px dashed #d8d8d8;
 
       img {
         width: 20px;
@@ -970,7 +1154,7 @@ export default {
     .recommend-item {
       margin: 0 21px;
       height: 80px;
-      border-bottom: 1px solid #E2E2E2;
+      border-bottom: 1px solid #e2e2e2;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -983,7 +1167,7 @@ export default {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 14px;
-        color: #1E1E1E;
+        color: #1e1e1e;
         display: flex;
 
         img {
@@ -1002,7 +1186,7 @@ export default {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 12px;
-        color: #4E5969;
+        color: #4e5969;
       }
     }
   }

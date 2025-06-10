@@ -1,11 +1,11 @@
 <template>
-  <div style="padding-bottom: 50px;">
+  <div style="padding-bottom: 50px">
     <!--    操作区-->
     <div class="index-box-first-content flex">
       <div class="banner">
         <el-carousel height="100%">
           <el-carousel-item v-for="(it, i) in index_banners" :key="i">
-            <img :src="it.image" alt="banner"/>
+            <img :src="it.image" alt="banner" />
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -15,18 +15,29 @@
     <div class="card main">
       <div class="title">
         <h2>最近学习</h2>
-        <img alt="" src="@/static/home/card-img.png">
+        <img alt="" src="@/static/home/card-img.png" />
       </div>
       <div class="content">
         <div v-for="(item, index) in recent_list" :key="index" class="item">
           <div class="left">
             <div class="tit">
-              <img v-if="item.course_info.course_type == 1" alt="" src="@/static/home/file3.png">
-              <img v-if="item.course_info.course_type == 2" alt="" src="@/static/home/file2.png">
+              <img
+                v-if="item.course_info.course_type == 1"
+                alt=""
+                src="@/static/home/file3.png"
+              />
+              <img
+                v-if="item.course_info.course_type == 2"
+                alt=""
+                src="@/static/home/file2.png"
+              />
               <span>{{ item.course_info.title }}</span>
             </div>
             <div class="progress">
-              <el-progress :format="format" :percentage="item.course_info.learn_time"></el-progress>
+              <el-progress
+                :format="format"
+                :percentage="item.course_schedule.split('%')[0] || 0"
+              ></el-progress>
             </div>
             <div class="desc">{{ item.course_info.description }}</div>
           </div>
@@ -40,7 +51,7 @@
     <div class="card main">
       <div class="title">
         <h2>文档类课程</h2>
-        <img alt="" src="@/static/home/card-img.png">
+        <img alt="" src="@/static/home/card-img.png" />
       </div>
       <div class="content">
         <div class="item2" v-if="pdf_list.length">
@@ -53,8 +64,13 @@
             <div class="btn" @click="toProduct(pdf_list[0])">立即学习</div>
           </div>
           <div class="right">
-            <div class="li-item" v-for="(item, index) in pdf_list" :key="index" @click="toProduct(item)">
-              <img alt="" :src="item.thumb_url">
+            <div
+              class="li-item"
+              v-for="(item, index) in pdf_list"
+              :key="index"
+              @click="toProduct(item)"
+            >
+              <img alt="" :src="item.thumb_url" />
               <div class="info">
                 <p class="text">{{ item.title }}</p>
                 <p class="desc ellipsis-1">{{ item.description }}</p>
@@ -70,12 +86,12 @@
     <div class="card main">
       <div class="title">
         <h2>视频类课程</h2>
-        <img alt="" src="@/static/home/card-img.png">
+        <img alt="" src="@/static/home/card-img.png" />
       </div>
       <div class="content">
         <div class="item3" v-if="video_list.length">
           <div class="left pointer" @click="toProduct(video_list[0])">
-            <img alt="" :src="video_list[0].thumb_url">
+            <img alt="" :src="video_list[0].thumb_url" />
             <div class="info">
               <div class="tit">
                 <span>{{ video_list[0].title }}</span>
@@ -84,12 +100,17 @@
             </div>
           </div>
           <div class="right">
-            <div class="li-item pointer" v-for="(item, index) in video_list" :key="index" @click="toProduct(item)">
+            <div
+              class="li-item pointer"
+              v-for="(item, index) in video_list"
+              :key="index"
+              @click="toProduct(item)"
+            >
               <div class="info">
                 <p class="text">{{ item.title }}</p>
                 <p class="desc ellipsis-1">{{ item.description }}</p>
               </div>
-              <img alt="" :src="item.thumb_url">
+              <img alt="" :src="item.thumb_url" />
             </div>
           </div>
         </div>
@@ -100,7 +121,7 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "index",
@@ -117,8 +138,8 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.userInfo,
-      index_banners: state => state.index_banners
+      userInfo: (state) => state.userInfo,
+      index_banners: (state) => state.index_banners,
     }),
   },
   mounted() {
@@ -132,7 +153,7 @@ export default {
         method: "get",
       }).then((res) => {
         this.recent_list = res.data;
-      })
+      });
       // 文档类课程
       this.$api({
         url: "getCourseList",
@@ -140,11 +161,11 @@ export default {
         data: {
           page: 1,
           limit: 4,
-          course_type: 1
-        }
+          course_type: 1,
+        },
       }).then((res) => {
         this.pdf_list = res.data.list;
-      })
+      });
       // 视频类课程
       this.$api({
         url: "getCourseList",
@@ -152,24 +173,23 @@ export default {
         data: {
           page: 1,
           limit: 3,
-          course_type: 2
-        }
+          course_type: 2,
+        },
       }).then((res) => {
         this.video_list = res.data.list;
-      })
+      });
     },
     format(percentage) {
       return `已学习${percentage}%`;
     },
     toProduct(item) {
-      const id = item.course_id || item.id
+      const id = item.course_id || item.id;
       this.$router.push({
-        path: '/course-detail?id=' + id
+        path: "/course-detail?id=" + id,
       });
     },
   },
-}
-
+};
 </script>
 
 <style lang="less" scoped>
@@ -188,7 +208,7 @@ export default {
     width: 100%;
     height: 550px;
     border-radius: 4px 4px 4px 4px;
-    background-color: #C4005B;
+    background-color: #c4005b;
 
     img {
       width: 100%;
@@ -197,14 +217,14 @@ export default {
 
     /deep/ .is-active {
       .el-carousel__button {
-        background: #F8C268;
+        background: #f8c268;
       }
     }
 
     /deep/ .el-carousel__button {
       width: 20px;
       height: 6px;
-      background: #FFFFFF;
+      background: #ffffff;
       border-radius: 0px 0px 0px 0px;
       opacity: 0.7;
     }
@@ -223,7 +243,7 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 34px;
-      color: #1C1F21;
+      color: #1c1f21;
       margin-bottom: 10px;
     }
 
@@ -238,7 +258,7 @@ export default {
 
     .item {
       height: 161px;
-      background: #F7F7F7;
+      background: #f7f7f7;
       padding: 30px;
       display: flex;
       align-items: center;
@@ -261,7 +281,7 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 18px;
-            color: #1F253B;
+            color: #1f253b;
             margin-left: 8px;
           }
         }
@@ -290,7 +310,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 14px;
-          color: #929AA2;
+          color: #929aa2;
         }
       }
 
@@ -299,13 +319,13 @@ export default {
         height: 40px;
         line-height: 40px;
         text-align: center;
-        background: #FFFFFF;
-        border: 1px solid #175E3D;
+        background: #ffffff;
+        border: 1px solid #175e3d;
         cursor: pointer;
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 16px;
-        color: #175E3D;
+        color: #175e3d;
       }
     }
 
@@ -315,11 +335,11 @@ export default {
       .left {
         padding: 50px;
         width: 516px;
-        background: #F3FDF9;
+        background: #f3fdf9;
 
         .tit {
           span {
-            color: #929AA2;
+            color: #929aa2;
             font-size: 14px;
             border-bottom: 1px solid @theme;
           }
@@ -329,7 +349,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 24px;
-          color: #1F253B;
+          color: #1f253b;
           margin: 20px 0;
         }
 
@@ -337,7 +357,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 14px;
-          color: #929AA2;
+          color: #929aa2;
         }
 
         .btn {
@@ -348,7 +368,7 @@ export default {
           line-height: 48px;
           width: 138px;
           height: 48px;
-          background: #175E3D;
+          background: #175e3d;
           margin-top: 75px;
         }
       }
@@ -364,7 +384,7 @@ export default {
           cursor: pointer;
 
           &:hover {
-            background: #F7F7F7;
+            background: #f7f7f7;
           }
 
           img {
@@ -388,10 +408,9 @@ export default {
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: 400;
               font-size: 14px;
-              color: #929AA2;
+              color: #929aa2;
             }
           }
-
         }
       }
     }
@@ -408,7 +427,7 @@ export default {
         }
 
         .info {
-          background-color: #F7F7F7;
+          background-color: #f7f7f7;
           height: 153px;
           padding: 25px;
         }
@@ -425,7 +444,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 14px;
-          color: #929AA2;
+          color: #929aa2;
           height: 60px;
         }
       }
@@ -440,7 +459,7 @@ export default {
           margin-top: 34px;
           margin-left: 40px;
           padding-bottom: 34px;
-          border-bottom: 1px solid #EBEBEB;
+          border-bottom: 1px solid #ebebeb;
 
           &:first-child {
             margin-top: 0;
@@ -466,7 +485,7 @@ export default {
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: 400;
               font-size: 14px;
-              color: #929AA2;
+              color: #929aa2;
             }
           }
         }

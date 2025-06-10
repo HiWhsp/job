@@ -3,42 +3,47 @@ export default {
   name: "my-exam-start",
   data() {
     return {
-      id: '',
-      course_id: '',
-      course_list_id: '',
-      checkbox: false
-    }
+      id: "",
+      course_id: "",
+      course_list_id: "",
+      checkbox: false,
+    };
+  },
+  mounted() {
+    this.id = this.$route.query.question_id;
+    this.course_id = this.$route.query.course_id;
+    this.course_list_id = this.$route.query.course_list_id;
   },
   methods: {
     submit() {
       if (!this.checkbox) {
         this.$message({
-          message: '请阅读并同意考试须知',
-          type: 'warning'
-        })
-        return
+          message: "请阅读并同意考试须知",
+          type: "warning",
+        });
+        return;
       }
       this.$api({
-        url: 'startQuestion',
-        method: 'post',
+        url: "startQuestion",
+        method: "post",
         data: {
           question_id: this.id,
           course_id: this.course_id,
-          course_list_id: this.course_list_id
-        }
-      }).then(res => {
+          course_list_id: this.course_list_id,
+        },
+      }).then((res) => {
         if (res.code == 200) {
-          this.$router.push('my-exam-submit?id=' + this.id);
-        }else {
+          this.$router.push("my-exam-submit?id=" + this.id);
+        } else {
           this.$message({
             message: res.msg,
-            type: 'warning'
-          })
+            type: "warning",
+          });
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 
 <template>
@@ -47,7 +52,7 @@ export default {
       <div class="profile">
         <div class="title">考生信息</div>
         <div class="profile-info">
-          <img alt="" src="@/static/prod/avatar.png">
+          <img alt="" :src="baseInfo.image" />
           <div class="info">
             <div class="name">{{ baseInfo.name }}</div>
             <div class="level">
@@ -84,7 +89,7 @@ export default {
 .container {
   height: calc(100vh - 80px);
   padding: 25px 37px 0;
-  background: #F5F6F6;
+  background: #f5f6f6;
   display: flex;
   align-items: start;
 
@@ -97,20 +102,20 @@ export default {
 
     .title {
       height: 60px;
-      background: #FAFAFA;
-      border-bottom: 1px solid #DEDEDE;
+      background: #fafafa;
+      border-bottom: 1px solid #dedede;
       text-align: center;
       line-height: 60px;
       font-family: Source Han Sans, Source Han Sans;
       font-weight: 700;
       font-size: 20px;
-      color: #23324F;
+      color: #23324f;
     }
 
     .profile {
       width: 100%;
       background-color: #fff;
-      border: 1px solid #DEDEDE;
+      border: 1px solid #dedede;
 
       .profile-info {
         padding: 34px;
@@ -131,15 +136,16 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 700;
             font-size: 18px;
-            color: #1F253B;
+            color: #1f253b;
           }
 
-          .level, .phone {
+          .level,
+          .phone {
             display: flex;
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 12px;
-            color: #6F6F6F;
+            color: #6f6f6f;
 
             p {
               width: 36px;
@@ -163,7 +169,7 @@ export default {
 
   .content {
     height: 780px;
-    border: 1px solid #DEDEDE;
+    border: 1px solid #dedede;
     margin-left: 36px;
     flex: 1;
     background-color: #fff;
@@ -174,7 +180,7 @@ export default {
         font-family: Source Han Sans, Source Han Sans;
         font-weight: 700;
         font-size: 30px;
-        color: #23324F;
+        color: #23324f;
         text-align: center;
       }
 
@@ -183,9 +189,9 @@ export default {
         font-family: Source Han Sans, Source Han Sans;
         font-weight: 400;
         font-size: 18px;
-        color: #23324F;
+        color: #23324f;
         height: 550px;
-        overflow-y: auto
+        overflow-y: auto;
       }
 
       .protocol {
@@ -196,7 +202,7 @@ export default {
         font-family: Source Han Sans, Source Han Sans;
         font-weight: 400;
         font-size: 14px;
-        color: #23324F;
+        color: #23324f;
 
         p {
           margin-left: 5px;
@@ -215,7 +221,7 @@ export default {
 
         .el-button {
           width: 134px;
-          background: linear-gradient(138deg, #175E3D 0%, #257C54 100%);
+          background: linear-gradient(138deg, #175e3d 0%, #257c54 100%);
           border-radius: 4px 4px 4px 4px;
           border: none;
         }

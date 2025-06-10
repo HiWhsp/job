@@ -5,30 +5,35 @@
     </div>
     <div class="page-ctx">
       <template v-for="(item, index) in product_list">
-        <div v-if="item.course_type == 1" class="item">
+        <div v-if="item.course_type == 1" class="item" :key="index">
           <div class="left">
             <div class="tit">
-              <img alt="" src="@/static/home/file3.png">
+              <img alt="" src="@/static/home/file3.png" />
               <span>{{ item.title }}</span>
             </div>
             <div class="progress">
-              <el-progress v-if="item.course_schedule.split('%')[0]" :format="format(item.course_schedule.split('%')[0])"
-                           :percentage="+item.course_schedule.split('%')[0]"></el-progress>
+              <el-progress
+                v-if="item.course_schedule.split('%')[0]"
+                :format="format(item.course_schedule.split('%')[0] || 0)"
+                :percentage="+item.course_schedule.split('%')[0] || 0"
+              ></el-progress>
             </div>
             <div class="desc">{{ item.description }}</div>
           </div>
           <div class="right" @click="toProduct(item)">继续学习</div>
         </div>
 
-        <div v-if="item.course_type == 2" class="item2">
-          <img :src="item.thumb_url" alt="">
+        <div v-if="item.course_type == 2" class="item2" :key="index">
+          <img :src="item.thumb_url" alt="" />
           <div class="left">
             <div class="tit">
               <span>{{ item.title }}</span>
             </div>
             <div class="progress">
-              <el-progress :format="format(item.course_schedule.split('%')[0])"
-                           :percentage="+item.course_schedule.split('%')[0]"></el-progress>
+              <el-progress
+                :format="format(item.course_schedule.split('%')[0] || 0)"
+                :percentage="+item.course_schedule.split('%')[0] || 0"
+              ></el-progress>
             </div>
           </div>
           <div class="right" @click="toProduct(item)">继续学习</div>
@@ -40,7 +45,6 @@
 </template>
 
 <script>
-
 export default {
   name: "my-course-fav",
   data() {
@@ -55,28 +59,28 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: 'getCourseList',
-        method: 'get',
+        url: "getCourseList",
+        method: "get",
         data: {
           page: 1,
           limit: 10,
           learn_type: 5,
-        }
-      }).then(res => {
+        },
+      }).then((res) => {
         if (res.code == 200) {
           this.product_list = res.data.list;
           this.count = res.data.count;
         }
-      })
+      });
     },
     toProduct(item) {
       this.$router.push({
-        path: '/course-detail?id=' + item.id
+        path: "/course-detail?id=" + item.id,
       });
     },
     format(percentage) {
       return () => `已学习${percentage}%`;
-    }
+    },
   },
 };
 </script>
@@ -124,7 +128,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #E6E6E6;
+      border-bottom: 1px solid #e6e6e6;
 
       .left {
         width: 600px;
@@ -142,7 +146,7 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 18px;
-            color: #1F253B;
+            color: #1f253b;
             margin-left: 8px;
           }
         }
@@ -171,7 +175,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 14px;
-          color: #929AA2;
+          color: #929aa2;
         }
       }
 
@@ -181,13 +185,13 @@ export default {
         height: 40px;
         line-height: 40px;
         text-align: center;
-        background: #FFFFFF;
-        border: 1px solid #175E3D;
+        background: #ffffff;
+        border: 1px solid #175e3d;
         cursor: pointer;
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 16px;
-        color: #175E3D;
+        color: #175e3d;
         border-radius: 6px;
       }
     }
@@ -199,7 +203,7 @@ export default {
       align-items: center;
       justify-content: space-between;
       margin-bottom: 20px;
-      border-bottom: 1px solid #E6E6E6;
+      border-bottom: 1px solid #e6e6e6;
 
       img {
         width: 160px;
@@ -223,7 +227,7 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 18px;
-            color: #1F253B;
+            color: #1f253b;
             margin-left: 8px;
           }
         }
@@ -252,7 +256,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 14px;
-          color: #929AA2;
+          color: #929aa2;
         }
       }
 
@@ -262,13 +266,13 @@ export default {
         height: 40px;
         line-height: 40px;
         text-align: center;
-        background: #FFFFFF;
-        border: 1px solid #175E3D;
+        background: #ffffff;
+        border: 1px solid #175e3d;
         cursor: pointer;
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 16px;
-        color: #175E3D;
+        color: #175e3d;
         border-radius: 6px;
       }
     }
@@ -278,7 +282,6 @@ export default {
 .page {
   .page-ctx {
     padding-bottom: 80px;
-
   }
 }
 </style>

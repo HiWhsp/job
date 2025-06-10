@@ -23,8 +23,7 @@
         </div>
         <div class="catalog-wrap">
           <div class="item">
-            <span>考试次数：</span
-            ><span>{{ item.question.can_test_num }}次</span>
+            <span>考试次数：</span><span>{{ item.question.can_test_num }}次</span>
           </div>
           <div class="item">
             <span>已考次数：</span><span>{{ item.has_test_num }}次</span>
@@ -34,12 +33,10 @@
             ><span>{{ item.question.can_test_num - item.has_test_num }}次</span>
           </div>
           <div class="item">
-            <span>考试总分：</span
-            ><span>{{ item.question.total_point }}分</span>
+            <span>考试总分：</span><span>{{ item.question.total_point }}分</span>
           </div>
           <div class="item">
-            <span>考试时长：</span
-            ><span>{{ item.question.test_time }}分钟</span>
+            <span>考试时长：</span><span>{{ item.question.test_time }}分钟</span>
           </div>
         </div>
         <div class="action">
@@ -47,10 +44,7 @@
             考试起止时间：{{ item.question.start_time }} 到
             {{ item.question.end_time }}
           </p>
-          <el-button
-            type="primary"
-            v-if="item.has_test_num === 0"
-            @click="go_exam(item)"
+          <el-button type="primary" v-if="item.has_test_num === 0" @click="go_exam(item)"
             >开始考试</el-button
           >
           <el-button
@@ -62,7 +56,7 @@
         </div>
         <div class="relevance">
           <p>
-            关联课程：<span>{{ item.course_info[0].course_title }}</span>
+            关联课程：<span>{{ item.course_info.title }}</span>
           </p>
           <p>完成度：100%</p>
         </div>
@@ -85,7 +79,7 @@ export default {
         page: 1,
         limit: 10,
       },
-      list: []
+      list: [],
     };
   },
   computed: {
