@@ -3,27 +3,27 @@ export default {
   name: "pdf-viewer",
   data() {
     return {
-      id: '',
-      index: '',
+      id: "",
+      index: "",
       detail: {},
       tableData: [],
-      selectItem: {}
-    }
+      selectItem: {},
+    };
   },
   mounted() {
     this.id = this.$route.query.id;
-    this.index = this.$route.query.index || 0
+    this.index = this.$route.query.index || 0;
     this.setView();
   },
   methods: {
     setView() {
       this.$api({
-        url: 'getCourse',
-        method: 'get',
+        url: "getCourse",
+        method: "get",
         data: {
-          id: this.id
-        }
-      }).then(res => {
+          id: this.id,
+        },
+      }).then((res) => {
         if (res.code == 200) {
           this.detail = res.data;
           this.tableData = res.data.course_list;
@@ -33,11 +33,11 @@ export default {
             this.selectItem = this.tableData[0];
           }
         }
-      })
+      });
     },
     // 上下切换
     arrow(type) {
-      if (type == 'up') {
+      if (type == "up") {
         if (this.index > 0) {
           this.index--;
         } else {
@@ -55,11 +55,18 @@ export default {
     goUrl(item) {
       this.$router.push({
         path: item.url,
-        query: item.query
-      })
-    }
-  }
-}
+        query: item.query,
+      });
+    },
+    // 根据url判断是否是pdf
+    isPdf(url) {
+      if (url) {
+        return url.endsWith(".pdf") || url.endsWith(".PDF");
+      }
+      return false;
+    },
+  },
+};
 </script>
 
 <template>
@@ -67,15 +74,15 @@ export default {
     <div class="left">
       <div class="arrow">
         <div class="arrow-top" @click="arrow('up')">
-          <img alt="" src="@/static/common/arrow-top.png">
+          <img alt="" src="@/static/common/arrow-top.png" />
         </div>
         <div class="col"></div>
         <div class="arrow-bottom" @click="arrow('down')">
-          <img alt="" src="@/static/common/arrow-bottom.png">
+          <img alt="" src="@/static/common/arrow-bottom.png" />
         </div>
       </div>
-      <div class="next-btn" @click="goUrl({url: '/course-detail', query: {id: id}})">
-        <img alt="" src="@/static/common/arrow-left.png">
+      <div class="next-btn" @click="goUrl({ url: '/course-detail', query: { id: id } })">
+        <img alt="" src="@/static/common/arrow-left.png" />
         <span>返回课程详情</span>
       </div>
       <div class="menu">
@@ -86,7 +93,15 @@ export default {
         <div class="text">第{{ index + 1 }}节: {{ selectItem.title }}</div>
       </div>
       <div class="content">
-        <iframe :src="selectItem.file_path_url" width="100%" height="100%"></iframe>
+        <iframe
+          v-if="isPdf(selectItem.file_path_url)"
+          :src="selectItem.file_path_url"
+          width="100%"
+          height="100%"
+        ></iframe>
+        <div v-else>
+          <!-- 展示docs文件 -->
+        </div>
       </div>
     </div>
     <div class="right">
@@ -100,7 +115,12 @@ export default {
       <div class="menu-list">
         <div class="col"></div>
         <div class="menu">
-          <div v-for="(item, index) in tableData" :key="index" class="menu-item" :class="{active: selectItem.id == item.id}">
+          <div
+            v-for="(item, index) in tableData"
+            :key="index"
+            class="menu-item"
+            :class="{ active: selectItem.id == item.id }"
+          >
             <p class="index">第{{ index + 1 }}节</p>
             <div class="line"></div>
             <p class="text ellipsis-1">{{ item.title }}</p>
@@ -132,7 +152,8 @@ export default {
     flex-direction: column;
     align-items: center;
 
-    .arrow-top, .arrow-bottom {
+    .arrow-top,
+    .arrow-bottom {
       cursor: pointer;
       width: 50px;
       height: 26px;
@@ -149,7 +170,7 @@ export default {
     .col {
       height: 100%;
       width: 4px;
-      background: #D8D8D8;
+      background: #d8d8d8;
     }
   }
 
@@ -159,13 +180,13 @@ export default {
     align-items: center;
     width: 102px;
     height: 24px;
-    background: #D8D8D8;
+    background: #d8d8d8;
     margin-top: 15px;
 
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;
     font-size: 12px;
-    color: #3D3D3D;
+    color: #3d3d3d;
 
     img {
       width: 14px;
@@ -189,7 +210,7 @@ export default {
       font-weight: 400;
       font-size: 12px;
       text-align: center;
-      color: #D6D6D6;
+      color: #d6d6d6;
       border-top-left-radius: 20px;
       border-bottom-left-radius: 20px;
     }
@@ -197,7 +218,7 @@ export default {
     .line {
       width: 28px;
       height: 28px;
-      background: #BEA069;
+      background: #bea069;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -209,11 +230,11 @@ export default {
         height: 22px;
         line-height: 22px;
         text-align: center;
-        background: #175E3D;
+        background: #175e3d;
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 12px;
-        color: #FFFFFF;
+        color: #ffffff;
         border-radius: 50%;
       }
     }
@@ -222,7 +243,7 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 18px;
-      color: #FFFFFF;
+      color: #ffffff;
       margin-left: 20px;
     }
   }
@@ -233,32 +254,31 @@ export default {
     left: 25px;
     width: 1532px;
     height: 760px;
-    background: #ECECEC;
+    background: #ececec;
   }
 }
 
 .right {
   width: 348px;
   height: 100%;
-  background: #FFFFFF;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
 
   .tit-info {
     width: 348px;
     height: 109px;
-    background: #D5DDE6;
+    background: #d5dde6;
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding-left: 20px;
 
-
     .title {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 16px;
-      color: #1F253B;
+      color: #1f253b;
     }
 
     .text {
@@ -273,7 +293,7 @@ export default {
   .menu-right {
     width: 348px;
     height: 44px;
-    background: #EFF3F7;
+    background: #eff3f7;
     line-height: 42px;
     padding-left: 20px;
 
@@ -296,7 +316,7 @@ export default {
       position: absolute;
       width: 1px;
       height: 100%;
-      background: #D8D8D8;
+      background: #d8d8d8;
       left: 59px;
     }
 
@@ -316,14 +336,14 @@ export default {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 12px;
-        color: #999FA4;
+        color: #999fa4;
       }
 
       .line {
         width: 15px;
         height: 15px;
-        background: #FFFFFF;
-        border: 1px solid #D3D3D3;
+        background: #ffffff;
+        border: 1px solid #d3d3d3;
         border-radius: 50%;
         margin: 0 10px 0 8px;
       }
@@ -334,7 +354,7 @@ export default {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 14px;
-        color: #3D3D3D;
+        color: #3d3d3d;
       }
 
       &.active {
