@@ -1,5 +1,5 @@
 <template>
-  <div class="reportCard">
+  <div class="reportCard" @click="goToReportDetail(dataItem)">
     <div class="cardCover">
       <img class="cardCoverImg" :src="dataItem.thumb" alt="" />
     </div>
@@ -29,8 +29,17 @@ export default {
       statusEnum: { 0: "原创", 1: "网络", 2: "新闻" },
     };
   },
-  created() {},
   mounted() {},
+  methods: {
+    goToReportDetail(item) {
+      this.$router.push({
+        path: "/reportDetails",
+        query: {
+          id: item.id,
+        },
+      });
+    },
+  },
 };
 </script>
 <style scoped lang="less" src="./card.less"></style>

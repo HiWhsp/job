@@ -9,17 +9,17 @@
   </div>
 </template>
 <script>
-import newsInsight from '@/components/ellsennComponents/index/newsInsight/index.vue';
-import recentActivities from '@/components/ellsennComponents/index/recentActivities/index.vue';
-import report from '@/components/ellsennComponents/index/report/index.vue';
-import topSwiper from '@/components/ellsennComponents/index/topSwiper/topSwiper.vue';
+import newsInsight from "@/components/ellsennComponents/index/newsInsight/index.vue";
+import recentActivities from "@/components/ellsennComponents/index/recentActivities/index.vue";
+import report from "@/components/ellsennComponents/index/report/index.vue";
+import topSwiper from "@/components/ellsennComponents/index/topSwiper/topSwiper.vue";
 export default {
-  name: 'index',
+  name: "index",
   components: {
     topSwiper,
     report,
     newsInsight,
-    recentActivities
+    recentActivities,
   },
   data() {
     return {};
@@ -31,10 +31,10 @@ export default {
     this.setView();
   },
   mounted() {
-    window.addEventListener('scroll', this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll);
   },
   beforeDestroy() {
-    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
     handleScroll() {
@@ -44,7 +44,7 @@ export default {
     scrollToTop() {
       window.scrollTo({
         top: 0,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     },
     setView() {},

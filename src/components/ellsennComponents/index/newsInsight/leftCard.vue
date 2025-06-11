@@ -1,27 +1,37 @@
 <template>
-  <div class="leftCard">
+  <div class="leftCard" @click="goToReportDetail(data)">
     <div>
       <img class="leftCardImg" :src="data.thumb" alt="" />
     </div>
     <div class="leftContent">
       <div class="leftContent-title">{{ data.title }}</div>
       <div class="leftContent-info">
-       {{data.info}}
+        {{ data.info }}
       </div>
-      <div class="leftContent-time">作者：{{ data.author }} <span>{{ data.created_time }}</span></div>
+      <div class="leftContent-time">
+        作者：{{ data.author }} <span>{{ data.created_time }}</span>
+      </div>
     </div>
   </div>
 </template>
 <script>
 export default {
   components: {},
-  props: ['data'],
-  name: 'leftCard',
+  props: ["data"],
+  name: "leftCard",
   data() {
     return {};
   },
-  created() {},
-  mounted() {},
+  methods: {
+    goToReportDetail(item) {
+      this.$router.push({
+        path: "/newsInsightsDetail",
+        query: {
+          id: item.id,
+        },
+      });
+    },
+  },
 };
 </script>
 <style scoped lang="less" src="./leftCard.less"></style>

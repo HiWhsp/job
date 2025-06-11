@@ -223,7 +223,7 @@ export default {
       activityGuests: [],
 
       // 活动议程数据
-      product_activities_program_outline: [],
+      product_activities_program_outline: [{}],
     };
   },
   mounted() {
@@ -249,7 +249,7 @@ export default {
         if (res.code == 200) {
           this.activityDetails = res.data;
           this.product_activities_program_outline =
-            res.data.product_activities_program_outline;
+            res.data.product_activities_program_outline || [];
         }
       });
     },

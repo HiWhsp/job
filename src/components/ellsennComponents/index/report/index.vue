@@ -21,6 +21,7 @@
                 :key="index"
               ></report-card>
             </div>
+            <el-empty v-if="dataList.length === 0" description="暂无数据" />
           </el-tab-pane>
         </el-tabs>
       </div>

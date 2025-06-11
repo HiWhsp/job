@@ -59,12 +59,14 @@
               </div>
             </div>
           </div>
-          <div
-            class="bottomLeftContent"
-            v-html="data.data ? data.data.content : ''"
-          ></div>
+          <div class="bottomLeftContent">
+            <div class="VueMarkdown" v-html="data.data ? data.data.content : ''"></div>
+          </div>
           <div class="bottomLeftNextReport">
-            <div class="bottomLeftNextReportItem top-left" v-if="data.data && data.data.next">
+            <div
+              class="bottomLeftNextReportItem top-left"
+              v-if="data.data && data.data.next"
+            >
               <img :src="data.data.next.thumb" alt="" />
               <div class="bottomLeftNextReportItemTitle">
                 <h2>{{ data.data.next.title }}</h2>
@@ -77,7 +79,10 @@
                 <span>上一篇</span>
               </div>
             </div>
-            <div class="bottomLeftNextReportItem bottom-right" v-if="data.data && data.data.previous">
+            <div
+              class="bottomLeftNextReportItem bottom-right"
+              v-if="data.data && data.data.previous"
+            >
               <img :src="data.data.previous.thumb" alt="" />
               <div class="bottomLeftNextReportItemTitle">
                 <h2>{{ data.data.previous.title }}</h2>
