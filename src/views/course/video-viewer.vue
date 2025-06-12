@@ -3,42 +3,42 @@ export default {
   name: "video-viewer",
   data() {
     return {
-      id: '',
-      index: '',
-      totalDuration: '', // 视频总时长
+      id: "",
+      index: "",
+      totalDuration: "", // 视频总时长
       detail: {},
       tableData: [],
-      selectItem: {}
-    }
+      selectItem: {},
+    };
   },
   unmounted() {
     // 保存播放时长
     this.savePlayTime();
     // 移除事件监听器
-    window.removeEventListener('beforeunload', this.savePlayTime);
+    window.removeEventListener("beforeunload", this.savePlayTime);
   },
   beforeDestroy() {
     // 保存播放时长
     this.savePlayTime();
     // 移除事件监听器
-    window.removeEventListener('beforeunload', this.savePlayTime);
+    window.removeEventListener("beforeunload", this.savePlayTime);
   },
   mounted() {
     this.id = this.$route.query.id;
-    this.index = this.$route.query.index || 0
+    this.index = this.$route.query.index || 0;
     this.setView();
     // 监听页面退出
-    window.addEventListener('beforeunload', this.savePlayTime);
+    window.addEventListener("beforeunload", this.savePlayTime);
   },
   methods: {
     setView() {
       this.$api({
-        url: 'getCourse',
-        method: 'get',
+        url: "getCourse",
+        method: "get",
         data: {
-          id: this.id
-        }
-      }).then(res => {
+          id: this.id,
+        },
+      }).then((res) => {
         if (res.code == 200) {
           this.detail = res.data;
           this.tableData = res.data.course_list;
@@ -50,11 +50,11 @@ export default {
           // 恢复播放进度
           this.restorePlayTime();
         }
-      })
+      });
     },
     // 上下切换
     arrow(type) {
-      if (type == 'up') {
+      if (type == "up") {
         if (this.index > 0) {
           this.index--;
         } else {
@@ -72,36 +72,38 @@ export default {
     goUrl(item) {
       this.$router.push({
         path: item.url,
-        query: item.query
-      })
+        query: item.query,
+      });
     },
     // 禁止加速播放
     handleRateChange() {
       const video = this.$refs.videoPlayer;
       if (video.playbackRate !== 1) {
         video.playbackRate = 1; // 强制设置为正常速度
-        this.$message.warning('禁止调整播放速度！');
+        this.$message.warning("禁止调整播放速度！");
       }
     },
     // 保存播放时长
     savePlayTime() {
-      console.log(123)
+      console.log(123);
       const video = this.$refs.videoPlayer;
       const playTime = video.currentTime.toFixed(0);
-      const progress = this.totalDuration ? ((playTime / this.totalDuration) * 100).toFixed(0) : 0;
+      const progress = this.totalDuration
+        ? ((playTime / this.totalDuration) * 100).toFixed(0)
+        : 0;
       this.sendToBackend(playTime, progress);
     },
     async sendToBackend(playTime, progress) {
       this.$api({
-        url: 'addMyCourseLearnRecord',
-        method: 'post',
+        url: "addMyCourseLearnRecord",
+        method: "post",
         data: {
           course_id: this.id,
           course_list_id: this.selectItem.id,
           has_learn_time: playTime,
-          schedule: progress
-        }
-      })
+          schedule: progress,
+        },
+      });
     },
     // 恢复播放进度
     restorePlayTime() {
@@ -115,11 +117,11 @@ export default {
       const video = this.$refs.videoPlayer;
       this.totalDuration = video.duration || 0; // 获取总时长，单位为秒
       if (isNaN(this.totalDuration) || !this.totalDuration) {
-        console.warn('无法获取视频时长，可能视频未正确加载');
+        console.warn("无法获取视频时长，可能视频未正确加载");
       }
     },
-  }
-}
+  },
+};
 </script>
 
 <template>
@@ -127,23 +129,21 @@ export default {
     <div class="left">
       <div class="arrow">
         <div class="arrow-top" @click="arrow('up')">
-          <img alt="" src="@/static/common/arrow-top.png">
+          <img alt="" src="@/static/common/arrow-top.png" />
         </div>
         <div class="col"></div>
         <div class="arrow-bottom" @click="arrow('down')">
-          <img alt="" src="@/static/common/arrow-bottom.png">
+          <img alt="" src="@/static/common/arrow-bottom.png" />
         </div>
       </div>
-      <div class="next-btn" @click="goUrl({url: '/course-detail', query: {id: id}})">
-        <img alt="" src="@/static/common/arrow-left.png">
+      <div class="next-btn" @click="goUrl({ url: '/course-detail', query: { id: id } })">
+        <img alt="" src="@/static/common/arrow-left.png" />
         <span>返回课程详情</span>
       </div>
       <div class="menu">
         <div class="index">
           章节{{ index + 1 }}
-          <div class="index-collapse">
-            课时
-          </div>
+          <div class="index-collapse">课时</div>
         </div>
         <div class="line">
           <div class="line-inner">{{ index + 1 }}</div>
@@ -151,8 +151,14 @@ export default {
         <div class="text">第{{ index + 1 }}节: {{ selectItem.title }}</div>
       </div>
       <div class="content">
-        <video id="video-player" ref="videoPlayer" :src="selectItem.file_path_url" controls
-               @loadedmetadata="handleLoadedMetadata" @ratechange="handleRateChange"></video>
+        <video
+          id="video-player"
+          ref="videoPlayer"
+          :src="selectItem.file_path_url"
+          controls
+          @loadedmetadata="handleLoadedMetadata"
+          @ratechange="handleRateChange"
+        ></video>
         <div class="mock"></div>
       </div>
     </div>
@@ -167,14 +173,18 @@ export default {
       <div class="menu-list">
         <div class="col"></div>
         <div class="menu">
-          <div v-for="(item, index) in tableData" :key="index" :class="{active: selectItem.id == item.id}"
-               class="menu-item">
+          <div
+            v-for="(item, index) in tableData"
+            :key="index"
+            :class="{ active: selectItem.id == item.id }"
+            class="menu-item"
+          >
             <p class="index">第{{ index + 1 }}节</p>
             <div class="line"></div>
             <div class="text">
               <p class="title ellipsis-1">{{ item.title }}</p>
               <p class="time">
-                <img alt="" src="@/static/common/video.png">
+                <img alt="" src="@/static/common/video.png" />
                 <span>{{ item.learn_time }}</span>
               </p>
             </div>
@@ -206,7 +216,8 @@ export default {
     flex-direction: column;
     align-items: center;
 
-    .arrow-top, .arrow-bottom {
+    .arrow-top,
+    .arrow-bottom {
       cursor: pointer;
       width: 50px;
       height: 26px;
@@ -223,7 +234,7 @@ export default {
     .col {
       height: 100%;
       width: 4px;
-      background: #D8D8D8;
+      background: #d8d8d8;
     }
   }
 
@@ -233,13 +244,13 @@ export default {
     align-items: center;
     width: 102px;
     height: 24px;
-    background: #D8D8D8;
+    background: #d8d8d8;
     margin-top: 15px;
 
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;
     font-size: 12px;
-    color: #3D3D3D;
+    color: #3d3d3d;
 
     img {
       width: 14px;
@@ -261,11 +272,11 @@ export default {
       width: 115px;
       height: 20px;
       line-height: 20px;
-      background: #D8D8D8;
+      background: #d8d8d8;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 12px;
-      color: #3D3D3D;
+      color: #3d3d3d;
       border-top-left-radius: 20px;
       border-bottom-left-radius: 20px;
 
@@ -277,7 +288,7 @@ export default {
         font-weight: 400;
         font-size: 12px;
         text-align: center;
-        color: #D6D6D6;
+        color: #d6d6d6;
         border-top-left-radius: 20px;
         border-bottom-left-radius: 20px;
       }
@@ -286,7 +297,7 @@ export default {
     .line {
       width: 28px;
       height: 28px;
-      background: #BEA069;
+      background: #bea069;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -298,11 +309,11 @@ export default {
         height: 22px;
         line-height: 22px;
         text-align: center;
-        background: #175E3D;
+        background: #175e3d;
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 12px;
-        color: #FFFFFF;
+        color: #ffffff;
         border-radius: 50%;
       }
     }
@@ -311,7 +322,7 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 18px;
-      color: #FFFFFF;
+      color: #ffffff;
       margin-left: 20px;
     }
   }
@@ -322,7 +333,7 @@ export default {
     left: 25px;
     width: 1532px;
     height: 760px;
-    background: #ECECEC;
+    background: #ececec;
 
     #video-player {
       width: 100%;
@@ -341,25 +352,24 @@ export default {
 .right {
   width: 348px;
   height: 100%;
-  background: #FFFFFF;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
 
   .tit-info {
     width: 348px;
     height: 109px;
-    background: #D5DDE6;
+    background: #d5dde6;
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding-left: 20px;
 
-
     .title {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 16px;
-      color: #1F253B;
+      color: #1f253b;
     }
 
     .text {
@@ -374,7 +384,7 @@ export default {
   .menu-right {
     width: 348px;
     height: 44px;
-    background: #EFF3F7;
+    background: #eff3f7;
     line-height: 42px;
     padding-left: 20px;
 
@@ -397,7 +407,7 @@ export default {
       position: absolute;
       width: 1px;
       height: 100%;
-      background: #D8D8D8;
+      background: #d8d8d8;
       left: 59px;
     }
 
@@ -417,14 +427,14 @@ export default {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 12px;
-        color: #999FA4;
+        color: #999fa4;
       }
 
       .line {
         width: 15px;
         height: 15px;
-        background: #FFFFFF;
-        border: 1px solid #D3D3D3;
+        background: #ffffff;
+        border: 1px solid #d3d3d3;
         border-radius: 50%;
         margin: 0 10px 0 8px;
       }
@@ -437,7 +447,7 @@ export default {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 14px;
-        color: #3D3D3D;
+        color: #3d3d3d;
 
         .title {
           width: 200px;
