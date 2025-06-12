@@ -4,7 +4,12 @@
       <h2>公司新闻</h2>
       <div class="news-list">
         <!-- 主要新闻 -->
-        <div class="main-news" v-for="item in [newsList[0]]" :key="item.id">
+        <div
+          class="main-news"
+          v-for="item in [newsList[0]]"
+          :key="item.id"
+          @click="handleNewsClick(item)"
+        >
           <div class="news-image">
             <img :src="item.thumb" :alt="item.title" />
           </div>
@@ -20,7 +25,12 @@
 
         <!-- 侧边新闻列表 -->
         <div class="side-news">
-          <div class="news-item" v-for="item in newsList.slice(1, 4)" :key="item.id">
+          <div
+            class="news-item"
+            v-for="item in newsList.slice(1, 4)"
+            :key="item.id"
+            @click="handleNewsClick(item)"
+          >
             <div class="news-info">
               <h4>{{ item.title }}</h4>
               <span class="news-date">{{ item.created_time }}</span>
@@ -32,7 +42,12 @@
         </div>
       </div>
       <div class="news-list-wrap">
-        <div class="news-item" v-for="item in newsList.slice(4, 10)" :key="item.id">
+        <div
+          class="news-item"
+          v-for="item in newsList.slice(4, 10)"
+          :key="item.id"
+          @click="handleNewsClick(item)"
+        >
           <div class="news-thumb">
             <img :src="item.thumb" alt="新闻图片" />
           </div>
@@ -74,8 +89,7 @@ export default {
   },
   methods: {
     handleNewsClick(news) {
-      // 处理新闻点击事件
-      console.log("点击新闻:", news.title);
+      this.$router.push("/newsInsightsDetail?id=" + news.id);
     },
     getNewsList() {
       this.$api({

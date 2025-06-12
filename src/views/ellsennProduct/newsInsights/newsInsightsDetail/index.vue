@@ -13,21 +13,24 @@
               {{ data.data ? data.data.title : "" }}
             </div>
             <div class="bottomLeftTitleAuthor">
-              <div class="bottomLeftTitleAuthorItem">
-                {{ data.data ? data.data.author : "" }}
-              </div>
-              <div class="bottomLeftTitleAuthorItem">
-                {{ data.data ? data.data.created_at : "" }}
-              </div>
-              <div class="bottomLeftTitleAuthorItem">
-                <div
-                  class="bottomLeftTitleAuthorItemIcon"
-                  v-for="item in data.data ? data.data.tag : []"
-                  :key="item"
-                >
-                  {{ item }}
+              <div class="bottomLeftTitleAuthorLeft">
+                <div class="bottomLeftTitleAuthorItem">
+                  {{ data.data ? data.data.author : "" }}
+                </div>
+                <div class="bottomLeftTitleAuthorItem">
+                  {{ data.data ? data.data.created_at : "" }}
+                </div>
+                <div class="bottomLeftTitleAuthorItem">
+                  <div
+                    class="bottomLeftTitleAuthorItemIcon"
+                    v-for="item in data.data ? data.data.tag : []"
+                    :key="item"
+                  >
+                    {{ item }}
+                  </div>
                 </div>
               </div>
+
               <div class="bottomLeftTitleAuthorBottom">
                 <div class="collect" @click="handleCollect">
                   <img

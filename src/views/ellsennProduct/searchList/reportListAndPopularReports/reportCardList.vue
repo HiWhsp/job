@@ -1,14 +1,8 @@
 <template>
   <div class="reportList">
     <div class="searchResult">
-      <el-input
-        placeholder="请输入关键词"
-        clearable
-        v-model="searchValue"
-      ></el-input>
-      <el-button type="primary" @click="search" icon="el-icon-search"
-        >搜索</el-button
-      >
+      <el-input placeholder="请输入关键词" clearable v-model="searchValue"></el-input>
+      <el-button type="primary" @click="search" icon="el-icon-search">搜索</el-button>
     </div>
     <div class="filter">
       <div class="filterItem">
@@ -39,8 +33,9 @@
         </div>
       </div>
     </div>
-    <div class="reportListTitle">
-      找到与"<span>VR</span>"相关的结果数约198个
+    <div class="reportListTitle" v-if="searchValue">
+      找到与"<span>{{ searchValue }}</span
+      >"相关的结果数约{{ totalItems }}个
     </div>
     <report-card v-for="item in list" :data="item" :key="item.id"></report-card>
 
@@ -61,53 +56,20 @@ export default {
   components: {
     reportCard,
   },
-  props: {
-    list: {
-      type: Array,
-      default: () => [
-        {
-          id: 1,
-          img: require("@img/ellsenn/test.png"),
-          title: "2025-2031年中国锰黄铜行业市场深度研究及发展趋势预测报告",
-          sub: "2025-2031年中国锰黄铜行业市场深度研究及发展趋势预测报告，主要包括行业下游产业链分析，行业各区域市场概况，行业主要优势企业分析，行业发展前景预测等内容。",
-          status: "公共服务",
-          time: "2025-04-22",
-          name: "梁昊",
-          tips: "世界互联网大会",
-        },
-        {
-          id: 2,
-          image: require("@img/ellsenn/test.png"),
-          title: "Quest平台VR内容总营收已超22亿美元",
-          description:
-            "根据wellsenn XR跟踪统计测算，截至2023年底，Meta Quest平台VR内容累计营收近22亿美元。",
-          date: "2025-04-22",
-          source: "维深 Wellsenn XR",
-          tags: ["拆解", "VR", "快讯"],
-        },
-        {
-          id: 3,
-          url: require('@img/ellsenn/i.png'),
-          title: '2025年全球AI/AR智能眼镜智能制造高峰论坛',
-          location: '北京XXXX万豪酒店',
-          time: '2025-01-01 至 2025-04-03',
-        },
-      ],
-    },
-  },
   name: "reportList",
   data() {
     return {
-      searchValue: "",
-      filterIndex: 0,
-      filterTimeIndex: 0,
-      currentPage: 1,
-      limit: 10,
-      totalItems: 100,
+      searchValue: "", // 搜索关键词
+      filterIndex: "", // 0:全部 1:报告 2:资讯 3:活动
+      filterTimeIndex: 0, // 0:按时间排序 1:按匹配度排序
+
+      currentPage: 1, // 当前页
+      limit: 10, // 每页条数
+      totalItems: 0, // 总条数
       filterList: [
         {
           title: "全部",
-          index: 0,
+          index: "",
         },
         {
           title: "报告",
@@ -122,21 +84,39 @@ export default {
           index: 3,
         },
       ],
+      list: [],
     };
   },
-  mounted() {},
+  mounted() {
+    this.search();
+  },
   methods: {
     search() {
-      console.log(this.searchValue, "search");
+      this.$api({
+        url: "getSearch",
+        data: {
+          keyword: this.searchValue,
+          type: this.filterIndex,
+          sort: this.filterTimeIndex,
+          page: this.currentPage,
+          limit: this.limit,
+        },
+      }).then((res) => {
+        this.list = res.data.list || [];
+        this.totalItems = res.data.count;
+      });
     },
     filterItemClick(index) {
       this.filterIndex = index;
+      this.search();
     },
     filterItem(index) {
       this.filterTimeIndex = index;
+      this.search();
     },
     handleSizeChange(size) {
       this.limit = size;
+      this.search();
     },
     handleCurrentChange(page) {
       this.currentPage = page;

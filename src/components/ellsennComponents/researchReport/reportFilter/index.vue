@@ -7,9 +7,7 @@
         </div>
         <div class="filter-item">
           <div class="filter-content">
-            <el-checkbox
-              v-model="reportTypeAll"
-              @change="handleReportTypeAllChange"
+            <el-checkbox v-model="reportTypeAll" @change="handleReportTypeAllChange"
               >全部</el-checkbox
             >
             <el-checkbox
@@ -74,6 +72,7 @@
 
 <script>
 import card from "@/components/ellsennComponents/components/card.vue";
+import { log } from "util";
 export default {
   name: "reportFilter",
   components: {
@@ -112,10 +111,23 @@ export default {
       this.reportTypes.forEach((item) => {
         item.checked = val;
       });
+      this.search();
     },
     //报告类型选择
     handleReportTypeChange() {
+      if (this.reportTypeAll) {
+        this.reportTypes.forEach((item) => {
+          // 只有当前点击的选中，其他都取消
+          if (!item.checked) {
+            item.checked = true;
+          } else {
+            item.checked = false;
+          }
+        });
+      }
+      this.reportTypeAll = false;
       this.search();
+      this.$forceUpdate();
     },
     //行业全选
     handleIndustryAllChange(val) {
@@ -126,7 +138,18 @@ export default {
     },
     //行业选择
     handleIndustryChange() {
+      if (this.industryAll) {
+        this.industries.forEach((item) => {
+          if (!item.checked) {
+            item.checked = true;
+          } else {
+            item.checked = false;
+          }
+        });
+      }
+      this.industryAll = false;
       this.search();
+      this.$forceUpdate();
     },
     //时间
     handleRadioChange() {
@@ -140,8 +163,22 @@ export default {
     // 查询
     search() {
       this.$emit("search", {
-        type_id: this.reportTypeAll ? "" : this.reportTypes.find((item) => item.checked) ? this.reportTypes.find((item) => item.checked).id : "",
-        category_id: this.industryAll ? "" : this.industries.find((item) => item.checked) ? this.industries.find((item) => item.checked).id : "",
+        type_id: this.reportTypeAll
+          ? ""
+          : this.reportTypes.filter((item) => item.checked).length > 0
+          ? this.reportTypes
+              .filter((item) => item.checked)
+              .map((item) => item.id)
+              .join(",")
+          : "",
+        category_id: this.industryAll
+          ? ""
+          : this.industries.filter((item) => item.checked).length > 0
+          ? this.industries
+              .filter((item) => item.checked)
+              .map((item) => item.id)
+              .join(",")
+          : "",
         time_id: this.releaseTime ? this.releaseTime : "",
         start_time: this.customDateRange ? this.customDateRange[0] : "",
         end_time: this.customDateRange ? this.customDateRange[1] : "",

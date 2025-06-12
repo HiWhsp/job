@@ -157,11 +157,11 @@ export default new Vuex.Store({
       });
       state.list_channel = value;
     },
-  },
+  },   
 
   actions: {
     async appInit({ commit, state, dispatch }, data) {
-      dispatch("appInitGetAssets");
+      dispatch("appInitGetAssets");  
 
 
       let token = localStorage.getItem("token");

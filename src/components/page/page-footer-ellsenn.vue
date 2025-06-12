@@ -8,20 +8,20 @@
             <div class="left-articles">
               <div class="article-item">
                 <img src="@img/footer/phone.png" alt="" />
-                <router-link to="/terms?id=100">
-                  {{ vuex_config.comPhone }}
+                <router-link to="/">
+                  {{ vuex_config.mobile }}
                 </router-link>
               </div>
               <div class="article-item">
                 <img src="@img/footer/email.png" alt="" />
-                <router-link to="/terms?id=101">
-                  {{ vuex_config.comEmail }}
+                <router-link to="/">
+                  {{ vuex_config.email }}
                 </router-link>
               </div>
               <div class="article-item">
                 <img src="@img/footer/map.png" alt="" />
-                <router-link to="/terms?id=101">
-                  {{ vuex_config.comAddress }}
+                <router-link to="/">
+                  {{ vuex_config.address }}
                 </router-link>
               </div>
             </div>
@@ -76,11 +76,11 @@
             <div class="info-box">
               <div class="card-group">
                 <div class="card-img">
-                  <img src="@img/ellsenn/test.png" alt="" />
+                  <img :src="vuex_config.gzh_logo" alt="" />
                   <span>扫码关注微信公众号</span>
                 </div>
                 <div class="card-img">
-                  <img src="@img/ellsenn/test.png" alt="" />
+                  <img :src="vuex_config.qrcode" alt="" />
                   <span>扫码咨询合作事宜</span>
                 </div>
               </div>
@@ -92,10 +92,10 @@
 
     <div class="beian-box">
       <div class="beian-ctx">
-        <div>深圳市维深信息技术版权所有V-Eglish-------京Icp备17078888号-1</div>
+        <div>{{ vuex_config.beian }}</div>
         <div>
           <img src="@img/footer/beian.png" alt="" />
-          V-Eglish-------京公网安备 11010502048888号
+          {{ vuex_config.jinggonganbei }}
         </div>
       </div>
     </div>
@@ -126,9 +126,7 @@ export default {
   },
 
   methods: {
-    setView() {
-      
-    },
+    setView() {},
     toNav(item) {
       this.$router.push(item.route);
     },

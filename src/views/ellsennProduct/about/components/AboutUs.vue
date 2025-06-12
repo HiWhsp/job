@@ -16,8 +16,6 @@
         <!-- 中间内容区域 -->
         <div class="content-section">
           <div class="description">
-            <p>{{ data.title }}</p>
-
             <p>{{ data.info }}</p>
           </div>
         </div>

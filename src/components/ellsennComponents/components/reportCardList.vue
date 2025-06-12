@@ -1,20 +1,35 @@
 <template>
   <div class="cardList">
     <!-- 列表区域 -->
-    <div class="reportListTitle">共找到 <span>{{ list.length }}</span> 个{{ title }}</div>
-    <div class="item" v-for="(item, index) in list" :key="index" @click="handleClick(item)">
+    <div class="reportListTitle">
+      共找到 <span>{{ list.length }}</span> 个{{ title }}
+    </div>
+    <div
+      class="item"
+      v-for="(item, index) in list"
+      :key="index"
+      @click="handleClick(item)"
+    >
       <div class="item-image">
-        <img :src="item.thumb" alt="新闻图片" />
+        <img :src="item.thumb" alt="" />
       </div>
       <div class="item-content">
         <div class="titleAndDes">
-          <div class="item-title">{{ item.title }}</div>
-          <div class="item-description">{{ item.info }}</div>
+          <div class="item-title ellipsis-1">{{ item.title }}</div>
+          <div class="item-description ellipsis-2">{{ item.info }}</div>
         </div>
         <div class="item-meta">
           <span>{{ item.created_time }}</span>
           <span>{{ item.author }}</span>
-          <el-tag type="info" v-for="tag in item.tag" :key="tag">{{ tag }}</el-tag>
+          <div class="bottomLeftTitleAuthorItem">
+            <div
+              class="bottomLeftTitleAuthorItemIcon"
+              v-for="item in item.tag"
+              :key="item"
+            >
+              {{ item }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -43,7 +58,7 @@ export default {
     },
     title: {
       type: String,
-      default: '报告',
+      default: "报告",
     },
   },
   data() {
@@ -57,15 +72,15 @@ export default {
   methods: {
     handleSizeChange(val) {
       this.limit = val;
-      this.$emit('change', this.currentPage);
+      this.$emit("change", this.currentPage);
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.$emit('change', this.currentPage);
+      this.$emit("change", this.currentPage);
     },
     handleClick(item) {
       this.$router.push({
-        path: '/newsInsightsDetail',
+        path: "/newsInsightsDetail",
         query: {
           id: item.id,
         },

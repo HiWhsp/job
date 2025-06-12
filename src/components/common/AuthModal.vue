@@ -20,12 +20,7 @@
           </p>
         </div>
 
-        <el-form
-          :model="loginForm"
-          :rules="loginRules"
-          ref="loginForm"
-          class="auth-form"
-        >
+        <el-form :model="loginForm" :rules="loginRules" ref="loginForm" class="auth-form">
           <el-form-item prop="account">
             <el-input
               v-model="loginForm.account"
@@ -66,8 +61,7 @@
 
           <el-form-item>
             <el-checkbox v-model="loginForm.agree">
-              已阅读并同意<span class="link-text">用户协议</span>和<span
-                class="link-text"
+              已阅读并同意<span class="link-text">用户协议</span>和<span class="link-text"
                 >隐私收集</span
               >
             </el-checkbox>
@@ -88,16 +82,10 @@
         <div class="auth-footer">
           <div class="forgot-password">
             <!-- <span @click="forgotPassword" class="link-text">忘记密码？</span> -->
-            <span
-              @click="passwordLogin"
-              class="link-text"
-              v-if="type === 'code'"
+            <span @click="passwordLogin" class="link-text" v-if="type === 'code'"
               >密码登录</span
             >
-            <span
-              @click="type = 'code'"
-              class="link-text"
-              v-if="type === 'password'"
+            <span @click="type = 'code'" class="link-text" v-if="type === 'password'"
               >验证码登录</span
             >
           </div>
@@ -114,10 +102,7 @@
       </div>
 
       <!-- 注册部分 -->
-      <div
-        class="auth-section register-section"
-        v-if="activeTab === 'register'"
-      >
+      <div class="auth-section register-section" v-if="activeTab === 'register'">
         <div class="auth-header">
           <h2>注册</h2>
           <p>
@@ -264,8 +249,7 @@ export default {
         account: [
           { required: true, message: "请输入手机号码或邮箱", trigger: "blur" },
           {
-            pattern:
-              /^(1[3-9]\d{9})|(\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)$/,
+            pattern: /^(1[3-9]\d{9})|(\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)$/,
             message: "请输入正确的手机号码或邮箱格式",
             trigger: "blur",
           },
@@ -301,12 +285,8 @@ export default {
           { required: true, message: "请输入密码", trigger: "blur" },
           { min: 6, max: 20, message: "密码长度为6-20位", trigger: "blur" },
         ],
-        realName: [
-          { required: true, message: "请输入真实姓名", trigger: "blur" },
-        ],
-        company: [
-          { required: true, message: "请输入公司名称", trigger: "blur" },
-        ],
+        realName: [{ required: true, message: "请输入真实姓名", trigger: "blur" }],
+        company: [{ required: true, message: "请输入公司名称", trigger: "blur" }],
         email: [
           { required: true, message: "请输入邮箱地址", trigger: "blur" },
           { type: "email", message: "请输入正确的邮箱格式", trigger: "blur" },
@@ -582,6 +562,27 @@ export default {
       color: #666;
       margin-bottom: 15px;
       font-size: 14px;
+      position: relative;
+      &::after {
+        content: "";
+        display: block;
+        width: 140px;
+        height: 1px;
+        background: rgba(216, 216, 216, 0.5);
+        position: absolute;
+        top: 50%;
+        left: 0;
+      }
+      &::before {
+        content: "";
+        display: block;
+        width: 140px;
+        height: 1px;
+        background: rgba(216, 216, 216, 0.5);
+        position: absolute;
+        top: 50%;
+        right: 0;
+      }
     }
 
     .social-login {

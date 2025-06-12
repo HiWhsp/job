@@ -12,26 +12,20 @@
           :data="item"
           :key="index"
         ></left-card>
-        <el-empty
-          description="暂无数据"
-          v-if="leftCardList.length === 0"
-        ></el-empty>
+        <el-empty description="暂无数据" v-if="leftCardList.length === 0"></el-empty>
       </div>
       <div class="newsRight">
         <comp-title
           title="维深测评"
           :icon="require('@img/ellsenn/report.png')"
-          :url="'/newsInsights'"
+          :url="'/deepEvaluation'"
         ></comp-title>
         <right-card
           v-for="(item, index) in rightCardList"
           :data="item"
           :key="index"
         ></right-card>
-        <el-empty
-          description="暂无数据"
-          v-if="rightCardList.length === 0"
-        ></el-empty>
+        <el-empty description="暂无数据" v-if="rightCardList.length === 0"></el-empty>
       </div>
     </div>
   </div>

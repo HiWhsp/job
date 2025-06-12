@@ -40,7 +40,7 @@
             </div>
           </div>
           <div class="right-box">
-            <div class="right-box-icon">
+            <div class="right-box-icon" @click="toSearch">
               <i class="el-icon-search"></i>
             </div>
             <div v-if="vuex_user.id" class="user-name" @click="toUserCenter">
@@ -287,21 +287,8 @@ export default {
     },
 
     toSearch() {
-      // if (!this.keyword) {
-      //   alertErr("请输入搜索关键字");
-      //   return;
-      // }
-      let query = {};
-      if (this.selectCate) {
-        query.id = this.selectCate;
-      }
-
-      let keyword = (this.keyword || "").trim() || "";
-      query.keyword = keyword;
-      query.ms = new Date().getTime();
       this.$router.push({
-        path: "/product-search",
-        query: query,
+        path: "/searchList",
       });
     },
     showLogin() {

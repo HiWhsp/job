@@ -1,59 +1,61 @@
 <template>
   <div class="layout">
-    <template v-if="data.id === 1">
+    <template v-if="data.type === 1">
       <div class="left">
-        <img class="left-img" :src="data.img" alt="" />
+        <img class="left-img" :src="data.thumb" alt="" />
       </div>
       <div class="right">
         <div class="title">{{ data.title }}</div>
-        <div class="sub">{{ data.sub }}</div>
+        <div class="sub">{{ data.info }}</div>
         <div class="right-bottom">
           <div class="right-bottom-info">
-            <div class="right-bottom-info-status">{{ data.status }}</div>
-            <div class="right-bottom-info-item">{{ data.time }}</div>
-            <div class="right-bottom-info-item">{{ data.name }}</div>
-            <div class="right-bottom-info-item">{{ data.tips }}</div>
+            <div class="right-bottom-info-status">{{ data.category_name }}</div>
+            <div class="right-bottom-info-item">{{ data.release_time }}</div>
+            <div class="right-bottom-info-item">{{ data.author }}</div>
+            <div class="right-bottom-info-item">{{ data.category_name }}</div>
           </div>
           <div class="right-bottom-btn-group">
             <div class="right-bottom-btn right-bottom-btn-download">
-              下载 <img src="@img/ellsenn/pdf.png" alt="" />
-              <img src="@img/ellsenn/word.png" alt="" />
+              下载
+              <img src="@img/ellsenn/pdf.png" alt="" @click="onDownload(data.pdf_file)" />
+              <img
+                src="@img/ellsenn/word.png"
+                alt=""
+                @click="onDownload(data.word_file)"
+              />
             </div>
-            <div
-              class="right-bottom-btn right-bottom-btn-primary"
-              @click="onBtnClick"
-            >
+            <div class="right-bottom-btn right-bottom-btn-primary" @click="onBtnClick">
               在线阅读
             </div>
           </div>
         </div>
       </div>
     </template>
-    <template v-if="data.id === 2">
-      <div class="item-image">
-        <img :src="data.image" alt="新闻图片" />
+    <template v-if="data.type === 2">
+      <div class="item-image" @click="onBtnClick(2)">
+        <img :src="data.thumb" alt="新闻图片" />
       </div>
-      <div class="item-content">
+      <div class="item-content" @click="onBtnClick(2)">
         <div class="titleAndDes">
           <div class="item-title">{{ data.title }}</div>
-          <div class="item-description">{{ data.description }}</div>
+          <div class="item-description">{{ data.info }}</div>
         </div>
         <div class="item-meta">
-          <span>{{ data.date }}</span>
-          <span>{{ data.source }}</span>
+          <span>{{ data.release_date }}</span>
+          <span>{{ data.author }}</span>
         </div>
       </div>
     </template>
-    <template v-if="data.id === 3">
-      <div class="item-image">
-        <img :src="data.url" alt="新闻图片" />
+    <template v-if="data.type === 3">
+      <div class="item-image" @click="onBtnClick(3)">
+        <img :src="data.thumb" alt="新闻图片" />
       </div>
-      <div class="item-content">
+      <div class="item-content" @click="onBtnClick(3)">
         <div class="cardContent">
           <div class="activeTitle">{{ data.title }}</div>
           <div class="activeTime">
             <img class="activeIcon" src="@img/ellsenn/time.png" alt="" />
-            <div>活动时间：{{ data.time }}</div>
+            <div>活动时间：{{ data.start_time }} 至 {{ data.end_time }}</div>
           </div>
           <div class="activeLocation">
             <img class="activeIcon" src="@img/ellsenn/location.png" alt="" />
@@ -76,7 +78,8 @@ export default {
       default: () => ({
         img: require("@img/ellsenn/test.png"),
         title: "2025-2031年中国锰黄铜行业市场深度研究及发展趋势预测报告",
-        sub: "2025-2031年中国锰黄铜行业市场深度研究及发展趋势预测报告，主要包括行业下游产业链分析，行业各区域市场概况，行业主要优势企业分析，行业发展前景预测等内容。",
+        sub:
+          "2025-2031年中国锰黄铜行业市场深度研究及发展趋势预测报告，主要包括行业下游产业链分析，行业各区域市场概况，行业主要优势企业分析，行业发展前景预测等内容。",
         status: "公共服务",
         time: "2025-04-22",
         name: "梁昊",
@@ -90,13 +93,36 @@ export default {
   },
   mounted() {},
   methods: {
-    onBtnClick() {
-      this.$router.push({
-        path: "/reportDetails",
-        query: {
-          id: this.data.id,
-        },
-      });
+    onBtnClick(type) {
+      if (type === 2) {
+        this.$router.push({
+          path: "/newsInsightsDetail",
+          query: {
+            id: this.data.pid,
+          },
+        });
+      } else if (type === 3) {
+        this.$router.push({
+          path: "/industrialActivitiesDetail",
+          query: {
+            id: this.data.pid,
+          },
+        });
+      } else {
+        this.$router.push({
+          path: "/reportDetails",
+          query: {
+            id: this.data.pid,
+          },
+        });
+      }
+    },
+    onDownload(url) {
+      if (url) {
+        window.open(url, "_blank");
+      } else {
+        alertErr("暂无下载地址");
+      }
     },
   },
 };

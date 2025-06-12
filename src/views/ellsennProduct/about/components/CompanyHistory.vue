@@ -25,7 +25,7 @@
                   </div>
                 </div>
                 <div class="image-section">
-                  <img :src="item.thumb" alt="2025" />
+                  <img :src="item.data[0].thumb" alt="" />
                 </div>
               </div>
             </div>
@@ -38,7 +38,7 @@
             <div class="timeline-content">
               <div class="content-box">
                 <div class="image-section">
-                  <img :src="item.thumb" alt="2024" />
+                  <img :src="item.data[0].thumb" alt="" />
                 </div>
                 <div class="text-section">
                   <div class="year">{{ item.title }}</div>
