@@ -16,7 +16,7 @@
           </div>
           <div class="action">
             <div class="info">
-              <span>课时：{{ tableData.length }}</span>
+              <span>课时：{{ detail.learn_time }}</span>
               <span>发布时间：{{ detail.created_at }}</span>
             </div>
             <div class="actions">

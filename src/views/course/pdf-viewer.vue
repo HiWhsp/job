@@ -32,6 +32,7 @@ export default {
           } else {
             this.selectItem = this.tableData[0];
           }
+          this.recordMyCourseList();
         }
       });
     },
@@ -64,6 +65,18 @@ export default {
         return url.endsWith(".pdf") || url.endsWith(".PDF");
       }
       return false;
+    },
+    recordMyCourseList() {
+      this.$api({
+        url: "addMyCourseLearnRecord",
+        method: "post",
+        data: {
+          course_id: this.detail.id,
+          course_list_id: this.selectItem.id,
+          schedule: 100,
+          has_learn_time: 100,
+        },
+      });
     },
   },
 };

@@ -45,18 +45,20 @@ export default {
           data: {
             question_id: this.id,
           },
-        }).then((res) => {
-          if (res.code == 200) {
-            this.switchCount++;
-            this.$message.error(
-              `已切换了 ${this.switchCount} 次标签页, 超过次数限制将自动交卷`
-            );
-          }
-        }).catch(err => {
-          setTimeout(() => {
-            this.endQuestion();
-          }, 1000);
-        });
+        })
+          .then((res) => {
+            if (res.code == 200) {
+              this.switchCount++;
+              this.$message.error(
+                `已切换了 ${this.switchCount} 次标签页, 超过次数限制将自动交卷`
+              );
+            }
+          })
+          .catch((err) => {
+            setTimeout(() => {
+              this.endQuestion();
+            }, 1000);
+          });
       }
     },
     setView() {
@@ -153,9 +155,7 @@ export default {
           : (question.selectText = item);
         this.addMyQuestionBank(question);
       } else if (type === "multiple") {
-        const textList = question.selectText
-          ? question.selectText.split(",")
-          : [];
+        const textList = question.selectText ? question.selectText.split(",") : [];
         textList.includes(item)
           ? textList.splice(textList.indexOf(item), 1)
           : textList.push(item);
@@ -195,7 +195,7 @@ export default {
     },
     // 选项标识
     topicList(item) {
-      return "ABCD".substring(item, item + 1);
+      return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".substring(item, item + 1);
     },
     // 倒计时
     updateCountdown() {
@@ -207,20 +207,13 @@ export default {
         this.timeObj.minutes = "0";
         this.timeObj.seconds = "0";
         clearInterval(this.timer);
-
         this.modalType = 2;
         this.show_modal = true;
-        this.timer1 = setInterval(() => {
-          this.overTime--;
-          if (this.overTime == 0) {
-            clearInterval(this.timer1);
-            this.endQuestion();
-            // this.$router.push('/my-exam');
-          }
-        }, 1000);
+        this.timer1Fun();
         return;
-      } else {
+      } else if (this.timer == null) {
         this.timer = setInterval(this.updateCountdown, 1000);
+        return;
       }
 
       timeDiff -= this.timeObj.days * 24 * 60 * 60;
@@ -228,6 +221,16 @@ export default {
       timeDiff -= this.timeObj.hours * 60 * 60;
       this.timeObj.minutes = Math.floor(timeDiff / 60);
       this.timeObj.seconds = timeDiff % 60;
+    },
+    timer1Fun() {
+      this.timer1 = setInterval(() => {
+        this.overTime--;
+        if (this.overTime == 0) {
+          clearInterval(this.timer1);
+          this.endQuestion();
+          // this.$router.push('/my-exam');
+        }
+      }, 1000);
     },
     formatNumber(num) {
       // Pad with leading zero if number is less than 10
@@ -437,9 +440,7 @@ export default {
                   v-for="(it, i) in item.content"
                   :key="i"
                   :class="{
-                    selected: item.selectText
-                      ? item.selectText.includes(it)
-                      : '',
+                    selected: item.selectText ? item.selectText.includes(it) : '',
                   }"
                   class="topic-item"
                   @click="topicClick(it, item, 'multiple')"
@@ -472,12 +473,8 @@ export default {
           </div>
         </div>
         <div slot="footer" class="dialog-footer">
-          <button class="btn-ripple btn-1" @click="show_modal = false">
-            继续答题
-          </button>
-          <button class="btn-ripple btn-2" @click="show_modal = false">
-            确认交卷
-          </button>
+          <button class="btn-ripple btn-1" @click="show_modal = false">继续答题</button>
+          <button class="btn-ripple btn-2" @click="show_modal = false">确认交卷</button>
         </div>
       </template>
       <template v-else-if="modalType === 2">
@@ -489,9 +486,7 @@ export default {
       <template v-else-if="modalType === 3">
         <div class="modal-inner">
           <div class="text-box">很遗憾，考试不及格！您的分数为：</div>
-          <div :class="{ wrong: true }" class="score">
-            {{ detail.my_total_point }}分
-          </div>
+          <div :class="{ wrong: true }" class="score">{{ detail.my_total_point }}分</div>
         </div>
         <div slot="footer" class="dialog-footer">
           <button
