@@ -9,9 +9,9 @@
     <div class="items">
       <div class="item" v-for="(item, index) in list" :key="index">
         <div class="content">
-          <div class="title">{{ item.title }}</div>
+          <div class="tit ellipsis-2">{{ item.title }}</div>
           <div class="info">
-            <span>{{ item.date }}</span>
+            <span>{{ item.created_time }}</span>
             <span>{{ item.author }}</span>
           </div>
         </div>

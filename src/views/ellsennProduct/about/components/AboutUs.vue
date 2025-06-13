@@ -15,9 +15,7 @@
 
         <!-- 中间内容区域 -->
         <div class="content-section">
-          <div class="description">
-            <p>{{ data.info }}</p>
-          </div>
+          <div class="description" v-html="data.info"></div>
         </div>
       </div>
 

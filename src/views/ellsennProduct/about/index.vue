@@ -106,6 +106,13 @@ export default {
       ],
     };
   },
+  watch: {
+    $route: {
+      handler(newVal) {
+        this.activeIndex = +newVal.query.activeIndex || 1;
+      },
+    },
+  },
   mounted() {
     this.activeIndex = +this.$route.query.activeIndex || 1;
   },
@@ -114,7 +121,12 @@ export default {
       console.log(i, "onBtnClick");
     },
     handleTabNavClick(index) {
-      this.activeIndex = index;
+      this.$router.push({
+        path: "/about",
+        query: {
+          activeIndex: index,
+        },
+      });
     },
   },
 };

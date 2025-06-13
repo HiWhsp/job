@@ -6,8 +6,9 @@
           <img :src="guest.thumb" :alt="guest.name" />
         </div>
         <div class="guest-info">
-          <div class="guest-name">{{ guest.title }}</div>
-          <div class="guest-position">{{ guest.info }}</div>
+          <div class="guest-name">{{ guest.name }}</div>
+          <div class="guest-company">{{ guest.info }}</div>
+          <div class="guest-position ellipsis-1">{{ guest.info }}</div>
         </div>
       </div>
     </div>
@@ -25,8 +26,7 @@ export default {
   },
   data() {
     return {
-      defaultGuests: [
-      ],
+      defaultGuests: [],
     };
   },
 };

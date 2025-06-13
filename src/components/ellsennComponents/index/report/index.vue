@@ -49,6 +49,9 @@ export default {
     this.$api({
       url: "getReportConfig",
       method: "get",
+      data: {
+        is_home: 1,
+      },
     }).then((res) => {
       if (res.code == 200) {
         this.tabList = res.data.category_data;
@@ -68,6 +71,7 @@ export default {
         data: {
           page: 1,
           limit: 12,
+          is_home: 1,
           category_id: this.activeName,
         },
       }).then((res) => {

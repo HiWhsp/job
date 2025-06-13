@@ -3,7 +3,7 @@
     <div class="rightCardTitle">{{ data.title }}</div>
     <div class="item-info">
       <span class="item-time">{{ data.created_time }}</span>
-      <span class="item-status" v-for="(item, index) in data.tab" :key="index">{{
+      <span class="item-status" v-for="(item, index) in data.tag" :key="index">{{
         item
       }}</span>
     </div>

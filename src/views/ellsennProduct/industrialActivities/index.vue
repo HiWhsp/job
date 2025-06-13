@@ -3,7 +3,7 @@
     <top-search title="行业峰会 为行业聚能" :onClick="onBtnClick"></top-search>
     <div class="industrialActivitiesBottom">
       <div class="bottomContent">
-        <report-filter @search="search"></report-filter>
+        <report-filter @search="search" url="getProductActivitiesConfig"></report-filter>
         <div class="activeContent">
           <activity-card
             v-for="(item, index) in activityList"

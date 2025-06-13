@@ -72,11 +72,16 @@
 
 <script>
 import card from "@/components/ellsennComponents/components/card.vue";
-import { log } from "util";
 export default {
   name: "reportFilter",
   components: {
     card,
+  },
+  props: {
+    url: {
+      type: String,
+      default: "getReportConfig",
+    },
   },
   data() {
     return {
@@ -96,7 +101,7 @@ export default {
     // 获取查询条件
     getQueryCondition() {
       this.$api({
-        url: "getReportConfig",
+        url: this.url,
         method: "get",
       }).then((res) => {
         if (res.code == 200) {
@@ -163,7 +168,7 @@ export default {
     // 查询
     search() {
       this.$emit("search", {
-        type_id: this.reportTypeAll
+        category_id: this.reportTypeAll
           ? ""
           : this.reportTypes.filter((item) => item.checked).length > 0
           ? this.reportTypes
@@ -171,7 +176,7 @@ export default {
               .map((item) => item.id)
               .join(",")
           : "",
-        category_id: this.industryAll
+        type_id: this.industryAll
           ? ""
           : this.industries.filter((item) => item.checked).length > 0
           ? this.industries

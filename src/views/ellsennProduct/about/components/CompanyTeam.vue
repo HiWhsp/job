@@ -51,6 +51,7 @@ export default {
         data: {
           page: this.currentPage,
           limit: 25,
+          type: 2,
         },
       }).then((res) => {
         this.guestList = res.data.list;

@@ -130,7 +130,9 @@
                     v-for="(item, itemIndex) in section.children"
                     :key="itemIndex"
                   >
-                    <div class="timeline-time">{{ item.time }}</div>
+                    <div class="timeline-time">
+                      {{ item.start_time }}-{{ item.end_time }}
+                    </div>
                     <div class="timeline-content">
                       <div class="timeline-text">{{ item.title }}</div>
                       <div class="timeline-desc" v-if="item.content"></div>
@@ -245,9 +247,6 @@ export default {
         data: { id: this.id },
       })
         .then((res) => {
-          console.log("====================================");
-          console.log(res);
-          console.log("====================================");
           if (res.code == 200) {
             this.$router.push("/meetingRegistration?id=" + this.id);
           }
@@ -256,7 +255,8 @@ export default {
           // 调用登录
           this.$showLogin({
             onLoginSuccess: (data) => {
-              this.getActivityDetails();
+              this.$store.commit("set_baseInfo", data);
+              location.reload();
             },
             onRegisterSuccess: (data) => {
               console.log("注册成功:", data);

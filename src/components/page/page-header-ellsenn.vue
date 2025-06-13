@@ -21,12 +21,33 @@
                   class="nav-item nav-item-type-1"
                   v-for="(item, index) in page_nav_list"
                   :key="index"
+                  @mouseenter="mouseoverLang(item)"
+                  @mouseleave="mouseoutLang(item)"
                 >
                   <template v-if="!item.route.includes('http')">
                     <router-link :to="item.route" class="nav-title">
                       {{ item.title }}
                     </router-link>
                     <i v-if="!!item.icon" class="nav-itm" :class="item.icon"></i>
+                    <div
+                      class="nav-dropdown"
+                      v-show="
+                        (item.children && showLanguage && item.title === '研究报告') ||
+                        (item.children && showContact && item.title === '关于我们')
+                      "
+                      @mouseenter="mouseoverLang"
+                      @mouseleave="mouseoutLang"
+                    >
+                      <div
+                        class="nav-dropdown-item"
+                        v-for="(item, index) in item.children"
+                        :key="index"
+                      >
+                        <router-link :to="item.route">
+                          {{ item.title }}
+                        </router-link>
+                      </div>
+                    </div>
                   </template>
                   <template v-else>
                     <div @click="jump_nav(item)">
@@ -43,9 +64,28 @@
             <div class="right-box-icon" @click="toSearch">
               <i class="el-icon-search"></i>
             </div>
-            <div v-if="vuex_user.id" class="user-name" @click="toUserCenter">
-              {{ vuex_user.name }}
+            <div
+              class="user-box"
+              v-if="vuex_user.id"
+              @mouseenter="mouseenter"
+              @mouseleave="mouseleave"
+            >
+              <img :src="vuex_user.image" alt="" />
+              <div class="user-name" @click="toUserCenter">
+                {{ vuex_user.name }}
+              </div>
+
+              <div
+                v-show="showSiteMap"
+                class="user-dropdown"
+                @mouseenter="mouseenter"
+                @mouseleave="mouseleave"
+              >
+                <div class="dropdown-item" @click="toUserCenter">个人中心</div>
+                <div class="dropdown-item" @click="logout">退出</div>
+              </div>
             </div>
+
             <el-button size="small " class="btn btn-login" @click="showLogin" v-else
               >登录</el-button
             >
@@ -56,13 +96,6 @@
               class="btn btn-register"
               @click="showRegister"
               >注册</el-button
-            >
-            <el-button
-              size="small "
-              class="btn btn-login"
-              @click="logout"
-              v-if="vuex_user.id"
-              >退出</el-button
             >
           </div>
         </div>
@@ -99,7 +132,6 @@ export default {
 
       showSearch: false,
       keyword: "",
-
       search_suggest_list: [],
       disabledSearchQuery: false,
       searchLock: false, //锁定搜素
@@ -128,6 +160,16 @@ export default {
           title: "研究报告",
           route: "/researchReport",
           icon: "el-icon-caret-bottom",
+          children: [
+            {
+              title: "研究报告",
+              route: "/researchReport",
+            },
+            {
+              title: "研究报告",
+              route: "/researchReport",
+            },
+          ],
         },
         { title: "新闻洞察", route: "/newsInsights" },
         { title: "维深测评", route: "/deepEvaluation" },
@@ -137,6 +179,44 @@ export default {
           title: "关于我们",
           route: "/about",
           icon: "el-icon-caret-bottom",
+          children: [
+            {
+              title: "公司简介",
+              route: "/about?activeIndex=1",
+            },
+            {
+              title: "公司历程",
+              route: "/about?activeIndex=2",
+            },
+            {
+              title: "公司新闻",
+              route: "/about?activeIndex=3",
+            },
+            {
+              title: "外部专业委员",
+              route: "/about?activeIndex=4",
+            },
+            {
+              title: "荣誉墙",
+              route: "/about?activeIndex=5",
+            },
+            {
+              title: "公司团队",
+              route: "/about?activeIndex=6",
+            },
+            {
+              title: "公司客户",
+              route: "/about?activeIndex=7",
+            },
+            {
+              title: "联系我们",
+              route: "/about?activeIndex=8",
+            },
+            {
+              title: "加入我们",
+              route: "/about?activeIndex=8",
+            },
+          ],
         },
       ];
       return arr;
@@ -179,59 +259,27 @@ export default {
       }
     },
 
-    on_mouseover() {
-      //this.show_fenlei = true;
-      //获取配置信息
-      //判断当前模板是否需要鼠标悬浮显示下拉导航
-      if (this.$route.name != "index") {
-        this.show_fenlei = true;
-      } else {
-        this.show_fenlei = false;
-      }
-    },
-    on_mouseleave() {
-      this.show_fenlei = false;
-    },
-
-    //语言切换
-    toggleLanguage(lang_curr) {
-      // let lang_prev = localStorage.getItem("lang") || "zh";
-      // let lang_curr = "";
-      // if (lang_prev == "zh") {
-      //   lang_curr = "en";
-      // } else if (lang_prev == "en") {
-      //   lang_curr = "zh";
-      // }
-
-      if (localStorage.getItem("lang") == lang_curr) {
-        return;
-      }
-
-      this.$store.commit("set_lang", lang_curr);
-      this.$i18n.locale = lang_curr;
-
-      location.reload();
-    },
-
-    jump(route) {
-      // debugger
-      this.$router.push("/" + route);
-    },
-
-    mouseover() {
+    mouseenter(e) {
       this.showSiteMap = true;
     },
-    mouseout() {
+    mouseleave(e) {
       this.showSiteMap = false;
     },
-    mouseoverLang() {
-      this.showLanguage = true;
-    },
-    mouseoutLang() {
-      this.showLanguage = false;
-    },
 
-    //
+    mouseoverLang(item) {
+      if (item.title === "关于我们") {
+        this.showContact = true;
+      } else {
+        this.showLanguage = true;
+      }
+    },
+    mouseoutLang(item) {
+      if (item.title === "关于我们") {
+        this.showContact = false;
+      } else {
+        this.showLanguage = false;
+      }
+    },
 
     //搜索
     click_search() {
@@ -295,7 +343,7 @@ export default {
       this.$showLogin({
         onLoginSuccess: (data) => {
           this.$store.commit("set_baseInfo", data);
-          this.$router.push("/");
+          location.reload();
         },
       });
     },

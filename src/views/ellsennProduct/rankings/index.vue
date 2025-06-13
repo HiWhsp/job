@@ -4,12 +4,12 @@
     <div class="year-nav">
       <div class="year-tabs">
         <div
-          v-for="year in years"
-          :key="year"
-          :class="['year-tab', { active: currentYear === year }]"
-          @click="switchYear(year)"
+          v-for="(year, index) in years"
+          :key="year.year"
+          :class="['year-tab', { active: currentYear === year.year }]"
+          @click="switchYear(year, index)"
         >
-          {{ year }}
+          {{ year.year }}
         </div>
       </div>
     </div>
@@ -25,7 +25,7 @@
               v-for="(category, index) in categories"
               :key="index"
               :class="['category-item', { active: selectedCategory.id === category.id }]"
-              @click="switchCategory(category)"
+              @click="switchCategory(category, index)"
             >
               {{ category.title }}
             </div>
@@ -72,14 +72,13 @@ export default {
     },
   },
   methods: {
-    switchYear(year) {
-      this.currentYear = year;
-      // 这里可以添加数据加载逻辑
-      this.loadRankingData(year);
+    switchYear(year, index) {
+      this.currentYear = year.year;
+      this.categories = year.data;
+      this.selectedCategory = this.categories[0];
     },
     switchCategory(category) {
       this.selectedCategory = category;
-      // 这里可以添加分类切换逻辑
     },
     loadRankingData(year) {
       this.$api({
@@ -87,9 +86,9 @@ export default {
         method: "get",
       }).then((res) => {
         if (res.code === 200) {
-          this.years = [res.data.year];
-          this.currentYear = res.data.year;
-          this.categories = res.data.data;
+          this.years = res.data;
+          this.currentYear = res.data[0].year;
+          this.categories = res.data[0].data;
           this.selectedCategory = this.categories[0];
         }
       });

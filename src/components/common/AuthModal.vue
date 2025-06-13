@@ -386,14 +386,20 @@ export default {
               code: this.loginForm.code,
               type: this.type === "code" ? 2 : 1,
             },
-          }).then((res) => {
-            if (res.code == 200) {
+          })
+            .then((res) => {
+              if (res.code == 200) {
+                this.loginLoading = false;
+                this.$message.success("登录成功");
+                this.hide();
+                this.$emit("login-success", res.data);
+              } else {
+                this.$message.error(res.msg);
+              }
+            })
+            .catch((err) => {
               this.loginLoading = false;
-              this.$message.success("登录成功");
-              this.hide();
-              this.$emit("login-success", res.data);
-            }
-          });
+            });
 
           // 模拟登录请求
           setTimeout(() => {}, 1500);

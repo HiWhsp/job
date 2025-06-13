@@ -66,37 +66,42 @@
             <div class="VueMarkdown" v-html="data.data ? data.data.content : ''"></div>
           </div>
           <div class="bottomLeftNextReport">
-            <div
-              class="bottomLeftNextReportItem top-left"
-              v-if="data.data && data.data.next"
-            >
-              <img :src="data.data.next.thumb" alt="" />
-              <div class="bottomLeftNextReportItemTitle">
-                <h2>{{ data.data.next.title }}</h2>
-                <div class="bottomLeftNextReportItemTime">
-                  {{ data.data.next.created_at }}
+            <div class="bottomLeftNextReportItem top-left">
+              <div class="bottomNextReportItem" v-if="data.next && data.next.id">
+                <img :src="data.next.thumb" alt="" />
+                <div class="bottomLeftNextReportItemTitle">
+                  <h2 class="ellipsis-2">{{ data.next.title }}</h2>
+                  <div class="bottomLeftNextReportItemTime">
+                    {{ data.next.created_at }}
+                  </div>
                 </div>
               </div>
-              <div class="btn">
+
+              <div class="btn" @click="handleNext" v-if="data.next && data.next.id">
                 <i class="el-icon-back"></i>
                 <span>上一篇</span>
               </div>
+              <el-empty description="暂无更多" v-else></el-empty>
             </div>
-            <div
-              class="bottomLeftNextReportItem bottom-right"
-              v-if="data.data && data.data.previous"
-            >
-              <img :src="data.data.previous.thumb" alt="" />
-              <div class="bottomLeftNextReportItemTitle">
-                <h2>{{ data.data.previous.title }}</h2>
-                <div class="bottomLeftNextReportItemTime">
-                  {{ data.data.previous.created_at }}
+            <div class="bottomLeftNextReportItem bottom-right">
+              <div class="bottomNextReportItem" v-if="data.previous && data.previous.id">
+                <img :src="data.previous.thumb" alt="" />
+                <div class="bottomLeftNextReportItemTitle">
+                  <h2 class="ellipsis-2">{{ data.previous.title }}</h2>
+                  <div class="bottomLeftNextReportItemTime">
+                    {{ data.previous.created_at }}
+                  </div>
                 </div>
               </div>
-              <div class="btn">
+              <div
+                class="btn"
+                @click="handlePrevious"
+                v-if="data.previous && data.previous.id"
+              >
                 <span>下一篇</span>
                 <i class="el-icon-right"></i>
               </div>
+              <el-empty description="暂无更多" v-else></el-empty>
             </div>
           </div>
           <div class="bottomLeftMakeComment">
@@ -105,7 +110,7 @@
         </div>
         <div class="bottomRight">
           <div>
-            <recommend :list="data.data ? data.data.recommend : []"></recommend>
+            <recommend :list="data.data ? data.related : []"></recommend>
           </div>
         </div>
       </div>
@@ -153,6 +158,15 @@ export default {
       return option;
     },
   },
+  watch: {
+    $route: {
+      handler() {
+        this.id = this.$route.query.id;
+        this.getData();
+      },
+      immediate: true,
+    },
+  },
   mounted() {
     this.id = this.$route.query.id;
     this.getData();
@@ -180,6 +194,18 @@ export default {
         },
       }).then((res) => {
         this.getData();
+      });
+    },
+    handleNext() {
+      this.$router.push({
+        path: "/newsInsightsDetail",
+        query: { id: this.data.next.id },
+      });
+    },
+    handlePrevious() {
+      this.$router.push({
+        path: "/newsInsightsDetail",
+        query: { id: this.data.previous.id },
       });
     },
   },

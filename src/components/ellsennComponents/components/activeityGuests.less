@@ -32,10 +32,10 @@
       overflow: hidden;
       position: relative;
 
-      &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      }
+      // &:hover {
+      //   transform: translateY(-5px);
+      //   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      // }
 
       .guest-avatar {
         width: 100%;
@@ -65,14 +65,41 @@
         }
 
         .guest-position {
-          font-size: 14px;
-          opacity: 0.9;
+          font-size: 12px;
           margin-bottom: 4px;
+          color: #fff;
+          opacity: 1;
+          max-height: 20px;
+          transition: opacity 0.3s ease, max-height 0.4s ease,
+            margin-bottom 0.4s ease;
+          overflow: hidden;
         }
 
         .guest-company {
           font-size: 12px;
-          opacity: 0.8;
+          line-height: 1.5;
+          color: #fff;
+          overflow: hidden;
+          opacity: 0;
+          max-height: 0;
+          transition: opacity 0.3s ease 0.1s, max-height 0.4s ease;
+          display: -webkit-box;
+          -webkit-line-clamp: 5;
+          -webkit-box-orient: vertical;
+        }
+      }
+      // 悬浮动画效果
+      &:hover {
+        .guest-info {
+          .guest-company {
+            opacity: 1;
+            max-height: 100px;
+          }
+          .guest-position {
+            opacity: 0;
+            max-height: 0;
+            margin-bottom: 0;
+          }
         }
       }
     }
