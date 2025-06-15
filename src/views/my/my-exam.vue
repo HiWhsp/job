@@ -58,7 +58,7 @@
           <p>
             关联课程：<span>{{ item.course_info.title }}</span>
           </p>
-          <p>完成度：100%</p>
+          <p>完成度：{{ item.course_schedule }}</p>
         </div>
       </div>
       <el-empty v-if="!list.length" description="暂无数据..."></el-empty>
