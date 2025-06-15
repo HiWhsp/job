@@ -29,7 +29,6 @@
                 type="date"
                 placeholder="请选择签订日期"
                 value-format="yyyy-MM-dd"
-                disabled
               ></el-date-picker>
             </el-form-item>
           </el-col>
@@ -39,20 +38,39 @@
       <!-- 产品列表 -->
       <div class="section">
         <div class="add-product">
-          <el-button type="primary" @click="addProduct">添加产品</el-button>
-          <el-select
-            v-model="productId"
-            placeholder="请选择产品"
-            style="margin-left: 15px"
-          >
-            <el-option
-              v-for="item in productList"
-              :key="item.id"
-              :label="item.title"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <el-button type="primary" @click="openDialog">添加产品</el-button>
         </div>
+        <!-- 产品选择弹框 -->
+        <el-dialog title="选择产品" :visible.sync="dialogVisible" width="60%">
+          <div style="margin-bottom: 16px">
+            <el-input
+              v-model="keyword"
+              placeholder="关键词搜索"
+              style="width: 200px; margin-right: 10px"
+              clearable
+            />
+            <el-button type="primary" @click="handleSearch">搜索</el-button>
+          </div>
+          <el-table
+            :data="filteredProductList"
+            style="width: 100%; margin-bottom: 16px"
+            @selection-change="handleSelectionChange"
+            ref="productTable"
+            :row-key="(row) => row.id"
+            border
+            highlight-current-row
+            @row-click="toggleRowSelection"
+          >
+            <el-table-column type="selection" width="55" align="center" />
+            <el-table-column prop="title" label="商品名称" align="center" />
+            <el-table-column prop="specNo" label="商品规格" align="center" />
+            <el-table-column prop="price" label="商品价格" align="center" />
+          </el-table>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="handleDialogConfirm">确认</el-button>
+          </span>
+        </el-dialog>
         <el-table :data="form.products" style="margin-top: 12px">
           <el-table-column
             type="index"
@@ -206,7 +224,23 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="需方单位名称：" prop="company">
-                <el-input v-model="form.companyInfo.company"></el-input>
+                <el-select
+                  v-model="form.companyInfo.company"
+                  filterable
+                  remote
+                  reserve-keyword
+                  placeholder="请输入关键词搜索"
+                  :remote-method="remoteSearch"
+                  :loading="loading"
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="item in companyOptions"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.name">
+                  </el-option>
+                </el-select>
               </el-form-item>
               <el-form-item label="法定代表人：" prop="fdName">
                 <el-input v-model="form.companyInfo.fdName"></el-input>
@@ -256,10 +290,12 @@ export default {
       id: "",
       productId: "",
       productList: [],
+      dialogVisible: false,
+      keyword: "",
+      filteredProductList: [],
+      selectedProducts: [],
       form: {
-        products: [
-          // { title: "", desc: "", unit: "", price: 0, num: 1, remark: "" },
-        ],
+        products: [],
         termJson: {
           standard:
             "品质验收标准以合同规定的型号，规格，配置为标准，按产品原生产厂家的标准及方式进行验收，即按照IIS A标准，不适用其他任何的验收条款和方式。需方应认真检查包装、数量及产品、随机附件是否完好，确认并签收。需方可在收到货物之日起2日内提出产品数量异议；在收到货物之日起7日内就产品质量提出书面异议。验收完成，此后因此产品发生的任何问题，与供方无关。",
@@ -310,18 +346,11 @@ export default {
         standard: [{ required: true, message: "请输入质量要求和技术标准" }],
         warranty: [{ required: true, message: "请输入保修说明" }],
         relatedCosts: [{ required: true, message: "请选择相关费用" }],
-        // shouHuo: [{ required: true, message: "请输入需方收货人信息" }],
         payment: [{ required: true, message: "请选择货款清算及结算方式" }],
         paymentDesc: [{ required: true, message: "请输入货款清算及结算方式描述" }],
-        // fdName: [{ required: true, message: "请输入法定代表人" }],
-        // phone: [{ required: true, message: "请输入电话" }],
-        // bank: [{ required: true, message: "请输入开户银行" }],
-        // taxCode: [{ required: true, message: "请输入税号" }],
-        // address: [{ required: true, message: "请输入单位地址" }],
-        // wtName: [{ required: true, message: "请输入委托代理人" }],
-        // zipCode: [{ required: true, message: "请输入邮编" }],
-        // bankCode: [{ required: true, message: "请输入账号" }],
       },
+      companyOptions: [],
+      loading: false,
     };
   },
   computed: {
@@ -388,17 +417,55 @@ export default {
     } else {
       this.form.companyInfo.signDate = log.parseTime(new Date(), "{y}-{m}-{d}");
     }
-    // 获取商品列表
-    this.$api({
-      url: "getProductList",
-      method: "get",
-    }).then((res) => {
-      if (res.code === 200) {
-        this.productList = res.data.list;
-      }
-    });
+    this.getProductList();
   },
   methods: {
+    getProductList() {
+      // 获取商品列表
+      this.$api({
+        url: "getProductList",
+        method: "get",
+        data: {
+          keyword: this.keyword,
+        },
+      }).then((res) => {
+        if (res.code === 200) {
+          this.productList = res.data.list;
+          this.filteredProductList = res.data.list; // 初始化弹框商品列表
+        }
+      });
+    },
+    openDialog() {
+      this.selectedProducts = [];
+      this.$nextTick(() => {
+        if (this.$refs.productTable) {
+          this.$refs.productTable.clearSelection();
+        }
+      });
+      this.dialogVisible = true;
+      this.filteredProductList = this.productList;
+    },
+    handleSearch() {
+      this.getProductList();
+    },
+    handleSelectionChange(val) {
+      this.selectedProducts = val;
+    },
+    toggleRowSelection(row) {
+      this.$refs.productTable.toggleRowSelection(row);
+    },
+    handleDialogConfirm() {
+      if (this.selectedProducts.length === 0) {
+        this.$message.error("请选择产品");
+        return;
+      }
+      this.selectedProducts.forEach((item) => {
+        this.productId = item.id;
+        this.addProduct();
+      });
+      this.selectedProducts = [];
+      this.dialogVisible = false;
+    },
     addProduct() {
       if (this.productId) {
         const product = this.productList.find((item) => item.id === this.productId);
@@ -407,10 +474,12 @@ export default {
           specNo: product.specNo,
           unit: product.unit,
           price: product.price,
-          num: product.num,
-          totalPrice: "",
+          num: 1,
+          totalPrice: product.price,
           remark: "",
         });
+        this.productId = "";
+        this.calcTotal();
       } else {
         this.$message.error("请选择产品");
       }
@@ -430,8 +499,6 @@ export default {
           // 依次校验form1和form2
           this.$refs.form1.validate((valid1) => {
             if (valid1) {
-              // this.$refs.form2.validate((valid2) => {
-              //   if (valid2) {
               if (this.form.termJson.payment == 3) {
                 if (this.form.termJson.paymentDesc == "") {
                   this.$message.error("请输入货款清算及结算方式描述");
@@ -441,9 +508,9 @@ export default {
               // 检查产品列表
               this.form.products.forEach((item) => {
                 if (
-                  item.title === "" ||
-                  item.specNo === "" ||
-                  item.unit === "" ||
+                  !item.title ||
+                  !item.specNo ||
+                  !item.unit ||
                   item.num === 0 ||
                   item.price === 0
                 ) {
@@ -484,10 +551,6 @@ export default {
                   loading.close();
                 });
               });
-              // } else {
-              //   this.$message.error("请检查需方信息输入内容");
-              // }
-              // });
             } else {
               this.$message.error("请检查合同条款输入内容");
             }
@@ -503,6 +566,25 @@ export default {
     },
     back() {
       this.$router.push("/xiaoshouhetong-list");
+    },
+    remoteSearch(query) {
+      this.loading = true;
+      this.$api({
+        url: "getCompanyList",
+        method: "post",
+        data: {
+          keyword: query,
+        },
+      }).then((res) => {
+        if (res.code === 200) {
+          this.companyOptions = res.data.list;
+        } else {
+          this.companyOptions = [];
+        }
+        this.loading = false;
+      }).catch(() => {
+        this.loading = false;
+      });
     },
   },
 };

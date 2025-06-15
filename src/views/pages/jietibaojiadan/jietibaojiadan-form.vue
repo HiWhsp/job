@@ -29,7 +29,6 @@
                 type="date"
                 placeholder="请选择签订日期"
                 value-format="yyyy-MM-dd"
-                disabled
               ></el-date-picker>
             </el-form-item>
           </el-col>
@@ -39,20 +38,39 @@
       <!-- 产品列表 -->
       <div class="section">
         <div class="add-product">
-          <el-button type="primary" @click="addProduct">添加产品</el-button>
-          <el-select
-            v-model="productId"
-            placeholder="请选择产品"
-            style="margin-left: 15px"
-          >
-            <el-option
-              v-for="item in productList"
-              :key="item.id"
-              :label="item.title"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <el-button type="primary" @click="openDialog">添加产品</el-button>
         </div>
+        <!-- 产品选择弹框 -->
+        <el-dialog title="选择产品" :visible.sync="dialogVisible" width="60%">
+          <div style="margin-bottom: 16px">
+            <el-input
+              v-model="keyword"
+              placeholder="关键词搜索"
+              style="width: 200px; margin-right: 10px"
+              clearable
+            />
+            <el-button type="primary" @click="handleSearch">搜索</el-button>
+          </div>
+          <el-table
+            :data="filteredProductList"
+            style="width: 100%; margin-bottom: 16px"
+            @selection-change="handleSelectionChange"
+            ref="productTable"
+            :row-key="(row) => row.id"
+            border
+            highlight-current-row
+            @row-click="toggleRowSelection"
+          >
+            <el-table-column type="selection" width="55" align="center" />
+            <el-table-column prop="title" label="商品名称" align="center" />
+            <el-table-column prop="specNo" label="商品规格" align="center" />
+            <el-table-column prop="price" label="商品价格" align="center" />
+          </el-table>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="handleDialogConfirm">确认</el-button>
+          </span>
+        </el-dialog>
         <el-table
           :data="form.products"
           style="margin-top: 12px"
@@ -206,6 +224,10 @@ export default {
       id: "",
       productId: "",
       productList: [],
+      dialogVisible: false,
+      keyword: "",
+      filteredProductList: [],
+      selectedProducts: [],
       form: {
         quotationNo: "", // 合计报价单
         signDate: "", // 签订日期
@@ -302,16 +324,55 @@ export default {
     } else {
       this.form.signDate = log.parseTime(new Date(), "{y}-{m}-{d}");
     }
-    this.$api({
-      url: "getProductList",
-      method: "get",
-    }).then((res) => {
-      if (res.code === 200) {
-        this.productList = res.data.list;
-      }
-    });
+    this.getProductList();
   },
   methods: {
+    getProductList() {
+      // 获取商品列表
+      this.$api({
+        url: "getProductList",
+        method: "get",
+        data: {
+          keyword: this.keyword,
+        },
+      }).then((res) => {
+        if (res.code === 200) {
+          this.productList = res.data.list;
+          this.filteredProductList = res.data.list; // 初始化弹框商品列表
+        }
+      });
+    },
+    openDialog() {
+      this.selectedProducts = [];
+      this.$nextTick(() => {
+        if (this.$refs.productTable) {
+          this.$refs.productTable.clearSelection();
+        }
+      });
+      this.dialogVisible = true;
+      this.filteredProductList = this.productList;
+    },
+    handleSearch() {
+      this.getProductList();
+    },
+    handleSelectionChange(val) {
+      this.selectedProducts = val;
+    },
+    toggleRowSelection(row) {
+      this.$refs.productTable.toggleRowSelection(row);
+    },
+    handleDialogConfirm() {
+      if (this.selectedProducts.length === 0) {
+        this.$message.error("请选择产品");
+        return;
+      }
+      this.selectedProducts.forEach((item) => {
+        this.productId = item.id;
+        this.addProduct();
+      });
+      this.selectedProducts = [];
+      this.dialogVisible = false;
+    },
     addProduct() {
       if (this.productId) {
         const product = this.productList.find((item) => item.id === this.productId);
@@ -388,7 +449,7 @@ export default {
 
               // 校验产品
               groupedProducts.forEach((item) => {
-                if (item.title === "" || item.specNo === "" || item.unit === "") {
+                if (!item.title || !item.specNo || !item.unit) {
                   flag = false;
                   return false;
                 } else {

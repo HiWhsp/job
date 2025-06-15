@@ -49,6 +49,8 @@ axios_ins_common.interceptors.response.use(
 		} else if (code == 401 && data.msg === '请登录') {
 			alertErr(data.msg)
 			window.location.href = "/login";
+		} else if (code == 401) {
+			alertErr(data.msg)
 		}
 		return data;
 	},
