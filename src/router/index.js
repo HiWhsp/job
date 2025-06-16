@@ -290,8 +290,8 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   let token = localStorage.getItem("token");
-  let userId = localStorage.getItem("userId");
-  let user_is_login = token && userId;
+  // let userId = localStorage.getItem("userId");
+  let user_is_login = token;
 
   // debugger
   if (!user_is_login && to.meta.requireAuth) {

@@ -98,6 +98,18 @@ export default {
     this.getQueryCondition();
   },
   methods: {
+    setQueryCondition(category_id) {
+      this.reportTypes.forEach((item) => {
+        // 只有当前点击的选中，其他都取消
+        if (item.id == category_id) {
+          item.checked = true;
+        } else {
+          item.checked = false;
+        }
+      });
+      this.$forceUpdate();
+      this.search();
+    },
     // 获取查询条件
     getQueryCondition() {
       this.$api({

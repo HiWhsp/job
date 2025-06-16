@@ -7,7 +7,7 @@
           <img class="img-left" src="@/assets/img/about/honor-left.png" alt="" />
           <div class="honor-list">
             <el-carousel
-              :interval="55000"
+              :interval="5500000000"
               type="card"
               height="416px"
               indicator-position="none"

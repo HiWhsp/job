@@ -122,6 +122,8 @@ export default {
       showContact: false, //联系我们
       show_shoujiban: false, //手机版
 
+      tabList: [],
+
       list_lang: [
         { title: "中文", lang: "zh" },
         { title: "English", lang: "en" },
@@ -155,21 +157,14 @@ export default {
 
     page_nav_list() {
       let route_news = "";
+      console.log(this.tabList);
+
       var arr = [
         {
           title: "研究报告",
           route: "/researchReport",
           icon: "el-icon-caret-bottom",
-          children: [
-            {
-              title: "研究报告",
-              route: "/researchReport",
-            },
-            {
-              title: "研究报告",
-              route: "/researchReport",
-            },
-          ],
+          children: [...this.tabList],
         },
         { title: "新闻洞察", route: "/newsInsights" },
         { title: "维深测评", route: "/deepEvaluation" },
@@ -214,7 +209,7 @@ export default {
             },
             {
               title: "加入我们",
-              route: "/about?activeIndex=8",
+              route: "/about?activeIndex=9",
             },
           ],
         },
@@ -234,7 +229,7 @@ export default {
     },
   },
 
-  created() {
+  mounted() {
     this.keyword = this.$route.query.keyword || "";
     this.setView();
   },
@@ -269,14 +264,14 @@ export default {
     mouseoverLang(item) {
       if (item.title === "关于我们") {
         this.showContact = true;
-      } else {
+      } else if (item.title === "研究报告") {
         this.showLanguage = true;
       }
     },
     mouseoutLang(item) {
       if (item.title === "关于我们") {
         this.showContact = false;
-      } else {
+      } else if (item.title === "研究报告") {
         this.showLanguage = false;
       }
     },
@@ -310,7 +305,24 @@ export default {
     },
     ///
 
-    setView() {},
+    setView() {
+      this.$api({
+        url: "getReportConfig",
+        method: "get",
+        data: {
+          is_home: 1,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.tabList = res.data.category_data.map((item) => {
+            return {
+              title: item.title,
+              route: `/researchReport?id=${item.id}`,
+            };
+          });
+        }
+      });
+    },
     mouseoutSearch() {},
     handleSearchInput() {
       this.searchLock = false;

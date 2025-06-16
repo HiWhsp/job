@@ -55,7 +55,7 @@
                   <div class="info-item">
                     <span class="info-label">地　　点：</span>
                     <span class="info-value">{{ activityDetails.location }}</span>
-                    <span class="location-link">查看地图导航</span>
+                    <span class="location-link" @click="viewMap">查看地图导航</span>
                   </div>
                 </div>
 
@@ -239,6 +239,12 @@ export default {
     window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
+    viewMap() {
+      window.open(
+        `https://api.map.baidu.com/marker?location=${this.activityDetails.lat},${this.activityDetails.lon}&title=${this.activityDetails.location}&content=活动地点&output=html`,
+        "_blank"
+      );
+    },
     // 会议报名
     meetingRegistration() {
       this.$api({
