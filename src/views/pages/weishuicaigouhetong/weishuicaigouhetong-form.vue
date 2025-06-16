@@ -64,7 +64,6 @@
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column prop="title" label="商品名称" align="center" />
             <el-table-column prop="specNo" label="商品规格" align="center" />
-            <el-table-column prop="price" label="商品价格" align="center" />
           </el-table>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取消</el-button>
