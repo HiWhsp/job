@@ -15,7 +15,7 @@
             <div class="avatar-box">
               <img src="@/assets/avatar.png" alt="" />
             </div>
-            <div class="user-name">{{ vuex_user.real_name || "管理员" }}</div>
+            <div class="user-name">{{ vuex_user.name || "管理员" }}</div>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </div>
           <el-dropdown-menu slot="dropdown">

@@ -17,11 +17,7 @@
                   :on-success="upload_on_success"
                   :before-upload="upload_before_upload"
                 >
-                  <img
-                    v-if="form.image"
-                    :src="form.image"
-                    class="user-avatar"
-                  />
+                  <img v-if="form.image" :src="form.image" class="user-avatar" />
                   <img v-else src="@/assets/avatar.png" class="user-avatar" />
                 </el-upload>
               </div>
@@ -72,10 +68,7 @@
                 :loading="loading"
                 >保存</el-button
               >
-              <button
-                class="btn-ripple fit-text btn-cancel"
-                @click="do_reset()"
-              >
+              <button class="btn-ripple fit-text btn-cancel" @click="do_reset()">
                 清空
               </button>
             </div>
@@ -164,7 +157,7 @@ export default {
             this.my_info = res.data;
             this.form = {
               image: res.data.image || "",
-              name: res.data.real_name || "",
+              name: res.data.name || "",
               mobile: res.data.mobile || "",
               email: res.data.email || "",
               sex: res.data.sex || "",
