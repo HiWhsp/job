@@ -1,4 +1,4 @@
-const ROOT = 'https://puxiangtongxun.dx.hdapp.com.cn/api/'
+const ROOT = 'https://htgl.px-lcd.com/api/'
 
 export const SITE_ROOT = ROOT; //站点部署域名
 

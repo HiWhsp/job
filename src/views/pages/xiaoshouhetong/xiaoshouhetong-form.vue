@@ -229,16 +229,19 @@
                   filterable
                   remote
                   reserve-keyword
+                  clearable
                   placeholder="请输入关键词搜索"
                   :remote-method="remoteSearch"
                   :loading="loading"
                   style="width: 100%"
+                  @change="handleCompanyChange"
                 >
                   <el-option
                     v-for="item in companyOptions"
                     :key="item.id"
-                    :label="item.name"
-                    :value="item.name">
+                    :label="item.company"
+                    :value="item.id"
+                  >
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -420,8 +423,8 @@ export default {
     this.getProductList();
   },
   methods: {
+    // 获取商品列表
     getProductList() {
-      // 获取商品列表
       this.$api({
         url: "getProductList",
         method: "get",
@@ -574,16 +577,35 @@ export default {
         method: "post",
         data: {
           keyword: query,
+          page: 1,
+          limit: 10,
         },
-      }).then((res) => {
-        if (res.code === 200) {
-          this.companyOptions = res.data.list;
-        } else {
-          this.companyOptions = [];
+      })
+        .then((res) => {
+          if (res.code === 200) {
+            this.companyOptions = res.data.list;
+          } else {
+            this.companyOptions = [];
+          }
+          this.loading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    },
+    handleCompanyChange(value) {
+      this.companyOptions.forEach((item) => {
+        if (item.id == value) {
+          this.form.companyInfo.company = item.company;
+          this.form.companyInfo.fdName = item.frName;
+          this.form.companyInfo.phone = item.phone;
+          this.form.companyInfo.bank = item.bankName;
+          this.form.companyInfo.taxCode = item.taxCode;
+          this.form.companyInfo.address = item.address;
+          this.form.companyInfo.wtName = item.wtName;
+          this.form.companyInfo.zipCode = item.zipCode;
+          this.form.companyInfo.bankCode = item.bankCode;
         }
-        this.loading = false;
-      }).catch(() => {
-        this.loading = false;
       });
     },
   },

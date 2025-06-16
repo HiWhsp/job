@@ -224,7 +224,26 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="供方单位名称：" prop="company">
-                <el-input v-model="form.companyInfo.company"></el-input>
+                <el-select
+                  v-model="form.companyInfo.company"
+                  filterable
+                  remote
+                  reserve-keyword
+                  clearable
+                  placeholder="请输入关键词搜索"
+                  :remote-method="remoteSearch"
+                  :loading="loading"
+                  style="width: 100%"
+                  @change="handleCompanyChange"
+                >
+                  <el-option
+                    v-for="item in companyOptions"
+                    :key="item.id"
+                    :label="item.company"
+                    :value="item.id"
+                  >
+                  </el-option>
+                </el-select>
               </el-form-item>
               <el-form-item label="法定代表人：" prop="fdName">
                 <el-input v-model="form.companyInfo.fdName"></el-input>
@@ -278,6 +297,8 @@ export default {
       keyword: "",
       filteredProductList: [],
       selectedProducts: [],
+      loading: false,
+      companyOptions: [],
       form: {
         products: [
           // { title: "", desc: "", unit: "", price: 0, num: 1, remark: "" },
@@ -561,6 +582,43 @@ export default {
     },
     back() {
       this.$router.push("/caigouhetong-list");
+    },
+    remoteSearch(query) {
+      this.loading = true;
+      this.$api({
+        url: "getCompanyList",
+        method: "post",
+        data: {
+          keyword: query,
+          page: 1,
+          limit: 10,
+        },
+      })
+        .then((res) => {
+          if (res.code === 200) {
+            this.companyOptions = res.data.list;
+          } else {
+            this.companyOptions = [];
+          }
+          this.loading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    },
+    handleCompanyChange(value) {
+      const selectedCompany = this.companyOptions.find((item) => item.id === value);
+      if (selectedCompany) {
+        this.form.companyInfo.company = selectedCompany.company;
+        this.form.companyInfo.fdName = selectedCompany.frName;
+        this.form.companyInfo.phone = selectedCompany.phone;
+        this.form.companyInfo.bank = selectedCompany.bankName;
+        this.form.companyInfo.taxCode = selectedCompany.taxCode;
+        this.form.companyInfo.address = selectedCompany.address;
+        this.form.companyInfo.wtName = selectedCompany.wtName;
+        this.form.companyInfo.zipCode = selectedCompany.zipCode;
+        this.form.companyInfo.bankCode = selectedCompany.bankCode;
+      }
     },
   },
 };
