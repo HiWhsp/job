@@ -51,7 +51,22 @@ export default {
           this.index = this.tableData.length - 1;
         }
       }
-      this.selectItem = this.tableData[this.index];
+      if (
+        ["pdf", "doc", "docx", "xls", "xlsx"].includes(
+          this.tableData[this.index].file_path_url.split(".").pop()
+        )
+      ) {
+        // 如果当前路由是pdf-viewer，则不进行跳转
+        if (this.$route.path == "/pdf-viewer") {
+          this.selectItem = this.tableData[this.index];
+          return;
+        }
+      } else {
+        this.goUrl({
+          url: "/video-viewer",
+          query: { id: this.id, index: this.index },
+        });
+      }
     },
     goUrl(item) {
       this.$router.push({

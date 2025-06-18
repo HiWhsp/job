@@ -67,7 +67,22 @@ export default {
           this.index = this.tableData.length - 1;
         }
       }
-      this.selectItem = this.tableData[this.index];
+      if (
+        ["pdf", "doc", "docx", "xls", "xlsx"].includes(
+          this.tableData[this.index].file_path_url.split(".").pop()
+        )
+      ) {
+        this.goUrl({
+          url: "/pdf-viewer",
+          query: { id: this.id, index: this.index },
+        });
+      } else {
+        // 如果当前路由是video-viewer，则不进行跳转
+        if (this.$route.path == "/video-viewer") {
+          this.selectItem = this.tableData[this.index];
+          return;
+        }
+      }
     },
     goUrl(item) {
       this.$router.push({

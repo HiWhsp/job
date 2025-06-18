@@ -100,15 +100,7 @@
                         }}%
                       </div>
                       <div class="action-collapse">
-                        <span
-                          @click="
-                            goUrl({
-                              url: '/pdf-viewer',
-                              query: { id: id, index },
-                            })
-                          "
-                          >学习</span
-                        >
+                        <span @click="toUrl(item, index)">学习</span>
                         <span>考试</span>
                       </div>
                     </template>
@@ -195,15 +187,7 @@
                         }}%
                       </div>
                       <div class="action-collapse">
-                        <span
-                          @click="
-                            goUrl({
-                              url: '/video-viewer',
-                              query: { id: id, index },
-                            })
-                          "
-                          >学习</span
-                        ><span>考试</span>
+                        <span @click="toUrl(item, index)">学习</span><span>考试</span>
                       </div>
                     </template>
                     <div
@@ -330,15 +314,7 @@
                         }}%
                       </div>
                       <div class="action-collapse">
-                        <span
-                          @click="
-                            goUrl({
-                              url: '/pdf-viewer',
-                              query: { id: id, index },
-                            })
-                          "
-                          >学习</span
-                        >
+                        <span @click="toUrl(item, index)">学习</span>
                         <span>考试</span>
                       </div>
                     </template>
@@ -423,15 +399,7 @@
                         }}%
                       </div>
                       <div class="action-collapse">
-                        <span
-                          @click="
-                            goUrl({
-                              url: '/video-viewer',
-                              query: { id: id, index },
-                            })
-                          "
-                          >学习</span
-                        ><span>考试</span>
+                        <span @click="toUrl(item, index)">学习</span><span>考试</span>
                       </div>
                     </template>
                     <div
@@ -666,6 +634,23 @@ export default {
         path: item.url,
         query: item.query,
       });
+    },
+    toUrl(item, index) {
+      if (
+        ["pdf", "doc", "docx", "xls", "xlsx"].includes(
+          item.file_path_url.split(".").pop()
+        )
+      ) {
+        this.goUrl({
+          url: "/pdf-viewer",
+          query: { id: this.id, index },
+        });
+      } else {
+        this.goUrl({
+          url: "/video-viewer",
+          query: { id: this.id, index },
+        });
+      }
     },
   },
 };
