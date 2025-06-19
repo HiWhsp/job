@@ -1,36 +1,43 @@
 .page {
   width: 100%;
   min-height: 100vh;
-  background: #f0f8ff;
+  background: #f3f5f8;
   padding: 0;
-  font-family: 'Microsoft YaHei', sans-serif;
+  font-family: "Microsoft YaHei", sans-serif;
 }
 
 .container {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 0;
 }
 
-.main-content {
-  width: 1200px;
+// 顶部导航区域
+.top-nav {
   display: flex;
   justify-content: space-between;
-  padding: 20px 0;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  gap: 16px;
+  height: 378px;
 
-  // 左侧导航
-  .left-nav {
-    width: 280px;
+  // 左侧导航菜单
+  .top-nav-left {
+    height: 100%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
     .nav-item {
-      height: 58px;
-      line-height: 58px;
-      background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+      width: 229px;
+      height: 62px;
+      line-height: 62px;
+      background: #33ae60;
       color: white;
       text-align: left;
-      margin-bottom: 8px;
-      border-radius: 25px;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s;
       padding: 0 20px;
@@ -39,7 +46,6 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 
       .icon {
         width: 24px;
@@ -48,9 +54,9 @@
         border-radius: 50%;
         margin-right: 12px;
         position: relative;
-        
+
         &::before {
-          content: '📋';
+          content: "📋";
           position: absolute;
           left: 50%;
           top: 50%;
@@ -65,26 +71,27 @@
       }
 
       &:hover {
-        background: linear-gradient(135deg, #66BB6A 0%, #388E3C 100%);
         transform: translateX(5px);
-        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
       }
     }
   }
 
-  // 中间内容区
-  .center-content {
-    width: 680px;
-    margin: 0 20px;
+  // 中间横幅区域
+  .top-nav-center {
+    flex: 1;
 
     .banner-area {
       width: 100%;
-      height: 380px;
-      background: linear-gradient(135deg, #B3E5FC 0%, #4FC3F7 50%, #29B6F6 100%);
-      border-radius: 15px;
+      height: 378px;
+      background: linear-gradient(
+        135deg,
+        #b3e5fc 0%,
+        #4fc3f7 50%,
+        #29b6f6 100%
+      );
+      border-radius: 14px;
       overflow: hidden;
       position: relative;
-      box-shadow: 0 8px 32px rgba(41, 182, 246, 0.3);
 
       .banner-content {
         width: 100%;
@@ -94,165 +101,141 @@
         justify-content: space-between;
         padding: 40px;
         position: relative;
-
-        .banner-text {
-          flex: 1;
-          color: white;
-          z-index: 2;
-
-          .subtitle {
-            font-size: 18px;
-            margin-bottom: 15px;
-            opacity: 0.9;
-            font-weight: 300;
-          }
-
-          .main-title {
-            font-size: 48px;
-            font-weight: bold;
-            margin-bottom: 25px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            line-height: 1.2;
-          }
-
-          .organizer {
-            font-size: 16px;
-            margin-bottom: 15px;
-            opacity: 0.9;
-            
-            span {
-              display: block;
-              margin-bottom: 5px;
-            }
-          }
-
-          .date-location {
-            font-size: 18px;
-            font-weight: 500;
-            
-            span {
-              margin-right: 30px;
-              &:last-child {
-                margin-right: 0;
-              }
-            }
-          }
-        }
-
-        .banner-illustration {
-          position: absolute;
-          right: 0;
-          bottom: 0;
-          width: 300px;
-          height: 200px;
-          background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"><defs><linearGradient id="hill" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:%234CAF50;stop-opacity:1" /><stop offset="100%" style="stop-color:%232E7D32;stop-opacity:1" /></linearGradient></defs><path d="M0,150 Q75,100 150,130 Q225,160 300,120 L300,200 L0,200 Z" fill="url(%23hill)"/><circle cx="50" cy="80" r="25" fill="%23FFD54F"/><rect x="200" y="100" width="15" height="40" fill="%23FFF"/><rect x="220" y="90" width="15" height="50" fill="%23FFF"/><rect x="240" y="95" width="15" height="45" fill="%23FFF"/></svg>') no-repeat center;
-          background-size: contain;
-          opacity: 0.7;
-        }
       }
     }
   }
 
-  // 右侧登录区
-  .right-login {
+  // 右侧登录区域
+  .top-nav-right {
     width: 260px;
+    height: 378px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
-    .greeting {
-      color: #666;
-      font-size: 14px;
-      margin-bottom: 15px;
-      text-align: center;
-    }
-
-    .login-box {
+    .top-nav-right-top {
+      width: 270px;
+      height: 166px;
+      padding: 22px;
+      background: linear-gradient(
+        180deg,
+        rgba(165, 232, 190, 0.15) 0%,
+        #ffffff 100%
+      );
+      border-radius: 14px;
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
-      margin-bottom: 20px;
 
-      .login-btn,
-      .register-btn {
-        width: 120px;
-        height: 45px;
-        line-height: 45px;
-        text-align: center;
-        border-radius: 22px;
-        cursor: pointer;
+      .greeting {
+        color: #3d3d3d;
         font-size: 16px;
-        font-weight: 500;
-        transition: all 0.3s;
       }
 
-      .login-btn {
-        background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
-        color: white;
-        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+      .login-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 14px;
 
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+        .login-btn,
+        .register-btn {
+          width: 100%;
+          height: 32px;
+          line-height: 32px;
+          text-align: center;
+          border-radius: 78px;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          transition: all 0.3s;
         }
-      }
 
-      .register-btn {
-        border: 2px solid #4CAF50;
-        color: #4CAF50;
-        background: white;
-
-        &:hover {
-          background: #4CAF50;
+        .login-btn {
+          background: #33ae60;
           color: white;
-          transform: translateY(-2px);
+
+          &:hover {
+            transform: translateY(-2px);
+          }
+        }
+
+        .register-btn {
+          border: 2px solid #33ae60;
+          color: #33ae60;
+          background: white;
+
+          &:hover {
+            background: #33ae60;
+            color: white;
+            transform: translateY(-2px);
+          }
         }
       }
     }
 
     .notice-area {
+      width: 270px;
       background: white;
-      padding: 20px;
-      border-radius: 12px;
+      border-radius: 14px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 
       .notice-title {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 15px;
-        color: #333;
         font-weight: 600;
+        height: 36px;
+        border-bottom: 1px solid #33ae60;
+        padding-right: 12px;
 
-        .notice-icon {
-          width: 20px;
-          height: 20px;
-          background: #4CAF50;
-          border-radius: 50%;
-          margin-right: 8px;
-          position: relative;
+        .notice-title-left {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          width: 112px;
+          background: #33ae60;
+          border-top-left-radius: 14px;
+          border-top-right-radius: 14px;
+          color: #fff;
+          font-size: 14px;
+          font-weight: 400;
+          .notice-icon {
+            width: 18px;
+            height: 18px;
+            background: #4caf50;
+            border-radius: 50%;
+            margin-right: 8px;
+            position: relative;
 
-          &::before {
-            content: '📢';
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 12px;
+            &::before {
+              content: "📢";
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              transform: translate(-50%, -50%);
+              font-size: 12px;
+            }
           }
         }
 
         .more {
-          color: #999;
+          color: #8c9194;
           font-size: 12px;
           cursor: pointer;
           font-weight: normal;
 
           &:hover {
-            color: #4CAF50;
+            color: #4caf50;
           }
         }
       }
 
       .notice-list {
         .notice-item {
-          margin-bottom: 12px;
+          height: 38px;
           color: #666;
           font-size: 14px;
           cursor: pointer;
@@ -262,14 +245,14 @@
           padding: 8px 0;
           border-bottom: 1px solid #f0f0f0;
           transition: all 0.3s;
+          margin: 0 12px;
 
           &:last-child {
             border-bottom: none;
-            margin-bottom: 0;
           }
 
           &:hover {
-            color: #4CAF50;
+            color: #4caf50;
             padding-left: 10px;
           }
         }
@@ -278,118 +261,634 @@
   }
 }
 
-// 底部功能区
-.bottom-section {
-  width: 1200px;
-  margin-top: 20px;
+.top-nav-right-bottom {
+  height: 80px;
+  background: #fff;
+  border-radius: 14px;
+  margin-bottom: 50px;
+}
 
-  .function-buttons {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: white;
-    padding: 15px 25px;
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// 通用区域标题样式
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+
+  h2 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #000;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+    &::before {
+      content: "";
+      position: absolute;
+      background-image: url("../assets/image/home/section1.png");
+      background-size: 100% 100%;
+      display: inline-block;
+      width: 100%;
+      height: 16px;
+      z-index: -1;
+      bottom: -6px;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      background-image: url("../assets/image/home/section2.png");
+      background-size: 100% 100%;
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      z-index: -1;
+      top: -5px;
+      right: -17px;
+    }
+  }
+
+  .more-link {
+    width: 111px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    background: #fff;
     border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    color: #979797;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
 
-    .func-btn {
-      display: flex;
-      align-items: center;
-      padding: 8px 16px;
-      border-radius: 20px;
+    &:hover {
+      color: #009f39;
+    }
+  }
+}
+
+// 系统广告区域
+.system-ads-section {
+  margin-bottom: 50px;
+
+  .ads-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+
+    .ad-card {
       cursor: pointer;
+      width: 190px;
+      height: 190px;
+      background: linear-gradient(180deg, #F6F6F8 0%, #FFFFFF 100%);
+      border-radius: 14px;
+      padding: 20px 17px;
+      box-shadow: 0px 12px 19px 0px rgba(0, 0, 0, 0.06);
       transition: all 0.3s;
-      font-size: 14px;
-      font-weight: 500;
-
-      .btn-icon {
-        margin-right: 8px;
-        font-size: 16px;
-      }
+      border: 1px solid #fff;
 
       &:hover {
-        transform: translateY(-2px);
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       }
 
-      &.highlight {
-        background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+      .ad-logo-placeholder {
+        width: 100%;
+        height: 32px;
+        background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+        margin-bottom: 15px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         color: white;
-        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        font-weight: bold;
+
+        &::before {
+          content: "LOGO";
+          font-size: 16px;
+        }
       }
 
-      &.special {
-        background: linear-gradient(135deg, #9C27B0 0%, #673AB7 100%);
-        color: white;
-        box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
-      }
-    }
-
-    .stats {
-      display: flex;
-      align-items: center;
-
-      .stat-item {
-        text-align: center;
-        margin: 0 15px;
-
-        .number {
-          font-size: 24px;
+      .ad-content {
+        h3 {
+          font-size: 14px;
           font-weight: bold;
-          color: #FF6B35;
-          line-height: 1;
-        }
-
-        .label {
-          font-size: 12px;
-          color: #666;
-          margin-top: 2px;
-        }
-      }
-    }
-
-    .free-learning {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #4CAF50;
-      font-weight: 600;
-
-      span {
-        font-size: 14px;
-        line-height: 1.2;
-      }
-    }
-
-    .qr-codes {
-      display: flex;
-
-      .qr-code {
-        text-align: center;
-        margin: 0 10px;
-
-        .qr-placeholder {
-          width: 60px;
-          height: 60px;
-          background: #f0f0f0;
-          border: 2px solid #ddd;
-          border-radius: 8px;
-          margin-bottom: 5px;
-          position: relative;
-
-          &::before {
-            content: '📱';
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 24px;
+          color: #000;
+          padding-bottom: 10px;
+          margin-bottom: 10px;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          &::after {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: #33ae60;
+            margin-top: 10px;
           }
         }
 
-        span {
+        p {
           font-size: 12px;
-          color: #666;
+          color: #999;
+          line-height: 1.6;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
+      }
+    }
+  }
+}
+
+// 配置广告区域
+.config-ads-section {
+  margin-bottom: 50px;
+
+  .ads-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+
+    .ad-card {
+      cursor: pointer;
+      width: 190px;
+      height: 190px;
+      background: linear-gradient(180deg, #F6F6F8 0%, #FFFFFF 100%);
+      border-radius: 14px;
+      padding: 20px 17px;
+      box-shadow: 0px 12px 19px 0px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s;
+      border: 1px solid #fff;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .ad-logo-placeholder {
+        width: 100%;
+        height: 32px;
+        background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+        margin-bottom: 15px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+
+        &::before {
+          content: "LOGO";
+          font-size: 16px;
+        }
+      }
+
+      .ad-content {
+        h3 {
+          font-size: 14px;
+          font-weight: bold;
+          color: #000;
+          padding-bottom: 10px;
+          margin-bottom: 10px;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          &::after {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: #33ae60;
+            margin-top: 10px;
+          }
+        }
+
+        p {
+          font-size: 12px;
+          color: #999;
+          line-height: 1.6;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+}
+
+// 服务网络区域
+.service-network-section {
+  margin-bottom: 50px;
+
+  .network-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+
+    .service-points {
+      flex: 1;
+      max-width: 300px;
+
+      .service-category {
+        margin-bottom: 30px;
+
+        h3 {
+          font-size: 18px;
+          font-weight: bold;
+          color: #333;
+          margin-bottom: 20px;
+          padding: 15px;
+          background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+          border-radius: 8px;
+          text-align: center;
+        }
+
+        .service-locations {
+          .location-group {
+            h4 {
+              font-size: 16px;
+              font-weight: bold;
+              color: #4caf50;
+              margin-bottom: 15px;
+              border-bottom: 2px solid #4caf50;
+              padding-bottom: 8px;
+            }
+
+            .location-item {
+              display: flex;
+              align-items: center;
+              margin-bottom: 12px;
+              padding: 8px;
+              background: #f9f9f9;
+              border-radius: 6px;
+              transition: all 0.3s;
+
+              &:hover {
+                background: #e8f5e8;
+              }
+
+              .flag {
+                margin-right: 10px;
+                font-size: 16px;
+              }
+
+              span:last-child {
+                font-size: 14px;
+                color: #666;
+              }
+            }
+          }
+        }
+      }
+
+      .service-stats {
+        h3 {
+          font-size: 18px;
+          font-weight: bold;
+          color: #333;
+          margin-bottom: 20px;
+          padding: 15px;
+          background: linear-gradient(135deg, #fff3e0 0%, #ffcc80 100%);
+          border-radius: 8px;
+          text-align: center;
+        }
+
+        .stats-list {
+          .stat-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            transition: all 0.3s;
+
+            &:hover {
+              background: #fff3e0;
+              transform: translateX(5px);
+            }
+
+            .icon {
+              margin-right: 12px;
+              font-size: 18px;
+            }
+
+            span:last-child {
+              font-size: 14px;
+              color: #666;
+              font-weight: 500;
+            }
+          }
+        }
+      }
+    }
+
+    .world-map {
+      flex: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .map-container {
+        width: 100%;
+        max-width: 500px;
+        height: 300px;
+        position: relative;
+
+        .map-placeholder {
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+          border-radius: 15px;
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &::before {
+            content: "🌍";
+            font-size: 80px;
+            opacity: 0.3;
+          }
+
+          .continent {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 8px 12px;
+            font-size: 12px;
+            color: white;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+
+            &.asia {
+              top: 20%;
+              right: 20%;
+            }
+
+            &.europe {
+              top: 15%;
+              left: 45%;
+            }
+
+            &.africa {
+              top: 45%;
+              left: 48%;
+            }
+
+            &.north-america {
+              top: 25%;
+              left: 15%;
+            }
+
+            &.south-america {
+              bottom: 25%;
+              left: 25%;
+            }
+
+            &.oceania {
+              bottom: 20%;
+              right: 15%;
+            }
+          }
+        }
+      }
+    }
+
+    .contact-section {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .contact-btn {
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+      }
+    }
+  }
+}
+
+// 合作品牌区域
+.partner-brands-section {
+  margin-bottom: 50px;
+
+  .brands-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
+
+    .brand-item {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s;
+      border: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .brand-logo {
+        width: 80px;
+        height: 40px;
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border-radius: 6px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &::before {
+          content: "BRAND";
+          font-size: 10px;
+          color: #1976d2;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 1024px) {
+  .container {
+    padding: 15px;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    gap: 20px;
+
+    .top-nav-left,
+    .top-nav-right {
+      width: 100%;
+    }
+
+    .top-nav-center {
+      margin: 0;
+
+      .banner-area {
+        height: 300px;
+
+        .banner-content {
+          padding: 30px;
+
+          .banner-text {
+            .main-title {
+              font-size: 36px;
+            }
+          }
+
+          .banner-illustration {
+            width: 280px;
+            height: 200px;
+          }
+        }
+      }
+    }
+  }
+
+  .system-ads-section,
+  .config-ads-section {
+    .ads-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+  }
+
+  .service-network-section {
+    .network-content {
+      flex-direction: column;
+      gap: 30px;
+
+      .service-points {
+        max-width: 100%;
+      }
+    }
+  }
+
+  .partner-brands-section {
+    .brands-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .top-nav {
+    .top-nav-left {
+      .nav-item {
+        height: 50px;
+        line-height: 50px;
+        font-size: 14px;
+        padding: 0 15px;
+      }
+    }
+
+    .top-nav-center {
+      .banner-area {
+        height: 250px;
+
+        .banner-content {
+          padding: 20px;
+          flex-direction: column;
+          text-align: center;
+
+          .banner-text {
+            .main-title {
+              font-size: 28px;
+              margin-bottom: 15px;
+            }
+
+            .subtitle {
+              font-size: 16px;
+            }
+
+            .organizer,
+            .date-location {
+              font-size: 14px;
+            }
+          }
+
+          .banner-illustration {
+            position: relative;
+            width: 100%;
+            height: 100px;
+            margin-top: 20px;
+          }
+        }
+      }
+    }
+
+    .top-nav-right {
+      .login-box {
+        flex-direction: column;
+        gap: 10px;
+
+        .login-btn,
+        .register-btn {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .system-ads-section,
+  .config-ads-section {
+    .ads-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .partner-brands-section {
+    .brands-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .service-network-section {
+    padding: 20px;
+
+    .world-map {
+      .map-container {
+        height: 200px;
       }
     }
   }

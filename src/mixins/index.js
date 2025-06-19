@@ -7,7 +7,7 @@ export default {
     return {
       // 上传
       mix_upload_name: "img",
-      demo: require('@/assets/demo.jpg'),
+      // demo: require('@/assets/demo.jpg'),
       mix_upload_action:
         process.env.NODE_ENV !== "production"
           ? "/api/service.php"
