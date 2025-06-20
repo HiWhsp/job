@@ -10,31 +10,50 @@
           <div class="item">
             <span class="text">旧密码：</span>
             <span class="info">
-              <el-input clearable type="password" v-model="form.old_password" class=""/>
+              <el-input clearable type="password" v-model="form.old_password" class="" />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">新密码：</span>
             <span class="info">
-              <el-input clearable type="password" v-model="form.password" class=""/>
+              <el-input
+                clearable
+                type="password"
+                v-model="form.password"
+                class=""
+                placeholder="请输入6位以上，只能包含英文字母和数字"
+                @input="handlePasswordInput"
+              />
+              <div class="password-rule">密码规则：6位以上，只能输入英文字母和数字</div>
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">重复新密码：</span>
             <span class="info">
-              <el-input clearable type="password" v-model="form.confirm_password" class=""/>
+              <el-input
+                clearable
+                type="password"
+                v-model="form.confirm_password"
+                class=""
+                @input="handleConfirmPasswordInput"
+              />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item btn-box">
             <span class="text" style="visibility: hidden">-</span>
             <div class="info">
-              <el-button class="btn-ripple fit-text btn-cancel" @click="throttle_do_submit()"
-                         :loading="loading">确认
+              <el-button
+                class="btn-ripple fit-text btn-cancel"
+                @click="throttle_do_submit()"
+                :loading="loading"
+                >确认
               </el-button>
-              <button class="btn-ripple fit-text btn-save" @click="do_clear()">清空</button>
+              <button class="btn-ripple fit-text btn-save" @click="do_clear()">
+                清空
+              </button>
             </div>
           </div>
         </div>
@@ -44,7 +63,7 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "my-password",
@@ -61,12 +80,37 @@ export default {
   },
   watch: {},
   created() {
-    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
+    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000);
   },
   methods: {
-    throttle_do_submit() {
+    // 验证密码规则：6位以上，包含英文和数字
+    validatePassword(password) {
+      if (!password || password.length < 6) {
+        return false;
+      }
+      // 检查是否包含英文字母
+      const hasLetter = /[a-zA-Z]/.test(password);
+      // 检查是否包含数字
+      const hasNumber = /[0-9]/.test(password);
 
+      return hasLetter && hasNumber;
     },
+
+    // 处理新密码输入，只允许英文和数字
+    handlePasswordInput(value) {
+      // 过滤掉非英文和数字的字符
+      const filteredValue = value.replace(/[^a-zA-Z0-9]/g, "");
+      this.form.password = filteredValue;
+    },
+
+    // 处理确认密码输入，只允许英文和数字
+    handleConfirmPasswordInput(value) {
+      // 过滤掉非英文和数字的字符
+      const filteredValue = value.replace(/[^a-zA-Z0-9]/g, "");
+      this.form.confirm_password = filteredValue;
+    },
+
+    throttle_do_submit() {},
     do_submit() {
       if (!this.form.old_password) {
         alertErr("请输入旧密码");
@@ -76,6 +120,13 @@ export default {
         alertErr("请输入新密码");
         return;
       }
+
+      // 密码规则验证：6位以上，包含英文和数字
+      if (!this.validatePassword(this.form.password)) {
+        alertErr("新密码必须是6位以上，且包含英文和数字");
+        return;
+      }
+
       if (!this.form.confirm_password) {
         alertErr("请输入确认密码");
         return;
@@ -87,19 +138,21 @@ export default {
 
       this.loading = true;
       this.$api({
-        url: 'updatePassword',
-        method: 'post',
+        url: "updatePassword",
+        method: "post",
         data: {
           ...this.form,
-        }
-      }).then((res) => {
-        this.loading = false;
-        if (res.code == 200) {
-          this.do_clear()
-        }
-      }).catch(()=>{
-        this.loading = false;
-      });
+        },
+      })
+        .then((res) => {
+          this.loading = false;
+          if (res.code == 200) {
+            this.do_clear();
+          }
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
 
     do_clear() {
@@ -108,7 +161,7 @@ export default {
         password: "",
         confirm_password: "",
       };
-    }
+    },
   },
 };
 </script>
@@ -176,10 +229,16 @@ export default {
           // border: 1px solid #d4d4d4;
         }
 
-
         .el-input {
           width: 400px;
           // height: 40px;
+        }
+
+        .password-rule {
+          margin-top: 5px;
+          font-size: 12px;
+          color: #999;
+          line-height: 1.4;
         }
       }
 
@@ -199,7 +258,6 @@ export default {
   }
 }
 
-
 .btn-box {
   margin-top: 46px;
 
@@ -209,14 +267,13 @@ export default {
   .btn-save {
     width: 120px;
     height: 32px;
-    background: #FFFFFF;
+    background: #ffffff;
     border-radius: 5px;
     border: 1px solid @theme;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
     color: @theme;
-
   }
 
   .btn-cancel {
@@ -228,7 +285,7 @@ export default {
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #FFFFFF;
+    color: #ffffff;
   }
 }
 </style>

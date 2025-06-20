@@ -44,7 +44,10 @@
             考试起止时间：{{ item.question.start_time }} 到
             {{ item.question.end_time }}
           </p>
-          <el-button type="primary" v-if="item.has_test_num === 0" @click="go_exam(item)"
+          <el-button
+            type="primary"
+            v-if="item.question.can_test_num - item.has_test_num !== 0"
+            @click="go_exam(item)"
             >开始考试</el-button
           >
           <el-button

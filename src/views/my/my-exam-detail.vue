@@ -3,14 +3,15 @@ export default {
   name: "my-exam-detail",
   data() {
     return {
-      id: '', // 考试id
+      id: "", // 考试id
       detail: {}, // 考试详情
-      question: { // 试题
+      question: {
+        // 试题
         judge_content: {},
         multiple_content: {},
-        single_content: {}
+        single_content: {},
       },
-    }
+    };
   },
   mounted() {
     this.id = this.$route.query.id;
@@ -19,62 +20,72 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: 'myQuestion',
-        method: 'get',
+        url: "myQuestion",
+        method: "get",
         data: {
-          question_id: this.id
-        }
-      }).then(res => {
+          question_id: this.id,
+        },
+      }).then((res) => {
         if (res.code == 200) {
           this.detail = res.data;
           this.question = res.data.question;
           // 判断题
           this.question.judge_content.list.forEach((item, index) => {
-            item.selectText = item.correct_answer === item.my_answer ? 1 : ['', undefined, null].includes(item.my_answer) ? 3 : 2;
-          })
+            item.selectText =
+              item.correct_answer === item.my_answer
+                ? 1
+                : ["", undefined, null].includes(item.my_answer)
+                ? 3
+                : 2;
+          });
           // 多选题
           this.question.multiple_content.list.forEach((item, index) => {
             item.selectText = this.multipleError(item);
-          })
+          });
           // 单选题
           this.question.single_content.list.forEach((item, index) => {
-            item.selectText = item.correct_answer === item.my_answer ? 1 : ['', undefined, null].includes(item.my_answer) ? 3 : 2;
-          })
+            item.selectText =
+              item.correct_answer === item.my_answer
+                ? 1
+                : ["", undefined, null].includes(item.my_answer)
+                ? 3
+                : 2;
+          });
         }
-      })
+      });
     },
     setActive(item) {
       if (item.selectText === 1) {
-        return 'correct'
+        return "correct";
       } else if (item.selectText === 2) {
-        return 'wrong'
+        return "wrong";
       } else {
-        return 'unknown'
+        return "unknown";
       }
     },
     multipleError(item) {
       let index = 0;
       // 没选
-      if (['', null, undefined].includes(item.my_answer)) {
-        return 3
+      if (["", null, undefined].includes(item.my_answer)) {
+        return 3;
       }
       // 选错
       if (item.my_answer.length !== item.correct_answer.length) {
-        return 2
+        return 2;
       }
       // 选错选项
-      item.my_answer.split(',').forEach((it, i) => {
+      item.my_answer.split(",").forEach((it, i) => {
         if (!item.correct_answer.includes(it)) {
-          index++
+          index++;
         }
-      })
+      });
       return index === 0 ? 1 : 2;
     },
     topicList(item) {
-      return 'ABCD'.substring(item, item + 1)
-    }
-  }
-}
+      return "ABCD".substring(item, item + 1);
+    },
+  },
+};
 </script>
 
 <template>
@@ -83,7 +94,7 @@ export default {
       <div class="profile">
         <div class="title">考生信息</div>
         <div class="profile-info">
-          <img :src="baseInfo.image" alt="">
+          <img :src="baseInfo.image" alt="" />
           <div class="info">
             <div class="name">{{ baseInfo.name }}</div>
             <div class="level">
@@ -112,42 +123,58 @@ export default {
           <div class="question-list">
             <div class="question-item">
               <div class="question-title">
-                单选题（共{{ question.single_content.total_num }}题，总分{{ question.single_content.total_point }}分）
+                单选题（共{{ question.single_content.total_num }}题，总分{{
+                  question.single_content.total_point
+                }}分）
               </div>
               <div class="question-content">
-                <div v-for="(item, index) in question.single_content.list" :key="index"
-                     :class="setActive(item)" class="question-content-item">
+                <div
+                  v-for="(item, index) in question.single_content.list"
+                  :key="index"
+                  :class="setActive(item)"
+                  class="question-content-item"
+                >
                   {{ index + 1 }}
                 </div>
               </div>
             </div>
             <div class="question-item">
               <div class="question-title">
-                判断题（共{{ question.judge_content.total_num }}题，总分{{ question.judge_content.total_point }}分）
+                判断题（共{{ question.judge_content.total_num }}题，总分{{
+                  question.judge_content.total_point
+                }}分）
               </div>
               <div class="question-content">
-                <div v-for="(item, index) in question.judge_content.list" :key="index"
-                     :class="setActive(item)" class="question-content-item">
+                <div
+                  v-for="(item, index) in question.judge_content.list"
+                  :key="index"
+                  :class="setActive(item)"
+                  class="question-content-item"
+                >
                   {{ index + 1 }}
                 </div>
               </div>
             </div>
             <div class="question-item">
               <div class="question-title">
-                多选题（共{{ question.multiple_content.total_num }}题，总分{{ question.multiple_content.total_point }}分）
+                多选题（共{{ question.multiple_content.total_num }}题，总分{{
+                  question.multiple_content.total_point
+                }}分）
               </div>
               <div class="question-content">
-                <div v-for="(item, index) in question.multiple_content.list" :key="index"
-                     :class="setActive(item)" class="question-content-item">
+                <div
+                  v-for="(item, index) in question.multiple_content.list"
+                  :key="index"
+                  :class="setActive(item)"
+                  class="question-content-item"
+                >
                   {{ index + 1 }}
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="all-score">
-            得分：{{ detail.my_total_point }}分
-          </div>
+          <div class="all-score">得分：{{ detail.my_total_point }}分</div>
         </div>
       </div>
     </div>
@@ -162,26 +189,36 @@ export default {
         <!--        单选-->
         <div class="question-item">
           <div class="question-title">
-            单选题（共{{ question.single_content.total_num }}题，总分{{ question.single_content.total_point }}分）
+            单选题（共{{ question.single_content.total_num }}题，总分{{
+              question.single_content.total_point
+            }}分）
           </div>
           <div class="question-content">
-            <div v-for="(item, index) in question.single_content.list" :key="index" class="question-content-item">
+            <div
+              v-for="(item, index) in question.single_content.list"
+              :key="index"
+              class="question-content-item"
+            >
               <div class="topic">
                 <div class="type">单选题</div>
                 <p>{{ index + 1 }}.{{ item.title }}</p>
               </div>
               <div class="topic-list">
-                <div v-for="(it, i) in item.content" :key="i" :class="{'selected': item.my_answer === it}"
-                     class="topic-item">
+                <div
+                  v-for="(it, i) in item.content"
+                  :key="i"
+                  :class="{ selected: item.my_answer === it }"
+                  class="topic-item"
+                >
                   <div class="select">{{ topicList(i) }}</div>
                   <p>{{ it }}</p>
                 </div>
               </div>
               <div class="Answer">
                 <p class="me">正确答案：{{ item.correct_answer }}</p>
-                <p :class="{'error': item.selectText != 1}" class="your">您的答案：{{
-                    item.my_answer || '空'
-                  }}</p>
+                <p :class="{ error: item.selectText != 1 }" class="your">
+                  您的答案：{{ item.my_answer || "空" }}
+                </p>
               </div>
             </div>
           </div>
@@ -189,26 +226,36 @@ export default {
         <!--        判断-->
         <div class="question-item">
           <div class="question-title">
-            判断题（共{{ question.judge_content.total_num }}题，总分{{ question.judge_content.total_point }}分）
+            判断题（共{{ question.judge_content.total_num }}题，总分{{
+              question.judge_content.total_point
+            }}分）
           </div>
           <div class="question-content">
-            <div v-for="(item, index) in question.judge_content.list" :key="index" class="question-content-item">
+            <div
+              v-for="(item, index) in question.judge_content.list"
+              :key="index"
+              class="question-content-item"
+            >
               <div class="topic">
                 <div class="type">判断题</div>
                 <p>{{ index + 1 }}.{{ item.title }}</p>
               </div>
               <div class="topic-list">
-                <div v-for="(it, i) in item.content" :key="i" :class="{'selected': item.my_answer === it}"
-                     class="topic-item">
+                <div
+                  v-for="(it, i) in item.content"
+                  :key="i"
+                  :class="{ selected: item.my_answer === it }"
+                  class="topic-item"
+                >
                   <div class="select">{{ topicList(i) }}</div>
                   <p>{{ it }}</p>
                 </div>
               </div>
               <div class="Answer">
                 <p class="me">正确答案：{{ item.correct_answer }}</p>
-                <p :class="{'error': item.selectText != 1}" class="your">您的答案：{{
-                    item.my_answer || '空'
-                  }}</p>
+                <p :class="{ error: item.selectText != 1 }" class="your">
+                  您的答案：{{ item.my_answer || "空" }}
+                </p>
               </div>
             </div>
           </div>
@@ -216,26 +263,36 @@ export default {
         <!--        多选-->
         <div class="question-item">
           <div class="question-title">
-            多选题（共{{ question.multiple_content.total_num }}题，总分{{ question.multiple_content.total_point }}分）
+            多选题（共{{ question.multiple_content.total_num }}题，总分{{
+              question.multiple_content.total_point
+            }}分）
           </div>
           <div class="question-content">
-            <div v-for="(item, index) in question.multiple_content.list" :key="index" class="question-content-item">
+            <div
+              v-for="(item, index) in question.multiple_content.list"
+              :key="index"
+              class="question-content-item"
+            >
               <div class="topic">
                 <div class="type">多选题</div>
                 <p>{{ index + 1 }}.{{ item.title }}</p>
               </div>
               <div class="topic-list">
-                <div v-for="(it, i) in item.content" :key="i" :class="{'selected': item.my_answer.includes(it)}"
-                     class="topic-item">
+                <div
+                  v-for="(it, i) in item.content"
+                  :key="i"
+                  :class="{ selected: item.my_answer.includes(it) }"
+                  class="topic-item"
+                >
                   <div class="select">{{ topicList(i) }}</div>
                   <p>{{ it }}</p>
                 </div>
               </div>
               <div class="Answer">
                 <p class="me">正确答案：{{ item.correct_answer }}</p>
-                <p :class="{'error': item.selectText != 1}" class="your">您的答案：{{
-                    item.my_answer || '空'
-                  }}</p>
+                <p :class="{ error: item.selectText != 1 }" class="your">
+                  您的答案：{{ item.my_answer || "空" }}
+                </p>
               </div>
             </div>
           </div>
@@ -271,10 +328,9 @@ export default {
 <style lang="less" scoped>
 .container {
   padding: 25px 37px 0;
-  background: #F5F6F6;
+  background: #f5f6f6;
   display: flex;
   align-items: start;
-
 
   .left {
     width: 362px;
@@ -285,20 +341,20 @@ export default {
 
     .title {
       height: 60px;
-      background: #FAFAFA;
-      border-bottom: 1px solid #DEDEDE;
+      background: #fafafa;
+      border-bottom: 1px solid #dedede;
       text-align: center;
       line-height: 60px;
       font-family: Source Han Sans, Source Han Sans;
       font-weight: 700;
       font-size: 20px;
-      color: #23324F;
+      color: #23324f;
     }
 
     .profile {
       width: 100%;
       background-color: #fff;
-      border: 1px solid #DEDEDE;
+      border: 1px solid #dedede;
 
       .profile-info {
         padding: 34px;
@@ -319,15 +375,16 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 700;
             font-size: 18px;
-            color: #1F253B;
+            color: #1f253b;
           }
 
-          .level, .phone {
+          .level,
+          .phone {
             display: flex;
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 12px;
-            color: #6F6F6F;
+            color: #6f6f6f;
 
             p {
               width: 36px;
@@ -351,7 +408,7 @@ export default {
     .answer {
       width: 100%;
       margin-top: 22px;
-      border: 1px solid #DEDEDE;
+      border: 1px solid #dedede;
       background-color: #fff;
 
       .answer-content {
@@ -365,7 +422,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 12px;
-          color: #9698A2;
+          color: #9698a2;
           padding-bottom: 5px;
 
           .idea1 {
@@ -374,11 +431,11 @@ export default {
             margin-right: 26px;
 
             &::before {
-              content: '';
+              content: "";
               display: inline-block;
               width: 12px;
               height: 12px;
-              background: #23B370;
+              background: #23b370;
               border-radius: 2px 2px 2px 2px;
               margin-right: 5px;
             }
@@ -390,11 +447,11 @@ export default {
             margin-right: 26px;
 
             &::before {
-              content: '';
+              content: "";
               display: inline-block;
               width: 12px;
               height: 12px;
-              background: #FA3C3B;
+              background: #fa3c3b;
               border-radius: 2px 2px 2px 2px;
               margin-right: 5px;
             }
@@ -405,11 +462,11 @@ export default {
             align-items: center;
 
             &::before {
-              content: '';
+              content: "";
               display: inline-block;
               width: 12px;
               height: 12px;
-              background: #F5F6F6;
+              background: #f5f6f6;
               border-radius: 2px 2px 2px 2px;
               margin-right: 5px;
             }
@@ -425,7 +482,7 @@ export default {
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: 400;
               font-size: 14px;
-              color: #23324F;
+              color: #23324f;
               margin: 10px 0;
             }
 
@@ -447,19 +504,19 @@ export default {
                 }
 
                 &.correct {
-                  background: #23B370;
+                  background: #23b370;
                   color: #fff;
                 }
 
                 &.wrong {
-                  background: #FA3C3B;
+                  background: #fa3c3b;
                   color: #fff;
                 }
 
                 &.unknown {
-                  border: 1px solid #DDE0E5;
-                  background-color: #F5F6F6;
-                  color: #999FA4;
+                  border: 1px solid #dde0e5;
+                  background-color: #f5f6f6;
+                  color: #999fa4;
                 }
               }
             }
@@ -469,18 +526,18 @@ export default {
         .all-score {
           height: 39px;
           line-height: 39px;
-          background: #FFFFFF;
+          background: #ffffff;
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 14px;
-          color: #23324F;
+          color: #23324f;
         }
       }
     }
   }
 
   .content {
-    border: 1px solid #DEDEDE;
+    border: 1px solid #dedede;
     margin-left: 36px;
     flex: 1;
     background-color: #fff;
@@ -490,22 +547,22 @@ export default {
       align-items: center;
       justify-content: space-between;
       height: 88px;
-      background: #FFFFFF;
+      background: #ffffff;
       padding: 0 38px;
-      border-bottom: 1px solid #DEDEDE;
+      border-bottom: 1px solid #dedede;
 
       .date {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 20px;
-        color: #FF0D0D;
+        color: #ff0d0d;
       }
 
       .name {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 700;
         font-size: 24px;
-        color: #23324F;
+        color: #23324f;
       }
 
       .back-btn {
@@ -513,7 +570,7 @@ export default {
         width: 120px;
         height: 40px;
         line-height: 40px;
-        background: linear-gradient(138deg, #175E3D 0%, #257C54 100%);
+        background: linear-gradient(138deg, #175e3d 0%, #257c54 100%);
         border-radius: 155px;
         text-align: center;
         color: #fff;
@@ -530,14 +587,14 @@ export default {
           padding: 0 38px;
           height: 62px;
           line-height: 62px;
-          background: #FAFAFA;
-          border-top: 1px solid #DEDEDE;
-          border-bottom: 1px solid #DEDEDE;
+          background: #fafafa;
+          border-top: 1px solid #dedede;
+          border-bottom: 1px solid #dedede;
 
           font-family: Source Han Sans, Source Han Sans;
           font-weight: 500;
           font-size: 18px;
-          color: #23324F;
+          color: #23324f;
         }
       }
 
@@ -546,7 +603,7 @@ export default {
 
         .question-content-item {
           padding-bottom: 20px;
-          border-bottom: 1px solid #DEDEDE;
+          border-bottom: 1px solid #dedede;
           margin-bottom: 20px;
 
           &:last-child {
@@ -562,7 +619,7 @@ export default {
             .type {
               width: 57px;
               height: 26px;
-              background: #F1F8FF;
+              background: #f1f8ff;
               border-radius: 4px;
               color: @theme;
               text-align: center;
@@ -575,7 +632,7 @@ export default {
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: 400;
               font-size: 16px;
-              color: #23324F;
+              color: #23324f;
             }
           }
 
@@ -591,12 +648,12 @@ export default {
                 text-align: center;
                 line-height: 30px;
                 background-color: #fff;
-                border: 1px solid #A6ACC0;
+                border: 1px solid #a6acc0;
                 border-radius: 50%;
                 font-family: Microsoft YaHei, Microsoft YaHei;
                 font-weight: 400;
                 font-size: 16px;
-                color: #636E92;
+                color: #636e92;
                 margin-right: 5px;
               }
 
@@ -615,7 +672,7 @@ export default {
                 font-family: Microsoft YaHei, Microsoft YaHei;
                 font-weight: 400;
                 font-size: 16px;
-                color: #23324F;
+                color: #23324f;
               }
             }
           }
@@ -628,7 +685,7 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 16px;
-            color: #175E3D;
+            color: #175e3d;
             margin-right: 25px;
           }
 
@@ -636,10 +693,10 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 16px;
-            color: #175E3D;
+            color: #175e3d;
 
             &.error {
-              color: #FA3C3B;
+              color: #fa3c3b;
             }
           }
         }

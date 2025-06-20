@@ -179,7 +179,7 @@
                       <div class="index-collapse">{{ item.title }}</div>
                       <div class="video-time">
                         <img alt="" src="@/static/common/video.png" />
-                        <span>{{ item.learn_time }}</span>
+                        <span class="ellipsis-1">{{ item.learn_time }}</span>
                       </div>
                       <div class="progress-collapse">
                         {{
@@ -391,7 +391,7 @@
                       <div class="index-collapse">{{ item.title }}</div>
                       <div class="video-time">
                         <img alt="" src="@/static/common/video.png" />
-                        <span>{{ item.learn_time }}</span>
+                        <span class="ellipsis-1">{{ item.learn_time }}</span>
                       </div>
                       <div class="progress-collapse">
                         {{
@@ -1086,6 +1086,8 @@ export default {
           font-weight: 400;
           font-size: 14px;
           color: #666666;
+          height: 20px;
+          line-height: 20px;
         }
       }
 

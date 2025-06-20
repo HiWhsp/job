@@ -9,19 +9,28 @@
         <div class="mess-item" v-for="(item, index) in messList" :key="index">
           <div class="title-box">
             <div class="content">
-              {{ item.content }}
+              {{ item.msg }}
             </div>
             <div class="date">
-              {{ item.dtTime }}
+              {{ item.created_at }}
             </div>
           </div>
         </div>
       </div>
 
-      <div v-if="count" class="pagination-box" style="margin-top: 40px; text-align: right;">
-        <el-pagination background layout="total, prev, pager, next" @current-change="setView"
-                       :current-page.sync="pagination.page" :page-size="pagination.pageNum"
-                       :total="count"></el-pagination>
+      <div
+        v-if="count"
+        class="pagination-box"
+        style="margin-top: 40px; text-align: right"
+      >
+        <el-pagination
+          background
+          layout="total, prev, pager, next"
+          @current-change="setView"
+          :current-page.sync="pagination.page"
+          :page-size="pagination.pageNum"
+          :total="count"
+        ></el-pagination>
       </div>
       <el-empty v-if="!count" description="暂无消息..."></el-empty>
     </div>
@@ -29,7 +38,7 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "myMessage",
@@ -40,8 +49,8 @@ export default {
       messList: [],
       pagination: {
         page: 1,
-        pageNum: 10
-      }
+        pageNum: 10,
+      },
     };
   },
   computed: {
@@ -57,8 +66,8 @@ export default {
         url: "myMsg",
         method: "get",
       }).then((res) => {
-        this.messList = res.data.list
-        this.count = res.data.count;
+        this.messList = res.data;
+        this.count = res.data.length;
       });
     },
   },
@@ -133,7 +142,7 @@ export default {
         display: inline-block;
         width: 5px;
         height: 5px;
-        background: #E4E4E4;
+        background: #e4e4e4;
         border-radius: 50%;
         margin-right: 10px;
       }
@@ -144,7 +153,7 @@ export default {
 .tab-box {
   .flex-between();
   background: #ffffff;
-  border-bottom: 1px solid #D9D9D9;
+  border-bottom: 1px solid #d9d9d9;
 
   .tab-list {
     .flex();

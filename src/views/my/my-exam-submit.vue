@@ -39,6 +39,9 @@ export default {
   methods: {
     handleBeforeUnload() {
       if (document.hidden) {
+        if (!this.$route.path.includes("my-exam-submit")) {
+          return;
+        }
         this.$api({
           url: "recordQuestionSwitchWindow",
           method: "post",

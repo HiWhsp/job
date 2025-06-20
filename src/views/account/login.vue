@@ -54,7 +54,7 @@ export default {
             });
             this.$store.commit("set_baseInfo", res.data);
             if (res.code == 200) {
-              this.$router.push({ name: "index" });
+              this.$router.push({ name: "my-password" });
             }
           });
         }
