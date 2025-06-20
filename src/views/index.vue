@@ -122,71 +122,64 @@
           <h2>线上线下服务网络</h2>
         </div>
         <div class="network-content">
-          <div class="service-points">
-            <div class="service-category">
-              <h3>全球售后服务网络</h3>
-              <div class="service-locations">
-                <div class="location-group">
-                  <h4>中国</h4>
-                  <div class="location-item">
-                    <span class="flag">🇨🇳</span>
-                    <span>XXX公司驻华服务中心</span>
-                  </div>
-                  <div class="location-item">
-                    <span class="flag">🇨🇳</span>
-                    <span>XXX公司驻华服务中心</span>
-                  </div>
-                  <div class="location-item">
-                    <span class="flag">🇨🇳</span>
-                    <span>XXX公司驻华服务中心</span>
-                  </div>
-                  <div class="location-item">
-                    <span class="flag">🇨🇳</span>
-                    <span>XXX公司驻华服务中心</span>
+          <div class="network-content-left">
+            <div class="service-points">
+              <div class="service-category">
+                <h3>全球售后服务网络</h3>
+                <div class="service-locations">
+                  <div class="location-group">
+                    <h4>中国</h4>
+                    <div class="location-item" v-for="i in 3" :key="'location-' + i">
+                      <img class="flag" />
+                      <div class="location-item-content">
+                        <p class="location-item-title ellipsis-1">XXXXX售后服务网点</p>
+                        <p class="location-item-address ellipsis-1">
+                          山西省大同市云州区XXX号
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- <div class="service-stats">
-              <h3>专属服务团队</h3>
-              <div class="stats-list">
-                <div class="stat-item">
-                  <span class="icon">👥</span>
-                  <span>超过3人专业服务团队</span>
+            <div class="world-map">
+              <div class="map-container">
+                <div class="map-placeholder">
+                  <!-- 世界地图区域 -->
+                  <div class="continent asia">亚洲</div>
+                  <div class="continent europe">欧洲</div>
+                  <div class="continent africa">非洲</div>
+                  <div class="continent north-america">北美洲</div>
+                  <div class="continent south-america">南美洲</div>
+                  <div class="continent oceania">大洋洲</div>
                 </div>
-                <div class="stat-item">
-                  <span class="icon">🌍</span>
-                  <span>覆盖全球17个国家地区</span>
-                </div>
-                <div class="stat-item">
-                  <span class="icon">⚡</span>
-                  <span>7×24小时在线服务</span>
-                </div>
-                <div class="stat-item">
-                  <span class="icon">📞</span>
-                  <span>一对一专属客户经理</span>
-                </div>
-              </div>
-            </div> -->
-          </div>
-
-          <div class="world-map">
-            <div class="map-container">
-              <div class="map-placeholder">
-                <!-- 世界地图区域 -->
-                <div class="continent asia">亚洲</div>
-                <div class="continent europe">欧洲</div>
-                <div class="continent africa">非洲</div>
-                <div class="continent north-america">北美洲</div>
-                <div class="continent south-america">南美洲</div>
-                <div class="continent oceania">大洋洲</div>
               </div>
             </div>
           </div>
 
           <div class="contact-section">
-            <div class="contact-btn">联系我们</div>
+            <div class="service-stats">
+              <h3>专属服务团队</h3>
+              <h4>千人级服务天团精准护航</h4>
+              <div class="stats-list">
+                <div class="stat-item">
+                  <span class="icon">🌍</span>
+                  <span>服务人员1对1专业报价</span>
+                </div>
+                <div class="stat-item">
+                  <span class="icon">⚡</span>
+                  <span>销售员上门对接业务</span>
+                </div>
+                <div class="stat-item">
+                  <span class="icon">📞</span>
+                  <span>认证工程师技术保障</span>
+                </div>
+              </div>
+              <div class="contact-btn">
+                <span>提交服务需求</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

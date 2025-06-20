@@ -347,7 +347,7 @@
       cursor: pointer;
       width: 190px;
       height: 190px;
-      background: linear-gradient(180deg, #F6F6F8 0%, #FFFFFF 100%);
+      background: linear-gradient(180deg, #f6f6f8 0%, #ffffff 100%);
       border-radius: 14px;
       padding: 20px 17px;
       box-shadow: 0px 12px 19px 0px rgba(0, 0, 0, 0.06);
@@ -426,7 +426,7 @@
       cursor: pointer;
       width: 190px;
       height: 190px;
-      background: linear-gradient(180deg, #F6F6F8 0%, #FFFFFF 100%);
+      background: linear-gradient(180deg, #f6f6f8 0%, #ffffff 100%);
       border-radius: 14px;
       padding: 20px 17px;
       box-shadow: 0px 12px 19px 0px rgba(0, 0, 0, 0.06);
@@ -500,174 +500,184 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 40px;
+    gap: 16px;
+    height: 465px;
 
-    .service-points {
+    .network-content-left {
       flex: 1;
-      max-width: 300px;
-
-      .service-category {
-        margin-bottom: 30px;
-
-        h3 {
-          font-size: 18px;
-          font-weight: bold;
-          color: #333;
-          margin-bottom: 20px;
-          padding: 15px;
-          background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
-          border-radius: 8px;
-          text-align: center;
-        }
-
-        .service-locations {
-          .location-group {
-            h4 {
-              font-size: 16px;
-              font-weight: bold;
-              color: #4caf50;
-              margin-bottom: 15px;
-              border-bottom: 2px solid #4caf50;
-              padding-bottom: 8px;
-            }
-
-            .location-item {
-              display: flex;
-              align-items: center;
-              margin-bottom: 12px;
-              padding: 8px;
-              background: #f9f9f9;
-              border-radius: 6px;
-              transition: all 0.3s;
-
-              &:hover {
-                background: #e8f5e8;
-              }
-
-              .flag {
-                margin-right: 10px;
-                font-size: 16px;
-              }
-
-              span:last-child {
-                font-size: 14px;
-                color: #666;
-              }
-            }
-          }
-        }
-      }
-
-      .service-stats {
-        h3 {
-          font-size: 18px;
-          font-weight: bold;
-          color: #333;
-          margin-bottom: 20px;
-          padding: 15px;
-          background: linear-gradient(135deg, #fff3e0 0%, #ffcc80 100%);
-          border-radius: 8px;
-          text-align: center;
-        }
-
-        .stats-list {
-          .stat-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 12px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            transition: all 0.3s;
-
-            &:hover {
-              background: #fff3e0;
-              transform: translateX(5px);
-            }
-
-            .icon {
-              margin-right: 12px;
-              font-size: 18px;
-            }
-
-            span:last-child {
-              font-size: 14px;
-              color: #666;
-              font-weight: 500;
-            }
-          }
-        }
-      }
-    }
-
-    .world-map {
-      flex: 2;
+      height: 100%;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
+      border-radius: 14px;
+      background: linear-gradient(
+        180deg,
+        #defaff 0%,
+        rgba(255, 255, 255, 0.7658) 25%,
+        #ffffff 78%,
+        #defaff 100%
+      );
+      box-sizing: border-box;
+      border: 1px solid #ffffff;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.06);
+      padding: 28px 47px 47px 37px;
+      .service-points {
+        flex: 1;
+        max-width: 300px;
 
-      .map-container {
-        width: 100%;
-        max-width: 500px;
-        height: 300px;
-        position: relative;
+        .service-category {
+          h3 {
+            font-family: Microsoft YaHei;
+            font-size: 22px;
+            font-weight: bold;
+            line-height: normal;
+            letter-spacing: normal;
+            color: #33ae60;
+            margin-bottom: 18px;
+          }
 
-        .map-placeholder {
+          .service-locations {
+            width: 249px;
+            height: 345px;
+            border-radius: 14px;
+            background: linear-gradient(
+              180deg,
+              #e8f6ff 0%,
+              rgba(255, 255, 255, 0.7658) 25%,
+              #ffffff 78%,
+              #e8f6fe 100%
+            );
+            box-sizing: border-box;
+            border: 1px solid #ffffff;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.06);
+            .location-group {
+              h4 {
+                font-family: Microsoft YaHei;
+                font-size: 20px;
+                font-weight: bold;
+                line-height: normal;
+                letter-spacing: normal;
+                color: #3d3d3d;
+                margin-bottom: 34px;
+                margin-top: 20px;
+                text-align: center;
+              }
+
+              .location-item {
+                height: 60px;
+                display: flex;
+                align-items: center;
+                border-radius: 14px;
+                margin: 0 22px 16px;
+                cursor: pointer;
+
+                .flag {
+                  width: 44px;
+                  height: 44px;
+                  border-radius: 8px;
+                  background: #33ae60;
+                  display: inline-block;
+                }
+
+                .location-item-content {
+                  width: 145px;
+                  display: flex;
+                  flex-direction: column;
+                  margin-left: 8px;
+                  .location-item-title {
+                    font-family: Microsoft YaHei;
+                    font-size: 14px;
+                    font-weight: normal;
+                    line-height: normal;
+                    letter-spacing: normal;
+                    color: #3d3d3d;
+                    height: 20px;
+                  }
+                  .location-item-address {
+                    font-family: Microsoft YaHei;
+                    font-size: 12px;
+                    font-weight: normal;
+                    line-height: normal;
+                    letter-spacing: normal;
+                    color: #8c9194;
+                    height: 20px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .world-map {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 524px;
+        height: 282px;
+
+        .map-container {
           width: 100%;
           height: 100%;
-          background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
-          border-radius: 15px;
           position: relative;
-          overflow: hidden;
-          display: flex;
-          align-items: center;
-          justify-content: center;
 
-          &::before {
-            content: "🌍";
-            font-size: 80px;
-            opacity: 0.3;
-          }
+          .map-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-          .continent {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 8px 12px;
-            font-size: 12px;
-            color: white;
-            font-weight: bold;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-
-            &.asia {
-              top: 20%;
-              right: 20%;
+            &::before {
+              content: "🌍";
+              font-size: 80px;
+              opacity: 0.3;
             }
 
-            &.europe {
-              top: 15%;
-              left: 45%;
-            }
+            .continent {
+              position: absolute;
+              background: rgba(255, 255, 255, 0.2);
+              border-radius: 20px;
+              padding: 8px 12px;
+              font-size: 12px;
+              color: white;
+              font-weight: bold;
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255, 255, 255, 0.3);
 
-            &.africa {
-              top: 45%;
-              left: 48%;
-            }
+              &.asia {
+                top: 20%;
+                right: 20%;
+              }
 
-            &.north-america {
-              top: 25%;
-              left: 15%;
-            }
+              &.europe {
+                top: 15%;
+                left: 45%;
+              }
 
-            &.south-america {
-              bottom: 25%;
-              left: 25%;
-            }
+              &.africa {
+                top: 45%;
+                left: 48%;
+              }
 
-            &.oceania {
-              bottom: 20%;
-              right: 15%;
+              &.north-america {
+                top: 25%;
+                left: 15%;
+              }
+
+              &.south-america {
+                bottom: 25%;
+                left: 25%;
+              }
+
+              &.oceania {
+                bottom: 20%;
+                right: 15%;
+              }
             }
           }
         }
@@ -675,25 +685,97 @@
     }
 
     .contact-section {
-      flex: 0 0 auto;
+      width: 281px;
+      height: 100%;
+      padding: 34px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      border-radius: 14px;
+      background: linear-gradient(
+        180deg,
+        #defaff 0%,
+        rgba(255, 255, 255, 0.7658) 25%,
+        #ffffff 78%,
+        #defaff 100%
+      );
+      box-sizing: border-box;
+      border: 1px solid #ffffff;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.06);
 
       .contact-btn {
-        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-        color: white;
-        padding: 15px 25px;
-        border-radius: 25px;
-        font-size: 16px;
+        border-radius: 64px;
+        background: linear-gradient(104deg, #f47c35 0%, #fcc231 100%);
+        box-shadow: 0px 4px 10px 0px rgba(197, 85, 0, 0.22);
+        width: 222px;
+        height: 56px;
+        text-align: center;
+        line-height: 56px;
+        font-family: Microsoft YaHei;
+        font-size: 18px;
         font-weight: bold;
+        text-align: center;
+        letter-spacing: normal;
+        color: #ffffff;
         cursor: pointer;
         transition: all 0.3s;
-        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
 
         &:hover {
           transform: translateY(-3px);
           box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+      }
+
+      .service-stats {
+        h3 {
+          font-family: Microsoft YaHei;
+          font-size: 22px;
+          font-weight: bold;
+          line-height: normal;
+          text-align: center;
+          letter-spacing: normal;
+          color: #343434;
+          text-align: center;
+          margin-bottom: 8px;
+        }
+        h4 {
+          font-family: Microsoft YaHei;
+          font-size: 14px;
+          font-weight: normal;
+          line-height: normal;
+          text-align: center;
+          letter-spacing: normal;
+          color: #8c9194;
+          margin-bottom: 42px;
+        }
+
+        .stats-list {
+          .stat-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+
+            .icon {
+              margin-right: 6px;
+              font-size: 14px;
+              background: #e4f4ea;
+              border-radius: 50%;
+              width: 32px;
+              height: 32px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+
+            span:last-child {
+              font-family: Microsoft YaHei;
+              font-size: 16px;
+              font-weight: normal;
+              line-height: normal;
+              letter-spacing: normal;
+              color: #343434;
+            }
+          }
         }
       }
     }
@@ -707,18 +789,19 @@
   .brands-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 20px;
+    gap: 12px;
 
     .brand-item {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s;
-      border: 1px solid #e0e0e0;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #F6F6F8 0%, #FFFFFF 100%);
+      box-sizing: border-box;
+      border: 1px solid #FFFFFF;
+      box-shadow: 0px 12px 19px 0px rgba(0, 0, 0, 0.06);
       display: flex;
       align-items: center;
       justify-content: center;
+      width: 190px;
+      height: 156px;
 
       &:hover {
         transform: translateY(-5px);
