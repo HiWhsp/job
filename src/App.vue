@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <AdBanner />
     <page_header_ellsenn data-title="普通页面顶部" />
     <!-- <page_header_mobile /> -->
 
@@ -8,6 +9,7 @@
     </div>
 
     <page_footer_ellsenn data-title="普通页面底部" />
+    <page_aside />
   </div>
 </template>
 
@@ -15,14 +17,17 @@
 import page_footer_ellsenn from "@/components/page/page-footer-ellsenn.vue";
 import page_header_ellsenn from "@/components/page/page-header-ellsenn.vue";
 import page_header_mobile from "@/components/page/page-header-mobile.vue"; //移动端顶部
+import AdBanner from "@/components/common/AdBanner.vue"; //广告横幅
 //
-// import page_aside from "@/components/page/page-aside.vue";
+import page_aside from "@/components/page/page-aside.vue";
 // import page_kefu from "@/components/page/page-kefu.vue";
 export default {
   components: {
+    AdBanner,
     page_header_ellsenn,
     page_header_mobile,
     page_footer_ellsenn,
+    page_aside,
   },
   data() {
     let href_pathname = location.pathname;
