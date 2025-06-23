@@ -13,11 +13,6 @@
       <div class="auth-section login-section" v-if="activeTab === 'login'">
         <div class="auth-header">
           <h2>登录</h2>
-          <p>
-            （没有账号？<span @click="switchTab('register')" class="switch-link"
-              >点击注册</span
-            >）
-          </p>
         </div>
 
         <el-form :model="loginForm" :rules="loginRules" ref="loginForm" class="auth-form">
@@ -81,22 +76,13 @@
 
         <div class="auth-footer">
           <div class="forgot-password">
-            <!-- <span @click="forgotPassword" class="link-text">忘记密码？</span> -->
+            <span @click="forgotPassword" class="link-text">忘记密码？</span>
             <span @click="passwordLogin" class="link-text" v-if="type === 'code'"
               >密码登录</span
             >
             <span @click="type = 'code'" class="link-text" v-if="type === 'password'"
               >验证码登录</span
             >
-          </div>
-
-          <div class="other-login">
-            <p>其他登录方式</p>
-            <div class="social-login">
-              <div class="social-item" @click="wechatLogin">
-                <img src="@/assets/img/ellsenn/wechat.png" alt="" />
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -400,9 +386,6 @@ export default {
             .catch((err) => {
               this.loginLoading = false;
             });
-
-          // 模拟登录请求
-          setTimeout(() => {}, 1500);
         }
       });
     },
@@ -466,7 +449,7 @@ export default {
 }
 
 .auth-container {
-  min-height: 500px;
+  min-height: 400px;
   display: flex;
   flex-direction: column;
   border-radius: 8px;
@@ -494,7 +477,7 @@ export default {
       display: block;
       width: 100%;
       height: 2px;
-      background: #005aac;
+      background: #33ae60;
     }
   }
 
@@ -505,7 +488,7 @@ export default {
 }
 
 .switch-link {
-  color: #005aac;
+  color: #33ae60;
   cursor: pointer;
   text-decoration: underline;
 }
@@ -541,10 +524,10 @@ export default {
   font-weight: 600;
   background: #f9f9f9 !important;
   border: none;
-  color: #005aac !important;
+  color: #33ae60 !important;
   &:hover {
     background: #f9f9f9 !important;
-    color: #005aac !important;
+    color: #33ae60 !important;
   }
 }
 
@@ -558,7 +541,7 @@ export default {
     justify-content: space-between;
 
     span {
-      color: #005aac;
+      color: #33ae60;
       text-decoration: none;
     }
   }
@@ -642,10 +625,10 @@ export default {
 .el-button--primary {
   font-size: 18px;
   height: 50px;
-  background: #005aac !important;
+  background: #33ae60 !important;
   border: none !important;
   &:hover {
-    background: #005aac !important;
+    background: #33ae60 !important;
   }
 }
 

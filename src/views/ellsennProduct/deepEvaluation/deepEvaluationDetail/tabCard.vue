@@ -4,7 +4,7 @@
       <el-tab-pane label="核心亮点" name="first">
         <verticalLineTitle tabTitle="核心亮点"> </verticalLineTitle>
         <div class="firstTab">
-          根据维深信息wellsenn
+          根据江阴联安wellsenn
           XR的调研和跟踪统计，2024年Q1全球VR销量为172万台，同比下滑9%。一季度销量下滑的主要原因主要来自于Meta、索尼PS
           VR2以及PICO，其中Meta 销量下滑了10%，索尼PS VR2下滑57%，苹果Vision
           Pro一季度取得29万台销量，部分弥补了Meta 、索尼PS
@@ -17,7 +17,7 @@
       <el-tab-pane label="研究方法" name="second">
         <verticalLineTitle tabTitle="研究方法"> </verticalLineTitle>
         <div class="firstTab">
-          根据维深信息wellsenn
+          根据江阴联安wellsenn
           XR的调研和跟踪统计，2024年Q1全球VR销量为172万台，同比下滑9%。一季度销量下滑的主要原因主要来自于Meta、索尼PS
           VR2以及PICO，其中Meta 销量下滑了10%，索尼PS VR2下滑57%，苹果Vision
           Pro一季度取得29万台销量，部分弥补了Meta 、索尼PS
@@ -30,7 +30,7 @@
       <el-tab-pane label="数据来源" name="third">
         <verticalLineTitle tabTitle="数据来源"> </verticalLineTitle>
         <div class="firstTab">
-          根据维深信息wellsenn
+          根据江阴联安wellsenn
           XR的调研和跟踪统计，2024年Q1全球VR销量为172万台，同比下滑9%。一季度销量下滑的主要原因主要来自于Meta、索尼PS
         </div>
       </el-tab-pane>

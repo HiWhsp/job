@@ -44,8 +44,8 @@
           <div class="top-nav-right-top">
             <div class="greeting">您好，请登录/注册</div>
             <div class="login-box">
-              <div class="login-btn">登录</div>
-              <div class="register-btn">注册</div>
+              <div class="login-btn" @click="showLogin">登录</div>
+              <div class="register-btn" @click="showRegister">注册</div>
             </div>
           </div>
 
@@ -228,6 +228,18 @@ export default {
       });
     },
     setView() {},
+
+    showLogin() {
+      this.$showLogin({
+        onLoginSuccess: (data) => {
+          this.$store.commit("set_baseInfo", data);
+          location.reload();
+        },
+      });
+    },
+    showRegister() {
+      this.$showRegister();
+    },
   },
 };
 </script>
