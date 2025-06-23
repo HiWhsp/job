@@ -1,15 +1,20 @@
 <template>
   <div id="app">
-    <AdBanner />
-    <page_header_ellsenn data-title="普通页面顶部" />
-    <!-- <page_header_mobile /> -->
+    <template v-if="!is_show_login_comp">
+      <AdBanner />
+      <page_header_ellsenn data-title="普通页面顶部" />
+      <!-- <page_header_mobile /> -->
 
-    <div class="layout-box">
+      <div class="layout-box">
+        <router-view></router-view>
+      </div>
+
+      <page_footer_ellsenn data-title="普通页面底部" />
+      <page_aside />
+    </template>
+    <template v-else>
       <router-view></router-view>
-    </div>
-
-    <page_footer_ellsenn data-title="普通页面底部" />
-    <page_aside />
+    </template>
   </div>
 </template>
 

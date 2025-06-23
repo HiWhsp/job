@@ -5,7 +5,7 @@
 }
 
 .left-logo-img {
-  width: 188px;
+  width: 165px;
 }
 .head-search {
   display: flex;
@@ -25,7 +25,7 @@
   padding: 0;
   // border-bottom: 4px solid #009a44;
   // box-shadow: 0px 3px 10px 1px rgba(0, 0, 0, 0.16);
-  background: #005aac;
+  background: #fff;
   box-shadow: 0px 4px 10px 0px rgba(36, 44, 94, 0.1);
   .right-box {
     margin-left: 70px;
@@ -44,6 +44,9 @@
       align-items: center;
       justify-content: center;
       margin: 0 16px 0 16px;
+      i {
+        color: #000;
+      }
     }
     .btn-login {
       color: #005aac;
@@ -106,6 +109,30 @@
       font-weight: 600;
       margin: 0 16px 0 16px;
       cursor: pointer;
+    }
+
+    .inter-login {
+      width: 120px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 25px;
+      background: #33AE60;
+      cursor: pointer;
+      img {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+      }
+      span {
+        font-family: Microsoft YaHei;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        color: #ffffff;
+      }
     }
   }
 }
@@ -182,10 +209,6 @@
         .nav-link {
           // font-weight: bold;
           color: #009f39;
-
-          &::after {
-            // width: 36px;
-          }
         }
       }
 
@@ -252,22 +275,22 @@
       margin-left: 40px;
     }
     .nav-item-icon {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
+      color: #3d3d3d;
     }
     .nav-title {
       font-size: 16px;
-      color: #333;
-      color: #fff;
+      color: #1e1e1e;
       position: relative;
 
       &.active {
-        color: #fff;
+        color: #33ae60;
         font-weight: bold;
       }
 
       &.router-link-exact-active {
-        color: #fff;
+        color: #33ae60;
         font-weight: bold;
         &::before {
           content: "";
@@ -278,14 +301,14 @@
           transform: translate(-50%);
           width: 36px;
           height: 2px;
-          background: #fff;
+          background: #33ae60;
           transition: 0.3s;
         }
       }
     }
 
     .text:hover {
-      color: #fff;
+      color: #33ae60;
       font-weight: bold;
     }
 
@@ -305,15 +328,15 @@
       .nav-dropdown-item {
         width: 100%;
         text-align: center;
-        color: #3d3d3d;
+        color: #1e1e1e;
         font-size: 16px;
 
         a {
           display: block;
-          color: #3d3d3d;
+          color: #1e1e1e;
           font-size: 16px;
           &:hover {
-            color: #005aac;
+            color: #33ae60;
           }
         }
       }

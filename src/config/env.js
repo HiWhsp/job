@@ -7,7 +7,7 @@ const ROOT = "https://xinwang.dx.hdapp.com.cn";//vuesc.new.zhishangez.com
  */
 export const API_ROOT = ROOT;
 
-// 商城类型 - 空-默认国内普通商城  foreign-维深信息 (地址管理不一样 账号登录注册等)
+// 商城类型 - 空-默认国内普通商城  foreign-江阴联安 (地址管理不一样 账号登录注册等)
 export const SHOP_TYPE = '';
 
 

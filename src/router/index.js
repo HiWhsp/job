@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import ellsennRouter from "./router";
 
 // 解决报错
 const originalPush = VueRouter.prototype.push;
@@ -38,7 +39,7 @@ const my_message = () =>
 const account_settings = () =>
   import(/* webpackChunkName: "account-settings" */ "@/views/my/account-settings.vue");
 
-// 维深信息
+// 江阴联安
 const researchReport = () => import("@/views/ellsennProduct/researchReport/index.vue"); // 研究报告
 const reportDetails = () => import("@/views/ellsennProduct/researchReport/reportDetails/index.vue"); // 研究报告详情
 const newsInsights = () => import("@/views/ellsennProduct/newsInsights/index.vue"); // 新闻洞察
@@ -60,6 +61,7 @@ const externalCommitteeDetail = () => import("@/views/ellsennProduct/about/compo
 const rankings = () => import("@/views/ellsennProduct/rankings/index.vue"); // 排行榜
 
 const routes = [
+  ...ellsennRouter,
   // 首页
   {
     path: "/",

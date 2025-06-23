@@ -6,7 +6,7 @@
           <div class="left-logo-content">
             <img
               class="left-logo-img"
-              src="@img/common/ellsenn-logo.png"
+              src="@/assets/image/home/logo.png"
               @click="$router.push('/')"
             />
             <!-- <span @click="$router.push('/')">网站名</span> -->
@@ -28,12 +28,12 @@
                     <router-link :to="item.route" class="nav-title">
                       {{ item.title }}
                     </router-link>
-                    <i v-if="!!item.icon" class="nav-itm" :class="item.icon"></i>
+                    <i v-if="!!item.icon" class="nav-item-icon" :class="item.icon"></i>
                     <div
                       class="nav-dropdown"
                       v-show="
-                        (item.children && showLanguage && item.title === '研究报告') ||
-                        (item.children && showContact && item.title === '关于我们')
+                        (item.children && showLanguage && item.title === '意见反馈') ||
+                        (item.children && showContact && item.title === '商务合作')
                       "
                       @mouseenter="mouseoverLang"
                       @mouseleave="mouseoutLang"
@@ -64,39 +64,10 @@
             <div class="right-box-icon" @click="toSearch">
               <i class="el-icon-search"></i>
             </div>
-            <div
-              class="user-box"
-              v-if="vuex_user.id"
-              @mouseenter="mouseenter"
-              @mouseleave="mouseleave"
-            >
-              <img :src="vuex_user.image" alt="" />
-              <div class="user-name" @click="toUserCenter">
-                {{ vuex_user.name }}
-              </div>
-
-              <div
-                v-show="showSiteMap"
-                class="user-dropdown"
-                @mouseenter="mouseenter"
-                @mouseleave="mouseleave"
-              >
-                <div class="dropdown-item" @click="toUserCenter">个人中心</div>
-                <div class="dropdown-item" @click="logout">退出</div>
-              </div>
+            <div class="inter-login">
+              <img src="@/assets/image/icon/inter.png" alt="" />
+              <span>切换国际版</span>
             </div>
-
-            <el-button size="small " class="btn btn-login" @click="showLogin" v-else
-              >登录</el-button
-            >
-            <el-button
-              v-if="!vuex_user.id"
-              size="small "
-              type="primary"
-              class="btn btn-register"
-              @click="showRegister"
-              >注册</el-button
-            >
           </div>
         </div>
       </div>
@@ -161,18 +132,14 @@ export default {
 
       var arr = [
         {
-          title: "研究报告",
-          route: "/researchReport",
-          icon: "el-icon-caret-bottom",
-          children: [...this.tabList],
+          title: "首页",
+          route: "/",
         },
-        { title: "新闻洞察", route: "/newsInsights" },
-        { title: "维深测评", route: "/deepEvaluation" },
-        { title: "产业活动", route: "/industrialActivities" },
-        { title: "维深榜单", route: "/rankings" },
+        { title: "消息", route: "/newsInsights" },
+        { title: "帮助中心", route: "/deepEvaluation" },
         {
-          title: "关于我们",
-          route: "/about",
+          title: "意见反馈",
+          route: "/industrialActivities",
           icon: "el-icon-caret-bottom",
           children: [
             {
@@ -212,6 +179,53 @@ export default {
               route: "/about?activeIndex=9",
             },
           ],
+        },
+        {
+          title: "商务合作",
+          route: "/rankings",
+          icon: "el-icon-caret-bottom",
+          children: [
+            {
+              title: "公司简介",
+              route: "/about?activeIndex=1",
+            },
+            {
+              title: "公司历程",
+              route: "/about?activeIndex=2",
+            },
+            {
+              title: "公司新闻",
+              route: "/about?activeIndex=3",
+            },
+            {
+              title: "外部专业委员",
+              route: "/about?activeIndex=4",
+            },
+            {
+              title: "荣誉墙",
+              route: "/about?activeIndex=5",
+            },
+            {
+              title: "公司团队",
+              route: "/about?activeIndex=6",
+            },
+            {
+              title: "公司客户",
+              route: "/about?activeIndex=7",
+            },
+            {
+              title: "联系我们",
+              route: "/about?activeIndex=8",
+            },
+            {
+              title: "加入我们",
+              route: "/about?activeIndex=9",
+            },
+          ],
+        },
+        {
+          title: "个人中心",
+          route: "/my-info",
         },
       ];
       return arr;
@@ -262,16 +276,16 @@ export default {
     },
 
     mouseoverLang(item) {
-      if (item.title === "关于我们") {
+      if (item.title === "商务合作") {
         this.showContact = true;
-      } else if (item.title === "研究报告") {
+      } else if (item.title === "意见反馈") {
         this.showLanguage = true;
       }
     },
     mouseoutLang(item) {
-      if (item.title === "关于我们") {
+      if (item.title === "商务合作") {
         this.showContact = false;
-      } else if (item.title === "研究报告") {
+      } else if (item.title === "意见反馈") {
         this.showLanguage = false;
       }
     },
@@ -350,17 +364,6 @@ export default {
       this.$router.push({
         path: "/searchList",
       });
-    },
-    showLogin() {
-      this.$showLogin({
-        onLoginSuccess: (data) => {
-          this.$store.commit("set_baseInfo", data);
-          location.reload();
-        },
-      });
-    },
-    showRegister() {
-      this.$showRegister();
     },
     logout() {
       this.$store.commit("clear_loginInfo");
