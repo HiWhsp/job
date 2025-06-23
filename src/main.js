@@ -3,7 +3,6 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-import "swiper/swiper-bundle.min.css";
 
 // 导入登录注册弹窗插件
 import AuthModalPlugin from "@/plugin/authModal.js";

@@ -44,9 +44,6 @@
 </template>
 
 <script>
-import Swiper, { EffectCoverflow } from "swiper";
-import "swiper/swiper-bundle.min.css";
-Swiper.use([EffectCoverflow]);
 
 export default {
   name: "HonorWall",
