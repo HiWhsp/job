@@ -82,7 +82,7 @@ export default {
       return index === 0 ? 1 : 2;
     },
     topicList(item) {
-      return "ABCD".substring(item, item + 1);
+      return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".substring(item, item + 1);
     },
   },
 };
