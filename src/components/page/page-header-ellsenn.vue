@@ -135,11 +135,11 @@ export default {
           title: "首页",
           route: "/",
         },
-        { title: "消息", route: "/newsInsights" },
-        { title: "帮助中心", route: "/deepEvaluation" },
+        { title: "消息", route: "/my-message" },
+        { title: "帮助中心", route: "/help" },
         {
           title: "意见反馈",
-          route: "/industrialActivities",
+          route: "/feedback",
           icon: "el-icon-caret-bottom",
           children: [
             {
@@ -182,7 +182,7 @@ export default {
         },
         {
           title: "商务合作",
-          route: "/rankings",
+          route: "/cooperation",
           icon: "el-icon-caret-bottom",
           children: [
             {

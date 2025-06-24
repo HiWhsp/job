@@ -41,11 +41,36 @@
 
         <!-- 右侧登录区域 -->
         <div class="top-nav-right">
-          <div class="top-nav-right-top">
+          <div class="top-nav-right-top" v-if="false">
             <div class="greeting">您好，请登录/注册</div>
             <div class="login-box">
               <div class="login-btn" @click="showLogin">登录</div>
               <div class="register-btn" @click="showRegister">注册</div>
+            </div>
+          </div>
+          <div class="top-nav-right-top" v-else>
+            <div class="item1">
+              <div class="item1-left">
+                <p>您好，尊敬的会员</p>
+                <p>孙靖翔</p>
+              </div>
+              <div class="item1-right">
+                <img src="@img/my/avatar.png" alt="" />
+                <div class="item1-right-img">
+                  <img src="@img/my/no-vip.png" alt="" />
+                  <p>黄金会员</p>
+                </div>
+              </div>
+            </div>
+            <div class="item2">
+              <div class="item2-item">
+                <img src="@/assets/image/icon/gd.png" alt="" />
+                <p>我的工单</p>
+              </div>
+              <div class="item2-item">
+                <img src="@/assets/image/icon/yq.png" alt="" />
+                <p>我的需求</p>
+              </div>
             </div>
           </div>
 
