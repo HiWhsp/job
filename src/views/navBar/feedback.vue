@@ -38,27 +38,31 @@
           <div class="form-container">
             <div class="form-group">
               <label class="form-label">问题类型：</label>
-              <select class="form-select" v-model="feedbackForm.type">
-                <option value="">请选择</option>
-                <option value="function">功能建议</option>
-                <option value="bug">问题反馈</option>
-                <option value="other">其他</option>
-              </select>
+              <el-select
+                class="form-input"
+                v-model="feedbackForm.type"
+                placeholder="请选择"
+              >
+                <el-option label="功能建议" value="function" />
+                <el-option label="问题反馈" value="bug" />
+                <el-option label="其他" value="other" />
+              </el-select>
             </div>
 
             <div class="form-group">
               <label class="form-label">问题描述：</label>
-              <textarea
-                class="form-textarea"
+              <el-input
+                class="form-input"
+                type="textarea"
                 v-model="feedbackForm.description"
                 placeholder="请描述"
                 rows="8"
-              ></textarea>
+              />
             </div>
 
             <div class="form-group">
               <label class="form-label">联系方式：</label>
-              <input
+              <el-input
                 type="text"
                 class="form-input"
                 v-model="feedbackForm.contact"
