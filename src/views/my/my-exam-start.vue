@@ -4,13 +4,15 @@ export default {
   data() {
     return {
       id: "",
+      question_id: "",
       course_id: "",
       course_list_id: "",
       checkbox: false,
     };
   },
   mounted() {
-    this.id = this.$route.query.question_id;
+    this.id = this.$route.query.id;
+    this.question_id = this.$route.query.question_id;
     this.course_id = this.$route.query.course_id;
     this.course_list_id = this.$route.query.course_list_id;
   },
@@ -27,13 +29,16 @@ export default {
         url: "startQuestion",
         method: "post",
         data: {
-          question_id: this.id,
+          id: this.id,
+          question_id: this.question_id,
           course_id: this.course_id,
           course_list_id: this.course_list_id,
         },
       }).then((res) => {
         if (res.code == 200) {
-          this.$router.push("my-exam-submit?id=" + this.id);
+          this.$router.push(
+            `my-exam-submit?id=${this.id}&question_id=${this.question_id}`
+          );
         } else {
           this.$message({
             message: res.msg,

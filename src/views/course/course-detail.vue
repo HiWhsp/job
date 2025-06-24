@@ -145,6 +145,7 @@
                             goUrl({
                               url: '/my-exam-start',
                               query: {
+                                id: item.my_test_question_primary_key,
                                 question_id: item.test_question_id,
                                 course_id: item.course_id,
                                 course_list_id: item.id,
@@ -231,6 +232,7 @@
                             goUrl({
                               url: '/my-exam-start',
                               query: {
+                                id: item.my_test_question_primary_key,
                                 question_id: item.test_question_id,
                                 course_id: item.course_id,
                                 course_list_id: item.id,
@@ -245,6 +247,7 @@
                   </el-collapse-item>
                 </el-collapse>
               </div>
+              <!-- 关联考试 -->
               <div
                 v-for="(item, index) in detail.test_question_list"
                 :key="index"
@@ -283,6 +286,7 @@
                           query: {
                             question_id: item.id,
                             course_id: detail.id,
+                            id: item.my_test_question_primary_key,
                           },
                         })
                       "
@@ -359,6 +363,7 @@
                             goUrl({
                               url: '/my-exam-start',
                               query: {
+                                id: item.my_test_question_primary_key,
                                 question_id: item.test_question_id,
                                 course_id: id,
                                 course_list_id: item.id,
@@ -443,6 +448,7 @@
                             goUrl({
                               url: '/my-exam-start',
                               query: {
+                                id: item.my_test_question_primary_key,
                                 question_id: item.test_question_id,
                                 course_id: item.course_id,
                                 course_list_id: item.id,
@@ -494,7 +500,11 @@
                       @click="
                         goUrl({
                           url: '/my-exam-start',
-                          query: { question_id: item.id, course_id: detail.id },
+                          query: {
+                            question_id: item.id,
+                            course_id: detail.id,
+                            id: item.my_test_question_primary_key,
+                          },
                         })
                       "
                       >开始考试

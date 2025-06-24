@@ -18,35 +18,44 @@
       </div>
       <div v-for="item in list" :key="item.id" class="catalog-list">
         <div class="title">
-          <p>{{ item.question.title }}</p>
+          <p>{{ item.question ? item.question.title : "" }}</p>
           <div class="start">{{ item.type_name }}</div>
         </div>
         <div class="catalog-wrap">
           <div class="item">
-            <span>考试次数：</span><span>{{ item.question.can_test_num }}次</span>
+            <span>考试次数：</span
+            ><span>{{ item.question ? item.question.can_test_num : 0 }}次</span>
           </div>
           <div class="item">
-            <span>已考次数：</span><span>{{ item.has_test_num }}次</span>
+            <span>已考次数：</span><span>{{ item.has_test_num || 0 }}次</span>
           </div>
           <div class="item">
             <span>剩余次数：</span
-            ><span>{{ item.question.can_test_num - item.has_test_num }}次</span>
+            ><span
+              >{{
+                item.question ? item.question.can_test_num - item.has_test_num : 0
+              }}次</span
+            >
           </div>
           <div class="item">
-            <span>考试总分：</span><span>{{ item.question.total_point }}分</span>
+            <span>考试总分：</span
+            ><span>{{ item.question ? item.question.total_point : 0 }}分</span>
           </div>
           <div class="item">
-            <span>考试时长：</span><span>{{ item.question.test_time }}分钟</span>
+            <span>考试时长：</span
+            ><span>{{ item.question ? item.question.test_time : 0 }}分钟</span>
           </div>
         </div>
         <div class="action">
           <p>
-            考试起止时间：{{ item.question.start_time }} 到
-            {{ item.question.end_time }}
+            考试起止时间：{{ item.question ? item.question.start_time : "" }} 到
+            {{ item.question ? item.question.end_time : "" }}
           </p>
           <el-button
             type="primary"
-            v-if="item.question.can_test_num - item.has_test_num !== 0"
+            v-if="
+              item.question ? item.question.can_test_num - item.has_test_num !== 0 : false
+            "
             @click="go_exam(item)"
             >开始考试</el-button
           >
@@ -128,6 +137,7 @@ export default {
       this.$router.push({
         path: "my-exam-start",
         query: {
+          id: row.id,
           question_id: row.question_id,
           course_id: row.course_id,
           course_list_id: row.course_list_id,

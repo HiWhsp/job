@@ -15,6 +15,7 @@ export default {
   },
   mounted() {
     this.id = this.$route.query.id;
+    this.question_id = this.$route.query.question_id;
     this.setView();
   },
   methods: {
@@ -23,7 +24,8 @@ export default {
         url: "myQuestion",
         method: "get",
         data: {
-          question_id: this.id,
+          question_id: this.question_id,
+          id: this.id,
         },
       }).then((res) => {
         if (res.code == 200) {

@@ -4,6 +4,7 @@ export default {
   data() {
     return {
       id: "", // 考试id
+      question_id: "", // 试题id
       show_modal: false, // 交卷弹窗
       modalType: null, // 交卷弹窗类型 1:没做完 2:考试时间到 3:没及格 4:及格
       detail: {}, // 考试详情
@@ -33,6 +34,7 @@ export default {
   },
   mounted() {
     this.id = this.$route.query.id;
+    this.question_id = this.$route.query.question_id;
     document.addEventListener("visibilitychange", this.handleBeforeUnload);
     this.setView();
   },
@@ -46,7 +48,8 @@ export default {
           url: "recordQuestionSwitchWindow",
           method: "post",
           data: {
-            question_id: this.id,
+            id: this.id,
+            question_id: this.question_id,
           },
         })
           .then((res) => {
@@ -69,13 +72,16 @@ export default {
         url: "myQuestion",
         method: "get",
         data: {
-          question_id: this.id,
+          id: this.id,
+          question_id: this.question_id,
         },
       }).then((res) => {
         if (res.code == 200) {
           this.detail = res.data;
           this.question = res.data.question;
-          this.timeObj.targetTimestamp = res.data.test_end_time; // 考试结束时间
+          // 考试结束时间
+          this.timeObj.targetTimestamp =
+            Math.floor(Date.now() / 1000) + res.data.question.test_time * 60;
           // 判断是否已停止考试
           this.updateCountdown();
           // 判断题
@@ -102,7 +108,8 @@ export default {
         url: "myQuestion",
         method: "get",
         data: {
-          question_id: this.id,
+          id: this.id,
+          question_id: this.question_id,
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -132,7 +139,8 @@ export default {
         url: "endQuestion",
         method: "post",
         data: {
-          question_id: this.id,
+          id: this.id,
+          question_id: this.question_id,
           my_total_point: this.detail.my_total_point,
         },
       }).then((res) => {
@@ -163,6 +171,7 @@ export default {
           ? textList.splice(textList.indexOf(item), 1)
           : textList.push(item);
         question.selectText = textList.join(",");
+        this.addMyQuestionBank(question);
       } else if (type === "judge") {
         question.selectText === str
           ? (question.selectText = "")
@@ -173,12 +182,13 @@ export default {
       this.$forceUpdate();
     },
     // 提交试题答案
-    addMyQuestionBank(question) {
+    addMyQuestionBank(question, type) {
       this.$api({
         url: "addMyQuestionBank",
         method: "post",
         data: {
-          question_id: this.id,
+          id: this.id,
+          question_id: this.question_id,
           question_bank_id: question.id,
           my_answer: question.selectText,
         },
@@ -187,11 +197,15 @@ export default {
           url: "myQuestion",
           method: "get",
           data: {
-            question_id: this.id,
+            id: this.id,
+            question_id: this.question_id,
           },
         }).then((res) => {
           if (res.code == 200) {
             this.detail = res.data;
+            if (type === "multiple") {
+              this.$message.success("已确认多选答案");
+            }
           }
         });
       });
@@ -430,13 +444,13 @@ export default {
               <div class="topic">
                 <div class="type">多选题</div>
                 <p>{{ index + 1 }}.{{ item.title }}</p>
-                <div
+                <!-- <div
                   v-if="item.selectText"
                   class="add-submit"
-                  @click="addMyQuestionBank(item)"
+                  @click="addMyQuestionBank(item, 'multiple')"
                 >
                   确定
-                </div>
+                </div> -->
               </div>
               <div class="topic-list">
                 <div
@@ -477,7 +491,7 @@ export default {
         </div>
         <div slot="footer" class="dialog-footer">
           <button class="btn-ripple btn-1" @click="show_modal = false">继续答题</button>
-          <button class="btn-ripple btn-2" @click="show_modal = false">确认交卷</button>
+          <button class="btn-ripple btn-2" @click="endQuestion">确认交卷</button>
         </div>
       </template>
       <template v-else-if="modalType === 2">
@@ -494,7 +508,7 @@ export default {
         <div slot="footer" class="dialog-footer">
           <button
             class="btn-ripple btn-1"
-            @click="$router.push('/my-exam-detail?id=' + id)"
+            @click="$router.push(`/my-exam-detail?id=${id}&question_id=${question_id}`)"
           >
             查看答题情况
           </button>
@@ -829,6 +843,7 @@ export default {
             }
 
             .add-submit {
+              margin-left: 10px;
               cursor: pointer;
               width: 50px;
               height: 26px;

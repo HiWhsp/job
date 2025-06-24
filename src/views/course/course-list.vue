@@ -2,7 +2,7 @@
   <div class="page-container">
     <div class="search-bar">
       <div class="search-wrap">
-        <el-input v-model="searchText" class="search-input" placeholder="输入关键字"/>
+        <el-input v-model="searchText" class="search-input" placeholder="输入关键字" />
         <el-button type="primary" @click="setView" @keyup.enter="setView">搜索</el-button>
       </div>
     </div>
@@ -10,9 +10,27 @@
     <div class="content-wrapper">
       <div class="tab-bar">
         <div class="type-options">
-          <div :class="{'active': activeTab === 0}" class="tab-item" @click="activeTab = 0">综合</div>
-          <div :class="{'active': activeTab === 1}" class="tab-item" @click="activeTab = 1">文档类课程</div>
-          <div :class="{'active': activeTab === 2}" class="tab-item" @click="activeTab = 2">视频类课程</div>
+          <div
+            :class="{ active: activeTab === 0 }"
+            class="tab-item"
+            @click="activeTab = 0"
+          >
+            综合
+          </div>
+          <div
+            :class="{ active: activeTab === 1 }"
+            class="tab-item"
+            @click="activeTab = 1"
+          >
+            文档类课程
+          </div>
+          <div
+            :class="{ active: activeTab === 2 }"
+            class="tab-item"
+            @click="activeTab = 2"
+          >
+            视频类课程
+          </div>
         </div>
         <div class="status-options">
           <el-radio-group v-model="status">
@@ -25,10 +43,10 @@
       </div>
 
       <template v-for="item in productList">
-        <div v-if="item.course_type === 1" class="course-list doc-list">
+        <div v-if="item.course_type === 1" class="course-list doc-list" :key="item.id">
           <div class="course-item" @click="toUrl(item)">
             <div class="course-box">
-              <img class="icon" src="@/static/home/file3.png"/>
+              <img class="icon" src="@/static/home/file3.png" />
               <div class="text">
                 <div class="title">{{ item.title }}</div>
                 <div class="desc ellipsis-1">{{ item.description }}</div>
@@ -36,34 +54,35 @@
             </div>
           </div>
         </div>
-        <div v-if="item.course_type === 2" class="video-list">
+        <div v-if="item.course_type === 2" class="video-list" :key="item.id">
           <div class="course-item" @click="toUrl(item)">
             <div class="course-box">
               <div class="text">
                 <div class="title">
-                  <img class="icon" src="@/static/home/file2.png"/>
+                  <img class="icon" src="@/static/home/file2.png" />
                   <span class="ellipsis-1">{{ item.title }}</span>
                 </div>
                 <div class="desc ellipsis-3">{{ item.description }}</div>
               </div>
-              <img :src="item.thumb_url" class="image"/>
+              <img :src="item.thumb_url" class="image" />
             </div>
           </div>
         </div>
       </template>
+      <el-empty v-if="productList.length === 0" description="暂无数据" />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'course-list',
+  name: "course-list",
   data() {
     return {
-      searchText: '', // 搜索词
+      searchText: "", // 搜索词
       status: null, // 学习状态
       activeTab: 0, // 当前选中的tab 0全部 1文档 2视频
-      productList: [] // 课程列表
+      productList: [], // 课程列表
     };
   },
   watch: {
@@ -72,7 +91,7 @@ export default {
     },
     status() {
       this.setView();
-    }
+    },
   },
   mounted() {
     this.setView();
@@ -80,26 +99,26 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: 'getCourseList',
-        method: 'get',
+        url: "getCourseList",
+        method: "get",
         data: {
           page: 1,
           limit: 10,
           course_type: this.activeTab,
           learn_type: this.status,
-          keyword: this.searchText
-        }
-      }).then(res => {
+          keyword: this.searchText,
+        },
+      }).then((res) => {
         if (res.code == 200) {
           this.productList = res.data.list;
         }
-      })
+      });
     },
     toUrl(item) {
       this.$router.push({
-        path: '/course-detail?id=' + item.id
+        path: "/course-detail?id=" + item.id,
       });
-    }
+    },
   },
 };
 </script>
@@ -122,7 +141,7 @@ export default {
       justify-content: space-between;
       width: 480px;
       height: 42px;
-      background: #FFFFFF;
+      background: #ffffff;
       border-radius: 8px 8px 8px 8px;
       border: 1px solid rgba(0, 0, 0, 0.14);
 
@@ -138,12 +157,11 @@ export default {
       .el-button {
         width: 88px;
         height: 36px;
-        background: #175E3D;
+        background: #175e3d;
         border-radius: 5px 5px 5px 5px;
         border: none;
         margin-right: 3px;
       }
-
     }
   }
 
@@ -162,15 +180,15 @@ export default {
         font-weight: 400;
         font-size: 14px;
         margin-right: 40px;
-        color: #1F253B;
+        color: #1f253b;
 
         &:hover {
-          color: #175E3D;
+          color: #175e3d;
         }
       }
 
       .active {
-        color: #175E3D;
+        color: #175e3d;
         font-weight: bold;
       }
     }
@@ -189,7 +207,7 @@ export default {
       margin-bottom: 30px;
       width: 580px;
       height: 104px;
-      background: #F7F7F7;
+      background: #f7f7f7;
 
       .course-box {
         display: flex;
@@ -230,7 +248,7 @@ export default {
       padding: 30px 40px;
       width: 580px;
       height: 171px;
-      background: #F7F7F7;
+      background: #f7f7f7;
       border-radius: 0px 0px 0px 0px;
 
       .course-box {
@@ -268,7 +286,7 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 14px;
-            color: #929AA2;
+            color: #929aa2;
             line-height: 22px;
           }
         }

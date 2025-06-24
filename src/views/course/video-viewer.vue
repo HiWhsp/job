@@ -109,7 +109,7 @@ export default {
       this.sendToBackend(playTime, progress);
     },
     async sendToBackend(playTime, progress) {
-      const schedule = progress > 100 ? 100 : progress;
+      const schedule = progress >= 99 ? 100 : progress;
       this.$api({
         url: "addMyCourseLearnRecord",
         method: "post",
@@ -117,7 +117,10 @@ export default {
           course_id: this.id,
           course_list_id: this.selectItem.id,
           has_learn_time: playTime,
-          schedule,
+          schedule:
+            this.selectItem.my_course_record.schedule > schedule
+              ? this.selectItem.my_course_record.schedule
+              : schedule,
         },
       });
     },
