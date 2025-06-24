@@ -11,8 +11,10 @@ node_modules
 .DS_Store
 dist
 dist_pc
+dist_pc.zip
 coverage
 *.local
+.history
 
 /cypress/videos/
 /cypress/screenshots/
