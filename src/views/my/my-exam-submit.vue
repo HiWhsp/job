@@ -170,7 +170,7 @@ export default {
         textList.includes(item)
           ? textList.splice(textList.indexOf(item), 1)
           : textList.push(item);
-        question.selectText = textList.join(",");
+        question.selectText = textList.join(";");
         this.addMyQuestionBank(question);
       } else if (type === "judge") {
         question.selectText === str

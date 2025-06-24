@@ -45,6 +45,10 @@
             <span>考试时长：</span
             ><span>{{ item.question ? item.question.test_time : 0 }}分钟</span>
           </div>
+          <div class="item" v-if="item.has_test_num !== 0">
+            <span>考试分数：</span
+            ><span>{{ item.question ? item.my_recent_total_point : 0 }}分</span>
+          </div>
         </div>
         <div class="action">
           <p>
@@ -61,8 +65,12 @@
           >
           <el-button
             type="primary"
-            v-if="item.has_test_num !== 0"
-            @click="$router.push('my-exam-detail?id=' + item.question_id)"
+            v-if="
+              item.question ? item.question.can_test_num - item.has_test_num == 0 : false
+            "
+            @click="
+              $router.push(`my-exam-detail?id=${item.id}&question_id=${item.question_id}`)
+            "
             >查看答题情况
           </el-button>
         </div>
