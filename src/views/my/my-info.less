@@ -1,0 +1,141 @@
+.page {
+  text-align: left;
+  padding: 40px 32px;
+  background: #fff;
+  border-radius: 12px;
+}
+.page-header {
+  .page-header-title {
+    font-family: Microsoft YaHei;
+    font-size: 22px;
+    font-weight: normal;
+    letter-spacing: normal;
+    color: #3d3d3d;
+  }
+  margin-bottom: 32px;
+}
+.user-card {
+  display: flex;
+  align-items: center;
+  background: #f6fcf9;
+  border-radius: 12px;
+  padding: 17px 28px;
+  .user-avatar-box {
+    margin-right: 32px;
+    .user-avatar {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e6e6e6;
+    }
+    .avatar-uploader {
+      display: inline-block;
+    }
+  }
+  .user-info-box {
+    flex: 1;
+    .user-name {
+      font-size: 16px;
+      color: #3d3d3d;
+      margin-bottom: 8px;
+    }
+    .user-level {
+      font-size: 12px;
+      color: #6c6d6d;
+      margin-bottom: 8px;
+      img {
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
+      }
+    }
+  }
+  .user-logout-box {
+    margin-left: 32px;
+    .el-button {
+      background: #fff;
+      border: 1px solid #e6e6e6;
+      color: #333;
+      border-radius: 6px;
+      padding: 8px 24px;
+    }
+  }
+}
+.page-ctx {
+  background: #fff;
+  border-radius: 12px;
+  padding: 40px 48px 32px 48px;
+
+  .form-item-title {
+    font-family: Microsoft YaHei;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 14px;
+    letter-spacing: normal;
+    color: #666666;
+    margin-bottom: 22px;
+  }
+  .change-phone-btn {
+    margin-left: 10px;
+  }
+
+  .el-checkbox {
+    height: 42px;
+    line-height: 42px;
+  }
+  /deep/.el-checkbox.is-checked {
+    .el-checkbox__inner {
+      border-color: #33ae60;
+    }
+    .el-checkbox__label {
+      color: #33ae60;
+    }
+  }
+  /deep/ .el-checkbox__inner {
+    border-color: #8c9194;
+    background-color: #fff;
+    &:after {
+      border-color: #33ae60;
+    }
+  }
+  /deep/ .el-checkbox__label {
+    color: #3d3d3d;
+  }
+}
+.user-form {
+  .el-form-item {
+    margin-bottom: 24px;
+  }
+  .el-input,
+  .el-select {
+    width: 320px;
+  }
+  .el-textarea {
+    width: 320px;
+  }
+}
+.certificate-uploader {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #fafbfc;
+  .certificate-upload-icon {
+    font-size: 32px;
+    color: #bfbfbf;
+  }
+}
+.btn-save {
+  width: 194px;
+  height: 40px;
+  background: #33ae60;
+  border: none;
+  font-size: 16px;
+  color: #fff;
+  border-radius: 8px;
+}

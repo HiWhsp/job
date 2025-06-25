@@ -122,10 +122,10 @@
         </div>
       </div>
 
-      <!-- 配置广告区域 -->
+      <!-- 配套厂商区域 -->
       <div class="config-ads-section">
         <div class="section-header">
-          <h2>配置广告</h2>
+          <h2>配套厂商</h2>
           <span class="more-link">查看更多 <i class="el-icon-arrow-right"></i></span>
         </div>
         <div class="ads-grid">
