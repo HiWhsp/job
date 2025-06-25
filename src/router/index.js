@@ -48,7 +48,6 @@ const deepEvaluation = () => import("@/views/ellsennProduct/deepEvaluation/index
 const deepEvaluationDetail = () => import("@/views/ellsennProduct/deepEvaluation/deepEvaluationDetail/index.vue"); // 维深测评详情
 const industrialActivities = () => import("@/views/ellsennProduct/industrialActivities/index.vue"); // 产业活动
 const industrialActivitiesDetail = () => import("@/views/ellsennProduct/industrialActivities/industrialActivitiesDetail/index.vue"); // 产业活动详情
-const searchList = () => import("@/views/ellsennProduct/searchList/index.vue"); // 搜索列表
 
 // 会议报名
 const meetingRegistration = () => import("@/views/ellsennProduct/meetingRegistration/index.vue"); // 会议报名
@@ -132,14 +131,6 @@ const routes = [
     component: industrialActivitiesDetail,
     meta: {
       title: "产业活动详情",
-    },
-  },
-  {
-    path: "/searchList",
-    name: "searchList",
-    component: searchList,
-    meta: {
-      title: "搜索列表",
     },
   },
   // 会议报名

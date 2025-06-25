@@ -110,15 +110,14 @@ export default {
       color: #aeaeae;
     }
 
-    >*:last-child {
+    > *:last-child {
       font-family: OPPOSans, OPPOSans;
       // font-weight: bold;
       font-size: 15px;
-      color: #000000;
+      color: #33ae60;
     }
   }
 }
 </style>
-
 
 <style scoped lang="less" src="@/assets/h5css/mobile/bread.less"></style>
