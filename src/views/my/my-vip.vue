@@ -26,23 +26,34 @@
                 VIP会员
               </span>
               <span class="password-tip" v-if="my_info.is_vip == 0"
-                >您还没有开通付费VIP会员哦～</span
+                >您还没有开通付费VIP会员</span
               >
               <span class="password-tip" v-else
-                >您已开通付费VIP会员 到期日期 {{ my_info.expiration_date }}</span
-              >
+                >会员已开通 | 会员到期时间：
+                <span class="vip-time">{{ my_info.expiration_date || "--" }}</span>
+                | <span class="vip-renew">续费</span>
+              </span>
             </div>
           </div>
         </div>
-        <!-- <button class="open-vip-btn" @click="openVipNow" v-if="my_info.is_vip == 0">立即开通</button> -->
+        <button class="open-vip-btn" @click="openVipNow" v-if="my_info.is_vip == 0">
+          立即开通
+        </button>
+        <div class="open-vip-btn-box">
+          <button class="open-vip-home" @click="go_my_home" v-if="my_info.is_vip == 1">
+            我的主页
+          </button>
+          <button class="open-vip-renew" @click="openVipNow" v-if="my_info.is_vip == 1">
+            续费会员
+          </button>
+        </div>
       </div>
 
       <!-- VIP会员卡片 -->
       <div class="vip-card">
         <div class="vip-card-content">
           <div class="vip-info">
-            <h3>{{ vip_info.title }}</h3>
-            <div class="price">¥{{ vip_info.price }}</div>
+            <h3>VIP会员</h3>
             <div class="promotion">今日注册多送{{ vip_info.month_num }}个月</div>
           </div>
         </div>
@@ -56,57 +67,8 @@
 
       <!-- 支付区域 -->
       <div class="payment-section">
-        <div class="payment-methods">
-          <div
-            class="payment-method"
-            :class="{ active: selectedPaymentMethod === 'wechat' }"
-            @click="selectPaymentMethod('wechat')"
-          >
-            <div class="method-icon">
-              <img src="@/assets/img/my/wechat.png" alt="" />
-            </div>
-            <span>微信支付</span>
-            <img
-              class="select-icon"
-              src="@/assets/img/my/select.png"
-              alt=""
-              v-if="selectedPaymentMethod === 'wechat'"
-            />
-          </div>
-          <div
-            class="payment-method"
-            :class="{ active: selectedPaymentMethod === 'alipay' }"
-            @click="selectPaymentMethod('alipay')"
-          >
-            <div class="method-icon">
-              <img src="@/assets/img/my/alipay.png" alt="" />
-            </div>
-            <span>支付宝支付</span>
-            <img
-              class="select-icon"
-              src="@/assets/img/my/select.png"
-              alt=""
-              v-if="selectedPaymentMethod === 'alipay'"
-            />
-          </div>
-        </div>
-
-        <div class="payment-qr">
-          <div class="qr-code">
-            <div class="qr-placeholder">
-              <!-- 这里应该是实际的二维码 -->
-              <div class="qr-grid">
-                <img :src="pay_qrcode" alt="" width="100%" v-if="pay_qrcode" />
-                <span v-else>请选择支付方式</span>
-              </div>
-            </div>
-          </div>
-          <div class="payment-info">
-            <div class="duration">{{ vip_info.date }}个月 金额总计：</div>
-            <div class="total-price">¥{{ vip_info.price }}</div>
-            <div class="payment-tip">支付即表示您同意《网站服务协议》</div>
-          </div>
-        </div>
+        <p>用户购买VIP会员后，获得主页权限，可自行上传介绍信息</p>
+        <p>购买VIP会员后，可提交需求单</p>
       </div>
 
       <!-- 我的会员订单 -->
@@ -219,6 +181,7 @@ export default {
     },
     query_user() {
       this.my_info = Object.assign({}, this.vuex_user);
+      this.my_info = { is_vip: 1 };
     },
 
     do_submit() {
@@ -271,6 +234,9 @@ export default {
         }
       });
     },
+    go_my_home() {
+      this.$router.push("/my-company-info");
+    },
   },
 };
 </script>
@@ -283,6 +249,8 @@ export default {
 .page {
   text-align: left;
   padding-bottom: 80px;
+  background-color: #fff;
+  border-radius: 14px;
 
   .main-title {
     display: flex;
@@ -292,7 +260,6 @@ export default {
     text-align: left;
     height: 56px;
     line-height: 56px;
-    background: #ffffff;
     font-size: 16px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
@@ -300,7 +267,6 @@ export default {
   }
 
   .page-ctx {
-    margin-top: 14px;
     padding: 20px 30px;
     background: #fff;
     padding-bottom: 80px;
@@ -313,7 +279,8 @@ export default {
       justify-content: space-between;
       padding: 17px 28px;
       margin-bottom: 20px;
-      background: #f3f8ff;
+      background: #f4fbf7;
+      border-radius: 14px;
 
       .user-avatar-info {
         display: flex;
@@ -362,6 +329,13 @@ export default {
             .password-tip {
               font-size: 12px;
               color: #999;
+              .vip-time {
+                color: #fb9c01;
+              }
+              .vip-renew {
+                color: #33ae60;
+                cursor: pointer;
+              }
             }
           }
         }
@@ -378,6 +352,29 @@ export default {
 
         &:hover {
           opacity: 0.9;
+        }
+      }
+      .open-vip-btn-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        .open-vip-home {
+          background: #fff;
+          color: #33ae60;
+          border: 1px solid #33ae60;
+          padding: 8px 20px;
+          border-radius: 20px;
+          font-size: 14px;
+          cursor: pointer;
+        }
+        .open-vip-renew {
+          background: #fde2b4;
+          color: #7e5529;
+          border: none;
+          padding: 8px 20px;
+          border-radius: 20px;
+          font-size: 14px;
+          cursor: pointer;
         }
       }
     }
@@ -459,106 +456,15 @@ export default {
 
     // 支付区域
     .payment-section {
-      margin-bottom: 40px;
-      background: #f3f8ff;
-      padding: 24px;
+      padding: 0 14px;
       margin-bottom: 50px;
-      display: flex;
-      align-items: center;
 
-      .payment-methods {
-        display: flex;
-        gap: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-right: 20px;
-
-        .payment-method {
-          display: flex;
-          align-items: center;
-          width: 186px;
-          height: 64px;
-          padding: 12px 20px;
-          cursor: pointer;
-          transition: all 0.3s;
-          background: #fff;
-          border: 1px solid #fff;
-          position: relative;
-
-          &.active {
-            border-color: #005aac;
-          }
-
-          img {
-            width: 24px;
-            height: 24px;
-          }
-
-          .method-icon {
-            margin-right: 8px;
-            display: flex;
-            align-items: center;
-          }
-
-          span {
-            font-size: 14px;
-            color: #333;
-          }
-
-          .select-icon {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-          }
-        }
-      }
-
-      .payment-qr {
-        display: flex;
-        gap: 30px;
-        align-items: center;
-
-        .qr-code {
-          .qr-placeholder {
-            width: 150px;
-            height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #fff;
-            .qr-grid {
-              width: 110px;
-              height: 110px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-size: 14px;
-              color: #999;
-            }
-          }
-        }
-
-        .payment-info {
-          .duration {
-            font-size: 14px;
-            color: #232d35;
-            margin-bottom: 10px;
-          }
-
-          .total-price {
-            font-size: 22px;
-            color: #fb6262;
-          }
-
-          .payment-tip {
-            cursor: pointer;
-            margin-top: 50px;
-            font-size: 12px;
-            color: #485056;
-          }
-        }
-      }
+      font-family: Microsoft YaHei;
+      font-size: 16px;
+      font-weight: normal;
+      line-height: 24px;
+      letter-spacing: normal;
+      color: #7a7a7a;
     }
 
     // 我的会员订单
@@ -587,6 +493,7 @@ export default {
         overflow: hidden;
 
         .table-header {
+          border-radius: 8px;
           display: grid;
           grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
           padding: 15px;

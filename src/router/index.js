@@ -26,38 +26,18 @@ const my_layout = () => import("@/views/my/my-layout.vue");
 
 const my_info = () =>
   import(/* webpackChunkName: "my-info" */ "@/views/my/my-info.vue");
-const member_center = () =>
-  import(/* webpackChunkName: "member-center" */ "@/views/my/member-center.vue");
+const my_vip = () =>
+  import(/* webpackChunkName: "my-vip" */ "@/views/my/my-vip.vue");
+const my_company_info = () =>
+  import(/* webpackChunkName: "my-company-info" */ "@/views/my/my-company-info.vue");
 const my_collection = () =>
   import(/* webpackChunkName: "my-collection" */ "@/views/my/my-collection.vue");
 const my_comment = () =>
   import(/* webpackChunkName: "my-comment" */ "@/views/my/my-comment.vue");
-const my_activity_registration = () =>
-  import(/* webpackChunkName: "my-activity-registration" */ "@/views/my/my-activity-registration.vue");
 const my_message = () =>
   import(/* webpackChunkName: "my-message" */ "@/views/my/my-message.vue");
-const account_settings = () =>
-  import(/* webpackChunkName: "account-settings" */ "@/views/my/account-settings.vue");
-
-// 江阴联安
-const researchReport = () => import("@/views/ellsennProduct/researchReport/index.vue"); // 研究报告
-const reportDetails = () => import("@/views/ellsennProduct/researchReport/reportDetails/index.vue"); // 研究报告详情
-const newsInsights = () => import("@/views/ellsennProduct/newsInsights/index.vue"); // 新闻洞察
-const newsInsightsDetail = () => import("@/views/ellsennProduct/newsInsights/newsInsightsDetail/index.vue"); // 新闻洞察详情
-const deepEvaluation = () => import("@/views/ellsennProduct/deepEvaluation/index.vue"); // 维深测评
-const deepEvaluationDetail = () => import("@/views/ellsennProduct/deepEvaluation/deepEvaluationDetail/index.vue"); // 维深测评详情
-const industrialActivities = () => import("@/views/ellsennProduct/industrialActivities/index.vue"); // 产业活动
-const industrialActivitiesDetail = () => import("@/views/ellsennProduct/industrialActivities/industrialActivitiesDetail/index.vue"); // 产业活动详情
-
-// 会议报名
-const meetingRegistration = () => import("@/views/ellsennProduct/meetingRegistration/index.vue"); // 会议报名
-const pay = () => import("@/views/ellsennProduct/meetingRegistration/pay.vue"); // 支付
-const paySuccess = () => import("@/views/ellsennProduct/meetingRegistration/pay-success.vue"); // 支付成功
-const about = () => import("@/views/ellsennProduct/about/index.vue"); // 关于我们
-const externalCommitteeDetail = () => import("@/views/ellsennProduct/about/components/ExternalCommitteeDetail.vue"); // 外部专业委员详情
-
-// 排行榜
-const rankings = () => import("@/views/ellsennProduct/rankings/index.vue"); // 排行榜
+const edit_password = () =>
+  import(/* webpackChunkName: "edit-password" */ "@/views/my/edit-password.vue");
 
 const routes = [
   ...ellsennRouter,
@@ -67,123 +47,6 @@ const routes = [
     name: "index",
     component: index,
     meta: {},
-  },
-  // 研究报告
-  {
-    path: "/researchReport",
-    name: "researchReport",
-    component: researchReport,
-    meta: {
-      title: "研究报告",
-    },
-  },
-  {
-    path: "/reportDetails",
-    name: "reportDetails",
-    component: reportDetails,
-    meta: {
-      title: "报告详情",
-    },
-  },
-  {
-    path: "/newsInsights",
-    name: "newsInsights",
-    component: newsInsights,
-    meta: {
-      title: "新闻洞察",
-    },
-  },
-  {
-    path: "/newsInsightsDetail",
-    name: "newsInsightsDetail",
-    component: newsInsightsDetail,
-    meta: {
-      title: "新闻详情",
-    },
-  },
-  {
-    path: "/deepEvaluation",
-    name: "deepEvaluation",
-    component: deepEvaluation,
-    meta: {
-      title: "维深测评",
-    },
-  },
-  {
-    path: "/deepEvaluationDetail",
-    name: "deepEvaluationDetail",
-    component: deepEvaluationDetail,
-    meta: {
-      title: "维深测评详情",
-    },
-  },
-  {
-    path: "/industrialActivities",
-    name: "industrialActivities",
-    component: industrialActivities,
-    meta: {
-      title: "产业活动",
-    },
-  },
-  {
-    path: "/industrialActivitiesDetail",
-    name: "industrialActivitiesDetail",
-    component: industrialActivitiesDetail,
-    meta: {
-      title: "产业活动详情",
-    },
-  },
-  // 会议报名
-  {
-    path: "/meetingRegistration",
-    name: "meetingRegistration",
-    component: meetingRegistration,
-    meta: {
-      title: "会议报名",
-    },
-  },
-  {
-    path: "/pay",
-    name: "pay",
-    component: pay,
-    meta: {
-      title: "支付",
-    },
-  },
-  {
-    path: "/paySuccess",
-    name: "paySuccess",
-    component: paySuccess,
-    meta: {
-      title: "支付成功",
-    },
-  },
-  // 排行榜
-  {
-    path: "/rankings",
-    name: "rankings",
-    component: rankings,
-    meta: {
-      title: "排行榜",
-    },
-  },
-  // 关于我们
-  {
-    path: "/about",
-    name: "about",
-    component: about,
-    meta: {
-      title: "关于我们",
-    },
-  },
-  // 外部专业委员详情
-  {
-    path: "/externalCommitteeDetail",
-    name: "externalCommitteeDetail",
-    component: externalCommitteeDetail,
-    meta: {
-      title: "外部专业委员详情",
-    },
   },
   //用户中心
   {
@@ -204,11 +67,20 @@ const routes = [
         },
       },
       {
-        path: "/member-center",
-        name: "member-center",
-        component: member_center,
+        path: "/my-vip",
+        name: "my-vip",
+        component: my_vip,
         meta: {
           title: "会员中心",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/my-company-info",
+        name: "my-company-info",
+        component: my_company_info,
+        meta: {
+          title: "企业信息",
           requireAuth: true,
         },
       },
@@ -231,15 +103,6 @@ const routes = [
         },
       },
       {
-        path: "/my-activity-registration",
-        name: "my-activity-registration",
-        component: my_activity_registration,
-        meta: {
-          title: "我的活动报名",
-          requireAuth: true,
-        },
-      },
-      {
         path: "/my-message",
         name: "my-message",
         component: my_message,
@@ -249,11 +112,11 @@ const routes = [
         },
       },
       {
-        path: "/account-settings",
-        name: "account-settings",
-        component: account_settings,
+        path: "/edit-password",
+        name: "edit-password",
+        component: edit_password,
         meta: {
-          title: "账号设置",
+          title: "修改密码",
           requireAuth: true,
         },
       },

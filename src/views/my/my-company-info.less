@@ -1,0 +1,270 @@
+.page {
+  text-align: left;
+  padding: 40px 32px;
+  background: #fff;
+  border-radius: 12px;
+}
+.page-header {
+  .page-header-title {
+    font-family: Microsoft YaHei;
+    font-size: 22px;
+    font-weight: normal;
+    letter-spacing: normal;
+    color: #3d3d3d;
+  }
+  margin-bottom: 32px;
+}
+.page-ctx {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 32px;
+
+  .page-ctx-title {
+    font-family: Microsoft YaHei;
+    font-size: 18px;
+    font-weight: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #222222;
+    margin-bottom: 38px;
+    padding-left: 10px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+
+    .el-button {
+      border: none;
+      background: #fff;
+      color: #33ae60;
+      font-size: 14px;
+      font-weight: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      padding: 0;
+    }
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 2px;
+      height: 18px;
+      background: #33ae60;
+      position: absolute;
+      left: 0;
+      top: 3px;
+    }
+  }
+
+  .form-item-title {
+    font-family: Microsoft YaHei;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 14px;
+    letter-spacing: normal;
+    color: #666666;
+    margin-bottom: 22px;
+  }
+  .change-phone-btn {
+    margin-left: 10px;
+  }
+
+  .el-checkbox {
+    height: 42px;
+    line-height: 42px;
+  }
+  /deep/.el-checkbox.is-checked {
+    .el-checkbox__inner {
+      border-color: #33ae60;
+    }
+    .el-checkbox__label {
+      color: #33ae60;
+    }
+  }
+  /deep/ .el-checkbox__inner {
+    border-color: #8c9194;
+    background-color: #fff;
+    &:after {
+      border-color: #33ae60;
+    }
+  }
+  /deep/ .el-checkbox__label {
+    color: #3d3d3d;
+  }
+}
+.user-form {
+  .el-form-item {
+    margin-bottom: 24px;
+  }
+  .el-input,
+  .el-select {
+    width: 320px;
+  }
+  .el-textarea {
+    width: 320px;
+  }
+}
+.certificate-uploader {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #fafbfc;
+  .certificate-upload-icon {
+    font-size: 32px;
+    color: #bfbfbf;
+  }
+}
+.btn-save {
+  background: #33ae60;
+  border: none;
+  font-size: 16px;
+  color: #fff;
+  border-radius: 8px;
+}
+
+.edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .el-button {
+    width: 188px;
+    height: 44px;
+  }
+}
+
+// 产品列表样式
+.product-list {
+  .product-category {
+    margin-bottom: 12px;
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+
+      .category-title {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .category-name-input {
+        width: 400px;
+
+        /deep/ .el-input__inner {
+          font-size: 16px;
+          font-weight: bold;
+          color: #333;
+          border: 1px solid #d9d9d9;
+          background: #fff;
+        }
+      }
+
+      .category-actions {
+        display: flex;
+        gap: 12px;
+
+        .el-button {
+          background-color: #fff;
+          border: none;
+          color: #33ae60;
+          height: 32px;
+          padding: 6px 16px;
+          font-size: 14px;
+        }
+        /deep/ .el-button--danger {
+          color: #DC2E1B;
+        }
+      }
+    }
+
+    .product-item {
+      background: #f3f5f8;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 16px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      /deep/ .el-input__inner {
+        width: 400px;
+      }
+
+      .product-title {
+        font-size: 14px;
+        font-weight: bold;
+        color: #666;
+        margin-bottom: 16px;
+        padding-left: 10px;
+        position: relative;
+      }
+
+      .product-form {
+        .el-form-item {
+          margin-bottom: 16px;
+        }
+
+        .el-input {
+          width: 100%;
+        }
+
+        .product-image-uploader {
+          border: 1px dashed #d9d9d9;
+          border-radius: 6px;
+          width: 80px;
+          height: 80px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          background: #fafbfc;
+          margin-bottom: 8px;
+
+          .product-image {
+            width: 78px;
+            height: 78px;
+            object-fit: cover;
+            border-radius: 4px;
+          }
+
+          .product-upload-icon {
+            font-size: 24px;
+            color: #bfbfbf;
+          }
+
+          &:hover {
+            border-color: #33ae60;
+          }
+        }
+
+        .delete-product-btn {
+          color: #f56c6c;
+          padding: 0;
+
+          &:hover {
+            color: #f78989;
+          }
+        }
+      }
+    }
+  }
+
+  .add-category-section {
+    text-align: center;
+    padding: 20px 0;
+
+    .el-button {
+      width: 200px;
+      height: 40px;
+      font-size: 14px;
+    }
+  }
+}
