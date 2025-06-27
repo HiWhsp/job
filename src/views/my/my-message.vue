@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="main-title">
-      <span>消息中心</span>
+      <span>消息通知</span>
     </div>
 
     <div class="page-ctx">
@@ -47,7 +47,7 @@
             <div class="mess-title">{{ item.title }}</div>
             <div class="mess-time">{{ item.created_at }}</div>
           </div>
-          <div style="color: #005aac; margin-right: 16px">
+          <div style="color: #33ae60; margin-right: 16px">
             {{ item.is_read == 0 ? "未读" : "已读" }}
           </div>
 
@@ -108,6 +108,16 @@ export default {
   },
   methods: {
     setView() {
+      this.messList = [
+        {
+          id: 1,
+          title: "消息1",
+          created_at: "2021-01-01",
+          is_read: 0,
+          selected: false,
+        },
+      ];
+      this.total = 1;
       this.$api({
         url: "mynotice",
         method: "get",
@@ -208,158 +218,4 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
-.page {
-  text-align: left;
-  padding-bottom: 80px;
-
-  .main-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 32px;
-    text-align: left;
-    height: 56px;
-    line-height: 56px;
-    background: #ffffff;
-    font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-    font-weight: bold;
-    color: #333333;
-  }
-
-  .page-ctx {
-    min-height: 400px;
-    margin-top: 14px;
-    padding: 0;
-    background: #fff;
-  }
-}
-
-.tab-header {
-  padding: 20px 32px;
-  border-bottom: 1px solid #f0f0f0;
-
-  .tab-buttons {
-    display: flex;
-    gap: 24px;
-    align-items: center;
-
-    .select-area {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-
-      .select-checkbox {
-        width: 16px;
-        height: 16px;
-        cursor: pointer;
-      }
-
-      .select-label {
-        font-size: 14px;
-        color: #3d3d3d;
-        cursor: pointer;
-      }
-    }
-
-    .tab-btn {
-      border: none;
-      font-size: 14px;
-      color: #3d3d3d;
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      cursor: pointer;
-      padding: 8px 20px;
-      border-radius: 5px;
-      position: relative;
-
-      &.active {
-        border: 1px solid #005aac;
-        color: #005aac;
-      }
-    }
-  }
-}
-
-.mess-list {
-  padding: 0 32px;
-
-  .mess-item {
-    display: flex;
-    align-items: center;
-    padding: 20px 0;
-    border-bottom: 1px solid #f0f0f0;
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-    .mess-checkbox {
-      margin-right: 16px;
-      flex-shrink: 0;
-
-      .item-checkbox {
-        width: 16px;
-        height: 16px;
-        cursor: pointer;
-        margin: 0;
-      }
-
-      .checkbox-label {
-        cursor: pointer;
-      }
-    }
-
-    .mess-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #005aac;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 16px;
-      flex-shrink: 0;
-      img {
-        width: 16px;
-        height: 16px;
-      }
-    }
-
-    .mess-content {
-      flex: 1;
-      min-width: 0;
-
-      .mess-title {
-        font-size: 14px;
-        color: #333333;
-        line-height: 20px;
-        margin-bottom: 8px;
-        font-weight: 400;
-      }
-
-      .mess-time {
-        font-size: 12px;
-        color: #999999;
-        line-height: 16px;
-      }
-    }
-
-    .mess-action {
-      flex-shrink: 0;
-
-      .delete-btn {
-        font-size: 14px;
-        color: #3d3d3d;
-        cursor: pointer;
-      }
-    }
-  }
-}
-
-.page {
-  .page-ctx {
-    padding-bottom: 80px;
-  }
-}
-</style>
+<style scoped lang="less" src="./my-message.less"></style>

@@ -5,24 +5,23 @@
     </div>
 
     <div class="page-ctx">
-      <div class="mess-list">
-        <div class="mess-item" v-for="(item, index) in messList" :key="index">
-          <div class="title-box">
-            <div class="title">
-              {{ item.title }}
+      <div class="card-grid">
+        <div class="card-item" v-for="(item, index) in messList" :key="index">
+          <div class="card-content">
+            <div class="logo-section">
+              <div class="logo-icon">
+                <img src="@/assets/img/ellsenn/share/collect-active.png" alt="logo" />
+              </div>
             </div>
-            <div class="date" @click="handleCancelCollect(item)">
-              <img src="@/assets/img/ellsenn/share/collect-active.png" alt="" />
-              取消收藏
+            <div class="card-title">
+              {{ item.title || "杭申电气" }}
             </div>
-          </div>
-          <div class="content">
-            {{ item.created_at }}
+            <div class="card-subtitle">取消关注</div>
           </div>
         </div>
       </div>
       <el-pagination
-        style="margin-top: 20px; text-align: center"
+        style="margin-top: 40px; text-align: center"
         v-if="total > 0"
         :total="total"
         layout="prev, pager, next"
@@ -38,7 +37,7 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "servicePage",
+  name: "my-follows",
   components: {},
   data() {
     return {
@@ -104,6 +103,8 @@ export default {
 .page {
   text-align: left;
   padding-bottom: 80px;
+  background: #fff;
+  border-radius: 12px;
 
   .main-title {
     display: flex;
@@ -113,7 +114,6 @@ export default {
     text-align: left;
     height: 56px;
     line-height: 56px;
-    background: #ffffff;
     font-size: 16px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
@@ -122,8 +122,7 @@ export default {
 
   .page-ctx {
     min-height: 400px;
-    margin-top: 14px;
-    padding: 32px 32px 40px 32px;
+    padding: 0px 32px 40px 32px;
     background: #fff;
   }
 }
@@ -134,35 +133,77 @@ export default {
   }
 }
 
-.mess-list {
-  .mess-item {
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    .title-box {
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+
+  .card-item {
+    width: 190px;
+    height: 200px;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #f6f6f8 0%, #ffffff 100%);
+    box-sizing: border-box;
+    border: 1px solid #e7e7e7;
+
+    .card-content {
+      height: 100%;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
+      flex-direction: column;
+      position: relative;
 
-      .title {
-        font-weight: 500;
+      .logo-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 10px;
+
+        .logo-icon {
+          width: 90px;
+          height: 90px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+          }
+        }
+      }
+
+      .card-title {
         font-size: 16px;
-        color: #000;
+        font-weight: 500;
+        color: #333;
+        line-height: 1.4;
+        margin-bottom: 20px;
       }
 
-      .date {
-        font-weight: 400;
-        font-size: 14px;
-        color: #7b8599;
+      .card-subtitle {
         cursor: pointer;
+        font-size: 12px;
+        color: #999;
       }
     }
+  }
 
-    .content {
-      color: #999999;
-      font-size: 12px;
-      margin-top: 15px;
-    }
+  // 响应式布局
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
   }
 }
 </style>

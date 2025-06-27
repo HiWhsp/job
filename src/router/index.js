@@ -1,6 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import ellsennRouter from "./router";
 
 // 解决报错
 const originalPush = VueRouter.prototype.push;
@@ -30,23 +29,85 @@ const my_vip = () =>
   import(/* webpackChunkName: "my-vip" */ "@/views/my/my-vip.vue");
 const my_company_info = () =>
   import(/* webpackChunkName: "my-company-info" */ "@/views/my/my-company-info.vue");
-const my_collection = () =>
-  import(/* webpackChunkName: "my-collection" */ "@/views/my/my-collection.vue");
-const my_comment = () =>
-  import(/* webpackChunkName: "my-comment" */ "@/views/my/my-comment.vue");
+const my_follows = () =>
+  import(/* webpackChunkName: "my-follows" */ "@/views/my/my-follows.vue");
 const my_message = () =>
   import(/* webpackChunkName: "my-message" */ "@/views/my/my-message.vue");
 const edit_password = () =>
   import(/* webpackChunkName: "edit-password" */ "@/views/my/edit-password.vue");
+const demand_form = () =>
+  import(/* webpackChunkName: "demand-form" */ "@/views/my/demand-form.vue");
+const demand_list = () =>
+  import(/* webpackChunkName: "demand-list" */ "@/views/my/demand-list.vue");
+const service_list = () =>
+  import(/* webpackChunkName: "service-list" */ "@/views/my/service-list.vue");
 
 const routes = [
-  ...ellsennRouter,
   // 首页
   {
     path: "/",
     name: "index",
     component: index,
     meta: {},
+  },
+  // 注册
+  {
+    path: "/register",
+    name: "register",
+    component: () => import("@/views/account/register.vue"),
+  },
+  // 帮助
+  {
+    path: "/help",
+    name: "help",
+    component: () => import("@/views/navBar/help.vue"),
+  },
+  // 反馈
+  {
+    path: "/feedback",
+    name: "feedback",
+    component: () => import("@/views/navBar/feedback.vue"),
+  },
+  // 合作
+  {
+    path: "/cooperation",
+    name: "cooperation",
+    component: () => import("@/views/navBar/cooperation.vue"),
+  },
+  // 搜索列表
+  {
+    path: "/searchList",
+    name: "searchList",
+    component: () => import("@/views/search/searchList.vue"),
+    meta: {
+      title: "搜索列表",
+    },
+  },
+  // 文章详情
+  {
+    path: "/article-detail",
+    name: "article-detail",
+    component: () => import("@/views/product/article-detail.vue"),
+    meta: {
+      title: "文章详情",
+    },
+  },
+  // 系统制造商列表
+  {
+    path: "/system-manufacturer-list",
+    name: "system-manufacturer-list",
+    component: () => import("@/views/product/system-manufacturer-list.vue"),
+    meta: {
+      title: "系统制造商列表",
+    },
+  },
+  {
+    path: "/manufacturer-detail",
+    name: "manufacturer-detail",
+    component: () => import("@/views/product/manufacturer-detail.vue"),
+    meta: {
+      title: "系统制造商详情",
+    },
   },
   //用户中心
   {
@@ -85,20 +146,11 @@ const routes = [
         },
       },
       {
-        path: "/my-collection",
-        name: "my-collection",
-        component: my_collection,
+        path: "/my-follows",
+        name: "my-follows",
+        component: my_follows,
         meta: {
-          title: "我的收藏",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/my-comment",
-        name: "my-comment",
-        component: my_comment,
-        meta: {
-          title: "我的评论",
+          title: "我的关注",
           requireAuth: true,
         },
       },
@@ -117,6 +169,33 @@ const routes = [
         component: edit_password,
         meta: {
           title: "修改密码",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/demand-form",
+        name: "demand-form",
+        component: demand_form,
+        meta: {
+          title: "填报需求",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/demand-list",
+        name: "demand-list",
+        component: demand_list,
+        meta: {
+          title: "我的需求",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/service-list",
+        name: "service-list",
+        component: service_list,
+        meta: {
+          title: "需求工单管理",
           requireAuth: true,
         },
       },

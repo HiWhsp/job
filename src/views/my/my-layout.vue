@@ -58,7 +58,7 @@ export default {
             },
             {
               title: "我的关注",
-              route: "my-follows‌",
+              route: "my-follows",
             },
           ],
         },
@@ -84,30 +84,6 @@ export default {
             },
           ],
         },
-        // {
-        //   title: "会员中心",
-        //   route: "member-center",
-        // },
-        // {
-        //   title: "我的收藏",
-        //   route: "my-collection",
-        // },
-        // {
-        //   title: "我的评论",
-        //   route: "my-comment",
-        // },
-        // {
-        //   title: "我的活动报名",
-        //   route: "my-activity-registration",
-        // },
-        // {
-        //   title: "消息中心",
-        //   route: "my-message",
-        // },
-        // {
-        //   title: "账号设置",
-        //   route: "account-settings",
-        // },
       ],
       activeRoute: "",
       openeds: ["order-list"],

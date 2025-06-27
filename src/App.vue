@@ -325,13 +325,23 @@ button {
   }
 }
 
-.el-pagination.is-background .btn-next,
-.el-pagination.is-background .btn-prev,
-.el-pagination.is-background .el-pager li {
+.el-pagination .btn-next,
+.el-pagination .btn-prev {
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  padding: 0 !important;
+  .el-icon {
+    font-size: 20px !important;
+  }
+}
+
+.el-pager li {
   background-color: #f4f4f5 !important;
-  min-width: 30px !important;
-  height: 30px;
-  line-height: 30px;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  padding: 0 !important;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled):hover {
@@ -344,6 +354,9 @@ button {
 }
 
 .el-pager li.active {
+  background-color: #33ae60 !important;
+  color: #fff !important;
+  border-radius: 4px !important;
 }
 
 // //PC  加载中
