@@ -1,0 +1,204 @@
+.page {
+  text-align: left;
+  padding: 40px 32px;
+  background-color: #fff;
+  border-radius: 14px;
+
+  .page-header {
+    .page-header-title {
+      font-family: Microsoft YaHei;
+      font-size: 22px;
+      font-weight: normal;
+      letter-spacing: normal;
+      color: #3d3d3d;
+    }
+    margin-bottom: 32px;
+  }
+
+  .page-ctx {
+    background: #fff;
+
+    // 基本信息样式
+    .basic-info {
+      margin-bottom: 30px;
+      .demand-info {
+        display: flex;
+        align-items: center;
+        padding-bottom: 22px;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #e0dfe0;
+        .col-line {
+          width: 1px;
+          height: 18px;
+          background: #3d3d3d;
+          margin: 0 10px;
+        }
+        .demand-date {
+          font-size: 18px;
+          color: #3d3d3d;
+        }
+
+        .demand-number {
+          font-size: 18px;
+          color: #3d3d3d;
+        }
+      }
+
+      .demand-status {
+        display: inline-block;
+        font-size: 18px;
+        font-weight: 500;
+
+        &.status-processed {
+          color: #33ae60;
+        }
+
+        &.status-viewed {
+          color: #fa6901;
+        }
+
+        &.status-processing {
+          color: #fa6901;
+        }
+      }
+    }
+
+    // 内容标题
+    .content-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    // 表单表格样式
+    .form-table {
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #E0DFE0;
+
+      .form-row {
+        display: flex;
+        margin-bottom: 15px;
+        align-items: flex-start;
+
+        .form-label {
+          width: 70px;
+          font-size: 14px;
+          color: #8d8d8d;
+          font-weight: 500;
+          flex-shrink: 0;
+          line-height: 1.5;
+        }
+
+        .form-value {
+          flex: 1;
+          font-size: 14px;
+          color: #3d3d3d;
+          line-height: 1.5;
+          word-break: break-all;
+        }
+
+        .upload-images {
+          display: flex;
+          gap: 15px;
+          flex-wrap: wrap;
+
+          .upload-image {
+            width: 120px;
+            height: 120px;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+
+            img {
+              max-width: 100%;
+              max-height: 100%;
+              object-fit: cover;
+              border-radius: 4px;
+            }
+
+            .upload-placeholder {
+              color: #9ca3af;
+              font-size: 14px;
+              text-align: center;
+            }
+          }
+        }
+      }
+    }
+
+    // 产品表格样式
+    .product-table {
+      margin-bottom: 30px;
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #e5e7eb;
+
+        th,
+        td {
+          padding: 12px 15px;
+          text-align: center;
+          border: 1px solid #e5e7eb;
+          font-size: 14px;
+
+          &:first-child {
+            color: #898C93;
+          }
+        }
+
+        th {
+          font-weight: 500;
+          color: #000;
+        }
+
+        td {
+          color: #000;
+        }
+      }
+    }
+
+    // 我的信息样式
+    .my-info {
+
+      .info-title {
+        font-size: 18px;
+        font-weight: 500;
+        color: #3D3D3D;
+        margin-bottom: 30px;
+      }
+
+      .info-content {
+        .info-row {
+          display: flex;
+          align-items: center;
+          margin-bottom: 15px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          .info-label {
+            font-size: 14px;
+            color: #757575;
+            font-weight: 500;
+          }
+
+          .info-value {
+            font-size: 14px;
+            color: #3D3D3D;
+            margin-left: 5px;
+            width: 200px;
+          }
+        }
+      }
+    }
+  }
+}

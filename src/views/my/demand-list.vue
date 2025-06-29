@@ -14,9 +14,9 @@
           @click="switchTab(tab.key)"
         >
           {{ tab.label }}
-          <span class="count"
+          <!-- <span class="count"
             >({{ tab.key === "all" ? demandList.length : getTypeCount(tab.key) }})</span
-          >
+          > -->
         </div>
       </div>
 
@@ -327,6 +327,16 @@ export default {
       // 处理查看详情逻辑
       console.log("查看详情:", item);
       // 这里可以跳转到详情页面或打开详情弹窗
+      this.$router.push({
+        path: "demand-detail",
+        query: {
+          id: item.title,
+          type: item.type,
+          contact: item.contact,
+          publishTime: item.publishTime,
+          company: item.company || "",
+        },
+      });
     },
     getTabName(tabKey) {
       const tab = this.tabs.find((t) => t.key === tabKey);

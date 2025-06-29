@@ -1,0 +1,240 @@
+.page {
+  text-align: left;
+  padding: 40px 32px;
+  background: #fff;
+  border-radius: 12px;
+}
+.page-header {
+  .page-header-title {
+    font-family: Microsoft YaHei;
+    font-size: 22px;
+    font-weight: normal;
+    letter-spacing: normal;
+    color: #3d3d3d;
+  }
+  margin-bottom: 32px;
+}
+.user-card {
+  display: flex;
+  align-items: center;
+  background: #f6fcf9;
+  border-radius: 12px;
+  padding: 17px 28px;
+  .user-avatar-box {
+    margin-right: 32px;
+    .user-avatar {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e6e6e6;
+    }
+    .avatar-uploader {
+      display: inline-block;
+    }
+  }
+  .user-info-box {
+    flex: 1;
+    .user-name {
+      font-size: 16px;
+      color: #3d3d3d;
+      margin-bottom: 8px;
+    }
+    .user-level {
+      font-size: 12px;
+      color: #6c6d6d;
+      margin-bottom: 8px;
+      img {
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
+      }
+    }
+  }
+  .user-logout-box {
+    margin-left: 32px;
+    .el-button {
+      background: #fff;
+      border: 1px solid #e6e6e6;
+      color: #333;
+      border-radius: 6px;
+      padding: 8px 24px;
+    }
+  }
+}
+.page-ctx {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 32px;
+
+  .form-item-title {
+    font-family: Microsoft YaHei;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 14px;
+    letter-spacing: normal;
+    color: #666666;
+    margin-bottom: 22px;
+  }
+  .change-phone-btn {
+    margin-left: 10px;
+  }
+
+  .el-checkbox {
+    height: 42px;
+    line-height: 42px;
+  }
+  /deep/.el-checkbox.is-checked {
+    .el-checkbox__inner {
+      border-color: #33ae60;
+    }
+    .el-checkbox__label {
+      color: #33ae60;
+    }
+  }
+  /deep/ .el-checkbox__inner {
+    border-color: #8c9194;
+    background-color: #fff;
+    &:after {
+      border-color: #33ae60;
+    }
+  }
+  /deep/ .el-checkbox__label {
+    color: #3d3d3d;
+  }
+}
+.user-form {
+  .el-form-item {
+    margin-bottom: 24px;
+  }
+  .el-input,
+  .el-select {
+    width: 320px;
+  }
+  .el-textarea {
+    width: 320px;
+  }
+}
+.certificate-uploader {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #fafbfc;
+  .certificate-upload-icon {
+    font-size: 32px;
+    color: #bfbfbf;
+  }
+}
+.btn-save {
+  width: 194px;
+  height: 40px;
+  background: #33ae60;
+  border: none;
+  font-size: 16px;
+  color: #fff;
+  border-radius: 8px;
+}
+
+// 添加修改手机号和邮箱的样式
+.phone-update-form,
+.email-update-form {
+  .update-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .update-form-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+
+    label {
+      display: inline-block;
+      width: 80px;
+      font-size: 14px;
+      color: #333;
+      text-align: right;
+      margin-right: 12px;
+    }
+
+    .input-box {
+      width: 400px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      border: 1px solid #d4d4d4;
+      border-radius: 4px;
+    }
+
+    .form-input {
+      flex: 1;
+    }
+    /deep/ .el-input__inner {
+      border: none;
+      height: 32px;
+      line-height: 32px;
+    }
+
+    .form-input-code {
+      flex: 1;
+      margin-right: 10px;
+    }
+
+    .get-code-btn {
+      border: none;
+      color: #fa6901;
+      padding: 6px 12px;
+    }
+  }
+
+  .update-form-actions {
+    text-align: left;
+    margin-top: 20px;
+    margin-left: 90px;
+
+    .el-button {
+      margin-right: 10px;
+      border: 1px solid #33ae60;
+      color: #33ae60;
+    }
+
+    /deep/ .el-button--default:hover {
+      background: #fff;
+    }
+
+    /deep/ .el-button--primary {
+      background: #33ae60;
+      border: none;
+      color: #fff;
+    }
+  }
+}
+
+.edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .el-button {
+    padding: 8px 24px;
+    border-radius: 6px;
+  }
+
+  .el-button--default {
+    width: 194px;
+    height: 40px;
+    border: none;
+    font-size: 16px;
+    color: #3d3d3d;
+    border-radius: 8px;
+    border: 1px solid #d9d9d9;
+  }
+}

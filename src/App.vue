@@ -35,47 +35,33 @@ export default {
     page_aside,
   },
   data() {
-    let href_pathname = location.pathname;
-    let is_show_login_comp = ["/login", "/register", "/retrieve"].includes(href_pathname);
     return {
-      //是否展示登录页面所需组件
-      is_show_login_comp: is_show_login_comp,
+      is_show_login_comp: false,
     };
   },
-  computed: {},
   watch: {
-    $route(to) {
-      if (["login", "register", "retrieve"].includes(to.name)) {
-        this.is_show_login_comp = true;
+    $route(to, from) {
+      let href_pathname = location.pathname;
+      let temp = false;
+      if (href_pathname.indexOf("service-provider") > -1) {
+        temp = true;
       } else {
-        this.is_show_login_comp = false;
+        temp = ["/login", "/register", "/retrieve"].includes(href_pathname);
       }
+      this.is_show_login_comp = temp;
     },
   },
-  beforeCreate() {},
-  created() {},
   mounted() {
     this.initScale();
   },
   methods: {
-    // scrollToTop() {
-    //   let disallowScrollPages = ["product-detail"];
-    //   if (disallowScrollPages.includes(this.$route.name)) {
-    //   } else {
-    //     document.querySelector("#app-wrap").scrollTop = 0;
-    //   }
-    // },
     initScale() {
-      if (document && document.documentElement && document.documentElement.clientWidth) {
+      if (
+        document &&
+        document.documentElement &&
+        document.documentElement.clientWidth
+      ) {
         let clientWidth = document.documentElement.clientWidth;
-        if (clientWidth <= 1366 && clientWidth >= 1024) {
-          // document.querySelector("body").style.overflowX = "auto";
-          // var $target = document.querySelector('[name="viewport"]');
-          // document
-          //   .querySelector('[name="viewport"]')
-          //   .setAttribute("content", "width=device-width,  initial-scale=0.15");
-        }
-
         // 笔记本电脑端  150% 缩放比例的问题
         if (window.devicePixelRatio == 1.5) {
           let fontSize = 10 / window.devicePixelRatio;
@@ -333,15 +319,24 @@ button {
   padding: 0 !important;
   .el-icon {
     font-size: 20px !important;
+    color: #b2b2b2 !important;
   }
 }
 
 .el-pager li {
-  background-color: #f4f4f5 !important;
+  background-color: transparent !important;
   width: 32px !important;
   height: 32px !important;
   line-height: 32px !important;
   padding: 0 !important;
+}
+
+.el-pager li {
+  color: #b2b2b2 !important;
+}
+
+.el-pager li:not(.active):hover {
+  color: #009f39 !important;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled):hover {

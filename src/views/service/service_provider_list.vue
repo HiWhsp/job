@@ -1,14 +1,65 @@
 <template>
   <div class="page">
     <div class="page-header">
-      <div class="page-header-title">
-        <span>工单管理</span>
+      <!-- 搜索项 -->
+      <div class="search-form">
+        <el-form
+          :model="searchForm"
+          ref="searchForm"
+          :inline="true"
+          size="small"
+        >
+          <el-form-item label="工单编号" prop="orderNo">
+            <el-input
+              v-model="searchForm.orderNo"
+              placeholder="请输入工单编号"
+              clearable
+              style="width: 200px"
+            />
+          </el-form-item>
+          <el-form-item label="工单类型" prop="orderType">
+            <el-select
+              v-model="searchForm.orderType"
+              placeholder="请选择工单类型"
+              clearable
+              style="width: 200px"
+            >
+              <el-option label="全部" value="" />
+              <el-option label="售后运维" value="maintenance" />
+              <el-option label="安装调试" value="installation" />
+              <el-option label="技术支持" value="support" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="设备类型" prop="deviceType">
+            <el-select
+              v-model="searchForm.deviceType"
+              placeholder="请选择设备类型"
+              clearable
+              style="width: 200px"
+            >
+              <el-option label="全部" value="" />
+              <el-option label="光伏" value="solar" />
+              <el-option label="风电" value="wind" />
+              <el-option label="储能" value="storage" />
+            </el-select>
+          </el-form-item>
+          <el-form-item style="flex: 1; text-align: right">
+            <el-button type="primary" @click="handleSearch">搜索</el-button>
+            <el-button @click="handleReset">重置</el-button>
+          </el-form-item>
+        </el-form>
       </div>
-      <div class="search-box">
-        <el-input v-model="keyword" placeholder="输入关键字" />
-        <el-button type="primary">
-          <i class="el-icon-search"></i>
-        </el-button>
+    </div>
+
+    <div class="tab-box">
+      <div
+        class="tab-item"
+        :class="{ active: activeTab === item.value }"
+        v-for="item in tabList"
+        :key="item.value"
+        @click="handleTabClick(item.value)"
+      >
+        <span>{{ item.name }}</span>
       </div>
     </div>
     <div class="page-ctx">
@@ -24,11 +75,11 @@
               <div class="service-info">
                 <span class="date">{{ item.date }}</span>
                 <span class="order-info">工单编号：{{ item.orderNo }}</span>
-                <span class="relation-info"
+                <!-- <span class="relation-info"
                   >关联需求表单号：<span class="relation-order">{{
                     item.relationNo
                   }}</span></span
-                >
+                > -->
               </div>
             </div>
             <div class="header-right">
@@ -118,6 +169,7 @@
 
 <script>
 export default {
+  name: "service-provider-list",
   data() {
     return {
       keyword: "",
@@ -165,12 +217,28 @@ export default {
           ],
         },
       ],
+      tabList: [
+        { name: "全部工单", value: "0" },
+        { name: "待确认", value: "1" },
+        { name: "服务中", value: "2" },
+        { name: "已完成", value: "3" },
+      ],
+      activeTab: "0",
       currentPage: 1,
       pageSize: 10,
       total: 100,
+      searchForm: {
+        orderNo: "",
+        orderType: "",
+        deviceType: "",
+        deviceLocation: "",
+      },
     };
   },
   methods: {
+    handleTabClick(value) {
+      this.activeTab = value;
+    },
     downloadFile(file) {
       // 处理文件下载
       console.log("下载文件:", file);
@@ -178,12 +246,31 @@ export default {
     handleAction(action, item) {
       // 处理操作按钮点击
       console.log("执行操作:", action.name, item);
+      this.$router.push({
+        name: "service-provider-detail",
+        params: {
+          id: item.id,
+        },
+      });
     },
     handleCurrentChange(page) {
       this.currentPage = page;
+    },
+    handleSearch() {
+      // 处理搜索功能
+      console.log("搜索条件:", this.searchForm);
+    },
+    handleReset() {
+      // 处理重置功能
+      this.searchForm = {
+        orderNo: "",
+        orderType: "",
+        deviceType: "",
+        deviceLocation: "",
+      };
     },
   },
 };
 </script>
 
-<style lang="less" scoped src="./service-list.less"></style>
+<style lang="less" scoped src="./service_provider_list.less"></style>

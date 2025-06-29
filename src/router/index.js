@@ -39,8 +39,12 @@ const demand_form = () =>
   import(/* webpackChunkName: "demand-form" */ "@/views/my/demand-form.vue");
 const demand_list = () =>
   import(/* webpackChunkName: "demand-list" */ "@/views/my/demand-list.vue");
+const demand_detail = () =>
+  import(/* webpackChunkName: "demand-detail" */ "@/views/my/demand-detail.vue");
 const service_list = () =>
   import(/* webpackChunkName: "service-list" */ "@/views/my/service-list.vue");
+const service_detail = () =>
+  import(/* webpackChunkName: "service-detail" */ "@/views/my/service-detail.vue");
 
 const routes = [
   // 首页
@@ -191,6 +195,15 @@ const routes = [
         },
       },
       {
+        path: "/demand-detail",
+        name: "demand-detail",
+        component: demand_detail,
+        meta: {
+          title: "需求详情",
+          requireAuth: true,
+        },
+      },
+      {
         path: "/service-list",
         name: "service-list",
         component: service_list,
@@ -199,6 +212,89 @@ const routes = [
           requireAuth: true,
         },
       },
+      {
+        path: "/service-detail",
+        name: "service-detail",
+        component: service_detail,
+        meta: {
+          title: "需求工单详情",
+          requireAuth: true,
+        },
+      },
+    ],
+  },
+  // 服务商
+  {
+    path: "/service-provider",
+    name: "service-provider",
+    component: () => import("@/views/service/service_layout.vue"),
+    meta: {
+      title: "服务商",
+    },
+    children: [
+      {
+        path: "/service-provider-list",
+        name: "service-provider-list",
+        component: () => import("@/views/service/service_provider_list.vue"),
+        meta: {
+          title: "服务商工单管理",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/service-provider-detail",
+        name: "service-provider-detail",
+        component: () => import("@/views/service/service_provider_detail.vue"),
+        meta: {
+          title: "服务商工单详情",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/service-provider-message",
+        name: "service-provider-message",
+        component: () => import("@/views/service/service_provider_message.vue"),
+        meta: {
+          title: "服务商消息",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/service-provider-follow",
+        name: "service-provider-follow",
+        component: () => import("@/views/service/service_provider_follow.vue"),
+        meta: {
+          title: "服务商关注",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/service-provider-change-password",
+        name: "service-provider-change-password",
+        component: () => import("@/views/service/service_provider_change_password.vue"),
+        meta: {
+          title: "修改密码",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/service-provider-vip",
+        name: "service-provider-vip",
+        component: () => import("@/views/service/service_provider_vip.vue"),
+        meta: {
+          title: "服务商会员中心",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "/service-provider_info",
+        name: "service-provider_info",
+        component: () => import("@/views/service/service_provider_info.vue"),
+        meta: {
+          title: "服务商个人中心",
+          requireAuth: true,
+        },
+      }
     ],
   },
 
