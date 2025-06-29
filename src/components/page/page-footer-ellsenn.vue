@@ -3,19 +3,19 @@
     <div class="web-footer">
       <div class="footer-center">
         <div class="nav-group">
-          <div class="group-item">
+          <div class="group-item" @click="toNav({ route: '/help' })">
             <div class="group-title">会员服务</div>
           </div>
           <div class="col-line"></div>
-          <div class="group-item">
+          <div class="group-item" @click="toNav({ route: '/help' })">
             <div class="group-title">企业视窗</div>
           </div>
           <div class="col-line"></div>
-          <div class="group-item">
+          <div class="group-item" @click="toNav({ route: '/help' })">
             <div class="group-title">关于我们</div>
           </div>
           <div class="col-line"></div>
-          <div class="group-item">
+          <div class="group-item" @click="toNav({ route: '/help' })">
             <div class="group-title">联系我们</div>
           </div>
         </div>
@@ -24,13 +24,10 @@
 
     <div class="beian-box">
       <div class="beian-ctx">
-        <div>
-          Copyright © 2025 Bjx.com.cn All Rights
-          Reserved. 北京XXXXXX网络技术有限公司 版权所有
-        </div>
+        <div>{{ vuex_config.banquan }}</div>
         <div>
           <!-- <img src="@img/footer/beian.png" alt="" /> -->
-          京ICP证080169号京ICP备09003304号-2京公网安备11010502034458号电子公告服务专项备案
+          {{ vuex_config.beian_mainpage }}
         </div>
       </div>
     </div>
@@ -38,6 +35,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "web-footer",
   components: {},
@@ -49,6 +47,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(["vuex_config"]),
     address_list() {
       let arr = (this.vuex_config.comAddress || "").split("||");
       return arr;

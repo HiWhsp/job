@@ -33,7 +33,12 @@
                 class="verify-input"
               >
               </el-input>
-              <el-button type="success" class="verify-btn">获取验证码</el-button>
+              <el-button
+                type="success"
+                class="verify-btn"
+                @click="getVerifyCode"
+                >获取验证码</el-button
+              >
             </div>
           </el-form-item>
 
@@ -62,7 +67,10 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="success" class="register-btn" @click="handleRegister"
+            <el-button
+              type="success"
+              class="register-btn"
+              @click="handleRegister"
               >提交</el-button
             >
           </el-form-item>
@@ -93,12 +101,13 @@ export default {
         account: [
           { required: true, message: "请输入手机号或邮箱", trigger: "blur" },
           {
-            pattern: /^(1[3-9]\d{9}|[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+)$/,
+            pattern:
+              /^(1[3-9]\d{9}|[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+)$/,
             message: "请输入正确的手机号或邮箱格式",
             trigger: "blur",
           },
         ],
-        verifyCode: [{ required: true, message: "请输入验证码", trigger: "blur" }],
+        // verifyCode: [{ required: true, message: "请输入验证码", trigger: "blur" }],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
           {
@@ -109,7 +118,7 @@ export default {
           },
         ],
         serviceArea: [
-          { required: true, message: "请选择常驻地/服务方", trigger: "change" },
+          // { required: true, message: "请选择常驻地/服务方", trigger: "change" },
         ],
       },
     };
@@ -118,12 +127,46 @@ export default {
     handleRegister() {
       this.$refs.registerForm.validate((valid) => {
         if (valid) {
-          console.log("注册表单数据:", this.registerForm);
-          // 这里可以调用注册接口
-          this.$message.success("注册成功！");
+          this.$api({
+            url: "register",
+            method: "post",
+            data: {
+              account: this.registerForm.account,
+              password: this.registerForm.password,
+              captcha: this.registerForm.verifyCode,
+              type: 1,
+            },
+          }).then((res) => {
+            if (res.code == 200) {
+              this.$message.success("注册成功");
+              this.$router.push("/login?is_register=1");
+            } else {
+              this.$message.error(res.msg);
+            }
+          });
         } else {
           this.$message.error("请完善表单信息");
           return false;
+        }
+      });
+    },
+    getVerifyCode() {
+      if (!this.registerForm.account) {
+        this.$message.error("请输入手机号/邮箱");
+        return;
+      }
+      this.$api({
+        url: "sendCode",
+        method: "post",
+        data: {
+          account: this.registerForm.account,
+          type: 1,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.$message.success("验证码发送成功");
+        } else {
+          this.$message.error(res.msg);
         }
       });
     },

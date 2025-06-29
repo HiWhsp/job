@@ -6,6 +6,8 @@ import store from "./store";
 
 // 导入登录注册弹窗插件
 import AuthModalPlugin from "@/plugin/authModal.js";
+// 导入完善信息弹窗插件
+import ProfileCompleteModalPlugin from "@/plugin/profileCompleteModal.js";
 
 // 全局组件注册
 import pageBread from "@/components/page/pageBread.vue";
@@ -13,6 +15,7 @@ import pageTop from "@/components/page/pageTop.vue";
 Vue.component("pageTop", pageTop); //
 Vue.component("pageBread", pageBread); //
 Vue.use(AuthModalPlugin);
+Vue.use(ProfileCompleteModalPlugin);
 
 
 // import VConsole from "vconsole";

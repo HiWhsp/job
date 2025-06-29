@@ -328,19 +328,20 @@ router.beforeEach((to, from, next) => {
   if (!user_is_login && to.meta.requireAuth) {
     // debugger
     alertErr("请先登录");
-    Vue.prototype.$showLogin({
-      onLoginSuccess: (data) => {
-        console.log('登录成功:', data)
-        // 处理登录成功逻辑
-      },
-      onRegisterSuccess: (data) => {
-        console.log('注册成功:', data)
-      },
-      onGetCode: ({ type, account }) => {
-        console.log('获取验证码:', type, account)
-        // 调用实际的验证码接口
-      }
-    });
+    next();
+    // Vue.prototype.$showLogin({
+    //   onLoginSuccess: (data) => {
+    //     console.log('登录成功:', data)
+    //     // 处理登录成功逻辑
+    //   },
+    //   onRegisterSuccess: (data) => {
+    //     console.log('注册成功:', data)
+    //   },
+    //   onGetCode: ({ type, account }) => {
+    //     console.log('获取验证码:', type, account)
+    //     // 调用实际的验证码接口
+    //   }
+    // });
   } else {
     next();
   }

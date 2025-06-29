@@ -36,6 +36,7 @@ axios.interceptors.response.use(
         } else if (code === 401) {
             alertErr(res.msg);
             if (res.msg == "请登录") {
+                store.commit("clear_loginInfo");
                 // Vue.prototype.$showLogin({
                 //     onLoginSuccess: (data) => {
                 //         store.commit("set_baseInfo", data);

@@ -184,9 +184,6 @@ export default {
 
   computed: {
     page_nav_list() {
-      let route_news = "";
-      console.log(this.tabList);
-
       var arr = [
         {
           title: "首页",
@@ -378,22 +375,6 @@ export default {
     ///
 
     setView() {
-      this.$api({
-        url: "getReportConfig",
-        method: "get",
-        data: {
-          is_home: 1,
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          this.tabList = res.data.category_data.map((item) => {
-            return {
-              title: item.title,
-              route: `/researchReport?id=${item.id}`,
-            };
-          });
-        }
-      });
     },
     mouseoutSearch() {},
     handleSearchInput() {

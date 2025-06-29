@@ -41,13 +41,13 @@
                 class="filter-item"
                 :class="{ active: firstCategory === item.id }"
                 @click="selectFirstCategory(item.id)"
-                >{{ item.name }}</span
+                >{{ item.name_zh }}</span
               >
             </div>
           </div>
 
           <!-- 二级分类 -->
-          <div class="filter-row">
+          <div class="filter-row" v-if="firstCategory != 'all'">
             <span class="filter-label">二级分类：</span>
             <div class="filter-options">
               <span
@@ -62,13 +62,13 @@
                 class="filter-item"
                 :class="{ active: secondCategory === item.id }"
                 @click="selectSecondCategory(item.id)"
-                >{{ item.name }}</span
+                >{{ item.name_zh }}</span
               >
             </div>
           </div>
 
           <!-- 三级分类 -->
-          <div class="filter-row">
+          <div class="filter-row" v-if="secondCategory != 'all'">
             <span class="filter-label">三级分类：</span>
             <div class="filter-options">
               <span
@@ -83,7 +83,7 @@
                 class="filter-item"
                 :class="{ active: thirdCategory === item.id }"
                 @click="selectThirdCategory(item.id)"
-                >{{ item.name }}</span
+                >{{ item.name_zh }}</span
               >
             </div>
           </div>
@@ -125,15 +125,15 @@
               @click="viewCompany(company)"
             >
               <div class="company-header">
-                <h3 class="company-title">{{ company.name }}</h3>
+                <h3 class="company-title">{{ company.companyName }}</h3>
               </div>
               <div class="company-body">
-                <img src="" alt="" />
+                <img :src="company.backImage" alt="" />
                 <div class="company-content">
-                  <p class="company-intro">{{ company.introduction }}</p>
+                  <p class="company-intro">{{ company.describption }}</p>
                   <div class="company-info">
                     <span class="info-item">
-                      北京XXXX科技有限公司 {{ company.registerTime }}</span
+                      {{ company.companyName }} {{ company.created_at }}</span
                     >
                   </div>
                 </div>
@@ -169,7 +169,7 @@
                 class="recommend-item"
                 @click="viewRecommend(item)"
               >
-                <div class="company-name">{{ item.name }}</div>
+                <div class="company-name">{{ item.companyName }}</div>
               </div>
             </div>
           </div>
@@ -209,25 +209,9 @@ export default {
       selectedRegion: "all",
 
       // 筛选选项数据
-      firstCategories: [
-        { id: "1", name: "太阳能" },
-        { id: "2", name: "稀土" },
-        { id: "3", name: "风能" },
-        { id: "4", name: "金属" },
-        { id: "5", name: "节能设备" },
-      ],
-      secondCategories: [
-        { id: "1", name: "光伏应用产品" },
-        { id: "2", name: "光伏生产设备及原材料" },
-        { id: "3", name: "光伏原材料" },
-        { id: "4", name: "太阳能灯、照明系统" },
-      ],
-      thirdCategories: [
-        { id: "1", name: "太阳能电池组件" },
-        { id: "2", name: "太阳能电池片" },
-        { id: "3", name: "光伏逆变器" },
-        { id: "4", name: "太阳能光伏发电系统" },
-      ],
+      firstCategories: [],
+      secondCategories: [],
+      thirdCategories: [],
       regions: [
         { id: "1", name: "北京" },
         { id: "2", name: "天津" },
@@ -240,23 +224,7 @@ export default {
       ],
 
       // 推荐列表
-      recommendList: [
-        {
-          id: 1,
-          name: "恒顺新能源科技有限公司",
-          description: "专业从事新能源技术研发，产品质量优良，服务完善",
-        },
-        {
-          id: 2,
-          name: "恒顺新能源科技有限公司",
-          description: "专业从事新能源技术研发，产品质量优良，服务完善",
-        },
-        {
-          id: 3,
-          name: "恒顺新能源科技有限公司",
-          description: "专业从事新能源技术研发，产品质量优良，服务完善",
-        },
-      ],
+      recommendList: [],
 
       // 公司列表
       companyList: [
@@ -276,15 +244,35 @@ export default {
         },
       ],
 
-      // 分页
-      currentPage: 1,
       pageSize: 20,
       total: 0,
     };
   },
 
-  created() {
+  mounted() {
     this.loadData();
+    // 获取筛选条件
+    this.$api({
+      url: "getFinishSelect",
+      method: "get",
+    }).then((res) => {
+      let { code, data, msg } = res;
+      if (code == 200) {
+        this.firstCategories = data.typeListTree || [];
+        this.secondCategories = data.typeListTree[0].children || [];
+        this.thirdCategories = data.typeListTree[0].children[0].children || [];
+      }
+    });
+    // 获取省
+    this.$api({
+      url: "provinceList",
+      method: "get",
+    }).then((res) => {
+      let { code, data, msg } = res;
+      if (code == 200) {
+        this.regions = data.provinceList || [];
+      }
+    });
   },
 
   methods: {
@@ -296,23 +284,54 @@ export default {
 
     // 选择一级分类
     selectFirstCategory(id) {
+      if (id == "all") {
+        this.firstCategory = "all";
+        this.secondCategory = "all";
+        this.thirdCategory = "all";
+        this.currentPage = 1;
+        this.loadData();
+        return;
+      }
       this.firstCategory = id;
       this.secondCategory = "all";
       this.thirdCategory = "all";
       this.currentPage = 1;
+      // 获取选择的一级分类的二级分类
+      this.secondCategories = this.firstCategories.find((item) => item.id == id)
+        ? this.firstCategories.find((item) => item.id == id).children
+        : [];
+      this.thirdCategories = this.secondCategories.find((item) => item.id == id)
+        ? this.secondCategories.find((item) => item.id == id).children
+        : [];
       this.loadData();
     },
 
     // 选择二级分类
     selectSecondCategory(id) {
+      if (id == "all") {
+        this.secondCategory = "all";
+        this.thirdCategory = "all";
+        this.currentPage = 1;
+        this.loadData();
+        return;
+      }
       this.secondCategory = id;
       this.thirdCategory = "all";
       this.currentPage = 1;
+      this.thirdCategories = this.secondCategories.find((item) => item.id == id)
+        ? this.secondCategories.find((item) => item.id == id).children
+        : [];
       this.loadData();
     },
 
     // 选择三级分类
     selectThirdCategory(id) {
+      if (id == "all") {
+        this.thirdCategory = "all";
+        this.currentPage = 1;
+        this.loadData();
+        return;
+      }
       this.thirdCategory = id;
       this.currentPage = 1;
       this.loadData();
@@ -329,12 +348,22 @@ export default {
     viewRecommend(item) {
       console.log("查看推荐:", item);
       // 跳转到公司详情页
+      this.toNav({ route: "/manufacturer-detail", query: { id: item.id } });
     },
 
     // 查看公司
     viewCompany(company) {
       console.log("查看公司:", company);
       // 跳转到公司详情页
+      this.toNav({ route: "/manufacturer-detail", query: { id: company.id } });
+    },
+
+    // 跳转
+    toNav(option) {
+      this.$router.push({
+        path: option.route,
+        query: option.query,
+      });
     },
 
     // 分页相关
@@ -351,16 +380,28 @@ export default {
 
     // 加载数据
     loadData() {
-      // 模拟数据加载
-      this.total = 50;
-      console.log("加载数据:", {
-        keyword: this.searchKeyword,
-        firstCategory: this.firstCategory,
-        secondCategory: this.secondCategory,
-        thirdCategory: this.thirdCategory,
-        region: this.selectedRegion,
-        page: this.currentPage,
-        size: this.pageSize,
+      this.$api({
+        url: "companyList",
+        method: "get",
+        params: {
+          keyWord: this.searchKeyword,
+          workType: [
+            this.firstCategory,
+            this.secondCategory,
+            this.thirdCategory,
+          ].join(","),
+          provinceId: this.selectedRegion,
+          page: this.currentPage,
+          pageSize: this.pageSize,
+          companyType: 1,
+        },
+      }).then((res) => {
+        let { code, data, msg } = res;
+        if (code == 200) {
+          this.companyList = data.list || [];
+          this.recommendList = data.suggestCompany || [];
+          this.total = data.totalCount || 0;
+        }
       });
     },
   },

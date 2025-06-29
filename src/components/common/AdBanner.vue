@@ -5,14 +5,19 @@
     :class="{ expanded: isExpanded, collapsed: isCollapsed }"
   >
     <div class="ad-banner">
-      <img alt="" />
+      <img
+        alt=""
+        v-for="item in banner_data"
+        :key="item.id"
+        :src="item.image"
+      />
     </div>
     <!-- 操作区域 -->
     <div class="shade">
       <div class="wrap">
         <div class="desc">
-          文案描述内容文案描述内容文案描述内容文案描述内容文案描述内容文案描述内容文案描述内容文案描述内容文案描述内容
-        </div>
+          {{ banner_data.length > 0 ? banner_data[0].title : "" }}
+        </div>  
         <div class="ad-close">
           <div class="show" @click="toggleBanner">
             <span v-if="isExpanded">收起</span>
@@ -34,6 +39,7 @@ export default {
   name: "AdBanner",
   data() {
     return {
+      banner_data: [],
       isVisible: true,
       isExpanded: false,
       isCollapsed: false,
@@ -44,6 +50,12 @@ export default {
     setTimeout(() => {
       this.isExpanded = true;
     }, 1000);
+    this.$api({
+      url: "index",
+      method: "get",
+    }).then((res) => {
+      this.banner_data = res.data.topBanners || [];
+    });
   },
   methods: {
     closeBanner() {

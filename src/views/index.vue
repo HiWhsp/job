@@ -5,28 +5,38 @@
       <div class="top-nav">
         <!-- 左侧导航菜单 -->
         <div class="top-nav-left">
-          <div class="nav-item">
-            <i class="icon"></i>
+          <div class="nav-item" @click="toNav({ route: '/demand-form' })">
+            <i class="icon">
+              <img src="@/assets/image/icon/home1.png" alt="" />
+            </i>
             售后运维需求表
             <span class="el-icon-arrow-right"></span>
           </div>
-          <div class="nav-item">
-            <i class="icon"></i>
+          <div class="nav-item" @click="toNav({ route: '/demand-form' })">
+            <i class="icon">
+              <img src="@/assets/image/icon/home2.png" alt="" />
+            </i>
             项目产品需求表
             <span class="el-icon-arrow-right"></span>
           </div>
-          <div class="nav-item">
-            <i class="icon"></i>
+          <div class="nav-item" @click="toNav({ route: '/demand-form' })">
+            <i class="icon">
+              <img src="@/assets/image/icon/home3.png" alt="" />
+            </i>
             项目融资表
             <span class="el-icon-arrow-right"></span>
           </div>
-          <div class="nav-item">
-            <i class="icon"></i>
+          <div class="nav-item" @click="toNav({ route: '/demand-form' })">
+            <i class="icon">
+              <img src="@/assets/image/icon/home4.png" alt="" />
+            </i>
             项目转让表
             <span class="el-icon-arrow-right"></span>
           </div>
-          <div class="nav-item">
-            <i class="icon"></i>
+          <div class="nav-item" @click="toNav({ route: '/demand-form' })">
+            <i class="icon">
+              <img src="@/assets/image/icon/home4.png" alt="" />
+            </i>
             产品回收利用表
             <span class="el-icon-arrow-right"></span>
           </div>
@@ -41,11 +51,15 @@
 
         <!-- 右侧登录区域 -->
         <div class="top-nav-right">
-          <div class="top-nav-right-top" v-if="false">
+          <div class="top-nav-right-top" v-if="!baseInfo.id">
             <div class="greeting">您好，请登录/注册</div>
             <div class="login-box">
               <div class="login-btn" @click="showLogin">登录</div>
               <div class="register-btn" @click="showRegister">注册</div>
+            </div>
+            <!-- 测试完善信息弹框按钮 -->
+            <div class="profile-complete-btn" @click="showProfileComplete">
+              完善信息
             </div>
           </div>
           <div class="top-nav-right-top" v-else>
@@ -63,11 +77,14 @@
               </div>
             </div>
             <div class="item2">
-              <div class="item2-item">
+              <div
+                class="item2-item"
+                @click="toNav({ route: '/service-list' })"
+              >
                 <img src="@/assets/image/icon/gd.png" alt="" />
                 <p>我的工单</p>
               </div>
-              <div class="item2-item">
+              <div class="item2-item" @click="toNav({ route: '/demand-list' })">
                 <img src="@/assets/image/icon/yq.png" alt="" />
                 <p>我的需求</p>
               </div>
@@ -81,20 +98,18 @@
                 <i class="notice-icon"></i>
                 <span>通知公告</span>
               </div>
-              <span class="more">查看更多 <i class="el-icon-arrow-right"></i></span>
+              <span class="more" @click="toNav({ route: '/my-message' })"
+                >查看更多 <i class="el-icon-arrow-right"></i
+              ></span>
             </div>
             <div class="notice-list">
-              <div class="notice-item ellipsis">
-                通知公告展示文字内容通知公告展示通知公告展示文字内容通知公告展示
-              </div>
-              <div class="notice-item ellipsis">
-                通知公告展示文字内容通知公告展示通知公告展示文字内容通知公告展示
-              </div>
-              <div class="notice-item ellipsis">
-                通知公告展示文字内容通知公告展示通知公告展示文字内容通知公告展示
-              </div>
-              <div class="notice-item ellipsis">
-                通知公告展示文字内容通知公告展示通知公告展示文字内容通知公告展示
+              <div
+                class="notice-item ellipsis"
+                v-for="item in (vuex_config.newsList || []).slice(0, 4)"
+                :key="item.id"
+                @click="toNav({ route: '/my-message' })"
+              >
+                {{ item.title }}
               </div>
             </div>
           </div>
@@ -107,15 +122,19 @@
       <div class="system-ads-section">
         <div class="section-header">
           <h2>系统厂商</h2>
-          <span class="more-link">查看更多 <i class="el-icon-arrow-right"></i></span>
+          <span class="more-link" @click="toNav({ route: '/system-manufacturer-list' })"
+            >查看更多 <i class="el-icon-arrow-right"></i
+          ></span>
         </div>
         <div class="ads-grid">
-          <div class="ad-card" v-for="i in 6" :key="'system-' + i">
-            <div class="ad-logo-placeholder"></div>
+          <div class="ad-card" v-for="item in system_list" :key="item.id">
+            <div class="ad-logo-placeholder">
+              <img :src="item.logo" alt="" />
+            </div>
             <div class="ad-content">
-              <h3 class="ellipsis">旭飒新能源</h3>
-              <p>
-                协鑫集成科技股份有限公司成立于2006年，是一家专业从事太阳能电池组件研发、生产和销售的高新技术企业。公司拥有完整的太阳能电池组件产业链，产品广泛应用于分布式光伏发电系统。
+              <h3 class="ellipsis">{{ item.companyName }}</h3>
+              <p class="ellipsis-3">
+                {{ item.describption }}
               </p>
             </div>
           </div>
@@ -126,15 +145,19 @@
       <div class="config-ads-section">
         <div class="section-header">
           <h2>配套厂商</h2>
-          <span class="more-link">查看更多 <i class="el-icon-arrow-right"></i></span>
+          <span class="more-link" @click="toNav({ route: '/system-manufacturer-list' })"
+            >查看更多 <i class="el-icon-arrow-right"></i
+          ></span>
         </div>
         <div class="ads-grid">
-          <div class="ad-card" v-for="i in 9" :key="'config-' + i">
-            <div class="ad-logo-placeholder"></div>
+          <div class="ad-card" v-for="item in config_list" :key="item.id">
+            <div class="ad-logo-placeholder">
+              <img :src="item.logo" alt="" />
+            </div>
             <div class="ad-content">
-              <h3 class="ellipsis">旭飒新能源</h3>
-              <p>
-                协鑫集成科技股份有限公司成立于2006年，是一家专业从事太阳能电池组件研发、生产和销售的高新技术企业。公司拥有完整的太阳能电池组件产业链，产品广泛应用于分布式光伏发电系统。
+              <h3 class="ellipsis">{{ item.companyName }}</h3>
+              <p class="ellipsis-3">
+                {{ item.describption }}
               </p>
             </div>
           </div>
@@ -154,12 +177,18 @@
                 <div class="service-locations">
                   <div class="location-group">
                     <h4>中国</h4>
-                    <div class="location-item" v-for="i in 3" :key="'location-' + i">
-                      <img class="flag" />
+                    <div
+                      class="location-item"
+                      v-for="item in vuex_config.wangdian_list"
+                      :key="item.name"
+                    >
+                      <img class="flag" :src="item.photo" />
                       <div class="location-item-content">
-                        <p class="location-item-title ellipsis-1">XXXXX售后服务网点</p>
+                        <p class="location-item-title ellipsis-1">
+                          {{ item.name }}
+                        </p>
                         <p class="location-item-address ellipsis-1">
-                          山西省大同市云州区XXX号
+                          {{ item.address }}
                         </p>
                       </div>
                     </div>
@@ -172,12 +201,7 @@
               <div class="map-container">
                 <div class="map-placeholder">
                   <!-- 世界地图区域 -->
-                  <div class="continent asia">亚洲</div>
-                  <div class="continent europe">欧洲</div>
-                  <div class="continent africa">非洲</div>
-                  <div class="continent north-america">北美洲</div>
-                  <div class="continent south-america">南美洲</div>
-                  <div class="continent oceania">大洋洲</div>
+                  <img :src="vuex_config.wangdian_photo" alt="" />
                 </div>
               </div>
             </div>
@@ -215,8 +239,14 @@
           <h2>合作品牌</h2>
         </div>
         <div class="brands-grid">
-          <div class="brand-item" v-for="i in 6" :key="'brand-' + i">
-            <div class="brand-logo"></div>
+          <div
+            class="brand-item"
+            v-for="item in vuex_config.hezuo_brand"
+            :key="item.brand_name"
+          >
+            <div class="brand-logo">
+              <img :src="item.url" alt="" />
+            </div>
           </div>
         </div>
       </div>
@@ -224,18 +254,36 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
   name: "index",
   data() {
-    return {};
+    return {
+      // 系统厂商
+      system_list: [],
+      // 配套厂商
+      config_list: [],
+    };
   },
-  computed: {},
+  computed: {
+    ...mapState(["vuex_config", "baseInfo"]),
+  },
 
-  watch: {},
-  created() {
-    this.setView();
+  watch: {
+    $route(to, from) {      
+      if (to.query.is_register) {
+        // 完善信息弹框
+        this.$nextTick(() => {
+          this.showProfileComplete();
+        });
+      }
+    },
   },
   mounted() {
+    this.setView();
+    if (this.$route.query.is_register) {
+      this.showProfileComplete();
+    }
     window.addEventListener("scroll", this.handleScroll);
   },
   beforeDestroy() {
@@ -252,7 +300,34 @@ export default {
         behavior: "smooth",
       });
     },
-    setView() {},
+    setView() {
+      this.$api({
+        url: "companyList",
+        method: "get",
+        data: {
+          page: 1,
+          pageSize: 6,
+          companyType: 1, // 1:系统厂商 2:配套厂商
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.system_list = res.data.list || [];
+        }
+      });
+      this.$api({
+        url: "companyList",
+        method: "get",
+        data: {
+          page: 1,
+          pageSize: 12,
+          companyType: 2, // 1:系统厂商 2:配套厂商
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.config_list = res.data.list;
+        }
+      });
+    },
 
     showLogin() {
       this.$showLogin({
@@ -262,8 +337,24 @@ export default {
         },
       });
     },
+    
+    showProfileComplete() {
+      this.$showProfileComplete({
+        onSubmitSuccess: (data) => {
+          console.log('完善信息提交成功:', data);
+          this.$message.success('信息完善成功，感谢您的参与！');
+        },
+        onClose: () => {
+          console.log('完善信息弹框关闭');
+        }
+      });
+    },
+    
+    toNav(route) {
+      this.$router.push(route.route);
+    },
     showRegister() {
-      this.$showRegister();
+      this.$router.push("/register");
     },
   },
 };

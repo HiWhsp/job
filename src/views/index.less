@@ -50,18 +50,14 @@
       .icon {
         width: 24px;
         height: 24px;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
         margin-right: 12px;
         position: relative;
-
-        &::before {
-          content: "📋";
+        img {
+          width: 100%;
+          height: 100%;
           position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 14px;
+          top: 0;
+          left: 0;
         }
       }
 
@@ -140,7 +136,8 @@
         gap: 14px;
 
         .login-btn,
-        .register-btn {
+        .register-btn,
+        .profile-complete-btn {
           width: 100%;
           height: 32px;
           line-height: 32px;
@@ -168,6 +165,19 @@
 
           &:hover {
             background: #33ae60;
+            color: white;
+            transform: translateY(-2px);
+          }
+        }
+
+        .profile-complete-btn {
+          border: 2px solid #ff8c00;
+          color: #ff8c00;
+          background: white;
+          margin-top: 8px;
+
+          &:hover {
+            background: #ff8c00;
             color: white;
             transform: translateY(-2px);
           }
@@ -442,7 +452,6 @@
       .ad-logo-placeholder {
         width: 100%;
         height: 32px;
-        background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
         margin-bottom: 15px;
         position: relative;
         display: flex;
@@ -450,10 +459,10 @@
         justify-content: center;
         color: white;
         font-weight: bold;
-
-        &::before {
-          content: "LOGO";
-          font-size: 16px;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
         }
       }
 
@@ -655,7 +664,6 @@
                   width: 44px;
                   height: 44px;
                   border-radius: 8px;
-                  background: #33ae60;
                   display: inline-block;
                 }
 
@@ -704,60 +712,16 @@
           .map-placeholder {
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
             border-radius: 15px;
             position: relative;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-
-            &::before {
-              content: "🌍";
-              font-size: 80px;
-              opacity: 0.3;
-            }
-
-            .continent {
-              position: absolute;
-              background: rgba(255, 255, 255, 0.2);
-              border-radius: 20px;
-              padding: 8px 12px;
-              font-size: 12px;
-              color: white;
-              font-weight: bold;
-              backdrop-filter: blur(10px);
-              border: 1px solid rgba(255, 255, 255, 0.3);
-
-              &.asia {
-                top: 20%;
-                right: 20%;
-              }
-
-              &.europe {
-                top: 15%;
-                left: 45%;
-              }
-
-              &.africa {
-                top: 45%;
-                left: 48%;
-              }
-
-              &.north-america {
-                top: 25%;
-                left: 15%;
-              }
-
-              &.south-america {
-                bottom: 25%;
-                left: 25%;
-              }
-
-              &.oceania {
-                bottom: 20%;
-                right: 15%;
-              }
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: contain;
             }
           }
         }
@@ -897,12 +861,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
-
-        &::before {
-          content: "BRAND";
-          font-size: 10px;
-          color: #1976d2;
-          font-weight: bold;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
         }
       }
     }

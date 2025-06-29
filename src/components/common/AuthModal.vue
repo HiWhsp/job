@@ -86,112 +86,6 @@
           </div>
         </div>
       </div>
-
-      <!-- 注册部分 -->
-      <div class="auth-section register-section" v-if="activeTab === 'register'">
-        <div class="auth-header">
-          <h2>注册</h2>
-          <p>
-            （已有账号？<span @click="switchTab('login')" class="switch-link"
-              >点击登录</span
-            >）
-          </p>
-        </div>
-
-        <el-form
-          :model="registerForm"
-          :rules="registerRules"
-          ref="registerForm"
-          class="auth-form"
-        >
-          <el-form-item prop="username">
-            <el-input
-              v-model="registerForm.username"
-              placeholder="请输入昵称"
-              size="large"
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item prop="phone">
-            <el-input
-              v-model="registerForm.phone"
-              placeholder="请输入手机号"
-              size="large"
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item prop="code">
-            <div class="code-input-group">
-              <el-input
-                v-model="registerForm.code"
-                placeholder="验证码"
-                size="large"
-              ></el-input>
-              <el-button
-                plain
-                size="large"
-                :disabled="codeDisabled"
-                @click="getVerifyCode('register')"
-                class="code-btn"
-              >
-                {{ codeText }}
-              </el-button>
-            </div>
-          </el-form-item>
-
-          <el-form-item prop="password">
-            <el-input
-              v-model="registerForm.password"
-              type="password"
-              placeholder="请输入密码"
-              size="large"
-              show-password
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item prop="realName">
-            <el-input
-              v-model="registerForm.realName"
-              placeholder="请输入真实姓名"
-              size="large"
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item prop="company">
-            <el-input
-              v-model="registerForm.company"
-              placeholder="请输入公司全称"
-              size="large"
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item prop="email">
-            <el-input
-              v-model="registerForm.email"
-              placeholder="请输入邮箱地址"
-              size="large"
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item>
-            <el-button
-              type="primary"
-              style="width: 100%"
-              :loading="registerLoading"
-              @click="submitRegister"
-            >
-              注册
-            </el-button>
-          </el-form-item>
-        </el-form>
-
-        <div class="register-footer">
-          <p class="agreement-text">
-            注册即表示你已阅读并同意
-            <span class="link-text">《注册协议与隐私政策》</span>
-          </p>
-        </div>
-      </div>
     </div>
   </el-dialog>
 </template>
@@ -367,7 +261,7 @@ export default {
             url: "web_login",
             method: "post",
             data: {
-              username: this.loginForm.account,
+              account: this.loginForm.account,
               password: this.loginForm.password,
               code: this.loginForm.code,
               type: this.type === "code" ? 2 : 1,
@@ -378,6 +272,7 @@ export default {
                 this.loginLoading = false;
                 this.$message.success("登录成功");
                 this.hide();
+                this.$store.commit("set_baseInfo", res.data);
                 this.$emit("login-success", res.data);
               } else {
                 this.$message.error(res.msg);
@@ -386,35 +281,6 @@ export default {
             .catch((err) => {
               this.loginLoading = false;
             });
-        }
-      });
-    },
-
-    submitRegister() {
-      this.$refs.registerForm.validate((valid) => {
-        if (valid) {
-          this.registerLoading = true;
-
-          this.$api({
-            url: "register",
-            method: "post",
-            data: {
-              name: this.registerForm.username,
-              mobile: this.registerForm.phone,
-              password: this.registerForm.password,
-              real_name: this.registerForm.realName,
-              company_title: this.registerForm.company,
-              email: this.registerForm.email,
-              code: this.registerForm.code,
-            },
-          }).then((res) => {
-            if (res.code == 200) {
-              this.registerLoading = false;
-              this.$message.success("注册成功");
-              this.hide();
-              this.$emit("register-success", this.registerForm);
-            }
-          });
         }
       });
     },

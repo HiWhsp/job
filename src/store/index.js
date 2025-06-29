@@ -221,25 +221,12 @@ export default new Vuex.Store({
       dispatch("query_user");
 
       api({
-        url: "setting",
+        url: "index",
         method: "get",
       }).then((res) => {
         let { code, data } = res;
         if (code === 200) {
           commit("set_vuex_configInfo", data);
-        }
-      });
-
-      //轮播图
-      api({
-        url: "getBanner",
-        method: "get",
-        data: {
-          position: 1, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          commit("set_vuex_banner", res.data);
         }
       });
     },
