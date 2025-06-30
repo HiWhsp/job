@@ -3,7 +3,9 @@
     <div class="page-header">
       <div class="page-header-title">
         <span>我的个人中心</span>
-        <span v-if="showPhoneUpdate || showEmailUpdate" style="margin: 0 10px">></span>
+        <span v-if="showPhoneUpdate || showEmailUpdate" style="margin: 0 10px"
+          >></span
+        >
         <span>{{
           showPhoneUpdate ? "更换手机号" : showEmailUpdate ? "更换邮箱" : ""
         }}</span>
@@ -19,20 +21,32 @@
             class="avatar-uploader"
             accept="image/*"
             :show-file-list="false"
-            :name="UPLOAD_NAME"
-            :action="UPLOAD_ACTION"
             :data="mix_upload_data"
+            :name="mix_upload_name"
+            :action="mix_upload_action"
             :on-success="upload_on_success"
             :before-upload="upload_before_upload"
             :disabled="!isEditing"
           >
-            <img v-if="my_info.image" :src="my_info.image" class="user-avatar" />
+            <img
+              v-if="my_info.avatar"
+              :src="my_info.avatar"
+              class="user-avatar"
+            />
             <img v-else src="@img/my/avatar.png" class="user-avatar" />
           </el-upload>
         </div>
         <div class="user-info-box">
-          <div class="user-name">{{ my_info.name || "用户名" }}</div>
-          <div class="user-level"><img src="@img/my/no-vip.png" alt="" /> 个人会员</div>
+          <div class="user-name">{{ my_info.realname || "用户名" }}</div>
+          <div class="user-level">
+            <img
+              src="@img/my/no-vip.png"
+              alt=""
+              v-if="my_info.userLevel == 0"
+            />
+            <img src="@img/my/vip-active.png" alt="" v-else />
+            {{ levelName }}
+          </div>
         </div>
         <div class="user-logout-box">
           <el-button @click="logout">退出登录</el-button>
@@ -49,23 +63,39 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="昵称：">
-                <el-input v-model="my_info.name" clearable :disabled="!isEditing" />
+                <el-input
+                  v-model="my_info.nickname"
+                  clearable
+                  :disabled="!isEditing"
+                />
               </el-form-item>
               <el-form-item label="姓名：">
-                <el-input v-model="my_info.real_name" clearable :disabled="!isEditing" />
+                <el-input
+                  v-model="my_info.realname"
+                  clearable
+                  :disabled="!isEditing"
+                />
               </el-form-item>
               <el-form-item label="公司：">
                 <el-input
-                  v-model="my_info.company_title"
+                  v-model="my_info.company_name"
                   clearable
                   :disabled="!isEditing"
                 />
               </el-form-item>
               <el-form-item label="职位：">
-                <el-input v-model="my_info.position" clearable :disabled="!isEditing" />
+                <el-input
+                  v-model="my_info.position"
+                  clearable
+                  :disabled="!isEditing"
+                />
               </el-form-item>
               <el-form-item label="手机号：">
-                <el-input v-model="my_info.mobile" disabled style="width: 70%" />
+                <el-input
+                  v-model="my_info.mobile"
+                  disabled
+                  style="width: 70%"
+                />
                 <el-button
                   type="text"
                   class="change-phone-btn"
@@ -79,7 +109,12 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="邮箱：">
-                <el-input v-model="my_info.email" clearable disabled style="width: 70%" />
+                <el-input
+                  v-model="my_info.email"
+                  clearable
+                  disabled
+                  style="width: 70%"
+                />
                 <el-button
                   type="text"
                   class="change-phone-btn"
@@ -89,7 +124,11 @@
                 >
               </el-form-item>
               <el-form-item label="地址：">
-                <el-input v-model="my_info.address" clearable :disabled="!isEditing" />
+                <el-input
+                  v-model="my_info.address"
+                  clearable
+                  :disabled="!isEditing"
+                />
               </el-form-item>
               <el-form-item label="简介：">
                 <el-input
@@ -105,43 +144,42 @@
           <el-row>
             <el-col :span="24">
               <div class="form-item-title">我属于的类型</div>
-
               <el-form-item label="选择类型：">
-                <el-select
-                  v-model="my_info.types"
-                  multiple
-                  placeholder="请选择类型"
-                  style="width: 400px"
-                  :disabled="!isEditing"
-                >
-                  <el-option label="太阳能光伏组件" value="太阳能光伏组件" />
-                  <el-option label="太阳能光伏逆变器" value="太阳能光伏逆变器" />
-                  <el-option label="其他" value="其他" />
-                </el-select>
+                <div class="requirement-type-section">
+                  <div class="tree-container">
+                    <el-tree
+                      ref="workTypeTree"
+                      :data="finish_select.typeListTree || []"
+                      :props="treeProps"
+                      node-key="id"
+                      show-checkbox
+                      check-strictly
+                      :default-checked-keys="my_info.workType"
+                      @check="handleWorkTypeCheck"
+                      class="work-type-tree"
+                    >
+                    </el-tree>
+                  </div>
+                </div>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
               <div class="form-item-title">我希望平台得到的服务</div>
-              <el-checkbox-group v-model="my_info.services" :disabled="!isEditing">
+              <el-checkbox-group
+                v-model="my_info.requireService"
+                :disabled="!isEditing"
+              >
                 <el-row :gutter="20">
-                  <el-col :span="6"><el-checkbox label="行业分析报告" /></el-col>
-                  <el-col :span="6"><el-checkbox label="寻找客户" /></el-col>
-                  <el-col :span="6"><el-checkbox label="已投建项目转让" /></el-col>
-                  <el-col :span="6"
-                    ><el-checkbox label="参加国内外线上、线下活动"
-                  /></el-col>
-                  <el-col :span="6"><el-checkbox label="国内外售后运维服务" /></el-col>
-                  <el-col :span="6"><el-checkbox label="寻找EPC合作伙伴" /></el-col>
-                  <el-col :span="6"
-                    ><el-checkbox label="寻找投融资机构（资金需求）"
-                  /></el-col>
-                  <el-col :span="6"><el-checkbox label="寻找产品" /></el-col>
-                  <el-col :span="6"><el-checkbox label="新能源回收利用" /></el-col>
-                  <el-col :span="6"
-                    ><el-checkbox label="参加融资沙龙（对接资源）"
-                  /></el-col>
+                  <el-col
+                    :span="6"
+                    v-for="item in finish_select.requireList || []"
+                    :key="item.id"
+                    ><el-checkbox :label="item.id + ''" :value="item.id + ''">{{
+                      item.title
+                    }}</el-checkbox></el-col
+                  >
                 </el-row>
               </el-checkbox-group>
             </el-col>
@@ -151,11 +189,21 @@
               <el-form-item label="技能证书">
                 <el-upload
                   class="certificate-uploader"
-                  action="#"
                   :show-file-list="false"
+                  :data="mix_upload_data"
+                  :name="mix_upload_name"
+                  :action="mix_upload_action"
                   :on-success="upload_certificate_success"
+                  :before-upload="upload_before_upload"
                 >
-                  <i class="el-icon-plus certificate-upload-icon"></i>
+                  <img
+                    v-if="my_info.skillPhoto"
+                    :src="my_info.skillPhoto"
+                    class="user-avatar"
+                  />
+                  <div v-else class="upload-btn">
+                    <i class="upload-icon">+</i>
+                  </div>
                 </el-upload>
               </el-form-item>
             </el-col>
@@ -221,7 +269,9 @@
             </div>
           </div>
           <div class="update-form-actions">
-            <el-button type="primary" @click="confirm_phone_update">确认</el-button>
+            <el-button type="primary" @click="confirm_phone_update"
+              >确认</el-button
+            >
             <el-button @click="cancel_phone_update">取消</el-button>
           </div>
         </div>
@@ -264,7 +314,9 @@
             </div>
           </div>
           <div class="update-form-actions">
-            <el-button type="primary" @click="confirm_email_update">确认</el-button>
+            <el-button type="primary" @click="confirm_email_update"
+              >确认</el-button
+            >
             <el-button @click="cancel_email_update">取消</el-button>
           </div>
         </div>
@@ -284,9 +336,15 @@ export default {
       UPLOAD_ACTION,
       UPLOAD_NAME,
       my_info: {
-        types: [],
-        services: [],
+        workType: [],
+        requireService: [],
       },
+      // 树形结构的配置
+      treeProps: {
+        label: "name_zh",
+        children: "children",
+      },
+      finish_select: [],
       loading: false,
       isEditing: false,
       originalMyInfo: {},
@@ -305,7 +363,19 @@ export default {
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState(["vuex_user"]),
+    levelName() {
+      switch (this.my_info.userLevel) {
+        case 1:
+          return "黄金会员";
+        case 2:
+          return "钻石会员";
+        case 3:
+          return "联合会员";
+        default:
+          return "个人会员";
+      }
+    },
   },
   methods: {
     logout() {
@@ -383,7 +453,9 @@ export default {
       this.resetUpdateForms();
       this.$message.success("邮箱更换成功");
     },
-    throttle_do_submit() {},
+    throttle_do_submit() {
+      this.do_submit();
+    },
     confirm_old_pass() {
       this.$refs.phone_bind_new_set_modal.init();
     },
@@ -392,6 +464,15 @@ export default {
     },
     setView() {
       this.query_user();
+      this.$api({
+        url: "getFinishSelect",
+        method: "get",
+      }).then((res) => {
+        let { code, data, msg } = res;
+        if (code == 200) {
+          this.finish_select = data;
+        }
+      });
     },
     query_user() {
       this.$api({
@@ -400,16 +481,22 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           let data = res.data;
-          this.my_info = Object.assign({ types: [], services: [] }, data);
+          this.my_info = Object.assign(data, {
+            workType: data.workType.split(","),
+            requireService: data.requireService.split(","),
+          });
+          console.log(this.my_info);
           this.originalMyInfo = JSON.parse(JSON.stringify(this.my_info));
-          this.$store.commit("set_vuex_user", res.data);
+          this.$store.commit("set_baseInfo", res.data);
         }
       });
     },
     do_submit() {
       this.loading = true;
+      this.my_info.workType = this.my_info.workType.join(",");
+      this.my_info.requireService = this.my_info.requireService.join(",");
       this.$api({
-        url: "updateUser",
+        url: "editUserInfo",
         method: "post",
         data: this.my_info,
       }).then((res) => {
@@ -425,7 +512,7 @@ export default {
     upload_on_success(res, file) {
       let { code, data, msg } = res;
       if (code == 200) {
-        this.my_info.image = res.data;
+        this.my_info.avatar = res.data.save_url;
       }
     },
     upload_before_upload(file) {
@@ -434,9 +521,20 @@ export default {
     },
     upload_certificate_success(res, file) {
       // 证书上传成功逻辑
+      let { code, data, msg } = res;
+      if (code == 200) {
+        this.my_info.skillPhoto = res.data.save_url;
+      }
+    },
+
+    // 处理工作类型树形选择变化
+    handleWorkTypeCheck(data, checked) {
+      // 获取当前所有选中的节点ID
+      const checkedKeys = this.$refs.workTypeTree.getCheckedKeys();
+      this.my_info.workType = checkedKeys;
     },
   },
-  created() {
+  mounted() {
     this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000);
     this.setView();
   },
