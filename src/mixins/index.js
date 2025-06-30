@@ -6,12 +6,12 @@ export default {
   data() {
     return {
       // 上传
-      mix_upload_name: "img",
+      mix_upload_name: "image",
       // demo: require('@/assets/demo.jpg'),
       mix_upload_action:
         process.env.NODE_ENV !== "production"
-          ? "/api/service.php"
-          : API_ROOT + "/service.php",
+          ? "https://jyla.dx.hdapp.com.cn/api/uploadImage"
+          : "https://jyla.dx.hdapp.com.cn/api/uploadImage",
     };
   },
   computed: {
@@ -34,7 +34,6 @@ export default {
 
     mix_upload_data() {
       let data = {
-        action: "index_localUpload",
         userId: localStorage.getItem("userId") || "",
         token: localStorage.getItem("token") || "",
       };

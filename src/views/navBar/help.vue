@@ -14,50 +14,22 @@
       <div class="sidebar">
         <ul class="nav-menu">
           <li
-            class="nav-item"
-            :class="{ active: activeMenu === 'platform' }"
-            @click="setActiveMenu('platform')"
+            class="nav-item ellipsis-1"
+            :class="{ active: activeMenu.id === item.id }"
+            v-for="item in helpList"
+            :key="item.id"
+            @click="setActiveMenu(item)"
           >
-            平台介绍
-          </li>
-          <li
-            class="nav-item"
-            :class="{ active: activeMenu === 'order' }"
-            @click="setActiveMenu('order')"
-          >
-            下单指引
-          </li>
-          <li
-            class="nav-item"
-            :class="{ active: activeMenu === 'ticket' }"
-            @click="setActiveMenu('ticket')"
-          >
-            工单受付
+            {{ item.title }}
           </li>
         </ul>
       </div>
 
       <!-- 右侧内容区域 -->
       <div class="content-area">
-        <div v-if="activeMenu === 'platform'" class="content-section">
-          <h2 class="section-title">企业认证</h2>
-          <p class="section-text">
-            这里是企业文介绍这里是企业文介绍这里是企业文介绍这里是企业文介绍这里是企业文介绍这里是企业文介绍这里是企业文介绍
-          </p>
-        </div>
-
-        <div v-if="activeMenu === 'order'" class="content-section">
-          <h2 class="section-title">下单指引</h2>
-          <p class="section-text">
-            这里是下单指引的详细说明，包括如何选择商品、如何下单、支付方式等相关信息。
-          </p>
-        </div>
-
-        <div v-if="activeMenu === 'ticket'" class="content-section">
-          <h2 class="section-title">工单受付</h2>
-          <p class="section-text">
-            这里是工单受付的相关说明，包括如何提交工单、处理流程、联系方式等信息。
-          </p>
+        <div class="content-section">
+          <h2 class="section-title">{{ activeMenu.title }}</h2>
+          <p class="section-text" v-html="activeMenu.content"></p>
         </div>
       </div>
     </div>
@@ -69,8 +41,20 @@ export default {
   name: "HelpCenter",
   data() {
     return {
-      activeMenu: "platform", // 默认选中平台介绍
+      activeMenu: "", // 默认选中平台介绍
+      helpList: [],
     };
+  },
+  mounted() {
+    this.$api({
+      url: "helpCenter",
+      method: "get",
+    }).then((res) => {
+      if (res.code == 200) {
+        this.helpList = res.data.list;
+        this.activeMenu = this.helpList[0];
+      }
+    });
   },
   methods: {
     setActiveMenu(menu) {

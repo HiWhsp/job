@@ -79,12 +79,6 @@
     .banner-area {
       width: 100%;
       height: 378px;
-      background: linear-gradient(
-        135deg,
-        #b3e5fc 0%,
-        #4fc3f7 50%,
-        #29b6f6 100%
-      );
       border-radius: 14px;
       overflow: hidden;
       position: relative;
@@ -92,11 +86,27 @@
       .banner-content {
         width: 100%;
         height: 100%;
+        border-radius: 14px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 40px;
         position: relative;
+        .el-carousel {
+          width: 100%;
+          height: 100%;
+          .el-carousel__container {
+            height: 100%;
+          }
+          .el-carousel__item {
+            height: 100%;
+          }
+        }
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 14px;
+          object-fit: cover;
+        }
       }
     }
   }
@@ -356,6 +366,11 @@
   background: #fff;
   border-radius: 14px;
   margin-bottom: 50px;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 @keyframes rotate {

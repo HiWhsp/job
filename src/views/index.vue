@@ -45,7 +45,13 @@
         <!-- 中间横幅区域 -->
         <div class="top-nav-center">
           <div class="banner-area">
-            <div class="banner-content"></div>
+            <div class="banner-content">
+              <el-carousel height="378px">
+                <el-carousel-item v-for="item in vuex_config.mainBanners" :key="item.id">
+                  <img :src="item.url" alt="" />
+                </el-carousel-item>
+              </el-carousel>
+            </div>
           </div>
         </div>
 
@@ -57,16 +63,12 @@
               <div class="login-btn" @click="showLogin">登录</div>
               <div class="register-btn" @click="showRegister">注册</div>
             </div>
-            <!-- 测试完善信息弹框按钮 -->
-            <div class="profile-complete-btn" @click="showProfileComplete">
-              完善信息
-            </div>
           </div>
           <div class="top-nav-right-top" v-else>
             <div class="item1">
               <div class="item1-left">
                 <p>您好，尊敬的会员</p>
-                <p>孙靖翔</p>
+                <p>{{ baseInfo.realname }}</p>
               </div>
               <div class="item1-right">
                 <img src="@img/my/avatar.png" alt="" />
@@ -77,10 +79,7 @@
               </div>
             </div>
             <div class="item2">
-              <div
-                class="item2-item"
-                @click="toNav({ route: '/service-list' })"
-              >
+              <div class="item2-item" @click="toNav({ route: '/service-list' })">
                 <img src="@/assets/image/icon/gd.png" alt="" />
                 <p>我的工单</p>
               </div>
@@ -116,7 +115,12 @@
         </div>
       </div>
 
-      <div class="top-nav-right-bottom"></div>
+      <div class="top-nav-right-bottom">
+        <img
+          :src="vuex_config.mainAdBanner ? vuex_config.mainAdBanner[0].url : ''"
+          alt=""
+        />
+      </div>
 
       <!-- 系统厂商区域 -->
       <div class="system-ads-section">
@@ -255,6 +259,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
+import { log } from "util";
 export default {
   name: "index",
   data() {
@@ -270,7 +275,7 @@ export default {
   },
 
   watch: {
-    $route(to, from) {      
+    $route(to, from) {
       if (to.query.is_register) {
         // 完善信息弹框
         this.$nextTick(() => {
@@ -281,8 +286,20 @@ export default {
   },
   mounted() {
     this.setView();
-    if (this.$route.query.is_register) {
-      this.showProfileComplete();
+    // 判断是否是注册后跳转
+    setTimeout(() => {
+      if (this.$route.query.is_register && !this.baseInfo.id) {
+        this.showProfileComplete();
+      }
+    }, 500);
+    // 判断是否是完善信息后跳转
+    if (localStorage.getItem("needFinish")) {
+      this.$showProfileComplete({
+        onSubmitSuccess: (data) => {
+          localStorage.removeItem("needFinish");
+          location.reload();
+        },
+      });
     }
     window.addEventListener("scroll", this.handleScroll);
   },
@@ -333,23 +350,22 @@ export default {
       this.$showLogin({
         onLoginSuccess: (data) => {
           this.$store.commit("set_baseInfo", data);
+          localStorage.setItem("needFinish", data.needFinish);
           location.reload();
         },
       });
     },
-    
+
     showProfileComplete() {
-      this.$showProfileComplete({
-        onSubmitSuccess: (data) => {
-          console.log('完善信息提交成功:', data);
-          this.$message.success('信息完善成功，感谢您的参与！');
+      this.$showLogin({
+        onLoginSuccess: (data) => {
+          this.$store.commit("set_baseInfo", data);
+          localStorage.setItem("needFinish", data.needFinish);
+          location.reload();
         },
-        onClose: () => {
-          console.log('完善信息弹框关闭');
-        }
       });
     },
-    
+
     toNav(route) {
       this.$router.push(route.route);
     },

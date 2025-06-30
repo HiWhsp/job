@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import store from "@/store/index.js";
 
 // 解决报错
 const originalPush = VueRouter.prototype.push;
@@ -141,7 +142,7 @@ const routes = [
         },
       },
       {
-        path: "/my-company-info",
+        path: "/my-company-info", 
         name: "my-company-info",
         component: my_company_info,
         meta: {
@@ -328,20 +329,14 @@ router.beforeEach((to, from, next) => {
   if (!user_is_login && to.meta.requireAuth) {
     // debugger
     alertErr("请先登录");
-    next();
-    // Vue.prototype.$showLogin({
-    //   onLoginSuccess: (data) => {
-    //     console.log('登录成功:', data)
-    //     // 处理登录成功逻辑
-    //   },
-    //   onRegisterSuccess: (data) => {
-    //     console.log('注册成功:', data)
-    //   },
-    //   onGetCode: ({ type, account }) => {
-    //     console.log('获取验证码:', type, account)
-    //     // 调用实际的验证码接口
-    //   }
-    // });
+    Vue.prototype.$showLogin({
+      onLoginSuccess: (data) => {
+        console.log('登录成功:', data)
+        // 处理登录成功逻辑
+        store.commit("set_baseInfo", data);
+        next();
+      }
+    });
   } else {
     next();
   }

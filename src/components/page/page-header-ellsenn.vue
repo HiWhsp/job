@@ -331,18 +331,18 @@ export default {
     },
 
     mouseoverLang(item) {
-      if (item.title === "商务合作") {
-        this.showContact = true;
-      } else if (item.title === "意见反馈") {
-        this.showLanguage = true;
-      }
+      // if (item.title === "商务合作") {
+      //   this.showContact = true;
+      // } else if (item.title === "意见反馈") {
+      //   this.showLanguage = true;
+      // }
     },
     mouseoutLang(item) {
-      if (item.title === "商务合作") {
-        this.showContact = false;
-      } else if (item.title === "意见反馈") {
-        this.showLanguage = false;
-      }
+      // if (item.title === "商务合作") {
+      //   this.showContact = false;
+      // } else if (item.title === "意见反馈") {
+      //   this.showLanguage = false;
+      // }
     },
 
     //搜索
@@ -374,8 +374,7 @@ export default {
     },
     ///
 
-    setView() {
-    },
+    setView() {},
     mouseoutSearch() {},
     handleSearchInput() {
       this.searchLock = false;

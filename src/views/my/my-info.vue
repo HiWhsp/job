@@ -35,7 +35,7 @@
           <div class="user-level"><img src="@img/my/no-vip.png" alt="" /> 个人会员</div>
         </div>
         <div class="user-logout-box">
-          <el-button @click="$emit('logout')">退出登录</el-button>
+          <el-button @click="logout">退出登录</el-button>
         </div>
       </div>
 
@@ -308,6 +308,10 @@ export default {
     ...mapState([""]),
   },
   methods: {
+    logout() {
+      this.$store.commit("clear_loginInfo");
+      this.$router.push("/");
+    },
     startEdit() {
       this.isEditing = true;
       this.originalMyInfo = JSON.parse(JSON.stringify(this.my_info));

@@ -139,6 +139,7 @@ export default new Vuex.Store({
       localStorage.removeItem('userInfo');
       localStorage.removeItem('baseInfo');
       localStorage.removeItem('token');
+      localStorage.removeItem("needFinish");
       location.reload();
     },
 

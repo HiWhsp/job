@@ -15,25 +15,20 @@
         <ul class="nav-menu">
           <li
             class="nav-item"
-            :class="{ active: activeMenu === 'platform' }"
-            @click="setActiveMenu('platform')"
+            v-for="(item, index) in cooperationList"
+            :key="index"
+            :class="{ active: activeMenu === index }"
+            @click="setActiveMenu(index)"
           >
-            广告投放
-          </li>
-          <li
-            class="nav-item"
-            :class="{ active: activeMenu === 'order' }"
-            @click="setActiveMenu('order')"
-          >
-            区域服务商合作
+            {{ item }}
           </li>
         </ul>
       </div>
 
       <!-- 右侧内容区域 -->
       <div class="content-area">
-        <div v-if="activeMenu === 'platform'" class="content-section">
-          <h2 class="section-title">广告投放</h2>
+        <div class="content-section">
+          <h2 class="section-title">{{ cooperationList[activeMenu] }}</h2>
           <div class="content">
             <div class="content-item">
               <div class="content-item-title">姓名：</div>
@@ -41,23 +36,16 @@
             </div>
             <div class="content-item">
               <div class="content-item-title">手机号：</div>
-              <el-input v-model="form.name" placeholder="请输入内容" />
+              <el-input v-model="form.mobile" placeholder="请输入内容" />
             </div>
             <div class="content-item">
               <div class="content-item-title">公司名称：</div>
-              <el-input v-model="form.name" placeholder="请输入内容" />
+              <el-input v-model="form.company_name" placeholder="请输入内容" />
             </div>
           </div>
           <div class="submit-btn">
-            <el-button type="primary">预约咨询</el-button>
+            <el-button type="primary" @click="submitForm">预约咨询</el-button>
           </div>
-        </div>
-
-        <div v-if="activeMenu === 'order'" class="content-section">
-          <h2 class="section-title">下单指引</h2>
-          <p class="section-text">
-            这里是下单指引的详细说明，包括如何选择商品、如何下单、支付方式等相关信息。
-          </p>
         </div>
       </div>
     </div>
@@ -69,17 +57,44 @@ export default {
   name: "cooperation",
   data() {
     return {
-      activeMenu: "platform", // 默认选中平台介绍
+      activeMenu: {}, // 默认选中平台介绍
+      cooperationList: [],
       form: {
         name: "",
-        phone: "",
-        company: "",
+        mobile: "",
+        company_name: "",
       },
     };
   },
+  mounted() {
+    this.$api({
+      url: "someList",
+      method: "get",
+    }).then((res) => {
+      this.cooperationList = res.data.bussinessType;
+      this.activeMenu = Object.keys(this.cooperationList)[0];
+    });
+  },
   methods: {
-    setActiveMenu(menu) {
-      this.activeMenu = menu;
+    setActiveMenu(index) {
+      this.activeMenu = index;
+    },
+    submitForm() {
+      this.$api({
+        url: "addShangwu",
+        method: "post",
+        data: {
+          ...this.form,
+          type_id: this.activeMenu,
+        },
+      }).then((res) => {
+        this.$message.success("提交成功");
+        this.form = {
+          name: "",
+          mobile: "",
+          company_name: "",
+        };
+      });
     },
   },
 };

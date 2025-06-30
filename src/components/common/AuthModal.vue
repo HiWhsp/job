@@ -272,7 +272,6 @@ export default {
                 this.loginLoading = false;
                 this.$message.success("登录成功");
                 this.hide();
-                this.$store.commit("set_baseInfo", res.data);
                 this.$emit("login-success", res.data);
               } else {
                 this.$message.error(res.msg);

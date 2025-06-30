@@ -15,17 +15,12 @@
         <ul class="nav-menu">
           <li
             class="nav-item"
-            :class="{ active: activeMenu === 'function' }"
-            @click="setActiveMenu('function')"
+            :class="{ active: activeMenu.id === item.id }"
+            v-for="item in feddBackTypeList"
+            :key="item.id"
+            @click="setActiveMenu(item)"
           >
-            功能建议
-          </li>
-          <li
-            class="nav-item"
-            :class="{ active: activeMenu === 'other' }"
-            @click="setActiveMenu('other')"
-          >
-            其他建议
+            {{ item.title }}
           </li>
         </ul>
       </div>
@@ -33,7 +28,7 @@
       <!-- 右侧内容区域 -->
       <div class="content-area">
         <div class="content-section">
-          <h2 class="section-title">功能建议</h2>
+          <h2 class="section-title">{{ activeMenu.title }}</h2>
 
           <div class="form-container">
             <div class="form-group">
@@ -43,9 +38,12 @@
                 v-model="feedbackForm.type"
                 placeholder="请选择"
               >
-                <el-option label="功能建议" value="function" />
-                <el-option label="问题反馈" value="bug" />
-                <el-option label="其他" value="other" />
+                <el-option
+                  v-for="(item, index) in feddBackModuleList"
+                  :key="index"
+                  :label="item"
+                  :value="index"
+                />
               </el-select>
             </div>
 
@@ -73,9 +71,25 @@
             <div class="form-group">
               <label class="form-label">上传图片：</label>
               <div class="upload-container">
-                <div class="upload-btn">
-                  <i class="upload-icon">+</i>
-                </div>
+                <el-upload
+                  class="avatar-uploader"
+                  accept="image/*"
+                  :show-file-list="false"
+                  :data="mix_upload_data"
+                  :name="mix_upload_name"
+                  :action="mix_upload_action"
+                  :on-success="upload_on_success"
+                  :before-upload="upload_before_upload"
+                >
+                  <img
+                    v-if="feedbackForm.images.length > 0"
+                    :src="feedbackForm.images[0]"
+                    class="user-avatar"
+                  />
+                  <div v-else class="upload-btn">
+                    <i class="upload-icon">+</i>
+                  </div>
+                </el-upload>
               </div>
             </div>
 
@@ -95,7 +109,9 @@ export default {
   name: "FeedbackCenter",
   data() {
     return {
-      activeMenu: "function", // 默认选中功能建议
+      activeMenu: {}, // 默认选中功能建议
+      feddBackTypeList: [],
+      feddBackModuleList: [],
       feedbackForm: {
         type: "",
         description: "",
@@ -104,13 +120,37 @@ export default {
       },
     };
   },
+  mounted() {
+    console.log(process.env.NODE_ENV);
+
+    this.$api({
+      url: "someList",
+      method: "get",
+    }).then((res) => {
+      this.feddBackTypeList = res.data.feddBackType;
+      this.activeMenu = this.feddBackTypeList[0];
+      this.feddBackModuleList = res.data.feddBackModule;
+    });
+  },
   methods: {
     setActiveMenu(menu) {
       this.activeMenu = menu;
     },
     submitFeedback() {
-      // 提交反馈逻辑
-      console.log("提交反馈:", this.feedbackForm);
+      this.$api({
+        url: "addFeedBack",
+        method: "post",
+        data: {
+          type_id: this.activeMenu.id,
+          module: this.feedbackForm.type,
+          content: this.feedbackForm.description,
+          mobile: this.feedbackForm.contact,
+          images: this.feedbackForm.images.join(","),
+        },
+      }).then((res) => {
+        this.$message.success("提交成功");
+        this.cancelFeedback();
+      });
     },
     cancelFeedback() {
       // 取消/重置表单
@@ -120,6 +160,17 @@ export default {
         contact: "",
         images: [],
       };
+      this.activeMenu = this.feddBackTypeList[0];
+    },
+    upload_on_success(res, file) {
+      let { code, data, msg } = res;
+      if (code == 200) {
+        this.feedbackForm.images.push(res.data.save_url);
+      }
+    },
+    upload_before_upload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 20;
+      return isLt2M;
     },
   },
 };

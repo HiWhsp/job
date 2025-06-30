@@ -19,11 +19,7 @@
       >
         <!-- 选择角色 -->
         <el-form-item label="选择角色：" prop="userType">
-          <el-select
-            v-model="form.userType"
-            placeholder="个人/企业"
-            style="width: 100%"
-          >
+          <el-select v-model="form.userType" placeholder="个人/企业" style="width: 100%">
             <el-option label="个人" value="1"></el-option>
             <el-option label="企业" value="2"></el-option>
           </el-select>
@@ -36,10 +32,7 @@
 
         <!-- 公司 -->
         <el-form-item label="公司：" prop="company_name">
-          <el-input
-            v-model="form.company_name"
-            placeholder="请输入公司名称"
-          ></el-input>
+          <el-input v-model="form.company_name" placeholder="请输入公司名称"></el-input>
         </el-form-item>
 
         <!-- 职务 -->
@@ -51,27 +44,20 @@
         <div class="form-item-title">我属于的类型</div>
         <el-form-item label="选择类型：">
           <div class="requirement-type-section">
-            <el-select
-              v-model="form.workType"
-              placeholder="太阳能光伏组件"
-              multiple
-              style="width: 100%"
-            >
-              <el-option-group
-                v-for="group in finish_select.typeListTree || []"
-                :key="group.id"
-                :label="group.name_zh"
-                :id="group.id"
+            <div class="tree-container">
+              <el-tree
+                ref="workTypeTree"
+                :data="finish_select.typeListTree || []"
+                :props="treeProps"
+                node-key="id"
+                show-checkbox
+                check-strictly
+                :default-checked-keys="form.workType"
+                @check="handleWorkTypeCheck"
+                class="work-type-tree"
               >
-                <el-option
-                  v-for="item in group.children"
-                  :key="item.id"
-                  :label="item.name_zh"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-option-group>
-            </el-select>
+              </el-tree>
+            </div>
           </div>
         </el-form-item>
 
@@ -120,14 +106,16 @@ export default {
         requireService: [], //我希望平台得到的服务
       },
 
+      // 树形结构的配置
+      treeProps: {
+        label: "name_zh",
+        children: "children",
+      },
+
       rules: {
-        userType: [
-          { required: true, message: "请选择角色", trigger: "change" },
-        ],
+        userType: [{ required: true, message: "请选择角色", trigger: "change" }],
         realname: [{ required: true, message: "请输入姓名", trigger: "blur" }],
-        company_name: [
-          { required: true, message: "请输入公司名称", trigger: "blur" },
-        ],
+        company_name: [{ required: true, message: "请输入公司名称", trigger: "blur" }],
         position: [{ required: true, message: "请输入职务", trigger: "blur" }],
       },
     };
@@ -177,8 +165,20 @@ export default {
           requireService: [],
         };
 
+        // 重置树形组件的选中状态
+        if (this.$refs.workTypeTree) {
+          this.$refs.workTypeTree.setCheckedKeys([]);
+        }
+
         this.selectedRequirementType = "";
       });
+    },
+
+    // 处理工作类型树形选择变化
+    handleWorkTypeCheck(data, checked) {
+      // 获取当前所有选中的节点ID
+      const checkedKeys = this.$refs.workTypeTree.getCheckedKeys();
+      this.form.workType = checkedKeys;
     },
 
     handleRequirementTypeChange(value) {
@@ -198,27 +198,30 @@ export default {
           // 构建提交数据
           const submitData = {
             ...this.form,
+            username: this.form.realname,
             workType: this.form.workType.join(","),
             requireService: this.form.requireService.join(","),
-          }
+          };
 
           // 实际API调用示例
           this.$api({
-            url: 'finishUserInfo',
-            method: 'post',
-            data: submitData
-          }).then((res) => {
-            this.submitLoading = false;
-            if (res.code === 200) {
-              this.$message.success('信息完善成功');
-              this.hide();
-              this.$emit('submit-success', submitData);
-            } else {
-              this.$message.error(res.msg || '提交失败');
-            }
-          }).catch(() => {
-            this.submitLoading = false;
-          });
+            url: "finishUserInfo",
+            method: "post",
+            data: submitData,
+          })
+            .then((res) => {
+              this.submitLoading = false;
+              if (res.code === 200) {
+                this.$message.success("信息完善成功");
+                this.hide();
+                this.$emit("submit-success", submitData);
+              } else {
+                this.$message.error(res.msg || "提交失败");
+              }
+            })
+            .catch(() => {
+              this.submitLoading = false;
+            });
         }
       });
     },
@@ -296,78 +299,38 @@ export default {
 }
 
 .requirement-type-section {
-  .tree-selection {
-    border: 1px solid #dcdfe6;
-    border-radius: 4px;
-    padding: 15px;
-    background: #fafafa;
+  margin-top: 8px;
+  /deep/ .el-checkbox__label {
+    font-size: 14px;
+    color: #333;
+  }
 
-    .tree-item {
-      margin-bottom: 10px;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      .sub-items {
-        margin-left: 20px;
-        margin-top: 8px;
-
-        .sub-sub-items {
-          margin-left: 20px;
-          margin-top: 8px;
-        }
-      }
-
-      /deep/ .el-checkbox {
-        margin-bottom: 8px;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-
-      /deep/ .el-checkbox__label {
-        font-size: 14px;
-        color: #333;
-      }
-
-      /deep/ .el-checkbox__input.is-checked .el-checkbox__inner {
-        background-color: #33ae60;
-        border-color: #33ae60;
-      }
-    }
+  /deep/ .el-checkbox__input.is-checked .el-checkbox__inner {
+    background-color: #33ae60;
+    border-color: #33ae60;
   }
 }
 
 .service-checkboxes {
-  .checkbox-row {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 15px;
-    gap: 0 30px;
+  /deep/ .el-checkbox {
+    margin-right: 0;
+    margin-bottom: 10px;
+    flex: 0 0 auto;
+    min-width: 180px;
+  }
 
-    &:last-child {
-      margin-bottom: 0;
-    }
+  /deep/ .el-checkbox__label {
+    font-size: 14px;
+    color: #333;
+    white-space: nowrap;
+  }
 
-    /deep/ .el-checkbox {
-      margin-right: 0;
-      margin-bottom: 10px;
-      flex: 0 0 auto;
-      min-width: 180px;
-    }
-
-    /deep/ .el-checkbox__label {
-      font-size: 14px;
-      color: #333;
-      white-space: nowrap;
-    }
-
-    /deep/ .el-checkbox__input.is-checked .el-checkbox__inner {
-      background-color: #33ae60;
-      border-color: #33ae60;
-    }
+  /deep/ .el-checkbox__input.is-checked .el-checkbox__inner {
+    background-color: #33ae60;
+    border-color: #33ae60;
+  }
+  /deep/ .el-checkbox.is-checked .el-checkbox__label {
+    color: #33ae60;
   }
 }
 

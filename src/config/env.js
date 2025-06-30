@@ -1,6 +1,6 @@
 // import {API_ROOT} from '@/config/env.js'
 
-const ROOT = "https://xinwang.dx.hdapp.com.cn";//vuesc.new.zhishangez.com
+const ROOT = "https://jyla.dx.hdapp.com.cn/";//vuesc.new.zhishangez.com
 
 /**
  * 全局接口请求根域名
@@ -14,11 +14,11 @@ export const SHOP_TYPE = '';
 // 上传
 // 是否开始oss上传  图片上传接口不一样
 export const IS_OPEN_OSS_UPLOAD = false;
-export const UPLOAD_NAME = "img";
+export const UPLOAD_NAME = "image";
 export const UPLOAD_ACTION =
   process.env.NODE_ENV !== "production"
-    ? "/api/service.php"
-    : ROOT + "/service.php";
+    ? ROOT + "api/uploadImage"
+    : "/api/uploadImage";
 
 export const UPLOAD_PARAMS_ACTION = IS_OPEN_OSS_UPLOAD ? "index_ossUpload" : 'index_localUpload';
 // 上传

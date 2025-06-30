@@ -5,6 +5,20 @@
     </div>
 
     <div class="page-ctx">
+      <div class="tab-box">
+        <div class="tab-item" :class="{ active: tabIndex == 0 }" @click="changeTab(0)">
+          <span>全部</span>
+        </div>
+        <div class="tab-item" :class="{ active: tabIndex == 1 }" @click="changeTab(1)">
+          <span>账号通知</span>
+        </div>
+        <div class="tab-item" :class="{ active: tabIndex == 2 }" @click="changeTab(2)">
+          <span>工单通知</span>
+        </div>
+        <div class="tab-item" :class="{ active: tabIndex == 3 }" @click="changeTab(3)">
+          <span>留言通知</span>
+        </div>
+      </div>
       <!-- 顶部标签选择区域 -->
       <div class="tab-header">
         <div class="tab-buttons">
@@ -44,11 +58,11 @@
 
           <!-- 消息内容区域 -->
           <div class="mess-content">
-            <div class="mess-title">{{ item.title }}</div>
+            <div class="mess-title">{{ item.content }}</div>
             <div class="mess-time">{{ item.created_at }}</div>
           </div>
           <div style="color: #33ae60; margin-right: 16px">
-            {{ item.is_read == 0 ? "未读" : "已读" }}
+            {{ item.isRead == 0 ? "未读" : "已读" }}
           </div>
 
           <!-- 右侧删除按钮 -->
@@ -78,10 +92,11 @@ export default {
   components: {},
   data() {
     return {
+      tabIndex: 0,
       messList: [],
       pagination: {
         page: 1,
-        limit: 10,
+        pageSize: 10,
       },
       total: 0,
     };
@@ -103,25 +118,23 @@ export default {
     },
   },
   watch: {},
-  created() {
+  mounted() {
     this.setView();
   },
   methods: {
+    changeTab(index) {
+      this.tabIndex = index;
+      this.setView();
+    },
     setView() {
-      this.messList = [
-        {
-          id: 1,
-          title: "消息1",
-          created_at: "2021-01-01",
-          is_read: 0,
-          selected: false,
-        },
-      ];
-      this.total = 1;
       this.$api({
-        url: "mynotice",
+        url: "myMessageList",
         method: "get",
-        data: this.pagination,
+        data: {
+          page: this.pagination.page,
+          pageSize: this.pagination.pageSize,
+          type: this.tabIndex,
+        },
       }).then((res) => {
         if (res.code == 200) {
           this.messList = res.data.list.map((item) => {
@@ -130,7 +143,7 @@ export default {
               selected: false,
             };
           });
-          this.total = res.data.count;
+          this.total = res.data.totalCount;
         }
       });
     },
@@ -164,15 +177,15 @@ export default {
         type: "warning",
       }).then(() => {
         this.$api({
-          url: "changenotice",
+          url: "markMessagedelete",
           method: "post",
           data: {
             ids: selectedItems.map((item) => item.id).join(","),
-            type: 2,
           },
         }).then((res) => {
           if (res.code == 200) {
             this.setView();
+            this.$message.success("删除成功");
           }
         });
       });
@@ -184,9 +197,9 @@ export default {
         type: "warning",
       }).then(() => {
         this.$api({
-          url: "changenotice",
+          url: "markMessagedelete",
           method: "post",
-          data: { ids: item.id, type: 2 },
+          data: { ids: item.id },
         }).then((res) => {
           if (res.code == 200) {
             this.setView();
@@ -205,12 +218,13 @@ export default {
         return;
       }
       this.$api({
-        url: "changenotice",
+        url: "markMessageRead",
         method: "post",
         data: { ids: selectedItems.map((item) => item.id).join(","), type: 1 },
       }).then((res) => {
         if (res.code == 200) {
           this.setView();
+          this.$message.success("标记已读成功");
         }
       });
     },
