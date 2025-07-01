@@ -15,18 +15,25 @@
         >
           {{ tab.label }}
           <!-- <span class="count"
-            >({{ tab.key === "all" ? demandList.length : getTypeCount(tab.key) }})</span
-          > -->
+              >({{ tab.key === "all" ? demandList.length : getTypeCount(tab.key) }})</span
+            > -->
         </div>
       </div>
 
       <!-- 需求列表 -->
       <div class="demand-list">
-        <el-empty v-if="filteredDemandList.length === 0" description="暂无数据" />
+        <el-empty
+          v-if="demandList.length === 0"
+          description="暂无数据"
+        />
 
-        <div v-for="item in filteredDemandList" :key="item.id" class="demand-item">
+        <div
+          v-for="item in demandList"
+          :key="item.id"
+          class="demand-item"
+        >
           <!-- 售后运维需求 -->
-          <template v-if="item.type === 'maintenance'">
+          <template v-if="item.type == '1'">
             <div class="demand-header">
               <div class="demand-type maintenance">{{ item.typeName }}</div>
               <div class="demand-header-info">
@@ -38,7 +45,9 @@
             <div class="demand-content">
               <div class="demand-title">
                 {{ item.title }}
-                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
+                <button class="detail-btn" @click="viewDetail(item)">
+                  查看详情
+                </button>
               </div>
               <div class="demand-details">
                 <div class="detail-row" v-if="item.company">
@@ -74,7 +83,9 @@
             <div class="demand-content">
               <div class="demand-title">
                 {{ item.title }}
-                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
+                <button class="detail-btn" @click="viewDetail(item)">
+                  查看详情
+                </button>
               </div>
               <div class="demand-details">
                 <div class="detail-row" v-if="item.company">
@@ -102,7 +113,9 @@
             <div class="demand-content">
               <div class="demand-title">
                 {{ item.title }}
-                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
+                <button class="detail-btn" @click="viewDetail(item)">
+                  查看详情
+                </button>
               </div>
               <div class="demand-details">
                 <div class="detail-row" v-if="item.projectType">
@@ -140,7 +153,9 @@
             <div class="demand-content">
               <div class="demand-title">
                 {{ item.title }}
-                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
+                <button class="detail-btn" @click="viewDetail(item)">
+                  查看详情
+                </button>
               </div>
               <div class="demand-details">
                 <div class="detail-row" v-if="item.projectScale">
@@ -178,7 +193,9 @@
             <div class="demand-content">
               <div class="demand-title">
                 {{ item.title }}
-                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
+                <button class="detail-btn" @click="viewDetail(item)">
+                  查看详情
+                </button>
               </div>
               <div class="demand-details">
                 <div class="detail-row" v-if="item.company">
@@ -218,7 +235,9 @@
               </div>
             </div>
             <div class="demand-actions">
-              <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
+              <button class="detail-btn" @click="viewDetail(item)">
+                查看详情
+              </button>
             </div>
           </template>
         </div>
@@ -231,7 +250,7 @@
 export default {
   data() {
     return {
-      activeTab: "all",
+      activeTab: "",
       demandList: [
         {
           id: 1,
@@ -302,7 +321,7 @@ export default {
         },
       ],
       tabs: [
-        { key: "all", label: "全部" },
+        { key: "", label: "全部" },
         { key: "maintenance", label: "售后运维" },
         { key: "photovoltaic", label: "光伏充电桩" },
         { key: "energy_storage", label: "新能源光储充" },
@@ -311,15 +330,25 @@ export default {
       ],
     };
   },
-  computed: {
-    filteredDemandList() {
-      if (this.activeTab === "all") {
-        return this.demandList;
-      }
-      return this.demandList.filter((item) => item.type === this.activeTab);
-    },
+  computed: {},
+  mounted() {
+    this.setView();
   },
   methods: {
+    setView() {
+      this.$api({
+        url: "myCreateWorkorderList",
+        method: "get",
+        data: {
+          workOrderType: this.activeTab,
+        },
+      }).then((res) => {
+        let { code, msg, data } = res;
+        if (code == 200) {
+          this.demandList = data.list;
+        }
+      });
+    },
     switchTab(tab) {
       this.activeTab = tab;
     },

@@ -12,7 +12,7 @@
           <label>旧密码：</label>
           <div class="input-box">
             <el-input
-              v-model="phoneUpdateForm.oldPhone"
+              v-model="phoneUpdateForm.oldPassword"
               placeholder="请输入旧密码"
               class="form-input"
             />
@@ -22,7 +22,7 @@
           <label>新密码：</label>
           <div class="input-box">
             <el-input
-              v-model="phoneUpdateForm.newPhone"
+              v-model="phoneUpdateForm.newPassword"
               placeholder="请输入新密码"
               class="form-input"
             />
@@ -39,8 +39,10 @@
           </div>
         </div>
         <div class="update-form-actions">
-          <el-button type="primary" @click="confirm_phone_update">确认</el-button>
-          <el-button @click="cancel_phone_update">取消</el-button>
+          <el-button type="primary" @click="confirm_phone_update"
+            >确认</el-button
+          >
+          <el-button @click="resetUpdateForms">取消</el-button>
         </div>
       </div>
     </div>
@@ -67,61 +69,28 @@ export default {
         newPassword: "",
         confirmPassword: "",
       };
-      this.emailUpdateForm = {
-        oldEmail: "",
-        newEmail: "",
-        code: "",
-      };
-    },
-    cancel_phone_update() {
-      this.phoneUpdateForm = {
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      };
     },
     confirm_phone_update() {
       // 验证手机号修改逻辑
-      if (!this.phoneUpdateForm.newPhone || !this.phoneUpdateForm.code) {
+      if (
+        !this.phoneUpdateForm.newPassword ||
+        !this.phoneUpdateForm.confirmPassword
+      ) {
         this.$message.error("请填写完整信息");
         return;
       }
-      // 这里应该调用API验证并更新手机号
-      this.my_info.mobile = this.phoneUpdateForm.newPhone;
-      this.showPhoneUpdate = false;
-      this.resetUpdateForms();
-      this.$message.success("手机号更换成功");
-    },
-    open_email_update() {
-      this.showEmailUpdate = true;
-      this.emailUpdateForm.oldEmail = this.my_info.email;
-    },
-    cancel_email_update() {
-      this.showEmailUpdate = false;
-      this.emailUpdateForm = {
-        oldEmail: "",
-        newEmail: "",
-        code: "",
-      };
-    },
-    throttle_do_submit() {},
-    do_submit() {
-      this.loading = true;
       this.$api({
-        url: "updateUser",
+        url: "editUserPassword",
         method: "post",
-        data: this.my_info,
+        data: this.phoneUpdateForm,
       }).then((res) => {
         let { code, msg, data } = res;
-        this.loading = false;
         if (code == 200) {
-          this.$message.success("保存成功");
+          this.$message.success("密码修改成功");
+          this.resetUpdateForms();
         }
       });
     },
-  },
-  created() {
-    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000);
   },
 };
 </script>

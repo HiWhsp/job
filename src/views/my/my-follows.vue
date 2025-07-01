@@ -10,13 +10,15 @@
           <div class="card-content">
             <div class="logo-section">
               <div class="logo-icon">
-                <img src="@/assets/img/ellsenn/share/collect-active.png" alt="logo" />
+                <img :src="item.logo" alt="logo" />
               </div>
             </div>
             <div class="card-title">
-              {{ item.title || "杭申电气" }}
+              {{ item.companyName }}
             </div>
-            <div class="card-subtitle">取消关注</div>
+            <div class="card-subtitle" @click="handleCancelCollect(item)">
+              取消关注
+            </div>
           </div>
         </div>
       </div>
@@ -41,18 +43,7 @@ export default {
   components: {},
   data() {
     return {
-      messList: [
-        {
-          feed_type: "留言",
-          dtTime: "2025-06-08 10:00:00",
-          content: "这是一条留言",
-        },
-        {
-          feed_type: "留言",
-          dtTime: "2025-06-08 10:00:00",
-          content: "这是一条留言",
-        },
-      ],
+      messList: [],
       pagination: {
         page: 1,
         limit: 10,
@@ -70,13 +61,13 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: "getMyCollect",
+        url: "myFollowCompanyList",
         method: "get",
         data: this.pagination,
       }).then((res) => {
         if (res.code == 200) {
           this.messList = res.data.list;
-          this.total = res.data.count;
+          this.total = res.data.totalCount;
         }
       });
     },
@@ -86,11 +77,12 @@ export default {
     },
     handleCancelCollect(item) {
       this.$api({
-        url: "qxCollect",
+        url: "followCompany",
         method: "post",
-        data: { ids: item.id },
+        data: { type: 2, companyId: item.id },
       }).then((res) => {
         if (res.code == 200) {
+          this.$message.success("取消关注成功");
           this.setView();
         }
       });

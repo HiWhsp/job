@@ -12,8 +12,8 @@
         :rules="rules"
       >
         <h3>选择填报类型</h3>
-        <el-form-item label="类型" prop="demand_type">
-          <el-select v-model="form.demand_type" placeholder="请选择填报类型">
+        <el-form-item label="类型" prop="workOrderType">
+          <el-select v-model="form.workOrderType" placeholder="请选择填报类型">
             <el-option label="售后运维需求表" value="1"></el-option>
             <el-option label="项目产品需求表" value="2"></el-option>
             <el-option label="项目融资表" value="3"></el-option>
@@ -24,29 +24,33 @@
 
         <h3>完善需求信息</h3>
 
-        <el-form-item label="企业名称" prop="company_name">
+        <el-form-item label="企业名称" prop="companyNmae">
           <el-input
-            v-model="form.company_name"
+            v-model="form.companyNmae"
             placeholder="请输入企业名称"
             clearable
           ></el-input>
         </el-form-item>
 
         <el-form-item label="地址" prop="address">
-          <el-input v-model="form.address" placeholder="请输入地址" clearable></el-input>
+          <el-input
+            v-model="form.address"
+            placeholder="请输入地址"
+            clearable
+          ></el-input>
         </el-form-item>
 
-        <el-form-item label="联系人" prop="contact_person">
+        <el-form-item label="联系人" prop="contactPerson">
           <el-input
-            v-model="form.contact_person"
+            v-model="form.contactPerson"
             placeholder="请输入联系人"
             clearable
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="联系电话" prop="contact_phone">
+        <el-form-item label="联系电话" prop="contact">
           <el-input
-            v-model="form.contact_phone"
+            v-model="form.contact"
             placeholder="请输入联系电话"
             clearable
           ></el-input>
@@ -61,40 +65,40 @@
         </el-form-item>
 
         <!-- 售后运维需求表 -->
-        <template v-if="form.demand_type === '1'">
-          <el-form-item label="设备类型" prop="equipment_type">
-            <el-radio-group v-model="form.equipment_type">
-              <el-radio label="photovoltaic">光伏</el-radio>
-              <el-radio label="module">组件</el-radio>
-              <el-radio label="inverter">逆变</el-radio>
-              <el-radio label="other">其他</el-radio>
+        <template v-if="form.workOrderType === '1'">
+          <el-form-item label="设备类型" prop="deviceType">
+            <el-radio-group v-model="form.deviceType">
+              <el-radio label="1">光伏</el-radio>
+              <el-radio label="2">组件</el-radio>
+              <el-radio label="3">逆变</el-radio>
+              <el-radio label="4">其他</el-radio>
             </el-radio-group>
             <el-input
-              v-if="form.equipment_type === 'other'"
-              v-model="form.equipment_type_other"
+              v-if="form.deviceType == '4'"
+              v-model="form.otherDevice"
               placeholder="请输入其他设备类型"
               style="width: 190px; margin-left: 20px"
             ></el-input>
           </el-form-item>
-          <el-form-item label="设备规格" prop="equipment_spec">
+          <el-form-item label="设备规格" prop="deviceGuige">
             <el-input
-              v-model="form.equipment_spec"
+              v-model="form.deviceGuige"
               placeholder="请输入设备规格"
               clearable
             ></el-input>
           </el-form-item>
 
-          <el-form-item label="设备位置" prop="equipment_location">
+          <el-form-item label="设备位置" prop="deviceAddress">
             <el-input
-              v-model="form.equipment_location"
+              v-model="form.deviceAddress"
               placeholder="请输入设备位置"
               clearable
             ></el-input>
           </el-form-item>
 
-          <el-form-item label="故障现象" prop="fault_description">
+          <el-form-item label="故障现象" prop="faultDescription">
             <el-input
-              v-model="form.fault_description"
+              v-model="form.faultDescription"
               placeholder="请输入故障现象"
               clearable
             ></el-input>
@@ -102,7 +106,7 @@
         </template>
 
         <!-- 项目产品需求表 -->
-        <template v-if="form.demand_type === '2'">
+        <template v-if="form.workOrderType === '2'">
           <h3>录入产品信息</h3>
           <div class="product-table">
             <table class="product-info-table">
@@ -128,14 +132,14 @@
                   </td>
                   <td>
                     <el-input
-                      v-model="item.spec"
+                      v-model="item.guige"
                       placeholder="请输入"
                       size="small"
                     ></el-input>
                   </td>
                   <td>
                     <el-input
-                      v-model="item.quantity"
+                      v-model="item.num"
                       placeholder="请输入"
                       size="small"
                     ></el-input>
@@ -169,44 +173,44 @@
         </template>
 
         <!-- 项目融资表 -->
-        <template v-if="form.demand_type === '3'">
+        <template v-if="form.workOrderType === '3'">
           <h3>项目基本信息</h3>
 
-          <el-form-item label="项目名称" prop="project_name">
+          <el-form-item label="项目名称" prop="projectName">
             <el-input
-              v-model="form.project_name"
+              v-model="form.projectName"
               placeholder="请输入"
               clearable
             ></el-input>
           </el-form-item>
 
-          <el-form-item label="项目地点" prop="project_location">
+          <el-form-item label="项目地点" prop="projectAddress">
             <el-input
-              v-model="form.project_location"
+              v-model="form.projectAddress"
               placeholder="请输入"
               clearable
             ></el-input>
           </el-form-item>
 
-          <el-form-item label="项目规模" prop="project_scale">
+          <el-form-item label="项目规模" prop="projectScale">
             <el-input
-              v-model="form.project_scale"
+              v-model="form.projectScale"
               placeholder="请输入"
               clearable
             ></el-input>
           </el-form-item>
 
-          <el-form-item label="项目类型" prop="project_type">
+          <el-form-item label="项目类型" prop="projectTypeStr">
             <el-input
-              v-model="form.project_type"
+              v-model="form.projectTypeStr"
               placeholder="请输入"
               clearable
             ></el-input>
           </el-form-item>
 
-          <el-form-item label="项目进度" prop="project_progress">
+          <el-form-item label="项目进度" prop="projectProgress">
             <el-input
-              v-model="form.project_progress"
+              v-model="form.projectProgress"
               placeholder="请输入"
               clearable
             ></el-input>
@@ -214,36 +218,36 @@
         </template>
 
         <!-- 项目转让表 -->
-        <template v-if="form.demand_type === '4'">
+        <template v-if="form.workOrderType === '4'">
           <h3>项目基本信息</h3>
 
-          <el-form-item label="项目名称" prop="transfer_project_name">
+          <el-form-item label="项目名称" prop="projectName">
             <el-input
-              v-model="form.transfer_project_name"
+              v-model="form.projectName"
               placeholder="请输入"
               clearable
             ></el-input>
           </el-form-item>
 
-          <el-form-item label="项目地点" prop="transfer_project_location">
+          <el-form-item label="项目地点" prop="projectAddress">
             <el-input
-              v-model="form.transfer_project_location"
+              v-model="form.projectAddress"
               placeholder="请输入"
               clearable
             ></el-input>
           </el-form-item>
 
-          <el-form-item label="项目规模" prop="transfer_project_scale">
+          <el-form-item label="项目规模" prop="projectScale">
             <el-input
-              v-model="form.transfer_project_scale"
+              v-model="form.projectScale"
               placeholder="请输入"
               clearable
             ></el-input>
           </el-form-item>
 
-          <el-form-item label="项目类型" prop="transfer_project_type">
+          <el-form-item label="项目类型" prop="projectTypeStr">
             <el-input
-              v-model="form.transfer_project_type"
+              v-model="form.projectTypeStr"
               placeholder="请输入"
               clearable
             ></el-input>
@@ -251,7 +255,7 @@
         </template>
 
         <!-- 产品回收利用表 -->
-        <template v-if="form.demand_type === '5'">
+        <template v-if="form.workOrderType === '5'">
           <h3>录入回收产品信息</h3>
           <div class="product-table">
             <table class="product-info-table">
@@ -352,9 +356,11 @@
         <el-form-item label="上传图片" prop="images">
           <el-upload
             class="upload-demo"
-            action="#"
-            :auto-upload="false"
+            accept="image/*"
             :file-list="form.images"
+            :data="mix_upload_data"
+            :name="mix_upload_name"
+            :action="mix_upload_action"
             list-type="picture-card"
             :on-change="handleImageChange"
           >
@@ -362,10 +368,10 @@
           </el-upload>
         </el-form-item>
 
-        <el-form-item label="补充说明" prop="additional_notes">
+        <el-form-item label="补充说明" prop="remark">
           <el-input
             type="textarea"
-            v-model="form.additional_notes"
+            v-model="form.remark"
             placeholder="详细描述您的问题"
             :rows="4"
             maxlength="500"
@@ -389,54 +395,28 @@ export default {
   data() {
     return {
       form: {
-        demand_type: "1",
-        company_name: "",
+        workOrderType: "1",
+        companyNmae: "",
         address: "",
-        contact_person: "",
-        contact_phone: "",
+        contactPerson: "",
+        contact: "",
         email: "",
-        equipment_type: "",
-        equipment_type_other: "",
-        equipment_spec: "",
-        equipment_location: "",
-        fault_description: "",
+        deviceType: "",
+        otherDevice: "",
+        deviceGuige: "",
+        deviceAddress: "",
+        faultDescription: "",
         images: [],
-        additional_notes: "",
-        productList: [
-          {
-            name: "光伏组件",
-            spec: "",
-            quantity: "",
-            description: "",
-          },
-          {
-            name: "",
-            spec: "",
-            quantity: "",
-            description: "",
-          },
-        ],
+        remark: "",
+        productList: [],
         // 项目融资表字段
-        project_name: "",
-        project_location: "",
-        project_scale: "",
-        project_type: "",
-        project_progress: "",
-        // 项目转让表字段
-        transfer_project_name: "",
-        transfer_project_location: "",
-        transfer_project_scale: "",
-        transfer_project_type: "",
+        projectName: "",
+        projectLocation: "",
+        projectScale: "",
+        projectType: "",
+        projectProgress: "",
         // 产品回收利用表数据
         recycleList: [
-          {
-            type: "光伏组件",
-            image: "",
-            imageName: "",
-            brand: "",
-            quantity: "",
-            spec: "",
-          },
           {
             type: "",
             image: "",
@@ -449,10 +429,17 @@ export default {
       },
       uploadAction: "#", // 上传接口地址，根据实际情况修改
       rules: {
-        demand_type: [{ required: true, message: "请选择填报类型", trigger: "change" }],
-        company_name: [{ required: true, message: "请输入企业名称", trigger: "blur" }],
-        contact_person: [{ required: true, message: "请输入联系人", trigger: "blur" }],
-        contact_phone: [
+        workOrderType: [
+          { required: true, message: "请选择填报类型", trigger: "change" },
+        ],
+        address: [{ required: true, message: "请输入地址", trigger: "blur" }],
+        companyNmae: [
+          { required: true, message: "请输入企业名称", trigger: "blur" },
+        ],
+        contactPerson: [
+          { required: true, message: "请输入联系人", trigger: "blur" },
+        ],
+        contact: [
           { required: true, message: "请输入联系电话", trigger: "blur" },
           {
             pattern: /^1[3-9]\d{9}$/,
@@ -464,7 +451,7 @@ export default {
           { required: true, message: "请输入邮箱地址", trigger: "blur" },
           { type: "email", message: "请输入正确的邮箱格式", trigger: "blur" },
         ],
-        equipment_type: [
+        deviceType: [
           { required: true, message: "请选择设备类型", trigger: "change" },
           { validator: this.validateEquipmentType, trigger: "change" },
         ],
@@ -473,16 +460,16 @@ export default {
   },
   mounted() {},
   watch: {
-    "form.equipment_type"(newVal) {
+    "form.deviceType"(newVal) {
       // 当设备类型改变时，清空其他设备类型的输入
-      if (newVal !== "other") {
-        this.form.equipment_type_other = "";
+      if (newVal !== "4") {
+        this.form.otherDevice = "";
       }
     },
   },
   methods: {
     validateEquipmentType(rule, value, callback) {
-      if (value === "other" && !this.form.equipment_type_other) {
+      if (value == "4" && !this.form.otherDevice) {
         callback(new Error("请输入具体的设备类型"));
       } else {
         callback();
@@ -494,9 +481,33 @@ export default {
     submitForm() {
       this.$refs.formRef.validate((valid) => {
         if (valid) {
-          console.log("表单数据:", this.form);
-          // 这里可以调用API提交表单数据
-          this.$message.success("提交成功！");
+          console.log(this.form.images);
+          if (this.form.images.length > 0) {
+            this.form.images.forEach((item) => {
+              this.form.photos ? this.form.photos.push(item.response.data.save_url) : (this.form.photos = [item.response.data.save_url]);
+              this.form.photosJson ? this.form.photosJson.push({  
+                name: item.name,
+                url: item.response.data.save_url,
+              }) : (this.form.photosJson = [{
+                name: item.name,
+                url: item.response.data.save_url,
+              }]);
+            });
+            this.form.photos = JSON.stringify(this.form.photos);
+            this.form.photosJson = JSON.stringify(this.form.photosJson);
+          }
+          if (this.form.workOrderType == "2") {
+            this.form.productJson = JSON.stringify(this.form.productList);
+          } else if (this.form.workOrderType == "5") {
+            // this.form.recycleJson = JSON.stringify(this.form.recycleList);
+          }
+          this.$api({
+            url: "createWorkorder",
+            method: "post",
+            data: this.form,
+          }).then((res) => {
+            let { code, msg, data } = res;
+          });
         } else {
           console.log("表单验证失败");
           this.$message.error("请完善必填信息");
@@ -512,8 +523,8 @@ export default {
     addProductRow() {
       this.form.productList.push({
         name: "",
-        spec: "",
-        quantity: "",
+        guige: "",
+        num: "",
         description: "",
       });
     },
