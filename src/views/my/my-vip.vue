@@ -8,53 +8,59 @@
       <div class="user-info-section">
         <div class="user-avatar-info">
           <div class="avatar-wrapper">
-            <img :src="my_info.image" alt="用户头像" class="user-avatar" />
+            <img :src="my_info.avatar" alt="用户头像" class="user-avatar" />
           </div>
           <div class="user-details">
             <div class="phone-number">{{ my_info.mobile || "" }}</div>
             <div class="vip-status">
               <span
                 class="vip-badge"
-                :class="{ 'vip-badge-active': my_info.is_vip == 1 }"
+                :class="{ 'vip-badge-active': my_info.userLevel != 0 }"
               >
                 <img
                   src="@/assets/img/my/no-vip.png"
                   alt="VIP会员"
-                  v-if="my_info.is_vip == 0"
+                  v-if="my_info.userLevel == 0"
                 />
                 <img src="@/assets/img/my/vip-active.png" alt="VIP会员" v-else />
-                VIP会员
+                {{ levelName }}
               </span>
-              <span class="password-tip" v-if="my_info.is_vip == 0"
+              <span class="password-tip" v-if="my_info.userLevel == 0"
                 >您还没有开通付费VIP会员</span
               >
               <span class="password-tip" v-else
-                >会员已开通 | 会员到期时间：
-                <span class="vip-time">{{ my_info.expiration_date || "--" }}</span>
+                >{{ levelName }}会员已开通 | 会员到期时间：
+                <span class="vip-time">{{ my_info.userLevelEndTime || "--" }}</span>
                 | <span class="vip-renew">续费</span>
               </span>
             </div>
           </div>
         </div>
-        <button class="open-vip-btn" @click="openVipNow" v-if="my_info.is_vip == 0">
+        <button class="open-vip-btn" @click="openVipNow" v-if="my_info.userLevel == 0">
           立即开通
         </button>
-        <div class="open-vip-btn-box">
-          <button class="open-vip-home" @click="go_my_home" v-if="my_info.is_vip == 1">
-            我的主页
-          </button>
-          <button class="open-vip-renew" @click="openVipNow" v-if="my_info.is_vip == 1">
-            续费会员
-          </button>
+        <div class="open-vip-btn-box" v-if="my_info.userLevel != 0">
+          <button class="open-vip-home" @click="go_my_home">我的主页</button>
+          <button class="open-vip-renew" @click="openVipNow">续费会员</button>
         </div>
       </div>
 
       <!-- VIP会员卡片 -->
       <div class="vip-card">
         <div class="vip-card-content">
-          <div class="vip-info">
+          <div class="vip-info" v-if="my_info.userLevel == 0">
             <h3>VIP会员</h3>
-            <div class="promotion">今日注册多送{{ vip_info.month_num }}个月</div>
+            <div class="promotion">
+              <button class="open-vip-btn" @click="openVipNow">立即开通</button>
+            </div>
+          </div>
+          <div class="vip-info" v-else>
+            <h4>{{ my_info.mobile || "--" }}</h4>
+            <div class="vip-info-box">
+              <img src="@/assets/img/my/vip-active.png" alt="VIP会员" />
+              <span>VIP会员</span>
+            </div>
+            <p>{{ my_info.company_name || my_info.nickname }}</p>
           </div>
         </div>
       </div>
@@ -102,37 +108,57 @@
         </div>
       </div>
     </div>
+
+    <!-- 开通会员弹框组件 -->
+    <ModalVipPurchase
+      :visible="showVipModal"
+      @close="closeVipModal"
+      @payment-success="onPaymentSuccess"
+    />
   </div>
 </template>
 
 <script>
 import { UPLOAD_ACTION, UPLOAD_NAME } from "@/config/env.js";
+import ModalVipPurchase from "@/components/modals/modalVipPurchase.vue";
+
 export default {
   name: "member-center",
+  components: {
+    ModalVipPurchase,
+  },
   data() {
     return {
       UPLOAD_ACTION,
       UPLOAD_NAME,
-      timer: null,
-      pay_qrcode: "",
       my_info: {},
       vip_info: {},
       vip_order_list: [],
       loading: false,
       selectedPaymentMethod: "", // 默认选择微信支付
+      showVipModal: false, // 控制弹框显示
     };
+  },
+  computed: {
+    levelName() {
+      switch (this.my_info.userLevel) {
+        case 1:
+          return "黄金会员";
+        case 2:
+          return "钻石会员";
+        case 3:
+          return "联合会员";
+        default:
+          return "个人会员";
+      }
+    },
   },
   watch: {},
   mounted() {
-    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000);
     this.setView();
   },
-  destroyed() {
-    clearInterval(this.timer);
-  },
-  methods: {
-    throttle_do_submit() {},
 
+  methods: {
     // 选择支付方式
     selectPaymentMethod(method) {
       if (this.selectedPaymentMethod == method) {
@@ -145,8 +171,18 @@ export default {
 
     // 立即开通VIP
     openVipNow() {
-      // 这里可以添加开通VIP的逻辑
-      console.log("开通VIP");
+      this.showVipModal = true;
+    },
+
+    // 关闭VIP弹框
+    closeVipModal() {
+      this.showVipModal = false;
+    },
+
+    // 支付成功回调
+    onPaymentSuccess() {
+      // 重新加载用户信息和页面数据
+      this.setView();
     },
 
     open_phone_update() {
@@ -162,7 +198,7 @@ export default {
     setView() {
       this.query_user();
       this.$api({
-        url: "vip",
+        url: "memberSetting",
         method: "get",
       }).then((res) => {
         if (res.code == 200) {
@@ -170,70 +206,26 @@ export default {
         }
       });
       // 充值订单
-      this.$api({
-        url: "vipOrderList",
-        method: "get",
-      }).then((res) => {
-        if (res.code == 200) {
-          this.vip_order_list = res.data;
-        }
-      });
+      // this.$api({
+      //   url: "vipOrderList",
+      //   method: "get",
+      // }).then((res) => {
+      //   if (res.code == 200) {
+      //     this.vip_order_list = res.data;
+      //   }
+      // });
     },
     query_user() {
-      this.my_info = Object.assign({}, this.vuex_user);
-      this.my_info = { is_vip: 1 };
-    },
-
-    do_submit() {
-      this.loading = true;
       this.$api({
-        url: "vipOrder",
-        method: "post",
-      }).then((res) => {
-        let { code, msg, data } = res;
-        alert(res).then(() => {
-          this.loading = false;
-        });
-        if (code == 200) {
-          // 支付方式
-          if (this.selectedPaymentMethod == "wechat") {
-            this.$api({
-              url: "pay",
-              method: "post",
-              data: {
-                order_no: data.orderno,
-                type: 2,
-              },
-            }).then((res) => {
-              if (res.code == 200) {
-                this.pay_qrcode = res.data.pay_qrcode;
-                // 每5秒轮询一次
-                this.timer = setInterval(() => {
-                  this.getPayStatus(data.orderno);
-                }, 5000);
-              }
-            });
-          }
-        }
-      });
-    },
-    getPayStatus(order_no) {
-      this.$api({
-        url: "checkVipPay",
+        url: "getUserInfo",
         method: "get",
-        data: {
-          orderno: order_no,
-        },
       }).then((res) => {
         if (res.code == 200) {
-          if (res.data.is_pay) {
-            clearInterval(this.timer);
-            this.$message.success("支付成功");
-            this.setView();
-          }
+          this.my_info = res.data;
         }
       });
     },
+
     go_my_home() {
       this.$router.push("/my-company-info");
     },
@@ -404,15 +396,51 @@ export default {
             color: #fcefc7;
           }
 
-          .price {
-            font-size: 20px;
-            margin-bottom: 10px;
-          }
-
           .promotion {
             margin-top: 40px;
             font-size: 14px;
             color: #fff;
+
+            .open-vip-btn {
+              background: #fde2b4;
+              color: #7e5529;
+              border: none;
+              padding: 8px 20px;
+              border-radius: 20px;
+              font-size: 14px;
+              cursor: pointer;
+
+              &:hover {
+                opacity: 0.9;
+              }
+            }
+          }
+
+          h4 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fcefc7;
+          }
+          .vip-info-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            color: #7e5529;
+            width: 76px;
+            height: 22px;
+            border-radius: 20px;
+            background: #fde2b4;
+            img {
+              width: 14px;
+              height: 14px;
+            }
+          }
+          p {
+            margin-top: 60px;
+            font-size: 12px;
+            color: #7e5529;
           }
         }
 

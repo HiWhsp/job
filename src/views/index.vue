@@ -46,7 +46,7 @@
         <div class="top-nav-center">
           <div class="banner-area">
             <div class="banner-content">
-              <el-carousel height="378px">
+              <el-carousel height="374px">
                 <el-carousel-item v-for="item in vuex_config.mainBanners" :key="item.id">
                   <img :src="item.url" alt="" />
                 </el-carousel-item>
