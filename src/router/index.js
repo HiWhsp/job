@@ -142,7 +142,7 @@ const routes = [
         },
       },
       {
-        path: "/my-company-info", 
+        path: "/my-company-info",
         name: "my-company-info",
         component: my_company_info,
         meta: {
@@ -338,13 +338,24 @@ router.beforeEach((to, from, next) => {
       }
     });
   } else {
-    next();
+    // "userType": 1, //1个人 2企业 3服务商
+    // 当用户是服务商时，如果想跳转的是/my下的所有页面，则跳转到/service-provider-list
+    if (store.state.baseInfo.userType == 3 && to.path.includes('/my')) {
+      next({
+        path: '/service-provider_info',
+      });
+    } else {
+      next();
+    }
   }
 });
 
 router.afterEach((to, from) => {
-  // //console.log("切换导航, 重新配置微信分享");
-  // wxShare.getSign();
+  if (JSON.parse(localStorage.getItem('userInfo')).userType == 3 && to.path.includes('/my')) {
+    router.push('/service-provider_info');
+  } else {
+    router.push(to.path);
+  }
 });
 
 export default router;

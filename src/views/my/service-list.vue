@@ -13,14 +13,12 @@
     </div>
     <div class="page-ctx">
       <!-- 工单列表 -->
-      <div class="service-list">
+      <div class="service-list" v-if="total > 0">
         <div v-for="item in serviceList" :key="item.id" class="service-item">
           <!-- 头部信息 -->
           <div class="service-header">
             <div class="header-left">
-              <span class="status" :class="item.statusClass">{{
-                item.status
-              }}</span>
+              <span class="status" :class="item.statusClass">{{ item.status }}</span>
               <div class="service-info">
                 <span class="date">{{ item.date }}</span>
                 <span class="order-info">工单编号：{{ item.orderNo }}</span>
@@ -33,9 +31,7 @@
             </div>
             <div class="header-right">
               <span class="pay-amount"
-                >待支付：<span class="amount"
-                  >￥{{ item.payAmount }}</span
-                ></span
+                >待支付：<span class="amount">￥{{ item.payAmount }}</span></span
               >
             </div>
           </div>
@@ -55,11 +51,7 @@
                     <span class="info-value">{{ item.deviceLocation }}</span>
                   </div>
                   <div class="download-files">
-                    <div
-                      v-for="file in item.files"
-                      :key="file.name"
-                      class="file-item"
-                    >
+                    <div v-for="file in item.files" :key="file.name" class="file-item">
                       <span class="file-type">{{ file.type }}：</span>
                       <img
                         src="@/assets/image/icon/pdf.png"
@@ -67,10 +59,7 @@
                         alt="file"
                       />
                       <span class="file-name">{{ file.name }}</span>
-                      <a
-                        href="#"
-                        class="download-link"
-                        @click="downloadFile(file)"
+                      <a href="#" class="download-link" @click="downloadFile(file)"
                         >下载</a
                       >
                     </div>
@@ -104,8 +93,10 @@
           </div>
         </div>
       </div>
+      <el-empty v-if="total == 0" description="暂无数据" />
     </div>
     <el-pagination
+      v-if="total > 0"
       style="margin-top: 20px; text-align: center"
       :current-page="currentPage"
       :page-size="pageSize"
@@ -167,10 +158,27 @@ export default {
       ],
       currentPage: 1,
       pageSize: 10,
-      total: 100,
+      total: 0,
     };
   },
+  mounted() {
+    this.getServiceList();
+  },
   methods: {
+    getServiceList() {
+      this.$api({
+        url: "myFormalWorkorderList",
+        method: "get",
+        data: {
+          page: this.currentPage,
+          pageSize: this.pageSize,
+          keyword: this.keyword,
+        },
+      }).then((res) => {
+        this.serviceList = res.data.list;
+        this.total = res.data.totalCount;
+      });
+    },
     downloadFile(file) {
       // 处理文件下载
       console.log("下载文件:", file);

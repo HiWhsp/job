@@ -22,196 +22,185 @@
 
       <!-- 需求列表 -->
       <div class="demand-list">
-        <el-empty
-          v-if="demandList.length === 0"
-          description="暂无数据"
-        />
+        <el-empty v-if="demandList.length === 0" description="暂无数据" />
 
-        <div
-          v-for="item in demandList"
-          :key="item.id"
-          class="demand-item"
-        >
+        <div v-for="item in demandList" :key="item.id" class="demand-item">
           <!-- 售后运维需求 -->
-          <template v-if="item.type == '1'">
+          <template v-if="item.workOrderType == 1">
             <div class="demand-header">
-              <div class="demand-type maintenance">{{ item.typeName }}</div>
+              <div class="demand-type maintenance">
+                {{ checkStatus(item.checkStatus) }}
+              </div>
               <div class="demand-header-info">
-                <div class="demand-time">{{ item.publishTime }}</div>
+                <div class="demand-time">{{ item.created_at }}</div>
                 <div class="demand-type-icon"></div>
-                <div class="contact-info">编号：{{ item.contact }}</div>
+                <div class="contact-info">编号：{{ item.serialNo }}</div>
               </div>
             </div>
             <div class="demand-content">
               <div class="demand-title">
-                {{ item.title }}
-                <button class="detail-btn" @click="viewDetail(item)">
-                  查看详情
-                </button>
+                {{ workOrderName(item) }}
+                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
               </div>
               <div class="demand-details">
-                <div class="detail-row" v-if="item.company">
-                  <span class="label">公司名称：</span>
-                  <span class="value">{{ item.company }}</span>
+                <div class="detail-row" v-if="item.deviceType">
+                  <span class="label">设备类型：</span>
+                  <span class="value">{{ deviceTypeName(item) }}</span>
                 </div>
-                <div class="detail-row" v-if="item.location">
-                  <span class="label">所在地区：</span>
-                  <span class="value">{{ item.location }}</span>
+                <div class="detail-row" v-if="item.deviceGuige">
+                  <span class="label">设备规格：</span>
+                  <span class="value">{{ item.deviceGuige }}</span>
                 </div>
-                <div class="detail-row" v-if="item.description">
-                  <span class="label">需求描述：</span>
-                  <span class="value">{{ item.description }}</span>
+                <div class="detail-row" v-if="item.deviceAddress">
+                  <span class="label">设备位置：</span>
+                  <span class="value">{{ item.deviceAddress }}</span>
                 </div>
-                <div class="detail-row" v-if="item.requirements">
-                  <span class="label">具体需求：</span>
-                  <span class="value">{{ item.requirements }}</span>
+                <div class="detail-row" v-if="item.faultDescription">
+                  <span class="label">故障现象：</span>
+                  <span class="value">{{ item.faultDescription }}</span>
                 </div>
               </div>
             </div>
           </template>
 
           <!-- 光伏充电桩产品需求 -->
-          <template v-else-if="item.type === 'photovoltaic'">
+          <template v-else-if="item.workOrderType === 2">
             <div class="demand-header">
-              <div class="demand-type photovoltaic">{{ item.typeName }}</div>
+              <div class="demand-type photovoltaic">
+                {{ checkStatus(item.checkStatus) }}
+              </div>
               <div class="demand-header-info">
-                <div class="demand-time">{{ item.publishTime }}</div>
+                <div class="demand-time">{{ item.created_at }}</div>
                 <div class="demand-type-icon"></div>
-                <div class="contact-info">编号：{{ item.contact }}</div>
+                <div class="contact-info">编号：{{ item.serialNo }}</div>
               </div>
             </div>
             <div class="demand-content">
               <div class="demand-title">
-                {{ item.title }}
-                <button class="detail-btn" @click="viewDetail(item)">
-                  查看详情
-                </button>
+                {{ workOrderName(item) }}
+                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
               </div>
               <div class="demand-details">
-                <div class="detail-row" v-if="item.company">
+                <div class="detail-row" v-if="item.companyName">
                   <span class="label">企业名称：</span>
-                  <span class="value">{{ item.company }}</span>
+                  <span class="value">{{ item.companyName }}</span>
                 </div>
-                <div class="detail-row" v-if="item.location">
+                <div class="detail-row" v-if="item.address">
                   <span class="label">地址：</span>
-                  <span class="value">{{ item.location }}</span>
+                  <span class="value">{{ item.address }}</span>
                 </div>
               </div>
             </div>
           </template>
 
           <!-- 新能源光储充项目需求 -->
-          <template v-else-if="item.type === 'energy_storage'">
+          <template v-else-if="item.workOrderType === 3">
             <div class="demand-header">
-              <div class="demand-type energy_storage">{{ item.typeName }}</div>
+              <div class="demand-type energy_storage">
+                {{ checkStatus(item.checkStatus) }}
+              </div>
               <div class="demand-header-info">
-                <div class="demand-time">{{ item.publishTime }}</div>
+                <div class="demand-time">{{ item.created_at }}</div>
                 <div class="demand-type-icon"></div>
-                <div class="contact-info">编号：{{ item.contact }}</div>
+                <div class="contact-info">编号：{{ item.serialNo }}</div>
               </div>
             </div>
             <div class="demand-content">
               <div class="demand-title">
-                {{ item.title }}
-                <button class="detail-btn" @click="viewDetail(item)">
-                  查看详情
-                </button>
+                {{ workOrderName(item) }}
+                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
               </div>
               <div class="demand-details">
-                <div class="detail-row" v-if="item.projectType">
-                  <span class="label">项目类型：</span>
-                  <span class="value">{{ item.projectType }}</span>
+                <div class="detail-row" v-if="item.projectName">
+                  <span class="label">项目名称：</span>
+                  <span class="value">{{ item.projectName }}</span>
                 </div>
-                <div class="detail-row" v-if="item.location">
+                <div class="detail-row" v-if="item.projectAddress">
                   <span class="label">项目地点：</span>
-                  <span class="value">{{ item.location }}</span>
+                  <span class="value">{{ item.projectAddress }}</span>
                 </div>
-                <div class="detail-row" v-if="item.description">
+                <div class="detail-row" v-if="item.projectScale">
                   <span class="label">项目规模：</span>
-                  <span class="value">{{ item.description }}</span>
+                  <span class="value">{{ item.projectScale }}</span>
                 </div>
-                <div class="detail-row" v-if="item.requirements">
+                <div class="detail-row" v-if="item.projectTypeStr">
                   <span class="label">技术类型：</span>
-                  <span class="value">{{ item.requirements }}</span>
+                  <span class="value">{{ item.projectTypeStr }}</span>
                 </div>
               </div>
             </div>
           </template>
 
           <!-- 项目转让需求 -->
-          <template v-else-if="item.type === 'project_transfer'">
+          <template v-else-if="item.workOrderType === 4">
             <div class="demand-header">
               <div class="demand-type project_transfer">
-                {{ item.typeName }}
+                {{ checkStatus(item.checkStatus) }}
               </div>
               <div class="demand-header-info">
-                <div class="demand-time">{{ item.publishTime }}</div>
+                <div class="demand-time">{{ item.created_at }}</div>
                 <div class="demand-type-icon"></div>
-                <div class="contact-info">编号：{{ item.contact }}</div>
+                <div class="contact-info">编号：{{ item.serialNo }}</div>
               </div>
             </div>
             <div class="demand-content">
               <div class="demand-title">
-                {{ item.title }}
-                <button class="detail-btn" @click="viewDetail(item)">
-                  查看详情
-                </button>
+                {{ workOrderName(item) }}
+                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
               </div>
               <div class="demand-details">
-                <div class="detail-row" v-if="item.projectScale">
+                <div class="detail-row" v-if="item.projectName">
                   <span class="label">项目名称：</span>
+                  <span class="value">{{ item.projectName }}</span>
+                </div>
+                <div class="detail-row" v-if="item.projectAddress">
+                  <span class="label">项目地点：</span>
+                  <span class="value">{{ item.projectAddress }}</span>
+                </div>
+                <div class="detail-row" v-if="item.projectScale">
+                  <span class="label">项目规模：</span>
                   <span class="value">{{ item.projectScale }}</span>
                 </div>
-                <div class="detail-row" v-if="item.location">
-                  <span class="label">项目地点：</span>
-                  <span class="value">{{ item.location }}</span>
-                </div>
-                <div class="detail-row" v-if="item.transferPrice">
-                  <span class="label">项目规模：</span>
-                  <span class="value">{{ item.transferPrice }}</span>
-                </div>
-                <div class="detail-row" v-if="item.description">
+                <div class="detail-row" v-if="item.projectTypeStr">
                   <span class="label">项目类型：</span>
-                  <span class="value">{{ item.description }}</span>
+                  <span class="value">{{ item.projectTypeStr }}</span>
                 </div>
               </div>
             </div>
           </template>
 
           <!-- 光伏材料/储电池/老旧电站改造合同需求 -->
-          <template v-else-if="item.type === 'material_contract'">
+          <template v-else-if="item.workOrderType === 5">
             <div class="demand-header">
               <div class="demand-type material_contract">
-                {{ item.typeName }}
+                {{ checkStatus(item.checkStatus) }}
               </div>
               <div class="demand-header-info">
-                <div class="demand-time">{{ item.publishTime }}</div>
+                <div class="demand-time">{{ item.created_at }}</div>
                 <div class="demand-type-icon"></div>
-                <div class="contact-info">编号：{{ item.contact }}</div>
+                <div class="contact-info">编号：{{ item.serialNo }}</div>
               </div>
             </div>
             <div class="demand-content">
               <div class="demand-title">
-                {{ item.title }}
-                <button class="detail-btn" @click="viewDetail(item)">
-                  查看详情
-                </button>
+                {{ workOrderName(item) }}
+                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
               </div>
               <div class="demand-details">
-                <div class="detail-row" v-if="item.company">
+                <div class="detail-row" v-if="item.companyName">
                   <span class="label">公司名称：</span>
-                  <span class="value">{{ item.company }}</span>
+                  <span class="value">{{ item.companyName }}</span>
                 </div>
-                <div class="detail-row" v-if="item.materialType">
+                <div class="detail-row" v-if="item.address">
                   <span class="label">回收地点：</span>
-                  <span class="value">{{ item.materialType }}</span>
+                  <span class="value">{{ item.address }}</span>
                 </div>
               </div>
             </div>
           </template>
 
           <!-- 默认展示 (兜底) -->
-          <template v-else>
+          <!-- <template v-else>
             <div class="demand-header">
               <div class="demand-type default">{{ item.typeName }}</div>
               <div class="demand-time">{{ item.publishTime }}</div>
@@ -220,26 +209,20 @@
             <div class="demand-content">
               <div class="demand-title">{{ item.title }}</div>
               <div class="demand-details">
-                <div class="detail-row" v-if="item.company">
+                <div class="detail-row" v-if="item.companyName">
                   <span class="label">公司名称：</span>
-                  <span class="value">{{ item.company }}</span>
+                  <span class="value">{{ item.companyName }}</span>
                 </div>
-                <div class="detail-row" v-if="item.location">
-                  <span class="label">所在地区：</span>
-                  <span class="value">{{ item.location }}</span>
-                </div>
-                <div class="detail-row" v-if="item.description">
-                  <span class="label">需求描述：</span>
-                  <span class="value">{{ item.description }}</span>
+                <div class="detail-row" v-if="item.address">
+                  <span class="label">回收地点：</span>
+                  <span class="value">{{ item.address }}</span>
                 </div>
               </div>
             </div>
             <div class="demand-actions">
-              <button class="detail-btn" @click="viewDetail(item)">
-                查看详情
-              </button>
+              <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
             </div>
-          </template>
+          </template> -->
         </div>
       </div>
     </div>
@@ -251,75 +234,8 @@ export default {
   data() {
     return {
       activeTab: "",
-      demandList: [
-        {
-          id: 1,
-          type: "maintenance",
-          typeName: "状态：已查看（1-3个工作日邮箱或电话回复您）",
-          title: "售后运维需求表",
-          publishTime: "2021-08-18 13:29",
-          contact: "56584455171454",
-          company: "武汉",
-          location: "武汉市",
-          description: "本项目为自己家房顶安装对应的新能源储能设备符合国家政策",
-          requirements: "详询能期维锁周知交家",
-        },
-        {
-          id: 2,
-          type: "photovoltaic",
-          typeName: "光伏充电桩产品需求表",
-          title: "光伏充电桩产品需求表",
-          publishTime: "2021-08-18 13:29",
-          contact: "56584455171454",
-          company: "XXXXXXXX科技有限公司",
-          location: "江苏省江阴市",
-          power: "50MW",
-          budget: "500-800万元",
-          description: "需要建设光伏充电桩项目",
-          requirements: "符合国家储能建设的需要性",
-        },
-        {
-          id: 3,
-          type: "energy_storage",
-          typeName: "新能源光储充项目的需要数据需求表",
-          title: "新能源光储充项目的需要数据需求表",
-          publishTime: "2021-08-18 13:29",
-          contact: "56584455171454",
-          projectType: "光储充一体化项目",
-          location: "江苏省无锡市",
-          description: "本项目为自己家房顶安装对应的新能源储能设备符合国家政策",
-          requirements: "详询新能源对应的储能自动化的符合国家合作储能",
-          timeline: "2024年6月前完成",
-        },
-        {
-          id: 4,
-          type: "project_transfer",
-          typeName: "项目转让需求表",
-          title: "项目转让需求表",
-          publishTime: "2021-08-18 13:29",
-          contact: "56584455171454",
-          projectScale: "100MW光伏电站",
-          location: "山东省济南市",
-          transferPrice: "8000万元",
-          description: "本项目为自己家房顶安装对应的新能源储能设备符合国家政策",
-          requirements: "详询新能源对应的储能自动化的符合国家合作储能",
-        },
-        {
-          id: 5,
-          type: "material_contract",
-          typeName: "光伏材料/储电池/老旧电站改造的业务合同需求表",
-          title: "光伏材料/储电池/老旧电站改造的业务合同需求表",
-          publishTime: "2021-08-18 13:29",
-          contact: "56584455171454",
-          company: "XXXXXXXX科技有限公司",
-          materialType: "单晶硅组件",
-          quantity: "1000块",
-          location: "江苏省常州市",
-          deliveryTime: "2024年3月底",
-          description: "需要采购单晶硅组件用于光伏电站建设",
-          requirements: "符合国家标准，质保25年",
-        },
-      ],
+      demandList: [],
+      total: 0,
       tabs: [
         { key: "", label: "全部" },
         { key: "maintenance", label: "售后运维" },
@@ -330,7 +246,41 @@ export default {
       ],
     };
   },
-  computed: {},
+  computed: {
+    // 审核状态
+    checkStatus() {
+      return (status) => {
+        return {
+          0: "待查看",
+          1: "已查看",
+          2: "已处理",
+        }[status];
+      };
+    },
+    // 需求类型
+    workOrderName() {
+      return (item) => {
+        return {
+          1: "售后运维需求表",
+          2: "光储充相关产品需求表",
+          3: "新能源光储充项目投融资信息需求表",
+          4: "项目转让需求表",
+          5: "光伏组件/锂电池/铅酸电池回收业务信息表",
+        }[item.workOrderType];
+      };
+    },
+    // 设备类型
+    deviceTypeName() {
+      return (item) => {
+        return {
+          1: "光伏",
+          2: "储能",
+          3: "拆冲",
+          4: item.otherDevice,
+        }[item.deviceType];
+      };
+    },
+  },
   mounted() {
     this.setView();
   },
@@ -346,11 +296,13 @@ export default {
         let { code, msg, data } = res;
         if (code == 200) {
           this.demandList = data.list;
+          this.total = data.totalCount;
         }
       });
     },
     switchTab(tab) {
       this.activeTab = tab;
+      this.setView();
     },
     viewDetail(item) {
       // 处理查看详情逻辑

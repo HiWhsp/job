@@ -31,7 +31,7 @@
               <span class="password-tip" v-else
                 >{{ levelName }}会员已开通 | 会员到期时间：
                 <span class="vip-time">{{ my_info.userLevelEndTime || "--" }}</span>
-                | <span class="vip-renew">续费</span>
+                | <span class="vip-renew" @click="openVipNow">续费</span>
               </span>
             </div>
           </div>

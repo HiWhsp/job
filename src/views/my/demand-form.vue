@@ -24,20 +24,16 @@
 
         <h3>完善需求信息</h3>
 
-        <el-form-item label="企业名称" prop="companyNmae">
+        <el-form-item label="企业名称" prop="companyName">
           <el-input
-            v-model="form.companyNmae"
+            v-model="form.companyName"
             placeholder="请输入企业名称"
             clearable
           ></el-input>
         </el-form-item>
 
         <el-form-item label="地址" prop="address">
-          <el-input
-            v-model="form.address"
-            placeholder="请输入地址"
-            clearable
-          ></el-input>
+          <el-input v-model="form.address" placeholder="请输入地址" clearable></el-input>
         </el-form-item>
 
         <el-form-item label="联系人" prop="contactPerson">
@@ -396,7 +392,7 @@ export default {
     return {
       form: {
         workOrderType: "1",
-        companyNmae: "",
+        companyName: "",
         address: "",
         contactPerson: "",
         contact: "",
@@ -416,29 +412,14 @@ export default {
         projectType: "",
         projectProgress: "",
         // 产品回收利用表数据
-        recycleList: [
-          {
-            type: "",
-            image: "",
-            imageName: "",
-            brand: "",
-            quantity: "",
-            spec: "",
-          },
-        ],
+        recycleList: [],
       },
       uploadAction: "#", // 上传接口地址，根据实际情况修改
       rules: {
-        workOrderType: [
-          { required: true, message: "请选择填报类型", trigger: "change" },
-        ],
+        workOrderType: [{ required: true, message: "请选择填报类型", trigger: "change" }],
         address: [{ required: true, message: "请输入地址", trigger: "blur" }],
-        companyNmae: [
-          { required: true, message: "请输入企业名称", trigger: "blur" },
-        ],
-        contactPerson: [
-          { required: true, message: "请输入联系人", trigger: "blur" },
-        ],
+        companyName: [{ required: true, message: "请输入企业名称", trigger: "blur" }],
+        contactPerson: [{ required: true, message: "请输入联系人", trigger: "blur" }],
         contact: [
           { required: true, message: "请输入联系电话", trigger: "blur" },
           {
@@ -481,20 +462,23 @@ export default {
     submitForm() {
       this.$refs.formRef.validate((valid) => {
         if (valid) {
-          console.log(this.form.images);
           if (this.form.images.length > 0) {
             this.form.images.forEach((item) => {
-              this.form.photos ? this.form.photos.push(item.response.data.save_url) : (this.form.photos = [item.response.data.save_url]);
-              this.form.photosJson ? this.form.photosJson.push({  
-                name: item.name,
-                url: item.response.data.save_url,
-              }) : (this.form.photosJson = [{
-                name: item.name,
-                url: item.response.data.save_url,
-              }]);
+              this.form.photos
+                ? this.form.photos.push(item.response.data.save_url)
+                : (this.form.photos = [item.response.data.save_url]);
+              this.form.photosJson
+                ? this.form.photosJson.push({
+                    name: item.name,
+                    url: item.response.data.save_url,
+                  })
+                : (this.form.photosJson = [
+                    {
+                      name: item.name,
+                      url: item.response.data.save_url,
+                    },
+                  ]);
             });
-            this.form.photos = JSON.stringify(this.form.photos);
-            this.form.photosJson = JSON.stringify(this.form.photosJson);
           }
           if (this.form.workOrderType == "2") {
             this.form.productJson = JSON.stringify(this.form.productList);
@@ -504,9 +488,19 @@ export default {
           this.$api({
             url: "createWorkorder",
             method: "post",
-            data: this.form,
+            data: {
+              ...this.form,
+              photos: JSON.stringify(this.form.photos),
+              photosJson: JSON.stringify(this.form.photosJson),
+            },
           }).then((res) => {
             let { code, msg, data } = res;
+            if (code == 200) {
+              this.$message.success("提交成功");
+              this.$router.push("demand-list");
+            } else {
+              this.$message.error(msg);
+            }
           });
         } else {
           console.log("表单验证失败");
