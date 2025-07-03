@@ -11,28 +11,29 @@
         <!-- 左侧：公司logo -->
         <div class="company-logo">
           <div class="logo-container">
-            <img
-              src="https://via.placeholder.com/80x80/4A90E2/fff?text=Logo"
-              alt="杭申电器Logo"
-            />
+            <img :src="companyInfo.logo" alt="Logo" />
           </div>
         </div>
 
         <!-- 中间：企业信息 -->
         <div class="company-info-center">
-          <h1 class="company-name">杭申电器</h1>
+          <h1 class="company-name">{{ companyInfo.companyName }}</h1>
           <div class="company-meta">
-            <span class="meta-item">从事制造相关</span>
+            <span class="meta-item">从事{{ workTypeName }}相关</span>
             <span class="meta-separator">·</span>
-            <span class="meta-item">杭州</span>
+            <span class="meta-item">{{ companyInfo.provinceName }}</span>
             <span class="meta-separator">·</span>
-            <span class="meta-item">1000万注册</span>
+            <span class="meta-item">{{ companyInfo.followNum }}关注</span>
           </div>
-          <div class="company-website">官网：https://www.hzk.com.cn</div>
+          <div class="company-website">官网：{{ companyInfo.homePage }}</div>
           <div class="action-buttons">
-            <button class="btn-follow" @click="handleFollow">
+            <button class="btn-follow" @click="handleFollow" v-if="!companyInfo.isFollow">
               <i class="el-icon-plus"></i>
               关注
+            </button>
+            <button class="btn-follow" @click="handleFollow" v-else>
+              <i class="el-icon-minus"></i>
+              已关注
             </button>
             <button class="btn-message" @click="handleMessage">
               <img src="@/assets/image/icon/msg.png" alt="留言" />
@@ -44,10 +45,7 @@
         <!-- 右侧：企业图片 -->
         <div class="company-info-right">
           <div class="company-image">
-            <img
-              src="https://via.placeholder.com/400x200/f0f0f0/666?text=企业建筑"
-              alt=""
-            />
+            <img :src="companyInfo.backImage" alt="" />
           </div>
         </div>
       </div>
@@ -81,59 +79,41 @@
 
         <!-- 企业介绍内容 -->
         <div class="tab-content" v-show="activeTab === 'introduction'">
-          <div class="company-introduction">
-            <p>
-              杭州之江开发区的有限公司是电控电缆行业区内高端市场的重要骨干企业，占地面积7000㎡，建筑面积6800㎡，企业地址杭州市西湖区，东靠杭州钱塘江
-              腰部门店，南依天目山（杭创储）高速公路，要路高铁干线，北接世界奇葩硅谷沿江开发基地，交通十分便捷。
-            </p>
-            <p>
-              公司是国家高点高端技术企业，浙江专业示范企业，通过GB/T19001，GB/T24001，GB/T28001三体系认证，综合技术力量雄厚，是国家双识质量七防精工
-              社会场，国家级企业技术中心，国家级CNAS实验室可运营的执行主体，公司拥有省级企业研究院，省级数字化车间，自动化生产设备和智能化检测设备齐全，内设各
-              种检中心，技术装备中心，生产供应中心，材料综合中心等部门，企业现增值健康，在全国各大城市设有分部门566，单梯高达100多处，技术服务网络覆盖
-              全国。
-            </p>
-            <p>
-              公司专注于高性能电缆电器，控制电缆，终端电器，智能仪表，系统技术等领域的研发，制造，营销和服务，"科技是第一生产力"，公司以创新求发展，不断
-              提高科研开发技术水准和水平，部分参数达当当国际先进或国内领先水平，与上海电缆科学研究院，浙江大学，河北工业大学等单位院系有长期技术合作
-              体，又是华中理工大学，东北理工大学 广大，参与
-              的长期理论交流基地，采用互联网+"云平台大数据技术，美的广技术生态创新管理，是有备识证工位监控平
-              台，实现厂主厂全过程客户产品的启用主要控制发生了转型。
-            </p>
-            <p>
-              公司拥有30万伏等级产品生产能力，数字化设备管控自主开发能力，建设，制作企业，专业工程科技开发中心，质量检测中心，石材化工，炼铜交通，船舶运输等立体液德邮
-              客户提供专业而高效的服务，高新优先地域保险的坚果！
-            </p>
-          </div>
+          <div class="company-introduction" v-html="companyInfo.introduce"></div>
         </div>
 
         <!-- 产品介绍内容 -->
         <div class="tab-content" v-show="activeTab === 'products'">
           <div class="products-introduction">
             <!-- 产品展示 -->
-            <div class="product-showcase">
+            <div
+              class="product-showcase"
+              v-for="(product, index) in companyInfo.productJson"
+              :key="index"
+            >
               <h3 class="showcase-title">
-                <span class="title-text">产品展示</span>
+                <span class="title-text">{{ product.typeName }}</span>
               </h3>
               <div class="product-list">
-                <div
-                  class="product-item"
-                  v-for="product in miniBreakers"
-                  :key="product.id"
-                >
+                <div class="product-item" v-for="(item, i) in product.list" :key="i">
                   <div class="product-image">
-                    <img :src="product.image" :alt="product.name" />
+                    <img :src="item.image" :alt="item.name" />
                   </div>
                   <div class="product-info">
-                    <h4 class="product-name">{{ product.name }}</h4>
+                    <h4 class="product-name">{{ item.name }}</h4>
                     <div class="product-specs">
-                      <div v-for="spec in product.specs" :key="spec" class="spec-item">
-                        {{ spec }}
+                      <div class="spec-item">
+                        {{ item.description }}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            <el-empty
+              v-if="!companyInfo.productJson || companyInfo.productJson.length === 0"
+              description="暂无产品"
+            />
           </div>
         </div>
 
@@ -141,24 +121,16 @@
         <div class="tab-content" v-show="activeTab === 'contact'">
           <div class="contact-info">
             <div class="contact-item">
-              <strong>公司地址：</strong>
-              <span>浙江省温州市乐清市柳市镇东仁宕工业区</span>
-            </div>
-            <div class="contact-item">
-              <strong>联系电话：</strong>
-              <span>0577-62766888</span>
-            </div>
-            <div class="contact-item">
-              <strong>传真：</strong>
-              <span>0577-62766999</span>
+              <strong>地址：</strong>
+              <span>{{ companyInfo.address }}</span>
             </div>
             <div class="contact-item">
               <strong>邮箱：</strong>
-              <span>info@hangshendq.com</span>
+              <span>{{ companyInfo.email }}</span>
             </div>
             <div class="contact-item">
-              <strong>网址：</strong>
-              <span>www.hangshendq.com</span>
+              <strong>电话：</strong>
+              <span>{{ companyInfo.contact }}</span>
             </div>
           </div>
         </div>
@@ -186,7 +158,7 @@
             <label>电话：</label>
             <input
               type="tel"
-              v-model="messageForm.phone"
+              v-model="messageForm.mobile"
               placeholder="请输入手机号"
               class="form-input"
             />
@@ -202,10 +174,13 @@
           </div>
           <div class="form-group">
             <label>公司名：</label>
-            <el-select v-model="messageForm.company" class="form-select">
-              <el-option value="杭申电器" label="杭申电器"></el-option>
-              <el-option value="其他公司" label="其他公司"></el-option>
-            </el-select>
+            <input
+              type="text"
+              v-model="messageForm.companyName"
+              placeholder="请输入公司名"
+              class="form-input"
+              disabled
+            />
           </div>
           <div class="form-group">
             <label>留言内容：</label>
@@ -241,10 +216,11 @@ export default {
       // 留言表单数据
       messageForm: {
         name: "",
-        phone: "",
+        mobile: "",
         email: "",
-        company: "",
+        companyName: "",
         content: "",
+        companyId: "",
       },
       // 微型断路器产品数据
       miniBreakers: [
@@ -267,14 +243,16 @@ export default {
           image: "https://via.placeholder.com/120x100/f0f0f0/666?text=断路器",
         },
       ],
+      companyInfo: {},
+      workTypeList: [],
     };
   },
   computed: {
     nav_option() {
       return [
         {
-          route: "/system-manufacturer-list",
-          title: "系统厂商",
+          route: "/system-manufacturer-list?companyType=" + this.companyInfo.companyType,
+          title: this.companyInfo.companyType == 1 ? "系统厂商" : "配置厂商",
         },
         {
           route: this.$route.path,
@@ -282,14 +260,77 @@ export default {
         },
       ];
     },
+    workTypeName() {
+      const list = this.companyInfo.workType;
+      const strList = [];
+      // workTypeList 是一个树形结构，需要遍历找到对应的name_zh
+      const findWorkTypeName = (items) => {
+        items.forEach((item) => {
+          if (list.includes(item.id)) {
+            strList.push(item.name_zh);
+          }
+          if (item.children && item.children.length > 0) {
+            findWorkTypeName(item.children);
+          }
+        });
+      };
+      findWorkTypeName(this.workTypeList);
+      return strList.join(",");
+    },
   },
   mounted() {
     // 页面初始化逻辑
+    this.loadData();
+    this.$api({
+      url: "getFinishSelect",
+      method: "get",
+    }).then((res) => {
+      console.log(res);
+      let { code, data, msg } = res;
+      if (code == 200) {
+        this.workTypeList = data.typeListTree;
+      }
+    });
   },
   methods: {
+    loadData() {
+      this.$api({
+        url: "companyDetail",
+        method: "get",
+        data: {
+          companyId: this.$route.query.id,
+        },
+      }).then((res) => {
+        console.log(res);
+        let { code, data, msg } = res;
+        if (code == 200) {
+          this.companyInfo = data.shopInfo;
+          this.messageForm.companyName = this.companyInfo.companyName;
+          this.messageForm.companyId = this.companyInfo.id;
+        }
+      });
+    },
     handleFollow() {
       // 关注逻辑
       console.log("关注");
+      this.$api({
+        url: "followCompany",
+        method: "post",
+        data: {
+          userId: this.vuex_user.id,
+          companyId: this.companyInfo.id,
+          type: this.companyInfo.isFollow ? 2 : 1,
+        },
+      }).then((res) => {
+        console.log(res);
+        let { code, data, msg } = res;
+        if (code == 200) {
+          this.$message.success("操作成功");
+          this.loadData();
+        } else {
+          this.$message.error(msg);
+        }
+      });
     },
     handleMessage() {
       // 显示留言弹框
@@ -301,9 +342,8 @@ export default {
       // 重置表单
       this.messageForm = {
         name: "",
-        phone: "",
+        mobile: "",
         email: "",
-        company: "",
         content: "",
       };
     },
@@ -313,7 +353,7 @@ export default {
         alert("请输入姓名");
         return;
       }
-      if (!this.messageForm.phone.trim()) {
+      if (!this.messageForm.mobile.trim()) {
         alert("请输入手机号");
         return;
       }
@@ -324,7 +364,19 @@ export default {
 
       // 提交留言逻辑
       console.log("提交留言:", this.messageForm);
-      alert("留言提交成功！");
+      this.$api({
+        url: "addCompanyComment",
+        method: "post",
+        data: this.messageForm,
+      }).then((res) => {
+        let { code, data, msg } = res;
+        if (code == 200) {
+          this.$message.success("留言成功");
+          this.loadData();
+        } else {
+          this.$message.error(msg);
+        }
+      });
       this.closeModal();
     },
   },

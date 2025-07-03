@@ -351,10 +351,18 @@ router.beforeEach((to, from, next) => {
 });
 
 router.afterEach((to, from) => {
+  // 有query参数，需要手动拼接
   if (JSON.parse(localStorage.getItem('userInfo')).userType == 3 && to.path.includes('/my')) {
     router.push('/service-provider_info');
   } else {
-    router.push(to.path);
+    if (to.query) {
+      router.push({
+        path: to.path,
+        query: to.query,
+      });
+    } else {
+      router.push(to.path);
+    }
   }
 });
 

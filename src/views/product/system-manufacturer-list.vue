@@ -31,8 +31,8 @@
             <div class="filter-options">
               <span
                 class="filter-item"
-                :class="{ active: firstCategory === 'all' }"
-                @click="selectFirstCategory('all')"
+                :class="{ active: firstCategory === '' }"
+                @click="selectFirstCategory('')"
                 >全部</span
               >
               <span
@@ -47,13 +47,13 @@
           </div>
 
           <!-- 二级分类 -->
-          <div class="filter-row" v-if="firstCategory != 'all'">
+          <div class="filter-row" v-if="firstCategory != ''">
             <span class="filter-label">二级分类：</span>
             <div class="filter-options">
               <span
                 class="filter-item"
-                :class="{ active: secondCategory === 'all' }"
-                @click="selectSecondCategory('all')"
+                :class="{ active: secondCategory === '' }"
+                @click="selectSecondCategory('')"
                 >全部</span
               >
               <span
@@ -68,13 +68,13 @@
           </div>
 
           <!-- 三级分类 -->
-          <div class="filter-row" v-if="secondCategory != 'all'">
+          <div class="filter-row" v-if="secondCategory != ''">
             <span class="filter-label">三级分类：</span>
             <div class="filter-options">
               <span
                 class="filter-item"
-                :class="{ active: thirdCategory === 'all' }"
-                @click="selectThirdCategory('all')"
+                :class="{ active: thirdCategory === '' }"
+                @click="selectThirdCategory('')"
                 >全部</span
               >
               <span
@@ -94,8 +94,8 @@
             <div class="filter-options">
               <span
                 class="filter-item"
-                :class="{ active: selectedRegion === 'all' }"
-                @click="selectRegion('all')"
+                :class="{ active: selectedRegion === '' }"
+                @click="selectRegion('')"
                 >全部</span
               >
               <span
@@ -191,7 +191,7 @@ export default {
       let option = [
         {
           route: "/system-manufacturer-list",
-          title: "系统制造商列表",
+          title: `${this.companyType == 1 ? "系统厂商" : "配置厂商"}列表`,
         },
       ];
       return option;
@@ -199,50 +199,27 @@ export default {
   },
   data() {
     return {
+      companyType: 1,
       // 搜索关键词
       searchKeyword: "",
 
       // 筛选条件
-      firstCategory: "all",
-      secondCategory: "all",
-      thirdCategory: "all",
-      selectedRegion: "all",
+      firstCategory: "",
+      secondCategory: "",
+      thirdCategory: "",
+      selectedRegion: "",
 
       // 筛选选项数据
       firstCategories: [],
       secondCategories: [],
       thirdCategories: [],
-      regions: [
-        { id: "1", name: "北京" },
-        { id: "2", name: "天津" },
-        { id: "3", name: "河北" },
-        { id: "4", name: "山西" },
-        { id: "5", name: "内蒙古" },
-        { id: "6", name: "上海" },
-        { id: "7", name: "江苏" },
-        { id: "8", name: "浙江" },
-      ],
+      regions: [],
 
       // 推荐列表
       recommendList: [],
 
       // 公司列表
-      companyList: [
-        {
-          id: 1,
-          name: "恒顺新能源科技有限公司",
-          introduction:
-            "本公司致力于新能源技术开发，在光伏产业工艺技术和新能源领域，坚持创新，突破传统，工艺技术精湛，生产制造规模大，效能高创新能力强，产品品质优良，管理制度完善，技术服务支持，实现客户价值",
-          registerTime: "2023-04",
-        },
-        {
-          id: 2,
-          name: "恒顺新能源科技有限公司",
-          introduction:
-            "本公司致力于新能源技术开发，在光伏产业工艺技术和新能源领域，坚持创新，突破传统，工艺技术精湛，生产制造规模大，效能高创新能力强，产品品质优良，管理制度完善，技术服务支持，实现客户价值",
-          registerTime: "2021-04",
-        },
-      ],
+      companyList: [],
 
       pageSize: 20,
       total: 0,
@@ -250,7 +227,7 @@ export default {
   },
 
   mounted() {
-    this.loadData();
+    this.companyType = this.$route.query.companyType;
     // 获取筛选条件
     this.$api({
       url: "getFinishSelect",
@@ -273,6 +250,7 @@ export default {
         this.regions = data.provinceList || [];
       }
     });
+    this.loadData();
   },
 
   methods: {
@@ -284,17 +262,17 @@ export default {
 
     // 选择一级分类
     selectFirstCategory(id) {
-      if (id == "all") {
-        this.firstCategory = "all";
-        this.secondCategory = "all";
-        this.thirdCategory = "all";
+      if (id == "") {
+        this.firstCategory = "";
+        this.secondCategory = "";
+        this.thirdCategory = "";
         this.currentPage = 1;
         this.loadData();
         return;
       }
       this.firstCategory = id;
-      this.secondCategory = "all";
-      this.thirdCategory = "all";
+      this.secondCategory = "";
+      this.thirdCategory = "";
       this.currentPage = 1;
       // 获取选择的一级分类的二级分类
       this.secondCategories = this.firstCategories.find((item) => item.id == id)
@@ -308,15 +286,15 @@ export default {
 
     // 选择二级分类
     selectSecondCategory(id) {
-      if (id == "all") {
-        this.secondCategory = "all";
-        this.thirdCategory = "all";
+      if (id == "") {
+        this.secondCategory = "";
+        this.thirdCategory = "";
         this.currentPage = 1;
         this.loadData();
         return;
       }
       this.secondCategory = id;
-      this.thirdCategory = "all";
+      this.thirdCategory = "";
       this.currentPage = 1;
       this.thirdCategories = this.secondCategories.find((item) => item.id == id)
         ? this.secondCategories.find((item) => item.id == id).children
@@ -326,8 +304,8 @@ export default {
 
     // 选择三级分类
     selectThirdCategory(id) {
-      if (id == "all") {
-        this.thirdCategory = "all";
+      if (id == "") {
+        this.thirdCategory = "";
         this.currentPage = 1;
         this.loadData();
         return;
@@ -383,17 +361,15 @@ export default {
       this.$api({
         url: "companyList",
         method: "get",
-        params: {
+        data: {
           keyWord: this.searchKeyword,
-          workType: [
-            this.firstCategory,
-            this.secondCategory,
-            this.thirdCategory,
-          ].join(","),
+          workType: [this.firstCategory, this.secondCategory, this.thirdCategory]
+            .filter((item) => item != "")
+            .join(","),
           provinceId: this.selectedRegion,
           page: this.currentPage,
           pageSize: this.pageSize,
-          companyType: 1,
+          companyType: this.companyType,
         },
       }).then((res) => {
         let { code, data, msg } = res;

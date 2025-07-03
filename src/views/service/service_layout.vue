@@ -18,16 +18,12 @@
               <i class="el-icon-user"></i>
               <span>个人中心</span>
             </template>
-            <el-menu-item index="service-provider_info">
-              我的个人中心
-            </el-menu-item>
+            <el-menu-item index="service-provider_info"> 我的个人中心 </el-menu-item>
             <el-menu-item index="service-provider-vip"> 会员中心 </el-menu-item>
             <el-menu-item index="service-provider-change-password">
               修改密码
             </el-menu-item>
-            <el-menu-item index="service-provider-follow">
-              我的关注
-            </el-menu-item>
+            <el-menu-item index="service-provider-follow"> 我的关注 </el-menu-item>
             <el-menu-item index="service-provider-message"> 消息 </el-menu-item>
           </el-submenu>
 
@@ -37,16 +33,14 @@
               <i class="el-icon-document"></i>
               <span>工单中心</span>
             </template>
-            <el-menu-item index="service-provider-list">
-              服务工单管理
-            </el-menu-item>
+            <el-menu-item index="service-provider-list"> 服务工单管理 </el-menu-item>
           </el-submenu>
         </el-menu>
       </div>
     </div>
     <div class="service-layout-right">
       <div class="service-layout-right-header">
-        <div class="item">
+        <div class="item" @click="handleMessage">
           <i class="el-icon-bell"></i>
         </div>
         <div class="item">
@@ -77,6 +71,9 @@ export default {
     };
   },
   methods: {
+    handleMessage() {
+      this.$router.push("/service-provider-message");
+    },
     handleCommand(command) {
       if (command === "logout") {
         this.$store.dispatch("clear_loginInfo");

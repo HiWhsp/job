@@ -3,31 +3,29 @@
     <div class="page-header">
       <!-- 搜索项 -->
       <div class="search-form">
-        <el-form
-          :model="searchForm"
-          ref="searchForm"
-          :inline="true"
-          size="small"
-        >
-          <el-form-item label="工单编号" prop="orderNo">
+        <el-form :model="searchForm" ref="searchForm" :inline="true" size="small">
+          <el-form-item label="工单编号" prop="workorder_no">
             <el-input
-              v-model="searchForm.orderNo"
+              v-model="searchForm.workorder_no"
               placeholder="请输入工单编号"
               clearable
               style="width: 200px"
             />
           </el-form-item>
-          <el-form-item label="工单类型" prop="orderType">
+          <el-form-item label="工单类型" prop="workOrderType">
             <el-select
-              v-model="searchForm.orderType"
+              v-model="searchForm.workOrderType"
               placeholder="请选择工单类型"
               clearable
               style="width: 200px"
             >
+              <!-- 不传或传空获取全部;1售后运维需求表 2项目产品需求表 3项目融资表 4项目转让表 5产品回收利用表 -->
               <el-option label="全部" value="" />
-              <el-option label="售后运维" value="maintenance" />
-              <el-option label="安装调试" value="installation" />
-              <el-option label="技术支持" value="support" />
+              <el-option label="售后运维需求表" value="1" />
+              <el-option label="项目产品需求表" value="2" />
+              <el-option label="项目融资表" value="3" />
+              <el-option label="项目转让表" value="4" />
+              <el-option label="产品回收利用表" value="5" />
             </el-select>
           </el-form-item>
           <el-form-item label="设备类型" prop="deviceType">
@@ -38,9 +36,10 @@
               style="width: 200px"
             >
               <el-option label="全部" value="" />
-              <el-option label="光伏" value="solar" />
-              <el-option label="风电" value="wind" />
-              <el-option label="储能" value="storage" />
+              <el-option label="光伏" value="1" />
+              <el-option label="储能" value="2" />
+              <el-option label="柴冲" value="3" />
+              <el-option label="其他" value="4" />
             </el-select>
           </el-form-item>
           <el-form-item style="flex: 1; text-align: right">
@@ -70,23 +69,16 @@
           <div class="service-header">
             <div class="header-left">
               <span class="status" :class="item.statusClass">{{
-                item.status
+                checkStatus(item.checkStatus)
               }}</span>
               <div class="service-info">
-                <span class="date">{{ item.date }}</span>
-                <span class="order-info">工单编号：{{ item.orderNo }}</span>
-                <!-- <span class="relation-info"
-                  >关联需求表单号：<span class="relation-order">{{
-                    item.relationNo
-                  }}</span></span
-                > -->
+                <span class="date">{{ item.created_at }}</span>
+                <span class="order-info">工单编号：{{ item.workorder_no }}</span>
               </div>
             </div>
             <div class="header-right">
               <span class="pay-amount"
-                >待支付：<span class="amount"
-                  >￥{{ item.payAmount }}</span
-                ></span
+                >金额：<span class="amount">￥{{ item.payPrice }}</span></span
               >
             </div>
           </div>
@@ -95,33 +87,29 @@
           <div class="service-content">
             <div class="content-top">
               <div class="content-left">
-                <h4 class="service-title">{{ item.title }}</h4>
+                <h4 class="service-title">{{ workOrderName(item) }}</h4>
                 <div class="service-info">
                   <div class="info-item">
                     <span class="info-label">设备类型：</span>
-                    <span class="info-value">{{ item.deviceType }}</span>
+                    <span class="info-value">{{ deviceTypeName(item) }}</span>
                   </div>
                   <div class="info-item">
                     <span class="info-label">设备位置：</span>
-                    <span class="info-value">{{ item.deviceLocation }}</span>
+                    <span class="info-value">{{ item.deviceAddress }}</span>
                   </div>
                   <div class="download-files">
-                    <div
-                      v-for="file in item.files"
-                      :key="file.name"
-                      class="file-item"
-                    >
-                      <span class="file-type">{{ file.type }}：</span>
+                    <div class="file-item">
+                      <span class="file-type">服务合同：</span>
                       <img
                         src="@/assets/image/icon/pdf.png"
                         class="file-icon"
                         alt="file"
                       />
-                      <span class="file-name">{{ file.name }}</span>
+                      <span class="file-name">{{ item.contractName }}</span>
                       <a
                         href="#"
                         class="download-link"
-                        @click="downloadFile(file)"
+                        @click="downloadFile(item.contractUrl)"
                         >下载</a
                       >
                     </div>
@@ -131,32 +119,43 @@
 
               <div class="content-right">
                 <div class="action-buttons">
+                  <el-button size="small" @click="handleAction(item)">
+                    工单详情
+                  </el-button>
                   <el-button
-                    v-for="action in item.actions"
-                    :key="action.name"
                     size="small"
-                    @click="handleAction(action, item)"
+                    @click="handleAction(item)"
+                    v-if="item.workorderStatus == 0"
                   >
-                    {{ action.name }}
+                    回传合同
+                  </el-button>
+                  <el-button
+                    size="small"
+                    @click="handleAction(item)"
+                    v-if="item.workorderStatus == 3"
+                  >
+                    服务完成
                   </el-button>
                 </div>
               </div>
             </div>
-            <div class="content-bottom">
+            <div class="content-bottom" v-if="item.workorderStatus == 0">
               <div class="notice">
                 <img
                   src="@/assets/image/icon/notice.png"
                   class="notice-icon"
                   alt="notice"
                 />
-                <span class="notice-text">{{ item.notice }}</span>
+                <span class="notice-text">请下载服务合同后签字盖章回传系统确认工单</span>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <el-empty v-if="total == 0" description="暂无数据" />
     <el-pagination
+      v-if="total > 0"
       style="margin-top: 20px; text-align: center"
       :current-page="currentPage"
       :page-size="pageSize"
@@ -172,80 +171,73 @@ export default {
   name: "service-provider-list",
   data() {
     return {
-      keyword: "",
-      serviceList: [
-        {
-          id: 1,
-          status: "待工单输入",
-          statusClass: "status-pending",
-          date: "2021-08-18 13:29",
-          orderNo: "565884455112454",
-          relationNo: "256555441255445",
-          payAmount: "19999.90",
-          title: "售后运维服务工单",
-          deviceType: "光伏",
-          deviceLocation: "设备位置详细信息设备位置详细信息设备位置详细信息",
-          files: [
-            { type: "下载工单", name: "XXXX工单.pdf" },
-            { type: "下载合同", name: "XXXX合同.pdf" },
-          ],
-          notice: "请下载工单、合同后签字盖章传给系统认证工单",
-          actions: [
-            { name: "工单详情", type: "default" },
-            { name: "回传工单", type: "primary" },
-            { name: "回传合同", type: "primary" },
-          ],
-        },
-        {
-          id: 2,
-          status: "待付款",
-          statusClass: "status-payment",
-          date: "2021-08-18 13:29",
-          orderNo: "565884455112454",
-          relationNo: "256555441255445",
-          payAmount: "19999.90",
-          title: "售后运维服务工单",
-          deviceType: "光伏",
-          deviceLocation: "设备位置详细信息设备位置详细信息设备位置详细信息",
-          files: [
-            { type: "我的工单", name: "XXXX工单.pdf" },
-            { type: "我的合同", name: "XXXX合同.pdf" },
-          ],
-          actions: [
-            { name: "工单详情", type: "default" },
-            { name: "去支付", type: "danger" },
-          ],
-        },
-      ],
+      serviceList: [],
       tabList: [
         { name: "全部工单", value: "0" },
         { name: "待确认", value: "1" },
-        { name: "服务中", value: "2" },
-        { name: "已完成", value: "3" },
+        { name: "服务中", value: "3" },
+        { name: "已完成", value: "4" },
       ],
       activeTab: "0",
       currentPage: 1,
       pageSize: 10,
-      total: 100,
+      total: 0,
       searchForm: {
-        orderNo: "",
-        orderType: "",
+        workorder_no: "",
+        workOrderType: "",
         deviceType: "",
-        deviceLocation: "",
       },
     };
+  },
+  computed: {
+    // 审核状态
+    checkStatus() {
+      return (status) => {
+        return {
+          0: "待查看",
+          1: "已查看",
+          2: "已处理",
+        }[status];
+      };
+    },
+    // 需求类型
+    workOrderName() {
+      return (item) => {
+        return {
+          1: "售后运维需求表",
+          2: "光储充相关产品需求表",
+          3: "新能源光储充项目投融资信息需求表",
+          4: "项目转让需求表",
+          5: "光伏组件/锂电池/铅酸电池回收业务信息表",
+        }[item.workOrderType];
+      };
+    },
+    // 设备类型
+    deviceTypeName() {
+      return (item) => {
+        return {
+          1: "光伏",
+          2: "储能",
+          3: "拆冲",
+          4: item.otherDevice,
+        }[item.deviceType];
+      };
+    },
+  },
+  mounted() {
+    this.handleSearch();
   },
   methods: {
     handleTabClick(value) {
       this.activeTab = value;
+      this.handleSearch();
     },
     downloadFile(file) {
       // 处理文件下载
-      console.log("下载文件:", file);
+      window.open(file, "_blank");
     },
     handleAction(action, item) {
       // 处理操作按钮点击
-      console.log("执行操作:", action.name, item);
       this.$router.push({
         name: "service-provider-detail",
         params: {
@@ -257,8 +249,21 @@ export default {
       this.currentPage = page;
     },
     handleSearch() {
-      // 处理搜索功能
-      console.log("搜索条件:", this.searchForm);
+      this.$api({
+        url: "myServiceWorkorderList",
+        method: "get",
+        data: {
+          page: this.currentPage,
+          pageSize: this.pageSize,
+          workorderStatus: this.activeTab,
+          ...this.searchForm,
+        },
+      }).then((res) => {
+        if (res.code === 200) {
+          this.serviceList = res.data.list;
+          this.total = res.data.totalCount;
+        }
+      });
     },
     handleReset() {
       // 处理重置功能
@@ -268,6 +273,9 @@ export default {
         deviceType: "",
         deviceLocation: "",
       };
+      this.activeTab = "0";
+      this.currentPage = 1;
+      this.handleSearch();
     },
   },
 };

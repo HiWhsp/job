@@ -126,12 +126,21 @@
       <div class="system-ads-section">
         <div class="section-header">
           <h2>系统厂商</h2>
-          <span class="more-link" @click="toNav({ route: '/system-manufacturer-list' })"
+          <span
+            class="more-link"
+            @click="
+              toNav({ route: '/system-manufacturer-list', query: { companyType: 1 } })
+            "
             >查看更多 <i class="el-icon-arrow-right"></i
           ></span>
         </div>
         <div class="ads-grid">
-          <div class="ad-card" v-for="item in system_list" :key="item.id">
+          <div
+            class="ad-card"
+            v-for="item in system_list"
+            :key="item.id"
+            @click="toNav({ route: '/manufacturer-detail', query: { id: item.id } })"
+          >
             <div class="ad-logo-placeholder">
               <img :src="item.logo" alt="" />
             </div>
@@ -149,12 +158,21 @@
       <div class="config-ads-section">
         <div class="section-header">
           <h2>配套厂商</h2>
-          <span class="more-link" @click="toNav({ route: '/system-manufacturer-list' })"
+          <span
+            class="more-link"
+            @click="
+              toNav({ route: '/system-manufacturer-list', query: { companyType: 2 } })
+            "
             >查看更多 <i class="el-icon-arrow-right"></i
           ></span>
         </div>
         <div class="ads-grid">
-          <div class="ad-card" v-for="item in config_list" :key="item.id">
+          <div
+            class="ad-card"
+            v-for="item in config_list"
+            :key="item.id"
+            @click="toNav({ route: '/manufacturer-detail', query: { id: item.id } })"
+          >
             <div class="ad-logo-placeholder">
               <img :src="item.logo" alt="" />
             </div>
@@ -367,7 +385,12 @@ export default {
     },
 
     toNav(route) {
-      this.$router.push(route.route);
+      this.$router.push({
+        path: route.route,
+        query: {
+          ...route.query,
+        },
+      });
     },
     showRegister() {
       this.$router.push("/register");

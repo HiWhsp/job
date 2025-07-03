@@ -125,12 +125,12 @@
                 class="hot-search-item"
                 v-for="(item, index) in hotSearchList"
                 :key="index"
-                @click="selectSearchItem(item.keyword)"
+                @click="selectSearchItem(item)"
               >
                 <span class="hot-search-number">
                   {{ index + 1 }}
                 </span>
-                <span class="hot-search-text">{{ item.keyword }}</span>
+                <span class="hot-search-text">{{ item }}</span>
               </div>
             </div>
           </div>
@@ -178,7 +178,7 @@ export default {
       showSearchModal: false,
       searchKeyword: "",
       searchHistory: [],
-      hotSearchList: [{ keyword: "企业" }, { keyword: "企业" }, { keyword: "企业" }],
+      hotSearchList: [],
     };
   },
 
@@ -442,6 +442,7 @@ export default {
       if (history) {
         this.searchHistory = JSON.parse(history).slice(0, 10); // 最多显示10个
       }
+      this.hotSearchList = JSON.parse(this.vuex_config.remen);
     },
 
     // 保存搜索历史
@@ -467,13 +468,17 @@ export default {
     refreshHotSearch() {
       // 这里可以调用API获取最新的热门搜索
       // 暂时使用模拟数据
-      this.hotSearchList = [
-        { keyword: "企业管理" },
-        { keyword: "商务合作" },
-        { keyword: "技术支持" },
-        { keyword: "产品介绍" },
-        { keyword: "服务咨询" },
-      ];
+      this.$api({
+        url: "index",
+        method: "get",
+      }).then((res) => {
+        console.log(res);
+        let { code, data, msg } = res;
+        if (code == 200) {
+          this.hotSearchList = JSON.parse(data.remen);
+          this.$message.success("已刷新");
+        }
+      });
     },
 
     logout() {
