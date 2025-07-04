@@ -109,22 +109,11 @@ export default {
     },
 
     on_click_util(item) {
-      //console.log("点击", item);
-
       document.documentElement.scrollTop = 0;
-
-      return;
-
       let title = item.title;
-
-      if (title == "回到顶部") {
-        document.documentElement.scrollTop = 0;
-      } else if (title == "购物车") {
-        this.$router.push("/cart");
+      if (title == "个人中心") {
+        this.$router.push("/my-info");
       }
-      //  else if (title == "客服") {
-      //   this.$router.push("/contact");
-      // }
     },
   },
 };
