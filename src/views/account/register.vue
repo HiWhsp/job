@@ -16,10 +16,31 @@
           label-width="120px"
           class="register-form-content"
         >
-          <el-form-item label="手机号/邮箱" prop="account">
+          <div class="service-area">选择注册类型</div>
+          <el-form-item label="注册类型" prop="type">
+            <el-select
+              v-model="registerForm.type"
+              placeholder="请选择"
+              class="form-input"
+            >
+              <el-option label="手机号" :value="1"></el-option>
+              <el-option label="邮箱" value="2"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="用户名" prop="account" v-if="registerForm.type == 1">
             <el-input
               v-model="registerForm.account"
-              placeholder="请输入手机号/邮箱"
+              placeholder="请输入用户名"
+              class="form-input"
+            >
+            </el-input>
+          </el-form-item>
+
+          <el-form-item label="邮箱" prop="account" v-if="registerForm.type == 2">
+            <el-input
+              v-model="registerForm.account"
+              placeholder="请输入邮箱"
               class="form-input"
             >
             </el-input>
@@ -33,10 +54,7 @@
                 class="verify-input"
               >
               </el-input>
-              <el-button
-                type="success"
-                class="verify-btn"
-                @click="getVerifyCode"
+              <el-button type="success" class="verify-btn" @click="getVerifyCode"
                 >获取验证码</el-button
               >
             </div>
@@ -52,25 +70,21 @@
             </el-input>
           </el-form-item>
 
-          <div class="service-area">选择常驻地/服务方</div>
+          <div class="service-area">选择需求方/服务方</div>
 
-          <el-form-item label="常驻地/服务方" prop="serviceArea">
+          <el-form-item label="需求方/服务方" prop="userType">
             <el-select
-              v-model="registerForm.serviceArea"
+              v-model="registerForm.userType"
               placeholder="请选择"
               class="form-input"
             >
-              <el-option label="服务方1" value="service1"></el-option>
-              <el-option label="服务方2" value="service2"></el-option>
-              <el-option label="服务方3" value="service3"></el-option>
+              <el-option label="需求方" value="2"></el-option>
+              <el-option label="服务方" value="3"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item>
-            <el-button
-              type="success"
-              class="register-btn"
-              @click="handleRegister"
+            <el-button type="success" class="register-btn" @click="handleRegister"
               >提交</el-button
             >
           </el-form-item>
@@ -94,15 +108,15 @@ export default {
         account: "",
         verifyCode: "",
         password: "",
-        serviceArea: "",
+        userType: "",
+        type: 1, // 1手机 2邮箱
       },
       agreeService: false,
       rules: {
         account: [
           { required: true, message: "请输入手机号或邮箱", trigger: "blur" },
           {
-            pattern:
-              /^(1[3-9]\d{9}|[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+)$/,
+            pattern: /^(1[3-9]\d{9}|[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+)$/,
             message: "请输入正确的手机号或邮箱格式",
             trigger: "blur",
           },
@@ -117,7 +131,7 @@ export default {
             trigger: "blur",
           },
         ],
-        serviceArea: [
+        userType: [
           // { required: true, message: "请选择常驻地/服务方", trigger: "change" },
         ],
       },
@@ -135,6 +149,7 @@ export default {
               password: this.registerForm.password,
               captcha: this.registerForm.verifyCode,
               type: 1,
+              userType: this.registerForm.userType,
             },
           }).then((res) => {
             if (res.code == 200) {
@@ -145,7 +160,6 @@ export default {
             }
           });
         } else {
-          this.$message.error("请完善表单信息");
           return false;
         }
       });

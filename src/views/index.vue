@@ -74,7 +74,7 @@
                 <img src="@img/my/avatar.png" alt="" />
                 <div class="item1-right-img">
                   <img src="@img/my/no-vip.png" alt="" />
-                  <p>黄金会员</p>
+                  <p>{{ levelName }}</p>
                 </div>
               </div>
             </div>
@@ -97,7 +97,7 @@
                 <i class="notice-icon"></i>
                 <span>通知公告</span>
               </div>
-              <span class="more" @click="toNav({ route: '/my-message' })"
+              <span class="more" @click="toNav({ route: '/article-detail' })"
                 >查看更多 <i class="el-icon-arrow-right"></i
               ></span>
             </div>
@@ -106,7 +106,7 @@
                 class="notice-item ellipsis"
                 v-for="item in (vuex_config.newsList || []).slice(0, 4)"
                 :key="item.id"
-                @click="toNav({ route: '/my-message' })"
+                @click="toNav({ route: '/article-detail', query: { id: item.id } })"
               >
                 {{ item.title }}
               </div>
@@ -247,7 +247,7 @@
                   <span>认证工程师技术保障</span>
                 </div>
               </div>
-              <div class="contact-btn">
+              <div class="contact-btn" @click="toNav({ route: '/demand-form' })">
                 <span>提交服务需求</span>
               </div>
             </div>
@@ -277,7 +277,6 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { log } from "util";
 export default {
   name: "index",
   data() {
@@ -290,6 +289,18 @@ export default {
   },
   computed: {
     ...mapState(["vuex_config", "baseInfo"]),
+    levelName() {
+      switch (this.baseInfo.userLevel) {
+        case 1:
+          return "黄金会员";
+        case 2:
+          return "钻石会员";
+        case 3:
+          return "联合会员";
+        default:
+          return "个人会员";
+      }
+    },
   },
 
   watch: {

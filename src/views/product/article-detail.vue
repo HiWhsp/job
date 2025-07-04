@@ -11,7 +11,7 @@
           </div>
         </div>
 
-        <div class="article-body"></div>
+        <div class="article-body" v-html="articleContent"></div>
       </div>
 
       <!-- 右侧通知公告 -->
@@ -21,8 +21,8 @@
         </div>
         <div class="notice-list">
           <div
-            class="notice-item"
-            v-for="notice in noticeList"
+            class="notice-item ellipsis-1"
+            v-for="notice in vuex_config.newsList || []"
             :key="notice.id"
             @click="goToNotice(notice.id)"
           >
@@ -39,25 +39,27 @@ export default {
   name: "ArticleDetail",
   data() {
     return {
-      articleTitle:
-        "通知公告名称，通知公告名称，通知公告名称，通知公告名称，通知公告名称。",
+      articleTitle: "",
       author: "江阴联安",
-      publishDate: "2025-02-21 19:27",
-      articleSummary: "图文详情展示，图文详情展示，图文详情展示",
-      articleContent:
-        "2月20日晚间，阿里巴巴发布最新一季财报，其中，B2B跨境电商业务的国际商品GMV同比增长18%，近7年GMV累积增长25倍。在当晚的财报分析师会议上，相关负责人表示将继续强化，未来几年B2B的结构性机会。",
-      articleImage: "/src/assets/img/common/article-image.jpg", // 示例图片路径
-      noticeList: [
-        { id: 1, title: "通知公告标题文案内容限制的内容..." },
-        { id: 2, title: "通知公告标题文案内容限制的内容..." },
-        { id: 3, title: "通知公告标题文案内容限制的内容..." },
-        { id: 4, title: "通知公告标题文案内容限制的内容..." },
-        { id: 5, title: "通知公告标题文案内容限制的内容..." },
-        { id: 6, title: "通知公告标题文案内容限制的内容..." },
-        { id: 7, title: "通知公告标题文案内容限制的内容..." },
-        { id: 8, title: "通知公告标题文案内容限制的内容..." },
-      ],
+      publishDate: "",
+      articleContent: "",
+      noticeList: [],
     };
+  },
+  watch: {
+    $route: {
+      handler(newVal) {
+        if (newVal.query.id) {
+          this.noticeList.forEach((item) => {
+            if (item.id == newVal.query.id) {
+              this.articleTitle = item.title;
+              this.publishDate = item.created_at;
+              this.articleContent = item.content;
+            }
+          });
+        }
+      },
+    },
   },
   mounted() {
     this.loadArticleDetail();
@@ -65,13 +67,32 @@ export default {
   methods: {
     loadArticleDetail() {
       // 从路由参数获取文章ID
-      const articleId = this.$route.params.id;
-      // 这里可以调用API获取文章详情
-      console.log("加载文章详情:", articleId);
+      const articleId = this.$route.query.id;
+      this.$api({
+        url: "index",
+        method: "get",
+      }).then((res) => {
+        if (res.code === 200) {
+          this.noticeList = res.data.newsList;
+          if (articleId) {
+            this.noticeList.forEach((item) => {
+              if (item.id == articleId) {
+                this.articleTitle = item.title;
+                this.publishDate = item.created_at;
+                this.articleContent = item.content;
+              }
+            });
+          } else {
+            this.articleTitle = this.noticeList[0].title;
+            this.publishDate = this.noticeList[0].created_at;
+            this.articleContent = this.noticeList[0].content;
+          }
+        }
+      });
     },
     goToNotice(noticeId) {
       // 跳转到通知详情页
-      this.$router.push(`/notice/${noticeId}`);
+      this.$router.push(`/article-detail?id=${noticeId}`);
     },
   },
 };

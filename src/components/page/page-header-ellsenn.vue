@@ -442,7 +442,7 @@ export default {
       if (history) {
         this.searchHistory = JSON.parse(history).slice(0, 10); // 最多显示10个
       }
-      this.hotSearchList = JSON.parse(this.vuex_config.remen);
+      this.hotSearchList = JSON.parse(this.vuex_config.remen || "[]");
     },
 
     // 保存搜索历史

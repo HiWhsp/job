@@ -114,6 +114,14 @@ const routes = [
       title: "系统制造商详情",
     },
   },
+  {
+    path: "/protocol",
+    name: "protocol",
+    component: () => import("@/views/account/protocol.vue"),
+    meta: {
+      title: "用户协议",
+    },
+  },
   //用户中心
   {
     path: "/my",
@@ -329,6 +337,7 @@ router.beforeEach((to, from, next) => {
   if (!user_is_login && to.meta.requireAuth) {
     // debugger
     alertErr("请先登录");
+    router.push('/');
     Vue.prototype.$showLogin({
       onLoginSuccess: (data) => {
         console.log('登录成功:', data)

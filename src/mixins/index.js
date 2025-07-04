@@ -66,6 +66,42 @@ export default {
     mix_user_nick() {
       return this.vuex_user.nickname || "";
     },
+    workorderStatusName() {
+      return (item) => {
+        // 1 待工单确认 2 待付款 3已付款 4已分配服务人员 5服务已完成 6服务已确认
+        return {
+          1: "待工单确认",
+          2: "待付款",
+          3: "已付款",
+          4: "已分配服务人员",
+          5: "服务已完成",
+          6: "服务已确认",
+        }[item.workorderStatus];
+      };
+    },
+    // 需求类型
+    workOrderName() {
+      return (item) => {
+        return {
+          1: "售后运维需求表",
+          2: "光储充相关产品需求表",
+          3: "新能源光储充项目投融资信息需求表",
+          4: "项目转让需求表",
+          5: "光伏组件/锂电池/铅酸电池回收业务信息表",
+        }[item.workOrderType];
+      };
+    },
+    // 设备类型
+    deviceTypeName() {
+      return (item) => {
+        return {
+          1: "光伏",
+          2: "储能",
+          3: "拆冲",
+          4: item.otherDevice,
+        }[item.deviceType];
+      };
+    },
   },
   filters: {
 

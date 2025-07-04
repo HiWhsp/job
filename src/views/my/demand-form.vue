@@ -349,7 +349,21 @@
           </div>
         </template>
 
-        <el-form-item label="上传图片" prop="images">
+        <el-form-item label="上传图片" prop="images" v-if="form.workOrderType == 1">
+          <el-upload
+            class="upload-demo"
+            accept="image/*"
+            :file-list="form.images"
+            :data="mix_upload_data"
+            :name="mix_upload_name"
+            :action="mix_upload_action"
+            list-type="picture-card"
+            :on-change="handleImageChange"
+          >
+            <i class="el-icon-plus"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="上传附件" prop="images" v-if="form.workOrderType != 1">
           <el-upload
             class="upload-demo"
             accept="image/*"
@@ -464,24 +478,43 @@ export default {
         if (valid) {
           if (this.form.images.length > 0) {
             this.form.images.forEach((item) => {
-              this.form.photos
-                ? this.form.photos.push(item.response.data.save_url)
-                : (this.form.photos = [item.response.data.save_url]);
-              this.form.photosJson
-                ? this.form.photosJson.push({
-                    name: item.name,
-                    url: item.response.data.save_url,
-                  })
-                : (this.form.photosJson = [
-                    {
+              if (this.form.workOrderType == 1) {
+                this.form.photos
+                  ? this.form.photos.push(item.response.data.save_url)
+                  : (this.form.photos = [item.response.data.save_url]);
+                this.form.photosJson
+                  ? this.form.photosJson.push({
                       name: item.name,
                       url: item.response.data.save_url,
-                    },
-                  ]);
+                    })
+                  : (this.form.photosJson = [
+                      {
+                        name: item.name,
+                        url: item.response.data.save_url,
+                      },
+                    ]);
+              } else {
+                this.form.attach
+                  ? this.form.attach.push(item.response.data.save_url)
+                  : (this.form.attach = [item.response.data.save_url]);
+                this.form.attachJson
+                  ? this.form.attachJson.push({
+                      name: item.name,
+                      url: item.response.data.save_url,
+                    })
+                  : (this.form.attachJson = [
+                      {
+                        name: item.name,
+                        url: item.response.data.save_url,
+                      },
+                    ]);
+              }
             });
+          } else {
+            this.$message.error("请上传附件图片");
           }
           if (this.form.workOrderType == "2") {
-            this.form.productJson = JSON.stringify(this.form.productList);
+            this.form.productJson = this.form.productList;
           } else if (this.form.workOrderType == "5") {
             // this.form.recycleJson = JSON.stringify(this.form.recycleList);
           }
@@ -492,6 +525,9 @@ export default {
               ...this.form,
               photos: JSON.stringify(this.form.photos),
               photosJson: JSON.stringify(this.form.photosJson),
+              attach: JSON.stringify(this.form.attach),
+              attachJson: JSON.stringify(this.form.attachJson),
+              images: undefined,
             },
           }).then((res) => {
             let { code, msg, data } = res;

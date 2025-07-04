@@ -311,11 +311,7 @@ export default {
       this.$router.push({
         path: "demand-detail",
         query: {
-          id: item.title,
-          type: item.type,
-          contact: item.contact,
-          publishTime: item.publishTime,
-          company: item.company || "",
+          id: item.id,
         },
       });
     },

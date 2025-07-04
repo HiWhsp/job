@@ -56,8 +56,10 @@
 
           <el-form-item>
             <el-checkbox v-model="loginForm.agree">
-              已阅读并同意<span class="link-text">用户协议</span>和<span class="link-text"
-                >隐私收集</span
+              已阅读并同意<span class="link-text" @click="userAgreement('用户协议')"
+                >用户协议</span
+              >和<span class="link-text" @click="userAgreement('隐私政策')"
+                >隐私政策</span
               >
             </el-checkbox>
           </el-form-item>
@@ -86,11 +88,74 @@
           </div>
         </div>
       </div>
+      <div class="auth-section login-section" v-if="activeTab === 'forgetPassword'">
+        <div class="auth-header">
+          <h2>忘记密码</h2>
+        </div>
+
+        <el-form :model="loginForm" :rules="loginRules" ref="loginForm" class="auth-form">
+          <el-form-item prop="account">
+            <el-input
+              v-model="loginForm.account"
+              placeholder="手机号码/邮箱"
+              size="large"
+            ></el-input>
+          </el-form-item>
+
+          <el-form-item prop="code">
+            <div class="code-input-group">
+              <el-input
+                v-model="loginForm.code"
+                placeholder="验证码"
+                size="large"
+              ></el-input>
+              <el-button
+                plain
+                size="large"
+                :disabled="codeDisabled"
+                @click="getVerifyCode('login')"
+                class="code-btn"
+              >
+                {{ codeText }}
+              </el-button>
+            </div>
+          </el-form-item>
+
+          <el-form-item prop="password">
+            <div class="code-input-group">
+              <el-input
+                v-model="loginForm.password"
+                placeholder="新密码"
+                size="large"
+                show-password
+              ></el-input>
+            </div>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button
+              type="primary"
+              style="width: 100%"
+              :loading="loginLoading"
+              @click="submitForgetPassword"
+            >
+              重置密码
+            </el-button>
+          </el-form-item>
+        </el-form>
+
+        <div class="auth-footer">
+          <div class="forgot-password">
+            <span @click="activeTab = 'login'" class="link-text">返回登录</span>
+          </div>
+        </div>
+      </div>
     </div>
   </el-dialog>
 </template>
 
 <script>
+import { router } from "@/router";
 export default {
   name: "AuthModal",
   props: {
@@ -176,6 +241,10 @@ export default {
   },
 
   methods: {
+    userAgreement(type) {
+      window.open("/protocol?type=" + type, "_blank");
+    },
+
     show(tab = "login") {
       this.activeTab = tab;
       this.visible = true;
@@ -200,9 +269,6 @@ export default {
       this.$nextTick(() => {
         if (this.$refs.loginForm) {
           this.$refs.loginForm.resetFields();
-        }
-        if (this.$refs.registerForm) {
-          this.$refs.registerForm.resetFields();
         }
       });
     },
@@ -285,8 +351,7 @@ export default {
     },
 
     forgotPassword() {
-      this.$message.info("忘记密码功能");
-      this.$emit("forgot-password");
+      this.activeTab = "forgetPassword";
     },
 
     passwordLogin() {
@@ -294,9 +359,12 @@ export default {
       this.$emit("password-login");
     },
 
-    wechatLogin() {
-      this.$message.info("微信登录功能");
-      this.$emit("wechat-login");
+    submitForgetPassword() {
+      this.$refs.loginForm.validate((valid) => {
+        if (valid) {
+          this.loginLoading = true;
+        }
+      });
     },
   },
 };
@@ -471,7 +539,7 @@ export default {
 }
 
 .link-text {
-  color: #000;
+  color: #33ae60;
   cursor: pointer;
   text-decoration: none;
 
@@ -494,6 +562,20 @@ export default {
   border: none !important;
   &:hover {
     background: #33ae60 !important;
+  }
+}
+
+.el-checkbox {
+  /deep/.el-checkbox__inner {
+    border: 1px solid #33ae60;
+    background: #fff !important;
+  }
+  /deep/.el-checkbox__input.is-checked .el-checkbox__inner {
+    background: #33ae60 !important;
+  }
+
+  /deep/ .el-checkbox__label {
+    color: #000 !important;
   }
 }
 

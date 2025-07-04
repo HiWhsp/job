@@ -12,30 +12,46 @@
       <div class="basic-info">
         <div class="demand-info">
           <div class="demand-info-left">
-            <p class="demand-date">工单号：{{ demandInfo.publishTime }}</p>
+            <p class="demand-date">工单号：{{ demandInfo.workorder_no }}</p>
             <i class="col-line"></i>
-            <p class="demand-number">关联需求单：{{ demandInfo.contact }}</p>
+            <p class="demand-number">关联需求单：{{ demandInfo.serialNo }}</p>
           </div>
           <div class="demand-info-right">
-            <el-button v-if="processStatus === 0">
+            <el-button v-if="processStatus === 1" @click="backOpen(1)">
               <span>回传工单</span>
             </el-button>
-            <el-button v-if="processStatus === 0">
+            <el-button v-if="processStatus === 1" @click="backOpen(2)">
               <span>回传合同</span>
             </el-button>
-            <el-button v-if="processStatus === 1" @click="showPaymentModal">
+            <el-button v-if="processStatus === 2" @click="showPaymentModal">
               去支付
             </el-button>
-            <el-button v-if="processStatus === 3" @click="confirmFinish">
+            <el-button v-if="processStatus === 5" @click="confirmFinish">
               确认完成
             </el-button>
           </div>
         </div>
         <div class="demand-status">
           <p>
-            当前状态：<span>{{ demandInfo.statusText }}</span>
+            当前状态：<span>{{ workorderStatusName(demandInfo) }}</span>
           </p>
-          <p>待支付：<span>￥1900</span></p>
+          <p>
+            {{
+              demandInfo.payStatus == 0
+                ? "待支付"
+                : demandInfo.payStatus == 2
+                ? "已支付"
+                : "待确认"
+            }}：<span
+              >￥{{
+                demandInfo.payStatus == 0
+                  ? demandInfo.originPrice
+                  : demandInfo.payStatus == 2
+                  ? demandInfo.payPrice
+                  : demandInfo.originPrice
+              }}</span
+            >
+          </p>
         </div>
         <!-- 流程 -->
         <div class="demand-process">
@@ -56,42 +72,40 @@
       </div>
 
       <div class="service-content">
-        <h4 class="service-title">标题：售后运维服务清单</h4>
+        <h4 class="service-title">标题：{{ workOrderName(demandInfo) }}</h4>
         <div class="service-info">
-          <div class="info-item">
+          <!-- <div class="info-item">
             <span class="info-label">工单类型：</span>
-            <span class="info-value">常规保养</span>
-          </div>
+            <span class="info-value">{{ workOrderName(demandInfo) }}</span>
+          </div> -->
           <div class="download-files">
             <div class="file-item">
               <span class="file-type">下载工单：</span>
-              <img
-                src="@/assets/image/icon/pdf.png"
-                class="file-icon"
-                alt="file"
-              />
-              <span class="file-name">XXXX工单.pdf</span>
-              <a href="#" class="download-link">下载</a>
+              <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
+              <span class="file-name">{{ demandInfo.workorderName }}</span>
+              <a
+                href="#"
+                class="download-link"
+                @click="downloadFile(demandInfo.workorderUrl)"
+                >下载</a
+              >
             </div>
             <div class="file-item">
               <span class="file-type">下载合同：</span>
-              <img
-                src="@/assets/image/icon/pdf.png"
-                class="file-icon"
-                alt="file"
-              />
-              <span class="file-name">XXXX工单.pdf</span>
-              <a href="#" class="download-link">下载</a>
+              <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
+              <span class="file-name">{{ demandInfo.contractName }}</span>
+              <a
+                href="#"
+                class="download-link"
+                @click="downloadFile(demandInfo.contractUrl)"
+                >下载</a
+              >
             </div>
           </div>
         </div>
         <div class="content-bottom">
           <div class="notice">
-            <img
-              src="@/assets/image/icon/notice.png"
-              class="notice-icon"
-              alt="notice"
-            />
+            <img src="@/assets/image/icon/notice.png" class="notice-icon" alt="notice" />
             <span class="notice-text">
               1. 请在收到工单后24小时内确认工单，否则将自动取消工单。
             </span>
@@ -105,23 +119,23 @@
         <div class="info-content">
           <div class="info-row">
             <span class="info-label">联系人：</span>
-            <span class="info-value">{{ demandInfo.company }}</span>
+            <span class="info-value">{{ demandInfo.contactPerson }}</span>
             <span class="info-label">创建人员：</span>
-            <span class="info-value">张三</span>
+            <span class="info-value">暂无</span>
           </div>
           <div class="info-row">
             <span class="info-label">联系电话：</span>
-            <span class="info-value">{{ demandInfo.phone }}</span>
-            <span class="info-label">工单分类：</span>
-            <span class="info-value">{{ demandInfo.email }}</span>
+            <span class="info-value">{{ demandInfo.contact }}</span>
+            <!-- <span class="info-label">工单分类：</span>
+            <span class="info-value">{{ demandInfo.email }}</span> -->
           </div>
           <div class="info-row">
             <span class="info-label">企业名称：</span>
-            <span class="info-value">{{ demandInfo.phone }}</span>
+            <span class="info-value">{{ demandInfo.companyName }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">联系邮箱：</span>
-            <span class="info-value">{{ demandInfo.phone }}</span>
+            <span class="info-value">{{ demandInfo.email }}</span>
           </div>
         </div>
       </div>
@@ -130,11 +144,11 @@
           <div class="form-row">
             <label class="form-label">设备类型</label>
             <div class="form-input">
-              <el-radio-group v-model="formData.deviceType">
-                <el-radio label="光伏">光伏</el-radio>
-                <el-radio label="储能">储能</el-radio>
-                <el-radio label="采发">采发</el-radio>
-                <el-radio label="其他">其他</el-radio>
+              <el-radio-group v-model="demandInfo.deviceType" disabled>
+                <el-radio :label="1">光伏</el-radio>
+                <el-radio :label="2">储能</el-radio>
+                <el-radio :label="3">采发</el-radio>
+                <el-radio :label="4">其他</el-radio>
               </el-radio-group>
             </div>
           </div>
@@ -143,8 +157,9 @@
             <label class="form-label">设备规格</label>
             <div class="form-input">
               <el-input
-                v-model="formData.deviceSpec"
+                v-model="demandInfo.deviceGuige"
                 placeholder="完善后的内容规格名称规格名称规格名称"
+                disabled
               />
             </div>
           </div>
@@ -153,8 +168,9 @@
             <label class="form-label">设备位置</label>
             <div class="form-input">
               <el-input
-                v-model="formData.deviceLocation"
+                v-model="demandInfo.deviceAddress"
                 placeholder="完善后的内容详细位置信息详细位置信息详细位置信息"
+                disabled
               />
             </div>
           </div>
@@ -163,29 +179,38 @@
             <label class="form-label">故障现象</label>
             <div class="form-input">
               <el-input
-                v-model="formData.faultDescription"
+                v-model="demandInfo.faultDescription"
                 type="textarea"
                 :rows="3"
                 placeholder="完善后的内容故障现象描述文案故障现象描述文案"
+                disabled
               />
             </div>
           </div>
 
           <div class="form-row">
-            <label class="form-label">上传图片</label>
+            <label class="form-label">{{
+              demandInfo.workorderStatus == 1 ? "图片" : "附件"
+            }}</label>
             <div class="form-input">
-              <el-upload
-                class="avatar-uploader"
-                action="#"
-                :show-file-list="false"
-                :auto-upload="false"
-                :on-change="handleAvatarSuccess"
-              >
-                <div class="upload-placeholder">
-                  <i class="el-icon-plus"></i>
-                  <div class="upload-text">图片</div>
+              <div class="upload-images" v-if="demandInfo.workorderStatus == 1">
+                <div
+                  class="upload-image"
+                  v-for="(item, index) in demandInfo.photosJson"
+                  :key="index"
+                >
+                  <img :src="item.url" alt="" />
                 </div>
-              </el-upload>
+              </div>
+              <div class="upload-images" v-else>
+                <div
+                  class="upload-image"
+                  v-for="(item, index) in demandInfo.attachJson"
+                  :key="index"
+                >
+                  <img :src="item.url" alt="" />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -193,35 +218,32 @@
             <label class="form-label">补充说明</label>
             <div class="form-input">
               <el-input
-                v-model="formData.additionalInfo"
+                v-model="demandInfo.remark"
                 type="textarea"
                 :rows="4"
-                placeholder="完善后的内容补充说明信息补充说明信息补充说明信息补充说明信息补充说明信息补充说明信息补充说明信息补充说明信息补充说明信息补充说明信息补充说明信息补充说明信息"
+                placeholder="完善后的内容补充说明"
+                disabled
               />
             </div>
           </div>
         </div>
       </div>
       <!-- 服务信息 -->
-      <div class="my-info" v-if="[2, 3, 4].includes(processStatus)">
+      <div class="my-info" v-if="[4, 5, 6].includes(processStatus)">
         <h3 class="info-title">服务信息</h3>
         <div class="info-content">
           <div class="info-row">
             <span class="info-label">服务人员：</span>
-            <span class="info-value">{{ demandInfo.company }}</span>
+            <span class="info-value">{{ demandInfo.serviceUserName }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">联系方式：</span>
-            <span class="info-value">{{ demandInfo.phone }}</span>
+            <span class="info-value">{{ demandInfo.servicePhone }}</span>
           </div>
-          <div class="info-row" v-if="[3, 4].includes(processStatus)">
+          <div class="info-row" v-if="[5, 6].includes(processStatus)">
             <span class="info-label">服务图片：</span>
             <span class="info-value">
-              <img
-                src="@/assets/image/icon/pdf.png"
-                class="file-icon"
-                alt="file"
-              />
+              <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
             </span>
           </div>
         </div>
@@ -269,32 +291,25 @@
             <div class="qrcode-placeholder"></div>
           </div>
           <div class="qrcode-tips">
-            <p>
-              请使用{{ selectedPayment === "alipay" ? "支付宝" : "微信" }}扫一扫
-            </p>
+            <p>请使用{{ selectedPayment === "alipay" ? "支付宝" : "微信" }}扫一扫</p>
             <p>二维码或支付</p>
           </div>
         </div>
 
         <!-- 线下支付区域 -->
-        <div
-          class="offline-payment-section"
-          v-if="selectedPayment === 'offline'"
-        >
+        <div class="offline-payment-section" v-if="selectedPayment === 'offline'">
           <div class="bank-info">
             <div class="info-item">
               <span class="info-label">收款单位名称：</span>
-              <span class="info-value"
-                >公司名称公司名称公司名称公司名称公司名称公司名称</span
-              >
+              <span class="info-value">{{ offlinePaymentInfo.pay_company_name }}</span>
             </div>
             <div class="info-item">
               <span class="info-label">收款单位账号：</span>
-              <span class="info-value">62220234000195331245</span>
+              <span class="info-value">{{ offlinePaymentInfo.pay_account }}</span>
             </div>
             <div class="info-item">
               <span class="info-label">收款单位开户行名称：</span>
-              <span class="info-value">中国工商银行大兴支行</span>
+              <span class="info-value">{{ offlinePaymentInfo.pay_bank_name }}</span>
             </div>
           </div>
 
@@ -303,10 +318,14 @@
             <div class="upload-area">
               <el-upload
                 class="payment-uploader"
-                action="#"
-                :show-file-list="false"
-                :auto-upload="false"
-                :on-change="handlePaymentVoucherUpload"
+                :data="mix_upload_data"
+                :name="mix_upload_name"
+                :action="mix_upload_action"
+                list-type="picture-card"
+                :limit="1"
+                :file-list="paymentUrl"
+                :on-change="upload_on_payment_success"
+                :before-upload="upload_before_upload"
               >
                 <div class="upload-placeholder">
                   <i class="el-icon-plus"></i>
@@ -316,12 +335,36 @@
           </div>
 
           <div class="offline-actions">
-            <el-button type="primary" @click="submitOfflinePayment"
-              >提交</el-button
-            >
+            <el-button type="primary" @click="submitOfflinePayment">提交</el-button>
             <el-button @click="cancelPayment">取消</el-button>
           </div>
         </div>
+      </div>
+    </el-dialog>
+    <!-- 回传工单弹框 -->
+    <el-dialog
+      :title="backOpenTitle"
+      :visible.sync="backOpenModalVisible"
+      width="400px"
+      :close-on-click-modal="false"
+    >
+      <!-- 一个上传组件, 一个提交 取消按钮 -->
+      <el-upload
+        class="upload-demo"
+        :file-list="backUrl"
+        :data="mix_upload_data"
+        :name="mix_upload_name"
+        :action="mix_upload_action"
+        list-type="picture-card"
+        :limit="1"
+        :on-change="upload_on_success"
+        :before-upload="upload_before_upload"
+      >
+        <i class="el-icon-plus"></i>
+      </el-upload>
+      <div class="back-open-actions">
+        <el-button type="primary" @click="submitBackOpen">提交</el-button>
+        <el-button @click="cancelBackOpen">取消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -331,87 +374,144 @@
 export default {
   data() {
     return {
-      title: "",
+      id: "",
       demandType: "",
-      processStatus: 3,
-      demandInfo: {
-        publishTime: "2021-08-18 13:29",
-        contact: "565884455112454",
-        statusText: "",
-        company: "XXXXXXXX科技有限公司",
-        phone: "010-12345678",
-        email: "815625979@qq.com",
-      },
+      processStatus: 1,
+      demandInfo: {},
       processSteps: [
         {
           title: "待工单确认",
           time: "",
           completed: false,
           active: false,
+          id: 1,
         },
         {
           title: "待付款",
           time: "",
           completed: false,
           active: false,
+          id: 2,
+        },
+        {
+          title: "已付款",
+          time: "",
+          completed: false,
+          active: false,
+          id: 3,
         },
         {
           title: "已分配服务人员",
           time: "",
           completed: false,
           active: false,
+          id: 4,
         },
         {
           title: "服务已完成",
           time: "",
           completed: false,
           active: false,
+          id: 5,
         },
         {
           title: "服务已确认",
           time: "",
           completed: false,
           active: false,
+          id: 6,
         },
       ],
-      formData: {
-        deviceType: "光伏",
-        deviceSpec: "",
-        deviceLocation: "",
-        faultDescription: "",
-        additionalInfo: "",
-      },
+      paymentUrl: [],
       paymentModalVisible: false,
       selectedPayment: "alipay",
+      backOpenType: 1,
+      backOpenTitle: "",
+      backOpenModalVisible: false,
+      backUrl: [],
+      offlinePaymentInfo: {},
     };
   },
   mounted() {
-    this.title = this.$route.query.id; // 修复参数获取
+    this.id = this.$route.query.id; // 修复参数获取
     this.initDemandInfo();
   },
   methods: {
+    // 初始化工单信息
     initDemandInfo() {
-      // 从路由参数获取信息
-      const query = this.$route.query;
-      this.demandType = query.type || "default";
-      this.demandInfo.publishTime = query.publishTime || "2021-08-18 13:29";
-      this.demandInfo.contact = query.contact || "565884455112454";
-      this.demandInfo.company = query.company || "XXXXXXXX科技有限公司";
-      this.demandInfo.statusText = "已处理（生成工作指导：OPS-2024-US-CA-001）";
-      this.updateProcessStatus(this.processStatus); // 已分配服务人员状态
+      this.$api({
+        url: "workorderDetail",
+        method: "post",
+        data: {
+          id: this.id,
+        },
+      }).then((res) => {
+        this.demandInfo = {
+          ...res.data,
+          photosJson: JSON.parse(res.data.photosJson) || [],
+          attachJson: JSON.parse(res.data.attachJson) || [],
+        };
+        this.updateProcessStatus(this.demandInfo.workorderStatus);
+      });
+    },
+
+    // 回传工单
+    backOpen(type) {
+      this.backOpenType = type;
+      this.backOpenTitle = type == 1 ? "回传工单" : "回传合同";
+      this.backOpenModalVisible = true;
+    },
+
+    // 回传工单成功
+    upload_on_success(file, fileList) {
+      this.backUrl = fileList;
+    },
+
+    upload_on_payment_success(file, fileList) {
+      this.paymentUrl = fileList;
+    },
+
+    submitBackOpen() {
+      console.log("提交回传", this.backUrl);
+      let url = "";
+      let originName = "";
+      this.backUrl.forEach((item) => {
+        url = item.response.data.save_url;
+        originName = item.originName;
+      });
+      this.$api({
+        url: "backOpen",
+        method: "post",
+        data: {
+          workorderId: this.id,
+          type: this.backOpenType,
+          url: url,
+          name: originName,
+        },
+      }).then((res) => {
+        this.$message.success("回传成功");
+        this.backOpenModalVisible = false;
+        this.backUrl = [];
+        this.initDemandInfo();
+      });
+    },
+    cancelBackOpen() {
+      this.backUrl = [];
+      this.backOpenTitle = "";
+      this.backOpenModalVisible = false;
     },
 
     // 更新流程状态
     updateProcessStatus(currentStep) {
       this.processSteps.forEach((step, index) => {
-        if (index < currentStep) {
+        if (step.id < currentStep) {
           step.active = true;
           // 为已完成的步骤添加时间（示例时间）
           if (index === 0) step.time = "2020-05-12 15:50";
           if (index === 1) step.time = "2020-05-13 10:30";
           if (index === 2) step.time = "2020-05-14 14:20";
           if (index === 3) step.time = "2020-05-15 16:45";
-        } else if (index === currentStep) {
+        } else if (step.id === currentStep) {
           step.active = true; // 当前步骤也标记为已完成
           // 为当前步骤添加时间
           if (index === 0) step.time = "2020-05-12 15:50";
@@ -432,12 +532,22 @@ export default {
       // 这里可以处理文件上传逻辑
     },
 
+    // 显示支付方式弹框
     showPaymentModal() {
       this.paymentModalVisible = true;
     },
 
+    // 选择支付方式
     selectPayment(paymentMethod) {
       this.selectedPayment = paymentMethod;
+      if (paymentMethod === "offline") {
+        this.$api({
+          url: "offPaySetting",
+          method: "get",
+        }).then((res) => {
+          this.offlinePaymentInfo = res.data;
+        });
+      }
     },
 
     // 处理支付凭证上传
@@ -449,9 +559,25 @@ export default {
     // 提交线下支付
     submitOfflinePayment() {
       console.log("提交线下支付");
-      // 这里可以处理线下支付提交逻辑
-      this.$message.success("支付凭证已提交，请等待审核");
-      this.paymentModalVisible = false;
+      let url = "";
+      let originName = "";
+      this.paymentUrl.forEach((item) => {
+        url = item.response.data.save_url;
+        originName = item.originName;
+      });
+      this.$api({
+        url: "uploadPayProve",
+        method: "post",
+        data: {
+          workorderId: this.id,
+          payProve: url,
+        },
+      }).then((res) => {
+        this.$message.success("提交成功");
+        this.paymentModalVisible = false;
+        this.paymentUrl = [];
+        this.initDemandInfo();
+      });
     },
 
     // 取消支付
@@ -465,10 +591,26 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
-        this.$message.success("确认完成");
-        this.processStatus = 4;
-        this.updateProcessStatus(this.processStatus);
+        this.$api({
+          url: "userConfirmFinish",
+          method: "post",
+          data: {
+            workorder_id: this.id,
+          },
+        }).then((res) => {
+          this.$message.success("确认完成");
+        });
       });
+    },
+
+    downloadFile(file) {
+      // 处理文件下载
+      console.log("下载文件:", file);
+      window.open(file, "_blank");
+    },
+    upload_before_upload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 20;
+      return isLt2M;
     },
   },
 };
