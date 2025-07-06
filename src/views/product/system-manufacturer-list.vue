@@ -160,7 +160,7 @@
           <div class="recommend-section">
             <div class="recommend-header">
               <img src="@/assets/image/icon/good.png" alt="" />
-              <span>广告推荐</span>
+              <span>厂商推荐</span>
             </div>
             <div class="recommend-list">
               <div

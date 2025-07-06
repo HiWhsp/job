@@ -238,11 +238,11 @@ export default {
       total: 0,
       tabs: [
         { key: "", label: "全部" },
-        { key: "maintenance", label: "售后运维" },
-        { key: "photovoltaic", label: "光伏充电桩" },
-        { key: "energy_storage", label: "新能源光储充" },
-        { key: "project_transfer", label: "项目转让" },
-        { key: "material_contract", label: "光伏材料合同" },
+        { key: "1", label: "售后运维" },
+        { key: "2", label: "光伏充电桩" },
+        { key: "3", label: "新能源光储充" },
+        { key: "4", label: "项目转让" },
+        { key: "5", label: "光伏材料合同" },
       ],
     };
   },

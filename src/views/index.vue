@@ -47,8 +47,11 @@
           <div class="banner-area">
             <div class="banner-content">
               <el-carousel height="374px">
-                <el-carousel-item v-for="item in vuex_config.mainBanners" :key="item.id">
-                  <img :src="item.url" alt="" />
+                <el-carousel-item
+                  v-for="item in vuex_config.mainBanners"
+                  :key="item.id"
+                >
+                  <img :src="item.image" alt="" @click="toUrl(item.url)" />
                 </el-carousel-item>
               </el-carousel>
             </div>
@@ -79,7 +82,10 @@
               </div>
             </div>
             <div class="item2">
-              <div class="item2-item" @click="toNav({ route: '/service-list' })">
+              <div
+                class="item2-item"
+                @click="toNav({ route: '/service-list' })"
+              >
                 <img src="@/assets/image/icon/gd.png" alt="" />
                 <p>我的工单</p>
               </div>
@@ -106,7 +112,9 @@
                 class="notice-item ellipsis"
                 v-for="item in (vuex_config.newsList || []).slice(0, 4)"
                 :key="item.id"
-                @click="toNav({ route: '/article-detail', query: { id: item.id } })"
+                @click="
+                  toNav({ route: '/article-detail', query: { id: item.id } })
+                "
               >
                 {{ item.title }}
               </div>
@@ -117,8 +125,9 @@
 
       <div class="top-nav-right-bottom">
         <img
-          :src="vuex_config.mainAdBanner ? vuex_config.mainAdBanner[0].url : ''"
+          :src="vuex_config.mainAdBanner ? vuex_config.mainAdBanner[0].image : ''"
           alt=""
+          @click="toUrl(vuex_config.mainAdBanner[0].url)"
         />
       </div>
 
@@ -129,7 +138,10 @@
           <span
             class="more-link"
             @click="
-              toNav({ route: '/system-manufacturer-list', query: { companyType: 1 } })
+              toNav({
+                route: '/system-manufacturer-list',
+                query: { companyType: 1 },
+              })
             "
             >查看更多 <i class="el-icon-arrow-right"></i
           ></span>
@@ -139,7 +151,9 @@
             class="ad-card"
             v-for="item in system_list"
             :key="item.id"
-            @click="toNav({ route: '/manufacturer-detail', query: { id: item.id } })"
+            @click="
+              toNav({ route: '/manufacturer-detail', query: { id: item.id } })
+            "
           >
             <div class="ad-logo-placeholder">
               <img :src="item.logo" alt="" />
@@ -161,7 +175,10 @@
           <span
             class="more-link"
             @click="
-              toNav({ route: '/system-manufacturer-list', query: { companyType: 2 } })
+              toNav({
+                route: '/system-manufacturer-list',
+                query: { companyType: 2 },
+              })
             "
             >查看更多 <i class="el-icon-arrow-right"></i
           ></span>
@@ -171,7 +188,9 @@
             class="ad-card"
             v-for="item in config_list"
             :key="item.id"
-            @click="toNav({ route: '/manufacturer-detail', query: { id: item.id } })"
+            @click="
+              toNav({ route: '/manufacturer-detail', query: { id: item.id } })
+            "
           >
             <div class="ad-logo-placeholder">
               <img :src="item.logo" alt="" />
@@ -189,29 +208,31 @@
       <!-- 线上线下服务网络区域 -->
       <div class="service-network-section">
         <div class="section-header">
-          <h2>线上线下服务网络</h2>
+          <h2>线上下单 线下服务保障</h2>
         </div>
         <div class="network-content">
           <div class="network-content-left">
             <div class="service-points">
               <div class="service-category">
-                <h3>全球售后服务网络</h3>
+                <h3>全球售后运维服务网点</h3>
                 <div class="service-locations">
                   <div class="location-group">
                     <h4>中国</h4>
-                    <div
-                      class="location-item"
-                      v-for="item in vuex_config.wangdian_list"
-                      :key="item.name"
-                    >
-                      <img class="flag" :src="item.photo" />
-                      <div class="location-item-content">
-                        <p class="location-item-title ellipsis-1">
-                          {{ item.name }}
-                        </p>
-                        <p class="location-item-address ellipsis-1">
-                          {{ item.address }}
-                        </p>
+                    <div class="scroll-box">
+                      <div
+                        class="location-item"
+                        v-for="item in vuex_config.wangdian_list"
+                        :key="item.name"
+                      >
+                        <img class="flag" :src="item.photo" />
+                        <div class="location-item-content">
+                          <p class="location-item-title ellipsis-1">
+                            {{ item.name }}
+                          </p>
+                          <p class="location-item-address ellipsis-1">
+                            {{ item.address }}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -247,7 +268,10 @@
                   <span>认证工程师技术保障</span>
                 </div>
               </div>
-              <div class="contact-btn" @click="toNav({ route: '/demand-form' })">
+              <div
+                class="contact-btn"
+                @click="toNav({ route: '/demand-form' })"
+              >
                 <span>提交服务需求</span>
               </div>
             </div>
@@ -402,6 +426,9 @@ export default {
           ...route.query,
         },
       });
+    },
+    toUrl(url) {
+      window.open(url, "_blank");
     },
     showRegister() {
       this.$router.push("/register");

@@ -32,7 +32,7 @@
               关注
             </button>
             <button class="btn-follow" @click="handleFollow" v-else>
-              <i class="el-icon-minus"></i>
+              <i class="el-icon-check"></i>
               已关注
             </button>
             <button class="btn-message" @click="handleMessage">
@@ -299,6 +299,7 @@ export default {
         method: "get",
         data: {
           companyId: this.$route.query.id,
+          userId: this.vuex_user.id,
         },
       }).then((res) => {
         console.log(res);

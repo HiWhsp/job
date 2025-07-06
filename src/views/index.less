@@ -369,7 +369,8 @@
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    border-radius: 14px;
+    // object-fit: cover;
   }
 }
 
@@ -477,7 +478,7 @@
         img {
           width: 100%;
           height: 100%;
-          object-fit: contain;
+          // object-fit: contain;
         }
       }
 
@@ -553,10 +554,10 @@
         justify-content: center;
         color: white;
         font-weight: bold;
-
-        &::before {
-          content: "LOGO";
-          font-size: 16px;
+        img {
+          width: 100%;
+          height: 100%;
+          // object-fit: cover;
         }
       }
 
@@ -665,6 +666,12 @@
                 margin-bottom: 34px;
                 margin-top: 20px;
                 text-align: center;
+              }
+
+              .scroll-box {
+                width: 100%;
+                height: 230px;
+                overflow-x: auto;
               }
 
               .location-item {
@@ -879,7 +886,7 @@
         img {
           width: 100%;
           height: 100%;
-          object-fit: contain;
+          // object-fit: contain;
         }
       }
     }

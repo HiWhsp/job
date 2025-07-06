@@ -483,7 +483,7 @@ export default {
     upload_on_success(res, file) {
       let { code, data, msg } = res;
       if (code == 200) {
-        this.my_info.avatar = res.data.save_url;
+        this.my_info.avatar = res.data.full_url;
       }
     },
     upload_before_upload(file) {
@@ -494,7 +494,7 @@ export default {
       // 证书上传成功逻辑
       let { code, data, msg } = res;
       if (code == 200) {
-        this.my_info.skillPhoto = res.data.save_url;
+        this.my_info.skillPhoto = res.data.full_url;
       }
     },
 

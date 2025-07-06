@@ -165,7 +165,7 @@ export default {
     upload_on_success(res, file) {
       let { code, data, msg } = res;
       if (code == 200) {
-        this.feedbackForm.images.push(res.data.save_url);
+        this.feedbackForm.images.push(res.data.full_url);
       }
     },
     upload_before_upload(file) {

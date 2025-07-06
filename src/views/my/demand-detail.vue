@@ -184,7 +184,7 @@ export default {
     initDemandInfo() {
       // 从路由参数获取信息
       this.$api({
-        url: "workorderDetail",
+        url: "requireDetail",
         method: "post",
         data: {
           id: this.id,
@@ -194,9 +194,9 @@ export default {
         if (code == 200) {
           this.demandInfo = {
             ...data,
-            photosJson: JSON.parse(data.photosJson || "[]"),
-            productJson: JSON.parse(data.productJson || "[]"),
-            attachJson: JSON.parse(data.attachJson || "[]"),
+            photosJson: JSON.parse(data.photosJson),
+            productJson: data.productJson,
+            attachJson: JSON.parse(data.attachJson),
           };
           console.log(this.demandInfo);
         }

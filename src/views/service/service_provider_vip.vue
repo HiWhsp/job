@@ -40,7 +40,7 @@
           立即开通
         </button>
         <div class="open-vip-btn-box" v-if="my_info.userLevel != 0">
-          <button class="open-vip-home" @click="go_my_home">我的主页</button>
+          <button class="open-vip-home" @click="go_my_home" v-if="my_info.userType != 1">我的主页</button>
           <button class="open-vip-renew" @click="openVipNow">续费会员</button>
         </div>
       </div>

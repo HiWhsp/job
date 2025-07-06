@@ -33,7 +33,11 @@
         </el-form-item>
 
         <el-form-item label="地址" prop="address">
-          <el-input v-model="form.address" placeholder="请输入地址" clearable></el-input>
+          <el-input
+            v-model="form.address"
+            placeholder="请输入地址"
+            clearable
+          ></el-input>
         </el-form-item>
 
         <el-form-item label="联系人" prop="contactPerson">
@@ -349,7 +353,11 @@
           </div>
         </template>
 
-        <el-form-item label="上传图片" prop="images" v-if="form.workOrderType == 1">
+        <el-form-item
+          label="上传图片"
+          prop="images"
+          v-if="form.workOrderType == 1"
+        >
           <el-upload
             class="upload-demo"
             accept="image/*"
@@ -363,7 +371,11 @@
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="上传附件" prop="images" v-if="form.workOrderType != 1">
+        <el-form-item
+          label="上传附件"
+          prop="images"
+          v-if="form.workOrderType != 1"
+        >
           <el-upload
             class="upload-demo"
             accept="image/*"
@@ -430,10 +442,16 @@ export default {
       },
       uploadAction: "#", // 上传接口地址，根据实际情况修改
       rules: {
-        workOrderType: [{ required: true, message: "请选择填报类型", trigger: "change" }],
+        workOrderType: [
+          { required: true, message: "请选择填报类型", trigger: "change" },
+        ],
         address: [{ required: true, message: "请输入地址", trigger: "blur" }],
-        companyName: [{ required: true, message: "请输入企业名称", trigger: "blur" }],
-        contactPerson: [{ required: true, message: "请输入联系人", trigger: "blur" }],
+        companyName: [
+          { required: true, message: "请输入企业名称", trigger: "blur" },
+        ],
+        contactPerson: [
+          { required: true, message: "请输入联系人", trigger: "blur" },
+        ],
         contact: [
           { required: true, message: "请输入联系电话", trigger: "blur" },
           {
@@ -480,53 +498,55 @@ export default {
             this.form.images.forEach((item) => {
               if (this.form.workOrderType == 1) {
                 this.form.photos
-                  ? this.form.photos.push(item.response.data.save_url)
-                  : (this.form.photos = [item.response.data.save_url]);
+                  ? this.form.photos.push(item.response.data.full_url)
+                  : (this.form.photos = [item.response.data.full_url]);
                 this.form.photosJson
                   ? this.form.photosJson.push({
                       name: item.name,
-                      url: item.response.data.save_url,
+                      url: item.response.data.full_url,
                     })
                   : (this.form.photosJson = [
                       {
                         name: item.name,
-                        url: item.response.data.save_url,
+                        url: item.response.data.full_url,
                       },
                     ]);
               } else {
                 this.form.attach
-                  ? this.form.attach.push(item.response.data.save_url)
-                  : (this.form.attach = [item.response.data.save_url]);
+                  ? this.form.attach.push(item.response.data.full_url)
+                  : (this.form.attach = [item.response.data.full_url]);
                 this.form.attachJson
                   ? this.form.attachJson.push({
                       name: item.name,
-                      url: item.response.data.save_url,
+                      url: item.response.data.full_url,
                     })
                   : (this.form.attachJson = [
                       {
                         name: item.name,
-                        url: item.response.data.save_url,
+                        url: item.response.data.full_url,
                       },
                     ]);
               }
             });
           } else {
             this.$message.error("请上传附件图片");
+            return false;
           }
           if (this.form.workOrderType == "2") {
             this.form.productJson = this.form.productList;
           } else if (this.form.workOrderType == "5") {
             // this.form.recycleJson = JSON.stringify(this.form.recycleList);
           }
+          console.log(this.form);
           this.$api({
             url: "createWorkorder",
             method: "post",
             data: {
               ...this.form,
-              photos: JSON.stringify(this.form.photos),
-              photosJson: JSON.stringify(this.form.photosJson),
-              attach: JSON.stringify(this.form.attach),
-              attachJson: JSON.stringify(this.form.attachJson),
+              photos: this.form.workOrderType == 1 ? this.form.photos.join(",") : undefined,
+              photosJson: this.form.workOrderType == 1 ? JSON.stringify(this.form.photosJson) : undefined,
+              attach: this.form.workOrderType != 1 ? this.form.attach.join(",") : undefined,
+              attachJson: this.form.workOrderType != 1 ? JSON.stringify(this.form.attachJson) : undefined,
               images: undefined,
             },
           }).then((res) => {

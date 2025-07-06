@@ -88,7 +88,7 @@ export default {
   height: 0;
   transition: height 1s ease-in-out;
   overflow: hidden;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  // background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   &.expanded {
     height: 510px;
   }
@@ -102,6 +102,11 @@ export default {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 @keyframes float {

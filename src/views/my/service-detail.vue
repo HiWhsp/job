@@ -86,7 +86,7 @@
               <a
                 href="#"
                 class="download-link"
-                @click="downloadFile(demandInfo.workorderUrl)"
+                @click="downloadFile(demandInfo.workorderUrl_full)"
                 >下载</a
               >
             </div>
@@ -97,7 +97,7 @@
               <a
                 href="#"
                 class="download-link"
-                @click="downloadFile(demandInfo.contractUrl)"
+                @click="downloadFile(demandInfo.contractUrl_full)"
                 >下载</a
               >
             </div>
@@ -476,11 +476,11 @@ export default {
       let url = "";
       let originName = "";
       this.backUrl.forEach((item) => {
-        url = item.response.data.save_url;
-        originName = item.originName;
+        url = item.response.data.full_url;
+        originName = item.response.data.originName;
       });
       this.$api({
-        url: "backOpen",
+        url: "backWorkorder",
         method: "post",
         data: {
           workorderId: this.id,
@@ -507,18 +507,23 @@ export default {
         if (step.id < currentStep) {
           step.active = true;
           // 为已完成的步骤添加时间（示例时间）
-          if (index === 0) step.time = "2020-05-12 15:50";
-          if (index === 1) step.time = "2020-05-13 10:30";
-          if (index === 2) step.time = "2020-05-14 14:20";
-          if (index === 3) step.time = "2020-05-15 16:45";
+          if (index === 0) step.time = this.demandInfo['status0_time'];
+          if (index === 1) step.time = this.demandInfo['status1_time'];
+          if (index === 2) step.time = this.demandInfo['status2_time'];
+          if (index === 3) step.time = this.demandInfo['status3_time'];
+          if (index === 4) step.time = this.demandInfo['status4_time'];
+          if (index === 5) step.time = this.demandInfo['status5_time'];
+          if (index === 6) step.time = this.demandInfo['status6_time'];
         } else if (step.id === currentStep) {
           step.active = true; // 当前步骤也标记为已完成
           // 为当前步骤添加时间
-          if (index === 0) step.time = "2020-05-12 15:50";
-          if (index === 1) step.time = "2020-05-13 10:30";
-          if (index === 2) step.time = "2020-05-14 14:20";
-          if (index === 3) step.time = "2020-05-15 16:45";
-          if (index === 4) step.time = "2020-05-16 09:15";
+          if (index === 0) step.time = this.demandInfo['status0_time'];
+          if (index === 1) step.time = this.demandInfo['status1_time'];
+          if (index === 2) step.time = this.demandInfo['status2_time'];
+          if (index === 3) step.time = this.demandInfo['status3_time'];
+          if (index === 4) step.time = this.demandInfo['status4_time'];
+          if (index === 5) step.time = this.demandInfo['status5_time'];
+          if (index === 6) step.time = this.demandInfo['status6_time'];
         } else {
           step.active = false;
           step.time = ""; // 未来步骤不显示时间
@@ -550,19 +555,13 @@ export default {
       }
     },
 
-    // 处理支付凭证上传
-    handlePaymentVoucherUpload(file, fileList) {
-      console.log("支付凭证上传:", file);
-      // 这里可以处理支付凭证上传逻辑
-    },
-
     // 提交线下支付
     submitOfflinePayment() {
       console.log("提交线下支付");
       let url = "";
       let originName = "";
       this.paymentUrl.forEach((item) => {
-        url = item.response.data.save_url;
+        url = item.response.data.full_url;
         originName = item.originName;
       });
       this.$api({
