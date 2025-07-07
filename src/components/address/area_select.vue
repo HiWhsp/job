@@ -2,20 +2,34 @@
   <div class="sanji-wrap">
     <div class="sanji-box">
       <el-select v-model="sheng" placeholder="请选择省" @change="change_sheng">
-        <el-option v-for="item in list_sheng" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        <el-option
+          v-for="item in list_sheng"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        ></el-option>
       </el-select>
       <el-select v-model="shi" placeholder="请选择市" @change="change_shi">
-        <el-option v-for="item in list_shi" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        <el-option
+          v-for="item in list_shi"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        ></el-option>
       </el-select>
       <el-select v-model="qu" placeholder="请选择区" @change="change_qu">
-        <el-option v-for="item in list_qu" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        <el-option
+          v-for="item in list_qu"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        ></el-option>
       </el-select>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
 export default {
   name: "area_select",
   components: {},
@@ -35,6 +49,9 @@ export default {
       list_sheng: [],
       list_shi: [],
       list_qu: [],
+
+      //全部数据
+      all_area_data: [],
     };
   },
 
@@ -54,7 +71,9 @@ export default {
     this.address_getAreaList({
       params: {},
       success: (data) => {
-        this.list_sheng = data;
+        this.all_area_data = data;
+        // 解析省份数据
+        this.list_sheng = this.parseProvinceData(data);
       },
     });
   },
@@ -65,14 +84,56 @@ export default {
   },
 
   methods: {
+    // 解析省份数据
+    parseProvinceData(data) {
+      return data.map((item) => ({
+        id: item.id,
+        name: item.name,
+        code: item.code,
+        parentId: item.parentId,
+      }));
+    },
+
+    // 根据省份ID获取城市数据
+    getCityData(provinceId) {
+      const province = this.all_area_data.find((item) => item.id == provinceId);
+      if (province && province.child) {
+        return province.child.map((item) => ({
+          id: item.id,
+          name: item.name,
+          code: item.code,
+          parentId: item.parentId,
+        }));
+      }
+      return [];
+    },
+
+    // 根据城市ID获取区县数据
+    getAreaData(cityId) {
+      for (let province of this.all_area_data) {
+        if (province.child) {
+          const city = province.child.find((item) => item.id == cityId);
+          if (city && city.child) {
+            return city.child.map((item) => ({
+              id: item.id,
+              name: item.name,
+              code: item.code,
+              parentId: item.parentId,
+            }));
+          }
+        }
+      }
+      return [];
+    },
+
     clear() {
-      this.sheng = ''
-      this.shi = ''
-      this.qu = ''
+      this.sheng = "";
+      this.shi = "";
+      this.qu = "";
 
       // this.list_sheng = []
-      this.list_shi = []
-      this.list_qu = []
+      this.list_shi = [];
+      this.list_qu = [];
     },
 
     //更新父组件省市区
@@ -100,38 +161,32 @@ export default {
 
     //父组件设置当前组件省市区数据
     async init(data) {
-      this.$log('初始化', data)
+      this.$log("初始化", data);
       //console.log("父组件设置当前组件省市区数据", data);
-      let { province, city, area, provinceCode, cityCode, areaCode } = data;
-      // this.sheng = province_id;
-      // this.shi = city_id;
-      // this.qu = area_id;
+      let { provinceName, cityName, areaName, provinceId, cityId, areaId } = data;
 
-      //省
-      let obj_sheng = this.list_sheng.find((v) => v.id == provinceCode || v.title == province) || {};
-      this.sheng = obj_sheng.id;
+      setTimeout(() => {
+        //省
+        let obj_sheng =
+          this.list_sheng.find((v) => v.id == provinceId || v.name == provinceName) || {};
+        this.sheng = obj_sheng.id;
 
-      //解决初始回显慢的问题
-      this.list_shi = [{id: cityCode, title: city}]
-      this.shi = cityCode
-      this.list_qu = [{id: areaCode, title: area}]
-      this.qu = areaCode
-      //解决初始回显慢的问题
+        //市
+        if (this.sheng) {
+          this.list_shi = this.getCityData(this.sheng);
+          let obj_shi =
+            this.list_shi.find((v) => v.id == cityId || v.name == cityName) || {};
+          this.shi = obj_shi.id;
 
-      //市
-      let res_shi = await this.$api("users_getAreaList", { parent_id: this.sheng });
-      this.list_shi = res_shi.data || [];
-      let obj_shi = this.list_shi.find((v) => v.id == cityCode || v.title == city) || {};
-      this.shi = obj_shi.id;
-
-      //区
-      let res_qu = await this.$api("users_getAreaList", { parent_id: this.shi });
-      this.list_qu = res_qu.data || [];
-      let obj_qu = this.list_qu.find((v) => v.id == areaCode || v.title == area) || {};
-      this.qu = obj_qu.id;
-
-      //console.log("查询城市数据 res_shi", res_shi);
-      //console.log("查询区县数据 res_qu", res_qu);
+          //区
+          if (this.shi) {
+            this.list_qu = this.getAreaData(this.shi);
+            let obj_qu =
+              this.list_qu.find((v) => v.id == areaId || v.name == areaName) || {};
+            this.qu = obj_qu.id;
+          }
+        }
+      }, 1000);
     },
 
     //查询城市
@@ -143,12 +198,9 @@ export default {
       }
       this.sheng_prev = id;
 
-      this.address_getAreaList({
-        params: { parent_id: id },
-        success: (data) => {
-          this.list_shi = data;
-        },
-      });
+      // 从全部数据中获取城市数据
+      this.list_shi = this.getCityData(id);
+      this.list_qu = []; // 清空区县数据
     },
 
     //查询区县
@@ -159,24 +211,16 @@ export default {
       }
       this.shi_prev = id;
 
-      this.address_getAreaList({
-        params: { parent_id: id },
-        success: (data) => {
-          this.list_qu = data;
-        },
-      });
+      // 从全部数据中获取区县数据
+      this.list_qu = this.getAreaData(id);
     },
 
-    change_qu(id) { },
+    change_qu(id) {},
 
     address_getAreaList({ params, success } = opt) {
       this.$api({
-        url: "/service.php",
+        url: "getArea",
         method: "get",
-        data: {
-          action: "users_getAreaList",
-          ...params
-        }
       }).then((res) => {
         let { code, data } = res;
         // debugger
@@ -191,11 +235,10 @@ export default {
 };
 </script>
 
-
 <style scoped lang="less">
 /deep/ .el-switch.is-checked .el-switch__core {
-  background-color: #009F39 !important;
-  border-color: #009F39 !important;
+  background-color: #009f39 !important;
+  border-color: #009f39 !important;
 }
 
 /deep/ .el-input {

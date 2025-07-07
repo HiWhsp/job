@@ -88,16 +88,20 @@
             <!-- 产品展示 -->
             <div
               class="product-showcase"
-              v-for="(product, index) in companyInfo.productJson"
+              v-for="(product, index) in products"
               :key="index"
             >
               <h3 class="showcase-title">
-                <span class="title-text">{{ product.typeName }}</span>
+                <span class="title-text">{{ product.product_type_title }}</span>
               </h3>
               <div class="product-list">
-                <div class="product-item" v-for="(item, i) in product.list" :key="i">
+                <div
+                  class="product-item"
+                  v-for="(item, i) in product.product_list"
+                  :key="i"
+                >
                   <div class="product-image">
-                    <img :src="item.image" :alt="item.name" />
+                    <img :src="item.image_full" :alt="item.name" />
                   </div>
                   <div class="product-info">
                     <h4 class="product-name">{{ item.name }}</h4>
@@ -110,10 +114,7 @@
                 </div>
               </div>
             </div>
-            <el-empty
-              v-if="!companyInfo.productJson || companyInfo.productJson.length === 0"
-              description="暂无产品"
-            />
+            <el-empty v-if="!products || products.length === 0" description="暂无产品" />
           </div>
         </div>
 
@@ -244,6 +245,7 @@ export default {
         },
       ],
       companyInfo: {},
+      products: [],
       workTypeList: [],
     };
   },
@@ -306,6 +308,7 @@ export default {
         let { code, data, msg } = res;
         if (code == 200) {
           this.companyInfo = data.shopInfo;
+          this.products = data.ptoducts;
           this.messageForm.companyName = this.companyInfo.companyName;
           this.messageForm.companyId = this.companyInfo.id;
         }

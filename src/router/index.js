@@ -303,7 +303,16 @@ const routes = [
           title: "服务商个人中心",
           requireAuth: true,
         },
-      }
+      },
+      {
+        path: "/service-provider-info",
+        name: "service-provider-info",
+        component: () => import("@/views/service/service_company_info.vue"),
+        meta: {
+          title: "服务商企业信息",
+          requireAuth: true,
+        },
+      },
     ],
   },
 

@@ -565,4 +565,4 @@ export default {
 };
 </script>
 
-<style scoped lang="less" src="./my-company-info.less"></style>
+<style scoped lang="less" src="./service_company_info.less"></style>
