@@ -148,7 +148,7 @@ export default {
               account: this.registerForm.account,
               password: this.registerForm.password,
               captcha: this.registerForm.verifyCode,
-              type: 1,
+              type: this.registerForm.type,
               userType: this.registerForm.userType,
             },
           }).then((res) => {
@@ -174,7 +174,7 @@ export default {
         method: "post",
         data: {
           account: this.registerForm.account,
-          type: 1,
+          type: this.registerForm.account.includes("@") ? 2 : 1,
         },
       }).then((res) => {
         if (res.code == 200) {

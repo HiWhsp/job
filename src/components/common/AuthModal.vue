@@ -113,7 +113,7 @@
                 plain
                 size="large"
                 :disabled="codeDisabled"
-                @click="getVerifyCode('login')"
+                @click="getVerifyCode('password')"
                 class="code-btn"
               >
                 {{ codeText }}
@@ -208,35 +208,6 @@ export default {
           { min: 4, max: 6, message: "验证码长度为4-6位", trigger: "blur" },
         ],
       },
-
-      registerRules: {
-        username: [
-          { required: true, message: "请输入昵称", trigger: "blur" },
-          { min: 2, max: 20, message: "昵称长度为2-20个字符", trigger: "blur" },
-        ],
-        phone: [
-          { required: true, message: "请输入手机号", trigger: "blur" },
-          {
-            pattern: /^1[3-9]\d{9}$/,
-            message: "请输入正确的手机号格式",
-            trigger: "blur",
-          },
-        ],
-        code: [
-          { required: true, message: "请输入验证码", trigger: "blur" },
-          { min: 4, max: 6, message: "验证码长度为4-6位", trigger: "blur" },
-        ],
-        password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, max: 20, message: "密码长度为6-20位", trigger: "blur" },
-        ],
-        realName: [{ required: true, message: "请输入真实姓名", trigger: "blur" }],
-        company: [{ required: true, message: "请输入公司名称", trigger: "blur" }],
-        email: [
-          { required: true, message: "请输入邮箱地址", trigger: "blur" },
-          { type: "email", message: "请输入正确的邮箱格式", trigger: "blur" },
-        ],
-      },
     };
   },
 
@@ -274,19 +245,28 @@ export default {
     },
 
     getVerifyCode(type) {
-      const form = type === "login" ? this.loginForm : this.registerForm;
-      const account = type === "login" ? form.account : form.phone;
-
+      const account = this.loginForm.account;
       if (!account) {
-        this.$message.warning(
-          type === "login" ? "请先输入手机号码或邮箱" : "请先输入手机号"
-        );
+        this.$message.warning("请先输入手机号或邮箱");
         return;
       }
+      if (account.includes("@")) {
+        if (type == "password") {
+          type = 4;
+        } else {
+          type = 6;
+        }
+      } else {
+        if (type == "password") {
+          type = 3;
+        } else {
+          type = 5;
+        }
+      }
       this.$api({
-        url: "send",
+        url: "sendCode",
         method: "post",
-        data: { mobile: account, type: type },
+        data: { account, type },
       }).then((res) => {
         if (res.code == 200) {
           this.startCountdown();
@@ -330,7 +310,7 @@ export default {
               account: this.loginForm.account,
               password: this.loginForm.password,
               code: this.loginForm.code,
-              type: this.type === "code" ? 2 : 1,
+              type: this.loginForm.account.includes("@") ? 2 : 1,
             },
           })
             .then((res) => {
@@ -362,7 +342,40 @@ export default {
     submitForgetPassword() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
+          if (!this.loginForm.password) {
+            this.$message.warning("请先输入新密码");
+            return;
+          }
+          // 清除密码中的空格
+          this.loginForm.password = this.loginForm.password.replace(/\s/g, "");
+          if (this.loginForm.password.length < 6 || this.loginForm.password.length > 20) {
+            this.$message.warning("密码长度为6-20位");
+            return;
+          }
           this.loginLoading = true;
+          this.$api({
+            url: "findPassword",
+            method: "post",
+            data: {
+              account: this.loginForm.account,
+              password: this.loginForm.password,
+              captcha: this.loginForm.code,
+              type: this.loginForm.account.includes("@") ? 2 : 1,
+            },
+          })
+            .then((res) => {
+              if (res.code == 200) {
+                this.loginLoading = false;
+                this.$message.success("重置密码成功");
+                this.activeTab = "login";
+              } else {
+                this.loginLoading = false;
+                this.$message.error(res.msg);
+              }
+            })
+            .catch((err) => {
+              this.loginLoading = false;
+            });
         }
       });
     },
