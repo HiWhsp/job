@@ -284,7 +284,9 @@
             font-size: 14px;
             color: #3d3d3d;
             margin-left: 5px;
-            width: 200px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
             .file-icon {
               width: 120px;
               height: 120px;
@@ -409,6 +411,37 @@
                 .upload-text {
                   font-size: 14px;
                   color: #8c8c8c;
+                }
+              }
+            }
+
+            .upload-images {
+              display: flex;
+              gap: 15px;
+              flex-wrap: wrap;
+
+              .upload-image {
+                width: 120px;
+                height: 120px;
+                border: 2px dashed #d1d5db;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #f9fafb;
+
+                img {
+                  max-width: 100%;
+                  max-height: 100%;
+                  object-fit: cover;
+                  border-radius: 4px;
+                }
+
+                .upload-placeholder {
+ 
+                  color: #9ca3af;
+                  font-size: 14px;
+                  text-align: center;
                 }
               }
             }

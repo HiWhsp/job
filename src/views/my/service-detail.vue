@@ -243,7 +243,7 @@
           <div class="info-row" v-if="[5, 6].includes(processStatus)">
             <span class="info-label">服务图片：</span>
             <span class="info-value">
-              <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
+              <img :src="demandInfo.servicePhotos" class="file-icon" alt="file" />
             </span>
           </div>
         </div>
@@ -503,27 +503,28 @@ export default {
 
     // 更新流程状态
     updateProcessStatus(currentStep) {
+      // this.processStatus = currentStep;
       this.processSteps.forEach((step, index) => {
         if (step.id < currentStep) {
           step.active = true;
           // 为已完成的步骤添加时间（示例时间）
-          if (index === 0) step.time = this.demandInfo['status0_time'];
-          if (index === 1) step.time = this.demandInfo['status1_time'];
-          if (index === 2) step.time = this.demandInfo['status2_time'];
-          if (index === 3) step.time = this.demandInfo['status3_time'];
-          if (index === 4) step.time = this.demandInfo['status4_time'];
-          if (index === 5) step.time = this.demandInfo['status5_time'];
-          if (index === 6) step.time = this.demandInfo['status6_time'];
+          if (index === 0) step.time = this.demandInfo["status0_time"];
+          if (index === 1) step.time = this.demandInfo["status1_time"];
+          if (index === 2) step.time = this.demandInfo["status2_time"];
+          if (index === 3) step.time = this.demandInfo["status3_time"];
+          if (index === 4) step.time = this.demandInfo["status4_time"];
+          if (index === 5) step.time = this.demandInfo["status5_time"];
+          if (index === 6) step.time = this.demandInfo["status6_time"];
         } else if (step.id === currentStep) {
           step.active = true; // 当前步骤也标记为已完成
           // 为当前步骤添加时间
-          if (index === 0) step.time = this.demandInfo['status0_time'];
-          if (index === 1) step.time = this.demandInfo['status1_time'];
-          if (index === 2) step.time = this.demandInfo['status2_time'];
-          if (index === 3) step.time = this.demandInfo['status3_time'];
-          if (index === 4) step.time = this.demandInfo['status4_time'];
-          if (index === 5) step.time = this.demandInfo['status5_time'];
-          if (index === 6) step.time = this.demandInfo['status6_time'];
+          if (index === 0) step.time = this.demandInfo["status0_time"];
+          if (index === 1) step.time = this.demandInfo["status1_time"];
+          if (index === 2) step.time = this.demandInfo["status2_time"];
+          if (index === 3) step.time = this.demandInfo["status3_time"];
+          if (index === 4) step.time = this.demandInfo["status4_time"];
+          if (index === 5) step.time = this.demandInfo["status5_time"];
+          if (index === 6) step.time = this.demandInfo["status6_time"];
         } else {
           step.active = false;
           step.time = ""; // 未来步骤不显示时间

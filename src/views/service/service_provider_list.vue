@@ -10,6 +10,7 @@
               placeholder="请输入工单编号"
               clearable
               style="width: 200px"
+              @change="handleSearch"
             />
           </el-form-item>
           <el-form-item label="工单类型" prop="workOrderType">
@@ -18,6 +19,7 @@
               placeholder="请选择工单类型"
               clearable
               style="width: 200px"
+              @change="handleSearch"
             >
               <!-- 不传或传空获取全部;1售后运维需求表 2项目产品需求表 3项目融资表 4项目转让表 5产品回收利用表 -->
               <el-option label="全部" value="" />
@@ -34,6 +36,7 @@
               placeholder="请选择设备类型"
               clearable
               style="width: 200px"
+              @change="handleSearch"
             >
               <el-option label="全部" value="" />
               <el-option label="光伏" value="1" />
@@ -119,19 +122,19 @@
 
               <div class="content-right">
                 <div class="action-buttons">
-                  <el-button size="small" @click="handleAction(item)">
+                  <el-button size="small" @click="handleAction('detail', item)">
                     工单详情
                   </el-button>
                   <el-button
                     size="small"
-                    @click="handleAction(item)"
+                    @click="handleAction('backContract', item)"
                     v-if="item.workorderStatus == 0"
                   >
                     回传合同
                   </el-button>
                   <el-button
                     size="small"
-                    @click="handleAction(item)"
+                    @click="handleAction('confirm', item)"
                     v-if="item.workorderStatus == 3"
                   >
                     服务完成
@@ -175,8 +178,8 @@ export default {
       tabList: [
         { name: "全部工单", value: "0" },
         { name: "待确认", value: "1" },
-        { name: "服务中", value: "3" },
-        { name: "已完成", value: "4" },
+        { name: "服务中", value: "4" },
+        { name: "已完成", value: "5" },
       ],
       activeTab: "0",
       currentPage: 1,
@@ -237,13 +240,15 @@ export default {
       window.open(file, "_blank");
     },
     handleAction(action, item) {
-      // 处理操作按钮点击
-      this.$router.push({
-        name: "service-provider-detail",
-        params: {
-          id: item.id,
-        },
-      });
+      if (action == "detail") {
+        // 处理操作按钮点击
+        this.$router.push({
+          path: "/service-provider-detail",
+          query: {
+            id: item.id,
+          },
+        });
+      }
     },
     handleCurrentChange(page) {
       this.currentPage = page;
