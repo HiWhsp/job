@@ -71,9 +71,11 @@
           <!-- 头部信息 -->
           <div class="service-header">
             <div class="header-left">
-              <span class="status" :class="item.statusClass">{{
-                checkStatus(item.checkStatus)
-              }}</span>
+              <span
+                class="status"
+                :class="item.serviceStatus == 3 ? 'status-payment' : 'status-pending'"
+                >{{ checkStatus(item.serviceStatus) }}</span
+              >
               <div class="service-info">
                 <span class="date">{{ item.created_at }}</span>
                 <span class="order-info">工单编号：{{ item.workorder_no }}</span>
@@ -128,14 +130,14 @@
                   <el-button
                     size="small"
                     @click="handleAction('backContract', item)"
-                    v-if="item.workorderStatus == 0"
+                    v-if="item.serviceStatus == 1"
                   >
                     回传合同
                   </el-button>
                   <el-button
                     size="small"
                     @click="handleAction('confirm', item)"
-                    v-if="item.workorderStatus == 3"
+                    v-if="item.serviceStatus == 2"
                   >
                     服务完成
                   </el-button>
@@ -166,6 +168,72 @@
       layout="prev, pager, next"
       @current-change="handleCurrentChange"
     />
+
+    <!-- 回传合同弹框 -->
+    <el-dialog
+      title="回传合同"
+      :visible.sync="backOpenModalVisible"
+      width="400px"
+      :close-on-click-modal="false"
+    >
+      <!-- 一个上传组件, 一个提交 取消按钮 -->
+      <el-upload
+        class="upload-demo"
+        :file-list="backUrl"
+        :data="mix_upload_data"
+        :name="mix_upload_name"
+        :action="mix_upload_action"
+        list-type="picture-card"
+        :limit="1"
+        :on-change="upload_on_success"
+        :before-upload="upload_before_upload"
+      >
+        <i class="el-icon-plus"></i>
+      </el-upload>
+      <div class="back-open-actions">
+        <el-button type="primary" @click="submitBackOpen">提交</el-button>
+        <el-button @click="cancelBackOpen">取消</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 服务完成弹框 -->
+    <el-dialog
+      title="服务完成"
+      :visible.sync="paymentModalVisible"
+      width="600px"
+      :close-on-click-modal="false"
+      custom-class="payment-modal"
+    >
+      <div class="payment-content">
+        <!-- 线下支付区域 -->
+        <div class="offline-payment-section">
+          <div class="upload-section">
+            <div class="upload-label">上传服务单：</div>
+            <div class="upload-area">
+              <el-upload
+                class="payment-uploader"
+                :file-list="paymentUrl"
+                :data="mix_upload_data"
+                :name="mix_upload_name"
+                :action="mix_upload_action"
+                :before-upload="upload_before_upload"
+                :on-change="handlePaymentVoucherUpload"
+              >
+                <div class="upload-placeholder">
+                  <i class="el-icon-plus"></i>
+                </div>
+              </el-upload>
+              <span>上传客户签字的服务单/现场维修图片</span>
+            </div>
+          </div>
+
+          <div class="offline-actions">
+            <el-button type="primary" @click="submitOfflinePayment">提交</el-button>
+            <el-button @click="cancelPayment">取消</el-button>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -174,12 +242,13 @@ export default {
   name: "service-provider-list",
   data() {
     return {
+      id: "",
       serviceList: [],
       tabList: [
-        { name: "全部工单", value: "0" },
+        { name: "全部工单", value: "" },
         { name: "待确认", value: "1" },
-        { name: "服务中", value: "4" },
-        { name: "已完成", value: "5" },
+        { name: "服务中", value: "2" },
+        { name: "已完成", value: "3" },
       ],
       activeTab: "0",
       currentPage: 1,
@@ -190,6 +259,10 @@ export default {
         workOrderType: "",
         deviceType: "",
       },
+      backOpenModalVisible: false,
+      paymentModalVisible: false,
+      backUrl: [],
+      paymentUrl: [],
     };
   },
   computed: {
@@ -197,9 +270,10 @@ export default {
     checkStatus() {
       return (status) => {
         return {
-          0: "待查看",
-          1: "已查看",
-          2: "已处理",
+          0: "未分配",
+          1: "待确认",
+          2: "服务中",
+          3: "已完成",
         }[status];
       };
     },
@@ -240,6 +314,7 @@ export default {
       window.open(file, "_blank");
     },
     handleAction(action, item) {
+      this.id = item.id;
       if (action == "detail") {
         // 处理操作按钮点击
         this.$router.push({
@@ -248,6 +323,11 @@ export default {
             id: item.id,
           },
         });
+      }
+      if (action == "backContract") {
+        this.backOpenModalVisible = true;
+      } else if (action == "confirm") {
+        this.paymentModalVisible = true;
       }
     },
     handleCurrentChange(page) {
@@ -260,7 +340,7 @@ export default {
         data: {
           page: this.currentPage,
           pageSize: this.pageSize,
-          workorderStatus: this.activeTab,
+          serviceStatus: this.activeTab,
           ...this.searchForm,
         },
       }).then((res) => {
@@ -281,6 +361,87 @@ export default {
       this.activeTab = "0";
       this.currentPage = 1;
       this.handleSearch();
+    },
+
+    submitBackOpen() {
+      console.log("提交回传", this.backUrl);
+      let url = "";
+      let originName = "";
+      this.backUrl.forEach((item) => {
+        url = item.response.data.save_url;
+        originName = item.response.data.originName;
+      });
+      this.$api({
+        url: "serviceContract",
+        method: "post",
+        data: {
+          workorderId: this.id,
+          url: url,
+          name: originName,
+        },
+      }).then((res) => {
+        this.$message.success("回传成功");
+        this.backOpenModalVisible = false;
+        this.backUrl = [];
+        this.handleSearch();
+      });
+    },
+    cancelBackOpen() {
+      this.backUrl = [];
+      this.backOpenModalVisible = false;
+    },
+
+    // 提交线下支付
+    submitOfflinePayment() {
+      if (this.paymentUrl.length == 0) {
+        this.$message.error("请上传服务单");
+        return;
+      }
+      let url = [];
+      this.paymentUrl.forEach((item) => {
+        url.push(item.response.data.save_url);
+      });
+      this.$api({
+        url: "submitServicePhoto",
+        method: "post",
+        data: {
+          workorderId: this.id,
+          servicePhotos: url.join(","),
+        },
+      }).then((res) => {
+        this.$message.success("服务图片上传完成");
+        this.paymentModalVisible = false;
+        this.$api({
+          url: "serviceConfirmFinish",
+          method: "post",
+          data: {
+            workorder_id: this.id,
+          },
+        }).then((res) => {
+          // this.$message.success("确认完成");
+          this.handleSearch();
+        });
+        this.handleSearch();
+      });
+    },
+
+    //
+    cancelPayment() {
+      this.paymentModalVisible = false;
+    },
+
+    // 回传工单成功
+    upload_on_success(file, fileList) {
+      this.backUrl = fileList;
+    },
+
+    // 处理支付凭证上传
+    handlePaymentVoucherUpload(file, fileList) {
+      this.paymentUrl = fileList;
+    },
+    upload_before_upload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 20;
+      return isLt2M;
     },
   },
 };

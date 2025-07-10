@@ -78,8 +78,8 @@
               placeholder="请选择"
               class="form-input"
             >
-              <el-option label="需求方" value="2"></el-option>
-              <el-option label="服务方" value="3"></el-option>
+              <el-option label="需求方" value="1"></el-option>
+              <el-option label="服务方" value="2"></el-option>
             </el-select>
           </el-form-item>
 
@@ -149,7 +149,7 @@ export default {
               password: this.registerForm.password,
               captcha: this.registerForm.verifyCode,
               type: this.registerForm.type,
-              userType: this.registerForm.userType,
+              serviceType: this.registerForm.userType,
             },
           }).then((res) => {
             if (res.code == 200) {

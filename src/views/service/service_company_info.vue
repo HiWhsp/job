@@ -423,7 +423,7 @@ export default {
     upload_on_success(res, file) {
       let { code, data, msg } = res;
       if (code == 200) {
-        this.my_info.logo = res.data.full_url;
+        this.my_info.logo = res.data.save_url;
         this.$forceUpdate();
       }
     },
@@ -435,7 +435,7 @@ export default {
       // 证书上传成功逻辑
       let { code, data, msg } = res;
       if (code == 200) {
-        this.my_info.backImage = res.data.full_url;
+        this.my_info.backImage = res.data.save_url;
         this.$forceUpdate();
       }
     },
@@ -505,7 +505,7 @@ export default {
     uploadProductImage(res, categoryIndex, productIndex) {
       if (res.code === 200) {
         this.productCategories[categoryIndex].list[productIndex].image =
-          res.data.full_url;
+          res.data.save_url;
         this.$message.success("图片上传成功");
       } else {
         this.$message.error("图片上传失败");

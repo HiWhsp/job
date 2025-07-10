@@ -26,7 +26,11 @@
             :before-upload="upload_before_upload"
             :disabled="!isEditing"
           >
-            <img v-if="my_info.avatar" :src="my_info.avatar" class="user-avatar" />
+            <img
+              v-if="vuex_config.file_url_pre + my_info.avatar"
+              :src="my_info.avatar"
+              class="user-avatar"
+            />
             <img v-else src="@img/my/avatar.png" class="user-avatar" />
           </el-upload>
         </div>
@@ -284,15 +288,12 @@
 </template>
 
 <script>
-import { UPLOAD_ACTION, UPLOAD_NAME } from "@/config/env.js";
 import { mapState } from "vuex";
 
 export default {
   name: "servicePage",
   data() {
     return {
-      UPLOAD_ACTION,
-      UPLOAD_NAME,
       my_info: {
         workType: [],
         requireService: [],
@@ -510,7 +511,7 @@ export default {
     upload_on_success(res, file) {
       let { code, data, msg } = res;
       if (code == 200) {
-        this.my_info.avatar = res.data.full_url;
+        this.my_info.avatar = res.data.save_url;
       }
     },
     upload_before_upload(file) {
@@ -521,7 +522,7 @@ export default {
       // 证书上传成功逻辑
       let { code, data, msg } = res;
       if (code == 200) {
-        this.my_info.skillPhoto = res.data.full_url;
+        this.my_info.skillPhoto = res.data.save_url;
       }
     },
 

@@ -47,10 +47,7 @@
           <div class="banner-area">
             <div class="banner-content">
               <el-carousel height="374px">
-                <el-carousel-item
-                  v-for="item in vuex_config.mainBanners"
-                  :key="item.id"
-                >
+                <el-carousel-item v-for="item in vuex_config.mainBanners" :key="item.id">
                   <img :src="item.image" alt="" @click="toUrl(item.url)" />
                 </el-carousel-item>
               </el-carousel>
@@ -74,7 +71,7 @@
                 <p>{{ baseInfo.realname }}</p>
               </div>
               <div class="item1-right">
-                <img src="@img/my/avatar.png" alt="" />
+                <img :src="vuex_config.file_url_pre + baseInfo.avatar" alt="" />
                 <div class="item1-right-img">
                   <img src="@img/my/no-vip.png" alt="" />
                   <p>{{ levelName }}</p>
@@ -84,12 +81,23 @@
             <div class="item2">
               <div
                 class="item2-item"
-                @click="toNav({ route: '/service-list' })"
+                @click="
+                  toNav({
+                    route:
+                      baseInfo.serviceType == 1
+                        ? '/service-list'
+                        : '/service-provider-list',
+                  })
+                "
               >
                 <img src="@/assets/image/icon/gd.png" alt="" />
                 <p>我的工单</p>
               </div>
-              <div class="item2-item" @click="toNav({ route: '/demand-list' })">
+              <div
+                class="item2-item"
+                @click="toNav({ route: '/demand-list' })"
+                v-if="baseInfo.serviceType == 1"
+              >
                 <img src="@/assets/image/icon/yq.png" alt="" />
                 <p>我的需求</p>
               </div>
@@ -112,9 +120,7 @@
                 class="notice-item ellipsis"
                 v-for="item in (vuex_config.newsList || []).slice(0, 4)"
                 :key="item.id"
-                @click="
-                  toNav({ route: '/article-detail', query: { id: item.id } })
-                "
+                @click="toNav({ route: '/article-detail', query: { id: item.id } })"
               >
                 {{ item.title }}
               </div>
@@ -151,12 +157,10 @@
             class="ad-card"
             v-for="item in system_list"
             :key="item.id"
-            @click="
-              toNav({ route: '/manufacturer-detail', query: { id: item.id } })
-            "
+            @click="toNav({ route: '/manufacturer-detail', query: { id: item.id } })"
           >
             <div class="ad-logo-placeholder">
-              <img :src="item.logo" alt="" />
+              <img :src="item.logo_full" alt="" />
             </div>
             <div class="ad-content">
               <h3 class="ellipsis">{{ item.companyName }}</h3>
@@ -188,12 +192,10 @@
             class="ad-card"
             v-for="item in config_list"
             :key="item.id"
-            @click="
-              toNav({ route: '/manufacturer-detail', query: { id: item.id } })
-            "
+            @click="toNav({ route: '/manufacturer-detail', query: { id: item.id } })"
           >
             <div class="ad-logo-placeholder">
-              <img :src="item.logo" alt="" />
+              <img :src="item.logo_full" alt="" />
             </div>
             <div class="ad-content">
               <h3 class="ellipsis">{{ item.companyName }}</h3>
@@ -268,10 +270,7 @@
                   <span>认证工程师技术保障</span>
                 </div>
               </div>
-              <div
-                class="contact-btn"
-                @click="toNav({ route: '/demand-form' })"
-              >
+              <div class="contact-btn" @click="toNav({ route: '/demand-form' })">
                 <span>提交服务需求</span>
               </div>
             </div>
@@ -346,7 +345,7 @@ export default {
       }
     }, 500);
     // 判断是否是完善信息后跳转
-    if (localStorage.getItem("needFinish")) {
+    if (localStorage.getItem("needFinish") == "true") {
       this.$showProfileComplete({
         onSubmitSuccess: (data) => {
           localStorage.removeItem("needFinish");
@@ -402,6 +401,7 @@ export default {
     showLogin() {
       this.$showLogin({
         onLoginSuccess: (data) => {
+          console.log(data);
           this.$store.commit("set_baseInfo", data);
           localStorage.setItem("needFinish", data.needFinish);
           location.reload();

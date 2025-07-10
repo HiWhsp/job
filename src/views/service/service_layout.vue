@@ -19,7 +19,7 @@
               <span>个人中心</span>
             </template>
             <el-menu-item index="service-provider_info"> 我的个人中心 </el-menu-item>
-            <el-menu-item index="service-provider-vip"> 会员中心 </el-menu-item>
+            <!-- <el-menu-item index="service-provider-vip"> 会员中心 </el-menu-item> -->
             <el-menu-item index="service-provider-change-password">
               修改密码
             </el-menu-item>
@@ -46,7 +46,7 @@
         <div class="item">
           <el-dropdown trigger="hover" @command="handleCommand">
             <span class="el-dropdown-link">
-              <img src="@/assets/img/my/avatar.png" alt="" />
+              <img :src="vuex_config.file_url_pre + baseInfo.avatar" alt="" />
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="home">首页</el-dropdown-item>
@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "service_layout",
   data() {
@@ -70,13 +71,17 @@ export default {
       activeMenuItem: "service-management", // 默认选中服务工单管理
     };
   },
+  computed: {
+    ...mapState(["baseInfo"]),
+  },
   methods: {
     handleMessage() {
       this.$router.push("/service-provider-message");
     },
     handleCommand(command) {
       if (command === "logout") {
-        this.$store.dispatch("clear_loginInfo");
+        this.$store.commit("clear_loginInfo");
+        this.$router.push("/");
       } else {
         this.$router.push("/");
       }

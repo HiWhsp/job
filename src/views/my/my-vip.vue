@@ -119,7 +119,6 @@
 </template>
 
 <script>
-import { UPLOAD_ACTION, UPLOAD_NAME } from "@/config/env.js";
 import ModalVipPurchase from "@/components/modals/modalVipPurchase.vue";
 
 export default {
@@ -129,8 +128,6 @@ export default {
   },
   data() {
     return {
-      UPLOAD_ACTION,
-      UPLOAD_NAME,
       my_info: {},
       vip_info: {},
       vip_order_list: [],

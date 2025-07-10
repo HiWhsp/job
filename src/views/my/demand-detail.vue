@@ -24,7 +24,7 @@
       <div class="demand-content">
         <h3 class="content-title">{{ workOrderName(demandInfo) }}</h3>
         <div class="form-table">
-          <template v-if="demandInfo.workOrderType === 1">
+          <template v-if="demandInfo.workOrderType == 1">
             <div class="form-row">
               <div class="form-label">设备类型：</div>
               <div class="form-value">{{ deviceTypeName(demandInfo) }}</div>
@@ -48,7 +48,7 @@
           </template>
 
           <!-- 光储充相关产品需求表详情 -->
-          <template v-else>
+          <template v-if="[2, 5].includes(demandInfo.workOrderType)">
             <div class="product-table">
               <table>
                 <thead>
@@ -73,16 +73,45 @@
             </div>
           </template>
 
+          <template v-if="[3, 4].includes(demandInfo.workOrderType)">
+            <div class="form-row">
+              <div class="form-label">项目名称：</div>
+              <div class="form-value">{{ demandInfo.projectName }}</div>
+            </div>
+            <div class="form-row">
+              <div class="form-label">项目地点：</div>
+              <div class="form-value">{{ demandInfo.projectAddress }}</div>
+            </div>
+            <div class="form-row">
+              <div class="form-label">项目规模：</div>
+              <div class="form-value">
+                {{ demandInfo.projectScale }}
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-label">项目类型：</div>
+              <div class="form-value">
+                {{ demandInfo.projectTypeStr }}
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-label">项目进度：</div>
+              <div class="form-value">
+                {{ demandInfo.projectProgress }}
+              </div>
+            </div>
+          </template>
+
           <div class="form-row" v-if="demandInfo.workOrderType == 1">
             <div class="form-label">图片：</div>
             <div class="form-value">
               <div class="upload-images">
                 <div
                   class="upload-image"
-                  v-for="(item, index) in demandInfo.photosJson"
+                  v-for="(item, index) in demandInfo.photos_full"
                   :key="index"
                 >
-                  <img :src="item.url" alt="" />
+                  <img :src="item" alt="" />
                 </div>
               </div>
             </div>
@@ -93,10 +122,10 @@
               <div class="upload-images">
                 <div
                   class="upload-image"
-                  v-for="(item, index) in demandInfo.attachJson"
+                  v-for="(item, index) in demandInfo.attach_full"
                   :key="index"
                 >
-                  <img :src="item.url" alt="" />
+                  <img :src="item" alt="" />
                 </div>
               </div>
             </div>
@@ -157,10 +186,10 @@ export default {
       return (item) => {
         return {
           1: "售后运维需求表",
-          2: "光储充相关产品需求表",
-          3: "新能源光储充项目投融资信息需求表",
-          4: "项目转让需求表",
-          5: "光伏组件/锂电池/铅酸电池回收业务信息表",
+          2: "项目产品需求表",
+          3: "项目融资表",
+          4: "项目转让表",
+          5: "产品回收利用表",
         }[item.workOrderType];
       };
     },
@@ -194,9 +223,9 @@ export default {
         if (code == 200) {
           this.demandInfo = {
             ...data,
-            photosJson: JSON.parse(data.photosJson),
+            photosJson: data.photosJson,
             productJson: data.productJson,
-            attachJson: JSON.parse(data.attachJson),
+            attachJson: data.attachJson,
           };
           console.log(this.demandInfo);
         }

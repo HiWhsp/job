@@ -17,20 +17,18 @@
             <p class="demand-number">工单编号：{{ demandInfo.workorder_no }}</p>
           </div>
           <div class="demand-info-right">
-            <el-button v-if="processStatus == 1">
+            <el-button v-if="processStatus == 1" @click="backContract">
               <span>回传合同</span>
             </el-button>
-            <el-button v-if="processStatus == 4" @click="showPaymentModal">
+            <el-button v-if="processStatus == 2" @click="showPaymentModal">
               服务完成
             </el-button>
-            <!-- <el-button v-if="processStatus == 5" @click="confirmFinish">
-              确认完成
-            </el-button> -->
           </div>
         </div>
         <div class="demand-status">
           <p>
-            当前状态：<span>{{ workorderStatusName(demandInfo) }}</span>
+            <!-- 当前状态：<span>{{ workorderStatusName(demandInfo) }}</span> -->
+            当前状态：<span>{{ serviceStatus(demandInfo) }}</span>
           </p>
           <p>
             金额：<span>￥{{ demandInfo.originPrice }}</span>
@@ -153,19 +151,19 @@
               <div class="upload-images" v-if="demandInfo.workorderStatus == 1">
                 <div
                   class="upload-image"
-                  v-for="(item, index) in demandInfo.photosJson"
+                  v-for="(item, index) in demandInfo.photos_full"
                   :key="index"
                 >
-                  <img :src="item.url" alt="" />
+                  <img :src="item" alt="" />
                 </div>
               </div>
               <div class="upload-images" v-else>
                 <div
                   class="upload-image"
-                  v-for="(item, index) in demandInfo.attachJson"
+                  v-for="(item, index) in demandInfo.attach_full"
                   :key="index"
                 >
-                  <img :src="item.url" alt="" />
+                  <img :src="item" alt="" />
                 </div>
                 <div class="upload-image">
                   暂无{{ demandInfo.workorderStatus == 1 ? "图片" : "附件" }}
@@ -189,7 +187,7 @@
         </div>
       </div>
       <!-- 服务信息 -->
-      <div class="my-info" v-if="[4, 5].includes(processStatus)">
+      <div class="my-info" v-if="[2, 3].includes(processStatus)">
         <h3 class="info-title">服务信息</h3>
         <div class="info-content">
           <div class="info-row">
@@ -200,7 +198,7 @@
             <span class="info-label">联系方式：</span>
             <span class="info-value">{{ demandInfo.servicePhone }}</span>
           </div>
-          <div class="info-row" v-if="processStatus == 5">
+          <div class="info-row" v-if="demandInfo.servicePhotos">
             <span class="info-label">服务图片：</span>
             <div class="info-value">
               <img
@@ -254,6 +252,33 @@
         </div>
       </div>
     </el-dialog>
+
+    <!-- 回传合同弹框 -->
+    <el-dialog
+      title="回传合同"
+      :visible.sync="backOpenModalVisible"
+      width="400px"
+      :close-on-click-modal="false"
+    >
+      <!-- 一个上传组件, 一个提交 取消按钮 -->
+      <el-upload
+        class="upload-demo"
+        :file-list="backUrl"
+        :data="mix_upload_data"
+        :name="mix_upload_name"
+        :action="mix_upload_action"
+        list-type="picture-card"
+        :limit="1"
+        :on-change="upload_on_success"
+        :before-upload="upload_before_upload"
+      >
+        <i class="el-icon-plus"></i>
+      </el-upload>
+      <div class="back-open-actions">
+        <el-button type="primary" @click="submitBackOpen">提交</el-button>
+        <el-button @click="cancelBackOpen">取消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -285,19 +310,33 @@ export default {
           time: "",
           completed: false,
           active: false,
-          id: 4,
+          id: 2,
         },
         {
           title: "已完成",
           time: "",
           completed: false,
           active: false,
-          id: 5,
+          id: 3,
         },
       ],
       paymentUrl: [],
       paymentModalVisible: false,
+      backOpenModalVisible: false,
+      backUrl: [],
     };
+  },
+  computed: {
+    serviceStatus() {
+      return (item) => {
+        return {
+          0: "未分配",
+          1: "待确认",
+          2: "服务中",
+          3: "已完成",
+        }[item.serviceStatus];
+      };
+    },
   },
   mounted() {
     this.id = this.$route.query.id; // 修复参数获取
@@ -314,10 +353,10 @@ export default {
       }).then((res) => {
         this.demandInfo = {
           ...res.data,
-          photosJson: JSON.parse(res.data.photosJson) || [],
-          attachJson: JSON.parse(res.data.attachJson) || [],
+          photosJson: res.data.photosJson || [],
+          attachJson: res.data.attachJson || [],
         };
-        this.updateProcessStatus(this.demandInfo.workorderStatus);
+        this.updateProcessStatus(this.demandInfo.serviceStatus);
       });
     },
 
@@ -367,6 +406,38 @@ export default {
       this.paymentUrl = fileList;
     },
 
+    backContract() {
+      this.backOpenModalVisible = true;
+    },
+
+    submitBackOpen() {
+      console.log("提交回传", this.backUrl);
+      let url = "";
+      let originName = "";
+      this.backUrl.forEach((item) => {
+        url = item.response.data.save_url;
+        originName = item.response.data.originName;
+      });
+      this.$api({
+        url: "serviceContract",
+        method: "post",
+        data: {
+          workorderId: this.id,
+          url: url,
+          name: originName,
+        },
+      }).then((res) => {
+        this.$message.success("回传成功");
+        this.backOpenModalVisible = false;
+        this.backUrl = [];
+        this.initDemandInfo();
+      });
+    },
+    cancelBackOpen() {
+      this.backUrl = [];
+      this.backOpenModalVisible = false;
+    },
+
     // 提交线下支付
     submitOfflinePayment() {
       if (this.paymentUrl.length == 0) {
@@ -375,7 +446,7 @@ export default {
       }
       let url = [];
       this.paymentUrl.forEach((item) => {
-        url.push(item.response.data.full_url);
+        url.push(item.response.data.save_url);
       });
       this.$api({
         url: "submitServicePhoto",
@@ -385,13 +456,13 @@ export default {
           servicePhotos: url.join(","),
         },
       }).then((res) => {
-        this.$message.success("服务确认完成");
+        this.$message.success("服务图片上传完成");
         this.paymentModalVisible = false;
         this.$api({
-          url: "submitServicePhoto",
+          url: "serviceConfirmFinish",
           method: "post",
           data: {
-            workorderId: this.id,
+            workorder_id: this.id,
           },
         }).then((res) => {
           // this.$message.success("确认完成");
@@ -401,28 +472,14 @@ export default {
       });
     },
 
-    confirmFinish() {
-      this.$confirm("确认完成服务？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        this.$api({
-          url: "submitServicePhoto",
-          method: "post",
-          data: {
-            workorderId: this.id,
-          },
-        }).then((res) => {
-          this.$message.success("确认完成");
-          this.initDemandInfo();
-        });
-      });
-    },
-
     // 取消支付
     cancelPayment() {
       this.paymentModalVisible = false;
+    },
+
+    // 回传工单成功
+    upload_on_success(file, fileList) {
+      this.backUrl = fileList;
     },
 
     downloadFile(file) {

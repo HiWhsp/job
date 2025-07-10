@@ -11,7 +11,7 @@
         <!-- 左侧：公司logo -->
         <div class="company-logo">
           <div class="logo-container">
-            <img :src="companyInfo.logo" alt="Logo" />
+            <img :src="companyInfo.logo_full" alt="Logo" />
           </div>
         </div>
 
@@ -45,7 +45,7 @@
         <!-- 右侧：企业图片 -->
         <div class="company-info-right">
           <div class="company-image">
-            <img :src="companyInfo.backImage" alt="" />
+            <img :src="companyInfo.backImage_full" alt="" />
           </div>
         </div>
       </div>

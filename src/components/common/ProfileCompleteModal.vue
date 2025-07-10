@@ -31,12 +31,12 @@
         </el-form-item>
 
         <!-- 公司 -->
-        <el-form-item label="公司：" prop="company_name">
+        <el-form-item label="公司：" prop="company_name" v-if="form.userType == 2">
           <el-input v-model="form.company_name" placeholder="请输入公司名称"></el-input>
         </el-form-item>
 
         <!-- 职务 -->
-        <el-form-item label="职务：" prop="position">
+        <el-form-item label="职务：" prop="position" v-if="form.userType == 2">
           <el-input v-model="form.position" placeholder="请输入职务"></el-input>
         </el-form-item>
 

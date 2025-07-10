@@ -401,7 +401,7 @@ export default {
       let url = "";
       let originName = "";
       this.backUrl.forEach((item) => {
-        url = item.response.data.full_url;
+        url = item.response.data.save_url;
         originName = item.response.data.originName;
       });
       this.$api({
@@ -446,7 +446,7 @@ export default {
       let url = "";
       let originName = "";
       this.paymentUrl.forEach((item) => {
-        url = item.response.data.full_url;
+        url = item.response.data.save_url;
         originName = item.originName;
       });
       this.$api({

@@ -196,19 +196,19 @@
               <div class="upload-images" v-if="demandInfo.workorderStatus == 1">
                 <div
                   class="upload-image"
-                  v-for="(item, index) in demandInfo.photosJson"
+                  v-for="(item, index) in demandInfo.photos_full"
                   :key="index"
                 >
-                  <img :src="item.url" alt="" />
+                  <img :src="item" alt="" />
                 </div>
               </div>
               <div class="upload-images" v-else>
                 <div
                   class="upload-image"
-                  v-for="(item, index) in demandInfo.attachJson"
+                  v-for="(item, index) in demandInfo.attach_full"
                   :key="index"
                 >
-                  <img :src="item.url" alt="" />
+                  <img :src="item" alt="" />
                 </div>
               </div>
             </div>
@@ -266,11 +266,11 @@
             @click="selectPayment('alipay')"
           ></div>
 
-          <div
+          <!-- <div
             class="payment-method wechat"
             :class="{ active: selectedPayment === 'wechat' }"
             @click="selectPayment('wechat')"
-          ></div>
+          ></div> -->
 
           <div
             class="payment-method offline"
@@ -448,8 +448,8 @@ export default {
       }).then((res) => {
         this.demandInfo = {
           ...res.data,
-          photosJson: JSON.parse(res.data.photosJson) || [],
-          attachJson: JSON.parse(res.data.attachJson) || [],
+          photosJson: res.data.photosJson || [],
+          attachJson: res.data.attachJson || [],
         };
         this.updateProcessStatus(this.demandInfo.workorderStatus);
       });
@@ -476,7 +476,7 @@ export default {
       let url = "";
       let originName = "";
       this.backUrl.forEach((item) => {
-        url = item.response.data.full_url;
+        url = item.response.data.save_url;
         originName = item.response.data.originName;
       });
       this.$api({
@@ -503,7 +503,7 @@ export default {
 
     // 更新流程状态
     updateProcessStatus(currentStep) {
-      // this.processStatus = currentStep;
+      this.processStatus = currentStep;
       this.processSteps.forEach((step, index) => {
         if (step.id < currentStep) {
           step.active = true;
@@ -562,7 +562,7 @@ export default {
       let url = "";
       let originName = "";
       this.paymentUrl.forEach((item) => {
-        url = item.response.data.full_url;
+        url = item.response.data.save_url;
         originName = item.originName;
       });
       this.$api({

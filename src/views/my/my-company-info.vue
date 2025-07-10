@@ -31,7 +31,11 @@
                 :on-success="upload_on_success"
                 :before-upload="upload_before_upload"
               >
-                <img v-if="my_info.logo" :src="my_info.logo" class="certificate-image" />
+                <img
+                  v-if="my_info.logo"
+                  :src="vuex_config.file_url_pre + my_info.logo"
+                  class="certificate-image"
+                />
                 <i v-else class="el-icon-plus certificate-upload-icon"></i>
               </el-upload>
             </el-form-item>
@@ -85,7 +89,7 @@
               >
                 <img
                   v-if="my_info.backImage"
-                  :src="my_info.backImage"
+                  :src="vuex_config.file_url_pre + my_info.backImage"
                   class="certificate-image"
                 />
                 <i v-else class="el-icon-plus certificate-upload-icon"></i>
@@ -172,7 +176,11 @@
                   "
                   :before-upload="upload_before_upload"
                 >
-                  <img v-if="product.image" :src="product.image" class="product-image" />
+                  <img
+                    v-if="product.image"
+                    :src="vuex_config.file_url_pre + product.image"
+                    class="product-image"
+                  />
                   <i v-else class="el-icon-plus product-upload-icon"></i>
                 </el-upload>
                 <el-button
@@ -423,7 +431,7 @@ export default {
     upload_on_success(res, file) {
       let { code, data, msg } = res;
       if (code == 200) {
-        this.my_info.logo = res.data.full_url;
+        this.my_info.logo = res.data.save_url;
         this.$forceUpdate();
       }
     },
@@ -435,7 +443,7 @@ export default {
       // 证书上传成功逻辑
       let { code, data, msg } = res;
       if (code == 200) {
-        this.my_info.backImage = res.data.full_url;
+        this.my_info.backImage = res.data.save_url;
         this.$forceUpdate();
       }
     },
@@ -505,7 +513,7 @@ export default {
     uploadProductImage(res, categoryIndex, productIndex) {
       if (res.code === 200) {
         this.productCategories[categoryIndex].list[productIndex].image =
-          res.data.full_url;
+          res.data.save_url;
         this.$message.success("图片上传成功");
       } else {
         this.$message.error("图片上传失败");
