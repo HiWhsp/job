@@ -49,6 +49,13 @@
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span="12">
+            <el-form-item label="公司官网">
+              <el-input v-model="my_info.homePage" clearable placeholder="请输入" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="24">
             <div class="form-item-title">我属于的类型：</div>
             <div class="form-item-content">

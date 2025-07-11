@@ -10,15 +10,13 @@
           <div class="card-content">
             <div class="logo-section">
               <div class="logo-icon">
-                <img :src="item.logo" alt="logo" />
+                <img :src="item.logo_full" alt="logo" />
               </div>
             </div>
             <div class="card-title">
               {{ item.companyName }}
             </div>
-            <div class="card-subtitle" @click="handleCancelCollect(item)">
-              取消关注
-            </div>
+            <div class="card-subtitle" @click="handleCancelCollect(item)">取消关注</div>
           </div>
         </div>
       </div>

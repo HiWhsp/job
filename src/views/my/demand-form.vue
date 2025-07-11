@@ -453,7 +453,11 @@ export default {
       },
     };
   },
-  mounted() {},
+  mounted() {
+    if (JSON.parse(localStorage.getItem("baseInfo")).userLevel == 0) {
+      this.$message.warning("暂无权限填报需求, 请开通会员");
+    }
+  },
   watch: {
     "form.deviceType"(newVal) {
       // 当设备类型改变时，清空其他设备类型的输入

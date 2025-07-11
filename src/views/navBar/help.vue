@@ -45,6 +45,15 @@ export default {
       helpList: [],
     };
   },
+  watch: {
+    "$route.query.type": {
+      handler(newVal) {
+        this.activeMenu = this.helpList.find((item) =>
+          item.title.includes(localStorage.getItem("help_type"))
+        );
+      },
+    },
+  },
   mounted() {
     this.$api({
       url: "helpCenter",
@@ -52,7 +61,13 @@ export default {
     }).then((res) => {
       if (res.code == 200) {
         this.helpList = res.data.list;
-        this.activeMenu = this.helpList[0];
+        if (this.$route.query.type) {
+          this.activeMenu = this.helpList.find((item) =>
+            item.title.includes(localStorage.getItem("help_type"))
+          );
+        } else {
+          this.activeMenu = this.helpList[0];
+        }
       }
     });
   },

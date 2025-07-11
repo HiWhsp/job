@@ -8,7 +8,12 @@
       <div class="user-info-section">
         <div class="user-avatar-info">
           <div class="avatar-wrapper">
-            <img :src="my_info.avatar" alt="用户头像" class="user-avatar" />
+            <img
+              v-if="my_info.avatar"
+              :src="vuex_config.file_url_pre + my_info.avatar"
+              class="user-avatar"
+            />
+            <img v-else src="@img/my/avatar.png" class="user-avatar" />
           </div>
           <div class="user-details">
             <div class="phone-number">{{ my_info.mobile || "" }}</div>

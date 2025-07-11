@@ -25,7 +25,11 @@
             <span class="meta-separator">·</span>
             <span class="meta-item">{{ companyInfo.followNum }}关注</span>
           </div>
-          <div class="company-website">官网：{{ companyInfo.homePage }}</div>
+          <div class="company-website">
+            官网：<span @click="toUrl(companyInfo.homePage)">{{
+              companyInfo.homePage
+            }}</span>
+          </div>
           <div class="action-buttons">
             <button class="btn-follow" @click="handleFollow" v-if="!companyInfo.isFollow">
               <i class="el-icon-plus"></i>
@@ -382,6 +386,9 @@ export default {
         }
       });
       this.closeModal();
+    },
+    toUrl(url) {
+      window.open(url, "_blank");
     },
   },
 };

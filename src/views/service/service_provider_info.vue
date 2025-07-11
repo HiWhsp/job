@@ -26,7 +26,11 @@
             :before-upload="upload_before_upload"
             :disabled="!isEditing"
           >
-            <img v-if="my_info.avatar" :src="my_info.avatar" class="user-avatar" />
+            <img
+              v-if="my_info.avatar"
+              :src="vuex_config.file_url_pre + my_info.avatar"
+              class="user-avatar"
+            />
             <img v-else src="@img/my/avatar.png" class="user-avatar" />
           </el-upload>
         </div>

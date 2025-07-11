@@ -14,7 +14,11 @@
           <div class="demand-info-left">
             <p class="demand-date">工单号：{{ demandInfo.workorder_no }}</p>
             <i class="col-line"></i>
-            <p class="demand-number">关联需求单：{{ demandInfo.serialNo }}</p>
+            <p class="demand-number">
+              关联需求单：{{
+                demandInfo.user_require ? demandInfo.user_require.serialNo : ""
+              }}
+            </p>
           </div>
           <div class="demand-info-right">
             <el-button v-if="processStatus === 1" @click="backOpen(1)">
@@ -107,7 +111,7 @@
           <div class="notice">
             <img src="@/assets/image/icon/notice.png" class="notice-icon" alt="notice" />
             <span class="notice-text">
-              1. 请在收到工单后24小时内确认工单，否则将自动取消工单。
+              1. 请下载工单、合同后签字盖章回传系统确认工单
             </span>
           </div>
         </div>
@@ -190,10 +194,10 @@
 
           <div class="form-row">
             <label class="form-label">{{
-              demandInfo.workorderStatus == 1 ? "图片" : "附件"
+              demandInfo.workOrderType == 1 ? "图片" : "附件"
             }}</label>
             <div class="form-input">
-              <div class="upload-images" v-if="demandInfo.workorderStatus == 1">
+              <div class="upload-images" v-if="demandInfo.workOrderType == 1">
                 <div
                   class="upload-image"
                   v-for="(item, index) in demandInfo.photos_full"
@@ -243,7 +247,13 @@
           <div class="info-row" v-if="[5, 6].includes(processStatus)">
             <span class="info-label">服务图片：</span>
             <span class="info-value">
-              <img :src="demandInfo.servicePhotos" class="file-icon" alt="file" />
+              <img
+                :src="item"
+                v-for="(item, index) in demandInfo.servicePhotos.split(',')"
+                :key="index"
+                class="file-icon"
+                alt="file"
+              />
             </span>
           </div>
         </div>

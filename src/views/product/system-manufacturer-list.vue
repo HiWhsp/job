@@ -191,7 +191,7 @@ export default {
       let option = [
         {
           route: "/system-manufacturer-list",
-          title: `${this.companyType == 1 ? "系统厂商" : "配置厂商"}列表`,
+          title: `厂商列表`,
         },
       ];
       return option;
@@ -331,9 +331,15 @@ export default {
 
     // 查看公司
     viewCompany(company) {
-      console.log("查看公司:", company);
-      // 跳转到公司详情页
-      this.toNav({ route: "/manufacturer-detail", query: { id: company.id } });
+      if (company && !company.can_show_detail) {
+        return;
+      } else {
+        // 跳转到公司详情页
+        this.toNav({
+          route: "/manufacturer-detail",
+          query: { id: company.id },
+        });
+      }
     },
 
     // 跳转
@@ -369,7 +375,6 @@ export default {
           provinceId: this.selectedRegion,
           page: this.currentPage,
           pageSize: this.pageSize,
-          companyType: this.companyType,
         },
       }).then((res) => {
         let { code, data, msg } = res;

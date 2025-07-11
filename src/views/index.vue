@@ -71,7 +71,12 @@
                 <p>{{ baseInfo.realname }}</p>
               </div>
               <div class="item1-right">
-                <img :src="vuex_config.file_url_pre + baseInfo.avatar" alt="" />
+                <img
+                  :src="vuex_config.file_url_pre + baseInfo.avatar"
+                  alt=""
+                  v-if="baseInfo.avatar"
+                />
+                <img src="@img/my/avatar.png" alt="" v-else />
                 <div class="item1-right-img">
                   <img src="@img/my/no-vip.png" alt="" />
                   <p>{{ levelName }}</p>
@@ -157,7 +162,9 @@
             class="ad-card"
             v-for="item in system_list"
             :key="item.id"
-            @click="toNav({ route: '/manufacturer-detail', query: { id: item.id } })"
+            @click="
+              toNav({ route: '/manufacturer-detail', query: { id: item.id } }, item)
+            "
           >
             <div class="ad-logo-placeholder">
               <img :src="item.logo_full" alt="" />
@@ -192,7 +199,9 @@
             class="ad-card"
             v-for="item in config_list"
             :key="item.id"
-            @click="toNav({ route: '/manufacturer-detail', query: { id: item.id } })"
+            @click="
+              toNav({ route: '/manufacturer-detail', query: { id: item.id } }, item)
+            "
           >
             <div class="ad-logo-placeholder">
               <img :src="item.logo_full" alt="" />
@@ -419,13 +428,17 @@ export default {
       });
     },
 
-    toNav(route) {
-      this.$router.push({
-        path: route.route,
-        query: {
-          ...route.query,
-        },
-      });
+    toNav(route, item) {
+      if (item && !item.can_show_detail) {
+        return;
+      } else {
+        this.$router.push({
+          path: route.route,
+          query: {
+            ...route.query,
+          },
+        });
+      }
     },
     toUrl(url) {
       window.open(url, "_blank");

@@ -57,7 +57,7 @@
           </div>
 
           <!-- 消息内容区域 -->
-          <div class="mess-content">
+          <div class="mess-content" @click="viewDetail(item)" style="cursor: pointer">
             <div class="mess-title">{{ item.content }}</div>
             <div class="mess-time">{{ item.created_at }}</div>
           </div>
@@ -81,6 +81,22 @@
         <el-empty description="暂无数据" v-if="messList.length === 0" />
       </div>
     </div>
+
+    <el-dialog
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+      title="详情"
+    >
+      <div v-if="messageDetail">
+        <div class="detail-content">
+          <p><strong>内容：</strong>{{ messageDetail.content }}</p>
+          <p><strong>时间：</strong>{{ messageDetail.created_at }}</p>
+          <p><strong>状态：</strong>{{ messageDetail.isRead == 0 ? "未读" : "已读" }}</p>
+          <!-- 这里可以根据接口返回的数据结构添加更多详情字段 -->
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -99,6 +115,8 @@ export default {
         pageSize: 10,
       },
       total: 0,
+      dialogVisible: false,
+      messageDetail: null,
     };
   },
   computed: {
@@ -227,6 +245,22 @@ export default {
           this.$message.success("标记已读成功");
         }
       });
+    },
+    viewDetail(item) {
+      this.$api({
+        url: "readComment",
+        method: "get",
+        data: { logId: item.logId },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.messageDetail = res.data;
+          this.dialogVisible = true;
+        }
+      });
+    },
+    handleClose() {
+      this.dialogVisible = false;
+      this.messageDetail = null;
     },
   },
 };

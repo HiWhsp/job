@@ -28,12 +28,10 @@
               >
               <div class="service-info">
                 <span class="date">{{ item.created_at }}</span>
-                <span class="order-info"
-                  >工单编号：{{ item.workorder_no }}</span
-                >
+                <span class="order-info">工单编号：{{ item.workorder_no }}</span>
                 <span class="relation-info"
                   >关联需求表单号：<span class="relation-order">{{
-                    item.serialNo
+                    item.user_require ? item.user_require.serialNo : ""
                   }}</span></span
                 >
               </div>
@@ -137,7 +135,7 @@
                   <el-button
                     size="small"
                     @click="handleAction('confirm', item)"
-                    v-if="item.workorderStatus == 4"
+                    v-if="item.workorderStatus == 5"
                   >
                     确认完成
                   </el-button>
@@ -214,11 +212,11 @@
             @click="selectPayment('alipay')"
           ></div>
 
-          <div
+          <!-- <div
             class="payment-method wechat"
             :class="{ active: selectedPayment === 'wechat' }"
             @click="selectPayment('wechat')"
-          ></div>
+          ></div> -->
 
           <div
             class="payment-method offline"
@@ -239,36 +237,25 @@
             <div class="qrcode-placeholder"></div>
           </div>
           <div class="qrcode-tips">
-            <p>
-              请使用{{ selectedPayment === "alipay" ? "支付宝" : "微信" }}扫一扫
-            </p>
+            <p>请使用{{ selectedPayment === "alipay" ? "支付宝" : "微信" }}扫一扫</p>
             <p>二维码或支付</p>
           </div>
         </div>
 
         <!-- 线下支付区域 -->
-        <div
-          class="offline-payment-section"
-          v-if="selectedPayment === 'offline'"
-        >
+        <div class="offline-payment-section" v-if="selectedPayment === 'offline'">
           <div class="bank-info">
             <div class="info-item">
               <span class="info-label">收款单位名称：</span>
-              <span class="info-value">{{
-                offlinePaymentInfo.pay_company_name
-              }}</span>
+              <span class="info-value">{{ offlinePaymentInfo.pay_company_name }}</span>
             </div>
             <div class="info-item">
               <span class="info-label">收款单位账号：</span>
-              <span class="info-value">{{
-                offlinePaymentInfo.pay_account
-              }}</span>
+              <span class="info-value">{{ offlinePaymentInfo.pay_account }}</span>
             </div>
             <div class="info-item">
               <span class="info-label">收款单位开户行名称：</span>
-              <span class="info-value">{{
-                offlinePaymentInfo.pay_bank_name
-              }}</span>
+              <span class="info-value">{{ offlinePaymentInfo.pay_bank_name }}</span>
             </div>
           </div>
 
@@ -294,9 +281,7 @@
           </div>
 
           <div class="offline-actions">
-            <el-button type="primary" @click="submitOfflinePayment"
-              >提交</el-button
-            >
+            <el-button type="primary" @click="submitOfflinePayment">提交</el-button>
             <el-button @click="cancelPayment">取消</el-button>
           </div>
         </div>
@@ -372,6 +357,16 @@ export default {
       } else if (action == "pay") {
         this.paymentModalVisible = true;
         this.selectedPayment = "alipay";
+        this.$api({
+          url: "orderPay",
+          method: "post",
+          data: {
+            type: 1,
+            order_id: item.id,
+          },
+        }).then((res) => {
+          console.log(res);
+        });
       } else if (action == "confirm") {
         this.$confirm("确认完成服务？", "提示", {
           confirmButtonText: "确定",

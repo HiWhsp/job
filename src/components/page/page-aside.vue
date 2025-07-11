@@ -19,7 +19,10 @@
               <div class="pop-kefu">
                 <div class="pop-kefu-inner">
                   <div class="kefu-tip">请微信扫描下方二维码</div>
-                  <img class="kefu-code" :src="vuex_config.kefu_code" />
+                  <img
+                    class="kefu-code"
+                    :src="vuex_config.file_url_pre + vuex_config.kefu_qrcode"
+                  />
                 </div>
               </div>
 
@@ -198,7 +201,7 @@ export default {
       margin-bottom: 10px;
     }
     .kefu-code {
-      width: 200px;
+      width: 120px;
     }
   }
 }

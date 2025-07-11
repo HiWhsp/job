@@ -145,10 +145,10 @@
 
           <div class="form-row">
             <label class="form-label">{{
-              demandInfo.workorderStatus == 1 ? "图片" : "附件"
+              demandInfo.workOrderType == 1 ? "图片" : "附件"
             }}</label>
             <div class="form-input">
-              <div class="upload-images" v-if="demandInfo.workorderStatus == 1">
+              <div class="upload-images" v-if="demandInfo.workOrderType == 1">
                 <div
                   class="upload-image"
                   v-for="(item, index) in demandInfo.photos_full"
@@ -166,7 +166,7 @@
                   <img :src="item" alt="" />
                 </div>
                 <div class="upload-image">
-                  暂无{{ demandInfo.workorderStatus == 1 ? "图片" : "附件" }}
+                  暂无{{ demandInfo.workOrderType == 1 ? "图片" : "附件" }}
                 </div>
               </div>
             </div>

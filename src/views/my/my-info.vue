@@ -27,8 +27,8 @@
             :disabled="!isEditing"
           >
             <img
-              v-if="vuex_config.file_url_pre + my_info.avatar"
-              :src="my_info.avatar"
+              v-if="my_info.avatar"
+              :src="vuex_config.file_url_pre + my_info.avatar"
               class="user-avatar"
             />
             <img v-else src="@img/my/avatar.png" class="user-avatar" />
@@ -164,12 +164,10 @@
                 >
                   <img
                     v-if="my_info.skillPhoto"
-                    :src="my_info.skillPhoto"
+                    :src="vuex_config.file_url_pre + my_info.skillPhoto"
                     class="user-avatar"
                   />
-                  <div v-else class="upload-btn">
-                    <i class="upload-icon">+</i>
-                  </div>
+                  <i class="el-icon-plus" v-else></i>
                 </el-upload>
               </el-form-item>
             </el-col>
@@ -481,7 +479,7 @@ export default {
         if (res.code == 200) {
           let data = res.data;
           this.my_info = Object.assign(data, {
-            workType: data.workType.split(","),
+            workType: data.workType ? data.workType.split(",") : [],
             requireService: data.requireService.split(","),
           });
           console.log(this.my_info);
