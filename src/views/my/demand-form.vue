@@ -33,7 +33,11 @@
         </el-form-item>
 
         <el-form-item label="地址" prop="address">
-          <el-input v-model="form.address" placeholder="请输入地址" clearable></el-input>
+          <el-input
+            v-model="form.address"
+            placeholder="请输入地址"
+            clearable
+          ></el-input>
         </el-form-item>
 
         <el-form-item label="联系人" prop="contactPerson">
@@ -291,7 +295,9 @@
                       </template>
                       <template v-else>
                         <el-upload
-                          :action="uploadAction"
+                          :data="mix_upload_data"
+                          :name="mix_upload_name"
+                          :action="mix_upload_action"
                           :show-file-list="false"
                           :on-success="
                             (response, file) =>
@@ -309,21 +315,21 @@
                   </td>
                   <td>
                     <el-input
-                      v-model="item.brand"
+                      v-model="item.name"
                       placeholder="请输入"
                       size="small"
                     ></el-input>
                   </td>
                   <td>
                     <el-input
-                      v-model="item.quantity"
+                      v-model="item.num"
                       placeholder="请输入"
                       size="small"
                     ></el-input>
                   </td>
                   <td>
                     <el-input
-                      v-model="item.spec"
+                      v-model="item.description"
                       placeholder="请输入"
                       size="small"
                     ></el-input>
@@ -349,7 +355,11 @@
           </div>
         </template>
 
-        <el-form-item label="上传图片" prop="images" v-if="form.workOrderType == 1">
+        <el-form-item
+          label="上传图片"
+          prop="images"
+          v-if="form.workOrderType == 1"
+        >
           <el-upload
             class="upload-demo"
             accept="image/*"
@@ -363,7 +373,11 @@
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="上传附件" prop="images" v-if="form.workOrderType != 1">
+        <el-form-item
+          label="上传附件"
+          prop="images"
+          v-if="form.workOrderType != 1"
+        >
           <el-upload
             class="upload-demo"
             accept="image/*"
@@ -430,10 +444,16 @@ export default {
       },
       uploadAction: "#", // 上传接口地址，根据实际情况修改
       rules: {
-        workOrderType: [{ required: true, message: "请选择填报类型", trigger: "change" }],
+        workOrderType: [
+          { required: true, message: "请选择填报类型", trigger: "change" },
+        ],
         address: [{ required: true, message: "请输入地址", trigger: "blur" }],
-        companyName: [{ required: true, message: "请输入企业名称", trigger: "blur" }],
-        contactPerson: [{ required: true, message: "请输入联系人", trigger: "blur" }],
+        companyName: [
+          { required: true, message: "请输入企业名称", trigger: "blur" },
+        ],
+        contactPerson: [
+          { required: true, message: "请输入联系人", trigger: "blur" },
+        ],
         contact: [
           { required: true, message: "请输入联系电话", trigger: "blur" },
           {
@@ -520,21 +540,28 @@ export default {
           }
           if (this.form.workOrderType == "2") {
             this.form.productJson = this.form.productList;
+            this.form.productList = null;
           } else if (this.form.workOrderType == "5") {
-            // this.form.recycleJson = JSON.stringify(this.form.recycleList);
+            this.form.productJson = this.form.recycleList;
+            this.form.recycleList = null
           }
-          console.log(this.form);
           this.$api({
             url: "createWorkorder",
             method: "post",
             data: {
               ...this.form,
               photos:
-                this.form.workOrderType == 1 ? this.form.photos.join(",") : undefined,
-              photosJson: this.form.workOrderType == 1 ? this.form.photosJson : undefined,
+                this.form.workOrderType == 1
+                  ? this.form.photos.join(",")
+                  : undefined,
+              photosJson:
+                this.form.workOrderType == 1 ? this.form.photosJson : undefined,
               attach:
-                this.form.workOrderType != 1 ? this.form.attach.join(",") : undefined,
-              attachJson: this.form.workOrderType != 1 ? this.form.attachJson : undefined,
+                this.form.workOrderType != 1
+                  ? this.form.attach.join(",")
+                  : undefined,
+              attachJson:
+                this.form.workOrderType != 1 ? this.form.attachJson : undefined,
               images: undefined,
             },
           }).then((res) => {
@@ -579,10 +606,9 @@ export default {
       this.form.recycleList.push({
         type: "",
         image: "",
-        imageName: "",
-        brand: "",
-        quantity: "",
-        spec: "",
+        name: "",
+        num: "",
+        description: "",
       });
     },
     // 删除回收产品行
@@ -611,9 +637,8 @@ export default {
     },
     // 回收产品图片上传成功
     handleRecycleImageSuccess(response, file, index) {
-      // 这里根据实际接口返回处理
-      this.form.recycleList[index].image = URL.createObjectURL(file.raw);
-      this.form.recycleList[index].imageName = file.name;
+      this.form.recycleList[index].image = response.data.full_url;
+      this.form.recycleList[index].imageName = response.data.originName;
       this.$message.success("图片上传成功");
     },
     // 预览图片

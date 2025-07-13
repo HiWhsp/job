@@ -48,7 +48,7 @@
           </template>
 
           <!-- 光储充相关产品需求表详情 -->
-          <template v-if="[2, 5].includes(demandInfo.workOrderType)">
+          <template v-if="demandInfo.workOrderType == 2">
             <div class="product-table">
               <table>
                 <thead>
@@ -65,6 +65,36 @@
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.guige }}</td>
+                    <td>{{ item.num }}</td>
+                    <td>{{ item.description }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </template>
+
+          <template v-if="demandInfo.workOrderType == 5">
+            <div class="product-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>序号</th>
+                    <th>类型</th>
+                    <th>图片</th>
+                    <th>名称</th>
+                    <th>数量</th>
+                    <th>描述</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in demandInfo.productJson" :key="index">
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ item.type }}</td>
+                    <td class="image-cell">
+                      <img :src="item.image" alt="" />
+                      <span class="preview-btn" @click="previewImage(item.image)">预览</span>
+                    </td>
+                    <td>{{ item.name }}</td>
                     <td>{{ item.num }}</td>
                     <td>{{ item.description }}</td>
                   </tr>
@@ -94,7 +124,7 @@
                 {{ demandInfo.projectTypeStr }}
               </div>
             </div>
-            <div class="form-row">
+            <div class="form-row" v-if="demandInfo.workOrderType == 3">
               <div class="form-label">项目进度：</div>
               <div class="form-value">
                 {{ demandInfo.projectProgress }}
@@ -239,6 +269,9 @@ export default {
       } else {
         return "status-processing";
       }
+    },
+    previewImage(image) {
+      window.open(image, "_blank");
     },
   },
 };

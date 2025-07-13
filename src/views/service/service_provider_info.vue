@@ -114,12 +114,12 @@
                   :before-upload="upload_before_upload"
                 >
                   <img
-                    v-if="my_info.skillPhoto"
-                    :src="my_info.skillPhoto"
+                    v-if="my_info.service_licence"
+                    :src="vuex_config.file_url_pre + my_info.service_licence"
                     class="user-avatar"
                   />
                   <div v-else class="upload-btn">
-                    <i class="upload-icon">+</i>
+                    <i class="el-icon-plus"></i>
                   </div>
                 </el-upload>
               </el-form-item>
@@ -132,16 +132,16 @@
                   :data="mix_upload_data"
                   :name="mix_upload_name"
                   :action="mix_upload_action"
-                  :on-success="upload_certificate_success"
+                  :on-success="upload_certificate_success2"
                   :before-upload="upload_before_upload"
                 >
                   <img
-                    v-if="my_info.skillPhoto"
-                    :src="my_info.skillPhoto"
+                    v-if="my_info.company_zizhi"
+                    :src="vuex_config.file_url_pre + my_info.company_zizhi"
                     class="user-avatar"
                   />
                   <div v-else class="upload-btn">
-                    <i class="upload-icon">+</i>
+                    <i class="el-icon-plus"></i>
                   </div>
                 </el-upload>
               </el-form-item>
@@ -495,7 +495,14 @@ export default {
       // 证书上传成功逻辑
       let { code, data, msg } = res;
       if (code == 200) {
-        this.my_info.skillPhoto = res.data.save_url;
+        this.my_info.service_licence = res.data.save_url;
+      }
+    },
+    upload_certificate_success2(res, file) {
+      // 资质上传成功逻辑
+      let { code, data, msg } = res;
+      if (code == 200) {
+        this.my_info.company_zizhi = res.data.save_url;
       }
     },
 

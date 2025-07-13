@@ -345,7 +345,7 @@ router.beforeEach((to, from, next) => {
   // debugger
   if (!user_is_login && to.meta.requireAuth) {
     // debugger
-    alertErr("请先登录");
+    alertErr("Please login first");
     router.push('/');
     Vue.prototype.$showLogin({
       onLoginSuccess: (data) => {
