@@ -54,7 +54,16 @@ export default {
             });
             this.$store.commit("set_baseInfo", res.data);
             if (res.code == 200) {
-              this.$router.push({ name: "my-password" });
+              if (
+                localStorage.getItem("loginNum") == 0 ||
+                !localStorage.getItem("loginNum")
+              ) {
+                this.$router.push({ name: "my-password" });
+                localStorage.setItem("loginNum", 1);
+              } else {
+                this.$router.push({ name: "home" });
+                location.reload();
+              }
             }
           });
         }
