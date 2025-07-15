@@ -8,12 +8,17 @@ export default {
       detail: {},
       tableData: [],
       selectItem: {},
+      startTime: null, // 记录开始学习时间
     };
   },
   mounted() {
     this.id = this.$route.query.id;
     this.index = this.$route.query.index || 0;
     this.setView();
+  },
+  // 页面关闭前提交学习记录
+  beforeDestroy() {
+    this.submitLearnRecord();
   },
   methods: {
     setView() {
@@ -32,12 +37,16 @@ export default {
           } else {
             this.selectItem = this.tableData[0];
           }
-          this.recordMyCourseList();
+          // 记录开始学习时间
+          this.startTime = new Date().getTime();
         }
       });
     },
     // 上下切换
     arrow(type) {
+      // 切换前提交当前学习记录
+      this.submitLearnRecord();
+
       if (type == "up") {
         if (this.index > 0) {
           this.index--;
@@ -51,6 +60,11 @@ export default {
           this.index = this.tableData.length - 1;
         }
       }
+
+      // 更新选中项并重新记录开始时间
+      this.selectItem = this.tableData[this.index];
+      this.startTime = new Date().getTime();
+
       if (
         ["pdf", "doc", "docx", "xls", "xlsx"].includes(
           this.tableData[this.index].file_path_url.split(".").pop()
@@ -58,7 +72,6 @@ export default {
       ) {
         // 如果当前路由是pdf-viewer，则不进行跳转
         if (this.$route.path == "/pdf-viewer") {
-          this.selectItem = this.tableData[this.index];
           return;
         }
       } else {
@@ -69,6 +82,9 @@ export default {
       }
     },
     goUrl(item) {
+      // 跳转前提交学习记录
+      this.submitLearnRecord();
+
       this.$router.push({
         path: item.url,
         query: item.query,
@@ -81,15 +97,43 @@ export default {
       }
       return false;
     },
-    recordMyCourseList() {
+    // 将时间格式 "05:00" 转换为秒数
+    timeToSeconds(timeStr) {
+      if (!timeStr) return 0;
+      const parts = timeStr.split(":");
+      return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+    },
+    // 提交学习记录
+    submitLearnRecord() {
+      if (!this.startTime || !this.selectItem.id) return;
+
+      const endTime = new Date().getTime();
+      const currentLearnTime = Math.floor((endTime - this.startTime) / 1000); // 当前学习时长（秒）
+
+      // 获取课程总时长（秒）
+      const totalTime = this.timeToSeconds(this.selectItem.learn_time);
+
+      // 计算当前学习进度百分比
+      let currentSchedule = 0;
+      if (totalTime > 0) {
+        currentSchedule = Math.min(Math.floor((currentLearnTime / totalTime) * 100), 100);
+      }
+
+      this.recordMyCourseList(currentSchedule, currentLearnTime);
+    },
+
+    recordMyCourseList(schedule = 0, has_learn_time = 0) {
       this.$api({
         url: "addMyCourseLearnRecord",
         method: "post",
         data: {
           course_id: this.detail.id,
           course_list_id: this.selectItem.id,
-          schedule: 100,
-          has_learn_time: 100,
+          schedule:
+            this.selectItem.my_course_record.schedule > schedule
+              ? this.selectItem.my_course_record.schedule
+              : schedule,
+          has_learn_time: has_learn_time,
         },
       });
     },

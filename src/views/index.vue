@@ -83,7 +83,7 @@
     </div>
 
     <!--    视频类课程-->
-    <div class="card main">
+    <!-- <div class="card main">
       <div class="title">
         <h2>视频类课程</h2>
         <img alt="" src="@/static/home/card-img.png" />
@@ -116,7 +116,7 @@
         </div>
         <el-empty v-if="!video_list.length" description="暂无数据..."></el-empty>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -166,18 +166,18 @@ export default {
       }).then((res) => {
         this.pdf_list = res.data.list;
       });
-      // 视频类课程
-      this.$api({
-        url: "getCourseList",
-        method: "get",
-        data: {
-          page: 1,
-          limit: 3,
-          course_type: 2,
-        },
-      }).then((res) => {
-        this.video_list = res.data.list;
-      });
+      // // 视频类课程
+      // this.$api({
+      //   url: "getCourseList",
+      //   method: "get",
+      //   data: {
+      //     page: 1,
+      //     limit: 3,
+      //     course_type: 2,
+      //   },
+      // }).then((res) => {
+      //   this.video_list = res.data.list;
+      // });
     },
     format(percentage) {
       return `已学习${percentage}%`;
