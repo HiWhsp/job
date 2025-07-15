@@ -55,7 +55,7 @@
                 v-for="duration in durationOptions[selectedVipType - 1]"
                 :key="duration.year"
                 class="duration-option"
-                :class="{ active: selectedDuration === duration.year }"
+                :class="{ active: selectedDuration == duration.year }"
                 @click="selectDuration(duration.year)"
               >
                 <span class="duration-text">{{ duration.year }}年</span>
@@ -69,7 +69,7 @@
 
         <div class="right-section">
           <!-- 价格显示 -->
-          <div class="price-display">¥{{ totalPrice }}</div>
+          <div class="price-display">¥{{ originPrice }}</div>
 
           <!-- 支付二维码 -->
           <div class="qr-section" v-if="pay_qrcode">
@@ -121,25 +121,8 @@ export default {
         // { value: 3, label: "3年", tag: "7折" },
       ],
       memberSetting: {},
+      originPrice: 0,
     };
-  },
-  computed: {
-    totalPrice() {
-      const selectedOption = this.vipOptions.find(
-        (option) => option.type === this.selectedVipType
-      );
-      if (!selectedOption) return 0;
-
-      let price = selectedOption.price * this.selectedDuration;
-      // 应用折扣
-      if (this.selectedDuration === 2) {
-        price = price * 0.8; // 8折
-      } else if (this.selectedDuration === 3) {
-        price = price * 0.7; // 7折
-      }
-
-      return Math.round(price);
-    },
   },
   watch: {
     visible(newVal) {
@@ -160,6 +143,7 @@ export default {
                 price: res.data[`member_${index}_origin_price`],
               });
               this.durationOptions.push(res.data[`member_${index}_discount`]);
+              this.selectDuration(1);
             }
           }
         });
@@ -207,6 +191,18 @@ export default {
     // 选择时长
     selectDuration(duration) {
       this.selectedDuration = duration;
+      this.$api({
+        url: "getMemberPayPrice",
+        method: "post",
+        data: {
+          level: this.selectedVipType,
+          year: duration,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.originPrice = res.data.originPrice;
+        }
+      });
       this.pay_qrcode = ""; // 重置二维码
     },
 

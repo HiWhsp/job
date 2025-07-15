@@ -43,7 +43,7 @@
             @click="handleItemClick(item)"
           >
             <div class="result-logo">
-              <img :src="item.logo" :alt="item.companyName" />
+              <img :src="item.logo_full" :alt="item.companyName" />
             </div>
             <div class="result-content">
               <div class="result-header">
