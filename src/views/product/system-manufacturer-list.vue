@@ -118,6 +118,28 @@
         <!-- 右侧公司列表区域 -->
         <div class="right-content">
           <div class="company-list">
+            <div class="company-item" v-for="item in adBanners" :key="item.id">
+              <div class="company-header">
+                <h3 class="company-title">{{ item.title || "广告" }}</h3>
+              </div>
+              <div class="company-body">
+                <div class="company-logo">
+                  <img
+                    :src="it"
+                    v-for="(it, i) in item.image.split(',')"
+                    :key="i"
+                    alt=""
+                  />
+                </div>
+                <div class="company-info">
+                  <p class="company-name">公司名称</p>
+                  <p class="company-time">2025-01-01</p>
+                  <p class="company-type">广告</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="company-list">
             <div
               v-for="company in companyList"
               :key="company.id"
@@ -220,6 +242,9 @@ export default {
 
       // 公司列表
       companyList: [],
+
+      // 广告
+      adBanners: [],
 
       pageSize: 20,
       total: 0,
@@ -324,9 +349,15 @@ export default {
 
     // 查看推荐
     viewRecommend(item) {
-      console.log("查看推荐:", item);
-      // 跳转到公司详情页
-      this.toNav({ route: "/manufacturer-detail", query: { id: item.id } });
+      if (item && !item.can_show_detail) {
+        return;
+      } else {
+        // 跳转到公司详情页
+        this.toNav({
+          route: "/manufacturer-detail",
+          query: { id: item.id },
+        });
+      }
     },
 
     // 查看公司
@@ -379,6 +410,7 @@ export default {
       }).then((res) => {
         let { code, data, msg } = res;
         if (code == 200) {
+          this.adBanners = data.adBanners || [];
           this.companyList = data.list || [];
           this.recommendList = data.suggestCompany || [];
           this.total = data.totalCount || 0;
