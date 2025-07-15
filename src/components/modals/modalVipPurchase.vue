@@ -140,7 +140,7 @@ export default {
               this.vipOptions.push({
                 type: index,
                 name: index == 1 ? "黄金会员" : index == 2 ? "钻石会员" : "联合会员",
-                price: res.data[`member_${index}_origin_price`],
+                price: res.data[`member_${index}_sale_price`],
               });
               this.durationOptions.push(res.data[`member_${index}_discount`]);
               this.selectDuration(1);
