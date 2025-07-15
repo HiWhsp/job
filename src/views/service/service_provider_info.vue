@@ -2,10 +2,10 @@
   <div class="page">
     <div class="page-header">
       <div class="page-header-title">
-        <span>我的个人中心</span>
+        <span>My Personal Center</span>
         <span v-if="showPhoneUpdate || showEmailUpdate" style="margin: 0 10px">></span>
         <span>{{
-          showPhoneUpdate ? "更换手机号" : showEmailUpdate ? "更换邮箱" : ""
+          showPhoneUpdate ? "Change Phone Number" : showEmailUpdate ? "Change Email" : ""
         }}</span>
       </div>
     </div>
@@ -35,7 +35,7 @@
           </el-upload>
         </div>
         <div class="user-info-box">
-          <div class="user-name">{{ my_info.realname || "用户名" }}</div>
+          <div class="user-name">{{ my_info.realname || "Username" }}</div>
           <div class="user-level">
             <img src="@img/my/no-vip.png" alt="" v-if="my_info.userLevel == 0" />
             <img src="@img/my/vip-active.png" alt="" v-else />
@@ -43,7 +43,7 @@
           </div>
         </div>
         <div class="user-logout-box">
-          <el-button @click="logout">退出登录</el-button>
+          <el-button @click="logout">Logout</el-button>
         </div>
       </div>
 
@@ -56,54 +56,54 @@
         >
           <el-row>
             <el-col :span="12">
-              <el-form-item label="昵称：">
+              <el-form-item label="Nickname:">
                 <el-input v-model="my_info.nickname" clearable :disabled="!isEditing" />
               </el-form-item>
-              <el-form-item label="姓名：">
+              <el-form-item label="Name:">
                 <el-input v-model="my_info.realname" clearable :disabled="!isEditing" />
               </el-form-item>
-              <el-form-item label="手机号：">
+              <el-form-item label="Phone:">
                 <el-input v-model="my_info.mobile" disabled style="width: 70%" />
                 <el-button
                   type="text"
                   class="change-phone-btn"
                   @click="open_phone_update"
                   v-if="isEditing"
-                  >更换手机号</el-button
+                  >Change Phone</el-button
                 >
               </el-form-item>
-              <el-form-item label="邮箱：">
+              <el-form-item label="Email:">
                 <el-input v-model="my_info.email" clearable disabled style="width: 70%" />
                 <el-button
                   type="text"
                   class="change-phone-btn"
                   @click="open_email_update"
                   v-if="isEditing"
-                  >更换邮箱</el-button
+                  >Change Email</el-button
                 >
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="国家：">
+              <el-form-item label="Country:">
                 <el-input v-model="my_info.country" clearable :disabled="!isEditing" />
               </el-form-item>
-              <el-form-item label="公司名称：">
+              <el-form-item label="Company:">
                 <el-input
                   v-model="my_info.company_name"
                   clearable
                   :disabled="!isEditing"
                 />
               </el-form-item>
-              <el-form-item label="详细地址：">
+              <el-form-item label="Address:">
                 <el-input v-model="my_info.address" clearable :disabled="!isEditing" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row v-if="isEditing">
             <el-col :span="24">
-              <el-form-item label="营业执照">
+              <el-form-item label="Business License">
                 <el-upload
                   class="certificate-uploader"
                   :show-file-list="false"
@@ -125,7 +125,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-form-item label="企业资质">
+              <el-form-item label="Company Qualification">
                 <el-upload
                   class="certificate-uploader"
                   :show-file-list="false"
@@ -154,16 +154,16 @@
                 type="primary"
                 class="btn-save"
                 @click="startEdit"
-                >编辑</el-button
+                >Edit</el-button
               >
               <div v-else class="edit-actions">
-                <el-button @click="cancelEdit">取消</el-button>
+                <el-button @click="cancelEdit">Cancel</el-button>
                 <el-button
                   type="primary"
                   class="btn-save"
                   :loading="loading"
                   @click="throttle_do_submit()"
-                  >保存</el-button
+                  >Save</el-button
                 >
               </div>
             </el-col>
@@ -177,39 +177,39 @@
       <div class="page-ctx">
         <div class="phone-update-form">
           <div class="update-form-item">
-            <label>旧手机号：</label>
+            <label>Current Phone:</label>
             <div class="input-box">
               <el-input
                 v-model="phoneUpdateForm.oldPhone"
-                placeholder="请输入当前手机号"
+                placeholder="Enter current phone number"
                 class="form-input"
               />
             </div>
           </div>
           <div class="update-form-item">
-            <label>新手机号：</label>
+            <label>New Phone:</label>
             <div class="input-box">
               <el-input
                 v-model="phoneUpdateForm.newPhone"
-                placeholder="请输入新手机号"
+                placeholder="Enter new phone number"
                 class="form-input"
               />
             </div>
           </div>
           <div class="update-form-item">
-            <label>验证码：</label>
+            <label>Verification Code:</label>
             <div class="input-box">
               <el-input
                 v-model="phoneUpdateForm.code"
-                placeholder="请输入验证码"
+                placeholder="Enter verification code"
                 class="form-input-code"
               />
-              <el-button class="get-code-btn" @click="get_code(1)">获取验证码</el-button>
+              <el-button class="get-code-btn" @click="get_code(1)">Get Code</el-button>
             </div>
           </div>
           <div class="update-form-actions">
-            <el-button type="primary" @click="confirm_phone_update">确认</el-button>
-            <el-button @click="cancel_phone_update">取消</el-button>
+            <el-button type="primary" @click="confirm_phone_update">Confirm</el-button>
+            <el-button @click="cancel_phone_update">Cancel</el-button>
           </div>
         </div>
       </div>
@@ -220,39 +220,39 @@
       <div class="page-ctx">
         <div class="email-update-form">
           <div class="update-form-item">
-            <label>旧邮箱：</label>
+            <label>Current Email:</label>
             <div class="input-box">
               <el-input
                 v-model="emailUpdateForm.oldEmail"
-                placeholder="请输入当前邮箱"
+                placeholder="Enter current email"
                 class="form-input"
               />
             </div>
           </div>
           <div class="update-form-item">
-            <label>新邮箱：</label>
+            <label>New Email:</label>
             <div class="input-box">
               <el-input
                 v-model="emailUpdateForm.newEmail"
-                placeholder="请输入新邮箱"
+                placeholder="Enter new email"
                 class="form-input"
               />
             </div>
           </div>
           <div class="update-form-item">
-            <label>验证码：</label>
+            <label>Verification Code:</label>
             <div class="input-box">
               <el-input
                 v-model="emailUpdateForm.code"
-                placeholder="请输入验证码"
+                placeholder="Enter verification code"
                 class="form-input-code"
               />
-              <el-button class="get-code-btn">获取验证码</el-button>
+              <el-button class="get-code-btn">Get Code</el-button>
             </div>
           </div>
           <div class="update-form-actions">
-            <el-button type="primary" @click="confirm_email_update">确认</el-button>
-            <el-button @click="cancel_email_update">取消</el-button>
+            <el-button type="primary" @click="confirm_email_update">Confirm</el-button>
+            <el-button @click="cancel_email_update">Cancel</el-button>
           </div>
         </div>
       </div>
@@ -299,13 +299,13 @@ export default {
     levelName() {
       switch (this.my_info.userLevel) {
         case 1:
-          return "黄金会员";
+          return "Gold Member";
         case 2:
-          return "钻石会员";
+          return "Diamond Member";
         case 3:
-          return "联合会员";
+          return "United Member";
         default:
-          return "个人会员";
+          return "Personal Member";
       }
     },
   },
@@ -352,7 +352,7 @@ export default {
     confirm_phone_update() {
       // 验证手机号修改逻辑
       if (!this.phoneUpdateForm.newPhone || !this.phoneUpdateForm.code) {
-        this.$message.error("请填写完整信息");
+        this.$message.error("Please fill in complete information");
         return;
       }
       // 这里应该调用API验证并更新手机号
@@ -369,7 +369,7 @@ export default {
           this.my_info.mobile = this.phoneUpdateForm.newPhone;
           this.showPhoneUpdate = false;
           this.resetUpdateForms();
-          this.$message.success("手机号更换成功");
+          this.$message.success("Phone number changed successfully");
         }
       });
     },
@@ -404,7 +404,7 @@ export default {
     confirm_email_update() {
       // 验证邮箱修改逻辑
       if (!this.emailUpdateForm.newEmail || !this.emailUpdateForm.code) {
-        this.$message.error("请填写完整信息");
+        this.$message.error("Please fill in complete information");
         return;
       }
       // 这里应该调用API验证并更新邮箱
@@ -421,7 +421,7 @@ export default {
           this.my_info.email = this.emailUpdateForm.newEmail;
           this.showEmailUpdate = false;
           this.resetUpdateForms();
-          this.$message.success("邮箱更换成功");
+          this.$message.success("Email changed successfully");
         }
       });
     },
@@ -477,7 +477,7 @@ export default {
         if (code == 200) {
           this.isEditing = false;
           this.setView();
-          this.$message.success("保存成功");
+          this.$message.success("Saved successfully");
         }
       });
     },

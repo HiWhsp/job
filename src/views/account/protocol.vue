@@ -38,7 +38,7 @@ export default {
   watch: {
     vuex_config: {
       handler(newVal) {
-        if (this.type == "用户协议") {
+        if (this.type == "User Agreement") {
           this.userAgreement = newVal.user_xieyi || "";
         } else {
           this.userAgreement = newVal.private_xieyi || "";
@@ -47,7 +47,7 @@ export default {
       deep: true,
     },
     type(newVal) {
-      if (newVal == "用户协议") {
+      if (newVal == "User Agreement") {
         this.userAgreement = this.vuex_config.user_xieyi || "";
       } else {
         this.userAgreement = this.vuex_config.private_xieyi || "";
@@ -56,7 +56,7 @@ export default {
   },
   mounted() {
     this.type = this.$route.query.type;
-    if (this.type == "用户协议") {
+    if (this.type == "User Agreement") {
       this.userAgreement = newVal.user_xieyi || "";
     } else {
       this.userAgreement = newVal.private_xieyi || "";
@@ -65,7 +65,7 @@ export default {
   methods: {
     handleAgree() {
       // 处理同意协议的逻辑
-      this.$message.success("您已同意用户服务协议");
+      this.$message.success("You have agreed to the user service agreement");
       // 可以根据来源页面进行不同的跳转
       const from = this.$route.query.from;
       if (from === "register") {

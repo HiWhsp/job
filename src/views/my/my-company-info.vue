@@ -2,15 +2,15 @@
   <div class="page">
     <div class="page-header">
       <div class="page-header-title">
-        <span>会员中心</span>
+        <span>Member Center</span>
         <span style="margin: 0 10px">></span>
-        <span>我的首页</span>
+        <span>My Homepage</span>
       </div>
     </div>
 
     <div class="page-ctx">
       <div class="page-ctx-title">
-        <span>主页信息维护</span>
+        <span>Homepage Information Maintenance</span>
       </div>
       <el-form
         :model="my_info"
@@ -43,21 +43,21 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="公司名称">
-              <el-input v-model="my_info.companyName" clearable placeholder="请输入" />
+            <el-form-item label="Company Name">
+              <el-input v-model="my_info.companyName" clearable placeholder="Please enter" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="公司官网">
-              <el-input v-model="my_info.homePage" clearable placeholder="请输入" />
+            <el-form-item label="Company Website">
+              <el-input v-model="my_info.homePage" clearable placeholder="Please enter" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div class="form-item-title">我属于的类型：</div>
+            <div class="form-item-title">My Type:</div>
             <div class="form-item-content">
               <el-tree
                 ref="workTypeTree"
@@ -76,14 +76,14 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="选择地址">
+            <el-form-item label="Select Address">
               <area_select ref="area_select" @change="changeSelectAddress" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="公司图片上传">
+            <el-form-item label="Company Image Upload">
               <el-upload
                 class="certificate-uploader"
                 accept="image/*"
@@ -106,12 +106,12 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="企业介绍">
+            <el-form-item label="Company Introduction">
               <el-input
                 v-model="my_info.introduce"
                 clearable
                 type="textarea"
-                placeholder="请输入"
+                placeholder="Please enter"
               />
             </el-form-item>
           </el-col>
@@ -121,9 +121,9 @@
 
     <div class="page-ctx">
       <div class="page-ctx-title">
-        <span>产品介绍</span>
+        <span>Product Introduction</span>
         <div class="add-category-section">
-          <el-button type="primary" @click="addCategory">+新增分类</el-button>
+          <el-button type="primary" @click="addCategory">+Add Category</el-button>
         </div>
       </div>
       <!-- 产品列表 -->
@@ -135,16 +135,16 @@
         >
           <div class="category-header">
             <div class="category-title">
-              <span>产品分类{{ categoryIndex + 1 }}</span>
+              <span>Product Category {{ categoryIndex + 1 }}</span>
               <el-input
                 v-model="category.title"
-                placeholder="请输入分类名称"
+                placeholder="Please enter category name"
                 class="category-name-input"
               />
             </div>
             <div class="category-actions">
               <el-button type="primary" size="small" @click="addProduct(categoryIndex)">
-                +添加产品
+                +Add Product
               </el-button>
               <el-button
                 v-if="categoryIndex > 0"
@@ -152,7 +152,7 @@
                 size="small"
                 @click="deleteCategory(categoryIndex)"
               >
-                删除分类
+                Delete Category
               </el-button>
             </div>
           </div>
@@ -162,15 +162,15 @@
             :key="productIndex"
             class="product-item"
           >
-            <div class="product-title">产品{{ productIndex + 1 }}</div>
+            <div class="product-title">Product {{ productIndex + 1 }}</div>
             <el-form :model="product" label-width="80px" class="product-form">
-              <el-form-item label="产品名称">
-                <el-input v-model="product.name" placeholder="请输入" />
+              <el-form-item label="Product Name">
+                <el-input v-model="product.name" placeholder="Please enter" />
               </el-form-item>
-              <el-form-item label="产品型号">
-                <el-input v-model="product.xinghao" placeholder="请输入" />
+              <el-form-item label="Product Model">
+                <el-input v-model="product.xinghao" placeholder="Please enter" />
               </el-form-item>
-              <el-form-item label="产品图片">
+              <el-form-item label="Product Image">
                 <el-upload
                   class="product-image-uploader"
                   :action="mix_upload_action"
@@ -197,7 +197,7 @@
                   class="delete-product-btn"
                   @click="deleteProduct(categoryIndex, productIndex)"
                 >
-                  删除
+                  Delete
                 </el-button>
               </el-form-item>
             </el-form>
@@ -208,7 +208,7 @@
 
     <div class="page-ctx">
       <div class="page-ctx-title">
-        <span>联系方式</span>
+        <span>Contact Information</span>
       </div>
       <el-form
         :model="my_info"
@@ -216,14 +216,14 @@
         class="user-form"
         label-position="right"
       >
-        <el-form-item label="地址">
-          <el-input v-model="my_info.address" clearable placeholder="请输入" />
+        <el-form-item label="Address">
+          <el-input v-model="my_info.address" clearable placeholder="Please enter" />
         </el-form-item>
-        <el-form-item label="电话">
-          <el-input v-model="my_info.contact" clearable placeholder="请输入" />
+        <el-form-item label="Phone">
+          <el-input v-model="my_info.contact" clearable placeholder="Please enter" />
         </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input v-model="my_info.email" clearable placeholder="请输入" />
+        <el-form-item label="Email">
+          <el-input v-model="my_info.email" clearable placeholder="Please enter" />
         </el-form-item>
       </el-form>
     </div>
@@ -237,9 +237,9 @@
               class="btn-save"
               :loading="loading"
               @click="throttle_do_submit()"
-              >提交</el-button
+              >Submit</el-button
             >
-            <el-button @click="preview">预览</el-button>
+            <el-button @click="preview">Preview</el-button>
           </div>
         </el-col>
       </el-row>
@@ -349,59 +349,59 @@ export default {
       };
       // 校验数据
       if (!data.companyName) {
-        this.$message.error("请输入公司名称");
+        this.$message.error("Please enter company name");
         return;
       }
       if (!data.address) {
-        this.$message.error("请输入地址");
+        this.$message.error("Please enter address");
         return;
       }
       if (!data.contact) {
-        this.$message.error("请输入电话");
+        this.$message.error("Please enter phone");
         return;
       }
       if (!data.email) {
-        this.$message.error("请输入邮箱");
+        this.$message.error("Please enter email");
         return;
       }
       if (!data.workType || data.workType.length == 0) {
-        this.$message.error("请选择类型");
+        this.$message.error("Please select type");
         return;
       }
       if (!data.logo) {
-        this.$message.error("请上传logo");
+        this.$message.error("Please upload logo");
         return;
       }
       if (!data.backImage) {
-        this.$message.error("请上传公司图片");
+        this.$message.error("Please upload company image");
         return;
       }
       if (!data.introduce) {
-        this.$message.error("请输入企业介绍");
+        this.$message.error("Please enter company introduction");
         return;
       }
       if (!data.productList || data.productList.length == 0) {
-        this.$message.error("请添加产品");
+        this.$message.error("Please add products");
         return;
       }
       for (let i = 0; i < data.productList.length; i++) {
         let product = data.productList[i];
         if (!product.title) {
-          this.$message.error("请输入产品分类名称");
+          this.$message.error("Please enter product category name");
           return;
         }
         for (let j = 0; j < product.list.length; j++) {
           let item = product.list[j];
           if (!item.name) {
-            this.$message.error("请输入产品名称");
+            this.$message.error("Please enter product name");
             return;
           }
           if (!item.xinghao) {
-            this.$message.error("请输入产品型号");
+            this.$message.error("Please enter product model");
             return;
           }
           if (!item.image) {
-            this.$message.error("请上传产品图片");
+            this.$message.error("Please upload product image");
             return;
           }
         }
@@ -426,13 +426,13 @@ export default {
           this.loading = false;
           if (code == 200) {
             this.loading = false;
-            this.$message.success("保存成功");
+            this.$message.success("Saved successfully");
             this.setView();
           }
         })
         .catch((err) => {
           this.loading = false;
-          this.$message.error("保存失败");
+          this.$message.error("Save failed");
         });
     },
     upload_on_success(res, file) {
@@ -458,7 +458,7 @@ export default {
     addCategory() {
       this.productCategories.push({
         id: 0,
-        title: `产品分类${this.productCategories.length + 1}`,
+        title: `Product Category ${this.productCategories.length + 1}`,
         list: [
           {
             id: 0,
@@ -472,14 +472,14 @@ export default {
     // 删除分类（不能删除第一个分类）
     deleteCategory(categoryIndex) {
       if (categoryIndex > 0) {
-        this.$confirm("确定要删除此分类吗？", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
+        this.$confirm("Are you sure to delete this category?", "Confirmation", {
+          confirmButtonText: "Confirm",
+          cancelButtonText: "Cancel",
           type: "warning",
         })
           .then(() => {
             this.productCategories.splice(categoryIndex, 1);
-            this.$message.success("分类删除成功");
+            this.$message.success("Category deleted successfully");
           })
           .catch(() => {
             // 取消删除
@@ -500,20 +500,20 @@ export default {
       const category = this.productCategories[categoryIndex];
       // 确保每个分类至少保留一个产品
       if (category.list.length > 1) {
-        this.$confirm("确定要删除此产品吗？", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
+        this.$confirm("Are you sure to delete this product?", "Confirmation", {
+          confirmButtonText: "Confirm",
+          cancelButtonText: "Cancel",
           type: "warning",
         })
           .then(() => {
             category.list.splice(productIndex, 1);
-            this.$message.success("产品删除成功");
+            this.$message.success("Product deleted successfully");
           })
           .catch(() => {
             // 取消删除
           });
       } else {
-        this.$message.warning("每个分类至少需要保留一个产品");
+        this.$message.warning("Each category must keep at least one product");
       }
     },
     // 产品图片上传成功
@@ -521,9 +521,9 @@ export default {
       if (res.code === 200) {
         this.productCategories[categoryIndex].list[productIndex].image =
           res.data.save_url;
-        this.$message.success("图片上传成功");
+        this.$message.success("Image uploaded successfully");
       } else {
-        this.$message.error("图片上传失败");
+        this.$message.error("Image upload failed");
       }
     },
 

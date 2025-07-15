@@ -70,12 +70,12 @@ export default {
       return (item) => {
         // 1 待工单确认 2 待付款 3已付款 4已分配服务人员 5服务已完成 6服务已确认
         return {
-          1: "待工单确认",
-          2: "待付款",
-          3: "已付款",
-          4: "已为您分配服务人员",
-          5: "服务已完成，待服务确认",
-          6: "已完成",
+          1: "Pending Work Order Confirmation",
+          2: "Pending Payment",
+          3: "Paid",
+          4: "Service Personnel Assigned",
+          5: "Service Completed, Pending Service Confirmation",
+          6: "Completed",
         }[item.workorderStatus];
       };
     },
@@ -83,11 +83,11 @@ export default {
     workOrderName() {
       return (item) => {
         return {
-          1: "售后运维需求表",
-          2: "项目产品需求表",
-          3: "项目融资表",
-          4: "项目转让表",
-          5: "产品回收利用表",
+          1: "After-sales Maintenance Demand",
+          2: "Project Product Demand",
+          3: "Project Financing",
+          4: "Project Transfer",
+          5: "Product Recycling",
         }[item.workOrderType];
       };
     },
@@ -95,9 +95,9 @@ export default {
     deviceTypeName() {
       return (item) => {
         return {
-          1: "光伏",
-          2: "储能",
-          3: "拆冲",
+          1: "PV",
+          2: "Storage",
+          3: "Disassembly",
           4: item.otherDevice,
         }[item.deviceType];
       };

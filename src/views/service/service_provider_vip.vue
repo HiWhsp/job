@@ -1,14 +1,14 @@
 <template>
   <div class="page">
     <div class="main-title">
-      <span>会员中心</span>
+      <span>Member Center</span>
     </div>
     <div class="page-ctx">
       <!-- 用户信息区域 -->
       <div class="user-info-section">
         <div class="user-avatar-info">
           <div class="avatar-wrapper">
-            <img :src="my_info.avatar" alt="用户头像" class="user-avatar" />
+            <img :src="my_info.avatar" alt="User Avatar" class="user-avatar" />
           </div>
           <div class="user-details">
             <div class="phone-number">{{ my_info.mobile || "" }}</div>
@@ -19,29 +19,29 @@
               >
                 <img
                   src="@/assets/img/my/no-vip.png"
-                  alt="VIP会员"
+                  alt="VIP Member"
                   v-if="my_info.userLevel == 0"
                 />
-                <img src="@/assets/img/my/vip-active.png" alt="VIP会员" v-else />
+                <img src="@/assets/img/my/vip-active.png" alt="VIP Member" v-else />
                 {{ levelName }}
               </span>
               <span class="password-tip" v-if="my_info.userLevel == 0"
-                >您还没有开通付费VIP会员</span
+                >You haven't activated paid VIP membership yet</span
               >
               <span class="password-tip" v-else
-                >{{ levelName }}会员已开通 | 会员到期时间：
+                >{{ levelName }} membership has been activated | Expiry Date:
                 <span class="vip-time">{{ my_info.userLevelEndTime || "--" }}</span>
-                | <span class="vip-renew" @click="openVipNow">续费</span>
+                | <span class="vip-renew" @click="openVipNow">Renew</span>
               </span>
             </div>
           </div>
         </div>
         <button class="open-vip-btn" @click="openVipNow" v-if="my_info.userLevel == 0">
-          立即开通
+          Activate Now
         </button>
         <div class="open-vip-btn-box" v-if="my_info.userLevel != 0">
-          <button class="open-vip-home" @click="go_my_home">我的主页</button>
-          <button class="open-vip-renew" @click="openVipNow">续费会员</button>
+          <button class="open-vip-home" @click="go_my_home">My Profile</button>
+          <button class="open-vip-renew" @click="openVipNow">Renew Membership</button>
         </div>
       </div>
 
@@ -49,16 +49,16 @@
       <div class="vip-card">
         <div class="vip-card-content">
           <div class="vip-info" v-if="my_info.userLevel == 0">
-            <h3>VIP会员</h3>
+            <h3>VIP Member</h3>
             <div class="promotion">
-              <button class="open-vip-btn" @click="openVipNow">立即开通</button>
+              <button class="open-vip-btn" @click="openVipNow">Activate Now</button>
             </div>
           </div>
           <div class="vip-info" v-else>
             <h4>{{ my_info.mobile || "--" }}</h4>
             <div class="vip-info-box">
-              <img src="@/assets/img/my/vip-active.png" alt="VIP会员" />
-              <span>VIP会员</span>
+              <img src="@/assets/img/my/vip-active.png" alt="VIP Member" />
+              <span>VIP Member</span>
             </div>
             <p>{{ my_info.company_name || my_info.nickname }}</p>
           </div>
@@ -67,32 +67,32 @@
 
       <!-- 会员权益 -->
       <div class="member-benefits">
-        <h3>会员权益</h3>
+        <h3>Member Benefits</h3>
         <p class="benefits-text" v-html="vip_info.content"></p>
       </div>
 
       <!-- 支付区域 -->
       <div class="payment-section">
-        <p>用户购买VIP会员后，获得主页权限，可自行上传介绍信息</p>
-        <p>购买VIP会员后，可提交需求单</p>
+        <p>After purchasing VIP membership, users get homepage access and can upload their own information</p>
+        <p>After purchasing VIP membership, users can submit requirement forms</p>
       </div>
 
       <!-- 我的会员订单 -->
       <div class="member-orders">
-        <h3>我的会员订单</h3>
+        <h3>My Member Orders</h3>
         <div class="orders-table">
           <div class="table-header">
-            <span>会员信息</span>
-            <span>售价</span>
-            <span>数量</span>
-            <span>实付款</span>
-            <span>订单状态</span>
+            <span>Member Information</span>
+            <span>Price</span>
+            <span>Quantity</span>
+            <span>Amount Paid</span>
+            <span>Order Status</span>
           </div>
           <div v-for="item in vip_order_list" :key="item.id" style="margin-bottom: 10px">
             <div class="table-row">
               <div class="order-info">
-                <div class="order-number">订单号：{{ item.orderno }}</div>
-                <div class="order-time">下单时间：{{ item.pay_time }}</div>
+                <div class="order-number">Order No.: {{ item.orderno }}</div>
+                <div class="order-time">Order Time: {{ item.pay_time }}</div>
               </div>
             </div>
             <div class="table-row order-details">
@@ -101,7 +101,7 @@
               <span class="quantity">{{ item.month_num }}</span>
               <span class="paid-amount">¥{{ item.price }}</span>
               <span class="status completed">{{
-                item.status == 2 ? "已完成" : "待支付"
+                item.status == 2 ? "Completed" : "Pending Payment"
               }}</span>
             </div>
           </div>
@@ -140,13 +140,13 @@ export default {
     levelName() {
       switch (this.my_info.userLevel) {
         case 1:
-          return "黄金会员";
+          return "Gold Member";
         case 2:
-          return "钻石会员";
+          return "Diamond Member";
         case 3:
-          return "联合会员";
+          return "United Member";
         default:
-          return "个人会员";
+          return "Personal Member";
       }
     },
   },

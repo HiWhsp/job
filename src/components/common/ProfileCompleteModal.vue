@@ -7,7 +7,7 @@
     class="profile-complete-modal"
     @close="handleClose"
   >
-    <div slot="title" class="dialog-title">完善信息</div>
+    <div slot="title" class="dialog-title">Complete Profile</div>
 
     <div class="profile-complete-container">
       <el-form
@@ -18,31 +18,31 @@
         label-width="120px"
       >
         <!-- 选择角色 -->
-        <el-form-item label="选择角色：" prop="userType">
-          <el-select v-model="form.userType" placeholder="个人/企业" style="width: 100%">
-            <el-option label="个人" value="1"></el-option>
-            <el-option label="企业" value="2"></el-option>
+        <el-form-item label="Select Role：" prop="userType">
+          <el-select v-model="form.userType" placeholder="Personal/Enterprise" style="width: 100%">
+            <el-option label="Personal" value="1"></el-option>
+            <el-option label="Enterprise" value="2"></el-option>
           </el-select>
         </el-form-item>
 
         <!-- 姓名 -->
-        <el-form-item label="姓名：" prop="realname">
-          <el-input v-model="form.realname" placeholder="请输入姓名"></el-input>
+        <el-form-item label="Name：" prop="realname">
+          <el-input v-model="form.realname" placeholder="Please enter name"></el-input>
         </el-form-item>
 
         <!-- 公司 -->
-        <el-form-item label="公司：" prop="company_name" v-if="form.userType == 2">
-          <el-input v-model="form.company_name" placeholder="请输入公司名称"></el-input>
+        <el-form-item label="Company：" prop="company_name" v-if="form.userType == 2">
+          <el-input v-model="form.company_name" placeholder="Please enter company name"></el-input>
         </el-form-item>
 
         <!-- 职务 -->
-        <el-form-item label="职务：" prop="position" v-if="form.userType == 2">
-          <el-input v-model="form.position" placeholder="请输入职务"></el-input>
+        <el-form-item label="Position：" prop="position" v-if="form.userType == 2">
+          <el-input v-model="form.position" placeholder="Please enter position"></el-input>
         </el-form-item>
 
         <!-- 我需求的类型 -->
-        <div class="form-item-title">我属于的类型</div>
-        <el-form-item label="选择类型：">
+        <div class="form-item-title">My Category</div>
+        <el-form-item label="Select Type：">
           <div class="requirement-type-section">
             <div class="tree-container">
               <el-tree
@@ -62,7 +62,7 @@
         </el-form-item>
 
         <!-- 我希望平台得到的服务 -->
-        <div class="form-item-title">我希望平台得到的服务</div>
+        <div class="form-item-title">Services I Hope to Get from Platform</div>
         <el-form-item>
           <div class="service-checkboxes">
             <el-checkbox-group v-model="form.requireService">
@@ -80,9 +80,9 @@
     </div>
 
     <div slot="footer" class="dialog-footer">
-      <el-button @click="handleCancel">取消</el-button>
+      <el-button @click="handleCancel">Cancel</el-button>
       <el-button type="primary" @click="handleSubmit" :loading="submitLoading">
-        提交
+        Submit
       </el-button>
     </div>
   </el-dialog>
@@ -113,10 +113,10 @@ export default {
       },
 
       rules: {
-        userType: [{ required: true, message: "请选择角色", trigger: "change" }],
-        realname: [{ required: true, message: "请输入姓名", trigger: "blur" }],
-        company_name: [{ required: true, message: "请输入公司名称", trigger: "blur" }],
-        position: [{ required: true, message: "请输入职务", trigger: "blur" }],
+        userType: [{ required: true, message: "Please select role", trigger: "change" }],
+        realname: [{ required: true, message: "Please enter name", trigger: "blur" }],
+        company_name: [{ required: true, message: "Please enter company name", trigger: "blur" }],
+        position: [{ required: true, message: "Please enter position", trigger: "blur" }],
       },
     };
   },
@@ -212,11 +212,11 @@ export default {
             .then((res) => {
               this.submitLoading = false;
               if (res.code === 200) {
-                this.$message.success("信息完善成功");
+                this.$message.success("Profile completed successfully");
                 this.hide();
                 this.$emit("submit-success", submitData);
               } else {
-                this.$message.error(res.msg || "提交失败");
+                this.$message.error(res.msg || "Submission failed");
               }
             })
             .catch(() => {

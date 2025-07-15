@@ -3,7 +3,7 @@
     <!-- 顶部横幅 -->
     <div class="header-banner">
       <div class="banner-content">
-        <h1 class="title">意见反馈</h1>
+        <h1 class="title">Feedback</h1>
         <p class="subtitle">FEEDBACK</p>
       </div>
     </div>
@@ -32,11 +32,11 @@
 
           <div class="form-container">
             <div class="form-group">
-              <label class="form-label">问题类型：</label>
+              <label class="form-label">Issue Type:</label>
               <el-select
                 class="form-input"
                 v-model="feedbackForm.type"
-                placeholder="请选择"
+                placeholder="Please select"
               >
                 <el-option
                   v-for="(item, index) in feddBackModuleList"
@@ -48,28 +48,28 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">问题描述：</label>
+              <label class="form-label">Description:</label>
               <el-input
                 class="form-input"
                 type="textarea"
                 v-model="feedbackForm.description"
-                placeholder="请描述"
+                placeholder="Please describe"
                 rows="8"
               />
             </div>
 
             <div class="form-group">
-              <label class="form-label">联系方式：</label>
+              <label class="form-label">Information:</label>
               <el-input
                 type="text"
                 class="form-input"
                 v-model="feedbackForm.contact"
-                placeholder="请输入联系方式"
+                placeholder="Please enter contact information"
               />
             </div>
 
             <div class="form-group">
-              <label class="form-label">上传图片：</label>
+              <label class="form-label">Images:</label>
               <div class="upload-container">
                 <el-upload
                   class="avatar-uploader"
@@ -94,8 +94,8 @@
             </div>
 
             <div class="form-actions">
-              <button class="btn-submit" @click="submitFeedback">提交</button>
-              <button class="btn-cancel" @click="cancelFeedback">取消</button>
+              <button class="btn-submit" @click="submitFeedback">Submit</button>
+              <button class="btn-cancel" @click="cancelFeedback">Cancel</button>
             </div>
           </div>
         </div>
@@ -148,7 +148,7 @@ export default {
           images: this.feedbackForm.images.join(","),
         },
       }).then((res) => {
-        this.$message.success("提交成功");
+        this.$message.success("Submitted successfully");
         this.cancelFeedback();
       });
     },

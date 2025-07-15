@@ -38,48 +38,48 @@ export default {
       //个人中心导航
       all_menu: [
         {
-          title: "个人中心",
+          title: "Personal Center",
           children: [
             {
-              title: "我的个人中心",
+              title: "My Personal Center",
               route: "my-info",
             },
             {
-              title: "会员中心",
+              title: "Member Center",
               route: "my-vip",
             },
             {
-              title: "修改密码",
+              title: "Change Password",
               route: "edit-password",
             },
             {
-              title: "消息",
+              title: "Messages",
               route: "my-message",
             },
             {
-              title: "我的关注",
+              title: "My Favorites",
               route: "my-follows",
             },
           ],
         },
         {
-          title: "需求管理",
+          title: "Management",
           children: [
             {
-              title: "填报需求",
+              title: "Submit Demand",
               route: "demand-form",
             },
             {
-              title: "我的需求",
+              title: "My Demands",
               route: "demand-list",
             },
           ],
         },
         {
-          title: "工单中心",
+          title: "Work Order Center",
           children: [
             {
-              title: "需求工单管理",
+              title: "Demand Work Order Management",
               route: "service-list",
             },
           ],
@@ -92,7 +92,7 @@ export default {
   computed: {
     nav_option() {
       let option = [
-        { route: "/my-index", title: "用户中心", title2: "Personal Center" },
+        { route: "/my-index", title: "User Center", title2: "Personal Center" },
         {
           route: "",
           title: this.$route.meta.title,

@@ -1,22 +1,22 @@
 <template>
   <div class="page">
     <div class="main-title">
-      <span>消息通知</span>
+      <span>Message Notifications</span>
     </div>
 
     <div class="page-ctx">
       <div class="tab-box">
         <div class="tab-item" :class="{ active: tabIndex == 0 }" @click="changeTab(0)">
-          <span>全部</span>
+          <span>All</span>
         </div>
         <div class="tab-item" :class="{ active: tabIndex == 1 }" @click="changeTab(1)">
-          <span>账号通知</span>
+          <span>Notice</span>
         </div>
         <div class="tab-item" :class="{ active: tabIndex == 2 }" @click="changeTab(2)">
-          <span>工单通知</span>
+          <span>Work Notice</span>
         </div>
         <div class="tab-item" :class="{ active: tabIndex == 3 }" @click="changeTab(3)">
-          <span>留言通知</span>
+          <span>Message Notice</span>
         </div>
       </div>
       <!-- 顶部标签选择区域 -->
@@ -30,10 +30,10 @@
               @change="toggleSelectAll"
               class="select-checkbox"
             />
-            <label for="selectAll" class="select-label">全选</label>
+            <label for="selectAll" class="select-label">Select All</label>
           </div>
-          <button class="tab-btn" @click="batchDelete">批量删除</button>
-          <button class="tab-btn active" @click="batchRead">标记已读</button>
+          <button class="tab-btn" @click="batchDelete">Batch Delete</button>
+          <button class="tab-btn active" @click="batchRead">Mark as Read</button>
         </div>
       </div>
 
@@ -62,12 +62,12 @@
             <div class="mess-time">{{ item.created_at }}</div>
           </div>
           <div style="color: #33ae60; margin-right: 16px">
-            {{ item.isRead == 0 ? "未读" : "已读" }}
+            {{ item.isRead == 0 ? "Unread" : "Read" }}
           </div>
 
           <!-- 右侧删除按钮 -->
           <div class="mess-action">
-            <button class="delete-btn" @click="deleteMessage(item)">删除</button>
+            <button class="delete-btn" @click="deleteMessage(item)">Delete</button>
           </div>
         </div>
         <el-pagination
@@ -78,7 +78,7 @@
           :current-page="pagination.page"
           @current-change="handleCurrentChange"
         />
-        <el-empty description="暂无数据" v-if="messList.length === 0" />
+        <el-empty description="No data" v-if="messList.length === 0" />
       </div>
     </div>
   </div>
@@ -168,12 +168,12 @@ export default {
     batchDelete() {
       const selectedItems = this.selectedMessages;
       if (selectedItems.length === 0) {
-        this.$message.warning("请选择要删除的消息");
+        this.$message.warning("Please select messages to delete");
         return;
       }
-      this.$confirm("确定删除选中的消息吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+      this.$confirm("Are you sure you want to delete selected messages?", "Confirm", {
+        confirmButtonText: "Confirm",
+        cancelButtonText: "Cancel",
         type: "warning",
       }).then(() => {
         this.$api({
@@ -185,15 +185,15 @@ export default {
         }).then((res) => {
           if (res.code == 200) {
             this.setView();
-            this.$message.success("删除成功");
+            this.$message.success("Deleted successfully");
           }
         });
       });
     },
     deleteMessage(item) {
-      this.$confirm("确定删除该消息吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+      this.$confirm("Are you sure you want to delete this message?", "Confirm", {
+        confirmButtonText: "Confirm",
+        cancelButtonText: "Cancel",
         type: "warning",
       }).then(() => {
         this.$api({
@@ -214,7 +214,7 @@ export default {
     batchRead() {
       const selectedItems = this.selectedMessages;
       if (selectedItems.length === 0) {
-        this.$message.warning("请选择要标记已读的消息");
+        this.$message.warning("Please select messages to mark as read");
         return;
       }
       this.$api({
@@ -224,7 +224,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           this.setView();
-          this.$message.success("标记已读成功");
+          this.$message.success("Marked as read successfully");
         }
       });
     },

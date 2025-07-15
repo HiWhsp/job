@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="main-title">
-      <span>我的需求</span>
+      <span>My Demands</span>
     </div>
     <div class="page-ctx">
       <!-- tab切换 -->
@@ -22,7 +22,7 @@
 
       <!-- 需求列表 -->
       <div class="demand-list">
-        <el-empty v-if="demandList.length === 0" description="暂无数据" />
+        <el-empty v-if="demandList.length === 0" description="No Data" />
 
         <div v-for="item in demandList" :key="item.id" class="demand-item">
           <!-- 售后运维需求 -->
@@ -34,29 +34,29 @@
               <div class="demand-header-info">
                 <div class="demand-time">{{ item.created_at }}</div>
                 <div class="demand-type-icon"></div>
-                <div class="contact-info">编号：{{ item.serialNo }}</div>
+                <div class="contact-info">No.: {{ item.serialNo }}</div>
               </div>
             </div>
             <div class="demand-content">
               <div class="demand-title">
                 {{ workOrderName(item) }}
-                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
+                <button class="detail-btn" @click="viewDetail(item)">View Details</button>
               </div>
               <div class="demand-details">
                 <div class="detail-row" v-if="item.deviceType">
-                  <span class="label">设备类型：</span>
+                  <span class="label">Device Type:</span>
                   <span class="value">{{ deviceTypeName(item) }}</span>
                 </div>
                 <div class="detail-row" v-if="item.deviceGuige">
-                  <span class="label">设备规格：</span>
+                  <span class="label">Device Specification:</span>
                   <span class="value">{{ item.deviceGuige }}</span>
                 </div>
                 <div class="detail-row" v-if="item.deviceAddress">
-                  <span class="label">设备位置：</span>
+                  <span class="label">Device Location:</span>
                   <span class="value">{{ item.deviceAddress }}</span>
                 </div>
                 <div class="detail-row" v-if="item.faultDescription">
-                  <span class="label">故障现象：</span>
+                  <span class="label">Fault Description:</span>
                   <span class="value">{{ item.faultDescription }}</span>
                 </div>
               </div>
@@ -72,21 +72,21 @@
               <div class="demand-header-info">
                 <div class="demand-time">{{ item.created_at }}</div>
                 <div class="demand-type-icon"></div>
-                <div class="contact-info">编号：{{ item.serialNo }}</div>
+                <div class="contact-info">No.: {{ item.serialNo }}</div>
               </div>
             </div>
             <div class="demand-content">
               <div class="demand-title">
                 {{ workOrderName(item) }}
-                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
+                <button class="detail-btn" @click="viewDetail(item)">View Details</button>
               </div>
               <div class="demand-details">
                 <div class="detail-row" v-if="item.companyName">
-                  <span class="label">企业名称：</span>
+                  <span class="label">Company Name:</span>
                   <span class="value">{{ item.companyName }}</span>
                 </div>
                 <div class="detail-row" v-if="item.address">
-                  <span class="label">地址：</span>
+                  <span class="label">Address:</span>
                   <span class="value">{{ item.address }}</span>
                 </div>
               </div>
@@ -102,29 +102,29 @@
               <div class="demand-header-info">
                 <div class="demand-time">{{ item.created_at }}</div>
                 <div class="demand-type-icon"></div>
-                <div class="contact-info">编号：{{ item.serialNo }}</div>
+                <div class="contact-info">No.: {{ item.serialNo }}</div>
               </div>
             </div>
             <div class="demand-content">
               <div class="demand-title">
                 {{ workOrderName(item) }}
-                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
+                <button class="detail-btn" @click="viewDetail(item)">View Details</button>
               </div>
               <div class="demand-details">
                 <div class="detail-row" v-if="item.projectName">
-                  <span class="label">项目名称：</span>
+                  <span class="label">Project Name:</span>
                   <span class="value">{{ item.projectName }}</span>
                 </div>
                 <div class="detail-row" v-if="item.projectAddress">
-                  <span class="label">项目地点：</span>
+                  <span class="label">Project Location:</span>
                   <span class="value">{{ item.projectAddress }}</span>
                 </div>
                 <div class="detail-row" v-if="item.projectScale">
-                  <span class="label">项目规模：</span>
+                  <span class="label">Project Scale:</span>
                   <span class="value">{{ item.projectScale }}</span>
                 </div>
                 <div class="detail-row" v-if="item.projectTypeStr">
-                  <span class="label">技术类型：</span>
+                  <span class="label">Technical Type:</span>
                   <span class="value">{{ item.projectTypeStr }}</span>
                 </div>
               </div>
@@ -140,29 +140,29 @@
               <div class="demand-header-info">
                 <div class="demand-time">{{ item.created_at }}</div>
                 <div class="demand-type-icon"></div>
-                <div class="contact-info">编号：{{ item.serialNo }}</div>
+                <div class="contact-info">No.: {{ item.serialNo }}</div>
               </div>
             </div>
             <div class="demand-content">
               <div class="demand-title">
                 {{ workOrderName(item) }}
-                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
+                <button class="detail-btn" @click="viewDetail(item)">View Details</button>
               </div>
               <div class="demand-details">
                 <div class="detail-row" v-if="item.projectName">
-                  <span class="label">项目名称：</span>
+                  <span class="label">Project Name:</span>
                   <span class="value">{{ item.projectName }}</span>
                 </div>
                 <div class="detail-row" v-if="item.projectAddress">
-                  <span class="label">项目地点：</span>
+                  <span class="label">Project Location:</span>
                   <span class="value">{{ item.projectAddress }}</span>
                 </div>
                 <div class="detail-row" v-if="item.projectScale">
-                  <span class="label">项目规模：</span>
+                  <span class="label">Project Scale:</span>
                   <span class="value">{{ item.projectScale }}</span>
                 </div>
                 <div class="detail-row" v-if="item.projectTypeStr">
-                  <span class="label">项目类型：</span>
+                  <span class="label">Project Type:</span>
                   <span class="value">{{ item.projectTypeStr }}</span>
                 </div>
               </div>
@@ -178,21 +178,21 @@
               <div class="demand-header-info">
                 <div class="demand-time">{{ item.created_at }}</div>
                 <div class="demand-type-icon"></div>
-                <div class="contact-info">编号：{{ item.serialNo }}</div>
+                <div class="contact-info">No.: {{ item.serialNo }}</div>
               </div>
             </div>
             <div class="demand-content">
               <div class="demand-title">
                 {{ workOrderName(item) }}
-                <button class="detail-btn" @click="viewDetail(item)">查看详情</button>
+                <button class="detail-btn" @click="viewDetail(item)">View Details</button>
               </div>
               <div class="demand-details">
                 <div class="detail-row" v-if="item.companyName">
-                  <span class="label">公司名称：</span>
+                  <span class="label">Company Name:</span>
                   <span class="value">{{ item.companyName }}</span>
                 </div>
                 <div class="detail-row" v-if="item.address">
-                  <span class="label">回收地点：</span>
+                  <span class="label">Recycling Location:</span>
                   <span class="value">{{ item.address }}</span>
                 </div>
               </div>
@@ -237,12 +237,12 @@ export default {
       demandList: [],
       total: 0,
       tabs: [
-        { key: "", label: "全部" },
-        { key: "1", label: "售后运维需求表" },
-        { key: "2", label: "项目产品需求表" },
-        { key: "3", label: "项目融资表" },
-        { key: "4", label: "项目转让表" },
-        { key: "5", label: "产品回收利用表" },
+        { key: "", label: "All" },
+        { key: "1", label: "After-sales Maintenance Demand" },
+        { key: "2", label: "Project Product Demand" },
+        { key: "3", label: "Project Financing" },
+        { key: "4", label: "Project Transfer" },
+        { key: "5", label: "Product Recycling" },
       ],
     };
   },
@@ -251,9 +251,9 @@ export default {
     checkStatus() {
       return (status) => {
         return {
-          0: "待查看",
-          1: "已查看(1-3个工作日邮箱或电话回复您)",
-          2: "已处理",
+          0: "Pending Review",
+          1: "Reviewed (Reply within 1-3 business days via email or phone)",
+          2: "Processed",
         }[status];
       };
     },
@@ -261,11 +261,11 @@ export default {
     workOrderName() {
       return (item) => {
         return {
-          1: "售后运维需求表",
-          2: "项目产品需求表",
-          3: "项目融资表",
-          4: "项目转让表",
-          5: "产品回收利用表",
+          1: "After-sales Maintenance Demand Form",
+          2: "Project Product Demand Form",
+          3: "Project Financing Form",
+          4: "Project Transfer Form",
+          5: "Product Recycling Form",
         }[item.workOrderType];
       };
     },
@@ -273,9 +273,9 @@ export default {
     deviceTypeName() {
       return (item) => {
         return {
-          1: "光伏",
-          2: "储能",
-          3: "拆冲",
+          1: "Photovoltaic",
+          2: "Energy Storage",
+          3: "Charging Station",
           4: item.otherDevice,
         }[item.deviceType];
       };
@@ -317,7 +317,7 @@ export default {
     },
     getTabName(tabKey) {
       const tab = this.tabs.find((t) => t.key === tabKey);
-      return tab ? tab.label : "全部";
+      return tab ? tab.label : "All";
     },
     getTypeCount(type) {
       return this.demandList.filter((item) => item.type === type).length;

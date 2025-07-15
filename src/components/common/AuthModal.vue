@@ -9,17 +9,17 @@
     @close="handleClose"
   >
     <div class="auth-container">
-      <!-- 登录部分 -->
+      <!-- Login Section -->
       <div class="auth-section login-section" v-if="activeTab === 'login'">
         <div class="auth-header">
-          <h2>登录</h2>
+          <h2>Login</h2>
         </div>
 
         <el-form :model="loginForm" :rules="loginRules" ref="loginForm" class="auth-form">
           <el-form-item prop="account">
             <el-input
               v-model="loginForm.account"
-              placeholder="手机号码/邮箱"
+              placeholder="Phone/Email"
               size="large"
             ></el-input>
           </el-form-item>
@@ -28,7 +28,7 @@
             <div class="code-input-group">
               <el-input
                 v-model="loginForm.code"
-                placeholder="验证码"
+                placeholder="Verification Code"
                 size="large"
               ></el-input>
               <el-button
@@ -47,7 +47,7 @@
             <div class="code-input-group">
               <el-input
                 v-model="loginForm.password"
-                placeholder="密码"
+                placeholder="Password"
                 size="large"
                 show-password
               ></el-input>
@@ -56,10 +56,10 @@
 
           <el-form-item>
             <el-checkbox v-model="loginForm.agree">
-              已阅读并同意<span class="link-text" @click="userAgreement('用户协议')"
-                >用户协议</span
-              >和<span class="link-text" @click="userAgreement('隐私政策')"
-                >隐私政策</span
+              I have read and agree to the <span class="link-text" @click="userAgreement('User Agreement')"
+                >Agreement</span
+              > and <span class="link-text" @click="userAgreement('Privacy Policy')"
+                >Privacy Policy</span
               >
             </el-checkbox>
           </el-form-item>
@@ -71,33 +71,33 @@
               :loading="loginLoading"
               @click="submitLogin"
             >
-              登录
+              Login
             </el-button>
           </el-form-item>
         </el-form>
 
         <div class="auth-footer">
           <div class="forgot-password">
-            <span @click="forgotPassword" class="link-text">忘记密码？</span>
+            <span @click="forgotPassword" class="link-text">Forgot Password?</span>
             <span @click="passwordLogin" class="link-text" v-if="type === 'code'"
-              >密码登录</span
+              >Password Login</span
             >
             <span @click="type = 'code'" class="link-text" v-if="type === 'password'"
-              >验证码登录</span
+              >Code Login</span
             >
           </div>
         </div>
       </div>
       <div class="auth-section login-section" v-if="activeTab === 'forgetPassword'">
         <div class="auth-header">
-          <h2>忘记密码</h2>
+          <h2>Forgot Password</h2>
         </div>
 
         <el-form :model="loginForm" :rules="loginRules" ref="loginForm" class="auth-form">
           <el-form-item prop="account">
             <el-input
               v-model="loginForm.account"
-              placeholder="手机号码/邮箱"
+              placeholder="Phone/Email"
               size="large"
             ></el-input>
           </el-form-item>
@@ -106,7 +106,7 @@
             <div class="code-input-group">
               <el-input
                 v-model="loginForm.code"
-                placeholder="验证码"
+                placeholder="Verification Code"
                 size="large"
               ></el-input>
               <el-button
@@ -125,7 +125,7 @@
             <div class="code-input-group">
               <el-input
                 v-model="loginForm.password"
-                placeholder="新密码"
+                placeholder="New Password"
                 size="large"
                 show-password
               ></el-input>
@@ -139,14 +139,14 @@
               :loading="loginLoading"
               @click="submitForgetPassword"
             >
-              重置密码
+              Reset Password
             </el-button>
           </el-form-item>
         </el-form>
 
         <div class="auth-footer">
           <div class="forgot-password">
-            <span @click="activeTab = 'login'" class="link-text">返回登录</span>
+            <span @click="activeTab = 'login'" class="link-text">Back to Login</span>
           </div>
         </div>
       </div>
@@ -172,7 +172,7 @@ export default {
       loginLoading: false,
       registerLoading: false,
       codeDisabled: false,
-      codeText: "获取验证码",
+      codeText: "Get Code",
 
       loginForm: {
         account: "",
@@ -192,20 +192,20 @@ export default {
 
       loginRules: {
         account: [
-          { required: true, message: "请输入手机号码或邮箱", trigger: "blur" },
+          { required: true, message: "Please enter phone number or email", trigger: "blur" },
           {
             pattern: /^(1[3-9]\d{9})|(\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)$/,
-            message: "请输入正确的手机号码或邮箱格式",
+            message: "Please enter a valid phone number or email format",
             trigger: "blur",
           },
         ],
         password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, max: 20, message: "密码长度为6-20位", trigger: "blur" },
+          { required: true, message: "Please enter password", trigger: "blur" },
+          { min: 6, max: 20, message: "Password length should be 6-20 characters", trigger: "blur" },
         ],
         code: [
-          { required: true, message: "请输入验证码", trigger: "blur" },
-          { min: 4, max: 6, message: "验证码长度为4-6位", trigger: "blur" },
+          { required: true, message: "Please enter verification code", trigger: "blur" },
+          { min: 4, max: 6, message: "Verification code length should be 4-6 characters", trigger: "blur" },
         ],
       },
     };
@@ -247,7 +247,7 @@ export default {
     getVerifyCode(type) {
       const account = this.loginForm.account;
       if (!account) {
-        this.$message.warning("请先输入手机号或邮箱");
+        this.$message.warning("Please enter phone number or email first");
         return;
       }
       if (account.includes("@")) {
@@ -270,7 +270,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           this.startCountdown();
-          this.$message.success("验证码已发送");
+          this.$message.success("Verification code sent successfully");
           this.$emit("get-code", { type, account });
         }
       });
@@ -287,7 +287,7 @@ export default {
           this.codeText = `${count}s`;
         } else {
           this.codeDisabled = false;
-          this.codeText = "获取验证码";
+          this.codeText = "Get Code";
           clearInterval(timer);
         }
       }, 1000);
@@ -297,7 +297,7 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           if (!this.loginForm.agree) {
-            this.$message.warning("请先同意用户协议");
+            this.$message.warning("Please agree to the User Agreement first");
             return;
           }
 
@@ -316,7 +316,7 @@ export default {
             .then((res) => {
               if (res.code == 200) {
                 this.loginLoading = false;
-                this.$message.success("登录成功");
+                this.$message.success("Login successful");
                 this.hide();
                 this.$emit("login-success", res.data);
               } else {
@@ -343,13 +343,13 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           if (!this.loginForm.password) {
-            this.$message.warning("请先输入新密码");
+            this.$message.warning("Please enter new password first");
             return;
           }
-          // 清除密码中的空格
+          // Remove spaces from password
           this.loginForm.password = this.loginForm.password.replace(/\s/g, "");
           if (this.loginForm.password.length < 6 || this.loginForm.password.length > 20) {
-            this.$message.warning("密码长度为6-20位");
+            this.$message.warning("Password length should be 6-20 characters");
             return;
           }
           this.loginLoading = true;
@@ -366,7 +366,7 @@ export default {
             .then((res) => {
               if (res.code == 200) {
                 this.loginLoading = false;
-                this.$message.success("重置密码成功");
+                this.$message.success("Password reset successful");
                 this.activeTab = "login";
               } else {
                 this.loginLoading = false;

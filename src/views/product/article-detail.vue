@@ -17,7 +17,7 @@
       <!-- 右侧通知公告 -->
       <div class="notice-sidebar">
         <div class="notice-header">
-          <h3><img src="@/assets/image/icon/good.png" alt="" /> 通知公告</h3>
+          <h3><img src="@/assets/image/icon/good.png" alt="" /> Notices & Announcements</h3>
         </div>
         <div class="notice-list">
           <div
@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       articleTitle: "",
-      author: "江阴联安",
+      author: "Jiangyin Lian'an",
       publishDate: "",
       articleContent: "",
       noticeList: [],
@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     loadArticleDetail() {
-      // 从路由参数获取文章ID
+      // Get article ID from route parameters
       const articleId = this.$route.query.id;
       this.$api({
         url: "index",
@@ -91,7 +91,7 @@ export default {
       });
     },
     goToNotice(noticeId) {
-      // 跳转到通知详情页
+      // Navigate to notice detail page
       this.$router.push(`/article-detail?id=${noticeId}`);
     },
   },

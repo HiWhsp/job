@@ -2,9 +2,9 @@
   <div class="page">
     <div class="page-header">
       <div class="page-header-title">
-        <span>我的需求</span>
+        <span>My Demands</span>
         <span style="margin: 0 10px">></span>
-        <span>{{ workOrderName(demandInfo) }}详情</span>
+        <span>{{ workOrderName(demandInfo) }} Details</span>
       </div>
     </div>
     <div class="page-ctx">
@@ -13,10 +13,10 @@
         <div class="demand-info">
           <p class="demand-date">{{ demandInfo.created_at }}</p>
           <i class="col-line"></i>
-          <p class="demand-number">编号：{{ demandInfo.serialNo }}</p>
+          <p class="demand-number">Number: {{ demandInfo.serialNo }}</p>
         </div>
         <div class="demand-status" :class="getStatusClass()">
-          状态：{{ checkStatus(demandInfo.checkStatus) }}
+          Status: {{ checkStatus(demandInfo.checkStatus) }}
         </div>
       </div>
 
@@ -26,21 +26,21 @@
         <div class="form-table">
           <template v-if="demandInfo.workOrderType == 1">
             <div class="form-row">
-              <div class="form-label">设备类型：</div>
+              <div class="form-label">Type:</div>
               <div class="form-value">{{ deviceTypeName(demandInfo) }}</div>
             </div>
             <div class="form-row">
-              <div class="form-label">设备地质：</div>
+              <div class="form-label">Location:</div>
               <div class="form-value">{{ demandInfo.deviceAddress }}</div>
             </div>
             <div class="form-row">
-              <div class="form-label">设备位置：</div>
+              <div class="form-label">Position:</div>
               <div class="form-value">
                 {{ demandInfo.deviceAddress }}
               </div>
             </div>
             <div class="form-row">
-              <div class="form-label">故障现象：</div>
+              <div class="form-label">Description:</div>
               <div class="form-value">
                 {{ demandInfo.faultDescription }}
               </div>
@@ -53,11 +53,11 @@
               <table>
                 <thead>
                   <tr>
-                    <th>序号</th>
-                    <th>名称</th>
-                    <th>规格</th>
-                    <th>数量</th>
-                    <th>资料提供</th>
+                    <th>No.</th>
+                    <th>Name</th>
+                    <th>Specification</th>
+                    <th>Quantity</th>
+                    <th>Data Provision</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -78,12 +78,12 @@
               <table>
                 <thead>
                   <tr>
-                    <th>序号</th>
-                    <th>类型</th>
-                    <th>图片</th>
-                    <th>名称</th>
-                    <th>数量</th>
-                    <th>描述</th>
+                    <th>No.</th>
+                    <th>Type</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Description</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -92,7 +92,7 @@
                     <td>{{ item.type }}</td>
                     <td class="image-cell">
                       <img :src="item.image" alt="" />
-                      <span class="preview-btn" @click="previewImage(item.image)">预览</span>
+                      <span class="preview-btn" @click="previewImage(item.image)">Preview</span>
                     </td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.num }}</td>
@@ -105,27 +105,27 @@
 
           <template v-if="[3, 4].includes(demandInfo.workOrderType)">
             <div class="form-row">
-              <div class="form-label">项目名称：</div>
+              <div class="form-label">Name:</div>
               <div class="form-value">{{ demandInfo.projectName }}</div>
             </div>
             <div class="form-row">
-              <div class="form-label">项目地点：</div>
+              <div class="form-label">Location:</div>
               <div class="form-value">{{ demandInfo.projectAddress }}</div>
             </div>
             <div class="form-row">
-              <div class="form-label">项目规模：</div>
+              <div class="form-label">Scale:</div>
               <div class="form-value">
                 {{ demandInfo.projectScale }}
               </div>
             </div>
             <div class="form-row">
-              <div class="form-label">项目类型：</div>
+              <div class="form-label">Type:</div>
               <div class="form-value">
                 {{ demandInfo.projectTypeStr }}
               </div>
             </div>
             <div class="form-row" v-if="demandInfo.workOrderType == 3">
-              <div class="form-label">项目进度：</div>
+              <div class="form-label">Progress:</div>
               <div class="form-value">
                 {{ demandInfo.projectProgress }}
               </div>
@@ -133,7 +133,7 @@
           </template>
 
           <div class="form-row" v-if="demandInfo.workOrderType == 1">
-            <div class="form-label">图片：</div>
+            <div class="form-label">Images:</div>
             <div class="form-value">
               <div class="upload-images">
                 <div
@@ -147,7 +147,7 @@
             </div>
           </div>
           <div class="form-row" v-if="demandInfo.workOrderType != 1">
-            <div class="form-label">附件：</div>
+            <div class="form-label">Attachments:</div>
             <div class="form-value">
               <div class="upload-images">
                 <div
@@ -161,7 +161,7 @@
             </div>
           </div>
           <div class="form-row">
-            <div class="form-label">补充说明：</div>
+            <div class="form-label">Notes:</div>
             <div class="form-value">
               {{ demandInfo.remark }}
             </div>
@@ -171,18 +171,18 @@
 
       <!-- 我的信息 -->
       <div class="my-info">
-        <h3 class="info-title">我的信息</h3>
+        <h3 class="info-title">My Information</h3>
         <div class="info-content">
           <div class="info-row">
-            <span class="info-label">企业名称：</span>
+            <span class="info-label">Company Name:</span>
             <span class="info-value">{{ demandInfo.companyName }}</span>
-            <span class="info-label">联系人：</span>
+            <span class="info-label">Contact Person:</span>
             <span class="info-value">{{ demandInfo.contactPerson }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label">联系电话：</span>
+            <span class="info-label">Contact Phone:</span>
             <span class="info-value">{{ demandInfo.contact }}</span>
-            <span class="info-label">邮箱：</span>
+            <span class="info-label">Email:</span>
             <span class="info-value">{{ demandInfo.email }}</span>
           </div>
         </div>
@@ -205,9 +205,9 @@ export default {
     checkStatus() {
       return (status) => {
         return {
-          0: "待查看",
-          1: "已查看",
-          2: "已处理",
+          0: "Pending Review",
+          1: "Reviewed",
+          2: "Processed",
         }[status];
       };
     },
@@ -215,11 +215,11 @@ export default {
     workOrderName() {
       return (item) => {
         return {
-          1: "售后运维需求表",
-          2: "项目产品需求表",
-          3: "项目融资表",
-          4: "项目转让表",
-          5: "产品回收利用表",
+          1: "After-sales Maintenance Demand Form",
+          2: "Project Product Demand Form",
+          3: "Project Financing Form",
+          4: "Project Transfer Form",
+          5: "Product Recycling Form",
         }[item.workOrderType];
       };
     },
@@ -227,9 +227,9 @@ export default {
     deviceTypeName() {
       return (item) => {
         return {
-          1: "光伏",
-          2: "储能",
-          3: "拆冲",
+          1: "Photovoltaic",
+          2: "Energy Storage",
+          3: "Charging Station",
           4: item.otherDevice,
         }[item.deviceType];
       };

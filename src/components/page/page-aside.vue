@@ -10,15 +10,15 @@
           @mouseleave="on_mouseleave(item)"
           @click="on_click_util(item)"
         >
-          <div class="item-inner" v-if="item.title != '人工客服'">
+          <div class="item-inner" v-if="item.title != 'Customer Service'">
             <img :src="item.icon" alt="" />
             <div class="item-title">{{ item.title }}</div>
           </div>
-          <template v-if="item.title == '人工客服'">
+          <template v-if="item.title == 'Customer Service'">
             <el-popover placement="right" trigger="hover">
               <div class="pop-kefu">
                 <div class="pop-kefu-inner">
-                  <div class="kefu-tip">请微信扫描下方二维码</div>
+                  <div class="kefu-tip">Please scan the QR code below with WeChat</div>
                   <img
                     class="kefu-code"
                     :src="vuex_config.file_url_pre + vuex_config.kefu_qrcode"
@@ -36,7 +36,7 @@
         <div class="item" v-if="showTop" @click="toTop()">
           <div class="item-inner">
             <img src="@/assets/image/home/to-top.png" alt="" />
-            <div class="item-title">回顶部</div>
+            <div class="item-title">Back to Top</div>
           </div>
         </div>
       </div>
@@ -56,11 +56,11 @@ export default {
       hoverIndex: "",
       list_util: [
         {
-          title: "个人中心",
+          title: "Personal Center",
           icon: require("@/assets/image/home/aside-info.png"),
         },
         {
-          title: "人工客服",
+          title: "Customer Service",
           icon: require("@/assets/image/home/aside-kefu.png"),
         },
       ],
@@ -114,7 +114,7 @@ export default {
     on_click_util(item) {
       document.documentElement.scrollTop = 0;
       let title = item.title;
-      if (title == "个人中心") {
+      if (title == "Personal Center") {
         this.$router.push("/my-info");
       }
     },

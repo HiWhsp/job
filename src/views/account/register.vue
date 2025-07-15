@@ -7,7 +7,7 @@
     </div>
     <div class="content-box">
       <div class="register-form">
-        <h2 class="register-title">注册</h2>
+        <h2 class="register-title">Register</h2>
 
         <el-form
           :model="registerForm"
@@ -16,76 +16,76 @@
           label-width="120px"
           class="register-form-content"
         >
-          <div class="service-area">选择注册类型</div>
-          <el-form-item label="注册类型" prop="type">
+          <div class="service-area">Select Registration Type</div>
+          <el-form-item label="Type" prop="type">
             <el-select
               v-model="registerForm.type"
-              placeholder="请选择"
+              placeholder="Please select"
               class="form-input"
             >
-              <el-option label="手机号" :value="1"></el-option>
-              <el-option label="邮箱" value="2"></el-option>
+              <el-option label="Mobile Phone" :value="1"></el-option>
+              <el-option label="Email" value="2"></el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="用户名" prop="account" v-if="registerForm.type == 1">
+          <el-form-item label="Username" prop="account" v-if="registerForm.type == 1">
             <el-input
               v-model="registerForm.account"
-              placeholder="请输入用户名"
+              placeholder="Please enter username"
               class="form-input"
             >
             </el-input>
           </el-form-item>
 
-          <el-form-item label="邮箱" prop="account" v-if="registerForm.type == 2">
+          <el-form-item label="Email" prop="account" v-if="registerForm.type == 2">
             <el-input
               v-model="registerForm.account"
-              placeholder="请输入邮箱"
+              placeholder="Please enter email"
               class="form-input"
             >
             </el-input>
           </el-form-item>
 
-          <el-form-item label="验证码" prop="verifyCode">
+          <el-form-item label="Code" prop="verifyCode">
             <div class="verify-code-row">
               <el-input
                 v-model="registerForm.verifyCode"
-                placeholder="请输入验证码"
+                placeholder="Please enter verification code"
                 class="verify-input"
               >
               </el-input>
               <el-button type="success" class="verify-btn" @click="getVerifyCode"
-                >获取验证码</el-button
+                >Get Code</el-button
               >
             </div>
           </el-form-item>
 
-          <el-form-item label="密码" prop="password">
+          <el-form-item label="Password" prop="password">
             <el-input
               v-model="registerForm.password"
               type="password"
-              placeholder="请输入密码"
+              placeholder="Please enter password"
               class="form-input"
             >
             </el-input>
           </el-form-item>
 
-          <div class="service-area">选择需求方/服务方</div>
+          <div class="service-area">Select Demander/Service Provider</div>
 
-          <el-form-item label="需求方/服务方" prop="userType">
+          <el-form-item label="Type" prop="userType">
             <el-select
               v-model="registerForm.userType"
-              placeholder="请选择"
+              placeholder="Please select"
               class="form-input"
             >
-              <el-option label="需求方" value="1"></el-option>
-              <el-option label="服务方" value="2"></el-option>
+              <el-option label="Demander" value="1"></el-option>
+              <el-option label="Service Provider" value="2"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item>
             <el-button type="success" class="register-btn" @click="handleRegister"
-              >提交</el-button
+              >Submit</el-button
             >
           </el-form-item>
         </el-form>
@@ -93,7 +93,7 @@
     </div>
     <div class="bottom-box">
       <p>
-        京ICP证080169号京ICP备09003304号-2京公网安备11010502034458号电子公告服务专项备案
+        {{ vuex_config.banquan }}
       </p>
     </div>
   </div>
@@ -114,25 +114,25 @@ export default {
       agreeService: false,
       rules: {
         account: [
-          { required: true, message: "请输入手机号或邮箱", trigger: "blur" },
+          { required: true, message: "Please enter mobile phone or email", trigger: "blur" },
           {
             pattern: /^(1[3-9]\d{9}|[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+)$/,
-            message: "请输入正确的手机号或邮箱格式",
+            message: "Please enter correct mobile phone or email format",
             trigger: "blur",
           },
         ],
-        // verifyCode: [{ required: true, message: "请输入验证码", trigger: "blur" }],
+        // verifyCode: [{ required: true, message: "Please enter verification code", trigger: "blur" }],
         password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
+          { required: true, message: "Please enter password", trigger: "blur" },
           {
             min: 6,
             max: 20,
-            message: "密码长度在 6 到 20 个字符",
+            message: "Password length should be 6 to 20 characters",
             trigger: "blur",
           },
         ],
         userType: [
-          // { required: true, message: "请选择常驻地/服务方", trigger: "change" },
+          // { required: true, message: "Please select demander/service provider", trigger: "change" },
         ],
       },
     };
@@ -153,7 +153,7 @@ export default {
             },
           }).then((res) => {
             if (res.code == 200) {
-              this.$message.success("注册成功");
+              this.$message.success("Registration successful");
               this.$router.push("/login?is_register=1");
             } else {
               this.$message.error(res.msg);
@@ -166,7 +166,7 @@ export default {
     },
     getVerifyCode() {
       if (!this.registerForm.account) {
-        this.$message.error("请输入手机号/邮箱");
+        this.$message.error("Please enter mobile phone/email");
         return;
       }
       this.$api({
@@ -178,7 +178,7 @@ export default {
         },
       }).then((res) => {
         if (res.code == 200) {
-          this.$message.success("验证码发送成功");
+          this.$message.success("Verification code sent successfully");
         } else {
           this.$message.error(res.msg);
         }

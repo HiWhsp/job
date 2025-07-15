@@ -4,50 +4,50 @@
       <!-- 搜索项 -->
       <div class="search-form">
         <el-form :model="searchForm" ref="searchForm" :inline="true" size="small">
-          <el-form-item label="工单编号" prop="workorder_no">
+          <el-form-item label="Order No." prop="workorder_no">
             <el-input
               v-model="searchForm.workorder_no"
-              placeholder="请输入工单编号"
+              placeholder="Enter order number"
               clearable
               style="width: 200px"
               @change="handleSearch"
             />
           </el-form-item>
-          <el-form-item label="工单类型" prop="workOrderType">
+          <el-form-item label="Order Type" prop="workOrderType">
             <el-select
               v-model="searchForm.workOrderType"
-              placeholder="请选择工单类型"
+              placeholder="Select order type"
               clearable
               style="width: 200px"
               @change="handleSearch"
             >
               <!-- 不传或传空获取全部;1售后运维需求表 2项目产品需求表 3项目融资表 4项目转让表 5产品回收利用表 -->
-              <el-option label="全部" value="" />
-              <el-option label="售后运维需求表" value="1" />
-              <el-option label="项目产品需求表" value="2" />
-              <el-option label="项目融资表" value="3" />
-              <el-option label="项目转让表" value="4" />
-              <el-option label="产品回收利用表" value="5" />
+              <el-option label="All" value="" />
+              <el-option label="After-sales Service" value="1" />
+              <el-option label="Product Requirement" value="2" />
+              <el-option label="Project Financing" value="3" />
+              <el-option label="Project Transfer" value="4" />
+              <el-option label="Product Recycling" value="5" />
             </el-select>
           </el-form-item>
-          <el-form-item label="设备类型" prop="deviceType">
+          <el-form-item label="Device Type" prop="deviceType">
             <el-select
               v-model="searchForm.deviceType"
-              placeholder="请选择设备类型"
+              placeholder="Select device type"
               clearable
               style="width: 200px"
               @change="handleSearch"
             >
-              <el-option label="全部" value="" />
-              <el-option label="光伏" value="1" />
-              <el-option label="储能" value="2" />
-              <el-option label="柴冲" value="3" />
-              <el-option label="其他" value="4" />
+              <el-option label="All" value="" />
+              <el-option label="Solar" value="1" />
+              <el-option label="Energy Storage" value="2" />
+              <el-option label="Diesel" value="3" />
+              <el-option label="Other" value="4" />
             </el-select>
           </el-form-item>
           <el-form-item style="flex: 1; text-align: right">
-            <el-button type="primary" @click="handleSearch">搜索</el-button>
-            <el-button @click="handleReset">重置</el-button>
+            <el-button type="primary" @click="handleSearch">Search</el-button>
+            <el-button @click="handleReset">Reset</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -78,12 +78,12 @@
               >
               <div class="service-info">
                 <span class="date">{{ item.created_at }}</span>
-                <span class="order-info">工单编号：{{ item.workorder_no }}</span>
+                <span class="order-info">Order No.: {{ item.workorder_no }}</span>
               </div>
             </div>
             <div class="header-right">
               <span class="pay-amount"
-                >金额：<span class="amount">￥{{ item.payPrice }}</span></span
+                >Amount: <span class="amount">￥{{ item.payPrice }}</span></span
               >
             </div>
           </div>
@@ -95,16 +95,16 @@
                 <h4 class="service-title">{{ workOrderName(item) }}</h4>
                 <div class="service-info">
                   <div class="info-item">
-                    <span class="info-label">设备类型：</span>
+                    <span class="info-label">Device Type:</span>
                     <span class="info-value">{{ deviceTypeName(item) }}</span>
                   </div>
                   <div class="info-item">
-                    <span class="info-label">设备位置：</span>
+                    <span class="info-label">Device Location:</span>
                     <span class="info-value">{{ item.deviceAddress }}</span>
                   </div>
                   <div class="download-files">
                     <div class="file-item">
-                      <span class="file-type">服务合同：</span>
+                      <span class="file-type">Service Contract:</span>
                       <img
                         src="@/assets/image/icon/pdf.png"
                         class="file-icon"
@@ -115,7 +115,7 @@
                         href="#"
                         class="download-link"
                         @click="downloadFile(item.contractUrl)"
-                        >下载</a
+                        >Download</a
                       >
                     </div>
                   </div>
@@ -125,21 +125,21 @@
               <div class="content-right">
                 <div class="action-buttons">
                   <el-button size="small" @click="handleAction('detail', item)">
-                    工单详情
+                    Order Details
                   </el-button>
                   <el-button
                     size="small"
                     @click="handleAction('backContract', item)"
                     v-if="item.serviceStatus == 1"
                   >
-                    回传合同
+                    Return Contract
                   </el-button>
                   <el-button
                     size="small"
                     @click="handleAction('confirm', item)"
                     v-if="item.serviceStatus == 2"
                   >
-                    服务完成
+                    Service Complete
                   </el-button>
                 </div>
               </div>
@@ -151,14 +151,14 @@
                   class="notice-icon"
                   alt="notice"
                 />
-                <span class="notice-text">请下载服务合同后签字盖章回传系统确认工单</span>
+                <span class="notice-text">Please download the service contract, sign and stamp it, then upload it back to the system to confirm the order</span>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <el-empty v-if="total == 0" description="暂无数据" />
+    <el-empty v-if="total == 0" description="No data" />
     <el-pagination
       v-if="total > 0"
       style="margin-top: 20px; text-align: center"
@@ -171,7 +171,7 @@
 
     <!-- 回传合同弹框 -->
     <el-dialog
-      title="回传合同"
+      title="Return Contract"
       :visible.sync="backOpenModalVisible"
       width="400px"
       :close-on-click-modal="false"
@@ -191,14 +191,14 @@
         <i class="el-icon-plus"></i>
       </el-upload>
       <div class="back-open-actions">
-        <el-button type="primary" @click="submitBackOpen">提交</el-button>
-        <el-button @click="cancelBackOpen">取消</el-button>
+        <el-button type="primary" @click="submitBackOpen">Submit</el-button>
+        <el-button @click="cancelBackOpen">Cancel</el-button>
       </div>
     </el-dialog>
 
     <!-- 服务完成弹框 -->
     <el-dialog
-      title="服务完成"
+      title="Service Complete"
       :visible.sync="paymentModalVisible"
       width="600px"
       :close-on-click-modal="false"
@@ -208,7 +208,7 @@
         <!-- 线下支付区域 -->
         <div class="offline-payment-section">
           <div class="upload-section">
-            <div class="upload-label">上传服务单：</div>
+            <div class="upload-label">Upload Service Report:</div>
             <div class="upload-area">
               <el-upload
                 class="payment-uploader"
@@ -223,13 +223,13 @@
                   <i class="el-icon-plus"></i>
                 </div>
               </el-upload>
-              <span>上传客户签字的服务单/现场维修图片</span>
+              <span>Upload customer-signed service report/on-site repair images</span>
             </div>
           </div>
 
           <div class="offline-actions">
-            <el-button type="primary" @click="submitOfflinePayment">提交</el-button>
-            <el-button @click="cancelPayment">取消</el-button>
+            <el-button type="primary" @click="submitOfflinePayment">Submit</el-button>
+            <el-button @click="cancelPayment">Cancel</el-button>
           </div>
         </div>
       </div>
@@ -245,10 +245,10 @@ export default {
       id: "",
       serviceList: [],
       tabList: [
-        { name: "全部工单", value: "" },
-        { name: "待确认", value: "1" },
-        { name: "服务中", value: "2" },
-        { name: "已完成", value: "3" },
+        { name: "All Orders", value: "" },
+        { name: "Pending", value: "1" },
+        { name: "In Service", value: "2" },
+        { name: "Completed", value: "3" },
       ],
       activeTab: "0",
       currentPage: 1,
@@ -270,10 +270,10 @@ export default {
     checkStatus() {
       return (status) => {
         return {
-          0: "未分配",
-          1: "待确认",
-          2: "服务中",
-          3: "已完成",
+          0: "Unassigned",
+          1: "Pending",
+          2: "In Service",
+          3: "Completed",
         }[status];
       };
     },
@@ -281,11 +281,11 @@ export default {
     workOrderName() {
       return (item) => {
         return {
-          1: "售后运维需求表",
-          2: "光储充相关产品需求表",
-          3: "新能源光储充项目投融资信息需求表",
-          4: "项目转让需求表",
-          5: "光伏组件/锂电池/铅酸电池回收业务信息表",
+          1: "After-sales Service Request",
+          2: "Solar Storage Charging Product Request",
+          3: "New Energy Solar Storage Charging Project Investment Request",
+          4: "Project Transfer Request",
+          5: "Solar Module/Lithium Battery/Lead Acid Battery Recycling Business Information",
         }[item.workOrderType];
       };
     },
@@ -293,9 +293,9 @@ export default {
     deviceTypeName() {
       return (item) => {
         return {
-          1: "光伏",
-          2: "储能",
-          3: "拆冲",
+          1: "Solar",
+          2: "Energy Storage",
+          3: "Diesel",
           4: item.otherDevice,
         }[item.deviceType];
       };
@@ -380,7 +380,7 @@ export default {
           name: originName,
         },
       }).then((res) => {
-        this.$message.success("回传成功");
+        this.$message.success("Contract uploaded successfully");
         this.backOpenModalVisible = false;
         this.backUrl = [];
         this.handleSearch();
@@ -394,7 +394,7 @@ export default {
     // 提交线下支付
     submitOfflinePayment() {
       if (this.paymentUrl.length == 0) {
-        this.$message.error("请上传服务单");
+        this.$message.error("Please upload service report");
         return;
       }
       let url = [];
@@ -409,7 +409,7 @@ export default {
           servicePhotos: url.join(","),
         },
       }).then((res) => {
-        this.$message.success("服务图片上传完成");
+        this.$message.success("Service images uploaded successfully");
         this.paymentModalVisible = false;
         this.$api({
           url: "serviceConfirmFinish",

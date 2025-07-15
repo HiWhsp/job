@@ -3,7 +3,7 @@
     <!-- 顶部横幅 -->
     <div class="header-banner">
       <div class="banner-content">
-        <h1 class="title">商务合作</h1>
+        <h1 class="title">Business Cooperation</h1>
         <p class="subtitle">BUSINESS COLLABORATION</p>
       </div>
     </div>
@@ -31,20 +31,20 @@
           <h2 class="section-title">{{ cooperationList[activeMenu] }}</h2>
           <div class="content">
             <div class="content-item">
-              <div class="content-item-title">姓名：</div>
-              <el-input v-model="form.name" placeholder="请输入内容" />
+              <div class="content-item-title">Name:</div>
+              <el-input v-model="form.name" placeholder="Please enter content" />
             </div>
             <div class="content-item">
-              <div class="content-item-title">手机号：</div>
-              <el-input v-model="form.mobile" placeholder="请输入内容" />
+              <div class="content-item-title">Mobile:</div>
+              <el-input v-model="form.mobile" placeholder="Please enter content" />
             </div>
             <div class="content-item">
-              <div class="content-item-title">公司名称：</div>
-              <el-input v-model="form.company_name" placeholder="请输入内容" />
+              <div class="content-item-title">Company:</div>
+              <el-input v-model="form.company_name" placeholder="Please enter content" />
             </div>
           </div>
           <div class="submit-btn">
-            <el-button type="primary" @click="submitForm">预约咨询</el-button>
+            <el-button type="primary" @click="submitForm">Schedule Consultation</el-button>
           </div>
         </div>
       </div>
@@ -88,7 +88,7 @@ export default {
           type_id: this.activeMenu,
         },
       }).then((res) => {
-        this.$message.success("提交成功");
+        this.$message.success("Submitted successfully");
         this.form = {
           name: "",
           mobile: "",

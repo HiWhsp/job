@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="main-title">
-      <span>我的收藏</span>
+      <span>My Favorites</span>
     </div>
 
     <div class="page-ctx">
@@ -16,7 +16,7 @@
             <div class="card-title">
               {{ item.companyName }}
             </div>
-            <div class="card-subtitle" @click="handleCancelCollect(item)">取消关注</div>
+            <div class="card-subtitle" @click="handleCancelCollect(item)">Unfollow</div>
           </div>
         </div>
       </div>
@@ -28,7 +28,7 @@
         :current-page="pagination.page"
         @current-change="handleCurrentChange"
       />
-      <el-empty description="暂无数据" v-if="messList.length === 0" />
+      <el-empty description="No data" v-if="messList.length === 0" />
     </div>
   </div>
 </template>
@@ -80,7 +80,7 @@ export default {
         data: { type: 2, companyId: item.id },
       }).then((res) => {
         if (res.code == 200) {
-          this.$message.success("取消关注成功");
+          this.$message.success("Unfollowed successfully");
           this.setView();
         }
       });

@@ -2,10 +2,10 @@
   <div class="page">
     <div class="page-header">
       <div class="page-header-title">
-        <span>工单管理</span>
+        <span>Work Order Management</span>
       </div>
       <div class="search-box">
-        <el-input v-model="keyword" placeholder="输入关键字" />
+        <el-input v-model="keyword" placeholder="Enter keyword" />
         <el-button type="primary">
           <i class="el-icon-search"></i>
         </el-button>
@@ -28,9 +28,9 @@
               >
               <div class="service-info">
                 <span class="date">{{ item.created_at }}</span>
-                <span class="order-info">工单编号：{{ item.workorder_no }}</span>
+                <span class="order-info">Work No.: {{ item.workorder_no }}</span>
                 <span class="relation-info"
-                  >关联需求表单号：<span class="relation-order">{{
+                  >Demand No.: <span class="relation-order">{{
                     item.user_require ? item.user_require.serialNo : ""
                   }}</span></span
                 >
@@ -40,11 +40,11 @@
               <span class="pay-amount"
                 >{{
                   item.payStatus == 0
-                    ? "待支付"
+                    ? "Payment"
                     : item.payStatus == 2
-                    ? "已支付"
-                    : "待确认"
-                }}：<span class="amount"
+                    ? "Paid"
+                    : "Confirmation"
+                }}: <span class="amount"
                   >￥{{
                     item.payStatus == 0
                       ? item.originPrice
@@ -64,16 +64,16 @@
                 <h4 class="service-title">{{ workOrderName(item) }}</h4>
                 <div class="service-info">
                   <div class="info-item">
-                    <span class="info-label">设备类型：</span>
+                    <span class="info-label">Device Type:</span>
                     <span class="info-value">{{ deviceTypeName(item) }}</span>
                   </div>
                   <div class="info-item">
-                    <span class="info-label">设备位置：</span>
+                    <span class="info-label">Device Location:</span>
                     <span class="info-value">{{ item.deviceAddress }}</span>
                   </div>
                   <div class="download-files">
                     <div class="file-item">
-                      <span class="file-type">下载工单：</span>
+                      <span class="file-type">Download Work Order:</span>
                       <img
                         src="@/assets/image/icon/pdf.png"
                         class="file-icon"
@@ -84,11 +84,11 @@
                         href="#"
                         class="download-link"
                         @click="downloadFile(item.workorderUrl_full)"
-                        >下载</a
+                        >Download</a
                       >
                     </div>
                     <div class="file-item">
-                      <span class="file-type">下载合同：</span>
+                      <span class="file-type">Download Contract:</span>
                       <img
                         src="@/assets/image/icon/pdf.png"
                         class="file-icon"
@@ -99,7 +99,7 @@
                         href="#"
                         class="download-link"
                         @click="downloadFile(item.contractUrl_full)"
-                        >下载</a
+                        >Download</a
                       >
                     </div>
                   </div>
@@ -109,35 +109,35 @@
               <div class="content-right">
                 <div class="action-buttons">
                   <el-button size="small" @click="handleAction('detail', item)">
-                    工单详情
+                    Work Order Details
                   </el-button>
                   <el-button
                     size="small"
                     @click="handleAction('backWorkorder', item)"
                     v-if="item.workorderStatus == 1"
                   >
-                    回传工单
+                    Upload Work Order
                   </el-button>
                   <el-button
                     size="small"
                     @click="handleAction('backContract', item)"
                     v-if="item.workorderStatus == 1"
                   >
-                    回传合同
+                    Upload Contract
                   </el-button>
                   <el-button
                     size="small"
                     @click="handleAction('pay', item)"
                     v-if="item.workorderStatus == 2"
                   >
-                    去支付
+                    Go to Payment
                   </el-button>
                   <el-button
                     size="small"
                     @click="handleAction('confirm', item)"
                     v-if="item.workorderStatus == 5"
                   >
-                    确认完成
+                    Confirm Completion
                   </el-button>
                 </div>
               </div>
@@ -150,14 +150,14 @@
                   alt="notice"
                 />
                 <span class="notice-text"
-                  >请下载工单、合同后签字盖章回传系统确认工单</span
+                  >Download the work order and contract, sign and stamp them, and send them back to the system for confirmation</span
                 >
               </div>
             </div>
           </div>
         </div>
       </div>
-      <el-empty v-if="total == 0" description="暂无数据" />
+      <el-empty v-if="total == 0" description="No Data" />
     </div>
     <el-pagination
       v-if="total > 0"
@@ -191,14 +191,14 @@
         <i class="el-icon-plus"></i>
       </el-upload>
       <div class="back-open-actions">
-        <el-button type="primary" @click="submitBackOpen">提交</el-button>
-        <el-button @click="cancelBackOpen">取消</el-button>
+        <el-button type="primary" @click="submitBackOpen">Submit</el-button>
+        <el-button @click="cancelBackOpen">Cancel</el-button>
       </div>
     </el-dialog>
 
     <!-- 支付方式弹框 -->
     <el-dialog
-      title="选择支付方式"
+      title="Select Payment Method"
       :visible.sync="paymentModalVisible"
       width="600px"
       :close-on-click-modal="false"
@@ -223,7 +223,7 @@
             :class="{ active: selectedPayment === 'offline' }"
             @click="selectPayment('offline')"
           >
-            线下支付
+            Offline Payment
           </div>
         </div>
 
@@ -237,8 +237,8 @@
             <div class="qrcode-placeholder"></div>
           </div>
           <div class="qrcode-tips">
-            <p>请使用{{ selectedPayment === "alipay" ? "支付宝" : "微信" }}扫一扫</p>
-            <p>二维码或支付</p>
+            <p>Please use {{ selectedPayment === "alipay" ? "Alipay" : "WeChat" }} to scan</p>
+            <p>QR code to pay</p>
           </div>
         </div>
 
@@ -246,21 +246,21 @@
         <div class="offline-payment-section" v-if="selectedPayment === 'offline'">
           <div class="bank-info">
             <div class="info-item">
-              <span class="info-label">收款单位名称：</span>
+              <span class="info-label">Payee Name:</span>
               <span class="info-value">{{ offlinePaymentInfo.pay_company_name }}</span>
             </div>
             <div class="info-item">
-              <span class="info-label">收款单位账号：</span>
+              <span class="info-label">Account Number:</span>
               <span class="info-value">{{ offlinePaymentInfo.pay_account }}</span>
             </div>
             <div class="info-item">
-              <span class="info-label">收款单位开户行名称：</span>
+              <span class="info-label">Bank Name:</span>
               <span class="info-value">{{ offlinePaymentInfo.pay_bank_name }}</span>
             </div>
           </div>
 
           <div class="upload-section">
-            <div class="upload-label">上传支付凭证：</div>
+            <div class="upload-label">Upload Payment Proof:</div>
             <div class="upload-area">
               <el-upload
                 class="payment-uploader"
@@ -281,8 +281,8 @@
           </div>
 
           <div class="offline-actions">
-            <el-button type="primary" @click="submitOfflinePayment">提交</el-button>
-            <el-button @click="cancelPayment">取消</el-button>
+            <el-button type="primary" @click="submitOfflinePayment">Submit</el-button>
+            <el-button @click="cancelPayment">Cancel</el-button>
           </div>
         </div>
       </div>
@@ -347,11 +347,11 @@ export default {
           },
         });
       } else if (action == "backWorkorder") {
-        this.backOpenTitle = "回传工单";
+        this.backOpenTitle = "Upload Work Order";
         this.backOpenModalVisible = true;
         this.backOpenType = "1";
       } else if (action == "backContract") {
-        this.backOpenTitle = "回传合同";
+        this.backOpenTitle = "Upload Contract";
         this.backOpenModalVisible = true;
         this.backOpenType = "2";
       } else if (action == "pay") {
@@ -368,9 +368,9 @@ export default {
           console.log(res);
         });
       } else if (action == "confirm") {
-        this.$confirm("确认完成服务？", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
+        this.$confirm("Confirm service completion?", "Confirmation", {
+          confirmButtonText: "Confirm",
+          cancelButtonText: "Cancel",
           type: "warning",
         }).then(() => {
           this.$api({
@@ -380,7 +380,7 @@ export default {
               workorder_id: item.id,
             },
           }).then((res) => {
-            this.$message.success("确认完成");
+            this.$message.success("Confirmed completion");
             this.getServiceList();
           });
         });
@@ -388,6 +388,7 @@ export default {
     },
     handleCurrentChange(page) {
       this.currentPage = page;
+      this.getServiceList();
     },
 
     // 回传工单
@@ -409,7 +410,7 @@ export default {
           name: originName,
         },
       }).then((res) => {
-        this.$message.success("回传成功");
+        this.$message.success("Upload successful");
         this.backOpenModalVisible = false;
         this.backUrl = [];
         this.getServiceList();
@@ -452,7 +453,7 @@ export default {
           payProve: url,
         },
       }).then((res) => {
-        this.$message.success("提交成功");
+        this.$message.success("Submitted successfully");
         this.paymentModalVisible = false;
         this.paymentUrl = [];
         this.initDemandInfo();

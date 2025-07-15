@@ -85,7 +85,7 @@ const routes = [
     name: "searchList",
     component: () => import("@/views/search/searchList.vue"),
     meta: {
-      title: "搜索列表",
+      title: "Search List",
     },
   },
   // 文章详情
@@ -94,7 +94,7 @@ const routes = [
     name: "article-detail",
     component: () => import("@/views/product/article-detail.vue"),
     meta: {
-      title: "文章详情",
+      title: "Article Detail",
     },
   },
   // 系统制造商列表
@@ -103,7 +103,7 @@ const routes = [
     name: "system-manufacturer-list",
     component: () => import("@/views/product/system-manufacturer-list.vue"),
     meta: {
-      title: "系统制造商列表",
+      title: "System Manufacturer List",
     },
   },
   {
@@ -111,7 +111,7 @@ const routes = [
     name: "manufacturer-detail",
     component: () => import("@/views/product/manufacturer-detail.vue"),
     meta: {
-      title: "系统制造商详情",
+      title: "System Manufacturer Detail",
     },
   },
   {
@@ -119,7 +119,7 @@ const routes = [
     name: "protocol",
     component: () => import("@/views/account/protocol.vue"),
     meta: {
-      title: "用户协议",
+      title: "User Agreement",
     },
   },
   //用户中心
@@ -136,7 +136,7 @@ const routes = [
         name: "my-info",
         component: my_info,
         meta: {
-          title: "个人信息",
+          title: "Personal Information",
           requireAuth: true,
         },
       },
@@ -145,7 +145,7 @@ const routes = [
         name: "my-vip",
         component: my_vip,
         meta: {
-          title: "会员中心",
+          title: "Member Center",
           requireAuth: true,
         },
       },
@@ -154,7 +154,7 @@ const routes = [
         name: "my-company-info",
         component: my_company_info,
         meta: {
-          title: "企业信息",
+          title: "Company Information",
           requireAuth: true,
         },
       },
@@ -163,7 +163,7 @@ const routes = [
         name: "my-follows",
         component: my_follows,
         meta: {
-          title: "我的关注",
+          title: "My Follows",
           requireAuth: true,
         },
       },
@@ -172,7 +172,7 @@ const routes = [
         name: "my-message",
         component: my_message,
         meta: {
-          title: "消息中心",
+          title: "Message Center",
           requireAuth: true,
         },
       },
@@ -181,7 +181,7 @@ const routes = [
         name: "edit-password",
         component: edit_password,
         meta: {
-          title: "修改密码",
+          title: "Change Password",
           requireAuth: true,
         },
       },
@@ -190,7 +190,7 @@ const routes = [
         name: "demand-form",
         component: demand_form,
         meta: {
-          title: "填报需求",
+          title: "Submit Demand",
           requireAuth: true,
         },
       },
@@ -199,7 +199,7 @@ const routes = [
         name: "demand-list",
         component: demand_list,
         meta: {
-          title: "我的需求",
+          title: "My Demands",
           requireAuth: true,
         },
       },
@@ -208,7 +208,7 @@ const routes = [
         name: "demand-detail",
         component: demand_detail,
         meta: {
-          title: "需求详情",
+          title: "Demand Detail",
           requireAuth: true,
         },
       },
@@ -217,7 +217,7 @@ const routes = [
         name: "service-list",
         component: service_list,
         meta: {
-          title: "需求工单管理",
+          title: "Service Order Management",
           requireAuth: true,
         },
       },
@@ -226,7 +226,7 @@ const routes = [
         name: "service-detail",
         component: service_detail,
         meta: {
-          title: "需求工单详情",
+          title: "Service Order Detail",
           requireAuth: true,
         },
       },
@@ -238,7 +238,7 @@ const routes = [
     name: "service-provider",
     component: () => import("@/views/service/service_layout.vue"),
     meta: {
-      title: "服务商",
+      title: "Service Provider",
     },
     children: [
       {
@@ -246,7 +246,7 @@ const routes = [
         name: "service-provider-list",
         component: () => import("@/views/service/service_provider_list.vue"),
         meta: {
-          title: "服务商工单管理",
+          title: "Service Provider Order Management",
           requireAuth: true,
         },
       },
@@ -255,7 +255,7 @@ const routes = [
         name: "service-provider-detail",
         component: () => import("@/views/service/service_provider_detail.vue"),
         meta: {
-          title: "服务商工单详情",
+          title: "Service Provider Order Detail",
           requireAuth: true,
         },
       },
@@ -264,7 +264,7 @@ const routes = [
         name: "service-provider-message",
         component: () => import("@/views/service/service_provider_message.vue"),
         meta: {
-          title: "服务商消息",
+          title: "Service Provider Messages",
           requireAuth: true,
         },
       },
@@ -273,7 +273,7 @@ const routes = [
         name: "service-provider-follow",
         component: () => import("@/views/service/service_provider_follow.vue"),
         meta: {
-          title: "服务商关注",
+          title: "Service Provider Follows",
           requireAuth: true,
         },
       },
@@ -282,7 +282,7 @@ const routes = [
         name: "service-provider-change-password",
         component: () => import("@/views/service/service_provider_change_password.vue"),
         meta: {
-          title: "修改密码",
+          title: "Change Password",
           requireAuth: true,
         },
       },
@@ -291,7 +291,7 @@ const routes = [
         name: "service-provider-vip",
         component: () => import("@/views/service/service_provider_vip.vue"),
         meta: {
-          title: "服务商会员中心",
+          title: "Service Provider Member Center",
           requireAuth: true,
         },
       },
@@ -300,7 +300,7 @@ const routes = [
         name: "service-provider_info",
         component: () => import("@/views/service/service_provider_info.vue"),
         meta: {
-          title: "服务商个人中心",
+          title: "Service Provider Personal Center",
           requireAuth: true,
         },
       },
@@ -309,7 +309,7 @@ const routes = [
         name: "service-provider-info",
         component: () => import("@/views/service/service_company_info.vue"),
         meta: {
-          title: "服务商企业信息",
+          title: "Service Provider Company Information",
           requireAuth: true,
         },
       },
@@ -349,7 +349,7 @@ router.beforeEach((to, from, next) => {
     router.push('/');
     Vue.prototype.$showLogin({
       onLoginSuccess: (data) => {
-        console.log('登录成功:', data)
+        console.log('Login successful:', data)
         // 处理登录成功逻辑
         store.commit("set_baseInfo", data);
         localStorage.setItem("needFinish", data.needFinish);

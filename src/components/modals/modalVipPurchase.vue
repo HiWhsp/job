@@ -55,7 +55,7 @@
                 v-for="duration in durationOptions[selectedVipType - 1]"
                 :key="duration.year"
                 class="duration-option"
-                :class="{ active: selectedDuration == duration.year }"
+                :class="{ active: selectedDuration === duration.year }"
                 @click="selectDuration(duration.year)"
               >
                 <span class="duration-text">{{ duration.year }}年</span>
@@ -205,7 +205,6 @@ export default {
       });
       this.pay_qrcode = ""; // 重置二维码
     },
-
     // 生成支付二维码
     generatePayQR() {
       this.loading = true;

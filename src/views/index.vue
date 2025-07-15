@@ -9,35 +9,35 @@
             <i class="icon">
               <img src="@/assets/image/icon/home1.png" alt="" />
             </i>
-            售后运维需求表
+            After-sales Service
             <span class="el-icon-arrow-right"></span>
           </div>
           <div class="nav-item" @click="toNav({ route: '/demand-form' })">
             <i class="icon">
               <img src="@/assets/image/icon/home2.png" alt="" />
             </i>
-            项目产品需求表
+            Project Product
             <span class="el-icon-arrow-right"></span>
           </div>
           <div class="nav-item" @click="toNav({ route: '/demand-form' })">
             <i class="icon">
               <img src="@/assets/image/icon/home3.png" alt="" />
             </i>
-            项目融资表
+            Project Financing
             <span class="el-icon-arrow-right"></span>
           </div>
           <div class="nav-item" @click="toNav({ route: '/demand-form' })">
             <i class="icon">
               <img src="@/assets/image/icon/home4.png" alt="" />
             </i>
-            项目转让表
+            Project Transfer
             <span class="el-icon-arrow-right"></span>
           </div>
           <div class="nav-item" @click="toNav({ route: '/demand-form' })">
             <i class="icon">
               <img src="@/assets/image/icon/home4.png" alt="" />
             </i>
-            产品回收利用表
+            Product Recycling
             <span class="el-icon-arrow-right"></span>
           </div>
         </div>
@@ -58,16 +58,16 @@
         <!-- 右侧登录区域 -->
         <div class="top-nav-right">
           <div class="top-nav-right-top" v-if="!baseInfo.id">
-            <div class="greeting">您好，请登录/注册</div>
+            <div class="greeting">Hello, please login/register</div>
             <div class="login-box">
-              <div class="login-btn" @click="showLogin">登录</div>
-              <div class="register-btn" @click="showRegister">注册</div>
+              <div class="login-btn" @click="showLogin">Login</div>
+              <div class="register-btn" @click="showRegister">Register</div>
             </div>
           </div>
           <div class="top-nav-right-top" v-else>
             <div class="item1">
               <div class="item1-left">
-                <p>您好，尊敬的会员</p>
+                <p>Hello, member</p>
                 <p>{{ baseInfo.realname }}</p>
               </div>
               <div class="item1-right">
@@ -96,7 +96,7 @@
                 "
               >
                 <img src="@/assets/image/icon/gd.png" alt="" />
-                <p>我的工单</p>
+                <p>My Orders</p>
               </div>
               <div
                 class="item2-item"
@@ -104,7 +104,7 @@
                 v-if="baseInfo.serviceType == 1"
               >
                 <img src="@/assets/image/icon/yq.png" alt="" />
-                <p>我的需求</p>
+                <p>My Demands</p>
               </div>
             </div>
           </div>
@@ -114,10 +114,10 @@
             <div class="notice-title">
               <div class="notice-title-left">
                 <i class="notice-icon"></i>
-                <span>通知公告</span>
+                <span>Notices</span>
               </div>
               <span class="more" @click="toNav({ route: '/article-detail' })"
-                >查看更多 <i class="el-icon-arrow-right"></i
+                >View More <i class="el-icon-arrow-right"></i
               ></span>
             </div>
             <div class="notice-list">
@@ -145,7 +145,7 @@
       <!-- 系统厂商区域 -->
       <div class="system-ads-section">
         <div class="section-header">
-          <h2>系统厂商</h2>
+          <h2>System Manufacturers</h2>
           <span
             class="more-link"
             @click="
@@ -154,7 +154,7 @@
                 query: { companyType: 1 },
               })
             "
-            >查看更多 <i class="el-icon-arrow-right"></i
+            >View More <i class="el-icon-arrow-right"></i
           ></span>
         </div>
         <div class="ads-grid">
@@ -182,7 +182,7 @@
       <!-- 配套厂商区域 -->
       <div class="config-ads-section">
         <div class="section-header">
-          <h2>配套厂商</h2>
+          <h2>Supporting Manufacturers</h2>
           <span
             class="more-link"
             @click="
@@ -191,7 +191,7 @@
                 query: { companyType: 2 },
               })
             "
-            >查看更多 <i class="el-icon-arrow-right"></i
+            >View More <i class="el-icon-arrow-right"></i
           ></span>
         </div>
         <div class="ads-grid">
@@ -219,16 +219,16 @@
       <!-- 线上线下服务网络区域 -->
       <div class="service-network-section">
         <div class="section-header">
-          <h2>线上下单 线下服务保障</h2>
+          <h2>Online Orders, Offline Service Guarantee</h2>
         </div>
         <div class="network-content">
           <div class="network-content-left">
             <div class="service-points">
               <div class="service-category">
-                <h3>全球售后运维服务网点</h3>
+                <h3>Global After-sales Service Network</h3>
                 <div class="service-locations">
                   <div class="location-group">
-                    <h4>中国</h4>
+                    <h4>China</h4>
                     <div class="scroll-box">
                       <div
                         class="location-item"
@@ -263,24 +263,24 @@
 
           <div class="contact-section">
             <div class="service-stats">
-              <h3>专属服务团队</h3>
-              <h4>千人级服务天团精准护航</h4>
+              <h3>Dedicated Service Team</h3>
+              <h4>Thousand-level Service Team for Precision Support</h4>
               <div class="stats-list">
                 <div class="stat-item">
                   <span class="icon">🌍</span>
-                  <span>服务人员1对1专业报价</span>
+                  <span>1-on-1 Professional Quotation by Service Staff</span>
                 </div>
                 <div class="stat-item">
                   <span class="icon">⚡</span>
-                  <span>销售员上门对接业务</span>
+                  <span>Door-to-door Business Coordination by Sales Staff</span>
                 </div>
                 <div class="stat-item">
                   <span class="icon">📞</span>
-                  <span>认证工程师技术保障</span>
+                  <span>Technical Support by Certified Engineers</span>
                 </div>
               </div>
               <div class="contact-btn" @click="toNav({ route: '/demand-form' })">
-                <span>提交服务需求</span>
+                <span>Submit Service Request</span>
               </div>
             </div>
           </div>
@@ -290,7 +290,7 @@
       <!-- 合作品牌区域 -->
       <div class="partner-brands-section">
         <div class="section-header">
-          <h2>合作品牌</h2>
+          <h2>Partner Brands</h2>
         </div>
         <div class="brands-grid">
           <div
@@ -324,13 +324,13 @@ export default {
     levelName() {
       switch (this.baseInfo.userLevel) {
         case 1:
-          return "黄金会员";
+          return "Gold";
         case 2:
-          return "钻石会员";
+          return "Diamond";
         case 3:
-          return "联合会员";
+          return "Union";
         default:
-          return "个人会员";
+          return "Individual";
       }
     },
   },

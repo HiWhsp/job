@@ -11,12 +11,12 @@
             <input
               type="text"
               v-model="searchKeyword"
-              placeholder="请输入关键字"
+              placeholder="Please enter keywords"
               @keyup.enter="handleSearch"
             />
             <button class="search-btn" @click="handleSearch">
               <i class="el-icon-search"></i>
-              搜索
+              Search
             </button>
           </div>
         </div>
@@ -27,13 +27,13 @@
         <div class="filter-container w-1400">
           <!-- 一级分类 -->
           <div class="filter-row">
-            <span class="filter-label">一级分类：</span>
+            <span class="filter-label">Primary Category:</span>
             <div class="filter-options">
               <span
                 class="filter-item"
                 :class="{ active: firstCategory === '' }"
                 @click="selectFirstCategory('')"
-                >全部</span
+                >All</span
               >
               <span
                 v-for="item in firstCategories"
@@ -48,13 +48,13 @@
 
           <!-- 二级分类 -->
           <div class="filter-row" v-if="firstCategory != ''">
-            <span class="filter-label">二级分类：</span>
+            <span class="filter-label">Secondary Category:</span>
             <div class="filter-options">
               <span
                 class="filter-item"
                 :class="{ active: secondCategory === '' }"
                 @click="selectSecondCategory('')"
-                >全部</span
+                >All</span
               >
               <span
                 v-for="item in secondCategories"
@@ -69,13 +69,13 @@
 
           <!-- 三级分类 -->
           <div class="filter-row" v-if="secondCategory != ''">
-            <span class="filter-label">三级分类：</span>
+            <span class="filter-label">Tertiary Category:</span>
             <div class="filter-options">
               <span
                 class="filter-item"
                 :class="{ active: thirdCategory === '' }"
                 @click="selectThirdCategory('')"
-                >全部</span
+                >All</span
               >
               <span
                 v-for="item in thirdCategories"
@@ -90,13 +90,13 @@
 
           <!-- 选择地区 -->
           <div class="filter-row">
-            <span class="filter-label">选择地区：</span>
+            <span class="filter-label">Select Region:</span>
             <div class="filter-options">
               <span
                 class="filter-item"
                 :class="{ active: selectedRegion === '' }"
                 @click="selectRegion('')"
-                >全部</span
+                >All</span
               >
               <span
                 v-for="item in regions"
@@ -182,7 +182,7 @@
           <div class="recommend-section">
             <div class="recommend-header">
               <img src="@/assets/image/icon/good.png" alt="" />
-              <span>厂商推荐</span>
+              <span>recommend</span>
             </div>
             <div class="recommend-list">
               <div

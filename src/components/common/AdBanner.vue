@@ -20,8 +20,8 @@
         </div>  
         <div class="ad-close">
           <div class="show" @click="toggleBanner">
-            <span v-if="isExpanded">收起</span>
-            <span v-else>展开</span>
+            <span v-if="isExpanded">Collapse</span>
+            <span v-else>Expand</span>
             <i class="el-icon-arrow-down" v-if="isExpanded"></i>
             <i class="el-icon-arrow-up" v-else></i>
           </div>
@@ -148,7 +148,7 @@ export default {
       cursor: pointer;
       gap: 10px;
       .show {
-        width: 58px;
+        width: 78px;
         height: 30px;
         border-radius: 44px;
         box-sizing: border-box;

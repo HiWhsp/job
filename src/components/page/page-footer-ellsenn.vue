@@ -4,19 +4,19 @@
       <div class="footer-center">
         <div class="nav-group">
           <div class="group-item" @click="toNav({ route: '/help?type=1' }, '会员服务')">
-            <div class="group-title">会员服务</div>
+            <div class="group-title">Member Services</div>
           </div>
           <div class="col-line"></div>
           <div class="group-item" @click="toNav({ route: '/help?type=2' }, '企业视窗')">
-            <div class="group-title">企业视窗</div>
+            <div class="group-title">Business Window</div>
           </div>
           <div class="col-line"></div>
           <div class="group-item" @click="toNav({ route: '/help?type=3' }, '关于我们')">
-            <div class="group-title">关于我们</div>
+            <div class="group-title">About Us</div>
           </div>
           <div class="col-line"></div>
           <div class="group-item" @click="toNav({ route: '/help?type=4' }, '联系我们')">
-            <div class="group-title">联系我们</div>
+            <div class="group-title">Contact Us</div>
           </div>
         </div>
       </div>

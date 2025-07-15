@@ -16,24 +16,24 @@
           <el-submenu index="personal">
             <template slot="title">
               <i class="el-icon-user"></i>
-              <span>个人中心</span>
+              <span>Personal Center</span>
             </template>
-            <el-menu-item index="service-provider_info"> 我的个人中心 </el-menu-item>
-            <!-- <el-menu-item index="service-provider-vip"> 会员中心 </el-menu-item> -->
+            <el-menu-item index="service-provider_info"> My Personal Center </el-menu-item>
+            <!-- <el-menu-item index="service-provider-vip"> Member Center </el-menu-item> -->
             <el-menu-item index="service-provider-change-password">
-              修改密码
+              Change Password
             </el-menu-item>
-            <el-menu-item index="service-provider-follow"> 我的关注 </el-menu-item>
-            <el-menu-item index="service-provider-message"> 消息 </el-menu-item>
+            <el-menu-item index="service-provider-follow"> My Follows </el-menu-item>
+            <el-menu-item index="service-provider-message"> Messages </el-menu-item>
           </el-submenu>
 
           <!-- 工单中心分组 -->
           <el-submenu index="service">
             <template slot="title">
               <i class="el-icon-document"></i>
-              <span>工单中心</span>
+              <span>Service Center</span>
             </template>
-            <el-menu-item index="service-provider-list"> 服务工单管理 </el-menu-item>
+            <el-menu-item index="service-provider-list"> Service Order Management </el-menu-item>
           </el-submenu>
         </el-menu>
       </div>
@@ -49,8 +49,8 @@
               <img :src="vuex_config.file_url_pre + baseInfo.avatar" alt="" />
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="home">首页</el-dropdown-item>
-              <el-dropdown-item command="logout">退出</el-dropdown-item>
+              <el-dropdown-item command="home">Home</el-dropdown-item>
+              <el-dropdown-item command="logout">Logout</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>

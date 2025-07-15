@@ -2,9 +2,9 @@
   <div class="page">
     <div class="page-header">
       <div class="page-header-title">
-        <span>服务工单</span>
+        <span>Service Orders</span>
         <span style="margin: 0 10px">></span>
-        <span>工单详情</span>
+        <span>Order Details</span>
       </div>
     </div>
     <div class="page-ctx">
@@ -14,24 +14,24 @@
           <div class="demand-info-left">
             <p class="demand-date">{{ demandInfo.created_at }}</p>
             <i class="col-line"></i>
-            <p class="demand-number">工单编号：{{ demandInfo.workorder_no }}</p>
+            <p class="demand-number">Order No.: {{ demandInfo.workorder_no }}</p>
           </div>
           <div class="demand-info-right">
             <el-button v-if="processStatus == 1" @click="backContract">
-              <span>回传合同</span>
+              <span>Return Contract</span>
             </el-button>
             <el-button v-if="processStatus == 2" @click="showPaymentModal">
-              服务完成
+              Service Complete
             </el-button>
           </div>
         </div>
         <div class="demand-status">
           <p>
             <!-- 当前状态：<span>{{ workorderStatusName(demandInfo) }}</span> -->
-            当前状态：<span>{{ serviceStatus(demandInfo) }}</span>
+            Current Status: <span>{{ serviceStatus(demandInfo) }}</span>
           </p>
           <p>
-            金额：<span>￥{{ demandInfo.originPrice }}</span>
+            Amount: <span>￥{{ demandInfo.originPrice }}</span>
           </p>
         </div>
         <!-- 流程 -->
@@ -53,7 +53,7 @@
       </div>
 
       <div class="service-content">
-        <h4 class="service-title">标题：{{ workOrderName(demandInfo) }}</h4>
+        <h4 class="service-title">Title: {{ workOrderName(demandInfo) }}</h4>
         <div class="service-info">
           <!-- <div class="info-item">
             <span class="info-label">工单类型：</span>
@@ -61,25 +61,25 @@
           </div> -->
           <div class="download-files">
             <div class="file-item">
-              <span class="file-type">下载工单：</span>
+              <span class="file-type">Download Order:</span>
               <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
               <span class="file-name">{{ demandInfo.workorderName }}</span>
               <a
                 href="#"
                 class="download-link"
                 @click="downloadFile(demandInfo.workorderUrl_full)"
-                >下载</a
+                >Download</a
               >
             </div>
             <div class="file-item">
-              <span class="file-type">下载合同：</span>
+              <span class="file-type">Download Contract:</span>
               <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
               <span class="file-name">{{ demandInfo.contractName }}</span>
               <a
                 href="#"
                 class="download-link"
                 @click="downloadFile(demandInfo.contractUrl_full)"
-                >下载</a
+                >Download</a
               >
             </div>
           </div>
@@ -88,7 +88,7 @@
           <div class="notice">
             <img src="@/assets/image/icon/notice.png" class="notice-icon" alt="notice" />
             <span class="notice-text">
-              1. 请在收到工单后24小时内确认工单，否则将自动取消工单。
+              1. Please confirm the order within 24 hours of receiving it, otherwise the order will be automatically cancelled.
             </span>
           </div>
         </div>
@@ -97,47 +97,47 @@
       <div class="form-content">
         <div class="form-section">
           <div class="form-row">
-            <label class="form-label">设备类型</label>
+            <label class="form-label">Device Type</label>
             <div class="form-input">
               <el-radio-group v-model="demandInfo.deviceType" disabled>
-                <el-radio :label="1">光伏</el-radio>
-                <el-radio :label="2">储能</el-radio>
-                <el-radio :label="3">采发</el-radio>
-                <el-radio :label="4">其他</el-radio>
+                <el-radio :label="1">Solar</el-radio>
+                <el-radio :label="2">Energy Storage</el-radio>
+                <el-radio :label="3">Diesel</el-radio>
+                <el-radio :label="4">Other</el-radio>
               </el-radio-group>
             </div>
           </div>
 
           <div class="form-row">
-            <label class="form-label">设备规格</label>
+            <label class="form-label">Device Specification</label>
             <div class="form-input">
               <el-input
                 v-model="demandInfo.deviceGuige"
-                placeholder="完善后的内容规格名称规格名称规格名称"
+                placeholder="Device specification details"
                 disabled
               />
             </div>
           </div>
 
           <div class="form-row">
-            <label class="form-label">设备位置</label>
+            <label class="form-label">Device Location</label>
             <div class="form-input">
               <el-input
                 v-model="demandInfo.deviceAddress"
-                placeholder="完善后的内容详细位置信息详细位置信息详细位置信息"
+                placeholder="Detailed location information"
                 disabled
               />
             </div>
           </div>
 
           <div class="form-row">
-            <label class="form-label">故障现象</label>
+            <label class="form-label">Fault Description</label>
             <div class="form-input">
               <el-input
                 v-model="demandInfo.faultDescription"
                 type="textarea"
                 :rows="3"
-                placeholder="完善后的内容故障现象描述文案故障现象描述文案"
+                placeholder="Fault description details"
                 disabled
               />
             </div>
@@ -145,7 +145,7 @@
 
           <div class="form-row">
             <label class="form-label">{{
-              demandInfo.workOrderType == 1 ? "图片" : "附件"
+              demandInfo.workOrderType == 1 ? "Images" : "Attachments"
             }}</label>
             <div class="form-input">
               <div class="upload-images" v-if="demandInfo.workOrderType == 1">
@@ -166,20 +166,20 @@
                   <img :src="item" alt="" />
                 </div>
                 <div class="upload-image">
-                  暂无{{ demandInfo.workOrderType == 1 ? "图片" : "附件" }}
+                  No {{ demandInfo.workOrderType == 1 ? "Images" : "Attachments" }}
                 </div>
               </div>
             </div>
           </div>
 
           <div class="form-row">
-            <label class="form-label">补充说明</label>
+            <label class="form-label">Additional Notes</label>
             <div class="form-input">
               <el-input
                 v-model="demandInfo.remark"
                 type="textarea"
                 :rows="4"
-                placeholder="完善后的内容补充说明"
+                placeholder="Additional notes"
                 disabled
               />
             </div>
@@ -188,18 +188,18 @@
       </div>
       <!-- 服务信息 -->
       <div class="my-info" v-if="[2, 3].includes(processStatus)">
-        <h3 class="info-title">服务信息</h3>
+        <h3 class="info-title">Service Information</h3>
         <div class="info-content">
           <div class="info-row">
-            <span class="info-label">服务人员：</span>
+            <span class="info-label">Service Personnel:</span>
             <span class="info-value">{{ demandInfo.serviceUserName }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label">联系方式：</span>
+            <span class="info-label">Contact:</span>
             <span class="info-value">{{ demandInfo.servicePhone }}</span>
           </div>
           <div class="info-row" v-if="demandInfo.servicePhotos">
-            <span class="info-label">服务图片：</span>
+            <span class="info-label">Service Images:</span>
             <div class="info-value">
               <img
                 :src="item"
@@ -216,7 +216,7 @@
 
     <!-- 服务完成弹框 -->
     <el-dialog
-      title="服务完成"
+      title="Service Complete"
       :visible.sync="paymentModalVisible"
       width="600px"
       :close-on-click-modal="false"
@@ -226,7 +226,7 @@
         <!-- 线下支付区域 -->
         <div class="offline-payment-section">
           <div class="upload-section">
-            <div class="upload-label">上传服务单：</div>
+            <div class="upload-label">Upload Service Report:</div>
             <div class="upload-area">
               <el-upload
                 class="payment-uploader"
@@ -241,13 +241,13 @@
                   <i class="el-icon-plus"></i>
                 </div>
               </el-upload>
-              <span>上传客户签字的服务单/现场维修图片</span>
+              <span>Upload customer-signed service report/on-site repair images</span>
             </div>
           </div>
 
           <div class="offline-actions">
-            <el-button type="primary" @click="submitOfflinePayment">提交</el-button>
-            <el-button @click="cancelPayment">取消</el-button>
+            <el-button type="primary" @click="submitOfflinePayment">Submit</el-button>
+            <el-button @click="cancelPayment">Cancel</el-button>
           </div>
         </div>
       </div>
@@ -255,7 +255,7 @@
 
     <!-- 回传合同弹框 -->
     <el-dialog
-      title="回传合同"
+      title="Return Contract"
       :visible.sync="backOpenModalVisible"
       width="400px"
       :close-on-click-modal="false"
@@ -275,8 +275,8 @@
         <i class="el-icon-plus"></i>
       </el-upload>
       <div class="back-open-actions">
-        <el-button type="primary" @click="submitBackOpen">提交</el-button>
-        <el-button @click="cancelBackOpen">取消</el-button>
+        <el-button type="primary" @click="submitBackOpen">Submit</el-button>
+        <el-button @click="cancelBackOpen">Cancel</el-button>
       </div>
     </el-dialog>
   </div>
@@ -299,21 +299,21 @@ export default {
       },
       processSteps: [
         {
-          title: "待确认",
+          title: "Pending",
           time: "",
           completed: false,
           active: false,
           id: 1,
         },
         {
-          title: "服务中",
+          title: "In Service",
           time: "",
           completed: false,
           active: false,
           id: 2,
         },
         {
-          title: "已完成",
+          title: "Completed",
           time: "",
           completed: false,
           active: false,
@@ -330,10 +330,10 @@ export default {
     serviceStatus() {
       return (item) => {
         return {
-          0: "未分配",
-          1: "待确认",
-          2: "服务中",
-          3: "已完成",
+          0: "Unassigned",
+          1: "Pending",
+          2: "In Service",
+          3: "Completed",
         }[item.serviceStatus];
       };
     },
@@ -427,7 +427,7 @@ export default {
           name: originName,
         },
       }).then((res) => {
-        this.$message.success("回传成功");
+        this.$message.success("Contract uploaded successfully");
         this.backOpenModalVisible = false;
         this.backUrl = [];
         this.initDemandInfo();
@@ -441,7 +441,7 @@ export default {
     // 提交线下支付
     submitOfflinePayment() {
       if (this.paymentUrl.length == 0) {
-        this.$message.error("请上传服务单");
+        this.$message.error("Please upload service report");
         return;
       }
       let url = [];
@@ -456,7 +456,7 @@ export default {
           servicePhotos: url.join(","),
         },
       }).then((res) => {
-        this.$message.success("服务图片上传完成");
+        this.$message.success("Service images uploaded successfully");
         this.paymentModalVisible = false;
         this.$api({
           url: "serviceConfirmFinish",

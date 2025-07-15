@@ -9,7 +9,7 @@
               src="@/assets/image/home/logo.png"
               @click="$router.push('/')"
             />
-            <!-- <span @click="$router.push('/')">网站名</span> -->
+            <!-- <span @click="$router.push('/')">Website Name</span> -->
           </div>
 
           <div class="center-search">
@@ -17,7 +17,7 @@
               <!-- 导航列表 -->
               <div class="nav-box nav-box-1">
                 <div
-                  data-title="导航样式1"
+                  data-title="Navigation Style 1"
                   class="nav-item nav-item-type-1"
                   v-for="(item, index) in page_nav_list"
                   :key="index"
@@ -32,8 +32,8 @@
                     <div
                       class="nav-dropdown"
                       v-show="
-                        (item.children && showLanguage && item.title === '意见反馈') ||
-                        (item.children && showContact && item.title === '商务合作')
+                        (item.children && showLanguage && item.title === 'Feedback') ||
+                        (item.children && showContact && item.title === 'Business Cooperation')
                       "
                       @mouseenter="mouseoverLang"
                       @mouseleave="mouseoutLang"
@@ -64,9 +64,9 @@
             <div class="right-box-icon" @click="toSearch">
               <i class="el-icon-search"></i>
             </div>
-            <div class="inter-login">
+            <div class="inter-login" @click="toLang">
               <img src="@/assets/image/icon/inter.png" alt="" />
-              <span>切换国际版</span>
+              <span>Chinese</span>
             </div>
           </div>
         </div>
@@ -82,13 +82,13 @@
             <input
               type="text"
               class="search-input"
-              placeholder="请输入关键词"
+              placeholder="Please enter keywords"
               v-model="searchKeyword"
               @keyup.enter="performSearch"
               @input="onSearchInput"
               ref="searchInput"
             />
-            <div class="search-close" @click="closeSearchModal">退出</div>
+            <div class="search-close" @click="closeSearchModal">Exit</div>
           </div>
         </div>
 
@@ -96,7 +96,7 @@
           <!-- 搜索历史 -->
           <div class="search-section" v-if="searchHistory.length > 0">
             <div class="section-header">
-              <span class="section-title">搜索历史</span>
+              <span class="section-title">Search History</span>
               <i class="el-icon-delete section-clear" @click="clearSearchHistory"></i>
             </div>
             <div class="search-tags">
@@ -114,7 +114,7 @@
           <!-- 热门搜索 -->
           <div class="search-section">
             <div class="section-header">
-              <span class="section-title">热门搜索</span>
+              <span class="section-title">Hot Search</span>
               <i
                 class="el-icon-refresh-right section-refresh"
                 @click="refreshHotSearch"
@@ -161,7 +161,7 @@ export default {
       tabList: [],
 
       list_lang: [
-        { title: "中文", lang: "zh" },
+        { title: "Chinese", lang: "zh" },
         { title: "English", lang: "en" },
       ],
 
@@ -186,99 +186,99 @@ export default {
     page_nav_list() {
       var arr = [
         {
-          title: "首页",
+          title: "Home",
           route: "/",
         },
-        { title: "消息", route: "/my-message" },
-        { title: "帮助中心", route: "/help" },
+        { title: "Messages", route: "/my-message" },
+        { title: "Help", route: "/help" },
         {
-          title: "意见反馈",
+          title: "Feedback",
           route: "/feedback",
           icon: "el-icon-caret-bottom",
           children: [
             {
-              title: "公司简介",
+              title: "Company Profile",
               route: "/about?activeIndex=1",
             },
             {
-              title: "公司历程",
+              title: "Company History",
               route: "/about?activeIndex=2",
             },
             {
-              title: "公司新闻",
+              title: "Company News",
               route: "/about?activeIndex=3",
             },
             {
-              title: "外部专业委员",
+              title: "External Professional Committee",
               route: "/about?activeIndex=4",
             },
             {
-              title: "荣誉墙",
+              title: "Honor Wall",
               route: "/about?activeIndex=5",
             },
             {
-              title: "公司团队",
+              title: "Company Team",
               route: "/about?activeIndex=6",
             },
             {
-              title: "公司客户",
+              title: "Company Clients",
               route: "/about?activeIndex=7",
             },
             {
-              title: "联系我们",
+              title: "Contact Us",
               route: "/about?activeIndex=8",
             },
             {
-              title: "加入我们",
+              title: "Join Us",
               route: "/about?activeIndex=9",
             },
           ],
         },
         {
-          title: "商务合作",
+          title: "Business",
           route: "/cooperation",
           icon: "el-icon-caret-bottom",
           children: [
             {
-              title: "公司简介",
+              title: "Company Profile",
               route: "/about?activeIndex=1",
             },
             {
-              title: "公司历程",
+              title: "Company History",
               route: "/about?activeIndex=2",
             },
             {
-              title: "公司新闻",
+              title: "Company News",
               route: "/about?activeIndex=3",
             },
             {
-              title: "外部专业委员",
+              title: "External Professional Committee",
               route: "/about?activeIndex=4",
             },
             {
-              title: "荣誉墙",
+              title: "Honor Wall",
               route: "/about?activeIndex=5",
             },
             {
-              title: "公司团队",
+              title: "Company Team",
               route: "/about?activeIndex=6",
             },
             {
-              title: "公司客户",
+              title: "Company Clients",
               route: "/about?activeIndex=7",
             },
             {
-              title: "联系我们",
+              title: "Contact Us",
               route: "/about?activeIndex=8",
             },
             {
-              title: "加入我们",
+              title: "Join Us",
               route: "/about?activeIndex=9",
             },
           ],
         },
         {
-          title: "个人中心",
+          title: "Personal",
           route: "/my-info",
         },
       ];
@@ -476,7 +476,7 @@ export default {
         let { code, data, msg } = res;
         if (code == 200) {
           this.hotSearchList = JSON.parse(data.remen);
-          this.$message.success("已刷新");
+          this.$message.success("Refreshed");
         }
       });
     },
@@ -487,6 +487,9 @@ export default {
     },
     toUserCenter() {
       this.$router.push("/my-info");
+    },
+    toLang() {
+      window.location.href = "https://jyla.dx.hdapp.com.cn/";
     },
   },
 };

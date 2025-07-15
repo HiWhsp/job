@@ -5,15 +5,15 @@
       <!-- 左侧筛选栏 -->
       <div class="filter-sidebar">
         <div class="filter-section">
-          <h3 class="filter-title">筛选</h3>
+          <h3 class="filter-title">Filter</h3>
 
           <div class="filter-group">
-            <div class="filter-label">类别</div>
+            <div class="filter-label">Category</div>
             <div class="filter-options">
               <el-radio-group v-model="selectedCategory">
-                <el-radio :label="''">全部</el-radio>
-                <el-radio :label="1">系统厂商</el-radio>
-                <el-radio :label="2">配套厂商</el-radio>
+                <el-radio :label="''">All</el-radio>
+                <el-radio :label="1">System Manufacturers</el-radio>
+                <el-radio :label="2">Supporting Manufacturers</el-radio>
               </el-radio-group>
             </div>
           </div>
@@ -26,13 +26,17 @@
         <div class="search-header">
           <div class="search-box">
             <i class="el-icon-search"></i>
-            <el-input clearable v-model="keyword" placeholder="请输入搜索内容" />
-            <el-button type="primary" @click="handleSearch">搜索</el-button>
+            <el-input
+              clearable
+              v-model="keyword"
+              placeholder="Please enter search content"
+            />
+            <el-button type="primary" @click="handleSearch">Search</el-button>
           </div>
         </div>
 
         <!-- 搜索结果统计 -->
-        <div class="search-stats">找到全部相关内容：{{ totalCount }}</div>
+        <div class="search-stats">Found all relevant content: {{ totalCount }}</div>
 
         <!-- 搜索结果列表 -->
         <div class="results-list">
@@ -60,7 +64,7 @@
         </div>
 
         <!-- 空状态 -->
-        <el-empty description="暂无数据" v-if="filteredResults.length === 0" />
+        <el-empty description="No data available" v-if="filteredResults.length === 0" />
       </div>
     </div>
   </div>
@@ -110,9 +114,9 @@ export default {
       });
     },
     performSearch() {
-      // 这里可以调用API进行搜索
-      console.log("搜索关键词:", this.keyword);
-      console.log("选择类别:", this.selectedCategory);
+      // Here you can call API to perform search
+      console.log("Search keyword:", this.keyword);
+      console.log("Selected category:", this.selectedCategory);
       this.$api({
         url: "companyList",
         method: "get",
@@ -131,14 +135,14 @@ export default {
     },
     getTypeLabel(type) {
       const typeMap = {
-        enterprise: "企业",
-        system: "系统厂商",
-        parts: "配件厂商",
+        enterprise: "Enterprise",
+        system: "System Manufacturer",
+        parts: "Parts Manufacturer",
       };
-      return typeMap[type] || "企业";
+      return typeMap[type] || "Enterprise";
     },
     handleItemClick(item) {
-      // 处理点击事件，可以跳转到详情页
+      // Handle click event, can navigate to detail page
       this.$router.push({
         path: "manufacturer-detail",
         query: {

@@ -3,7 +3,7 @@
     <!-- 顶部横幅 -->
     <div class="header-banner">
       <div class="banner-content">
-        <h1 class="title">帮助中心</h1>
+        <h1 class="title">Help Center</h1>
         <p class="subtitle">SUPPORT CENTER</p>
       </div>
     </div>
