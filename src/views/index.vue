@@ -47,76 +47,47 @@
       </div>
     </div>
 
-    <!--    文档类课程-->
+    <!--    部门课程-->
     <div class="card main">
       <div class="title">
-        <h2>文档类课程</h2>
+        <h2>部门课程</h2>
         <img alt="" src="@/static/home/card-img.png" />
       </div>
       <div class="content">
-        <div class="item2" v-if="pdf_list.length">
-          <div class="left">
-            <div class="tit">
-              <span>课程推荐</span>
-            </div>
-            <div class="text">{{ pdf_list[0].title }}</div>
-            <div class="desc">{{ pdf_list[0].description }}</div>
-            <div class="btn" @click="toProduct(pdf_list[0])">立即学习</div>
+        <!-- 标签栏 -->
+        <div class="course-tabs">
+          <div
+            v-for="(tab, index) in courseTabs"
+            :key="index"
+            :class="['tab-item', { active: currentTab === index }]"
+            @click="switchTab(index)"
+          >
+            {{ tab }}
           </div>
-          <div class="right">
-            <div
-              class="li-item"
-              v-for="(item, index) in pdf_list"
-              :key="index"
-              @click="toProduct(item)"
-            >
-              <img alt="" :src="item.thumb_url" />
-              <div class="info">
-                <p class="text">{{ item.title }}</p>
-                <p class="desc ellipsis-1">{{ item.description }}</p>
-              </div>
+        </div>
+
+        <!-- 课程卡片网格 -->
+        <div class="course-grid">
+          <div
+            v-for="(course, index) in pdf_list"
+            :key="index"
+            class="course-card"
+            @click="toProduct(course)"
+          >
+            <div class="course-img">
+              <img src="@/static/home/file3.png" alt="" />
+            </div>
+            <div class="course-content">教育技术学导论</div>
+            <div class="course-stats">
+              <span class="study-hours">课时: {{ course.study_hours || 3 }}</span>
+              <span class="student-count">{{ course.student_count || 512 }}人学习</span>
             </div>
           </div>
         </div>
+
         <el-empty v-if="!pdf_list.length" description="暂无数据..."></el-empty>
       </div>
     </div>
-
-    <!--    视频类课程-->
-    <!-- <div class="card main">
-      <div class="title">
-        <h2>视频类课程</h2>
-        <img alt="" src="@/static/home/card-img.png" />
-      </div>
-      <div class="content">
-        <div class="item3" v-if="video_list.length">
-          <div class="left pointer" @click="toProduct(video_list[0])">
-            <img alt="" :src="video_list[0].thumb_url" />
-            <div class="info">
-              <div class="tit">
-                <span>{{ video_list[0].title }}</span>
-              </div>
-              <div class="desc ellipsis-3">{{ video_list[0].description }}</div>
-            </div>
-          </div>
-          <div class="right">
-            <div
-              class="li-item pointer"
-              v-for="(item, index) in video_list"
-              :key="index"
-              @click="toProduct(item)"
-            >
-              <div class="info">
-                <p class="text">{{ item.title }}</p>
-                <p class="desc ellipsis-1">{{ item.description }}</p>
-              </div>
-              <img alt="" :src="item.thumb_url" />
-            </div>
-          </div>
-        </div>
-        <el-empty v-if="!video_list.length" description="暂无数据..."></el-empty>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -134,6 +105,16 @@ export default {
       pdf_list: [],
       // 视频类课程
       video_list: [],
+      // 部门课程标签
+      courseTabs: [
+        "全部课程",
+        "文员",
+        "公务车驾驶员",
+        "招生办人员",
+        "办公室管理人员",
+        "适用案例",
+      ],
+      currentTab: 0,
     };
   },
   computed: {
@@ -160,11 +141,15 @@ export default {
         method: "get",
         data: {
           page: 1,
-          limit: 4,
+          limit: 8,
           course_type: 1,
         },
       }).then((res) => {
         this.pdf_list = res.data.list;
+        // 如果没有数据，提供模拟数据用于展示
+        if (!this.pdf_list || this.pdf_list.length === 0) {
+          this.pdf_list = this.getMockCourses();
+        }
       });
       // // 视频类课程
       // this.$api({
@@ -187,6 +172,115 @@ export default {
       this.$router.push({
         path: "/course-detail?id=" + id,
       });
+    },
+    switchTab(index) {
+      this.currentTab = index;
+      // 根据选中的标签筛选课程
+      if (index === 0) {
+        // 全部课程
+        this.loadAllCourses();
+      } else {
+        // 其他分类的课程
+        this.loadCoursesByCategory(this.courseTabs[index]);
+      }
+    },
+    loadAllCourses() {
+      // 文档类课程
+      this.$api({
+        url: "getCourseList",
+        method: "get",
+        data: {
+          page: 1,
+          limit: 8,
+          course_type: 1,
+        },
+      }).then((res) => {
+        this.pdf_list = res.data.list;
+        // 如果没有数据，提供模拟数据用于展示
+        if (!this.pdf_list || this.pdf_list.length === 0) {
+          this.pdf_list = this.getMockCourses();
+        }
+      });
+    },
+    loadCoursesByCategory(category) {
+      // 根据分类加载课程
+      this.$api({
+        url: "getCourseList",
+        method: "get",
+        data: {
+          page: 1,
+          limit: 8,
+          course_type: 1,
+          category: category,
+        },
+      }).then((res) => {
+        this.pdf_list = res.data.list;
+        // 如果没有数据，提供模拟数据用于展示
+        if (!this.pdf_list || this.pdf_list.length === 0) {
+          this.pdf_list = this.getMockCourses();
+        }
+      });
+    },
+    getMockCourses() {
+      // 模拟课程数据
+      return [
+        {
+          id: 1,
+          title: "教育技术学导论",
+          subtitle: "集团文员在收文中打印资料不予全事件",
+          study_hours: 3,
+          student_count: 512,
+        },
+        {
+          id: 2,
+          title: "教育技术学导论",
+          subtitle: "集团文员在收文中打印资料不予全事件",
+          study_hours: 3,
+          student_count: 512,
+        },
+        {
+          id: 3,
+          title: "教育技术学导论",
+          subtitle: "集团文员在收文中打印资料不予全事件",
+          study_hours: 3,
+          student_count: 512,
+        },
+        {
+          id: 4,
+          title: "教育技术学导论",
+          subtitle: "集团文员在收文中打印资料不予全事件",
+          study_hours: 3,
+          student_count: 512,
+        },
+        {
+          id: 5,
+          title: "教育技术学导论",
+          subtitle: "集团文员在收文中打印资料不予全事件",
+          study_hours: 3,
+          student_count: 512,
+        },
+        {
+          id: 6,
+          title: "教育技术学导论",
+          subtitle: "集团文员在收文中打印资料不予全事件",
+          study_hours: 3,
+          student_count: 512,
+        },
+        {
+          id: 7,
+          title: "教育技术学导论",
+          subtitle: "集团文员在收文中打印资料不予全事件",
+          study_hours: 3,
+          student_count: 512,
+        },
+        {
+          id: 8,
+          title: "教育技术学导论",
+          subtitle: "集团文员在收文中打印资料不予全事件",
+          study_hours: 3,
+          student_count: 512,
+        },
+      ];
     },
   },
 };
@@ -255,6 +349,91 @@ export default {
 
   .content {
     margin-top: 60px;
+
+    // 课程标签栏样式
+    .course-tabs {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 40px;
+      justify-content: center;
+
+      .tab-item {
+        padding: 10px 20px;
+        cursor: pointer;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #666;
+        transition: all 0.3s ease;
+
+        &.active {
+          background: #165e3d;
+          color: #fff;
+          border-color: #165e3d;
+        }
+
+        &:hover {
+          background: #165e3d;
+          color: #fff;
+          border-color: #165e3d;
+        }
+      }
+    }
+
+    // 课程卡片网格样式
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+
+      .course-card {
+        background: #f7f7f7;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .course-img {
+          height: 130px;
+          width: 100%;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+
+        .course-content {
+          font-size: 18px;
+          color: #666;
+          padding: 20px 20px 0px;
+        }
+
+        .course-stats {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 20px;
+
+          .study-hours {
+            font-size: 12px;
+            color: #999;
+          }
+
+          .student-count {
+            font-size: 12px;
+            color: #999;
+          }
+        }
+      }
+    }
 
     .item {
       height: 161px;

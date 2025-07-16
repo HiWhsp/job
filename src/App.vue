@@ -4,37 +4,35 @@
       <router-view></router-view>
     </template>
     <template v-else>
-      <pageHeader/>
+      <pageHeader />
       <div class="layout-box">
         <router-view></router-view>
       </div>
-      <pageFooter v-if="!['my-exam-detail', 'my-exam-start', 'my-exam-submit'].includes($route.name)"/>
+      <pageFooter
+        v-if="
+          !['my-exam-detail', 'my-exam-start', 'my-exam-submit'].includes($route.name)
+        "
+      />
     </template>
   </div>
 </template>
 
 <script>
-
 import pageHeader from "@/components/page/page-header.vue"; //顶部
 import pageFooter from "@/components/page/page-footer.vue";
-
-import {mapState} from "vuex";
 
 export default {
   components: {
     pageHeader,
-    pageFooter
+    pageFooter,
   },
   data() {
     return {};
   },
   computed: {},
   watch: {},
-  beforeCreate() {
-  },
-  created() {
-
-  },
+  beforeCreate() {},
+  created() {},
   mounted() {
     this.initScale();
   },
@@ -137,11 +135,9 @@ body {
   }
 }
 
-
 .el-rate__icon {
   //color: #F7BB04 !important;
 }
-
 
 .el-textarea__inner:focus {
   border-color: @theme !important;
@@ -255,7 +251,7 @@ button {
 
 /* 滚动条滑块 */
 ::-webkit-scrollbar-thumb {
-  background-color: #D8D8D8; /* 颜色 */
+  background-color: #d8d8d8; /* 颜色 */
   border-radius: 6px; /* 边角弧度 */
 }
 
