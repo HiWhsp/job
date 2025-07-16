@@ -8,31 +8,93 @@
     </div>
 
     <div class="content-wrapper">
-      <div class="tab-bar">
-        <div class="type-options">
+      <!-- 课程目录 -->
+      <div class="course-catalog">
+        <div class="catalog-header">
+          <h3>课程目录</h3>
+        </div>
+
+        <div class="catalog-content">
+          <!-- 全部课程 -->
           <div
-            :class="{ active: activeTab === 0 }"
-            class="tab-item"
-            @click="activeTab = 0"
+            class="catalog-item"
+            :class="{ active: selectedCategory === 'all' }"
+            @click="selectCategory('all')"
           >
-            综合
+            <span>全部课程</span>
           </div>
-          <div
-            :class="{ active: activeTab === 1 }"
-            class="tab-item"
-            @click="activeTab = 1"
-          >
-            文档类课程
+
+          <!-- 老师分类 -->
+          <div class="catalog-section">
+            <div class="section-header" @click="toggleSection('teacher')">
+              <span>老师</span>
+              <i
+                class="el-icon-arrow-down"
+                :class="{ 'is-reverse': openSections.teacher }"
+              ></i>
+            </div>
+            <div class="section-content" v-show="openSections.teacher">
+              <div
+                class="catalog-item"
+                :class="{ active: selectedCategory === 'doc' }"
+                @click="selectCategory('doc')"
+              >
+                文员篇
+              </div>
+              <div
+                class="catalog-item"
+                :class="{ active: selectedCategory === 'driver' }"
+                @click="selectCategory('driver')"
+              >
+                公务车驾驶员篇
+              </div>
+              <div
+                class="catalog-item"
+                :class="{ active: selectedCategory === 'admission' }"
+                @click="selectCategory('admission')"
+              >
+                招生办人员篇
+              </div>
+              <div
+                class="catalog-item"
+                :class="{ active: selectedCategory === 'office' }"
+                @click="selectCategory('office')"
+              >
+                办公室管理人员篇
+              </div>
+            </div>
           </div>
-          <div
-            :class="{ active: activeTab === 2 }"
-            class="tab-item"
-            @click="activeTab = 2"
-          >
-            视频类课程
+
+          <!-- 后勤 -->
+          <div class="catalog-section">
+            <div class="section-header" @click="toggleSection('logistics')">
+              <span>后勤</span>
+              <i class="el-icon-message" style="color: #ccc"></i>
+            </div>
+          </div>
+
+          <!-- 行政 -->
+          <div class="catalog-section">
+            <div class="section-header" @click="toggleSection('admin')">
+              <span>行政</span>
+              <i class="el-icon-message" style="color: #ccc"></i>
+            </div>
+          </div>
+
+          <!-- 人秘部 -->
+          <div class="catalog-section">
+            <div class="section-header" @click="toggleSection('hr')">
+              <span>人秘部</span>
+              <i class="el-icon-message" style="color: #ccc"></i>
+            </div>
           </div>
         </div>
-        <div class="status-options">
+      </div>
+
+      <!-- 课程内容区域 -->
+      <div class="course-content">
+        <!-- 学习状态筛选 -->
+        <div class="status-filter">
           <el-radio-group v-model="status">
             <el-radio :label="null">全部</el-radio>
             <el-radio :label="3">已学完</el-radio>
@@ -40,36 +102,29 @@
             <el-radio :label="2">学习中</el-radio>
           </el-radio-group>
         </div>
-      </div>
 
-      <template v-for="item in productList">
-        <div v-if="item.course_type === 1" class="course-list doc-list" :key="item.id">
-          <div class="course-item" @click="toUrl(item)">
-            <div class="course-box">
-              <img class="icon" src="@/static/home/file3.png" />
-              <div class="text">
-                <div class="title">{{ item.title }}</div>
-                <div class="desc ellipsis-1">{{ item.description }}</div>
+        <!-- 统一的课程网格布局 -->
+        <div class="course-grid" v-if="productList.length">
+          <div
+            v-for="(course, index) in productList"
+            :key="index"
+            class="course-card"
+            @click="toUrl(course)"
+          >
+            <div class="course-img">
+              <img :src="course.thumb_url || '/static/home/default-course.png'" alt="" />
+            </div>
+            <div class="course-content">
+              <div class="course-title ellipsis-2">{{ course.title }}</div>
+              <div class="course-stats">
+                <span class="study-hours">课时: {{ course.learn_time || 3 }}</span>
+                <span class="student-count">{{ course.studyNum || 512 }}人学习</span>
               </div>
             </div>
           </div>
         </div>
-        <div v-if="item.course_type === 2" class="video-list" :key="item.id">
-          <div class="course-item" @click="toUrl(item)">
-            <div class="course-box">
-              <div class="text">
-                <div class="title">
-                  <img class="icon" src="@/static/home/file2.png" />
-                  <span class="ellipsis-1">{{ item.title }}</span>
-                </div>
-                <div class="desc ellipsis-3">{{ item.description }}</div>
-              </div>
-              <img :src="item.thumb_url" class="image" />
-            </div>
-          </div>
-        </div>
-      </template>
-      <el-empty v-if="productList.length === 0" description="暂无数据" />
+        <el-empty v-if="productList.length === 0" description="暂无数据" />
+      </div>
     </div>
   </div>
 </template>
@@ -83,6 +138,14 @@ export default {
       status: null, // 学习状态
       activeTab: 0, // 当前选中的tab 0全部 1文档 2视频
       productList: [], // 课程列表
+      selectedCategory: "all", // 选中的课程分类
+      openSections: {
+        // 控制课程目录的展开/收起
+        teacher: true, // 默认展开老师分类
+        logistics: false,
+        admin: false,
+        hr: false,
+      },
     };
   },
   watch: {
@@ -98,16 +161,23 @@ export default {
   },
   methods: {
     setView() {
+      const requestData = {
+        page: 1,
+        limit: 10,
+        course_type: this.activeTab,
+        learn_type: this.status,
+        keyword: this.searchText,
+      };
+
+      // 根据选中的分类添加过滤条件
+      if (this.selectedCategory !== "all") {
+        requestData.category = this.selectedCategory;
+      }
+
       this.$api({
         url: "getCourseList",
         method: "get",
-        data: {
-          page: 1,
-          limit: 10,
-          course_type: this.activeTab,
-          learn_type: this.status,
-          keyword: this.searchText,
-        },
+        data: requestData,
       }).then((res) => {
         if (res.code == 200) {
           this.productList = res.data.list;
@@ -118,6 +188,13 @@ export default {
       this.$router.push({
         path: "/course-detail?id=" + item.id,
       });
+    },
+    selectCategory(category) {
+      this.selectedCategory = category;
+      this.setView(); // 根据选中的分类重新加载课程列表
+    },
+    toggleSection(section) {
+      this.openSections[section] = !this.openSections[section];
     },
   },
 };
@@ -165,137 +242,189 @@ export default {
     }
   }
 
-  .tab-bar {
-    margin-top: 42px;
+  .content-wrapper {
     display: flex;
-    justify-content: space-between;
+    margin-top: 42px;
+    gap: 30px;
+    align-items: flex-start;
+  }
 
-    .type-options {
-      display: flex;
-      margin-bottom: 30px;
+  .course-catalog {
+    width: 220px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0; // 防止被压缩
 
-      .tab-item {
+    .catalog-header {
+      background: linear-gradient(135deg, #4a9b7e 0%, #6bb99d 100%);
+      padding: 15px 20px;
+      margin-bottom: 0;
+
+      h3 {
+        font-size: 18px;
+        font-weight: bold;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        border: none;
+      }
+    }
+
+    .catalog-content {
+      padding: 20px;
+      background-color: #f5f5f5;
+
+      .catalog-item {
+        padding: 10px 0;
         cursor: pointer;
-        font-family: Microsoft YaHei, Microsoft YaHei;
-        font-weight: 400;
         font-size: 14px;
-        margin-right: 40px;
-        color: #1f253b;
+        color: #555;
+        transition: color 0.3s ease;
 
         &:hover {
           color: #175e3d;
         }
+
+        &.active {
+          color: #175e3d;
+          font-weight: bold;
+        }
       }
 
-      .active {
-        color: #175e3d;
-        font-weight: bold;
+      .catalog-section {
+        margin-top: 20px;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+
+        .section-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          cursor: pointer;
+          font-size: 15px;
+          color: #333;
+          font-weight: bold;
+          padding-bottom: 10px;
+          border-bottom: 1px solid #eee;
+
+          .el-icon-arrow-down {
+            transition: transform 0.3s ease;
+          }
+
+          .is-reverse {
+            transform: rotate(180deg);
+          }
+        }
+
+        .section-content {
+          padding-top: 10px;
+          .catalog-item {
+            padding: 8px 0;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s ease;
+
+            &:hover {
+              color: #175e3d;
+            }
+
+            &.active {
+              color: #175e3d;
+              font-weight: bold;
+            }
+          }
+        }
       }
     }
   }
 
-  .course-list {
+  .course-content {
+    flex: 1;
+    min-width: 0; // 确保能够缩放
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    flex-direction: column;
 
-    .course-item {
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      padding: 30px 40px;
-      margin-bottom: 30px;
-      width: 580px;
-      height: 104px;
-      background: #f7f7f7;
+    .status-filter {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
 
-      .course-box {
+      .el-radio-group {
+        .el-radio {
+          margin-right: 20px;
+        }
+      }
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+
+      .course-card {
+        background: linear-gradient(135deg, #4a9b7e 0%, #6bb99d 100%);
+        border-radius: 8px;
+        cursor: pointer;
         display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.1);
 
-        .icon {
-          width: 46px;
-          height: 46px;
-          margin-right: 26px;
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
 
-        .text {
-          width: 420px;
+        .course-img {
+          height: 180px;
+          width: 100%;
+          position: relative;
+          overflow: hidden;
 
-          .title {
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .course-content {
+          padding: 20px;
+          color: #fff;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+
+          .course-title {
             font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 5px;
-          }
-
-          .desc {
-            color: #888;
-            font-size: 14px;
-          }
-        }
-      }
-    }
-  }
-
-  .video-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-bottom: 30px;
-
-    .course-item {
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      padding: 30px 40px;
-      width: 580px;
-      height: 171px;
-      background: #f7f7f7;
-      border-radius: 0px 0px 0px 0px;
-
-      .course-box {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-
-        .text {
-          width: 310px;
-
-          .title {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: 400;
             font-size: 18px;
-            color: #000000;
-            line-height: 20px;
-
-            .icon {
-              width: 20px;
-              height: 20px;
-              margin-right: 8px;
-            }
-
-            span {
-              display: inline-block;
-              width: 270px;
-            }
+            color: #fff;
+            line-height: 24px;
+            margin-bottom: 20px;
+            min-height: 48px;
           }
 
-          .desc {
-            height: 66px;
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: 400;
+          .course-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-size: 14px;
-            color: #929aa2;
-            line-height: 22px;
-          }
-        }
+            color: rgba(255, 255, 255, 0.9);
 
-        .image {
-          width: 162px;
-          height: 108px;
-          border-radius: 0;
+            .study-hours {
+              font-size: 14px;
+            }
+
+            .student-count {
+              font-size: 14px;
+            }
+          }
         }
       }
     }

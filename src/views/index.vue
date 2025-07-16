@@ -11,6 +11,63 @@
       </div>
     </div>
 
+    <div class="card main">
+      <div class="topMain">
+        <div class="left">
+          <div class="tit">HOT</div>
+          <img alt="" src="@/static/home/HOT.png" />
+        </div>
+        <div class="right">
+          <div class="tab">
+            <div
+              class="tab-item"
+              :class="{ action: HOT_currentTab === 0 }"
+              @click="switchHOTTab(0)"
+            >
+              推荐课程
+            </div>
+            <div
+              class="tab-item"
+              :class="{ action: HOT_currentTab === 1 }"
+              @click="switchHOTTab(1)"
+            >
+              最热课程
+            </div>
+            <div
+              class="tab-item"
+              :class="{ action: HOT_currentTab === 2 }"
+              @click="switchHOTTab(2)"
+            >
+              最新课程
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="course-grid" v-if="HOT_list.length">
+          <div
+            v-for="(course, index) in HOT_list"
+            :key="index"
+            class="course-card"
+            style="background: #fff; box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.1)"
+            @click="toProduct(course)"
+          >
+            <div class="course-img">
+              <img :src="course.thumb" alt="" />
+            </div>
+            <div class="course-content">
+              <div class="course-title ellipsis-2">{{ course.title }}</div>
+            </div>
+          </div>
+        </div>
+        <el-empty
+          style="width: 100%"
+          v-if="!HOT_list.length"
+          description="暂无数据..."
+        ></el-empty>
+      </div>
+    </div>
+
     <!--    最近学习-->
     <div class="card main">
       <div class="title">
@@ -36,7 +93,7 @@
             <div class="progress">
               <el-progress
                 :format="format"
-                :percentage="item.course_schedule.split('%')[0] || 0"
+                :percentage="Number(item.course_schedule.split('%')[0]) || 0"
               ></el-progress>
             </div>
             <div class="desc">{{ item.course_info.description }}</div>
@@ -57,12 +114,19 @@
         <!-- 标签栏 -->
         <div class="course-tabs">
           <div
+            class="tab-item"
+            :class="{ active: currentTab === 0 }"
+            @click="switchTab(0)"
+          >
+            全部课程
+          </div>
+          <div
             v-for="(tab, index) in courseTabs"
             :key="index"
-            :class="['tab-item', { active: currentTab === index }]"
-            @click="switchTab(index)"
+            :class="['tab-item', { active: currentTab === tab.id }]"
+            @click="switchTab(tab.id)"
           >
-            {{ tab }}
+            {{ tab.cat_name }}
           </div>
         </div>
 
@@ -75,12 +139,14 @@
             @click="toProduct(course)"
           >
             <div class="course-img">
-              <img src="@/static/home/file3.png" alt="" />
+              <img :src="course.thumb" alt="" />
             </div>
-            <div class="course-content">教育技术学导论</div>
-            <div class="course-stats">
-              <span class="study-hours">课时: {{ course.study_hours || 3 }}</span>
-              <span class="student-count">{{ course.student_count || 512 }}人学习</span>
+            <div class="course-content">
+              <div class="course-title ellipsis-2">{{ course.title }}</div>
+              <div class="course-stats">
+                <span class="study-hours">课时: {{ course.learn_time || 3 }}</span>
+                <span class="student-count">{{ course.studyNum || 512 }}人学习</span>
+              </div>
             </div>
           </div>
         </div>
@@ -103,18 +169,13 @@ export default {
       recent_list: [],
       // 文档类课程
       pdf_list: [],
+      HOT_list: [],
       // 视频类课程
       video_list: [],
       // 部门课程标签
-      courseTabs: [
-        "全部课程",
-        "文员",
-        "公务车驾驶员",
-        "招生办人员",
-        "办公室管理人员",
-        "适用案例",
-      ],
+      courseTabs: [],
       currentTab: 0,
+      HOT_currentTab: 0,
     };
   },
   computed: {
@@ -135,34 +196,15 @@ export default {
       }).then((res) => {
         this.recent_list = res.data;
       });
-      // 文档类课程
+      // 分类
       this.$api({
-        url: "getCourseList",
+        url: "getUserCourseCatLists",
         method: "get",
-        data: {
-          page: 1,
-          limit: 8,
-          course_type: 1,
-        },
       }).then((res) => {
-        this.pdf_list = res.data.list;
-        // 如果没有数据，提供模拟数据用于展示
-        if (!this.pdf_list || this.pdf_list.length === 0) {
-          this.pdf_list = this.getMockCourses();
-        }
+        this.courseTabs = res.data;
       });
-      // // 视频类课程
-      // this.$api({
-      //   url: "getCourseList",
-      //   method: "get",
-      //   data: {
-      //     page: 1,
-      //     limit: 3,
-      //     course_type: 2,
-      //   },
-      // }).then((res) => {
-      //   this.video_list = res.data.list;
-      // });
+      this.loadHOTCourses();
+      this.loadAllCourses();
     },
     format(percentage) {
       return `已学习${percentage}%`;
@@ -175,112 +217,41 @@ export default {
     },
     switchTab(index) {
       this.currentTab = index;
-      // 根据选中的标签筛选课程
-      if (index === 0) {
-        // 全部课程
-        this.loadAllCourses();
-      } else {
-        // 其他分类的课程
-        this.loadCoursesByCategory(this.courseTabs[index]);
-      }
+      this.loadAllCourses();
     },
     loadAllCourses() {
       // 文档类课程
       this.$api({
-        url: "getCourseList",
+        url: "getNewCourseList",
         method: "get",
         data: {
           page: 1,
           limit: 8,
-          course_type: 1,
+          course_cat_id: this.currentTab || "",
         },
       }).then((res) => {
         this.pdf_list = res.data.list;
-        // 如果没有数据，提供模拟数据用于展示
-        if (!this.pdf_list || this.pdf_list.length === 0) {
-          this.pdf_list = this.getMockCourses();
-        }
       });
     },
-    loadCoursesByCategory(category) {
-      // 根据分类加载课程
+    loadHOTCourses() {
+      // HOT
       this.$api({
-        url: "getCourseList",
+        url: "getNewCourseList",
         method: "get",
         data: {
           page: 1,
           limit: 8,
-          course_type: 1,
-          category: category,
+          isRecommend: this.HOT_currentTab === 0 ? 1 : "",
+          isHot: this.HOT_currentTab === 1 ? 1 : "",
+          isNew: this.HOT_currentTab === 2 ? 1 : "",
         },
       }).then((res) => {
-        this.pdf_list = res.data.list;
-        // 如果没有数据，提供模拟数据用于展示
-        if (!this.pdf_list || this.pdf_list.length === 0) {
-          this.pdf_list = this.getMockCourses();
-        }
+        this.HOT_list = res.data.list;
       });
     },
-    getMockCourses() {
-      // 模拟课程数据
-      return [
-        {
-          id: 1,
-          title: "教育技术学导论",
-          subtitle: "集团文员在收文中打印资料不予全事件",
-          study_hours: 3,
-          student_count: 512,
-        },
-        {
-          id: 2,
-          title: "教育技术学导论",
-          subtitle: "集团文员在收文中打印资料不予全事件",
-          study_hours: 3,
-          student_count: 512,
-        },
-        {
-          id: 3,
-          title: "教育技术学导论",
-          subtitle: "集团文员在收文中打印资料不予全事件",
-          study_hours: 3,
-          student_count: 512,
-        },
-        {
-          id: 4,
-          title: "教育技术学导论",
-          subtitle: "集团文员在收文中打印资料不予全事件",
-          study_hours: 3,
-          student_count: 512,
-        },
-        {
-          id: 5,
-          title: "教育技术学导论",
-          subtitle: "集团文员在收文中打印资料不予全事件",
-          study_hours: 3,
-          student_count: 512,
-        },
-        {
-          id: 6,
-          title: "教育技术学导论",
-          subtitle: "集团文员在收文中打印资料不予全事件",
-          study_hours: 3,
-          student_count: 512,
-        },
-        {
-          id: 7,
-          title: "教育技术学导论",
-          subtitle: "集团文员在收文中打印资料不予全事件",
-          study_hours: 3,
-          student_count: 512,
-        },
-        {
-          id: 8,
-          title: "教育技术学导论",
-          subtitle: "集团文员在收文中打印资料不予全事件",
-          study_hours: 3,
-          student_count: 512,
-        },
-      ];
+    switchHOTTab(index) {
+      this.HOT_currentTab = index;
+      this.loadHOTCourses();
     },
   },
 };
@@ -390,7 +361,7 @@ export default {
 
       .course-card {
         background: #f7f7f7;
-        border-radius: 8px;
+        border-radius: 4px;
         cursor: pointer;
         display: flex;
         flex-direction: column;
@@ -402,7 +373,7 @@ export default {
         }
 
         .course-img {
-          height: 130px;
+          height: 180px;
           width: 100%;
           img {
             width: 100%;
@@ -413,23 +384,26 @@ export default {
         .course-content {
           font-size: 18px;
           color: #666;
-          padding: 20px 20px 0px;
-        }
-
-        .course-stats {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
           padding: 20px;
-
-          .study-hours {
-            font-size: 12px;
-            color: #999;
+          .course-title {
+            height: 48px;
           }
 
-          .student-count {
-            font-size: 12px;
-            color: #999;
+          .course-stats {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .study-hours {
+              font-size: 12px;
+              color: #999;
+            }
+
+            .student-count {
+              font-size: 12px;
+              color: #999;
+            }
           }
         }
       }
@@ -666,6 +640,50 @@ export default {
               font-size: 14px;
               color: #929aa2;
             }
+          }
+        }
+      }
+    }
+  }
+}
+
+.topMain {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .left {
+    .tit {
+      font-weight: bold;
+      font-size: 34px;
+      color: #175e3d;
+      line-height: 48px;
+    }
+    img {
+      width: 41px;
+      height: 11px;
+    }
+  }
+
+  .right {
+    .tab {
+      display: flex;
+      gap: 20px;
+      .tab-item {
+        cursor: pointer;
+        font-size: 16px;
+        color: #666;
+        &.action {
+          color: #175e3d;
+          font-weight: bold;
+
+          &::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 2px;
+            margin-top: 10px;
+            background: #175e3d;
           }
         }
       }
