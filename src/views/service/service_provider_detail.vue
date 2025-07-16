@@ -97,6 +97,27 @@
       <div class="form-content">
         <div class="form-section">
           <div class="form-row">
+            <label class="form-label">客户姓名</label>
+            <div class="form-input">
+              <el-input
+                v-model="demandInfo.user_info.realname"
+                placeholder="完善后的内容客户姓名"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-label">联系方式</label>
+            <div class="form-input">
+              <el-input
+                v-model="demandInfo.user_info.mobile"
+                placeholder="完善后的内容联系方式"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="form-row">
             <label class="form-label">设备类型</label>
             <div class="form-input">
               <el-radio-group v-model="demandInfo.deviceType" disabled>

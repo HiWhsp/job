@@ -127,15 +127,18 @@
           <div class="contact-info">
             <div class="contact-item">
               <strong>地址：</strong>
-              <span>{{ companyInfo.address }}</span>
+              <!-- <span>{{ companyInfo.address }}</span> -->
+              <span>******</span>
             </div>
             <div class="contact-item">
               <strong>邮箱：</strong>
-              <span>{{ companyInfo.email }}</span>
+              <!-- <span>{{ companyInfo.email }}</span> -->
+              <span>******</span>
             </div>
             <div class="contact-item">
               <strong>电话：</strong>
-              <span>{{ companyInfo.contact }}</span>
+              <!-- <span>{{ companyInfo.contact }}</span> -->
+              <span>******</span>
             </div>
           </div>
         </div>
