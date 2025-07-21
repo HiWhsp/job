@@ -15,77 +15,39 @@
         </div>
 
         <div class="catalog-content">
-          <!-- 全部课程 -->
-          <div
-            class="catalog-item"
-            :class="{ active: selectedCategory === 'all' }"
-            @click="selectCategory('all')"
-          >
-            <span>全部课程</span>
-          </div>
-
           <!-- 老师分类 -->
-          <div class="catalog-section">
-            <div class="section-header" @click="toggleSection('teacher')">
-              <span>老师</span>
+          <div
+            class="catalog-section"
+            v-for="(item, index) in courseCatList"
+            :key="index"
+          >
+            <div
+              class="section-header"
+              @click="toggleSection(item.id)"
+              :class="{
+                active: selectedCategory === item.id || showSelect === item.id,
+              }"
+            >
+              <span>{{ item.cat_name }}</span>
               <i
                 class="el-icon-arrow-down"
-                :class="{ 'is-reverse': openSections.teacher }"
+                :class="{ 'is-reverse': showSelect === item.id }"
+                v-if="item.child && item.child.length > 0"
               ></i>
             </div>
-            <div class="section-content" v-show="openSections.teacher">
+            <div
+              class="section-content"
+              v-show="item.child && item.child.length > 0 && showSelect === item.id"
+            >
               <div
+                v-for="(item2, index2) in item.child"
+                :key="index2"
                 class="catalog-item"
-                :class="{ active: selectedCategory === 'doc' }"
-                @click="selectCategory('doc')"
+                :class="{ active: selectedCategory === item2.id }"
+                @click="selectCategory(item2.id)"
               >
-                文员篇
+                {{ item2.cat_name }}
               </div>
-              <div
-                class="catalog-item"
-                :class="{ active: selectedCategory === 'driver' }"
-                @click="selectCategory('driver')"
-              >
-                公务车驾驶员篇
-              </div>
-              <div
-                class="catalog-item"
-                :class="{ active: selectedCategory === 'admission' }"
-                @click="selectCategory('admission')"
-              >
-                招生办人员篇
-              </div>
-              <div
-                class="catalog-item"
-                :class="{ active: selectedCategory === 'office' }"
-                @click="selectCategory('office')"
-              >
-                办公室管理人员篇
-              </div>
-            </div>
-          </div>
-
-          <!-- 后勤 -->
-          <div class="catalog-section">
-            <div class="section-header" @click="toggleSection('logistics')">
-              <span>后勤</span>
-              <i class="el-icon-message" style="color: #ccc"></i>
-            </div>
-          </div>
-
-          <!-- 行政 -->
-          <div class="catalog-section">
-            <div class="section-header" @click="toggleSection('admin')">
-              <span>行政</span>
-              <i class="el-icon-message" style="color: #ccc"></i>
-            </div>
-          </div>
-
-          <!-- 人秘部 -->
-          <div class="catalog-section">
-            <div class="section-header" @click="toggleSection('hr')">
-              <span>人秘部</span>
-              <i class="el-icon-message" style="color: #ccc"></i>
             </div>
           </div>
         </div>
@@ -93,16 +55,6 @@
 
       <!-- 课程内容区域 -->
       <div class="course-content">
-        <!-- 学习状态筛选 -->
-        <div class="status-filter">
-          <el-radio-group v-model="status">
-            <el-radio :label="null">全部</el-radio>
-            <el-radio :label="3">已学完</el-radio>
-            <el-radio :label="1">未开始</el-radio>
-            <el-radio :label="2">学习中</el-radio>
-          </el-radio-group>
-        </div>
-
         <!-- 统一的课程网格布局 -->
         <div class="course-grid" v-if="productList.length">
           <div
@@ -135,28 +87,21 @@ export default {
   data() {
     return {
       searchText: "", // 搜索词
-      status: null, // 学习状态
-      activeTab: 0, // 当前选中的tab 0全部 1文档 2视频
       productList: [], // 课程列表
-      selectedCategory: "all", // 选中的课程分类
-      openSections: {
-        // 控制课程目录的展开/收起
-        teacher: true, // 默认展开老师分类
-        logistics: false,
-        admin: false,
-        hr: false,
-      },
+      selectedCategory: null, // 选中的课程分类
+      showSelect: null,
+      courseCatList: [], // 课程分类列表
     };
   },
-  watch: {
-    activeTab() {
-      this.setView();
-    },
-    status() {
-      this.setView();
-    },
-  },
   mounted() {
+    this.$api({
+      url: "getCourseCatLists",
+      method: "get",
+    }).then((res) => {
+      if (res.code == 200) {
+        this.courseCatList = res.data;
+      }
+    });
     this.setView();
   },
   methods: {
@@ -164,18 +109,12 @@ export default {
       const requestData = {
         page: 1,
         limit: 10,
-        course_type: this.activeTab,
-        learn_type: this.status,
         keyword: this.searchText,
+        course_cat_id: this.selectedCategory,
       };
 
-      // 根据选中的分类添加过滤条件
-      if (this.selectedCategory !== "all") {
-        requestData.category = this.selectedCategory;
-      }
-
       this.$api({
-        url: "getCourseList",
+        url: "getNewCourseList",
         method: "get",
         data: requestData,
       }).then((res) => {
@@ -190,11 +129,25 @@ export default {
       });
     },
     selectCategory(category) {
-      this.selectedCategory = category;
+      if (this.selectedCategory === category) {
+        this.selectedCategory = null;
+      } else {
+        this.selectedCategory = category;
+      }
       this.setView(); // 根据选中的分类重新加载课程列表
     },
-    toggleSection(section) {
-      this.openSections[section] = !this.openSections[section];
+    toggleSection(id) {
+      if (this.showSelect === id) {
+        this.showSelect = null;
+      } else {
+        this.showSelect = id;
+      }
+      if (this.selectedCategory === id) {
+        this.selectedCategory = null;
+      } else {
+        this.selectedCategory = id;
+      }
+      this.setView();
     },
   },
 };
@@ -245,12 +198,12 @@ export default {
   .content-wrapper {
     display: flex;
     margin-top: 42px;
-    gap: 30px;
+    gap: 42px;
     align-items: flex-start;
   }
 
   .course-catalog {
-    width: 220px;
+    width: 240px;
     background-color: #fff;
     border-radius: 8px;
     overflow: hidden;
@@ -258,8 +211,8 @@ export default {
     flex-shrink: 0; // 防止被压缩
 
     .catalog-header {
-      background: linear-gradient(135deg, #4a9b7e 0%, #6bb99d 100%);
-      padding: 15px 20px;
+      background: #175e3d;
+      padding: 15px 34px;
       margin-bottom: 0;
 
       h3 {
@@ -273,8 +226,8 @@ export default {
     }
 
     .catalog-content {
-      padding: 20px;
-      background-color: #f5f5f5;
+      padding: 18px 0;
+      background: #f7f7f7;
 
       .catalog-item {
         padding: 10px 0;
@@ -294,20 +247,21 @@ export default {
       }
 
       .catalog-section {
-        margin-top: 20px;
-        border-top: 1px solid #eee;
-        padding-top: 15px;
+        border-bottom: 1px solid #eee;
 
         .section-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
           cursor: pointer;
-          font-size: 15px;
+          font-size: 16px;
           color: #333;
-          font-weight: bold;
-          padding-bottom: 10px;
-          border-bottom: 1px solid #eee;
+          padding: 13px 22px 13px 34px;
+          &.active {
+            background: #e2efe9;
+            color: #175e3d;
+            font-weight: bold;
+          }
 
           .el-icon-arrow-down {
             transition: transform 0.3s ease;
@@ -319,11 +273,11 @@ export default {
         }
 
         .section-content {
-          padding-top: 10px;
+          padding-left: 44px;
           .catalog-item {
-            padding: 8px 0;
-            font-size: 13px;
-            color: #666;
+            padding: 14px 0;
+            font-size: 14px;
+            color: #616161;
             cursor: pointer;
             transition: color 0.3s ease;
 
@@ -333,7 +287,6 @@ export default {
 
             &.active {
               color: #175e3d;
-              font-weight: bold;
             }
           }
         }
@@ -347,41 +300,29 @@ export default {
     display: flex;
     flex-direction: column;
 
-    .status-filter {
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #eee;
-
-      .el-radio-group {
-        .el-radio {
-          margin-right: 20px;
-        }
-      }
-    }
-
     .course-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
       margin-bottom: 40px;
 
       .course-card {
-        background: linear-gradient(135deg, #4a9b7e 0%, #6bb99d 100%);
-        border-radius: 8px;
+        border-radius: 4px;
         cursor: pointer;
         display: flex;
         flex-direction: column;
         transition: all 0.3s ease;
         overflow: hidden;
         box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.1);
-
+        background: #f7f7f7;
+        width: 220px;
         &:hover {
           transform: translateY(-5px);
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
 
         .course-img {
-          height: 180px;
+          height: 140px;
           width: 100%;
           position: relative;
           overflow: hidden;
@@ -394,17 +335,16 @@ export default {
         }
 
         .course-content {
-          padding: 20px;
-          color: #fff;
+          padding: 15px;
+          color: #333333;
           flex: 1;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
 
           .course-title {
-            font-weight: bold;
             font-size: 18px;
-            color: #fff;
+            color: #3d3d3d;
             line-height: 24px;
             margin-bottom: 20px;
             min-height: 48px;
@@ -415,7 +355,7 @@ export default {
             justify-content: space-between;
             align-items: center;
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
+            color: #8b8b8b;
 
             .study-hours {
               font-size: 14px;

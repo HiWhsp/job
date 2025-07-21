@@ -512,6 +512,10 @@
                   </div>
                 </div>
               </div>
+              <el-empty
+                v-if="detail.test_question_list && detail.test_question_list.length === 0"
+                description="暂无关联考试..."
+              ></el-empty>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -583,7 +587,7 @@ export default {
 
     setView() {
       this.$api({
-        url: "getCourse",
+        url: "getNewCourse",
         method: "get",
         data: {
           id: this.id,

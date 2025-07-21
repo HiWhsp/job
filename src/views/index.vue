@@ -387,6 +387,9 @@ export default {
           padding: 20px;
           .course-title {
             height: 48px;
+            &:hover {
+              color: @theme;
+            }
           }
 
           .course-stats {
