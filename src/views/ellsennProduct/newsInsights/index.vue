@@ -4,39 +4,47 @@
     <div class="container">
       <div class="layout">
         <div>
-          <reportCardList :list="newsList" @change="getNewsList" title="新闻"></reportCardList>
+          <reportCardList
+            :list="newsList"
+            @change="getNewsList"
+            title="新闻"
+          ></reportCardList>
         </div>
         <div>
-          <popularReports title="热门新闻" :list="hotNewsList"></popularReports>
+          <popularReports
+            title="热门新闻"
+            :list="hotNewsList"
+            :url="'/newsInsightsDetail'"
+          ></popularReports>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { mapState } from 'vuex';
-import popularReports from '@/components/ellsennComponents/components/popularReports/popularReports.vue';
-import reportCardList from '@/components/ellsennComponents/components/reportCardList';
-import topSearch from '@/components/ellsennComponents/components/topSearch.vue';
+import { mapState } from "vuex";
+import popularReports from "@/components/ellsennComponents/components/popularReports/popularReports.vue";
+import reportCardList from "@/components/ellsennComponents/components/reportCardList";
+import topSearch from "@/components/ellsennComponents/components/topSearch.vue";
 export default {
   components: {
     topSearch,
     reportCardList,
-    popularReports
+    popularReports,
   },
   props: {},
-  name: 'newsInsights',
+  name: "newsInsights",
   data() {
     return {
       list: [],
       newsList: [],
       hotNewsList: [],
-      keyword: '',
+      keyword: "",
     };
   },
   computed: {
     ...mapState({
-      webConfig: state => state.webConfig
+      webConfig: (state) => state.webConfig,
     }),
   },
   watch: {
@@ -50,17 +58,17 @@ export default {
     this.list = this.webConfig.news;
     this.getNewsList();
     this.$api({
-        url: 'getArticleList',
-        method: 'get',
-        data: {
-          page: 1,
-          limit: 6, 
-          is_hot: 1,
-          type_id: 1,
-        },
-      }).then(res => {
-        this.hotNewsList = res.data.list;
-      });
+      url: "getArticleList",
+      method: "get",
+      data: {
+        page: 1,
+        limit: 6,
+        is_hot: 1,
+        type_id: 1,
+      },
+    }).then((res) => {
+      this.hotNewsList = res.data.list;
+    });
   },
   methods: {
     onBtnClick(i) {
@@ -69,15 +77,15 @@ export default {
     },
     getNewsList(page) {
       this.$api({
-        url: 'getArticleList',
-        method: 'get',
+        url: "getArticleList",
+        method: "get",
         data: {
           page: page || 1,
           limit: 10,
           keyword: this.keyword,
           type_id: 1,
         },
-      }).then(res => {
+      }).then((res) => {
         this.newsList = res.data.list;
       });
     },

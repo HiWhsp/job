@@ -164,7 +164,7 @@ export default {
   margin-bottom: 1.302083vw;
   text-align: center;
   font-size: 1.197917vw;
-  font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+  font-family: OPPPSans;
   font-weight: bold;
   color: #000000;
 }
@@ -196,7 +196,7 @@ export default {
 .ctx-rich {
   text-align: left;
   font-size: 14px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: OPPPSans;
   font-weight: 400;
   color: #000000;
   line-height: 1.5;

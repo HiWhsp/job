@@ -1,10 +1,17 @@
 <template>
   <div class="modal-container">
-    <el-dialog title="售后提示" width="580px" custom-class="cus-modal-wrap" :close-on-click-modal="true"
-      :visible.sync="show_modal" :before-close="onbeforeclose" @closed="onclosed">
+    <el-dialog
+      title="售后提示"
+      width="580px"
+      custom-class="cus-modal-wrap"
+      :close-on-click-modal="true"
+      :visible.sync="show_modal"
+      :before-close="onbeforeclose"
+      @closed="onclosed"
+    >
       <div class="modal-inner">
         <div class="success-box">
-          <img src="@img/common/success.png" alt="">
+          <img src="@img/common/success.png" alt="" />
         </div>
         <div class="text-1">
           {{ vuex_config.comEmail }}
@@ -60,9 +67,7 @@ export default {
     onclosed() {
       // this.show_modal = false;
     },
-    throttle_do_cancel() {
-
-    },
+    throttle_do_cancel() {},
     do_cancel() {
       // this.loading = true;
       // this.$api({
@@ -80,19 +85,18 @@ export default {
       //     this.$emit('confirm')
       //   }
       // });
-    }
-  }
+    },
+  },
 };
 </script>
-
 
 <style scoped lang="less">
 /deep/ .el-dialog__header {
   padding: 16px 24px;
   border-bottom: 1px solid #eee;
-  background: #F7F7F7;
+  background: #f7f7f7;
 
-  font-family: Poppins, Poppins;
+  font-family: OPPPSans;
   // font-weight: 600;
   font-size: 18px;
   color: #333333;
@@ -113,26 +117,28 @@ export default {
   button {
     width: 120px;
     height: 32px;
-    background: #FFFFFF;
+    background: #ffffff;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #009F39;
+    border: 1px solid #009f39;
 
-    font-family: Arial, Arial;
+    font-family: OPPPSans;
     font-weight: 400;
     font-size: 14px;
-    color: #009F39;
+    color: #009f39;
 
-    &+button {
+    & + button {
       margin-left: 16px;
     }
   }
 
-  .btn-1 {}
+  .btn-1 {
+  }
 
-  .btn-2 {}
+  .btn-2 {
+  }
 
   .btn-bg {
-    background: #009F39;
+    background: #009f39;
     color: #ffffff;
   }
 }
@@ -141,7 +147,6 @@ export default {
   .modal-inner {
     padding: 0;
     text-align: center;
-
 
     .success-box {
       width: 71px;
@@ -155,7 +160,7 @@ export default {
 
     .text-1 {
       margin-top: 20px;
-      font-family: Arial, Arial;
+      font-family: OPPPSans;
       font-weight: 400;
       font-size: 22px;
       color: #000000;
@@ -163,7 +168,7 @@ export default {
 
     .text-2 {
       margin-top: 15px;
-      font-family: Arial, Arial;
+      font-family: OPPPSans;
       font-weight: 400;
       font-size: 14px;
       color: #999999;

@@ -294,7 +294,7 @@ export default {
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: bold;
     color: #333333;
   }
@@ -636,7 +636,7 @@ export default {
             padding: 10px 15px;
 
             span {
-              font-family: Microsoft YaHei;
+              font-family: OPPPSans;
               text-align: center;
               font-size: 16px;
               color: #1e1e1e;

@@ -260,7 +260,7 @@ export default {
     width: 120px; /*no */
     border-right: 1px solid #ccc;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 400;
     line-height: 24px;
     color: #333;
@@ -285,7 +285,7 @@ export default {
 
     &::-webkit-input-placeholder {
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: OPPPSans;
       font-weight: 400;
       color: #d7d7d7;
     }
@@ -323,7 +323,7 @@ export default {
     margin-right: 24px;
     // margin-right: 20px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 400;
     color: #009F39;
     border: 1px solid #009F39;

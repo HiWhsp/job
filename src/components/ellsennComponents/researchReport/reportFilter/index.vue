@@ -41,10 +41,13 @@
       </div>
       <div class="filter-layout">
         <div class="filter-label">
-          <img src="@img/ellsenn/releaseTime.png" alt="" />发布时间
+          <img src="@img/ellsenn/releaseTime.png" alt="" />活动时间
         </div>
         <div class="filter-item">
           <div class="filter-content">
+            <el-radio v-model="releaseTime" label="" @change="handleRadioChange"
+              >全部</el-radio
+            >
             <el-radio
               v-for="item in releaseList"
               :key="item.id"

@@ -10,6 +10,7 @@
           v-for="(item, index) in list"
           :data="item"
           :key="index"
+          :url="url"
         ></popular-reports-card>
         <el-empty v-if="list.length === 0" description="暂无数据"></el-empty>
       </div>
@@ -32,6 +33,10 @@ export default {
     title: {
       type: String,
       default: "热门报告",
+    },
+    url: {
+      type: String,
+      default: "",
     },
   },
   name: "popularReports",

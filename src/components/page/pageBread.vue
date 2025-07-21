@@ -89,14 +89,14 @@
       }
       .link {
         font-size: 14px;
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: OPPPSans;
         font-weight: 400;
         color: #757575;
       }
   
       .route-link {
         font-size: 14px;
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: OPPPSans;
         font-weight: 400;
         color: #04277b;
       }
@@ -108,7 +108,7 @@
   
       > *:last-child {
         font-size: 14px;
-        font-family: Arial, Arial;
+        font-family: OPPPSans;
         font-weight: 400;
         color: #333333;
       }

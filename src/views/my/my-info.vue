@@ -222,7 +222,7 @@ export default {
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: bold;
     color: #333333;
 
@@ -257,7 +257,7 @@ export default {
     .section-title {
       margin-bottom: 50px;
       font-size: 16px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: OPPPSans;
       font-weight: 400;
       color: #666666;
     }
@@ -290,7 +290,7 @@ export default {
       .info {
         padding-left: 20px;
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: OPPPSans;
         font-weight: 400;
         color: #333333;
         display: inline-block;
@@ -308,7 +308,7 @@ export default {
       .action {
         margin-left: 20px;
         font-size: 14px;
-        font-family: Microsoft YaHei;
+        font-family: OPPPSans;
         font-weight: 400;
         color: #009f39;
 

@@ -151,7 +151,7 @@ export default {
         align-items: center;
         justify-content: center;
         gap: 10px;
-        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-family: OPPPSans;
         font-weight: 400;
         font-size: 18px;
         color: #333333;

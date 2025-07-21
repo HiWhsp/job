@@ -76,7 +76,7 @@ export default {
           justify-content: center;
           align-items: center;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: OPPPSans;
       font-weight: bold;
       line-height: 20px;
       color: #333333;

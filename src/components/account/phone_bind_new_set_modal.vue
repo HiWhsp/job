@@ -1,8 +1,13 @@
 <template>
   <div class="modal-container">
-    <el-dialog title="修改手机号" width="596px" custom-class="modal-custom"  :close-on-click-modal="false"
-      :visible.sync="show" :before-close="onModalClose">
-
+    <el-dialog
+      title="修改手机号"
+      width="596px"
+      custom-class="modal-custom"
+      :close-on-click-modal="false"
+      :visible.sync="show"
+      :before-close="onModalClose"
+    >
       <div class="modal-inner">
         <div class="modal-ctx">
           <!-- <div class="tip">密码要求至少包含字母，符号或数字中的两项且长度超过6位，</div> -->
@@ -10,7 +15,7 @@
           <div class="input-box flex">
             <div class="label">新手机号</div>
             <div class="input-item">
-              <el-input  type="text" v-model="phone" placeholder="手机号"> </el-input>
+              <el-input type="text" v-model="phone" placeholder="手机号"> </el-input>
               <!-- {{ mix_user_phone }} -->
             </div>
           </div>
@@ -41,9 +46,7 @@ import { mapState } from "vuex";
 
 export default {
   name: "modal-hetong",
-  components: {
-
-  },
+  components: {},
   props: ["curr"],
   data() {
     return {
@@ -94,11 +97,10 @@ export default {
         data: {
           action: "login_phoneYzm",
           phone: phone,
-        }
+        },
       }).then((res) => {
         alert(res);
         if (res.code == 200) {
-
         } else {
           clearInterval(this.timer);
           this.timer = null;
@@ -106,8 +108,6 @@ export default {
         }
       });
     },
-
-
 
     //倒计时
     countdown() {
@@ -153,21 +153,21 @@ export default {
       }
 
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'users_setNew',
-          editType: '1',//类型：1-手机号 2-邮箱
+          action: "users_setNew",
+          editType: "1", //类型：1-手机号 2-邮箱
           code: this.code,
           phone: this.phone,
           // email: this.email,
         },
       }).then((res) => {
         //console.log("修改密码", res);
-        alert(res)
+        alert(res);
         let { code, data } = res;
         if (code == 200) {
-          this.$emit('confirm')
+          this.$emit("confirm");
           this.show = false;
         }
       });
@@ -177,14 +177,10 @@ export default {
 </script>
 
 <style scoped lang="less">
-
-
 /deep/ .modal-custom {
   .modal-inner {
     padding: 0;
   }
-
-
 
   .modal-ctx {
     .input-box {
@@ -218,18 +214,14 @@ export default {
       }
     }
   }
-
 }
-
-
-
 
 /deep/ .el-dialog__header {
   padding: 16px 24px;
   border-bottom: 1px solid #eee;
-  background: #F7F7F7;
+  background: #f7f7f7;
 
-  font-family: Poppins, Poppins;
+  font-family: OPPPSans;
   font-weight: 600;
   font-size: 18px;
   color: #333333;
@@ -239,36 +231,35 @@ export default {
   }
 }
 
-/deep/  .el-dialog__body {
+/deep/ .el-dialog__body {
   padding: 36px 60px 36px 60px;
 }
 
-/deep/  .el-dialog__footer {
+/deep/ .el-dialog__footer {
   text-align: center;
   padding-bottom: 50px;
 
   button {
     min-width: 120px;
     height: 32px;
-    background: #FFFFFF;
+    background: #ffffff;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #009F39;
-    font-family: Arial, Arial;
+    border: 1px solid #009f39;
+    font-family: OPPPSans;
     font-weight: 400;
     font-size: 14px;
-    color: #009F39;
+    color: #009f39;
 
-    &+button {
+    & + button {
       margin-left: 20px;
     }
   }
 
   .btn-bg {
-    background: #009F39;
-    color: #FFFFFF;
+    background: #009f39;
+    color: #ffffff;
   }
 }
-
 
 .btn-send {
   // position: absolute;
@@ -278,7 +269,7 @@ export default {
   padding: 0 10px;
   height: 40px;
   background: #fff;
-  color: #009F39;
+  color: #009f39;
   font-size: 14px;
   margin-left: 15px;
   border-radius: 5px;

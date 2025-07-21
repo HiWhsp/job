@@ -215,7 +215,7 @@ export default {
         margin-bottom: 10px;
 
         font-size: 14px;
-        font-family: MicrosoftYaHei;
+        font-family: OPPPSans;
         line-height: 40px;
         height: 40px;
         color: #5e5e5e;

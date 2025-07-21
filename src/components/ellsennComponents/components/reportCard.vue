@@ -1,10 +1,10 @@
 <template>
   <div class="layout">
-    <div class="left">
+    <div class="left" @click="onBtnClick">
       <img class="left-img" :src="data.thumb" alt="" />
     </div>
     <div class="right">
-      <div class="title">{{ data.title }}</div>
+      <div class="title" @click="onBtnClick">{{ data.title }}</div>
       <div class="sub">{{ data.info }}</div>
       <div class="right-bottom">
         <div class="right-bottom-info">
@@ -18,10 +18,7 @@
             下载 <img src="@img/ellsenn/pdf.png" alt="" @click="onDownloadClick('pdf')" />
             <img src="@img/ellsenn/word.png" alt="" @click="onDownloadClick('word')" />
           </div>
-          <div
-            class="right-bottom-btn right-bottom-btn-primary"
-            @click="onBtnClick"
-          >
+          <div class="right-bottom-btn right-bottom-btn-primary" @click="onBtnClick">
             在线阅读
           </div>
         </div>
@@ -53,7 +50,7 @@ export default {
       });
     },
     onDownloadClick(type) {
-      window.open(this.data[type + '_file'], '_blank');
+      window.open(this.data[type + "_file"], "_blank");
     },
   },
 };

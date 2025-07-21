@@ -78,6 +78,26 @@ export default {
 </script>
 
 <style lang="less">
+@font-face {
+  font-family: "OPPPSans";
+  src: url("./assets/font/OPPOSans4.0-VF.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+html,
+body,
+#app,
+div,
+p,
+span,
+a,
+button,
+input,
+textarea {
+  font-family: "OPPOSans";
+}
+
 .w-1400 {
   width: 1200px;
   margin: 0 auto;

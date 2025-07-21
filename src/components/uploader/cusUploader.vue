@@ -75,7 +75,7 @@ input {
         height: 48px;
         background: #000000;
         font-size: 14px;
-        font-family: PingFang SC;
+        font-family: OPPPSans;
         font-weight: 400;
         line-height: 24px;
         color: #ffffff;

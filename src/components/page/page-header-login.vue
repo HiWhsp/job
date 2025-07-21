@@ -274,7 +274,7 @@ export default {
 
     background: #fff;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 400;
     color: #000000;
 
@@ -316,7 +316,7 @@ export default {
       span {
         margin-left: 10px;
         font-size: 30px;
-        font-family: Microsoft YaHei;
+        font-family: OPPPSans;
         font-weight: 400;
         line-height: 30px;
         color: #333333;
@@ -334,7 +334,7 @@ export default {
       .btn-box {
         margin-left: 6px;
         .mobile {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: OPPPSans;
           font-weight: 400;
           font-size: 15px;
           color: #ff7600;
@@ -347,7 +347,7 @@ export default {
           border-radius: 14px 14px 14px 14px;
           border: 1px solid #009f39;
 
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: OPPPSans;
           font-weight: 400;
           font-size: 14px;
           color: #009f39;

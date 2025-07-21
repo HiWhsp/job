@@ -204,7 +204,7 @@ export default {
     border-bottom: 1px solid #eee;
     background: #F7F7F7;
 
-    font-family: Poppins, Poppins;
+    font-family: OPPPSans;
     font-weight: 600;
     font-size: 18px;
     color: #333333;
@@ -250,7 +250,7 @@ export default {
         background: #FFFFFF;
         border-radius: 50px 50px 50px 50px;
         border: 1px solid #FFAA06;
-        font-family: Arial, Arial;
+        font-family: OPPPSans;
         font-weight: 400;
         font-size: 14px;
         color: #FFAA06;
@@ -261,7 +261,7 @@ export default {
         height: 32px;
         background: #FFAA06;
         border-radius: 50px 50px 50px 50px;
-        font-family: Arial, Arial;
+        font-family: OPPPSans;
         font-weight: 400;
         font-size: 14px;
         color: #FFFFFF;
@@ -281,7 +281,7 @@ export default {
     .section-title {
         padding-bottom: 16px;
         border-bottom: 1px solid #d5d8de;
-        font-family: Poppins, Poppins;
+        font-family: OPPPSans;
         // font-weight: bold;
         font-size: 16px;
         color: #333333;
@@ -337,7 +337,7 @@ export default {
                     padding-bottom: 15px;
                     border-bottom: 1px solid #d5d8de;
                     font-size: 14px;
-                    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+                    font-family: OPPPSans;
                     font-weight: 400;
                     color: #000000;
                 }
@@ -345,7 +345,7 @@ export default {
                 .address-bottom {
                     padding-top: 15px;
                     font-size: 14px;
-                    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+                    font-family: OPPPSans;
                     font-weight: 400;
                     color: #999999;
                 }
@@ -362,7 +362,7 @@ export default {
                 border-radius: 2px 2px 2px 2px;
                 border: 1px solid #b9b9b9;
                 font-size: 14px;
-                font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
+                font-family: OPPPSans;
                 font-weight: normal;
                 color: #666666;
             }

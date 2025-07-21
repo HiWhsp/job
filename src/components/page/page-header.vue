@@ -394,7 +394,7 @@ export default {
 
     background: #fff;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 400;
     color: #000000;
 
@@ -418,7 +418,7 @@ export default {
   .base-inner {
     .base-box {
       height: 40px;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: OPPPSans;
       font-weight: 400;
       font-size: 14px;
       color: #585858;
@@ -433,7 +433,7 @@ export default {
           margin-right: 40px;
         }
         a {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: OPPPSans;
           font-weight: 400;
           font-size: 14px;
           color: #ffffff;
@@ -513,7 +513,7 @@ export default {
       span {
         margin-left: 10px;
         font-size: 30px;
-        font-family: Microsoft YaHei;
+        font-family: OPPPSans;
         font-weight: 400;
         line-height: 30px;
         color: #333333;
@@ -545,7 +545,7 @@ export default {
           padding-right: 30px;
           // border: 2px solid #333;
           font-size: 14px;
-          font-family: Microsoft YaHei;
+          font-family: OPPPSans;
           color: #000;
         }
 
@@ -558,7 +558,7 @@ export default {
           outline: none;
           cursor: pointer;
 
-          font-family: PingFang SC, PingFang SC;
+          font-family: OPPPSans;
           font-weight: 500;
           font-size: 16px;
           color: #ffffff;
@@ -600,7 +600,7 @@ export default {
           .reci {
             margin-right: 24px;
             cursor: pointer;
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: OPPPSans;
             font-weight: 400;
             font-size: 14px;
             color: #c4c4c4;
@@ -637,7 +637,7 @@ export default {
         }
 
         .text {
-          font-family: MicrosoftYaHei, MicrosoftYaHei;
+          font-family: OPPPSans;
           font-weight: normal;
           font-size: 16px;
           color: #ffffff;
@@ -652,7 +652,7 @@ export default {
           background: #ffaa2a;
           border-radius: 9px 9px 9px 9px;
 
-          font-family: MicrosoftYaHei, MicrosoftYaHei;
+          font-family: OPPPSans;
 font-weight: normal;
 font-size: 12px;
 color: #FFFFFF;
@@ -730,7 +730,7 @@ color: #FFFFFF;
         display: inline-block;
         height: 50px;
         line-height: 50px;
-        font-family: Poppins, Poppins;
+        font-family: OPPPSans;
         font-weight: 600;
         font-size: 17px;
         color: #333333;
@@ -769,7 +769,7 @@ color: #FFFFFF;
         color: #222;
         width: 100%;
         font-size: 16px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: OPPPSans;
         font-weight: 400;
         color: #333;
       }
@@ -991,7 +991,7 @@ color: #FFFFFF;
 
   .phone {
     margin: 0 16px;
-    font-family: Arial, Arial;
+    font-family: OPPPSans;
     font-weight: 400;
     font-size: 16px;
     color: #999999;
@@ -1002,7 +1002,7 @@ color: #FFFFFF;
   }
 
   .logout {
-    font-family: Arial, Arial;
+    font-family: OPPPSans;
     font-weight: 400;
     font-size: 16px;
     color: #999999;

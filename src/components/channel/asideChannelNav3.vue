@@ -1,11 +1,23 @@
 <template>
   <div class="aside-nav-wrap" :class="$route.name == 'index' ? '' : 'not-index'">
-    <div class="aside-nav-inner" @mouseover="showPannel = true" @mouseout="showPannel = false">
+    <div
+      class="aside-nav-inner"
+      @mouseover="showPannel = true"
+      @mouseout="showPannel = false"
+    >
       <!-- -->
 
       <div class="list-wrap">
         <div class="list">
-          <div class="item" v-for="(level_1, index_1) in list_channel" :key="index_1" @mouseenter="onEnterSubNav(level_1, index_1)" @mouseleave="onLeaveNav()" @click.stop="click_level_1(index_1, level_1)" :class="level_1_index == index_1 ? 'active1' : ''">
+          <div
+            class="item"
+            v-for="(level_1, index_1) in list_channel"
+            :key="index_1"
+            @mouseenter="onEnterSubNav(level_1, index_1)"
+            @mouseleave="onLeaveNav()"
+            @click.stop="click_level_1(index_1, level_1)"
+            :class="level_1_index == index_1 ? 'active1' : ''"
+          >
             <div class="item-title">
               <div class="text">
                 {{ level_1.title }}
@@ -21,11 +33,28 @@
       <div v-show="showPannel" class="list-pannel" :class="'module-' + vuex_config.moban">
         <div class="list-inner">
           <div class="one" v-for="(level_2, index) in level_1.channels" :key="index">
-            <div class="level-2-title" @click="$router.push(`/classify?level_1_index=${level_1_index}&level_1=${level_1.id}&level_2=${level_2.id}`)">
+            <div
+              class="level-2-title"
+              @click="
+                $router.push(
+                  `/classify?level_1_index=${level_1_index}&level_1=${level_1.id}&level_2=${level_2.id}`
+                )
+              "
+            >
               {{ level_2.title }}
             </div>
             <div class="level-3-list" :class="{ no_sub: level_2.channels.length == 0 }">
-              <span class="level-3-title" v-for="(level_3, index) in level_2.channels" :key="index" @click="$router.push(`/classify?level_1_index=${level_1_index}&level_1=${level_1.id}&level_2=${level_2.id}&level_3=${level_3.id}`)">{{ level_3.title }} </span>
+              <span
+                class="level-3-title"
+                v-for="(level_3, index) in level_2.channels"
+                :key="index"
+                @click="
+                  $router.push(
+                    `/classify?level_1_index=${level_1_index}&level_1=${level_1.id}&level_2=${level_2.id}&level_3=${level_3.id}`
+                  )
+                "
+                >{{ level_3.title }}
+              </span>
             </div>
           </div>
         </div>
@@ -79,7 +108,9 @@ export default {
     click_level_3(level_3, level_2, level_1) {
       let level_1_index = this.level_1_index;
 
-      this.$router.push(`/classify?level_1_index=${level_1_index}&level_1=${level_1.id}&level_2=${level_2.id}&level_3=${level_3.id}`);
+      this.$router.push(
+        `/classify?level_1_index=${level_1_index}&level_1=${level_1.id}&level_2=${level_2.id}&level_3=${level_3.id}`
+      );
     },
 
     //科室导航移动
@@ -125,9 +156,9 @@ export default {
         border: none;
       }
       .item {
-          display: flex;
-          justify-content: center;
-          align-items: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         flex-direction: column;
         align-items: flex-start;
         cursor: pointer;
@@ -148,9 +179,9 @@ export default {
         }
         .item-title {
           width: 100%;
-            display: flex;
-  align-items: center;
-  justify-content: space-between;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
           font-size: 16px;
           // color: #fff;
           // font-weight: bold;
@@ -159,9 +190,9 @@ export default {
           }
 
           .text {
-              white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
             line-height: 1;
             flex: 2;
           }
@@ -179,11 +210,11 @@ export default {
 
         .level2-list {
           width: 100%;
-            display: flex;
-  align-items: center;
-            white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+          display: flex;
+          align-items: center;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
           height: 16px;
           margin-top: 10px;
           font-size: 12px;
@@ -240,7 +271,7 @@ export default {
             margin: 0 0.18rem;
             font-size: 14px;
             line-height: 18px;
-            font-family: MicrosoftYaHei;
+            font-family: OPPPSans;
             color: #333333;
             display: flex;
             align-items: center;
@@ -264,7 +295,7 @@ export default {
             }
             a {
               font-size: 16px;
-              font-family: MicrosoftYaHei;
+              font-family: OPPPSans;
               line-height: 0.18rem;
               color: #9b9b9b;
               display: block;
@@ -273,7 +304,7 @@ export default {
             .level-3-title {
               cursor: pointer;
               font-size: 14px;
-              font-family: MicrosoftYaHei;
+              font-family: OPPPSans;
               color: #9b9b9b;
               display: block;
               margin: 0 0.05rem;
@@ -292,7 +323,7 @@ export default {
         margin-left: 30px;
         margin-bottom: 10px;
         font-size: 14px;
-        font-family: MicrosoftYaHei;
+        font-family: OPPPSans;
         line-height: 40px;
         height: 40px;
         color: #5e5e5e;

@@ -229,7 +229,7 @@ export default {
         .left-label {
 
           a {
-            font-family: Poppins, Poppins;
+            font-family: OPPPSans;
             font-weight: bold;
             font-size: 22px;
             color: #333333;
@@ -238,7 +238,7 @@ export default {
 
         .left-text {
           margin-top: 24px;
-          font-family: OPPOSans, OPPOSans;
+          font-family: OPPPSans;
           font-weight: normal;
           font-size: 14px;
           color: #888888;
@@ -263,7 +263,7 @@ export default {
       .group-title {
         margin-bottom: 24px;
         cursor: pointer;
-        font-family: Poppins, Poppins;
+        font-family: OPPPSans;
         font-weight: bold;
         font-size: 22px;
         color: #333333;
@@ -271,7 +271,7 @@ export default {
 
         a {
           cursor: pointer;
-          font-family: Poppins, Poppins;
+          font-family: OPPPSans;
           font-weight: bold;
           font-size: 22px;
           color: #333333;
@@ -292,14 +292,14 @@ export default {
 
 
           span {
-            font-family: OPPOSans, OPPOSans;
+            font-family: OPPPSans;
             font-weight: bold;
             font-size: 16px;
             color: #888888;
             font-weight: normal;
 
             a {
-              font-family: OPPOSans, OPPOSans;
+              font-family: OPPPSans;
               font-weight: bold;
               font-size: 16px;
               color: #888888;
@@ -310,7 +310,7 @@ export default {
           .desc-box {
             .desc-item {
               margin-bottom: 10px;
-              font-family: OPPOSans, OPPOSans;
+              font-family: OPPPSans;
               font-weight: bold;
               font-size: 16px;
               color: #888888;
@@ -338,7 +338,7 @@ export default {
       height: 40px;
       background: #4CA5E4;
 
-      font-family: OPPOSans, OPPOSans;
+      font-family: OPPPSans;
       font-weight: bold;
       font-size: 14px;
       color: #FFFFFF;
@@ -357,7 +357,7 @@ export default {
 .info-box {
   margin-top: 10px;
   font-size: 14px;
-  font-family: Microsoft YaHei;
+  font-family: OPPPSans;
   font-weight: 400;
   line-height: 14px;
   color: #dae8e2;
@@ -377,7 +377,7 @@ export default {
 
     a {
       font-size: 16px;
-      font-family: Microsoft YaHei;
+      font-family: OPPPSans;
       font-weight: 400;
       line-height: 48px;
       color: #ffffff;
@@ -405,7 +405,7 @@ export default {
     .text {
       margin-top: 15px;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: OPPPSans;
       font-weight: 400;
       line-height: 16px;
       color: #dae8e2;
@@ -423,7 +423,7 @@ export default {
     text-align: center;
     text-align: left;
 
-    font-family: OPPOSans, OPPOSans;
+    font-family: OPPPSans;
     font-weight: bold;
     font-size: 14px;
     color: rgba(153, 153, 153, 0.6);
@@ -444,13 +444,13 @@ export default {
     text-align: center;
     text-align: center;
 
-    font-family: OPPOSans, OPPOSans;
+    font-family: OPPPSans;
     font-weight: bold;
     font-size: 14px;
     color: rgba(153, 153, 153, 0.6);
 
     a {
-      font-family: OPPOSans, OPPOSans;
+      font-family: OPPPSans;
       font-weight: bold;
       font-size: 14px;
       color: rgba(153, 153, 153, 0.6);
@@ -460,14 +460,14 @@ export default {
     p,
     span,
     div {
-      font-family: OPPOSans, OPPOSans;
+      font-family: OPPPSans;
       font-weight: bold;
       font-size: 14px;
       color: rgba(153, 153, 153, 0.6);
     }
 
     .beian {
-      font-family: OPPOSans, OPPOSans;
+      font-family: OPPPSans;
       font-weight: bold;
       font-size: 14px;
       color: rgba(153, 153, 153, 0.6);

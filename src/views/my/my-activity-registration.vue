@@ -128,7 +128,7 @@ export default {
     line-height: 56px;
     background: #ffffff;
     font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: bold;
     color: #000;
   }
@@ -165,7 +165,7 @@ export default {
       margin-left: 20px;
     }
     .activeTitle {
-      font-family: Microsoft YaHei;
+      font-family: OPPPSans;
       font-size: 18px;
       color: #111111;
       word-break: break-all;
@@ -180,7 +180,7 @@ export default {
       display: flex;
       flex-direction: row;
       align-items: center;
-      font-family: Microsoft YaHei;
+      font-family: OPPPSans;
       font-size: 13px;
       color: #666666;
     }
@@ -188,7 +188,7 @@ export default {
       display: flex;
       flex-direction: row;
       align-items: center;
-      font-family: Microsoft YaHei;
+      font-family: OPPPSans;
       font-size: 13px;
       color: #666666;
 
@@ -210,7 +210,7 @@ export default {
       flex-direction: row;
       align-items: center;
       justify-content: end;
-      font-family: Microsoft YaHei;
+      font-family: OPPPSans;
       font-size: 14px;
       color: #666666;
       gap: 30px;

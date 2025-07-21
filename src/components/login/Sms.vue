@@ -98,7 +98,7 @@ export default {
     border-right: 1px solid #ccc;
 
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 400;
     line-height: 24px;
     color: #999999;

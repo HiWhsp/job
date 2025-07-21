@@ -146,12 +146,12 @@ export default {
       text-align: left;
       .text-1 {
         font-size: 14px;
-        font-family: MicrosoftYaHei;
+        font-family: OPPPSans;
         color: #747474;
       }
       .text-2 {
         font-size: 24px;
-        font-family: MicrosoftYaHei;
+        font-family: OPPPSans;
         color: #f00;
       }
     }
@@ -192,7 +192,7 @@ export default {
       border: 1px solid #f00;
 
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: OPPPSans;
       color: #000;
     }
     .btn-search {

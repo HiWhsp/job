@@ -116,7 +116,7 @@ export default {
         .title {
           margin-bottom: 10px;
           font-size: 18px;
-          font-family: PingFang SC, PingFang SC;
+          font-family: OPPPSans;
           // font-weight: bold;
           color: #ffffff;
           color: #222;
@@ -124,7 +124,7 @@ export default {
 
         .desc {
           font-size: 14px;
-          font-family: PingFang SC, PingFang SC;
+          font-family: OPPPSans;
           font-weight: 500;
           color: #d0d0d0;
           color: #878787;
@@ -161,7 +161,7 @@ export default {
         text-align: left;
         margin-bottom: 15px;
         font-size: 16px;
-        font-family: PingFang SC, PingFang SC;
+        font-family: OPPPSans;
         font-weight: bold;
         color: #000000;
       }
@@ -169,14 +169,14 @@ export default {
       .link-item {
         text-align: left;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: OPPPSans;
         font-weight: 400;
         color: #ffffff;
         line-height: 32px;
 
         a {
           font-weight: normal;
-          font-family: MicrosoftYaHei, MicrosoftYaHei;
+          font-family: OPPPSans;
           font-weight: normal;
           font-size: 14px;
           color: #666666;
@@ -210,27 +210,27 @@ export default {
       .text-box {
         padding-left: 12px;
         .mobile-text {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: OPPPSans;
           font-weight: 400;
           font-size: 16px;
           color: #333333;
         }
         .mobile {
           margin: 10px 0 25px 0;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: OPPPSans;
           font-weight: 400;
           font-size: 26px;
           color: #ff7600;
         }
         .time-text {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: OPPPSans;
           font-weight: 400;
           font-size: 16px;
           color: #333333;
         }
         .time {
           margin-top: 10px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: OPPPSans;
           font-weight: 400;
           font-size: 14px;
           color: #707070;
@@ -265,14 +265,14 @@ export default {
 
   a {
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 400;
     color: #fff;
   }
 
   /deep/ a {
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 400;
     color: #fff;
   }

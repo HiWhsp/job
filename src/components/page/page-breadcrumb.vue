@@ -81,7 +81,7 @@ export default {
       display: inline-flex;
       align-items: center;
 
-      font-family: OPPOSans, OPPOSans;
+      font-family: OPPPSans;
       // font-weight: bold;
       font-size: 15px;
       color: #999999;
@@ -92,14 +92,14 @@ export default {
     }
 
     .link {
-      font-family: OPPOSans, OPPOSans;
+      font-family: OPPPSans;
       // font-weight: bold;
       font-size: 15px;
       color: #999999;
     }
 
     .route-link {
-      font-family: OPPOSans, OPPOSans;
+      font-family: OPPPSans;
       // font-weight: bold;
       font-size: 15px;
       color: #999999;
@@ -111,7 +111,7 @@ export default {
     }
 
     >*:last-child {
-      font-family: OPPOSans, OPPOSans;
+      font-family: OPPPSans;
       // font-weight: bold;
       font-size: 15px;
       color: #000000;

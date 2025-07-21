@@ -154,7 +154,7 @@ export default {
 
         .all-title {
           margin-left: 18px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: OPPPSans;
           font-weight: bold;
           font-size: 18px;
           color: #ffffff;
@@ -210,7 +210,7 @@ export default {
             padding: 0;
             height: 47px;
 
-            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-family: OPPPSans;
             font-size: 16px;
             color: #ffffff;
           }

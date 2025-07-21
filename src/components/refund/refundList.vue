@@ -62,7 +62,7 @@ export default {
 
     .date {
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: OPPPSans;
       font-weight: 400;
       line-height: 20px;
       color: #7d7d7d;
@@ -73,7 +73,7 @@ export default {
       padding-left: 20px;
 
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: OPPPSans;
       font-weight: 400;
       line-height: 20px;
       color: #7d7d7d;
@@ -85,7 +85,7 @@ export default {
       padding: 3px 6px;
       border: 1px solid #ccc;
       font-size: 14px;
-      font-family: Microsoft YaHei;
+      font-family: OPPPSans;
       font-weight: 400;
       line-height: 20px;
       color: #999999;
@@ -119,7 +119,7 @@ export default {
           text-align: left;
           padding-left: 20px;
           font-size: 14px;
-          font-family: Microsoft YaHei;
+          font-family: OPPPSans;
           font-weight: 400;
           line-height: 20px;
           color: #333333;
@@ -129,7 +129,7 @@ export default {
         .num {
           width: 100px;
           font-size: 16px;
-          font-family: Microsoft YaHei;
+          font-family: OPPPSans;
           font-weight: 400;
           line-height: 20px;
           color: #999999;
@@ -137,7 +137,7 @@ export default {
         .price {
           min-width: 100px;
           font-size: 16px;
-          font-family: Microsoft YaHei;
+          font-family: OPPPSans;
           font-weight: 400;
           line-height: 20px;
           color: #333333;
@@ -153,7 +153,7 @@ export default {
   justify-content: space-between;
     justify-content: flex-end;
     font-size: 14px;
-    font-family: Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 400;
     line-height: 20px;
     color: #7d7d7d;

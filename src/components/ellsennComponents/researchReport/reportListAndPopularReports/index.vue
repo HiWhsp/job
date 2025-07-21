@@ -6,7 +6,7 @@
       </card>
     </div>
     <div class="layout-right">
-      <popularReports :list="popularReportsList"></popularReports>
+      <popularReports :url="'/reportDetails'" :list="popularReportsList"></popularReports>
     </div>
   </div>
 </template>

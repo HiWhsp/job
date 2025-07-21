@@ -393,7 +393,7 @@ export default {
 
     background: #fff;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 400;
     color: #000000;
 

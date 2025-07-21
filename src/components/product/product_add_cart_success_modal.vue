@@ -67,7 +67,7 @@ export default {
   border-bottom: 1px solid #eee;
   background: #f7f7f7;
 
-  font-family: Poppins, Poppins;
+  font-family: OPPPSans;
   font-weight: 600;
   font-size: 18px;
   color: #333333;
@@ -101,7 +101,7 @@ export default {
 
     .text-box-1 {
       margin-top: 18px;
-      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: OPPPSans;
       font-weight: bold;
       font-size: 20px;
       color: #f74747;
@@ -109,7 +109,7 @@ export default {
 
     .text-box-2 {
       margin-top: 18px;
-      font-family: Arial, Arial;
+      font-family: OPPPSans;
       font-weight: 400;
       font-size: 14px;
       color: #999999;
@@ -130,7 +130,7 @@ export default {
     background: linear-gradient(180deg, #fffefe 0%, #e8e8e8 100%);
     border-radius: 0px 0px 0px 0px;
     border: 1px solid #e5e5e5;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 400;
     font-size: 14px;
     color: #333333;
@@ -141,7 +141,7 @@ export default {
     height: 40px;
     background: #009f39;
     border-radius: 0px 0px 0px 0px;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 400;
     font-size: 14px;
     color: #ffffff;

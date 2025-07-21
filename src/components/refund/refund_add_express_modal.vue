@@ -116,7 +116,7 @@ export default {
           border: 1px solid #eee;
           height: 40px;
           padding-left: 20px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: OPPPSans;
           font-weight: 400;
           font-size: 14px;
           color: #676767;
@@ -151,7 +151,7 @@ export default {
     height: 40px;
     border-radius: 4px 4px 4px 4px;
     border: 1px solid #009F39;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 400;
     font-size: 14px;
     color: #009F39;
@@ -162,7 +162,7 @@ export default {
     height: 40px;
     background: #009F39;
     border-radius: 4px 4px 4px 4px;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 400;
     font-size: 14px;
     color: #FFFFFF;

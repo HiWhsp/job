@@ -48,13 +48,13 @@
                 <div class="share">
                   分享：
                   <div class="shareIcon">
-                    <div class="shareIconItem">
+                    <div class="shareIconItem" @click="handleShare('link')">
                       <img src="@/assets/img/ellsenn/share/link.png" alt="" />
                     </div>
-                    <div class="shareIconItem">
+                    <div class="shareIconItem" @click="handleShare('wechat')">
                       <img src="@/assets/img/ellsenn/share/wechat.png" alt="" />
                     </div>
-                    <div class="shareIconItem">
+                    <div class="shareIconItem" @click="handleShare('weibo')">
                       <img src="@/assets/img/ellsenn/share/weibo.png" alt="" />
                     </div>
                   </div>
@@ -207,6 +207,25 @@ export default {
         path: "/newsInsightsDetail",
         query: { id: this.data.previous.id },
       });
+    },
+    handleShare(type) {
+      if (type == "link") {
+        // 复制链接
+        navigator.clipboard.writeText(window.location.href);
+        this.$message.success("复制成功");
+      } else if (type == "wechat") {
+        // 微信分享
+        navigator.clipboard.writeText(window.location.href);
+        this.$message.success("复制成功");
+      } else if (type == "weibo") {
+        // 微博分享
+        const url = encodeURIComponent(window.location.href);
+        const title = encodeURIComponent(this.data.data ? this.data.data.title : "");
+        window.open(
+          `https://service.weibo.com/share/share.php?url=${url}&title=${title}`,
+          "_blank"
+        );
+      }
     },
   },
 };

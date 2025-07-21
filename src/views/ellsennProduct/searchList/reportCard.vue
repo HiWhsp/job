@@ -143,19 +143,19 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   .item-title {
-    font-family: PingFang SC;
+    font-family: OPPPSans;
     font-size: 20px;
     font-weight: 500;
     color: #000000;
   }
   .item-description {
-    font-family: Microsoft YaHei;
+    font-family: OPPPSans;
     font-size: 16px;
     color: #696d80;
     margin-top: 37px;
   }
   .item-meta {
-    font-family: Microsoft YaHei;
+    font-family: OPPPSans;
     font-size: 14px;
     line-height: 24px;
     color: #afbac4;
@@ -166,7 +166,7 @@ export default {
 }
 
 .activeTitle {
-  font-family: Microsoft YaHei;
+  font-family: OPPPSans;
   font-size: 18px;
   color: #111111;
   word-break: break-all;
@@ -181,7 +181,7 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
-  font-family: Microsoft YaHei;
+  font-family: OPPPSans;
   font-size: 13px;
   color: #666666;
 }
@@ -189,7 +189,7 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
-  font-family: Microsoft YaHei;
+  font-family: OPPPSans;
   font-size: 13px;
   color: #666666;
 

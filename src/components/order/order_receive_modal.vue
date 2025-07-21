@@ -93,7 +93,7 @@ export default {
   border-bottom: 1px solid #eee;
   background: #F7F7F7;
 
-  font-family: Poppins, Poppins;
+  font-family: OPPPSans;
   // font-weight: 600;
   font-size: 18px;
   color: #333333;
@@ -118,7 +118,7 @@ export default {
     border-radius: 50px 50px 50px 50px;
     border: 1px solid #009F39;
 
-    font-family: Arial, Arial;
+    font-family: OPPPSans;
     font-weight: 400;
     font-size: 14px;
     color: #009F39;
@@ -162,7 +162,7 @@ export default {
       flex: 2;
       text-align: center;
       font-size: 16px;
-      font-family: Microsoft YaHei;
+      font-family: OPPPSans;
       // font-weight: bold;
       line-height: 20px;
       color: #333333;

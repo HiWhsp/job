@@ -145,8 +145,7 @@ export default {
         height: 22px;
       }
       .title {
-
-        font-family: MicrosoftYaHei, MicrosoftYaHei;
+        font-family: OPPPSans;
         font-weight: normal;
         font-size: 14px;
         color: #3d4248;
@@ -157,10 +156,10 @@ export default {
         margin-top: 15px;
 
         .sale {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: OPPPSans;
           font-weight: bold;
           font-size: 14px;
-          color: #F74747;
+          color: #f74747;
           .value {
             font-size: 18px;
           }
@@ -173,7 +172,7 @@ export default {
 
           span {
             text-decoration: line-through;
-            font-family: OPPOSans, OPPOSans;
+            font-family: OPPPSans;
             font-weight: 400;
             font-size: 12px;
             color: #bfbfbf;
@@ -198,7 +197,7 @@ export default {
           padding: 4px 0;
           width: 50%;
           text-align: center;
-          font-family: Arial, Arial;
+          font-family: OPPPSans;
           font-weight: 400;
           font-size: 12px;
           color: #444444;
@@ -231,7 +230,7 @@ export default {
           height: 27px;
           border-radius: 0px 0px 0px 0px;
           border: 1px solid #009f39;
-          font-family: OPPOSans, OPPOSans;
+          font-family: OPPPSans;
           font-weight: bold;
           font-size: 12px;
           color: #009f39;
@@ -323,7 +322,7 @@ export default {
         .ellipsis-2();
 
         font-size: 12px;
-        font-family: PingFang SC;
+        font-family: OPPPSans;
         font-weight: 400;
         color: #222222;
         white-space: normal;
@@ -332,7 +331,7 @@ export default {
       .baozhiqi {
         margin-top: 10px;
         font-size: 14px;
-        font-family: PingFang SC;
+        font-family: OPPPSans;
         font-weight: 400;
         color: #ea5959;
       }
@@ -342,7 +341,7 @@ export default {
 
         .sale {
           span {
-            font-family: OPPOSans, OPPOSans;
+            font-family: OPPPSans;
             font-weight: bold;
             font-size: 12px;
             color: #ff0000;
@@ -354,7 +353,7 @@ export default {
           margin-left: 17px;
 
           span {
-            font-family: OPPOSans, OPPOSans;
+            font-family: OPPPSans;
             font-weight: 400;
             font-size: 12px;
             color: #bfbfbf;

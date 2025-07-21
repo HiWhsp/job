@@ -136,7 +136,7 @@ export default {
     border-radius: 3px;
 
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 300;
     color: #414040;
     border-color: #aaa;
@@ -147,7 +147,7 @@ export default {
     border-radius: 3px;
 
     font-size: 16px;
-    font-family: Microsoft YaHei;
+    font-family: OPPPSans;
     font-weight: 300;
     color: #ffffff;
   }

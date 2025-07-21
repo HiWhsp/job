@@ -128,7 +128,7 @@ export default {
       text-align: left;
 
       .main-title {
-        font-family: SourceHanSansSC-Bold, SourceHanSansSC-Bold;
+        font-family: OPPPSans;
         font-weight: normal;
         font-size: 46px;
         color: #FFFFFF;
@@ -137,7 +137,7 @@ export default {
       .main-title-en {
 
         margin-top: 10px;
-        font-family: SourceHanSansSC-Bold, SourceHanSansSC-Bold;
+        font-family: OPPPSans;
         font-weight: normal;
         font-size: 56px;
         color: #FFFFFF;
@@ -162,7 +162,7 @@ export default {
         .bread-divider {
           margin: 0 6px;
           font-size: 18px;
-          font-family: MicrosoftYaHei-, MicrosoftYaHei;
+          font-family: OPPPSans;
           font-weight: normal;
           color: #ffffff;
         }
@@ -198,7 +198,7 @@ export default {
         line-height: 71px;
         // flex: 1;
         font-size: 14px;
-        font-family: MicrosoftYaHei-, MicrosoftYaHei;
+        font-family: OPPPSans;
         font-weight: normal;
         color: #333333;
         text-align: center;
@@ -210,7 +210,7 @@ export default {
         // &.router-link-active,
         &.active {
           font-size: 14px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-family: OPPPSans;
           font-weight: bold;
           color: #009F39;
 

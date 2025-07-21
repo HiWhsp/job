@@ -115,14 +115,14 @@ export default {
 
       min-height: 40px;
       font-size: 14px;
-      font-family: PingFang SC;
+      font-family: OPPPSans;
       font-weight: 400;
       color: #222222;
     }
     .baozhiqi {
       margin-top: 10px;
       font-size: 14px;
-      font-family: PingFang SC;
+      font-family: OPPPSans;
       font-weight: 400;
       color: #ea5959;
     }
@@ -133,7 +133,7 @@ export default {
       .sale {
         color: #009F39;
         font-size: 20px;
-        font-family: PingFang SC;
+        font-family: OPPPSans;
         font-weight: bold;
         line-height: 24px;
 
@@ -145,7 +145,7 @@ export default {
         margin-left: 10px;
         text-decoration: line-through;
         font-size: 12px;
-        font-family: PingFang SC;
+        font-family: OPPPSans;
         font-weight: 400;
         line-height: 24px;
         color: #a4a4a4;
@@ -218,7 +218,7 @@ export default {
   -webkit-line-clamp: 2;
 
         font-size: 12px;
-        font-family: PingFang SC;
+        font-family: OPPPSans;
         font-weight: 400;
         color: #222222;
         white-space: normal;
@@ -226,7 +226,7 @@ export default {
       .baozhiqi {
         margin-top: 10px;
         font-size: 14px;
-        font-family: PingFang SC;
+        font-family: OPPPSans;
         font-weight: 400;
         color: #ea5959;
       }
@@ -237,7 +237,7 @@ export default {
         .sale {
           color: #009F39;
           font-size: 14px;
-          font-family: PingFang SC;
+          font-family: OPPPSans;
           font-weight: bold;
           line-height: 1.5;
 
@@ -249,7 +249,7 @@ export default {
           margin-left: 10px;
           text-decoration: line-through;
           font-size: 12px;
-          font-family: PingFang SC;
+          font-family: OPPPSans;
           font-weight: 400;
           line-height: 24px;
           color: #a4a4a4;
