@@ -71,7 +71,7 @@ export default {
 
 <style lang="less">
 .w-1400 {
-  width: 1200px;
+  width: 1400px;
   margin: 0 auto;
 }
 .btn {

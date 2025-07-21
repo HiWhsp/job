@@ -90,7 +90,7 @@ export default {
 }
 
 .protocol-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   background: #fff;
   border-radius: 8px;

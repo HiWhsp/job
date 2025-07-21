@@ -42,6 +42,15 @@
               <div class="content-item-title">公司名称：</div>
               <el-input v-model="form.company_name" placeholder="请输入内容" />
             </div>
+            <div class="content-item">
+              <div class="content-item-title">介绍说明：</div>
+              <el-input
+                v-model="form.content"
+                placeholder="请输入内容"
+                type="textarea"
+                :rows="3"
+              />
+            </div>
           </div>
           <div class="submit-btn">
             <el-button type="primary" @click="submitForm">预约咨询</el-button>

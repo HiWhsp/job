@@ -183,7 +183,7 @@ export default {
   }
 
   // 响应式布局
-  @media (max-width: 1200px) {
+  @media (max-width: 1400px) {
     grid-template-columns: repeat(3, 1fr);
   }
 

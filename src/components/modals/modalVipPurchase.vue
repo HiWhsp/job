@@ -293,7 +293,7 @@ export default {
 .vip-modal {
   background: white;
   border-radius: 12px;
-  width: 1200px;
+  width: 1400px;
   max-height: 640px;
   overflow: hidden;
   position: relative;

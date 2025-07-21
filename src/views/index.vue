@@ -167,13 +167,10 @@
             "
           >
             <div class="ad-logo-placeholder">
-              <img :src="item.logo_full" alt="" />
+              <img :src="item.adLogo_full" alt="" />
             </div>
             <div class="ad-content">
               <h3 class="ellipsis">{{ item.companyName }}</h3>
-              <p class="ellipsis-3">
-                {{ item.describption }}
-              </p>
             </div>
           </div>
         </div>
@@ -204,7 +201,7 @@
             "
           >
             <div class="ad-logo-placeholder">
-              <img :src="item.logo_full" alt="" />
+              <img :src="item.adLogo_full" alt="" />
             </div>
             <div class="ad-content">
               <h3 class="ellipsis">{{ item.companyName }}</h3>
@@ -235,12 +232,12 @@
                         v-for="item in vuex_config.wangdian_list"
                         :key="item.name"
                       >
-                        <img class="flag" :src="item.photo" />
+                        <!-- <img class="flag" :src="item.photo" /> -->
                         <div class="location-item-content">
                           <p class="location-item-title ellipsis-1">
                             {{ item.name }}
                           </p>
-                          <p class="location-item-address ellipsis-1">
+                          <p class="location-item-address ellipsis-3">
                             {{ item.address }}
                           </p>
                         </div>
@@ -384,7 +381,7 @@ export default {
         method: "get",
         data: {
           page: 1,
-          pageSize: 6,
+          pageSize: 7,
           companyType: 1, // 1:系统厂商 2:配套厂商
         },
       }).then((res) => {
@@ -397,7 +394,7 @@ export default {
         method: "get",
         data: {
           page: 1,
-          pageSize: 12,
+          pageSize: 14,
           companyType: 2, // 1:系统厂商 2:配套厂商
         },
       }).then((res) => {

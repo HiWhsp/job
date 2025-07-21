@@ -8,7 +8,7 @@
 
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 20px 0;
 }
@@ -41,7 +41,7 @@
       cursor: pointer;
       transition: all 0.3s;
       padding: 0 20px;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 500;
       display: flex;
       align-items: center;
@@ -136,7 +136,7 @@
 
       .greeting {
         color: #3d3d3d;
-        font-size: 16px;
+        font-size: 18px;
       }
 
       .login-box {
@@ -154,7 +154,7 @@
           text-align: center;
           border-radius: 78px;
           cursor: pointer;
-          font-size: 14px;
+          font-size: 16px;
           font-weight: 500;
           transition: all 0.3s;
         }
@@ -201,7 +201,7 @@
         .item1-left {
           p {
             font-family: Microsoft YaHei;
-            font-size: 16px;
+            font-size: 18px;
             color: #3d3d3d;
             margin-bottom: 10px;
           }
@@ -337,7 +337,7 @@
         .notice-item {
           height: 38px;
           color: #666;
-          font-size: 14px;
+          font-size: 16px;
           cursor: pointer;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -446,7 +446,7 @@
 
   .ads-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     gap: 12px;
 
     .ad-card {
@@ -459,6 +459,10 @@
       box-shadow: 0px 12px 19px 0px rgba(0, 0, 0, 0.06);
       transition: all 0.3s;
       border: 1px solid #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
 
       &:hover {
         transform: translateY(-5px);
@@ -467,7 +471,7 @@
 
       .ad-logo-placeholder {
         width: 100%;
-        height: 32px;
+        height: 68px;
         margin-bottom: 15px;
         position: relative;
         display: flex;
@@ -487,21 +491,12 @@
           font-size: 14px;
           font-weight: bold;
           color: #000;
-          padding-bottom: 10px;
           margin-bottom: 10px;
           text-align: center;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          &::after {
-            content: "";
-            display: inline-block;
-            width: 20px;
-            height: 1px;
-            background: #33ae60;
-            margin-top: 10px;
-          }
         }
 
         p {
@@ -524,7 +519,7 @@
 
   .ads-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     gap: 12px;
 
     .ad-card {
@@ -537,6 +532,10 @@
       box-shadow: 0px 12px 19px 0px rgba(0, 0, 0, 0.06);
       transition: all 0.3s;
       border: 1px solid #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
 
       &:hover {
         transform: translateY(-5px);
@@ -545,7 +544,7 @@
 
       .ad-logo-placeholder {
         width: 100%;
-        height: 32px;
+        height: 68px;
         background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
         margin-bottom: 15px;
         position: relative;
@@ -566,21 +565,11 @@
           font-size: 14px;
           font-weight: bold;
           color: #000;
-          padding-bottom: 10px;
-          margin-bottom: 10px;
           text-align: center;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          &::after {
-            content: "";
-            display: inline-block;
-            width: 20px;
-            height: 1px;
-            background: #33ae60;
-            margin-top: 10px;
-          }
         }
 
         p {
@@ -628,7 +617,7 @@
       padding: 28px 47px 47px 37px;
       .service-points {
         flex: 1;
-        max-width: 300px;
+        max-width: 350px;
 
         .service-category {
           h3 {
@@ -642,7 +631,7 @@
           }
 
           .service-locations {
-            width: 249px;
+            width: 300px;
             height: 345px;
             border-radius: 14px;
             background: linear-gradient(
@@ -690,10 +679,9 @@
                 }
 
                 .location-item-content {
-                  width: 145px;
+                  width: 100%;
                   display: flex;
                   flex-direction: column;
-                  margin-left: 8px;
                   .location-item-title {
                     font-family: Microsoft YaHei;
                     font-size: 14px;
@@ -710,7 +698,6 @@
                     line-height: normal;
                     letter-spacing: normal;
                     color: #8c9194;
-                    height: 20px;
                   }
                 }
               }
@@ -723,8 +710,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 524px;
-        height: 282px;
+        width: 624px;
+        height: 382px;
 
         .map-container {
           width: 100%;
@@ -854,7 +841,7 @@
 
   .brands-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     gap: 12px;
 
     .brand-item {
@@ -953,7 +940,7 @@
 
   .partner-brands-section {
     .brands-grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
     }
   }
 }

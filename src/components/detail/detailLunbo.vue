@@ -91,7 +91,7 @@
     <el-dialog
       custom-class="cd-img"
       :visible.sync="centerDialogVisible"
-      width="1200px"
+      width="1400px"
       @close="close"
       center
     >

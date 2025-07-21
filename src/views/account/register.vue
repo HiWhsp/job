@@ -204,7 +204,7 @@ export default {
     align-items: center;
     justify-content: center;
     .top-box-left {
-      width: 1200px;
+      width: 1400px;
       margin: 0 auto;
       img {
         width: 99px;
@@ -213,7 +213,7 @@ export default {
     }
   }
   .content-box {
-    width: 1200px;
+    width: 1400px;
     margin: 0 auto;
     height: 100%;
     display: flex;

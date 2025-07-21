@@ -39,6 +39,10 @@
         <el-form-item label="职务：" prop="position" v-if="form.userType == 2">
           <el-input v-model="form.position" placeholder="请输入职务"></el-input>
         </el-form-item>
+        <!-- 地址 -->
+        <el-form-item label="地址：" prop="address">
+          <el-input v-model="form.address" placeholder="请输入地址"></el-input>
+        </el-form-item>
 
         <!-- 我需求的类型 -->
         <div class="form-item-title">我属于的类型</div>
@@ -117,6 +121,7 @@ export default {
         realname: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         company_name: [{ required: true, message: "请输入公司名称", trigger: "blur" }],
         position: [{ required: true, message: "请输入职务", trigger: "blur" }],
+        address: [{ required: true, message: "请输入地址", trigger: "blur" }],
       },
     };
   },

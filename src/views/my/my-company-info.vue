@@ -20,7 +20,7 @@
       >
         <el-row>
           <el-col :span="24">
-            <el-form-item label="logo">
+            <el-form-item label="企业logo">
               <el-upload
                 class="certificate-uploader"
                 accept="image/*"
@@ -34,6 +34,29 @@
                 <img
                   v-if="my_info.logo"
                   :src="vuex_config.file_url_pre + my_info.logo"
+                  class="certificate-image"
+                />
+                <i v-else class="el-icon-plus certificate-upload-icon"></i>
+              </el-upload>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="广告logo">
+              <el-upload
+                class="certificate-uploader"
+                accept="image/*"
+                :show-file-list="false"
+                :data="mix_upload_data"
+                :name="mix_upload_name"
+                :action="mix_upload_action"
+                :on-success="upload_on_success2"
+                :before-upload="upload_before_upload"
+              >
+                <img
+                  v-if="my_info.adLogo"
+                  :src="vuex_config.file_url_pre + my_info.adLogo"
                   class="certificate-image"
                 />
                 <i v-else class="el-icon-plus certificate-upload-icon"></i>
@@ -439,6 +462,13 @@ export default {
       let { code, data, msg } = res;
       if (code == 200) {
         this.my_info.logo = res.data.save_url;
+        this.$forceUpdate();
+      }
+    },
+    upload_on_success2(res, file) {
+      let { code, data, msg } = res;
+      if (code == 200) {
+        this.my_info.adLogo = res.data.save_url;
         this.$forceUpdate();
       }
     },
