@@ -81,7 +81,7 @@
                 class="btn-ripple fit-text btn-save"
                 @click="throttle_do_submit()"
                 :loading="loading"
-                >确认修改</el-button
+                >{{ loading ? "修改中..." : "修改" }}</el-button
               >
             </div>
           </div>
@@ -173,6 +173,7 @@ export default {
         let { code, msg, data } = res;
         this.loading = false;
         if (code == 200) {
+          this.$message.success("修改成功");
           this.setView();
         }
       });
@@ -192,7 +193,7 @@ export default {
       let { code, data, msg } = res;
       alert(res);
       if (code == 200) {
-        this.form.image = res.data;
+        this.my_info.image = res.data;
       }
     },
     upload_before_upload(file) {

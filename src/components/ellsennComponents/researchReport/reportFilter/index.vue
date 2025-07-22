@@ -41,7 +41,9 @@
       </div>
       <div class="filter-layout">
         <div class="filter-label">
-          <img src="@img/ellsenn/releaseTime.png" alt="" />活动时间
+          <img src="@img/ellsenn/releaseTime.png" alt="" />{{
+            $route.name === "researchReport" ? "发布时间" : "活动时间"
+          }}
         </div>
         <div class="filter-item">
           <div class="filter-content">

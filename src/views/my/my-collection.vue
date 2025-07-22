@@ -6,7 +6,12 @@
 
     <div class="page-ctx">
       <div class="mess-list">
-        <div class="mess-item" v-for="(item, index) in messList" :key="index">
+        <div
+          class="mess-item"
+          v-for="(item, index) in messList"
+          :key="index"
+          @click="handleToDetail(item)"
+        >
           <div class="title-box">
             <div class="title">
               {{ item.title }}
@@ -42,18 +47,7 @@ export default {
   components: {},
   data() {
     return {
-      messList: [
-        {
-          feed_type: "留言",
-          dtTime: "2025-06-08 10:00:00",
-          content: "这是一条留言",
-        },
-        {
-          feed_type: "留言",
-          dtTime: "2025-06-08 10:00:00",
-          content: "这是一条留言",
-        },
-      ],
+      messList: [],
       pagination: {
         page: 1,
         limit: 10,
@@ -96,6 +90,9 @@ export default {
         }
       });
     },
+    handleToDetail(item) {
+      this.$router.push(`/newsInsightsDetail?id=${item.p_id}`);
+    },
   },
 };
 </script>
@@ -136,6 +133,7 @@ export default {
 
 .mess-list {
   .mess-item {
+    cursor: pointer;
     border-bottom: 1px solid #ddd;
     padding-bottom: 20px;
     margin-bottom: 20px;

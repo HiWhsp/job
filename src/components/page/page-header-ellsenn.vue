@@ -61,6 +61,7 @@
             </div>
           </div>
           <div class="right-box">
+            <div class="language-box">中/EN</div>
             <div class="right-box-icon" @click="toSearch">
               <i class="el-icon-search"></i>
             </div>
