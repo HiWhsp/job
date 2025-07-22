@@ -39,8 +39,11 @@
         <el-form-item label="职务：" prop="position" v-if="form.userType == 2">
           <el-input v-model="form.position" placeholder="请输入职务"></el-input>
         </el-form-item>
+        <el-form-item label="地区：">
+          <area_select ref="area_select" @change="changeSelectAddress" />
+        </el-form-item>
         <!-- 地址 -->
-        <el-form-item label="地址：" prop="address">
+        <el-form-item label="详细地址：" prop="address">
           <el-input v-model="form.address" placeholder="请输入地址"></el-input>
         </el-form-item>
 
@@ -93,8 +96,12 @@
 </template>
 
 <script>
+import area_select from "@/components/address/area_select.vue";
 export default {
   name: "ProfileCompleteModal",
+  components: {
+    area_select,
+  },
   data() {
     return {
       visible: false,
@@ -108,6 +115,12 @@ export default {
         company_name: "", // 公司名称
         workType: [], //我属于的类型
         requireService: [], //我希望平台得到的服务
+        provinceName: "",
+        cityName: "",
+        areaName: "",
+        provinceId: "",
+        cityId: "",
+        areaId: "",
       },
 
       // 树形结构的配置
@@ -229,6 +242,17 @@ export default {
             });
         }
       });
+    },
+    //更新当前父组件数据
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      // debugger
+      this.form.provinceName = data.sheng.name;
+      this.form.cityName = data.shi.name;
+      this.form.areaName = data.qu.name;
+      this.form.provinceId = data.sheng.id;
+      this.form.cityId = data.shi.id;
+      this.form.areaId = data.qu.id;
     },
   },
 };

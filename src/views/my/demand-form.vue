@@ -32,12 +32,11 @@
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="地址" prop="address">
-          <el-input
-            v-model="form.address"
-            placeholder="请输入地址"
-            clearable
-          ></el-input>
+        <el-form-item label="地区">
+          <area_select ref="area_select" @change="changeSelectAddress" />
+        </el-form-item>
+        <el-form-item label="详细地址" prop="address">
+          <el-input v-model="form.address" placeholder="请输入地址" clearable></el-input>
         </el-form-item>
 
         <el-form-item label="联系人" prop="contactPerson">
@@ -355,11 +354,7 @@
           </div>
         </template>
 
-        <el-form-item
-          label="上传图片"
-          prop="images"
-          v-if="form.workOrderType == 1"
-        >
+        <el-form-item label="上传图片" prop="images" v-if="form.workOrderType == 1">
           <el-upload
             class="upload-demo"
             accept="image/*"
@@ -373,11 +368,7 @@
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item
-          label="上传附件"
-          prop="images"
-          v-if="form.workOrderType != 1"
-        >
+        <el-form-item label="上传附件" prop="images" v-if="form.workOrderType != 1">
           <el-upload
             class="upload-demo"
             accept="image/*"
@@ -414,8 +405,12 @@
 </template>
 
 <script>
+import area_select from "@/components/address/area_select.vue";
 export default {
   name: "demand-form",
+  components: {
+    area_select,
+  },
   data() {
     return {
       form: {
@@ -441,19 +436,19 @@ export default {
         projectProgress: "",
         // 产品回收利用表数据
         recycleList: [],
+        provinceName: "",
+        cityName: "",
+        areaName: "",
+        provinceId: "",
+        cityId: "",
+        areaId: "",
       },
       uploadAction: "#", // 上传接口地址，根据实际情况修改
       rules: {
-        workOrderType: [
-          { required: true, message: "请选择填报类型", trigger: "change" },
-        ],
+        workOrderType: [{ required: true, message: "请选择填报类型", trigger: "change" }],
         address: [{ required: true, message: "请输入地址", trigger: "blur" }],
-        companyName: [
-          { required: true, message: "请输入企业名称", trigger: "blur" },
-        ],
-        contactPerson: [
-          { required: true, message: "请输入联系人", trigger: "blur" },
-        ],
+        companyName: [{ required: true, message: "请输入企业名称", trigger: "blur" }],
+        contactPerson: [{ required: true, message: "请输入联系人", trigger: "blur" }],
         contact: [
           { required: true, message: "请输入联系电话", trigger: "blur" },
           {
@@ -543,7 +538,7 @@ export default {
             this.form.productList = null;
           } else if (this.form.workOrderType == "5") {
             this.form.productJson = this.form.recycleList;
-            this.form.recycleList = null
+            this.form.recycleList = null;
           }
           this.$api({
             url: "createWorkorder",
@@ -551,17 +546,11 @@ export default {
             data: {
               ...this.form,
               photos:
-                this.form.workOrderType == 1
-                  ? this.form.photos.join(",")
-                  : undefined,
-              photosJson:
-                this.form.workOrderType == 1 ? this.form.photosJson : undefined,
+                this.form.workOrderType == 1 ? this.form.photos.join(",") : undefined,
+              photosJson: this.form.workOrderType == 1 ? this.form.photosJson : undefined,
               attach:
-                this.form.workOrderType != 1
-                  ? this.form.attach.join(",")
-                  : undefined,
-              attachJson:
-                this.form.workOrderType != 1 ? this.form.attachJson : undefined,
+                this.form.workOrderType != 1 ? this.form.attach.join(",") : undefined,
+              attachJson: this.form.workOrderType != 1 ? this.form.attachJson : undefined,
               images: undefined,
             },
           }).then((res) => {
@@ -645,6 +634,17 @@ export default {
     previewImage(imageUrl) {
       // 可以使用Element UI的图片预览组件或自定义预览方法
       window.open(imageUrl, "_blank");
+    },
+    //更新当前父组件数据
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      // debugger
+      this.form.provinceName = data.sheng.name;
+      this.form.cityName = data.shi.name;
+      this.form.areaName = data.qu.name;
+      this.form.provinceId = data.sheng.id;
+      this.form.cityId = data.shi.id;
+      this.form.areaId = data.qu.id;
     },
   },
 };

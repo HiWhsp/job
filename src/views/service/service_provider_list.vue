@@ -104,17 +104,17 @@
                   </div>
                   <div class="download-files">
                     <div class="file-item">
-                      <span class="file-type">服务合同：</span>
+                      <span class="file-type">初始服务合同：</span>
                       <img
                         src="@/assets/image/icon/pdf.png"
                         class="file-icon"
                         alt="file"
                       />
-                      <span class="file-name">{{ item.contractName }}</span>
+                      <span class="file-name">{{ item.serviceOriginContractName }}</span>
                       <a
                         href="#"
                         class="download-link"
-                        @click="downloadFile(item.contractUrl)"
+                        @click="downloadFile(item.serviceOriginContractUrl_full)"
                         >下载</a
                       >
                     </div>

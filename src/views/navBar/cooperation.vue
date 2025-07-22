@@ -20,7 +20,7 @@
             :class="{ active: activeMenu === index }"
             @click="setActiveMenu(index)"
           >
-            {{ item }}
+            {{ item.name }}
           </li>
         </ul>
       </div>
@@ -28,26 +28,39 @@
       <!-- 右侧内容区域 -->
       <div class="content-area">
         <div class="content-section">
-          <h2 class="section-title">{{ cooperationList[activeMenu] }}</h2>
+          <h2 class="section-title">{{ cooperationList[activeMenu].name }}</h2>
           <div class="content">
-            <div class="content-item">
-              <div class="content-item-title">姓名：</div>
+            <div class="content-item" v-if="cooperationList[activeMenu].name_field_name">
+              <div class="content-item-title">
+                {{ cooperationList[activeMenu].name_field_name }}：
+              </div>
               <el-input v-model="form.name" placeholder="请输入内容" />
             </div>
-            <div class="content-item">
-              <div class="content-item-title">手机号：</div>
+            <div
+              class="content-item"
+              v-if="cooperationList[activeMenu].mobile_field_name"
+            >
+              <div class="content-item-title">
+                {{ cooperationList[activeMenu].mobile_field_name }}：
+              </div>
               <el-input v-model="form.mobile" placeholder="请输入内容" />
             </div>
-            <div class="content-item">
-              <div class="content-item-title">公司名称：</div>
+            <div
+              class="content-item"
+              v-if="cooperationList[activeMenu].company_field_name"
+            >
+              <div class="content-item-title">
+                {{ cooperationList[activeMenu].company_field_name }}：
+              </div>
               <el-input v-model="form.company_name" placeholder="请输入内容" />
             </div>
-            <div class="content-item">
-              <div class="content-item-title">介绍说明：</div>
+            <div class="content-item" v-if="cooperationList[activeMenu].description">
+              <div class="content-item-title">描述：</div>
               <el-input
                 v-model="form.content"
-                placeholder="请输入内容"
+                :placeholder="cooperationList[activeMenu].description"
                 type="textarea"
+                disabled
                 :rows="3"
               />
             </div>
