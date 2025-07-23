@@ -110,11 +110,11 @@
                         class="file-icon"
                         alt="file"
                       />
-                      <span class="file-name">{{ item.contractName }}</span>
+                      <span class="file-name">{{ item.serviceOriginContractName }}</span>
                       <a
                         href="#"
                         class="download-link"
-                        @click="downloadFile(item.contractUrl)"
+                        @click="downloadFile(item.serviceOriginContractUrl_full)"
                         >Download</a
                       >
                     </div>
@@ -151,7 +151,10 @@
                   class="notice-icon"
                   alt="notice"
                 />
-                <span class="notice-text">Please download the service contract, sign and stamp it, then upload it back to the system to confirm the order</span>
+                <span class="notice-text"
+                  >Please download the service contract, sign and stamp it, then upload it
+                  back to the system to confirm the order</span
+                >
               </div>
             </div>
           </div>

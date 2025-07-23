@@ -265,7 +265,7 @@ export default {
 
 .header-inner {
   position: relative;
-  width: 1200px;
+  width: 1400px;
   height: 150px;
   margin: 0 auto;
   display: flex;

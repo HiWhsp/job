@@ -1,7 +1,7 @@
 <template>
   <div class="sanji-wrap">
     <div class="sanji-box">
-      <el-select v-model="sheng" placeholder="请选择省" @change="change_sheng">
+      <el-select v-model="sheng" placeholder="please select" @change="change_sheng">
         <el-option
           v-for="item in list_sheng"
           :key="item.id"
@@ -9,7 +9,7 @@
           :value="item.id"
         ></el-option>
       </el-select>
-      <el-select v-model="shi" placeholder="请选择市" @change="change_shi">
+      <!-- <el-select v-model="shi" placeholder="请选择市" @change="change_shi">
         <el-option
           v-for="item in list_shi"
           :key="item.id"
@@ -24,7 +24,7 @@
           :label="item.name"
           :value="item.id"
         ></el-option>
-      </el-select>
+      </el-select> -->
     </div>
   </div>
 </template>
@@ -71,9 +71,9 @@ export default {
     this.address_getAreaList({
       params: {},
       success: (data) => {
-        this.all_area_data = data;
+        this.all_area_data = data.state_list;
         // 解析省份数据
-        this.list_sheng = this.parseProvinceData(data);
+        this.list_sheng = this.parseProvinceData(data.state_list);
       },
     });
   },
@@ -88,7 +88,7 @@ export default {
     parseProvinceData(data) {
       return data.map((item) => ({
         id: item.id,
-        name: item.name,
+        name: item.nameEn,
         code: item.code,
         parentId: item.parentId,
       }));
@@ -144,12 +144,12 @@ export default {
       if (this.sheng) {
         obj_sheng = this.list_sheng.find((v) => v.id == this.sheng);
       }
-      if (this.shi) {
-        obj_shi = this.list_shi.find((v) => v.id == this.shi);
-      }
-      if (this.qu) {
-        obj_qu = this.list_qu.find((v) => v.id == this.qu);
-      }
+      // if (this.shi) {
+      //   obj_shi = this.list_shi.find((v) => v.id == this.shi);
+      // }
+      // if (this.qu) {
+      //   obj_qu = this.list_qu.find((v) => v.id == this.qu);
+      // }
 
       let obj = {
         sheng: obj_sheng,
@@ -163,29 +163,13 @@ export default {
     async init(data) {
       this.$log("初始化", data);
       //console.log("父组件设置当前组件省市区数据", data);
-      let { provinceName, cityName, areaName, provinceId, cityId, areaId } = data;
+      let { provinceName, provinceId } = data;
 
       setTimeout(() => {
         //省
         let obj_sheng =
           this.list_sheng.find((v) => v.id == provinceId || v.name == provinceName) || {};
         this.sheng = obj_sheng.id;
-
-        //市
-        if (this.sheng) {
-          this.list_shi = this.getCityData(this.sheng);
-          let obj_shi =
-            this.list_shi.find((v) => v.id == cityId || v.name == cityName) || {};
-          this.shi = obj_shi.id;
-
-          //区
-          if (this.shi) {
-            this.list_qu = this.getAreaData(this.shi);
-            let obj_qu =
-              this.list_qu.find((v) => v.id == areaId || v.name == areaName) || {};
-            this.qu = obj_qu.id;
-          }
-        }
       }, 1000);
     },
 
@@ -219,11 +203,10 @@ export default {
 
     address_getAreaList({ params, success } = opt) {
       this.$api({
-        url: "getArea",
+        url: "provinceList",
         method: "get",
       }).then((res) => {
         let { code, data } = res;
-        // debugger
         if (code == 200) {
           if (success) {
             success(data);

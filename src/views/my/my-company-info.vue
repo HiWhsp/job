@@ -14,7 +14,7 @@
       </div>
       <el-form
         :model="my_info"
-        label-width="100px"
+        label-width="140px"
         class="user-form"
         label-position="right"
       >
@@ -42,9 +42,36 @@
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span="24">
+            <el-form-item label="adLogo">
+              <el-upload
+                class="certificate-uploader"
+                accept="image/*"
+                :show-file-list="false"
+                :data="mix_upload_data"
+                :name="mix_upload_name"
+                :action="mix_upload_action"
+                :on-success="upload_on_success2"
+                :before-upload="upload_before_upload"
+              >
+                <img
+                  v-if="my_info.adLogo"
+                  :src="vuex_config.file_url_pre + my_info.adLogo"
+                  class="certificate-image"
+                />
+                <i v-else class="el-icon-plus certificate-upload-icon"></i>
+              </el-upload>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="12">
             <el-form-item label="Company Name">
-              <el-input v-model="my_info.companyName" clearable placeholder="Please enter" />
+              <el-input
+                v-model="my_info.companyName"
+                clearable
+                placeholder="Please enter"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -83,7 +110,7 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="Company Image Upload">
+            <el-form-item label="Company Image">
               <el-upload
                 class="certificate-uploader"
                 accept="image/*"
@@ -106,7 +133,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="Company Introduction">
+            <el-form-item label="Introduction">
               <el-input
                 v-model="my_info.introduce"
                 clearable
@@ -164,13 +191,13 @@
           >
             <div class="product-title">Product {{ productIndex + 1 }}</div>
             <el-form :model="product" label-width="80px" class="product-form">
-              <el-form-item label="Product Name">
+              <el-form-item label="Name">
                 <el-input v-model="product.name" placeholder="Please enter" />
               </el-form-item>
-              <el-form-item label="Product Model">
+              <el-form-item label="Model">
                 <el-input v-model="product.xinghao" placeholder="Please enter" />
               </el-form-item>
-              <el-form-item label="Product Image">
+              <el-form-item label="Image">
                 <el-upload
                   class="product-image-uploader"
                   :action="mix_upload_action"
@@ -291,12 +318,8 @@ export default {
     changeSelectAddress(data) {
       this.$log("更新省市区数据", data);
       // debugger
-      this.my_info.provinceName = data.sheng.name;
-      this.my_info.cityName = data.shi.name;
-      this.my_info.areaName = data.qu.name;
-      this.my_info.provinceId = data.sheng.id;
-      this.my_info.cityId = data.shi.id;
-      this.my_info.areaId = data.qu.id;
+      this.my_info.stateName = data.sheng.name;
+      this.my_info.stateId = data.sheng.id;
     },
     throttle_do_submit() {},
 
@@ -321,12 +344,8 @@ export default {
             }) || [];
           this.$nextTick(() => {
             this.$refs.area_select.init({
-              provinceName: this.my_info.provinceName,
-              cityName: this.my_info.cityName,
-              areaName: this.my_info.areaName,
-              provinceId: this.my_info.provinceId,
-              cityId: this.my_info.cityId,
-              areaId: this.my_info.areaId,
+              provinceName: this.my_info.stateName,
+              provinceId: this.my_info.stateId,
             });
           });
         }
@@ -439,6 +458,13 @@ export default {
       let { code, data, msg } = res;
       if (code == 200) {
         this.my_info.logo = res.data.save_url;
+        this.$forceUpdate();
+      }
+    },
+    upload_on_success2(res, file) {
+      let { code, data, msg } = res;
+      if (code == 200) {
+        this.my_info.adLogo = res.data.save_url;
         this.$forceUpdate();
       }
     },

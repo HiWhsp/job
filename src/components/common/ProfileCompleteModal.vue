@@ -19,7 +19,11 @@
       >
         <!-- 选择角色 -->
         <el-form-item label="Select Role：" prop="userType">
-          <el-select v-model="form.userType" placeholder="Personal/Enterprise" style="width: 100%">
+          <el-select
+            v-model="form.userType"
+            placeholder="Personal/Enterprise"
+            style="width: 100%"
+          >
             <el-option label="Personal" value="1"></el-option>
             <el-option label="Enterprise" value="2"></el-option>
           </el-select>
@@ -32,12 +36,25 @@
 
         <!-- 公司 -->
         <el-form-item label="Company：" prop="company_name" v-if="form.userType == 2">
-          <el-input v-model="form.company_name" placeholder="Please enter company name"></el-input>
+          <el-input
+            v-model="form.company_name"
+            placeholder="Please enter company name"
+          ></el-input>
         </el-form-item>
 
         <!-- 职务 -->
         <el-form-item label="Position：" prop="position" v-if="form.userType == 2">
-          <el-input v-model="form.position" placeholder="Please enter position"></el-input>
+          <el-input
+            v-model="form.position"
+            placeholder="Please enter position"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="Province：">
+          <area_select ref="area_select" @change="changeSelectAddress" />
+        </el-form-item>
+        <!-- 地址 -->
+        <el-form-item label="Address：" prop="address">
+          <el-input v-model="form.address" placeholder="Please enter address"></el-input>
         </el-form-item>
 
         <!-- 我需求的类型 -->
@@ -89,8 +106,12 @@
 </template>
 
 <script>
+import area_select from "@/components/address/area_select.vue";
 export default {
   name: "ProfileCompleteModal",
+  components: {
+    area_select,
+  },
   data() {
     return {
       visible: false,
@@ -115,7 +136,13 @@ export default {
       rules: {
         userType: [{ required: true, message: "Please select role", trigger: "change" }],
         realname: [{ required: true, message: "Please enter name", trigger: "blur" }],
-        company_name: [{ required: true, message: "Please enter company name", trigger: "blur" }],
+        company_name: [
+          {
+            required: true,
+            message: "Please enter company name",
+            trigger: "blur",
+          },
+        ],
         position: [{ required: true, message: "Please enter position", trigger: "blur" }],
       },
     };
@@ -224,6 +251,13 @@ export default {
             });
         }
       });
+    },
+    //更新当前父组件数据
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      // debugger
+      this.form.stateName = data.sheng.name;
+      this.form.stateId = data.sheng.id;
     },
   },
 };

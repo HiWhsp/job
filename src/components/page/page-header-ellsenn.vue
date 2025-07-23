@@ -33,7 +33,9 @@
                       class="nav-dropdown"
                       v-show="
                         (item.children && showLanguage && item.title === 'Feedback') ||
-                        (item.children && showContact && item.title === 'Business Cooperation')
+                        (item.children &&
+                          showContact &&
+                          item.title === 'Business Cooperation')
                       "
                       @mouseenter="mouseoverLang"
                       @mouseleave="mouseoutLang"
@@ -489,7 +491,7 @@ export default {
       this.$router.push("/my-info");
     },
     toLang() {
-      window.location.href = "https://jyla.dx.hdapp.com.cn/";
+      window.open("https://jyla.dx.hdapp.com.cn/", "_self");
     },
   },
 };

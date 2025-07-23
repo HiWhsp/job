@@ -20,7 +20,7 @@
             :class="{ active: activeMenu === index }"
             @click="setActiveMenu(index)"
           >
-            {{ item }}
+            {{ item.name }}
           </li>
         </ul>
       </div>
@@ -28,23 +28,47 @@
       <!-- 右侧内容区域 -->
       <div class="content-area">
         <div class="content-section">
-          <h2 class="section-title">{{ cooperationList[activeMenu] }}</h2>
+          <h2 class="section-title">{{ cooperationList[activeMenu].name }}</h2>
           <div class="content">
-            <div class="content-item">
-              <div class="content-item-title">Name:</div>
+            <div class="content-item" v-if="cooperationList[activeMenu].name_field_name">
+              <div class="content-item-title">
+                {{ cooperationList[activeMenu].name_field_name }}:
+              </div>
               <el-input v-model="form.name" placeholder="Please enter content" />
             </div>
-            <div class="content-item">
-              <div class="content-item-title">Mobile:</div>
+            <div
+              class="content-item"
+              v-if="cooperationList[activeMenu].mobile_field_name"
+            >
+              <div class="content-item-title">
+                {{ cooperationList[activeMenu].mobile_field_name }}:
+              </div>
               <el-input v-model="form.mobile" placeholder="Please enter content" />
             </div>
-            <div class="content-item">
-              <div class="content-item-title">Company:</div>
+            <div
+              class="content-item"
+              v-if="cooperationList[activeMenu].company_field_name"
+            >
+              <div class="content-item-title">
+                {{ cooperationList[activeMenu].company_field_name }}:
+              </div>
               <el-input v-model="form.company_name" placeholder="Please enter content" />
+            </div>
+            <div class="content-item" v-if="cooperationList[activeMenu].description">
+              <div class="content-item-title">description：</div>
+              <el-input
+                v-model="form.content"
+                :placeholder="cooperationList[activeMenu].description"
+                type="textarea"
+                disabled
+                :rows="3"
+              />
             </div>
           </div>
           <div class="submit-btn">
-            <el-button type="primary" @click="submitForm">Schedule Consultation</el-button>
+            <el-button type="primary" @click="submitForm"
+              >Schedule Consultation</el-button
+            >
           </div>
         </div>
       </div>

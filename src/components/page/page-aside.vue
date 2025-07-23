@@ -36,7 +36,7 @@
         <div class="item" v-if="showTop" @click="toTop()">
           <div class="item-inner">
             <img src="@/assets/image/home/to-top.png" alt="" />
-            <div class="item-title">Back to Top</div>
+            <div class="item-title">Top</div>
           </div>
         </div>
       </div>

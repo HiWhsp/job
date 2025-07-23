@@ -127,7 +127,7 @@ export default {
   height: 60px;
   background: rgba(0, 0, 0, 0.5);
   .wrap {
-    width: 1200px;
+    width: 1400px;
     margin: 0 auto;
     height: 100%;
     display: flex;
