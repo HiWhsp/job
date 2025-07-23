@@ -64,7 +64,7 @@
             <div class="right-box-icon" @click="toSearch">
               <i class="el-icon-search"></i>
             </div>
-            <div class="inter-login">
+            <div class="inter-login" @click="toInter">
               <img src="@/assets/image/icon/inter.png" alt="" />
               <span>切换国际版</span>
             </div>
@@ -407,6 +407,10 @@ export default {
           this.$refs.searchInput.focus();
         }
       });
+    },
+
+    toInter() {
+      window.open("https://jyla.en.dx.hdapp.com.cn/", "_self");
     },
 
     // 关闭搜索弹框
