@@ -83,10 +83,10 @@
             <span class="info-value">{{ workOrderName(demandInfo) }}</span>
           </div> -->
           <div class="download-files">
-            <div class="file-item">
+            <div class="file-item" v-if="demandInfo.workorderUrl_full">
               <span class="file-type">下载工单：</span>
               <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
-              <span class="file-name">{{ demandInfo.workorderName }}</span>
+              <span class="file-name">{{ demandInfo.workorderName || "--" }}</span>
               <a
                 href="#"
                 class="download-link"
@@ -94,7 +94,11 @@
                 >下载</a
               >
             </div>
-            <div class="file-item">
+            <div class="file-item" v-else>
+              <span class="file-type">下载工单：</span>
+              <span class="file-name">暂未上传</span>
+            </div>
+            <div class="file-item" v-if="demandInfo.contractUrl_full">
               <span class="file-type">下载合同：</span>
               <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
               <span class="file-name">{{ demandInfo.contractName }}</span>
@@ -104,6 +108,10 @@
                 @click="downloadFile(demandInfo.contractUrl_full)"
                 >下载</a
               >
+            </div>
+            <div class="file-item" v-else>
+              <span class="file-type">下载合同：</span>
+              <span class="file-name">暂未上传</span>
             </div>
           </div>
         </div>

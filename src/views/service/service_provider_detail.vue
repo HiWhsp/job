@@ -60,7 +60,7 @@
             <span class="info-value">常规保养</span>
           </div> -->
           <div class="download-files">
-            <div class="file-item">
+            <!-- <div class="file-item">
               <span class="file-type">下载工单：</span>
               <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
               <span class="file-name">{{ demandInfo.workorderName }}</span>
@@ -70,17 +70,21 @@
                 @click="downloadFile(demandInfo.workorderUrl_full)"
                 >下载</a
               >
-            </div>
-            <div class="file-item">
+            </div> -->
+            <div class="file-item" v-if="demandInfo.contractUrl_full">
               <span class="file-type">下载合同：</span>
               <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
-              <span class="file-name">{{ demandInfo.contractName }}</span>
+              <span class="file-name">{{ demandInfo.contractName || "--" }}</span>
               <a
                 href="#"
                 class="download-link"
                 @click="downloadFile(demandInfo.contractUrl_full)"
                 >下载</a
               >
+            </div>
+            <div class="file-item" v-else>
+              <span class="file-type">下载合同：</span>
+              <span class="file-name">暂未上传</span>
             </div>
           </div>
         </div>
@@ -100,8 +104,8 @@
             <label class="form-label">客户姓名</label>
             <div class="form-input">
               <el-input
-                v-model="demandInfo.user_info.realname"
-                placeholder="完善后的内容客户姓名"
+                v-model="demandInfo.serviceUserName"
+                placeholder="客户姓名"
                 disabled
               />
             </div>
@@ -111,8 +115,8 @@
             <label class="form-label">联系方式</label>
             <div class="form-input">
               <el-input
-                v-model="demandInfo.user_info.mobile"
-                placeholder="完善后的内容联系方式"
+                v-model="demandInfo.servicePhone"
+                placeholder="联系方式"
                 disabled
               />
             </div>

@@ -83,7 +83,7 @@
             </div>
             <div class="header-right">
               <span class="pay-amount"
-                >金额：<span class="amount">￥{{ item.payPrice }}</span></span
+                >金额：<span class="amount">￥{{ item.servicePrice }}</span></span
               >
             </div>
           </div>
@@ -103,20 +103,30 @@
                     <span class="info-value">{{ item.deviceAddress }}</span>
                   </div>
                   <div class="download-files">
-                    <div class="file-item">
+                    <div class="file-item" v-if="item.serviceOriginContractUrl">
                       <span class="file-type">初始服务合同：</span>
                       <img
                         src="@/assets/image/icon/pdf.png"
                         class="file-icon"
                         alt="file"
                       />
-                      <span class="file-name">{{ item.serviceOriginContractName }}</span>
+                      <span class="file-name">{{
+                        item.serviceOriginContractName || "--"
+                      }}</span>
                       <a
                         href="#"
                         class="download-link"
-                        @click="downloadFile(item.serviceOriginContractUrl_full)"
+                        @click="
+                          downloadFile(
+                            vuex_config.file_url_pre + item.serviceOriginContractUrl
+                          )
+                        "
                         >下载</a
                       >
+                    </div>
+                    <div class="file-item" v-else>
+                      <span class="file-type">初始服务合同：</span>
+                      <span class="file-name">暂未上传</span>
                     </div>
                   </div>
                 </div>
@@ -250,7 +260,7 @@ export default {
         { name: "服务中", value: "2" },
         { name: "已完成", value: "3" },
       ],
-      activeTab: "0",
+      activeTab: "",
       currentPage: 1,
       pageSize: 10,
       total: 0,
