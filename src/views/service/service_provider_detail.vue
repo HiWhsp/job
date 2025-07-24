@@ -31,7 +31,7 @@
             当前状态：<span>{{ serviceStatus(demandInfo) }}</span>
           </p>
           <p>
-            金额：<span>￥{{ demandInfo.originPrice }}</span>
+            金额：<span>￥{{ demandInfo.servicePrice }}</span>
           </p>
         </div>
         <!-- 流程 -->
@@ -71,14 +71,20 @@
                 >下载</a
               >
             </div> -->
-            <div class="file-item" v-if="demandInfo.contractUrl_full">
+            <div class="file-item" v-if="demandInfo.serviceOriginContractUrl">
               <span class="file-type">下载合同：</span>
               <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
-              <span class="file-name">{{ demandInfo.contractName || "--" }}</span>
+              <span class="file-name">{{
+                demandInfo.serviceOriginContractName || "--"
+              }}</span>
               <a
                 href="#"
                 class="download-link"
-                @click="downloadFile(demandInfo.contractUrl_full)"
+                @click="
+                  downloadFile(
+                    vuex_config.file_url_pre + demandInfo.serviceOriginContractUrl
+                  )
+                "
                 >下载</a
               >
             </div>
