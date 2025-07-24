@@ -129,15 +129,18 @@
           <div class="contact-info">
             <div class="contact-item">
               <strong>Address: </strong>
-              <span>{{ companyInfo.address }}</span>
+              <!-- <span>{{ companyInfo.address }}</span> -->
+              <span>******</span>
             </div>
             <div class="contact-item">
               <strong>Email: </strong>
-              <span>{{ companyInfo.email }}</span>
+              <!-- <span>{{ companyInfo.email }}</span> -->
+              <span>******</span>
             </div>
             <div class="contact-item">
               <strong>Phone: </strong>
-              <span>{{ companyInfo.contact }}</span>
+              <!-- <span>{{ companyInfo.contact }}</span> -->
+              <span>******</span>
             </div>
           </div>
         </div>

@@ -104,6 +104,27 @@
       <div class="form-content">
         <div class="form-section">
           <div class="form-row">
+            <label class="form-label">Customer Name</label>
+            <div class="form-input">
+              <el-input
+                v-model="demandInfo.user_info.nickname"
+                placeholder="Customer Name"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-label">Contact</label>
+            <div class="form-input">
+              <el-input
+                v-model="demandInfo.user_info.mobile"
+                placeholder="Contact"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="form-row">
             <label class="form-label">Device Type</label>
             <div class="form-input">
               <el-radio-group v-model="demandInfo.deviceType" disabled>

@@ -423,8 +423,8 @@ export default {
           workType: [this.firstCategory, this.secondCategory, this.thirdCategory]
             .filter((item) => item != "")
             .join(","),
-          // provinceId: this.selectedRegion,
-          stateId: this.selectedRegion,
+          provinceId: this.selectedRegion,
+          // stateId: this.selectedRegion,
           page: this.currentPage,
           pageSize: this.pageSize,
         },
