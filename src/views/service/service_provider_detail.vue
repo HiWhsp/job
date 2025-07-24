@@ -110,7 +110,7 @@
             <label class="form-label">客户姓名</label>
             <div class="form-input">
               <el-input
-                v-model="demandInfo.serviceUserName"
+                v-model="demandInfo.user_info.nickname"
                 placeholder="客户姓名"
                 disabled
               />
@@ -121,7 +121,7 @@
             <label class="form-label">联系方式</label>
             <div class="form-input">
               <el-input
-                v-model="demandInfo.servicePhone"
+                v-model="demandInfo.user_info.mobile"
                 placeholder="联系方式"
                 disabled
               />
@@ -493,7 +493,7 @@ export default {
           url: "serviceConfirmFinish",
           method: "post",
           data: {
-            workorder_id: this.id,
+            workorderId: this.id,
           },
         }).then((res) => {
           // this.$message.success("确认完成");
