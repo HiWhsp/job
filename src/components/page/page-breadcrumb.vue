@@ -3,7 +3,7 @@
     <div class="bread-inner flex w-1400">
       <router-link to="/">
         <!-- <img src="@img/common/home.png" alt="" /> -->
-        首页
+        Home
         <!-- Home -->
       </router-link>
 

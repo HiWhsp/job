@@ -104,7 +104,7 @@
                 class="filter-item"
                 :class="{ active: selectedRegion === item.id }"
                 @click="selectRegion(item.id)"
-                >{{ item.name }}</span
+                >{{ item.nameEn }}</span
               >
             </div>
           </div>
@@ -118,9 +118,31 @@
         <!-- 右侧公司列表区域 -->
         <div class="right-content">
           <div class="company-list">
+            <div
+              v-for="company in companyList.slice(0, 2)"
+              :key="company.id"
+              class="company-item"
+              @click="viewCompany(company)"
+            >
+              <div class="company-header">
+                <h3 class="company-title">{{ company.companyName }}</h3>
+              </div>
+              <div class="company-body">
+                <img :src="company.logo_full" alt="" />
+                <div class="company-content">
+                  <p class="company-intro">{{ company.describption }}</p>
+                  <div class="company-info">
+                    <span class="info-item">
+                      {{ company.companyName }} {{ company.created_at }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 广告 -->
             <div class="company-item" v-for="item in adBanners" :key="item.id">
               <div class="company-header">
-                <h3 class="company-title">{{ item.title || "广告" }}</h3>
+                <h3 class="company-title">{{ item.describe || "广告" }}</h3>
               </div>
               <div class="company-body">
                 <div class="company-logo">
@@ -132,16 +154,14 @@
                   />
                 </div>
                 <div class="company-info">
-                  <p class="company-name">公司名称</p>
-                  <p class="company-time">2025-01-01</p>
+                  <p class="company-name">{{ item.title }}</p>
+                  <p class="company-time">{{ item.created_at || "--" }}</p>
                   <p class="company-type">广告</p>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="company-list">
             <div
-              v-for="company in companyList"
+              v-for="company in companyList.slice(2)"
               :key="company.id"
               class="company-item"
               @click="viewCompany(company)"
@@ -150,7 +170,7 @@
                 <h3 class="company-title">{{ company.companyName }}</h3>
               </div>
               <div class="company-body">
-                <img :src="company.logo_full" alt="" />
+                <img :src="company.adLogo_full" alt="" />
                 <div class="company-content">
                   <p class="company-intro">{{ company.describption }}</p>
                   <div class="company-info">
@@ -213,7 +233,7 @@ export default {
       let option = [
         {
           route: "/system-manufacturer-list",
-          title: `厂商列表`,
+          title: "Manufacturer List",
         },
       ];
       return option;
@@ -272,7 +292,7 @@ export default {
     }).then((res) => {
       let { code, data, msg } = res;
       if (code == 200) {
-        this.regions = data.provinceList || [];
+        this.regions = data.state_list || [];
       }
     });
     this.loadData();
@@ -403,7 +423,8 @@ export default {
           workType: [this.firstCategory, this.secondCategory, this.thirdCategory]
             .filter((item) => item != "")
             .join(","),
-          provinceId: this.selectedRegion,
+          // provinceId: this.selectedRegion,
+          stateId: this.selectedRegion,
           page: this.currentPage,
           pageSize: this.pageSize,
         },

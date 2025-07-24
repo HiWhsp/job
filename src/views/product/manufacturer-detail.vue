@@ -19,29 +19,28 @@
         <div class="company-info-center">
           <h1 class="company-name">{{ companyInfo.companyName }}</h1>
           <div class="company-meta">
-            <span class="meta-item">从事{{ workTypeName }}相关</span>
+            <span class="meta-item">Engaged in {{ workTypeName }} related</span>
             <span class="meta-separator">·</span>
             <span class="meta-item">{{ companyInfo.provinceName }}</span>
             <span class="meta-separator">·</span>
-            <span class="meta-item">{{ companyInfo.followNum }}关注</span>
+            <span class="meta-item">{{ companyInfo.followNum }} followers</span>
           </div>
           <div class="company-website">
-            官网：<span @click="toUrl(companyInfo.homePage)">{{
-              companyInfo.homePage
-            }}</span>
+            Website:
+            <span @click="toUrl(companyInfo.homePage)">{{ companyInfo.homePage }}</span>
           </div>
           <div class="action-buttons">
             <button class="btn-follow" @click="handleFollow" v-if="!companyInfo.isFollow">
               <i class="el-icon-plus"></i>
-              关注
+              Follow
             </button>
             <button class="btn-follow" @click="handleFollow" v-else>
               <i class="el-icon-check"></i>
-              已关注
+              Following
             </button>
             <button class="btn-message" @click="handleMessage">
-              <img src="@/assets/image/icon/msg.png" alt="留言" />
-              留言
+              <img src="@/assets/image/icon/msg.png" alt="Message" />
+              Message
             </button>
           </div>
         </div>
@@ -64,19 +63,19 @@
               class="tab-item"
               :class="{ active: activeTab === 'introduction' }"
               @click="activeTab = 'introduction'"
-              >企业介绍</span
+              >Company Introduction</span
             >
             <span
               class="tab-item"
               :class="{ active: activeTab === 'products' }"
               @click="activeTab = 'products'"
-              >产品介绍</span
+              >Product Introduction</span
             >
             <span
               class="tab-item"
               :class="{ active: activeTab === 'contact' }"
               @click="activeTab = 'contact'"
-              >地址和联系方式</span
+              >Address and Contact</span
             >
           </div>
         </div>
@@ -118,7 +117,10 @@
                 </div>
               </div>
             </div>
-            <el-empty v-if="!products || products.length === 0" description="暂无产品" />
+            <el-empty
+              v-if="!products || products.length === 0"
+              description="No products available"
+            />
           </div>
         </div>
 
@@ -126,15 +128,15 @@
         <div class="tab-content" v-show="activeTab === 'contact'">
           <div class="contact-info">
             <div class="contact-item">
-              <strong>地址：</strong>
+              <strong>Address: </strong>
               <span>{{ companyInfo.address }}</span>
             </div>
             <div class="contact-item">
-              <strong>邮箱：</strong>
+              <strong>Email: </strong>
               <span>{{ companyInfo.email }}</span>
             </div>
             <div class="contact-item">
-              <strong>电话：</strong>
+              <strong>Phone: </strong>
               <span>{{ companyInfo.contact }}</span>
             </div>
           </div>
@@ -146,60 +148,60 @@
     <div class="message-modal" v-if="showMessageModal" @click="closeModal">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
-          <h3>留言</h3>
+          <h3>Message</h3>
           <button class="close-btn" @click="closeModal">×</button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label>姓名：</label>
+            <label>Name: </label>
             <input
               type="text"
               v-model="messageForm.name"
-              placeholder="请输入姓名"
+              placeholder="Please enter your name"
               class="form-input"
             />
           </div>
           <div class="form-group">
-            <label>电话：</label>
+            <label>Phone: </label>
             <input
               type="tel"
               v-model="messageForm.mobile"
-              placeholder="请输入手机号"
+              placeholder="Please enter your phone number"
               class="form-input"
             />
           </div>
           <div class="form-group">
-            <label>邮箱：</label>
+            <label>Email: </label>
             <input
               type="email"
               v-model="messageForm.email"
-              placeholder="请输入邮箱"
+              placeholder="Please enter your email"
               class="form-input"
             />
           </div>
           <div class="form-group">
-            <label>公司名：</label>
+            <label>Company Name: </label>
             <input
               type="text"
               v-model="messageForm.companyName"
-              placeholder="请输入公司名"
+              placeholder="Please enter company name"
               class="form-input"
               disabled
             />
           </div>
           <div class="form-group">
-            <label>留言内容：</label>
+            <label>Message Content: </label>
             <textarea
               v-model="messageForm.content"
-              placeholder="请输入"
+              placeholder="Please enter your message"
               class="form-textarea"
               rows="4"
             ></textarea>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn-submit" @click="submitMessage">提交</button>
-          <button class="btn-cancel" @click="closeModal">取消</button>
+          <button class="btn-submit" @click="submitMessage">Submit</button>
+          <button class="btn-cancel" @click="closeModal">Cancel</button>
         </div>
       </div>
     </div>
@@ -231,21 +233,21 @@ export default {
       miniBreakers: [
         {
           id: 1,
-          name: "微型断路器",
+          name: "Miniature Circuit Breaker",
           specs: ["HSR2,HSM8,HSM8N-32 H", "SRZ,HSM8,HSM8N-32"],
-          image: "https://via.placeholder.com/120x100/f0f0f0/666?text=断路器",
+          image: "https://via.placeholder.com/120x100/f0f0f0/666?text=Circuit Breaker",
         },
         {
           id: 2,
-          name: "微型断路器",
+          name: "Miniature Circuit Breaker",
           specs: ["HSR2,HSM8,HSM8N-32 H", "SRZ,HSM8,HSM8N-32"],
-          image: "https://via.placeholder.com/120x100/f0f0f0/666?text=断路器",
+          image: "https://via.placeholder.com/120x100/f0f0f0/666?text=Circuit Breaker",
         },
         {
           id: 3,
-          name: "微型断路器",
+          name: "Miniature Circuit Breaker",
           specs: ["HSR2,HSM8,HSM8N-32 H", "SRZ,HSM8,HSM8N-32"],
-          image: "https://via.placeholder.com/120x100/f0f0f0/666?text=断路器",
+          image: "https://via.placeholder.com/120x100/f0f0f0/666?text=Circuit Breaker",
         },
       ],
       companyInfo: {},
@@ -258,11 +260,14 @@ export default {
       return [
         {
           route: "/system-manufacturer-list?companyType=" + this.companyInfo.companyType,
-          title: this.companyInfo.companyType == 1 ? "系统厂商" : "配置厂商",
+          title:
+            this.companyInfo.companyType == 1
+              ? "System Manufacturer"
+              : "Configuration Manufacturer",
         },
         {
           route: this.$route.path,
-          title: "厂商详情",
+          title: "Manufacturer Details",
         },
       ];
     },
@@ -320,7 +325,7 @@ export default {
     },
     handleFollow() {
       // 关注逻辑
-      console.log("关注");
+      console.log("Follow");
       this.$api({
         url: "followCompany",
         method: "post",
@@ -333,7 +338,7 @@ export default {
         console.log(res);
         let { code, data, msg } = res;
         if (code == 200) {
-          this.$message.success("操作成功");
+          this.$message.success("Operation successful");
           this.loadData();
         } else {
           this.$message.error(msg);
@@ -358,20 +363,20 @@ export default {
     submitMessage() {
       // 表单验证
       if (!this.messageForm.name.trim()) {
-        alert("请输入姓名");
+        alert("Please enter your name");
         return;
       }
       if (!this.messageForm.mobile.trim()) {
-        alert("请输入手机号");
+        alert("Please enter your phone number");
         return;
       }
       if (!this.messageForm.content.trim()) {
-        alert("请输入留言内容");
+        alert("Please enter your message content");
         return;
       }
 
       // 提交留言逻辑
-      console.log("提交留言:", this.messageForm);
+      console.log("Submit message:", this.messageForm);
       this.$api({
         url: "addCompanyComment",
         method: "post",
@@ -379,7 +384,7 @@ export default {
       }).then((res) => {
         let { code, data, msg } = res;
         if (code == 200) {
-          this.$message.success("留言成功");
+          this.$message.success("Message sent successfully");
           this.loadData();
         } else {
           this.$message.error(msg);
