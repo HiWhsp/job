@@ -30,7 +30,8 @@
                 <span class="date">{{ item.created_at }}</span>
                 <span class="order-info">Work No.: {{ item.workorder_no }}</span>
                 <span class="relation-info"
-                  >Demand No.: <span class="relation-order">{{
+                  >Demand No.:
+                  <span class="relation-order">{{
                     item.user_require ? item.user_require.serialNo : ""
                   }}</span></span
                 >
@@ -44,7 +45,8 @@
                     : item.payStatus == 2
                     ? "Paid"
                     : "Confirmation"
-                }}: <span class="amount"
+                }}:
+                <span class="amount"
                   >￥{{
                     item.payStatus == 0
                       ? item.originPrice
@@ -61,25 +63,25 @@
           <div class="service-content">
             <div class="content-top">
               <div class="content-left">
-                <h4 class="service-title">{{ workOrderName(item) }}</h4>
+                <h4 class="service-title">{{ workOrderName(item) || "--" }}</h4>
                 <div class="service-info">
                   <div class="info-item">
                     <span class="info-label">Device Type:</span>
-                    <span class="info-value">{{ deviceTypeName(item) }}</span>
+                    <span class="info-value">{{ deviceTypeName(item) || "--" }}</span>
                   </div>
                   <div class="info-item">
                     <span class="info-label">Device Location:</span>
-                    <span class="info-value">{{ item.deviceAddress }}</span>
+                    <span class="info-value">{{ item.deviceAddress || "--" }}</span>
                   </div>
                   <div class="download-files">
-                    <div class="file-item">
+                    <div class="file-item" v-if="item.workorderUrl_full">
                       <span class="file-type">Download Work Order:</span>
                       <img
                         src="@/assets/image/icon/pdf.png"
                         class="file-icon"
                         alt="file"
                       />
-                      <span class="file-name">{{ item.workorderName }}</span>
+                      <span class="file-name">{{ item.workorderName || "--" }}</span>
                       <a
                         href="#"
                         class="download-link"
@@ -87,20 +89,28 @@
                         >Download</a
                       >
                     </div>
-                    <div class="file-item">
+                    <div class="file-item" v-else>
+                      <span class="file-type">Download Work Order:</span>
+                      <span class="file-name">Not Uploaded</span>
+                    </div>
+                    <div class="file-item" v-if="item.contractUrl_full">
                       <span class="file-type">Download Contract:</span>
                       <img
                         src="@/assets/image/icon/pdf.png"
                         class="file-icon"
                         alt="file"
                       />
-                      <span class="file-name">{{ item.contractName }}</span>
+                      <span class="file-name">{{ item.contractName || "--" }}</span>
                       <a
                         href="#"
                         class="download-link"
                         @click="downloadFile(item.contractUrl_full)"
                         >Download</a
                       >
+                    </div>
+                    <div class="file-item" v-else>
+                      <span class="file-type">Download Contract:</span>
+                      <span class="file-name">Not Uploaded</span>
                     </div>
                   </div>
                 </div>
@@ -150,7 +160,8 @@
                   alt="notice"
                 />
                 <span class="notice-text"
-                  >Download the work order and contract, sign and stamp them, and send them back to the system for confirmation</span
+                  >Download the work order and contract, sign and stamp them, and send
+                  them back to the system for confirmation</span
                 >
               </div>
             </div>
@@ -237,7 +248,9 @@
             <div class="qrcode-placeholder"></div>
           </div>
           <div class="qrcode-tips">
-            <p>Please use {{ selectedPayment === "alipay" ? "Alipay" : "WeChat" }} to scan</p>
+            <p>
+              Please use {{ selectedPayment === "alipay" ? "Alipay" : "WeChat" }} to scan
+            </p>
             <p>QR code to pay</p>
           </div>
         </div>

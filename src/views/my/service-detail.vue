@@ -15,9 +15,8 @@
             <p class="demand-date">Work No.: {{ demandInfo.workorder_no }}</p>
             <i class="col-line"></i>
             <p class="demand-number">
-              Demand Order: {{
-                demandInfo.user_require ? demandInfo.user_require.serialNo : ""
-              }}
+              Demand Order:
+              {{ demandInfo.user_require ? demandInfo.user_require.serialNo : "" }}
             </p>
           </div>
           <div class="demand-info-right">
@@ -46,7 +45,8 @@
                 : demandInfo.payStatus == 2
                 ? "Paid"
                 : "Pending Confirmation"
-            }}: <span
+            }}:
+            <span
               >￥{{
                 demandInfo.payStatus == 0
                   ? demandInfo.originPrice
@@ -83,10 +83,10 @@
             <span class="info-value">{{ workOrderName(demandInfo) }}</span>
           </div> -->
           <div class="download-files">
-            <div class="file-item">
+            <div class="file-item" v-if="demandInfo.workorderUrl_full">
               <span class="file-type">Download Work Order:</span>
               <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
-              <span class="file-name">{{ demandInfo.workorderName }}</span>
+              <span class="file-name">{{ demandInfo.workorderName || "--" }}</span>
               <a
                 href="#"
                 class="download-link"
@@ -94,10 +94,14 @@
                 >Download</a
               >
             </div>
-            <div class="file-item">
+            <div class="file-item" v-else>
+              <span class="file-type">Download Work Order:</span>
+              <span class="file-name">Not Uploaded</span>
+            </div>
+            <div class="file-item" v-if="demandInfo.contractUrl_full">
               <span class="file-type">Download Contract:</span>
               <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
-              <span class="file-name">{{ demandInfo.contractName }}</span>
+              <span class="file-name">{{ demandInfo.contractName || "--" }}</span>
               <a
                 href="#"
                 class="download-link"
@@ -105,13 +109,18 @@
                 >Download</a
               >
             </div>
+            <div class="file-item" v-else>
+              <span class="file-type">Download Contract:</span>
+              <span class="file-name">Not Uploaded</span>
+            </div>
           </div>
         </div>
         <div class="content-bottom">
           <div class="notice">
             <img src="@/assets/image/icon/notice.png" class="notice-icon" alt="notice" />
             <span class="notice-text">
-              1. Download the work order and contract, sign and stamp them, and send them back to the system for confirmation
+              1. Download the work order and contract, sign and stamp them, and send them
+              back to the system for confirmation
             </span>
           </div>
         </div>
@@ -301,7 +310,9 @@
             <div class="qrcode-placeholder"></div>
           </div>
           <div class="qrcode-tips">
-            <p>Please use {{ selectedPayment === "alipay" ? "Alipay" : "WeChat" }} to scan</p>
+            <p>
+              Please use {{ selectedPayment === "alipay" ? "Alipay" : "WeChat" }} to scan
+            </p>
             <p>QR code to pay</p>
           </div>
         </div>

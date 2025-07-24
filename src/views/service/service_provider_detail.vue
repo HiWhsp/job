@@ -31,7 +31,7 @@
             Current Status: <span>{{ serviceStatus(demandInfo) }}</span>
           </p>
           <p>
-            Amount: <span>￥{{ demandInfo.originPrice }}</span>
+            Amount: <span>￥{{ demandInfo.servicePrice }}</span>
           </p>
         </div>
         <!-- 流程 -->
@@ -60,7 +60,7 @@
             <span class="info-value">常规保养</span>
           </div> -->
           <div class="download-files">
-            <div class="file-item">
+            <!-- <div class="file-item">
               <span class="file-type">Download Order:</span>
               <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
               <span class="file-name">{{ demandInfo.workorderName }}</span>
@@ -70,15 +70,21 @@
                 @click="downloadFile(demandInfo.workorderUrl_full)"
                 >Download</a
               >
-            </div>
-            <div class="file-item">
+            </div> -->
+            <div class="file-item" v-if="demandInfo.serviceOriginContractUrl">
               <span class="file-type">Download Contract:</span>
               <img src="@/assets/image/icon/pdf.png" class="file-icon" alt="file" />
-              <span class="file-name">{{ demandInfo.contractName }}</span>
+              <span class="file-name">{{
+                demandInfo.serviceOriginContractName || "--"
+              }}</span>
               <a
                 href="#"
                 class="download-link"
-                @click="downloadFile(demandInfo.contractUrl_full)"
+                @click="
+                  downloadFile(
+                    vuex_config.file_url_pre + demandInfo.serviceOriginContractUrl
+                  )
+                "
                 >Download</a
               >
             </div>
@@ -88,7 +94,8 @@
           <div class="notice">
             <img src="@/assets/image/icon/notice.png" class="notice-icon" alt="notice" />
             <span class="notice-text">
-              1. Please confirm the order within 24 hours of receiving it, otherwise the order will be automatically cancelled.
+              1. Please confirm the order within 24 hours of receiving it, otherwise the
+              order will be automatically cancelled.
             </span>
           </div>
         </div>

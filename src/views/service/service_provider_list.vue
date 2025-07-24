@@ -83,7 +83,7 @@
             </div>
             <div class="header-right">
               <span class="pay-amount"
-                >Amount: <span class="amount">￥{{ item.payPrice }}</span></span
+                >Amount: <span class="amount">￥{{ item.servicePrice }}</span></span
               >
             </div>
           </div>
@@ -103,18 +103,24 @@
                     <span class="info-value">{{ item.deviceAddress }}</span>
                   </div>
                   <div class="download-files">
-                    <div class="file-item">
+                    <div class="file-item" v-if="item.serviceOriginContractUrl">
                       <span class="file-type">Service Contract:</span>
                       <img
                         src="@/assets/image/icon/pdf.png"
                         class="file-icon"
                         alt="file"
                       />
-                      <span class="file-name">{{ item.serviceOriginContractName }}</span>
+                      <span class="file-name">{{
+                        item.serviceOriginContractName || "--"
+                      }}</span>
                       <a
                         href="#"
                         class="download-link"
-                        @click="downloadFile(item.serviceOriginContractUrl_full)"
+                        @click="
+                          downloadFile(
+                            vuex_config.file_url_pre + item.serviceOriginContractUrl
+                          )
+                        "
                         >Download</a
                       >
                     </div>
