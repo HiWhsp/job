@@ -219,18 +219,18 @@
         <h3 class="info-title">Service Information</h3>
         <div class="info-content">
           <div class="info-row">
-            <span class="info-label">Service Personnel:</span>
+            <span class="info-label">Service Personnel</span>
             <span class="info-value">{{ demandInfo.serviceUserName }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label">Contact:</span>
+            <span class="info-label">Service Contact</span>
             <span class="info-value">{{ demandInfo.servicePhone }}</span>
           </div>
           <div class="info-row" v-if="demandInfo.servicePhotos">
-            <span class="info-label">Service Images:</span>
+            <span class="info-label">Service Images</span>
             <div class="info-value">
               <img
-                :src="item"
+                :src="vuex_config.file_url_pre + item"
                 v-for="(item, index) in demandInfo.servicePhotos.split(',')"
                 :key="index"
                 class="file-icon"

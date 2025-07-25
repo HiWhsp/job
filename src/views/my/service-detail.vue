@@ -257,7 +257,7 @@
             <span class="info-label">Service Images:</span>
             <span class="info-value">
               <img
-                :src="item"
+                :src="vuex_config.file_url_pre + item"
                 v-for="(item, index) in demandInfo.servicePhotos.split(',')"
                 :key="index"
                 class="file-icon"

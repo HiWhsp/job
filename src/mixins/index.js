@@ -6,12 +6,12 @@ export default {
   data() {
     return {
       // 上传
-      mix_upload_name: "image",
+      mix_upload_name: "file",
       // demo: require('@/assets/demo.jpg'),
       mix_upload_action:
         process.env.NODE_ENV !== "production"
-          ? "https://jyla.dx.hdapp.com.cn/api/uploadImage"
-          : "https://jyla.dx.hdapp.com.cn/api/uploadImage",
+          ? "https://jyla.en.dx.hdapp.com.cn/api/uploadFile"
+          : "https://jyla.en.dx.hdapp.com.cn/api/uploadFile",
     };
   },
   computed: {

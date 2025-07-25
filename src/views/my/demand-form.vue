@@ -31,7 +31,9 @@
             clearable
           ></el-input>
         </el-form-item>
-
+        <el-form-item label="Region">
+          <area_select ref="area_select" @change="changeSelectAddress" />
+        </el-form-item>
         <el-form-item label="Address" prop="address">
           <el-input
             v-model="form.address"
@@ -48,7 +50,7 @@
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="Phone" prop="contact">
+        <el-form-item label="Phone">
           <el-input
             v-model="form.contact"
             placeholder="Please enter contact phone"
@@ -355,11 +357,7 @@
           </div>
         </template>
 
-        <el-form-item
-          label="Images"
-          prop="images"
-          v-if="form.workOrderType == 1"
-        >
+        <el-form-item label="Images" prop="images" v-if="form.workOrderType == 1">
           <el-upload
             class="upload-demo"
             accept="image/*"
@@ -373,11 +371,7 @@
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item
-          label="Attachments"
-          prop="images"
-          v-if="form.workOrderType != 1"
-        >
+        <el-form-item label="Attachments" prop="images" v-if="form.workOrderType != 1">
           <el-upload
             class="upload-demo"
             accept="image/*"
@@ -414,8 +408,13 @@
 </template>
 
 <script>
+import area_select from "@/components/address/area_select.vue";
+
 export default {
   name: "demand-form",
+  components: {
+    area_select,
+  },
   data() {
     return {
       form: {
@@ -445,17 +444,33 @@ export default {
       uploadAction: "#", // 上传接口地址，根据实际情况修改
       rules: {
         workOrderType: [
-          { required: true, message: "Please select form type", trigger: "change" },
+          {
+            required: true,
+            message: "Please select form type",
+            trigger: "change",
+          },
         ],
         address: [{ required: true, message: "Please enter address", trigger: "blur" }],
         companyName: [
-          { required: true, message: "Please enter company name", trigger: "blur" },
+          {
+            required: true,
+            message: "Please enter company name",
+            trigger: "blur",
+          },
         ],
         contactPerson: [
-          { required: true, message: "Please enter contact person", trigger: "blur" },
+          {
+            required: true,
+            message: "Please enter contact person",
+            trigger: "blur",
+          },
         ],
         contact: [
-          { required: true, message: "Please enter contact phone", trigger: "blur" },
+          {
+            required: true,
+            message: "Please enter contact phone",
+            trigger: "blur",
+          },
           {
             pattern: /^1[3-9]\d{9}$/,
             message: "Please enter correct phone number",
@@ -463,11 +478,23 @@ export default {
           },
         ],
         email: [
-          { required: true, message: "Please enter email address", trigger: "blur" },
-          { type: "email", message: "Please enter correct email format", trigger: "blur" },
+          {
+            required: true,
+            message: "Please enter email address",
+            trigger: "blur",
+          },
+          {
+            type: "email",
+            message: "Please enter correct email format",
+            trigger: "blur",
+          },
         ],
         deviceType: [
-          { required: true, message: "Please select device type", trigger: "change" },
+          {
+            required: true,
+            message: "Please select device type",
+            trigger: "change",
+          },
           { validator: this.validateEquipmentType, trigger: "change" },
         ],
       },
@@ -475,7 +502,9 @@ export default {
   },
   mounted() {
     if (JSON.parse(localStorage.getItem("baseInfo")).userLevel == 0) {
-      this.$message.warning("No permission to submit demand, please upgrade to VIP member");
+      this.$message.warning(
+        "No permission to submit demand, please upgrade to VIP member"
+      );
     }
   },
   watch: {
@@ -543,7 +572,7 @@ export default {
             this.form.productList = null;
           } else if (this.form.workOrderType == "5") {
             this.form.productJson = this.form.recycleList;
-            this.form.recycleList = null
+            this.form.recycleList = null;
           }
           this.$api({
             url: "createWorkorder",
@@ -551,17 +580,11 @@ export default {
             data: {
               ...this.form,
               photos:
-                this.form.workOrderType == 1
-                  ? this.form.photos.join(",")
-                  : undefined,
-              photosJson:
-                this.form.workOrderType == 1 ? this.form.photosJson : undefined,
+                this.form.workOrderType == 1 ? this.form.photos.join(",") : undefined,
+              photosJson: this.form.workOrderType == 1 ? this.form.photosJson : undefined,
               attach:
-                this.form.workOrderType != 1
-                  ? this.form.attach.join(",")
-                  : undefined,
-              attachJson:
-                this.form.workOrderType != 1 ? this.form.attachJson : undefined,
+                this.form.workOrderType != 1 ? this.form.attach.join(",") : undefined,
+              attachJson: this.form.workOrderType != 1 ? this.form.attachJson : undefined,
               images: undefined,
             },
           }).then((res) => {
@@ -645,6 +668,13 @@ export default {
     previewImage(imageUrl) {
       // 可以使用Element UI的图片预览组件或自定义预览方法
       window.open(imageUrl, "_blank");
+    },
+    //更新当前父组件数据
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      // debugger
+      this.form.stateName = data.sheng.name;
+      this.form.stateId = data.sheng.id;
     },
   },
 };

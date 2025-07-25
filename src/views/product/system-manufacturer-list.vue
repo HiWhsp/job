@@ -128,7 +128,7 @@
                 <h3 class="company-title">{{ company.companyName }}</h3>
               </div>
               <div class="company-body">
-                <img :src="company.logo_full" alt="" />
+                <img :src="company.adLogo_full" alt="" />
                 <div class="company-content">
                   <p class="company-intro">{{ company.describption }}</p>
                   <div class="company-info">
@@ -170,7 +170,7 @@
                 <h3 class="company-title">{{ company.companyName }}</h3>
               </div>
               <div class="company-body">
-                <img :src="company.adLogo_full" alt="" />
+                <img :src="company.adadLogo_full" alt="" />
                 <div class="company-content">
                   <p class="company-intro">{{ company.describption }}</p>
                   <div class="company-info">

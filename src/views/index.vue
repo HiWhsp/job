@@ -167,7 +167,7 @@
             "
           >
             <div class="ad-logo-placeholder">
-              <img :src="item.logo_full" alt="" />
+              <img :src="item.adLogo_full" alt="" />
             </div>
             <div class="ad-content">
               <h3 class="ellipsis">{{ item.companyName }}</h3>
@@ -201,7 +201,7 @@
             "
           >
             <div class="ad-logo-placeholder">
-              <img :src="item.logo_full" alt="" />
+              <img :src="item.adLogo_full" alt="" />
             </div>
             <div class="ad-content">
               <h3 class="ellipsis">{{ item.companyName }}</h3>

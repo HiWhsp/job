@@ -3,7 +3,7 @@
   <div class="vip-modal-overlay" v-if="visible" @click="closeModal">
     <div class="vip-modal" @click.stop>
       <div class="modal-header">
-        <h3>开通会员</h3>
+        <h3>Activate Membership</h3>
         <button class="close-btn" @click="closeModal">✕</button>
       </div>
 
@@ -13,7 +13,7 @@
           <div class="vip-intro">
             <div class="vip-icon">
               <img src="@/assets/img/my/pay-vip.png" alt="" />
-              <p>开通会员</p>
+              <p>Activate Membership</p>
             </div>
             <div class="vip-intro-text" v-html="memberSetting.member_xieyi"></div>
             <div class="vip-benefits">
@@ -32,7 +32,7 @@
         <div class="center-section">
           <!-- 选择版本 -->
           <div class="version-section">
-            <h4>选择版本</h4>
+            <h4>Select Version</h4>
             <div class="version-options">
               <div
                 v-for="option in vipOptions"
@@ -42,14 +42,14 @@
                 @click="selectVipType(option.type)"
               >
                 <span class="version-name">{{ option.name }}</span>
-                <span class="version-price">{{ option.price }}元/年</span>
+                <span class="version-price">{{ option.price }}元/year</span>
               </div>
             </div>
           </div>
 
           <!-- 选择购买时长 -->
           <div class="duration-section">
-            <h4>选择购买时长</h4>
+            <h4>Select Duration</h4>
             <div class="duration-options">
               <div
                 v-for="duration in durationOptions[selectedVipType - 1]"
@@ -58,9 +58,9 @@
                 :class="{ active: selectedDuration === duration.year }"
                 @click="selectDuration(duration.year)"
               >
-                <span class="duration-text">{{ duration.year }}年</span>
+                <span class="duration-text">{{ duration.year }}Year</span>
                 <span class="duration-tag" v-if="duration.discount"
-                  >{{ duration.discount / 10 }}折</span
+                  >{{ duration.discount / 10 }}Off</span
                 >
               </div>
             </div>
@@ -74,18 +74,21 @@
           <!-- 支付二维码 -->
           <div class="qr-section" v-if="pay_qrcode">
             <div class="qr-code">
-              <img :src="pay_qrcode" alt="支付二维码" />
+              <img :src="pay_qrcode" alt="Payment QR Code" />
             </div>
             <div class="pay-tips">
-              <p>使用 微信/支付宝 扫码支付</p>
-              <p>支付即同意 <span class="terms-link">服务条款</span> 条款</p>
+              <p>Scan with WeChat/Alipay to pay</p>
+              <p>
+                Payment indicates agreement to
+                <span class="terms-link">Terms of Service</span>
+              </p>
             </div>
           </div>
 
           <!-- 生成支付二维码按钮 -->
           <div class="pay-action" v-if="!pay_qrcode">
             <button class="generate-qr-btn" @click="generatePayQR" :disabled="loading">
-              {{ loading ? "生成中..." : "生成支付二维码" }}
+              {{ loading ? "Generating..." : "Generate Payment QR Code" }}
             </button>
           </div>
         </div>
@@ -111,14 +114,14 @@ export default {
       selectedVipType: 1,
       selectedDuration: 1,
       vipOptions: [
-        // { type: "1", name: "黄金会员", price: 1899 },
-        // { type: "2", name: "钻石会员", price: 58800 },
-        // { type: "3", name: "联合会员", price: 518000 },
+        // { type: "1", name: "Gold Member", price: 1899 },
+        // { type: "2", name: "Diamond Member", price: 58800 },
+        // { type: "3", name: "Union Member", price: 518000 },
       ],
       durationOptions: [
-        // { value: 1, label: "1年" },
-        // { value: 2, label: "2年", tag: "8折" },
-        // { value: 3, label: "3年", tag: "7折" },
+        // { value: 1, label: "1 Year" },
+        // { value: 2, label: "2 Years", tag: "20% Off" },
+        // { value: 3, label: "3 Years", tag: "30% Off" },
       ],
       memberSetting: {},
       originPrice: 0,
@@ -139,7 +142,12 @@ export default {
             for (let index = 1; index <= 3; index++) {
               this.vipOptions.push({
                 type: index,
-                name: index == 1 ? "黄金会员" : index == 2 ? "钻石会员" : "联合会员",
+                name:
+                  index == 1
+                    ? "Gold Member"
+                    : index == 2
+                    ? "Diamond Member"
+                    : "Union Member",
                 price: res.data[`member_${index}_sale_price`],
               });
               this.durationOptions.push(res.data[`member_${index}_discount`]);
@@ -242,12 +250,12 @@ export default {
               }
             });
           } else {
-            this.$message.error(res.msg || "订单创建失败");
+            this.$message.error(res.msg || "Order creation failed");
           }
         })
         .catch(() => {
           this.loading = false;
-          this.$message.error("网络错误，请重试");
+          this.$message.error("Network error, please try again");
         });
     },
 
@@ -263,7 +271,7 @@ export default {
         if (res.code == 200) {
           if (res.data.is_pay) {
             this.clearPaymentTimer();
-            this.$message.success("支付成功");
+            this.$message.success("Payment successful");
             this.$emit("payment-success");
             this.closeModal();
           }
