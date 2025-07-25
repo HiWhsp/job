@@ -152,8 +152,8 @@
             <div class="course-content">
               <div class="course-title ellipsis-2">{{ course.title }}</div>
               <div class="course-stats">
-                <span class="study-hours">课时: {{ course.learn_time || 3 }}</span>
-                <span class="student-count">{{ course.studyNum || 512 }}人学习</span>
+                <span class="study-hours">课时: {{ course.learn_time || 0 }}</span>
+                <span class="student-count">{{ course.studyNum || 0 }}人学习</span>
               </div>
             </div>
           </div>
