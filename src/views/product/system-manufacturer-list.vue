@@ -27,7 +27,7 @@
         <div class="filter-container w-1400">
           <!-- 一级分类 -->
           <div class="filter-row">
-            <span class="filter-label">Primary Category:</span>
+            <span class="filter-label">Primary Category</span>
             <div class="filter-options">
               <span
                 class="filter-item"
@@ -90,7 +90,7 @@
 
           <!-- 选择地区 -->
           <div class="filter-row">
-            <span class="filter-label">Select Region:</span>
+            <span class="filter-label">Select Region</span>
             <div class="filter-options">
               <span
                 class="filter-item"

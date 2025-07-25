@@ -222,7 +222,7 @@
                 <h3>Global After-sales Service Network</h3>
                 <div class="service-locations">
                   <div class="location-group">
-                    <h4>China</h4>
+                    <h4>international</h4>
                     <div class="scroll-box">
                       <div
                         class="location-item"
@@ -233,9 +233,9 @@
                           <p class="location-item-title ellipsis-1">
                             {{ item.name }}
                           </p>
-                          <p class="location-item-address ellipsis-3">
+                          <!-- <p class="location-item-address ellipsis-3">
                             {{ item.address }}
-                          </p>
+                          </p> -->
                         </div>
                       </div>
                     </div>

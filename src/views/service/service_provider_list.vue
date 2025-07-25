@@ -424,7 +424,7 @@ export default {
           url: "serviceConfirmFinish",
           method: "post",
           data: {
-            workorder_id: this.id,
+            workorderId: this.id,
           },
         }).then((res) => {
           // this.$message.success("确认完成");
