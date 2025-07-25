@@ -53,7 +53,7 @@
             @click="toProduct(course)"
           >
             <div class="course-img">
-              <img :src="course.thumb" alt="" />
+              <img :src="course.thumb_url" alt="" />
             </div>
             <div class="course-content">
               <div class="course-title ellipsis-2">{{ course.title }}</div>
@@ -113,15 +113,23 @@
       <div class="content">
         <!-- 标签栏 -->
         <div class="course-tabs">
-          <div
+          <!-- <div
             class="tab-item"
-            :class="{ active: currentTab === 0 }"
-            @click="switchTab(0)"
+            :class="{ active: currentTab === courseTabs[0].id }"
+            @click="switchTab(courseTabs[0].id)"
           >
             全部课程
-          </div>
+          </div> -->
           <div
             v-for="(tab, index) in courseTabs"
+            :key="index"
+            :class="['tab-item', { active: currentTab === tab.id }]"
+            @click="switchTab(tab.id)"
+          >
+            {{ tab.cat_name }}
+          </div>
+          <div
+            v-for="(tab, index) in courseTabs[0].child"
             :key="index"
             :class="['tab-item', { active: currentTab === tab.id }]"
             @click="switchTab(tab.id)"
@@ -139,7 +147,7 @@
             @click="toProduct(course)"
           >
             <div class="course-img">
-              <img :src="course.thumb" alt="" />
+              <img :src="course.thumb_url" alt="" />
             </div>
             <div class="course-content">
               <div class="course-title ellipsis-2">{{ course.title }}</div>
@@ -173,7 +181,7 @@ export default {
       // 视频类课程
       video_list: [],
       // 部门课程标签
-      courseTabs: [],
+      courseTabs: [{}],
       currentTab: 0,
       HOT_currentTab: 0,
     };
@@ -202,9 +210,10 @@ export default {
         method: "get",
       }).then((res) => {
         this.courseTabs = res.data;
+        this.currentTab = this.courseTabs[0].id;
+        this.loadAllCourses();
       });
       this.loadHOTCourses();
-      this.loadAllCourses();
     },
     format(percentage) {
       return `已学习${percentage}%`;
@@ -240,7 +249,7 @@ export default {
         method: "get",
         data: {
           page: 1,
-          limit: 8,
+          limit: 4,
           isRecommend: this.HOT_currentTab === 0 ? 1 : "",
           isHot: this.HOT_currentTab === 1 ? 1 : "",
           isNew: this.HOT_currentTab === 2 ? 1 : "",
@@ -323,12 +332,14 @@ export default {
 
     // 课程标签栏样式
     .course-tabs {
-      display: flex;
-      gap: 20px;
       margin-bottom: 40px;
-      justify-content: center;
+      overflow-y: auto;
+      height: 57px;
+      white-space: nowrap;
 
       .tab-item {
+        display: inline-block;
+        margin-right: 20px;
         padding: 10px 20px;
         cursor: pointer;
         background: #fff;

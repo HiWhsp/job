@@ -33,7 +33,7 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: "getCourse",
+        url: "getNewCourse",
         method: "get",
         data: {
           id: this.id,

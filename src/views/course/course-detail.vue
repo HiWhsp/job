@@ -650,21 +650,31 @@ export default {
       });
     },
     toUrl(item, index) {
-      if (
-        ["pdf", "doc", "docx", "xls", "xlsx"].includes(
-          item.file_path_url.split(".").pop()
-        )
-      ) {
-        this.goUrl({
-          url: "/pdf-viewer",
-          query: { id: this.id, index },
-        });
-      } else {
-        this.goUrl({
-          url: "/video-viewer",
-          query: { id: this.id, index },
-        });
-      }
+      this.$api({
+        url: "checkStudy",
+        method: "get",
+        data: {
+          id: this.id,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          if (
+            ["pdf", "doc", "docx", "xls", "xlsx"].includes(
+              item.file_path_url.split(".").pop()
+            )
+          ) {
+            this.goUrl({
+              url: "/pdf-viewer",
+              query: { id: this.id, index },
+            });
+          } else {
+            this.goUrl({
+              url: "/video-viewer",
+              query: { id: this.id, index },
+            });
+          }
+        }
+      });
     },
   },
 };

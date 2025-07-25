@@ -23,7 +23,7 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: "getCourse",
+        url: "getNewCourse",
         method: "get",
         data: {
           id: this.id,
@@ -96,6 +96,23 @@ export default {
         return url.endsWith(".pdf") || url.endsWith(".PDF");
       }
       return false;
+    },
+    // 处理PDF URL编码，解决文件名乱码问题
+    getPdfUrl(url) {
+      if (!url) return "";
+
+      try {
+        // 如果是相对路径，先转换为绝对路径
+        if (url.startsWith("/")) {
+          url = window.location.origin + url;
+        }
+
+        // 对URL进行编码，确保中文字符正确显示
+        return encodeURI(url);
+      } catch (error) {
+        console.error("PDF URL编码错误:", error);
+        return url;
+      }
     },
     // 将时间格式 "05:00" 转换为秒数
     timeToSeconds(timeStr) {

@@ -166,7 +166,7 @@ export default {
           : (question.selectText = item);
         this.addMyQuestionBank(question);
       } else if (type === "multiple") {
-        const textList = question.selectText ? question.selectText.split(",") : [];
+        const textList = question.selectText ? question.selectText.split(";") : [];
         textList.includes(item)
           ? textList.splice(textList.indexOf(item), 1)
           : textList.push(item);
@@ -506,11 +506,8 @@ export default {
           <div :class="{ wrong: true }" class="score">{{ detail.my_total_point }}分</div>
         </div>
         <div slot="footer" class="dialog-footer">
-          <button
-            class="btn-ripple btn-1"
-            @click="$router.push(`/my-exam-detail?id=${id}&question_id=${question_id}`)"
-          >
-            查看答题情况
+          <button class="btn-ripple btn-1" @click="$router.push(`/my-exam`)">
+            返回考试列表
           </button>
         </div>
       </template>
@@ -520,11 +517,8 @@ export default {
           <div class="score">{{ detail.my_total_point }}分</div>
         </div>
         <div slot="footer" class="dialog-footer">
-          <button
-            class="btn-ripple btn-1"
-            @click="$router.push('/my-exam-detail?id=' + id)"
-          >
-            查看答题情况
+          <button class="btn-ripple btn-1" @click="$router.push('/my-exam')">
+            返回考试列表
           </button>
         </div>
       </template>
