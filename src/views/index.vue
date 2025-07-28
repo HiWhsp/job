@@ -75,7 +75,7 @@
         <img alt="" src="@/static/home/card-img.png" />
       </div>
       <div class="content">
-        <div v-for="(item, index) in recent_list" :key="index" class="item">
+        <div v-for="(item, index) in recent_list.slice(0, 4)" :key="index" class="item">
           <div class="left">
             <div class="tit">
               <img
