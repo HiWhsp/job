@@ -149,12 +149,11 @@
         .register-btn,
         .profile-complete-btn {
           width: 100%;
-          height: 32px;
           line-height: 32px;
           text-align: center;
           border-radius: 78px;
           cursor: pointer;
-          font-size: 14px;
+          font-size: 16px;
           font-weight: 500;
           transition: all 0.3s;
         }
@@ -169,7 +168,7 @@
         }
 
         .register-btn {
-          border: 2px solid #33ae60;
+          border: 3px solid #33ae60;
           color: #33ae60;
           background: white;
 
@@ -260,7 +259,7 @@
           width: 115px;
           height: 40px;
           border-radius: 8px;
-          border: 1px solid #33ae60;
+          border: 3px solid #33ae60;
           img {
             width: 16px;
             height: 16px;
@@ -269,6 +268,7 @@
           p {
             font-family: Microsoft YaHei;
             font-size: 14px;
+            font-weight: 600;
             color: #33ae60;
           }
         }
@@ -323,7 +323,7 @@
 
         .more {
           color: #8c9194;
-          font-size: 12px;
+          font-size: 14px;
           cursor: pointer;
           font-weight: normal;
 
@@ -337,7 +337,7 @@
         .notice-item {
           height: 38px;
           color: #666;
-          font-size: 14px;
+          font-size: 16px;
           cursor: pointer;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -430,7 +430,7 @@
     background: #fff;
     border-radius: 12px;
     color: #979797;
-    font-size: 12px;
+    font-size: 14px;
     cursor: pointer;
     transition: all 0.3s;
 
@@ -845,7 +845,7 @@
 
   .brands-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 12px;
 
     .brand-item {
@@ -857,8 +857,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 190px;
-      height: 156px;
+      width: 220px;
+      height: 186px;
+      transition: all 0.3s;
+      cursor: pointer;
 
       &:hover {
         transform: translateY(-5px);
@@ -866,8 +868,8 @@
       }
 
       .brand-logo {
-        width: 100px;
-        height: 60px;
+        width: 130px;
+        height: 90px;
         background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
         border-radius: 6px;
         position: relative;
