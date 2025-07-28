@@ -123,7 +123,7 @@
     .top-nav-right-top {
       width: 270px;
       height: 166px;
-      padding: 22px 14px;
+      padding: 20px 14px;
       background: linear-gradient(
         180deg,
         rgba(165, 232, 190, 0.15) 0%,
@@ -149,13 +149,13 @@
         .register-btn,
         .profile-complete-btn {
           width: 100%;
-          height: 32px;
-          line-height: 32px;
+          height: 35px;
+          line-height: 35px;
           text-align: center;
           border-radius: 78px;
           cursor: pointer;
           font-size: 16px;
-          font-weight: 500;
+          font-weight: 600;
           transition: all 0.3s;
         }
 
@@ -176,7 +176,6 @@
           &:hover {
             background: #33ae60;
             color: white;
-            transform: translateY(-2px);
           }
         }
 
@@ -260,7 +259,7 @@
           width: 115px;
           height: 40px;
           border-radius: 8px;
-          border: 1px solid #33ae60;
+          border: 3px solid #33ae60;
           img {
             width: 16px;
             height: 16px;
@@ -269,6 +268,7 @@
           p {
             font-family: Microsoft YaHei;
             font-size: 14px;
+            font-weight: 600;
             color: #33ae60;
           }
         }
@@ -300,7 +300,7 @@
           border-top-left-radius: 14px;
           border-top-right-radius: 14px;
           color: #fff;
-          font-size: 14px;
+          font-size: 16px;
           font-weight: 400;
           .notice-icon {
             width: 18px;
@@ -323,7 +323,7 @@
 
         .more {
           color: #8c9194;
-          font-size: 12px;
+          font-size: 16px;
           cursor: pointer;
           font-weight: normal;
 
@@ -428,9 +428,9 @@
     line-height: 34px;
     text-align: center;
     background: #fff;
-    border-radius: 12px;
+    border-radius: 14px;
     color: #979797;
-    font-size: 12px;
+    font-size: 16px;
     cursor: pointer;
     transition: all 0.3s;
 
@@ -840,7 +840,7 @@
 
   .brands-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 12px;
 
     .brand-item {
@@ -852,8 +852,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 190px;
-      height: 156px;
+      width: 220px;
+      height: 186px;
+      transition: all 0.3s;
+      cursor: pointer;
 
       &:hover {
         transform: translateY(-5px);
@@ -861,8 +863,8 @@
       }
 
       .brand-logo {
-        width: 100px;
-        height: 60px;
+        width: 130px;
+        height: 90px;
         background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
         border-radius: 6px;
         position: relative;
