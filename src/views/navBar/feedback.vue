@@ -14,7 +14,7 @@
       <div class="sidebar">
         <ul class="nav-menu">
           <li
-            class="nav-item"
+            class="nav-item ellipsis-1"
             :class="{ active: activeMenu.id === item.id }"
             v-for="item in feddBackTypeList"
             :key="item.id"
