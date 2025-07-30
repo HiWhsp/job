@@ -76,7 +76,7 @@ export default {
         return 2;
       }
       // 选错选项
-      item.my_answer.split(",").forEach((it, i) => {
+      item.my_answer.split(";").forEach((it, i) => {
         if (!item.correct_answer.includes(it)) {
           index++;
         }

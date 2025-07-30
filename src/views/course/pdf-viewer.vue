@@ -17,7 +17,7 @@ export default {
     this.setView();
   },
   // 页面关闭前提交学习记录
-  beforeDestroy() {
+  beforeDestroy() {    
     this.submitLearnRecord();
   },
   methods: {
@@ -43,7 +43,7 @@ export default {
       });
     },
     // 上下切换
-    arrow(type) {
+    arrow(type) {      
       // 切换前提交当前学习记录
       this.submitLearnRecord();
 
@@ -82,9 +82,6 @@ export default {
       }
     },
     goUrl(item) {
-      // 跳转前提交学习记录
-      this.submitLearnRecord();
-
       this.$router.push({
         path: item.url,
         query: item.query,
@@ -121,7 +118,7 @@ export default {
       return parseInt(parts[0]) * 60 + parseInt(parts[1]);
     },
     // 提交学习记录
-    submitLearnRecord() {
+    submitLearnRecord() {      
       if (!this.startTime || !this.selectItem.id) return;
 
       const endTime = new Date().getTime();
