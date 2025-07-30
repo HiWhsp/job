@@ -237,7 +237,7 @@
                           <p class="location-item-title ellipsis-1">
                             {{ item.name }}
                           </p>
-                          <p class="location-item-address ellipsis-3">
+                          <p class="location-item-address">
                             {{ item.address }}
                           </p>
                         </div>
