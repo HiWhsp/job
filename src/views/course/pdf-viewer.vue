@@ -17,7 +17,7 @@ export default {
     this.setView();
   },
   // 页面关闭前提交学习记录
-  beforeDestroy() {    
+  beforeDestroy() {
     this.submitLearnRecord();
   },
   methods: {
@@ -43,7 +43,7 @@ export default {
       });
     },
     // 上下切换
-    arrow(type) {      
+    arrow(type) {
       // 切换前提交当前学习记录
       this.submitLearnRecord();
 
@@ -118,7 +118,7 @@ export default {
       return parseInt(parts[0]) * 60 + parseInt(parts[1]);
     },
     // 提交学习记录
-    submitLearnRecord() {      
+    submitLearnRecord() {
       if (!this.startTime || !this.selectItem.id) return;
 
       const endTime = new Date().getTime();
@@ -137,16 +137,14 @@ export default {
     },
 
     recordMyCourseList(schedule = 0, has_learn_time = 0) {
+      const sum = Number(this.selectItem.my_course_record.schedule) + Number(schedule);
       this.$api({
         url: "addMyCourseLearnRecord",
         method: "post",
         data: {
           course_id: this.detail.id,
           course_list_id: this.selectItem.id,
-          schedule:
-            this.selectItem.my_course_record.schedule > schedule
-              ? this.selectItem.my_course_record.schedule
-              : schedule,
+          schedule: sum > 100 ? 100 : sum,
           has_learn_time: has_learn_time,
         },
       });

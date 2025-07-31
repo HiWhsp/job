@@ -145,7 +145,8 @@ export default {
         },
       }).then((res) => {
         if (res.code == 200) {
-          (this.detail.my_total_point / this.question.total_point) * 100 >= 60
+          (this.detail.my_total_point / this.question.total_point) * 100 >=
+          this.question.passing_point
             ? (this.modalType = 4)
             : (this.modalType = 3);
           this.show_modal = true;

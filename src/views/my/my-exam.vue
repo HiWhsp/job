@@ -19,7 +19,13 @@
       <div v-for="item in list" :key="item.id" class="catalog-list">
         <div class="title">
           <p>{{ item.question ? item.question.title : "" }}</p>
-          <div class="start">{{ item.type_name }}</div>
+          <div class="start">
+            {{
+              item.my_recent_total_point >= item.question.passing_point
+                ? "已通过"
+                : item.type_name
+            }}
+          </div>
         </div>
         <div class="catalog-wrap">
           <div class="item">
@@ -58,21 +64,17 @@
           <el-button
             type="primary"
             v-if="
-              item.question ? item.question.can_test_num - item.has_test_num !== 0 : false
-            "
-            @click="go_exam(item)"
-            >开始考试</el-button
-          >
-          <el-button
-            type="primary"
-            v-if="
-              item.question ? item.question.can_test_num - item.has_test_num == 0 : false
+              item.my_recent_total_point >= item.question.passing_point ||
+              (item.question
+                ? item.question.can_test_num - item.has_test_num == 0
+                : false)
             "
             @click="
               $router.push(`my-exam-detail?id=${item.id}&question_id=${item.question_id}`)
             "
             >查看答题情况
           </el-button>
+          <el-button type="primary" v-else @click="go_exam(item)">开始考试</el-button>
         </div>
         <div class="relevance">
           <p>
