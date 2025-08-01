@@ -36,9 +36,44 @@
         </div>
 
         <div class="rightTopBtnGroup">
-          <el-button class="payBtn" type="primary"><img src="@img/ellsenn/dinggou.png" alt="">立即订购</el-button>
-          <el-button class="checkBtn" type="primary"><img src="@img/ellsenn/lock.png" alt="">在线查看</el-button>
-          <el-button class="contactBtn"><img src="@img/ellsenn/kefu.png" alt="">联系助理</el-button>
+          <!-- <el-button class="payBtn" type="primary"
+            ><img src="@img/ellsenn/dinggou.png" alt="" />立即订购</el-button
+          > -->
+          <el-button class="checkBtn" type="primary" @click="onDownloadClick('pdf')"
+            ><img src="@img/ellsenn/lock.png" alt="" />在线查看</el-button
+          >
+
+          <el-popover placement="top" trigger="hover" width="400">
+            <div class="contact-info">
+              <div class="item-wrap">
+                <div class="contact-item">
+                  <span class="label">联系人:</span>
+                  <span class="value">{{ contacts.contacts_name }}</span>
+                </div>
+                <div class="contact-item">
+                  <span class="label">微信号:</span>
+                  <span class="value">{{ contacts.wx }}</span>
+                </div>
+                <div class="contact-item">
+                  <span class="label">联系电话:</span>
+                  <span class="value">{{ contacts.mobile }}</span>
+                </div>
+                <div class="contact-item">
+                  <span class="label">联系邮箱:</span>
+                  <span class="value">{{ contacts.email }}</span>
+                </div>
+              </div>
+
+              <div class="qr-code-section">
+                <div class="qr-code">
+                  <!-- <img src="@img/ellsenn/qr-code.png" alt="二维码" /> -->
+                </div>
+              </div>
+            </div>
+            <el-button slot="reference" class="contactBtn"
+              ><img src="@img/ellsenn/kefu.png" alt="" />联系助理</el-button
+            >
+          </el-popover>
         </div>
       </div>
     </div>
@@ -51,23 +86,32 @@ export default {
     data: {
       type: Object,
       default: () => ({
-        title: 'VR/AR产业2024年第二季度销量跟踪报告',
+        title: "VR/AR产业2024年第二季度销量跟踪报告",
         subTitle:
-          '根据维深信息wellsenn XR的调研和跟踪统计，2024年Q1全球VR销量为172万台，同比下滑9%。一季度销量下滑的主要原因主要来自于Meta、索尼PS VR2以及PICO，其中Meta 销量下滑了10%，索尼PS VR2下滑57%，苹果Vision Pro一季度取得29万台销量，部分弥补了Meta 、索尼PS VR2以及PICO的销量下滑。预计2024年全球实现844万台销量规模，较2023年增长12%，2024年VR市场将扭转过去两年的销量下滑趋势，重回正增长轨道，但今明两年VR行业仍处于销量小年。',
-        author: 'Wellsenn XR',
-        user: '孙靖翔',
-        time: '2025-04-22',
+          "根据维深信息wellsenn XR的调研和跟踪统计，2024年Q1全球VR销量为172万台，同比下滑9%。一季度销量下滑的主要原因主要来自于Meta、索尼PS VR2以及PICO，其中Meta 销量下滑了10%，索尼PS VR2下滑57%，苹果Vision Pro一季度取得29万台销量，部分弥补了Meta 、索尼PS VR2以及PICO的销量下滑。预计2024年全球实现844万台销量规模，较2023年增长12%，2024年VR市场将扭转过去两年的销量下滑趋势，重回正增长轨道，但今明两年VR行业仍处于销量小年。",
+        author: "Wellsenn XR",
+        user: "孙靖翔",
+        time: "2025-04-22",
+      }),
+    },
+    contacts: {
+      type: Object,
+      default: () => ({
+        name: "维深助理",
+        wechat: "wellsenn001",
+        phone: "18611823719",
+        email: "abc@wellsenn.com",
       }),
     },
   },
-  name: 'reportInfo',
+  name: "reportInfo",
   data() {
     return {};
   },
   mounted() {},
   methods: {
     onDownloadClick(type) {
-      window.open(this.data[type + '_file'], '_blank');
+      window.open(this.data[type + "_file"], "_blank");
     },
   },
 };

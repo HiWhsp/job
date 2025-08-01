@@ -3,7 +3,7 @@
     <div class="top">
       <div class="topContent">
         <page_breadcrumb :option="nav_option" />
-        <report-info :data="reportInfo.report" />
+        <report-info :data="reportInfo.report" :contacts="reportInfo.contacts" />
       </div>
     </div>
     <div class="bottom">
@@ -11,7 +11,10 @@
         <div class="bottomLeft">
           <tab-card :data="reportInfo.report" />
           <div>
-            <make-comment :id="reportInfo.report ? reportInfo.report.id : ''" :type="1"></make-comment>
+            <make-comment
+              :id="reportInfo.report ? reportInfo.report.id : ''"
+              :type="1"
+            ></make-comment>
           </div>
         </div>
         <div class="bottomRight">

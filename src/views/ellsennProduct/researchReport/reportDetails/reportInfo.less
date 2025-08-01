@@ -105,6 +105,7 @@
         background: #005bac;
         border: 0px;
         font-size: 16px;
+        margin-right: 16px;
       }
       .contactBtn {
         width: 160px;
@@ -113,11 +114,68 @@
         box-sizing: border-box;
         border: 1px solid #dcdfe6;
         font-size: 16px;
+        &:hover {
+          color: #005aac;
+        }
       }
       img {
         width: 18px;
         height: 18px;
         margin-right: 8px;
+      }
+    }
+  }
+}
+
+// 联系助理弹出框样式
+.contact-info {
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+
+  .item-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    &:last-child {
+      margin-bottom: 0px;
+    }
+    
+    .label {
+      font-family: OPPPSans;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      min-width: 70px;
+      margin-right: 8px;
+    }
+    
+    .value {
+      font-family: OPPPSans;
+      font-size: 14px;
+      color: #666;
+      flex: 1;
+    }
+  }
+  
+  .qr-code-section {
+    text-align: center;
+    
+    .qr-code {
+      display: inline-block;
+      width: 106px;
+      height: 106px;
+      background-color: #ccc;
+      img {
+        width: 106px;
+        height: 106px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
       }
     }
   }
