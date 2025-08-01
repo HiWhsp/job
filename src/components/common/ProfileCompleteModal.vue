@@ -64,7 +64,7 @@
             <div class="tree-container">
               <el-tree
                 ref="workTypeTree"
-                :data="finish_select.typeListTree || []"
+                :data="finish_select.belongTypeList || []"
                 :props="treeProps"
                 node-key="id"
                 show-checkbox
@@ -154,7 +154,15 @@ export default {
     }).then((res) => {
       let { code, data, msg } = res;
       if (code == 200) {
-        this.finish_select = data;
+        const newData = data;
+        newData.belongTypeList = Object.keys(data.belongTypeList).map((key) => {
+          return {
+            id: key,
+            name_zh: data.belongTypeList[key],
+            children: [],
+          };
+        });
+        this.finish_select = newData;
       }
     });
   },
@@ -226,7 +234,8 @@ export default {
           const submitData = {
             ...this.form,
             username: this.form.realname,
-            workType: this.form.workType.join(","),
+            belongType: this.form.workType.join(","),
+            workType: undefined,
             requireService: this.form.requireService.join(","),
           };
 
