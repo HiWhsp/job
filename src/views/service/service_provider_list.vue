@@ -42,7 +42,8 @@
               <el-option label="光伏" value="1" />
               <el-option label="储能" value="2" />
               <el-option label="柴冲" value="3" />
-              <el-option label="其他" value="4" />
+              <el-option label="柴发" value="4" />
+              <el-option label="其他" value="5" />
             </el-select>
           </el-form-item>
           <el-form-item style="flex: 1; text-align: right">

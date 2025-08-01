@@ -61,7 +61,7 @@
             <div class="mess-title">{{ item.content }}</div>
             <div class="mess-time">{{ item.created_at }}</div>
           </div>
-          <div style="color: #33ae60; margin-right: 16px">
+          <div style="color: #33ae60; margin-right: 16px; font-size: 16px">
             {{ item.isRead == 0 ? "未读" : "已读" }}
           </div>
 

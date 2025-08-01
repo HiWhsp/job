@@ -92,7 +92,9 @@
                     <td>{{ item.type }}</td>
                     <td class="image-cell">
                       <img :src="item.image" alt="" />
-                      <span class="preview-btn" @click="previewImage(item.image)">预览</span>
+                      <span class="preview-btn" @click="previewImage(item.image)"
+                        >预览</span
+                      >
                     </td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.num }}</td>
@@ -229,8 +231,9 @@ export default {
         return {
           1: "光伏",
           2: "储能",
-          3: "拆冲",
-          4: item.otherDevice,
+          3: "柴冲",
+          4: "柴发",
+          5: item.otherDevice,
         }[item.deviceType];
       };
     },

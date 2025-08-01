@@ -370,7 +370,7 @@ export default {
         }
 
         .vip-intro-text {
-          font-size: 14px;
+          font-size: 18px;
           color: #696a6e;
           padding: 20px 0;
           margin-bottom: 20px;
@@ -387,7 +387,7 @@ export default {
 
           .benefit-list {
             .benefit-item {
-              font-size: 14px;
+              font-size: 18px;
               color: #666;
               margin-bottom: 4px;
               position: relative;
@@ -413,7 +413,7 @@ export default {
 
         h4 {
           margin: 0 0 12px 0;
-          font-size: 14px;
+          font-size: 18px;
           font-weight: bold;
           color: #333;
         }
@@ -461,13 +461,15 @@ export default {
           align-items: center;
 
           .version-name {
-            font-size: 14px;
+            font-size: 16px;
             color: #333;
+            font-weight: 600;
           }
 
           .version-price {
-            font-size: 12px;
+            font-size: 16px;
             color: #666;
+            font-weight: 600;
           }
         }
 
@@ -478,8 +480,9 @@ export default {
           position: relative;
 
           .duration-text {
-            font-size: 14px;
+            font-size: 16px;
             color: #333;
+            font-weight: 600;
           }
 
           .duration-tag {
@@ -487,9 +490,9 @@ export default {
             background-size: 100% 100%;
             background-repeat: no-repeat;
             color: white;
-            font-size: 12px;
-            width: 44px;
-            height: 24px;
+            font-size: 16px;
+            width: 54px;
+            height: 28px;
             position: absolute;
             top: 0;
             right: 0;
@@ -510,7 +513,7 @@ export default {
       border-left: 1px solid #e4e4e5;
 
       .price-display {
-        font-size: 32px;
+        font-size: 36px;
         font-weight: bold;
         color: #ff4d4f;
         margin-bottom: 24px;
@@ -558,7 +561,7 @@ export default {
           border: none;
           padding: 12px 24px;
           border-radius: 6px;
-          font-size: 14px;
+          font-size: 18px;
           cursor: pointer;
           transition: background 0.3s;
 

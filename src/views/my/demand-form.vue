@@ -68,12 +68,13 @@
           <el-form-item label="设备类型" prop="deviceType">
             <el-radio-group v-model="form.deviceType">
               <el-radio label="1">光伏</el-radio>
-              <el-radio label="2">组件</el-radio>
-              <el-radio label="3">逆变</el-radio>
-              <el-radio label="4">其他</el-radio>
+              <el-radio label="2">储能</el-radio>
+              <el-radio label="3">柴冲</el-radio>
+              <el-radio label="4">柴发</el-radio>
+              <el-radio label="5">其他</el-radio>
             </el-radio-group>
             <el-input
-              v-if="form.deviceType == '4'"
+              v-if="form.deviceType == '5'"
               v-model="form.otherDevice"
               placeholder="请输入其他设备类型"
               style="width: 190px; margin-left: 20px"
@@ -476,14 +477,14 @@ export default {
   watch: {
     "form.deviceType"(newVal) {
       // 当设备类型改变时，清空其他设备类型的输入
-      if (newVal !== "4") {
+      if (newVal !== "5") {
         this.form.otherDevice = "";
       }
     },
   },
   methods: {
     validateEquipmentType(rule, value, callback) {
-      if (value == "4" && !this.form.otherDevice) {
+      if (value == "5" && !this.form.otherDevice) {
         callback(new Error("请输入具体的设备类型"));
       } else {
         callback();

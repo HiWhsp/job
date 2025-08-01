@@ -133,8 +133,9 @@
               <el-radio-group v-model="demandInfo.deviceType" disabled>
                 <el-radio :label="1">光伏</el-radio>
                 <el-radio :label="2">储能</el-radio>
-                <el-radio :label="3">采发</el-radio>
-                <el-radio :label="4">其他</el-radio>
+                <el-radio :label="3">柴冲</el-radio>
+                <el-radio :label="4">柴发</el-radio>
+                <el-radio :label="5">其他</el-radio>
               </el-radio-group>
             </div>
           </div>

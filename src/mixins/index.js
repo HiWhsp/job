@@ -97,8 +97,9 @@ export default {
         return {
           1: "光伏",
           2: "储能",
-          3: "拆冲",
-          4: item.otherDevice,
+          3: "柴冲",
+          4: "柴发",
+          5: item.otherDevice,
         }[item.deviceType];
       };
     },

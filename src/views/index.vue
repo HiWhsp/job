@@ -9,35 +9,35 @@
             <i class="icon">
               <img src="@/assets/image/icon/home1.png" alt="" />
             </i>
-            售后运维需求表
+            售后运维需求
             <span class="el-icon-arrow-right"></span>
           </div>
           <div class="nav-item" @click="toNav({ route: '/demand-form' })">
             <i class="icon">
               <img src="@/assets/image/icon/home2.png" alt="" />
             </i>
-            项目产品需求表
+            项目产品需求
             <span class="el-icon-arrow-right"></span>
           </div>
           <div class="nav-item" @click="toNav({ route: '/demand-form' })">
             <i class="icon">
               <img src="@/assets/image/icon/home3.png" alt="" />
             </i>
-            项目融资表
+            项目融资
             <span class="el-icon-arrow-right"></span>
           </div>
           <div class="nav-item" @click="toNav({ route: '/demand-form' })">
             <i class="icon">
               <img src="@/assets/image/icon/home4.png" alt="" />
             </i>
-            项目转让表
+            项目转让
             <span class="el-icon-arrow-right"></span>
           </div>
           <div class="nav-item" @click="toNav({ route: '/demand-form' })">
             <i class="icon">
               <img src="@/assets/image/icon/home4.png" alt="" />
             </i>
-            产品回收利用表
+            产品回收利用
             <span class="el-icon-arrow-right"></span>
           </div>
         </div>

@@ -50,16 +50,22 @@
       <div class="page-ctx">
         <el-form
           :model="my_info"
-          label-width="90px"
+          label-width="130px"
           class="user-form"
           label-position="right"
         >
           <el-row>
             <el-col :span="12">
               <el-form-item label="昵称：">
+                <template slot="label">
+                  <span class="required-label">昵称：</span>
+                </template>
                 <el-input v-model="my_info.nickname" clearable :disabled="!isEditing" />
               </el-form-item>
               <el-form-item label="姓名：">
+                <template slot="label">
+                  <span class="required-label">姓名：</span>
+                </template>
                 <el-input v-model="my_info.realname" clearable :disabled="!isEditing" />
               </el-form-item>
               <el-form-item label="公司：">
@@ -73,6 +79,9 @@
                 <el-input v-model="my_info.position" clearable :disabled="!isEditing" />
               </el-form-item>
               <el-form-item label="手机号：">
+                <template slot="label">
+                  <span class="required-label">手机号：</span>
+                </template>
                 <el-input v-model="my_info.mobile" disabled style="width: 70%" />
                 <el-button
                   type="text"
@@ -87,6 +96,9 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="邮箱：">
+                <template slot="label">
+                  <span class="required-label">邮箱：</span>
+                </template>
                 <el-input v-model="my_info.email" clearable disabled style="width: 70%" />
                 <el-button
                   type="text"
@@ -114,11 +126,14 @@
             <el-col :span="24">
               <div class="form-item-title">我属于的类型</div>
               <el-form-item label="选择类型：">
+                <template slot="label">
+                  <span class="required-label">选择类型：</span>
+                </template>
                 <div class="requirement-type-section">
                   <div class="tree-container">
                     <el-tree
                       ref="workTypeTree"
-                      :data="finish_select.typeListTree || []"
+                      :data="finish_select.belongTypeList || []"
                       :props="treeProps"
                       node-key="id"
                       show-checkbox
@@ -467,7 +482,15 @@ export default {
       }).then((res) => {
         let { code, data, msg } = res;
         if (code == 200) {
-          this.finish_select = data;
+          const newData = data;
+          newData.belongTypeList = Object.keys(data.belongTypeList).map((key) => {
+            return {
+              id: key,
+              name_zh: data.belongTypeList[key],
+              children: [],
+            };
+          });
+          this.finish_select = newData;
         }
       });
     },
@@ -479,7 +502,7 @@ export default {
         if (res.code == 200) {
           let data = res.data;
           this.my_info = Object.assign(data, {
-            workType: data.workType ? data.workType.split(",") : [],
+            workType: data.belongType ? data.belongType.split(",") : [],
             requireService: data.requireService.split(","),
           });
           console.log(this.my_info);
@@ -490,7 +513,8 @@ export default {
     },
     do_submit() {
       this.loading = true;
-      this.my_info.workType = this.my_info.workType.join(",");
+      this.my_info.belongType = this.my_info.workType.join(",");
+      this.my_info.workType = undefined;
       this.my_info.requireService = this.my_info.requireService.join(",");
       this.$api({
         url: "editUserInfo",

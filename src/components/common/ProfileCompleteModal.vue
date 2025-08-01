@@ -3,7 +3,7 @@
     :visible.sync="visible"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
-    width="800px"
+    width="850px"
     class="profile-complete-modal"
     @close="handleClose"
   >
@@ -18,7 +18,7 @@
         label-width="120px"
       >
         <!-- 选择角色 -->
-        <el-form-item label="选择角色：" prop="userType">
+        <el-form-item label="选择角色：" prop="userType" required>
           <el-select v-model="form.userType" placeholder="个人/企业" style="width: 100%">
             <el-option label="个人" value="1"></el-option>
             <el-option label="企业" value="2"></el-option>
@@ -26,40 +26,45 @@
         </el-form-item>
 
         <!-- 姓名 -->
-        <el-form-item label="姓名：" prop="realname">
+        <el-form-item label="姓名：" prop="realname" required>
           <el-input v-model="form.realname" placeholder="请输入姓名"></el-input>
         </el-form-item>
 
         <!-- 公司 -->
-        <el-form-item label="公司：" prop="company_name" v-if="form.userType == 2">
+        <el-form-item
+          label="公司："
+          prop="company_name"
+          v-if="form.userType == 2"
+          required
+        >
           <el-input v-model="form.company_name" placeholder="请输入公司名称"></el-input>
         </el-form-item>
 
         <!-- 职务 -->
-        <el-form-item label="职务：" prop="position" v-if="form.userType == 2">
+        <el-form-item label="职务：" prop="position" v-if="form.userType == 2" required>
           <el-input v-model="form.position" placeholder="请输入职务"></el-input>
         </el-form-item>
-        <el-form-item label="地区：">
+        <el-form-item label="地区：" required>
           <area_select ref="area_select" @change="changeSelectAddress" />
         </el-form-item>
         <!-- 地址 -->
-        <el-form-item label="详细地址：" prop="address">
+        <el-form-item label="详细地址：" prop="address" required>
           <el-input v-model="form.address" placeholder="请输入地址"></el-input>
         </el-form-item>
 
         <!-- 我需求的类型 -->
         <div class="form-item-title">我属于的类型</div>
-        <el-form-item label="选择类型：">
+        <el-form-item label="选择类型：" required>
           <div class="requirement-type-section">
             <div class="tree-container">
               <el-tree
                 ref="workTypeTree"
-                :data="finish_select.typeListTree || []"
+                :data="finish_select.belongTypeList || []"
                 :props="treeProps"
                 node-key="id"
                 show-checkbox
                 check-strictly
-                :default-checked-keys="form.workType"
+                :default-checked-keys="form.belongType"
                 @check="handleWorkTypeCheck"
                 class="work-type-tree"
               >
@@ -145,7 +150,17 @@ export default {
     }).then((res) => {
       let { code, data, msg } = res;
       if (code == 200) {
-        this.finish_select = data;
+        const newData = data;
+        // belongTypeList的数据是{1:"从事光伏、风电、柴油发电相关方", 2:"从事储能、充电桩相关方", 3:"从事柴冲、柴发相关方", 4:"从事其他相关方" ....}
+        // 需要转换为[{id:1, name:"从事光伏、风电、柴油发电相关方", children:[]}, {id:2, name:"从事储能、充电桩相关方", children:[]}, {id:3, name:"从事柴冲、柴发相关方", children:[]}, {id:4, name:"从事其他相关方", children:[]}]
+        newData.belongTypeList = Object.keys(data.belongTypeList).map((key) => {
+          return {
+            id: key,
+            name_zh: data.belongTypeList[key],
+            children: [],
+          };
+        });
+        this.finish_select = newData;
       }
     });
   },
@@ -211,15 +226,32 @@ export default {
     handleSubmit() {
       this.$refs.profileForm.validate((valid) => {
         if (valid) {
-          this.submitLoading = true;
+          // 校验数据
+          if (this.form.workType.length == 0) {
+            this.$message.error("请选择我属于的类型");
+            return;
+          }
+          if (this.form.requireService.length == 0) {
+            this.$message.error("请选择我希望平台得到的服务");
+          }
+          if (this.form.provinceId == "") {
+            this.$message.error("请选择地区");
+            return;
+          }
+          if (this.form.address == "") {
+            this.$message.error("请输入详细地址");
+            return;
+          }
 
           // 构建提交数据
           const submitData = {
             ...this.form,
             username: this.form.realname,
-            workType: this.form.workType.join(","),
+            belongType: this.form.workType.join(","),
             requireService: this.form.requireService.join(","),
+            workType: undefined,
           };
+          this.submitLoading = true;
 
           // 实际API调用示例
           this.$api({
@@ -295,9 +327,9 @@ export default {
 
     .form-item-title {
       font-family: Microsoft YaHei;
-      font-size: 14px;
+      font-size: 18px;
       font-weight: bold;
-      line-height: 14px;
+      line-height: 18px;
       letter-spacing: normal;
       color: #666666;
       margin-bottom: 22px;
@@ -306,6 +338,13 @@ export default {
     /deep/ .el-form-item__label {
       font-weight: 500;
       color: #333;
+      font-size: 18px;
+    }
+
+    /deep/ .el-form-item.is-required .el-form-item__label:before {
+      content: "*";
+      color: #f56c6c;
+      margin-right: 4px;
     }
 
     /deep/ .el-input__inner,
@@ -314,6 +353,7 @@ export default {
       line-height: 40px;
       border-radius: 4px;
       border: 1px solid #dcdfe6;
+      font-size: 18px;
 
       &:focus {
         border-color: #33ae60;
@@ -338,18 +378,22 @@ export default {
     background-color: #33ae60;
     border-color: #33ae60;
   }
+  /deep/ .el-tree-node__label {
+    font-size: 17px;
+    color: #333;
+  }
 }
 
 .service-checkboxes {
   /deep/ .el-checkbox {
-    margin-right: 0;
+    margin-right: 10px;
     margin-bottom: 10px;
     flex: 0 0 auto;
     min-width: 180px;
   }
 
   /deep/ .el-checkbox__label {
-    font-size: 14px;
+    font-size: 18px;
     color: #333;
     white-space: nowrap;
   }
