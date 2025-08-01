@@ -97,8 +97,9 @@ export default {
         return {
           1: "PV",
           2: "Storage",
-          3: "Disassembly",
-          4: item.otherDevice,
+          3: "Chai Chong",
+          4: "Chai Fa",
+          5: item.otherDevice,
         }[item.deviceType];
       };
     },

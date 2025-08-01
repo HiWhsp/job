@@ -276,7 +276,8 @@ export default {
           1: "Photovoltaic",
           2: "Energy Storage",
           3: "Charging Station",
-          4: item.otherDevice,
+          4: "Chai Fa",
+          5: item.otherDevice,
         }[item.deviceType];
       };
     },
