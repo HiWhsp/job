@@ -66,7 +66,7 @@
 
               <div class="qr-code-section">
                 <div class="qr-code">
-                  <!-- <img src="@img/ellsenn/qr-code.png" alt="二维码" /> -->
+                  <img :src="contacts.qrcode" alt="二维码" />
                 </div>
               </div>
             </div>
