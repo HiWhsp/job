@@ -39,10 +39,11 @@
               @change="handleSearch"
             >
               <el-option label="All" value="" />
-              <el-option label="Solar" value="1" />
-              <el-option label="Energy Storage" value="2" />
-              <el-option label="Diesel" value="3" />
-              <el-option label="Other" value="4" />
+              <el-option label="PV" value="1" />
+              <el-option label="Storage" value="2" />
+              <el-option label="Charging Pile" value="3" />
+              <el-option label="Chai Fa" value="4" />
+              <el-option label="Other" value="5" />
             </el-select>
           </el-form-item>
           <el-form-item style="flex: 1; text-align: right">
@@ -302,9 +303,9 @@ export default {
     deviceTypeName() {
       return (item) => {
         return {
-          1: "Solar",
-          2: "Energy Storage",
-          3: "Diesel",
+          1: "PV",
+          2: "Storage",
+          3: "Charging Pile",
           4: "Chai Fa",
           5: item.otherDevice,
         }[item.deviceType];

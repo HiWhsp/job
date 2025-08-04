@@ -377,7 +377,7 @@ export default {
         method: "get",
         data: {
           page: 1,
-          pageSize: 7,
+          pageSize: 6,
           companyType: 1, // 1:系统厂商 2:配套厂商
         },
       }).then((res) => {
@@ -390,7 +390,7 @@ export default {
         method: "get",
         data: {
           page: 1,
-          pageSize: 14,
+          pageSize: 12,
           companyType: 2, // 1:系统厂商 2:配套厂商
         },
       }).then((res) => {

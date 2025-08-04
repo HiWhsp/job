@@ -273,9 +273,9 @@ export default {
     deviceTypeName() {
       return (item) => {
         return {
-          1: "Photovoltaic",
-          2: "Energy Storage",
-          3: "Charging Station",
+          1: "PV",
+          2: "Storage",
+          3: "Charging Pile",
           4: "Chai Fa",
           5: item.otherDevice,
         }[item.deviceType];

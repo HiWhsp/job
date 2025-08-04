@@ -128,10 +128,11 @@
             <label class="form-label">Device Type</label>
             <div class="form-input">
               <el-radio-group v-model="demandInfo.deviceType" disabled>
-                <el-radio :label="1">Solar</el-radio>
-                <el-radio :label="2">Energy Storage</el-radio>
-                <el-radio :label="3">Diesel</el-radio>
-                <el-radio :label="4">Other</el-radio>
+                <el-radio :label="1">PV</el-radio>
+                <el-radio :label="2">Storage</el-radio>
+                <el-radio :label="3">Charging Pile</el-radio>
+                <el-radio :label="4">Chai Fa</el-radio>
+                <el-radio :label="5">Other</el-radio>
               </el-radio-group>
             </div>
           </div>

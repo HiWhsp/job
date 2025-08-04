@@ -70,9 +70,9 @@
         <template v-if="form.workOrderType === '1'">
           <el-form-item label="Type" prop="deviceType">
             <el-radio-group v-model="form.deviceType">
-              <el-radio label="1">Photovoltaic</el-radio>
-              <el-radio label="2">Energy Storage</el-radio>
-              <el-radio label="3">Chai Chong</el-radio>
+              <el-radio label="1">PV</el-radio>
+              <el-radio label="2">Storage</el-radio>
+              <el-radio label="3">Charging Pile</el-radio>
               <el-radio label="4">Chai Fa</el-radio>
               <el-radio label="5">Other</el-radio>
             </el-radio-group>

@@ -64,22 +64,35 @@
 
       <!-- VIP会员卡片 -->
       <div class="vip-card">
-        <div class="vip-card-content">
+        <div class="vip-card-content" :style="{ backgroundImage: `url(${require('@/assets/img/my/vip-card' + my_info.userLevel + '.png')})` }">
           <div class="vip-info" v-if="my_info.userLevel == 0">
-            <h3>VIP</h3>
+            <h3>{{ levelName }}</h3>
             <div class="promotion">
               <button class="open-vip-btn" @click="openVipNow">
                 Activate Now
               </button>
             </div>
           </div>
-          <div class="vip-info" v-else>
+          <div class="vip-info" v-else-if="my_info.userLevel == 1">
             <h4>{{ my_info.mobile || "--" }}</h4>
             <div class="vip-info-box">
-              <img src="@/assets/img/my/vip-active.png" alt="VIP会员" />
-              <span>VIP</span>
+              <img src="@/assets/img/my/vip-active1.png" alt="VIP会员" />
+              <span>{{ levelName }}</span>
             </div>
-            <p>{{ my_info.company_name || my_info.nickname }}</p>
+          </div>
+          <div class="vip-info vip-info-2" v-else-if="my_info.userLevel == 2">
+            <h4>{{ my_info.mobile || "--" }}</h4>
+            <div class="vip-info-box">
+              <img src="@/assets/img/my/vip-active2.png" alt="VIP会员" />
+              <span>{{ levelName }}</span>
+            </div>
+          </div>
+          <div class="vip-info vip-info-3" v-else-if="my_info.userLevel == 3">
+            <h4>{{ my_info.mobile || "--" }}</h4>
+            <div class="vip-info-box">
+              <img src="@/assets/img/my/vip-active3.png" alt="VIP会员" />
+              <span>{{ levelName }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -441,7 +454,7 @@ export default {
 
           h4 {
             margin: 0 0 10px 0;
-            font-size: 16px;
+            font-size: 20px;
             font-weight: bold;
             color: #fcefc7;
           }
@@ -451,19 +464,31 @@ export default {
             justify-content: center;
             gap: 3px;
             color: #7e5529;
-            width: 76px;
-            height: 22px;
+            width: 102px;
+            height: 30px;
             border-radius: 20px;
             background: #fde2b4;
             img {
-              width: 14px;
-              height: 14px;
+              width: 18px;
+              height: 18px;
             }
           }
           p {
             margin-top: 60px;
             font-size: 12px;
             color: #7e5529;
+          }
+        }
+        .vip-info-2 {
+          .vip-info-box {
+            background: #deeeff;
+            color: #398AD7;
+          }
+        }
+        .vip-info-3 {   
+          .vip-info-box {
+            background: #FCDBF5;
+            color: #7D4BB7;
           }
         }
 

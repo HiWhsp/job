@@ -3,9 +3,15 @@
     <div class="page-header">
       <div class="page-header-title">
         <span>My Personal Center</span>
-        <span v-if="showPhoneUpdate || showEmailUpdate" style="margin: 0 10px">></span>
+        <span v-if="showPhoneUpdate || showEmailUpdate" style="margin: 0 10px"
+          >></span
+        >
         <span>{{
-          showPhoneUpdate ? "Change Phone Number" : showEmailUpdate ? "Change Email" : ""
+          showPhoneUpdate
+            ? "Change Phone Number"
+            : showEmailUpdate
+            ? "Change Email"
+            : ""
         }}</span>
       </div>
     </div>
@@ -37,7 +43,11 @@
         <div class="user-info-box">
           <div class="user-name">{{ my_info.realname || "Username" }}</div>
           <div class="user-level">
-            <img src="@img/my/no-vip.png" alt="" v-if="my_info.userLevel == 0" />
+            <img
+              src="@img/my/no-vip.png"
+              alt=""
+              v-if="my_info.userLevel == 0"
+            />
             <img src="@img/my/vip-active.png" alt="" v-else />
             {{ levelName }}
           </div>
@@ -57,10 +67,18 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="Nickname:">
-                <el-input v-model="my_info.nickname" clearable :disabled="!isEditing" />
+                <el-input
+                  v-model="my_info.nickname"
+                  clearable
+                  :disabled="!isEditing"
+                />
               </el-form-item>
               <el-form-item label="Name:">
-                <el-input v-model="my_info.realname" clearable :disabled="!isEditing" />
+                <el-input
+                  v-model="my_info.realname"
+                  clearable
+                  :disabled="!isEditing"
+                />
               </el-form-item>
               <el-form-item label="Company:">
                 <el-input
@@ -70,10 +88,18 @@
                 />
               </el-form-item>
               <el-form-item label="Position:">
-                <el-input v-model="my_info.position" clearable :disabled="!isEditing" />
+                <el-input
+                  v-model="my_info.position"
+                  clearable
+                  :disabled="!isEditing"
+                />
               </el-form-item>
               <el-form-item label="Phone:">
-                <el-input v-model="my_info.mobile" disabled style="width: 70%" />
+                <el-input
+                  v-model="my_info.mobile"
+                  disabled
+                  style="width: 70%"
+                />
                 <el-button
                   type="text"
                   class="change-phone-btn"
@@ -87,7 +113,12 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="Email:">
-                <el-input v-model="my_info.email" clearable disabled style="width: 70%" />
+                <el-input
+                  v-model="my_info.email"
+                  clearable
+                  disabled
+                  style="width: 70%"
+                />
                 <el-button
                   type="text"
                   class="change-phone-btn"
@@ -97,7 +128,11 @@
                 >
               </el-form-item>
               <el-form-item label="Address:">
-                <el-input v-model="my_info.address" clearable :disabled="!isEditing" />
+                <el-input
+                  v-model="my_info.address"
+                  clearable
+                  :disabled="!isEditing"
+                />
               </el-form-item>
               <el-form-item label="Bio:">
                 <el-input
@@ -135,18 +170,23 @@
           </el-row>
           <el-row>
             <el-col :span="24">
-              <div class="form-item-title">Services I Hope to Get from the Platform</div>
-              <el-checkbox-group v-model="my_info.requireService" :disabled="!isEditing">
-                <el-row :gutter="20">
-                  <el-col
-                    :span="6"
+              <div class="form-item-title">
+                Services I Hope to Get from the Platform
+              </div>
+              <el-checkbox-group
+                v-model="my_info.requireService"
+                :disabled="!isEditing"
+              >
+                <div class="require-service-list">
+                  <div
                     v-for="item in finish_select.requireList || []"
                     :key="item.id"
-                    ><el-checkbox :label="item.id + ''" :value="item.id + ''">{{
-                      item.title
-                    }}</el-checkbox></el-col
                   >
-                </el-row>
+                    <el-checkbox :label="item.id + ''" :value="item.id + ''">{{
+                      item.title
+                    }}</el-checkbox>
+                  </div>
+                </div>
               </el-checkbox-group>
             </el-col>
           </el-row>
@@ -229,11 +269,15 @@
                 placeholder="Please enter verification code"
                 class="form-input-code"
               />
-              <el-button class="get-code-btn" @click="get_code(1)">Get Code</el-button>
+              <el-button class="get-code-btn" @click="get_code(1)"
+                >Get Code</el-button
+              >
             </div>
           </div>
           <div class="update-form-actions">
-            <el-button type="primary" @click="confirm_phone_update">Confirm</el-button>
+            <el-button type="primary" @click="confirm_phone_update"
+              >Confirm</el-button
+            >
             <el-button @click="cancel_phone_update">Cancel</el-button>
           </div>
         </div>
@@ -276,7 +320,9 @@
             </div>
           </div>
           <div class="update-form-actions">
-            <el-button type="primary" @click="confirm_email_update">Confirm</el-button>
+            <el-button type="primary" @click="confirm_email_update"
+              >Confirm</el-button
+            >
             <el-button @click="cancel_email_update">Cancel</el-button>
           </div>
         </div>
@@ -421,7 +467,9 @@ export default {
         method: "post",
         data: {
           account:
-            type == 1 ? this.phoneUpdateForm.newPhone : this.emailUpdateForm.newEmail,
+            type == 1
+              ? this.phoneUpdateForm.newPhone
+              : this.emailUpdateForm.newEmail,
           type: type,
         },
       });
@@ -468,13 +516,15 @@ export default {
         let { code, data, msg } = res;
         if (code == 200) {
           const newData = data;
-          newData.belongTypeList = Object.keys(data.belongTypeList).map((key) => {
-            return {
-              id: key,
-              name_zh: data.belongTypeList[key],
-              children: [],
-            };
-          });
+          newData.belongTypeList = Object.keys(data.belongTypeList).map(
+            (key) => {
+              return {
+                id: key,
+                name_zh: data.belongTypeList[key],
+                children: [],
+              };
+            }
+          );
           this.finish_select = newData;
         }
       });

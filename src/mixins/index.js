@@ -97,7 +97,7 @@ export default {
         return {
           1: "PV",
           2: "Storage",
-          3: "Chai Chong",
+          3: "Charging Pile",
           4: "Chai Fa",
           5: item.otherDevice,
         }[item.deviceType];
