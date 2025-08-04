@@ -1,5 +1,11 @@
 <template>
   <div class="page-footer">
+    <!-- <div class="logo-wrap">
+      <div class="left-logo">
+        <img :src="vuex_config.comLogo" alt="" />
+      </div>
+    </div> -->
+
     <div class="web-footer">
       <div class="footer-left">
         <div class="left-info">
@@ -16,17 +22,12 @@
             <div class="left-articles">
               <div class="article-item">
                 <router-link to="/terms?id=100">
-                  <img src="@/assets/image/footer/fackback.png" alt="" />
+                  {{ info_return.title }}
                 </router-link>
               </div>
               <div class="article-item">
                 <router-link to="/terms?id=101">
-                  <img src="@/assets/image/footer/feishu.png" alt="" />
-                </router-link>
-              </div>
-              <div class="article-item">
-                <router-link to="/terms?id=101">
-                  <img src="@/assets/image/footer/weibo.png" alt="" />
+                  {{ info_ship.title }}
                 </router-link>
               </div>
             </div>
@@ -46,24 +47,23 @@
             <div class="info-box">
               <div class="info-item">
                 <span>
-                  <a
-                    target="_blank"
-                    :href="'https://wa.me/' + vuex_config.comPhone"
-                  >
+                  <a target="_blank" :href="'https://wa.me/' + vuex_config.comPhone">
                     {{ vuex_config.comPhone }}
                   </a>
                 </span>
               </div>
 
-              <div class="info-item">支付方式</div>
+              <div class="info-item">
+                支付方式
+            
+              </div>
 
               <div class="info-item">
-                <!-- <img src="@/static/common/foot-addr.png" alt=""> -->
+                <!-- <img src="@img/common/foot-addr.png" alt=""> -->
                 <div class="desc-box">
-                  <!-- <div class="desc-item" v-for="(item, index) in address_list" :key="index">
+                  <div class="desc-item" v-for="(item, index) in address_list">
                     {{ item }}
-                  </div> -->
-                  <img src="@/assets/image/footer/play.png" alt="" />
+                  </div>
                 </div>
 
                 <!-- <span> 
@@ -71,51 +71,41 @@
                 </span> -->
               </div>
 
-              <div class="links">
+              <div class="links" >
                 <a href="">
-                  <!-- <img src="@/static/common/foot-link1.png" alt=""> -->
+                  <!-- <img src="@img/common/foot-link1.png" alt=""> -->
                 </a>
                 <a href="">
-                  <!-- <img src="@/static/common/foot-link2.png" alt=""> -->
+                  <!-- <img src="@img/common/foot-link2.png" alt=""> -->
                 </a>
                 <a href="">
-                  <!-- <img src="@/static/common/foot-link3.png" alt=""> -->
+                  <!-- <img src="@img/common/foot-link3.png" alt=""> -->
                 </a>
               </div>
             </div>
           </div>
 
           <div class="group-item">
-            <div class="group-title">时事通讯</div>
-            <div class="info-box">
-              <div class="info-item">
-                <span>
-                  <a target="_blank"> 注册以接收我们的时事通讯 </a>
-                </span>
-              </div>
-
-              <div class="info-item">
-                <el-input v-model="email" placeholder="请输入邮箱" />
-              </div>
-
-              <div class="info-item">
-                <div class="desc-box">
-                  <p
-                    >我同意接收有关bbrmodelstore产品、活动和促销（包括优惠和折扣）的个性化营销信息。</p
-                  >
-                  <el-button>发送</el-button>
-                </div>
-              </div>
+            <div class="group-title">
+              时事通讯
             </div>
+        
           </div>
         </div>
       </div>
+  
     </div>
 
     <div class="beian-box">
       <div class="beian-ctx">
-        <div class="beian" v-html="vuex_config.comBeian"></div>
+        <div class="beian" v-html="vuex_config.comBeian">
+
+        </div>
+        <!-- <a href="https://beian.miit.gov.cn/" target="_blank">© Copyright 2024 COMPANY NAME. All Rights Reserved.</a> -->
+        <!-- <a href="https://beian.miit.gov.cn/" target="_blank"> {{ vuex_config.comBeian }} </a> -->
+        <!-- <span>{{ vuex_config.comBeian }}</span> -->
       </div>
+
     </div>
   </div>
 </template>
@@ -129,22 +119,25 @@ export default {
   props: [],
   data() {
     return {
-      info_return: {},
-      info_ship: {},
-      email: "",
+      info_return: {
+
+      },
+      info_ship: {
+
+      },
     };
   },
   computed: {
-    ...mapState(["vuex_product_cate_1", "vuex_product_cate_2"]),
+    // ...mapState(['']),
     address_list() {
-      let arr = (this.vuex_config.comAddress || "").split("||");
-      return arr;
-    },
+      let arr = (this.vuex_config.comAddress || '').split('||')
+      return arr
+    }
   },
   watch: {},
 
   created() {
-    this.setView();
+    this.setView()
   },
 
   methods: {
@@ -157,29 +150,31 @@ export default {
         method: "get",
         data: {
           action: "news_detail",
-          id: 100,
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          this.info_return = res.data.info;
+          id: 100
         }
-      });
+      })
+        .then((res) => {
+          if (res.code == 200) {
+            this.info_return = res.data.info;
+          }
+        });
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "news_detail",
-          id: 101,
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          this.info_ship = res.data.info;
+          id: 101
         }
-      });
+      })
+        .then((res) => {
+          if (res.code == 200) {
+            this.info_ship = res.data.info;
+          }
+        });
     },
     toNav(item) {
-      this.$router.push(item.route);
-    },
+      this.$router.push(item.route)
+    }
   },
 };
 </script>
@@ -187,11 +182,14 @@ export default {
 <style scoped lang="less">
 .page-footer {
   width: 100%;
+  min-height: 402px;
   padding-top: 40px;
-  background: #000;
+  // background: #4CA5E4;
+  background: #F9FAFC;
   color: #fff;
-  border-top: 1px solid #999;
 }
+
+
 
 .logo-wrap {
   width: @width;
@@ -218,20 +216,23 @@ export default {
   align-items: flex-start;
   padding-bottom: 60px;
 
+
   .footer-left {
-    width: 540px;
+    width: 640px;
     padding-right: 180px;
 
     .left-info {
+
       .left-item {
         margin-bottom: 10px;
 
         .left-label {
+
           a {
             font-family: Poppins, Poppins;
             font-weight: bold;
             font-size: 22px;
-            color: #fff;
+            color: #333333;
           }
         }
 
@@ -240,7 +241,7 @@ export default {
           font-family: OPPOSans, OPPOSans;
           font-weight: normal;
           font-size: 14px;
-          color: #fff;
+          color: #888888;
           line-height: 24px;
         }
       }
@@ -251,6 +252,7 @@ export default {
     flex: 1;
     display: flex;
     justify-content: space-evenly;
+    padding-right: 100px;
 
     .nav-group {
       flex: 1;
@@ -264,7 +266,7 @@ export default {
         font-family: Poppins, Poppins;
         font-weight: bold;
         font-size: 22px;
-        color: #fff;
+        color: #333333;
         font-weight: normal;
 
         a {
@@ -272,7 +274,7 @@ export default {
           font-family: Poppins, Poppins;
           font-weight: bold;
           font-size: 22px;
-          color: #fff;
+          color: #333333;
         }
       }
 
@@ -288,62 +290,32 @@ export default {
             height: 20px;
           }
 
+
           span {
             font-family: OPPOSans, OPPOSans;
             font-weight: bold;
             font-size: 16px;
-            color: #fff;
+            color: #888888;
             font-weight: normal;
 
             a {
               font-family: OPPOSans, OPPOSans;
               font-weight: bold;
               font-size: 16px;
-              color: #fff;
+              color: #888888;
               font-weight: normal;
             }
           }
 
           .desc-box {
-            img {
-              width: 100%;
-              height: 26px;
-            }
             .desc-item {
               margin-bottom: 10px;
               font-family: OPPOSans, OPPOSans;
               font-weight: bold;
               font-size: 16px;
-              color: #fff;
+              color: #888888;
               font-weight: normal;
             }
-
-            p {
-              width: 288px;
-              color: #fff;
-              line-height: 24px;
-            }
-
-            .el-button {
-              margin-top: 10px;
-              width: 100px;
-              background: #DF1626;
-              border-radius: 2px 2px 2px 2px;
-              border: 1px solid #DF1626;
-              color: #fff;
-            }
-          }
-
-          .el-input {
-            width: 288px;
-            background: #ffffff;
-            border-radius: 2px 2px 2px 2px;
-            border: 1px solid #e6e5e5;
-            opacity: 0.2;
-          }
-          /deep/ .el-input__inner {
-            border-radius: 0;
-            border: 1px solid #e6e5e5;
           }
         }
 
@@ -364,12 +336,12 @@ export default {
     .btn-dingyue {
       width: 150px;
       height: 40px;
-      background: #4ca5e4;
+      background: #4CA5E4;
 
       font-family: OPPOSans, OPPOSans;
       font-weight: bold;
       font-size: 14px;
-      color: #ffffff;
+      color: #FFFFFF;
     }
   }
 }
@@ -379,6 +351,8 @@ export default {
     width: 201px;
   }
 }
+
+
 
 .info-box {
   margin-top: 10px;
@@ -412,7 +386,9 @@ export default {
 }
 
 .qrcode-box {
-  .flex-center();
+    display: flex;
+          justify-content: center;
+          align-items: center;
   padding-bottom: 60px;
 
   .qrcode-item {
@@ -437,6 +413,7 @@ export default {
   }
 }
 
+
 .tip-box {
   margin-bottom: 20px;
 
@@ -453,10 +430,10 @@ export default {
   }
 }
 
+
 .beian-box {
   border-top: 1px solid #ddd;
-  background: #000;
-  height: 66px;
+  background: #F9FAFC;
 
   .beian-ctx {
     width: @width;
@@ -498,23 +475,17 @@ export default {
   }
 }
 
+
 .left-articles {
-  display: flex;
-  flex-direction: row;
   .article-item {
     margin-top: 10px;
-    img {
-      width: 24px;
-      height: 24px;
-      margin-right: 24px;
-    }
 
     a {
       color: #666;
       font-size: 14px;
 
       &:hover {
-        color: #4ca5e4;
+        color: #4CA5E4;
       }
     }
   }

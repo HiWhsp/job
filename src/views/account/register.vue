@@ -1,59 +1,79 @@
 <template>
   <div class="page">
-    <terms_modal ref="terms_modal" />
-
-
     <div class="page-bg">
-      <img src="@img/login/login-bg.png" alt="">
+      <img src="@img/login/login-bg.jpg" alt="" />
     </div>
 
     <div class="page-ctx">
-      <div class="center page-inner flex-between w-1200">
+      <div class="page-inner page-inner flex-between w-1400">
         <div class="page-poster">
-          <!-- <img src="@/static/login/poster.png" alt=""> -->
+          <!-- <img src="@img/login/poster.png" alt=""> -->
         </div>
 
-        <div class="inner form-box">
+        <div class="form-box">
           <div class="input-wrap">
             <div class="tab-box">
               <div class="tab-item">
-                会员注册
+                {{ form.type == 1 ? "会员" : "企业" }}注册
               </div>
             </div>
 
             <template>
               <div class="input-box">
                 <span>手机号</span>
-                <input type="text" placeholder="请输入手机号码" v-model="form.phone" />
+                <input
+                  type="text"
+                  placeholder="请输入手机号码"
+                  v-model="form.phone"
+                />
               </div>
 
-              <mobile_sms :form="form" />
+              <register_phone_code :form="form" />
 
               <div class="input-box">
                 <span>设置密码</span>
-                <input type="password" placeholder="请输入密码" v-model="form.pass" />
+                <input
+                  type="password"
+                  placeholder="请输入密码"
+                  v-model="form.pass"
+                />
               </div>
 
               <div class="input-box">
                 <span>确认密码</span>
-                <input type="password" placeholder="请输入密码" v-model="form.pass2" />
+                <input
+                  type="password"
+                  placeholder="请输入密码"
+                  v-model="form.pass2"
+                />
               </div>
-
+              <div class="input-box" v-if="form.type == 2">
+                <span>企业名称</span>
+                <input
+                  type="text"
+                  placeholder="请输入企业名称"
+                  v-model="form.company"
+                />
+              </div>
               <div class="btn-box">
-                <button class="btn-ripple" @click="do_submit()">确定</button>
+                <button class="btn-ripple" @click="do_submit()">注册</button>
               </div>
 
               <div class="register-box">
-                <span> <router-link to="/login">已有账号，去登录 ></router-link> </span>
+                <span>
+                  <router-link to="/login">已有账号，直接登录</router-link>
+                </span>
               </div>
 
               <div class="terms-box">
                 <span class="terms-check" @click="is_agree = !is_agree">
-                  <img v-if="is_agree" src="@/static/common/check1.png" alt="">
-                  <img v-else src="@/static/common/check0.png" alt="">
+                  <img v-if="is_agree" src="@img/common/check1.png" alt="" />
+                  <img v-else src="@img/common/check0.png" alt="" />
                   登录注册即表示同意
                 </span>
-                <span class="terms-text" @click="terms_open(92)">《隐私政策》</span>
+                <span class="terms-text" @click="terms_open(92)"
+                  >《会员注册协议》</span
+                >
               </div>
             </template>
           </div>
@@ -61,17 +81,19 @@
       </div>
     </div>
 
+    <register_type_modal
+      data-title="注册类型"
+      ref="register_type_modal"
+      @confirm="switchMode"
+    />
 
-    <register_type_modal data-title="注册类型" ref="register_type_modal" />
+    <terms_modal ref="terms_modal" />
   </div>
 </template>
 
 <script>
 import register_type_modal from "@/components/account/register_type_modal.vue"; //短信验证码
-import mobile_sms from "@/components/login/mobile_sms.vue"; //短信验证码
-import utilForm from "@/util/utilForm.js";
-// import SmsLogin from "@/components/login/SmsLogin.vue"; //短信验证码
-// import modalTerms from "@/components/modals/modalTerms.vue"; //协议弹窗
+import register_phone_code from "@/components/account/register_phone_code.vue"; //短信验证码
 import terms_modal from "@/components/account/terms_modal.vue"; //协议弹窗
 
 import { mapState } from "vuex";
@@ -80,8 +102,7 @@ export default {
   name: "login",
   components: {
     register_type_modal,
-    mobile_sms,
-    // modalTerms,
+    register_phone_code,
     terms_modal,
   },
   data() {
@@ -98,19 +119,31 @@ export default {
         pass: "",
         pass2: "",
         invite_id: "",
+        type: 1,
       },
     };
   },
   computed: {
     ...mapState(["logo"]),
   },
-  created() { },
+  mounted() {
+    let type = this.$route.query.type;
+    console.log(type);
+    if (type !== undefined) {
+      this.form.type = type;
+    } else {
+      this.$refs.register_type_modal.init("");
+    }
+  },
 
   methods: {
     terms_open(id) {
       this.$refs.terms_modal.init(id);
     },
-
+    switchMode(info) {
+      console.log(info);
+      this.form.type = info;
+    },
     do_submit() {
       let reg_phone = /^1[3-9]\d{9}$/;
       let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
@@ -135,16 +168,19 @@ export default {
         alertErr("两次密码不一致");
         return;
       }
-
+      if (this.form.type == 2 && this.form.company.length === 0) {
+        alertErr("请输入企业名称");
+        return;
+      }
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "login_phoneReg",
-          ...this.form
-        }
+          ...this.form,
+        },
       }).then((res) => {
-        alert(res)
+        alert(res);
         if (res.code == 200) {
           this.$router.push("/login");
         }
@@ -184,10 +220,6 @@ export default {
     align-items: center;
   }
 
-
-
-
-
   .page-poster {
     margin-left: 46px;
 
@@ -197,182 +229,155 @@ export default {
     }
   }
 
-  .center {
+  .page-inner {
     height: 780px;
     margin: 0 auto;
     background: transparent;
     align-items: center;
     position: relative;
 
-    .inner {
+    .form-box {
       position: relative;
-
-
-      width: 560px;
+      width: fit-content;
       min-height: 520px;
-      background: #F9FAFC;
+      background: #f9fafc;
       box-shadow: 0px 2px 15px 1px rgba(79, 79, 79, 0.15);
       border: 1px solid rgba(76, 165, 228, 0.1);
 
       padding: 40px 40px 70px;
       opacity: 1;
       border-radius: 10px;
-
-
-      .mode-toggle {
-        position: absolute;
-        right: 12px;
-        top: 12px;
-
-        img {
-          width: 64px;
-          cursor: pointer;
-        }
-      }
-
-      .left {}
-
-      .right {
-        // width: 480px;
-        // height: 480px;
-        // background: #ffffff;
-        // box-shadow: 0px 10px 20px rgba(1, 100, 98, 0.2);
-        // opacity: 1;
-        // border-radius: 10px;
-
-        // padding: 40px 40px 30px 40px;
-      }
-    }
-
-    .tab-box {
-      margin-bottom: 40px;
-      .flex-center();
-
-      .tab-item {
-        font-family: Poppins, Poppins;
-        font-weight: 600;
-        font-size: 26px;
-        color: #333333;
-
-
-        &:first-child {
-          // &:after {
-          //   content: "";
-          //   display: inline-block;
-          //   width: 2px;
-          //   height: 24px;
-          //   background-color: #ccc;
-          //   margin: 0 30px;
-          //   position: relative;
-          //   top: 3px;
-          // }
-        }
-
-        &.active {
-          color: #333333;
-        }
-      }
     }
 
     .input-wrap {
       width: 400px;
       margin: 0 auto;
-    }
 
-    .input-box {
-      margin-bottom: 20px;
-      width: 100%;
-      height: 50px;
-      background: #ffffff;
-      border: 1px solid #eeeeee;
-      border-radius: 4px;
+      .tab-box {
+        margin-bottom: 40px;
         display: flex;
-  align-items: center;
-  justify-content: space-between;
-      overflow: hidden;
+        justify-content: center;
+        align-items: center;
 
-      span {
-        display: inline-block;
-        width: 95px;
-        border-right: 1px solid #ccc;
+        .tab-item {
+          font-family: Poppins, Poppins;
+          font-weight: 600;
+          font-size: 26px;
+          color: #333333;
 
-        font-family: OPPOSans, OPPOSans;
-        font-weight: 400;
-        font-size: 14px;
-        color: #7D7D7D;
-        text-indent: 1em;
-      }
+          &:first-child {
+            // &:after {
+            //   content: "";
+            //   display: inline-block;
+            //   width: 2px;
+            //   height: 24px;
+            //   background-color: #ccc;
+            //   margin: 0 30px;
+            //   position: relative;
+            //   top: 3px;
+            // }
+          }
 
-      img {
-        width: 36px;
-      }
-
-      input {
-        flex: 2;
-        height: 100%;
-        padding-left: 16px;
-        font-size: 14px;
-        color: #000;
-
-        &::-webkit-input-placeholder {
-          font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-          font-weight: 400;
-          color: #d7d7d7;
+          &.active {
+            color: #333333;
+          }
         }
       }
-    }
 
-    .agree-box {
-      text-align: left;
-      margin-top: 20px;
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-      font-size: 14px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      line-height: 24px;
-      color: #999999;
-
-      a {
-        color: #F74747;
-      }
-    }
-
-    .btn-box {
-      margin-top: 40px;
-
-      button {
+      .input-box {
+        margin-bottom: 20px;
         width: 100%;
-        height: 44px;
-        background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
-        background: #F74747;
-        font-size: 18px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #ffffff;
+        height: 50px;
+        background: #ffffff;
+        border: 1px solid #eeeeee;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        overflow: hidden;
+
+        span {
+          text-align: center;
+          display: inline-block;
+          width: 90px;
+          border-right: 1px solid #ccc;
+          font-family: OPPOSans, OPPOSans;
+          font-weight: 400;
+          font-size: 14px;
+          color: #7d7d7d;
+          // text-indent: 1em;
+        }
+
+        img {
+          width: 36px;
+        }
+
+        input {
+          flex: 2;
+          height: 100%;
+          padding-left: 16px;
+          font-size: 14px;
+          color: #000;
+
+          &::-webkit-input-placeholder {
+            font-size: 14px;
+            font-family: sans-serif;
+            font-weight: 400;
+            color: #d7d7d7;
+          }
+        }
       }
-    }
 
-    .register-box {
-      text-align: center;
-      margin-top: 30px;
-      font-size: 14px;
+      .agree-box {
+        text-align: left;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
-      a {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 24px;
-        color: #F74747;
-        border-bottom: 1px solid #F74747;
+        color: #999999;
+
+        a {
+          color: #3B64FC;
+        }
+      }
+
+      .btn-box {
+        margin-top: 40px;
+
+        button {
+          width: 100%;
+          height: 44px;
+          background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
+          background: #3B64FC;
+          font-size: 18px;
+          font-family: sans-serif;
+          font-weight: 400;
+          color: #ffffff;
+        }
+      }
+
+      .register-box {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+
+        a {
+          font-size: 14px;
+          font-family: Microsoft YaHei;
+          font-weight: 400;
+          line-height: 24px;
+          color: #3B64FC;
+          border-bottom: 1px solid #3B64FC;
+        }
       }
     }
   }
 }
-
 
 .terms-box {
   position: absolute;
@@ -387,7 +392,6 @@ export default {
   justify-content: flex-start;
   padding-left: 20px;
   text-align: center;
-
 
   .terms-check {
     cursor: pointer;
@@ -411,7 +415,7 @@ export default {
     color: #999999;
 
     &:hover {
-      color: #F74747;
+      color: #3B64FC;
     }
   }
 }

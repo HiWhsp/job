@@ -105,7 +105,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
 
     // has_shangji() {
     //   // return this.detail.shangji;
@@ -221,11 +221,13 @@ export default {
 
     .top-box {
       padding: 30px;
-      background: #F74747;
+      background: #3b64fc;
       color: #fff;
       .fenhong-info {
         margin-top: 30px;
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
         font-size: 16px;
         color: #ffffff;
 
@@ -237,7 +239,9 @@ export default {
         }
         .fenhong-item {
           min-width: 160px;
-          .flex-center();
+            display: flex;
+          justify-content: center;
+          align-items: center;
           flex-direction: column;
 
           &:first-child {
@@ -447,9 +451,9 @@ export default {
             margin-top: 20px;
             text-align: right;
             a {
-              border: 1px solid #F74747;
+              border: 1px solid #3b64fc;
               padding: 3px 8px;
-              color: #F74747;
+              color: #3b64fc;
             }
           }
         }

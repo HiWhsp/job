@@ -171,7 +171,9 @@ export default {
         border: none;
       }
       .item {
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
         flex-direction: column;
         align-items: flex-start;
         cursor: pointer;
@@ -203,7 +205,7 @@ export default {
             flex: 2;
 
             &:hover {
-              color: var(--main_color);
+              color: #f00;
             }
           }
           .marker {
@@ -226,7 +228,7 @@ export default {
           .level2-item {
             margin-right: 10px;
             &:hover {
-              color: var(--main_color);
+              color: #f00;
             }
           }
         }
@@ -279,7 +281,7 @@ export default {
             font-size: 14px;
 
             &:hover {
-              color: var(--main_color);
+              color: #f00;
             }
           }
 
@@ -314,7 +316,7 @@ export default {
               margin: 0 0.05rem;
 
               &:hover {
-                color: var(--main_color);
+                color: #f00;
               }
             }
           }
@@ -333,7 +335,7 @@ export default {
         color: #5e5e5e;
       }
       .pannel-item:hover {
-        color: var(--main_color);
+        color: #f00;
       }
     }
   }

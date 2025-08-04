@@ -5,7 +5,12 @@
       <!-- <img src="/common/icon-code.png" alt="" /> -->
       <input type="text" placeholder="请输入验证码" v-model="form.code" />
 
-      <button :disabled="disabledBtn" class="btn-validate-box" @click="query_code()" :class="time != 60 ? 'disabled' : ''">
+      <button
+        :disabled="disabledBtn"
+        class="btn-validate-box"
+        @click="query_code()"
+        :class="time != 60 ? 'disabled' : ''"
+      >
         获取验证码
         <span>（{{ time }}）</span>
       </button>
@@ -39,7 +44,8 @@ export default {
 
       //console.log("发送验证码");
       let { phone, email } = this.form;
-      let reg_email = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+      let reg_email =
+        /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
       let reg_phone = /^1[3-9]\d{9}$/;
 
       let is_true_phone = reg_phone.test(phone);
@@ -62,11 +68,10 @@ export default {
         data: {
           action: "login_phoneYzm",
           phone: this.form.phone,
-        }
+        },
       }).then((res) => {
         alert(res);
         if (res.code == 200) {
-
         } else {
           clearInterval(this.timer);
           this.timer = null;
@@ -104,7 +109,7 @@ export default {
   background: #ffffff;
   border: 1px solid #eeeeee;
   border-radius: 4px;
-    display: flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   overflow: hidden;
@@ -135,7 +140,7 @@ export default {
 
     &::-webkit-input-placeholder {
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #d7d7d7;
     }
@@ -143,13 +148,13 @@ export default {
 }
 
 .btn-validate-box {
-    display: flex;
+  display: flex;
   align-items: center;
   background: transparent;
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: #F74747;
+  color: #3b64fc;
   font-size: 1.4rem;
 
   &.disabled {
@@ -166,9 +171,9 @@ export default {
     background: #ffffff;
     border: 1px solid #eeeeee;
     border-radius: 4px;
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     overflow: hidden;
 
     img {
@@ -197,7 +202,7 @@ export default {
 
       &::-webkit-input-placeholder {
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #d7d7d7;
       }
@@ -208,10 +213,10 @@ export default {
     background: transparent;
     position: absolute;
     right: 0;
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     cursor: pointer;
-    color: #F74747;
+    color: #3b64fc;
 
     &.disabled {
       color: #ccc;

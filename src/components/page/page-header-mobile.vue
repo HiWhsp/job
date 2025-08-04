@@ -378,14 +378,14 @@ export default {
 
  
 
-      let child_about = this.child_about;
-      let route_product = this.vuexTreeCates.length ? this.vuexTreeCates[0].route : '/'
+      let child_about = this.child_about || [];
+      let route_product = this.vuex_category_tree.length ? this.vuex_category_tree[0].route : '/'
 
       let arr = [
         { title: "首页", route: "/" },
-        { title: "产品中心", route: route_product, child: this.vuexTreeCates },
+        { title: "产品中心", route: route_product, child: this.vuex_category_tree },
         { title: "饮食与文化", route: '/culture', },
-        { title: "市场活动", route: "/activities?id=25", child: this.activitiesCates },
+        { title: "市场活动", route: "/activities?id=25", child: [] },
         { title: "新闻中心", route: '/news?id=27', child: this.vuex_news_cates },
         { title: "关于我们", route: "/companyProfile", child: child_about },
 
@@ -573,7 +573,7 @@ export default {
       query.keyword = this.keyword.trim() || "";
       query.ms = new Date().getTime();
 
-      // this.toProductSearchPage(params);
+
 
       this.toggleSearchBox();
 
@@ -725,7 +725,7 @@ export default {
         color: #888;
         font-size: 12px;
         &:hover {
-          color: #F74747;
+          color: #3b64fc;
         }
       }
     }

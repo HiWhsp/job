@@ -1,39 +1,34 @@
 <template>
   <div class="page">
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="main-title flex-between">
         <div class="left">
-          <span>我的购物车</span>
+          <span>购物车</span>
         </div>
-        <!-- <div class="right">
-          <div class="step-box">
-            <div class="step step-1 active">1.我的购物车</div>
-            <div class="step step-2">2.填写/核对订单信息</div>
-            <div class="step step-3">3.成功提交订单</div>
-          </div>
-        </div> -->
       </div>
 
-      <!-- <div class="search-wrap">
-        <div class="search-tip">我知道货号，可直接输入货号快速添加产品..</div>
-        <div class="search-box">
-          <div class="text-1">请输入货号：</div>
-          <div class="input-box">
-            <input type="text" v-model="keyword" />
-          </div>
-          <button class="btn-ripple" @click="searchGoodsAddCart">加入购物车</button>
-        </div>
-      </div> -->
-
       <!-- 商品列表 -->
-      <div class="ctx-box">
+      <div class="empty-wrap column-flex-center" v-if="!list_shopcart.length">
+        <div class="empty-pic-box">
+          <img src="@img/cart/cart-empty.png" alt="" />
+        </div>
+        <div class="empty-text">购物车为空，快去选购商品吧～</div>
+        <div class="empty-btn">
+          <div class="btn flex-center btn-ripple" @click="toRoute('/')">
+            去购物
+          </div>
+        </div>
+      </div>
+      <div class="ctx-box" v-else>
         <div class="list cart-list">
           <div class="cart-list-inner">
             <!-- 标题 -->
             <div class="list-title">
               <div class="title-1">选择</div>
               <!-- <div class="title-3">货号</div> -->
-              <div class="title-2" style="text-align: left; padding-left: 0px">产品名称</div>
+              <div class="title-2" style="text-align: left; padding-left: 0px">
+                产品名称
+              </div>
               <div class="title-3">规格</div>
               <div class="title-4">单价</div>
               <div class="title-5">数量</div>
@@ -42,10 +37,17 @@
             </div>
 
             <!-- 商品列表 -->
-            <div class="item" v-for="(item, index) in list_shopcart" :key="index">
+            <div
+              class="item"
+              v-for="(item, index) in list_shopcart"
+              :key="index"
+            >
               <div class="item-detail flex">
                 <div class="box-select">
-                  <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
+                  <el-checkbox
+                    v-model="item.checked"
+                    @change="on_change_checked_item"
+                  ></el-checkbox>
                 </div>
                 <!-- <div class="box-sku" @click="mix_to_product(item)">{{ item.skuId }}</div> -->
 
@@ -68,13 +70,22 @@
                 <div class="box-sku">
                   {{ item.keyVals }}
                 </div>
-                <div class="box-unit-price">{{ vuex_huobi }} {{ item.priceSale }}</div>
+                <div class="box-unit-price">
+                  {{ vuex_huobi }} {{ item.priceSale }}
+                </div>
                 <div class="box-number">
                   <button @click="do_number_minus(item)">-</button>
-                  <input type="number" min="1" v-model="item.num" @blur="on_blur_input(item)" />
+                  <input
+                    type="number"
+                    min="1"
+                    v-model="item.num"
+                    @blur="on_blur_input(item)"
+                  />
                   <button @click="do_number_plus(item)">+</button>
                 </div>
-                <div class="box-subtotal">{{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}</div>
+                <div class="box-subtotal">
+                  {{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}
+                </div>
                 <div class="box-act">
                   <!-- <div class="goods-action-box" v-if="false">
                     <span class="goods-action" v-if="item.if_collect" @click="favouriteDelete(item)">
@@ -86,32 +97,47 @@
                       收藏</span>
                   </div> -->
                   <div class="goods-action-box">
-                    <span class="goods-action" @click="do_cart_delete_row(item.inventoryId)">
+                    <span
+                      class="goods-action"
+                      data-fn="do_cart_delete_row"
+                      @click="do_cart_delete_row_tip(item.inventoryId)"
+                    >
                       <!-- <img src="@img/other/shopcart-goods-delete.png" alt="" /> -->
-                      删除</span>
+                      删除</span
+                    >
                   </div>
                 </div>
               </div>
             </div>
 
-            <el-empty v-if="!list_shopcart.length" description="购物车是空的..."></el-empty>
+            <el-empty
+              v-if="!list_shopcart.length"
+              description="购物车为空，快去选购商品吧～"
+            ></el-empty>
             <!-- <div class="empty" v-if="!list_shopcart.length">暂无数据...</div> -->
           </div>
         </div>
 
-
         <!-- 底部操作 -->
         <div class="bottom-action-box">
           <div class="all-select">
-            <el-checkbox v-model="checked_all" @change="on_change_checked_all">{{
-              checked_all ? "反选" : "全选"
-            }}</el-checkbox>
+            <el-checkbox
+              v-model="checked_all"
+              @change="on_change_checked_all"
+              >{{ checked_all ? "反选" : "全选" }}</el-checkbox
+            >
           </div>
           <div class="delete-box">
-            <span @click="do_cart_remove_select()">删除选中</span>
+            <span
+              data-fn="do_cart_remove_select"
+              @click="do_cart_remove_select_tip()"
+              >删除选中</span
+            >
           </div>
           <div class="clear-box">
-            <span @click="do_cart_clear()">清空购物车</span>
+            <span data-fn="do_cart_clear" @click="do_cart_clear_tip()"
+              >清空购物车</span
+            >
           </div>
 
           <div class="total-number">
@@ -123,22 +149,35 @@
             总价：
             <b>{{ vuex_huobi }} {{ shopcart_money }}</b>
           </div>
-          <button :disabled="jiesuanDisabled" class="btn-ripple btn-order" @click="to_pay()">
+          <button
+            :disabled="jiesuanDisabled"
+            class="btn-ripple btn-order"
+            @click="to_pay()"
+          >
             去下单
           </button>
         </div>
-
       </div>
     </div>
+
+    <cart_action_modal
+      data-title="删除提示"
+      ref="cart_action_modal"
+      @confirm="do_confirm_delete"
+    />
   </div>
 </template>
 
 <script>
+import cart_action_modal from "@/components/cart/cart_action_modal.vue";
+
 import { mapState } from "vuex";
 
 export default {
   name: "cart",
-  components: {},
+  components: {
+    cart_action_modal,
+  },
   data() {
     return {
       address: "", //选择的地址
@@ -149,7 +188,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar", "shopcart_count"]),
+    ...mapState([""]),
 
     canSubmit() {
       return this.form.name;
@@ -209,22 +248,21 @@ export default {
         method: "get",
         data: {
           action: "gouwuche_lists",
-        }
-      })
-        .then((res) => {
-          let { code, data } = res;
-          if (code == 200) {
-            data.forEach((v) => {
-              v.checked = true;
-            });
-            this.list_shopcart = data;
-            if (data.length) {
-              this.checked_all = true;
-            }
-
-            this.do_update_vuex_cart_number()
+        },
+      }).then((res) => {
+        let { code, data } = res;
+        if (code == 200) {
+          data.forEach((v) => {
+            v.checked = true;
+          });
+          this.list_shopcart = data;
+          if (data.length) {
+            this.checked_all = true;
           }
-        });
+
+          this.do_update_vuex_cart_number();
+        }
+      });
     },
 
     favouriteDelete(item) {
@@ -252,6 +290,19 @@ export default {
       });
     },
 
+    do_cart_remove_select_tip() {
+      if (!this.list_shopcart_checked.length) {
+        alertErr("请先选择要删除的商品");
+        return;
+      }
+
+      this.$refs.cart_action_modal.init({
+        type: "批量",
+        inventoryId: "",
+        tip: "确定删除所选商品吗？",
+      });
+    },
+
     //购物车 删除选中
     do_cart_remove_select() {
       if (!this.list_shopcart_checked.length) {
@@ -264,17 +315,34 @@ export default {
       this.do_cart_delete_row(id);
     },
 
+    do_cart_delete_row_tip(inventoryId) {
+      this.$refs.cart_action_modal.init({
+        type: "单个",
+        inventoryId: inventoryId,
+        tip: "确定删除该商品吗？",
+      });
+    },
+
+    do_confirm_delete(option) {
+      if (option.type == "单个") {
+        this.do_cart_delete_row(option.inventoryId);
+      } else if (option.type == "全部") {
+        this.do_cart_clear();
+      } else if (option.type == "批量") {
+        this.do_cart_remove_select();
+      }
+    },
+
     //购车车 删除商品
     do_cart_delete_row(inventoryId) {
-
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "gouwuche_del",
           inventoryId: inventoryId,
-        }
-      }).then(res => {
+        },
+      }).then((res) => {
         if (res.code == 200) {
           let list = this.list_shopcart;
           let ids = (inventoryId + "").split(",");
@@ -284,9 +352,9 @@ export default {
             list.splice(index, 1);
           });
 
-          this.do_update_vuex_cart_number()
+          this.do_update_vuex_cart_number();
         }
-      })
+      });
     },
 
     //购物车商品数量减少
@@ -314,18 +382,33 @@ export default {
           action: "gouwuche_updateNum",
           inventoryId: inventoryId,
           num: num,
-        }
-      }).then(res => {
+        },
+      }).then((res) => {
         if (res.code == 200) {
-          let index = this.list_shopcart.findIndex((v) => v.inventoryId == inventoryId);
+          let index = this.list_shopcart.findIndex(
+            (v) => v.inventoryId == inventoryId
+          );
           this.list_shopcart.splice(index, 1, item);
 
-          this.do_update_vuex_cart_number()
+          this.do_update_vuex_cart_number();
         }
-      })
+      });
     },
 
     // 购物车商品更新数量
+
+    do_cart_clear_tip() {
+      if (!this.list_shopcart.length) {
+        alertErr("购物车是空的！");
+        return;
+      }
+
+      this.$refs.cart_action_modal.init({
+        type: "全部",
+        inventoryId: "",
+        tip: "确定清空购物车吗？",
+      });
+    },
 
     //清空购物车
     do_cart_clear() {
@@ -334,20 +417,18 @@ export default {
         return;
       }
 
-
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "gouwuche_delAll",
-        }
-      }).then(res => {
+        },
+      }).then((res) => {
         if (res.code == 200) {
           this.list_shopcart = [];
-          this.do_update_vuex_cart_number()
+          this.do_update_vuex_cart_number();
         }
-      })
-
+      });
     },
 
     //商品勾选 全选与取消
@@ -381,7 +462,7 @@ export default {
         return;
       }
 
-      let data_format = this.list_shopcart_checked.map(v => ({
+      let data_format = this.list_shopcart_checked.map((v) => ({
         title: v.title,
         image: v.image,
         inventoryId: v.inventoryId,
@@ -392,8 +473,10 @@ export default {
         priceMarket: v.priceMarket,
       }));
 
-
-      this.$store.commit('set_cache_payment_products', JSON.stringify(data_format))
+      this.$store.commit(
+        "set_cache_payment_products",
+        JSON.stringify(data_format)
+      );
 
       this.$router.push({
         path: "/order-submit",
@@ -409,8 +492,6 @@ export default {
       }
       this.shopcart_updateNum(item);
     },
-
-
   },
 };
 </script>
@@ -421,7 +502,7 @@ export default {
 }
 
 .page {
-  background: #FFFFFF;
+  background: #ffffff;
   text-align: center;
   font-size: 14px;
   padding-top: 45px;
@@ -443,14 +524,11 @@ export default {
     border-bottom: 1px solid #d5d8de;
     text-align: left;
 
-
-
     .left {
-      font-family: Poppins, Poppins;
-      font-weight: bold;
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: 400;
       font-size: 24px;
       color: #333333;
-
 
       .num {
         margin-left: 10px;
@@ -473,8 +551,8 @@ export default {
         width: 500px;
         margin: 0 auto;
         font-size: 14px;
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
 
         .step {
           flex: 1;
@@ -494,15 +572,29 @@ export default {
           }
 
           &.step-2 {
-            clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%, 3% 50%);
+            clip-path: polygon(
+              0% 0%,
+              97% 0%,
+              100% 50%,
+              97% 100%,
+              0% 100%,
+              3% 50%
+            );
           }
 
           &.step-3 {
-            clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%, 3% 50%);
+            clip-path: polygon(
+              0% 0%,
+              97% 0%,
+              100% 50%,
+              97% 100%,
+              0% 100%,
+              3% 50%
+            );
           }
 
           &.active {
-            background: #F74747;
+            background: #3B64FC;
             color: #fff;
           }
         }
@@ -515,7 +607,7 @@ export default {
 
     .search-tip {
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #999999;
     }
@@ -523,12 +615,12 @@ export default {
     .search-box {
       margin-top: 20px;
       margin-bottom: 40px;
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
 
       .text-1 {
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #666666;
       }
@@ -550,10 +642,10 @@ export default {
         display: inline-block;
         width: 128px;
         height: 36px;
-        background: #F74747;
+        background: #3B64FC;
         border-radius: 4px 4px 4px 4px;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #ffffff;
       }
@@ -571,11 +663,11 @@ export default {
         text-align: center;
         height: 48px;
         background: #f9f9f9;
-        background: #F5F5F5;
+        background: #f5f5f5;
         padding: 15px 0;
 
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
         border-bottom: 1px solid #eee;
 
         .title-1 {
@@ -586,7 +678,6 @@ export default {
         .title-2 {
           // width: 150px;
           flex: 2;
-
         }
 
         .title-3 {
@@ -618,8 +709,8 @@ export default {
         }
 
         .item-title {
-            display: flex;
-  align-items: center;
+          display: flex;
+          align-items: center;
           text-align: left;
           padding: 12px 40px;
           border-bottom: 1px solid #eee;
@@ -636,7 +727,6 @@ export default {
           // font-weight: bold;
           font-size: 14px;
           color: #666666;
-
 
           .box-select {
             width: 58px;
@@ -665,7 +755,7 @@ export default {
 
             div {
               &:hover {
-                color: #F74747;
+                color: #3B64FC;
               }
             }
 
@@ -673,12 +763,11 @@ export default {
               width: fit-content;
               cursor: pointer;
               // height: 40px;
-               display: -webkit-box;
-  -webkit-box-orient: vertical;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  -webkit-line-clamp: 2;
-
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              -webkit-line-clamp: 2;
             }
 
             .sku-info {
@@ -694,12 +783,14 @@ export default {
 
           .box-unit-price {
             width: 200px;
-            color: #FF0000;
+            color: #ff0000;
           }
 
           .box-number {
             width: 200px;
-            .flex-center();
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
             input {
               width: 48px;
@@ -724,7 +815,7 @@ export default {
 
           .box-subtotal {
             width: 200px;
-            color: #FC0D1B;
+            color: #fc0d1b;
           }
 
           .box-act {
@@ -732,7 +823,7 @@ export default {
             font-size: 16px;
 
             div {
-              &+div {
+              & + div {
                 margin-top: 10px;
               }
 
@@ -740,7 +831,7 @@ export default {
                 cursor: pointer;
 
                 &:hover {
-                  color: #F74747;
+                  color: #3B64FC;
                 }
               }
             }
@@ -758,7 +849,9 @@ export default {
   color: #666666;
 
   .goods-action {
-    .flex-center();
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 14px;
@@ -771,11 +864,11 @@ export default {
 }
 
 .bottom-action-box {
-    display: flex;
+  display: flex;
   align-items: center;
   padding-right: 40px;
   height: 86px;
-  background: #FAFBFC;
+  background: #fafbfc;
   // border: 1px solid #eeeeee;
   // box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.08);
   opacity: 1;
@@ -802,7 +895,7 @@ export default {
       color: #666666;
 
       &:hover {
-        color: #F74747;
+        color: #3B64FC;
       }
     }
   }
@@ -820,7 +913,7 @@ export default {
       color: #666666;
 
       &:hover {
-        color: #F74747;
+        color: #3B64FC;
       }
     }
   }
@@ -864,7 +957,7 @@ export default {
     cursor: pointer;
     width: 191px;
     height: 46px;
-    background: #F74747;
+    background: #3B64FC;
 
     font-size: 16px;
     font-family: Microsoft YaHei;
@@ -888,6 +981,33 @@ export default {
 
   b {
     color: #e6170b;
+  }
+}
+
+.empty-wrap {
+  margin-top: 80px;
+  .empty-pic-box {
+    img {
+      width: 161px;
+    }
+  }
+  .empty-text {
+    margin: 39px 0 33px 0;
+    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-weight: 400;
+    font-size: 16px;
+    color: #333333;
+  }
+  .empty-btn {
+    .btn {
+      width: 191px;
+      height: 46px;
+      background: #3B64FC;
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: 400;
+      font-size: 18px;
+      color: #ffffff;
+    }
   }
 }
 </style>

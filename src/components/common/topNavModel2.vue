@@ -1,6 +1,6 @@
 <template>
   <div class="wrap" :class="1">
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="center">
         <!-- 全部分类下拉 -->
         <div class="quanbu" @mouseover="on_mouseover" @mouseleave="on_mouseleave">
@@ -181,10 +181,10 @@ export default {
 <style scoped lang="less">
 .wrap {
   height: 47px;
-  background: var(--main_color);
+  background: #f00;
 
   width: 100%;
-  border-bottom: 1px solid var(--main_color);
+  border-bottom: 1px solid #f00;
   // height: 40px;
   .inner {
 
@@ -201,7 +201,7 @@ export default {
         justify-content: center;
         width: 200px;
         height: 47px;
-        background: var(--main_color);
+        background: #f00;
         background: #e4393c;
         background: rgba(0, 0, 0, 0.2);
 
@@ -273,11 +273,11 @@ export default {
 
 .wrap.nav-bg-white {
   background: #fff;
-  border-bottom: 1px solid var(--main_color);
+  border-bottom: 1px solid #f00;
   .inner {
     .center {
       .quanbu {
-        background: var(--main_color);
+        background: #f00;
       }
       .nav-box {
         .nav-item {
@@ -290,7 +290,7 @@ export default {
           }
 
           .text:hover {
-            color: var(--main_color);
+            color: #f00;
             font-weight: bold;
           }
         }

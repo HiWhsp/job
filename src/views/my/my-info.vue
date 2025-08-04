@@ -1,7 +1,5 @@
 <template>
   <div class="page">
-
-
     <div class="main-title">
       <span>个人资料</span>
     </div>
@@ -14,11 +12,22 @@
             <span class="text">头像：</span>
             <span class="info">
               <div class="upload-box">
-                <el-upload class="upload-demo" accept="image/*" :show-file-list="false" :name="UPLOAD_NAME"
-                  :action="UPLOAD_ACTION" :data="mix_upload_data" :on-success="upload_on_success"
-                  :before-upload="upload_before_upload">
-                  <img v-if="form.image" :src="form.image" class="user-avatar" />
-                  <img v-else src="@/static/my/avatar.png" class="user-avatar" />
+                <el-upload
+                  class="upload-demo"
+                  accept="image/*"
+                  :show-file-list="false"
+                  :name="UPLOAD_NAME"
+                  :action="UPLOAD_ACTION"
+                  :data="mix_upload_data"
+                  :on-success="upload_on_success"
+                  :before-upload="upload_before_upload"
+                >
+                  <img
+                    v-if="form.image"
+                    :src="form.image"
+                    class="user-avatar"
+                  />
+                  <img v-else src="@img/my/avatar.png" class="user-avatar" />
                 </el-upload>
               </div>
             </span>
@@ -31,8 +40,13 @@
               <span>修改</span>
             </span>
           </div>
-
-
+          <div class="item">
+            <span class="text">昵称：</span>
+            <span class="info">
+              <el-input clearable type="text" v-model="form.nickname" />
+            </span>
+            <span class="action"> </span>
+          </div>
           <div class="item">
             <span class="text">真实姓名：</span>
             <span class="info">
@@ -47,17 +61,30 @@
             </span>
             <span class="action"> </span>
           </div>
-
-
-          <!-- <div class="item">
-            <span class="text">昵称：</span>
+          <div class="item">
+            <span class="text">集团：</span>
             <span class="info">
-              <input type="text" v-model="nickname" class="" />
+              {{ form.blocName }}
+              <!-- <el-input clearable type="text" v-model="form.company" /> -->
             </span>
-            <span class="action">
-
+            <span class="action"> </span>
+          </div>
+          <div class="item">
+            <span class="text">公司：</span>
+            <span class="info">
+              {{ form.companyName }}
+              <!-- <el-input clearable type="text" v-model="form.company" /> -->
             </span>
-          </div> -->
+            <span class="action"> </span>
+          </div>
+          <div class="item">
+            <span class="text">部门：</span>
+            <span class="info">
+              {{ form.departmentName }}
+              <!-- <el-input clearable type="text" v-model="form.department" /> -->
+            </span>
+            <span class="action"> </span>
+          </div>
 
           <!-- <div class="item">
             <span class="text">密码：</span>
@@ -82,28 +109,42 @@
           <div class="item btn-box">
             <span class="text" style="visibility: hidden">-</span>
             <div class="info">
-              <el-button class="btn-ripple fit-text btn-save" @click="throttle_do_submit()"
-                :loading="loading">保存</el-button>
-              <button class="btn-ripple fit-text btn-cancel" @click="do_reset()">清空</button>
+              <el-button
+                class="btn-ripple fit-text btn-save"
+                @click="throttle_do_submit()"
+                :loading="loading"
+                >保存</el-button
+              >
+              <button
+                class="btn-ripple fit-text btn-cancel"
+                @click="do_reset()"
+              >
+                清空
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <phone_bind_old_check_modal ref="phone_bind_old_check_modal" data-title="校验" @confirm="confirm_old_pass" />
-    <phone_bind_new_set_modal ref="phone_bind_new_set_modal" data-title="绑定" @confirm="confirm_new" />
-
-
+    <phone_bind_old_check_modal
+      ref="phone_bind_old_check_modal"
+      data-title="校验"
+      @confirm="confirm_old_pass"
+    />
+    <phone_bind_new_set_modal
+      ref="phone_bind_new_set_modal"
+      data-title="绑定"
+      @confirm="confirm_new"
+    />
   </div>
 </template>
 
 <script>
-import { UPLOAD_ACTION, UPLOAD_NAME } from '@/config/env.js'
+import { UPLOAD_ACTION, UPLOAD_NAME } from "@/config/env.js";
 
 import phone_bind_old_check_modal from "@/components/account/phone_bind_old_check_modal.vue";
 import phone_bind_new_set_modal from "@/components/account/phone_bind_new_set_modal.vue";
-
 
 import { mapState } from "vuex";
 
@@ -123,22 +164,26 @@ export default {
         image: "",
         realName: "",
         address: "",
+        company: "",
+        department: "",
+        nickname: "",
+        blocName: "",
+        companyName: "",
+        departmentName: "",
       },
       loading: false,
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   watch: {},
   created() {
-    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
+    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000);
     this.setView();
   },
   methods: {
-    throttle_do_submit() {
-
-    },
+    throttle_do_submit() {},
 
     open_phone_update() {
       this.$refs.phone_bind_old_check_modal.init();
@@ -147,7 +192,7 @@ export default {
       this.$refs.phone_bind_new_set_modal.init();
     },
     confirm_new() {
-      this.query_user()
+      this.query_user();
     },
 
     setView() {
@@ -156,12 +201,12 @@ export default {
     query_user() {
       // this.$store.dispatch("query_user");
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'users_userInfo',
+          action: "users_userInfo",
         },
-      }).then(res => {
+      }).then((res) => {
         if (res.code == 200) {
           let data = res.data;
           this.my_info = data;
@@ -170,22 +215,25 @@ export default {
             image: data.image || "",
             realName: data.realName || "",
             address: data.address || "",
+            nickname: data.nickname || "",
+            blocName: data.blocName || "",
+            companyName: data.companyName || "",
+            departmentName: data.departmentName || "",
           };
 
-
-          this.$store.commit("set_baseInfo", res.data);
+          this.$store.commit("set_vuex_user", res.data);
         }
-      })
+      });
     },
 
     do_submit() {
       this.loading = true;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'users_editInfo',
-          ...this.form
+          action: "users_editInfo",
+          ...this.form,
         },
       }).then((res) => {
         let { code, msg, data } = res;
@@ -205,7 +253,6 @@ export default {
         address: "",
       };
     },
-
 
     //上传相关
     upload_on_success(res, file) {
@@ -234,9 +281,9 @@ export default {
   padding-bottom: 80px;
 
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -251,7 +298,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #3b64fc;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -278,7 +325,7 @@ export default {
     .section-title {
       margin-bottom: 50px;
       font-size: 16px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #666666;
     }
@@ -336,7 +383,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: #F74747;
+        color: #3b64fc;
 
         span {
           margin-right: 20px;
@@ -347,7 +394,6 @@ export default {
   }
 }
 
-
 .btn-box {
   button {
     width: 76px;
@@ -357,26 +403,25 @@ export default {
   .btn-save {
     width: 120px;
     height: 32px;
-    background: #FFFFFF;
+    background: #ffffff;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    border: 1px solid #3b64fc;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
-
+    color: #3b64fc;
   }
 
   .btn-cancel {
     margin-left: 20px;
     width: 120px;
     height: 32px;
-    background: #F74747;
+    background: #3b64fc;
     border-radius: 50px 50px 50px 50px;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #FFFFFF;
+    color: #ffffff;
   }
 }
 </style>

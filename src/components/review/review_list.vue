@@ -3,12 +3,12 @@
     <div class="review-item" v-for="(item, index) in list" :key="index">
       <div class="avatar-info flex">
         <div class="left">
-          <img :src="item.image || avatar_default" alt class="avatar" />
+          <img :src="item.image || vuex_avatar_default" alt class="avatar" />
           <span>{{ item.nickname }}</span>
         </div>
         <div class="right">
-          <el-rate v-model="item.star" disabled :colors="['#F74747', '#F74747', '#F74747']"
-            text-color="#F74747"></el-rate>
+          <el-rate v-model="item.star" disabled :colors="['#3b64fc', '#3b64fc', '#3b64fc']"
+            text-color="#3b64fc"></el-rate>
         </div>
       </div>
       <div class="content">{{ item.content }}</div>
@@ -54,7 +54,9 @@ export default {
 
       .left {
         min-width: 150px;
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
 
         .avatar {
           width: 64px;
@@ -144,7 +146,9 @@ export default {
 
         .left {
           min-width: 150px;
-          .flex-center();
+            display: flex;
+          justify-content: center;
+          align-items: center;
 
           .avatar {
             width: 40px;

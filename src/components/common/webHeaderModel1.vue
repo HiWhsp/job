@@ -1,9 +1,9 @@
 <template>
   <div class="wrap">
-    <!-- <asideUtilModel1 /> -->
-    <topHeaderInfoModel1 v-if="!this.$route.meta.hide_topHeaderInfo" />
+    <asideUtilModel1 />
+    <!-- <topHeaderInfoModel1 v-if="!this.$route.meta.hide_topHeaderInfo" />
     <topHeaderSearchModel1 v-if="!this.$route.meta.hide_topHeaderSearch" />
-    <topNavModel1 v-if="!this.$route.meta.hide_topNav" />
+    <topNavModel1 v-if="!this.$route.meta.hide_topNav" /> -->
     <!-- <router-view></router-view> -->
     <!-- <footerModel1 /> -->
   </div>

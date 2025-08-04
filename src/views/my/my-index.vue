@@ -18,7 +18,7 @@
           <div class="text-1">{{ mix_user_name }}</div>
           <!-- <div class="text-2">
             <img src="@img/level-0.png" alt="" />
-            <span>{{ baseInfo.level }}</span>
+            <span>{{ vuex_user.level }}</span>
           </div> -->
         </div>
       </div>
@@ -77,7 +77,6 @@
             <div class="label">待评价</div>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -86,14 +85,14 @@
         <div class="label">最近订单</div>
         <router-link to="/order-list" class="action">
           <span>全部订单</span>
-          <img src="@/static/my-index/more.png" alt="" />
+          <img src="@img/my-index/more.png" alt="" />
         </router-link>
       </div>
 
       <div class="order-box">
         <div class="empty-info" v-if="!list_order.length">
           <div class="empty-img">
-            <img src="@/static/common/empty-img.png" alt="" />
+            <img src="@img/common/empty-img.png" alt="" />
           </div>
           <div class="empty-text">您还没有订单，赶快去逛逛吧！</div>
           <router-link to="/product-cates" class="empty-action">
@@ -101,7 +100,7 @@
           </router-link>
         </div>
         <div class="order-info" v-else>
-          <orderList :list="list_order" @confirm="emitConfirm"/>
+          <orderList :list="list_order" @confirm="emitConfirm" />
         </div>
       </div>
     </div>
@@ -111,7 +110,7 @@
         <div class="label">我们向您推荐</div>
         <div class="action" @click="changeSugges">
           <span>换一组</span>
-          <img src="@/static/my-index/refresh.png" alt="" />
+          <img src="@img/my-index/refresh.png" alt="" />
         </div>
       </div>
 
@@ -161,7 +160,7 @@ export default {
   },
   methods: {
     emitConfirm() {
-      this.query_order()
+      this.query_order();
     },
     // uploadSuccess(col, data) {
     //   if (data.code == 200) {
@@ -178,16 +177,16 @@ export default {
     query_user() {
       // this.$store.dispatch("query_user");
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'users_userInfo',
+          action: "users_userInfo",
         },
-      }).then(res => {
+      }).then((res) => {
         if (res.code == 200) {
-          this.my_info = res.data
+          this.my_info = res.data;
         }
-      })
+      });
     },
 
     //用户主页数据
@@ -209,10 +208,10 @@ export default {
     //订单查询
     query_order() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'orders_lists',
+          action: "orders_lists",
           page: 1,
           pageNum: 2,
           scene: 0,
@@ -275,14 +274,16 @@ export default {
 }
 
 .section-box {
-    display: flex;
+  display: flex;
   align-items: center;
 }
 
 .section-1 {
-  .flex-center();
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
-  background: #ffffff url("~@/static/my-index/user-bg.png");
+  background: #ffffff url("~@img/my-index/user-bg.png");
   background-size: 100% 100%;
   padding: 0 15px;
   width: 256px;
@@ -303,16 +304,16 @@ export default {
     .name {
       margin-top: 10px;
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #ffffff;
     }
   }
 
   .right {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -321,19 +322,19 @@ export default {
     background: #ffffff;
     text-align: left;
     padding: 0 15px;
-    border: 1px solid #F74747;
+    border: 1px solid #3B64FC;
     border-radius: 0 0 11px 11px;
 
     .text-1 {
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #333333;
     }
 
     .text-2 {
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
 
       img {
         width: 24px;
@@ -342,9 +343,9 @@ export default {
 
       span {
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
-        color: #F74747;
+        color: #3B64FC;
       }
     }
   }
@@ -354,9 +355,9 @@ export default {
   flex: 1;
 
   .list {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     height: 185px;
     background: #ffffff;
     border: 1px solid #eee9e4;
@@ -389,7 +390,7 @@ export default {
           font-size: 32px;
           font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
           font-weight: normal;
-          color: #F74747;
+          color: #3B64FC;
         }
       }
     }
@@ -402,7 +403,7 @@ export default {
 
 .section-title {
   border-bottom: 1px solid #dedede;
-    display: flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   height: 56px;
@@ -410,18 +411,18 @@ export default {
 
   .label {
     font-size: 18px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #333333;
   }
 
   .action {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
-    color: #F74747;
+    color: #3B64FC;
     cursor: pointer;
 
     img {
@@ -453,14 +454,14 @@ export default {
         margin-top: 10px;
         margin-bottom: 20px;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #999999;
       }
 
       .empty-action {
         font-size: 14px;
-        color: #F74747;
+        color: #3B64FC;
       }
     }
   }

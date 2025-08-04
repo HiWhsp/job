@@ -1,18 +1,22 @@
 <template>
   <div id="app">
-    <!-- <webHeaderModel1 v-if="1" />
-    <webHeaderModel3 v-else-if="1" />
+    <webHeaderModel1 v-if="1" />
+    <!-- <webHeaderModel3 v-else-if="1" />
     <webHeaderModel2 v-else-if="1" /> -->
 
 
-    <!-- <page_header v-if="!vuex_h5" /> -->
-    <page_header_2 v-if="!vuex_h5" />
+    <page_header v-if="!vuex_h5" />
+    <!-- <page_header_2 v-if="!vuex_h5" /> -->
+    <page_header_mobile v-if="vuex_h5" />
 
 
     <div class="layout-box">
       <router-view></router-view>
     </div>
-    <page_footer_2 />
+    <page_footer />
+    <!-- <page_footer_2 /> -->
+    <!-- <page_aside /> -->
+    <!-- <page_kefu /> -->
   </div>
 </template>
 
@@ -24,8 +28,13 @@ import webHeaderModel3 from "@/components/common/webHeaderModel3.vue";
 
 import page_header from "@/components/page/page-header.vue"; //顶部搜索
 import page_header_2 from "@/components/page/page-header-2.vue"; //顶部搜索
+import page_header_mobile from "@/components/page/page-header-mobile.vue"; //顶部搜索
+import page_footer from "@/components/page/page-footer.vue";
 import page_footer_2 from "@/components/page/page-footer-2.vue";
+// import page_aside from "@/components/page/page-aside.vue";
+// import page_kefu from "@/components/page/page-kefu.vue";
 
+import { mapState } from "vuex";
 export default {
   components: {
     webHeaderModel1,
@@ -36,7 +45,11 @@ export default {
     //
     page_header,
     page_header_2,
-    page_footer_2
+    page_header_mobile,
+    page_footer,
+    page_footer_2,
+    // page_aside,
+    // page_kefu,
   },
   data() {
     return {
@@ -98,8 +111,8 @@ export default {
 </script>
 
 <style lang="less">
-.w-1200 {
-  width: 1200px;
+.w-1400 {
+  width: 1400px;
   margin: 0 auto;
 }
 .btn {
@@ -181,12 +194,12 @@ body {
 
 
 .el-textarea__inner:focus {
-  border-color: #F74747 !important;
+  border-color: #3B64FC !important;
 }
 
 .el-radio__input.is-checked .el-radio__inner {
-  background: #F74747 !important;
-  border-color: #F74747 !important;
+  background: #3B64FC !important;
+  border-color: #3B64FC !important;
 }
 
 .el-radio__input.is-checked+.el-radio__label {
@@ -194,17 +207,17 @@ body {
 }
 
 .el-checkbox__input.is-focus .el-checkbox__inner {
-  border-color: #F74747 !important;
+  border-color: #3B64FC !important;
 }
 
 .el-checkbox__input.is-checked+.el-checkbox__label {
-  color: #F74747 !important;
+  color: #3B64FC !important;
 }
 
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-  background: #F74747 !important;
-  border-color: #F74747 !important;
+  background: #3B64FC !important;
+  border-color: #3B64FC !important;
 }
 
 .pagination-box {
@@ -247,7 +260,7 @@ a {
 }
 
 img {
-  vertical-align: middle;
+  vertical-align: bottom;
 }
 
 button {
@@ -304,7 +317,7 @@ button {
 
 //按钮 水波涟漪效果
 .btn-ripple {
-  vertical-align: middle;
+  vertical-align: bottom;
 }
 
 .btn-ripple:not(:disabled):hover {
@@ -351,11 +364,11 @@ button {
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled):hover {
-  color: #F74747 !important;
+  color: #3B64FC !important;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #F74747 !important;
+  background-color: #3B64FC !important;
   color: #fff !important;
 }
 
@@ -580,7 +593,9 @@ button {
   }
 
   .detail-qrcode {
-    .flex-center();
+      display: flex;
+          justify-content: center;
+          align-items: center;
     text-align: center;
 
     img {

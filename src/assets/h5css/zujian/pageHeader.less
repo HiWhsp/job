@@ -18,7 +18,7 @@
 
 .section-1 {
   height: 32px;
-  background: #F74747;
+  background: #3b64fc;
 
   .header-info {
       display: flex;
@@ -29,7 +29,7 @@
     margin: 0 auto;
 
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #ffffff;
 
@@ -94,7 +94,7 @@ right: 0;
   box-shadow: 0px 3px 10px 1px rgba(0, 0, 0, 0.16);
 }
 .header-inner {
-  width: 1200px;
+  width: 1400px;
   height: 100px;
   margin: 0 auto;
   display: flex;
@@ -145,13 +145,15 @@ right: 0;
 
         &::-webkit-input-placeholder {
           font-size: 12px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #c2c2c2;
         }
       }
       .btn-search {
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
         position: absolute;
         right: 0;
         width: 40px;
@@ -175,7 +177,9 @@ right: 0;
 
   .nav-list {
     margin-left: 80px;
-    .flex-center();
+      display: flex;
+          justify-content: center;
+          align-items: center;
     height: 100%;
     .nav-item {
       margin-left: 64px;
@@ -201,7 +205,7 @@ right: 0;
           transform: translate(-50%);
           width: 0;
           height: 3px;
-          background: #F74747;
+          background: #3b64fc;
           transition: 0.3s;
         }
       }
@@ -215,7 +219,7 @@ right: 0;
       &.active {
         .nav-link {
           font-weight: bold;
-          color: #F74747;
+          color: #3b64fc;
           &::after {
             width: 36px;
           }
@@ -226,7 +230,7 @@ right: 0;
         color: #222;
         width: 100%;
         font-size: 16px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #333;
       }
@@ -341,12 +345,12 @@ right: 0;
           font-size: 1.6rem;
 
           &.active {
-            background: #F74747;
+            background: #3b64fc;
             color: #fff;
           }
 
           &:hover {
-            background: #F74747;
+            background: #3b64fc;
             color: #fff;
           }
         }
@@ -369,7 +373,7 @@ right: 0;
             background: #f7f7f7;
             margin-bottom: 5px;
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #333333;
 
@@ -377,12 +381,12 @@ right: 0;
             margin-bottom: 0.5rem;
 
             &.active {
-              background: #F74747;
+              background: #3b64fc;
               color: #fff;
             }
 
             &:hover {
-              background: #F74747;
+              background: #3b64fc;
               color: #fff;
             }
           }
@@ -411,7 +415,7 @@ right: 0;
               padding: 0 5px;
               display: block;
               font-size: 12px;
-              font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+              font-family: sans-serif;
               font-weight: 400;
               color: #333333;
 
@@ -419,7 +423,7 @@ right: 0;
               font-size: 1.4rem;
 
               &:hover {
-                background: #F74747;
+                background: #3b64fc;
                 color: #fff;
               }
             }
@@ -448,7 +452,7 @@ right: 0;
             font-size: 16px;
             font-size: 1.6rem;
             &:hover {
-              background: #F74747;
+              background: #3b64fc;
               color: #fff;
             }
           }
@@ -461,7 +465,7 @@ right: 0;
               width: fit-content;
               display: block;
               font-size: 12px;
-              font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+              font-family: sans-serif;
               font-weight: 400;
               color: #333333;
               line-height: 28px;
@@ -471,7 +475,7 @@ right: 0;
               line-height: 2;
               padding-left: 9px;
               &:hover {
-                color: #F74747;
+                color: #3b64fc;
               }
             }
           }
@@ -495,7 +499,7 @@ right: 0;
             // line-height: 1.5;
 
             &:hover {
-              background: #F74747;
+              background: #3b64fc;
               color: #fff;
             }
           }
@@ -550,7 +554,7 @@ right: 0;
       color: #888;
       font-size: 1.3rem;
       &:hover {
-        color: #F74747;
+        color: #3b64fc;
       }
     }
   }

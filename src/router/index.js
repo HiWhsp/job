@@ -1,6 +1,7 @@
 import Vue from "vue";
 import store from "../store/index";
 import VueRouter from "vue-router";
+// import { component } from "vue/types/umd";
 
 // 解决报错
 const originalPush = VueRouter.prototype.push;
@@ -45,7 +46,9 @@ const contact = () =>
   import(/* webpackChunkName: "contact" */ "@/views/company/contact.vue");
 
 const terms = () =>
-  import(/* webpackChunkName: "terms" */ "@/views/company/terms.vue");
+  import(/* webpackChunkName: "terms" */ "@/views/article/terms.vue");
+const help = () =>
+  import(/* webpackChunkName: "help" */ "@/views/article/help.vue");
 
 const demand = () =>
   import(/* webpackChunkName: "demand" */ "@/views/company/demand.vue");
@@ -63,6 +66,37 @@ const product_detail = () =>
   import(
     /* webpackChunkName: "product-detail" */ "@/views/product/product-detail.vue"
   );
+const batch_search = () =>
+  import(
+    /* webpackChunkName: "batch-xiadan" */ "@/views/batch/batch-xiadan.vue"
+  );
+const batch_xunjia = () =>
+  import(
+    /* webpackChunkName: "batch-xunjia" */ "@/views/batch/batch-xunjia.vue"
+  );
+const batch_xunjia_match = () =>
+  import(
+    /* webpackChunkName: "batch-xunjia" */ "@/views/batch/batch-xunjia-match.vue"
+  );
+const batch_xunjia_result = () =>
+  import(
+    /* webpackChunkName: "batch-xunjia" */ "@/views/batch/batch-xunjia-result.vue"
+  );
+const product_xieyi = () =>
+  import(
+    /* webpackChunkName: "product-xieyi" */ "@/views/product/product-xieyi.vue"
+  );
+const product_zhenxuan = () =>
+  import(
+    /* webpackChunkName: "product-zhenxuan" */ "@/views/product/product-zhenxuan.vue"
+  );
+const scene = () =>
+  import(
+    /* webpackChunkName: "scene" */ "@/views/product/scene.vue"
+  );
+
+// const orderLogistics = () => import(/* webpackChunkName: "orderLogistics" */ "@/views/order/orderLogistics.vue");
+// const memberCenter = () => import(/* webpackChunkName: "memberCenter" */ "@/views/my/member/memberCenter.vue");
 
 // 个人中心
 const my_layout = () => import("@/views/my/my-layout.vue");
@@ -187,6 +221,12 @@ const routes = [
     component: terms,
     meta: {},
   },
+  {
+    path: "/help",
+    name: "help",
+    component: help,
+    meta: {},
+  },
 
   {
     path: "/register",
@@ -236,6 +276,62 @@ const routes = [
     component: product_detail,
     meta: {
       title: "产品详情",
+    },
+  },
+  {
+    path: "/batch-xiadan",
+    name: "batch-xiadan",
+    component: batch_search,
+    meta: {
+      title: "批量下单",
+    },
+  },
+  {
+    path: "/batch-xunjia",
+    name: "batch-xunjia",
+    component: batch_xunjia,
+    meta: {
+      title: "批量询价",
+    },
+  },
+  {
+    path: "/batch-xunjia-match",
+    name: "batch-xunjia-match",
+    component: batch_xunjia_match,
+    meta: {
+      title: "批量询价",
+    },
+  },
+  {
+    path: "/batch-xunjia-result",
+    name: "batch-xunjia-result",
+    component: batch_xunjia_result,
+    meta: {
+      title: "批量询价",
+    },
+  },
+  {
+    path: "/product-xieyi",
+    name: "product-xieyi",
+    component: product_xieyi,
+    meta: {
+      title: "协议商品",
+    },
+  },
+  {
+    path: "/product-zhenxuan",
+    name: "product-zhenxuan",
+    component: product_zhenxuan,
+    meta: {
+      title: "氿州甄选",
+    },
+  },
+  {
+    path: "/scene",
+    name: "scene",
+    component: scene,
+    meta: {
+      title: "场景专区",
     },
   },
   {
@@ -472,6 +568,78 @@ const routes = [
         },
       },
       {
+        path: "/stock-censor",
+        name: "stock-censor",
+        component: () => import('@/views/stock/stock-censor.vue'),
+        meta: {
+          title: "订单审批",
+          requireAuth: true
+        }
+      },
+      {
+        path: "/stock-censor-my",
+        name: "stock-censor-my",
+        component: () => import('@/views/stock/stock-censor-my.vue'),
+        meta: {
+          title: "待我审批",
+          requireAuth: true
+        }
+      },
+      {
+        path: "/stock-censor-detail",
+        name: "stock-censor-detail",
+        component: () => import('@/views/stock/stock-censor-detail.vue'),
+        meta: {
+          title: "查看审批详情",
+          requireAuth: true
+        }
+      },
+      {
+        path: "/store-man",
+        name: "store-man",
+        component: () => import('@/views/stock/store-man.vue'),
+        meta: {
+          title: "采购额度",
+          requireAuth: true
+        }
+      },
+      {
+        path: "/enterprise-member-man",
+        name: "enterprise-member-man",
+        component: () => import('@/views/enterprise/enterprise-member-man.vue'),
+        meta: {
+          title: "人员管理",
+          requireAuth: true
+        }
+      },
+      {
+        path: "/batch-xunjia-list",
+        name: "batch-xunjia-list",
+        component: () => import('@/views/batch/batch-xunjia-list'),
+        meta: {
+          title: "我的询价",
+          requireAuth: true
+        }
+      },
+      {
+        path: "/batch-xunjia-detail",
+        name: "batch-xunjia-detail",
+        component: () => import('@/views/batch/batch-xunjia-detail'),
+        meta: {
+          title: "询价详情",
+          requireAuth: true
+        }
+      },
+      {
+        path: "/enterprise-member-add",
+        name: "enterprise-member-add",
+        component: () => import('@/views/enterprise/enterprise-member-add.vue'),
+        meta: {
+          title: "人员管理",
+          requireAuth: true
+        }
+      },
+      {
         path: "/coupon-list",
         name: "coupon-list",
         component: couponList,
@@ -487,6 +655,7 @@ const routes = [
           title: "领券中心",
         },
       },
+
     ],
   },
 

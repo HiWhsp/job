@@ -3,7 +3,7 @@
     <news_banner />
 
     <div class="inner">
-      <div class="page-ctx w-1200">
+      <div class="page-ctx w-1400">
         <div class="ctx-box ">
           <div class="ctx-left">
             <div class="news-ctx">
@@ -158,7 +158,7 @@ export default {
       display: block;
       // margin: 10px auto;
       margin: 0 auto;
-      vertical-align: middle;
+      vertical-align: bottom;
     }
   }
 

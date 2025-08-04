@@ -9,7 +9,7 @@
       <div class="cart" @click="$router.push('/myCart')">
         <!-- <img src="@pro/common/aside-cart.png" alt="" /> -->
         <div class="cart-text">购物车</div>
-        <div class="cart-num">{{ shopcart_count }}</div>
+        <div class="cart-num">{{ vuex_cart_number }}</div>
       </div>
 
       <div class="shoucang" @click="$router.push('/shoucang')">
@@ -41,7 +41,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["shopcart_count"]),
+    ...mapState([""]),
   },
 
   methods: {
@@ -64,7 +64,9 @@ export default {
   background: #000;
   color: #fff;
 
-  .flex-center();
+    display: flex;
+          justify-content: center;
+          align-items: center;
 
   .top-box {
     position: absolute;

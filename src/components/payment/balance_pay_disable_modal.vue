@@ -1,15 +1,22 @@
 <template>
   <div class="modal-container">
-    <el-dialog title="余额支付" width="580px" custom-class="modal-wrap" :close-on-click-modal="true" :visible.sync="showModal" :before-close="onModal_close">
+    <el-dialog
+      title="余额支付"
+      width="580px"
+      custom-class="modal-wrap"
+      :close-on-click-modal="true"
+      :visible.sync="showModal"
+      :before-close="onModal_close"
+    >
       <div class="modal-inner">
         <div class="img-box">
-          <img src="@/static/payment/pay-warn.png" alt="" />
+          <img src="@img/payment/pay-warn.png" alt="" />
         </div>
         <div class="tip">余额不足</div>
         <div class="texts">
           <div class="text">
             <div class="label">余额：</div>
-            <div class="val">{{ baseInfo.yue }}</div>
+            <div class="val">{{ vuex_user.yue }}</div>
           </div>
           <div class="text" style="margin-left: 50px">
             <div class="label">需支付：</div>
@@ -18,7 +25,9 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <button class="queding" @click="$router.push('/yueChongzhi')">去充值</button>
+        <button class="queding" @click="$router.push('/yueChongzhi')">
+          去充值
+        </button>
         <!-- <button class="quxiao" @click="showModal = false">取消</button> -->
       </span>
     </el-dialog>
@@ -39,14 +48,14 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   watch: {
     showModal(val) {
-      if(!val) {
-        this.money = '';
+      if (!val) {
+        this.money = "";
       }
-    }
+    },
   },
 
   methods: {
@@ -80,16 +89,18 @@ export default {
       text-align: center;
       margin: 20px 0;
       font-size: 24px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #000000;
     }
     .texts {
-      .flex-center();
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       .text {
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
         .label {
           font-size: 14px;
           font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
@@ -100,7 +111,7 @@ export default {
           font-size: 14px;
           font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
           font-weight: normal;
-          color: #F74747;
+          color: #3b64fc;
         }
       }
     }
@@ -109,7 +120,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #F74747;
+  // background: #3b64fc;
   background: #f7f7f7;
   text-align: left;
 
@@ -137,14 +148,14 @@ export default {
   .quxiao {
     // margin-right: 20px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
-    color: #F74747;
-    border: 1px solid #F74747;
+    color: #3b64fc;
+    border: 1px solid #3b64fc;
   }
   .queding {
     // margin-right: 24px;
-    background: #F74747;
+    background: #3b64fc;
     color: #fff;
   }
 }

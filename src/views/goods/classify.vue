@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
     <div class="inner-content">
-      <div class="inner w-1200">
+      <div class="inner w-1400">
         <!-- 面包屑导航 -->
         <!-- <breadCrumb /> -->
 
@@ -362,11 +362,11 @@ export default {
         border: 1px solid transparent;
 
         &:hover {
-          color: #F74747;
+          color: #3b64fc;
         }
 
         &.active {
-          color: #F74747;
+          color: #3b64fc;
           border: 1px solid #ff9312;
 
           background: url(~@img/other/fenlei-checked.png) no-repeat right bottom;
@@ -422,11 +422,11 @@ export default {
           span {
             cursor: pointer;
             &:hover {
-              color: #F74747;
+              color: #3b64fc;
             }
 
             &.active {
-              color: #F74747;
+              color: #3b64fc;
             }
           }
         }

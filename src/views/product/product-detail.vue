@@ -1,33 +1,43 @@
 <template>
   <div class="page">
-    <!-- <modalLoading ref="modalLoading" /> -->
-    <product_add_cart_success_modal ref="product_add_cart_success_modal" :curr="curr" />
-    <!-- 邀请好友 -->
-    <!-- <modalYaoqing ref="modalYaoqing" /> -->
-    <!-- 添加成功提示 -->
-    <!-- 右侧优惠券列表 -->
-    <!-- <goodsCouponList ref="goodsCouponList" :list="info.yhq_list" /> -->
-    <!-- <pageProductTop /> -->
-
     <div class="page-top">
-      <div class="page-bread w-1200">
+      <div class="page-bread w-1400">
         <div class="bread-box">
-          <img src="@/static/common/product-home.png" alt="" />
+          <!-- <img src="@img/common/product-home.png" alt="" /> -->
           <router-link to="/">首页</router-link>
-          <span class="bread-divider">&gt;</span>
-          <router-link :to="activeCate.route">产品展示</router-link>
-          <span class="bread-divider">&gt;</span>
-          <template v-if="activeCate.title">
-            <router-link :to="activeCate.route">{{ activeCate.title }}</router-link>
-            <span class="bread-divider">&gt;</span>
-          </template>
+          <!-- <span class="bread-divider">&gt;</span> -->
+          <!-- <router-link to="/products">产品中心</router-link>
+          <span class="bread-divider">&gt;</span> -->
+
+          <div
+            class="bread-item"
+            v-for="(item, index) in bread_list"
+            :key="index"
+          >
+            <span class="arrow">></span>
+            <template v-if="item">
+              <a
+                v-if="item && !item.route"
+                class="link"
+                href="javascript: void(0)"
+                >{{ item.title }}</a
+              >
+              <router-link
+                v-else-if="item && item.route"
+                :to="item.route"
+                class="route-link"
+                >{{ item.title }}</router-link
+              >
+            </template>
+          </div>
+          <span class="arrow">></span>
           <a href="javascirpt:void(0);">{{ info.title }}</a>
         </div>
       </div>
     </div>
 
-    <div class="page-box">
-      <div class="page-inner w-1200">
+    <div class="page-box w-1400">
+      <div class="page-inner">
         <div class="main-content">
           <div class="ctx-top">
             <div class="ctx-left">
@@ -36,122 +46,393 @@
               <div class="preview-wrap">
                 <detailLunbo :imageList="detailImages" />
               </div>
-
-              <!-- <div class="shoucang-box" v-if="false">
-                <div class="shoucang-left" @click="favourite_toggle">
-                  <img v-if="if_shoucang" src="@img/yishoucang.png" alt="" />
-                  <img v-else src="@img/weishoucang.png" alt="" />
-                  <span>{{ if_shoucang ? "取消收藏" : "收藏商品" }}</span>
+              <div class="detail-act-list">
+                <div class="act-item">
+                  <img src="@img/product/icon-zhengpin.png" alt="" />
+                  <span>正品保障</span>
                 </div>
-                <div class="shoucang-right" @click="show_yaoqing">
-                  <img src="@img/fenxiang.png" alt="" />
+                <div class="act-item">
+                  <img src="@img/product/icon-shouhou.png" alt="" />
+                  <span>无忧售后</span>
+                </div>
+                <div class="act-item" @click="do_open_share()">
+                  <img src="@img/product/icon-share.png" alt="" />
                   <span>分享</span>
                 </div>
-              </div> -->
+                <div class="act-item" @click="do_fav_toggle()">
+                  <img
+                    v-if="if_shoucang"
+                    src="@img/product/icon-fav1.png"
+                    alt=""
+                  />
+                  <img v-else src="@img/product/icon-fav0.png" alt="" />
+                  <span>{{ if_shoucang ? "取消收藏" : "收藏商品" }}</span>
+                </div>
+              </div>
             </div>
 
             <div class="ctx-right">
-              <div class="detail-title">
-                <div class="title-text ellipsis-3">
+              <div class="detail-title flex">
+                <div class="title-text">
                   {{ info.title }}
                 </div>
-              </div>
-              <div class="detail-desc">
-                限量50台
-              </div>
-              <div class="detail-code">
-                货号: K340001
-              </div>
-              <div class="detail-price">
-                ￥298.00
-              </div>
-              <div class="detail-txt ellipsis-3">
-                基於R.Salvadori / C.Shelby駕駛的5號車，該車贏得了1959年勒芒24小時耐力賽。 也可以從該套件中製造出由M.Trintignant /P.Frère駕駛的＃6賽車和由S.Moss / J.Fairman駕駛
-                完整詳細的多材料套件，包括鉛錫合金金屬，樹脂，蝕刻，橡膠輪胎的翻折零件
-              </div>
 
-              <div class="btn-box">
-                <div class="btn-buy">图片一键下载</div>
-                <div class="left-articles">
-                  <span>分享：</span>
-                  <div class="article-item">
-                    <a href="/terms?id=100" >
-                      <img src="@/assets/image/footer/fackback.png" alt="">
-                    </a>
+                <!-- <div class="price-box">
+                  未税价格：{{ vuex_huobi }} {{ info.priceSale }}
+                </div> -->
+              </div>
+              <div class="detail-desc"></div>
+
+              <!-- <div class="detail-desc" v-if="info.subtitle">
+                {{ info.subtitle }}
+              </div>
+              <div class="detail-desc" v-if="info.jianjie">
+                {{ info.jianjie }}
+              </div> -->
+
+              <div class="sale-info">
+                <div class="list">
+                  <div class="item price-item" style="margin-bottom: 10px">
+                    <div class="label">价格</div>
+                    <div class="vals vals-price">
+                      <div class="val">
+                        {{ vuex_huobi }}
+                        {{ view_info.priceSale }}
+                      </div>
+                    </div>
+                    <div
+                      style="color: gray; margin-left: 16px"
+                      v-if="view_info.usersCompany"
+                    >
+                      未税价格：{{ vuex_huobi
+                      }}{{
+                        vuex_is_login
+                          ? (view_info.priceSale / 1.3).toFixed(2) *
+                            view_info.companyDiscount
+                          : "---"
+                      }}
+                    </div>
+                    <div style="color: gray; margin-left: 16px" v-else>
+                      未税价格：{{ vuex_huobi
+                      }}{{
+                        vuex_is_login
+                          ? (view_info.priceSale / 1.3).toFixed(2)
+                          : "---"
+                      }}
+                    </div>
+                    <div style="color: gray; margin-left: 16px">税率：13%</div>
                   </div>
-                  <div class="article-item">
-                    <a href="/terms?id=100" >
-                      <img src="@/assets/image/footer/feishu.png" alt="">
-                    </a>
+                  <div class="item" v-if="info.discountSale">
+                    <div class="label">折扣价格</div>
+                    <div class="vals">
+                      <div class="val">{{ vuex_huobi }}{{ info.discountSale||0 }}</div>
+                    </div>
                   </div>
-                  <div class="article-item">
-                    <a href="/terms?id=100" >
-                      <img src="@/assets/image/footer/weibo.png" alt="">
-                    </a>
+                </div>
+              </div>
+              <div class="misc-detail">
+                <div class="misc-sector">
+                  <div>商品编号：</div>
+                  <div>{{ info.productNo || "--" }}</div>
+                </div>
+                <div class="misc-sector">
+                  <div>起订量：</div>
+                  <div>{{ info.minNum }}</div>
+                </div>
+                <div class="misc-sector">
+                  <div>品牌名称：</div>
+                  <div>{{ info.brand.title || "--" }}</div>
+                </div>
+                <div class="misc-sector">
+                  <div>单位：</div>
+                  <div>{{ info.unit }}</div>
+                </div>
+                <div class="misc-sector">
+                  <div>库存：</div>
+                  <div>{{ view_info.kucun || "--" }}</div>
+                </div>
+                <!-- <div class="misc-sector">
+                  <div>质量评价：</div>
+                  <div>{{ info.zhiliangPingjia? info.zhiliangPingjia : '--' }}</div>
+                </div> -->
+                <!-- <div class="misc-sector">
+                  <div>销量：</div>
+                  <div>{{ info.orders }}</div>
+                </div> -->
+                <div class="misc-sector">
+                  <div>货期：</div>
+                  <div>
+                    {{
+                      view_info.kucun > 0
+                        ? "48小时内发货"
+                        : info.delivery_date || "请联系客服发货"
+                    }}
                   </div>
+                </div>
+              </div>
+              <!-- <div class="info-texts">
+                <div class="text-item">
+                  <div class="label">总销量</div>
+                  <div class="text">{{ info.orders }}</div>
+                </div>
+                <div class="text-item">
+                  <div class="label">累计评价</div>
+                  <div class="text">{{ info.comment_num }}</div>
+                </div>
+                <div class="text-item detail-act-list" @click="do_fav_toggle()">
+                  <div class="label">
+                    <div class="detail-act-list">
+                      <img v-if="if_shoucang" src="@img/detail-fav-1.png" alt="" />
+                      <img v-else src="@img/detail-fav-0.png" alt="" />
+                    </div>
+                  </div>
+                  <div class="text"> <span>{{ if_shoucang ? "取消收藏" : "收藏商品" }}</span></div>
+                </div>
+              </div> -->
+
+              <div class="other-box">
+                <!-- <div class="sku-box">
+                  <div class="sku-label">选择规格</div>
+                  <div class="sku-list">
+                    <button
+                      class="sku-item"
+                      :disabled="!item.kucun || item.status == -1"
+                      v-for="(item, index) in sku_list"
+                      :key="index"
+                      :class="{
+                        active: item.inventoryId == sku_select.inventoryId,
+                      }"
+                      @click="toggle_sku(item)"
+                    >
+                      <div class="text">
+                        {{ item.keyVals }}
+                      </div>
+                    </button>
+                  </div>
+                </div> -->
+
+                <div class="shuliang-box">
+                  <div class="sel-num-title">数量</div>
+                  <div class="shuliang">
+                    <div
+                      class="btn minus"
+                      @click="
+                        selected_num > 1 ? selected_num-- : (selected_num = 0)
+                      "
+                    >
+                      <img src="@img/product/num-minus.png" alt="" />
+                    </div>
+                    <input
+                      type="number"
+                      v-model="selected_num"
+                      @blur="onBlur_selected_num"
+                    />
+                    <div class="btn plus" @click="selected_num++">
+                      <img src="@img/product/num-plus.png" alt="" />
+                    </div>
+                    <span class="kucun">订购方式：先款后货</span>
+                  </div>
+                </div>
+                <div class="yunfei-box flex">
+                  <div class="label">运费</div>
+                  <div class="value">满300包邮 不到300运费15元</div>
+                </div>
+                <div class="dinghuo-box flex">
+                  <div class="label">支付方式：</div>
+                  <div class="value">
+                    <div class="" v-if="info.dinggouType">
+                      {{ info.dinggouType }}
+                    </div>
+                    <div class="flex" v-else>
+                      <div class="flex">
+                        <img
+                          src="@/assets/img/pay/type-xianxia.png"
+                          style="height: 28px; margin-right: 8px"
+                          alt=""
+                        />
+                        线下支付
+                      </div>
+                      &nbsp;&nbsp;&nbsp;
+                      <div class="flex">
+                        <img
+                          src="@/assets/img/pay/type-wx.png"
+                          style="height: 28px; margin-right: 8px"
+                          alt=""
+                        />
+                        在线支付
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="dinghuo-box flex">
+                  <div class="label">配送至：</div>
+                  <area_select
+                    ref="area_select"
+                    @change="changeSelectAddress"
+                  />
+                  <!-- <div class="value"><el-button @click="do_pay_now()">请选择</el-button></div> -->
+                </div>
+                <div class="btn-box flex">
+                  <button
+                    class="btn-ripple flex-center btn-buy"
+                    @click="do_pay_now()"
+                  >
+                    立即购买
+                  </button>
+                  <button
+                    class="btn-ripple flex-center btn-add-cart"
+                    @click="do_add_cart()"
+                  >
+                    <img
+                      src="@img/product/detail-cart.png"
+                      alt=""
+                      class="cart"
+                    />
+                    加入购物车
+                  </button>
+
+                  <!-- <button
+                    class="btn-ripple flex-center btn-add-fav"
+                    @click="do_add_fav()"
+                  >
+                    {{ is_fav ? "取消收藏" : "添加收藏" }}
+                  </button> -->
                 </div>
               </div>
             </div>
           </div>
 
-
-
           <div class="ctx-bottom-container">
-
-
+            <div class="bottom-left">
+              <div class="main-title">相关产品</div>
+              <div class="product-list">
+                <div
+                  class="product-item"
+                  v-for="(item, index) in related_products"
+                  :key="index"
+                  @click="toDetail(item)"
+                >
+                  <div class="poster-box scale-box">
+                    <img :src="item.thumb" alt="" class="poster scale-img" />
+                  </div>
+                  <div class="info-box">
+                    <div class="title">{{ item.title }}</div>
+                    <div class="pirce-box">
+                      ￥{{ vuex_is_login ? item.priceSale : "---" }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <div class="bottom-right">
               <div class="ctx-bottom">
                 <div class="ctx-bottom-inner">
-                  <!-- v-if="active_panel == '详情'" -->
-                  <div class="detail-content-box">
-                    <div class="panel-title" data-title="详情">
-                      详情说明
+                  <div class="bottom-nav">
+                    <div
+                      class="nav-item"
+                      @click="togglePanel('详情')"
+                      :class="active_panel == '详情' ? 'active' : ''"
+                    >
+                      商品详情
                     </div>
-                    <div class="panel-title-line"></div>
+
+                    <!-- <div
+                      class="nav-item"
+                      @click="togglePanel('评价')"
+                      :class="active_panel == '评价' ? 'active' : ''"
+                    >
+                      累计评价
+                      <span class="count-num">{{ info.commentNum }}</span>
+                    </div> -->
+
+                    <!-- <el-popover placement="bottom" trigger="click">
+                  <div class="pop-kefu">
+                    <div class="pop-kefu-inner">
+                      <div class="kefu-tip">请微信扫描下方二维码</div>
+                      <img class="kefu-code" :src="vuex_config.kefu_code" />
+                    </div>
+                  </div>
+                  <button class="contact" slot="reference">
+                    <img src="@img/other/goods-detail-kefu.png" alt />
+                    <span>联系客服</span>
+                  </button>
+                </el-popover> -->
+                    <!-- <button class="contact" slot="reference" @click="shopcart_add">
+                  <img src="@img/icon-cart-trans.png" alt />
+                  <span>加入购物车</span>
+                </button> -->
+                  </div>
+
+                  <!-- v-if="active_panel == '详情'" -->
+                  <div class="detail-content-box" v-if="active_panel == '详情'">
+                    <!-- <div class="panel-title" data-title="详情">
+                      商品详情
+                    </div>
+                    <div class="panel-title-line"></div> -->
+                    <div class="detail-spec">
+                      <div
+                        class="detail-spec-sector"
+                        v-for="(value, key) in info.addrows"
+                      >
+                        <div>{{ key }}</div>
+                        <div>{{ value || "--" }}</div>
+                      </div>
+                    </div>
                     <div class="rich-html" v-html="info.content"></div>
                     <div class="rich-html" v-html="info.cont2"></div>
                     <div class="rich-html" v-html="info.cont3"></div>
                   </div>
-                              <div class="bottom-left">
-                                <div class="main-title">相关产品</div>
 
-                                <div class="product-list">
-                                  <div class="product-item" v-for="(item, index)  in list_goods" :key="index" @click="toDetail(item)">
-                                    <div class="poster-box scale-box">
-                                      <img :src="item.img" alt="" class="poster scale-img">
-                                    </div>
-                                    <div class="info-box">
-                                      <div class="title ellipsis-2">12323</div>
-                                      <div class="pirce-box">
-                                        <div class="price-info">
-                                          <div class="price-1">￥298.00</div>
-                                        </div>
-                                        <div class="yishou">
-                                          限量50台
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
+                  <!-- v-if="active_panel == '评价'" -->
+                  <div class="comment-box" v-if="active_panel == '评价'">
+                    <!-- <div class="panel-title" data-title="评论">
+                      累计评价 ({{ info.commentNum }})
+                    </div>
+                    <div class="panel-title-line"></div> -->
+
+                    <review_list :list="reviews" />
+
+                    <div
+                      class="pagination-box"
+                      style="margin-top: 80px"
+                      v-if="info.commentNum"
+                    >
+                      <el-pagination
+                        background
+                        layout="total, prev, pager, next"
+                        @current-change="changePage_comment"
+                        :current-page.sync="pagination.page"
+                        :page-size="pagination.pageNum"
+                        :total="info.commentNum"
+                      ></el-pagination>
+                    </div>
+
+                    <div class="detail-empty" v-else>
+                      <el-empty description="没有查询到评论信息..."></el-empty>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-
           </div>
-
         </div>
       </div>
     </div>
+
+    <product_add_cart_success_modal ref="product_add_cart_success_modal" />
   </div>
 </template>
 
 <script>
+// import { Swiper, SwiperOptions, Pagination, Navigation } from "swiper";
+// import "swiper/swiper-bundle.min.css";
+
 import product_add_cart_success_modal from "@/components/product/product_add_cart_success_modal.vue";
+import detailLunbo from "@/components/detail/detailLunbo.vue";
 import carouselComponent from "@/components/goods/carouselComponent.vue"; //左侧轮播
 import review_list from "@/components/review/review_list.vue";
-import detailLunbo from "@/components/detail/detailLunbo.vue";
+import area_select from "@/components/address/area_select.vue";
 
 import { mapState } from "vuex";
 import { Loading } from "element-ui";
@@ -163,10 +444,18 @@ export default {
     carouselComponent,
     review_list,
     detailLunbo,
+    area_select,
+    // QRCode,
+    // modalLoading,
+    // modalYaoqing,
+    // goodsCouponList,
   },
   data() {
     return {
-      info: {},
+      info: {
+        inventorys: [],
+        brand: {},
+      },
       is_fav: false,
       reviews: [],
       pagination: {
@@ -199,14 +488,13 @@ export default {
       field_list: [],
       param_list: [],
       all_field: [],
-
       id: this.$route.query.id || "", //规格id
       product_id: "", //产品id
 
       //规格数量
       sku_mode: "单规格",
       sku_select: {}, //选择的规格
-      selected_num: 1, //商品数量
+      selected_num: 0, //商品数量
       sku_list: [], //规格列表
       show_sku: false,
       //拆分状态下选择的商品属性
@@ -219,32 +507,55 @@ export default {
       // 其他
       active_panel: "详情", //详情
 
-
       pagination_relative: {
         page: 1,
         pageNum: 5,
       },
 
       select_inventoryId: "",
-
       timer: null, //促销计算
       remaining: "", //促销剩余时间
 
       coupons: [], //可用的优惠券
       isFavourite: false, //未收藏
-
+      minnum: "",
       selectedSkuComb: {}, //选择的商品规格信息 立即购买需要金额
-      show_sku: false,
+      // show_sku: false,
       curr: {}, //产品
       detail: {}, //产品
       current: 0, //轮播图指示器
       swiperImgs: [], //轮播图
       activeSwipeIndex: 0, //轮播图指示器
+
+      //
+      if_shoucang: false,
+      related_products: [],
     };
   },
 
   computed: {
     ...mapState(["kefu_qq"]),
+
+    bread_list() {
+      let option = [];
+      if (this.info.channelId) {
+        if (this.vuex_category_flat.length) {
+          let cate = this.vuex_category_flat.find(
+            (v) => v.id == this.info.channelId
+          );
+          if (cate) {
+            let ids = cate.ids || "";
+            let id_arr = ids.split("-").filter((v) => !!v);
+            id_arr.forEach((id) => {
+              let cate = this.vuex_category_flat.find((v) => v.id == id) || {};
+              option.push(cate);
+            });
+          }
+        }
+      }
+
+      return option;
+    },
 
     //预览信息
     view_info() {
@@ -301,12 +612,19 @@ export default {
   },
 
   methods: {
+    //更新当前父组件数据
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      let { sheng, shi, qu } = data;
+      // debugger
+    },
+
     toDetail(item) {
-      this.$router.push(`/product-detail?id=${item.inventoryId}`)
+      this.$router.push(`/product-detail?id=${item.inventoryId}`);
     },
 
     setView() {
-      this.query_product_detail()
+      this.query_product_detail();
     },
 
     query_product_detail() {
@@ -320,27 +638,32 @@ export default {
           ifShowSku: 1, //是否展示全部规格skus：0-不需要展示 1-需要展示（规格以组合形式展示，即规格1,规格2 组合一起的）
         },
       }).then((res) => {
-        //console.log("商品详情", res);
-        let { code, data, msg } = res;
+        console.log(res);
+        let { code, data, message } = res;
         if (res.code == 200) {
+          data.brand = data.brand || {};
           this.info = data;
-          this.add_history_record()
+          console.log(data.inventorys[0].minNumNormal);
+          this.minnum = data.inventorys[0].minNumNormal;
+          this.add_history_record();
           // this.reviews = data.commentList;
           this.query_reviews(); //评论
-
-
 
           this.curr = data;
           this.detail = data;
           this.swiperImgs = data.images;
           this.detailImages = data.images.map((v, i) => ({
             index: i,
-            image: v
+            image: v,
           }));
-
+          this.if_shoucang = data.ifShoucang == 0 ? false : true;
           this.posterSrc = data.images[0];
           this.set_sku(data);
+
+          this.query_related_product();
+          console.log(data);
         } else {
+          alert(res.message);
           if (message == "商品不存在或已下架") {
             this.$router.push("/");
           }
@@ -348,9 +671,17 @@ export default {
         this.hideLoading();
       });
     },
-
-
-
+    async setClipboard() {
+      let text = window.location.href;
+      const type = "text/plain";
+      const clipboardItemData = {
+        [type]: text,
+      };
+      const clipboardItem = new ClipboardItem(clipboardItemData);
+      await navigator.clipboard.write([clipboardItem]);
+      console.log(text);
+      alert("链接已复制至剪贴板");
+    },
     showLoading() {
       this.loadingInstance = Loading.service({
         lock: true,
@@ -375,7 +706,6 @@ export default {
       // });
     },
 
-
     //查询评论列表
     query_reviews() {
       this.$api({
@@ -384,7 +714,7 @@ export default {
         data: {
           action: "product_comments",
           productId: this.info.productId,
-          ...this.pagination
+          ...this.pagination,
         },
       }).then((res) => {
         let { code, data, count } = res;
@@ -393,7 +723,22 @@ export default {
         }
       });
     },
-
+    //相关商品信息
+    query_related_product() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_plist",
+          productId: this.info.productId,
+          ...this.pagination,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.related_products = res.data.list;
+        }
+      });
+    },
 
     add_history_record() {
       this.$api({
@@ -402,17 +747,17 @@ export default {
         data: {
           action: "product_operate",
           productId: this.info.productId,
-          operateType: 2,//1-关注 2-足迹
-          operateSence: 0,//0-关注（添加记录） 1-取消关注（删除记录）
+          operateType: 2, //1-关注 2-足迹
+          operateSence: 0, //0-关注（添加记录） 1-取消关注（删除记录）
         },
-      }).then((res) => {
-
-      });
+      }).then((res) => {});
     },
-
+    do_fav_toggle() {
+      this.do_add_fav();
+    },
     do_add_fav() {
       if (!this.mix_get_login_status()) {
-        return
+        return;
       }
 
       this.$api({
@@ -421,19 +766,16 @@ export default {
         data: {
           action: "product_operate",
           productId: this.info.productId,
-          operateType: 1,//1-关注 2-足迹
-          operateSence: 0,//0-关注（添加记录） 1-取消关注（删除记录）
+          operateType: 1, //1-关注 2-足迹
+          operateSence: this.if_shoucang ? 1 : 0, //0-关注（添加记录） 1-取消关注（删除记录）
         },
       }).then((res) => {
-        alert(res)
+        alert(res);
         if (res.code == 200) {
-          this.is_fav = !this.is_fav
+          this.if_shoucang = !this.if_shoucang;
         }
       });
     },
-
-
-
 
     //商品sku 属性选择
     onSelectShuXing(item) {
@@ -450,7 +792,9 @@ export default {
         //已选的属性不包含当前属性
         //需要查询是否已选过当前属性其他属性值
         let prev_item = this.select_shuxing_list.find((v) => v.key == key);
-        let prev_item_index = this.select_shuxing_list.findIndex((v) => v.key == key);
+        let prev_item_index = this.select_shuxing_list.findIndex(
+          (v) => v.key == key
+        );
         if (prev_item) {
           this.select_shuxing_list.splice(prev_item_index, 1, item);
         } else {
@@ -467,10 +811,11 @@ export default {
 
     //设置商品选择的规格
     set_sku_select() {
-      if (Object.keys(this.info.skus).length == this.select_shuxing_list.length) {
+      if (
+        Object.keys(this.info.skus).length == this.select_shuxing_list.length
+      ) {
         let key_ids = this.select_shuxing_list.map((v) => v.id).join("-");
-        this.sku_select =
-          this.sku_list.find((v) => v.key_ids == key_ids) || {};
+        this.sku_select = this.sku_list.find((v) => v.key_ids == key_ids) || {};
       }
 
       //console.log("已选的商品属性值 select_shuxing_list", this.select_shuxing_list);
@@ -548,7 +893,8 @@ export default {
       if (this.product_cates_all && this.product_cates_all.length) {
         //实验耗材
         var cate_id = this.info.channelId;
-        this.activeCate = this.product_cates_all.find((v) => v.id == cate_id) || {};
+        this.activeCate =
+          this.product_cates_all.find((v) => v.id == cate_id) || {};
 
         //console.log("activeCate", { ...this.activeCate });
 
@@ -596,8 +942,7 @@ export default {
         this.sku_select = sku_list[0];
       } else {
         // this.sku_select = {};
-        this.sku_select =
-          sku_list.find((v) => v.inventoryId == this.id) || {};
+        this.sku_select = sku_list.find((v) => v.inventoryId == this.id) || {};
       }
       this.sku_list = sku_list;
 
@@ -629,8 +974,6 @@ export default {
         }
       }
     },
-
-
 
     //商品是否选择规格检测
     checkedSelected() {
@@ -670,29 +1013,35 @@ export default {
 
     //立即购买
     do_pay_now() {
+      if (this.selected_num == 0) {
+        alertErr("请选择订购数量！");
+        return;
+      }
       if (!this.mix_get_login_status()) {
-        return
+        return;
       }
       var isSelect = this.checkedSelected();
       if (!isSelect) {
         return;
       }
 
-
       let info = this.info;
       let sku_item = this.sku_select;
-      let data_format = [{
-        title: info.title,
-        image: sku_item.image || info.thumb,
-        inventoryId: sku_item.inventoryId,
-        productId: info.productId,
-        keyVals: sku_item.keyVals,
-        num: this.selected_num,
-        priceSale: sku_item.priceSale,
-        priceMarket: sku_item.priceMarket,
-      }];
+      let data_format = [
+        {
+          title: info.title,
+          image: sku_item.image || info.thumb,
+          inventoryId: sku_item.inventoryId,
+          productId: info.productId,
+          keyVals: sku_item.keyVals,
+          num: this.selected_num,
+          priceSale: sku_item.priceSale,
+          discountSale: info.discountSale,
+          priceMarket: sku_item.priceMarket,
+        },
+      ];
       let str_data = JSON.stringify(data_format);
-      this.$store.commit('set_cache_payment_products',str_data)
+      this.$store.commit("set_cache_payment_products", str_data);
       this.$router.push({
         path: "/order-submit",
       });
@@ -706,10 +1055,13 @@ export default {
 
     //购车添加商品
     do_add_cart() {
-      if (!this.mix_get_login_status()) {
-        return
+      if (this.selected_num == 0) {
+        alertErr("请选择订购数量！");
+        return;
       }
-
+      if (!this.mix_get_login_status()) {
+        return;
+      }
 
       //console.log("shopcart_add 加入购物车");
       if (!this.sku_select.inventoryId) {
@@ -736,7 +1088,7 @@ export default {
           num: this.selected_num,
         },
       }).then((res) => {
-        alert(res)
+        alert(res);
         let { code, data, msg } = res;
         if (code == 200) {
           this.$refs.product_add_cart_success_modal.init({
@@ -744,11 +1096,10 @@ export default {
             ...this.sku_select,
           });
 
-          this.$store.commit('set_vuex_cart_number', data.count)
+          this.$store.commit("set_vuex_cart_number", data.count);
         }
       });
     },
-
 
     //商品评价页面
     go_comments() {
@@ -759,7 +1110,6 @@ export default {
         },
       });
     },
-
 
     //预览图片
     previewImage(src, index, swiperImgs) {
@@ -784,8 +1134,6 @@ export default {
       }
     },
 
-
-
     //
     togglePanel(name) {
       // return;
@@ -797,20 +1145,25 @@ export default {
       }
     },
 
-
-
     //商品评价分页
     changePage_comment(page) {
       this.pagination.page = page;
       this.query_comments();
     },
 
-
     //滚动到指定位置
     scrollToTarget(clsName) {
       // var element = document.querySelector(".wenxian-box");
       var element = document.querySelector(clsName);
-      element.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
+    },
+
+    do_open_share() {
+      this.setClipboard();
     },
   },
 };
@@ -826,10 +1179,13 @@ export default {
 }
 
 .detail-qrcode {
-  .flex-center();
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
 
   img {
+    border: 1px solid #ddd;
     width: 150px;
     height: 150px;
   }
@@ -838,10 +1194,8 @@ export default {
 
 <style scoped lang="less">
 .page-top {
-  padding: 24px 0;
+  padding: 14px 0;
   position: relative;
-  border-top: 1px solid #313131;
-  border-bottom: 1px solid #313131;
 
   .page-top-banner {
     img {
@@ -850,7 +1204,6 @@ export default {
   }
 
   .page-bread {
-
     margin: 0 auto;
     height: auto;
     // background: #f5f5f5;
@@ -869,20 +1222,45 @@ export default {
       .bread-divider {
         margin: 0 10px;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #999999;
       }
 
       a {
-        font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
+        display: inline-flex;
+        align-items: center;
+
+        font-family: OPPOSans, OPPOSans;
+        font-size: 15px;
         color: #999999;
 
-        &:hover {
-          color: #F74747;
+        img {
+          margin-right: 10px;
         }
+      }
+
+      .link {
+        font-family: OPPOSans, OPPOSans;
+        font-size: 15px;
+        color: #999999;
+      }
+
+      .route-link {
+        font-family: OPPOSans, OPPOSans;
+        font-size: 15px;
+        color: #999999;
+      }
+
+      .arrow {
+        margin: 0 6px;
+        color: #aeaeae;
+      }
+
+      > *:last-child {
+        font-family: OPPOSans, OPPOSans;
+        font-size: 15px;
+        color: #000000;
       }
     }
   }
@@ -897,26 +1275,55 @@ export default {
       font-size: 14px;
     }
 
-    .kefu-code {}
+    .kefu-code {
+    }
 
-    .erweima {}
+    .erweima {
+    }
   }
 }
 
 .phone-tip-inner {
-    display: flex;
+  display: flex;
   align-items: center;
   cursor: pointer;
 }
-
+.misc-detail {
+  display: grid;
+  margin: 16px 0;
+  max-width: 80%;
+  min-width: 384px;
+  grid-template-columns: 1fr 1fr;
+  font-size: 14px;
+  .misc-sector {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    margin: 8px 0;
+  }
+}
+.detail-spec {
+  display: grid;
+  margin: 0 0 16px;
+  //max-width: 80%;
+  //min-width: 384px;
+  grid-template-columns: 1fr 1fr 1fr;
+  font-size: 14px;
+  .detail-spec-sector {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    margin: 8px 0;
+  }
+}
 .page {
-  background: #000;
+  background: #ffffff;
+  background: #f3f3f3;
   // padding-top: 32px;
   min-height: 50vh;
   font-size: 14px;
 
   .page-box {
-    padding-top: 32px;
+    padding: 36px 30px;
+    background: #ffffff;
   }
 
   .page-inner {
@@ -930,10 +1337,114 @@ export default {
       // background-color: #fff;
 
       .ctx-top {
+        background: #fff;
         display: flex;
         align-items: flex-start;
       }
 
+      .top-info {
+        .product-title {
+          text-align: left;
+          font-size: 20px;
+          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+          font-weight: bold;
+          color: #333333;
+
+          .state-xiajia {
+            margin-left: 20px;
+            font-weight: normal;
+            font-size: 14px;
+            color: #999;
+            color: #ea3200;
+          }
+        }
+
+        .product-other-action {
+          padding: 25px 0;
+          display: flex;
+          align-items: center;
+
+          .action-item {
+            display: flex;
+            align-items: center;
+            margin-right: 30px;
+            cursor: pointer;
+
+            &:hover {
+              span {
+                color: #3b64fc;
+              }
+            }
+
+            img {
+              margin-right: 5px;
+              max-width: 20px;
+              max-height: 20px;
+            }
+
+            span {
+              font-size: 12px;
+              font-family: sans-serif;
+              font-weight: 400;
+              color: #666666;
+
+              font-size: 16px;
+            }
+          }
+        }
+
+        .product-filter {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 15px 0;
+          padding-bottom: 0;
+          border: 1px solid #d5d8de;
+          border-left: none;
+          border-right: none;
+
+          .text {
+            margin-bottom: 15px;
+          }
+
+          .tabs {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+            .tab-item {
+              margin-right: 15px;
+              margin-bottom: 15px;
+              min-width: 32px;
+              padding: 0 5px;
+              height: 24px;
+              line-height: 24px;
+              background: #ffffff;
+              border-radius: 3px 3px 3px 3px;
+              border: 1px solid #a6a6a6;
+
+              font-size: 12px;
+              font-family: sans-serif;
+              font-weight: 400;
+              color: #999999;
+              font-size: 16px;
+
+              &.active {
+                background: #3b64fc;
+                color: #fff;
+                border-color: #3b64fc;
+              }
+            }
+          }
+
+          .fuli {
+            img {
+              height: 24px;
+            }
+          }
+        }
+      }
 
       .ctx-top {
         padding: 0;
@@ -941,67 +1452,25 @@ export default {
         justify-content: space-between;
 
         .ctx-left {
-          width: 582px;
+          width: 400px;
           position: relative;
 
-          .promotion-box {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-
-            .limit-end-box {
-              font-size: 0.3rem;
-              color: #F74747;
-              font-weight: bold;
-              text-align: center;
-              padding-bottom: 0.5rem;
-            }
-          }
-
-          .shoucang-box {
+          .detail-act-list {
             margin-top: 20px;
-              display: flex;
-  align-items: center;
-  justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             width: 100%;
 
-            .yes {
-              color: #f00;
-            }
-
-            .no {
-              color: #000;
-            }
-
-            .shoucang-left {
+            .act-item {
               cursor: pointer;
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               img {
                 width: 20px;
-                margin-right: 15px;
+                margin-right: 6px;
               }
-
-              span {
-                font-size: 16px;
-                font-family: PingFang SC;
-                font-weight: 400;
-                line-height: 36px;
-                color: #333333;
-              }
-            }
-
-            .shoucang-right {
-              cursor: pointer;
-                display: flex;
-  align-items: center;
-
-              img {
-                width: 20px;
-                margin-right: 15px;
-              }
-
               span {
                 font-size: 16px;
                 font-family: PingFang SC;
@@ -1014,67 +1483,68 @@ export default {
         }
 
         .ctx-right {
-          width: 572px;
-          margin-left: 46px;
+          flex: 1;
+          min-height: 364px;
+          margin-left: 36px;
           text-align: left;
 
           .detail-title {
             .title-text {
-              font-weight: 500;
-              font-size: 24px;
-              color: #FFFFFF;
+              flex: 1;
+              font-family: Poppins, Poppins;
+              font-weight: bold;
+              font-size: 26px;
+              color: #000000;
+            }
+
+            .price-box {
+              margin-left: 100px;
+              font-family: Arial, Arial;
+              font-weight: bold;
+              font-size: 30px;
+              color: #ff0000;
             }
           }
 
           .detail-desc {
-            width: 75px;
-            height: 24px;
-            color: #fff;
-            text-align: center;
-            line-height: 24px;
-            background: #1F1C1F;
-            border: 1px solid #7B7B7B;
-          }
-          .detail-code {
-            color: #fff;
-            margin: 20px 0;
-          }
-          .detail-price {
-            font-weight: bold;
-            font-size: 26px;
-            color: #FFFFFF;
-            margin-bottom: 20px;
-          }
-          .detail-txt {
-            font-weight: 400;
-            font-size: 14px;
-            line-height: 24px;
-            color: #fff;
+            margin-top: 17px;
+            margin-bottom: 34px;
+            font-family: OPPOSans, OPPOSans;
+            // font-weight: bold;
+            font-size: 16px;
+            color: #555555;
+            line-height: 30px;
           }
 
-          .info-box {
-            padding: 25px 20px;
+          .sale-info {
+            padding: 0px;
             background: #f7f7f7;
             background-repeat: no-repeat;
             background-size: 100% 100%;
 
             .list {
               .item {
-                  display: flex;
-                  align-items: center;
+                display: flex;
+                align-items: center;
+                padding: 12px 20px;
+
+                &.price-item {
+                  background: url("~@img/product/sale-bg.png");
+                  padding-top: 20px;
+                }
 
                 .label {
                   width: 80px;
-                  font-size: 16px;
-                  font-family: PingFang SC, PingFang SC;
-                  font-weight: 500;
-                  color: #353535;
+                  font-family: Microsoft YaHei, Microsoft YaHei;
+                  font-weight: 400;
+                  font-size: 14px;
+                  color: #6a6a6a;
                 }
 
                 .vals {
-                    display: flex;
-  align-items: center;
-                  flex: 1;
+                  display: flex;
+                  align-items: center;
+                  //flex: 1;
 
                   font-size: 16px;
                   font-family: PingFang SC, PingFang SC;
@@ -1085,19 +1555,23 @@ export default {
                     font-size: 24px;
                     font-family: PingFang SC, PingFang SC;
                     font-weight: bold;
-                    color: #eb0611;
+                    color: #e1251b;
                   }
 
                   .val {
                     flex: 1;
+                    font-family: Microsoft YaHei, Microsoft YaHei;
+                    font-weight: bold;
+                    font-size: 20px;
+                    color: #e1251b;
                   }
                 }
               }
             }
 
             .price {
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               .number {
                 font-size: 28px;
@@ -1108,43 +1582,34 @@ export default {
             }
           }
 
+          .other-box {
+            padding-left: 20px;
+          }
 
           .info-texts {
-              display: flex;
-  align-items: center;
-  justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             padding: 0 32px;
             height: 45px;
-            background: #F8F8F8;
+            background: #f8f8f8;
 
             .text-item {
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
               .label {
+                font-family: Microsoft YaHei, Microsoft YaHei;
+                font-weight: 400;
                 font-size: 14px;
-                color: #6A6A6A;
+                color: #999999;
               }
 
               .text {
                 margin-left: 6px;
                 font-size: 16px;
-                color: #E1251B;
+                color: #e1251b;
               }
-            }
-
-            .shoucang-box {
-              cursor: pointer;
-
-              img {
-                width: 18px;
-              }
-
-              .text {
-                font-size: 13px;
-                color: #747474;
-              }
-
             }
           }
 
@@ -1155,18 +1620,25 @@ export default {
 
             .sku-label {
               margin-top: 8px;
-              min-width: 84px;
+              min-width: 90px;
+
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 14px;
+              color: #999999;
             }
           }
 
           .sku-list {
             flex: 1;
-              display: flex;
-  align-items: center;
+            display: flex;
+            align-items: center;
             flex-wrap: wrap;
 
             .sku-item {
-              // .flex-center();
+              //   display: flex;
+              justify-content: center;
+              align-items: center;
               margin-bottom: 10px;
               padding: 0 6px;
               margin-right: 20px;
@@ -1182,8 +1654,6 @@ export default {
               font-weight: 500;
               color: #333333;
 
-
-
               &:disabled {
                 cursor: not-allowed;
                 opacity: 0.6;
@@ -1191,7 +1661,7 @@ export default {
               }
 
               &.active {
-                border: 1px solid #F74747;
+                border: 1px solid #3b64fc;
                 color: #eb0611;
 
                 .img-box {
@@ -1201,11 +1671,11 @@ export default {
                 }
 
                 .text {
-                  color: #F74747;
+                  color: #3b64fc;
                 }
 
                 .price {
-                  color: #F74747;
+                  color: #3b64fc;
                 }
               }
 
@@ -1213,51 +1683,48 @@ export default {
                 text-align: center;
                 flex: 1;
                 font-size: 14px;
-                font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+                font-family: sans-serif;
                 font-weight: 400;
                 color: #333333;
               }
             }
           }
 
-          .phone-tip {
-            margin-top: 16px;
-            display: flex;
-            justify-content: flex-end;
-
-            font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-            font-weight: 400;
-            color: #808080;
-
-            img {
-              margin-left: 10px;
-              width: 24px;
-            }
-          }
-
-
-
           .shuliang-box {
-            margin-top: 0px;
-              display: flex;
-  align-items: center;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
 
             .sel-num-title {
-              min-width: 84px;
+              min-width: 90px;
               font-family: Arial, Arial;
-              font-size: 16px;
-              color: #333333;
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 14px;
+              color: #999999;
+            }
+
+            .kucun {
+              margin-left: 16px;
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 14px;
+              color: #999999;
             }
 
             .shuliang {
               min-width: 105px;
-                display: flex;
-  align-items: center;
+              display: flex;
+              align-items: center;
 
-              div {
-                width: 30px;
-                height: 30px;
+              .btn {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                border: 1px solid #d5d8de;
+                width: 24px;
+                height: 24px;
                 cursor: pointer;
                 user-select: none;
 
@@ -1266,26 +1733,30 @@ export default {
                 }
 
                 img {
-                  width: 30px;
-                  height: 30px;
-                  vertical-align: middle;
+                  width: 10px;
+                  height: 10px;
+                  vertical-align: bottom;
                 }
               }
 
-              .minus {}
+              .minus {
+              }
 
               input {
                 outline: none;
-                margin: 0 10px;
+                margin: 0 0;
                 display: inline-block;
                 border: 1px solid #ccc;
+                border-left: none;
+                border-right: none;
 
                 width: 40px;
                 height: 30px;
+                height: 24px;
                 line-height: 30px;
                 text-align: center;
 
-                font-size: 20px;
+                font-size: 16px;
                 font-family: Arial;
                 font-weight: 400;
                 color: #4a4a4a;
@@ -1302,71 +1773,119 @@ export default {
                 /* firefox */
               }
 
-              .plus {}
+              .plus {
+              }
             }
           }
 
-          .sel-num-title {
-            margin: 20px 0;
+          .yunfei-box,
+          .dinghuo-box {
+            margin-top: 30px;
+            .label {
+              min-width: 90px;
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 14px;
+              color: #999999;
+            }
+            .value {
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 14px;
+              color: #999999;
+            }
           }
 
           .btn-box {
-            margin-top: 20px;
-            display: flex;
-            align-items: end;
-            justify-content: space-between;
+            margin-top: 30px;
 
+            button {
+              margin-right: 20px;
+              font-size: 16px;
+              transition: 0.3s;
+
+              &:hover {
+                opacity: 0.8;
+              }
+            }
 
             .btn-buy {
-              cursor: pointer;
-              width: 256px;
+              width: 164px;
               height: 48px;
-              background: #DF1626;
-              text-align: center;
-              line-height: 48px;
-              color: #fff;
+              background: #edf5ff;
+              border-radius: 0px 0px 0px 0px;
+              font-family: OPPOSans, OPPOSans;
+              // font-weight: bold;
+              font-size: 18px;
+              color: #3b64fc;
+              border: 1px solid #3b64fc;
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: bold;
+              font-size: 16px;
+              color: #3b64fc;
             }
-            .left-articles {
-              display: flex;
-              flex-direction: row;
-              color: #E6E6E6;
-              .article-item {
-                a {
-                  color: #666;
-                  font-size: 14px;
-                  img {
-                    width: 24px;
-                    height: 24px;
-                    margin-right: 16px;
-                  }
-                }
+
+            .btn-add-cart {
+              width: 164px;
+              height: 48px;
+              background: #ffffff;
+              border-radius: 0px 0px 0px 0px;
+              border: 1px solid #3b64fc;
+              background: #3b64fc;
+
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: bold;
+              font-size: 16px;
+              color: #ffffff;
+
+              img {
+                margin-right: 10px;
               }
+            }
+
+            .btn-add-fav {
+              width: 164px;
+              height: 48px;
+              background: #ffffff;
+              border-radius: 0px 0px 0px 0px;
+              border: 1px solid #3b64fc;
+              font-family: OPPOSans, OPPOSans;
+              // font-weight: bold;
+              font-size: 18px;
+              color: #3b64fc;
             }
           }
         }
       }
 
-
-
       .ctx-bottom-container {
         margin-top: 16px;
+        margin-top: 40px;
         display: flex;
         justify-content: space-between;
 
         .bottom-left {
-          width: 100%;
+          border: 1px solid #d6d6d6;
+          margin-right: 24px;
+          width: 220px;
+          background: #fff;
           font-weight: 400;
           font-size: 16px;
-          color: #fff;
+          color: #333333;
+
+          .product-list {
+            padding: 12px 16px;
+          }
         }
 
         .bottom-right {
-          width: 1200px;
+          flex: 1;
+          overflow: hidden;
+          background: #fff;
         }
       }
 
       .ctx-bottom {
-        margin-top: 50px;
       }
 
       .ctx-bottom-inner {
@@ -1378,29 +1897,15 @@ export default {
           font-family: Poppins, Poppins;
           font-weight: bold;
           font-size: 25px;
-          color: #fff;
+          color: #3b64fc;
         }
 
         .panel-title-line {
-          position: relative;
-          border-bottom: 1px solid #696969;
-          line-height: 45px;
-          padding-left: 16px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
-          font-weight: 400;
-          font-size: 16px;
-          color: #333333;
-          margin-bottom: 20px;
-
-          &::after {
-            position: absolute;
-            content: '';
-            background: #fff;
-            bottom: 0;
-            width: 96px;
-            left: 0px;
-            height: 2px;
-          }
+          margin-bottom: 64px;
+          width: 100%;
+          height: 7px;
+          background: #3b64fc;
+          border-radius: 0px 0px 0px 0px;
         }
       }
     }
@@ -1408,17 +1913,15 @@ export default {
 }
 
 .bottom-nav {
-  background: #F9F9F9;
+  background: #f9f9f9;
   position: relative;
-  border-bottom: 1px solid #ddd;
+  border: 1px solid #ddd;
   display: flex;
   height: 48px;
-  /*no */
   line-height: 48px;
-  /*no */
 
   .count-num {
-    color: #F74747;
+    color: #3b64fc;
   }
 
   .nav-item {
@@ -1429,7 +1932,7 @@ export default {
     margin-right: 10px;
     // background: #fff;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #000000;
 
@@ -1438,11 +1941,10 @@ export default {
     }
 
     &.active {
-
       font-weight: bold;
       position: relative;
-      background: #333333;
-      color: #FFFFFF;
+      background: #3b64fc;
+      color: #ffffff;
 
       // &::after {
       //   content: "";
@@ -1475,8 +1977,10 @@ export default {
     /*no */
 
     &.contact {
-      background: #F74747;
-      .flex-center();
+      background: #3b64fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       right: 20px;
 
       &:hover {
@@ -1486,7 +1990,7 @@ export default {
       img {
         width: 20px;
         margin-right: 10px;
-        vertical-align: middle;
+        vertical-align: bottom;
       }
 
       span {
@@ -1519,6 +2023,7 @@ export default {
 
 .detail-content-box {
   min-height: 10vh;
+  padding: 20px;
   // padding: 0;
   text-align: left;
 
@@ -1533,8 +2038,8 @@ export default {
 
     .params-box {
       .params-item {
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
         border: 1px solid #ccc;
         border-bottom: none;
 
@@ -1610,7 +2115,6 @@ export default {
 
       &.firstRow {
         td {
-
           p,
           span,
           strong,
@@ -1633,137 +2137,161 @@ export default {
   }
 }
 
-.bottom-left {
-  margin-top: 50px;
-  .main-title {
-    position: relative;
-    border-bottom: 1px solid #696969;
-    line-height: 45px;
-    font-weight: 400;
-    font-size: 24px;
-    color: #fff;
+.pagation-box {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
 
-    &::after {
-      position: absolute;
-      content: '';
-      background: #fff;
-      bottom: 0;
-      width: 96px;
-      left: 0px;
-      height: 2px;
+.comment-box {
+  min-height: 10vh;
+  padding: 20px;
+  // margin-top: 20px;
+
+  .comment-title {
+    display: flex;
+    background-color: #eee;
+    align-items: center;
+    color: #fff;
+    width: 100%;
+
+    color: #000;
+
+    .comment-title-text {
+      padding: 5px 30px;
+      margin-right: 20px;
+      background-color: #3b64fc;
+      color: #fff;
+    }
+  }
+
+  label {
+    width: 70px;
+
+    input {
+      margin-right: 10px;
+    }
+  }
+
+  .comment-list {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #000;
+    text-align: left;
+
+    .comment-item {
+      background-color: #eee;
+      padding: 20px;
+      min-height: 50px;
+      margin-bottom: 20px;
+
+      .comment-bottom {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+
+        .left {
+          flex: 3;
+
+          .img-list {
+            display: flex;
+
+            .img-item {
+              padding: 10px;
+            }
+
+            img {
+              width: 80px;
+              height: 80px;
+              padding: 10px;
+              background-color: #fff;
+              margin-right: 10px;
+            }
+          }
+        }
+
+        .right {
+          flex: 1;
+        }
+      }
     }
   }
 }
 
+.bottom-left {
+  .main-title {
+    text-align: center;
+    height: 48px;
+    line-height: 48px;
+    background: #f9f9f9;
+    border-radius: 0px 0px 0px 0px;
+
+    position: relative;
+    border-bottom: 1px solid #eeeeee;
+    line-height: 45px;
+    padding-left: 16px;
+    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-weight: 400;
+    font-size: 16px;
+    color: #333333;
+
+    // &::after {
+    //   position: absolute;
+    //   content: "";
+    //   background: #333;
+    //   bottom: 0;
+    //   width: 96px;
+    //   left: 16px;
+    //   height: 2px;
+    // }
+  }
+}
+
 .product-list {
-  margin-top: 12px;
-  display: flex;
-
   .product-item {
-
-    margin-bottom: 10px;
-    margin-right: 16px;
-    margin-top: 16px;
-    width: 285px;
-    background: #1F1C1F;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e8e8e8;
+    margin-bottom: 20px;
+    width: 100%;
+    // height: 349px;
+    background: #ffffff;
     cursor: pointer;
-
-    &:nth-child(4n) {
-      margin-right: 0;
-    }
-
-    &:nth-child(-n + 4) {
-      margin-top: 0;
-    }
 
     &:hover {
       .title {
-        color: #F74747 !important;
+        color: #3b64fc !important;
       }
     }
 
     .poster-box {
-      width: 285px;
-      height: 190px;
+      margin: 0 auto;
+      width: 172px;
+      height: 172px;
 
       .poster {
-        width: 285px;
-        height: 190px;
+        width: 100%;
+        height: 100%;
       }
     }
 
     .info-box {
-      height: 113px;
-      padding: 13px 15px 15px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      padding: 13px 0 0;
 
       .title {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
         font-weight: 400;
-        font-size: 16px;
-        color: #fff;
+        font-size: 14px;
+        color: #333333;
       }
 
       .pirce-box {
         margin-top: 15px;
-          display: flex;
-  align-items: center;
-  justify-content: space-between;
 
-        .price-info {
-          display: flex;
-          align-items: center;
-
-          .price-1 {
-            font-weight: 400;
-            font-size: 18px;
-            color: #fff;
-          }
-        }
-
-        .yishou {
-          width: 75px;
-          height: 24px;
-          background: #1F1C1F;
-          border: 1px solid #7B7B7B;
-          font-size: 12px;
-          text-align: center;
-          line-height: 24px;
-        }
-      }
-
-
-      .act-box {
-        margin-top: 15px;
-        border-top: 1px solid #ddd;
-        padding-top: 5px;
-          display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-        .fav-box {
-          .flex-center();
-          width: fit-content;
-          height: 32px;
-
-          img {
-            margin-right: 5px;
-            width: 18px;
-            height: 18px;
-          }
-        }
-
-        .cart-box {
-          .flex-center();
-          width: 32px;
-          height: 32px;
-
-          img {
-            width: 32px;
-            height: 32px;
-          }
-        }
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-weight: bold;
+        font-size: 18px;
+        color: #e1251b;
       }
     }
   }
@@ -1772,4 +2300,8 @@ export default {
 
 <style scoped lang="less" src="@/assets/h5css/page/product-detail.less"></style>
 
-<style scoped lang="less" src="@/assets/h5css/mobile/product-detail.less"></style>
+<style
+  scoped
+  lang="less"
+  src="@/assets/h5css/mobile/product-detail.less"
+></style>

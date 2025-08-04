@@ -2,7 +2,7 @@
   <div class="w-banner-wrap">
     <div class="w-banner-inner">
       <el-carousel trigger="click" :autoplay="true">
-        <el-carousel-item v-for="(item, index) in index_banners" :key="index" @click.native="do_banner_click(item)">
+        <el-carousel-item v-for="(item, index) in vuex_index_banners" :key="index" @click.native="do_banner_click(item)">
           <img :src="item.image" alt="" />
         </el-carousel-item>
       </el-carousel>

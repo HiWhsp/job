@@ -4,10 +4,10 @@
       :visible.sync="show_modal" :before-close="onBeforeClose">
       <div class="modal-inner">
         <div class="tip-box">
-          <img src="@/static/product/product-add-success.png" alt />
+          <img src="@img/product/product-add-success.png" alt />
         </div>
         <div class="text-box-1">该商品已成功加入购物车</div>
-        <div class="text-box-2">购物车共{{ shopcart_count }}件商品</div>
+        <div class="text-box-2">购物车共{{ vuex_cart_number }}件商品</div>
       </div>
       <span slot="footer" class="dialog-footer">
         <button class="btn btn-ripple btn-1" @click="$router.push('/cart')">查看购物车</button>
@@ -21,9 +21,8 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "add-success",
+  name: "product-add-cart-success",
   components: {},
-  // props: ["curr"],
   data() {
     return {
       show_modal: false,
@@ -79,7 +78,7 @@ export default {
   .btn-1 {
     width: 200px;
     height: 45px;
-    background: #F74747;
+    background: #3B64FC;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 17px;
@@ -89,11 +88,11 @@ export default {
     width: 200px;
     height: 45px;
     border-radius: 0px 0px 0px 0px;
-    border: 1px solid #F74747;
+    border: 1px solid #3B64FC;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 17px;
-    color: #F74747;
+    color: #3B64FC;
   }
 }
 

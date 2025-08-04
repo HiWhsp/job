@@ -10,7 +10,7 @@
             </div>
             <div class="title">
               <div class="text-1">我的积分</div>
-              <div class="text-2">{{ +baseInfo.jifen || 0 }}</div>
+              <div class="text-2">{{ +vuex_user.jifen || 0 }}</div>
             </div>
           </div>
           <div class="right-box">
@@ -87,7 +87,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   created() {
     this.setView();

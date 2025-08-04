@@ -12,7 +12,7 @@
         <div class="text-box">
           <div class="text-1">我的余额</div>
           <div class="text-2">
-            {{ baseInfo.yue || 0 }}
+            {{ vuex_user.yue || 0 }}
             <span class="currency">元</span>
           </div>
           <div class="text-3">
@@ -51,7 +51,10 @@
                 <div class="mingxi-desc">{{ item.orderInfo }}</div>
                 <div class="mingxi-date">时间：{{ item.dtTime }}</div>
               </div>
-              <div class="mingxi-value" :class="item.type == 2 ? 'plus' : 'minus'">
+              <div
+                class="mingxi-value"
+                :class="item.type == 2 ? 'plus' : 'minus'"
+              >
                 <!-- <span class="plus">2400.00</span> -->
                 <span>{{ item.type == 2 ? "+" : "" }}{{ item.money }}</span>
                 元
@@ -133,7 +136,7 @@ export default {
     },
 
     setYuePass() {
-      this.$refs.balance_password_set_modal.init(this.baseInfo);
+      this.$refs.balance_password_set_modal.init(this.vuex_user);
     },
   },
 };
@@ -144,9 +147,9 @@ export default {
   text-align: left;
   padding-bottom: 80px;
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -161,7 +164,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #3b64fc;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -184,7 +187,9 @@ export default {
   padding-left: 40px;
   padding-left: 40px;
   flex-direction: column;
-  .flex-center();
+  display: flex;
+  justify-content: center;
+  align-items: center;
   align-items: flex-start;
 
   .text-box {
@@ -232,7 +237,7 @@ export default {
   flex: 2;
   // border-bottom: 1px solid #eee;
 
-    display: flex;
+  display: flex;
   align-items: center;
   .tab-item {
     cursor: pointer;
@@ -241,14 +246,14 @@ export default {
     margin-right: 60px;
 
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #333333;
 
     &.active {
-      border-bottom: 3px solid #F74747;
+      border-bottom: 3px solid #3b64fc;
       font-weight: bold;
-      color: #F74747;
+      color: #3b64fc;
     }
   }
 }
@@ -294,7 +299,7 @@ export default {
         font-size: 24px;
       }
       &.plus {
-        color: #F74747;
+        color: #3b64fc;
       }
 
       &.minus {

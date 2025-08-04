@@ -4,7 +4,7 @@
       <div class="page-top-banner">
         <img src="@img/banner/news-banner.png" alt="" />
       </div>
-      <div class="page-top-text-wrap w-1200">
+      <div class="page-top-text-wrap w-1400">
         <div class="page-top-text-inner">
           <div class="main-title">内容资讯</div>
           <div class="btn btn-ripple fit-text">了解更多行业资讯</div>
@@ -97,7 +97,7 @@ export default {
         padding: 0 24px;
         width: fit-content;
         height: 61px;
-        background: #F74747;
+        background: #3B64FC;
         border-radius: 0px 0px 0px 0px;
 
         font-family: Microsoft YaHei, Microsoft YaHei;

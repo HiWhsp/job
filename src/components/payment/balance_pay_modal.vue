@@ -1,11 +1,18 @@
 <template>
   <div class="modal-container">
-    <el-dialog title="余额支付" width="580px" custom-class="modal-wrap" :close-on-click-modal="false" :visible.sync="showModal" :before-close="onModal_close">
+    <el-dialog
+      title="余额支付"
+      width="580px"
+      custom-class="modal-wrap"
+      :close-on-click-modal="false"
+      :visible.sync="showModal"
+      :before-close="onModal_close"
+    >
       <div class="modal-inner">
         <div class="item">
           <div class="label">余额：</div>
           <div class="val">
-            <div class="money">¥ {{ baseInfo.yue }}</div>
+            <div class="money">¥ {{ vuex_user.yue }}</div>
           </div>
         </div>
         <div class="item">
@@ -47,7 +54,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState(["vuex_user"]),
   },
   watch: {
     showModal(val) {
@@ -85,7 +92,7 @@ export default {
 
     //余额支付
     order_payment_yue() {
-      // if (+this.baseInfo.money < +this.money_daizhifu) {
+      // if (+this.vuex_user.money < +this.money_daizhifu) {
       //   alertErr("您的余额不足，请选择其他支付方式");
       //   return;
       // }
@@ -125,15 +132,15 @@ export default {
     padding: 20px;
 
     .item {
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
       margin-bottom: 20px;
 
       .label {
         min-width: 100px;
         text-align: right;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #666666;
       }
@@ -142,7 +149,7 @@ export default {
           font-size: 20px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #3b64fc;
         }
 
         input {
@@ -161,7 +168,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #F74747;
+  // background: #3b64fc;
   background: #f7f7f7;
   text-align: left;
 
@@ -188,12 +195,12 @@ export default {
 
   .quxiao {
     margin-right: 24px;
-    color: #F74747;
-    border: 1px solid #F74747;
+    color: #3b64fc;
+    border: 1px solid #3b64fc;
   }
   .queding {
     // margin-right: 24px;
-    background: #F74747;
+    background: #3b64fc;
     color: #fff;
   }
 }

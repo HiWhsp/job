@@ -1,9 +1,12 @@
 <template>
   <div class="page-head">
     <div class="head-search">
-      <div class="header-box w-1200">
-        <div class="header w-1200 flex">
-          <div class="left-logo" @click="$router.push('/')"></div>
+      <div class="header-box w-1400">
+        <div class="header w-1400 flex">
+          <div class="left-logo">
+            <img src="@img/common/logo.png" @click="$router.push('/')" />
+            <!-- <span @click="$router.push('/')">网站名</span> -->
+          </div>
 
           <div class="center-search">
             <div class="head-nav">
@@ -36,25 +39,20 @@
 
           <div class="right-box">
             <div class="cart-box">
-              <router-link to="">
-                <img src="@/assets/image/home/search.png" alt="" />
-              </router-link>
-              <router-link to="">
-                <img src="@/assets/image/home/user.png" alt="" />
-              </router-link>
               <router-link to="/shopcart">
-                <img src="@/assets/image/home/cart.png" alt="" />
-              </router-link>
-              <router-link to="/shopcart" class="flex-center">
-                <img class="en-icon" src="@/assets/image/home/en.png" alt="" />
-                <span class="cart-text">中文</span>
-                <img class="en-icon" src="@/assets/image/home/down-icon.png" alt="" />
+                <img src="@img/common/head-cart.png" alt="" />
+                <span class="cart-text">购物车</span>
+                <span class="cart-num">（{{ vuex_cart_number }}）</span>
               </router-link>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- <div class="head-nav">
+        <topNavModel1 />
+      </div> -->
   </div>
 </template>
 
@@ -95,8 +93,6 @@ export default {
   computed: {
     ...mapState([
       //
-      "vuex_product_cate_1",
-      "vuex_product_cate_2",
     ]),
 
     userMenu() {
@@ -120,10 +116,12 @@ export default {
       }
       var arr = [
         { title: "首页", route: "/" },
-        { title: "产品展示", route: "/service" },
-        { title: "预约商品", route: "/xunjia" },
-        { title: "工艺鉴赏", route: "/suggest" },
-        { title: "联系我们", route: "/scene" },
+        { title: "协议专区", route: "/service" },
+        { title: "批量询价", route: "/xunjia" },
+        { title: "氿洲甄选", route: "/suggest" },
+        { title: "场景专区", route: "/scene" },
+        { title: "品牌馆", route: "/product-brand" },
+        { title: "内容资讯", route: route_news },
       ];
       return arr;
     },
@@ -233,7 +231,7 @@ export default {
       }
     },
     logout() {
-      this.$store.commit("clear_loginInfo");
+      this.$store.commit("remove_vuex_user");
       // debugger
       if (this.$route.meta.requireAuth) {
         this.$router.push("/");
@@ -315,7 +313,7 @@ export default {
     },
 
     logout() {
-      this.$store.commit("clear_loginInfo");
+      this.$store.commit("remove_vuex_user");
       // if (this.$route.meta.requireAuth) {
       //   this.$router.push("/login");
       // }
@@ -346,12 +344,12 @@ export default {
 
     background: #fff;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #000000;
 
     &:hover {
-      background: #f74747;
+      background: #3B64FC;
       color: #fff;
     }
   }
@@ -360,7 +358,7 @@ export default {
 
 <style scoped lang="less">
 .head-nav {
-  background: #000;
+  background: #202020;
 }
 
 .page-head {
@@ -369,27 +367,17 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  line-height: 110px;
+  line-height: 0;
   padding: 0;
-  height: 110px;
+  // border-bottom: 4px solid #009a44;
+  // box-shadow: 0px 3px 10px 1px rgba(0, 0, 0, 0.16);
+  background: #fff;
   background: #000;
-}
-
-.left-logo {
-  width: 200px;
-  height: 40px;
-  background-image: url("~@/assets/image/home/logo.png");
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-}
-
-.header {
-  justify-content: space-between;
 }
 
 .header-inner {
   position: relative;
-  width: 1200px;
+  width: 1400px;
   height: 150px;
   margin: 0 auto;
   display: flex;
@@ -445,7 +433,7 @@ export default {
           transform: translate(-50%);
           width: 0;
           height: 2px;
-          background: #f74747;
+          background: #3b64fc;
           transition: 0.3s;
         }
       }
@@ -459,7 +447,7 @@ export default {
       &.active {
         .nav-link {
           // font-weight: bold;
-          color: #f74747;
+          color: #3b64fc;
 
           &::after {
             // width: 36px;
@@ -471,7 +459,7 @@ export default {
         color: #222;
         width: 100%;
         font-size: 16px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #333;
       }
@@ -485,19 +473,8 @@ export default {
   text-align: center;
 
   img {
-    width: 24px;
-    margin-right: 36px;
-  }
-  .en-icon {
-    width: 20px;
-    margin: 0;
-  }
-  .cart-text {
-    color: #fff;
-    margin: 0 8px;
-    font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-    font-weight: 400;
+    width: 14px;
+    margin-right: 5px;
   }
 }
 
@@ -507,7 +484,11 @@ export default {
 }
 
 .nav-box {
+  transition: 0.5s;
+  // width: 100%;
+  flex: 2;
   display: flex;
+  justify-content: flex-start;
 
   .nav-item {
     // flex: 1;
@@ -522,24 +503,28 @@ export default {
     height: 47px;
     line-height: 47px;
 
+    &:hover {
+      // background: rgba(0, 0, 0, .8);
+    }
+
     .nav-title {
       font-size: 16px;
       color: #333;
       color: #fff;
 
       &.active {
-        color: #f74747;
+        color: #3b64fc;
         font-weight: bold;
       }
 
       &.router-link-exact-active {
-        color: #f74747;
+        color: #3b64fc;
         font-weight: bold;
       }
     }
 
     .text:hover {
-      color: #f74747;
+      color: #3b64fc;
       font-weight: bold;
     }
   }
@@ -585,7 +570,9 @@ export default {
     position: relative;
     width: 30px;
     height: 30px;
-    .flex-center();
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     img {
       width: 30px;
@@ -593,7 +580,9 @@ export default {
     }
 
     .cart-num {
-      .flex-center();
+      display: flex;
+      justify-content: center;
+      align-items: center;
       position: absolute;
       right: -10px;
       top: -10px;
@@ -635,7 +624,7 @@ export default {
     color: #999999;
 
     &:hover {
-      color: #f74747;
+      color: #3b64fc;
     }
   }
 
@@ -646,7 +635,7 @@ export default {
     color: #999999;
 
     &:hover {
-      color: #f74747;
+      color: #3b64fc;
     }
   }
 }

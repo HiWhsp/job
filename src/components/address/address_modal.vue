@@ -21,7 +21,7 @@
         </div>
         <div class="item">
           <span class="text">默认地址</span>
-          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#F74747"
+          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#3B64FC"
             inactive-color="#eeeeee">
           </el-switch>
         </div>
@@ -70,7 +70,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   watch: {
 
@@ -332,17 +332,17 @@ export default {
     height: 32px;
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    border: 1px solid #3B64FC;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
+    color: #3B64FC;
   }
 
   .btn-2 {
     min-width: 120px;
     height: 32px;
-    background: #F74747;
+    background: #3B64FC;
     border-radius: 50px 50px 50px 50px;
     font-family: Arial, Arial;
     font-weight: 400;

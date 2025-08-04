@@ -22,8 +22,12 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <button class="btn-ripple quxiao" @click="showModal = false">取消</button>
-        <button class="btn-ripple queding" @click="confirm_duihuan">确认</button>
+        <button class="btn-ripple quxiao" @click="showModal = false">
+          取消
+        </button>
+        <button class="btn-ripple queding" @click="confirm_duihuan">
+          确认
+        </button>
       </span>
     </el-dialog>
   </div>
@@ -45,7 +49,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   watch: {
     showModal(val) {
@@ -93,7 +97,10 @@ export default {
         },
       ];
 
-      sessionStorage.setItem("jifen_payment_products", JSON.stringify(payment_products));
+      sessionStorage.setItem(
+        "jifen_payment_products",
+        JSON.stringify(payment_products)
+      );
 
       this.$router.push("/jifenorder-submit");
     },
@@ -114,12 +121,14 @@ export default {
     text-align: left;
 
     .tip {
-      color: #F74747;
+      color: #3b64fc;
       margin-bottom: 20px;
     }
 
     .img-box {
-      .flex-center();
+      display: flex;
+      justify-content: center;
+      align-items: center;
       margin-bottom: 20px;
       img {
         width: 150px;
@@ -143,7 +152,7 @@ export default {
   background: #ffffff;
   border: 1px solid #eeeeee;
   border-radius: 4px;
-    display: flex;
+  display: flex;
   align-items: center;
   overflow: hidden;
 
@@ -177,7 +186,7 @@ export default {
 
     &::-webkit-input-placeholder {
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #d7d7d7;
     }
@@ -186,7 +195,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #F74747;
+  // background: #3b64fc;
   background: #f7f7f7;
   text-align: left;
 
@@ -215,13 +224,13 @@ export default {
     margin-right: 24px;
     // margin-right: 20px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
-    color: #F74747;
-    border: 1px solid #F74747;
+    color: #3b64fc;
+    border: 1px solid #3b64fc;
   }
   .queding {
-    background: #F74747;
+    background: #3b64fc;
     color: #fff;
   }
 }
@@ -230,10 +239,10 @@ export default {
   background: transparent;
   position: absolute;
   right: 0;
-    display: flex;
+  display: flex;
   align-items: center;
   cursor: pointer;
-  color: #F74747;
+  color: #3b64fc;
 
   &.disabled {
     color: #ccc;

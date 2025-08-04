@@ -1,6 +1,6 @@
 <template>
   <div class="header-box">
-    <div class="header w-1200">
+    <div class="header w-1400">
       <!-- 没登录 -->
       <!-- <div class="left" v-if="!vuex_is_login">
         <router-link class="login" to="/login">请登录</router-link>
@@ -10,7 +10,7 @@
       <div class="left" v-if="vuex_is_login">
         <span>
           <b class="user-index" @click="$router.push('/memberCenter')">{{
-            baseInfo.name
+            vuex_user.name
           }}</b>
           <span class="text-1">您好！</span>
         </span>
@@ -40,7 +40,7 @@
         >
           <img src="/common/cart.png" alt />
           <router-link to="/cart">购物车</router-link>
-          <b class="cart-num">{{ shopcart_count }}</b>
+          <b class="cart-num">{{ vuex_cart_number }}</b>
         </div> -->
 
         <div
@@ -120,8 +120,6 @@ export default {
 
   computed: {
     ...mapState([
-      "baseInfo",
-      "shopcart_count",
       "is_common",
     ]),
   },
@@ -157,7 +155,7 @@ export default {
       }
     },
     logout() {
-      this.$store.commit("clear_loginInfo");
+      this.$store.commit("remove_vuex_user");
       // debugger
       if (this.$route.meta.requireAuth) {
         this.$router.push("/");
@@ -181,7 +179,7 @@ export default {
 
   li:hover {
     a {
-      color: #F74747;
+      color: #3b64fc;
     }
   }
 }
@@ -204,7 +202,7 @@ export default {
     text-align: left;
 
     .logout {
-      color: #F74747;
+      color: #3b64fc;
       cursor: pointer;
     }
     .login {
@@ -218,11 +216,11 @@ export default {
     }
 
     .user-index {
-      color: #F74747;
+      color: #3b64fc;
       cursor: pointer;
 
       &:hover {
-        color: #F74747;
+        color: #3b64fc;
       }
     }
 
@@ -246,11 +244,11 @@ export default {
 
     .login-action {
       .login {
-        color: #F74747;
+        color: #3b64fc;
       }
 
       .logout {
-        color: #F74747;
+        color: #3b64fc;
       }
     }
 
@@ -319,7 +317,7 @@ export default {
     }
 
     .phone {
-      color: #F74747;
+      color: #3b64fc;
       font-weight: bold;
       margin-left: 10px;
     }

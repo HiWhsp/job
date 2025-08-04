@@ -92,7 +92,7 @@ export default {
         }
 
         &:hover {
-          background-color: var(--main_color);
+          background-color: #f00;
         }
       }
     }

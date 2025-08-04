@@ -1,8 +1,8 @@
 <template>
   <div class="bread-box">
-    <div class="bread-inner flex w-1200">
+    <div class="bread-inner flex w-1400">
       <router-link to="/">
-         <img src="@/static/common/home.png" alt="" />
+        <!-- <img src="@img/common/home.png" alt="" /> -->
         首页
         <!-- Home -->
       </router-link>
@@ -71,10 +71,7 @@ export default {
 
 <style scoped lang="less">
 .bread-box {
-  height: 60px;
-  line-height: 60px;
-  border-top: 1px solid #313131;
-  border-bottom: 1px solid #313131;
+  padding: 0px 0;
 
   .bread-inner {
     margin: 0 auto;

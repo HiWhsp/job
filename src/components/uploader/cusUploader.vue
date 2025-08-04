@@ -22,7 +22,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
 
   created() {},

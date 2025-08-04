@@ -3,7 +3,7 @@
     <orderPayWxCode ref="orderPayWxCode" :payment_money="payment_money" />
     <orderPayWaiting ref="orderPayWaiting" />
 
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="order-info">
         <div class="left">
           <img src="@img/pay/create-success.png" alt="" />
@@ -68,7 +68,7 @@
 
         <div class="yue-box" v-if="payType == '余额'">
           <div class="text-1">使用余额</div>
-          <div class="text-2">您当前可用余额为 {{vuex_huobi}}{{ baseInfo.yue }}</div>
+          <div class="text-2">您当前可用余额为 {{vuex_huobi}}{{ vuex_user.yue }}</div>
         </div>
       </div>
 
@@ -117,7 +117,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
 
     list_pay_type() {
       let arr = [
@@ -174,7 +174,7 @@ export default {
     disabledPay() {
       let ret = false;
       if (this.payType == "余额") {
-        if (this.baseInfo.yue < this.payment_money) {
+        if (this.vuex_user.yue < this.payment_money) {
           ret = true;
         }
       }
@@ -522,7 +522,7 @@ export default {
             img {
               height: 30px;
               object-fit: contain;
-              vertical-align: middle;
+              vertical-align: bottom;
             }
           }
         }

@@ -5,12 +5,12 @@
     </div>
 
     <div class="page-top-text-wrap">
-      <div class="page-top-text-inner w-1200">
+      <div class="page-top-text-inner w-1400">
         <div class="main-title">{{ config.title }}</div>
         <div class="main-title-en">{{ config.title_en }}</div>
         <div class="title-line"></div>
         <div class="bread-box">
-          <img src="@/static/common/bread-home.png" alt="" />
+          <img src="@img/common/bread-home.png" alt="" />
           <router-link to="/">首页</router-link>
 
           <template v-if="list_bread[0]">
@@ -30,7 +30,7 @@
 
     <!-- 子级导航 -->
     <div class="child-nav-wrap" v-if="config.nav_list">
-      <div class="child-nav-inner w-1200">
+      <div class="child-nav-inner w-1400">
         <router-link :to="item.route" class="child-item" :class="checkClass(item)"
           v-for="(item, index) in config.nav_list" :key="index">
           {{ item.title }}
@@ -212,7 +212,7 @@ export default {
           font-size: 14px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #3b64fc;
 
           &::after {
             content: "";
@@ -222,7 +222,7 @@ export default {
             transform: translate(-50%, 0);
             width: 100%;
             height: 3px;
-            background: #F74747;
+            background: #3b64fc;
           }
         }
       }

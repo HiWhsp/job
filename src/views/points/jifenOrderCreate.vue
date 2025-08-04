@@ -3,7 +3,7 @@
     <!-- 新增收货地址 -->
     <addressAdd ref="addressAdd" />
 
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="section">
         <div class="section-title">选择收货人地址</div>
         <div class="section-ctx">
@@ -15,15 +15,19 @@
               :class="{ active: item.id == select_address.id }"
               @click="handleSelectAddress(item)"
             >
-              <div class="address-top">{{ item.areaName }}（{{ item.name }}收）</div>
+              <div class="address-top">
+                {{ item.areaName }}（{{ item.name }}收）
+              </div>
               <div class="address-bottom">
                 {{ item.areaName }} {{ item.address }} {{ item.phone }}
               </div>
-              <img src="@/static/address/dizhi-check-1.png" alt="" class="marker" />
+              <img src="@img/address/dizhi-check-1.png" alt="" class="marker" />
             </div>
           </div>
           <div class="btn-box">
-            <button class="btn-ripple" @click="handleAddressOpen">使用新地址</button>
+            <button class="btn-ripple" @click="handleAddressOpen">
+              使用新地址
+            </button>
           </div>
         </div>
       </div>
@@ -44,7 +48,11 @@
               </div>
 
               <!-- 商品列表 -->
-              <div class="item" v-for="(item, index) in payment_products" :key="index">
+              <div
+                class="item"
+                v-for="(item, index) in payment_products"
+                :key="index"
+              >
                 <div class="item-detail">
                   <div class="item-1">
                     <img :src="item.image" />
@@ -60,7 +68,9 @@
                   <!-- <div class="item-3">{{ item.key_vals == "无" || !item.key_vals ? "默认" : item.key_vals }}</div> -->
                   <div class="item-3">{{ item.jifen }}</div>
                   <div class="item-4">{{ item.num }}</div>
-                  <div class="item-5">{{ +(item.jifen * item.num).toFixed(2) }}</div>
+                  <div class="item-5">
+                    {{ +(item.jifen * item.num).toFixed(2) }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -102,7 +112,9 @@
       <!-- 操作按钮 -->
       <div class="bottom-btns">
         <button class="btn-ripple back" @click="$router.back()">返回</button>
-        <button class="btn-ripple tijiao" @click="confirm_exchange">确认兑换</button>
+        <button class="btn-ripple tijiao" @click="confirm_exchange">
+          确认兑换
+        </button>
       </div>
     </div>
   </div>
@@ -143,7 +155,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
 
     opts_peisong() {
       let arr = ["同城配送", "门店自取"];
@@ -204,7 +216,9 @@ export default {
 
       try {
         if (sessionStorage.getItem("jifen_payment_products")) {
-          this.payment_products = JSON.parse(sessionStorage.getItem("jifen_payment_products"));
+          this.payment_products = JSON.parse(
+            sessionStorage.getItem("jifen_payment_products")
+          );
         }
       } catch (error) {}
     },
@@ -319,16 +333,15 @@ export default {
   font-size: 14px;
 
   .inner {
-
     margin: 0 auto;
 
     padding: 20px 0 80px;
   }
 
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 30px;
     text-align: left;
 
@@ -377,8 +390,8 @@ export default {
         background: #f9f9f9;
         padding: 15px;
 
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
         border-bottom: 1px solid #ddd;
         .title-1 {
           flex: 2;
@@ -407,8 +420,8 @@ export default {
           font-size: 16px;
           color: #333333;
 
-            display: flex;
-  align-items: center;
+          display: flex;
+          align-items: center;
 
           .item-1 {
             width: 100px;
@@ -469,9 +482,9 @@ export default {
   }
 
   .bottom {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     button {
       width: 240px;
       height: 60px;
@@ -505,9 +518,9 @@ export default {
   border: 1px solid #cccccc;
 
   .dizhi-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding-left: 20px;
     padding-right: 20px;
     height: 48px;
@@ -522,7 +535,7 @@ export default {
     .add {
       b {
         font-weight: bold;
-        color: #F74747;
+        color: #3b64fc;
         cursor: pointer;
       }
     }
@@ -561,8 +574,8 @@ export default {
           background: #ddd;
         }
 
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
 
         .name {
           width: 120px;
@@ -591,7 +604,7 @@ export default {
 
         .checked {
           flex: 2;
-          color: #F74747;
+          color: #3b64fc;
           text-align: right;
         }
       }
@@ -625,8 +638,8 @@ export default {
     padding: 30px 20px;
 
     .select-1 {
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
 
       & + .select-1 {
         margin-top: 30px;
@@ -646,7 +659,7 @@ export default {
           background: #ffffff;
           border: 1px solid #cccccc;
           &.active {
-            border: 1px solid #F74747;
+            border: 1px solid #3b64fc;
           }
         }
       }
@@ -725,7 +738,7 @@ export default {
     padding-bottom: 16px;
     border-bottom: 1px solid #d5d8de;
     font-size: 24px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #333333;
   }
@@ -755,7 +768,7 @@ export default {
         }
 
         &.active {
-          border: 2px solid #F74747;
+          border: 2px solid #3b64fc;
 
           .marker {
             display: block;
@@ -773,14 +786,14 @@ export default {
           padding-bottom: 15px;
           border-bottom: 1px solid #d5d8de;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #000000;
         }
         .address-bottom {
           padding-top: 15px;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #999999;
         }
@@ -816,7 +829,7 @@ export default {
     border: 1px solid #cccccc;
     font-size: 16px;
     font-weight: 400;
-    color: #F74747;
+    color: #3b64fc;
 
     transition: 0.3s;
     &:hover {
@@ -825,16 +838,16 @@ export default {
 
     &.back {
       margin-right: 24px;
-      border: 1px solid #F74747;
+      border: 1px solid #3b64fc;
       font-size: 16px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
-      color: #F74747;
+      color: #3b64fc;
     }
 
     &.tijiao {
       color: #ffffff;
-      background: #F74747;
+      background: #3b64fc;
     }
   }
 }

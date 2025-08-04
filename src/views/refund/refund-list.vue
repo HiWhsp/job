@@ -5,8 +5,13 @@
     <div class="page-ctx">
       <div class="tab-box">
         <div class="tab-list">
-          <div v-for="(item, index) in tab_list" :key="index" class="tab-item"
-            :class="{ active: tab_select.value == item.value }" @click="do_toggle_tab(item)">
+          <div
+            v-for="(item, index) in tab_list"
+            :key="index"
+            class="tab-item"
+            :class="{ active: tab_select.value == item.value }"
+            @click="do_toggle_tab(item)"
+          >
             {{ item.title }}
           </div>
         </div>
@@ -17,10 +22,18 @@
       </div>
 
       <div class="page-sec">
-        <div class="allow-wrap" data-title="可申请售后列表" v-if="tab_select.title == '全部'">
+        <div
+          class="allow-wrap"
+          data-title="可申请售后列表"
+          v-if="tab_select.title == '全部'"
+        >
           <div class="allow-inner">
             <div class="order-list">
-              <div class="order-item" v-for="(order, index) in allow_refund_order_list" :key="index">
+              <div
+                class="order-item"
+                v-for="(order, index) in allow_refund_order_list"
+                :key="index"
+              >
                 <div class="base-box flex-between">
                   <div class="date">{{ order.createdTime }}</div>
                   <div class="order-code">
@@ -41,36 +54,53 @@
                         <div class="sku">{{ order.products.keyVals }}</div>
                       </div>
                       <div class="box-price">
-                        <div class="price">{{ vuex_huobi }} {{ order.products.priceSale }}</div>
+                        <div class="price">
+                          {{ vuex_huobi }} {{ order.products.priceSale }}
+                        </div>
                       </div>
                       <div class="box-num">
                         <div class="num">x {{ order.products.num }}</div>
                       </div>
                       <div class="box-xiaoji">
-                        <div class="price">{{ vuex_huobi }} {{ order.products.priceSale }}</div>
+                        <div class="price">
+                          {{ vuex_huobi }} {{ order.products.priceSale }}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="actions-box">
-                  <button class="btn btn-ripple" @click="to_refund_type(order)">申请售后</button>
+                  <button class="btn btn-ripple" @click="to_refund_type(order)">
+                    申请售后
+                  </button>
                 </div>
               </div>
             </div>
 
-            <div class="pagi-box">
-              <el-pagination @current-change="on_current_change_allow" :current-page.sync="allow_pagination.page"
-                :page-size="allow_pagination.pageNum" layout="total, prev, pager, next" :total="allow_refund_count"></el-pagination>
+            <div class="pagi-box" v-if="allow_refund_count !== 0">
+              <el-pagination
+                @current-change="on_current_change_allow"
+                :current-page.sync="allow_pagination.page"
+                :page-size="allow_pagination.pageNum"
+                layout="total, prev, pager, next"
+                :total="allow_refund_count"
+              ></el-pagination>
             </div>
-            <el-empty v-if="allow_refund_count" description="暂无数据..."></el-empty>
+            <el-empty
+              v-if="allow_refund_count === 0"
+              description="暂无数据..."
+            ></el-empty>
           </div>
         </div>
-
 
         <div class="service-wrap" data-title="售后申请列表">
           <div class="service-inner">
             <div class="service-list">
-              <div class="service-item" v-for="(order, index) in refund_service_list" :key="index">
+              <div
+                class="service-item"
+                v-for="(order, index) in refund_service_list"
+                :key="index"
+              >
                 <div class="base-box flex">
                   <!-- <div class="refund-type">
                     {{ order.statusInfo }}
@@ -99,33 +129,48 @@
                       <div class="box-price">
                         <div class="price">
                           {{ order.is_jifen ? "积分" : "￥" }}
-                          {{ order.is_jifen ? order.products.jifen : order.products.priceSale }}
+                          {{
+                            order.is_jifen
+                              ? order.products.jifen
+                              : order.products.priceSale
+                          }}
                         </div>
                       </div>
                       <div class="box-num">
                         <div class="num">x {{ order.products.num }}</div>
                       </div>
                       <div class="box-xiaoji">
-                        <div class="price">{{ vuex_huobi }} {{ order.products.priceSale * order.products.num }}</div>
+                        <div class="price">
+                          {{ vuex_huobi }}
+                          {{ order.products.priceSale * order.products.num }}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="actions-box">
-                  <button class="btn btn-ripple" @click="to_service(order)">售后详情</button>
+                  <button class="btn btn-ripple" @click="to_service(order)">
+                    售后详情
+                  </button>
                 </div>
               </div>
             </div>
-
           </div>
-          <div class="pagi-box">
-            <el-pagination @current-change="on_current_change_service" :current-page.sync="service_pagination.page"
-              :page-size="service_pagination.pageNum" layout="total, prev, pager, next" :total="refund_service_count"></el-pagination>
+          <div class="pagi-box" v-if="refund_service_count !== 0">
+            <el-pagination
+              @current-change="on_current_change_service"
+              :current-page.sync="service_pagination.page"
+              :page-size="service_pagination.pageNum"
+              layout="total, prev, pager, next"
+              :total="refund_service_count"
+            ></el-pagination>
           </div>
-          <el-empty v-if="!refund_service_count" description="暂无数据..."></el-empty>
+          <el-empty
+            v-if="!refund_service_count === 0"
+            description="暂无数据..."
+          ></el-empty>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -135,9 +180,7 @@ import { mapState } from "vuex";
 
 export default {
   name: "page-refund-list",
-  components: {
-
-  },
+  components: {},
   data() {
     return {
       tab_list: [
@@ -147,9 +190,9 @@ export default {
         { value: 1, title: "已完成" },
       ],
       tab_select: {
-        value: -10, title: "全部"
+        value: -10,
+        title: "全部",
       },
-
 
       //
       allow_pagination: {
@@ -157,28 +200,26 @@ export default {
         pageNum: 10,
       },
       allow_refund_count: 0,
-      allow_refund_order_list: [],//允许售后的订单列表
+      allow_refund_order_list: [], //允许售后的订单列表
       //
       service_pagination: {
         page: 1,
         pageNum: 10,
       },
       refund_service_count: 0,
-      refund_service_list: [],//售后申请服务列表
+      refund_service_list: [], //售后申请服务列表
       //
       keyword: "",
     };
   },
 
-  computed: {
-
-  },
+  computed: {},
   created() {
     this.setView();
   },
   methods: {
     setView() {
-      if (this.tab_select.title == '全部') {
+      if (this.tab_select.title == "全部") {
         this.query_allow_refund_order(); //可申请订单列表
       } else {
         this.query_refund_service_list(); //售后申请列表
@@ -188,10 +229,10 @@ export default {
     //售后列表
     query_allow_refund_order() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'refund_afterSaleList',
+          action: "refund_afterSaleList",
           ...this.pagination,
         },
       }).then((res) => {
@@ -205,10 +246,10 @@ export default {
     //已申请售后列表
     query_refund_service_list() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'refund_lists',
+          action: "refund_lists",
           ...this.pagination,
           status: this.refund_status, //(0待处理  1已完成  -1无效)
         },
@@ -222,44 +263,41 @@ export default {
         }
       });
     },
-    
+
     do_toggle_tab(item) {
       this.tab_select = item;
-      this.setView()
+      this.setView();
     },
 
     to_refund_type(item) {
       this.mix_toRoute({
-        path: '/refund-type',
+        path: "/refund-type",
         query: {
           orderId: item.orderId,
           inventoryId: item.inventoryId,
-        }
-      })
+        },
+      });
     },
     to_service(item) {
       this.mix_toRoute({
-        path: '/refund-service-detail',
+        path: "/refund-service-detail",
         query: {
           id: item.id,
-        }
-      })
+        },
+      });
     },
 
     on_current_change_allow(value) {
-      this.allow_pagination.page = value
+      this.allow_pagination.page = value;
       this.setView();
     },
     on_current_change_service(value) {
-      this.service_pagination.page = value
+      this.service_pagination.page = value;
       this.setView();
     },
 
+    do_search() {},
 
-    do_search() {
-
-    },
-    
     updateView() {
       this.setView();
     },
@@ -304,7 +342,9 @@ export default {
     //售后申请
     refund_apply(item) {
       //console.log({ ...item });
-      this.$router.push(`/refund-type?order_id=${item.order_id}&inventoryId=${item.inventoryId}`);
+      this.$router.push(
+        `/refund-type?order_id=${item.order_id}&inventoryId=${item.inventoryId}`
+      );
     },
   },
 };
@@ -334,18 +374,17 @@ export default {
   }
 }
 
-
 .tab-box {
   padding-right: 20px;
-    display: flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   background: #ffffff;
   // border: 1px solid #cccccc;
 
   .tab-list {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: 400;
@@ -361,14 +400,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #F74747;
+        color: #3B64FC;
       }
 
       &.active {
-        // background: #F74747;
+        // background: #3b64fc;
         // color: #fff;
         font-weight: bold;
-        color: #F74747;
+        color: #3B64FC;
 
         &::after {
           content: "";
@@ -377,15 +416,15 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #F74747;
+          background: #3B64FC;
         }
       }
     }
   }
 
   .search-box {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     min-width: 260px;
     height: 32px;
     background: #f9f9f9;
@@ -415,7 +454,6 @@ export default {
   }
 }
 
-
 .page-sec {
   margin-top: 30px;
 }
@@ -423,7 +461,6 @@ export default {
 .pagi-box {
   margin-top: 30px;
 }
-
 
 .allow-wrap {
   .order-list {
@@ -469,7 +506,6 @@ export default {
           padding: 20px;
           border-bottom: 1px dashed #ccc;
 
-
           &:last-child {
             border: none;
           }
@@ -523,12 +559,10 @@ export default {
             }
           }
 
-
           .box-num {
             width: 100px;
 
             .num {
-
               font-size: 16px;
               font-family: Microsoft YaHei;
               font-weight: 400;
@@ -548,10 +582,6 @@ export default {
               color: #333333;
             }
           }
-
-
-
-
         }
       }
     }
@@ -570,8 +600,8 @@ export default {
       .btn {
         min-width: 96px;
         height: 30px;
-        background: #F74747;
-        border: 1px solid #F74747;
+        background: #3B64FC;
+        border: 1px solid #3B64FC;
         font-size: 14px;
         color: #fff;
         transition: 0.3s;
@@ -584,13 +614,8 @@ export default {
   }
 }
 
-
-
 .service-wrap {
-
-
   .service-list {
-
     .service-item {
       border: 1px solid #cccccc;
       margin-bottom: 30px;
@@ -605,7 +630,7 @@ export default {
       .refund-type {
         min-width: 80px;
         text-align: left;
-        color: #F74747;
+        color: #3B64FC;
       }
 
       .date {
@@ -642,8 +667,8 @@ export default {
         color: #999999;
 
         &.state2 {
-          color: #F74747;
-          border-color: #F74747;
+          color: #3B64FC;
+          border-color: #3B64FC;
         }
       }
     }
@@ -653,7 +678,6 @@ export default {
         .product-item {
           padding: 20px;
           border-bottom: 1px dashed #ccc;
-
 
           &:last-child {
             border: none;
@@ -708,12 +732,10 @@ export default {
             }
           }
 
-
           .box-num {
             width: 100px;
 
             .num {
-
               font-size: 16px;
               font-family: Microsoft YaHei;
               font-weight: 400;
@@ -733,14 +755,9 @@ export default {
               color: #333333;
             }
           }
-
-
-
-
         }
       }
     }
-
 
     .actions-box {
       text-align: right;
@@ -756,8 +773,8 @@ export default {
       .btn {
         min-width: 96px;
         height: 30px;
-        background: #F74747;
-        border: 1px solid #F74747;
+        background: #3B64FC;
+        border: 1px solid #3B64FC;
         font-size: 14px;
         color: #fff;
         transition: 0.3s;
@@ -768,9 +785,5 @@ export default {
       }
     }
   }
-
-
-
-
 }
 </style>

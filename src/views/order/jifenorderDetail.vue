@@ -88,7 +88,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar"]),
+    ...mapState([""]),
   },
   watch: {
     orderObj(data) {

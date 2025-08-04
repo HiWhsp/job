@@ -13,7 +13,11 @@
       </div>
       <div class="info-good">
         <div class="list-good">
-          <div class="item-good flex" v-for="(product_item, product_index) in item.products" :key="product_index">
+          <div
+            class="item-good flex"
+            v-for="(product_item, product_index) in item.products"
+            :key="product_index"
+          >
             <div class="box-image cover" @click="mix_to_product(product_item)">
               <!-- <img :src="good.img" alt /> -->
               <el-image :src="product_item.image">
@@ -24,15 +28,17 @@
             </div>
 
             <div class="box-title">
-              <div class="goods-title" @click="mix_to_product(product_item)">{{ product_item.title }}</div>
+              <div class="goods-title" @click="mix_to_product(product_item)">
+                {{ product_item.title }}
+              </div>
             </div>
             <div class="box-sku">
               <div class="goods-sku">{{ product_item.keyVals }}</div>
             </div>
-            <div class="box-num">
-              x {{ product_item.num }}
+            <div class="box-num">x {{ product_item.num }}</div>
+            <div class="box-price">
+              {{ vuex_huobi }} {{ product_item.priceSale }}
             </div>
-            <div class="box-price">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
           </div>
         </div>
       </div>
@@ -47,25 +53,49 @@
         </div>
 
         <div class="btn-actions">
-          <button class="btn-ripple fit-text " @click="toDetail(item)">
+          <button class="btn-ripple fit-text" @click="toDetail(item)">
             订单详情
           </button>
-          <button v-if="item.ifCancel == 1" class="btn-ripple fit-text btn-bg" @click="doCancel(item)">
+          <button
+            v-if="item.ifCancel == 1"
+            class="btn-ripple fit-text btn-bg"
+            @click="doCancel(item)"
+          >
             取消订单
           </button>
-          <button v-if="item.ifPay == 1" class="btn-ripple fit-text btn-bg" @click="doPay(item)">
+          <button
+            v-if="item.ifPay == 1"
+            class="btn-ripple fit-text btn-bg"
+            @click="doPay(item)"
+          >
             去支付
           </button>
-          <button v-if="item.ifDel == 1" class="btn-ripple fit-text btn-bg" @click="doDelete(item)">
+          <button
+            v-if="item.ifDel == 1"
+            class="btn-ripple fit-text btn-bg"
+            @click="doDelete(item)"
+          >
             删除订单
           </button>
-          <button v-if="item.ifReceive == 1" class="btn-ripple fit-text btn-bg" @click="doReceive(item)">
+          <button
+            v-if="item.ifReceive == 1"
+            class="btn-ripple fit-text btn-bg"
+            @click="doReceive(item)"
+          >
             确认收货
           </button>
-          <button v-if="item.ifComment == 1" class="btn-ripple fit-text btn-bg" @click="doReview(item)">
+          <button
+            v-if="item.ifComment == 1"
+            class="btn-ripple fit-text btn-bg"
+            @click="doReview(item)"
+          >
             去评价
           </button>
-          <button v-if="item.orderStatus >= 5" class="btn-ripple fit-text btn-bg" @click="doRefund(item)">
+          <button
+            v-if="item.orderStatus >= 5"
+            class="btn-ripple fit-text btn-bg"
+            @click="doRefund(item)"
+          >
             售后
           </button>
           <!-- <button v-if="item.is_aa == 1" class="btn-ripple fit-text btn-bg" @click="toDetail(item)">
@@ -75,17 +105,30 @@
       </div>
     </div>
 
-    <order_cancel_modal ref="order_cancel_modal" @confirm="emitConfirm" data-type="取消" />
-    <order_delete_modal ref="order_delete_modal" @confirm="emitConfirm" data-type="删除" />
-    <order_receive_modal ref="order_receive_modal" @confirm="emitConfirm" data-type="收货" />
-    <order_refund_modal ref="order_refund_modal" @confirm="emitConfirm" data-type="售后"/>
-    
+    <order_cancel_modal
+      ref="order_cancel_modal"
+      @confirm="emitConfirm"
+      data-type="取消"
+    />
+    <order_delete_modal
+      ref="order_delete_modal"
+      @confirm="emitConfirm"
+      data-type="删除"
+    />
+    <order_receive_modal
+      ref="order_receive_modal"
+      @confirm="emitConfirm"
+      data-type="收货"
+    />
+    <order_refund_modal
+      ref="order_refund_modal"
+      @confirm="emitConfirm"
+      data-type="售后"
+    />
   </div>
 </template>
 
 <script>
-
-
 import order_cancel_modal from "@/components/order/order_cancel_modal.vue"; //取消
 import order_delete_modal from "@/components/order/order_delete_modal.vue"; //删除
 import order_receive_modal from "@/components/order/order_receive_modal.vue"; //收货
@@ -108,40 +151,39 @@ export default {
   computed: {},
   methods: {
     emitConfirm() {
-      this.$emit('confirm')
+      this.$emit("confirm");
     },
 
     toDetail(item) {
       // this.$router.push(`/order-detail?id=${item.id}`);
       this.toRoute({
-        path: '/order-detail',
+        path: "/order-detail",
         query: {
-          id: item.id
+          id: item.id,
         },
-      })
+      });
     },
     doCancel(item) {
-      this.$refs.order_cancel_modal.init(item)
+      this.$refs.order_cancel_modal.init(item);
     },
     doPay(item) {
       this.$router.push({
-        path: '/payment-methods',
+        path: "/payment-methods",
         query: {
-          id: item.id
-        }
-      })
+          id: item.id,
+        },
+      });
     },
     doDelete(item) {
-      this.$refs.order_delete_modal.init(item)
+      this.$refs.order_delete_modal.init(item);
     },
     doReceive(item) {
       this.$refs.order_receive_modal.init(item);
     },
-    doReview(item) { },
+    doReview(item) {},
     doRefund(item) {
       this.$refs.order_refund_modal.init(item);
     },
-
 
     updateView() {
       this.$parent.updateView();
@@ -149,7 +191,6 @@ export default {
 
     //处理订单行为
     handleOrderAction(action, order_id, order) {
-
       let fahuo_id = order.fahuo_id || "";
       //console.log({ ...action });
       let name = action.name;
@@ -177,7 +218,6 @@ export default {
     //取消订单
     orders_qxOrder(order_id) {
       let order = this.list.find((v) => v.id == order_id);
-
 
       // order.orders_qxOrder({
       //   params: { order_id },
@@ -216,9 +256,7 @@ export default {
     jump_shouhou(order_id) {
       this.$router.push(`/orderRefund?order_id=${order_id}`);
     },
-    jump_order_detail(order) {
-
-    },
+    jump_order_detail(order) {},
 
     open_link(link) {
       window.open(link, "_blank");
@@ -251,9 +289,9 @@ export default {
   }
 
   .info-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     height: 48px;
     padding: 0 15px;
     background: #f5f5f5;
@@ -289,7 +327,7 @@ export default {
       font-weight: 400;
       line-height: 20px;
       color: #999999;
-      color: #F74747;
+      color: #3b64fc;
 
       // 待付款
       &.state--5 {
@@ -299,8 +337,8 @@ export default {
       }
 
       &.state-2 {
-        color: #F74747;
-        border-color: #F74747;
+        color: #3b64fc;
+        border-color: #3b64fc;
       }
     }
   }
@@ -324,8 +362,7 @@ export default {
           width: 100px;
           height: 100px;
           cursor: pointer;
-          border: 1px solid #F5F5F5;
-
+          border: 1px solid #f5f5f5;
 
           /deep/ img {
             width: 100px;
@@ -347,13 +384,12 @@ export default {
           text-align: left;
           padding-left: 40px;
 
-
           .goods-title {
             width: fit-content;
             cursor: pointer;
 
             &:hover {
-              color: #F74747;
+              color: #3b64fc;
             }
           }
         }
@@ -375,7 +411,7 @@ export default {
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
           font-size: 14px;
-          color: #FF0000;
+          color: #ff0000;
         }
       }
     }
@@ -384,9 +420,9 @@ export default {
   .info-heji {
     padding: 15px;
     border-top: 1px solid #e5e5e5;
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: 400;
@@ -394,10 +430,10 @@ export default {
     color: #7d7d7d;
 
     .heji {
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #333333;
 
@@ -405,13 +441,13 @@ export default {
         margin-right: 30px;
 
         b {
-          color: #F74747;
+          color: #3b64fc;
         }
       }
 
       .heji-money {
         b {
-          color: #F74747;
+          color: #3b64fc;
         }
       }
     }
@@ -421,15 +457,15 @@ export default {
         transition: 0.3s;
         min-width: 120px;
         height: 32px;
-        background: #FFFFFF;
+        background: #ffffff;
         border-radius: 50px 50px 50px 50px;
-        border: 1px solid #F74747;
+        border: 1px solid #3b64fc;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #F74747;
+        color: #3b64fc;
 
-        &+button {
+        & + button {
           margin-left: 20px;
         }
 
@@ -438,8 +474,8 @@ export default {
         }
 
         &.btn-bg {
-          background: #F74747;
-          color: #FFFFFF;
+          background: #3b64fc;
+          color: #ffffff;
         }
       }
     }

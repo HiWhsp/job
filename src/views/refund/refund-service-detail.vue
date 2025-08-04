@@ -669,7 +669,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #3B64FC;
       color: #fff;
       font-size: 14px;
     }
@@ -820,15 +820,15 @@ export default {
       height: 32px;
       background: #FFFFFF;
       border-radius: 4px 4px 4px 4px;
-      border: 1px solid #F74747;
+      border: 1px solid #3B64FC;
 
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 14px;
-      color: #F74747;
+      color: #3B64FC;
 
       &.btn-bg {
-        background: rgba(247, 71, 71, 1);
+        background: #3B64FC;
         color: #FFF;
       }
     }
@@ -840,7 +840,7 @@ export default {
   margin-bottom: 24px;
   padding: 30px;
   min-height: 115px;
-  background: #F74747;
+  background: #3B64FC;
   border-radius: 0px 0px 0px 0px;
 
   .jindu-title {

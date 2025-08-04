@@ -70,20 +70,20 @@
     .hot-words {
       margin-top: 20px;
       font-size: 12px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #ffffff;
 
       .words {
         margin-right: 20px;
         font-size: 12px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #ffffff;
         line-height: 1.7;
 
         &:hover {
-          color: #F74747;
+          color: #3b64fc;
         }
       }
     }
@@ -136,7 +136,7 @@
 
           &::-webkit-input-placeholder {
             font-size: 12px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #a6a6a6;
           }
@@ -148,7 +148,9 @@
           top: 0;
           width: 32px;
           height: 32px;
-          .flex-center();
+            display: flex;
+          justify-content: center;
+          align-items: center;
           .img-search {
             width: 15px;
             cursor: pointer;
@@ -182,7 +184,7 @@
         font-size: 14px;
         font-family: Alibaba PuHuiTi 2-55 Regular, Alibaba PuHuiTi 20;
         font-weight: normal;
-        color: #F74747;
+        color: #3b64fc;
 
         &::before {
           content: "";
@@ -258,7 +260,7 @@
           margin-top: 20px;
           min-height: 50px;
           font-size: 12px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #ffffff;
           line-height: 2;
@@ -272,11 +274,13 @@
           padding: 0 15px;
 
           a {
-            .flex-center();
+              display: flex;
+          justify-content: center;
+          align-items: center;
             width: fit-content;
             height: 42px;
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #ffffff;
             img {
@@ -291,7 +295,9 @@
         justify-content: space-between;
 
         .cate-item {
-          .flex-center();
+            display: flex;
+          justify-content: center;
+          align-items: center;
           flex-direction: column;
           flex: 1;
           height: auto;
@@ -310,7 +316,7 @@
           }
 
           &.active {
-            background: #F74747;
+            background: #3b64fc;
             .title {
               color: #fff;
             }
@@ -335,7 +341,7 @@
             transition: 0.4s linear;
             margin-top: 10px;
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #000000;
           }
@@ -348,7 +354,7 @@
     margin-top: 80px;
     img {
       width: 100%;
-      vertical-align: middle;
+      vertical-align: bottom;
     }
   }
 
@@ -376,7 +382,7 @@
 
           &:hover {
             .wenxian-title {
-              color: #F74747;
+              color: #3b64fc;
             }
           }
 
@@ -398,7 +404,7 @@
             height: auto;
             padding: 0px;
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #333333;
             line-height: 1.7;
@@ -465,7 +471,7 @@
           color: #87888a;
 
           .page-curr {
-            color: #F74747;
+            color: #3b64fc;
             // font-weight: BOLD;
             font-size: 20px;
           }

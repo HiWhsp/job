@@ -1,9 +1,7 @@
 <template>
   <div class="page">
-    <div class="inner w-1200">
-      <div class="section-title">
-        支付成功
-      </div>
+    <div class="inner w-1400">
+      <div class="section-title">支付成功</div>
       <div class="pay-info">
         <!-- 成功 -->
         <div class="img-box">
@@ -13,8 +11,15 @@
         <div class="text-2">订单号：546456456123123</div>
         <!-- 操作按钮 -->
         <div class="bottom">
-          <button class="tijiao" @click="$router.push('/order-detail?order_id=' + order_id)">查看订单</button>
-          <button class="back" @click="$router.push('/category')">继续浏览</button>
+          <button
+            class="tijiao"
+            @click="$router.push('/order-detail?order_id=' + order_id)"
+          >
+            查看订单
+          </button>
+          <button class="back" @click="$router.push('/category')">
+            继续浏览
+          </button>
         </div>
       </div>
     </div>
@@ -22,8 +27,6 @@
 </template>
 
 <script>
-
-
 import { mapState } from "vuex";
 
 export default {
@@ -35,7 +38,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar"]),
+    ...mapState([""]),
   },
   watch: {
     address(val) {
@@ -76,7 +79,7 @@ export default {
   padding-bottom: 16px;
   border-bottom: 1px solid #d5d8de;
   font-size: 24px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: sans-serif;
   font-weight: 400;
   color: #333333;
 }
@@ -86,7 +89,6 @@ export default {
   font-size: 14px;
 
   .inner {
- 
     // width: 100%;
     margin: 0 auto;
     min-height: 50vh;
@@ -103,7 +105,7 @@ export default {
     .text-1 {
       margin: 20px 0;
       font-size: 24px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #000000;
     }
@@ -115,7 +117,9 @@ export default {
     }
     .bottom {
       margin-top: 30px;
-      .flex-center();
+      display: flex;
+      justify-content: center;
+      align-items: center;
       button {
         width: 170px;
         height: 40px;
@@ -126,7 +130,7 @@ export default {
         transition: 0.3s;
         border-radius: 4px 4px 4px 4px;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         &:hover {
           opacity: 0.8;
@@ -135,12 +139,12 @@ export default {
         &.tijiao {
           margin-right: 30px;
           color: #ffffff;
-          background: #F74747;
+          background: #3b64fc;
         }
 
         &.back {
-          border: 1px solid #F74747;
-          color: #F74747;
+          border: 1px solid #3b64fc;
+          color: #3b64fc;
         }
       }
     }

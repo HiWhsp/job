@@ -1,11 +1,11 @@
 <template>
   <div class="page">
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="page-title">支付结果</div>
       <div class="pay-info">
         <div class="img-box">
-          <img v-if="payState == '支付成功' || payState == '提交成功'" src="@/static/payment/pay-succ.png" alt />
-          <img v-else src="@/static/payment/pay-fail.png" alt />
+          <img v-if="payState == '支付成功' || payState == '提交成功'" src="@img/payment/pay-succ.png" alt />
+          <img v-else src="@img/payment/pay-fail.png" alt />
         </div>
         <div class="text-1">{{ payState }}</div>
         <div class="text-2" v-if="payState == '提交成功'">
@@ -34,7 +34,7 @@ export default {
   components: {},
   data() {
     return {
-      id: this.$route.query.id || this.$route.query.orderId,
+      id: this.$route.query.id || this.$route.query.order_id,
       payState: "",
       info: {},
     };
@@ -140,14 +140,14 @@ export default {
         height: 45px;
         background: #FFFFFF;
         border-radius: 0px 0px 0px 0px;
-        border: 1px solid #F74747;
+        border: 1px solid #3B64FC;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 17px;
-        color: #F74747;
+        color: #3B64FC;
 
         &.btn-bg {
-          background: #F74747;
+          background: #3B64FC;
           color: #FFFFFF;
         }
 

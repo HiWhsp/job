@@ -1,136 +1,230 @@
 <template>
-  <div class="aside-util">
-    <div class="inner">
-      <div class="util_box active" v-if="this.$route.path == '/userIndex'" @click="$router.push('/userIndex')">
-        <!-- <img src="@pro/index/user_icon.png" alt="" /> -->
-        <div class="text">会员中心</div>
+  <div class="silder-nav-box goTop">
+    <div class="silder-nav-item">
+      <el-tooltip
+        class="item"
+        effect="light"
+        :content="setting.comKefu"
+        placement="left"
+      >
+        <div slot="content">
+          <img class="code-img" :src="setting.shareImg" alt="" />
+          <p class="code-text">微信扫码咨询</p>
+        </div>
+        <div class="silder-nav-icon">
+          <img src="../../assets/img/common/slider-icon-zxkf.png" alt="" />
+          <p class="text">在线客服</p>
+        </div>
+      </el-tooltip>
+    </div>
+    <div
+      class="silder-nav-item last-item"
+      v-show="showTopBtn"
+      @click="goTopFun"
+    >
+      <div class="silder-nav-icon">
+        <img src="../../assets/img/common/slider-icon-hddb.png" alt="" />
       </div>
-      <div class="util_box" v-else @click="$router.push('/userIndex')">
-        <!-- <img src="@pro/index/user_icon.png" alt="" /> -->
-        <div class="text">会员中心</div>
-      </div>
-
-      <div class="util_box active" v-if="this.$route.path == '/myCart'" @click="$router.push('/myCart')">
-        <!-- <img src="@pro/index/gwc_icon.png" alt="" /> -->
-        <div class="text">购物车</div>
-      </div>
-      <div class="util_box" v-else @click="$router.push('/myCart')">
-        <!-- <img src="@pro/index/gwc_icon.png" alt="" /> -->
-        <div class="text">购物车</div>
-      </div>
-
-      <div class="util_box active" v-if="this.$route.path == '/zuji'" @click="$router.push('/zuji')">
-        <!-- <img src="@pro/index/zuji_icon.png" alt="" /> -->
-        <div class="text">历史足迹</div>
-      </div>
-      <div class="util_box" v-else @click="$router.push('/zuji')">
-        <!-- <img src="@pro/index/zuji_icon.png" alt="" /> -->
-        <div class="text">历史足迹</div>
-      </div>
-
-      <div class="util_box active" v-if="this.$route.path == '/shoucang'" @click="$router.push('/shoucang')">
-        <!-- <img src="@pro/index/shouc_icon.png" alt="" /> -->
-        <div class="text">我的收藏</div>
-      </div>
-      <div class="util_box" v-else @click="$router.push('/shoucang')">
-        <!-- <img src="@pro/index/shouc_icon.png" alt="" /> -->
-        <div class="text">我的收藏</div>
-      </div>
-
-      <div class="util_box active" v-if="this.$route.path == '/contactUs'" @click="$router.push('/contactUs')">
-        <!-- <img src="@pro/index/xioaxi_ixon.png" alt="" /> -->
-        <div class="text">我的建议</div>
-      </div>
-      <div class="util_box" v-else @click="$router.push('/contactUs')">
-        <!-- <img src="@pro/index/xioaxi_ixon.png" alt="" /> -->
-        <div class="text">我的建议</div>
-      </div>
-      <div class="util_box" @click="toTop">
-        <!-- <img src="@pro/index/totop_icon.png" alt="" /> -->
-        <div class="text">顶部</div>
-      </div>
-
-      <!-- <div class="user" @click="$router.push('/userIndex')">
-        <img src="@pro/common/aside-user.png" alt="" />
-        <div class="text">会员中心</div>
-      </div>
-
-      <div class="cart" @click="$router.push('/myCart')">
-        <img src="@pro/common/aside-cart.png" alt="" />
-        <div class="cart-text">购物车</div>
-        <div class="cart-num">{{ shopcart_count }}</div>
-      </div>
-
-      <div class="shoucang" @click="$router.push('/shoucang')">
-        <img src="@pro/common/aside-star.png" alt="" />
-      </div>
-
-      <div class="zuji" @click="$router.push('/zuji')">
-        <img src="@pro/common/aside-zuji.png" alt="" />
-      </div> -->
+      <p class="text">回到顶部</p>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-
 export default {
-  name: "aside-util",
-  components: {},
-  props: [],
+  name: "goTop",
   data() {
     return {
-      hoverIndex: "",
-      showToTop: false,
+      showTopBtn: true,
+      isSelect: "",
+      setting: {},
     };
   },
   computed: {
-    ...mapState(["shopcart_count"]),
+    ...mapState([]),
   },
-
+  watch: {
+  },
+  created() {
+    this.get_setting();
+  },
   methods: {
-    toTop() {
-      document.documentElement.scrollTop = 0;
+    goTopFun() {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth", // 可选，平滑滚动效果
+      });
+    },
+    get_setting() {
+      this.$api("index_config", {}).then((res) => {
+        let { code, data, message, count } = res;
+        if (code == 200) {
+          let data = res.data;
+          this.setting = data;
+        }
+      });
     },
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="less">
-.aside-util {
+<style lang="less" scoped>
+.code-img {
+  width: 140px;
+  height: 140px;
+  background: #ffffff;
+  border-radius: 0px 0px 0px 0px;
+  // border: 1px solid #707070;
+}
+.code-text {
+  font-family: PingFang SC, PingFang SC;
+  font-weight: 400;
+  font-size: 14px;
+  color: #666666;
+  line-height: 20px;
+  text-align: center;
+}
+.goTop {
   position: fixed;
-  z-index: 1000;
-  bottom: 30px;
-  right: 0;
-  width: 60px;
-  height: 360px;
-  background: rgba(0, 0, 0, 0.6);
-
-  .inner {
-    width: 100%;
-    .active {
-      background: var(--main_color);
-    }
-    .util_box {
-      padding-top: 10px;
-      width: 100%;
-      height: 60px;
-      cursor: pointer;
-      border-bottom: 1px solid #fff;
+  left: 0.1%;
+  top: 80%;
+  transform: translateY(-50%);
+  width: 70px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  z-index: 999;
+}
+.silder-nav-box {
+  background: #ffffff;
+  box-shadow: 0rem 0.17rem 0.25rem 0.08rem rgba(0, 0, 0, 0.16);
+  border-radius: 0.67rem 0.67rem 0.67rem 0.67rem;
+  padding: 10px;
+  width: 6.67rem;
+  .silder-nav-item {
+    width: 5.5rem;
+    height: 6.67rem;
+    border-radius: 0rem 0rem 0rem 0rem;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    .silder-nav-icon {
+      text-align: center;
+      margin-top: 1.17rem;
       img {
-        height: 21px;
-        display: block;
-        margin: 0 auto;
+        width: 2.33rem;
+        height: 2.33rem;
+      }
+    }
+    .text {
+      margin-top: 0.67rem;
+      font-family: PingFang SC, PingFang SC;
+      font-weight: 500;
+      font-size: 1.17rem;
+      color: #1e2024;
+    }
+  }
+  .last-item {
+    border-bottom: 0 !important;
+  }
+  .car-icon {
+    position: relative;
+    span {
+      display: block;
+      width: 1.5rem;
+      height: 1.5rem;
+      font-size: 10px;
+      line-height: 1.5rem;
+      text-align: 1.5rem;
+      border-radius: 50%;
+      background: red;
+      color: #fff;
+      position: absolute;
+      right: 7px;
+      top: -5px;
+    }
+  }
+}
+@media screen and (max-width: 1024px) {
+  .code-img {
+    width: 140px;
+    height: 140px;
+    background: #ffffff;
+    border-radius: 0px 0px 0px 0px;
+    // border: 1px solid #707070;
+  }
+  .code-text {
+    font-family: PingFang SC, PingFang SC;
+    font-weight: 400;
+    font-size: 14px;
+    color: #666666;
+    line-height: 20px;
+    text-align: center;
+  }
+  .goTop {
+    position: fixed;
+    right: 0.1%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 70px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    z-index: 999;
+  }
+  .silder-nav-box {
+    background: #ffffff;
+    box-shadow: 0rem 0.17rem 0.25rem 0.08rem rgba(0, 0, 0, 0.16);
+    border-radius: 0.67rem 0.67rem 0.67rem 0.67rem;
+    padding: 10px;
+    width: 3.67rem;
+    .silder-nav-item {
+      width: 3.5rem;
+      height: 3.67rem;
+      border-radius: 0rem 0rem 0rem 0rem;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+      cursor: pointer;
+      .silder-nav-icon {
+        text-align: center;
+        margin-top: 0.5rem;
+        img {
+          width: 1.33rem;
+          height: 1.33rem;
+        }
       }
       .text {
-        font-size: 12px;
-
+        margin-top: 0.27rem;
+        font-family: PingFang SC, PingFang SC;
         font-weight: 500;
-        margin-top: 5px;
-        line-height: 17px;
-        color: #ffffff;
+        font-size: 12px;
+        color: #1e2024;
+      }
+    }
+    .last-item {
+      border-bottom: 0 !important;
+    }
+    .car-icon {
+      position: relative;
+      span {
+        display: block;
+        width: 1rem;
+        height: 1rem;
+        font-size: 10px;
+        line-height: 1rem;
+        text-align: 1rem;
+        border-radius: 50%;
+        background: red;
+        color: #fff;
+        position: absolute;
+        right: 7px;
+        top: -5px;
       }
     }
   }

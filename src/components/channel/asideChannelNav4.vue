@@ -133,7 +133,7 @@ export default {
           height: 46px;
           line-height: 46px;
           padding-left: 15px;
-          border-bottom: 1px dotted var(--main_color);
+          border-bottom: 1px dotted #f00;
           font-size: 16px;
           color: #fff;
           font-weight: bold;
@@ -154,7 +154,7 @@ export default {
             color: #333333;
 
             &:hover {
-              color: var(--main_color);
+              color: #f00;
             }
           }
         }
@@ -172,7 +172,7 @@ export default {
 
             &:hover {
               text-decoration: underline;
-              color: var(--main_color);
+              color: #f00;
             }
             &.active {
               color: #f07f00;
@@ -221,7 +221,7 @@ export default {
         color: #5e5e5e;
       }
       .pannel-item:hover {
-        color: var(--main_color);
+        color: #f00;
       }
     }
   }

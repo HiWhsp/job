@@ -1,14 +1,14 @@
 // import {API_ROOT} from '@/config/env.js'
 
-const ROOT = "http://vuesc.new.zhishangez.com";
+const ROOT = "http://jzgy360.com";
 
 /**
  * 全局接口请求根域名
  */
 export const API_ROOT = ROOT;
 
-// 商城类型 - 空-默认国内普通商城  foreign-东莞市锋扬礼品 (地址管理不一样 账号登录注册等)
-export const SHOP_TYPE = 'foreign';
+// 商城类型 - 空-默认国内普通商城  foreign-标准商城 (地址管理不一样 账号登录注册等)
+export const SHOP_TYPE = '';
 
 
 // 上传

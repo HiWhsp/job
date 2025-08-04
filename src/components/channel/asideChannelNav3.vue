@@ -125,7 +125,9 @@ export default {
         border: none;
       }
       .item {
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
         flex-direction: column;
         align-items: flex-start;
         cursor: pointer;
@@ -153,7 +155,7 @@ export default {
           // color: #fff;
           // font-weight: bold;
           &.active {
-            color: var(--main_color);
+            color: #f00;
           }
 
           .text {
@@ -170,7 +172,7 @@ export default {
 
           &:hover {
             .text {
-              color: var(--main_color);
+              color: #f00;
             }
           }
         }
@@ -245,7 +247,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: var(--main_color);
+              color: #f00;
             }
           }
           .level-3-list {
@@ -277,7 +279,7 @@ export default {
               margin: 0 0.05rem;
 
               &:hover {
-                color: var(--main_color);
+                color: #f00;
               }
             }
           }
@@ -296,7 +298,7 @@ export default {
         color: #5e5e5e;
       }
       .pannel-item:hover {
-        color: var(--main_color);
+        color: #f00;
       }
     }
   }

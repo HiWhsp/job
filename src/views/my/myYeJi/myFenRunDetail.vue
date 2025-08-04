@@ -93,7 +93,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   created() {
     this.init();
@@ -185,7 +185,7 @@ export default {
       height: 30px;
       line-height: 30px;
 
-      background: #F74747;
+      background: #3b64fc;
       color: #fff;
       font-size: 14px;
     }
@@ -205,7 +205,9 @@ export default {
       }
 
       .info-box {
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
         flex-direction: column;
         position: absolute;
         z-index: 100;
@@ -231,7 +233,9 @@ export default {
 
       .fenhong-info {
         margin-top: 30px;
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
 
         font-size: 16px;
         color: #ffffff;
@@ -406,9 +410,9 @@ export default {
             margin-top: 20px;
             text-align: right;
             a {
-              border: 1px solid #F74747;
+              border: 1px solid #3b64fc;
               padding: 3px 8px;
-              color: #F74747;
+              color: #3b64fc;
             }
           }
         }

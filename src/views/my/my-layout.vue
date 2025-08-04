@@ -1,33 +1,52 @@
 <template>
   <div class="page-user-wrap">
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <page_breadcrumb :option="nav_option" />
 
       <div class="page-ctx">
         <div class="menu-wrap">
-          <div class="left-title">
-            个人中心
-          </div>
-          <div class="title-line">
-
-          </div>
+          <div class="left-title">个人中心</div>
+          <div class="title-line"></div>
           <div class="nav-wrap">
-            <div class="nav-group" v-for="(group, gindex) in page_menu" :key="gindex">
+            <div
+              class="nav-group"
+              v-for="(group, gindex) in page_menu"
+              :key="gindex"
+              v-if="
+                (!group.blacklist || group.blacklist.indexOf(staffType) < 0) &&
+                (!group.blacklistT || group.blacklistT.indexOf(userType) < 0)
+              "
+            >
               <div class="group-title-box flex">
                 <div class="icon-box">
-                  <img :src="group.icon" alt="">
+                  <img :src="group.icon" alt="" />
                 </div>
                 <div class="group-title">
                   {{ group.title }}
                 </div>
                 <div class="arrow-box">
-                  <img class="arrow-right" src="@img/my/arrow-right.png" alt="">
+                  <img
+                    class="arrow-right"
+                    src="@img/my/arrow-right.png"
+                    alt=""
+                  />
                   <!-- <img class="arrow-down" src="@img/my/arrow-down.png" alt=""> -->
                 </div>
               </div>
               <div class="sub-child" v-if="group.child && group.child.length">
-                <div class="sub-item" v-for="(item, index) in group.child" :key="index" @click="do_toggle_nav(item)">
-                  <div class="sub-title" :class="$route.name == item.route ? 'active' : ''">
+                <div
+                  class="sub-item"
+                  v-for="(item, index) in group.child"
+                  :key="index"
+                  @click="do_toggle_nav(item)"
+                  v-if="
+                    !item.blacklist || item.blacklist.indexOf(staffType) < 0
+                  "
+                >
+                  <div
+                    class="sub-title"
+                    :class="$route.name == item.route ? 'active' : ''"
+                  >
                     {{ item.title }}
                   </div>
                 </div>
@@ -44,7 +63,6 @@
                 {{ item.title }}
               </div>
             </div> -->
-
           </div>
         </div>
         <div class="view-wrap">
@@ -56,9 +74,9 @@
 </template>
 
 <script>
-import { SHOP_TYPE } from '@/config/env.js'
+import { SHOP_TYPE } from "@/config/env.js";
 
-import page_breadcrumb from '@/components/page/page-breadcrumb.vue'
+import page_breadcrumb from "@/components/page/page-breadcrumb.vue";
 
 import { mapState } from "vuex";
 
@@ -79,37 +97,59 @@ export default {
         {
           title: "订单管理",
           route: "",
-          icon: require('@img/my/nav-1.png'),
+          icon: require("@img/my/nav-1.png"),
           child: [
             {
               title: "我的订单",
               route: "order-list",
+              // blacklist: [3],
             },
             {
               title: "我的售后",
               route: "refund-list",
+              blacklist: [3], //define whether a option should be or not be shown for specific kind of user
             },
-          ]
+            {
+              title: "我的询价",
+              route: "batch-xunjia-list",
+              blacklist: [3], //define whether a option should be or not be shown for specific kind of user
+            },
+            {
+              title: "订单审批",
+              route: "stock-censor",
+              blacklist: [0,1],
+            },
+            {
+              title: "待我审批",
+              route: "stock-censor-my",
+              blacklist: [0, 2, 3],
+            },
+            {
+              title: "采购额度",
+              route: "store-man",
+              blacklist: [2, 3],
+            },
+          ],
         },
         {
           title: "我的活动",
           route: "",
-          icon: require('@img/my/nav-2.png'),
+          icon: require("@img/my/nav-2.png"),
           child: [
             {
               title: "我的收藏",
               route: "favorite-list",
             },
             {
-              title: "我的足迹",
+              title: "浏览足迹",
               route: "browse-history",
             },
-          ]
+          ],
         },
         {
           title: "个人资料",
           route: "",
-          icon: require('@img/my/nav-3.png'),
+          icon: require("@img/my/nav-3.png"),
           child: [
             {
               title: "地址管理",
@@ -118,38 +158,50 @@ export default {
             {
               title: "我的发票",
               route: "invoice-list",
+              blacklist: [1, 2, 3],
             },
             {
-              title: "个人资料",
+              title: "个人信息",
               route: "my-info",
             },
             {
               title: "修改密码",
               route: "change-password",
             },
-          ]
+          ],
         },
+        // {
+        //   title: "其他",
+        //   route: "",
+        //   icon: require("@img/my/nav-3.png"),
+        //   blacklist: [1, 2, 3],
+        //   child: [
+        //     {
+        //       title: "我的积分",
+        //       route: "points-record",
+        //     },
+        //     {
+        //       title: "我的优惠券",
+        //       route: "coupon-list",
+        //     },
+        //     {
+        //       title: "领券中心",
+        //       route: "coupon-center",
+        //     },
+        //   ],
+        // },
         {
-          title: "其他",
+          title: "企业管理",
           route: "",
-          icon: require('@img/my/nav-3.png'),
+          icon: require("@img/my/nav-4.png"),
+          blacklistT: [1],
           child: [
             {
-              title: "我的积分",
-              route: "points-record",
+              title: "人员管理",
+              route: "enterprise-member-man",
             },
-            {
-              title: "我的优惠券",
-              route: "coupon-list",
-            },
-            {
-              title: "领券中心",
-              route: "coupon-center",
-            },
-
-          ]
+          ],
         },
-
         // {
         //   title: "评价晒单",
         //   route: "my-review-list",
@@ -203,19 +255,22 @@ export default {
         // },
       ],
       activeRoute: "",
-      openeds: [
-        "order-list",
-      ],
+      openeds: ["order-list"],
+      staffType: 0,
+      userType: 0,
     };
   },
   computed: {
     // ...mapState(["",]),
     nav_option() {
       let option = [
-        { route: '/my-index', title: '用户中心', title2: 'Personal Center' },
-        { route: '', title: this.$route.meta.title, title: this.$route.meta.title }
-      ]
-      return option
+        { route: "/my-index", title: "用户中心", title2: "Personal Center" },
+        {
+          route: "",
+          title: this.$route.meta.title,
+        },
+      ];
+      return option;
     },
 
     page_menu() {
@@ -238,9 +293,15 @@ export default {
   watch: {},
   created() {
     // this.subArr = this.subNavArr[0];
+    console.log(this.vuex_user);
+    console.log(this.vuex_user.staffType);
+    this.staffType = this.vuex_user.staffType;
+    this.userType = this.vuex_user.type;
+    console.log(this.userType);
+    this.$forceUpdate();
   },
 
-  mounted() { },
+  mounted() {},
 
   methods: {
     do_toggle_nav(item) {
@@ -251,16 +312,13 @@ export default {
         this.$router.push("/" + item.route);
       }
     },
-
-
-
   },
 };
 </script>
 
 <style scoped lang="less">
 .page-user-wrap {
-  background: #F9FAFC;
+  background: #f9fafc;
   padding-top: 35px;
 
   .inner {
@@ -281,7 +339,6 @@ export default {
       background: #fff;
       padding-bottom: 20px;
 
-
       .left-title {
         padding: 18px 0;
         text-align: center;
@@ -294,21 +351,20 @@ export default {
       .title-line {
         margin: 0 auto;
         width: 196px;
-        background: #F0F0F0;
+        background: #f0f0f0;
         height: 1px;
       }
 
       .nav-wrap {
         .nav-group {
-
           // margin-bottom: 10px;
           &::after {
-            content: '';
+            content: "";
             display: inline-block;
             margin: 0 auto;
             width: 196px;
             height: 1px;
-            background: #F0F0F0;
+            background: #f0f0f0;
           }
 
           .group-title-box {
@@ -336,7 +392,8 @@ export default {
             }
 
             .arrow-box {
-              img {}
+              img {
+              }
 
               .arrow-down {
                 width: 14.22px;
@@ -354,20 +411,18 @@ export default {
               cursor: pointer;
 
               .sub-title {
-
                 font-family: Microsoft YaHei, Microsoft YaHei;
                 font-weight: 400;
                 font-size: 14px;
                 color: #666666;
 
                 &.active {
-                  color: #F74747;
+                  color: #3b64fc;
                 }
               }
             }
           }
         }
-
 
         .nav-item {
           overflow: hidden;
@@ -384,12 +439,11 @@ export default {
             font-size: 12px;
             color: #808080;
 
-
             &.link {
               margin-bottom: 16px;
 
               &:hover {
-                color: #F74747;
+                color: #3b64fc;
               }
             }
 
@@ -407,7 +461,7 @@ export default {
             &.active {
               // background: #ffffff;
               // background: #fffaf7;
-              color: #F74747;
+              color: #3b64fc;
 
               &:before {
                 // content: "";
@@ -416,7 +470,7 @@ export default {
                 // top: 0;
                 // bottom: 0;
                 // width: 3px;
-                // background-color: #F74747;
+                // background-color: #3b64fc;
               }
             }
 

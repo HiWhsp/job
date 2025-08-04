@@ -11,8 +11,8 @@
         <div class="img-box">
           <img src="@img/my/coin.png" alt />
         </div>
-        <div class="text">{{vuex_huobi}}{{ baseInfo.yongjin }}</div>
-        <div class="text-2">累积获得{{ baseInfo.yongjin_leiji }}元</div>
+        <div class="text">{{vuex_huobi}}{{ vuex_user.yongjin }}</div>
+        <div class="text-2">累积获得{{ vuex_user.yongjin_leiji }}元</div>
 
         <div class="action-box">
           <button class="btn" @click="$router.push('/myCommissionDetail?type=2')">收入</button>
@@ -40,7 +40,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   created() {
     this.setView();
@@ -119,7 +119,9 @@ export default {
 
     .action-box {
       margin: 30px auto;
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
       .btn {
         cursor: pointer;
         width: 240px;
@@ -146,7 +148,7 @@ export default {
         width: 520px;
         height: 60px;
         line-height: 60px;
-        background: #F74747;
+        background: #3b64fc;
         border-radius: 0;
         font-size: 20px;
         font-family: Microsoft YaHei;

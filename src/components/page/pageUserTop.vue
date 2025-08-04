@@ -1,7 +1,7 @@
 <template>
   <div class="page-banner-nav">
     <!-- 面包屑 -->
-    <div class="bread-wrap w-1200" :class="'page-' + $route.name">
+    <div class="bread-wrap w-1400" :class="'page-' + $route.name">
       <div class="bread-box">
         <!-- <img src="@/assets/weizhi.png" alt="" /> -->
         <span class="weizhi">您的位置： </span>
@@ -48,7 +48,7 @@ export default {
 
 <style lang="less" scoped>
 .link-home {
-  color: #F74747;
+  color: #3b64fc;
 }
 
 .bread-wrap {

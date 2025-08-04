@@ -3,7 +3,7 @@
     <!-- 新增收货地址 -->
     <address_modal ref="address_modal" />
 
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <!-- 收货人地址 -->
       <div class="dizhi-select">
         <div class="dizhi-title">
@@ -149,7 +149,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
 
     opts_peisong() {
       let arr = ["同城配送", "门店自取"];
@@ -754,7 +754,7 @@ export default {
     .add {
       b {
         font-weight: bold;
-        color: #F74747;
+        color: #3b64fc;
         cursor: pointer;
       }
     }
@@ -823,7 +823,7 @@ export default {
 
         .checked {
           flex: 2;
-          color: #F74747;
+          color: #3b64fc;
           text-align: right;
         }
       }
@@ -878,7 +878,7 @@ export default {
           background: #ffffff;
           border: 1px solid #cccccc;
           &.active {
-            border: 1px solid #F74747;
+            border: 1px solid #3b64fc;
           }
         }
       }

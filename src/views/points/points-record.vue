@@ -52,7 +52,9 @@
                   :key="index"
                   @click="$router.push(`/order-detail?order_id=${order.id}`)"
                 >
-                  <template v-if="item.product_info && item.product_info.length">
+                  <template
+                    v-if="item.product_info && item.product_info.length"
+                  >
                     <div class="item item_cahnpin">
                       <div class="item-1">
                         <div
@@ -119,13 +121,10 @@
   </div>
 </template>
 <script>
-
 import { mapState } from "vuex";
 export default {
   name: "jifen-jilu",
-  components: {
-
-  },
+  components: {},
   data() {
     return {
       selectTab: { title: "全部", status: "0" },
@@ -142,7 +141,7 @@ export default {
         pageNum: 10,
       },
       count: 0,
-      info:{}
+      info: {},
     };
   },
   computed: {
@@ -159,31 +158,29 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'jiFen_lists',
+          action: "jiFen_lists",
           ...this.pagination,
           type: this.selectTab.status, //类型：0全部 1收入 2 支出
         },
       }).then((res) => {
         if (res.code == 200) {
-          let data = res.data
+          let data = res.data;
           this.info = data;
           this.list_jilu = data.list;
           this.count = data.count;
         }
       });
     },
-
- 
   },
 };
 </script>
 
 <style scoped lang="less">
 .plus {
-  color: #F74747;
+  color: #3b64fc;
   font-weight: bold;
 }
 .minus {
@@ -192,7 +189,7 @@ export default {
 }
 
 .goods-info {
-    display: flex;
+  display: flex;
   align-items: center;
 
   .img-box {
@@ -208,9 +205,9 @@ export default {
   text-align: left;
   padding-bottom: 80px;
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -225,7 +222,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #3b64fc;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -249,7 +246,9 @@ export default {
   padding-left: 40px;
   padding-left: 40px;
   flex-direction: column;
-  .flex-center();
+  display: flex;
+  justify-content: center;
+  align-items: center;
   align-items: flex-start;
 
   .text-box {
@@ -299,7 +298,7 @@ export default {
   flex: 2;
   // border-bottom: 1px solid #eee;
 
-    display: flex;
+  display: flex;
   align-items: center;
   .tab-item {
     cursor: pointer;
@@ -307,14 +306,14 @@ export default {
     border-bottom: 3px solid transparent;
     margin-right: 55px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #333333;
 
     &.active {
-      border-bottom: 3px solid #F74747;
+      border-bottom: 3px solid #3b64fc;
       font-weight: bold;
-      color: #F74747;
+      color: #3b64fc;
     }
   }
 }
@@ -329,13 +328,13 @@ export default {
 
   .item {
     text-align: center;
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 20px;
     border-bottom: 1px solid #eee;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #666666;
 
@@ -353,8 +352,8 @@ export default {
     .item-1 {
       text-align: left;
       flex: 1;
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
 
       .img-box {
         img {
@@ -365,20 +364,20 @@ export default {
       .info-box {
         padding-left: 15px;
         .title {
-           display: -webkit-box;
-  -webkit-box-orient: vertical;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  -webkit-line-clamp: 2;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          -webkit-line-clamp: 2;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #333333;
           line-height: 24px;
         }
         .info {
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #999999;
         }

@@ -10,7 +10,7 @@
           <div class="info-box">
             <div class="number">
               <span>{{vuex_huobi}}</span>
-              <b>{{baseInfo.order_price || 0}}</b>
+              <b>{{vuex_user.order_price || 0}}</b>
             </div>
             <div class="text">当月个人新增业绩</div>
           </div>
@@ -92,7 +92,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   created() {
     this.setView();
@@ -192,7 +192,9 @@ export default {
       }
 
       .info-box {
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
         flex-direction: column;
         position: absolute;
         z-index: 100;
@@ -341,8 +343,8 @@ export default {
           .btn {
             display: inline-block;
             padding: 3px 8px;
-            border: 1px solid #F74747;
-            color: #F74747;
+            border: 1px solid #3b64fc;
+            color: #3b64fc;
             background: #fff;
           }
         }

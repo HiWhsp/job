@@ -27,7 +27,7 @@
           <div class="info-list flex-between">
             <div class="info-item">
               <div class="icon-box">
-                <img src="@/static/contact/addr.png" alt="">
+                <img src="@img/contact/addr.png" alt="">
               </div>
               <div class="title">
                 Address
@@ -38,7 +38,7 @@
             </div>
             <div class="info-item">
               <div class="icon-box">
-                <img src="@/static/contact/phone.png" alt="">
+                <img src="@img/contact/phone.png" alt="">
               </div>
               <div class="title">
                 Phone
@@ -49,7 +49,7 @@
             </div>
             <div class="info-item">
               <div class="icon-box">
-                <img src="@/static/contact/email.png" alt="">
+                <img src="@img/contact/email.png" alt="">
               </div>
               <div class="title">
                 E-mail
@@ -92,9 +92,9 @@ export default {
     };
   },
   computed: {
-    ...mapState(['map_banners']),
+    ...mapState(['vuex_map_banners']),
     banners() {
-      return this.map_banners['联系我们'] || []
+      return this.vuex_map_banners['联系我们'] || []
     },
     nav_option() {
       let option = [
@@ -157,7 +157,7 @@ export default {
       padding-top: 173px;
 
       .banner-content {
-        width: 1200px;
+        width: 1400px;
         margin: 0 auto;
         text-align: left;
 
@@ -185,7 +185,7 @@ export default {
 }
 
 .page-ctx {
-  width: 1200px;
+  width: 1400px;
   margin: 0 auto;
 
 

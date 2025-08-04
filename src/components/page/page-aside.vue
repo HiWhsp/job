@@ -11,7 +11,7 @@
         <!-- <div class="item" v-for="(item, index) in list_util" :key="index" @mouseenter="on_mouseenter(item)" @mouseleave="on_mouseleave(item)" @click="on_click_util(item)">
           <div class="item-inner" v-if="item.title != '客服'">
             <div class="cart-num" v-if="item.title == '购物车'">
-              {{ shopcart_count }}
+              {{ vuex_cart_number }}
             </div>
             <img :src="item.icon" alt="" />
           </div>
@@ -70,7 +70,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["shopcart_count", ""]),
+    ...mapState([""]),
   },
   watch: {},
 
@@ -158,7 +158,9 @@ export default {
   .item {
     position: relative;
     cursor: pointer;
-    .flex-center();
+      display: flex;
+          justify-content: center;
+          align-items: center;
     // width: 50px;
     // height: 50px;
     // transition: 0.3s;

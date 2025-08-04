@@ -8,8 +8,8 @@
       <div class="fav-box">
         <div class="fav-titles flex">
           <div class="fav-check flex" @click="do_toggle_all()" :class="{ checked: checkedAll }">
-            <img src="@/static/common/check0.png" alt="" class="img-check check-0" />
-            <img src="@/static/common/check1.png" alt="" class="img-check check-1" />
+            <img src="@img/common/check0.png" alt="" class="img-check check-0" />
+            <img src="@img/common/check1.png" alt="" class="img-check check-1" />
             <span>全选</span>
           </div>
           <div class="fav-delete" @click="do_delete_checked()">移除选中</div>
@@ -19,8 +19,8 @@
           <div class="fav-list">
             <div class="fav-item" v-for="(item, index) in product_list" :key="index">
               <div class="fav-check" @click.stop="do_toggle_item(item)" :class="{ checked: item.checked }">
-                <img src="@/static/common/check0.png" alt="" class="img-check check-0" />
-                <img src="@/static/common/check1.png" alt="" class="img-check check-1" />
+                <img src="@img/common/check0.png" alt="" class="img-check check-0" />
+                <img src="@img/common/check1.png" alt="" class="img-check check-1" />
               </div>
 
               <div class="goods-img scale-box" @click="to_product(item)">
@@ -272,7 +272,7 @@ export default {
       color: #666666;
 
       &.checked {
-        color: #F74747;
+        color: #3B64FC;
       }
 
 
@@ -390,12 +390,12 @@ export default {
           height: 32px;
           background: #FFFFFF;
           border-radius: 6px;
-          border: 1px solid #F74747;
+          border: 1px solid #3B64FC;
 
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
           font-size: 14px;
-          color: #F74747;
+          color: #3B64FC;
         }
       }
     }

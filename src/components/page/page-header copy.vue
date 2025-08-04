@@ -4,13 +4,18 @@
       <div class="header-inner">
         <div class="logo-wrap">
           <div class="logo-box" @click="toHome()">
-            <img src="@/static/common/head-logo.png" />
+            <img src="@img/common/head-logo.png" />
           </div>
         </div>
 
         <div class="nav-wrap">
           <div class="nav-list flex-between">
-            <div class="nav-item" v-for="(item, index) in nav_list" :key="index" :class="checkClass(item)">
+            <div
+              class="nav-item"
+              v-for="(item, index) in nav_list"
+              :key="index"
+              :class="checkClass(item)"
+            >
               <!-- 无子导航 -->
               <template v-if="!item.child || !item.child.length">
                 <router-link class="nav-link" :to="item.route">
@@ -20,14 +25,29 @@
 
               <!-- 有子导航 -->
               <template v-else>
-                <el-popover popper-class="w-nav-popover" placement="top" title="" width="150" trigger="hover"
-                  content="">
-                  <router-link slot="reference" class="nav-link" :to="item.route">
+                <el-popover
+                  popper-class="w-nav-popover"
+                  placement="top"
+                  title=""
+                  width="150"
+                  trigger="hover"
+                  content=""
+                >
+                  <router-link
+                    slot="reference"
+                    class="nav-link"
+                    :to="item.route"
+                  >
                     {{ item.title }}
                   </router-link>
 
                   <div class="pop-child" v-if="item.child">
-                    <router-link :to="sub.route" class="child-item" v-for="(sub, index) in item.child" :key="index">
+                    <router-link
+                      :to="sub.route"
+                      class="child-item"
+                      v-for="(sub, index) in item.child"
+                      :key="index"
+                    >
                       {{ sub.title }}
                     </router-link>
                   </div>
@@ -41,10 +61,19 @@
           <div class="center-search-wrap">
             <div class="center-search">
               <div class="search-box">
-                <input v-model="keyword" type="text" placeholder="请输入搜索关键词" @keyup.enter="toSearch"
-                  @input="handleSearchInput" />
-                <button class="btn-search " @click="toSearch()">
-                  <img class="img-search" src="@/static/common/head-search.png" alt="" />
+                <input
+                  v-model="keyword"
+                  type="text"
+                  placeholder="请输入搜索关键词"
+                  @keyup.enter="toSearch"
+                  @input="handleSearchInput"
+                />
+                <button class="btn-search" @click="toSearch()">
+                  <img
+                    class="img-search"
+                    src="@img/common/head-search.png"
+                    alt=""
+                  />
                 </button>
               </div>
             </div>
@@ -62,32 +91,40 @@
           <div class="info-right">
             <div class="log-box">
               <router-link class="login" to="/login">
-                <img src="@/static/common/head-user-login.png" alt="" class="user-login">
+                <img
+                  src="@img/common/head-user-login.png"
+                  alt=""
+                  class="user-login"
+                />
               </router-link>
               <router-link class="register" to="/register">
-                <img src="@/static/common/head-user-reg.png" alt="" class="user-reg">
+                <img
+                  src="@img/common/head-user-reg.png"
+                  alt=""
+                  class="user-reg"
+                />
               </router-link>
             </div>
             <router-link class="shopcart" to="/cart">
-              <img src="@/static/common/head-cart.png" alt="" class="cart-image">
-              <span class="cart-num">{{ shopcart_count || 0 }}</span>
+              <img src="@img/common/head-cart.png" alt="" class="cart-image" />
+              <span class="cart-num">{{ vuex_cart_number || 0 }}</span>
             </router-link>
           </div>
         </div>
 
         <div class="user-login-info flex" v-if="vuex_is_login">
           <div class="avatar-box" @click="$router.push('/my-index')">
-            <img :src="mix_user_avatar || avatar_default" alt="">
+            <img :src="mix_user_avatar || vuex_avatar_default" alt="" />
           </div>
           <router-link class="phone" to="/my-index">
             {{ mix_user_phone }}
           </router-link>
-          <a class="logout" href="javascript:void(0)" @click="logout()"> 退出 </a>
+          <a class="logout" href="javascript:void(0)" @click="logout()">
+            退出
+          </a>
         </div>
-
       </div>
     </div>
-
   </div>
 </template>
 
@@ -108,22 +145,16 @@ export default {
   },
 
   computed: {
-
     ...mapState([
       //
-      "vuex_product_cate_1",
-      'vuex_product_cate_2',
-      "userInfo",
-      "avatar_default",
     ]),
 
     // 主导航
     nav_list() {
       let arr = [
         { title: "首页", route: "/" },
-        { title: this.vuex_product_cate_1.title || 'Cream Charger', route: this.vuex_product_cate_1.route || '/product-cates?id=780', child: [] },
-        { title: this.vuex_product_cate_2.title || "Cream Dispenser", route: this.vuex_product_cate_2.route || '/product-cates?id=780', child: [] },
-        { title: "关于我们", route: '/about', child: [] },
+
+        { title: "关于我们", route: "/about", child: [] },
         { title: "联系我们", route: "/contact", child: [] },
       ];
       return arr;
@@ -141,15 +172,12 @@ export default {
       }
       return arr;
     },
-
-
   },
 
   watch: {
     $route(to, from) {
       if (to.name == "product-search") {
         if (to.query.id) {
-
         }
       }
       this.searchLock = true;
@@ -163,12 +191,8 @@ export default {
   },
 
   methods: {
-    setView() {
-
-    },
-    mouseoutSearch() {
-
-    },
+    setView() {},
+    mouseoutSearch() {},
     handleSearchInput() {
       this.searchLock = false;
     },
@@ -201,7 +225,7 @@ export default {
         query.id = this.selectCate;
       }
 
-      let keyword = (this.keyword || '').trim() || ""
+      let keyword = (this.keyword || "").trim() || "";
       query.keyword = keyword;
       query.ms = new Date().getTime();
       this.$router.push({
@@ -211,7 +235,7 @@ export default {
     },
 
     logout() {
-      this.$store.commit("clear_loginInfo");
+      this.$store.commit("remove_vuex_user");
       // if (this.$route.meta.requireAuth) {
       //   this.$router.push("/login");
       // }
@@ -242,12 +266,12 @@ export default {
 
     background: #fff;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #000000;
 
     &:hover {
-      background: #F74747;
+      background: #3B64FC;
       color: #fff;
     }
   }
@@ -270,7 +294,7 @@ export default {
 
 .header-inner {
   position: relative;
-  width: 1200px;
+  width: 1400px;
   height: 150px;
   margin: 0 auto;
   display: flex;
@@ -290,8 +314,6 @@ export default {
       }
     }
   }
-
-
 
   .nav-wrap {
     flex: 1;
@@ -320,7 +342,6 @@ export default {
         font-size: 17px;
         color: #333333;
 
-
         &::after {
           content: "";
           position: absolute;
@@ -329,7 +350,7 @@ export default {
           transform: translate(-50%);
           width: 0;
           height: 2px;
-          background: #F74747;
+          background: #3b64fc;
           transition: 0.3s;
         }
       }
@@ -343,7 +364,7 @@ export default {
       &.active {
         .nav-link {
           // font-weight: bold;
-          color: #F74747;
+          color: #3b64fc;
 
           &::after {
             // width: 36px;
@@ -355,7 +376,7 @@ export default {
         color: #222;
         width: 100%;
         font-size: 16px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #333;
       }
@@ -367,7 +388,6 @@ export default {
   width: 440px;
   width: fit-content;
 }
-
 
 .center-search-wrap {
   position: relative;
@@ -383,19 +403,18 @@ export default {
     width: 270px;
     border-bottom: 1px solid #999999;
 
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     align-items: stretch;
 
     border-radius: 5px;
     position: relative;
     overflow: hidden;
 
-
     .search-box {
       // border: 1px solid #aaa;
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
       overflow: hidden;
       // height: 100%;
 
@@ -413,16 +432,18 @@ export default {
       }
 
       .btn-search {
-        .flex-center();
+        display: flex;
+        justify-content: center;
+        align-items: center;
         position: absolute;
         right: 0;
         width: 40px;
         height: 40px;
-        background: #F74747;
+        background: #3b64fc;
         border-radius: 0px 6px 6px 0px;
         font-weight: normal;
         font-size: 16px;
-        color: #FFFFFF;
+        color: #ffffff;
         background: transparent;
 
         &:hover {
@@ -441,8 +462,6 @@ export default {
           }
         }
       }
-
-
     }
   }
 
@@ -460,9 +479,9 @@ export default {
     overflow: hidden;
 
     .search-suggest-item {
-       white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
       line-height: 3.5rem;
       height: 3.5rem;
       padding: 0 5px;
@@ -474,9 +493,9 @@ export default {
       }
 
       a {
-         white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
         display: block;
         width: 100%;
         height: 100%;
@@ -484,30 +503,26 @@ export default {
         font-size: 1.3rem;
 
         &:hover {
-          color: #F74747;
+          color: #3b64fc;
         }
       }
     }
   }
-
 }
 
-
 .info-right {
-    display: flex;
+  display: flex;
   align-items: center;
-
 
   .log-box {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
   }
-
 
   a {
     color: #fff;
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 
     img {
       width: 30px;
@@ -535,7 +550,9 @@ export default {
     position: relative;
     width: 30px;
     height: 30px;
-    .flex-center();
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     img {
       width: 30px;
@@ -543,28 +560,27 @@ export default {
     }
 
     .cart-num {
-      .flex-center();
+      display: flex;
+      justify-content: center;
+      align-items: center;
       position: absolute;
       right: -10px;
       top: -10px;
       min-width: 18px;
       min-height: 18px;
       padding: 0 3px;
-      background: #FF3B30;
-      border: 1px solid #FFFFFF;
+      background: #ff3b30;
+      border: 1px solid #ffffff;
       border-radius: 50%;
       font-size: 12px;
     }
   }
 }
 
-
-
 .user-login-info {
   position: absolute;
   right: 0;
   top: 12px;
-
 
   .avatar-box {
     width: 35px;
@@ -588,7 +604,7 @@ export default {
     color: #999999;
 
     &:hover {
-      color: #F74747;
+      color: #3b64fc;
     }
   }
 
@@ -599,13 +615,10 @@ export default {
     color: #999999;
 
     &:hover {
-      color: #F74747;
+      color: #3b64fc;
     }
   }
 }
-
-
-
 
 @media screen and (max-width: 1600px) {
   .header-inner .nav-list .nav-item {

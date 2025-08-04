@@ -1,7 +1,14 @@
 <template>
   <div class="modal-container">
-    <el-dialog class="modal-job-wrap modal-wrap" title="申请岗位" width="580px" custom-class="modal-job  modal-wrap"
-      :close-on-click-modal="false" :visible.sync="showModal" :before-close="onModal_close">
+    <el-dialog
+      class="modal-job-wrap modal-wrap"
+      title="申请岗位"
+      width="580px"
+      custom-class="modal-job  modal-wrap"
+      :close-on-click-modal="false"
+      :visible.sync="showModal"
+      :before-close="onModal_close"
+    >
       <div class="modal-inner">
         <div class="item">
           <div class="label">您的姓名：</div>
@@ -25,9 +32,20 @@
           <div class="label">简历附件：</div>
           <div class="val">
             <div class="upload-box">
-              <el-upload class="upload-demo" multiple :limit="1" name="img" :data="mix_upload_data"
-                :action="mix_upload_action" :on-success="onSuccess_upload" :on-preview="handlePreview"
-                :on-remove="handleRemove" :before-remove="beforeRemove" :on-exceed="handleExceed" :file-list="fileList">
+              <el-upload
+                class="upload-demo"
+                multiple
+                :limit="1"
+                name="img"
+                :data="mix_upload_data"
+                :action="mix_upload_action"
+                :on-success="onSuccess_upload"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                :on-exceed="handleExceed"
+                :file-list="fileList"
+              >
                 <button class="btn-ripple btn-upload">
                   <img src="@img/upload.png" alt="" />
                   <span>上传附件</span>
@@ -39,8 +57,12 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <button class="btn-ripple quxiao" @click="showModal = false">取消</button>
-        <button class="btn-ripple queding" @click="confirm_submit()">提交</button>
+        <button class="btn-ripple quxiao" @click="showModal = false">
+          取消
+        </button>
+        <button class="btn-ripple queding" @click="confirm_submit()">
+          提交
+        </button>
       </span>
     </el-dialog>
   </div>
@@ -75,7 +97,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   watch: {
     showModal(val) {
@@ -154,7 +176,7 @@ export default {
       // debugger
       //console.log("onSuccess_upload 上传结果 res", res);
       //console.log("onSuccess_upload 上传结果 file", file);
-      let { code, data, msg} = res;
+      let { code, data, msg } = res;
 
       if (code == 200) {
         // this.$parent.uploadSuccess(this.col, res);
@@ -185,7 +207,8 @@ export default {
 
     handleExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length
+        `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
         } 个文件`
       );
     },
@@ -199,16 +222,18 @@ export default {
 
 <style scoped lang="less">
 .btn-upload {
-  .flex-center();
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-width: 128px;
   height: 40px;
   background: #ffffff;
   border-radius: 4px 4px 4px 4px;
-  border: 1px solid #F74747;
+  border: 1px solid #3b64fc;
   font-size: 14px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: sans-serif;
   font-weight: 400;
-  color: #F74747;
+  color: #3b64fc;
 
   img {
     margin-right: 10px;
@@ -221,7 +246,7 @@ export default {
 
     .item {
       //   display: flex;
-  align-items: center;
+      align-items: center;
       margin-bottom: 20px;
       text-align: left;
 
@@ -230,7 +255,7 @@ export default {
         min-width: 100px;
         text-align: left;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #333;
       }
@@ -240,7 +265,7 @@ export default {
           font-size: 20px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #3b64fc;
         }
 
         input {
@@ -260,7 +285,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #F74747;
+  // background: #3b64fc;
   background: #f7f7f7;
   text-align: left;
 
@@ -288,13 +313,13 @@ export default {
 
   .quxiao {
     margin-right: 24px;
-    color: #F74747;
-    border: 1px solid #F74747;
+    color: #3b64fc;
+    border: 1px solid #3b64fc;
   }
 
   .queding {
     // margin-right: 24px;
-    background: #F74747;
+    background: #3b64fc;
     color: #fff;
   }
 }

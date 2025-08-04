@@ -16,7 +16,7 @@
         <div class="text-box">
           <div class="text-1">我的积分</div>
           <div class="text-2">
-            {{ baseInfo.jifen || 0 }}
+            {{ vuex_user.jifen || 0 }}
             <!-- <span class="currency">元</span> -->
           </div>
           <div class="text-3">
@@ -37,7 +37,11 @@
             <div class="list-wrap" v-if="list_goods.length">
               <div class="good-list">
                 <!-- @click="mix_to_product(item)" -->
-                <div class="item" v-for="(item, index) in list_goods" :key="index">
+                <div
+                  class="item"
+                  v-for="(item, index) in list_goods"
+                  :key="index"
+                >
                   <div class="img-box cover">
                     <img :src="item.image" alt />
                   </div>
@@ -52,7 +56,10 @@
                       </div>
 
                       <!-- <span class="yidui">已兑 {{ item.order || 0 }}</span> -->
-                      <button class="btn-enter" @click.stop="onClick_duihuan(item)">
+                      <button
+                        class="btn-enter"
+                        @click.stop="onClick_duihuan(item)"
+                      >
                         兑换
                       </button>
                     </div>
@@ -106,7 +113,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
 
     list_tab() {
       return [
@@ -176,9 +183,9 @@ export default {
   text-align: left;
   padding-bottom: 80px;
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -193,7 +200,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #3b64fc;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -216,7 +223,9 @@ export default {
   padding-left: 40px;
   padding-left: 40px;
   flex-direction: column;
-  .flex-center();
+  display: flex;
+  justify-content: center;
+  align-items: center;
   align-items: flex-start;
 
   .text-box {
@@ -266,7 +275,7 @@ export default {
   flex: 2;
   // border-bottom: 1px solid #eee;
 
-    display: flex;
+  display: flex;
   align-items: center;
   .tab-item {
     cursor: pointer;
@@ -274,14 +283,14 @@ export default {
     border-bottom: 3px solid transparent;
     margin-right: 55px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #333333;
 
     &.active {
-      border-bottom: 3px solid #F74747;
+      border-bottom: 3px solid #3b64fc;
       font-weight: bold;
-      color: #F74747;
+      color: #3b64fc;
     }
   }
 }
@@ -292,7 +301,7 @@ export default {
 }
 
 .good-list {
-    display: flex;
+  display: flex;
   align-items: center;
   flex-wrap: wrap;
   margin-top: 20px;
@@ -323,9 +332,9 @@ export default {
       text-align: left;
       padding: 15px;
       .title {
-         white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
         margin-top: 0;
         font-size: 13px;
         color: #222;
@@ -337,9 +346,9 @@ export default {
 
       .duihuan-info {
         margin-top: 10px;
-          display: flex;
-  align-items: center;
-  justify-content: space-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         .jifen {
           font-size: 14px;
@@ -376,7 +385,7 @@ export default {
       button {
         width: 51px;
         height: 22px;
-        background: #F74747;
+        background: #3b64fc;
         border-radius: 2px;
         color: #fff;
         font-size: 12px;

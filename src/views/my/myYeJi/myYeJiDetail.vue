@@ -84,7 +84,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   created() {
     this.setView();
@@ -165,7 +165,7 @@ export default {
       height: 30px;
       line-height: 30px;
 
-      background: #F74747;
+      background: #3b64fc;
       color: #fff;
       font-size: 14px;
     }
@@ -185,7 +185,9 @@ export default {
       }
 
       .info-box {
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
         flex-direction: column;
         position: absolute;
         z-index: 100;

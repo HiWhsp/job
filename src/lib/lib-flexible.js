@@ -75,7 +75,7 @@
 
     //   rem = 192;
 
-    if(width < 1024){
+    if(width < 800){//width < 1024
         rem = 16
     }else if(width<1500){
         rem = 8

@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
     <div class="baozhang-box">
-      <div class="footer-top-list1 w-1200">
+      <div class="footer-top-list1 w-1400">
         <div class="list1-item">
           <!-- <img src="@pro/index/down1.png" alt /> -->
           <div class="item-con">
@@ -34,7 +34,7 @@
     </div>
 
     <div class="footer-top">
-      <div class="link-box w-1200">
+      <div class="link-box w-1400">
         <div class="left-link">
           <!-- 左侧链接 -->
           <div class="list-link">
@@ -103,10 +103,12 @@ export default {
       showNow: false, //是否立即展示
 
       //"title":"12313","link":"123123","logo":""
+
+      footer_logo_friend_link:[]
     };
   },
   computed: {
-    ...mapState(["footer_nav","footer_logo_friend_link"]),
+    ...mapState(["footer_nav",]),
   },
   watch: {},
 
@@ -236,7 +238,7 @@ export default {
                 font-family: Microsoft YaHei;
                 font-weight: 400;
                 line-height: 38px;
-                color: var(--main_color);
+                color: #f00;
               }
               .text-3 {
                 font-size: 16px;
@@ -315,7 +317,7 @@ export default {
                 cursor: pointer;
               }
               a:hover {
-                color: var(--main_color);
+                color: #f00;
               }
             }
           }
@@ -324,7 +326,9 @@ export default {
     }
   }
   .footer-bottom {
-    .flex-center();
+      display: flex;
+          justify-content: center;
+          align-items: center;
     // height: 60px;
     padding-bottom: 7px;
     background: #333;
@@ -339,9 +343,11 @@ export default {
     }
 
     .friend-links {
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
       flex-wrap: wrap;
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       padding-bottom: 10px;
 
@@ -350,7 +356,7 @@ export default {
           height: 45px;
           margin: 0 7px;
           cursor: pointer;
-          vertical-align: middle;
+          vertical-align: bottom;
         }
       }
     }

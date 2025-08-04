@@ -7,13 +7,15 @@
     <!-- <pageAboutTop /> -->
 
     <div class="page-box">
-      <div class="page-inner w-1200">
+      <div class="page-inner w-1400">
         <div class="job-title">
           <div class="left">
             {{ detail.title }}
           </div>
           <!-- <a  class="to-email btn-ripple" :href="'mailto:' + vuex_config.email">申请岗位</a> -->
-          <button class="to-email btn-ripple" @click="openModalJobApply()">申请岗位</button>
+          <button class="to-email btn-ripple" @click="openModalJobApply()">
+            申请岗位
+          </button>
         </div>
         <div class="job-info">
           <span>{{ detail.address }}</span>
@@ -66,23 +68,22 @@ export default {
   computed: {
     ...mapState([""]),
 
-
     pageConfig() {
       return {
-        banner: this.bannerMap['关于我们'],
-        title: '关于我们',
-        title_en: 'ABOUT US',
+        banner: this.bannerMap["关于我们"],
+        title: "关于我们",
+        title_en: "ABOUT US",
         list_bread: [
           {
-            title: '关于我们',
-            route: '',
+            title: "关于我们",
+            route: "",
           },
           {
-            title: '人才招聘',
-            route: '',
+            title: "人才招聘",
+            route: "",
           },
         ],
-        nav_list: this.child_about
+        nav_list: [],
       };
     },
   },
@@ -112,7 +113,7 @@ export default {
 
 <style scoped lang="less">
 .page {
-  background: #FFFFFF;
+  background: #ffffff;
   padding-bottom: 100px;
   min-height: 50vh;
 
@@ -121,7 +122,6 @@ export default {
     // background: #fff;
   }
   .page-inner {
-
     margin: 0 auto;
     padding: 40px;
     background: #fff;
@@ -148,7 +148,7 @@ export default {
   margin-bottom: 20px;
   text-align: left;
   font-size: 36px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: sans-serif;
   font-weight: 400;
   color: #333333;
 
@@ -160,7 +160,7 @@ export default {
     line-height: 48px;
     text-align: center;
     background: #ea3200;
-    background: #F74747;
+    background: #3b64fc;
     border-radius: 4px 4px 4px 4px;
     font-size: 20px;
     font-family: SourceHanSansSC-Regular-, SourceHanSansSC-Regular;
@@ -171,7 +171,7 @@ export default {
 .job-info {
   margin-bottom: 45px;
   text-align: left;
-    display: flex;
+  display: flex;
   align-items: center;
 
   .divider {
@@ -200,7 +200,7 @@ export default {
   .zhize-title {
     margin: 40px 0;
     font-size: 28px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #333333;
   }
@@ -210,7 +210,7 @@ export default {
   .yaoqiu-title {
     margin: 40px 0;
     font-size: 28px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #333333;
   }
@@ -218,7 +218,7 @@ export default {
 
 .ctx {
   font-size: 16px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: sans-serif;
   font-weight: 400;
   color: #333333;
   line-height: 40px;

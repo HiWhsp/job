@@ -1,10 +1,10 @@
 <template>
   <div class="wrap" :class="1">
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="center">
         <!-- 全部分类下拉 -->
-        <div class="quanbu" @mouseover="on_mouseover" @mouseleave="on_mouseleave">
-          <img src="@/static/common/fenlei.png" class="img-1" />
+        <div v-if="false" class="quanbu" @mouseover="on_mouseover" @mouseleave="on_mouseleave">
+          <img src="@img/common/fenlei.png" class="img-1" />
           <span>全部商品分类</span>
           <div class="side-nav">
             <!-- 侧边分类 -->
@@ -70,9 +70,9 @@ export default {
       }
       var arr = [
         { title: "首页", route: "/" },
-        { title: "协议专区", route: "/service" },
-        { title: "批量询价", route: "/xunjia" },
-        { title: "氿洲甄选", route: "/suggest" },
+        { title: "协议专区", route: "/product-xieyi" },
+        { title: "批量询价", route: "/batch-xunjia" },
+        { title: "氿洲甄选", route: "/product-zhenxuan" },
         { title: "场景专区", route: "/scene" },
         { title: "品牌馆", route: "/product-brand" },
         { title: "内容资讯", route: route_news },
@@ -125,10 +125,10 @@ export default {
 <style scoped lang="less">
 .wrap {
   height: 47px;
-  background: var(--main_color);
+  background: #f00;
 
   width: 100%;
-  border-bottom: 1px solid var(--main_color);
+  border-bottom: 1px solid #f00;
 
   // height: 40px;
   .inner {
@@ -179,7 +179,7 @@ export default {
 
         .nav-item {
           // flex: 1;
-          margin-left: 48px;
+          margin-left: 68px;
           text-align: center;
           position: relative;
           cursor: pointer;
@@ -202,18 +202,18 @@ export default {
             color: #fff;
 
             &.active {
-              color: #F74747;
+              color: #3b64fc;
               font-weight: bold;
             }
 
             &.router-link-exact-active {
-              color: #F74747;
+              color: #3b64fc;
               font-weight: bold;
             }
           }
 
           .text:hover {
-            color: #F74747;
+            color: #3b64fc;
             font-weight: bold;
           }
         }
@@ -226,12 +226,12 @@ export default {
 
 .wrap.nav-bg-white {
   background: #fff;
-  border-bottom: 1px solid var(--main_color);
+  border-bottom: 1px solid #f00;
 
   .inner {
     .center {
       .quanbu {
-        background: var(--main_color);
+        background: #f00;
       }
 
       .nav-box {
@@ -246,7 +246,7 @@ export default {
           }
 
           .text:hover {
-            color: var(--main_color);
+            color: #f00;
             font-weight: bold;
           }
         }

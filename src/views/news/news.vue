@@ -5,7 +5,7 @@
 
 
     <div class="inner">
-      <div class="page-ctx w-1200">
+      <div class="page-ctx w-1400">
         <div class="ctx-news">
           <div class="ctx-left">
             <!-- <div class="search-box">
@@ -215,7 +215,7 @@ export default {
 
         &:hover {
           .title-text {
-            color: #F74747 !important;
+            color: #3B64FC !important;
           }
         }
 

@@ -34,7 +34,12 @@
         </div> -->
 
         <div class="list-box">
-          <div class="item" :class="'state-' + status" v-for="(item, index) in list_yhq" :key="index">
+          <div
+            class="item"
+            :class="'state-' + status"
+            v-for="(item, index) in list_yhq"
+            :key="index"
+          >
             <div class="info">
               <div class="title">
                 <span class="huobi">{{ vuex_huobi }} </span>
@@ -50,7 +55,11 @@
               </div>
             </div>
             <div class="action">
-              <button class="btn-lingqu" v-if="item.if_ke_lingqu == 1" @click="do_coupon_pick(item)">
+              <button
+                class="btn-lingqu"
+                v-if="item.if_ke_lingqu == 1"
+                @click="do_coupon_pick(item)"
+              >
                 立即领取
               </button>
               <button class="btn-yilingqu" v-else>已领取</button>
@@ -58,8 +67,10 @@
           </div>
         </div>
 
-
-        <el-empty v-if="!list_yhq.length" description="暂无优惠券信息..."></el-empty>
+        <el-empty
+          v-if="!list_yhq.length"
+          description="暂无优惠券信息..."
+        ></el-empty>
 
         <!-- <div class="bg-box">
           <img src="@img/my/bg-coupon.png" alt="" />
@@ -76,7 +87,6 @@
           {{ item.title }}
         </div>
       </div> -->
-
 
         <!-- <el-empty v-if="!list_yhq.length" description="暂无优惠券信息..."></el-empty> -->
 
@@ -112,7 +122,7 @@ export default {
         page: 1,
         pageNum: 10,
       },
-      count: 0
+      count: 0,
     };
   },
   computed: {
@@ -124,31 +134,31 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'yhq_list',
+          action: "yhq_list",
           ...this.pagination,
-          scene: 0,//0全部 1未使用 2已使用 3已过期
+          scene: 0, //0全部 1未使用 2已使用 3已过期
         },
       }).then((res) => {
         if (res.code == 200) {
           let data = res.data;
           this.list_yhq = data.list;
-          this.count = data.count
+          this.count = data.count;
         }
       });
     },
     do_coupon_pick(item) {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'yhq_lingQu',
+          action: "yhq_lingQu",
           id: item.id,
         },
       }).then((res) => {
-        alert(res)
+        alert(res);
         if (res.code == 200) {
           this.setView();
         }
@@ -181,7 +191,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #3b64fc;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -282,7 +292,8 @@ export default {
           margin: 20px 0 10px;
         }
 
-        .shijian {}
+        .shijian {
+        }
       }
 
       .action {
@@ -325,7 +336,7 @@ export default {
 
         img {
           width: 60px;
-          vertical-align: middle;
+          vertical-align: bottom;
         }
       }
     }
@@ -383,21 +394,21 @@ export default {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #3b64fc;
         }
 
         .num {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #3b64fc;
         }
       }
 
       .tiaojian {
         margin-top: 10px;
         font-size: 12px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #999999;
         line-height: 28px;
@@ -405,7 +416,7 @@ export default {
 
       .shijian {
         font-size: 12px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #999999;
         line-height: 28px;
@@ -417,10 +428,10 @@ export default {
         button {
           width: 127px;
           height: 36px;
-          background: #F74747;
+          background: #3b64fc;
           border-radius: 4px 4px 4px 4px;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #ffffff;
 

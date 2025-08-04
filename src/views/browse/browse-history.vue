@@ -7,22 +7,51 @@
     <div class="page-ctx">
       <div class="product-box">
         <div class="product-titles flex">
-          <div class="product-check flex" @click="do_toggle_all()" :class="{ checked: checkedAll }">
-            <img src="@/static/common/check0.png" alt="" class="img-check check-0" />
-            <img src="@/static/common/check1.png" alt="" class="img-check check-1" />
+          <div
+            class="product-check flex"
+            @click="do_toggle_all()"
+            :class="{ checked: checkedAll }"
+          >
+            <img
+              src="@img/common/check0.png"
+              alt=""
+              class="img-check check-0"
+            />
+            <img
+              src="@img/common/check1.png"
+              alt=""
+              class="img-check check-1"
+            />
             <span>全选</span>
           </div>
-          <div class="product-delete" @click="do_delete_checked()">移除选中</div>
+          <div class="product-delete" @click="do_delete_checked()">
+            移除选中
+          </div>
         </div>
 
         <div class="product-data-box" v-if="count">
-
           <div class="product-wrap">
             <div class="product-list">
-              <div class="product-item" v-for="(item, index) in product_list" :key="index">
-                <div class="img-check-box" @click.stop="do_toggle_item(item)" :class="{ checked: item.checked }">
-                  <img src="@/static/common/check0.png" alt="" class="img-check check-0" />
-                  <img src="@/static/common/check1.png" alt="" class="img-check check-1" />
+              <div
+                class="product-item"
+                v-for="(item, index) in product_list"
+                :key="index"
+              >
+                <div
+                  class="img-check-box"
+                  @click.stop="do_toggle_item(item)"
+                  :class="{ checked: item.checked }"
+                >
+                  <img
+                    src="@img/common/check0.png"
+                    alt=""
+                    class="img-check check-0"
+                  />
+                  <img
+                    src="@img/common/check1.png"
+                    alt=""
+                    class="img-check check-1"
+                  />
                 </div>
 
                 <div class="goods-img scale-box" @click="mix_to_product(item)">
@@ -45,9 +74,18 @@
             <productList :list="product_list" :is_show_check="true" @toggle_check="toggle_check" />
           </div> -->
 
-          <div class="pagination-box" style="margin-top: 40px;text-align: right;">
-            <el-pagination background layout="total, prev, pager, next" @current-change="mix_current_change"
-              :current-page.sync="pagination.page" :page-size="pagination.pageNum" :total="count"></el-pagination>
+          <div
+            class="pagination-box"
+            style="margin-top: 40px; text-align: right"
+          >
+            <el-pagination
+              background
+              layout="total, prev, pager, next"
+              @current-change="mix_current_change"
+              :current-page.sync="pagination.page"
+              :page-size="pagination.pageNum"
+              :total="count"
+            ></el-pagination>
           </div>
         </div>
 
@@ -93,7 +131,7 @@ export default {
 
   methods: {
     setView() {
-      this.query_browse()
+      this.query_browse();
     },
     query_browse() {
       this.$api({
@@ -132,7 +170,6 @@ export default {
       this.product_list.forEach((v) => (v.checked = this.checkedAll));
     },
 
-
     do_toggle_item(item) {
       //console.log("切换勾选", { ...item });
 
@@ -158,11 +195,11 @@ export default {
         method: "get",
         data: {
           action: "product_bathDelOperate",
-          operateType: 2,//行为类型：1-关注 2-足迹 此接口默认为 1-关注
-          productIds: ids
+          operateType: 2, //行为类型：1-关注 2-足迹 此接口默认为 1-关注
+          productIds: ids,
         },
       }).then((res) => {
-        alert(res)
+        alert(res);
         if (res.code == 200) {
           this.setView();
         }
@@ -170,9 +207,8 @@ export default {
     },
 
     toggle_check(item) {
-      item.checked = !item.checked
+      item.checked = !item.checked;
     },
-
   },
 };
 </script>
@@ -202,7 +238,8 @@ export default {
   }
 }
 
-.product-item {}
+.product-item {
+}
 
 .page {
   padding-bottom: 80px;
@@ -229,7 +266,6 @@ export default {
   background: #fff;
 }
 
-
 .bottom-info {
   margin-top: 20px;
   margin-bottom: 50px;
@@ -243,16 +279,14 @@ export default {
   .product-titles {
     // margin-bottom: 20px;
     padding: 0 24px;
-    border: 1px solid #E5E5E5;
+    border: 1px solid #e5e5e5;
     height: 44px;
-    background: #F5F5F5;
-
+    background: #f5f5f5;
 
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 14px;
     color: #666666;
-
 
     .product-check {
       user-select: none;
@@ -262,9 +296,8 @@ export default {
       font-size: 14px;
       color: #666666;
 
-
       &.checked {
-        color: #F74747;
+        color: #3B64FC;
       }
 
       img {
@@ -281,7 +314,6 @@ export default {
       font-weight: 400;
       font-size: 14px;
       color: #666666;
-
     }
   }
 
@@ -307,7 +339,9 @@ export default {
       }
 
       .img-check-box {
-        .flex-center();
+        display: flex;
+        justify-content: center;
+        align-items: center;
         position: absolute;
         z-index: 10;
         left: 10px;
@@ -347,7 +381,7 @@ export default {
           cursor: pointer;
           margin-bottom: 15px;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #333333;
           line-height: 24px;
@@ -357,7 +391,7 @@ export default {
           font-size: 14px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #eb0f19;
 
           b {
             font-size: 20px;

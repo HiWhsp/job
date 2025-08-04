@@ -1,24 +1,23 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import ajax from "@/plugin/request.js"; //导入 axios 配置
-const api = ajax.api; //请求方法
+Vue.use(Vuex);
 
-// debugger
-//console.log("========== store location ==========", location);
+import plugins_request from "@/plugin/request.js"
+let api = plugins_request.api;
 
 // 处理产品分类数据
-function handle_product_cate_data(cateTreeList) {
+function handle_product_cate_data(category_tree) {
   let root_route = "/product-cates?ids="; //配件产品
 
-  let cateFlatList = [];
-  cateTreeList.forEach((level1) => {
+  let category_flat = [];
+  category_tree.forEach((level1) => {
     level1.level = "1";
     level1.idlist = [level1.id];
     level1.ids = level1.idlist.join("-");
     level1.route = root_route + level1.ids;
 
-    cateFlatList.push({
+    category_flat.push({
       ...level1,
     });
 
@@ -30,7 +29,7 @@ function handle_product_cate_data(cateTreeList) {
         level2.ids = level2.idlist.join("-");
         level2.route = root_route + level2.ids;
 
-        cateFlatList.push({
+        category_flat.push({
           ...level2,
         });
 
@@ -42,7 +41,7 @@ function handle_product_cate_data(cateTreeList) {
             level3.ids = level3.idlist.join("-");
             level3.route = root_route + level3.ids;
 
-            cateFlatList.push({
+            category_flat.push({
               ...level3,
             });
           });
@@ -52,72 +51,39 @@ function handle_product_cate_data(cateTreeList) {
   });
 
   return {
-    cateFlatList: cateFlatList,
-    cateTreeList: cateTreeList,
+    category_flat: category_flat,
+    category_tree: category_tree,
   };
 }
 
 //
-
-Vue.use(Vuex);
-
 export default new Vuex.Store({
   state: {
     vuex_h5: !!navigator.userAgent.match(
       /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
     ),
-
+    vuex_avatar_default: require("@img/common/avatar.png"),
+    vuex_user: {},
     //
     vuex_config: {},
-    vuex_huobi: "￥",
     vuex_news_cates: [],
-
-    //
-    vuex_user: {},
-    userInfo: {}, //
-    baseInfo: {}, //
     //
     vuex_is_login: false, //是否登录
-    vuex_is_login: false,
     //
-    avatar_default: require("@/static/common/avatar.png"),
-    vuex_avatar_default: require("@/static/common/avatar.png"),
-    defaultAvatar: require("@/static/common/avatar.png"),
-    //
-    //
-    //商城部分
     vuex_cart_number: 0,
-
+    vuex_huobi: "￥",
     //
-
-    index_banners: [],
-    map_banners: {
+    vuex_category_tree: [],
+    vuex_category_flat: [],
+    //
+    default_address: {}, //默认收货地址
+    //
+    vuex_index_banners: [],
+    vuex_map_banners: {
       关于我们: [],
       联系我们: [],
     },
     //
-    vuexTreeCates: [],
-    vuexFlatCates: [],
-
-    vuex_product_cate_1: {
-      id: 780,
-      title: "Cream Charger",
-      route: "/product-cates?id=780",
-    },
-    vuex_product_cate_2: {
-      id: 792,
-      title: "Cream Dispenser",
-      route: "/product-cates?id=792",
-    },
-
-
-
-    shopcart_count: 0,
-    if_calc_yunfei: false, //是否需要计算运费
-    default_address: {}, //默认收货地址
-    store_keyword: {},
-
-    footer_logo_friend_link:[]
   },
 
   getters: {},
@@ -134,98 +100,58 @@ export default new Vuex.Store({
     },
 
     //设置基本信息
-    set_userInfo(state, data) {
-      console.log("vuex set_userInfo 用户信息", {
-        ...data,
-      });
+    set_vuex_user(state, data) {
+      // //console.log("vuex set_vuex_user 设置用户信息", { ...data });
 
-      // debugger
-      let { token, userId, id } = data;
+      let token = data.token;
+      let userId = data.userId || data.id;
 
       state.vuex_is_login = true;
-      state.vuex_is_login = true;
-      state.userInfo = data;
+      state.token = token;
+      state.userId = userId;
       state.vuex_user = data;
+
       localStorage.setItem("token", token);
-      localStorage.setItem("userId", userId || id);
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("vuex_user", JSON.stringify(data));
+      // let cookieVal = {
+      //   "token": token,
+      //   "userId": userId,
+      //   "vuex_user": data,
+      // }
+      // document.cookie = `jiuzhouuser=${JSON.stringify(cookieVal)}`
+    },
+
+    //设置购物车商品数量
+    set_vuex_cart_number(state, value) {
+      state.vuex_cart_number = value;
+    },
+
+    set_cache_payment_products(state, str_products) {
+      console.log('vuex 缓存商品信息', str_products)
+      sessionStorage.setItem("cache_payment_products", str_products);
     },
 
     set_vuex_banner(state, data) {
       let [pos_0, pos_1, pos_2] = data;
       console.log("首页轮播", pos_0.images);
-      state.index_banners = pos_0.images;
+      state.vuex_index_banners = pos_0.images;
 
-      state.map_banners = {
+      state.vuex_map_banners = {
         关于我们: pos_1.images,
         联系我们: pos_2.images,
       };
     },
-
+    // 产品分类树
     set_vuex_product_cate(state, data) {
-      let { cateFlatList, cateTreeList } = data;
+      let { category_flat, category_tree } = data;
       console.warn(
-        "cateTreeList 产品分类数据",
-        JSON.parse(JSON.stringify(cateTreeList))
+        "category_tree 产品分类数据",
+        JSON.parse(JSON.stringify(category_tree))
       );
 
-      state.vuexTreeCates = cateTreeList;
-      state.vuexFlatCates = cateFlatList;
-
-      state.vuex_product_cate_1 = cateTreeList[0]
-      state.vuex_product_cate_2 = cateTreeList[1]
-    },
-
-    //设置购物车商品数量
-    set_vuex_cart_number(state, value) {
-      //console.log("设置购物车商品数量", value);
-      state.shopcart_count = value;
-      state.vuex_cart_number = value;
-    },
-
-    set_cache_payment_products(state, str_products)  {
-      console.log('vuex 缓存商品信息',str_products)
-      sessionStorage.setItem("cache_payment_products", str_products);
-    },
-
-    //设置基本信息
-    set_baseInfo(state, data) {
-      // //console.log("设置用户信息", { ...data });
-      let { token, userId, id, level, level_rules } = data;
-
-      state.vuex_is_login = true;
-      state.token = token;
-      state.userId = userId || id;
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("userId", userId || id);
-
-      // if (level_rules) {
-      //   //处理
-      //   let curr_level = level_rules.find((v) => v.title == level) || {};
-      //   let level_id = curr_level.id || "";
-
-      //   data = {
-      //     ...data,
-      //     phone: data.username,
-      //     name: data.name || "未设置",
-      //     yue: data.money || 0, //余额
-      //     jifen: +data.jifen || 0, //积分
-      //     yongjin: +data.money || 0, //佣金
-
-      //     yongjin_leiji: +data.earn || 0, //佣金累计
-
-      //     level_title: level || "", //会员级别
-      //     level_id: level_id || "", //会员级别
-      //     curr_level: curr_level, //当前级别
-      //   };
-      // }
-
-      state.baseInfo = data;
-      state.userInfo = data;
-      state.vuex_user = data;
-      localStorage.setItem("baseInfo", JSON.stringify(data));
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      state.vuex_category_tree = category_tree;
+      state.vuex_category_flat = category_flat;
     },
 
     set_vuex_login_status(state, value) {
@@ -233,51 +159,37 @@ export default new Vuex.Store({
       state.vuex_is_login = value;
     },
     //清空登录信息
-    clear_loginInfo(state) {
-      state.shopcart_count = "0";
+    remove_vuex_user(state) {
+      state.vuex_cart_number = "0";
       state.token = "";
       state.userId = "";
-      state.baseInfo = {};
+      state.vuex_user = {};
       state.vuex_is_login = false;
       localStorage.clear();
+      document.cookie = ''
     },
 
-    change_store_keyword(state, val) {
-      state.store_keyword = {
-        time: new Date().getTime(),
-        keyword: val,
-      };
-    },
-
-    set_list_channel(state, value) {
-      value.forEach((v) => {
-        if (v.id == 628) {
-          v.is_youhuiqu = true;
-        }
-      });
-      state.list_channel = value;
-    },
   },
 
   actions: {
     async appInit({ commit, state, dispatch }, data) {
-      dispatch("appInitGetAssets");
-
-
+      dispatch("query_assets");
 
       let token = localStorage.getItem("token");
       let userId = localStorage.getItem("userId");
-
+      console.log(userId);
       if (token && userId) {
-        commit("set_vuex_login_status", true);
-        dispatch("getUserloginedInfo");
+        let cache_user = JSON.parse(localStorage.getItem("vuex_user"));
+        console.log(cache_user);
+        commit("set_vuex_user", cache_user);
+        dispatch("query_user_auth_info");
       } else {
-        commit("set_vuex_login_status", false);
+        commit("remove_vuex_user");
       }
     },
 
     //获取登录后的信息
-    async getUserloginedInfo({ commit, state, dispatch }, data) {
+    async query_user_auth_info({ commit, state, dispatch }, data) {
       dispatch("query_user");
       dispatch("query_cart");
     },
@@ -292,14 +204,13 @@ export default new Vuex.Store({
         },
       }).then((res) => {
         if (res.code == 200) {
-          commit("set_vuex_login_status", true);
-          commit("set_baseInfo", res.data);
+          commit("set_vuex_user", res.data);
         } else {
-          commit("set_vuex_login_status", false);
+          commit("remove_vuex_user");
         }
       });
     },
-    // 获取用户信息
+    // 购物车
     async query_cart({ commit, state, dispatch }) {
       api({
         url: "/service.php",
@@ -308,22 +219,28 @@ export default new Vuex.Store({
           action: "gouwuche_lists",
         },
       })
-      .then((res) => {
-        let { code, data } = res;
-        if (code == 200) {
-          let count = 0;
-          data.forEach((v) => {
-            count += v.num * 1;
-          });
-
-          commit("set_vuex_cart_number", count);
-        }
-      });
+        .then((res) => {
+          let { code, data } = res;
+          if (code == 200) {
+            let count = 0;
+            data.forEach((v) => {
+              count += v.num * 1;
+            });
+            commit("set_vuex_cart_number", count);
+          }
+        });
     },
 
-
     //初始化资源
-    async appInitGetAssets({ commit, state, dispatch }, data) {
+    async query_assets({ commit, state, dispatch }, data) {
+      dispatch('query_config')
+      dispatch('query_banner')
+      dispatch('query_category')
+      dispatch('query_news')
+    },
+
+    // 查询
+    async query_config({ commit, state, dispatch }) {
       api({
         url: "/service.php",
         method: "get",
@@ -336,8 +253,9 @@ export default new Vuex.Store({
           commit("set_vuex_config", data);
         }
       });
-
-      //首页数据接口
+    },
+    // 查询
+    async query_banner({ commit, state, dispatch }) {
       api({
         url: "/service.php",
         method: "get",
@@ -350,8 +268,9 @@ export default new Vuex.Store({
           commit("set_vuex_banner", res.data);
         }
       });
-
-      //产品分类
+    },
+    // 查询
+    async query_category({ commit, state, dispatch }) {
       api({
         url: "/service.php",
         method: "get",
@@ -365,8 +284,9 @@ export default new Vuex.Store({
           commit("set_vuex_product_cate", catesInfo);
         }
       });
-
-      //新闻分类
+    },
+    // 查询
+    async query_news({ commit, state, dispatch }) {
       api({
         url: "/service.php",
         method: "get",
@@ -387,5 +307,7 @@ export default new Vuex.Store({
         }
       });
     },
+
+
   },
 });

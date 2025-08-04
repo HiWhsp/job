@@ -1,10 +1,9 @@
 <template>
   <div class="page">
-
     <div class="page-top">
-      <div class="page-bread w-1200">
+      <div class="page-bread w-1400">
         <div class="bread-box">
-          <img src="@/static/common/product-home.png" alt="" />
+          <img src="@img/common/product-home.png" alt="" />
           <router-link to="/">首页</router-link>
           <span class="bread-divider">&gt;</span>
           <!-- <router-link to="/products">产品中心</router-link>
@@ -16,10 +15,10 @@
       </div>
     </div>
 
-    <div class="page-box w-1200">
-      <div class="page-inner w-1200">
+    <div class="page-box w-1400">
+      <div class="page-inner w-1400">
         <div class="total-box">共{{ count }}条数据</div>
-        <div class="ctx-box w-1200">
+        <div class="ctx-box w-1400">
           <div class="bottom-list">
             <productList :list="product_list" />
             <!-- <div class="product-list">
@@ -41,14 +40,21 @@
                 </div>
               </div>
             </div> -->
-            <div class="pagination-box" v-if="count" style="margin-top: 50px;">
-              <el-pagination background layout="prev, pager, next" :total="count" :current-page="pagination.page"
-                :page-size="pagination.pageNum" @current-change="mix_current_change"> </el-pagination>
+            <div class="pagination-box" v-if="count" style="margin-top: 50px">
+              <el-pagination
+                background
+                layout="prev, pager, next"
+                :total="count"
+                :current-page="pagination.page"
+                :page-size="pagination.pageNum"
+                @current-change="mix_current_change"
+              >
+              </el-pagination>
             </div>
           </div>
 
           <div class="empty-box" v-if="!count">
-            <el-empty  description="没有找到相关产品..."></el-empty>
+            <el-empty description="没有找到相关产品..."></el-empty>
           </div>
         </div>
       </div>
@@ -64,7 +70,7 @@ import productList from "@/components/product/productList.vue"; //
 export default {
   name: "product-search",
   components: {
-    productList
+    productList,
   },
   data() {
     return {
@@ -73,7 +79,7 @@ export default {
         page: 1,
         pageNum: 18,
       },
-      product_list: []
+      product_list: [],
     };
   },
   computed: {
@@ -89,10 +95,11 @@ export default {
   },
   created() {
     this.setView();
+    console.log(this.$route.query.keyword )
   },
   methods: {
     toDetail(item) {
-      this.$router.push(`/product-detail?id=${item.inventoryId}`)
+      this.$router.push(`/product-detail?id=${item.inventoryId}`);
     },
 
     setView() {
@@ -105,7 +112,7 @@ export default {
           // channelId: 780,
           page: 1,
           pageNum: 12,
-          keyword: this.$route.query.keyword || ''
+          keyword: this.$route.query.keyword || "",
         },
       }).then((res) => {
         let { code, data, count } = res;
@@ -126,7 +133,7 @@ export default {
 
 <style scoped lang="less">
 .page {
-  background: #FFFFFF;
+  background: #ffffff;
 }
 
 .page-top {
@@ -139,7 +146,6 @@ export default {
   }
 
   .page-bread {
-
     margin: 0 auto;
     height: 44px;
     //background: #f5f5f5;
@@ -158,19 +164,19 @@ export default {
       .bread-divider {
         margin: 0 10px;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #999999;
       }
 
       a {
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #999999;
 
         &:hover {
-          color: #F74747;
+          color: #3b64fc;
         }
       }
     }
@@ -188,14 +194,12 @@ export default {
   }
 
   .page-inner {
-
     margin: 0 auto;
     padding: 20px 0;
     padding-bottom: 80px;
     text-align: left;
 
     .page-block {
-
       margin: 0 auto;
     }
   }
@@ -206,17 +210,16 @@ export default {
   padding-bottom: 12px;
   border-bottom: 1px solid #ddd;
   font-size: 18px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: sans-serif;
   font-weight: 400;
   color: #808080;
 }
 
-.ctx-box {}
+.ctx-box {
+}
 
-
-
-.bottom-list {}
-
+.bottom-list {
+}
 
 .product-list {
   display: flex;
@@ -227,7 +230,7 @@ export default {
     margin-top: 10px;
     width: 220px;
     height: 298px;
-    background: #FFFFFF;
+    background: #ffffff;
     cursor: pointer;
 
     &:nth-child(6n) {
@@ -240,9 +243,8 @@ export default {
 
     &:hover {
       .title {
-        color: #F74747 !important;
+        color: #3b64fc !important;
       }
-
     }
 
     .poster-box {
@@ -259,9 +261,9 @@ export default {
       padding: 13px 15px 0;
 
       .title {
-         white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
         font-weight: 400;
         font-size: 14px;
         color: #333333;
@@ -269,21 +271,20 @@ export default {
 
       .pirce-box {
         margin-top: 15px;
-          display: flex;
-  align-items: center;
-  justify-content: space-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         .price-info {
-
-            display: flex;
-  align-items: center;
+          display: flex;
+          align-items: center;
 
           .price-1 {
             margin-right: 5px;
             font-family: Arial, Arial;
             font-weight: 400;
             font-size: 16px;
-            color: #FF3A30;
+            color: #ff3a30;
           }
 
           .price-2 {

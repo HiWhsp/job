@@ -1,7 +1,7 @@
 <template>
   <div class="footer-wrap">
     <div class="footer-tip">
-      <div class="footer-icons w-1200">
+      <div class="footer-icons w-1400">
         <div class="icon-item" v-for="(item, index) in footerTips" :key="index">
           <div class="icon-box">
             <img :src="item.icon" alt="" />
@@ -17,35 +17,44 @@
     </div>
 
     <div class="page-footer">
-      <div class="web-footer w-1200">
+      <div class="web-footer w-1400">
         <!-- 底部链接 -->
-        <div class="footer-center">
-          <div class="nav-group" v-for="(group, index) in groupList" :key="index">
+        <div class="link-wrap">
+          <div
+            class="link-group"
+            v-for="(group, index) in footer_link_group"
+            :key="index"
+          >
             <div class="group-title">
               {{ group.title }}
             </div>
-            <div class="nav-item" v-for="(sub, index) in group.child" :key="index">
-              <router-link :to="sub.route" v-if="sub.route">
+            <div
+              class="link-item"
+              v-for="(sub, index) in group.newList"
+              :key="index"
+            >
+              <a :href="sub.url" v-if="sub.url" target="_blank">
+                {{ sub.title }}
+              </a>
+              <router-link :to="'/help?id=' + sub.id">
                 {{ sub.title }}
               </router-link>
-              <div v-else>{{ sub.title }}</div>
+              <!-- <div v-else>{{ sub.title }}</div> -->
             </div>
           </div>
         </div>
 
         <!-- 网站信息 -->
-        <div class="footer-left link-info">
+        <div class="logo-wrap link-info">
           <div class="top-info v-flex-start">
-            <div class="info-box ">
+            <div class="info-box">
               <div class="title">
-                <img src="@img/foot/foot-logo.png" alt="">
+                <img src="@img/foot/foot-logo.png" alt="" />
               </div>
-              <div class="text">
-                {{ vuex_config.com_kefu }}
-              </div>
-              <div class="time">工作时间：周一至周五（9:00-10:00）节假日除外</div>
+
+              <div class="time">工作时间：周一到周五8:30-17:30</div>
               <div class="phone">
-                <img src="@img/foot/foot-mobile.png" alt="">
+                <img src="@img/foot/foot-mobile.png" alt="" />
                 <span>
                   {{ vuex_config.comPhone }}
                 </span>
@@ -54,9 +63,7 @@
 
             <div class="icon-box">
               <img :src="vuex_config.zhishang_back" alt="" />
-              <div class="icon-title">
-                微信公众号
-              </div>
+              <div class="icon-title">微信公众号</div>
             </div>
           </div>
         </div>
@@ -88,52 +95,50 @@ export default {
         },
         {
           icon: require("@/assets/img/foot/foot-2.png"),
-          title: "一站式服务",
+          title: "货期保证",
           desc: "一站式服务",
         },
         {
           icon: require("@/assets/img/foot/foot-3.png"),
-          title: "全网比价",
+          title: "阳光采购",
           desc: "全网比价 惠到实处",
         },
         {
           icon: require("@/assets/img/foot/foot-4.png"),
-          title: "售后无忧",
+          title: "诚信服务",
           desc: "专业团队 无忧售后",
         },
       ],
+      footer_link_group: [],
     };
   },
   computed: {
-    ...mapState(["", "opt_news_cate"]),
-
-    groupList() {
-      // return this.vuex_news_cates.slice(0, 5);
-
-      //关于我们
-      let child_about = [
-        { title: "文章1", route: "/companyProfile" },
-        { title: "文章2", route: "/contactUs" },
-      ];
-
-      let arr = [
-        { title: "购物指南", route: "/companyProfile", child: child_about },
-        { title: "购物指南", route: "/companyProfile", child: child_about },
-        { title: "购物指南", route: "/companyProfile", child: child_about },
-        { title: "购物指南", route: "/companyProfile", child: child_about },
-        { title: "购物指南", route: "/companyProfile", child: child_about },
-
-        // ...this.vuex_news_cates,
-      ];
-
-      return arr;
-    },
+    // ...mapState([""]),
   },
   watch: {},
 
-  created() { },
-
-  methods: {},
+  created() {
+    this.query_footer_link();
+  },
+  methods: {
+    query_footer_link() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "news_getIndexFooter",
+          channelId: 52,
+          page: 1,
+          pageNum: 1000,
+          orderType: 0, //排序情况：0-自然排序 1-最新
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.footer_link_group = res.data;
+        }
+      });
+    },
+  },
 };
 </script>
 
@@ -146,7 +151,7 @@ export default {
 .page-footer {
   padding-top: 40px;
   // background: url("~@img/footer-bg.jpg") no-repeat center / cover;
-  background: #044FA0;
+  background: #044fa0;
   background: #202020;
   color: #fff;
   overflow: hidden;
@@ -155,23 +160,22 @@ export default {
 .footer-tip {
   width: 100%;
   padding: 40px 0;
-  background: #044FA0;
+  background: #044fa0;
   background: #202020;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid #FFF;
+  border-bottom: 1px solid #666;
 
   .footer-icons {
-
     display: flex;
 
     .icon-item {
       flex: 1;
       text-align: left;
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
 
       .icon-box {
         img {
@@ -188,7 +192,7 @@ export default {
           margin-bottom: 10px;
           font-size: 18px;
           font-family: PingFang SC, PingFang SC;
-          font-weight: 500;
+          font-weight: bold;
           color: #ffffff;
         }
 
@@ -203,7 +207,6 @@ export default {
   }
 
   .footerRow {
-
     padding: 0 80px;
   }
 
@@ -230,7 +233,6 @@ export default {
 }
 
 .web-footer {
-
   margin: 0 auto;
   margin-bottom: 40px;
   display: flex;
@@ -241,7 +243,7 @@ export default {
     width: 500px;
   }
 
-  .footer-center {
+  .link-wrap {
     flex: 1;
     display: flex;
     justify-content: space-evenly;
@@ -249,7 +251,7 @@ export default {
     align-items: flex-start;
     padding-right: 140px;
 
-    .nav-group {
+    .link-group {
       .group-title {
         text-align: left;
         margin-bottom: 15px;
@@ -259,20 +261,23 @@ export default {
         color: #ffffff;
       }
 
-      .nav-item {
+      .link-item {
         text-align: left;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #ffffff;
         line-height: 32px;
 
         a {
+          font-weight: normal;
           font-size: 14px;
-          font-family: PingFang SC, PingFang SC;
-          font-weight: 500;
-          color: #dddddd;
+          color: #9f9f9f;
           line-height: 32px;
+
+          &:hover {
+            color: #3B64FC;
+          }
         }
       }
     }
@@ -288,7 +293,7 @@ export default {
       .text {
         margin-top: 15px;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #ffffff;
       }
@@ -302,8 +307,6 @@ export default {
   align-items: flex-end;
 
   .top-info {
-
-
     .icon-box {
       img {
         width: 144px;
@@ -322,48 +325,38 @@ export default {
         color: #ffffff;
       }
 
-      .text {
-        margin-top: 15px;
-        font-size: 24px;
-        font-family: PingFang SC, PingFang SC;
-        font-weight: 500;
-        color: #f48533;
-      }
-
       .time {
-        margin-top: 5px;
+        margin-top: 15px;
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-weight: 400;
         font-size: 14px;
-        font-family: PingFang SC, PingFang SC;
-        font-weight: 500;
-        color: #dddddd;
+        color: #9f9f9f;
       }
 
       .phone {
-        margin: 5px 0;
-        font-size: 14px;
-        font-family: PingFang SC, PingFang SC;
-        font-weight: 500;
-        color: #dddddd;
-      }
-
-      .fax {
-        font-size: 14px;
-        font-family: PingFang SC, PingFang SC;
-        font-weight: 500;
-        color: #dddddd;
+        margin-top: 15px;
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-weight: 400;
+        font-size: 20px;
+        color: #9f9f9f;
+        img {
+          width: 16.75px;
+        }
       }
     }
   }
 
   .bottom-info {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     margin-top: 45px;
 
     .sns-item {
       cursor: pointer;
       margin-left: 10px;
-      .flex-center();
+      display: flex;
+      justify-content: center;
+      align-items: center;
       text-align: center;
       width: 35px;
       height: 35px;
@@ -397,7 +390,7 @@ export default {
 }
 
 .nav-box {
-    display: flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   width: 1600px;
@@ -421,7 +414,9 @@ export default {
 }
 
 .qrcode-box {
-  .flex-center();
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding-bottom: 60px;
 
   .qrcode-item {
@@ -462,8 +457,7 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     color: #fff;
-    color: #9F9F9F;
-    
+    color: #9f9f9f;
   }
 
   /deep/ a {
@@ -471,11 +465,11 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     color: #fff;
-    color: #9F9F9F;
+    color: #9f9f9f;
   }
 }
 
-@media screen and (max-width:1024px) {
+@media screen and (max-width: 1024px) {
   .footer-tip {
     padding: 15px;
 
@@ -506,24 +500,24 @@ export default {
       width: 100%;
       flex-direction: column;
 
-      .footer-center {
+      .link-wrap {
         width: 100%;
         padding-right: 0;
         margin-bottom: 15px;
         justify-content: space-between;
 
-        .nav-group {
+        .link-group {
           .group-title {
             font-size: 1.4rem;
           }
 
-          .nav-item a {
+          .link-item a {
             font-size: 1.2rem;
           }
         }
       }
 
-      .footer-left {
+      .logo-wrap {
         width: 100%;
       }
     }

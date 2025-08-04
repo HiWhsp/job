@@ -195,7 +195,7 @@ export default {
           //   let resUser = await this.$api("users_userInfo");
           //   if (resUser && resUser.code == 200) {
           //     this.$store.commit("set_vuex_is_login", true);
-          //     this.$store.commit("set_baseInfo", resUser.data);
+          //     this.$store.commit("set_vuex_user", resUser.data);
           //     this.$store.dispatch("appInit"); //重新初始化
           //   } else {
           //     //登录过期
@@ -212,11 +212,11 @@ export default {
           // if (resUser && resUser.code == 200) {
           //   if (resUser.code == 200) {
           //     // this.$store.commit("set_vuex_is_login", true);
-          //     // this.$store.commit("set_baseInfo", resUser.data);
+          //     // this.$store.commit("set_vuex_user", resUser.data);
           //     // this.$store.dispatch("appInit"); //重新初始化
           //   } else {
           //     // this.$store.commit("set_vuex_is_login", false);
-          //     // this.$store.commit("clear_loginInfo", false);
+          //     // this.$store.commit("remove_vuex_user", false);
           //     // this.$store.dispatch("appInit"); //重新初始化
           //   }
           // }
@@ -266,7 +266,6 @@ export default {
             });
 
             // 重新调取获取用户信息的接口
-          
           } else {
             this.$Message.error(data.msg);
           }
@@ -397,7 +396,7 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: sans-serif;
   font-weight: 400;
   color: #ffffff;
 }
@@ -414,7 +413,7 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: sans-serif;
   font-weight: 400;
   color: #1d2088;
   margin-left: 24px;

@@ -9,8 +9,13 @@
       <div class="inner">
         <div class="tab-wrap">
           <div class="tab-box">
-            <div class="tab-item" v-for="(item, index) in tabList" :key="index" @click="do_tab_toggle(item)"
-              :class="tabSelect.value == item.value ? 'active' : ''">
+            <div
+              class="tab-item"
+              v-for="(item, index) in tabList"
+              :key="index"
+              @click="do_tab_toggle(item)"
+              :class="tabSelect.value == item.value ? 'active' : ''"
+            >
               {{ item.title }}
             </div>
           </div>
@@ -48,9 +53,13 @@
             </div>
           </div> -->
 
-
           <div class="list-box">
-            <div class="item" :class="'state-' + item.status" v-for="(item, index) in list_yhq" :key="index">
+            <div
+              class="item"
+              :class="'state-' + item.status"
+              v-for="(item, index) in list_yhq"
+              :key="index"
+            >
               <div class="info">
                 <div class="title">
                   <span class="huobi">{{ vuex_huobi }} </span>
@@ -66,19 +75,33 @@
                 </div>
               </div>
               <div class="action">
-                <button :disabled="item.status != 0" @click="do_coupon_use(item)">立即使用</button>
+                <button
+                  :disabled="item.status != 0"
+                  @click="do_coupon_use(item)"
+                >
+                  立即使用
+                </button>
               </div>
               <div class="guoqi">
                 <!-- <img v-if="item.status == 0" src="@img/coupon/jijiangguoqi.png" alt /> -->
-                <img v-if="item.status == 1" src="@img/coupon/yiguoqi.png" alt />
-                <img v-if="item.status == 2" src="@img/coupon/yishiyong.png" alt />
+                <img
+                  v-if="item.status == 1"
+                  src="@img/coupon/yiguoqi.png"
+                  alt
+                />
+                <img
+                  v-if="item.status == 2"
+                  src="@img/coupon/yishiyong.png"
+                  alt
+                />
               </div>
             </div>
           </div>
 
-          <el-empty v-if="!list_yhq.length" description="暂无数据..."></el-empty>
-
-
+          <el-empty
+            v-if="!list_yhq.length"
+            description="暂无数据..."
+          ></el-empty>
         </div>
       </div>
     </div>
@@ -90,13 +113,12 @@ import { mapState } from "vuex";
 
 export default {
   name: "coupon-list",
-  components: {
-
-  },
+  components: {},
   data() {
     return {
       tabSelect: {
-        title: "未使用", value: 1
+        title: "未使用",
+        value: 1,
       },
       // 0全部 1未使用 2已使用 3已过期
       tabList: [
@@ -110,7 +132,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar"]),
+    ...mapState([""]),
   },
   watch: {},
   created() {
@@ -119,10 +141,10 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'yhq_myList',
+          action: "yhq_myList",
           ...this.pagination,
           scene: this.tabSelect.value, //0全部 1未使用 2已使用 3已过期
         },
@@ -130,14 +152,14 @@ export default {
         if (res.code == 200) {
           let data = res.data;
           this.list_yhq = data.list;
-          this.count = data.count
+          this.count = data.count;
         }
       });
     },
     do_tab_toggle(item) {
       if (this.tabSelect.value != item.value) {
         this.list_yhq = [];
-        this.tabSelect = item
+        this.tabSelect = item;
         this.setView();
       }
     },
@@ -174,7 +196,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #3b64fc;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -188,181 +210,173 @@ export default {
   background: #fff;
 }
 
-
-
-
 .inner {
   padding-bottom: 80px;
 }
 
 .tab-wrap {
-    position: relative;
-    margin-bottom: 30px;
+  position: relative;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .tab-box {
+    flex: 2;
+    // border-bottom: 1px solid #eee;
+
     display: flex;
     align-items: center;
-    justify-content: space-between;
 
-    .tab-box {
-      flex: 2;
-      // border-bottom: 1px solid #eee;
-
-      display: flex;
-      align-items: center;
-
-      .tab-item {
-        cursor: pointer;
-        padding-bottom: 10px;
-        border-bottom: 3px solid transparent;
-        margin-right: 60px;
-
-        font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #333333;
-
-        &.active {
-          border-bottom: 3px solid #F74747;
-          font-weight: bold;
-          color: #F74747;
-        }
-      }
-    }
-
-    .lingquan {
-      position: absolute;
-      right: 0;
-      display: flex;
-      align-items: center;
+    .tab-item {
       cursor: pointer;
-      width: fit-content;
+      padding-bottom: 10px;
+      border-bottom: 3px solid transparent;
+      margin-right: 60px;
 
-      .coupon {
-        width: 25px;
-      }
+      font-size: 14px;
+      font-family: sans-serif;
+      font-weight: 400;
+      color: #333333;
 
-      .arrow {
-        width: 10px;
-        margin-left: 8px;
-      }
-
-      span {
-        margin-left: 10px;
-        font-size: 16px;
-        font-family: PingFang SC;
-        font-weight: 400;
-        line-height: 36px;
-        color: #333;
+      &.active {
+        border-bottom: 3px solid #3b64fc;
+        font-weight: bold;
+        color: #3b64fc;
       }
     }
   }
 
-
-
-
-
-  .list-box {
+  .lingquan {
+    position: absolute;
+    right: 0;
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    cursor: pointer;
+    width: fit-content;
 
-    .item {
-      position: relative;
-      background: url(~@img/other/mycoupon-bg.png) center / cover no-repeat;
-      width: 238px;
-      height: 234px;
-      padding: 15px;
-      margin-right: 10px;
-      margin-bottom: 20px;
-      color: #fff;
+    .coupon {
+      width: 25px;
+    }
 
-      &.state-2 {
-        background: url(~@img/coupon/bg-yishiyong.png) center / cover no-repeat;
-      }
+    .arrow {
+      width: 10px;
+      margin-left: 8px;
+    }
 
-      &.state-3 {
-        background: url(~@img/coupon/bg-yiguoqi.png) center / cover no-repeat;
-      }
+    span {
+      margin-left: 10px;
+      font-size: 16px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      line-height: 36px;
+      color: #333;
+    }
+  }
+}
 
-      &:nth-child(4n) {
-        margin-right: 0;
-      }
+.list-box {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 
-      .info {
-        font-size: 12px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        line-height: 20px;
-        color: #ffffff;
+  .item {
+    position: relative;
+    background: url(~@img/other/mycoupon-bg.png) center / cover no-repeat;
+    width: 238px;
+    height: 234px;
+    padding: 15px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    color: #fff;
 
-        .title {
-          margin-top: 25px;
+    &.state-2 {
+      background: url(~@img/coupon/bg-yishiyong.png) center / cover no-repeat;
+    }
 
-          .huobi {
-            font-size: 24px;
-            font-family: Microsoft YaHei;
-            font-weight: 400;
-            line-height: 20px;
-            color: #ffffff;
-          }
+    &.state-3 {
+      background: url(~@img/coupon/bg-yiguoqi.png) center / cover no-repeat;
+    }
 
-          .num {
-            font-size: 36px;
-            font-family: Microsoft YaHei;
-            font-weight: bold;
-            line-height: 20px;
-            color: #ffffff;
-          }
-        }
+    &:nth-child(4n) {
+      margin-right: 0;
+    }
 
-        .tiaojian {
-          margin: 20px 0 10px;
-        }
+    .info {
+      font-size: 12px;
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      line-height: 20px;
+      color: #ffffff;
 
-        .shijian {}
-      }
+      .title {
+        margin-top: 25px;
 
-      .action {
-        margin-top: 43px;
-        text-align: center;
-
-        button {
-          width: 122px;
-          height: 34px;
-          border: 1px solid #ff3d00;
-          background: transparent;
-          font-size: 14px;
+        .huobi {
+          font-size: 24px;
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 20px;
-          color: #ff3d00;
-          border-radius: 17px;
+          color: #ffffff;
+        }
 
-          // &:hover {
-          //   background: #ff3d00;
-          //   color: #fff;
-          // }
-
-          &:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-          }
+        .num {
+          font-size: 36px;
+          font-family: Microsoft YaHei;
+          font-weight: bold;
+          line-height: 20px;
+          color: #ffffff;
         }
       }
 
-      .guoqi {
-        position: absolute;
-        bottom: 0;
-        right: 0;
+      .tiaojian {
+        margin: 20px 0 10px;
+      }
 
-        img {
-          width: 60px;
-          vertical-align: middle;
+      .shijian {
+      }
+    }
+
+    .action {
+      margin-top: 43px;
+      text-align: center;
+
+      button {
+        width: 122px;
+        height: 34px;
+        border: 1px solid #ff3d00;
+        background: transparent;
+        font-size: 14px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        line-height: 20px;
+        color: #ff3d00;
+        border-radius: 17px;
+
+        // &:hover {
+        //   background: #ff3d00;
+        //   color: #fff;
+        // }
+
+        &:disabled {
+          opacity: 0.3;
+          cursor: not-allowed;
         }
       }
     }
+
+    .guoqi {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+
+      img {
+        width: 60px;
+        vertical-align: bottom;
+      }
+    }
   }
-
-
+}
 
 .yhq-list {
   .yhq-item-box {
@@ -398,21 +412,21 @@ export default {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #3b64fc;
         }
 
         .num {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #3b64fc;
         }
       }
 
       .tiaojian {
         margin-top: 10px;
         font-size: 12px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #999999;
         line-height: 28px;
@@ -420,7 +434,7 @@ export default {
 
       .shijian {
         font-size: 12px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #999999;
         line-height: 28px;
@@ -432,10 +446,10 @@ export default {
         button {
           width: 127px;
           height: 36px;
-          background: #F74747;
+          background: #3b64fc;
           border-radius: 4px 4px 4px 4px;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #ffffff;
 

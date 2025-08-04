@@ -5,22 +5,28 @@
     <!-- <pageBread /> -->
 
     <div class="page-box">
-      <div class="page-inner w-1200">
-        <div class="p-page-title">
-          人才招聘
-        </div>
-
+      <div class="page-inner w-1400">
+        <div class="p-page-title">人才招聘</div>
 
         <div class="list-box">
           <div class="tabs">
-            <div class="tab-item" v-for="(item, index) in job_cate_list" :key="index"
-              :class="{ active: active_cate.id == item.id }" @click="toggleTab(item)">
+            <div
+              class="tab-item"
+              v-for="(item, index) in job_cate_list"
+              :key="index"
+              :class="{ active: active_cate.id == item.id }"
+              @click="toggleTab(item)"
+            >
               {{ item.title }}
             </div>
           </div>
 
           <div class="job-list">
-            <div class="job-item" v-for="(item, index) in job_list" :key="index">
+            <div
+              class="job-item"
+              v-for="(item, index) in job_list"
+              :key="index"
+            >
               <div class="info-box">
                 <div class="title">{{ item.title }}</div>
                 <div class="desc">
@@ -39,7 +45,10 @@
                 </div>
               </div>
               <div class="btn-box">
-                <button class="btn-ripple" @click="$router.push('/jobdetail?id=' + item.id)">
+                <button
+                  class="btn-ripple"
+                  @click="$router.push('/jobdetail?id=' + item.id)"
+                >
                   申请职位
                 </button>
               </div>
@@ -47,8 +56,14 @@
           </div>
 
           <div class="pagination-box" style="margin-top: 40px">
-            <el-pagination background @current-change="mix_current_change" :current-page.sync="pagination.page"
-              :page-size="pagination.pageNum" layout="total, prev, pager, next" :total="count"></el-pagination>
+            <el-pagination
+              background
+              @current-change="mix_current_change"
+              :current-page.sync="pagination.page"
+              :page-size="pagination.pageNum"
+              layout="total, prev, pager, next"
+              :total="count"
+            ></el-pagination>
           </div>
         </div>
       </div>
@@ -80,20 +95,20 @@ export default {
 
     pageConfig() {
       return {
-        banner: this.bannerMap['关于我们'],
-        title: '关于我们',
-        title_en: 'ABOUT US',
+        banner: this.bannerMap["关于我们"],
+        title: "关于我们",
+        title_en: "ABOUT US",
         list_bread: [
           {
-            title: '关于我们',
-            route: '',
+            title: "关于我们",
+            route: "",
           },
           {
-            title: '人才招聘',
-            route: '',
+            title: "人才招聘",
+            route: "",
           },
         ],
-        nav_list: this.child_about
+        nav_list: [],
       };
     },
   },
@@ -142,16 +157,14 @@ export default {
 
 <style scoped lang="less">
 .page {
-  background: #FFFFFF;
+  background: #ffffff;
   min-height: 50vh;
-
 
   .page-box {
     // background: #f7f7f7;
   }
 
   .page-inner {
-
     margin: 0 auto;
     padding: 80px 0;
 
@@ -186,7 +199,7 @@ export default {
     background: #e5e5e5;
     border-radius: 4px 4px 4px 4px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #333333;
     cursor: pointer;
@@ -204,7 +217,7 @@ export default {
 
 .job-list {
   margin-top: 64px;
-    display: flex;
+  display: flex;
   align-items: center;
   flex-wrap: wrap;
 
@@ -231,7 +244,7 @@ export default {
 
       .title {
         font-size: 24px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #333333;
       }
@@ -241,8 +254,8 @@ export default {
 
         .desc-item {
           margin-bottom: 10px;
-            display: flex;
-  align-items: center;
+          display: flex;
+          align-items: center;
 
           img {
             margin-right: 10px;
@@ -250,7 +263,7 @@ export default {
 
           span {
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #666666;
           }
@@ -264,11 +277,11 @@ export default {
         height: 40px;
         background: #ffffff;
         border-radius: 4px 4px 4px 4px;
-        border: 1px solid #F74747;
+        border: 1px solid #3b64fc;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
-        color: #F74747;
+        color: #3b64fc;
       }
     }
   }

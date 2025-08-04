@@ -5,7 +5,7 @@
         <div class="page-top-banner">
           <img src="@img/banner/news-banner.png" alt="" />
         </div>
-        <div class="page-top-text-wrap w-1200">
+        <div class="page-top-text-wrap w-1400">
           <div class="page-top-text-inner">
             <div class="main-title">品牌馆</div>
             <div class="btn btn-ripple fit-text">大牌专区 质美价优</div>
@@ -96,7 +96,7 @@ export default {
   text-align: left;
 
   .inner {
-    width: 1200px;
+    width: 1400px;
     margin: 0 auto;
     padding-top: 35px;
     padding-bottom: 100px;
@@ -143,7 +143,7 @@ export default {
         padding: 0 24px;
         width: fit-content;
         height: 61px;
-        background: #F74747;
+        background: #3B64FC;
         border-radius: 0px 0px 0px 0px;
 
         font-family: Microsoft YaHei, Microsoft YaHei;

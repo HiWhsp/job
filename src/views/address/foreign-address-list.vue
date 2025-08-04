@@ -12,7 +12,11 @@
     <div class="page-ctx">
       <div class="center">
         <div class="wrap-address">
-          <div class="address-item" v-for="(item, index) in list_address" :key="index">
+          <div
+            class="address-item"
+            v-for="(item, index) in list_address"
+            :key="index"
+          >
             <div class="top">
               <div>
                 <span>收货人：</span>
@@ -20,7 +24,7 @@
               </div>
               <div>
                 <span>所在地区：</span>
-                {{ item.full_addr }} 
+                {{ item.full_addr }}
               </div>
               <div>
                 <span>详细地址：</span>
@@ -36,15 +40,25 @@
                 <span v-if="item.moren == 1" class="moren">默认地址</span>
               </div>
               <div class="right">
-                <span class="action" v-if="item.moren != 1" @click="do_address_set_default(item.id)">设为默认</span>
+                <span
+                  class="action"
+                  v-if="item.moren != 1"
+                  @click="do_address_set_default(item.id)"
+                  >设为默认</span
+                >
                 <span class="action" @click="do_address_edit(item)">编辑</span>
-                <span class="action" @click="do_address_delete(item.id)">删除</span>
+                <span class="action" @click="do_address_delete(item.id)"
+                  >删除</span
+                >
               </div>
             </div>
           </div>
         </div>
 
-        <el-empty v-if="!list_address.length" description="尚未添加地址"></el-empty>
+        <el-empty
+          v-if="!list_address.length"
+          description="尚未添加地址"
+        ></el-empty>
       </div>
     </div>
 
@@ -71,7 +85,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar"]),
+    ...mapState([""]),
   },
   created() {
     this.setView();
@@ -79,18 +93,20 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'userAddress_lists',
+          action: "userAddress_lists",
           ...this.pagination,
         },
-      }).then(res => {
+      }).then((res) => {
         if (res.code == 200) {
-          let data = res.data
+          let data = res.data;
 
           data.forEach((v) => {
-            v.full_addr = [v.country, v.province, v.city, v.area].filter(v => !!v).join('-');
+            v.full_addr = [v.country, v.province, v.city, v.area]
+              .filter((v) => !!v)
+              .join("-");
             // v.selected =  v.if_default
           });
 
@@ -104,8 +120,7 @@ export default {
             val: obj,
           });
         }
-      })
-
+      });
     },
     do_address_add() {
       this.$refs.address_modal.init();
@@ -115,10 +130,10 @@ export default {
     },
     do_address_delete(id) {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'userAddress_delete',
+          action: "userAddress_delete",
           id: id,
         },
       }).then((res) => {
@@ -130,10 +145,10 @@ export default {
     //设置默认地址
     do_address_set_default(id) {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'userAddress_setDefault',
+          action: "userAddress_setDefault",
           id: id,
         },
       }).then((res) => {
@@ -152,9 +167,9 @@ export default {
   padding-bottom: 80px;
 
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -166,15 +181,15 @@ export default {
     color: #333333;
 
     button {
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #3b64fc;
       color: #fff;
       background: #fff;
-      color: #F74747;
+      color: #3b64fc;
       font-size: 14px;
       // font-weight: bold;
 
@@ -212,7 +227,7 @@ export default {
     .top {
       padding-bottom: 20px;
 
-      >div {
+      > div {
         margin-bottom: 10px;
         color: #333333;
 
@@ -222,7 +237,7 @@ export default {
 
         span {
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #666666;
         }
@@ -230,9 +245,9 @@ export default {
     }
 
     .bottom {
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       border-top: 1px solid #eeeeee;
       padding-top: 20px;
 
@@ -244,7 +259,7 @@ export default {
           line-height: 30px;
           text-align: center;
           // background: rgba(255, 90, 0, 0.68);
-          background: #F74747;
+          background: #3b64fc;
           font-size: 14px;
           color: #ffffff;
         }
@@ -255,7 +270,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 20px;
-        color: #F74747;
+        color: #3b64fc;
 
         .action {
           margin-left: 20px;

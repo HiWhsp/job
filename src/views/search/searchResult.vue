@@ -183,7 +183,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["list_channel", "list_brand", "store_keyword"]),
+    ...mapState(["",]),
 
     //当前分类
     curr_channel() {
@@ -226,10 +226,6 @@ export default {
     },
     filter_item(val, val_prev) {
       this.query_list();
-    },
-    store_keyword(val, prev) {
-      this.keyword = val.keyword;
-      this.setView();
     },
   },
 
@@ -362,10 +358,10 @@ export default {
   align-items: center;
     height: 40px;
     line-height: 40px;
-    border: 2px solid #F74747;
+    border: 2px solid #3b64fc;
 
     .btn-search {
-      background: #F74747;
+      background: #3b64fc;
       width: 120px;
       height: 100%;
       color: #fff;
@@ -484,11 +480,11 @@ export default {
         border: 1px solid transparent;
 
         &:hover {
-          color: #F74747;
+          color: #3b64fc;
         }
 
         &.active {
-          color: #F74747;
+          color: #3b64fc;
           border: 1px solid #ff9312;
 
           background: url(~@img/other/fenlei-checked.png) no-repeat right bottom;
@@ -544,11 +540,11 @@ export default {
           span {
             cursor: pointer;
             &:hover {
-              color: #F74747;
+              color: #3b64fc;
             }
 
             &.active {
-              color: #F74747;
+              color: #3b64fc;
             }
           }
         }
@@ -634,7 +630,7 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: bold;
           line-height: 16px;
-          color: #F74747;
+          color: #3b64fc;
         }
       }
     }

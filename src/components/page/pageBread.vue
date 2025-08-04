@@ -1,8 +1,8 @@
 <template>
     <div class="bread-box">
-      <div class="bread-inner w-1200">
+      <div class="bread-inner w-1400">
         <router-link to="/">
-          <img src="@/static/common/home.png" alt="" />
+          <img src="@img/common/home.png" alt="" />
           首页</router-link
         >
   

@@ -85,7 +85,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   watch: {
     selectTab() {
@@ -225,7 +225,9 @@ export default {
 
       .duihuan-info {
         margin-top: 10px;
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
 
         .jifen {
           font-size: 14px;

@@ -144,7 +144,11 @@
 
         <div class="info-good">
           <div class="list-good">
-            <div class="item" v-for="(item, index) in order.products" :key="index">
+            <div
+              class="item"
+              v-for="(item, index) in order.products"
+              :key="index"
+            >
               <div class="item-good">
                 <div class="img-box cover">
                   <img :src="item.image" alt />
@@ -158,9 +162,11 @@
                 </div>
                 <div class="price">
                   <template v-if="item.id == 9 || item.id == 10">
-                    {{vuex_huobi}} {{ item.num }}
+                    {{ vuex_huobi }} {{ item.num }}
                   </template>
-                  <template v-else> {{vuex_huobi}} {{ item.priceSale }} </template>
+                  <template v-else>
+                    {{ vuex_huobi }} {{ item.priceSale }}
+                  </template>
                 </div>
               </div>
             </div>
@@ -170,18 +176,30 @@
         <!-- 订单流程 -->
         <div class="order-liucheng-box" v-if="false">
           <div class="state-box">
-            <div class="state-item" v-for="(item, index) in list_step" :key="index">
+            <div
+              class="state-item"
+              v-for="(item, index) in list_step"
+              :key="index"
+            >
               <div class="img-box">
                 <img :src="item.is_active ? item.icon2 : item.icon" alt="" />
               </div>
               <div class="line-box" v-if="index != list_step.length - 1">
-                <img v-if="item.is_active" src="@img/order/line-active.png" alt="" />
+                <img
+                  v-if="item.is_active"
+                  src="@img/order/line-active.png"
+                  alt=""
+                />
                 <img v-else src="@img/order/line.png" alt="" />
               </div>
             </div>
           </div>
           <div class="text-box">
-            <div class="text-item" v-for="(item, index) in list_step" :key="index">
+            <div
+              class="text-item"
+              v-for="(item, index) in list_step"
+              :key="index"
+            >
               <div class="text">{{ item.title }}</div>
               <!-- <div class="hidden" v-if="index != 7"></div> -->
             </div>
@@ -240,7 +258,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar"]),
+    ...mapState([""]),
 
     //订单流程
     list_step() {
@@ -359,15 +377,13 @@ export default {
       this.$api("orders_detail", {
         id: this.order_id,
       }).then((res) => {
-        let { code, data, msg} = res;
+        let { code, data, msg } = res;
         if (code == 200) {
           data.actions = this.getOrderActionsByStatus({
             ...data,
           });
 
-          data.products.forEach((v) => {
-            v.allow_actions = this.mix_getOrderProductsAllowActions(data, v);
-          });
+          data.products.forEach((v) => {});
 
           //积分商品
           if (data.if_jifen) {
@@ -433,9 +449,9 @@ export default {
 .page {
   padding-bottom: 80px;
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -450,7 +466,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #3b64fc;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -512,8 +528,8 @@ export default {
 
 .section-danhao {
   .section-title {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     padding-left: 24px;
     text-align: left;
     height: 44px;
@@ -534,8 +550,8 @@ export default {
 
 .section-goods {
   .section-title {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     padding-left: 24px;
     text-align: left;
     height: 44px;
@@ -620,8 +636,8 @@ export default {
       .item-good {
         padding: 20px;
         border-bottom: 1px dashed #ccc;
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
 
         &:last-child {
           border: none;
@@ -669,8 +685,8 @@ export default {
       }
 
       .goods-action {
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
         justify-content: flex-end;
         padding: 10px;
         .btn-goods-action {
@@ -679,7 +695,7 @@ export default {
           margin-left: 10px;
           min-width: 96px;
           height: 30px;
-          background: #F74747;
+          background: #3b64fc;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;
@@ -719,9 +735,9 @@ export default {
   }
 
   .section-other {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 20px 25px;
 
     .item {
@@ -778,8 +794,8 @@ export default {
 
   .other {
     //   display: flex;
-  align-items: center;
-  justify-content: space-between;
+    align-items: center;
+    justify-content: space-between;
     display: flex;
     padding: 20px 25px;
 
@@ -789,7 +805,7 @@ export default {
       flex: 1;
       .item-title {
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #999999;
         margin-bottom: 10px;
