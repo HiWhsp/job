@@ -141,7 +141,7 @@
                       </div>
                       <div class="tip-box">
                         <template v-if="!vuex_is_login"
-                          >Hi，欢迎来到氿州工品</template
+                          >Hi，欢迎来到莉东实业</template
                         >
                         <template v-else>Hi，{{ vuex_user.nickname }}</template>
                       </div>
@@ -151,11 +151,11 @@
                         </div>
                       </div>
                       <div class="reg-box flex-between" v-if="!vuex_is_login">
-                        <div class="btn btn-ripple" @click="toRegister(2)">
+                        <!-- <div class="btn btn-ripple" @click="toRegister(2)">
                           企业注册
-                        </div>
+                        </div> -->
                         <div class="btn btn-ripple" @click="toRegister(1)">
-                          个人注册
+                          会员注册
                         </div>
                       </div>
                       <!-- <div class="operate-box">
@@ -165,7 +165,7 @@
                       </div> -->
                     </div>
 
-                    <div class="tequan-list flex" v-if="vuex_is_login">
+                    <div class="tequan-list flex" >
                       <div
                         class="tequan-item"
                         v-for="(item, index) in nav_list"
@@ -184,7 +184,7 @@
 
                     <div class="news-box">
                       <div class="main-title flex-between">
-                        <div class="text">氿洲公告</div>
+                        <div class="text">莉东公告</div>
                         <router-link to="/news">更多 ></router-link>
                       </div>
                       <div class="news-list">
@@ -499,9 +499,7 @@
                           </div>
                         </div>
                         <div class="price">
-                          <div class="pirce-num">
-                            ￥{{ item.priceSale }}
-                          </div>
+                          <div class="pirce-num">￥{{ item.priceSale }}</div>
                           <div class="chengjiao" v-if="item.unit">
                             {{ item.unit }}
                           </div>
@@ -554,9 +552,7 @@
                       </div>
                     </div>
                     <div class="price flex">
-                      <div class="pirce-num">
-                        ￥ {{ item.priceSale }}
-                      </div>
+                      <div class="pirce-num">￥ {{ item.priceSale }}</div>
                       <div class="unit">/{{ item.unit || "把" }}</div>
                     </div>
                   </div>
@@ -590,19 +586,19 @@ export default {
         {
           title: "会员中心",
           icon: require("@img/index/nav1.png"),
-          icon1: require("@img/index/nav1-1.png"),
+          icon1: require("@img/index/nav1.png"),
           route: "/my-info",
         },
         {
           title: "订单查询",
           icon: require("@img/index/nav2.png"),
-          icon1: require("@img/index/nav2-1.png"),
+          icon1: require("@img/index/nav2.png"),
           route: "/order-list",
         },
         {
-          title: "批量下单",
+          title: "我的询价",
           icon: require("@img/index/nav3.png"),
-          icon1: require("@img/index/nav3-1.png"),
+          icon1: require("@img/index/nav3.png"),
           route: "/batch-xiadan",
         },
       ],
@@ -964,6 +960,19 @@ export default {
     height: 546px;
     cursor: pointer;
   }
+
+  /deep/ .el-carousel__button {
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    opacity: 0.58;
+  }
+  /deep/ .el-carousel__indicator.is-active button {
+    width: 40px;
+    background: #F74747;
+    border-radius: 6px;
+  }
 }
 
 .lunbo-cont {
@@ -1018,7 +1027,7 @@ export default {
 
         &:hover {
           .v1-title {
-            color: #3B64FC;
+            color: #3b64fc;
           }
         }
         .v1-icon-box {
@@ -1059,7 +1068,7 @@ export default {
           cursor: pointer;
 
           &:hover {
-            color: #3B64FC;
+            color: #3b64fc;
           }
         }
       }
@@ -1112,7 +1121,7 @@ export default {
           color: #333333;
 
           &:hover {
-            color: #3B64FC;
+            color: #3b64fc;
           }
         }
       }
@@ -1129,7 +1138,7 @@ export default {
             font-size: 13px;
             color: #545454;
             &:hover {
-              color: #3B64FC;
+              color: #3b64fc;
             }
           }
         }
@@ -1215,7 +1224,7 @@ export default {
         .btn {
           height: 34px;
           line-height: 34px;
-          background: #3B64FC;
+          background: #E5222B;
           border-radius: 2px 2px 2px 2px;
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
@@ -1228,9 +1237,9 @@ export default {
         margin-top: 14px;
 
         .btn {
-          width: 120px;
-          height: 34px;
-          line-height: 34px;
+          width: 100%;
+          height: 38px;
+          line-height: 38px;
           background: #ffffff;
           border-radius: 2px 2px 2px 2px;
           border: 1px solid #c9cdd4;
@@ -1269,7 +1278,7 @@ export default {
     }
 
     .news-box {
-      border-top: 1px dashed #999;
+      border-top: 1px solid #E0E0E0;
       margin: 10px;
       padding: 10px 5px;
       text-align: left;
@@ -1345,8 +1354,8 @@ export default {
         }
         .img-box {
           img {
-            width: 34px;
-            height: 34px;
+            width: 46px;
+            height: 46px;
             &.icon1 {
               display: none;
             }
@@ -1355,8 +1364,8 @@ export default {
 
         .tequan-title {
           margin-top: 10px;
-          font-size: 12px;
-          color: #666666;
+          font-size: 14px;
+          color: #333333;
         }
       }
     }
@@ -1406,7 +1415,7 @@ export default {
       align-items: center;
       width: 200px;
       height: 50px;
-      background: #3B64FC;
+      background: #3b64fc;
       border-radius: 0px 0px 0px 0px;
 
       font-family: OPPOSans, OPPOSans;
@@ -1651,6 +1660,8 @@ export default {
 
 .hot-sec {
   background-image: url("~@img/index/jingpin-bg.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   height: 356px;
   padding: 6px;
 
@@ -1780,7 +1791,7 @@ export default {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: bold;
         font-size: 24px;
-        color: #3B64FC;
+        color: #3b64fc;
       }
       .title-2 {
         font-family: Microsoft YaHei, Microsoft YaHei;
@@ -1814,7 +1825,7 @@ export default {
 
       .tag-lunbo {
         height: 132px;
-        background: linear-gradient(180deg, #8DA5FF 0%, #ffffff 100%);
+        background: linear-gradient(180deg, #8da5ff 0%, #ffffff 100%);
         border-radius: 4px 4px 4px 4px;
 
         .product-lunbo {
@@ -2000,7 +2011,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: bold;
           font-size: 18px;
-          color: #3B64FC;
+          color: #3b64fc;
         }
 
         &:not(:first-child) {

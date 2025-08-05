@@ -42,7 +42,7 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="name" label="氿洲商品编码" width="180">
+              <el-table-column prop="name" label="莉东商品编码" width="180">
                 <template slot-scope="scope">
                   <div class="input-box">
                     <el-input v-model="scope.row.productNo"></el-input>

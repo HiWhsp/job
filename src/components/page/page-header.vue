@@ -6,14 +6,14 @@
           <div class="base-box w-1400 flex-between">
             <!-- 没登录 -->
             <div class="base-left flex" v-if="!vuex_is_login">
-              <div class="web-title">欢迎访问氿洲工品</div>
+              <div class="web-title">欢迎访问莉东实业</div>
               <router-link class="login" to="/login">请登录</router-link>
               <router-link class="register" to="/register"
                 >免费注册</router-link
               >
             </div>
             <div class="base-left flex" v-if="vuex_is_login">
-              <div class="web-title">欢迎访问氿洲工品</div>
+              <div class="web-title">欢迎访问莉东实业</div>
               <span>
                 <b class="user-index" @click="$router.push('/userIndex')">{{
                   vuex_user.name
@@ -58,7 +58,7 @@
                     class="u-act u-my flex"
                     to="/order-list"
                   >
-                    <span class="logout"> 我的氿洲工品 </span>
+                    <span class="logout"> 我的莉东实业 </span>
                     <i class="el-icon-caret-bottom"></i>
                   </router-link>
 
@@ -136,12 +136,12 @@
                 </div>
               </router-link>
 
-              <router-link to="/batch-xiadan" class="link">
+              <!-- <router-link to="/batch-xiadan" class="link">
                 <div class="btn-box">
                   <img src="@img/head/xiadan.png" alt="" />
                   <span class="text">批量下单</span>
                 </div>
-              </router-link>
+              </router-link> -->
             </div>
           </div>
         </div>
@@ -445,15 +445,15 @@ export default {
 
 <style scoped lang="less">
 .head-sec {
-  background: #0c0a0a;
-  background-image: url("~@img/head/head-bg.png");
+  // background: #0c0a0a;
+  // background-image: url("~@img/head/head-bg.png");
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 .head-base {
   .base-inner {
     .base-box {
-      border-bottom: 1px solid #5589ff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       height: 40px;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
@@ -513,6 +513,9 @@ export default {
         }
 
         .u-act {
+          span {
+            color: #E5222B;
+          }
         }
         .u-my {
           height: 36px;
@@ -556,7 +559,7 @@ export default {
       justify-content: flex-start;
 
       img {
-        height: 80px;
+        height: 66px;
         cursor: pointer;
       }
 
@@ -576,7 +579,7 @@ export default {
       margin-left: 200px;
 
       .input-box {
-        border: 1px solid #5589ff;
+        border: 2px solid #E5222B;
         display: flex;
         align-items: center;
         width: 669px;
@@ -602,7 +605,7 @@ export default {
         button {
           width: 113px;
           height: 50px;
-          background: #5589ff;
+          background: #E5222B;
           // border: 2px solid #333;
           border: none;
           outline: none;
@@ -664,7 +667,6 @@ export default {
 
     .btns {
       height: 80px;
-      margin-left: 40px;
       padding-bottom: 30px;
 
       .link {
@@ -690,8 +692,8 @@ export default {
         }
 
         &.bg {
-          border: 1px solid #5589ff;
-          background: #5589ff;
+          border: 1px solid #E5222B;
+          background: #E5222B;
           width: 150px;
           height: 50px;
 
@@ -723,6 +725,7 @@ export default {
           height: 18px;
           background: #ffffff;
           border-radius: 9px 9px 9px 9px;
+          color: #E5222B;
         }
       }
     }
@@ -736,7 +739,7 @@ export default {
 //
 
 .head-nav {
-  background: #202020;
+  // background: #202020;
 }
 
 .page-head {
@@ -749,7 +752,9 @@ export default {
   padding: 0;
   // border-bottom: 4px solid #009a44;
   // box-shadow: 0px 3px 10px 1px rgba(0, 0, 0, 0.16);
-  background: #fff;
+  background-image: url("~@img/head/head-bg.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 
 .header-inner {

@@ -4,45 +4,45 @@
       <div class="nav-ctx">
         <!-- 全部分类下拉 -->
         <el-popover
-            popper-class="w-nav-popover"
-            placement="bottom-start"
-            title=""
-            width="150"
-            trigger="hover"
-            content="">
+          popper-class="w-nav-popover"
+          placement="bottom-start"
+          title=""
+          width="150"
+          trigger="hover"
+          content=""
+        >
           <router-link
-              slot="reference"
-              class="u-act u-my flex"
-              to="/product-cates"
+            slot="reference"
+            class="u-act u-my flex"
+            to="/product-cates"
           >
             <div
-                class="all-box"
-                @mouseover="on_mouseover"
-                @mouseleave="on_mouseleave"
+              class="all-box"
+              @mouseover="on_mouseover"
+              @mouseleave="on_mouseleave"
             >
               <img src="@img/common/fenlei.png" class="all-icon" />
               <span class="all-title">全部商品分类</span>
-<!--              <div class="side-nav">-->
-<!--                &lt;!&ndash; <asideChannelNav /> &ndash;&gt;-->
-<!--                &lt;!&ndash; <asideChannelNav2 v-if="config.asideClassifyType == 2" />-->
-<!--                    <asideChannelNav3 v-if="config.asideClassifyType == 3" />-->
-<!--                    <asideChannelNav4 v-if="config.asideClassifyType == 4" /> &ndash;&gt;-->
-<!--              </div>-->
+              <!--              <div class="side-nav">-->
+              <!--                &lt;!&ndash; <asideChannelNav /> &ndash;&gt;-->
+              <!--                &lt;!&ndash; <asideChannelNav2 v-if="config.asideClassifyType == 2" />-->
+              <!--                    <asideChannelNav3 v-if="config.asideClassifyType == 3" />-->
+              <!--                    <asideChannelNav4 v-if="config.asideClassifyType == 4" /> &ndash;&gt;-->
+              <!--              </div>-->
             </div>
           </router-link>
           <div class="pop-child">
             <div
-                class="child-item"
-                v-for="(sub, index) in cates"
-                :key="index"
-                @click="navtoRoute(sub)"
-                style="cursor: pointer"
+              class="child-item"
+              v-for="(sub, index) in cates"
+              :key="index"
+              @click="navtoRoute(sub)"
+              style="cursor: pointer"
             >
               {{ sub.title }}
             </div>
           </div>
         </el-popover>
-
 
         <div class="nav-box">
           <div class="nav-item" v-for="(item, index) in nav_list" :key="index">
@@ -55,8 +55,8 @@
     </div>
   </div>
 </template>
-  
-  <script>
+
+<script>
 import { mapState } from "vuex";
 
 export default {
@@ -67,7 +67,7 @@ export default {
     return {
       show_fenlei: false,
       activeNavIndex: 0,
-      cates: []
+      cates: [],
     };
   },
   computed: {
@@ -82,7 +82,7 @@ export default {
         { title: "首页", route: "/" },
         { title: "协议专区", route: "/product-xieyi" },
         { title: "批量询价", route: "/batch-xunjia" },
-        { title: "氿洲甄选", route: "/product-zhenxuan" },
+        { title: "莉东甄选", route: "/product-zhenxuan" },
         { title: "场景专区", route: "/scene" },
         { title: "品牌馆", route: "/product-brand" },
         { title: "内容资讯", route: route_news },
@@ -115,21 +115,21 @@ export default {
         window.open(item.route, "_blank");
       }
     },
-  getCate(){
-    this.$api({
-      url: '/service.php',
-      method: 'get',
-      data: {
-        action: 'product_channel'
-      }
-    }).then(res => {
-      if (res.code == 200){
-        this.cates = res.data
-      }
-    })
-  },
+    getCate() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_channel",
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.cates = res.data;
+        }
+      });
+    },
     navtoRoute(item) {
-      this.$router.push(`/product-cates?ids=${item.id}`)
+      this.$router.push(`/product-cates?ids=${item.id}`);
     },
     on_mouseover() {
       //this.show_fenlei = true;
@@ -147,12 +147,12 @@ export default {
   },
 };
 </script>
-  
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
-  <style scoped lang="less">
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="less">
 .nav-wrap {
   height: 48px;
-  background: #202020;
+  background: transparent;
   width: 100%;
   // border-bottom: 1px solid #eee;
 
@@ -234,31 +234,31 @@ export default {
             color: #ffffff;
 
             &.active {
-              color: #3B64FC;
+              color: #FF5058;
               font-weight: bold;
             }
 
             &.router-link-exact-active {
-              color: #3B64FC;
+              color: #FF5058;
               font-weight: bold;
 
-              &::after {
-                content: "";
-                position: absolute;
-                bottom: 2px;
-                left: 50%;
-                transform: translate(-50%);
+              // &::after {
+              //   content: "";
+              //   position: absolute;
+              //   bottom: 2px;
+              //   left: 50%;
+              //   transform: translate(-50%);
 
-                width: 57px;
-                height: 3px;
-                background: #3B64FC;
-                border-radius: 10px 10px 10px 10px;
-              }
+              //   width: 57px;
+              //   height: 3px;
+              //   background: #3b64fc;
+              //   border-radius: 10px 10px 10px 10px;
+              // }
             }
           }
 
           .text:hover {
-            color: #3B64FC;
+            color: #FF5058;
             font-weight: bold;
           }
         }
@@ -267,4 +267,3 @@ export default {
   }
 }
 </style>
-  

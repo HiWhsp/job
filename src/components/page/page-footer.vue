@@ -42,24 +42,26 @@
               <!-- <div v-else>{{ sub.title }}</div> -->
             </div>
           </div>
+          <div class="link-group">
+            <div class="group-title">联系我们</div>
+            <div class="link-item">
+              <img src="@img/foot/link1.png" alt="" />
+              <a href="tel:13800138000">+1 562-907-8080</a>
+            </div>
+            <div class="link-item">
+              <img src="@img/foot/link2.png" alt="" />
+              <a href="tel:13800138000">sales@hotmail.com</a>
+            </div>
+            <div class="link-item">
+              <img src="@img/foot/link3.png" alt="" />
+              <a href="tel:13800138000">上海市嘉定区沪宜公路5358号4层JT2494室</a>
+            </div>
+          </div>
         </div>
 
         <!-- 网站信息 -->
         <div class="logo-wrap link-info">
-          <div class="top-info v-flex-start">
-            <div class="info-box">
-              <div class="title">
-                <img src="@img/foot/foot-logo.png" alt="" />
-              </div>
-
-              <div class="time">工作时间：周一到周五8:30-17:30</div>
-              <div class="phone">
-                <img src="@img/foot/foot-mobile.png" alt="" />
-                <span>
-                  {{ vuex_config.comPhone }}
-                </span>
-              </div>
-            </div>
+          <div class="top-info">
 
             <div class="icon-box">
               <img :src="vuex_config.zhishang_back" alt="" />
@@ -70,17 +72,13 @@
       </div>
 
       <div class="beian-box">
-        <div class="beian" v-html="vuex_config.comBeian">
-          <a href="https://beian.miit.gov.cn/">{{ vuex_config.comBeian }} </a>
-        </div>
+        <div class="beian" v-html="vuex_config.comBeian"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {
   name: "web-footer",
   components: {},
@@ -151,8 +149,7 @@ export default {
 .page-footer {
   padding-top: 40px;
   // background: url("~@img/footer-bg.jpg") no-repeat center / cover;
-  background: #044fa0;
-  background: #202020;
+  background: #0c2b5d;
   color: #fff;
   overflow: hidden;
 }
@@ -160,13 +157,12 @@ export default {
 .footer-tip {
   width: 100%;
   padding: 40px 0;
-  background: #044fa0;
-  background: #202020;
+  background: #0c2b5d;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid #666;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
   .footer-icons {
     display: flex;
@@ -268,15 +264,23 @@ export default {
         font-weight: 400;
         color: #ffffff;
         line-height: 32px;
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 20px;
+          height: 20px;
+          margin-right: 10px;
+        }
 
         a {
           font-weight: normal;
           font-size: 14px;
-          color: #9f9f9f;
+          color: #fff;
           line-height: 32px;
 
           &:hover {
-            color: #3B64FC;
+            color: #f74747;
           }
         }
       }
@@ -311,6 +315,10 @@ export default {
       img {
         width: 144px;
         height: 144px;
+      }
+      .icon-title {
+        margin-top: 5px;
+        text-align: center;
       }
     }
 
@@ -443,9 +451,9 @@ export default {
 
 .beian-box {
   text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.4);
-  height: 60px;
-  line-height: 60px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  height: 80px;
+  line-height: 80px;
   padding: 0;
 
   .beian {

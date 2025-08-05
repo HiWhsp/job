@@ -323,7 +323,7 @@ const routes = [
     name: "product-zhenxuan",
     component: product_zhenxuan,
     meta: {
-      title: "氿州甄选",
+      title: "莉东甄选",
     },
   },
   {
