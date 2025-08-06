@@ -226,8 +226,8 @@ export default {
 }
 
 .btn-confirm:not(:disabled) {
-  background: #3b64fc;
-  border-color: #3b64fc;
+  background: #F74747;
+  border-color: #F74747;
   color: #fff;
 }
 

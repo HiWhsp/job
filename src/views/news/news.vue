@@ -215,7 +215,7 @@ export default {
 
         &:hover {
           .title-text {
-            color: #3B64FC !important;
+            color: #F74747 !important;
           }
         }
 

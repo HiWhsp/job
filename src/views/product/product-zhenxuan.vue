@@ -429,7 +429,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: bold;
           font-size: 18px;
-          color: #3b64fc;
+          color: #F74747;
         }
 
         &:not(:first-child) {

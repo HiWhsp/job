@@ -128,7 +128,7 @@ export default {
       border: 1px solid transparent;
 
       &.active {
-        border: 1px solid #3b64fc;
+        border: 1px solid #F74747;
       }
       img {
         width: 100%;

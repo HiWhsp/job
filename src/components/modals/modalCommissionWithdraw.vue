@@ -143,7 +143,7 @@ export default {
   }
   .queding {
     width: 270px;
-    background: #3b64fc;
+    background: #F74747;
     border-radius: 3px;
 
     font-size: 16px;

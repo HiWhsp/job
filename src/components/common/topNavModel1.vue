@@ -202,18 +202,18 @@ export default {
             color: #fff;
 
             &.active {
-              color: #3b64fc;
+              color: #F74747;
               font-weight: bold;
             }
 
             &.router-link-exact-active {
-              color: #3b64fc;
+              color: #F74747;
               font-weight: bold;
             }
           }
 
           .text:hover {
-            color: #3b64fc;
+            color: #F74747;
             font-weight: bold;
           }
         }

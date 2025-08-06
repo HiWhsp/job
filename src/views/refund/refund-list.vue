@@ -400,14 +400,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #3B64FC;
+        color: #F74747;
       }
 
       &.active {
-        // background: #3b64fc;
+        // background: #F74747;
         // color: #fff;
         font-weight: bold;
-        color: #3B64FC;
+        color: #F74747;
 
         &::after {
           content: "";
@@ -416,7 +416,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #3B64FC;
+          background: #F74747;
         }
       }
     }
@@ -600,8 +600,8 @@ export default {
       .btn {
         min-width: 96px;
         height: 30px;
-        background: #3B64FC;
-        border: 1px solid #3B64FC;
+        background: #F74747;
+        border: 1px solid #F74747;
         font-size: 14px;
         color: #fff;
         transition: 0.3s;
@@ -630,7 +630,7 @@ export default {
       .refund-type {
         min-width: 80px;
         text-align: left;
-        color: #3B64FC;
+        color: #F74747;
       }
 
       .date {
@@ -667,8 +667,8 @@ export default {
         color: #999999;
 
         &.state2 {
-          color: #3B64FC;
-          border-color: #3B64FC;
+          color: #F74747;
+          border-color: #F74747;
         }
       }
     }
@@ -773,8 +773,8 @@ export default {
       .btn {
         min-width: 96px;
         height: 30px;
-        background: #3B64FC;
-        border: 1px solid #3B64FC;
+        background: #F74747;
+        border: 1px solid #F74747;
         font-size: 14px;
         color: #fff;
         transition: 0.3s;

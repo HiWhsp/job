@@ -272,7 +272,7 @@ export default {
       color: #666666;
 
       &.checked {
-        color: #3B64FC;
+        color: #F74747;
       }
 
 
@@ -390,12 +390,12 @@ export default {
           height: 32px;
           background: #FFFFFF;
           border-radius: 6px;
-          border: 1px solid #3B64FC;
+          border: 1px solid #F74747;
 
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
           font-size: 14px;
-          color: #3B64FC;
+          color: #F74747;
         }
       }
     }

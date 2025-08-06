@@ -725,7 +725,7 @@ export default {
         color: #888;
         font-size: 12px;
         &:hover {
-          color: #3b64fc;
+          color: #F74747;
         }
       }
     }

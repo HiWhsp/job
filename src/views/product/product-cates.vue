@@ -62,7 +62,7 @@
             推荐您可能喜欢的商品
           </p>
           <div class="goods-list">
-            <div class="good" v-for="(good) in recomm_list" @click="toDetail(good)">
+            <div class="good" v-for="(good) in recomm_list" @click="toDetail(good)" :key="good.id">
               <img class="good_pic" :src="good.thumb" alt="">
               <div class="good_info">
                 <p>{{ good.title }}</p>
@@ -636,7 +636,7 @@ export default {
       color: #aeaeae;
     }
     .search-keyword{
-      color: #3B64FC;
+      color: #F74747;
     }
   }
 }
@@ -701,7 +701,7 @@ export default {
       cursor: pointer;
 
       &.active {
-        color: #3B64FC;
+        color: #F74747;
       }
     }
   }
@@ -717,24 +717,24 @@ export default {
       min-width: 30px;
       margin-right: 20px;
       border-radius: 15px 15px 15px 15px;
-      background: #eef1fc;
-      border: 1px solid #3B64FC;
+      background: #FCEEEE;
+      border: 1px solid #F74747;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 13px;
-      color: #3B64FC;
+      color: #F74747;
       padding: 0 14px;
       padding-right: 0;
 
       &.active {
-        color: #3B64FC;
+        color: #F74747;
       }
 
       .check-title {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 13px;
-        color: #3B64FC;
+        color: #F74747;
       }
       .remove-box {
         cursor: pointer;
@@ -776,7 +776,7 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 14px;
-      color: #3B64FC;
+      color: #666;
 
       img {
         margin-left: 6px;
@@ -819,7 +819,7 @@ export default {
 
       &.active {
         .text {
-          color: #3B64FC;
+          color: #F74747;
         }
       }
 
@@ -839,7 +839,7 @@ export default {
           border-bottom-color: #aaa;
 
           &.active {
-            border-bottom-color: #3B64FC;
+            border-bottom-color: #F74747;
           }
         }
 
@@ -850,7 +850,7 @@ export default {
           border-top-color: #aaa;
 
           &.active {
-            border-top-color: #3B64FC;
+            border-top-color: #F74747;
           }
         }
       }
@@ -884,6 +884,7 @@ export default {
       }
 
       .btn {
+        margin-left: 10px;
       }
     }
   }
@@ -963,7 +964,7 @@ export default {
 
     &:hover {
       .title {
-        color: #3B64FC !important;
+        color: #F74747 !important;
       }
     }
 
@@ -1074,7 +1075,7 @@ export default {
 
   .refresh {
     font-size: 16px;
-    color: #3B64FC;
+    color: #F74747;
     margin-top: 14px;
     cursor: pointer;
     text-decoration: underline;
@@ -1107,7 +1108,7 @@ export default {
       align-items: center;
 
       p {
-        color: #3B64FC;
+        color: #F74747;
       }
 
       .suggest-protect {
@@ -1188,7 +1189,7 @@ export default {
       left: 0;
       width: 9px;
       height: 100%;
-      background: #3B64FC;
+      background: #F74747;
       content: '';
     }
   }

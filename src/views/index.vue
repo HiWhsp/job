@@ -915,12 +915,12 @@ export default {
 <style lang="less">
 .el-select-dropdown__item.hover,
 .el-select-dropdown__item:hover {
-  background: #3b64fc;
+  background: #F74747;
   color: #fff !important;
 }
 
 .el-select-dropdown__item.selected {
-  color: #3b64fc;
+  color: #F74747;
 }
 </style>
 
@@ -1027,7 +1027,7 @@ export default {
 
         &:hover {
           .v1-title {
-            color: #3b64fc;
+            color: #F74747;
           }
         }
         .v1-icon-box {
@@ -1068,7 +1068,7 @@ export default {
           cursor: pointer;
 
           &:hover {
-            color: #3b64fc;
+            color: #F74747;
           }
         }
       }
@@ -1121,7 +1121,7 @@ export default {
           color: #333333;
 
           &:hover {
-            color: #3b64fc;
+            color: #F74747;
           }
         }
       }
@@ -1138,7 +1138,7 @@ export default {
             font-size: 13px;
             color: #545454;
             &:hover {
-              color: #3b64fc;
+              color: #F74747;
             }
           }
         }
@@ -1156,7 +1156,7 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: bold;
       font-size: 18px;
-      color: #3b64fc;
+      color: #F74747;
       img {
         margin-right: 4px;
         width: 18.44px;
@@ -1415,7 +1415,7 @@ export default {
       align-items: center;
       width: 200px;
       height: 50px;
-      background: #3b64fc;
+      background: #F74747;
       border-radius: 0px 0px 0px 0px;
 
       font-family: OPPOSans, OPPOSans;
@@ -1791,7 +1791,7 @@ export default {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: bold;
         font-size: 24px;
-        color: #3b64fc;
+        color: #F74747;
       }
       .title-2 {
         font-family: Microsoft YaHei, Microsoft YaHei;
@@ -2007,11 +2007,11 @@ export default {
         color: #333333;
 
         &.active {
-          background: rgba(71, 97, 247, 0.2);
+          background: #FEDADA;
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: bold;
           font-size: 18px;
-          color: #3b64fc;
+          color: #F74747;
         }
 
         &:not(:first-child) {

@@ -216,7 +216,7 @@ export default {
         content: "";
         width: 3px;
         height: 30px;
-        background: #3b64fc;
+        background: #F74747;
       }
     }
   }
@@ -279,7 +279,7 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: bold;
           line-height: 16px;
-          color: #3b64fc;
+          color: #F74747;
         }
       }
     }

@@ -150,17 +150,17 @@ export default {
     width: 104px;
     height: 40px;
     border-radius: 4px 4px 4px 4px;
-    border: 1px solid #3b64fc;
+    border: 1px solid #F74747;
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;
     font-size: 14px;
-    color: #3b64fc;
+    color: #F74747;
   }
 
   .btn-bg {
     width: 104px;
     height: 40px;
-    background: #3b64fc;
+    background: #F74747;
     border-radius: 4px 4px 4px 4px;
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;

@@ -96,7 +96,7 @@ export default {
   .btn-bg {
     width: 133px;
     height: 40px;
-    background: #3B64FC;
+    background: #F74747;
     border-radius: 0px 0px 0px 0px;
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;

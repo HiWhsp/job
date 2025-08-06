@@ -535,7 +535,7 @@ export default {
     .add {
       b {
         font-weight: bold;
-        color: #3b64fc;
+        color: #F74747;
         cursor: pointer;
       }
     }
@@ -604,7 +604,7 @@ export default {
 
         .checked {
           flex: 2;
-          color: #3b64fc;
+          color: #F74747;
           text-align: right;
         }
       }
@@ -659,7 +659,7 @@ export default {
           background: #ffffff;
           border: 1px solid #cccccc;
           &.active {
-            border: 1px solid #3b64fc;
+            border: 1px solid #F74747;
           }
         }
       }
@@ -768,7 +768,7 @@ export default {
         }
 
         &.active {
-          border: 2px solid #3b64fc;
+          border: 2px solid #F74747;
 
           .marker {
             display: block;
@@ -829,7 +829,7 @@ export default {
     border: 1px solid #cccccc;
     font-size: 16px;
     font-weight: 400;
-    color: #3b64fc;
+    color: #F74747;
 
     transition: 0.3s;
     &:hover {
@@ -838,16 +838,16 @@ export default {
 
     &.back {
       margin-right: 24px;
-      border: 1px solid #3b64fc;
+      border: 1px solid #F74747;
       font-size: 16px;
       font-family: sans-serif;
       font-weight: 400;
-      color: #3b64fc;
+      color: #F74747;
     }
 
     &.tijiao {
       color: #ffffff;
-      background: #3b64fc;
+      background: #F74747;
     }
   }
 }

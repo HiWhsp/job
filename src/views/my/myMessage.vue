@@ -89,7 +89,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #3B64FC;
+      background: #F74747;
       color: #fff;
       font-size: 14px;
       font-weight: bold;

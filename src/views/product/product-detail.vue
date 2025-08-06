@@ -46,7 +46,7 @@
               <div class="preview-wrap">
                 <detailLunbo :imageList="detailImages" />
               </div>
-              <div class="detail-act-list">
+              <!-- <div class="detail-act-list">
                 <div class="act-item">
                   <img src="@img/product/icon-zhengpin.png" alt="" />
                   <span>正品保障</span>
@@ -68,7 +68,7 @@
                   <img v-else src="@img/product/icon-fav0.png" alt="" />
                   <span>{{ if_shoucang ? "取消收藏" : "收藏商品" }}</span>
                 </div>
-              </div>
+              </div> -->
             </div>
 
             <div class="ctx-right">
@@ -303,7 +303,7 @@
           </div>
 
           <div class="ctx-bottom-container">
-            <div class="bottom-left">
+            <!-- <div class="bottom-left">
               <div class="main-title">相关产品</div>
               <div class="product-list">
                 <div
@@ -323,7 +323,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <div class="bottom-right">
               <div class="ctx-bottom">
@@ -337,14 +337,14 @@
                       商品详情
                     </div>
 
-                    <!-- <div
+                    <div
                       class="nav-item"
                       @click="togglePanel('评价')"
                       :class="active_panel == '评价' ? 'active' : ''"
                     >
-                      累计评价
+                      商品评价
                       <span class="count-num">{{ info.commentNum }}</span>
-                    </div> -->
+                    </div>
 
                     <!-- <el-popover placement="bottom" trigger="click">
                   <div class="pop-kefu">
@@ -374,6 +374,7 @@
                       <div
                         class="detail-spec-sector"
                         v-for="(value, key) in info.addrows"
+                        :key="key"
                       >
                         <div>{{ key }}</div>
                         <div>{{ value || "--" }}</div>
@@ -1372,7 +1373,7 @@ export default {
 
             &:hover {
               span {
-                color: #3b64fc;
+                color: #F74747;
               }
             }
 
@@ -1431,9 +1432,9 @@ export default {
               font-size: 16px;
 
               &.active {
-                background: #3b64fc;
+                background: #F74747;
                 color: #fff;
-                border-color: #3b64fc;
+                border-color: #F74747;
               }
             }
           }
@@ -1661,7 +1662,7 @@ export default {
               }
 
               &.active {
-                border: 1px solid #3b64fc;
+                border: 1px solid #F74747;
                 color: #eb0611;
 
                 .img-box {
@@ -1671,11 +1672,11 @@ export default {
                 }
 
                 .text {
-                  color: #3b64fc;
+                  color: #F74747;
                 }
 
                 .price {
-                  color: #3b64fc;
+                  color: #F74747;
                 }
               }
 
@@ -1817,12 +1818,12 @@ export default {
               font-family: OPPOSans, OPPOSans;
               // font-weight: bold;
               font-size: 18px;
-              color: #3b64fc;
-              border: 1px solid #3b64fc;
+              color: #F74747;
+              border: 1px solid #F74747;
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: bold;
               font-size: 16px;
-              color: #3b64fc;
+              color: #F74747;
             }
 
             .btn-add-cart {
@@ -1830,8 +1831,8 @@ export default {
               height: 48px;
               background: #ffffff;
               border-radius: 0px 0px 0px 0px;
-              border: 1px solid #3b64fc;
-              background: #3b64fc;
+              border: 1px solid #F74747;
+              background: #F74747;
 
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: bold;
@@ -1848,11 +1849,11 @@ export default {
               height: 48px;
               background: #ffffff;
               border-radius: 0px 0px 0px 0px;
-              border: 1px solid #3b64fc;
+              border: 1px solid #F74747;
               font-family: OPPOSans, OPPOSans;
               // font-weight: bold;
               font-size: 18px;
-              color: #3b64fc;
+              color: #F74747;
             }
           }
         }
@@ -1897,14 +1898,14 @@ export default {
           font-family: Poppins, Poppins;
           font-weight: bold;
           font-size: 25px;
-          color: #3b64fc;
+          color: #F74747;
         }
 
         .panel-title-line {
           margin-bottom: 64px;
           width: 100%;
           height: 7px;
-          background: #3b64fc;
+          background: #F74747;
           border-radius: 0px 0px 0px 0px;
         }
       }
@@ -1921,7 +1922,7 @@ export default {
   line-height: 48px;
 
   .count-num {
-    color: #3b64fc;
+    color: #F74747;
   }
 
   .nav-item {
@@ -1943,7 +1944,7 @@ export default {
     &.active {
       font-weight: bold;
       position: relative;
-      background: #3b64fc;
+      background: #F74747;
       color: #ffffff;
 
       // &::after {
@@ -1977,7 +1978,7 @@ export default {
     /*no */
 
     &.contact {
-      background: #3b64fc;
+      background: #F74747;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -2159,7 +2160,7 @@ export default {
     .comment-title-text {
       padding: 5px 30px;
       margin-right: 20px;
-      background-color: #3b64fc;
+      background-color: #F74747;
       color: #fff;
     }
   }
@@ -2258,7 +2259,7 @@ export default {
 
     &:hover {
       .title {
-        color: #3b64fc !important;
+        color: #F74747 !important;
       }
     }
 

@@ -242,7 +242,7 @@ export default {
       margin-top: 27px;
       width: 263px;
       height: 61px;
-      background: #3B64FC;
+      background: #F74747;
       border-radius: 0px 0px 0px 0px;
 
       font-family: Microsoft YaHei, Microsoft YaHei;
@@ -284,7 +284,7 @@ export default {
         left: 0;
         width: 100%;
         height: 71px;
-        background: #3B64FC;
+        background: #F74747;
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: bold;
         font-size: 30px;
@@ -317,7 +317,7 @@ export default {
         left: 0;
         width: 247px;
         height: 71px;
-        background: #3B64FC;
+        background: #F74747;
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: bold;
         font-size: 30px;

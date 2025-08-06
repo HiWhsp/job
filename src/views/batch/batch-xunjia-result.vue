@@ -221,7 +221,7 @@ export default {
       }
 
       &.active {
-        color: #3B64FC;
+        color: #F74747;
       }
     }
   }
@@ -250,9 +250,9 @@ export default {
       }
 
       &.active {
-        background: #3B64FC;
+        background: #F74747;
         .dot-box {
-          background: #3B64FC;
+          background: #F74747;
         }
       }
 
@@ -300,7 +300,7 @@ export default {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: bold;
         font-size: 20px;
-        color: #3B64FC;
+        color: #F74747;
       }
 
       .desc {
@@ -330,7 +330,7 @@ export default {
             // 样式
             width: 133px;
             height: 40px;
-            background: #3B64FC;
+            background: #F74747;
             border-radius: 0px 0px 0px 0px;
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;

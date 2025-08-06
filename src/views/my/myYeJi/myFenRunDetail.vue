@@ -185,7 +185,7 @@ export default {
       height: 30px;
       line-height: 30px;
 
-      background: #3b64fc;
+      background: #F74747;
       color: #fff;
       font-size: 14px;
     }
@@ -410,9 +410,9 @@ export default {
             margin-top: 20px;
             text-align: right;
             a {
-              border: 1px solid #3b64fc;
+              border: 1px solid #F74747;
               padding: 3px 8px;
-              color: #3b64fc;
+              color: #F74747;
             }
           }
         }

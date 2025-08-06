@@ -212,7 +212,7 @@ export default {
           font-size: 14px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #3b64fc;
+          color: #F74747;
 
           &::after {
             content: "";
@@ -222,7 +222,7 @@ export default {
             transform: translate(-50%, 0);
             width: 100%;
             height: 3px;
-            background: #3b64fc;
+            background: #F74747;
           }
         }
       }

@@ -255,7 +255,7 @@ export default {
       }
 
       &.active {
-        color: #3B64FC;
+        color: #F74747;
       }
     }
   }
@@ -284,9 +284,9 @@ export default {
       }
 
       &.active {
-        background: #3B64FC;
+        background: #F74747;
         .dot-box {
-          background: #3B64FC;
+          background: #F74747;
         }
       }
 
@@ -316,7 +316,7 @@ export default {
   .btn {
     width: 164px;
     height: 48px;
-    background: #3B64FC;
+    background: #F74747;
     border-radius: 0px 0px 0px 0px;
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: bold;
@@ -346,12 +346,12 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 14px;
-      color: #3B64FC;
+      color: #F74747;
     }
   }
 }
 .download {
-  color: #3B64FC;
+  color: #F74747;
   cursor: pointer;
 }
 </style>

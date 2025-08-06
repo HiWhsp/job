@@ -221,10 +221,10 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #3B64FC;
+      background: #F74747;
       color: #fff;
       background: #fff;
-      color: #3B64FC;
+      color: #F74747;
       font-size: 14px;
       // font-weight: bold;
 
@@ -294,7 +294,7 @@ export default {
           line-height: 30px;
           text-align: center;
           // background: rgba(255, 90, 0, 0.68);
-          background: #3B64FC;
+          background: #F74747;
           font-size: 14px;
           color: #ffffff;
         }
@@ -305,7 +305,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 20px;
-        color: #3B64FC;
+        color: #F74747;
 
         .action {
           margin-left: 20px;

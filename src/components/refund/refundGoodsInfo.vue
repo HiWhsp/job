@@ -161,7 +161,7 @@ export default {
           margin-left: 10px;
           width: 96px;
           height: 30px;
-          background: #3b64fc;
+          background: #F74747;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;

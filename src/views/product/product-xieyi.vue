@@ -408,7 +408,7 @@ export default {
       user-select: none;
 
       &.active {
-        // background: #3b64fc;
+        // background: #F74747;
         // color: #fff;
         color: #a76737;
       }
@@ -425,7 +425,7 @@ export default {
           border-bottom-color: #aaa;
 
           &.active {
-            border-bottom-color: #3B64FC;
+            border-bottom-color: #F74747;
           }
         }
 
@@ -436,7 +436,7 @@ export default {
           border-top-color: #aaa;
 
           &.active {
-            border-top-color: #3B64FC;
+            border-top-color: #F74747;
           }
         }
       }
@@ -538,7 +538,7 @@ export default {
 
     &:hover {
       .title {
-        color: #3B64FC !important;
+        color: #F74747 !important;
       }
     }
 

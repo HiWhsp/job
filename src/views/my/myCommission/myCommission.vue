@@ -148,7 +148,7 @@ export default {
         width: 520px;
         height: 60px;
         line-height: 60px;
-        background: #3b64fc;
+        background: #F74747;
         border-radius: 0;
         font-size: 20px;
         font-family: Microsoft YaHei;

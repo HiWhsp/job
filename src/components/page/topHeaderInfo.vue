@@ -179,7 +179,7 @@ export default {
 
   li:hover {
     a {
-      color: #3b64fc;
+      color: #F74747;
     }
   }
 }
@@ -202,7 +202,7 @@ export default {
     text-align: left;
 
     .logout {
-      color: #3b64fc;
+      color: #F74747;
       cursor: pointer;
     }
     .login {
@@ -216,11 +216,11 @@ export default {
     }
 
     .user-index {
-      color: #3b64fc;
+      color: #F74747;
       cursor: pointer;
 
       &:hover {
-        color: #3b64fc;
+        color: #F74747;
       }
     }
 
@@ -244,11 +244,11 @@ export default {
 
     .login-action {
       .login {
-        color: #3b64fc;
+        color: #F74747;
       }
 
       .logout {
-        color: #3b64fc;
+        color: #F74747;
       }
     }
 
@@ -317,7 +317,7 @@ export default {
     }
 
     .phone {
-      color: #3b64fc;
+      color: #F74747;
       font-weight: bold;
       margin-left: 10px;
     }

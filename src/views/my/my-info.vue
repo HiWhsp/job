@@ -298,7 +298,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #3b64fc;
+      background: #F74747;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -383,7 +383,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: #3b64fc;
+        color: #F74747;
 
         span {
           margin-right: 20px;
@@ -405,18 +405,18 @@ export default {
     height: 32px;
     background: #ffffff;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #3b64fc;
+    border: 1px solid #F74747;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #3b64fc;
+    color: #F74747;
   }
 
   .btn-cancel {
     margin-left: 20px;
     width: 120px;
     height: 32px;
-    background: #3b64fc;
+    background: #F74747;
     border-radius: 50px 50px 50px 50px;
     font-family: Arial, Arial;
     font-weight: 400;

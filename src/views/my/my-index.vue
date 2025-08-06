@@ -322,7 +322,7 @@ export default {
     background: #ffffff;
     text-align: left;
     padding: 0 15px;
-    border: 1px solid #3B64FC;
+    border: 1px solid #F74747;
     border-radius: 0 0 11px 11px;
 
     .text-1 {
@@ -345,7 +345,7 @@ export default {
         font-size: 14px;
         font-family: sans-serif;
         font-weight: 400;
-        color: #3B64FC;
+        color: #F74747;
       }
     }
   }
@@ -390,7 +390,7 @@ export default {
           font-size: 32px;
           font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
           font-weight: normal;
-          color: #3B64FC;
+          color: #F74747;
         }
       }
     }
@@ -422,7 +422,7 @@ export default {
     font-size: 14px;
     font-family: sans-serif;
     font-weight: 400;
-    color: #3B64FC;
+    color: #F74747;
     cursor: pointer;
 
     img {
@@ -461,7 +461,7 @@ export default {
 
       .empty-action {
         font-size: 14px;
-        color: #3B64FC;
+        color: #F74747;
       }
     }
   }

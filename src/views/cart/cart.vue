@@ -594,7 +594,7 @@ export default {
           }
 
           &.active {
-            background: #3B64FC;
+            background: #F74747;
             color: #fff;
           }
         }
@@ -642,7 +642,7 @@ export default {
         display: inline-block;
         width: 128px;
         height: 36px;
-        background: #3B64FC;
+        background: #F74747;
         border-radius: 4px 4px 4px 4px;
         font-size: 14px;
         font-family: sans-serif;
@@ -755,7 +755,7 @@ export default {
 
             div {
               &:hover {
-                color: #3B64FC;
+                color: #F74747;
               }
             }
 
@@ -831,7 +831,7 @@ export default {
                 cursor: pointer;
 
                 &:hover {
-                  color: #3B64FC;
+                  color: #F74747;
                 }
               }
             }
@@ -895,7 +895,7 @@ export default {
       color: #666666;
 
       &:hover {
-        color: #3B64FC;
+        color: #F74747;
       }
     }
   }
@@ -913,7 +913,7 @@ export default {
       color: #666666;
 
       &:hover {
-        color: #3B64FC;
+        color: #F74747;
       }
     }
   }
@@ -957,7 +957,7 @@ export default {
     cursor: pointer;
     width: 191px;
     height: 46px;
-    background: #3B64FC;
+    background: #F74747;
 
     font-size: 16px;
     font-family: Microsoft YaHei;
@@ -1002,7 +1002,7 @@ export default {
     .btn {
       width: 191px;
       height: 46px;
-      background: #3B64FC;
+      background: #F74747;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 18px;

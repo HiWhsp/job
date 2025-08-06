@@ -237,7 +237,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #3b64fc;
+      background: #F74747;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -400,7 +400,7 @@ export default {
     height: 180px;
     border-radius: 12px;
 
-    border: 2px solid #3b64fc;
+    border: 2px solid #F74747;
     border: 2px solid transparent;
     background: #f6f6f6;
     &:nth-child(3n) {
@@ -408,7 +408,7 @@ export default {
     }
 
     &.selected {
-      border: 2px solid #3b64fc;
+      border: 2px solid #F74747;
     }
     .song-marker {
       position: absolute;
@@ -418,7 +418,7 @@ export default {
       height: 40px;
       line-height: 40px;
       text-align: center;
-      background: linear-gradient(61deg, #3b64fc 0%, #fe6927 100%);
+      background: linear-gradient(61deg, #F74747 0%, #fe6927 100%);
       border-radius: 20px 0px 20px 0px;
       font-size: 18px;
       font-family: sans-serif;
@@ -430,7 +430,7 @@ export default {
       font-size: 42px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
       font-weight: bold;
-      color: #3b64fc;
+      color: #F74747;
     }
     .tip {
       margin-top: 10px;
@@ -485,7 +485,7 @@ export default {
     height: 48px;
     line-height: 48px;
     background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
-    background: #3b64fc;
+    background: #F74747;
     border-radius: 4px;
     font-size: 16px;
     font-family: PingFang SC;

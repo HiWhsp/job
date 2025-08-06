@@ -140,14 +140,14 @@ export default {
         height: 45px;
         background: #FFFFFF;
         border-radius: 0px 0px 0px 0px;
-        border: 1px solid #3B64FC;
+        border: 1px solid #F74747;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 17px;
-        color: #3B64FC;
+        color: #F74747;
 
         &.btn-bg {
-          background: #3B64FC;
+          background: #F74747;
           color: #FFFFFF;
         }
 

@@ -299,17 +299,17 @@ export default {
     width: 200px;
     height: 50px;
     border-radius: 0px 0px 0px 0px;
-    border: 1px solid #3b64fc;
+    border: 1px solid #F74747;
 
     font-family: OPPOSans, OPPOSans;
     font-weight: bold;
     font-size: 16px;
-    color: #3b64fc;
+    color: #F74747;
     background: #FFFFFF;
     transition: .3s;
 
     &:hover {
-      background: #3b64fc;
+      background: #F74747;
       color: #FFFFFF;
     }
   }

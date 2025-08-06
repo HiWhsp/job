@@ -165,7 +165,7 @@ export default {
       height: 30px;
       line-height: 30px;
 
-      background: #3b64fc;
+      background: #F74747;
       color: #fff;
       font-size: 14px;
     }

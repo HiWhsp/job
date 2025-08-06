@@ -417,7 +417,7 @@ export default {
                 color: #666666;
 
                 &.active {
-                  color: #3b64fc;
+                  color: #F74747;
                 }
               }
             }
@@ -443,7 +443,7 @@ export default {
               margin-bottom: 16px;
 
               &:hover {
-                color: #3b64fc;
+                color: #F74747;
               }
             }
 
@@ -461,7 +461,7 @@ export default {
             &.active {
               // background: #ffffff;
               // background: #fffaf7;
-              color: #3b64fc;
+              color: #F74747;
 
               &:before {
                 // content: "";
@@ -470,7 +470,7 @@ export default {
                 // top: 0;
                 // bottom: 0;
                 // width: 3px;
-                // background-color: #3b64fc;
+                // background-color: #F74747;
               }
             }
 

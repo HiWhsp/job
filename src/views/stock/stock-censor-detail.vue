@@ -745,7 +745,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #3b64fc;
+      background: #F74747;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -771,12 +771,12 @@ export default {
     &.active {
       .step-number {
         .step-num {
-          background: #3b64fc;
+          background: #F74747;
           color: #fff;
         }
 
         .step-line {
-          background: #3b64fc;
+          background: #F74747;
         }
       }
     }
@@ -938,7 +938,7 @@ export default {
 
   .money-heji {
     span {
-      color: #3b64fc;
+      color: #F74747;
       font-weight: bold;
     }
   }
@@ -965,7 +965,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: bold;
         line-height: 24px;
-        color: #3b64fc;
+        color: #F74747;
 
         .pay-title {
           margin-right: 5px;
@@ -1013,8 +1013,8 @@ export default {
         // min-width: 96px;
         height: 30px;
         line-height: 30px;
-        // background: #3B64FC;
-        color: #3b64fc;
+        // background: #F74747;
+        color: #F74747;
         // color: #fff;
         font-size: 14px;
       }
@@ -1069,7 +1069,7 @@ export default {
               cursor: pointer;
 
               &:hover {
-                color: #3b64fc;
+                color: #F74747;
               }
             }
           }
@@ -1115,7 +1115,7 @@ export default {
             margin-left: 10px;
             min-width: 96px;
             height: 30px;
-            background: #3b64fc;
+            background: #F74747;
             font-size: 14px;
             font-family: Microsoft YaHei;
             color: #ffffff;
@@ -1209,18 +1209,18 @@ export default {
         height: 32px;
         background: #ffffff;
         border-radius: 50px 50px 50px 50px;
-        border: 1px solid #3b64fc;
+        border: 1px solid #F74747;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #3b64fc;
+        color: #F74747;
 
         & + button {
           margin-left: 20px;
         }
 
         &.btn-bg {
-          background: #3b64fc;
+          background: #F74747;
           color: #fff;
         }
 

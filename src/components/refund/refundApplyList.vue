@@ -82,7 +82,7 @@ export default {
     .refund-type {
       min-width: 80px;
       text-align: left;
-      color: #3b64fc;
+      color: #F74747;
     }
 
     .date {
@@ -119,8 +119,8 @@ export default {
       color: #999999;
 
       &.state2 {
-        color: #3b64fc;
-        border-color: #3b64fc;
+        color: #F74747;
+        border-color: #F74747;
       }
     }
   }
@@ -195,8 +195,8 @@ export default {
     .order-detail {
       min-width: 96px;
       height: 30px;
-      background: #3b64fc;
-      border: 1px solid #3b64fc;
+      background: #F74747;
+      border: 1px solid #F74747;
       font-size: 14px;
       color: #fff;
       transition: 0.3s;

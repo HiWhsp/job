@@ -295,7 +295,7 @@ export default {
         color: #999999;
 
         a {
-          color: #3B64FC;
+          color: #F74747;
         }
       }
 
@@ -307,7 +307,7 @@ export default {
           width: 100%;
           height: 44px;
           background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
-          background: #3B64FC;
+          background: #F74747;
           font-size: 18px;
           font-family: sans-serif;
           font-weight: 400;
@@ -335,8 +335,8 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 24px;
-          color: #3B64FC;
-          // border-bottom: 1px solid #3b64fc;
+          color: #F74747;
+          // border-bottom: 1px solid #F74747;
         }
       }
     }
@@ -379,7 +379,7 @@ export default {
     color: #999999;
 
     &:hover {
-      color: #3B64FC;
+      color: #F74747;
     }
   }
 }

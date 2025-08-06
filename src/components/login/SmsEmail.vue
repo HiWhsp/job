@@ -119,7 +119,7 @@ export default {
     display: flex;
   align-items: center;
   cursor: pointer;
-  color: #3b64fc;
+  color: #F74747;
 
   &.disabled {
     color: #ccc;

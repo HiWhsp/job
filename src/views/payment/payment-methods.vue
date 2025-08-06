@@ -264,6 +264,7 @@
                         v-for="(item, index) in pay_method_list"
                         @click="do_toggle_paytype(item)"
                         :class="{ checked: pay_type_value == item.value }"
+                        :key="index"
                       >
                         <img
                           class="img-check check-0 check-img check-img-0"
@@ -1399,8 +1400,8 @@ export default {
 .btn-cancel {
   min-width: 100px;
   height: 40px;
-  border: 1px solid #3b64fc;
-  color: #3b64fc;
+  border: 1px solid #F74747;
+  color: #F74747;
   font-size: 14px;
 }
 
@@ -1408,7 +1409,7 @@ export default {
   margin-left: 20px;
   min-width: 100px;
   height: 40px;
-  background: #3b64fc;
+  background: #F74747;
   color: #fff;
   font-size: 14px;
 }
@@ -1596,11 +1597,11 @@ export default {
       height: 45px;
       background: #ffffff;
       border-radius: 0px 0px 0px 0px;
-      border: 1px solid #3b64fc;
+      border: 1px solid #F74747;
       font-family: Arial, Arial;
       font-weight: 400;
       font-size: 17px;
-      color: #3b64fc;
+      color: #F74747;
       transition: 0.3s;
 
       & + button {
@@ -1612,7 +1613,7 @@ export default {
       }
 
       &.btn-bg {
-        background: #3b64fc;
+        background: #F74747;
         color: #ffffff;
       }
     }
@@ -1801,7 +1802,7 @@ export default {
       display: inline-block;
       height: 20px;
       line-height: 20px;
-      color: #3b64fc;
+      color: #F74747;
       vertical-align: bottom;
     }
 
@@ -2112,11 +2113,11 @@ export default {
         line-height: 40px;
         background: #ffffff;
         border-radius: 3px 3px 3px 3px;
-        border: 1px solid #3b64fc;
+        border: 1px solid #F74747;
         font-size: 14px;
         font-family: Microsoft YaHei-Bold, Microsoft YaHei;
         font-weight: bold;
-        color: #3b64fc;
+        color: #F74747;
       }
     }
   }
@@ -2154,7 +2155,7 @@ export default {
     }
 
     .yue-warn-tip {
-      color: #3b64fc;
+      color: #F74747;
       font-size: 14px;
     }
   }

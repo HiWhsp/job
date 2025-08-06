@@ -1733,8 +1733,8 @@ export default {
 .btn-cancel {
   min-width: 100px;
   height: 40px;
-  border: 1px solid #3b64fc;
-  color: #3b64fc;
+  border: 1px solid #F74747;
+  color: #F74747;
   font-size: 14px;
 }
 
@@ -1742,7 +1742,7 @@ export default {
   margin-left: 20px;
   min-width: 100px;
   height: 40px;
-  background: #3b64fc;
+  background: #F74747;
   color: #fff;
   font-size: 14px;
 }
@@ -1987,17 +1987,17 @@ export default {
         height: 45px;
         background: #ffffff;
         border-radius: 0px 0px 0px 0px;
-        border: 1px solid #3b64fc;
+        border: 1px solid #F74747;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 17px;
-        color: #3b64fc;
+        color: #F74747;
       }
 
       &.btn-2 {
         width: 200px;
         height: 45px;
-        background: #3b64fc;
+        background: #F74747;
         border-radius: 0px 0px 0px 0px;
         font-family: Arial, Arial;
         font-weight: 400;
@@ -2110,7 +2110,7 @@ export default {
           border: 1px solid #cccccc;
 
           &.active {
-            border: 1px solid #3b64fc;
+            border: 1px solid #F74747;
           }
         }
       }
@@ -2207,7 +2207,7 @@ export default {
     margin-bottom: 10px;
 
     b {
-      color: #3b64fc;
+      color: #F74747;
     }
   }
 
@@ -2344,11 +2344,11 @@ export default {
       height: 32px;
       background: #ffffff;
       border-radius: 2px 2px 2px 2px;
-      border: 1px solid #3b64fc;
+      border: 1px solid #F74747;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 14px;
-      color: #3b64fc;
+      color: #F74747;
     }
   }
 }
@@ -2378,7 +2378,7 @@ export default {
         color: #666666;
 
         span {
-          color: #3b64fc;
+          color: #F74747;
         }
       }
 
@@ -2466,11 +2466,11 @@ export default {
         line-height: 40px;
         background: #ffffff;
         border-radius: 3px 3px 3px 3px;
-        border: 1px solid #3b64fc;
+        border: 1px solid #F74747;
         font-size: 14px;
         font-family: Microsoft YaHei-Bold, Microsoft YaHei;
         font-weight: bold;
-        color: #3b64fc;
+        color: #F74747;
       }
     }
   }
@@ -2515,7 +2515,7 @@ export default {
       cursor: pointer;
 
       &.active {
-        border-color: #3b64fc;
+        border-color: #F74747;
 
         .marker {
           display: block;
@@ -2543,7 +2543,7 @@ export default {
             font-size: 24px;
             font-family: Microsoft YaHei-Bold, Microsoft YaHei;
             font-weight: bold;
-            color: #3b64fc;
+            color: #F74747;
           }
 
           .text-2 {
@@ -2571,7 +2571,7 @@ export default {
         font-size: 12px;
         font-family: sans-serif;
         font-weight: 400;
-        color: #3b64fc;
+        color: #F74747;
       }
     }
   }
@@ -2583,7 +2583,7 @@ export default {
     padding: 0 30px;
 
     .number {
-      color: #3b64fc;
+      color: #F74747;
       margin: 0 10px;
     }
   }
@@ -2632,7 +2632,7 @@ export default {
     }
 
     .yue-warn-tip {
-      color: #3b64fc;
+      color: #F74747;
       font-size: 14px;
     }
   }

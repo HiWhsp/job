@@ -251,7 +251,7 @@ export default {
 
               //   width: 57px;
               //   height: 3px;
-              //   background: #3b64fc;
+              //   background: #F74747;
               //   border-radius: 10px 10px 10px 10px;
               // }
             }

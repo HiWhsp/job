@@ -595,7 +595,7 @@ export default {
   display: flex;
   align-items: center;
   margin-left: 16px;
-  color: #3B64FC;
+  color: #F74747;
   font-size: 14px;
   font-weight: normal;
   cursor: pointer;
@@ -652,14 +652,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #3B64FC;
+        color: #F74747;
       }
 
       &.active {
-        // background: #3b64fc;
+        // background: #F74747;
         // color: #fff;
         font-weight: bold;
-        color: #3B64FC;
+        color: #F74747;
 
         &::after {
           content: "";
@@ -668,7 +668,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #3B64FC;
+          background: #F74747;
         }
       }
     }
@@ -764,7 +764,7 @@ export default {
       font-weight: 400;
       line-height: 20px;
       color: #999999;
-      color: #3B64FC;
+      color: #F74747;
 
       // 待付款
       &.state--5 {
@@ -774,8 +774,8 @@ export default {
       }
 
       &.state-2 {
-        color: #3B64FC;
-        border-color: #3B64FC;
+        color: #F74747;
+        border-color: #F74747;
       }
     }
   }
@@ -826,7 +826,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #3B64FC;
+              color: #F74747;
             }
           }
 
@@ -923,11 +923,11 @@ export default {
         background: #ffffff;
         border-radius: 50px 50px 50px 50px;
         border-radius: 4px;
-        border: 1px solid #3B64FC;
+        border: 1px solid #F74747;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #3B64FC;
+        color: #F74747;
 
         & + button {
           margin-left: 20px;
@@ -938,7 +938,7 @@ export default {
         }
 
         &.btn-bg {
-          background: #3B64FC;
+          background: #F74747;
           color: #ffffff;
         }
       }

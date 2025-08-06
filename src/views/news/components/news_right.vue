@@ -149,7 +149,7 @@ export default {
             display: inline-block;
             width: 6px;
             height: 24px;
-            background: #3B64FC;
+            background: #F74747;
             border-radius: 100px 100px 100px 100px;
         }
 
@@ -176,7 +176,7 @@ export default {
                     color: #000000;
 
                     &.active {
-                        background: #3B64FC;
+                        background: #F74747;
                         color: #FFFFFF;
                     }
                 }
@@ -211,7 +211,7 @@ export default {
                     display: inline-block;
                     width: 6px;
                     height: 6px;
-                    background: #3B64FC;
+                    background: #F74747;
                     border-radius: 0;
                 }
 
@@ -223,7 +223,7 @@ export default {
                     color: #282828;
 
                     &:hover {
-                        color: #3B64FC;
+                        color: #F74747;
                     }
                 }
 
