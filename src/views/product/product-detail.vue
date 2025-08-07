@@ -45,30 +45,15 @@
               <!-- <carouselComponent :swiperImgs="swiperImgs" /> -->
               <div class="preview-wrap">
                 <detailLunbo :imageList="detailImages" />
-              </div>
-              <!-- <div class="detail-act-list">
-                <div class="act-item">
-                  <img src="@img/product/icon-zhengpin.png" alt="" />
-                  <span>正品保障</span>
-                </div>
-                <div class="act-item">
-                  <img src="@img/product/icon-shouhou.png" alt="" />
-                  <span>无忧售后</span>
-                </div>
-                <div class="act-item" @click="do_open_share()">
-                  <img src="@img/product/icon-share.png" alt="" />
-                  <span>分享</span>
-                </div>
-                <div class="act-item" @click="do_fav_toggle()">
+                <div class="detail-act-list" @click="do_fav_toggle()">
                   <img
                     v-if="if_shoucang"
                     src="@img/product/icon-fav1.png"
                     alt=""
                   />
                   <img v-else src="@img/product/icon-fav0.png" alt="" />
-                  <span>{{ if_shoucang ? "取消收藏" : "收藏商品" }}</span>
                 </div>
-              </div> -->
+              </div>
             </div>
 
             <div class="ctx-right">
@@ -92,15 +77,28 @@
 
               <div class="sale-info">
                 <div class="list">
-                  <div class="item price-item" style="margin-bottom: 10px">
-                    <div class="label">价格</div>
-                    <div class="vals vals-price">
-                      <div class="val">
-                        {{ vuex_huobi }}
-                        {{ view_info.priceSale }}
+                  <div class="item price-item">
+                    <div class="flex">
+                      <div class="label">会员价</div>
+                      <div class="vals vals-price">
+                        <div class="val">
+                          {{ vuex_huobi }}
+                          <span class="price">{{ view_info.priceSale }}</span>
+                          <span class="unit">/个</span>
+                        </div>
                       </div>
                     </div>
-                    <div
+                    <div class="flex">
+                      <div class="label">零售价</div>
+                      <div class="vals del-price">
+                        <div class="val">
+                          {{ vuex_huobi }}
+                          {{ info.discountSale }}
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- <div
                       style="color: gray; margin-left: 16px"
                       v-if="view_info.usersCompany"
                     >
@@ -120,79 +118,35 @@
                           : "---"
                       }}
                     </div>
-                    <div style="color: gray; margin-left: 16px">税率：13%</div>
+                    <div style="color: gray; margin-left: 16px">税率：13%</div> -->
                   </div>
-                  <div class="item" v-if="info.discountSale">
-                    <div class="label">折扣价格</div>
+                  <div class="item sale-item">
+                    <div class="label">累计销量</div>
                     <div class="vals">
-                      <div class="val">{{ vuex_huobi }}{{ info.discountSale||0 }}</div>
+                      <div class="val">
+                        {{ info.orders || 0 }}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="misc-detail">
-                <div class="misc-sector">
-                  <div>商品编号：</div>
-                  <div>{{ info.productNo || "--" }}</div>
-                </div>
-                <div class="misc-sector">
-                  <div>起订量：</div>
-                  <div>{{ info.minNum }}</div>
-                </div>
-                <div class="misc-sector">
-                  <div>品牌名称：</div>
-                  <div>{{ info.brand.title || "--" }}</div>
-                </div>
-                <div class="misc-sector">
-                  <div>单位：</div>
-                  <div>{{ info.unit }}</div>
-                </div>
-                <div class="misc-sector">
-                  <div>库存：</div>
-                  <div>{{ view_info.kucun || "--" }}</div>
-                </div>
-                <!-- <div class="misc-sector">
-                  <div>质量评价：</div>
-                  <div>{{ info.zhiliangPingjia? info.zhiliangPingjia : '--' }}</div>
-                </div> -->
-                <!-- <div class="misc-sector">
-                  <div>销量：</div>
-                  <div>{{ info.orders }}</div>
-                </div> -->
-                <div class="misc-sector">
-                  <div>货期：</div>
-                  <div>
-                    {{
-                      view_info.kucun > 0
-                        ? "48小时内发货"
-                        : info.delivery_date || "请联系客服发货"
-                    }}
+                <div class="misc-sector-list">
+                  <div class="misc-sector">
+                    <div class="label">品牌名称：</div>
+                    <div class="value">{{ info.brand.title || "--" }}</div>
+                  </div>
+                  <div class="misc-sector">
+                    <div class="label">商品编号：</div>
+                    <div class="value">{{ info.productNo || "--" }}</div>
+                  </div>
+                  <div class="misc-sector">
+                    <div class="label">起订量：</div>
+                    <div class="value">{{ info.minNum }}</div>
                   </div>
                 </div>
-              </div>
-              <!-- <div class="info-texts">
-                <div class="text-item">
-                  <div class="label">总销量</div>
-                  <div class="text">{{ info.orders }}</div>
-                </div>
-                <div class="text-item">
-                  <div class="label">累计评价</div>
-                  <div class="text">{{ info.comment_num }}</div>
-                </div>
-                <div class="text-item detail-act-list" @click="do_fav_toggle()">
-                  <div class="label">
-                    <div class="detail-act-list">
-                      <img v-if="if_shoucang" src="@img/detail-fav-1.png" alt="" />
-                      <img v-else src="@img/detail-fav-0.png" alt="" />
-                    </div>
-                  </div>
-                  <div class="text"> <span>{{ if_shoucang ? "取消收藏" : "收藏商品" }}</span></div>
-                </div>
-              </div> -->
-
-              <div class="other-box">
-                <!-- <div class="sku-box">
-                  <div class="sku-label">选择规格</div>
+                <div class="sku-box">
+                  <div class="sku-label">规格：</div>
                   <div class="sku-list">
                     <button
                       class="sku-item"
@@ -205,98 +159,148 @@
                       @click="toggle_sku(item)"
                     >
                       <div class="text">
-                        {{ item.keyVals }}
+                        {{ item.keyVals || "--" }}
                       </div>
                     </button>
                   </div>
-                </div> -->
-
-                <div class="shuliang-box">
-                  <div class="sel-num-title">数量</div>
-                  <div class="shuliang">
-                    <div
-                      class="btn minus"
-                      @click="
-                        selected_num > 1 ? selected_num-- : (selected_num = 0)
-                      "
-                    >
-                      <img src="@img/product/num-minus.png" alt="" />
-                    </div>
-                    <input
-                      type="number"
-                      v-model="selected_num"
-                      @blur="onBlur_selected_num"
-                    />
-                    <div class="btn plus" @click="selected_num++">
-                      <img src="@img/product/num-plus.png" alt="" />
-                    </div>
-                    <span class="kucun">订购方式：先款后货</span>
-                  </div>
                 </div>
+                <!-- 
+                <div class="misc-sector">
+                  <div>单位：</div>
+                  <div>{{ info.unit }}</div>
+                </div>
+                <div class="misc-sector">
+                  <div>库存：</div>
+                  <div>{{ view_info.kucun || "--" }}</div>
+                </div> -->
+                <!-- <div class="misc-sector">
+                  <div>质量评价：</div>
+                  <div>{{ info.zhiliangPingjia? info.zhiliangPingjia : '--' }}</div>
+                </div> -->
+                <!-- <div class="misc-sector">
+                  <div>销量：</div>
+                  <div>{{ info.orders }}</div>
+                </div> -->
+              </div>
+              <!-- <div class="info-texts">
+                <div class="text-item">
+                  <div class="label">总销量</div>
+                  <div class="text">{{ info.orders }}</div>
+                </div>
+                <div class="text-item">
+                  <div class="label">累计评价</div>
+                  <div class="text">{{ info.comment_num }}</div>
+                </div>
+              </div> -->
+
+              <div class="other-box">
                 <div class="yunfei-box flex">
-                  <div class="label">运费</div>
-                  <div class="value">满300包邮 不到300运费15元</div>
+                  <div class="label">发 &nbsp;货&nbsp; 日：</div>
+                  <div class="value">
+                    {{
+                      view_info.kucun > 0
+                        ? "48小时内发货"
+                        : info.delivery_date || "请联系客服发货"
+                    }}
+                  </div>
                 </div>
                 <div class="dinghuo-box flex">
                   <div class="label">支付方式：</div>
                   <div class="value">
-                    <div class="" v-if="info.dinggouType">
-                      {{ info.dinggouType }}
+                    <div class="flex">
+                      <img
+                        src="@/assets/img/pay/type-xianxia.png"
+                        style="height: 20px; margin-right: 6px"
+                        alt=""
+                      />
+                      线下支付
                     </div>
-                    <div class="flex" v-else>
-                      <div class="flex">
-                        <img
-                          src="@/assets/img/pay/type-xianxia.png"
-                          style="height: 28px; margin-right: 8px"
-                          alt=""
-                        />
-                        线下支付
-                      </div>
-                      &nbsp;&nbsp;&nbsp;
-                      <div class="flex">
-                        <img
-                          src="@/assets/img/pay/type-wx.png"
-                          style="height: 28px; margin-right: 8px"
-                          alt=""
-                        />
-                        在线支付
-                      </div>
+                    <div class="flex">
+                      <img
+                        src="@/assets/img/pay/type-wx.png"
+                        style="height: 20px; margin-right: 6px"
+                        alt=""
+                      />
+                      在线支付
                     </div>
                   </div>
                 </div>
                 <div class="dinghuo-box flex">
-                  <div class="label">配送至：</div>
-                  <area_select
-                    ref="area_select"
-                    @change="changeSelectAddress"
-                  />
-                  <!-- <div class="value"><el-button @click="do_pay_now()">请选择</el-button></div> -->
+                  <div class="label">商品服务：</div>
+                  <div class="value">
+                    <div class="flex">
+                      <img
+                        src="@img/product/icon-zhengpin.png"
+                        style="height: 20px; margin-right: 6px"
+                        alt=""
+                      />
+                      正品保障
+                    </div>
+                    <div class="flex">
+                      <img
+                        src="@img/product/icon-share.png"
+                        style="height: 20px; margin-right: 6px"
+                        alt=""
+                      />
+                      增票速开
+                    </div>
+                    <div class="flex">
+                      <img
+                        src="@img/product/icon-shouhou.png"
+                        style="height: 20px; margin-right: 6px"
+                        alt=""
+                      />
+                      售后保障
+                    </div>
+                  </div>
                 </div>
+                <div class="dinghuo-box flex">
+                  <div class="label">
+                    备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 注：
+                  </div>
+                  <div class="value desc">
+                    异形易碎类产品，到货异常请第一时间联系客服解决
+                  </div>
+                </div>
+
                 <div class="btn-box flex">
+                  <div class="shuliang-box">
+                    <div class="shuliang">
+                      <div
+                        class="btn minus"
+                        @click="
+                          selected_num > 1 ? selected_num-- : (selected_num = 0)
+                        "
+                      >
+                        <i class="el-icon-minus"></i>
+                      </div>
+                      <input
+                        type="number"
+                        v-model="selected_num"
+                        @blur="onBlur_selected_num"
+                      />
+                      <div class="btn plus" @click="selected_num++">
+                        <i class="el-icon-plus"></i>
+                      </div>
+                    </div>
+                  </div>
                   <button
                     class="btn-ripple flex-center btn-buy"
+                    @click="do_add_cart()"
+                  >
+                    <!-- <img
+                      src="@img/product/detail-cart.png"
+                      alt=""
+                      class="cart"
+                    /> -->
+                    加入购物车
+                  </button>
+                  <button
+                    class="btn-ripple flex-center btn-add-cart"
                     @click="do_pay_now()"
                   >
                     立即购买
                   </button>
-                  <button
-                    class="btn-ripple flex-center btn-add-cart"
-                    @click="do_add_cart()"
-                  >
-                    <img
-                      src="@img/product/detail-cart.png"
-                      alt=""
-                      class="cart"
-                    />
-                    加入购物车
-                  </button>
-
-                  <!-- <button
-                    class="btn-ripple flex-center btn-add-fav"
-                    @click="do_add_fav()"
-                  >
-                    {{ is_fav ? "取消收藏" : "添加收藏" }}
-                  </button> -->
                 </div>
               </div>
             </div>
@@ -917,7 +921,7 @@ export default {
           sku_list.push({
             ...v,
             kucun: +v.kucun,
-            key_vals: v.key_vals,
+            keyVals: v.keyVals,
           });
         });
       } else {
@@ -926,7 +930,7 @@ export default {
             status: this.info.product_status,
             image: this.info.images[0],
             inventoryId: this.info.inventoryId,
-            key_vals: this.info.key_vals == "无" ? "默认" : this.info.key_vals,
+            keyVals: this.info.keyVals == "无" ? "默认" : this.info.keyVals,
             kucun: +this.info.kucun,
             priceMarket: this.info.priceMarket,
             priceSale: this.info.priceSale,
@@ -1290,16 +1294,25 @@ export default {
   cursor: pointer;
 }
 .misc-detail {
-  display: grid;
-  margin: 16px 0;
-  max-width: 80%;
-  min-width: 384px;
-  grid-template-columns: 1fr 1fr;
-  font-size: 14px;
+  padding: 20px 32px;
+  border-bottom: 1px dashed #e5e5e5;
+
+  .misc-sector-list {
+    display: flex;
+    .misc-sector {
+      flex: 1;
+    }
+  }
   .misc-sector {
-    display: grid;
-    grid-template-columns: 100px 1fr;
-    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    .label {
+      color: #6a6a6a;
+    }
+    .value {
+      color: #000;
+    }
   }
 }
 .detail-spec {
@@ -1373,7 +1386,7 @@ export default {
 
             &:hover {
               span {
-                color: #F74747;
+                color: #f74747;
               }
             }
 
@@ -1432,9 +1445,9 @@ export default {
               font-size: 16px;
 
               &.active {
-                background: #F74747;
+                background: #f74747;
                 color: #fff;
-                border-color: #F74747;
+                border-color: #f74747;
               }
             }
           }
@@ -1453,32 +1466,18 @@ export default {
         justify-content: space-between;
 
         .ctx-left {
-          width: 400px;
+          width: 512px;
           position: relative;
 
           .detail-act-list {
-            margin-top: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            cursor: pointer;
 
-            .act-item {
-              cursor: pointer;
-              display: flex;
-              align-items: center;
-
-              img {
-                width: 20px;
-                margin-right: 6px;
-              }
-              span {
-                font-size: 16px;
-                font-family: PingFang SC;
-                font-weight: 400;
-                line-height: 36px;
-                color: #333333;
-              }
+            img {
+              width: 20px;
+              margin-right: 6px;
             }
           }
         }
@@ -1524,10 +1523,12 @@ export default {
             background-size: 100% 100%;
 
             .list {
+              display: flex;
+              flex-direction: column;
               .item {
                 display: flex;
-                align-items: center;
-                padding: 12px 20px;
+                flex-direction: column;
+                padding: 15px 32px 25px 32px;
 
                 &.price-item {
                   background: url("~@img/product/sale-bg.png");
@@ -1535,7 +1536,7 @@ export default {
                 }
 
                 .label {
-                  width: 80px;
+                  width: 68px;
                   font-family: Microsoft YaHei, Microsoft YaHei;
                   font-weight: 400;
                   font-size: 14px;
@@ -1545,8 +1546,6 @@ export default {
                 .vals {
                   display: flex;
                   align-items: center;
-                  //flex: 1;
-
                   font-size: 16px;
                   font-family: PingFang SC, PingFang SC;
                   font-weight: 500;
@@ -1556,7 +1555,7 @@ export default {
                     font-size: 24px;
                     font-family: PingFang SC, PingFang SC;
                     font-weight: bold;
-                    color: #e1251b;
+                    color: #f42424;
                   }
 
                   .val {
@@ -1564,21 +1563,34 @@ export default {
                     font-family: Microsoft YaHei, Microsoft YaHei;
                     font-weight: bold;
                     font-size: 20px;
-                    color: #e1251b;
+                    .price {
+                      font-size: 32px;
+                      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+                      font-weight: bold;
+                    }
+                    .unit {
+                      font-size: 16px;
+                      font-family: Microsoft YaHei, Microsoft YaHei;
+                      font-weight: 400;
+                      color: #333;
+                    }
+                  }
+                  &.del-price {
+                    font-family: PingFang SC, PingFang SC;
+                    font-weight: bold;
+                    color: #666;
+                    .val {
+                      font-size: 14px;
+                      // 删除线
+                      text-decoration: line-through;
+                    }
                   }
                 }
               }
-            }
-
-            .price {
-              display: flex;
-              align-items: center;
-
-              .number {
-                font-size: 28px;
-                font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-                font-weight: bold;
-                color: #ea3200;
+              .sale-item {
+                padding: 13px 32px;
+                flex-direction: row;
+                align-items: center;
               }
             }
           }
@@ -1615,18 +1627,17 @@ export default {
           }
 
           .sku-box {
-            margin-top: 35px;
+            margin-top: 20px;
             display: flex;
             align-items: flex-start;
 
             .sku-label {
               margin-top: 8px;
-              min-width: 90px;
-
+              margin-right: 14px;
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: 400;
               font-size: 14px;
-              color: #999999;
+              color: #6a6a6a;
             }
           }
 
@@ -1637,23 +1648,19 @@ export default {
             flex-wrap: wrap;
 
             .sku-item {
-              //   display: flex;
               justify-content: center;
               align-items: center;
               margin-bottom: 10px;
-              padding: 0 6px;
-              margin-right: 20px;
+              padding: 9px 13px;
+              margin-right: 10px;
               text-align: center;
-              line-height: 36px;
-              min-width: 108px;
-              height: 36px;
               background: #ffffff;
-              border-radius: 0px 0px 0px 0px;
-              border: 1px solid #dddddd;
+              border: 1px solid #b8c4d1;
               font-size: 14px;
               font-family: PingFang SC, PingFang SC;
               font-weight: 500;
               color: #333333;
+              border-radius: 4px;
 
               &:disabled {
                 cursor: not-allowed;
@@ -1662,7 +1669,7 @@ export default {
               }
 
               &.active {
-                border: 1px solid #F74747;
+                border: 1px solid #f74747;
                 color: #eb0611;
 
                 .img-box {
@@ -1672,11 +1679,11 @@ export default {
                 }
 
                 .text {
-                  color: #F74747;
+                  color: #f74747;
                 }
 
                 .price {
-                  color: #F74747;
+                  color: #f74747;
                 }
               }
 
@@ -1692,10 +1699,10 @@ export default {
           }
 
           .shuliang-box {
-            margin-top: 20px;
             display: flex;
             align-items: center;
-
+            height: 48px;
+            margin-right: 26px;
             .sel-num-title {
               min-width: 90px;
               font-family: Arial, Arial;
@@ -1717,30 +1724,26 @@ export default {
               min-width: 105px;
               display: flex;
               align-items: center;
+              height: 100%;
 
               .btn {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-
                 border: 1px solid #d5d8de;
-                width: 24px;
-                height: 24px;
+                width: 48px;
+                height: 48px;
                 cursor: pointer;
                 user-select: none;
+                background: #f7f7f7;
 
                 &:hover {
                   opacity: 0.8;
                 }
-
-                img {
-                  width: 10px;
-                  height: 10px;
-                  vertical-align: bottom;
+                i {
+                  font-size: 16px;
+                  color: #666;
                 }
-              }
-
-              .minus {
               }
 
               input {
@@ -1751,10 +1754,9 @@ export default {
                 border-left: none;
                 border-right: none;
 
-                width: 40px;
-                height: 30px;
-                height: 24px;
-                line-height: 30px;
+                width: 72px;
+                height: 48px;
+                line-height: 48px;
                 text-align: center;
 
                 font-size: 16px;
@@ -1767,33 +1769,31 @@ export default {
               input::-webkit-inner-spin-button {
                 -webkit-appearance: none !important;
               }
-
-              /* chrome */
-              input[type="number"] {
-                -moz-appearance: textfield;
-                /* firefox */
-              }
-
-              .plus {
-              }
             }
           }
 
           .yunfei-box,
           .dinghuo-box {
-            margin-top: 30px;
+            margin-top: 18px;
             .label {
-              min-width: 90px;
+              min-width: 70px;
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: 400;
               font-size: 14px;
               color: #999999;
             }
             .value {
+              display: flex;
+              align-items: center;
+              gap: 30px;
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: 400;
               font-size: 14px;
               color: #999999;
+            }
+            .desc {
+              font-size: 14px;
+              color: #f54a4b;
             }
           }
 
@@ -1813,17 +1813,17 @@ export default {
             .btn-buy {
               width: 164px;
               height: 48px;
-              background: #edf5ff;
-              border-radius: 0px 0px 0px 0px;
+              background: #fdf5f5;
+              border-radius: 4px;
               font-family: OPPOSans, OPPOSans;
               // font-weight: bold;
               font-size: 18px;
-              color: #F74747;
-              border: 1px solid #F74747;
+              color: #f74747;
+              border: 1px solid #f74747;
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: bold;
               font-size: 16px;
-              color: #F74747;
+              color: #333;
             }
 
             .btn-add-cart {
@@ -1831,8 +1831,8 @@ export default {
               height: 48px;
               background: #ffffff;
               border-radius: 0px 0px 0px 0px;
-              border: 1px solid #F74747;
-              background: #F74747;
+              border: 1px solid #f74747;
+              background: #f74747;
 
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: bold;
@@ -1849,11 +1849,11 @@ export default {
               height: 48px;
               background: #ffffff;
               border-radius: 0px 0px 0px 0px;
-              border: 1px solid #F74747;
+              border: 1px solid #f74747;
               font-family: OPPOSans, OPPOSans;
               // font-weight: bold;
               font-size: 18px;
-              color: #F74747;
+              color: #f74747;
             }
           }
         }
@@ -1898,14 +1898,14 @@ export default {
           font-family: Poppins, Poppins;
           font-weight: bold;
           font-size: 25px;
-          color: #F74747;
+          color: #f74747;
         }
 
         .panel-title-line {
           margin-bottom: 64px;
           width: 100%;
           height: 7px;
-          background: #F74747;
+          background: #f74747;
           border-radius: 0px 0px 0px 0px;
         }
       }
@@ -1922,7 +1922,7 @@ export default {
   line-height: 48px;
 
   .count-num {
-    color: #F74747;
+    color: #f74747;
   }
 
   .nav-item {
@@ -1944,7 +1944,7 @@ export default {
     &.active {
       font-weight: bold;
       position: relative;
-      background: #F74747;
+      background: #f74747;
       color: #ffffff;
 
       // &::after {
@@ -1978,7 +1978,7 @@ export default {
     /*no */
 
     &.contact {
-      background: #F74747;
+      background: #f74747;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -2160,7 +2160,7 @@ export default {
     .comment-title-text {
       padding: 5px 30px;
       margin-right: 20px;
-      background-color: #F74747;
+      background-color: #f74747;
       color: #fff;
     }
   }
@@ -2259,7 +2259,7 @@ export default {
 
     &:hover {
       .title {
-        color: #F74747 !important;
+        color: #f74747 !important;
       }
     }
 

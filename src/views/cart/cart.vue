@@ -1,12 +1,7 @@
 <template>
   <div class="page">
     <div class="inner w-1400">
-      <div class="main-title flex-between">
-        <div class="left">
-          <span>购物车</span>
-        </div>
-      </div>
-
+      <pageBreadcrumb />
       <!-- 商品列表 -->
       <div class="empty-wrap column-flex-center" v-if="!list_shopcart.length">
         <div class="empty-pic-box">
@@ -87,23 +82,18 @@
                   {{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}
                 </div>
                 <div class="box-act">
-                  <!-- <div class="goods-action-box" v-if="false">
-                    <span class="goods-action" v-if="item.if_collect" @click="favouriteDelete(item)">
-                      <img src="@img/other/shopcart-goods-yishoucang.png" alt="" />
-                      取消
-                    </span>
-                    <span class="goods-action" v-else @click="favouriteAdd(item)">
-                      <img src="@img/other/shopcart-goods-weishoucang.png" alt="" />
-                      收藏</span>
-                  </div> -->
                   <div class="goods-action-box">
                     <span
                       class="goods-action"
                       data-fn="do_cart_delete_row"
                       @click="do_cart_delete_row_tip(item.inventoryId)"
                     >
-                      <!-- <img src="@img/other/shopcart-goods-delete.png" alt="" /> -->
                       删除</span
+                    >
+                  </div>
+                  <div class="goods-action-box">
+                    <span class="goods-action" @click="favouriteAdd(item)">
+                      加入收藏夹</span
                     >
                   </div>
                 </div>
@@ -169,6 +159,7 @@
 </template>
 
 <script>
+import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
 import cart_action_modal from "@/components/cart/cart_action_modal.vue";
 
 import { mapState } from "vuex";
@@ -177,6 +168,7 @@ export default {
   name: "cart",
   components: {
     cart_action_modal,
+    pageBreadcrumb
   },
   data() {
     return {
@@ -500,12 +492,11 @@ export default {
 /deep/ .order-list-wrap {
   margin-top: 30px;
 }
-
 .page {
-  background: #ffffff;
+  background: #F3F3F3;
   text-align: center;
   font-size: 14px;
-  padding-top: 45px;
+  padding-top: 20px;
 
   .inner {
     min-height: 50vh;
@@ -517,89 +508,6 @@ export default {
     font-weight: 400;
     line-height: 20px;
     color: #333333;
-  }
-
-  .main-title {
-    padding-bottom: 15px;
-    border-bottom: 1px solid #d5d8de;
-    text-align: left;
-
-    .left {
-      font-family: Microsoft YaHei, Microsoft YaHei;
-      font-weight: 400;
-      font-size: 24px;
-      color: #333333;
-
-      .num {
-        margin-left: 10px;
-        color: #ff9312;
-      }
-    }
-
-    .right {
-      font-size: 12px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      line-height: 24px;
-      color: #333333;
-
-      .el-select {
-        width: 250px;
-      }
-
-      .step-box {
-        width: 500px;
-        margin: 0 auto;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-
-        .step {
-          flex: 1;
-          height: 30px;
-          line-height: 30px;
-          text-align: center;
-          background: #eee;
-          cursor: pointer;
-          transition: 0.3s;
-
-          &:hover {
-            opacity: 0.75;
-          }
-
-          &.step-1 {
-            clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%);
-          }
-
-          &.step-2 {
-            clip-path: polygon(
-              0% 0%,
-              97% 0%,
-              100% 50%,
-              97% 100%,
-              0% 100%,
-              3% 50%
-            );
-          }
-
-          &.step-3 {
-            clip-path: polygon(
-              0% 0%,
-              97% 0%,
-              100% 50%,
-              97% 100%,
-              0% 100%,
-              3% 50%
-            );
-          }
-
-          &.active {
-            background: #F74747;
-            color: #fff;
-          }
-        }
-      }
-    }
   }
 
   .search-wrap {
@@ -642,7 +550,7 @@ export default {
         display: inline-block;
         width: 128px;
         height: 36px;
-        background: #F74747;
+        background: #f74747;
         border-radius: 4px 4px 4px 4px;
         font-size: 14px;
         font-family: sans-serif;
@@ -654,7 +562,8 @@ export default {
 
   .ctx-box {
     background: #fff;
-    padding: 60px 0;
+    margin-top: 20px;
+    padding: 20px;
 
     .list {
       border: 1px solid #eee;
@@ -755,7 +664,7 @@ export default {
 
             div {
               &:hover {
-                color: #F74747;
+                color: #f74747;
               }
             }
 
@@ -831,7 +740,7 @@ export default {
                 cursor: pointer;
 
                 &:hover {
-                  color: #F74747;
+                  color: #f74747;
                 }
               }
             }
@@ -895,7 +804,7 @@ export default {
       color: #666666;
 
       &:hover {
-        color: #F74747;
+        color: #f74747;
       }
     }
   }
@@ -913,7 +822,7 @@ export default {
       color: #666666;
 
       &:hover {
-        color: #F74747;
+        color: #f74747;
       }
     }
   }
@@ -957,7 +866,7 @@ export default {
     cursor: pointer;
     width: 191px;
     height: 46px;
-    background: #F74747;
+    background: #f74747;
 
     font-size: 16px;
     font-family: Microsoft YaHei;
@@ -1002,7 +911,7 @@ export default {
     .btn {
       width: 191px;
       height: 46px;
-      background: #F74747;
+      background: #f74747;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 18px;

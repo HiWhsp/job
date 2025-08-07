@@ -119,14 +119,14 @@ export default {
 }
 
 .zhutu-wrap {
-  width: 400px;
+  width: 512px;
   padding: 0 0px;
 
   .zhutu-inner {
     border: 1px solid #eee;
     overflow: hidden;
-    width: 400px;
-    height: 400px;
+    width: 512px;
+    height: 512px;
     margin: 0 auto;
     user-select: none;
   }
@@ -134,7 +134,7 @@ export default {
 
 .lunbo-box {
   position: relative;
-  width: 400px;
+  width: 512px;
 //   height: 400px;
   // border: 1px solid #eee;
   // padding-top: 20px;

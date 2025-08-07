@@ -1,11 +1,9 @@
 <template>
   <div class="bread-box">
     <div class="bread-inner flex w-1400">
-      <router-link to="/">
-        <!-- <img src="@img/common/home.png" alt="" /> -->
-        首页
-        <!-- Home -->
-      </router-link>
+      <img src="@img/common/home.png" alt="" />
+      <p>当前位置：</p>
+      <router-link to="/"> 首页 </router-link>
 
       <template v-if="level1.title">
         <span class="arrow">&gt;</span>
@@ -75,7 +73,15 @@ export default {
 
   .bread-inner {
     margin: 0 auto;
-    // width: 95%;
+    img {
+      width: 14px;
+      height: 14px;
+      margin-right: 10px;
+    }
+    p {
+      font-size: 16px;
+      color: #999999;
+    }
 
     a {
       display: inline-flex;
@@ -110,7 +116,7 @@ export default {
       color: #aeaeae;
     }
 
-    >*:last-child {
+    > *:last-child {
       font-family: OPPOSans, OPPOSans;
       // font-weight: bold;
       font-size: 15px;
@@ -119,6 +125,5 @@ export default {
   }
 }
 </style>
-
 
 <style scoped lang="less" src="@/assets/h5css/mobile/bread.less"></style>
