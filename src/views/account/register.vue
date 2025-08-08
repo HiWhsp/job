@@ -1,34 +1,76 @@
 <template>
   <div class="page">
-    <div class="page-bg">
-      <img src="@img/login/login-bg.jpg" alt="" />
-    </div>
-
     <div class="page-ctx">
-      <div class="page-inner page-inner flex-between w-1400">
-        <div class="page-poster">
-          <!-- <img src="@img/login/poster.png" alt=""> -->
-        </div>
-
+      <div class="page-inner flex-center w-1400">
         <div class="form-box">
           <div class="input-wrap">
             <div class="tab-box">
-              <div class="tab-item">
-                {{ form.type == 1 ? "会员" : "企业" }}注册
-              </div>
+              <div class="tab-item">用户注册</div>
             </div>
 
             <template>
               <div class="input-box">
-                <span>手机号</span>
+                <span>姓名：</span>
                 <input
                   type="text"
-                  placeholder="请输入手机号码"
+                  placeholder="请输入姓名"
+                  v-model="form.name"
+                />
+              </div>
+              <div class="input-box">
+                <span>邮箱：</span>
+                <input
+                  type="text"
+                  placeholder="请输入邮箱"
+                  v-model="form.email"
+                />
+              </div>
+              <div class="input-box tip">
+                <span>公司名称：</span>
+                <input
+                  type="text"
+                  placeholder="请输入公司名称"
+                  v-model="form.company"
+                />
+              </div>
+              <div class="input-box">
+                <span>职位：</span>
+                <input
+                  type="text"
+                  placeholder="请输入职位"
+                  v-model="form.position"
+                />
+              </div>
+
+              <div class="input-box">
+                <span>联系地址：</span>
+                <input
+                  type="text"
+                  placeholder="请输入联系地址"
+                  v-model="form.address"
+                />
+              </div>
+              <div class="input-box">
+                <span>详细地址：</span>
+                <input
+                  type="text"
+                  placeholder="请输入详细地址"
+                  v-model="form.address"
+                />
+              </div>
+
+              <div class="input-box">
+                <span>手机号：</span>
+                <input
+                  type="text"
+                  placeholder="请输入手机号"
                   v-model="form.phone"
                 />
               </div>
 
-              <register_phone_code :form="form" />
+              <div class="input-box">
+                <register_phone_code :form="form" />
+              </div>
 
               <div class="input-box">
                 <span>设置密码</span>
@@ -47,33 +89,27 @@
                   v-model="form.pass2"
                 />
               </div>
-              <div class="input-box" v-if="form.type == 2">
-                <span>企业名称</span>
-                <input
-                  type="text"
-                  placeholder="请输入企业名称"
-                  v-model="form.company"
-                />
-              </div>
               <div class="btn-box">
                 <button class="btn-ripple" @click="do_submit()">注册</button>
               </div>
 
-              <div class="register-box">
-                <span>
-                  <router-link to="/login">已有账号，直接登录</router-link>
-                </span>
-              </div>
-
               <div class="terms-box">
-                <span class="terms-check" @click="is_agree = !is_agree">
-                  <img v-if="is_agree" src="@img/common/check1.png" alt="" />
-                  <img v-else src="@img/common/check0.png" alt="" />
-                  登录注册即表示同意
-                </span>
-                <span class="terms-text" @click="terms_open(92)"
-                  >《会员注册协议》</span
-                >
+                <div class="terms-box-inner">
+                  <span class="terms-check" @click="is_agree = !is_agree">
+                    <img v-if="is_agree" src="@img/common/check1.png" alt="" />
+                    <img v-else src="@img/common/check0.png" alt="" />
+                    我已阅读并同意
+                  </span>
+                  <span class="terms-text" @click="terms_open(92)"
+                    >《隐私协议》</span
+                  >
+                </div>
+
+                <div class="register-box">
+                  <span>
+                    <router-link to="/login">已有账号，直接登录</router-link>
+                  </span>
+                </div>
               </div>
             </template>
           </div>
@@ -109,10 +145,6 @@ export default {
     return {
       is_agree: true,
 
-      mode: "账号密码", //微信扫码
-      tabType: "PASS", //登录方式
-      agreed: false,
-
       form: {
         phone: "",
         code: "",
@@ -126,15 +158,7 @@ export default {
   computed: {
     ...mapState(["logo"]),
   },
-  mounted() {
-    let type = this.$route.query.type;
-    console.log(type);
-    if (type !== undefined) {
-      this.form.type = type;
-    } else {
-      this.$refs.register_type_modal.init("");
-    }
-  },
+  mounted() {},
 
   methods: {
     terms_open(id) {
@@ -201,23 +225,12 @@ export default {
 <style scoped lang="less">
 .page {
   position: relative;
-
-  .page-bg {
-    img {
-      width: 100%;
-      min-height: 665px;
-    }
-  }
+  background: #f3f3f3;
 
   .page-ctx {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-
     display: flex;
     align-items: center;
+    padding: 60px 0;
   }
 
   .page-poster {
@@ -230,7 +243,6 @@ export default {
   }
 
   .page-inner {
-    height: 780px;
     margin: 0 auto;
     background: transparent;
     align-items: center;
@@ -239,18 +251,9 @@ export default {
     .form-box {
       position: relative;
       width: fit-content;
-      min-height: 520px;
-      background: #f9fafc;
-      box-shadow: 0px 2px 15px 1px rgba(79, 79, 79, 0.15);
-      border: 1px solid rgba(76, 165, 228, 0.1);
-
-      padding: 40px 40px 70px;
-      opacity: 1;
-      border-radius: 10px;
     }
 
     .input-wrap {
-      width: 400px;
       margin: 0 auto;
 
       .tab-box {
@@ -286,45 +289,56 @@ export default {
 
       .input-box {
         margin-bottom: 20px;
-        width: 100%;
+        width: 650px;
         height: 50px;
-        background: #ffffff;
-        border: 1px solid #eeeeee;
         border-radius: 4px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         overflow: hidden;
+        padding-right: 110px;
+        position: relative;
+        .sms-box {
+          width: 550px;
+          height: 100%;
+        }
 
         span {
           text-align: center;
           display: inline-block;
-          width: 90px;
-          border-right: 1px solid #ccc;
+          width: 105px;
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
-          font-size: 14px;
-          color: #7d7d7d;
-          // text-indent: 1em;
-        }
-
-        img {
-          width: 36px;
+          font-size: 16px;
+          color: #272536;
         }
 
         input {
-          flex: 2;
+          width: 480px;
           height: 100%;
           padding-left: 16px;
           font-size: 14px;
           color: #000;
 
           &::-webkit-input-placeholder {
-            font-size: 14px;
+            font-size: 16px;
             font-family: sans-serif;
             font-weight: 400;
-            color: #d7d7d7;
+            color: #bebebe;
           }
+        }
+      }
+      .tip {
+        &:after {
+          content: "请输入公司全称";
+          color: #f74747;
+          position: absolute;
+          right: 0;
+          top: 10px;
+          font-size: 14px;
+          font-family: Microsoft YaHei;
+          font-weight: 400;
+          line-height: 24px;
         }
       }
 
@@ -342,18 +356,20 @@ export default {
         color: #999999;
 
         a {
-          color: #F74747;
+          color: #f74747;
         }
       }
 
       .btn-box {
         margin-top: 40px;
+        margin-left: 100px;
+        margin-right: 110px;
 
         button {
           width: 100%;
           height: 44px;
           background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
-          background: #F74747;
+          background: #f74747;
           font-size: 18px;
           font-family: sans-serif;
           font-weight: 400;
@@ -363,7 +379,6 @@ export default {
 
       .register-box {
         text-align: center;
-        margin-top: 20px;
         font-size: 14px;
 
         a {
@@ -371,8 +386,8 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 24px;
-          color: #F74747;
-          border-bottom: 1px solid #F74747;
+          color: #f74747;
+          border-bottom: 1px solid #f74747;
         }
       }
     }
@@ -380,17 +395,12 @@ export default {
 }
 
 .terms-box {
-  position: absolute;
-  height: 40px;
-  background: #f5f6f8;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  margin-top: 40px;
+  margin-left: 100px;
+  margin-right: 110px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  justify-content: flex-start;
-  padding-left: 20px;
+  justify-content: space-between;
   text-align: center;
 
   .terms-check {
@@ -412,11 +422,7 @@ export default {
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 12px;
-    color: #999999;
-
-    &:hover {
-      color: #F74747;
-    }
+    color: #e5222b;
   }
 }
 </style>

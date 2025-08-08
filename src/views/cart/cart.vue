@@ -24,10 +24,10 @@
               <div class="title-2" style="text-align: left; padding-left: 0px">
                 产品名称
               </div>
-              <div class="title-3">规格</div>
               <div class="title-4">单价</div>
               <div class="title-5">数量</div>
               <div class="title-6">小计</div>
+              <div class="title-8">需求描述</div>
               <div class="title-7">操作</div>
             </div>
 
@@ -58,12 +58,9 @@
                   <div class="goods-title" @click="mix_to_product(item)">
                     {{ item.title }}
                   </div>
-                  <!-- <div class="sku-info">
-                    {{ item.key_vals }}
-                  </div> -->
-                </div>
-                <div class="box-sku">
-                  {{ item.keyVals }}
+                  <div class="sku-info">
+                    规格：{{ item.keyVals || '--' }}
+                  </div>
                 </div>
                 <div class="box-unit-price">
                   {{ vuex_huobi }} {{ item.priceSale }}
@@ -80,6 +77,14 @@
                 </div>
                 <div class="box-subtotal">
                   {{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}
+                </div>
+                <div class="box-desc">
+                  <el-input
+                    type="textarea"
+                    :rows="2"
+                    placeholder="请输入需求描述"
+                    v-model="item.remark"
+                  ></el-input>
                 </div>
                 <div class="box-act">
                   <div class="goods-action-box">
@@ -136,7 +141,7 @@
             件商品
           </div>
           <div class="total-price">
-            总价：
+            合计：
             <b>{{ vuex_huobi }} {{ shopcart_money }}</b>
           </div>
           <button
@@ -168,7 +173,7 @@ export default {
   name: "cart",
   components: {
     cart_action_modal,
-    pageBreadcrumb
+    pageBreadcrumb,
   },
   data() {
     return {
@@ -493,7 +498,7 @@ export default {
   margin-top: 30px;
 }
 .page {
-  background: #F3F3F3;
+  background: #f3f3f3;
   text-align: center;
   font-size: 14px;
   padding-top: 20px;
@@ -590,22 +595,25 @@ export default {
         }
 
         .title-3 {
-          width: 200px;
+          width: 120px;
         }
 
         .title-4 {
-          width: 200px;
+          width: 120px;
         }
 
         .title-5 {
-          width: 200px;
+          width: 120px;
         }
 
         .title-6 {
-          width: 200px;
+          width: 120px;
         }
 
         .title-7 {
+          width: 120px;
+        }
+        .title-8 {
           width: 200px;
         }
       }
@@ -691,12 +699,12 @@ export default {
           }
 
           .box-unit-price {
-            width: 200px;
+            width: 120px;
             color: #ff0000;
           }
 
           .box-number {
-            width: 200px;
+            width: 120px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -723,13 +731,18 @@ export default {
           }
 
           .box-subtotal {
-            width: 200px;
+            width: 120px;
             color: #fc0d1b;
           }
 
-          .box-act {
+          .box-desc {
             width: 200px;
+          }
+
+          .box-act {
+            width: 120px;
             font-size: 16px;
+            padding-left: 30px;
 
             div {
               & + div {
@@ -752,15 +765,13 @@ export default {
 }
 
 .goods-action-box {
-  text-align: center;
+  text-align: left;
   font-size: 14px;
   font-weight: normal;
   color: #666666;
 
   .goods-action {
     display: flex;
-    justify-content: center;
-    align-items: center;
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 14px;

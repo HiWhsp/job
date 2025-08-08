@@ -55,16 +55,16 @@
               </div>
             </div>
 
-            <!-- <div class="terms-box">
+            <div class="terms-box">
               <span class="terms-check" @click="is_agree = !is_agree">
                 <img v-if="is_agree" src="@img/common/check1.png" alt="" />
                 <img v-else src="@img/common/check0.png" alt="" />
-                登录注册即表示同意
+                我已阅读并同意
               </span>
               <span class="terms-text" @click="terms_open(92)"
                 >《隐私政策》</span
               >
-            </div> -->
+            </div>
           </div>
         </div>
       </div>
@@ -197,7 +197,7 @@ export default {
       background: #f9fafc;
       box-shadow: 0px 2px 15px 1px rgba(79, 79, 79, 0.15);
       border: 1px solid transparent;
-      padding: 46px 40px;
+      padding: 25px 40px;
       border-radius: 10px;
       padding-bottom: 70px;
     }
@@ -207,32 +207,29 @@ export default {
       margin: 0 auto;
 
       .tab-box {
-        margin-bottom: 40px;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
         display: flex;
         justify-content: center;
         align-items: center;
+        border-bottom: 2px solid #b9b8b8;
 
         .tab-item {
           font-family: Poppins, Poppins;
           font-weight: 600;
           font-size: 26px;
           color: #333333;
+          position: relative;
 
-          &:first-child {
-            // &:after {
-            //   content: "";
-            //   display: inline-block;
-            //   width: 2px;
-            //   height: 24px;
-            //   background-color: #ccc;
-            //   margin: 0 30px;
-            //   position: relative;
-            //   top: 3px;
-            // }
-          }
-
-          &.active {
-            color: #333333;
+          &:after {
+            content: "";
+            display: inline-block;
+            width: 100%;
+            height: 3px;
+            background-color: #000;
+            position: absolute;
+            bottom: -12px;
+            left: 0;
           }
         }
       }
@@ -252,7 +249,7 @@ export default {
         span {
           text-align: center;
           display: inline-block;
-          width: 90px;
+          width: 100px;
           border-right: 1px solid #ccc;
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
@@ -295,7 +292,7 @@ export default {
         color: #999999;
 
         a {
-          color: #F74747;
+          color: #f74747;
         }
       }
 
@@ -307,7 +304,7 @@ export default {
           width: 100%;
           height: 44px;
           background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
-          background: #F74747;
+          background: #f74747;
           font-size: 18px;
           font-family: sans-serif;
           font-weight: 400;
@@ -335,7 +332,7 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 24px;
-          color: #F74747;
+          color: #f74747;
           // border-bottom: 1px solid #F74747;
         }
       }
@@ -376,11 +373,7 @@ export default {
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 12px;
-    color: #999999;
-
-    &:hover {
-      color: #F74747;
-    }
+    color: #f74747;
   }
 }
 </style>

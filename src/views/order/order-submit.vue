@@ -1772,14 +1772,13 @@ export default {
 }
 
 .page {
-  background: #ffffff;
+  background: #f3f3f3;
   text-align: center;
   font-size: 14px;
 
   .inner {
     margin: 0 auto;
     padding: 40px 0 100px 0;
-    background: #fff;
   }
 
   .page-title {

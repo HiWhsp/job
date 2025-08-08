@@ -11,23 +11,42 @@
         <div class="form-box">
           <div class="input-wrap">
             <div class="tab-box">
-              <div class="tab-item">登录账号</div>
+              <div
+                class="tab-item"
+                :class="{ active: tabType == 'PASS' }"
+                @click="tabType = 'PASS'"
+              >
+                账号登录
+              </div>
+              <div
+                class="tab-item"
+                :class="{ active: tabType == 'SMS' }"
+                @click="tabType = 'SMS'"
+              >
+                短信登录
+              </div>
             </div>
-            <div class="input-box">
+            <div class="input-box" v-if="tabType == 'PASS'">
               <!-- <span>手机号</span> -->
               <div class="icon-box flex">
-                <img class="icon-phone" src="@img/login/phone.png" alt="" />
+                <!-- <img class="icon-phone" src="@img/login/phone.png" alt="" /> -->
+                <p class="flex-between">
+                  <span>账</span>
+                  <span>号</span>
+                </p>
               </div>
               <input
                 type="text"
-                placeholder="请输入手机号"
+                placeholder="请输入用户名或手机号"
                 v-model="form.phone"
               />
             </div>
-            <div class="input-box">
-              <!-- <span>密码</span> -->
+            <div class="input-box" v-if="tabType == 'PASS'">
               <div class="icon-box flex">
-                <img class="icon-pass" src="@img/login/pass.png" alt="" />
+                <p class="flex-between">
+                  <span>密</span>
+                  <span>码</span>
+                </p>
               </div>
               <input
                 type="password"
@@ -36,37 +55,49 @@
               />
             </div>
 
+            <div class="input-box" v-if="tabType == 'SMS'">
+              <!-- <span>手机号</span> -->
+              <div class="icon-box flex">
+                <p class="flex-between">
+                  <span>账</span>
+                  <span>号</span>
+                </p>
+              </div>
+              <input
+                type="text"
+                placeholder="请输入手机号"
+                v-model="form.phone"
+              />
+            </div>
+            <login_phone_code :form="form" v-if="tabType == 'SMS'" />
+
+            <div class="pass-act-box flex-between">
+              <span class="save">
+                <el-checkbox v-model="savePass">记住密码</el-checkbox>
+              </span>
+              <router-link to="retrieve" class="forget">忘记密码</router-link>
+            </div>
+
             <div class="btn-box">
               <button class="btn-ripple" @click="do_submit()">登录</button>
             </div>
 
-            <div class="pass-act-box flex-between">
-<!--              <div class="reg-box">-->
-<!--                <span> 没有账号， </span>-->
-<!--                <router-link to="/register">立即注册</router-link>-->
-<!--              </div>-->
-              <!-- <span class="save">
-                <el-checkbox v-model="savePass">记住密码</el-checkbox>
-              </span> -->
-              <router-link to="retrieve" class="forget">忘记密码</router-link>
+            <div class="register-box">
+              <span>
+                <router-link to="/register">没有账号，去注册</router-link>
+              </span>
             </div>
 
-            <!-- <div class="register-box">
-              <span>
-                <router-link to="/register">没有账号，去注册 ></router-link>
-              </span>
-            </div> -->
-
-            <!-- <div class="terms-box">
+            <div class="terms-box">
               <span class="terms-check" @click="is_agree = !is_agree">
                 <img v-if="is_agree" src="@img/common/check1.png" alt="" />
                 <img v-else src="@img/common/check0.png" alt="" />
-                登录注册即表示同意
+                我已阅读并同意
               </span>
               <span class="terms-text" @click="terms_open(92)"
                 >《隐私政策》</span
               >
-            </div> -->
+            </div>
           </div>
         </div>
       </div>
@@ -77,13 +108,13 @@
 </template>
 
 <script>
+import login_phone_code from "@/components/account/login_phone_code.vue"; //短信验证码
 import terms_modal from "@/components/account/terms_modal.vue"; //协议弹窗
-
-import { mapState } from "vuex";
 
 export default {
   name: "login",
   components: {
+    login_phone_code,
     terms_modal,
   },
   data() {
@@ -189,7 +220,7 @@ export default {
 
     .form-box {
       position: relative;
-      width: fit-content;
+      width: 400px;
       min-height: 300px;
       background: #f9fafc;
       box-shadow: 0px 2px 15px 1px rgba(79, 79, 79, 0.15);
@@ -200,36 +231,38 @@ export default {
     }
 
     .input-wrap {
-      width: 400px;
+      width: 100%;
       margin: 0 auto;
 
       .tab-box {
-        margin-bottom: 46px;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
         display: flex;
         justify-content: center;
         align-items: center;
-
+        border-bottom: 2px solid #b9b8b8;
+        display: flex;
+        justify-content: space-between;
         .tab-item {
           font-family: Poppins, Poppins;
-          font-weight: 600;
           font-size: 26px;
-          color: #333333;
-
-          &:first-child {
-            // &:after {
-            //   content: "";
-            //   display: inline-block;
-            //   width: 2px;
-            //   height: 24px;
-            //   background-color: #ccc;
-            //   margin: 0 30px;
-            //   position: relative;
-            //   top: 3px;
-            // }
-          }
+          color: #acacac;
+          position: relative;
+          padding: 0 10px;
 
           &.active {
             color: #333333;
+            font-weight: 600;
+            &:after {
+              content: "";
+              display: inline-block;
+              width: 100%;
+              height: 2px;
+              background-color: #000;
+              position: absolute;
+              bottom: -11px;
+              left: 0;
+            }
           }
         }
       }
@@ -246,21 +279,24 @@ export default {
         justify-content: space-between;
         overflow: hidden;
 
-        span {
-          display: inline-block;
-          width: 95px;
+        p {
+          display: flex;
+          width: 100px;
+          padding: 0 25px;
 
           border-right: 1px solid #ccc;
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
           font-size: 14px;
           color: #7d7d7d;
-          text-indent: 1em;
+          span {
+            font-size: 16px;
+          }
         }
 
         .icon-box {
-          justify-content: flex-end;
-          width: 32px;
+          justify-content: space-between;
+          width: 100px;
           height: 50px;
           .icon-phone {
             width: 15.63px;
@@ -293,8 +329,8 @@ export default {
           width: 100%;
           height: 44px;
           background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
-          background: #F74747;
-          background: #F74747;
+          background: #f74747;
+          background: #f74747;
           font-size: 18px;
           font-family: sans-serif;
           font-weight: 400;
@@ -314,7 +350,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 14px;
-          color: #F74747;
+          color: #f74747;
         }
       }
 
@@ -329,8 +365,8 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 24px;
-          color: #F74747;
-          border-bottom: 1px solid #F74747;
+          color: #f74747;
+          border-bottom: 1px solid #f74747;
         }
       }
     }
@@ -370,11 +406,7 @@ export default {
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 12px;
-    color: #999999;
-
-    &:hover {
-      color: #F74747;
-    }
+    color: #f74747;
   }
 }
 </style>

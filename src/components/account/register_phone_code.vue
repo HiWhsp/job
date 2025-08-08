@@ -106,9 +106,6 @@ export default {
   margin-bottom: 20px;
   width: 100%;
   height: 50px;
-  background: #ffffff;
-  border: 1px solid #eeeeee;
-  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -121,13 +118,10 @@ export default {
   .label {
     text-align: center;
     display: inline-block;
-    width: 90px;
-    border-right: 1px solid #ccc;
-    font-size: 14px;
-    font-family: Microsoft YaHei;
+    width: 100px;
+    font-size: 16px;
     font-weight: 400;
-    line-height: 24px;
-    color: #999999;
+    color: #272536;
     // text-indent: 1em;
   }
 
