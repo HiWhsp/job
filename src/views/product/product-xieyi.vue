@@ -1,6 +1,7 @@
 <template>
   <div class="page">
     <div class="inner w-1400">
+      <pageBreadcrumb />
       <div class="banner-box">
         <div class="lunbo-box">
           <el-carousel trigger="click" :autoplay="true">
@@ -296,7 +297,7 @@ export default {
   .inner {
     width: 1400px;
     margin: 0 auto;
-    padding-top: 35px;
+    padding-top: 20px;
     padding-bottom: 100px;
 
     .page-ctx {
@@ -306,6 +307,7 @@ export default {
 }
 
 .banner-box {
+  margin-top: 20px;
   position: relative;
 }
 

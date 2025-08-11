@@ -159,7 +159,7 @@
                   class="btn-ripple btn-sc"
                   @click="doConfirm()"
                 >
-                  生成报价单
+                去询价
                 </button>
                 <button
                   :disabled="jiesuanDisabled"

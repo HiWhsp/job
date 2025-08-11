@@ -41,8 +41,38 @@
     </div>
     <div class="inner w-1400">
       <div class="page-ctx">
-        <div class="upload-wrap">
+        <div class="upload-wrap flex-center">
+          <div class="download-box column-flex-center">
+            <div class="btn btn-ripple flex-center" @click="showTemplate()">
+              <img src="@img/batch/download.png" alt="" />
+              点我下载
+            </div>
+            <div class="tip">按照模版填写可以提高匹配成功率哦</div>
+          </div>
+          <div class="line-box">
+            <img src="@img/batch/line.png" alt="" />
+          </div>
           <div class="upload-box column-flex-center">
+            <el-upload
+              class="upload-demo"
+              :action="UPLOAD_ACTION"
+              name="file"
+              :data="custom_upload_data"
+              accept=".xls,.xlsx,.et"
+              :before-upload="beforeAvatarUpload"
+              :on-success="handleAvatarSuccess"
+              :show-file-list="false"
+            >
+              <div class="btn btn-ripple flex-center">
+                <img src="@img/batch/upload.png" alt="" />
+                上传文件
+              </div>
+            </el-upload>
+
+            <div class="tip">提交文件直接下单，表格最多支持100行</div>
+          </div>
+
+          <!-- <div class="upload-box column-flex-center">
             <el-upload
               class="upload-demo"
               :action="UPLOAD_ACTION"
@@ -64,7 +94,7 @@
               您还可以选择下载我们的模版，进行填写
               <span class="download" @click="showTemplate()">下载模版</span> )
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -94,11 +124,11 @@ export default {
     ...mapState([""]),
 
     custom_upload_data() {
-      let token = localStorage.getItem("token") || '';
-      let userId = localStorage.getItem("userId") || '';
+      let token = localStorage.getItem("token") || "";
+      let userId = localStorage.getItem("userId") || "";
 
       let info = {
-        action: 'upload_uploadFile',
+        action: "upload_uploadFile",
         token: token,
         userId: userId,
       };
@@ -255,7 +285,7 @@ export default {
       }
 
       &.active {
-        color: #F74747;
+        color: #f74747;
       }
     }
   }
@@ -284,9 +314,9 @@ export default {
       }
 
       &.active {
-        background: #F74747;
+        background: #f74747;
         .dot-box {
-          background: #F74747;
+          background: #f74747;
         }
       }
 
@@ -313,15 +343,49 @@ export default {
   height: 299px;
   background: #ffffff;
   padding-top: 70px;
+
+  .download-box {
+    .btn {
+      margin-bottom: 16px;
+      width: 164px;
+      height: 48px;
+      background: #FFEDED;
+      border-radius: 0px 0px 0px 0px;
+      border: 1px solid #f74747;
+
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: bold;
+      font-size: 16px;
+      color: #f74747;
+      img {
+        margin-right: 16px;
+        width: 23px;
+      }
+    }
+    .tip {
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: 400;
+      font-size: 12px;
+      color: #333333;
+    }
+  }
+
+  .line-box {
+    margin: 0 60px;
+    img {
+      width: 221.84px;
+    }
+  }
   .btn {
     width: 164px;
     height: 48px;
-    background: #F74747;
+    background: #f74747;
     border-radius: 0px 0px 0px 0px;
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: bold;
     font-size: 16px;
     color: #ffffff;
+    margin-bottom: 16px;
     img {
       margin-right: 16px;
       width: 23.08px;
@@ -335,24 +399,14 @@ export default {
     color: #333333;
   }
   .tip {
-    max-width: 450px;
-    text-align: center;
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 12px;
     color: #333333;
-
-    a {
-      font-family: Microsoft YaHei, Microsoft YaHei;
-      font-weight: 400;
-      font-size: 14px;
-      color: #F74747;
-    }
   }
 }
 .download {
-  color: #F74747;
+  color: #f74747;
   cursor: pointer;
 }
 </style>
-

@@ -1,14 +1,17 @@
 <template>
   <div class="page">
     <div class="inner w-1400">
-      <!-- <div class="page-title flex-between" v-if="false">
-        <div class="left">
-          <span>提交订单</span>
-        </div>
-      </div> -->
+      <pageBreadcrumb />
       <div class="page-ctx">
         <div class="sec-addr">
-          <div class="sec-title">选择收货人地址</div>
+          <div class="sec-title">
+            选择收货人地址
+            <div class="addr-add">
+              <button class="btn btn-ripple" @click="open_addr_add()">
+                添加新地址
+              </button>
+            </div>
+          </div>
           <div class="sec-ctx">
             <div class="address-list" v-if="address_list.length">
               <div
@@ -25,20 +28,13 @@
                 <img src="@img/order/addr-select.png" alt="" class="marker" />
               </div>
             </div>
-            <div class="addr-add">
-              <div class="empty-title" v-if="!address_list.length">
-                还没有收件地址
-              </div>
-              <button class="btn btn-ripple" @click="open_addr_add()">
-                + 新增地址
-              </button>
-            </div>
+            <el-empty description="暂无收件地址" v-else />
           </div>
         </div>
 
         <div class="sec-pay">
           <div class="sec-title flex">
-            支付信息
+            支付和配送信息
             <!-- <span
               v-if="vuex_user.type == 2"
               style="font-size: 16px; margin-left: 16px"
@@ -47,28 +43,83 @@
           </div>
           <div class="sec-ctx sec-ctx-type">
             <div class="pay-group">
-              <div class="title">支付方式：</div>
               <div class="pay-items">
-                <div
-                  class="item"
-                  v-for="(item, index) in pay_method_list"
-                  :key="index"
-                  @click="do_toggle_paytype(item)"
-                  :class="{ checked: pay_type_value == item.value }"
-                >
-                  <img
-                    class="img-check check-0 check-img check-img-0"
-                    src="@img/common/check0.png"
-                    alt=""
-                  />
-                  <img
-                    class="img-check check-1 check-img check-img-1"
-                    src="@img/common/check1.png"
-                    alt=""
-                  />
-                  <img class="marker-img" :src="item.icon" alt="" />
-                  <span>{{ item.title }}</span>
+                <div class="pay-items-left">
+                  <div
+                    class="item"
+                    v-for="(item, index) in pay_method_list"
+                    :key="index"
+                    @click="do_toggle_paytype(item)"
+                    :class="{ checked: pay_type_value == item.value }"
+                  >
+                    <img
+                      class="img-check check-0 check-img check-img-0"
+                      src="@img/common/check0.png"
+                      alt=""
+                    />
+                    <img
+                      class="img-check check-1 check-img check-img-1"
+                      src="@img/common/check1.png"
+                      alt=""
+                    />
+                    <img class="marker-img" :src="item.icon" alt="" />
+                    <span>{{ item.title }}</span>
+                  </div>
                 </div>
+
+                <div class="wuli-info">
+                  <div class="info-title">配送方式：</div>
+                  <div class="info-item">
+                    <div class="info-label">快递配送</div>
+                  </div>
+                </div>
+              </div>
+              <!-- 线下转款信息 -->
+              <div class="xianxia-info" v-if="payType == '对公转账'">
+                <div class="info-title">收款对公账户</div>
+                <div class="info-item">
+                  <div class="info-label">收款单位名称:</div>
+                  <div class="info-val">
+                    {{ vuex_config.offline_company || "--"
+                    }}<img
+                      src="@img/pay-method/copy.png"
+                      alt=""
+                      class="copy-img"
+                    />
+                  </div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">收款单位账号:</div>
+                  <div class="info-val">
+                    {{ vuex_config.offline_code || "--" }}
+                  </div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">开户银行:</div>
+                  <div class="info-val">
+                    {{ vuex_config.offline_bank || "--" }}
+                  </div>
+                </div>
+                <!-- <div class="info-item scroll-target-pingzheng">
+                  <div class="info-label">转账凭证:</div>
+                  <div class="info-val">
+                    <el-upload
+                      class="upload-demo"
+                      list-type="picture-card"
+                      multiple
+                      accept="image/*"
+                      :limit="upload_limit_number"
+                      :name="upload_col_name"
+                      :action="mix_upload_action"
+                      :data="mix_upload_data"
+                      :on-success="uploadSuccess_pingjia"
+                      :before-upload="beforeUpload_pingjia"
+                      :on-preview="handlePictureCardPreview"
+                    >
+                      <i class="el-icon-plus"></i>
+                    </el-upload>
+                  </div>
+                </div> -->
               </div>
             </div>
 
@@ -83,51 +134,6 @@
               >
                 <div class="info-label yue-warn-tip">
                   提示：您的余额不足，请选择其他支付方式
-                </div>
-              </div>
-            </div>
-
-            <!-- 线下转款信息 -->
-            <div class="xianxia-info" v-if="payType == '线下转款'">
-              <div class="info-item">
-                <div class="info-label">收款单位名称:</div>
-                <div class="info-val">{{ vuex_config.offline_company }}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">收款单位账号:</div>
-                <div class="info-val">{{ vuex_config.offline_code }}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">开户银行:</div>
-                <div class="info-val">{{ vuex_config.offline_bank }}</div>
-              </div>
-              <div class="info-item scroll-target-pingzheng">
-                <div class="info-label">转账凭证:</div>
-                <div class="info-val">
-                  <el-upload
-                    class="upload-demo"
-                    list-type="picture-card"
-                    multiple
-                    accept="image/*"
-                    :limit="upload_limit_number"
-                    :name="upload_col_name"
-                    :action="mix_upload_action"
-                    :data="mix_upload_data"
-                    :on-success="uploadSuccess_pingjia"
-                    :before-upload="beforeUpload_pingjia"
-                    :on-preview="handlePictureCardPreview"
-                  >
-                    <i class="el-icon-plus"></i>
-
-                    <!-- <div class="el-upload__tip" slot="tip">
-                    <div class="tip-text-1">添加图片</div>
-                    <div class="tip-text-2">
-                      最多
-                      <b class="number">6</b>
-                      张
-                    </div>
-                  </div> -->
-                  </el-upload>
                 </div>
               </div>
             </div>
@@ -315,9 +321,8 @@
 
         <div class="sec sec-product">
           <div class="sec-title">订单商品</div>
-          <div class="sec-ctx" style="padding-top: 24px">
+          <div class="sec-ctx">
             <div class="goods-list">
-              <!-- <div class="title">订单商品</div> -->
               <div class="list">
                 <div class="goods-list-inner">
                   <!-- 标题 -->
@@ -325,11 +330,9 @@
                     <div class="box-title">
                       <div class="title-text">产品</div>
                     </div>
-                    <div class="box-sku">规格</div>
-                    <div class="box-unit">价格</div>
+                    <div class="box-unit">单价</div>
                     <div class="box-num">数量</div>
                     <div class="box-subtitle">小计</div>
-                    <div class="box-remark">备注</div>
                   </div>
 
                   <!-- 商品列表 -->
@@ -348,191 +351,33 @@
                           </el-image>
                         </div>
                         <div class="title-box">
-                          {{ item.title }}
+                          <div class="title-text ellipsis-2">
+                            {{ item.title }}
+                          </div>
+                          <div class="box-sku">规格：{{ item.keyVals }}</div>
                         </div>
                       </div>
-                      <div class="box-sku">
-                        {{ item.keyVals }}
-                      </div>
+
                       <div class="box-unit">
-                        {{ vuex_huobi }} {{ item.discountSale||item.priceSale }}
+                        {{ vuex_huobi }}
+                        {{ item.discountSale || item.priceSale }}
                       </div>
                       <div class="box-num">{{ item.num }}</div>
                       <div class="box-subtitle">
                         {{ vuex_huobi }}
-                        {{ item.discountSale?(item.discountSale * item.num).toFixed(2):(item.priceSale * item.num).toFixed(2) }}
-                      </div>
-                      <div class="box-remark">
-                        <el-input
-                          type="textarea"
-                          :autosize="{ minRows: 2, maxRows: 3 }"
-                          placeholder="请输入内容"
-                          v-model="item.remark"
-                        >
-                        </el-input>
+                        {{
+                          item.discountSale
+                            ? (item.discountSale * item.num).toFixed(2)
+                            : (item.priceSale * item.num).toFixed(2)
+                        }}
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              <div class="order-action">
-                <div class="order-action-inner">
-                  <div class="sec-item" v-if="list_coupon.length">
-                    <div
-                      class="sub-title"
-                      @click="showCoupon = !showCoupon"
-                      :class="{ 'expand-0': !showCoupon }"
-                    >
-                      <div class="text">使用优惠</div>
-                      <img src="@img/common/pay-arrow-top.png" alt="" />
-                    </div>
-                    <!-- <div class="sec-input">
-                    <el-select v-model="coupon_select_id" placeholder="请选择优惠券">
-                      <el-option v-for="item in list_coupon" :key="item.id" :label="`${item.title} 【${item.miaoshu}】`" :value="item.id"> </el-option>
-                    </el-select>
-                  </div> -->
-
-                    <div class="yhq-list" v-if="showCoupon">
-                      <div
-                        class="yhq-item"
-                        v-for="(item, index) in list_coupon"
-                        :key="index"
-                        :class="{ active: coupon_select_id == item.id }"
-                        @click="handleCouponSelect(item)"
-                      >
-                        <img
-                          src="@img/address/dizhi-check-1.png"
-                          alt=""
-                          class="marker"
-                        />
-
-                        <div class="yhq-top">
-                          <div class="yhq-1">
-                            <div class="text-1">
-                              {{ vuex_huobi }}{{ +item.jian }}
-                            </div>
-                            <div class="text-2">满{{ +item.man }}</div>
-                          </div>
-                          <div class="yhq-2">
-                            有效期至
-                            {{ item.endTime && item.endTime.substr(0, 10) }}
-                          </div>
-                        </div>
-                        <div class="yhq-bottom">
-                          <div class="yhq-3">[{{ item.title }}]</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="yhq-select-info">
-                      <b>金额抵用</b>
-                      <template v-if="coupon_select.id">
-                        <b class="number"
-                          >{{ vuex_huobi }}{{ +coupon_select.jian }}</b
-                        >, 使用【{{ coupon_select.title }}】优惠券 1张，优惠
-                        {{ +coupon_select.jian }} 元
-                      </template>
-                      <template v-else> 无 </template>
-                    </div>
-                  </div>
-
-                  <div class="sec-item" v-if="false">
-                    <div class="sub-title">使用积分</div>
-                    <div class="sec-tip" v-if="jifen_pay.jifen">
-                      可用积分：{{ +vuex_user.jifen || 0 }}, 本单最多可用
-                      {{ jifen_pay.jifen }} 积分抵扣 {{ currency
-                      }}{{ jifen_pay.money }}
-                    </div>
-                    <div class="sec-tip" v-else>当前没有可抵扣的积分</div>
-
-                    <div class="sec-btn-actions">
-                      <button
-                        class="btn"
-                        :class="{ active: if_use_jifen }"
-                        @click="if_use_jifen = true"
-                      >
-                        使用积分
-                      </button>
-                      <button
-                        class="btn"
-                        :class="{ active: !if_use_jifen }"
-                        @click="if_use_jifen = false"
-                      >
-                        不使用积分
-                      </button>
-                    </div>
-                    <div class="use-jifen-num">
-                      本单将扣减积分 <b>{{ use_jifen_num }}</b>
-                    </div>
-                    <!-- <div class="sec-input" v-if="jifen_pay.jifen">
-                <el-input type="number" :disabled="jifen_pay.jifen <= 0" v-model="use_jifen_num" @input="onInput_jifen" placeholder="请填写要抵扣的积分"></el-input>
-              </div> -->
-                  </div>
-
-                  <div class="sec-item" v-if="false">
-                    <div class="sub-title">使用佣金</div>
-                    <div class="sec-tip">
-                      可用佣金：{{ +vuex_user.yongjin || 0 }}
-                    </div>
-                    <div class="sec-btn-actions">
-                      <button
-                        class="btn"
-                        :class="{ active: if_use_yongjin }"
-                        @click="if_use_yongjin = true"
-                      >
-                        使用佣金
-                      </button>
-                      <button
-                        class="btn"
-                        :class="{ active: !if_use_yongjin }"
-                        @click="if_use_yongjin = false"
-                      >
-                        不使用佣金
-                      </button>
-                    </div>
-                    <div class="use-jifen-num">
-                      本单将扣减佣金 <b>{{ money_yongjin_dixian }}</b>
-                    </div>
-                    <!-- <div class="sec-input" v-if="jifen_pay.jifen">
-                <el-input type="number" :disabled="jifen_pay.jifen <= 0" v-model="use_jifen_num" @input="onInput_jifen" placeholder="请填写要抵扣的积分"></el-input>
-              </div> -->
-                  </div>
-
-                  <!-- 
-            <div class="sec-item">
-              <div class="sec-title">优惠码</div>
-              <div class="sec-input">
-                <el-input v-model="yh_code" placeholder="请填写优惠码"></el-input>
-              </div>
-              <div class="sec-tip">优惠码填写完成后, 请点击下方使用按钮查询优惠信息。</div>
-              <div class="sec-input">
-                <div class="btn-actions">
-                  <el-button size="small" type="warning" @click="query_yh">使用优惠</el-button>
-                  <el-button size="small" type="warning" @click="not_use_yh">不使用</el-button>
-                </div>
-              </div>
-            </div>
-          -->
-                  <!-- <div class="sec-item remark-box" v-if="false">
-                    <div class="sub-title">
-                      <b> 订单备注 </b>
-                    </div>
-                    <div class="sec-input input-box">
-                      <el-input
-                        type="textarea"
-                        :autosize="{ minRows: 3 }"
-                        placeholder="请填写订单备注"
-                        v-model="remark"
-                      >
-                      </el-input>
-                    </div>
-                  </div> -->
                 </div>
               </div>
 
               <div class="huizong flex">
-                <div class="left">
+                <!-- <div class="left">
                   <span class="text">整单备注：</span>
                   <el-input
                     type="textarea"
@@ -541,16 +386,8 @@
                     v-model="remark"
                   >
                   </el-input>
-                </div>
+                </div> -->
                 <div class="right">
-                  <!-- <div class="item">
-            积分抵扣：
-            <b>{{vuex_huobi}} {{ jifen_pay.money || 0 }}</b>
-          </div> -->
-                  <!-- <div class="order-tip">
-            {{ vuex_config.yunfei_msg }}
-          </div> -->
-
                   <div class="item">
                     <!-- <span class="text">共：</span> -->
                     <b class="val">共 {{ total_product_number || 0 }} 件</b>
@@ -561,20 +398,8 @@
                       >{{ vuex_huobi }} {{ pay_info.goodsPrice || 0 }}</b
                     >
                   </div>
-                  <!-- <div class="item">
-                <span class="text">优惠券：</span>
-                <b class="val">-{{ vuex_huobi }} {{ money_yhq || 0 }}</b>
-              </div> -->
-                  <!-- <div class="item">
-                <span class="text">积分抵现：</span>
-                <b>-{{ vuex_huobi }} {{ money_jifen_dixian || 0 }}</b>
-              </div> -->
-                  <!-- <div class="item">
-                <span class="text">佣金：</span>
-                <b>-{{ vuex_huobi }} {{ money_yongjin_dixian || 0 }}</b>
-              </div> -->
                   <div class="item">
-                    <span class="text">运费：</span>
+                    <span class="text">配送费：</span>
                     <b>{{ vuex_huobi }} {{ pay_info.yunfei || 0 }}</b>
                   </div>
                   <!-- <div class="item">
@@ -582,7 +407,7 @@
                   <b>- {{ vuex_huobi }} {{ pay_info.foreignManjian || 0 }}</b>
                 </div> -->
                   <div class="item total">
-                    <span class="text">总计：</span>
+                    <span class="text">合计应付：</span>
                     <b>{{ vuex_huobi }} {{ pay_info.orderPrice }}</b>
                   </div>
                 </div>
@@ -657,7 +482,7 @@
 
 <script>
 import { SHOP_TYPE } from "@/config/env.js";
-
+import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
 import address_modal from "@/components/address/address_modal.vue"; //新增地址
 import foreign_address_modal from "@/components/address/foreign_address_modal.vue"; //新增地址
 import invoice_history from "@/components/order/invoice_history.vue";
@@ -673,6 +498,7 @@ import { mapState } from "vuex";
 export default {
   name: "order-submit",
   components: {
+    pageBreadcrumb,
     address_modal,
     foreign_address_modal,
 
@@ -736,22 +562,22 @@ export default {
       pay_type_value: "paypal",
       pay_method_list: [
         {
-          value: "weixin",
-          title: "微信支付",
-          icon: require("@img/pay-method/type-weixin.png"),
+          value: "pay1",
+          title: "账期月结",
+          icon: require("@img/pay-method/pay1.png"),
         },
         {
-          value: "zhifubao",
-          title: "支付宝支付",
-          icon: require("@img/pay-method/type-zfb.png"),
+          value: "pay2",
+          title: "对公转账",
+          icon: require("@img/pay-method/pay2.png"),
         },
         // { value: 'xianxia', title: '线下转款', icon: require('@img/pay-method/type-xianxia.png') },
         //{ value: 'paypal', title: 'PayPal', icon: require('@img/pay-method/type-paypal.png') },
-        {
-          value: "yue",
-          title: "余额支付",
-          icon: require("@img/pay-method/type-yue.png"),
-        },
+        // {
+        //   value: "yue",
+        //   title: "余额支付",
+        //   icon: require("@img/pay-method/type-yue.png"),
+        // },
       ],
 
       //
@@ -1031,7 +857,7 @@ export default {
         inventoryId: v.inventoryId,
         productId: v.productId,
         num: v.num,
-        remark:v.remark,
+        remark: v.remark,
       }));
       let productInfo = JSON.stringify(product_items);
 
@@ -1161,12 +987,15 @@ export default {
           return alertErr("请上传转款凭证信息");
         }
       }
-      
+
       if (this.pay_type_value == "yue") {
         // if (this.total_balance < +this.real_payment_money) {
         //   return alertErr("您的余额不足，请选择其他支付方式");
         // }
-        if (Number(this.pay_info.orderPrice) > Number(this.vuex_user.left_caigou_credit)) {
+        if (
+          Number(this.pay_info.orderPrice) >
+          Number(this.vuex_user.left_caigou_credit)
+        ) {
           return alertErr("无法下单，采购额度不足，请申请采购额度后下单。");
         }
         // if (!this.is_pay_pass) {
@@ -1240,15 +1069,15 @@ export default {
       //   this.order_pay_step();
       // }
       let params = this.get_pay_params();
-      console.log(params,'xiadan');
-      
-      let invoice = JSON.parse(localStorage.getItem('invoice_history'))||[];
-      if (this.fapiao_info.invoiceStatus != 0){
-       invoice.push(this.fapiao_info);
+      console.log(params, "xiadan");
+
+      let invoice = JSON.parse(localStorage.getItem("invoice_history")) || [];
+      if (this.fapiao_info.invoiceStatus != 0) {
+        invoice.push(this.fapiao_info);
       }
-      
+
       invoice = JSON.stringify(invoice);
-      localStorage.setItem('invoice_history', invoice)
+      localStorage.setItem("invoice_history", invoice);
       this.$api({
         url: "/service.php",
         method: "get",
@@ -1713,7 +1542,7 @@ export default {
       } else if (val === 1) {
         //专用发票
         this.fapiao_info.invoiceStatus = 1;
-        this.fapiao_info.titleType = '1'; //企业
+        this.fapiao_info.titleType = "1"; //企业
       } else if (val === 2) {
         this.fapiao_info.invoiceStatus = 1;
       } else {
@@ -1733,8 +1562,8 @@ export default {
 .btn-cancel {
   min-width: 100px;
   height: 40px;
-  border: 1px solid #F74747;
-  color: #F74747;
+  border: 1px solid #f74747;
+  color: #f74747;
   font-size: 14px;
 }
 
@@ -1742,7 +1571,7 @@ export default {
   margin-left: 20px;
   min-width: 100px;
   height: 40px;
-  background: #F74747;
+  background: #f74747;
   color: #fff;
   font-size: 14px;
 }
@@ -1778,7 +1607,13 @@ export default {
 
   .inner {
     margin: 0 auto;
-    padding: 40px 0 100px 0;
+    padding: 20px 0 100px 0;
+  }
+
+  .page-ctx {
+    margin-top: 20px;
+    background: #fff;
+    padding: 45px 40px;
   }
 
   .page-title {
@@ -1798,9 +1633,7 @@ export default {
   }
 
   .goods-list {
-    // border: 1px solid #cccccc;
-    // margin-bottom: 40px;
-    text-align: left;
+    padding: 0 20px;
 
     .title {
       padding-left: 20px;
@@ -1814,27 +1647,22 @@ export default {
     }
 
     .list {
+      padding-left: 19px;
+      margin-bottom: 10px;
+      border-left: 1px dashed #707070;
+
       .list-title {
         font-size: 14px;
         text-align: center;
         height: 48px;
-        background: #f9f9f9;
-        background: #f5f5f5;
-        padding: 15px 0;
 
-        font-family: OPPOSans, OPPOSans;
-        // font-weight: bold;
         font-size: 14px;
         color: #666666;
 
-        // border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
         .box-title {
           flex: 1;
           text-align: left;
-
-          .title-text {
-            margin-left: 70px;
-          }
         }
 
         .box-sku {
@@ -1876,8 +1704,21 @@ export default {
             flex: 1;
 
             .poster-box {
-              margin-left: 70px;
               margin-right: 16px;
+            }
+
+            .title-box {
+              .title-text {
+                font-size: 16px;
+                font-weight: 500;
+                color: #333333;
+              }
+
+              .box-sku {
+                font-size: 14px;
+                color: #999999;
+                text-align: left;
+              }
             }
 
             img {
@@ -1923,6 +1764,7 @@ export default {
     .huizong {
       padding: 24px 45px;
       background: #f9f9f9;
+      justify-content: end;
       .left {
         width: 40%;
         .text {
@@ -1935,7 +1777,6 @@ export default {
         }
       }
       .right {
-        width: 60%;
         .item {
           margin-bottom: 16px;
           text-align: right;
@@ -1986,17 +1827,17 @@ export default {
         height: 45px;
         background: #ffffff;
         border-radius: 0px 0px 0px 0px;
-        border: 1px solid #F74747;
+        border: 1px solid #f74747;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 17px;
-        color: #F74747;
+        color: #f74747;
       }
 
       &.btn-2 {
         width: 200px;
         height: 45px;
-        background: #F74747;
+        background: #f74747;
         border-radius: 0px 0px 0px 0px;
         font-family: Arial, Arial;
         font-weight: 400;
@@ -2109,7 +1950,7 @@ export default {
           border: 1px solid #cccccc;
 
           &.active {
-            border: 1px solid #F74747;
+            border: 1px solid #f74747;
           }
         }
       }
@@ -2206,7 +2047,7 @@ export default {
     margin-bottom: 10px;
 
     b {
-      color: #F74747;
+      color: #f74747;
     }
   }
 
@@ -2237,16 +2078,33 @@ export default {
   text-align: left;
 
   .sec-title {
-    padding-bottom: 16px;
-    border-bottom: 1px solid #d5d8de;
-    font-family: Microsoft YaHei, Microsoft YaHei;
-    font-weight: 400;
-    font-size: 24px;
+    font-size: 20px;
+    font-weight: 500;
     color: #333333;
+    height: 48px;
+    line-height: 48px;
+    padding-left: 24px;
+    background: #f5f5f5;
+
+    margin-left: 58px;
+    position: relative;
+    &:before {
+      content: "";
+      display: block;
+      width: 38px;
+      height: 38px;
+      background: url("~@/assets/img/pay-method/sec4.png") no-repeat center
+        center;
+      background-size: 100% 100%;
+      position: absolute;
+      left: -58px;
+      top: 5px;
+    }
   }
 
   .sec-ctx {
-    padding-top: 45px;
+    margin-top: 10px;
+    padding-top: 10px;
   }
 }
 
@@ -2255,16 +2113,38 @@ export default {
   text-align: left;
 
   .sec-title {
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #d5d8de;
-    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-family: PingFang SC, PingFang SC;
     font-weight: 400;
-    font-size: 24px;
+    font-size: 20px;
     color: #333333;
+    background: #f5f5f5;
+    height: 48px;
+    line-height: 48px;
+    padding-left: 24px;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 58px;
+    position: relative;
+
+    &:before {
+      content: "";
+      display: block;
+      width: 38px;
+      height: 38px;
+      background: url("~@/assets/img/pay-method/sec1.png") no-repeat center
+        center;
+      background-size: 100% 100%;
+      position: absolute;
+      left: -58px;
+      top: 5px;
+    }
   }
 
   .sec-ctx {
+    margin-top: 10px;
+    margin-left: 19px;
+    padding-left: 40px;
+    border-left: 1px dashed #707070;
   }
 
   .address-list {
@@ -2275,8 +2155,7 @@ export default {
       position: relative;
       margin-top: 20px;
       margin-right: 30px;
-      margin-bottom: 20px;
-      width: 440px;
+      width: 400px;
       min-height: 130px;
       padding: 15px 20px;
       background: #ffffff;
@@ -2287,9 +2166,6 @@ export default {
 
       &:nth-child(3n) {
         margin-right: 0;
-      }
-      &:nth-child(-n + 3) {
-        margin-top: 0;
       }
 
       &.active {
@@ -2327,27 +2203,17 @@ export default {
   }
 
   .addr-add {
-    margin-top: 32px;
-    padding-left: 32px;
-
-    .empty-title {
-      margin-bottom: 40px;
-      font-family: Microsoft YaHei, Microsoft YaHei;
-      font-weight: 400;
-      font-size: 16px;
-      color: #333333;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 
     .btn {
-      min-width: 124px;
-      height: 32px;
-      background: #ffffff;
-      border-radius: 2px 2px 2px 2px;
-      border: 1px solid #F74747;
-      font-family: Microsoft YaHei, Microsoft YaHei;
-      font-weight: 400;
-      font-size: 14px;
-      color: #F74747;
+      width: 133px;
+      height: 40px;
+      background: #e5222b;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 500;
     }
   }
 }
@@ -2377,7 +2243,7 @@ export default {
         color: #666666;
 
         span {
-          color: #F74747;
+          color: #f74747;
         }
       }
 
@@ -2394,17 +2260,34 @@ export default {
 
 // 支付配送
 .sec-pay {
-  padding-bottom: 55px;
+  padding-bottom: 20px;
   text-align: left;
 
   .sec-title {
-    margin-bottom: 32px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #d5d8de;
-    font-family: Microsoft YaHei, Microsoft YaHei;
-    font-weight: 400;
-    font-size: 24px;
+    font-size: 20px;
+    font-weight: 500;
     color: #333333;
+    height: 48px;
+    line-height: 48px;
+    background: #f5f5f5;
+    margin-bottom: 20px;
+    padding-left: 20px;
+
+    margin-left: 58px;
+    position: relative;
+
+    &:before {
+      content: "";
+      display: block;
+      width: 38px;
+      height: 38px;
+      background: url("~@/assets/img/pay-method/sec2.png") no-repeat center
+        center;
+      background-size: 100% 100%;
+      position: absolute;
+      left: -58px;
+      top: 5px;
+    }
   }
 
   .sec-ctx {
@@ -2412,8 +2295,7 @@ export default {
 
   .pay-group {
     display: flex;
-    align-items: center;
-    padding-left: 32px;
+    padding-left: 12px;
 
     .title {
       // min-width: 120px;
@@ -2424,10 +2306,15 @@ export default {
     }
 
     .pay-items {
-      padding-left: 20px;
-      flex: 1;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .pay-items-left {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
 
       .item {
         display: flex;
@@ -2457,199 +2344,62 @@ export default {
       }
     }
 
-    .peisong-items {
-      .item {
-        text-align: center;
-        width: 144px;
-        height: 40px;
-        line-height: 40px;
-        background: #ffffff;
-        border-radius: 3px 3px 3px 3px;
-        border: 1px solid #F74747;
-        font-size: 14px;
-        font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-        font-weight: bold;
-        color: #F74747;
+    .wuli-info {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      margin-bottom: 30px;
+
+      .info-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: #666666;
+      }
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        align-items: flex-start;
+
+        .info-label {
+          font-size: 16px;
+          font-weight: 500;
+          color: #333;
+        }
       }
     }
   }
 }
 
 .sec-product {
-  .sub-title {
-    padding-left: 30px;
-    height: 50px;
-    background: #fafbfc;
-    cursor: pointer;
-
-    &.expand-0 {
-      margin-bottom: 15px;
-    }
-
-    .text {
-      font-size: 14px;
-      font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-      font-weight: bold;
-      color: #333333;
-    }
-
-    img {
-      width: 16px;
-      margin-left: 15px;
-    }
-  }
-
-  .yhq-list {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 15px;
-
-    .yhq-item {
-      position: relative;
-      margin-right: 24px;
-      width: 220px;
-      height: auto;
-      border-radius: 4px 4px 4px 4px;
-      border: 1px solid #e5e5e5;
-      cursor: pointer;
-
-      &.active {
-        border-color: #F74747;
-
-        .marker {
-          display: block;
-        }
-      }
-
-      .marker {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        display: none;
-      }
-
-      .yhq-top {
-        height: auto;
-        background: #fdf2ef;
-        padding: 10px 15px;
-
-        .yhq-1 {
-          display: flex;
-          align-items: center;
-          align-items: flex-end;
-
-          .text-1 {
-            font-size: 24px;
-            font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-            font-weight: bold;
-            color: #F74747;
-          }
-
-          .text-2 {
-            margin-left: 5px;
-            font-size: 12px;
-            font-family: sans-serif;
-            font-weight: 400;
-            color: #333333;
-          }
-        }
-
-        .yhq-2 {
-          margin-top: 10px;
-          font-size: 12px;
-          font-family: sans-serif;
-          font-weight: 400;
-          color: #999999;
-        }
-      }
-
-      .yhq-bottom {
-        height: 32px;
-        line-height: 32px;
-        padding: 0 15px;
-        font-size: 12px;
-        font-family: sans-serif;
-        font-weight: 400;
-        color: #F74747;
-      }
-    }
-  }
-
-  .yhq-select-info {
-    height: 50px;
-    line-height: 50px;
-    background: #fafbfc;
-    padding: 0 30px;
-
-    .number {
-      color: #F74747;
-      margin: 0 10px;
-    }
-  }
-
-  .remark-box {
-    .input-box {
-      padding: 15px;
-    }
-  }
 }
 
 .sec-ctx-type {
-  padding-left: 32px;
-  padding-left: 0;
-}
-
-// 余额信息
-.yue-info {
-  margin-top: 32px;
-  padding: 24px 120px;
-  padding: 24px 32px;
-  // padding-bottom: 0;
-  border: 1px dashed #ccc;
-
-  .info-item {
-    display: flex;
-    align-items: center;
-    align-items: flex-start;
-    margin-bottom: 10px;
-
-    .info-label {
-      line-height: 32px;
-      padding-right: 10px;
-      font-size: 14px;
-      font-family: sans-serif;
-      font-weight: 400;
-      color: #666666;
-    }
-
-    .info-val {
-      line-height: 32px;
-      font-size: 14px;
-      font-family: sans-serif;
-      font-weight: 400;
-      color: #666666;
-    }
-
-    .yue-warn-tip {
-      color: #F74747;
-      font-size: 14px;
-    }
-  }
+  margin-left: 19px;
+  padding-left: 40px;
+  border-left: 1px dashed #707070;
 }
 
 // 线下转款信息
 .xianxia-info {
-  margin-top: 32px;
-  padding: 24px 120px;
-  padding: 24px 32px;
-  // padding-bottom: 0;
-  border: 1px dashed #ccc;
+  padding: 16px 22px;
+  width: 370px;
+  height: 167px;
+  background: #fffdf1;
+  border: 1px solid #f8e9d2;
+
+  .info-title {
+    font-family: PingFang SC, PingFang SC;
+    font-weight: 500;
+    font-size: 18px;
+    color: #000000;
+    margin-bottom: 14px;
+  }
 
   .info-item {
     display: flex;
     align-items: center;
     align-items: flex-start;
-    margin-bottom: 10px;
 
     .info-label {
       line-height: 32px;
@@ -2666,22 +2416,47 @@ export default {
       font-family: sans-serif;
       font-weight: 400;
       color: #666666;
+      display: flex;
+      align-items: center;
+      img {
+        width: 12px;
+        height: 12px;
+        margin-left: 10px;
+        cursor: pointer;
+      }
     }
   }
 }
 
 .sec-fapiao {
-  padding-bottom: 55px;
+  padding-bottom: 20px;
   text-align: left;
 
   .sec-title {
-    margin-bottom: 32px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #d5d8de;
-    font-family: Microsoft YaHei, Microsoft YaHei;
-    font-weight: 400;
-    font-size: 24px;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 500;
     color: #333333;
+    height: 48px;
+    line-height: 48px;
+    padding-left: 24px;
+    background: #f5f5f5;
+
+    margin-left: 58px;
+    position: relative;
+
+    &:before {
+      content: "";
+      display: block;
+      width: 38px;
+      height: 38px;
+      background: url("~@/assets/img/pay-method/sec3.png") no-repeat center
+        center;
+      background-size: 100% 100%;
+      position: absolute;
+      left: -58px;
+      top: 5px;
+    }
   }
 
   .sec-ctx {
@@ -2693,7 +2468,11 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    margin-bottom: 30px;
+    padding-bottom: 20px;
+    padding-left: 19px;
+    border-left: 1px dashed #707070;
+    margin-left: 19px;
+
     .main-title {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
@@ -2724,8 +2503,8 @@ export default {
         color: #333333;
 
         &.active {
-          // color: #FFA58D;
-          border: 1px solid #ffa58d;
+          color: #e5222b;
+          border: 1px solid #e5222b;
         }
 
         &:hover {

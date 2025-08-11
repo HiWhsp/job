@@ -194,7 +194,7 @@
               </div> -->
 
               <div class="other-box">
-                <div class="yunfei-box flex">
+                <!-- <div class="yunfei-box flex">
                   <div class="label">发 &nbsp;货&nbsp; 日：</div>
                   <div class="value">
                     {{
@@ -203,7 +203,7 @@
                         : info.delivery_date || "请联系客服发货"
                     }}
                   </div>
-                </div>
+                </div> -->
                 <div class="dinghuo-box flex">
                   <div class="label">支付方式：</div>
                   <div class="value">

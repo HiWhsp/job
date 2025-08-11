@@ -17,7 +17,7 @@
           <img :src="banner_poster" alt="" />
         </div>
         <div class="poster-info flex">
-          <div class="info-left">MRO工业品全品类超市</div>
+          <div class="info-left">工业品全品类超市</div>
         </div>
       </div>
       <div class="page-ctx w-1400">
@@ -36,7 +36,8 @@
                   :key="gindex"
                 >
                   <div class="product-list">
-                    <div
+                    <productList :list="group" />
+                    <!-- <div
                       class="product-item hover"
                       v-for="(item, index) in group"
                       :key="index"
@@ -58,7 +59,7 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                 </el-carousel-item>
               </el-carousel>
@@ -72,7 +73,7 @@
             <span>莉东精选</span>
             <img src="@img/index/suggest-right.png" alt="" />
           </div>
-          <div class="suggest-tabs">
+          <!-- <div class="suggest-tabs">
             <div class="tab-list flex-center">
               <div
                 class="tab-item"
@@ -84,10 +85,11 @@
                 {{ item.title }}
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="suggest-list">
             <div class="product-list">
-              <div
+              <productList :list="suggest_products" />
+              <!-- <div
                 class="product-item hover"
                 v-for="(item, index) in suggest_products"
                 :key="index"
@@ -110,7 +112,7 @@
                     <div class="unit">/{{ item.unit || "把" }}</div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -120,10 +122,12 @@
 </template>
 <script>
 import { mapState } from "vuex";
-
+import productList from "@/components/product/productList.vue"; //
 export default {
   name: "category",
-  components: {},
+  components: {
+    productList,
+  },
   data() {
     return {
       banner_list: [],

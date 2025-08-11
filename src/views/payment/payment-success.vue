@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="inner w-1400">
-      <div class="page-title">支付结果</div>
+      <pageBreadcrumb />
       <div class="pay-info">
         <div class="img-box">
           <img v-if="payState == '支付成功' || payState == '提交成功'" src="@img/payment/pay-succ.png" alt />
@@ -12,13 +12,16 @@
           您的转账凭证已提交，请等待后台审核！
         </div>
         <div class="text-2">订单号：{{ info.orderNo }}</div>
+        <div class="text-2">下单时间：2022-03-29 13:24:69</div>
+        <div class="text-2">支付方式： 对公转账</div>
+
 
         <div class="btns flex-center">
-          <button class="btn-ripple fit-text" @click="to_order()">
-            查看订单
+          <button class="btn-ripple fit-text " @click="to_liulan()">
+            继续购物
           </button>
-          <button class="btn-ripple fit-text btn-bg" @click="to_liulan()">
-            继续浏览
+          <button class="btn-ripple fit-text btn-bg" @click="to_order()">
+            查看订单
           </button>
         </div>
       </div>
@@ -28,10 +31,13 @@
 
 <script>
 import { mapState } from "vuex";
+import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
 
 export default {
   name: "order-pay-done",
-  components: {},
+  components: {
+    pageBreadcrumb,
+  },
   data() {
     return {
       id: this.$route.query.id || this.$route.query.order_id,
@@ -103,7 +109,7 @@ export default {
     // width: 100%;
     margin: 0 auto;
     min-height: 50vh;
-    padding: 48px 0 80px;
+    padding: 20px 0 80px;
     background: #fff;
   }
 
@@ -125,11 +131,11 @@ export default {
     }
 
     .text-2 {
-      margin-top: 21px;
+      margin-top: 10px;
       font-family: Arial, Arial;
       font-weight: 400;
-      font-size: 14px;
-      color: #999999;
+      font-size: 16px;
+      color: #000;
     }
 
     .btns {
