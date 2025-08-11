@@ -17,15 +17,15 @@
             <span class="number" v-if="item.num">{{ item.num }}</span>
           </div>
         </div>
-        <div class="dash-btn" @click="getList()">
+        <!-- <div class="dash-btn" @click="getList()">
           <img class="dashicon" src="@/assets/img/my/download.png" alt="" />
           导出信息
-        </div>
-        <!-- <div class="search-box">
+        </div> -->
+        <div class="search-box">
           <input v-model="keyword" type="text" placeholder="输入商品名称、订单号" />
           <button @click="do_search()">搜索</button>
           <button @click="do_reset()">重置</button>
-        </div> -->
+        </div>
       </div>
 
       <div class="page-sec">
@@ -69,7 +69,9 @@
                     >
                       {{ product_item.title }}
                     </div>
-                    <div class="product-sku">{{ product_item.keyVals }}</div>
+                    <div class="product-sku">订货编码：{{ product_item.keyVals }}</div>
+                    <div class="product-sku">商品型号：{{ product_item.keyVals }}</div>
+
                   </div>
                   <!-- <div class="box-sku">
                     <div class="product-sku">{{ product_item.keyVals }}</div>
@@ -77,7 +79,7 @@
                   <div class="box-price">
                     {{ vuex_huobi }} {{ product_item.priceSale }}
                   </div>
-                  <div class="box-num">x {{ product_item.num }}</div>
+                  <div class="box-num">{{ product_item.num }}</div>
                   <div class="box-subtotal">
                     {{ vuex_huobi }} {{ product_item.priceSale }}
                   </div>
@@ -796,21 +798,21 @@ export default {
         }
 
         .box-image {
-          width: 100px;
-          height: 100px;
+          width: 70px;
+          height: 70px;
           cursor: pointer;
           border: 1px solid #f5f5f5;
 
           /deep/ img {
-            width: 100px;
-            height: 100px;
+            width: 70px;
+            height: 70px;
             object-fit: contain;
             object-fit: cover;
           }
 
           img {
-            width: 100px;
-            height: 100px;
+            width: 70px;
+            height: 70px;
             object-fit: contain;
             object-fit: cover;
           }
@@ -824,6 +826,9 @@ export default {
           .product-title {
             width: fit-content;
             cursor: pointer;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
 
             &:hover {
               color: #F74747;
@@ -831,9 +836,9 @@ export default {
           }
 
           .product-sku {
-            margin-top: 20px;
+            font-size: 16px;
             min-width: 200px;
-            color: #777;
+            color: #999;
           }
         }
 
@@ -923,11 +928,11 @@ export default {
         background: #ffffff;
         border-radius: 50px 50px 50px 50px;
         border-radius: 4px;
-        border: 1px solid #F74747;
+        border: 1px solid #D5DBE8;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #F74747;
+        color: #333;
 
         & + button {
           margin-left: 20px;

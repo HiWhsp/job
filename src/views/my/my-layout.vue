@@ -318,15 +318,15 @@ export default {
 
 <style scoped lang="less">
 .page-user-wrap {
-  background: #f9fafc;
-  padding-top: 35px;
+  background: #F3F3F3;
+  padding-top: 20px;
 
   .inner {
     margin: 0 auto;
     min-height: 70vh;
 
     .page-ctx {
-      padding-top: 30px;
+      padding-top: 20px;
       display: flex;
       justify-content: space-between;
     }

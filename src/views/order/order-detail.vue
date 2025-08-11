@@ -10,7 +10,7 @@
     </div>
 
     <div class="page-ctx">
-      <div class="step-box" v-if="info.statusInfo == '待审核'">
+      <!-- <div class="step-box" v-if="info.statusInfo == '待审核'">
         <div class="step-item active">
           <div class="step-number">
             <div class="step-line step-line-1"></div>
@@ -100,7 +100,7 @@
           <div class="step-title">订单收货</div>
           <div class="step-date" style="visibility: hidden">-</div>
         </div>
-      </div>
+      </div> -->
 
       <div class="base-ctx">
         <div class="base-title">订单信息</div>
@@ -846,15 +846,15 @@ export default {
   margin-bottom: 24px;
   min-height: 156px;
   background: #ffffff;
-  border: 1px solid #f5f5f5;
+  border: 1px solid #E5E5E5;
 
   .base-title {
     text-align: left;
     padding-left: 24px;
     height: 48px;
     line-height: 48px;
-    background: #f9f9f9;
-    border-bottom: 1px solid #f5f5f5;
+    background: #F5F5F5;
+    border-bottom: 1px solid #E5E5E5;
 
     font-size: 14px;
     font-family: Microsoft YaHei;
@@ -883,7 +883,6 @@ export default {
         font-family: sans-serif;
         font-weight: 400;
         color: #999999;
-        color: #333;
         margin-bottom: 10px;
       }
 
@@ -910,11 +909,13 @@ export default {
 
           .label {
             margin-right: 10px;
-            width: fit-content;
+            width: 70px;
+            color: #666;
           }
 
           .val {
             flex: 1;
+            color: #000;
           }
         }
       }
