@@ -105,11 +105,6 @@
       <div class="base-ctx">
         <div class="base-title">订单信息</div>
         <div class="base-items">
-          <!--     3: "快递配送",
-        4: "门店自取",
-        5: "同城配送", -->
-
-          <!-- v-if="peisong_type_text == '普通快递'" -->
           <div class="base-item">
             <div class="info-title">收货人信息</div>
             <div class="info-content">
@@ -136,7 +131,7 @@
           <div class="base-item">
             <div class="info-title">支付及配送方式</div>
             <div class="info-content">
-              <div class="info-item" v-if="is_finish_pay">
+              <div class="info-item">
                 <div class="label">支付方式：</div>
                 <div class="val">
                   <span v-if="payInfo.balance">余额</span>
@@ -153,150 +148,38 @@
                   {{ fahuoInfo.expressOrder || "" }}
                 </div>
               </div>
-              <!-- <div class="date" v-if="orderObj.peisong_time">
-              <span>配送时间:</span>
-              {{ orderObj.peisong_time }}
-            </div> -->
-            </div>
-          </div>
-
-          <div class="base-item" v-if="invioceJson.invoiceType">
-            <div class="info-title">发票信息</div>
-            <div class="info-content">
               <div class="info-item">
-                <div class="label">发票抬头:</div>
-                <div class="val">{{ invioceJson.title }}</div>
-              </div>
-              <div class="info-item">
-                <div class="label">纳税人识别号:</div>
-                <div class="val">{{ invioceJson.shibiema }}</div>
-              </div>
-              <div class="info-item">
-                <div class="label">注册地址:</div>
-                <div class="val">{{ invioceJson.companyAddress }}</div>
-              </div>
-              <div class="info-item">
-                <div class="label">注册电话:</div>
-                <div class="val">{{ invioceJson.companyPhone }}</div>
-              </div>
-              <div class="info-item">
-                <div class="label">开户银行:</div>
-                <div class="val">{{ invioceJson.bankName }}</div>
-              </div>
-              <div class="info-item">
-                <div class="label">银行账户:</div>
-                <div class="val">{{ invioceJson.bankNo }}</div>
+                <div class="label">汇款截图：</div>
+                <div class="val">
+                  {{ fahuoInfo.expressName || "" }}
+                  {{ fahuoInfo.expressOrder || "" }}
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- 物流信息 -->
-          <div class="item" v-if="fahuo_info.company">
-            <div class="info-title">发货信息</div>
-            <div class="info-content">
-              <div class="wuliu-name">
-                <span>快递公司：</span>
-                {{ fahuo_info.company }}
-              </div>
-              <div class="wuliu-code">
-                <span>物流单号：</span>
-                {{ fahuo_info.order_id }}
-              </div>
-            </div>
-          </div>
-          <!-- 订单备注 -->
-          <div class="base-item" v-if="orderObj.remark">
-            <div class="info-title">订单备注</div>
+          <div class="base-item back">
+            <div class="info-title">收款对公账户</div>
             <div class="info-content">
               <div class="info-item">
-                <div class="label">备注:</div>
-                <div class="val">{{ orderObj.remark }}</div>
+                <div class="label">收款单位名称：</div>
+                <div class="val">
+                  这里展示收款方名称
+                  <img src="@/assets/img/pay-method/copy.png" alt="" />
+                </div>
               </div>
-              <!-- <div class="wuliu-name">
-                  <span>备注：</span>
-                  {{ orderObj.remark }}
-                </div> -->
-            </div>
-          </div>
-          
-            <!-- 采购审核意见 -->
-          <div class="base-item" v-if="info.shenheCaigouMsg">
-            <div class="info-title">采购审核意见</div>
-            <div class="info-content">
               <div class="info-item">
-                <div class="label">意见:</div>
-                <div class="val">{{ info.shenheCaigouMsg }}</div>
+                <div class="label">收款单位号码：</div>
+                <div class="val">
+                  4205 0111 6297 0918 8188
+                  <img src="@/assets/img/pay-method/copy.png" alt="" />
+                </div>
               </div>
-            </div>
-          </div>
-          <!-- 经理审核意见 -->
-          <div class="base-item" v-if="info.shenheManagerMsg">
-            <div class="info-title">经理审核意见</div>
-            <div class="info-content">
               <div class="info-item">
-                <div class="label">意见:</div>
-                <div class="val">{{ info.shenheManagerMsg }}</div>
-              </div>
-            </div>
-          </div>
-          <!-- 总监审核意见 -->
-          <div class="base-item" v-if="info.shenheDirectorMsg">
-            <div class="info-title">总监审核意见</div>
-            <div class="info-content">
-              <div class="info-item">
-                <div class="label">意见:</div>
-                <div class="val">{{ info.shenheDirectorMsg }}</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="item" v-if="peisong_type_text == '上门自提'">
-            <div class="info-title">取货人信息</div>
-            <div class="info-content">
-              <div class="name">
-                <span>取货人：</span>
-                {{ shouhuoInfo.name }}
-              </div>
-              <div class="phone">
-                <span>手机号码：</span>
-                {{ shouhuoInfo.phone }}
-              </div>
-            </div>
-          </div>
-
-          <div class="item" v-if="peisong_type_text == '上门自提'">
-            <div class="info-title">厂家信息</div>
-            <div class="info-content">
-              <div class="phone">
-                <span>联系方式：</span>
-                {{ shequ.phone }}
-              </div>
-              <div class="address">
-                <span>厂家地址：</span>
-                {{ shequ.address }}
-              </div>
-            </div>
-          </div>
-
-          <!-- 转款凭证 -->
-          <div class="item" v-if="is_xianxia">
-            <div class="info-title">支付凭证</div>
-            <div class="info-content">
-              <div class="wuliu-name">
-                <!-- <span>转账凭证：</span> -->
-                <div class="pingzheng-box">
-                  <div
-                    class="pingzheng-item"
-                    v-for="(item, index) in xianxia_imgs"
-                    :key="index"
-                  >
-                    <el-image
-                      style="width: 100px; height: 100px"
-                      :src="item"
-                      :preview-src-list="xianxia_imgs"
-                    >
-                    </el-image>
-                  </div>
+                <div class="label">开户银行：</div>
+                <div class="val">
+                  这里展示收款方名称
+                  <img src="@/assets/img/pay-method/copy.png" alt="" />
                 </div>
               </div>
             </div>
@@ -329,7 +212,6 @@
                       class="box-image cover"
                       @click="mix_to_product(product_item)"
                     >
-                      <!-- <img :src="item.image" alt /> -->
                       <el-image :src="product_item.image">
                         <div slot="error" class="image-slot">
                           <img :src="product_item.image" />
@@ -340,19 +222,28 @@
                       <div class="title" @click="mix_to_product(product_item)">
                         {{ product_item.title }}
                       </div>
+                      <div class="box-sku">
+                        <div class="goods-sku">订货编码：UA199</div>
+                      </div>
+                      <div class="box-sku">
+                        <div class="goods-sku">商品型号：S54001</div>
+                      </div>
+                      <div class="box-sku">
+                        <div class="goods-sku">
+                          需求描述: {{ product_item.remark }}
+                        </div>
+                      </div>
                     </div>
-                    <div class="box-sku">
-                      <div class="goods-sku">{{ product_item.keyVals }}</div>
+                    <div class="box-price">
+                      {{ vuex_huobi }} {{ product_item.priceSale }}
                     </div>
-                    <div class="box-remark">
-                      <div class="goods-remark">{{ product_item.remark }}</div>
-                    </div>
-                    <div class="box-num">x {{ product_item.num }}</div>
+                    <div class="box-num">{{ product_item.num }}</div>
                     <div class="box-price">
                       {{ vuex_huobi }} {{ product_item.priceSale }}
                     </div>
                   </div>
-                  <div class="goods-action" v-if="info.orderStatus == 5">
+                  <!-- <div class="goods-action" v-if="info.orderStatus == 5"> -->
+                  <div class="goods-action">
                     <!-- <button v-if="!is_jifen_goods && item.allow_actions.allow_refund" class="btn-goods-action" @click="refundApply(item)">申请售后</button> -->
                     <!-- <button v-if="item.ifshouhou" class="btn-goods-action disabled">已售后</button> -->
                     <!-- <button v-if="item.allow_actions.allow_logistics" class="btn-goods-action" @click="toRoute(`/orderLogistics?order_id=${order_id}&logistics_id=${fahuo_id}`)">查看物流</button> -->
@@ -386,15 +277,7 @@
                   </div>
                 </div>
                 <div class="money-item">
-                  <span class="label">满减：</span>
-                  <div class="value">
-                    <span class="money-num"
-                      >{{ vuex_huobi }}{{ payInfo.foreignManjian }}</span
-                    >
-                  </div>
-                </div>
-                <div class="money-item">
-                  <span class="label">运费：</span>
+                  <span class="label">配送费：</span>
                   <div class="value">
                     <span class="money-num"
                       >{{ vuex_huobi }}{{ payInfo.foreignYunfei }}</span
@@ -402,7 +285,7 @@
                   </div>
                 </div>
                 <div class="money-item">
-                  <span class="label">总计：</span>
+                  <span class="label">总计应付：</span>
                   <div class="value">
                     <span class="money-num money-total"
                       >{{ vuex_huobi }}{{ info.price }}</span
@@ -463,8 +346,14 @@
               >
                 去支付
               </button>
-              <button
+              <!-- <button
                 v-if="info.ifPay == 1 && vuex_user.staffType == 1"
+                class="btn-ripple fit-text btn-bg"
+                @click="doOfflinePay(info)"
+              >
+                上传支付凭证
+              </button> -->
+              <button
                 class="btn-ripple fit-text btn-bg"
                 @click="doOfflinePay(info)"
               >
@@ -743,7 +632,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #f74747;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -769,12 +658,12 @@ export default {
     &.active {
       .step-number {
         .step-num {
-          background: #F74747;
+          background: #f74747;
           color: #fff;
         }
 
         .step-line {
-          background: #F74747;
+          background: #f74747;
         }
       }
     }
@@ -828,7 +717,7 @@ export default {
       font-size: 12px;
       color: #fff;
       line-height: 20px;
-      background: #F74747;
+      background: #f74747;
       cursor: pointer;
     }
 
@@ -846,15 +735,15 @@ export default {
   margin-bottom: 24px;
   min-height: 156px;
   background: #ffffff;
-  border: 1px solid #E5E5E5;
+  border: 1px solid #e5e5e5;
 
   .base-title {
     text-align: left;
     padding-left: 24px;
     height: 48px;
     line-height: 48px;
-    background: #F5F5F5;
-    border-bottom: 1px solid #E5E5E5;
+    background: #f5f5f5;
+    border-bottom: 1px solid #e5e5e5;
 
     font-size: 14px;
     font-family: Microsoft YaHei;
@@ -864,18 +753,14 @@ export default {
   }
 
   .base-items {
-    //   display: flex;
     align-items: center;
     justify-content: space-between;
     display: flex;
-    flex-wrap: wrap;
     padding: 20px 25px;
 
     .base-item {
-      width: 50%;
       margin-bottom: 30px;
       text-align: left;
-      padding-right: 40px;
 
       // flex: 1;
       .info-title {
@@ -920,6 +805,39 @@ export default {
         }
       }
     }
+
+    .back {
+      padding: 16px 20px;
+      background: #fffdf1;
+      .info-title {
+        font-family: PingFang SC, PingFang SC;
+        font-weight: 500;
+        font-size: 18px;
+        color: #000000;
+      }
+      .info-content {
+        .info-item {
+          .label {
+            width: 112px;
+            text-align: right;
+            color: #000;
+            font-size: 16px;
+          }
+          .val {
+            font-size: 16px;
+            color: #000;
+            display: flex;
+            align-items: center;
+            img {
+              margin-left: 5px;
+              width: 12px;
+              height: 12px;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -948,7 +866,7 @@ export default {
 
   .money-heji {
     span {
-      color: #F74747;
+      color: #f74747;
       font-weight: bold;
     }
   }
@@ -975,7 +893,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: bold;
         line-height: 24px;
-        color: #F74747;
+        color: #f74747;
 
         .pay-title {
           margin-right: 5px;
@@ -1024,7 +942,7 @@ export default {
         height: 30px;
         line-height: 30px;
         // background: #F74747;
-        color: #F74747;
+        color: #f74747;
         // color: #fff;
         font-size: 14px;
       }
@@ -1049,21 +967,21 @@ export default {
           }
 
           .box-image {
-            width: 100px;
-            height: 100px;
+            width: 70px;
+            height: 70px;
             cursor: pointer;
             border: 1px solid #f5f5f5;
 
             /deep/ img {
-              width: 100px;
-              height: 100px;
+              width: 70px;
+              height: 70px;
               object-fit: contain;
               object-fit: cover;
             }
 
             img {
-              width: 100px;
-              height: 100px;
+              width: 70px;
+              height: 70px;
               object-fit: contain;
               object-fit: cover;
             }
@@ -1077,31 +995,30 @@ export default {
             .title {
               width: fit-content;
               cursor: pointer;
+              color: #333;
+              font-size: 16px;
+              font-weight: 500;
 
               &:hover {
-                color: #F74747;
+                color: #f74747;
               }
             }
-          }
-
-          .box-remark {
-            text-align: center;
-            min-width: 200px;
-          }
-
-          .box-sku {
-            text-align: center;
-            min-width: 200px;
+            .box-sku {
+              text-align: left;
+              min-width: 200px;
+              color: #999;
+              font-size: 16px;
+            }
           }
 
           .box-num {
             text-align: center;
-            min-width: 200px;
+            min-width: 160px;
           }
 
           .box-price {
             text-align: center;
-            min-width: 200px;
+            min-width: 160px;
 
             font-family: OPPOSans, OPPOSans;
             font-weight: 400;
@@ -1125,7 +1042,7 @@ export default {
             margin-left: 10px;
             min-width: 96px;
             height: 30px;
-            background: #F74747;
+            background: #f74747;
             font-size: 14px;
             font-family: Microsoft YaHei;
             color: #ffffff;
@@ -1167,7 +1084,7 @@ export default {
 
       .count {
         font-weight: bold;
-        color: #F74747;
+        color: #f74747;
       }
 
       .money-item {
@@ -1215,22 +1132,22 @@ export default {
 
       button {
         transition: 0.3s;
-        min-width: 120px;
-        height: 32px;
+        min-width: 200px;
+        height: 48px;
         background: #ffffff;
-        border-radius: 50px 50px 50px 50px;
-        border: 1px solid #F74747;
-        font-family: Arial, Arial;
+        border-radius: 5px;
+        border: 1px solid #dedede;
         font-weight: 400;
-        font-size: 14px;
-        color: #F74747;
+        font-size: 18px;
+        color: #666666;
 
         & + button {
           margin-left: 20px;
         }
 
         &.btn-bg {
-          background: #F74747;
+          background: #e5222b;
+          border: 1px solid #e5222b;
           color: #fff;
         }
 
