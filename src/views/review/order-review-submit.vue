@@ -22,21 +22,64 @@
         </div>
         <div class="info-good">
           <div class="list-good">
-            <div class="item" v-for="(product_item, index) in products" :key="index">
-              <div class="item-good flex" @click="mix_to_product(product_item)">
-                <div class="box-image">
+            <div
+              class="item"
+              v-for="(product_item, index) in products"
+              :key="index"
+            >
+              <div class="item-good flex">
+                <div class="box-image" @click="mix_to_product(product_item)">
                   <img :src="product_item.image" alt />
-                </div>
-                <div class="box-title">
-                  <div class="title" @click="mix_to_product(product_item)">
-                    {{ product_item.title }}
+                  <div class="box-title">
+                    <div class="title">{{ product_item.title }}</div>
                   </div>
                 </div>
-                <div class="box-sku">
-                  <div class="goods-sku">{{ product_item.keyVals }}</div>
+                <div class="comment-box">
+                  <div class="form-box">
+                    <div class="title">
+                      <div class="text">总体评分</div>
+                      <div>
+                        <el-rate v-model="params.star"></el-rate>
+                      </div>
+                    </div>
+                    <div class="input-box">
+                      <el-input
+                        type="textarea"
+                        placeholder="分享购物心得..."
+                        v-model="params.content"
+                        maxlength="500"
+                        :autosize="{ minRows: 8 }"
+                        show-word-limit
+                      />
+                    </div>
+
+                    <div class="upload-box">
+                      <el-upload
+                        class="upload-demo"
+                        list-type="picture-card"
+                        accept="image/*"
+                        multiple
+                        :name="UPLOAD_NAME"
+                        :action="UPLOAD_ACTION"
+                        :limit="upload_limit_number"
+                        :data="mix_upload_data"
+                        :on-success="upload_on_success"
+                        :before-upload="upload_before_upload"
+                      >
+                        <i class="el-icon-plus"></i>
+
+                        <div class="el-upload__tip" slot="tip">
+                          <div class="tip-text-1">添加图片</div>
+                          <div class="tip-text-2">
+                            最多
+                            <b class="number">6</b>
+                            张
+                          </div>
+                        </div>
+                      </el-upload>
+                    </div>
+                  </div>
                 </div>
-                <div class="box-num">x {{ product_item.num }}</div>
-                <div class="box-price">{{vuex_huobi}} {{ product_item.priceSale }}</div>
               </div>
             </div>
           </div>
@@ -44,37 +87,10 @@
       </div>
 
       <div class="comment-box">
-        <div class="form-box">
-          <div class="title">
-            <div class="text">总体评分</div>
-            <div>
-              <el-rate v-model="params.star" ></el-rate>
-            </div>
-          </div>
-          <div class="input-box">
-            <el-input type="textarea" placeholder="分享购物心得..." v-model="params.content" maxlength="500"
-              :autosize="{ minRows: 8 }" show-word-limit />
-          </div>
-
-          <div class="upload-box">
-            <el-upload class="upload-demo" list-type="picture-card" accept="image/*" multiple :name="UPLOAD_NAME"
-              :action="UPLOAD_ACTION" :limit="upload_limit_number" :data="mix_upload_data"
-              :on-success="upload_on_success" :before-upload="upload_before_upload">
-              <i class="el-icon-plus"></i>
-
-              <div class="el-upload__tip" slot="tip">
-                <div class="tip-text-1">添加图片</div>
-                <div class="tip-text-2">
-                  最多
-                  <b class="number">6</b>
-                  张
-                </div>
-              </div>
-            </el-upload>
-          </div>
-        </div>
         <div class="submit-box flex-center">
-          <button class="btn btn-ripple flex-center" @click="submit_pingjia">发表评价</button>
+          <button class="btn btn-ripple flex-center" @click="submit_pingjia">
+            发表评价
+          </button>
         </div>
       </div>
     </div>
@@ -82,9 +98,7 @@
 </template>
 
 <script>
-import { UPLOAD_ACTION, UPLOAD_NAME } from '@/config/env.js'
-
-
+import { UPLOAD_ACTION, UPLOAD_NAME } from "@/config/env.js";
 
 import { mapState } from "vuex";
 
@@ -97,13 +111,13 @@ export default {
       UPLOAD_NAME,
       //
       params: {
-        id: this.$route.query.orderId || "",//订单id
+        id: this.$route.query.orderId || "", //订单id
         inventoryId: this.$route.query.inventoryId || "", //商品规格
-        star: '',
-        star1: '',
-        star2: '',
-        uploadedfile1: '',
-        content: '',
+        star: "",
+        star1: "",
+        star2: "",
+        uploadedfile1: "",
+        content: "",
       },
       //
       products: [],
@@ -120,8 +134,8 @@ export default {
   },
   watch: {
     upload_pic_list(arr) {
-      this.params.uploadedfile1 = this.upload_pic_list.join('|')
-    }
+      this.params.uploadedfile1 = this.upload_pic_list.join("|");
+    },
   },
   created() {
     this.setView();
@@ -129,16 +143,18 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'orders_detail',
-          id: this.params.id
+          action: "orders_detail",
+          id: this.params.id,
         },
       }).then((res) => {
         let { code, data, msg } = res;
         if (code == 200) {
-          this.products = data.products.filter((v) => v.id == this.params.inventoryId);
+          this.products = data.products.filter(
+            (v) => v.id == this.params.inventoryId
+          );
           this.info = data;
         }
       });
@@ -158,14 +174,14 @@ export default {
 
       // let inventoryId = this.info.products.map((v) => v.id).join();
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'orders_comment',
-          ...this.params
+          action: "orders_comment",
+          ...this.params,
         },
       }).then((res) => {
-        alert(res)
+        alert(res);
         let { code, msg, data } = res;
         if (code == 200) {
           this.$router.back();
@@ -180,21 +196,20 @@ export default {
       alert(res);
       if (code == 200) {
         // this.form.image = res.data;
-        this.upload_pic_list.push(res.data)
+        this.upload_pic_list.push(res.data);
       }
     },
     upload_before_upload(file) {
       const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
       return isLt2M;
     },
-
   },
 };
 </script>
 
 <style scoped lang="less">
 /deep/ .el-rate__icon {
-  color: #F74747 !important;
+  color: #f74747 !important;
 }
 
 /deep/ .el-upload--picture-card {
@@ -203,15 +218,13 @@ export default {
   line-height: 100px;
 }
 
-
-
 .page {
   padding-bottom: 80px;
 
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -226,7 +239,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #f74747;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -243,7 +256,6 @@ export default {
 /deep/.btn-box {
   display: none;
 }
-
 
 .el-upload__tip {
   margin-top: 0;
@@ -275,9 +287,9 @@ export default {
   margin-bottom: 25px;
 
   .info-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     height: 48px;
     padding: 0 15px;
     background: #f5f5f5;
@@ -288,14 +300,16 @@ export default {
     font-weight: bold;
     color: #333333;
 
-    .date {}
+    .date {
+    }
 
     .order-code {
       flex: 2;
       text-align: left;
       padding-left: 20px;
 
-      span {}
+      span {
+      }
     }
 
     .order-state {
@@ -309,34 +323,30 @@ export default {
 
   .info-good {
     .list-good {
-
-
       .item-good {
         padding: 20px;
-        border-bottom: 1px dashed #F5F5F5;
-
+        border-bottom: 1px dashed #f5f5f5;
+        display: flex;
+        align-items: start;
         &:last-child {
           border: none;
         }
 
-
         .box-image {
-          width: 100px;
-          height: 100px;
+          width: 200px;
+          height: 200px;
           cursor: pointer;
-          border: 1px solid #F5F5F5;
-
 
           /deep/ img {
-            width: 100px;
-            height: 100px;
+            width: 200px;
+            height: 200px;
             object-fit: contain;
             object-fit: cover;
           }
 
           img {
-            width: 100px;
-            height: 100px;
+            width: 200px;
+            height: 200px;
             object-fit: contain;
             object-fit: cover;
           }
@@ -344,45 +354,28 @@ export default {
 
         .box-title {
           flex: 1;
-          text-align: left;
-          padding-left: 40px;
-
+          text-align: center;
+          margin-top: 10px;
 
           .title {
             width: fit-content;
             cursor: pointer;
 
             &:hover {
-              color: #F74747;
+              color: #f74747;
             }
           }
         }
 
-        .box-sku {
-          text-align: center;
-          min-width: 200px;
-        }
-
-        .box-num {
-          text-align: center;
-          min-width: 200px;
-        }
-
-        .box-price {
-          text-align: center;
-          min-width: 200px;
-
-          font-family: OPPOSans, OPPOSans;
-          font-weight: 400;
-          font-size: 14px;
-          color: #FF0000;
+        .comment-box {
+          flex: 1;
+          margin-left: 90px;
         }
       }
 
-
       .goods-action {
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
         justify-content: flex-end;
         padding: 10px;
 
@@ -392,7 +385,7 @@ export default {
           margin-left: 10px;
           min-width: 96px;
           height: 30px;
-          background: #F74747;
+          background: #f74747;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;
@@ -415,16 +408,12 @@ export default {
 .comment-box {
   .form-box {
     min-height: 327px;
-    background: #ffffff;
-    border: 1px solid #e5e5e5;
 
     .title {
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
       height: 48px;
       padding-left: 20px;
-      background: #f5f5f5;
-      border-bottom: 1px solid #e5e5e5;
 
       .text {
         margin-right: 20px;
@@ -432,11 +421,15 @@ export default {
     }
 
     .input-box {
+      border: 1px solid #e5e5e5;
+
       /deep/ textarea {
         border: none;
         border-bottom: 1px solid #e5e5e5;
         padding-top: 20px;
         font-size: 14px;
+        min-height: 110px !important;
+        height: 110px !important;
 
         &:focus {
           border-color: #e5e5e5 !important;
@@ -452,13 +445,12 @@ export default {
     .btn {
       width: 250px;
       height: 48px;
-      background: #F74747;
+      background: #f74747;
       border-radius: 100px 100px 100px 100px;
       font-family: OPPOSans, OPPOSans;
-font-weight: 400;
-font-size: 16px;
-color: #FFFFFF;
-
+      font-weight: 400;
+      font-size: 16px;
+      color: #ffffff;
 
       &:hover {
         opacity: 0.75;
@@ -473,4 +465,8 @@ color: #FFFFFF;
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/shop/order-review-submit.less"></style>
+<style
+  scoped
+  lang="less"
+  src="@/assets/h5css/shop/order-review-submit.less"
+></style>

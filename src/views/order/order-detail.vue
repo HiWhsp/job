@@ -332,6 +332,10 @@
           <!-- 订单操作 -->
           <div class="order-action-box">
             <div class="btn-box">
+              <button class="btn-ripple fit-text" @click="doRefund(info)">
+                下载合同文件
+              </button>
+
               <button
                 v-if="info.ifCancel == 1"
                 class="btn-ripple fit-text"
@@ -346,14 +350,8 @@
               >
                 去支付
               </button>
-              <!-- <button
-                v-if="info.ifPay == 1 && vuex_user.staffType == 1"
-                class="btn-ripple fit-text btn-bg"
-                @click="doOfflinePay(info)"
-              >
-                上传支付凭证
-              </button> -->
               <button
+                v-if="info.ifPay == 1 && vuex_user.staffType == 1"
                 class="btn-ripple fit-text btn-bg"
                 @click="doOfflinePay(info)"
               >
