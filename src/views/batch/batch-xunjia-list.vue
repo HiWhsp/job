@@ -1,55 +1,63 @@
 <template>
   <div class="page">
-    <div class="page-title">我的询价</div>
+    <div class="page-title">
+      <div class="title-left">我的询价</div>
+      <div class="right">
+        <el-date-picker
+          v-model="data"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+          type="date"
+          placeholder="选择日期"
+        >
+        </el-date-picker>
+        <el-select
+          v-model="tabSelect"
+          placeholder="全部询价状态"
+          @change="do_search()"
+        >
+          <el-option
+            :label="item.title"
+            :value="item"
+            v-for="item in tabList"
+            :key="item.value"
+          ></el-option>
+        </el-select>
+        <el-input
+          placeholder="请输入内容"
+          v-model="keyword"
+          class="input-with-select"
+        >
+          <el-button
+            slot="append"
+            icon="el-icon-search"
+            @click="do_search()"
+          ></el-button>
+        </el-input>
+      </div>
+    </div>
 
     <div class="page-ctx">
-      <div class="tab-box">
-        <div class="tab-list">
-          <div
-            v-for="(item, index) in tabList"
-            :key="index"
-            class="tab-item"
-            :class="tabSelect.value == item.value ? 'active' : ''"
-            @click="do_toggle_tab(item)"
-          >
-            {{ item.title }}
-            <span class="number" v-if="item.num">{{ item.num }}</span>
-          </div>
-        </div>
-        <!-- <div class="search-box">
-          <input v-model="keyword" type="text" placeholder="输入商品名称、订单号" />
-          <button @click="do_search()">搜索</button>
-          <button @click="do_reset()">重置</button>
-        </div> -->
-      </div>
-
       <div class="page-sec">
         <!-- <orderList :list="orders" @confirm="emitConfirm"/> -->
 
         <div class="order-list-wrap">
+          <div class="base-box flex-between">
+            <div class="box-title">
+              <div class="product-title">商品信息</div>
+            </div>
+            <div class="box-price">金额</div>
+            <div class="order-state_">询价状态</div>
+            <div class="box-num">操作</div>
+          </div>
           <div class="info-item" v-for="(item, index) in orders" :key="index">
-            <div class="basic-info flex-between">
+            <div class="basic-info flex">
+              <div class="date">{{ item.dtTime }}</div>
               <div class="order-code">
                 报价单号：
                 <span>{{ item.xunjiaNo }}</span>
               </div>
-              <div class="date">制单时间：{{ item.dtTime }}</div>
             </div>
-
-            <div class="base-box flex-between">
-              <div class="box-title">
-                <div class="product-title">商品信息</div>
-              </div>
-              <!-- <div class="box-sku">
-                    <div class="product-sku">{{ product_item.keyVals }}</div>
-                  </div> -->
-              <div class="order-state_">状态</div>
-              <div class="box-num">数量</div>
-              <div class="box-price">单价</div>
-
-              <div class="box-subtotal">小计</div>
-            </div>
-
             <div class="product-box">
               <div class="product-list">
                 <div
@@ -68,18 +76,9 @@
                       </div>
                     </el-image>
                   </div>
-                  <div class="box-title">
-                    <div
-                      class="product-title"
-                      @click="mix_to_product(product_item)"
-                    >
-                      {{ product_item.sku }}
-                    </div>
-                    <div class="product-sku">{{ product_item.brand }}</div>
+                  <div class="box-price">
+                    {{ vuex_huobi }} {{ product_item.baojiaPrice }}
                   </div>
-                  <!-- <div class="box-sku">
-                    <div class="product-sku">{{ product_item.keyVals }}</div>
-                  </div> -->
                   <div class="order-state" :class="'state-' + item.status">
                     {{ item.status == 0 ? "待提交" : "" }}
                     {{ item.status == 1 ? "待处理" : "" }}
@@ -88,56 +87,10 @@
                     {{ item.status == -1 ? "后台取消" : "" }}
                     {{ item.status == -2 ? "用户取消" : "" }}
                   </div>
-                  <div class="box-num">x {{ product_item.num }}</div>
-                  <div class="box-price">
-                    {{ vuex_huobi }} {{ product_item.baojiaPrice }}
+                  <div class="box-refund" @click="toDetail(item)">
+                    <div class="refund-act">查看详情</div>
                   </div>
-
-                  <div class="box-subtotal">
-                    {{ vuex_huobi }}
-                    {{ product_item.baojiaPrice * product_item.num }}
-                  </div>
-                  <!-- <div class="box-refund">
-                    <div class="refund-act">
-                      申请售后
-                    </div>
-                  </div> -->
                 </div>
-              </div>
-            </div>
-
-            <div class="info-heji">
-              <div class="heji">报价有效期：{{ item.endTime }}</div>
-
-              <div class="btn-actions">
-                <button class="btn-ripple fit-text" @click="toDetail(item)">
-                  订单详情
-                </button>
-                <div class="btn-ripple fit-text" @click="getList(item)">
-                  下载报价单
-                </div>
-
-                <button
-                  v-if="item.status == 0 || item.status == 1"
-                  class="btn-ripple fit-text btn-bg"
-                  @click="doCancel(item)"
-                >
-                  取消报价
-                </button>
-                <button
-                  v-if="item.status == 0"
-                  class="btn-ripple fit-text btn-bg"
-                  @click="doSubmit(item)"
-                >
-                  提交报价
-                </button>
-                <button
-                  v-if="item.status == 2"
-                  class="btn-ripple fit-text btn-bg"
-                  @click="doPay(item)"
-                >
-                  去订购
-                </button>
               </div>
             </div>
           </div>
@@ -146,7 +99,7 @@
         <div
           v-if="count"
           class="pagination-box"
-          style="margin-top: 40px; text-align: right"
+          style="margin-top: 40px; text-align: center"
         >
           <el-pagination
             background
@@ -202,6 +155,7 @@ export default {
       count: 0,
       keyword: "",
       user_index: {},
+      data: "",
     };
   },
   computed: {
@@ -278,7 +232,7 @@ export default {
           action: "product_userXunjiaList",
           ...this.pagination,
           status: this.tabSelect.id,
-          // keyword: this.keyword,
+          keyword: this.keyword,
         },
       }).then((res) => {
         let { code, data } = res;
@@ -557,14 +511,13 @@ export default {
 </script>
 
 <style scoped lang="less">
-/deep/ .order-list-wrap {
-  margin-top: 30px;
-}
-
 .page {
   padding-bottom: 50px;
 
   .page-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -574,6 +527,20 @@ export default {
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
     color: #333333;
+    .right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      .el-date-editor {
+        width: 185px;
+      }
+      .el-select {
+        width: 185px;
+      }
+      .el-input-group {
+        width: 220px;
+      }
+    }
   }
 
   .page-ctx {
@@ -609,14 +576,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #F74747;
+        color: #f74747;
       }
 
       &.active {
         // background: #F74747;
         // color: #fff;
         font-weight: bold;
-        color: #F74747;
+        color: #f74747;
 
         &::after {
           content: "";
@@ -625,7 +592,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #F74747;
+          background: #f74747;
         }
       }
     }
@@ -682,26 +649,27 @@ export default {
 .order-list-wrap {
   .info-item {
     border: 1px solid #e5e5e5;
-    margin-bottom: 30px;
+    margin-top: 20px;
   }
   .basic-info {
     height: 48px;
     padding: 0 15px;
+    background: #F5F5F5;
     .order-code {
-      flex: 2;
-      text-align: left;
-
       font-size: 14px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
       font-weight: bold;
       color: #333333;
+      margin-left: 20px;
 
       span {
         color: #333333;
       }
     }
     .date {
-      color: #999999;
+      color: #333;
+      font-size: 14px;
+      font-weight: bold;
     }
   }
   .base-box {
@@ -709,53 +677,37 @@ export default {
     padding: 0 15px;
     background: #f5f5f5;
     border-bottom: 1px solid #e5e5e5;
-    .order-state_ {
-      padding: 3px 6px;
-      // border: 1px solid #ccc;
-      font-size: 14px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      line-height: 20px;
-      min-width: 96px;
-      // color: #999999;
-    }
+
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
 
     .box-title {
       flex: 1;
-      text-align: left;
-      // padding-left: 40px;
-
-      .product-title {
-        width: fit-content;
-        cursor: pointer;
-      }
     }
 
-    .box-sku {
-      text-align: center;
+    .order-state_ {
+      padding: 3px 6px;
       min-width: 200px;
+      text-align: center;
     }
 
     .box-num {
       text-align: center;
-      min-width: 150px;
+      min-width: 200px;
+      text-align: center;
     }
 
     .box-price {
       text-align: center;
-      min-width: 150px;
+      min-width: 200px;
 
       font-family: OPPOSans, OPPOSans;
-      font-weight: 400;
-      font-size: 14px;
     }
     .box-subtotal {
       text-align: center;
       min-width: 150px;
-
       font-family: OPPOSans, OPPOSans;
-      font-weight: 400;
-      font-size: 14px;
     }
     .date {
       font-size: 14px;
@@ -795,16 +747,10 @@ export default {
           border: none;
         }
         .order-state {
-          padding: 3px 6px;
-          // border: 1px solid #ccc;
           font-size: 14px;
-          font-family: Microsoft YaHei;
-          font-weight: 400;
-          line-height: 20px;
-          margin-left: 16px;
-          color: #999999;
-          color: #F74747;
-          min-width: 96px;
+          color: #333;
+          min-width: 200px;
+          text-align: center;
           // 待付款
           &.state--5 {
             // background: #ff4c29;
@@ -813,15 +759,14 @@ export default {
           }
 
           &.state-2 {
-            color: #F74747;
-            border-color: #F74747;
+            color: #f74747;
+            border-color: #f74747;
           }
         }
         .box-image {
-          width: 100px;
-          height: 100px;
           cursor: pointer;
           border: 1px solid #f5f5f5;
+          flex: 1;
 
           /deep/ img {
             width: 100px;
@@ -848,7 +793,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #F74747;
+              color: #f74747;
             }
           }
 
@@ -859,11 +804,6 @@ export default {
           }
         }
 
-        .box-sku {
-          text-align: center;
-          min-width: 200px;
-        }
-
         .box-num {
           text-align: center;
           min-width: 150px;
@@ -871,31 +811,25 @@ export default {
 
         .box-price {
           text-align: center;
-          min-width: 150px;
-
-          font-family: OPPOSans, OPPOSans;
-          font-weight: 400;
+          min-width: 200px;
           font-size: 14px;
-          color: #777;
-        }
-        .box-subtotal {
-          text-align: center;
-          min-width: 150px;
-
-          font-family: OPPOSans, OPPOSans;
-          font-weight: 400;
-          font-size: 14px;
-          color: #777;
+          color: #333;
         }
         .box-refund {
+          min-width: 200px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           .refund-act {
+            cursor: pointer;
             text-align: center;
-            min-width: 150px;
-
-            font-family: OPPOSans, OPPOSans;
-            font-weight: 400;
+            width: 100px;
+            height: 36px;
+            line-height: 36px;
             font-size: 14px;
-            color: #ff0000;
+            color: #333;
+            border-radius: 4px 4px 4px 4px;
+            border: 1px solid #D5DBE8;
           }
         }
       }
@@ -926,13 +860,13 @@ export default {
         margin-right: 30px;
 
         b {
-          color: #F74747;
+          color: #f74747;
         }
       }
 
       .heji-money {
         b {
-          color: #F74747;
+          color: #f74747;
         }
       }
     }
@@ -945,11 +879,11 @@ export default {
         background: #ffffff;
         border-radius: 50px 50px 50px 50px;
         border-radius: 4px;
-        border: 1px solid #F74747;
+        border: 1px solid #f74747;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #F74747;
+        color: #f74747;
 
         & + button {
           margin-left: 20px;
@@ -960,7 +894,7 @@ export default {
         }
 
         &.btn-bg {
-          background: #F74747;
+          background: #f74747;
           color: #ffffff;
         }
       }
@@ -975,11 +909,11 @@ export default {
   background: #ffffff;
   border-radius: 5rem 5rem 5rem 5rem;
   border-radius: 0.4rem;
-  border: 1px solid #F74747;
+  border: 1px solid #f74747;
   font-family: Arial, Arial;
   font-weight: 400;
   font-size: 1.4rem;
-  color: #F74747;
+  color: #f74747;
   margin-left: 20px;
 }
 .btn-ripple:not(:disabled):hover {
