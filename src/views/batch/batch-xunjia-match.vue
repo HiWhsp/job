@@ -377,7 +377,7 @@ export default {
       if (this.checkedItem.length === 0) {
         alert("请选择需求");
       } else {
-        if ((this.checkedItem, length === this.checkedAttr.length)) {
+        if ((this.checkedItem.length === this.checkedAttr.length)) {
           alert("需要至少一条需求");
         } else {
           for (let i = 0; i < this.checkedItem.length; i++) {

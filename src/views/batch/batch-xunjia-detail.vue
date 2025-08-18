@@ -5,12 +5,11 @@
       <img width="100%" :src="dialogImageUrl" alt="" />
     </el-dialog> -->
     <div class="page-title flex-between">
-      <span>询价单号 {{ info.xunjiaNo }}</span>
-      <button @click="$router.push('/batch-xunjia-list')">返回</button>
+      <span>询价单详情</span>
     </div>
 
     <div class="page-ctx">
-      <div class="step-box">
+      <!-- <div class="step-box">
         <div class="step-info active">
           <div class="step-number">
             <div class="step-line step-line-1"></div>
@@ -52,153 +51,140 @@
           </div>
           <div class="step-date" style="visibility: hidden">-</div>
         </div>
-      </div>
+      </div> -->
 
       <div class="base-ctx">
-        <div class="base-title">订单信息</div>
-        <div class="base-infos">
-          <div class="base-info">
-            <div class="info-content">
-              <div class="info-group">
-                <div class="info-info">
-                  <div class="label">制单日期</div>
-                </div>
-                <div class="info-info">
-                  <div class="label">{{ info.dtTime }}</div>
-                </div>
-              </div>
-              <div class="info-group">
-                <div class="info-info">
-                  <div class="label">会员信息</div>
-                </div>
-                <div class="info-info">
-                  <div class="label">{{ info.user.nickname }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="base-info">
-            <div class="info-content">
-              <div class="info-group">
-                <div class="info-info">
-                  <div class="label">最近报价完成时间</div>
-                </div>
-                <div class="info-info">
-                  <div>{{ info.editTime || "--" }}</div>
-                </div>
-              </div>
-              <div class="info-group">
-                <div class="info-info">
-                  <div class="label">会员编号</div>
-                  <div class="val"></div>
-                </div>
-                <div class="info-info">
-                  <div class="label">{{ info.user.id }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="base-info">
-            <div class="info-content">
-              <div class="info-group">
-                <div class="info-info">
-                  <div class="label">报价有效期</div>
-                </div>
-                <div class="info-info">
-                  <div class="label">{{ info.endTime }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="base-info" v-if="invioceJson.invoiceType">
-            <div class="info-title">发票信息</div>
-            <div class="info-content">
-              <div class="info-info">
-                <div class="label">发票抬头:</div>
-                <div class="val">{{ invioceJson.title }}</div>
-              </div>
-              <div class="info-info">
-                <div class="label">纳税人识别号:</div>
-                <div class="val">{{ invioceJson.shibiema }}</div>
-              </div>
-              <div class="info-info">
-                <div class="label">注册地址:</div>
-                <div class="val">{{ invioceJson.companyAddress }}</div>
-              </div>
-              <div class="info-info">
-                <div class="label">注册电话:</div>
-                <div class="val">{{ invioceJson.companyPhone }}</div>
-              </div>
-              <div class="info-info">
-                <div class="label">开户银行:</div>
-                <div class="val">{{ invioceJson.bankName }}</div>
-              </div>
-              <div class="info-info">
-                <div class="label">银行账户:</div>
-                <div class="val">{{ invioceJson.bankNo }}</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 物流信息 -->
-          <div class="info" v-if="fahuo_info.company">
-            <div class="info-title">发货信息</div>
-            <div class="info-content">
-              <div class="wuliu-name">
-                <span>快递公司：</span>
-                {{ fahuo_info.company }}
-              </div>
-              <div class="wuliu-code">
-                <span>物流单号：</span>
-                {{ fahuo_info.order_id }}
-              </div>
-            </div>
-          </div>
-          <!-- 物流信息 -->
-          <div class="info" v-if="orderObj.remark">
-            <div class="info-title">订单备注</div>
-            <div class="info-content">
-              <div class="wuliu-name">
-                <span>备注：</span>
-                {{ orderObj.remark }}
-              </div>
-            </div>
-          </div>
-
-          <div class="info" v-if="peisong_type_text == '上门自提'">
-            <div class="info-title">厂家信息</div>
-            <div class="info-content">
-              <div class="phone">
-                <span>联系方式：</span>
-                {{ shequ.phone }}
-              </div>
-              <div class="address">
-                <span>厂家地址：</span>
-                {{ shequ.address }}
-              </div>
-            </div>
-          </div>
-
-          <!-- 转款凭证 -->
-          <div class="info" v-if="is_xianxia">
-            <div class="info-title">转账凭证</div>
-            <div class="info-content">
-              <div class="wuliu-name">
-                <!-- <span>转账凭证：</span> -->
-                <div class="pingzheng-box">
+        <div class="base-title">
+          <div class="data">{{ info.dtTime }}</div>
+          <div class="data">询价单号：{{ info.xunjiaNo }}</div>
+        </div>
+        <div class="page-ctx">
+          <div class="result-wrap">
+            <div class="result-top">
+              <div class="result-left">
+                <div class="left-title">原始文件列</div>
+                <div class="data-list">
                   <div
-                    class="pingzheng-info"
-                    v-for="(info, index) in xianxia_imgs"
+                    class="data-item"
+                    v-for="(item, index) in info.xunjiaDetail"
                     :key="index"
                   >
-                    <el-image
-                      style="width: 100px; height: 100px"
-                      :src="info"
-                      :preview-src-list="xianxia_imgs"
-                    >
-                    </el-image>
+                    <div class="check-box">
+                      <input
+                        type="checkbox"
+                        :value="item.id"
+                        v-model="checkedItem"
+                      />
+                    </div>
+                    <div class="info-box">
+                      <div class="xuhao">{{ index }}</div>
+                      <div class="title">
+                        编号 {{ item.brand }} 名称：{{
+                          item.product_name || "空"
+                        }}
+                      </div>
+                      <div class="num">数量：{{ item.num }}</div>
+                    </div>
                   </div>
+                </div>
+              </div>
+              <div class="result-right">
+                <div class="right-title">匹配结果列：</div>
+                <div class="match-list">
+                  <div
+                    class="match-item-loop"
+                    v-for="(item, index) in info.xunjiaDetail"
+                    :key="index"
+                  >
+                    <div
+                      class="match-item"
+                      v-if="item.product && item.product.title"
+                    >
+                      <div class="poster-box">
+                        <img :src="item.product.thumb" alt="" />
+                      </div>
+                      <div class="title-box">
+                        <div class="title">
+                          {{ item.product.title }}
+                        </div>
+                        <div class="price-box">
+                          单价：<span class="price"
+                            >{{ vuex_huobi }}{{ item.product.price }}</span
+                          >
+                        </div>
+                      </div>
+                      <div class="brand-box">
+                        <div class="brand">
+                          品牌：<span v-if="item.product.brand"
+                            >{{ item.product.brand.title }}，</span
+                          >
+                        </div>
+                        <div class="sku">规格：{{ item.guige }}</div>
+                      </div>
+                      <div class="num-box">
+                        <el-input-number
+                          v-model="item.num"
+                          :min="1"
+                          label="描述文字"
+                        ></el-input-number>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="result-bottom">
+              <div class="bottom-action-box">
+                <div class="left-acts flex">
+                  <div class="all-select">
+                    <el-checkbox
+                      v-model="checked_all"
+                      @change="on_change_checked_all"
+                      >{{ checked_all ? "反选" : "全选" }}</el-checkbox
+                    >
+                  </div>
+                  <div class="delete-box">
+                    <span
+                      data-fn="do_cart_remove_select"
+                      @click="do_cart_remove_select_tip()"
+                      >删除选中</span
+                    >
+                  </div>
+                  <div class="num-box flex">
+                    <div class="num-item">
+                      <span class="label">总需求数：</span>
+                      <span class="value">{{ info.length }}件</span>
+                    </div>
+                    <div class="num-item">
+                      <span class="label">已报价：</span>
+                      <span class="value">{{ info.length }}件</span>
+                    </div>
+                    <div class="num-item">
+                      <span class="label">待报价：</span>
+                      <span class="value">{{ 0 }}件</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="right-acts flex">
+                  <div class="total-number">
+                    已选中：
+                    <b>{{ checkedItem.length }}</b>
+                  </div>
+
+                  <button
+                    :disabled="jiesuanDisabled"
+                    class="btn-ripple btn-sc"
+                    @click="doConfirm()"
+                  >
+                    去询价
+                  </button>
+                  <button
+                    :disabled="jiesuanDisabled"
+                    class="btn-ripple btn-cart"
+                    @click="toCart()"
+                  >
+                    加入购物车
+                  </button>
                 </div>
               </div>
             </div>
@@ -395,6 +381,11 @@ export default {
       xianxia_imgs: [], //线下凭证信息
       is_xianxia: false, //是否线下转款
       pay_type: "", //支付方式
+
+      checkedItem: [],
+      checkedAttr: [],
+      checked_all: false,
+      jiesuanDisabled: false,
     };
   },
   computed: {
@@ -502,6 +493,9 @@ export default {
         if (code == 200) {
           this.info = data;
           console.log(this.info);
+          for (let i = 0; i < this.info.xunjiaDetail.length; i++) {
+            this.checkedAttr.push(this.info.xunjiaDetail[i].id);
+          }
           // this.payInfo = data.payInfo;
           this.products = data.products;
           // this.fahuoInfo = data.fahuoInfo;
@@ -534,6 +528,17 @@ export default {
           inventoryId: info.id,
         },
       });
+    },
+
+    on_change_checked_all() {
+      // 判断全选复选框是否选中
+      if (this.checked_all) {
+        // 如果全选复选框被选中,则重新给选项复选框赋值,即选中所有的选项复选框
+        this.checkedItem = this.checkedAttr;
+      } else {
+        // 如果全选复未选框被选中,则设置为空值,即未选中所有的选项复选框
+        this.checkedItem = [];
+      }
     },
 
     doCancel(info) {
@@ -579,7 +584,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #f74747;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -588,10 +593,285 @@ export default {
 }
 
 .page-ctx {
-  margin-top: 24px;
-  padding: 24px 32px;
-  background: #fff;
-  width: 100%;
+  .result-wrap {
+    position: relative;
+    z-index: 2;
+    background: #ffffff;
+  }
+  .result-top {
+    display: flex;
+    align-items: flex-start;
+
+    .result-left {
+      .left-title {
+        height: 48px;
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-weight: 400;
+        font-size: 16px;
+        color: #333333;
+        line-height: 48px;
+      }
+      .data-list {
+        .data-item {
+          margin-bottom: 20px;
+          background: #f7f7f7;
+          width: 315px;
+          padding: 10px;
+          display: flex;
+          align-items: flex-start;
+          height: 113px;
+          border-top: 1px solid #f74747;
+          .check-box {
+            width: 35px;
+            text-align: center;
+          }
+          .info-box {
+            flex: 1;
+            .xuhao {
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 12px;
+              color: #f74747;
+            }
+            .title {
+              margin: 10px 0;
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 12px;
+              color: #333333;
+            }
+            .num {
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 12px;
+              color: #333333;
+            }
+          }
+        }
+      }
+    }
+    .result-right {
+      margin-left: 47px;
+      flex: 1;
+      .right-title {
+        height: 48px;
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-weight: 400;
+        font-size: 16px;
+        color: #333333;
+        line-height: 48px;
+      }
+
+      .match-item {
+        margin-bottom: 0;
+        background: #fff;
+        width: 100%;
+        padding: 20px 0;
+        display: flex;
+        align-items: flex-start;
+        height: 133px;
+        border-top: 1px solid #f74747;
+
+        .poster-box {
+          width: 80px;
+          height: 80px;
+          img {
+            width: 80px;
+            height: 80px;
+          }
+        }
+        .title-box {
+          margin-left: 18px;
+          flex: 1;
+          .title {
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-weight: 400;
+            font-size: 16px;
+            color: #333333;
+          }
+          .price-box {
+            margin-top: 10px;
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-weight: 400;
+            font-size: 16px;
+            color: #333333;
+            .price {
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 16px;
+              color: #f74747;
+            }
+          }
+        }
+        .brand-box {
+          margin-left: 18px;
+          width: 300px;
+          .brand {
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-weight: 400;
+            font-size: 16px;
+            color: #333333;
+          }
+          .sku {
+            margin-top: 10px;
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-weight: 400;
+            font-size: 16px;
+            color: #333333;
+          }
+        }
+      }
+    }
+  }
+  .bottom-action-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 40px;
+    height: 86px;
+    background: #fafbfc;
+    // border: 1px solid #eeeeee;
+    // box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.08);
+    opacity: 1;
+    margin-top: 40px;
+    padding-left: 16px;
+    .all-select {
+      cursor: pointer;
+      min-width: 120px;
+      width: fit-content;
+      font-family: OPPOSans, OPPOSans;
+      font-weight: 400;
+      font-size: 14px;
+      color: #666666;
+    }
+
+    .delete-box {
+      cursor: pointer;
+      width: fit-content;
+      margin-right: 16px;
+      span {
+        font-family: OPPOSans, OPPOSans;
+        font-weight: 400;
+        font-size: 14px;
+        color: #666666;
+
+        &:hover {
+          color: #f74747;
+        }
+      }
+    }
+
+    .clear-box {
+      cursor: pointer;
+      margin-left: 64px;
+      flex: 2;
+      text-align: left;
+
+      span {
+        font-family: OPPOSans, OPPOSans;
+        font-weight: 400;
+        font-size: 14px;
+        color: #666666;
+
+        &:hover {
+          color: #f74747;
+        }
+      }
+    }
+
+    .num-box {
+      .num-item {
+        margin-right: 30px;
+        .label {
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: 400;
+          font-size: 12px;
+          color: #666666;
+        }
+        .value {
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: 400;
+          font-size: 12px;
+          color: #f74747;
+        }
+      }
+    }
+
+    .total-number {
+      width: fit-content;
+      font-family: OPPOSans, OPPOSans;
+      font-weight: 400;
+      font-size: 14px;
+      color: #666666;
+
+      b {
+        font-size: 16px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        line-height: 20px;
+        color: #f13f17;
+      }
+    }
+
+    .total-price {
+      margin-left: 60px;
+      margin-right: 60px;
+      width: fit-content;
+
+      font-family: OPPOSans, OPPOSans;
+      font-weight: 400;
+      font-size: 14px;
+      color: #666666;
+
+      b {
+        font-size: 16px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        line-height: 20px;
+        color: #f13f17;
+      }
+    }
+
+    .btn-sc {
+      margin-left: 20px;
+      cursor: pointer;
+      width: 191px;
+      height: 46px;
+      background: #ff9900;
+
+      font-size: 16px;
+      font-family: Microsoft YaHei;
+      font-weight: bold;
+      color: #ffffff;
+      transition: 0.3s;
+      user-select: none;
+
+      &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+    }
+
+    .btn-cart {
+      margin-left: 20px;
+      cursor: pointer;
+      width: 191px;
+      height: 46px;
+      background: #f74747;
+
+      font-size: 16px;
+      font-family: Microsoft YaHei;
+      font-weight: bold;
+      color: #ffffff;
+      transition: 0.3s;
+      user-select: none;
+
+      &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+    }
+  }
 }
 
 .step-box {
@@ -606,12 +886,12 @@ export default {
     &.active {
       .step-number {
         .step-num {
-          background: #F74747;
+          background: #f74747;
           color: #fff;
         }
 
         .step-line {
-          background: #F74747;
+          background: #f74747;
         }
       }
     }
@@ -668,19 +948,19 @@ export default {
 }
 
 .base-ctx {
-  margin-bottom: 24px;
-  min-height: 156px;
+  margin-top: 10px;
   background: #ffffff;
-  border: 1px solid #f5f5f5;
+  padding: 20px 34px;
 
   .base-title {
-    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     padding-left: 24px;
     height: 48px;
     line-height: 48px;
     background: #f9f9f9;
-    border-bottom: 1px solid #f5f5f5;
-
+    color: #333;
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: bold;
@@ -749,9 +1029,6 @@ export default {
   }
 }
 
-.order-product {
-}
-
 .pingzheng-box {
   display: flex;
   align-items: center;
@@ -774,7 +1051,7 @@ export default {
 
   .money-heji {
     span {
-      color: #F74747;
+      color: #f74747;
       font-weight: bold;
     }
   }
@@ -801,7 +1078,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: bold;
         line-height: 24px;
-        color: #F74747;
+        color: #f74747;
 
         .pay-title {
           margin-right: 5px;
@@ -861,7 +1138,7 @@ export default {
         height: 30px;
         line-height: 30px;
         // background: #F74747;
-        color: #F74747;
+        color: #f74747;
         // color: #fff;
         font-size: 14px;
       }
@@ -946,7 +1223,7 @@ export default {
               cursor: pointer;
 
               &:hover {
-                color: #F74747;
+                color: #f74747;
               }
             }
           }
@@ -994,7 +1271,7 @@ export default {
             margin-left: 10px;
             min-width: 96px;
             height: 30px;
-            background: #F74747;
+            background: #f74747;
             font-size: 14px;
             font-family: Microsoft YaHei;
             color: #ffffff;
@@ -1036,7 +1313,7 @@ export default {
 
       .count {
         font-weight: bold;
-        color: #F74747;
+        color: #f74747;
       }
 
       .money-info {
@@ -1088,18 +1365,18 @@ export default {
         height: 32px;
         background: #ffffff;
         border-radius: 50px 50px 50px 50px;
-        border: 1px solid #F74747;
+        border: 1px solid #f74747;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #F74747;
+        color: #f74747;
 
         & + button {
           margin-left: 20px;
         }
 
         &.btn-bg {
-          background: #F74747;
+          background: #f74747;
           color: #fff;
         }
 
@@ -1111,6 +1388,3 @@ export default {
   }
 }
 </style>
-
-<style scoped lang="less" src="@/assets/h5css/shop/order-detail.less"></style>
-<style scoped lang="less" src="@/assets/h5css/shop/orderInfo.less"></style>

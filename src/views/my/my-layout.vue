@@ -102,37 +102,24 @@ export default {
             {
               title: "我的订单",
               route: "order-list",
-              // blacklist: [3],
             },
             {
-              title: "我的售后",
+              title: "售后服务",
               route: "refund-list",
-              blacklist: [3], //define whether a option should be or not be shown for specific kind of user
             },
             {
               title: "我的询价",
               route: "batch-xunjia-list",
-              blacklist: [3], //define whether a option should be or not be shown for specific kind of user
             },
+
             {
-              title: "订单审批",
-              route: "stock-censor",
-              blacklist: [0,1],
-            },
-            {
-              title: "待我审批",
-              route: "stock-censor-my",
-              blacklist: [0, 2, 3],
-            },
-            {
-              title: "采购额度",
+              title: "我的账单",
               route: "store-man",
-              blacklist: [2, 3],
             },
           ],
         },
         {
-          title: "我的活动",
+          title: "我关注的",
           route: "",
           icon: require("@img/my/nav-2.png"),
           child: [
@@ -141,7 +128,7 @@ export default {
               route: "favorite-list",
             },
             {
-              title: "浏览足迹",
+              title: "我的足迹",
               route: "browse-history",
             },
           ],

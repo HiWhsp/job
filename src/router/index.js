@@ -590,7 +590,7 @@ const routes = [
         name: "stock-censor-detail",
         component: () => import('@/views/stock/stock-censor-detail.vue'),
         meta: {
-          title: "查看审批详情",
+          title: "账单详情",
           requireAuth: true
         }
       },
@@ -599,7 +599,7 @@ const routes = [
         name: "store-man",
         component: () => import('@/views/stock/store-man.vue'),
         meta: {
-          title: "采购额度",
+          title: "我的账单",
           requireAuth: true
         }
       },
