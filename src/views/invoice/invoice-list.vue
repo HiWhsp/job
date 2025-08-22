@@ -66,11 +66,10 @@
                     >
                       {{ product_item.title }}
                     </div>
-                    <div class="product-sku">{{ product_item.keyVals }}</div>
+                    <div class="product-sku">订货编码：UA199</div>
+                    <div class="product-sku">商品型号：S54001</div>
                   </div>
-                  <!-- <div class="box-sku">
-                      <div class="product-sku">{{ product_item.keyVals }}</div>
-                    </div> -->
+  
                   <div class="box-price">
                     {{ vuex_huobi }} {{ product_item.priceSale }}
                   </div>
@@ -455,21 +454,21 @@ export default {
         }
 
         .box-image {
-          width: 100px;
-          height: 100px;
+          width: 70px;
+          height: 70px;
           cursor: pointer;
           border: 1px solid #f5f5f5;
 
           /deep/ img {
-            width: 100px;
-            height: 100px;
+            width: 70px;
+            height: 70px;
             object-fit: contain;
             object-fit: cover;
           }
 
           img {
-            width: 100px;
-            height: 100px;
+            width: 70px;
+            height: 70px;
             object-fit: contain;
             object-fit: cover;
           }
@@ -478,11 +477,12 @@ export default {
         .box-title {
           flex: 1;
           text-align: left;
-          padding-left: 40px;
+          padding-left: 16px;
 
           .product-title {
             width: fit-content;
             cursor: pointer;
+            margin-bottom: 10px;
 
             &:hover {
               color: #F74747;
@@ -490,7 +490,6 @@ export default {
           }
 
           .product-sku {
-            margin-top: 20px;
             min-width: 200px;
             color: #777;
           }

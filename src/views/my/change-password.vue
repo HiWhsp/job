@@ -32,7 +32,7 @@
             <span class="action"> </span>
           </div>
           <div class="item">
-            <span class="text">确认密码：</span>
+            <span class="text">重复新密码：</span>
             <span class="info">
               <el-input
                 clearable
@@ -46,18 +46,18 @@
           <div class="item btn-box">
             <span class="text" style="visibility: hidden">-</span>
             <div class="info">
-              <el-button
-                class="btn-ripple fit-text btn-save"
-                @click="throttle_do_submit()"
-                :loading="loading"
-                >确认</el-button
-              >
               <button
-                class="btn-ripple fit-text btn-cancel"
+                class="btn-ripple fit-text btn-save "
                 @click="do_clear()"
               >
                 清空
               </button>
+              <el-button
+                class="btn-ripple fit-text btn-cancel"
+                @click="throttle_do_submit()"
+                :loading="loading"
+                >确认</el-button
+              >
             </div>
           </div>
         </div>
@@ -234,22 +234,22 @@ export default {
 
   .btn-save {
     width: 120px;
-    height: 32px;
+    height: 40px;
     background: #ffffff;
-    border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    border-radius: 4px;
+    border: 1px solid #D5DBE8;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
+    color: #333;
   }
 
   .btn-cancel {
     margin-left: 24px;
     width: 120px;
-    height: 32px;
+    height: 40px;
     background: #F74747;
-    border-radius: 50px 50px 50px 50px;
+    border-radius: 4px;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;

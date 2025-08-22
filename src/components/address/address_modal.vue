@@ -8,16 +8,24 @@
           <el-input clearable v-model="form.name" placeholder="收货人姓名"></el-input>
         </div>
         <div class="item">
-          <span class="text required">联系电话</span>
-          <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
-        </div>
-        <div class="item">
           <span class="text required">所在地区</span>
           <area_select ref="area_select" @change="changeSelectAddress" />
         </div>
         <div class="item">
           <span class="text required">详细地址</span>
           <el-input clearable v-model="form.address" placeholder="详细地址"></el-input>
+        </div>
+        <div class="item">
+          <span class="text required">手机号</span>
+          <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
+        </div>
+        <div class="item">
+          <span class="text required">固定电话</span>
+          <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
+        </div>
+        <div class="item">
+          <span class="text required">邮政编码</span>
+          <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
         </div>
         <div class="item">
           <span class="text">默认地址</span>
@@ -27,8 +35,8 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <button class="btn-ripple fit-text btn-1" @click="throttle_do_submit()" :loading="loading">保 存</button>
-        <button class="btn-ripple fit-text btn-2" @click="show_modal = false">取 消</button>
+        <button class="btn-ripple fit-text btn-2" @click="throttle_do_submit()" :loading="loading">保 存</button>
+        <button class="btn-ripple fit-text btn-1" @click="show_modal = false">取 消</button>
       </span>
     </el-dialog>
   </div>
@@ -329,9 +337,9 @@ export default {
 
   .btn-1 {
     min-width: 120px;
-    height: 32px;
+    height: 40px;
     background: #FFFFFF;
-    border-radius: 50px 50px 50px 50px;
+    border-radius: 4px;
     border: 1px solid #F74747;
     font-family: Arial, Arial;
     font-weight: 400;
@@ -341,9 +349,9 @@ export default {
 
   .btn-2 {
     min-width: 120px;
-    height: 32px;
+    height: 40px;
     background: #F74747;
-    border-radius: 50px 50px 50px 50px;
+    border-radius: 4px;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;

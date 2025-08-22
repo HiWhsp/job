@@ -382,6 +382,15 @@ const routes = [
     },
     children: [
       {
+        path: "/sub-account-list",
+        name: "sub-account-list",
+        component: () => import('@/views/my/sub-account-list.vue'),
+        meta: {
+          title: "子账号管理",
+          requireAuth: true,
+        },
+      },
+      {
         path: "/my-index",
         name: "my-index",
         component: my_index,

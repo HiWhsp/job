@@ -25,7 +25,7 @@
             <span>全选</span>
           </div>
           <div class="product-delete" @click="do_delete_checked()">
-            移除选中
+            删除选中
           </div>
         </div>
 
@@ -60,10 +60,21 @@
                 <div class="goods-title" @click="mix_to_product(item)">
                   <div class="text-1">
                     {{ item.title }}
+                    <p class="text-1-num">
+                      品牌名称：<span>{{ item.brandName }}</span>
+                    </p>
+                    <p class="text-1-num">
+                      商品型号：<span>{{ item.model }}</span>
+                    </p>
                   </div>
                   <div class="text-2">
-                    <span> {{ vuex_huobi }} </span>
-                    <b>{{ item.priceSale }}</b>
+                    <div class="sale-box">
+                      <span> {{ vuex_huobi }} </span>
+                      <b>{{ item.priceSale }}</b>
+                    </div>
+                    <div class="cart-box">
+                      <img src="@img/common/cart.png" alt="" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -297,7 +308,7 @@ export default {
       color: #666666;
 
       &.checked {
-        color: #F74747;
+        color: #f74747;
       }
 
       img {
@@ -385,16 +396,36 @@ export default {
           font-weight: 400;
           color: #333333;
           line-height: 24px;
+
+          .text-1-num {
+            color: #6a6a6a;
+            span {
+              color: #000;
+            }
+          }
         }
 
         .text-2 {
-          font-size: 14px;
-          font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-          font-weight: bold;
-          color: #eb0f19;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .sale-box {
+            font-size: 14px;
+            font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+            font-weight: bold;
+            color: #eb0f19;
 
-          b {
-            font-size: 20px;
+            b {
+              font-size: 20px;
+            }
+          }
+          .cart-box {
+            width: 32px;
+            height: 32px;
+            img {
+              width: 100%;
+              height: 100%;
+            }
           }
         }
       }

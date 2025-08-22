@@ -6,7 +6,6 @@
 
     <div class="page-ctx">
       <div class="section">
-        <div class="section-title">基本信息</div>
         <div class="section-ctx">
           <div class="item upload-box">
             <span class="text">头像：</span>
@@ -34,6 +33,23 @@
           </div>
 
           <div class="item">
+            <span class="text">姓名：</span>
+            <span class="info">
+              <el-input clearable type="text" v-model="form.realName" />
+            </span>
+            <span class="action"> </span>
+          </div>
+          <div class="item">
+            <span class="text">性别：</span>
+            <span class="info">
+              <el-radio-group v-model="form.sex">
+                <el-radio :label="1">男</el-radio>
+                <el-radio :label="2">女</el-radio>
+              </el-radio-group>
+            </span>
+            <span class="action"> </span>
+          </div>
+          <div class="item">
             <span class="text">手机：</span>
             <span class="info">{{ my_info.phone }}</span>
             <span class="action" @click="open_phone_update()">
@@ -41,59 +57,41 @@
             </span>
           </div>
           <div class="item">
-            <span class="text">昵称：</span>
-            <span class="info">
-              <el-input clearable type="text" v-model="form.nickname" />
-            </span>
-            <span class="action"> </span>
-          </div>
-          <div class="item">
-            <span class="text">真实姓名：</span>
-            <span class="info">
-              <el-input clearable type="text" v-model="form.realName" />
-            </span>
-            <span class="action"> </span>
-          </div>
-          <div class="item">
-            <span class="text">所在地区：</span>
+            <span class="text">联系地址：</span>
             <span class="info">
               <el-input clearable type="text" v-model="form.address" />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
-            <span class="text">集团：</span>
+            <span class="text">详细地址：</span>
             <span class="info">
-              {{ form.blocName }}
-              <!-- <el-input clearable type="text" v-model="form.company" /> -->
+              <el-input clearable type="text" v-model="form.company" />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
-            <span class="text">公司：</span>
+            <span class="text">邮箱：</span>
             <span class="info">
-              {{ form.companyName }}
-              <!-- <el-input clearable type="text" v-model="form.company" /> -->
+              <el-input clearable type="text" v-model="form.company" />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
-            <span class="text">部门：</span>
+            <span class="text">公司名称：</span>
             <span class="info">
-              {{ form.departmentName }}
-              <!-- <el-input clearable type="text" v-model="form.department" /> -->
+              <el-input clearable type="text" v-model="form.department" />
             </span>
             <span class="action"> </span>
           </div>
-
+          <div class="item">
+            <span class="text">职位：</span>
+            <span class="info">
+              <el-input clearable type="text" v-model="form.position" />
+            </span>
+            <span class="action"> </span>
+          </div>
           <!-- <div class="item">
-            <span class="text">密码：</span>
-            <span class="info">******</span>
-            <span class="action">
-              <span @click="$router.push('/retrieve')">修改</span>
-            </span>
-          </div> 
-          <div class="item">
             <span class="text">账号：</span>
             <span class="info" style="visibility: hidden">******</span>
             <span class="action">
@@ -109,18 +107,15 @@
           <div class="item btn-box">
             <span class="text" style="visibility: hidden">-</span>
             <div class="info">
+              <button class="btn-ripple fit-text btn-save" @click="do_reset()">
+                取消
+              </button>
               <el-button
-                class="btn-ripple fit-text btn-save"
+                class="btn-ripple fit-text btn-cancel"
                 @click="throttle_do_submit()"
                 :loading="loading"
                 >保存</el-button
               >
-              <button
-                class="btn-ripple fit-text btn-cancel"
-                @click="do_reset()"
-              >
-                清空
-              </button>
             </div>
           </div>
         </div>
@@ -298,7 +293,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #f74747;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -383,7 +378,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: #F74747;
+        color: #f74747;
 
         span {
           margin-right: 20px;
@@ -402,22 +397,22 @@ export default {
 
   .btn-save {
     width: 120px;
-    height: 32px;
-    background: #ffffff;
-    border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    height: 40px;
+    background: #F5F5F5;
+    border-radius: 4px;
+    border: 1px solid #D7D7D7;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
+    color: #666;
   }
 
   .btn-cancel {
     margin-left: 20px;
     width: 120px;
-    height: 32px;
-    background: #F74747;
-    border-radius: 50px 50px 50px 50px;
+    height: 40px;
+    background: #f74747;
+    border-radius: 4px;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;

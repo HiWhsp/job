@@ -7,20 +7,48 @@
     <div class="page-ctx">
       <div class="fav-box">
         <div class="fav-titles flex">
-          <div class="fav-check flex" @click="do_toggle_all()" :class="{ checked: checkedAll }">
-            <img src="@img/common/check0.png" alt="" class="img-check check-0" />
-            <img src="@img/common/check1.png" alt="" class="img-check check-1" />
+          <div
+            class="fav-check flex"
+            @click="do_toggle_all()"
+            :class="{ checked: checkedAll }"
+          >
+            <img
+              src="@img/common/check0.png"
+              alt=""
+              class="img-check check-0"
+            />
+            <img
+              src="@img/common/check1.png"
+              alt=""
+              class="img-check check-1"
+            />
             <span>全选</span>
           </div>
-          <div class="fav-delete" @click="do_delete_checked()">移除选中</div>
+          <div class="fav-delete" @click="do_delete_checked()">删除选中</div>
         </div>
 
         <div class="fav-data-box" v-if="count">
           <div class="fav-list">
-            <div class="fav-item" v-for="(item, index) in product_list" :key="index">
-              <div class="fav-check" @click.stop="do_toggle_item(item)" :class="{ checked: item.checked }">
-                <img src="@img/common/check0.png" alt="" class="img-check check-0" />
-                <img src="@img/common/check1.png" alt="" class="img-check check-1" />
+            <div
+              class="fav-item"
+              v-for="(item, index) in product_list"
+              :key="index"
+            >
+              <div
+                class="fav-check"
+                @click.stop="do_toggle_item(item)"
+                :class="{ checked: item.checked }"
+              >
+                <img
+                  src="@img/common/check0.png"
+                  alt=""
+                  class="img-check check-0"
+                />
+                <img
+                  src="@img/common/check1.png"
+                  alt=""
+                  class="img-check check-1"
+                />
               </div>
 
               <div class="goods-img scale-box" @click="to_product(item)">
@@ -46,22 +74,40 @@
               </div>
 
               <div class="goods-actions flex-center">
-                <!-- <button class="btn btn-detail btn-ripple" @click="addCart(item)">
+                <button
+                  class="btn btn-detail btn-ripple"
+                  @click="addCart(item)"
+                >
                   加入购物车
-                </button> -->
-                <button class="btn btn-cancel" @click.stop="do_fav_cancel_item(item)">
+                </button>
+                <button
+                  class="btn btn-cancel"
+                  @click.stop="do_fav_cancel_item(item)"
+                >
                   取消收藏
                 </button>
-                <button class="btn btn-detail btn-ripple" @click="to_product(item)">
+                <!-- <button
+                  class="btn btn-detail btn-ripple"
+                  @click="to_product(item)"
+                >
                   查看详情
-                </button>
+                </button> -->
               </div>
             </div>
           </div>
 
-          <div class="pagination-box" style="margin-top: 40px;text-align: right;">
-            <el-pagination background layout="total, prev, pager, next" @current-change="mix_current_change"
-              :current-page.sync="pagination.page" :page-size="pagination.pageNum" :total="count"></el-pagination>
+          <div
+            class="pagination-box"
+            style="margin-top: 40px; text-align: right"
+          >
+            <el-pagination
+              background
+              layout="total, prev, pager, next"
+              @current-change="mix_current_change"
+              :current-page.sync="pagination.page"
+              :page-size="pagination.pageNum"
+              :total="count"
+            ></el-pagination>
           </div>
         </div>
         <div class="fav-empty" v-if="!count">
@@ -104,7 +150,7 @@ export default {
 
   methods: {
     setView() {
-      this.query_fav()
+      this.query_fav();
     },
     query_fav() {
       this.$api({
@@ -143,7 +189,6 @@ export default {
       this.product_list.forEach((v) => (v.checked = this.checkedAll));
     },
 
-
     do_toggle_item(item) {
       //console.log("切换勾选", { ...item });
       item.checked = !item.checked;
@@ -161,12 +206,12 @@ export default {
         return;
       }
       let ids = this.checked_list.map((v) => v.id).join();
-      this.confirm_cancel(ids)
+      this.confirm_cancel(ids);
     },
 
     //收藏 取消
     do_fav_cancel_item(item) {
-      this.confirm_cancel(item.id)
+      this.confirm_cancel(item.id);
     },
 
     confirm_cancel(ids) {
@@ -175,16 +220,16 @@ export default {
         method: "get",
         data: {
           action: "product_bathDelOperate",
-          operateType: 1,//行为类型：1-关注 2-足迹 此接口默认为 1-关注
-          productIds: ids
+          operateType: 1, //行为类型：1-关注 2-足迹 此接口默认为 1-关注
+          productIds: ids,
         },
       }).then((res) => {
-        alert(res)
+        alert(res);
         if (res.code == 200) {
           this.setView();
         }
       });
-    }
+    },
   },
 };
 </script>
@@ -218,9 +263,9 @@ export default {
   padding-bottom: 80px;
 
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -230,12 +275,11 @@ export default {
     font-weight: bold;
     font-size: 16px;
     color: #333333;
-
   }
 
   .page-ctx {
     margin-top: 14px;
-    padding: 46px 32px;
+    padding: 20px 32px;
     background: #fff;
   }
 }
@@ -245,23 +289,19 @@ export default {
   margin-bottom: 50px;
 }
 
-
 .fav-box {
   .fav-titles {
     // margin-bottom: 20px;
     padding: 0 24px;
 
-    border: 1px solid #E5E5E5;
+    border: 1px solid #e5e5e5;
     height: 44px;
-    background: #F5F5F5;
-
+    background: #f5f5f5;
 
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 14px;
     color: #666666;
-
-
 
     .fav-check {
       user-select: none;
@@ -272,9 +312,8 @@ export default {
       color: #666666;
 
       &.checked {
-        color: #F74747;
+        color: #f74747;
       }
-
 
       img {
         width: 13px;
@@ -290,13 +329,9 @@ export default {
       font-weight: 400;
       font-size: 14px;
       color: #666666;
-
     }
   }
-
-
 }
-
 
 .fav-list {
   border: 1px solid #e5e5e5;
@@ -349,15 +384,14 @@ export default {
         font-family: OPPOSans, OPPOSans;
         // font-weight: bold;
         font-size: 14px;
-        color: #666666;
-
+        color: #333;
       }
 
       .text-2 {
         font-family: OPPOSans, OPPOSans;
         font-weight: 400;
         font-size: 14px;
-        color: #666666;
+        color: #333;
       }
     }
 
@@ -366,15 +400,14 @@ export default {
       font-family: OPPOSans, OPPOSans;
       font-weight: 400;
       font-size: 14px;
-      color: #FF0000;
+      color: #000;
     }
-
 
     .goods-actions {
       min-width: 300px;
 
       button {
-        &+button {
+        & + button {
           margin-left: 32px;
         }
 
@@ -382,20 +415,19 @@ export default {
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
           font-size: 14px;
-          color: #999999;
+          color: #666;
         }
 
         &.btn-detail {
           width: 104px;
           height: 32px;
-          background: #FFFFFF;
+          background: #E5222B;
           border-radius: 6px;
-          border: 1px solid #F74747;
 
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
           font-size: 14px;
-          color: #F74747;
+          color: #fff;
         }
       }
     }

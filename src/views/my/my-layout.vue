@@ -134,14 +134,10 @@ export default {
           ],
         },
         {
-          title: "个人资料",
+          title: "账号中心",
           route: "",
           icon: require("@img/my/nav-3.png"),
           child: [
-            {
-              title: "地址管理",
-              route: "address-list",
-            },
             {
               title: "我的发票",
               route: "invoice-list",
@@ -152,31 +148,19 @@ export default {
               route: "my-info",
             },
             {
+              title: "地址管理",
+              route: "address-list",
+            },
+            {
               title: "修改密码",
               route: "change-password",
             },
+            {
+              title: "子账号管理",
+              route: "sub-account-list",
+            }
           ],
         },
-        // {
-        //   title: "其他",
-        //   route: "",
-        //   icon: require("@img/my/nav-3.png"),
-        //   blacklist: [1, 2, 3],
-        //   child: [
-        //     {
-        //       title: "我的积分",
-        //       route: "points-record",
-        //     },
-        //     {
-        //       title: "我的优惠券",
-        //       route: "coupon-list",
-        //     },
-        //     {
-        //       title: "领券中心",
-        //       route: "coupon-center",
-        //     },
-        //   ],
-        // },
         {
           title: "企业管理",
           route: "",

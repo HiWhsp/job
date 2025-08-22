@@ -89,44 +89,54 @@
                 </div>
               </div>
               <div class="result-right">
-                <div class="right-title">匹配结果列：</div>
+                <div class="right-title">
+                  <div class="title">匹配结果列：商品信息</div>
+                  <div class="title2">单价</div>
+                  <div class="title2">状态</div>
+                  <div class="title2">数量/操作</div>
+                </div>
                 <div class="match-list">
                   <div
                     class="match-item-loop"
                     v-for="(item, index) in info.xunjiaDetail"
                     :key="index"
                   >
-                    <div
-                      class="match-item"
-                      v-if="item.product && item.product.title"
-                    >
+                    <div class="match-item" v-if="info.xunjiaDetail">
                       <div class="poster-box">
                         <img :src="item.product.thumb" alt="" />
                       </div>
                       <div class="title-box">
                         <div class="title">
-                          {{ item.product.title }}
+                          {{ item.product.title || "空" }}
                         </div>
-                        <div class="price-box">
-                          单价：<span class="price"
-                            >{{ vuex_huobi }}{{ item.product.price }}</span
-                          >
+                        <div class="brand-box">
+                          <div class="brand">品牌名称：泰得力</div>
+                          <div class="sku">订货编码：UA199</div>
                         </div>
                       </div>
-                      <div class="brand-box">
-                        <div class="brand">
-                          品牌：<span v-if="item.product.brand"
-                            >{{ item.product.brand.title }}，</span
-                          >
-                        </div>
-                        <div class="sku">规格：{{ item.guige }}</div>
+                      <div class="price-box">
+                        <span class="price"
+                          >{{ vuex_huobi }}{{ item.product.price }}</span
+                        >
                       </div>
+                      <div class="order-state" :class="'state-' + info.status">
+                        {{ info.status == 0 ? "待提交" : "" }}
+                        {{ info.status == 1 ? "待处理" : "" }}
+                        {{ info.status == 2 ? "待采购确认" : "" }}
+                        {{ info.status == 3 ? "已下单" : "" }}
+                        {{ info.status == -1 ? "后台取消" : "" }}
+                        {{ info.status == -2 ? "用户取消" : "" }}
+                      </div>
+
                       <div class="num-box">
                         <el-input-number
                           v-model="item.num"
                           :min="1"
                           label="描述文字"
                         ></el-input-number>
+                        <div class="btn-box">
+                          <button class="btn-ripple btn-sc">加入购物车</button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -187,132 +197,6 @@
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 订单商品信息 -->
-      <div class="order-product order-info">
-        <div class="order-list-wrap">
-          <!-- 商品信息 -->
-          <div class="info-wrapper">
-            <div class="info-info">
-              <div class="info-title">
-                <div class="box-title">商品详情</div>
-                <div class="box-sku">状态</div>
-                <div class="box-remark">平台备注</div>
-                <div class="box-num">数量</div>
-                <div class="box-price">单价</div>
-                <div class="box-price">小计</div>
-                <div class="box-date">订货日</div>
-                <div class="box-date">报价完成时间</div>
-              </div>
-              <div class="info-good">
-                <div class="list-good">
-                  <div
-                    class="info"
-                    v-for="(product_info, index) in info.xunjiaDetail"
-                    :key="index"
-                  >
-                    <div class="info-good flex">
-                      <div
-                        class="box-image cover"
-                        @click="mix_to_product(product_info)"
-                      >
-                        <!-- <img :src="info.image" alt /> -->
-                        <el-image :src="product_info.product.thumb">
-                          <div slot="error" class="image-slot">
-                            <img :src="product_info.product.thumb" />
-                          </div>
-                        </el-image>
-                      </div>
-                      <div class="box-title">
-                        <div
-                          class="title"
-                          @click="mix_to_product(product_info)"
-                        >
-                          {{ product_info.sku }}
-                        </div>
-                        <div class="product-sku">{{ product_info.brand }}</div>
-                      </div>
-                      <div class="box-sku">
-                        <div
-                          class="order-state"
-                          :class="'state-' + info.status"
-                        >
-                          {{ info.status == 0 ? "待提交" : "" }}
-                          {{ info.status == 1 ? "待处理" : "" }}
-                          {{ info.status == 2 ? "待采购确认" : "" }}
-                          {{ info.status == 3 ? "已下单" : "" }}
-                          {{ info.status == -1 ? "后台取消" : "" }}
-                          {{ info.status == -2 ? "用户取消" : "" }}
-                        </div>
-                      </div>
-                      <div class="box-remark">
-                        <div>{{ product_info.remark || "--" }}</div>
-                      </div>
-                      <div class="box-num">x {{ product_info.num }}</div>
-                      <div class="box-price">
-                        {{ vuex_huobi }} {{ product_info.baojiaPrice }}
-                      </div>
-
-                      <div class="box-subtotal">
-                        {{ vuex_huobi }}
-                        {{ product_info.baojiaPrice * product_info.num }}
-                      </div>
-                      <div class="box-date">
-                        <div>{{ product_info.dtTime }}</div>
-                      </div>
-                      <div class="box-date">
-                        <div>{{ product_info.editTime || "--" }}</div>
-                      </div>
-                    </div>
-                    <div class="goods-action" v-if="info.orderStatus == 5">
-                      <!-- <button v-if="!is_jifen_goods && info.allow_actions.allow_refund" class="btn-goods-action" @click="refundApply(info)">申请售后</button> -->
-                      <!-- <button v-if="info.ifshouhou" class="btn-goods-action disabled">已售后</button> -->
-                      <!-- <button v-if="info.allow_actions.allow_logistics" class="btn-goods-action" @click="toRoute(`/orderLogistics?order_id=${order_id}&logistics_id=${fahuo_id}`)">查看物流</button> -->
-                      <button
-                        v-if="product_info.ifComment == 0"
-                        class="btn-goods-action"
-                        @click="to_review(product_info)"
-                      >
-                        商品评价
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 订单操作 -->
-          <div class="order-action-box">
-            <div class="btn-box">
-              <button class="btn-ripple fit-text" @click="getList()">
-                下载报价单
-              </button>
-              <button
-                v-if="info.status == 0 || info.status == 1"
-                class="btn-ripple fit-text btn-bg"
-                @click="doCancel(info)"
-              >
-                取消报价
-              </button>
-              <button
-                v-if="info.status == 0"
-                class="btn-ripple fit-text btn-bg"
-                @click="doSubmit(info)"
-              >
-                提交报价
-              </button>
-              <button
-                v-if="info.status == 2"
-                class="btn-ripple fit-text btn-bg"
-                @click="doPay()"
-              >
-                去订购
-              </button>
             </div>
           </div>
         </div>
@@ -660,6 +544,16 @@ export default {
         font-size: 16px;
         color: #333333;
         line-height: 48px;
+        display: flex;
+        align-items: center;
+        margin-right: 80px;
+        .title {
+          flex: 1;
+        }
+        .title2 {
+          width: 100px;
+          text-align: center;
+        }
       }
 
       .match-item {
@@ -686,38 +580,61 @@ export default {
           .title {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
-            font-size: 16px;
+            font-size: 14px;
             color: #333333;
           }
-          .price-box {
-            margin-top: 10px;
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: 400;
-            font-size: 16px;
-            color: #333333;
-            .price {
+          .brand-box {
+            width: 300px;
+            .brand {
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: 400;
-              font-size: 16px;
-              color: #f74747;
+              font-size: 14px;
+              color: #999;
+            }
+            .sku {
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 14px;
+              color: #999;
             }
           }
         }
-        .brand-box {
-          margin-left: 18px;
-          width: 300px;
-          .brand {
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: 400;
-            font-size: 16px;
-            color: #333333;
-          }
-          .sku {
-            margin-top: 10px;
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: 400;
-            font-size: 16px;
-            color: #333333;
+        .price-box {
+          text-align: center;
+          width: 100px;
+          margin-top: 10px;
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: 400;
+          font-size: 16px;
+          color: #333333;
+        }
+        .order-state {
+          text-align: center;
+          width: 100px;
+          color: #333;
+          font-size: 14px;
+          margin-top: 10px;
+        }
+      }
+      .num-box {
+        .btn-sc {
+          margin-top: 10px;
+          cursor: pointer;
+          width: 180px;
+          height: 46px;
+          background: #fff2f2;
+          border: 1px solid #e5222b;
+
+          font-size: 16px;
+          font-family: Microsoft YaHei;
+          font-weight: bold;
+          color: #e5222b;
+          transition: 0.3s;
+          user-select: none;
+
+          &:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
           }
         }
       }
@@ -831,7 +748,6 @@ export default {
         color: #f13f17;
       }
     }
-
     .btn-sc {
       margin-left: 20px;
       cursor: pointer;
@@ -851,7 +767,6 @@ export default {
         cursor: not-allowed;
       }
     }
-
     .btn-cart {
       margin-left: 20px;
       cursor: pointer;
@@ -1131,16 +1046,6 @@ export default {
 
         span {
         }
-      }
-
-      .order-state {
-        // min-width: 96px;
-        height: 30px;
-        line-height: 30px;
-        // background: #F74747;
-        color: #f74747;
-        // color: #fff;
-        font-size: 14px;
       }
       .box-title {
         // flex: 1;
