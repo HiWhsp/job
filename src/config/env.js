@@ -1,6 +1,6 @@
 // import {API_ROOT} from '@/config/env.js'
 
-const ROOT = "http://jzgy360.com";
+const ROOT = "https://lidong.dx.hdapp.com.cn";
 
 /**
  * 全局接口请求根域名

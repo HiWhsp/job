@@ -165,7 +165,7 @@
                       </div> -->
                     </div>
 
-                    <div class="tequan-list flex" >
+                    <div class="tequan-list flex">
                       <div
                         class="tequan-item"
                         v-for="(item, index) in nav_list"
@@ -915,12 +915,12 @@ export default {
 <style lang="less">
 .el-select-dropdown__item.hover,
 .el-select-dropdown__item:hover {
-  background: #F74747;
+  background: #f74747;
   color: #fff !important;
 }
 
 .el-select-dropdown__item.selected {
-  color: #F74747;
+  color: #f74747;
 }
 </style>
 
@@ -970,7 +970,7 @@ export default {
   }
   /deep/ .el-carousel__indicator.is-active button {
     width: 40px;
-    background: #F74747;
+    background: #f74747;
     border-radius: 6px;
   }
 }
@@ -1027,7 +1027,7 @@ export default {
 
         &:hover {
           .v1-title {
-            color: #F74747;
+            color: #f74747;
           }
         }
         .v1-icon-box {
@@ -1068,7 +1068,7 @@ export default {
           cursor: pointer;
 
           &:hover {
-            color: #F74747;
+            color: #f74747;
           }
         }
       }
@@ -1121,7 +1121,7 @@ export default {
           color: #333333;
 
           &:hover {
-            color: #F74747;
+            color: #f74747;
           }
         }
       }
@@ -1138,7 +1138,7 @@ export default {
             font-size: 13px;
             color: #545454;
             &:hover {
-              color: #F74747;
+              color: #f74747;
             }
           }
         }
@@ -1156,7 +1156,7 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: bold;
       font-size: 18px;
-      color: #F74747;
+      color: #f74747;
       img {
         margin-right: 4px;
         width: 18.44px;
@@ -1224,7 +1224,7 @@ export default {
         .btn {
           height: 34px;
           line-height: 34px;
-          background: #E5222B;
+          background: #e5222b;
           border-radius: 2px 2px 2px 2px;
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
@@ -1278,7 +1278,7 @@ export default {
     }
 
     .news-box {
-      border-top: 1px solid #E0E0E0;
+      border-top: 1px solid #e0e0e0;
       margin: 10px;
       padding: 10px 5px;
       text-align: left;
@@ -1307,7 +1307,8 @@ export default {
 
       .news-list {
         .news-item {
-          padding: 8px 0;
+          margin-top: 8px;
+
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 14px;
@@ -1415,7 +1416,7 @@ export default {
       align-items: center;
       width: 200px;
       height: 50px;
-      background: #F74747;
+      background: #f74747;
       border-radius: 0px 0px 0px 0px;
 
       font-family: OPPOSans, OPPOSans;
@@ -1791,7 +1792,7 @@ export default {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: bold;
         font-size: 24px;
-        color: #F74747;
+        color: #f74747;
       }
       .title-2 {
         font-family: Microsoft YaHei, Microsoft YaHei;
@@ -2007,11 +2008,11 @@ export default {
         color: #333333;
 
         &.active {
-          background: #FEDADA;
+          background: #fedada;
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: bold;
           font-size: 18px;
-          color: #F74747;
+          color: #f74747;
         }
 
         &:not(:first-child) {

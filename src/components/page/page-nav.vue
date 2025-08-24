@@ -85,7 +85,7 @@ export default {
         { title: "莉东甄选", route: "/product-zhenxuan" },
         { title: "场景专区", route: "/scene" },
         { title: "品牌馆", route: "/product-brand" },
-        { title: "内容资讯", route: route_news },
+        { title: "内容资讯", route: route_news || "/news" },
       ];
       return arr;
     },

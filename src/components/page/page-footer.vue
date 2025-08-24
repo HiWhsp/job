@@ -46,15 +46,15 @@
             <div class="group-title">联系我们</div>
             <div class="link-item">
               <img src="@img/foot/link1.png" alt="" />
-              <a href="tel:13800138000">+1 562-907-8080</a>
+              <a href="tel:13800138000">{{ vuex_config.comKefu }}</a>
             </div>
             <div class="link-item">
               <img src="@img/foot/link2.png" alt="" />
-              <a href="tel:13800138000">sales@hotmail.com</a>
+              <a href="tel:13800138000">{{ vuex_config.comEmail }}</a>
             </div>
             <div class="link-item">
               <img src="@img/foot/link3.png" alt="" />
-              <a href="tel:13800138000">上海市嘉定区沪宜公路5358号4层JT2494室</a>
+              <a href="tel:13800138000">{{ vuex_config.comAddress }}</a>
             </div>
           </div>
         </div>
@@ -64,7 +64,7 @@
           <div class="top-info">
 
             <div class="icon-box">
-              <img :src="vuex_config.zhishang_back" alt="" />
+              <img :src="vuex_config.accountImg" alt="" />
               <div class="icon-title">微信公众号</div>
             </div>
           </div>
@@ -125,7 +125,7 @@ export default {
         method: "get",
         data: {
           action: "news_getIndexFooter",
-          channelId: 52,
+          channelId: 59,
           page: 1,
           pageNum: 1000,
           orderType: 0, //排序情况：0-自然排序 1-最新
