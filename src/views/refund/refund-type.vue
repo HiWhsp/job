@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <div class="page-title">申请售后</div>
+    <div class="page-title">售后服务</div>
 
     <div class="page-ctx">
       <div class="refund-info ">
@@ -82,6 +82,7 @@
             </div>
           </div>
         </div>
+        <refundSubmit v-if="type" :type="type" :orderId="orderId" :inventoryId="inventoryId" />
       </div>
     </div>
 
@@ -90,15 +91,17 @@
 
 <script>
 import { mapState } from "vuex";
+import refundSubmit from './refund-submit.vue'
 export default {
   name: "page-refund-type",
   components: {
-
+    refundSubmit
   },
   data() {
     return {
       orderId: this.$route.query.orderId,
       inventoryId: this.$route.query.inventoryId,
+      type: '',
       order: {},
       product_info: {}
     };
@@ -127,15 +130,16 @@ export default {
     },
 
     to_refund_submit(type) {
-      //退换货类型(1-退款   2-退货退款  3-换货)
-      this.mix_toRoute({
-        path: '/refund-submit',
-        query: {
-          orderId: this.orderId,
-          inventoryId: this.inventoryId,
-          type: type,
-        }
-      })
+      //退换货类型(1-退款   2-退货退款  3-换货 4-维修 )
+      this.type = type;
+      // this.mix_toRoute({
+      //   path: '/refund-submit',
+      //   query: {
+      //     orderId: this.orderId,
+      //     inventoryId: this.inventoryId,
+      //     type: type,
+      //   }
+      // })
     },
   },
 };
@@ -172,7 +176,12 @@ export default {
     .base-box {
       height: 48px;
       padding: 0 15px;
-      background: #f9f9f9;
+      background: #f5f5f5;
+      font-size: 14px;
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      line-height: 20px;
+      color: #333333;
 
       .date {
         font-size: 14px;
@@ -239,7 +248,7 @@ export default {
 
             .title {
               text-align: left;
-              font-size: 14px;
+              font-size: 16px;
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
@@ -253,7 +262,7 @@ export default {
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
-              color: #333333;
+              color: #999;
             }
           }
 
@@ -265,7 +274,7 @@ export default {
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
-              color: #333333;
+              color: #666;
             }
           }
 
@@ -279,7 +288,7 @@ export default {
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
-              color: #999999;
+              color: #666;
             }
           }
 
@@ -291,7 +300,7 @@ export default {
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
-              color: #333333;
+              color: #666;
             }
           }
 

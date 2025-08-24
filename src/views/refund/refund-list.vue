@@ -15,17 +15,21 @@
             {{ item.title }}
           </div>
         </div>
-        <!-- <div class="search-box">
-        <input type="text" placeholder="输入商品名称、订单号" v-model="keyword" />
-        <button @click="do_search()">搜索</button>
-      </div> -->
+        <div class="search-box">
+          <input
+            type="text"
+            placeholder="输入商品名称、订单号"
+            v-model="keyword"
+          />
+          <button @click="do_search()">搜索</button>
+        </div>
       </div>
 
       <div class="page-sec">
         <div
           class="allow-wrap"
           data-title="可申请售后列表"
-          v-if="tab_select.title == '全部'"
+          v-if="tab_select.title == '售后服务'"
         >
           <div class="allow-inner">
             <div class="order-list">
@@ -51,7 +55,8 @@
                       </div>
                       <div class="box-title">
                         <div class="title">{{ order.products.title }}</div>
-                        <div class="sku">{{ order.products.keyVals }}</div>
+                        <div class="sku">订货编码：UA199</div>
+                        <div class="sku">商品型号：S54001</div>
                       </div>
                       <div class="box-price">
                         <div class="price">
@@ -59,26 +64,34 @@
                         </div>
                       </div>
                       <div class="box-num">
-                        <div class="num">x {{ order.products.num }}</div>
+                        <div class="num">{{ order.products.num }}</div>
                       </div>
                       <div class="box-xiaoji">
                         <div class="price">
                           {{ vuex_huobi }} {{ order.products.priceSale }}
                         </div>
                       </div>
+                      <div class="actions-box">
+                        <button
+                          class="btn btn-ripple"
+                          @click="to_refund_type(order)"
+                        >
+                          申请售后
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="actions-box">
-                  <button class="btn btn-ripple" @click="to_refund_type(order)">
-                    申请售后
-                  </button>
                 </div>
               </div>
             </div>
 
-            <div class="pagi-box" v-if="allow_refund_count !== 0">
+            <div
+              class="pagi-box pagination-box"
+              style="text-align: right"
+              v-if="allow_refund_count !== 0"
+            >
               <el-pagination
+                background
                 @current-change="on_current_change_allow"
                 :current-page.sync="allow_pagination.page"
                 :page-size="allow_pagination.pageNum"
@@ -93,7 +106,7 @@
           </div>
         </div>
 
-        <div class="service-wrap" data-title="售后申请列表">
+        <div class="service-wrap" data-title="售后申请列表" v-else>
           <div class="service-inner">
             <div class="service-list">
               <div
@@ -107,10 +120,11 @@
                   </div> -->
                   <div class="date">{{ order.createdTime }}</div>
                   <div class="order-code">
-                    服务编码：
+                    订单号：
                     <span>{{ order.sn }}</span>
                   </div>
                   <div class="order-state" :class="'state' + order.status">
+                    <div class="icon-img"></div>
                     {{ order.typeInfo }}
                   </div>
                 </div>
@@ -124,7 +138,8 @@
                       </div>
                       <div class="box-title">
                         <div class="title">{{ order.products.title }}</div>
-                        <div class="sku">{{ order.products.keyVals }}</div>
+                        <div class="sku">订货编码：UA199</div>
+                        <div class="sku">商品型号：S54001</div>
                       </div>
                       <div class="box-price">
                         <div class="price">
@@ -137,7 +152,7 @@
                         </div>
                       </div>
                       <div class="box-num">
-                        <div class="num">x {{ order.products.num }}</div>
+                        <div class="num">{{ order.products.num }}</div>
                       </div>
                       <div class="box-xiaoji">
                         <div class="price">
@@ -149,9 +164,21 @@
                   </div>
                 </div>
                 <div class="actions-box">
-                  <button class="btn btn-ripple" @click="to_service(order)">
-                    售后详情
-                  </button>
+                  <div class="item-wrap">
+                    <div class="item">等待审核</div>
+                    <div class="item2">等待平台审核</div>
+                  </div>
+                  <div class="btn-wrap">
+                    <button
+                      class="btn btn-ripple btn-text"
+                      @click="to_service(order)"
+                    >
+                      取消售后
+                    </button>
+                    <button class="btn btn-ripple" @click="to_service(order)">
+                      售后详情
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -184,14 +211,14 @@ export default {
   data() {
     return {
       tab_list: [
-        { value: -10, title: "全部" },
-        { value: 2, title: "申请记录" },
-        { value: 0, title: "待处理" },
+        // { value: -10, title: "全部" },
+        { value: 2, title: "售后服务" },
+        { value: 0, title: "处理中" },
         { value: 1, title: "已完成" },
       ],
       tab_select: {
-        value: -10,
-        title: "全部",
+        value: 2,
+        title: "售后服务",
       },
 
       //
@@ -219,7 +246,7 @@ export default {
   },
   methods: {
     setView() {
-      if (this.tab_select.title == "全部") {
+      if (this.tab_select.title == "售后服务") {
         this.query_allow_refund_order(); //可申请订单列表
       } else {
         this.query_refund_service_list(); //售后申请列表
@@ -350,7 +377,6 @@ export default {
 };
 </script>
 
-
 <style scoped lang="less">
 .page {
   padding-bottom: 50px;
@@ -400,14 +426,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #F74747;
+        color: #f74747;
       }
 
       &.active {
         // background: #F74747;
         // color: #fff;
         font-weight: bold;
-        color: #F74747;
+        color: #f74747;
 
         &::after {
           content: "";
@@ -416,7 +442,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #F74747;
+          background: #f74747;
         }
       }
     }
@@ -472,15 +498,15 @@ export default {
     .base-box {
       height: 48px;
       padding: 0 15px;
-      background: #f9f9f9;
+      background: #f5f5f5;
       border-bottom: 1px solid #cccccc;
 
       .date {
         font-size: 14px;
         font-family: Microsoft YaHei;
-        font-weight: 400;
+        font-weight: bold;
         line-height: 20px;
-        color: #7d7d7d;
+        color: #333;
       }
 
       .order-code {
@@ -490,12 +516,12 @@ export default {
 
         font-size: 14px;
         font-family: Microsoft YaHei;
-        font-weight: 400;
+        font-weight: bold;
         line-height: 20px;
-        color: #7d7d7d;
+        color: #333;
 
         span {
-          color: #333333;
+          color: #333;
         }
       }
     }
@@ -511,14 +537,14 @@ export default {
           }
 
           .box-pic {
-            width: 100px;
+            width: 70px;
 
             .img-box {
-              width: 100px;
+              width: 70px;
 
               img {
-                width: 100px;
-                height: 100px;
+                width: 70px;
+                height: 70px;
               }
             }
           }
@@ -534,16 +560,16 @@ export default {
               font-weight: 400;
               line-height: 20px;
               color: #333333;
+              margin-bottom: 7px;
             }
 
             .sku {
-              margin-top: 20px;
               text-align: left;
               font-size: 14px;
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
-              color: #333333;
+              color: #999;
             }
           }
 
@@ -567,7 +593,7 @@ export default {
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
-              color: #999999;
+              color: #333;
             }
           }
 
@@ -589,21 +615,17 @@ export default {
     .actions-box {
       text-align: right;
       padding: 15px;
-      border-top: 1px solid #ccc;
       justify-content: flex-end;
       font-size: 14px;
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
-      color: #7d7d7d;
 
       .btn {
         min-width: 96px;
         height: 30px;
-        background: #F74747;
-        border: 1px solid #F74747;
         font-size: 14px;
-        color: #fff;
+        color: #e5222b;
         transition: 0.3s;
 
         &:hover {
@@ -624,21 +646,21 @@ export default {
     .base-box {
       height: 48px;
       padding: 0 15px;
-      background: #f9f9f9;
+      background: #f5f5f5;
       border-bottom: 1px solid #cccccc;
 
       .refund-type {
         min-width: 80px;
         text-align: left;
-        color: #F74747;
+        color: #f74747;
       }
 
       .date {
         font-size: 14px;
         font-family: Microsoft YaHei;
-        font-weight: 400;
+        font-weight: bold;
         line-height: 20px;
-        color: #7d7d7d;
+        color: #333;
       }
 
       .order-code {
@@ -648,9 +670,9 @@ export default {
 
         font-size: 14px;
         font-family: Microsoft YaHei;
-        font-weight: 400;
+        font-weight: bold;
         line-height: 20px;
-        color: #7d7d7d;
+        color: #333;
 
         span {
           color: #333333;
@@ -659,16 +681,21 @@ export default {
 
       .order-state {
         padding: 3px 6px;
-        border: 1px solid #ccc;
         font-size: 14px;
         font-family: Microsoft YaHei;
-        font-weight: 400;
+        font-weight: bold;
         line-height: 20px;
-        color: #999999;
+        color: #e5222b;
+        display: flex;
+        align-items: center;
+
+        .icon-img {
+          width: 24px;
+          height: 24px;
+          margin-right: 5px;
+        }
 
         &.state2 {
-          color: #F74747;
-          border-color: #F74747;
         }
       }
     }
@@ -706,22 +733,22 @@ export default {
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
-              color: #333333;
+              color: #333;
+              margin-bottom: 7px;
             }
 
             .sku {
-              margin-top: 20px;
               text-align: left;
               font-size: 14px;
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
-              color: #333333;
+              color: #999;
             }
           }
 
           .box-price {
-            min-width: 100px;
+            min-width: 150px;
 
             .price {
               font-size: 16px;
@@ -733,7 +760,7 @@ export default {
           }
 
           .box-num {
-            width: 100px;
+            width: 150px;
 
             .num {
               font-size: 16px;
@@ -745,7 +772,7 @@ export default {
           }
 
           .box-xiaoji {
-            min-width: 100px;
+            min-width: 150px;
 
             .price {
               font-size: 16px;
@@ -760,27 +787,61 @@ export default {
     }
 
     .actions-box {
-      text-align: right;
+      display: flex;
+      justify-content: space-between;
       padding: 15px;
       border-top: 1px solid #ccc;
-      justify-content: flex-end;
       font-size: 14px;
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
       color: #7d7d7d;
 
+      .item-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+
+        .item {
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: 400;
+          font-size: 14px;
+          color: #333333;
+        }
+        .item2 {
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: 400;
+          font-size: 14px;
+          color: #999;
+        }
+      }
+
+      .btn-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
       .btn {
         min-width: 96px;
         height: 30px;
-        background: #F74747;
-        border: 1px solid #F74747;
+        background: #f74747;
+        border: 1px solid #f74747;
         font-size: 14px;
         color: #fff;
         transition: 0.3s;
 
         &:hover {
           opacity: 0.8;
+        }
+
+        &.btn-text {
+          background-color: #fff;
+          border-radius: 4px;
+          border: 1px solid #e5222b;
+          color: #e5222b;
         }
       }
     }

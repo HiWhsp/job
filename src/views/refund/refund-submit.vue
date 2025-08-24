@@ -1,84 +1,51 @@
 <template>
   <div class="page">
-    <div class="page-title">申请售后</div>
     <div class="page-ctx">
       <div class="refund-info">
-        <div class="refund-product-detail">
-          <div class="refund-item">
-            <div class="base-box flex">
-              商品信息
-              <!-- <div class="date">{{ order.dtTime }}</div>
-            <div class="order-code">
-              订单号：
-              <span>{{ order.order_id }}</span>
-            </div>
-            <div class="order-state">{{ order.status_info }}</div> -->
-            </div>
-            <div class="product-box">
-              <div class="product-list">
-                <div class="product-item flex">
-                  <div class="box-pic">
-                    <div class="img-box">
-                      <img :src="product_info.image" alt />
-                    </div>
-                  </div>
-                  <div class="box-title">
-                    <div class="title">{{ product_info.title }}</div>
-                    <div class="sku">{{ product_info.keyVals }}</div>
-                  </div>
-                  <div class="box-price">
-                    <div class="price">
-                      {{ order.is_jifen ? "积分" : "￥" }}
-                      {{ order.is_jifen ? product_info.jifen : product_info.priceSale }}
-                    </div>
-                  </div>
-                  <div class="box-num">
-                    <div class="num">x {{ product_info.num }}</div>
-                  </div>
-                  <div class="box-xiaoji">
-                    <div class="price">{{ vuex_huobi }} {{ product_info.priceSale * product_info.num }}</div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div class="form-wrap">
           <div class="form-box">
-            <div class="input-box">
+            <!-- <div class="input-box">
               <div class="label">服务类型：</div>
               <div class="action">{{ type_title }}</div>
-            </div>
+            </div> -->
 
             <div class="input-box">
-              <div class="label">申请原因：</div>
+              <div class="label">{{ type != 3 ? '退款原因：' : '退货原因：' }}</div>
               <div class="action">
                 <el-select v-model="refund_reason" placeholder="请选择">
-                  <el-option v-for="item in refund_reasons" :key="item.tilte" :label="item.tilte" :value="item.title">
+                  <el-option
+                    v-for="item in refund_reasons"
+                    :key="item.tilte"
+                    :label="item.tilte"
+                    :value="item.title"
+                  >
                   </el-option>
                 </el-select>
               </div>
             </div>
 
             <div class="huanhuo-wrap" v-if="type == 3">
-              <div class="input-box" style="align-items: flex-start;">
+              <div class="input-box" style="align-items: flex-start">
                 <div class="label">换新商品：</div>
                 <div class="action">
-                  <div class="huanhuo-tip">
-                    价格相同的商品才可以换货哦
-                  </div>
+                  <div class="huanhuo-tip">价格相同的商品才可以换货哦</div>
                   <div class="huanhuo-sku-info">
-                    <refund_sku_choose data-title="售后商品的sku选择" ref="refund_sku_choose" @confirm="do_confirm_product" />
+                    <refund_sku_choose
+                      data-title="售后商品的sku选择"
+                      ref="refund_sku_choose"
+                      @confirm="do_confirm_product"
+                    />
                   </div>
                 </div>
               </div>
               <div class="input-box shouhuo-box">
                 <div class="label">换货地址：</div>
-                <div class="action" style="width: fit-content;">
+                <div class="action" style="width: fit-content">
                   <div class="huanhuo-receive">
-                    <div class="btn btn-ripple fit-text" @click="do_choose_addr()">
+                    <div
+                      class="btn btn-ripple fit-text"
+                      @click="do_choose_addr()"
+                    >
                       选择收货地址
                     </div>
                   </div>
@@ -96,24 +63,31 @@
                   </div> -->
                   <div class="huanhuo-receive" v-if="address_select.id">
                     <div class="rec">
-                      <span class="text">收货人: </span> <span class="val"> {{ address_select.name }}</span>
+                      <span class="text">收货人: </span>
+                      <span class="val"> {{ address_select.name }}</span>
                     </div>
                     <div class="rec">
-                      <span class="text">收货地址:</span> <span class="val">{{ address_select.phone }} </span>
+                      <span class="text">收货地址:</span>
+                      <span class="val">{{ address_select.phone }} </span>
                     </div>
                     <div class="rec">
-                      <span class="text">手机号码: </span> <span class="val"> {{ address_select.province }}{{
-                        address_select.city
-                      }}{{ shouhuoInfo.area }} {{ shouhuoInfo.address }}</span>
+                      <span class="text">手机号码: </span>
+                      <span class="val">
+                        {{ address_select.province }}{{ address_select.city
+                        }}{{ shouhuoInfo.area }} {{ shouhuoInfo.address }}</span
+                      >
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="input-box" v-if="type_title == '退款' || type_title == '退货退款'">
+            <div
+              class="input-box"
+              v-if="type_title == '退款' || type_title == '退货退款'"
+            >
               <div class="label">
-                {{ currency == "积分" ? "退还积分" : "退款金额(￥)" }}：
+                {{ type_title == "退款" ? "退款金额：" : "退款金额" }}：
               </div>
               <div class="action">
                 <el-input placeholder="请输入退款金额" v-model="refund_money" />
@@ -121,39 +95,69 @@
             </div>
 
             <div class="input-box remark-box">
-              <div class="label">详细说明：</div>
+              <div class="label">退款说明：</div>
               <div class="action">
-                <el-input type="textarea" placeholder="请输入说明信息" v-model="refund_remark" :autosize="{ minRows: 6 }" />
+                <el-input
+                  type="textarea"
+                  placeholder="请输入退款说明"
+                  v-model="refund_remark"
+                  :autosize="{ minRows: 6 }"
+                />
               </div>
             </div>
             <div class="input-box upload-box">
               <div class="label">上传凭证：</div>
-              <div class="action" style="flex:1; width: fit-content;">
-                <el-upload class="upload-demo" list-type="picture-card" multiple accept="image/*"
-                  :name="mix_upload_name" :action="mix_upload_action" :on-success="on_success_upload"
-                  :before-upload="on_before_upload" :data="mix_upload_data">
+              <div class="action" style="flex: 1; width: fit-content">
+                <el-upload
+                  class="upload-demo"
+                  list-type="picture-card"
+                  multiple
+                  accept="image/*"
+                  :name="mix_upload_name"
+                  :action="mix_upload_action"
+                  :on-success="on_success_upload"
+                  :before-upload="on_before_upload"
+                  :data="mix_upload_data"
+                >
                   <!-- <i class="el-icon-upload"></i> -->
                   上传图片
                   <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
                 </el-upload>
               </div>
             </div>
+            <div class="input-box" v-if="type == 2">
+              <div class="label">退货方式：</div>
+              <div class="action">自行寄回</div>
+            </div>
+            <div class="input-box upload-box" v-if="type == 2">
+              <div class="label">我的地址：</div>
+              <div class="action">
+                <p style="margin-bottom: 10px;color: #7D7D7D;font-size: 14px;">张三 1810000000</p>
+                <p style="color: #7D7d7d;font-size: 14px;">详细地址：中关村东路XXX号 XXXXXXX</p>
+              </div>
+            </div>
 
             <div class="submit-box">
-              <button class="btn btn-ripple" @click="submit_refund">提交申请</button>
+              <button class="btn btn-ripple" @click="submit_refund">
+                提交申请
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <refund_address_list_modal data-title="售后选择地址" ref="refund_address_list_modal" @confirm="do_confirm_address" />
+    <refund_address_list_modal
+      data-title="售后选择地址"
+      ref="refund_address_list_modal"
+      @confirm="do_confirm_address"
+    />
   </div>
 </template>
 
 <script>
-import refund_sku_choose from '@/components/refund/refund_sku_choose.vue'
-import refund_address_list_modal from '@/components/refund/refund_address_list_modal.vue'
+import refund_sku_choose from "@/components/refund/refund_sku_choose.vue";
+import refund_address_list_modal from "@/components/refund/refund_address_list_modal.vue";
 
 import { mapState } from "vuex";
 
@@ -163,13 +167,24 @@ export default {
     refund_sku_choose,
     refund_address_list_modal,
   },
+  props: {
+    type: {
+      type: Number,
+      default: 1,
+    },
+    orderId: {
+      type: String,
+      default: "",
+    },
+    inventoryId: {
+      type: String,
+      default: "",
+    },
+  },
   data() {
     return {
-      orderId: this.$route.query.orderId,
-      inventoryId: this.$route.query.inventoryId,
-      type: this.$route.query.type,
       //
-      type_title: '',
+      type_title: "",
       type_map: {
         1: "退款",
         2: "退货退款",
@@ -181,7 +196,7 @@ export default {
       currency: "",
       product_info: {},
       product: {},
-      max_refund_money: 0,//可申请的最大退款金额
+      max_refund_money: 0, //可申请的最大退款金额
       shouhuoInfo: {},
       address_select: {},
       product_select: {},
@@ -201,14 +216,14 @@ export default {
     ...mapState([""]),
 
     refund_reasons() {
-      let str = this.vuex_config.tuihuanReason
-      let arr = []
+      let str = this.vuex_config.tuihuanReason;
+      let arr = [];
       try {
-        arr = JSON.parse(str) || []
+        arr = JSON.parse(str) || [];
       } catch (e) {
         //TODO handle the exception
       }
-      return arr
+      return arr;
     },
 
     upload_data() {
@@ -218,16 +233,16 @@ export default {
         token: localStorage.getItem("token") || "",
       };
       return data;
-    }
+    },
   },
   created() {
-    this.initParams()
+    this.initParams();
     this.setView();
   },
   methods: {
     initParams() {
-      this.type_title = this.type_map[this.type]
-      if (this.type == 3 || this.type_title == '换货') {
+      this.type_title = this.type_map[this.type];
+      if (this.type == 3 || this.type_title == "换货") {
         this.query_address();
       }
     },
@@ -237,94 +252,97 @@ export default {
     //订单产品
     query_order() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'orders_detail',
-          id: this.orderId
+          action: "orders_detail",
+          id: this.orderId,
         },
       }).then((res) => {
         if (res.code == 200) {
           let data = res.data;
           this.order = data;
           this.orderObj = data;
-          this.product_info = data.products.find(v => v.id == this.inventoryId) || {}
-          this.product = this.product_info
+          this.product_info =
+            data.products.find((v) => v.id == this.inventoryId) || {};
+          this.product = this.product_info;
           this.max_refund_money = parseFloat(data.price);
-          this.shouhuoInfo = data.shouhuoInfo
+          this.shouhuoInfo = data.shouhuoInfo;
 
           if (data && data.if_jifen) {
             this.currency = "积分";
           }
 
           if (this.type == 3) {
-            this.query_exchange_products()
+            this.query_exchange_products();
           }
         }
       });
     },
 
-
     //可换货产品
     query_exchange_products() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'refund_showChangeProduct',
+          action: "refund_showChangeProduct",
           inventoryId: this.inventoryId,
           productId: this.product.productId,
           num: this.product.num,
           priceSale: this.product.priceSale,
         },
-      }).then(res => {
+      }).then((res) => {
         if (res.code == 200) {
-          res.data.forEach(v => {
-            v.inventoryId = v.id
-          })
+          res.data.forEach((v) => {
+            v.inventoryId = v.id;
+          });
           this.exchange_products = res.data;
           this.$nextTick(() => {
             this.$refs.refund_sku_choose.init({
-              inventorys: res.data
-            })
-          })
+              inventorys: res.data,
+            });
+          });
         }
-      })
+      });
     },
 
     query_address() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'userAddress_lists',
+          action: "userAddress_lists",
           page: 1,
-          pageNum: 100
+          pageNum: 100,
         },
-      }).then(res => {
+      }).then((res) => {
         if (res.code == 200) {
           let list = res.data;
-          list.forEach(v => {
-            v.full_addr = [v.country, v.province, v.city, v.area].filter(v => !!v).join('-');
+          list.forEach((v) => {
+            v.full_addr = [v.country, v.province, v.city, v.area]
+              .filter((v) => !!v)
+              .join("-");
             // v.xing = v.name[0] || ''
-          })
-          let cache_refund_address_id = localStorage.getItem('cache_refund_address_id');
+          });
+          let cache_refund_address_id = localStorage.getItem(
+            "cache_refund_address_id"
+          );
           if (cache_refund_address_id) {
-            this.address_select = list.find(v => v.id == cache_refund_address_id);
+            this.address_select = list.find(
+              (v) => v.id == cache_refund_address_id
+            );
           }
         }
         // this.hideLoading()
-      })
+      });
     },
-
-
-
 
     //提交评价
     submit_refund() {
       //退换货类型(1-退款   2-退货退款  3-换货)
       let params = {
-        action: 'refund_add',
+        action: "refund_add",
         orderId: this.orderId,
         inventoryId: this.inventoryId,
         type: this.type, //退换货类型(1-退款 2-退货退款 3-换货)
@@ -337,8 +355,14 @@ export default {
         // new_product: ''//type=3换货 传换货的商品
       };
       if (this.type == 3) {
-        params.addressId = this.address_select.id
-        params.new_product = JSON.stringify([{ "inventoryId": this.product_select.inventoryId, "productId": this.product_select.productId, "num": this.product_info.num }])
+        params.addressId = this.address_select.id;
+        params.new_product = JSON.stringify([
+          {
+            inventoryId: this.product_select.inventoryId,
+            productId: this.product_select.productId,
+            num: this.product_info.num,
+          },
+        ]);
       }
       console.log("要提交的信息", params);
       // return;
@@ -348,14 +372,16 @@ export default {
         return;
       }
 
-      if (this.type == 2) {//退货退款
+      if (this.type == 2) {
+        //退货退款
         if (!this.refund_money) {
           return alertErr("请输入退款金额");
         }
         if (this.refund_money > this.product_info.priceSale) {
           return alertErr("退款金额应小于等于商品金额");
         }
-      } else if (this.type == 3) {//换货
+      } else if (this.type == 3) {
+        //换货
         if (!this.product_select.id) {
           return alertErr("请选择换货商品");
         }
@@ -370,22 +396,18 @@ export default {
 
       // debugger;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: params,
-      }).then(res => {
-        alert(res)
+      }).then((res) => {
+        alert(res);
         if (res.code == 200) {
           this.mix_toRoute({
-            path: '/refund-list',
-            query: {
-
-            }
-          })
+            path: "/refund-list",
+            query: {},
+          });
         }
-      })
-
-
+      });
     },
 
     //上传相关
@@ -402,7 +424,7 @@ export default {
     },
 
     do_choose_addr() {
-      this.$refs.refund_address_list_modal.init(this.order)
+      this.$refs.refund_address_list_modal.init(this.order);
     },
     do_confirm_address(info) {
       this.address_select = info;
@@ -410,11 +432,9 @@ export default {
     do_confirm_product(info) {
       this.product_select = info;
     },
-
   },
 };
 </script>
-
 
 <style scoped lang="less">
 .page {
@@ -434,12 +454,9 @@ export default {
   }
 
   .page-ctx {
-    padding: 30px 36px;
     background: #fff;
   }
 }
-
-
 
 .refund-product-detail {
   .refund-item {
@@ -485,7 +502,6 @@ export default {
 
     .product-box {
       .product-list {
-
         .product-item {
           padding: 20px;
           border-bottom: 1px dashed #ccc;
@@ -493,8 +509,6 @@ export default {
           &:last-child {
             border-bottom: none;
           }
-
-
 
           .box-pic {
             width: 100px;
@@ -545,12 +559,10 @@ export default {
             }
           }
 
-
           .box-num {
             width: 100px;
 
             .num {
-
               font-size: 16px;
               font-family: Microsoft YaHei;
               font-weight: 400;
@@ -570,15 +582,11 @@ export default {
               color: #333333;
             }
           }
-
-
         }
-
       }
     }
   }
 }
-
 
 .form-wrap {
   margin-top: 30px;
@@ -588,7 +596,6 @@ export default {
     display: flex;
     align-items: center;
     margin-bottom: 25px;
-
 
     &.shouhuo-box {
       align-items: flex-start;
@@ -603,8 +610,8 @@ export default {
     }
 
     .label {
-      min-width: 120px;
       min-width: 90px;
+      font-size: 14px;
     }
 
     .action {
@@ -620,14 +627,15 @@ export default {
 
       .shouhuo {
         .rec {
-            display: flex;
-  align-items: center;
+          display: flex;
+          align-items: center;
 
           .text {
             min-width: 75px;
           }
 
-          .val {}
+          .val {
+          }
         }
       }
     }
@@ -641,7 +649,7 @@ export default {
       width: 240px;
       height: 40px;
       background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
-      background: #F74747;
+      background: #f74747;
       border-radius: 30px;
       border-radius: 0;
 
@@ -654,14 +662,13 @@ export default {
   }
 }
 
-
 .huanhuo-receive {
   margin-bottom: 15px;
 
   .btn {
     width: 111px;
     height: 37px;
-    background: #F9F9F9;
+    background: #f9f9f9;
     border-radius: 0px 0px 0px 0px;
     border: 2px solid #ddd;
     font-family: Microsoft YaHei, Microsoft YaHei;

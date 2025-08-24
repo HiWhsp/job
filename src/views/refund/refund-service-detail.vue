@@ -16,7 +16,7 @@
    
 
       <div class="refund-sec ">
-        <div class="sec-title">售后服务信息</div>
+        <div class="sec-title">售后信息</div>
         <div class="sec-ctx">
           <div class="text-info">
             <div class="item">
@@ -28,7 +28,7 @@
                   </div>
                   <div class="product-info">
                     <div class="title">{{ productInfo.title }}</div>
-                    <div class="sku"> {{ productInfo.keyVals }}</div>
+                    <div class="sku">规格：{{ productInfo.keyVals }}</div>
                     <div class="num">x {{ productInfo.num }}</div>
                   </div>
                 </div>
@@ -698,6 +698,7 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     color: #333333;
+    border-bottom: 1px solid #ccc;
   }
 
   .sec-ctx {
