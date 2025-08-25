@@ -558,6 +558,7 @@
                   </div>
                 </div>
               </div>
+              <el-empty v-if="suggest_products.length === 0" description="暂无数据" />
             </div>
           </div>
         </div>
@@ -661,7 +662,19 @@ export default {
     this.setView();
     console.log("compiled0401");
   },
-  mounted() {},
+  mounted() {
+    this.tab_list = this.vuex_category_tree
+      .filter((v) => v.isHot)
+      .map((v) => {
+        return {
+          value: v.id,
+          title: v.title,
+        };
+      });
+    this.tab_select = this.tab_list[0];
+    // 为你推荐
+    this.query_product_suggest();
+  },
   methods: {
     setView() {
       this.query_brand();
@@ -673,7 +686,6 @@ export default {
       this.query_dijia();
       //
       this.query_cates_add_products();
-      this.query_product_suggest();
     },
     query_brand() {
       this.$api({
@@ -826,9 +838,9 @@ export default {
         data: {
           action: "product_plist",
           // ifShowSku: 1,
-          // channelId: 792,
+          channelId: this.tab_select.value,
           page: 1,
-          pageNum: 16,
+          pageNum: 15,
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -890,6 +902,7 @@ export default {
     },
     do_toggle_tab(item) {
       this.tab_select = item;
+      this.query_product_suggest();
     },
     do_logout() {},
 
@@ -2032,6 +2045,7 @@ export default {
 
   .suggest-list {
     .product-list {
+      margin-top: 20px;
       display: flex;
       flex-wrap: wrap;
 
