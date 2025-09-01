@@ -1,71 +1,31 @@
 <template>
   <div id="app">
-    <!-- <webHeaderModel1 v-if="1" /> -->
-    <!-- <webHeaderModel3 v-else-if="1" />
-    <webHeaderModel2 v-else-if="1" /> -->
-
-
-    <page_header v-if="!vuex_h5" />
-    <!-- <page_header_2 v-if="!vuex_h5" /> -->
-    <page_header_mobile v-if="vuex_h5" />
-
+    <page_header />
 
     <div class="layout-box">
       <router-view></router-view>
     </div>
     <page_footer />
-    <!-- <page_footer_2 /> -->
-    <!-- <page_aside /> -->
-    <!-- <page_kefu /> -->
   </div>
 </template>
 
 <script>
-import webHeaderModel1 from "@/components/common/webHeaderModel1.vue";
-import webHeaderModel2 from "@/components/common/webHeaderModel2.vue";
-import webHeaderModel3 from "@/components/common/webHeaderModel3.vue";
-
 
 import page_header from "@/components/page/page-header.vue"; //顶部搜索
-import page_header_2 from "@/components/page/page-header-2.vue"; //顶部搜索
-import page_header_mobile from "@/components/page/page-header-mobile.vue"; //顶部搜索
 import page_footer from "@/components/page/page-footer.vue";
-import page_footer_2 from "@/components/page/page-footer-2.vue";
-// import page_aside from "@/components/page/page-aside.vue";
-// import page_kefu from "@/components/page/page-kefu.vue";
 
-import { mapState } from "vuex";
 export default {
   components: {
-    webHeaderModel1,
-    webHeaderModel2,
-    webHeaderModel3,
-
-
-    //
     page_header,
-    page_header_2,
-    page_header_mobile,
     page_footer,
-    page_footer_2,
-    // page_aside,
-    // page_kefu,
   },
   data() {
-    return {
-
-    };
+    return {};
   },
-  computed: {
-
-  },
-  watch: {
-
-  },
-  beforeCreate() { },
-  created() {
-
-  },
+  computed: {},
+  watch: {},
+  beforeCreate() {},
+  created() {},
   mounted() {
     this.initScale();
     this.queryConfig();
@@ -79,7 +39,11 @@ export default {
     //   }
     // },
     initScale() {
-      if (document && document.documentElement && document.documentElement.clientWidth) {
+      if (
+        document &&
+        document.documentElement &&
+        document.documentElement.clientWidth
+      ) {
         let clientWidth = document.documentElement.clientWidth;
         if (clientWidth <= 1366 && clientWidth >= 1024) {
           // document.querySelector("body").style.overflowX = "auto";
@@ -111,8 +75,13 @@ export default {
 </script>
 
 <style lang="less">
-.w-1400 {
-  width: 1400px;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.w-1600 {
+  width: @width;
   margin: 0 auto;
 }
 .btn {
@@ -123,7 +92,7 @@ export default {
 }
 
 .layout-box {
-  background: #F5F5F5;
+  background: #f5f5f5;
 }
 
 .poster-box .poster {
@@ -187,37 +156,35 @@ body {
   }
 }
 
-
 .el-rate__icon {
-  color: #F7BB04 !important;
+  color: #f7bb04 !important;
 }
 
-
 .el-textarea__inner:focus {
-  border-color: #F74747 !important;
+  border-color: #f74747 !important;
 }
 
 .el-radio__input.is-checked .el-radio__inner {
-  background: #F74747 !important;
-  border-color: #F74747 !important;
+  background: #f74747 !important;
+  border-color: #f74747 !important;
 }
 
-.el-radio__input.is-checked+.el-radio__label {
+.el-radio__input.is-checked + .el-radio__label {
   color: #000 !important;
 }
 
 .el-checkbox__input.is-focus .el-checkbox__inner {
-  border-color: #F74747 !important;
+  border-color: #f74747 !important;
 }
 
-.el-checkbox__input.is-checked+.el-checkbox__label {
-  color: #F74747 !important;
+.el-checkbox__input.is-checked + .el-checkbox__label {
+  color: #f74747 !important;
 }
 
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-  background: #F74747 !important;
-  border-color: #F74747 !important;
+  background: #f74747 !important;
+  border-color: #f74747 !important;
 }
 
 .pagination-box {
@@ -282,7 +249,7 @@ button {
 .scale-box {
   overflow: hidden;
 
-  &>.scale-img {
+  & > .scale-img {
     width: 100%;
     height: 100%;
     transition: 0.25s linear;
@@ -291,7 +258,7 @@ button {
   }
 
   &:hover {
-    &>.scale-img {
+    & > .scale-img {
       transform: scale(1.1);
     }
   }
@@ -364,15 +331,16 @@ button {
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled):hover {
-  color: #F74747 !important;
+  color: #f74747 !important;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #F74747 !important;
+  background-color: #f74747 !important;
   color: #fff !important;
 }
 
-.el-pager li.active {}
+.el-pager li.active {
+}
 
 // //PC  加载中
 // .el-loading-spinner {
@@ -582,7 +550,6 @@ button {
 }
 
 @media screen and (max-width: 1199px) {
-
   // 商品详情弹窗
   .pop-kefu-inner {
     padding: 25px !important;
@@ -593,9 +560,9 @@ button {
   }
 
   .detail-qrcode {
-      display: flex;
-          justify-content: center;
-          align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
 
     img {
@@ -607,14 +574,14 @@ button {
 }
 
 @media screen and (max-width: 1199px) and (min-width: 768px) {
-  #mobile_icon_div>div {
+  #mobile_icon_div > div {
     width: 70px !important;
     height: 70px !important;
     display: flex;
     justify-content: center;
     align-items: center;
 
-    &>div {
+    & > div {
       margin: 0 !important;
       width: 35px !important;
       height: 35px !important;
