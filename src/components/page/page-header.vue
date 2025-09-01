@@ -5,7 +5,7 @@
       <div class="header-left">
         <div class="logo">
           <div class="logo-emblem">
-            <span class="logo-text">法焰</span>
+            <img src="@img/common/logo.png" alt="" />
           </div>
         </div>
         <div class="brand-name">法律文书网</div>
@@ -15,7 +15,7 @@
       <div class="header-center">
         <nav class="navigation">
           <ul class="nav-list">
-            <li class="nav-item">
+            <li class="nav-item active">
               <a href="#" class="nav-link">首页</a>
             </li>
             <li class="nav-item">
@@ -34,13 +34,17 @@
       <!-- 右侧用户操作和联系信息 -->
       <div class="header-right">
         <button class="login-btn">
-          <i class="user-icon">👤</i>
+          <i class="user-icon"><img src="@img/common/avatar.png" alt="" /></i>
           <span>登录/注册</span>
         </button>
         <div class="contact-info">
-          <div class="phone-icon">📞</div>
           <div class="contact-text">
-            <div class="contact-label">律师咨询电话(同微信)</div>
+            <div class="contact-label flex-center">
+              <div class="phone-icon">
+                <img src="@img/index/phone.png" alt="" />
+              </div>
+              律师咨询电话(同微信)
+            </div>
             <div class="phone-number">18696628883</div>
           </div>
         </div>
@@ -50,16 +54,16 @@
 </template>
 
 <script>
-  export default {
-    name: "page-header",
-  }
+export default {
+  name: "page-header",
+};
 </script>
 
 <style lang="less" scoped>
 .page-header {
   background: #fff;
   height: 80px;
-  box-shadow: 0px 3px 8px 1px rgba(0,0,0,0.07);
+  box-shadow: 0px 3px 8px 1px rgba(0, 0, 0, 0.07);
 }
 
 .header-container {
@@ -77,25 +81,23 @@
 
 .logo {
   .logo-emblem {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #ff9800, #ff5722);
+    width: 65px;
+    height: 65px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    .logo-text {
-      color: #fff;
-      font-weight: bold;
-      font-size: 16px;
+
+    img {
+      width: 100%;
+      height: 100%;
     }
   }
 }
 
 .brand-name {
   color: #d32f2f;
-  font-size: 24px;
+  font-size: 32px;
   font-weight: bold;
 }
 
@@ -107,36 +109,26 @@
       list-style: none;
       margin: 0;
       padding: 0;
-      gap: 40px;
+      gap: 90px;
     }
 
     .nav-item {
       .nav-link {
         color: #424242;
         text-decoration: none;
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 500;
         padding: 10px 0;
         transition: color 0.3s ease;
         position: relative;
 
         &:hover {
-          color: #d32f2f;
+          color: #363130;
         }
-
-        &::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 0;
-          height: 2px;
-          background: #d32f2f;
-          transition: width 0.3s ease;
-        }
-
-        &:hover::after {
-          width: 100%;
+      }
+      &.active {
+        .nav-link {
+          font-weight: bold;
         }
       }
     }
@@ -147,15 +139,15 @@
 .header-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
 }
 
 .login-btn {
-  background: linear-gradient(135deg, #e1bee7, #ce93d8);
-  border: none;
+  background: #fff;
+  border: 1px solid #4e57d9;
   border-radius: 25px;
   padding: 12px 24px;
-  color: #fff;
+  color: #4e57d9;
   font-size: 14px;
   cursor: pointer;
   display: flex;
@@ -168,7 +160,12 @@
   }
 
   .user-icon {
-    font-size: 16px;
+    width: 18px;
+    height: 18px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 
@@ -179,39 +176,29 @@
 }
 
 .phone-icon {
-  font-size: 24px;
-  color: #d32f2f;
+  width: 24px;
+  height: 24px;
+  margin-right: 7px;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .contact-text {
   .contact-label {
     color: #d32f2f;
-    font-size: 12px;
+    font-size: 18px;
+    font-weight: bold;
     line-height: 1.2;
   }
 
   .phone-number {
     color: #d32f2f;
-    font-size: 18px;
+    font-size: 32px;
     font-weight: bold;
     line-height: 1.2;
-  }
-}
-
-// 响应式设计
-@media (max-width: 768px) {
-  .header-container {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .header-center .navigation .nav-list {
-    gap: 20px;
-  }
-
-  .header-right {
-    flex-direction: column;
-    gap: 15px;
   }
 }
 </style>
