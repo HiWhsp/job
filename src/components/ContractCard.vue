@@ -1,0 +1,332 @@
+<template>
+  <div
+    class="contract-card"
+    @mouseenter="showOverlay = true"
+    @mouseleave="showOverlay = false"
+  >
+    <div class="card-content">
+      <div class="document-preview">
+        <div class="document-header">
+          <div class="word-icon">
+            <img src="@img/index/word-icon.png" alt="" />
+          </div>
+          <div class="document-title">
+            {{ contract.title }}
+            <div class="document-info">word A4 打印 内容可随意更改</div>
+          </div>
+        </div>
+        <div class="document-content">
+          <div class="document-paper">
+            <div class="contract-content">
+              <div class="contract-line">
+                <span class="label">合同编号：</span>
+                <span class="value">________________</span>
+              </div>
+              <div class="contract-line">
+                <span class="label">甲方：</span>
+                <span class="value">________________</span>
+              </div>
+              <div class="contract-line">
+                <span class="label">乙方：</span>
+                <span class="value">________________</span>
+              </div>
+              <div class="contract-line">
+                <span class="label">签订日期：</span>
+                <span class="value">________________</span>
+              </div>
+              <div class="contract-line">
+                <span class="label">合同金额：</span>
+                <span class="value">________________</span>
+              </div>
+              <div class="contract-line">
+                <span class="label">履行期限：</span>
+                <span class="value">________________</span>
+              </div>
+              <div class="contract-line">
+                <span class="label">违约责任：</span>
+                <span class="value">________________</span>
+              </div>
+              <div class="contract-line">
+                <span class="label">争议解决：</span>
+                <span class="value">________________</span>
+              </div>
+              <div class="contract-line">
+                <span class="label">其他条款：</span>
+                <span class="value">________________</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 悬浮遮罩层 -->
+    <div class="overlay" v-show="showOverlay">
+      <div class="overlay-buttons">
+        <button class="view-btn" @click="handleView">
+          <i class="el-icon-view"></i>
+          点击查看
+        </button>
+        <button class="collect-btn" @click="handleCollect">
+          <i class="el-icon-star-off"></i>
+          收藏
+        </button>
+      </div>
+      <div class="overlay-stats">
+        <div class="stat-item">
+          <i class="el-icon-view"></i>
+          <span>{{ contract.viewCount }}</span>
+        </div>
+        <div class="stat-item">
+          <i class="el-icon-star-off"></i>
+          <span>{{ contract.collectCount }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title">{{ contract.title }}</div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "ContractCard",
+  props: {
+    contract: {
+      type: Object,
+      required: true,
+      default: () => ({
+        title: "生产经营合同",
+        viewCount: 123,
+        collectCount: 123,
+      }),
+    },
+  },
+  data() {
+    return {
+      showOverlay: true,
+    };
+  },
+  methods: {
+    handleView() {
+      this.$emit("view", this.contract);
+    },
+    handleCollect() {
+      this.$emit("collect", this.contract);
+    },
+  },
+};
+</script>
+
+<style lang="less" scoped>
+.contract-card {
+  position: relative;
+  width: 305px;
+  height: 534px;
+  background: #f4f5f8;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+
+  .card-content {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    padding: 13px 16px;
+  }
+
+  .document-preview {
+
+    .document-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+
+      .word-icon {
+        width: 43px;
+        height: 43px;
+        margin-right: 10px;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .document-title {
+        font-weight: bold;
+        font-size: 20px;
+        color: #363130;
+        line-height: 28px;
+        .document-info {
+          font-weight: 400;
+          font-size: 12px;
+          color: #9f9f9f;
+          line-height: 16px;
+        }
+      }
+    }
+
+    .document-content {
+      height: 365px;
+      position: relative;
+
+      // 背景层叠卡片
+      &::before {
+        content: "";
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        right: -8px;
+        bottom: -8px;
+        background: #e8f0fe;
+        border-radius: 8px;
+        z-index: 1;
+      }
+
+      // 前景白色卡片
+      .document-paper {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+        .contract-content {
+          position: relative;
+          z-index: 2;
+          height: 100%;
+          overflow: hidden;
+        }
+
+        .contract-line {
+          display: flex;
+          margin-bottom: 12px;
+          font-size: 14px;
+          line-height: 24px;
+
+          .label {
+            color: #333;
+            min-width: 80px;
+            font-weight: 500;
+          }
+
+          .value {
+            color: #999;
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+            height: 24px;
+            position: relative;
+
+            &::after {
+              content: "";
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              height: 1px;
+              background: repeating-linear-gradient(
+                to right,
+                #ddd 0px,
+                #ddd 4px,
+                transparent 4px,
+                transparent 8px
+              );
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+
+    .overlay-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 140px;
+
+      .view-btn,
+      .collect-btn {
+        width: 202px;
+        height: 59px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
+
+        i {
+          font-size: 18px;
+        }
+      }
+
+      .view-btn {
+        background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
+        color: white;
+
+        &:hover {
+          background: #106ebe;
+        }
+      }
+
+      .collect-btn {
+        background: white;
+        color: #333;
+
+        &:hover {
+          background: #f5f5f5;
+        }
+      }
+    }
+
+    .overlay-stats {
+      display: flex;
+      gap: 16px;
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: white;
+        font-size: 18px;
+
+        i {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
+  .card-title {
+    height: 60px;
+    font-size: 18px;
+    color: #363130;
+    font-weight: bold;
+    padding-left: 20px;
+    margin-top: 20px;
+    line-height: 60px;
+    border-top: 1px solid #f0f0f0;
+  }
+}
+</style>

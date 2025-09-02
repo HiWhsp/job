@@ -1,0 +1,244 @@
+.page-index {
+  margin-top: 80px;
+  min-height: 100vh;
+  background: #fff;
+}
+
+.lunbo-box {
+  /deep/ .el-carousel__container {
+    height: 340px;
+  }
+
+  /deep/ img {
+    width: 100%;
+    height: 340px;
+    cursor: pointer;
+  }
+
+  /deep/ .el-carousel__indicators--horizontal {
+    width: 200px;
+    bottom: 65px;
+    right: 40px;
+    left: auto;
+    position: absolute;
+  }
+
+  /deep/ .el-carousel__button {
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    opacity: 0.58;
+  }
+  /deep/ .el-carousel__indicator.is-active button {
+    width: 40px;
+    background: #f74747;
+    border-radius: 6px;
+  }
+}
+
+.main-content {
+  z-index: 2;
+  position: relative;
+  margin-top: -60px;
+  padding-bottom: 100px;
+}
+
+// 业务公告区域
+.announcement-section {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.announcement-banner {
+  background: url("../assets/img/index/announcement.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  display: flex;
+  width: 1058px;
+  height: 200px;
+
+  .banner-content {
+    margin-left: 212px;
+    padding: 26px 30px 26px 0;
+
+    .announcement-text {
+      color: #44464b;
+      font-size: 18px;
+      line-height: 1.6;
+      font-weight: bold;
+      margin-bottom: 18px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+      span {
+        color: #e0291f;
+      }
+      &.red-text {
+        color: #e0291f;
+      }
+    }
+  }
+}
+
+.latest-updates {
+  width: 527px;
+  height: 200px;
+  background: url("../assets/img/index/latest.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+
+  .updates-list {
+    padding: 60px 70px 0 30px;
+    .update-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+
+      .update-date {
+        font-size: 14px;
+        color: #363130;
+      }
+
+      .update-content {
+        font-size: 14px;
+        color: #363130;
+      }
+    }
+  }
+}
+
+// 合同文书区域
+.contract-section {
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      color: #363130;
+      margin: 0;
+      img {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    .search-box {
+      .search-input {
+        width: 680px;
+      }
+      /deep/.el-input-group__append {
+        background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
+        color: #fff;
+        font-size: 20px;
+      }
+    }
+  }
+
+  .category-tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 30px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+
+    .tab-item {
+      padding: 10px 20px;
+      background: #f4f5f8;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #666;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #e9ecef;
+        color: #333;
+      }
+
+      &.active {
+        background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
+        color: white;
+      }
+    }
+  }
+
+  .contract-list-section {
+    margin-bottom: 30px;
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      .section-title-text {
+        width: 350px;
+        height: 50px;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        padding: 12px 0 0 94px;
+        line-height: 42px;
+        font-size: 30px;
+        color: #363130;
+        font-weight: bold;
+      }
+
+      .view-more-btn {
+        text-align: right;
+        .el-button--primary {
+          border: 1px solid #4e57d9;
+          color: #4e57d9;
+          background: #fff;
+          font-size: 16px;
+          .el-icon-arrow-right {
+            font-size: 16px;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    .contract-grid {
+      display: flex;
+      gap: 18px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+  }
+}
+
+// 广告区域
+.advertising-section {
+  width: 100vw;
+  margin-left: -160px;
+  .advertising-banner {
+    width: 100vw;
+    height: 460px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.footer-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 100px auto 0;
+  width: 475px;
+  height: 74px;
+  background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
+  border-radius: 35px;
+  font-weight: 400;
+  font-size: 26px;
+  color: #ffffff;
+}

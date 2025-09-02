@@ -206,8 +206,8 @@ export default {
 
     .nav-dropdown {
       .nav-link {
-        color: #424242;
-        font-size: 16px;
+        color: #363130;
+        font-size: 18px;
         font-weight: 500;
         cursor: pointer;
         padding: 8px 12px;
@@ -223,21 +223,28 @@ export default {
 
     .search-container {
       .search-input {
-        width: 300px;
+        width: 534px;
+        height: 50px;
         
-        .el-input__inner {
-          border-radius: 20px 0 0 20px;
+        /deep/ .el-input__inner {
+          border-radius: 8px 0 0 8px;
           border-right: none;
+          border: 1px solid #CED1DB;
+          height: 100%;
         }
         
-        .el-input-group__append {
-          border-radius: 0 20px 20px 0;
-          background: linear-gradient(135deg, #4e57d9, #667eea);
+        /deep/ .el-input-group__append {
+          border-radius: 0 8px 8px 0;
+          background: linear-gradient( 90deg, #4E57D9 0%, #519DFF 100%);
           border: none;
           color: white;
           
           &:hover {
-            background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+            background: linear-gradient( 90deg, #4E57D9 0%, #519DFF 100%);
+          }
+          .el-icon-search {
+            font-size: 26px;
+            color: white;
           }
         }
       }
