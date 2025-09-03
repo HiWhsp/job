@@ -23,6 +23,11 @@ Vue.use(VueRouter);
 // 官网页面1
 const index = () => import(/* webpackChunkName: "index" */ "@/views/index.vue");
 
+const login = () => import(/* webpackChunkName: "login" */ "@/views/account/login.vue");
+const register = () => import(/* webpackChunkName: "register" */ "@/views/account/register.vue");
+const retrieve = () => import(/* webpackChunkName: "passwordReset" */ "@/views/account/retrieve.vue");
+const contractDetail = () => import(/* webpackChunkName: "contractDetail" */ "@/views/contractDetail.vue");
+
 const routes = [
   // 首页
   {
@@ -31,7 +36,36 @@ const routes = [
     component: index,
     meta: {},
   },
+  // 登录
+  {
+    path: "/login",
+    name: "login",
+    component: login,
+    meta: {},
+  },
+  // 注册
+  {
+    path: "/register",
+    name: "register",
+    component: register,
+    meta: {},
+  },
+  // 找回密码
+  {
+    path: "/retrieve",
+    name: "retrieve",
+    component: retrieve,
+    meta: {},
+  },
 
+  // 合同详情
+  {
+    path: "/contractDetail",
+    name: "contractDetail",
+    component: contractDetail,
+    meta: {},
+  },
+  
   {
     path: "*",
     redirect: "/",

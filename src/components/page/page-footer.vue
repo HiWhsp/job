@@ -46,19 +46,27 @@
       <div class="features-section">
         <div class="features">
           <div class="feature-item">
-            <div class="feature-icon price-icon">🏷️</div>
+            <div class="feature-icon">
+              <img src="@/assets/img/footer/icon1.png" alt="price" />
+            </div>
             <span class="feature-text">价格优惠</span>
           </div>
           <div class="feature-item">
-            <div class="feature-icon quality-icon">💎</div>
+            <div class="feature-icon">
+              <img src="@/assets/img/footer/icon2.png" alt="quality" />
+            </div>
             <span class="feature-text">海量精品</span>
           </div>
           <div class="feature-item">
-            <div class="feature-icon service-icon">🔧</div>
+            <div class="feature-icon">
+              <img src="@/assets/img/footer/icon3.png" alt="service" />
+            </div>
             <span class="feature-text">高质服务</span>
           </div>
           <div class="feature-item">
-            <div class="feature-icon efficiency-icon">👍</div>
+            <div class="feature-icon">
+              <img src="@/assets/img/footer/icon4.png" alt="efficiency" />
+            </div>
             <span class="feature-text">提升效率</span>
           </div>
         </div>
@@ -206,62 +214,56 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 110px;
+  margin-left: 270px;
 }
 
 .features {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 20px;
-}
+  .feature-item {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 12px;
+    .feature-icon {
+      width: 46px;
+      height: 52px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
 
-.feature-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.feature-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.feature-text {
-  color: #fff;
-  font-size: 14px;
-  text-align: center;
+    .feature-text {
+      color: #B8B8B8;
+      font-size: 22px;
+      text-align: center;
+    }
+  }
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 15px;
+  justify-content: end;
+  gap: 44px;
   flex-wrap: wrap;
-}
+  .nav-link {
+    color: #9D9D9D;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s ease;
 
-.nav-link {
-  color: #999;
-  text-decoration: none;
-  font-size: 14px;
-  transition: color 0.3s ease;
-
-  &:hover {
-    color: #fff;
+    &:hover {
+      color: #fff;
+    }
+    .separator {
+      color: #B8B8B8;
+      font-size: 18px;
+    }
   }
-}
-
-.separator {
-  color: #666;
-  font-size: 14px;
 }
 
 .footer-bottom {

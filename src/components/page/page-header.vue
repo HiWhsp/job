@@ -12,7 +12,7 @@
       </div>
 
       <!-- 中间导航菜单 -->
-      <div class="header-center">
+      <div class="header-center" v-if="!isLogin">
         <!-- 默认导航 -->
         <nav class="navigation" v-if="!isScrolled">
           <ul class="nav-list">
@@ -63,17 +63,25 @@
               class="search-input"
               size="small"
             >
-              <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+              <el-button
+                slot="append"
+                icon="el-icon-search"
+                @click="handleSearch"
+              ></el-button>
             </el-input>
           </div>
         </div>
       </div>
+      <div v-if="isLogin"></div>
 
       <!-- 右侧用户操作和联系信息 -->
       <div class="header-right">
-        <button class="login-btn">
+        <button class="login-btn" v-if="!isLogin">
           <i class="user-icon"><img src="@img/common/avatar.png" alt="" /></i>
           <span>登录/注册</span>
+        </button>
+        <button class="login-btn" v-if="isLogin" @click="goHome">
+          <span>返回首页</span>
         </button>
         <div class="contact-info">
           <div class="contact-text">
@@ -97,24 +105,32 @@ export default {
   data() {
     return {
       isScrolled: false,
-      searchText: ''
+      isLogin: false,
+      searchText: "",
     };
   },
   mounted() {
-    window.addEventListener('scroll', this.handleScroll);
+    if (["/login", "/register", "/retrieve"].includes(location.pathname)) {
+      this.isLogin = true;
+    }
+    window.addEventListener("scroll", this.handleScroll);
   },
   beforeDestroy() {
-    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
     handleScroll() {
       this.isScrolled = window.scrollY > 100;
     },
     handleSearch() {
-      console.log('搜索内容:', this.searchText);
+      console.log("搜索内容:", this.searchText);
       // 这里可以添加搜索逻辑
-    }
-  }
+    },
+    goHome() {
+      this.$router.push("/");
+      this.isLogin = false;
+    },
+  },
 };
 </script>
 
@@ -225,22 +241,22 @@ export default {
       .search-input {
         width: 534px;
         height: 50px;
-        
+
         /deep/ .el-input__inner {
           border-radius: 8px 0 0 8px;
           border-right: none;
-          border: 1px solid #CED1DB;
+          border: 1px solid #ced1db;
           height: 100%;
         }
-        
+
         /deep/ .el-input-group__append {
           border-radius: 0 8px 8px 0;
-          background: linear-gradient( 90deg, #4E57D9 0%, #519DFF 100%);
+          background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
           border: none;
           color: white;
-          
+
           &:hover {
-            background: linear-gradient( 90deg, #4E57D9 0%, #519DFF 100%);
+            background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
           }
           .el-icon-search {
             font-size: 26px;

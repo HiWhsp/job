@@ -103,12 +103,18 @@ export default {
   },
   data() {
     return {
-      showOverlay: true,
+      showOverlay: false,
     };
   },
   methods: {
     handleView() {
-      this.$emit("view", this.contract);
+      this.$router.push({
+        path: "/contractDetail",
+        query: {
+          id: this.contract.id,
+        },
+      });
+      // this.$emit("view", this.contract);
     },
     handleCollect() {
       this.$emit("collect", this.contract);
@@ -319,6 +325,7 @@ export default {
   }
 
   .card-title {
+    text-align: center;
     height: 60px;
     font-size: 18px;
     color: #363130;

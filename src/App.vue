@@ -5,31 +5,39 @@
     <div class="layout-box">
       <router-view></router-view>
     </div>
-    <page_footer />
+    <page_footer v-if="!isFooter" />
+    <page_aside v-if="!isFooter" />
   </div>
 </template>
 
 <script>
-
+import page_aside from "@/components/page/page-aside.vue";
 import page_header from "@/components/page/page-header.vue"; //顶部搜索
 import page_footer from "@/components/page/page-footer.vue";
 
 export default {
   components: {
+    page_aside,
     page_header,
     page_footer,
   },
   data() {
-    return {};
+    return {
+      isFooter: false,
+    };
   },
   computed: {},
-  watch: {},
+  watch: {
+    $route(to, from) {
+      if (["/login", "/register", "/retrieve"].includes(to.path)) {
+        this.isFooter = true;
+      } else {
+        this.isFooter = false;
+      } 
+    },
+  },
   beforeCreate() {},
   created() {},
-  mounted() {
-    this.initScale();
-    this.queryConfig();
-  },
   methods: {
     // scrollToTop() {
     //   let disallowScrollPages = ["product-detail"];
@@ -38,28 +46,6 @@ export default {
     //     document.querySelector("#app-wrap").scrollTop = 0;
     //   }
     // },
-    initScale() {
-      if (
-        document &&
-        document.documentElement &&
-        document.documentElement.clientWidth
-      ) {
-        let clientWidth = document.documentElement.clientWidth;
-        if (clientWidth <= 1366 && clientWidth >= 1024) {
-          // document.querySelector("body").style.overflowX = "auto";
-          // var $target = document.querySelector('[name="viewport"]');
-          // document
-          //   .querySelector('[name="viewport"]')
-          //   .setAttribute("content", "width=device-width,  initial-scale=0.15");
-        }
-
-        // 笔记本电脑端  150% 缩放比例的问题
-        if (window.devicePixelRatio == 1.5) {
-          let fontSize = 10 / window.devicePixelRatio;
-          document.documentElement.style.fontSize = fontSize + "px";
-        }
-      }
-    },
 
     queryConfig() {
       this.$api("index_config").then((res) => {
