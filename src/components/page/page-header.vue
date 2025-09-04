@@ -80,6 +80,31 @@
           <i class="user-icon"><img src="@img/common/avatar.png" alt="" /></i>
           <span>登录/注册</span>
         </button>
+        <el-popover placement="bottom" width="250" trigger="hover">
+          <div class="user-info-content">
+            <div class="list">
+              <div class="user-info-item">
+                <img src="@img/common/order.png" alt="" />
+                <span>我的订单</span>
+              </div>
+              <div class="user-info-item">
+                <img src="@img/common/my-down.png" alt="" />
+                <span>我的下载</span>
+              </div>
+              <div class="user-info-item">
+                <img src="@img/common/my-collect.png" alt="" />
+                <span>我的收藏</span>
+              </div>
+            </div>
+            <div class="logout">
+              <span>退出登录</span>
+            </div>
+          </div>
+          <div class="user-info" v-if="vuex_user.id" slot="reference">
+            <img src="@img/common/avatar.png" alt="" />
+            <span>{{ vuex_user.phone || "13333333333" }}</span>
+          </div>
+        </el-popover>
         <button class="login-btn" v-if="isLogin" @click="goHome">
           <span>返回首页</span>
         </button>
@@ -299,6 +324,57 @@ export default {
       width: 100%;
       height: 100%;
     }
+  }
+}
+
+.user-info {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #ecf3ff;
+  border-radius: 25px;
+  width: 135px;
+  height: 36px;
+
+  font-weight: bold;
+  font-size: 12px;
+  color: #4e57d9;
+  img {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.user-info-content {
+  .list {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #DBDBDB;
+    .user-info-item {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-weight: 400;
+      font-size: 14px;
+      color: #363130;
+      img {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  }
+  .logout {
+    padding-top: 10px;
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 14px;
+    color: #ACACAC;
+    text-align: center;
   }
 }
 

@@ -103,7 +103,7 @@
 
             <!-- 操作按钮 -->
             <div class="action-buttons">
-              <button class="download-btn">
+              <button class="download-btn" @click="showDownloadModal">
                 <img src="@/assets/img/common/down.png" alt="" />
                 <span>下载Word版本</span>
               </button>
@@ -141,18 +141,24 @@
         </div>
       </div>
     </div>
+    
+    <!-- 下载弹框 -->
+    <DownloadModal :visible.sync="downloadModalVisible"  />
   </div>
 </template>
 
 <script>
 import ContractCard from "@/components/ContractCard.vue";
+import DownloadModal from "@/components/DownloadModal.vue";
 export default {
   name: "contractDetail",
   components: {
     ContractCard,
+    DownloadModal,
   },
   data() {
     return {
+      downloadModalVisible: false,
       latestUpdates: [
         {
           date: "2025-08-13",
@@ -188,7 +194,11 @@ export default {
     },
   },
   mounted() {},
-  methods: {},
+  methods: {
+    showDownloadModal() {
+      this.downloadModalVisible = true;
+    }
+  },
 };
 </script>
 

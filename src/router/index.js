@@ -28,6 +28,8 @@ const register = () => import(/* webpackChunkName: "register" */ "@/views/accoun
 const retrieve = () => import(/* webpackChunkName: "passwordReset" */ "@/views/account/retrieve.vue");
 const contractDetail = () => import(/* webpackChunkName: "contractDetail" */ "@/views/contractDetail.vue");
 
+const myIndex = () => import(/* webpackChunkName: "myIndex" */ "@/views/my/myIndex.vue");
+
 const routes = [
   // 首页
   {
@@ -65,7 +67,15 @@ const routes = [
     component: contractDetail,
     meta: {},
   },
-  
+
+  // 我的
+  {
+    path: "/my",
+    name: "my",
+    component: myIndex,
+    meta: {},
+  },
+
   {
     path: "*",
     redirect: "/",

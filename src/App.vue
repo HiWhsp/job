@@ -311,17 +311,17 @@ button {
 .el-pagination.is-background .btn-prev,
 .el-pagination.is-background .el-pager li {
   background-color: #f4f4f5 !important;
-  min-width: 30px !important;
-  height: 30px;
-  line-height: 30px;
+  min-width: 50px !important;
+  height: 50px;
+  line-height: 50px;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled):hover {
-  color: #f74747 !important;
+  color: #4E57D9 !important;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #f74747 !important;
+  background-color: #4E57D9 !important;
   color: #fff !important;
 }
 
