@@ -29,12 +29,14 @@ const retrieve = () => import(/* webpackChunkName: "passwordReset" */ "@/views/a
 const contractDetail = () => import(/* webpackChunkName: "contractDetail" */ "@/views/contractDetail.vue");
 
 const myIndex = () => import(/* webpackChunkName: "myIndex" */ "@/views/my/myIndex.vue");
+const about = () => import(/* webpackChunkName: "about" */ "@/views/company/about.vue");
+const business = () => import(/* webpackChunkName: "business" */ "@/views/company/business.vue");
 
 const routes = [
   // 首页
   {
     path: "/",
-    name: "index",
+    name: "首页",
     component: index,
     meta: {},
   },
@@ -73,6 +75,21 @@ const routes = [
     path: "/my",
     name: "my",
     component: myIndex,
+    meta: {},
+  },
+
+  // 关于我们
+  {
+    path: "/about",
+    name: "关于我们",
+    component: about,
+    meta: {},
+  },
+  // 业务范围
+  {
+    path: "/business",
+    name: "业务范围",
+    component: business,
     meta: {},
   },
 

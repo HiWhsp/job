@@ -1,0 +1,295 @@
+.business-page {
+  margin-top: 80px;
+  background: #fff;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+
+  // 页面头部区域
+  .business-header {
+    height: 340px;
+    background: url("~@/assets/img/company/business-header.png") no-repeat;
+    background-size: 100% 100%;
+    padding-left: 270px;
+
+    p {
+      line-height: 340px;
+      font-weight: bold;
+      font-size: 36px;
+      color: #ffffff;
+    }
+  }
+
+  // 通用样式
+  .section-title {
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    color: #363130;
+  }
+
+  // 合同文书范本销售部分
+  .contract-templates-section {
+    padding-top: 70px;
+    padding-bottom: 100px;
+    background-color: #fff;
+
+    .templates-cards {
+      display: flex;
+      justify-content: space-between;
+      gap: 60px;
+      width: 1300px;
+      margin: 130px auto 0;
+
+      .template-card {
+        width: 400px;
+        height: 486px;
+        padding: 30px 20px;
+        text-align: center;
+        position: relative;
+
+        .card-icon {
+          margin-bottom: 20px;
+
+          .icon-documents {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            position: relative;
+            transform: perspective(100px) rotateX(15deg) rotateY(-15deg);
+
+            &::before {
+              content: "";
+              position: absolute;
+              top: 10px;
+              left: 10px;
+              right: 10px;
+              height: 8px;
+              background: #60a5fa;
+              border-radius: 2px;
+            }
+
+            &::after {
+              content: "";
+              position: absolute;
+              top: 20px;
+              left: 10px;
+              right: 10px;
+              height: 8px;
+              background: #93c5fd;
+              border-radius: 2px;
+            }
+          }
+        }
+
+        .card-title {
+          font-size: 20px;
+          font-weight: bold;
+          color: #000;
+          margin-bottom: 15px;
+        }
+
+        .card-content {
+          font-size: 14px;
+          color: #374151;
+          line-height: 1.6;
+          text-align: left;
+        }
+
+        &:nth-child(1) {
+          background: url("~@/assets/img/company/business/template-left.png")
+            no-repeat;
+          background-size: 100% 100%;
+        }
+        &:nth-child(2) {
+          background: url("~@/assets/img/company/business/template-center.png")
+            no-repeat;
+          background-size: 100% 100%;
+        }
+        &:nth-child(3) {
+          background: url("~@/assets/img/company/business/template-right.png")
+            no-repeat;
+          background-size: 100% 100%;
+        }
+      }
+    }
+  }
+
+  // 免费律师中介服务部分
+  .lawyer-service-section {
+    padding-top: 70px;
+    padding-bottom: 200px;
+    background: #f4f6fa;
+
+    .lawyer-cards {
+      width: 1500px;
+      margin: 0 auto;
+      margin-top: 120px;
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+
+      .lawyer-card {
+        width: 732px;
+        height: 352px;
+        background: linear-gradient(147deg, #d94e4e 0%, #ff9f9f 100%);
+        box-shadow: 0px 0px 15px 1px rgba(108, 116, 148, 0.1);
+        border-radius: 8px;
+        padding: 62px 150px 62px 62px;
+        color: #fff;
+        position: relative;
+
+        .card-title {
+          font-size: 24px;
+          font-weight: bold;
+          margin-bottom: 20px;
+        }
+
+        .card-content {
+          font-size: 15px;
+          line-height: 34px;
+        }
+
+        .card-icon {
+          position: absolute;
+          bottom: 0px;
+          right: 0px;
+          width: 229px;
+          height: 206px;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  // 免费法律咨询服务部分
+  .consultation-section {
+    padding-top: 70px;
+
+    .consultation-content {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      grid-template-rows: auto 1fr auto;
+      gap: 30px;
+      align-items: center;
+
+      .service-channels {
+        grid-column: 1;
+        grid-row: 1;
+        text-align: center;
+
+        .content-title {
+          font-size: 18px;
+          font-weight: bold;
+          color: #000;
+          margin-bottom: 15px;
+        }
+
+        .content-text {
+          font-size: 14px;
+          color: #374151;
+          line-height: 1.6;
+        }
+      }
+
+      .central-graphic {
+        grid-column: 2;
+        grid-row: 1 / 3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 300px;
+
+        .consultation-icon {
+          width: 200px;
+          height: 200px;
+          background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+
+          .icon-consultation {
+            width: 120px;
+            height: 80px;
+            background: white;
+            border-radius: 8px;
+            position: relative;
+            transform: perspective(200px) rotateX(10deg) rotateY(-10deg);
+
+            &::before {
+              content: "";
+              position: absolute;
+              top: 15px;
+              left: 15px;
+              width: 20px;
+              height: 20px;
+              background: #3b82f6;
+              border-radius: 50%;
+            }
+
+            &::after {
+              content: "";
+              position: absolute;
+              top: 45px;
+              left: 15px;
+              right: 15px;
+              height: 3px;
+              background: #e5e7eb;
+              border-radius: 2px;
+            }
+          }
+        }
+      }
+
+      .service-content {
+        grid-column: 1;
+        grid-row: 2;
+        border: 2px dashed #d1d5db;
+        border-radius: 8px;
+        padding: 20px;
+        background: #f8f9fa;
+
+        .content-title {
+          font-size: 18px;
+          font-weight: bold;
+          color: #000;
+          margin-bottom: 15px;
+        }
+
+        .content-text {
+          font-size: 14px;
+          color: #374151;
+          line-height: 1.6;
+        }
+      }
+
+      .team-config {
+        grid-column: 3;
+        grid-row: 2;
+        border: 2px dashed #d1d5db;
+        border-radius: 8px;
+        padding: 20px;
+        background: #f8f9fa;
+
+        .content-title {
+          font-size: 18px;
+          font-weight: bold;
+          color: #000;
+          margin-bottom: 15px;
+        }
+
+        .content-text {
+          font-size: 14px;
+          color: #374151;
+          line-height: 1.6;
+        }
+      }
+    }
+  }
+}

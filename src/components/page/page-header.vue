@@ -17,16 +17,16 @@
         <nav class="navigation" v-if="!isScrolled">
           <ul class="nav-list">
             <li class="nav-item active">
-              <a href="#" class="nav-link">首页</a>
+              <router-link to="/" class="nav-link">首页</router-link>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">关于我们</a>
+              <router-link to="/about" class="nav-link">关于我们</router-link>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">业务范围</a>
+              <router-link to="/business" class="nav-link">业务范围</router-link>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">联系我们</a>
+              <router-link to="/contact" class="nav-link">联系我们</router-link>
             </li>
           </ul>
         </nav>
@@ -35,12 +35,13 @@
         <div class="scrolled-navigation" v-if="isScrolled">
           <el-dropdown trigger="hover" class="nav-dropdown">
             <span class="nav-link">
-              首页 <i class="el-icon-arrow-down el-icon--right"></i>
+              {{ $route.name }} <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>首页概览</el-dropdown-item>
-              <el-dropdown-item>最新动态</el-dropdown-item>
-              <el-dropdown-item>热门推荐</el-dropdown-item>
+            <el-dropdown-menu slot="dropdown" @click.native="handleNavClick">
+              <el-dropdown-item @click.native="handleNavClick('/')">首页</el-dropdown-item>
+              <el-dropdown-item @click.native="handleNavClick('/about')">关于我们</el-dropdown-item>
+              <el-dropdown-item @click.native="handleNavClick('/business')">业务范围</el-dropdown-item>
+              <el-dropdown-item @click.native="handleNavClick('/contact')">联系我们</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
 
@@ -154,6 +155,9 @@ export default {
     goHome() {
       this.$router.push("/");
       this.isLogin = false;
+    },
+    handleNavClick(path) {
+      this.$router.push(path);
     },
   },
 };

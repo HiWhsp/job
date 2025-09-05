@@ -188,7 +188,7 @@ export default {
 }
 
 .modal-content {
-  padding: 65px 140px 34px 140px;
+  padding: 65px 100px 20px 100px;
 }
 
 .form-group {
@@ -201,13 +201,13 @@ export default {
     font-size: 14px;
     font-weight: 500;
     color: #5b5d60;
-    width: 80px;
+    width: 85px;
     text-align: right;
     margin-right: 24px;
   }
 
   .form-input {
-    width: 150px;
+    width: 250px;
     padding: 12px 16px;
     border: 1px solid #d9d9d9;
     border-radius: 4px;
@@ -229,7 +229,7 @@ export default {
 .modal-footer {
   display: flex;
   gap: 12px;
-  padding: 0px 140px 96px 245px;
+  padding: 0px 68px 96px 210px;
 
   .btn {
     padding: 10px 24px;
