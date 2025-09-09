@@ -10,29 +10,38 @@
       <div class="templates-cards">
         <div class="template-card">
           <div class="card-icon">
-            <div class="icon-documents"></div>
+            <img
+              src="@/assets/img/company/business/template-icon1.png"
+              alt=""
+            />
           </div>
           <h3 class="card-title">服务形式</h3>
           <p class="card-content">
-            线上购买（下载）合同范本，线下提供专业法律服务支持，满足不同客户需求。
+            线上购买（下载）合同范本，客户可添加律师微信获取增值服务。
           </p>
         </div>
         <div class="template-card">
           <div class="card-icon">
-            <div class="icon-documents"></div>
+            <img
+              src="@/assets/img/company/business/template-icon2.png"
+              alt=""
+            />
           </div>
           <h3 class="card-title">范本品类</h3>
           <p class="card-content">
-            涵盖房地产、人事、建设工程、公司管理、知识产权、合同文本等多个专业领域，提供全面的法律文书模板。
+            涵盖生产经营、买卖交易、商务租赁、生活消费、劳动人事、家装家居、婚姻家庭、建设工程、公司管理、农资农业、诉讼文书、证明文件等超过200个细分品类，既包含企业经营所需合同文本，也涉及个人事务常用文书。
           </p>
         </div>
         <div class="template-card">
           <div class="card-icon">
-            <div class="icon-documents"></div>
+            <img
+              src="@/assets/img/company/business/template-icon3.png"
+              alt=""
+            />
           </div>
           <h3 class="card-title">增值服务</h3>
           <p class="card-content">
-            购买（下载）合同范本，享受专业法律服务，包括合同审查、法律咨询等增值服务。
+            购买（下载）合同范本，即可享受律师合同审核、签约指导及终生法律咨询服务。
           </p>
         </div>
       </div>
@@ -70,30 +79,29 @@
         <div class="service-channels">
           <h3 class="content-title">服务渠道</h3>
           <p class="content-text">
-            线上咨询平台，线下门店服务，多渠道满足客户法律咨询需求。
+            提供电话咨询、微信咨询及线下门店面对面咨询三种方式。
           </p>
-        </div>
-
-        <div class="central-graphic">
-          <div class="consultation-icon">
-            <div class="icon-consultation"></div>
-          </div>
         </div>
 
         <div class="service-content">
           <h3 class="content-title">服务内容</h3>
           <p class="content-text">
-            提供专业法律咨询、案件分析、法律意见等服务，帮助客户解决各类法律问题。
+            解答法律常识疑问、分析案件初步解决方案、指引维权流程等，例如针对劳动纠纷客户，详细说明仲裁时效、举证要点、经济补偿金计算方式等关键信息。
           </p>
         </div>
 
         <div class="team-config">
           <h3 class="content-title">团队配置</h3>
           <p class="content-text">
-            拥有10年以上执业经验的专业律师团队，提供高质量的法律服务保障。
+            咨询团队由10年以上执业经验的律师组成，确保解答的准确性与实用性。
           </p>
         </div>
       </div>
+    </div>
+    <!-- 规划拓展业务 -->
+    <div class="planning-section">
+      <h2 class="section-title">规划拓展业务</h2>
+      <p class="planning-text">未来计划推出法律知识培训、企业合规体系搭建等新业务，持续拓展服务边界。</p>
     </div>
   </div>
 </template>

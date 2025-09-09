@@ -31,6 +31,7 @@ const contractDetail = () => import(/* webpackChunkName: "contractDetail" */ "@/
 const myIndex = () => import(/* webpackChunkName: "myIndex" */ "@/views/my/myIndex.vue");
 const about = () => import(/* webpackChunkName: "about" */ "@/views/company/about.vue");
 const business = () => import(/* webpackChunkName: "business" */ "@/views/company/business.vue");
+const contact = () => import(/* webpackChunkName: "contact" */ "@/views/company/contact.vue");
 
 const routes = [
   // 首页
@@ -92,7 +93,13 @@ const routes = [
     component: business,
     meta: {},
   },
-
+  // 联系我们
+  {
+    path: "/contact",
+    name: "联系我们",
+    component: contact,
+    meta: {},
+  },
   {
     path: "*",
     redirect: "/",
