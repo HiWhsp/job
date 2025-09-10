@@ -32,6 +32,8 @@ const myIndex = () => import(/* webpackChunkName: "myIndex" */ "@/views/my/myInd
 const about = () => import(/* webpackChunkName: "about" */ "@/views/company/about.vue");
 const business = () => import(/* webpackChunkName: "business" */ "@/views/company/business.vue");
 const contact = () => import(/* webpackChunkName: "contact" */ "@/views/company/contact.vue");
+const help = () => import(/* webpackChunkName: "help" */ "@/views/company/help.vue");
+const protocol = () => import(/* webpackChunkName: "protocol" */ "@/views/company/protocol.vue");
 
 const routes = [
   // 首页
@@ -98,6 +100,20 @@ const routes = [
     path: "/contact",
     name: "联系我们",
     component: contact,
+    meta: {},
+  },
+  // 帮助中心
+  {
+    path: "/help",
+    name: "帮助中心",
+    component: help,
+    meta: {},
+  },
+  // 平台协议
+  {
+    path: "/protocol",
+    name: "平台协议",
+    component: protocol,
     meta: {},
   },
   {

@@ -1,6 +1,6 @@
 // import {API_ROOT} from '@/config/env.js'
 
-const ROOT = "https://lidong.dx.hdapp.com.cn";
+const ROOT = "https://fayan.dx.hdapp.com.cn";
 
 /**
  * 全局接口请求根域名
@@ -17,8 +17,8 @@ export const IS_OPEN_OSS_UPLOAD = false;
 export const UPLOAD_NAME = "img";
 export const UPLOAD_ACTION =
   process.env.NODE_ENV !== "production"
-    ? "/api/service.php"
-    : ROOT + "/service.php";
+    ? "/api/upload"
+    : ROOT + "/upload";
 
 export const UPLOAD_PARAMS_ACTION = IS_OPEN_OSS_UPLOAD ? "index_ossUpload" : 'index_localUpload';
 // 上传
