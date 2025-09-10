@@ -71,10 +71,9 @@ function api(option) {
   data.token = localStorage.getItem("token") || "";
   //
   if (process.env.NODE_ENV !== "production") {
-    url = API_ROOT + "/service.php";//
-    // url =  "/api/" + url;//跨域时 使用代理
+    url = API_ROOT + "/api/" + url;//
   } else {
-    url = "/service.php";
+    url = API_ROOT + "/api/" + url;//
   }
 
   let otherConfig = {

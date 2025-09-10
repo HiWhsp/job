@@ -79,10 +79,6 @@ export default new Vuex.Store({
     default_address: {}, //默认收货地址
     //
     vuex_index_banners: [],
-    vuex_map_banners: {
-      关于我们: [],
-      联系我们: [],
-    },
     //
   },
 
@@ -131,24 +127,14 @@ export default new Vuex.Store({
       console.log('vuex 缓存商品信息', str_products)
       sessionStorage.setItem("cache_payment_products", str_products);
     },
-
+    // 首页轮播
     set_vuex_banner(state, data) {
-      let [pos_0, pos_1, pos_2] = data;
-      console.log("首页轮播", pos_0.images);
-      state.vuex_index_banners = pos_0.images;
-
-      state.vuex_map_banners = {
-        关于我们: pos_1.images,
-        联系我们: pos_2.images,
-      };
+      state.vuex_index_banners = data;
     },
     // 产品分类树
     set_vuex_product_cate(state, data) {
-      let { category_flat, category_tree } = data;
-      console.warn(
-        "category_tree 产品分类数据",
-        JSON.parse(JSON.stringify(category_tree))
-      );
+      let category_flat = data;
+      let category_tree = data;
 
       state.vuex_category_tree = category_tree;
       state.vuex_category_flat = category_flat;
@@ -191,17 +177,13 @@ export default new Vuex.Store({
     //获取登录后的信息
     async query_user_auth_info({ commit, state, dispatch }, data) {
       dispatch("query_user");
-      dispatch("query_cart");
     },
 
     // 获取用户信息
     async query_user({ commit, state, dispatch }) {
       api({
-        url: "/service.php",
+        url: "getUserInfo",
         method: "get",
-        data: {
-          action: "users_userInfo",
-        },
       }).then((res) => {
         if (res.code == 200) {
           commit("set_vuex_user", res.data);
@@ -210,43 +192,19 @@ export default new Vuex.Store({
         }
       });
     },
-    // 购物车
-    async query_cart({ commit, state, dispatch }) {
-      api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "gouwuche_lists",
-        },
-      })
-        .then((res) => {
-          let { code, data } = res;
-          if (code == 200) {
-            let count = 0;
-            data.forEach((v) => {
-              count += v.num * 1;
-            });
-            commit("set_vuex_cart_number", count);
-          }
-        });
-    },
 
     //初始化资源
     async query_assets({ commit, state, dispatch }, data) {
       dispatch('query_config')
       dispatch('query_banner')
       dispatch('query_category')
-      dispatch('query_news')
     },
 
-    // 查询
+    // 查询配置
     async query_config({ commit, state, dispatch }) {
       api({
-        url: "/service.php",
+        url: "indexSetting",
         method: "get",
-        data: {
-          action: "index_config",
-        },
       }).then((res) => {
         let { code, data } = res;
         if (code == 200) {
@@ -257,11 +215,10 @@ export default new Vuex.Store({
     // 查询
     async query_banner({ commit, state, dispatch }) {
       api({
-        url: "/service.php",
+        url: "getBanner",
         method: "get",
         data: {
-          action: "banner_index",
-          position: 0, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
+          position: 1, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -272,42 +229,14 @@ export default new Vuex.Store({
     // 查询
     async query_category({ commit, state, dispatch }) {
       api({
-        url: "/service.php",
+        url: "indexSetting",
         method: "get",
-        data: {
-          action: "product_channel",
-          parentId: 0,
-        },
       }).then((res) => {
         if (res.code == 200) {
-          let catesInfo = handle_product_cate_data(res.data);
-          commit("set_vuex_product_cate", catesInfo);
+          // let catesInfo = handle_product_cate_data(res.data);
+          commit("set_vuex_product_cate", res.data.categoryList);
         }
       });
     },
-    // 查询
-    async query_news({ commit, state, dispatch }) {
-      api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "news_channel",
-          channelId: 49
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          let data = res.data
-          data.forEach((v) => {
-            v.route = "/news?id=" + v.id;
-          });
-          commit("set_vuex_data", {
-            key: "vuex_news_cates",
-            val: data,
-          });
-        }
-      });
-    },
-
-
   },
 });

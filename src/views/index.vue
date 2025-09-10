@@ -37,8 +37,8 @@
               v-for="(update, index) in latestUpdates"
               :key="index"
             >
-              <span class="update-content">{{ update.content }}</span>
-              <span class="update-date">{{ update.date }}</span>
+              <span class="update-content">{{ update.come == 1 ? '最新上传' : '最近下载' }} | {{ update.title }}</span>
+              <span class="update-date">{{ update.created_at }}</span>
             </div>
           </div>
         </div>
@@ -68,14 +68,15 @@
 
         <!-- 分类标签 -->
         <div class="category-tabs">
+          <div class="tab-item" :class="{ active: activeCategory === '' }" @click="switchCategory('')">全部</div>
           <div
             class="tab-item"
-            :class="{ active: activeCategory === category.key }"
-            v-for="category in categories"
+            :class="{ active: activeCategory === category.id }"
+            v-for="category in vuex_category_tree"
             :key="category.key"
-            @click="switchCategory(category.key)"
+            @click="switchCategory(category.id)"
           >
-            {{ category.name }}
+            {{ category.title }}
           </div>
         </div>
 
@@ -146,22 +147,9 @@ export default {
   data() {
     return {
       searchKeyword: "",
-      activeCategory: "production",
-      categories: [
-        { key: "all", name: "全部" },
-        { key: "transaction", name: "买卖交易" },
-        { key: "lease", name: "商务租赁" },
-        { key: "consumption", name: "生活消费" },
-        { key: "labor", name: "劳动人事" },
-        { key: "decoration", name: "家装家居" },
-        { key: "marriage", name: "婚姻家庭" },
-        { key: "construction", name: "建设工程" },
-        { key: "management", name: "公司管理" },
-        { key: "agriculture", name: "农资农业" },
-        { key: "litigation", name: "诉讼文书" },
-        { key: "certificate", name: "证明文件" },
-        { key: "latest", name: "最新上传" },
-      ],
+      activeCategory: "",
+      categories: [],
+      // 最新动态
       latestUpdates: [
         {
           date: "2025-08-13",
@@ -180,42 +168,23 @@ export default {
           content: "最近下载 | 个人房屋租赁合同范本(实用)",
         },
       ],
-      contracts: {
-        production: [
-          { id: 1, title: "生产经营合同", viewCount: 123, collectCount: 123 },
-          { id: 2, title: "生产经营合同", viewCount: 123, collectCount: 123 },
-          { id: 3, title: "生产经营合同", viewCount: 123, collectCount: 123 },
-          { id: 4, title: "生产经营合同", viewCount: 123, collectCount: 123 },
-          { id: 5, title: "生产经营合同", viewCount: 123, collectCount: 123 },
-        ],
-        transaction: [
-          { id: 6, title: "买卖合同", viewCount: 89, collectCount: 67 },
-          { id: 7, title: "买卖合同", viewCount: 89, collectCount: 67 },
-          { id: 8, title: "买卖合同", viewCount: 89, collectCount: 67 },
-          { id: 9, title: "买卖合同", viewCount: 89, collectCount: 67 },
-          { id: 10, title: "买卖合同", viewCount: 89, collectCount: 67 },
-        ],
-        lease: [
-          { id: 11, title: "租赁合同", viewCount: 156, collectCount: 98 },
-          { id: 12, title: "租赁合同", viewCount: 156, collectCount: 98 },
-          { id: 13, title: "租赁合同", viewCount: 156, collectCount: 98 },
-          { id: 14, title: "租赁合同", viewCount: 156, collectCount: 98 },
-          { id: 15, title: "租赁合同", viewCount: 156, collectCount: 98 },
-        ],
-      },
+      // 合同文书
+      contracts: {},
     };
   },
   computed: {
     ...mapState(["vuex_index_banners"]),
     currentContracts() {
-      if (this.activeCategory === "all") {
-        return Object.values(this.contracts).flat();
+      if (this.activeCategory === "") {
+        return this.contracts.flatMap(item => item.child) || [];
       }
-      return this.contracts[this.activeCategory] || [];
+      return this.contracts.find(item => item.id === this.activeCategory).child || []
+      ;
     },
   },
-  created() {},
-  mounted() {},
+  mounted() {
+    this.getIndex();
+  },
   methods: {
     // 轮播图点击
     do_banner_click(item) {
@@ -233,15 +202,28 @@ export default {
     },
     // 获取当前分类名称
     getCurrentCategoryName() {
-      const category = this.categories.find(
-        (cat) => cat.key === this.activeCategory
+      const category = this.vuex_category_tree.find(
+        (cat) => cat.id === this.activeCategory
       );
-      return category ? category.name : "全部";
+      return category ? category.title : "全部";
+    },
+    getIndex() {
+      this.$api({
+        url: "index",
+        method: "get",
+        data: {
+          keyword: this.searchKeyword,
+        },
+      }).then((res) => {
+        this.latestUpdates = res.data.recent;
+        this.contracts = res.data.category_list;
+      })
     },
     // 搜索
     handleSearch() {
       console.log("搜索关键词:", this.searchKeyword);
       // 这里可以添加搜索逻辑
+      this.getIndex();
     },
     // 查看合同
     handleViewContract(contract) {

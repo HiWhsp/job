@@ -16,46 +16,7 @@
           </div>
         </div>
         <div class="document-content">
-          <div class="document-paper">
-            <div class="contract-content">
-              <div class="contract-line">
-                <span class="label">合同编号：</span>
-                <span class="value">________________</span>
-              </div>
-              <div class="contract-line">
-                <span class="label">甲方：</span>
-                <span class="value">________________</span>
-              </div>
-              <div class="contract-line">
-                <span class="label">乙方：</span>
-                <span class="value">________________</span>
-              </div>
-              <div class="contract-line">
-                <span class="label">签订日期：</span>
-                <span class="value">________________</span>
-              </div>
-              <div class="contract-line">
-                <span class="label">合同金额：</span>
-                <span class="value">________________</span>
-              </div>
-              <div class="contract-line">
-                <span class="label">履行期限：</span>
-                <span class="value">________________</span>
-              </div>
-              <div class="contract-line">
-                <span class="label">违约责任：</span>
-                <span class="value">________________</span>
-              </div>
-              <div class="contract-line">
-                <span class="label">争议解决：</span>
-                <span class="value">________________</span>
-              </div>
-              <div class="contract-line">
-                <span class="label">其他条款：</span>
-                <span class="value">________________</span>
-              </div>
-            </div>
-          </div>
+          <img :src="contract.thumb" alt="" />
         </div>
       </div>
     </div>
@@ -67,18 +28,18 @@
           点击查看
         </button>
         <button class="collect-btn" @click="handleCollect">
-          <i class="el-icon-star-off"></i>
-          收藏
+          <i class="el-icon-star-off" :class="{ 'is-collected': contract.is_collect }"></i>
+          {{ contract.is_collect ? '取消收藏' : '收藏' }}
         </button>
       </div>
       <div class="overlay-stats">
         <div class="stat-item">
           <i class="el-icon-view"></i>
-          <span>{{ contract.viewCount }}</span>
+          <span>{{ contract.view_num }}</span>
         </div>
         <div class="stat-item">
           <i class="el-icon-star-off"></i>
-          <span>{{ contract.collectCount }}</span>
+          <span>{{ contract.collect_num }}</span>
         </div>
       </div>
     </div>
@@ -144,7 +105,6 @@ export default {
   }
 
   .document-preview {
-
     .document-header {
       display: flex;
       align-items: center;
@@ -190,60 +150,11 @@ export default {
         border-radius: 8px;
         z-index: 1;
       }
-
-      // 前景白色卡片
-      .document-paper {
+      img {
         position: relative;
+        width: 267px;
+        height: 365px;
         z-index: 2;
-        height: 100%;
-        background: #fff;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-
-        .contract-content {
-          position: relative;
-          z-index: 2;
-          height: 100%;
-          overflow: hidden;
-        }
-
-        .contract-line {
-          display: flex;
-          margin-bottom: 12px;
-          font-size: 14px;
-          line-height: 24px;
-
-          .label {
-            color: #333;
-            min-width: 80px;
-            font-weight: 500;
-          }
-
-          .value {
-            color: #999;
-            flex: 1;
-            border-bottom: 1px solid #ddd;
-            height: 24px;
-            position: relative;
-
-            &::after {
-              content: "";
-              position: absolute;
-              bottom: 0;
-              left: 0;
-              right: 0;
-              height: 1px;
-              background: repeating-linear-gradient(
-                to right,
-                #ddd 0px,
-                #ddd 4px,
-                transparent 4px,
-                transparent 8px
-              );
-            }
-          }
-        }
       }
     }
   }
@@ -284,6 +195,9 @@ export default {
 
         i {
           font-size: 18px;
+        }
+        .is-collected {
+          color: #F74747;
         }
       }
 

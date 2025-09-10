@@ -89,9 +89,12 @@
   background: url("../assets/img/index/latest.png");
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  padding: 60px 70px 0 30px;
 
   .updates-list {
-    padding: 60px 70px 0 30px;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 10px;
     .update-item {
       display: flex;
       justify-content: space-between;
@@ -105,6 +108,10 @@
       .update-content {
         font-size: 14px;
         color: #363130;
+        width: 250px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }
