@@ -20,7 +20,7 @@
           </div>
           <div class="info-text">
             <h3>公司地址</h3>
-            <p>重庆市南岸区南坪东路9号2025-S013</p>
+            <p>{{ contactInfo.site_address }}</p>
           </div>
         </div>
 
@@ -33,7 +33,7 @@
           </div>
           <div class="info-text">
             <h3>公司电话</h3>
-            <p>18696628883</p>
+            <p>{{ contactInfo.company_phone }}</p>
           </div>
         </div>
 
@@ -46,7 +46,7 @@
           </div>
           <div class="info-text">
             <h3>邮箱</h3>
-            <p>851432731@qq.com</p>
+            <p>{{ contactInfo.company_email }}</p>
           </div>
         </div>
       </div>
@@ -57,7 +57,7 @@
             <div class="red-bar"></div>
             <div class="consultation-text">
               <h3>律师咨询电话</h3>
-              <p class="phone-number">18696628883</p>
+              <p class="phone-number">{{ contactInfo.ask_lawer_phone }}</p>
             </div>
           </div>
           <div class="consultation-icon">
@@ -73,7 +73,7 @@
             <div class="red-bar"></div>
             <div class="consultation-text">
               <h3>微信咨询律师</h3>
-              <p class="phone-number">18696628883</p>
+              <p class="phone-number">{{ contactInfo.wechat_lawer_phone }}</p>
             </div>
           </div>
           <div class="consultation-icon">
@@ -89,7 +89,21 @@
 </template>
 
 <script>
-export default {};
+export default {
+  name: "Contact",
+  data() {
+    return {
+      contactInfo: {},
+    };
+  },
+  mounted() {
+    this.$api({
+      url: "contactUs",
+    }).then((res) => {
+      this.contactInfo = res.data;
+    });
+  },
+};
 </script>
 
 <style lang="less" scoped>

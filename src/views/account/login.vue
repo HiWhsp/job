@@ -106,15 +106,16 @@ export default {
       }
 
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: "web_login",
+        method: "post",
         data: {
-          action: "login_phoneLogin",
-          ...this.form,
+          mobile: this.form.phone,
+          password: this.form.password,
         },
       }).then((res) => {
         alert(res);
         if (res.code == 200) {
+          localStorage.setItem("token", res.data.token);
           this.$store.commit("set_vuex_user", res.data);
           this.$store.dispatch("query_user_auth_info");
           this.$router.push("/");
@@ -236,6 +237,9 @@ export default {
             font-family: sans-serif;
             font-weight: 400;
             color: #9b9b9b;
+          }
+          &:focus {
+            outline: none;
           }
         }
       }

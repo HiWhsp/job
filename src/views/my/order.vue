@@ -2,7 +2,7 @@
   <div class="my-orders">
     <div class="order-content">
       <el-table
-        :data="currentPageData"
+        :data="orderList"
         :empty-text="'暂无订单数据'"
         v-loading="loading"
         height="400"
@@ -11,22 +11,22 @@
         </el-table-column>
 
         <el-table-column
-          prop="name"
+          prop="title"
           label="订单名称"
           align="center"
           show-overflow-tooltip
         >
         </el-table-column>
 
-        <el-table-column prop="amount" label="订单金额" align="center">
+        <el-table-column prop="payPrice" label="订单金额" align="center">
           <template slot-scope="scope">
-            <span class="order-amount">¥{{ scope.row.amount }}</span>
+            <span class="order-amount">¥{{ scope.row.payPrice }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="orderTime" label="下单时间" align="center">
+        <el-table-column prop="created_at" label="下单时间" align="center">
           <template slot-scope="scope">
-            <span class="order-time">{{ scope.row.orderTime }}</span>
+            <span class="order-time">{{ scope.row.created_at }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="downloadStatus" label="下载状态" align="center">
@@ -74,6 +74,7 @@ export default {
       loading: false,
       currentPage: 1,
       pageSize: 10,
+      totalOrders: 0,
       orderList: [
         {
           id: 1,
@@ -186,22 +187,11 @@ export default {
       ],
     };
   },
-  computed: {
-    totalOrders() {
-      return this.orderList.length;
-    },
-    currentPageData() {
-      const start = (this.currentPage - 1) * this.pageSize;
-      const end = start + this.pageSize;
-      return this.orderList.slice(start, end);
-    },
-  },
   methods: {
     // 处理下载
     handleDownload(order) {
       // 设置下载状态
       this.$set(order, "downloading", true);
-
       // 模拟下载过程
       setTimeout(() => {
         this.$set(order, "downloading", false);
@@ -224,6 +214,17 @@ export default {
     // 模拟加载数据
     loadData() {
       this.loading = true;
+      this.$api({
+        url: "getMyOrder",
+        method: "get",
+        data: {
+          page: this.currentPage,
+          pageSize: this.pageSize,
+        },
+      }).then((res) => {
+        this.orderList = res.data.list;
+        this.totalOrders = res.data.count;
+      });
       setTimeout(() => {
         this.loading = false;
       }, 1000);

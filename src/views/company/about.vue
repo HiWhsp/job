@@ -191,6 +191,11 @@ export default {
       return this.businessItems[this.activeTab];
     },
   },
+  mounted() {
+    // this.$api({
+    //   url: "setting",
+    // })
+  },
   methods: {
     setActiveTab(index) {
       this.activeTab = index;

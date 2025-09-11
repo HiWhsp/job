@@ -2,7 +2,7 @@
   <div class="my-orders">
     <div class="order-content">
       <el-table
-        :data="currentPageData"
+        :data="orderList"
         :empty-text="'暂无订单数据'"
         v-loading="loading"
         height="400"
@@ -18,15 +18,15 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="amount" label="合同名称" align="center">
+        <el-table-column prop="title" label="合同名称" align="center">
           <template slot-scope="scope">
-            <span class="order-amount">¥{{ scope.row.amount }}</span>
+            <span class="order-amount">{{ scope.row.title }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="orderTime" label="下载时间" align="center">
+        <el-table-column prop="created_at" label="下载时间" align="center">
           <template slot-scope="scope">
-            <span class="order-time">{{ scope.row.orderTime }}</span>
+            <span class="order-time">{{ scope.row.created_at }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="downloadStatus" label="文档大小" align="center">
@@ -184,17 +184,8 @@ export default {
           downloading: false,
         },
       ],
+      totalOrders: 0,
     };
-  },
-  computed: {
-    totalOrders() {
-      return this.orderList.length;
-    },
-    currentPageData() {
-      const start = (this.currentPage - 1) * this.pageSize;
-      const end = start + this.pageSize;
-      return this.orderList.slice(start, end);
-    },
   },
   methods: {
     // 处理下载
@@ -224,6 +215,17 @@ export default {
     // 模拟加载数据
     loadData() {
       this.loading = true;
+      this.$api({
+        url: "getMyDownload",
+        method: "get",
+        data: {
+          page: this.currentPage,
+          pageSize: this.pageSize,
+        },
+      }).then((res) => {
+        this.orderList = res.data.list;
+        this.totalOrders = res.data.count;
+      });
       setTimeout(() => {
         this.loading = false;
       }, 1000);
