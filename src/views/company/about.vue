@@ -19,7 +19,7 @@
         <div class="about-image">
           <div class="image-container">
             <img
-              src="@/assets/img/company/about-img1.png"
+              src="@/assets/img/company/about-img1.jpg"
               alt="法焰科技"
               class="company-image"
             />
@@ -101,7 +101,7 @@
         </div>
       </div>
       <div class="about-section-right">
-        <img src="@/assets/img/company/right-bg.png" alt="法焰科技" />
+        <img src="@/assets/img/company/right-bg.jpg" alt="法焰科技" />
       </div>
     </div>
   </div>
