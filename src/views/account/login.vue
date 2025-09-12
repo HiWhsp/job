@@ -117,6 +117,7 @@ export default {
       }).then((res) => {
         alert(res);
         if (res.code == 200) {
+          localStorage.setItem("token", res.data.token);
           this.$store.commit("set_vuex_user", res.data);
           this.$store.dispatch("query_user_auth_info");
           this.$router.push("/");
@@ -238,6 +239,9 @@ export default {
             font-family: sans-serif;
             font-weight: 400;
             color: #9b9b9b;
+          }
+          &:focus {
+            outline: none;
           }
         }
       }

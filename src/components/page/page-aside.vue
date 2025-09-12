@@ -10,7 +10,7 @@
           @mouseleave="on_mouseleave(item)"
           @click="on_click_util(item)"
         >
-          <div class="item-inner" v-if="item.title != '微信'">
+          <div class="item-inner" v-if="item.title != '微信'" @click="goUrl(item.path)">
             <img :src="item.icon" alt="" />
             <div class="item-title">{{ item.title }}</div>
           </div>
@@ -58,6 +58,7 @@ export default {
         {
           title: "我的下载",
           icon: require("@/assets/img/common/down-icon.png"),
+          path: "/my?tab=2",
         },
         {
           title: "微信",
@@ -66,6 +67,7 @@ export default {
         {
           title: "在线客服",
           icon: require("@/assets/img/common/aside-kefu.png"),
+          path: "/",
         },
       ],
 
@@ -113,6 +115,9 @@ export default {
     on_mouseleave(item) {
       //console.log("鼠标移出", item);
       this.hoverIndex = "";
+    },
+    goUrl(path) {
+      this.$router.push(path);
     },
 
     on_click_util(item) {

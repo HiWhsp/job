@@ -28,8 +28,11 @@
           点击查看
         </button>
         <button class="collect-btn" @click="handleCollect">
-          <i class="el-icon-star-off" :class="{ 'is-collected': contract.is_collect }"></i>
-          {{ contract.is_collect ? '取消收藏' : '收藏' }}
+          <i
+            class="el-icon-star-off"
+            :class="{ 'is-collected': contract.is_collect }"
+          ></i>
+          {{ contract.is_collect ? "取消收藏" : "收藏" }}
         </button>
       </div>
       <div class="overlay-stats">
@@ -75,10 +78,24 @@ export default {
           id: this.contract.id,
         },
       });
-      // this.$emit("view", this.contract);
+      console.log(this.contract);
+      
     },
     handleCollect() {
-      this.$emit("collect", this.contract);
+      const status = this.contract.is_collect == 0 ? 1 : 0;
+      this.$api({
+        url: "addCollect",
+        method: "get",
+        data: {
+          status,
+          articleId: this.contract.id,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.contract.is_collect = status;
+          this.$message.success(res.msg);
+        }
+      });
     },
   },
 };
@@ -197,7 +214,7 @@ export default {
           font-size: 18px;
         }
         .is-collected {
-          color: #F74747;
+          color: #f74747;
         }
       }
 
@@ -239,7 +256,7 @@ export default {
   }
 
   .card-title {
-    text-align: center;
+    text-align: left;
     height: 60px;
     font-size: 18px;
     color: #363130;

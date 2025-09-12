@@ -18,6 +18,9 @@ export default {
   },
   data() {
     return {
+      currentPage: 1,
+      pageSize: 10,
+      totalContracts: 0,
       currentContracts: [
         // { id: 1, title: "生产经营合同", viewCount: 123, collectCount: 123 },
         // { id: 2, title: "生产经营合同", viewCount: 123, collectCount: 123 },
@@ -27,7 +30,24 @@ export default {
       ],
     };
   },
-  methods: {},
+  methods: {
+    loadData() {
+      this.$api({
+        url: "getMyCollect",
+        method: "get",
+        data: {
+          page: this.currentPage,
+          pageSize: this.pageSize,
+        },
+      }).then((res) => {
+        this.currentContracts = res.data.list;
+        this.totalContracts = res.data.count;
+      });
+    },
+  },
+  mounted() {
+    this.loadData();
+  },
 };
 </script>
 

@@ -9,11 +9,11 @@
 
       <div class="user-info-container">
         <div class="user-avatar">
-          <img :src="userInfo.avatar" alt="用户头像" />
+          <img :src="vuex_user.image" alt="用户头像" />
         </div>
 
         <div class="user-details">
-          <div class="username">用户名: {{ userInfo.phone }}</div>
+          <div class="username">用户名: {{ vuex_user.username }}</div>
 
           <div class="action-buttons">
             <button class="action-btn modify-info-btn" @click="openModifyModal">修改个人信息</button>
@@ -28,22 +28,22 @@
       <div class="nav-container">
         <div
           class="nav-item"
-          :class="{ active: currentTab === 'orders' }"
-          @click="switchTab('orders')"
+          :class="{ active: currentTab == '1' }"
+          @click="switchTab('1')"
         >
           我的订单
         </div>
         <div
           class="nav-item"
-          :class="{ active: currentTab === 'downloads' }"
-          @click="switchTab('downloads')"
+          :class="{ active: currentTab == '2' }"
+          @click="switchTab('2')"
         >
           我的下载
         </div>
         <div
           class="nav-item"
-          :class="{ active: currentTab === 'favorites' }"
-          @click="switchTab('favorites')"
+          :class="{ active: currentTab == '3' }"
+          @click="switchTab('3')"
         >
           我的收藏
         </div>
@@ -94,22 +94,21 @@ export default {
       currentTab: "downloads", // 默认选中"我的下载"
       showModifyModal: false, // 控制修改个人信息弹框显示
       showChangePasswordModal: false, // 控制修改密码弹框显示
-      userInfo: {
-        avatar: require("@/assets/img/common/avatar.png"),
-        phone: "15251252154",
-        nickname: ""
-      }
+      userInfo: {},
     };
   },
   computed: {
     currentComponent() {
       const components = {
-        orders: "MyOrders",
-        downloads: "MyDownloads",
-        favorites: "MyFavorites",
+        1: "MyOrders",
+        2: "MyDownloads",
+        3: "MyFavorites",
       };
       return components[this.currentTab];
     },
+  },
+  mounted() {
+    this.currentTab = this.$route.query.tab || "1";
   },
   methods: {
     switchTab(tab) {

@@ -77,7 +77,7 @@ const routes = [
   // 合同详情
   {
     path: "/contractDetail",
-    name: "contractDetail",
+    name: "合同详情",
     component: contractDetail,
     meta: {},
   },

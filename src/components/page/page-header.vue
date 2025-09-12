@@ -90,36 +90,36 @@
 
       <!-- 右侧用户操作和联系信息 -->
       <div class="header-right">
-        <button class="login-btn" v-if="!isLogin" @click="handleLogin">
+        <button class="login-btn" v-if="!isLogin && !vuex_user.id">
           <i class="user-icon"><img src="@img/common/avatar.png" alt="" /></i>
           <span>登录/注册</span>
         </button>
         <el-popover placement="bottom" width="250" trigger="hover">
           <div class="user-info-content">
             <div class="list">
-              <div class="user-info-item">
+              <div class="user-info-item" @click="goUrl('/my?tab=1')">
                 <img src="@img/common/order.png" alt="" />
                 <span>我的订单</span>
               </div>
-              <div class="user-info-item">
+              <div class="user-info-item" @click="goUrl('/my?tab=2')">
                 <img src="@img/common/my-down.png" alt="" />
                 <span>我的下载</span>
               </div>
-              <div class="user-info-item">
+              <div class="user-info-item" @click="goUrl('/my?tab=3')">
                 <img src="@img/common/my-collect.png" alt="" />
                 <span>我的收藏</span>
               </div>
             </div>
             <div class="logout">
-              <span>退出登录</span>
+              <span @click="logout">退出登录</span>
             </div>
           </div>
           <div class="user-info" v-if="vuex_user.id" slot="reference">
             <img src="@img/common/avatar.png" alt="" />
-            <span>{{ vuex_user.phone || "13333333333" }}</span>
+            <span>{{ vuex_user.mobile || "13333333333" }}</span>
           </div>
         </el-popover>
-        <button class="login-btn" v-if="isLogin" @click="goHome">
+        <button class="login-btn" v-if="isLogin && !vuex_user.id" @click="goHome">
           <span>返回首页</span>
         </button>
         <div class="contact-info">
@@ -172,9 +172,15 @@ export default {
     handleNavClick(path) {
       this.$router.push(path);
     },
-    
-    handleLogin() {
-      this.$router.push("/login");
+    goUrl(path) {
+      this.$router.push(path);
+    },
+    logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("vuex_user");
+      this.$store.commit("set_vuex_user", {});
+      this.$router.push("/");
     },
   },
 };

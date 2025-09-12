@@ -99,15 +99,13 @@ export default new Vuex.Store({
     set_vuex_user(state, data) {
       // //console.log("vuex set_vuex_user 设置用户信息", { ...data });
 
-      let token = data.token;
       let userId = data.userId || data.id;
 
       state.vuex_is_login = true;
-      state.token = token;
       state.userId = userId;
       state.vuex_user = data;
 
-      localStorage.setItem("token", token);
+      
       localStorage.setItem("userId", userId);
       localStorage.setItem("vuex_user", JSON.stringify(data));
       // let cookieVal = {
