@@ -58,7 +58,9 @@
         </div>
       </div>
     </div>
-    <div class="copyright">Copyright(C) 法律文书网 All Rights Reserved</div>
+    <div class="copyright">
+      {{ vuex_config.beian || "Copyright(C) 法律文书网 All Rights Reserved" }}
+    </div>
   </div>
 </template>
 
@@ -106,11 +108,11 @@ export default {
       }
 
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: "web_login",
+        method: "post",
         data: {
-          action: "login_phoneLogin",
-          ...this.form,
+          mobile: this.form.phone,
+          password: this.form.password,
         },
       }).then((res) => {
         alert(res);

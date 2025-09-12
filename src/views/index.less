@@ -90,6 +90,16 @@
   background-size: 100% 100%;
   background-repeat: no-repeat;
   padding: 60px 70px 0 30px;
+  position: relative;
+
+  .latest-updates-title {
+    font-size: 18px;
+    color: #363130;
+    font-weight: bold;
+    position: absolute;
+    top: 18px;
+    left: 80px;
+  }
 
   .updates-list {
     height: 100%;
@@ -155,7 +165,6 @@
     gap: 5px;
     margin-bottom: 30px;
     overflow-x: auto;
-    padding-bottom: 5px;
 
     .tab-item {
       padding: 10px 20px;
@@ -175,6 +184,23 @@
       &.active {
         background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
         color: white;
+      }
+    }
+  }
+  .list-tab {
+    border-bottom: 1px solid #e1e5ec;
+    .tab-item {
+      background: #fff;
+      border-radius: 0;
+      border-bottom: 4px solid transparent;
+      &:hover {
+        color: #4e57d9;
+        background: #fff;
+      }
+      &.active {
+        color: #4e57d9;
+        background: #fff;
+        border-bottom: 4px solid #4e57d9;
       }
     }
   }
@@ -211,6 +237,63 @@
           }
         }
       }
+
+      .filter {
+        display: flex;
+
+        .item {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 40px;
+          min-width: 80px;
+
+          padding: 0;
+          text-align: center;
+          cursor: pointer;
+
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -o-user-select: none;
+          user-select: none;
+
+          &.active {
+            // background: #F74747;
+            // color: #fff;
+            color: #4E57D9;
+          }
+
+          .text {
+            font-size: 16px;
+            color: #363130;
+          }
+
+          .sanjiao-box {
+            margin-left: 5px;
+
+            .top {
+              border: 5px solid;
+              border-color: transparent;
+              border-bottom-color: #aaa;
+
+              &.active {
+                border-bottom-color: #4E57D9;
+              }
+            }
+
+            .bottom {
+              margin-top: 2px;
+              border: 5px solid;
+              border-color: transparent;
+              border-top-color: #aaa;
+
+              &.active {
+                border-top-color: #4E57D9;
+              }
+            }
+          }
+        }
+      }
     }
 
     .contract-grid {
@@ -237,6 +320,7 @@
 }
 
 .footer-section {
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -23,7 +23,9 @@
               <router-link to="/about" class="nav-link">关于我们</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/business" class="nav-link">业务范围</router-link>
+              <router-link to="/business" class="nav-link"
+                >业务范围</router-link
+              >
             </li>
             <li class="nav-item">
               <router-link to="/contact" class="nav-link">联系我们</router-link>
@@ -35,25 +37,36 @@
         <div class="scrolled-navigation" v-if="isScrolled">
           <el-dropdown trigger="hover" class="nav-dropdown">
             <span class="nav-link">
-              {{ $route.name }} <i class="el-icon-arrow-down el-icon--right"></i>
+              {{ $route.name }}
+              <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" @click.native="handleNavClick">
-              <el-dropdown-item @click.native="handleNavClick('/')">首页</el-dropdown-item>
-              <el-dropdown-item @click.native="handleNavClick('/about')">关于我们</el-dropdown-item>
-              <el-dropdown-item @click.native="handleNavClick('/business')">业务范围</el-dropdown-item>
-              <el-dropdown-item @click.native="handleNavClick('/contact')">联系我们</el-dropdown-item>
+              <el-dropdown-item @click.native="handleNavClick('/')"
+                >首页</el-dropdown-item
+              >
+              <el-dropdown-item @click.native="handleNavClick('/about')"
+                >关于我们</el-dropdown-item
+              >
+              <el-dropdown-item @click.native="handleNavClick('/business')"
+                >业务范围</el-dropdown-item
+              >
+              <el-dropdown-item @click.native="handleNavClick('/contact')"
+                >联系我们</el-dropdown-item
+              >
             </el-dropdown-menu>
           </el-dropdown>
 
-          <el-dropdown trigger="hover" class="nav-dropdown">
+          <el-dropdown trigger="hover" class="nav-dropdown" @click.native="handleNavClick('/contractList/?ids=' + item.id)">
             <span class="nav-link">
               分类 <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>民事案件</el-dropdown-item>
-              <el-dropdown-item>刑事案件</el-dropdown-item>
-              <el-dropdown-item>行政案件</el-dropdown-item>
-              <el-dropdown-item>商事案件</el-dropdown-item>
+              <el-dropdown-item
+                v-for="item in vuex_category_tree"
+                :key="item.id"
+                @click.native="handleNavClick('/contractList/?ids=' + item.id)"
+                >{{ item.title }}</el-dropdown-item
+              >
             </el-dropdown-menu>
           </el-dropdown>
 
@@ -77,7 +90,7 @@
 
       <!-- 右侧用户操作和联系信息 -->
       <div class="header-right">
-        <button class="login-btn" v-if="!isLogin">
+        <button class="login-btn" v-if="!isLogin" @click="handleLogin">
           <i class="user-icon"><img src="@img/common/avatar.png" alt="" /></i>
           <span>登录/注册</span>
         </button>
@@ -117,7 +130,7 @@
               </div>
               律师咨询电话(同微信)
             </div>
-            <div class="phone-number">18696628883</div>
+            <div class="phone-number">{{ vuex_config.bottom_lawer_contact || "18696628883" }}</div>
           </div>
         </div>
       </div>
@@ -158,6 +171,10 @@ export default {
     },
     handleNavClick(path) {
       this.$router.push(path);
+    },
+    
+    handleLogin() {
+      this.$router.push("/login");
     },
   },
 };
@@ -356,7 +373,7 @@ export default {
     align-items: center;
     gap: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #DBDBDB;
+    border-bottom: 1px solid #dbdbdb;
     .user-info-item {
       cursor: pointer;
       display: flex;
@@ -377,7 +394,7 @@ export default {
     cursor: pointer;
     font-weight: 400;
     font-size: 14px;
-    color: #ACACAC;
+    color: #acacac;
     text-align: center;
   }
 }

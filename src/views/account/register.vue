@@ -138,16 +138,13 @@ export default {
         alertErr("两次密码不一致");
         return;
       }
-      if (this.form.type == 2 && this.form.company.length === 0) {
-        alertErr("请输入企业名称");
-        return;
-      }
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: "register",
+        method: "post",
         data: {
-          action: "login_phoneReg",
-          ...this.form,
+          mobile: this.form.phone,
+          code: this.form.code,
+          password: this.form.pass,
         },
       }).then((res) => {
         alert(res);

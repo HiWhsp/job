@@ -24,7 +24,7 @@
                     src="@/assets/img/index/footer-phone.png"
                     alt="phone"
                   />
-                  <span class="phone-number">18696628883</span>
+                  <span class="phone-number">{{ vuex_config.bottom_lawer_contact || "18696628883" }}</span>
                 </div>
               </div>
               <div class="contact-item">
@@ -34,7 +34,7 @@
                     src="@/assets/img/index/footer-email.png"
                     alt="email"
                   />
-                  <span class="email">851432731@qq.com</span>
+                  <span class="email">{{ vuex_config.bottom_lawer_email || "851432731@qq.com" }}</span>
                 </div>
               </div>
             </div>
@@ -73,15 +73,15 @@
 
         <!-- 导航链接 -->
         <div class="nav-links">
-          <a href="#" class="nav-link">关于我们</a>
+          <router-link to="/about" class="nav-link">关于我们</router-link>
           <span class="separator">|</span>
-          <a href="#" class="nav-link">业务范围</a>
+          <router-link to="/business" class="nav-link">业务范围</router-link>
           <span class="separator">|</span>
-          <a href="#" class="nav-link">联系我们</a>
+          <router-link to="/contact" class="nav-link">联系我们</router-link>
           <span class="separator">|</span>
-          <a href="#" class="nav-link">帮助中心</a>
+          <router-link to="/help" class="nav-link">帮助中心</router-link>
           <span class="separator">|</span>
-          <a href="#" class="nav-link">平台协议</a>
+          <router-link to="/protocol" class="nav-link">平台协议</router-link>
         </div>
       </div>
     </div>
@@ -89,10 +89,10 @@
     <!-- 底部版权信息 -->
     <div class="footer-bottom w-1600">
       <div class="copyright">
-        <span>copyright © 2025 重庆法焰科技有限公司</span>
-        <span class="address">地址:重庆市南岸区南坪东路9号2025-S013</span>
+        <span>{{ vuex_config.beian || "copyright © 2025 重庆法焰科技有限公司" }}</span>
+        <span class="address">地址:{{ vuex_config.site_address || "重庆市南岸区南坪东路9号2025-S013" }}</span>
       </div>
-      <div class="infringement-notice">本站内容如有侵权,请联系18696628883</div>
+      <div class="infringement-notice">{{ vuex_config.bottom_qinquan_phone || "本站内容如有侵权,请联系18696628883" }}</div>
     </div>
   </div>
 </template>

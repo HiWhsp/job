@@ -26,6 +26,7 @@ const index = () => import(/* webpackChunkName: "index" */ "@/views/index.vue");
 const login = () => import(/* webpackChunkName: "login" */ "@/views/account/login.vue");
 const register = () => import(/* webpackChunkName: "register" */ "@/views/account/register.vue");
 const retrieve = () => import(/* webpackChunkName: "passwordReset" */ "@/views/account/retrieve.vue");
+const contractList = () => import(/* webpackChunkName: "contractList" */ "@/views/contractList.vue");
 const contractDetail = () => import(/* webpackChunkName: "contractDetail" */ "@/views/contractDetail.vue");
 
 const myIndex = () => import(/* webpackChunkName: "myIndex" */ "@/views/my/myIndex.vue");
@@ -62,6 +63,14 @@ const routes = [
     path: "/retrieve",
     name: "retrieve",
     component: retrieve,
+    meta: {},
+  },
+
+  // 合同列表
+  {
+    path: "/contractList",
+    name: "合同列表",
+    component: contractList,
     meta: {},
   },
 

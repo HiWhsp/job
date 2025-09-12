@@ -1,18 +1,6 @@
 <template>
   <div class="page-index">
-    <div class="lunbo-box">
-      <el-carousel trigger="click" :autoplay="true">
-        <el-carousel-item
-          v-for="(item, index) in vuex_index_banners"
-          :key="index"
-          @click.native="do_banner_click(item)"
-        >
-          <img :src="item.image" alt="" />
-        </el-carousel-item>
-      </el-carousel>
-    </div>
-
-    <div class="main-content w-1600">
+    <div class="main-content w-1600" style="margin-top: 0; padding-top: 20px">
       <!-- 业务公告 -->
       <div class="announcement-section">
         <div class="announcement-banner">
@@ -50,28 +38,8 @@
 
       <!-- 合同文书区域 -->
       <div class="contract-section">
-        <div class="section-header">
-          <h2>
-            <img src="@img/index/contract-icon.png" alt="" />
-            合同文书：
-          </h2>
-          <div class="search-box">
-            <el-input
-              v-model="searchKeyword"
-              placeholder="搜索精品合同模板"
-              class="search-input"
-            >
-              <el-button
-                slot="append"
-                icon="el-icon-search"
-                @click="handleSearch"
-              ></el-button>
-            </el-input>
-          </div>
-        </div>
-
         <!-- 分类标签 -->
-        <div class="category-tabs">
+        <div class="category-tabs list-tab">
           <div
             class="tab-item"
             :class="{ active: activeCategory === '' }"
@@ -111,11 +79,40 @@
             >
               {{ getCurrentCategoryName() }}
             </div>
-            <div class="view-more-btn">
-              <el-button type="primary" @click="handleViewMore">
-                查看更多
-                <i class="el-icon-arrow-right"></i>
-              </el-button>
+            <div class="filter sort-box">
+              <div class="item">
+                <div class="text">共{{ currentContracts.length }}个</div>
+              </div>
+              <div class="item">
+                <div class="text">{{ getCurrentCategoryName() }}</div>
+              </div>
+              <div
+                class="item"
+                v-for="(item, index) in sortList"
+                :key="index"
+                :class="orderByColumn == item.ziduan ? 'active' : ''"
+                @click="onClickSort(item)"
+              >
+                <div class="text">{{ item.title }}</div>
+                <div class="sanjiao-box" v-if="item.title != '综合排序'">
+                  <div
+                    class="top"
+                    :class="
+                      orderByColumn == item.ziduan && isAsc == 'asc'
+                        ? 'active'
+                        : ''
+                    "
+                  ></div>
+                  <div
+                    class="bottom"
+                    :class="
+                      orderByColumn == item.ziduan && isAsc == 'desc'
+                        ? 'active'
+                        : ''
+                    "
+                  ></div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -139,7 +136,6 @@
           <img src="@img/index/advertising-banner.png" alt="" />
         </div>
       </div>
-      <div class="footer-section" @click="handleViewMore">查看更多合同文书</div>
     </div>
   </div>
 </template>
@@ -161,6 +157,19 @@ export default {
       latestUpdates: [],
       // 合同文书
       contracts: {},
+      isAsc: "", //升asc 降序desc
+      orderByColumn: "ordering", //选择的排序方式
+      sortList: [
+        { title: "综合排序", ziduan: "ordering", orderType: 0, orderTyped: 0 },
+        { title: "销量", ziduan: "orders", orderType: 1, orderTyped: 1 },
+        { title: "价格", ziduan: "priceSale", orderType: 2, orderType: 3 },
+      ],
+      chosenSort: {
+        title: "综合排序",
+        ziduan: "ordering",
+        orderType: 0,
+        orderTyped: 0,
+      },
     };
   },
   computed: {
@@ -220,9 +229,24 @@ export default {
       // 这里可以添加搜索逻辑
       this.getIndex();
     },
-    // 查看更多
-    handleViewMore() {
-      this.$router.push("/contractList");
+    //排序方式
+    onClickSort(item) {
+      if (item.ziduan == this.orderByColumn) {
+        this.isAsc = this.isAsc == "asc" ? "desc" : "asc";
+      } else {
+        this.isAsc = "asc";
+      }
+      this.orderByColumn = item.ziduan;
+
+      let sortParams = {
+        // orderByColumn: this.orderByColumn,
+        // isAsc: this.isAsc,
+
+        order1: this.orderByColumn,
+        order2: this.orderByColumn != "ordering" ? this.isAsc : "",
+      };
+      this.chosenSort = item;
+      this.getIndex();
     },
   },
 };

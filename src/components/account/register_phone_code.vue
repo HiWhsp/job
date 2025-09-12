@@ -43,9 +43,7 @@ export default {
       }
 
       //console.log("发送验证码");
-      let { phone, email } = this.form;
-      let reg_email =
-        /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+      let { phone } = this.form;
       let reg_phone = /^1[3-9]\d{9}$/;
 
       let is_true_phone = reg_phone.test(phone);
@@ -63,11 +61,11 @@ export default {
 
     doSend() {
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: "send",
+        method: "post",
         data: {
-          action: "login_phoneYzm",
-          phone: this.form.phone,
+          scene: "register",
+          mobile: this.form.phone,
         },
       }).then((res) => {
         alert(res);
