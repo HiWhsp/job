@@ -90,7 +90,7 @@
 
       <!-- 右侧用户操作和联系信息 -->
       <div class="header-right">
-        <button class="login-btn" v-if="!isLogin && !vuex_user.id">
+        <button class="login-btn" v-if="!isLogin && !vuex_user.id" @click="goUrl('/login')">
           <i class="user-icon"><img src="@img/common/avatar.png" alt="" /></i>
           <span>登录/注册</span>
         </button>

@@ -2,19 +2,20 @@
 import { mapState } from "vuex";
 import { API_ROOT, UPLOAD_PARAMS_ACTION } from '@/config/env.js'
 import {
-	Loading
+  Loading
 } from "element-ui";
+import util from "@/util/index.js";
 
 export default {
   data() {
     return {
       // 上传
-      mix_upload_name: "img",
+      mix_upload_name: "file",
       mix_upload_action:
         process.env.NODE_ENV !== "production"
           ? "/api/service.php"
           : API_ROOT + "/service.php",
-    };
+    }
   },
   computed: {
     ...mapState([
@@ -74,28 +75,29 @@ export default {
 
   },
   methods: {
-    	showLoading(is_hide) {
-			if (is_hide) {
-				this.loadingInstance = Loading.service({
-					lock: true,
-					text: "Loading...",
-					spinner: "el-icon-loading",
-					background: "rgba(255, 255, 255, .95)",
-				});
-			} else {
-				this.loadingInstance = Loading.service({
-					lock: true,
-					text: "Loading...",
-					spinner: "el-icon-loading",
-					background: "rgba(0, 0, 0, 0.7)",
-				});
-			}
-		},
-		hideLoading() {
-			if (this.loadingInstance) {
-				this.loadingInstance.close();
-			}
-		},
+    // 添加 util 工具类到组件实例
+    showLoading(is_hide) {
+      if (is_hide) {
+        this.loadingInstance = Loading.service({
+          lock: true,
+          text: "Loading...",
+          spinner: "el-icon-loading",
+          background: "rgba(255, 255, 255, .95)",
+        });
+      } else {
+        this.loadingInstance = Loading.service({
+          lock: true,
+          text: "Loading...",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
+      }
+    },
+    hideLoading() {
+      if (this.loadingInstance) {
+        this.loadingInstance.close();
+      }
+    },
     // if(!this.mix_get_login_status()){
     //   return
     // }
@@ -272,7 +274,7 @@ export default {
         this.$router.push(`/product-detail?id=${id}`);
       }
     },
-    
+
     //banner 跳转
     mix_banner_click(item) {
       //console.log(" do_banner_click item", { ...item });

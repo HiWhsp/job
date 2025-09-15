@@ -22,7 +22,7 @@
         <div class="form-group">
           <label class="form-label">旧密码：</label>
           <input
-            v-model="formData.oldPassword"
+            v-model="formData.old_pass"
             type="password"
             class="form-input"
             placeholder="请输入旧密码"
@@ -33,7 +33,7 @@
         <div class="form-group">
           <label class="form-label">新密码：</label>
           <input
-            v-model="formData.newPassword"
+            v-model="formData.new_pass"
             type="password"
             class="form-input"
             placeholder="请输入新密码"
@@ -44,7 +44,7 @@
         <div class="form-group">
           <label class="form-label">重复新密码：</label>
           <input
-            v-model="formData.confirmPassword"
+            v-model="formData.new_pass_confirm"
             type="password"
             class="form-input"
             placeholder="请重复输入新密码"
@@ -73,9 +73,9 @@ export default {
   data() {
     return {
       formData: {
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: "",
+        old_pass: "",
+        new_pass: "",
+        new_pass_confirm: "",
       },
     };
   },
@@ -89,9 +89,9 @@ export default {
   methods: {
     resetForm() {
       this.formData = {
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: "",
+        old_pass: "",
+        new_pass: "",
+        new_pass_confirm: "",
       };
     },
     closeModal() {
@@ -102,27 +102,27 @@ export default {
     },
     confirmChange() {
       // 验证表单数据
-      if (!this.formData.oldPassword.trim()) {
+      if (!this.formData.old_pass.trim()) {
         this.$message?.warning("请输入旧密码");
         return;
       }
 
-      if (!this.formData.newPassword.trim()) {
+      if (!this.formData.new_pass.trim()) {
         this.$message?.warning("请输入新密码");
         return;
       }
 
-      if (this.formData.newPassword.length < 6) {
+      if (this.formData.new_pass.length < 6) {
         this.$message?.warning("新密码长度不能少于6位");
         return;
       }
 
-      if (this.formData.newPassword !== this.formData.confirmPassword) {
+      if (this.formData.new_pass !== this.formData.new_pass_confirm) {
         this.$message?.warning("两次输入的新密码不一致");
         return;
       }
 
-      if (this.formData.oldPassword === this.formData.newPassword) {
+        if (this.formData.old_pass === this.formData.new_pass) {
         this.$message?.warning("新密码不能与旧密码相同");
         return;
       }

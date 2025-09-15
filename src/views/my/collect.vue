@@ -40,7 +40,12 @@ export default {
           pageSize: this.pageSize,
         },
       }).then((res) => {
-        this.currentContracts = res.data.list;
+        this.currentContracts = res.data.list.map(item => {
+          return {
+            ...item,
+            is_collect: true,
+          };
+        });
         this.totalContracts = res.data.count;
       });
     },

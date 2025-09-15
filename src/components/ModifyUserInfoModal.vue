@@ -23,25 +23,37 @@
           <label class="form-label" style="margin-bottom: 48px">头像：</label>
           <div class="avatar-section">
             <div class="avatar-preview">
-              <img :src="formData.avatar" alt="用户头像" />
+              <img :src="formData.image" alt="用户头像" />
             </div>
-            <button class="change-avatar-btn" @click="changeAvatar">
-              更换头像
-            </button>
+            <el-upload
+              class="avatar-uploader"
+              :action="uploadAction"
+              :data="uploadData"
+              name="file"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :on-error="handleAvatarError"
+              :before-upload="beforeAvatarUpload"
+              accept="image/*"
+            >
+              <button class="change-avatar-btn">
+                更换头像
+              </button>
+            </el-upload>
           </div>
         </div>
 
         <!-- 手机号部分 -->
         <div class="form-group">
           <label class="form-label">手机号：</label>
-          <div class="phone-display">{{ formData.phone }}</div>
+          <div class="phone-display">{{ formData.mobile }}</div>
         </div>
 
         <!-- 昵称部分 -->
         <div class="form-group">
           <label class="form-label">昵称：</label>
           <input
-            v-model="formData.nickname"
+            v-model="formData.username"
             type="text"
             class="form-input"
             placeholder="请输入昵称"
@@ -59,6 +71,9 @@
 </template>
 
 <script>
+import {
+  API_ROOT
+} from '@/config/env.js'
 export default {
   name: "ModifyUserInfoModal",
   props: {
@@ -84,6 +99,19 @@ export default {
       },
     };
   },
+  computed: {
+    // 上传接口地址
+    uploadAction() {
+      return API_ROOT + "/api/upload";
+    },
+    // 上传参数
+    uploadData() {
+      return {
+        userId: localStorage.getItem("userId") || "",
+        token: localStorage.getItem("token") || "",
+      };
+    }
+  },
   watch: {
     visible(newVal) {
       if (newVal) {
@@ -102,9 +130,7 @@ export default {
   methods: {
     initFormData() {
       this.formData = {
-        avatar: this.userInfo.avatar || "@/assets/img/common/avatar.png",
-        phone: this.userInfo.phone || "",
-        nickname: this.userInfo.nickname || "",
+        ...this.userInfo,
       };
     },
     closeModal() {
@@ -113,15 +139,43 @@ export default {
     handleOverlayClick() {
       this.closeModal();
     },
-    changeAvatar() {
-      // 这里可以添加更换头像的逻辑
-      // 比如打开文件选择器或调用头像选择组件
-      console.log("更换头像");
-      this.$emit("change-avatar");
+    // 上传前验证
+    beforeAvatarUpload(file) {
+      const isImage = file.type.startsWith('image/');
+      const isLt5M = file.size / 1024 / 1024 < 1;
+
+      if (!isImage) {
+        this.$message?.warning('只能上传图片文件!');
+        return false;
+      }
+      if (!isLt5M) {
+        this.$message?.warning('图片大小不能超过 1MB!');
+        return false;
+      }
+      return true;
+    },
+    
+    // 上传成功回调
+    handleAvatarSuccess(response, file) {
+      if (response.code === 200 && response.data && response.data.path) {
+        // 上传成功，更新头像
+        this.formData.image = response.data.path;
+        // 通知父组件头像已更新
+        this.$emit('avatar-updated', response.data.path);
+        this.$message?.success('头像上传成功');
+      } else {
+        this.$message?.error(response.message || '上传失败');
+      }
+    },
+    
+    // 上传失败回调
+    handleAvatarError(error, file) {
+      console.error('上传失败:', error);
+      this.$message?.error('头像上传失败，请重试');
     },
     confirmModify() {
       // 验证表单数据
-      if (!this.formData.nickname.trim()) {
+      if (!this.formData.username.trim()) {
         this.$message?.warning("请输入昵称");
         return;
       }
@@ -220,22 +274,25 @@ export default {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        border-radius: 50%;
       }
     }
 
-    .change-avatar-btn {
-      padding: 8px 16px;
-      background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s ease;
+    .avatar-uploader {
+      .change-avatar-btn {
+        padding: 8px 16px;
+        background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
 
-      &:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(78, 87, 217, 0.3);
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(78, 87, 217, 0.3);
+        }
       }
     }
   }

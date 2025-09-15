@@ -133,7 +133,7 @@
 
       <div class="advertising-section">
         <div class="advertising-banner">
-          <img src="@img/index/advertising-banner.png" alt="" />
+          <img src="@img/index/advertising-banner.jpg" alt="" />
         </div>
       </div>
     </div>

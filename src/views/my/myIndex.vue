@@ -16,8 +16,15 @@
           <div class="username">用户名: {{ vuex_user.username }}</div>
 
           <div class="action-buttons">
-            <button class="action-btn modify-info-btn" @click="openModifyModal">修改个人信息</button>
-            <button class="action-btn change-password-btn" @click="openChangePasswordModal">修改密码</button>
+            <button class="action-btn modify-info-btn" @click="openModifyModal">
+              修改个人信息
+            </button>
+            <button
+              class="action-btn change-password-btn"
+              @click="openChangePasswordModal"
+            >
+              修改密码
+            </button>
           </div>
         </div>
       </div>
@@ -58,7 +65,7 @@
     <!-- 修改个人信息弹框 -->
     <ModifyUserInfoModal
       :visible="showModifyModal"
-      :user-info="userInfo"
+      :user-info="vuex_user"
       @close="closeModifyModal"
       @confirm="handleModifyConfirm"
       @change-avatar="handleChangeAvatar"
@@ -74,6 +81,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import MyOrders from "./order.vue";
 import MyDownloads from "./down.vue";
 import MyFavorites from "./collect.vue";
@@ -94,10 +102,10 @@ export default {
       currentTab: "downloads", // 默认选中"我的下载"
       showModifyModal: false, // 控制修改个人信息弹框显示
       showChangePasswordModal: false, // 控制修改密码弹框显示
-      userInfo: {},
     };
   },
   computed: {
+    ...mapState(["vuex_user"]),
     currentComponent() {
       const components = {
         1: "MyOrders",
@@ -113,6 +121,11 @@ export default {
   methods: {
     switchTab(tab) {
       this.currentTab = tab;
+      this.$router.push({
+        query: {
+          tab: tab,
+        },
+      });
     },
     // 打开修改个人信息弹框
     openModifyModal() {
@@ -124,19 +137,27 @@ export default {
     },
     // 处理修改确认
     handleModifyConfirm(formData) {
-      console.log('修改个人信息:', formData);
-      // 这里可以调用API保存用户信息
-      this.userInfo = {
-        ...this.userInfo,
-        ...formData
-      };
-      this.closeModifyModal();
-      // 可以添加成功提示
-      this.$message?.success('个人信息修改成功');
+      console.log("修改个人信息:", formData);
+      // 调用API保存用户信息
+      this.$api({
+        url: "updateUser",
+        method: "post",
+        data: formData,
+      })
+        .then((res) => {
+          if (res.code == 200) {
+            this.$message?.success("个人信息修改成功");
+            this.closeModifyModal();
+            this.$store.dispatch("getUserInfo");
+          } else {
+            this.$message?.error(res.message);
+          }
+        })
+        .catch((err) => {});
     },
     // 处理更换头像
     handleChangeAvatar() {
-      console.log('更换头像');
+      console.log("更换头像");
       // 这里可以添加更换头像的逻辑
       // 比如打开文件选择器
     },
@@ -150,12 +171,25 @@ export default {
     },
     // 处理修改密码确认
     handleChangePasswordConfirm(formData) {
-      console.log('修改密码:', formData);
+      console.log("修改密码:", formData);
       // 这里可以调用API修改密码
-      this.closeChangePasswordModal();
-      // 可以添加成功提示
-      this.$message?.success('密码修改成功');
-    }
+      this.$api({
+        url: "updatePassword",
+        method: "post",
+        data: formData,
+      })
+        .then((res) => {
+          if (res.code == 200) {
+            this.$message?.success("密码修改成功");
+            this.closeChangePasswordModal();
+          } else {
+            this.$message?.error(res.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 };
 </script>
@@ -172,7 +206,7 @@ export default {
 .user-profile-header {
   position: relative;
   height: 165px;
-  background: url("../../assets/img/index/myBack.png") no-repeat;
+  background: url("../../assets/img/index/myBack.jpg") no-repeat;
   background-size: 100% 100%;
   overflow: hidden;
 
@@ -312,11 +346,11 @@ export default {
       transition: all 0.3s ease;
 
       &:hover {
-        color: #4E57D9;
+        color: #4e57d9;
       }
 
       &.active {
-        color: #4E57D9;
+        color: #4e57d9;
 
         &::after {
           content: "";
@@ -326,7 +360,7 @@ export default {
           transform: translateX(-50%);
           width: 100%;
           height: 3px;
-          background: #4E57D9;
+          background: #4e57d9;
           border-radius: 2px;
         }
       }
