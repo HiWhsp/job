@@ -51,8 +51,6 @@
   <script>
 import help_right from "./components/help_right.vue";
 
-import { mapState } from "vuex";
-
 export default {
   name: "news-detail",
   components: {
@@ -88,7 +86,7 @@ export default {
         method: "get",
         data: {
           action: "news_detail",
-          id: this.id,
+          id: 124,
         },
       }).then((res) => {
         if (res.code == 200) {

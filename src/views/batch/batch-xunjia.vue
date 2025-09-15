@@ -151,7 +151,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           if (res.data[0]) {
-            this.banner_list = res.data[3].images;
+            this.banner_list = res.data[7].images;
             this.$log("banner_list", this.banner_list);
             this.banner_poster = this.banner_list[0].image;
           }

@@ -265,7 +265,7 @@
             </div>
           </div>
 
-          <div class="hot-tags">
+          <!-- <div class="hot-tags">
             <div class="tag-wrap">
               <div class="tag-title">
                 <span class="title-1">新品</span>
@@ -448,7 +448,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="sec-item">
             <div class="sec-title-box">
@@ -460,7 +460,7 @@
             <div class="sec-ctx w-1400">
               <div class="sec-left">
                 <div class="bg-box">
-                  <img :src="cate_select.thumb" alt="" />
+                  <img :src="cate_select.images" alt="" />
                 </div>
                 <div class="fix-cate">
                   <div class="cate-list">

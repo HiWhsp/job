@@ -85,7 +85,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           if (res.data[0]) {
-            this.banner_list = res.data[3].images;
+            this.banner_list = res.data[5].images;
             this.$log("banner_list", this.banner_list);
             this.banner_poster = this.banner_list[0].image;
           }
@@ -102,7 +102,7 @@ export default {
         },
       }).then((res) => {
         console.log(res.data);
-        this.sceneList = res.data.filter((v) => v.id == 178)[0].images;
+        this.sceneList = res.data.filter((v) => v.id == 183)[0].images;
         console.log(this.sceneList);
       });
     },
@@ -255,6 +255,7 @@ export default {
 
 .scene-box {
   margin-top: 80px;
+  height: 1000px;
   .float-list {
     .float-item {
       float: left;

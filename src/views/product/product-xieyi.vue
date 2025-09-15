@@ -53,9 +53,9 @@
               </div>
 
               <div class="price-input-box">
-                <input type="text" placeholder="最低价" />
+                <input type="text" placeholder="最低价" v-model="price_min" @change="query_product" />
                 <span>-</span>
-                <input type="text" placeholder="最高价" />
+                <input type="text" placeholder="最高价" v-model="price_max" @change="query_product" />
               </div>
             </div>
           </div>
@@ -65,6 +65,7 @@
       <div class="page-ctx">
         <div class="product-wrap">
           <productList :list="product_list" />
+          <el-empty description="暂无数据" v-if="product_list.length === 0" />
         </div>
 
         <div class="pagination-box" v-if="count" style="margin-top: 50px">
@@ -130,6 +131,8 @@ export default {
         orderType: 0,
         orderTyped: 0,
       },
+      price_min: "",
+      price_max: "",
       brand_list: [],
       brand_select: {},
       cate_select: {},
@@ -175,7 +178,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           if (res.data[0]) {
-            this.banner_list = res.data.filter((v) => v.id == 179)[0].images;
+            this.banner_list = res.data.filter((v) => v.id == 182)[0].images;
           }
         }
       });
@@ -212,6 +215,8 @@ export default {
             this.isAsc == "desc"
               ? this.chosenSort.orderTyped
               : this.chosenSort.orderType,
+          searchMin: this.price_min,
+          searchMax: this.price_max,
         },
       }).then((res) => {
         let { code, data, count } = res;
@@ -427,7 +432,7 @@ export default {
           border-bottom-color: #aaa;
 
           &.active {
-            border-bottom-color: #F74747;
+            border-bottom-color: #f74747;
           }
         }
 
@@ -438,7 +443,7 @@ export default {
           border-top-color: #aaa;
 
           &.active {
-            border-top-color: #F74747;
+            border-top-color: #f74747;
           }
         }
       }
@@ -540,7 +545,7 @@ export default {
 
     &:hover {
       .title {
-        color: #F74747 !important;
+        color: #f74747 !important;
       }
     }
 
@@ -640,5 +645,8 @@ export default {
 }
 </style>
 
-
-<style scoped lang="less" src="@/assets/h5css/mobile/product-cates.less"></style>
+<style
+  scoped
+  lang="less"
+  src="@/assets/h5css/mobile/product-cates.less"
+></style>
