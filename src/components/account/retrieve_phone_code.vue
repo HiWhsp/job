@@ -65,11 +65,11 @@ export default {
 
     query_code() {
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: "send",
+        method: "post",
         data: {
-          action: "login_phoneYzm",
-          phone: this.form.phone,
+          scene: "password",
+          mobile: this.form.phone,
         },
       }).then((res) => {
         alert(res);

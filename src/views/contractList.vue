@@ -42,7 +42,7 @@
         <div class="category-tabs list-tab">
           <div
             class="tab-item"
-            :class="{ active: activeCategory === '' }"
+            :class="{ active: activeCategory === '' || activeCategory === 0 }"
             @click="switchCategory('')"
           >
             全部
@@ -175,19 +175,22 @@ export default {
   computed: {
     ...mapState(["vuex_index_banners"]),
     currentContracts() {
-      if (this.activeCategory === "") {
-        return (
-          this.contracts || this.contracts.flatMap((item) => item.child) || []
-        );
+      console.log(this.activeCategory,this.contracts);
+      if (this.activeCategory === "" || this.activeCategory === 0) {
+        const res = this.contracts.flatMap((item) => {
+            return item.child;
+          });
+        return res;
       }
       return (
+        this.contracts.find((item) => item.id === this.activeCategory).child ||
         this.contracts.find((item) => item.id === this.activeCategory).child ||
         []
       );
     },
   },
-  mounted() {
-    this.getIndex();
+  async mounted() {
+    await this.getIndex();
   },
   methods: {
     // 轮播图点击
@@ -202,6 +205,7 @@ export default {
     },
     // 切换分类
     switchCategory(categoryKey) {
+      this.$router.push("/contractList?category=" + categoryKey);
       this.activeCategory = categoryKey;
     },
     // 获取当前分类名称
@@ -211,17 +215,17 @@ export default {
       );
       return category ? category.title : "全部";
     },
-    getIndex() {
-      this.$api({
+    async getIndex() {
+      const res = await this.$api({
         url: "index",
         method: "get",
         data: {
           keyword: this.searchKeyword,
         },
-      }).then((res) => {
-        this.latestUpdates = res.data.recent;
-        this.contracts = res.data.category_list;
       });
+      this.latestUpdates = res.data.recent;
+      this.contracts = res.data.category_list;
+      this.switchCategory(+this.$route.query.category);
     },
     // 搜索
     handleSearch() {

@@ -137,11 +137,13 @@ export default {
       }
 
       this.$api({
-        url: "/service.php",
-        method: "get",
+        url: "findPassword",
+        method: "post",
         data: {
-          action: "login_resetPass",
-          ...this.form,
+          mobile: this.form.phone,
+          password: this.form.pass,
+          cofirm_password: this.form.confirm_pass,
+          code: this.form.code,
         },
       }).then((res) => {
         alert(res);

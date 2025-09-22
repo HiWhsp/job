@@ -5,7 +5,7 @@
       :key="contract.id"
       :contract="contract"
     />
-    <el-empty v-if="currentContracts.length === 0" style="width: 100%" description="暂无内容" />
+    <el-empty v-if="currentContracts.length === 0" style="width: 100%" description="暂无收藏数据" />
   </div>
 </template>
 

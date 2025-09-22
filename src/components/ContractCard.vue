@@ -11,7 +11,7 @@
             <img src="@img/index/word-icon.png" alt="" />
           </div>
           <div class="document-title">
-            {{ contract.title }}
+            <p class="ellipsis-1">{{ contract.title }}</p>
             <div class="document-info">word A4 打印 内容可随意更改</div>
           </div>
         </div>
@@ -38,16 +38,16 @@
       <div class="overlay-stats">
         <div class="stat-item">
           <i class="el-icon-view"></i>
-          <span>{{ contract.view_num }}</span>
+          <span>{{ contract.view_num || 0  }}</span>
         </div>
         <div class="stat-item">
           <i class="el-icon-star-off"></i>
-          <span>{{ contract.collect_num }}</span>
+          <span>{{ contract.collect_num || 0 }}</span>
         </div>
       </div>
     </div>
 
-    <div class="card-title">{{ contract.title }}</div>
+    <div class="card-title ellipsis-1">{{ contract.title }}</div>
   </div>
 </template>
 
@@ -142,6 +142,9 @@ export default {
         font-size: 20px;
         color: #363130;
         line-height: 28px;
+        p {
+          width: 220px;
+        }
         .document-info {
           font-weight: 400;
           font-size: 12px;
@@ -195,6 +198,7 @@ export default {
       flex-direction: column;
       gap: 20px;
       margin-bottom: 140px;
+      margin-top: 140px;
 
       .view-btn,
       .collect-btn {
@@ -262,6 +266,7 @@ export default {
     color: #363130;
     font-weight: bold;
     padding-left: 20px;
+    padding-right: 20px;
     margin-top: 20px;
     line-height: 60px;
     border-top: 1px solid #f0f0f0;

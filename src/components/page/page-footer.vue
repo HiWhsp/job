@@ -216,6 +216,7 @@ export default {
   flex-direction: column;
   gap: 110px;
   margin-left: 270px;
+  margin-top: 30px;
 }
 
 .features {
@@ -277,7 +278,6 @@ export default {
 
 .copyright {
   display: flex;
-  flex-direction: column;
   gap: 5px;
   color: #999;
   font-size: 12px;

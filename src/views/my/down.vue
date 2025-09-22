@@ -3,7 +3,7 @@
     <div class="order-content">
       <el-table
         :data="orderList"
-        :empty-text="'暂无订单数据'"
+        :empty-text="'暂无下载数据'"
         v-loading="loading"
         height="400"
       >

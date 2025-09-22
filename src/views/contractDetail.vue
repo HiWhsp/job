@@ -56,7 +56,8 @@
           <div class="document-container">
             <div class="document-page">
               <div class="document-content blurred">
-                <img :src="detail.preview_pdf_url" alt="" />
+                <iframe :src="detail.preview_pdf_url" width="100%" height="100%" v-if="detail.preview_pdf_url.includes('.pdf')" alt=""></iframe>
+                <img :src="detail.preview_pdf_url" v-else alt="" />
               </div>
             </div>
             <div class="document-page-bottom">

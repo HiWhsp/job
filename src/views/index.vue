@@ -121,14 +121,14 @@
 
           <div class="contract-grid">
             <ContractCard
-              v-for="contract in currentContracts"
+              v-for="contract in contracts"
               :key="contract.id"
               :contract="contract"
             />
             <el-empty
               style="width: 100%; height: 100%"
               description="暂无数据"
-              v-if="currentContracts.length === 0"
+              v-if="contracts.length === 0"
             />
           </div>
         </div>
@@ -165,17 +165,6 @@ export default {
   },
   computed: {
     ...mapState(["vuex_index_banners"]),
-    currentContracts() {
-      if (this.activeCategory === "") {
-        return (
-          this.contracts || this.contracts.flatMap((item) => item.child) || []
-        );
-      }
-      return (
-        this.contracts.find((item) => item.id === this.activeCategory).child ||
-        []
-      );
-    },
   },
   mounted() {
     this.getIndex();
@@ -193,7 +182,8 @@ export default {
     },
     // 切换分类
     switchCategory(categoryKey) {
-      this.activeCategory = categoryKey;
+      this.$router.push("/contractList?category=" + categoryKey);
+      // this.activeCategory = categoryKey;
     },
     // 获取当前分类名称
     getCurrentCategoryName() {
@@ -211,7 +201,10 @@ export default {
         },
       }).then((res) => {
         this.latestUpdates = res.data.recent;
-        this.contracts = res.data.category_list;
+        this.contracts =
+          res.data.category_list.flatMap((item) => {
+            return item.child;
+          }) || [];
       });
     },
     // 搜索
