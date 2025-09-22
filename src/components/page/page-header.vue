@@ -16,18 +16,18 @@
         <!-- 默认导航 -->
         <nav class="navigation" v-if="!isScrolled">
           <ul class="nav-list">
-            <li class="nav-item active">
+            <li class="nav-item" :class="{ active: $route.path === '/' }">
               <router-link to="/" class="nav-link">首页</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" :class="{ active: $route.path === '/about' }">
               <router-link to="/about" class="nav-link">关于我们</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" :class="{ active: $route.path === '/business' }">
               <router-link to="/business" class="nav-link"
                 >业务范围</router-link
               >
             </li>
-            <li class="nav-item">
+            <li class="nav-item" :class="{ active: $route.path === '/contact' }">
               <router-link to="/contact" class="nav-link">联系我们</router-link>
             </li>
           </ul>

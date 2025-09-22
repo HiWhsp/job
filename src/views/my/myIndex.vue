@@ -7,7 +7,7 @@
         <div class="background-pattern"></div>
       </div>
 
-      <div class="user-info-container">
+      <div class="user-info-container" v-if="vuex_user.id">
         <div class="user-avatar">
           <img :src="vuex_user.image" alt="用户头像" />
         </div>
@@ -34,6 +34,7 @@
     <div class="user-profile-nav">
       <div class="nav-container">
         <div
+          v-if="vuex_user.id"
           class="nav-item"
           :class="{ active: currentTab == '1' }"
           @click="switchTab('1')"
@@ -48,6 +49,7 @@
           我的下载
         </div>
         <div
+          v-if="vuex_user.id"
           class="nav-item"
           :class="{ active: currentTab == '3' }"
           @click="switchTab('3')"

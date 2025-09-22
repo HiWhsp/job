@@ -1,7 +1,8 @@
 import Vue from "vue";
 import axios from "axios";
+import { Message } from "element-ui";
 // import store from "@/store";
-// import router from "@/router";
+import router from "@/router";
 
 import {
   API_ROOT
@@ -29,7 +30,11 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   function (response) {
     let res = response.data;
-    // let {code, data} = res
+    let { code, data } = res
+    if (res.msg.includes('请登录')) {
+      Message.error(res.msg);
+      router.push("/login");
+    }
     // debugger
     return res;
   },
@@ -89,7 +94,7 @@ function api(option) {
           items.push(str)
         }
         ret = items.join('&')
-        return ret ;
+        return ret;
       },
     ]
   };
