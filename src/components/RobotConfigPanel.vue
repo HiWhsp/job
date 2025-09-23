@@ -22,7 +22,7 @@
     <!-- 配置内容区域 -->
     <div class="config-content">
       <!-- 控制器和雷达标签页 -->
-      <div v-if="activeTab === 'controller'" class="config-section">
+      <div v-if="activeTab === '1'" class="config-section">
         <!-- 控制器部分 -->
         <div class="section-title">控制器</div>
         <div class="controller-grid">
@@ -52,14 +52,14 @@
       </div>
 
       <!-- 元器件标签页 -->
-      <div v-if="activeTab === 'components'" class="config-section">
+      <div v-if="activeTab === '2'" class="config-section">
         <div class="components-placeholder">
           <p>元器件配置内容</p>
         </div>
       </div>
 
       <!-- 外观模块标签页 -->
-      <div v-if="activeTab === 'appearance'" class="config-section">
+      <div v-if="activeTab === '3'" class="config-section">
         <div class="appearance-placeholder">
           <p>外观模块配置内容</p>
         </div>
@@ -68,7 +68,8 @@
 
     <!-- 底部按钮 -->
     <div class="config-footer">
-      <button class="next-button" @click="nextStep">元器件 ></button>
+      <button class="prev-button" v-if="activeTab !== '1'" @click="prevStep"> <i class="el-icon-arrow-left"></i> </button>
+      <button class="next-button" v-if="activeTab !== '3'" @click="nextStep">{{ tabs[activeTab - 1].label }} ></button>
     </div>
   </div>
 </template>
@@ -78,12 +79,12 @@ export default {
   name: "RobotConfigPanel",
   data() {
     return {
-      activeTab: "controller",
+      activeTab: "1",
       selectedController: "xian-gong",
       tabs: [
-        { key: "controller", label: "控制器和雷达" },
-        { key: "components", label: "元器件" },
-        { key: "appearance", label: "外观模块" },
+        { key: "1", label: "控制器和雷达" },
+        { key: "2", label: "元器件" },
+        { key: "3", label: "外观模块" },
       ],
       controllers: [
         { id: "xian-gong", brand: "仙工", model: "SRC-800" },
@@ -99,10 +100,17 @@ export default {
     },
     nextStep() {
       // 切换到下一个标签页或执行下一步操作
-      if (this.activeTab === "controller") {
-        this.activeTab = "components";
-      } else if (this.activeTab === "components") {
-        this.activeTab = "appearance";
+      if (this.activeTab === "1") {
+        this.activeTab = "2";
+      } else if (this.activeTab === "2") {
+        this.activeTab = "3";
+      }
+    },
+    prevStep() {
+      if (this.activeTab === "2") {
+        this.activeTab = "1";
+      } else if (this.activeTab === "3") {
+        this.activeTab = "2";
       }
     },
   },

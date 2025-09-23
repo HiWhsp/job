@@ -1,8 +1,8 @@
 <template>
   <div class="robot-thumbnails">
     <div class="thumbnails-container">
-      <div 
-        v-for="(thumbnail, index) in thumbnails" 
+      <div
+        v-for="(thumbnail, index) in thumbnails"
         :key="index"
         :class="['thumbnail-item', { active: selectedThumbnail === index }]"
         @click="selectThumbnail(index)"
@@ -20,49 +20,49 @@
 
 <script>
 export default {
-  name: 'RobotThumbnails',
+  name: "RobotThumbnails",
   data() {
     return {
       selectedThumbnail: 0,
       thumbnails: [
         {
           id: 0,
-          name: '正面视图',
+          name: "正面视图",
           image: require("@/assets/img/common/22-全屏.png"),
-          angle: 'front'
+          angle: "front",
         },
         {
           id: 1,
-          name: '侧面视图',
+          name: "侧面视图",
           image: require("@/assets/img/common/23-全屏.png"),
-          angle: 'side'
+          angle: "side",
         },
         {
           id: 2,
-          name: '背面视图',
+          name: "背面视图",
           image: require("@/assets/img/common/24-全屏.png"),
-          angle: 'back'
+          angle: "back",
         },
         {
           id: 3,
-          name: '俯视图',
+          name: "俯视图",
           image: require("@/assets/img/common/25-全屏.png"),
-          angle: 'top'
-        }
-      ]
-    }
+          angle: "top",
+        },
+      ],
+    };
   },
   mounted() {
     // 组件挂载时自动选中第一项并触发事件
-    this.$emit('thumbnail-change', this.thumbnails[0]);
+    this.$emit("thumbnail-change", this.thumbnails[0]);
   },
   methods: {
     selectThumbnail(index) {
       this.selectedThumbnail = index;
-      this.$emit('thumbnail-change', this.thumbnails[index]);
-    }
-  }
-}
+      this.$emit("thumbnail-change", this.thumbnails[index]);
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
@@ -76,14 +76,16 @@ export default {
 
 .thumbnails-container {
   display: flex;
-  gap: 15px;
+  gap: 35px;
   justify-content: center;
   align-items: center;
 }
 
 .thumbnail-item {
-  width: 80px;
-  height: 60px;
+  width: 280px;
+  height: 158px;
+  border-radius: 15px;
+  border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
@@ -93,32 +95,23 @@ export default {
   }
 
   &.active {
-    .thumbnail-robot {
-      border: 2px solid #ffffff;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-    }
+    border: 1px solid #B2B2B2;
   }
 }
 
 .thumbnail-robot {
   width: 100%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
+  border-radius: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
 }
 
 .mini-robot {
-  width: 50px;
-  height: 30px;
-  transform-style: preserve-3d;
-  transition: transform 0.3s ease;
   img {
+    border-radius: 15px;
     width: 100%;
     height: 100%;
     object-fit: cover;

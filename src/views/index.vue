@@ -10,6 +10,10 @@
           </div>
         </div>
       </div>
+      <!-- 全屏 -->
+      <div class="full-screen-btn">
+        <img src="@/assets/img/common/full-screen.png" alt="full-screen" />
+      </div>
       <RobotThumbnails @thumbnail-change="handleThumbnailChange" />
     </div>
 
