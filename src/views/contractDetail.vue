@@ -250,7 +250,21 @@ export default {
       });
     },
     showDownloadModal() {
-      this.downloadModalVisible = true;
+      if(this.detail.is_bought == 0) {
+        this.downloadModalVisible = true;
+      }else {
+        this.$api({
+          url: "contractReal",
+          method: "post",
+          data: {
+            articleId: this.$route.query.id,
+          },
+        }).then((res) => {
+          if(res.code == 200) {
+            window.open(res.data.doc_url, "_blank");
+          }
+        })
+      }
     },
     handleCollect() {
       const status = this.detail.is_collect == 0 ? 1 : 0;

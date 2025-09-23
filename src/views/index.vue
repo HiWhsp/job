@@ -62,6 +62,7 @@
               class="search-input"
             >
               <el-button
+                class="btn-hover"
                 slot="append"
                 icon="el-icon-search"
                 @click="handleSearch"
@@ -73,7 +74,7 @@
         <!-- 分类标签 -->
         <div class="category-tabs">
           <div
-            class="tab-item"
+            class="tab-item btn-hover"
             :class="{ active: activeCategory === '' }"
             @click="switchCategory('')"
           >
@@ -91,7 +92,11 @@
         </div>
 
         <!-- 合同列表 -->
-        <div class="contract-list-section" v-for="(item, index) in contracts" :key="index">
+        <div
+          class="contract-list-section"
+          v-for="(item, index) in contracts"
+          :key="index"
+        >
           <div class="section-title">
             <div
               class="section-title-text"
@@ -131,15 +136,15 @@
               v-if="item.child.length === 0"
             />
           </div>
+          <div class="advertising-section" v-if="item.title == '婚姻家庭'">
+            <div class="advertising-banner">
+              <img src="@img/index/advertising-banner.jpg" alt="" />
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="advertising-section">
-        <div class="advertising-banner">
-          <img src="@img/index/advertising-banner.jpg" alt="" />
-        </div>
-      </div>
-      <div class="footer-section" @click="handleViewMore">查看更多合同文书</div>
+      <div class="footer-section btn-hover" @click="handleViewMore">查看更多合同文书</div>
     </div>
   </div>
 </template>
@@ -211,8 +216,8 @@ export default {
       this.getIndex();
     },
     // 查看更多
-    handleViewMore(id) {
-      this.$router.push("/contractList?category=" + id);
+    handleViewMore() {
+      this.$router.push("/contractList?category=0");
     },
   },
 };

@@ -23,7 +23,7 @@
     <!-- 悬浮遮罩层 -->
     <div class="overlay" v-show="showOverlay">
       <div class="overlay-buttons">
-        <button class="view-btn" @click="handleView">
+        <button class="view-btn btn-hover" @click="handleView">
           <i class="el-icon-view"></i>
           点击查看
         </button>

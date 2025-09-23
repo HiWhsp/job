@@ -7,7 +7,7 @@
         v-loading="loading"
         height="400"
       >
-        <el-table-column prop="orderNumber" label="订单编号" align="center">
+        <el-table-column prop="orderNo" label="订单编号" align="center">
         </el-table-column>
 
         <el-table-column
@@ -193,11 +193,19 @@ export default {
       // 设置下载状态
       this.$set(order, "downloading", true);
       // 模拟下载过程
-      setTimeout(() => {
-        this.$set(order, "downloading", false);
-        this.$set(order, "downloadStatus", "downloaded");
-        this.$message.success("下载完成！");
-      }, 2000);
+      this.$api({
+        url: "contractReal",
+        method: "post",
+        data: {
+          articleId: order.articleId,
+        },
+      }).then((res) => {
+        if(res.code == 200) {
+          window.open(res.data.doc_url, "_blank");
+        }else {
+          this.$message.error(res.msg);
+        }
+      })
     },
 
     // 每页条数改变

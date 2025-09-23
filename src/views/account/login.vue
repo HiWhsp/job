@@ -32,7 +32,7 @@
             </div>
 
             <div class="btn-box">
-              <button class="btn-ripple" @click="do_submit()">登录</button>
+              <button class="btn-ripple btn-hover" @click="do_submit()">登录</button>
             </div>
 
             <div class="register-box">

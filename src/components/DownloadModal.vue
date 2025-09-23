@@ -86,14 +86,25 @@
 
           <!-- 金额显示 -->
           <div class="amount-display">
-            <div class="amount-label">应付金额</div>
-            <div class="amount-value">¥ {{ selectedProduct.price }}</div>
-            <div class="amount-tip">付费成功即可下载本文档</div>
+            <div class="amount-display-top">
+              <div class="amount-label">应付金额</div>
+              <div class="amount-value">¥ {{ selectedProduct.price }}</div>
+              <div class="amount-tip">付费成功即可下载本文档</div>
+            </div>
+            <div class="amount-display-bottom">
+              <div class="title">
+                <img src="@/assets/img/common/miaoze.png" alt="" />
+                免责声明：
+              </div>
+              <div class="content">
+                本合同模板的提供方及为模板使用提供合同审核、签约指导或法律咨询服务的人员，不对合同双方的订约行为、履约行为及由此产生的任何争议、损失承担任何法律责任；本声明适用于本合同模板的所有使用方，您通过使用本合同模板即表示同意并接受以上免责条款。
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- 备案信息 -->
-        <div class="payment-right">
+        <!-- <div class="payment-right">
           <div class="security-badges">
             <div class="badge-item">
               <img src="@/assets/img/common/pay-icon3.png" alt="安全联盟" />
@@ -109,7 +120,7 @@
             支付系统已经经过安全联盟认证请放心使用
             <span>支付成功后会自动跳转到文书合同下载页面</span>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="download-modal-content" v-else>
@@ -161,25 +172,24 @@ export default {
     },
   },
   mounted() {
-    // 基础
-    this.products[0] = {
-      title: this.detail.title + "(基础版)",
-      description: this.detail.description,
-      format: "word格式",
-      size: this.detail.size,
-      pages: "共" + this.detail.total_page + "页",
-      price: this.detail.basic_price,
-      recommended: true,
-    };
-
     // 服务
-    this.products[1] = {
+    this.products[0] = {
       title: this.detail.title + "(服务版)",
-      description: this.detail.description,
+      description: this.vuex_config.service_buy_notice,
       format: "word格式",
       size: this.detail.size + "MB",
       pages: "共" + this.detail.total_page + "页",
       price: this.detail.service_price,
+      recommended: true,
+    };
+    // 基础
+    this.products[1] = {
+      title: this.detail.title + "(基础版)",
+      description: this.vuex_config.basic_buy_notice,
+      format: "word格式",
+      size: this.detail.size + "MB",
+      pages: "共" + this.detail.total_page + "页",
+      price: this.detail.basic_price,
       recommended: false,
     };
   },
@@ -201,9 +211,10 @@ export default {
         method: "POST",
         data: {
           articleId: this.detail.id,
-          priceType: this.selectedProductIndex === 0 ? 'basic_price' : 'service_price',
+          priceType:
+            this.selectedProductIndex === 0 ? "basic_price" : "service_price",
         },
-      }).then(res => {
+      }).then((res) => {
         if (res.code === 200) {
           this.getWchatQR(res.data.orderNo);
           this.getAlipayQR(res.data.orderNo);
@@ -382,9 +393,36 @@ export default {
       }
 
       .amount-display {
+        flex: 1;
         margin-top: 8px;
         margin-left: 30px;
         text-align: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .amount-display-bottom {
+          img {
+            width: 12px;
+            height: 12px;
+            margin-right: 5px;
+          }
+          .title {
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-weight: bold;
+            font-size: 12px;
+            color: #363130;
+            display: flex;
+            align-items: center;
+          }
+          .content {
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-weight: bold;
+            font-size: 12px;
+            color: #363130;
+            margin-top: 10px;
+          }
+        }
 
         .amount-label {
           font-size: 16px;

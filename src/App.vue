@@ -66,6 +66,16 @@ export default {
   margin: 0;
   padding: 0;
 }
+
+.btn-hover {
+  transition: all 0.5s ease !important;
+  &:hover {
+    background: linear-gradient(90deg, #519dff 0%, #4e57d9 100%) !important; 
+    transition: all 0.5s ease !important;
+    color: #fff !important;
+  }
+}
+
 .w-1600 {
   width: @width;
   margin: 0 auto;

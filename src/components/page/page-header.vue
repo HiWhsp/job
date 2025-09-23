@@ -78,6 +78,7 @@
               size="small"
             >
               <el-button
+                class="btn-hover"
                 slot="append"
                 icon="el-icon-search"
                 @click="handleSearch"
