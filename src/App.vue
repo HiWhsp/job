@@ -1,26 +1,14 @@
 <template>
   <div id="app">
-    <page_header />
-
     <div class="layout-box">
       <router-view></router-view>
     </div>
-    <page_footer v-if="!isFooter" />
-    <page_aside v-if="!isFooter" />
   </div>
 </template>
 
 <script>
-import page_aside from "@/components/page/page-aside.vue";
-import page_header from "@/components/page/page-header.vue"; //顶部搜索
-import page_footer from "@/components/page/page-footer.vue";
 
 export default {
-  components: {
-    page_aside,
-    page_header,
-    page_footer,
-  },
   data() {
     return {
       isFooter: false,

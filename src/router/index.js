@@ -23,106 +23,12 @@ Vue.use(VueRouter);
 // 官网页面1
 const index = () => import(/* webpackChunkName: "index" */ "@/views/index.vue");
 
-const login = () => import(/* webpackChunkName: "login" */ "@/views/account/login.vue");
-const register = () => import(/* webpackChunkName: "register" */ "@/views/account/register.vue");
-const retrieve = () => import(/* webpackChunkName: "passwordReset" */ "@/views/account/retrieve.vue");
-const contractList = () => import(/* webpackChunkName: "contractList" */ "@/views/contractList.vue");
-const contractDetail = () => import(/* webpackChunkName: "contractDetail" */ "@/views/contractDetail.vue");
-
-const myIndex = () => import(/* webpackChunkName: "myIndex" */ "@/views/my/myIndex.vue");
-const about = () => import(/* webpackChunkName: "about" */ "@/views/company/about.vue");
-const business = () => import(/* webpackChunkName: "business" */ "@/views/company/business.vue");
-const contact = () => import(/* webpackChunkName: "contact" */ "@/views/company/contact.vue");
-const help = () => import(/* webpackChunkName: "help" */ "@/views/company/help.vue");
-const protocol = () => import(/* webpackChunkName: "protocol" */ "@/views/company/protocol.vue");
-
 const routes = [
   // 首页
   {
     path: "/",
     name: "首页",
     component: index,
-    meta: {},
-  },
-  // 登录
-  {
-    path: "/login",
-    name: "login",
-    component: login,
-    meta: {},
-  },
-  // 注册
-  {
-    path: "/register",
-    name: "register",
-    component: register,
-    meta: {},
-  },
-  // 找回密码
-  {
-    path: "/retrieve",
-    name: "retrieve",
-    component: retrieve,
-    meta: {},
-  },
-
-  // 合同列表
-  {
-    path: "/contractList",
-    name: "合同列表",
-    component: contractList,
-    meta: {},
-  },
-
-  // 合同详情
-  {
-    path: "/contractDetail",
-    name: "合同详情",
-    component: contractDetail,
-    meta: {},
-  },
-
-  // 我的
-  {
-    path: "/my",
-    name: "my",
-    component: myIndex,
-    meta: {},
-  },
-
-  // 关于我们
-  {
-    path: "/about",
-    name: "关于我们",
-    component: about,
-    meta: {},
-  },
-  // 业务范围
-  {
-    path: "/business",
-    name: "业务范围",
-    component: business,
-    meta: {},
-  },
-  // 联系我们
-  {
-    path: "/contact",
-    name: "联系我们",
-    component: contact,
-    meta: {},
-  },
-  // 帮助中心
-  {
-    path: "/help",
-    name: "帮助中心",
-    component: help,
-    meta: {},
-  },
-  // 平台协议
-  {
-    path: "/protocol",
-    name: "平台协议",
-    component: protocol,
     meta: {},
   },
   {

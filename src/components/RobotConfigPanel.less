@@ -1,0 +1,215 @@
+.robot-config-panel {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  padding: 30px 30px 0 30px;
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.05"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.04"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    pointer-events: none;
+  }
+}
+
+.config-header {
+  position: relative;
+  z-index: 1;
+
+  .config-header-left {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+  }
+
+  .robot-title {
+    font-family: YouSheBiaoTiHei, YouSheBiaoTiHei;
+    font-size: 40px;
+    font-weight: bold;
+    color: #ffffff;
+  }
+
+  .ai-recommend {
+    font-family: Microsoft JhengHei UI, Microsoft JhengHei UI;
+    font-weight: 400;
+    font-size: 14px;
+    color: #ffffff;
+    line-height: 14px;
+  }
+}
+
+.config-tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  margin-left: 20px;
+  position: relative;
+  z-index: 1;
+
+  .tab-item {
+    width: 120px;
+    padding: 20px 0;
+    cursor: pointer;
+    font-size: 20px;
+    color: #ffffff;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    text-align: center;
+
+    &:hover {
+      color: #ffffff;
+    }
+
+    &.active {
+      color: #ffffff;
+      border-bottom-color: #ffffff;
+    }
+  }
+}
+
+.config-content {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  overflow-y: auto;
+  margin-bottom: 100px;
+  // 添加滚动条样式
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #4caf50;
+  }
+  &::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+}
+
+.config-section {
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #ffffff;
+  }
+}
+
+.controller-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.controller-item {
+  height: 300px;
+  width: 233px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+
+  .controller-image {
+    background: linear-gradient(180deg, #303030 0%, #303030 100%);
+    width: 233px;
+    height: 233px;
+    border-radius: 8px;
+    border: 1px solid #303030;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      width: 233px;
+      height: 233px;
+      object-fit: cover;
+    }
+  }
+
+  &:hover {
+    .controller-image {
+      border: 1px solid #b2b2b2;
+    }
+  }
+
+  &.selected {
+    .controller-image {
+      border: 1px solid #b2b2b2;
+    }
+  }
+
+  .controller-info {
+    height: 67px;
+    width: 233px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .controller-info-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-left: 10px;
+      .controller-brand {
+        font-size: 16px;
+        color: #ffffff;
+        margin-bottom: 5px;
+      }
+      .controller-model {
+        font-size: 14px;
+        color: #ffffff;
+      }
+    }
+    .controller-price {
+      .coin-icon {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+.components-placeholder,
+.appearance-placeholder {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-style: italic;
+}
+
+.config-footer {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 30px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  text-align: right;
+  .next-button {
+    width: 150px;
+    height: 50px;
+    background: #00975d;
+    border-radius: 8px 8px 8px 8px;
+    color: #ffffff;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}

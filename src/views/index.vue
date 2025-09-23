@@ -1,228 +1,38 @@
 <template>
-  <div class="page-index">
-    <div class="lunbo-box">
-      <el-carousel trigger="click" :autoplay="true">
-        <el-carousel-item
-          v-for="(item, index) in vuex_index_banners"
-          :key="index"
-          @click.native="do_banner_click(item)"
-        >
-          <img :src="item.image" alt="" />
-        </el-carousel-item>
-      </el-carousel>
+  <div class="robot-configuration-page">
+    <!-- 左侧展示区域 -->
+    <div class="left-display-section">
+      <RobotDisplay @toggle-fullscreen="handleFullscreen" />
+      <RobotThumbnails @thumbnail-change="handleThumbnailChange" />
     </div>
 
-    <div class="main-content w-1600">
-      <!-- 业务公告 -->
-      <div class="announcement-section">
-        <div class="announcement-banner">
-          <div class="banner-content">
-            <div class="announcement-text red-text">
-              购买并下载本站合同范本，即可享受律师合同审核、签约指导及终生法律咨询服务，下载后添加律师微信（18696628883）即可获取上述服务；
-            </div>
-            <div class="announcement-text">
-              提供<span>免费法律咨询服务</span>，专业团队为您答疑解惑，助您明确法律问题解决方案；
-            </div>
-            <div class="announcement-text">
-              提供<span>免费律师中介服务</span>，为您推荐、匹配适合案件的资深专业律师。
-            </div>
-          </div>
-        </div>
-
-        <!-- 最新动态 -->
-        <div class="latest-updates">
-          <p class="latest-updates-title">最新动态</p>
-          <div class="updates-list">
-            <div
-              class="update-item"
-              v-for="(update, index) in latestUpdates"
-              :key="index"
-            >
-              <span class="update-content"
-                >{{ update.come == 1 ? "最新上传" : "最近下载" }} |
-                {{ update.title }}</span
-              >
-              <span class="update-date">{{ update.created_at }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 合同文书区域 -->
-      <div class="contract-section">
-        <div class="section-header">
-          <h2>
-            <img src="@img/index/contract-icon.png" alt="" />
-            合同文书：
-          </h2>
-          <div class="search-box">
-            <el-input
-              v-model="searchKeyword"
-              placeholder="搜索精品合同模板"
-              class="search-input"
-            >
-              <el-button
-                slot="append"
-                icon="el-icon-search"
-                @click="handleSearch"
-              ></el-button>
-            </el-input>
-          </div>
-        </div>
-
-        <!-- 分类标签 -->
-        <div class="category-tabs">
-          <div
-            class="tab-item"
-            :class="{ active: activeCategory === '' }"
-            @click="switchCategory('')"
-          >
-            全部
-          </div>
-          <div
-            class="tab-item"
-            :class="{ active: activeCategory === category.id }"
-            v-for="category in vuex_category_tree"
-            :key="category.key"
-            @click="switchCategory(category.id)"
-          >
-            {{ category.title }}
-          </div>
-        </div>
-
-        <!-- 合同列表 -->
-        <div class="contract-list-section">
-          <div class="section-title">
-            <div
-              class="section-title-text"
-              v-if="Math.random() > 0.5"
-              :style="{
-                backgroundImage: `url(${require('@img/index/icon1.png')})`,
-              }"
-            >
-              {{ getCurrentCategoryName() }}
-            </div>
-            <div
-              class="section-title-text"
-              v-else
-              :style="{
-                backgroundImage: `url(${require('@img/index/icon2.png')})`,
-              }"
-            >
-              {{ getCurrentCategoryName() }}
-            </div>
-            <div class="view-more-btn">
-              <el-button type="primary" @click="handleViewMore">
-                查看更多
-                <i class="el-icon-arrow-right"></i>
-              </el-button>
-            </div>
-          </div>
-
-          <div class="contract-grid">
-            <ContractCard
-              v-for="contract in currentContracts"
-              :key="contract.id"
-              :contract="contract"
-            />
-            <el-empty
-              style="width: 100%; height: 100%"
-              description="暂无数据"
-              v-if="currentContracts.length === 0"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="advertising-section">
-        <div class="advertising-banner">
-          <img src="@img/index/advertising-banner.jpg" alt="" />
-        </div>
-      </div>
-      <div class="footer-section" @click="handleViewMore">查看更多合同文书</div>
+    <!-- 右侧配置区域 -->
+    <div class="right-config-section">
+      <RobotConfigPanel />
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import ContractCard from "@/components/ContractCard.vue";
+import RobotDisplay from "@/components/RobotDisplay.vue";
+import RobotThumbnails from "@/components/RobotThumbnails.vue";
+import RobotConfigPanel from "@/components/RobotConfigPanel.vue";
 
 export default {
+  name: "RobotConfiguration",
   components: {
-    ContractCard,
-  },
-  data() {
-    return {
-      searchKeyword: "",
-      activeCategory: "",
-      categories: [],
-      // 最新动态
-      latestUpdates: [],
-      // 合同文书
-      contracts: {},
-    };
-  },
-  computed: {
-    ...mapState(["vuex_index_banners"]),
-    currentContracts() {
-      if (this.activeCategory === "") {
-        return (
-          this.contracts || this.contracts.flatMap((item) => item.child) || []
-        );
-      }
-      return (
-        this.contracts.find((item) => item.id === this.activeCategory).child ||
-        []
-      );
-    },
-  },
-  mounted() {
-    this.getIndex();
+    RobotDisplay,
+    RobotThumbnails,
+    RobotConfigPanel,
   },
   methods: {
-    // 轮播图点击
-    do_banner_click(item) {
-      if (item.url) {
-        window.open(item.url, "_blank");
-      } else if (item.inventoryId) {
-        this.$router.push(
-          "/product-detail/" + (item.skuId || item.inventoryId)
-        );
-      }
+    handleFullscreen() {
+      // 处理全屏查看
+      console.log("Toggle fullscreen");
     },
-    // 切换分类
-    switchCategory(categoryKey) {
-      this.activeCategory = categoryKey;
-    },
-    // 获取当前分类名称
-    getCurrentCategoryName() {
-      const category = this.vuex_category_tree.find(
-        (cat) => cat.id === this.activeCategory
-      );
-      return category ? category.title : "全部";
-    },
-    getIndex() {
-      this.$api({
-        url: "index",
-        method: "get",
-        data: {
-          keyword: this.searchKeyword,
-        },
-      }).then((res) => {
-        this.latestUpdates = res.data.recent;
-        this.contracts = res.data.category_list;
-      });
-    },
-    // 搜索
-    handleSearch() {
-      console.log("搜索关键词:", this.searchKeyword);
-      // 这里可以添加搜索逻辑
-      this.getIndex();
-    },
-    // 查看更多
-    handleViewMore() {
-      this.$router.push("/contractList");
+    handleThumbnailChange(thumbnail) {
+      // 处理缩略图切换
+      console.log("Thumbnail changed:", thumbnail);
     },
   },
 };
