@@ -191,7 +191,7 @@
     </div>
 
     <!-- 下载弹框 -->
-    <DownloadModal :visible.sync="downloadModalVisible" />
+    <DownloadModal :visible.sync="downloadModalVisible" :detail="detail" />
   </div>
 </template>
 

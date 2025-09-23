@@ -133,33 +133,16 @@ export default {
       type: Boolean,
       default: false,
     },
+    detail: {
+      type: Object,
+      default: () => {},
+    },
   },
   data() {
     return {
-      isPaySuccess: false,
+      isPaySuccess: true,
       selectedProductIndex: 0,
-      products: [
-        {
-          title: "写字楼办公室房屋租赁合同范本",
-          description:
-            "提供律师合同审核、签约指导及法律咨询服务,购买并下载后添加律师微信18696628883即可获取上述服务",
-          format: "word格式",
-          size: "1MB",
-          pages: "共4页",
-          price: "198.00",
-          recommended: true,
-        },
-        {
-          title: "写字楼办公室房屋租赁合同范本",
-          description:
-            "提供法律咨询服务,购买并下载后添加律师微信18696628883即可获取上述服务",
-          format: "word格式",
-          size: "1MB",
-          pages: "共4页",
-          price: "39.00",
-          recommended: false,
-        },
-      ],
+      products: [{}],
       wechatQR: "",
       alipayQR: "",
     };
@@ -169,17 +152,81 @@ export default {
       return this.products[this.selectedProductIndex];
     },
   },
+  watch: {
+    visible(newVal) {
+      if (newVal) {
+        // 获取二维码
+        this.getQRCode();
+      }
+    },
+  },
+  mounted() {
+    // 基础
+    this.products[0] = {
+      title: this.detail.title + "(基础版)",
+      description: this.detail.description,
+      format: "word格式",
+      size: this.detail.size,
+      pages: "共" + this.detail.total_page + "页",
+      price: this.detail.basic_price,
+      recommended: true,
+    };
+
+    // 服务
+    this.products[1] = {
+      title: this.detail.title + "(服务版)",
+      description: this.detail.description,
+      format: "word格式",
+      size: this.detail.size + "MB",
+      pages: "共" + this.detail.total_page + "页",
+      price: this.detail.service_price,
+      recommended: false,
+    };
+  },
   methods: {
     selectProduct(index) {
       this.selectedProductIndex = index;
     },
     handleClose() {
       this.$emit("update:visible", false);
-      this.isPaySuccess = false;
       this.selectedProductIndex = 0;
     },
     handleDownload() {
       this.isPaySuccess = true;
+    },
+    getQRCode() {
+      // 先获取订单
+      this.$api({
+        url: "createOrder",
+        method: "POST",
+        data: {
+          articleId: this.detail.id,
+          priceType: this.selectedProductIndex === 0 ? 'basic_price' : 'service_price',
+        },
+      }).then(res => {
+        if (res.code === 200) {
+          this.getWchatQR(res.data.orderNo);
+          this.getAlipayQR(res.data.orderNo);
+        }
+      });
+    },
+    getWchatQR(orderId) {
+      this.$api({
+        url: "wx_scan_qr",
+        method: "POST",
+        data: {
+          orderId: orderId,
+        },
+      });
+    },
+    getAlipayQR(orderId) {
+      this.$api({
+        url: "alipay_web_qr",
+        method: "POST",
+        data: {
+          orderId: orderId,
+        },
+      });
     },
   },
 };

@@ -91,28 +91,28 @@
         </div>
 
         <!-- 合同列表 -->
-        <div class="contract-list-section">
+        <div class="contract-list-section" v-for="(item, index) in contracts" :key="index">
           <div class="section-title">
             <div
               class="section-title-text"
-              v-if="Math.random() > 0.5"
+              v-if="index % 2 === 0"
               :style="{
                 backgroundImage: `url(${require('@img/index/icon1.png')})`,
               }"
             >
-              {{ getCurrentCategoryName() }}
+              {{ item.title }}
             </div>
             <div
               class="section-title-text"
-              v-else
+              v-if="index % 2 === 1"
               :style="{
                 backgroundImage: `url(${require('@img/index/icon2.png')})`,
               }"
             >
-              {{ getCurrentCategoryName() }}
+              {{ item.title }}
             </div>
             <div class="view-more-btn">
-              <el-button type="primary" @click="handleViewMore">
+              <el-button type="primary" @click="handleViewMore(item.id)">
                 查看更多
                 <i class="el-icon-arrow-right"></i>
               </el-button>
@@ -121,14 +121,14 @@
 
           <div class="contract-grid">
             <ContractCard
-              v-for="contract in contracts"
+              v-for="contract in item.child.slice(0, 4)"
               :key="contract.id"
               :contract="contract"
             />
             <el-empty
               style="width: 100%; height: 100%"
               description="暂无数据"
-              v-if="contracts.length === 0"
+              v-if="item.child.length === 0"
             />
           </div>
         </div>
@@ -201,10 +201,7 @@ export default {
         },
       }).then((res) => {
         this.latestUpdates = res.data.recent;
-        this.contracts =
-          res.data.category_list.flatMap((item) => {
-            return item.child;
-          }) || [];
+        this.contracts = res.data.category_list;
       });
     },
     // 搜索
@@ -214,8 +211,8 @@ export default {
       this.getIndex();
     },
     // 查看更多
-    handleViewMore() {
-      this.$router.push("/contractList");
+    handleViewMore(id) {
+      this.$router.push("/contractList?category=" + id);
     },
   },
 };

@@ -85,7 +85,7 @@ const routes = [
   // 我的
   {
     path: "/my",
-    name: "my",
+    name: "个人中心",
     component: myIndex,
     meta: {},
   },

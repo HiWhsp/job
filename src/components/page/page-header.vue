@@ -64,7 +64,7 @@
               <el-dropdown-item
                 v-for="item in vuex_category_tree"
                 :key="item.id"
-                @click.native="handleNavClick('/contractList/?ids=' + item.id)"
+                @click.native="handleNavClick('/contractList?category=' + item.id)"
                 >{{ item.title }}</el-dropdown-item
               >
             </el-dropdown-menu>
@@ -94,7 +94,7 @@
           <i class="user-icon"><img src="@img/common/avatar.png" alt="" /></i>
           <span>登录/注册</span>
         </button>
-        <el-popover placement="bottom" width="250" trigger="hover">
+        <el-popover placement="bottom" width="250" trigger="hover" v-if="vuex_user.id">
           <div class="user-info-content">
             <div class="list">
               <div class="user-info-item" @click="goUrl('/my?tab=1')">
@@ -114,7 +114,7 @@
               <span @click="logout">退出登录</span>
             </div>
           </div>
-          <div class="user-info" v-if="vuex_user.id" slot="reference">
+          <div class="user-info" slot="reference">
             <img src="@img/common/avatar.png" alt="" />
             <span>{{ vuex_user.mobile || "13333333333" }}</span>
           </div>
@@ -181,6 +181,7 @@ export default {
       localStorage.removeItem("vuex_user");
       this.$store.commit("set_vuex_user", {});
       this.$router.push("/");
+      location.reload();
     },
   },
 };
