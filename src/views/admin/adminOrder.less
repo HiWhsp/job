@@ -75,10 +75,11 @@
         .el-form-item {
           margin-bottom: 16px;
 
-          .el-form-item__label {
+          /deep/ .el-form-item__label {
             font-weight: 500;
             color: #333;
             font-size: 14px;
+            text-align: left;
           }
 
           .el-input__inner {
@@ -119,13 +120,10 @@
         }
 
         .search-buttons {
-          text-align: center;
           margin-top: 20px;
           padding-top: 20px;
-          border-top: 1px solid #f0f0f0;
 
           .el-button {
-            margin: 0 10px;
             padding: 10px 30px;
             border-radius: 4px;
             font-weight: 500;
@@ -155,139 +153,104 @@
     }
 
     // 数据表格区域
-    .table-section {
-      .table-card {
+    .table-actions {
+      .el-button {
+        margin-left: 10px;
 
-        .table-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-          h3 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-          }
+        &.el-button--success {
+          background: #67c23a;
+          border-color: #67c23a;
 
-          .table-actions {
-            .el-button {
-              margin-left: 10px;
-
-              &.el-button--success {
-                background: #67c23a;
-                border-color: #67c23a;
-
-                &:hover {
-                  background: #5daf34;
-                  border-color: #5daf34;
-                }
-              }
-
-              &.el-button--warning {
-                background: #e6a23c;
-                border-color: #e6a23c;
-
-                &:hover {
-                  background: #d4941e;
-                  border-color: #d4941e;
-                }
-              }
-            }
+          &:hover {
+            background: #5daf34;
+            border-color: #5daf34;
           }
         }
 
-        // 表格样式定制
-        .el-table {
+        &.el-button--warning {
+          background: #e6a23c;
+          border-color: #e6a23c;
+
+          &:hover {
+            background: #d4941e;
+            border-color: #d4941e;
+          }
+        }
+      }
+    }
+
+    // 表格样式定制
+    /deep/.el-table {
+      border-radius: 4px;
+      overflow: hidden;
+
+      .el-table__header {
+        th {
+          background: #ff6b35 !important;
+          color: #fff !important;
+          font-weight: 600;
+        }
+      }
+      .el-button--primary {
+        background: #ff6b35;
+        border-color: #ff6b35;
+        color: #fff;
+        border-radius: 14px;
+      }
+    }
+
+    // 分页样式
+    .pagination-wrapper {
+      margin-top: 20px;
+      text-align: right;
+      padding-top: 20px;
+      border-top: 1px solid #f0f0f0;
+
+      .el-pagination {
+        .el-pager li {
           border-radius: 4px;
-          overflow: hidden;
+          margin: 0 2px;
 
-          .el-table__header {
-            th {
-              background: #ff6b35 !important;
-              color: #fff !important;
-              font-weight: 600;
-              text-align: center;
-            }
+          &.active {
+            background: #ff6b35;
+            color: #fff;
           }
 
-          .el-table__body {
-            tr {
-              &:nth-child(even) {
-                background-color: #fafafa;
-              }
-
-              &:hover {
-                background-color: #f5f7fa;
-              }
-
-              td {
-                text-align: center;
-                padding: 12px 0;
-                border-bottom: 1px solid #ebeef5;
-              }
-            }
-          }
-
-          .el-table__empty-block {
-            background: #fafafa;
+          &:hover {
+            color: #ff6b35;
           }
         }
 
-        // 分页样式
-        .pagination-wrapper {
-          margin-top: 20px;
-          text-align: right;
-          padding-top: 20px;
-          border-top: 1px solid #f0f0f0;
+        .btn-prev,
+        .btn-next {
+          border-radius: 4px;
+          margin: 0 2px;
 
-          .el-pagination {
-            .el-pager li {
+          &:hover {
+            color: #ff6b35;
+          }
+        }
+
+        .el-pagination__sizes {
+          .el-select {
+            .el-input__inner {
               border-radius: 4px;
-              margin: 0 2px;
+              border: 1px solid #dcdfe6;
 
-              &.active {
-                background: #ff6b35;
-                color: #fff;
-              }
-
-              &:hover {
-                color: #ff6b35;
+              &:focus {
+                border-color: #ff6b35;
               }
             }
+          }
+        }
 
-            .btn-prev,
-            .btn-next {
-              border-radius: 4px;
-              margin: 0 2px;
+        .el-pagination__jump {
+          .el-input__inner {
+            border-radius: 4px;
+            border: 1px solid #dcdfe6;
 
-              &:hover {
-                color: #ff6b35;
-              }
-            }
-
-            .el-pagination__sizes {
-              .el-select {
-                .el-input__inner {
-                  border-radius: 4px;
-                  border: 1px solid #dcdfe6;
-
-                  &:focus {
-                    border-color: #ff6b35;
-                  }
-                }
-              }
-            }
-
-            .el-pagination__jump {
-              .el-input__inner {
-                border-radius: 4px;
-                border: 1px solid #dcdfe6;
-
-                &:focus {
-                  border-color: #ff6b35;
-                }
-              }
+            &:focus {
+              border-color: #ff6b35;
             }
           }
         }

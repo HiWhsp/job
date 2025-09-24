@@ -25,7 +25,7 @@
         <el-form
           :model="searchForm"
           class="search-form"
-          label-width="100px"
+          label-width="80px"
           :inline="false"
         >
           <el-row :gutter="20">
@@ -127,11 +127,11 @@
           </el-row>
           <div class="search-buttons">
             <el-button type="primary" @click="handleSearch">
-              <i class="el-icon-search"></i>
+              <!-- <i class="el-icon-search"></i> -->
               筛选
             </el-button>
             <el-button @click="handleReset">
-              <i class="el-icon-refresh"></i>
+              <!-- <i class="el-icon-refresh"></i> -->
               重置
             </el-button>
           </div>
@@ -140,14 +140,11 @@
 
       <!-- 数据表格区域 -->
       <div class="table-section">
-
         <el-table
           :data="tableData"
           v-loading="loading"
-          stripe
-          border
           style="width: 100%"
-          :header-cell-style="{ background: '#ff6b35', color: '#fff' }"
+          :header-cell-style="{ background: '#ED6C00', color: '#fff' }"
         >
           <el-table-column
             prop="index"
@@ -158,10 +155,10 @@
           <el-table-column
             prop="orderNumber"
             label="配置单号"
-            width="150"
+            width="120"
             show-overflow-tooltip
           />
-          <el-table-column prop="contact" label="联系人" width="120" />
+          <el-table-column prop="contact" label="联系人" width="80" />
           <el-table-column prop="phone" label="手机号" width="140" />
           <el-table-column
             prop="email"
@@ -175,9 +172,9 @@
             width="180"
             show-overflow-tooltip
           />
-          <el-table-column prop="deviceType" label="设备类型" width="140" />
-          <el-table-column prop="deviceModel" label="设备型号" width="120" />
-          <el-table-column prop="controller" label="控制器" width="120" />
+          <el-table-column prop="deviceType" label="设备类型" width="120" />
+          <el-table-column prop="deviceModel" label="设备型号" width="100" />
+          <el-table-column prop="controller" label="控制器" width="100" />
           <el-table-column
             prop="controllerModel"
             label="控制器型号"
@@ -203,7 +200,7 @@
         </el-table>
 
         <!-- 分页 -->
-        <div class="pagination-wrapper">
+        <!-- <div class="pagination-wrapper">
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -213,7 +210,7 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="pagination.total"
           />
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -345,8 +342,13 @@ export default {
 
     // 查看详情
     handleViewDetail(row) {
-      this.$message.info(`查看订单 ${row.orderNumber} 的详细配置`);
       // 这里可以跳转到详情页面或打开详情弹窗
+      this.$router.push({
+        path: "/adminOrderDetail",
+        query: {
+          orderNumber: row.orderNumber,
+        },
+      });
     },
 
     // 分页大小改变

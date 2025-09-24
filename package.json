@@ -13,7 +13,7 @@
     "element-ui": "^2.15.0",
     "lib-flexible": "^0.3.2",
     "lodash": "^4.17.21",
-    "qrcode": "^1.5.3",
+    "qrcode": "^1.5.4",
     "tableexport": "^5.2.0",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",

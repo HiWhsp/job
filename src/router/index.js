@@ -27,7 +27,7 @@ const aiRecommendation = () => import(/* webpackChunkName: "aiRecommendation" */
 // 翼菲后台管理页面
 const admin = () => import(/* webpackChunkName: "admin" */ "@/views/admin/index.vue");
 const adminOrder = () => import(/* webpackChunkName: "adminOrder" */ "@/views/admin/adminOrder.vue");
-
+const adminOrderDetail = () => import(/* webpackChunkName: "adminOrderDetail" */ "@/views/admin/adminOrderDetail.vue");
 const routes = [
   // 首页
   {
@@ -52,6 +52,12 @@ const routes = [
     path: "/adminOrder",
     name: "翼非官网后台管理系统",
     component: adminOrder,
+    meta: {},
+  },
+  {
+    path: "/adminOrderDetail",
+    name: "翼非官网后台管理系统详情",
+    component: adminOrderDetail,
     meta: {},
   },
   {
