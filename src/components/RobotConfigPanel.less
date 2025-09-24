@@ -60,7 +60,7 @@
     padding: 20px 0;
     cursor: pointer;
     font-size: 20px;
-    color: #ffffff;
+    color: #b2b2b2;
     border-bottom: 2px solid transparent;
     transition: all 0.3s ease;
     position: relative;
@@ -104,89 +104,237 @@
   }
 }
 
+// 控制器网格
 .controller-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
   margin-bottom: 30px;
-}
-
-.controller-item {
-  height: 300px;
-  width: 233px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-
-  .controller-image {
-    background: linear-gradient(180deg, #303030 0%, #303030 100%);
+  .controller-item {
+    height: 300px;
     width: 233px;
-    height: 233px;
-    border-radius: 8px;
-    border: 1px solid #303030;
+    cursor: pointer;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    img {
+    position: relative;
+
+    .controller-image {
+      background: linear-gradient(180deg, #303030 0%, #303030 100%);
       width: 233px;
       height: 233px;
-      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #303030;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img {
+        width: 233px;
+        height: 233px;
+        object-fit: cover;
+      }
+    }
+
+    &:hover {
+      .controller-image {
+        border: 1px solid #b2b2b2;
+      }
+    }
+
+    &.selected {
+      .controller-image {
+        border: 1px solid #b2b2b2;
+      }
+    }
+
+    .controller-info {
+      height: 67px;
+      width: 233px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .controller-info-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-left: 10px;
+        .controller-brand {
+          font-size: 16px;
+          color: #ffffff;
+          margin-bottom: 5px;
+        }
+        .controller-model {
+          font-size: 14px;
+          color: #ffffff;
+        }
+      }
+      .controller-price {
+        .coin-icon {
+          font-size: 16px;
+        }
+      }
     }
   }
+}
 
-  &:hover {
-    .controller-image {
-      border: 1px solid #b2b2b2;
-    }
-  }
-
-  &.selected {
-    .controller-image {
-      border: 1px solid #b2b2b2;
-    }
-  }
-
-  .controller-info {
-    height: 67px;
-    width: 233px;
+// 电机网格
+.motor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-bottom: 30px;
+  .motor-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .controller-info-left {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding-left: 10px;
-      .controller-brand {
-        font-size: 16px;
-        color: #ffffff;
-        margin-bottom: 5px;
+    width: 233px;
+    height: 50px;
+    background: linear-gradient(180deg, #303030 0%, #303030 100%);
+    border-radius: 8px;
+    border: 1px solid #b2b2b2;
+    padding: 0 10px;
+    cursor: pointer;
+    .motor-name {
+      font-size: 16px;
+    }
+  }
+}
+
+// 外观模块网格
+.select-module {
+  .select-module-title {
+    height: 60px;
+    line-height: 60px;
+    font-family: Microsoft JhengHei UI, Microsoft JhengHei UI;
+    font-weight: bold;
+    font-size: 22px;
+    color: #ffffff;
+    border-bottom: 1px solid #565656;
+    margin-bottom: 20px;
+  }
+  .select-module-grid {
+    .color-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-bottom: 30px;
+      .color-item {
+        display: flex;
+        flex-direction: column;
       }
-      .controller-model {
-        font-size: 14px;
-        color: #ffffff;
+      .color-image {
+        width: 100%;
+        height: 50px;
+        background: #e5e5e5;
+        border-radius: 8px;
+        position: relative;
+        input {
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+        }
+        .color-picker-text {
+          cursor: pointer;
+          position: absolute;
+          top: 25%;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 16px;
+          color: #b2b2b2;
+        }
+      }
+      .color-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        .color-info-left {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding-left: 10px;
+          gap: 10px;
+        }
+        .color-brand {
+          font-size: 16px;
+          color: #b2b2b2;
+        }
+        .color-model {
+          font-size: 14px;
+          color: #b2b2b2;
+        }
+        .color-price {
+          .coin-icon {
+            font-size: 16px;
+          }
+        }
       }
     }
-    .controller-price {
-      .coin-icon {
-        font-size: 16px;
+
+    .logo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-bottom: 30px;
+      .logo-item {
+        display: flex;
+        flex-direction: column;
+      }
+      .logo-image {
+        width: 100%;
+        height: 50px;
+        background: #303030;
+        border-radius: 8px;
+        position: relative;
+        background-size: 80px 40px;
+        background-position: center;
+        background-repeat: no-repeat;
+        input {
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+        }
+        .logo-picker-text {
+          cursor: pointer;
+          position: absolute;
+          top: 25%;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 16px;
+          color: #b2b2b2;
+        }
+      }
+      .logo-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        .logo-info-left {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding-left: 10px;
+          gap: 10px;
+        }
+        .logo-brand {
+          font-size: 16px;
+          color: #b2b2b2;
+        }
+        .logo-model {
+          font-size: 14px;
+          color: #b2b2b2;
+        }
+        .logo-price {
+          .coin-icon {
+            font-size: 16px;
+          }
+        }
       }
     }
   }
 }
 
-.components-placeholder,
-.appearance-placeholder {
-  min-height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #666;
-  font-style: italic;
-}
-
+// 底部按钮
 .config-footer {
   position: absolute;
   z-index: 1;
@@ -218,7 +366,7 @@
   .prev-button {
     width: 50px;
     height: 50px;
-    background: #00975D;
+    background: #00975d;
     border-radius: 8px;
     color: #ffffff;
     border: none;
@@ -230,6 +378,46 @@
     img {
       width: 100%;
       height: 100%;
+    }
+  }
+}
+
+// 遮罩层样式
+.overlay-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(5px);
+
+  .overlay-content {
+    text-align: center;
+
+    .overlay-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      align-items: center;
+
+      .overlay-btn {
+        width: 363px;
+        height: 70px;
+        background: #00975D;
+        color: #ffffff;
+        border-radius: 8px 8px 8px 8px;
+        border: none;
+        font-size: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+      }
     }
   }
 }

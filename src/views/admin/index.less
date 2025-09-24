@@ -1,0 +1,233 @@
+.admin-login-page {
+  min-height: 100vh;
+  background: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  // 头部样式
+  .header {
+    background: #ff6b35; // 橙色背景
+    height: 80px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .header-content {
+      width: 100%;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        .logo-text {
+          width: 70px;
+          height: 35px;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .page-title {
+          font-family: Microsoft JhengHei UI, Microsoft JhengHei UI;
+          font-weight: 400;
+          font-size: 20px;
+          color: #ffffff;
+        }
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+
+        .user-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #fff;
+          i {
+            font-size: 16px;
+          }
+
+          .user-name {
+            font-size: 16px;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+
+  // 主内容区域
+  .main-content {
+    min-height: calc(100vh - 180px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+
+    .login-form-container {
+      width: 480px;
+
+      .login-form {
+        border-radius: 12px;
+
+        .form-title {
+          text-align: center;
+          font-size: 24px;
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 30px;
+        }
+
+        .input-group {
+          margin-bottom: 20px;
+
+          .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: #f7f8fa;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            padding: 0 16px;
+            height: 50px;
+            width: 480px;
+            transition: all 0.3s ease;
+
+            &:focus-within {
+              border-color: #ff6b35;
+              box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+            }
+
+            .input-icon {
+              font-size: 16px;
+              color: #6c757d;
+              margin-right: 12px;
+              width: 24px;
+              height: 24px;
+              img {
+                width: 100%;
+                height: 100%;
+              }
+              text-align: center;
+            }
+
+            .form-input {
+              flex: 1;
+              border: none;
+              background: transparent;
+              outline: none;
+              font-size: 14px;
+              color: #333;
+              height: 100%;
+
+              &::placeholder {
+                color: #adb5bd;
+                font-size: 14px;
+              }
+
+              &:focus {
+                outline: none;
+              }
+            }
+
+            .verification-input {
+              padding-right: 80px;
+            }
+
+            .send-btn {
+              position: absolute;
+              right: 8px;
+              top: 50%;
+              transform: translateY(-50%);
+              background: #ff6b35;
+              color: #fff;
+              border: none;
+              border-radius: 6px;
+              padding: 8px 16px;
+              font-size: 12px;
+              font-weight: 500;
+              cursor: pointer;
+              transition: all 0.3s ease;
+              min-width: 60px;
+
+              &:hover:not(:disabled) {
+                background: #e55a2b;
+                transform: translateY(-50%) scale(1.05);
+              }
+
+              &:disabled {
+                background: #adb5bd;
+                cursor: not-allowed;
+                transform: translateY(-50%);
+              }
+            }
+          }
+        }
+
+        .login-btn {
+          width: 480px;
+          height: 50px;
+          background: #ED6C00;
+          color: #fff;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          margin-top: 10px;
+
+          &:hover:not(:disabled) {
+            background: #e55a2b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+          }
+
+          &:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+// 动画效果
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-form {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+// 输入框聚焦效果
+.input-wrapper:focus-within {
+  .input-icon {
+    color: #ff6b35;
+  }
+}
+
+// 按钮点击效果
+.login-btn:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.send-btn:active:not(:disabled) {
+  transform: translateY(-50%) scale(0.95);
+}

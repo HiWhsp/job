@@ -39,6 +39,10 @@ Vue.use(ElementUI);
 import _mixin from "@/mixins/index.js";
 Vue.mixin(_mixin);
 
+// 全局组件
+import FullScreenViewer from "@/components/FullScreenViewer.vue";
+Vue.component('FullScreenViewer', FullScreenViewer);
+
 Vue.prototype.$load = {
   loading: null,
   open: function () {

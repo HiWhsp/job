@@ -11,15 +11,23 @@
         </div>
       </div>
       <!-- 全屏 -->
-      <div class="full-screen-btn">
+      <div class="full-screen-btn" @click="handleFullScreen">
         <img src="@/assets/img/common/full-screen.png" alt="full-screen" />
       </div>
+      
+      <!-- 全屏查看组件 -->
+      <FullScreenViewer 
+        :visible="isFullScreenVisible"
+        :imageUrl="currentBackgroundImage"
+        :imageAlt="'机器人配置预览'"
+        @close="closeFullScreen"
+      />
       <RobotThumbnails @thumbnail-change="handleThumbnailChange" />
     </div>
 
     <!-- 右侧配置区域 -->
     <div class="right-config-section">
-      <RobotConfigPanel />
+      <RobotConfigPanel @navigate-to-ai="handleNavigateToAI" />
     </div>
   </div>
 </template>
@@ -37,6 +45,7 @@ export default {
   data() {
     return {
       currentBackgroundImage: require("@/assets/img/common/22-全屏.png"), // 默认使用第一张图片
+      isFullScreenVisible: false, // 控制全屏组件显示
     };
   },
   methods: {
@@ -44,6 +53,23 @@ export default {
       // 处理缩略图切换，更新背景图
       this.currentBackgroundImage = thumbnail.image;
       console.log("Thumbnail changed:", thumbnail);
+    },
+    handleFullScreen() {
+      this.isFullScreenVisible = true;
+    },
+    closeFullScreen() {
+      this.isFullScreenVisible = false;
+    },
+    handleNavigateToAI() {
+      // 处理AI推荐跳转
+      console.log('父组件接收到AI推荐跳转事件');
+      // 这里可以实现具体的跳转逻辑
+      // 例如：跳转到外部链接、显示AI推荐页面等
+      this.$message({
+        message: 'AI推荐功能正在开发中，敬请期待！',
+        type: 'info',
+        duration: 3000
+      });
     },
   },
 };

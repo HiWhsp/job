@@ -22,6 +22,11 @@ Vue.use(VueRouter);
 
 // 官网页面1
 const index = () => import(/* webpackChunkName: "index" */ "@/views/index.vue");
+const aiRecommendation = () => import(/* webpackChunkName: "aiRecommendation" */ "@/views/aiRecommendation.vue");
+
+// 翼菲后台管理页面
+const admin = () => import(/* webpackChunkName: "admin" */ "@/views/admin/index.vue");
+const adminOrder = () => import(/* webpackChunkName: "adminOrder" */ "@/views/admin/adminOrder.vue");
 
 const routes = [
   // 首页
@@ -29,6 +34,24 @@ const routes = [
     path: "/",
     name: "首页",
     component: index,
+    meta: {},
+  },
+  {
+    path: "/aiRecommendation",
+    name: "AI推荐",
+    component: aiRecommendation,
+    meta: {},
+  },
+  {
+    path: "/admin",
+    name: "翼菲后台管理",
+    component: admin,
+    meta: {},
+  },
+  {
+    path: "/adminOrder",
+    name: "翼非官网后台管理系统",
+    component: adminOrder,
     meta: {},
   },
   {
