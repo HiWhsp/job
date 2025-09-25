@@ -199,6 +199,7 @@ export default {
   methods: {
     selectProduct(index) {
       this.selectedProductIndex = index;
+      this.getQRCode();
     },
     handleClose() {
       this.$emit("update:visible", false);
@@ -207,7 +208,7 @@ export default {
     handleDownload() {
       this.isPaySuccess = true;
     },
-    getQRCode() {
+    getQRCode() {      
       // 先获取订单
       this.$api({
         url: "createOrder",
