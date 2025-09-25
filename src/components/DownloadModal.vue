@@ -41,7 +41,9 @@
                 <img src="@/assets/img/common/word.png" alt="标题" />
                 {{ product.title }}
               </h3>
-              <p class="product-description">{{ product.description }}</p>
+              <p class="product-description">
+                <span class="ellipsis-3">{{ product.description }}</span>
+              </p>
 
               <div class="flex-between">
                 <div class="product-meta">
@@ -162,7 +164,7 @@ export default {
   },
   mounted() {
     // 基础
-    this.products[0] = {
+    this.$set(this.products, 0, {
       title: this.detail.title + "(基础版)",
       description: this.detail.description,
       format: "word格式",
@@ -170,10 +172,10 @@ export default {
       pages: "共" + this.detail.total_page + "页",
       price: this.detail.basic_price,
       recommended: true,
-    };
+    });
 
     // 服务
-    this.products[1] = {
+    this.$set(this.products, 1, {
       title: this.detail.title + "(服务版)",
       description: this.detail.description,
       format: "word格式",
@@ -181,7 +183,7 @@ export default {
       pages: "共" + this.detail.total_page + "页",
       price: this.detail.service_price,
       recommended: false,
-    };
+    });
   },
   methods: {
     selectProduct(index) {
@@ -201,9 +203,10 @@ export default {
         method: "POST",
         data: {
           articleId: this.detail.id,
-          priceType: this.selectedProductIndex === 0 ? 'basic_price' : 'service_price',
+          priceType:
+            this.selectedProductIndex === 0 ? "basic_price" : "service_price",
         },
-      }).then(res => {
+      }).then((res) => {
         if (res.code === 200) {
           this.getWchatQR(res.data.orderNo);
           this.getAlipayQR(res.data.orderNo);
@@ -305,6 +308,7 @@ export default {
             font-size: 16px;
             color: #e0291f;
             margin-bottom: 20px;
+            height: 100px;
           }
 
           .product-meta {

@@ -56,7 +56,13 @@
           <div class="document-container">
             <div class="document-page">
               <div class="document-content blurred">
-                <iframe :src="detail.preview_pdf_url" width="100%" height="100%" v-if="detail.preview_pdf_url.includes('.pdf')" alt=""></iframe>
+                <iframe
+                  :src="detail.preview_pdf_url"
+                  width="100%"
+                  height="100%"
+                  v-if="detail.preview_pdf_url && detail.preview_pdf_url.includes('.pdf')"
+                  alt=""
+                ></iframe>
                 <img :src="detail.preview_pdf_url" v-else alt="" />
               </div>
             </div>
@@ -88,8 +94,7 @@
           <div class="document-page-bottom-bottom">
             <h3>相关搜索</h3>
             <div class="document-page-bottom-border-content">
-              <div class="item">个人房屋租赁合同范本</div>
-              <div class="item">个人房屋租赁合同范本</div>
+              <div class="item" v-for="item in detail.about_list" :key="item">{{ item}}</div>
             </div>
           </div>
         </div>
@@ -177,21 +182,21 @@
         </div>
         <div class="contract-grid">
           <ContractCard
-            v-for="contract in currentContracts"
+            v-for="contract in contracts"
             :key="contract.id"
             :contract="contract"
           />
           <el-empty
             style="width: 100%; height: 100%"
             description="暂无数据"
-            v-if="currentContracts.length === 0"
+            v-if="contracts.length === 0"
           />
         </div>
       </div>
     </div>
 
     <!-- 下载弹框 -->
-    <DownloadModal :visible.sync="downloadModalVisible" :detail="detail" />
+    <DownloadModal :visible.sync="downloadModalVisible" v-if="downloadModalVisible" :detail="detail" />
   </div>
 </template>
 
@@ -208,22 +213,9 @@ export default {
     return {
       downloadModalVisible: false,
       latestUpdates: [],
-      contracts: {
-        production: [
-          { id: 1, title: "生产经营合同", viewCount: 123, collectCount: 123 },
-          { id: 2, title: "生产经营合同", viewCount: 123, collectCount: 123 },
-          { id: 3, title: "生产经营合同", viewCount: 123, collectCount: 123 },
-          { id: 4, title: "生产经营合同", viewCount: 123, collectCount: 123 },
-          { id: 5, title: "生产经营合同", viewCount: 123, collectCount: 123 },
-        ],
-      },
+      contracts: [],
       detail: {},
     };
-  },
-  computed: {
-    currentContracts() {
-      return this.contracts.production;
-    },
   },
   mounted() {
     this.$api({
@@ -247,6 +239,15 @@ export default {
         },
       }).then((res) => {
         this.detail = res.data;
+        this.$api({
+          url: "contractList",
+          method: "get",
+          data: {
+            category_id: this.detail.category_id,
+          },
+        }).then((res) => {
+          this.contracts = res.data.list.slice(0, 5);
+        });
       });
     },
     showDownloadModal() {

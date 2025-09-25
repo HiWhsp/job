@@ -121,7 +121,7 @@
 
           <div class="contract-grid">
             <ContractCard
-              v-for="contract in item.child.slice(0, 4)"
+              v-for="contract in item.child.slice(0, 5)"
               :key="contract.id"
               :contract="contract"
             />

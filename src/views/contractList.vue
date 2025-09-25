@@ -81,7 +81,7 @@
             </div>
             <div class="filter sort-box">
               <div class="item">
-                <div class="text">共{{ currentContracts.length }}个</div>
+                <div class="text">共{{ total }}个</div>
               </div>
               <div class="item">
                 <div class="text">{{ getCurrentCategoryName() }}</div>
@@ -118,15 +118,25 @@
 
           <div class="contract-grid">
             <ContractCard
-              v-for="contract in currentContracts"
+              v-for="contract in contracts"
               :key="contract.id"
               :contract="contract"
             />
             <el-empty
               style="width: 100%; height: 100%"
               description="暂无数据"
-              v-if="currentContracts.length === 0"
+              v-if="total === 0"
             />
+          </div>
+          <div class="pagination-container">
+            <el-pagination
+              :total="total"
+              :page-size="pageSize"
+              :current-page="currentPage"
+              @current-change="handleCurrentChange"
+
+              layout="total, prev, pager, next"
+            ></el-pagination>
           </div>
         </div>
       </div>
@@ -152,6 +162,9 @@ export default {
     return {
       searchKeyword: "",
       activeCategory: "",
+      total: 0,
+      pageSize: 10,
+      currentPage: 1,
       categories: [],
       // 最新动态
       latestUpdates: [],
@@ -174,19 +187,13 @@ export default {
   },
   computed: {
     ...mapState(["vuex_index_banners"]),
-    currentContracts() {
-      console.log(this.activeCategory,this.contracts);
-      if (this.activeCategory === "" || this.activeCategory === 0) {
-        const res = this.contracts.flatMap((item) => {
-            return item.child;
-          });
-        return res;
-      }
-      return (
-        this.contracts.find((item) => item.id === this.activeCategory).child ||
-        this.contracts.find((item) => item.id === this.activeCategory).child ||
-        []
-      );
+  },
+  watch: {
+    activeCategory: {
+      handler(newVal) {
+        this.currentPage = 1;
+        this.getIndex();
+      },
     },
   },
   async mounted() {
@@ -207,6 +214,7 @@ export default {
     switchCategory(categoryKey) {
       this.$router.push("/contractList?category=" + categoryKey);
       this.activeCategory = categoryKey;
+      this.currentPage = 1;
     },
     // 获取当前分类名称
     getCurrentCategoryName() {
@@ -216,16 +224,27 @@ export default {
       return category ? category.title : "全部";
     },
     async getIndex() {
+      console.log(this.orderByColumn, this.isAsc); 
       const res = await this.$api({
-        url: "index",
+        url: "contractList",
         method: "get",
         data: {
-          keyword: this.searchKeyword,
+          page: this.currentPage,
+          pageSize: this.pageSize,
+          category_id: this.activeCategory,
+          saleSort: this.orderByColumn == 'orders' ? this.isAsc == 'asc' ? '1' : '2' : '',
+          priceSort: this.orderByColumn == 'priceSale' ? this.isAsc == 'asc' ? '1' : '2' : '',
         },
       });
-      this.latestUpdates = res.data.recent;
-      this.contracts = res.data.category_list;
-      this.switchCategory(+this.$route.query.category);
+      this.contracts = res.data.list;
+      this.total = res.data.count;
+      this.activeCategory = +this.$route.query.category;
+      this.$api({
+        url: "index",
+        method: "get",
+      }).then((res) => {
+        this.latestUpdates = res.data.recent;
+      });
     },
     // 搜索
     handleSearch() {
@@ -252,10 +271,18 @@ export default {
       this.chosenSort = item;
       this.getIndex();
     },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.getIndex();
+    },
   },
 };
 </script>
 
 <style lang="less" scoped>
 @import "./index.less";
+.pagination-container {
+  text-align: center;
+  margin-top: 20px;
+}
 </style>
