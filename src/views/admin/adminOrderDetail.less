@@ -81,7 +81,7 @@
 
   // 主要内容区域
   .main-content {
-    padding: 0 70px;
+    padding: 0 70px 100px;
 
     // 通用section样式
     .section {
@@ -134,7 +134,7 @@
         .config-item {
           display: flex;
           align-items: center;
-          padding: 20px 0;
+          padding: 20px 120px 20px 0px;
           border-radius: 8px;
           margin-bottom: 15px;
           border-bottom: 1px solid #ddd;
@@ -236,33 +236,32 @@
     .component-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
 
       .component-item {
+        height: 55px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 20px;
-        background: #f8f9fa;
-        border-radius: 6px;
-        border: 1px solid #e9ecef;
+        background: #fff;
+        border: 1px solid #DDDDDD;
         transition: all 0.3s;
-
-        &:hover {
-          background: #e9ecef;
-          transform: translateY(-1px);
-        }
 
         .component-name {
           font-weight: 600;
-          color: #333;
-          font-size: 14px;
+          color: #3A3A3A;
+          font-size: 16px;
+          width: 200px;
+          height: 100%;
+          line-height: 55px;
+          padding-left: 30px;
+          background: #FAFAFA;
         }
 
         .component-value {
-          color: #666;
-          font-size: 14px;
-          text-align: right;
+          color: #3A3A3A;
+          font-size: 16px;
+          flex: 1;
+          padding-left: 45px;
         }
       }
     }
@@ -285,47 +284,6 @@
     .components {
       .component-grid {
         grid-template-columns: repeat(2, 1fr);
-      }
-    }
-  }
-
-  // 响应式设计
-  @media (max-width: 1200px) {
-    padding: 15px;
-
-    .main-content {
-      padding: 20px;
-
-      .contact-info .info-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .config-details .config-list .config-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-
-        .config-icon {
-          margin-right: 0;
-        }
-
-        .config-info {
-          margin-right: 0;
-          width: 100%;
-        }
-
-        .config-delivery {
-          width: 100%;
-          margin-right: 0;
-        }
-
-        .config-price {
-          align-self: flex-end;
-        }
-      }
-
-      .component-grid {
-        grid-template-columns: 1fr !important;
       }
     }
   }
