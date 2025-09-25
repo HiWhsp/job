@@ -74,9 +74,9 @@
                 <button class="download-btn" @click="showDownloadModal">
                   <span>下载Word版本</span>
                 </button>
-                <button class="collect-btn" @click="handleCollect">
+                <button class="collect-btn">
                   <img src="@/assets/img/common/kefu.png" alt="" />
-                  <span>联系在线客服</span>
+                  <span>联系客服电话：18696628883 (微信同号)</span>
                 </button>
               </div>
               <div class="document-page-bottom-right">
@@ -251,7 +251,21 @@ export default {
       });
     },
     showDownloadModal() {
-      this.downloadModalVisible = true;
+      if(this.detail.is_bought == 0) {
+        this.downloadModalVisible = true;
+      }else {
+        this.$api({
+          url: "contractReal",
+          method: "post",
+          data: {
+            articleId: this.$route.query.id,
+          },
+        }).then((res) => {
+          if(res.code == 200) {
+            window.open(res.data.doc_url, "_blank");
+          }
+        })
+      }
     },
     handleCollect() {
       const status = this.detail.is_collect == 0 ? 1 : 0;

@@ -32,7 +32,7 @@
         <el-table-column prop="downloadStatus" label="文档大小" align="center">
           <template slot-scope="scope">
             <span class="order-time">{{
-              scope.row.downloadStatus === "downloaded" ? "已下载" : "未下载"
+              scope.row.size || 0 + "MB"
             }}</span>
           </template>
         </el-table-column>

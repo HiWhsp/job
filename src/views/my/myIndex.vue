@@ -16,11 +16,11 @@
           <div class="username">用户名: {{ vuex_user.username }}</div>
 
           <div class="action-buttons">
-            <button class="action-btn modify-info-btn" @click="openModifyModal">
+            <button class="action-btn btn-hover modify-info-btn" @click="openModifyModal">
               修改个人信息
             </button>
             <button
-              class="action-btn change-password-btn"
+              class="action-btn btn-hover change-password-btn"
               @click="openChangePasswordModal"
             >
               修改密码

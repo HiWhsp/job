@@ -64,11 +64,11 @@ export default {
           title: "微信",
           icon: require("@/assets/img/common/wechat-icon.png"),
         },
-        {
-          title: "在线客服",
-          icon: require("@/assets/img/common/aside-kefu.png"),
-          path: "/",
-        },
+        // {
+        //   title: "在线客服",
+        //   icon: require("@/assets/img/common/aside-kefu.png"),
+        //   path: "/",
+        // },
       ],
 
       showTop: false,
@@ -145,12 +145,11 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   width: 79px;
-  height: 409px;
   background: #ffffff;
   box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.1);
   border-radius: 8px 8px 8px 8px;
   .item {
-    flex: 1;
+    height: 100px;
     position: relative;
     cursor: pointer;
     display: flex;

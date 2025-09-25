@@ -4,6 +4,8 @@
       v-for="contract in currentContracts"
       :key="contract.id"
       :contract="contract"
+      @collect="loadData"
+      type="collect"
     />
     <el-empty v-if="currentContracts.length === 0" style="width: 100%" description="暂无收藏数据" />
   </div>

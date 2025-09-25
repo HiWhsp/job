@@ -43,7 +43,7 @@
                 />
               </div>
               <div class="btn-box">
-                <button class="btn-ripple" @click="do_submit()">注册</button>
+                <button class="btn-ripple btn-hover" @click="do_submit()">注册</button>
               </div>
 
               <div class="register-box">

@@ -7,7 +7,7 @@
         v-loading="loading"
         height="400"
       >
-        <el-table-column prop="orderNumber" label="订单编号" align="center">
+        <el-table-column prop="orderNo" label="订单编号" align="center">
         </el-table-column>
 
         <el-table-column
@@ -32,7 +32,7 @@
         <el-table-column prop="downloadStatus" label="下载状态" align="center">
           <template slot-scope="scope">
             <span class="order-time">{{
-              scope.row.downloadStatus === "downloaded" ? "已下载" : "未下载"
+              scope.row.had_download ? "已下载" : "未下载"
             }}</span>
           </template>
         </el-table-column>
@@ -75,116 +75,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       totalOrders: 0,
-      orderList: [
-        {
-          id: 1,
-          orderNumber: "123456789",
-          name: "写字楼办公室房屋租赁合同范本",
-          amount: "10.00",
-          orderTime: "2025-08-08 17:59:38",
-          downloadStatus: "downloaded",
-          downloading: false,
-        },
-        {
-          id: 2,
-          orderNumber: "123456790",
-          name: "写字楼办公室房屋租赁合同范本",
-          amount: "10.00",
-          orderTime: "2025-08-08 17:59:38",
-          downloadStatus: "not_downloaded",
-          downloading: false,
-        },
-        {
-          id: 3,
-          orderNumber: "123456791",
-          name: "写字楼办公室房屋租赁合同范本",
-          amount: "10.00",
-          orderTime: "2025-08-08 17:59:38",
-          downloadStatus: "downloaded",
-          downloading: false,
-        },
-        {
-          id: 4,
-          orderNumber: "123456792",
-          name: "商铺租赁合同模板",
-          amount: "15.00",
-          orderTime: "2025-08-07 14:30:25",
-          downloadStatus: "not_downloaded",
-          downloading: false,
-        },
-        {
-          id: 5,
-          orderNumber: "123456793",
-          name: "房屋买卖合同范本",
-          amount: "20.00",
-          orderTime: "2025-08-07 10:15:42",
-          downloadStatus: "downloaded",
-          downloading: false,
-        },
-        {
-          id: 6,
-          orderNumber: "123456794",
-          name: "劳动合同模板",
-          amount: "8.00",
-          orderTime: "2025-08-06 16:45:18",
-          downloadStatus: "not_downloaded",
-          downloading: false,
-        },
-        {
-          id: 7,
-          orderNumber: "123456795",
-          name: "借款合同范本",
-          amount: "12.00",
-          orderTime: "2025-08-06 09:20:33",
-          downloadStatus: "downloaded",
-          downloading: false,
-        },
-        {
-          id: 8,
-          orderNumber: "123456796",
-          name: "服务合同模板",
-          amount: "18.00",
-          orderTime: "2025-08-05 20:10:55",
-          downloadStatus: "not_downloaded",
-          downloading: false,
-        },
-        {
-          id: 9,
-          orderNumber: "123456797",
-          name: "技术开发合同范本",
-          amount: "25.00",
-          orderTime: "2025-08-05 15:30:12",
-          downloadStatus: "downloaded",
-          downloading: false,
-        },
-        {
-          id: 10,
-          orderNumber: "123456798",
-          name: "保密协议模板",
-          amount: "6.00",
-          orderTime: "2025-08-04 11:25:40",
-          downloadStatus: "not_downloaded",
-          downloading: false,
-        },
-        {
-          id: 11,
-          orderNumber: "123456799",
-          name: "股权转让协议范本",
-          amount: "30.00",
-          orderTime: "2025-08-04 08:45:22",
-          downloadStatus: "downloaded",
-          downloading: false,
-        },
-        {
-          id: 12,
-          orderNumber: "123456800",
-          name: "合伙协议模板",
-          amount: "22.00",
-          orderTime: "2025-08-03 19:15:18",
-          downloadStatus: "not_downloaded",
-          downloading: false,
-        },
-      ],
+      orderList: [],
     };
   },
   methods: {
@@ -192,12 +83,28 @@ export default {
     handleDownload(order) {
       // 设置下载状态
       this.$set(order, "downloading", true);
-      // 模拟下载过程
-      setTimeout(() => {
-        this.$set(order, "downloading", false);
-        this.$set(order, "downloadStatus", "downloaded");
-        this.$message.success("下载完成！");
-      }, 2000);
+      this.$api({
+        url: "contractReal",
+        method: "post",
+        data: {
+          articleId: order.articleId,
+        },
+      }).then((res) => {
+        if(res.code == 200) {
+          window.open(res.data.doc_url, "_blank");
+          this.$api({
+            url: "cofirmDownload",
+            method: "post",
+            data: {
+              articleId: order.articleId,
+            },
+          })
+          this.loadData();
+        }else {
+          this.$message.error(res.msg);
+          this.loadData();
+        }
+      })
     },
 
     // 每页条数改变

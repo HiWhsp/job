@@ -23,7 +23,7 @@
     <!-- 悬浮遮罩层 -->
     <div class="overlay" v-show="showOverlay">
       <div class="overlay-buttons">
-        <button class="view-btn" @click="handleView">
+        <button class="view-btn btn-hover" @click="handleView">
           <i class="el-icon-view"></i>
           点击查看
         </button>
@@ -64,6 +64,10 @@ export default {
         collectCount: 123,
       }),
     },
+    type: {
+      type: String,
+      default: "",
+    },
   },
   data() {
     return {
@@ -75,7 +79,7 @@ export default {
       this.$router.push({
         path: "/contractDetail",
         query: {
-          id: this.contract.id,
+          id: this.type == "collect" ? this.contract.articleId : this.contract.id,
         },
       });
       console.log(this.contract);
@@ -88,12 +92,13 @@ export default {
         method: "get",
         data: {
           status,
-          articleId: this.contract.id,
+          articleId: this.type == "collect" ? this.contract.articleId : this.contract.id,
         },
       }).then((res) => {
         if (res.code == 200) {
           this.contract.is_collect = status;
           this.$message.success(res.msg);
+          this.$emit("collect");
         }
       });
     },
