@@ -144,7 +144,7 @@
         </div>
       </div>
 
-      <div class="footer-section btn-hover" @click="handleViewMore">查看更多合同文书</div>
+      <div class="footer-section btn-hover" @click="handleViewMore(0)">查看更多合同文书</div>
     </div>
   </div>
 </template>
@@ -216,8 +216,8 @@ export default {
       this.getIndex();
     },
     // 查看更多
-    handleViewMore() {
-      this.$router.push("/contractList?category=0");
+    handleViewMore(categoryId) {
+      this.$router.push("/contractList?category=" + categoryId);
     },
   },
 };
