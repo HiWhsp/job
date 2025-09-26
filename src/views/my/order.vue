@@ -51,11 +51,8 @@
       <!-- 分页组件 -->
       <div class="pagination-container">
         <el-pagination
-          @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[5, 10, 20, 50]"
-          :page-size="pageSize"
           layout="prev, pager, next"
           :total="totalOrders"
           background
@@ -107,15 +104,10 @@ export default {
       })
     },
 
-    // 每页条数改变
-    handleSizeChange(val) {
-      this.pageSize = val;
-      this.currentPage = 1; // 重置到第一页
-    },
-
     // 当前页改变
     handleCurrentChange(val) {
       this.currentPage = val;
+      this.loadData();
     },
 
     // 模拟加载数据

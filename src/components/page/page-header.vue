@@ -56,7 +56,7 @@
             </el-dropdown-menu>
           </el-dropdown>
 
-          <el-dropdown trigger="hover" class="nav-dropdown" @click.native="handleNavClick('/contractList/?ids=' + item.id)">
+          <el-dropdown trigger="hover" class="nav-dropdown" @click.native="handleNavClick('/contractList/?category=' + item.id)">
             <span class="nav-link">
               分类 <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
@@ -163,8 +163,16 @@ export default {
       this.isScrolled = window.scrollY > 100;
     },
     handleSearch() {
-      console.log("搜索内容:", this.searchText);
       // 这里可以添加搜索逻辑
+      this.$router.push({
+        path: "/contractList",
+        query: {
+          category: "",
+          search: this.searchText,
+          hash: Math.random().toString(36).substring(2, 15),
+        },
+      });
+      this.searchText = "";
     },
     goHome() {
       this.$router.push("/");

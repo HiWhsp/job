@@ -262,6 +262,13 @@ export default {
           },
         }).then((res) => {
           if(res.code == 200) {
+            this.$api({
+            url: "cofirmDownload",
+            method: "post",
+            data: {
+              articleId: this.detail.id,
+            },
+          })
             window.open(res.data.doc_url, "_blank");
           }
         })

@@ -189,14 +189,30 @@ export default {
     ...mapState(["vuex_index_banners"]),
   },
   watch: {
-    activeCategory: {
+    // activeCategory: {
+    //   handler(newVal) {
+    //     this.currentPage = 1;
+    //     this.getIndex();
+    //   },
+    // },
+    "$route.query.search": {
       handler(newVal) {
-        this.currentPage = 1;
+        this.searchKeyword = newVal;
+        this.getIndex();
+      },
+    },
+    "$route.query.category": {
+      handler(newVal) {
+        this.activeCategory = newVal;
         this.getIndex();
       },
     },
   },
   async mounted() {
+    this.searchKeyword = this.$route.query.search;
+    if(this.$route.query.category) {
+      this.activeCategory = this.$route.query.category;
+    }
     await this.getIndex();
   },
   methods: {
@@ -229,6 +245,7 @@ export default {
         url: "contractList",
         method: "get",
         data: {
+          keyword: this.searchKeyword,
           page: this.currentPage,
           pageSize: this.pageSize,
           category_id: this.activeCategory,
