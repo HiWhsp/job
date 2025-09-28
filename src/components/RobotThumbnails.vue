@@ -2,15 +2,15 @@
   <div class="robot-thumbnails">
     <div class="thumbnails-container">
       <div
-        v-for="(thumbnail, index) in thumbnails"
+        v-for="(thumbnail, index) in list"
         :key="index"
         :class="['thumbnail-item', { active: selectedThumbnail === index }]"
         @click="selectThumbnail(index)"
       >
         <div class="thumbnail-robot">
           <!-- 缩略图机器人模型 -->
-          <div class="mini-robot" :style="{ transform: thumbnail.transform }">
-            <img :src="thumbnail.image" alt="robot" />
+          <div class="mini-robot">
+            <img :src="ImgUrl(thumbnail)" alt="robot" />
           </div>
         </div>
       </div>
@@ -21,45 +21,32 @@
 <script>
 export default {
   name: "RobotThumbnails",
+  props: {
+    list: {
+      type: Array,
+      default: () => [],
+    },
+  },
   data() {
     return {
       selectedThumbnail: 0,
-      thumbnails: [
-        {
-          id: 0,
-          name: "正面视图",
-          image: require("@/assets/img/common/22-全屏.png"),
-          angle: "front",
-        },
-        {
-          id: 1,
-          name: "侧面视图",
-          image: require("@/assets/img/common/23-全屏.png"),
-          angle: "side",
-        },
-        {
-          id: 2,
-          name: "背面视图",
-          image: require("@/assets/img/common/24-全屏.png"),
-          angle: "back",
-        },
-        {
-          id: 3,
-          name: "俯视图",
-          image: require("@/assets/img/common/25-全屏.png"),
-          angle: "top",
-        },
-      ],
     };
   },
   mounted() {
     // 组件挂载时自动选中第一项并触发事件
-    this.$emit("thumbnail-change", this.thumbnails[0]);
+    this.$emit("thumbnail-change", this.list[0]);
   },
   methods: {
     selectThumbnail(index) {
       this.selectedThumbnail = index;
-      this.$emit("thumbnail-change", this.thumbnails[index]);
+      this.$emit("thumbnail-change", this.list[index]);
+    },
+    ImgUrl(thumbnail) {
+      if (thumbnail && thumbnail.includes("http")) {
+        return thumbnail; 
+      } else {
+        return "https://yifei.dx.hdapp.com.cn/uploads/" + thumbnail;
+      }
     },
   },
 };
@@ -110,6 +97,8 @@ export default {
 }
 
 .mini-robot {
+  width: 100%;
+  height: 100%;
   img {
     border-radius: 15px;
     width: 100%;

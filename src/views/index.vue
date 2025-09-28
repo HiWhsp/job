@@ -1,7 +1,10 @@
 <template>
   <div class="robot-configuration-page">
     <!-- 左侧展示区域 -->
-    <div class="left-display-section" :style="{ backgroundImage: `url(${currentBackgroundImage})` }">
+    <div
+      class="left-display-section"
+      :style="{ backgroundImage: `url(${currentBackgroundImage})` }"
+    >
       <div class="robot-display">
         <!-- 顶部Logo区域 -->
         <div class="display-header">
@@ -14,20 +17,20 @@
       <div class="full-screen-btn" @click="handleFullScreen">
         <img src="@/assets/img/common/full-screen.png" alt="full-screen" />
       </div>
-      
+
       <!-- 全屏查看组件 -->
-      <FullScreenViewer 
+      <FullScreenViewer
         :visible="isFullScreenVisible"
         :imageUrl="currentBackgroundImage"
         :imageAlt="'机器人配置预览'"
         @close="closeFullScreen"
       />
-      <RobotThumbnails @thumbnail-change="handleThumbnailChange" />
+      <RobotThumbnails v-if="ImgList.length > 0" :list="ImgList" @thumbnail-change="handleThumbnailChange" />
     </div>
 
     <!-- 右侧配置区域 -->
     <div class="right-config-section">
-      <RobotConfigPanel @navigate-to-ai="handleNavigateToAI" />
+      <RobotConfigPanel :title="info.info.title" :detail="detail" @navigate-to-ai="handleNavigateToAI" />
     </div>
   </div>
 </template>
@@ -44,15 +47,45 @@ export default {
   },
   data() {
     return {
+      id: "2",
       currentBackgroundImage: require("@/assets/img/common/22-全屏.png"), // 默认使用第一张图片
       isFullScreenVisible: false, // 控制全屏组件显示
+      ImgList: [],
+      detail: [],
+      info: {
+        info: {
+          title: "",
+        },
+      },
     };
   },
+  mounted() {
+    this.getRobotConfig();
+  },
   methods: {
+    getRobotConfig() {
+      this.$api({
+        url: "getProductSetting",
+        method: "get",
+        data: {
+          id: this.id,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.info = res.data;
+          this.ImgList = res.data.info.images.split(",");
+          this.detail = res.data.lists;
+        }
+      });
+    },
     handleThumbnailChange(thumbnail) {
+      console.log(thumbnail);
+      if (thumbnail && thumbnail.includes("http")) {
+        this.currentBackgroundImage = thumbnail;
+      } else {
+        this.currentBackgroundImage = "https://yifei.dx.hdapp.com.cn/uploads/" + thumbnail;
+      }
       // 处理缩略图切换，更新背景图
-      this.currentBackgroundImage = thumbnail.image;
-      console.log("Thumbnail changed:", thumbnail);
     },
     handleFullScreen() {
       this.isFullScreenVisible = true;
@@ -62,13 +95,13 @@ export default {
     },
     handleNavigateToAI() {
       // 处理AI推荐跳转
-      console.log('父组件接收到AI推荐跳转事件');
+      console.log("父组件接收到AI推荐跳转事件");
       // 这里可以实现具体的跳转逻辑
       // 例如：跳转到外部链接、显示AI推荐页面等
       this.$message({
-        message: 'AI推荐功能正在开发中，敬请期待！',
-        type: 'info',
-        duration: 3000
+        message: "AI推荐功能正在开发中，敬请期待！",
+        type: "info",
+        duration: 3000,
       });
     },
   },

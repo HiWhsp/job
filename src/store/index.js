@@ -193,9 +193,9 @@ export default new Vuex.Store({
 
     //初始化资源
     async query_assets({ commit, state, dispatch }, data) {
-      dispatch('query_config')
-      dispatch('query_banner')
-      dispatch('query_category')
+      // dispatch('query_config')
+      // dispatch('query_banner')
+      // dispatch('query_category')
     },
 
     // 查询配置

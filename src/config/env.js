@@ -1,6 +1,6 @@
 // import {API_ROOT} from '@/config/env.js'
 
-const ROOT = "https://fayan.dx.hdapp.com.cn";
+const ROOT = "https://yifei.dx.hdapp.com.cn";
 
 /**
  * 全局接口请求根域名
