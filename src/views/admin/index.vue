@@ -154,11 +154,11 @@ export default {
       }
 
       try {
-        const res = await this.$api({
-          url: "login",
-          method: "post",
-          data: this.formData,
-        });
+        // const res = await this.$api({
+        //   url: "login",
+        //   method: "post",
+        //   data: this.formData,
+        // });
         if (res.code === 200) {
           this.$message.success("登录成功");
         } else {
