@@ -20,7 +20,7 @@
                 <div class="pop-kefu-inner">
                   <img
                     class="kefu-code"
-                    :src="'https://fayan.dx.hdapp.com.cn/upload/' + vuex_config.weixin_qr"
+                    :src="vuex_config.weixin_qr"
                   />
                   <div class="kefu-tip">扫一扫，咨询专业律师</div>
                 </div>
