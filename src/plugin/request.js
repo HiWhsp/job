@@ -31,7 +31,7 @@ axios.interceptors.response.use(
   function (response) {
     let res = response.data;
     let { code, data } = res
-    if (res.msg.includes('请登录')) {
+    if (res.msg ? res.msg.includes('请登录') : false && res.code == 401) {
       Message.error(res.msg);
       router.push("/login");
     }

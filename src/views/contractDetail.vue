@@ -196,7 +196,7 @@
     </div>
 
     <!-- 下载弹框 -->
-    <DownloadModal :visible.sync="downloadModalVisible" v-if="downloadModalVisible" :detail="detail" />
+    <DownloadModal :visible.sync="downloadModalVisible" v-if="downloadModalVisible" :id="$route.query.id" :detail="detail" />
   </div>
 </template>
 

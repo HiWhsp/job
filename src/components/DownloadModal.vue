@@ -150,6 +150,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    id: {
+      type: String,
+      default: "",
+    },
   },
   data() {
     return {
@@ -158,6 +162,8 @@ export default {
       products: [{}],
       wechatQR: "",
       alipayQR: "",
+      basic_price_id: "",
+      service_price_id: "",
     };
   },
   computed: {
@@ -206,24 +212,54 @@ export default {
       this.selectedProductIndex = 0;
     },
     handleDownload() {
-      this.isPaySuccess = true;
-    },
-    getQRCode() {      
-      // 先获取订单
       this.$api({
-        url: "createOrder",
-        method: "POST",
+        url: "contractReal",
+        method: "post",
         data: {
-          articleId: this.detail.id,
-          priceType:
-            this.selectedProductIndex === 0 ? "basic_price" : "service_price",
+          articleId: this.id,
         },
       }).then((res) => {
-        if (res.code === 200) {
-          this.getWchatQR(res.data.orderNo);
-          this.getAlipayQR(res.data.orderNo);
+        if (res.code == 200) {
+          this.$api({
+            url: "cofirmDownload",
+            method: "post",
+            data: {
+              articleId: this.id,
+            },
+          });
+          window.open(res.data.doc_url, "_blank");
         }
       });
+    },
+    getQRCode() {
+      if (this.selectedProductIndex === 0 && this.service_price_id) {
+        this.getWchatQR(this.service_price_id);
+        // this.getAlipayQR(this.service_price_id);
+      } else if (this.selectedProductIndex === 1 && this.basic_price_id) {
+        this.getWchatQR(this.basic_price_id);
+        // this.getAlipayQR(this.basic_price_id);
+      } else {
+        // 先获取订单
+        this.$api({
+          url: "createOrder",
+          method: "POST",
+          data: {
+            articleId: this.detail.id,
+            priceType:
+              this.selectedProductIndex === 0 ? "basic_price" : "service_price",
+          },
+        }).then((res) => {
+          if (res.code === 200) {
+            if (this.selectedProductIndex === 0) {
+              this.service_price_id = res.data.id;
+            } else {
+              this.basic_price_id = res.data.id;
+            }
+            this.getWchatQR(res.data.id);
+            // this.getAlipayQR(res.data.id);
+          }
+        });
+      }
     },
     getWchatQR(orderId) {
       this.$api({
@@ -232,6 +268,10 @@ export default {
         data: {
           orderId: orderId,
         },
+      }).then((res) => {
+        this.wechatQR = res.qrcode;
+        // 轮询检测订单状态
+        this.checkOrderStatus(orderId);
       });
     },
     getAlipayQR(orderId) {
@@ -241,6 +281,25 @@ export default {
         data: {
           orderId: orderId,
         },
+      });
+    },
+    checkOrderStatus(orderId) {
+      this.$api({
+        url: "getOrderPayStatus",
+        method: "POST",
+        data: {
+          orderId: orderId,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          if (res.code == 200 && res.data.payResult == true) {
+            this.isPaySuccess = false;
+          } else {
+            setTimeout(() => {
+              this.checkOrderStatus(orderId);
+            }, 1000);
+          }
+        }
       });
     },
   },
@@ -377,8 +436,8 @@ export default {
             margin-bottom: 10px;
 
             img {
-              width: 100px;
-              height: 100px;
+              width: 160px;
+              height: 160px;
             }
           }
 
