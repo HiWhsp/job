@@ -1,0 +1,275 @@
+.config-overview {
+  width: 100%;
+  min-height: 100vh;
+  background: #000;
+  color: #ffffff;
+  font-family: "Microsoft YaHei", Arial, sans-serif;
+}
+
+.overview-header {
+  display: flex;
+  align-items: center;
+  background: #1a1a1a;
+  margin-bottom: 40px;
+
+  .header-left {
+    .overview-title {
+      font-family: YouSheBiaoTiHei, YouSheBiaoTiHei;
+      font-size: 40px;
+      font-weight: bold;
+      color: #ffffff;
+      margin: 0;
+    }
+  }
+}
+
+.overview-content {
+  display: flex;
+}
+
+.config-list-section {
+  padding: 28px 0px 0 65px;
+  flex: 1;
+  background: #1a1a1a;
+  height: 100vh;
+
+  .config-order-number {
+    font-size: 16px;
+    color: #e6e6e6;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    span {
+      color: #ffffff;
+      font-size: 28px;
+      font-weight: bold;
+    }
+  }
+
+  .config-items-list {
+    padding: 28px 70px;
+    background: #161616;
+    height: calc(100vh - 200px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    .config-item-row {
+      display: flex;
+      align-items: center;
+      padding: 20px 0;
+      gap: 20px;
+      border-bottom: 1px solid #565656;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .item-thumbnail {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .no-image {
+          width: 100%;
+          height: 100%;
+          background: #555;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #999;
+          font-size: 12px;
+        }
+      }
+
+      .item-details {
+        flex: 1;
+        min-width: 200px;
+
+        .item-name {
+          font-size: 16px;
+          font-weight: bold;
+          color: #ffffff;
+          margin-bottom: 5px;
+        }
+
+        .item-model {
+          font-size: 14px;
+          color: #ffffff;
+        }
+      }
+
+      .item-params {
+        flex: 1;
+        font-size: 14px;
+        color: #999;
+        min-width: 150px;
+      }
+
+      .item-progress {
+        min-width: 220px;
+
+        .progress-bar {
+          position: relative;
+          height: 8px;
+          margin-bottom: 8px;
+          img {
+            object-fit: cover;
+          }
+        }
+
+        .progress-text {
+          font-size: 12px;
+          color: #999;
+          text-align: center;
+        }
+      }
+
+      .item-price {
+        width: 25px;
+        .price-icon {
+          object-fit: cover;
+        }
+      }
+
+      .item-edit {
+        cursor: pointer;
+        color: #999;
+        font-size: 16px;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: #00975d;
+        }
+      }
+    }
+  }
+}
+
+.price-section {
+  width: 550px;
+  background: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+
+  .header-right {
+    width: 516px;
+    height: 39px;
+    background: #292c31;
+    border-radius: 4px 4px 4px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .contact-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+
+        i {
+          color: #37b182;
+          font-size: 16px;
+        }
+        span {
+          color: #e6e6e6;
+          font-size: 14px;
+        }
+      }
+
+      .divider {
+        width: 1px;
+        height: 20px;
+        background: #555;
+      }
+    }
+  }
+
+  .reference-price {
+    text-align: center;
+    margin-bottom: 40px;
+    width: 272px;
+    margin: 248px auto 0;
+
+    .price-label {
+      font-size: 16px;
+      color: #ffffff;
+      margin-left: 35px;
+      margin-bottom: 35px;
+      text-align: left;
+    }
+
+    .price-value {
+      font-size: 42px;
+      font-weight: bold;
+      color: #ffffff;
+      line-height: 1;
+      margin-bottom: 40px;
+    }
+  }
+
+  .save-config-btn {
+    width: 245px;
+    height: 50px;
+    background: #00975d;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #007a4a;
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .user-info {
+    width: 465px;
+    height: 240px;
+    background: #636979;
+    border-radius: 8px 8px 8px 8px;
+    margin: 100px auto 0;
+    border: 1px solid #636979;
+    padding: 28px 37px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    .user-title {
+      font-family: PingFang SC, PingFang SC;
+      font-weight: bold;
+      font-size: 16px;
+      color: #e6e6e6;
+    }
+    .user-info-item {
+      font-family: PingFang SC, PingFang SC;
+      font-weight: 400;
+      font-size: 14px;
+      color: #e6e6e6;
+      display: flex;
+      gap: 10px;
+    }
+  }
+}

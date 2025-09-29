@@ -20,7 +20,7 @@
           联系人
         </div>
         <el-input
-          v-model="formData.contactPerson"
+          v-model="formData.name"
           placeholder="请输入联系人姓名"
           class="user-input"
         ></el-input>
@@ -33,7 +33,7 @@
           手机号
         </div>
         <el-input
-          v-model="formData.phone"
+          v-model="formData.mobile"
           placeholder="请输入手机号码"
           class="user-input"
         ></el-input>
@@ -87,8 +87,8 @@ export default {
   data() {
     return {
       formData: {
-        contactPerson: "",
-        phone: "",
+        name: "",
+        mobile: "",
         email: "",
         company: "",
       },
@@ -111,11 +111,11 @@ export default {
     },
     handleSubmit() {
       // 简单的表单验证
-      if (!this.formData.contactPerson) {
+      if (!this.formData.name) {
         this.$message.error("请输入联系人姓名");
         return;
       }
-      if (!this.formData.phone) {
+      if (!this.formData.mobile) {
         this.$message.error("请输入手机号码");
         return;
       }
@@ -137,14 +137,14 @@ export default {
 
       // 验证手机号格式
       const phoneRegex = /^1[3-9]\d{9}$/;
-      if (!phoneRegex.test(this.formData.phone)) {
+      if (!phoneRegex.test(this.formData.mobile)) {
         this.$message.error("请输入正确的手机号码");
         return;
       }
 
       const submitData = {
-        contactPerson: this.formData.contactPerson,
-        phone: this.formData.phone,
+        name: this.formData.name,
+        mobile: this.formData.mobile,
         email: this.formData.email,
         company: this.formData.company,
       };
@@ -154,8 +154,8 @@ export default {
     },
     resetForm() {
       this.formData = {
-        contactPerson: "",
-        phone: "",
+        name: "",
+        mobile: "",
         email: "",
         company: "",
       };

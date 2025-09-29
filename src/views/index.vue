@@ -30,7 +30,7 @@
 
     <!-- 右侧配置区域 -->
     <div class="right-config-section">
-      <RobotConfigPanel :title="info.info.title" :detail="detail" @navigate-to-ai="handleNavigateToAI" />
+      <RobotConfigPanel :id="id" :title="info.info.title" :price="info.info.price" :detail="detail" @navigate-to-ai="handleNavigateToAI" />
     </div>
   </div>
 </template>

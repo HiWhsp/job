@@ -149,7 +149,9 @@ export default new Vuex.Store({
       state.userId = "";
       state.vuex_user = {};
       state.vuex_is_login = false;
-      localStorage.clear();
+      // localStorage.clear();
+      localStorage.removeItem("userId");
+      localStorage.removeItem("vuex_user");
       document.cookie = ''
     },
 

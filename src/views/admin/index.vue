@@ -109,14 +109,19 @@ export default {
       this.isSendingCode = true;
 
       try {
-        // 这里调用发送验证码的API
-        // await this.$api('send_verification_code', { email: this.formData.email })
-
-        // 模拟API调用
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        this.$message.success("验证码已发送到您的邮箱");
-        this.startCountdown();
+        const res = await this.$api({
+          url: "sendEmail",
+          method: "post",
+          data: {
+            email: this.formData.email,
+          },
+        });
+        if (res.code === 200) {
+          this.$message.success("验证码已发送到您的邮箱");
+          this.startCountdown();
+        } else {
+          this.$message.error("发送验证码失败，请重试");
+        }
       } catch (error) {
         this.$message.error("发送验证码失败，请重试");
       } finally {
@@ -149,13 +154,16 @@ export default {
       }
 
       try {
-        // 这里调用登录API
-        // const response = await this.$api('admin_login', this.formData)
-
-        // 模拟API调用
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        this.$message.success("登录成功");
+        const res = await this.$api({
+          url: "login",
+          method: "post",
+          data: this.formData,
+        });
+        if (res.code === 200) {
+          this.$message.success("登录成功");
+        } else {
+          this.$message.error("登录失败，请检查验证码是否正确");
+        }
 
         // 保存登录状态
         localStorage.setItem("adminToken", "mock_token");
