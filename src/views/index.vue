@@ -136,11 +136,11 @@
               v-if="item.child.length === 0"
             />
           </div>
-          <div class="advertising-section" v-if="item.title == '婚姻家庭'">
+          <!-- <div class="advertising-section" v-if="item.title == '婚姻家庭'">
             <div class="advertising-banner">
               <img src="@img/index/advertising-banner.jpg" alt="" />
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
 

@@ -141,11 +141,11 @@
         </div>
       </div>
 
-      <div class="advertising-section">
+      <!-- <div class="advertising-section">
         <div class="advertising-banner">
           <img src="@img/index/advertising-banner.jpg" alt="" />
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

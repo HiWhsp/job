@@ -60,7 +60,10 @@
                   :src="detail.preview_pdf_url"
                   width="100%"
                   height="100%"
-                  v-if="detail.preview_pdf_url && detail.preview_pdf_url.includes('.pdf')"
+                  v-if="
+                    detail.preview_pdf_url &&
+                    detail.preview_pdf_url.includes('.pdf')
+                  "
                   alt=""
                 ></iframe>
                 <img :src="detail.preview_pdf_url" v-else alt="" />
@@ -94,7 +97,9 @@
           <div class="document-page-bottom-bottom">
             <h3>相关搜索</h3>
             <div class="document-page-bottom-border-content">
-              <div class="item" v-for="item in detail.about_list" :key="item">{{ item}}</div>
+              <div class="item" v-for="item in detail.about_list" :key="item">
+                {{ item }}
+              </div>
             </div>
           </div>
         </div>
@@ -177,7 +182,7 @@
               backgroundImage: `url(${require('@img/index/icon2.png')})`,
             }"
           >
-            相关合同文书
+            相关合同文书推荐
           </div>
         </div>
         <div class="contract-grid">
@@ -196,7 +201,12 @@
     </div>
 
     <!-- 下载弹框 -->
-    <DownloadModal :visible.sync="downloadModalVisible" v-if="downloadModalVisible" :id="$route.query.id" :detail="detail" />
+    <DownloadModal
+      :visible.sync="downloadModalVisible"
+      v-if="downloadModalVisible"
+      :id="$route.query.id"
+      :detail="detail"
+    />
   </div>
 </template>
 
@@ -251,9 +261,9 @@ export default {
       });
     },
     showDownloadModal() {
-      if(this.detail.is_bought == 0) {
+      if (this.detail.is_bought == 0) {
         this.downloadModalVisible = true;
-      }else {
+      } else {
         this.$api({
           url: "contractReal",
           method: "post",
@@ -261,17 +271,17 @@ export default {
             articleId: this.$route.query.id,
           },
         }).then((res) => {
-          if(res.code == 200) {
+          if (res.code == 200) {
             this.$api({
-            url: "cofirmDownload",
-            method: "post",
-            data: {
-              articleId: this.detail.id,
-            },
-          })
+              url: "cofirmDownload",
+              method: "post",
+              data: {
+                articleId: this.detail.id,
+              },
+            });
             window.open(res.data.doc_url, "_blank");
           }
-        })
+        });
       }
     },
     handleCollect() {
