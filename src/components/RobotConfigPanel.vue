@@ -23,15 +23,16 @@
     <!-- 标题区域 -->
     <div class="config-header" v-if="!isEdit">
       <div class="config-header-left">
-        <h2 class="robot-title">{{ title }}</h2>
-        <span class="ai-recommend">AI 推荐</span>
+        <h2 class="robot-title">AI推荐（{{ title }}）</h2>
+        <span class="ai-recommend" @click="useAIRecommendation">AI 推荐</span>
       </div>
       <!-- 导航标签 -->
       <div class="config-tabs">
         <div
-          v-for="tab in tabs"
+          v-for="(tab, index) in tabs"
           :key="tab.id"
           :class="['tab-item', { active: activeTab === tab.id }]"
+          @click="selectTab(tab, index)"
         >
           {{ tab.title }}
         </div>
@@ -290,12 +291,6 @@
 
     <!-- 颜色定制弹框 -->
     <ColorCustomDialog v-model="showColorDialog" @submit="handleColorSubmit" />
-
-    <!-- 用户信息填写弹框 -->
-    <UserInfoDialog
-      v-model="showUserInfoDialog"
-      @submit="handleUserInfoSubmit"
-    />
   </div>
 </template>
 
@@ -303,8 +298,6 @@
 import logo1 from "@/assets/img/common/logo2.png";
 import CustomDialog from "./CustomDialog.vue";
 import ColorCustomDialog from "./ColorCustomDialog.vue";
-import UserInfoDialog from "./UserInfoDialog.vue";
-import DownloadDialog from "./DownloadDialog.vue";
 
 export default {
   name: "RobotConfigPanel",
@@ -329,8 +322,6 @@ export default {
   components: {
     CustomDialog,
     ColorCustomDialog,
-    UserInfoDialog,
-    DownloadDialog,
   },
   data() {
     return {
@@ -344,7 +335,6 @@ export default {
       showDialog: false, // 自定义配置弹框
       dialogTitle: "弹窗标题", // 弹窗标题
       showColorDialog: false, // 颜色定制弹框
-      showUserInfoDialog: false, // 用户信息填写弹框
       robotConfig: {}, // 机器人配置
       tabs: [], // 标签页
       controllers: [], // 控制器
@@ -394,7 +384,7 @@ export default {
 
     // 使用AI推荐
     useAIRecommendation() {
-      this.$router.push("/aiRecommendation");
+      this.$router.push("/aiRecommendation?id=" + this.id);
     },
 
     // 使用自定义配置
@@ -573,10 +563,10 @@ export default {
             this.logo1 = configData.logo;
           }
 
-          this.$message.success("已加载本地保存的配置");
+          // this.$message.success("已加载本地保存的配置");
         }
       } catch (error) {
-        console.error("加载配置数据失败:", error);
+        // console.error("加载配置数据失败:", error);
       }
     },
     // 提交
@@ -586,13 +576,11 @@ export default {
       console.log("格式化后的数据:", formattedData);
       // 存储到localStorage
       localStorage.setItem("robotConfig", JSON.stringify(formattedData));
-      this.$message.success("配置已保存到本地");
+      // this.$message.success("配置已保存到本地");
 
-      if (localStorage.getItem("robotUserInfo") != null) {
-        this.$router.push("/rebotPreview?id=" + this.id);
-      } else {
-        this.showUserInfoDialog = true;
-      }
+
+      this.$router.push("/rebotPreview?id=" + this.id);
+
     },
 
     // 生成指定格式的数据
@@ -617,9 +605,9 @@ export default {
                     product_type_three_id: "",
                     product_type_goods_ids: item.id,
                     other: {
-                      image: item.thumb || "",
-                      notes: item.description || "",
-                      brand: item.title || "",
+                      // image: item.thumb || "",
+                      // notes: item.description || "",
+                      // brand: item.title || "",
                     },
                   });
                 }
@@ -643,9 +631,9 @@ export default {
                           secondLevel.id || secondLevel.title,
                         product_type_goods_ids: item.id,
                         other: {
-                          image: item.thumb || "",
-                          notes: item.description || "",
-                          brand: item.title || "",
+                          // image: item.thumb || "",
+                          // notes: item.description || "",
+                          // brand: item.title || "",
                         },
                       });
                     }
@@ -670,9 +658,9 @@ export default {
                               secondLevel.id || secondLevel.title,
                             product_type_goods_ids: item.id,
                             other: {
-                              image: item.thumb || "",
-                              notes: item.description || "",
-                              brand: item.title || "",
+                              // image: item.thumb || "",
+                              // notes: item.description || "",
+                              // brand: item.title || "",
                             },
                           });
                         }
@@ -711,6 +699,11 @@ export default {
       this.activeTabTitle = this.tabs[this.activeTab].title;
       this.controllers = this.tabs[this.activeTab - 1].child;
     },
+    selectTab(tab, index) {
+      this.activeTab = index + 1;
+      this.activeTabTitle = this.tabs[this.activeTab].title;
+      this.controllers = this.tabs[this.activeTab - 1].child;
+    },
     // 颜色选择
     colorPicker() {
       this.showColorDialog = true;
@@ -719,7 +712,7 @@ export default {
     handleDialogSubmit(data) {
       console.log("弹框提交的数据:", data);
       // 这里可以处理提交的数据，比如发送到服务器
-      this.$message.success("配置已保存");
+      // this.$message.success("配置已保存");
     },
     // 颜色定制提交
     handleColorSubmit(data) {
@@ -729,7 +722,7 @@ export default {
         // 如果输入了RGBA，更新颜色值
         this.color1 = data.rgba;
       }
-      this.$message.success("颜色配置已保存");
+      // this.$message.success("颜色配置已保存");
     },
     // 用户信息提交
     handleUserInfoSubmit(data) {
@@ -741,6 +734,10 @@ export default {
       this.$router.push("/rebotPreview?id=" + this.id);
     },
     editConfirm() {
+      const formattedData = this.generateFormattedData();
+      console.log("格式化后的数据:", formattedData);
+      // 存储到localStorage
+      localStorage.setItem("robotConfig", JSON.stringify(formattedData));
       this.$message.success("修改成功");
       this.$router.push("/rebotPreview?id=" + this.id);
     },

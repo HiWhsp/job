@@ -85,7 +85,7 @@
                 v-if="item.price_status == 4"
               />
             </div>
-            <div class="item-edit">
+            <div class="item-edit" v-if="!configOrderNumber">
               <i class="el-icon-edit" @click="editItem(item)"></i>
             </div>
           </div>
@@ -112,7 +112,7 @@
           <div class="price-value">{{ referencePrice }}</div>
           <button
             class="save-config-btn"
-            @click="saveConfig"
+            @click="showUserInfoDialog = true"
             v-if="!configOrderNumber"
           >
             保存配置单
@@ -125,7 +125,7 @@
             下载配置单
           </button>
         </div>
-        <div class="user-info">
+        <div class="user-info" v-if="userInfo.name">
           <div class="user-title">用户信息</div>
           <div class="user-info-item">
             <div class="user-info-item-label">姓名：</div>
@@ -153,15 +153,24 @@
       :config-data="robotConfig"
       @download="handleDownload"
     />
+
+    <!-- 用户信息填写弹框 -->
+    <UserInfoDialog
+      v-model="showUserInfoDialog"
+      @submit="handleUserInfoSubmit"
+    />
   </div>
 </template>
 
 <script>
 import DownloadDialog from "@/components/DownloadDialog.vue";
+import UserInfoDialog from "@/components/UserInfoDialog.vue";
+
 export default {
   name: "RobotPreview",
   components: {
     DownloadDialog,
+    UserInfoDialog
   },
   data() {
     return {
@@ -170,13 +179,15 @@ export default {
       referencePrice: "¥ 19,888 起",
       configItems: [],
       userInfo: {},
-      showDownloadDialog: false,
+      showDownloadDialog: false, // 下载弹框
+      showUserInfoDialog: false, // 用户信息填写弹框
+
       robotConfig: {},
     };
   },
   mounted() {
     this.id = this.$route.query.id;
-    this.userInfo = JSON.parse(localStorage.getItem("robotUserInfo"));
+    this.userInfo = JSON.parse(localStorage.getItem("robotUserInfo")) || {};
     this.getRobotConfig();
   },
   methods: {
@@ -190,6 +201,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           this.loadConfigFromStorage(res.data.lists);
+          this.referencePrice = `¥ ${res.data.info.price} 起`;
         }
       });
     },
@@ -351,7 +363,7 @@ export default {
             data: {
               ...this.userInfo,
               product_id: this.id,
-              product_info: JSON.stringify(this.configItems),
+              product_info: JSON.stringify(localStorage.getItem("robotConfig")),
             },
           }).then((res) => {
             if (res.code == 200) {
@@ -368,6 +380,15 @@ export default {
           });
         },
       });
+    },
+
+    // 用户信息提交
+    handleUserInfoSubmit(data) {
+      // 处理用户信息提交数据
+      localStorage.setItem("robotUserInfo", JSON.stringify(data));
+      this.userInfo = data;
+      this.showUserInfoDialog = false;
+      this.saveConfig();
     },
 
     // 处理下载
