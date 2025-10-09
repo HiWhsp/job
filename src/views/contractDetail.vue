@@ -2,7 +2,7 @@
   <div class="page-index">
     <div class="main-content w-1600">
       <!-- 业务公告 -->
-      <div class="announcement-section">
+      <!-- <div class="announcement-section">
         <div class="announcement-banner">
           <div class="banner-content">
             <div class="announcement-text red-text">
@@ -19,7 +19,6 @@
           </div>
         </div>
 
-        <!-- 最新动态 -->
         <div class="latest-updates">
           <div class="updates-title">最新动态</div>
           <div class="updates-list">
@@ -36,7 +35,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- 面包屑导航 -->
       <div class="breadcrumb-section">
@@ -105,7 +104,7 @@
         </div>
 
         <!-- 右侧下载信息区域 -->
-        <div class="download-info">
+        <div class="download-info" :class="{ 'download-info-absolute': isDownloadInfoAbsolute }" ref="downloadInfo">
           <!-- 下载须知 -->
           <div class="download-notice">
             <h3 class="notice-title">下载须知</h3>
@@ -225,6 +224,8 @@ export default {
       latestUpdates: [],
       contracts: [],
       detail: {},
+      isDownloadInfoAbsolute: false,
+      lastScrollTime: 0,
     };
   },
   mounted() {
@@ -238,6 +239,10 @@ export default {
       this.latestUpdates = res.data.recent;
     });
     this.setView();
+    this.addScrollListener();
+  },
+  beforeDestroy() {
+    this.removeScrollListener();
   },
   methods: {
     setView() {
@@ -299,6 +304,37 @@ export default {
           this.$message.success(res.msg);
         }
       });
+    },
+    addScrollListener() {
+      window.addEventListener('scroll', this.handleScroll);
+    },
+    removeScrollListener() {
+      window.removeEventListener('scroll', this.handleScroll);
+    },
+    handleScroll() {
+      const now = Date.now();
+      // 节流：每50ms最多执行一次
+      if (now - this.lastScrollTime < 50) {
+        return;
+      }
+      this.lastScrollTime = now;
+      
+      const contractContentSection = document.querySelector('.contract-content-section');
+      
+      if (!contractContentSection) return;
+      
+      const sectionRect = contractContentSection.getBoundingClientRect();
+      
+      // 简化判断逻辑：只基于contract-content-section的位置
+      const isSectionOutOfView = sectionRect.bottom < 0 || sectionRect.top > window.innerHeight;
+      
+      if (this.isDownloadInfoAbsolute) {
+        // 如果已经是absolute定位，当section重新进入可视区域时恢复fixed
+        this.isDownloadInfoAbsolute = isSectionOutOfView;
+      } else {
+        // 如果还是fixed定位，当section超出可视区域时切换为absolute
+        this.isDownloadInfoAbsolute = isSectionOutOfView;
+      }
     },
   },
 };

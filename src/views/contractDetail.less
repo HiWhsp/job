@@ -127,6 +127,8 @@
   display: flex;
   gap: 20px;
   margin-top: 20px;
+  position: relative;
+  padding-right: 497px;
 }
 
 // 左侧文档预览区域
@@ -267,6 +269,18 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  position: fixed;
+  right: 160px;
+  z-index: 1000;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  
+  // 当超出可视区域时使用absolute定位
+  &.download-info-absolute {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+  }
 }
 
 // 下载须知
