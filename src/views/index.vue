@@ -136,15 +136,23 @@
               v-if="item.child.length === 0"
             />
           </div>
+
           <!-- <div class="advertising-section" v-if="item.title == '婚姻家庭'">
             <div class="advertising-banner">
               <img src="@img/index/advertising-banner.jpg" alt="" />
             </div>
           </div> -->
-        </div>
+        </div>  
+        <el-empty
+          style="width: 100%; height: 100%"
+          description="暂无数据"
+          v-if="contracts.length === 0"
+        />
       </div>
 
-      <div class="footer-section btn-hover" @click="handleViewMore(0)">查看更多合同文书</div>
+      <div class="footer-section btn-hover" @click="handleViewMore(0)">
+        查看更多合同文书
+      </div>
     </div>
   </div>
 </template>

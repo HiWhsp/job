@@ -42,7 +42,9 @@
                 {{ product.title }}
               </h3>
               <p class="product-description">
-                <span class="ellipsis-3">{{ product.description }}</span>
+                <el-tooltip :content="product.description" placement="top">
+                  <span class="ellipsis-3">{{ product.description }}</span>
+                </el-tooltip>
               </p>
 
               <div class="flex-between">

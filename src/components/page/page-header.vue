@@ -37,7 +37,7 @@
         <div class="scrolled-navigation" v-if="isScrolled">
           <el-dropdown trigger="hover" class="nav-dropdown">
             <span class="nav-link">
-              {{ $route.name }}
+              首页
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" @click.native="handleNavClick">

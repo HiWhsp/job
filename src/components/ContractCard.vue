@@ -11,7 +11,7 @@
             <img src="@img/index/word-icon.png" alt="" />
           </div>
           <div class="document-title">
-            <p class="ellipsis-1">{{ contract.title }}</p>
+            <p class="ellipsis-1">{{ displayTitle }}</p>
             <div class="document-info">word A4 打印 内容可随意更改</div>
           </div>
         </div>
@@ -38,7 +38,7 @@
       <div class="overlay-stats">
         <div class="stat-item">
           <i class="el-icon-view"></i>
-          <span>{{ contract.view_num || 0  }}</span>
+          <span>{{ contract.view_num || 0 }}</span>
         </div>
         <div class="stat-item">
           <i class="el-icon-star-off"></i>
@@ -47,7 +47,7 @@
       </div>
     </div>
 
-    <div class="card-title ellipsis-1">{{ contract.title }}</div>
+    <div class="card-title ellipsis-1">{{ displayTitle }}</div>
   </div>
 </template>
 
@@ -74,16 +74,24 @@ export default {
       showOverlay: false,
     };
   },
+  computed: {
+    displayTitle() {
+      if (!this.contract.title) return "";
+      // 使用字段截取，只展示括号左边的内容
+      const leftBracketIndex = this.contract.title.indexOf('（') || this.contract.title.indexOf('(');
+      return leftBracketIndex !== -1 ? this.contract.title.substring(0, leftBracketIndex) : this.contract.title;
+    },
+  },
   methods: {
     handleView() {
       this.$router.push({
         path: "/contractDetail",
         query: {
-          id: this.type == "collect" ? this.contract.articleId : this.contract.id,
+          id:
+            this.type == "collect" ? this.contract.articleId : this.contract.id,
         },
       });
       console.log(this.contract);
-      
     },
     handleCollect() {
       const status = this.contract.is_collect == 0 ? 1 : 0;
@@ -92,7 +100,8 @@ export default {
         method: "get",
         data: {
           status,
-          articleId: this.type == "collect" ? this.contract.articleId : this.contract.id,
+          articleId:
+            this.type == "collect" ? this.contract.articleId : this.contract.id,
         },
       }).then((res) => {
         if (res.code == 200) {

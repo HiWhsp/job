@@ -14,7 +14,11 @@
           show-overflow-tooltip
         >
           <template slot-scope="">
-            <img style="width: 40px; height: 40px" src="../../assets/img/common/word.png" alt="" />
+            <img
+              style="width: 40px; height: 40px"
+              src="../../assets/img/common/word.png"
+              alt=""
+            />
           </template>
         </el-table-column>
 
@@ -31,9 +35,7 @@
         </el-table-column>
         <el-table-column prop="downloadStatus" label="文档大小" align="center">
           <template slot-scope="scope">
-            <span class="order-time">{{
-              scope.row.size || 0 + "MB"
-            }}</span>
+            <span class="order-time">{{ scope.row.size || 0 + "MB" }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="downloadStatus" label="" align="center">
@@ -192,13 +194,21 @@ export default {
     handleDownload(order) {
       // 设置下载状态
       this.$set(order, "downloading", true);
-
-      // 模拟下载过程
-      setTimeout(() => {
-        this.$set(order, "downloading", false);
-        this.$set(order, "downloadStatus", "downloaded");
-        this.$message.success("下载完成！");
-      }, 2000);
+      this.$api({
+        url: "contractReal",
+        method: "post",
+        data: {
+          articleId: order.articleId,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          window.open(res.data.doc_url, "_blank");
+          this.loadData();
+        } else {
+          this.$message.error(res.msg);
+          this.loadData();
+        }
+      });
     },
 
     // 每页条数改变
