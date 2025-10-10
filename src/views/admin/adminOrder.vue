@@ -32,7 +32,7 @@
             <el-col :span="6">
               <el-form-item label="配置单号">
                 <el-input
-                  v-model="searchForm.orderNumber"
+                  v-model="searchForm.order_no"
                   placeholder="请输入"
                   clearable
                 />
@@ -41,7 +41,7 @@
             <el-col :span="6">
               <el-form-item label="联系人">
                 <el-input
-                  v-model="searchForm.contact"
+                  v-model="searchForm.name"
                   placeholder="请输入"
                   clearable
                 />
@@ -85,9 +85,9 @@
                 >
                   <el-option
                     v-for="item in deviceTypeOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                    :key="item.id"
+                    :label="item.title"
+                    :value="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -95,16 +95,7 @@
             <el-col :span="6">
               <el-form-item label="设备型号">
                 <el-input
-                  v-model="searchForm.deviceModel"
-                  placeholder="请输入"
-                  clearable
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="控制器">
-                <el-input
-                  v-model="searchForm.controller"
+                  v-model="searchForm.product_title"
                   placeholder="请输入"
                   clearable
                 />
@@ -146,20 +137,19 @@
           style="width: 100%"
           :header-cell-style="{ background: '#ED6C00', color: '#fff' }"
         >
+          <el-table-column prop="index" label="序号" width="80" align="center">
+            <template slot-scope="scope">
+              {{ scope.$index + 1 }}
+            </template>
+          </el-table-column>
           <el-table-column
-            prop="index"
-            label="序号"
-            width="80"
-            align="center"
-          />
-          <el-table-column
-            prop="orderNumber"
+            prop="order_no"
             label="配置单号"
             width="120"
             show-overflow-tooltip
           />
-          <el-table-column prop="contact" label="联系人" width="80" />
-          <el-table-column prop="phone" label="手机号" width="140" />
+          <el-table-column prop="name" label="联系人" width="80" />
+          <el-table-column prop="mobile" label="手机号" width="140" />
           <el-table-column
             prop="email"
             label="邮箱"
@@ -167,20 +157,18 @@
             show-overflow-tooltip
           />
           <el-table-column
-            prop="unit"
+            prop="company"
             label="所属单位"
             width="180"
             show-overflow-tooltip
           />
-          <el-table-column prop="deviceType" label="设备类型" width="120" />
-          <el-table-column prop="deviceModel" label="设备型号" width="100" />
-          <el-table-column prop="controller" label="控制器" width="100" />
-          <el-table-column
-            prop="controllerModel"
-            label="控制器型号"
-            width="140"
-          />
-          <el-table-column prop="submitDate" label="提交日期" width="160" />
+          <el-table-column prop="deviceType" label="设备类型">
+            <template slot-scope="scope">
+              {{ getDeviceType(scope.row.product_channel_id) }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="product_title" label="设备型号" />
+          <el-table-column prop="created_at" label="提交日期" />
           <el-table-column
             label="操作"
             width="120"
@@ -200,17 +188,16 @@
         </el-table>
 
         <!-- 分页 -->
-        <!-- <div class="pagination-wrapper">
+        <div class="pagination-wrapper">
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="pagination.currentPage"
-            :page-sizes="[10, 20, 50, 100]"
             :page-size="pagination.pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
+            layout="total, prev, pager, next"
             :total="pagination.total"
           />
-        </div> -->
+        </div>
       </div>
     </div>
   </div>
@@ -223,89 +210,17 @@ export default {
     return {
       loading: false,
       searchForm: {
-        orderNumber: "",
-        contact: "",
+        order_no: "",
+        name: "",
         phone: "",
         email: "",
-        unit: "",
+        company: "",
         deviceType: "",
-        deviceModel: "",
-        controller: "",
-        date: "",
+        product_title: "",
+        created_at: "",
       },
-      deviceTypeOptions: [
-        { label: "潜伏式机器人", value: "潜伏式机器人" },
-        { label: "叉车式机器人", value: "叉车式机器人" },
-        { label: "顶升式机器人", value: "顶升式机器人" },
-        { label: "牵引式机器人", value: "牵引式机器人" },
-      ],
-      tableData: [
-        {
-          index: 1,
-          orderNumber: "250909-12345",
-          contact: "张三",
-          phone: "12345678912",
-          email: "1743962256@qq.com",
-          unit: "单位名称单位名称",
-          deviceType: "潜伏式机器人",
-          deviceModel: "Camel-600",
-          controller: "仙工",
-          controllerModel: "SRC-880",
-          submitDate: "2025/09/09 14:39",
-        },
-        {
-          index: 2,
-          orderNumber: "250909-12346",
-          contact: "李四",
-          phone: "12345678913",
-          email: "1743962257@qq.com",
-          unit: "单位名称单位名称",
-          deviceType: "潜伏式机器人",
-          deviceModel: "Camel-600",
-          controller: "仙工",
-          controllerModel: "SRC-880",
-          submitDate: "2025/09/09 14:40",
-        },
-        {
-          index: 3,
-          orderNumber: "250909-12347",
-          contact: "王五",
-          phone: "12345678914",
-          email: "1743962258@qq.com",
-          unit: "单位名称单位名称",
-          deviceType: "潜伏式机器人",
-          deviceModel: "Camel-600",
-          controller: "仙工",
-          controllerModel: "SRC-880",
-          submitDate: "2025/09/09 14:41",
-        },
-        {
-          index: 4,
-          orderNumber: "250909-12348",
-          contact: "赵六",
-          phone: "12345678915",
-          email: "1743962259@qq.com",
-          unit: "单位名称单位名称",
-          deviceType: "潜伏式机器人",
-          deviceModel: "Camel-600",
-          controller: "仙工",
-          controllerModel: "SRC-880",
-          submitDate: "2025/09/09 14:42",
-        },
-        {
-          index: 5,
-          orderNumber: "250909-12349",
-          contact: "钱七",
-          phone: "12345678916",
-          email: "1743962260@qq.com",
-          unit: "单位名称单位名称",
-          deviceType: "潜伏式机器人",
-          deviceModel: "Camel-600",
-          controller: "仙工",
-          controllerModel: "SRC-880",
-          submitDate: "2025/09/09 14:43",
-        },
-      ],
+      deviceTypeOptions: [], // 设备类型选项
+      tableData: [],
       pagination: {
         currentPage: 1,
         pageSize: 10,
@@ -317,25 +232,20 @@ export default {
     // 搜索功能
     handleSearch() {
       this.loading = true;
-      // 模拟API调用
-      setTimeout(() => {
-        this.loading = false;
-        this.$message.success("搜索完成");
-      }, 1000);
+      this.loadData();
     },
 
     // 重置搜索
     handleReset() {
       this.searchForm = {
-        orderNumber: "",
-        contact: "",
+        order_no: "",
+        name: "",
         phone: "",
         email: "",
-        unit: "",
+        company: "",
         deviceType: "",
-        deviceModel: "",
-        controller: "",
-        date: "",
+        product_title: "",
+        created_at: "",
       };
       this.$message.info("已重置搜索条件");
     },
@@ -346,7 +256,7 @@ export default {
       this.$router.push({
         path: "/adminOrderDetail",
         query: {
-          orderNumber: row.orderNumber,
+          order_no: row.order_no,
         },
       });
     },
@@ -367,15 +277,29 @@ export default {
     // 加载数据
     loadData() {
       this.loading = true;
-      // 模拟API调用
-      setTimeout(() => {
+      this.$api({
+        url: "logProductSetting",
+        method: "post",
+        data: this.searchForm,
+      }).then((res) => {
+        this.tableData = res.data.list;
+        this.pagination.total = res.data.count;
         this.loading = false;
-      }, 500);
+      });
+    },
+    getDeviceType(id) {
+      return this.deviceTypeOptions.find((item) => item.id === id)?.title;
     },
   },
 
   mounted() {
     this.loadData();
+    this.$api({
+      url: "getProductType",
+      method: "get",
+    }).then((res) => {
+      this.deviceTypeOptions = res.data;
+    });
   },
 };
 </script>

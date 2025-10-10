@@ -99,7 +99,7 @@ export default new Vuex.Store({
     set_vuex_user(state, data) {
       // //console.log("vuex set_vuex_user 设置用户信息", { ...data });
 
-      let userId = data.userId || data.id;
+      let userId = data.user_id || data.id;
 
       state.vuex_is_login = true;
       state.userId = userId;

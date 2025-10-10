@@ -153,33 +153,23 @@ export default {
         return;
       }
 
-      try {
-        // const res = await this.$api({
-        //   url: "login",
-        //   method: "post",
-        //   data: this.formData,
-        // });
-        if (res.code === 200) {
-          this.$message.success("登录成功");
-        } else {
-          this.$message.error("登录失败，请检查验证码是否正确");
-        }
-
-        // 保存登录状态
-        localStorage.setItem("adminToken", "mock_token");
-        localStorage.setItem(
-          "adminUser",
-          JSON.stringify({
-            email: this.formData.email,
-            name: "Admin User",
-          })
-        );
-
-        // 跳转到管理页面
-        this.$router.push("/admin/dashboard");
-      } catch (error) {
+      const res = await this.$api({
+        url: "email_login",
+        method: "post",
+        data: this.formData,
+      });
+      if (res.code === 200) {
+        this.$message.success("登录成功");
+      } else {
         this.$message.error("登录失败，请检查验证码是否正确");
       }
+
+      // 保存登录状态
+      localStorage.setItem("token", res.data.token);
+      this.$store.commit("set_vuex_user", res.data);
+
+      // 跳转到管理页面
+      this.$router.push("/adminOrder");
     },
   },
 };

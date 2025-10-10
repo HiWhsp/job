@@ -178,7 +178,7 @@ export default {
   name: "AdminOrderDetail",
   data() {
     return {
-      orderNumber: "123456789",
+      orderNumber: "",
       contactInfo: {
         name: "张三",
         phone: "15931263145",
@@ -230,6 +230,17 @@ export default {
     };
   },
   methods: {
+    getOrderDetail() {
+      this.$api({
+        url: "showProductSetting",
+        method: "post",
+        data: {
+          id: this.orderNumber,
+        },
+      }).then((res) => {
+        // this.orderDetail = res.data;
+      });
+    },
     handleClose() {
       this.$router.go(-1);
     },
@@ -240,9 +251,10 @@ export default {
   },
   mounted() {
     // 从路由参数获取订单号
-    if (this.$route.query.orderNumber) {
-      this.orderNumber = this.$route.query.orderNumber;
+    if (this.$route.query.order_no) {
+      this.orderNumber = this.$route.query.order_no;
     }
+    this.getOrderDetail();
   },
 };
 </script>
