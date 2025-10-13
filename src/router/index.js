@@ -24,6 +24,7 @@ Vue.use(VueRouter);
 const index = () => import(/* webpackChunkName: "index" */ "@/views/index.vue");
 const aiRecommendation = () => import(/* webpackChunkName: "aiRecommendation" */ "@/views/aiRecommendation.vue");
 const rebotPreview = () => import(/* webpackChunkName: "rebotPreview" */ "@/views/rebotPreview.vue");
+const h5rebotPreview = () => import(/* webpackChunkName: "h5rebotPreview" */ "@/views/h5rebotPreview.vue");
 
 // 翼菲后台管理页面
 const admin = () => import(/* webpackChunkName: "admin" */ "@/views/admin/index.vue");
@@ -65,6 +66,12 @@ const routes = [
     path: "/adminOrderDetail",
     name: "翼非官网后台管理系统详情",
     component: adminOrderDetail,
+    meta: {},
+  },
+  {
+    path: "/h5rebotPreview",
+    name: "h5机器人预览",
+    component: h5rebotPreview,
     meta: {},
   },
   {

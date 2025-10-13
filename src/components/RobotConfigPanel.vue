@@ -31,7 +31,7 @@
         <div
           v-for="(tab, index) in tabs"
           :key="tab.id"
-          :class="['tab-item', { active: activeTab === tab.id }]"
+          :class="['tab-item', { active: activeTabTitle == tab.title }]"
           @click="selectTab(tab, index)"
         >
           {{ tab.title }}
@@ -48,7 +48,7 @@
     <!-- 配置内容区域 -->
     <div class="config-content">
       <!-- 控制器和雷达标签页 -->
-      <div v-if="activeTab === 1" class="config-section">
+      <div v-if="activeTabTitle === '控制器和雷达'" class="config-section">
         <!-- 控制器部分 -->
         <div v-for="controller in controllers" :key="controller.id">
           <div class="section-title">{{ controller.title }}</div>
@@ -57,10 +57,13 @@
               v-for="item in controller.producntInfos"
               :key="item.id"
               :class="['controller-item', { selected: item.selected }]"
-              @click="selectController(item.id)"
+              @click="selectController(item.id, item)"
             >
               <div class="controller-image">
-                <img :src="item.thumb" alt="controller" />
+                <img
+                  :src="item.thumb || vuex_avatar_default"
+                  alt="controller"
+                />
               </div>
               <div class="controller-info">
                 <div class="controller-info-left">
@@ -91,10 +94,10 @@
       </div>
 
       <!-- 元器件标签页 -->
-      <div v-if="activeTab === 2" class="config-section">
+      <div v-if="activeTabTitle === '元器件'" class="config-section">
         <div v-for="item in controllers" :key="item.id">
           <div class="section-title">{{ item.title }}</div>
-          <div class="motor-grid">
+          <div class="motor-grid" v-if="!item.child">
             <div
               v-for="item in item.producntInfos"
               :key="item.id"
@@ -119,11 +122,41 @@
               />
             </div>
           </div>
+          <div v-else>
+            <div v-for="item2 in item.child" :key="item2.id">
+              <div class="section-title">{{ item2.title }}</div>
+              <div class="motor-grid" v-if="!item2.child">
+                <div
+                  v-for="item3 in item2.producntInfos"
+                  :key="item3.id"
+                  :class="['motor-item', { selected: item3.selected }]"
+                  @click="selectMotor(item3.id)"
+                >
+                  <span class="motor-name">{{ item3.title }}</span>
+                  <img
+                    src="@/assets/img/icon/Group1.png"
+                    alt=""
+                    v-if="item3.price_status == '1'"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group2.png"
+                    alt=""
+                    v-if="item3.price_status == '2'"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group3.png"
+                    alt=""
+                    v-if="item3.price_status == '3'"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- 外观模块标签页 -->
-      <div v-if="activeTab === 3" class="config-section">
+      <div v-if="activeTabTitle === '外观模块'" class="config-section">
         <div class="select-module">
           <div v-for="item in controllers" :key="item.id">
             <div class="select-module-title">{{ item.title }}</div>
@@ -256,19 +289,19 @@
 
     <!-- 底部按钮 -->
     <div class="config-footer" v-if="!isEdit">
-      <button class="prev-button" v-if="activeTab !== 1" @click="prevStep">
+      <button class="prev-button" v-if="activeTab !== 0" @click="prevStep">
         <i class="el-icon-arrow-left"></i>
       </button>
       <button
         class="next-button"
-        v-if="activeTab < tabs.length"
+        v-if="activeTab < tabs.length - 1"
         @click="nextStep"
       >
         {{ activeTabTitle }} >
       </button>
       <button
         class="next-button"
-        v-if="activeTab == tabs.length"
+        v-if="activeTab == tabs.length - 1"
         @click="submitRobot"
       >
         总览 >
@@ -284,6 +317,7 @@
 
     <!-- 自定义弹框 -->
     <CustomDialog
+      ref="customDialog"
       v-model="showDialog"
       :title="dialogTitle"
       @submit="handleDialogSubmit"
@@ -329,7 +363,7 @@ export default {
       editTitle: "", // 编辑标题
       editIndex: 0, // 编辑索引
       showOverlay: true, // 初始显示遮罩层
-      activeTab: 1, // 当前激活的标签页
+      activeTab: 0, // 当前激活的标签页
       color1: "#303030", // 颜色
       logo1: logo1, // logo
       showDialog: false, // 自定义配置弹框
@@ -339,6 +373,7 @@ export default {
       tabs: [], // 标签页
       controllers: [], // 控制器
       activeTabTitle: "", // 当前激活的标签页标题
+      currentOtherItem: null, // 当前选中的"其他"选项
     };
   },
   watch: {
@@ -346,9 +381,9 @@ export default {
       this.editIndex = this.$route.query.index || 0;
       this.tabs = this.detail;
       this.controllers = this.tabs[this.editIndex].child;
-      this.activeTabTitle = this.tabs[1]
-        ? this.tabs[1].title
-        : this.tabs[0].title;
+      this.activeTabTitle = this.tabs[this.editIndex || 0]
+        ? this.tabs[this.editIndex || 0].title
+        : this.tabs[this.editIndex || 0].title;
       // 为所有item添加selected属性
       this.initializeSelectedState();
       // 加载本地保存的配置
@@ -367,6 +402,13 @@ export default {
           if (controller.producntInfos) {
             controller.producntInfos.forEach((item) => {
               this.$set(item, "selected", false);
+              if (item.title === "其他" || item.title === "其他配件") {
+                this.$set(item, "other", {
+                  image: "",
+                  notes: "",
+                  brand: "",
+                });
+              }
             });
           }
           if (controller.child) {
@@ -374,6 +416,13 @@ export default {
               if (child.producntInfos) {
                 child.producntInfos.forEach((item) => {
                   this.$set(item, "selected", false);
+                  if (item.title === "其他" || item.title === "其他配件") {
+                    this.$set(item, "other", {
+                      image: "",
+                      notes: "",
+                      brand: "",
+                    });
+                  }
                 });
               }
             });
@@ -397,7 +446,21 @@ export default {
     selectMotor(motorId) {
       // 找到当前电机所在的组，只在该组内进行单选
       this.controllers.forEach((controller) => {
-        if (controller.producntInfos) {
+        if (controller.child) {
+          controller.child.forEach((child) => {
+            if (child.producntInfos) {
+              const targetItem = child.producntInfos.find(
+                (item) => item.id === motorId
+              );
+              if (targetItem) {
+                child.producntInfos.forEach((item) => {
+                  this.$set(item, "selected", false);
+                });
+                this.$set(targetItem, "selected", true);
+              }
+            }
+          });
+        } else if (controller.producntInfos) {
           // 检查当前点击的item是否在这个组中
           const targetItem = controller.producntInfos.find(
             (item) => item.id === motorId
@@ -416,15 +479,18 @@ export default {
     },
 
     // 选择控制器
-    selectController(controllerId) {
+    selectController(controllerId, item) {
+      let targetItem = null;
+      
       // 找到当前控制器所在的组，只在该组内进行单选
       this.controllers.forEach((controller) => {
         if (controller.producntInfos) {
           // 检查当前点击的item是否在这个组中
-          const targetItem = controller.producntInfos.find(
+          const foundItem = controller.producntInfos.find(
             (item) => item.id === controllerId
           );
-          if (targetItem) {
+          if (foundItem) {
+            targetItem = foundItem; // 保存找到的item
             // 先取消当前组内所有item的选中状态
             controller.producntInfos.forEach((item) => {
               this.$set(item, "selected", false);
@@ -436,24 +502,35 @@ export default {
         }
       });
 
-      if (controllerId === "other") {
+      if (item.title === "其他" || item.title === "其他配件") {
+        this.currentOtherItem = targetItem; // 保存当前选中的"其他"选项
         this.dialogTitle = "其他选项配置";
         this.showDialog = true;
+        
+        // 如果有已保存的数据，回显到弹框中
+        this.$nextTick(() => {
+          if (this.$refs.customDialog && targetItem.other) {
+            this.$refs.customDialog.setFormData(targetItem.other);
+          }
+        });
       }
     },
 
     // 选择外观模块item
     selectAppearanceItem(itemId) {
+      let targetItem = null; // 提升到方法最开始
+      
       // 找到对应的item并切换选中状态
       this.controllers.forEach((controller) => {
         if (controller.child) {
           controller.child.forEach((child) => {
             if (child.producntInfos) {
               // 检查当前点击的item是否在这个子组中
-              const targetItem = child.producntInfos.find(
+              const foundItem = child.producntInfos.find(
                 (item) => item.id === itemId
               );
-              if (targetItem) {
+              if (foundItem) {
+                targetItem = foundItem; // 保存找到的item
                 // 先取消当前子组内所有item的选中状态
                 child.producntInfos.forEach((item) => {
                   this.$set(item, "selected", false);
@@ -466,6 +543,20 @@ export default {
           });
         }
       });
+      
+      // 如果是"其他"选项，打开弹框
+      if (targetItem && (targetItem.title === "其他" || targetItem.title === "其他配件")) {
+        this.currentOtherItem = targetItem; // 保存当前选中的"其他"选项
+        this.dialogTitle = "其他选项配置";
+        this.showDialog = true;
+        
+        // 如果有已保存的数据，回显到弹框中
+        this.$nextTick(() => {
+          if (this.$refs.customDialog && targetItem.other) {
+            this.$refs.customDialog.setFormData(targetItem.other);
+          }
+        });
+      }
     },
 
     // 从localStorage加载配置数据
@@ -578,9 +669,7 @@ export default {
       localStorage.setItem("robotConfig", JSON.stringify(formattedData));
       // this.$message.success("配置已保存到本地");
 
-
       this.$router.push("/rebotPreview?id=" + this.id);
-
     },
 
     // 生成指定格式的数据
@@ -604,11 +693,7 @@ export default {
                     product_type_two_id: firstLevel.id || firstLevel.title,
                     product_type_three_id: "",
                     product_type_goods_ids: item.id,
-                    other: {
-                      // image: item.thumb || "",
-                      // notes: item.description || "",
-                      // brand: item.title || "",
-                    },
+                    other: item.other,
                   });
                 }
               });
@@ -630,11 +715,7 @@ export default {
                         product_type_three_id:
                           secondLevel.id || secondLevel.title,
                         product_type_goods_ids: item.id,
-                        other: {
-                          // image: item.thumb || "",
-                          // notes: item.description || "",
-                          // brand: item.title || "",
-                        },
+                        other: item.other,
                       });
                     }
                   });
@@ -657,11 +738,7 @@ export default {
                             product_type_three_id:
                               secondLevel.id || secondLevel.title,
                             product_type_goods_ids: item.id,
-                            other: {
-                              // image: item.thumb || "",
-                              // notes: item.description || "",
-                              // brand: item.title || "",
-                            },
+                            other: item.other,
                           });
                         }
                       });
@@ -681,39 +758,53 @@ export default {
       if (this.activeTab <= this.tabs.length) {
         this.activeTab++;
       } else {
-        this.activeTab = this.tabs.length;
+        this.activeTab = this.tabs.length - 1;
       }
 
       this.activeTabTitle = this.tabs[this.activeTab]
         ? this.tabs[this.activeTab].title
-        : this.tabs[this.activeTab - 1].title;
-      this.controllers = this.tabs[this.activeTab - 1].child;
+        : this.tabs[this.activeTab].title;
+      this.controllers = this.tabs[this.activeTab].child;
     },
     prevStep() {
-      if (this.activeTab > 1) {
+      if (this.activeTab > 0) {
         this.activeTab--;
       } else {
-        this.activeTab = 1;
+        this.activeTab = 0;
       }
 
       this.activeTabTitle = this.tabs[this.activeTab].title;
-      this.controllers = this.tabs[this.activeTab - 1].child;
+      this.controllers = this.tabs[this.activeTab].child;
     },
     selectTab(tab, index) {
-      this.activeTab = index + 1;
+      this.activeTab = index;
       this.activeTabTitle = this.tabs[this.activeTab].title;
-      this.controllers = this.tabs[this.activeTab - 1].child;
+      this.controllers = this.tabs[this.activeTab].child;
     },
     // 颜色选择
     colorPicker() {
       this.showColorDialog = true;
     },
+
     // 弹框提交
     handleDialogSubmit(data) {
-      console.log("弹框提交的数据:", data);
-      // 这里可以处理提交的数据，比如发送到服务器
-      // this.$message.success("配置已保存");
+      
+      // 将弹框数据赋值到当前选中的"其他"选项的other对象中
+      if (this.currentOtherItem) {
+        this.$set(this.currentOtherItem, 'other', {
+          notes: data.notes || "",
+          brand: data.brand || "",
+          image: data.images && data.images.length > 0 ? data.images[0].url : ""
+        });
+        
+        console.log("已更新other对象:", this.currentOtherItem.other);
+        this.$message.success("其他选项配置已保存");
+      }
+      
+      // 重置当前选中的"其他"选项
+      this.currentOtherItem = null;
     },
+    
     // 颜色定制提交
     handleColorSubmit(data) {
       console.log("颜色定制数据:", data);
@@ -724,15 +815,7 @@ export default {
       }
       // this.$message.success("颜色配置已保存");
     },
-    // 用户信息提交
-    handleUserInfoSubmit(data) {
-      console.log("用户信息提交数据:", data);
-      // 处理用户信息提交数据
-      localStorage.setItem("robotUserInfo", JSON.stringify(data));
-      this.$message.success("用户信息保存成功");
-      // 跳转到机器人预览页面
-      this.$router.push("/rebotPreview?id=" + this.id);
-    },
+
     editConfirm() {
       const formattedData = this.generateFormattedData();
       console.log("格式化后的数据:", formattedData);

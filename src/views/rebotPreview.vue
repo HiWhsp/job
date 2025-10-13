@@ -363,7 +363,7 @@ export default {
             data: {
               ...this.userInfo,
               product_id: this.id,
-              product_info: JSON.stringify(localStorage.getItem("robotConfig")),
+              product_info: localStorage.getItem("robotConfig"),
             },
           }).then((res) => {
             if (res.code == 200) {

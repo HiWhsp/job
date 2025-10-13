@@ -9,13 +9,24 @@
     <!-- 文本输入区域 -->
     <div class="dialog-content">
       <div class="input-section">
-        <el-input
-          v-model="formData.text"
-          type="textarea"
-          :rows="4"
-          placeholder="请输入文字"
-          class="text-input"
-        ></el-input>
+        <!-- <div class="form-item">
+          <label class="form-label">品牌/型号：</label>
+          <el-input
+            v-model="formData.brand"
+            placeholder="请输入品牌或型号"
+            class="text-input"
+          ></el-input>
+        </div> -->
+        <div class="form-item">
+          <label class="form-label">备注说明：</label>
+          <el-input
+            v-model="formData.notes"
+            type="textarea"
+            :rows="4"
+            placeholder="请输入文字"
+            class="text-input"
+          ></el-input>
+        </div>
       </div>
 
       <!-- 图片上传区域 -->
@@ -76,7 +87,8 @@ export default {
   data() {
     return {
       formData: {
-        text: ""
+        notes: "",
+        brand: ""
       },
       uploadedImages: []
     };
@@ -95,6 +107,20 @@ export default {
     handleClose() {
       this.visible = false;
       this.resetForm();
+    },
+    // 设置表单数据（用于回显）
+    setFormData(data) {
+      console.log(data);
+      this.formData.notes = data.notes || "";
+      this.formData.brand = data.brand || "";
+      if (data.image) {
+        this.uploadedImages = [{
+          file: null,
+          url: data.image
+        }];
+      } else {
+        this.uploadedImages = [];
+      }
     },
     triggerUpload() {
       this.$refs.fileInput.click();
@@ -123,7 +149,8 @@ export default {
     },
     handleSubmit() {
       const submitData = {
-        text: this.formData.text,
+        notes: this.formData.notes,
+        brand: this.formData.brand,
         images: this.uploadedImages.map(img => ({
           file: img.file,
           url: img.url
@@ -134,7 +161,8 @@ export default {
       this.handleClose();
     },
     resetForm() {
-      this.formData.text = "";
+      this.formData.notes = "";
+      this.formData.brand = "";
       this.uploadedImages = [];
     }
   }
@@ -147,12 +175,30 @@ export default {
     .input-section {
       margin-bottom: 20px;
       
+      .form-item {
+        margin-bottom: 15px;
+        
+        .form-label {
+          display: block;
+          margin-bottom: 8px;
+          font-size: 14px;
+          color: #fff;
+          font-weight: 500;
+        }
+      }
+      
       .text-input {
         .el-textarea__inner {
           border-radius: 8px;
           border: 1px solid #dcdfe6;
           font-size: 14px;
           line-height: 1.5;
+        }
+        
+        .el-input__inner {
+          border-radius: 8px;
+          border: 1px solid #dcdfe6;
+          font-size: 14px;
         }
       }
     }

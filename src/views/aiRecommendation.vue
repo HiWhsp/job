@@ -25,94 +25,8 @@
           </div>
         </div>
 
-        <div class="components-list">
-          <div v-for="(item, index) in select1" :key="index">
-            <div class="component-item-title">{{ item.title }}</div>
-            <div
-              class="component-item"
-              v-for="(value, i) in item.producntInfos"
-              :key="i"
-            >
-              <div class="component-icon">
-                <img :src="value.thumb" alt="" />
-              </div>
-              <div class="component-info">
-                <div class="component-name">
-                  {{ value.title }} {{ value.description }}
-                </div>
-                <div class="component-leadtime">
-                  {{ value.delivery_time }}周
-                </div>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill">
-                  <img
-                    src="@/assets/img/icon/progress1.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 1"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress2.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 2"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress3.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 3"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress4.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 4"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress4.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 5"
-                  />
-                </div>
-                <div class="coin-icon">
-                  <img
-                    src="@/assets/img/icon/Group1.png"
-                    alt="price"
-                    class="price-icon"
-                    v-if="value.price_status == 1"
-                  />
-                  <img
-                    src="@/assets/img/icon/Group2.png"
-                    alt="price"
-                    class="price-icon"
-                    v-if="value.price_status == 2"
-                  />
-                  <img
-                    src="@/assets/img/icon/Group3.png"
-                    alt="price"
-                    class="price-icon"
-                    v-if="value.price_status == 3"
-                  />
-                  <img
-                    src="@/assets/img/icon/Group4.png"
-                    alt="price"
-                    class="price-icon"
-                    v-if="value.price_status == 4"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- <div class="sub-components">
-            <div class="sub-component-title">前壳体组件</div>
-            <div class="sub-component-item">
-              <span class="sub-component-name">急停按钮：</span>
-              <span class="sub-component-value">自复位</span>
-            </div>
-            <div class="sub-component-item">
-              <span class="sub-component-name">急停按钮：</span>
-              <span class="sub-component-value">自复位</span>
-            </div>
-          </div> -->
+        <div class="panel-content">
+          <ComponentList :components="select1" />
         </div>
       </div>
 
@@ -129,94 +43,8 @@
           </div>
         </div>
 
-        <div class="components-list">
-          <div v-for="(item, index) in select2" :key="index">
-            <div class="component-item-title">{{ item.title }}</div>
-            <div
-              class="component-item"
-              v-for="(value, i) in item.producntInfos"
-              :key="i"
-            >
-              <div class="component-icon">
-                <img :src="value.thumb" alt="" />
-              </div>
-              <div class="component-info">
-                <div class="component-name">
-                  {{ value.title }} {{ value.description }}
-                </div>
-                <div class="component-leadtime">
-                  {{ value.delivery_time }}周
-                </div>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill">
-                  <img
-                    src="@/assets/img/icon/progress1.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 1"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress2.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 2"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress3.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 3"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress4.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 4"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress4.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 5"
-                  />
-                </div>
-                <div class="coin-icon">
-                  <img
-                    src="@/assets/img/icon/Group1.png"
-                    alt="price"
-                    class="price-icon"
-                    v-if="value.price_status == 1"
-                  />
-                  <img
-                    src="@/assets/img/icon/Group2.png"
-                    alt="price"
-                    class="price-icon"
-                    v-if="value.price_status == 2"
-                  />
-                  <img
-                    src="@/assets/img/icon/Group3.png"
-                    alt="price"
-                    class="price-icon"
-                    v-if="value.price_status == 3"
-                  />
-                  <img
-                    src="@/assets/img/icon/Group4.png"
-                    alt="price"
-                    class="price-icon"
-                    v-if="value.price_status == 4"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- <div class="sub-components">
-            <div class="sub-component-title">前壳体组件</div>
-            <div class="sub-component-item">
-              <span class="sub-component-name">急停按钮：</span>
-              <span class="sub-component-value">自复位</span>
-            </div>
-            <div class="sub-component-item">
-              <span class="sub-component-name">急停按钮：</span>
-              <span class="sub-component-value">自复位</span>
-            </div>
-          </div> -->
+        <div class="panel-content">
+          <ComponentList :components="select2" />
         </div>
       </div>
 
@@ -233,94 +61,8 @@
           </div>
         </div>
 
-        <div class="components-list">
-          <div v-for="(item, index) in select3" :key="index">
-            <div class="component-item-title">{{ item.title }}</div>
-            <div
-              class="component-item"
-              v-for="(value, i) in item.producntInfos"
-              :key="i"
-            >
-              <div class="component-icon">
-                <img :src="value.thumb" alt="" />
-              </div>
-              <div class="component-info">
-                <div class="component-name">
-                  {{ value.title }} {{ value.description }}
-                </div>
-                <div class="component-leadtime">
-                  {{ value.delivery_time }}周
-                </div>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill">
-                  <img
-                    src="@/assets/img/icon/progress1.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 1"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress2.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 2"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress3.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 3"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress4.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 4"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress4.png"
-                    alt="progress"
-                    v-if="value.delivery_time == 5"
-                  />
-                </div>
-                <div class="coin-icon">
-                  <img
-                    src="@/assets/img/icon/Group1.png"
-                    alt="price"
-                    class="price-icon"
-                    v-if="value.price_status == 1"
-                  />
-                  <img
-                    src="@/assets/img/icon/Group2.png"
-                    alt="price"
-                    class="price-icon"
-                    v-if="value.price_status == 2"
-                  />
-                  <img
-                    src="@/assets/img/icon/Group3.png"
-                    alt="price"
-                    class="price-icon"
-                    v-if="value.price_status == 3"
-                  />
-                  <img
-                    src="@/assets/img/icon/Group4.png"
-                    alt="price"
-                    class="price-icon"
-                    v-if="value.price_status == 4"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- <div class="sub-components">
-            <div class="sub-component-title">前壳体组件</div>
-            <div class="sub-component-item">
-              <span class="sub-component-name">急停按钮：</span>
-              <span class="sub-component-value">自复位</span>
-            </div>
-            <div class="sub-component-item">
-              <span class="sub-component-name">急停按钮：</span>
-              <span class="sub-component-value">自复位</span>
-            </div>
-          </div> -->
+        <div class="panel-content">
+          <ComponentList :components="select3" />
         </div>
       </div>
     </div>
@@ -328,8 +70,13 @@
 </template>
 
 <script>
+import ComponentList from "@/components/ComponentList.vue";
+
 export default {
   name: "AIRecommendation",
+  components: {
+    ComponentList,
+  },
   data() {
     return {
       selectedPanel: "cost-effective", // 默认选中性价比优先

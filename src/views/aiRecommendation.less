@@ -1,5 +1,6 @@
 .ai-recommendation {
   width: 100%;
+  min-height: 100vh;
   background: #000;
   display: flex;
   flex-direction: column;
@@ -116,15 +117,21 @@
   }
 }
 
+.panel-content {
+  padding: 0 30px;
+  background-color: #161616;
+}
+
 // 组件列表
 .components-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 40px 30px;
+  padding: 20px 0px;
   background-color: #161616;
   flex: 1;
 }
+
 
 .component-item-title {
   font-family: YouSheBiaoTiHei, YouSheBiaoTiHei;
@@ -139,16 +146,11 @@
   display: flex;
   align-items: center;
   background: transparent;
-  border-radius: 4px;
   border: none;
   transition: all 0.3s ease;
   min-height: 50px;
   padding-bottom: 10px;
   border-bottom: 1px solid #565656;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.05);
-  }
   // 组件图标
   .component-icon {
     width: 60px;
