@@ -9,7 +9,7 @@
         <div class="list">
           <div
             class="item"
-            v-for="(item, index) in list_channel_youhuiqu"
+            v-for="(item, index) in vuex_category_tree"
             :key="index"
             @mouseenter="onEnterSubNav(item)"
           >
@@ -75,16 +75,9 @@ export default {
     };
   },
   computed: {
-    ...mapState(["list_channel"]),
+    ...mapState(["vuex_category_tree"]),
 
-    //京东优惠区分类
-    list_channel_youhuiqu() {
-      let arr = [];
-      if (this.list_channel.length) {
-        arr = this.list_channel.find((v) => v.is_youhuiqu).channels;
-      }
-      return arr;
-    },
+ 
   },
   created() {},
   methods: {
@@ -169,7 +162,7 @@ export default {
 
           &:hover {
             text-decoration: underline;
-            color: #4CA5E4;
+            color: #F74747;
           }
           &.active {
             color: #f07f00;
@@ -185,7 +178,7 @@ export default {
 
             &:hover {
               text-decoration: underline;
-              color: #4CA5E4;
+              color: #F74747;
             }
             &.active {
               color: #f07f00;
@@ -206,12 +199,12 @@ export default {
     padding: 20px;
 
     background-color: #fff;
-    border: 1px solid #4CA5E4;
+    border: 1px solid #F74747;
     border-left: none;
     text-align: left;
 
     &.need-border-top {
-      border-top: 1px solid #4CA5E4;
+      border-top: 1px solid #F74747;
     }
 
     .pannel-item {
@@ -224,7 +217,7 @@ export default {
 
         &:hover {
           text-decoration: underline;
-          color: #4CA5E4;
+          color: #F74747;
         }
       }
       .pannel-content {

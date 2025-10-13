@@ -33,7 +33,7 @@ export default {
   components: {},
   // props: [""],
   data() {
-    let user_id = localStorage.getItem("userId") || "";
+    let userId = localStorage.getItem("userId") || "";
     const registerLink = location.origin + "/register?invite=" + userId || location.href;
 
     return {
@@ -43,7 +43,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   watch: {
     showModal(val) {
@@ -98,7 +98,7 @@ export default {
       color: #333;
       .link {
         font-size: 14px;
-        color: #4CA5E4;
+        color: #F74747;
         // text-decoration: underline;
         // cursor: pointer;
       }
@@ -109,9 +109,11 @@ export default {
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
   // background: #ea5959;
-  background: #4CA5E4;
+  background: #F74747;
   height: 40px;
-  .flex-between();
+    display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 0 20px;
 
   .el-dialog__title {
@@ -142,7 +144,7 @@ export default {
   .queding {
     color: #fff;
     background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
-    background: #4CA5E4;
+    background: #F74747;
   }
 }
 </style>

@@ -9,14 +9,16 @@
       :before-close="onModal_close"
     >
       <div class="modal-inner">
-        <div class="tip">请完成余额支付密码设置，否则无法使用余额支付完成下单操作。</div>
+        <div class="tip">
+          请完成余额支付密码设置，否则无法使用余额支付完成下单操作。
+        </div>
 
         <div class="form-box">
           <div class="input-box">
             <span class="label">手机号</span>
             <!-- <input type="text" placeholder="请输入手机号码" v-model="form.phone" /> -->
             <span class="val">
-              {{ baseInfo.phone }}
+              {{ vuex_user.phone }}
             </span>
           </div>
 
@@ -40,12 +42,18 @@
 
           <div class="input-box">
             <span class="label">确认密码</span>
-            <input type="password" placeholder="确认密码" v-model="form.paypass2" />
+            <input
+              type="password"
+              placeholder="确认密码"
+              v-model="form.paypass2"
+            />
           </div>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <button class="btn-ripple quxiao" @click="showModal = false">取消</button>
+        <button class="btn-ripple quxiao" @click="showModal = false">
+          取消
+        </button>
         <button class="btn-ripple queding" @click="confirm_set">确认</button>
       </span>
     </el-dialog>
@@ -83,7 +91,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    // ...mapState([""]),
   },
   watch: {
     showModal(val) {
@@ -145,7 +153,7 @@ export default {
         code: this.form.code,
         paypass: this.form.paypass,
       }).then((res) => {
-        let { code, data, msg} = res;
+        let { code, data, msg } = res;
         if (code == 200) {
           this.$parent.yuePayPassSetCallback();
           this.showModal = false;
@@ -172,7 +180,8 @@ export default {
 
       //console.log("发送验证码");
       let { phone, email } = this.form;
-      let reg_email = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+      let reg_email =
+        /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
       let reg_phone = /^1[3-9]\d{9}$/;
 
       let is_true_phone = reg_phone.test(phone);
@@ -233,7 +242,7 @@ export default {
     text-align: left;
 
     .tip {
-      color: #4CA5E4;
+      color: #F74747;
       margin-bottom: 20px;
     }
   }
@@ -251,7 +260,8 @@ export default {
   background: #ffffff;
   border: 1px solid #eeeeee;
   border-radius: 4px;
-  .flex();
+  display: flex;
+  align-items: center;
   overflow: hidden;
 
   .label {
@@ -284,7 +294,7 @@ export default {
 
     &::-webkit-input-placeholder {
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #d7d7d7;
     }
@@ -293,7 +303,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #4CA5E4;
+  // background: #F74747;
   background: #f7f7f7;
   text-align: left;
 
@@ -322,13 +332,13 @@ export default {
     margin-right: 24px;
     // margin-right: 20px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
-    color: #4CA5E4;
-    border: 1px solid #4CA5E4;
+    color: #F74747;
+    border: 1px solid #F74747;
   }
   .queding {
-    background: #4CA5E4;
+    background: #F74747;
     color: #fff;
   }
 }
@@ -337,9 +347,10 @@ export default {
   background: transparent;
   position: absolute;
   right: 0;
-  .flex();
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  color: #4CA5E4;
+  color: #F74747;
 
   &.disabled {
     color: #ccc;

@@ -104,7 +104,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getUserInfo"]),
+    ...mapActions([""]),
 
     onWeChatLogin() {
       WeChatLogin.handleAuthorize();
@@ -173,7 +173,7 @@ export default {
           // if (res_wx_login && res_wx_login.code == 200) {
           //console.log("4 查询用户信息判断绑定手机号情况");
 
-          // this.getUserInfo().then((res) => {
+          // this.query_user().then((res) => {
           this.has_bind_phone = info.mobile;
           if (!this.has_bind_phone) {
             //console.log("5 未绑定手机 ");
@@ -193,9 +193,9 @@ export default {
           // //有登陆信息
           // if (localStorage.getItem("token")) {
           //   let resUser = await this.$api("users_userInfo");
-          //   if (resUser && resUser.code == 1) {
-          //     this.$store.commit("set_isLogin", true);
-          //     this.$store.commit("set_baseInfo", resUser.data);
+          //   if (resUser && resUser.code == 200) {
+          //     this.$store.commit("set_vuex_is_login", true);
+          //     this.$store.commit("set_vuex_user", resUser.data);
           //     this.$store.dispatch("appInit"); //重新初始化
           //   } else {
           //     //登录过期
@@ -208,15 +208,15 @@ export default {
         } else {
           // this.$store.commit("set_wx_code", this.wx_code_curr);
           // //授权后已拿到code
-          // let resUser = await this.$api("getUserInfo");
+          // let resUser = await this.$api("query_user");
           // if (resUser && resUser.code == 200) {
-          //   if (resUser.code == 1) {
-          //     // this.$store.commit("set_isLogin", true);
-          //     // this.$store.commit("set_baseInfo", resUser.data);
+          //   if (resUser.code == 200) {
+          //     // this.$store.commit("set_vuex_is_login", true);
+          //     // this.$store.commit("set_vuex_user", resUser.data);
           //     // this.$store.dispatch("appInit"); //重新初始化
           //   } else {
-          //     // this.$store.commit("set_isLogin", false);
-          //     // this.$store.commit("clear_loginInfo", false);
+          //     // this.$store.commit("set_vuex_is_login", false);
+          //     // this.$store.commit("remove_vuex_user", false);
           //     // this.$store.dispatch("appInit"); //重新初始化
           //   }
           // }
@@ -266,11 +266,6 @@ export default {
             });
 
             // 重新调取获取用户信息的接口
-            // this.getUserInfo().then((res) => {
-            //   this.$router.push({
-            //     name: this.$config.homeName,
-            //   });
-            // });
           } else {
             this.$Message.error(data.msg);
           }
@@ -401,7 +396,7 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: sans-serif;
   font-weight: 400;
   color: #ffffff;
 }
@@ -418,7 +413,7 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: sans-serif;
   font-weight: 400;
   color: #1d2088;
   margin-left: 24px;

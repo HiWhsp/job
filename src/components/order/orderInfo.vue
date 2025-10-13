@@ -143,7 +143,7 @@
 </template>
 
 <script>
-import order from "@/shop-actions/order";
+
 import { mapState } from "vuex";
 import order_receive_modal from "@/components/order/order_receive_modal.vue"; //确认收货
 
@@ -394,7 +394,7 @@ export default {
       let order_id = this.$route.query.order_id;
       let inventoryId = item.id;
 
-      this.$router.push(`/refundType?order_id=${order_id}&inventoryId=${inventoryId}`);
+      this.$router.push(`/refund-type?order_id=${order_id}&inventoryId=${inventoryId}`);
     },
 
     to_review(item) {
@@ -446,7 +446,7 @@ export default {
 
 .money-heji {
   span {
-    color: #4CA5E4;
+    color: #F74747;
     font-weight: bold;
   }
 }
@@ -456,21 +456,24 @@ export default {
   padding: 10px 0;
   width: 100%;
   border-top: 1px dashed #e5e5e5;
-  .flex();
+    display: flex;
+  align-items: center;
   justify-content: flex-end;
 
   .zhifufangshi {
-    .flex();
+      display: flex;
+  align-items: center;
 
     .pay-item {
-      .flex();
+        display: flex;
+  align-items: center;
       margin-left: 10px;
 
       font-size: 14px;
       font-family: Microsoft YaHei;
       font-weight: bold;
       line-height: 24px;
-      color: #4CA5E4;
+      color: #F74747;
 
       .pay-title {
         margin-right: 5px;
@@ -488,7 +491,9 @@ export default {
   }
 
   .info-title {
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     height: 48px;
     padding: 0 24px;
     background: #f9f9f9;
@@ -513,8 +518,8 @@ export default {
       // min-width: 96px;
       height: 30px;
       line-height: 30px;
-      // background: #4CA5E4;
-      color: #4CA5E4;
+      // background: #F74747;
+      color: #F74747;
       // color: #fff;
       font-size: 14px;
     }
@@ -572,7 +577,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #4CA5E4;
+              color: #F74747;
             }
           }
         }
@@ -599,7 +604,8 @@ export default {
       }
 
       .goods-action {
-        .flex();
+          display: flex;
+  align-items: center;
         justify-content: flex-end;
         padding: 10px;
 
@@ -611,7 +617,7 @@ export default {
           margin-left: 10px;
           min-width: 96px;
           height: 30px;
-          background: #4CA5E4;
+          background: #F74747;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;
@@ -638,7 +644,9 @@ export default {
   background: #fafafa;
   padding: 24px 40px;
   border-top: 1px solid #F5F5F5;
-  // .flex-between();
+  //   display: flex;
+  align-items: center;
+  justify-content: space-between;
   align-items: flex-start;
   font-size: 14px;
   font-family: Microsoft YaHei;
@@ -652,7 +660,7 @@ export default {
 
     .count {
       font-weight: bold;
-      color: #4CA5E4;
+      color: #F74747;
     }
 
     .money-item {
@@ -721,8 +729,8 @@ export default {
     line-height: 20px;
     color: #7d7d7d;
 
-    border: 1px solid #4CA5E4;
-    color: #4CA5E4;
+    border: 1px solid #F74747;
+    color: #F74747;
   }
 
   .order-action {
@@ -731,28 +739,28 @@ export default {
     font-size: 14px;
     color: #7d7d7d;
 
-    border: 1px solid #4CA5E4;
-    color: #4CA5E4;
+    border: 1px solid #F74747;
+    color: #F74747;
 
     &:hover {
       opacity: 0.8;
     }
 
     &.zhifu {
-      background: #4CA5E4;
-      border-color: #4CA5E4;
+      background: #F74747;
+      border-color: #F74747;
       color: #fff;
     }
 
     &.shanchu {
-      background: #4CA5E4;
-      border-color: #4CA5E4;
+      background: #F74747;
+      border-color: #F74747;
       color: #fff;
     }
 
     &.shouhuo {
-      background: #4CA5E4;
-      border-color: #4CA5E4;
+      background: #F74747;
+      border-color: #F74747;
       color: #fff;
     }
   }

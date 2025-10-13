@@ -1,611 +1,1113 @@
 <template>
-  <div class="page-header" :style="{ background: pageHeaderBackground }">
-    <div class="main">
-      <div class="left">
-        <img
-            :src="iconImgSrc"
-            alt="Logo"
-            @click="onRouteTo({ name: 'index' })"
-        />
-      </div>
-      <div class="mid">
-        <ul class="nav-list">
-          <li
-              v-for="(item, index) in navLists"
-              :key="index"
-              :class="['li', { active: activeIndex === index }]"
-              @click="onRouteTo({ name: item.path, index })"
-              @mouseenter="mouseenterChat(index)"
-              :style="{ color: color, '--active-color': color }"
-          >
-            {{ item.text }}
-          </li>
-          <img
-              src="../../assets/img/head/icon.png"
-              v-show="activeIndex === 0 && color !== '#fff'"
-              class="icon"
-              alt=""
-          />
-        </ul>
-      </div>
-      <div class="right">
-        <div class="img-wrap" @mousedown="showSearchBox = true">
-          <img :src="searchImgSrc" alt="search"/>
-          <transition name="fade">
-            <div
-                class="search-box"
-                v-show="showSearchBox"
-                @mouseleave="showSearchBox = false"
-            >
-              <div class="input-wrap">
-                <el-input v-model="input"></el-input>
-                <div class="icon-wrap" @click="goSearch(input)">
-                  <img
-                      src="../../assets/img/head/search-icon.png"
-                      alt="search-icon"
-                  />
-                </div>
-              </div>
-              <ul class="keyword-list">
-                <li
-                    v-for="(item, index) in keywordList"
-                    :key="index"
-                    class="keyword-li"
-                    @click="goSearch(item)"
+  <div class="page-head">
+    <div class="head-sec">
+      <div class="head-base">
+        <div class="base-inner">
+          <div class="base-box w-1400 flex-between">
+            <!-- 没登录 -->
+            <div class="base-left flex" v-if="!vuex_is_login">
+              <div class="web-title">欢迎访问莉东实业</div>
+              <router-link class="login" to="/login">请登录</router-link>
+              <router-link class="register" to="/register"
+                >免费注册</router-link
+              >
+            </div>
+            <div class="base-left flex" v-if="vuex_is_login">
+              <div class="web-title">欢迎访问莉东实业</div>
+              <span>
+                <b class="user-index" @click="$router.push('/userIndex')">{{
+                  vuex_user.name
+                }}</b>
+                <span class="text-1"
+                  >{{
+                    `您好 ${vuex_user.realName || vuex_user.nickname}（${
+                      vuex_user.companyName
+                    }）`
+                  }}
+                  <span style="user-select: none">&nbsp;</span>
+                </span>
+              </span>
+              <span class="logout" @click="logout()">退出登录</span>
+            </div>
+
+            <div class="base-right flex">
+              <!-- <div class="login-action" v-if="!vuex_is_login">
+              <router-link class="login" to="/login">登录</router-link>
+            </div>
+            <div class="login-action" v-if="!vuex_is_login">
+              <router-link class="register" to="/register">注册</router-link>
+            </div> -->
+
+              <template v-if="vuex_is_login">
+                <div
+                  class="audit-count"
+                  v-if="vuex_user.auditCount > 0"
+                  @click="toAudit"
                 >
-                  <span class="span">{{ item.title }}</span>
-                </li>
-              </ul>
-              <div class="arrow"></div>
-            </div>
-          </transition>
-        </div>
-        <div class="img-wrap" @click="onRouteTo({ name: 'productCart' })">
-          <img :src="cartImgSrc" alt="cart"/>
-        </div>
-        <div class="img-wrap" @mousedown="showUserMenu = true">
-          <img :src="personImgSrc" alt="user"/>
-          <transition name="fade">
-            <div
-                class="user-menu"
-                v-show="isLogin && showUserMenu"
-                @mouseleave="showUserMenu = false"
-            >
-              <div class="user-item" @click="onRouteTo({ name: 'my' })">
-                个人中心
               </div>
-              <div class="user-item" @click="onRouteTo({ name: 'order-list' })">我的订单</div>
-              <div class="user-item" @click="onRouteTo({ name: 'couponCenter' })">领券中心</div>
-              <div class="user-item" @click="onRouteTo({ name: 'integralWinGoods' })">积分商城</div>
-              <div class="arrow"></div>
-            </div>
-          </transition>
-          <transition name="fade">
-            <div
-                v-show="!isLogin && showUserMenu"
-                class="user-menu"
-                @mouseleave="showUserMenu = false"
-            >
-              <div
-                  class="user-item"
-                  @click="onRouteTo({ name: 'login', query: 'login' })"
-              >
-                会员登录
+                <el-popover
+                  popper-class="w-nav-popover"
+                  placement="top"
+                  title=""
+                  width="150"
+                  trigger="hover"
+                  content=""
+                >
+                  <router-link
+                    slot="reference"
+                    class="u-act u-my flex"
+                    to="/order-list"
+                  >
+                    <span class="logout"> 我的莉东实业 </span>
+                    <i class="el-icon-caret-bottom"></i>
+                  </router-link>
+
+                  <div class="pop-child">
+                    <div
+                      :to="sub.route"
+                      class="child-item"
+                      v-for="(sub, index) in user_menus"
+                      :key="index"
+                      @click="navtoRoute(sub)"
+                    >
+                      {{ sub.title }}
+                    </div>
+                  </div>
+                </el-popover>
+              </template>
+
+              <span class="u-line" v-if="vuex_is_login"></span>
+              <div class="u-act">
+                <router-link to="/help">帮助中心</router-link>
+                <!-- <i class="el-icon-caret-bottom"></i> -->
               </div>
-              <div
-                  class="user-item"
-                  @click="onRouteTo({ name: 'login', query: 'register' })"
-              >
-                会员注册
-              </div>
-            </div>
-          </transition>
-        </div>
-      </div>
-      <transition name="fade">
-        <div
-            class="chat-with-up-pop"
-            v-show="showChatWithUp"
-            @mouseleave="showChatWithUp = false"
-        >
-          <div class="chat-list">
-            <div
-                class="chat-item"
-                :class="{ active: chatActiveIndex === index, 'all-chat': activeName === 'all-prod' }"
-                v-for="(item, index) in chatList"
-                :key="index"
-                @click="onClickChatItem(item, index)"
-            >
-              <span v-if="activeName !== 'all-prod'"><i class="el-icon-arrow-right"></i> {{ item.text }}</span>
-              <div class="item" v-else>
-                <div class="left">
-                  <span class="title ellipsis-1">{{ item.title }}</span>
-                  <span class="desc ellipsis-1">{{ item.description }}</span>
-                </div>
-                <div class="right">
-                  <img :src="item.thumb" alt="">
-                </div>
+              <span class="u-line"></span>
+              <div class="u-act">
+                <a href="" class="flex-center">
+                  <img class="icon" src="@img/head/mobile.png" alt="" />
+                  <span>{{ vuex_config.comPhone }}</span>
+                </a>
               </div>
             </div>
           </div>
         </div>
-      </transition>
+      </div>
+      <div class="head-search">
+        <div class="search-inner">
+          <div class="search-box w-1400">
+            <div class="left-logo">
+              <img src="@img/common/logo.png" @click="$router.push('/')" />
+            </div>
+
+            <div class="center-search">
+              <div class="input-box">
+                <input
+                  type="text"
+                  v-model="keyword"
+                  @keyup.enter="do_search"
+                  placeholder="请输入产品名称 品牌 型号 订货编码"
+                />
+                <button class="btn btn-ripple" @click="do_search()">
+                  <i class="el-icon-search"></i>
+                </button>
+              </div>
+
+              <div class="reci-wrap">
+                <!-- <div class="reci-label">热搜词:</div> -->
+                <div class="reci-list">
+                  <div
+                    class="reci"
+                    v-for="(item, index) in keyword_list"
+                    :key="index"
+                    @click="do_search_reci(item)"
+                  >
+                    {{ item.title }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="btns flex-between">
+              <router-link to="/cart" class="link bg">
+                <div class="btn-box">
+                  <img src="@img/head/cart.png" alt="" />
+                  <span class="text">购物车</span>
+                  <span class="cart-num fit-text">{{ vuex_cart_number }}</span>
+                </div>
+              </router-link>
+
+              <!-- <router-link to="/batch-xiadan" class="link">
+                <div class="btn-box">
+                  <img src="@img/head/xiadan.png" alt="" />
+                  <span class="text">批量下单</span>
+                </div>
+              </router-link> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="head-nav">
+      <page_nav />
     </div>
   </div>
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import page_nav from "@/components/page/page-nav.vue";
+
+import { mapState } from "vuex";
 
 export default {
+  name: "HeaderIndex",
+  components: {
+    page_nav,
+  },
   data() {
     return {
-      activeIndex: -1,
-      chatActiveIndex: -1,
-      activeName: '',
-      showSearchBox: false,
-      showChatWithUp: false,
-      input: "",
-      showUserMenu: false,
-      chatList: [],
-      categoryList: []
+      showSiteMap: false, //个人中心 菜单
+      showLanguage: false, //语言切换
+      showContact: false, //联系我们
+      show_shoujiban: false, //手机版
+
+      list_lang: [
+        { title: "中文", lang: "zh" },
+        { title: "English", lang: "en" },
+      ],
+
+      keyword: "",
+      //
+
+      showSearch: false,
+      keyword: "",
+
+      search_suggest_list: [],
+      disabledSearchQuery: false,
+      searchLock: false, //锁定搜素
+
+      user_menus: [
+        { title: "我的订单", route: "/order-list" },
+        { title: "我的售后", route: "/refund-list" },
+        { title: "我的收藏", route: "/favorite-list" },
+        { title: "我的足迹", route: "/browse-history" },
+        { title: "地址管理", route: "/address-list" },
+        { title: "我的发票", route: "/invoice-list" },
+        { title: "个人信息", route: "/my-info" },
+        { title: "修改密码", route: "/change-password" },
+        { title: "退出登录", route: "/exit" },
+      ],
     };
   },
+
   computed: {
-    ...mapGetters([
-      "pageHeaderBackground",
-      "iconImgSrc",
-      "color",
-      "searchImgSrc",
-      "cartImgSrc",
-      "personImgSrc",
-      "isLogin"
-    ]),
+    ...mapState(["vuex_user"]),
 
-    keywordList() {
-      let reci = this.vuex_config.hotSearch || ''
-      let reci_list = []
-      if (reci) {
-        reci_list = JSON.parse(reci)
+    keyword_list() {
+      let arr = [];
+      if (this.vuex_config.hotSearch) {
+        try {
+          arr = JSON.parse(this.vuex_config.hotSearch);
+        } catch (error) {}
       }
-      return reci_list
-    }
+      return arr;
+    },
   },
+
+  watch: {
+    $route(to, from) {
+      if (to.name == "product-search") {
+        if (to.query.id) {
+        }
+      }
+      this.searchLock = true;
+      this.keyword = to.query.keyword;
+    },
+  },
+
   created() {
-    this.navLists = [
-      {
-        path: "allCommodities",
-        text: "全部商品",
-      },
-      {
-        path: "laboratory",
-        text: "光电实验室",
-      },
-      {
-        path: "oneClickSelection",
-        text: "一键选型",
-      },
-      {
-        path: "service-support",
-        text: "服务支持",
-      },
-      {
-        path: "company",
-        text: "联系我们",
-      },
-    ];
-    this.$api({
-      url: "/service.php",
-      method: "get",
-      data: {
-        action: "product_channel",
-        parentId: 0,
-      },
-    }).then(res => {
-      if (res.code == 200) {
-        this.categoryList = res.data.map(item=>{
-          item.path = `allCommodities?channelId=${item.id}`
-          return item
-        })
-      }
-    })
+    this.keyword = this.$route.query.keyword || "";
+    this.setView();
+   if(this.vuex_user.auditCount > 0){
+      this.$notify.info({
+      title: "",
+      message: "有您待审批的订单,请审批",
+      duration: 0,
+    });
+   }
   },
+
   methods: {
-    onRouteTo(params) {
-      const {index, name, query} = params;
-      this.activeIndex = index;
-      this.$router.push({name, query: {to: query}});
-      this.showUserMenu = false;
-      this.showSearchBox = false;
-      this.showChatWithUp = false;
-    },
-    mouseenterChat(index) {
-      this.showChatWithUp = true;
-      if (index === 4) {
-        this.chatList = [
-          {
-            path: "company-profile",
-            text: "公司简介",
+    //跳转待审核
+    toAudit() {
+      if(this.vuex_user.staffType > 1){
+        this.$router.push({
+          path: "stock-censor",
+          query: {
+            value: 1,
           },
-          {
-            path: "company-news",
-            text: "公司新闻",
+        });
+      }else{
+         this.$router.push({
+          path: "stock-censor-my",
+          query: {
+            value: 1,
           },
-          {
-            path: "exhibition-information",
-            text: "展会信息",
-          },
-          {
-            path: "contact-us",
-            text: "联系我们",
-          }
-        ];
-        this.activeName = '';
-      } else if (index == 3) {
-        this.chatList = [
-          {
-            path: "light-computing",
-            text: "光电计算",
-            icon: true
-          }, {
-            path: "laser-processing",
-            text: "激光加工",
-            icon: true
-          }, {
-            path: "download-materials",
-            text: "资料下载",
-            icon: true
-          }, {
-            path: "complaints-suggestions",
-            text: "投诉建议",
-            icon: true
-          }, {
-            path: "merchant-cooperation",
-            text: "商家合作",
-            icon: true
-          }, {
-            path: "member-benefits",
-            text: "会员权益",
-            icon: true
-          }, {
-            path: "technical-article",
-            text: "技术文章",
-            icon: true
-          }
-        ];
-        this.activeName = '';
-      } else if (index === 0) {
-        this.activeName = "all-prod"
-        this.chatList = this.categoryList;
-      } else {
-        this.showChatWithUp = false;
-        this.activeName = '';
+        });
       }
+     
     },
-    onClickChatItem(item, index) {
-      this.chatActiveIndex = index;
-      this.$router.push("/" + item.path);
-      this.showUserMenu = false;
-      this.showSearchBox = false;
-      this.showChatWithUp = false;
+    //语言切换
+    toggleLanguage(lang_curr) {
+      // let lang_prev = localStorage.getItem("lang") || "zh";
+      // let lang_curr = "";
+      // if (lang_prev == "zh") {
+      //   lang_curr = "en";
+      // } else if (lang_prev == "en") {
+      //   lang_curr = "zh";
+      // }
+
+      if (localStorage.getItem("lang") == lang_curr) {
+        return;
+      }
+
+      this.$store.commit("set_lang", lang_curr);
+      this.$i18n.locale = lang_curr;
+
+      location.reload();
     },
 
-    goSearch(text) {
+    jump(route) {
+      // debugger
+      this.$router.push("/" + route);
+    },
+    navtoRoute(item) {
+      if (item.route != "/exit") {
+        this.toRoute(item.route);
+      } else {
+        this.logout();
+      }
+    },
+    goCart() {
+      this.$router.push({ path: "/cart" });
+    },
+    goOrderAll() {
+      this.$router.push({ path: "/orderAll" });
+    },
+    mouseover() {
+      this.showSiteMap = true;
+    },
+    mouseout() {
+      this.showSiteMap = false;
+    },
+    mouseoverLang() {
+      this.showLanguage = true;
+    },
+    mouseoutLang() {
+      this.showLanguage = false;
+    },
+
+    goModule(name) {
+      if (name == "index") {
+        this.$router.push({ path: "/" });
+      } else if (name == "my") {
+        this.$router.push({ path: "/info" });
+      } else if (name == "login") {
+        this.$router.push({ path: "login" });
+      }
+    },
+    logout() {
+      this.$store.commit("remove_vuex_user");
+      // debugger
+      if (this.$route.meta.requireAuth) {
+        this.$router.push("/");
+      }
+    },
+
+    //
+
+    //搜索
+    do_search() {
+      window.location.href = `/product-cates?keyword=${this.keyword || ""}`;
+      // this.$router.push({
+      //   path: "/product-cates",
+      //   query: {
+      //     keyword: this.keyword,
+      //   },
+      // });
+    },
+    //热搜
+    do_search_reci(item) {
+      this.keyword = item.title;
+      window.location.href = `/product-cates?keyword=${item.title}`;
+      // this.$router.push({
+      //   path: "/product-cates",
+      //   query: {
+      //     keyword: this.keyword,
+      //   },
+      // });
+    },
+
+    //自定义 banner跳转
+    jump_banner(item) {
+      console.log({ ...item });
+      let url = item.url;
+      if (!url) {
+        return;
+      }
+      window.open(url, "_blank");
+    },
+    ///
+
+    setView() {},
+    mouseoutSearch() {},
+
+    toHome() {
+      if (this.$route.name != "index") {
+        this.$router.push("/");
+      } else {
+        document.documentElement.scrollTop = 0;
+      }
+    },
+
+    checkClass(item) {
+      let pagePath = this.$route.fullPath;
+
+      let obj = {
+        active: item.route == pagePath || item.title == this.$route.meta.root,
+        "nav-item-static": "/product-cates" == item.path,
+      };
+      return obj;
+    },
+
+    toSearch() {
+      // if (!this.keyword) {
+      //   alertErr("请输入搜索关键字");
+      //   return;
+      // }
+      let query = {};
+      if (this.selectCate) {
+        query.id = this.selectCate;
+      }
+
+      let keyword = (this.keyword || "").trim() || "";
+      query.keyword = keyword;
+      query.ms = new Date().getTime();
       this.$router.push({
-        path: "/allCommodities",
-        query: {keyword: text, hash: Math.random()},
+        path: "/product-search",
+        query: query,
       });
-      this.showUserMenu = false;
-      this.showSearchBox = false;
-      this.showChatWithUp = false;
-    }
+    },
+
+    logout() {
+      this.$store.commit("remove_vuex_user");
+      // if (this.$route.meta.requireAuth) {
+      //   this.$router.push("/login");
+      // }
+      this.$router.push("/index");
+      alertSucc("退出成功");
+    },
   },
 };
 </script>
 
-<style lang="less" scoped>
-.page-header {
-  position: relative;
-  height: 114px;
-  width: 100%;
-  z-index: 10;
+<style lang="less">
+.w-nav-popover .popper__arrow {
+  display: none !important;
+}
 
-  .main {
-    height: 100%;
-    //padding: 0 260px 0;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.w-nav-popover {
+  padding: 0 !important;
+  margin-top: 2px !important;
+  // border: none !important;
+}
 
-    .left {
-      width: 409px;
-      cursor: pointer;
+.pop-child {
+  .child-item {
+    text-align: center;
+    display: block;
+    height: 40px;
+    line-height: 40px;
 
-      img {
-        width: 232px;
-        height: 55px;
-      }
+    background: #fff;
+    font-size: 14px;
+    font-family: sans-serif;
+    font-weight: 400;
+    color: #000000;
+
+    &:hover {
+      background: #5589ff;
+      color: #fff;
     }
+  }
+}
+</style>
 
-    .mid {
-      height: 100%;
-      flex: 1;
-      font-size: 20px;
+<style scoped lang="less">
+.head-sec {
+  // background: #0c0a0a;
+  // background-image: url("~@img/head/head-bg.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.head-base {
+  .base-inner {
+    .base-box {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      height: 40px;
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: 400;
+      font-size: 14px;
+      color: #ffffff;
+      line-height: 0px;
 
-      .nav-list {
-        position: relative;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+      .base-left {
+        float: left;
+        min-width: 20%;
+        text-align: left;
 
-        .li {
-          position: relative;
+        .web-title {
+          margin-right: 40px;
+        }
+        a {
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: 400;
+          font-size: 14px;
+          color: #ffffff;
+          &:hover {
+            color: #5589ff;
+          }
+        }
+
+        .login {
+          margin-right: 20px;
+        }
+        .register {
+        }
+        .logout {
           cursor: pointer;
-          font-weight: bold;
-          padding-bottom: 11px;
+        }
+      }
 
-          &.active::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 35px;
-            width: 100%;
-            height: 3px;
-            background: var(--active-color);
+      .base-right {
+        a {
+          color: #333;
+          color: #ffffff;
+        }
+
+        .login-action {
+          .login {
+            color: #333;
+            color: #ffffff;
           }
 
-          &:hover::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 35px;
-            width: 100%;
-            height: 3px;
-            background: var(--active-color);
+          .logout {
+            color: #333;
+            color: #ffffff;
           }
         }
 
         .icon {
-          position: absolute;
-          left: 91px;
-          width: 10px;
-          height: 7px;
+          width: 16px;
+          margin-right: 6px;
+        }
+
+        .u-act {
+          span {
+            color: #E5222B;
+          }
+        }
+        .u-my {
+          height: 36px;
+        }
+
+        .u-line {
+          margin: 0 15px;
+          width: 1px;
+          height: 16px;
+          background: #bbbbbb;
+        }
+      }
+      .audit-count {
+        display: flex;
+        align-items: center;
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+        margin: 0 15px;
+        cursor: pointer;
+        background: #eb0f19;
+      }
+    }
+  }
+}
+
+.head-search {
+  // background: #0c0a0a;
+  .search-inner {
+    height: auto;
+    padding: 24px 0;
+  }
+
+  .search-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .left-logo {
+      cursor: pointer;
+      justify-content: flex-start;
+
+      img {
+        height: 66px;
+        cursor: pointer;
+      }
+
+      span {
+        margin-left: 10px;
+        font-size: 30px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        line-height: 30px;
+        color: #333333;
+      }
+    }
+
+    .center-search {
+      height: 80px;
+      flex: 1;
+      margin-left: 200px;
+
+      .input-box {
+        border: 2px solid #E5222B;
+        display: flex;
+        align-items: center;
+        width: 669px;
+        height: 50px;
+        background: #efefef;
+        overflow: hidden;
+
+        input {
+          flex: 1;
+          height: 100%;
+          height: 50px;
+          border: none;
+          outline: none;
+          background: #fff;
+          padding-left: 20px;
+          padding-right: 30px;
+          // border: 2px solid #333;
+          font-size: 14px;
+          font-family: Microsoft YaHei;
+          color: #000;
+        }
+
+        button {
+          width: 113px;
+          height: 50px;
+          background: #E5222B;
+          // border: 2px solid #333;
+          border: none;
+          outline: none;
+          cursor: pointer;
+
+          font-family: PingFang SC, PingFang SC;
+          font-weight: 500;
+          font-size: 16px;
+          color: #ffffff;
+
+          i {
+            color: #fff;
+            font-size: 22px;
+          }
+
+          &:hover {
+            filter: opacity(0.8);
+          }
+
+          img {
+            width: 31px;
+            height: 31px;
+          }
+        }
+      }
+
+      .reci-wrap {
+        margin-top: 10px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+
+        .reci-label {
+          color: #000;
+          display: inline-block;
+          min-width: 40px;
+        }
+
+        .reci-list {
+          display: flex;
+          color: #9f9f9f;
+
+          .reci {
+            margin-right: 24px;
+            cursor: pointer;
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-weight: 400;
+            font-size: 14px;
+            color: #c4c4c4;
+
+            &:hover {
+              color: #5589ff;
+            }
+          }
         }
       }
     }
 
-    .right {
-      width: 296px;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 27px;
+    .btns {
+      height: 80px;
+      padding-bottom: 30px;
 
-      .img-wrap {
-        position: relative;
-        width: 18px;
-        height: 20px;
-        cursor: pointer;
-
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-
-      .search-box {
-        padding: 16px 15px 19px 23px;
-        width: 508px;
-        position: absolute;
-        top: 36px;
-        right: 0;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-
-        .input-wrap {
+      .link {
+        background: #ffffff;
+        border-radius: 0px 0px 0px 0px;
+        border: 1px solid #dddddd;
+        transition: 0.3s;
+        .btn-box {
+          width: 150px;
+          height: 50px;
           position: relative;
-          display: flex;
-
-          ::v-deep .el-input__inner {
-            padding-right: 20%;
-          }
-
-          .icon-wrap {
-            position: absolute;
-            right: 4px;
-            top: 4px;
-            width: 66px;
-            height: 31px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #27417c;
-            border-radius: 3px;
-
-            img {
-              width: 22px;
-              height: 24px;
-            }
-          }
-        }
-
-        .keyword-list {
-          display: flex;
-          gap: 5px;
-          font-size: 13px;
-          color: #5e5e5e;
-          cursor: default;
-
-          .keyword-li {
-            cursor: pointer;
-            padding: 5px 0;
-
-            .span {
-              cursor: pointer;
-            }
-          }
-        }
-
-        .arrow {
-          position: absolute;
-          right: 6px;
-          top: -10px;
-          width: 0;
-          height: 0;
-          border: 5px solid transparent;
-          border-bottom: 5px solid #fff;
-        }
-      }
-
-      .user-menu {
-        position: absolute;
-        top: 36px;
-        left: -58.5px;
-        width: 117px;
-        background: #fff;
-        border: 1px solid #ccc;
-        font-size: 14px;
-        color: #5e5e5e;
-        border-radius: 4px;
-
-        .user-item {
-          height: 41px;
           display: flex;
           justify-content: center;
           align-items: center;
-          border-bottom: 1px solid rgba(112, 112, 112, 0.2);
         }
 
-        .arrow {
+        &:hover {
+          opacity: 0.75;
+        }
+
+        & + .link {
+          margin-left: 30px;
+        }
+
+        &.bg {
+          border: 1px solid #E5222B;
+          background: #E5222B;
+          width: 150px;
+          height: 50px;
+
+          .text {
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-weight: 400;
+            font-size: 14px;
+            color: #ffffff;
+          }
+        }
+
+        img {
+          width: 17px;
+          margin-right: 11px;
+        }
+
+        .text {
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: 400;
+          font-size: 14px;
+          color: #0c0a0a;
+        }
+
+        .cart-num {
           position: absolute;
-          left: 58.5px;
-          right: 6px;
-          top: -10px;
-          width: 0;
-          height: 0;
-          border: 5px solid transparent;
-          border-bottom: 5px solid #fff;
+          right: 10px;
+          top: 5px;
+          min-width: 23px;
+          height: 18px;
+          background: #ffffff;
+          border-radius: 9px 9px 9px 9px;
+          color: #E5222B;
         }
       }
     }
   }
 }
 
-.chat-with-up-pop {
-  position: absolute;
-  top: 114px;
+//
+//
+//
+//
+//
+
+.head-nav {
+  // background: #202020;
+}
+
+.page-head {
+  //position: sticky;
+  z-index: 1024;
+  top: 0;
   left: 0;
-  width: 100%;
-  min-height: 152px;
-  background: #fff;
+  right: 0;
+  line-height: 0;
+  padding: 0;
+  // border-bottom: 4px solid #009a44;
+  // box-shadow: 0px 3px 10px 1px rgba(0, 0, 0, 0.16);
+  background-image: url("~@img/head/head-bg.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
 
-  .chat-list {
-    width: 1400px;
-    margin: 48px auto 0 auto;
-    flex-wrap: wrap;
+.header-inner {
+  position: relative;
+  width: 1400px;
+  height: 150px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .logo-wrap {
     display: flex;
-    font-size: 18px;
-    color: #333333;
-    line-height: 30px;
+    align-items: center;
 
-    .chat-item {
+    .logo-box {
       cursor: pointer;
-      width: 287px;
-      font-size: 18px;
-      margin-right: 84px;
-      margin-bottom: 20px;
-      padding-bottom: 18px;
-      border-bottom: 1px solid #E8E8E8;
 
-      i {
-        color: #77797B;
+      img {
+        width: 141px;
+        height: 82px;
+      }
+    }
+  }
+
+  .nav-wrap {
+    flex: 1;
+    margin-left: 60px;
+    margin-right: 92px;
+  }
+
+  .nav-list {
+    height: 100%;
+
+    .nav-item {
+      // flex: 1;
+      text-align: center;
+
+      &.nav-item-static {
+        position: static;
       }
 
-      &:nth-child(4n) {
-        margin-right: 0;
-      }
+      .nav-link {
+        position: relative;
+        display: inline-block;
+        height: 50px;
+        line-height: 50px;
+        font-family: Poppins, Poppins;
+        font-weight: 600;
+        font-size: 17px;
+        color: #333333;
 
-      &.active {
-        color: #27417c;
-        font-weight: bold;
-
-        i {
-          color: #27417c;
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translate(-50%);
+          width: 0;
+          height: 2px;
+          background: #5589ff;
+          transition: 0.3s;
         }
       }
 
       &:hover {
-        color: #27417c;
-        font-weight: bold;
+        .nav-link::after {
+          width: 36px;
+        }
+      }
 
-        i {
-          color: #27417c;
+      &.active {
+        .nav-link {
+          // font-weight: bold;
+          color: #5589ff;
+
+          &::after {
+            // width: 36px;
+          }
+        }
+      }
+
+      a {
+        color: #222;
+        width: 100%;
+        font-size: 16px;
+        font-family: sans-serif;
+        font-weight: 400;
+        color: #333;
+      }
+    }
+  }
+}
+
+.user-act {
+  width: 440px;
+  width: fit-content;
+}
+
+.center-search-wrap {
+  position: relative;
+  margin-right: 25px;
+
+  &:hover {
+    .search-suggest-list {
+      display: block;
+    }
+  }
+
+  .center-search {
+    width: 270px;
+    border-bottom: 1px solid #999999;
+
+    display: flex;
+    align-items: center;
+    align-items: stretch;
+
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+
+    .search-box {
+      // border: 1px solid #aaa;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      // height: 100%;
+
+      input {
+        display: block;
+        width: 317px;
+        height: 38px;
+        padding-left: 10px;
+
+        &::-webkit-input-placeholder {
+          font-weight: normal;
+          font-size: 14px;
+          color: #909090;
+        }
+      }
+
+      .btn-search {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        right: 0;
+        width: 40px;
+        height: 40px;
+        background: #5589ff;
+        border-radius: 0px 6px 6px 0px;
+        font-weight: normal;
+        font-size: 16px;
+        color: #ffffff;
+        background: transparent;
+
+        &:hover {
+          opacity: 1 !important;
+        }
+
+        .img-search {
+          width: 20px;
+          height: 20px;
+          cursor: pointer;
+          transition: 0.3s;
+          margin-right: 11px;
+
+          &:hover {
+            opacity: 0.85;
+          }
         }
       }
     }
+  }
 
-    // 全部商品
-    .all-chat {
-      width: 336px;
-      height: 138px;
-      background: #F7F7F7;
-      border-radius: 4px;
-      border: none;
-      padding: 0;
-      margin-right: 18px;
-      margin-bottom: 16px;
+  .search-suggest-list {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    left: 0;
+    right: 0;
+    top: 43px;
+    border: 1px solid #ddd;
+    border-top: none;
+    background: #fff;
+    border-radius: 6px;
+    overflow: hidden;
 
-      .item {
-        width: 336px;
-        .flex();
-        justify-content: space-between;
-        padding: 10px 10px 10px 30px;
+    .search-suggest-item {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      line-height: 3.5rem;
+      height: 3.5rem;
+      padding: 0 5px;
+      text-align: left;
+      transition: 0.3s;
 
-        .left {
-          width: 160px;
-          .flex();
-          flex-direction: column;
-          align-items: start;
-          .title {
-            width: 100%;
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: 400;
-            font-size: 18px;
-            color: #27417C;
-          }
+      &:hover {
+        background: #f5f5f5;
+      }
 
-          .desc {
-            width: 100%;
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: 400;
-            font-size: 16px;
-            color: #808080;
-          }
-        }
+      a {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: block;
+        width: 100%;
+        height: 100%;
+        color: #888;
+        font-size: 1.3rem;
 
-        .right {
-          width: 116px;
-          height: 116px;
-          img {
-            width: 116px;
-            height: 116px;
-          }
+        &:hover {
+          color: #5589ff;
         }
       }
     }
   }
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s;
+.info-right {
+  display: flex;
+  align-items: center;
+
+  .log-box {
+    display: flex;
+    align-items: center;
+  }
+
+  a {
+    color: #fff;
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  .user-login {
+    width: 30px;
+    height: 30px;
+  }
+
+  .user-reg {
+    margin: 0 16px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .cart-image {
+    width: 30px;
+    height: 30px;
+  }
+
+  .shopcart {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .cart-num {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      right: -10px;
+      top: -10px;
+      min-width: 18px;
+      min-height: 18px;
+      padding: 0 3px;
+      background: #ff3b30;
+      border: 1px solid #ffffff;
+      border-radius: 50%;
+      font-size: 12px;
+    }
+  }
 }
 
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
+.user-login-info {
+  position: absolute;
+  right: 0;
+  top: 12px;
+
+  .avatar-box {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .phone {
+    margin: 0 16px;
+    font-family: Arial, Arial;
+    font-weight: 400;
+    font-size: 16px;
+    color: #999999;
+
+    &:hover {
+      color: #5589ff;
+    }
+  }
+
+  .logout {
+    font-family: Arial, Arial;
+    font-weight: 400;
+    font-size: 16px;
+    color: #999999;
+
+    &:hover {
+      color: #5589ff;
+    }
+  }
+}
+.child-item {
+  cursor: pointer;
+}
+@media screen and (max-width: 1600px) {
+  .header-inner .nav-list .nav-item {
+    margin-left: 10px;
+    min-width: 80px;
+  }
+
+  .left-select {
+    width: 160px !important;
+  }
+}
+
+@media screen and (max-width: 1520px) {
+  .header-inner .nav-list .nav-item {
+    margin-left: 10px;
+    min-width: 80px;
+  }
+
+  .left-select {
+    width: 150px !important;
+  }
 }
 </style>
+
+<style scoped lang="less" src="@/assets/h5css/zujian/pageHeader.less"></style>

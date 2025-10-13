@@ -95,7 +95,9 @@ export default {
   position: relative;
 
   .img-box {
-    .flex-center();
+      display: flex;
+          justify-content: center;
+          align-items: center;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -161,7 +163,7 @@ export default {
       margin-right: 20px;
 
       &.active {
-        border: 1px solid #4CA5E4;
+        border: 1px solid #F74747;
       }
       img {
         width: 100%;

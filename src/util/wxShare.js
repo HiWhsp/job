@@ -64,8 +64,8 @@ export default {
       wx.ready(function() {
         //需在用户可能点击分享按钮前就先调用
         wx.updateAppMessageShareData({
-          title: title || "海外商城有限公司", // 分享标题
-          desc: desc || "海外商城有限公司", // 分享描述
+          title: title || "标准商城有限公司", // 分享标题
+          desc: desc || "标准商城有限公司", // 分享描述
           link:
             "http://web.bio-swamp.com?fromId=" +
             localStorage.getItem("userId"), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
@@ -80,7 +80,7 @@ export default {
         });
 
         wx.updateTimelineShareData({
-          title: title || "海外商城有限公司", // 分享标题
+          title: title || "标准商城有限公司", // 分享标题
           link:
             "http://web.bio-swamp.com?fromId=" +
             localStorage.getItem("userId"), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致

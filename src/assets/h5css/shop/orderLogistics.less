@@ -2,7 +2,9 @@
   .page {
     padding-bottom: 80px;
     .main-title {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       padding: 0 32px;
       text-align: left;
       height: 56px;
@@ -17,7 +19,7 @@
         min-width: 96px;
         height: 30px;
         line-height: 30px;
-        background: #4CA5E4;
+        background: #F74747;
         color: #fff;
         font-size: 14px;
         font-weight: bold;
@@ -80,7 +82,8 @@
 
   .section-danhao {
     .section-title {
-      .flex();
+        display: flex;
+  align-items: center;
       padding-left: 10px;
       text-align: left;
       height: 44px;
@@ -101,7 +104,8 @@
 
   .section-goods {
     .section-title {
-      .flex();
+        display: flex;
+  align-items: center;
       padding-left: 24px;
       text-align: left;
       height: 44px;
@@ -186,7 +190,8 @@
         .item-good {
           padding: 20px;
           border-bottom: 1px dashed #ccc;
-          .flex();
+            display: flex;
+  align-items: center;
 
           &:last-child {
             border: none;
@@ -234,7 +239,8 @@
         }
 
         .goods-action {
-          .flex();
+            display: flex;
+  align-items: center;
           justify-content: flex-end;
           padding: 10px;
           .btn-goods-action {
@@ -243,7 +249,7 @@
             margin-left: 10px;
             min-width: 96px;
             height: 30px;
-            background: #4CA5E4;
+            background: #F74747;
             font-size: 14px;
             font-family: Microsoft YaHei;
             color: #ffffff;
@@ -283,7 +289,9 @@
     }
 
     .section-other {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       padding: 20px 25px;
 
       .item {
@@ -341,7 +349,9 @@
     }
 
     .other {
-      // .flex-between();
+      //   display: flex;
+  align-items: center;
+  justify-content: space-between;
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -356,7 +366,7 @@
         flex: 1;
         .item-title {
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #666;
           font-weight: bold;

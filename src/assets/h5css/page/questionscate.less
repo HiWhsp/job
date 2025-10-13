@@ -38,11 +38,11 @@
           height: 40px;
           background: #ffffff;
           border-radius: 4px 4px 4px 4px;
-          border: 1px solid #4CA5E4;
+          border: 1px solid #F74747;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
-          color: #4CA5E4;
+          color: #F74747;
         }
       }
 
@@ -50,14 +50,16 @@
         width: 80px;
         margin: 24px auto;
         height: 5px;
-        background: #4CA5E4;
+        background: #F74747;
         border-radius: 3px 3px 3px 3px;
       }
     }
   }
 
   .ctx-box {
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     align-items: flex-start;
 
     flex-direction: column;
@@ -93,7 +95,7 @@
           height: 36px;
           line-height: 36px;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #606266;
 
@@ -103,7 +105,7 @@
 
           &.active {
             font-weight: bold;
-            color: #4CA5E4;
+            color: #F74747;
           }
         }
       }
@@ -123,7 +125,7 @@
       margin-bottom: 15px;
       &.expand {
         .ques-title {
-          background: #4CA5E4 !important;
+          background: #F74747 !important;
           .text {
             color: #fff !important;
           }
@@ -154,11 +156,13 @@
         height: 50px;
         background: #f4f4f4;
         transition: 0.3s;
-        .flex-between();
+          display: flex;
+  align-items: center;
+  justify-content: space-between;
         cursor: pointer;
 
         &:hover {
-          background: #4CA5E4;
+          background: #F74747;
           color: #fff;
 
           .text {
@@ -168,7 +172,7 @@
 
         .text {
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #333333;
         }

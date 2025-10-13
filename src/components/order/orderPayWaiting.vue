@@ -10,7 +10,7 @@
     >
       <div class="modal-inner">
         <div class="text-box">
-<!--          <img src="@/static/product/product-add-success.png" alt />-->
+          <img src="@img/product/product-add-success.png" alt />
           支付结果查询中，请稍后...
         </div>
       </div>
@@ -36,7 +36,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   watch: {},
 
@@ -72,7 +72,9 @@ export default {
       margin-top: 20px;
       flex: 2;
       text-align: center;
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
       font-size: 14px;
       font-family: Microsoft YaHei;
       font-weight: bold;
@@ -89,7 +91,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  background: #4CA5E4;
+  background: #F74747;
 
   .el-dialog__title {
     color: #fff;

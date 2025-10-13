@@ -41,18 +41,18 @@
         .bread-divider {
           margin: 0 5px;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #999999;
         }
         a {
           font-size: 12px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #999999;
 
           &:hover {
-            color: #4CA5E4;
+            color: #F74747;
           }
         }
       }
@@ -87,7 +87,7 @@
     padding-bottom: 20px;
     border-bottom: 1px solid #ddd;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #333333;
   }
@@ -134,7 +134,8 @@
       .checks {
         .check-item {
           margin-bottom: 13px;
-          .flex();
+            display: flex;
+  align-items: center;
           cursor: pointer;
           user-select: none;
 
@@ -163,7 +164,7 @@
 
           span {
             font-size: 12px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #666666;
           }
@@ -182,7 +183,7 @@
         .product-item {
           flex: 1;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #666666;
           border-left: 1px solid #d5d8de;
@@ -192,14 +193,18 @@
             height: 250px;
 
             a {
-              .ellipsis-2();
+               display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
               font-size: 14px;
-              font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+              font-family: sans-serif;
               font-weight: 400;
               color: #666666;
 
               &:hover {
-                color: #4CA5E4;
+                color: #F74747;
               }
             }
 
@@ -229,13 +234,15 @@
             // min-height: 50px;
             // line-height: 1.5;
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #666666;
 
             .text {
               min-height: 50px;
-              .flex-center();
+                display: flex;
+          justify-content: center;
+          align-items: center;
             }
           }
         }
@@ -265,7 +272,8 @@
     .checks {
       .check-item {
         margin-bottom: 13px;
-        .flex();
+          display: flex;
+  align-items: center;
         cursor: pointer;
         user-select: none;
 
@@ -294,7 +302,7 @@
 
         span {
           font-size: 12px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #666666;
         }
@@ -360,7 +368,9 @@
         .text-box {
           min-height: 50px;
           padding: 0 10px;
-          .flex-center();
+            display: flex;
+          justify-content: center;
+          align-items: center;
           word-break: break-all;
           text-align: center;
 
@@ -377,15 +387,19 @@
           align-items: center;
 
           a {
-            .ellipsis-5();
+             display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 5;
             text-align: center;
             font-size: 12px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #666666;
 
             &:hover {
-              color: #4CA5E4;
+              color: #F74747;
             }
           }
 

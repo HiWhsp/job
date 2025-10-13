@@ -1,13 +1,13 @@
 <template>
   <div class="goods-info">
-<!--    <div class="info-title">-->
-<!--      <div class="date">{{ order.dtTime }}</div>-->
-<!--      <div class="order-code">-->
-<!--        订单号：-->
-<!--        <span>{{ order.order_id }}</span>-->
-<!--      </div>-->
-<!--      <div class="order-state">{{ order.status_info }}</div>-->
-<!--    </div>-->
+    <div class="info-title">
+      <div class="date">{{ order.dtTime }}</div>
+      <div class="order-code">
+        订单号：
+        <span>{{ order.order_id }}</span>
+      </div>
+      <div class="order-state">{{ order.status_info }}</div>
+    </div>
     <div class="info-good">
       <div class="list-good">
         <div class="item">
@@ -66,9 +66,10 @@ export default {
 
 <style scoped lang="less">
 .goods-info {
-  border: 1px solid #E5E5E5;
   .info-title {
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     height: 48px;
     padding: 0 15px;
     background: #f9f9f9;
@@ -107,7 +108,8 @@ export default {
       .item-good {
         padding: 20px;
         border-bottom: 1px dashed #ccc;
-        .flex();
+          display: flex;
+  align-items: center;
 
         &:last-child {
           border: none;
@@ -151,14 +153,15 @@ export default {
       }
 
       .goods-action {
-        .flex();
+          display: flex;
+  align-items: center;
         justify-content: flex-end;
         padding: 10px;
         .btn-goods-action {
           margin-left: 10px;
           width: 96px;
           height: 30px;
-          background: #4CA5E4;
+          background: #F74747;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;

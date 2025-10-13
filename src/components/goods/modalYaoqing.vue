@@ -28,7 +28,7 @@
 <script>
 import { mapState } from "vuex";
 
-let user_id = localStorage.getItem("userId") || "";
+let userId = localStorage.getItem("userId") || "";
 let cutId = sessionStorage.getItem("cutId") || "";
 const registerLink = location.href;
 
@@ -44,7 +44,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
 
     firstImage() {
       let src = "";

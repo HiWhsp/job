@@ -1,135 +1,174 @@
 <template>
   <div class="page">
-    <modalTerms ref="modalTerms"/>
-    <!--    <modalRich ref="modalRich"/>-->
-    <div class="mask"></div>
-
-    <div class="center">
-      <div class="inner">
-        <div class="mode-toggle">
-          <img v-if="mode == '账号密码'" @click="mode = '微信扫码'" src="../../static/account/login-qrcode.png" alt=""/>
-          <img v-if="mode == '微信扫码'" @click="mode = '账号密码'" src="../../static/account/login-pc.png" alt=""/>
-        </div>
-
-        <div class="input-wrap">
-          <div class="tab-box">
-            <div
-                class="tab-item"
-                :class="tabType == 'PASS' ? 'active' : ''"
-                @click="tabType = 'PASS'"
-            >
-              {{ mode == "账号密码" ? "手机号注册" : "微信注册" }}
-            </div>
-          </div>
-          <!--          手机号注册-->
-          <template v-if="mode == '账号密码'">
-            <div class="input-box">
-              <span>手机号</span>
-              <input type="text" placeholder="请输入手机号码" v-model="form.phone"/>
+    <div class="page-ctx">
+      <div class="page-inner flex-center w-1400">
+        <div class="form-box">
+          <div class="input-wrap">
+            <div class="tab-box">
+              <div class="tab-item">用户注册</div>
             </div>
 
-            <!-- 验证码 -->
-            <sms_phone :form="form"/>
+            <template>
+              <div class="input-box">
+                <span>姓名：</span>
+                <input
+                  type="text"
+                  placeholder="请输入姓名"
+                  v-model="form.name"
+                />
+              </div>
+              <div class="input-box">
+                <span>邮箱：</span>
+                <input
+                  type="text"
+                  placeholder="请输入邮箱"
+                  v-model="form.email"
+                />
+              </div>
+              <div class="input-box tip">
+                <span>公司名称：</span>
+                <input
+                  type="text"
+                  placeholder="请输入公司名称"
+                  v-model="form.company"
+                />
+              </div>
+              <div class="input-box">
+                <span>职位：</span>
+                <input
+                  type="text"
+                  placeholder="请输入职位"
+                  v-model="form.position"
+                />
+              </div>
 
-            <div class="input-box">
-              <span>设置密码</span>
-              <!-- <img src="@img/other/icon-lock.png" alt="" /> -->
-              <input type="password" placeholder="请输入密码" v-model="form.pass"/>
-            </div>
+              <div class="input-box">
+                <span>联系地址：</span>
+                <input
+                  type="text"
+                  placeholder="请输入联系地址"
+                  v-model="form.address"
+                />
+              </div>
+              <div class="input-box">
+                <span>详细地址：</span>
+                <input
+                  type="text"
+                  placeholder="请输入详细地址"
+                  v-model="form.address"
+                />
+              </div>
 
-            <div class="input-box">
-              <span>确认密码</span>
-              <!-- <img src="@img/other/icon-lock.png" alt="" /> -->
-              <input
+              <div class="input-box">
+                <span>手机号：</span>
+                <input
+                  type="text"
+                  placeholder="请输入手机号"
+                  v-model="form.phone"
+                />
+              </div>
+
+              <div class="input-box">
+                <register_phone_code :form="form" />
+              </div>
+
+              <div class="input-box">
+                <span>设置密码</span>
+                <input
                   type="password"
                   placeholder="请输入密码"
-                  v-model="form.confirm_pass"
-              />
-            </div>
-
-            <div class="btn-box">
-              <button class="btn-ripple" @click="retrieve_submit">确定</button>
-            </div>
-
-            <div class="register-box">
-              <!-- <router-link to="/">回到主页 ></router-link> -->
-              <span> <router-link to="/login">已有账号，去登录 ></router-link> </span>
-            </div>
-
-            <div class="terms-box">
-              <!-- 登录即代表同意 <router-link to="/">《用户协议》</router-link> 与 <router-link to="/">《隐私政策》</router-link> -->
-              登录注册即表示同意 <span @click="terms_open(83)">《隐私政策》</span>
-            </div>
-          </template>
-          <!-- 扫码登录 -->
-          <template v-else>
-            <div class="qrcode-cit flex">
-              <div class="title">使用微信扫码后点击【关注公众号】注册账号</div>
-              <div class="qrcode-box">
-                <img src="../../static/account/demo-code.png" alt=""/>
-                <!--                <div ref="qrCodeUrl" class="erweima"></div>-->
+                  v-model="form.pass"
+                />
               </div>
-              <div class="text-box flex">
-                <div class="title flex">
-                  <div class="col"></div>
-                  <span>其他注册方式</span>
-                  <div class="col"></div>
+
+              <div class="input-box">
+                <span>确认密码</span>
+                <input
+                  type="password"
+                  placeholder="请输入密码"
+                  v-model="form.pass2"
+                />
+              </div>
+              <div class="btn-box">
+                <button class="btn-ripple" @click="do_submit()">注册</button>
+              </div>
+
+              <div class="terms-box">
+                <div class="terms-box-inner">
+                  <span class="terms-check" @click="is_agree = !is_agree">
+                    <img v-if="is_agree" src="@img/common/check1.png" alt="" />
+                    <img v-else src="@img/common/check0.png" alt="" />
+                    我已阅读并同意
+                  </span>
+                  <span class="terms-text" @click="terms_open(92)"
+                    >《隐私协议》</span
+                  >
                 </div>
-                <div class="check flex pointer" @click="mode = '账号密码'">
-                  <img src="../../static/account/phone.png" alt="">
-                  <span>手机号注册</span>
+
+                <div class="register-box">
+                  <span>
+                    <router-link to="/login">已有账号，直接登录</router-link>
+                  </span>
                 </div>
               </div>
-            </div>
-          </template>
+            </template>
+          </div>
         </div>
       </div>
     </div>
+
+    <register_type_modal
+      data-title="注册类型"
+      ref="register_type_modal"
+      @confirm="switchMode"
+    />
+
+    <terms_modal ref="terms_modal" />
   </div>
 </template>
 
 <script>
-import sms_phone from "@/components/login/sms_phone.vue"; //短信验证码
-import utilForm from "@/util/utilForm.js";
-// import SmsLogin from "@/components/login/SmsLogin.vue"; //短信验证码
-import modalTerms from "@/components/modals/modalTerms.vue"; //协议弹窗
-// import modalRich from "@/components/modals/modalRich.vue"; //协议弹窗
+import register_type_modal from "@/components/account/register_type_modal.vue"; //短信验证码
+import register_phone_code from "@/components/account/register_phone_code.vue"; //短信验证码
+import terms_modal from "@/components/account/terms_modal.vue"; //协议弹窗
 
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "login",
   components: {
-    sms_phone,
-    modalTerms,
-    // modalRich,
+    register_type_modal,
+    register_phone_code,
+    terms_modal,
   },
   data() {
     return {
-      mode: "账号密码", //微信扫码
-      tabType: "PASS", //登录方式
-      agreed: false,
+      is_agree: true,
 
       form: {
         phone: "",
         code: "",
         pass: "",
-        confirm_pass: "",
+        pass2: "",
+        invite_id: "",
+        type: 1,
       },
     };
   },
   computed: {
     ...mapState(["logo"]),
   },
-  created() {
-  },
+  mounted() {},
 
   methods: {
     terms_open(id) {
-      this.$refs.modalRich.init(id);
+      this.$refs.terms_modal.init(id);
     },
-
-    retrieve_submit() {
+    switchMode(info) {
+      console.log(info);
+      this.form.type = info;
+    },
+    do_submit() {
       let reg_phone = /^1[3-9]\d{9}$/;
       let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
 
@@ -145,22 +184,28 @@ export default {
         alertErr("请输入密码");
         return;
       }
-      if (!this.form.confirm_pass) {
+      if (!this.form.pass2) {
         alertErr("请输入确认密码");
         return;
       }
-      if (this.form.pass != this.form.confirm_pass) {
+      if (this.form.pass != this.form.pass2) {
         alertErr("两次密码不一致");
         return;
       }
-
-      this.$api("login_phoneReg", {
-        ...this.form,
-        invite_id: this.$route.query.invite || "",
+      if (this.form.type == 2 && this.form.company.length === 0) {
+        alertErr("请输入企业名称");
+        return;
+      }
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "login_phoneReg",
+          ...this.form,
+        },
       }).then((res) => {
-        //console.log("注册", res);
-        let {code, data, message} = res;
-        if (code == 1) {
+        alert(res);
+        if (res.code == 200) {
           this.$router.push("/login");
         }
       });
@@ -179,293 +224,205 @@ export default {
 
 <style scoped lang="less">
 .page {
-  width: 100%;
   position: relative;
+  background: #f3f3f3;
 
-  .mask {
-    background: url(../../static/account/login-bg.png) 100% 100% no-repeat;
-    background-size: cover;
-    position: absolute;
-    content: "";
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    // opacity: 0.1;
-    pointer-events: none;
+  .page-ctx {
+    display: flex;
+    align-items: center;
+    padding: 60px 0;
   }
 
-  .center {
-    height: 780px;
-    width: @width;
+  .page-poster {
+    margin-left: 46px;
+
+    img {
+      width: 664px;
+      height: 664px;
+    }
+  }
+
+  .page-inner {
     margin: 0 auto;
-    display: flex;
-    justify-content: flex-end;
     background: transparent;
     align-items: center;
     position: relative;
 
-    .inner {
+    .form-box {
       position: relative;
-      // position: absolute;
-      // left: 50%;
-      // top: 50%;
-      // transform: translate(-50%, -50%);
-      width: 480px;
-      min-height: 520px;
-      height: auto;
-      padding: 40px 40px 60px;
-      background: #ffffff;
-      opacity: 1;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #fff;
-      // margin: 0 auto;
-
-      .mode-toggle {
-        position: absolute;
-        right: 12px;
-        top: 12px;
-
-        img {
-          width: 64px;
-          cursor: pointer;
-        }
-      }
-
-      .left {
-      }
-
-      .right {
-        // width: 480px;
-        // height: 480px;
-        // background: #ffffff;
-        // box-shadow: 0px 10px 20px rgba(1, 100, 98, 0.2);
-        // opacity: 1;
-        // border-radius: 10px;
-
-        // padding: 40px 40px 30px 40px;
-      }
-    }
-
-    .tab-box {
-      margin-bottom: 40px;
-      .flex-center();
-
-      .tab-item {
-        font-size: 24px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #333333;
-
-        &:first-child {
-          // &:after {
-          //   content: "";
-          //   display: inline-block;
-          //   width: 2px;
-          //   height: 24px;
-          //   background-color: #ccc;
-          //   margin: 0 30px;
-          //   position: relative;
-          //   top: 3px;
-          // }
-        }
-
-        &.active {
-          color: #333333;
-        }
-      }
+      width: fit-content;
     }
 
     .input-wrap {
-      width: 400px;
       margin: 0 auto;
-    }
 
-    .input-box {
-      margin-bottom: 20px;
-      width: 100%;
-      height: 50px;
-      background: #ffffff;
-      border: 1px solid #eeeeee;
-      border-radius: 4px;
-      .flex-between();
-      overflow: hidden;
+      .tab-box {
+        margin-bottom: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-      span {
-        display: inline-block;
-        width: 90px; /*no */
-        border-right: 1px solid #eee;
+        .tab-item {
+          font-family: Poppins, Poppins;
+          font-weight: 600;
+          font-size: 26px;
+          color: #333333;
+
+          &:first-child {
+            // &:after {
+            //   content: "";
+            //   display: inline-block;
+            //   width: 2px;
+            //   height: 24px;
+            //   background-color: #ccc;
+            //   margin: 0 30px;
+            //   position: relative;
+            //   top: 3px;
+            // }
+          }
+
+          &.active {
+            color: #333333;
+          }
+        }
+      }
+
+      .input-box {
+        margin-bottom: 20px;
+        width: 650px;
+        height: 50px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        overflow: hidden;
+        padding-right: 110px;
+        position: relative;
+        .sms-box {
+          width: 550px;
+          height: 100%;
+        }
+
+        span {
+          text-align: center;
+          display: inline-block;
+          width: 105px;
+          font-family: OPPOSans, OPPOSans;
+          font-weight: 400;
+          font-size: 16px;
+          color: #272536;
+        }
+
+        input {
+          width: 480px;
+          height: 100%;
+          padding-left: 16px;
+          font-size: 14px;
+          color: #000;
+
+          &::-webkit-input-placeholder {
+            font-size: 16px;
+            font-family: sans-serif;
+            font-weight: 400;
+            color: #bebebe;
+          }
+        }
+      }
+      .tip {
+        &:after {
+          content: "请输入公司全称";
+          color: #f74747;
+          position: absolute;
+          right: 0;
+          top: 10px;
+          font-size: 14px;
+          font-family: Microsoft YaHei;
+          font-weight: 400;
+          line-height: 24px;
+        }
+      }
+
+      .agree-box {
+        text-align: left;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 24px;
         color: #999999;
-        text-indent: 1em;
-      }
 
-      img {
-        width: 36px;
-      }
-
-      input {
-        flex: 2;
-        height: 100%;
-        padding-left: 16px;
-        font-size: 14px;
-        color: #000;
-
-        &::-webkit-input-placeholder {
-          font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-          font-weight: 400;
-          color: #d7d7d7;
+        a {
+          color: #f74747;
         }
       }
-    }
 
-    .agree-box {
-      text-align: left;
-      margin-top: 20px;
-      .flex-between();
+      .btn-box {
+        margin-top: 40px;
+        margin-left: 100px;
+        margin-right: 110px;
 
-      font-size: 14px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      line-height: 24px;
-      color: #999999;
-
-      a {
-        color: @theme;
+        button {
+          width: 100%;
+          height: 44px;
+          background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
+          background: #f74747;
+          font-size: 18px;
+          font-family: sans-serif;
+          font-weight: 400;
+          color: #ffffff;
+        }
       }
-    }
 
-    .btn-box {
-      margin-top: 30px;
-
-      button {
-        width: 100%;
-        height: 44px;
-        background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
-        background: @theme;
-        font-size: 18px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #ffffff;
-      }
-    }
-
-    .register-box {
-      text-align: center;
-      margin-top: 30px;
-      font-size: 14px;
-
-      a {
+      .register-box {
+        text-align: center;
         font-size: 14px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        line-height: 24px;
-        color: @theme;
-        border-bottom: 1px solid @theme;
+
+        a {
+          font-size: 14px;
+          font-family: Microsoft YaHei;
+          font-weight: 400;
+          line-height: 24px;
+          color: #f74747;
+          border-bottom: 1px solid #f74747;
+        }
       }
     }
   }
 }
 
 .terms-box {
-  position: absolute;
-  height: 40px;
-  background: #f5f6f8;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  margin-top: 40px;
+  margin-left: 100px;
+  margin-right: 110px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  // padding-left: 40px;
+  justify-content: space-between;
   text-align: center;
 
-  span {
+  .terms-check {
     cursor: pointer;
-
-    &:hover {
-      color: @theme;
-    }
-  }
-}
-
-.qrcode-cit {
-  flex-direction: column;
-
-  .qrcode-box {
-    text-align: center;
-    width: 180px;
-    height: 180px;
-    margin-top: 25px;
-
-    img {
-      width: 180px;
-      height: 180px;
-    }
-  }
-
-  .title {
-    font-family: Roboto, Roboto;
+    font-family: OPPOSans, OPPOSans;
     font-weight: 400;
-    font-size: 14px;
-    color: #333333;
-    font-style: normal;
-    text-transform: none;
-  }
-
-  .text-box {
-    flex-direction: column;
-    margin-top: 24px;
-    .flex-center();
+    font-size: 12px;
+    color: #999999;
 
     img {
-      width: 32px;
       margin-right: 10px;
+      width: 18px;
+      height: 18px;
     }
+  }
 
-    .text {
-      font-size: 16px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-      font-weight: 400;
-      color: #333333;
-    }
-
-    .title {
-      .col {
-        width: 112px;
-        height: 0px;
-        border: 1px solid #707070;
-        opacity: 0.2;
-      }
-      span {
-        margin: 0 5px;
-      }
-    }
-
-    .check {
-      flex-direction: column;
-      margin-top: 20px;
-      img {
-        width: 48px;
-        height: 48px;
-      }
-
-      span {
-        margin-top: 16px;
-        font-family: Roboto, Roboto;
-        font-weight: 400;
-        font-size: 14px;
-        color: #7D7D7D;
-        font-style: normal;
-        text-transform: none;
-      }
-    }
+  .terms-text {
+    cursor: pointer;
+    font-family: OPPOSans, OPPOSans;
+    font-weight: 400;
+    font-size: 12px;
+    color: #e5222b;
   }
 }
 </style>

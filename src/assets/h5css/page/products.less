@@ -40,11 +40,11 @@
           height: 40px;
           background: #ffffff;
           border-radius: 4px 4px 4px 4px;
-          border: 1px solid #4CA5E4;
+          border: 1px solid #F74747;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
-          color: #4CA5E4;
+          color: #F74747;
         }
       }
 
@@ -52,7 +52,7 @@
         width: 80px;
         margin: 24px auto;
         height: 5px;
-        background: #4CA5E4;
+        background: #F74747;
         border-radius: 3px 3px 3px 3px;
       }
     }
@@ -60,7 +60,8 @@
 
   .leixing-list {
     margin-top: 20px;
-    .flex();
+      display: flex;
+  align-items: center;
     flex-wrap: wrap;
     justify-content: space-between;
     .leixing-item {
@@ -80,7 +81,7 @@
       }
 
       &:hover {
-        background: #4CA5E4;
+        background: #F74747;
         .icon-default {
           display: none !important;
         }
@@ -116,10 +117,14 @@
           color: #666666;
         }
         .desc {
-          .ellipsis-3();
+          display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
           margin-top: 0;
           font-size: 12px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #999999;
           line-height: 1.7;
@@ -166,21 +171,24 @@
         .info-box {
           padding: 15px;
           .zhuanti-title {
-            .ellipsis-1();
+             white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #333333;
             line-height: 1.6;
             height: auto;
           }
           .zhuanti-desc {
-            .flex();
+              display: flex;
+  align-items: center;
             margin-top: 10px;
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
-            color: #4CA5E4;
+            color: #F74747;
 
             img {
               width: 26px;
@@ -274,21 +282,24 @@
       .info-box {
         padding: 15px;
         .zhuanti-title {
-          .ellipsis-1();
+           white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #333333;
           line-height: 1.7;
           height: auto;
         }
         .zhuanti-desc {
-          .flex();
+            display: flex;
+  align-items: center;
           margin-top: 10px;
           font-size: 12px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
-          color: #4CA5E4;
+          color: #F74747;
 
           img {
             width: 20px;
@@ -311,7 +322,9 @@
 
       .lingyu-item {
         float: left;
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
         flex-direction: column;
         width: calc((100% - 15px) / 2);
         height: 40px;
@@ -338,7 +351,7 @@
         }
 
         &:hover {
-          background: #4CA5E4;
+          background: #F74747;
           .icon-default {
             display: none !important;
           }
@@ -371,7 +384,7 @@
           margin-top: 0;
           .title {
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #000000;
           }
@@ -418,7 +431,7 @@
   }
 
   /deep/ .swiper-pagination-bullet-active {
-    background: #4CA5E4;
+    background: #F74747;
   }
 
   .swiper-wenxian {
@@ -442,7 +455,7 @@
 
     &:hover {
       .title {
-        color: #4CA5E4;
+        color: #F74747;
       }
     }
 
@@ -451,12 +464,16 @@
       height: auto;
       background: #f7f7f7;
       font-size: 12px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #333333;
       line-height: 1.7;
       .text {
-        .ellipsis-2();
+         display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
       }
     }
     .info-box {
@@ -465,10 +482,11 @@
       flex-wrap: wrap;
 
       .info-item {
-        .flex();
+          display: flex;
+  align-items: center;
         width: 100%;
         font-size: 12px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #666666;
         line-height: 1.7;
@@ -485,7 +503,9 @@
           min-width: 60px;
         }
         .text {
-          .ellipsis-1();
+           white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 
           &.zazhi {
             font-size: 12px;

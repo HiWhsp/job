@@ -33,7 +33,7 @@
     padding-bottom: 15px;
     border-bottom: 1px solid #ddd;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #808080;
   }
@@ -60,7 +60,9 @@
       .main-title {
         height: 36px;
         padding: 0 10px;
-        .flex-between();
+          display: flex;
+  align-items: center;
+  justify-content: space-between;
         border-bottom: 1px solid #ebeef5;
 
         .text {
@@ -71,9 +73,9 @@
         }
         .action {
           font-size: 12px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
-          color: #4CA5E4;
+          color: #F74747;
         }
       }
 
@@ -86,7 +88,8 @@
           }
           .item-title {
             position: relative;
-            .flex();
+              display: flex;
+  align-items: center;
             height: 36px;
             padding: 0 23px;
             img {
@@ -100,9 +103,9 @@
               right: 20px;
               background: transparent;
               font-size: 12px;
-              font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+              font-family: sans-serif;
               font-weight: 400;
-              color: #4CA5E4;
+              color: #F74747;
             }
           }
 
@@ -134,11 +137,12 @@
             }
 
             .sub-item {
-              .flex();
+                display: flex;
+  align-items: center;
               margin-bottom: 5px;
               line-height: 28px;
               font-size: 12px;
-              font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+              font-family: sans-serif;
               font-weight: 400;
               color: #808080;
 
@@ -185,12 +189,13 @@
             }
 
             &:hover {
-              border-color: #4CA5E4;
+              border-color: #F74747;
             }
           }
 
           .level-1 {
-            .flex();
+              display: flex;
+  align-items: center;
             height: 36px;
             padding: 0 10px;
 
@@ -206,7 +211,7 @@
 
             a {
               font-size: 14px;
-              font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+              font-family: sans-serif;
               font-weight: 400;
               color: #666666;
 
@@ -215,7 +220,7 @@
               }
 
               &:hover {
-                color: #4CA5E4;
+                color: #F74747;
               }
             }
           }
@@ -247,7 +252,8 @@
               // margin-bottom: 12px;
 
               .level-2 {
-                .flex();
+                  display: flex;
+  align-items: center;
                 // height: 43px;
                 // padding: 0 23px;
 
@@ -280,7 +286,7 @@
                   width: fit-content;
                   line-height: 24px;
                   font-size: 12px;
-                  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+                  font-family: sans-serif;
                   font-weight: 400;
                   color: #808080;
 
@@ -289,13 +295,14 @@
                   }
 
                   &:hover {
-                    color: #4CA5E4;
+                    color: #F74747;
                   }
                 }
               }
 
               .level-3 {
-                .flex();
+                  display: flex;
+  align-items: center;
                 // height: 43px;
                 // padding: 0 23px;
 
@@ -320,7 +327,7 @@
                   width: fit-content;
                   line-height: 24px;
                   font-size: 12px;
-                  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+                  font-family: sans-serif;
                   font-weight: 400;
                   color: #808080;
 
@@ -329,7 +336,7 @@
                   }
 
                   &:hover {
-                    color: #4CA5E4;
+                    color: #F74747;
                   }
                 }
               }
@@ -347,7 +354,7 @@
   .top-info {
     .cate-title {
       font-size: 16px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #333333;
     }
@@ -362,7 +369,9 @@
         margin-right: 30px;
         width: 240px;
         height: 200px;
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
         border-radius: 6px 6px 6px 6px;
         border: 1px solid #e5e5e5;
 
@@ -380,7 +389,7 @@
       .cate-desc {
         flex: 1;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #333333;
         line-height: 24px;

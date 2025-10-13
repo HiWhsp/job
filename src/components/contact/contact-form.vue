@@ -5,40 +5,64 @@
       <!-- <div class="detail-title-line"></div> -->
       <div class="page-block">
         <div class="xunjia-box">
-          <div class="input-item ">
+          <div class="input-item">
             <div class="label">名</div>
             <div class="input-box">
-              <el-input clearable v-model="form.firstName" placeholder="名"></el-input>
+              <el-input
+                clearable
+                v-model="form.firstName"
+                placeholder="名"
+              ></el-input>
             </div>
           </div>
           <div class="input-item">
             <div class="label">姓</div>
             <div class="input-box">
-              <el-input clearable v-model="form.lastName" placeholder="姓"></el-input>
+              <el-input
+                clearable
+                v-model="form.lastName"
+                placeholder="姓"
+              ></el-input>
             </div>
           </div>
           <div class="input-item">
             <div class="label required">邮箱</div>
             <div class="input-box">
-              <el-input clearable v-model="form.email" placeholder="邮箱"></el-input>
+              <el-input
+                clearable
+                v-model="form.email"
+                placeholder="邮箱"
+              ></el-input>
             </div>
           </div>
           <div class="input-item">
             <div class="label required">电话</div>
             <div class="input-box">
-              <el-input clearable v-model="form.phone" placeholder="电话"></el-input>
+              <el-input
+                clearable
+                v-model="form.phone"
+                placeholder="电话"
+              ></el-input>
             </div>
           </div>
           <div class="input-item">
             <div class="label required">国家</div>
             <div class="input-box">
-              <el-input clearable v-model="form.country" placeholder="国家"></el-input>
+              <el-input
+                clearable
+                v-model="form.country"
+                placeholder="国家"
+              ></el-input>
             </div>
           </div>
           <div class="input-item">
             <div class="label required">主题</div>
             <div class="input-box">
-              <el-input clearable v-model="form.subject" placeholder="主题"></el-input>
+              <el-input
+                clearable
+                v-model="form.subject"
+                placeholder="主题"
+              ></el-input>
             </div>
           </div>
 
@@ -52,15 +76,20 @@
             </div>
           </div> -->
 
-
-          <div class="input-item full" style="width: 100%; margin-right: 0;">
+          <div class="input-item full" style="width: 100%; margin-right: 0">
             <div class="label required">留言内容</div>
             <div class="input-box">
-              <el-input v-model="form.content" placeholder="留言内容" clearable type="textarea" :autosize="{ minRows: 6 }">
+              <el-input
+                v-model="form.content"
+                placeholder="留言内容"
+                clearable
+                type="textarea"
+                :autosize="{ minRows: 6 }"
+              >
               </el-input>
               <!-- <div class="upload-box">
-                <el-upload class="upload-demo" multiple :limit="6" name="file" :data="uploadExtraData"
-                  :action="uploadAction" :on-success="onSuccess_upload" :on-preview="handlePreview"
+                <el-upload class="upload-demo" multiple :limit="6" name="file" :data="mix_upload_data"
+                  :action="mix_upload_action" :on-success="onSuccess_upload" :on-preview="handlePreview"
                   :on-remove="handleRemove" :before-remove="beforeRemove" :on-exceed="handleExceed"
                   :file-list="fileList">
                   <button class="btn-ripple btn-upload">
@@ -78,7 +107,12 @@
         </div>
 
         <div class="submit-box">
-          <el-button class="btn-ripple" :loading="loading" @click="throttle_do_submit()" >提交</el-button>
+          <el-button
+            class="btn-ripple"
+            :loading="loading"
+            @click="throttle_do_submit()"
+            >提交</el-button
+          >
         </div>
       </div>
     </div>
@@ -97,7 +131,7 @@ export default {
         firstName: "",
         lastName: "",
         phone: "",
-        applyType: "1",//类型：1-代理
+        applyType: "1", //类型：1-代理
         country: "",
         subject: "",
         content: "",
@@ -111,7 +145,7 @@ export default {
       list_sheng: [],
       uploadList: [],
 
-      loading:false
+      loading: false,
     };
   },
   computed: {
@@ -126,24 +160,19 @@ export default {
   },
 
   created() {
-    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
+    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000);
     this.setView();
   },
   methods: {
-    setView() {
+    setView() {},
 
-    },
-
-
-    throttle_do_submit() {
-
-    },
+    throttle_do_submit() {},
 
     do_submit() {
       let reg_phone = /^1[3-9]\d{9}$/;
       let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
-      let is_true_email = reg_email.test(this.form.email)
-      let is_true_phone = reg_phone.test(this.form.phone)
+      let is_true_email = reg_email.test(this.form.email);
+      let is_true_phone = reg_phone.test(this.form.phone);
 
       // if (!this.form.firstName) {
       //   alertErr("请填写名");
@@ -176,19 +205,19 @@ export default {
 
       this.loading = true;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'agent_apply',
+          action: "agent_apply",
           ...this.form,
-        }
+        },
       }).then((res) => {
         alert(res).then(() => {
           this.loading = false;
         });
 
         if (res.code == 200) {
-          this.do_clear()
+          this.do_clear();
         }
       });
     },
@@ -198,14 +227,13 @@ export default {
         firstName: "",
         lastName: "",
         phone: "",
-        applyType: "1",//类型：1-代理
+        applyType: "1", //类型：1-代理
         country: "",
         subject: "",
         content: "",
         email: "",
       };
     },
-
 
     onSuccess_upload(res, file) {
       // debugger
@@ -240,7 +268,8 @@ export default {
 
     handleExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length
+        `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
         } 个文件`
       );
     },
@@ -272,14 +301,14 @@ export default {
   width: 80px;
   margin: 24px auto;
   height: 5px;
-  background: #4CA5E4;
+  background: #F74747;
   border-radius: 3px 3px 3px 3px;
 }
 
 .block-xunjia {
   min-height: 500px;
   padding: 70px 80px 90px;
-  background: #F5F5F5;
+  background: #f5f5f5;
 
   .xunjia-box {
     padding-top: 0;
@@ -304,7 +333,7 @@ export default {
 
         &.required {
           &::after {
-            content: '*';
+            content: "*";
             color: #f00;
             margin-left: 5px;
           }
@@ -329,28 +358,30 @@ export default {
     button {
       width: 200px;
       height: 50px;
-      background: #4CA5E4;
+      background: #F74747;
       border-radius: 0px 0px 0px 0px;
 
       font-family: OPPOSans, OPPOSans;
       font-weight: bold;
       font-size: 16px;
-      color: #FFFFFF;
+      color: #ffffff;
     }
   }
 }
 
 .btn-upload {
-  .flex-center();
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-width: 128px;
   height: 40px;
   background: #ffffff;
   border-radius: 4px 4px 4px 4px;
-  border: 1px solid #4CA5E4;
+  border: 1px solid #F74747;
   font-size: 14px;
-  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-family: sans-serif;
   font-weight: 400;
-  color: #4CA5E4;
+  color: #F74747;
 
   img {
     margin-right: 10px;

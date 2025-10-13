@@ -38,11 +38,11 @@
           height: 40px;
           background: #ffffff;
           border-radius: 4px 4px 4px 4px;
-          border: 1px solid #4CA5E4;
+          border: 1px solid #F74747;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
-          color: #4CA5E4;
+          color: #F74747;
         }
       }
 
@@ -50,7 +50,7 @@
         width: 80px;
         margin: 24px auto;
         height: 5px;
-        background: #4CA5E4;
+        background: #F74747;
         border-radius: 3px 3px 3px 3px;
       }
     }
@@ -72,7 +72,7 @@
       background: #f4f4f4;
       border-radius: 4px 4px 4px 4px;
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #333333;
       cursor: pointer;
@@ -82,7 +82,7 @@
       }
 
       &.active {
-        background: #4CA5E4;
+        background: #F74747;
         color: #fff;
       }
     }
@@ -95,7 +95,7 @@
       margin-bottom: 15px;
       &.expand {
         .ques-title {
-          background: #4CA5E4 !important;
+          background: #F74747 !important;
           .text {
             color: #fff !important;
           }
@@ -126,11 +126,13 @@
         height: 50px;
         background: #f4f4f4;
         transition: 0.3s;
-        .flex-between();
+          display: flex;
+  align-items: center;
+  justify-content: space-between;
         cursor: pointer;
 
         &:hover {
-          background: #4CA5E4;
+          background: #F74747;
           color: #fff;
 
           .text {
@@ -140,7 +142,7 @@
 
         .text {
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #333333;
         }
@@ -188,7 +190,9 @@ display: none;
     flex-wrap: wrap;
 
     .buzhou-item {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       width: 100%;
       height: 50px;
       padding: 0 10px;
@@ -209,15 +213,17 @@ display: none;
 
       .title {
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #333333;
       }
       .img-box {
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
         cursor: pointer;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #666666;
 

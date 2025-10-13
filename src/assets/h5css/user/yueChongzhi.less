@@ -23,7 +23,9 @@
     text-align: left;
     padding-bottom: 80px;
     .main-title {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       padding: 0 32px;
       text-align: left;
       height: 56px;
@@ -38,7 +40,7 @@
         min-width: 96px;
         height: 30px;
         line-height: 30px;
-        background: #4CA5E4;
+        background: #F74747;
         color: #fff;
         font-size: 14px;
         font-weight: bold;
@@ -65,7 +67,9 @@
       height: 240px;
       background: url(~@img/yue/yue-bg.png) no-repeat center / cover;
       padding-left: 40px;
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
       flex-direction: column;
       align-items: flex-start;
 
@@ -110,10 +114,13 @@
   }
 
   .list {
-    .flex();
+      display: flex;
+  align-items: center;
     flex-wrap: wrap;
     .item {
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
       cursor: pointer;
       justify-content: flex-start;
       margin-top: 20px;
@@ -164,7 +171,7 @@
     padding: 24px;
     padding: 10px;
     font-size: 12px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #666666;
     line-height: 28px;
@@ -175,7 +182,7 @@
     margin-bottom: 20px;
     font-size: 18px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #333333;
   }
@@ -189,7 +196,9 @@
     .chongzhi-item {
       cursor: pointer;
       position: relative;
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
       flex-direction: column;
       margin-right: 31px;
       margin-bottom: 50px;
@@ -201,7 +210,7 @@
       margin-right: 15px;
       padding-bottom: 0;
 
-      border: 2px solid #4CA5E4;
+      border: 2px solid #F74747;
       border: 2px solid transparent;
       background: #f6f6f6;
 
@@ -214,7 +223,7 @@
       }
 
       &.selected {
-        border: 2px solid #4CA5E4;
+        border: 2px solid #F74747;
       }
       .song-marker {
         position: absolute;
@@ -224,10 +233,10 @@
         height: 30px;
         line-height: 30px;
         text-align: center;
-        background: linear-gradient(61deg, #4CA5E4 0%, #fe6927 100%);
+        background: linear-gradient(61deg, #F74747 0%, #fe6927 100%);
         border-radius: 20px 0px 20px 0px;
         font-size: 12px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #ffffff;
       }
@@ -238,12 +247,12 @@
         font-size: 16px;
         font-family: Microsoft YaHei-Bold, Microsoft YaHei;
         font-weight: bold;
-        color: #4CA5E4;
+        color: #F74747;
       }
       .tip {
         margin-top: 10px;
         font-size: 12px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #666666;
       }
@@ -253,16 +262,18 @@
   .chongzhi-type {
     margin-bottom: 20px;
     font-size: 14px;
-    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-family: sans-serif;
     font-weight: 400;
     color: #333333;
   }
 
   .type-box {
-    .flex();
+      display: flex;
+  align-items: center;
 
     .type-item {
-      .flex();
+        display: flex;
+  align-items: center;
       cursor: pointer;
 
       & + .type-item {
@@ -292,7 +303,7 @@
       height: 40px;
       line-height: 40px;
       background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
-      background: #4CA5E4;
+      background: #F74747;
       border-radius: 4px;
       font-size: 14px;
       font-family: PingFang SC;

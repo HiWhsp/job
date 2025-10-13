@@ -31,18 +31,13 @@
               <div class="goods-title" @click="mix_to_product(product_item)">
                 {{ product_item.title }}
               </div>
-              <div class="goods-sku">{{ product_item.keyVals }}</div>
             </div>
             <div class="box-sku">
-              <div class="goods-sku">
-                {{ vuex_huobi }}{{ product_item.priceSale }}
-              </div>
+              <div class="goods-sku">{{ product_item.keyVals }}</div>
             </div>
-            <div class="box-num">
-              {{ product_item.num }}
-            </div>
+            <div class="box-num">x {{ product_item.num }}</div>
             <div class="box-price">
-              {{ vuex_huobi }} {{ product_item.priceSale * product_item.num }}
+              {{ vuex_huobi }} {{ product_item.priceSale }}
             </div>
           </div>
         </div>
@@ -58,9 +53,6 @@
         </div>
 
         <div class="btn-actions">
-          <button class="btn-ripple fit-text" @click="toLogistics(item)">
-            物流信息
-          </button>
           <button class="btn-ripple fit-text" @click="toDetail(item)">
             订单详情
           </button>
@@ -137,14 +129,10 @@
 </template>
 
 <script>
-import order from "@/shop-actions/order";
-
 import order_cancel_modal from "@/components/order/order_cancel_modal.vue"; //取消
 import order_delete_modal from "@/components/order/order_delete_modal.vue"; //删除
 import order_receive_modal from "@/components/order/order_receive_modal.vue"; //收货
 import order_refund_modal from "@/components/order/order_refund_modal.vue"; //售后
-
-import download from "@/static/order/download.png";
 
 import { mapState } from "vuex";
 
@@ -165,14 +153,7 @@ export default {
     emitConfirm() {
       this.$emit("confirm");
     },
-    toLogistics(item) {
-      this.toRoute({
-        path: "/order-logistics",
-        query: {
-          id: item.id,
-        },
-      });
-    },
+
     toDetail(item) {
       // this.$router.push(`/order-detail?id=${item.id}`);
       this.toRoute({
@@ -186,58 +167,11 @@ export default {
       this.$refs.order_cancel_modal.init(item);
     },
     doPay(item) {
-      // this.$router.push({
-      //   path: '/payment-methods',
-      //   query: {
-      //     id: item.id
-      //   }
-      // })
-      const h = this.$createElement;
-      this.$msgbox({
-        title: "上传支付凭证",
-        customClass: "order-list-model-warp",
-        message: h("div", [
-          h("div", { class: "model-desc-wrap" }, [
-            h("div", { class: "one-desc" }, "1. 收款人信息"),
-            h("div", { class: "row" }, "户名：*******"),
-            h("div", { class: "row" }, "开户行：*******"),
-            h("div", { class: "row" }, "账号：*******"),
-          ]),
-          h("div", { class: "model-img-wrap" }, [
-            h("div", { class: "img-wrap" }, [
-              h("img", {
-                attrs: {
-                  src: download,
-                  alt: "",
-                },
-              }),
-            ]),
-          ]),
-          h("div", { class: "model-btn-wrap" }, [
-            h(
-              "div",
-              {
-                class: "btn-ripple btn btn-bg",
-                on: {
-                  click: this.ok,
-                },
-              },
-              "确定"
-            ),
-            h(
-              "div",
-              {
-                class: "btn-ripple btn",
-                on: {
-                  click: this.cancel,
-                },
-              },
-              "取消"
-            ),
-          ]),
-        ]),
-        showCancelButton: false,
-        showConfirmButton: false,
+      this.$router.push({
+        path: "/payment-methods",
+        query: {
+          id: item.id,
+        },
       });
     },
     doDelete(item) {
@@ -253,12 +187,6 @@ export default {
 
     updateView() {
       this.$parent.updateView();
-    },
-    ok() {
-      this.$msgbox.close();
-    },
-    cancel() {
-      this.$msgbox.close();
     },
 
     //处理订单行为
@@ -361,7 +289,9 @@ export default {
   }
 
   .info-title {
-    .flex-between();
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     height: 48px;
     padding: 0 15px;
     background: #f5f5f5;
@@ -396,17 +326,19 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
+      color: #999999;
+      color: #F74747;
 
       // 待付款
       &.state--5 {
-        //background: #ff4c29;
-        //border-color: #ff4c29;
-        color: #ea3200;
+        // background: #ff4c29;
+        // border-color: #ff4c29;
+        // color: #fff;
       }
 
       &.state-2 {
-        color: @theme;
-        border-color: @theme;
+        color: #F74747;
+        border-color: #F74747;
       }
     }
   }
@@ -415,7 +347,7 @@ export default {
     .list-good {
       .item-good {
         padding: 20px;
-        border-bottom: 1px solid #e5e5e5;
+        border-bottom: 1px dashed #ccc;
 
         font-family: OPPOSans, OPPOSans;
         font-weight: 400;
@@ -457,7 +389,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: @theme;
+              color: #F74747;
             }
           }
         }
@@ -477,9 +409,9 @@ export default {
           min-width: 200px;
 
           font-family: OPPOSans, OPPOSans;
-          font-weight: bold;
+          font-weight: 400;
           font-size: 14px;
-          color: #333;
+          color: #ff0000;
         }
       }
     }
@@ -488,7 +420,9 @@ export default {
   .info-heji {
     padding: 15px;
     border-top: 1px solid #e5e5e5;
-    .flex-between();
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: 400;
@@ -496,9 +430,10 @@ export default {
     color: #7d7d7d;
 
     .heji {
-      .flex();
+      display: flex;
+      align-items: center;
       font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: 400;
       color: #333333;
 
@@ -506,13 +441,13 @@ export default {
         margin-right: 30px;
 
         b {
-          color: #ea3200;
+          color: #F74747;
         }
       }
 
       .heji-money {
         b {
-          color: #ea3200;
+          color: #F74747;
         }
       }
     }
@@ -523,12 +458,12 @@ export default {
         min-width: 120px;
         height: 32px;
         background: #ffffff;
-        border-radius: 4px;
-        border: 1px solid @theme;
+        border-radius: 50px 50px 50px 50px;
+        border: 1px solid #F74747;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: @theme;
+        color: #F74747;
 
         & + button {
           margin-left: 20px;
@@ -539,7 +474,7 @@ export default {
         }
 
         &.btn-bg {
-          background: @theme;
+          background: #F74747;
           color: #ffffff;
         }
       }
@@ -549,62 +484,3 @@ export default {
 </style>
 
 <style scoped lang="less" src="@/assets/h5css/shop/orderList.less"></style>
-
-<style lang="less">
-.order-list-model-warp {
-  width: 789px;
-  height: 443px;
-  padding: 11px 0 0 19px;
-  .model-desc-wrap {
-    width: 717px;
-    height: 153px;
-    border: 1px solid #c3d1f1;
-    background: #eff2f9;
-    padding: 12px 0 0 24px;
-    .one-desc {
-      font-size: 16px;
-      color: #333333;
-      line-height: 30px;
-    }
-    .row {
-      font-size: 14px;
-      color: #333333;
-      line-height: 32px;
-    }
-  }
-  .model-img-wrap {
-    margin-top: 23px;
-    .img-wrap {
-      width: 90px;
-      height: 90px;
-      cursor: pointer;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-  }
-  .model-btn-wrap {
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    .btn {
-      width: 104px;
-      height: 40px;
-      line-height: 40px;
-      text-align: center;
-      background: #ffffff;
-      border-radius: 4px;
-      font-family: Arial, Arial;
-      border: 1px solid #27417c;
-      color: @theme;
-      cursor: pointer;
-      &.btn-bg {
-        background: #27417c;
-        color: #fff;
-      }
-    }
-  }
-}
-</style>

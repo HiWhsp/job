@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import order from "@/shop-actions/order";
+
 
 import orderInfo from "@/components/order/orderInfo.vue"; //
 import { mapState } from "vuex";
@@ -88,7 +88,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar"]),
+    ...mapState([""]),
   },
   watch: {
     orderObj(data) {
@@ -140,7 +140,9 @@ export default {
 .page {
   padding-bottom: 80px;
   .main-title {
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     margin-bottom: 20px;
     text-align: left;
 
@@ -176,7 +178,9 @@ export default {
   }
 
   .other {
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     padding: 20px 25px;
 
     .item {

@@ -1,9 +1,9 @@
 <template>
-  <div class="order-list-wrap">
-    <div class="info-item" v-for="(order, index) in list" :key="index">
-      <div class="info-title">
+  <div class="service-list">
+    <div class="service-item" v-for="(order, index) in list" :key="index">
+      <div class="base-box flex">
         <div class="refund-type">
-          {{order.type_info}}
+          {{ order.type_info }}
         </div>
         <div class="date">{{ order.dtTime }}</div>
         <div class="order-code">
@@ -14,25 +14,37 @@
           {{ order.status_info }}
         </div>
       </div>
-      <div class="info-good">
-        <div class="list-good">
-          <div class="item-good">
-            <div class="img-box">
-              <img :src="order.products.image" alt />
+      <div class="product-box">
+        <div class="product-list">
+
+
+          <div class="product-item flex">
+            <div class="box-pic">
+              <div class="img-box">
+                <img :src="order.products.image" alt />
+              </div>
             </div>
-            <div class="title">{{ order.products.title }}</div>
-            <div class="num">x {{ order.products.num }}</div>
-            <div class="price">
-              {{ order.is_jifen ? "积分" : "￥" }}
-              {{ order.is_jifen ? order.products.jifen : order.products.priceSale }}
+            <div class="box-title">
+              <div class="title">{{ order.products.title }}</div>
+              <div class="sku">{{ order.products.keyVals }}</div>
+            </div>
+            <div class="box-price">
+              <div class="price">
+                {{ order.is_jifen ? "积分" : "￥" }}
+                {{ order.is_jifen ? order.products.jifen : order.products.priceSale }}
+              </div>
+            </div>
+            <div class="box-num">
+              <div class="num">x {{ order.products.num }}</div>
+            </div>
+            <div class="box-xiaoji">
+              <div class="price">{{ vuex_huobi }} {{ order.products.priceSale * order.products.num }}</div>
             </div>
           </div>
         </div>
       </div>
-      <div class="info-heji">
-        <div class="btn-actions">
-          <button class="order-detail" @click="$router.push(`/refundServiceDetail?refund_id=${order.id}`)">售后详情</button>
-        </div>
+      <div class="actions-box">
+        <button class="btn btn-ripple" @click="$router.push(`/refund-service-detail?refund_id=${order.id}`)">售后详情</button>
       </div>
     </div>
   </div>
@@ -55,13 +67,13 @@ export default {
 
 
 <style scoped lang="less">
-.order-list-wrap {
-  .info-item {
+.service-list {
+  .service-item {
     border: 1px solid #cccccc;
     margin-bottom: 30px;
   }
-  .info-title {
-    .flex();
+
+  .base-box {
     height: 48px;
     padding: 0 15px;
     background: #f9f9f9;
@@ -70,7 +82,7 @@ export default {
     .refund-type {
       min-width: 80px;
       text-align: left;
-      color: #4CA5E4;
+      color: #F74747;
     }
 
     .date {
@@ -80,6 +92,7 @@ export default {
       line-height: 20px;
       color: #7d7d7d;
     }
+
     .order-code {
       flex: 2;
       text-align: left;
@@ -90,10 +103,12 @@ export default {
       font-weight: 400;
       line-height: 20px;
       color: #7d7d7d;
+
       span {
         color: #333333;
       }
     }
+
     .order-state {
       padding: 3px 6px;
       border: 1px solid #ccc;
@@ -104,17 +119,19 @@ export default {
       color: #999999;
 
       &.state2 {
-        color: #4CA5E4;
-        border-color: #4CA5E4;
+        color: #F74747;
+        border-color: #F74747;
       }
     }
   }
-  .info-good {
-    .list-good {
-      .item-good {
+
+
+  .product-box {
+    .product-list {
+      .product-item {
         padding: 20px;
         border-bottom: 1px dashed #ccc;
-        .flex();
+
 
         &:last-child {
           border: none;
@@ -122,11 +139,13 @@ export default {
 
         .img-box {
           width: 100px;
+
           img {
             width: 100px;
             height: 100px;
           }
         }
+
         .title {
           text-align: left;
           padding-left: 20px;
@@ -138,6 +157,7 @@ export default {
 
           flex: 2;
         }
+
         .num {
           width: 100px;
           font-size: 16px;
@@ -146,6 +166,7 @@ export default {
           line-height: 20px;
           color: #999999;
         }
+
         .price {
           min-width: 100px;
           font-size: 16px;
@@ -157,10 +178,13 @@ export default {
       }
     }
   }
+
   .info-heji {
     padding: 15px;
     border-top: 1px solid #ccc;
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     justify-content: flex-end;
     font-size: 14px;
     font-family: Microsoft YaHei;
@@ -171,8 +195,8 @@ export default {
     .order-detail {
       min-width: 96px;
       height: 30px;
-      background: #4CA5E4;
-      border: 1px solid #4CA5E4;
+      background: #F74747;
+      border: 1px solid #F74747;
       font-size: 14px;
       color: #fff;
       transition: 0.3s;

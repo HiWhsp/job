@@ -10,30 +10,54 @@
           <div class="item">
             <span class="text">旧密码：</span>
             <span class="info">
-              <el-input clearable placeholder="请输入旧密码" type="password" v-model="form.oldPass" class="" />
+              <el-input
+                clearable
+                type="password"
+                v-model="form.oldPass"
+                class=""
+              />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">新密码：</span>
             <span class="info">
-              <el-input clearable placeholder="请输入新密码" type="password" v-model="form.pass" class="" />
+              <el-input
+                clearable
+                type="password"
+                v-model="form.pass"
+                class=""
+              />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">重复新密码：</span>
             <span class="info">
-              <el-input clearable placeholder="请输入重复新密码" type="password" v-model="form.pass2" class="" />
+              <el-input
+                clearable
+                type="password"
+                v-model="form.pass2"
+                class=""
+              />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item btn-box">
             <span class="text" style="visibility: hidden">-</span>
             <div class="info">
-              <el-button class="btn-ripple fit-text btn-save" @click="throttle_do_submit()"
-                :loading="loading">确认</el-button>
-              <button class="btn-ripple fit-text btn-cancel" @click="do_clear()">清空</button>
+              <button
+                class="btn-ripple fit-text btn-save "
+                @click="do_clear()"
+              >
+                清空
+              </button>
+              <el-button
+                class="btn-ripple fit-text btn-cancel"
+                @click="throttle_do_submit()"
+                :loading="loading"
+                >确认</el-button
+              >
             </div>
           </div>
         </div>
@@ -51,9 +75,9 @@ export default {
   data() {
     return {
       form: {
-        editType: '1',//修改类型：1-老密码验证 2-手机短信验证 3-邮箱验证码验证
+        editType: "1", //修改类型：1-老密码验证 2-手机短信验证 3-邮箱验证码验证
         oldPass: "",
-        pass: "",//验证码 类型2/类型3-必传
+        pass: "", //验证码 类型2/类型3-必传
         pass2: "",
       },
       loading: false,
@@ -64,11 +88,11 @@ export default {
   },
   watch: {},
   created() {
-    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
+    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000);
   },
   methods: {
     throttle_do_submit() {
-
+      this.do_submit;
     },
     do_submit() {
       if (!this.form.oldPass) {
@@ -90,30 +114,30 @@ export default {
 
       this.loading = true;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'users_editPass',
+          action: "users_editPass",
           ...this.form,
-        }
+        },
       }).then((res) => {
         alert(res).then(() => {
           this.loading = false;
         });
         if (res.code == 200) {
-          this.do_clear()
+          this.do_clear();
         }
       });
     },
 
     do_clear() {
       this.form = {
-        editType: '1',
+        editType: "1",
         oldPass: "",
         pass: "",
         pass2: "",
       };
-    }
+    },
   },
 };
 </script>
@@ -147,7 +171,8 @@ export default {
   .page-ctx {
     padding-bottom: 80px;
 
-    .section {}
+    .section {
+    }
 
     .item {
       margin-bottom: 20px;
@@ -179,7 +204,6 @@ export default {
           // border: 1px solid #d4d4d4;
         }
 
-
         .el-input {
           width: 400px;
           // height: 40px;
@@ -191,7 +215,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: @theme;
+        color: #F74747;
 
         span {
           margin-right: 20px;
@@ -202,35 +226,34 @@ export default {
   }
 }
 
-
 .btn-box {
   margin-top: 46px;
 
-  button {}
+  button {
+  }
 
   .btn-save {
     width: 120px;
-    height: 32px;
-    background: #FFFFFF;
-    border-radius: 50px 50px 50px 50px;
-    border: 1px solid @theme;
+    height: 40px;
+    background: #ffffff;
+    border-radius: 4px;
+    border: 1px solid #D5DBE8;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: @theme;
-
+    color: #333;
   }
 
   .btn-cancel {
     margin-left: 24px;
     width: 120px;
-    height: 32px;
-    background: @theme;
-    border-radius: 50px 50px 50px 50px;
+    height: 40px;
+    background: #F74747;
+    border-radius: 4px;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #FFFFFF;
+    color: #ffffff;
   }
 }
 </style>

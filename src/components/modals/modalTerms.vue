@@ -27,7 +27,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
 
     modal_title() {
       return this.detail.title;
@@ -50,7 +50,7 @@ export default {
     },
 
     queryDetail() {
-      this.$api("news_detail", {
+      this.$api("index_newsDetail", {
         id: this.id,
       }).then((res) => {
         //console.log("协议内容", res);
@@ -93,11 +93,13 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  background: #4CA5E4;
+  background: #F74747;
   height: 40px;
   line-height: 40px;
   padding: 0;
-  .flex-center();
+    display: flex;
+          justify-content: center;
+          align-items: center;
 
   .el-dialog__title {
     color: #fff;
@@ -116,7 +118,9 @@ export default {
 }
 
 /deep/ .el-dialog__footer {
-  .flex-center();
+    display: flex;
+          justify-content: center;
+          align-items: center;
   text-align: center;
   padding: 0;
   height: 50px;
@@ -128,8 +132,8 @@ export default {
     background: #fff;
     opacity: 1;
     border-radius: 0;
-    border: 1px solid #4CA5E4;
-    color: #4CA5E4;
+    border: 1px solid #F74747;
+    color: #F74747;
     cursor: pointer;
 
     & + button {
@@ -138,7 +142,7 @@ export default {
   }
 
   .queding {
-    background: #4CA5E4;
+    background: #F74747;
     border: 1px solid #aaa;
     color: #fff;
   }

@@ -30,8 +30,8 @@
   .btn-cancel {
     min-width: 100px;
     height: 40px;
-    border: 1px solid #4CA5E4;
-    color: #4CA5E4;
+    border: 1px solid #F74747;
+    color: #F74747;
     font-size: 14px;
   }
 
@@ -39,7 +39,7 @@
     margin-left: 20px;
     min-width: 100px;
     height: 40px;
-    background: #4CA5E4;
+    background: #F74747;
     color: #fff;
     font-size: 14px;
   }
@@ -80,7 +80,9 @@
     }
 
     .main-title {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       margin-bottom: 30px;
       text-align: left;
 
@@ -110,7 +112,8 @@
           width: 500px;
           margin: 0 auto;
           font-size: 14px;
-          .flex();
+            display: flex;
+  align-items: center;
 
           .step {
             flex: 1;
@@ -138,7 +141,7 @@
             }
 
             &.active {
-              background: #4CA5E4;
+              background: #F74747;
               color: #fff;
             }
           }
@@ -175,7 +178,8 @@
           max-width: 10000vw;
           width: 600px;
 
-          .flex();
+            display: flex;
+  align-items: center;
           font-size: 14px;
           text-align: center;
           height: 48px;
@@ -222,7 +226,8 @@
             font-size: 16px;
             color: #333333;
 
-            .flex();
+              display: flex;
+  align-items: center;
 
             .item-1 {
               width: 100px;
@@ -241,7 +246,7 @@
               .goods-title {
                 height: 40px;
                 font-size: 12px;
-                font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+                font-family: sans-serif;
                 font-weight: 400;
                 color: #666666;
                 line-height: 18px;
@@ -249,7 +254,7 @@
 
               .goods-guige {
                 font-size: 12px;
-                font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+                font-family: sans-serif;
                 font-weight: 400;
                 color: #999999;
               }
@@ -258,7 +263,7 @@
             .item-3 {
               width: 100px;
 
-              color: #4CA5E4;
+              color: #F74747;
             }
 
             .item-4 {
@@ -267,7 +272,7 @@
 
             .item-5 {
               width: 100px;
-              color: #4CA5E4;
+              color: #F74747;
             }
           }
         }
@@ -319,7 +324,7 @@
         border: 1px solid #cccccc;
         font-size: 14px;
         font-weight: 400;
-        color: #4CA5E4;
+        color: #F74747;
 
         transition: 0.3s;
 
@@ -329,16 +334,16 @@
 
         &.back {
           margin-right: 24px;
-          border: 1px solid #4CA5E4;
+          border: 1px solid #F74747;
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
-          color: #4CA5E4;
+          color: #F74747;
         }
 
         &.tijiao {
           color: #ffffff;
-          background: #4CA5E4;
+          background: #F74747;
         }
       }
     }
@@ -352,7 +357,9 @@
     border: 1px solid #cccccc;
 
     .ziti-title {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       padding-left: 20px;
       padding-right: 20px;
       height: 48px;
@@ -370,7 +377,8 @@
 
       .ziti-info {
         margin-bottom: 15px;
-        .flex();
+          display: flex;
+  align-items: center;
 
         span {
           display: inline-block;
@@ -397,7 +405,9 @@
     border: 1px solid #cccccc;
 
     .dizhi-title {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       padding-left: 20px;
       padding-right: 20px;
       height: 48px;
@@ -412,7 +422,7 @@
       .add {
         b {
           font-weight: bold;
-          color: #4CA5E4;
+          color: #F74747;
           cursor: pointer;
         }
       }
@@ -426,7 +436,7 @@
         color: #7d7d7d;
 
         b {
-          color: #4CA5E4;
+          color: #F74747;
           cursor: pointer;
         }
       }
@@ -454,7 +464,8 @@
             background: #eee;
           }
 
-          .flex();
+            display: flex;
+  align-items: center;
 
           .name {
             width: 120px;
@@ -486,7 +497,7 @@
 
           .checked {
             flex: 2;
-            color: #4CA5E4;
+            color: #F74747;
             text-align: right;
           }
         }
@@ -520,7 +531,8 @@
       padding: 30px 20px;
 
       .select-1 {
-        .flex();
+          display: flex;
+  align-items: center;
 
         & + .select-1 {
           margin-top: 30px;
@@ -544,7 +556,7 @@
             border: 1px solid #cccccc;
 
             &.active {
-              border: 1px solid #4CA5E4;
+              border: 1px solid #F74747;
             }
           }
         }
@@ -642,12 +654,13 @@
       margin-bottom: 10px;
 
       b {
-        color: #4CA5E4;
+        color: #F74747;
       }
     }
 
     .section-btn-actions {
-      .flex();
+        display: flex;
+  align-items: center;
 
       .btn {
         width: 160px;
@@ -681,7 +694,7 @@
       padding-bottom: 16px;
       border-bottom: 1px solid #d5d8de;
       font-size: 16px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-family: sans-serif;
       font-weight: bold;
       color: #333333;
     }
@@ -716,7 +729,7 @@
           }
 
           &.active {
-            border: 2px solid #4CA5E4;
+            border: 2px solid #F74747;
 
             .marker {
               display: block;
@@ -735,7 +748,7 @@
             border-bottom: 1px solid #d5d8de;
             font-size: 14px;
             font-size: 12px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #000000;
           }
@@ -743,7 +756,7 @@
           .address-bottom {
             padding-top: 10px;
             font-size: 12px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #999999;
           }
@@ -794,7 +807,7 @@
           color: #666666;
 
           span {
-            color: #4CA5E4;
+            color: #F74747;
           }
         }
 
@@ -812,7 +825,8 @@
   // 支付配送
   .section-pay {
     .pay-group {
-      .flex();
+        display: flex;
+  align-items: center;
       align-items: flex-start;
 
       & + .pay-group {
@@ -822,20 +836,22 @@
       .title {
         min-width: 80px;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #666666;
       }
 
       .pay-items {
         flex: 1;
-        .flex();
+          display: flex;
+  align-items: center;
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
 
         .item {
-          .flex();
+            display: flex;
+  align-items: center;
           margin-right: 5px;
           cursor: pointer;
           margin-bottom: 15px;
@@ -854,7 +870,7 @@
           }
           span {
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #333;
           }
@@ -870,11 +886,11 @@
           line-height: 32px;
           background: #ffffff;
           border-radius: 3px 3px 3px 3px;
-          border: 1px solid #4CA5E4;
+          border: 1px solid #F74747;
           font-size: 14px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: normal;
-          color: #4CA5E4;
+          color: #F74747;
         }
       }
     }
@@ -882,7 +898,8 @@
 
   .section-huizong {
     .sub-title {
-      .flex();
+        display: flex;
+  align-items: center;
       padding-left: 20px;
       height: 50px;
       background: #fafbfc;
@@ -920,7 +937,7 @@
         cursor: pointer;
 
         &.active {
-          border-color: #4CA5E4;
+          border-color: #F74747;
 
           .marker {
             display: block;
@@ -940,20 +957,21 @@
           padding: 10px 15px;
 
           .yhq-1 {
-            .flex();
+              display: flex;
+  align-items: center;
             align-items: flex-end;
 
             .text-1 {
               font-size: 24px;
               font-family: Microsoft YaHei-Bold, Microsoft YaHei;
               font-weight: bold;
-              color: #4CA5E4;
+              color: #F74747;
             }
 
             .text-2 {
               margin-left: 5px;
               font-size: 12px;
-              font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+              font-family: sans-serif;
               font-weight: 400;
               color: #333333;
             }
@@ -962,7 +980,7 @@
           .yhq-2 {
             margin-top: 10px;
             font-size: 12px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #999999;
           }
@@ -973,9 +991,9 @@
           line-height: 32px;
           padding: 0 15px;
           font-size: 12px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
-          color: #4CA5E4;
+          color: #F74747;
         }
       }
     }
@@ -987,7 +1005,7 @@
       padding: 0 30px;
 
       .number {
-        color: #4CA5E4;
+        color: #F74747;
         margin: 0 10px;
       }
     }
@@ -1015,7 +1033,8 @@
     border: 1px dashed #ccc;
 
     .info-item {
-      .flex();
+        display: flex;
+  align-items: center;
       align-items: flex-start;
       margin-bottom: 10px;
 
@@ -1023,7 +1042,7 @@
         line-height: 32px;
         padding-right: 10px;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #666666;
       }
@@ -1031,13 +1050,13 @@
       .info-val {
         line-height: 32px;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #666666;
       }
 
       .yue-warn-tip {
-        color: #4CA5E4;
+        color: #F74747;
         font-size: 14px;
       }
     }
@@ -1051,7 +1070,8 @@
     border: 1px dashed #ccc;
 
     .info-item {
-      .flex();
+        display: flex;
+  align-items: center;
       align-items: flex-start;
       margin-bottom: 5px;
 
@@ -1059,7 +1079,7 @@
         line-height: 1.7;
         padding-right: 10px;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #666666;
       }
@@ -1067,7 +1087,7 @@
       .info-val {
         line-height: 1.7;
         font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-family: sans-serif;
         font-weight: 400;
         color: #666666;
       }

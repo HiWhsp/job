@@ -3,7 +3,7 @@
     <orderPayWxCode ref="orderPayWxCode" :payment_money="payment_money" />
     <orderPayWaiting ref="orderPayWaiting" />
 
-    <div class="inner">
+    <div class="inner w-1400">
       <div class="order-info">
         <div class="left">
           <img src="@img/pay/create-success.png" alt="" />
@@ -68,7 +68,7 @@
 
         <div class="yue-box" v-if="payType == '余额'">
           <div class="text-1">使用余额</div>
-          <div class="text-2">您当前可用余额为 {{vuex_huobi}}{{ baseInfo.yue }}</div>
+          <div class="text-2">您当前可用余额为 {{vuex_huobi}}{{ vuex_user.yue }}</div>
         </div>
       </div>
 
@@ -84,7 +84,7 @@
 <script>
 import orderPayWxCode from "@/components/order/orderPayWxCode.vue";
 import orderPayWaiting from "@/components/order/orderPayWaiting.vue";
-import order from "@/shop-actions/order";
+
 
 import { mapState } from "vuex";
 
@@ -117,7 +117,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
 
     list_pay_type() {
       let arr = [
@@ -174,7 +174,7 @@ export default {
     disabledPay() {
       let ret = false;
       if (this.payType == "余额") {
-        if (this.baseInfo.yue < this.payment_money) {
+        if (this.vuex_user.yue < this.payment_money) {
           ret = true;
         }
       }
@@ -466,7 +466,6 @@ export default {
   font-size: 14px;
 
   .inner {
-    width: @width;
     margin: 0 auto;
 
     padding: 20px 0 80px;
@@ -496,7 +495,8 @@ export default {
       padding: 30px 20px;
 
       .select-1 {
-        // .flex();
+        //   display: flex;
+  align-items: center;
 
         & + .select-1 {
           margin-top: 30px;
@@ -531,7 +531,9 @@ export default {
   }
 
   .main-title {
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
     margin-bottom: 30px;
     text-align: left;
 
@@ -559,7 +561,8 @@ export default {
   }
 
   .bottom {
-    .flex();
+      display: flex;
+  align-items: center;
     justify-content: flex-end;
     button {
       width: 200px;
@@ -594,7 +597,8 @@ export default {
   margin-bottom: 40px;
   padding: 20px;
   border: 1px solid #cccccc;
-  .flex();
+    display: flex;
+  align-items: center;
   align-items: flex-start;
 
   .left {
@@ -609,7 +613,9 @@ export default {
   }
   .section-1 {
     padding-top: 50px;
-    .flex-between();
+      display: flex;
+  align-items: center;
+  justify-content: space-between;
 
     .text-1 {
       font-size: 22px;
@@ -641,7 +647,8 @@ export default {
   }
   .section-2 {
     .text-1 {
-      .flex();
+        display: flex;
+  align-items: center;
       align-items: flex-start;
       font-size: 14px;
       font-family: Microsoft YaHei;

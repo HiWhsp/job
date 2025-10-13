@@ -1,32 +1,48 @@
 <template>
   <div class="page">
-    <div class="inner">
-      <div class="main-title">
-        <div class="left">
-          <span>购物车</span>
+    <div class="inner w-1400">
+      <pageBreadcrumb />
+      <!-- 商品列表 -->
+      <div class="empty-wrap column-flex-center" v-if="!list_shopcart.length">
+        <div class="empty-pic-box">
+          <img src="@img/cart/cart-empty.png" alt="" />
+        </div>
+        <div class="empty-text">购物车为空，快去选购商品吧～</div>
+        <div class="empty-btn">
+          <div class="btn flex-center btn-ripple" @click="toRoute('/')">
+            去购物
+          </div>
         </div>
       </div>
-
-      <!-- 商品列表 -->
-      <div class="ctx-box">
+      <div class="ctx-box" v-else>
         <div class="list cart-list">
           <div class="cart-list-inner">
             <!-- 标题 -->
             <div class="list-title">
               <div class="title-1">选择</div>
-              <div class="title-2" style="text-align: left; padding-left: 0px">商品信息</div>
-              <div class="title-4">单价(含税)</div>
+              <!-- <div class="title-3">货号</div> -->
+              <div class="title-2" style="text-align: left; padding-left: 0px">
+                产品名称
+              </div>
+              <div class="title-4">单价</div>
               <div class="title-5">数量</div>
-              <div class="title-6">小计(含税)</div>
-              <div class="title-3">库存/交期</div>
+              <div class="title-6">小计</div>
+              <div class="title-8">需求描述</div>
               <div class="title-7">操作</div>
             </div>
 
             <!-- 商品列表 -->
-            <div class="item" v-for="(item, index) in list_shopcart" :key="index">
+            <div
+              class="item"
+              v-for="(item, index) in list_shopcart"
+              :key="index"
+            >
               <div class="item-detail flex">
                 <div class="box-select">
-                  <el-checkbox v-model="item.checked" @change="on_change_checked_item"></el-checkbox>
+                  <el-checkbox
+                    v-model="item.checked"
+                    @change="on_change_checked_item"
+                  ></el-checkbox>
                 </div>
                 <!-- <div class="box-sku" @click="mix_to_product(item)">{{ item.skuId }}</div> -->
 
@@ -34,7 +50,7 @@
                   <!-- <img :src="item.image" @click="mix_to_product(item)" /> -->
                   <el-image :src="item.image" @click="mix_to_product(item)">
                     <div slot="error" class="image-slot">
-                      <img :src="item.default_img"/>
+                      <img :src="item.default_img" />
                     </div>
                   </el-image>
                 </div>
@@ -42,58 +58,81 @@
                   <div class="goods-title" @click="mix_to_product(item)">
                     {{ item.title }}
                   </div>
-                  <!-- <div class="sku-info">
-                    {{ item.key_vals }}
-                  </div> -->
+                  <div class="sku-info">
+                    规格：{{ item.keyVals || '--' }}
+                  </div>
                 </div>
-                <div class="box-sku">
-                  {{ item.keyVals }}
+                <div class="box-unit-price">
+                  {{ vuex_huobi }} {{ item.priceSale }}
                 </div>
-                <div class="box-unit-price">{{ vuex_huobi }} {{ item.priceSale }}</div>
                 <div class="box-number">
                   <button @click="do_number_minus(item)">-</button>
-                  <input type="number" min="1" v-model="item.num" @blur="on_blur_input(item)"/>
+                  <input
+                    type="number"
+                    min="1"
+                    v-model="item.num"
+                    @blur="on_blur_input(item)"
+                  />
                   <button @click="do_number_plus(item)">+</button>
                 </div>
-                <div class="box-subtotal">{{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}</div>
+                <div class="box-subtotal">
+                  {{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}
+                </div>
+                <div class="box-desc">
+                  <el-input
+                    type="textarea"
+                    :rows="2"
+                    placeholder="请输入需求描述"
+                    v-model="item.remark"
+                  ></el-input>
+                </div>
                 <div class="box-act">
-                  <!-- <div class="goods-action-box" v-if="false">
-                    <span class="goods-action" v-if="item.if_collect" @click="favouriteDelete(item)">
-                      <img src="@img/other/shopcart-goods-yishoucang.png" alt="" />
-                      取消
-                    </span>
-                    <span class="goods-action" v-else @click="favouriteAdd(item)">
-                      <img src="@img/other/shopcart-goods-weishoucang.png" alt="" />
-                      收藏</span>
-                  </div> -->
                   <div class="goods-action-box">
-                    <span class="goods-action" @click="do_cart_delete_row(item.inventoryId)">
-                      删除
-                    </span>
+                    <span
+                      class="goods-action"
+                      data-fn="do_cart_delete_row"
+                      @click="do_cart_delete_row_tip(item.inventoryId)"
+                    >
+                      删除</span
+                    >
+                  </div>
+                  <div class="goods-action-box">
+                    <span class="goods-action" @click="favouriteAdd(item)">
+                      加入收藏夹</span
+                    >
                   </div>
                 </div>
               </div>
             </div>
 
-            <el-empty v-if="!list_shopcart.length" description="购物车是空的..."></el-empty>
+            <el-empty
+              v-if="!list_shopcart.length"
+              description="购物车为空，快去选购商品吧～"
+            ></el-empty>
             <!-- <div class="empty" v-if="!list_shopcart.length">暂无数据...</div> -->
           </div>
         </div>
 
-
         <!-- 底部操作 -->
         <div class="bottom-action-box">
           <div class="all-select">
-            <el-checkbox v-model="checked_all" @change="on_change_checked_all">{{
-                checked_all ? "反选" : "全选"
-              }}
-            </el-checkbox>
+            <el-checkbox
+              v-model="checked_all"
+              @change="on_change_checked_all"
+              >{{ checked_all ? "反选" : "全选" }}</el-checkbox
+            >
           </div>
           <div class="delete-box">
-            <span @click="do_cart_remove_select()">删除选中</span>
+            <span
+              data-fn="do_cart_remove_select"
+              @click="do_cart_remove_select_tip()"
+              >删除选中</span
+            >
           </div>
           <div class="clear-box">
-            <span @click="do_cart_clear()">清空购物车</span>
+            <span data-fn="do_cart_clear" @click="do_cart_clear_tip()"
+              >清空购物车</span
+            >
           </div>
 
           <div class="total-number">
@@ -102,25 +141,40 @@
             件商品
           </div>
           <div class="total-price">
-            总价：
+            合计：
             <b>{{ vuex_huobi }} {{ shopcart_money }}</b>
           </div>
-          <button :disabled="jiesuanDisabled" class="btn-ripple btn-order" @click="to_pay()">
+          <button
+            :disabled="jiesuanDisabled"
+            class="btn-ripple btn-order"
+            @click="to_pay()"
+          >
             去下单
           </button>
         </div>
-
       </div>
     </div>
+
+    <cart_action_modal
+      data-title="删除提示"
+      ref="cart_action_modal"
+      @confirm="do_confirm_delete"
+    />
   </div>
 </template>
 
 <script>
-import {mapState} from "vuex";
+import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
+import cart_action_modal from "@/components/cart/cart_action_modal.vue";
+
+import { mapState } from "vuex";
 
 export default {
   name: "cart",
-  components: {},
+  components: {
+    cart_action_modal,
+    pageBreadcrumb,
+  },
   data() {
     return {
       address: "", //选择的地址
@@ -131,7 +185,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar", "shopcart_count", "webConfig"]),
+    ...mapState([""]),
 
     canSubmit() {
       return this.form.name;
@@ -141,10 +195,10 @@ export default {
     shopcart_money() {
       let money = 0;
       this.list_shopcart
-          .filter((v) => v.checked)
-          .forEach((v) => {
-            money += v.num * v.priceSale;
-          });
+        .filter((v) => v.checked)
+        .forEach((v) => {
+          money += v.num * v.priceSale;
+        });
       return money.toFixed(2);
     },
 
@@ -191,22 +245,21 @@ export default {
         method: "get",
         data: {
           action: "gouwuche_lists",
-        }
-      })
-          .then((res) => {
-            let {code, data} = res;
-            if (code == 200) {
-              data.forEach((v) => {
-                v.checked = true;
-              });
-              this.list_shopcart = data;
-              if (data.length) {
-                this.checked_all = true;
-              }
-
-              this.do_update_vuex_cart_number()
-            }
+        },
+      }).then((res) => {
+        let { code, data } = res;
+        if (code == 200) {
+          data.forEach((v) => {
+            v.checked = true;
           });
+          this.list_shopcart = data;
+          if (data.length) {
+            this.checked_all = true;
+          }
+
+          this.do_update_vuex_cart_number();
+        }
+      });
     },
 
     favouriteDelete(item) {
@@ -214,7 +267,7 @@ export default {
         inventoryId: item.inventoryId,
         collect_type: 1,
       }).then((res) => {
-        let {code, message} = res;
+        let { code, message } = res;
 
         if (code == 200) {
           this.setView();
@@ -226,11 +279,24 @@ export default {
         inventoryId: item.inventoryId,
         collect_type: 0,
       }).then((res) => {
-        let {code, message} = res;
+        let { code, message } = res;
 
         if (code == 200) {
           this.setView();
         }
+      });
+    },
+
+    do_cart_remove_select_tip() {
+      if (!this.list_shopcart_checked.length) {
+        alertErr("请先选择要删除的商品");
+        return;
+      }
+
+      this.$refs.cart_action_modal.init({
+        type: "批量",
+        inventoryId: "",
+        tip: "确定删除所选商品吗？",
       });
     },
 
@@ -246,17 +312,34 @@ export default {
       this.do_cart_delete_row(id);
     },
 
+    do_cart_delete_row_tip(inventoryId) {
+      this.$refs.cart_action_modal.init({
+        type: "单个",
+        inventoryId: inventoryId,
+        tip: "确定删除该商品吗？",
+      });
+    },
+
+    do_confirm_delete(option) {
+      if (option.type == "单个") {
+        this.do_cart_delete_row(option.inventoryId);
+      } else if (option.type == "全部") {
+        this.do_cart_clear();
+      } else if (option.type == "批量") {
+        this.do_cart_remove_select();
+      }
+    },
+
     //购车车 删除商品
     do_cart_delete_row(inventoryId) {
-
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "gouwuche_del",
           inventoryId: inventoryId,
-        }
-      }).then(res => {
+        },
+      }).then((res) => {
         if (res.code == 200) {
           let list = this.list_shopcart;
           let ids = (inventoryId + "").split(",");
@@ -266,9 +349,9 @@ export default {
             list.splice(index, 1);
           });
 
-          this.do_update_vuex_cart_number()
+          this.do_update_vuex_cart_number();
         }
-      })
+      });
     },
 
     //购物车商品数量减少
@@ -287,7 +370,7 @@ export default {
     },
     //购物车修改数量
     do_updateNum(item) {
-      let {inventoryId, num} = item;
+      let { inventoryId, num } = item;
 
       this.$api({
         url: "/service.php",
@@ -296,18 +379,33 @@ export default {
           action: "gouwuche_updateNum",
           inventoryId: inventoryId,
           num: num,
-        }
-      }).then(res => {
+        },
+      }).then((res) => {
         if (res.code == 200) {
-          let index = this.list_shopcart.findIndex((v) => v.inventoryId == inventoryId);
+          let index = this.list_shopcart.findIndex(
+            (v) => v.inventoryId == inventoryId
+          );
           this.list_shopcart.splice(index, 1, item);
 
-          this.do_update_vuex_cart_number()
+          this.do_update_vuex_cart_number();
         }
-      })
+      });
     },
 
     // 购物车商品更新数量
+
+    do_cart_clear_tip() {
+      if (!this.list_shopcart.length) {
+        alertErr("购物车是空的！");
+        return;
+      }
+
+      this.$refs.cart_action_modal.init({
+        type: "全部",
+        inventoryId: "",
+        tip: "确定清空购物车吗？",
+      });
+    },
 
     //清空购物车
     do_cart_clear() {
@@ -316,20 +414,18 @@ export default {
         return;
       }
 
-
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "gouwuche_delAll",
-        }
-      }).then(res => {
+        },
+      }).then((res) => {
         if (res.code == 200) {
           this.list_shopcart = [];
-          this.do_update_vuex_cart_number()
+          this.do_update_vuex_cart_number();
         }
-      })
-
+      });
     },
 
     //商品勾选 全选与取消
@@ -363,7 +459,7 @@ export default {
         return;
       }
 
-      let data_format = this.list_shopcart_checked.map(v => ({
+      let data_format = this.list_shopcart_checked.map((v) => ({
         title: v.title,
         image: v.image,
         inventoryId: v.inventoryId,
@@ -374,8 +470,10 @@ export default {
         priceMarket: v.priceMarket,
       }));
 
-
-      this.$store.commit('set_cache_payment_products', JSON.stringify(data_format))
+      this.$store.commit(
+        "set_cache_payment_products",
+        JSON.stringify(data_format)
+      );
 
       this.$router.push({
         path: "/order-submit",
@@ -391,8 +489,6 @@ export default {
       }
       this.shopcart_updateNum(item);
     },
-
-
   },
 };
 </script>
@@ -401,16 +497,14 @@ export default {
 /deep/ .order-list-wrap {
   margin-top: 30px;
 }
-
 .page {
-  width: 100%;
-  background: #FFFFFF;
+  background: #f3f3f3;
   text-align: center;
   font-size: 14px;
-  padding-top: 40px;
+  padding-top: 20px;
 
   .inner {
-    width: @width;
+    min-height: 50vh;
     margin: 0 auto;
     padding: 0 0 80px;
 
@@ -421,37 +515,74 @@ export default {
     color: #333333;
   }
 
-  .main-title {
-    padding-bottom: 16px;
-    border-bottom: 1px solid #D5D8DE;
+  .search-wrap {
     text-align: left;
 
-    .left {
-      font-family: Microsoft YaHei, Microsoft YaHei;
+    .search-tip {
+      font-size: 14px;
+      font-family: sans-serif;
       font-weight: 400;
-      font-size: 24px;
-      color: #333333;
-      font-style: normal;
-      text-transform: none;
+      color: #999999;
+    }
+
+    .search-box {
+      margin-top: 20px;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+
+      .text-1 {
+        font-size: 14px;
+        font-family: sans-serif;
+        font-weight: 400;
+        color: #666666;
+      }
+
+      .input-box {
+        input {
+          padding: 0 15px;
+          display: inline-block;
+          width: 256px;
+          height: 36px;
+          background: #ffffff;
+          border-radius: 4px 4px 4px 4px;
+          border: 1px solid #d5d8de;
+        }
+      }
+
+      button {
+        margin-left: 10px;
+        display: inline-block;
+        width: 128px;
+        height: 36px;
+        background: #f74747;
+        border-radius: 4px 4px 4px 4px;
+        font-size: 14px;
+        font-family: sans-serif;
+        font-weight: 400;
+        color: #ffffff;
+      }
     }
   }
 
   .ctx-box {
     background: #fff;
-    padding: 18px 0;
+    margin-top: 20px;
+    padding: 20px;
 
     .list {
-      border-bottom: 1px solid #E6E4E1;
+      border: 1px solid #eee;
+
       .list-title {
         text-align: center;
-        background: #E9E9E9;
-        color: #333;
-        font-weight: bold;
-        padding: 11px 0;
-        font-size: 14px;
+        height: 48px;
+        background: #f9f9f9;
+        background: #f5f5f5;
+        padding: 15px 0;
 
-        .flex();
-        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #eee;
 
         .title-1 {
           width: 100px;
@@ -461,26 +592,28 @@ export default {
         .title-2 {
           // width: 150px;
           flex: 2;
-
         }
 
         .title-3 {
-          width: 200px;
+          width: 120px;
         }
 
         .title-4 {
-          width: 200px;
+          width: 120px;
         }
 
         .title-5 {
-          width: 200px;
+          width: 120px;
         }
 
         .title-6 {
-          width: 200px;
+          width: 120px;
         }
 
         .title-7 {
+          width: 120px;
+        }
+        .title-8 {
           width: 200px;
         }
       }
@@ -493,7 +626,8 @@ export default {
         }
 
         .item-title {
-          .flex();
+          display: flex;
+          align-items: center;
           text-align: left;
           padding: 12px 40px;
           border-bottom: 1px solid #eee;
@@ -510,7 +644,6 @@ export default {
           // font-weight: bold;
           font-size: 14px;
           color: #666666;
-
 
           .box-select {
             width: 58px;
@@ -539,7 +672,7 @@ export default {
 
             div {
               &:hover {
-                color: #4CA5E4;
+                color: #f74747;
               }
             }
 
@@ -547,8 +680,11 @@ export default {
               width: fit-content;
               cursor: pointer;
               // height: 40px;
-              .ellipsis-2();
-
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              -webkit-line-clamp: 2;
             }
 
             .sku-info {
@@ -563,13 +699,15 @@ export default {
           }
 
           .box-unit-price {
-            width: 200px;
-            color: #FF0000;
+            width: 120px;
+            color: #ff0000;
           }
 
           .box-number {
-            width: 200px;
-            .flex-center();
+            width: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
             input {
               width: 48px;
@@ -593,13 +731,18 @@ export default {
           }
 
           .box-subtotal {
+            width: 120px;
+            color: #fc0d1b;
+          }
+
+          .box-desc {
             width: 200px;
-            color: #FC0D1B;
           }
 
           .box-act {
-            width: 200px;
+            width: 120px;
             font-size: 16px;
+            padding-left: 30px;
 
             div {
               & + div {
@@ -610,7 +753,7 @@ export default {
                 cursor: pointer;
 
                 &:hover {
-                  color: #4CA5E4;
+                  color: #f74747;
                 }
               }
             }
@@ -622,13 +765,13 @@ export default {
 }
 
 .goods-action-box {
-  text-align: center;
+  text-align: left;
   font-size: 14px;
   font-weight: normal;
   color: #666666;
 
   .goods-action {
-    .flex-center();
+    display: flex;
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 14px;
@@ -641,16 +784,19 @@ export default {
 }
 
 .bottom-action-box {
-  .flex();
-  padding: 20px 35px;
-  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  padding-right: 40px;
   height: 86px;
-  background: #FAFBFC;
+  background: #fafbfc;
+  // border: 1px solid #eeeeee;
+  // box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.08);
+  opacity: 1;
+  margin-top: 40px;
 
   .all-select {
     cursor: pointer;
-    min-width: 80px;
-    text-align: left;
+    min-width: 120px;
     width: fit-content;
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
@@ -669,14 +815,14 @@ export default {
       color: #666666;
 
       &:hover {
-        color: @theme;
+        color: #f74747;
       }
     }
   }
 
   .clear-box {
     cursor: pointer;
-    margin-left: 34px;
+    margin-left: 64px;
     flex: 2;
     text-align: left;
 
@@ -687,7 +833,7 @@ export default {
       color: #666666;
 
       &:hover {
-        color: @theme;
+        color: #f74747;
       }
     }
   }
@@ -731,10 +877,10 @@ export default {
     cursor: pointer;
     width: 191px;
     height: 46px;
-    background: @theme;
+    background: #f74747;
 
     font-size: 16px;
-    font-family: Roboto, Roboto;
+    font-family: Microsoft YaHei;
     font-weight: bold;
     color: #ffffff;
     transition: 0.3s;
@@ -755,6 +901,33 @@ export default {
 
   b {
     color: #e6170b;
+  }
+}
+
+.empty-wrap {
+  margin-top: 80px;
+  .empty-pic-box {
+    img {
+      width: 161px;
+    }
+  }
+  .empty-text {
+    margin: 39px 0 33px 0;
+    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-weight: 400;
+    font-size: 16px;
+    color: #333333;
+  }
+  .empty-btn {
+    .btn {
+      width: 191px;
+      height: 46px;
+      background: #f74747;
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: 400;
+      font-size: 18px;
+      color: #ffffff;
+    }
   }
 }
 </style>

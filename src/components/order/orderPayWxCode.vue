@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import order from "@/shop-actions/order";
+
 
 import { mapState } from "vuex";
 
@@ -51,7 +51,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   watch: {
     showModal(val) {
@@ -140,7 +140,7 @@ export default {
 
       .pay-info {
         b {
-          color: #4CA5E4;
+          color: #F74747;
           font-size: 20px;
         }
       }
@@ -150,7 +150,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  background: #4CA5E4;
+  background: #F74747;
 
   .el-dialog__title {
     color: #fff;
@@ -175,7 +175,7 @@ export default {
     margin-right: 20px;
   }
   .queding {
-    background: #4CA5E4;
+    background: #F74747;
     color: #fff;
 
     &:disabled {

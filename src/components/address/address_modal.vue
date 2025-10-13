@@ -1,45 +1,42 @@
 <template>
   <div class="modal-container">
-    <el-dialog class="modal-address" title="新增收货地址" width="500px" :visible.sync="show_modal"
-               :before-close="onModal_close"
-               :close-on-press-escape="false" :close-on-click-modal="false" custom-class="modal-custom"
-               @closed="onclosed">
+    <el-dialog class="modal-address" title="新增地址" width="500px" :visible.sync="show_modal" :before-close="onModal_close"
+      :close-on-press-escape="false" :close-on-click-modal="false" custom-class="modal-custom" @closed="onclosed">
       <div class="modal-inner">
         <div class="item">
           <span class="text required">收货人</span>
-          <el-input clearable v-model="form.name" placeholder="请输入收货人姓名"></el-input>
+          <el-input clearable v-model="form.name" placeholder="收货人姓名"></el-input>
         </div>
         <div class="item">
           <span class="text required">所在地区</span>
-          <area_select ref="area_select" @change="changeSelectAddress"/>
+          <area_select ref="area_select" @change="changeSelectAddress" />
         </div>
         <div class="item">
           <span class="text required">详细地址</span>
-          <el-input clearable v-model="form.address" placeholder="请输入详细地址"></el-input>
+          <el-input clearable v-model="form.address" placeholder="详细地址"></el-input>
         </div>
         <div class="item">
           <span class="text required">手机号</span>
-          <el-input clearable v-model="form.phone" placeholder="请输入手机号"></el-input>
+          <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
         </div>
         <div class="item">
           <span class="text required">固定电话</span>
-          <el-input clearable v-model="form.fixed_phone" placeholder="请输入固定电话"></el-input>
+          <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
         </div>
         <div class="item">
           <span class="text required">邮政编码</span>
-          <el-input clearable v-model="form.zipCode" placeholder="请输入邮政编码"></el-input>
+          <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
         </div>
         <div class="item">
-          <span class="text"></span>
-          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#27417C"
-                     inactive-color="#eeeeee">
+          <span class="text">默认地址</span>
+          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#F74747"
+            inactive-color="#eeeeee">
           </el-switch>
-          <span style="margin-left: 15px;">设置为默认地址</span>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <button class="btn-ripple fit-text btn-1" @click="throttle_do_submit()" :loading="loading">保 存</button>
-        <button class="btn-ripple fit-text btn-2" @click="show_modal = false">取 消</button>
+        <button class="btn-ripple fit-text btn-2" @click="throttle_do_submit()" :loading="loading">保 存</button>
+        <button class="btn-ripple fit-text btn-1" @click="show_modal = false">取 消</button>
       </span>
     </el-dialog>
   </div>
@@ -48,8 +45,7 @@
 <script>
 import area_select from "@/components/address/area_select.vue";
 
-import {mapState} from "vuex";
-
+import { mapState } from "vuex";
 export default {
   name: "address-add",
   components: {
@@ -76,17 +72,17 @@ export default {
         latitude: '',
         shequId: '',
         addressType: 1,
-        fixed_phone: "",
-        zipCode: ''
       },
 
       loading: false,
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
-  watch: {},
+  watch: {
+
+  },
 
   created() {
     this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
@@ -111,7 +107,7 @@ export default {
       this.$api("userAddress_detail", {
         id: this.form.id
       }).then((res) => {
-        let {code, data, msg} = res;
+        let { code, data, msg } = res;
         if (code == 200) {
 
           this.form = {
@@ -130,8 +126,6 @@ export default {
             latitude: data.latitude,
             shequId: data.shequId,
             addressType: data.addressType,
-            fixed_phone: data.fixed_phone,
-            zipCode: data.zipCode
           }
 
           this.$nextTick(() => {
@@ -159,8 +153,6 @@ export default {
         latitude: '',
         shequId: '',
         addressType: 1,
-        fixed_phone: "",
-        zipCode: ''
       }
     },
 
@@ -168,7 +160,7 @@ export default {
     //更新当前父组件数据
     changeSelectAddress(data) {
       this.$log("更新省市区数据", data);
-      let {sheng, shi, qu} = data;
+      let { sheng, shi, qu } = data;
       this.form.province = sheng.title;
       this.form.city = shi.title;
       this.form.area = qu.title;
@@ -178,6 +170,7 @@ export default {
       this.form.areaCode = qu.id;
       // debugger
     },
+
 
 
     // 新建地址 / 编辑地址
@@ -248,7 +241,8 @@ export default {
 
     .item {
       margin-bottom: 20px;
-      .flex();
+        display: flex;
+  align-items: center;
 
       .text {
         min-width: 190px;
@@ -267,14 +261,14 @@ export default {
           }
         }
 
-        //&::after {
-        //  margin-left: 3px;
-        //  content: ':';
-        //  font-family: OPPOSans, OPPOSans;
-        //  font-weight: 400;
-        //  font-size: 14px;
-        //  color: #999999;
-        //}
+        &::after {
+          margin-left: 3px;
+          content: ':';
+          font-family: OPPOSans, OPPOSans;
+          font-weight: 400;
+          font-size: 14px;
+          color: #999999;
+        }
       }
 
       .default-text {
@@ -342,32 +336,26 @@ export default {
   }
 
   .btn-1 {
-    width: 104px;
+    min-width: 120px;
     height: 40px;
-    background: @theme;
-    border-radius: 4px 4px 4px 4px;
-    text-align: center;
-    font-family: Roboto, Roboto;
+    background: #FFFFFF;
+    border-radius: 4px;
+    border: 1px solid #F74747;
+    font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #FFFFFF;
-    line-height: 40px;
-    font-style: normal;
-    text-transform: none;
+    color: #F74747;
   }
 
   .btn-2 {
-    width: 104px;
+    min-width: 120px;
     height: 40px;
-    border-radius: 4px 4px 4px 4px;
-    border: 1px solid @theme;
-    font-family: Roboto, Roboto;
+    background: #F74747;
+    border-radius: 4px;
+    font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: @theme;
-    line-height: 40px;
-    font-style: normal;
-    text-transform: none;
+    color: #FFFFFF;
   }
 }
 </style>

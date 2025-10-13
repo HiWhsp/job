@@ -3,7 +3,9 @@
     text-align: left;
     padding-bottom: 80px;
     .main-title {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       padding: 0 32px;
       text-align: left;
       height: 56px;
@@ -18,7 +20,7 @@
         min-width: 96px;
         height: 30px;
         line-height: 30px;
-        background: #4CA5E4;
+        background: #F74747;
         color: #fff;
         font-size: 14px;
         font-weight: bold;
@@ -39,13 +41,16 @@
     .tab-wrap {
       position: relative;
       margin-bottom: 30px;
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
 
       .tab-box {
         flex: 2;
         // border-bottom: 1px solid #eee;
 
-        .flex();
+          display: flex;
+  align-items: center;
         .tab-item {
           cursor: pointer;
           padding-bottom: 10px;
@@ -53,14 +58,14 @@
           margin-right: 20px;
 
           font-size: 14px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #333333;
 
           &.active {
-            border-bottom: 3px solid #4CA5E4;
+            border-bottom: 3px solid #F74747;
             font-weight: bold;
-            color: #4CA5E4;
+            color: #F74747;
           }
         }
       }
@@ -68,7 +73,8 @@
       .lingquan {
         position: absolute;
         right: 0;
-        .flex();
+          display: flex;
+  align-items: center;
         cursor: pointer;
         width: fit-content;
 
@@ -92,7 +98,8 @@
     }
 
     .list-box {
-      .flex();
+        display: flex;
+  align-items: center;
       flex-wrap: wrap;
 
       .item {
@@ -192,7 +199,8 @@
     }
 
     .yhq-item {
-      .flex();
+        display: flex;
+  align-items: center;
       flex-wrap: wrap;
       margin-bottom: 20px;
 
@@ -218,27 +226,27 @@
             font-size: 24px;
             font-family: Microsoft YaHei-Bold, Microsoft YaHei;
             font-weight: bold;
-            color: #4CA5E4;
+            color: #F74747;
           }
           .num {
             font-size: 24px;
             font-family: Microsoft YaHei-Bold, Microsoft YaHei;
             font-weight: bold;
-            color: #4CA5E4;
+            color: #F74747;
           }
         }
 
         .tiaojian {
           margin-top: 0;
           font-size: 12px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #999999;
           line-height: 28px;
         }
         .shijian {
           font-size: 12px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-family: sans-serif;
           font-weight: 400;
           color: #999999;
           line-height: 28px;
@@ -248,10 +256,10 @@
           button {
             width: 127px;
             height: 36px;
-            background: #4CA5E4;
+            background: #F74747;
             border-radius: 4px 4px 4px 4px;
             font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-family: sans-serif;
             font-weight: 400;
             color: #ffffff;
 

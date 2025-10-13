@@ -1,7 +1,9 @@
 @media screen and (max-width: 1199px) {
   .page {
     .main-title {
-      .flex-between();
+        display: flex;
+  align-items: center;
+  justify-content: space-between;
       margin-bottom: 20px;
       text-align: left;
       font-size: 16px;
@@ -13,7 +15,8 @@
       .left {
       }
       .right {
-        .flex();
+          display: flex;
+  align-items: center;
         img {
           margin-right: 15px;
           width: 16px;
@@ -40,7 +43,9 @@
       height: 240px;
       background: url(~@img/yue/yue-bg.png) no-repeat center / cover;
       padding-left: 40px;
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
       flex-direction: column;
       align-items: flex-start;
 
@@ -102,10 +107,13 @@
   }
 
   .list {
-    .flex();
+      display: flex;
+  align-items: center;
     flex-wrap: wrap;
     .item {
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
       cursor: pointer;
       justify-content: flex-start;
       margin-top: 20px;

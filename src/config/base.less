@@ -1,6 +1,10 @@
-@width: 1200px;
-@theme: #27417C;
+@width: 1400px;
+@theme: #F74747;
 @navhead: 152px;
+
+.w-1400 {
+  width: 1400px;
+}
 
 .flex {
   display: flex;
@@ -15,6 +19,10 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+}
+.v-flex-start {
+  display: flex;
+  align-items: flex-start;
 }
 .flex-between {
   display: flex;
@@ -90,10 +98,6 @@
   }
 }
 
-.pointer {
-  cursor: pointer;
-}
-
 
 .scrollbar-y {
   overflow-y: auto;
@@ -105,5 +109,13 @@
   &::-webkit-scrollbar {
     width: 5px;
     height: 0px;
+  }
+}
+
+
+.hover-color {
+  cursor: pointer;
+  &:hover {
+    color: #F74747 !important;
   }
 }

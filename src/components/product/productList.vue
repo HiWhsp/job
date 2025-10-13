@@ -7,41 +7,34 @@
           <!-- <shouqing :kucun="goods.kucun" /> -->
         </div>
         <div class="info-box">
-          <div class="title ellipsis-1">
-            {{ item.title }}
+          <div class="brand ellipsis-1">
+            {{ item.brand && item.brand.title }}
           </div>
-          <div class="price-box flex-center">
+          <div class="title-box">
+            <div class="title ellipsis-2">
+              {{ item.title }}
+            </div>
+          </div>
+
+          <div class="price-box flex-between">
             <div class="sale">
               <span class="huobi"> {{ vuex_huobi }} </span>
               <span class="value"> {{ item.priceSale }} </span>
+              <span class="unit" v-if="item.unit"> {{ item.unit }} </span>
             </div>
-            <div class="market">
+            <div class="cart-box">
+              <img
+                src="@img/common/cart.png"
+                alt=""
+                class="img-check check-1"
+              />
+            </div>
+            <!-- <div class="market">
               <span class="huobi"> {{ vuex_huobi }} </span>
               <span class="value"> {{ item.priceSale }} </span>
-            </div>
-          </div>
-
-          <div class="sku-box flex">
-            <div class="sku-item ellipsis-1" v-for="(sku_item, sku_index) in item.skus">
-              {{ sku_item.keyVals }}
-            </div>
-          </div>
-
-          <div class="btn-box">
-            <button class="btn-ripple btn-cart">
-              Add To Cart
-            </button>
+            </div> -->
           </div>
         </div>
-
-        <div class="act-info" v-if="is_show_check">
-          <div class="img-check-box flex-center" @click.stop="do_toggle_check(item)">
-            <img v-if="item.checked" src="@/static/common/check1.png" alt="" class="img-check check-1" />
-            <!-- <img v-else src="@/static/common/check0.png" alt="" class="img-check check-0" /> -->
-            <img v-else src="@/static/common/check00.png" alt="" class="img-check check-0" />
-          </div>
-        </div>
-
       </div>
     </div>
   </div>
@@ -64,7 +57,7 @@ export default {
     },
     is_show_check: {
       type: Boolean,
-      default: false
+      default: false,
     },
   },
   data() {
@@ -88,8 +81,8 @@ export default {
       });
     },
     do_toggle_check(item) {
-      this.$emit('toggle_check', item)
-    }
+      this.$emit("toggle_check", item);
+    },
   },
 };
 </script>
@@ -100,11 +93,11 @@ export default {
 
   .product-item {
     position: relative;
-    width: 280px;
-    height: 404px;
-    background: #FFFFFF;
+    width: 264px;
+    height: 385px;
+    background: #ffffff;
     border-radius: 0px 0px 0px 0px;
-    border: 1px solid #CBCBCB;
+    border: 1px solid #cbcbcb;
     padding: 24px;
     margin-right: 20px;
     margin-top: 32px;
@@ -113,11 +106,11 @@ export default {
     overflow: hidden;
     cursor: pointer;
 
-    &:nth-child(4n) {
+    &:nth-child(5n) {
       margin-right: 0;
     }
 
-    &:nth-child(-n + 4) {
+    &:nth-child(-n + 5) {
       margin-top: 0;
     }
 
@@ -130,16 +123,16 @@ export default {
     }
 
     .img-box {
-      width: 202px;
-      height: 202px;
+      width: 224px;
+      height: 224px;
       padding-bottom: 23px;
       margin: 0 auto;
       overflow: hidden;
       position: relative;
 
       img {
-        width: 202px;
-        height: 202px;
+        width: 224px;
+        height: 224px;
         object-fit: cover;
         transition: 0.3s;
       }
@@ -152,41 +145,56 @@ export default {
       // border-top: none;
       padding: 15px 0px;
 
-      .title {
-        text-align: center;
-        width: 100%;
-        font-family: Poppins, Poppins;
-        font-weight: 600;
+      .brand {
+        height: 16px;
+        font-family: MicrosoftYaHei, MicrosoftYaHei;
+        font-weight: normal;
         font-size: 13px;
-        color: #000000;
+        color: #656565;
       }
-
+      .title-box {
+        height: 44px;
+      }
+      .title {
+        margin-top: 10px;
+        font-family: MicrosoftYaHei, MicrosoftYaHei;
+        font-weight: normal;
+        font-size: 14px;
+        color: #3d4248;
+        line-height: 22px;
+      }
 
       .price-box {
         margin-top: 5px;
 
-
         .sale {
-          span {
-            font-family: OPPOSans, OPPOSans;
-            font-weight: bold;
-            font-size: 12px;
-            color: #FF0000;
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: bold;
+          font-size: 14px;
+          color: #eb0f19;
+          .value {
+            font-size: 18px;
           }
-
         }
 
         .market {
           // text-decoration: line-through;
           margin-left: 17px;
-          color: #BFBFBF;
+          color: #bfbfbf;
 
           span {
             text-decoration: line-through;
             font-family: OPPOSans, OPPOSans;
             font-weight: 400;
             font-size: 12px;
-            color: #BFBFBF;
+            color: #bfbfbf;
+          }
+        }
+
+        .cart-box {
+          img {
+            width: 32px;
+            height: 32px;
           }
         }
       }
@@ -207,7 +215,7 @@ export default {
           color: #444444;
 
           &::after {
-            content: '';
+            content: "";
             position: absolute;
             bottom: 0;
             left: 50%;
@@ -233,14 +241,14 @@ export default {
           width: 100%;
           height: 27px;
           border-radius: 0px 0px 0px 0px;
-          border: 1px solid #4CA5E4;
+          border: 1px solid #F74747;
           font-family: OPPOSans, OPPOSans;
           font-weight: bold;
           font-size: 12px;
-          color: #4CA5E4;
+          color: #F74747;
 
           &:hover {
-            background: #4CA5E4;
+            background: #F74747;
             color: #fff;
           }
         }
@@ -248,8 +256,6 @@ export default {
     }
   }
 }
-
-
 
 .img-check-box {
   position: absolute;
@@ -345,15 +351,13 @@ export default {
       .price-box {
         margin-top: 5px;
 
-
         .sale {
           span {
             font-family: OPPOSans, OPPOSans;
             font-weight: bold;
             font-size: 12px;
-            color: #FF0000;
+            color: #ff0000;
           }
-
         }
 
         .market {
@@ -364,9 +368,8 @@ export default {
             font-family: OPPOSans, OPPOSans;
             font-weight: 400;
             font-size: 12px;
-            color: #BFBFBF;
+            color: #bfbfbf;
           }
-
         }
       }
     }

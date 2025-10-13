@@ -1,62 +1,57 @@
 <template>
   <div class="lunbo-box">
     <div class="zhutu-wrap">
-      <div class="zhutu-inner" @mouseover="showMaskModal = true" @mouseout="showMaskModal = false">
-        <el-carousel ref="carousel" :autoplay="false" :interval="4000" @change="onCarouseChange" height="100%">
+      <div
+        class="zhutu-inner"
+        @mouseover="showMaskModal = true"
+        @mouseout="showMaskModal = false"
+      >
+        <el-carousel
+          ref="carousel"
+          :autoplay="false"
+          :interval="4000"
+          @change="onCarouseChange"
+        >
           <el-carousel-item v-for="item in imageViewList" :key="item">
             <div class="img-box">
-              <el-image :src="item" :preview-src-list="imageViewList"></el-image>
+              <el-image :src="item" :preview-src-list="imageViewList">
+              </el-image>
             </div>
           </el-carousel-item>
         </el-carousel>
-
-        <div class="collect-icon" @click="collect">
-          <img src="@/assets/img/my/no-collect.png" v-if="ifShoucang == 0"/>
-          <img src="@/assets/img/my/collect.png" v-if="ifShoucang == 1"/>
-        </div>
       </div>
     </div>
+
+    <!-- <div class="mask-modal" v-if="showMaskModal">
+          <div class="mask-inner">
+            <img :src="imageList[activeSwipeIndex]" alt />
+          </div>
+        </div> -->
 
     <!-- 缩略图 -->
     <div class="slt-wrap">
       <div class="lunbo-arrow arrow-left" @click="toPrev()">
-        <img src="../../assets/img/productDetail/left.png" alt="">
+        <i class="el-icon-arrow-left"></i>
       </div>
       <div class="lunbo-arrow arrow-right" @click="toNext()">
-        <img src="../../assets/img/productDetail/right.png" alt="">
+        <i class="el-icon-arrow-right"></i>
       </div>
 
       <div class="lunbo-slt-list">
-        <div class="lunbo-slt-item cover hidden" v-for="(item, index) in imageList" :key="index" :class="{
-                    active: item.index == activeSwipeIndex,
-                    shown: Math.floor(item.index / 6) == shownGroupIndex,
-                }" @click="onClickSwipeItem(item.index)">
-          <img :src="item.image"/>
+        <div
+          class="lunbo-slt-item cover hidden"
+          v-for="(item, index) in imageList"
+          :key="index"
+          :class="{
+            active: item.index == activeSwipeIndex,
+            shown: Math.floor(item.index / 4) == shownGroupIndex,
+          }"
+          @click="onClickSwipeItem(item.index)"
+        >
+          <img :src="item.image" />
         </div>
       </div>
     </div>
-
-    <!-- 下载 -->
-    <div class="down">
-      <div class="it flex flex-center pointer" v-for="(item, index) in detail.pr_pdf_url" :key="index"
-           @click="download(item)">
-        <img src="@/assets/img/productDetail/download.png" alt="pdf">
-        <span>产品说明书</span>
-      </div>
-    </div>
-
-    <el-dialog title="操作提示" width="580px" custom-class="cus-modal-wrap" :close-on-click-modal="true"
-               :visible.sync="show_modal">
-      <div class="modal-inner">
-        <div class="text-box">
-          确认取消收藏当前商品?
-        </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <button class="btn btn-ripple fit-text btn-1" @click="show_modal = false">取消</button>
-        <el-button class="btn btn-ripple fit-text btn-2 btn-bg" @click="throttle_do_confirm()">确认</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -64,13 +59,11 @@
 export default {
   name: "carouselComponent",
   components: {},
-  props: ["imageList", "detail"],
+  props: ["imageList"],
   data() {
     return {
-      show_modal: false, // 是否展示模态框
       showMaskModal: false, //是否展示模态框
       activeSwipeIndex: 0, //轮播图指示器
-      ifShoucang: null
     };
   },
   computed: {
@@ -88,11 +81,6 @@ export default {
       let end = this.activeSwipeIndex * group + 6;
       return this.imageList.slice(start, end);
     },
-  },
-  watch: {
-    detail() {
-      this.ifShoucang = this.detail.ifShoucang;
-    }
   },
   methods: {
     //幻灯片切换
@@ -112,46 +100,14 @@ export default {
     toNext() {
       this.$refs.carousel.next();
     },
-
-    // 收藏
-    collect() {
-      if (this.ifShoucang) {
-        this.show_modal = true;
-      } else {
-        this.throttle_do_confirm();
-      }
-    },
-
-    throttle_do_confirm() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "product_operate",
-          operateType: 1,
-          operateSence: this.ifShoucang == 0 ? 0 : 1,
-          productId: this.detail.productId,
-        },
-      }).then(res => {
-        if (res.code == 200) {
-          this.show_modal = false;
-          this.$message.success(res.msg);
-          this.ifShoucang = this.ifShoucang == 0 ? 1 : 0;
-        }
-      })
-    },
-
-    download(item) {
-      window.open(item);
-    }
   },
 };
 </script>
 
 <style scoped lang="less">
 /deep/ .el-carousel {
-  width: 100%;
-  height: 100%;
+  width: 400px;
+  height: 400px;
 }
 
 /deep/ .el-carousel__container {
@@ -163,91 +119,53 @@ export default {
 }
 
 .zhutu-wrap {
-  width: 355px;
+  width: 512px;
+  padding: 0 0px;
 
   .zhutu-inner {
     border: 1px solid #eee;
     overflow: hidden;
-    width: 355px;
-    height: 355px;
+    width: 512px;
+    height: 512px;
     margin: 0 auto;
     user-select: none;
-
-    .collect-icon {
-      position: absolute;
-      top: 17px;
-      right: 11px;
-      width: 33px;
-      height: 33px;
-      border-radius: 50%;
-      cursor: pointer;
-      z-index: 2;
-
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
   }
 }
-
-/deep/ .el-dialog__footer {
-  text-align: center;
-
-  button {
-    width: 120px;
-    height: 32px;
-    background: #FFFFFF;
-    border-radius: 50px 50px 50px 50px;
-    border: 1px solid @theme;
-
-    font-family: Arial, Arial;
-    font-weight: 400;
-    font-size: 14px;
-    color: @theme;
-
-    & + button {
-      margin-left: 16px;
-    }
-  }
-
-  .btn-bg {
-    background: @theme;
-    color: #ffffff;
-  }
-}
-
 
 .lunbo-box {
   position: relative;
-  width: 355px;
-  height: 355px;
+  width: 512px;
+//   height: 400px;
+  // border: 1px solid #eee;
+  // padding-top: 20px;
 
   .img-box {
-    .flex-center();
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     cursor: move;
     margin: 0 auto;
-    width: 355px;
-    height: 355px;
+    width: 100%;
+    height: 100%;
     background: #f8f8f8;
     background: #fff;
     padding: 0;
 
     img {
-      width: 355px;
-      height: 355px;
+      max-width: 100%;
+      max-height: 100%;
     }
 
     .el-image {
-      width: 355px;
-      height: 355px;
+      max-width: 100%;
+      max-height: 100%;
 
       /deep/ img {
-        width: 355px;
-        height: 355px;
+        max-width: 100%;
+        max-height: 100%;
       }
     }
   }
@@ -273,8 +191,8 @@ export default {
 }
 
 .lunbo-slt-list {
-  margin-left: 24px;
-  margin-right: 24px;
+  margin-left: 30px;
+  margin-right: 30px;
   width: 100%;
   margin-top: 10px;
   display: flex;
@@ -282,8 +200,8 @@ export default {
   justify-content: flex-start;
 
   .lunbo-slt-item {
-    width: 60px;
-    height: 60px;
+    width: 76px;
+    height: 76px;
     padding: 0;
     cursor: pointer;
     border: 1px solid transparent;
@@ -303,12 +221,10 @@ export default {
     }
 
     &.active {
-      border-radius: 8px;
-      border: 2px solid @theme;
+      border: 1px solid #F74747;
     }
 
     img {
-      border-radius: 8px;
       width: 100%;
       height: 100%;
     }
@@ -320,20 +236,25 @@ export default {
 }
 
 .lunbo-arrow {
-  .flex-center();
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   z-index: 3;
   cursor: pointer;
   top: 50%;
   transform: translate(0, -50%);
 
-  width: 24px;
-  height: 24px;
+  //   height: 74p  rgba(0, 0, 0, 0.3);
+  width: 30px;
+  height: 30px;
   background: #fff;
   border-radius: 50%;
+  border: 1px solid #aaa;
+  border: 1px solid transparent;
 
   &.arrow-left {
-    //left: 20px;
+    left: 0px;
   }
 
   &.arrow-right {
@@ -344,32 +265,8 @@ export default {
     color: #fff;
     font-size: 20px;
     font-size: 14px;
+    font-size: 24px;
     color: #aaa;
-  }
-}
-
-.down {
-  margin-top: 22px;
-  display: flex;
-
-  .it {
-    padding: 5px 10px;
-    border-radius: 2px;
-    border: 1px solid #E6E4E1;
-    margin-right: 15px;
-
-    img {
-      width: 15px;
-      height: 15px;
-      margin-right: 3px;
-    }
-
-    span {
-      font-family: Roboto, Roboto;
-      font-weight: 400;
-      font-size: 14px;
-      color: #77797B;
-    }
   }
 }
 </style>
