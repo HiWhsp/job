@@ -31,37 +31,28 @@
 
       <!-- 图片上传区域 -->
       <div class="upload-section">
-        <div class="uploaded-images" v-if="uploadedImages.length > 0">
-          <div
-            v-for="(image, index) in uploadedImages"
-            :key="index"
-            class="image-item"
-          >
-            <img :src="image.url" :alt="`上传图片${index + 1}`" />
-            <div class="image-remove" @click="removeImage(index)">
-              <i class="el-icon-close"></i>
-            </div>
+        <el-upload
+          ref="upload"
+          action="https://yifei.dx.hdapp.com.cn/api/upload"
+          :file-list="fileList"
+          :auto-upload="false"
+          :on-change="handleFileChange"
+          :on-remove="handleRemove"
+          :before-upload="beforeUpload"
+          :accept="'image/*'"
+          :multiple="true"
+          list-type="picture-card"
+          class="custom-upload"
+        >
+          <div class="upload-button">
+            <!-- <div class="upload-icon">
+              <i class="el-icon-plus"></i>
+            </div> -->
+            <div class="upload-text">上传文件</div>
           </div>
-        </div>
-
-        <div class="upload-button" @click="triggerUpload">
-          <div class="upload-icon">
-            <i class="el-icon-plus"></i>
-          </div>
-          <div class="upload-text">上传文件</div>
-        </div>
+        </el-upload>
       </div>
     </div>
-
-    <!-- 隐藏的文件输入 -->
-    <input
-      ref="fileInput"
-      type="file"
-      accept="image/*"
-      multiple
-      style="display: none"
-      @change="handleFileChange"
-    />
 
     <!-- 底部按钮 -->
     <div slot="footer" class="dialog-footer">
@@ -90,6 +81,7 @@ export default {
         notes: "",
         brand: ""
       },
+      fileList: [],
       uploadedImages: []
     };
   },
@@ -114,45 +106,48 @@ export default {
       this.formData.notes = data.notes || "";
       this.formData.brand = data.brand || "";
       if (data.image) {
+        this.fileList = [{
+          name: 'image',
+          url: data.image,
+          status: 'success'
+        }];
         this.uploadedImages = [{
           file: null,
           url: data.image
         }];
       } else {
+        this.fileList = [];
         this.uploadedImages = [];
       }
     },
-    triggerUpload() {
-      this.$refs.fileInput.click();
-    },
-    handleFileChange(event) {
-      const files = event.target.files;
-      if (files.length > 0) {
-        Array.from(files).forEach(file => {
-          if (file.type.startsWith("image/")) {
-            const reader = new FileReader();
-            reader.onload = e => {
-              this.uploadedImages.push({
-                file: file,
-                url: e.target.result
-              });
-            };
-            reader.readAsDataURL(file);
-          }
-        });
+    // 文件上传前的处理
+    beforeUpload(file) {
+      const isImage = file.type.startsWith('image/');
+      if (!isImage) {
+        this.$message.error('只能上传图片文件!');
+        return false;
       }
-      // 清空input值，允许重复选择同一文件
-      event.target.value = "";
+      return false; // 阻止自动上传
     },
-    removeImage(index) {
-      this.uploadedImages.splice(index, 1);
+    // 文件选择变化时的处理
+    handleFileChange(file, fileList) {
+      this.fileList = fileList;
+    },
+    // 移除文件
+    handleRemove(file, fileList) {
+      this.fileList = fileList;
+      // 从uploadedImages中移除对应的文件
+      const index = this.uploadedImages.findIndex(img => img.url === file.url);
+      if (index > -1) {
+        this.uploadedImages.splice(index, 1);
+      }
     },
     handleSubmit() {
       const submitData = {
         notes: this.formData.notes,
         brand: this.formData.brand,
         images: this.uploadedImages.map(img => ({
-          file: img.file,
+          file: img.file, // 现在存储的是二进制数据
           url: img.url
         }))
       };
@@ -163,6 +158,7 @@ export default {
     resetForm() {
       this.formData.notes = "";
       this.formData.brand = "";
+      this.fileList = [];
       this.uploadedImages = [];
     }
   }
@@ -204,19 +200,24 @@ export default {
     }
 
     .upload-section {
-      .uploaded-images {
+      .custom-upload {
         display: flex;
-        flex-wrap: wrap;
         gap: 10px;
-        margin-bottom: 15px;
+        :deep(.el-upload-list) {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-bottom: 15px;
+        }
 
-        .image-item {
-          position: relative;
+        :deep(.el-upload-list__item) {
           width: 80px;
           height: 80px;
           border-radius: 8px;
           overflow: hidden;
           border: 1px solid #dcdfe6;
+          margin: 0;
+          position: relative;
 
           img {
             width: 100%;
@@ -224,7 +225,7 @@ export default {
             object-fit: cover;
           }
 
-          .image-remove {
+          .el-upload-list__item-delete {
             position: absolute;
             top: -5px;
             right: -5px;
@@ -238,41 +239,52 @@ export default {
             cursor: pointer;
             color: white;
             font-size: 12px;
+            border: none;
 
             &:hover {
               background: #f78989;
             }
           }
         }
-      }
 
-      .upload-button {
-        width: 80px;
-        height: 80px;
-        border: 2px solid #FF6600;
-        border-radius: 8px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s;
+        :deep(.el-upload--picture-card) {
+          width: 80px;
+          height: 80px;
+          border: 2px solid #FF6600;
+          border-radius: 8px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.3s;
+          background: transparent;
 
-        &:hover {
-          border-color: #FF6600;
-          background-color: #fff5f2;
+          &:hover {
+            border-color: #FF6600;
+            background-color: #fff5f2;
+          }
         }
 
-        .upload-icon {
-          font-size: 24px;
-          color: #FF6600;
-          margin-bottom: 5px;
-        }
+        .upload-button {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 80px;
+          height: 80px;
 
-        .upload-text {
-          font-size: 12px;
-          color: #FF6600;
-          text-align: center;
+          .upload-icon {
+            font-size: 24px;
+            color: #FF6600;
+            margin-bottom: 5px;
+          }
+
+          .upload-text {
+            font-size: 12px;
+            color: #FF6600;
+            text-align: center;
+          }
         }
       }
     }
