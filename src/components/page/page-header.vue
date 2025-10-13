@@ -6,14 +6,14 @@
           <div class="base-box w-1400 flex-between">
             <!-- 没登录 -->
             <div class="base-left flex" v-if="!vuex_is_login">
-              <div class="web-title">欢迎访问莉东实业</div>
+              <!-- <div class="web-title">欢迎访问莉东实业</div>
               <router-link class="login" to="/login">请登录</router-link>
               <router-link class="register" to="/register"
                 >免费注册</router-link
-              >
+              > -->
             </div>
             <div class="base-left flex" v-if="vuex_is_login">
-              <div class="web-title">欢迎访问莉东实业</div>
+              <!-- <div class="web-title">欢迎访问莉东实业</div>
               <span>
                 <b class="user-index" @click="$router.push('/userIndex')">{{
                   vuex_user.name
@@ -27,66 +27,24 @@
                   <span style="user-select: none">&nbsp;</span>
                 </span>
               </span>
-              <span class="logout" @click="logout()">退出登录</span>
+              <span class="logout" @click="logout()">退出登录</span> -->
             </div>
 
             <div class="base-right flex">
-              <!-- <div class="login-action" v-if="!vuex_is_login">
-              <router-link class="login" to="/login">登录</router-link>
-            </div>
-            <div class="login-action" v-if="!vuex_is_login">
-              <router-link class="register" to="/register">注册</router-link>
-            </div> -->
-
-              <template v-if="vuex_is_login">
-                <div
-                  class="audit-count"
-                  v-if="vuex_user.auditCount > 0"
-                  @click="toAudit"
-                >
-              </div>
-                <el-popover
-                  popper-class="w-nav-popover"
-                  placement="top"
-                  title=""
-                  width="150"
-                  trigger="hover"
-                  content=""
-                >
-                  <router-link
-                    slot="reference"
-                    class="u-act u-my flex"
-                    to="/order-list"
-                  >
-                    <span class="logout"> 我的莉东实业 </span>
-                    <i class="el-icon-caret-bottom"></i>
-                  </router-link>
-
-                  <div class="pop-child">
-                    <div
-                      :to="sub.route"
-                      class="child-item"
-                      v-for="(sub, index) in user_menus"
-                      :key="index"
-                      @click="navtoRoute(sub)"
-                    >
-                      {{ sub.title }}
-                    </div>
-                  </div>
-                </el-popover>
-              </template>
-
-              <span class="u-line" v-if="vuex_is_login"></span>
               <div class="u-act">
-                <router-link to="/help">帮助中心</router-link>
-                <!-- <i class="el-icon-caret-bottom"></i> -->
+                <router-link to="/help">服务中心</router-link>
               </div>
               <span class="u-line"></span>
               <div class="u-act">
-                <a href="" class="flex-center">
-                  <img class="icon" src="@img/head/mobile.png" alt="" />
-                  <span>{{ vuex_config.comPhone }}</span>
-                </a>
+                <router-link to="/help">下载中心</router-link>
+              </div>
+              <span class="u-line"></span>
+              <div class="u-act">
+                <router-link to="/help">帮助中心</router-link>
+              </div>
+              <span class="u-line"></span>
+              <div class="u-act">
+                <router-link to="/help">关于我们</router-link>
               </div>
             </div>
           </div>
@@ -228,34 +186,33 @@ export default {
   created() {
     this.keyword = this.$route.query.keyword || "";
     this.setView();
-   if(this.vuex_user.auditCount > 0){
+    if (this.vuex_user.auditCount > 0) {
       this.$notify.info({
-      title: "",
-      message: "有您待审批的订单,请审批",
-      duration: 0,
-    });
-   }
+        title: "",
+        message: "有您待审批的订单,请审批",
+        duration: 0,
+      });
+    }
   },
 
   methods: {
     //跳转待审核
     toAudit() {
-      if(this.vuex_user.staffType > 1){
+      if (this.vuex_user.staffType > 1) {
         this.$router.push({
           path: "stock-censor",
           query: {
             value: 1,
           },
         });
-      }else{
-         this.$router.push({
+      } else {
+        this.$router.push({
           path: "stock-censor-my",
           query: {
             value: 1,
           },
         });
       }
-     
     },
     //语言切换
     toggleLanguage(lang_curr) {
@@ -491,7 +448,6 @@ export default {
 
       .base-right {
         a {
-          color: #333;
           color: #ffffff;
         }
 
@@ -513,9 +469,7 @@ export default {
         }
 
         .u-act {
-          span {
-            color: #E5222B;
-          }
+          
         }
         .u-my {
           height: 36px;
@@ -579,7 +533,7 @@ export default {
       margin-left: 200px;
 
       .input-box {
-        border: 2px solid #E5222B;
+        border: 2px solid #e5222b;
         display: flex;
         align-items: center;
         width: 669px;
@@ -605,7 +559,7 @@ export default {
         button {
           width: 113px;
           height: 50px;
-          background: #E5222B;
+          background: #e5222b;
           // border: 2px solid #333;
           border: none;
           outline: none;
@@ -692,8 +646,8 @@ export default {
         }
 
         &.bg {
-          border: 1px solid #E5222B;
-          background: #E5222B;
+          border: 1px solid #e5222b;
+          background: #e5222b;
           width: 150px;
           height: 50px;
 
@@ -725,7 +679,7 @@ export default {
           height: 18px;
           background: #ffffff;
           border-radius: 9px 9px 9px 9px;
-          color: #E5222B;
+          color: #e5222b;
         }
       }
     }
