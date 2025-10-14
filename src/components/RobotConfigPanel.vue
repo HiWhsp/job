@@ -175,7 +175,7 @@
                       class="color-image"
                       :style="{ backgroundColor: color1 }"
                       v-else
-                      @click="colorPicker(item)"
+                      @click="colorPicker(item3)"
                     >
                       <div class="color-picker-text">点击定制颜色</div>
                     </div>
@@ -324,6 +324,7 @@
 
     <!-- 颜色定制弹框 -->
     <ColorCustomDialog
+      ref="colorCustomDialog"
       v-model="showColorDialog"
       :item="currentOtherItem"
       @submit="handleColorSubmit"
@@ -400,38 +401,34 @@ export default {
   methods: {
     // 初始化选中状态
     initializeSelectedState() {
-      if (this.controllers && this.controllers.length > 0) {
-        this.controllers.forEach((controller) => {
-          if (controller.producntInfos) {
-            controller.producntInfos.forEach((item) => {
-              this.$set(item, "selected", false);
-              if (item.title === "其他" || item.title.includes("定制")) {
-                this.$set(item, "other", {
-                  image: "",
-                  notes: "",
-                  brand: "",
-                });
-              }
-            });
-          }
-          if (controller.child) {
-            controller.child.forEach((child) => {
-              if (child.producntInfos) {
-                child.producntInfos.forEach((item) => {
-                  console.log(item);
+      if (this.tabs && this.tabs.length > 0) {
+        this.tabs.forEach((tab) => {
+          // 递归处理所有层级的 producntInfos
+          this.initializeProducntInfos(tab);
+        });
+      }
+    },
 
-                  this.$set(item, "selected", false);
-                  if (item.title === "其他" || item.title.includes("定制")) {
-                    this.$set(item, "other", {
-                      image: "",
-                      notes: "",
-                      brand: "",
-                    });
-                  }
-                });
-              }
+    // 递归初始化 producntInfos 的辅助方法
+    initializeProducntInfos(item) {
+      // 如果当前项有 producntInfos，则初始化它们
+      if (item.producntInfos && Array.isArray(item.producntInfos)) {
+        item.producntInfos.forEach((product) => {
+          this.$set(product, "selected", false);
+          if (product.title === "其他" || product.title.includes("定制")) {
+            this.$set(product, "other", {
+              image: "",
+              notes: "",
+              brand: "",
             });
           }
+        });
+      }
+
+      // 如果当前项有子项，递归处理子项
+      if (item.child && Array.isArray(item.child)) {
+        item.child.forEach((child) => {
+          this.initializeProducntInfos(child);
         });
       }
     },
@@ -804,6 +801,7 @@ export default {
     // 颜色选择
     colorPicker(item) {
       this.currentOtherItem = item;
+      this.$refs.colorCustomDialog.setFormData(item.other);
       this.showColorDialog = true;
     },
 

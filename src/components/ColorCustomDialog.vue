@@ -71,14 +71,6 @@ export default {
       },
     };
   },
-  watch: {
-    item: {
-      handler(newVal) {
-        this.formData = newVal.notes;
-      },
-      deep: true,
-    },
-  },
   computed: {
     visible: {
       get() {
@@ -106,6 +98,9 @@ export default {
         ral: "",
         rgba: "",
       };
+    },
+    setFormData(data) {
+      this.formData = data.notes || {};
     },
   },
 };
