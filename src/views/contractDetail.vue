@@ -55,17 +55,35 @@
           <div class="document-container">
             <div class="document-page">
               <div class="document-content blurred">
-                <iframe
-                  :src="detail.preview_pdf_url"
-                  width="100%"
-                  height="100%"
-                  v-if="
-                    detail.preview_pdf_url &&
-                    detail.preview_pdf_url.includes('.pdf')
-                  "
-                  alt=""
-                ></iframe>
-                <img :src="detail.preview_pdf_url" v-else alt="" />
+              
+                <!-- PDF所有页面展示 -->
+                <div v-if="detail.preview_pdf_url && detail.preview_pdf_url.includes('.pdf')" class="pdf-all-pages-container" ref="pdfContainer">
+                  <div 
+                    v-for="(page, index) in pdfPages" 
+                    :key="index" 
+                    class="pdf-page-wrapper"
+                  >
+                    <canvas 
+                      :ref="`pdfCanvas${index}`" 
+                      class="pdf-page-canvas"
+                    ></canvas>
+                  </div>
+                  
+                  <!-- 加载状态 -->
+                  <div v-if="pdfLoading" class="pdf-loading">
+                    <div class="loading-spinner"></div>
+                    <p>PDF加载中...</p>
+                  </div>
+                  
+                  <!-- 错误状态 -->
+                  <div v-if="pdfError" class="pdf-error">
+                    <p>PDF加载失败，请稍后重试</p>
+                    <button @click="loadAllPages" class="retry-btn">重试</button>
+                  </div>
+                </div>
+                
+                <!-- 非PDF文件显示 -->
+                <img v-else :src="detail.preview_pdf_url" alt="" />
               </div>
             </div>
             <div class="document-page-bottom">
@@ -226,6 +244,10 @@ export default {
       detail: {},
       isDownloadInfoAbsolute: false,
       lastScrollTime: 0,
+      pdfLoading: false,
+      pdfError: false,
+      pdfDoc: null,
+      pdfPages: [],
     };
   },
   mounted() {
@@ -240,9 +262,12 @@ export default {
     });
     this.setView();
     this.addScrollListener();
+    this.addResizeListener();
+    this.loadPDFJS();
   },
   beforeDestroy() {
     this.removeScrollListener();
+    this.removeResizeListener();
   },
   methods: {
     setView() {
@@ -254,6 +279,12 @@ export default {
         },
       }).then((res) => {
         this.detail = res.data;
+        // 当detail数据加载完成后，加载PDF
+        this.$nextTick(() => {
+          if (window.pdfjsLib && this.detail.preview_pdf_url) {
+            this.loadAllPages();
+          }
+        });
         this.$api({
           url: "contractList",
           method: "get",
@@ -311,6 +342,12 @@ export default {
     removeScrollListener() {
       window.removeEventListener('scroll', this.handleScroll);
     },
+    addResizeListener() {
+      window.addEventListener('resize', this.handleResize);
+    },
+    removeResizeListener() {
+      window.removeEventListener('resize', this.handleResize);
+    },
     handleScroll() {
       const now = Date.now();
       // 节流：每50ms最多执行一次
@@ -325,15 +362,106 @@ export default {
       
       const sectionRect = contractContentSection.getBoundingClientRect();
       
-      // 简化判断逻辑：只基于contract-content-section的位置
-      const isSectionOutOfView = sectionRect.bottom < 0 || sectionRect.top > window.innerHeight;
+      // 修改判断逻辑：当section的底部超出可视区域时改变定位
+      // sectionRect.bottom < 0 表示section的底部已经滚动到可视区域上方（即超出了底部）
+      const isSectionBottomOutOfView = sectionRect.bottom < 580;
       
       if (this.isDownloadInfoAbsolute) {
-        // 如果已经是absolute定位，当section重新进入可视区域时恢复fixed
-        this.isDownloadInfoAbsolute = isSectionOutOfView;
+        // 如果已经是absolute定位，当section底部重新进入可视区域时恢复fixed
+        this.isDownloadInfoAbsolute = isSectionBottomOutOfView;
       } else {
-        // 如果还是fixed定位，当section超出可视区域时切换为absolute
-        this.isDownloadInfoAbsolute = isSectionOutOfView;
+        // 如果还是fixed定位，当section底部超出可视区域时切换为absolute
+        this.isDownloadInfoAbsolute = isSectionBottomOutOfView;
+      }
+    },
+    
+    // 加载PDF.js库
+    loadPDFJS() {
+      if (window.pdfjsLib) {
+        this.initPDF();
+        return;
+      }
+      
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      script.onload = () => {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        this.initPDF();
+      };
+      script.onerror = () => {
+        console.error('PDF.js加载失败');
+        this.pdfError = true;
+      };
+      document.head.appendChild(script);
+    },
+    
+    // 初始化PDF
+    initPDF() {
+      if (this.detail.preview_pdf_url) {
+        this.loadAllPages();
+      }
+    },
+    
+    // 加载所有PDF页面
+    loadAllPages() {
+      if (!this.detail.preview_pdf_url) return;
+      
+      this.pdfLoading = true;
+      this.pdfError = false;
+      this.pdfPages = [];
+      
+      const loadingTask = window.pdfjsLib.getDocument({
+        url: this.detail.preview_pdf_url,
+        cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+        cMapPacked: true,
+      });
+      
+      loadingTask.promise.then((pdf) => {
+        this.pdfDoc = pdf;
+        this.pdfPages = Array.from({ length: pdf.numPages }, (_, i) => i + 1);
+        
+        this.$nextTick(() => {
+          this.renderAllPages();
+        });
+        
+        this.pdfLoading = false;
+      }).catch((error) => {
+        console.error('PDF加载失败:', error);
+        this.pdfError = true;
+        this.pdfLoading = false;
+      });
+    },
+    
+    // 渲染所有页面
+    async renderAllPages() {
+      if (!this.pdfDoc) return;
+      
+      const container = this.$refs.pdfContainer;
+      const containerWidth = container.clientWidth - 40; // 减去padding
+      
+      for (let i = 0; i < this.pdfPages.length; i++) {
+        try {
+          const page = await this.pdfDoc.getPage(i + 1);
+          const canvas = this.$refs[`pdfCanvas${i}`][0];
+          const context = canvas.getContext('2d');
+          
+          // 计算缩放比例以适应容器宽度
+          const viewport = page.getViewport({ scale: 1 });
+          const scale = containerWidth / viewport.width;
+          const scaledViewport = page.getViewport({ scale: scale });
+          
+          canvas.width = scaledViewport.width;
+          canvas.height = scaledViewport.height;
+          
+          const renderContext = {
+            canvasContext: context,
+            viewport: scaledViewport
+          };
+          
+          await page.render(renderContext).promise;
+        } catch (error) {
+          console.error(`渲染第${i + 1}页失败:`, error);
+        }
       }
     },
   },
