@@ -21,73 +21,88 @@
             :key="index"
             class="config-item-row"
           >
-            <div class="item-thumbnail">
-              <img :src="item.image" :alt="item.name" v-if="item.image" />
-              <div class="no-image" v-else></div>
-            </div>
-            <div class="item-details">
-              <div class="item-name">{{ item.firstTitle }}</div>
-              <div class="item-model">{{ item.name }} {{ item.model }}</div>
-            </div>
-            <div class="item-params">参数信息：{{ item.params || "--" }}</div>
-            <div class="item-progress">
-              <div class="progress-bar">
+            <template v-if="item.image">
+              <div class="item-thumbnail">
+                <img :src="item.image" :alt="item.name" v-if="item.image" />
+                <div class="no-image" v-else></div>
+              </div>
+              <div class="item-details">
+                <div class="item-name">{{ item.firstTitle }}</div>
+                <div class="item-model">{{ item.name }} {{ item.model }}</div>
+              </div>
+              <div class="item-params">参数信息：{{ item.params || "--" }}</div>
+              <div class="item-progress">
+                <div class="progress-bar">
+                  <img
+                    src="@/assets/img/icon/progress1.png"
+                    alt="progress"
+                    v-if="item.progress == 1"
+                  />
+                  <img
+                    src="@/assets/img/icon/progress2.png"
+                    alt="progress"
+                    v-if="item.progress == 2"
+                  />
+                  <img
+                    src="@/assets/img/icon/progress3.png"
+                    alt="progress"
+                    v-if="item.progress == 3"
+                  />
+                  <img
+                    src="@/assets/img/icon/progress4.png"
+                    alt="progress"
+                    v-if="item.progress == 4"
+                  />
+                  <img
+                    src="@/assets/img/icon/progress4.png"
+                    alt="progress"
+                    v-if="item.progress == 5"
+                  />
+                </div>
+              </div>
+              <div class="item-price">
                 <img
-                  src="@/assets/img/icon/progress1.png"
-                  alt="progress"
-                  v-if="item.progress == 1"
+                  src="@/assets/img/icon/Group1.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 1"
                 />
                 <img
-                  src="@/assets/img/icon/progress2.png"
-                  alt="progress"
-                  v-if="item.progress == 2"
+                  src="@/assets/img/icon/Group2.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 2"
                 />
                 <img
-                  src="@/assets/img/icon/progress3.png"
-                  alt="progress"
-                  v-if="item.progress == 3"
+                  src="@/assets/img/icon/Group3.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 3"
                 />
                 <img
-                  src="@/assets/img/icon/progress4.png"
-                  alt="progress"
-                  v-if="item.progress == 4"
-                />
-                <img
-                  src="@/assets/img/icon/progress4.png"
-                  alt="progress"
-                  v-if="item.progress == 5"
+                  src="@/assets/img/icon/Group4.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 4"
                 />
               </div>
-            </div>
-            <div class="item-price">
-              <img
-                src="@/assets/img/icon/Group1.png"
-                alt="price"
-                class="price-icon"
-                v-if="item.price_status == 1"
-              />
-              <img
-                src="@/assets/img/icon/Group2.png"
-                alt="price"
-                class="price-icon"
-                v-if="item.price_status == 2"
-              />
-              <img
-                src="@/assets/img/icon/Group3.png"
-                alt="price"
-                class="price-icon"
-                v-if="item.price_status == 3"
-              />
-              <img
-                src="@/assets/img/icon/Group4.png"
-                alt="price"
-                class="price-icon"
-                v-if="item.price_status == 4"
-              />
-            </div>
-            <div class="item-edit" v-if="!configOrderNumber">
-              <i class="el-icon-edit" @click="editItem(item)"></i>
-            </div>
+              <div class="item-edit" v-if="!configOrderNumber">
+                <i class="el-icon-edit" @click="editItem(item)"></i>
+              </div>
+            </template>
+            <template v-else>
+              <div class="item-details">
+                <div class="item-name">{{ item.firstTitle }}</div>
+                <!-- <div class="item-model">{{ item.name }} {{ item.model }}</div> -->
+              </div>
+              <div class="item-params">
+                <p>{{ item.name }}</p>
+                <p>{{ item.params }}</p>
+              </div>
+              <div class="item-edit" v-if="!configOrderNumber">
+                <i class="el-icon-edit" @click="editItem(item)"></i>
+              </div>
+            </template>
           </div>
         </div>
       </div>
@@ -170,7 +185,7 @@ export default {
   name: "RobotPreview",
   components: {
     DownloadDialog,
-    UserInfoDialog
+    UserInfoDialog,
   },
   data() {
     return {
@@ -251,8 +266,6 @@ export default {
                   );
 
                   if (matchedItem) {
-                    console.log("tab", tab);
-
                     selectedItems.push({
                       activeTab: index,
                       firstTitle: firstLevel.title,
@@ -260,7 +273,10 @@ export default {
                       name: item.title,
                       model: item.description,
                       image: item.thumb,
-                      params: item.spec,
+                      params:
+                        item.title == "其他"
+                          ? matchedItem.other.notes
+                          : item.spec,
                       progress: item.delivery_time,
                       price_status: item.price_status,
                     });
@@ -290,7 +306,10 @@ export default {
                           name: item.title,
                           model: item.description,
                           image: item.thumb,
-                          params: item.spec,
+                          params:
+                            item.title == "其他"
+                              ? matchedItem.other.notes
+                              : item.spec,
                           progress: item.delivery_time,
                           price_status: item.price_status,
                         });
@@ -320,7 +339,10 @@ export default {
                               name: item.title,
                               model: item.description,
                               image: item.thumb,
-                              params: item.spec,
+                              params:
+                                item.title == "其他"
+                                  ? matchedItem.other.notes
+                                  : item.spec,
                               progress: item.delivery_time,
                               price_status: item.price_status,
                             });
@@ -354,6 +376,30 @@ export default {
 
     // 保存配置
     saveConfig() {
+      const configData = JSON.parse(localStorage.getItem("robotConfig"));
+      configData.forEach((item) => {
+        if (!item.other) {
+          return;
+        }
+        if (item.other?.notes && item.other.notes instanceof Object) {
+          // 将对象value转换为字符串 1-1-1
+          item.other.notes = Object.values(item.other.notes).join("-");
+        }
+        // 如果item.other中的三个值如果为空则删除
+        if (!item.other?.notes) {
+          delete item.other.notes;
+        }
+        if (!item.other?.brand) {
+          delete item.other.brand;
+        }
+        if (!item.other?.image) {
+          delete item.other.image;
+        }
+        // 如果item.other为空则删除
+        if (!item.other?.notes && !item.other?.brand && !item.other?.image) {
+          delete item.other;
+        }
+      });
       this.$alert("保存配置单", "确定要保存配置单吗？", {
         confirmButtonText: "确定",
         callback: (action) => {
@@ -363,7 +409,7 @@ export default {
             data: {
               ...this.userInfo,
               product_id: this.id,
-              product_info: localStorage.getItem("robotConfig"),
+              product_info: JSON.stringify(configData),
             },
           }).then((res) => {
             if (res.code == 200) {

@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="top-bar">我的配置单{{ detail.product_title }}</div>
     <div class="img-box">
-      <img :src="detail.product_img" alt="" />
+      <img :src="productImg" alt="" />
     </div>
     <div class="content-box">
       <div class="content-box-title">配置单号：{{ detail.order_no }}</div>
@@ -13,20 +13,44 @@
           :key="index"
         >
           <div class="content-box-list-item-title">
-            {{ item.product_type_two_title  }}
+            {{ item.product_type_two_title }}
           </div>
           <div class="content-box-list-item-content">
-            <div class="content-box-list-item-content-img">
-              <img :src="item.producntInfos.thumb || vuex_avatar_default" alt="" />
-            </div>
-            <div class="content-box-info">
-              <div class="content-box-info-title">
-                {{ item.product_type_three_title || item.producntInfos.title }}
+            <template v-if="item.producntInfos.thumb">
+              <div class="content-box-list-item-content-img">
+                <img :src="item.producntInfos.thumb" alt="" />
               </div>
-              <div class="content-box-info-content">
-                {{ item.producntInfos.title != '其他' ? item.producntInfos.title : item.other.notes }}
+              <div class="content-box-info">
+                <div class="content-box-info-title">
+                  {{
+                    item.product_type_three_title || item.producntInfos.title
+                  }}
+                </div>
+                <div class="content-box-info-content">
+                  {{
+                    item.producntInfos.title != "其他"
+                      ? item.producntInfos.title
+                      : item.other.notes
+                  }}
+                </div>
               </div>
-            </div>
+            </template>
+            <template v-else>
+              <div class="content-box-info content-box-info-other">
+                <div class="content-box-info-title">
+                  {{
+                    item.product_type_three_title || item.producntInfos.title
+                  }}
+                </div>
+                <div class="content-box-info-content">
+                  {{
+                    item.producntInfos.title != "其他"
+                      ? item.producntInfos.title
+                      : item.other.notes
+                  }}
+                </div>
+              </div>
+            </template>
           </div>
         </div>
       </div>
@@ -45,6 +69,15 @@ export default {
   },
   mounted() {
     this.getRobotConfig();
+  },
+  computed: {
+    productImg() {
+      return (
+        this.detail.z_product?.thumb +
+        "/uploads/" +
+        this.detail.z_product?.images?.split(",")[0]
+      );
+    },
   },
   methods: {
     getRobotConfig() {
@@ -104,7 +137,9 @@ export default {
     }
     .content-box-list {
       .content-box-list-item {
-        margin-bottom: 15px;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #565656;
         .content-box-list-item-title {
           font-size: 10px;
           font-weight: 400;
@@ -134,6 +169,15 @@ export default {
             font-weight: 400;
             color: #fff;
             margin-bottom: 5px;
+          }
+        }
+        .content-box-info-other {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          .content-box-info-title {
+            margin-bottom: 0;
+            width: 50%;
           }
         }
         .content-box-info-content {

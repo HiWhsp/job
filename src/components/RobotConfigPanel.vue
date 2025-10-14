@@ -427,9 +427,9 @@ export default {
           this.$set(product, "selected", false);
           if (product.title === "其他" || product.title.includes("定制")) {
             this.$set(product, "other", {
-              image: "",
-              notes: "",
-              brand: "",
+              image: null,
+              notes: null,
+              brand: null,
             });
           }
         });
@@ -881,10 +881,10 @@ export default {
       // 将弹框数据赋值到当前选中的"其他"选项的other对象中
       if (this.currentOtherItem) {
         this.$set(this.currentOtherItem, "other", {
-          notes: data.notes || "",
-          brand: data.brand || "",
+          notes: data.notes || null,
+          brand: data.brand || null,
           image:
-            data.images && data.images.length > 0 ? data.images[0].url : "",
+            data.images && data.images.length > 0 ? data.images[0].url : null,
         });
 
         console.log("已更新other对象:", this.currentOtherItem.other);
@@ -900,9 +900,9 @@ export default {
       console.log("颜色定制数据:", data);
       // 处理颜色定制数据
       this.$set(this.currentOtherItem, "other", {
-        notes: data || "",
-        brand: "",
-        image: "",
+        notes: data || null,
+        brand: null,
+        image: null,
       });
       // this.$message.success("颜色配置已保存");
     },
