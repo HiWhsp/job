@@ -34,12 +34,11 @@
         <el-upload
           ref="upload"
           action="https://yifei.dx.hdapp.com.cn/api/upload"
+          :data="uploadData"
+          name="file"
           :file-list="fileList"
-          :auto-upload="false"
-          :on-change="handleFileChange"
+          :on-success="handleUploadSuccess"
           :on-remove="handleRemove"
-          :before-upload="beforeUpload"
-          :accept="'image/*'"
           :multiple="true"
           list-type="picture-card"
           class="custom-upload"
@@ -68,21 +67,21 @@ export default {
   props: {
     title: {
       type: String,
-      default: "弹窗标题"
+      default: "弹窗标题",
     },
     value: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       formData: {
         notes: "",
-        brand: ""
+        brand: "",
       },
       fileList: [],
-      uploadedImages: []
+      uploadedImages: [],
     };
   },
   computed: {
@@ -92,13 +91,29 @@ export default {
       },
       set(val) {
         this.$emit("input", val);
-      }
-    }
+      },
+    },
+    // 上传参数
+    uploadData() {
+      return {
+        userId: localStorage.getItem("userId") || "",
+        token: localStorage.getItem("token") || "",
+      };
+    },
   },
   methods: {
     handleClose() {
       this.visible = false;
       this.resetForm();
+    },
+    handleUploadSuccess(response, file) {
+      console.log(response);
+      if (response.code === 200 && response.data && response.data.path) {
+        this.uploadedImages.push({
+          file: response.data.path,
+          url: response.data.path,
+        });
+      }
     },
     // 设置表单数据（用于回显）
     setFormData(data) {
@@ -106,25 +121,26 @@ export default {
       this.formData.notes = data.notes || "";
       this.formData.brand = data.brand || "";
       if (data.image) {
-        this.fileList = [{
-          name: 'image',
-          url: data.image,
-          status: 'success'
-        }];
-        this.uploadedImages = [{
-          file: null,
-          url: data.image
-        }];
-      } else {
-        this.fileList = [];
-        this.uploadedImages = [];
+        this.fileList = [
+          {
+            name: "image",
+            url: data.image,
+            status: "success",
+          },
+        ];
+        this.uploadedImages = [
+          {
+            file: data.image,
+            url: data.image,
+          },
+        ];
       }
     },
     // 文件上传前的处理
     beforeUpload(file) {
-      const isImage = file.type.startsWith('image/');
+      const isImage = file.type.startsWith("image/");
       if (!isImage) {
-        this.$message.error('只能上传图片文件!');
+        this.$message.error("只能上传图片文件!");
         return false;
       }
       return false; // 阻止自动上传
@@ -137,7 +153,9 @@ export default {
     handleRemove(file, fileList) {
       this.fileList = fileList;
       // 从uploadedImages中移除对应的文件
-      const index = this.uploadedImages.findIndex(img => img.url === file.url);
+      const index = this.uploadedImages.findIndex(
+        (img) => img.file === file.file
+      );
       if (index > -1) {
         this.uploadedImages.splice(index, 1);
       }
@@ -146,12 +164,12 @@ export default {
       const submitData = {
         notes: this.formData.notes,
         brand: this.formData.brand,
-        images: this.uploadedImages.map(img => ({
+        images: this.uploadedImages.map((img) => ({
           file: img.file, // 现在存储的是二进制数据
-          url: img.url
-        }))
+          url: img.url,
+        })),
       };
-      
+
       this.$emit("submit", submitData);
       this.handleClose();
     },
@@ -160,8 +178,8 @@ export default {
       this.formData.brand = "";
       this.fileList = [];
       this.uploadedImages = [];
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -170,10 +188,10 @@ export default {
   .dialog-content {
     .input-section {
       margin-bottom: 20px;
-      
+
       .form-item {
         margin-bottom: 15px;
-        
+
         .form-label {
           display: block;
           margin-bottom: 8px;
@@ -182,7 +200,7 @@ export default {
           font-weight: 500;
         }
       }
-      
+
       .text-input {
         .el-textarea__inner {
           border-radius: 8px;
@@ -190,7 +208,7 @@ export default {
           font-size: 14px;
           line-height: 1.5;
         }
-        
+
         .el-input__inner {
           border-radius: 8px;
           border: 1px solid #dcdfe6;
@@ -250,7 +268,7 @@ export default {
         :deep(.el-upload--picture-card) {
           width: 80px;
           height: 80px;
-          border: 2px solid #FF6600;
+          border: 2px solid #ff6600;
           border-radius: 8px;
           display: flex;
           flex-direction: column;
@@ -261,7 +279,7 @@ export default {
           background: transparent;
 
           &:hover {
-            border-color: #FF6600;
+            border-color: #ff6600;
             background-color: #fff5f2;
           }
         }
@@ -276,13 +294,13 @@ export default {
 
           .upload-icon {
             font-size: 24px;
-            color: #FF6600;
+            color: #ff6600;
             margin-bottom: 5px;
           }
 
           .upload-text {
             font-size: 12px;
-            color: #FF6600;
+            color: #ff6600;
             text-align: center;
           }
         }
@@ -292,7 +310,7 @@ export default {
 
   .dialog-footer {
     text-align: center;
-    
+
     .el-button {
       padding: 10px 30px;
       border-radius: 6px;
@@ -300,16 +318,16 @@ export default {
       &:hover {
         background-color: #fff;
         border-color: #fff;
-        color: #37B182;
+        color: #37b182;
       }
     }
 
     .el-button--primary {
-      background-color: #37B182;;
-      border-color: #37B182;
+      background-color: #37b182;
+      border-color: #37b182;
       &:hover {
-        background-color: #37B182;
-        border-color: #37B182;
+        background-color: #37b182;
+        border-color: #37b182;
         color: #fff;
       }
     }

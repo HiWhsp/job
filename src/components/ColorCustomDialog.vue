@@ -51,6 +51,12 @@
 export default {
   name: "ColorCustomDialog",
   props: {
+    item: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  props: {
     value: {
       type: Boolean,
       default: false,
@@ -64,6 +70,14 @@ export default {
         rgba: "",
       },
     };
+  },
+  watch: {
+    item: {
+      handler(newVal) {
+        this.formData = newVal.notes;
+      },
+      deep: true,
+    },
   },
   computed: {
     visible: {
@@ -81,11 +95,7 @@ export default {
       this.resetForm();
     },
     handleSubmit() {
-      const submitData = {
-        pantone: this.formData.pantone,
-        ral: this.formData.ral,
-        rgba: this.formData.rgba,
-      };
+      const submitData = this.formData;
 
       this.$emit("submit", submitData);
       this.handleClose();

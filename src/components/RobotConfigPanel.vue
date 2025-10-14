@@ -175,10 +175,9 @@
                       class="color-image"
                       :style="{ backgroundColor: color1 }"
                       v-else
+                      @click="colorPicker(item)"
                     >
-                      <div class="color-picker-text" @click="colorPicker">
-                        点击定制颜色
-                      </div>
+                      <div class="color-picker-text">点击定制颜色</div>
                     </div>
                     <div class="color-info">
                       <div class="color-info-left">
@@ -324,7 +323,11 @@
     />
 
     <!-- 颜色定制弹框 -->
-    <ColorCustomDialog v-model="showColorDialog" @submit="handleColorSubmit" />
+    <ColorCustomDialog
+      v-model="showColorDialog"
+      :item="currentOtherItem"
+      @submit="handleColorSubmit"
+    />
   </div>
 </template>
 
@@ -402,7 +405,7 @@ export default {
           if (controller.producntInfos) {
             controller.producntInfos.forEach((item) => {
               this.$set(item, "selected", false);
-              if (item.title === "其他" || item.title === "其他配件") {
+              if (item.title === "其他" || item.title.includes("定制")) {
                 this.$set(item, "other", {
                   image: "",
                   notes: "",
@@ -415,8 +418,10 @@ export default {
             controller.child.forEach((child) => {
               if (child.producntInfos) {
                 child.producntInfos.forEach((item) => {
+                  console.log(item);
+
                   this.$set(item, "selected", false);
-                  if (item.title === "其他" || item.title === "其他配件") {
+                  if (item.title === "其他" || item.title.includes("定制")) {
                     this.$set(item, "other", {
                       image: "",
                       notes: "",
@@ -481,7 +486,7 @@ export default {
     // 选择控制器
     selectController(controllerId, item) {
       let targetItem = null;
-      
+
       // 找到当前控制器所在的组，只在该组内进行单选
       this.controllers.forEach((controller) => {
         if (controller.producntInfos) {
@@ -506,7 +511,7 @@ export default {
         this.currentOtherItem = targetItem; // 保存当前选中的"其他"选项
         this.dialogTitle = "其他选项配置";
         this.showDialog = true;
-        
+
         // 如果有已保存的数据，回显到弹框中
         this.$nextTick(() => {
           if (this.$refs.customDialog && targetItem.other) {
@@ -519,7 +524,7 @@ export default {
     // 选择外观模块item
     selectAppearanceItem(itemId) {
       let targetItem = null; // 提升到方法最开始
-      
+
       // 找到对应的item并切换选中状态
       this.controllers.forEach((controller) => {
         if (controller.child) {
@@ -543,13 +548,16 @@ export default {
           });
         }
       });
-      
+
       // 如果是"其他"选项，打开弹框
-      if (targetItem && (targetItem.title === "其他" || targetItem.title === "其他配件")) {
+      if (
+        targetItem &&
+        (targetItem.title === "其他" || targetItem.title === "其他配件")
+      ) {
         this.currentOtherItem = targetItem; // 保存当前选中的"其他"选项
         this.dialogTitle = "其他选项配置";
         this.showDialog = true;
-        
+
         // 如果有已保存的数据，回显到弹框中
         this.$nextTick(() => {
           if (this.$refs.customDialog && targetItem.other) {
@@ -624,6 +632,12 @@ export default {
                         );
                         if (targetItem) {
                           this.$set(targetItem, "selected", true);
+                          if (
+                            targetItem.title === "其他" ||
+                            targetItem.title.includes("定制")
+                          ) {
+                            this.$set(targetItem, "other", savedItem.other);
+                          }
                         }
                       }
                     }
@@ -638,6 +652,12 @@ export default {
                       );
                       if (targetItem) {
                         this.$set(targetItem, "selected", true);
+                        if (
+                          targetItem.title === "其他" ||
+                          targetItem.title.includes("定制")
+                        ) {
+                          this.$set(targetItem, "other", savedItem.other);
+                        }
                       }
                     }
                   }
@@ -782,37 +802,39 @@ export default {
       this.controllers = this.tabs[this.activeTab].child;
     },
     // 颜色选择
-    colorPicker() {
+    colorPicker(item) {
+      this.currentOtherItem = item;
       this.showColorDialog = true;
     },
 
     // 弹框提交
     handleDialogSubmit(data) {
-      
       // 将弹框数据赋值到当前选中的"其他"选项的other对象中
       if (this.currentOtherItem) {
-        this.$set(this.currentOtherItem, 'other', {
+        this.$set(this.currentOtherItem, "other", {
           notes: data.notes || "",
           brand: data.brand || "",
-          image: data.images && data.images.length > 0 ? data.images[0].url : ""
+          image:
+            data.images && data.images.length > 0 ? data.images[0].url : "",
         });
-        
+
         console.log("已更新other对象:", this.currentOtherItem.other);
         this.$message.success("其他选项配置已保存");
       }
-      
+
       // 重置当前选中的"其他"选项
       this.currentOtherItem = null;
     },
-    
+
     // 颜色定制提交
     handleColorSubmit(data) {
       console.log("颜色定制数据:", data);
       // 处理颜色定制数据
-      if (data.rgba) {
-        // 如果输入了RGBA，更新颜色值
-        this.color1 = data.rgba;
-      }
+      this.$set(this.currentOtherItem, "other", {
+        notes: data || "",
+        brand: "",
+        image: "",
+      });
       // this.$message.success("颜色配置已保存");
     },
 
