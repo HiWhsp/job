@@ -5,13 +5,7 @@
         <div class="base-inner">
           <div class="base-box w-1400 flex-between">
             <!-- 没登录 -->
-            <div class="base-left flex" v-if="!vuex_is_login">
-              <!-- <div class="web-title">欢迎访问莉东实业</div>
-              <router-link class="login" to="/login">请登录</router-link>
-              <router-link class="register" to="/register"
-                >免费注册</router-link
-              > -->
-            </div>
+            <div class="base-left flex" v-if="!vuex_is_login"></div>
             <div class="base-left flex" v-if="vuex_is_login">
               <!-- <div class="web-title">欢迎访问莉东实业</div>
               <span>
@@ -59,69 +53,48 @@
 
             <div class="center-search">
               <div class="input-box">
+                <button class="btn btn-ripple" @click="do_search()">
+                  <i class="el-icon-search"></i>
+                </button>
                 <input
                   type="text"
                   v-model="keyword"
                   @keyup.enter="do_search"
-                  placeholder="请输入产品名称 品牌 型号 订货编码"
+                  placeholder="请输入您要搜索的关键字"
                 />
-                <button class="btn btn-ripple" @click="do_search()">
-                  <i class="el-icon-search"></i>
-                </button>
-              </div>
-
-              <div class="reci-wrap">
-                <!-- <div class="reci-label">热搜词:</div> -->
-                <div class="reci-list">
-                  <div
-                    class="reci"
-                    v-for="(item, index) in keyword_list"
-                    :key="index"
-                    @click="do_search_reci(item)"
-                  >
-                    {{ item.title }}
-                  </div>
-                </div>
               </div>
             </div>
 
             <div class="btns flex-between">
-              <router-link to="/cart" class="link bg">
-                <div class="btn-box">
-                  <img src="@img/head/cart.png" alt="" />
-                  <span class="text">购物车</span>
-                  <span class="cart-num fit-text">{{ vuex_cart_number }}</span>
-                </div>
-              </router-link>
-
-              <!-- <router-link to="/batch-xiadan" class="link">
-                <div class="btn-box">
-                  <img src="@img/head/xiadan.png" alt="" />
-                  <span class="text">批量下单</span>
-                </div>
-              </router-link> -->
+              <div class="btn">
+                <img src="@img/head/icon1.png" alt="">
+                <span>产品中心</span>
+              </div>
+              <div class="btn">
+                <img src="@img/head/icon2.png" alt="">
+                <span>登录 | 注册</span>
+              </div>
+              <div class="btn">
+                <img src="@img/head/icon3.png" alt="">
+                <span>购物车</span>
+              </div>
+              <div class="btn">
+                <img src="@img/head/icon4.png" alt="">
+                <span>系统消息</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="head-nav">
-      <page_nav />
-    </div>
   </div>
 </template>
 
 <script>
-import page_nav from "@/components/page/page-nav.vue";
-
 import { mapState } from "vuex";
 
 export default {
   name: "HeaderIndex",
-  components: {
-    page_nav,
-  },
   data() {
     return {
       showSiteMap: false, //个人中心 菜单
@@ -469,7 +442,6 @@ export default {
         }
 
         .u-act {
-          
         }
         .u-my {
           height: 36px;
@@ -528,18 +500,17 @@ export default {
     }
 
     .center-search {
-      height: 80px;
       flex: 1;
       margin-left: 200px;
 
       .input-box {
-        border: 2px solid #e5222b;
         display: flex;
         align-items: center;
-        width: 669px;
+        width: 400px;
         height: 50px;
-        background: #efefef;
         overflow: hidden;
+        border-radius: 24px;
+        border: 1px solid #fff;
 
         input {
           flex: 1;
@@ -547,19 +518,21 @@ export default {
           height: 50px;
           border: none;
           outline: none;
-          background: #fff;
           padding-left: 20px;
           padding-right: 30px;
           // border: 2px solid #333;
           font-size: 14px;
           font-family: Microsoft YaHei;
-          color: #000;
+          color: #fff;
+          background: transparent;
+          &::placeholder {
+            color: #fff;
+          }
         }
 
         button {
-          width: 113px;
+          width: 60px;
           height: 50px;
-          background: #e5222b;
           // border: 2px solid #333;
           border: none;
           outline: none;
@@ -620,81 +593,29 @@ export default {
     }
 
     .btns {
-      height: 80px;
-      padding-bottom: 30px;
-
-      .link {
-        background: #ffffff;
-        border-radius: 0px 0px 0px 0px;
-        border: 1px solid #dddddd;
-        transition: 0.3s;
-        .btn-box {
-          width: 150px;
-          height: 50px;
-          position: relative;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        &:hover {
-          opacity: 0.75;
-        }
-
-        & + .link {
-          margin-left: 30px;
-        }
-
-        &.bg {
-          border: 1px solid #e5222b;
-          background: #e5222b;
-          width: 150px;
-          height: 50px;
-
-          .text {
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: 400;
-            font-size: 14px;
-            color: #ffffff;
-          }
-        }
-
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
         img {
-          width: 17px;
-          margin-right: 11px;
+          width: 30px;
+          height: 30px;
         }
-
-        .text {
-          font-family: Microsoft YaHei, Microsoft YaHei;
-          font-weight: 400;
-          font-size: 14px;
-          color: #0c0a0a;
-        }
-
-        .cart-num {
-          position: absolute;
-          right: 10px;
-          top: 5px;
-          min-width: 23px;
-          height: 18px;
-          background: #ffffff;
-          border-radius: 9px 9px 9px 9px;
-          color: #e5222b;
+        span {
+          font-size: 16px;
+          font-weight: 500;
+          color: #fff;
         }
       }
     }
   }
 }
 
-//
-//
-//
-//
-//
 
-.head-nav {
-  // background: #202020;
-}
 
 .page-head {
   //position: sticky;

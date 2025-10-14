@@ -1,21 +1,5 @@
 <template>
   <div class="footer-wrap">
-    <div class="footer-tip">
-      <div class="footer-icons w-1400">
-        <div class="icon-item" v-for="(item, index) in footerTips" :key="index">
-          <div class="icon-box">
-            <img :src="item.icon" alt="" />
-          </div>
-          <div class="info-box">
-            <div class="title">{{ item.title }}</div>
-            <div class="desc">
-              {{ item.desc }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="page-footer">
       <div class="web-footer w-1400">
         <!-- 底部链接 -->
@@ -62,10 +46,10 @@
         <!-- 网站信息 -->
         <div class="logo-wrap link-info">
           <div class="top-info">
-
+            <img src="@img/common/logo.png" class="logo" alt="" />
             <div class="icon-box">
               <img :src="vuex_config.accountImg" alt="" />
-              <div class="icon-title">微信公众号</div>
+              <div class="icon-title">扫码关注我们</div>
             </div>
           </div>
         </div>
@@ -154,80 +138,6 @@ export default {
   overflow: hidden;
 }
 
-.footer-tip {
-  width: 100%;
-  padding: 40px 0;
-  background: #0c2b5d;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-
-  .footer-icons {
-    display: flex;
-
-    .icon-item {
-      flex: 1;
-      text-align: left;
-      display: flex;
-      align-items: center;
-
-      .icon-box {
-        img {
-          width: 47px;
-          height: 52px;
-        }
-      }
-
-      .info-box {
-        flex: 1;
-        padding-left: 15px;
-
-        .title {
-          margin-bottom: 10px;
-          font-size: 18px;
-          font-family: PingFang SC, PingFang SC;
-          font-weight: bold;
-          color: #ffffff;
-        }
-
-        .desc {
-          font-size: 14px;
-          font-family: PingFang SC, PingFang SC;
-          font-weight: 500;
-          color: #d0d0d0;
-        }
-      }
-    }
-  }
-
-  .footerRow {
-    padding: 0 80px;
-  }
-
-  .footerItem {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .footerIcon {
-    width: 46.43px;
-    height: 52px;
-    margin-right: 20px;
-  }
-
-  .txt {
-    font-size: 16px;
-    color: #ffffff;
-    width: 150px;
-    width: 200px;
-    word-break: break-all;
-    text-align: left;
-  }
-}
-
 .web-footer {
   margin: 0 auto;
   margin-bottom: 40px;
@@ -311,6 +221,17 @@ export default {
   align-items: flex-end;
 
   .top-info {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    .logo {
+      width: 264px;
+      height: 65px;
+      margin-bottom: 30px;
+    }
     .icon-box {
       img {
         width: 144px;
