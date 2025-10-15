@@ -23,7 +23,7 @@
     <!-- 标题区域 -->
     <div class="config-header" v-if="!isEdit">
       <div class="config-header-left">
-        <h2 class="robot-title">AI推荐（{{ title }}）</h2>
+        <h2 class="robot-title">{{ title }}</h2>
         <span class="ai-recommend" @click="useAIRecommendation">AI 推荐</span>
       </div>
       <!-- 导航标签 -->
@@ -205,7 +205,10 @@
                   </div>
                 </div>
 
-                <div class="logo-grid" v-if="item2.title == 'logo定制' || item2.title == 'Logo定制'">
+                <div
+                  class="logo-grid"
+                  v-if="item2.title == 'logo定制' || item2.title == 'Logo定制'"
+                >
                   <div
                     class="logo-item"
                     :class="{ selected: item3.selected }"
@@ -222,8 +225,16 @@
                       :style="{ backgroundImage: `url(${logo1})` }"
                       v-if="item3.title === '翼菲logo'"
                     ></div>
-                    <div class="logo-image" v-if="item3.title === '定制logo'" @click="logoPicker(item3)">
-                      <img :src="item3.other.image" alt="" v-if="item3.other.image">
+                    <div
+                      class="logo-image"
+                      v-if="item3.title === '定制logo'"
+                      @click="logoPicker(item3)"
+                    >
+                      <img
+                        :src="item3.other.image"
+                        alt=""
+                        v-if="item3.other.image"
+                      />
                       <div class="logo-picker-text" v-else>点击定制logo</div>
                     </div>
                     <div class="logo-info">
@@ -810,8 +821,11 @@ export default {
     // Logo选择（文件上传）
     logoPicker(item) {
       this.currentOtherItem = item;
+      this.showDialog = true;
+      this.dialogTitle = "Logo定制";
+      this.$refs.customDialog.setFormData(item.other);
       // 触发文件选择
-      this.$refs.fileInput.click();
+      // this.$refs.fileInput.click();
     },
 
     // 处理文件上传
@@ -820,60 +834,64 @@ export default {
       if (!file) return;
 
       // 检查文件类型
-      if (!file.type.startsWith('image/')) {
-        this.$message.error('请选择图片文件');
+      if (!file.type.startsWith("image/")) {
+        this.$message.error("请选择图片文件");
         return;
       }
 
       // 检查文件大小（限制为5MB）
       if (file.size > 5 * 1024 * 1024) {
-        this.$message.error('图片大小不能超过5MB');
+        this.$message.error("图片大小不能超过5MB");
         return;
       }
 
       // 显示上传中提示
       const loading = this.$loading({
         lock: true,
-        text: '正在上传Logo...',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
+        text: "正在上传Logo...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
       });
 
       // 创建FormData对象
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
 
       // 调用上传接口
-      this.$axios.post('https://yifei.dx.hdapp.com.cn/api/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'token': localStorage.getItem('token') || ''
-        }
-      }).then(response => {
-        loading.close();
-        console.log(response);
-        
-        
-        if (response.code === 200 && response.data && response.data.path) {
-          // 上传成功，将图片路径保存到当前选中项的other.image中
-          if (this.currentOtherItem) {
-            this.$set(this.currentOtherItem, 'other', {
-              ...this.currentOtherItem.other,
-              image: response.data.path
-            });
-            this.$message.success('Logo上传成功');
+      this.$axios
+        .post("https://yifei.dx.hdapp.com.cn/api/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            token: localStorage.getItem("token") || "",
+          },
+        })
+        .then((response) => {
+          loading.close();
+          console.log(response);
+
+          if (response.code === 200 && response.data && response.data.path) {
+            // 上传成功，将图片路径保存到当前选中项的other.image中
+            if (this.currentOtherItem) {
+              this.$set(this.currentOtherItem, "other", {
+                ...this.currentOtherItem.other,
+                image: response.data.path,
+              });
+              this.$message.success("Logo上传成功");
+            }
+          } else {
+            this.$message.error(
+              "上传失败：" + (response.message || "未知错误")
+            );
           }
-        } else {
-          this.$message.error('上传失败：' + (response.message || '未知错误'));
-        }
-      }).catch(error => {
-        loading.close();
-        console.error('上传失败:', error);
-        this.$message.error('上传失败，请重试');
-      });
+        })
+        .catch((error) => {
+          loading.close();
+          console.error("上传失败:", error);
+          this.$message.error("上传失败，请重试");
+        });
 
       // 清空input的值，以便可以重复选择同一个文件
-      event.target.value = '';
+      event.target.value = "";
     },
 
     // 弹框提交
@@ -888,7 +906,7 @@ export default {
         });
 
         console.log("已更新other对象:", this.currentOtherItem.other);
-        this.$message.success("其他选项配置已保存");
+        // this.$message.success("其他选项配置已保存");
       }
 
       // 重置当前选中的"其他"选项
@@ -912,7 +930,7 @@ export default {
       console.log("格式化后的数据:", formattedData);
       // 存储到localStorage
       localStorage.setItem("robotConfig", JSON.stringify(formattedData));
-      this.$message.success("修改成功");
+      // this.$message.success("修改成功");
       this.$router.push("/rebotPreview?id=" + this.id);
     },
     editCancel() {

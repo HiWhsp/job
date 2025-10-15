@@ -136,8 +136,9 @@
             class="save-config-btn"
             @click="showDownloadDialog = true"
             v-else
+            :disabled="isGeneratingPDF"
           >
-            下载配置单
+            {{ isGeneratingPDF ? "生成中..." : "下载配置单" }}
           </button>
         </div>
         <div class="user-info" v-if="userInfo.name">
@@ -166,6 +167,7 @@
     <DownloadDialog
       v-model="showDownloadDialog"
       :config-data="robotConfig"
+      :is-generating-pdf="isGeneratingPDF"
       @download="handleDownload"
     />
 
@@ -180,6 +182,7 @@
 <script>
 import DownloadDialog from "@/components/DownloadDialog.vue";
 import UserInfoDialog from "@/components/UserInfoDialog.vue";
+import html2canvas from "html2canvas";
 
 export default {
   name: "RobotPreview",
@@ -196,6 +199,7 @@ export default {
       userInfo: {},
       showDownloadDialog: false, // 下载弹框
       showUserInfoDialog: false, // 用户信息填写弹框
+      isGeneratingPDF: false, // PDF生成状态
 
       robotConfig: {},
     };
@@ -400,34 +404,30 @@ export default {
           delete item.other;
         }
       });
-      this.$alert("保存配置单", "确定要保存配置单吗？", {
-        confirmButtonText: "确定",
-        callback: (action) => {
-          this.$api({
-            url: "addProductSetting",
-            method: "post",
-            data: {
-              ...this.userInfo,
-              product_id: this.id,
-              product_info: JSON.stringify(configData),
-            },
-          }).then((res) => {
-            if (res.code == 200) {
-              this.$message.success("配置单保存成功");
-              this.configOrderNumber = res.data.order_no;
-              this.robotConfig = res.data;
-              //   this.$router.push({
-              //     path: "/",
-              //     query: {
-              //       id: this.id,
-              //     },
-              //   });
-            }
-          });
+      this.$api({
+        url: "addProductSetting",
+        method: "post",
+        data: {
+          ...this.userInfo,
+          product_id: this.id,
+          product_info: JSON.stringify(configData),
         },
-      });
+      })
+        .then((res) => {
+          if (res.code == 200) {
+            // this.$message.success("配置单保存成功");
+            this.configOrderNumber = res.data.order_no;
+            this.robotConfig = res.data;
+            this.showDownloadDialog = true;
+          }
+        })
+        .catch((err) => {
+          this.$message.error("配置单保存失败");
+        })
+        .finally(() => {
+        });
     },
-
+    
     // 用户信息提交
     handleUserInfoSubmit(data) {
       // 处理用户信息提交数据
@@ -438,7 +438,180 @@ export default {
     },
 
     // 处理下载
-    handleDownload(data) {},
+    async handleDownload() {
+      if (this.isGeneratingPDF) {
+        return; // 防止重复点击
+      }
+
+      try {
+        this.isGeneratingPDF = true;
+        // 获取要转换的元素
+        const element = document.querySelector(".config-list-section");
+        if (!element) {
+          this.$message.error("未找到配置列表元素");
+          return;
+        }
+
+        // 使用html2canvas将DOM元素转换为canvas
+        console.log("开始转换DOM元素为图片...", element);
+        const canvas = await html2canvas(element, {
+          allowTaint: true,
+          useCORS: true,
+          scale: 2, // 提高图片质量
+          backgroundColor: "#ffffff",
+          width: element.offsetWidth,
+          height: element.offsetHeight,
+        });
+        console.log("Canvas生成完成，尺寸:", canvas.width, "x", canvas.height);
+
+        // 将canvas转换为图片数据
+        const imgData = canvas.toDataURL("image/png");
+        console.log(
+          "图片数据生成完成，大小:",
+          Math.round(imgData.length / 1024),
+          "KB"
+        );
+
+        // 检查jsPDF是否已加载
+        if (typeof window.jspdf === "undefined") {
+          this.$message.error("PDF库未加载，请刷新页面重试");
+          this.isGeneratingPDF = false;
+          return;
+        }
+
+        const jsPDF = window.jspdf.jsPDF;
+
+        // 创建PDF文档
+        const pdf = new jsPDF({
+          orientation: "portrait",
+          unit: "mm",
+          format: "a4",
+        });
+        console.log("PDF文档创建完成");
+
+        // 计算图片在PDF中的尺寸
+        const imgWidth = 190; // A4宽度减去边距
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const pageHeight = 277; // A4高度减去边距
+
+        // 如果图片高度超过一页，需要分页处理
+        if (imgHeight <= pageHeight) {
+          // 单页处理
+          pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+        } else {
+          // 多页处理
+          let yPosition = 10;
+          let remainingHeight = imgHeight;
+          let sourceY = 0;
+          const sourceHeight = canvas.height;
+          const scaledSourceHeight = sourceHeight * (imgWidth / canvas.width);
+
+          while (remainingHeight > 0) {
+            const currentPageHeight = Math.min(pageHeight, remainingHeight);
+            const sourceHeightForPage =
+              (currentPageHeight / imgHeight) * sourceHeight;
+
+            // 创建临时canvas来截取当前页的内容
+            const tempCanvas = document.createElement("canvas");
+            const tempCtx = tempCanvas.getContext("2d");
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = sourceHeightForPage;
+
+            tempCtx.drawImage(
+              canvas,
+              0,
+              sourceY,
+              canvas.width,
+              sourceHeightForPage,
+              0,
+              0,
+              canvas.width,
+              sourceHeightForPage
+            );
+
+            const pageImgData = tempCanvas.toDataURL("image/png");
+            pdf.addImage(
+              pageImgData,
+              "PNG",
+              10,
+              yPosition,
+              imgWidth,
+              currentPageHeight
+            );
+
+            remainingHeight -= currentPageHeight;
+            sourceY += sourceHeightForPage;
+            yPosition = 10; // 重置Y位置为下一页顶部
+
+            if (remainingHeight > 0) {
+              pdf.addPage();
+            }
+          }
+        }
+
+        // 生成PDF文件
+        const pdfBlob = pdf.output("blob");
+        console.log(
+          "PDF文件生成完成，大小:",
+          Math.round(pdfBlob.size / 1024),
+          "KB"
+        );
+
+        // 创建FormData用于上传
+        const formData = new FormData();
+        formData.append(
+          "file",
+          pdfBlob,
+          `配置单_${this.configOrderNumber || "unknown"}.pdf`
+        );
+        console.log("开始上传PDF文件...");
+
+        // 上传PDF文件
+        await this.uploadPDF(formData);
+      } catch (error) {
+        console.error("生成PDF失败:", error);
+        this.$message.error("生成PDF失败，请重试");
+      } finally {
+        this.isGeneratingPDF = false;
+      }
+    },
+
+    // 上传PDF文件
+    async uploadPDF(formData) {
+      try {
+        // 调用上传接口
+        this.$axios
+          .post("https://yifei.dx.hdapp.com.cn/api/upload", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              token: localStorage.getItem("token") || "",
+            },
+          })
+          .then((response) => {
+            if (response.code === 200) {
+              this.showDownloadDialog = false;
+              if (response.data && response.data.path) {
+                // 可以在这里添加下载链接的显示
+                window.open(response.data.path, "_blank");
+              }
+              this.$api({
+                url: "upPdf",
+                method: "post",
+                data: {
+                  id: this.robotConfig.order_id,
+                  pdfUrl: response.data.path,
+                },
+              })
+            } else {
+              this.$message.error(response.message || "上传失败");
+            }
+          });
+      } catch (error) {
+        console.error("上传PDF失败:", error);
+        this.$message.error("上传PDF失败，请重试");
+        throw error; // 重新抛出错误以便上层处理
+      }
+    },
   },
 };
 </script>

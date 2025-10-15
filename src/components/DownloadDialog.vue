@@ -21,14 +21,18 @@
     </div>
 
     <!-- 配置单号 -->
-    <div class="config-number">
-      配置单号: {{ configData.order_no }}
-    </div>
+    <div class="config-number">配置单号: {{ configData.order_no }}</div>
 
     <!-- 底部按钮 -->
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="handleDownload" class="download-button">
-        配置单下载
+      <el-button 
+        type="primary" 
+        @click="handleDownload" 
+        class="download-button"
+        :loading="isGeneratingPDF"
+        :disabled="isGeneratingPDF"
+      >
+        {{ isGeneratingPDF ? '生成中...' : '配置单下载' }}
       </el-button>
     </div>
   </el-dialog>
@@ -45,6 +49,10 @@ export default {
     configData: {
       type: Object,
       default: () => ({}),
+    },
+    isGeneratingPDF: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -69,8 +77,7 @@ export default {
       this.visible = false;
     },
     handleDownload() {
-      // 下载图片
-      window.open(this.configData.url, "_blank");
+      this.$emit("download");
     },
   },
 };
