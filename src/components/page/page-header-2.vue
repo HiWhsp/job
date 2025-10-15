@@ -118,7 +118,7 @@ export default {
         { title: "首页", route: "/" },
         { title: "协议专区", route: "/service" },
         { title: "批量询价", route: "/xunjia" },
-        { title: "莉东甄选", route: "/suggest" },
+        { title: "信田甄选", route: "/suggest" },
         { title: "场景专区", route: "/scene" },
         { title: "品牌馆", route: "/product-brand" },
         { title: "内容资讯", route: route_news },

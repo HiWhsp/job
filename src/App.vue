@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ 'not-home': !isHomePage }">
     <!-- <webHeaderModel1 v-if="1" /> -->
     <!-- <webHeaderModel3 v-else-if="1" />
     <webHeaderModel2 v-else-if="1" /> -->
@@ -57,7 +57,9 @@ export default {
     };
   },
   computed: {
-
+    isHomePage() {
+      return this.$route.path === '/';
+    }
   },
   watch: {
 
@@ -184,6 +186,10 @@ body {
   &.lock {
     height: 100vh !important;
     overflow: hidden !important;
+  }
+
+  &.not-home {
+    padding-top: 158px;
   }
 }
 

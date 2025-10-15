@@ -82,7 +82,7 @@ export default {
         { title: "首页", route: "/" },
         { title: "协议专区", route: "/product-xieyi" },
         { title: "批量询价", route: "/batch-xunjia" },
-        { title: "莉东甄选", route: "/product-zhenxuan" },
+        { title: "信田甄选", route: "/product-zhenxuan" },
         { title: "场景专区", route: "/scene" },
         { title: "品牌馆", route: "/product-brand" },
         { title: "内容资讯", route: route_news || "/news" },

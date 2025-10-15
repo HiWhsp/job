@@ -1,5 +1,5 @@
 <template>
-  <div class="page-head">
+  <div class="page-head" :class="{ scrolled: isScrolled }">
     <div class="head-sec">
       <div class="head-base">
         <div class="base-inner">
@@ -7,7 +7,7 @@
             <!-- 没登录 -->
             <div class="base-left flex" v-if="!vuex_is_login"></div>
             <div class="base-left flex" v-if="vuex_is_login">
-              <!-- <div class="web-title">欢迎访问莉东实业</div>
+              <!-- <div class="web-title">欢迎访问北京信田</div>
               <span>
                 <b class="user-index" @click="$router.push('/userIndex')">{{
                   vuex_user.name
@@ -48,7 +48,8 @@
         <div class="search-inner">
           <div class="search-box w-1400">
             <div class="left-logo">
-              <img src="@img/common/logo.png" @click="$router.push('/')" />
+              <img src="@img/common/logo.png" @click="$router.push('/')" v-if="!isScrolled" />
+              <img src="@img/common/logo-scrolled.png" @click="$router.push('/')" v-else />
             </div>
 
             <div class="center-search">
@@ -67,19 +68,23 @@
 
             <div class="btns flex-between">
               <div class="btn">
-                <img src="@img/head/icon1.png" alt="">
+                <img src="@img/head/icon1-scrolled.png" alt="" v-if="isScrolled" />
+                <img src="@img/head/icon1.png" alt="" v-else />
                 <span>产品中心</span>
               </div>
               <div class="btn">
-                <img src="@img/head/icon2.png" alt="">
+                <img src="@img/head/icon2-scrolled.png" alt="" v-if="isScrolled" />
+                <img src="@img/head/icon2.png" alt="" v-else />
                 <span>登录 | 注册</span>
               </div>
               <div class="btn">
-                <img src="@img/head/icon3.png" alt="">
+                <img src="@img/head/icon3-scrolled.png" alt="" v-if="isScrolled" />
+                <img src="@img/head/icon3.png" alt="" v-else />
                 <span>购物车</span>
               </div>
               <div class="btn">
-                <img src="@img/head/icon4.png" alt="">
+                <img src="@img/head/icon4-scrolled.png" alt="" v-if="isScrolled" />
+                <img src="@img/head/icon4.png" alt="" v-else />
                 <span>系统消息</span>
               </div>
             </div>
@@ -101,6 +106,7 @@ export default {
       showLanguage: false, //语言切换
       showContact: false, //联系我们
       show_shoujiban: false, //手机版
+      isScrolled: false, // 滚动状态
 
       list_lang: [
         { title: "中文", lang: "zh" },
@@ -147,6 +153,9 @@ export default {
 
   watch: {
     $route(to, from) {
+      if (to.path != "/") {
+        this.isScrolled = true;
+      }
       if (to.name == "product-search") {
         if (to.query.id) {
         }
@@ -168,7 +177,28 @@ export default {
     }
   },
 
+  mounted() {
+    this.handleScroll();
+    window.addEventListener("scroll", this.handleScroll);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.handleScroll);
+  },
+
   methods: {
+    // 处理滚动事件
+    handleScroll() {
+      if (this.$route.path != "/") {
+        return;
+      }
+      const scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+      this.isScrolled = scrollTop > 100;
+    },
+
     //跳转待审核
     toAudit() {
       if (this.vuex_user.staffType > 1) {
@@ -375,15 +405,14 @@ export default {
 
 <style scoped lang="less">
 .head-sec {
-  // background: #0c0a0a;
-  // background-image: url("~@img/head/head-bg.png");
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 .head-base {
   .base-inner {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
     .base-box {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       height: 40px;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
@@ -439,9 +468,6 @@ export default {
         .icon {
           width: 16px;
           margin-right: 6px;
-        }
-
-        .u-act {
         }
         .u-my {
           height: 36px;
@@ -518,8 +544,8 @@ export default {
           height: 50px;
           border: none;
           outline: none;
-          padding-left: 20px;
-          padding-right: 30px;
+          padding-left: 10px;
+          padding-right: 10px;
           // border: 2px solid #333;
           font-size: 14px;
           font-family: Microsoft YaHei;
@@ -615,10 +641,8 @@ export default {
   }
 }
 
-
-
 .page-head {
-  //position: sticky;
+  position: fixed;
   z-index: 1024;
   top: 0;
   left: 0;
@@ -627,9 +651,47 @@ export default {
   padding: 0;
   // border-bottom: 4px solid #009a44;
   // box-shadow: 0px 3px 10px 1px rgba(0, 0, 0, 0.16);
-  background-image: url("~@img/head/head-bg.png");
+  // background-image: url("~@img/head/head-bg.png");
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  transition: background-color 0.3s ease;
+
+  &.scrolled {
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    .head-base {
+      background: #F3F3F3;
+      .base-right .u-act a {
+        color: #666;
+      }
+    }
+    .head-search {
+      background: #fff;
+    }
+
+    .center-search input {
+      color: #666;
+    }
+    .center-search button {
+      color: #666;
+    }
+    .center-search .input-box {
+      border: 1px solid #E4E4E4;
+    }
+    .center-search .input-box button .el-icon-search {
+      color: #999;
+    }
+    .center-search .input-box input {
+      color: #000;
+    }
+    .center-search .input-box input::placeholder {
+      color: #999;
+    }
+
+    .search-box .btns .btn span {
+      color: #666;
+    }
+  }
 }
 
 .header-inner {
@@ -962,27 +1024,4 @@ export default {
 .child-item {
   cursor: pointer;
 }
-@media screen and (max-width: 1600px) {
-  .header-inner .nav-list .nav-item {
-    margin-left: 10px;
-    min-width: 80px;
-  }
-
-  .left-select {
-    width: 160px !important;
-  }
-}
-
-@media screen and (max-width: 1520px) {
-  .header-inner .nav-list .nav-item {
-    margin-left: 10px;
-    min-width: 80px;
-  }
-
-  .left-select {
-    width: 150px !important;
-  }
-}
 </style>
-
-<style scoped lang="less" src="@/assets/h5css/zujian/pageHeader.less"></style>

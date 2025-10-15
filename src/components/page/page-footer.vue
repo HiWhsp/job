@@ -4,41 +4,48 @@
       <div class="web-footer w-1400">
         <!-- 底部链接 -->
         <div class="link-wrap">
-          <div
-            class="link-group"
-            v-for="(group, index) in footer_link_group"
-            :key="index"
-          >
-            <div class="group-title">
-              {{ group.title }}
+          <div class="link-group">
+            <div class="group-title">服务热线</div>
+            <img
+              src="~@img/common/footer-phone.png"
+              class="footer-phone"
+              alt=""
+            />
+          </div>
+          <div class="link-group">
+            <div class="group-title">帮助中心</div>
+            <div class="link-item">
+              <a href="tel:13800138000">购物须知</a>
             </div>
-            <div
-              class="link-item"
-              v-for="(sub, index) in group.newList"
-              :key="index"
-            >
-              <a :href="sub.url" v-if="sub.url" target="_blank">
-                {{ sub.title }}
-              </a>
-              <router-link :to="'/help?id=' + sub.id">
-                {{ sub.title }}
-              </router-link>
-              <!-- <div v-else>{{ sub.title }}</div> -->
+            <div class="link-item">
+              <a href="tel:13800138000">线下采购</a>
+            </div>
+            <div class="link-item">
+              <a href="tel:13800138000">换货须知</a>
             </div>
           </div>
           <div class="link-group">
             <div class="group-title">联系我们</div>
             <div class="link-item">
-              <img src="@img/foot/link1.png" alt="" />
-              <a href="tel:13800138000">{{ vuex_config.comKefu }}</a>
+              <a href="tel:13800138000">常见问题</a>
             </div>
             <div class="link-item">
-              <img src="@img/foot/link2.png" alt="" />
-              <a href="tel:13800138000">{{ vuex_config.comEmail }}</a>
+              <a href="tel:13800138000">文件下载</a>
             </div>
             <div class="link-item">
-              <img src="@img/foot/link3.png" alt="" />
-              <a href="tel:13800138000">{{ vuex_config.comAddress }}</a>
+              <a href="tel:13800138000">在线留言</a>
+            </div>
+          </div>
+          <div class="link-group">
+            <div class="group-title">联系我们</div>
+            <div class="link-item">
+              <a href="tel:13800138000">公司介绍</a>
+            </div>
+            <div class="link-item">
+              <a href="tel:13800138000">联系我们</a>
+            </div>
+            <div class="link-item">
+              <a href="tel:13800138000">资质认证</a>
             </div>
           </div>
         </div>
@@ -132,8 +139,7 @@ export default {
 
 .page-footer {
   padding-top: 40px;
-  // background: url("~@img/footer-bg.jpg") no-repeat center / cover;
-  background: #0c2b5d;
+  background: #435886;
   color: #fff;
   overflow: hidden;
 }
@@ -156,6 +162,7 @@ export default {
     justify-content: space-between;
     align-items: flex-start;
     padding-right: 140px;
+    margin-top: 40px;
 
     .link-group {
       .group-title {
@@ -193,6 +200,11 @@ export default {
             color: #f74747;
           }
         }
+      }
+      .footer-phone {
+        width: 204px;
+        height: 48px;
+        margin-top: 30px;
       }
     }
   }
@@ -373,8 +385,8 @@ export default {
 .beian-box {
   text-align: center;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  height: 80px;
-  line-height: 80px;
+  height: 70px;
+  line-height: 70px;
   padding: 0;
 
   .beian {
@@ -386,7 +398,6 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     color: #fff;
-    color: #9f9f9f;
   }
 
   /deep/ a {
@@ -394,67 +405,6 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     color: #fff;
-    color: #9f9f9f;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .footer-tip {
-    padding: 15px;
-
-    .footer-icons {
-      width: 100%;
-      flex-direction: column;
-
-      .icon-item {
-        margin-bottom: 15px;
-
-        .info-box {
-          .title {
-            font-size: 1.4rem;
-          }
-
-          .desc {
-            font-size: 1.2rem;
-          }
-        }
-      }
-    }
-  }
-
-  .page-footer {
-    padding: 15px;
-
-    .web-footer {
-      width: 100%;
-      flex-direction: column;
-
-      .link-wrap {
-        width: 100%;
-        padding-right: 0;
-        margin-bottom: 15px;
-        justify-content: space-between;
-
-        .link-group {
-          .group-title {
-            font-size: 1.4rem;
-          }
-
-          .link-item a {
-            font-size: 1.2rem;
-          }
-        }
-      }
-
-      .logo-wrap {
-        width: 100%;
-      }
-    }
-  }
-
-  .link-info .top-info .icon-box img {
-    width: 10rem;
-    height: 10rem;
   }
 }
 </style>

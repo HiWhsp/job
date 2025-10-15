@@ -70,7 +70,7 @@
         <div class="suggest-box">
           <div class="suggest-title flex-center">
             <img src="@img/index/suggest-left.png" alt="" />
-            <span>莉东精选</span>
+            <span>信田精选</span>
             <img src="@img/index/suggest-right.png" alt="" />
           </div>
           <!-- <div class="suggest-tabs">
