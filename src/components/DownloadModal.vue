@@ -166,6 +166,8 @@ export default {
       alipayQR: "",
       basic_price_id: "",
       service_price_id: "",
+      timer: null, // 用于存储setTimeout的ID
+      currentPollingOrderId: null, // 当前正在轮询的订单ID
     };
   },
   computed: {
@@ -204,12 +206,32 @@ export default {
     });
     this.selectProduct(0);
   },
+  beforeDestroy() {
+    // 组件销毁前清理定时器和轮询状态
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+    this.currentPollingOrderId = null;
+  },
   methods: {
     selectProduct(index) {
+      // 清理定时器和轮询状态
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+      this.currentPollingOrderId = null; // 重置轮询状态
       this.selectedProductIndex = index;
       this.getQRCode();
     },
     handleClose() {
+      // 清理定时器和轮询状态
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+      this.currentPollingOrderId = null;
       this.$emit("update:visible", false);
       this.selectedProductIndex = 0;
     },
@@ -229,11 +251,27 @@ export default {
               articleId: this.id,
             },
           });
-          window.open(res.data.doc_url, "_blank");
+          fetch(res.data.doc_url)
+            .then((res) => res.blob())
+            .then((blob) => {
+              const link = document.createElement("a");
+              const objectUrl = URL.createObjectURL(blob);
+              link.href = objectUrl;
+              link.download = res.data.doc_name; // 指定保存的文件名
+              link.click();
+              URL.revokeObjectURL(objectUrl);
+            })
+            .catch((err) => console.error("下载失败:", err));
         }
       });
     },
     getQRCode() {
+      // 清理之前的定时器
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+
       if (this.selectedProductIndex === 0 && this.service_price_id) {
         this.getWchatQR(this.service_price_id);
         // this.getAlipayQR(this.service_price_id);
@@ -264,6 +302,13 @@ export default {
       }
     },
     getWchatQR(orderId) {
+      // 清理之前的定时器和轮询状态
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+      this.currentPollingOrderId = null;
+
       this.$api({
         url: "wx_scan_qr",
         method: "POST",
@@ -272,6 +317,8 @@ export default {
         },
       }).then((res) => {
         this.wechatQR = res.qrcode;
+        // 设置当前轮询的订单ID
+        this.currentPollingOrderId = orderId;
         // 轮询检测订单状态
         this.checkOrderStatus(orderId);
       });
@@ -286,6 +333,11 @@ export default {
       });
     },
     checkOrderStatus(orderId) {
+      // 检查是否是当前正在轮询的订单
+      if (this.currentPollingOrderId !== orderId) {
+        return; // 如果不是当前订单，直接返回，不进行轮询
+      }
+
       this.$api({
         url: "getOrderPayStatus",
         method: "POST",
@@ -293,11 +345,23 @@ export default {
           orderId: orderId,
         },
       }).then((res) => {
+        // 再次检查订单ID，防止异步请求返回时订单已切换
+        if (this.currentPollingOrderId !== orderId) {
+          return;
+        }
+
         if (res.code == 200) {
           if (res.code == 200 && res.data.payResult == true) {
+            // 支付成功，清理定时器和轮询状态
+            if (this.timer) {
+              clearTimeout(this.timer);
+              this.timer = null;
+            }
+            this.currentPollingOrderId = null;
             this.isPaySuccess = false;
           } else {
-            setTimeout(() => {
+            // 继续轮询，存储定时器ID
+            this.timer = setTimeout(() => {
               this.checkOrderStatus(orderId);
             }, 1000);
           }

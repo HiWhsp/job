@@ -202,7 +202,17 @@ export default {
         },
       }).then((res) => {
         if (res.code == 200) {
-          window.open(res.data.doc_url, "_blank");
+          fetch(res.data.doc_url)
+            .then((res) => res.blob())
+            .then((blob) => {
+              const link = document.createElement("a");
+              const objectUrl = URL.createObjectURL(blob);
+              link.href = objectUrl;
+              link.download = res.data.doc_name; // 指定保存的文件名
+              link.click();
+              URL.revokeObjectURL(objectUrl);
+            })
+            .catch((err) => console.error("下载失败:", err));
           this.loadData();
         } else {
           this.$message.error(res.msg);
