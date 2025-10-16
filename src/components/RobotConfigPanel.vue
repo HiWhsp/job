@@ -23,7 +23,10 @@
     <!-- 标题区域 -->
     <div class="config-header" v-if="!isEdit">
       <div class="config-header-left">
-        <h2 class="robot-title">{{ title }}</h2>
+        <h2 class="robot-title" @click="goRobotDetail">
+          {{ title }}
+          <!-- <i class="el-icon-arrow-right"></i> -->
+        </h2>
         <span class="ai-recommend" @click="useAIRecommendation">AI 推荐</span>
       </div>
       <!-- 导航标签 -->
@@ -59,35 +62,80 @@
               :class="['controller-item', { selected: item.selected }]"
               @click="selectController(item.id, item)"
             >
-              <div class="controller-image">
-                <img
-                  :src="item.thumb || vuex_avatar_default"
-                  alt="controller"
-                />
-              </div>
-              <div class="controller-info">
-                <div class="controller-info-left">
-                  <div class="controller-brand">{{ item.title }}</div>
-                  <div class="controller-model">{{ item.description }}</div>
-                </div>
-                <div class="controller-price">
+              <el-tooltip
+                v-if="
+                  item.title === '其他' &&
+                  item.other &&
+                  (item.other.image || item.other.notes)
+                "
+                placement="left"
+                effect="dark"
+              >
+                <div class="controller-image">
                   <img
-                    src="@/assets/img/icon/Group1.png"
-                    alt="coin"
-                    v-if="item.price_status == '1'"
-                  />
-                  <img
-                    src="@/assets/img/icon/Group2.png"
-                    alt="coin"
-                    v-if="item.price_status == '2'"
-                  />
-                  <img
-                    src="@/assets/img/icon/Group3.png"
-                    alt="coin"
-                    v-if="item.price_status == '3'"
+                    :src="item.thumb || vuex_avatar_default"
+                    alt="controller"
                   />
                 </div>
-              </div>
+                <div class="controller-info">
+                  <div class="controller-info-left">
+                    <div class="controller-brand">{{ item.title }}</div>
+                    <div class="controller-model">{{ item.description }}</div>
+                  </div>
+                  <div class="controller-price">
+                    <img
+                      src="@/assets/img/icon/Group1.png"
+                      alt="coin"
+                      v-if="item.price_status == '1'"
+                    />
+                    <img
+                      src="@/assets/img/icon/Group2.png"
+                      alt="coin"
+                      v-if="item.price_status == '2'"
+                    />
+                    <img
+                      src="@/assets/img/icon/Group3.png"
+                      alt="coin"
+                      v-if="item.price_status == '3'"
+                    />
+                  </div>
+                </div>
+                <div
+                  slot="content"
+                  v-html="getTooltipContent(item.other)"
+                ></div>
+              </el-tooltip>
+              <template v-else>
+                <div class="controller-image">
+                  <img
+                    :src="item.thumb || vuex_avatar_default"
+                    alt="controller"
+                  />
+                </div>
+                <div class="controller-info">
+                  <div class="controller-info-left">
+                    <div class="controller-brand">{{ item.title }}</div>
+                    <div class="controller-model">{{ item.description }}</div>
+                  </div>
+                  <div class="controller-price">
+                    <img
+                      src="@/assets/img/icon/Group1.png"
+                      alt="coin"
+                      v-if="item.price_status == '1'"
+                    />
+                    <img
+                      src="@/assets/img/icon/Group2.png"
+                      alt="coin"
+                      v-if="item.price_status == '2'"
+                    />
+                    <img
+                      src="@/assets/img/icon/Group3.png"
+                      alt="coin"
+                      v-if="item.price_status == '3'"
+                    />
+                  </div>
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -170,38 +218,91 @@
                     :class="['color-item', { selected: item3.selected }]"
                     @click="selectAppearanceItem(item3.id)"
                   >
-                    <div class="color-image" v-if="item3.spec !== '定制'"></div>
-                    <div
-                      class="color-image"
-                      :style="{ backgroundColor: color1 }"
-                      v-else
-                      @click="colorPicker(item3)"
+                    <el-tooltip
+                      v-if="
+                        item3.title.includes('定制') &&
+                        item3.other &&
+                        (item3.other.image || item3.other.notes)
+                      "
+                      placement="left"
+                      effect="dark"
                     >
-                      <div class="color-picker-text">点击定制颜色</div>
-                    </div>
-                    <div class="color-info">
-                      <div class="color-info-left">
-                        <div class="color-brand">{{ item3.title }}</div>
-                        <div class="color-model">{{ item3.description }}</div>
+                      <div
+                        slot="content"
+                        v-html="getColorTooltipContent(item3.other)"
+                      ></div>
+                      <div>
+                        <div
+                          class="color-image"
+                          :style="{ backgroundColor: color1 }"
+                          @click="colorPicker(item3)"
+                        >
+                          <div class="color-picker-text">点击定制颜色</div>
+                        </div>
+                        <div class="color-info">
+                          <div class="color-info-left">
+                            <div class="color-brand">{{ item3.title }}</div>
+                            <div class="color-model">
+                              {{ item3.description }}
+                            </div>
+                          </div>
+                          <div class="color-price">
+                            <img
+                              src="@/assets/img/icon/Group1.png"
+                              alt="coin"
+                              v-if="item3.price_status == '1'"
+                            />
+                            <img
+                              src="@/assets/img/icon/Group2.png"
+                              alt="coin"
+                              v-if="item3.price_status == '2'"
+                            />
+                            <img
+                              src="@/assets/img/icon/Group3.png"
+                              alt="coin"
+                              v-if="item3.price_status == '3'"
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div class="color-price">
-                        <img
-                          src="@/assets/img/icon/Group1.png"
-                          alt="coin"
-                          v-if="item3.price_status == '1'"
-                        />
-                        <img
-                          src="@/assets/img/icon/Group2.png"
-                          alt="coin"
-                          v-if="item3.price_status == '2'"
-                        />
-                        <img
-                          src="@/assets/img/icon/Group3.png"
-                          alt="coin"
-                          v-if="item3.price_status == '3'"
-                        />
+                    </el-tooltip>
+                    <template v-else>
+                      <div
+                        class="color-image"
+                        v-if="!item3.title.includes('定制')"
+                      ></div>
+                      <div
+                        class="color-image"
+                        :style="{ backgroundColor: color1 }"
+                        v-else
+                        @click="colorPicker(item3)"
+                      >
+                        <div class="color-picker-text">点击定制颜色</div>
                       </div>
-                    </div>
+                      <div class="color-info">
+                        <div class="color-info-left">
+                          <div class="color-brand">{{ item3.title }}</div>
+                          <div class="color-model">{{ item3.description }}</div>
+                        </div>
+                        <div class="color-price">
+                          <img
+                            src="@/assets/img/icon/Group1.png"
+                            alt="coin"
+                            v-if="item3.price_status == '1'"
+                          />
+                          <img
+                            src="@/assets/img/icon/Group2.png"
+                            alt="coin"
+                            v-if="item3.price_status == '2'"
+                          />
+                          <img
+                            src="@/assets/img/icon/Group3.png"
+                            alt="coin"
+                            v-if="item3.price_status == '3'"
+                          />
+                        </div>
+                      </div>
+                    </template>
                   </div>
                 </div>
 
@@ -225,18 +326,46 @@
                       :style="{ backgroundImage: `url(${logo1})` }"
                       v-if="item3.title === '翼菲logo'"
                     ></div>
-                    <div
-                      class="logo-image"
-                      v-if="item3.title === '定制logo'"
-                      @click="logoPicker(item3)"
+                    <el-tooltip
+                      v-if="
+                        item3.title.includes('定制') &&
+                        item3.other &&
+                        (item3.other.image || item3.other.notes)
+                      "
+                      placement="left"
+                      effect="dark"
                     >
-                      <img
-                        :src="item3.other.image"
-                        alt=""
-                        v-if="item3.other.image"
-                      />
-                      <div class="logo-picker-text" v-else>点击定制logo</div>
-                    </div>
+                      <div
+                        slot="content"
+                        v-html="getTooltipContent(item3.other)"
+                      ></div>
+                      <div
+                        class="logo-image"
+                        v-if="item3.title === '定制logo'"
+                        @click="logoPicker(item3)"
+                      >
+                        <img
+                          :src="item3.other.image"
+                          alt=""
+                          v-if="item3.other.image"
+                        />
+                        <div class="logo-picker-text" v-else>点击定制logo</div>
+                      </div>
+                    </el-tooltip>
+                    <template v-else>
+                      <div
+                        class="logo-image"
+                        v-if="item3.title === '定制logo'"
+                        @click="logoPicker(item3)"
+                      >
+                        <img
+                          :src="item3.other.image"
+                          alt=""
+                          v-if="item3.other.image"
+                        />
+                        <div class="logo-picker-text" v-else>点击定制logo</div>
+                      </div>
+                    </template>
                     <div class="logo-info">
                       <div class="logo-info-left">
                         <div class="logo-brand">{{ item3.title }}</div>
@@ -457,6 +586,10 @@ export default {
     // 使用AI推荐
     useAIRecommendation() {
       this.$router.push("/aiRecommendation?id=" + this.id);
+    },
+
+    goRobotDetail() {
+      // this.$router.push("/robotDetail?id=" + this.id);
     },
 
     // 使用自定义配置
@@ -935,6 +1068,43 @@ export default {
     },
     editCancel() {
       this.$router.push("/rebotPreview?id=" + this.id);
+    },
+
+    getTooltipContent(other) {
+      if (!other) return "";
+
+      let content = '<div class="tooltip-content">';
+      // 如果有备注，添加备注信息
+      if (other.notes) {
+        content += `<div class="tooltip-notes" style="font-size: 12px; color: #ccc; margin-bottom: 4px;">备注: ${other.notes}</div>`;
+      }
+      // 如果有图片，添加图片信息
+      if (other.image) {
+        content += `<img src="${other.image}" class="tooltip-image" style="max-width: 200px; max-height: 150px; border-radius: 4px; margin-bottom: 8px;" />`;
+      }
+
+      // 如果有品牌信息，添加品牌信息
+      if (other.brand) {
+        content += `<div class="tooltip-brand">品牌: ${other.brand}</div>`;
+      }
+
+      content += "</div>";
+      return content;
+    },
+    getColorTooltipContent(other) {
+      if (!other) return "";
+
+      let content = '<div class="tooltip-content">';
+      // 如果有备注，添加备注信息
+      if (other.notes) {
+        content += `<div class="tooltip-notes" style="font-size: 12px; color: #ccc; margin-bottom: 4px;">
+            <p style="margin-bottom: 4px;">潘通色号: ${other.notes.pantone}</p>
+            <p style="margin-bottom: 4px;">劳尔色号: ${other.notes.ral}</p>
+            <p>RGBA色彩: ${other.notes.rgba}</p>
+          </div>`;
+      }
+      content += "</div>";
+      return content;
     },
   },
 };

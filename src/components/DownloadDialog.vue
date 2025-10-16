@@ -25,14 +25,14 @@
 
     <!-- 底部按钮 -->
     <div slot="footer" class="dialog-footer">
-      <el-button 
-        type="primary" 
-        @click="handleDownload" 
+      <el-button
+        type="primary"
+        @click="handleDownload"
         class="download-button"
         :loading="isGeneratingPDF"
         :disabled="isGeneratingPDF"
       >
-        {{ isGeneratingPDF ? '生成中...' : '配置单下载' }}
+        配置单下载
       </el-button>
     </div>
   </el-dialog>

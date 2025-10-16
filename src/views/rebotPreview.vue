@@ -200,7 +200,7 @@ export default {
       showDownloadDialog: false, // 下载弹框
       showUserInfoDialog: false, // 用户信息填写弹框
       isGeneratingPDF: false, // PDF生成状态
-
+      loading: false,
       robotConfig: {},
     };
   },
@@ -486,6 +486,7 @@ export default {
           orientation: "portrait",
           unit: "mm",
           format: "a4",
+          compress: true,
         });
         console.log("PDF文档创建完成");
 
@@ -579,6 +580,12 @@ export default {
     // 上传PDF文件
     async uploadPDF(formData) {
       try {
+        this.loading = this.$loading({
+          lock: true,
+          text: '加载中...',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
         // 调用上传接口
         this.$axios
           .post("https://yifei.dx.hdapp.com.cn/api/upload", formData, {
@@ -594,6 +601,7 @@ export default {
                 // 可以在这里添加下载链接的显示
                 window.open(response.data.path, "_blank");
               }
+              this.loading.close();
               this.$api({
                 url: "upPdf",
                 method: "post",
@@ -603,7 +611,8 @@ export default {
                 },
               })
             } else {
-              this.$message.error(response.message || "上传失败");
+              this.loading.close();
+              this.$message.error(response.msg || "上传失败");
             }
           });
       } catch (error) {
