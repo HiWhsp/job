@@ -1,7 +1,7 @@
 <template>
   <div class="bread-box">
     <div class="bread-inner flex w-1400">
-      <img src="@img/common/home.png" alt="" />
+      <!-- <img src="@img/common/home.png" alt="" /> -->
       <p>当前位置：</p>
       <router-link to="/"> 首页 </router-link>
 
@@ -31,13 +31,15 @@
         <span class="arrow">&gt;</span>
         <a href="javascript: void(0)">{{ level3.title }}</a>
       </template>
+      <template v-if="level4.title">
+        <span class="arrow">&gt;</span>
+        <a href="javascript: void(0)">{{ level4.title }}</a>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {
   name: "page-bread",
   components: {},
@@ -61,6 +63,9 @@ export default {
     },
     level3() {
       return this.option[2] || { title: "" };
+    },
+    level4() {
+      return this.option[3] || { title: "" };
     },
   },
   methods: {},

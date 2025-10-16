@@ -20,7 +20,7 @@ VueRouter.prototype.replace = function push(location, onResolve, onReject) {
 };
 Vue.use(VueRouter);
 
-// 官网页面1
+// 官网页面 信田
 const index = () => import(/* webpackChunkName: "index" */ "@/views/index.vue");
 const news = () =>
   import(/* webpackChunkName: "news" */ "@/views/news/news.vue");
@@ -53,11 +53,21 @@ const help = () =>
 const demand = () =>
   import(/* webpackChunkName: "demand" */ "@/views/company/demand.vue");
 
-//产品
+//产品 信田
 const product_cates = () =>
   import(
     /* webpackChunkName: "product-cates" */ "@/views/product/product-cates.vue"
   );
+
+const product_classes = () =>
+  import(
+    /* webpackChunkName: "product-classes" */ "@/views/product/product-classes.vue"
+  );
+const product_list = () =>
+  import(
+    /* webpackChunkName: "product-list" */ "@/views/product/product-list.vue"
+  );
+
 const product_search = () =>
   import(
     /* webpackChunkName: "product-search" */ "@/views/product/product-search.vue"
@@ -251,7 +261,23 @@ const routes = [
     name: "product-cates",
     component: product_cates,
     meta: {
+      title: "产品中心",
+    },
+  },
+  {
+    path: "/product-classes",
+    name: "product-classes",
+    component: product_classes,
+    meta: {
       title: "产品分类",
+    },
+  },
+  {
+    path: "/product-list",
+    name: "product-list",
+    component: product_list,
+    meta: {
+      title: "产品列表",
     },
   },
   {

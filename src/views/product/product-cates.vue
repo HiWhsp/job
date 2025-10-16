@@ -5,7 +5,6 @@
       <div class="page-ctx w-1400">
         <!-- 产品分类 -->
         <div class="category-section">
-          <h2 class="section-title">产品分类</h2>
           <div class="category-grid">
             <div
               class="category-card"
@@ -14,7 +13,7 @@
               @click="handleCategoryClick(category)"
             >
               <div class="category-image">
-                <img :src="category.image" :alt="category.title" />
+                <img :src="category.thumb" :alt="category.title" />
               </div>
               <div class="category-name">
                 {{ category.title }}
@@ -28,86 +27,22 @@
 </template>
 <script>
 import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
-import productList from "@/components/product/productList.vue";
 
 export default {
   name: "category",
   components: {
     pageBreadcrumb,
-    productList,
   },
   data() {
     return {
-      categoryList: [
-        {
-          id: 1,
-          title: "一级分类",
-          image: "",
-          link: "/product/classify?id=1",
-        },
-        {
-          id: 2,
-          title: "光学元件",
-          image: "",
-          link: "/product/classify?id=2",
-        },
-        {
-          id: 3,
-          title: "一级分类",
-          image: "",
-          link: "/product/classify?id=3",
-        },
-        {
-          id: 4,
-          title: "一级分类",
-          image: "",
-          link: "/product/classify?id=4",
-        },
-        {
-          id: 5,
-          title: "一级分类",
-          image: "",
-          link: "/product/classify?id=5",
-        },
-        {
-          id: 6,
-          title: "一级分类",
-          image: "",
-          link: "/product/classify?id=6",
-        },
-        {
-          id: 7,
-          title: "一级分类",
-          image: "",
-          link: "/product/classify?id=7",
-        },
-        {
-          id: 8,
-          title: "一级分类",
-          image: "",
-          link: "/product/classify?id=8",
-        },
-        {
-          id: 9,
-          title: "一级分类",
-          image: "",
-          link: "/product/classify?id=9",
-        },
-        {
-          id: 10,
-          title: "一级分类",
-          image: "",
-          link: "/product/classify?id=10",
-        },
-      ],
+      categoryList: [], // 分类列表
     };
   },
   computed: {
     nav_option() {
-      return this.$route.meta.nav_option;
+      return [{ title: "产品中心" }];
     },
   },
-
   watch: {
     $route() {
       this.setView();
@@ -120,20 +55,7 @@ export default {
 
   methods: {
     setView() {
-      this.query_product();
       this.query_categories();
-    },
-    query_product() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "product_plist",
-          // channelId: channelId,
-        },
-      }).then((res) => {
-        let { code, data, count } = res;
-      });
     },
     // 获取分类数据
     query_categories() {
@@ -147,18 +69,13 @@ export default {
         let { code, data } = res;
         if (code == 200 && data) {
           // 更新分类列表数据
-          this.categoryList = data.map((item, index) => ({
-            id: item.id,
-            title: item.title,
-            image: item.image || "",
-            link: `/product/classify?id=${item.id}`,
-          }));
+          this.categoryList = data;
         }
       });
     },
     // 处理分类点击事件
     handleCategoryClick(category) {
-      this.$router.push(category.link);
+      this.$router.push(`/product-classes?id=${category.id}`);
     },
   },
 };
@@ -196,7 +113,7 @@ export default {
     margin: 0 auto;
 
     .category-card {
-      background: #FDFDFD;
+      background: #fdfdfd;
       border: 1px solid #e4e4e4;
       overflow: hidden;
       cursor: pointer;
