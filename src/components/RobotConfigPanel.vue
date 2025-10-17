@@ -216,12 +216,209 @@
         <div class="select-module">
           <div v-for="item in controllers" :key="item.id">
             <div class="select-module-title">{{ item.title }}</div>
-            <div class="select-module-grid" v-if="item.title == '外壳'">
-              <div v-for="item2 in item.child" :key="item2.id">
-                <div class="section-title">{{ item2.title }}</div>
-                <div class="color-grid" v-if="item2.title == '颜色'">
+            <div
+              class="select-module-grid"
+              v-if="
+                ['外壳', '颜色', 'logo定制', 'Logo定制', '定制logo'].includes(
+                  item.title
+                )
+              "
+            >
+              <template v-if="item.child && item.child.length > 0">
+                <div v-for="item2 in item.child" :key="item2.id">
+                  <div class="section-title">{{ item2.title }}</div>
+                  <div class="color-grid" v-if="item2.title == '颜色'">
+                    <div
+                      v-for="item3 in item2.producntInfos"
+                      :key="item3.id"
+                      :class="['color-item', { selected: item3.selected }]"
+                      @click="selectAppearanceItem(item3.id)"
+                    >
+                      <el-tooltip
+                        v-if="
+                          item3.title.includes('定制') &&
+                          item3.other &&
+                          (item3.other.image || item3.other.notes)
+                        "
+                        placement="left"
+                        effect="dark"
+                      >
+                        <div
+                          slot="content"
+                          v-html="getColorTooltipContent(item3.other)"
+                        ></div>
+                        <div>
+                          <div
+                            class="color-image"
+                            :style="{ backgroundColor: color1 }"
+                            @click="colorPicker(item3)"
+                          >
+                            <div class="color-picker-text">点击定制颜色</div>
+                          </div>
+                          <div class="color-info">
+                            <div class="color-info-left">
+                              <div class="color-brand">{{ item3.title }}</div>
+                              <div class="color-model">
+                                {{ item3.description }}
+                              </div>
+                            </div>
+                            <div class="color-price">
+                              <img
+                                src="@/assets/img/icon/Group1.png"
+                                alt="coin"
+                                v-if="item3.price_status == '1'"
+                              />
+                              <img
+                                src="@/assets/img/icon/Group2.png"
+                                alt="coin"
+                                v-if="item3.price_status == '2'"
+                              />
+                              <img
+                                src="@/assets/img/icon/Group3.png"
+                                alt="coin"
+                                v-if="item3.price_status == '3'"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </el-tooltip>
+                      <template v-else>
+                        <div
+                          class="color-image"
+                          v-if="!item3.title.includes('定制')"
+                        ></div>
+                        <div
+                          class="color-image"
+                          :style="{ backgroundColor: color1 }"
+                          v-else
+                          @click="colorPicker(item3)"
+                        >
+                          <div class="color-picker-text">点击定制颜色</div>
+                        </div>
+                        <div class="color-info">
+                          <div class="color-info-left">
+                            <div class="color-brand">{{ item3.title }}</div>
+                            <div class="color-model">
+                              {{ item3.description }}
+                            </div>
+                          </div>
+                          <div class="color-price">
+                            <img
+                              src="@/assets/img/icon/Group1.png"
+                              alt="coin"
+                              v-if="item3.price_status == '1'"
+                            />
+                            <img
+                              src="@/assets/img/icon/Group2.png"
+                              alt="coin"
+                              v-if="item3.price_status == '2'"
+                            />
+                            <img
+                              src="@/assets/img/icon/Group3.png"
+                              alt="coin"
+                              v-if="item3.price_status == '3'"
+                            />
+                          </div>
+                        </div>
+                      </template>
+                    </div>
+                  </div>
+
                   <div
-                    v-for="item3 in item2.producntInfos"
+                    class="logo-grid"
+                    v-if="['logo定制', 'Logo定制', '定制logo'].includes(item2.title)"
+                  >
+                    <div
+                      class="logo-item"
+                      :class="{ selected: item3.selected }"
+                      v-for="item3 in item2.producntInfos"
+                      :key="item3.id"
+                      @click="selectAppearanceItem(item3.id)"
+                    >
+                      <div
+                        class="logo-image"
+                        v-if="item3.title === '无logo'"
+                      ></div>
+                      <div
+                        class="logo-image"
+                        :style="{ backgroundImage: `url(${logo1})` }"
+                        v-if="item3.title === '翼菲logo'"
+                      ></div>
+                      <el-tooltip
+                        v-if="
+                          ['定制logo', '定制Logo', '定制'].includes(item3.title) &&
+                          item3.other &&
+                          (item3.other.image || item3.other.notes)
+                        "
+                        placement="left"
+                        effect="dark"
+                      >
+                        <div
+                          slot="content"
+                          v-html="getTooltipContent(item3.other)"
+                        ></div>
+                        <div
+                          class="logo-image"
+                          v-if="['定制logo', '定制Logo', '定制'].includes(item3.title)"
+                          @click="logoPicker(item3)"
+                        >
+                          <img
+                            :src="item3.other.image"
+                            alt=""
+                            v-if="item3.other.image"
+                          />
+                          <div class="logo-picker-text" v-else>
+                            点击定制logo
+                          </div>
+                        </div>
+                      </el-tooltip>
+                      <template v-else>
+                        <div
+                          class="logo-image"
+                          v-if="['定制logo', '定制Logo', '定制'].includes(item3.title)"
+                          @click="logoPicker(item3)"
+                        >
+                          <img
+                            :src="item3.other.image"
+                            alt=""
+                            v-if="item3.other.image"
+                          />
+                          <div class="logo-picker-text" v-else>
+                            点击定制logo
+                          </div>
+                        </div>
+                      </template>
+                      <div class="logo-info">
+                        <div class="logo-info-left">
+                          <div class="logo-brand">{{ item3.title }}</div>
+                        </div>
+                        <div class="logo-price">
+                          <img
+                            src="@/assets/img/icon/Group1.png"
+                            alt="coin"
+                            v-if="item3.price_status == '1'"
+                          />
+                          <img
+                            src="@/assets/img/icon/Group2.png"
+                            alt="coin"
+                            v-if="item3.price_status == '2'"
+                          />
+                          <img
+                            src="@/assets/img/icon/Group3.png"
+                            alt="coin"
+                            v-if="item3.price_status == '3'"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+              <template v-else>
+                <!-- <div class="section-title">{{ item.title }}</div> -->
+                <div class="color-grid" v-if="item.title == '颜色'">
+                  <div
+                    v-for="item3 in item.producntInfos"
                     :key="item3.id"
                     :class="['color-item', { selected: item3.selected }]"
                     @click="selectAppearanceItem(item3.id)"
@@ -290,7 +487,9 @@
                       <div class="color-info">
                         <div class="color-info-left">
                           <div class="color-brand">{{ item3.title }}</div>
-                          <div class="color-model">{{ item3.description }}</div>
+                          <div class="color-model">
+                            {{ item3.description }}
+                          </div>
                         </div>
                         <div class="color-price">
                           <img
@@ -316,18 +515,20 @@
 
                 <div
                   class="logo-grid"
-                  v-if="item2.title == 'logo定制' || item2.title == 'Logo定制'"
+                  v-if="
+                    ['logo定制', 'Logo定制', '定制logo'].includes(item.title)
+                  "
                 >
                   <div
                     class="logo-item"
                     :class="{ selected: item3.selected }"
-                    v-for="item3 in item2.producntInfos"
+                    v-for="item3 in item.producntInfos"
                     :key="item3.id"
                     @click="selectAppearanceItem(item3.id)"
                   >
                     <div
                       class="logo-image"
-                      v-if="item3.title === '无logo'"
+                      v-if="['无logo', '无Logo', '无'].includes(item3.title)"
                     ></div>
                     <div
                       class="logo-image"
@@ -349,7 +550,7 @@
                       ></div>
                       <div
                         class="logo-image"
-                        v-if="item3.title === '定制logo'"
+                        v-if="['定制logo', '定制Logo', '定制'].includes(item3.title)"
                         @click="logoPicker(item3)"
                       >
                         <img
@@ -363,7 +564,7 @@
                     <template v-else>
                       <div
                         class="logo-image"
-                        v-if="item3.title === '定制logo'"
+                        v-if="['定制logo', '定制Logo', '定制'].includes(item3.title)"
                         @click="logoPicker(item3)"
                       >
                         <img
@@ -398,8 +599,9 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </template>
             </div>
+            <!-- 其他情况 -->
             <template v-else>
               <div v-for="item2 in item.child" :key="item2.id">
                 <div class="section-title">{{ item2.title }}</div>
@@ -548,7 +750,8 @@ export default {
   },
   watch: {
     detail() {
-      this.showOverlay = this.$route.query.showOverlay == 'false' ? false : true;
+      this.showOverlay =
+        this.$route.query.showOverlay == "false" ? false : true;
       this.compareSorce = this.$route.query.compare || 0;
       this.editIndex = this.$route.query.index || 0;
       this.tabs = this.detail;
@@ -618,6 +821,7 @@ export default {
 
     // 选择电机
     selectMotor(motorId) {
+      console.log("选择电机:", motorId);
       // 找到当前电机所在的组，只在该组内进行单选
       this.controllers.forEach((controller) => {
         if (controller.child) {
@@ -692,6 +896,7 @@ export default {
 
     // 选择外观模块item
     selectAppearanceItem(itemId) {
+      console.log("选择外观模块item:", itemId);
       let targetItem = null; // 提升到方法最开始
 
       // 找到对应的item并切换选中状态
@@ -715,6 +920,21 @@ export default {
               }
             }
           });
+        } else {
+          // 检查当前点击的item是否在这个子组中
+          const foundItem = controller.producntInfos.find(
+            (item) => item.id === itemId
+          );
+          if (foundItem) {
+            targetItem = foundItem; // 保存找到的item
+            // 先取消当前子组内所有item的选中状态
+            controller.producntInfos.forEach((item) => {
+              this.$set(item, "selected", false);
+            });
+
+            // 然后选中当前点击的item
+            this.$set(targetItem, "selected", true);
+          }
         }
       });
 
@@ -862,7 +1082,9 @@ export default {
       // 存储到localStorage
       localStorage.setItem("robotConfig", JSON.stringify(formattedData));
       // 跳转到对比页面
-      this.$router.push("/aiRecommendation?id=" + this.id + "&compare=" + this.compareSorce);
+      this.$router.push(
+        "/aiRecommendation?id=" + this.id + "&compare=" + this.compareSorce
+      );
     },
 
     // 生成指定格式的数据
@@ -976,6 +1198,7 @@ export default {
     },
     // 颜色选择
     colorPicker(item) {
+      console.log("颜色选择:", item);
       this.currentOtherItem = item;
       this.$refs.colorCustomDialog.setFormData(item.other);
       this.showColorDialog = true;
