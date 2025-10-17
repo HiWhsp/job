@@ -169,7 +169,7 @@ export default {
       this.$store.commit("set_vuex_user", res.data);
 
       // 跳转到管理页面
-      this.$router.push("/adminOrder");
+      this.$router.push("/myAdminOrder");
     },
   },
 };

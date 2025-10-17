@@ -3,7 +3,7 @@
     title="感谢您对翼菲的支持"
     :visible.sync="visible"
     width="400px"
-    :before-close="handleClose"
+    @close="handleClose"
     custom-class="download-dialog"
   >
     <!-- 描述信息 -->
@@ -67,14 +67,12 @@ export default {
       }
     },
     visible(newVal) {
-      if (newVal) {
-        this.visible = newVal;
-      }
+      this.visible = newVal;
     },
   },
   methods: {
     handleClose() {
-      this.visible = false;
+      this.$emit("close");
     },
     handleDownload() {
       this.$emit("download");

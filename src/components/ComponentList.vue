@@ -21,9 +21,9 @@
             </div>
             <div class="component-info">
               <div class="component-name">
-                {{ value.title }} {{ value.description }}
+                {{ value.title }} 
               </div>
-              <div class="component-leadtime">{{ value.delivery_time }}周</div>
+              <div class="component-leadtime">{{ value.description }}</div>
             </div>
             <div class="progress-bar">
               <div class="progress-fill">

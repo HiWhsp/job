@@ -2,85 +2,87 @@
   <div v-if="visible" class="fullscreen-viewer" @click="handleBackdropClick">
     <!-- 全屏背景遮罩 -->
     <div class="fullscreen-backdrop"></div>
-    
+
     <!-- 左上角Logo -->
     <div class="logo-container">
       <img src="@/assets/img/common/logo.png" alt="logo" class="logo" />
     </div>
-    
+
     <!-- 右下角取消全屏按钮 -->
     <div class="close-button" @click="closeFullScreen">
-      <img src="@/assets/img/common/no-full-screen.png" alt="close" class="close-icon" />
+      <img
+        src="@/assets/img/common/no-full-screen.png"
+        alt="close"
+        class="close-icon"
+      />
     </div>
-    
+
     <!-- 图片展示区域 - 作为背景图 -->
-    <div 
-      class="image-background" 
-      :style="{ backgroundImage: `url(${imageUrl})` }"
-      @click.stop
-    ></div>
+    <div class="image-background" @click.stop>
+      <img v-if="imageUrl" :src="imageUrl" alt="" />
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'FullScreenViewer',
+  name: "FullScreenViewer",
   props: {
     visible: {
       type: Boolean,
-      default: false
+      default: false,
     },
     imageUrl: {
       type: String,
-      default: ''
+      default: "",
     },
     imageAlt: {
       type: String,
-      default: '全屏图片'
-    }
+      default: "全屏图片",
+    },
   },
   data() {
     return {
       // 移除图片加载状态，因为使用背景图
-    }
+    };
   },
   watch: {
     visible(newVal) {
       if (newVal) {
         // 全屏时禁止页面滚动
-        document.body.style.overflow = 'hidden'
+        document.body.style.overflow = "hidden";
         // 监听ESC键关闭全屏
-        document.addEventListener('keydown', this.handleKeydown)
+        document.addEventListener("keydown", this.handleKeydown);
       } else {
         // 恢复页面滚动
-        document.body.style.overflow = ''
+        document.body.style.overflow = "";
         // 移除ESC键监听
-        document.removeEventListener('keydown', this.handleKeydown)
+        document.removeEventListener("keydown", this.handleKeydown);
       }
-    }
+    },
   },
   beforeDestroy() {
     // 组件销毁时清理
-    document.body.style.overflow = ''
-    document.removeEventListener('keydown', this.handleKeydown)
+    document.body.style.overflow = "";
+    document.removeEventListener("keydown", this.handleKeydown);
   },
   methods: {
     closeFullScreen() {
-      this.$emit('close')
+      this.$emit("close");
     },
     handleBackdropClick() {
       // 点击背景关闭全屏
-      this.closeFullScreen()
+      this.closeFullScreen();
     },
     handleKeydown(event) {
       // ESC键关闭全屏
-      if (event.key === 'Escape') {
-        this.closeFullScreen()
+      if (event.key === "Escape") {
+        this.closeFullScreen();
       }
     },
     // 移除图片加载相关方法，因为使用背景图
-  }
-}
+  },
+};
 </script>
 
 <style lang="less" scoped>
@@ -111,7 +113,7 @@ export default {
   top: 30px;
   left: 30px;
   z-index: 10001;
-  
+
   .logo {
     height: 80px;
     width: 164px;
@@ -126,12 +128,12 @@ export default {
   z-index: 10001;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &:hover {
     background-color: rgba(255, 255, 255, 0.2);
     transform: scale(1.1);
   }
-  
+
   .close-icon {
     width: 40px;
     height: 40px;
@@ -152,6 +154,12 @@ export default {
   transition: all 0.3s ease;
   opacity: 0;
   animation: fadeIn 0.5s ease-in-out forwards;
+  background-image: url('~@/assets/img/common/back-bg.png');
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 // 响应式设计
@@ -159,24 +167,24 @@ export default {
   .logo-container {
     top: 15px;
     left: 15px;
-    
+
     .logo {
       height: 30px;
       max-width: 100px;
     }
   }
-  
+
   .close-button {
     bottom: 15px;
     right: 15px;
     padding: 8px;
-    
+
     .close-icon {
       width: 20px;
       height: 20px;
     }
   }
-  
+
   .image-background {
     background-attachment: scroll; // 移动端不支持fixed
   }

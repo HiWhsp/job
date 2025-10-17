@@ -50,7 +50,7 @@
             <el-col :span="6">
               <el-form-item label="手机号">
                 <el-input
-                  v-model="searchForm.phone"
+                  v-model="searchForm.mobile"
                   placeholder="请输入"
                   clearable
                 />
@@ -70,7 +70,7 @@
             <el-col :span="6">
               <el-form-item label="所属单位">
                 <el-input
-                  v-model="searchForm.unit"
+                  v-model="searchForm.company"
                   placeholder="请输入"
                   clearable
                 />
@@ -212,7 +212,7 @@ export default {
       searchForm: {
         order_no: "",
         name: "",
-        phone: "",
+        mobile: "",
         email: "",
         company: "",
         deviceType: "",
@@ -240,23 +240,23 @@ export default {
       this.searchForm = {
         order_no: "",
         name: "",
-        phone: "",
+        mobile: "",
         email: "",
         company: "",
         deviceType: "",
         product_title: "",
         created_at: "",
       };
-      this.$message.info("已重置搜索条件");
+      this.loadData();
     },
 
     // 查看详情
     handleViewDetail(row) {
       // 这里可以跳转到详情页面或打开详情弹窗
       this.$router.push({
-        path: "/adminOrderDetail",
+        path: "/myAdminOrderDetail",
         query: {
-          order_no: row.order_no,
+          order_no: row.id,
         },
       });
     },

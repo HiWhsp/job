@@ -51,19 +51,19 @@ const routes = [
     meta: {},
   },
   {
-    path: "/admin",
+    path: "/myAdmin",
     name: "翼菲后台管理",
     component: admin,
     meta: {},
   },
   {
-    path: "/adminOrder",
+    path: "/myAdminOrder",
     name: "翼非官网后台管理系统",
     component: adminOrder,
     meta: {},
   },
   {
-    path: "/adminOrderDetail",
+    path: "/myAdminOrderDetail",
     name: "翼非官网后台管理系统详情",
     component: adminOrderDetail,
     meta: {},

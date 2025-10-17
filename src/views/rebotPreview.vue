@@ -168,6 +168,11 @@
       v-model="showDownloadDialog"
       :config-data="robotConfig"
       :is-generating-pdf="isGeneratingPDF"
+      @close="
+        () => {
+          showDownloadDialog = false;
+        }
+      "
       @download="handleDownload"
     />
 
@@ -380,6 +385,12 @@ export default {
 
     // 保存配置
     saveConfig() {
+      const loading = this.$loading({
+        lock: true,
+        text: "保存中...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
       const configData = JSON.parse(localStorage.getItem("robotConfig"));
       configData.forEach((item) => {
         if (!item.other) {
@@ -419,15 +430,18 @@ export default {
             this.configOrderNumber = res.data.order_no;
             this.robotConfig = res.data;
             this.showDownloadDialog = true;
+            loading.close();
           }
         })
         .catch((err) => {
           this.$message.error("配置单保存失败");
+          loading.close();
         })
         .finally(() => {
+          loading.close();
         });
     },
-    
+
     // 用户信息提交
     handleUserInfoSubmit(data) {
       // 处理用户信息提交数据
@@ -582,9 +596,9 @@ export default {
       try {
         this.loading = this.$loading({
           lock: true,
-          text: '加载中...',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
+          text: "加载中...",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
         });
         // 调用上传接口
         this.$axios
@@ -609,7 +623,7 @@ export default {
                   id: this.robotConfig.order_id,
                   pdfUrl: response.data.path,
                 },
-              })
+              });
             } else {
               this.loading.close();
               this.$message.error(response.msg || "上传失败");

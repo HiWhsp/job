@@ -84,6 +84,10 @@
   }
 }
 
+.panel-compare {
+  justify-content: center;
+  gap: 60px;
+}
 // 单个配置板块
 .config-panel {
   width: 550px;
@@ -105,6 +109,8 @@
   margin-bottom: 60px;
 
   .panel-title {
+    display: flex;
+    align-items: center;
     font-family: YouSheBiaoTiHei, YouSheBiaoTiHei;
     font-weight: 400;
     font-size: 30px;
@@ -113,6 +119,14 @@
       width: 54px;
       height: 40px;
       margin-left: 10px;
+    }
+
+    .compare-btn {
+      font-size: 14px;
+      color: #ffffff;
+      font-weight: 400;
+      margin-left: 10px;
+      cursor: pointer;
     }
   }
 }
@@ -214,6 +228,10 @@
       }
     }
   }
+}
+
+.my-config-item {
+
 }
 
 // 子组件

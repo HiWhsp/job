@@ -3,7 +3,7 @@
     <!-- 左侧展示区域 -->
     <div
       class="left-display-section"
-      :style="{ backgroundImage: `url(${currentBackgroundImage})` }"
+      :style="{ backgroundImage: `url(${require('@/assets/img/common/back-bg.png')})` }"
     >
       <div class="robot-display">
         <!-- 顶部Logo区域 -->
@@ -13,11 +13,14 @@
           </div>
         </div>
       </div>
+
       <!-- 全屏 -->
       <div class="full-screen-btn" @click="handleFullScreen">
         <img src="@/assets/img/common/full-screen.png" alt="full-screen" />
       </div>
-
+      <div class="backImg">
+        <img v-if="currentBackgroundImage" :src="currentBackgroundImage" alt="">
+      </div>
       <!-- 全屏查看组件 -->
       <FullScreenViewer
         :visible="isFullScreenVisible"
@@ -47,8 +50,8 @@ export default {
   },
   data() {
     return {
-      id: "2",
-      currentBackgroundImage: require("@/assets/img/common/22-全屏.png"), // 默认使用第一张图片
+      id: "",
+      currentBackgroundImage: '', // 默认使用第一张图片
       isFullScreenVisible: false, // 控制全屏组件显示
       ImgList: [],
       detail: [],
@@ -60,6 +63,7 @@ export default {
     };
   },
   mounted() {
+    this.id = this.$route.query.id || "2";
     this.getRobotConfig();
   },
   methods: {

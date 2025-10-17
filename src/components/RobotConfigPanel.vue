@@ -1,7 +1,10 @@
 <template>
   <div class="robot-config-panel">
     <!-- 初始遮罩层 -->
-    <div v-if="showOverlay && !isEdit" class="overlay-mask">
+    <div
+      v-if="showOverlay && !isEdit && compareSorce == 0"
+      class="overlay-mask"
+    >
       <div class="overlay-content">
         <div class="overlay-buttons">
           <button
@@ -51,7 +54,12 @@
     <!-- 配置内容区域 -->
     <div class="config-content">
       <!-- 控制器和雷达标签页 -->
-      <div v-if="activeTabTitle === '控制器和雷达'" class="config-section">
+      <div
+        v-if="
+          activeTabTitle === '控制器与雷达' || activeTabTitle === '控制器和雷达'
+        "
+        class="config-section"
+      >
         <!-- 控制器部分 -->
         <div v-for="controller in controllers" :key="controller.id">
           <div class="section-title">{{ controller.title }}</div>
@@ -441,10 +449,17 @@
       </button>
       <button
         class="next-button"
-        v-if="activeTab == tabs.length - 1"
+        v-if="activeTab == tabs.length - 1 && compareSorce == 0"
         @click="submitRobot"
       >
         总览 >
+      </button>
+      <button
+        class="next-button"
+        v-if="activeTab == tabs.length - 1 && compareSorce != 0"
+        @click="compareRobot"
+      >
+        对比 >
       </button>
     </div>
     <div class="config-footer2" v-if="isEdit">
@@ -528,10 +543,13 @@ export default {
       controllers: [], // 控制器
       activeTabTitle: "", // 当前激活的标签页标题
       currentOtherItem: null, // 当前选中的"其他"选项
+      compareSorce: 0, // 对比来源 0:无, 1:性价比优先, 2:配置均衡, 3:性能优先
     };
   },
   watch: {
     detail() {
+      this.showOverlay = this.$route.query.showOverlay == 'false' ? false : true;
+      this.compareSorce = this.$route.query.compare || 0;
       this.editIndex = this.$route.query.index || 0;
       this.tabs = this.detail;
       this.controllers = this.tabs[this.editIndex].child;
@@ -833,6 +851,18 @@ export default {
       // this.$message.success("配置已保存到本地");
 
       this.$router.push("/rebotPreview?id=" + this.id);
+    },
+    /**
+     * 对比机器人
+     */
+    compareRobot() {
+      // 生成指定格式的数据
+      const formattedData = this.generateFormattedData();
+      console.log("格式化后的数据:", formattedData);
+      // 存储到localStorage
+      localStorage.setItem("robotConfig", JSON.stringify(formattedData));
+      // 跳转到对比页面
+      this.$router.push("/aiRecommendation?id=" + this.id + "&compare=" + this.compareSorce);
     },
 
     // 生成指定格式的数据
