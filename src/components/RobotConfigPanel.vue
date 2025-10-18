@@ -931,10 +931,7 @@ export default {
       // 如果当前项有 producntInfos，则初始化它们
       if (item.producntInfos && Array.isArray(item.producntInfos)) {
         item.producntInfos.forEach((product) => {
-          this.$set(product, "selected", false);
-          if(product.moren == '1') {
-            this.$set(product, "selected", true);
-          }
+          this.$set(product, "selected", false)
           if (product.title === "其他" || product.title.includes("定制")) {
             this.$set(product, "other", {
               image: null,
