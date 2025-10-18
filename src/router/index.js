@@ -25,6 +25,7 @@ const index = () => import(/* webpackChunkName: "index" */ "@/views/index.vue");
 const aiRecommendation = () => import(/* webpackChunkName: "aiRecommendation" */ "@/views/aiRecommendation.vue");
 const rebotPreview = () => import(/* webpackChunkName: "rebotPreview" */ "@/views/rebotPreview.vue");
 const h5rebotPreview = () => import(/* webpackChunkName: "h5rebotPreview" */ "@/views/h5rebotPreview.vue");
+const parameter = () => import(/* webpackChunkName: "parameter" */ "@/views/parameter.vue");
 
 // 翼菲后台管理页面
 const admin = () => import(/* webpackChunkName: "admin" */ "@/views/admin/index.vue");
@@ -36,6 +37,12 @@ const routes = [
     path: "/",
     name: "首页",
     component: index,
+    meta: {},
+  },
+  {
+    path: "/parameter",
+    name: "参数配置",
+    component: parameter,
     meta: {},
   },
   {

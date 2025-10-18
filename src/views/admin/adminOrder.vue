@@ -79,7 +79,7 @@
             <el-col :span="6">
               <el-form-item label="设备类型">
                 <el-select
-                  v-model="searchForm.deviceType"
+                  v-model="searchForm.product_channel_id"
                   placeholder="请选择"
                   clearable
                 >
@@ -106,7 +106,7 @@
             <el-col :span="6">
               <el-form-item label="日期">
                 <el-date-picker
-                  v-model="searchForm.date"
+                  v-model="searchForm.created_at"
                   type="date"
                   placeholder="请选择日期"
                   format="yyyy-MM-dd"
@@ -162,7 +162,7 @@
             width="180"
             show-overflow-tooltip
           />
-          <el-table-column prop="deviceType" label="设备类型">
+          <el-table-column prop="product_channel_id" label="设备类型">
             <template slot-scope="scope">
               {{ getDeviceType(scope.row.product_channel_id) }}
             </template>
@@ -215,7 +215,7 @@ export default {
         mobile: "",
         email: "",
         company: "",
-        deviceType: "",
+        product_channel_id: "",
         product_title: "",
         created_at: "",
       },
@@ -243,7 +243,7 @@ export default {
         mobile: "",
         email: "",
         company: "",
-        deviceType: "",
+        product_channel_id: "",
         product_title: "",
         created_at: "",
       };

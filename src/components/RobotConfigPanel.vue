@@ -28,7 +28,7 @@
       <div class="config-header-left">
         <h2 class="robot-title" @click="goRobotDetail">
           {{ title }}
-          <!-- <i class="el-icon-arrow-right"></i> -->
+          <i class="el-icon-arrow-right"></i>
         </h2>
         <span class="ai-recommend" @click="useAIRecommendation">AI 推荐</span>
       </div>
@@ -154,41 +154,132 @@
         <div v-for="item in controllers" :key="item.id">
           <div class="section-title">{{ item.title }}</div>
           <div class="motor-grid" v-if="!item.child">
-            <div
-              v-for="item in item.producntInfos"
-              :key="item.id"
-              :class="['motor-item', { selected: item.selected }]"
-              @click="selectMotor(item.id)"
-            >
-              <span class="motor-name">{{ item.title }}</span>
-              <img
-                src="@/assets/img/icon/Group1.png"
-                alt=""
-                v-if="item.price_status == '1'"
-              />
-              <img
-                src="@/assets/img/icon/Group2.png"
-                alt=""
-                v-if="item.price_status == '2'"
-              />
-              <img
-                src="@/assets/img/icon/Group3.png"
-                alt=""
-                v-if="item.price_status == '3'"
-              />
+            <div v-for="item2 in item.producntInfos" :key="item2.id">
+              <el-tooltip
+                v-if="
+                  item2.title === '其他' &&
+                  item2.other &&
+                  (item2.other.image || item2.other.notes)
+                "
+                placement="left"
+                effect="dark"
+              >
+                <div
+                  slot="content"
+                  v-html="getTooltipContent(item2.other)"
+                ></div>
+                <div
+                  :class="['motor-item', { selected: item2.selected }]"
+                  @click="selectMotor(item2.id, item2)"
+                >
+                  <span class="motor-name">{{ item2.title }}</span>
+                  <img
+                    src="@/assets/img/icon/Group1.png"
+                    alt=""
+                    v-if="item2.price_status == '1'"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group2.png"
+                    alt=""
+                    v-if="item2.price_status == '2'"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group3.png"
+                    alt=""
+                    v-if="item2.price_status == '3'"
+                  />
+                </div>
+              </el-tooltip>
+              <template v-else>
+                <div
+                  :class="['motor-item', { selected: item2.selected }]"
+                  @click="selectMotor(item2.id, item2)"
+                >
+                  <span class="motor-name">{{ item2.title }}</span>
+                  <img
+                    src="@/assets/img/icon/Group1.png"
+                    alt=""
+                    v-if="item2.price_status == '1'"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group2.png"
+                    alt=""
+                    v-if="item2.price_status == '2'"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group3.png"
+                    alt=""
+                    v-if="item2.price_status == '3'"
+                  />
+                </div>
+              </template>
             </div>
           </div>
           <div v-else>
             <div v-for="item2 in item.child" :key="item2.id">
               <div class="section-title">{{ item2.title }}</div>
               <div class="motor-grid" v-if="!item2.child">
-                <div
-                  v-for="item3 in item2.producntInfos"
-                  :key="item3.id"
-                  :class="['motor-item', { selected: item3.selected }]"
-                  @click="selectMotor(item3.id)"
-                >
-                  <span class="motor-name">{{ item3.title }}</span>
+                <div v-for="item3 in item2.producntInfos" :key="item3.id">
+                  <el-tooltip
+                    v-if="
+                      item3.title === '其他' &&
+                      item3.other &&
+                      (item3.other.image || item3.other.notes)
+                    "
+                    placement="left"
+                    effect="dark"
+                  >
+                    <div
+                      slot="content"
+                      v-html="getTooltipContent(item3.other)"
+                    ></div>
+                    <div
+                      :class="['motor-item', { selected: item3.selected }]"
+                      @click="selectMotor(item3.id, item3)"
+                    >
+                      <span class="motor-name">{{ item3.title }}</span>
+                      <img
+                        src="@/assets/img/icon/Group1.png"
+                        alt=""
+                        v-if="item3.price_status == '1'"
+                      />
+                      <img
+                        src="@/assets/img/icon/Group2.png"
+                        alt=""
+                        v-if="item3.price_status == '2'"
+                      />
+                      <img
+                        src="@/assets/img/icon/Group3.png"
+                        alt=""
+                        v-if="item3.price_status == '3'"
+                      />
+                    </div>
+                  </el-tooltip>
+                  <template v-else>
+                    <div
+                      :class="['motor-item', { selected: item3.selected }]"
+                      @click="selectMotor(item3.id, item3)"
+                    >
+                      <span class="motor-name">{{ item3.title }}</span>
+                      <img
+                        src="@/assets/img/icon/Group1.png"
+                        alt=""
+                        v-if="item3.price_status == '1'"
+                      />
+                      <img
+                        src="@/assets/img/icon/Group2.png"
+                        alt=""
+                        v-if="item3.price_status == '2'"
+                      />
+                      <img
+                        src="@/assets/img/icon/Group3.png"
+                        alt=""
+                        v-if="item3.price_status == '3'"
+                      />
+                    </div>
+                  </template>
+
+                  <!-- <span class="motor-name">{{ item3.title }}</span>
                   <img
                     src="@/assets/img/icon/Group1.png"
                     alt=""
@@ -203,7 +294,7 @@
                     src="@/assets/img/icon/Group3.png"
                     alt=""
                     v-if="item3.price_status == '3'"
-                  />
+                  /> -->
                 </div>
               </div>
             </div>
@@ -326,7 +417,9 @@
 
                   <div
                     class="logo-grid"
-                    v-if="['logo定制', 'Logo定制', '定制logo'].includes(item2.title)"
+                    v-if="
+                      ['logo定制', 'Logo定制', '定制logo'].includes(item2.title)
+                    "
                   >
                     <div
                       class="logo-item"
@@ -346,7 +439,9 @@
                       ></div>
                       <el-tooltip
                         v-if="
-                          ['定制logo', '定制Logo', '定制'].includes(item3.title) &&
+                          ['定制logo', '定制Logo', '定制'].includes(
+                            item3.title
+                          ) &&
                           item3.other &&
                           (item3.other.image || item3.other.notes)
                         "
@@ -359,7 +454,11 @@
                         ></div>
                         <div
                           class="logo-image"
-                          v-if="['定制logo', '定制Logo', '定制'].includes(item3.title)"
+                          v-if="
+                            ['定制logo', '定制Logo', '定制'].includes(
+                              item3.title
+                            )
+                          "
                           @click="logoPicker(item3)"
                         >
                           <img
@@ -375,7 +474,11 @@
                       <template v-else>
                         <div
                           class="logo-image"
-                          v-if="['定制logo', '定制Logo', '定制'].includes(item3.title)"
+                          v-if="
+                            ['定制logo', '定制Logo', '定制'].includes(
+                              item3.title
+                            )
+                          "
                           @click="logoPicker(item3)"
                         >
                           <img
@@ -550,7 +653,9 @@
                       ></div>
                       <div
                         class="logo-image"
-                        v-if="['定制logo', '定制Logo', '定制'].includes(item3.title)"
+                        v-if="
+                          ['定制logo', '定制Logo', '定制'].includes(item3.title)
+                        "
                         @click="logoPicker(item3)"
                       >
                         <img
@@ -564,7 +669,9 @@
                     <template v-else>
                       <div
                         class="logo-image"
-                        v-if="['定制logo', '定制Logo', '定制'].includes(item3.title)"
+                        v-if="
+                          ['定制logo', '定制Logo', '定制'].includes(item3.title)
+                        "
                         @click="logoPicker(item3)"
                       >
                         <img
@@ -606,28 +713,67 @@
               <div v-for="item2 in item.child" :key="item2.id">
                 <div class="section-title">{{ item2.title }}</div>
                 <div class="motor-grid">
-                  <div
-                    v-for="item3 in item2.producntInfos"
-                    :key="item3.id"
-                    :class="['motor-item', { selected: item3.selected }]"
-                    @click="selectAppearanceItem(item3.id)"
-                  >
-                    <span class="motor-name">{{ item3.title }}</span>
-                    <img
-                      src="@/assets/img/icon/Group1.png"
-                      alt=""
-                      v-if="item3.price_status == '1'"
-                    />
-                    <img
-                      src="@/assets/img/icon/Group2.png"
-                      alt=""
-                      v-if="item3.price_status == '2'"
-                    />
-                    <img
-                      src="@/assets/img/icon/Group3.png"
-                      alt=""
-                      v-if="item3.price_status == '3'"
-                    />
+                  <div v-for="item3 in item2.producntInfos" :key="item3.id">
+                    <el-tooltip
+                      v-if="
+                        item3.title === '其他' ||
+                        (item3.title === '其他配件' &&
+                          item3.other &&
+                          (item3.other.image || item3.other.notes))
+                      "
+                      placement="left"
+                      effect="dark"
+                    >
+                      <div
+                        slot="content"
+                        v-html="getTooltipContent(item3.other)"
+                      ></div>
+                      <div
+                        :class="['motor-item', { selected: item3.selected }]"
+                        @click="selectAppearanceItem(item3.id)"
+                      >
+                        <span class="motor-name">{{ item3.title }}</span>
+                        <img
+                          src="@/assets/img/icon/Group1.png"
+                          alt=""
+                          v-if="item3.price_status == '1'"
+                        />
+                        <img
+                          src="@/assets/img/icon/Group2.png"
+                          alt=""
+                          v-if="item3.price_status == '2'"
+                        />
+                        <img
+                          src="@/assets/img/icon/Group3.png"
+                          alt=""
+                          v-if="item3.price_status == '3'"
+                        />
+                      </div>
+                    </el-tooltip>
+                    <template v-else>
+                      <div
+                        :class="['motor-item', { selected: item3.selected }]"
+                        @click="selectAppearanceItem(item3.id)"
+                      >
+                        <span class="motor-name">{{ item3.title }}</span>
+                        <span class="motor-name">{{ item3.title }}</span>
+                        <img
+                          src="@/assets/img/icon/Group1.png"
+                          alt=""
+                          v-if="item3.price_status == '1'"
+                        />
+                        <img
+                          src="@/assets/img/icon/Group2.png"
+                          alt=""
+                          v-if="item3.price_status == '2'"
+                        />
+                        <img
+                          src="@/assets/img/icon/Group3.png"
+                          alt=""
+                          v-if="item3.price_status == '3'"
+                        />
+                      </div>
+                    </template>
                   </div>
                 </div>
               </div>
@@ -786,6 +932,9 @@ export default {
       if (item.producntInfos && Array.isArray(item.producntInfos)) {
         item.producntInfos.forEach((product) => {
           this.$set(product, "selected", false);
+          if(product.moren == '1') {
+            this.$set(product, "selected", true);
+          }
           if (product.title === "其他" || product.title.includes("定制")) {
             this.$set(product, "other", {
               image: null,
@@ -810,7 +959,7 @@ export default {
     },
 
     goRobotDetail() {
-      // this.$router.push("/robotDetail?id=" + this.id);
+      this.$router.push("/parameter?id=" + this.id);
     },
 
     // 使用自定义配置
@@ -820,17 +969,18 @@ export default {
     },
 
     // 选择电机
-    selectMotor(motorId) {
-      console.log("选择电机:", motorId);
+    selectMotor(motorId, item) {
+      let targetItem = null; // 提升到方法最开始
       // 找到当前电机所在的组，只在该组内进行单选
       this.controllers.forEach((controller) => {
         if (controller.child) {
           controller.child.forEach((child) => {
             if (child.producntInfos) {
-              const targetItem = child.producntInfos.find(
-                (item) => item.id === motorId
+              targetItem = child.producntInfos.find(
+                (item) => item.id == motorId
               );
               if (targetItem) {
+                console.log("targetItem:", 123123);
                 child.producntInfos.forEach((item) => {
                   this.$set(item, "selected", false);
                 });
@@ -840,7 +990,7 @@ export default {
           });
         } else if (controller.producntInfos) {
           // 检查当前点击的item是否在这个组中
-          const targetItem = controller.producntInfos.find(
+          targetItem = controller.producntInfos.find(
             (item) => item.id === motorId
           );
           if (targetItem) {
@@ -854,6 +1004,19 @@ export default {
           }
         }
       });
+
+      if (item.title === "其他" || item.title === "其他配件") {
+        this.currentOtherItem = item; // 保存当前选中的"其他"选项
+        this.dialogTitle = "其他选项配置";
+        this.showDialog = true;
+
+        // 如果有已保存的数据，回显到弹框中
+        this.$nextTick(() => {
+          if (this.$refs.customDialog && item.other) {
+            this.$refs.customDialog.setFormData(item.other);
+          }
+        });
+      }
     },
 
     // 选择控制器

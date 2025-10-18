@@ -99,6 +99,61 @@
                 <p>{{ item.name }}</p>
                 <p>{{ item.params }}</p>
               </div>
+              <div class="item-progress">
+                <div class="progress-bar">
+                  <img
+                    src="@/assets/img/icon/progress1.png"
+                    alt="progress"
+                    v-if="item.progress == 1"
+                  />
+                  <img
+                    src="@/assets/img/icon/progress2.png"
+                    alt="progress"
+                    v-if="item.progress == 2"
+                  />
+                  <img
+                    src="@/assets/img/icon/progress3.png"
+                    alt="progress"
+                    v-if="item.progress == 3"
+                  />
+                  <img
+                    src="@/assets/img/icon/progress4.png"
+                    alt="progress"
+                    v-if="item.progress == 4"
+                  />
+                  <img
+                    src="@/assets/img/icon/progress4.png"
+                    alt="progress"
+                    v-if="item.progress == 5"
+                  />
+                </div>
+              </div>
+              <div class="item-price">
+                <img
+                  src="@/assets/img/icon/Group1.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 1"
+                />
+                <img
+                  src="@/assets/img/icon/Group2.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 2"
+                />
+                <img
+                  src="@/assets/img/icon/Group3.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 3"
+                />
+                <img
+                  src="@/assets/img/icon/Group4.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 4"
+                />
+              </div>
               <div class="item-edit" v-if="!configOrderNumber">
                 <i class="el-icon-edit" @click="editItem(item)"></i>
               </div>
@@ -400,19 +455,21 @@ export default {
           // 将对象value转换为字符串 1-1-1
           item.other.notes = Object.values(item.other.notes).join("-");
         }
-        // 如果item.other中的三个值如果为空则删除
+        // 如果item.other中的三个值如果为空则设置为空字符串
         if (!item.other?.notes) {
-          delete item.other.notes;
+          item.other.notes = '';
         }
         if (!item.other?.brand) {
-          delete item.other.brand;
+          item.other.brand = '';
         }
         if (!item.other?.image) {
-          delete item.other.image;
+          item.other.image = '';
         }
-        // 如果item.other为空则删除
-        if (!item.other?.notes && !item.other?.brand && !item.other?.image) {
-          delete item.other;
+        if (!item.other?.brand) {
+          item.other.brand = '';
+        }
+        if (!item.other?.image) {
+          item.other.image = '';
         }
       });
       this.$api({
@@ -427,6 +484,7 @@ export default {
         .then((res) => {
           if (res.code == 200) {
             // this.$message.success("配置单保存成功");
+            localStorage.removeItem("robotConfig");
             this.configOrderNumber = res.data.order_no;
             this.robotConfig = res.data;
             this.showDownloadDialog = true;
