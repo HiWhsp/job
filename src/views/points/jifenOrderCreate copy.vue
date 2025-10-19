@@ -754,7 +754,7 @@ export default {
     .add {
       b {
         font-weight: bold;
-        color: #F74747;
+        color: #2E4C87;
         cursor: pointer;
       }
     }
@@ -823,7 +823,7 @@ export default {
 
         .checked {
           flex: 2;
-          color: #F74747;
+          color: #2E4C87;
           text-align: right;
         }
       }
@@ -878,7 +878,7 @@ export default {
           background: #ffffff;
           border: 1px solid #cccccc;
           &.active {
-            border: 1px solid #F74747;
+            border: 1px solid #2E4C87;
           }
         }
       }

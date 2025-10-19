@@ -9,7 +9,7 @@
         </div>
         <div class="empty-text">购物车为空，快去选购商品吧～</div>
         <div class="empty-btn">
-          <div class="btn flex-center btn-ripple" @click="toRoute('/')">
+          <div class="btn flex-center btn-ripple" @click="toRoute('/product-cates')">
             去购物
           </div>
         </div>
@@ -27,7 +27,7 @@
               <div class="title-4">单价</div>
               <div class="title-5">数量</div>
               <div class="title-6">小计</div>
-              <div class="title-8">需求描述</div>
+              <!-- <div class="title-8">需求描述</div> -->
               <div class="title-7">操作</div>
             </div>
 
@@ -78,14 +78,14 @@
                 <div class="box-subtotal">
                   {{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}
                 </div>
-                <div class="box-desc">
+                <!-- <div class="box-desc">
                   <el-input
                     type="textarea"
                     :rows="2"
                     placeholder="请输入需求描述"
                     v-model="item.remark"
                   ></el-input>
-                </div>
+                </div> -->
                 <div class="box-act">
                   <div class="goods-action-box">
                     <span
@@ -252,7 +252,16 @@ export default {
           data.forEach((v) => {
             v.checked = true;
           });
-          this.list_shopcart = data;
+          // this.list_shopcart = data;
+          this.list_shopcart =  [{
+            checked: true,
+            inventoryId: "",
+            productId: "",
+            title: "",
+            image: "",
+            priceSale: 0,
+            num: 1,
+          }];
           if (data.length) {
             this.checked_all = true;
           }
@@ -555,7 +564,7 @@ export default {
         display: inline-block;
         width: 128px;
         height: 36px;
-        background: #f74747;
+        background: #2E4C87;
         border-radius: 4px 4px 4px 4px;
         font-size: 14px;
         font-family: sans-serif;
@@ -672,7 +681,7 @@ export default {
 
             div {
               &:hover {
-                color: #f74747;
+                color: #2E4C87;
               }
             }
 
@@ -700,7 +709,7 @@ export default {
 
           .box-unit-price {
             width: 120px;
-            color: #ff0000;
+            color: #2E4C87;
           }
 
           .box-number {
@@ -753,7 +762,7 @@ export default {
                 cursor: pointer;
 
                 &:hover {
-                  color: #f74747;
+                  color: #2E4C87;
                 }
               }
             }
@@ -815,7 +824,7 @@ export default {
       color: #666666;
 
       &:hover {
-        color: #f74747;
+        color: #2E4C87;
       }
     }
   }
@@ -833,7 +842,7 @@ export default {
       color: #666666;
 
       &:hover {
-        color: #f74747;
+        color: #2E4C87;
       }
     }
   }
@@ -877,7 +886,7 @@ export default {
     cursor: pointer;
     width: 191px;
     height: 46px;
-    background: #f74747;
+    background: #2E4C87;
 
     font-size: 16px;
     font-family: Microsoft YaHei;
@@ -922,7 +931,7 @@ export default {
     .btn {
       width: 191px;
       height: 46px;
-      background: #f74747;
+      background: #2E4C87;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 18px;

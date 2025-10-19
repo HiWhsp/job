@@ -180,7 +180,7 @@ export default {
 
 <style scoped lang="less">
 .plus {
-  color: #F74747;
+  color: #2E4C87;
   font-weight: bold;
 }
 .minus {
@@ -222,7 +222,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #2E4C87;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -311,9 +311,9 @@ export default {
     color: #333333;
 
     &.active {
-      border-bottom: 3px solid #F74747;
+      border-bottom: 3px solid #2E4C87;
       font-weight: bold;
-      color: #F74747;
+      color: #2E4C87;
     }
   }
 }

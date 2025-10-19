@@ -649,7 +649,7 @@ export default {
       width: 240px;
       height: 40px;
       background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
-      background: #f74747;
+      background: #2E4C87;
       border-radius: 30px;
       border-radius: 0;
 

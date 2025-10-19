@@ -285,7 +285,7 @@ export default {
       }
 
       &.active {
-        color: #f74747;
+        color: #2E4C87;
       }
     }
   }
@@ -314,9 +314,9 @@ export default {
       }
 
       &.active {
-        background: #f74747;
+        background: #2E4C87;
         .dot-box {
-          background: #f74747;
+          background: #2E4C87;
         }
       }
 
@@ -351,12 +351,12 @@ export default {
       height: 48px;
       background: #FFEDED;
       border-radius: 0px 0px 0px 0px;
-      border: 1px solid #f74747;
+      border: 1px solid #2E4C87;
 
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: bold;
       font-size: 16px;
-      color: #f74747;
+      color: #2E4C87;
       img {
         margin-right: 16px;
         width: 23px;
@@ -379,7 +379,7 @@ export default {
   .btn {
     width: 164px;
     height: 48px;
-    background: #f74747;
+    background: #2E4C87;
     border-radius: 0px 0px 0px 0px;
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: bold;
@@ -406,7 +406,7 @@ export default {
   }
 }
 .download {
-  color: #f74747;
+  color: #2E4C87;
   cursor: pointer;
 }
 </style>

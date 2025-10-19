@@ -149,7 +149,7 @@ export default {
           font-size: 20px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #2E4C87;
         }
 
         input {
@@ -168,7 +168,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #F74747;
+  // background: #2E4C87;
   background: #f7f7f7;
   text-align: left;
 
@@ -195,12 +195,12 @@ export default {
 
   .quxiao {
     margin-right: 24px;
-    color: #F74747;
-    border: 1px solid #F74747;
+    color: #2E4C87;
+    border: 1px solid #2E4C87;
   }
   .queding {
     // margin-right: 24px;
-    background: #F74747;
+    background: #2E4C87;
     color: #fff;
   }
 }

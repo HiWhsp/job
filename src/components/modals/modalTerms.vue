@@ -93,7 +93,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  background: #F74747;
+  background: #2E4C87;
   height: 40px;
   line-height: 40px;
   padding: 0;
@@ -132,8 +132,8 @@ export default {
     background: #fff;
     opacity: 1;
     border-radius: 0;
-    border: 1px solid #F74747;
-    color: #F74747;
+    border: 1px solid #2E4C87;
+    color: #2E4C87;
     cursor: pointer;
 
     & + button {
@@ -142,7 +142,7 @@ export default {
   }
 
   .queding {
-    background: #F74747;
+    background: #2E4C87;
     border: 1px solid #aaa;
     color: #fff;
   }

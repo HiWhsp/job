@@ -293,7 +293,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #f74747;
+      background: #2E4C87;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -378,7 +378,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: #f74747;
+        color: #2E4C87;
 
         span {
           margin-right: 20px;
@@ -411,7 +411,7 @@ export default {
     margin-left: 20px;
     width: 120px;
     height: 40px;
-    background: #f74747;
+    background: #2E4C87;
     border-radius: 4px;
     font-family: Arial, Arial;
     font-weight: 400;

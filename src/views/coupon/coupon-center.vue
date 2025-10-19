@@ -191,7 +191,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #2E4C87;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -394,14 +394,14 @@ export default {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #2E4C87;
         }
 
         .num {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #2E4C87;
         }
       }
 
@@ -428,7 +428,7 @@ export default {
         button {
           width: 127px;
           height: 36px;
-          background: #F74747;
+          background: #2E4C87;
           border-radius: 4px 4px 4px 4px;
           font-size: 14px;
           font-family: sans-serif;

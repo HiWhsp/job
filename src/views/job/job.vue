@@ -277,11 +277,11 @@ export default {
         height: 40px;
         background: #ffffff;
         border-radius: 4px 4px 4px 4px;
-        border: 1px solid #F74747;
+        border: 1px solid #2E4C87;
         font-size: 14px;
         font-family: sans-serif;
         font-weight: 400;
-        color: #F74747;
+        color: #2E4C87;
       }
     }
   }

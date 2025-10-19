@@ -176,7 +176,7 @@ export default {
         color: #999999;
 
         &:hover {
-          color: #F74747;
+          color: #2E4C87;
         }
       }
     }
@@ -243,7 +243,7 @@ export default {
 
     &:hover {
       .title {
-        color: #F74747 !important;
+        color: #2E4C87 !important;
       }
     }
 

@@ -241,14 +241,14 @@ export default {
           width: 100%;
           height: 27px;
           border-radius: 0px 0px 0px 0px;
-          border: 1px solid #F74747;
+          border: 1px solid #2E4C87;
           font-family: OPPOSans, OPPOSans;
           font-weight: bold;
           font-size: 12px;
-          color: #F74747;
+          color: #2E4C87;
 
           &:hover {
-            background: #F74747;
+            background: #2E4C87;
             color: #fff;
           }
         }

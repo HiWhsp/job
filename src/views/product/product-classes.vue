@@ -83,7 +83,8 @@ export default {
         breadcrumbPath.forEach((item, index) => {
           breadcrumb.push({
             title: item.title,
-            route: `/product-classes?id=${item.id}`
+            route: `/product-classes?id=${item.id}`,
+            id: item.id
           });
         });
 
@@ -140,9 +141,13 @@ export default {
           // 根据id获取分类数据 可能有多层级
           const result = this.getCategoryList(data, this.id);
           this.categoryList = result || [];
-          
+
           // 生成面包屑导航
           this.nav_option = this.generateBreadcrumb(data, this.id);
+          if(this.categoryList.length == 0) {
+            localStorage.setItem('product_nav_option', JSON.stringify(this.nav_option));
+            this.$router.push('/product-list');
+          } 
         } else {
           console.warn('获取分类数据失败:', res);
           this.categoryList = [];
@@ -398,7 +403,7 @@ export default {
       color: #aeaeae;
     }
     .search-keyword {
-      color: #f74747;
+      color: #2E4C87;
     }
   }
 }

@@ -255,12 +255,12 @@ export default {
 <style lang="less">
 .el-select-dropdown__item.hover,
 .el-select-dropdown__item:hover {
-  background: #f74747;
+  background: #2E4C87;
   color: #fff !important;
 }
 
 .el-select-dropdown__item.selected {
-  color: #f74747;
+  color: #2E4C87;
 }
 </style>
 

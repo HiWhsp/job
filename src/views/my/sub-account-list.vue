@@ -87,7 +87,7 @@
                 >
                 <el-button
                   type="text"
-                  style="color: #f74747"
+                  style="color: #2E4C87"
                   @click="handleDelete(scope.row)"
                   >删除</el-button
                 >
@@ -435,7 +435,7 @@ export default {
 .dash-btn {
   width: 94px;
   height: 36px;
-  background: #e5222b;
+  background: #2E4C87;
   border-radius: 3px;
   color: #fff;
   font-size: 14px;
@@ -495,14 +495,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #f74747;
+        color: #2E4C87;
       }
 
       &.active {
-        // background: #F74747;
+        // background: #2E4C87;
         // color: #fff;
         font-weight: bold;
-        color: #f74747;
+        color: #2E4C87;
 
         &::after {
           content: "";
@@ -511,7 +511,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #f74747;
+          background: #2E4C87;
         }
       }
     }
@@ -573,15 +573,15 @@ export default {
 
 .demo-ruleForm {
   /deep/ .el-button--primary {
-    background: #e5222b;
+    background: #2E4C87;
     border: none;
     border-radius: 4px;
     color: #fff !important;
   }
   /deep/ .el-button {
-    border: 1px solid #e5222b;
+    border: 1px solid #2E4C87;
     border-radius: 4px;
-    color: #e5222b;
+    color: #2E4C87;
   }
 }
 </style>

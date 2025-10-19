@@ -160,7 +160,7 @@ export default {
     line-height: 48px;
     text-align: center;
     background: #ea3200;
-    background: #F74747;
+    background: #2E4C87;
     border-radius: 4px 4px 4px 4px;
     font-size: 20px;
     font-family: SourceHanSansSC-Regular-, SourceHanSansSC-Regular;

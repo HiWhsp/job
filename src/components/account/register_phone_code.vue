@@ -110,6 +110,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   overflow: hidden;
+  background: #ffffff;
 
   img {
     width: 36px;
@@ -123,6 +124,8 @@ export default {
     font-weight: 400;
     color: #272536;
     // text-indent: 1em;
+    border-right: 1px solid #ccc;
+
   }
 
   input {
@@ -148,7 +151,7 @@ export default {
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: #F74747;
+  color: #2E4C87;
   font-size: 1.4rem;
 
   &.disabled {
@@ -210,7 +213,7 @@ export default {
     display: flex;
     align-items: center;
     cursor: pointer;
-    color: #F74747;
+    color: #2E4C87;
 
     &.disabled {
       color: #ccc;

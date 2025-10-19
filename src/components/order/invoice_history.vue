@@ -149,7 +149,7 @@ export default{
       margin: 10px 0;
       cursor: pointer;
       &:hover{
-        border: 1px solid #F74747;
+        border: 1px solid #2E4C87;
       }
       &.active{
         background-color: #FCEFEF;
@@ -211,11 +211,11 @@ export default{
     height: 32px;
     background: #ffffff;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    border: 1px solid #2E4C87;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
+    color: #2E4C87;
 
     & + button {
       margin-left: 20px;
@@ -223,7 +223,7 @@ export default{
   }
 
   .btn-bg {
-    background: #F74747;
+    background: #2E4C87;
     color: #ffffff;
   }
 }
@@ -236,7 +236,7 @@ export default{
   padding: 0 10px;
   height: 40px;
   background: #fff;
-  color: #F74747;
+  color: #2E4C87;
   font-size: 14px;
   margin-left: 15px;
   border-radius: 5px;

@@ -367,12 +367,12 @@ export default {
       height: 48px;
       background: #edf0ff;
       border-radius: 0px 0px 0px 0px;
-      border: 1px solid #F74747;
+      border: 1px solid #2E4C87;
 
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: bold;
       font-size: 16px;
-      color: #F74747;
+      color: #2E4C87;
       img {
         margin-right: 16px;
         width: 23px;
@@ -397,7 +397,7 @@ export default {
       margin-bottom: 16px;
       width: 164px;
       height: 48px;
-      background: #F74747;
+      background: #2E4C87;
       border-radius: 0px 0px 0px 0px;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: bold;
@@ -434,7 +434,7 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: bold;
       font-size: 16px;
-      color: #F74747;
+      color: #2E4C87;
     }
   }
 }
@@ -467,7 +467,7 @@ export default {
       display: inline-flex;
       width: 191px;
       height: 46px;
-      background: #F74747;
+      background: #2E4C87;
 
       border-radius: 0px 0px 0px 0px;
       font-family: Microsoft YaHei, Microsoft YaHei;

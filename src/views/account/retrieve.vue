@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="page-bg">
-      <img src="@img/login/login-bg.jpg" alt="" />
+      <img src="@img/login/login-bg.png" alt="" />
     </div>
 
     <div class="page-ctx">
@@ -292,7 +292,7 @@ export default {
         color: #999999;
 
         a {
-          color: #f74747;
+          color: #2E4C87;
         }
       }
 
@@ -304,7 +304,7 @@ export default {
           width: 100%;
           height: 44px;
           background: linear-gradient(90deg, #ff7327 0%, #ea5959 100%);
-          background: #f74747;
+          background: #2E4C87;
           font-size: 18px;
           font-family: sans-serif;
           font-weight: 400;
@@ -332,8 +332,8 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 24px;
-          color: #f74747;
-          // border-bottom: 1px solid #F74747;
+          color: #2E4C87;
+          // border-bottom: 1px solid #2E4C87;
         }
       }
     }
@@ -373,7 +373,7 @@ export default {
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 12px;
-    color: #f74747;
+    color: #2E4C87;
   }
 }
 </style>

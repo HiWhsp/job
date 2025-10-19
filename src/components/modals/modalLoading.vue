@@ -121,7 +121,7 @@ export default {
   width: 15px;
   height: 15px;
   background-color: #fff;
-  background-color: #F74747;
+  background-color: #2E4C87;
   border-radius: 100%;
   position: absolute;
   -webkit-animation: bouncedelay 1.2s infinite ease-in-out;
@@ -264,7 +264,7 @@ export default {
     width: 10px;
     height: 10px;
     background-color: #fff;
-    background-color: #F74747;
+    background-color: #2E4C87;
     border-radius: 100%;
     position: absolute;
     -webkit-animation: bouncedelay 1.2s infinite ease-in-out;

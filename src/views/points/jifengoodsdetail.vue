@@ -240,7 +240,7 @@ export default {
             width: 100%;
             .limit-end-box {
               font-size: 0.3rem;
-              color: #F74747;
+              color: #2E4C87;
               font-weight: bold;
               text-align: center;
               padding-bottom: 0.5rem;
@@ -514,7 +514,7 @@ export default {
                 font-size: 12px;
 
                 &:hover {
-                  border-color: #F74747;
+                  border-color: #2E4C87;
                 }
 
                 .coupon-info {
@@ -568,7 +568,7 @@ export default {
         width: 100%;
         .detail-nav {
           position: relative;
-          border-bottom: 2px solid #F74747;
+          border-bottom: 2px solid #2E4C87;
           display: flex;
 
           height: 48px; /*no */
@@ -581,7 +581,7 @@ export default {
             min-width: 100px; /*no */
           }
           .active {
-            background-color: #F74747;
+            background-color: #2E4C87;
             color: #fff;
           }
 
@@ -594,7 +594,7 @@ export default {
             height: 32px; /*no */
 
             &.contact {
-              background: #F74747;
+              background: #2E4C87;
                 display: flex;
           justify-content: center;
           align-items: center;
@@ -654,7 +654,7 @@ export default {
 
           .sort-info-title {
             display: inline-block;
-            background-color: #F74747;
+            background-color: #2E4C87;
             color: #fff;
             padding: 0.1rem 0.2rem;
           }
@@ -681,7 +681,7 @@ export default {
             .comment-title-text {
               padding: 5px 30px;
               margin-right: 20px;
-              background-color: #F74747;
+              background-color: #2E4C87;
               color: #fff;
             }
           }

@@ -312,7 +312,7 @@ export default {
       color: #666666;
 
       &.checked {
-        color: #f74747;
+        color: #2E4C87;
       }
 
       img {
@@ -421,7 +421,7 @@ export default {
         &.btn-detail {
           width: 104px;
           height: 32px;
-          background: #E5222B;
+          background: #2E4C87;
           border-radius: 6px;
 
           font-family: OPPOSans, OPPOSans;

@@ -597,7 +597,7 @@ export default {
   display: flex;
   align-items: center;
   margin-left: 16px;
-  color: #F74747;
+  color: #2E4C87;
   font-size: 14px;
   font-weight: normal;
   cursor: pointer;
@@ -654,14 +654,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #F74747;
+        color: #2E4C87;
       }
 
       &.active {
-        // background: #F74747;
+        // background: #2E4C87;
         // color: #fff;
         font-weight: bold;
-        color: #F74747;
+        color: #2E4C87;
 
         &::after {
           content: "";
@@ -670,7 +670,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #F74747;
+          background: #2E4C87;
         }
       }
     }
@@ -766,7 +766,7 @@ export default {
       font-weight: 400;
       line-height: 20px;
       color: #999999;
-      color: #F74747;
+      color: #2E4C87;
 
       // 待付款
       &.state--5 {
@@ -776,8 +776,8 @@ export default {
       }
 
       &.state-2 {
-        color: #F74747;
-        border-color: #F74747;
+        color: #2E4C87;
+        border-color: #2E4C87;
       }
     }
   }
@@ -831,7 +831,7 @@ export default {
             font-weight: bold;
 
             &:hover {
-              color: #F74747;
+              color: #2E4C87;
             }
           }
 
@@ -943,7 +943,7 @@ export default {
         }
 
         &.btn-bg {
-          background: #F74747;
+          background: #2E4C87;
           color: #ffffff;
         }
       }

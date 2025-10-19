@@ -29,11 +29,19 @@
 
       <template v-if="level3.title">
         <span class="arrow">&gt;</span>
-        <a href="javascript: void(0)">{{ level3.title }}</a>
+        <a href="javascript: void(0)" v-if="!level3.route">{{
+          level3.title
+        }}</a>
+        <router-link v-else :to="level3.route" class="route-link">{{
+          level3.title
+        }}</router-link>
       </template>
       <template v-if="level4.title">
         <span class="arrow">&gt;</span>
-        <a href="javascript: void(0)">{{ level4.title }}</a>
+        <a href="javascript: void(0)" v-if="!level4.route">{{ level4.title }}</a>
+        <router-link v-else :to="level4.route" class="route-link">{{
+          level4.title
+        }}</router-link>
       </template>
     </div>
   </div>

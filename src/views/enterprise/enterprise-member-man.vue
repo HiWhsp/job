@@ -599,7 +599,7 @@ export default {
       display: flex;
       align-items: center;
       margin-left: 16px;
-      color: #F74747;
+      color: #2E4C87;
       font-size: 14px;
       font-weight: normal;
       cursor: pointer;
@@ -685,14 +685,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #F74747;
+        color: #2E4C87;
       }
 
       &.active {
-        // background: #F74747;
+        // background: #2E4C87;
         // color: #fff;
         font-weight: bold;
-        color: #F74747;
+        color: #2E4C87;
 
         &::after {
           content: "";
@@ -701,7 +701,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #F74747;
+          background: #2E4C87;
         }
       }
     }
@@ -797,7 +797,7 @@ export default {
       font-weight: 400;
       line-height: 20px;
       color: #999999;
-      color: #F74747;
+      color: #2E4C87;
 
       // 待付款
       &.state--5 {
@@ -807,8 +807,8 @@ export default {
       }
 
       &.state-2 {
-        color: #F74747;
-        border-color: #F74747;
+        color: #2E4C87;
+        border-color: #2E4C87;
       }
     }
   }
@@ -859,7 +859,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #F74747;
+              color: #2E4C87;
             }
           }
 
@@ -937,13 +937,13 @@ export default {
         margin-right: 30px;
 
         b {
-          color: #F74747;
+          color: #2E4C87;
         }
       }
 
       .heji-money {
         b {
-          color: #F74747;
+          color: #2E4C87;
         }
       }
     }
@@ -956,11 +956,11 @@ export default {
         background: #ffffff;
         border-radius: 50px 50px 50px 50px;
         border-radius: 4px;
-        border: 1px solid #F74747;
+        border: 1px solid #2E4C87;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #F74747;
+        color: #2E4C87;
 
         & + button {
           margin-left: 20px;
@@ -971,7 +971,7 @@ export default {
         }
 
         &.btn-bg {
-          background: #F74747;
+          background: #2E4C87;
           color: #ffffff;
         }
       }

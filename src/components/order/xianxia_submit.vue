@@ -178,7 +178,7 @@ export default {
   }
 
   .btn-bg {
-    background: #f74747;
+    background: #2E4C87;
     color: #ffffff;
   }
 }

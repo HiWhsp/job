@@ -7,7 +7,7 @@
           <img src="@img/product/product-add-success.png" alt />
         </div>
         <div class="text-box-1">该商品已成功加入购物车</div>
-        <div class="text-box-2">购物车共<span style="color: #F74747;">{{ vuex_cart_number }}</span>件商品</div>
+        <div class="text-box-2">购物车共<span style="color: #2E4C87;">{{ vuex_cart_number }}</span>件商品</div>
       </div>
       <span slot="footer" class="dialog-footer">
         <button class="btn btn-ripple btn-1" @click="$router.push('/cart')">查看购物车</button>
@@ -78,7 +78,7 @@ export default {
   .btn-1 {
     width: 200px;
     height: 45px;
-    background: #F74747;
+    background: #2E4C87;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 17px;
@@ -88,11 +88,11 @@ export default {
     width: 200px;
     height: 45px;
     border-radius: 0px 0px 0px 0px;
-    border: 1px solid #F74747;
+    border: 1px solid #2E4C87;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 17px;
-    color: #F74747;
+    color: #2E4C87;
   }
 }
 

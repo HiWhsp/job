@@ -533,7 +533,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #f74747;
+      background: #2E4C87;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -559,12 +559,12 @@ export default {
     &.active {
       .step-number {
         .step-num {
-          background: #f74747;
+          background: #2E4C87;
           color: #fff;
         }
 
         .step-line {
-          background: #f74747;
+          background: #2E4C87;
         }
       }
     }
@@ -618,7 +618,7 @@ export default {
       font-size: 12px;
       color: #fff;
       line-height: 20px;
-      background: #f74747;
+      background: #2E4C87;
       cursor: pointer;
     }
 
@@ -773,7 +773,7 @@ export default {
 
   .money-heji {
     span {
-      color: #f74747;
+      color: #2E4C87;
       font-weight: bold;
     }
   }
@@ -800,7 +800,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: bold;
         line-height: 24px;
-        color: #f74747;
+        color: #2E4C87;
 
         .pay-title {
           margin-right: 5px;
@@ -848,8 +848,8 @@ export default {
         // min-width: 96px;
         height: 30px;
         line-height: 30px;
-        // background: #F74747;
-        color: #f74747;
+        // background: #2E4C87;
+        color: #2E4C87;
         // color: #fff;
         font-size: 14px;
       }
@@ -907,7 +907,7 @@ export default {
               font-weight: 500;
 
               &:hover {
-                color: #f74747;
+                color: #2E4C87;
               }
             }
             .box-sku {
@@ -949,7 +949,7 @@ export default {
             margin-left: 10px;
             min-width: 96px;
             height: 30px;
-            background: #f74747;
+            background: #2E4C87;
             font-size: 14px;
             font-family: Microsoft YaHei;
             color: #ffffff;
@@ -991,7 +991,7 @@ export default {
 
       .count {
         font-weight: bold;
-        color: #f74747;
+        color: #2E4C87;
       }
 
       .money-item {
@@ -1053,8 +1053,8 @@ export default {
         }
 
         &.btn-bg {
-          background: #e5222b;
-          border: 1px solid #e5222b;
+          background: #2E4C87;
+          border: 1px solid #2E4C87;
           color: #fff;
         }
 

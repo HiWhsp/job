@@ -221,7 +221,7 @@ export default {
     }
 
     &.active {
-      border: 1px solid #F74747;
+      border: 1px solid #2E4C87;
     }
 
     img {

@@ -425,7 +425,7 @@
             返回购物车
           </button>
           <button class="btn-ripple fit-text btn-2" @click="do_submit()">
-            去支付
+            提交订单
           </button>
         </div>
       </div>
@@ -1562,8 +1562,8 @@ export default {
 .btn-cancel {
   min-width: 100px;
   height: 40px;
-  border: 1px solid #f74747;
-  color: #f74747;
+  border: 1px solid #2E4C87;
+  color: #2E4C87;
   font-size: 14px;
 }
 
@@ -1571,7 +1571,7 @@ export default {
   margin-left: 20px;
   min-width: 100px;
   height: 40px;
-  background: #f74747;
+  background: #2E4C87;
   color: #fff;
   font-size: 14px;
 }
@@ -1743,7 +1743,7 @@ export default {
 
           .box-unit {
             width: 240px;
-            color: #ff0000;
+            color: #2E4C87;
           }
 
           .box-num {
@@ -1752,7 +1752,7 @@ export default {
 
           .box-subtitle {
             width: 240px;
-            color: #ff0000;
+            color: #2E4C87;
           }
           .box-remark {
             width: 240px;
@@ -1806,7 +1806,7 @@ export default {
             font-family: Arial, Arial;
             font-weight: bold;
             font-size: 20px;
-            color: #ff0000;
+            color: #2E4C87;
           }
         }
       }
@@ -1827,17 +1827,17 @@ export default {
         height: 45px;
         background: #ffffff;
         border-radius: 0px 0px 0px 0px;
-        border: 1px solid #f74747;
+        border: 1px solid #2E4C87;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 17px;
-        color: #f74747;
+        color: #2E4C87;
       }
 
       &.btn-2 {
         width: 200px;
         height: 45px;
-        background: #f74747;
+        background: #2E4C87;
         border-radius: 0px 0px 0px 0px;
         font-family: Arial, Arial;
         font-weight: 400;
@@ -1950,7 +1950,7 @@ export default {
           border: 1px solid #cccccc;
 
           &.active {
-            border: 1px solid #f74747;
+            border: 1px solid #2E4C87;
           }
         }
       }
@@ -2047,7 +2047,7 @@ export default {
     margin-bottom: 10px;
 
     b {
-      color: #f74747;
+      color: #2E4C87;
     }
   }
 
@@ -2169,7 +2169,7 @@ export default {
       }
 
       &.active {
-        border: 2px solid #ff0000;
+        border: 2px solid #2E4C87;
 
         .marker {
           display: block;
@@ -2210,7 +2210,7 @@ export default {
     .btn {
       width: 133px;
       height: 40px;
-      background: #e5222b;
+      background: #2E4C87;
       color: #fff;
       font-size: 16px;
       font-weight: 500;
@@ -2243,7 +2243,7 @@ export default {
         color: #666666;
 
         span {
-          color: #f74747;
+          color: #2E4C87;
         }
       }
 
@@ -2503,8 +2503,8 @@ export default {
         color: #333333;
 
         &.active {
-          color: #e5222b;
-          border: 1px solid #e5222b;
+          color: #2E4C87;
+          border: 1px solid #2E4C87;
         }
 
         &:hover {

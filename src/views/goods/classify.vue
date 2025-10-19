@@ -362,11 +362,11 @@ export default {
         border: 1px solid transparent;
 
         &:hover {
-          color: #F74747;
+          color: #2E4C87;
         }
 
         &.active {
-          color: #F74747;
+          color: #2E4C87;
           border: 1px solid #ff9312;
 
           background: url(~@img/other/fenlei-checked.png) no-repeat right bottom;
@@ -422,11 +422,11 @@ export default {
           span {
             cursor: pointer;
             &:hover {
-              color: #F74747;
+              color: #2E4C87;
             }
 
             &.active {
-              color: #F74747;
+              color: #2E4C87;
             }
           }
         }

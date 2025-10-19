@@ -206,7 +206,7 @@ export default {
       color: #aeaeae;
     }
     .search-keyword {
-      color: #f74747;
+      color: #2E4C87;
     }
   }
 }

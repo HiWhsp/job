@@ -349,7 +349,7 @@ export default {
     color: #000000;
 
     &:hover {
-      background: #F74747;
+      background: #2E4C87;
       color: #fff;
     }
   }
@@ -433,7 +433,7 @@ export default {
           transform: translate(-50%);
           width: 0;
           height: 2px;
-          background: #F74747;
+          background: #2E4C87;
           transition: 0.3s;
         }
       }
@@ -447,7 +447,7 @@ export default {
       &.active {
         .nav-link {
           // font-weight: bold;
-          color: #F74747;
+          color: #2E4C87;
 
           &::after {
             // width: 36px;
@@ -513,18 +513,18 @@ export default {
       color: #fff;
 
       &.active {
-        color: #F74747;
+        color: #2E4C87;
         font-weight: bold;
       }
 
       &.router-link-exact-active {
-        color: #F74747;
+        color: #2E4C87;
         font-weight: bold;
       }
     }
 
     .text:hover {
-      color: #F74747;
+      color: #2E4C87;
       font-weight: bold;
     }
   }
@@ -624,7 +624,7 @@ export default {
     color: #999999;
 
     &:hover {
-      color: #F74747;
+      color: #2E4C87;
     }
   }
 
@@ -635,7 +635,7 @@ export default {
     color: #999999;
 
     &:hover {
-      color: #F74747;
+      color: #2E4C87;
     }
   }
 }

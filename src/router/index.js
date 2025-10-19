@@ -187,6 +187,11 @@ const points_record = () => import("@/views/points/points-record.vue");
 const couponList = () => import("@/views/coupon/coupon-list.vue");
 const couponCenter = () => import("@/views/coupon/coupon-center.vue");
 
+const custom_order = () => import("@/views/service/custom-order.vue");
+const quick_buy = () => import("@/views/service/quick-buy.vue");
+const product_consult = () => import("@/views/service/product-consult.vue");
+const download = () => import("@/views/download/download.vue");
+
 const routes = [
   // 首页
   {
@@ -280,6 +285,40 @@ const routes = [
       title: "产品列表",
     },
   },
+  {
+    path: "/custom-order",
+    name: "custom-order",
+    component: custom_order,
+    meta: {
+      title: "非标定制",
+    },
+  },
+  {
+    path: "/quick-buy",
+    name: "quick-buy",
+    component: quick_buy,
+    meta: {
+      title: "快速购物",
+    },
+  },
+  {
+    path: "/product-consult",
+    name: "product-consult",
+    component: product_consult,
+    meta: {
+      title: "产品咨询与反馈",
+    },
+  },
+
+  {
+    path: "/download",
+    name: "download",
+    component: download,
+    meta: {
+      title: "下载中心",
+    },
+  },
+
   {
     path: "/product-brand",
     name: "product-brand",

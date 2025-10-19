@@ -26,11 +26,27 @@
 
             <div class="base-right flex">
               <div class="u-act">
-                <router-link to="/help">服务中心</router-link>
+                <el-dropdown @command="handleServiceCommand" trigger="hover">
+                  <span class="el-dropdown-link">
+                    服务中心
+                    <i class="el-icon-arrow-down el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="custom-order"
+                      >非标定制</el-dropdown-item
+                    >
+                    <el-dropdown-item command="quick-buy"
+                      >快速购物</el-dropdown-item
+                    >
+                    <el-dropdown-item command="product-consult"
+                      >产品咨询与反馈</el-dropdown-item
+                    >
+                  </el-dropdown-menu>
+                </el-dropdown>
               </div>
               <span class="u-line"></span>
               <div class="u-act">
-                <router-link to="/help">下载中心</router-link>
+                <router-link to="/download">下载中心</router-link>
               </div>
               <span class="u-line"></span>
               <div class="u-act">
@@ -38,7 +54,7 @@
               </div>
               <span class="u-line"></span>
               <div class="u-act">
-                <router-link to="/help">关于我们</router-link>
+                <router-link to="/about">关于我们</router-link>
               </div>
             </div>
           </div>
@@ -48,8 +64,16 @@
         <div class="search-inner">
           <div class="search-box w-1400">
             <div class="left-logo">
-              <img src="@img/common/logo.png" @click="$router.push('/')" v-if="!isScrolled" />
-              <img src="@img/common/logo-scrolled.png" @click="$router.push('/')" v-else />
+              <img
+                src="@img/common/logo.png"
+                @click="$router.push('/')"
+                v-if="!isScrolled"
+              />
+              <img
+                src="@img/common/logo-scrolled.png"
+                @click="$router.push('/')"
+                v-else
+              />
             </div>
 
             <div class="center-search">
@@ -67,23 +91,39 @@
             </div>
 
             <div class="btns flex-between">
-              <div class="btn">
-                <img src="@img/head/icon1-scrolled.png" alt="" v-if="isScrolled" />
+              <div class="btn" @click="$router.push('/product-cates')">
+                <img
+                  src="@img/head/icon1-scrolled.png"
+                  alt=""
+                  v-if="isScrolled"
+                />
                 <img src="@img/head/icon1.png" alt="" v-else />
                 <span>产品中心</span>
               </div>
-              <div class="btn">
-                <img src="@img/head/icon2-scrolled.png" alt="" v-if="isScrolled" />
+              <div class="btn" @click="$router.push('/login')">
+                <img
+                  src="@img/head/icon2-scrolled.png"
+                  alt=""
+                  v-if="isScrolled"
+                />
                 <img src="@img/head/icon2.png" alt="" v-else />
                 <span>登录 | 注册</span>
               </div>
-              <div class="btn">
-                <img src="@img/head/icon3-scrolled.png" alt="" v-if="isScrolled" />
+              <div class="btn" @click="$router.push('/cart')">
+                <img
+                  src="@img/head/icon3-scrolled.png"
+                  alt=""
+                  v-if="isScrolled"
+                />
                 <img src="@img/head/icon3.png" alt="" v-else />
                 <span>购物车</span>
               </div>
               <div class="btn">
-                <img src="@img/head/icon4-scrolled.png" alt="" v-if="isScrolled" />
+                <img
+                  src="@img/head/icon4-scrolled.png"
+                  alt=""
+                  v-if="isScrolled"
+                />
                 <img src="@img/head/icon4.png" alt="" v-else />
                 <span>系统消息</span>
               </div>
@@ -187,6 +227,21 @@ export default {
   },
 
   methods: {
+    // 处理服务中心下拉菜单命令
+    handleServiceCommand(command) {
+      switch (command) {
+        case "custom-order":
+          this.$router.push("/custom-order");
+          break;
+        case "quick-buy":
+          this.$router.push("/quick-buy");
+          break;
+        case "product-consult":
+          this.$router.push("/product-consult");
+          break;
+      }
+    },
+
     // 处理滚动事件
     handleScroll() {
       if (this.$route.path != "/") {
@@ -288,7 +343,7 @@ export default {
 
     //搜索
     do_search() {
-      window.location.href = `/product-cates?keyword=${this.keyword || ""}`;
+      window.location.href = `/product-list?keyword=${this.keyword || ""}`;
       // this.$router.push({
       //   path: "/product-cates",
       //   query: {
@@ -380,6 +435,32 @@ export default {
   padding: 0 !important;
   margin-top: 2px !important;
   // border: none !important;
+}
+
+// 服务中心下拉菜单样式
+.el-dropdown-menu {
+  border-radius: 6px !important;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid #e4e7ed !important;
+  padding: 6px 0 !important;
+  margin-top: 8px !important;
+
+  .el-dropdown-menu__item {
+    font-size: 14px !important;
+    color: #606266 !important;
+    padding: 8px 20px !important;
+    line-height: 1.5 !important;
+
+    &:hover {
+      background-color: #f5f7fa !important;
+      color: #5589ff !important;
+    }
+
+    &:focus {
+      background-color: #f5f7fa !important;
+      color: #5589ff !important;
+    }
+  }
 }
 
 .pop-child {
@@ -478,6 +559,21 @@ export default {
           width: 1px;
           height: 16px;
           background: #bbbbbb;
+        }
+
+        .el-dropdown-link {
+          color: #ffffff;
+          cursor: pointer;
+          font-size: 14px;
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: 400;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          &:hover {
+            color: #5589ff;
+          }
         }
       }
       .audit-count {
@@ -660,9 +756,15 @@ export default {
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     .head-base {
-      background: #F3F3F3;
+      background: #f3f3f3;
       .base-right .u-act a {
         color: #666;
+      }
+      .base-right .u-act .el-dropdown-link {
+        color: #666;
+        &:hover {
+          color: #5589ff;
+        }
       }
     }
     .head-search {
@@ -676,7 +778,7 @@ export default {
       color: #666;
     }
     .center-search .input-box {
-      border: 1px solid #E4E4E4;
+      border: 1px solid #e4e4e4;
     }
     .center-search .input-box button .el-icon-search {
       color: #999;

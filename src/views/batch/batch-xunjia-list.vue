@@ -576,14 +576,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #f74747;
+        color: #2E4C87;
       }
 
       &.active {
-        // background: #F74747;
+        // background: #2E4C87;
         // color: #fff;
         font-weight: bold;
-        color: #f74747;
+        color: #2E4C87;
 
         &::after {
           content: "";
@@ -592,7 +592,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #f74747;
+          background: #2E4C87;
         }
       }
     }
@@ -759,8 +759,8 @@ export default {
           }
 
           &.state-2 {
-            color: #f74747;
-            border-color: #f74747;
+            color: #2E4C87;
+            border-color: #2E4C87;
           }
         }
         .box-image {
@@ -793,7 +793,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #f74747;
+              color: #2E4C87;
             }
           }
 
@@ -860,13 +860,13 @@ export default {
         margin-right: 30px;
 
         b {
-          color: #f74747;
+          color: #2E4C87;
         }
       }
 
       .heji-money {
         b {
-          color: #f74747;
+          color: #2E4C87;
         }
       }
     }
@@ -879,11 +879,11 @@ export default {
         background: #ffffff;
         border-radius: 50px 50px 50px 50px;
         border-radius: 4px;
-        border: 1px solid #f74747;
+        border: 1px solid #2E4C87;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #f74747;
+        color: #2E4C87;
 
         & + button {
           margin-left: 20px;
@@ -894,7 +894,7 @@ export default {
         }
 
         &.btn-bg {
-          background: #f74747;
+          background: #2E4C87;
           color: #ffffff;
         }
       }
@@ -909,11 +909,11 @@ export default {
   background: #ffffff;
   border-radius: 5rem 5rem 5rem 5rem;
   border-radius: 0.4rem;
-  border: 1px solid #f74747;
+  border: 1px solid #2E4C87;
   font-family: Arial, Arial;
   font-weight: 400;
   font-size: 1.4rem;
-  color: #f74747;
+  color: #2E4C87;
   margin-left: 20px;
 }
 .btn-ripple:not(:disabled):hover {

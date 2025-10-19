@@ -121,7 +121,7 @@ export default {
     text-align: left;
 
     .tip {
-      color: #F74747;
+      color: #2E4C87;
       margin-bottom: 20px;
     }
 
@@ -195,7 +195,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #F74747;
+  // background: #2E4C87;
   background: #f7f7f7;
   text-align: left;
 
@@ -226,11 +226,11 @@ export default {
     font-size: 14px;
     font-family: sans-serif;
     font-weight: 400;
-    color: #F74747;
-    border: 1px solid #F74747;
+    color: #2E4C87;
+    border: 1px solid #2E4C87;
   }
   .queding {
-    background: #F74747;
+    background: #2E4C87;
     color: #fff;
   }
 }
@@ -242,7 +242,7 @@ export default {
   display: flex;
   align-items: center;
   cursor: pointer;
-  color: #F74747;
+  color: #2E4C87;
 
   &.disabled {
     color: #ccc;

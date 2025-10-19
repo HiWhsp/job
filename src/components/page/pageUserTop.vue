@@ -48,7 +48,7 @@ export default {
 
 <style lang="less" scoped>
 .link-home {
-  color: #F74747;
+  color: #2E4C87;
 }
 
 .bread-wrap {

@@ -426,14 +426,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #f74747;
+        color: #2E4C87;
       }
 
       &.active {
-        // background: #F74747;
+        // background: #2E4C87;
         // color: #fff;
         font-weight: bold;
-        color: #f74747;
+        color: #2E4C87;
 
         &::after {
           content: "";
@@ -442,7 +442,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #f74747;
+          background: #2E4C87;
         }
       }
     }
@@ -625,7 +625,7 @@ export default {
         min-width: 96px;
         height: 30px;
         font-size: 14px;
-        color: #e5222b;
+        color: #2E4C87;
         transition: 0.3s;
 
         &:hover {
@@ -652,7 +652,7 @@ export default {
       .refund-type {
         min-width: 80px;
         text-align: left;
-        color: #f74747;
+        color: #2E4C87;
       }
 
       .date {
@@ -685,7 +685,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: bold;
         line-height: 20px;
-        color: #e5222b;
+        color: #2E4C87;
         display: flex;
         align-items: center;
 
@@ -827,8 +827,8 @@ export default {
       .btn {
         min-width: 96px;
         height: 30px;
-        background: #f74747;
-        border: 1px solid #f74747;
+        background: #2E4C87;
+        border: 1px solid #2E4C87;
         font-size: 14px;
         color: #fff;
         transition: 0.3s;
@@ -840,8 +840,8 @@ export default {
         &.btn-text {
           background-color: #fff;
           border-radius: 4px;
-          border: 1px solid #e5222b;
-          color: #e5222b;
+          border: 1px solid #2E4C87;
+          color: #2E4C87;
         }
       }
     }

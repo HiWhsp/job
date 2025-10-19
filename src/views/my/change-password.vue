@@ -215,7 +215,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: #F74747;
+        color: #2E4C87;
 
         span {
           margin-right: 20px;
@@ -248,7 +248,7 @@ export default {
     margin-left: 24px;
     width: 120px;
     height: 40px;
-    background: #F74747;
+    background: #2E4C87;
     border-radius: 4px;
     font-family: Arial, Arial;
     font-weight: 400;

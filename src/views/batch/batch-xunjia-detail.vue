@@ -468,7 +468,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #f74747;
+      background: #2E4C87;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -504,7 +504,7 @@ export default {
           display: flex;
           align-items: flex-start;
           height: 113px;
-          border-top: 1px solid #f74747;
+          border-top: 1px solid #2E4C87;
           .check-box {
             width: 35px;
             text-align: center;
@@ -515,7 +515,7 @@ export default {
               font-family: Microsoft YaHei, Microsoft YaHei;
               font-weight: 400;
               font-size: 12px;
-              color: #f74747;
+              color: #2E4C87;
             }
             .title {
               margin: 10px 0;
@@ -564,7 +564,7 @@ export default {
         display: flex;
         align-items: flex-start;
         height: 133px;
-        border-top: 1px solid #f74747;
+        border-top: 1px solid #2E4C87;
 
         .poster-box {
           width: 80px;
@@ -623,12 +623,12 @@ export default {
           width: 180px;
           height: 46px;
           background: #fff2f2;
-          border: 1px solid #e5222b;
+          border: 1px solid #2E4C87;
 
           font-size: 16px;
           font-family: Microsoft YaHei;
           font-weight: bold;
-          color: #e5222b;
+          color: #2E4C87;
           transition: 0.3s;
           user-select: none;
 
@@ -673,7 +673,7 @@ export default {
         color: #666666;
 
         &:hover {
-          color: #f74747;
+          color: #2E4C87;
         }
       }
     }
@@ -691,7 +691,7 @@ export default {
         color: #666666;
 
         &:hover {
-          color: #f74747;
+          color: #2E4C87;
         }
       }
     }
@@ -709,7 +709,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 12px;
-          color: #f74747;
+          color: #2E4C87;
         }
       }
     }
@@ -772,7 +772,7 @@ export default {
       cursor: pointer;
       width: 191px;
       height: 46px;
-      background: #f74747;
+      background: #2E4C87;
 
       font-size: 16px;
       font-family: Microsoft YaHei;
@@ -801,12 +801,12 @@ export default {
     &.active {
       .step-number {
         .step-num {
-          background: #f74747;
+          background: #2E4C87;
           color: #fff;
         }
 
         .step-line {
-          background: #f74747;
+          background: #2E4C87;
         }
       }
     }
@@ -966,7 +966,7 @@ export default {
 
   .money-heji {
     span {
-      color: #f74747;
+      color: #2E4C87;
       font-weight: bold;
     }
   }
@@ -993,7 +993,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: bold;
         line-height: 24px;
-        color: #f74747;
+        color: #2E4C87;
 
         .pay-title {
           margin-right: 5px;
@@ -1128,7 +1128,7 @@ export default {
               cursor: pointer;
 
               &:hover {
-                color: #f74747;
+                color: #2E4C87;
               }
             }
           }
@@ -1176,7 +1176,7 @@ export default {
             margin-left: 10px;
             min-width: 96px;
             height: 30px;
-            background: #f74747;
+            background: #2E4C87;
             font-size: 14px;
             font-family: Microsoft YaHei;
             color: #ffffff;
@@ -1218,7 +1218,7 @@ export default {
 
       .count {
         font-weight: bold;
-        color: #f74747;
+        color: #2E4C87;
       }
 
       .money-info {
@@ -1270,18 +1270,18 @@ export default {
         height: 32px;
         background: #ffffff;
         border-radius: 50px 50px 50px 50px;
-        border: 1px solid #f74747;
+        border: 1px solid #2E4C87;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #f74747;
+        color: #2E4C87;
 
         & + button {
           margin-left: 20px;
         }
 
         &.btn-bg {
-          background: #f74747;
+          background: #2E4C87;
           color: #fff;
         }
 

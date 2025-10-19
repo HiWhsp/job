@@ -114,12 +114,12 @@ export default {
     height: 32px;
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    border: 1px solid #2E4C87;
 
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
+    color: #2E4C87;
 
     & + button {
       margin-left: 16px;
@@ -135,7 +135,7 @@ export default {
   }
 
   .btn-bg {
-    background: #F74747;
+    background: #2E4C87;
     color: #ffffff;
   }
 }

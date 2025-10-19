@@ -200,12 +200,12 @@ body {
 
 
 .el-textarea__inner:focus {
-  border-color: #F74747 !important;
+  border-color: #2E4C87 !important;
 }
 
 .el-radio__input.is-checked .el-radio__inner {
-  background: #F74747 !important;
-  border-color: #F74747 !important;
+  background: #2E4C87 !important;
+  border-color: #2E4C87 !important;
 }
 
 .el-radio__input.is-checked+.el-radio__label {
@@ -213,17 +213,17 @@ body {
 }
 
 .el-checkbox__input.is-focus .el-checkbox__inner {
-  border-color: #F74747 !important;
+  border-color: #2E4C87 !important;
 }
 
 .el-checkbox__input.is-checked+.el-checkbox__label {
-  color: #F74747 !important;
+  color: #2E4C87 !important;
 }
 
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-  background: #F74747 !important;
-  border-color: #F74747 !important;
+  background: #2E4C87 !important;
+  border-color: #2E4C87 !important;
 }
 
 .pagination-box {
@@ -370,11 +370,11 @@ button {
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled):hover {
-  color: #F74747 !important;
+  color: #2E4C87 !important;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #F74747 !important;
+  background-color: #2E4C87 !important;
   color: #fff !important;
 }
 

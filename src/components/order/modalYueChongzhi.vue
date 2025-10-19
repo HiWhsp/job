@@ -123,7 +123,7 @@ export default {
     .money {
       margin-top: 20px;
       font-size: 16px;
-      color: #F74747;
+      color: #2E4C87;
       b {
         font-size: 24px;
       }
@@ -138,7 +138,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #F74747;
+  // background: #2E4C87;
   background: #f7f7f7;
   text-align: left;
 
@@ -165,12 +165,12 @@ export default {
 
   .quxiao {
     // margin-right: 20px;
-    color: #F74747;
-    border: 1px solid #F74747;
+    color: #2E4C87;
+    border: 1px solid #2E4C87;
   }
   .queding {
     // margin-right: 24px;
-    background: #F74747;
+    background: #2E4C87;
     color: #fff;
 
     &:disabled {

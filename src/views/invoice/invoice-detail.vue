@@ -448,7 +448,7 @@ export default {
     .red {
       width: 240px;
       height: 32px;
-      background: #f74747;
+      background: #2E4C87;
       border-radius: 4px;
       color: #fff;
       font-size: 14px;
