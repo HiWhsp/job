@@ -55,6 +55,7 @@
           <div class="document-container">
             <div class="document-page">
               <div class="document-content blurred">
+                <canvas ref="watermarkCanvas" class="watermark-canvas"></canvas>
                 <!-- PDF所有页面展示 -->
                 <div
                   v-if="
@@ -276,6 +277,7 @@ export default {
     this.addScrollListener();
     this.addResizeListener();
     this.loadPDFJS();
+    this.loadWatermark();
   },
   beforeDestroy() {
     this.removeScrollListener();
@@ -501,6 +503,49 @@ export default {
           console.error(`渲染第${i + 1}页失败:`, error);
         }
       }
+    },
+    loadWatermark() {
+      const canvas = this.$refs.watermarkCanvas;
+      const ctx = canvas.getContext("2d");
+      // 设置 canvas 尺寸
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+
+      // 水印参数
+      const watermarkText = "法焰律师";
+      const fontSize = 18;
+      const spacing = 80; // 水印间距
+      const angle = -45; // 旋转角度
+      const opacity = 0.1; // 透明度
+
+      // 清空画布
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+      // 设置字体样式
+      ctx.font = `bold ${fontSize}px Arial, sans-serif`;
+      ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      // 计算水印网格
+      const cols = Math.ceil(canvasWidth / spacing) + 2;
+      const rows = Math.ceil(canvasHeight / spacing) + 2;
+
+      // 绘制水印
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          const x = j * spacing;
+          const y = i * spacing;
+
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.rotate((angle * Math.PI) / 180);
+          ctx.fillText(watermarkText, 0, 0);
+          ctx.restore();
+        }
+      }
+
+      context.draw();
     },
   },
 };

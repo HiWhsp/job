@@ -84,13 +84,7 @@ export default {
   },
   methods: {
     handleView() {
-      this.$router.push({
-        path: "/contractDetail",
-        query: {
-          id:
-            this.type == "collect" ? this.contract.articleId : this.contract.id,
-        },
-      });
+    window.open(`/contractDetail?id=${this.type == "collect" ? this.contract.articleId : this.contract.id}`, '_blank');
       console.log(this.contract);
     },
     handleCollect() {
