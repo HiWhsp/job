@@ -15,86 +15,22 @@
 
             <!-- 焦距筛选 -->
             <el-collapse v-model="activeFilters" class="filter-collapse">
-              <el-collapse-item title="焦距f'" name="focalLength">
+              <el-collapse-item
+                :title="item.title"
+                :name="item.fieldTitle"
+                v-for="item in filterOptions"
+                :key="item.fieldTitle"
+              >
                 <el-checkbox-group
-                  v-model="filters.focalLength"
+                  v-model="filters[item.fieldTitle]"
                   @change="handleFilterChange"
                 >
-                  <el-checkbox label="100">100</el-checkbox>
-                  <el-checkbox label="125">125</el-checkbox>
-                  <el-checkbox label="150">150</el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-
-              <!-- 直径筛选 -->
-              <el-collapse-item title="直径Φ" name="diameter">
-                <el-checkbox-group
-                  v-model="filters.diameter"
-                  @change="handleFilterChange"
-                >
-                  <el-checkbox label="6.0">6.0</el-checkbox>
-                  <el-checkbox label="10.0">10.0</el-checkbox>
-                  <el-checkbox label="12.7">12.7</el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-
-              <!-- 机械壳外径筛选 -->
-              <el-collapse-item title="机械壳外径" name="housingDiameter">
-                <el-checkbox-group
-                  v-model="filters.housingDiameter"
-                  @change="handleFilterChange"
-                >
-                  <el-checkbox label="20">20</el-checkbox>
-                  <el-checkbox label="30">30</el-checkbox>
-                  <el-checkbox label="40">40</el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-
-              <!-- 装卡透镜型号筛选 -->
-              <el-collapse-item title="装卡透镜型号" name="lensModel">
-                <el-checkbox-group
-                  v-model="filters.lensModel"
-                  @change="handleFilterChange"
-                >
-                  <el-checkbox label="model1">型号1</el-checkbox>
-                  <el-checkbox label="model2">型号2</el-checkbox>
-                  <el-checkbox label="model3">型号3</el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-
-              <!-- 曲率半径筛选 -->
-              <el-collapse-item title="曲率半径R" name="curvatureRadius">
-                <el-checkbox-group
-                  v-model="filters.curvatureRadius"
-                  @change="handleFilterChange"
-                >
-                  <el-checkbox label="50">50</el-checkbox>
-                  <el-checkbox label="75">75</el-checkbox>
-                  <el-checkbox label="100">100</el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-
-              <!-- 工作距离筛选 -->
-              <el-collapse-item title="工作距离" name="workingDistance">
-                <el-checkbox-group
-                  v-model="filters.workingDistance"
-                  @change="handleFilterChange"
-                >
-                  <el-checkbox label="10">10mm</el-checkbox>
-                  <el-checkbox label="20">20mm</el-checkbox>
-                  <el-checkbox label="30">30mm</el-checkbox>
-                </el-checkbox-group>
-              </el-collapse-item>
-
-              <!-- 机械壳螺纹筛选 -->
-              <el-collapse-item title="机械壳螺纹" name="thread">
-                <el-checkbox-group
-                  v-model="filters.thread"
-                  @change="handleFilterChange"
-                >
-                  <el-checkbox label="M8">M8</el-checkbox>
-                  <el-checkbox label="M12">M12</el-checkbox>
-                  <el-checkbox label="M16">M16</el-checkbox>
+                  <el-checkbox
+                    :label="option"
+                    v-for="(option, index) in item.options"
+                    :key="index"
+                    >{{ option }}</el-checkbox
+                  >
                 </el-checkbox-group>
               </el-collapse-item>
             </el-collapse>
@@ -154,7 +90,7 @@
                     size="small"
                     class="view-products-btn"
                   >
-                    查看{{ product.kucun }}款同类型产品
+                    查看{{ product.brandNum }}款同类型产品
                   </el-button>
                 </div>
               </div>
@@ -195,15 +131,7 @@ export default {
 
       // 筛选条件
       activeFilters: [],
-      filters: {
-        focalLength: [],
-        diameter: [],
-        housingDiameter: [],
-        lensModel: [],
-        curvatureRadius: [],
-        workingDistance: [],
-        thread: [],
-      },
+      filters: {},
 
       // 排序
       sortBy: "0",
@@ -215,10 +143,21 @@ export default {
 
       // 商品数据
       products: [],
+
+      // 筛选条件
+      filterOptions: [],
     };
   },
   methods: {
     getProductList() {
+      let attrs = [];
+      if (this.filters) {
+        Object.keys(this.filters).forEach((key) => {
+          if (this.filters[key].length > 0) {
+            attrs.push({ key, value: this.filters[key].join(",") });
+          }
+        });
+      }
       this.$api({
         url: "/service.php",
         method: "get",
@@ -229,6 +168,7 @@ export default {
           channelId: this.nav_option[this.nav_option.length - 1].id,
           page: this.currentPage,
           pageNum: this.pageSize,
+          attrs: attrs.length > 0 ? JSON.stringify(attrs) : "",
         },
       }).then((res) => {
         let { list, count } = res.data;
@@ -240,21 +180,18 @@ export default {
     },
     // 重置筛选条件
     resetFilters() {
-      this.filters = {
-        focalLength: [],
-        diameter: [],
-        housingDiameter: [],
-        lensModel: [],
-        curvatureRadius: [],
-        workingDistance: [],
-        thread: [],
-      };
+      this.filters = this.filterOptions.reduce((acc, item) => {
+        acc[item.fieldTitle] = [];
+        return acc;
+      }, {});
       this.currentPage = 1;
+      this.getProductList();
     },
 
     // 筛选条件变化
     handleFilterChange() {
       this.currentPage = 1;
+      this.getProductList();
     },
 
     // 排序变化
@@ -265,7 +202,7 @@ export default {
 
     // 商品点击
     handleProductClick(item) {
-      this.$router.push(`/product-detail?id=${item.inventoryId}`);
+      this.$router.push(`/product-detail?id=${item.id}`);
     },
 
     // 切换收藏
@@ -280,6 +217,24 @@ export default {
       this.$message.success(product.selected ? "已选择商品" : "已取消选择");
     },
 
+    // 获取筛选条件
+    getFilterOptions() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_zdyAttr",
+        },
+      }).then((res) => {
+        if (res.code == 200 && res.data) {
+          this.filterOptions = res.data;
+          this.filters = this.filterOptions.reduce((acc, item) => {
+            acc[item.fieldTitle] = [];
+            return acc;
+          }, {});
+        }
+      });
+    },
     // 分页大小变化
     handleSizeChange(val) {
       this.pageSize = val;
@@ -299,6 +254,8 @@ export default {
     if (this.nav_option.length > 0) {
       this.nav_option[this.nav_option.length - 1].route = "/product-list";
     }
+    // 获取筛选条件
+    this.getFilterOptions();
     this.getProductList();
   },
 };
