@@ -32,32 +32,18 @@
               </div>
               <div class="item-params">参数信息：{{ item.params || "--" }}</div>
               <div class="item-progress">
-                <div class="progress-bar">
-                  <img
-                    src="@/assets/img/icon/progress1.png"
-                    alt="progress"
-                    v-if="item.progress == 1"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress2.png"
-                    alt="progress"
-                    v-if="item.progress == 2"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress3.png"
-                    alt="progress"
-                    v-if="item.progress == 3"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress4.png"
-                    alt="progress"
-                    v-if="item.progress == 4"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress4.png"
-                    alt="progress"
-                    v-if="item.progress == 5"
-                  />
+                <div class="progress-bar-container">
+                  <div class="progress-bar-track">
+                    <div
+                      class="progress-bar-fill"
+                      :style="{ width: item.progress * 20 + '%' }"
+                    >
+                      <span class="progress-slider"> </span>
+                    </div>
+                  </div>
+                  <div class="progress-label">
+                    {{ item.delivery_title }}
+                  </div>
                 </div>
               </div>
               <div class="item-price">
@@ -100,32 +86,23 @@
                 <p>{{ item.params }}</p>
               </div>
               <div class="item-progress">
-                <div class="progress-bar">
-                  <img
-                    src="@/assets/img/icon/progress1.png"
-                    alt="progress"
-                    v-if="item.progress == 1"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress2.png"
-                    alt="progress"
-                    v-if="item.progress == 2"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress3.png"
-                    alt="progress"
-                    v-if="item.progress == 3"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress4.png"
-                    alt="progress"
-                    v-if="item.progress == 4"
-                  />
-                  <img
-                    src="@/assets/img/icon/progress4.png"
-                    alt="progress"
-                    v-if="item.progress == 5"
-                  />
+                <div class="progress-bar-container">
+                  <div class="progress-bar-track">
+                    <div
+                      class="progress-bar-fill"
+                      :style="{
+                        width:
+                          (item.progress * 20 > 100
+                            ? 100
+                            : item.progress * 20) + '%',
+                      }"
+                    >
+                      <span class="progress-slider"> </span>
+                    </div>
+                  </div>
+                  <div class="progress-label">
+                    {{ item.delivery_title }}
+                  </div>
                 </div>
               </div>
               <div class="item-price">
@@ -343,6 +320,7 @@ export default {
                           : item.spec,
                       progress: item.delivery_time,
                       price_status: item.price_status,
+                      delivery_title: item.delivery_title,
                     });
                   }
                 });
@@ -376,6 +354,7 @@ export default {
                               : item.spec,
                           progress: item.delivery_time,
                           price_status: item.price_status,
+                          delivery_title: item.delivery_title,
                         });
                       }
                     });
@@ -409,6 +388,7 @@ export default {
                                   : item.spec,
                               progress: item.delivery_time,
                               price_status: item.price_status,
+                              delivery_title: item.delivery_title,
                             });
                           }
                         });
@@ -457,19 +437,19 @@ export default {
         }
         // 如果item.other中的三个值如果为空则设置为空字符串
         if (!item.other?.notes) {
-          item.other.notes = '';
+          item.other.notes = "";
         }
         if (!item.other?.brand) {
-          item.other.brand = '';
+          item.other.brand = "";
         }
         if (!item.other?.image) {
-          item.other.image = '';
+          item.other.image = "";
         }
         if (!item.other?.brand) {
-          item.other.brand = '';
+          item.other.brand = "";
         }
         if (!item.other?.image) {
-          item.other.image = '';
+          item.other.image = "";
         }
       });
       this.$api({

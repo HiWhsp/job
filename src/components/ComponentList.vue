@@ -21,37 +21,30 @@
             </div>
             <div class="component-info">
               <div class="component-name">
-                {{ value.title }} 
+                {{ value.title }}
               </div>
               <div class="component-leadtime">{{ value.description }}</div>
             </div>
             <div class="progress-bar">
               <div class="progress-fill">
-                <img
-                  src="@/assets/img/icon/progress1.png"
-                  alt="progress"
-                  v-if="value.delivery_time == 1"
-                />
-                <img
-                  src="@/assets/img/icon/progress2.png"
-                  alt="progress"
-                  v-if="value.delivery_time == 2"
-                />
-                <img
-                  src="@/assets/img/icon/progress3.png"
-                  alt="progress"
-                  v-if="value.delivery_time == 3"
-                />
-                <img
-                  src="@/assets/img/icon/progress4.png"
-                  alt="progress"
-                  v-if="value.delivery_time == 4"
-                />
-                <img
-                  src="@/assets/img/icon/progress4.png"
-                  alt="progress"
-                  v-if="value.delivery_time == 5"
-                />
+                <div class="progress-bar-container">
+                  <div class="progress-bar-track">
+                    <div
+                      class="progress-bar-fill"
+                      :style="{
+                        width:
+                          (value.delivery_time * 20 > 100
+                            ? 100
+                            : value.delivery_time * 20) + '%',
+                      }"
+                    >
+                      <span class="progress-slider"> </span>
+                    </div>
+                  </div>
+                  <div class="progress-label">
+                    {{ value.delivery_title }}
+                  </div>
+                </div>
               </div>
               <div class="coin-icon">
                 <img

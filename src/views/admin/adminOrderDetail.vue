@@ -79,26 +79,24 @@
 
             <div class="config-delivery">
               <div class="delivery-progress">
-                <img
-                  src="@/assets/img/icon/progress1.png"
-                  alt="progress"
-                  v-if="item.producntInfos.delivery_time == 1"
-                />
-                <img
-                  src="@/assets/img/icon/progress2.png"
-                  alt="progress"
-                  v-if="item.producntInfos.delivery_time == 2"
-                />
-                <img
-                  src="@/assets/img/icon/progress3.png"
-                  alt="progress"
-                  v-if="item.producntInfos.delivery_time == 3"
-                />
-                <img
-                  src="@/assets/img/icon/progress4.png"
-                  alt="progress"
-                  v-if="item.producntInfos.delivery_time == 4"
-                />
+                <div class="progress-bar-container">
+                  <div class="progress-bar-track">
+                    <div
+                      class="progress-bar-fill"
+                      :style="{
+                        width:
+                          (item.producntInfos.delivery_time * 20 > 100
+                            ? 100
+                            : item.producntInfos.delivery_time * 20) + '%',
+                      }"
+                    >
+                      <span class="progress-slider"> </span>
+                    </div>
+                  </div>
+                  <div class="progress-label">
+                    {{ item.producntInfos.delivery_title }}
+                  </div>
+                </div>
               </div>
             </div>
             <div class="config-price">
