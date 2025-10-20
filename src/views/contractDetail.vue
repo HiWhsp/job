@@ -55,7 +55,6 @@
           <div class="document-container">
             <div class="document-page">
               <div class="document-content blurred">
-                <canvas ref="watermarkCanvas" class="watermark-canvas"></canvas>
                 <!-- PDF所有页面展示 -->
                 <div
                   v-if="
@@ -73,6 +72,10 @@
                     <canvas
                       :ref="`pdfCanvas${index}`"
                       class="pdf-page-canvas"
+                    ></canvas>
+                    <canvas
+                      :ref="`watermarkCanvas${index}`"
+                      class="watermark-canvas"
                     ></canvas>
                   </div>
 
@@ -277,7 +280,6 @@ export default {
     this.addScrollListener();
     this.addResizeListener();
     this.loadPDFJS();
-    this.loadWatermark();
   },
   beforeDestroy() {
     this.removeScrollListener();
@@ -499,17 +501,20 @@ export default {
           };
 
           await page.render(renderContext).promise;
+          this.$nextTick(() => {
+            this.loadWatermark(scaledViewport.width, scaledViewport.height, i);
+          });
         } catch (error) {
           console.error(`渲染第${i + 1}页失败:`, error);
         }
       }
     },
-    loadWatermark() {
-      const canvas = this.$refs.watermarkCanvas;
+    loadWatermark(width, height, index) {
+      const canvas = this.$refs[`watermarkCanvas${index}`][0];
       const ctx = canvas.getContext("2d");
       // 设置 canvas 尺寸
-      const canvasWidth = canvas.width;
-      const canvasHeight = canvas.height;
+      const canvasWidth = width;
+      const canvasHeight = height;
 
       // 水印参数
       const watermarkText = "法焰律师";
@@ -544,8 +549,6 @@ export default {
           ctx.restore();
         }
       }
-
-      context.draw();
     },
   },
 };
