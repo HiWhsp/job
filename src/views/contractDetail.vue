@@ -260,6 +260,7 @@ export default {
       detail: {},
       isDownloadInfoAbsolute: false,
       lastScrollTime: 0,
+      contract_type: '',
       pdfLoading: false,
       pdfError: false,
       pdfDoc: null,
@@ -295,6 +296,7 @@ export default {
         },
       }).then((res) => {
         this.detail = res.data;
+        this.contract_type = res.data.contract_type;
         // 当detail数据加载完成后，加载PDF
         this.$nextTick(() => {
           if (window.pdfjsLib && this.detail.preview_pdf_url) {
@@ -517,8 +519,8 @@ export default {
       const canvasHeight = height;
 
       // 水印参数
-      const watermarkText = "法焰律师";
-      const fontSize = 18;
+      const watermarkText = this.contract_type == 1 ? "专业合同范本" : "专业法律文书";
+      const fontSize = 14;
       const spacing = 80; // 水印间距
       const angle = -45; // 旋转角度
       const opacity = 0.1; // 透明度
