@@ -756,7 +756,7 @@
                         @click="selectAppearanceItem(item3.id)"
                       >
                         <span class="motor-name">{{ item3.title }}</span>
-                        <span class="motor-name">{{ item3.title }}</span>
+                        <span class="motor-name">{{ item3.description }}</span>
                         <img
                           src="@/assets/img/icon/Group1.png"
                           alt=""
