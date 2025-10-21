@@ -167,9 +167,7 @@
                         <span class="product-radius"
                           >曲率半径: {{ product.radius }}mm</span
                         >
-                        <span class="product-stock"
-                          >库存: {{ product.stock }}</span
-                        >
+                        <span class="product-stock">{{ product.stock }}</span>
                         <div class="product-compare">
                           <el-checkbox
                             v-model="product.checked"
@@ -195,14 +193,16 @@
                             size="mini"
                           ></el-button>
                         </div>
-                        <el-button
-                          type="danger"
-                          @click.stop="addToCart(product)"
-                          size="small"
-                          class="add-cart-btn"
-                        >
-                          加入购物车
-                        </el-button>
+                        <div class="flex-center">
+                          <el-button
+                            type="danger"
+                            @click.stop="addToCart(product)"
+                            size="small"
+                            class="add-cart-btn"
+                          >
+                            加入购物车
+                          </el-button>
+                        </div>
                       </div>
                     </div>
                   </template>
@@ -409,16 +409,19 @@
         </div>
       </div>
     </div>
+
+    <product_add_cart_success_modal ref="product_add_cart_success_modal" />
   </div>
 </template>
 
 <script>
 import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
-
+import product_add_cart_success_modal from "@/components/product/product_add_cart_success_modal.vue";
 export default {
   name: "ProductDetail",
   components: {
     pageBreadcrumb,
+    product_add_cart_success_modal,
   },
   data() {
     return {
@@ -456,67 +459,7 @@ export default {
             surfaceQuality: "40/20-60/40",
             chamfer: "0.2X45°",
           },
-        },
-        {
-          id: "GT00002",
-          code: "GT00002",
-          diameter: 5.0,
-          focalLength: 8.0,
-          radius: 4.0,
-          stock: 50,
-          price: 35.0,
-          quantity: 1,
-          checked: false,
-          parameters: {
-            diameter: "5.00",
-            focalLength: "8.00",
-            coating: "AR镀膜",
-            material: "精退火H-K9L光学玻璃",
-            backFocalLength: "7.39",
-            radius1: "4.00",
-            centerThickness: "2.50",
-            edgeThickness: "1.80",
-            mountRing: "SM05",
-            designWavelength: "587.6",
-            diameterTolerance: "+0.0/-0.1mm",
-            thicknessTolerance: "+0.2mm",
-            surfaceIrregularity: "入4@632.8nm",
-            focalTolerance: "+2%",
-            centeringError: "3弧分",
-            surfaceQuality: "40/20-60/40",
-            chamfer: "0.2X45°",
-          },
-        },
-        {
-          id: "GT00003",
-          code: "GT00003",
-          diameter: 10.0,
-          focalLength: 15.0,
-          radius: 7.5,
-          stock: 30,
-          price: 45.0,
-          quantity: 1,
-          checked: false,
-          parameters: {
-            diameter: "10.00",
-            focalLength: "15.00",
-            coating: "AR镀膜",
-            material: "精退火H-K9L光学玻璃",
-            backFocalLength: "14.39",
-            radius1: "7.50",
-            centerThickness: "3.00",
-            edgeThickness: "2.20",
-            mountRing: "SM1",
-            designWavelength: "587.6",
-            diameterTolerance: "+0.0/-0.1mm",
-            thicknessTolerance: "+0.2mm",
-            surfaceIrregularity: "入4@632.8nm",
-            focalTolerance: "+2%",
-            centeringError: "3弧分",
-            surfaceQuality: "40/20-60/40",
-            chamfer: "0.2X45°",
-          },
-        },
+        }
       ],
       products: [{}, {}, {}, {}, {}],
     };
@@ -569,19 +512,37 @@ export default {
       }
     },
     // 加入购物车
-    addToCart(product) {
-      this.$message.success(
-        `已将 ${product.code} 加入购物车，数量：${product.quantity}`
-      );
-      // 这里可以添加实际的购物车逻辑
+    addToCart() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "gouwuche_add",
+          inventoryId: this.product.inventoryId,
+          num: 1,
+        },
+      }).then((res) => {
+        let { code, data, message } = res;
+        
+        if (code == 200) {
+          this.$refs.product_add_cart_success_modal.init({
+            num: 1,
+            ...this.product,
+          });
+
+          this.$store.commit("set_vuex_cart_number", 1);
+        } else {
+          this.$message.error(message);
+        }
+      });
     },
     // 切换对比状态
     toggleCompare(product) {
-      if (product.checked) {
-        this.$message.success(`已将 ${product.code} 加入对比`);
-      } else {
-        this.$message.info(`已从对比中移除 ${product.code}`);
-      }
+      // if (product.checked) {
+      //   this.$message.success(`已将 ${product.code} 加入对比`);
+      // } else {
+      //   this.$message.info(`已从对比中移除 ${product.code}`);
+      // }
       // 这里可以添加实际的对比逻辑
     },
     handleProductClick(product) {
@@ -650,7 +611,7 @@ export default {
       &::after {
         content: "";
         position: absolute;
-        bottom: -8px;
+        bottom: -7px;
         left: 50%;
         transform: translateX(-50%);
         width: 0;
@@ -793,6 +754,7 @@ export default {
     height: 56px;
     line-height: 56px;
     padding-left: 20px;
+    padding-right: 20px;
     background: #ffffff;
     border-radius: 0px 0px 0px 0px;
     display: flex;
@@ -823,7 +785,7 @@ export default {
           .product-info {
             display: flex;
             align-items: center;
-            gap: 20px;
+            // gap: 20px;
             width: 100%;
             div,
             span {
@@ -871,6 +833,7 @@ export default {
             .product-quantity {
               display: flex;
               align-items: center;
+              justify-content: center;
 
               .el-button {
                 width: 24px;
@@ -895,7 +858,6 @@ export default {
             .add-cart-btn {
               background: #e74c3c;
               border-color: #e74c3c;
-              margin-left: auto;
 
               &:hover {
                 background: #c0392b;

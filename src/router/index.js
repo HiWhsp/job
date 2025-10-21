@@ -619,7 +619,7 @@ const routes = [
         name: "my-info",
         component: my_info,
         meta: {
-          title: "个人信息",
+          title: "会员中心",
           requireAuth: true,
         },
       },

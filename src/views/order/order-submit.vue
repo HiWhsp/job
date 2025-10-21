@@ -1078,21 +1078,21 @@ export default {
 
       invoice = JSON.stringify(invoice);
       localStorage.setItem("invoice_history", invoice);
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action:
-            this.vuex_user.type == 1 ? "orders_create" : "orderC_createOrder",
-          ...params,
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          let { id, orderNo } = res.data;
-          this.order_id = id;
-          this.do_order_pay();
-        }
-      });
+      // this.$api({
+      //   url: "/service.php",
+      //   method: "get",
+      //   data: {
+      //     action:
+      //       this.vuex_user.type == 1 ? "orders_create" : "orderC_createOrder",
+      //     ...params,
+      //   },
+      // }).then((res) => {
+      //   if (res.code == 200) {
+      //     let { id, orderNo } = res.data;
+      //     this.order_id = id;
+      //     this.do_order_pay();
+      //   }
+      // });
     },
 
     //支付方式调取

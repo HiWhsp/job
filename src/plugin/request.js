@@ -1,5 +1,6 @@
 import Vue from "vue";
 import axios from "axios";
+import { Message } from "element-ui";
 // import store from "@/store";
 // import router from "@/router";
 
@@ -29,7 +30,10 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   function (response) {
     let res = response.data;
-    // let {code, data} = res
+    let {code, message} = res
+    if (code != 200) {
+      Message.error(message);
+    }
     // debugger
     return res;
   },

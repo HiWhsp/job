@@ -100,7 +100,8 @@
                 <img src="@img/head/icon1.png" alt="" v-else />
                 <span>产品中心</span>
               </div>
-              <div class="btn" @click="$router.push('/login')">
+              <template v-if="!vuex_is_login">
+                <div class="btn" @click="$router.push('/login')">
                 <img
                   src="@img/head/icon2-scrolled.png"
                   alt=""
@@ -109,6 +110,18 @@
                 <img src="@img/head/icon2.png" alt="" v-else />
                 <span>登录 | 注册</span>
               </div>
+              </template>
+              <template v-if="vuex_is_login">
+                <div class="btn" @click="$router.push('/my-info')">
+                  <img
+                    src="@img/head/icon2-scrolled.png"
+                    alt=""
+                    v-if="isScrolled"
+                  />
+                  <img src="@img/head/icon2.png" alt="" v-else />
+                  <span>会员中心</span>
+                </div>
+              </template>
               <div class="btn" @click="$router.push('/cart')">
                 <img
                   src="@img/head/icon3-scrolled.png"

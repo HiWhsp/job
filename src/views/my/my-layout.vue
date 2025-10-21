@@ -12,41 +12,16 @@
               class="nav-group"
               v-for="(group, gindex) in page_menu"
               :key="gindex"
-              v-if="
-                (!group.blacklist || group.blacklist.indexOf(staffType) < 0) &&
-                (!group.blacklistT || group.blacklistT.indexOf(userType) < 0)
-              "
             >
-              <div class="group-title-box flex">
-                <div class="icon-box">
-                  <img :src="group.icon" alt="" />
-                </div>
-                <div class="group-title">
-                  {{ group.title }}
-                </div>
-                <div class="arrow-box">
-                  <img
-                    class="arrow-right"
-                    src="@img/my/arrow-right.png"
-                    alt=""
-                  />
-                  <!-- <img class="arrow-down" src="@img/my/arrow-down.png" alt=""> -->
-                </div>
-              </div>
               <div class="sub-child" v-if="group.child && group.child.length">
                 <div
                   class="sub-item"
                   v-for="(item, index) in group.child"
                   :key="index"
                   @click="do_toggle_nav(item)"
-                  v-if="
-                    !item.blacklist || item.blacklist.indexOf(staffType) < 0
-                  "
+                  :class="$route.name == item.route ? 'active' : ''"
                 >
-                  <div
-                    class="sub-title"
-                    :class="$route.name == item.route ? 'active' : ''"
-                  >
+                  <div class="sub-title">
                     {{ item.title }}
                   </div>
                 </div>
@@ -104,44 +79,20 @@ export default {
               route: "order-list",
             },
             {
-              title: "售后服务",
-              route: "refund-list",
-            },
-            {
-              title: "我的询价",
-              route: "batch-xunjia-list",
-            },
-
-            {
-              title: "我的账单",
-              route: "store-man",
-            },
-          ],
-        },
-        {
-          title: "我关注的",
-          route: "",
-          icon: require("@img/my/nav-2.png"),
-          child: [
-            {
               title: "我的收藏",
               route: "favorite-list",
             },
             {
-              title: "我的足迹",
-              route: "browse-history",
+              title: "售后服务",
+              route: "refund-list",
             },
-          ],
-        },
-        {
-          title: "账号中心",
-          route: "",
-          icon: require("@img/my/nav-3.png"),
-          child: [
             {
               title: "我的发票",
               route: "invoice-list",
-              blacklist: [1, 2, 3],
+            },
+            {
+              title: "系统消息",
+              route: "",
             },
             {
               title: "个人信息",
@@ -155,24 +106,73 @@ export default {
               title: "修改密码",
               route: "change-password",
             },
-            {
-              title: "子账号管理",
-              route: "sub-account-list",
-            }
+
+            // {
+            //   title: "我的询价",
+            //   route: "batch-xunjia-list",
+            // },
+
+            // {
+            //   title: "我的账单",
+            //   route: "store-man",
+            // },
           ],
         },
-        {
-          title: "企业管理",
-          route: "",
-          icon: require("@img/my/nav-4.png"),
-          blacklistT: [1],
-          child: [
-            {
-              title: "人员管理",
-              route: "enterprise-member-man",
-            },
-          ],
-        },
+        // {
+        //   title: "我关注的",
+        //   route: "",
+        //   icon: require("@img/my/nav-2.png"),
+        //   child: [
+        //     {
+        //       title: "我的收藏",
+        //       route: "favorite-list",
+        //     },
+        //     {
+        //       title: "我的足迹",
+        //       route: "browse-history",
+        //     },
+        //   ],
+        // },
+        // {
+        //   title: "账号中心",
+        //   route: "",
+        //   icon: require("@img/my/nav-3.png"),
+        //   child: [
+        //     {
+        //       title: "我的发票",
+        //       route: "invoice-list",
+        //       blacklist: [1, 2, 3],
+        //     },
+        //     {
+        //       title: "个人信息",
+        //       route: "my-info",
+        //     },
+        //     {
+        //       title: "地址管理",
+        //       route: "address-list",
+        //     },
+        //     {
+        //       title: "修改密码",
+        //       route: "change-password",
+        //     },
+        //     {
+        //       title: "子账号管理",
+        //       route: "sub-account-list",
+        //     },
+        //   ],
+        // },
+        // {
+        //   title: "企业管理",
+        //   route: "",
+        //   icon: require("@img/my/nav-4.png"),
+        //   blacklistT: [1],
+        //   child: [
+        //     {
+        //       title: "人员管理",
+        //       route: "enterprise-member-man",
+        //     },
+        //   ],
+        // },
         // {
         //   title: "评价晒单",
         //   route: "my-review-list",
@@ -235,7 +235,6 @@ export default {
     // ...mapState(["",]),
     nav_option() {
       let option = [
-        { route: "/my-index", title: "用户中心", title2: "Personal Center" },
         {
           route: "",
           title: this.$route.meta.title,
@@ -289,7 +288,7 @@ export default {
 
 <style scoped lang="less">
 .page-user-wrap {
-  background: #F3F3F3;
+  background: #f3f3f3;
   padding-top: 20px;
 
   .inner {
@@ -378,18 +377,24 @@ export default {
 
           .sub-child {
             .sub-item {
-              padding: 8px 45px;
+              height: 44px;
+              line-height: 44px;
+              padding-left: 46px;
               cursor: pointer;
-
+              border-left: 4px solid transparent;
               .sub-title {
                 font-family: Microsoft YaHei, Microsoft YaHei;
                 font-weight: 400;
-                font-size: 14px;
-                color: #666666;
-
-                &.active {
-                  color: #2E4C87;
+                font-size: 16px;
+                color: #333;
+              }
+              &.active {
+                .sub-title {
+                  color: #2e4c87;
+                  font-weight: 600;
                 }
+                background: #eff3fb;
+                border-left: 4px solid #2e4c87;
               }
             }
           }
@@ -414,7 +419,7 @@ export default {
               margin-bottom: 16px;
 
               &:hover {
-                color: #2E4C87;
+                color: #2e4c87;
               }
             }
 
@@ -432,7 +437,7 @@ export default {
             &.active {
               // background: #ffffff;
               // background: #fffaf7;
-              color: #2E4C87;
+              color: #2e4c87;
 
               &:before {
                 // content: "";

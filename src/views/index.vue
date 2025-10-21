@@ -32,33 +32,25 @@
               <p class="product-desc">
                 了解我们如何更好地 <br />为客户创造价值
               </p>
-              <button class="learn-more-btn">了解更多</button>
+              <button
+                class="learn-more-btn"
+                @click="toRouter('/product-cates')"
+              >
+                了解更多
+              </button>
             </div>
             <div class="product-center-right">
               <div class="product-grid">
-                <div class="product-item">
+                <div
+                  class="product-item"
+                  v-for="(item, index) in productChannelList"
+                  :key="index"
+                  @click="toRouter(`/product-classes?id=${item.id}`)"
+                >
                   <div class="product-image">
-                    <img src="" alt="光学元件" />
+                    <img :src="item.thumb" alt="光学元件" />
                   </div>
-                  <div class="product-category">光学元件</div>
-                </div>
-                <div class="product-item">
-                  <div class="product-image">
-                    <img src="" alt="激光防护" />
-                  </div>
-                  <div class="product-category">激光防护</div>
-                </div>
-                <div class="product-item">
-                  <div class="product-image">
-                    <img src="" alt="光学周边" />
-                  </div>
-                  <div class="product-category">光学周边</div>
-                </div>
-                <div class="product-item">
-                  <div class="product-image">
-                    <img src="" alt="其它元件" />
-                  </div>
-                  <div class="product-category">其它元件</div>
+                  <div class="product-category">{{ item.title }}</div>
                 </div>
               </div>
             </div>
@@ -66,21 +58,26 @@
           <!-- 产品推荐 -->
           <div class="product-recommendation">
             <div class="product-grid-container">
-              <div class="product-grid-8">
+              <div class="product-grid-8" v-if="productList.length > 0">
                 <div
                   class="product-item"
-                  v-for="(item, index) in 8"
+                  v-for="(item, index) in productList.slice(0, 8)"
                   :key="index"
+                  @click="toRouter(`/product-detail?id=${item.id}`)"
                 >
                   <div class="product-image">
-                    <img src="" :alt="`产品${index + 1}`" />
+                    <img :src="item.thumb" :alt="`产品${index + 1}`" />
                   </div>
                   <div class="product-category ellipsis-1">
-                    产品名称文字占位...
+                    {{ item.title }}
                   </div>
                   <button class="view-details-btn">查看详情</button>
                 </div>
               </div>
+              <el-empty
+                v-if="productList.length === 0"
+                description="暂无数据"
+              />
             </div>
             <div class="recommendation-sidebar">
               <div class="sub-title">
@@ -88,7 +85,12 @@
                 <p class="product-subtitle">RECOMMENDATION</p>
               </div>
               <p class="recommendation-desc">优质好物为您推荐</p>
-              <button class="learn-more-btn">了解更多</button>
+              <button
+                class="learn-more-btn"
+                @click="toRouter('/product-cates')"
+              >
+                了解更多
+              </button>
             </div>
           </div>
           <!-- 新闻动态 -->
@@ -97,18 +99,22 @@
               <h2 class="product-title-text">新闻动态</h2>
               <p class="product-subtitle">NEWS UPDATES</p>
             </div>
-            <div class="news-content">
+            <div class="news-content" v-if="newsList.length > 0">
               <div class="news-left">
-                <div class="news-card" v-for="(item, index) in 2" :key="index">
+                <div
+                  class="news-card"
+                  v-for="(item, index) in newsList.slice(0, 2)"
+                  :key="index"
+                >
                   <div class="news-image">
-                    <img src="" :alt="`新闻${index + 1}`" />
+                    <img :src="item.channelImage" :alt="`新闻${index + 1}`" />
                   </div>
                   <div class="news-info">
                     <h3 class="news-title ellipsis-2">
-                      这里展示新闻标题文字占位这里展示新闻标题文字占位这里展示新闻标题文字占位...
+                      {{ item.title }}
                     </h3>
                     <div class="news-meta">
-                      <span class="news-date">2025-02-25</span>
+                      <span class="news-date">{{ item.dtTime }}</span>
                       <button class="news-action-btn">
                         <i class="el-icon-right"></i>
                       </button>
@@ -120,23 +126,26 @@
                 <div class="news-list">
                   <div
                     class="news-item"
-                    v-for="(item, index) in 6"
+                    v-for="(item, index) in newsList.slice(2)"
                     :key="index"
                   >
                     <h4 class="news-item-title ellipsis-2">
-                      这里展示新闻标题文字占位这里展示新闻标题文字占位这里展示新闻标题文字占位这里展示新闻标题文字占位这里展示新闻标题文字占位这里展示新闻标题文字占位...
+                      {{ item.title }}
                     </h4>
                     <div class="news-item-meta">
-                      <span class="news-item-date">2025-02-25</span>
+                      <span class="news-item-date">{{ item.dtTime }}</span>
                       <button class="news-item-action-btn">
                         <i class="el-icon-right"></i>
                       </button>
                     </div>
                   </div>
                 </div>
-                <button class="learn-more-btn">了解更多</button>
+                <button class="learn-more-btn" @click="toRouter('/news')">
+                  了解更多
+                </button>
               </div>
             </div>
+            <el-empty v-if="newsList.length === 0" description="暂无数据" />
           </div>
           <!-- 服务中心 -->
           <div class="service-center">
@@ -147,22 +156,23 @@
             <div class="service-grid">
               <div
                 class="service-card1"
-                v-for="(item) in serviceList[0]"
+                v-for="item in serviceList[0]"
                 :key="item.titletitle"
+                @click="toRouter(item.path)"
               >
-                <div class="service-content">
+                <div class="service-content" :style="{ backgroundImage: `url(${item.image})` }">
                   <h3 class="service-title">{{ item.title }}</h3>
                   <p class="service-subtitle">{{ item.subtitle }}</p>
                 </div>
               </div>
               <div
                 class="service-card"
-                v-for="(item) in serviceList[1]"
+                v-for="item in serviceList[1]"
                 :key="item.title"
               >
-                <div class="service-content">
-                  <h3 class="service-title">{{ item.title }}</h3>
-                  <p class="service-subtitle">{{ item.subtitle }}</p>
+                <div class="service-content" :style="{ backgroundImage: `url(${item.image})` }">
+                  <!-- <h3 class="service-title">{{ item.title }}</h3> -->
+                  <!-- <p class="service-subtitle">{{ item.subtitle }}</p> -->
                 </div>
               </div>
             </div>
@@ -179,33 +189,45 @@ export default {
   name: "index",
   data() {
     return {
+      productList: [],
+      productChannelList: [],
+      newsList: [],
       serviceList: [
         [
           {
             title: "非标定制",
             subtitle: "根据需求,专属定制",
+            image: require("@img/index/custom-order.png"),
+            path: "/custom-order",
           },
           {
             title: "快速购物",
             subtitle: "指定产品型号,快速下单",
+            image: require("@img/index/quick-buy.png"),
+            path: "/quick-buy",
           },
           {
             title: "产品咨询与反馈",
             subtitle: "专业团队无忧售后",
+            image: require("@img/index/product-consult.png"),
+            path: "/product-consult",
           },
         ],
         [
           {
             title: "空气隙零级波片",
             subtitle: "变倍、定倍定制产品",
+            image: require("@img/index/ad1.png"),
           },
           {
             title: "激光聚焦镜",
             subtitle: "紫外、绿光和红外全波",
+            image: require("@img/index/ad2.png"),
           },
           {
             title: "同轴视觉玻璃",
             subtitle: "紫外/绿光/红外",
+            image: require("@img/index/ad3.png"),
           },
         ],
       ],
@@ -226,27 +248,58 @@ export default {
   mounted() {},
   methods: {
     setView() {
+      this.query_product_list();
+      this.query_product();
       this.query_news();
     },
+    // 点击banner
     do_banner_click(item) {
       window.open(item.url, "_blank");
     },
-
+    query_product_list() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_channel",
+          // isIndex: 1
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.productChannelList = res.data.slice(0, 4);
+        }
+      });
+    },
+    query_product() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_plist",
+          rec: 1,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.productList = res.data.list;
+        }
+      });
+    },
     query_news() {
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "news_lists",
-          channelId: "",
-          page: 1,
-          pageNum: 5,
+          channelId: 49
         },
       }).then((res) => {
         if (res.code == 200) {
-          this.news_list = res.data.list;
+          this.newsList = res.data.list;
         }
       });
+    },
+    toRouter(path) {
+      this.$router.push(path);
     },
   },
 };
@@ -255,12 +308,12 @@ export default {
 <style lang="less">
 .el-select-dropdown__item.hover,
 .el-select-dropdown__item:hover {
-  background: #2E4C87;
+  background: #2e4c87;
   color: #fff !important;
 }
 
 .el-select-dropdown__item.selected {
-  color: #2E4C87;
+  color: #2e4c87;
 }
 </style>
 
@@ -431,9 +484,9 @@ export default {
       overflow: hidden;
 
       img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        // object-fit: cover;
       }
     }
 
@@ -603,9 +656,8 @@ export default {
         overflow: hidden;
 
         img {
-          max-width: 100%;
-          max-height: 100%;
-          object-fit: cover;
+          width: 100%;
+          height: 100%;
         }
       }
 
@@ -824,6 +876,8 @@ export default {
       justify-content: center;
       align-items: flex-start;
       padding: 0 50px;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
 
       .service-title {
         font-size: 24px;
@@ -863,22 +917,9 @@ export default {
       flex-direction: column;
       justify-content: center;
       align-items: flex-start;
-      padding: 0 50px;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
 
-      .service-title {
-        font-size: 28px;
-        font-weight: bold;
-        color: #000;
-        margin: 0 0 8px 0;
-        line-height: 1.2;
-      }
-
-      .service-subtitle {
-        font-size: 18px;
-        color: #666;
-        margin: 0;
-        line-height: 1.4;
-      }
     }
   }
 }

@@ -252,16 +252,7 @@ export default {
           data.forEach((v) => {
             v.checked = true;
           });
-          // this.list_shopcart = data;
-          this.list_shopcart =  [{
-            checked: true,
-            inventoryId: "",
-            productId: "",
-            title: "",
-            image: "",
-            priceSale: 0,
-            num: 1,
-          }];
+          this.list_shopcart = data;
           if (data.length) {
             this.checked_all = true;
           }
