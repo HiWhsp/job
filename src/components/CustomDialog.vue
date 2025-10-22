@@ -37,9 +37,9 @@
           :data="uploadData"
           name="file"
           :file-list="fileList"
+          :before-upload="beforeUpload"
           :on-success="handleUploadSuccess"
           :on-remove="handleRemove"
-          :multiple="true"
           list-type="picture-card"
           class="custom-upload"
           accept="image/*"
@@ -144,7 +144,11 @@ export default {
         this.$message.error("只能上传图片文件!");
         return false;
       }
-      return false; // 阻止自动上传
+      if (this.uploadedImages.length >= 1) {
+        this.$message.error("只能上传一张图片!");
+        return false;
+      }
+      return true; // 阻止自动上传
     },
     // 文件选择变化时的处理
     handleFileChange(file, fileList) {

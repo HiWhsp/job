@@ -281,7 +281,7 @@ export default {
       this.loading = true;
       // 构建请求数据，处理日期区间
       const requestData = { ...this.searchForm };
-      
+
       // 将date_range转换为start_time和end_time
       if (requestData.date_range && requestData.date_range.length === 2) {
         requestData.start_time = requestData.date_range[0];
@@ -290,14 +290,18 @@ export default {
         requestData.start_time = "";
         requestData.end_time = "";
       }
-      
+
       // 删除date_range字段
       delete requestData.date_range;
-      
+
       this.$api({
         url: "logProductSetting",
         method: "post",
-        data: requestData,
+        data: {
+          ...requestData,
+          page: this.pagination.currentPage,
+          limit: this.pagination.pageSize,
+        },
       }).then((res) => {
         this.tableData = res.data.list;
         this.pagination.total = res.data.count;
