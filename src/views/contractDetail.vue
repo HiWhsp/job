@@ -518,10 +518,14 @@ export default {
       const canvasWidth = width;
       const canvasHeight = height;
 
+      // 设置 canvas 的实际尺寸，防止变形拉伸
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+
       // 水印参数
       const watermarkText = this.contract_type == 1 ? "专业合同范本" : "专业法律文书";
-      const fontSize = 14;
-      const spacing = 80; // 水印间距
+      const fontSize = 36
+      const spacing = 240; // 水印间距
       const angle = -45; // 旋转角度
       const opacity = 0.1; // 透明度
 
