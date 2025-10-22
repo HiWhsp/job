@@ -30,7 +30,7 @@
                   {{
                     item.producntInfos.title != "其他"
                       ? item.producntInfos.description
-                      : item.other.notes
+                      : (item.other && item.other.notes ? item.other.notes : '')
                   }}
                 </div>
               </div>
@@ -47,10 +47,10 @@
                     {{
                       item.producntInfos.title != "其他"
                         ? item.producntInfos.title
-                        : item.other.notes
+                        : (item.other && item.other.notes ? item.other.notes : '')
                     }}
                   </p>
-                  <p>{{ item.producntInfos.description || item.other.notes }}</p>
+                  <p>{{ item.producntInfos.description || (item.other && item.other.notes ? item.other.notes : '') }}</p>
                 </div>
               </div>
             </template>

@@ -155,7 +155,7 @@ export default {
       this.fileList = fileList;
       // 从uploadedImages中移除对应的文件
       const index = this.uploadedImages.findIndex(
-        (img) => img.file === file.file
+        (img) => img.url === file.url
       );
       if (index > -1) {
         this.uploadedImages.splice(index, 1);
