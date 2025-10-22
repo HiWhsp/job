@@ -8,6 +8,9 @@
         <div class="overview-header">
           <div class="header-left">
             <h1 class="overview-title">配置总览</h1>
+            <span class="overview-title-sub" @click="goHome"
+              >返回上一页<i class="el-icon-arrow-right"></i
+            ></span>
           </div>
         </div>
         <div class="config-order-number">
@@ -30,7 +33,23 @@
                 <div class="item-name">{{ item.firstTitle }}</div>
                 <div class="item-model">{{ item.name }} {{ item.model }}</div>
               </div>
-              <div class="item-params">参数信息：{{ item.params || "--" }}</div>
+              <div
+                class="item-params"
+                v-if="
+                  item.name != '其他' &&
+                  item.name != '定制' &&
+                  item.name != '定制logo'
+                "
+              >
+                参数信息：{{ paramsText(item) }}
+              </div>
+              <el-tooltip placement="left" effect="dark" v-else>
+                <div class="item-params">参数信息：{{ paramsText(item) }}</div>
+                <div
+                  slot="content"
+                  v-html="getTooltipContent(item.params)"
+                ></div>
+              </el-tooltip>
               <div class="item-progress">
                 <div class="progress-bar-container">
                   <div class="progress-bar-track">
@@ -81,10 +100,23 @@
                 <div class="item-name">{{ item.firstTitle }}</div>
                 <!-- <div class="item-model">{{ item.name }} {{ item.model }}</div> -->
               </div>
-              <div class="item-params">
+              <div
+                class="item-params"
+                v-if="item.name != '其他' && item.name != '定制logo'"
+              >
                 <p>{{ item.name }}</p>
-                <p>{{ item.params }}</p>
+                <p>{{ paramsText(item) }}</p>
               </div>
+              <el-tooltip placement="left" effect="dark" v-else>
+                <div class="item-params">
+                  <p>{{ item.name }}</p>
+                  <p>{{ paramsText(item) }}</p>
+                </div>
+                <div
+                  slot="content"
+                  v-html="getTooltipContent(item.params)"
+                ></div>
+              </el-tooltip>
               <div class="item-progress">
                 <div class="progress-bar-container">
                   <div class="progress-bar-track">
@@ -247,6 +279,14 @@ export default {
     this.getRobotConfig();
   },
   methods: {
+    goHome() {
+      this.$router.push({
+        path: "/",
+        query: {
+          id: this.id,
+        },
+      });
+    },
     getRobotConfig() {
       this.$api({
         url: "getProductSetting",
@@ -315,8 +355,10 @@ export default {
                       model: item.description,
                       image: item.thumb,
                       params:
-                        item.title == "其他"
-                          ? matchedItem.other.notes
+                        item.title == "其他" ||
+                        item.title == "定制" ||
+                        item.title == "定制logo"
+                          ? matchedItem.other
                           : item.spec,
                       progress: item.delivery_time,
                       price_status: item.price_status,
@@ -349,8 +391,8 @@ export default {
                           model: item.description,
                           image: item.thumb,
                           params:
-                            item.title == "其他"
-                              ? matchedItem.other.notes
+                            item.title == "其他" || item.title == "定制"
+                              ? matchedItem.other
                               : item.spec,
                           progress: item.delivery_time,
                           price_status: item.price_status,
@@ -383,8 +425,8 @@ export default {
                               model: item.description,
                               image: item.thumb,
                               params:
-                                item.title == "其他"
-                                  ? matchedItem.other.notes
+                                item.title == "其他" || item.title == "定制"
+                                  ? matchedItem.other
                                   : item.spec,
                               progress: item.delivery_time,
                               price_status: item.price_status,
@@ -432,8 +474,7 @@ export default {
           return;
         }
         if (item.other?.notes && item.other.notes instanceof Object) {
-          // 将对象value转换为字符串 1-1-1
-          item.other.notes = Object.values(item.other.notes).join("-");
+          item.other.notes = item.other.notes.pantone || item.other.notes.ral || item.other.notes.rgba;
         }
         // 如果item.other中的三个值如果为空则设置为空字符串
         if (!item.other?.notes) {
@@ -672,6 +713,60 @@ export default {
         this.$message.error("上传PDF失败，请重试");
         throw error; // 重新抛出错误以便上层处理
       }
+    },
+    paramsText(item) {
+      if (item.name == "其他") {
+        return item.params.notes;
+      } else if (item.firstTitle == "颜色" && item.name == "定制") {
+        const notes = item.params.notes;
+        if (notes) {
+          return `${notes.pantone ? `潘通色号: ${notes.pantone}` : ""} ${
+            notes.ral ? `劳尔色号: ${notes.ral}` : ""
+          } ${
+            notes.rgba
+              ? `RGBA色彩: ${
+                  notes.rgba.includes("#") ? notes.rgba : "#" + notes.rgba
+                }`
+              : ""
+          }`;
+        }
+        return "";
+      }
+      if (item.firstTitle == "定制logo" && item.name == "定制logo") {
+        return "";
+      }
+      return item.params || "";
+    },
+    getTooltipContent(other) {
+      if (!other) return "";
+
+      let content = '<div class="tooltip-content">';
+      // 如果有备注，添加备注信息
+      if (other.notes) {
+        const escapedNotes = this.escapeHtml(other.notes);
+        content += `<div class="tooltip-notes" style="font-size: 12px; color: #ccc; margin-bottom: 4px; white-space: pre-wrap; word-break: break-word;">备注: ${escapedNotes}</div>`;
+      }
+      // 如果有图片，添加图片信息
+      if (other.image) {
+        const escapedImage = this.escapeHtml(other.image);
+        content += `<img src="${escapedImage}" class="tooltip-image" style="max-width: 200px; max-height: 150px; border-radius: 4px; margin-bottom: 8px;" />`;
+      }
+
+      // 如果有品牌信息，添加品牌信息
+      if (other.brand) {
+        const escapedBrand = this.escapeHtml(other.brand);
+        content += `<div class="tooltip-brand">品牌: ${escapedBrand}</div>`;
+      }
+
+      content += "</div>";
+      return content;
+    },
+    // HTML 转义函数，防止 XSS 攻击
+    escapeHtml(text) {
+      if (!text) return "";
+      const div = document.createElement("div");
+      div.textContent = String(text);
+      return div.innerHTML;
     },
   },
 };

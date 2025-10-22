@@ -32,11 +32,19 @@
           <i class="el-icon-phone"></i>
           手机号
         </div>
-        <el-input
-          v-model="formData.mobile"
-          placeholder="请输入手机号码"
-          class="user-input"
-        ></el-input>
+        <div class="input-wrapper">
+          <el-input
+            v-model="formData.mobile"
+            @input="handleMobileInput"
+            @blur="validateMobile"
+            maxLength="11"
+            placeholder="请输入手机号码"
+            class="user-input"
+          ></el-input>
+          <div v-if="errors.mobile" class="error-message">
+            {{ errors.mobile }}
+          </div>
+        </div>
       </div>
 
       <!-- 邮箱 -->
@@ -45,11 +53,18 @@
           <i class="el-icon-message"></i>
           邮箱
         </div>
-        <el-input
-          v-model="formData.email"
-          placeholder="请输入邮箱地址"
-          class="user-input"
-        ></el-input>
+        <div class="input-wrapper">
+          <el-input
+            v-model="formData.email"
+            @input="validateEmail"
+            @blur="validateEmail"
+            placeholder="请输入邮箱地址"
+            class="user-input"
+          ></el-input>
+          <div v-if="errors.email" class="error-message">
+            {{ errors.email }}
+          </div>
+        </div>
       </div>
 
       <!-- 所属单位 -->
@@ -92,6 +107,10 @@ export default {
         email: "",
         company: "",
       },
+      errors: {
+        mobile: "",
+        email: "",
+      },
     };
   },
   computed: {
@@ -105,40 +124,78 @@ export default {
     },
   },
   methods: {
+    // 手机号输入处理（限制只能输入数字）
+    handleMobileInput() {
+      this.formData.mobile = this.formData.mobile.replace(/\D/g, "");
+      this.validateMobile();
+    },
+    // 验证手机号
+    validateMobile() {
+      const mobile = this.formData.mobile;
+      if (!mobile) {
+        this.errors.mobile = "";
+        return false;
+      }
+      if (mobile.length < 11) {
+        this.errors.mobile = "手机号码长度不足11位";
+        return false;
+      }
+      const phoneRegex = /^1[3-9]\d{9}$/;
+      if (!phoneRegex.test(mobile)) {
+        this.errors.mobile = "请输入正确的手机号码格式";
+        return false;
+      }
+      this.errors.mobile = "";
+      return true;
+    },
+    // 验证邮箱
+    validateEmail() {
+      const email = this.formData.email;
+      if (!email) {
+        this.errors.email = "";
+        return false;
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        this.errors.email = "请输入正确的邮箱格式";
+        return false;
+      }
+      this.errors.email = "";
+      return true;
+    },
     handleClose() {
       this.visible = false;
       this.resetForm();
     },
     handleSubmit() {
-      // 简单的表单验证
+      // 表单验证
       if (!this.formData.name) {
         this.$message.error("请输入联系人姓名");
         return;
       }
+
       if (!this.formData.mobile) {
         this.$message.error("请输入手机号码");
         return;
       }
+      // 验证手机号格式
+      if (!this.validateMobile()) {
+        this.$message.error(this.errors.mobile || "请输入正确的手机号码");
+        return;
+      }
+
       if (!this.formData.email) {
         this.$message.error("请输入邮箱地址");
         return;
       }
+      // 验证邮箱格式
+      if (!this.validateEmail()) {
+        this.$message.error(this.errors.email || "请输入正确的邮箱格式");
+        return;
+      }
+
       if (!this.formData.company) {
         this.$message.error("请输入所属单位");
-        return;
-      }
-
-      // 验证邮箱格式
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(this.formData.email)) {
-        this.$message.error("请输入正确的邮箱格式");
-        return;
-      }
-
-      // 验证手机号格式
-      const phoneRegex = /^1[3-9]\d{9}$/;
-      if (!phoneRegex.test(this.formData.mobile)) {
-        this.$message.error("请输入正确的手机号码");
         return;
       }
 
@@ -159,6 +216,10 @@ export default {
         email: "",
         company: "",
       };
+      this.errors = {
+        mobile: "",
+        email: "",
+      };
     },
   },
 };
@@ -177,12 +238,12 @@ export default {
   .dialog-content {
     .input-group {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       background: #e5e5e5;
       border-radius: 8px;
-      height: 50px;
-      margin-bottom: 15px;
-      overflow: hidden;
+      min-height: 50px;
+      margin-bottom: 25px;
+      overflow: visible;
 
       .input-icon {
         width: 50px;
@@ -205,9 +266,18 @@ export default {
         font-size: 18px;
         font-weight: bold;
         padding-left: 18px;
+        flex-shrink: 0;
         i {
           margin-right: 10px;
         }
+      }
+
+      .input-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        position: relative;
       }
 
       .user-input {
@@ -222,6 +292,7 @@ export default {
           height: 50px;
           line-height: 50px;
           padding: 0 15px;
+          transition: all 0.3s;
 
           &:focus {
             outline: none;
@@ -232,7 +303,36 @@ export default {
             color: #c0c4cc;
           }
         }
+
+        &.is-error {
+          /deep/ .el-input__inner {
+            border: 2px solid #f56c6c;
+            background-color: #fef0f0;
+          }
+        }
       }
+
+      .error-message {
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        width: 100%;
+        color: #f56c6c;
+        font-size: 12px;
+        line-height: 1.5;
+        animation: slideDown 0.3s ease;
+      }
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 

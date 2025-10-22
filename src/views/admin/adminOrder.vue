@@ -103,12 +103,14 @@
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :span="6">
+            <el-col :span="12">
               <el-form-item label="日期">
                 <el-date-picker
-                  v-model="searchForm.created_at"
-                  type="date"
-                  placeholder="请选择日期"
+                  v-model="searchForm.date_range"
+                  type="daterange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd"
                   clearable
@@ -217,7 +219,7 @@ export default {
         company: "",
         product_channel_id: "",
         product_title: "",
-        created_at: "",
+        date_range: [],
       },
       deviceTypeOptions: [], // 设备类型选项
       tableData: [],
@@ -245,7 +247,7 @@ export default {
         company: "",
         product_channel_id: "",
         product_title: "",
-        created_at: "",
+        date_range: [],
       };
       this.loadData();
     },
@@ -277,10 +279,25 @@ export default {
     // 加载数据
     loadData() {
       this.loading = true;
+      // 构建请求数据，处理日期区间
+      const requestData = { ...this.searchForm };
+      
+      // 将date_range转换为start_time和end_time
+      if (requestData.date_range && requestData.date_range.length === 2) {
+        requestData.start_time = requestData.date_range[0];
+        requestData.end_time = requestData.date_range[1];
+      } else {
+        requestData.start_time = "";
+        requestData.end_time = "";
+      }
+      
+      // 删除date_range字段
+      delete requestData.date_range;
+      
       this.$api({
         url: "logProductSetting",
         method: "post",
-        data: this.searchForm,
+        data: requestData,
       }).then((res) => {
         this.tableData = res.data.list;
         this.pagination.total = res.data.count;

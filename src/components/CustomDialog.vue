@@ -42,6 +42,7 @@
           :multiple="true"
           list-type="picture-card"
           class="custom-upload"
+          accept="image/*"
         >
           <div class="upload-button">
             <!-- <div class="upload-icon">

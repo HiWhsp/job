@@ -341,10 +341,14 @@
                         <div>
                           <div
                             class="color-image"
-                            :style="{ backgroundColor: color1 }"
+                            :style="{
+                              backgroundColor: getColor(item3),
+                            }"
                             @click="colorPicker(item3)"
                           >
-                            <div class="color-picker-text">点击定制颜色</div>
+                            <div class="color-picker-text">
+                              {{ getColorText(item3) }}
+                            </div>
                           </div>
                           <div class="color-info">
                             <div class="color-info-left">
@@ -380,11 +384,15 @@
                         ></div>
                         <div
                           class="color-image"
-                          :style="{ backgroundColor: color1 }"
+                          :style="{
+                            backgroundColor: getColor(item3),
+                          }"
                           v-else
                           @click="colorPicker(item3)"
                         >
-                          <div class="color-picker-text">点击定制颜色</div>
+                          <div class="color-picker-text">
+                            {{ getColorText(item3) }}
+                          </div>
                         </div>
                         <div class="color-info">
                           <div class="color-info-left">
@@ -542,10 +550,14 @@
                       <div>
                         <div
                           class="color-image"
-                          :style="{ backgroundColor: color1 }"
+                          :style="{
+                            backgroundColor: getColor(item3),
+                          }"
                           @click="colorPicker(item3)"
                         >
-                          <div class="color-picker-text">点击定制颜色</div>
+                          <div class="color-picker-text">
+                            {{ getColorText(item3) }}
+                          </div>
                         </div>
                         <div class="color-info">
                           <div class="color-info-left">
@@ -581,11 +593,15 @@
                       ></div>
                       <div
                         class="color-image"
-                        :style="{ backgroundColor: color1 }"
+                        :style="{
+                          backgroundColor: getColor(item3),
+                        }"
                         v-else
                         @click="colorPicker(item3)"
                       >
-                        <div class="color-picker-text">点击定制颜色</div>
+                        <div class="color-picker-text">
+                          {{ getColorText(item3) }}
+                        </div>
                       </div>
                       <div class="color-info">
                         <div class="color-info-left">
@@ -869,6 +885,10 @@ export default {
       type: String,
       default: "",
     },
+    info: {
+      type: Object,
+      default: () => {},
+    },
   },
   components: {
     CustomDialog,
@@ -931,7 +951,7 @@ export default {
       // 如果当前项有 producntInfos，则初始化它们
       if (item.producntInfos && Array.isArray(item.producntInfos)) {
         item.producntInfos.forEach((product) => {
-          this.$set(product, "selected", false)
+          this.$set(product, "selected", false);
           if (product.title === "其他" || product.title.includes("定制")) {
             this.$set(product, "other", {
               image: null,
@@ -956,7 +976,7 @@ export default {
     },
 
     goRobotDetail() {
-      this.$router.push("/parameter?id=" + this.id);
+      window.open(this.info.info.url, "_blank");
     },
 
     // 使用自定义配置
@@ -1364,6 +1384,50 @@ export default {
       this.showColorDialog = true;
     },
 
+    // 获取颜色文案
+    getColorText(item) {
+      console.log("获取颜色文案:", item);
+      if (!item || !item.other || !item.other.notes) {
+        return "点击定制颜色";
+      }
+
+      const notes = item.other.notes;
+
+      if (notes.pantone) {
+        return `潘通色号: ${notes.pantone}`;
+      }
+
+      if (notes.ral) {
+        return `劳尔色号: ${notes.ral}`;
+      }
+
+      if (notes.rgba) {
+        const rgbaValue = notes.rgba.includes("#")
+          ? notes.rgba
+          : "#" + notes.rgba;
+        // return `RGBA色彩: ${rgbaValue}`;
+        return ''
+      }
+
+      return "点击定制颜色";
+    },
+    
+    getColor(item) {
+      if (!item || !item.other || !item.other.notes) {
+        return this.color1;
+      }
+
+      const notes = item.other.notes;
+
+      if (notes.rgba) {
+        return notes.rgba.includes("#")
+          ? notes.rgba
+          : "#" + notes.rgba;
+      }
+
+      return this.color1;
+    },
+
     // Logo选择（文件上传）
     logoPicker(item) {
       this.currentOtherItem = item;
@@ -1483,22 +1547,33 @@ export default {
       this.$router.push("/rebotPreview?id=" + this.id);
     },
 
+    // HTML 转义函数，防止 XSS 攻击
+    escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = String(text);
+      return div.innerHTML;
+    },
+
     getTooltipContent(other) {
       if (!other) return "";
 
       let content = '<div class="tooltip-content">';
       // 如果有备注，添加备注信息
       if (other.notes) {
-        content += `<div class="tooltip-notes" style="font-size: 12px; color: #ccc; margin-bottom: 4px;">备注: ${other.notes}</div>`;
+        const escapedNotes = this.escapeHtml(other.notes);
+        content += `<div class="tooltip-notes" style="font-size: 12px; color: #ccc; margin-bottom: 4px; white-space: pre-wrap; word-break: break-word;">备注: ${escapedNotes}</div>`;
       }
       // 如果有图片，添加图片信息
       if (other.image) {
-        content += `<img src="${other.image}" class="tooltip-image" style="max-width: 200px; max-height: 150px; border-radius: 4px; margin-bottom: 8px;" />`;
+        const escapedImage = this.escapeHtml(other.image);
+        content += `<img src="${escapedImage}" class="tooltip-image" style="max-width: 200px; max-height: 150px; border-radius: 4px; margin-bottom: 8px;" />`;
       }
 
       // 如果有品牌信息，添加品牌信息
       if (other.brand) {
-        content += `<div class="tooltip-brand">品牌: ${other.brand}</div>`;
+        const escapedBrand = this.escapeHtml(other.brand);
+        content += `<div class="tooltip-brand">品牌: ${escapedBrand}</div>`;
       }
 
       content += "</div>";
@@ -1510,10 +1585,20 @@ export default {
       let content = '<div class="tooltip-content">';
       // 如果有备注，添加备注信息
       if (other.notes) {
+        const escapedPantone = this.escapeHtml(other.notes.pantone);
+        const escapedRal = this.escapeHtml(other.notes.ral);
+        const escapedRgba = this.escapeHtml(other.notes.rgba);
+        
         content += `<div class="tooltip-notes" style="font-size: 12px; color: #ccc; margin-bottom: 4px;">
-            <p style="margin-bottom: 4px;">潘通色号: ${other.notes.pantone}</p>
-            <p style="margin-bottom: 4px;">劳尔色号: ${other.notes.ral}</p>
-            <p>RGBA色彩: ${other.notes.rgba}</p>
+            <p style="${
+              other.notes.pantone ? "display: block" : "display: none"
+            }">潘通色号: ${escapedPantone}</p>
+            <p style="${
+              other.notes.ral ? "display: block" : "display: none"
+            }">劳尔色号: ${escapedRal}</p>
+            <p style="${
+              other.notes.rgba ? "display: block" : "display: none"
+            }">RGBA色彩: ${escapedRgba}</p>
           </div>`;
       }
       content += "</div>";

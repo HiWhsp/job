@@ -8,32 +8,25 @@
   >
     <!-- 颜色输入区域 -->
     <div class="dialog-content">
-      <!-- 潘通色号 -->
+      <!-- 颜色类型选择 -->
       <div class="input-group">
-        <label class="input-label">潘通色号</label>
-        <el-input
-          v-model="formData.pantone"
-          placeholder="请输入潘通色号"
-          class="color-input"
-        ></el-input>
+        <el-select
+          v-model="formData.colorType"
+          placeholder="请选择颜色类型"
+          class="color-select"
+          @change="handleColorTypeChange"
+        >
+          <el-option label="潘通色号" value="pantone"></el-option>
+          <el-option label="劳尔色号" value="ral"></el-option>
+          <el-option label="RGBA色彩" value="rgba"></el-option>
+        </el-select>
       </div>
 
-      <!-- 劳尔色号 -->
-      <div class="input-group">
-        <label class="input-label">劳尔色号</label>
+      <!-- 颜色值输入 -->
+      <div class="input-group" v-if="formData.colorType">
         <el-input
-          v-model="formData.ral"
-          placeholder="请输入劳尔色号"
-          class="color-input"
-        ></el-input>
-      </div>
-
-      <!-- RGBA色彩 -->
-      <div class="input-group">
-        <label class="input-label">RGBA色彩</label>
-        <el-input
-          v-model="formData.rgba"
-          placeholder="请输入RGBA色彩"
+          v-model="formData.colorValue"
+          :placeholder="getPlaceholder"
           class="color-input"
         ></el-input>
       </div>
@@ -65,9 +58,8 @@ export default {
   data() {
     return {
       formData: {
-        pantone: "",
-        ral: "",
-        rgba: "",
+        colorType: "",
+        colorValue: "",
       },
     };
   },
@@ -80,6 +72,14 @@ export default {
         this.$emit("input", val);
       },
     },
+    getPlaceholder() {
+      const placeholderMap = {
+        pantone: "请输入潘通色号：例 2337C",
+        ral: "请输入劳尔色号：例 RAL 5012",
+        rgba: "请输入RGBA色彩：例 #FFFFFF",
+      };
+      return placeholderMap[this.formData.colorType] || "请输入颜色值";
+    },
   },
   methods: {
     handleClose() {
@@ -89,18 +89,47 @@ export default {
     handleSubmit() {
       const submitData = this.formData;
 
-      this.$emit("submit", submitData);
+      this.$emit("submit", {
+        pantone:
+          submitData.colorType === "pantone" ? submitData.colorValue : null,
+        ral: submitData.colorType === "ral" ? submitData.colorValue : null,
+        rgba: submitData.colorType === "rgba" ? submitData.colorValue : null,
+      });
       this.handleClose();
     },
     resetForm() {
       this.formData = {
-        pantone: "",
-        ral: "",
-        rgba: "",
+        colorType: "",
+        colorValue: "",
       };
     },
     setFormData(data) {
-      this.formData = data.notes || {};
+      if (data.notes && (data.notes.pantone || data.notes.ral || data.notes.rgba)) {
+        this.formData = {
+          colorType: data.notes.pantone
+            ? "pantone"
+            : data.notes.ral
+            ? "ral"
+            : data.notes.rgba
+            ? "rgba"
+            : "",
+          colorValue: data.notes.pantone
+            ? data.notes.pantone
+            : data.notes.ral
+            ? data.notes.ral
+            : data.notes.rgba
+            ? data.notes.rgba
+            : "",
+        };
+      } else {
+        this.formData = {
+          colorType: "",
+          colorValue: "",
+        };
+      }
+    },
+    handleColorTypeChange(value) {
+      this.formData.colorValue = "";
     },
   },
 };
@@ -111,23 +140,32 @@ export default {
   .dialog-content {
     .input-group {
       margin-bottom: 20px;
-      display: flex;
-      background: #e5e5e5;
-      border-radius: 8px;
-      height: 50px;
 
-      .input-label {
-        font-family: Microsoft JhengHei UI, Microsoft JhengHei UI;
-        display: block;
-        color: #303030;
-        font-size: 18px;
-        font-weight: bold;
-        width: 170px;
-        text-align: center;
-        line-height: 50px;
+      .color-select {
+        width: 100%;
+
+        /deep/ .el-input__inner {
+          background-color: #fff;
+          border: 1px solid #dcdfe6;
+          border-radius: 6px;
+          color: #303133;
+          font-size: 14px;
+          height: 50px;
+          line-height: 50px;
+
+          &:focus {
+            outline: none;
+          }
+
+          &::placeholder {
+            color: #c0c4cc;
+          }
+        }
       }
 
       .color-input {
+        width: 100%;
+
         /deep/ .el-input__inner {
           background-color: #fff;
           border: 1px solid #dcdfe6;

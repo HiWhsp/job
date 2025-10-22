@@ -29,7 +29,7 @@
                 <div class="content-box-info-content">
                   {{
                     item.producntInfos.title != "其他"
-                      ? item.producntInfos.title
+                      ? item.producntInfos.description
                       : item.other.notes
                   }}
                 </div>
@@ -43,11 +43,14 @@
                   }}
                 </div>
                 <div class="content-box-info-content">
-                  {{
-                    item.producntInfos.title != "其他"
-                      ? item.producntInfos.title
-                      : item.other.notes
-                  }}
+                  <p>
+                    {{
+                      item.producntInfos.title != "其他"
+                        ? item.producntInfos.title
+                        : item.other.notes
+                    }}
+                  </p>
+                  <p>{{ item.producntInfos.description || item.other.notes }}</p>
                 </div>
               </div>
             </template>
@@ -120,6 +123,7 @@ export default {
     img {
       width: 100%;
       height: 100%;
+      object-fit: cover;
     }
   }
 
