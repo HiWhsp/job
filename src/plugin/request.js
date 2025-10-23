@@ -1,5 +1,6 @@
 import Vue from "vue";
 import axios from "axios";
+import Message from "ElementUI";
 // import store from "@/store";
 // import router from "@/router";
 
@@ -29,6 +30,9 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   function (response) {
     let res = response.data;
+    if (res.code == 401) {
+      Message.error(res.msg);
+    }
     // let {code, data} = res
     // debugger
     return res;
@@ -89,7 +93,7 @@ function api(option) {
           items.push(str)
         }
         ret = items.join('&')
-        return ret ;
+        return ret;
       },
     ]
   };
