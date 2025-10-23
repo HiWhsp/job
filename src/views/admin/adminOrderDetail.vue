@@ -52,7 +52,7 @@
         <h2 class="section-title">配置详情</h2>
         <div class="config-list">
           <div
-            v-for="(item, index) in orderDetail.product_info"
+            v-for="(item, index) in configItems"
             :key="index"
             class="config-item"
           >
@@ -75,6 +75,13 @@
             </div>
             <div class="config-params">
               参数信息: {{ item.producntInfos.spec }}
+              {{ item.other && item.other.notes ? item.other.notes : "" }}
+              <img
+                :src="item.other && item.other.image"
+                v-if="item.other && item.other.image"
+                alt="image"
+                @click="handleImageClick(item.other.image)"
+              />
             </div>
 
             <div class="config-delivery">
@@ -125,28 +132,81 @@
         </div>
       </div>
 
-      <!-- 前壳体组件 -->
-      <!-- <div class="section front-casing">
-        <h2 class="section-title">前壳体组件</h2>
+      <!-- 外观模组 -->
+      <div class="section rear-casing">
+        <h2 class="section-title">外观模组</h2>
         <div class="component-grid">
-          <div class="component-item">
-            <span class="component-name">急停按钮</span>
-            <span class="component-value">自复位</span>
-          </div>
-          <div class="component-item">
-            <span class="component-name">调试接口</span>
-            <span class="component-value">无</span>
-          </div>
-          <div class="component-item">
-            <span class="component-name">3D相机</span>
-            <span class="component-value">奥比中光 XXXX-XXXX-1</span>
-          </div>
-          <div class="component-item">
-            <span class="component-name">警示灯</span>
-            <span class="component-value">有</span>
+          <div
+            class="component-item"
+            v-for="(item, index) in configItems3"
+            :key="index"
+          >
+            <span class="component-name">{{
+              item.product_type_two_title
+            }}</span>
+            <span class="component-value"
+              >{{ item.producntInfos.title }} {{ item.other && item.other.notes ? item.other.notes : '' }}
+              <img
+                :src="item.other && item.other.image"
+                v-if="item.other && item.other.image"
+                alt="image"
+                @click="handleImageClick(item.other.image)"
+              />
+            </span>
           </div>
         </div>
-      </div> -->
+      </div>
+
+      <template v-for="(items, key) in configItems3MultipleData">
+        <div class="section rear-casing" v-bind:key="key">
+          <h2 class="section-title">{{ items[0].product_type_two_title }}</h2>
+          <div class="component-grid">
+            <div
+              class="component-item"
+              v-for="(item, index) in items"
+              :key="index"
+            >
+              <span class="component-name">{{
+                item.product_type_three_title
+              }}</span>
+              <span class="component-value">{{
+                item.producntInfos.title
+              }} {{ item.other && item.other.notes ? item.other.notes : '' }}
+              <img
+                :src="item.other && item.other.image"
+                v-if="item.other && item.other.image"
+                alt="image"
+                @click="handleImageClick(item.other.image)"
+              />
+            </span>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- 元器件 -->
+      <div class="section components">
+        <h2 class="section-title">元器件</h2>
+        <div class="component-grid">
+          <div
+            class="component-item"
+            v-for="(item, index) in configItems2"
+            :key="index"
+          >
+            <span class="component-name">{{
+              item.product_type_two_title
+            }}</span>
+            <span class="component-value">{{ item.producntInfos.title }} {{ item.other && item.other.notes ? item.other.notes : '' }}
+              <img
+                :src="item.other && item.other.image"
+                v-if="item.other && item.other.image"
+                alt="image"
+                @click="handleImageClick(item.other.image)"
+              />
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -156,17 +216,13 @@ export default {
   name: "AdminOrderDetail",
   data() {
     return {
-      orderNumber: "",
-      orderDetail: {},
-      contactInfo: {
-        name: "张三",
-        phone: "15931263145",
-        email: "1743962256@qq.com",
-        unit: "单位名称单位名称",
-      },
-      configItems: [], // 控制器和雷达
+      orderNumber: "", // 订单号
+      orderDetail: {}, // 订单详情
+      contactInfo: {}, // 联系人信息
+      configItems: [], // 控制器与雷达
       configItems2: [], // 元器件
       configItems3: [], // 外观模组
+      configItems3MultipleData: [], // 多个的外观模组
     };
   },
   methods: {
@@ -179,6 +235,44 @@ export default {
         },
       }).then((res) => {
         this.orderDetail = res.data;
+        res.data.product_info.forEach((item) => {
+          if (
+            item.product_type_title === "控制器与雷达" ||
+            item.product_type_title === "控制器和雷达"
+          ) {
+            this.configItems.push(item);
+          } else if (item.product_type_title === "元器件") {
+            this.configItems2.push(item);
+          } else if (
+            item.product_type_title === "外观模块" ||
+            item.product_type_title === "外观模组"
+          ) {
+            this.configItems3.push(item);
+          }
+        });
+
+        const groupedData = {};
+        this.configItems3.forEach((item) => {
+          // 通过product_type_two_title分类
+          const key = item.product_type_two_title;
+          if (!groupedData[key]) {
+            groupedData[key] = [];
+          }
+          groupedData[key].push(item);
+        });
+        // 打印分组后的数据再通过value数组的长度分类, 单一的放一个数组, 多个的放一个数组
+        const singleData = [];
+        const multipleData = [];
+        Object.values(groupedData).forEach((value) => {
+          if (value.length === 1) {
+            singleData.push(...value);
+          } else {
+            multipleData.push(value);
+          }
+        });
+        this.configItems3 = [...singleData];
+        this.configItems3MultipleData = [...multipleData];
+        console.log(this.configItems3MultipleData);
       });
     },
     handleClose() {
@@ -189,6 +283,9 @@ export default {
     handleImageError(event) {
       // 图片加载失败时显示默认图标
       event.target.src = require("@/assets/img/common/logo.png");
+    },
+    handleImageClick(image) {
+      window.open(image, "_blank");
     },
   },
   mounted() {

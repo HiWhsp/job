@@ -9,13 +9,13 @@
       <div class="content-box-list">
         <div
           class="content-box-list-item"
-          v-for="(item, index) in detail.product_info"
-          :key="index"
+          v-for="(items, key) in groupedProductInfo"
+          :key="key"
         >
           <div class="content-box-list-item-title">
-            {{ item.product_type_two_title }}
+            {{ key }}
           </div>
-          <div class="content-box-list-item-content">
+          <div class="content-box-list-item-content" v-for="(item, index) in items" :key="index">
             <template v-if="item.producntInfos.thumb">
               <div class="content-box-list-item-content-img">
                 <img :src="item.producntInfos.thumb" alt="" />
@@ -30,7 +30,9 @@
                   {{
                     item.producntInfos.title != "其他"
                       ? item.producntInfos.description
-                      : (item.other && item.other.notes ? item.other.notes : '')
+                      : item.other && item.other.notes
+                      ? item.other.notes
+                      : ""
                   }}
                 </div>
               </div>
@@ -45,12 +47,13 @@
                 <div class="content-box-info-content">
                   <p>
                     {{
-                      item.producntInfos.title != "其他"
-                        ? item.producntInfos.title
-                        : (item.other && item.other.notes ? item.other.notes : '')
+                      item.producntInfos.title != "其他" && !item.producntInfos.title.includes('定制')
+                        ? item.product_type_three_title ? item.producntInfos.title : '--'
+                        : item.other && item.other.notes
+                        ? item.other.notes
+                        : "--"
                     }}
                   </p>
-                  <p>{{ item.producntInfos.description || (item.other && item.other.notes ? item.other.notes : '') }}</p>
                 </div>
               </div>
             </template>
@@ -68,6 +71,7 @@ export default {
     return {
       id: this.$route.query.id,
       detail: {},
+      groupedProductInfo: {}, // 添加分组后的数据
     };
   },
   mounted() {
@@ -92,6 +96,19 @@ export default {
         },
       }).then((res) => {
         this.detail = res.data;
+
+        // 将 product_info 按 product_type_two_title 分组
+        const groupedData = {};
+        res.data.product_info.forEach((item) => {
+          const key = item.product_type_two_title;
+          if (!groupedData[key]) {
+            groupedData[key] = [];
+          }
+          groupedData[key].push(item);
+        });
+        this.groupedProductInfo = groupedData;
+
+        console.log("分组后的数据:", this.groupedProductInfo);
       });
     },
   },
@@ -143,17 +160,18 @@ export default {
       .content-box-list-item {
         margin-bottom: 10px;
         padding-bottom: 10px;
-        border-bottom: 1px solid #565656;
         .content-box-list-item-title {
           font-size: 10px;
           font-weight: 400;
           color: #b2b2b2;
-          margin-bottom: 15px;
+          margin-bottom: 10px;
         }
         .content-box-list-item-content {
           display: flex;
           align-items: center;
           gap: 10px;
+          padding: 10px 0;
+          border-bottom: 1px solid #565656;
           .content-box-list-item-content-img {
             width: 35px;
             height: 35px;

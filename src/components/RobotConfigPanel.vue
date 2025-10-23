@@ -1406,12 +1406,12 @@ export default {
           ? notes.rgba
           : "#" + notes.rgba;
         // return `RGBA色彩: ${rgbaValue}`;
-        return ''
+        return "";
       }
 
       return "点击定制颜色";
     },
-    
+
     getColor(item) {
       if (!item || !item.other || !item.other.notes) {
         return this.color1;
@@ -1420,9 +1420,7 @@ export default {
       const notes = item.other.notes;
 
       if (notes.rgba) {
-        return notes.rgba.includes("#")
-          ? notes.rgba
-          : "#" + notes.rgba;
+        return notes.rgba.includes("#") ? notes.rgba : "#" + notes.rgba;
       }
 
       return this.color1;
@@ -1549,8 +1547,8 @@ export default {
 
     // HTML 转义函数，防止 XSS 攻击
     escapeHtml(text) {
-      if (!text) return '';
-      const div = document.createElement('div');
+      if (!text) return "";
+      const div = document.createElement("div");
       div.textContent = String(text);
       return div.innerHTML;
     },
@@ -1558,16 +1556,17 @@ export default {
     getTooltipContent(other) {
       if (!other) return "";
 
-      let content = '<div class="tooltip-content">';
+      let content =
+        '<div class="tooltip-content" style="width: 423px;max-height: 538px; border-radius: 8px 8px 8px 8px;">';
       // 如果有备注，添加备注信息
       if (other.notes) {
         const escapedNotes = this.escapeHtml(other.notes);
-        content += `<div class="tooltip-notes" style="font-size: 12px; color: #ccc; margin-bottom: 4px; white-space: pre-wrap; word-break: break-word;">备注: ${escapedNotes}</div>`;
+        content += `<div class="tooltip-notes" style="font-size: 14px; color: #fff; margin-bottom: 10px; white-space: pre-wrap; word-break: break-word;">备注: ${escapedNotes}</div>`;
       }
       // 如果有图片，添加图片信息
       if (other.image) {
         const escapedImage = this.escapeHtml(other.image);
-        content += `<img src="${escapedImage}" class="tooltip-image" style="max-width: 200px; max-height: 150px; border-radius: 4px; margin-bottom: 8px;" />`;
+        content += `<img src="${escapedImage}" class="tooltip-image" style="width: 100%; height: 380px; border-radius: 4px; margin-bottom: 8px;" />`;
       }
 
       // 如果有品牌信息，添加品牌信息
@@ -1588,7 +1587,7 @@ export default {
         const escapedPantone = this.escapeHtml(other.notes.pantone);
         const escapedRal = this.escapeHtml(other.notes.ral);
         const escapedRgba = this.escapeHtml(other.notes.rgba);
-        
+
         content += `<div class="tooltip-notes" style="font-size: 12px; color: #ccc; margin-bottom: 4px;">
             <p style="${
               other.notes.pantone ? "display: block" : "display: none"
