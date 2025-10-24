@@ -4,17 +4,7 @@
       <!-- 业务公告 -->
       <div class="announcement-section">
         <div class="announcement-banner">
-          <div class="banner-content">
-            <div class="announcement-text red-text">
-              购买并下载本站合同范本，即可享受律师合同审核、签约指导及终生法律咨询服务，下载后添加律师微信（18696628883）即可获取上述服务；
-            </div>
-            <div class="announcement-text">
-              提供<span>免费法律咨询服务</span>，专业团队为您答疑解惑，助您明确法律问题解决方案；
-            </div>
-            <div class="announcement-text">
-              提供<span>免费律师中介服务</span>，为您推荐、匹配适合案件的资深专业律师。
-            </div>
-          </div>
+          <div class="banner-content" v-html="vuex_config.yewu_gonggao"></div>
         </div>
 
         <!-- 最新动态 -->
