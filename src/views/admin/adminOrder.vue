@@ -12,7 +12,7 @@
         <div class="header-right">
           <div class="user-info">
             <i class="el-icon-s-custom"></i>
-            <span class="user-name">Name</span>
+            <span class="user-name">{{ vuex_user.email }}</span>
           </div>
         </div>
       </div>

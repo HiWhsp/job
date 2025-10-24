@@ -207,6 +207,10 @@
           </div>
         </div>
       </div>
+
+      <div class="download-btn">
+        <el-button type="primary" @click="handleDownload">下载配置单</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -286,6 +290,9 @@ export default {
     },
     handleImageClick(image) {
       window.open(image, "_blank");
+    },
+    handleDownload() {
+      window.open(this.orderDetail.pdfUrl, "_blank");
     },
   },
   mounted() {

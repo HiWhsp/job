@@ -899,7 +899,7 @@ export default {
       isEdit: false, // 是否是编辑状态
       editTitle: "", // 编辑标题
       editIndex: 0, // 编辑索引
-      showOverlay: true, // 初始显示遮罩层
+      showOverlay: false, // 初始显示遮罩层
       activeTab: 0, // 当前激活的标签页
       color1: "#303030", // 颜色
       logo1: logo1, // logo

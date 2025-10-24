@@ -108,12 +108,15 @@ export default {
       this.resetForm();
     },
     handleUploadSuccess(response, file) {
-      console.log(response);
       if (response.code === 200 && response.data && response.data.path) {
         this.uploadedImages.push({
           file: response.data.path,
           url: response.data.path,
         });
+      }else {
+        this.fileList = [];
+        this.uploadedImages = [];
+        this.$message.error(response.msg);
       }
     },
     // 设置表单数据（用于回显）

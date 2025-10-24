@@ -1,6 +1,6 @@
 import Vue from "vue";
 import axios from "axios";
-import Message from "ElementUI";
+import { Message } from "element-ui";
 // import store from "@/store";
 // import router from "@/router";
 
