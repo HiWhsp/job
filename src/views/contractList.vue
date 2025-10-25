@@ -227,7 +227,7 @@ export default {
       const category = this.vuex_category_tree.find(
         (cat) => cat.id === this.activeCategory
       );
-      return category ? category.title : "全部";
+      return category ? category.title : this.searchKeyword ? "为您推荐" : "全部";
     },
     async getIndex() {
       console.log(this.orderByColumn, this.isAsc); 

@@ -204,7 +204,24 @@ export default {
         },
       }).then((res) => {
         this.latestUpdates = res.data.recent;
-        this.contracts = res.data.category_list;
+        if (this.searchKeyword) {
+          let arr = [];
+          res.data.category_list.forEach((item) => {
+            if (item.child.length > 0) {
+              arr.push(...item.child);
+            }
+          });
+          console.log(arr);
+
+          this.contracts = [
+            {
+              title: "为您推荐",
+              child: arr,
+            },
+          ];
+        } else {
+          this.contracts = res.data.category_list;
+        }
       });
     },
     // 搜索
