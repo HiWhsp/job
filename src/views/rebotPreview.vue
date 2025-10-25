@@ -510,7 +510,9 @@ export default {
             this.robotConfig = res.data;
             this.showDownloadDialog = true;
             loading.close();
-            this.handleDownload();
+            setTimeout(() => {
+              this.handleDownload();
+            }, 1000);
           }
         })
         .catch((err) => {
