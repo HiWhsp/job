@@ -179,6 +179,11 @@ export default {
       this.isLogin = false;
     },
     handleNavClick(path) {
+      if(path === "/") {
+        this.searchText = "";
+        window.location.reload();
+        return;
+      }
       this.$router.push(path);
     },
     goUrl(path) {

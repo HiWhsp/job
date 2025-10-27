@@ -115,11 +115,20 @@
           </div>
 
           <div class="contract-grid">
-            <ContractCard
-              v-for="contract in item.child.slice(0, 5)"
-              :key="contract.id"
-              :contract="contract"
-            />
+            <template v-if="!searchKeyword">
+              <ContractCard
+                v-for="contract in item.child.slice(0, 5)"
+                :key="contract.id"
+                :contract="contract"
+              />
+            </template>
+            <template v-else>
+              <ContractCard
+                v-for="contract in item.child"
+                :key="contract.id"
+                :contract="contract"
+              />
+            </template>
             <el-empty
               style="width: 100%; height: 100%"
               description="暂无数据"
@@ -231,8 +240,8 @@ export default {
       this.getIndex();
     },
     // 查看更多
-    handleViewMore(categoryId) {
-      this.$router.push("/contractList?category=" + categoryId);
+    handleViewMore(categoryId = '0') {
+      this.$router.push("/contractList?category=" + categoryId || '0');
     },
   },
 };
