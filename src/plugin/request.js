@@ -30,9 +30,6 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   function (response) {
     let res = response.data;
-    if (res.code == 401) {
-      Message.error(res.msg);
-    }
     // let {code, data} = res
     // debugger
     return res;
