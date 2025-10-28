@@ -33,23 +33,7 @@
                 <div class="item-name">{{ item.firstTitle }}</div>
                 <div class="item-model">{{ item.name }} {{ item.model }}</div>
               </div>
-              <div
-                class="item-params"
-                v-if="
-                  item.name != '其他' &&
-                  item.name != '定制' &&
-                  item.name != '定制logo'
-                "
-              >
-                参数信息：{{ paramsText(item) }}
-              </div>
-              <el-tooltip placement="left" effect="dark" v-else>
-                <div class="item-params">参数信息：{{ paramsText(item) }}</div>
-                <div
-                  slot="content"
-                  v-html="getTooltipContent(item.params)"
-                ></div>
-              </el-tooltip>
+              <div class="item-params">参数信息：{{ paramsText(item) }}</div>
               <div class="item-progress">
                 <div class="progress-bar-container">
                   <div class="progress-bar-track">
@@ -100,23 +84,10 @@
                 <div class="item-name">{{ item.firstTitle }}</div>
                 <!-- <div class="item-model">{{ item.name }} {{ item.model }}</div> -->
               </div>
-              <div
-                class="item-params"
-                v-if="item.name != '其他' && item.name != '定制logo'"
-              >
+              <div class="item-params">
                 <p>{{ item.name }}</p>
                 <p>{{ paramsText(item) }}</p>
               </div>
-              <el-tooltip placement="left" effect="dark" v-else>
-                <div class="item-params">
-                  <p>{{ item.name }}</p>
-                  <p>{{ paramsText(item) }}</p>
-                </div>
-                <div
-                  slot="content"
-                  v-html="getTooltipContent(item.params)"
-                ></div>
-              </el-tooltip>
               <div class="item-progress">
                 <div class="progress-bar-container">
                   <div class="progress-bar-track">
@@ -227,6 +198,185 @@
       </div>
     </div>
 
+    <div class="overview-content" id="download-content">
+      <!-- 左侧：配置列表 -->
+      <div class="config-list-section">
+        <!-- 头部区域 -->
+        <div class="overview-header">
+          <div class="header-left">
+            <h1 class="overview-title">配置总览</h1>
+          </div>
+        </div>
+        <div class="config-order-number">
+          配置单号: <span>{{ configOrderNumber || "暂无" }}</span>
+        </div>
+
+        <!-- 配置项列表 -->
+        <div class="config-items-list">
+          <div
+            v-for="(item, index) in configItems"
+            :key="index"
+            class="config-item-row"
+          >
+            <template v-if="item.image">
+              <div class="item-thumbnail">
+                <img :src="item.image" :alt="item.name" v-if="item.image" />
+                <div class="no-image" v-else></div>
+              </div>
+              <div class="item-details">
+                <div class="item-name">{{ item.firstTitle }}</div>
+                <div class="item-model">{{ item.name }} {{ item.model }}</div>
+              </div>
+              <div class="item-params">参数信息：{{ paramsText(item) }}</div>
+              <div class="item-progress">
+                <div class="progress-bar-container">
+                  <div class="progress-bar-track">
+                    <div
+                      class="progress-bar-fill"
+                      :style="{ width: item.progress * 20 + '%' }"
+                    >
+                      <span class="progress-slider"> </span>
+                    </div>
+                  </div>
+                  <div class="progress-label">
+                    {{ item.delivery_title }}
+                  </div>
+                </div>
+              </div>
+              <div class="item-price">
+                <img
+                  src="@/assets/img/icon/Group1.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 1"
+                />
+                <img
+                  src="@/assets/img/icon/Group2.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 2"
+                />
+                <img
+                  src="@/assets/img/icon/Group3.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 3"
+                />
+                <img
+                  src="@/assets/img/icon/Group4.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 4"
+                />
+              </div>
+              <div class="item-edit" v-if="!configOrderNumber">
+                <i class="el-icon-edit" @click="editItem(item)"></i>
+              </div>
+            </template>
+            <template v-else>
+              <div class="item-details">
+                <div class="item-name">{{ item.firstTitle }}</div>
+                <!-- <div class="item-model">{{ item.name }} {{ item.model }}</div> -->
+              </div>
+              <div class="item-params">
+                <p>{{ item.name }}</p>
+                <p>{{ paramsText(item) }}</p>
+              </div>
+              <div class="item-progress">
+                <div class="progress-bar-container">
+                  <div class="progress-bar-track">
+                    <div
+                      class="progress-bar-fill"
+                      :style="{
+                        width:
+                          (item.progress * 20 > 100
+                            ? 100
+                            : item.progress * 20) + '%',
+                      }"
+                    >
+                      <span class="progress-slider"> </span>
+                    </div>
+                  </div>
+                  <div class="progress-label">
+                    {{ item.delivery_title }}
+                  </div>
+                </div>
+              </div>
+              <div class="item-price">
+                <img
+                  src="@/assets/img/icon/Group1.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 1"
+                />
+                <img
+                  src="@/assets/img/icon/Group2.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 2"
+                />
+                <img
+                  src="@/assets/img/icon/Group3.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 3"
+                />
+                <img
+                  src="@/assets/img/icon/Group4.png"
+                  alt="price"
+                  class="price-icon"
+                  v-if="item.price_status == 4"
+                />
+              </div>
+              <div class="item-edit" v-if="!configOrderNumber">
+                <i class="el-icon-edit" @click="editItem(item)"></i>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧：价格信息 -->
+      <div class="price-section">
+        <div class="header-right">
+          <div class="contact-info">
+            <div class="contact-item">
+              <i class="el-icon-phone"></i>
+              <span>服务热线: 400-116-0626</span>
+            </div>
+            <div class="divider"></div>
+            <div class="contact-item">
+              <i class="el-icon-link"></i>
+              <span>官网: https://www.robotphoenix.com</span>
+            </div>
+          </div>
+        </div>
+        <div class="reference-price">
+          <div class="price-label">参考价格</div>
+          <div class="price-value">{{ referencePrice }}</div>
+        </div>
+        <div class="user-info" v-if="userInfo.name">
+          <div class="user-title">用户信息</div>
+          <div class="user-info-item">
+            <div class="user-info-item-label">姓名：</div>
+            <div class="user-info-item-value">{{ userInfo.name }}</div>
+          </div>
+          <div class="user-info-item">
+            <div class="user-info-item-label">手机号:</div>
+            <div class="user-info-item-value">{{ userInfo.mobile }}</div>
+          </div>
+          <div class="user-info-item">
+            <div class="user-info-item-label">邮箱:</div>
+            <div class="user-info-item-value">{{ userInfo.email }}</div>
+          </div>
+          <div class="user-info-item">
+            <div class="user-info-item-label">所属单位:</div>
+            <div class="user-info-item-value">{{ userInfo.company }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 下载弹框 -->
     <DownloadDialog
       v-model="showDownloadDialog"
@@ -263,7 +413,7 @@ export default {
     return {
       id: "",
       configOrderNumber: "",
-      referencePrice: "¥ 19,888 起",
+      referencePrice: "¥ 0",
       configItems: [],
       userInfo: {},
       showDownloadDialog: false, // 下载弹框
@@ -271,6 +421,7 @@ export default {
       isGeneratingPDF: false, // PDF生成状态
       loading: false,
       robotConfig: {},
+      downPdfUrl: "",
     };
   },
   mounted() {
@@ -347,23 +498,42 @@ export default {
                   );
 
                   if (matchedItem) {
-                    selectedItems.push({
-                      activeTab: index,
-                      firstTitle: firstLevel.title,
-                      id: item.id,
-                      name: item.title,
-                      model: item.description,
-                      image: item.thumb,
-                      params:
-                        item.title == "其他" ||
-                        item.title == "定制" ||
-                        item.title == "定制logo"
-                          ? matchedItem.other
-                          : item.spec,
-                      progress: item.delivery_time,
-                      price_status: item.price_status,
-                      delivery_title: item.delivery_title,
-                    });
+                    if (
+                      item.title == "其他" ||
+                      item.title == "定制" ||
+                      item.title == "定制logo"
+                    ) {
+                      selectedItems.push({
+                        activeTab: index,
+                        firstTitle: firstLevel.title,
+                        id: item.id,
+                        name: item.title,
+                        model: item.description,
+                        image: matchedItem.other.image || item.thumb,
+                        params: matchedItem.other || item.spec,
+                        progress: item.delivery_time,
+                        price_status: item.price_status,
+                        delivery_title: item.delivery_title,
+                      });
+                    } else {
+                      selectedItems.push({
+                        activeTab: index,
+                        firstTitle: firstLevel.title,
+                        id: item.id,
+                        name: item.title,
+                        model: item.description,
+                        image: item.thumb,
+                        params:
+                          item.title == "其他" ||
+                          item.title == "定制" ||
+                          item.title == "定制logo"
+                            ? matchedItem.other
+                            : item.spec,
+                        progress: item.delivery_time,
+                        price_status: item.price_status,
+                        delivery_title: item.delivery_title,
+                      });
+                    }
                   }
                 });
               }
@@ -383,21 +553,42 @@ export default {
                       );
 
                       if (matchedItem) {
-                        selectedItems.push({
-                          activeTab: index,
-                          firstTitle: secondLevel.title,
-                          id: item.id,
-                          name: item.title,
-                          model: item.description,
-                          image: item.thumb,
-                          params:
-                            item.title == "其他" || item.title == "定制"
-                              ? matchedItem.other
-                              : item.spec,
-                          progress: item.delivery_time,
-                          price_status: item.price_status,
-                          delivery_title: item.delivery_title,
-                        });
+                        if (
+                          item.title == "其他" ||
+                          item.title == "定制" ||
+                          item.title == "定制logo"
+                        ) {
+                          selectedItems.push({
+                            activeTab: index,
+                            firstTitle: firstLevel.title,
+                            id: item.id,
+                            name: item.title,
+                            model: item.description,
+                            image: matchedItem.other.image || item.thumb,
+                            params: matchedItem.other || item.spec,
+                            progress: item.delivery_time,
+                            price_status: item.price_status,
+                            delivery_title: item.delivery_title,
+                          });
+                        } else {
+                          selectedItems.push({
+                            activeTab: index,
+                            firstTitle: firstLevel.title,
+                            id: item.id,
+                            name: item.title,
+                            model: item.description,
+                            image: item.thumb,
+                            params:
+                              item.title == "其他" ||
+                              item.title == "定制" ||
+                              item.title == "定制logo"
+                                ? matchedItem.other
+                                : item.spec,
+                            progress: item.delivery_time,
+                            price_status: item.price_status,
+                            delivery_title: item.delivery_title,
+                          });
+                        }
                       }
                     });
                   }
@@ -417,21 +608,42 @@ export default {
                           );
 
                           if (matchedItem) {
-                            selectedItems.push({
-                              activeTab: index,
-                              firstTitle: thirdLevel.title,
-                              id: item.id,
-                              name: item.title,
-                              model: item.description,
-                              image: item.thumb,
-                              params:
-                                item.title == "其他" || item.title == "定制"
-                                  ? matchedItem.other
-                                  : item.spec,
-                              progress: item.delivery_time,
-                              price_status: item.price_status,
-                              delivery_title: item.delivery_title,
-                            });
+                            if (
+                              item.title == "其他" ||
+                              item.title == "定制" ||
+                              item.title == "定制logo"
+                            ) {
+                              selectedItems.push({
+                                activeTab: index,
+                                firstTitle: firstLevel.title,
+                                id: item.id,
+                                name: item.title,
+                                model: item.description,
+                                image: matchedItem.other.image || item.thumb,
+                                params: matchedItem.other || item.spec,
+                                progress: item.delivery_time,
+                                price_status: item.price_status,
+                                delivery_title: item.delivery_title,
+                              });
+                            } else {
+                              selectedItems.push({
+                                activeTab: index,
+                                firstTitle: firstLevel.title,
+                                id: item.id,
+                                name: item.title,
+                                model: item.description,
+                                image: item.thumb,
+                                params:
+                                  item.title == "其他" ||
+                                  item.title == "定制" ||
+                                  item.title == "定制logo"
+                                    ? matchedItem.other
+                                    : item.spec,
+                                progress: item.delivery_time,
+                                price_status: item.price_status,
+                                delivery_title: item.delivery_title,
+                              });
+                            }
                           }
                         });
                       }
@@ -474,7 +686,10 @@ export default {
           return;
         }
         if (item.other?.notes && item.other.notes instanceof Object) {
-          item.other.notes = item.other.notes.pantone || item.other.notes.ral || item.other.notes.rgba;
+          item.other.notes =
+            item.other.notes.pantone ||
+            item.other.notes.ral ||
+            item.other.notes.rgba;
         }
         // 如果item.other中的三个值如果为空则设置为空字符串
         if (!item.other?.notes) {
@@ -505,13 +720,14 @@ export default {
         .then((res) => {
           if (res.code == 200) {
             // this.$message.success("配置单保存成功");
-            localStorage.removeItem("robotConfig");
+            // localStorage.removeItem("robotConfig");
+            localStorage.removeItem("robotUserInfo");
             this.configOrderNumber = res.data.order_no;
             this.robotConfig = res.data;
             this.showDownloadDialog = true;
             loading.close();
             setTimeout(() => {
-              this.handleDownload();
+              this.handleDownload("save");
             }, 1000);
           }
         })
@@ -534,15 +750,20 @@ export default {
     },
 
     // 处理下载
-    async handleDownload() {
+    async handleDownload(type) {
       if (this.isGeneratingPDF) {
         return; // 防止重复点击
+      }
+
+      if (this.downPdfUrl) {
+        this.downPdf(this.downPdfUrl);
+        return;
       }
 
       try {
         this.isGeneratingPDF = true;
         // 获取要转换的元素
-        const element = document.querySelector(".config-list-section");
+        const element = document.querySelector("#download-content");
         if (!element) {
           this.$message.error("未找到配置列表元素");
           return;
@@ -664,7 +885,7 @@ export default {
         console.log("开始上传PDF文件...");
 
         // 上传PDF文件
-        await this.uploadPDF(formData);
+        await this.uploadPDF(formData, type);
       } catch (error) {
         console.error("生成PDF失败:", error);
         this.$message.error("生成PDF失败，请重试");
@@ -674,7 +895,7 @@ export default {
     },
 
     // 上传PDF文件
-    async uploadPDF(formData) {
+    async uploadPDF(formData, type) {
       try {
         this.loading = this.$loading({
           lock: true,
@@ -695,7 +916,10 @@ export default {
               this.showDownloadDialog = false;
               if (response.data && response.data.path) {
                 // 可以在这里添加下载链接的显示
-                window.open(response.data.path, "_blank");
+                if (type !== "save") {
+                  this.downPdfUrl = response.data.path;
+                  this.downPdf(response.data.path);
+                }
               }
               this.loading.close();
               this.$api({
@@ -736,7 +960,7 @@ export default {
         return "";
       }
       if (item.firstTitle == "定制logo" && item.name == "定制logo") {
-        return "";
+        return item.params.notes;
       }
       return item.params || "";
     },
@@ -770,6 +994,19 @@ export default {
       const div = document.createElement("div");
       div.textContent = String(text);
       return div.innerHTML;
+    },
+    downPdf(url) {
+      fetch(url)
+        .then((res) => res.blob())
+        .then((blob) => {
+          const link = document.createElement("a");
+          const objectUrl = URL.createObjectURL(blob);
+          link.href = objectUrl;
+          link.download = "配置单_" + this.configOrderNumber + ".pdf"; // 指定保存的文件名
+          link.click();
+          URL.revokeObjectURL(objectUrl);
+        })
+        .catch((err) => console.error("下载失败:", err));
     },
   },
 };

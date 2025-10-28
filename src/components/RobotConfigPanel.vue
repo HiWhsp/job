@@ -732,10 +732,10 @@
                   <div v-for="item3 in item2.producntInfos" :key="item3.id">
                     <el-tooltip
                       v-if="
-                        item3.title === '其他' ||
-                        (item3.title === '其他配件' &&
-                          item3.other &&
-                          (item3.other.image || item3.other.notes))
+                        (item3.title === '其他' ||
+                          item3.title === '其他配件') &&
+                        item3.other &&
+                        (item3.other.image || item3.other.notes)
                       "
                       placement="left"
                       effect="dark"
@@ -969,9 +969,31 @@ export default {
         });
       }
     },
+    // 递归初始化 设置默认值
+    initializeProducntInfosMoren(item) {
+      // 如果当前项有 producntInfos，则初始化它们
+      if (item.producntInfos && Array.isArray(item.producntInfos)) {
+        item.producntInfos.forEach((product) => {
+          if(product.moren == 1) {
+            this.$set(product, "selected", true);
+          }
+        });
+      }
+
+      // 如果当前项有子项，递归处理子项
+      if (item.child && Array.isArray(item.child)) {
+        item.child.forEach((child) => {
+          this.initializeProducntInfosMoren(child);
+        });
+      }
+    },
 
     // 使用AI推荐
     useAIRecommendation() {
+      // 生成指定格式的数据
+      const formattedData = this.generateFormattedData();
+      // 存储到localStorage
+      localStorage.setItem("robotConfig", JSON.stringify(formattedData));
       this.$router.push("/aiRecommendation?id=" + this.id);
     },
 
@@ -1140,6 +1162,7 @@ export default {
     loadConfigFromStorage() {
       try {
         const savedConfig = localStorage.getItem("robotConfig");
+        console.log("savedConfig:", savedConfig);
         if (savedConfig) {
           const configData = JSON.parse(savedConfig);
           console.log("从localStorage加载配置数据:", configData);
@@ -1236,6 +1259,14 @@ export default {
           }
 
           // this.$message.success("已加载本地保存的配置");
+        } else {
+          // 遍历tabs，设置所有item的选中状态为false
+          if (this.tabs && this.tabs.length > 0) {
+            this.tabs.forEach((tab) => {
+              // 递归处理所有层级的 producntInfos
+              this.initializeProducntInfosMoren(tab);
+            });
+          }
         }
       } catch (error) {
         // console.error("加载配置数据失败:", error);

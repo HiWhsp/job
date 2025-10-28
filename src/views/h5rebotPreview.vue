@@ -15,7 +15,11 @@
           <div class="content-box-list-item-title">
             {{ key }}
           </div>
-          <div class="content-box-list-item-content" v-for="(item, index) in items" :key="index">
+          <div
+            class="content-box-list-item-content"
+            v-for="(item, index) in items"
+            :key="index"
+          >
             <template v-if="item.producntInfos.thumb">
               <div class="content-box-list-item-content-img">
                 <img :src="item.producntInfos.thumb" alt="" />
@@ -47,8 +51,11 @@
                 <div class="content-box-info-content">
                   <p>
                     {{
-                      item.producntInfos.title != "其他" && !item.producntInfos.title.includes('定制')
-                        ? item.product_type_three_title ? item.producntInfos.title : '--'
+                      item.producntInfos.title != "其他" &&
+                      !item.producntInfos.title.includes("定制")
+                        ? item.product_type_three_title
+                          ? item.producntInfos.title
+                          : "--"
                         : item.other && item.other.notes
                         ? item.other.notes
                         : "--"
@@ -136,7 +143,7 @@ export default {
   }
 
   .img-box {
-    height: 121px;
+    // height: 121px;
     img {
       width: 100%;
       height: 100%;
