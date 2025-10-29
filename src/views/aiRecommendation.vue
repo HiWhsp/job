@@ -193,6 +193,7 @@ export default {
   },
   data() {
     return {
+      more: 0, // 是否是默认 0:否, 1:是
       compareSorce: 0, // 对比来源 0:无, 1:性价比优先, 2:配置均衡, 3:性能优先
       productName: "", // 产品名称
       myConfig: [], // 我的配置
@@ -216,6 +217,7 @@ export default {
   },
   mounted() {
     this.compareSorce = this.$route.query.compare || 0;
+    this.more = this.$route.query.more || 0;
     this.setView();
     if (this.compareSorce != 0) {
       this.setMyConfig();
@@ -363,7 +365,7 @@ export default {
                           product_type_two_id:
                             firstLevel.id || firstLevel.title,
                           product_type_three_id:
-                            secondLevel.id || secondLevel.title,
+                            thirdLevel.id || thirdLevel.title,
                           product_type_goods_ids: item.id,
                           other: item.other,
                         });
@@ -384,15 +386,28 @@ export default {
      * @param sorce 1:性价比优先, 2:配置均衡, 3:性能优先
      */
     compare(sorce) {
-      // 重置localStorage中的robotConfig
-      localStorage.removeItem("robotConfig");
-      this.$router.push({
-        path: "/",
-        query: {
-          id: this.$route.query.id,
-          compare: sorce, // 1:性价比优先, 2:配置均衡, 3:性能优先
-        },
-      });
+      // 使用默认配置对比
+      if (this.more == 1) {
+        this.$router.push({
+          path: "/aiRecommendation",
+          query: {
+            id: this.$route.query.id,
+            compare: sorce, // 1:性价比优先, 2:配置均衡, 3:性能优先
+          },
+        });
+        location.reload();
+        return;
+      } else {
+        // 重置localStorage中的robotConfig
+        localStorage.removeItem("robotConfig");
+        this.$router.push({
+          path: "/",
+          query: {
+            id: this.$route.query.id,
+            compare: sorce, // 1:性价比优先, 2:配置均衡, 3:性能优先
+          },
+        });
+      }
     },
     /**
      * 设置我的配置
@@ -440,21 +455,42 @@ export default {
                   );
 
                   if (matchedItem) {
-                    selectedItems.push({
-                      activeTab: index,
-                      firstTitle: firstLevel.title,
-                      id: item.id,
-                      name: item.title,
-                      model: item.description,
-                      image: item.thumb,
-                      params:
-                        item.title == "其他"
-                          ? matchedItem.other.notes
-                          : item.spec,
-                      progress: item.delivery_time,
-                      price_status: item.price_status,
-                      delivery_title: item.delivery_title,
-                    });
+                    if (
+                      item.title == "其他" ||
+                      item.title == "定制" ||
+                      item.title == "定制logo"
+                    ) {
+                      selectedItems.push({
+                        activeTab: index,
+                        firstTitle: firstLevel.title,
+                        id: item.id,
+                        name: matchedItem.other.notes || item.title,
+                        model: item.description,
+                        image: matchedItem.other.image || item.thumb,
+                        params: matchedItem.other || item.spec,
+                        progress: item.delivery_time,
+                        price_status: item.price_status,
+                        delivery_title: item.delivery_title,
+                      });
+                    } else {
+                      selectedItems.push({
+                        activeTab: index,
+                        firstTitle: firstLevel.title,
+                        id: item.id,
+                        name: item.title,
+                        model: item.description,
+                        image: item.thumb,
+                        params:
+                          item.title == "其他" ||
+                          item.title == "定制" ||
+                          item.title == "定制logo"
+                            ? matchedItem.other
+                            : item.spec,
+                        progress: item.delivery_time,
+                        price_status: item.price_status,
+                        delivery_title: item.delivery_title,
+                      });
+                    }
                   }
                 });
               }
@@ -474,21 +510,42 @@ export default {
                       );
 
                       if (matchedItem) {
-                        selectedItems.push({
-                          activeTab: index,
-                          firstTitle: secondLevel.title,
-                          id: item.id,
-                          name: item.title,
-                          model: item.description,
-                          image: item.thumb,
-                          params:
-                            item.title == "其他"
-                              ? matchedItem.other.notes
-                              : item.spec,
-                          progress: item.delivery_time,
-                          price_status: item.price_status,
-                          delivery_title: item.delivery_title,
-                        });
+                        if (
+                          item.title == "其他" ||
+                          item.title == "定制" ||
+                          item.title == "定制logo"
+                        ) {
+                          selectedItems.push({
+                            activeTab: index,
+                            firstTitle: secondLevel.title,
+                            id: item.id,
+                            name: matchedItem.other.notes || item.title,
+                            model: item.description,
+                            image: matchedItem.other.image || item.thumb,
+                            params: matchedItem.other || item.spec,
+                            progress: item.delivery_time,
+                            price_status: item.price_status,
+                            delivery_title: item.delivery_title,
+                          });
+                        } else {
+                          selectedItems.push({
+                            activeTab: index,
+                            firstTitle: secondLevel.title,
+                            id: item.id,
+                            name: item.title,
+                            model: item.description,
+                            image: item.thumb,
+                            params:
+                              item.title == "其他" ||
+                              item.title == "定制" ||
+                              item.title == "定制logo"
+                                ? matchedItem.other
+                                : item.spec,
+                            progress: item.delivery_time,
+                            price_status: item.price_status,
+                            delivery_title: item.delivery_title,
+                          });
+                        }
                       }
                     });
                   }
@@ -508,21 +565,42 @@ export default {
                           );
 
                           if (matchedItem) {
-                            selectedItems.push({
-                              activeTab: index,
-                              firstTitle: thirdLevel.title,
-                              id: item.id,
-                              name: item.title,
-                              model: item.description,
-                              image: item.thumb,
-                              params:
-                                item.title == "其他"
-                                  ? matchedItem.other.notes
-                                  : item.spec,
-                              progress: item.delivery_time,
-                              price_status: item.price_status,
-                              delivery_title: item.delivery_title,
-                            });
+                            if (
+                              item.title == "其他" ||
+                              item.title == "定制" ||
+                              item.title == "定制logo"
+                            ) {
+                              selectedItems.push({
+                                activeTab: index,
+                                firstTitle: thirdLevel.title,
+                                id: item.id,
+                                name: matchedItem.other.notes || item.title,
+                                model: item.description,
+                                image: matchedItem.other.image || item.thumb,
+                                params: matchedItem.other || item.spec,
+                                progress: item.delivery_time,
+                                price_status: item.price_status,
+                                delivery_title: item.delivery_title,
+                              });
+                            } else {
+                              selectedItems.push({
+                                activeTab: index,
+                                firstTitle: thirdLevel.title,
+                                id: item.id,
+                                name: item.title,
+                                model: item.description,
+                                image: item.thumb,
+                                params:
+                                  item.title == "其他" ||
+                                  item.title == "定制" ||
+                                  item.title == "定制logo"
+                                    ? matchedItem.other
+                                    : item.spec,
+                                progress: item.delivery_time,
+                                price_status: item.price_status,
+                                delivery_title: item.delivery_title,
+                              });
+                            }
                           }
                         });
                       }

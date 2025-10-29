@@ -921,6 +921,7 @@ export default {
       this.compareSorce = this.$route.query.compare || 0;
       this.editIndex = this.$route.query.index || 0;
       this.tabs = this.detail;
+      this.activeTab = this.editIndex || 0;
       this.controllers = this.tabs[this.editIndex].child;
       this.activeTabTitle = this.tabs[this.editIndex || 0]
         ? this.tabs[this.editIndex || 0].title
@@ -994,7 +995,7 @@ export default {
       const formattedData = this.generateFormattedData();
       // 存储到localStorage
       localStorage.setItem("robotConfig", JSON.stringify(formattedData));
-      this.$router.push("/aiRecommendation?id=" + this.id);
+      this.$router.push("/aiRecommendation?id=" + this.id  + "&more=1");
     },
 
     goRobotDetail() {
@@ -1162,7 +1163,6 @@ export default {
     loadConfigFromStorage() {
       try {
         const savedConfig = localStorage.getItem("robotConfig");
-        console.log("savedConfig:", savedConfig);
         if (savedConfig) {
           const configData = JSON.parse(savedConfig);
           console.log("从localStorage加载配置数据:", configData);

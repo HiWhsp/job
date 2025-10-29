@@ -435,6 +435,8 @@ export default {
         path: "/",
         query: {
           id: this.id,
+          showOverlay: false,
+          index: 2,
         },
       });
     },
@@ -560,7 +562,7 @@ export default {
                         ) {
                           selectedItems.push({
                             activeTab: index,
-                            firstTitle: firstLevel.title,
+                            firstTitle: secondLevel.title,
                             id: item.id,
                             name: item.title,
                             model: item.description,
@@ -573,7 +575,7 @@ export default {
                         } else {
                           selectedItems.push({
                             activeTab: index,
-                            firstTitle: firstLevel.title,
+                            firstTitle: secondLevel.title,
                             id: item.id,
                             name: item.title,
                             model: item.description,
@@ -615,7 +617,7 @@ export default {
                             ) {
                               selectedItems.push({
                                 activeTab: index,
-                                firstTitle: firstLevel.title,
+                                firstTitle: thirdLevel.title,
                                 id: item.id,
                                 name: item.title,
                                 model: item.description,
@@ -628,7 +630,7 @@ export default {
                             } else {
                               selectedItems.push({
                                 activeTab: index,
-                                firstTitle: firstLevel.title,
+                                firstTitle: thirdLevel.title,
                                 id: item.id,
                                 name: item.title,
                                 model: item.description,

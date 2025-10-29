@@ -20,9 +20,9 @@
             v-for="(item, index) in items"
             :key="index"
           >
-            <template v-if="item.producntInfos.thumb">
+            <template v-if="item.producntInfos.thumb || (item.other && item.other.image)">
               <div class="content-box-list-item-content-img">
-                <img :src="item.producntInfos.thumb" alt="" />
+                <img :src="item.producntInfos.thumb || item.other.image" alt="" />
               </div>
               <div class="content-box-info">
                 <div class="content-box-info-title">
@@ -32,7 +32,7 @@
                 </div>
                 <div class="content-box-info-content">
                   {{
-                    item.producntInfos.title != "其他"
+                    item.producntInfos.title != "其他" && !item.producntInfos.title.includes("定制")
                       ? item.producntInfos.description
                       : item.other && item.other.notes
                       ? item.other.notes
