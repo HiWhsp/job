@@ -17,17 +17,23 @@
         <nav class="navigation" v-if="!isScrolled">
           <ul class="nav-list">
             <li class="nav-item" :class="{ active: $route.path === '/' }">
-              <router-link to="/" class="nav-link">首页</router-link>
+              <span class="nav-link" @click="handleNavClick('/')">首页</span>
             </li>
             <li class="nav-item" :class="{ active: $route.path === '/about' }">
               <router-link to="/about" class="nav-link">关于我们</router-link>
             </li>
-            <li class="nav-item" :class="{ active: $route.path === '/business' }">
+            <li
+              class="nav-item"
+              :class="{ active: $route.path === '/business' }"
+            >
               <router-link to="/business" class="nav-link"
                 >业务范围</router-link
               >
             </li>
-            <li class="nav-item" :class="{ active: $route.path === '/contact' }">
+            <li
+              class="nav-item"
+              :class="{ active: $route.path === '/contact' }"
+            >
               <router-link to="/contact" class="nav-link">联系我们</router-link>
             </li>
           </ul>
@@ -56,7 +62,11 @@
             </el-dropdown-menu>
           </el-dropdown>
 
-          <el-dropdown trigger="hover" class="nav-dropdown" @click.native="handleNavClick('/contractList/?category=' + item.id)">
+          <el-dropdown
+            trigger="hover"
+            class="nav-dropdown"
+            @click.native="handleNavClick('/contractList/?category=' + item.id)"
+          >
             <span class="nav-link">
               分类 <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
@@ -64,7 +74,9 @@
               <el-dropdown-item
                 v-for="item in vuex_category_tree"
                 :key="item.id"
-                @click.native="handleNavClick('/contractList?category=' + item.id)"
+                @click.native="
+                  handleNavClick('/contractList?category=' + item.id)
+                "
                 >{{ item.title }}</el-dropdown-item
               >
             </el-dropdown-menu>
@@ -91,11 +103,20 @@
 
       <!-- 右侧用户操作和联系信息 -->
       <div class="header-right">
-        <button class="login-btn" v-if="!isLogin && !vuex_user.id" @click="goUrl('/login')">
+        <button
+          class="login-btn"
+          v-if="!isLogin && !vuex_user.id"
+          @click="goUrl('/login')"
+        >
           <i class="user-icon"><img src="@img/common/avatar.png" alt="" /></i>
           <span>登录/注册</span>
         </button>
-        <el-popover placement="bottom" width="250" trigger="hover" v-if="vuex_user.id">
+        <el-popover
+          placement="bottom"
+          width="250"
+          trigger="hover"
+          v-if="vuex_user.id"
+        >
           <div class="user-info-content">
             <div class="list">
               <div class="user-info-item" @click="goUrl('/my?tab=1')">
@@ -120,7 +141,11 @@
             <span>{{ vuex_user.mobile || "13333333333" }}</span>
           </div>
         </el-popover>
-        <button class="login-btn" v-if="isLogin && !vuex_user.id" @click="goHome">
+        <button
+          class="login-btn"
+          v-if="isLogin && !vuex_user.id"
+          @click="goHome"
+        >
           <span>返回首页</span>
         </button>
         <div class="contact-info">
@@ -131,7 +156,9 @@
               </div>
               律师咨询电话(同微信)
             </div>
-            <div class="phone-number">{{ vuex_config.bottom_lawer_contact || "18696628883" }}</div>
+            <div class="phone-number">
+              {{ vuex_config.bottom_lawer_contact || "18696628883" }}
+            </div>
           </div>
         </div>
       </div>
@@ -179,7 +206,7 @@ export default {
       this.isLogin = false;
     },
     handleNavClick(path) {
-      if(path === "/") {
+      if (path === "/" && location.pathname === "/") {
         this.searchText = "";
         window.location.reload();
         return;
@@ -268,6 +295,7 @@ export default {
         padding: 10px 0;
         transition: color 0.3s ease;
         position: relative;
+        cursor: pointer;
 
         &:hover {
           color: #363130;
