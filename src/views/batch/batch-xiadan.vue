@@ -311,7 +311,7 @@ export default {
     doConfirm(params) {
       console.log(params);
       let infos = params;
-      infos.piliangId = this.fullInfo.id;
+      infos.piliangId = this.fullInfo.id;      
       this.$api({
         url: "/service.php",
         method: "post",
