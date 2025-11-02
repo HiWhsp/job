@@ -184,10 +184,12 @@ export default {
     },
   },
   mounted() {
+    console.log(this.detail.contract_type);
+    
     // 服务
     this.$set(this.products, 0, {
       title: this.detail.title + "(服务版)",
-      description: this.vuex_config.service_buy_notice,
+      description: this.detail.contract_type == 1 ? this.vuex_config.service_buy_notice_2 : this.vuex_config.service_buy_notice,
       format: "word格式",
       size: this.detail.size + "MB",
       pages: "共" + this.detail.total_page + "页",
@@ -197,7 +199,7 @@ export default {
     // 基础
     this.$set(this.products, 1, {
       title: this.detail.title + "(基础版)",
-      description: this.vuex_config.basic_buy_notice,
+      description: this.detail.contract_type == 1 ? this.vuex_config.basic_buy_notice_2 : this.vuex_config.basic_buy_notice,
       format: "word格式",
       size: this.detail.size + "MB",
       pages: "共" + this.detail.total_page + "页",
