@@ -762,12 +762,22 @@ export default {
         return;
       }
 
+      // 显示loading提示
+      const downloadLoading = this.$loading({
+        lock: true,
+        text: "正在生成PDF，请稍候...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+
       try {
         this.isGeneratingPDF = true;
         // 获取要转换的元素
         const element = document.querySelector("#download-content");
         if (!element) {
+          downloadLoading.close();
           this.$message.error("未找到配置列表元素");
+          this.isGeneratingPDF = false;
           return;
         }
 
@@ -793,6 +803,7 @@ export default {
 
         // 检查jsPDF是否已加载
         if (typeof window.jspdf === "undefined") {
+          downloadLoading.close();
           this.$message.error("PDF库未加载，请刷新页面重试");
           this.isGeneratingPDF = false;
           return;
@@ -887,24 +898,32 @@ export default {
         console.log("开始上传PDF文件...");
 
         // 上传PDF文件
-        await this.uploadPDF(formData, type);
+        await this.uploadPDF(formData, type, downloadLoading);
       } catch (error) {
         console.error("生成PDF失败:", error);
         this.$message.error("生成PDF失败，请重试");
+        downloadLoading.close();
       } finally {
         this.isGeneratingPDF = false;
+        // 确保loading被关闭
+        if (downloadLoading) {
+          downloadLoading.close();
+        }
       }
     },
 
     // 上传PDF文件
-    async uploadPDF(formData, type) {
+    async uploadPDF(formData, type, downloadLoading) {
       try {
-        this.loading = this.$loading({
-          lock: true,
-          text: "加载中...",
-          spinner: "el-icon-loading",
-          background: "rgba(0, 0, 0, 0.7)",
-        });
+        // 如果传入了loading实例，直接使用；否则创建新的loading
+        if (!downloadLoading) {
+          this.loading = this.$loading({
+            lock: true,
+            text: "正在上传PDF文件，请稍候...",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)",
+          });
+        }
         // 调用上传接口
         this.$axios
           .post("https://yifei.dx.hdapp.com.cn/api/upload", formData, {
@@ -923,7 +942,10 @@ export default {
                   this.downPdf(response.data.path);
                 }
               }
-              this.loading.close();
+              // 关闭loading（如果使用的是传入的loading，则由上层关闭）
+              if (!downloadLoading && this.loading) {
+                this.loading.close();
+              }
               this.$api({
                 url: "upPdf",
                 method: "post",
@@ -933,13 +955,33 @@ export default {
                 },
               });
             } else {
-              this.loading.close();
+              // 关闭loading
+              if (!downloadLoading && this.loading) {
+                this.loading.close();
+              } else if (downloadLoading) {
+                downloadLoading.close();
+              }
               this.$message.error(response.msg || "上传失败");
             }
+          })
+          .catch((error) => {
+            // 关闭loading
+            if (!downloadLoading && this.loading) {
+              this.loading.close();
+            } else if (downloadLoading) {
+              downloadLoading.close();
+            }
+            throw error;
           });
       } catch (error) {
         console.error("上传PDF失败:", error);
         this.$message.error("上传PDF失败，请重试");
+        // 关闭loading
+        if (!downloadLoading && this.loading) {
+          this.loading.close();
+        } else if (downloadLoading) {
+          downloadLoading.close();
+        }
         throw error; // 重新抛出错误以便上层处理
       }
     },

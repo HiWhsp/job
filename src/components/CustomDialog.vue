@@ -39,6 +39,7 @@
           :file-list="fileList"
           :before-upload="beforeUpload"
           :on-success="handleUploadSuccess"
+          :on-error="handleUploadError"
           :on-remove="handleRemove"
           list-type="picture-card"
           class="custom-upload"
@@ -83,6 +84,7 @@ export default {
       },
       fileList: [],
       uploadedImages: [],
+      isUploading: false, // 标记是否有图片正在上传
     };
   },
   computed: {
@@ -108,15 +110,26 @@ export default {
       this.resetForm();
     },
     handleUploadSuccess(response, file) {
+      this.isUploading = false; // 上传完成（成功或失败），重置上传状态
       if (response.code === 200 && response.data && response.data.path) {
         this.uploadedImages.push({
           file: response.data.path,
           url: response.data.path,
         });
-      }else {
+      } else {
         this.fileList = [];
         this.uploadedImages = [];
-        this.$message.error(response.msg);
+        this.$message.error(response.msg || "上传失败");
+      }
+    },
+    // 上传失败的处理
+    handleUploadError(err, file, fileList) {
+      this.isUploading = false; // 上传失败，重置上传状态
+      this.$message.error("图片上传失败，请重试");
+      // 移除上传失败的文件
+      const index = this.fileList.findIndex((item) => item.uid === file.uid);
+      if (index > -1) {
+        this.fileList.splice(index, 1);
       }
     },
     // 设置表单数据（用于回显）
@@ -151,7 +164,9 @@ export default {
         this.$message.error("只能上传一张图片!");
         return false;
       }
-      return true; // 阻止自动上传
+      // 验证通过，设置上传状态
+      this.isUploading = true;
+      return true;
     },
     // 文件选择变化时的处理
     handleFileChange(file, fileList) {
@@ -169,6 +184,12 @@ export default {
       }
     },
     handleSubmit() {
+      // 如果正在上传图片，阻止提交
+      if (this.isUploading) {
+        this.$message.warning("图片正在上传中，请等待上传完成后再提交");
+        return;
+      }
+
       const submitData = {
         notes: this.formData.notes,
         brand: this.formData.brand,
@@ -186,6 +207,7 @@ export default {
       this.formData.brand = "";
       this.fileList = [];
       this.uploadedImages = [];
+      this.isUploading = false; // 重置表单时，也重置上传状态
     },
   },
 };
