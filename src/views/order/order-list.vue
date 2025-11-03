@@ -284,18 +284,7 @@ export default {
           this.tabList[0];
       }
 
-      this.query_userIndex();
       this.query_order();
-    },
-
-    //用户主页数据
-    query_userIndex() {
-      this.$api("users_index").then((res) => {
-        let { code, data } = res;
-        if (code == 200) {
-          this.user_index = data;
-        }
-      });
     },
 
     //订单列表

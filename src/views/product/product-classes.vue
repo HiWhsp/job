@@ -2,6 +2,12 @@
   <div class="page">
     <div class="inner">
       <pageBreadcrumb :option="nav_option" />
+      <div class="page-info w-1400">
+        <div class="page-info-title">{{ groupItem.title }}</div>
+        <div class="page-info-desc">
+          {{ groupItem.description }}
+        </div>
+      </div>
       <div class="page-ctx w-1400">
         <!-- 产品分类 -->
         <div class="category-section">
@@ -37,6 +43,7 @@ export default {
     return {
       id: this.$route.query.id || 0,
       categoryList: [], // 分类列表
+      groupItem: {}, // 当前分类项
       nav_option: [{ title: "产品中心", route: "/product-cates" }],
     };
   },
@@ -56,7 +63,7 @@ export default {
     setView() {
       this.query_categories();
     },
-    
+
     /**
      * 生成面包屑导航数据
      * @param {Array} allData - 所有分类数据
@@ -76,22 +83,24 @@ export default {
 
         // 查找当前分类及其所有父级
         const breadcrumbPath = this.findBreadcrumbPath(allData, currentId);
-        
+
         // 构建面包屑数组
         const breadcrumb = [{ title: "产品中心", route: "/product-cates" }];
-        
+
         breadcrumbPath.forEach((item, index) => {
+          if (index == breadcrumbPath.length - 1) {
+            this.groupItem = item;
+          }
           breadcrumb.push({
             title: item.title,
             route: `/product-classes?id=${item.id}`,
-            id: item.id
+            id: item.id,
           });
         });
 
         return breadcrumb;
-        
       } catch (error) {
-        console.error('生成面包屑导航失败:', error);
+        console.error("生成面包屑导航失败:", error);
         return [{ title: "产品中心", route: "/product-cates" }];
       }
     },
@@ -110,20 +119,22 @@ export default {
             // 找到目标分类，返回包含该分类的路径
             return [...path, item];
           }
-          
+
           // 如果有子分类，递归查找
           if (item && item.channels && Array.isArray(item.channels)) {
-            const result = this.findBreadcrumbPath(item.channels, targetId, [...path, item]);
+            const result = this.findBreadcrumbPath(item.channels, targetId, [
+              ...path,
+              item,
+            ]);
             if (result.length > 0) {
               return result;
             }
           }
         }
-        
+
         return [];
-        
       } catch (error) {
-        console.error('查找面包屑路径失败:', error);
+        console.error("查找面包屑路径失败:", error);
         return [];
       }
     },
@@ -135,29 +146,34 @@ export default {
         data: {
           action: "product_channel",
         },
-      }).then((res) => {
-        let { code, data } = res;
-        if (code == 200 && data) {
-          // 根据id获取分类数据 可能有多层级
-          const result = this.getCategoryList(data, this.id);
-          this.categoryList = result || [];
+      })
+        .then((res) => {
+          let { code, data } = res;
+          if (code == 200 && data) {
+            // 根据id获取分类数据 可能有多层级
+            const result = this.getCategoryList(data, this.id);
+            this.categoryList = result || [];
 
-          // 生成面包屑导航
-          this.nav_option = this.generateBreadcrumb(data, this.id);
-          if(this.categoryList.length == 0) {
-            localStorage.setItem('product_nav_option', JSON.stringify(this.nav_option));
-            this.$router.push('/product-list');
-          } 
-        } else {
-          console.warn('获取分类数据失败:', res);
+            // 生成面包屑导航
+            this.nav_option = this.generateBreadcrumb(data, this.id);
+            if (this.categoryList.length == 0) {
+              localStorage.setItem(
+                "product_nav_option",
+                JSON.stringify(this.nav_option)
+              );
+              this.$router.push("/product-list");
+            }
+          } else {
+            console.warn("获取分类数据失败:", res);
+            this.categoryList = [];
+            this.nav_option = [{ title: "产品中心" }];
+          }
+        })
+        .catch((error) => {
+          console.error("API请求失败:", error);
           this.categoryList = [];
           this.nav_option = [{ title: "产品中心" }];
-        }
-      }).catch((error) => {
-        console.error('API请求失败:', error);
-        this.categoryList = [];
-        this.nav_option = [{ title: "产品中心" }];
-      });
+        });
     },
     /**
      * 根据ID递归查找数据
@@ -167,16 +183,16 @@ export default {
      * @param {Number} maxDepth - 最大递归深度，防止无限循环
      * @returns {Array|null} 找到的数据或null
      */
-    getCategoryList(data, targetId, childrenKey = 'channels', maxDepth = 10) {
+    getCategoryList(data, targetId, childrenKey = "channels", maxDepth = 10) {
       try {
         // 参数验证
         if (!Array.isArray(data) || data.length === 0) {
-          console.warn('getCategoryList: 数据为空或不是数组');
+          console.warn("getCategoryList: 数据为空或不是数组");
           return null;
         }
-        
+
         if (targetId === null || targetId === undefined) {
-          console.warn('getCategoryList: 目标ID为空');
+          console.warn("getCategoryList: 目标ID为空");
           return null;
         }
 
@@ -193,7 +209,7 @@ export default {
             if (item && item.id == targetId) {
               return item[childrenKey] || null;
             }
-            
+
             // 如果有子数据，递归查找
             if (item && item[childrenKey] && Array.isArray(item[childrenKey])) {
               const result = findById(item[childrenKey], depth + 1);
@@ -202,19 +218,18 @@ export default {
               }
             }
           }
-          
+
           return null;
         };
 
         const result = findById(data);
         return result || null;
-        
       } catch (error) {
-        console.error('getCategoryList 发生错误:', error);
+        console.error("getCategoryList 发生错误:", error);
         return null;
       }
     },
-    
+
     /**
      * 通用递归查找方法 - 根据ID查找任意嵌套结构的数据
      * @param {Array} data - 数据数组
@@ -223,16 +238,16 @@ export default {
      * @param {Number} maxDepth - 最大递归深度，防止无限循环
      * @returns {Object|null} 找到的数据项或null
      */
-    findByIdRecursive(data, targetId, childrenKey = 'channels', maxDepth = 10) {
+    findByIdRecursive(data, targetId, childrenKey = "channels", maxDepth = 10) {
       try {
         // 参数验证
         if (!Array.isArray(data) || data.length === 0) {
-          console.warn('findByIdRecursive: 数据为空或不是数组');
+          console.warn("findByIdRecursive: 数据为空或不是数组");
           return null;
         }
-        
+
         if (targetId === null || targetId === undefined) {
-          console.warn('findByIdRecursive: 目标ID为空');
+          console.warn("findByIdRecursive: 目标ID为空");
           return null;
         }
 
@@ -249,7 +264,7 @@ export default {
             if (item && item.id == targetId) {
               return item;
             }
-            
+
             // 如果有子数据，递归查找
             if (item && item[childrenKey] && Array.isArray(item[childrenKey])) {
               const result = findById(item[childrenKey], depth + 1);
@@ -258,18 +273,17 @@ export default {
               }
             }
           }
-          
+
           return null;
         };
 
         return findById(data);
-        
       } catch (error) {
-        console.error('findByIdRecursive 发生错误:', error);
+        console.error("findByIdRecursive 发生错误:", error);
         return null;
       }
     },
-    
+
     // 处理分类点击事件
     handleCategoryClick(category) {
       this.$router.push(`/product-classes?id=${category.id}`);
@@ -288,8 +302,35 @@ export default {
     padding-bottom: 100px;
 
     .page-ctx {
-      padding-top: 45px;
+      padding-top: 30px;
     }
+  }
+}
+
+.page-info {
+  margin-top: 30px;
+  background: #F2F6FA;
+  padding: 40px;
+  .page-info-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 20px;
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 20px;
+      border-radius: 6px;
+      background: #2e4c87;
+      margin-right: 10px;
+    }
+  }
+  .page-info-desc {
+    font-family: PingFang SC, PingFang SC;
+    font-size: 16px;
+    color: #333333;
+    line-height: 32px;
   }
 }
 
@@ -403,7 +444,7 @@ export default {
       color: #aeaeae;
     }
     .search-keyword {
-      color: #2E4C87;
+      color: #2e4c87;
     }
   }
 }

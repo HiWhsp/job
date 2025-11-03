@@ -70,7 +70,6 @@ export default {
           phone: this.form.phone,
         },
       }).then((res) => {
-        alert(res);
         if (res.code == 200) {
         } else {
           clearInterval(this.timer);

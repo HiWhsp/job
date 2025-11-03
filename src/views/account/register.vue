@@ -119,10 +119,10 @@ export default {
       let reg_phone = /^1[3-9]\d{9}$/;
       // let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
 
-      // if (!this.is_agree) {
-      //   alertErr("请阅读并勾选协议条款");
-      //   return;
-      // }
+      if (!this.is_agree) {
+        alertErr("请阅读并勾选隐私政策");
+        return;
+      }
       if (!reg_phone.test(this.form.phone)) {
         alertErr("请输入正确的手机号");
         return;
@@ -139,7 +139,7 @@ export default {
         alertErr("请输入确认密码");
         return;
       }
-      if (this.form.password !== this.form.password_confirm) {
+      if (this.form.pass !== this.form.password_confirm) {
         alertErr("密码不一致");
         return;
       }
@@ -152,12 +152,12 @@ export default {
           ...this.form,
         },
       }).then((res) => {
-        alert(res);
         if (res.code == 200) {
-          this.$store.commit("set_vuex_user", res.data);
-          this.$store.dispatch("query_user_auth_info");
-          this.$router.push("/");
+          setTimeout(() => {
+            this.$router.push("/login");
+          }, 1000);
         } else {
+          alertErr(res.msg);
         }
       });
     },

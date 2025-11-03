@@ -127,7 +127,6 @@ export default {
       savePass: true, //记住密码
 
       form: {
-        loginType: "0", //登录方式：1-手机验证码登录 0-手机密码登录
         phone: "",
         password: "",
         code: "",
@@ -147,16 +146,20 @@ export default {
       let reg_phone = /^1[3-9]\d{9}$/;
       // let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
 
-      // if (!this.is_agree) {
-      //   alertErr("请阅读并勾选协议条款");
-      //   return;
-      // }
+      if (!this.is_agree) {
+        alertErr("请阅读并勾选隐私政策");
+        return;
+      }
       if (!reg_phone.test(this.form.phone)) {
         alertErr("请输入正确的手机号");
         return;
       }
-      if (!this.form.password) {
+      if(this.tabType == 'PASS' && !this.form.password) {
         alertErr("请输入密码");
+        return;
+      }
+      if(this.tabType == 'SMS' && !this.form.code) {
+        alertErr("请输入验证码");
         return;
       }
 
@@ -165,6 +168,7 @@ export default {
         method: "get",
         data: {
           action: "login_phoneLogin",
+          loginType: this.tabType == 'PASS' ? '0' : '1',
           ...this.form,
         },
       }).then((res) => {
