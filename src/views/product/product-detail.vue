@@ -45,73 +45,35 @@
                     <h3>产品说明</h3>
                     <div class="series-content-top-item-content">
                       <p>
-                        K9平凸透镜（K9 Plano Convex (PCX)
-                        Lenses）是以K9光学玻璃材质为基底的平凸透镜。
-                        K9光学玻璃是一种宽光谱透过优异的光学材料，其对350nm-2000nm波长的光具有高透过率，同时具有较高的硬度，能承受多种物
-                        理和化学刺激，气泡和杂质含量较低，所以常作为各种光学元件的基底。K9平凸透镜会将光线聚焦成一个点。其特点是焦距为正，一
-                        面为平面，另一面为凸面。常用于单色光源的瞄准和聚焦。使用时，将凸面面向入射光。K9平凸透镜组合其他透镜可用于光束整形、
-                        光束的准直、扩束、缩束等不同应用
+                        {{ product.brandInfo ? product.brandInfo.content : "" }}
                       </p>
                     </div>
                   </div>
                   <div class="series-content-top-item">
                     <h3>示意图</h3>
                     <div class="series-content-top-item-content">
-                      <img src="#" alt="示意图" />
+                      <img
+                        :src="product.brandInfo ? product.brandInfo.thumb : ''"
+                        alt="示意图"
+                      />
                     </div>
                   </div>
                 </div>
                 <div class="series-content-bottom">
                   <h3>通用参数</h3>
                   <div class="parameter-table">
-                    <div class="parameter-row">
-                      <div class="parameter-item">
-                        <span class="parameter-label">材料</span>
-                        <span class="parameter-value">精退火H-K9L光学玻璃</span>
-                      </div>
-                      <div class="parameter-item">
-                        <span class="parameter-label">直径误差</span>
-                        <span class="parameter-value">+0.0/-0.1mm</span>
-                      </div>
-                    </div>
-                    <div class="parameter-row">
-                      <div class="parameter-item">
-                        <span class="parameter-label">面型不规则</span>
-                        <span class="parameter-value">入/4@632.8nm</span>
-                      </div>
-                      <div class="parameter-item">
-                        <span class="parameter-label">透镜定心误差</span>
-                        <span class="parameter-value">3弧分</span>
-                      </div>
-                    </div>
-                    <div class="parameter-row">
-                      <div class="parameter-item">
-                        <span class="parameter-label">倒边</span>
-                        <span class="parameter-value">0.2mmX45°</span>
-                      </div>
-                      <div class="parameter-item">
-                        <span class="parameter-label">设计波长</span>
-                        <span class="parameter-value">587.6nm</span>
-                      </div>
-                    </div>
-                    <div class="parameter-row">
-                      <div class="parameter-item">
-                        <span class="parameter-label">中心厚度误差</span>
-                        <span class="parameter-value">+0.2mm</span>
-                      </div>
-                      <div class="parameter-item">
-                        <span class="parameter-label">有效焦距误差</span>
-                        <span class="parameter-value">+2%</span>
-                      </div>
-                    </div>
-                    <div class="parameter-row">
-                      <div class="parameter-item">
-                        <span class="parameter-label">表面光洁度</span>
-                        <span class="parameter-value">40/20~60/40</span>
-                      </div>
-                      <div class="parameter-item">
-                        <span class="parameter-label">镀膜</span>
-                        <span class="parameter-value">见列表</span>
+                    <div
+                      class="parameter-row"
+                      v-for="(item, index) in product.brandInfo.addrows"
+                      :key="index"
+                    >
+                      <div
+                        class="parameter-item"
+                        v-for="(it, i) in item"
+                        :key="i"
+                      >
+                        <span class="parameter-label">{{ it.key }}</span>
+                        <span class="parameter-value">{{ it.value }}</span>
                       </div>
                     </div>
                   </div>
@@ -157,17 +119,17 @@
                   <template slot="title">
                     <div class="product-header">
                       <div class="product-info">
-                        <span class="product-code">{{ product.code }}</span>
+                        <span class="product-code">{{ product.title }}</span>
                         <span class="product-diameter"
-                          >直径: {{ product.diameter }}mm</span
+                          >直径: {{ product.diameter || '0.00' }}mm</span
                         >
                         <span class="product-focal"
-                          >焦距: {{ product.focalLength }}mm</span
+                          >焦距: {{ product.focal || '0.00' }}mm</span
                         >
                         <span class="product-radius"
-                          >曲率半径: {{ product.radius }}mm</span
+                          >曲率半径: {{ product.curvature || '0.00' }}mm</span
                         >
-                        <span class="product-stock">{{ product.stock }}</span>
+                        <span class="product-stock">{{ product.kucun || 0 }}</span>
                         <div class="product-compare">
                           <el-checkbox
                             v-model="product.checked"
@@ -239,128 +201,10 @@
 
                     <!-- 详细参数表格 -->
                     <div class="parameter-table">
-                      <div class="parameter-row">
-                        <div class="parameter-item">
-                          <span class="parameter-label">直径</span>
-                          <span class="parameter-value"
-                            >{{ product.parameters.diameter }}mm</span
-                          >
-                        </div>
-                        <div class="parameter-item">
-                          <span class="parameter-label">有效焦距</span>
-                          <span class="parameter-value"
-                            >{{ product.parameters.focalLength }}mm</span
-                          >
-                        </div>
-                      </div>
-                      <div class="parameter-row">
-                        <div class="parameter-item">
-                          <span class="parameter-label">镀膜</span>
-                          <span class="parameter-value">{{
-                            product.parameters.coating
-                          }}</span>
-                        </div>
-                        <div class="parameter-item">
-                          <span class="parameter-label">材料</span>
-                          <span class="parameter-value">{{
-                            product.parameters.material
-                          }}</span>
-                        </div>
-                      </div>
-                      <div class="parameter-row">
-                        <div class="parameter-item">
-                          <span class="parameter-label">后焦距</span>
-                          <span class="parameter-value"
-                            >{{ product.parameters.backFocalLength }}mm</span
-                          >
-                        </div>
-                        <div class="parameter-item">
-                          <span class="parameter-label">半径 R1</span>
-                          <span class="parameter-value"
-                            >{{ product.parameters.radius1 }}mm</span
-                          >
-                        </div>
-                      </div>
-                      <div class="parameter-row">
-                        <div class="parameter-item">
-                          <span class="parameter-label">中心厚度 CT</span>
-                          <span class="parameter-value"
-                            >{{ product.parameters.centerThickness }}mm</span
-                          >
-                        </div>
-                        <div class="parameter-item">
-                          <span class="parameter-label">边缘厚度 ET</span>
-                          <span class="parameter-value"
-                            >{{ product.parameters.edgeThickness }}mm</span
-                          >
-                        </div>
-                      </div>
-                      <div class="parameter-row">
-                        <div class="parameter-item">
-                          <span class="parameter-label">适用的透镜安装环</span>
-                          <span class="parameter-value">{{
-                            product.parameters.mountRing
-                          }}</span>
-                        </div>
-                        <div class="parameter-item">
-                          <span class="parameter-label">设计波长</span>
-                          <span class="parameter-value"
-                            >{{ product.parameters.designWavelength }}nm</span
-                          >
-                        </div>
-                      </div>
-                      <div class="parameter-row">
-                        <div class="parameter-item">
-                          <span class="parameter-label">直径容差</span>
-                          <span class="parameter-value">{{
-                            product.parameters.diameterTolerance
-                          }}</span>
-                        </div>
-                        <div class="parameter-item">
-                          <span class="parameter-label">中心厚度容差</span>
-                          <span class="parameter-value">{{
-                            product.parameters.thicknessTolerance
-                          }}</span>
-                        </div>
-                      </div>
-                      <div class="parameter-row">
-                        <div class="parameter-item">
-                          <span class="parameter-label">面型不规则</span>
-                          <span class="parameter-value">{{
-                            product.parameters.surfaceIrregularity
-                          }}</span>
-                        </div>
-                        <div class="parameter-item">
-                          <span class="parameter-label">焦距容差</span>
-                          <span class="parameter-value">{{
-                            product.parameters.focalTolerance
-                          }}</span>
-                        </div>
-                      </div>
-                      <div class="parameter-row">
-                        <div class="parameter-item">
-                          <span class="parameter-label">透镜定心误差</span>
-                          <span class="parameter-value">{{
-                            product.parameters.centeringError
-                          }}</span>
-                        </div>
-                        <div class="parameter-item">
-                          <span class="parameter-label">表面光洁度</span>
-                          <span class="parameter-value">{{
-                            product.parameters.surfaceQuality
-                          }}</span>
-                        </div>
-                      </div>
-                      <div class="parameter-row">
-                        <div class="parameter-item">
-                          <span class="parameter-label">倒边</span>
-                          <span class="parameter-value">{{
-                            product.parameters.chamfer
-                          }}</span>
-                        </div>
-                        <div class="parameter-item">
-                          <span class="parameter-label"></span>
-                          <span class="parameter-value"></span>
+                      <div class="parameter-row" v-for="(item, index) in product.fieldsInfo" :key="index">
+                        <div class="parameter-item" v-for="(it, i) in item" :key="i">
+                          <span class="parameter-label">{{ it.title }}</span>
+                          <span class="parameter-value">{{ it.fieldValue }}</span>
                         </div>
                       </div>
                     </div>
@@ -425,43 +269,12 @@ export default {
   },
   data() {
     return {
-      nav_option: [],
-      product: {},
+      nav_option: [], // 面包屑导航
+      product: {}, // 产品详情
       activeTab: "series", // 默认选中系列说明
       activeProducts: [], // 展开的产品ID数组
-      productList: [
-        {
-          id: "GT00001",
-          code: "GT00001",
-          diameter: 3.0,
-          focalLength: 4.5,
-          radius: 2.33,
-          stock: 100,
-          price: 25.0,
-          quantity: 1,
-          checked: false,
-          parameters: {
-            diameter: "3.00",
-            focalLength: "4.50",
-            coating: "未镀膜",
-            material: "精退火H-K9L光学玻璃",
-            backFocalLength: "3.39",
-            radius1: "2.33",
-            centerThickness: "1.70",
-            edgeThickness: "1.15",
-            mountRing: "N/A",
-            designWavelength: "587.6",
-            diameterTolerance: "+0.0/-0.1mm",
-            thicknessTolerance: "+0.2mm",
-            surfaceIrregularity: "入4@632.8nm",
-            focalTolerance: "+2%",
-            centeringError: "3弧分",
-            surfaceQuality: "40/20-60/40",
-            chamfer: "0.2X45°",
-          },
-        }
-      ],
-      products: [{}, {}, {}, {}, {}],
+      productList: [], // 产品列表
+      products: [{}, {}, {}, {}, {}], // 产品推荐
     };
   },
   mounted() {
@@ -484,12 +297,26 @@ export default {
       }).then((res) => {
         if (res.code == 200 && res.data) {
           this.product = res.data;
+          this.product.quantity = 1;
+          this.product.brandInfo.addrows = this.pairArray(
+            this.product.brandInfo.addrows
+          );
+          this.product.fieldsInfo = this.pairArray(this.product.fieldsInfo);
+          this.productList.push(res.data);
         }
       });
     },
+    // 将数组分成两组
+    pairArray(arr) {
+      const result = [];
+      for (let i = 0; i < arr.length; i += 2) {
+        result.push(arr.slice(i, i + 2));
+      }
+      return result;
+    },
     // 增加数量
     increaseQuantity(index) {
-      if (this.productList[index].quantity < this.productList[index].stock) {
+      if (this.productList[index].quantity < this.productList[index].kucun) {
         this.productList[index].quantity++;
       }
     },
@@ -512,22 +339,22 @@ export default {
       }
     },
     // 加入购物车
-    addToCart() {
+    addToCart(product) {
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "gouwuche_add",
-          inventoryId: this.product.inventoryId,
-          num: 1,
+          inventoryId: product.inventoryId,
+          num: product.quantity,
         },
       }).then((res) => {
         let { code, data, message } = res;
-        
+
         if (code == 200) {
           this.$refs.product_add_cart_success_modal.init({
-            num: 1,
-            ...this.product,
+            num: product.quantity,
+            ...product,
           });
 
           this.$store.commit("set_vuex_cart_number", 1);

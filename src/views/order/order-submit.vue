@@ -100,26 +100,24 @@
                     {{ vuex_config.offline_bank || "--" }}
                   </div>
                 </div>
-                <!-- <div class="info-item scroll-target-pingzheng">
-                  <div class="info-label">转账凭证:</div>
-                  <div class="info-val">
-                    <el-upload
-                      class="upload-demo"
-                      list-type="picture-card"
-                      multiple
-                      accept="image/*"
-                      :limit="upload_limit_number"
-                      :name="upload_col_name"
-                      :action="mix_upload_action"
-                      :data="mix_upload_data"
-                      :on-success="uploadSuccess_pingjia"
-                      :before-upload="beforeUpload_pingjia"
-                      :on-preview="handlePictureCardPreview"
-                    >
-                      <i class="el-icon-plus"></i>
-                    </el-upload>
+              </div>
+              <div class="scroll-target-pingzheng">
+                <el-upload
+                  ref="upload_pingzheng"
+                  multiple
+                  accept="image/*"
+                  :limit="upload_limit_number"
+                  :name="'img'"
+                  :action="mix_upload_action"
+                  :data="mix_upload_data"
+                  :on-success="uploadSuccess_pingjia"
+                  :before-upload="beforeUpload_pingjia"
+                  :on-preview="handlePictureCardPreview"
+                >
+                  <div class="info-label">
+                    上传汇款截图
                   </div>
-                </div> -->
+                </el-upload>
               </div>
             </div>
 
@@ -558,20 +556,23 @@ export default {
         bankNo: "", //
       },
       // 支付方式
-      payTypeValue: 2,
-      pay_type_value: "paypal",
+      pay_type_value: "xianxia",
       pay_method_list: [
         {
-          value: "pay1",
-          title: "账期月结",
-          icon: require("@img/pay-method/pay1.png"),
+          value: "weixin",
+          title: "微信支付",
+          icon: require("@img/pay-method/type-weixin.png"),
         },
         {
-          value: "pay2",
+          value: "zhifubao",
+          title: "支付宝支付",
+          icon: require("@img/pay-method/type-zfb.png"),
+        },
+        {
+          value: "xianxia",
           title: "对公转账",
           icon: require("@img/pay-method/pay2.png"),
         },
-        // { value: 'xianxia', title: '线下转款', icon: require('@img/pay-method/type-xianxia.png') },
         //{ value: 'paypal', title: 'PayPal', icon: require('@img/pay-method/type-paypal.png') },
         // {
         //   value: "yue",
@@ -580,10 +581,6 @@ export default {
         // },
       ],
 
-      //
-      //
-      //
-      //
       //
       //
       //
@@ -617,7 +614,7 @@ export default {
       //
 
       is_pay_pass: 0, //是否设置余额支付密码
-      payType: "",
+      payType: "对公转账",
       upload_limit_number: 6,
       dialogVisible: false,
       dialogImageUrl: "", //转账图片查看
@@ -731,11 +728,26 @@ export default {
     this.getCacheProduct();
 
     //
-    this.query_user();
-    this.query_address();
-    this.query_pay_info();
+    this.query_user(); // 获取用户信息
+    this.query_address(); // 获取地址列表
+    this.query_pay_info(); // 获取支付信息
+    // this.query_pay_platform_account_list(); // 获取支付平台账号列表
   },
   methods: {
+    query_pay_platform_account_list() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "orders_getPlatformAccountList",
+          pageNum: 10,
+          page: 1,
+        },
+      }).then((res) => {
+        console.log(res);
+      });
+    },
+
     //下单成功后 移除商品信息
     clearCacheProduct() {
       if (this.from == "cart") {
@@ -1059,15 +1071,6 @@ export default {
     do_confirm_submit() {
       this.confirm_tip = false;
 
-      // let not_use_jifen = !this.if_use_jifen || this.vuex_user.jifen <= 0;
-      // let not_use_yongjin = !this.if_use_yongjin || this.vuex_user.yongjin <= 0;
-      // if (not_use_jifen && not_use_yongjin) {
-      //   //不使用积分 不使用佣金  直接进行微信支付
-      //   // alert(res);
-      //   // this.to_pay_methods();
-      // } else {
-      //   this.order_pay_step();
-      // }
       let params = this.get_pay_params();
       console.log(params, "xiadan");
 
@@ -1078,21 +1081,20 @@ export default {
 
       invoice = JSON.stringify(invoice);
       localStorage.setItem("invoice_history", invoice);
-      // this.$api({
-      //   url: "/service.php",
-      //   method: "get",
-      //   data: {
-      //     action:
-      //       this.vuex_user.type == 1 ? "orders_create" : "orderC_createOrder",
-      //     ...params,
-      //   },
-      // }).then((res) => {
-      //   if (res.code == 200) {
-      //     let { id, orderNo } = res.data;
-      //     this.order_id = id;
-      //     this.do_order_pay();
-      //   }
-      // });
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "orders_create",
+          ...params,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          let { id, orderNo } = res.data;
+          this.order_id = id;
+          this.do_order_pay();
+        }
+      });
     },
 
     //支付方式调取
@@ -1104,10 +1106,10 @@ export default {
           this.pay_use_weixin();
         } else if (this.pay_type_value == "zhifubao") {
           this.pay_use_zhifubao();
-        } else if (this.pay_type_value == "yue") {
-          this.pay_use_yue();
         } else if (this.pay_type_value == "xianxia") {
           this.pay_use_xianxia();
+        } else if (this.pay_type_value == "yue") {
+          this.pay_use_yue();
         } else if (this.pay_type_value == "paypal") {
           this.pay_use_paypal();
         }
@@ -1243,29 +1245,23 @@ export default {
 
     //线下转款
     pay_use_xianxia() {
-      // this.$api("orders_offlinePay", { order_id: this.order_id }).then((res) => {
-      //   //console.log("货到付款支付", res);
-      //   let { code, message } = res;
-
-      //   if (code == 200) {
-      //     this.toPaySuccess();
-      //   } else {
-      //     this.toFail();
-      //   }
-      // });
-
-      let paypz = this.xianxia_file_list.join();
-      this.$api("orders_uploadPz", {
-        //
-        order_id: this.order_id,
-        paypz: paypz,
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "pay_offline",
+          orderType: 1,
+          orderId: this.order_id,
+          images: this.xianxia_file_list.join(","),
+          bankId: 3,
+        },
       }).then((res) => {
-        //console.log("线下转款支付", res);
-        let { code, message } = res;
-        if (code == 200) {
+        console.log(res.code);
+
+        alert(res);
+        if (res.code == 200) {
           this.toPaySuccess();
         } else {
-          this.toFail();
         }
       });
     },
@@ -1562,8 +1558,8 @@ export default {
 .btn-cancel {
   min-width: 100px;
   height: 40px;
-  border: 1px solid #2E4C87;
-  color: #2E4C87;
+  border: 1px solid #2e4c87;
+  color: #2e4c87;
   font-size: 14px;
 }
 
@@ -1571,7 +1567,7 @@ export default {
   margin-left: 20px;
   min-width: 100px;
   height: 40px;
-  background: #2E4C87;
+  background: #2e4c87;
   color: #fff;
   font-size: 14px;
 }
@@ -1647,7 +1643,7 @@ export default {
     }
 
     .list {
-      padding-left: 19px;
+      padding-left: 40px;
       margin-bottom: 10px;
       border-left: 1px dashed #707070;
 
@@ -1743,7 +1739,7 @@ export default {
 
           .box-unit {
             width: 240px;
-            color: #2E4C87;
+            color: #2e4c87;
           }
 
           .box-num {
@@ -1752,7 +1748,7 @@ export default {
 
           .box-subtitle {
             width: 240px;
-            color: #2E4C87;
+            color: #2e4c87;
           }
           .box-remark {
             width: 240px;
@@ -1806,7 +1802,7 @@ export default {
             font-family: Arial, Arial;
             font-weight: bold;
             font-size: 20px;
-            color: #2E4C87;
+            color: #2e4c87;
           }
         }
       }
@@ -1827,17 +1823,17 @@ export default {
         height: 45px;
         background: #ffffff;
         border-radius: 0px 0px 0px 0px;
-        border: 1px solid #2E4C87;
+        border: 1px solid #2e4c87;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 17px;
-        color: #2E4C87;
+        color: #2e4c87;
       }
 
       &.btn-2 {
         width: 200px;
         height: 45px;
-        background: #2E4C87;
+        background: #2e4c87;
         border-radius: 0px 0px 0px 0px;
         font-family: Arial, Arial;
         font-weight: 400;
@@ -1950,7 +1946,7 @@ export default {
           border: 1px solid #cccccc;
 
           &.active {
-            border: 1px solid #2E4C87;
+            border: 1px solid #2e4c87;
           }
         }
       }
@@ -2047,7 +2043,7 @@ export default {
     margin-bottom: 10px;
 
     b {
-      color: #2E4C87;
+      color: #2e4c87;
     }
   }
 
@@ -2169,7 +2165,7 @@ export default {
       }
 
       &.active {
-        border: 2px solid #2E4C87;
+        border: 2px solid #2e4c87;
 
         .marker {
           display: block;
@@ -2210,7 +2206,7 @@ export default {
     .btn {
       width: 133px;
       height: 40px;
-      background: #2E4C87;
+      background: #2e4c87;
       color: #fff;
       font-size: 16px;
       font-weight: 500;
@@ -2243,7 +2239,7 @@ export default {
         color: #666666;
 
         span {
-          color: #2E4C87;
+          color: #2e4c87;
         }
       }
 
@@ -2368,18 +2364,27 @@ export default {
         }
       }
     }
+
+    .scroll-target-pingzheng {
+      margin-left: 20px;
+      display: flex;
+      .info-label {
+        width: 130px;
+        height: 40px;
+        background: #2e4c87;
+        border-radius: 4px 4px 4px 4px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 500;
+        color: #fff;
+      }
+      .info-val {
+        margin-left: 20px;
+      }
+    }
   }
 }
-
-.sec-product {
-}
-
-.sec-ctx-type {
-  margin-left: 19px;
-  padding-left: 40px;
-  border-left: 1px dashed #707070;
-}
-
 // 线下转款信息
 .xianxia-info {
   padding: 16px 22px;
@@ -2463,13 +2468,12 @@ export default {
   }
 
   .fapiao-info {
-    padding-left: 32px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     padding-bottom: 20px;
-    padding-left: 19px;
+    padding-left: 40px;
     border-left: 1px dashed #707070;
     margin-left: 19px;
 
@@ -2503,8 +2507,8 @@ export default {
         color: #333333;
 
         &.active {
-          color: #2E4C87;
-          border: 1px solid #2E4C87;
+          color: #2e4c87;
+          border: 1px solid #2e4c87;
         }
 
         &:hover {
