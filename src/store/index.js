@@ -62,7 +62,7 @@ export default new Vuex.Store({
     vuex_h5: !!navigator.userAgent.match(
       /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
     ),
-    vuex_avatar_default: 'https://yifei.dx.hdapp.com.cn/uploads/images/wechat_2025-10-11_151239_658.png',
+    vuex_avatar_default: require('../assets/img/common/default.png'),
     vuex_user: {},
     //
     vuex_config: {},
