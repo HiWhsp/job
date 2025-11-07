@@ -53,8 +53,8 @@
                 <router-link to="/help">帮助中心</router-link>
               </div>
               <span class="u-line"></span>
-              <div class="u-act">
-                <router-link to="/about">关于我们</router-link>
+              <div class="u-act" style="cursor: pointer;">
+                <p @click="goUrl('http://www.xintiankeji.com/guanyu.html')">关于我们</p>
               </div>
             </div>
           </div>
@@ -240,6 +240,9 @@ export default {
   },
 
   methods: {
+    goUrl(url) {
+      window.open(url, "_blank");
+    },
     // 处理服务中心下拉菜单命令
     handleServiceCommand(command) {
       switch (command) {
@@ -771,6 +774,9 @@ export default {
     .head-base {
       background: #f3f3f3;
       .base-right .u-act a {
+        color: #666;
+      }
+      .base-right .u-act p {
         color: #666;
       }
       .base-right .u-act .el-dropdown-link {
