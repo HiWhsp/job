@@ -133,75 +133,77 @@
           </div>
         </div>
 
-        <!-- 右侧下载信息区域 -->
-        <div
-          class="download-info"
-          :class="{ 'download-info-absolute': isDownloadInfoAbsolute }"
-          ref="downloadInfo"
-        >
-          <!-- 下载须知 -->
-          <div class="download-notice">
-            <h3 class="notice-title">下载须知</h3>
-            <div class="notice-content">
-              <p>
-                1.
-                购买本站合同范本，即可享受律师合同审核、签约指导及终生法律咨询服务，下载后添加律师微信（{{
-                  vuex_config.bottom_lawer_contact
-                }}）即可获取上述服务；
-              </p>
-              <p>2. 本产品为电子文档，无实体发货，无快递配送；</p>
-              <p>
-                3.
-                由于电子产品的可复制性，下载后不支持退换货，请确认需求后再购买；
-              </p>
-              <p>
-                4. 如有疑问，请先咨询律师微信（{{
-                  vuex_config.bottom_lawer_contact
-                }}）后再下单，或直接向律师购买合同范本。
-              </p>
-            </div>
-          </div>
-
-          <!-- 文档详情 -->
-          <div class="document-details">
-            <div class="detail-list">
-              <div class="detail-item">
-                <span class="detail-label">软件：</span>
-                <span class="detail-value">Word</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">格式：</span>
-                <span class="detail-value">docx</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">大小：</span>
-                <span class="detail-value">{{ detail.size || 0 }}MB</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">页数：</span>
-                <span class="detail-value">共{{ detail.total_page }}页</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">版权范围：</span>
-                <span class="detail-value">个人/企业</span>
+        <div class="download-info-section">
+          <!-- 右侧下载信息区域 -->
+          <div
+            class="download-info"
+            :class="{ 'download-info-absolute': isDownloadInfoAbsolute }"
+            ref="downloadInfo"
+          >
+            <!-- 下载须知 -->
+            <div class="download-notice">
+              <h3 class="notice-title">下载须知</h3>
+              <div class="notice-content">
+                <p>
+                  1.
+                  购买本站合同范本，即可享受律师合同审核、签约指导及终生法律咨询服务，下载后添加律师微信（{{
+                    vuex_config.bottom_lawer_contact
+                  }}）即可获取上述服务；
+                </p>
+                <p>2. 本产品为电子文档，无实体发货，无快递配送；</p>
+                <p>
+                  3.
+                  由于电子产品的可复制性，下载后不支持退换货，请确认需求后再购买；
+                </p>
+                <p>
+                  4. 如有疑问，请先咨询律师微信（{{
+                    vuex_config.bottom_lawer_contact
+                  }}）后再下单，或直接向律师购买合同范本。
+                </p>
               </div>
             </div>
 
-            <!-- 操作按钮 -->
-            <div class="action-buttons">
-              <button class="download-btn" @click="showDownloadModal">
-                <img src="@/assets/img/common/down.png" alt="" />
-                <span>下载Word版本</span>
-              </button>
-              <button class="collect-btn" @click="handleCollect">
-                <img
-                  src="@/assets/img/common/collect.png"
-                  alt=""
-                  v-if="detail.is_collect == 0"
-                />
-                <img src="@/assets/img/common/my-collect.png" alt="" v-else />
-                <span>{{ detail.is_collect == 0 ? "收藏" : "已收藏" }}</span>
-              </button>
+            <!-- 文档详情 -->
+            <div class="document-details">
+              <div class="detail-list">
+                <div class="detail-item">
+                  <span class="detail-label">软件：</span>
+                  <span class="detail-value">Word</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">格式：</span>
+                  <span class="detail-value">docx</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">大小：</span>
+                  <span class="detail-value">{{ detail.size || 0 }}MB</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">页数：</span>
+                  <span class="detail-value">共{{ detail.total_page }}页</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">版权范围：</span>
+                  <span class="detail-value">个人/企业</span>
+                </div>
+              </div>
+
+              <!-- 操作按钮 -->
+              <div class="action-buttons">
+                <button class="download-btn" @click="showDownloadModal">
+                  <img src="@/assets/img/common/down.png" alt="" />
+                  <span>下载Word版本</span>
+                </button>
+                <button class="collect-btn" @click="handleCollect">
+                  <img
+                    src="@/assets/img/common/collect.png"
+                    alt=""
+                    v-if="detail.is_collect == 0"
+                  />
+                  <img src="@/assets/img/common/my-collect.png" alt="" v-else />
+                  <span>{{ detail.is_collect == 0 ? "收藏" : "已收藏" }}</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -260,7 +262,7 @@ export default {
       detail: {},
       isDownloadInfoAbsolute: false,
       lastScrollTime: 0,
-      contract_type: '',
+      contract_type: "",
       pdfLoading: false,
       pdfError: false,
       pdfDoc: null,
@@ -523,8 +525,9 @@ export default {
       canvas.height = canvasHeight;
 
       // 水印参数
-      const watermarkText = this.contract_type == 1 ? "专业合同范本" : "专业法律文书";
-      const fontSize = 36
+      const watermarkText =
+        this.contract_type == 1 ? "专业合同范本" : "专业法律文书";
+      const fontSize = 36;
       const spacing = 240; // 水印间距
       const angle = -45; // 旋转角度
       const opacity = 0.1; // 透明度

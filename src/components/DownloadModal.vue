@@ -386,7 +386,7 @@ export default {
       gap: 20px;
 
       .product-item {
-        width: 610px;
+        width: 100%;
         background: #ffffff;
         position: relative;
         border: 4px solid #f4f5f8;

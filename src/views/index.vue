@@ -16,7 +16,7 @@
       <!-- 业务公告 -->
       <div class="announcement-section">
         <div class="announcement-banner">
-          <div class="banner-content" v-html="vuex_config.yewu_gonggao"></div>
+          <div class="banner-content" v-html="yewuGonggaoWithoutStyle"></div>
         </div>
 
         <!-- 最新动态 -->
@@ -177,6 +177,14 @@ export default {
   },
   computed: {
     ...mapState(["vuex_index_banners"]),
+    // 去除富文本中的 style 样式
+    yewuGonggaoWithoutStyle() {
+      if (!this.vuex_config || !this.vuex_config.yewu_gonggao) {
+        return "";
+      }
+      // 使用正则表达式去除所有 style 属性（包括单引号、双引号、以及各种空格情况）
+      return this.vuex_config.yewu_gonggao.replace(/\s*style\s*=\s*(["'])[^"']*\1/gi, "");
+    },
   },
   mounted() {
     this.getIndex();

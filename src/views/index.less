@@ -64,21 +64,27 @@
     margin-left: 212px;
     padding: 26px 30px 26px 0;
 
-    .announcement-text {
-      color: #44464b;
+    // 使用深度选择器让样式应用到 v-html 插入的内容
+    /deep/ p {
       font-size: 18px;
       line-height: 1.6;
       font-weight: bold;
-      margin-bottom: 18px;
+      margin-bottom: 10px;
       &:last-child {
         margin-bottom: 0;
       }
       span {
         color: #e0291f;
       }
-      &.red-text {
-        color: #e0291f;
-      }
+    }
+    // 也可以直接使用标签选择器
+    /deep/ span {
+      color: #e0291f;
+    }
+    // 支持其他可能的元素
+    /deep/ div {
+      font-size: 18px;
+      line-height: 1.6;
     }
   }
 }
