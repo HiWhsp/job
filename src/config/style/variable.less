@@ -1,0 +1,54 @@
+@theme: #4da7fd;
+
+@width: 1200px;
+
+.flex {
+  display: flex;
+  align-items: center;
+}
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.line-1 {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.line-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+}
+
+.scrollbar {
+  overflow-y: auto;
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    border: 8px solid #4ea0ff;
+    background: #fff;
+  }
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 0px;
+  }
+}
+
+
+
