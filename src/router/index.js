@@ -111,6 +111,7 @@ const scene = () =>
 // 个人中心
 const my_layout = () => import("@/views/my/my-layout.vue");
 const my_index = () => import("@/views/my/my-index.vue");
+const myMessage = () => import("@/views/my/myMessage.vue");
 
 // 订单
 // 下单
@@ -484,16 +485,16 @@ const routes = [
           requireAuth: true,
         },
       },
-      // {
-      //   path: "/orderLogistics",
-      //   name: "orderLogistics",
-      //   component: orderLogistics,
-      //   meta: {
-      //     title: "订单物流",
-      //     requireAuth: true,
-      //
-      //   },
-      // },
+      {
+        path: "/message-list",
+        name: "message-list",
+        component: myMessage,
+        meta: {
+          title: "系统消息",
+          requireAuth: true,
+      
+        },
+      },
       {
         path: "/order-review-submit",
         name: "order-review-submit",

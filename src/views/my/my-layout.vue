@@ -49,11 +49,9 @@
 </template>
 
 <script>
-import { SHOP_TYPE } from "@/config/env.js";
 
 import page_breadcrumb from "@/components/page/page-breadcrumb.vue";
 
-import { mapState } from "vuex";
 
 export default {
   name: "my",
@@ -92,7 +90,7 @@ export default {
             },
             {
               title: "系统消息",
-              route: "",
+              route: "message-list",
             },
             {
               title: "个人信息",

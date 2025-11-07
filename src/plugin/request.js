@@ -30,12 +30,14 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   function (response) {
     let res = response.data;
-    let {code, Message} = res
+    let { code, msg } = res
     if (code != 200) {
       Message.error(msg);
+      return Promise.reject(res);
+    } else {
+      return res;
     }
     // debugger
-    return res;
   },
   function (error) {
 
@@ -94,7 +96,7 @@ function api(option) {
           items.push(str)
         }
         ret = items.join('&')
-        return ret ;
+        return ret;
       },
     ]
   };
