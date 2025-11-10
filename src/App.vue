@@ -97,7 +97,7 @@
 
 	.el-table th.el-table__cell {
 		background: #F2F6FC !important;
-		background: #008A32 !important;
+		background: #3377FE !important;
 
 		font-family: PingFang SC, PingFang SC;
 font-weight: 400;
@@ -131,15 +131,15 @@ color: #FFFFFF;
 
 	.el-button--primary {
 		background: #409eff !important;
-		background: #008A32 !important;
+		background: #3377FE !important;
 	}
 	.el-button--text {
-		color: #008A32 !important;
+		color: #3377FE !important;
 	}
 
 	.el-pagination.is-background .el-pager li:not(.disabled).active {
 		background: #409eff!important;
-		background: #008A32!important;
+		background: #3377FE!important;
 	}
 
 

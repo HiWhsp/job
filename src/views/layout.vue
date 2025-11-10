@@ -33,68 +33,11 @@ export default {
   data() {
     return {};
   },
-  created() {
-    //    this.initialization();
-    //    let token = localStorage.getItem("token");
-    //    if (!token && this.$route.name != "login") {
-    //      this.$router.push("/login");
-    //      return;
-    //    } else {
-    //      this.$store.dispatch("appInit", {
-    //        callback: this.initCallback,
-    //      }); //重新初始化
-    //    }
+  mounted() {
+    this.$store.dispatch("appInit");
   },
 
   methods: {
-    // initialization() {
-    //   this.$api({
-    //     url: "/admin_service.php",
-    //     method: "get",
-    //     data: {
-    //       action: "manager_getUserInfo",
-    //     },
-    //   }).then((res) => {
-    //     if (res.code == 200) {
-    //       if (res.data.roleInfo == null || !res.data.roleInfo) {
-    //         alertErr("请重新登录！！！");
-    //         this.$router.push("/login");
-    //       }
-    //     } else {
-    //       alert(res);
-    //     }
-    //   });
-    // },
-    initCallback(data) {
-      if (data.id) {
-      } else {
-        this.$router.push("/login");
-      }
-    },
-    handleOpen(key, keyPath) {
-      console.log("handleOpen", key, keyPath);
-    },
-    handleSelect(key, keyPath) {
-      let key_str = keyPath[keyPath.length - 1];
-      let route = this.key_map[key_str];
-
-      console.log("handleSelect key", key);
-      console.log("handleSelect keyPath", keyPath);
-      console.log("handleSelect route", route);
-
-      // debugger;
-      this.$router.push("/" + route);
-    },
-
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    },
-
-    root_click() {
-      console.log("点击内容区, 关闭选项弹窗");
-      // this.$store.commit('vuex_closePop');
-      // this.vuex_closePop();
-    },
   },
 };
 </script>

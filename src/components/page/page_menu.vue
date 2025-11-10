@@ -440,7 +440,7 @@ export default {
         border-radius: 0px 12px 12px 0px;
 
         .group-title { 
-          color: #008A32 !important;
+          color: #3377FE !important;
         }
       }
       &.sub_select {

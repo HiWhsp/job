@@ -13,6 +13,7 @@ export default new Vuex.Store({
 		),
 		//
 		vuex_user: {},
+		vuex_depart_list: [],
 		token: "",
 
 
@@ -35,68 +36,20 @@ export default new Vuex.Store({
 			localStorage.setItem("token", value);
 		},
 		set_vuex_user(state, data) {
-			// state.token = value;
-			// localStorage.setItem("token", value);
-
-			let user = data.user;
-			let roles = data.roles; //["admin"]
-			let role = roles[0] || ''
-			let permissions = data.permissions; //[ "*:*:*"]
-
-			//
-			state.isLogin = true;
-			state.vuex_user = user;
-			state.vuex_role = role;
-			//
-			localStorage.setItem("cache_user", user);
-			localStorage.setItem("cache_role", role);
-		},
-
-
-		//设置数据
-		setVuexData(state, opt) {
-			let {
-				key,
-				val
-			} = opt;
-			state[key] = val;
-		},
-		setAdminAccount(state, data) {
-			let {
-				token,
-				user_id
-			} = data;
-			state.isLogin = true;
-			state.token = token;
-			state.user_id = user_id;
-			//
-			localStorage.setItem("token", token);
-			localStorage.setItem("user_id", user_id);
-		},
-		//设置基本信息
-		setAdminUserInfo(state, data) {
-			state.isLogin = true;
-			state.userInfo = data;
 			state.vuex_user = data;
+			localStorage.setItem("vuex_user", JSON.stringify(data));
+		},
 
-			if (data.isSup) { //超级管理员
-				localStorage.setItem('is_limit_auth_route', 0)
-			}
-			localStorage.setItem("isSup", data.isSup);
-			localStorage.setItem("roleId", data.roleId);
-			localStorage.setItem("userInfo", JSON.stringify(data));
+		set_vuex_depart_list(state, data) {
+			state.vuex_depart_list = data;
+			localStorage.setItem("vuex_depart_list", JSON.stringify(data));
 		},
 		//清空登录信息
 		clearAdminInfo(state) {
-			state.token = "";
-			state.user_id = "";
-			state.userInfo = {};
-			state.isLogin = false;
-			localStorage.removeItem("userInfo");
-			localStorage.removeItem("token");
-			localStorage.removeItem("user_id");
-			localStorage.removeItem("roleId");
-			localStorage.removeItem("is_auth_refresh");
+			state.vuex_user = {};
+			state.vuex_depart_list = [];
+			localStorage.removeItem("vuex_user");
+			localStorage.removeItem("vuex_depart_list");
 		},
 	},
 
@@ -106,31 +59,8 @@ export default new Vuex.Store({
 			state,
 			dispatch
 		}, data) {
-			dispatch("appInitGetAssets");
-
-			localStorage.setItem("is_permission_refresh", 1)
-			let token = localStorage.getItem("token");
-			if (token) {
-				dispatch("getUserloginedInfo");
-			} else {}
-		},
-
-		//获取登录后的信息
-		async getUserloginedInfo({
-			commit,
-			state,
-			dispatch
-		}, data) {
 			dispatch("getUserInfo");
-		},
-
-		//初始化资源
-		async appInitGetAssets({
-			commit,
-			state,
-			dispatch
-		}, data) {
-			//
+			dispatch("getDepartList");
 		},
 
 		// 获取用户信息
@@ -140,23 +70,32 @@ export default new Vuex.Store({
 			dispatch
 		}, option) {
 			api({
-				url: '/apiurl',
+				url: '/getUserInfo',
 				method: 'get',
-				data: {
-					action: "manager_getUserInfo",
-				}
 			}).then((res) => {
 				console.log("动态获取用户信息", res);
 
 				// debugger
 				if (res.code == 200) {
-					commit("setAdminUserInfo", res.data);
+					commit("set_vuex_user", res.data);
 				} else {}
-
-				if (option && option.callback) {
-					option.callback(res.data)
-				}
 			});
 		},
+		async getDepartList({
+			commit,
+			state,
+			dispatch
+		}, option) {
+			api({
+				url: '/departs',
+				method: 'get',
+			}).then((res) => {
+				console.log("获取部门列表", res);
+				if (res.code == 200) {
+					commit("set_vuex_depart_list", res.data);
+				} else {}
+			});
+		},
+
 	},
 });

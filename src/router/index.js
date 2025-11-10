@@ -19,26 +19,16 @@ VueRouter.prototype.replace = function push(location, onResolve, onReject) {
 };
 Vue.use(VueRouter);
 
-const pages = () => import("@/views/test/pages.vue");
 const layout = () => import("@/views/layout.vue");
 const login = () => import("@/views/login/login.vue"); //登录
 
-//奕诚需要页面
-const student = () => import("@/views/student/student.vue");
+const project = () => import("@/views/project/project.vue");
 const teacher = () => import("@/views/teacher/teacher.vue");
 const statistics = () => import("@/views/statistics/statistics.vue");
 const question = () => import("@/views/question/question.vue");
 const setting = () => import("@/views/setting/setting.vue");
 
 const routes = [
-  {
-    path: "/pages",
-    name: "pages",
-    component: pages,
-    meta: {
-      title: "pages",
-    },
-  },
   {
     path: "/",
     name: "index",
@@ -73,11 +63,11 @@ const routes = [
     },
     children: [
       {
-        path: "/student",
-        name: "student",
-        component: student,
+        path: "/project",
+        name: "project",
+        component: project,
         meta: {
-          title: "学生中心",
+          title: "项目管理",
         },
       },
       {
