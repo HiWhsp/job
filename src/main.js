@@ -15,7 +15,7 @@ import store from "./store";
 import "@/plugin/request.js"; 
 import "@/plugin/message.js"; 
 import "@/plugin/log.js"; 
-import '@/lib/lib-flexible.js';
+// import '@/lib/lib-flexible.js';
 
 
 import Directives from "./directives"; //全局指令

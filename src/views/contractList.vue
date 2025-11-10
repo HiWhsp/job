@@ -4,7 +4,7 @@
       <!-- 业务公告 -->
       <div class="announcement-section">
         <div class="announcement-banner">
-          <div class="banner-content" v-html="vuex_config.yewu_gonggao"></div>
+          <div class="banner-content" v-html="yewuGonggaoWithoutStyle"></div>
         </div>
 
         <!-- 最新动态 -->
@@ -124,7 +124,6 @@
               :page-size="pageSize"
               :current-page="currentPage"
               @current-change="handleCurrentChange"
-
               layout="total, prev, pager, next"
             ></el-pagination>
           </div>
@@ -177,6 +176,17 @@ export default {
   },
   computed: {
     ...mapState(["vuex_index_banners"]),
+    // 去除富文本中的 style 样式
+    yewuGonggaoWithoutStyle() {
+      if (!this.vuex_config || !this.vuex_config.yewu_gonggao) {
+        return "";
+      }
+      // 使用正则表达式去除所有 style 属性（包括单引号、双引号、以及各种空格情况）
+      return this.vuex_config.yewu_gonggao.replace(
+        /\s*style\s*=\s*(["'])[^"']*\1/gi,
+        ""
+      );
+    },
   },
   watch: {
     // activeCategory: {
@@ -200,7 +210,7 @@ export default {
   },
   async mounted() {
     this.searchKeyword = this.$route.query.search;
-    if(this.$route.query.category) {
+    if (this.$route.query.category) {
       this.activeCategory = this.$route.query.category;
     }
     await this.getIndex();
@@ -227,10 +237,14 @@ export default {
       const category = this.vuex_category_tree.find(
         (cat) => cat.id === this.activeCategory
       );
-      return category ? category.title : this.searchKeyword ? "为您推荐" : "全部";
+      return category
+        ? category.title
+        : this.searchKeyword
+        ? "为您推荐"
+        : "全部";
     },
     async getIndex() {
-      console.log(this.orderByColumn, this.isAsc); 
+      console.log(this.orderByColumn, this.isAsc);
       const res = await this.$api({
         url: "contractList",
         method: "get",
@@ -239,8 +253,18 @@ export default {
           page: this.currentPage,
           pageSize: this.pageSize,
           category_id: this.activeCategory,
-          saleSort: this.orderByColumn == 'orders' ? this.isAsc == 'asc' ? '1' : '2' : '',
-          priceSort: this.orderByColumn == 'priceSale' ? this.isAsc == 'asc' ? '1' : '2' : '',
+          saleSort:
+            this.orderByColumn == "orders"
+              ? this.isAsc == "asc"
+                ? "1"
+                : "2"
+              : "",
+          priceSort:
+            this.orderByColumn == "priceSale"
+              ? this.isAsc == "asc"
+                ? "1"
+                : "2"
+              : "",
         },
       });
       this.contracts = res.data.list;
