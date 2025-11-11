@@ -68,7 +68,7 @@
               v-for="item in controller.producntInfos"
               :key="item.id"
               :class="['controller-item', { selected: item.selected }]"
-              @click="selectController(item.id, item)"
+              @click="selectController(item.id, item, controller.title)"
             >
               <el-tooltip
                 v-if="
@@ -908,6 +908,7 @@ export default {
       showColorDialog: false, // 颜色定制弹框
       robotConfig: {}, // 机器人配置
       tabs: [], // 标签页
+      originalTabs: [], // 原始标签页
       controllers: [], // 控制器
       activeTabTitle: "", // 当前激活的标签页标题
       currentOtherItem: null, // 当前选中的"其他"选项
@@ -921,6 +922,7 @@ export default {
       this.compareSorce = this.$route.query.compare || 0;
       this.editIndex = this.$route.query.index || 0;
       this.tabs = this.detail;
+      this.originalTabs = JSON.parse(JSON.stringify(this.tabs));
       this.activeTab = this.editIndex || 0;
       this.controllers = this.tabs[this.editIndex].child;
       this.activeTabTitle = this.tabs[this.editIndex || 0]
@@ -1060,8 +1062,41 @@ export default {
     },
 
     // 选择控制器
-    selectController(controllerId, item) {
+    selectController(controllerId, item, controllerTitle) {
       let targetItem = null;
+
+      if(controllerTitle == '控制器') {
+        const list = this.controllers.slice(1); // 截取除控制器外的所有选项
+        const controllerIdStr = String(controllerId); // 将controllerId转换为字符串
+        let hasMatch = false; // 标记是否有匹配项
+        
+        list.forEach((controller) => {
+          if(controller.producntInfos && controller.producntInfos.length > 0) {
+            // 查找包含controllerId的producntInfos项
+            const matchedItems = controller.producntInfos.filter((productInfo) => {
+              if (!productInfo.glId) {
+                return false;
+              }
+              // 将glId字符串按逗号分割，检查是否包含controllerId
+              const glIdArray = productInfo.glId.split(',').map(id => id.trim());
+              return glIdArray.includes(controllerIdStr);
+            });
+            
+            // 如果有匹配项，只保留匹配的项
+            if (matchedItems.length > 0) {
+              hasMatch = true;
+              // 使用Vue.set来更新数组，确保响应式
+              this.$set(controller, 'producntInfos', matchedItems);
+            }
+          }
+        });
+        
+        // 如果没有任何匹配项，恢复所有原始数据
+        if (!hasMatch) {
+          // 重新从tabs中获取原始数据
+          this.controllers = JSON.parse(JSON.stringify(this.originalTabs[this.editIndex].child));
+        }
+      }
 
       // 找到当前控制器所在的组，只在该组内进行单选
       this.controllers.forEach((controller) => {
@@ -1268,6 +1303,49 @@ export default {
             });
           }
         }
+        
+        // 加载配置完成后，检查是否有控制器被选择，如果有则执行selectController方法
+        this.$nextTick(() => {
+          // 从tabs中查找选中的控制器（因为loadConfigFromStorage是在tabs中设置选中状态的）
+          const currentTab = this.tabs[this.activeTab];
+          if (currentTab && currentTab.child) {
+            const controllerItem = currentTab.child.find(
+              (item) => item.title === '控制器'
+            );
+            
+            if (controllerItem && controllerItem.producntInfos) {
+              // 查找选中的控制器
+              const selectedController = controllerItem.producntInfos.find(
+                (item) => item.selected === true
+              );
+              
+              if (selectedController) {
+                // 在controllers中找到对应的控制器项
+                const controllerItemInControllers = this.controllers.find(
+                  (item) => item.title === '控制器'
+                );
+                
+                if (controllerItemInControllers && controllerItemInControllers.producntInfos) {
+                  // 在controllers中找到对应的控制器
+                  const controllerInControllers = controllerItemInControllers.producntInfos.find(
+                    (item) => item.id === selectedController.id
+                  );
+                  
+                  if (controllerInControllers) {
+                    // 先同步选中状态到controllers
+                    this.$set(controllerInControllers, 'selected', true);
+                    // 执行selectController方法
+                    this.selectController(
+                      controllerInControllers.id,
+                      controllerInControllers,
+                      '控制器'
+                    );
+                  }
+                }
+              }
+            }
+          }
+        });
       } catch (error) {
         // console.error("加载配置数据失败:", error);
       }
