@@ -42,7 +42,7 @@ axios_ins_common.interceptors.response.use(
 	function (res) {
 		let data = res.data;
 		let code = data.code
-		if (code == 403) {
+		if (code == 403 || code == 401) {
 			alertErr(data.msg)
 		} else if (code == 500) {
 			alertErr(data.msg)
