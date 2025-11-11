@@ -386,7 +386,6 @@ export default {
       gap: 20px;
 
       .product-item {
-        width: 100%;
         background: #ffffff;
         position: relative;
         border: 4px solid #f4f5f8;
@@ -669,6 +668,10 @@ export default {
 
 <style lang="less">
 .download-modal {
+  width: 1300px !important;
+  min-width: 1300px !important;
+  max-width: 1300px !important;
+
   .el-dialog__header {
     height: 60px;
     padding: 10px;
