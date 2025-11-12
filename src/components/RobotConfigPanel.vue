@@ -929,9 +929,10 @@ export default {
         : this.tabs[this.editIndex || 0].title;
       // 为所有item添加selected属性
       this.initializeSelectedState();
-      this.originalTabs = JSON.parse(JSON.stringify(this.tabs));
       // 加载本地保存的配置
       this.loadConfigFromStorage();
+      this.originalTabs = JSON.parse(JSON.stringify(this.tabs));
+
 
       this.isEdit = this.$route.query.edit == "true";
 
@@ -977,7 +978,7 @@ export default {
       // 如果当前项有 producntInfos，则初始化它们
       if (item.producntInfos && Array.isArray(item.producntInfos)) {
         item.producntInfos.forEach((product) => {
-          if(product.moren == 1) {
+          if (product.moren == 1) {
             this.$set(product, "selected", true);
           }
         });
@@ -997,7 +998,7 @@ export default {
       const formattedData = this.generateFormattedData();
       // 存储到localStorage
       localStorage.setItem("robotConfig", JSON.stringify(formattedData));
-      this.$router.push("/aiRecommendation?id=" + this.id  + "&more=1");
+      this.$router.push("/aiRecommendation?id=" + this.id + "&more=1");
     },
 
     goRobotDetail() {
@@ -1064,18 +1065,18 @@ export default {
     // 选择控制器
     selectController(controllerId, item, controllerTitle) {
       let targetItem = null;
-      this.tabs = JSON.parse(JSON.stringify(this.originalTabs));
 
-      if(controllerTitle == '控制器') {
+      if (controllerTitle == "控制器") {
+        this.tabs = JSON.parse(JSON.stringify(this.originalTabs));
         const controllerIdStr = String(controllerId); // 将controllerId转换为字符串
-        
+
         // 递归遍历所有tabs中的producntInfos
         this.tabs.forEach((tab) => {
           this.filterProducntInfosByControllerId(tab, controllerIdStr);
         });
-        
+
         // 更新controllers（当前标签页的child）
-        this.controllers = this.tabs[this.editIndex].child;
+        this.controllers = this.tabs[this.activeTab].child;
       }
 
       // 找到当前控制器所在的组，只在该组内进行单选
@@ -1122,18 +1123,22 @@ export default {
             return false;
           }
           // 将glId字符串按逗号分割，检查是否包含controllerId
-          const glIdArray = productInfo.glId.split(',').map(id => id.trim());
+          const glIdArray = productInfo.glId.split(",").map((id) => id.trim());
           return glIdArray.includes(controllerIdStr);
         });
-        
+
         // 如果有关联项，只保留匹配的项
         if (matchedItems.length > 0) {
-          this.$set(item, 'producntInfos', matchedItems);
+          this.$set(item, "producntInfos", matchedItems);
         } else {
           // 如果没有关联项，从originalTabs中恢复原始数据
           const originalItem = this.findOriginalItem(item, this.originalTabs);
           if (originalItem && originalItem.producntInfos) {
-            this.$set(item, 'producntInfos', JSON.parse(JSON.stringify(originalItem.producntInfos)));
+            this.$set(
+              item,
+              "producntInfos",
+              JSON.parse(JSON.stringify(originalItem.producntInfos))
+            );
           }
         }
       }
@@ -1343,48 +1348,52 @@ export default {
         } else {
           // 遍历tabs，设置所有item的选中状态为false
           if (this.tabs && this.tabs.length > 0) {
-            this.tabs.forEach((tab) => {
+            this.tabs.forEach((tab) => {              
               // 递归处理所有层级的 producntInfos
               this.initializeProducntInfosMoren(tab);
             });
           }
         }
-        
+
         // 加载配置完成后，检查是否有控制器被选择，如果有则执行selectController方法
         this.$nextTick(() => {
           // 从tabs中查找选中的控制器（因为loadConfigFromStorage是在tabs中设置选中状态的）
           const currentTab = this.tabs[this.activeTab];
           if (currentTab && currentTab.child) {
             const controllerItem = currentTab.child.find(
-              (item) => item.title === '控制器'
+              (item) => item.title === "控制器"
             );
-            
+
             if (controllerItem && controllerItem.producntInfos) {
               // 查找选中的控制器
               const selectedController = controllerItem.producntInfos.find(
                 (item) => item.selected === true
               );
-              
+
               if (selectedController) {
                 // 在controllers中找到对应的控制器项
                 const controllerItemInControllers = this.controllers.find(
-                  (item) => item.title === '控制器'
+                  (item) => item.title === "控制器"
                 );
-                
-                if (controllerItemInControllers && controllerItemInControllers.producntInfos) {
+
+                if (
+                  controllerItemInControllers &&
+                  controllerItemInControllers.producntInfos
+                ) {
                   // 在controllers中找到对应的控制器
-                  const controllerInControllers = controllerItemInControllers.producntInfos.find(
-                    (item) => item.id === selectedController.id
-                  );
-                  
+                  const controllerInControllers =
+                    controllerItemInControllers.producntInfos.find(
+                      (item) => item.id === selectedController.id
+                    );
+
                   if (controllerInControllers) {
                     // 先同步选中状态到controllers
-                    this.$set(controllerInControllers, 'selected', true);
+                    this.$set(controllerInControllers, "selected", true);
                     // 执行selectController方法
                     this.selectController(
                       controllerInControllers.id,
                       controllerInControllers,
-                      '控制器'
+                      "控制器"
                     );
                   }
                 }
