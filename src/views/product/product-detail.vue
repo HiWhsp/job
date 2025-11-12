@@ -80,17 +80,115 @@
                 </div>
               </div>
             </div>
-            <div v-if="activeTab === 'coating'" class="content-item">
-              <h3>镀膜曲线</h3>
-              <p>这里是镀膜曲线的内容...</p>
+            <div v-if="activeTab === 'coating'" class="content-item" v-html="product.brandInfo.content2">
             </div>
-            <div v-if="activeTab === 'lens'" class="content-item">
-              <h3>光学透镜</h3>
-              <p>这里是光学透镜的内容...</p>
+            <div v-if="activeTab === 'lens'" class="content-item" v-html="product.brandInfo.content3">
             </div>
-            <div v-if="activeTab === 'feedback'" class="content-item">
-              <h3>产品反馈</h3>
-              <p>这里是产品反馈的内容...</p>
+            <div v-if="activeTab === 'feedback'" class="content-item feedback-content">
+              <div class="feedback-form">
+                <!-- 左列 -->
+                <div class="feedback-left">
+                  <!-- 反馈类型 -->
+                  <div class="form-group">
+                    <label class="form-label">反馈类型</label>
+                    <div class="radio-group">
+                      <label class="radio-item">
+                        <input
+                          type="radio"
+                          name="feedbackType"
+                          value="newProduct"
+                          v-model="feedbackForm.type"
+                        />
+                        <span class="radio-label">新品需求</span>
+                      </label>
+                      <label class="radio-item">
+                        <input
+                          type="radio"
+                          name="feedbackType"
+                          value="improvement"
+                          v-model="feedbackForm.type"
+                        />
+                        <span class="radio-label">改进建议</span>
+                      </label>
+                      <label class="radio-item">
+                        <input
+                          type="radio"
+                          name="feedbackType"
+                          value="inquiry"
+                          v-model="feedbackForm.type"
+                        />
+                        <span class="radio-label">产品咨询</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- 您的联系方式 -->
+                  <div class="form-group">
+                    <label class="form-label required">
+                      您的联系方式
+                      <span class="asterisk">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      class="form-input"
+                      placeholder="请输入"
+                      v-model="feedbackForm.contact"
+                    />
+                  </div>
+
+                  <!-- 反馈内容 -->
+                  <div class="form-group">
+                    <label class="form-label required">
+                      反馈内容
+                      <span class="asterisk">*</span>
+                    </label>
+                    <textarea
+                      class="form-textarea"
+                      placeholder="请输入"
+                      v-model="feedbackForm.content"
+                    ></textarea>
+                  </div>
+
+                  <!-- 提交按钮 -->
+                  <div class="form-group">
+                    <button class="submit-btn" @click="submitFeedback">提交</button>
+                  </div>
+                </div>
+
+                <!-- 右列 -->
+                <div class="feedback-right">
+                  <!-- 反馈产品 -->
+                  <div class="form-group">
+                    <label class="form-label">反馈产品</label>
+                    <el-select
+                      v-model="feedbackForm.product"
+                      placeholder="请选择"
+                      class="form-select"
+                    >
+                      <el-option
+                        v-for="item in productList"
+                        :key="item.id"
+                        :label="item.title"
+                        :value="item.id"
+                      ></el-option>
+                    </el-select>
+                  </div>
+
+                  <!-- 是否联系我 -->
+                  <div class="form-group">
+                    <label class="form-label">是否联系我</label>
+                    <div class="checkbox-group">
+                      <label class="checkbox-item">
+                        <input
+                          type="checkbox"
+                          v-model="feedbackForm.contactMe"
+                        />
+                        <span class="checkbox-label">是</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -275,6 +373,20 @@ export default {
       activeProducts: [], // 展开的产品ID数组
       productList: [], // 产品列表
       products: [{}, {}, {}, {}, {}], // 产品推荐
+      // 反馈表单数据
+      feedbackForm: {
+        type: "improvement", // 默认选中"改进建议"
+        contact: "", // 联系方式
+        content: "", // 反馈内容
+        product: "", // 反馈产品
+        contactMe: true, // 是否联系我，默认选中
+      },
+      // 产品选项（可以根据实际需求从接口获取）
+      productOptions: [
+        { label: "产品A", value: "productA" },
+        { label: "产品B", value: "productB" },
+        { label: "产品C", value: "productC" },
+      ],
     };
   },
   mounted() {
@@ -303,6 +415,16 @@ export default {
           );
           this.product.fieldsInfo = this.pairArray(this.product.fieldsInfo);
           this.productList.push(res.data);
+          
+          // 更新反馈表单的产品选项，将当前产品添加到选项中
+          if (this.product.title) {
+            this.productOptions = [
+              { label: this.product.title, value: this.product.id || this.product.title },
+              ...this.productOptions.filter(item => item.value !== (this.product.id || this.product.title))
+            ];
+            // 默认选中当前产品
+            this.feedbackForm.product = this.product.id || this.product.title;
+          }
         }
       });
     },
@@ -377,6 +499,53 @@ export default {
         path: "/product-detail",
         query: { id: product.id },
       });
+    },
+    // 提交反馈
+    submitFeedback() {
+      // 验证必填项
+      if (!this.feedbackForm.contact) {
+        this.$message.warning("请输入您的联系方式");
+        return;
+      }
+      if (!this.feedbackForm.content) {
+        this.$message.warning("请输入反馈内容");
+        return;
+      }
+
+      // 这里可以调用API提交反馈
+      // this.$api({
+      //   url: "/service.php",
+      //   method: "post",
+      //   data: {
+      //     action: "feedback_submit",
+      //     ...this.feedbackForm,
+      //   },
+      // }).then((res) => {
+      //   if (res.code == 200) {
+      //     this.$message.success("反馈提交成功");
+      //     // 重置表单
+      //     this.feedbackForm = {
+      //       type: "improvement",
+      //       contact: "",
+      //       content: "",
+      //       product: "",
+      //       contactMe: true,
+      //     };
+      //   } else {
+      //     this.$message.error(res.message || "提交失败");
+      //   }
+      // });
+
+      // 临时提示
+      this.$message.success("反馈提交成功");
+      // 重置表单
+      this.feedbackForm = {
+        type: "improvement",
+        contact: "",
+        content: "",
+        product: "",
+        contactMe: true,
+      };
     },
   },
 };
@@ -877,6 +1046,166 @@ export default {
           border-radius: 28px;
           border: 1px solid #c4c4c4;
           cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+// 反馈表单样式
+.feedback-content {
+  h3 {
+    margin-bottom: 30px;
+  }
+
+  .feedback-form {
+    display: flex;
+    gap: 60px;
+    max-width: 1200px;
+    padding: 50px 50px;
+
+    .feedback-left,
+    .feedback-right {
+      flex: 1;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .form-label {
+        display: block;
+        font-size: 14px;
+        color: #333;
+        font-weight: 400;
+        width: 120px;
+        text-align: right;
+        padding-right: 10px;
+
+        &.required {
+          position: relative;
+        }
+
+        .asterisk {
+          color: #f56c6c;
+          margin-left: 2px;
+        }
+      }
+
+      .form-input {
+        flex: 1;
+        height: 40px;
+        padding: 0 12px;
+        border: 1px solid #dcdfe6;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #333;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+
+        &:focus {
+          outline: none;
+          border-color: #409eff;
+        }
+
+        &::placeholder {
+          color: #c0c4cc;
+        }
+      }
+
+      .form-textarea {
+        flex: 1;
+        min-height: 120px;
+        padding: 12px;
+        border: 1px solid #dcdfe6;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #333;
+        resize: vertical;
+        box-sizing: border-box;
+        font-family: inherit;
+        transition: border-color 0.3s;
+
+        &:focus {
+          outline: none;
+          border-color: #409eff;
+        }
+
+        &::placeholder {
+          color: #c0c4cc;
+        }
+      }
+
+      .form-select {
+        flex: 1;
+      }
+
+      .radio-group {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+
+        .radio-item {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          user-select: none;
+
+          input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            cursor: pointer;
+          }
+
+          .radio-label {
+            font-size: 14px;
+            color: #333;
+          }
+        }
+      }
+
+      .checkbox-group {
+        .checkbox-item {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          user-select: none;
+
+          input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            cursor: pointer;
+          }
+
+          .checkbox-label {
+            font-size: 14px;
+            color: #333;
+          }
+        }
+      }
+
+      .submit-btn {
+        width: 100%;
+        height: 44px;
+        background: #1e3a8a;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: 400;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background: #1e4a9a;
+        }
+
+        &:active {
+          background: #1e2a7a;
         }
       }
     }
