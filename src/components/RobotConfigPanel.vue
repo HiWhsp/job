@@ -52,7 +52,7 @@
     </div>
 
     <!-- 配置内容区域 -->
-    <div class="config-content">
+    <div class="config-content" ref="configContent">
       <!-- 控制器和雷达标签页 -->
       <div
         v-if="
@@ -922,7 +922,6 @@ export default {
       this.compareSorce = this.$route.query.compare || 0;
       this.editIndex = this.$route.query.index || 0;
       this.tabs = this.detail;
-      this.originalTabs = JSON.parse(JSON.stringify(this.tabs));
       this.activeTab = this.editIndex || 0;
       this.controllers = this.tabs[this.editIndex].child;
       this.activeTabTitle = this.tabs[this.editIndex || 0]
@@ -930,6 +929,7 @@ export default {
         : this.tabs[this.editIndex || 0].title;
       // 为所有item添加selected属性
       this.initializeSelectedState();
+      this.originalTabs = JSON.parse(JSON.stringify(this.tabs));
       // 加载本地保存的配置
       this.loadConfigFromStorage();
 
@@ -1064,38 +1064,18 @@ export default {
     // 选择控制器
     selectController(controllerId, item, controllerTitle) {
       let targetItem = null;
+      this.tabs = JSON.parse(JSON.stringify(this.originalTabs));
 
       if(controllerTitle == '控制器') {
-        const list = this.controllers.slice(1); // 截取除控制器外的所有选项
         const controllerIdStr = String(controllerId); // 将controllerId转换为字符串
-        let hasMatch = false; // 标记是否有匹配项
         
-        list.forEach((controller) => {
-          if(controller.producntInfos && controller.producntInfos.length > 0) {
-            // 查找包含controllerId的producntInfos项
-            const matchedItems = controller.producntInfos.filter((productInfo) => {
-              if (!productInfo.glId) {
-                return false;
-              }
-              // 将glId字符串按逗号分割，检查是否包含controllerId
-              const glIdArray = productInfo.glId.split(',').map(id => id.trim());
-              return glIdArray.includes(controllerIdStr);
-            });
-            
-            // 如果有匹配项，只保留匹配的项
-            if (matchedItems.length > 0) {
-              hasMatch = true;
-              // 使用Vue.set来更新数组，确保响应式
-              this.$set(controller, 'producntInfos', matchedItems);
-            }
-          }
+        // 递归遍历所有tabs中的producntInfos
+        this.tabs.forEach((tab) => {
+          this.filterProducntInfosByControllerId(tab, controllerIdStr);
         });
         
-        // 如果没有任何匹配项，恢复所有原始数据
-        if (!hasMatch) {
-          // 重新从tabs中获取原始数据
-          this.controllers = JSON.parse(JSON.stringify(this.originalTabs[this.editIndex].child));
-        }
+        // 更新controllers（当前标签页的child）
+        this.controllers = this.tabs[this.editIndex].child;
       }
 
       // 找到当前控制器所在的组，只在该组内进行单选
@@ -1130,6 +1110,72 @@ export default {
           }
         });
       }
+    },
+
+    // 递归过滤producntInfos，根据controllerId筛选关联项
+    filterProducntInfosByControllerId(item, controllerIdStr) {
+      // 如果当前项有producntInfos，进行筛选
+      if (item.producntInfos && Array.isArray(item.producntInfos)) {
+        // 查找包含controllerId的producntInfos项
+        const matchedItems = item.producntInfos.filter((productInfo) => {
+          if (!productInfo.glId) {
+            return false;
+          }
+          // 将glId字符串按逗号分割，检查是否包含controllerId
+          const glIdArray = productInfo.glId.split(',').map(id => id.trim());
+          return glIdArray.includes(controllerIdStr);
+        });
+        
+        // 如果有关联项，只保留匹配的项
+        if (matchedItems.length > 0) {
+          this.$set(item, 'producntInfos', matchedItems);
+        } else {
+          // 如果没有关联项，从originalTabs中恢复原始数据
+          const originalItem = this.findOriginalItem(item, this.originalTabs);
+          if (originalItem && originalItem.producntInfos) {
+            this.$set(item, 'producntInfos', JSON.parse(JSON.stringify(originalItem.producntInfos)));
+          }
+        }
+      }
+
+      // 如果当前项有子项，递归处理子项
+      if (item.child && Array.isArray(item.child)) {
+        item.child.forEach((child) => {
+          this.filterProducntInfosByControllerId(child, controllerIdStr);
+        });
+      }
+    },
+
+    // 在originalTabs中查找对应的原始项
+    findOriginalItem(targetItem, originalTabs) {
+      // 遍历originalTabs查找匹配的项
+      for (let tab of originalTabs) {
+        const found = this.findItemRecursive(tab, targetItem);
+        if (found) {
+          return found;
+        }
+      }
+      return null;
+    },
+
+    // 递归查找匹配的项（通过id匹配）
+    findItemRecursive(item, targetItem) {
+      // 如果id匹配，返回该项
+      if (item.id === targetItem.id) {
+        return item;
+      }
+
+      // 如果有子项，递归查找
+      if (item.child && Array.isArray(item.child)) {
+        for (let child of item.child) {
+          const found = this.findItemRecursive(child, targetItem);
+          if (found) {
+            return found;
+          }
+        }
+      }
+
+      return null;
     },
 
     // 选择外观模块item
@@ -1469,6 +1515,12 @@ export default {
         ? this.tabs[this.activeTab].title
         : this.tabs[this.activeTab].title;
       this.controllers = this.tabs[this.activeTab].child;
+      // 切换标签页时，将滚动距离归零
+      this.$nextTick(() => {
+        if (this.$refs.configContent) {
+          this.$refs.configContent.scrollTop = 0;
+        }
+      });
     },
     prevStep() {
       if (this.activeTab > 0) {
@@ -1479,11 +1531,23 @@ export default {
 
       this.activeTabTitle = this.tabs[this.activeTab].title;
       this.controllers = this.tabs[this.activeTab].child;
+      // 切换标签页时，将滚动距离归零
+      this.$nextTick(() => {
+        if (this.$refs.configContent) {
+          this.$refs.configContent.scrollTop = 0;
+        }
+      });
     },
     selectTab(tab, index) {
       this.activeTab = index;
       this.activeTabTitle = this.tabs[this.activeTab].title;
       this.controllers = this.tabs[this.activeTab].child;
+      // 切换标签页时，将滚动距离归零
+      this.$nextTick(() => {
+        if (this.$refs.configContent) {
+          this.$refs.configContent.scrollTop = 0;
+        }
+      });
     },
     // 颜色选择
     colorPicker(item) {
