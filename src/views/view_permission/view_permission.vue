@@ -5,7 +5,7 @@
         <div class="control-view" data-title="顶部操作栏">
           <div class="control-box">
             <div class="control-left">
-              <div class="page-title">项目管理</div>
+              <div class="page-title">查看权限</div>
             </div>
             <div class="control-right">
               <div class="control-act">
@@ -52,19 +52,16 @@
           <div class="table-box">
             <el-table :data="table_data" stripe>
               <el-table-column
-                prop="status"
-                label="项目状态"
-                align="center"
-              ></el-table-column>
-              <el-table-column
                 prop="orderNo"
                 label="项目编号"
                 align="center"
+                width="220"
               ></el-table-column>
               <el-table-column
                 prop="title"
                 label="项目名称"
                 align="center"
+                width="220"
               ></el-table-column>
               <el-table-column
                 prop="proType"
@@ -126,7 +123,7 @@
                   <div class="row-acts">
                     <div class="row-act">
                       <el-button @click="do_process(scope.row)" type="text"
-                        >查询详情</el-button
+                        >权限设置</el-button
                       >
                     </div>
                   </div>
@@ -159,23 +156,20 @@
     </div>
 
     <project_content_modal ref="project_content_modal" @confirm="query_view" />
-    <project_process_modal ref="project_process_modal" @confirm="query_view" />
-    <project_process_modal_shenhe ref="project_process_modal_shenhe" @confirm="query_view" />
+    <project_permission_modal ref="project_permission_modal" @confirm="query_view" />
   </div>
 </template>
 
 <script>
 import project_content_modal from "./components/project_content_modal.vue";
-import project_process_modal from "./components/project_process_modal.vue";
-import project_process_modal_shenhe from "./components/project_process_modal_shenhe.vue";
+import project_permission_modal from "./components/project_permission_modal.vue";
 import { mapState } from "vuex";
 export default {
   name: "company-list",
   mixins: [],
   components: {
     project_content_modal,
-    project_process_modal,
-    project_process_modal_shenhe,
+    project_permission_modal,
   },
   data() {
     return {
@@ -261,11 +255,7 @@ export default {
       this.$refs.project_content_modal.init(content, title);
     },
     do_process(row) {
-      if (this.vuex_role.includes("shenhe")) {
-        this.$refs.project_process_modal_shenhe.init(row);
-      } else {
-        this.$refs.project_process_modal.init(row);
-      }
+      this.$refs.project_permission_modal.init(row);
     },
   },
 };

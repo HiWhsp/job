@@ -71,18 +71,35 @@
         </div>
 
         <!-- 操作按钮 -->
-        <div class="action-section">
+        <div class="action-section" v-if="statusText == '待审核'">
           <el-button type="danger" @click="handleReject">驳回</el-button>
           <el-button type="success" @click="handlePass">通过</el-button>
         </div>
       </div>
     </el-dialog>
+    <!-- 驳回原因弹框 -->
+    <project-content-modal
+      ref="project_content_modal"
+      @confirm="handleRejectConfirm"
+    ></project-content-modal>
+    <!-- 通过确认弹框 -->
+    <project-confirm-modal
+      ref="project_confirm_modal"
+      @confirm="handlePassConfirm"
+    ></project-confirm-modal>
   </div>
 </template>
 
 <script>
+import ProjectContentModal from "./project_content_modal.vue";
+import ProjectConfirmModal from "./project_confirm_modal.vue";
+
 export default {
   name: "project-process-detail-modal",
+  components: {
+    ProjectContentModal,
+    ProjectConfirmModal,
+  },
   data() {
     return {
       show_modal: false,
@@ -92,10 +109,14 @@ export default {
       imageList: [],
       previewImageList: [],
       statusText: "",
+      index: 0,
+      id: null,
     };
   },
   methods: {
-    init(processItem, name, statusText) {
+    init(processItem, name, statusText, index, id) {
+      this.index = index;
+      this.id = id;
       if (processItem) {
         this.processName = name || "流程详情";
         this.statusText = statusText || "";
@@ -111,10 +132,24 @@ export default {
     },
 
     handleReject() {
-      // this.$refs.project_content_modal.init("驳回原因", "驳回原因");
+      this.$refs.project_content_modal.init("驳回原因", this.index, this.id);
     },
     handlePass() {
-      // this.$refs.project_content_modal.init("通过原因", "通过原因");
+      // 通过操作
+      this.$refs.project_confirm_modal.init(
+        "是否确认通过当前录入信息",
+        this.index,
+        this.id
+      );
+    },
+    handleRejectConfirm(reason) {
+      // 处理驳回确认，可以在这里调用API提交驳回原因
+      this.$emit("reject", reason);
+    },
+    handlePassConfirm() {
+      // 处理通过确认
+      this.$emit("pass");
+      this.show_modal = false;
     },
 
     // 处理文件点击
@@ -315,12 +350,12 @@ export default {
       color: #fff;
     }
     .el-button--danger {
-      background-color: #FF0000;
-      border-color: #FF0000;
+      background-color: #ff0000;
+      border-color: #ff0000;
     }
     .el-button--success {
-      background-color: #1FB168;
-      border-color: #1FB168;
+      background-color: #1fb168;
+      border-color: #1fb168;
     }
   }
 }

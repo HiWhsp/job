@@ -45,7 +45,7 @@
     </el-dialog>
 
     <!-- 流程资料详情弹框 -->
-    <project_process_detail_modal_shenhe ref="process_detail_modal_shenhe" />
+    <project_process_detail_modal_shenhe ref="process_detail_modal_shenhe" @confirm="handleConfirm"/>
   </div>
 </template>
 
@@ -230,7 +230,7 @@ export default {
         },
       }).then((res) => {
         if (res.code == 200) {
-          this.$refs.process_detail_modal_shenhe.init(res.data, this.processList[index].name, statusText);
+          this.$refs.process_detail_modal_shenhe.init(res.data, this.processList[index].name, statusText, index, this.row.id);
         }
       });
     },
@@ -244,6 +244,10 @@ export default {
       } else {
         return "待审核";
       }
+    },
+
+    handleConfirm() {
+      this.$emit("confirm");
     },
 
     on_dialog_closed() {

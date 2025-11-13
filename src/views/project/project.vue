@@ -264,7 +264,7 @@ export default {
     },
     do_process(row) {
       if (this.vuex_role.includes("shenhe")) {
-        this.$refs.project_process_modal_shenhe.init(row );
+        this.$refs.project_process_modal_shenhe.init(row);
       } else {
         this.$refs.project_process_modal.init(row);
       }

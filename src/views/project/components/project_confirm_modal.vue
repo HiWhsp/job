@@ -1,9 +1,9 @@
 <template>
-  <div class="project-content-modal">
+  <div class="project-confirm-modal">
     <el-dialog
-      title="驳回原因"
-      width="600px"
-      custom-class="project-content-dialog"
+      title="温馨提示"
+      width="500px"
+      custom-class="project-confirm-dialog"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       :visible.sync="show_modal"
@@ -11,13 +11,7 @@
       @closed="on_dialog_closed()"
     >
       <div class="modal-content">
-        <el-input
-          v-model="rejectReason"
-          type="textarea"
-          :rows="6"
-          placeholder="请填写驳回原因"
-          class="reason-input"
-        ></el-input>
+        <div class="confirm-text">{{ message }}</div>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button class="cancel-btn" @click="handleCancel">取消</el-button>
@@ -29,51 +23,44 @@
 
 <script>
 export default {
-  name: "project-content-modal",
+  name: "project-confirm-modal",
   data() {
     return {
       show_modal: false,
-      rejectReason: "",
+      message: "是否确认通过当前录入信息",
       index: 0,
       id: null,
     };
   },
   methods: {
-    init(title, index, id) {
-      this.title = title;
-      this.rejectReason = "";
+    init(message, index, id) {
+      this.message = message || "是否确认通过当前录入信息";
       this.index = index;
       this.id = id;
       this.show_modal = true;
     },
     handleCancel() {
       this.show_modal = false;
-      this.rejectReason = "";
     },
     handleConfirm() {
-      if (!this.rejectReason.trim()) {
-        this.$message.warning("请输入驳回原因");
-        return;
-      }
       this.$api({
         url: "/stepShenhe",
         method: "post",
         data: {
           id: this.id,
           step: this.index,
-          shenheStatus: '-2',
-          reason: this.rejectReason
+          shenheStatus: "2",
         },
       }).then((res) => {
         if (res.code == 200) {
-          this.$message.success("驳回成功");
-          this.$emit("confirm", this.rejectReason);
+          this.$message.success("通过成功");
+          this.$emit("confirm");
+          this.show_modal = false;
         }
       });
     },
     on_dialog_closed() {
-      this.title = "";
-      this.rejectReason = "";
+      this.message = "是否确认通过当前录入信息";
     },
   },
 };
@@ -81,37 +68,13 @@ export default {
 
 <style scoped lang="less">
 .modal-content {
-  padding: 20px;
-  max-height: 500px;
-  overflow-y: auto;
+  padding: 40px 20px;
+  text-align: center;
 
-  .reason-input {
-    width: 100%;
-
-    ::v-deep .el-textarea__inner {
-      border: none;
-      border-radius: 4px;
-      font-size: 14px;
-      color: #333;
-      padding: 10px 15px;
-      line-height: 1.5;
-      background-color: #f8f8f8;
-
-      &::placeholder {
-        color: #c0c4cc;
-      }
-
-      &:focus {
-        border: none;
-      }
-    }
-  }
-
-  .content-text {
-    line-height: 1.8;
+  .confirm-text {
+    font-size: 16px;
     color: #333;
-    white-space: pre-wrap;
-    word-break: break-word;
+    line-height: 1.5;
   }
 }
 
@@ -123,8 +86,8 @@ export default {
 
   .cancel-btn {
     background-color: #fff;
-    border: 1px solid #3377FE;
-    color: #409eff;
+    border: 1px solid #3377fe;
+    color: #3377fe;
     padding: 10px 20px;
     border-radius: 4px;
     font-size: 14px;
@@ -134,14 +97,14 @@ export default {
 
     &:hover {
       background-color: #ecf5ff;
-      border-color: #3377FE;
-      color: #3377FE;
+      border-color: #3377fe;
+      color: #3377fe;
     }
   }
 
   .confirm-btn {
-    background-color: #3377FE;
-    border: 1px solid #3377FE;
+    background-color: #3377fe;
+    border: 1px solid #3377fe;
     color: #fff;
     padding: 10px 20px;
     border-radius: 4px;
@@ -151,19 +114,20 @@ export default {
     transition: all 0.3s;
 
     &:hover {
-      background-color: #3377FE;
-      border-color: #3377FE;
+      background-color: #3377fe;
+      border-color: #3377fe;
+      opacity: 0.9;
     }
   }
 }
 
 // 全局样式，用于自定义dialog样式
-::v-deep .project-content-dialog {
+::v-deep .project-confirm-dialog {
   border-radius: 16px;
   overflow: hidden;
 
   .el-dialog__header {
-    background-color: #409eff;
+    background-color: #3377fe;
     padding: 15px 20px;
     border-radius: 0;
     margin: 0;
@@ -196,3 +160,4 @@ export default {
   }
 }
 </style>
+

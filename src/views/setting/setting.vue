@@ -22,7 +22,9 @@
         </div>
         <div class="table-view" data-title="渲染表格">
           <div class="table-util-bar">
-            <div class="table-title">{{ active_tab == 'info' ? '个人信息' : '修改密码' }}</div>
+            <div class="table-title">
+              {{ active_tab == "info" ? "个人信息" : "修改密码" }}
+            </div>
             <!-- <div class="table-acts">
               <el-button type="primary" @click="do_add()"> 创建账号 </el-button>
             </div> -->
@@ -38,16 +40,24 @@
                       <div class="info-item">
                         <span class="info-label">头像:</span>
                         <span class="info-value">
-                          <div
-                            class="avatar-wrapper"
-                            @click="handleAvatarClick"
+                          <el-upload
+                            class="avatar-uploader"
+                            :action="mix_upload_action"
+                            :data="upload_image_data"
+                            :headers="mix_upload_headers"
+                            :name="mix_upload_name"
+                            :show-file-list="false"
+                            :before-upload="handleAvatarChange"
+                            :on-success="handleAvatarSuccess"
                           >
-                            <img
+                            <el-avatar
+                              :size="80"
                               :src="userInfo.image || defaultAvatar"
-                              alt="头像"
                               class="avatar-img"
-                            />
-                          </div>
+                            >
+                              <img :src="defaultAvatar" alt="默认头像" />
+                            </el-avatar>
+                          </el-upload>
                         </span>
                       </div>
                       <div class="info-item">
@@ -115,15 +125,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- 隐藏的文件上传 -->
-            <input
-              ref="avatarInput"
-              type="file"
-              accept="image/*"
-              style="display: none"
-              @change="handleAvatarChange"
-            />
           </div>
           <div class="table-box" v-if="active_tab == 'password'">
             <div class="password-container">
@@ -159,8 +160,15 @@
                   ></el-input>
                 </div>
                 <div class="password-actions">
-                  <el-button class="cancel-btn" @click="handleCancelPassword">取消</el-button>
-                  <el-button type="primary" class="confirm-password-btn" @click="handleConfirmPassword">确认</el-button>
+                  <el-button class="cancel-btn" @click="handleCancelPassword"
+                    >取消</el-button
+                  >
+                  <el-button
+                    type="primary"
+                    class="confirm-password-btn"
+                    @click="handleConfirmPassword"
+                    >确认</el-button
+                  >
                 </div>
               </div>
             </div>
@@ -198,6 +206,12 @@ export default {
     };
   },
   computed: {
+    upload_image_data() {
+      return {
+        action: "upload_uploadImg",
+        token: this.mix_get_token(),
+      };
+    },
     ...mapState(["vuex_user", "vuex_depart_list", "defaultAvatar"]),
     departName() {
       if (!this.vuex_user.departId) return "";
@@ -215,7 +229,7 @@ export default {
     initUserInfo() {
       // 初始化用户信息
       this.$api({
-        url: "/getUserInfo",
+        url: "/getUserInfo2",
         method: "get",
       }).then((res) => {
         if (res.code == 200) {
@@ -223,46 +237,29 @@ export default {
         }
       });
     },
-    handleAvatarClick() {
-      // 点击头像触发文件选择
-      this.$refs.avatarInput.click();
-    },
-    handleAvatarChange(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
+    handleAvatarChange(file) {
       // 验证文件类型
       if (!file.type.startsWith("image/")) {
         this.$message.error("请选择图片文件");
-        return;
+        return false;
       }
 
-      // 上传头像
-      this.$apiUploadImage({
-        file: file,
-      })
-        .then((res) => {
-          if (res.code == 200) {
-            this.userInfo.image = res.url || res.data?.url || res.data;
-            this.$message.success("头像上传成功");
-          } else {
-            this.$message.error(res.msg || "头像上传失败");
-          }
-        })
-        .catch((err) => {
-          this.$message.error("头像上传失败");
-          console.error(err);
-        });
-
-      // 清空 input，以便可以重复选择同一文件
-      event.target.value = "";
+      // 验证文件大小（可选，例如限制为 2MB）
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+        return false;
+      }
+      return true;
     },
     handleConfirmModify() {
       // 确认修改用户信息
       this.$api({
-        url: "/updateUserInfo",
+        url: "/editUserInfo",
         method: "post",
         data: {
+          ...this.userInfo,
+          username: this.userInfo.real_name,
           real_name: this.userInfo.real_name,
           phone: this.userInfo.phone,
           email: this.userInfo.email,
@@ -315,11 +312,11 @@ export default {
 
       // 提交修改密码请求
       this.$api({
-        url: "/changePassword",
+        url: "/changePwd",
         method: "post",
         data: {
-          oldPassword: this.passwordForm.oldPassword,
-          newPassword: this.passwordForm.newPassword,
+          old: this.passwordForm.oldPassword,
+          new: this.passwordForm.newPassword,
         },
       })
         .then((res) => {
@@ -327,6 +324,10 @@ export default {
             this.$message.success("密码修改成功");
             // 清空表单
             this.handleCancelPassword();
+            setTimeout(() => {
+              this.$store.commit("clearAdminInfo");
+              this.$router.push("/login");
+            }, 500);
           } else {
             this.$message.error(res.msg || "密码修改失败");
           }
@@ -335,6 +336,14 @@ export default {
           this.$message.error("密码修改失败");
           console.error(err);
         });
+    },
+    handleAvatarSuccess(res, file) {
+      console.log(res, file);
+      if (res.code == 200) {
+        this.userInfo.image = res.data.path;
+      } else {
+        this.$message.error(res.msg || "头像上传失败");
+      }
     },
   },
 };
@@ -401,44 +410,16 @@ export default {
         align-items: flex-start;
         gap: 24px;
 
-        .avatar-wrapper {
-          position: relative;
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          overflow: hidden;
+        .avatar-uploader {
           cursor: pointer;
-          border: 2px solid #f0f0f0;
-          flex-shrink: 0;
 
-          .avatar-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-          }
-
-          .avatar-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s;
-
-            .avatar-text {
-              color: #ffffff;
-              font-size: 14px;
-              font-family: PingFang SC, PingFang SC;
+          /deep/ .el-avatar {
+            transition: all 0.3s;
+            img {
+              width: 80px;
+              height: 80px;
+              object-fit: cover;
             }
-          }
-
-          &:hover .avatar-overlay {
-            opacity: 1;
           }
         }
 
