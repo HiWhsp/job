@@ -5,7 +5,7 @@
         <div class="control-view" data-title="顶部操作栏">
           <div class="control-box">
             <div class="control-left">
-              <div class="page-title">项目管理</div>
+              <div class="page-title">审核记录</div>
             </div>
             <div class="control-right">
               <div class="control-act">
@@ -45,17 +45,9 @@
         <div class="table-view" data-title="渲染表格">
           <div class="table-util-bar">
             <div class="table-title">项目列表</div>
-            <!-- <div class="table-acts">
-              <el-button type="primary" @click="do_add()"> 创建账号 </el-button>
-            </div> -->
           </div>
           <div class="table-box">
             <el-table :data="table_data" stripe>
-              <el-table-column
-                prop="status"
-                label="项目状态"
-                align="center"
-              ></el-table-column>
               <el-table-column
                 prop="orderNo"
                 label="项目编号"
@@ -161,15 +153,16 @@
     </div>
 
     <project_content_modal ref="project_content_modal" @confirm="query_view" />
-    <project_process_modal ref="project_process_modal" @confirm="query_view" />
-    <project_process_modal_shenhe ref="project_process_modal_shenhe" @confirm="query_view" />
+    <project_process_modal
+      ref="project_process_modal"
+      @confirm="query_view"
+    />
   </div>
 </template>
 
 <script>
 import project_content_modal from "./components/project_content_modal.vue";
 import project_process_modal from "./components/project_process_modal.vue";
-import project_process_modal_shenhe from "./components/project_process_modal_shenhe.vue";
 import { mapState } from "vuex";
 export default {
   name: "company-list",
@@ -177,7 +170,6 @@ export default {
   components: {
     project_content_modal,
     project_process_modal,
-    project_process_modal_shenhe,
   },
   data() {
     return {
@@ -263,11 +255,7 @@ export default {
       this.$refs.project_content_modal.init(content, title);
     },
     do_process(row) {
-      if (this.vuex_role.includes("shenhe")) {
-        this.$refs.project_process_modal_shenhe.init(row );
-      } else {
-        this.$refs.project_process_modal.init(row);
-      }
+      this.$refs.project_process_modal.init(row);
     },
   },
 };

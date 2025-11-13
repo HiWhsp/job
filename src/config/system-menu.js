@@ -4,6 +4,16 @@ let system_menus = [
 	route: "/project",
 },
 {
+	title: "审核记录",
+	route: "/audit-record",
+	is_permission: true,
+},
+{
+	title: "查看权限",
+	route: "/view-permission",
+	is_permission: true,
+},
+{
 	title: "设置",
 	route: "/setting",
 },

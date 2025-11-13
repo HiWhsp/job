@@ -24,21 +24,17 @@
               class="process-action"
               :class="getActionClass(item.status)"
               v-if="item.isStepRole"
+              @click="handleView(item.status, index)"
             >
-              <span
-                v-if="item.status == (index + 1) * 10"
-                @click="handleView(index)"
-                >查看资料</span
-              >
-              <!-- 前一个是否是完成状态/ 当前步骤是初始提交状态 -->
-              <span
-                v-else-if="
-                  processList[index].status % 10 == 5 || item.status == 1
-                "
-                @click="handleInput(item, index)"
-                >资料录入</span
-              >
-              <span v-else>未录入</span>
+              {{
+                !item.status
+                  ? "未录入"
+                  : item.status % 10 == 5
+                  ? "已通过"
+                  : item.status % 10 == 2
+                  ? "已驳回"
+                  : "待审核"
+              }}
             </div>
           </div>
         </div>
@@ -49,26 +45,18 @@
     </el-dialog>
 
     <!-- 流程资料详情弹框 -->
-    <project_process_detail_modal ref="process_detail_modal" />
-
-    <!-- 资料录入弹框 -->
-    <project_process_input_modal
-      ref="process_input_modal"
-      @confirm="handleInputConfirm"
-    />
+    <project_process_detail_modal_shenhe ref="process_detail_modal_shenhe" />
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import project_process_detail_modal from "./project_process_detail_modal.vue";
-import project_process_input_modal from "./project_process_input_modal.vue";
+import project_process_detail_modal_shenhe from "./project_process_detail_modal_shenhe.vue";
 
 export default {
   name: "project-process-modal",
   components: {
-    project_process_detail_modal,
-    project_process_input_modal,
+    project_process_detail_modal_shenhe,
   },
   data() {
     return {
@@ -135,7 +123,6 @@ export default {
 
       // 获取步骤状态
       this.getStepStatus();
-      console.log(this.processList);
       this.show_modal = true;
     },
 
@@ -220,13 +207,20 @@ export default {
         return "action-active";
       } else if (status && status % 10 == 0) {
         return "action-submit";
+      } else if (status && status % 10 == 2) {
+        return "action-reject";
       } else {
         return "action-inactive";
       }
     },
 
     // 处理查看资料
-    handleView(index) {
+    handleView(status, index) {
+      if (!status) {
+        this.$message.warning("请先录入资料");
+        return;
+      }
+      let statusText = this.getStatusText(status);
       this.$api({
         url: "/getStepInfo",
         method: "get",
@@ -236,22 +230,20 @@ export default {
         },
       }).then((res) => {
         if (res.code == 200) {
-          this.$refs.process_detail_modal.init(res.data);
+          this.$refs.process_detail_modal_shenhe.init(res.data, this.processList[index].name, statusText);
         }
       });
     },
-
-    // 处理资料录入
-    handleInput(item, index) {
-      // 打开资料录入弹框
-      const projectId = this.row.id || this.row.projectId;
-      this.$refs.process_input_modal.init(item.name, index, projectId);
-    },
-
-    // 资料录入确认后的回调
-    handleInputConfirm() {
-      // 可以在这里刷新流程列表或执行其他操作
-      console.log("资料录入成功");
+    getStatusText(status) {
+      if (!status) {
+        return "未录入";
+      } else if (status % 10 == 5) {
+        return "已通过";
+      } else if (status % 10 == 2) {
+        return "已驳回";
+      } else {
+        return "待审核";
+      }
     },
 
     on_dialog_closed() {
@@ -295,7 +287,7 @@ export default {
         cursor: pointer;
 
         &.action-active {
-          color: #409eff;
+          color: #1fb168;
           font-weight: 500;
         }
 
@@ -304,7 +296,12 @@ export default {
         }
 
         &.action-submit {
-          color: #000;
+          color: #3377fe;
+          font-weight: 500;
+        }
+
+        &.action-reject {
+          color: #ff0000;
           font-weight: 500;
         }
       }

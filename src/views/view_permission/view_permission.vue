@@ -13,7 +13,7 @@
                 <div class="act-form">
                   <el-input
                     clearable
-                    v-model="search_params.keyword"
+                    v-model="search_params.companyName"
                     placeholder="请输入"
                     @clear="do_search()"
                   >
@@ -60,13 +60,11 @@
                 prop="orderNo"
                 label="项目编号"
                 align="center"
-                width="220"
               ></el-table-column>
               <el-table-column
                 prop="title"
                 label="项目名称"
                 align="center"
-                width="220"
               ></el-table-column>
               <el-table-column
                 prop="proType"
@@ -264,7 +262,7 @@ export default {
     },
     do_process(row) {
       if (this.vuex_role.includes("shenhe")) {
-        this.$refs.project_process_modal_shenhe.init(row );
+        this.$refs.project_process_modal_shenhe.init(row);
       } else {
         this.$refs.project_process_modal.init(row);
       }

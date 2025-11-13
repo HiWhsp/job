@@ -43,6 +43,10 @@ axios_ins_common.interceptors.response.use(
 		let data = res.data;
 		let code = data.code
 		if (code == 403 || code == 401) {
+			// if (data.msg === '请登录') {
+			// 	window.location.href = '/login';
+			// 	return;
+			// }
 			alertErr(data.msg)
 		} else if (code == 500) {
 			alertErr(data.msg)

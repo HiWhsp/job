@@ -22,6 +22,7 @@ export default new Vuex.Store({
 		user_id: 0,
 		userInfo: {},
 		isLogin: false,
+		vuex_role: "",
 
 		//
 		vuex_iframe_page_data: {},
@@ -43,6 +44,11 @@ export default new Vuex.Store({
 		set_vuex_depart_list(state, data) {
 			state.vuex_depart_list = data;
 			localStorage.setItem("vuex_depart_list", JSON.stringify(data));
+		},
+		set_vuex_role(state, data) {
+			if(!data) return;
+			state.vuex_role = data.join(",");
+			localStorage.setItem("vuex_role", JSON.stringify(state.vuex_role));
 		},
 		//清空登录信息
 		clearAdminInfo(state) {
@@ -70,14 +76,13 @@ export default new Vuex.Store({
 			dispatch
 		}, option) {
 			api({
-				url: '/getUserInfo',
+				url: '/getUserInfo2',
 				method: 'get',
 			}).then((res) => {
 				console.log("动态获取用户信息", res);
-
-				// debugger
 				if (res.code == 200) {
 					commit("set_vuex_user", res.data);
+					commit("set_vuex_role", res.data.opRole);
 				} else {}
 			});
 		},

@@ -23,10 +23,9 @@ const layout = () => import("@/views/layout.vue");
 const login = () => import("@/views/login/login.vue"); //登录
 
 const project = () => import("@/views/project/project.vue");
-const teacher = () => import("@/views/teacher/teacher.vue");
-const statistics = () => import("@/views/statistics/statistics.vue");
-const question = () => import("@/views/question/question.vue");
 const setting = () => import("@/views/setting/setting.vue");
+const audit_record = () => import("@/views/audit_record/audit_record.vue");
+const view_permission = () => import("@/views/view_permission/view_permission.vue");
 
 const routes = [
   {
@@ -46,14 +45,6 @@ const routes = [
       title: "登录",
     },
   },
-  // {
-  // 	path: "/",
-  // 	name: "index",
-  // 	component: index,
-  // 	meta: {
-  // 		title: '概览'
-  // 	},
-  // },
   {
     path: "/layout",
     name: "layout",
@@ -71,27 +62,19 @@ const routes = [
         },
       },
       {
-        path: "/teacher",
-        name: "teacher",
-        component: teacher,
+        path: "/audit-record",
+        name: "audit-record",
+        component: audit_record,
         meta: {
-          title: "老师中心",
+          title: "审核记录",
         },
       },
       {
-        path: "/statistics",
-        name: "statistics",
-        component: statistics,
+        path: "/view-permission",
+        name: "view-permission",
+        component: view_permission,
         meta: {
-          title: "数据汇总",
-        },
-      },
-      {
-        path: "/question",
-        name: "question",
-        component: question,
-        meta: {
-          title: "问题汇总",
+          title: "查看权限",
         },
       },
       {

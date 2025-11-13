@@ -24,21 +24,17 @@
               class="process-action"
               :class="getActionClass(item.status)"
               v-if="item.isStepRole"
+              @click="handleView(item.status, index)"
             >
-              <span
-                v-if="item.status == (index + 1) * 10"
-                @click="handleView(index)"
-                >查看资料</span
-              >
-              <!-- 前一个是否是完成状态/ 当前步骤是初始提交状态 -->
-              <span
-                v-else-if="
-                  processList[index].status % 10 == 5 || item.status == 1
-                "
-                @click="handleInput(item, index)"
-                >资料录入</span
-              >
-              <span v-else>未录入</span>
+              {{
+                !item.status
+                  ? "未录入"
+                  : item.status % 10 == 5
+                  ? "已通过"
+                  : item.status % 10 == 2
+                  ? "已驳回"
+                  : "待审核"
+              }}
             </div>
           </div>
         </div>
@@ -135,7 +131,6 @@ export default {
 
       // 获取步骤状态
       this.getStepStatus();
-      console.log(this.processList);
       this.show_modal = true;
     },
 
@@ -220,13 +215,20 @@ export default {
         return "action-active";
       } else if (status && status % 10 == 0) {
         return "action-submit";
+      } else if (status && status % 10 == 2) {
+        return "action-reject";
       } else {
         return "action-inactive";
       }
     },
 
     // 处理查看资料
-    handleView(index) {
+    handleView(status, index) {
+      if (!status) {
+        this.$message.warning("请先录入资料");
+        return;
+      }
+      let statusText = this.getStatusText(status);
       this.$api({
         url: "/getStepInfo",
         method: "get",
@@ -236,9 +238,20 @@ export default {
         },
       }).then((res) => {
         if (res.code == 200) {
-          this.$refs.process_detail_modal.init(res.data);
+          this.$refs.process_detail_modal.init(res.data, this.processList[index].name, statusText);
         }
       });
+    },
+    getStatusText(status) {
+      if (!status) {
+        return "未录入";
+      } else if (status % 10 == 5) {
+        return "已通过";
+      } else if (status % 10 == 2) {
+        return "已驳回";
+      } else {
+        return "待审核";
+      }
     },
 
     // 处理资料录入
@@ -295,7 +308,7 @@ export default {
         cursor: pointer;
 
         &.action-active {
-          color: #409eff;
+          color: #1fb168;
           font-weight: 500;
         }
 
@@ -304,7 +317,12 @@ export default {
         }
 
         &.action-submit {
-          color: #000;
+          color: #3377fe;
+          font-weight: 500;
+        }
+
+        &.action-reject {
+          color: #ff0000;
           font-weight: 500;
         }
       }
