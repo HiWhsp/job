@@ -954,7 +954,12 @@ export default {
     initializeProducntInfos(item) {
       // 如果当前项有 producntInfos，则初始化它们
       if (item.producntInfos && Array.isArray(item.producntInfos)) {
-        item.producntInfos.forEach((product) => {
+        item.producntInfos.forEach((product, index) => {
+          if(!product.title) {
+            // 删除当前项, 并且不继续遍历
+            item.producntInfos.splice(index, 1);
+            return;
+          }
           this.$set(product, "selected", false);
           if (product.title === "其他" || product.title.includes("定制")) {
             this.$set(product, "other", {
