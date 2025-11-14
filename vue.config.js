@@ -1,8 +1,8 @@
 const path = require("path");
 
 module.exports = {
-	publicPath: process.env.NODE_ENV !== "production" ? "/" : "/dist_admin", //本地开发用
-	outputDir: "dist_admin",
+	publicPath: process.env.NODE_ENV !== "production" ? "/" : "/dist_pc", //本地开发用
+	outputDir: "dist_pc",
 	assetsDir: "",
 	indexPath: "index.html",
 	filenameHashing: true,

@@ -86,9 +86,9 @@
 					language_url: "@/lang/tinymce/zh_CN.js",
 					language: "zh_CN",
 					// skin_url: "/public/tinymce/skins/ui/oxide/",
-					skin_url: SITE_ROOT + "/dist_admin/tinymce/skins/ui/oxide/",
+					skin_url: SITE_ROOT + "/dist_pc/tinymce/skins/ui/oxide/",
 					// content_css: "/public/tinymce/skins/content/default/content.css",
-					content_css: SITE_ROOT + "/dist_admin/tinymce/skins/content/default/content.css",
+					content_css: SITE_ROOT + "/dist_pc/tinymce/skins/content/default/content.css",
 					height: this.height,
 					content_style: `
           * { padding:0; margin:0; } 
