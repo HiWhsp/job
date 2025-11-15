@@ -287,11 +287,18 @@ export default {
       localStorage.setItem("robotConfig", JSON.stringify(formattedData));
 
       // 跳转到预览页面
+      // this.$router.push({
+      //   path: "/",
+      //   query: {
+      //     id: this.$route.query.id,
+      //     showOverlay: "false",
+      //   },
+      // });
+
       this.$router.push({
-        path: "/",
+        path: "/rebotPreview",
         query: {
           id: this.$route.query.id,
-          showOverlay: "false",
         },
       });
     },
@@ -464,7 +471,12 @@ export default {
                         activeTab: index,
                         firstTitle: firstLevel.title,
                         id: item.id,
-                        name: this.paramsText(firstLevel.title, item.title, matchedItem.other.notes) || item.title,
+                        name:
+                          this.paramsText(
+                            firstLevel.title,
+                            item.title,
+                            matchedItem.other.notes
+                          ) || item.title,
                         model: item.description,
                         image: matchedItem.other.image || item.thumb,
                         params: matchedItem.other || item.spec,
@@ -519,7 +531,12 @@ export default {
                             activeTab: index,
                             firstTitle: secondLevel.title,
                             id: item.id,
-                            name: this.paramsText(firstLevel.title, item.title, matchedItem.other.notes) || item.title,
+                            name:
+                              this.paramsText(
+                                firstLevel.title,
+                                item.title,
+                                matchedItem.other.notes
+                              ) || item.title,
                             model: item.description,
                             image: matchedItem.other.image || item.thumb,
                             params: matchedItem.other || item.spec,
@@ -574,7 +591,12 @@ export default {
                                 activeTab: index,
                                 firstTitle: thirdLevel.title,
                                 id: item.id,
-                                name: this.paramsText(firstLevel.title, item.title, matchedItem.other.notes) || item.title,
+                                name:
+                                  this.paramsText(
+                                    firstLevel.title,
+                                    item.title,
+                                    matchedItem.other.notes
+                                  ) || item.title,
                                 model: item.description,
                                 image: matchedItem.other.image || item.thumb,
                                 params: matchedItem.other || item.spec,
@@ -621,7 +643,9 @@ export default {
           params.ral ? `劳尔色号: ${params.ral}` : ""
         } ${
           params.rgba
-            ? `RGBA色彩: ${params.rgba.includes("#") ? params.rgba : "#" + params.rgba}`
+            ? `RGBA色彩: ${
+                params.rgba.includes("#") ? params.rgba : "#" + params.rgba
+              }`
             : ""
         }`;
       }

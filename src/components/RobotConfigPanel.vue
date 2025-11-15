@@ -26,11 +26,14 @@
     <!-- 标题区域 -->
     <div class="config-header" v-if="!isEdit">
       <div class="config-header-left">
-        <h2 class="robot-title" @click="goRobotDetail">
-          {{ title }}
-          <i class="el-icon-arrow-right"></i>
-        </h2>
-        <span class="ai-recommend" @click="useAIRecommendation">AI 推荐</span>
+        <div class="config-header-left-title">
+          <h2 class="robot-title" @click="goRobotDetail">
+            {{ title }}
+            <i class="el-icon-arrow-right"></i>
+          </h2>
+          <span class="ai-recommend" @click="useAIRecommendation">AI 推荐</span>
+        </div>
+        <div class="specs-btn">个性化配置</div>
       </div>
       <!-- 导航标签 -->
       <div class="config-tabs">
@@ -81,9 +84,11 @@
               >
                 <div class="controller-image">
                   <img
+                    v-if="item.thumb"
                     :src="item.thumb || vuex_avatar_default"
                     alt="controller"
                   />
+                  <i class="el-icon-plus" v-else></i>
                 </div>
                 <div class="controller-info">
                   <div class="controller-info-left">
@@ -116,9 +121,11 @@
               <template v-else>
                 <div class="controller-image">
                   <img
+                    v-if="item.title !== '其他'"
                     :src="item.thumb || vuex_avatar_default"
                     alt="controller"
                   />
+                  <i class="el-icon-plus" v-else></i>
                 </div>
                 <div class="controller-info">
                   <div class="controller-info-left">
@@ -933,7 +940,6 @@ export default {
       this.loadConfigFromStorage();
       this.originalTabs = JSON.parse(JSON.stringify(this.tabs));
 
-
       this.isEdit = this.$route.query.edit == "true";
 
       this.editTitle = this.tabs[this.editIndex].title;
@@ -955,7 +961,7 @@ export default {
       // 如果当前项有 producntInfos，则初始化它们
       if (item.producntInfos && Array.isArray(item.producntInfos)) {
         item.producntInfos.forEach((product, index) => {
-          if(!product.title) {
+          if (!product.title) {
             // 删除当前项, 并且不继续遍历
             item.producntInfos.splice(index, 1);
             return;
@@ -1069,6 +1075,8 @@ export default {
 
     // 选择控制器
     selectController(controllerId, item, controllerTitle) {
+      console.log(12312222);
+      
       let targetItem = null;
 
       if (controllerTitle == "控制器") {
@@ -1353,7 +1361,7 @@ export default {
         } else {
           // 遍历tabs，设置所有item的选中状态为false
           if (this.tabs && this.tabs.length > 0) {
-            this.tabs.forEach((tab) => {              
+            this.tabs.forEach((tab) => {
               // 递归处理所有层级的 producntInfos
               this.initializeProducntInfosMoren(tab);
             });
@@ -1699,7 +1707,17 @@ export default {
           image:
             data.images && data.images.length > 0 ? data.images[0].url : null,
         });
-
+        
+        this.originalTabs[0].child[0].producntInfos.forEach(item => {
+          if (item.id === this.currentOtherItem.id) {
+            this.$set(item, "other", {
+              notes: this.currentOtherItem.other.notes || null,
+              brand: this.currentOtherItem.other.brand || null,
+              image: this.currentOtherItem.other.image || null,
+            });
+          }
+        });
+        
         console.log("已更新other对象:", this.currentOtherItem.other);
         // this.$message.success("其他选项配置已保存");
       }
