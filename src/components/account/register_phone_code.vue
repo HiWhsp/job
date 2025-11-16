@@ -57,7 +57,6 @@ export default {
         return;
       }
 
-      this.countdown();
       this.doSend();
     },
 
@@ -71,6 +70,7 @@ export default {
         },
       }).then((res) => {
         if (res.code == 200) {
+          this.countdown();
         } else {
           clearInterval(this.timer);
           this.timer = null;
@@ -124,7 +124,6 @@ export default {
     color: #272536;
     // text-indent: 1em;
     border-right: 1px solid #ccc;
-
   }
 
   input {
@@ -150,7 +149,7 @@ export default {
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: #2E4C87;
+  color: #2e4c87;
   font-size: 1.4rem;
 
   &.disabled {
@@ -212,7 +211,7 @@ export default {
     display: flex;
     align-items: center;
     cursor: pointer;
-    color: #2E4C87;
+    color: #2e4c87;
 
     &.disabled {
       color: #ccc;

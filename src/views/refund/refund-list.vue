@@ -22,6 +22,7 @@
             v-model="keyword"
           />
           <button @click="do_search()">搜索</button>
+          <button @click="do_reset()">重置</button>
         </div>
       </div>
 
@@ -68,7 +69,7 @@
                       </div>
                       <div class="box-xiaoji">
                         <div class="price">
-                          {{ vuex_huobi }} {{ order.products.priceSale }}
+                          {{ vuex_huobi }} {{ order.products.priceSale * order.products.num }}
                         </div>
                       </div>
                       <div class="actions-box">
@@ -260,6 +261,7 @@ export default {
         method: "get",
         data: {
           action: "refund_afterSaleList",
+          keyword: this.keyword,
           ...this.pagination,
         },
       }).then((res) => {
@@ -278,7 +280,8 @@ export default {
         data: {
           action: "refund_lists",
           ...this.pagination,
-          status: this.refund_status, //(0待处理  1已完成  -1无效)
+          status: this.tab_select.value, //(0待处理  1已完成  -1无效)
+          keyword: this.keyword,
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -293,6 +296,7 @@ export default {
 
     do_toggle_tab(item) {
       this.tab_select = item;
+      this.service_pagination.page = 1;
       this.setView();
     },
 
@@ -323,7 +327,16 @@ export default {
       this.setView();
     },
 
-    do_search() {},
+    do_search() {
+      this.service_pagination.page = 1;
+      this.setView();
+    },
+    //重置
+    do_reset() {
+      this.keyword = "";
+      this.pagination.page = 1;
+      this.query_order();
+    },
 
     updateView() {
       this.setView();
@@ -426,14 +439,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #2E4C87;
+        color: #2e4c87;
       }
 
       &.active {
         // background: #2E4C87;
         // color: #fff;
         font-weight: bold;
-        color: #2E4C87;
+        color: #2e4c87;
 
         &::after {
           content: "";
@@ -442,7 +455,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #2E4C87;
+          background: #2e4c87;
         }
       }
     }
@@ -625,7 +638,7 @@ export default {
         min-width: 96px;
         height: 30px;
         font-size: 14px;
-        color: #2E4C87;
+        color: #2e4c87;
         transition: 0.3s;
 
         &:hover {
@@ -652,7 +665,7 @@ export default {
       .refund-type {
         min-width: 80px;
         text-align: left;
-        color: #2E4C87;
+        color: #2e4c87;
       }
 
       .date {
@@ -685,7 +698,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: bold;
         line-height: 20px;
-        color: #2E4C87;
+        color: #2e4c87;
         display: flex;
         align-items: center;
 
@@ -827,8 +840,8 @@ export default {
       .btn {
         min-width: 96px;
         height: 30px;
-        background: #2E4C87;
-        border: 1px solid #2E4C87;
+        background: #2e4c87;
+        border: 1px solid #2e4c87;
         font-size: 14px;
         color: #fff;
         transition: 0.3s;
@@ -840,8 +853,8 @@ export default {
         &.btn-text {
           background-color: #fff;
           border-radius: 4px;
-          border: 1px solid #2E4C87;
-          color: #2E4C87;
+          border: 1px solid #2e4c87;
+          color: #2e4c87;
         }
       }
     }

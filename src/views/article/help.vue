@@ -10,24 +10,12 @@
             <div class="sidebar-nav">
               <div
                 class="nav-item"
-                :class="{ active: activeTab === 'shopping' }"
-                @click="activeTab = 'shopping'"
+                :class="{ active: activeTab === item.id }"
+                @click="handleTabClick(item)"
+                v-for="item in tabList"
+                :key="item.id"
               >
-                购物须知
-              </div>
-              <div
-                class="nav-item"
-                :class="{ active: activeTab === 'offline' }"
-                @click="activeTab = 'offline'"
-              >
-                线下采购
-              </div>
-              <div
-                class="nav-item"
-                :class="{ active: activeTab === 'exchange' }"
-                @click="activeTab = 'exchange'"
-              >
-                换货须知
+                {{ item.title }}
               </div>
             </div>
           </div>
@@ -36,69 +24,12 @@
           <div class="help-content">
             <div class="content-title">
               <div class="title-bar"></div>
-              {{ getCurrentTitle() }}
+              {{ activeContent.title }}
             </div>
 
             <div class="content-body">
               <!-- 购物须知内容 -->
-              <div v-if="activeTab === 'shopping'" class="content-section">
-                <div class="section-item">
-                  <div class="section-title">付款价格</div>
-                  <div class="section-desc">
-                    产品均为含13%税(票)价格,商城支持微信、支付宝、余额、银行转账支付方式
-                  </div>
-                </div>
-
-                <div class="section-item">
-                  <div class="section-title">开具发票</div>
-                  <div class="section-desc">
-                    订单提交时请申请发票,开票金额为实际支付金额。【增值税电子普通发票】在发货后48小时内开出,请在收票邮箱中领取。
-                  </div>
-                </div>
-
-                <div class="section-item">
-                  <div class="section-title">在线客服</div>
-                  <div class="section-desc">
-                    客服在线时间:周一至周五9:00-17:00(节假日除外)
-                    联系电话:010-62628881
-                  </div>
-                </div>
-              </div>
-
-              <!-- 线下采购内容 -->
-              <div v-if="activeTab === 'offline'" class="content-section">
-                <div class="section-item">
-                  <div class="section-title">线下采购流程</div>
-                  <div class="section-desc">
-                    请先联系我们的销售团队，预约线下采购时间。我们将为您安排专业的销售顾问进行一对一服务。
-                  </div>
-                </div>
-
-                <div class="section-item">
-                  <div class="section-title">联系方式</div>
-                  <div class="section-desc">
-                    销售热线: 010-62628881 | 邮箱: sales@company.com | 地址:
-                    北京市朝阳区xxx大厦
-                  </div>
-                </div>
-              </div>
-
-              <!-- 换货须知内容 -->
-              <div v-if="activeTab === 'exchange'" class="content-section">
-                <div class="section-item">
-                  <div class="section-title">换货条件</div>
-                  <div class="section-desc">
-                    商品需在收货后7天内申请换货，商品需保持原包装完整，无使用痕迹。
-                  </div>
-                </div>
-
-                <div class="section-item">
-                  <div class="section-title">换货流程</div>
-                  <div class="section-desc">
-                    1. 联系客服申请换货 2. 客服审核通过后安排退货 3.
-                    收到退货后安排重新发货
-                  </div>
-                </div>
+              <div class="content-section" v-html="activeContent.content"></div>
               </div>
             </div>
           </div>
@@ -117,17 +48,50 @@ export default {
   data() {
     return {
       nav_option: [{ title: "帮助中心", route: "/help" }],
-      activeTab: "shopping", // 默认激活购物须知
+      activeTab: null, // 默认激活
+      tabList: [],
+      activeContent: "",
     };
   },
+  mounted() {
+    // this.query_tab_list();
+    this.query_content();
+  },
   methods: {
-    getCurrentTitle() {
-      const titleMap = {
-        shopping: "购物须知",
-        offline: "线下采购",
-        exchange: "换货须知",
-      };
-      return titleMap[this.activeTab] || "购物须知";
+    query_tab_list() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "index_otherChannels",
+          channelType: 2,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.tabList = res.data;
+          // this.activeTab = this.tabList[0].id;
+        }
+      });
+    },
+    query_content() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "index_helpList",
+          // channelId: this.activeTab,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.tabList = res.data.list;
+          this.activeTab = this.tabList[0].id;
+          this.activeContent = this.tabList[0];
+        }
+      });
+    },
+    handleTabClick(item) {
+      this.activeTab = item.id;
+      this.activeContent = item;
     },
   },
 };
@@ -220,7 +184,7 @@ export default {
     .title-bar {
       width: 4px;
       height: 20px;
-      background-color: #2E4C87;
+      background-color: #2e4c87;
       margin-right: 12px;
     }
   }

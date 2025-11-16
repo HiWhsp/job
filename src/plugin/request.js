@@ -30,9 +30,9 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   function (response) {
     let res = response.data;
-    let { code, msg } = res
+    let { code, message, msg } = res
     if (code != 200) {
-      Message.error(msg);
+      Message.error(message || msg);
       return Promise.reject(res);
     } else {
       return res;

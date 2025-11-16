@@ -97,8 +97,8 @@
                     >
                   </div>
                   <div class="goods-action-box">
-                    <span class="goods-action" @click="favouriteAdd(item)">
-                      加入收藏夹</span
+                    <span class="goods-action" @click.stop="favouriteAdd(item)">
+                      {{ item.ifshoucang ? "取消收藏" : "加入收藏夹" }}</span
                     >
                   </div>
                 </div>
@@ -275,9 +275,15 @@ export default {
       });
     },
     favouriteAdd(item) {
-      this.$api("product_collect", {
-        inventoryId: item.inventoryId,
-        collect_type: 0,
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_operate",
+          productId: item.productId,
+          operateType: 1,
+          operateSence: item.ifshoucang ? 1 : 0,
+        },
       }).then((res) => {
         let { code, message } = res;
 

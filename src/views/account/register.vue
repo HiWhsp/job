@@ -91,7 +91,7 @@ export default {
   },
   data() {
     return {
-      is_agree: true,
+      is_agree: false,
 
       mode: "账号密码", //微信扫码
       tabType: "PASS", //登录方式

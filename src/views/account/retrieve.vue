@@ -87,7 +87,7 @@ export default {
   },
   data() {
     return {
-      is_agree: true,
+      is_agree: false,
 
       mode: "账号密码", //微信扫码
       tabType: "PASS", //登录方式
@@ -131,6 +131,14 @@ export default {
       }
       if (!this.form.confirm_pass) {
         alertErr("请输入确认密码");
+        return;
+      }
+      if (this.form.pass !== this.form.confirm_pass) {
+        alertErr("密码不一致");
+        return;
+      }
+      if (!this.is_agree) {
+        alertErr("请阅读并同意隐私政策");
         return;
       }
 

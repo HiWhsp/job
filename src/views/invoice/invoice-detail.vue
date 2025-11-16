@@ -214,7 +214,7 @@ export default {
         method: "get",
         data: {
           action: "orders_detail",
-          id: this.invoiceId,
+          id: this.orderId,
         },
       }).then((res) => {
         if (res.code == 200) {

@@ -29,7 +29,7 @@
           <button
             :disabled="!is_check"
             class="btn-confirm fit-text btn-ripple"
-            @click="is_show = false"
+            @click="on_confirm"
           >
             确定
           </button>
@@ -61,6 +61,10 @@ export default {
   },
 
   methods: {
+    on_confirm() {
+      this.is_show = false;
+      this.$emit("confirm", this.is_check);
+    },
     on_before_close() {
       this.is_show = false;
     },

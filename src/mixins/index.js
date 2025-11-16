@@ -266,9 +266,9 @@ export default {
 
     //商品详情页
     mix_to_product(item) {
-      let { inventoryId, id } = item;
-      if (inventoryId) {
-        this.$router.push(`/product-detail?id=${inventoryId}`);
+      let { productId, id } = item;
+      if (productId) {
+        this.$router.push(`/product-detail?id=${productId}`);
       } else if (id) {
         this.$router.push(`/product-detail?id=${id}`);
       }

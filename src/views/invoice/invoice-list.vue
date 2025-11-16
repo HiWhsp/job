@@ -66,8 +66,7 @@
                     >
                       {{ product_item.title }}
                     </div>
-                    <div class="product-sku">订货编码：UA199</div>
-                    <div class="product-sku">商品型号：S54001</div>
+                    <div class="product-sku">产品编号：--</div>
                   </div>
   
                   <div class="box-price">
@@ -75,7 +74,7 @@
                   </div>
                   <div class="box-num">x {{ product_item.num }}</div>
                   <div class="box-subtotal">
-                    {{ vuex_huobi }} {{ product_item.priceSale }}
+                    {{ vuex_huobi }} {{ product_item.priceSale * product_item.num }}
                   </div>
                 </div>
               </div>

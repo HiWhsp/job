@@ -7,116 +7,133 @@
     <div class="page-ctx">
       <div class="section">
         <div class="section-ctx">
-          <div class="item upload-box">
-            <span class="text">头像：</span>
-            <span class="info">
-              <div class="upload-box">
-                <el-upload
-                  class="upload-demo"
-                  accept="image/*"
-                  :show-file-list="false"
-                  :name="UPLOAD_NAME"
-                  :action="UPLOAD_ACTION"
-                  :data="mix_upload_data"
-                  :on-success="upload_on_success"
-                  :before-upload="upload_before_upload"
-                >
+          <!-- 头像区域 -->
+          <div class="avatar-section">
+            <div class="avatar-wrapper">
+              <el-upload
+                class="avatar-uploader"
+                accept="image/*"
+                :show-file-list="false"
+                :name="UPLOAD_NAME"
+                :action="UPLOAD_ACTION"
+                :data="mix_upload_data"
+                :on-success="upload_on_success"
+                :before-upload="upload_before_upload"
+              >
+                <div class="avatar-container">
                   <img
-                    v-if="form.image"
-                    :src="form.image"
+                    :src="form.image || vuex_avatar_default"
                     class="user-avatar"
                   />
-                  <img v-else src="@img/my/avatar.png" class="user-avatar" />
-                </el-upload>
-              </div>
-            </span>
-          </div>
-
-          <div class="item">
-            <span class="text">姓名：</span>
-            <span class="info">
-              <el-input clearable type="text" v-model="form.realName" />
-            </span>
-            <span class="action"> </span>
-          </div>
-          <div class="item">
-            <span class="text">性别：</span>
-            <span class="info">
-              <el-radio-group v-model="form.sex">
-                <el-radio :label="1">男</el-radio>
-                <el-radio :label="2">女</el-radio>
-              </el-radio-group>
-            </span>
-            <span class="action"> </span>
-          </div>
-          <div class="item">
-            <span class="text">手机：</span>
-            <span class="info">{{ my_info.phone }}</span>
-            <span class="action" @click="open_phone_update()">
-              <span>修改</span>
-            </span>
-          </div>
-          <div class="item">
-            <span class="text">联系地址：</span>
-            <span class="info">
-              <el-input clearable type="text" v-model="form.address" />
-            </span>
-            <span class="action"> </span>
-          </div>
-          <div class="item">
-            <span class="text">详细地址：</span>
-            <span class="info">
-              <el-input clearable type="text" v-model="form.company" />
-            </span>
-            <span class="action"> </span>
-          </div>
-          <div class="item">
-            <span class="text">邮箱：</span>
-            <span class="info">
-              <el-input clearable type="text" v-model="form.company" />
-            </span>
-            <span class="action"> </span>
-          </div>
-          <div class="item">
-            <span class="text">公司名称：</span>
-            <span class="info">
-              <el-input clearable type="text" v-model="form.department" />
-            </span>
-            <span class="action"> </span>
-          </div>
-          <div class="item">
-            <span class="text">职位：</span>
-            <span class="info">
-              <el-input clearable type="text" v-model="form.position" />
-            </span>
-            <span class="action"> </span>
-          </div>
-          <!-- <div class="item">
-            <span class="text">账号：</span>
-            <span class="info" style="visibility: hidden">******</span>
-            <span class="action">
-              <span @click="mix_logout">退出登录</span>
-            </span>
-          </div> -->
-        </div>
-      </div>
-
-      <div class="other">
-        <!-- <div class="section-title">个人信息</div> -->
-        <div class="section-ctx">
-          <div class="item btn-box">
-            <span class="text" style="visibility: hidden">-</span>
-            <div class="info">
-              <button class="btn-ripple fit-text btn-save" @click="do_reset()">
-                取消
-              </button>
-              <el-button
-                class="btn-ripple fit-text btn-cancel"
-                @click="throttle_do_submit()"
-                :loading="loading"
-                >保存</el-button
-              >
+                </div>
+              </el-upload>
             </div>
+          </div>
+
+          <!-- 邮箱区域 -->
+          <div class="email-section">
+            <span class="email-label">Email:</span>
+            <span class="email-value">{{ form.email || my_info.email || '--' }}</span>
+            <span class="email-modify" @click="open_email_update()">Modify</span>
+          </div>
+
+          <!-- 表单字段 -->
+          <div class="form-section">
+            <div class="form-item">
+              <label class="form-label">
+                <span class="label-text">姓名</span>
+                <span class="required-star">*</span>
+              </label>
+              <div class="form-input-wrapper">
+                <el-input 
+                  clearable 
+                  type="text" 
+                  v-model="form.realName" 
+                  placeholder="请输入姓名"
+                  class="form-input"
+                />
+              </div>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label">
+                <span class="label-text">性别</span>
+              </label>
+              <div class="form-input-wrapper">
+                <el-radio-group v-model="form.sex" class="gender-radio-group">
+                  <el-radio :label="1" class="gender-radio">男</el-radio>
+                  <el-radio :label="2" class="gender-radio">女</el-radio>
+                </el-radio-group>
+              </div>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label">
+                <span class="label-text">手机号</span>
+              </label>
+              <div class="form-input-wrapper">
+                <el-input 
+                  clearable 
+                  type="text" 
+                  v-model="form.phone" 
+                  placeholder="请输入手机号"
+                  class="form-input"
+                />
+              </div>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label">
+                <span class="label-text">城市</span>
+              </label>
+              <div class="form-input-wrapper">
+                <el-input 
+                  clearable 
+                  type="text" 
+                  v-model="form.address" 
+                  placeholder="请选择城市"
+                  class="form-input"
+                />
+                <span class="input-icon location-icon">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M10 0C6.13 0 3 3.13 3 7C3 12.25 10 20 10 20C10 20 17 12.25 17 7C17 3.13 13.87 0 10 0ZM10 9.5C8.62 9.5 7.5 8.38 7.5 7C7.5 5.62 8.62 4.5 10 4.5C11.38 4.5 12.5 5.62 12.5 7C12.5 8.38 11.38 9.5 10 9.5Z" fill="#999"/>
+                  </svg>
+                </span>
+              </div>
+            </div>
+
+            <div class="form-item">
+              <label class="form-label">
+                <span class="label-text">出生日期</span>
+              </label>
+              <div class="form-input-wrapper">
+                <el-date-picker
+                  v-model="form.birthday"
+                  type="date"
+                  placeholder="请选择出生日期"
+                  value-format="yyyy-MM-dd"
+                  class="form-input date-picker"
+                />
+                <span class="input-icon calendar-icon">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <rect x="3" y="4" width="14" height="13" rx="1" stroke="#999" stroke-width="1.5" fill="none"/>
+                    <path d="M3 7H17" stroke="#999" stroke-width="1.5"/>
+                    <path d="M7 3V7" stroke="#999" stroke-width="1.5"/>
+                    <path d="M13 3V7" stroke="#999" stroke-width="1.5"/>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 按钮区域 -->
+          <div class="button-section">
+            <button class="btn-cancel" @click="do_reset()">取消</button>
+            <el-button
+              class="btn-save"
+              @click="throttle_do_submit()"
+              :loading="loading"
+            >保存</el-button>
           </div>
         </div>
       </div>
@@ -158,13 +175,11 @@ export default {
       form: {
         image: "",
         realName: "",
-        address: "",
-        company: "",
-        department: "",
-        nickname: "",
-        blocName: "",
-        companyName: "",
-        departmentName: "",
+        sex: 2,
+        phone: "",
+        city: "",
+        birthday: "",
+        email: "",
       },
       loading: false,
     };
@@ -182,6 +197,14 @@ export default {
 
     open_phone_update() {
       this.$refs.phone_bind_old_check_modal.init();
+    },
+    open_email_update() {
+      // 邮箱修改逻辑，可以打开一个弹窗或跳转到邮箱修改页面
+      // 这里先简单处理
+      const newEmail = prompt('请输入新邮箱：', this.form.email || this.my_info.email);
+      if (newEmail) {
+        this.form.email = newEmail;
+      }
     },
     confirm_old_pass() {
       this.$refs.phone_bind_new_set_modal.init();
@@ -209,11 +232,11 @@ export default {
           this.form = {
             image: data.image || "",
             realName: data.realName || "",
-            address: data.address || "",
-            nickname: data.nickname || "",
-            blocName: data.blocName || "",
-            companyName: data.companyName || "",
-            departmentName: data.departmentName || "",
+            sex: data.sex || 2,
+            phone: data.phone || "",
+            city: data.city || "",
+            birthday: data.birthday || "",
+            email: data.email || "",
           };
 
           this.$store.commit("set_vuex_user", res.data);
@@ -243,9 +266,13 @@ export default {
 
     do_reset() {
       this.form = {
-        image: this.my_info.image,
-        realName: "",
-        address: "",
+        image: this.my_info.image || "",
+        realName: this.my_info.realName || "",
+        sex: this.my_info.sex || 2,
+        phone: this.my_info.phone || "",
+        city: this.my_info.city || "",
+        birthday: this.my_info.birthday || "",
+        email: this.my_info.email || "",
       };
     },
 
@@ -267,13 +294,10 @@ export default {
 </script>
 
 <style scoped lang="less">
-.user-avatar {
-  object-fit: cover;
-}
-
 .page {
   text-align: left;
   padding-bottom: 80px;
+  background: #fff;
 
   .main-title {
     display: flex;
@@ -288,135 +312,261 @@ export default {
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
     color: #333333;
-
-    button {
-      min-width: 96px;
-      height: 30px;
-      line-height: 30px;
-      background: #2E4C87;
-      color: #fff;
-      font-size: 14px;
-      font-weight: bold;
-    }
   }
 
   .page-ctx {
     margin-top: 24px;
-    padding: 80px 100px;
+    padding: 40px 100px;
     background: #fff;
+    min-height: calc(100vh - 100px);
   }
-}
 
-.page {
-  .page-ctx {
-    padding-bottom: 80px;
-
-    .section {
-      // padding-bottom: 27px;
-      // margin-bottom: 40px;
-      // border-bottom: 1px solid #dbdbdb;
-    }
-
-    .section-title {
-      margin-bottom: 50px;
-      font-size: 16px;
-      font-family: sans-serif;
-      font-weight: 400;
-      color: #666666;
-    }
-
+  .section {
     .section-ctx {
-      // padding-top: 32px;
+      max-width: 600px;
+      margin: 0 auto;
     }
+  }
 
-    .upload-box {
-      img {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
+  // 头像区域
+  .avatar-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+
+    .avatar-wrapper {
+      position: relative;
+
+      .avatar-uploader {
+        display: inline-block;
+      }
+
+      .avatar-container {
+        position: relative;
+        display: inline-block;
+        border-radius: 4px;
+        padding: 4px;
+        cursor: pointer;
+
+        .user-avatar {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          object-fit: cover;
+          display: block;
+          background: #f0f0f0;
+        }
+
+        .avatar-placeholder {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          background: #f0f0f0;
+          display: block;
+        }
       }
     }
+  }
 
-    .item {
-      margin-bottom: 32px;
+  // 邮箱区域
+  .email-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+    gap: 10px;
+
+    .email-label {
+      font-size: 14px;
+      color: #333;
+    }
+
+    .email-value {
+      font-size: 14px;
+      color: #333;
+    }
+
+    .email-modify {
+      font-size: 14px;
+      color: #ff0000;
+      cursor: pointer;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // 表单区域
+  .form-section {
+    .form-item {
+      margin-bottom: 24px;
       display: flex;
       align-items: center;
 
-      .text {
-        display: inline-block;
-        min-width: 134px;
-        text-align: right;
+      .form-label {
+        display: flex;
+        align-items: center;
+        min-width: 100px;
         font-size: 14px;
-        color: #666;
-      }
+        color: #333;
+        margin-right: 16px;
+        text-align: left;
 
-      .info {
-        padding-left: 10px;
-        font-size: 14px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        color: #333333;
-        display: inline-block;
-        min-width: 120px;
-
-        input {
-          // width: 400px;
-          // height: 40px;
-          // background: #ffffff;
-          // border-radius: 4px 4px 4px 4px;
-          // border: 1px solid #d4d4d4;
+        .label-text {
+          margin-right: 4px;
         }
 
-        .el-input {
-          width: 400px;
-          // height: 40px;
+        .required-star {
+          color: #ff0000;
+          font-size: 14px;
+          margin-left: 2px;
         }
       }
 
-      .action {
-        margin-left: 20px;
-        font-size: 14px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        color: #2E4C87;
+      .form-input-wrapper {
+        flex: 1;
+        position: relative;
+        max-width: 400px;
 
-        span {
-          margin-right: 20px;
-          cursor: pointer;
+        .form-input {
+          width: 100%;
+
+          ::v-deep .el-input__inner {
+            height: 40px;
+            border-radius: 4px;
+            border: 1px solid #d4d4d4;
+            background: #f5f5f5;
+            color: #333;
+            font-size: 14px;
+            padding-right: 40px;
+            padding-left: 12px;
+          }
+
+          ::v-deep .el-input__inner:focus {
+            border-color: #2E4C87;
+            background: #fff;
+          }
+
+          ::v-deep .el-input__inner::placeholder {
+            color: #999;
+          }
+          ::v-deep .el-input__prefix {
+            display: none;
+          }
+        }
+
+        .date-picker {
+          width: 100%;
+
+          ::v-deep .el-input__inner {
+            height: 40px;
+            border-radius: 4px;
+            border: 1px solid #d4d4d4;
+            background: #f5f5f5;
+            color: #333;
+            font-size: 14px;
+            padding-right: 40px;
+            padding-left: 12px;
+          }
+
+          ::v-deep .el-input__inner:focus {
+            border-color: #2E4C87;
+            background: #fff;
+          }
+
+          ::v-deep .el-input__suffix {
+            display: none;
+          }
+        }
+
+        .input-icon {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 20px;
+          height: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          pointer-events: none;
+          z-index: 1;
+        }
+      }
+
+      .gender-radio-group {
+        ::v-deep .el-radio {
+          margin-right: 24px;
+
+          .el-radio__label {
+            font-size: 14px;
+            color: #333;
+            padding-left: 8px;
+          }
+
+          .el-radio__input.is-checked .el-radio__inner {
+            background-color: #2E4C87;
+            border-color: #2E4C87;
+          }
+
+          .el-radio__inner {
+            width: 18px;
+            height: 18px;
+          }
         }
       }
     }
   }
-}
 
-.btn-box {
-  button {
-    width: 76px;
-    height: 40px;
-  }
+  // 按钮区域
+  .button-section {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 40px;
+    padding-top: 40px;
 
-  .btn-save {
-    width: 120px;
-    height: 40px;
-    background: #F5F5F5;
-    border-radius: 4px;
-    border: 1px solid #D7D7D7;
-    font-family: Arial, Arial;
-    font-weight: 400;
-    font-size: 14px;
-    color: #666;
-  }
+    .btn-cancel {
+      width: 120px;
+      height: 40px;
+      background: #F5F5F5;
+      border-radius: 4px;
+      border: 1px solid #D7D7D7;
+      font-size: 14px;
+      color: #666;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
 
-  .btn-cancel {
-    margin-left: 20px;
-    width: 120px;
-    height: 40px;
-    background: #2E4C87;
-    border-radius: 4px;
-    font-family: Arial, Arial;
-    font-weight: 400;
-    font-size: 14px;
-    color: #ffffff;
+      &:hover {
+        background: #e8e8e8;
+      }
+    }
+
+    .btn-save {
+      width: 120px;
+      height: 40px;
+      background: #2E4C87;
+      border-radius: 4px;
+      border: none;
+      font-size: 14px;
+      color: #ffffff;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+
+      &:hover {
+        background: #1e3a6b;
+      }
+
+      ::v-deep .el-button {
+        width: 100%;
+        height: 100%;
+        background: #2E4C87;
+        border: none;
+        color: #fff;
+      }
+    }
   }
 }
 </style>

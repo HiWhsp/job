@@ -103,7 +103,7 @@
       </div>
     </div>
 
-    <terms_modal ref="terms_modal" />
+    <terms_modal ref="terms_modal" @confirm="on_terms_confirm" />
   </div>
 </template>
 
@@ -119,7 +119,7 @@ export default {
   },
   data() {
     return {
-      is_agree: true,
+      is_agree: false,
 
       mode: "账号密码", //微信扫码
       tabType: "PASS", //登录方式
@@ -138,6 +138,10 @@ export default {
   },
   created() {},
   methods: {
+    on_terms_confirm(is_check) {
+      this.is_agree = is_check;
+    },
+
     terms_open(id) {
       this.$refs.terms_modal.init(id);
     },

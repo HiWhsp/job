@@ -53,8 +53,10 @@
                 <router-link to="/help">帮助中心</router-link>
               </div>
               <span class="u-line"></span>
-              <div class="u-act" style="cursor: pointer;">
-                <p @click="goUrl('http://www.xintiankeji.com/guanyu.html')">关于我们</p>
+              <div class="u-act" style="cursor: pointer">
+                <p @click="goUrl('http://www.xintiankeji.com/guanyu.html')">
+                  关于我们
+                </p>
               </div>
             </div>
           </div>
@@ -102,14 +104,14 @@
               </div>
               <template v-if="!vuex_is_login">
                 <div class="btn" @click="$router.push('/login')">
-                <img
-                  src="@img/head/icon2-scrolled.png"
-                  alt=""
-                  v-if="isScrolled"
-                />
-                <img src="@img/head/icon2.png" alt="" v-else />
-                <span>登录 | 注册</span>
-              </div>
+                  <img
+                    src="@img/head/icon2-scrolled.png"
+                    alt=""
+                    v-if="isScrolled"
+                  />
+                  <img src="@img/head/icon2.png" alt="" v-else />
+                  <span>登录 | 注册</span>
+                </div>
               </template>
               <template v-if="vuex_is_login">
                 <div class="btn" @click="$router.push('/my-info')">
@@ -123,12 +125,14 @@
                 </div>
               </template>
               <div class="btn" @click="$router.push('/cart')">
-                <img
-                  src="@img/head/icon3-scrolled.png"
-                  alt=""
-                  v-if="isScrolled"
-                />
-                <img src="@img/head/icon3.png" alt="" v-else />
+                <el-badge :value="vuex_cart_number" class="item">
+                  <img
+                    src="@img/head/icon3-scrolled.png"
+                    alt=""
+                    v-if="isScrolled"
+                  />
+                  <img src="@img/head/icon3.png" alt="" v-else />
+                </el-badge>
                 <span>购物车</span>
               </div>
               <div class="btn">

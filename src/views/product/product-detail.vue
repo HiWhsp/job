@@ -64,7 +64,9 @@
                   <div class="parameter-table">
                     <div
                       class="parameter-row"
-                      v-for="(item, index) in product.brandInfo.addrows"
+                      v-for="(item, index) in product.brandInfo
+                        ? product.brandInfo.addrows
+                        : []"
                       :key="index"
                     >
                       <div
@@ -80,11 +82,20 @@
                 </div>
               </div>
             </div>
-            <div v-if="activeTab === 'coating'" class="content-item" v-html="product.brandInfo.content2">
-            </div>
-            <div v-if="activeTab === 'lens'" class="content-item" v-html="product.brandInfo.content3">
-            </div>
-            <div v-if="activeTab === 'feedback'" class="content-item feedback-content">
+            <div
+              v-if="activeTab === 'coating'"
+              class="content-item"
+              v-html="product.brandInfo.content2"
+            ></div>
+            <div
+              v-if="activeTab === 'lens'"
+              class="content-item"
+              v-html="product.brandInfo.content3"
+            ></div>
+            <div
+              v-if="activeTab === 'feedback'"
+              class="content-item feedback-content"
+            >
               <div class="feedback-form">
                 <!-- 左列 -->
                 <div class="feedback-left">
@@ -96,8 +107,8 @@
                         <input
                           type="radio"
                           name="feedbackType"
-                          value="newProduct"
-                          v-model="feedbackForm.type"
+                          value="1"
+                          v-model="feedbackForm.bType"
                         />
                         <span class="radio-label">新品需求</span>
                       </label>
@@ -105,8 +116,8 @@
                         <input
                           type="radio"
                           name="feedbackType"
-                          value="improvement"
-                          v-model="feedbackForm.type"
+                          value="2"
+                          v-model="feedbackForm.bType"
                         />
                         <span class="radio-label">改进建议</span>
                       </label>
@@ -114,8 +125,8 @@
                         <input
                           type="radio"
                           name="feedbackType"
-                          value="inquiry"
-                          v-model="feedbackForm.type"
+                          value="3"
+                          v-model="feedbackForm.bType"
                         />
                         <span class="radio-label">产品咨询</span>
                       </label>
@@ -132,7 +143,7 @@
                       type="text"
                       class="form-input"
                       placeholder="请输入"
-                      v-model="feedbackForm.contact"
+                      v-model="feedbackForm.phone"
                     />
                   </div>
 
@@ -151,7 +162,9 @@
 
                   <!-- 提交按钮 -->
                   <div class="form-group">
-                    <button class="submit-btn" @click="submitFeedback">提交</button>
+                    <button class="submit-btn" @click="submitFeedback">
+                      提交
+                    </button>
                   </div>
                 </div>
 
@@ -161,7 +174,7 @@
                   <div class="form-group">
                     <label class="form-label">反馈产品</label>
                     <el-select
-                      v-model="feedbackForm.product"
+                      v-model="feedbackForm.proId"
                       placeholder="请选择"
                       class="form-select"
                     >
@@ -179,10 +192,7 @@
                     <label class="form-label">是否联系我</label>
                     <div class="checkbox-group">
                       <label class="checkbox-item">
-                        <input
-                          type="checkbox"
-                          v-model="feedbackForm.contactMe"
-                        />
+                        <input type="checkbox" v-model="feedbackForm.tell" />
                         <span class="checkbox-label">是</span>
                       </label>
                     </div>
@@ -219,15 +229,17 @@
                       <div class="product-info">
                         <span class="product-code">{{ product.title }}</span>
                         <span class="product-diameter"
-                          >直径: {{ product.diameter || '0.00' }}mm</span
+                          >直径: {{ product.diameter || "0.00" }}mm</span
                         >
                         <span class="product-focal"
-                          >焦距: {{ product.focal || '0.00' }}mm</span
+                          >焦距: {{ product.focal || "0.00" }}mm</span
                         >
                         <span class="product-radius"
-                          >曲率半径: {{ product.curvature || '0.00' }}mm</span
+                          >曲率半径: {{ product.curvature || "0.00" }}mm</span
                         >
-                        <span class="product-stock">{{ product.kucun || 0 }}</span>
+                        <span class="product-stock">{{
+                          product.kucun || 0
+                        }}</span>
                         <div class="product-compare">
                           <el-checkbox
                             v-model="product.checked"
@@ -299,10 +311,20 @@
 
                     <!-- 详细参数表格 -->
                     <div class="parameter-table">
-                      <div class="parameter-row" v-for="(item, index) in product.fieldsInfo" :key="index">
-                        <div class="parameter-item" v-for="(it, i) in item" :key="i">
+                      <div
+                        class="parameter-row"
+                        v-for="(item, index) in product.fieldsInfo"
+                        :key="index"
+                      >
+                        <div
+                          class="parameter-item"
+                          v-for="(it, i) in item"
+                          :key="i"
+                        >
                           <span class="parameter-label">{{ it.title }}</span>
-                          <span class="parameter-value">{{ it.fieldValue }}</span>
+                          <span class="parameter-value">{{
+                            it.fieldValue
+                          }}</span>
                         </div>
                       </div>
                     </div>
@@ -341,8 +363,9 @@
                     type="primary"
                     size="small"
                     class="view-products-btn"
+                    @click="viewProducts(product)"
                   >
-                    查看{{ product.kucun }}款同类型产品
+                    查看{{ product.brandNum }}款同类型产品
                   </el-button>
                 </div>
               </div>
@@ -372,14 +395,15 @@ export default {
       activeTab: "series", // 默认选中系列说明
       activeProducts: [], // 展开的产品ID数组
       productList: [], // 产品列表
-      products: [{}, {}, {}, {}, {}], // 产品推荐
+      products: [], // 产品推荐
+      channelId: null, // 频道ID
       // 反馈表单数据
       feedbackForm: {
-        type: "improvement", // 默认选中"改进建议"
-        contact: "", // 联系方式
+        bType: "1", // 默认选中"改进建议"
+        phone: "", // 联系方式
         content: "", // 反馈内容
-        product: "", // 反馈产品
-        contactMe: true, // 是否联系我，默认选中
+        proId: "", // 反馈产品
+        tell: true, // 是否联系我，默认选中
       },
       // 产品选项（可以根据实际需求从接口获取）
       productOptions: [
@@ -415,17 +439,51 @@ export default {
           );
           this.product.fieldsInfo = this.pairArray(this.product.fieldsInfo);
           this.productList.push(res.data);
-          
+          this.getRecommendProduct();
           // 更新反馈表单的产品选项，将当前产品添加到选项中
           if (this.product.title) {
             this.productOptions = [
-              { label: this.product.title, value: this.product.id || this.product.title },
-              ...this.productOptions.filter(item => item.value !== (this.product.id || this.product.title))
+              {
+                label: this.product.title,
+                value: this.product.id || this.product.title,
+              },
+              ...this.productOptions.filter(
+                (item) => item.value !== (this.product.id || this.product.title)
+              ),
             ];
             // 默认选中当前产品
-            this.feedbackForm.product = this.product.id || this.product.title;
+            this.feedbackForm.proId = this.product.id || this.product.title;
           }
         }
+      });
+    },
+    getRecommendProduct() {
+      const channelList = JSON.parse(this.product.channelIdArr || "{}");
+      const channelId =
+        channelList.length > 0 ? channelList[channelList.length - 1].id : null;
+      this.channelId = channelId;
+      // 获取推荐产品
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_plist",
+          channelId: channelId,
+          page: 1,
+          pageNum: 5,
+        },
+      }).then((res) => {
+        let { list, count } = res.data;
+        if (res.code == 200 && list) {
+          this.products = list;
+          this.totalProducts = count;
+        }
+      });
+    },
+    viewProducts(product) {
+      this.$router.push({
+        path: "/product-list",
+        query: { channelId: this.channelId },
       });
     },
     // 将数组分成两组
@@ -474,12 +532,27 @@ export default {
         let { code, data, message } = res;
 
         if (code == 200) {
-          this.$refs.product_add_cart_success_modal.init({
-            num: product.quantity,
-            ...product,
-          });
+          // 三秒后关闭弹窗
 
-          this.$store.commit("set_vuex_cart_number", 1);
+          this.$api({
+            url: "/service.php",
+            method: "get",
+            data: {
+              action: "gouwuche_lists",
+            },
+          }).then((res) => {
+            let { code, data } = res;
+            if (code == 200) {
+              this.$store.commit("set_vuex_cart_number", data.length);
+            }
+            this.$refs.product_add_cart_success_modal.init({
+              num: product.quantity,
+              ...product,
+            });
+            setTimeout(() => {
+              this.$refs.product_add_cart_success_modal.onBeforeClose();
+            }, 3000);
+          });
         } else {
           this.$message.error(message);
         }
@@ -503,7 +576,7 @@ export default {
     // 提交反馈
     submitFeedback() {
       // 验证必填项
-      if (!this.feedbackForm.contact) {
+      if (!this.feedbackForm.phone) {
         this.$message.warning("请输入您的联系方式");
         return;
       }
@@ -513,39 +586,34 @@ export default {
       }
 
       // 这里可以调用API提交反馈
-      // this.$api({
-      //   url: "/service.php",
-      //   method: "post",
-      //   data: {
-      //     action: "feedback_submit",
-      //     ...this.feedbackForm,
-      //   },
-      // }).then((res) => {
-      //   if (res.code == 200) {
-      //     this.$message.success("反馈提交成功");
-      //     // 重置表单
-      //     this.feedbackForm = {
-      //       type: "improvement",
-      //       contact: "",
-      //       content: "",
-      //       product: "",
-      //       contactMe: true,
-      //     };
-      //   } else {
-      //     this.$message.error(res.message || "提交失败");
-      //   }
-      // });
-
-      // 临时提示
-      this.$message.success("反馈提交成功");
-      // 重置表单
-      this.feedbackForm = {
-        type: "improvement",
-        contact: "",
-        content: "",
-        product: "",
-        contactMe: true,
-      };
+      this.$api({
+        url: "/service.php",
+        method: "post",
+        data: {
+          action: "serve_proSeek",
+          ...{
+            phone: this.feedbackForm.phone,
+            content: this.feedbackForm.content,
+            proId: this.feedbackForm.proId,
+            tell: this.feedbackForm.tell ? 1 : 0,
+            bType: this.feedbackForm.bType,
+          },
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.$message.success("反馈提交成功");
+          // 重置表单
+          this.feedbackForm = {
+            bType: "1",
+            phone: "",
+            content: "",
+            proId: "",
+            tell: true,
+          };
+        } else {
+          this.$message.error(res.message || "提交失败");
+        }
+      });
     },
   },
 };

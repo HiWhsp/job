@@ -1,6 +1,9 @@
 <template>
   <div class="page">
-    <div style="position: absolute; top: 0; left: 0; z-index: -100" id="tableGen"></div>
+    <div
+      style="position: absolute; top: 0; left: 0; z-index: -100"
+      id="tableGen"
+    ></div>
     <div class="page-title">我的订单</div>
 
     <div class="page-ctx">
@@ -22,7 +25,11 @@
           导出信息
         </div> -->
         <div class="search-box">
-          <input v-model="keyword" type="text" placeholder="输入商品名称、订单号" />
+          <input
+            v-model="keyword"
+            type="text"
+            placeholder="输入商品名称、订单号"
+          />
           <button @click="do_search()">搜索</button>
           <button @click="do_reset()">重置</button>
         </div>
@@ -69,9 +76,12 @@
                     >
                       {{ product_item.title }}
                     </div>
-                    <div class="product-sku">订货编码：{{ product_item.keyVals }}</div>
-                    <div class="product-sku">商品型号：{{ product_item.keyVals }}</div>
-
+                    <!-- <div class="product-sku">
+                      订货编码：{{ product_item.keyVals }}
+                    </div> -->
+                    <div class="product-sku">
+                      产品编号：{{ product_item.keyVals }}
+                    </div>
                   </div>
                   <!-- <div class="box-sku">
                     <div class="product-sku">{{ product_item.keyVals }}</div>
@@ -81,7 +91,8 @@
                   </div>
                   <div class="box-num">{{ product_item.num }}</div>
                   <div class="box-subtotal">
-                    {{ vuex_huobi }} {{ product_item.priceSale }}
+                    {{ vuex_huobi }}
+                    {{ product_item.priceSale * product_item.num }}
                   </div>
                   <!-- <div class="box-refund">
                     <div class="refund-act">
@@ -121,9 +132,9 @@
                   去支付
                 </button>
                 <button
-                    v-if="item.ifPay == 1 && vuex_user.staffType == 1"
-                    class="btn-ripple fit-text btn-bg"
-                    @click="doOfflinePay(item)"
+                  v-if="item.ifPay == 1 && vuex_user.staffType == 1"
+                  class="btn-ripple fit-text btn-bg"
+                  @click="doOfflinePay(item)"
                 >
                   上传支付凭证
                 </button>
@@ -202,10 +213,7 @@
       @confirm="emitConfirm"
       data-type="售后"
     />
-    <xianxia_submit
-    ref="xianxia"
-    @confirm="emitConfirm"
-    ></xianxia_submit>
+    <xianxia_submit ref="xianxia" @confirm="emitConfirm"></xianxia_submit>
   </div>
 </template>
 
@@ -217,7 +225,7 @@ import order_receive_modal from "@/components/order/order_receive_modal.vue"; //
 import order_refund_modal from "@/components/order/order_refund_modal.vue"; //售后
 import xianxia_submit from "@/components/order/xianxia_submit.vue";
 import { mapState } from "vuex";
-import TableExport from 'tableexport';
+import TableExport from "tableexport";
 import download from "@/util/download";
 export default {
   name: "servicePage",
@@ -227,7 +235,7 @@ export default {
     order_delete_modal,
     order_receive_modal,
     order_refund_modal,
-    xianxia_submit
+    xianxia_submit,
   },
   data() {
     return {
@@ -258,13 +266,11 @@ export default {
       let tabList = [
         { value: 0, title: "全部订单" },
         { value: 1, title: "待付款", num: user_index.order_num_1 || 0 },
+        { value: 8, title: "待审核", num: user_index.order_num_4 || 0 },
         { value: 2, title: "待发货", num: user_index.order_num_2 || 0 },
         { value: 3, title: "待收货", num: user_index.order_num_3 || 0 },
-        // { value: 4, title: "待核销", num: user_index.order_num_4 || 0 },
-        { value: 6, title: "待评价", num: user_index.order_num_4 || 0 },
         { value: 5, title: "已完成", num: user_index.order_num_4 || 0 },
         { value: 7, title: "已取消", num: user_index.order_num_4 || 0 },
-        // { value: 6, title: "待审核", num: user_index.order_num_6 || 0 },
       ];
       return tabList;
     },
@@ -296,7 +302,7 @@ export default {
           action: "orders_lists",
           ...this.pagination,
           scene: this.tabSelect.value,
-          // keyword: this.keyword,
+          keyword: this.keyword,
         },
       }).then((res) => {
         let { code, data } = res;
@@ -399,9 +405,10 @@ export default {
 
     //搜索
     do_search() {
+      this.pagination.page = 1;
       this.query_order();
     },
-    doOfflinePay(item){
+    doOfflinePay(item) {
       this.$refs.xianxia.init(item);
     },
     //重置
@@ -428,10 +435,26 @@ export default {
       this.$refs.order_cancel_modal.init(item);
     },
     doPay(item) {
+      let data_format = item.products.map((v) => ({
+        title: v.title,
+        image: v.image,
+        inventoryId: v.id,
+        productId: v.productId,
+        keyVals: v.keyVals,
+        num: v.num,
+        priceSale: v.priceSale,
+        priceMarket: v.priceMarket,
+      }));
+
+      this.$store.commit(
+        "set_cache_payment_products",
+        JSON.stringify(data_format)
+      );
+
       this.$router.push({
-        path: "/payment-methods",
+        path: "/order-submit",
         query: {
-          id: item.id,
+          from: "order",
         },
       });
     },
@@ -502,51 +525,63 @@ export default {
         },
       });
     },
-    async getList(){
+    async getList() {
       this.showLoading();
       this.$api({
-        url: '/service.php',
-        method: 'get',
-        data:{
-          action: 'orders_orderExport',
-          orderStatus: this.tabSelect.value == 0? '' : this.tabSelect.value || ''
-        }
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "orders_orderExport",
+          orderStatus:
+            this.tabSelect.value == 0 ? "" : this.tabSelect.value || "",
+        },
       }).then(async (res) => {
-        console.log(res)
-        if (res.code == 200){
+        console.log(res);
+        if (res.code == 200) {
           window.location.href = res.data;
         }
         this.hideLoading();
         // download.excel(res, 'report.xls')
-      })
-      if (false){
+      });
+      if (false) {
         this.$api({
-          url: '/service.php',
-          method: 'post',
+          url: "/service.php",
+          method: "post",
           data: {
-            action: 'orders_daochu',
-            orderStatus: this.tabSelect.value == 0? '' : this.tabSelect.value || ''
-          }
-        }).then(res => {
+            action: "orders_daochu",
+            orderStatus:
+              this.tabSelect.value == 0 ? "" : this.tabSelect.value || "",
+          },
+        }).then((res) => {
           document.getElementById("tableGen").innerHTML = res;
-          let exporttable = TableExport(document.getElementById("tableGen").children[0], {
-            exportButtons: false,
+          let exporttable = TableExport(
+            document.getElementById("tableGen").children[0],
+            {
+              exportButtons: false,
 
-            filename: '我的订单',
+              filename: "我的订单",
 
-            sheetname: 'Sheet1',
-            type: 'excel'
-          });
+              sheetname: "Sheet1",
+              type: "excel",
+            }
+          );
           let tabledata = exporttable.getExportData();
           console.log(tabledata);
           var xlsxData = Object.values(tabledata)[0].xlsx;
           console.log(xlsxData);
-          exporttable.export2file(xlsxData.data, xlsxData.mimeType, xlsxData.filename, xlsxData.fileExtension, xlsxData.merges, xlsxData.RTL, xlsxData.sheetname)
+          exporttable.export2file(
+            xlsxData.data,
+            xlsxData.mimeType,
+            xlsxData.filename,
+            xlsxData.fileExtension,
+            xlsxData.merges,
+            xlsxData.RTL,
+            xlsxData.sheetname
+          );
 
           // alert(res)
-        })
+        });
       }
-
     },
     //订单支付
     order_payment(order_id) {
@@ -586,7 +621,7 @@ export default {
   display: flex;
   align-items: center;
   margin-left: 16px;
-  color: #2E4C87;
+  color: #2e4c87;
   font-size: 14px;
   font-weight: normal;
   cursor: pointer;
@@ -643,14 +678,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #2E4C87;
+        color: #2e4c87;
       }
 
       &.active {
         // background: #2E4C87;
         // color: #fff;
         font-weight: bold;
-        color: #2E4C87;
+        color: #2e4c87;
 
         &::after {
           content: "";
@@ -659,7 +694,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #2E4C87;
+          background: #2e4c87;
         }
       }
     }
@@ -755,7 +790,7 @@ export default {
       font-weight: 400;
       line-height: 20px;
       color: #999999;
-      color: #2E4C87;
+      color: #2e4c87;
 
       // 待付款
       &.state--5 {
@@ -765,8 +800,8 @@ export default {
       }
 
       &.state-2 {
-        color: #2E4C87;
-        border-color: #2E4C87;
+        color: #2e4c87;
+        border-color: #2e4c87;
       }
     }
   }
@@ -820,7 +855,7 @@ export default {
             font-weight: bold;
 
             &:hover {
-              color: #2E4C87;
+              color: #2e4c87;
             }
           }
 
@@ -917,7 +952,7 @@ export default {
         background: #ffffff;
         border-radius: 50px 50px 50px 50px;
         border-radius: 4px;
-        border: 1px solid #D5DBE8;
+        border: 1px solid #d5dbe8;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
@@ -932,7 +967,7 @@ export default {
         }
 
         &.btn-bg {
-          background: #2E4C87;
+          background: #2e4c87;
           color: #ffffff;
         }
       }

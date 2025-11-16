@@ -4,11 +4,16 @@
     <div class="inner w-1400">
       <div class="download-container">
         <!-- 选项卡区域 -->
-        <el-tabs v-model="activeTab" class="download-tabs">
-          <el-tab-pane label="全部分类" name="all">
-            <div class="file-list">
+        <el-tabs v-model="activeTab" class="download-tabs" @tab-click="handleTabClick">
+          <el-tab-pane
+            v-for="item in tabList"
+            :key="item.id + ''"
+            :label="item.title"
+            :name="item.id + ''"
+          >
+            <div class="file-list" v-if="fileList.length > 0">
               <div
-                v-for="(file, index) in allFiles"
+                v-for="(file, index) in fileList"
                 :key="index"
                 class="file-item"
               >
@@ -16,8 +21,8 @@
                   <img src="@img/common/pdf.png" alt="" />
                 </div>
                 <div class="file-info">
-                  <div class="file-name ellipsis-1">{{ file.name }}</div>
-                  <div class="file-meta">{{ file.date }} | {{ file.type }}</div>
+                  <div class="file-name ellipsis-1">{{ file.title }}</div>
+                  <div class="file-meta">{{ file.createTime || '--' }} | {{ file.fileType }}</div>
                 </div>
                 <div class="file-actions">
                   <el-button
@@ -30,32 +35,7 @@
                 </div>
               </div>
             </div>
-          </el-tab-pane>
-          <el-tab-pane label="分类名称一" name="category1">
-            <div class="file-list">
-              <div
-                v-for="(file, index) in category1Files"
-                :key="index"
-                class="file-item"
-              >
-                <div class="file-icon">
-                  <img src="@img/common/pdf.png" alt="" />
-                </div>
-                <div class="file-info">
-                  <div class="file-name ellipsis-1">{{ file.name }}</div>
-                  <div class="file-meta">{{ file.date }} | {{ file.type }}</div>
-                </div>
-                <div class="file-actions">
-                  <el-button
-                    type="text"
-                    @click="downloadFile(file)"
-                    class="download-btn"
-                  >
-                    <img src="@img/common/down.png" alt="" />
-                  </el-button>
-                </div>
-              </div>
-            </div>
+            <el-empty v-else description="暂无数据" />
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -72,49 +52,60 @@ export default {
   data() {
     return {
       nav_option: [{ title: "下载中心", route: "/download" }],
-      activeTab: "all",
-      allFiles: [
-        {
-          name: "这里展示下载文件名称文字占位...",
-          date: "2025-07-08",
-          type: "PDF文件",
-          url: "#",
-        },
-        {
-          name: "这里展示下载文件名称文字占位...",
-          date: "2025-07-08",
-          type: "PDF文件",
-          url: "#",
-        },
-        {
-          name: "这里展示下载文件名称文字占位...",
-          date: "2025-07-08",
-          type: "PDF文件",
-          url: "#",
-        },
-      ],
-      category1Files: [
-        {
-          name: "分类一文件示例1",
-          date: "2025-07-07",
-          type: "PDF文件",
-          url: "#",
-        },
-        {
-          name: "分类一文件示例2",
-          date: "2025-07-06",
-          type: "Word文档",
-          url: "#",
-        },
-      ],
+      activeTab: 0,
+      tabList: [],
+      fileList: [],
+      pagination: {
+        page: 1,
+        pageNum: 10,
+        total: 0,
+      },
     };
   },
+  mounted() {
+    this.query_tab_list();
+  },
   methods: {
+    query_tab_list() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "index_otherChannels",
+          channelType: 1,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.tabList = res.data;
+          this.activeTab = this.tabList[0].id + '';
+          this.query_file_list();
+        }
+      });
+    },
+    query_file_list() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "index_downloadList",
+          channelId: this.activeTab,
+          page: this.pagination.page,
+          pageNum: this.pagination.pageNum,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.fileList = res.data.list;
+          this.pagination.total = res.data.count;
+        }
+      });
+    },
+    handleTabClick(tab, event) {
+      this.activeTab = tab.name;
+      this.pagination.page = 1;
+      this.query_file_list();
+    },
     downloadFile(file) {
-      // 这里可以添加下载逻辑
-      console.log("下载文件:", file.name);
-      // 实际项目中可以调用下载API
-      this.$message.success(`开始下载: ${file.name}`);
+      window.open(file.file, '_blank');
     },
   },
 };

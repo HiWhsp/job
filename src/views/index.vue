@@ -105,9 +105,10 @@
                   class="news-card"
                   v-for="(item, index) in newsList.slice(0, 2)"
                   :key="index"
+                  @click="toRouter(`/news-detail?id=${item.id}`)"
                 >
                   <div class="news-image">
-                    <img :src="item.channelImage" :alt="`新闻${index + 1}`" />
+                    <img :src="item.thumb" :alt="`新闻${index + 1}`" />
                   </div>
                   <div class="news-info">
                     <h3 class="news-title ellipsis-2">
@@ -128,6 +129,7 @@
                     class="news-item"
                     v-for="(item, index) in newsList.slice(2)"
                     :key="index"
+                    @click="toRouter(`/news-detail?id=${item.id}`)"
                   >
                     <h4 class="news-item-title ellipsis-2">
                       {{ item.title }}

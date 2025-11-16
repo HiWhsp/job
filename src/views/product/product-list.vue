@@ -76,15 +76,21 @@
                   <div class="product-actions">
                     <img
                       src="@img/product/icon-fav1.png"
+                      @click.stop="toggleFavorite(product, 1)"
                       alt=""
-                      v-if="product.favorite"
+                      v-if="product.ifshoucang"
                     />
-                    <img src="@img/product/icon-fav0.png" alt="" v-else />
+                    <img
+                      src="@img/product/icon-fav0.png"
+                      @click.stop="toggleFavorite(product, 0)"
+                      alt=""
+                      v-else
+                    />
                   </div>
                 </div>
                 <div class="product-info">
                   <h3 class="product-name">{{ product.title }}</h3>
-                  <div class="product-price">¥{{ product.priceSale }}</div>
+                  <div class="product-price">¥{{ product.priceSale || 0 }}</div>
                   <el-button
                     type="primary"
                     size="small"
@@ -206,9 +212,23 @@ export default {
     },
 
     // 切换收藏
-    toggleFavorite(product) {
-      product.favorite = !product.favorite;
-      this.$message.success(product.favorite ? "已添加到收藏" : "已取消收藏");
+    toggleFavorite(product, type) {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_operate",
+          productIds: product.id,
+          operateType: 1,
+          operateSence: type,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.$message.success(type == 0 ? "已添加到收藏" : "已取消收藏");
+        } else {
+          this.$message.error(res.message);
+        }
+      });
     },
 
     // 选择商品

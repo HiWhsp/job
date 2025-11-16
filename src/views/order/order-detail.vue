@@ -10,98 +10,6 @@
     </div>
 
     <div class="page-ctx">
-      <!-- <div class="step-box" v-if="info.statusInfo == '待审核'">
-        <div class="step-item active">
-          <div class="step-number">
-            <div class="step-line step-line-1"></div>
-            <div class="step-num">1</div>
-            <div class="step-line step-line-2"></div>
-          </div>
-          <div class="step-title">采购员{{ info.orderUser }}提交下单</div>
-          <div class="step-date">{{ info.createdTime }}</div>
-        </div>
-        <div class="step-item" :class="{ active: info.shenheStatus >= 20 }">
-          <div class="step-number">
-            <div class="step-line step-line-3"></div>
-            <div class="step-num">2</div>
-            <div class="step-line step-line-4"></div>
-          </div>
-          <div class="step-title">
-            采购员{{ info.shenheBuyerJson.realName }}审核通过
-          </div>
-          <div class="btn_cb" v-if="info.shenheStatus < 20" @click="urge">
-            催批
-          </div>
-          <div class="step-date" v-else>{{ info.shenheBuyerJson.time }}</div>
-        </div>
-        <div class="step-item" :class="{ active: info.shenheStatus >= 30 }">
-          <div class="step-number">
-            <div class="step-line step-line-3"></div>
-            <div class="step-num">3</div>
-            <div class="step-line step-line-4"></div>
-          </div>
-          <div class="step-title">
-            采购经理{{ info.shenheManagerJson.realName }}审核通过
-          </div>
-          <div
-            class="btn_cb"
-            v-if="info.shenheStatus < 30 && info.shenheStatus >= 20"
-            @click="urge"
-          >
-            催批
-          </div>
-          <div class="step-date" v-else>{{ info.shenheManagerJson.time }}</div>
-        </div>
-        <div class="step-item" :class="{ active: info.shenheStatus >= 40 }">
-          <div class="step-number">
-            <div class="step-line step-line-5"></div>
-            <div class="step-num">4</div>
-            <div class="step-line step-line-6"></div>
-          </div>
-          <div class="step-title">
-            采购总监{{ info.shenheDirectorJson.realName }}审核通过
-          </div>
-          <div
-            class="btn_cb"
-            v-if="info.shenheStatus < 40 && info.shenheStatus >= 30"
-            @click="urge"
-          >
-            催批
-          </div>
-          <div class="step-date" v-else>{{ info.shenheDirectorJson.time }}</div>
-        </div>
-      </div>
-
-      <div class="step-box" v-else>
-        <div class="step-item active">
-          <div class="step-number">
-            <div class="step-line step-line-1"></div>
-            <div class="step-num">1</div>
-            <div class="step-line step-line-2"></div>
-          </div>
-          <div class="step-title">订购时间</div>
-          <div class="step-date">{{ info.createdTime }}</div>
-        </div>
-        <div class="step-item" :class="{ active: info.orderStatus >= 3 }">
-          <div class="step-number">
-            <div class="step-line step-line-3"></div>
-            <div class="step-num">2</div>
-            <div class="step-line step-line-4"></div>
-          </div>
-          <div class="step-title">商品发货</div>
-          <div class="step-date" style="visibility: hidden">-</div>
-        </div>
-        <div class="step-item" :class="{ active: info.orderStatus >= 5 }">
-          <div class="step-number">
-            <div class="step-line step-line-5"></div>
-            <div class="step-num">3</div>
-            <div class="step-line step-line-6"></div>
-          </div>
-          <div class="step-title">订单收货</div>
-          <div class="step-date" style="visibility: hidden">-</div>
-        </div>
-      </div> -->
-
       <div class="base-ctx">
         <div class="base-title">订单信息</div>
         <div class="base-items">
@@ -133,8 +41,11 @@
             <div class="info-content">
               <div class="info-item">
                 <div class="label">支付方式：</div>
-                <div class="val">
-                  <span v-if="payInfo.balance">余额</span>
+                <div class="val" v-if="payInfo.ifPay">
+                  <span>余额</span>
+                </div>
+                <div class="val" v-else>
+                  <span>对公转账</span>
                 </div>
               </div>
               <div class="info-item">
@@ -143,22 +54,28 @@
               </div>
               <div class="info-item">
                 <div class="label">配送方式：</div>
-                <div class="val">
-                  {{ fahuoInfo.expressName || "" }}
-                  {{ fahuoInfo.expressOrder || "" }}
-                </div>
+                <div class="val">{{ peisong_type_text || "暂无配送方式" }}</div>
               </div>
-              <div class="info-item">
+              <div class="info-item" v-if="xianxia_imgs.length > 0">
                 <div class="label">汇款截图：</div>
                 <div class="val">
-                  {{ fahuoInfo.expressName || "" }}
-                  {{ fahuoInfo.expressOrder || "" }}
+                  <el-image
+                    v-for="(item, index) in xianxia_imgs"
+                    :key="index"
+                    style="width: 50px; height: 50px; margin-right: 5px"
+                    :src="item"
+                    :preview-src-list="[xianxia_imgs]"
+                  >
+                  </el-image>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="base-item back">
+          <div
+            class="base-item back"
+            v-if="['待审核', '待支付'].includes(info.statusInfo)"
+          >
             <div class="info-title">收款对公账户</div>
             <div class="info-content">
               <div class="info-item">
@@ -222,17 +139,19 @@
                       <div class="title" @click="mix_to_product(product_item)">
                         {{ product_item.title }}
                       </div>
-                      <div class="box-sku">
+                      <!-- <div class="box-sku">
                         <div class="goods-sku">订货编码：UA199</div>
-                      </div>
+                      </div> -->
                       <div class="box-sku">
-                        <div class="goods-sku">商品型号：S54001</div>
+                        <div class="goods-sku">
+                          产品编号：{{ product_item.keyVals }}
+                        </div>
                       </div>
-                      <div class="box-sku">
+                      <!-- <div class="box-sku">
                         <div class="goods-sku">
                           需求描述: {{ product_item.remark }}
                         </div>
-                      </div>
+                      </div> -->
                     </div>
                     <div class="box-price">
                       {{ vuex_huobi }} {{ product_item.priceSale }}
@@ -241,19 +160,6 @@
                     <div class="box-price">
                       {{ vuex_huobi }} {{ product_item.priceSale }}
                     </div>
-                  </div>
-                  <!-- <div class="goods-action" v-if="info.orderStatus == 5"> -->
-                  <div class="goods-action">
-                    <!-- <button v-if="!is_jifen_goods && item.allow_actions.allow_refund" class="btn-goods-action" @click="refundApply(item)">申请售后</button> -->
-                    <!-- <button v-if="item.ifshouhou" class="btn-goods-action disabled">已售后</button> -->
-                    <!-- <button v-if="item.allow_actions.allow_logistics" class="btn-goods-action" @click="toRoute(`/orderLogistics?order_id=${order_id}&logistics_id=${fahuo_id}`)">查看物流</button> -->
-                    <button
-                      v-if="product_item.ifComment == 0"
-                      class="btn-goods-action"
-                      @click="to_review(product_item)"
-                    >
-                      商品评价
-                    </button>
                   </div>
                 </div>
               </div>
@@ -280,7 +186,7 @@
                   <span class="label">配送费：</span>
                   <div class="value">
                     <span class="money-num"
-                      >{{ vuex_huobi }}{{ payInfo.foreignYunfei }}</span
+                      >{{ vuex_huobi }}{{ payInfo.foreignYunfei || 0 }}</span
                     >
                   </div>
                 </div>
@@ -292,7 +198,7 @@
                     >
                   </div>
                 </div>
-                <div class="zhifufangshi-wrap" v-if="is_finish_pay">
+                <!-- <div class="zhifufangshi-wrap" v-if="is_finish_pay">
                   <span>支付方式：</span>
                   <div class="zhifufangshi">
                     <div class="pay-item" v-if="payInfo.balance">
@@ -302,7 +208,7 @@
                       >
                     </div>
                   </div>
-                </div>
+                </div> -->
                 <!-- <div class="money-item">
                       <span class="label">优惠券： </span>
                       <span class="money-num">- {{vuex_huobi}}{{ money_coupon }}</span>
@@ -332,10 +238,6 @@
           <!-- 订单操作 -->
           <div class="order-action-box">
             <div class="btn-box">
-              <button class="btn-ripple fit-text" @click="doRefund(info)">
-                下载合同文件
-              </button>
-
               <button
                 v-if="info.ifCancel == 1"
                 class="btn-ripple fit-text"
@@ -471,64 +373,28 @@ export default {
   },
   watch: {
     orderObj(data) {
-      let { shouhuoInfo, status, pay_info, fahuo_info, peisong_type, shequ } =
-        data;
+      let { shouhuoInfo, payInfo, peisongType, shequ, offlineJson } = data;
 
-      this.peisong_type = peisong_type;
+      this.peisong_type = peisongType;
       this.shequ = shequ;
       this.shouhuoInfo = shouhuoInfo;
-      this.pay_info = pay_info;
-
-      //订单状态码(-5待支付 -3售后处理中 -1无效 0待成团 2待发货 3待收货 4已收货)
-      if (status != -5 && status != -1 && status != 0) {
-        this.is_payed = true;
-      }
-
+      this.pay_info = payInfo;
+      offlineJson.forEach((item) => {
+        this.xianxia_imgs.push(item.images);
+      });
       //配送方式
       let peisong_map = {
-        1: "上门自提",
-        2: "社区配送",
-        3: "普通快递",
-        4: "",
-        5: "",
+        1: "快递配送",
+        2: "上门自提",
       };
 
-      //社区购配送方式(1自提 2社区配送 3快递)
-
-      this.peisong_type_text = peisong_map[peisong_type] || "";
-      //门店配送订单需要显示配送员信息
-      if (this.peisong_type_text == "同城配送") {
-        this.is_mendian_peisong = true;
-        this.peisong_info = fahuo_info;
-      }
-
-      //发货信息
-      if (fahuo_info && fahuo_info.company) {
-        this.fahuo_info = fahuo_info;
-        this.is_fahuo = true; //已经发货
-      }
+      this.peisong_type_text = peisong_map[peisongType] || "";
     },
   },
   created() {
     this.setView();
   },
   methods: {
-    urge() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "orderC_sendRemindEmail",
-          orderId: this.order_id,
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          alertSucc(res.msg);
-        } else {
-          alert(res);
-        }
-      });
-    },
     emitConfirm() {
       this.setView();
     },
@@ -554,7 +420,6 @@ export default {
           this.fahuoInfo = data.fahuoInfo;
           this.invioceJson = data.invioceJson || {};
           this.is_finish_pay = parseFloat(data.pricePayed) > 0;
-
           //
           this.shouhuoInfo = data.shouhuoInfo;
           if (data.shouhuoInfo) {
@@ -563,6 +428,9 @@ export default {
               .filter((v) => v)
               .join(" ");
           }
+          this.products.forEach((item) => {
+            this.total_product_number += item.num;
+          });
 
           //
           //支付方式
@@ -573,24 +441,31 @@ export default {
         }
       });
     },
-    to_review(item) {
-      this.$router.push({
-        path: "/order-review-submit",
-        query: {
-          orderId: this.order_id,
-          inventoryId: item.id,
-        },
-      });
-    },
 
     doCancel(item) {
       this.$refs.order_cancel_modal.init(item);
     },
     doPay(item) {
+      let data_format = item.products.map((v) => ({
+        title: v.title,
+        image: v.image,
+        inventoryId: v.id,
+        productId: v.productId,
+        keyVals: v.keyVals,
+        num: v.num,
+        priceSale: v.priceSale,
+        priceMarket: v.priceMarket,
+      }));
+
+      this.$store.commit(
+        "set_cache_payment_products",
+        JSON.stringify(data_format)
+      );
+
       this.$router.push({
-        path: "/payment-methods",
+        path: "/order-submit",
         query: {
-          id: item.id,
+          from: "order",
         },
       });
     },
@@ -630,7 +505,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #2E4C87;
+      background: #2e4c87;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -656,12 +531,12 @@ export default {
     &.active {
       .step-number {
         .step-num {
-          background: #2E4C87;
+          background: #2e4c87;
           color: #fff;
         }
 
         .step-line {
-          background: #2E4C87;
+          background: #2e4c87;
         }
       }
     }
@@ -715,7 +590,7 @@ export default {
       font-size: 12px;
       color: #fff;
       line-height: 20px;
-      background: #2E4C87;
+      background: #2e4c87;
       cursor: pointer;
     }
 
@@ -752,8 +627,8 @@ export default {
 
   .base-items {
     align-items: center;
-    justify-content: space-between;
     display: flex;
+    gap: 120px;
     padding: 20px 25px;
 
     .base-item {
@@ -864,7 +739,7 @@ export default {
 
   .money-heji {
     span {
-      color: #2E4C87;
+      color: #2e4c87;
       font-weight: bold;
     }
   }
@@ -891,7 +766,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: bold;
         line-height: 24px;
-        color: #2E4C87;
+        color: #2e4c87;
 
         .pay-title {
           margin-right: 5px;
@@ -940,7 +815,7 @@ export default {
         height: 30px;
         line-height: 30px;
         // background: #2E4C87;
-        color: #2E4C87;
+        color: #2e4c87;
         // color: #fff;
         font-size: 14px;
       }
@@ -998,7 +873,7 @@ export default {
               font-weight: 500;
 
               &:hover {
-                color: #2E4C87;
+                color: #2e4c87;
               }
             }
             .box-sku {
@@ -1040,7 +915,7 @@ export default {
             margin-left: 10px;
             min-width: 96px;
             height: 30px;
-            background: #2E4C87;
+            background: #2e4c87;
             font-size: 14px;
             font-family: Microsoft YaHei;
             color: #ffffff;
@@ -1082,7 +957,7 @@ export default {
 
       .count {
         font-weight: bold;
-        color: #2E4C87;
+        color: #2e4c87;
       }
 
       .money-item {
@@ -1144,8 +1019,8 @@ export default {
         }
 
         &.btn-bg {
-          background: #2E4C87;
-          border: 1px solid #2E4C87;
+          background: #2e4c87;
+          border: 1px solid #2e4c87;
           color: #fff;
         }
 

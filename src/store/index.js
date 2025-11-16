@@ -133,13 +133,12 @@ export default new Vuex.Store({
     },
 
     set_vuex_banner(state, data) {
-      let [pos_0, pos_1, pos_2] = data;
-      console.log("首页轮播", pos_0.images);
-      state.vuex_index_banners = pos_0.images;
+      state.vuex_index_banners = data[0].images;
 
       state.vuex_map_banners = {
-        关于我们: pos_1.images,
-        联系我们: pos_2.images,
+        关于我们: data[1].images,
+        联系我们: data[2].images,
+        新闻动态: data[3].images,
       };
     },
     // 产品分类树

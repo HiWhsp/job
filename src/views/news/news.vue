@@ -1,47 +1,45 @@
 <template>
   <div class="page">
-    <!-- <pageTop :config="pageConfig" /> -->
-     <news_banner />
+    <news_banner />
+    <page_breadcrumb :option="nav_option" />
     <div class="inner">
       <div class="page-ctx w-1400">
         <div class="ctx-news">
           <div class="ctx-left">
-            <!-- <div class="search-box">
-            <img class="img-search" src="@img/keyword-search.png" alt="" />
-            <input
-              v-model="keyword"
-              type="text"
-              placeholder="请输入要搜索的关键词"
-              @keyup.enter="setView"
-            />
-            <button class="btn-ripple" @click="setView">搜索</button>
-          </div> -->
-
             <div class="news-wrap" v-if="count">
               <div class="news-list">
-                <router-link v-for="(item, index) in list_news" :key="index" :to="`/news-detail?id=${item.id}`"
-                  class="news-item flex">
-                  <div class="img-box scale-box">
-                    <img :src="item.thumb" alt="" class="scale-img" />
-                  </div>
-                  <div class="info-box">
-                    <div class="news-title">
-                      <div class="title-text">
+                <router-link
+                  v-for="(item, index) in list_news"
+                  :key="index"
+                  :to="`/news-detail?id=${item.id}`"
+                >
+                  <div class="news-card">
+                    <div class="news-image">
+                      <img :src="item.thumb" :alt="`新闻${index + 1}`" />
+                    </div>
+                    <div class="news-info">
+                      <h3 class="news-title ellipsis-2">
                         {{ item.title }}
+                      </h3>
+                      <div class="news-meta">
+                        <span class="news-date">{{ item.dtTime }}</span>
+                        <button class="news-action-btn">
+                          <i class="el-icon-right"></i>
+                        </button>
                       </div>
                     </div>
-                    <div class="news-desc">
-                      <div class="desc-text">
-                        {{ item.content }}
-                      </div>
-                    </div>
-                    <div class="news-date">{{ item.dtTime?.substr(0, 10) }}</div>
                   </div>
                 </router-link>
               </div>
               <div class="pagination-box" style="margin-top: 40px">
-                <el-pagination background layout="total,prev, pager, next" :total="count"
-                  :current-page="pagination.page" :page-size="pagination.pageNum" @current-change="on_current_change">
+                <el-pagination
+                  background
+                  layout="total,prev, pager, next"
+                  :total="count"
+                  :current-page="pagination.page"
+                  :page-size="pagination.pageNum"
+                  @current-change="on_current_change"
+                >
                 </el-pagination>
               </div>
             </div>
@@ -49,41 +47,20 @@
               <el-empty description="没有查询到相关信息..."></el-empty>
             </div>
           </div>
-
-          <news_right />
-          <!-- <div class="ctx-right">
-            <div class="right-title flex">
-              <span class="marker"></span>
-              最新资讯
-            </div>
-            <div class="suggest-poster scale-box" v-if="first_suggest.thumb">
-              <img class="scale-img" :src="first_suggest.thumb" alt="">
-            </div>
-            <div class="suggest-list">
-              <div class="suggest-item flex" v-for="(item, index) in suggest_news" :key="index">
-                <span class="dot"></span>
-                <router-link class="ellipsis-1" :to="'/news-detail?id=' + item.id"> {{ item.title }} </router-link>
-              </div>
-            </div>
-          </div> -->
-          
         </div>
       </div>
-
     </div>
   </div>
 </template>
 <script>
-import news_banner from './components/news_banner.vue'
-import news_right from './components/news_right.vue'
-
-import { mapState } from "vuex";
+import news_banner from "./components/news_banner.vue";
+import page_breadcrumb from "@/components/page/page-breadcrumb.vue";
 
 export default {
   name: "news",
   components: {
     news_banner,
-    news_right
+    page_breadcrumb,
   },
   data() {
     return {
@@ -95,18 +72,29 @@ export default {
       count: 0,
       list_news: [],
       suggest_news: [],
-      first_suggest:{},
+      first_suggest: {},
       //
       keyword: "",
     };
   },
   computed: {
-    ...mapState([""]),
-
+    nav_option() {
+      let option = [
+        {
+          route: "",
+          title: this.$route.meta.title,
+        },
+        {
+          route: "/news",
+          title: "新闻动态",
+        },
+      ];
+      return option;
+    },
   },
   watch: {
     $route(to, from) {
-      this.initParams()
+      this.initParams();
       this.setView();
     },
   },
@@ -127,11 +115,11 @@ export default {
         data: {
           action: "news_lists",
           channelId: 49,
-          keyword: '',
+          keyword: "",
           ...this.pagination,
-          isIndex: 0,//类型：0-全部 1-推荐
-          contentLen: '100',//
-          orderType: 0,//排序情况：0-自然排序 1-最新
+          isIndex: 0, //类型：0-全部 1-推荐
+          contentLen: "100", //
+          orderType: 0, //排序情况：0-自然排序 1-最新
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -150,24 +138,24 @@ export default {
         data: {
           action: "news_lists",
           ...this.pagination,
-          isIndex: 1,//类型：0-全部 1-推荐
-          contentLen: '100',//
-          orderType: 0,//排序情况：0-自然排序 1-最新
+          isIndex: 1, //类型：0-全部 1-推荐
+          contentLen: "100", //
+          orderType: 0, //排序情况：0-自然排序 1-最新
         },
       }).then((res) => {
         if (res.code == 200) {
           let data = res.data;
           this.suggest_news = data.list;
-          this.first_suggest = data.list[0]
+          this.first_suggest = data.list[0];
           // this.count = data.count;
         }
       });
     },
 
     on_current_change(value) {
-      this.pagination.page = value
-      this.setView()
-    }
+      this.pagination.page = value;
+      this.setView();
+    },
   },
 };
 </script>
@@ -175,9 +163,15 @@ export default {
 <style scoped lang="less">
 .page {
   .inner {
-    background: #F3F3F3;
+    background: #f3f3f3;
     padding: 24px 0;
   }
+}
+.bread-box {
+  height: 60px;
+  line-height: 60px;
+  border-bottom: 1px solid #e4e4e4;
+  background: #fff;
 }
 
 .page-ctx {
@@ -191,12 +185,9 @@ export default {
   display: flex;
   align-items: flex-start;
 
-
   .ctx-left {
     flex: 1;
     overflow: hidden;
-    margin-right: 24px;
-
 
     .cate-title {
       font-weight: normal;
@@ -205,22 +196,24 @@ export default {
     }
 
     .news-list {
-      .news-item {
-        margin-bottom: 12px;
-        padding: 20px;
-        background: #FFFFFF;
-        border-radius: 4px 4px 4px 4px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      .news-card {
+        display: flex;
+        background: #fff;
+        border: 1px solid #e4e4e4;
+        overflow: hidden;
+        width: 785px;
+        height: 200px;
+        cursor: pointer;
 
-        &:hover {
-          .title-text {
-            color: #2E4C87 !important;
-          }
-        }
-
-        .img-box {
-          width: 200px;
-          height: 140px;
-          border-radius: 4px;
+        .news-image {
+          width: 300px;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
 
           img {
             width: 100%;
@@ -228,57 +221,65 @@ export default {
           }
         }
 
-        .info-box {
+        .news-info {
+          padding: 20px;
           flex: 1;
-          padding-left: 32px;
-
+          background: #fff;
           .news-title {
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-
-            .title-text {
-              font-family: Microsoft YaHei, Microsoft YaHei;
-              font-weight: bold;
-              font-size: 20px;
-              color: #282828;
-            }
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.4;
+            margin: 0 0 40px 0;
           }
 
-          .news-desc {
-            margin-top: 20px;
-            height: 50px;
+          .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
 
-            .desc-text {
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              text-overflow: ellipsis;
-              overflow: hidden;
-              -webkit-line-clamp: 2;
-              font-weight: 400;
-              font-size: 14px;
-              color: #777777;
-              line-height: 24px;
+            .news-date {
+              font-size: 16px;
+              color: #666;
+            }
+
+            .news-action-btn {
+              width: 36px;
+              height: 36px;
+              border-radius: 50%;
+              border: none;
+              background: #fff;
+              border: 1px solid #dedede;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              cursor: pointer;
+              transition: all 0.3s ease;
+              font-size: 16px;
             }
           }
+        }
 
-          .news-date {
-            margin-top: 16px;
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: 400;
-            font-size: 14px;
-            color: #5E5E5E;
+        &:hover {
+          .news-info {
+            .news-title {
+              color: #2e4c87;
+            }
+            .news-date {
+              color: #2e4c87;
+            }
+            .news-action-btn {
+              border-color: #2e4c87;
+              background: #2e4c87;
+              .el-icon-right {
+                color: #fff;
+              }
+              transform: rotate(-45deg);
+            }
           }
         }
       }
     }
   }
-
-  .ctx-right {
-
-  }
 }
 </style>
-
-<style scoped lang="less" src="@/assets/h5css/page/news.less"></style>
-<style scoped lang="less" src="@/assets/h5css/mobile/news.less"></style>
