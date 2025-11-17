@@ -135,7 +135,7 @@
                 </el-badge>
                 <span>购物车</span>
               </div>
-              <div class="btn">
+              <div class="btn" @click="$router.push('/message-list')">
                 <img
                   src="@img/head/icon4-scrolled.png"
                   alt=""

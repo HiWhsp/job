@@ -261,7 +261,7 @@ export default {
         method: "get",
         data: {
           action: "refund_afterSaleList",
-          keyword: this.keyword,
+          keyWord: this.keyword,
           ...this.pagination,
         },
       }).then((res) => {

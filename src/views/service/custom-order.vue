@@ -53,7 +53,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item prop="phone" label="*您的电话">
+                <el-form-item prop="phone" label="您的电话">
                   <el-input
                     v-model="formData.phone"
                     placeholder="请输入手机号"

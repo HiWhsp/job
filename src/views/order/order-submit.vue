@@ -882,7 +882,7 @@ export default {
         tuanId: "", //参与拼团的团ID
         tuanType: "", //拼团类型：0-普通订单 1-普通团 2-社区团
         remark: this.remark, //备注
-
+        payType: this.payType == 'weixin' ? 1 : this.payType == 'zhifubao' ? 2 : 3,
         ...this.fapiao_info,
       };
       return params;

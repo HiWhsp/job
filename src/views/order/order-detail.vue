@@ -273,13 +273,13 @@
               >
                 确认收货
               </button>
-              <button
+              <!-- <button
                 v-if="info.orderStatus >= 5"
                 class="btn-ripple fit-text btn-bg"
                 @click="doRefund(info)"
               >
                 售后
-              </button>
+              </button> -->
             </div>
           </div>
         </div>
