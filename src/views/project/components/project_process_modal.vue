@@ -165,8 +165,12 @@ export default {
       ];
 
       // 初始化所有步骤状态为空
-      this.processList.forEach((item) => {
-        item.status = "";
+      this.processList.forEach((item, index) => {
+        if (this.row.status == 1 && index == 0) {
+          item.status = "1";
+        } else {
+          item.status = "";
+        }
       });
 
       // 确定当前状态所在的步骤索引

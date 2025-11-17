@@ -93,12 +93,14 @@
 <script>
 import ProjectContentModal from "./project_content_modal.vue";
 import ProjectConfirmModal from "./project_confirm_modal.vue";
+import ProjectRejectModal from "./project_reject_modal.vue";
 
 export default {
   name: "project-process-detail-modal",
   components: {
     ProjectContentModal,
     ProjectConfirmModal,
+    ProjectRejectModal,
   },
   data() {
     return {
@@ -132,7 +134,7 @@ export default {
     },
 
     handleReject() {
-      this.$refs.project_content_modal.init("驳回原因", this.index, this.id);
+      this.$refs.project_reject_modal.init("驳回原因", this.index, this.id);
     },
     handlePass() {
       // 通过操作
