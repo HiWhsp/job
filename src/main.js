@@ -11,6 +11,7 @@ import store from "./store";
 
 // import "lib-flexible";//网页适配
 
+import "@/util/fontsize.js";
 
 import "@/plugin/request.js"; 
 import "@/plugin/message.js"; 
