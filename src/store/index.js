@@ -47,7 +47,7 @@ export default new Vuex.Store({
 		},
 		set_vuex_role(state, data) {
 			if(!data) return;
-			state.vuex_role = data.join(",");
+			state.vuex_role = data;
 			localStorage.setItem("vuex_role", JSON.stringify(state.vuex_role));
 		},
 		//清空登录信息
