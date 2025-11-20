@@ -1,8 +1,8 @@
 <template>
   <div class="page">
     <div class="service-img">
-      <h1>服务中心</h1>
-      <p>Service Center</p>
+      <h1>在线留言</h1>
+      <p>Online Message</p>
     </div>
     <pageBreadcrumb :option="nav_option" />
     <div class="inner">
@@ -16,18 +16,8 @@
             class="custom-form"
           >
             <el-row :gutter="24">
-              <el-col :span="12">
-                <el-form-item prop="company" label="您的单位">
-                  <el-input
-                    v-model="formData.company"
-                    placeholder="请输入"
-                    class="form-input"
-                  >
-                  </el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item prop="name" label="您的称呼">
+              <el-col :span="8">
+                <el-form-item prop="name" label="姓名">
                   <el-input
                     v-model="formData.name"
                     placeholder="请输入"
@@ -35,23 +25,17 @@
                   >
                   </el-input></el-form-item
               ></el-col>
-            </el-row>
-            <el-row :gutter="24">
-              <el-col :span="12">
-                <el-form-item prop="areaId" label="您的地域">
-                  <el-cascader
-                    v-model="formData.areaId"
-                    :options="regionOptions"
-                    :props="cascaderProps"
-                    placeholder="请选择所在地区"
+              <el-col :span="8">
+                <el-form-item prop="email" label="邮箱">
+                  <el-input
+                    v-model="formData.email"
+                    placeholder="请输入"
                     class="form-input"
-                    clearable
-                    filterable
-                  ></el-cascader>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item prop="phone" label="您的电话">
+                  >
+                  </el-input> </el-form-item
+              ></el-col>
+              <el-col :span="8">
+                <el-form-item prop="phone" label="电话">
                   <el-input
                     v-model="formData.phone"
                     placeholder="请输入手机号"
@@ -63,27 +47,34 @@
             </el-row>
             <el-row :gutter="24">
               <el-col :span="12">
-                <el-form-item prop="email" label="您的邮箱">
-                  <el-input
-                    v-model="formData.email"
-                    placeholder="请输入"
+                <el-form-item prop="title" label="主题">
+                  <el-select
+                    v-model="formData.title"
+                    placeholder="请选择主题"
                     class="form-input"
                   >
-                  </el-input> </el-form-item
-              ></el-col>
+                    <el-option
+                      v-for="(item, index) in feedType"
+                      :key="index"
+                      :label="item.title"
+                      :value="item.title"
+                      >{{ item.title }}</el-option
+                    >
+                  </el-select>
+                </el-form-item>
+              </el-col>
               <el-col :span="12">
-                <el-form-item prop="content" label="您的需求">
+                <el-form-item prop="orderNo" label="订单号">
                   <el-input
-                    v-model="formData.content"
-                    placeholder="请输入"
+                    v-model="formData.orderNo"
+                    placeholder="请输入订单号"
                     class="form-input"
                   >
                   </el-input>
                 </el-form-item>
               </el-col>
             </el-row>
-
-            <el-form-item label="上传文件">
+            <el-form-item label="附件上传">
               <div class="upload-section">
                 <div
                   class="upload-area"
@@ -118,20 +109,44 @@
                   >
                     <i class="el-icon-document"></i>
                     <span class="file-name">{{ file.name }}</span>
-                    <span v-if="file.status === 'uploading'" class="upload-status">
+                    <span
+                      v-if="file.status === 'uploading'"
+                      class="upload-status"
+                    >
                       上传中...
                     </span>
-                    <span v-else-if="file.status === 'success'" class="upload-status success">
-                       上传成功
+                    <span
+                      v-else-if="file.status === 'success'"
+                      class="upload-status success"
+                    >
+                      上传成功
                     </span>
-                    <span v-else-if="file.status === 'error'" class="upload-status error">
-                       上传失败
+                    <span
+                      v-else-if="file.status === 'error'"
+                      class="upload-status error"
+                    >
+                      上传失败
                     </span>
-                    <i class="el-icon-close" @click="removeFile(index)" v-if="file.status !== 'uploading'"></i>
+                    <i
+                      class="el-icon-close"
+                      @click="removeFile(index)"
+                      v-if="file.status !== 'uploading'"
+                    ></i>
                   </div>
                 </div>
               </div>
             </el-form-item>
+            <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item prop="code" label="验证码">
+                  <el-input
+                    v-model="formData.code"
+                    placeholder="请输入"
+                    class="form-input"
+                  >
+                  </el-input> </el-form-item
+              ></el-col>
+            </el-row>
 
             <div class="form-actions">
               <el-button type="primary" @click="submitForm" class="submit-btn"
@@ -148,30 +163,29 @@
 <script>
 import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
 import axios from "axios";
+import { mapState } from "vuex";
 export default {
   components: {
     pageBreadcrumb,
   },
+  computed: {
+    ...mapState(["vuex_config"]),
+    feedType() {
+      console.log(this.vuex_config.feedType);
+      return JSON.parse(this.vuex_config.feedType || "[]");
+    },
+  },
   data() {
     return {
-      nav_option: [
-        { title: "服务中心" },
-        { title: "非标定制", route: "/custom-order" },
-      ],
+      nav_option: [{ title: "在线留言", route: "/online-message" }],
       formData: {
-        company: "",
-        areaId: [],
-        email: "",
         name: "",
+        email: "",
         phone: "",
-        content: "",
-      },
-      regionOptions: [],
-      cascaderProps: {
-        value: "id",
-        label: "name",
-        children: "child",
-        expandTrigger: "hover",
+        title: "",
+        orderNo: "",
+        code: "",
+        files: "",
       },
       formRules: {
         phone: [
@@ -190,48 +204,14 @@ export default {
     };
   },
   mounted() {
-    this.getAreaData();
   },
   methods: {
-    // 获取地区数据
-    getAreaData() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "index_getArea",
-        },
-      }).then((res) => {
-        if (res.code === 200 && res.data) {
-          // 将数据转换为级联选择器需要的格式
-          this.regionOptions = this.formatAreaData(res.data);
-        }
-      }).catch((err) => {
-        console.error("获取地区数据失败:", err);
-      });
-    },
-    // 格式化地区数据为级联选择器格式
-    formatAreaData(data) {
-      if (!Array.isArray(data)) {
-        return [];
-      }
-      return data.map((item) => {
-        const formatted = {
-          id: item.id,
-          name: item.name,
-          code: item.code,
-        };
-        if (item.child && Array.isArray(item.child) && item.child.length > 0) {
-          formatted.child = this.formatAreaData(item.child);
-        }
-        return formatted;
-      });
-    },
     triggerFileUpload() {
       this.$refs.fileInput.click();
     },
     handleFileSelect(event) {
-      const files = Array.from(event.target.files);      this.processFiles(files);
+      const files = Array.from(event.target.files);
+      this.processFiles(files);
     },
     handleFileDrop(event) {
       event.preventDefault();
@@ -276,15 +256,16 @@ export default {
       const formData = new FormData();
       formData.append("img", fileItem.file);
       formData.append("action", "index_localUpload");
-      
+
       const userId = localStorage.getItem("userId") || "";
       const token = localStorage.getItem("token") || "";
       if (userId) formData.append("userId", userId);
       if (token) formData.append("token", token);
 
-      const uploadUrl = process.env.NODE_ENV !== "production"
-        ? "/api/service.php"
-        : "https://xintian.dx.hdapp.com.cn/service.php";
+      const uploadUrl =
+        process.env.NODE_ENV !== "production"
+          ? "/api/service.php"
+          : "https://xintian.dx.hdapp.com.cn/service.php";
 
       axios({
         url: uploadUrl,
@@ -310,7 +291,8 @@ export default {
           fileItem.status = "error";
           console.error("上传失败:", err);
           // 响应拦截器会在 code != 200 时 reject，err 就是 response.data
-          const errorMsg = err.msg || err.message || err.response?.data?.msg || "网络错误";
+          const errorMsg =
+            err.msg || err.message || err.response?.data?.msg || "网络错误";
           this.$message.error(`${fileItem.name} 上传失败：${errorMsg}`);
         });
     },
@@ -346,10 +328,6 @@ export default {
           // 准备提交数据
           const submitData = {
             ...this.formData,
-            // 如果地区是数组，取最后一个值作为地区ID
-            areaId: Array.isArray(this.formData.areaId)
-              ? this.formData.areaId[this.formData.areaId.length - 1]
-              : this.formData.areaId,
             files: fileUrls.join(","), // 文件URL用 | 分隔
           };
 
@@ -359,7 +337,7 @@ export default {
             url: "/service.php",
             method: "post",
             data: {
-              action: "serve_unStandard",
+              action: "serve_onlineMsg",
               ...submitData,
             },
           }).then((res) => {
@@ -370,8 +348,6 @@ export default {
             } else {
               this.$message.error(res.msg);
             }
-          }).catch((err) => {
-            this.$message.error(err.msg);
           });
         } else {
           this.$message.error("请检查表单信息");
@@ -399,7 +375,7 @@ export default {
 }
 
 .service-img {
-  background-image: url("../../assets/img/banner/service.png");
+  background-image: url("../../assets/img/banner/online-message.png");
   height: 560px;
   background-size: 100% 100%;
   background-position: center;

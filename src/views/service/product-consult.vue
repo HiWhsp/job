@@ -18,25 +18,39 @@
             <!-- 第一行：联系方式和反馈产品 -->
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="您的联系方式:" prop="contact">
+                <el-form-item label="您的联系方式:" prop="phone">
                   <el-input
-                    v-model="formData.contact"
+                    v-model="formData.phone"
                     placeholder="请输入"
                     clearable
                   />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="反馈产品:">
+                <el-form-item label="反馈产品:" prop="proId">
                   <el-select
-                    v-model="formData.product"
+                    v-model="formData.proId"
                     placeholder="请选择"
                     clearable
+                    filterable
+                    remote
+                    reserve-keyword
                     style="width: 100%"
+                    :remote-method="fetchProductOptions"
+                    :loading="productLoading"
+                    @visible-change="handleProductDropdown"
                   >
-                    <el-option label="产品A" value="product1" />
-                    <el-option label="产品B" value="product2" />
-                    <el-option label="产品C" value="product3" />
+                    <el-option
+                      v-for="item in productOptions"
+                      :key="item.id"
+                      :label="
+                        item.name ||
+                        item.title ||
+                        item.productName ||
+                        '未命名产品'
+                      "
+                      :value="item.id"
+                    />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -46,15 +60,15 @@
             <el-row :gutter="20">
               <el-col :span="6">
                 <el-form-item label="是否联系我:" style="text-align: left">
-                  <el-checkbox v-model="formData.contactMe">是</el-checkbox>
+                  <el-checkbox v-model="formData.tell">是</el-checkbox>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="反馈类型:">
-                  <el-radio-group v-model="formData.feedbackType">
-                    <el-radio label="new-product">新品需求</el-radio>
-                    <el-radio label="improvement">改进建议</el-radio>
-                    <el-radio label="consultation">产品咨询</el-radio>
+                  <el-radio-group v-model="formData.bType">
+                    <el-radio :label="1">新品需求</el-radio>
+                    <el-radio :label="2">改进建议</el-radio>
+                    <el-radio :label="3">产品咨询</el-radio>
                   </el-radio-group>
                 </el-form-item>
               </el-col>
@@ -107,53 +121,111 @@ export default {
         { title: "产品咨询与反馈", route: "/product-consult" },
       ],
       formData: {
-        contact: "", // 联系方式
-        product: "", // 反馈产品
-        contactMe: true, // 是否联系我
-        feedbackType: "improvement", // 反馈类型，默认选择"改进建议"
+        phone: "", // 联系方式
+        proId: "", // 反馈产品
+        tell: true, // 是否联系我
+        bType: 1, // 反馈类型
         content: "", // 反馈内容
       },
+      productOptions: [], // 反馈产品选项
+      productLoading: false, // 产品加载状态
       submitLoading: false, // 提交按钮加载状态
       formRules: {
-        contact: [
+        phone: [
           { required: true, message: "请输入您的联系方式", trigger: "blur" },
           {
-            min: 2,
-            max: 50,
-            message: "联系方式长度在 2 到 50 个字符",
+            pattern: /^1[3-9]\d{9}$/,
+            message: "请输入正确的手机号格式",
             trigger: "blur",
           },
         ],
         content: [
           { required: true, message: "请输入反馈内容", trigger: "blur" },
-          {
-            min: 10,
-            max: 500,
-            message: "反馈内容长度在 10 到 500 个字符",
-            trigger: "blur",
-          },
+        ],
+        proId: [
+          { required: true, message: "请选择反馈产品", trigger: "change" },
         ],
       },
     };
   },
+  mounted() {
+    this.getProductList();
+  },
   methods: {
+    // 获取产品列表，支持关键字搜索
+    getProductList(keyword = "") {
+      this.productLoading = true;
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_plist",
+          keyword,
+          page: 1,
+          pageNum: 10,
+        },
+      })
+        .then((res) => {
+          if (res.code === 200) {
+            const list = (res.data && res.data.list) || [];
+            this.productOptions = list;
+          }
+        })
+        .catch((err) => {
+          console.error("获取产品列表失败:", err);
+        })
+        .finally(() => {
+          this.productLoading = false;
+        });
+    },
+    // 远程搜索回调
+    fetchProductOptions(keyword) {
+      this.getProductList(keyword);
+    },
+    // 下拉展开时默认加载
+    handleProductDropdown(visible) {
+      if (visible && this.productOptions.length === 0 && !this.productLoading) {
+        this.getProductList();
+      }
+    },
     submitForm() {
       this.$refs.consultForm.validate((valid) => {
         if (valid) {
           this.submitLoading = true;
 
-          // 模拟异步提交
-          setTimeout(() => {
-            // 这里可以添加提交到后端的逻辑
-            console.log("提交的表单数据:", this.formData);
-
-            // 模拟提交成功
-            this.$message.success("提交成功，我们会尽快处理您的反馈");
-
-            // 重置表单
-            this.resetForm();
-            this.submitLoading = false;
-          }, 1500);
+          this.$api({
+            url: "/service.php",
+            method: "post",
+            data: {
+              action: "serve_proSeek",
+              phone: this.formData.phone,
+              proId: this.formData.proId,
+              tell: this.formData.tell ? 1 : 0,
+              bType: this.formData.bType,
+              content: this.formData.content,
+            },
+          })
+            .then((res) => {
+              if (res.code === 200) {
+                this.$message.success("提交成功！我们会尽快与您联系");
+                this.$refs.consultForm.resetFields();
+                this.formData = {
+                  phone: "",
+                  proId: "",
+                  tell: true,
+                  bType: 1,
+                  content: "",
+                };
+              } else {
+                this.$message.error(res.msg);
+              }
+            })
+            .catch((err) => {
+              this.$message.error(err.msg);
+            })
+            .finally(() => {
+              this.submitLoading = false;
+            });
         } else {
           this.$message.error("请检查表单填写是否正确");
           return false;
@@ -164,10 +236,10 @@ export default {
     resetForm() {
       this.$refs.consultForm.resetFields();
       this.formData = {
-        contact: "",
-        product: "",
-        contactMe: true,
-        feedbackType: "improvement",
+        phone: "",
+        proId: "",
+        tell: true,
+        bType: 1,
         content: "",
       };
     },

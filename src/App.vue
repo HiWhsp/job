@@ -15,7 +15,7 @@
     </div>
     <page_footer />
     <!-- <page_footer_2 /> -->
-    <!-- <page_aside /> -->
+    <page_aside />
     <!-- <page_kefu /> -->
   </div>
 </template>
@@ -31,7 +31,7 @@ import page_header_2 from "@/components/page/page-header-2.vue"; //顶部搜索
 import page_header_mobile from "@/components/page/page-header-mobile.vue"; //顶部搜索
 import page_footer from "@/components/page/page-footer.vue";
 import page_footer_2 from "@/components/page/page-footer-2.vue";
-// import page_aside from "@/components/page/page-aside.vue";
+import page_aside from "@/components/page/page-aside.vue";
 // import page_kefu from "@/components/page/page-kefu.vue";
 
 import { mapState } from "vuex";
@@ -48,7 +48,7 @@ export default {
     page_header_mobile,
     page_footer,
     page_footer_2,
-    // page_aside,
+    page_aside,
     // page_kefu,
   },
   data() {

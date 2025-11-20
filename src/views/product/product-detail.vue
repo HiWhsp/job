@@ -1,6 +1,9 @@
 <template>
   <div class="product-detail">
     <div class="inner">
+      <div class="product-img">
+        <img :src="product.thumb" :alt="product.title" />
+      </div>
       <pageBreadcrumb :option="nav_option" />
       <div class="page-ctx w-1400">
         <div class="product-detail-container">
@@ -43,11 +46,10 @@
                 <div class="series-content-top">
                   <div class="series-content-top-item">
                     <h3>产品说明</h3>
-                    <div class="series-content-top-item-content">
-                      <p>
-                        {{ product.brandInfo ? product.brandInfo.content : "" }}
-                      </p>
-                    </div>
+                    <div
+                      class="series-content-top-item-content"
+                      v-html="product.cont1"
+                    ></div>
                   </div>
                   <div class="series-content-top-item">
                     <h3>示意图</h3>
@@ -204,7 +206,16 @@
 
           <!-- 产品选择区 -->
           <div class="product-selection">
-            <h3>产品选择</h3>
+            <h3>
+              <el-input
+                v-model="searchProductValue"
+                placeholder="请输入产品编号"
+              >
+                <el-button slot="append" type="primary" @click="searchProduct"
+                  >搜索</el-button
+                >
+              </el-input>
+            </h3>
             <div class="product-list">
               <div class="product-list-header-item">
                 <span>产品编号</span>
@@ -227,7 +238,7 @@
                   <template slot="title">
                     <div class="product-header">
                       <div class="product-info">
-                        <span class="product-code">{{ product.title }}</span>
+                        <span class="product-code">{{ product.brandId }}</span>
                         <span class="product-diameter"
                           >直径: {{ product.diameter || "0.00" }}mm</span
                         >
@@ -392,6 +403,7 @@ export default {
     return {
       nav_option: [], // 面包屑导航
       product: {}, // 产品详情
+      searchProductValue: "", // 搜索产品
       activeTab: "series", // 默认选中系列说明
       activeProducts: [], // 展开的产品ID数组
       productList: [], // 产品列表
@@ -416,12 +428,10 @@ export default {
   mounted() {
     this.nav_option =
       JSON.parse(localStorage.getItem("product_nav_option")) || [];
-    if (this.nav_option.length > 0) {
-      this.nav_option[this.nav_option.length - 1].route = "/product-detail";
-    }
     this.getProductDetail();
   },
   methods: {
+    searchProduct() {},
     getProductDetail() {
       this.$api({
         url: "/service.php",
@@ -454,6 +464,12 @@ export default {
             // 默认选中当前产品
             this.feedbackForm.proId = this.product.id || this.product.title;
           }
+
+          this.nav_option.push({
+            title: this.product.title,
+            route: `/product-detail?id=${this.product.id}`,
+            id: this.product.id,
+          });
         }
       });
     },
@@ -488,6 +504,9 @@ export default {
     },
     // 将数组分成两组
     pairArray(arr) {
+      if (!arr || arr.length == 0) {
+        return [];
+      }
       const result = [];
       for (let i = 0; i < arr.length; i += 2) {
         result.push(arr.slice(i, i + 2));
@@ -631,6 +650,13 @@ export default {
 
   .page-ctx {
     padding-top: 45px;
+  }
+}
+.product-img {
+  height: 560px;
+  img {
+    width: 100%;
+    height: 100%;
   }
 }
 .bread-box {
@@ -798,20 +824,31 @@ export default {
     font-weight: 600;
     font-size: 22px;
     color: #000000;
-    padding-left: 20px;
     position: relative;
     margin-bottom: 20px;
-
-    &::before {
-      content: "";
-      position: absolute;
-      left: 0px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 6px;
-      height: 20px;
+    display: flex;
+    align-items: center;
+    :deep(.el-input) {
+      width: 270px;
+    }
+    :deep(.el-input__inner) {
+      width: 200px;
+    }
+    :deep(.el-input-group__append) {
       background: #2e4c87;
-      border-radius: 6px 6px 6px 6px;
+      color: #fff;
+      &:hover {
+        background: #2e4c87;
+        color: #fff;
+      }
+    }
+    :deep(.el-button) {
+      background: #2e4c87;
+      color: #fff;
+      &:hover {
+        background: #2e4c87;
+        color: #fff;
+      }
     }
   }
   .product-list-header-item {

@@ -32,11 +32,7 @@
                   <span>设置密码</span>
                 </p>
               </div>
-              <input
-                type="text"
-                placeholder="请输入密码"
-                v-model="form.pass"
-              />
+              <input type="text" placeholder="请输入密码" v-model="form.pass" />
             </div>
             <div class="input-box">
               <div class="icon-box flex">
@@ -76,7 +72,7 @@
       </div>
     </div>
 
-    <terms_modal ref="terms_modal" />
+    <terms_modal ref="terms_modal" @confirm="on_terms_confirm" />
   </div>
 </template>
 
@@ -111,6 +107,9 @@ export default {
   },
   created() {},
   methods: {
+    on_terms_confirm(is_check) {
+      this.is_agree = is_check;
+    },
     terms_open(id) {
       this.$refs.terms_modal.init(id);
     },

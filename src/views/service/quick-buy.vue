@@ -33,6 +33,8 @@
                   class="upload-btn"
                   @click="triggerFileUpload"
                   icon="el-icon-upload2"
+                  :loading="uploadingFile"
+                  :disabled="uploadingFile"
                 >
                   上传文件
                 </el-button>
@@ -68,21 +70,21 @@
                     <td>{{ index + 1 }}</td>
                     <td>
                       <el-input
-                        v-model="item.materialName"
+                        v-model="item.material"
                         placeholder="请填写"
                         class="table-input"
                       />
                     </td>
                     <td>
                       <el-input
-                        v-model="item.specification"
+                        v-model="item.sku"
                         placeholder="请填写"
                         class="table-input"
                       />
                     </td>
                     <td>
                       <el-input
-                        v-model="item.requirements"
+                        v-model="item.content"
                         placeholder="请填写要求信息..."
                         class="table-input"
                       />
@@ -92,11 +94,11 @@
                         <el-button
                           size="mini"
                           @click="decreaseQuantity(index)"
-                          :disabled="item.quantity <= 1"
+                          :disabled="item.num <= 1"
                         >
                           -
                         </el-button>
-                        <span class="quantity-number">{{ item.quantity }}</span>
+                        <span class="quantity-number">{{ item.num }}</span>
                         <el-button size="mini" @click="increaseQuantity(index)">
                           +
                         </el-button>
@@ -104,7 +106,7 @@
                     </td>
                     <td>
                       <el-date-picker
-                        v-model="item.deliveryDate"
+                        v-model="item.deliverTime"
                         type="date"
                         placeholder="请选择"
                         class="table-date-picker"
@@ -124,6 +126,11 @@
                   </tr>
                 </tbody>
               </table>
+              <el-empty
+                style="width: 100%"
+                v-if="productList.length === 0"
+                description="暂无数据"
+              />
               <el-button type="primary" class="add-btn" @click="addProduct">
                 添加
               </el-button>
@@ -175,6 +182,8 @@
 
 <script>
 import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
+import axios from "axios";
+import { API_ROOT } from "@/config/env.js";
 export default {
   components: {
     pageBreadcrumb,
@@ -185,20 +194,14 @@ export default {
         { title: "服务中心" },
         { title: "快速购物", route: "/quick-buy" },
       ],
-      productList: [
-        {
-          materialName: "平凸透镜",
-          specification: "",
-          requirements: "",
-          quantity: 1,
-          deliveryDate: "",
-        },
-      ],
+      productList: [],
       contactInfo: {
         phone: "",
         address: "",
       },
+      buyId: "",
       submitting: false,
+      uploadingFile: false,
     };
   },
   methods: {
@@ -233,21 +236,85 @@ export default {
     // 处理文件选择
     handleFileSelect(event) {
       const file = event.target.files[0];
-      if (file) {
-        // 这里可以添加文件解析逻辑
-        this.$message.success("文件上传成功！");
-        // 可以在这里解析Excel/CSV文件并填充到表格中
+      if (!file) {
+        return;
       }
+      const allowedExtensions = [".xlsx", ".xls", ".csv"];
+      const fileName = file.name.toLowerCase();
+      const isValidType = allowedExtensions.some((ext) =>
+        fileName.endsWith(ext)
+      );
+      if (!isValidType) {
+        this.$message.error("仅支持上传 .xlsx/.xls/.csv 文件");
+        event.target.value = "";
+        return;
+      }
+
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      if (file.size > maxSize) {
+        this.$message.error("文件大小不能超过 10MB");
+        event.target.value = "";
+        return;
+      }
+
+      this.uploadBuyInfoFile(file);
+    },
+
+    // 上传批量采购文件
+    uploadBuyInfoFile(file) {
+      this.uploadingFile = true;
+      const formData = new FormData();
+      formData.append("filepath", file);
+      formData.append("action", "serve_uploadWithBuyInfo");
+
+      const userId = localStorage.getItem("userId") || "";
+      const token = localStorage.getItem("token") || "";
+      if (userId) formData.append("userId", userId);
+      if (token) formData.append("token", token);
+
+      const uploadUrl =
+        process.env.NODE_ENV !== "production"
+          ? `${API_ROOT}/service.php`
+          : "/service.php";
+
+      axios({
+        url: uploadUrl,
+        method: "post",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+        .then((res) => {
+          const list = Array.isArray(res.data?.details) ? res.data.details : [];
+          this.buyId = res.data?.buyId || "";
+          if (list.length > 0) {
+            this.productList = list;
+            this.$message.success("文件上传成功，数据已填充");
+          } else {
+            this.$message.success("文件上传成功");
+          }
+        })
+        .catch((err) => {
+          const msg = err?.msg || err?.message || "文件上传失败";
+          this.$message.error(msg);
+        })
+        .finally(() => {
+          this.uploadingFile = false;
+          if (this.$refs.fileInput) {
+            this.$refs.fileInput.value = "";
+          }
+        });
     },
 
     // 添加商品
     addProduct() {
       this.productList.push({
-        materialName: "",
-        specification: "",
-        requirements: "",
-        quantity: 1,
-        deliveryDate: "",
+        material: "",
+        sku: "",
+        content: "",
+        num: 1,
+        deliverTime: "",
       });
     },
 
@@ -260,13 +327,13 @@ export default {
 
     // 增加数量
     increaseQuantity(index) {
-      this.productList[index].quantity++;
+      this.productList[index].num++;
     },
 
     // 减少数量
     decreaseQuantity(index) {
-      if (this.productList[index].quantity > 1) {
-        this.productList[index].quantity--;
+      if (this.productList[index].num > 1) {
+        this.productList[index].num--;
       }
     },
 
@@ -285,7 +352,7 @@ export default {
       // 验证商品信息
       const hasEmptyProduct = this.productList.some(
         (item) =>
-          !item.materialName || !item.specification || !item.requirements
+          !item.material || !item.sku || !item.content || !item.deliverTime
       );
 
       if (hasEmptyProduct) {
@@ -294,27 +361,35 @@ export default {
       }
 
       this.submitting = true;
-
-      // 模拟提交过程
-      setTimeout(() => {
-        this.submitting = false;
-        this.$message.success("订单提交成功！我们会尽快与您联系");
-
-        // 重置表单
-        this.productList = [
-          {
-            materialName: "平凸透镜",
-            specification: "",
-            requirements: "",
-            quantity: 1,
-            deliveryDate: "",
-          },
-        ];
-        this.contactInfo = {
-          phone: "",
-          address: "",
-        };
-      }, 2000);
+      this.$api({
+        url: "/service.php",
+        method: "post",
+        data: {
+          action: "serve_quickBuy",
+          buyInfo: JSON.stringify(this.productList),
+          phone: this.contactInfo.phone,
+          address: this.contactInfo.address,
+          buyId: this.buyId,
+        },
+      })
+        .then((res) => {
+          if (res.code === 200) {
+            this.$message.success("提交成功");
+            this.productList = [];
+            this.contactInfo = {
+              phone: "",
+              address: "",
+            };
+          } else {
+            this.$message.error(res.msg);
+          }
+        })
+        .catch((err) => {
+          this.$message.error(err.msg);
+        })
+        .finally(() => {
+          this.submitting = false;
+        });
     },
   },
 };
@@ -574,8 +649,8 @@ export default {
     text-align: center;
 
     .submit-btn {
-      background: #2E4C87;
-      border-color: #2E4C87;
+      background: #2e4c87;
+      border-color: #2e4c87;
       color: #fff;
       padding: 15px 50px;
       border-radius: 6px;

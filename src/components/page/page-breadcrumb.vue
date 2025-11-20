@@ -5,44 +5,13 @@
       <p>当前位置：</p>
       <router-link to="/"> 首页 </router-link>
 
-      <template v-if="level1.title">
+      <div class="flex items-center" v-for="item in option" :key="item.id">
         <span class="arrow">&gt;</span>
-        <a v-if="!level1.route" class="link" href="javascript: void(0)">{{
-          level1.title
-        }}</a>
-        <router-link v-else :to="level1.route" class="route-link">{{
-          level1.title
+        <a href="javascript: void(0)" v-if="!item.route">{{ item.title }}</a>
+        <router-link v-else :to="item.route" class="route-link">{{
+          item.title
         }}</router-link>
-      </template>
-
-      <template v-if="level2.title">
-        <span class="arrow">&gt;</span>
-        <!-- <a href="javascript: void(0)">{{ level2.title }}</a> -->
-
-        <a v-if="!level2.route" class="link" href="javascript: void(0)">{{
-          level2.title
-        }}</a>
-        <router-link v-else :to="level2.route" class="route-link">{{
-          level2.title
-        }}</router-link>
-      </template>
-
-      <template v-if="level3.title">
-        <span class="arrow">&gt;</span>
-        <a href="javascript: void(0)" v-if="!level3.route">{{
-          level3.title
-        }}</a>
-        <router-link v-else :to="level3.route" class="route-link">{{
-          level3.title
-        }}</router-link>
-      </template>
-      <template v-if="level4.title">
-        <span class="arrow">&gt;</span>
-        <a href="javascript: void(0)" v-if="!level4.route">{{ level4.title }}</a>
-        <router-link v-else :to="level4.route" class="route-link">{{
-          level4.title
-        }}</router-link>
-      </template>
+      </div>
     </div>
   </div>
 </template>

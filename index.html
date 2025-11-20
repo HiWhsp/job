@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AES-ECB加密</title>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsencrypt@3.3.2/bin/jsencrypt.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>AES-ECB加密</h1>
+        <div class="section">
+            <h2>AES 加密/解密</h2>
+            <div class="input-container">
+                <input type="text" id="plaintext" placeholder="请输入明文">
+                <input type="text" id="key" placeholder="请输入AES密钥">
+                <input type="text" id="encrypted" placeholder="加密结果/密文">
+                <div class="button-group">
+                    <button id="encrypt">AES加密</button>
+                    <button id="decrypt">AES解密</button>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h2>RSA 加密 AES 密钥</h2>
+            <div class="input-container">
+                <textarea id="rsaPublicKey" placeholder="请输入RSA公钥（PEM格式）" rows="4"></textarea>
+                <textarea id="rsaPrivateKey" placeholder="请输入RSA私钥（PEM格式）" rows="4"></textarea>
+                <button id="generateRSAKey">生成RSA密钥对</button>
+                <input type="text" id="aesKeyToEncrypt" placeholder="要加密的AES密钥（从上方复制）">
+                <input type="text" id="rsaEncryptedKey" placeholder="RSA加密后的AES密钥">
+                <div class="button-group">
+                    <button id="rsaEncryptKey">RSA加密AES密钥</button>
+                    <button id="rsaDecryptKey">RSA解密AES密钥</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // AES 相关元素
+        const plaintext = document.getElementById('plaintext');
+        const key = document.getElementById('key');
+        const encryptedInput = document.getElementById('encrypted');
+        const encryptBtn = document.getElementById('encrypt');
+        const decryptBtn = document.getElementById('decrypt');
+
+        // RSA 相关元素
+        const rsaPublicKey = document.getElementById('rsaPublicKey');
+        const rsaPrivateKey = document.getElementById('rsaPrivateKey');
+        const generateRSAKeyBtn = document.getElementById('generateRSAKey');
+        const aesKeyToEncrypt = document.getElementById('aesKeyToEncrypt');
+        const rsaEncryptedKey = document.getElementById('rsaEncryptedKey');
+        const rsaEncryptKeyBtn = document.getElementById('rsaEncryptKey');
+        const rsaDecryptKeyBtn = document.getElementById('rsaDecryptKey');
+
+        // AES 加密
+        encryptBtn.addEventListener('click', () => {
+            const plaintextValue = plaintext.value;
+            const keyValue = key.value;
+            if (!plaintextValue || !keyValue) {
+                alert('请输入明文和密钥');
+                return;
+            }
+            const encrypted = encryptFn(plaintextValue, keyValue);
+            encryptedInput.value = encrypted;
+            console.log('加密结果:', encrypted);
+        });
+
+        // AES 解密
+        decryptBtn.addEventListener('click', () => {
+            const encryptedValue = encryptedInput.value;
+            const keyValue = key.value;
+            if (!encryptedValue || !keyValue) {
+                alert('请输入密文和密钥');
+                return;
+            }
+            const decrypted = decryptFn(encryptedValue, keyValue);
+            plaintext.value = decrypted;
+            console.log('解密结果:', decrypted);
+        });
+
+        // 生成 RSA 密钥对
+        generateRSAKeyBtn.addEventListener('click', () => {
+            const crypt = new JSEncrypt({ default_key_size: 2048 });
+            crypt.getKey();
+            rsaPublicKey.value = crypt.getPublicKey();
+            rsaPrivateKey.value = crypt.getPrivateKey();
+            console.log('RSA密钥对已生成');
+        });
+
+        // RSA 加密 AES 密钥
+        rsaEncryptKeyBtn.addEventListener('click', () => {
+            const aesKeyValue = aesKeyToEncrypt.value || key.value;
+            const publicKeyValue = rsaPublicKey.value;
+            
+            if (!aesKeyValue) {
+                alert('请输入要加密的AES密钥');
+                return;
+            }
+            if (!publicKeyValue) {
+                alert('请输入RSA公钥');
+                return;
+            }
+
+            try {
+                const encrypt = new JSEncrypt();
+                encrypt.setPublicKey(publicKeyValue);
+                const encrypted = encrypt.encrypt(aesKeyValue);
+                
+                if (!encrypted) {
+                    alert('加密失败，请检查公钥格式是否正确');
+                    return;
+                }
+                
+                rsaEncryptedKey.value = encrypted;
+                console.log('RSA加密后的AES密钥:', encrypted);
+            } catch (error) {
+                alert('加密失败: ' + error.message);
+                console.error(error);
+            }
+        });
+
+        // RSA 解密 AES 密钥
+        rsaDecryptKeyBtn.addEventListener('click', () => {
+            const encryptedKeyValue = rsaEncryptedKey.value;
+            const privateKeyValue = rsaPrivateKey.value;
+            
+            if (!encryptedKeyValue) {
+                alert('请输入要解密的密文');
+                return;
+            }
+            if (!privateKeyValue) {
+                alert('请输入RSA私钥');
+                return;
+            }
+
+            try {
+                const decrypt = new JSEncrypt();
+                decrypt.setPrivateKey(privateKeyValue);
+                const decrypted = decrypt.decrypt(encryptedKeyValue);
+                
+                if (!decrypted) {
+                    alert('解密失败，请检查私钥格式是否正确');
+                    return;
+                }
+                
+                aesKeyToEncrypt.value = decrypted;
+                key.value = decrypted;
+                console.log('RSA解密后的AES密钥:', decrypted);
+            } catch (error) {
+                alert('解密失败: ' + error.message);
+                console.error(error);
+            }
+        });
+
+        // AES-ECB 加密
+        function encryptFn(plaintext, key) {
+            const keyHex = CryptoJS.enc.Utf8.parse(key);
+            const encrypted = CryptoJS.AES.encrypt(plaintext, keyHex, {
+                mode: CryptoJS.mode.ECB,
+                padding: CryptoJS.pad.Pkcs7
+            });
+            return encrypted.toString();
+        }
+
+        // AES-ECB 解密
+        function decryptFn(encrypted, key) {
+            const keyHex = CryptoJS.enc.Utf8.parse(key);
+            const decrypted = CryptoJS.AES.decrypt(encrypted, keyHex, {
+                mode: CryptoJS.mode.ECB,
+                padding: CryptoJS.pad.Pkcs7
+            });
+            return decrypted.toString(CryptoJS.enc.Utf8);
+        }
+    </script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .section {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .section h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-container input,
+        .input-container textarea {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .input-container input {
+            height: 40px;
+        }
+
+        .input-container textarea {
+            resize: vertical;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .input-container button {
+            flex: 1;
+            max-width: 200px;
+            height: 40px;
+            border: none;
+            border-radius: 5px;
+            background-color: #409eff;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .input-container button:hover {
+            background-color: #66b1ff;
+        }
+
+        .input-container button:active {
+            background-color: #3a8ee6;
+        }
+    </style>
+</body>
+
+</html>

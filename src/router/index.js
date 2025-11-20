@@ -192,6 +192,7 @@ const custom_order = () => import("@/views/service/custom-order.vue");
 const quick_buy = () => import("@/views/service/quick-buy.vue");
 const product_consult = () => import("@/views/service/product-consult.vue");
 const download = () => import("@/views/download/download.vue");
+const online_message = () => import("@/views/service/online-message.vue");
 
 const routes = [
   // 首页
@@ -308,6 +309,15 @@ const routes = [
     component: product_consult,
     meta: {
       title: "产品咨询与反馈",
+    },
+  },
+
+  {
+    path: "/online-message",
+    name: "online-message",
+    component: online_message,
+    meta: {
+      title: "在线留言",
     },
   },
 
@@ -492,7 +502,7 @@ const routes = [
         meta: {
           title: "系统消息",
           requireAuth: true,
-      
+
         },
       },
       {
@@ -729,8 +739,7 @@ const routes = [
         meta: {
           title: "领券中心",
         },
-      },
-
+      }
     ],
   },
 
