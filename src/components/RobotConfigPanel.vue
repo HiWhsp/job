@@ -988,11 +988,17 @@ export default {
     initializeProducntInfosMoren(item) {
       // 如果当前项有 producntInfos，则初始化它们
       if (item.producntInfos && Array.isArray(item.producntInfos)) {
-        item.producntInfos.forEach((product) => {
-          if (product.moren == 1) {
-            this.$set(product, "selected", true);
-          }
-        });
+        // 如果所有选项里都没有moren为1的选项，则设置第一个选项为选中状态
+        
+        if (item.producntInfos.every((product) => product.moren != 1)) {
+          this.$set(item.producntInfos[0], "selected", true);
+        } else {
+          item.producntInfos.forEach((product) => {
+            if (product.moren == 1) {
+              this.$set(product, "selected", true);
+            }
+          });
+        }
       }
 
       // 如果当前项有子项，递归处理子项
@@ -1075,8 +1081,6 @@ export default {
 
     // 选择控制器
     selectController(controllerId, item, controllerTitle) {
-      console.log(12312222);
-      
       let targetItem = null;
 
       if (controllerTitle == "控制器") {
@@ -1356,7 +1360,6 @@ export default {
               }
             });
           }
-
           // this.$message.success("已加载本地保存的配置");
         } else {
           // 遍历tabs，设置所有item的选中状态为false
@@ -1707,8 +1710,8 @@ export default {
           image:
             data.images && data.images.length > 0 ? data.images[0].url : null,
         });
-        
-        this.originalTabs[0].child[0].producntInfos.forEach(item => {
+
+        this.originalTabs[0].child[0].producntInfos.forEach((item) => {
           if (item.id === this.currentOtherItem.id) {
             this.$set(item, "other", {
               notes: this.currentOtherItem.other.notes || null,
@@ -1717,7 +1720,7 @@ export default {
             });
           }
         });
-        
+
         console.log("已更新other对象:", this.currentOtherItem.other);
         // this.$message.success("其他选项配置已保存");
       }
