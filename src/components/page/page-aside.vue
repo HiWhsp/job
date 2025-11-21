@@ -26,27 +26,27 @@ export default {
       asideItems: [
         {
           key: "consult",
-          label: "产品咨询",
-          icon: require("@img/other/aside1.png"),
-          route: "/product-consult",
-        },
-        {
-          key: "online",
-          label: "在线留言",
-          icon: require("@img/other/aside2.png"),
-          route: "/online-message",
-        },
-        {
-          key: "custom",
           label: "非标定制",
-          icon: require("@img/other/aside3.png"),
+          icon: require("@img/other/aside1.png"),
           route: "/custom-order",
         },
         {
+          key: "online",
+          label: "产品对比",
+          icon: require("@img/other/aside2.png"),
+          route: "/product-compare",
+        },
+        {
+          key: "custom",
+          label: "购物车",
+          icon: require("@img/other/aside3.png"),
+          route: "/cart",
+        },
+        {
           key: "quick",
-          label: "快速采购",
+          label: "在线咨询",
           icon: require("@img/other/aside4.png"),
-          route: "/quick-buy",
+          route: "/online-message",
         },
         {
           key: "top",

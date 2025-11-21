@@ -579,12 +579,22 @@ export default {
     },
     // 切换对比状态
     toggleCompare(product) {
-      // if (product.checked) {
-      //   this.$message.success(`已将 ${product.code} 加入对比`);
-      // } else {
-      //   this.$message.info(`已从对比中移除 ${product.code}`);
-      // }
-      // 这里可以添加实际的对比逻辑
+      // 查看是否已经在对比列表中,如果有没有则添加, 如果有则提示
+      const compareProductsIds = JSON.parse(
+        localStorage.getItem("compare_productsIds")
+      );
+      if (compareProductsIds.indexOf(product.id) === -1) {
+        compareProductsIds.push(product.id);
+      } else {
+        this.$message.warning("该产品已添加到对比列表中");
+        product.checked = false;
+        return;
+      }
+      localStorage.setItem(
+        "compare_productsIds",
+        JSON.stringify(compareProductsIds)
+      );
+      this.$message.success("已添加到对比列表中");
     },
     handleProductClick(product) {
       this.$router.push({

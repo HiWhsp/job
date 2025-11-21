@@ -56,8 +56,7 @@
                       </div>
                       <div class="box-title">
                         <div class="title">{{ order.products.title }}</div>
-                        <div class="sku">订货编码：UA199</div>
-                        <div class="sku">商品型号：S54001</div>
+                        <div class="sku">产品编号：{{ order.products.productId }}</div>
                       </div>
                       <div class="box-price">
                         <div class="price">
@@ -139,8 +138,7 @@
                       </div>
                       <div class="box-title">
                         <div class="title">{{ order.products.title }}</div>
-                        <div class="sku">订货编码：UA199</div>
-                        <div class="sku">商品型号：S54001</div>
+                        <div class="sku">产品编号：{{ order.products.productId }}</div>
                       </div>
                       <div class="box-price">
                         <div class="price">
@@ -166,11 +164,12 @@
                 </div>
                 <div class="actions-box">
                   <div class="item-wrap">
-                    <div class="item">等待审核</div>
-                    <div class="item2">等待平台审核</div>
+                    <div class="item">{{ status_title(order.status) }}</div>
+                    <div class="item2">{{ order.dealCont }}</div>
                   </div>
                   <div class="btn-wrap">
                     <button
+                      v-if="order.ifCancel == 1"
                       class="btn btn-ripple btn-text"
                       @click="to_service(order)"
                     >
@@ -194,7 +193,7 @@
             ></el-pagination>
           </div>
           <el-empty
-            v-if="!refund_service_count === 0"
+            v-if="refund_service_count === 0"
             description="暂无数据..."
           ></el-empty>
         </div>
@@ -204,7 +203,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 
 export default {
   name: "page-refund-list",
@@ -241,7 +239,30 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    status_title() {
+      return (status) => {
+        // //1-待审核  2-待买家发货/退货待收货 3-待退款  4-换货待发货  5-待客户接货 6-已完成  -1 已驳回
+        switch (status) {
+          case 1:
+            return "等待审核";
+          case 2:
+            return "待买家发货/退货待收货";
+          case 3:
+            return "待退款";
+          case 4:
+            return "换货待发货";
+          case 5:
+            return "待客户接货";
+          case 6:
+            return "已完成";
+          case -1:
+            return "已驳回";
+        }
+        return "";
+      };
+    },
+  },
   created() {
     this.setView();
   },
@@ -261,7 +282,7 @@ export default {
         method: "get",
         data: {
           action: "refund_afterSaleList",
-          keyWord: this.keyword,
+          keyword: this.keyword,
           ...this.pagination,
         },
       }).then((res) => {

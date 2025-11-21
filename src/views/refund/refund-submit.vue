@@ -1,6 +1,47 @@
 <template>
   <div class="page">
+    <div class="page-title">售后服务</div>
     <div class="page-ctx">
+      <div class="refund-product-detail">
+        <div class="refund-item">
+          <div class="base-box flex">商品信息</div>
+          <div class="product-box">
+            <div class="product-list">
+              <div class="product-item flex">
+                <div class="box-pic">
+                  <div class="img-box">
+                    <img :src="product_info.image" alt />
+                  </div>
+                </div>
+                <div class="box-title">
+                  <div class="title">{{ product_info.title }}</div>
+                  <div class="sku">{{ product_info.keyVals }}</div>
+                </div>
+                <div class="box-price">
+                  <div class="price">
+                    {{ order.is_jifen ? "积分" : "￥" }}
+                    {{
+                      order.is_jifen
+                        ? product_info.jifen
+                        : product_info.priceSale
+                    }}
+                  </div>
+                </div>
+                <div class="box-num">
+                  <div class="num">x {{ product_info.num }}</div>
+                </div>
+                <div class="box-xiaoji">
+                  <div class="price">
+                    {{ vuex_huobi }}
+                    {{ product_info.priceSale * product_info.num }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="refund-info">
         <div class="form-wrap">
           <div class="form-box">
@@ -10,7 +51,15 @@
             </div> -->
 
             <div class="input-box">
-              <div class="label">{{ type != 3 ? '退款原因：' : '退货原因：' }}</div>
+              <div class="label">
+                {{
+                  type == 2
+                    ? "退货原因："
+                    : type == 3
+                    ? "换货原因："
+                    : "维修原因："
+                }}
+              </div>
               <div class="action">
                 <el-select v-model="refund_reason" placeholder="请选择">
                   <el-option
@@ -49,18 +98,6 @@
                       选择收货地址
                     </div>
                   </div>
-                  <!-- <div class="huanhuo-receive" v-if="!address_select.id">
-                    <div class="rec">
-                      <span class="text">收货人: </span> <span class="val"> {{ shouhuoInfo.name }}</span>
-                    </div>
-                    <div class="rec">
-                      <span class="text">收货地址:</span> <span class="val">{{ shouhuoInfo.phone }} </span>
-                    </div>
-                    <div class="rec">
-                      <span class="text">手机号码: </span> <span class="val"> {{ shouhuoInfo.province }}{{ shouhuoInfo.city
-                        }}{{ shouhuoInfo.area }} {{ shouhuoInfo.address }}</span>
-                    </div>
-                  </div> -->
                   <div class="huanhuo-receive" v-if="address_select.id">
                     <div class="rec">
                       <span class="text">收货人: </span>
@@ -91,15 +128,34 @@
               </div>
               <div class="action">
                 <el-input placeholder="请输入退款金额" v-model="refund_money" />
+                <span style="color: #999; font-size: 12px"
+                  >最多￥{{ product_info.priceSale }}, 含运费￥{{
+                    product_info.yunfei || 0
+                  }}</span
+                >
               </div>
             </div>
 
             <div class="input-box remark-box">
-              <div class="label">退款说明：</div>
+              <div class="label">
+                {{
+                  type == 2
+                    ? "退货说明："
+                    : type == 3
+                    ? "换货说明："
+                    : "维修说明："
+                }}
+              </div>
               <div class="action">
                 <el-input
                   type="textarea"
-                  placeholder="请输入退款说明"
+                  :placeholder="
+                    type == 2
+                      ? '请输入退货说明：'
+                      : type == 3
+                      ? '请输入换货说明：'
+                      : '请输入维修说明：'
+                  "
                   v-model="refund_remark"
                   :autosize="{ minRows: 6 }"
                 />
@@ -107,21 +163,20 @@
             </div>
             <div class="input-box upload-box">
               <div class="label">上传凭证：</div>
-              <div class="action" style="flex: 1; width: fit-content">
+              <div class="action">
                 <el-upload
                   class="upload-demo"
                   list-type="picture-card"
                   multiple
                   accept="image/*"
+                  :file-list="upload_pic_list_url"
                   :name="mix_upload_name"
                   :action="mix_upload_action"
                   :on-success="on_success_upload"
                   :before-upload="on_before_upload"
                   :data="mix_upload_data"
                 >
-                  <!-- <i class="el-icon-upload"></i> -->
-                  上传图片
-                  <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
+                  <img src="@img/refund/upload.png" alt="" />
                 </el-upload>
               </div>
             </div>
@@ -129,11 +184,15 @@
               <div class="label">退货方式：</div>
               <div class="action">自行寄回</div>
             </div>
-            <div class="input-box upload-box" v-if="type == 2">
+            <div class="input-box upload-box" v-if="type == 2 || type == 4">
               <div class="label">我的地址：</div>
               <div class="action">
-                <p style="margin-bottom: 10px;color: #7D7D7D;font-size: 14px;">张三 1810000000</p>
-                <p style="color: #7D7d7d;font-size: 14px;">详细地址：中关村东路XXX号 XXXXXXX</p>
+                <p style="margin-bottom: 10px; color: #7d7d7d; font-size: 14px">
+                  张三 1810000000
+                </p>
+                <p style="color: #7d7d7d; font-size: 14px">
+                  详细地址：中关村东路XXX号 XXXXXXX
+                </p>
               </div>
             </div>
 
@@ -167,20 +226,6 @@ export default {
     refund_sku_choose,
     refund_address_list_modal,
   },
-  props: {
-    type: {
-      type: Number,
-      default: 1,
-    },
-    orderId: {
-      type: String,
-      default: "",
-    },
-    inventoryId: {
-      type: String,
-      default: "",
-    },
-  },
   data() {
     return {
       //
@@ -207,6 +252,7 @@ export default {
 
       //
       upload_pic_list: [],
+      upload_pic_list_url: [],
       //图片预览
       dialogVisible: false,
       dialogImageUrl: "",
@@ -216,7 +262,12 @@ export default {
     ...mapState([""]),
 
     refund_reasons() {
-      let str = this.vuex_config.tuihuanReason;
+      let str = "";
+      if (this.type == 3 || this.type == 2) {
+        str = this.vuex_config.tuihuanReason;
+      } else {
+        str = this.vuex_config.weixiuReason;
+      }
       let arr = [];
       try {
         arr = JSON.parse(str) || [];
@@ -241,12 +292,29 @@ export default {
   },
   methods: {
     initParams() {
+      this.orderId = this.$route.query.orderId;
+      this.inventoryId = this.$route.query.inventoryId;
+      this.type = this.$route.query.type;
       this.type_title = this.type_map[this.type];
       if (this.type == 3 || this.type_title == "换货") {
         this.query_address();
       }
     },
     setView() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "orders_detail",
+          id: this.orderId,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.order = res.data;
+          this.product_info =
+            res.data.products.find((v) => v.id == this.inventoryId) || {};
+        }
+      });
       this.query_order();
     },
     //订单产品
@@ -345,7 +413,7 @@ export default {
         action: "refund_add",
         orderId: this.orderId,
         inventoryId: this.inventoryId,
-        type: this.type, //退换货类型(1-退款 2-退货退款 3-换货)
+        type: this.type, //退换货类型(1-退款 2-退货退款 3-换货 4-维修)
         num: this.product_info.num,
         reason: this.refund_reason,
         remark: this.refund_remark,
@@ -377,7 +445,7 @@ export default {
         if (!this.refund_money) {
           return alertErr("请输入退款金额");
         }
-        if (this.refund_money > this.product_info.priceSale) {
+        if (this.refund_money > Number(this.product_info.priceSale)) {
           return alertErr("退款金额应小于等于商品金额");
         }
       } else if (this.type == 3) {
@@ -415,6 +483,13 @@ export default {
       console.log("上传结果 res", res);
       if (res.code == 200) {
         let url = res.data;
+        // 将图片地址设置到 file 对象中，el-upload 需要 url 属性才能显示
+        file.url = url;
+        this.upload_pic_list_url.push({
+          name: file.name,
+          url: url,
+          uid: file.uid,
+        });
         this.upload_pic_list.push(url);
       }
     },
@@ -454,7 +529,144 @@ export default {
   }
 
   .page-ctx {
+    padding: 30px 36px;
+
     background: #fff;
+  }
+}
+
+.refund-product-detail {
+  .refund-item {
+    border: 1px solid #eee;
+
+    .base-box {
+      height: 48px;
+      padding: 0 15px;
+      background: #f5f5f5;
+      font-size: 14px;
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      line-height: 20px;
+      color: #333333;
+
+      .date {
+        font-size: 14px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        line-height: 20px;
+        color: #7d7d7d;
+      }
+
+      .order-code {
+        flex: 2;
+        text-align: left;
+        padding-left: 20px;
+
+        font-size: 14px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        line-height: 20px;
+        color: #7d7d7d;
+
+        span {
+          color: #333333;
+        }
+      }
+
+      .order-state {
+        font-size: 14px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        line-height: 20px;
+        color: #999999;
+      }
+    }
+
+    .product-box {
+      .product-list {
+        .product-item {
+          padding: 20px;
+          border-bottom: 1px dashed #ccc;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          .box-pic {
+            width: 100px;
+
+            .img-box {
+              width: 100px;
+
+              img {
+                width: 100px;
+                height: 100px;
+              }
+            }
+          }
+
+          .box-title {
+            flex: 1;
+            padding-left: 20px;
+
+            .title {
+              text-align: left;
+              font-size: 16px;
+              font-family: Microsoft YaHei;
+              font-weight: 400;
+              line-height: 20px;
+              color: #333333;
+            }
+
+            .sku {
+              margin-top: 20px;
+              text-align: left;
+              font-size: 14px;
+              font-family: Microsoft YaHei;
+              font-weight: 400;
+              line-height: 20px;
+              color: #999;
+            }
+          }
+
+          .box-price {
+            min-width: 100px;
+
+            .price {
+              font-size: 16px;
+              font-family: Microsoft YaHei;
+              font-weight: 400;
+              line-height: 20px;
+              color: #666;
+            }
+          }
+
+          .box-num {
+            width: 100px;
+
+            .num {
+              font-size: 16px;
+              font-family: Microsoft YaHei;
+              font-weight: 400;
+              line-height: 20px;
+              color: #666;
+            }
+          }
+
+          .box-xiaoji {
+            min-width: 100px;
+
+            .price {
+              font-size: 16px;
+              font-family: Microsoft YaHei;
+              font-weight: 400;
+              line-height: 20px;
+              color: #666;
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -643,13 +855,13 @@ export default {
 
   .submit-box {
     margin-top: 40px;
-    padding-left: 120px;
+    padding-left: 90px;
 
     .btn {
       width: 240px;
       height: 40px;
       background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
-      background: #2E4C87;
+      background: #2e4c87;
       border-radius: 30px;
       border-radius: 0;
 
@@ -681,6 +893,29 @@ export default {
     margin-bottom: 10px;
     font-size: 14px;
     color: #333;
+  }
+}
+
+.upload-demo {
+  :deep(.el-upload--picture-card) {
+    width: 90px;
+    height: 90px;
+    border: none;
+    line-height: 90px;
+    img {
+      width: 90px;
+      height: 90px;
+    }
+  }
+  :deep(.el-upload-list--picture-card) {
+    .el-upload-list__item {
+      width: 90px;
+      height: 90px;
+      img {
+        width: 90px;
+        height: 90px;
+      }
+    }
   }
 }
 </style>

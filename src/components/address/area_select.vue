@@ -119,13 +119,27 @@ export default {
       //解决初始回显慢的问题
 
       //市
-      let res_shi = await this.$api("users_getAreaList", { parent_id: this.sheng });
+      let res_shi = await this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "users_getAreaList",
+          parent_id: this.sheng
+        }
+      });
       this.list_shi = res_shi.data || [];
       let obj_shi = this.list_shi.find((v) => v.id == cityCode || v.title == city) || {};
       this.shi = obj_shi.id;
 
       //区
-      let res_qu = await this.$api("users_getAreaList", { parent_id: this.shi });
+      let res_qu = await this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "users_getAreaList",
+          parent_id: this.shi
+        }
+      });
       this.list_qu = res_qu.data || [];
       let obj_qu = this.list_qu.find((v) => v.id == areaCode || v.title == area) || {};
       this.qu = obj_qu.id;

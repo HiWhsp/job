@@ -84,29 +84,7 @@ export default {
       list_address: [],
 
       activeMenu: "address", // 当前选中的菜单
-      addresses: [
-        {
-          receiver: "张三",
-          region: "北京市海淀区直辖市",
-          detailAddress: "中央村东路*********",
-          phone: "15931263145",
-        },
-        {
-          receiver: "李四",
-          region: "上海市浦东新区直辖市",
-          detailAddress: "浦东大道*********",
-          phone: "13800138000",
-        },
-      ],
-      activeMenuMap: {
-        personal: "个人中心",
-        address: "地址管理",
-        order: "订单管理",
-        "after-sale": "我的售后",
-        activity: "我的活动",
-        favorite: "我的收藏",
-        history: "浏览记录",
-      },
+      addresses: [],
     };
   },
   computed: {

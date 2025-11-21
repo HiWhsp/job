@@ -76,33 +76,9 @@ const product_detail = () =>
   import(
     /* webpackChunkName: "product-detail" */ "@/views/product/product-detail.vue"
   );
-const batch_search = () =>
+const product_compare = () =>
   import(
-    /* webpackChunkName: "batch-xiadan" */ "@/views/batch/batch-xiadan.vue"
-  );
-const batch_xunjia = () =>
-  import(
-    /* webpackChunkName: "batch-xunjia" */ "@/views/batch/batch-xunjia.vue"
-  );
-const batch_xunjia_match = () =>
-  import(
-    /* webpackChunkName: "batch-xunjia" */ "@/views/batch/batch-xunjia-match.vue"
-  );
-const batch_xunjia_result = () =>
-  import(
-    /* webpackChunkName: "batch-xunjia" */ "@/views/batch/batch-xunjia-result.vue"
-  );
-const product_xieyi = () =>
-  import(
-    /* webpackChunkName: "product-xieyi" */ "@/views/product/product-xieyi.vue"
-  );
-const product_zhenxuan = () =>
-  import(
-    /* webpackChunkName: "product-zhenxuan" */ "@/views/product/product-zhenxuan.vue"
-  );
-const scene = () =>
-  import(
-    /* webpackChunkName: "scene" */ "@/views/product/scene.vue"
+    /* webpackChunkName: "product-compare" */ "@/views/product/product-compare.vue"
   );
 
 // const orderLogistics = () => import(/* webpackChunkName: "orderLogistics" */ "@/views/order/orderLogistics.vue");
@@ -193,7 +169,6 @@ const quick_buy = () => import("@/views/service/quick-buy.vue");
 const product_consult = () => import("@/views/service/product-consult.vue");
 const download = () => import("@/views/download/download.vue");
 const online_message = () => import("@/views/service/online-message.vue");
-
 const routes = [
   // 首页
   {
@@ -355,59 +330,11 @@ const routes = [
     },
   },
   {
-    path: "/batch-xiadan",
-    name: "batch-xiadan",
-    component: batch_search,
+    path: "/product-compare",
+    name: "product-compare",
+    component: product_compare,
     meta: {
-      title: "批量下单",
-    },
-  },
-  {
-    path: "/batch-xunjia",
-    name: "batch-xunjia",
-    component: batch_xunjia,
-    meta: {
-      title: "批量询价",
-    },
-  },
-  {
-    path: "/batch-xunjia-match",
-    name: "batch-xunjia-match",
-    component: batch_xunjia_match,
-    meta: {
-      title: "批量询价",
-    },
-  },
-  {
-    path: "/batch-xunjia-result",
-    name: "batch-xunjia-result",
-    component: batch_xunjia_result,
-    meta: {
-      title: "批量询价",
-    },
-  },
-  {
-    path: "/product-xieyi",
-    name: "product-xieyi",
-    component: product_xieyi,
-    meta: {
-      title: "协议商品",
-    },
-  },
-  {
-    path: "/product-zhenxuan",
-    name: "product-zhenxuan",
-    component: product_zhenxuan,
-    meta: {
-      title: "信田甄选",
-    },
-  },
-  {
-    path: "/scene",
-    name: "scene",
-    component: scene,
-    meta: {
-      title: "场景专区",
+      title: "产品对比",
     },
   },
   {
@@ -694,24 +621,6 @@ const routes = [
         component: () => import('@/views/enterprise/enterprise-member-man.vue'),
         meta: {
           title: "人员管理",
-          requireAuth: true
-        }
-      },
-      {
-        path: "/batch-xunjia-list",
-        name: "batch-xunjia-list",
-        component: () => import('@/views/batch/batch-xunjia-list'),
-        meta: {
-          title: "我的询价",
-          requireAuth: true
-        }
-      },
-      {
-        path: "/batch-xunjia-detail",
-        name: "batch-xunjia-detail",
-        component: () => import('@/views/batch/batch-xunjia-detail'),
-        meta: {
-          title: "询价详情",
           requireAuth: true
         }
       },
