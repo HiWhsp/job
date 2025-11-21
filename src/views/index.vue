@@ -87,7 +87,7 @@ export default {
       if (thumbnail && thumbnail.includes("http")) {
         this.currentBackgroundImage = thumbnail;
       } else {
-        this.currentBackgroundImage = "https://yifei.dx.hdapp.com.cn/uploads/" + thumbnail;
+        this.currentBackgroundImage = "https://www.robotphoenixonline.com/uploads/" + thumbnail;
       }
       // 处理缩略图切换，更新背景图
     },

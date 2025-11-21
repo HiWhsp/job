@@ -45,7 +45,7 @@ export default {
       if (thumbnail && thumbnail.includes("http")) {
         return thumbnail; 
       } else {
-        return "https://yifei.dx.hdapp.com.cn/uploads/" + thumbnail;
+        return "https://www.robotphoenixonline.com/uploads/" + thumbnail;
       }
     },
   },

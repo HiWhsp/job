@@ -33,7 +33,7 @@
       <div class="upload-section">
         <el-upload
           ref="upload"
-          action="https://yifei.dx.hdapp.com.cn/api/upload"
+          action="https://www.robotphoenixonline.com/api/upload"
           :data="uploadData"
           name="file"
           :file-list="fileList"

@@ -926,7 +926,7 @@ export default {
         }
         // 调用上传接口
         this.$axios
-          .post("https://yifei.dx.hdapp.com.cn/api/upload", formData, {
+          .post("https://www.robotphoenixonline.com/api/upload", formData, {
             headers: {
               "Content-Type": "multipart/form-data",
               token: localStorage.getItem("token") || "",

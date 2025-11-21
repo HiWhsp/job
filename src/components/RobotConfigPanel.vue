@@ -989,7 +989,7 @@ export default {
       // 如果当前项有 producntInfos，则初始化它们
       if (item.producntInfos && Array.isArray(item.producntInfos)) {
         // 如果所有选项里都没有moren为1的选项，则设置第一个选项为选中状态
-        
+
         if (item.producntInfos.every((product) => product.moren != 1)) {
           this.$set(item.producntInfos[0], "selected", true);
         } else {
@@ -1090,6 +1090,8 @@ export default {
         // 递归遍历所有tabs中的producntInfos
         this.tabs.forEach((tab) => {
           this.filterProducntInfosByControllerId(tab, controllerIdStr);
+          // 递归处理所有层级的 producntInfos
+          this.initializeProducntInfosMoren(tab);
         });
 
         // 更新controllers（当前标签页的child）
@@ -1665,7 +1667,7 @@ export default {
 
       // 调用上传接口
       this.$axios
-        .post("https://yifei.dx.hdapp.com.cn/api/upload", formData, {
+        .post("https://www.robotphoenixonline.com/api/upload", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             token: localStorage.getItem("token") || "",
