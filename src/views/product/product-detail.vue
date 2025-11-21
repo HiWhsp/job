@@ -581,8 +581,9 @@ export default {
     toggleCompare(product) {
       // 查看是否已经在对比列表中,如果有没有则添加, 如果有则提示
       const compareProductsIds = JSON.parse(
-        localStorage.getItem("compare_productsIds")
+        localStorage.getItem("compare_productsIds") || "[]"
       );
+      // 如果compareProductsIds为空,则初始化一个空数组
       if (compareProductsIds.indexOf(product.id) === -1) {
         compareProductsIds.push(product.id);
       } else {
