@@ -66,9 +66,14 @@
               <el-table-column
                 prop="proType"
                 label="项目类别"
-                width="auto"
+                width="220"
                 align="center"
-              ></el-table-column>
+              >
+                <template slot-scope="scope">
+                  {{ scope.row.channel1Title }}
+                  {{ "-" + scope.row.channel2Title }}
+                </template></el-table-column
+              >
               <el-table-column
                 prop="contactNumber"
                 label="客户名称"
@@ -156,7 +161,10 @@
     </div>
 
     <project_content_modal ref="project_content_modal" @confirm="query_view" />
-    <project_permission_modal ref="project_permission_modal" @confirm="query_view" />
+    <project_permission_modal
+      ref="project_permission_modal"
+      @confirm="query_view"
+    />
   </div>
 </template>
 

@@ -18,6 +18,9 @@
           <div class="group-title">
             {{ group.title }}
           </div>
+          <div class="red-number" v-if="group.red_number > 0">
+            {{ group.red_number }}
+          </div>
         </div>
       </div>
     </div>
@@ -42,7 +45,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["vuex_role"]),
+    ...mapState(["vuex_role", "vuex_red_number"]),
   },
   watch: {
     vuex_role: {
@@ -62,6 +65,10 @@ export default {
         // 需要权限的菜单
         if (item.is_permission) {
           return this.vuex_role.includes("shenhe");
+        }
+        if (item.title == "项目管理") {
+          
+          item.red_number = this.vuex_red_number;
         }
         // 不需要权限的菜单
         return true;
@@ -105,7 +112,19 @@ export default {
     .group-title-box {
       width: 68px;
       background: #ffffff;
-      &:hover {
+      position: relative;
+      .red-number {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 16px;
+        height: 16px;
+        background: #FF0000;
+        font-size: 10px;
+        color: #fff;
+        text-align: center;
+        line-height: 16px;
+        border-radius: 50%;
       }
 
       &.select {
@@ -115,9 +134,6 @@ export default {
         .group-title {
           color: #3377fe !important;
         }
-      }
-      &.sub_select {
-        // background: rgba(64, 158, 255, 0.4);
       }
 
       .group-title {

@@ -106,15 +106,15 @@ export default {
     ...mapState(["vuex_user"]),
   },
   methods: {
-    init(row) {
+    init(row, userRoles) {
       if (row) {
         this.row = row;
       }
       this.processList.forEach((item, index) => {
         item.isStepRole =
-          this.vuex_user.stepRole &&
-          this.vuex_user.stepRole[index] &&
-          this.vuex_user.stepRole[index].status == 1;
+          userRoles &&
+          userRoles[index] &&
+          userRoles[index].status == 1;
       });
 
       //10-步骤1提交,15-步骤1通过,20-步骤2提交待审,25-步骤2通过,30-步骤3提交待审,35-步骤3通过,

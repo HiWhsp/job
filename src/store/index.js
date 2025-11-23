@@ -23,6 +23,7 @@ export default new Vuex.Store({
 		userInfo: {},
 		isLogin: false,
 		vuex_role: "",
+		vuex_red_number: 0,
 
 		//
 		vuex_iframe_page_data: {},
@@ -50,6 +51,10 @@ export default new Vuex.Store({
 			state.vuex_role = data;
 			localStorage.setItem("vuex_role", JSON.stringify(state.vuex_role));
 		},
+		set_vuex_red_number(state, data) {
+			state.vuex_red_number = data || 0;
+			localStorage.setItem("vuex_red_number", JSON.stringify(state.vuex_red_number));
+		},
 		//清空登录信息
 		clearAdminInfo(state) {
 			state.vuex_user = {};
@@ -67,6 +72,7 @@ export default new Vuex.Store({
 		}, data) {
 			dispatch("getUserInfo");
 			dispatch("getDepartList");
+			dispatch("getRedNumber");
 		},
 
 		// 获取用户信息
@@ -79,7 +85,6 @@ export default new Vuex.Store({
 				url: '/getUserInfo2',
 				method: 'get',
 			}).then((res) => {
-				console.log("动态获取用户信息", res);
 				if (res.code == 200) {
 					commit("set_vuex_user", res.data);
 					commit("set_vuex_role", res.data.opRole);
@@ -95,12 +100,24 @@ export default new Vuex.Store({
 				url: '/departs',
 				method: 'get',
 			}).then((res) => {
-				console.log("获取部门列表", res);
 				if (res.code == 200) {
 					commit("set_vuex_depart_list", res.data);
 				} else {}
 			});
 		},
-
+		async getRedNumber({
+			commit,
+			state,
+			dispatch
+		}, option) {
+			api({
+				url: '/projectList',
+				method: 'get',
+			}).then((res) => {
+				if (res.code == 200) {
+					commit("set_vuex_red_number", res.data.num);
+				} else {}
+			});
+		},
 	},
 });

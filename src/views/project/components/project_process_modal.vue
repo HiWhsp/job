@@ -27,7 +27,7 @@
             >
               <span
                 v-if="item.status == (index + 1) * 10"
-                @click="handleView(index)"
+                @click="handleView(item, index)"
                 >查看资料</span
               >
               <!-- 前一个是否是完成状态/ 当前步骤是初始提交状态 -->
@@ -118,15 +118,15 @@ export default {
     ...mapState(["vuex_user"]),
   },
   methods: {
-    init(row) {
+    init(row, userRoles) {
       if (row) {
         this.row = row;
       }
       this.processList.forEach((item, index) => {
         item.isStepRole =
-          this.vuex_user.stepRole &&
-          this.vuex_user.stepRole[index] &&
-          this.vuex_user.stepRole[index].status == 1;
+          userRoles &&
+          userRoles[index] &&
+          userRoles[index].status == 1;
       });
 
       //10-步骤1提交,15-步骤1通过,20-步骤2提交待审,25-步骤2通过,30-步骤3提交待审,35-步骤3通过,
@@ -230,7 +230,7 @@ export default {
     },
 
     // 处理查看资料
-    handleView(index) {
+    handleView(item, index) {
       this.$api({
         url: "/getStepInfo",
         method: "get",
@@ -240,7 +240,7 @@ export default {
         },
       }).then((res) => {
         if (res.code == 200) {
-          this.$refs.process_detail_modal.init(res.data);
+          this.$refs.process_detail_modal.init(item.name, res.data, index);
         }
       });
     },

@@ -115,7 +115,7 @@
                     <div class="info-field">
                       <span class="field-label">身份</span>
                       <el-input
-                        v-model="userInfo.role_name"
+                        v-model="userInfo.roleIdentity"
                         placeholder="身份"
                         class="field-input"
                         :disabled="true"

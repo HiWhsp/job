@@ -88,7 +88,8 @@ export default {
     };
   },
   methods: {
-    init(name, processItem) {
+    init(name, processItem, index) {
+      this.index = index;
       if (processItem) {
         this.processName = name || "流程详情";
         // 从流程项或行数据中获取资料信息

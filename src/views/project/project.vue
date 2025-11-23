@@ -52,7 +52,7 @@
           <div class="table-box">
             <el-table :data="table_data" stripe>
               <el-table-column
-                prop="status"
+                prop="statusName"
                 label="项目状态"
                 align="center"
               ></el-table-column>
@@ -71,9 +71,14 @@
               <el-table-column
                 prop="proType"
                 label="项目类别"
-                width="auto"
+                width="200"
                 align="center"
-              ></el-table-column>
+              >
+                <template slot-scope="scope">
+                  {{ scope.row.channel1Title }}
+                  {{ "-" + scope.row.channel2Title }}
+                </template>
+              </el-table-column>
               <el-table-column
                 prop="contactNumber"
                 label="客户名称"
@@ -130,6 +135,7 @@
                       <el-button @click="do_process(scope.row)" type="text"
                         >查询详情</el-button
                       >
+                      <div class="red-number" v-if="scope.row.red == 1"></div>
                     </div>
                   </div>
                 </template>
@@ -162,7 +168,10 @@
 
     <project_content_modal ref="project_content_modal" @confirm="query_view" />
     <project_process_modal ref="project_process_modal" @confirm="query_view" />
-    <project_process_modal_shenhe ref="project_process_modal_shenhe" @confirm="query_view" />
+    <project_process_modal_shenhe
+      ref="project_process_modal_shenhe"
+      @confirm="query_view"
+    />
   </div>
 </template>
 
@@ -263,14 +272,37 @@ export default {
       this.$refs.project_content_modal.init(content, title);
     },
     do_process(row) {
-      if (this.vuex_role.includes("shenhe")) {
-        this.$refs.project_process_modal_shenhe.init(row);
-      } else {
-        this.$refs.project_process_modal.init(row);
-      }
+      this.$api({
+        url: "/projectDetail",
+        method: "get",
+        data: {
+          id: row.id,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          // 获取项目详情
+          const projectDetail = res.data;
+          // 角色是审核角色，则显示审核流程
+          if (this.vuex_role.includes("shenhe")) {
+            this.$refs.project_process_modal_shenhe.init(row, projectDetail.userRoles);
+          } else {
+            this.$refs.project_process_modal.init(row, projectDetail.userRoles);
+          }
+        }
+      });
     },
   },
 };
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.red-number {
+  background-color: #ff0000;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: absolute;
+  top: 14px;
+  right: 25px;
+}
+</style>

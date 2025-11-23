@@ -60,6 +60,7 @@
             :on-preview="handleImagePreview"
             :before-upload="beforeImageUpload"
             :limit="9"
+            multiple
             accept="image/*"
           >
             <img src="@/assets/img/up-img.png" alt="" />
