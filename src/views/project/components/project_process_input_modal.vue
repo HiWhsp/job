@@ -169,14 +169,9 @@ export default {
     },
 
     // 文件上传成功
-    handleFileSuccess(res, file) {
+    handleFileSuccess(res, file, fileList) {
       if (res.code == 200) {
-        const fileItem = {
-          name: file.name,
-          url: res.data.path,
-          uid: file.uid,
-        };
-        this.fileList.push(fileItem);
+        this.fileList = fileList;
         this.$message.success("文件上传成功");
       } else {
         this.fileList.splice(this.fileList.indexOf(file), 1);
@@ -190,14 +185,9 @@ export default {
     },
 
     // 图片上传成功
-    handleImageSuccess(res, file) {
+    handleImageSuccess(res, file, fileList) {
       if (res.code == 200) {
-        const imageItem = {
-          name: file.name,
-          url: res.data.path,
-          uid: file.uid,
-        };
-        this.imageList.push(imageItem);
+        this.imageList = fileList;
         this.$message.success("图片上传成功");
       } else {  
         this.imageList.splice(this.imageList.indexOf(file), 1);
@@ -235,13 +225,15 @@ export default {
 
       this.loading = true;
 
+      
+
       // 准备提交数据
       const submitData = {
         id: this.projectId,
         step: this.processIndex + 1,
         content: this.form.content,
-        files: this.fileList.map((file) => file.url).join(','),
-        imgs: this.imageList.map((img) => img.url).join(','),
+        files: this.fileList.map((file) => file.response.data.path).join(','),
+        imgs: this.imageList.map((img) => img.response.data.path).join(','),
       };
 
       // 调用API提交数据

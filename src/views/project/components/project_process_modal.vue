@@ -25,15 +25,16 @@
               :class="getActionClass(item.status)"
               v-if="item.isStepRole"
             >
+              <!-- 当前步骤是完成状态 -->
               <span
-                v-if="item.status == (index + 1) * 10"
+                v-if="item.status == (index + 1) * 15"
                 @click="handleView(item, index)"
                 >查看资料</span
               >
-              <!-- 前一个是否是完成状态/ 当前步骤是初始提交状态 -->
+              <!-- 前一个步骤是完成状态/ 当前步骤是初始提交状态 -->
               <span
                 v-else-if="
-                  processList[index].status % 10 == 5 || item.status == 1
+                  processList[index - 1].status % 10 == 5 || item.status == 1
                 "
                 @click="handleInput(item, index)"
                 >资料录入</span
@@ -124,9 +125,7 @@ export default {
       }
       this.processList.forEach((item, index) => {
         item.isStepRole =
-          userRoles &&
-          userRoles[index] &&
-          userRoles[index].status == 1;
+          userRoles && userRoles[index] && userRoles[index].status == 1;
       });
 
       //10-步骤1提交,15-步骤1通过,20-步骤2提交待审,25-步骤2通过,30-步骤3提交待审,35-步骤3通过,
@@ -150,7 +149,7 @@ export default {
         return;
       }
 
-      // 定义状态映射：每个步骤的提交、驳回、通过状态
+      // 定义状态映射：每个步骤的待提交、驳回、通过状态
       const stepStatusMap = [
         { submit: 10, reject: 12, pass: 15 }, // 步骤1
         { submit: 20, reject: 22, pass: 25 }, // 步骤2
@@ -187,6 +186,7 @@ export default {
           break;
         }
       }
+      console.log(currentStepIndex);
 
       // 如果找到了当前步骤
       if (currentStepIndex >= 0) {
@@ -196,6 +196,11 @@ export default {
         // 设置之前所有步骤为通过状态
         for (let i = 0; i < currentStepIndex; i++) {
           this.processList[i].status = stepStatusMap[i].pass;
+        }
+
+        if (currentStatus != 100) {
+          this.processList[currentStepIndex + 1].status =
+            stepStatusMap[currentStepIndex + 1].submit;
         }
       } else {
         // 如果状态不在映射中，可能是中间状态，尝试找到最接近的步骤
@@ -220,9 +225,9 @@ export default {
 
     // 获取操作按钮的样式类
     getActionClass(status) {
-      if ((status && status % 10 == 5) || status == 1) {
+      if ((status && status % 10 == 0) || status == 1) {
         return "action-active";
-      } else if (status && status % 10 == 0) {
+      } else if (status && status % 10 == 5) {
         return "action-submit";
       } else {
         return "action-inactive";

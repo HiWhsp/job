@@ -78,10 +78,10 @@
       </div>
     </el-dialog>
     <!-- 驳回原因弹框 -->
-    <project-content-modal
-      ref="project_content_modal"
+    <project-reject-modal
+      ref="project_reject_modal"
       @confirm="handleRejectConfirm"
-    ></project-content-modal>
+    ></project-reject-modal>
     <!-- 通过确认弹框 -->
     <project-confirm-modal
       ref="project_confirm_modal"
@@ -150,7 +150,7 @@ export default {
     },
     handlePassConfirm() {
       // 处理通过确认
-      this.$emit("pass");
+      this.$emit("confirm");
       this.show_modal = false;
     },
 

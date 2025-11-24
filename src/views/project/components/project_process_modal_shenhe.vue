@@ -45,7 +45,10 @@
     </el-dialog>
 
     <!-- 流程资料详情弹框 -->
-    <project_process_detail_modal_shenhe ref="process_detail_modal_shenhe" @confirm="handleConfirm"/>
+    <project_process_detail_modal_shenhe
+      ref="process_detail_modal_shenhe"
+      @confirm="handleConfirm"
+    />
   </div>
 </template>
 
@@ -103,7 +106,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["vuex_user"]),
+    ...mapState(["vuex_user", "vuex_role"]),
   },
   methods: {
     init(row, userRoles) {
@@ -111,10 +114,12 @@ export default {
         this.row = row;
       }
       this.processList.forEach((item, index) => {
-        item.isStepRole =
-          userRoles &&
-          userRoles[index] &&
-          userRoles[index].status == 1;
+        if (this.vuex_role.includes("shenhe")) {
+          item.isStepRole = true;
+        } else {
+          item.isStepRole =
+            userRoles && userRoles[index] && userRoles[index].status == 1;
+        }
       });
 
       //10-步骤1提交,15-步骤1通过,20-步骤2提交待审,25-步骤2通过,30-步骤3提交待审,35-步骤3通过,
@@ -230,7 +235,13 @@ export default {
         },
       }).then((res) => {
         if (res.code == 200) {
-          this.$refs.process_detail_modal_shenhe.init(res.data, this.processList[index].name, statusText, index, this.row.id);
+          this.$refs.process_detail_modal_shenhe.init(
+            res.data,
+            this.processList[index].name,
+            statusText,
+            index + 1,
+            this.row.id
+          );
         }
       });
     },
@@ -247,6 +258,7 @@ export default {
     },
 
     handleConfirm() {
+      this.show_modal = false;
       this.$emit("confirm");
     },
 
