@@ -120,7 +120,7 @@ export default {
           this.$message.success("验证码已发送到您的邮箱");
           this.startCountdown();
         } else {
-          this.$message.error("发送验证码失败，请重试");
+          this.$message.error(res.msg);
         }
       } catch (error) {
         this.$message.error("发送验证码失败，请重试");
@@ -160,16 +160,17 @@ export default {
       });
       if (res.code === 200) {
         this.$message.success("登录成功");
+
+        // 保存登录状态
+        localStorage.setItem("token", res.data.token);
+        this.$store.commit("set_vuex_user", res.data);
+
+        // 跳转到管理页面
+        this.$router.push("/myAdminOrder");
       } else {
-        this.$message.error("登录失败，请检查验证码是否正确");
+        this.$message.error(res.msg);
+        return;
       }
-
-      // 保存登录状态
-      localStorage.setItem("token", res.data.token);
-      this.$store.commit("set_vuex_user", res.data);
-
-      // 跳转到管理页面
-      this.$router.push("/myAdminOrder");
     },
   },
 };
