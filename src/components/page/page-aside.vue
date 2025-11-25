@@ -2,50 +2,44 @@
   <div class="aside">
     <div class="inner">
       <div class="list">
-        <div class="item" v-if="showTop" @click="toTop()">
-          <div class="item-inner">
-            <img src="@img/to-top.png" alt="" />
-          </div>
-        </div>
-
-        <!-- <div class="item" v-for="(item, index) in list_util" :key="index" @mouseenter="on_mouseenter(item)" @mouseleave="on_mouseleave(item)" @click="on_click_util(item)">
-          <div class="item-inner" v-if="item.title != '客服'">
-            <div class="cart-num" v-if="item.title == '购物车'">
-              {{ shopcart_count }}
-            </div>
+        <div
+          class="item"
+          v-for="(item, index) in list_util"
+          :key="index"
+          @mouseenter="on_mouseenter(item)"
+          @mouseleave="on_mouseleave(item)"
+          @click="on_click_util(item)"
+        >
+          <div class="item-inner" v-if="item.title != '微信'" @click="goUrl(item.path)">
             <img :src="item.icon" alt="" />
+            <div class="item-title">{{ item.title }}</div>
           </div>
-
-          <template v-if="item.title == '客服'">
+          <template v-if="item.title == '微信'">
             <el-popover placement="right" trigger="hover">
               <div class="pop-kefu">
                 <div class="pop-kefu-inner">
-                  <div class="kefu-tip">请微信扫描下方二维码</div>
-                  <img class="kefu-code" :src="vuex_config.kefu_code" />
+                  <img
+                    class="kefu-code"
+                    :src="vuex_config.weixin_qr"
+                  />
+                  <div class="kefu-tip">扫一扫，咨询专业律师</div>
                 </div>
               </div>
 
               <div class="item-inner" slot="reference">
                 <img :src="item.icon" alt="" />
+                <div class="item-title">{{ item.title }}</div>
               </div>
             </el-popover>
           </template>
-        </div> -->
+        </div>
+        <div class="item" v-if="showTop" @click="toTop()">
+          <div class="item-inner">
+            <img src="@/assets/img/common/to-top.png" alt="" />
+            <div class="item-title">回顶部</div>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <div class="modal" v-show="hoverIndex == 2 || hoverIndex == 3">
-      <template v-if="hoverIndex == 2">
-        <div class="text-box">
-          <div class="text">联系方式</div>
-          <div class="phone">{{ "xxxxx" }}</div>
-        </div>
-      </template>
-      <template v-if="hoverIndex == 3">
-        <div class="img-box">
-          <!-- <img :src="fixInfo.wechat" alt /> -->
-        </div>
-      </template>
     </div>
   </div>
 </template>
@@ -61,16 +55,27 @@ export default {
     return {
       hoverIndex: "",
       list_util: [
-        // { title: "购物车", icon: require("@img/other/aside-shopcart.png") },
-        // { title: "客服", icon: require("@img/other/aside-kefu.png") },
-        // { title: "收藏", icon: require("@img/other/aside-favourite.png") },
+        {
+          title: "我的下载",
+          icon: require("@/assets/img/common/down-icon.png"),
+          path: "/my?tab=2",
+        },
+        {
+          title: "微信",
+          icon: require("@/assets/img/common/wechat-icon.png"),
+        },
+        // {
+        //   title: "在线客服",
+        //   icon: require("@/assets/img/common/aside-kefu.png"),
+        //   path: "/",
+        // },
       ],
 
       showTop: false,
     };
   },
   computed: {
-    ...mapState(["shopcart_count", ""]),
+    ...mapState([""]),
   },
   watch: {},
 
@@ -111,24 +116,16 @@ export default {
       //console.log("鼠标移出", item);
       this.hoverIndex = "";
     },
+    goUrl(path) {
+      this.$router.push(path);
+    },
 
     on_click_util(item) {
-      //console.log("点击", item);
-
       document.documentElement.scrollTop = 0;
-
-      return;
-
       let title = item.title;
-
-      if (title == "回到顶部") {
-        document.documentElement.scrollTop = 0;
-      } else if (title == "购物车") {
-        this.$router.push("/cart");
+      if (title == "个人中心") {
+        this.$router.push("/my-info");
       }
-      //  else if (title == "客服") {
-      //   this.$router.push("/contact");
-      // }
     },
   },
 };
@@ -138,16 +135,8 @@ export default {
 .aside {
   z-index: 10000;
   position: fixed;
-  right: 50px;
-  bottom: 150px;
-
-  // height: 151.45px;
-  // height: 50px;
-  background: #cccccc;
-  border-radius: 0;
-
-  .inner {
-  }
+  right: 0px;
+  top: 40%;
 }
 
 // 工具列表
@@ -155,84 +144,41 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 79px;
+  background: #ffffff;
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 8px 8px 8px 8px;
   .item {
+    height: 100px;
     position: relative;
     cursor: pointer;
-    .flex-center();
-    // width: 50px;
-    // height: 50px;
-    // transition: 0.3s;
-
-    width: 60px;
-    height: 60px;
-    background: #ffffff;
-    box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.1);
-    border-radius: 4px 4px 4px 4px;
-
-    &:nth-child(1) {
-      background: #ff9312;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    border-bottom: 1px solid #e8e8e8;
+    .item-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      .item-title {
+        margin-top: 10px;
+        font-size: 14px;
+        font-weight: normal;
+        text-align: center;
+        color: #7b7b7b;
+      }
     }
-    &:nth-child(1) {
-      background: #fff;
+    &:last-child {
+      border-bottom: none;
     }
-    &:nth-child(2) {
-      background: #ea5959;
-    }
-    &:nth-child(3) {
-      background: #f13f17;
-    }
-
     &:hover {
       opacity: 0.6;
     }
 
     img {
       height: 32px;
-    }
-
-    .cart-num {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 19px;
-      height: 19px;
-      background: #ffffff;
-      border: 1px solid #ff9312;
-      border-radius: 50%;
-      font-size: 10px;
-      color: #ff9312;
-    }
-  }
-}
-
-// 弹窗
-.modal {
-  position: absolute;
-  border: 1px solid #eee;
-  top: 70px;
-  right: 49px;
-  width: 130px;
-  height: 130px;
-  background: #fff;
-  padding: 7px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #000;
-
-  img {
-    width: 100%;
-    height: 100%;
-  }
-
-  .text-box {
-    font-size: 16px;
-    .text {
-    }
-    .phone {
-      margin-top: 30px;
     }
   }
 }
@@ -247,10 +193,9 @@ export default {
       margin-bottom: 10px;
     }
     .kefu-code {
-      width: 200px;
+      width: 176px;
+      height: 176px;
     }
   }
 }
 </style>
-
-<style scoped lang="less" src="@/assets/h5css/common/pageAside.less"></style>

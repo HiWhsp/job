@@ -1,244 +1,111 @@
 <template>
-  <div class="page">
-    <div class="page-top">
-      <div class="banner-box">
-        <div class="banner-img-box" v-if="banners.length == 1">
-          <img :src="banners[0].image" alt="" />
+  <div class="contact-page">
+    <div class="contact-header">
+      <p>联系我们</p>
+    </div>
+
+    <div class="contact-content">
+      <div class="contact-info">
+        <h1 class="contact-title">
+          <span class="contact-title-bg">CONTACT US</span>
+          <span class="contact-title-main">重庆法焰科技有限公司</span>
+        </h1>
+
+        <div class="info-item">
+          <div class="info-icon">
+            <img
+              src="@/assets/img/company/contact/组 43857@2x.png"
+              alt="地址图标"
+            />
+          </div>
+          <div class="info-text">
+            <h3>公司地址</h3>
+            <p>{{ contactInfo.site_address }}</p>
+          </div>
         </div>
-        <pageBanner v-if="banners.length > 1" />
 
-        <div class="banner-content-wrap">
-          <div class="banner-content">
-            <div class="banner-title">
-              Contact Us
-            </div>
-            <div class="banner-line">
+        <div class="info-item">
+          <div class="info-icon">
+            <img
+              src="@/assets/img/company/contact/组 43858@2x.png"
+              alt="电话图标"
+            />
+          </div>
+          <div class="info-text">
+            <h3>公司电话</h3>
+            <p>{{ contactInfo.company_phone }}</p>
+          </div>
+        </div>
 
-            </div>
+        <div class="info-item">
+          <div class="info-icon">
+            <img
+              src="@/assets/img/company/contact/组 43859@2x.png"
+              alt="邮箱图标"
+            />
+          </div>
+          <div class="info-text">
+            <h3>邮箱</h3>
+            <p>{{ contactInfo.company_email }}</p>
           </div>
         </div>
       </div>
-    </div>
-    <div class="inner">
-      <div class="page-ctx">
-        <pageBreadcrumb :option="nav_option" />
 
-        <div class="contact-info">
-          <div class="info-list flex-between">
-            <div class="info-item">
-              <div class="icon-box">
-                <img src="@/static/contact/addr.png" alt="">
-              </div>
-              <div class="title">
-                Address
-              </div>
-              <div class="desc">
-                {{ vuex_config.comAddress }}
-              </div>
-            </div>
-            <div class="info-item">
-              <div class="icon-box">
-                <img src="@/static/contact/phone.png" alt="">
-              </div>
-              <div class="title">
-                Phone
-              </div>
-              <div class="desc">
-                {{ vuex_config.comPhone }}
-              </div>
-            </div>
-            <div class="info-item">
-              <div class="icon-box">
-                <img src="@/static/contact/email.png" alt="">
-              </div>
-              <div class="title">
-                E-mail
-              </div>
-              <div class="desc">
-                {{ vuex_config.comEmail }}
-              </div>
+      <div class="consultation-info">
+        <div class="consultation-item">
+          <div class="consultation-left">
+            <div class="red-bar"></div>
+            <div class="consultation-text">
+              <h3>律师咨询电话</h3>
+              <p class="phone-number">{{ contactInfo.ask_lawer_phone }}</p>
             </div>
           </div>
-
-          <div class="contact-form-box">
-            <contactForm />
+          <div class="consultation-icon">
+            <img
+              src="@/assets/img/company/contact/组 43896@2x.png"
+              alt="咨询图标"
+            />
           </div>
+        </div>
 
+        <div class="consultation-item">
+          <div class="consultation-left">
+            <div class="red-bar"></div>
+            <div class="consultation-text">
+              <h3>微信咨询律师</h3>
+              <p class="phone-number">{{ contactInfo.wechat_lawer_phone }}</p>
+            </div>
+          </div>
+          <div class="consultation-icon">
+            <img
+              src="@/assets/img/company/contact/组 43897@2x.png"
+              alt="微信图标"
+            />
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
-import pageBanner from '@/components/page/page-banner.vue'
-import pageBreadcrumb from '@/components/page/page-breadcrumb.vue'
-
-import { mapState } from "vuex";
-import contactForm from '@/components/contact/contact-form.vue';
-
 export default {
-  name: "index",
-  components: {
-    pageBanner,
-    pageBreadcrumb,
-    contactForm,
-  },
+  name: "Contact",
   data() {
     return {
-      form: {
-        feed_type: '',
-        content: '',
-      }
+      contactInfo: {},
     };
   },
-  computed: {
-    ...mapState(['map_banners']),
-    banners() {
-      return this.map_banners['联系我们'] || []
-    },
-    nav_option() {
-      let option = [
-        { route: '/contact', title: '联系我们', title: 'Contact Us' }
-      ]
-      return option
-    }
-  },
-
-  watch: {},
-
-  created() {
-    this.setView();
-  },
   mounted() {
-    if (this.$route.query.apply == 1) {
-      this.$nextTick(() => {
-        this.scrollToTarget(".contact-form-box .detail-title");
-      })
-    }
-  },
-  methods: {
-    //滚动到指定位置
-    scrollToTarget(clsName) {
-      // var element = document.querySelector(".wenxian-box");
-      var element = document.querySelector(clsName);
-      element.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-    },
-
-    
-    setView() {
-
-    },
+    this.$api({
+      url: "contactUs",
+    }).then((res) => {
+      this.contactInfo = res.data;
+    });
   },
 };
 </script>
 
-<style scoped lang="less">
-.page-top {
-  position: relative;
-
-  .banner-box {
-    position: relative;
-
-    .banner-img-box {
-      img {
-        width: 100%;
-        height: 700px;
-        object-fit: cover;
-      }
-    }
-
-    .banner-content-wrap {
-      position: absolute;
-      z-index: 2;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      padding-top: 173px;
-
-      .banner-content {
-        width: 1200px;
-        margin: 0 auto;
-        text-align: left;
-
-        .banner-title {
-          font-family: Poppins, Poppins;
-          font-weight: bold;
-          font-size: 60px;
-          line-height: 80px;
-          color: #FFFFFF;
-        }
-
-        .banner-line {
-          margin-top: 30px;
-          width: 180px;
-          height: 13px;
-          background: #FFFFFF;
-        }
-      }
-    }
-  }
-}
-
-.page {
-  .inner {}
-}
-
-.page-ctx {
-  width: 1200px;
-  margin: 0 auto;
-
-
-  padding-top: 35px;
-  padding-bottom: 90px;
-
-  .contact-info {
-    padding-top: 70px;
-    background: #fff;
-  }
-}
-
-.info-list {
-  .info-item {
-    flex: 1;
-    padding: 0 10px;
-    text-align: center;
-
-    .icon-box {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 80px;
-      height: 80px;
-      margin: 0 auto;
-
-      img {
-        width: 60px;
-      }
-    }
-
-    .title {
-      margin-top: 30px;
-      margin-bottom: 30px;
-      font-family: Poppins, Poppins;
-      font-weight: bold;
-      font-size: 25px;
-      color: #0D398A;
-    }
-
-    .desc {
-      font-family: OPPOSans, OPPOSans;
-      // font-weight: bold;
-      font-size: 16px;
-      color: #555555;
-    }
-  }
-}
-
-.contact-form-box {
-  margin-top: 123px;
-}
+<style lang="less" scoped>
+@import "./contact.less";
 </style>
-
-
-<style scoped lang="less" src="@/assets/h5css/mobile/contact.less"></style>

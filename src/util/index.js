@@ -23,14 +23,14 @@ export default {
         const scale = Math.sqrt(fileObj.size / (1024 * 200)).toFixed(2); //缩放比例
 
         //console.log(
-          "名称 宽高 大小 信息  ===========》",
-          fileObj.name,
-          width,
-          height,
-          fileObj.size,
-          isNeedCompress,
-          scale
-        );
+        //   "名称 宽高 大小 信息  ===========》",
+        //   fileObj.name,
+        //   width,
+        //   height,
+        //   fileObj.size,
+        //   isNeedCompress,
+        //   scale
+        // );
         //console.log("名称", name);
         //console.log("宽", width);
         //console.log("高", height);

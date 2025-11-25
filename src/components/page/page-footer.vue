@@ -1,539 +1,294 @@
 <template>
-  <div class="footer-wrap">
-    <div class="footer-tip">
-      <div class="footer-icons w-1200">
-        <div class="icon-item" v-for="(item, index) in footerTips" :key="index">
-          <div class="icon-box">
-            <img :src="item.icon" alt="" />
-          </div>
-          <div class="info-box">
-            <div class="title">{{ item.title }}</div>
-            <div class="desc">
-              {{ item.desc }}
+  <div class="page-footer">
+    <div class="footer-content w-1600">
+      <!-- 左侧公司信息 -->
+      <div class="company-info">
+        <div class="logo-section">
+          <div class="company-details">
+            <div class="logo-section">
+              <div class="logo">
+                <img src="@/assets/img/common/logo.png" alt="logo" />
+              </div>
+              <div class="right-logo">
+                <h2 class="company-name">法律文书网</h2>
+                <p class="slogan">海量合同文书 高效下载</p>
+              </div>
+            </div>
+
+            <div class="contact-info">
+              <div class="contact-item">
+                <span class="contact-label">律师咨询电话 (同微信)</span>
+                <div class="phone-section">
+                  <img
+                    class="phone-icon"
+                    src="@/assets/img/index/footer-phone.png"
+                    alt="phone"
+                  />
+                  <span class="phone-number">{{ vuex_config.bottom_lawer_contact || "18696628883" }}</span>
+                </div>
+              </div>
+              <div class="contact-item">
+                <div class="email-section">
+                  <img
+                    class="email-icon"
+                    src="@/assets/img/index/footer-email.png"
+                    alt="email"
+                  />
+                  <span class="email">{{ vuex_config.bottom_lawer_email || "851432731@qq.com" }}</span>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- 右侧特色功能 -->
+      <div class="features-section">
+        <div class="features">
+          <div class="feature-item">
+            <div class="feature-icon">
+              <img src="@/assets/img/footer/icon1.png" alt="price" />
+            </div>
+            <span class="feature-text">价格优惠</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">
+              <img src="@/assets/img/footer/icon2.png" alt="quality" />
+            </div>
+            <span class="feature-text">海量精品</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">
+              <img src="@/assets/img/footer/icon3.png" alt="service" />
+            </div>
+            <span class="feature-text">高质服务</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">
+              <img src="@/assets/img/footer/icon4.png" alt="efficiency" />
+            </div>
+            <span class="feature-text">提升效率</span>
+          </div>
+        </div>
+
+        <!-- 导航链接 -->
+        <div class="nav-links">
+          <router-link to="/about" class="nav-link">关于我们</router-link>
+          <span class="separator">|</span>
+          <router-link to="/business" class="nav-link">业务范围</router-link>
+          <span class="separator">|</span>
+          <router-link to="/contact" class="nav-link">联系我们</router-link>
+          <span class="separator">|</span>
+          <router-link to="/help" class="nav-link">帮助中心</router-link>
+          <span class="separator">|</span>
+          <router-link to="/protocol" class="nav-link">平台协议</router-link>
         </div>
       </div>
     </div>
 
-    <div class="page-footer">
-      <div class="web-footer w-1200">
-        <!-- 底部链接 -->
-        <div class="footer-center">
-          <div class="nav-group" v-for="(group, index) in groupList" :key="index">
-            <div class="group-title">
-              {{ group.title }}
-            </div>
-            <div class="nav-item" v-for="(sub, index) in group.child" :key="index">
-              <router-link :to="sub.route" v-if="sub.route">
-                {{ sub.title }}
-              </router-link>
-              <div v-else>{{ sub.title }}</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 网站信息 -->
-        <div class="footer-left link-info">
-          <div class="top-info v-flex-start">
-            <div class="info-box ">
-              <div class="title">
-                <img src="@img/foot/foot-logo.png" alt="">
-              </div>
-              <div class="text">
-                {{ vuex_config.com_kefu }}
-              </div>
-              <div class="time">工作时间：周一至周五（9:00-10:00）节假日除外</div>
-              <div class="phone">
-                <img src="@img/foot/foot-mobile.png" alt="">
-                <span>
-                  {{ vuex_config.comPhone }}
-                </span>
-              </div>
-            </div>
-
-            <div class="icon-box">
-              <img :src="vuex_config.zhishang_back" alt="" />
-              <div class="icon-title">
-                微信公众号
-              </div>
-            </div>
-          </div>
-        </div>
+    <!-- 底部版权信息 -->
+    <div class="footer-bottom w-1600">
+      <div class="copyright">
+        <span>{{ vuex_config.beian || "copyright © 2025 重庆法焰科技有限公司" }}</span>
+        <span class="address">地址:{{ vuex_config.site_address || "重庆市南岸区南坪东路9号2025-S013" }}</span>
       </div>
-
-      <div class="beian-box">
-        <div class="beian" v-html="vuex_config.comBeian">
-          <a href="https://beian.miit.gov.cn/">{{ vuex_config.comBeian }} </a>
-        </div>
-      </div>
+      <div class="infringement-notice">{{ vuex_config.bottom_qinquan_phone || "本站内容如有侵权,请联系18696628883" }}</div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {
-  name: "web-footer",
-  components: {},
-  props: [],
-  data() {
-    return {
-      footerTips: [
-        {
-          icon: require("@/assets/img/foot/foot-1.png"),
-          title: "正品保障",
-          desc: "正品保障，诚信服务",
-        },
-        {
-          icon: require("@/assets/img/foot/foot-2.png"),
-          title: "一站式服务",
-          desc: "一站式服务",
-        },
-        {
-          icon: require("@/assets/img/foot/foot-3.png"),
-          title: "全网比价",
-          desc: "全网比价 惠到实处",
-        },
-        {
-          icon: require("@/assets/img/foot/foot-4.png"),
-          title: "售后无忧",
-          desc: "专业团队 无忧售后",
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapState(["", "opt_news_cate"]),
-
-    groupList() {
-      // return this.vuex_news_cates.slice(0, 5);
-
-      //关于我们
-      let child_about = [
-        { title: "文章1", route: "/companyProfile" },
-        { title: "文章2", route: "/contactUs" },
-      ];
-
-      let arr = [
-        { title: "购物指南", route: "/companyProfile", child: child_about },
-        { title: "购物指南", route: "/companyProfile", child: child_about },
-        { title: "购物指南", route: "/companyProfile", child: child_about },
-        { title: "购物指南", route: "/companyProfile", child: child_about },
-        { title: "购物指南", route: "/companyProfile", child: child_about },
-
-        // ...this.vuex_news_cates,
-      ];
-
-      return arr;
-    },
-  },
-  watch: {},
-
-  created() { },
-
-  methods: {},
+  name: "PageFooter",
 };
 </script>
 
-<style scoped lang="less">
-.root {
-  width: 100%;
-  min-height: 172px;
-}
-
+<style lang="less" scoped>
 .page-footer {
-  padding-top: 40px;
-  // background: url("~@img/footer-bg.jpg") no-repeat center / cover;
-  background: #044FA0;
-  background: #202020;
+  background: url("../../assets/img/index/footer-bg.png") no-repeat center
+    center;
+  background-size: 100% 100%;
   color: #fff;
-  overflow: hidden;
-}
-
-.footer-tip {
-  width: 100%;
-  padding: 40px 0;
-  background: #044FA0;
-  background: #202020;
+  height: 415px;
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid #FFF;
-
-  .footer-icons {
-
-    display: flex;
-
-    .icon-item {
-      flex: 1;
-      text-align: left;
-        display: flex;
-  align-items: center;
-
-      .icon-box {
-        img {
-          width: 47px;
-          height: 52px;
-        }
-      }
-
-      .info-box {
-        flex: 1;
-        padding-left: 15px;
-
-        .title {
-          margin-bottom: 10px;
-          font-size: 18px;
-          font-family: PingFang SC, PingFang SC;
-          font-weight: 500;
-          color: #ffffff;
-        }
-
-        .desc {
-          font-size: 14px;
-          font-family: PingFang SC, PingFang SC;
-          font-weight: 500;
-          color: #d0d0d0;
-        }
-      }
-    }
-  }
-
-  .footerRow {
-
-    padding: 0 80px;
-  }
-
-  .footerItem {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .footerIcon {
-    width: 46.43px;
-    height: 52px;
-    margin-right: 20px;
-  }
-
-  .txt {
-    font-size: 16px;
-    color: #ffffff;
-    width: 150px;
-    width: 200px;
-    word-break: break-all;
-    text-align: left;
-  }
+  justify-content: space-between;
 }
 
-.web-footer {
-
-  margin: 0 auto;
-  margin-bottom: 40px;
+.footer-content {
+  flex: 1;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-
-  .footer-left {
-    width: 500px;
-  }
-
-  .footer-center {
-    flex: 1;
-    display: flex;
-    justify-content: space-evenly;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding-right: 140px;
-
-    .nav-group {
-      .group-title {
-        text-align: left;
-        margin-bottom: 15px;
-        font-size: 18px;
-        font-family: PingFang SC, PingFang SC;
-        font-weight: bold;
-        color: #ffffff;
-      }
-
-      .nav-item {
-        text-align: left;
-        font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #ffffff;
-        line-height: 32px;
-
-        a {
-          font-size: 14px;
-          font-family: PingFang SC, PingFang SC;
-          font-weight: 500;
-          color: #dddddd;
-          line-height: 32px;
-        }
-      }
-    }
-  }
-
-  .footer-right {
-    .qrcode-item {
-      img {
-        width: 95px;
-        height: 95px;
-      }
-
-      .text {
-        margin-top: 15px;
-        font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #ffffff;
-      }
-    }
-  }
+  position: relative;
+  padding: 43px 0 58px 0;
 }
 
-.link-info {
+.company-info {
+  height: 100%;
+}
+
+.company-details {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  justify-content: space-between;
+}
 
-  .top-info {
-
-
-    .icon-box {
-      img {
-        width: 144px;
-        height: 144px;
-      }
-    }
-
-    .info-box {
-      text-align: left;
-      margin-right: 45px;
-
-      .title {
-        font-size: 18px;
-        font-family: PingFang SC, PingFang SC;
-        font-weight: bold;
-        color: #ffffff;
-      }
-
-      .text {
-        margin-top: 15px;
-        font-size: 24px;
-        font-family: PingFang SC, PingFang SC;
-        font-weight: 500;
-        color: #f48533;
-      }
-
-      .time {
-        margin-top: 5px;
-        font-size: 14px;
-        font-family: PingFang SC, PingFang SC;
-        font-weight: 500;
-        color: #dddddd;
-      }
-
-      .phone {
-        margin: 5px 0;
-        font-size: 14px;
-        font-family: PingFang SC, PingFang SC;
-        font-weight: 500;
-        color: #dddddd;
-      }
-
-      .fax {
-        font-size: 14px;
-        font-family: PingFang SC, PingFang SC;
-        font-weight: 500;
-        color: #dddddd;
-      }
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 100%;
+  .logo {
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    img {
+      width: 100%;
+      height: 100%;
     }
   }
+  .right-logo {
+    .company-name {
+      font-size: 36px;
+      font-weight: bold;
+      color: #b8b8b8;
+      margin-bottom: 8px;
+    }
 
-  .bottom-info {
-      display: flex;
-  align-items: center;
-    margin-top: 45px;
+    .slogan {
+      color: #b8b8b8;
+      font-size: 16px;
+    }
+  }
+}
 
-    .sns-item {
-      cursor: pointer;
-      margin-left: 10px;
-      .flex-center();
-      text-align: center;
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  .contact-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .contact-label {
+    font-weight: 400;
+    font-size: 22px;
+    color: #9d9d9d;
+  }
+
+  .phone-section,
+  .email-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    .phone-icon {
       width: 35px;
       height: 35px;
-      border-radius: 3px 3px 3px 3px;
-      border: 1px solid #707070;
-
-      img {
-        height: 20px;
-      }
-
-      &:hover {
-        background: @theme;
-      }
+    }
+    .email-icon {
+      width: 19px;
+      height: 19px;
     }
   }
-}
 
-.top-logo {
-  img {
-    width: 201px;
+  .phone-number {
+    font-weight: 600;
+    font-size: 40px;
+    color: #9d9d9d;
+  }
+
+  .email {
+    color: #9d9d9d;
+    font-size: 14px;
   }
 }
 
-.desc-box {
-  margin-top: 15px;
-  font-size: 14px;
-  font-family: Microsoft YaHei;
-  font-weight: 400;
-  line-height: 14px;
-  color: #dae8e2;
+.features-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 110px;
+  margin-left: 270px;
+  margin-top: 30px;
 }
 
-.nav-box {
+.features {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px;
+  .feature-item {
     display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 12px;
+    .feature-icon {
+      width: 46px;
+      height: 52px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .feature-text {
+      color: #B8B8B8;
+      font-size: 22px;
+      text-align: center;
+    }
+  }
+}
+
+.nav-links {
+  display: flex;
   align-items: center;
+  justify-content: end;
+  gap: 44px;
+  flex-wrap: wrap;
+  .nav-link {
+    color: #9D9D9D;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #fff;
+    }
+    .separator {
+      color: #B8B8B8;
+      font-size: 18px;
+    }
+  }
+}
+
+.footer-bottom {
+  height: 72px;
+  display: flex;
   justify-content: space-between;
-  width: 1600px;
-  margin: 60px auto;
-  border-top: 1px solid #41b48a;
-  border-bottom: 1px solid #41b48a;
-  height: 48px;
-  line-height: 48px;
-
-  .nav-item {
-    flex: 1;
-
-    a {
-      font-size: 16px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      line-height: 48px;
-      color: #ffffff;
-    }
-  }
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-.qrcode-box {
-  .flex-center();
-  padding-bottom: 60px;
-
-  .qrcode-item {
-    &:last-child {
-      margin-left: 40px;
-    }
-
-    img {
-      width: 190px;
-      height: 190px;
-      border-radius: 6px;
-    }
-
-    .text {
-      margin-top: 15px;
-      font-size: 14px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      line-height: 16px;
-      color: #dae8e2;
-    }
-  }
+.copyright {
+  display: flex;
+  gap: 5px;
+  color: #999;
+  font-size: 12px;
 }
 
-.beian-box {
-  text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.4);
-  height: 60px;
-  line-height: 60px;
-  padding: 0;
-
-  .beian {
-    text-align: center;
-  }
-
-  a {
-    font-size: 14px;
-    font-family: Microsoft YaHei;
-    font-weight: 400;
-    color: #fff;
-    color: #9F9F9F;
-    
-  }
-
-  /deep/ a {
-    font-size: 14px;
-    font-family: Microsoft YaHei;
-    font-weight: 400;
-    color: #fff;
-    color: #9F9F9F;
-  }
+.address {
+  color: #666;
 }
 
-@media screen and (max-width:1024px) {
-  .footer-tip {
-    padding: 15px;
-
-    .footer-icons {
-      width: 100%;
-      flex-direction: column;
-
-      .icon-item {
-        margin-bottom: 15px;
-
-        .info-box {
-          .title {
-            font-size: 1.4rem;
-          }
-
-          .desc {
-            font-size: 1.2rem;
-          }
-        }
-      }
-    }
-  }
-
-  .page-footer {
-    padding: 15px;
-
-    .web-footer {
-      width: 100%;
-      flex-direction: column;
-
-      .footer-center {
-        width: 100%;
-        padding-right: 0;
-        margin-bottom: 15px;
-        justify-content: space-between;
-
-        .nav-group {
-          .group-title {
-            font-size: 1.4rem;
-          }
-
-          .nav-item a {
-            font-size: 1.2rem;
-          }
-        }
-      }
-
-      .footer-left {
-        width: 100%;
-      }
-    }
-  }
-
-  .link-info .top-info .icon-box img {
-    width: 10rem;
-    height: 10rem;
-  }
+.infringement-notice {
+  color: #999;
+  font-size: 12px;
 }
 </style>
-
-<style scoped lang="less" src="@/assets/h5css/zujian/pageFooter.less"></style>

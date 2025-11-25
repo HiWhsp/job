@@ -1,14 +1,14 @@
 // import {API_ROOT} from '@/config/env.js'
 
-const ROOT = "http://vuesc.new.zhishangez.com";
+const ROOT = "https://fayan.dx.hdapp.com.cn";
 
 /**
  * 全局接口请求根域名
  */
 export const API_ROOT = ROOT;
 
-// 商城类型 - 空-默认国内普通商城  foreign-东莞市锋扬礼品 (地址管理不一样 账号登录注册等)
-export const SHOP_TYPE = 'foreign';
+// 商城类型 - 空-默认国内普通商城  foreign-标准商城 (地址管理不一样 账号登录注册等)
+export const SHOP_TYPE = '';
 
 
 // 上传
@@ -17,8 +17,8 @@ export const IS_OPEN_OSS_UPLOAD = false;
 export const UPLOAD_NAME = "img";
 export const UPLOAD_ACTION =
   process.env.NODE_ENV !== "production"
-    ? "/api/service.php"
-    : ROOT + "/service.php";
+    ? "/api/upload"
+    : ROOT + "/upload";
 
 export const UPLOAD_PARAMS_ACTION = IS_OPEN_OSS_UPLOAD ? "index_ossUpload" : 'index_localUpload';
 // 上传
