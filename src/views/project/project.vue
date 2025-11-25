@@ -55,6 +55,7 @@
                 prop="statusName"
                 label="项目状态"
                 align="center"
+                v-if="!vuex_role.includes('shenhe')"
               ></el-table-column>
               <el-table-column
                 prop="orderNo"
@@ -179,7 +180,7 @@
 import project_content_modal from "./components/project_content_modal.vue";
 import project_process_modal from "./components/project_process_modal.vue";
 import project_process_modal_shenhe from "./components/project_process_modal_shenhe.vue";
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   name: "company-list",
   mixins: [],
@@ -224,6 +225,7 @@ export default {
     this.query_view();
   },
   methods: {
+    ...mapMutations(["set_vuex_red_number"]),
     set_params() {
       this.origin_search_params = {
         ...this.search_params,
@@ -243,6 +245,7 @@ export default {
         if (res.code == 200) {
           this.table_data = res.data.list;
           this.total = res.data.count;
+          this.set_vuex_red_number(res.data.num);
         }
       });
     },

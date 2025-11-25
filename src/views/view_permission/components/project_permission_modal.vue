@@ -14,14 +14,14 @@
         <div class="permission-list">
           <div
             class="permission-item"
-            v-for="(item, index) in permissionList"
+            v-for="(item, index) in row"
             :key="index"
           >
-            <div class="permission-name">{{ item.name }}</div>
+            <div class="permission-name">{{ permissionList[index].name }}</div>
             <div class="permission-buttons">
               <button
                 class="permission-btn viewable-btn"
-                :class="{ active: item.permission === 1 }"
+                :class="{ active: item.status == 1 }"
                 @click="handlePermissionChange(index, 1)"
               >
                 可查看
@@ -29,7 +29,7 @@
               <button
                 v-if="index !== permissionList.length - 1"
                 class="permission-btn not-viewable-btn"
-                :class="{ active: item.permission === 0 }"
+                :class="{ active: item.status == 0 }"
                 @click="handlePermissionChange(index, 0)"
               >
                 无法查看
@@ -52,83 +52,73 @@ export default {
   data() {
     return {
       show_modal: false,
+      projectId: '',
       permissionList: [
         {
           name: "深化设计、排版套料",
-          permission: 1, // 1-可查看, 0-无法查看
         },
         {
           name: "物资检验",
-          permission: 1,
         },
         {
           name: "下料",
-          permission: 1,
         },
         {
           name: "装配",
-          permission: 1,
         },
         {
           name: "焊清",
-          permission: 1,
         },
         {
           name: "校正",
-          permission: 1,
         },
         {
           name: "总装",
-          permission: 1,
         },
         {
           name: "涂装",
-          permission: 1,
         },
         {
           name: "检验出厂",
-          permission: 1,
         },
       ],
       row: {},
     };
   },
   methods: {
-    init(row) {
+    init(row, projectId) {
+      this.projectId = projectId;
       this.row = row;
       // 这里可以调用接口获取已有的权限设置
       // 暂时使用默认值
       this.show_modal = true;
     },
     handlePermissionChange(index, permission) {
-      this.permissionList[index].permission = permission;
+      this.row[index].status = permission;
     },
     handleCancel() {
       this.show_modal = false;
     },
     handleConfirm() {
       // 这里调用接口保存权限设置
-      // const permissions = this.permissionList.map((item) => ({
-      //   name: item.name,
-      //   permission: item.permission,
-      // }));
-      // this.$api({
-      //   url: "/savePermission",
-      //   method: "post",
-      //   data: {
-      //     projectId: this.row.id,
-      //     permissions: permissions,
-      //   },
-      // }).then((res) => {
-      //   if (res.code == 200) {
-      //     this.$message.success("权限设置成功");
-      //     this.$emit("confirm");
-      //     this.show_modal = false;
-      //   }
-      // });
-      this.$message.success("权限设置成功");
-      this.$emit("confirm");
-      this.show_modal = false;
+      const permissions = this.row.map((item, index) => ({
+        step: index + 1,
+        see: item.status,
+      }));
+      this.$api({
+        url: "/stepPermission",
+        method: "post",
+        data: {
+          id: this.projectId,
+          seeInfo: permissions,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.$message.success("权限设置成功");
+          this.$emit("confirm");
+          this.show_modal = false;
+        }
+      });
     },
     on_dialog_closed() {
       // 重置权限列表

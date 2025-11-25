@@ -48,8 +48,10 @@ axios_ins_common.interceptors.response.use(
 			// 	return;
 			// }
 			alertErr(data.msg)
+			return Promise.reject(data);
 		} else if (code == 500) {
 			alertErr(data.msg)
+			return Promise.reject(data);
 		}
 		return data;
 	},

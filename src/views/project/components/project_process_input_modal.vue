@@ -249,12 +249,11 @@ export default {
             this.show_modal = false;
             this.$emit("confirm");
           } else {
-            this.$message.error(res.msg || "资料录入失败");
+            this.loading = false;
           }
         })
         .catch(() => {
           this.loading = false;
-          this.$message.error("资料录入失败");
         });
     },
 

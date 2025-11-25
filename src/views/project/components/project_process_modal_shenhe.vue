@@ -222,7 +222,7 @@ export default {
     // 处理查看资料
     handleView(status, index) {
       if (!status) {
-        this.$message.warning("请先录入资料");
+        // this.$message.warning("请先录入资料");
         return;
       }
       let statusText = this.getStatusText(status);

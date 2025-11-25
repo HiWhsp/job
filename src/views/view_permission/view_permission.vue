@@ -263,7 +263,18 @@ export default {
       this.$refs.project_content_modal.init(content, title);
     },
     do_process(row) {
-      this.$refs.project_permission_modal.init(row);
+      this.$api({
+        url: "/projectDetail",
+        method: "get",
+        data: {
+          id: row.id,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          // this.$refs.project_permission_modal.init(row);
+          this.$refs.project_permission_modal.init(res.data.userRoles, row.id);
+        }
+      });
     },
   },
 };

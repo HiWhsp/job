@@ -223,6 +223,7 @@ export default {
         method: "get",
         data: {
           ...this.search_params,
+          finish: 1,
         },
       }).then((res) => {
         if (res.code == 200) {

@@ -11,7 +11,7 @@
       @closed="on_dialog_closed()"
     >
       <div class="modal-content">
-        <div class="content-text">{{ content }}</div>
+        <div class="content-text" v-html="content"></div>
       </div>
     </el-dialog>
   </div>
