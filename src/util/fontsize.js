@@ -8,30 +8,28 @@
 // PC 端  1rem = 100px;
 //手机端  1rem = 100px;
 
-(function(doc, win) {
+(function (doc, win) {
   console.log('fontsize.js', doc);
   var docEl = doc.documentElement,
     resizeEvt = "orientationchange" in window ? "orientationchange" : "resize",
-    recalc = function() {
+    baseWidth = 1920, // 基准宽度固定为1920
+    recalc = function () {
       console.log('recalc', docEl);
       var clientWidth = docEl.clientWidth;
       if (!clientWidth) return;
-      if (clientWidth >= 2560) {
-        docEl.style.fontSize = "200px";
-      } else if (clientWidth <= 767) {
-        docEl.style.fontSize = 10 * (clientWidth / 750) + "px";
 
-        let scale = clientWidth / 1920;
-        var viewport = document.querySelector("meta[name=viewport]");
-        viewport.setAttribute(
-          "content",
-          `user-scalable=yes, width=device-width, initial-scale=${scale}`
-        );
-      } else {
-        docEl.style.fontSize = 10 * (clientWidth / 1920) + "px";
-      }
+      // 始终以1920作为基准计算缩放比例
+      var scale = clientWidth / baseWidth;
+
+      // 设置fontSize，1rem = 10px (在1920px宽度下)
+      docEl.style.fontSize = 10 * scale + "px";
+
+      // 可选：如果需要整体缩放，可以使用transform scale
+      // 但通常使用fontSize缩放已经足够
     };
   if (!doc.addEventListener) return;
   // win.addEventListener(resizeEvt, recalc, false);
   doc.addEventListener("DOMContentLoaded", recalc, false);
+  // 立即执行一次
+  recalc();
 })(document, window);
