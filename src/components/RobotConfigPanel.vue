@@ -1412,6 +1412,9 @@ export default {
                     // 先同步选中状态到controllers
                     this.$set(controllerInControllers, "selected", true);
                     // 执行selectController方法
+                    if (controllerInControllers.title === "其他") {
+                      return;
+                    }
                     this.selectController(
                       controllerInControllers.id,
                       controllerInControllers,

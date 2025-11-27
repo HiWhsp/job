@@ -13,7 +13,7 @@
             ></span>
           </div>
         </div>
-        <div class="config-order-number">
+        <div class="config-order-number">submit
           配置单号: <span>{{ configOrderNumber || "暂无" }}</span>
         </div>
 
@@ -724,6 +724,12 @@ export default {
             // this.$message.success("配置单保存成功");
             // localStorage.removeItem("robotConfig");
             localStorage.removeItem("robotUserInfo");
+            // 清除cookie中所有内容
+            document.cookie.split(";").forEach(function(c) {
+              document.cookie = c
+                .replace(/^ +/, "")
+                .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
             this.configOrderNumber = res.data.order_no;
             this.robotConfig = res.data;
             this.showDownloadDialog = true;

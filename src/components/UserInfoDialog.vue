@@ -79,6 +79,32 @@
           class="user-input"
         ></el-input>
       </div>
+
+      <!-- 验证码 -->
+      <div class="input-group captcha-group">
+        <div class="input-label">
+          <i class="el-icon-lock"></i>
+          验证码
+        </div>
+        <div class="captcha-input-wrapper">
+          <el-input
+            v-model="captchaInput"
+            placeholder="请输入验证码"
+            class="captcha-input"
+            @keyup.enter="handleSubmit"
+          ></el-input>
+          <div class="captcha-container">
+            <canvas
+              ref="captchaCanvas"
+              width="80"
+              height="50"
+              aria-label="验证码"
+              class="captcha-canvas"
+              @click="refreshCaptcha"
+            ></canvas>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 底部按钮 -->
@@ -110,7 +136,11 @@ export default {
       errors: {
         mobile: "",
         email: "",
+        captcha: "",
       },
+      captchaInput: "",
+      currentCaptchaCode: "",
+      canvasContext: null,
     };
   },
   computed: {
@@ -121,6 +151,18 @@ export default {
       set(val) {
         this.$emit("input", val);
       },
+    },
+  },
+  mounted() {
+    this.initCaptcha();
+  },
+  watch: {
+    visible(newVal) {
+      if (newVal) {
+        this.$nextTick(() => {
+          this.initCaptcha();
+        });
+      }
     },
   },
   methods: {
@@ -199,6 +241,12 @@ export default {
         return;
       }
 
+      // 验证验证码
+      if (!this.validateCaptcha()) {
+        this.$message.error(this.errors.captcha || "验证码错误");
+        return;
+      }
+
       const submitData = {
         name: this.formData.name,
         mobile: this.formData.mobile,
@@ -219,7 +267,231 @@ export default {
       this.errors = {
         mobile: "",
         email: "",
+        captcha: "",
       };
+      this.captchaInput = "";
+      this.$nextTick(() => {
+        this.refreshCaptcha();
+      });
+    },
+    // 初始化验证码
+    initCaptcha() {
+      const canvas = this.$refs.captchaCanvas;
+      if (!canvas) return;
+      this.canvasContext = canvas.getContext("2d");
+      this.refreshCaptcha();
+    },
+    // 生成随机数
+    randInt(min, max) {
+      const range = max - min + 1;
+      const r = crypto.getRandomValues(new Uint32Array(1))[0] / 0xffffffff;
+      return Math.floor(r * range) + min;
+    },
+    // 生成验证码文本
+    makeCode(length = 5) {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+      let s = "";
+      for (let i = 0; i < length; i++) {
+        s += chars.charAt(this.randInt(0, chars.length - 1));
+      }
+      return s;
+    },
+    // 清空画布
+    clearCanvas() {
+      const canvas = this.$refs.captchaCanvas;
+      if (!canvas || !this.canvasContext) return;
+      this.canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+      // 背景渐变
+      const g = this.canvasContext.createLinearGradient(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+      g.addColorStop(0, "#f8fafc");
+      g.addColorStop(1, "#eef2f6");
+      this.canvasContext.fillStyle = g;
+      this.canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+    },
+    // 绘制噪点
+    drawNoiseDots(count = 80) {
+      const canvas = this.$refs.captchaCanvas;
+      if (!canvas || !this.canvasContext) return;
+      for (let i = 0; i < count; i++) {
+        this.canvasContext.beginPath();
+        this.canvasContext.fillStyle = `rgba(${this.randInt(
+          50,
+          200
+        )},${this.randInt(50, 200)},${this.randInt(50, 200)},${(
+          Math.random() * 0.6
+        ).toFixed(2)})`;
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const r = Math.random() * 1.2; // 减小噪点大小
+        this.canvasContext.arc(x, y, r, 0, Math.PI * 2);
+        this.canvasContext.fill();
+      }
+    },
+    // 绘制干扰线
+    drawInterferenceLines(count = 4) {
+      const canvas = this.$refs.captchaCanvas;
+      if (!canvas || !this.canvasContext) return;
+      for (let i = 0; i < count; i++) {
+        this.canvasContext.beginPath();
+        this.canvasContext.lineWidth = this.randInt(1, 1.5); // 减小线宽
+        this.canvasContext.strokeStyle = `rgba(${this.randInt(
+          30,
+          150
+        )},${this.randInt(30, 150)},${this.randInt(30, 150)},${(
+          0.25 +
+          Math.random() * 0.4
+        ).toFixed(2)})`;
+        const startY = Math.random() * canvas.height;
+        this.canvasContext.moveTo(0, startY);
+        const cpX = this.randInt(canvas.width * 0.2, canvas.width * 0.8);
+        const cpY = this.randInt(0, canvas.height);
+        const endY = Math.random() * canvas.height;
+        const steps = 50; // 减少步数，提高性能
+        let prevX = 0,
+          prevY = startY;
+        for (let t = 1; t <= steps; t++) {
+          const tt = t / steps;
+          const x = tt * canvas.width;
+          const y =
+            (1 - tt) * (1 - tt) * startY +
+            2 * (1 - tt) * tt * cpY +
+            tt * tt * endY;
+          this.canvasContext.moveTo(prevX, prevY);
+          this.canvasContext.lineTo(x, y);
+          prevX = x;
+          prevY = y;
+        }
+        this.canvasContext.stroke();
+      }
+    },
+    // 绘制文本
+    drawText(code) {
+      const canvas = this.$refs.captchaCanvas;
+      if (!canvas || !this.canvasContext) return;
+      const len = code.length;
+      const baseX = 5;
+      const availableW = canvas.width - baseX * 2;
+      const perW = availableW / len;
+
+      for (let i = 0; i < len; i++) {
+        const ch = code[i];
+        // 根据 80x50 尺寸调整字体大小
+        const fontSize = this.randInt(14, 20);
+        const rotate = Math.random() * 0.4 - 0.2; // 减小旋转角度
+        const color = `rgba(${this.randInt(30, 110)},${this.randInt(
+          30,
+          110
+        )},${this.randInt(30, 110)},1)`;
+        this.canvasContext.save();
+        const centerX =
+          baseX + perW * (i + 0.5) + (Math.random() * perW - perW / 2) * 0.15;
+        const centerY = canvas.height / 2 + this.randInt(-3, 3);
+
+        const channels = [
+          { dx: this.randInt(-1, 1), dy: this.randInt(-1, 1) },
+          { dx: this.randInt(-1, 1), dy: this.randInt(-1, 1) },
+        ];
+
+        this.canvasContext.translate(centerX, centerY);
+        this.canvasContext.rotate(rotate);
+        this.canvasContext.font = `${fontSize}px "Arial", sans-serif`;
+        this.canvasContext.textBaseline = "middle";
+        this.canvasContext.textAlign = "center";
+
+        this.canvasContext.shadowColor = "rgba(0,0,0,0.12)";
+        this.canvasContext.shadowBlur = 1;
+        this.canvasContext.fillStyle = color;
+        this.canvasContext.fillText(ch, 0, 0);
+
+        this.canvasContext.lineWidth = 0.5;
+        this.canvasContext.strokeStyle = `rgba(0,0,0,0.06)`;
+        this.canvasContext.strokeText(ch, 0, 0);
+
+        this.canvasContext.restore();
+
+        // 减少偏移层数，避免过于复杂
+        for (let c = 0; c < channels.length; c++) {
+          const { dx, dy } = channels[c];
+          this.canvasContext.save();
+          this.canvasContext.translate(centerX + dx * 1, centerY + dy * 1);
+          this.canvasContext.rotate(rotate + (Math.random() * 0.04 - 0.02));
+          this.canvasContext.font = `${fontSize}px "Arial", sans-serif`;
+          this.canvasContext.textBaseline = "middle";
+          this.canvasContext.textAlign = "center";
+          this.canvasContext.globalAlpha = 0.1;
+          this.canvasContext.fillText(ch, 0, 0);
+          this.canvasContext.restore();
+        }
+      }
+    },
+    // 绘制网格
+    drawGridFine() {
+      const canvas = this.$refs.captchaCanvas;
+      if (!canvas || !this.canvasContext) return;
+      this.canvasContext.save();
+      this.canvasContext.globalAlpha = 0.03;
+      // 根据 80x50 尺寸调整网格间距
+      for (let x = 0; x < canvas.width; x += 5) {
+        this.canvasContext.fillRect(x, 0, 0.5, canvas.height);
+      }
+      for (let y = 0; y < canvas.height; y += 5) {
+        this.canvasContext.fillRect(0, y, canvas.width, 0.5);
+      }
+      this.canvasContext.restore();
+    },
+    // 渲染验证码
+    renderCaptcha(code) {
+      this.clearCanvas();
+      this.drawGridFine();
+      // 根据 80x50 尺寸减少噪点和干扰线数量
+      this.drawNoiseDots(20);
+      this.drawInterferenceLines(1 + this.randInt(0, 1)); // 1-2条干扰线
+      this.drawText(code);
+      this.drawNoiseDots(10);
+    },
+    // 生成并渲染验证码
+    generateAndRender(length = 4) {
+      // 80x50 尺寸较小，使用4位验证码更合适
+      this.currentCaptchaCode = this.makeCode(length);
+      this.renderCaptcha(this.currentCaptchaCode);
+      this.captchaInput = "";
+      this.errors.captcha = "";
+    },
+    // 刷新验证码
+    refreshCaptcha() {
+      this.generateAndRender(4);
+    },
+    // 验证验证码
+    validateCaptcha() {
+      const input = this.captchaInput.trim();
+      if (!input) {
+        this.errors.captcha = "请输入验证码";
+        return false;
+      }
+      if (input.toLowerCase() !== this.currentCaptchaCode.toLowerCase()) {
+        this.errors.captcha = "验证码错误";
+        return false;
+      }
+      this.errors.captcha = "";
+      return true;
+    },
+    // 语音读出验证码
+    readAloud() {
+      if (!("speechSynthesis" in window)) {
+        this.$message.warning("当前浏览器不支持语音合成");
+        return;
+      }
+      const text = this.currentCaptchaCode.split("").join(" ");
+      const ut = new SpeechSynthesisUtterance(text);
+      ut.rate = 0.9;
+      ut.lang = "en-US";
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(ut);
     },
   },
 };
@@ -321,6 +593,60 @@ export default {
         font-size: 12px;
         line-height: 1.5;
         animation: slideDown 0.3s ease;
+      }
+
+      &.captcha-group {
+        .captcha-wrapper {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .captcha-container {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .captcha-canvas {
+          border: 1px solid #ddd;
+          border-radius: 6px;
+          cursor: pointer;
+          background: #fff;
+        }
+
+        .captcha-input-wrapper {
+          position: relative;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .captcha-input {
+          /deep/ .el-input__inner {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            color: #303133;
+            font-size: 14px;
+            height: 50px;
+            line-height: 50px;
+            padding: 0 15px;
+            transition: all 0.3s;
+
+            &:focus {
+              outline: none;
+              border-color: #37b182;
+              box-shadow: 0 0 0 2px rgba(55, 177, 130, 0.1);
+            }
+
+            &::placeholder {
+              color: #c0c4cc;
+            }
+          }
+        }
       }
     }
   }
