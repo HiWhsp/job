@@ -54,6 +54,12 @@ export default {
       },
       deep: true,
     },
+    vuex_red_number: {
+      handler(newVal) {
+        this.setViewMenu();
+      },
+      deep: true,
+    },
   },
   mounted() {
     this.setViewMenu();

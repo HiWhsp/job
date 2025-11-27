@@ -146,7 +146,8 @@ export default {
     },
     handleRejectConfirm(reason) {
       // 处理驳回确认，可以在这里调用API提交驳回原因
-      this.$emit("reject", reason);
+      this.show_modal = false;
+      this.$emit("confirm", reason);
     },
     handlePassConfirm() {
       // 处理通过确认

@@ -56,7 +56,14 @@
                 label="项目状态"
                 align="center"
                 v-if="!vuex_role.includes('shenhe')"
-              ></el-table-column>
+              >
+                <template slot-scope="scope">
+                  <span v-if="scope.row.statusName == '待录入'" style="color: #3377FE;">待录入</span>
+                  <span v-if="scope.row.statusName == '待审核'" style="color: #FF8000;">待审核</span>
+                  <span v-if="scope.row.statusName == '已通过'" style="color: #1FB168;">已通过</span>
+                  <span v-if="scope.row.statusName == '已驳回'" style="color: #FF0000;">已驳回</span>
+                </template>
+              </el-table-column>
               <el-table-column
                 prop="orderNo"
                 label="项目编号"
@@ -245,7 +252,7 @@ export default {
         if (res.code == 200) {
           this.table_data = res.data.list;
           this.total = res.data.count;
-          this.set_vuex_red_number(res.data.num);
+          this.set_vuex_red_number(this.vuex_role.includes("shenhe") ? res.data.num2 : res.data.num1);
         }
       });
     },
@@ -289,7 +296,7 @@ export default {
           if (this.vuex_role.includes("shenhe")) {
             this.$refs.project_process_modal_shenhe.init(row, projectDetail.userRoles);
           } else {
-            this.$refs.project_process_modal.init(row, projectDetail.userRoles);
+            this.$refs.project_process_modal.init(row, projectDetail);
           }
         }
       });

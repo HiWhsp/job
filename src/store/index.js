@@ -115,7 +115,7 @@ export default new Vuex.Store({
 				method: 'get',
 			}).then((res) => {
 				if (res.code == 200) {
-					commit("set_vuex_red_number", res.data.num);
+					commit("set_vuex_red_number", state.vuex_role.includes("shenhe") ? res.data.num2 : res.data.num1);
 				} else {}
 			});
 		},

@@ -93,6 +93,7 @@ export default {
     return {
       show_modal: false,
       loading: false,
+      isModify: false,
       processName: "",
       processIndex: 0,
       projectId: null,
@@ -123,10 +124,27 @@ export default {
     },
   },
   methods: {
-    init(processName, processIndex, projectId) {
+    init(processName, processIndex, projectId, isModify = false) {
       this.processName = processName || "";
       this.processIndex = processIndex || 0;
       this.projectId = projectId;
+      this.isModify = isModify;
+      if (isModify) {
+        this.$api({
+          url: "/getStepInfo",
+          method: "get",
+          data: {
+            id: projectId,
+            step: processIndex + 1,
+          },
+        }).then((res) => {
+          if (res.code == 200) {
+            this.form.content = res.data.content;
+            this.fileList = res.data.files.map((file) => ({ url: file, name: file, response: { data: { path: file } } }));
+            this.imageList = res.data.imgs.map((img) => ({ url: img, name: img, response: { data: { path: img } } }));
+          }
+        });
+      }
       this.resetForm();
       this.show_modal = true;
     },
@@ -225,8 +243,7 @@ export default {
 
       this.loading = true;
 
-      
-
+    
       // 准备提交数据
       const submitData = {
         id: this.projectId,

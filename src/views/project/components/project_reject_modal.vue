@@ -67,6 +67,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           this.$message.success("驳回成功");
+          this.show_modal = false;
           this.$emit("confirm", this.rejectReason);
         }
       });
