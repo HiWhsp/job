@@ -988,6 +988,10 @@ export default {
     initializeProducntInfosMoren(item) {
       // 如果当前项有 producntInfos，则初始化它们
       if (item.producntInfos && Array.isArray(item.producntInfos)) {
+        // 如果有一个选项被选中，则不设置默认值
+        if (item.producntInfos.some((product) => product.selected == true)) {
+          return;
+        }
         // 如果所有选项里都没有moren为1的选项，则设置第一个选项为选中状态
 
         if (item.producntInfos.every((product) => product.moren != 1)) {
