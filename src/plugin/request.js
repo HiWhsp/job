@@ -78,7 +78,7 @@ function api(option) {
   if (process.env.NODE_ENV !== "production") {
     url = API_ROOT + "/api/" + url;//
   } else {
-    url = API_ROOT + "/api/" + url;//
+    url = "/api/" + url;//
   }
 
   let otherConfig = {
