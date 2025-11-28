@@ -22,7 +22,7 @@
           <div class="text-box">
             <div class="text text-1 active">1上传文件</div>
             <div class="text text-2">2核对结果</div>
-            <div class="text text-3">3生成报价单/立刻下单</div>
+            <div class="text text-3">3生成询价单</div>
           </div>
           <div class="step-box">
             <div class="step-item active">
@@ -71,30 +71,6 @@
 
             <div class="tip">提交文件直接下单，表格最多支持100行</div>
           </div>
-
-          <!-- <div class="upload-box column-flex-center">
-            <el-upload
-              class="upload-demo"
-              :action="UPLOAD_ACTION"
-              name="file"
-              :data="custom_upload_data"
-              accept=".xls,.xlsx,.et"
-              :before-upload="beforeAvatarUpload"
-              :on-success="handleAvatarSuccess"
-              :show-file-list="false"
-            >
-              <div class="btn btn-ripple flex-center">
-                <img src="@img/batch/upload.png" alt="" />
-                上传文件
-              </div>
-            </el-upload>
-            <div class="desc">上传文件，即可自动报价</div>
-            <div class="tip">
-              (目前仅支持excel、pdf文件，建议上传文件大小不超过400行500k
-              您还可以选择下载我们的模版，进行填写
-              <span class="download" @click="showTemplate()">下载模版</span> )
-            </div>
-          </div> -->
         </div>
       </div>
     </div>
@@ -102,8 +78,8 @@
   </div>
 </template>
 <script>
-import { UPLOAD_ACTION, UPLOAD_NAME } from "@/config/env";
-import Enterprise_template_down from "../../components/enterprise/enterprise_template_down";
+import { UPLOAD_ACTION, UPLOAD_NAME, UPLOAD_PARAMS_ACTION } from "@/config/env";
+import Enterprise_template_down from "@/components/enterprise/enterprise_template_down";
 import { mapState } from "vuex";
 
 export default {
@@ -115,9 +91,8 @@ export default {
     return {
       banner_list: [],
       banner_poster: "",
-      UPLOAD_ACTION: "http://jzgy360.com/service.php",
-      UPLOAD_NAME,
-      UPLOAD_PARAMS_ACTION: "upload_uploadFile",
+      UPLOAD_ACTION: UPLOAD_ACTION,
+      UPLOAD_NAME: UPLOAD_NAME,
     };
   },
   computed: {
@@ -159,7 +134,7 @@ export default {
       });
     },
     showTemplate() {
-      this.$refs.download.init({});
+      // this.$refs.download.init({});
     },
     do_banner_click(item) {
       //console.log({ ...item });
@@ -338,7 +313,7 @@ export default {
 .upload-wrap {
   position: relative;
   // z-index: 2;
-  margin-top: 100px;
+  margin-top: 170px;
   width: 1400px;
   height: 299px;
   background: #ffffff;
@@ -349,7 +324,7 @@ export default {
       margin-bottom: 16px;
       width: 164px;
       height: 48px;
-      background: #FFEDED;
+      background: #ffeded;
       border-radius: 0px 0px 0px 0px;
       border: 1px solid #f74747;
 

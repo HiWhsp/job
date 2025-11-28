@@ -44,11 +44,7 @@
 
               <div class="input-box">
                 <span>联系地址：</span>
-                <input
-                  type="text"
-                  placeholder="请输入联系地址"
-                  v-model="form.address"
-                />
+                <area_select ref="area_select" @change="changeSelectAddress" />
               </div>
               <div class="input-box">
                 <span>详细地址：</span>
@@ -86,7 +82,7 @@
                 <input
                   type="password"
                   placeholder="请输入密码"
-                  v-model="form.pass2"
+                  v-model="form.repass"
                 />
               </div>
               <div class="btn-box">
@@ -128,10 +124,10 @@
 </template>
 
 <script>
-import register_type_modal from "@/components/account/register_type_modal.vue"; //短信验证码
+import register_type_modal from "@/components/account/register_type_modal.vue";
 import register_phone_code from "@/components/account/register_phone_code.vue"; //短信验证码
 import terms_modal from "@/components/account/terms_modal.vue"; //协议弹窗
-
+import area_select from "@/components/address/area_select.vue";
 import { mapState } from "vuex";
 
 export default {
@@ -140,6 +136,7 @@ export default {
     register_type_modal,
     register_phone_code,
     terms_modal,
+    area_select,
   },
   data() {
     return {
@@ -151,7 +148,6 @@ export default {
         pass: "",
         pass2: "",
         invite_id: "",
-        type: 1,
       },
     };
   },
@@ -184,23 +180,23 @@ export default {
         alertErr("请输入密码");
         return;
       }
-      if (!this.form.pass2) {
+      if (!this.form.repass) {
         alertErr("请输入确认密码");
         return;
       }
-      if (this.form.pass != this.form.pass2) {
+      if (this.form.pass != this.form.repass) {
         alertErr("两次密码不一致");
         return;
       }
-      if (this.form.type == 2 && this.form.company.length === 0) {
-        alertErr("请输入企业名称");
-        return;
-      }
+      // if (this.form.type == 2 && this.form.company.length === 0) {
+      //   alertErr("请输入企业名称");
+      //   return;
+      // }
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
-          action: "login_phoneReg",
+          action: "login_userReg",
           ...this.form,
         },
       }).then((res) => {
@@ -209,6 +205,20 @@ export default {
           this.$router.push("/login");
         }
       });
+    },
+
+    //更新当前父组件数据
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      let { sheng, shi, qu } = data;
+      this.form.province = sheng.id;
+      this.form.city = shi.id;
+      this.form.area = qu.id;
+
+      // this.form.provinceCode = sheng.id;
+      // this.form.cityCode = shi.id;
+      // this.form.areaCode = qu.id;
+      // debugger
     },
 
     //条款
@@ -326,6 +336,10 @@ export default {
             font-weight: 400;
             color: #bebebe;
           }
+        }
+
+        .sanji-wrap {
+          flex: 2;
         }
       }
       .tip {

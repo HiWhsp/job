@@ -35,7 +35,7 @@
           <div class="item">
             <span class="text">姓名：</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.realName" />
+              <el-input clearable type="text" v-model="form.nickname" />
             </span>
             <span class="action"> </span>
           </div>
@@ -59,7 +59,7 @@
           <div class="item">
             <span class="text">联系地址：</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.address" />
+              <area_select ref="area_select" @change="changeSelectAddress" />
             </span>
             <span class="action"> </span>
           </div>
@@ -137,6 +137,7 @@
 
 <script>
 import { UPLOAD_ACTION, UPLOAD_NAME } from "@/config/env.js";
+import area_select from "@/components/address/area_select.vue";
 
 import phone_bind_old_check_modal from "@/components/account/phone_bind_old_check_modal.vue";
 import phone_bind_new_set_modal from "@/components/account/phone_bind_new_set_modal.vue";
@@ -148,6 +149,7 @@ export default {
   components: {
     phone_bind_old_check_modal,
     phone_bind_new_set_modal,
+    area_select,
   },
   data() {
     return {
@@ -206,16 +208,15 @@ export default {
           let data = res.data;
           this.my_info = data;
 
-          this.form = {
-            image: data.image || "",
-            realName: data.realName || "",
-            address: data.address || "",
-            nickname: data.nickname || "",
-            blocName: data.blocName || "",
-            companyName: data.companyName || "",
-            departmentName: data.departmentName || "",
-          };
-
+          this.form = data;
+          this.$refs.area_select.init({
+            province: data.province,
+            city: data.city,
+            area: data.areaId,
+            provinceCode: data.province,
+            cityCode: data.city,
+            areaCode: data.areaId,
+          });
           this.$store.commit("set_vuex_user", res.data);
         }
       });
@@ -239,6 +240,19 @@ export default {
           this.setView();
         }
       });
+    },
+
+    changeSelectAddress(data) {
+      this.$log("更新省市区数据", data);
+      let { sheng, shi, qu } = data;
+      this.form.province = sheng.id;
+      this.form.city = shi.id;
+      this.form.area = qu.id;
+
+      // this.form.provinceCode = sheng.id;
+      // this.form.cityCode = shi.id;
+      // this.form.areaCode = qu.id;
+      // debugger
     },
 
     do_reset() {
@@ -398,9 +412,9 @@ export default {
   .btn-save {
     width: 120px;
     height: 40px;
-    background: #F5F5F5;
+    background: #f5f5f5;
     border-radius: 4px;
-    border: 1px solid #D7D7D7;
+    border: 1px solid #d7d7d7;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;

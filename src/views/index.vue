@@ -18,12 +18,6 @@
                 @mouseleave="on_mouseleave"
               >
                 <div class="lunbo-left">
-                  <!-- 1 -->
-                  <!-- <asideChannelNav v-if="1" /> -->
-                  <!-- <asideChannelNav2 v-if="2" /> -->
-                  <!-- <asideChannelNav3 v-if="3" /> -->
-                  <!-- <asideChannelNav4 v-if="4" /> -->
-
                   <div class="cate-wrap">
                     <div class="cate-group-list">
                       <div
@@ -189,7 +183,7 @@
                       </div>
                       <div class="news-list">
                         <div
-                          class="news-item hover-color"
+                          class="news-item hover-color ellipsis-1"
                           v-for="(item, index) in news_list"
                           :key="index"
                           @click="to_news(item)"
@@ -558,7 +552,10 @@
                   </div>
                 </div>
               </div>
-              <el-empty v-if="suggest_products.length === 0" description="暂无数据" />
+              <el-empty
+                v-if="suggest_products.length === 0"
+                description="暂无数据"
+              />
             </div>
           </div>
         </div>
@@ -621,13 +618,7 @@ export default {
         value: "1",
         title: "推荐商品",
       },
-      tab_list: [
-        { value: "1", title: "推荐商品" },
-        { value: "2", title: "推荐商品" },
-        { value: "3", title: "推荐商品" },
-        { value: "4", title: "推荐商品" },
-        { value: "5", title: "推荐商品" },
-      ],
+      tab_list: [],
 
       product_list_1: [],
       product_list_2: [],
@@ -645,6 +636,7 @@ export default {
       "vuex_index_banners",
       "index_full_ani",
       "hotSearchWords",
+      "vuex_category_tree",
     ]),
 
     float_category_list() {
@@ -657,24 +649,29 @@ export default {
     },
   },
 
-  watch: {},
+  watch: {
+    vuex_category_tree: {
+      handler(newVal) {
+        this.tab_list = newVal
+          .filter((v) => v.isHot)
+          .map((v) => {
+            return {
+              value: v.id,
+              title: v.title,
+            };
+          });
+        this.tab_select = this.tab_list[0] || { value: "58", title: "推荐商品" };
+        // 为你推荐
+        this.query_product_suggest();
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
   created() {
     this.setView();
-    console.log("compiled0401");
   },
-  mounted() {
-    this.tab_list = this.vuex_category_tree
-      .filter((v) => v.isHot)
-      .map((v) => {
-        return {
-          value: v.id,
-          title: v.title,
-        };
-      });
-    this.tab_select = this.tab_list[0];
-    // 为你推荐
-    this.query_product_suggest();
-  },
+  mounted() {},
   methods: {
     setView() {
       this.query_brand();
@@ -718,7 +715,7 @@ export default {
         method: "get",
         data: {
           action: "news_lists",
-          channelId: "",
+          channelId: "58",
           page: 1,
           pageNum: 5,
         },
@@ -907,7 +904,7 @@ export default {
     do_logout() {},
 
     on_mouseover(group, group_index) {
-      console.log("当前分类", { ...group }, group_index);
+      // console.log("当前分类", { ...group }, group_index);
       this.float_index = group_index;
       this.show_float = true;
       //获取配置信息

@@ -57,7 +57,6 @@ export default {
         return;
       }
 
-      this.countdown();
       this.doSend();
     },
 
@@ -70,8 +69,8 @@ export default {
           phone: this.form.phone,
         },
       }).then((res) => {
-        alert(res);
         if (res.code == 200) {
+          this.countdown();
         } else {
           clearInterval(this.timer);
           this.timer = null;
@@ -148,7 +147,7 @@ export default {
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: #F74747;
+  color: #f74747;
   font-size: 1.4rem;
 
   &.disabled {
@@ -210,7 +209,7 @@ export default {
     display: flex;
     align-items: center;
     cursor: pointer;
-    color: #F74747;
+    color: #f74747;
 
     &.disabled {
       color: #ccc;

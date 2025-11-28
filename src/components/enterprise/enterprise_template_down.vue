@@ -48,13 +48,12 @@ export default {
   },
   computed: {},
   watch: {},
-  created() {
-    this.getLink();
-  },
+  created() {},
   methods: {
     init(info) {
       this.show = true;
       console.log(info);
+      this.getLink();
     },
     onModalClose() {
       this.show = false;
@@ -120,7 +119,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 24px;
-          color: #F74747;
+          color: #f74747;
         }
       }
     }
@@ -156,11 +155,11 @@ export default {
     height: 32px;
     background: #ffffff;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    border: 1px solid #f74747;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
+    color: #f74747;
 
     & + button {
       margin-left: 20px;
@@ -168,7 +167,7 @@ export default {
   }
 
   .btn-bg {
-    background: #F74747;
+    background: #f74747;
     color: #ffffff;
   }
 }
@@ -181,7 +180,7 @@ export default {
   padding: 0 10px;
   height: 40px;
   background: #fff;
-  color: #F74747;
+  color: #f74747;
   font-size: 14px;
   margin-left: 15px;
   border-radius: 5px;
@@ -194,4 +193,8 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/modals/phone_bind_modal.less"></style>
+<style
+  scoped
+  lang="less"
+  src="@/assets/h5css/modals/phone_bind_modal.less"
+></style>

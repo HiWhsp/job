@@ -2,13 +2,28 @@
   <div class="sanji-wrap">
     <div class="sanji-box">
       <el-select v-model="sheng" placeholder="请选择省" @change="change_sheng">
-        <el-option v-for="item in list_sheng" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        <el-option
+          v-for="item in list_sheng"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        ></el-option>
       </el-select>
       <el-select v-model="shi" placeholder="请选择市" @change="change_shi">
-        <el-option v-for="item in list_shi" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        <el-option
+          v-for="item in list_shi"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        ></el-option>
       </el-select>
       <el-select v-model="qu" placeholder="请选择区" @change="change_qu">
-        <el-option v-for="item in list_qu" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        <el-option
+          v-for="item in list_qu"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        ></el-option>
       </el-select>
     </div>
   </div>
@@ -66,13 +81,13 @@ export default {
 
   methods: {
     clear() {
-      this.sheng = ''
-      this.shi = ''
-      this.qu = ''
+      this.sheng = "";
+      this.shi = "";
+      this.qu = "";
 
       // this.list_sheng = []
-      this.list_shi = []
-      this.list_qu = []
+      this.list_shi = [];
+      this.list_qu = [];
     },
 
     //更新父组件省市区
@@ -100,7 +115,7 @@ export default {
 
     //父组件设置当前组件省市区数据
     async init(data) {
-      this.$log('初始化', data)
+      this.$log("初始化", data);
       //console.log("父组件设置当前组件省市区数据", data);
       let { province, city, area, provinceCode, cityCode, areaCode } = data;
       // this.sheng = province_id;
@@ -108,26 +123,46 @@ export default {
       // this.qu = area_id;
 
       //省
-      let obj_sheng = this.list_sheng.find((v) => v.id == provinceCode || v.title == province) || {};
+      let obj_sheng =
+        this.list_sheng.find(
+          (v) => v.id == provinceCode || v.title == province
+        ) || {};
+      console.log("obj_sheng", obj_sheng);
       this.sheng = obj_sheng.id;
 
       //解决初始回显慢的问题
-      this.list_shi = [{id: cityCode, title: city}]
-      this.shi = cityCode
-      this.list_qu = [{id: areaCode, title: area}]
-      this.qu = areaCode
+      this.list_shi = [{ id: cityCode, title: city }];
+      this.shi = cityCode;
+      this.list_qu = [{ id: areaCode, title: area }];
+      this.qu = areaCode;
       //解决初始回显慢的问题
 
       //市
-      let res_shi = await this.$api("users_getAreaList", { parent_id: this.sheng });
+      let res_shi = await this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "index_getArea",
+          parentId: this.sheng,
+        },
+      });
       this.list_shi = res_shi.data || [];
-      let obj_shi = this.list_shi.find((v) => v.id == cityCode || v.title == city) || {};
+      let obj_shi =
+        this.list_shi.find((v) => v.id == cityCode || v.title == city) || {};
       this.shi = obj_shi.id;
 
       //区
-      let res_qu = await this.$api("users_getAreaList", { parent_id: this.shi });
+      let res_qu = await this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "index_getArea",
+          parentId: this.shi,
+        },
+      });
       this.list_qu = res_qu.data || [];
-      let obj_qu = this.list_qu.find((v) => v.id == areaCode || v.title == area) || {};
+      let obj_qu =
+        this.list_qu.find((v) => v.id == areaCode || v.title == area) || {};
       this.qu = obj_qu.id;
 
       //console.log("查询城市数据 res_shi", res_shi);
@@ -144,7 +179,7 @@ export default {
       this.sheng_prev = id;
 
       this.address_getAreaList({
-        params: { parent_id: id },
+        params: { parentId: id },
         success: (data) => {
           this.list_shi = data;
         },
@@ -160,23 +195,23 @@ export default {
       this.shi_prev = id;
 
       this.address_getAreaList({
-        params: { parent_id: id },
+        params: { parentId: id },
         success: (data) => {
           this.list_qu = data;
         },
       });
     },
 
-    change_qu(id) { },
+    change_qu(id) {},
 
     address_getAreaList({ params, success } = opt) {
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
-          action: "users_getAreaList",
-          ...params
-        }
+          action: "index_getArea",
+          ...params,
+        },
       }).then((res) => {
         let { code, data } = res;
         // debugger
@@ -191,11 +226,10 @@ export default {
 };
 </script>
 
-
 <style scoped lang="less">
 /deep/ .el-switch.is-checked .el-switch__core {
-  background-color: #F74747 !important;
-  border-color: #F74747 !important;
+  background-color: #f74747 !important;
+  border-color: #f74747 !important;
 }
 
 /deep/ .el-input {

@@ -35,7 +35,7 @@
                         {{ item.content }}
                       </div>
                     </div>
-                    <div class="news-date">{{ item.dtTime?.substr(0, 10) }}</div>
+                    <div class="news-date">{{ item.dtTime.substr(0, 10) }}</div>
                   </div>
                 </router-link>
               </div>
@@ -126,7 +126,7 @@ export default {
         method: "get",
         data: {
           action: "news_lists",
-          channelId: 49,
+          channelId: this.cid,
           keyword: '',
           ...this.pagination,
           isIndex: 0,//类型：0-全部 1-推荐

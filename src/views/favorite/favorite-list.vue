@@ -115,13 +115,19 @@
         </div>
       </div>
     </div>
+
+    <product_add_cart_success_modal ref="product_add_cart_success_modal" />
   </div>
 </template>
 <script>
+import product_add_cart_success_modal from "@/components/product/product_add_cart_success_modal.vue";
+
 import { mapState } from "vuex";
 export default {
   name: "favourite-list",
-  components: {},
+  components: {
+    product_add_cart_success_modal,
+  },
   data() {
     return {
       product_list: [],
@@ -150,6 +156,10 @@ export default {
 
   methods: {
     setView() {
+      this.query_fav();
+    },
+    mix_current_change(page) {
+      this.pagination.page = page;
       this.query_fav();
     },
     query_fav() {
@@ -227,6 +237,28 @@ export default {
         alert(res);
         if (res.code == 200) {
           this.setView();
+        }
+      });
+    },
+    addCart(item) {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "gouwuche_add",
+          inventoryId: item.inventoryId,
+          num: 1,
+        },
+      }).then((res) => {
+        alert(res);
+        let { code, data, msg } = res;
+        if (code == 200) {
+          this.$refs.product_add_cart_success_modal.init({
+            num: 1,
+            ...item,
+          });
+
+          this.$store.commit("set_vuex_cart_number", data.count);
         }
       });
     },
@@ -421,7 +453,7 @@ export default {
         &.btn-detail {
           width: 104px;
           height: 32px;
-          background: #E5222B;
+          background: #e5222b;
           border-radius: 6px;
 
           font-family: OPPOSans, OPPOSans;

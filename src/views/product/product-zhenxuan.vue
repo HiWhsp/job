@@ -294,6 +294,8 @@ export default {
 
 .hot-sec {
   background-image: url("~@img/product/remai-bg.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   height: 509px;
   padding: 0px 0;
   margin-top: 36px;

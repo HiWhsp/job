@@ -86,9 +86,7 @@ export default {
             }).then((res) => {
                 if (res.code == 200) {
                     let data = res.data;
-
                     this.cate_list = data;
-
                 }
             });
         },

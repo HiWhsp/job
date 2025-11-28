@@ -20,9 +20,7 @@
                 }}</b>
                 <span class="text-1"
                   >{{
-                    `您好 ${vuex_user.realName || vuex_user.nickname}（${
-                      vuex_user.companyName
-                    }）`
+                    `您好 ${vuex_user.realName || vuex_user.nickname}`
                   }}
                   <span style="user-select: none">&nbsp;</span>
                 </span>

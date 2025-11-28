@@ -3,35 +3,28 @@
     <div class="nav-inner w-1400">
       <div class="nav-ctx">
         <!-- 全部分类下拉 -->
-        <el-popover
-          popper-class="w-nav-popover"
-          placement="bottom-start"
-          title=""
-          width="150"
-          trigger="hover"
-          content=""
+
+        <router-link
+          slot="reference"
+          class="u-act u-my flex"
+          to="/product-cates"
         >
-          <router-link
-            slot="reference"
-            class="u-act u-my flex"
-            to="/product-cates"
+          <div
+            class="all-box"
+            @mouseover="on_mouseover"
+            @mouseleave="on_mouseleave"
           >
-            <div
-              class="all-box"
-              @mouseover="on_mouseover"
-              @mouseleave="on_mouseleave"
-            >
-              <img src="@img/common/fenlei.png" class="all-icon" />
-              <span class="all-title">全部商品分类</span>
-              <!--              <div class="side-nav">-->
-              <!--                &lt;!&ndash; <asideChannelNav /> &ndash;&gt;-->
-              <!--                &lt;!&ndash; <asideChannelNav2 v-if="config.asideClassifyType == 2" />-->
-              <!--                    <asideChannelNav3 v-if="config.asideClassifyType == 3" />-->
-              <!--                    <asideChannelNav4 v-if="config.asideClassifyType == 4" /> &ndash;&gt;-->
-              <!--              </div>-->
-            </div>
-          </router-link>
-          <div class="pop-child">
+            <img src="@img/common/fenlei.png" class="all-icon" />
+            <span class="all-title">全部商品分类</span>
+            <!--              <div class="side-nav">-->
+            <!--                &lt;!&ndash; <asideChannelNav /> &ndash;&gt;-->
+            <!--                &lt;!&ndash; <asideChannelNav2 v-if="config.asideClassifyType == 2" />-->
+            <!--                    <asideChannelNav3 v-if="config.asideClassifyType == 3" />-->
+            <!--                    <asideChannelNav4 v-if="config.asideClassifyType == 4" /> &ndash;&gt;-->
+            <!--              </div>-->
+          </div>
+        </router-link>
+        <!-- <div class="pop-child">
             <div
               class="child-item"
               v-for="(sub, index) in cates"
@@ -41,8 +34,7 @@
             >
               {{ sub.title }}
             </div>
-          </div>
-        </el-popover>
+          </div> -->
 
         <div class="nav-box">
           <div class="nav-item" v-for="(item, index) in nav_list" :key="index">
@@ -234,12 +226,12 @@ export default {
             color: #ffffff;
 
             &.active {
-              color: #FF5058;
+              color: #ff5058;
               font-weight: bold;
             }
 
             &.router-link-exact-active {
-              color: #FF5058;
+              color: #ff5058;
               font-weight: bold;
 
               // &::after {
@@ -258,7 +250,7 @@ export default {
           }
 
           .text:hover {
-            color: #FF5058;
+            color: #ff5058;
             font-weight: bold;
           }
         }
