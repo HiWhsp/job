@@ -19,6 +19,7 @@
             </div>
           </div>
         </div>
+        <div class="reason-content" v-if="statusText == '已驳回'">{{ processItem.reason }}</div>
         <!-- 录入信息 -->
         <div class="info-section">
           <div class="section-title">录入信息</div>
@@ -78,6 +79,9 @@
           <el-empty description="暂无资料信息"></el-empty>
         </div>
       </div>
+      <span slot="footer" class="dialog-footer" v-if="statusText == '已驳回'">
+        <el-button type="primary" @click="handleModify"> 修改录入 </el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -90,6 +94,7 @@ export default {
       show_modal: false,
       processName: "",
       infoText: "",
+      processItem: {},
       fileList: [],
       imageList: [],
       previewImageList: [],
@@ -97,14 +102,16 @@ export default {
     };
   },
   methods: {
-    init(processItem, name, statusText) {
+    init(name, processItem, index, statusText) {
+      this.index = index;
+      this.statusText = statusText;
+      this.processItem = processItem;
       if (processItem) {
         this.processName = name || "流程详情";
-        this.statusText = statusText || "";
         // 从流程项或行数据中获取资料信息
         this.infoText = processItem.content || "暂无录入信息";
-        this.fileList = processItem.files || [{}];
-        this.imageList = processItem.imgs || [{}];
+        this.fileList = processItem.files || [];
+        this.imageList = processItem.imgs || [];
 
         // 处理图片预览列表
         this.previewImageList = this.imageList.map((img) => img.url || img);
@@ -114,7 +121,7 @@ export default {
 
     // 处理文件点击
     handleFileClick(file) {
-      const fileUrl = file.url || file.fileUrl || file;
+      const fileUrl = file.path || file.fileUrl || file;
       if (fileUrl) {
         // 打开文件链接
         window.open(fileUrl, "_blank");
@@ -126,12 +133,19 @@ export default {
       // ElementUI的el-image组件会自动处理预览
     },
 
+    // 处理修改录入
+    handleModify() {
+      this.show_modal = false;
+      this.$emit("modify", this.index);
+    },
+
     on_dialog_closed() {
       this.processName = "";
       this.infoText = "";
       this.fileList = [];
       this.imageList = [];
       this.previewImageList = [];
+      this.statusText = "";
     },
     getStatusClass(statusText) {
       if (statusText == "未录入") {
@@ -140,6 +154,8 @@ export default {
         return "status-text-active";
       } else if (statusText == "已驳回") {
         return "status-text-reject";
+      } else if (statusText == "待审核") {
+        return "status-text-pending";
       }
       return "status-text-inactive";
     },
@@ -154,7 +170,7 @@ export default {
   overflow-y: auto;
 
   .status-section {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -178,8 +194,19 @@ export default {
         &.status-text-inactive {
           color: #909399;
         }
+        &.status-text-pending {
+          color: #ff8800;
+        }
       }
     }
+  }
+  .reason-content {
+    margin-bottom: 10px;
+    background: #f8f8f8;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #000;
+    border-radius: 8px;
   }
 
   .info-section {
@@ -329,6 +356,25 @@ export default {
   .el-dialog__footer {
     padding: 15px 20px;
     border-top: 1px solid #e4e7ed;
+  }
+
+  .dialog-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    ::v-deep .el-button {
+      width: 120px;
+      height: 40px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #3377fe;
+      background: #fff;
+    }
+    ::v-deep .el-button--primary {
+      background: #3377fe;
+      color: #fff;
+    }
   }
 }
 </style>

@@ -234,12 +234,20 @@ export default {
 
       this.loading = true;
 
+      const files = [];
+      this.fileList.forEach((file) => {
+        files.push({
+          path: file.url,
+          name: file.name,
+        });
+      });
+
       // 准备提交数据
       const submitData = {
         id: this.projectId,
         step: this.processIndex + 1,
         content: this.form.content,
-        files: this.fileList.map((file) => file.url).join(','),
+        files: JSON.stringify(files),
         imgs: this.imageList.map((img) => img.url).join(','),
       };
 

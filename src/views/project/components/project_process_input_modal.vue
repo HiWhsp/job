@@ -140,8 +140,16 @@ export default {
         }).then((res) => {
           if (res.code == 200) {
             this.form.content = res.data.content;
-            this.fileList = res.data.files.map((file) => ({ url: file, name: file, response: { data: { path: file } } }));
-            this.imageList = res.data.imgs.map((img) => ({ url: img, name: img, response: { data: { path: img } } }));
+            this.fileList = res.data.files.map((file) => ({
+              url: file,
+              name: file,
+              response: { data: { path: file } },
+            }));
+            this.imageList = res.data.imgs.map((img) => ({
+              url: img,
+              name: img,
+              response: { data: { path: img } },
+            }));
           }
         });
       }
@@ -207,7 +215,7 @@ export default {
       if (res.code == 200) {
         this.imageList = fileList;
         this.$message.success("图片上传成功");
-      } else {  
+      } else {
         this.imageList.splice(this.imageList.indexOf(file), 1);
         this.$message.error(res.msg || "图片上传失败");
       }
@@ -243,14 +251,21 @@ export default {
 
       this.loading = true;
 
-    
+      const files = [];
+      this.fileList.forEach((file) => {
+        files.push({
+          path: file.response.data.path,
+          name: file.name,
+        });
+      });
+
       // 准备提交数据
       const submitData = {
         id: this.projectId,
         step: this.processIndex + 1,
         content: this.form.content,
-        files: this.fileList.map((file) => file.response.data.path).join(','),
-        imgs: this.imageList.map((img) => img.response.data.path).join(','),
+        files: JSON.stringify(files),
+        imgs: this.imageList.map((img) => img.response.data.path).join(","),
       };
 
       // 调用API提交数据

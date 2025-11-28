@@ -168,8 +168,7 @@ export default {
         if (
           currentStatus === step.submit ||
           currentStatus === step.reject ||
-          currentStatus === step.pass ||
-          currentStatus === 100
+          currentStatus === step.pass
         ) {
           currentStepIndex = i;
           break;
@@ -179,7 +178,9 @@ export default {
       // 如果找到了当前步骤
       if (currentStepIndex >= 0) {
         // 设置当前步骤的状态
-        this.processList[currentStepIndex].status = currentStatus;
+        !this.processList[currentStepIndex]
+          ? (this.processList[currentStepIndex - 1].status = currentStatus)
+          : (this.processList[currentStepIndex].status = currentStatus);
 
         // 设置之前所有步骤为通过状态
         for (let i = 0; i < currentStepIndex; i++) {

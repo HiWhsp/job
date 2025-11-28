@@ -258,7 +258,19 @@ export default {
       this.$refs.project_content_modal.init(content, title);
     },
     do_process(row) {
-      this.$refs.project_process_modal.init(row);
+      this.$api({
+        url: "/projectDetail",
+        method: "get",
+        data: {
+          id: row.id,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          // 获取项目详情
+          const projectDetail = res.data;
+          this.$refs.project_process_modal.init(row, projectDetail);
+        }
+      });
     },
   },
 };

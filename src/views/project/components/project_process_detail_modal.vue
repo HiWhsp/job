@@ -110,8 +110,8 @@ export default {
         this.processName = name || "流程详情";
         // 从流程项或行数据中获取资料信息
         this.infoText = processItem.content || "暂无录入信息";
-        this.fileList = processItem.files || [{}];
-        this.imageList = processItem.imgs || [{}];
+        this.fileList = processItem.files || [];
+        this.imageList = processItem.imgs || [];
 
         // 处理图片预览列表
         this.previewImageList = this.imageList.map((img) => img.url || img);
@@ -121,7 +121,7 @@ export default {
 
     // 处理文件点击
     handleFileClick(file) {
-      const fileUrl = file.url || file.fileUrl || file;
+      const fileUrl = file.path || file.fileUrl || file;
       if (fileUrl) {
         // 打开文件链接
         window.open(fileUrl, "_blank");

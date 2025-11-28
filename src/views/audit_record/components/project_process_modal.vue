@@ -22,19 +22,32 @@
             </div>
             <div
               class="process-action"
-              :class="getActionClass(item.status)"
-              v-if="item.isStepRole"
-              @click="handleView(item.status, index)"
+              :class="
+                getActionClass(
+                  item.status,
+                  readInfo[index] ? readInfo[index].self : 0
+                )
+              "
             >
-              {{
-                !item.status
-                  ? "未录入"
-                  : item.status % 10 == 5
-                  ? "已通过"
-                  : item.status % 10 == 2
-                  ? "已驳回"
-                  : "待审核"
-              }}
+              <span v-if="item.status == 1" @click="handleInput(item, index)"
+                >资料录入</span
+              >
+              <span
+                v-else-if="item.status && item.status % 10 == 0"
+                @click="handleView(item, index)"
+                >{{ readInfo[index].self == 0 ? "查看资料" : "待审核" }}</span
+              >
+              <span
+                v-else-if="item.status && item.status % 10 == 5"
+                @click="handleView(item, index)"
+                >已通过</span
+              >
+              <span
+                v-else-if="item.status && item.status % 10 == 2"
+                @click="handleView(item, index)"
+                >已驳回</span
+              >
+              <span v-else>未录入</span>
             </div>
           </div>
         </div>
@@ -45,7 +58,10 @@
     </el-dialog>
 
     <!-- 流程资料详情弹框 -->
-    <project_process_detail_modal ref="process_detail_modal" />
+    <project_process_detail_modal
+      ref="process_detail_modal"
+      @modify="handleModify"
+    />
 
     <!-- 资料录入弹框 -->
     <project_process_input_modal
@@ -69,6 +85,7 @@ export default {
   data() {
     return {
       show_modal: false,
+      readInfo: [],
       processList: [
         {
           name: "深化设计、排版套料",
@@ -114,15 +131,16 @@ export default {
     ...mapState(["vuex_user"]),
   },
   methods: {
-    init(row) {
+    init(row, projectDetail) {
+      const userRoles = projectDetail.userRoles;
+      const readInfo = projectDetail.readInfo;
+      this.readInfo = readInfo;
       if (row) {
         this.row = row;
       }
       this.processList.forEach((item, index) => {
         item.isStepRole =
-          this.vuex_user.stepRole &&
-          this.vuex_user.stepRole[index] &&
-          this.vuex_user.stepRole[index].status == 1;
+          userRoles && userRoles[index] && userRoles[index].status == 1;
       });
 
       //10-步骤1提交,15-步骤1通过,20-步骤2提交待审,25-步骤2通过,30-步骤3提交待审,35-步骤3通过,
@@ -131,6 +149,7 @@ export default {
 
       // 获取步骤状态
       this.getStepStatus();
+      console.log(this.processList);
       this.show_modal = true;
     },
 
@@ -145,7 +164,7 @@ export default {
         return;
       }
 
-      // 定义状态映射：每个步骤的提交、驳回、通过状态
+      // 定义状态映射：每个步骤的待提交、驳回、通过状态
       const stepStatusMap = [
         { submit: 10, reject: 12, pass: 15 }, // 步骤1
         { submit: 20, reject: 22, pass: 25 }, // 步骤2
@@ -160,8 +179,12 @@ export default {
       ];
 
       // 初始化所有步骤状态为空
-      this.processList.forEach((item) => {
-        item.status = "";
+      this.processList.forEach((item, index) => {
+        if (this.row.status == 1 && index == 0) {
+          item.status = "1";
+        } else {
+          item.status = "";
+        }
       });
 
       // 确定当前状态所在的步骤索引
@@ -171,50 +194,41 @@ export default {
         if (
           currentStatus === step.submit ||
           currentStatus === step.reject ||
-          currentStatus === step.pass ||
-          currentStatus === 100
+          currentStatus === step.pass
         ) {
           currentStepIndex = i;
           break;
         }
       }
+      console.log(currentStepIndex);
 
       // 如果找到了当前步骤
       if (currentStepIndex >= 0) {
+
         // 设置当前步骤的状态
-        this.processList[currentStepIndex].status = currentStatus;
+        !this.processList[currentStepIndex]
+          ? (this.processList[currentStepIndex - 1].status = currentStatus)
+          : (this.processList[currentStepIndex].status = currentStatus);
 
         // 设置之前所有步骤为通过状态
         for (let i = 0; i < currentStepIndex; i++) {
           this.processList[i].status = stepStatusMap[i].pass;
         }
-      } else {
-        // 如果状态不在映射中，可能是中间状态，尝试找到最接近的步骤
-        // 例如状态值在某个范围内
-        for (let i = 0; i < stepStatusMap.length; i++) {
-          const step = stepStatusMap[i];
-          if (
-            currentStatus >= step.submit &&
-            currentStatus < (stepStatusMap[i + 1]?.submit || 1000)
-          ) {
-            // 设置当前步骤的状态
-            this.processList[i].status = currentStatus;
-            // 设置之前所有步骤为通过状态
-            for (let j = 0; j < i; j++) {
-              this.processList[j].status = stepStatusMap[j].pass;
-            }
-            break;
-          }
+
+        if (currentStatus != 100 && currentStatus % 10 == 5) {
+          this.processList[currentStepIndex + 1].status = 1;
         }
       }
     },
 
     // 获取操作按钮的样式类
-    getActionClass(status) {
-      if ((status && status % 10 == 5) || status == 1) {
+    getActionClass(status, self) {
+      if (status == 1) {
         return "action-active";
       } else if (status && status % 10 == 0) {
-        return "action-submit";
+        return self == 0 ? "action-submit" : "action-view";
+      } else if (status && status % 10 == 5) {
+        return "action-over";
       } else if (status && status % 10 == 2) {
         return "action-reject";
       } else {
@@ -223,12 +237,7 @@ export default {
     },
 
     // 处理查看资料
-    handleView(status, index) {
-      if (!status) {
-        this.$message.warning("请先录入资料");
-        return;
-      }
-      let statusText = this.getStatusText(status);
+    handleView(item, index) {
       this.$api({
         url: "/getStepInfo",
         method: "get",
@@ -238,10 +247,16 @@ export default {
         },
       }).then((res) => {
         if (res.code == 200) {
-          this.$refs.process_detail_modal.init(res.data, this.processList[index].name, statusText);
+          this.$refs.process_detail_modal.init(
+            item.name,
+            res.data,
+            index,
+            this.getStatusText(item.status)
+          );
         }
       });
     },
+
     getStatusText(status) {
       if (!status) {
         return "未录入";
@@ -253,18 +268,28 @@ export default {
         return "待审核";
       }
     },
+    handleModify(index) {
+      this.handleInput(this.processList[index], index, true);
+    },
 
     // 处理资料录入
-    handleInput(item, index) {
+    handleInput(item, index, isModify = false) {
       // 打开资料录入弹框
       const projectId = this.row.id || this.row.projectId;
-      this.$refs.process_input_modal.init(item.name, index, projectId);
+      this.$refs.process_input_modal.init(
+        item.name,
+        index,
+        projectId,
+        isModify
+      );
     },
 
     // 资料录入确认后的回调
     handleInputConfirm() {
       // 可以在这里刷新流程列表或执行其他操作
       console.log("资料录入成功");
+      this.show_modal = false;
+      this.$emit("confirm");
     },
 
     on_dialog_closed() {
@@ -308,7 +333,7 @@ export default {
         cursor: pointer;
 
         &.action-active {
-          color: #1fb168;
+          color: #409eff;
           font-weight: 500;
         }
 
@@ -317,12 +342,19 @@ export default {
         }
 
         &.action-submit {
-          color: #3377fe;
+          color: #000;
           font-weight: 500;
         }
-
         &.action-reject {
           color: #ff0000;
+          font-weight: 500;
+        }
+        &.action-view {
+          color: #ff8800;
+          font-weight: 500;
+        }
+        &.action-over {
+          color: #1fb168;
           font-weight: 500;
         }
       }
