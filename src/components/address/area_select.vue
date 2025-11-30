@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 export default {
   name: "area_select",
   components: {},
@@ -122,6 +121,16 @@ export default {
       // this.shi = city_id;
       // this.qu = area_id;
 
+      const res_sheng = await this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "index_getArea",
+        },
+      });
+      if (res_sheng.code == 200) {
+        this.list_sheng = res_sheng.data;
+      }
       //省
       let obj_sheng =
         this.list_sheng.find(

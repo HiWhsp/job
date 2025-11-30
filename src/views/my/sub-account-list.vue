@@ -118,7 +118,8 @@
     <el-dialog
       :visible.sync="dialog_show"
       width="600px"
-      title="填写异议备注信息"
+      :title="dialog_title"
+      @close="do_close()"
     >
       <el-form
         :model="ruleForm"
@@ -127,35 +128,41 @@
         label-width="100px"
         class="demo-ruleForm"
       >
-        <el-form-item label="用户名称：" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+        <el-form-item label="用户名称：" prop="realName">
+          <el-input v-model="ruleForm.realName"></el-input>
         </el-form-item>
-        <el-form-item label="用户密码：" prop="password">
-          <el-input v-model="ruleForm.region"></el-input>
+        <el-form-item label="用户密码：" prop="pass">
+          <el-input v-model="ruleForm.pass"></el-input>
+        </el-form-item>
+        <el-form-item label="用户性别：" prop="sex">
+          <el-radio-group v-model="ruleForm.sex">
+            <el-radio :label="1">男</el-radio>
+            <el-radio :label="0">女</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="部门：" prop="department">
-          <el-input v-model="ruleForm.region"></el-input>
+          <el-input v-model="ruleForm.department"></el-input>
         </el-form-item>
         <el-form-item label="职位：" prop="position">
-          <el-switch v-model="ruleForm.delivery"></el-switch>
+          <el-input v-model="ruleForm.position"></el-input>
         </el-form-item>
         <el-form-item label="手机号：" prop="phone">
-          <el-input v-model="ruleForm.type"></el-input>
+          <el-input v-model="ruleForm.phone"></el-input>
         </el-form-item>
         <el-form-item label="邮箱：" prop="email">
-          <el-input v-model="ruleForm.resource"></el-input>
+          <el-input v-model="ruleForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="备注：" prop="remark">
-          <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+        <el-form-item label="备注：" prop="note">
+          <el-input type="textarea" v-model="ruleForm.note"></el-input>
         </el-form-item>
-        <el-form-item label="状态：" prop="status">
-          <el-radio-group v-model="ruleForm.resource">
-            <el-radio label="启用"></el-radio>
-            <el-radio label="禁用"></el-radio>
+        <el-form-item label="状态：" prop="userStatus">
+          <el-radio-group v-model="ruleForm.userStatus">
+            <el-radio :label="1">启用</el-radio>
+            <el-radio :label="0">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="dialog_show = false"
+          <el-button type="primary" @click="do_submit()"
             >确定</el-button
           >
           <el-button @click="dialog_show = false">取消</el-button>
@@ -176,6 +183,7 @@ export default {
         value: 0,
       },
       //
+      dialog_title: "",
       orders: [],
       pagination: {
         page: 1,
@@ -196,18 +204,15 @@ export default {
         status: "",
       },
       rules: {
-        name: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
-        password: [
-          { required: true, message: "请输入用户密码", trigger: "blur" },
-        ],
-        department: [
-          { required: true, message: "请输入部门", trigger: "blur" },
-        ],
+        realName: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
+        pass: [{ required: true, message: "请输入用户密码", trigger: "blur" }],
+        department: [{ required: true, message: "请输入部门", trigger: "blur" }],
         position: [{ required: true, message: "请输入职位", trigger: "blur" }],
         phone: [{ required: true, message: "请输入手机号", trigger: "blur" }],
         email: [{ required: true, message: "请输入邮箱", trigger: "blur" }],
-        remark: [{ required: true, message: "请输入备注", trigger: "blur" }],
-        status: [{ required: true, message: "请选择状态", trigger: "blur" }],
+        note: [{ required: true, message: "请输入备注", trigger: "blur" }],
+        userStatus: [{ required: true, message: "请选择状态", trigger: "blur" }],
+        sex: [{ required: true, message: "请选择用户性别", trigger: "blur" }],
       },
     };
   },
@@ -219,6 +224,19 @@ export default {
   },
 
   methods: {
+    do_close() {
+      this.ruleForm = {
+        name: "",
+        password: "",
+        department: "",
+        position: "",
+        phone: "",
+        email: "",
+        note: "",
+        userStatus: 1,
+        sex: 1,
+      };
+    },
     emitConfirm() {
       this.query_order();
     },
@@ -229,13 +247,19 @@ export default {
           this.tabList[0];
       }
 
-      this.query_userIndex();
+      // this.query_userIndex();
       this.query_order();
     },
 
     //用户主页数据
     query_userIndex() {
-      this.$api("users_index").then((res) => {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "users_index",
+        },
+      }).then((res) => {
         let { code, data } = res;
         if (code == 200) {
           this.user_index = data;
@@ -249,30 +273,14 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "orders_lists",
+          action: "users_getSubList",
           ...this.pagination,
-          scene: this.tabSelect.value,
-          // keyword: this.keyword,
+          keyword: this.keyword,
         },
       }).then((res) => {
         let { code, data } = res;
         if (code == 200) {
-          let list = data.list;
-
-          list.forEach((order) => {
-            order.isPay = order.value >= 0;
-            order.actions = this.getOrderActions({
-              ...order,
-            });
-
-            let count_goods = 0;
-            order.products.forEach((product) => {
-              count_goods = count_goods + +product.num;
-            });
-            order.count_goods = count_goods;
-          });
-
-          this.orders = list;
+          this.orders = data;
           this.count = data.count;
         }
       });
@@ -407,11 +415,27 @@ export default {
         },
       });
     },
+    do_submit() {
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.$api({
+            url: "/service.php",
+            method: "post",
+            data: {
+              action: "users_addSub",
+              ...this.ruleForm,
+            },
+          });
+        }
+      });
+    },
     async getList() {
       this.dialog_show = true;
+      this.dialog_title = "添加子账号";
     },
     handleEdit(row) {
       this.dialog_show = true;
+      this.dialog_title = "编辑子账号";
       this.ruleForm = row;
     },
     handleDelete(row) {

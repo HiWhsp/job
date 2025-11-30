@@ -730,6 +730,16 @@ export default {
     this.from = this.$route.query.from || "";
     this.getCacheProduct();
 
+    this.$api({
+      url: "/service.php",
+      method: "get",
+      data: {
+        action: "orders_getPlatformAccountList",
+        page: 1,
+        pagenum: 20,
+      },
+    }).then((res) => {
+    })
     //
     this.query_user();
     this.query_address();

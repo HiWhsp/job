@@ -106,8 +106,8 @@ export default {
 
 <style scoped lang="less">
 /deep/ .el-carousel {
-  width: 400px;
-  height: 400px;
+  width: 512px;
+  height: 512px;
 }
 
 /deep/ .el-carousel__container {

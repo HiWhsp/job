@@ -19,14 +19,14 @@
           <span class="text required">手机号</span>
           <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
         </div>
-        <div class="item">
+        <!-- <div class="item">
           <span class="text required">固定电话</span>
           <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
         </div>
         <div class="item">
           <span class="text required">邮政编码</span>
           <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
-        </div>
+        </div> -->
         <div class="item">
           <span class="text">默认地址</span>
           <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#F74747"
@@ -104,8 +104,13 @@ export default {
     },
     //获取地址详情
     query_address_detail() {
-      this.$api("userAddress_detail", {
-        id: this.form.id
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'userAddress_detail',
+          id: this.form.id
+        },
       }).then((res) => {
         let { code, data, msg } = res;
         if (code == 200) {
@@ -161,9 +166,9 @@ export default {
     changeSelectAddress(data) {
       this.$log("更新省市区数据", data);
       let { sheng, shi, qu } = data;
-      this.form.province = sheng.title;
-      this.form.city = shi.title;
-      this.form.area = qu.title;
+      this.form.province = sheng.name;
+      this.form.city = shi.name;
+      this.form.area = qu.name;
 
       this.form.provinceCode = sheng.id;
       this.form.cityCode = shi.id;

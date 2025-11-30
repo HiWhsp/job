@@ -2,6 +2,7 @@ import Vue from "vue";
 import axios from "axios";
 // import store from "@/store";
 // import router from "@/router";
+import { Message } from "element-ui";
 
 import {
   API_ROOT
@@ -29,9 +30,13 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   function (response) {
     let res = response.data;
-    // let {code, data} = res
-    // debugger
+    let { code, msg, message, data } = res
+    if (code != 200) {
+      Message.error(msg || message);
+      return Promise.reject(res);
+    }
     return res;
+    // debugger
   },
   function (error) {
 
@@ -90,7 +95,7 @@ function api(option) {
           items.push(str)
         }
         ret = items.join('&')
-        return ret ;
+        return ret;
       },
     ]
   };

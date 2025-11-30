@@ -151,7 +151,7 @@
             </div>
           </div>
         </div>
-        <div class="filter-item">
+        <!-- <div class="filter-item">
           <div class="label">精确搜索</div>
           <div class="val">
             <div class="cate-box">
@@ -166,7 +166,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="filter-item">
           <div class="label">当前筛选</div>
           <div class="val">

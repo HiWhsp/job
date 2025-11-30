@@ -84,7 +84,7 @@
                         <div class="val">
                           {{ vuex_huobi }}
                           <span class="price">{{ view_info.priceSale }}</span>
-                          <span class="unit">/个</span>
+                          <span class="unit">/{{ info.unit }}</span>
                         </div>
                       </div>
                     </div>
@@ -93,7 +93,7 @@
                       <div class="vals del-price">
                         <div class="val">
                           {{ vuex_huobi }}
-                          {{ info.discountSale }}
+                          {{ view_info.priceMarket }}
                         </div>
                       </div>
                     </div>
@@ -137,7 +137,7 @@
                     <div class="value">{{ info.brand.title || "--" }}</div>
                   </div>
                   <div class="misc-sector">
-                    <div class="label">商品编号：</div>
+                    <div class="label">商品型号：</div>
                     <div class="value">{{ info.productNo || "--" }}</div>
                   </div>
                   <div class="misc-sector">
@@ -209,19 +209,19 @@
                   <div class="value">
                     <div class="flex">
                       <img
-                        src="@/assets/img/pay/type-xianxia.png"
+                        src="@/assets/img/pay/pay-yue.png"
                         style="height: 20px; margin-right: 6px"
                         alt=""
                       />
-                      线下支付
+                      账期月结
                     </div>
                     <div class="flex">
                       <img
-                        src="@/assets/img/pay/type-wx.png"
+                        src="@/assets/img/pay/pay-duigong.png"
                         style="height: 20px; margin-right: 6px"
                         alt=""
                       />
-                      在线支付
+                      对公打款
                     </div>
                   </div>
                 </div>
@@ -374,7 +374,7 @@
                       商品详情
                     </div>
                     <div class="panel-title-line"></div> -->
-                    <div class="detail-spec">
+                    <!-- <div class="detail-spec">
                       <div
                         class="detail-spec-sector"
                         v-for="(value, key) in info.addrows"
@@ -383,7 +383,7 @@
                         <div>{{ key }}</div>
                         <div>{{ value || "--" }}</div>
                       </div>
-                    </div>
+                    </div> -->
                     <div class="rich-html" v-html="info.content"></div>
                     <div class="rich-html" v-html="info.cont2"></div>
                     <div class="rich-html" v-html="info.cont3"></div>
@@ -1474,6 +1474,7 @@ export default {
             top: 12px;
             right: 12px;
             cursor: pointer;
+            z-index: 10;
 
             img {
               width: 20px;

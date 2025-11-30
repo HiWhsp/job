@@ -66,14 +66,14 @@
           <div class="item">
             <span class="text">详细地址：</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.company" />
+              <el-input clearable type="text" v-model="form.address" />
             </span>
             <span class="action"> </span>
           </div>
           <div class="item">
             <span class="text">邮箱：</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.company" />
+              <el-input clearable type="text" v-model="form.email" />
             </span>
             <span class="action"> </span>
           </div>
@@ -233,9 +233,7 @@ export default {
         },
       }).then((res) => {
         let { code, msg, data } = res;
-        alert(res).then(() => {
-          this.loading = false;
-        });
+        this.loading = false;
         if (code == 200) {
           this.setView();
         }
@@ -247,7 +245,7 @@ export default {
       let { sheng, shi, qu } = data;
       this.form.province = sheng.id;
       this.form.city = shi.id;
-      this.form.area = qu.id;
+      this.form.areaId = qu.id;
 
       // this.form.provinceCode = sheng.id;
       // this.form.cityCode = shi.id;

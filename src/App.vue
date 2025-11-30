@@ -98,7 +98,13 @@ export default {
     },
 
     queryConfig() {
-      this.$api("index_config").then((res) => {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "index_config",
+        },
+      }).then((res) => {
         if (res.data && res.data.com_logo) {
           document
             .querySelector('meta[property="og:image"]')

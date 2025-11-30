@@ -275,13 +275,20 @@ export default {
       });
     },
     favouriteAdd(item) {
-      this.$api("product_collect", {
-        inventoryId: item.inventoryId,
-        collect_type: 0,
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_operate",
+          productId: item.productId,
+          operateType: 1,
+          operateSence: 0,
+        },
       }).then((res) => {
         let { code, message } = res;
 
         if (code == 200) {
+          this.$message.success("加入收藏夹成功");
           this.setView();
         }
       });

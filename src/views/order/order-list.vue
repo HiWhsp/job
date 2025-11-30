@@ -284,7 +284,7 @@ export default {
           this.tabList[0];
       }
 
-      this.query_userIndex();
+      // this.query_userIndex();
       this.query_order();
     },
 
