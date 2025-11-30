@@ -1,165 +1,118 @@
-.contact-page {
+@primary-color: #4a7bf7;
+@secondary-color: #e74c3c;
+@text-primary: #363130;
+@text-muted: #adb5bd;
+@bg-light: #f8f9fa;
+@bg-white: #f4f4f6;
+@border-color: #f1f3f4;
+@shadow-light: 0 10px 40px rgba(0, 0, 0, 0.08);
+@shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.1);
+@shadow-active: 0 8px 25px rgba(74, 123, 247, 0.3);
+@border-radius: 16px;
+@border-radius-small: 12px;
+@transition: all 0.3s ease;
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.container {
+  width: 1600px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.card-hover {
+  transition: @transition;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: @shadow-hover;
+    border-color: @primary-color;
+  }
+}
+
+.about-page {
+  background: @bg-white;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
   max-width: 1980px;
   margin: 80px auto 0;
-  background: #fff;
-  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  padding-bottom: 100px;
 
-  .contact-header {
-    height: 340px;
-    background: url("~@/assets/img/company/contact/contact-header.jpg")
-      no-repeat;
+  // 页面头部区域
+  .about-header {
+    height: 600px;
+    background: url("~@/assets/img/company/about-header.png") no-repeat;
     background-size: 100% 100%;
-    padding-left: 270px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
-    p {
-      line-height: 340px;
+    h2 {
+      font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: bold;
       font-size: 36px;
-      color: #ffffff;
+      color: #333333;
+      line-height: 50px;
+    }
+    p {
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: 400;
+      font-size: 20px;
+      color: #666666;
+      line-height: 28px;
     }
   }
 
-  .contact-content {
-    padding: 60px 0;
-    max-width: 1600px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    gap: 60px;
-
-    .contact-info {
-      flex: 1;
-
-      .contact-title {
-        position: relative;
-        margin-bottom: 40px;
-
-        .contact-title-bg {
-          font-size: 60px;
-          font-weight: 900;
-          background: linear-gradient(180deg, #d8e5ff 0%, #f4f6fa 100%);
-          color: transparent;
-          -webkit-background-clip: text;
-          background-clip: text;
-          position: absolute;
-          top: -20px;
-          left: 0;
-          z-index: 1;
-        }
-
-        .contact-title-main {
-          font-size: 40px;
-          font-weight: 700;
-          color: #363130;
-          position: relative;
-          top: 20px;
-          z-index: 2;
-        }
-      }
-
-      .info-item {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 30px;
-
-        .info-icon {
-          width: 92px;
-          height: 92px;
-          img {
-            width: 92px;
-            height: 92px;
-          }
-        }
-
-        .info-text {
-          flex: 1;
-          height: 92px;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          gap: 10px;
-          margin-left: 36px;
-          h3 {
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: 400;
-            font-size: 20px;
-            color: #363130;
-          }
-
-          p {
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: bold;
-            font-size: 20px;
-            color: #363130;
-          }
-        }
-      }
+  .contact-section {
+    width: 1600px;
+    margin: 60px auto 0;
+    .contact-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
-    .consultation-info {
-      flex: 1;
-      border-radius: 12px;
-      padding: 30px;
-
-      .consultation-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 25px;
-        padding-left: 90px;
-        padding-right: 24px;
-
-        width: 784px;
-        height: 160px;
-        background: #ffffff;
-        box-shadow: 0px 0px 20px 1px rgba(0, 0, 0, 0.05);
-        border-radius: 10px 10px 10px 10px;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-
-        .consultation-left {
-          display: flex;
-          align-items: center;
-          flex: 1;
-
-          .red-bar {
-            width: 4px;
-            height: 70px;
-            background: #E0291F;
-            margin-right: 20px;
-            border-radius: 2px;
-          }
-
-          .consultation-text {
-            h3 {
-              font-size: 24px;
-              font-weight: 600;
-              color: #363130;
-              margin: 0 0 8px 0;
-            }
-
-            .phone-number {
-              font-size: 32px;
-              font-weight: bold;
-              color: #E0291F;
-              margin: 0;
-            }
-          }
-        }
-
-        .consultation-icon {
-          width: 160px;
-          height: 160px;
-
-          img {
-            width: 160px;
-            height: 160px;
-          }
-        }
+    .contact-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 468px;
+      height: 360px;
+      background: #ffffff;
+      border: 1px solid #dbdbdb;
+      padding: 34px 24px;
+      .contact-item-title {
+        font-size: 18px;
+        color: #333333;
+        margin-bottom: 10px;
+      }
+      img {
+        width: 240px;
+        height: 140px;
+      }
+      .value {
+        font-size: 18px;
+        color: #333333;
+        margin-bottom: 10px;
+        font-weight: bold;
+        margin-bottom: 45px;
+        margin-top: 30px;
+      }
+      .tip {
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-weight: 400;
+        font-size: 14px;
+        color: #8d8d8d;
+        line-height: 19px;
       }
     }
   }

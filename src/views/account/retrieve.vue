@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="page-bg">
-      <img src="@img/login/login-bg.jpg" alt="" />
+      <img src="@img/login/login-bg.png" alt="" />
     </div>
 
     <div class="page-ctx">
@@ -45,31 +45,20 @@
             </div>
 
             <div class="btn-box">
-              <button class="btn-ripple btn-hover" @click="do_submit()">确定</button>
+              <button class="btn-ripple btn-hover" @click="do_submit()">
+                确定
+              </button>
             </div>
 
             <div class="register-box flex-center">
               <div class="log-box flex" @click="$router.push('/login')">
-                <img src="@img/login/back.png" alt="" />
+                <i class="el-icon-back" style="margin-right: 10px;"></i>
                 <span class="log-text" to="/login">返回登录</span>
               </div>
-            </div>
-
-            <div class="terms-box">
-              <span class="terms-check" @click="is_agree = !is_agree">
-                <img v-if="is_agree" src="@img/common/check1.png" alt="" />
-                <img v-else src="@img/common/check0.png" alt="" />
-                我已阅读并同意
-              </span>
-              <span class="terms-text" @click="terms_open(92)"
-                >《会员注册协议》</span
-              >
             </div>
           </div>
         </div>
       </div>
-
-      <div class="copyright">Copyright(C) 法律文书网 All Rights Reserved</div>
     </div>
 
     <terms_modal ref="terms_modal" />
@@ -79,7 +68,6 @@
 <script>
 import retrieve_phone_code from "@/components/account/retrieve_phone_code.vue"; //短信验证码
 import terms_modal from "@/components/account/terms_modal.vue"; //协议弹窗
-import { mapState } from "vuex";
 
 export default {
   name: "retrieve",
@@ -284,7 +272,7 @@ export default {
         color: #999999;
 
         a {
-          color: #f74747;
+          color: #0081ff;
         }
       }
 
@@ -295,8 +283,9 @@ export default {
         button {
           width: 100%;
           height: 55px;
-          background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
-          font-size: 20px;
+          background: #0081ff;
+          border-radius: 22px;
+          font-size: 22px;
           font-family: sans-serif;
           font-weight: 400;
           color: #ffffff;
@@ -312,18 +301,22 @@ export default {
         .log-box {
           cursor: pointer;
           padding-bottom: 4px;
-          border-bottom: 1px solid #e0291f;
+          border-bottom: 1px solid #0081ff;
           margin-top: 30px;
           margin-bottom: 30px;
           img {
             margin-right: 8px;
+          }
+          i {
+            font-size: 20px;
+            color: #0081ff;
           }
         }
 
         .log-text {
           font-size: 16px;
           font-weight: 400;
-          color: #e0291f;
+          color: #0081ff;
         }
       }
     }
@@ -375,7 +368,7 @@ export default {
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 12px;
-    color: #f74747;
+    color: #0081ff;
   }
 }
 </style>

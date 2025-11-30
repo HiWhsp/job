@@ -8,98 +8,64 @@
             <img src="@img/common/logo.png" alt="" />
           </div>
         </div>
-        <div class="brand-name">法律文书网</div>
       </div>
 
       <!-- 中间导航菜单 -->
-      <div class="header-center" v-if="!isLogin">
+      <div class="header-center">
         <!-- 默认导航 -->
-        <nav class="navigation" v-if="!isScrolled">
+        <nav class="navigation">
           <ul class="nav-list">
             <li class="nav-item" :class="{ active: $route.path === '/' }">
               <span class="nav-link" @click="handleNavClick('/')">首页</span>
             </li>
-            <li class="nav-item" :class="{ active: $route.path === '/about' }">
-              <router-link to="/about" class="nav-link">关于我们</router-link>
-            </li>
             <li
               class="nav-item"
-              :class="{ active: $route.path === '/business' }"
+              :class="{ active: $route.path === '/contractList' }"
             >
-              <router-link to="/business" class="nav-link"
-                >业务范围</router-link
+              <router-link to="/contractList" class="nav-link"
+                >文档中心</router-link
               >
             </li>
-            <li
-              class="nav-item"
-              :class="{ active: $route.path === '/contact' }"
-            >
-              <router-link to="/contact" class="nav-link">联系我们</router-link>
-            </li>
+            <el-dropdown @command="handleNewsCommand">
+              <li class="nav-item" :class="{ active: $route.path === '/news' }">
+                <router-link to="/news" class="nav-link">新闻资讯</router-link>
+              </li>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="1">公司新闻</el-dropdown-item>
+                <el-dropdown-item command="2">行业动态</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+
+            <el-dropdown @command="handleAboutCommand">
+              <li
+                class="nav-item"
+                :class="{ active: $route.path === '/about' }"
+              >
+                <router-link to="/about" class="nav-link">关于我们</router-link>
+              </li>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="company">公司简介</el-dropdown-item>
+                <el-dropdown-item command="contact">联系我们</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </ul>
         </nav>
-
-        <!-- 滚动后的导航 -->
-        <div class="scrolled-navigation" v-if="isScrolled">
-          <el-dropdown trigger="hover" class="nav-dropdown">
-            <span class="nav-link">
-              首页
-              <i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown" @click.native="handleNavClick">
-              <el-dropdown-item @click.native="handleNavClick('/')"
-                >首页</el-dropdown-item
-              >
-              <el-dropdown-item @click.native="handleNavClick('/about')"
-                >关于我们</el-dropdown-item
-              >
-              <el-dropdown-item @click.native="handleNavClick('/business')"
-                >业务范围</el-dropdown-item
-              >
-              <el-dropdown-item @click.native="handleNavClick('/contact')"
-                >联系我们</el-dropdown-item
-              >
-            </el-dropdown-menu>
-          </el-dropdown>
-
-          <el-dropdown
-            trigger="hover"
-            class="nav-dropdown"
-            @click.native="handleNavClick('/contractList/?category=' + item.id)"
+        <div class="search-container">
+          <el-input
+            placeholder="请输入文档关键词"
+            v-model="searchText"
+            class="search-input"
+            size="small"
           >
-            <span class="nav-link">
-              分类 <i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
-                v-for="item in vuex_category_tree"
-                :key="item.id"
-                @click.native="
-                  handleNavClick('/contractList?category=' + item.id)
-                "
-                >{{ item.title }}</el-dropdown-item
-              >
-            </el-dropdown-menu>
-          </el-dropdown>
-
-          <div class="search-container">
-            <el-input
-              placeholder="请输入搜索内容"
-              v-model="searchText"
-              class="search-input"
-              size="small"
-            >
-              <el-button
-                class="btn-hover"
-                slot="append"
-                icon="el-icon-search"
-                @click="handleSearch"
-              ></el-button>
-            </el-input>
-          </div>
+            <el-button
+              class="btn-hover"
+              slot="append"
+              icon="el-icon-search"
+              @click="handleSearch"
+            ></el-button>
+          </el-input>
         </div>
       </div>
-      <div v-if="isLogin"></div>
 
       <!-- 右侧用户操作和联系信息 -->
       <div class="header-right">
@@ -109,58 +75,8 @@
           @click="goUrl('/login')"
         >
           <i class="user-icon"><img src="@img/common/avatar.png" alt="" /></i>
-          <span>登录/注册</span>
+          <span>会员登陆 | 注册</span>
         </button>
-        <el-popover
-          placement="bottom"
-          width="250"
-          trigger="hover"
-          v-if="vuex_user.id"
-        >
-          <div class="user-info-content">
-            <div class="list">
-              <div class="user-info-item" @click="goUrl('/my?tab=1')">
-                <img src="@img/common/order.png" alt="" />
-                <span>我的订单</span>
-              </div>
-              <div class="user-info-item" @click="goUrl('/my?tab=2')">
-                <img src="@img/common/my-down.png" alt="" />
-                <span>我的下载</span>
-              </div>
-              <div class="user-info-item" @click="goUrl('/my?tab=3')">
-                <img src="@img/common/my-collect.png" alt="" />
-                <span>我的收藏</span>
-              </div>
-            </div>
-            <div class="logout">
-              <span @click="logout">退出登录</span>
-            </div>
-          </div>
-          <div class="user-info" slot="reference">
-            <img src="@img/common/avatar.png" alt="" />
-            <span>{{ vuex_user.mobile || "13333333333" }}</span>
-          </div>
-        </el-popover>
-        <button
-          class="login-btn"
-          v-if="isLogin && !vuex_user.id"
-          @click="goHome"
-        >
-          <span>返回首页</span>
-        </button>
-        <div class="contact-info">
-          <div class="contact-text">
-            <div class="contact-label flex-center">
-              <div class="phone-icon">
-                <img src="@img/index/phone.png" alt="" />
-              </div>
-              律师咨询电话(同微信)
-            </div>
-            <div class="phone-number">
-              {{ vuex_config.bottom_lawer_contact || "18696628883" }}
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -171,7 +87,6 @@ export default {
   name: "page-header",
   data() {
     return {
-      isScrolled: false,
       isLogin: false,
       searchText: "",
     };
@@ -186,9 +101,6 @@ export default {
     window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
-    handleScroll() {
-      this.isScrolled = window.scrollY > 100;
-    },
     handleSearch() {
       // 这里可以添加搜索逻辑
       this.$router.push({
@@ -200,6 +112,19 @@ export default {
         },
       });
       this.searchText = "";
+    },
+    handleNewsCommand(command) {
+      this.$router.push({
+        path: "/news",
+        query: {
+          type: command,
+        },
+      });
+    },
+    handleAboutCommand(command) {
+      this.$router.push({
+        path: `/${command}`,
+      });
     },
     goHome() {
       this.$router.push("/");
@@ -231,7 +156,7 @@ export default {
 <style lang="less" scoped>
 .page-header {
   background: #fff;
-  height: 80px;
+  height: 114px;
   box-shadow: 0px 3px 8px 1px rgba(0, 0, 0, 0.07);
   position: fixed;
   top: 0;
@@ -255,9 +180,8 @@ export default {
 
 .logo {
   .logo-emblem {
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
+    width: 384px;
+    height: 69px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -269,15 +193,13 @@ export default {
   }
 }
 
-.brand-name {
-  color: #d32f2f;
-  font-size: 32px;
-  font-weight: bold;
-}
-
 // 中间导航菜单
 .header-center {
+  display: flex;
+  align-items: center;
+  width: 860px;
   .navigation {
+    margin-right: 60px;
     .nav-list {
       display: flex;
       list-style: none;
@@ -287,8 +209,10 @@ export default {
     }
 
     .nav-item {
+      width: 80px;
+      text-align: center;
       .nav-link {
-        color: #424242;
+        color: #333;
         text-decoration: none;
         font-size: 18px;
         font-weight: 500;
@@ -298,65 +222,51 @@ export default {
         cursor: pointer;
 
         &:hover {
-          color: #363130;
+          color: #0081ff;
         }
       }
       &.active {
         .nav-link {
+          color: #0081ff;
           font-weight: bold;
+          &::after {
+            content: "";
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #0081ff;
+          }
         }
       }
     }
   }
-
-  // 滚动后的导航样式
-  .scrolled-navigation {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-
-    .nav-dropdown {
-      .nav-link {
-        color: #363130;
-        font-size: 18px;
-        font-weight: 500;
-        cursor: pointer;
-        padding: 8px 12px;
-        border-radius: 4px;
-        transition: all 0.3s ease;
-
-        &:hover {
-          color: #4e57d9;
-          background-color: #f5f7fa;
-        }
+  .search-container {
+    width: 254px;
+    height: 40px;
+    border-radius: 23px 23px 23px 23px;
+    border: 1px solid #c2c5ca;
+    .search-input {
+      width: 100%;
+      height: 100%;
+      /deep/ .el-input__inner {
+        border-right: none;
+        border: none;
+        height: 100%;
+        border-radius: 23px 23px 23px 23px;
       }
-    }
 
-    .search-container {
-      .search-input {
-        width: 534px;
-        height: 50px;
-
-        /deep/ .el-input__inner {
-          border-radius: 8px 0 0 8px;
-          border-right: none;
-          border: 1px solid #ced1db;
-          height: 100%;
-        }
-
-        /deep/ .el-input-group__append {
-          border-radius: 0 8px 8px 0;
-          background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
-          border: none;
-          color: white;
-
-          &:hover {
-            background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
-          }
-          .el-icon-search {
-            font-size: 26px;
-            color: white;
-          }
+      /deep/ .el-input-group__append {
+        background: #fff;
+        border-radius: 0 8px 8px 0;
+        border: none;
+        color: #0081ff;
+        border-radius: 0 23px 23px 0;
+        .el-icon-search {
+          font-size: 26px;
+          color: #0081ff;
         }
       }
     }
@@ -372,24 +282,19 @@ export default {
 
 .login-btn {
   background: #fff;
-  border: 1px solid #4e57d9;
+  border: none;
   border-radius: 25px;
   padding: 12px 24px;
-  color: #4e57d9;
-  font-size: 14px;
+  color: #333;
+  font-size: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: transform 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
 
   .user-icon {
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 24px;
     img {
       width: 100%;
       height: 100%;

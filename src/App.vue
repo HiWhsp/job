@@ -5,8 +5,8 @@
     <div class="layout-box">
       <router-view></router-view>
     </div>
-    <page_footer v-if="!isFooter" />
-    <page_aside v-if="!isFooter" />
+    <page_footer />
+    <!-- <page_aside v-if="!isFooter" /> -->
   </div>
 </template>
 
@@ -149,12 +149,12 @@ body {
 }
 
 .el-textarea__inner:focus {
-  border-color: #f74747 !important;
+  border-color: #0081FF !important;
 }
 
 .el-radio__input.is-checked .el-radio__inner {
-  background: #f74747 !important;
-  border-color: #f74747 !important;
+  background: #0081FF !important;
+  border-color: #0081FF !important;
 }
 
 .el-radio__input.is-checked + .el-radio__label {
@@ -162,17 +162,17 @@ body {
 }
 
 .el-checkbox__input.is-focus .el-checkbox__inner {
-  border-color: #f74747 !important;
+  border-color: #0081FF !important;
 }
 
 .el-checkbox__input.is-checked + .el-checkbox__label {
-  color: #f74747 !important;
+  color: #0081FF !important;
 }
 
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-  background: #f74747 !important;
-  border-color: #f74747 !important;
+  background: #0081FF !important;
+  border-color: #0081FF !important;
 }
 
 .pagination-box {

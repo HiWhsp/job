@@ -1,14 +1,14 @@
 <template>
   <div class="page">
     <div class="page-bg">
-      <img src="@img/login/login-bg.jpg" alt="" />
+      <img src="@img/login/login-bg.png" alt="" />
     </div>
     <div class="page-ctx">
       <div class="page-inner flex-center w-1400">
         <div class="form-box">
           <div class="input-wrap">
             <div class="tab-box">
-              <div class="tab-item">手机号注册</div>
+              <div class="tab-item">会员注册</div>
             </div>
 
             <template>
@@ -43,7 +43,9 @@
                 />
               </div>
               <div class="btn-box">
-                <button class="btn-ripple btn-hover" @click="do_submit()">注册</button>
+                <button class="btn-ripple btn-hover" @click="do_submit()">
+                  注册
+                </button>
               </div>
 
               <div class="register-box">
@@ -54,13 +56,12 @@
 
               <div class="terms-box">
                 <div class="terms-box-inner">
-                  <span class="terms-check" @click="is_agree = !is_agree">
-                    <img v-if="is_agree" src="@img/common/check1.png" alt="" />
-                    <img v-else src="@img/common/check0.png" alt="" />
-                    我已阅读并同意
-                  </span>
+                  <el-checkbox v-model="is_agree"></el-checkbox>
+                  <span class="terms-text" style="margin-left: 10px;" @click="terms_open(92)"
+                    >我已阅读并同意《用户协议》和</span
+                  >
                   <span class="terms-text" @click="terms_open(92)"
-                    >《会员注册协议》</span
+                    >《隐私政策》</span
                   >
                 </div>
               </div>
@@ -69,7 +70,6 @@
         </div>
       </div>
     </div>
-    <div class="copyright">Copyright(C) 法律文书网 All Rights Reserved</div>
 
     <terms_modal ref="terms_modal" />
   </div>
@@ -283,7 +283,7 @@ export default {
       .tip {
         &:after {
           content: "请输入公司全称";
-          color: #f74747;
+          color: #0081ff;
           position: absolute;
           right: 0;
           top: 10px;
@@ -308,7 +308,7 @@ export default {
         color: #999999;
 
         a {
-          color: #f74747;
+          color: #0081ff;
         }
       }
 
@@ -318,7 +318,8 @@ export default {
         button {
           width: 100%;
           height: 55px;
-          background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
+          background: #0081ff;
+          border-radius: 22px;
           font-size: 20px;
           font-weight: 400;
           color: #ffffff;
@@ -337,8 +338,8 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 24px;
-          color: #f74747;
-          border-bottom: 1px solid #f74747;
+          color: #0081ff;
+          border-bottom: 1px solid #0081ff;
         }
       }
     }
@@ -388,7 +389,7 @@ export default {
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 14px;
-    color: #f74747;
+    color: #0081ff;
   }
 }
 </style>

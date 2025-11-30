@@ -17,22 +17,9 @@
           </div>
         </div>
         <div class="modal-footer">
-          <div
-            class="left-check check-box"
-            :class="{ checked: is_check }"
-            @click="is_check = !is_check"
-          >
-            <img src="@img/common/check0.png" alt="" class="check-0" />
-            <img src="@img/common/check1.png" alt="" class="check-1" />
-            <span>登录注册即表示您已阅读并同意上述内容</span>
-          </div>
-          <button
-            :disabled="!is_check"
-            class="btn-confirm fit-text btn-ripple"
-            @click="is_show = false"
-          >
-            确定
-          </button>
+          <el-button type="primary" @click="is_show = false">
+            同意条款并继续
+          </el-button>
         </div>
       </div>
     </el-dialog>
@@ -138,9 +125,7 @@ export default {
 }
 
 /deep/ .el-dialog__header {
-  padding: 15px;
-  border-bottom: 1px solid #ddd;
-  background: #e4f5fc;
+  background: #f7f7f7;
 }
 
 .el-dialog__headerbtn {
@@ -152,12 +137,10 @@ export default {
 }
 
 /deep/ .el-dialog__body {
-  color: #606266;
   font-size: 14px;
   word-break: break-all;
   height: auto;
   padding: 20px 30px;
-  background: #e4f5fc;
 }
 
 .modal-title {
@@ -178,19 +161,21 @@ export default {
   background: #ffffff;
   border-radius: 0.677083vw 0.677083vw 0.677083vw 0.677083vw;
   opacity: 1;
-  border: 1px solid #ccc;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
 .modal-footer {
-  margin: 0 auto;
-  margin-top: 1.041667vw;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: none;
+  text-align: center;
+  margin-top: 20px;
+  /deep/ .el-button {
+    width: 280px;
+    height: 40px;
+    background: #377cfd;
+    font-size: 16px;
+    font-weight: 400;
+    color: #ffffff;
+  }
 }
 
 .ctx-rich {
@@ -226,8 +211,8 @@ export default {
 }
 
 .btn-confirm:not(:disabled) {
-  background: #F74747;
-  border-color: #F74747;
+  background: #f74747;
+  border-color: #f74747;
   color: #fff;
 }
 

@@ -1,87 +1,35 @@
 <template>
-  <div class="contact-page">
-    <div class="contact-header">
-      <p>联系我们</p>
+  <div class="about-page">
+    <div class="about-header">
+      <h2>联系我们</h2>
+      <p>为企业提供优质有效的服务，赢得企业认可</p>
     </div>
 
-    <div class="contact-content">
-      <div class="contact-info">
-        <h1 class="contact-title">
-          <span class="contact-title-bg">CONTACT US</span>
-          <span class="contact-title-main">重庆法焰科技有限公司</span>
-        </h1>
-
-        <div class="info-item">
-          <div class="info-icon">
-            <img
-              src="@/assets/img/company/contact/组 43857@2x.png"
-              alt="地址图标"
-            />
+    <div class="contact-section">
+      <div class="contact-content">
+        <div class="contact-item">
+          <div class="contact-item-title">
+            <h3>联系电话</h3>
           </div>
-          <div class="info-text">
-            <h3>公司地址</h3>
-            <p>{{ contactInfo.site_address }}</p>
-          </div>
+          <img src="@/assets/img/company/contact-mobile.png" alt="" />
+          <div class="value">18628267502</div>
+          <div class="tip">如有意见建议请在工作日9:00- 18:00致电我们</div>
         </div>
-
-        <div class="info-item">
-          <div class="info-icon">
-            <img
-              src="@/assets/img/company/contact/组 43858@2x.png"
-              alt="电话图标"
-            />
+        <div class="contact-item">
+          <div class="contact-item-title">
+            <h3>联系电话</h3>
           </div>
-          <div class="info-text">
-            <h3>公司电话</h3>
-            <p>{{ contactInfo.company_phone }}</p>
-          </div>
+          <img src="@/assets/img/company/contact-mobile.png" alt="" />
+          <div class="value">18628267502</div>
+          <div class="tip">如有意见建议请在工作日9:00- 18:00致电我们</div>
         </div>
-
-        <div class="info-item">
-          <div class="info-icon">
-            <img
-              src="@/assets/img/company/contact/组 43859@2x.png"
-              alt="邮箱图标"
-            />
-          </div>
-          <div class="info-text">
+        <div class="contact-item">
+          <div class="contact-item-title">
             <h3>邮箱</h3>
-            <p>{{ contactInfo.company_email }}</p>
           </div>
-        </div>
-      </div>
-
-      <div class="consultation-info">
-        <div class="consultation-item">
-          <div class="consultation-left">
-            <div class="red-bar"></div>
-            <div class="consultation-text">
-              <h3>律师咨询电话</h3>
-              <p class="phone-number">{{ contactInfo.ask_lawer_phone }}</p>
-            </div>
-          </div>
-          <div class="consultation-icon">
-            <img
-              src="@/assets/img/company/contact/组 43896@2x.png"
-              alt="咨询图标"
-            />
-          </div>
-        </div>
-
-        <div class="consultation-item">
-          <div class="consultation-left">
-            <div class="red-bar"></div>
-            <div class="consultation-text">
-              <h3>微信咨询律师</h3>
-              <p class="phone-number">{{ contactInfo.wechat_lawer_phone }}</p>
-            </div>
-          </div>
-          <div class="consultation-icon">
-            <img
-              src="@/assets/img/company/contact/组 43897@2x.png"
-              alt="微信图标"
-            />
-          </div>
+          <img src="@/assets/img/company/contact-email.png" alt="" />
+          <div class="value">446426404@qq.com</div>
+          <div class="tip">如有意见建议请发送邮件至我们的邮箱</div>
         </div>
       </div>
     </div>
@@ -90,18 +38,21 @@
 
 <script>
 export default {
-  name: "Contact",
+  name: "About",
   data() {
     return {
-      contactInfo: {},
+      activeTab: 0,
     };
   },
   mounted() {
-    this.$api({
-      url: "contactUs",
-    }).then((res) => {
-      this.contactInfo = res.data;
-    });
+    // this.$api({
+    //   url: "setting",
+    // })
+  },
+  methods: {
+    setActiveTab(index) {
+      this.activeTab = index;
+    },
   },
 };
 </script>

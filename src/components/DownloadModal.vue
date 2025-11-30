@@ -1,140 +1,40 @@
 <template>
   <el-dialog
     :visible.sync="visible"
-    width="1300px"
-    custom-class="download-modal"
+    width="500px"
+    custom-class="wechat-pay-modal"
+    :show-close="false"
     @close="handleClose"
   >
-    <div class="download-modal-content" v-if="isPaySuccess">
-      <!-- 产品选择区域 -->
-      <div class="product-section">
-        <div class="product-list" ref="productList">
-          <div
-            v-for="(product, index) in products"
-            :key="index"
-            class="product-item"
-            :class="{
-              selected: selectedProductIndex === index,
-              recommended: product.recommended,
-            }"
-            @click="selectProduct(index)"
-          >
-            <!-- 推荐标签 -->
-            <div v-if="product.recommended" class="recommend-badge">
-              <img src="@/assets/img/common/hotPay.png" alt="推荐" />
-            </div>
-
-            <!-- 选择图标 -->
-            <div class="select-icon">
-              <img
-                v-if="selectedProductIndex === index"
-                class="el-icon-check"
-                src="@/assets/img/common/pay-yes.png"
-                alt="选择"
-              />
-              <img v-else src="@/assets/img/common/pay-no.png" alt="选择" />
-            </div>
-
-            <!-- 产品信息 -->
-            <div class="product-info">
-              <h3 class="product-title">
-                <img src="@/assets/img/common/word.png" alt="标题" />
-                {{ product.title }}
-              </h3>
-              <p class="product-description">
-                <el-tooltip :content="product.description" placement="top">
-                  <span class="ellipsis-3">{{ product.description }}</span>
-                </el-tooltip>
-              </p>
-
-              <div class="flex-between">
-                <div class="product-meta">
-                  <span class="format">{{ product.format }}</span>
-                  <span class="size">{{ product.size }}</span>
-                  <span class="pages">{{ product.pages }}</span>
-                </div>
-                <div class="product-price">
-                  <span class="price-label">支付金额：</span>
-                  <span class="price-value">¥{{ product.price }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+    <!-- 弹框头部 -->
+    <div class="pay-modal-header">
+      <div class="header-left">
+        <div class="wechat-icon">
+          <img src="@img/common/wechat.png" alt="" />
         </div>
+        <span class="wechat-pay-text">微信支付</span>
       </div>
-
-      <!-- 支付区域 -->
-      <div class="payment-section">
-        <div class="payment-left">
-          <!-- 二维码区域 -->
-          <div class="qr-codes">
-            <div class="qr-item">
-              <div class="qr-code wechat-qr">
-                <img :src="wechatQR" alt="微信支付二维码" />
-              </div>
-              <div class="qr-label">
-                <img src="@/assets/img/common/wechat.png" alt="微信" />
-                <span>微信扫码支付</span>
-              </div>
-            </div>
-            <div class="qr-item">
-              <div class="qr-code alipay-qr">
-                <img :src="alipayQR" alt="支付宝支付二维码" />
-              </div>
-              <div class="qr-label">
-                <img src="@/assets/img/common/alipay.png" alt="支付宝" />
-                <span>支付宝扫码支付</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 金额显示 -->
-          <div class="amount-display">
-            <div class="amount-display-top">
-              <div class="amount-label">应付金额</div>
-              <div class="amount-value">¥ {{ selectedProduct.price }}</div>
-              <div class="amount-tip">付费成功即可下载本文档</div>
-            </div>
-            <div class="amount-display-bottom">
-              <div class="title">
-                <img src="@/assets/img/common/miaoze.png" alt="" />
-                免责声明：
-              </div>
-              <div class="content">
-                本合同模板的提供方及为模板使用提供合同审核、签约指导或法律咨询服务的人员，不对合同双方的订约行为、履约行为及由此产生的任何争议、损失承担任何法律责任；本声明适用于本合同模板的所有使用方，您通过使用本合同模板即表示同意并接受以上免责条款。
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 备案信息 -->
-        <!-- <div class="payment-right">
-          <div class="security-badges">
-            <div class="badge-item">
-              <img src="@/assets/img/common/pay-icon3.png" alt="安全联盟" />
-            </div>
-            <div class="badge-item">
-              <img src="@/assets/img/common/pay-icon2.png" alt="安全联盟" />
-            </div>
-            <div class="badge-item">
-              <img src="@/assets/img/common/pay-icon1.png" alt="安全联盟" />
-            </div>
-          </div>
-          <div class="security-tip">
-            支付系统已经经过安全联盟认证请放心使用
-            <span>支付成功后会自动跳转到文书合同下载页面</span>
-          </div>
-        </div> -->
-      </div>
+      <i class="el-icon-close close-btn" @click="handleClose"></i>
     </div>
-    <div class="download-modal-content" v-else>
-      <div class="pay-success">
-        <img src="@/assets/img/common/pay-success.png" alt="支付成功" />
-        <span>支付成功！立即下载</span>
-        <button class="download-btn" @click="handleDownload">
-          <img src="@/assets/img/common/down.png" alt="" />
-          <span>下载Word版本</span>
-        </button>
+
+    <!-- 简洁支付弹框（当有二维码时显示） -->
+    <div class="pay-modal-body" v-if="wechatQR && isPaySuccess">
+      <!-- 支付金额 -->
+      <div class="payment-amount">
+        <div class="amount-label">支付金额</div>
+        <div class="amount-value">¥{{ selectedProduct.price || "79.11" }}</div>
+      </div>
+
+      <!-- 二维码 -->
+      <div class="qr-code-container">
+        <div class="qr-code-wrapper">
+          <img :src="wechatQR" alt="微信支付二维码" />
+        </div>
+      </div>
+
+      <!-- 提示信息 -->
+      <div class="payment-tip">
+        <img src="@img/common/payment-tip.png" alt="" />
       </div>
     </div>
   </el-dialog>
@@ -185,11 +85,14 @@ export default {
   },
   mounted() {
     console.log(this.detail.contract_type);
-    
+
     // 服务
     this.$set(this.products, 0, {
       title: this.detail.title + "(服务版)",
-      description: this.detail.contract_type == 1 ? this.vuex_config.service_buy_notice_2 : this.vuex_config.service_buy_notice,
+      description:
+        this.detail.contract_type == 1
+          ? this.vuex_config.service_buy_notice_2
+          : this.vuex_config.service_buy_notice,
       format: "word格式",
       size: this.detail.size + "MB",
       pages: "共" + this.detail.total_page + "页",
@@ -199,7 +102,10 @@ export default {
     // 基础
     this.$set(this.products, 1, {
       title: this.detail.title + "(基础版)",
-      description: this.detail.contract_type == 1 ? this.vuex_config.basic_buy_notice_2 : this.vuex_config.basic_buy_notice,
+      description:
+        this.detail.contract_type == 1
+          ? this.vuex_config.basic_buy_notice_2
+          : this.vuex_config.basic_buy_notice,
       format: "word格式",
       size: this.detail.size + "MB",
       pages: "共" + this.detail.total_page + "页",
@@ -684,6 +590,126 @@ export default {
   .el-dialog__close {
     font-size: 28px;
     color: #999;
+  }
+}
+
+// 微信支付弹框样式
+.wechat-pay-modal {
+  width: 500px !important;
+  min-width: 500px !important;
+  max-width: 500px !important;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .el-dialog__header {
+    display: none;
+  }
+
+  .el-dialog__body {
+    padding: 0;
+  }
+
+  // 弹框头部
+  .pay-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background: #fff;
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .wechat-icon {
+        width: 38px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .wechat-pay-text {
+        font-size: 18px;
+        font-weight: 500;
+        color: #333;
+      }
+    }
+
+    .close-btn {
+      font-size: 20px;
+      color: #999;
+      cursor: pointer;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: #333;
+      }
+    }
+  }
+
+  // 弹框内容
+  .pay-modal-body {
+    padding: 0px 24px 30px;
+    background: #fff;
+    text-align: center;
+
+    // 支付金额
+    .payment-amount {
+      margin-bottom: 30px;
+
+      .amount-label {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 12px;
+      }
+
+      .amount-value {
+        font-size: 36px;
+        font-weight: bold;
+        color: #ff6600;
+      }
+    }
+
+    // 二维码容器
+    .qr-code-container {
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: center;
+
+      .qr-code-wrapper {
+        width: 240px;
+        height: 240px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+
+        .qr-placeholder {
+          color: #999;
+          font-size: 14px;
+        }
+      }
+    }
+
+    // 提示信息
+    .payment-tip {
+      img {
+        width: 226px;
+      }
+    }
   }
 }
 </style>

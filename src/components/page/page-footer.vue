@@ -1,87 +1,125 @@
 <template>
   <div class="page-footer">
     <div class="footer-content w-1600">
-      <!-- 左侧公司信息 -->
-      <div class="company-info">
-        <div class="logo-section">
-          <div class="company-details">
-            <div class="logo-section">
-              <div class="logo">
-                <img src="@/assets/img/common/logo.png" alt="logo" />
-              </div>
-              <div class="right-logo">
-                <h2 class="company-name">法律文书网</h2>
-                <p class="slogan">海量合同文书 高效下载</p>
-              </div>
-            </div>
-
-            <div class="contact-info">
-              <div class="contact-item">
-                <span class="contact-label">律师咨询电话 (同微信)</span>
-                <div class="phone-section">
-                  <img
-                    class="phone-icon"
-                    src="@/assets/img/index/footer-phone.png"
-                    alt="phone"
-                  />
-                  <span class="phone-number">{{ vuex_config.bottom_lawer_contact || "18696628883" }}</span>
-                </div>
-              </div>
-              <div class="contact-item">
-                <div class="email-section">
-                  <img
-                    class="email-icon"
-                    src="@/assets/img/index/footer-email.png"
-                    alt="email"
-                  />
-                  <span class="email">{{ vuex_config.bottom_lawer_email || "851432731@qq.com" }}</span>
-                </div>
-              </div>
-            </div>
+      <!-- 左侧联系信息 -->
+      <div class="contact-section">
+        <div class="contact-phone">
+          <img src="@img/footer/phone.png" alt="" />
+          <span class="phone-number-large">{{
+            vuex_config.bottom_lawer_contact || "18628267502"
+          }}</span>
+        </div>
+        <div class="contact-details">
+          <div class="contact-item">
+            <img src="@img/footer/icon1.png" alt="" />
+            <span
+              >手机:联系电话:{{
+                vuex_config.bottom_lawer_contact || "18628267502"
+              }}</span
+            >
+          </div>
+          <div class="contact-item">
+            <i class="el-icon-message contact-icon"></i>
+            <span
+              >邮箱:
+              {{ vuex_config.bottom_lawer_email || "******@163.com" }}</span
+            >
+          </div>
+          <div class="contact-item">
+            <img src="@img/footer/icon2.png" alt="" />
+            <span
+              >地址:{{ vuex_config.site_address || "这里显示公司地址" }}</span
+            >
           </div>
         </div>
       </div>
 
-      <!-- 右侧特色功能 -->
-      <div class="features-section">
-        <div class="features">
-          <div class="feature-item">
-            <div class="feature-icon">
-              <img src="@/assets/img/footer/icon1.png" alt="price" />
-            </div>
-            <span class="feature-text">价格优惠</span>
-          </div>
-          <div class="feature-item">
-            <div class="feature-icon">
-              <img src="@/assets/img/footer/icon2.png" alt="quality" />
-            </div>
-            <span class="feature-text">海量精品</span>
-          </div>
-          <div class="feature-item">
-            <div class="feature-icon">
-              <img src="@/assets/img/footer/icon3.png" alt="service" />
-            </div>
-            <span class="feature-text">高质服务</span>
-          </div>
-          <div class="feature-item">
-            <div class="feature-icon">
-              <img src="@/assets/img/footer/icon4.png" alt="efficiency" />
-            </div>
-            <span class="feature-text">提升效率</span>
+      <!-- 导航链接区域 -->
+      <div class="nav-sections">
+        <!-- 使用帮助 -->
+        <div class="nav-section">
+          <h3 class="nav-title">使用帮助</h3>
+          <div class="nav-links">
+            <router-link to="/member/login" class="nav-link"
+              >会员登录</router-link
+            >
+            <router-link to="/member/register" class="nav-link"
+              >会员注册</router-link
+            >
+            <router-link to="/payment/wechat" class="nav-link"
+              >微信支付</router-link
+            >
           </div>
         </div>
 
-        <!-- 导航链接 -->
-        <div class="nav-links">
-          <router-link to="/about" class="nav-link">关于我们</router-link>
-          <span class="separator">|</span>
-          <router-link to="/business" class="nav-link">业务范围</router-link>
-          <span class="separator">|</span>
-          <router-link to="/contact" class="nav-link">联系我们</router-link>
-          <span class="separator">|</span>
-          <router-link to="/help" class="nav-link">帮助中心</router-link>
-          <span class="separator">|</span>
-          <router-link to="/protocol" class="nav-link">平台协议</router-link>
+        <!-- 文档中心 -->
+        <div class="nav-section">
+          <h3 class="nav-title">文档中心</h3>
+          <div class="nav-links">
+            <router-link
+              to="/contractList?category=常用表格及模版"
+              class="nav-link"
+              >常用表格及模版</router-link
+            >
+            <router-link
+              to="/contractList?category=企业基本制度"
+              class="nav-link"
+              >企业基本制度</router-link
+            >
+            <router-link
+              to="/contractList?category=科创管理制度"
+              class="nav-link"
+              >科创管理制度</router-link
+            >
+            <router-link
+              to="/contractList?category=股东&董事&监事制度及模版"
+              class="nav-link"
+              >股东&董事&监事制度及模版</router-link
+            >
+            <router-link
+              to="/contractList?category=工程项目管理制度"
+              class="nav-link"
+              >工程项目管理制度</router-link
+            >
+          </div>
+        </div>
+
+        <!-- 新闻资讯 -->
+        <div class="nav-section">
+          <h3 class="nav-title">新闻资讯</h3>
+          <div class="nav-links">
+            <router-link to="/news?category=公司新闻" class="nav-link"
+              >公司新闻</router-link
+            >
+            <router-link to="/news?category=行业动态" class="nav-link"
+              >行业动态</router-link
+            >
+          </div>
+        </div>
+
+        <!-- 关于我们 -->
+        <div class="nav-section">
+          <h3 class="nav-title">关于我们</h3>
+          <div class="nav-links">
+            <router-link to="/about" class="nav-link">公司简介</router-link>
+            <router-link to="/contact" class="nav-link">联系我们</router-link>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧二维码 -->
+      <div class="qr-codes">
+        <div class="qr-item">
+          <div class="qr-code">
+            <!-- <img src="@/assets/img/footer/wechat-qr.png" alt="微信公众号" /> -->
+          </div>
+          <span class="qr-label">微信公众号</span>
+        </div>
+        <div class="qr-item">
+          <div class="qr-code">
+            <!-- <img src="@/assets/img/footer/miniprogram-qr.png" alt="小程序" /> -->
+          </div>
+          <span class="qr-label">小程序</span>
         </div>
       </div>
     </div>
@@ -89,206 +127,217 @@
     <!-- 底部版权信息 -->
     <div class="footer-bottom w-1600">
       <div class="copyright">
-        <span>{{ vuex_config.beian || "copyright © 2025 重庆法焰科技有限公司" }}</span>
-        <span class="address">地址:{{ vuex_config.site_address || "重庆市南岸区南坪东路9号2025-S013" }}</span>
+        <span
+          >Copyright © {{ new Date().getFullYear() }} 四川响梵信息科技有限公司
+          版权所有</span
+        >
+        <span class="beian"
+          >备案号:{{ vuex_config.beian || "蜀ICP备20220号-2B2-20220663" }}</span
+        >
       </div>
-      <div class="infringement-notice">{{ vuex_config.bottom_qinquan_phone || "本站内容如有侵权,请联系18696628883" }}</div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "PageFooter",
+  computed: {
+    ...mapState(["vuex_config"]),
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .page-footer {
-  background: url("../../assets/img/index/footer-bg.png") no-repeat center
-    center;
-  background-size: 100% 100%;
-  color: #fff;
-  height: 415px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  background: #fff;
+  color: #333;
+  padding-top: 60px;
+  padding-bottom: 0;
 }
 
 .footer-content {
-  flex: 1;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  position: relative;
-  padding: 43px 0 58px 0;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #e8e8e8;
 }
 
-.company-info {
-  height: 100%;
-}
+// 左侧联系信息
+.contact-section {
+  flex: 0 0 280px;
 
-.company-details {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.logo-section {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  height: 100%;
-  .logo {
-    width: 100px;
+  .contact-phone {
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    gap: 12px;
+    margin-bottom: 30px;
+
     img {
-      width: 100%;
-      height: 100%;
+      width: 32px;
+      height: 27px;
     }
-  }
-  .right-logo {
-    .company-name {
-      font-size: 36px;
+    .phone-number-large {
+      font-size: 24px;
       font-weight: bold;
-      color: #b8b8b8;
-      margin-bottom: 8px;
-    }
-
-    .slogan {
-      color: #b8b8b8;
-      font-size: 16px;
+      color: #0081ff;
     }
   }
-}
 
-.contact-info {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  .contact-item {
+  .contact-details {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-  }
+    gap: 16px;
 
-  .contact-label {
-    font-weight: 400;
-    font-size: 22px;
-    color: #9d9d9d;
-  }
-
-  .phone-section,
-  .email-section {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    .phone-icon {
-      width: 35px;
-      height: 35px;
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #666;
+      img {
+        width: 16px;
+        height: 18px;
+      }
+      .contact-icon {
+        font-size: 18px;
+      }
     }
-    .email-icon {
-      width: 19px;
-      height: 19px;
-    }
-  }
-
-  .phone-number {
-    font-weight: 600;
-    font-size: 40px;
-    color: #9d9d9d;
-  }
-
-  .email {
-    color: #9d9d9d;
-    font-size: 14px;
   }
 }
 
-.features-section {
+// 导航链接区域
+.nav-sections {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  gap: 110px;
-  margin-left: 270px;
-  margin-top: 30px;
-}
+  justify-content: space-around;
+  gap: 40px;
+  padding: 0 40px;
 
-.features {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 20px;
-  .feature-item {
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    gap: 12px;
-    .feature-icon {
-      width: 46px;
-      height: 52px;
-      img {
-        width: 100%;
-        height: 100%;
+  .nav-section {
+    flex: 1;
+
+    .nav-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      margin: 0 0 20px 0;
+      padding-bottom: 8px;
+      &::after {
+        content: '';
+        display: block;
+        width: 28px;
+        height: 3px;
+        background: #0081ff;
+        margin-top: 10px;
       }
     }
 
-    .feature-text {
-      color: #B8B8B8;
-      font-size: 22px;
-      text-align: center;
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .nav-link {
+        font-size: 14px;
+        color: #666;
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: #0081ff;
+        }
+      }
     }
   }
 }
 
-.nav-links {
+// 右侧二维码
+.qr-codes {
+  flex: 0 0 200px;
   display: flex;
-  align-items: center;
-  justify-content: end;
-  gap: 44px;
-  flex-wrap: wrap;
-  .nav-link {
-    color: #9D9D9D;
-    text-decoration: none;
-    font-size: 18px;
-    transition: color 0.3s ease;
-
-    &:hover {
-      color: #fff;
-    }
-    .separator {
-      color: #B8B8B8;
-      font-size: 18px;
-    }
-  }
-}
-
-.footer-bottom {
-  height: 72px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
   gap: 20px;
+
+  .qr-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+
+    .qr-code {
+      width: 100px;
+      height: 100px;
+      background: #f5f5f5;
+      border: 1px solid #e8e8e8;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .qr-label {
+      font-size: 12px;
+      color: #666;
+    }
+  }
 }
 
-.copyright {
+// 底部版权信息
+.footer-bottom {
+  padding: 20px 0;
   display: flex;
-  gap: 5px;
-  color: #999;
-  font-size: 12px;
+  justify-content: center;
+  align-items: center;
+
+  .copyright {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 12px;
+    color: #999;
+
+    .beian {
+      color: #999;
+    }
+  }
 }
 
-.address {
-  color: #666;
+// 响应式设计
+@media (max-width: 1400px) {
+  .nav-sections {
+    gap: 30px;
+    padding: 0 20px;
+  }
 }
 
-.infringement-notice {
-  color: #999;
-  font-size: 12px;
+@media (max-width: 1200px) {
+  .footer-content {
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+
+  .contact-section {
+    flex: 0 0 100%;
+  }
+
+  .nav-sections {
+    flex: 0 0 100%;
+    justify-content: flex-start;
+  }
+
+  .qr-codes {
+    flex: 0 0 100%;
+    justify-content: center;
+  }
 }
 </style>

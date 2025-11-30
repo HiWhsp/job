@@ -1,19 +1,17 @@
 <template>
   <div class="page">
     <div class="page-bg">
-      <img src="@img/login/login-bg.jpg" alt="" />
+      <img src="@img/login/login-bg.png" alt="" />
     </div>
     <div class="page-ctx">
       <div class="page-inner flex-between w-1400">
         <div class="form-box">
           <div class="input-wrap">
             <div class="tab-box">
-              <div class="tab-item">手机号登录</div>
+              <div class="tab-item">会员登录</div>
             </div>
             <div class="input-box">
-              <div class="icon-box flex">
-                <img class="icon-phone" src="@img/login/phone.png" alt="" />
-              </div>
+              <div class="icon-box">手机号</div>
               <input
                 type="text"
                 placeholder="请输入手机号"
@@ -21,9 +19,7 @@
               />
             </div>
             <div class="input-box">
-              <div class="icon-box flex">
-                <img class="icon-pass" src="@img/login/pass.png" alt="" />
-              </div>
+              <div class="icon-box">密码</div>
               <input
                 type="password"
                 placeholder="请输入密码"
@@ -31,35 +27,31 @@
               />
             </div>
 
+            <div class="forget-box">
+              <el-checkbox v-model="is_agree">记住密码</el-checkbox>
+              <span>
+                <router-link to="retrieve" class="forget">忘记密码</router-link>
+              </span>
+            </div>
+
             <div class="btn-box">
-              <button class="btn-ripple btn-hover" @click="do_submit()">登录</button>
+              <button class="btn-ripple btn-hover" @click="do_submit()">
+                登录
+              </button>
             </div>
 
             <div class="register-box">
               <span>
                 <router-link to="/register">没有账号，去注册</router-link>
               </span>
-              <span>
-                <router-link to="retrieve" class="forget">忘记密码</router-link>
-              </span>
             </div>
+          </div>
 
-            <!-- <div class="terms-box">
-              <span class="terms-check" @click="is_agree = !is_agree">
-                <img v-if="is_agree" src="@img/common/check1.png" alt="" />
-                <img v-else src="@img/common/check0.png" alt="" />
-                我已阅读并同意
-              </span>
-              <span class="terms-text" @click="terms_open(92)"
-                >《隐私政策》</span
-              >
-            </div> -->
+          <div class="other-login">
+            <img src="@img/login/qr-code.png" alt="" />
           </div>
         </div>
       </div>
-    </div>
-    <div class="copyright">
-      {{ vuex_config.beian || "Copyright(C) 法律文书网 All Rights Reserved" }}
     </div>
   </div>
 </template>
@@ -88,7 +80,10 @@ export default {
   computed: {
     // ...mapState([""]),
   },
-  created() {},
+  created() {
+    this.form.phone = localStorage.getItem("login_phone") || "";
+    this.form.password = localStorage.getItem("login_password") || "";
+  },
   methods: {
     do_submit() {
       let reg_phone = /^1[3-9]\d{9}$/;
@@ -117,6 +112,10 @@ export default {
       }).then((res) => {
         alert(res);
         if (res.code == 200) {
+          if (this.is_agree) {
+            localStorage.setItem("login_password", this.form.password);
+            localStorage.setItem("login_phone", this.form.phone);
+          }
           localStorage.setItem("token", res.data.token);
           this.$store.commit("set_vuex_user", res.data);
           this.$store.dispatch("query_user_auth_info");
@@ -215,9 +214,12 @@ export default {
         }
 
         .icon-box {
-          justify-content: space-between;
-          height: 50px;
-          padding: 0 8px 0 18px;
+          width: 90px;
+          height: 30px;
+          line-height: 30px;
+          text-align: center;
+          margin: 10px 0;
+          border-right: 1px solid #ccc;
           .icon-phone {
             width: 15.63px;
           }
@@ -229,7 +231,7 @@ export default {
         input {
           flex: 1;
           height: 100%;
-          padding-left: 10px;
+          padding-left: 15px;
           font-size: 14px;
           color: #000;
           border: none;
@@ -277,9 +279,27 @@ export default {
         }
       }
 
+      .forget-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        .el-checkbox {
+          font-size: 14px;
+          color: #363130;
+        }
+        a {
+          font-size: 14px;
+          font-family: Microsoft YaHei;
+          font-weight: 400;
+          line-height: 24px;
+          color: #0081ff;
+        }
+      }
+
       .register-box {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         text-align: center;
         margin-top: 70px;
@@ -291,7 +311,7 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 24px;
-          color: #e0291f;
+          color: #0081ff;
         }
         .forget {
           color: #363130;
@@ -347,6 +367,18 @@ export default {
     font-weight: 400;
     font-size: 12px;
     color: #f74747;
+  }
+}
+
+.other-login {
+  width: 64px;  
+  height: 64px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  img {
+    width: 100%;
+    height: 100%;
   }
 }
 </style>

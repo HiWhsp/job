@@ -28,13 +28,20 @@ const register = () => import(/* webpackChunkName: "register" */ "@/views/accoun
 const retrieve = () => import(/* webpackChunkName: "passwordReset" */ "@/views/account/retrieve.vue");
 const contractList = () => import(/* webpackChunkName: "contractList" */ "@/views/contractList.vue");
 const contractDetail = () => import(/* webpackChunkName: "contractDetail" */ "@/views/contractDetail.vue");
+const paySuccess = () => import(/* webpackChunkName: "paySuccess" */ "@/views/pay-success.vue");
 
 const myIndex = () => import(/* webpackChunkName: "myIndex" */ "@/views/my/myIndex.vue");
+const myOrders = () => import(/* webpackChunkName: "myOrders" */ "@/views/my/orders.vue");
+const myOrderDetail = () => import(/* webpackChunkName: "myOrderDetail" */ "@/views/my/orderDetail.vue");
+const myDownloads = () => import(/* webpackChunkName: "myDownloads" */ "@/views/my/downloads.vue");
+const myProfile = () => import(/* webpackChunkName: "myProfile" */ "@/views/my/profile.vue");
+const myPassword = () => import(/* webpackChunkName: "myPassword" */ "@/views/my/password.vue");
 const about = () => import(/* webpackChunkName: "about" */ "@/views/company/about.vue");
-const business = () => import(/* webpackChunkName: "business" */ "@/views/company/business.vue");
 const contact = () => import(/* webpackChunkName: "contact" */ "@/views/company/contact.vue");
 const help = () => import(/* webpackChunkName: "help" */ "@/views/company/help.vue");
 const protocol = () => import(/* webpackChunkName: "protocol" */ "@/views/company/protocol.vue");
+const news = () => import(/* webpackChunkName: "news" */ "@/views/company/news.vue");
+const newsDetail = () => import(/* webpackChunkName: "newsDetail" */ "@/views/company/newsDetail.vue");
 
 const routes = [
   // 首页
@@ -57,7 +64,7 @@ const routes = [
     name: "register",
     component: register,
     meta: {},
-  },
+  },  
   // 找回密码
   {
     path: "/retrieve",
@@ -69,7 +76,7 @@ const routes = [
   // 合同列表
   {
     path: "/contractList",
-    name: "合同列表",
+    name: "文档中心",
     component: contractList,
     meta: {},
   },
@@ -82,12 +89,65 @@ const routes = [
     meta: {},
   },
 
-  // 我的
+  // 支付成功
+  {
+    path: "/pay-success",
+    name: "支付成功",
+    component: paySuccess,
+    meta: {},
+  },
+
+  {
+    path: "/news",
+    name: "新闻资讯",
+    component: news,
+    meta: {},
+  },
+  {
+    path: "/newsDetail",
+    name: "新闻详情",
+    component: newsDetail,
+    meta: {},
+  },
+  // 我的 - 会员中心
   {
     path: "/my",
     name: "个人中心",
     component: myIndex,
+    redirect: "/my/orders",
     meta: {},
+    children: [
+      {
+        path: "orders",
+        name: "我的订单",
+        component: myOrders,
+        meta: {},
+      },
+      {
+        path: "order-detail",
+        name: "订单详情",
+        component: myOrderDetail,
+        meta: {},
+      },
+      {
+        path: "downloads",
+        name: "下载记录",
+        component: myDownloads,
+        meta: {},
+      },
+      {
+        path: "profile",
+        name: "个人资料",
+        component: myProfile,
+        meta: {},
+      },
+      {
+        path: "password",
+        name: "修改密码",
+        component: myPassword,
+        meta: {},
+      },
+    ],
   },
 
   // 关于我们
@@ -95,13 +155,6 @@ const routes = [
     path: "/about",
     name: "关于我们",
     component: about,
-    meta: {},
-  },
-  // 业务范围
-  {
-    path: "/business",
-    name: "业务范围",
-    component: business,
     meta: {},
   },
   // 联系我们

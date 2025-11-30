@@ -1,20 +1,7 @@
 <template>
-  <div
-    class="contract-card"
-    @mouseenter="showOverlay = true"
-    @mouseleave="showOverlay = false"
-  >
+  <div class="contract-card">
     <div class="card-content">
       <div class="document-preview">
-        <div class="document-header">
-          <div class="word-icon">
-            <img src="@img/index/word-icon.png" alt="" />
-          </div>
-          <div class="document-title">
-            <p class="ellipsis-1">{{ displayTitle }}</p>
-            <div class="document-info">word A4 打印 内容可随意更改</div>
-          </div>
-        </div>
         <div class="document-content">
           <img :src="contract.thumb" alt="" />
         </div>
@@ -47,7 +34,12 @@
       </div>
     </div>
 
-    <div class="card-title ellipsis-1">{{ displayTitle }}</div>
+    <div class="card-title ellipsis-2">
+      仁寿县关于进一步支持科技创新的若干政策
+    </div>
+    <div class="card-info">
+      <span>免费下载</span>
+    </div>
   </div>
 </template>
 
@@ -78,13 +70,21 @@ export default {
     displayTitle() {
       if (!this.contract.title) return "";
       // 使用字段截取，只展示括号左边的内容
-      const leftBracketIndex = this.contract.title.indexOf('（') || this.contract.title.indexOf('(');
-      return leftBracketIndex !== -1 ? this.contract.title.substring(0, leftBracketIndex) : this.contract.title;
+      const leftBracketIndex =
+        this.contract.title.indexOf("（") || this.contract.title.indexOf("(");
+      return leftBracketIndex !== -1
+        ? this.contract.title.substring(0, leftBracketIndex)
+        : this.contract.title;
     },
   },
   methods: {
     handleView() {
-    window.open(`/contractDetail?id=${this.type == "collect" ? this.contract.articleId : this.contract.id}`, '_blank');
+      window.open(
+        `/contractDetail?id=${
+          this.type == "collect" ? this.contract.articleId : this.contract.id
+        }`,
+        "_blank"
+      );
       console.log(this.contract);
     },
     handleCollect() {
@@ -112,10 +112,7 @@ export default {
 <style lang="less" scoped>
 .contract-card {
   position: relative;
-  width: 305px;
-  height: 534px;
-  background: #f4f5f8;
-  border-radius: 15px;
+  width: 250px;
   margin-bottom: 20px;
   cursor: pointer;
   display: flex;
@@ -126,62 +123,16 @@ export default {
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
-    padding: 13px 16px;
   }
 
   .document-preview {
-    .document-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-
-      .word-icon {
-        width: 43px;
-        height: 43px;
-        margin-right: 10px;
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-
-      .document-title {
-        font-weight: bold;
-        font-size: 20px;
-        color: #363130;
-        line-height: 28px;
-        p {
-          width: 220px;
-        }
-        .document-info {
-          font-weight: 400;
-          font-size: 12px;
-          color: #9f9f9f;
-          line-height: 16px;
-        }
-      }
-    }
-
     .document-content {
-      height: 365px;
+      height: 350px;
       position: relative;
-
-      // 背景层叠卡片
-      &::before {
-        content: "";
-        position: absolute;
-        top: 8px;
-        left: 8px;
-        right: -8px;
-        bottom: -8px;
-        background: #e8f0fe;
-        border-radius: 8px;
-        z-index: 1;
-      }
       img {
         position: relative;
-        width: 267px;
-        height: 365px;
+        width: 100%;
+        height: 100%;
         z-index: 2;
       }
     }
@@ -269,15 +220,19 @@ export default {
 
   .card-title {
     text-align: left;
-    height: 60px;
-    font-size: 18px;
-    color: #363130;
-    font-weight: bold;
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-top: 20px;
-    line-height: 60px;
-    border-top: 1px solid #f0f0f0;
+    height: 45px;
+    font-size: 16px;
+    color: #333;
+    line-height: 24px;
+    margin-top: 10px;
+  }
+  .card-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    color: #0081FF;
+    margin-top: 10px;
   }
 }
 </style>
