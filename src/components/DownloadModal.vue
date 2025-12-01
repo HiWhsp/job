@@ -288,7 +288,7 @@ export default {
           data: {
             articleId: this.detail.id,
             priceType:
-              this.selectedProductIndex === 0 ? "basic_price" : "service_price",
+              this.selectedProductIndex === 1 ? "basic_price" : "service_price",
           },
         }).then((res) => {
           if (res.code === 200) {
