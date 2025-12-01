@@ -301,20 +301,6 @@ export default {
       }
     },
     setView() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "orders_detail",
-          id: this.orderId,
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          this.order = res.data;
-          this.product_info =
-            res.data.products.find((v) => v.id == this.inventoryId) || {};
-        }
-      });
       this.query_order();
     },
     //订单产品
@@ -332,7 +318,7 @@ export default {
           this.order = data;
           this.orderObj = data;
           this.product_info =
-            data.products.find((v) => v.id == this.inventoryId) || {};
+            data.products.find((v) => v.productId == this.inventoryId) || {};
           this.product = this.product_info;
           this.max_refund_money = parseFloat(data.price);
           this.shouhuoInfo = data.shouhuoInfo;

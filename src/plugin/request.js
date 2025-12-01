@@ -31,11 +31,17 @@ axios.interceptors.response.use(
   function (response) {
     let res = response.data;
     let { code, message, msg } = res
-    if (code != 200) {
+    if (code == 200) {
+      return res;
+    } else if (code == -1 || code == 401) {
+      Message.error("登录已过期，请重新登录");
+      this.$store.dispatch("remove_vuex_user");
+      router.push("/login");
+      return Promise.reject(res);
+    }
+    else {
       Message.error(message || msg);
       return Promise.reject(res);
-    } else {
-      return res;
     }
     // debugger
   },

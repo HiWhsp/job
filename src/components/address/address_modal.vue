@@ -41,7 +41,7 @@
           ></el-input>
         </div>
         <div class="item">
-          <span class="text required">固定电话</span>
+          <span class="text">固定电话</span>
           <el-input
             clearable
             v-model="form.telephone"
@@ -49,7 +49,7 @@
           ></el-input>
         </div>
         <div class="item">
-          <span class="text required">邮政编码</span>
+          <span class="text">邮政编码</span>
           <el-input
             clearable
             v-model="form.zipCode"
