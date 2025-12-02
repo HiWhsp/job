@@ -4,20 +4,24 @@
       <p>帮助中心</p>
     </div>
     <div class="help-content">
-        <div class="help-content-top">
-            <img src="@/assets/img/company/help/icon.png" alt="">
-            <p>帮助中心</p>
-        </div>
-        <div class="help-content-bottom">
-            一、帮助中心内容
-        </div>
+      <div class="help-content-top">
+        <img src="@/assets/img/company/help/icon.png" alt="" />
+        <p>帮助中心</p>
+      </div>
+      <div class="help-content-bottom" v-html="vuex_config.help_center"></div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "Help",
+  computed: {
+    ...mapState("vuex_config"),
+  },
+  mounted() {},
+  methods: {},
 };
 </script>
 

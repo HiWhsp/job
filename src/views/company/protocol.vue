@@ -8,14 +8,18 @@
         <img src="@/assets/img/company/help/icon2.png" alt="" />
         <p>平台协议</p>
       </div>
-      <div class="help-content-bottom">一、平台协议内容</div>
+      <div class="help-content-bottom" v-html="vuex_config.pingtai_xieyi"></div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "Help",
+  computed: {
+    ...mapState("vuex_config"),
+  },
 };
 </script>
 

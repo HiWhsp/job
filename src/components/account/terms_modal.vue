@@ -2,7 +2,7 @@
   <div class="modal-box">
     <el-dialog
       custom-class="modal-terms"
-      :title="info.title"
+      title="会员注册协议"
       width="780px"
       :close-on-click-modal="false"
       :visible.sync="is_show"
@@ -13,7 +13,7 @@
         <!-- <div class="modal-title">{{ detail.title }}</div> -->
         <div class="modal-ctx">
           <div class="ctx-rich scrollbar-y">
-            <div class="ctx-rich" v-html="info.content"></div>
+            <div class="ctx-rich" v-html="vuex_config.register_xieyi"></div>
           </div>
         </div>
         <div class="modal-footer">
@@ -39,11 +39,14 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
   name: "terms-modal",
+  computed: {
+    ...mapState("vuex_config"),
+  },
   data() {
     return {
-      info: {},
       is_show: false,
       is_check: false,
     };
@@ -66,29 +69,11 @@ export default {
     },
     on_closed() {
       console.log("关闭弹窗");
-      this.info = {};
     },
 
     init(id) {
       this.id = id;
-      this.queryDetail();
       this.is_show = true;
-    },
-
-    queryDetail() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "news_detail",
-          id: this.id,
-        },
-      }).then((res) => {
-        let { code, data, msg } = res;
-        if (code == 200) {
-          this.info = data.info;
-        }
-      });
     },
   },
 };

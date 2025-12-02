@@ -526,9 +526,11 @@ export default {
 
       // 水印参数
       const watermarkText =
-        this.contract_type == 1 ? "专业合同范本" : "专业法律文书";
-      const fontSize = 36;
-      const spacing = 240; // 水印间距
+        this.contract_type == 1
+          ? `专业合同范本+律师合同审核+签约指导+法律咨询\n下载后添加律师微信 18696628883 获取上述服务`
+          : "专业法律文书+法律咨询";
+      const fontSize = 22;
+      const spacing = 550; // 水印间距（增加间距让多个水印之间更宽松）
       const angle = -45; // 旋转角度
       const opacity = 0.1; // 透明度
 
@@ -546,6 +548,10 @@ export default {
       const rows = Math.ceil(canvasHeight / spacing) + 2;
 
       // 绘制水印
+      const lines = watermarkText.split("\n"); // 按换行符分割文本
+      const lineHeight = fontSize * 1.8; // 行高（增加行高让两行文字间距更大）
+      const totalHeight = lines.length * lineHeight; // 总高度
+      
       for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
           const x = j * spacing;
@@ -554,7 +560,13 @@ export default {
           ctx.save();
           ctx.translate(x, y);
           ctx.rotate((angle * Math.PI) / 180);
-          ctx.fillText(watermarkText, 0, 0);
+          
+          // 绘制多行文本
+          lines.forEach((line, lineIndex) => {
+            const offsetY = (lineIndex - (lines.length - 1) / 2) * lineHeight;
+            ctx.fillText(line, 0, offsetY);
+          });
+          
           ctx.restore();
         }
       }
