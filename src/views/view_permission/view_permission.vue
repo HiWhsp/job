@@ -272,7 +272,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           // this.$refs.project_permission_modal.init(row);
-          this.$refs.project_permission_modal.init(res.data.userRoles, row.id);
+          this.$refs.project_permission_modal.init(res.data, row.id);
         }
       });
     },

@@ -21,7 +21,7 @@
             <div class="permission-buttons">
               <button
                 class="permission-btn viewable-btn"
-                :class="{ active: item.status == 1 }"
+                :class="{ active: item.see == 1 }"
                 @click="handlePermissionChange(index, 1)"
               >
                 可查看
@@ -29,7 +29,7 @@
               <button
                 v-if="index !== permissionList.length - 1"
                 class="permission-btn not-viewable-btn"
-                :class="{ active: item.status == 0 }"
+                :class="{ active: item.see == 0 }"
                 @click="handlePermissionChange(index, 0)"
               >
                 无法查看
@@ -88,13 +88,18 @@ export default {
   methods: {
     init(row, projectId) {
       this.projectId = projectId;
-      this.row = row;
-      // 这里可以调用接口获取已有的权限设置
-      // 暂时使用默认值
+      if(row.seeInfo) {
+        this.row = JSON.parse(row.seeInfo);
+      } else {
+        this.row = this.permissionList.map(item => ({
+          name: item.name,
+          see: 0,
+        }));
+      }
       this.show_modal = true;
     },
     handlePermissionChange(index, permission) {
-      this.row[index].status = permission;
+      this.row[index].see = permission;
     },
     handleCancel() {
       this.show_modal = false;
@@ -103,14 +108,14 @@ export default {
       // 这里调用接口保存权限设置
       const permissions = this.row.map((item, index) => ({
         step: index + 1,
-        see: item.status,
+        see: item.see,
       }));
       this.$api({
         url: "/stepPermission",
         method: "post",
         data: {
           id: this.projectId,
-          seeInfo: permissions,
+          seeInfo: JSON.stringify(permissions),
         },
       }).then((res) => {
         if (res.code == 200) {
