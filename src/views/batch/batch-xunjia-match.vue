@@ -48,7 +48,8 @@
               <div class="data-list">
                 <div
                   class="data-item"
-                  v-for="(item, index) in info"
+                  :class="{ 'folded': !item.fold }"
+                  v-for="(item, index) in info.origin_list"
                   :key="index"
                 >
                   <div class="check-box">
@@ -59,13 +60,48 @@
                     />
                   </div>
                   <div class="info-box">
-                    <div class="xuhao">{{ index }}</div>
-                    <div class="title">
-                      编号 {{ item.brand }} 名称：{{
-                        item.product_name || "空"
-                      }}
+                    <div class="xuhao">{{ item.serialNo }}</div>
+                    <div class="item_box">
+                      <div>
+                        <img :src="item.image" alt="" />
+                      </div>
+                      <div class="info-box-right">
+                        <div class="num">
+                          名称：{{ item.productName || "空" }}
+                        </div>
+                        <div class="num">
+                          品牌：{{ item.brandName || "空" }}
+                        </div>
+                        <div class="num">制造商型号：{{ item.sn || "--" }}</div>
+                        <div class="num">
+                          数量：{{ item.requireNum || "--" }}
+                        </div>
+                      </div>
                     </div>
-                    <div class="num">数量：{{ item.num }}</div>
+                    <div class="fold-box-container" v-show="item.fold">
+                      <div class="fold-box-item ellipsis-1">
+                        需求日期：{{ item.requireDate || "--" }}
+                      </div>
+                      <div class="fold-box-item ellipsis-1">
+                        需求描述：{{ item.description || "--" }}
+                      </div>
+                      <div class="fold-box-item ellipsis-1">
+                        备注：{{ item.note || "--" }}
+                      </div>
+                    </div>
+                    <div class="fold-box" @click="toggleFold(item, index)">
+                      <div class="fold-box-text">
+                        {{ item.fold ? "收起" : "展开" }}
+                      </div>
+                      <img
+                        :src="
+                          item.fold
+                            ? require('@/assets/img/batch/fold.png')
+                            : require('@/assets/img/batch/unfold.png')
+                        "
+                        alt=""
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -75,7 +111,7 @@
               <div class="match-list">
                 <div
                   class="match-item-loop"
-                  v-for="(item, index) in info"
+                  v-for="(item, index) in info.product_list"
                   :key="index"
                 >
                   <div
@@ -159,7 +195,7 @@
                   class="btn-ripple btn-sc"
                   @click="doConfirm()"
                 >
-                去询价
+                  去询价
                 </button>
                 <button
                   :disabled="jiesuanDisabled"
@@ -212,11 +248,8 @@ export default {
   },
   watch: {},
   created() {
-    let name = this.$route.query.fileName;
-    let url = this.$route.query.filePath;
-    console.log(url);
     this.query_banner();
-    this.batchConfirm(url, name);
+    this.batchConfirm();
   },
   methods: {
     query_banner() {
@@ -230,7 +263,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           if (res.data[0]) {
-            this.banner_list = res.data[3].images;
+            this.banner_list = res.data[7].images;
             this.$log("banner_list", this.banner_list);
             this.banner_poster = this.banner_list[0].image;
           }
@@ -253,24 +286,38 @@ export default {
         this.$refs.popup.init(chosen);
       }
     },
-    batchConfirm(link, name) {
-      link = link.substring(link.lastIndexOf("/upload") + 8);
-      console.log(link);
-      this.$api({
-        url: "/service.php",
-        method: "post",
-        data: {
-          action: "product_createXunjia",
-          filename: name,
-          filepath: link,
-        },
-      }).then((res) => {
-        alert(res);
-        if (res.code == 200) {
-          this.getBatchInfo(res.data.xunjiaId);
-          this.url = link;
-        }
-      });
+    batchConfirm() {
+      // link = link.substring(link.lastIndexOf("/upload") + 8);
+      // console.log(link);
+      // this.$api({
+      //   url: "/service.php",
+      //   method: "post",
+      //   data: {
+      //     action: "product_createXunjia",
+      //     filename: name,
+      //     filepath: link,
+      //   },
+      // }).then((res) => {
+      //   alert(res);
+      //   if (res.code == 200) {
+      //     this.getBatchInfo(res.data.xunjiaId);
+      //     this.url = link;
+      //   }
+      // });
+
+      const data = localStorage.getItem("batchData");
+      this.info = JSON.parse(data);
+      // 初始化每个item的fold状态
+      if (this.info && this.info.origin_list) {
+        this.info.origin_list.forEach(item => {
+          if (item.fold === undefined) {
+            this.$set(item, 'fold', false);
+          }
+        });
+      }
+    },
+    toggleFold(item, index) {
+      this.$set(item, 'fold', !item.fold);
     },
     doConfirm() {
       this.$api({
@@ -377,7 +424,7 @@ export default {
       if (this.checkedItem.length === 0) {
         alert("请选择需求");
       } else {
-        if ((this.checkedItem.length === this.checkedAttr.length)) {
+        if (this.checkedItem.length === this.checkedAttr.length) {
           alert("需要至少一条需求");
         } else {
           for (let i = 0; i < this.checkedItem.length; i++) {
@@ -520,7 +567,7 @@ export default {
       }
 
       &.active {
-        color: #F74747;
+        color: #f74747;
       }
     }
   }
@@ -549,9 +596,9 @@ export default {
       }
 
       &.active {
-        background: #F74747;
+        background: #f74747;
         .dot-box {
-          background: #F74747;
+          background: #f74747;
         }
       }
 
@@ -599,22 +646,67 @@ export default {
         margin-bottom: 20px;
         background: #f7f7f7;
         width: 315px;
-        padding: 10px;
+        padding: 10px 10px 17px 10px;
+        padding-bottom: 0;
         display: flex;
         align-items: flex-start;
-        height: 113px;
-        border-top: 1px solid #F74747;
+        height: 190px;
+        border-top: 1px solid #f74747;
+        transition: height 0.3s ease;
+        overflow: hidden;
+        &.folded {
+          height: 125px;
+        }
         .check-box {
           width: 35px;
           text-align: center;
+          line-height: 22px;
         }
         .info-box {
           flex: 1;
+          position: relative;
+          .fold-box {
+            cursor: pointer;
+            position: absolute;
+            right: 0;
+            top: 80px;
+            padding: 4px 8px;
+            background: #fafafa;
+            border-radius: 4px 4px 4px 4px;
+            border: 1px solid #dee1e7;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .fold-box-text {
+              font-family: Microsoft YaHei, Microsoft YaHei;
+            }
+            img {
+              margin-left: 8px;
+              width: 8px;
+              height: 8px;
+            }
+          }
+          .item_box {
+            display: flex;
+            align-items: center;
+            .info-box-right {
+              margin-left: 10px;
+            }
+            img {
+              width: 80px;
+              height: 80px;
+              img {
+                width: 80px;
+                height: 80px;
+              }
+            }
+          }
           .xuhao {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 12px;
-            color: #F74747;
+            color: #f74747;
+            margin-bottom: 5px;
           }
           .title {
             margin: 10px 0;
@@ -628,6 +720,17 @@ export default {
             font-weight: 400;
             font-size: 12px;
             color: #333333;
+          }
+
+          .fold-box-container {
+            margin-top: 10px;
+            .fold-box-item {
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: 400;
+              font-size: 12px;
+              color: #333333;
+              margin-bottom: 5px;
+            }
           }
         }
       }
@@ -652,7 +755,7 @@ export default {
       display: flex;
       align-items: flex-start;
       height: 133px;
-      border-top: 1px solid #F74747;
+      border-top: 1px solid #f74747;
 
       .poster-box {
         width: 80px;
@@ -681,7 +784,7 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 16px;
-            color: #F74747;
+            color: #f74747;
           }
         }
       }
@@ -739,7 +842,7 @@ export default {
       color: #666666;
 
       &:hover {
-        color: #F74747;
+        color: #f74747;
       }
     }
   }
@@ -757,7 +860,7 @@ export default {
       color: #666666;
 
       &:hover {
-        color: #F74747;
+        color: #f74747;
       }
     }
   }
@@ -775,7 +878,7 @@ export default {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 12px;
-        color: #F74747;
+        color: #f74747;
       }
     }
   }
@@ -840,7 +943,7 @@ export default {
     cursor: pointer;
     width: 191px;
     height: 46px;
-    background: #F74747;
+    background: #f74747;
 
     font-size: 16px;
     font-family: Microsoft YaHei;
@@ -856,4 +959,3 @@ export default {
   }
 }
 </style>
-

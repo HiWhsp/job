@@ -55,7 +55,7 @@
           <div class="upload-box column-flex-center">
             <el-upload
               class="upload-demo"
-              :action="UPLOAD_ACTION"
+              action="https://lidong.dx.hdapp.com.cn/service.php"
               name="file"
               :data="custom_upload_data"
               accept=".xls,.xlsx,.et"
@@ -103,7 +103,7 @@ export default {
       let userId = localStorage.getItem("userId") || "";
 
       let info = {
-        action: "upload_uploadFile",
+        action: "Inquiry_getInquiryResult",
         token: token,
         userId: userId,
       };
@@ -134,6 +134,10 @@ export default {
       });
     },
     showTemplate() {
+      window.open(
+        "https://lidong.dx.hdapp.com.cn/upload/inquiryExcel/%E8%AF%A2%E4%BB%B7%E5%8D%95%E6%A8%A1%E6%9D%BF.xlsx",
+        "_blank"
+      );
       // this.$refs.download.init({});
     },
     do_banner_click(item) {
@@ -148,17 +152,17 @@ export default {
     },
     beforeAvatarUpload(file) {},
     handleAvatarSuccess(res, file, fileList) {
-      console.log(file);
-      console.log(res);
-      this.batchConfirm(res.data.url, file.name);
+      if (res.code != 200) {
+        this.$message.error(res.message);
+      } else {
+        localStorage.setItem("batchData", JSON.stringify(res.data));
+        this.batchConfirm();
+      }
+      // this.batchConfirm(res.data.url, file.name);
     },
     batchConfirm(url, name) {
       this.toRoute({
         path: "/batch-xunjia-match",
-        query: {
-          filePath: url,
-          fileName: name,
-        },
       });
     },
     do_upload() {
