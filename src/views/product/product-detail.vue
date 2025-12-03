@@ -77,7 +77,9 @@
                         :key="i"
                       >
                         <span class="parameter-label">{{ it.key }}</span>
-                        <span class="parameter-value">{{ it.value }}</span>
+                        <span class="parameter-value ellipsis-1">{{
+                          it.value
+                        }}</span>
                       </div>
                     </div>
                   </div>
@@ -429,6 +431,15 @@ export default {
     this.nav_option =
       JSON.parse(localStorage.getItem("product_nav_option")) || [];
     this.getProductDetail();
+
+    this.$api({
+      url: "/service.php",
+      method: "get",
+      data: {
+        action: "product_channelToBrand",
+        channelId: this.$route.query.id,
+      },
+    }).then((res) => {});
   },
   methods: {
     searchProduct() {},
@@ -790,6 +801,8 @@ export default {
           border-bottom: 1px dashed #d9d9d9;
           margin: 0 23px;
 
+          display: grid;
+          grid-template-columns: 1fr 1fr;
           &:last-child {
             border-bottom: none;
           }
@@ -816,6 +829,10 @@ export default {
               text-align: left;
               flex: 1;
               margin-left: 20px;
+              max-width: 600px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
             }
           }
         }
@@ -1018,6 +1035,7 @@ export default {
               line-height: 40px;
               border-bottom: 1px dashed #d9d9d9;
               margin: 0 23px;
+              
 
               &:last-child {
                 border-bottom: none;

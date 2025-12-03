@@ -98,7 +98,7 @@
                   </div>
                   <div class="goods-action-box">
                     <span class="goods-action" @click.stop="favouriteAdd(item)">
-                      {{ item.ifshoucang ? "取消收藏" : "加入收藏夹" }}</span
+                      {{ item.ifShoucang ? "取消收藏" : "加入收藏夹" }}</span
                     >
                   </div>
                 </div>
@@ -282,7 +282,7 @@ export default {
           action: "product_operate",
           productId: item.productId,
           operateType: 1,
-          operateSence: item.ifshoucang ? 1 : 0,
+          operateSence: item.ifShoucang ? 1 : 0,
         },
       }).then((res) => {
         let { code, message } = res;

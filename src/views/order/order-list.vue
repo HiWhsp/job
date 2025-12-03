@@ -226,7 +226,6 @@ import order_refund_modal from "@/components/order/order_refund_modal.vue"; //�
 import xianxia_submit from "@/components/order/xianxia_submit.vue";
 import { mapState } from "vuex";
 import TableExport from "tableexport";
-import download from "@/util/download";
 export default {
   name: "servicePage",
   components: {
@@ -251,26 +250,27 @@ export default {
       },
       count: 0,
       keyword: "",
-      user_index: {},
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState(["vuex_user"]),
 
     tabList() {
       //scene
       //筛选状态：0-全部 1-待支付 2-待发货 3-待收货 4-待核销 5-已完成 6-待评价 7-已取消
       //orderStatus
       //订单状态：-5-待支付  -1-已取消  2-待发货  3-待收货  4-待自提  5-已完成
-      let user_index = {} || this.user_index;
+      let user_index = this.vuex_user || {};
+      console.log(user_index);
+      // users_userInfo 中 orderNeedPay 待支付 orderNeedDelivery 待发货 orderNeedShouhuo 待收货 orderNeedHexiao 待核销 orderNeedComment 待评论 orderRefundNum 待售后
       let tabList = [
         { value: 0, title: "全部订单" },
-        { value: 1, title: "待付款", num: user_index.order_num_1 || 0 },
-        { value: 8, title: "待审核", num: user_index.order_num_4 || 0 },
-        { value: 2, title: "待发货", num: user_index.order_num_2 || 0 },
-        { value: 3, title: "待收货", num: user_index.order_num_3 || 0 },
-        { value: 5, title: "已完成", num: user_index.order_num_4 || 0 },
-        { value: 7, title: "已取消", num: user_index.order_num_4 || 0 },
+        { value: 1, title: "待付款", num: user_index.orderNeedPay || 0 },
+        { value: 8, title: "待审核", num: user_index.orderNeedHexiao || 0 },
+        { value: 2, title: "待发货", num: user_index.orderNeedDelivery || 0 },
+        { value: 3, title: "待收货", num: user_index.orderNeedShouhuo || 0 },
+        { value: 5, title: "已完成", num: user_index.orderNeedComment || 0 },
+        { value: 7, title: "已取消", num: user_index.orderCancelNum || 0 },
       ];
       return tabList;
     },
@@ -678,7 +678,7 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #2e4c87;
+        color: #eb0f19;
       }
 
       &.active {

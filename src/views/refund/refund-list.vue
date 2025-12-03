@@ -282,7 +282,7 @@ export default {
         method: "get",
         data: {
           action: "refund_afterSaleList",
-          keyword: this.keyword,
+          keyWord: this.keyword,
           ...this.pagination,
         },
       }).then((res) => {
@@ -302,12 +302,12 @@ export default {
           action: "refund_lists",
           ...this.pagination,
           status: this.tab_select.value, //(0待处理  1已完成  -1无效)
-          keyword: this.keyword,
+          keyWord: this.keyword,
         },
       }).then((res) => {
         if (res.code == 200) {
           res.data.list.forEach((v) => {
-            v.is_jifen = v.products.jifen ? 1 : 0;
+            v.is_jifen = v.products ? v.products.jifen ? 1 : 0 : 0;
           });
           this.refund_service_list = res.data.list;
           this.refund_service_count = res.data.count;

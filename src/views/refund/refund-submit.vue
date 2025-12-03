@@ -398,7 +398,7 @@ export default {
       let params = {
         action: "refund_add",
         orderId: this.orderId,
-        inventoryId: this.inventoryId,
+        productId: this.inventoryId,
         type: this.type, //退换货类型(1-退款 2-退货退款 3-换货 4-维修)
         num: this.product_info.num,
         reason: this.refund_reason,
@@ -412,7 +412,7 @@ export default {
         params.addressId = this.address_select.id;
         params.new_product = JSON.stringify([
           {
-            inventoryId: this.product_select.inventoryId,
+            productId: this.product_select.inventoryId,
             productId: this.product_select.productId,
             num: this.product_info.num,
           },

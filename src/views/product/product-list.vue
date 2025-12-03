@@ -78,7 +78,7 @@
                       src="@img/product/icon-fav1.png"
                       @click.stop="toggleFavorite(product, 1)"
                       alt=""
-                      v-if="product.ifshoucang"
+                      v-if="product.ifShoucang"
                     />
                     <img
                       src="@img/product/icon-fav0.png"
@@ -218,13 +218,14 @@ export default {
         method: "get",
         data: {
           action: "product_operate",
-          productIds: product.id,
+          productId: product.id,
           operateType: 1,
           operateSence: type,
         },
       }).then((res) => {
         if (res.code == 200) {
           this.$message.success(type == 0 ? "已添加到收藏" : "已取消收藏");
+          this.getProductList();
         } else {
           this.$message.error(res.message);
         }

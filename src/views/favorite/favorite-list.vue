@@ -219,9 +219,10 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "product_bathDelOperate",
+          action: "product_operate",
           operateType: 1, //行为类型：1-关注 2-足迹 此接口默认为 1-关注
-          productIds: ids,
+          productId: ids,
+          operateSence: 1,
         },
       }).then((res) => {
         alert(res);
