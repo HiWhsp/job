@@ -528,7 +528,7 @@ export default {
       const watermarkText =
         this.contract_type == 1
           ? `专业合同范本+律师合同审核+签约指导+法律咨询\n下载范本后，添加律师微信18696628883，即刻获取全套服务。`
-          : "专业法律文书+法律咨询";
+          : "专业法律文书+法律咨询，下载范本后\n添加律师微信18696628883，即可获取法律咨询服务";
       const fontSize = 22;
       const spacing = 550; // 水印间距（增加间距让多个水印之间更宽松）
       const angle = -45; // 旋转角度
