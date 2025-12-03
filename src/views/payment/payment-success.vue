@@ -12,7 +12,7 @@
           您的转账凭证已提交，请等待后台审核！
         </div>
         <div class="text-2">订单号：{{ info.orderNo }}</div>
-        <div class="text-2">下单时间：2022-03-29 13:24:69</div>
+        <div class="text-2">下单时间：{{ info.createdTime }}</div>
         <div class="text-2">支付方式： 对公转账</div>
 
 

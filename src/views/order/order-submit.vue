@@ -75,51 +75,66 @@
                 </div>
               </div>
               <!-- 线下转款信息 -->
-              <div class="xianxia-info" v-if="payType == '对公转账'">
+              <div class="xianxia-info" v-if="pay_type_value == 'pay2'">
                 <div class="info-title">收款对公账户</div>
                 <div class="info-item">
                   <div class="info-label">收款单位名称:</div>
                   <div class="info-val">
-                    {{ vuex_config.offline_company || "--"
+                    {{ offlineInfo.company || "--"
                     }}<img
                       src="@img/pay-method/copy.png"
                       alt=""
                       class="copy-img"
+                      @click="copy_text(offlineInfo.company)"
                     />
                   </div>
                 </div>
                 <div class="info-item">
                   <div class="info-label">收款单位账号:</div>
                   <div class="info-val">
-                    {{ vuex_config.offline_code || "--" }}
+                    {{ offlineInfo.bankNo || "--"
+                    }}<img
+                      src="@img/pay-method/copy.png"
+                      alt=""
+                      class="copy-img"
+                      @click="copy_text(offlineInfo.bankNo)"
+                    />
                   </div>
                 </div>
                 <div class="info-item">
                   <div class="info-label">开户银行:</div>
                   <div class="info-val">
-                    {{ vuex_config.offline_bank || "--" }}
+                    {{ offlineInfo.bankName || "--"
+                    }}<img
+                      src="@img/pay-method/copy.png"
+                      alt=""
+                      class="copy-img"
+                      @click="copy_text(offlineInfo.bankName)"
+                    />
                   </div>
                 </div>
-                <!-- <div class="info-item scroll-target-pingzheng">
-                  <div class="info-label">转账凭证:</div>
-                  <div class="info-val">
-                    <el-upload
-                      class="upload-demo"
-                      list-type="picture-card"
-                      multiple
-                      accept="image/*"
-                      :limit="upload_limit_number"
-                      :name="upload_col_name"
-                      :action="mix_upload_action"
-                      :data="mix_upload_data"
-                      :on-success="uploadSuccess_pingjia"
-                      :before-upload="beforeUpload_pingjia"
-                      :on-preview="handlePictureCardPreview"
-                    >
-                      <i class="el-icon-plus"></i>
-                    </el-upload>
-                  </div>
-                </div> -->
+              </div>
+              <div
+                class="scroll-target-pingzheng"
+                v-if="pay_type_value == 'pay2'"
+                style="margin-left: 20px"
+              >
+                <div class="info-val">
+                  <el-upload
+                    class="upload-demo"
+                    multiple
+                    accept="image/*"
+                    :limit="upload_limit_number"
+                    :name="mix_upload_name"
+                    :action="mix_upload_action"
+                    :data="mix_upload_data"
+                    :on-success="uploadSuccess_pingjia"
+                    :before-upload="beforeUpload_pingjia"
+                    :on-preview="handlePictureCardPreview"
+                  >
+                    <el-button type="primary">上传汇款截图</el-button>
+                  </el-upload>
+                </div>
               </div>
             </div>
 
@@ -559,7 +574,7 @@ export default {
       },
       // 支付方式
       payTypeValue: 2,
-      pay_type_value: "paypal",
+      pay_type_value: "pay2",
       pay_method_list: [
         {
           value: "pay1",
@@ -625,6 +640,7 @@ export default {
       xianxia_file_list: [],
 
       peisong_list: ["快递配送", "上门自提"],
+      offlineInfo: {},
     };
   },
   computed: {
@@ -739,13 +755,26 @@ export default {
         pagenum: 20,
       },
     }).then((res) => {
-    })
+      if (res.code == 200) {
+        this.offlineInfo = res.data.list[0] || {};
+      }
+    });
     //
     this.query_user();
     this.query_address();
     this.query_pay_info();
   },
   methods: {
+    copy_text(text) {
+      // 使用原生方法
+      const input = document.createElement("input");
+      input.value = text;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand("copy");
+      document.body.removeChild(input);
+      this.$message.success("复制成功");
+    },
     //下单成功后 移除商品信息
     clearCacheProduct() {
       if (this.from == "cart") {
@@ -872,14 +901,13 @@ export default {
       let productInfo = JSON.stringify(product_items);
 
       let params = {
-        productInfo: productInfo,
-        addressId: this.address_select.id || "",
         peisongType: 1, //配送类型：1-快递物流 2-上门自提
-        peisongTime: "", //配送时间
-        yhqId: "", //优惠券记录ID
-        tuanId: "", //参与拼团的团ID
-        tuanType: "", //拼团类型：0-普通订单 1-普通团 2-社区团
+
         remark: this.remark, //备注
+        addressId: this.address_select.id || "",
+        productInfo: productInfo,
+        payMethod: this.pay_type_value == "pay2" ? 1 : 2, // 支付方式
+        payImg: this.xianxia_file_list.join(","), //汇款截图
 
         ...this.fapiao_info,
       };
@@ -991,7 +1019,7 @@ export default {
         return alertErr("请选择支付方式");
       }
 
-      if (this.pay_type_value == "xianxia") {
+      if (this.pay_type_value == "pay2") {
         if (!this.xianxia_file_list.length) {
           this.scrollToTarget(".scroll-target-pingzheng");
           return alertErr("请上传转款凭证信息");
@@ -1092,15 +1120,29 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action:
-            this.vuex_user.type == 1 ? "orders_create" : "orderC_createOrder",
+          action: "orders_create",
           ...params,
         },
       }).then((res) => {
         if (res.code == 200) {
           let { id, orderNo } = res.data;
           this.order_id = id;
-          this.do_order_pay();
+          // 上传汇款截图
+          this.$api({
+            url: "/service.php",
+            method: "get",
+            data: {
+              action: "orders_savePayImg",
+              id: this.order_id,
+              payImg: this.xianxia_file_list.join(","),
+            },
+          }).then((res) => {
+            if (res.code == 200) {
+              this.toPaySuccess();
+            }
+          });
+
+          // this.do_order_pay();
         }
       });
     },
@@ -1110,6 +1152,8 @@ export default {
       if (this.is_order_test) {
         this.pay_use_yue();
       } else {
+        this.toPaySuccess();
+        return;
         if (this.pay_type_value == "weixin") {
           this.pay_use_weixin();
         } else if (this.pay_type_value == "zhifubao") {
@@ -2393,7 +2437,7 @@ export default {
 // 线下转款信息
 .xianxia-info {
   padding: 16px 22px;
-  width: 370px;
+  width: 400px;
   height: 167px;
   background: #fffdf1;
   border: 1px solid #f8e9d2;
@@ -2435,6 +2479,14 @@ export default {
         cursor: pointer;
       }
     }
+  }
+}
+
+.scroll-target-pingzheng {
+  /deep/ .el-button--primary {
+    background: #f74747;
+    border: 1px solid #f74747;
+    color: #fff;
   }
 }
 

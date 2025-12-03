@@ -307,28 +307,6 @@
           </div>
 
           <div class="ctx-bottom-container">
-            <!-- <div class="bottom-left">
-              <div class="main-title">相关产品</div>
-              <div class="product-list">
-                <div
-                  class="product-item"
-                  v-for="(item, index) in related_products"
-                  :key="index"
-                  @click="toDetail(item)"
-                >
-                  <div class="poster-box scale-box">
-                    <img :src="item.thumb" alt="" class="poster scale-img" />
-                  </div>
-                  <div class="info-box">
-                    <div class="title">{{ item.title }}</div>
-                    <div class="pirce-box">
-                      ￥{{ vuex_is_login ? item.priceSale : "---" }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-
             <div class="bottom-right">
               <div class="ctx-bottom">
                 <div class="ctx-bottom-inner">
@@ -385,8 +363,8 @@
                       </div>
                     </div> -->
                     <div class="rich-html" v-html="info.content"></div>
-                    <div class="rich-html" v-html="info.cont2"></div>
-                    <div class="rich-html" v-html="info.cont3"></div>
+                    <!-- <div class="rich-html" v-html="info.cont2"></div>
+                    <div class="rich-html" v-html="info.cont3"></div> -->
                   </div>
 
                   <!-- v-if="active_panel == '评价'" -->
@@ -425,6 +403,13 @@
       </div>
     </div>
 
+    <div class="prud-list-box w-1400">
+      <div class="prud-list-title">同类人气商品</div>
+      <div class="prud-list-content">
+        <productList :list="related_products" />
+      </div>
+    </div>
+
     <product_add_cart_success_modal ref="product_add_cart_success_modal" />
   </div>
 </template>
@@ -441,7 +426,7 @@ import area_select from "@/components/address/area_select.vue";
 
 import { mapState } from "vuex";
 import { Loading } from "element-ui";
-
+import productList from "@/components/product/productList.vue"; //
 export default {
   name: "goods-detail",
   components: {
@@ -450,6 +435,7 @@ export default {
     review_list,
     detailLunbo,
     area_select,
+    productList,
     // QRCode,
     // modalLoading,
     // modalYaoqing,
@@ -735,8 +721,9 @@ export default {
         method: "get",
         data: {
           action: "product_plist",
-          productId: this.info.productId,
-          ...this.pagination,
+          channelId: this.info.channelId,
+          page: 1,
+          pageNum: 5,
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -1914,6 +1901,19 @@ export default {
   }
 }
 
+.prud-list-box {
+  margin-top: 36px;
+  padding-bottom: 50px;
+  .prud-list-title {
+    font-family: PingFang SC, PingFang SC;
+    font-weight: 500;
+    font-size: 22px;
+    color: #333333;
+    line-height: 38px;
+    margin-bottom: 20px;
+  }
+}
+
 .bottom-nav {
   background: #f9f9f9;
   position: relative;
@@ -2299,11 +2299,3 @@ export default {
   }
 }
 </style>
-
-<style scoped lang="less" src="@/assets/h5css/page/product-detail.less"></style>
-
-<style
-  scoped
-  lang="less"
-  src="@/assets/h5css/mobile/product-detail.less"
-></style>

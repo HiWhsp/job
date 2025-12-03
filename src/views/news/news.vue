@@ -32,7 +32,7 @@
                     </div>
                     <div class="news-desc">
                       <div class="desc-text">
-                        {{ item.content }}
+                        {{ item.description }}
                       </div>
                     </div>
                     <div class="news-date">{{ item.dtTime.substr(0, 10) }}</div>

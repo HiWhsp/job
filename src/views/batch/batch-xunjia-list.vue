@@ -9,6 +9,7 @@
           value-format="yyyy-MM-dd"
           type="date"
           placeholder="选择日期"
+          @change="do_search()"
         >
         </el-date-picker>
         <el-select
@@ -24,7 +25,7 @@
           ></el-option>
         </el-select>
         <el-input
-          placeholder="请输入内容"
+          placeholder="输入询价单号"
           v-model="keyword"
           class="input-with-select"
         >
@@ -80,12 +81,8 @@
                     {{ vuex_huobi }} {{ product_item.baojiaPrice }}
                   </div>
                   <div class="order-state" :class="'state-' + item.status">
-                    {{ item.status == 0 ? "待提交" : "" }}
-                    {{ item.status == 1 ? "待处理" : "" }}
-                    {{ item.status == 2 ? "待采购确认" : "" }}
-                    {{ item.status == 3 ? "已下单" : "" }}
-                    {{ item.status == -1 ? "后台取消" : "" }}
-                    {{ item.status == -2 ? "用户取消" : "" }}
+                    {{ item.status == 0 ? "待报价" : "" }}
+                    {{ item.status == 1 ? "已报价" : "" }}
                   </div>
                   <div class="box-refund" @click="toDetail(item)">
                     <div class="refund-act">查看详情</div>
@@ -143,8 +140,8 @@ export default {
   data() {
     return {
       tabSelect: {
-        title: "全部",
-        value: 0,
+        title: "全部状态",
+        value: -1,
       },
       //
       orders: [],
@@ -168,28 +165,9 @@ export default {
       //订单状态：-5-待支付  -1-已取消  2-待发货  3-待收货  4-待自提  5-已完成
       let user_index = {} || this.user_index;
       let tabList = [
-        { value: 0, id: "", title: "全部报价" },
-        { value: 1, id: 0, title: "待提交", num: user_index.order_num_0 || 0 },
-        { value: 2, id: 1, title: "待处理", num: user_index.order_num_1 || 0 },
-        {
-          value: 3,
-          id: 2,
-          title: "待采购确认",
-          num: user_index.order_num_2 || 0,
-        },
-        { value: 4, id: 3, title: "已下单", num: user_index.order_num_3 || 0 },
-        {
-          value: 5,
-          id: -1,
-          title: "后台取消",
-          num: user_index.order_num_m1 || 0,
-        },
-        {
-          value: 6,
-          id: -2,
-          title: "用户取消",
-          num: user_index.order_num_m2 || 0,
-        },
+        { value: -1, id: "", title: "全部状态" },
+        { value: 0, id: 0, title: "待提交", num: user_index.order_num_0 || 0 },
+        { value: 1, id: 1, title: "待处理", num: user_index.order_num_1 || 0 },
       ];
       return tabList;
     },
@@ -229,10 +207,11 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "product_userXunjiaList",
+          action: "inquiry_getInquiryOrderList",
           ...this.pagination,
           status: this.tabSelect.id,
-          keyword: this.keyword,
+          orderNo: this.keyword,
+          createTime: this.data,
         },
       }).then((res) => {
         let { code, data } = res;

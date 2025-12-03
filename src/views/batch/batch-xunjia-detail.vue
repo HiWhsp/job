@@ -369,7 +369,7 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "product_xunjiaDetail",
+          action: "inquiry_getInquiryOrderDetail",
           id: this.id,
         },
       }).then((res) => {

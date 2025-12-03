@@ -188,6 +188,8 @@ export default {
         alertErr("两次密码不一致");
         return;
       }
+      console.log(this.form);
+      // return
       // if (this.form.type == 2 && this.form.company.length === 0) {
       //   alertErr("请输入企业名称");
       //   return;
@@ -213,7 +215,7 @@ export default {
       let { sheng, shi, qu } = data;
       this.form.province = sheng.id;
       this.form.city = shi.id;
-      this.form.area = qu.id;
+      this.form.areaId = qu.id;
 
       // this.form.provinceCode = sheng.id;
       // this.form.cityCode = shi.id;

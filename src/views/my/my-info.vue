@@ -80,7 +80,7 @@
           <div class="item">
             <span class="text">公司名称：</span>
             <span class="info">
-              <el-input clearable type="text" v-model="form.department" />
+              <el-input clearable type="text" v-model="form.company" />
             </span>
             <span class="action"> </span>
           </div>

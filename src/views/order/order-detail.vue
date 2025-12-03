@@ -134,7 +134,8 @@
               <div class="info-item">
                 <div class="label">支付方式：</div>
                 <div class="val">
-                  <span v-if="payInfo.balance">余额</span>
+                  <!-- <span v-if="payInfo.balance">余额</span> -->
+                  对公转账
                 </div>
               </div>
               <div class="info-item">
@@ -143,10 +144,7 @@
               </div>
               <div class="info-item">
                 <div class="label">配送方式：</div>
-                <div class="val">
-                  {{ fahuoInfo.expressName || "" }}
-                  {{ fahuoInfo.expressOrder || "" }}
-                </div>
+                <div class="val">快递配送</div>
               </div>
               <div class="info-item">
                 <div class="label">汇款截图：</div>
@@ -164,22 +162,34 @@
               <div class="info-item">
                 <div class="label">收款单位名称：</div>
                 <div class="val">
-                  这里展示收款方名称
-                  <img src="@/assets/img/pay-method/copy.png" alt="" />
+                  {{ offlineInfo.company }}
+                  <img
+                    src="@/assets/img/pay-method/copy.png"
+                    alt=""
+                    @click="copy_text(offlineInfo.company)"
+                  />
                 </div>
               </div>
               <div class="info-item">
                 <div class="label">收款单位号码：</div>
                 <div class="val">
-                  4205 0111 6297 0918 8188
-                  <img src="@/assets/img/pay-method/copy.png" alt="" />
+                  {{ offlineInfo.bankNo }}
+                  <img
+                    src="@/assets/img/pay-method/copy.png"
+                    alt=""
+                    @click="copy_text(offlineInfo.bankNo)"
+                  />
                 </div>
               </div>
               <div class="info-item">
                 <div class="label">开户银行：</div>
                 <div class="val">
-                  这里展示收款方名称
-                  <img src="@/assets/img/pay-method/copy.png" alt="" />
+                  {{ offlineInfo.bankName }}
+                  <img
+                    src="@/assets/img/pay-method/copy.png"
+                    alt=""
+                    @click="copy_text(offlineInfo.bankName)"
+                  />
                 </div>
               </div>
             </div>
@@ -346,13 +356,6 @@
               <button
                 v-if="info.ifPay == 1"
                 class="btn-ripple fit-text btn-bg"
-                @click="doPay(info)"
-              >
-                去支付
-              </button>
-              <button
-                v-if="info.ifPay == 1 && vuex_user.staffType == 1"
-                class="btn-ripple fit-text btn-bg"
                 @click="doOfflinePay(info)"
               >
                 上传支付凭证
@@ -464,6 +467,7 @@ export default {
       xianxia_imgs: [], //线下凭证信息
       is_xianxia: false, //是否线下转款
       pay_type: "", //支付方式
+      offlineInfo: {},
     };
   },
   computed: {
@@ -513,6 +517,16 @@ export default {
     this.setView();
   },
   methods: {
+    copy_text(text) {
+      // 使用原生方法
+      const input = document.createElement("input");
+      input.value = text;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand("copy");
+      document.body.removeChild(input);
+      this.$message.success("复制成功");
+    },
     urge() {
       this.$api({
         url: "/service.php",
@@ -534,6 +548,19 @@ export default {
     },
     setView() {
       this.query_order();
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "orders_getPlatformAccountList",
+          page: 1,
+          pagenum: 20,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.offlineInfo = res.data.list[0] || {};
+        }
+      });
     },
 
     query_order() {

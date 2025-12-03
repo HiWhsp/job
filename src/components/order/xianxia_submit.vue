@@ -49,10 +49,9 @@ export default {
           url: "/service.php",
           method: "post",
           data: {
-            action: "pay_offline",
-            orderType: 1,
-            orderId: this.info.id,
-            images: images,
+            action: "orders_savePayImg",
+            id: this.info.id,
+            payImg: images,
           },
         }).then((res) => {
           alert(res);

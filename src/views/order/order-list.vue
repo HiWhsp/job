@@ -114,14 +114,7 @@
                   取消订单
                 </button>
                 <button
-                  v-if="item.ifPay == 1"
-                  class="btn-ripple fit-text btn-bg"
-                  @click="doPay(item)"
-                >
-                  去支付
-                </button>
-                <button
-                    v-if="item.ifPay == 1 && vuex_user.staffType == 1"
+                    v-if="item.ifPay == 1"
                     class="btn-ripple fit-text btn-bg"
                     @click="doOfflinePay(item)"
                 >
@@ -439,12 +432,12 @@ export default {
       this.$refs.order_cancel_modal.init(item);
     },
     doPay(item) {
-      this.$router.push({
-        path: "/payment-methods",
-        query: {
-          id: item.id,
-        },
-      });
+      // this.$router.push({
+      //   path: "/payment-methods",
+      //   query: {
+      //     id: item.id,
+      //   },
+      // });
     },
     doDelete(item) {
       this.$refs.order_delete_modal.init(item);
