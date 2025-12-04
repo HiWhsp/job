@@ -201,7 +201,7 @@ export default new Vuex.Store({
     // 查询配置
     async query_config({ commit, state, dispatch }) {
       api({
-        url: "indexSetting",
+        url: "setting",
         method: "get",
       }).then((res) => {
         let { code, data } = res;
@@ -227,7 +227,7 @@ export default new Vuex.Store({
     // 查询
     async query_category({ commit, state, dispatch }) {
       api({
-        url: "indexSetting",
+        url: "setting",
         method: "get",
       }).then((res) => {
         if (res.code == 200) {

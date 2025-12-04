@@ -34,10 +34,8 @@
       </div>
     </div>
 
-    <div class="card-title ellipsis-2">
-      仁寿县关于进一步支持科技创新的若干政策
-    </div>
-    <div class="card-info">
+    <div class="card-title ellipsis-2">{{ contract.title }}</div>
+    <div class="card-info" v-if="$route.path != '/'" @click="handleDownload(contract)">
       <span>免费下载</span>
     </div>
   </div>
@@ -66,17 +64,6 @@ export default {
       showOverlay: false,
     };
   },
-  computed: {
-    displayTitle() {
-      if (!this.contract.title) return "";
-      // 使用字段截取，只展示括号左边的内容
-      const leftBracketIndex =
-        this.contract.title.indexOf("（") || this.contract.title.indexOf("(");
-      return leftBracketIndex !== -1
-        ? this.contract.title.substring(0, leftBracketIndex)
-        : this.contract.title;
-    },
-  },
   methods: {
     handleView() {
       window.open(
@@ -104,6 +91,9 @@ export default {
           this.$emit("collect");
         }
       });
+    },
+    handleDownload(contract) {
+      window.open(contract.url, "_blank");
     },
   },
 };

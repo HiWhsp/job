@@ -209,6 +209,13 @@
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
+      .empty-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
   /deep/ .el-carousel__container {
@@ -217,6 +224,7 @@
 }
 
 .free-download-section {
+  margin-top: 30px;
   padding: 20px;
   border-radius: 20px;
   height: 552px;
@@ -247,6 +255,7 @@
         margin-bottom: 10px;
       }
       .download-item-down {
+        cursor: pointer;
         font-size: 16px;
         color: #0081ff;
       }
@@ -322,46 +331,13 @@
       .company-image-placeholder {
         width: 100%;
         height: 100%;
-        background: linear-gradient(
-          135deg,
-          #4e57d9 0%,
-          #519dff 50%,
-          #0081ff 100%
-        );
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-
-        // 添加一些装饰性效果，模拟建筑轮廓
-        &::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: linear-gradient(
-              180deg,
-              rgba(255, 255, 255, 0.1) 0%,
-              transparent 50%
-            ),
-            repeating-linear-gradient(
-              90deg,
-              transparent,
-              transparent 40px,
-              rgba(255, 255, 255, 0.03) 40px,
-              rgba(255, 255, 255, 0.03) 80px
-            );
-        }
-
-        // 添加一个简单的图标或文字提示
-        &::after {
-          content: "图片占位";
-          position: absolute;
-          color: rgba(255, 255, 255, 0.3);
-          font-size: 18px;
-          font-weight: 300;
+        img {
+          width: 100%;
+          height: 100%;
         }
       }
     }

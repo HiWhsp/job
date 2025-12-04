@@ -17,7 +17,7 @@
       <div class="contract-section">
         <div class="head-title">
           <div class="left-title">
-            <h2><span>合同</span>文档</h2>
+            <h2><span>精选</span>文档</h2>
             <span>来自专业机构的权威发布信息，值得信赖</span>
           </div>
           <div class="right-title">
@@ -42,11 +42,14 @@
             trigger="click"
             :autoplay="false"
           >
-            <el-carousel-item v-for="i in 3" :key="i">
+            <el-carousel-item
+              v-for="(item, index) in selectedDocumentList"
+              :key="index"
+            >
               <div class="contract-grid-item">
                 <ContractCard
-                  v-for="(contract, index) in displayContracts"
-                  :key="index"
+                  v-for="(contract, index2) in item"
+                  :key="index2"
                   :contract="contract"
                 />
               </div>
@@ -66,18 +69,22 @@
           </div>
         </div>
         <div class="download-content">
-          <div class="download-item" v-for="i in 3" :key="i">
-            <img alt="" />
+          <div
+            class="download-item"
+            v-for="(item, index) in freeDownloadDocumentList"
+            :key="index"
+          >
+            <img :src="item.thumb" alt="" />
             <div class="download-item-title ellipsis-2">
-              仁寿县关于进一步支持科技创新的若干政策
+              {{ item.title }}
             </div>
-            <div class="download-item-down">
+            <div class="download-item-down" @click="downloadDocument(item)">
               <span>下载</span>
             </div>
           </div>
         </div>
       </div>
-      <!-- 精选文档 -->
+      <!-- 文档列表 -->
       <div class="contract-section" style="margin-top: 57px">
         <div class="head-title">
           <div class="left-title">
@@ -98,19 +105,8 @@
                 <div class="type-menu-list" ref="typeMenuList">
                   <div
                     class="type-menu-item"
-                    :class="{ active: activeType === '' || activeType === 0 }"
-                    @click="switchType('')"
-                  >
-                    全部
-                  </div>
-                  <div
-                    class="type-menu-item"
                     :class="{ active: activeType === category.id }"
-                    v-for="(category, index) in [
-                      ...vuex_category_tree,
-                      ...vuex_category_tree,
-                      ...vuex_category_tree,
-                    ]"
+                    v-for="(category, index) in categoryList"
                     :key="index"
                     @click="switchType(category.id)"
                   >
@@ -131,10 +127,16 @@
         <div class="contract-grid">
           <div class="contract-grid-item">
             <ContractCard
-              v-for="(contract, index) in filteredContracts"
-              :key="contract.id || index"
+              v-for="(contract, index) in documentList"
+              :key="index"
               :contract="contract"
             />
+            <div class="empty-container">
+              <el-empty
+                v-if="documentList.length === 0"
+                description="暂无数据"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -142,18 +144,21 @@
       <div class="company-info">
         <div class="company-info-content">
           <div class="company-info-left">
-            <h2 class="company-name">四川响梵信息科技有限公司</h2>
+            <h2 class="company-name">{{ vuex_config.site_name }}</h2>
             <p class="company-slogan">致力于现代化企业体系服务</p>
-            <p class="company-description">
-              四川响梵信息科技有限公司成立于2023年,是一家致力于现代企业体系制度服务的企业,主要对企业制度体系建设、科技创新、政策咨询、科技成果积累、专项资金申报、会议展览、招投标代理、人力资源等内容进行服务。
-            </p>
+            <p
+              class="company-description"
+              v-html="vuex_config.site_content"
+            ></p>
             <div class="company-btn btn-hover" @click="handleLearnMore">
               <span>了解详情</span>
               <i class="el-icon-right"></i>
             </div>
           </div>
           <div class="company-info-right">
-            <div class="company-image-placeholder"></div>
+            <div class="company-image-placeholder">
+              <img :src="vuex_config.site_img" alt="" />
+            </div>
           </div>
         </div>
       </div>
@@ -173,24 +178,24 @@
           <div class="news-grid">
             <div
               class="news-card"
-              v-for="(news, index) in displayNews"
+              v-for="(news, index) in newsList"
               :key="index"
               @click="handleNewsClick(news)"
             >
               <div class="news-card-header">
                 <span class="news-date">
                   <img src="@/assets/img/index/news-date.png" alt="" />{{
-                    news.date
+                    news.created_at
                   }}</span
                 >
                 <span class="news-tag">
-                  {{ news.category }}
+                  公司新闻
                 </span>
               </div>
               <h3 class="news-title ellipsis-2">{{ news.title }}</h3>
               <p class="news-description ellipsis-2">{{ news.description }}</p>
               <div class="news-footer">
-                <span class="news-link" @click.stop="handleNewsDetail(news)">
+                <span class="news-link">
                   了解详情
                   <i class="el-icon-right"></i>
                 </span>
@@ -222,10 +227,16 @@ export default {
     return {
       searchKeyword: "",
       activeCategory: "",
-      // 合同文书
-      contracts: [],
+      // 精选文档
+      selectedDocumentList: [],
+      // 文档列表
+      documentList: [],
       // 文档列表的当前选中类型
       activeType: "",
+      // 分类列表
+      categoryList: [],
+      // 免费下载文档
+      freeDownloadDocumentList: [],
       // 类型菜单滚动相关
       canScrollLeft: false,
       canScrollRight: false,
@@ -236,7 +247,7 @@ export default {
     };
   },
   watch: {
-    vuex_category_tree: {
+    categoryList: {
       handler() {
         this.$nextTick(() => {
           this.checkScrollButtons();
@@ -248,50 +259,17 @@ export default {
       },
       immediate: true,
     },
-    contracts: {
-      handler() {
-        this.$nextTick(() => {
-          this.checkScrollButtons();
-        });
-      },
-    },
   },
   computed: {
-    ...mapState(["vuex_index_banners", "vuex_category_tree"]),
-    // 显示前6个合同，如果不足6个则用默认值填充
-    displayContracts() {
-      const defaultContract = {
-        title: "生产经营合同",
-        thumb: "",
-        view_num: 0,
-        collect_num: 0,
-        is_collect: 0,
-        id: 0,
-      };
-      const contracts = this.contracts.slice(0, 6);
-      // 如果不足6个，用默认值填充
-      while (contracts.length < 6) {
-        contracts.push({ ...defaultContract, id: contracts.length });
-      }
-      return contracts;
-    },
-    // 根据选中的类型过滤合同列表
-    filteredContracts() {
-      if (!this.activeType || this.activeType === "") {
-        return this.contracts;
-      }
-      return this.contracts.filter(
-        (contract) => contract.category_id === this.activeType
-      );
-    },
-    // 显示前4条新闻
-    displayNews() {
-      return this.newsList.slice(0, 4);
-    },
+    ...mapState(["vuex_index_banners", "vuex_config"]),
   },
   mounted() {
+    // 获取首页数据
     this.getIndex();
+    this.getList();
+    // 获取新闻列表
     this.getNewsList();
+    // 初始化类型菜单滚动
     this.$nextTick(() => {
       this.initTypeMenuScroll();
     });
@@ -319,26 +297,92 @@ export default {
       }
     },
 
+    // 下载文档
+    downloadDocument(item) {
+      window.open(item.url, "_blank");
+    },
+
+    // 获取首页数据
     async getIndex() {
+      // 获取精选文档
       try {
         const res = await this.$api({
-          url: "contractList",
+          url: "pcDocumentList",
           method: "get",
           data: {
             page: 1,
-            pageSize: 100, // 获取更多数据用于筛选
-            category_id: this.activeType || "",
+            limit: 100, // 获取更多数据用于筛选
+            ifSelected: 1,
           },
         });
         if (res.code === 200 && res.data && res.data.list) {
-          this.contracts = res.data.list;
+          // 按照6个一组，分成多组
+          this.selectedDocumentList = res.data.list.reduce(
+            (acc, curr, index) => {
+              if (index % 6 === 0) {
+                acc.push([]);
+              }
+              acc[acc.length - 1].push(curr);
+              return acc;
+            },
+            []
+          );
           // 数据加载完成后检查滚动按钮状态
           this.$nextTick(() => {
             this.checkScrollButtons();
           });
         }
       } catch (error) {
-        console.error("获取合同列表失败:", error);
+        console.error("获取文档列表失败:", error);
+      }
+      // 免费下载文档
+      try {
+        const res = await this.$api({
+          url: "pcDocumentList",
+          method: "get",
+          data: {
+            page: 1,
+            limit: 7,
+            ifFree: 1,
+          },
+        });
+        if (res.code === 200 && res.data && res.data.list) {
+          this.freeDownloadDocumentList = res.data.list;
+        }
+      } catch (error) {
+        console.error("获取免费下载文档列表失败:", error);
+      }
+      // 获取分类
+      try {
+        const res = await this.$api({
+          url: "documentTypeList",
+          method: "get",
+        });
+        if (res.code === 200 && res.data) {
+          this.categoryList = res.data;
+          this.activeType = res.data[0].id;
+          this.getList();
+        }
+      } catch (error) {
+        console.error("获取分类列表失败:", error);
+      }
+    },
+    async getList() {
+      try {
+        const res = await this.$api({
+          url: "pcDocumentList",
+          method: "get",
+          data: {
+            page: 1,
+            limit: 12,
+            typeId: this.activeType,
+          },
+        });
+        if (res.code === 200 && res.data && res.data.list) {
+          this.documentList = res.data.list;
+        }
+      } catch (error) {
+        console.error("获取文档列表失败:", error);
       }
     },
     // 搜索
@@ -353,84 +397,35 @@ export default {
     },
     // 了解详情
     handleLearnMore() {
-      // 可以跳转到公司详情页面或执行其他操作
-      console.log("了解详情");
+      this.$router.push("/about");
     },
     // 获取新闻列表
     async getNewsList() {
+      // 获取新闻
       try {
-        // 这里可以调用实际的API获取新闻数据
-        // const res = await this.$api({
-        //   url: "newsList",
-        //   method: "get",
-        //   data: {
-        //     page: 1,
-        //     pageSize: 4,
-        //   },
-        // });
-        // if (res.code === 200 && res.data && res.data.list) {
-        //   this.newsList = res.data.list;
-        // }
-
-        // 临时使用模拟数据
-        this.newsList = [
-          {
-            id: 1,
-            date: "2024-05-07",
-            category: "公司新闻",
-            tagColor: "#0081ff",
-            title: "仁寿县关于进一步支持科技创新的若干政策标题文字",
-            description:
-              "业制度体系建设、科技创新、政策咨询、辅助完成知识产权积累、专项资金申报、会议展览、招投标采购、人力资源等内容进行服务。",
+        const res = await this.$api({
+          url: "getArticleList",
+          method: "get",
+          data: {
+            page: 1,
+            limit: 4,
           },
-          {
-            id: 2,
-            date: "2024-05-06",
-            category: "行业动态",
-            tagColor: "#52c41a",
-            title: "企业制度体系建设的重要性与实践",
-            description:
-              "现代企业制度体系建设是企业发展的基础，包括组织架构、管理制度、流程规范等多个方面，需要系统性的规划和实施。",
-          },
-          {
-            id: 3,
-            date: "2024-05-05",
-            category: "政策解读",
-            tagColor: "#ff9800",
-            title: "科技创新政策最新解读与分析",
-            description:
-              "随着国家对科技创新的重视程度不断提升，相关政策也在不断完善和优化，企业需要及时了解并合理运用这些政策。",
-          },
-          {
-            id: 4,
-            date: "2024-05-04",
-            category: "公司新闻",
-            tagColor: "#0081ff",
-            title: "专项资金申报指南与注意事项",
-            description:
-              "专项资金申报是企业获得政府支持的重要途径，需要准备充分的材料，了解申报流程和要求，提高申报成功率。",
-          },
-        ];
+        });
+        if (res.code === 200 && res.data && res.data.list) {
+          this.newsList = res.data.list;
+        }
       } catch (error) {
         console.error("获取新闻列表失败:", error);
       }
     },
     // 新闻卡片点击
     handleNewsClick(news) {
-      console.log("点击新闻:", news);
-      // 可以跳转到新闻详情页
-      // this.$router.push(`/news-detail/${news.id}`);
-    },
-    // 新闻详情
-    handleNewsDetail(news) {
-      console.log("查看新闻详情:", news);
-      // 可以跳转到新闻详情页
-      // this.$router.push(`/news-detail/${news.id}`);
+      this.$router.push("/newsDetail?id=" + news.id);
     },
     // 查看更多新闻
     handleViewMoreNews() {
       // 可以跳转到新闻列表页
-      this.$router.push("/news-list");
+      this.$router.push("/news");
     },
     // 左切换
     handleLeftClick() {
@@ -443,7 +438,7 @@ export default {
     // 切换类型
     switchType(typeId) {
       this.activeType = typeId;
-      this.getIndex();
+      this.getList();
     },
     // 初始化类型菜单滚动
     initTypeMenuScroll() {
