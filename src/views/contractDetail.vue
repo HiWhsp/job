@@ -72,10 +72,14 @@
                     <canvas
                       :ref="`pdfCanvas${index}`"
                       class="pdf-page-canvas"
+                      @contextmenu.prevent
+                      @selectstart.prevent
                     ></canvas>
                     <canvas
                       :ref="`watermarkCanvas${index}`"
                       class="watermark-canvas"
+                      @contextmenu.prevent
+                      @selectstart.prevent
                     ></canvas>
                   </div>
 
@@ -283,10 +287,12 @@ export default {
     this.addScrollListener();
     this.addResizeListener();
     this.loadPDFJS();
+    this.preventCanvasSave();
   },
   beforeDestroy() {
     this.removeScrollListener();
     this.removeResizeListener();
+    this.removeCanvasSavePrevention();
   },
   methods: {
     setView() {
@@ -386,6 +392,55 @@ export default {
     },
     removeResizeListener() {
       window.removeEventListener("resize", this.handleResize);
+    },
+    // 防止canvas保存图片
+    preventCanvasSave() {
+      // 阻止右键菜单
+      document.addEventListener("contextmenu", this.handleContextMenu);
+      // 阻止键盘快捷键保存
+      document.addEventListener("keydown", this.handleKeyDown);
+      // 阻止拖拽
+      document.addEventListener("dragstart", this.handleDragStart);
+    },
+    removeCanvasSavePrevention() {
+      document.removeEventListener("contextmenu", this.handleContextMenu);
+      document.removeEventListener("keydown", this.handleKeyDown);
+      document.removeEventListener("dragstart", this.handleDragStart);
+    },
+    handleContextMenu(e) {
+      // 如果点击的是canvas元素，阻止右键菜单
+      if (e.target.tagName === "CANVAS") {
+        e.preventDefault();
+        return false;
+      }
+    },
+    handleKeyDown(e) {
+      // 阻止Ctrl+S、Ctrl+Shift+S等保存快捷键
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        (e.key === "s" || e.key === "S")
+      ) {
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.tagName === "CANVAS") {
+          e.preventDefault();
+          return false;
+        }
+      }
+      // 阻止F12开发者工具（可选）
+      if (e.key === "F12") {
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.tagName === "CANVAS") {
+          e.preventDefault();
+          return false;
+        }
+      }
+    },
+    handleDragStart(e) {
+      // 如果拖拽的是canvas元素，阻止拖拽
+      if (e.target.tagName === "CANVAS") {
+        e.preventDefault();
+        return false;
+      }
     },
     handleScroll() {
       const now = Date.now();
