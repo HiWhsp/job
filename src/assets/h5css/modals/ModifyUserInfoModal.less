@@ -1,0 +1,124 @@
+/* 移动端适配 - 修改个人信息弹框 */
+@media screen and (max-width: 750px) {
+  .modal-overlay {
+    align-items: flex-end;
+    
+    .modal-container {
+      width: 100%;
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 1rem 1rem 0 0;
+      animation: slideUp 0.3s ease;
+    }
+  }
+
+  .modal-header {
+    padding: 1rem 1.25rem !important;
+    height: 3.125rem !important;
+    
+    .modal-title {
+      font-size: 1.125rem !important;
+      font-weight: 600;
+    }
+    
+    .close-btn {
+      padding: 0.5rem !important;
+    }
+  }
+
+  .modal-content {
+    padding: 1.875rem 1.25rem 1.25rem 1.25rem !important;
+  }
+
+  .form-group {
+    margin-bottom: 0.8rem !important;
+    align-items: center !important;
+    
+    .form-label {
+      width: 100% !important;
+      text-align: left !important;
+      margin-right: 0 !important;
+      margin-bottom: 0.5rem !important;
+      font-size: 1rem !important;
+      color: #333 !important;
+    }
+
+    .avatar-section {
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 1.25rem !important;
+      
+      .avatar-preview {
+        width: 3.75rem !important;
+        height: 3.75rem !important;
+      }
+      
+      .avatar-uploader {
+        /deep/ .el-upload{
+            display: flex;
+            align-items: center;
+        }
+        .change-avatar-btn {
+          padding: 0.625rem 1.25rem !important;
+          font-size: 0.875rem !important;
+          border-radius: 0.5rem !important;
+          
+          &:hover {
+            transform: none !important;
+          }
+        }
+      }
+    }
+
+    .phone-display {
+      width: 100% !important;
+      padding: 0.875rem 1rem !important;
+      font-size: 1rem !important;
+      border-radius: 0.5rem !important;
+    }
+
+    .form-input {
+      width: 100% !important;
+      padding: 0.875rem 1rem !important;
+      font-size: 1rem !important;
+      border-radius: 0.5rem !important;
+      border: 0.0625rem solid #ddd !important;
+      
+      &:focus {
+        border-color: #4e57d9 !important;
+        box-shadow: 0 0 0 0.125rem rgba(78, 87, 217, 0.1) !important;
+      }
+    }
+  }
+
+  .modal-footer {
+    padding: 0 1.25rem 1.875rem 1.25rem !important;
+    flex-direction: column-reverse;
+    gap: 0.75rem !important;
+    
+    .btn {
+      width: 100% !important;
+      padding: 0.6rem !important;
+      font-size: 1rem !important;
+      border-radius: 0.5rem !important;
+      
+      &.btn-confirm {
+        &:hover {
+          transform: none !important;
+        }
+      }
+    }
+  }
+}
+
+/* 移动端弹框动画 */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+

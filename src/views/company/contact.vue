@@ -109,3 +109,5 @@ export default {
 <style lang="less" scoped>
 @import "./contact.less";
 </style>
+<style scoped lang="less" src="@/assets/h5css/contact.less"></style>
+

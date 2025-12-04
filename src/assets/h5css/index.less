@@ -1,0 +1,135 @@
+@media screen and (max-width:750px) {
+    .page-index {
+        margin: 0 auto 0;
+
+    }
+
+    .lunbo-box {
+        img {
+            height: 5.12rem;
+        }
+
+        /deep/ .el-carousel__container {
+            height: 11rem;
+        }
+    }
+
+    .announcement-section {
+        margin-bottom: 1rem;
+        flex-direction: column;
+        gap: 0;
+
+        .announcement-banner {
+            width: 100%;
+            background-size: 100% 4.6rem;
+            height: 5rem;
+            border-radius: 0.2rem;
+
+            .banner-content {
+                margin-left: 4.2rem;
+                padding: 0.2rem 0.2rem 0.2rem 0;
+
+                /deep/ p {
+                    font-size: 0.6rem;
+                    line-height: 1rem;
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    .latest-updates {
+        width: 100%;
+        padding: 2.8rem 0.8rem 0 1rem;
+        height: 9rem;
+
+        .latest-updates-title {
+            font-size: 1rem;
+            top: 0.4rem;
+            left: 3.2rem;
+        }
+
+        .updates-list {
+            .update-item {
+                margin-bottom: 0.6rem;
+
+                .update-content {
+                    font-size: 0.8rem;
+                    width: 10rem;
+                }
+
+                .update-date {
+                    font-size: 0.8rem;
+                }
+            }
+        }
+    }
+
+    .contract-section {
+        padding: 0 0.8rem;
+        .section-header {
+            margin-bottom: 1rem;
+            h2 {
+                font-size: 1rem;
+
+                img {
+                    width: 2rem;
+                    height: 2rem;
+                }
+            }
+
+            .search-box {
+                .search-input {
+                    width: 12rem;
+                }
+                 /deep/.el-input-group__append{
+                font-size: 1rem;
+                text-align: center;
+                padding: 0 1.4rem;
+             }
+            }
+
+        }
+        .category-tabs {
+            margin-bottom: 1rem;
+            .tab-item{
+                padding:0.2rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+        .contract-list-section {
+            .section-title {
+                margin-bottom: 1rem;
+                .view-more-btn{
+                    /deep/ .el-button{
+                        font-size: 0.7rem !important;
+                    }
+                    /deep/ .el-button--primary .el-icon-arrow-right{
+                        font-size: 0.8rem;
+                    }
+                }
+                .section-title-text{
+                    width: 50%;
+                    height: 2rem;
+                    font-size: 1rem;
+                    line-height: 0.2rem;
+                    padding:1rem 0 0 3.4rem;;
+                }
+            }
+        }
+    }
+    .contract-grid{
+        flex-direction: column;
+        margin-bottom: 0rem !important;
+    }
+    .footer-section{
+        width: 80%;
+        font-size: 1rem;
+        height: 3.2rem;
+        margin: 2rem auto 0;
+    }
+    .main-content{
+        padding-bottom: 2rem;
+    }
+    
+}

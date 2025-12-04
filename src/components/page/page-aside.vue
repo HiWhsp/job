@@ -2,14 +2,8 @@
   <div class="aside">
     <div class="inner">
       <div class="list">
-        <div
-          class="item"
-          v-for="(item, index) in list_util"
-          :key="index"
-          @mouseenter="on_mouseenter(item)"
-          @mouseleave="on_mouseleave(item)"
-          @click="on_click_util(item)"
-        >
+        <div class="item" v-for="(item, index) in list_util" :key="index" @mouseenter="on_mouseenter(item)"
+          @mouseleave="on_mouseleave(item)" @click="on_click_util(item)">
           <div class="item-inner" v-if="item.title != '微信'" @click="goUrl(item.path)">
             <img :src="item.icon" alt="" />
             <div class="item-title">{{ item.title }}</div>
@@ -148,6 +142,7 @@ export default {
   background: #ffffff;
   box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.1);
   border-radius: 8px 8px 8px 8px;
+
   .item {
     height: 100px;
     position: relative;
@@ -157,11 +152,13 @@ export default {
     align-items: center;
     box-sizing: border-box;
     border-bottom: 1px solid #e8e8e8;
+
     .item-inner {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+
       .item-title {
         margin-top: 10px;
         font-size: 14px;
@@ -170,9 +167,11 @@ export default {
         color: #7b7b7b;
       }
     }
+
     &:last-child {
       border-bottom: none;
     }
+
     &:hover {
       opacity: 0.6;
     }
@@ -187,14 +186,64 @@ export default {
 .pop-kefu {
   .pop-kefu-inner {
     text-align: center;
+
     .kefu-tip {
       text-align: center;
       font-size: 14px;
       margin-bottom: 10px;
     }
+
     .kefu-code {
       width: 176px;
       height: 176px;
+    }
+  }
+}
+</style>
+<style lang="less" scoped>
+@media screen and (max-width:750px) {
+  .aside{
+    top: 66%;
+  }
+  .list {
+    width: 4.2rem;
+
+    .item {
+      height: 4.6rem;
+
+      .item-inner {
+        img {
+          height: 1.4rem;
+        }
+
+        .item-title {
+          font-size: 0.8rem;
+          margin-top: 0.6rem;
+        }
+      }
+    }
+  }
+
+  .pop-kefu {
+    .pop-kefu-inner {
+      padding: 0rem !important;
+      text-align: center;
+
+      .kefu-tip {
+        text-align: center;
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+      }
+
+      .kefu-code {
+        width:5rem;
+        height: 6rem;
+      }
+      .kefu-tip{
+        margin-bottom: 0 !important;
+      }
+
+      .item-inner {}
     }
   }
 }

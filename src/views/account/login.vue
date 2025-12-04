@@ -350,3 +350,4 @@ export default {
   }
 }
 </style>
+<style scoped lang="less" src="@/assets/h5css/login.less"></style>

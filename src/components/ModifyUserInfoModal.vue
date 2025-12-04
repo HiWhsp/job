@@ -363,3 +363,4 @@ export default {
   }
 }
 </style>
+<style scoped lang="less" src="@/assets/h5css/modals/ModifyUserInfoModal.less"></style>

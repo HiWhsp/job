@@ -578,3 +578,5 @@ export default {
 <style lang="less" scoped>
 @import "./contractDetail.less";
 </style>
+
+<style scoped lang="less" src="@/assets/h5css/contractDetail.less"></style>

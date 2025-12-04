@@ -263,3 +263,4 @@ export default {
   }
 }
 </style>
+<style scoped lang="less" src="@/assets/h5css/modals/ChangePasswordModal.less"></style>

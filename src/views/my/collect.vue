@@ -1,12 +1,7 @@
 <template>
   <div class="my-favorites">
-    <ContractCard
-      v-for="contract in currentContracts"
-      :key="contract.id"
-      :contract="contract"
-      @collect="loadData"
-      type="collect"
-    />
+    <ContractCard v-for="contract in currentContracts" :key="contract.id" :contract="contract" @collect="loadData"
+      type="collect" />
     <el-empty v-if="currentContracts.length === 0" style="width: 100%" description="暂无收藏数据" />
   </div>
 </template>
@@ -64,5 +59,15 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 60px;
+}
+</style>
+<style lang="less" scoped>
+@media screen and(max-width:750px) {
+  .my-favorites {
+    margin-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
 }
 </style>

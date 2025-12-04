@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :visible.sync="visible"
-    width="1300px"
+    width="375px"
     custom-class="download-modal"
     @close="handleClose"
   >
@@ -42,9 +42,10 @@
                 {{ product.title }}
               </h3>
               <p class="product-description">
-                <el-tooltip :content="product.description" placement="top">
+                <el-tooltip :content="product.description" placement="top" v-if="!vuex_h5">
                   <span class="ellipsis-3">{{ product.description }}</span>
                 </el-tooltip>
+                 <span class="ellipsis-3" v-else>{{ product.description }}</span>
               </p>
 
               <div class="flex-between">
@@ -685,5 +686,16 @@ export default {
     font-size: 28px;
     color: #999;
   }
+}
+</style>
+<style lang="less" scoped src="@/assets/h5css/modals/DownloadModal.less"></style>
+
+<style lang="less">
+@media screen and (max-width:750px) {
+  .download-modal {
+        width: 96vw !important;
+        min-width: 96vw !important;
+        max-width: 96vw !important;
+    }
 }
 </style>

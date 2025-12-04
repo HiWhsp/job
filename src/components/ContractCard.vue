@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="contract-card"
-    @mouseenter="showOverlay = true"
-    @mouseleave="showOverlay = false"
-  >
+  <div class="contract-card" @mouseenter="showOverlay = true" @mouseleave="showOverlay = false">
     <div class="card-content">
       <div class="document-preview">
         <div class="document-header">
@@ -21,17 +17,14 @@
       </div>
     </div>
     <!-- 悬浮遮罩层 -->
-    <div class="overlay" v-show="showOverlay">
+    <div class="overlay" v-show="showOverlay && !vuex_h5">
       <div class="overlay-buttons">
         <button class="view-btn btn-hover" @click="handleView">
           <i class="el-icon-view"></i>
           点击查看
         </button>
         <button class="collect-btn" @click="handleCollect">
-          <i
-            class="el-icon-star-off"
-            :class="{ 'is-collected': contract.is_collect }"
-          ></i>
+          <i class="el-icon-star-off" :class="{ 'is-collected': contract.is_collect }"></i>
           {{ contract.is_collect ? "取消收藏" : "收藏" }}
         </button>
       </div>
@@ -46,8 +39,22 @@
         </div>
       </div>
     </div>
+   
 
     <div class="card-title ellipsis-1">{{ displayTitle }}</div>
+     <div v-if="vuex_h5" class="overlay-operate-h5">
+      <div class="overlay-buttons">
+        <button class="view-btn btn-hover" @click="handleView">
+          <i class="el-icon-view"></i>
+          点击查看
+        </button>
+        <button class="collect-btn" @click="handleCollect">
+          <i class="el-icon-star-off" :class="{ 'is-collected': contract.is_collect }"></i>
+          {{ contract.is_collect ? "取消收藏" : "收藏" }}
+        </button>
+      </div>
+      
+    </div>
   </div>
 </template>
 
@@ -84,7 +91,7 @@ export default {
   },
   methods: {
     handleView() {
-    window.open(`/contractDetail?id=${this.type == "collect" ? this.contract.articleId : this.contract.id}`, '_blank');
+      window.open(`/contractDetail?id=${this.type == "collect" ? this.contract.articleId : this.contract.id}`, '_blank');
       console.log(this.contract);
     },
     handleCollect() {
@@ -139,6 +146,7 @@ export default {
         width: 43px;
         height: 43px;
         margin-right: 10px;
+
         img {
           width: 100%;
           height: 100%;
@@ -150,9 +158,11 @@ export default {
         font-size: 20px;
         color: #363130;
         line-height: 28px;
+
         p {
           width: 220px;
         }
+
         .document-info {
           font-weight: 400;
           font-size: 12px;
@@ -178,6 +188,7 @@ export default {
         border-radius: 8px;
         z-index: 1;
       }
+
       img {
         position: relative;
         width: 267px;
@@ -225,6 +236,7 @@ export default {
         i {
           font-size: 18px;
         }
+
         .is-collected {
           color: #f74747;
         }
@@ -279,5 +291,133 @@ export default {
     line-height: 60px;
     border-top: 1px solid #f0f0f0;
   }
+}
+</style>
+<style lang="less" scoped>
+@media screen and (max-width:750px) {
+  .contract-card {
+    border-radius: 0.8rem;
+    width: 100%;
+    height: 42rem;
+    margin-bottom: 0rem;
+    padding-bottom: 1rem;
+
+    .card-title {
+      font-size: 1rem;
+      height: 3rem;
+      line-height: 3rem;
+      margin-top: 0;
+    }
+
+    .card-content {
+      padding: 0.8rem;
+    }
+
+    .document-preview {
+      .document-header {
+        margin-bottom: 1rem;
+
+        .word-icon {
+          width: 2.4rem;
+          height: 2.4rem;
+        }
+
+        .document-title {
+          p {
+            font-size: 1rem;
+            width: 80%;
+            line-height: 1.2rem;
+          }
+
+          .document-info {
+            font-size: 0.7rem;
+          }
+        }
+      }
+
+      .document-content {
+        height: 25.2rem;
+
+        img {
+          width: 100%;
+          height: 25rem;
+        }
+      }
+
+      .document-content::before {
+        bottom: -0.3rem;
+        right: -0.3rem;
+      }
+    }
+  }
+
+  .overlay-operate-h5 {
+    .overlay-buttons {
+      display: flex;
+      justify-content: space-between;      
+      margin-top: 1rem;
+      flex-direction: column;
+      gap:0.6rem;
+      justify-content: center;
+      align-items: center;
+      .view-btn,
+      .collect-btn {
+        width: 90%;
+        height: 3rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
+
+        i {
+          font-size: 1rem;
+        }
+
+        .is-collected {
+          color: #f74747;
+        }
+      }
+
+      .view-btn {
+        background: linear-gradient(90deg, #4e57d9 0%, #519dff 100%);
+        color: white;
+
+        &:hover {
+          background: #106ebe;
+        }
+      }
+
+      .collect-btn {
+        background: white;
+        color: #333;
+
+        &:hover {
+          background: #f5f5f5;
+        }
+      }
+    }
+
+    .overlay-stats {
+      display: flex;
+      gap: 16px;
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: #363130;
+        font-size: 18px;
+
+        i {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
 }
 </style>

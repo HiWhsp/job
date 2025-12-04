@@ -35,7 +35,6 @@ axios.interceptors.response.use(
       Message.error(res.msg);
       router.push("/login");
     }
-    // debugger
     return res;
   },
   function (error) {

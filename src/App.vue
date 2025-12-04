@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <page_header />
+     <page-header-mobile v-if="vuex_h5" />
+    <page_header v-else />
+   
 
     <div class="layout-box">
       <router-view></router-view>
@@ -13,6 +15,7 @@
 <script>
 import page_aside from "@/components/page/page-aside.vue";
 import page_header from "@/components/page/page-header.vue"; //顶部搜索
+import pageHeaderMobile from "@/components/page/page-header-mobile.vue"; //顶部搜索
 import page_footer from "@/components/page/page-footer.vue";
 
 export default {
@@ -20,6 +23,7 @@ export default {
     page_aside,
     page_header,
     page_footer,
+    pageHeaderMobile
   },
   data() {
     return {
@@ -38,7 +42,30 @@ export default {
   },
   beforeCreate() {},
   created() {},
+  mounted() {
+    this.setPhoneSize()
+  },
   methods: {
+    setPhoneSize() {
+
+      const baseSize = 16; // 基础字号（PC 端值）
+      const designWidth = 375; // 设计稿宽度（按 iPhone 6/7/8）
+
+      function setRem() {
+        if (document.documentElement.clientWidth <= 750) {
+          const scale = document.documentElement.clientWidth / designWidth;
+          document.getElementById('app').style.width = document.documentElement.clientWidth + 'px'
+          document.getElementById('app').style.overflow = 'hidden'
+          const size = baseSize * Math.min(scale, 2) + 'px';
+          document.documentElement.style.fontSize = size
+        }
+
+      }
+
+      setRem();
+      window.addEventListener('resize', setRem);
+
+    },
     // scrollToTop() {
     //   let disallowScrollPages = ["product-detail"];
     //   if (disallowScrollPages.includes(this.$route.name)) {
@@ -71,6 +98,13 @@ export default {
 .w-1600 {
   width: @width;
   margin: 0 auto;
+}
+
+@media screen  and (max-width:750px){
+  .w-1600 {
+  width: 100vw !important;
+  margin: 0 auto;
+}
 }
 .btn {
   cursor: pointer;
@@ -577,3 +611,5 @@ button {
   }
 }
 </style>
+<style lang="less" src="@/assets/h5css/h5Element.less"></style>
+

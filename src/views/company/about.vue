@@ -46,7 +46,7 @@
             :key="index"
             class="nav-item"
             :class="{ active: activeTab === index }"
-            @click="setActiveTab(index)"
+            @click.stop="setActiveTab(index)"
           >
             <div class="nav-number">
               {{ String(index + 1).padStart(2, "0") }}
@@ -207,3 +207,5 @@ export default {
 <style lang="less" scoped>
 @import "./about.less";
 </style>
+<style scoped lang="less" src="@/assets/h5css/about.less"></style>
+

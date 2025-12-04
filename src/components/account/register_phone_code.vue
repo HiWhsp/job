@@ -5,12 +5,8 @@
       <!-- <img src="/common/icon-code.png" alt="" /> -->
       <input type="text" placeholder="请输入验证码" v-model="form.code" />
 
-      <button
-        :disabled="disabledBtn"
-        class="btn-validate-box"
-        @click="query_code()"
-        :class="time != 60 ? 'disabled' : ''"
-      >
+      <button :disabled="disabledBtn" class="btn-validate-box" @click="query_code()"
+        :class="time != 60 ? 'disabled' : ''">
         获取验证码
         <span>（{{ time }}）</span>
       </button>
@@ -137,6 +133,7 @@ export default {
       font-weight: 400;
       color: #d7d7d7;
     }
+
     &:focus {
       outline: none;
     }
@@ -219,5 +216,17 @@ export default {
       color: #ccc;
     }
   }
+}
+</style>
+<style lang="less" scoped>
+@media screen and (max-width:750px) {
+  .btn-validate-box {
+    font-size: 0.8rem;
+  }
+  .input-box{
+    border: none;
+  }
+  
+
 }
 </style>

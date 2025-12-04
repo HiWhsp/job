@@ -7,7 +7,7 @@
         v-loading="loading"
         height="400"
       >
-        <el-table-column
+        <el-table-column v-if="!vuex_h5"
           prop="name"
           label=""
           align="center"
@@ -80,7 +80,7 @@ export default {
         {
           id: 1,
           orderNumber: "123456789",
-          name: "写字楼办公室房屋租赁合同范本",
+          title: "写字楼办公室房屋租赁合同范本",
           amount: "10.00",
           orderTime: "2025-08-08 17:59:38",
           downloadStatus: "downloaded",
@@ -89,7 +89,7 @@ export default {
         {
           id: 2,
           orderNumber: "123456790",
-          name: "写字楼办公室房屋租赁合同范本",
+          title: "写字楼办公室房屋租赁合同范本",
           amount: "10.00",
           orderTime: "2025-08-08 17:59:38",
           downloadStatus: "not_downloaded",
@@ -98,7 +98,7 @@ export default {
         {
           id: 3,
           orderNumber: "123456791",
-          name: "写字楼办公室房屋租赁合同范本",
+          title: "写字楼办公室房屋租赁合同范本",
           amount: "10.00",
           orderTime: "2025-08-08 17:59:38",
           downloadStatus: "downloaded",
@@ -351,5 +351,17 @@ export default {
 /deep/ .el-message {
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+</style>
+<style lang="less" scoped>
+@media screen and (max-width:750px) {
+  .my-orders .order-content /deep/ .el-button--primary{
+    width: auto !important;
+    height:  auto !important;
+    padding: 0.2rem 0.4rem;
+  }
+  .my-orders .order-content .pagination-container{
+    margin-top: 1rem;
+  }
 }
 </style>

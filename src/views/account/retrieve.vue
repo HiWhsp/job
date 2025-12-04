@@ -379,3 +379,19 @@ export default {
   }
 }
 </style>
+<style scoped lang="less" src="@/assets/h5css/login.less"></style>
+
+<style scoped lang="less" src="@/assets/h5css/register.less"></style>
+<style scoped  lang="less">
+@media screen and (max-width:750px){
+  .page .page-inner .input-wrap .register-box .log-text{
+    font-size: 0.8rem;
+  }
+  .page-poster{
+    display: none;
+  }
+  .page .page-inner .input-wrap .register-box .log-box{
+    margin: 1rem 0;
+  }
+}
+</style>

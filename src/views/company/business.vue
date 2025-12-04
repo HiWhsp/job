@@ -115,3 +115,5 @@ export default {
 <style lang="less" scoped>
 @import "./business.less";
 </style>
+<style scoped lang="less" src="@/assets/h5css/business.less"></style>
+

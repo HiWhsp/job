@@ -28,3 +28,5 @@ export default {
 <style lang="less" scoped>
 @import "./help.less";
 </style>
+<style scoped lang="less" src="@/assets/h5css/help.less"></style>
+

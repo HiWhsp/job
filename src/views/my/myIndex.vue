@@ -9,7 +9,7 @@
 
       <div class="user-info-container" v-if="vuex_user.id">
         <div class="user-avatar">
-          <img :src="vuex_user.image" alt="用户头像" />
+          <img :src="vuex_user.image" alt="" />
         </div>
 
         <div class="user-details">
@@ -378,3 +378,5 @@ export default {
   border-radius: 8px;
 }
 </style>
+<style scoped lang="less" src="@/assets/h5css/my.less"></style>
+

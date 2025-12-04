@@ -1,0 +1,173 @@
+@media screen and (max-width:750px) {
+
+    /deep/ .el-dialog__body {
+        background-color: #fff;
+    }
+
+    /deep/ .download-modal .el-dialog__header {
+        height: 2rem;
+    }
+
+    .download-modal-content {
+
+        .product-section {
+            .product-list {
+                flex-direction: column;
+                gap: 1rem;
+
+                .product-item {
+                    padding: 0.8rem;
+                    border-width: 0.1rem;
+
+                    &.selected {
+                        border: 0.1rem solid #e0291f;
+                    }
+
+                    .select-icon {
+                        width: 1rem;
+                        height: 1rem;
+                        top: 0.5rem;
+                        left: 0.5rem;
+                    }
+
+                    .product-info {
+                        .product-description {
+                            padding: 0.8rem;
+                            font-size: 0.8rem;
+                            height: 5rem;
+                            margin-bottom: 1rem;
+                        }
+
+                        .product-title {
+                            font-size: 1rem;
+                            margin-top: 1.4rem;
+
+                            img {
+                                width: 1rem;
+                                height: 1rem;
+                            }
+                        }
+
+                        .product-meta {
+                            font-size: 0.6rem;
+                        }
+
+                        .product-price {
+                            .price-label {
+                                font-size: 0.6rem;
+                            }
+
+                            .price-value {
+                                font-size: 1rem;
+                            }
+                        }
+                    }
+                }
+
+                .product-item.recommended {
+                    .recommend-badge {
+                        top: 0rem;
+                        right: 0;
+                        border-radius: 0.8rem;
+
+                        img {
+                            width: 4.2rem;
+                            height: auto;
+
+                        }
+                    }
+                }
+            }
+        }
+
+        .payment-section {
+            .payment-left {
+                flex-direction: column;
+
+                .qr-codes {
+                    .qr-item {
+                        .qr-code {
+                            width: 5rem;
+                            height: 5rem;
+
+                            img {
+                                width: 4rem;
+                                height: 4rem;
+                            }
+                        }
+
+                        .qr-label {
+                            font-size: 0.6rem;
+
+                            img {
+                                width: 1rem;
+                                height: 1rem;
+                                margin-right: 0.4rem;
+                            }
+                        }
+                    }
+                }
+
+                .amount-display {
+                    margin-left: 0;
+
+                    .amount-display-top {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-end;
+                    }
+
+                    .amount-label {
+                        font-size: 0.7rem;
+                    }
+
+                    .amount-value {
+                        font-size: 1.2rem;
+                    }
+
+                    .amount-tip {
+                        font-size: 0.6rem;
+                    }
+
+                    .amount-display-bottom {
+                        .title {
+                            font-size: 0.6rem;
+                        }
+
+                        img {
+                            width: 0.8rem;
+                            height: 0.8rem;
+                        }
+
+                        .content {
+                            font-size: 0.6rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .download-modal-content {
+        .pay-success {
+            font-size: 1rem;
+            gap:1rem;
+
+            img {
+                width: 5rem;
+                height: 5rem;
+            }
+
+            .download-btn {
+                width: 13rem;
+                height: 3rem;
+                font-size: 0.8rem;
+
+                img {
+                    width: 1.5rem;
+                    height: 1.5rem;
+                }
+            }
+        }
+    }
+}

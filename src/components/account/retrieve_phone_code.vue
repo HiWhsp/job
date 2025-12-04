@@ -230,3 +230,15 @@ export default {
   }
 }
 </style>
+<style lang="less" scoped>
+@media screen and (max-width:750px) {
+  .btn-validate-box {
+    font-size: 0.8rem;
+  }
+  .input-box{
+    // border: none;
+  }
+  
+
+}
+</style>

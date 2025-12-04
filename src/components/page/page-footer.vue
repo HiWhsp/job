@@ -19,21 +19,13 @@
               <div class="contact-item">
                 <span class="contact-label">律师咨询电话 (同微信)</span>
                 <div class="phone-section">
-                  <img
-                    class="phone-icon"
-                    src="@/assets/img/index/footer-phone.png"
-                    alt="phone"
-                  />
+                  <img class="phone-icon" src="@/assets/img/index/footer-phone.png" alt="phone" />
                   <span class="phone-number">{{ vuex_config.bottom_lawer_contact || "18696628883" }}</span>
                 </div>
               </div>
               <div class="contact-item">
                 <div class="email-section">
-                  <img
-                    class="email-icon"
-                    src="@/assets/img/index/footer-email.png"
-                    alt="email"
-                  />
+                  <img class="email-icon" src="@/assets/img/index/footer-email.png" alt="email" />
                   <span class="email">{{ vuex_config.bottom_lawer_email || "851432731@qq.com" }}</span>
                 </div>
               </div>
@@ -105,8 +97,7 @@ export default {
 
 <style lang="less" scoped>
 .page-footer {
-  background: url("../../assets/img/index/footer-bg.png") no-repeat center
-    center;
+  background: url("../../assets/img/index/footer-bg.png") no-repeat center center;
   background-size: 100% 100%;
   color: #fff;
   height: 415px;
@@ -141,17 +132,20 @@ export default {
   align-items: center;
   gap: 20px;
   height: 100%;
+
   .logo {
     width: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+
     img {
       width: 100%;
       height: 100%;
     }
   }
+
   .right-logo {
     .company-name {
       font-size: 36px;
@@ -171,9 +165,9 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 12px;
+
   .contact-item {
     display: flex;
-    flex-direction: column;
     gap: 8px;
   }
 
@@ -188,10 +182,12 @@ export default {
     display: flex;
     align-items: center;
     gap: 8px;
+
     .phone-icon {
       width: 35px;
       height: 35px;
     }
+
     .email-icon {
       width: 19px;
       height: 19px;
@@ -223,14 +219,17 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 20px;
+
   .feature-item {
     display: flex;
     align-items: center;
     justify-content: end;
     gap: 12px;
+
     .feature-icon {
       width: 46px;
       height: 52px;
+
       img {
         width: 100%;
         height: 100%;
@@ -251,6 +250,7 @@ export default {
   justify-content: end;
   gap: 44px;
   flex-wrap: wrap;
+
   .nav-link {
     color: #9D9D9D;
     text-decoration: none;
@@ -260,6 +260,7 @@ export default {
     &:hover {
       color: #fff;
     }
+
     .separator {
       color: #B8B8B8;
       font-size: 18px;
@@ -290,5 +291,108 @@ export default {
 .infringement-notice {
   color: #999;
   font-size: 12px;
+}
+</style>
+<style lang="less" scoped>
+@media screen and (max-width:750px) {
+  .page-footer{
+    height: 15rem;
+  }
+  .footer-content{
+    flex-direction: column;
+    padding: 1rem 0.8rem;
+  }
+ 
+  .logo-section {
+    gap: 0.4rem;
+
+    .logo {
+      width: 1rem;
+    }
+
+    .right-logo {
+      display: flex;
+      align-items: center;
+      .company-name {
+        font-size: 1rem;
+        margin-bottom: 0.4rem;
+        margin-right: 1rem;
+      }
+
+      .slogan {
+        font-size: 0.7rem;
+      }
+    }
+  }
+
+  .contact-info {
+    .contact-label {
+      font-size: 0.8rem;
+    }
+    .phone-section{
+       .phone-icon{
+        width: 1rem;
+        height: 1rem;
+       }
+    }
+    .phone-number{
+      font-size: 1rem;
+    }
+    .email-section {
+      .email-icon{
+         width: 1rem;
+        height: 1rem;
+      }
+    }
+    .email{
+      font-size: 0.7rem;
+    }
+  }
+  .features-section{
+    gap:0;
+    margin-left: 0rem;
+    margin-top: 0.8rem;
+  }
+  .features {
+    display: flex;
+    gap:0.8rem;
+    .feature-item {
+      gap:0.2rem;
+      .feature-icon{
+        width: 1.8rem;
+        height: 1.8rem;
+        gap: 0.2rem;
+        display: flex;
+        align-items: center;
+      }
+      .feature-text{
+        font-size: 0.7rem;
+      }
+    }
+  }
+  .nav-links{
+    gap:0.4rem;
+    justify-content: center;
+     margin-top: 1rem;
+     .nav-link{
+      font-size: 0.7rem;
+     
+     
+     }
+      span{
+        font-size: 0.8rem;
+      }
+  }
+  .footer-bottom{
+    height:2rem;
+    gap:0
+  }
+  .copyright{
+    font-size: 0.5rem;
+  }
+  .infringement-notice{
+     font-size:  0.5rem;
+  }
+
 }
 </style>

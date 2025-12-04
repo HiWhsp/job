@@ -1,7 +1,7 @@
 <template>
   <div class="page-index">
     <div class="lunbo-box">
-      <el-carousel trigger="click" :autoplay="true">
+      <el-carousel trigger="click" :autoplay="false">
         <el-carousel-item
           v-for="(item, index) in vuex_index_banners"
           :key="index"
@@ -258,3 +258,5 @@ export default {
 <style lang="less" scoped>
 @import "./index.less";
 </style>
+<style scoped lang="less" src="@/assets/h5css/index.less"></style>
+

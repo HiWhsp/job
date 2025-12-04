@@ -1,21 +1,11 @@
 <template>
   <div class="my-orders">
     <div class="order-content">
-      <el-table
-        :data="orderList"
-        :empty-text="'暂无订单数据'"
-        v-loading="loading"
-        height="400"
-      >
-        <el-table-column prop="orderNo" label="订单编号" align="center">
+      <el-table :data="orderList" :empty-text="'暂无订单数据'" v-loading="loading" height="400">
+        <el-table-column v-if="!vuex_h5" prop="orderNo" label="订单编号" align="center">
         </el-table-column>
 
-        <el-table-column
-          prop="title"
-          label="订单名称"
-          align="center"
-          show-overflow-tooltip
-        >
+        <el-table-column prop="title" label="订单名称" align="center" show-overflow-tooltip>
         </el-table-column>
 
         <el-table-column prop="payPrice" label="订单金额" align="center">
@@ -29,7 +19,7 @@
             <span class="order-time">{{ scope.row.created_at }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="downloadStatus" label="下载状态" align="center">
+        <el-table-column  v-if="!vuex_h5" prop="downloadStatus" label="下载状态" align="center">
           <template slot-scope="scope">
             <span class="order-time">{{
               scope.row.had_download ? "已下载" : "未下载"
@@ -38,25 +28,15 @@
         </el-table-column>
         <el-table-column prop="downloadStatus" label="" align="center">
           <template slot-scope="scope">
-            <el-button
-              type="primary"
-              size="mini"
-              @click="handleDownload(scope.row)"
-              >立即下载</el-button
-            >
+            <el-button type="primary" size="mini" @click="handleDownload(scope.row)">立即下载</el-button>
           </template>
         </el-table-column>
       </el-table>
 
       <!-- 分页组件 -->
       <div class="pagination-container">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          layout="prev, pager, next"
-          :total="totalOrders"
-          background
-        >
+        <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" layout="prev, pager, next"
+          :total="totalOrders" background>
         </el-pagination>
       </div>
     </div>
@@ -87,7 +67,7 @@ export default {
           articleId: order.articleId,
         },
       }).then((res) => {
-        if(res.code == 200) {
+        if (res.code == 200) {
           fetch(res.data.doc_url)
             .then((res) => res.blob())
             .then((blob) => {
@@ -107,7 +87,7 @@ export default {
             },
           })
           this.loadData();
-        }else {
+        } else {
           this.$message.error(res.msg);
           this.loadData();
         }
@@ -240,5 +220,17 @@ export default {
 /deep/ .el-message {
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+</style>
+<style lang="less" scoped>
+@media screen and(max-width:750px) {
+  .my-orders .order-content /deep/.el-button--primary{
+    width: auto !important;
+    height:  auto !important;
+    padding: 0.2rem 0.6rem;
+  }
+  .user-profile-page .content-area{
+    padding: 0;
+  }
 }
 </style>

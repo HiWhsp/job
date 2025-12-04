@@ -274,3 +274,16 @@ export default {
   }
 }
 </style>
+<style lang="less" scoped>
+@media screen and (max-width:750px) {
+  .check-box {
+    img{
+      width: 1rem;
+    }
+  }
+  .btn-confirm{
+    min-width: 3rem;
+    height: 1.6rem;
+  }
+}
+</style>

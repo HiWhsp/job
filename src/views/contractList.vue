@@ -11,15 +11,9 @@
         <div class="latest-updates">
           <p class="latest-updates-title">最新动态</p>
           <div class="updates-list">
-            <div
-              class="update-item"
-              v-for="(update, index) in latestUpdates"
-              :key="index"
-            >
-              <span class="update-content"
-                >{{ update.come == 1 ? "最新上传" : "最近下载" }} |
-                {{ update.title }}</span
-              >
+            <div class="update-item" v-for="(update, index) in latestUpdates" :key="index">
+              <span class="update-content">{{ update.come == 1 ? "最新上传" : "最近下载" }} |
+                {{ update.title }}</span>
               <span class="update-date">{{ update.created_at }}</span>
             </div>
           </div>
@@ -30,20 +24,12 @@
       <div class="contract-section">
         <!-- 分类标签 -->
         <div class="category-tabs list-tab">
-          <div
-            class="tab-item"
-            :class="{ active: activeCategory === '' || activeCategory === 0 }"
-            @click="switchCategory('')"
-          >
+          <div class="tab-item" :class="{ active: activeCategory === '' || activeCategory === 0 }"
+            @click="switchCategory('')">
             全部
           </div>
-          <div
-            class="tab-item"
-            :class="{ active: activeCategory === category.id }"
-            v-for="category in vuex_category_tree"
-            :key="category.key"
-            @click="switchCategory(category.id)"
-          >
+          <div class="tab-item" :class="{ active: activeCategory === category.id }"
+            v-for="category in vuex_category_tree" :key="category.key" @click="switchCategory(category.id)">
             {{ category.title }}
           </div>
         </div>
@@ -51,22 +37,14 @@
         <!-- 合同列表 -->
         <div class="contract-list-section">
           <div class="section-title">
-            <div
-              class="section-title-text"
-              v-if="Math.random() > 0.5"
-              :style="{
-                backgroundImage: `url(${require('@img/index/icon1.png')})`,
-              }"
-            >
+            <div class="section-title-text" v-if="Math.random() > 0.5" :style="{
+              backgroundImage: `url(${require('@img/index/icon1.png')})`,
+            }">
               {{ getCurrentCategoryName() }}
             </div>
-            <div
-              class="section-title-text"
-              v-else
-              :style="{
-                backgroundImage: `url(${require('@img/index/icon2.png')})`,
-              }"
-            >
+            <div class="section-title-text" v-else :style="{
+              backgroundImage: `url(${require('@img/index/icon2.png')})`,
+            }">
               {{ getCurrentCategoryName() }}
             </div>
             <div class="filter sort-box">
@@ -76,56 +54,30 @@
               <div class="item">
                 <div class="text">{{ getCurrentCategoryName() }}</div>
               </div>
-              <div
-                class="item"
-                v-for="(item, index) in sortList"
-                :key="index"
-                :class="orderByColumn == item.ziduan ? 'active' : ''"
-                @click="onClickSort(item)"
-              >
+              <div class="item" v-for="(item, index) in sortList" :key="index"
+                :class="orderByColumn == item.ziduan ? 'active' : ''" @click="onClickSort(item)">
                 <div class="text">{{ item.title }}</div>
                 <div class="sanjiao-box" v-if="item.title != '综合排序'">
-                  <div
-                    class="top"
-                    :class="
-                      orderByColumn == item.ziduan && isAsc == 'asc'
-                        ? 'active'
-                        : ''
-                    "
-                  ></div>
-                  <div
-                    class="bottom"
-                    :class="
-                      orderByColumn == item.ziduan && isAsc == 'desc'
-                        ? 'active'
-                        : ''
-                    "
-                  ></div>
+                  <div class="top" :class="orderByColumn == item.ziduan && isAsc == 'asc'
+                      ? 'active'
+                      : ''
+                    "></div>
+                  <div class="bottom" :class="orderByColumn == item.ziduan && isAsc == 'desc'
+                      ? 'active'
+                      : ''
+                    "></div>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="contract-grid">
-            <ContractCard
-              v-for="contract in contracts"
-              :key="contract.id"
-              :contract="contract"
-            />
-            <el-empty
-              style="width: 100%; height: 100%"
-              description="暂无数据"
-              v-if="total === 0"
-            />
+            <ContractCard v-for="contract in contracts" :key="contract.id" :contract="contract" />
+            <el-empty style="width: 100%; height: 100%" description="暂无数据" v-if="total === 0" />
           </div>
           <div class="pagination-container">
-            <el-pagination
-              :total="total"
-              :page-size="pageSize"
-              :current-page="currentPage"
-              @current-change="handleCurrentChange"
-              layout="total, prev, pager, next"
-            ></el-pagination>
+            <el-pagination :total="total" :page-size="pageSize" :current-page="currentPage"
+              @current-change="handleCurrentChange" layout="total, prev, pager, next"></el-pagination>
           </div>
         </div>
       </div>
@@ -240,8 +192,8 @@ export default {
       return category
         ? category.title
         : this.searchKeyword
-        ? "为您推荐"
-        : "全部";
+          ? "为您推荐"
+          : "全部";
     },
     async getIndex() {
       console.log(this.orderByColumn, this.isAsc);
@@ -312,8 +264,26 @@ export default {
 
 <style lang="less" scoped>
 @import "./index.less";
+
 .pagination-container {
   text-align: center;
   margin-top: 20px;
+}
+</style>
+<style scoped lang="less" src="@/assets/h5css/index.less"></style>
+<style lang="less" scoped>
+@media screen and(max-width:750px) {
+  .contract-section .contract-list-section .section-title{
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 0;
+     .filter .item {
+    min-width: 4rem;
+
+    .text {
+      font-size: 0.8rem;
+    }
+  }
+  }
 }
 </style>

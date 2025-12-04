@@ -1,0 +1,89 @@
+@media screen and (max-width: 750px) {
+  .user-profile-page {
+    margin-top: 0;
+    padding-bottom: 1rem;
+
+    .user-profile-header {
+      height: 4rem;
+      background-size: cover;
+      background-position: center;
+
+      .header-background {
+        .background-pattern {
+          display: none; // 移动端隐藏装饰图案
+        }
+      }
+
+      .user-info-container {
+        padding: 1rem;
+       align-items: center;
+        text-align: center;
+        height: 100%;
+        justify-content: center;
+
+        .user-avatar {
+          width: 2.5rem;
+          height: 2.5rem;
+          margin-right: 1rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .user-details {
+          flex: none;
+          .username {
+            font-size: 0.6rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+          }
+
+          .action-buttons {
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+
+            .action-btn {
+              padding: 0.3rem 0.6rem;
+              font-size: 0.6rem;
+              border-radius: 0.2rem;
+
+              &:hover {
+                transform: none; // 移动端移除悬停效果
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .user-profile-nav {
+      .nav-container {
+        padding: 0;
+        gap: 0;
+        justify-content: space-around;
+
+        .nav-item {
+          padding: 0.6rem 0;
+          width: auto;
+          flex: 1;
+          font-size: 0.7rem;
+          text-align: center;
+
+          &.active::after {
+            height: 2px;
+          }
+        }
+      }
+    }
+
+    .content-area {
+      margin: 0.5rem;
+      padding: 0.2rem;
+      border-radius: 0.4rem;
+      
+      &.w-1600 {
+        max-width: 100%;
+      }
+    }
+  }
+}
