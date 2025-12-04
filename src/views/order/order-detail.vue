@@ -10,98 +10,6 @@
     </div>
 
     <div class="page-ctx">
-      <!-- <div class="step-box" v-if="info.statusInfo == '待审核'">
-        <div class="step-item active">
-          <div class="step-number">
-            <div class="step-line step-line-1"></div>
-            <div class="step-num">1</div>
-            <div class="step-line step-line-2"></div>
-          </div>
-          <div class="step-title">采购员{{ info.orderUser }}提交下单</div>
-          <div class="step-date">{{ info.createdTime }}</div>
-        </div>
-        <div class="step-item" :class="{ active: info.shenheStatus >= 20 }">
-          <div class="step-number">
-            <div class="step-line step-line-3"></div>
-            <div class="step-num">2</div>
-            <div class="step-line step-line-4"></div>
-          </div>
-          <div class="step-title">
-            采购员{{ info.shenheBuyerJson.realName }}审核通过
-          </div>
-          <div class="btn_cb" v-if="info.shenheStatus < 20" @click="urge">
-            催批
-          </div>
-          <div class="step-date" v-else>{{ info.shenheBuyerJson.time }}</div>
-        </div>
-        <div class="step-item" :class="{ active: info.shenheStatus >= 30 }">
-          <div class="step-number">
-            <div class="step-line step-line-3"></div>
-            <div class="step-num">3</div>
-            <div class="step-line step-line-4"></div>
-          </div>
-          <div class="step-title">
-            采购经理{{ info.shenheManagerJson.realName }}审核通过
-          </div>
-          <div
-            class="btn_cb"
-            v-if="info.shenheStatus < 30 && info.shenheStatus >= 20"
-            @click="urge"
-          >
-            催批
-          </div>
-          <div class="step-date" v-else>{{ info.shenheManagerJson.time }}</div>
-        </div>
-        <div class="step-item" :class="{ active: info.shenheStatus >= 40 }">
-          <div class="step-number">
-            <div class="step-line step-line-5"></div>
-            <div class="step-num">4</div>
-            <div class="step-line step-line-6"></div>
-          </div>
-          <div class="step-title">
-            采购总监{{ info.shenheDirectorJson.realName }}审核通过
-          </div>
-          <div
-            class="btn_cb"
-            v-if="info.shenheStatus < 40 && info.shenheStatus >= 30"
-            @click="urge"
-          >
-            催批
-          </div>
-          <div class="step-date" v-else>{{ info.shenheDirectorJson.time }}</div>
-        </div>
-      </div>
-
-      <div class="step-box" v-else>
-        <div class="step-item active">
-          <div class="step-number">
-            <div class="step-line step-line-1"></div>
-            <div class="step-num">1</div>
-            <div class="step-line step-line-2"></div>
-          </div>
-          <div class="step-title">订购时间</div>
-          <div class="step-date">{{ info.createdTime }}</div>
-        </div>
-        <div class="step-item" :class="{ active: info.orderStatus >= 3 }">
-          <div class="step-number">
-            <div class="step-line step-line-3"></div>
-            <div class="step-num">2</div>
-            <div class="step-line step-line-4"></div>
-          </div>
-          <div class="step-title">商品发货</div>
-          <div class="step-date" style="visibility: hidden">-</div>
-        </div>
-        <div class="step-item" :class="{ active: info.orderStatus >= 5 }">
-          <div class="step-number">
-            <div class="step-line step-line-5"></div>
-            <div class="step-num">3</div>
-            <div class="step-line step-line-6"></div>
-          </div>
-          <div class="step-title">订单收货</div>
-          <div class="step-date" style="visibility: hidden">-</div>
-        </div>
-      </div> -->
-
       <div class="base-ctx">
         <div class="base-title">订单信息</div>
         <div class="base-items">
@@ -135,7 +43,7 @@
                 <div class="label">支付方式：</div>
                 <div class="val">
                   <!-- <span v-if="payInfo.balance">余额</span> -->
-                  对公转账
+                  {{ info.payMethod == 2 ? '账期月结' : '对公转账' }}
                 </div>
               </div>
               <div class="info-item">
@@ -146,17 +54,16 @@
                 <div class="label">配送方式：</div>
                 <div class="val">快递配送</div>
               </div>
-              <div class="info-item">
+              <div class="info-item" v-if="info.payMethod == 1">
                 <div class="label">汇款截图：</div>
                 <div class="val">
-                  {{ fahuoInfo.expressName || "" }}
-                  {{ fahuoInfo.expressOrder || "" }}
+                  <el-image :src="info.payImg"  style="width: 50px; height: 50px;" :preview-src-list="[info.payImg]" />
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="base-item back">
+          <div class="base-item back" v-if="info.payMethod == 1">
             <div class="info-title">收款对公账户</div>
             <div class="info-content">
               <div class="info-item">
@@ -194,6 +101,7 @@
               </div>
             </div>
           </div>
+          <div class="base-item" v-else></div>
         </div>
       </div>
 
@@ -258,7 +166,7 @@
                     <!-- <button v-if="item.ifshouhou" class="btn-goods-action disabled">已售后</button> -->
                     <!-- <button v-if="item.allow_actions.allow_logistics" class="btn-goods-action" @click="toRoute(`/orderLogistics?order_id=${order_id}&logistics_id=${fahuo_id}`)">查看物流</button> -->
                     <button
-                      v-if="product_item.ifComment == 0"
+                      v-if="product_item.ifComment == 1"
                       class="btn-goods-action"
                       @click="to_review(product_item)"
                     >
@@ -342,9 +250,9 @@
           <!-- 订单操作 -->
           <div class="order-action-box">
             <div class="btn-box">
-              <button class="btn-ripple fit-text" @click="doRefund(info)">
+              <!-- <button class="btn-ripple fit-text" @click="doRefund(info)">
                 下载合同文件
-              </button>
+              </button> -->
 
               <button
                 v-if="info.ifCancel == 1"

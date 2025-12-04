@@ -1,18 +1,6 @@
 <template>
   <div class="page">
     <div class="banner-box">
-      <!-- <div class="lunbo-box">
-          <el-carousel trigger="click" :autoplay="true">
-            <el-carousel-item
-              v-for="(item, index) in banner_list"
-              :key="index"
-              @click.native="do_banner_click(item)"
-            >
-              <img :src="item.image" alt="" />
-            </el-carousel-item>
-          </el-carousel>
-        </div> -->
-
       <div class="poster-box">
         <img :src="banner_poster" alt="" />
       </div>
@@ -48,16 +36,15 @@
               <div class="data-list">
                 <div
                   class="data-item"
-                  :class="{ 'folded': !item.fold }"
+                  :class="{ folded: !item.fold }"
                   v-for="(item, index) in info.origin_list"
                   :key="index"
                 >
                   <div class="check-box">
-                    <input
-                      type="checkbox"
-                      :value="item.id"
-                      v-model="checkedItem"
-                    />
+                    <el-checkbox
+                      v-model="item.selected"
+                      @change="handleChange(item)"
+                    ></el-checkbox>
                   </div>
                   <div class="info-box">
                     <div class="xuhao">{{ item.serialNo }}</div>
@@ -66,14 +53,14 @@
                         <img :src="item.image" alt="" />
                       </div>
                       <div class="info-box-right">
-                        <div class="num">
+                        <div class="num ellipsis-1">
                           名称：{{ item.productName || "空" }}
                         </div>
-                        <div class="num">
+                        <div class="num ellipsis-1">
                           品牌：{{ item.brandName || "空" }}
                         </div>
                         <div class="num">制造商型号：{{ item.sn || "--" }}</div>
-                        <div class="num">
+                        <div class="num ellipsis-1">
                           数量：{{ item.requireNum || "--" }}
                         </div>
                       </div>
@@ -111,43 +98,52 @@
               <div class="match-list">
                 <div
                   class="match-item-loop"
-                  v-for="(item, index) in info.product_list"
+                  v-for="(item, index) in selectedProductList"
                   :key="index"
                 >
                   <div
                     class="match-item"
-                    v-if="item.product && item.product.title"
+                    v-for="(itLoop, index) in item || []"
+                    :key="index"
                   >
                     <div class="poster-box">
-                      <img :src="item.product.thumb" alt="" />
+                      <img :src="itLoop.images" alt="" />
                     </div>
                     <div class="title-box">
-                      <div class="title">
-                        {{ item.product.title }}
+                      <div class="title ellipsis-1">
+                        {{ itLoop.title }}
                       </div>
                       <div class="price-box">
                         单价：<span class="price"
-                          >{{ vuex_huobi }}{{ item.product.price }}</span
+                          >{{ vuex_huobi }}{{ itLoop.price }}</span
                         >
                       </div>
                     </div>
                     <div class="brand-box">
                       <div class="brand">
-                        品牌：<span v-if="item.product.brand"
-                          >{{ item.product.brand.title }}，</span
-                        >
+                        品牌：<span>{{ itLoop.brandName }}</span>
                       </div>
-                      <div class="sku">规格：{{ item.guige }}</div>
+                      <div class="sku">
+                        制造商型号：{{ itLoop.inventory.sn || "--" }}
+                      </div>
                     </div>
                     <div class="num-box">
                       <el-input-number
-                        v-model="item.num"
-                        @change="handleChange"
+                        v-model="itLoop.num"
+                        size="mini"
                         :min="1"
-                        label="描述文字"
                       ></el-input-number>
+                      <div class="num-box-tip">
+                        <el-checkbox v-model="itLoop.selected"></el-checkbox>
+                      </div>
                     </div>
                   </div>
+                </div>
+                <div
+                  v-if="selectedProductList.length == 0"
+                  class="no-match-item"
+                >
+                  <div class="no-match-item-text-title">暂无此商品</div>
                 </div>
               </div>
             </div>
@@ -172,15 +168,20 @@
                 <div class="num-box flex">
                   <div class="num-item">
                     <span class="label">总需求数：</span>
-                    <span class="value">{{ info.length }}件</span>
+                    <span class="value">{{ info.origin_list.length }}件</span>
                   </div>
                   <div class="num-item">
                     <span class="label">已报价：</span>
-                    <span class="value">{{ info.length }}件</span>
+                    <span class="value">{{ info.product_list.length }}种</span>
                   </div>
                   <div class="num-item">
                     <span class="label">待报价：</span>
-                    <span class="value">{{ 0 }}件</span>
+                    <span class="value"
+                      >{{
+                        info.origin_list.length -
+                        selectedProductList.flat().length
+                      }}件</span
+                    >
                   </div>
                 </div>
               </div>
@@ -210,22 +211,12 @@
         </div>
       </div>
     </div>
-    <batch_xunjia_popupVue
-      name="popup"
-      ref="popup"
-      @confirm="doConfirm"
-    ></batch_xunjia_popupVue>
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
 
-import batch_xunjia_popupVue from "@/components/batch/batch_xunjia_popup.vue";
 export default {
   name: "category",
-  components: {
-    batch_xunjia_popupVue,
-  },
   data() {
     return {
       banner_list: [],
@@ -233,6 +224,7 @@ export default {
       info: [],
       fullInfo: {},
       list: [],
+      selectedProductList: [],
       count_shopcart_checked: "",
       jiesuanDisabled: false,
       checked_all: false,
@@ -243,11 +235,9 @@ export default {
       url: "",
     };
   },
-  computed: {
-    ...mapState([""]),
-  },
+  computed: {},
   watch: {},
-  created() {
+  mounted() {
     this.query_banner();
     this.batchConfirm();
   },
@@ -270,205 +260,142 @@ export default {
         }
       });
     },
-    generateReport() {
-      if (this.checkedItem.length === 0) {
-        alert("请选择需求");
-      } else {
-        let chosen = [];
-        for (let i = 0; i < this.checkedItem.length; i++) {
-          for (let j = 0; j < this.info.length; j++) {
-            if ((this.info[j].id = this.checkedItem[i])) {
-              chosen.push(this.info[j]);
-              break;
-            }
-          }
-        }
-        this.$refs.popup.init(chosen);
-      }
-    },
     batchConfirm() {
-      // link = link.substring(link.lastIndexOf("/upload") + 8);
-      // console.log(link);
-      // this.$api({
-      //   url: "/service.php",
-      //   method: "post",
-      //   data: {
-      //     action: "product_createXunjia",
-      //     filename: name,
-      //     filepath: link,
-      //   },
-      // }).then((res) => {
-      //   alert(res);
-      //   if (res.code == 200) {
-      //     this.getBatchInfo(res.data.xunjiaId);
-      //     this.url = link;
-      //   }
-      // });
-
       const data = localStorage.getItem("batchData");
       this.info = JSON.parse(data);
       // 初始化每个item的fold状态
       if (this.info && this.info.origin_list) {
-        this.info.origin_list.forEach(item => {
+        this.info.origin_list.forEach((item, index) => {
+          this.$set(item, "index", index);
+          this.$set(item, "selected", false);
           if (item.fold === undefined) {
-            this.$set(item, 'fold', false);
+            this.$set(item, "fold", false);
           }
+        });
+      }
+      if (this.info && this.info.product_list) {
+        this.info.product_list.forEach((item) => {
+          item.forEach((itLoop) => {
+            this.$set(itLoop, "num", 1);
+            this.$set(itLoop, "selected", false);
+          });
         });
       }
     },
     toggleFold(item, index) {
-      this.$set(item, 'fold', !item.fold);
+      this.$set(item, "fold", !item.fold);
     },
     doConfirm() {
+      // [
+      //   {
+      //     serialNo: "001",
+      //     requireDate: "2020-01-01",
+      //     productName: "产品1",
+      //     brandName: "华为",
+      //     manufacturerNo: "a123456",
+      //     image: "http://1.jpg",
+      //     description: "九成新",
+      //     requireNum: 100,
+      //     note: "八成新也可以",
+      //   },
+      // ];
+      const data = [];
+      this.selectedProductList.forEach((item) => {
+        item.forEach((itLoop) => {
+          if (itLoop.selected) {
+            data.push({
+              serialNo: itLoop.inventoryId,
+              requireDate: itLoop.dtTime,
+              productName: itLoop.title,
+              brandName: itLoop.brandName,
+              manufacturerNo: itLoop.inventory.sn,
+              image: itLoop.thumb,
+              description: itLoop.description,
+              requireNum: itLoop.num,
+              note: itLoop.note,
+            });
+          }
+        });
+      });
       this.$api({
         url: "/service.php",
         method: "post",
         data: {
-          action: "product_submitXunjia",
-          filepath: this.url,
-          id: this.fullInfo.id,
+          action: "Inquiry_createInquiryOrder",
+          data,
         },
       }).then((res) => {
-        alert(res);
-        this.toRoute({
-          path: "/batch-xunjia-result",
-          query: {
-            id: this.fullInfo.id,
-          },
-        });
-      });
-      // console.log(params);
-      // let infos = params;
-      // infos.xunjiaid = this.fullInfo.id;
-      // this.$api({
-      //   url: "/service.php",
-      //   method: "post",
-      //   data: {
-      //     ...infos,
-      //   },
-      // }).then((res) => {
-      //   alert(res);
-      //   if (res.code == 200) {
-      //     this.toCart();
-      //     this.toRoute({
-      //       path: "/batch-xunjia-result",
-      //       query: {
-      //         id: res.data.id,
-      //       },
-      //     });
-      //   }
-      // });
-    },
-    getBatchInfo(id) {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "product_xunjiaDetail",
-          id: id,
-        },
-      }).then((res) => {
-        alert(res);
-        if (res.code == 200) {
-          this.info = res.data.xunjiaDetail;
-          this.fullInfo = res.data;
-          console.log(this.fullInfo);
-          console.log(this.info);
-          for (let i = 0; i < this.info.length; i++) {
-            this.checkedAttr.push(this.info[i].id);
-          }
-          // this.generateAll();
-        }
-      });
-    },
-    generateAll() {
-      this.$refs.popup.init(this.info);
-    },
-    handleChange() {},
-    getProductInfo(id) {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "product_detail",
-          inventoryId: id,
-        },
-      }).then((res) => {
-        console.log(res);
-        if (res.code == 200) {
-          this.list.push(res.data);
-        }
+        // this.toRoute({
+        //   path: "/batch-xunjia-result",
+        //   query: {
+        //     id: this.fullInfo.id,
+        //   },
+        // });
       });
     },
     on_change_checked_all() {
       // 判断全选复选框是否选中
       if (this.checked_all) {
         // 如果全选复选框被选中,则重新给选项复选框赋值,即选中所有的选项复选框
-        this.checkedItem = this.checkedAttr;
+        this.selectedProductList.forEach((item) => {
+          item.forEach((itLoop) => {
+            this.$set(itLoop, "selected", true);
+            this.checkedItem.push(itLoop.inventoryId);
+          });
+        });
       } else {
-        // 如果全选复未选框被选中,则设置为空值,即未选中所有的选项复选框
+        // 如果全选复未选框未被选中,则选中所有的选项复选框
+        this.selectedProductList.forEach((item) => {
+          item.forEach((itLoop) => {
+            this.$set(itLoop, "selected", false);
+          });
+        });
         this.checkedItem = [];
       }
     },
-    do_banner_click(item) {
-      //console.log({ ...item });
-      if (item.url) {
-        window.open(item.url, "_blank");
-      } else if (item.inventoryId) {
-        this.$router.push(
-          "/product-detail/" + (item.skuId || item.inventoryId)
-        );
-      }
-    },
-    async do_cart_remove_select_tip() {
+    async do_cart_remove_select_tip() {},
+    async toCart() {
       if (this.checkedItem.length === 0) {
-        alert("请选择需求");
+        alert("请选择商品");
       } else {
-        if (this.checkedItem.length === this.checkedAttr.length) {
-          alert("需要至少一条需求");
-        } else {
-          for (let i = 0; i < this.checkedItem.length; i++) {
-            for (let j = 0; j < this.info.length; j++) {
-              if ((this.info[j].id = this.checkedItem[i])) {
-                this.info.splice(j, 1);
-                break;
+        for (let i = 0; i < this.checkedItem.length; i++) {
+          for (let j = 0; j < this.selectedProductList.length; j++) {
+            for (let k = 0; k < this.selectedProductList[j].length; k++) {
+              if (
+                this.selectedProductList[j][k].inventoryId ===
+                this.checkedItem[i]
+              ) {
+                setTimeout(() => {
+                  this.toCartSub(
+                    this.selectedProductList[j][k].inventoryId,
+                    this.selectedProductList[j][k].num
+                  );
+                }, 100 + 100 * i);
               }
             }
           }
-          alert("删除成功");
         }
+        this.$message.success("加入购物车成功");
       }
     },
-    to_pay() {
-      this.toRoute("/batch-xunjia-result");
-    },
-    toCartSub(id, num) {
+    toCartSub(inventoryId, num) {
       this.$api({
         url: "/service.php",
         method: "post",
         data: {
           action: "gouwuche_add",
-          inventoryId: id,
+          inventoryId: inventoryId,
           num: num,
         },
-      }).then((res) => {
-        alert(res);
       });
     },
-    async toCart() {
-      if (this.checkedItem.length === 0) {
-        alert("请选择需求");
+
+    handleChange(item) {
+      if (item.selected) {
+        this.selectedProductList[item.index] =
+          this.info.product_list[item.index];
       } else {
-        for (let i = 0; i < this.checkedItem.length; i++) {
-          for (let j = 0; j < this.info.length; j++) {
-            if (this.info[j].id === this.checkedItem[i]) {
-              setTimeout(() => {
-                this.toCartSub(this.info[j].inventory.id, this.info[j].num);
-              }, 100 + 100 * i);
-            }
-          }
-        }
-        // alert("操作已成功完成");
+        this.selectedProductList[item.index] = [];
       }
     },
   },
@@ -691,6 +618,7 @@ export default {
             align-items: center;
             .info-box-right {
               margin-left: 10px;
+              width: 168px;
             }
             img {
               width: 80px;
@@ -747,14 +675,25 @@ export default {
       color: #333333;
     }
 
-    .match-item {
+    .no-match-item {
       margin-bottom: 0;
       background: #fff;
       width: 100%;
       padding: 20px 0;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       height: 133px;
+      justify-content: center;
+    }
+
+    .match-item {
+      margin-bottom: 0;
+      background: #fff;
+      width: 100%;
+      padding: 30px 0;
+      display: flex;
+      align-items: flex-start;
+      height: 143px;
       border-top: 1px solid #f74747;
 
       .poster-box {
@@ -767,7 +706,7 @@ export default {
       }
       .title-box {
         margin-left: 18px;
-        flex: 1;
+        width: 370px;
         .title {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
@@ -803,6 +742,11 @@ export default {
           font-weight: 400;
           font-size: 16px;
           color: #333333;
+        }
+      }
+      .num-box {
+        .num-box-tip {
+          margin-top: 30px;
         }
       }
     }

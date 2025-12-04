@@ -13,7 +13,7 @@
         </div>
         <div class="text-2">订单号：{{ info.orderNo }}</div>
         <div class="text-2">下单时间：{{ info.createdTime }}</div>
-        <div class="text-2">支付方式： 对公转账</div>
+        <div class="text-2">支付方式： {{ info.payMethod == 2 ? '账期月结' : '对公转账' }}</div>
 
 
         <div class="btns flex-center">

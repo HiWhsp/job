@@ -212,7 +212,9 @@
         >
         </el-input>
         <div class="yiyi-btn">
-          <button class="btn-ripple fit-text" @click="yiyi_show = false">取消</button>
+          <button class="btn-ripple fit-text" @click="yiyi_show = false">
+            取消
+          </button>
           <button class="btn-ripple fit-text btn-bg" @click="yiyi_show = false">
             提交
           </button>
@@ -267,10 +269,11 @@ export default {
   data() {
     return {
       tabSelect: {
-        title: "全部",
-        value: 0,
+        title: "全部账单",
+        value: -1,
       },
       //
+      orderData: null,
       orders: [],
       pagination: {
         page: 1,
@@ -291,22 +294,16 @@ export default {
       //筛选状态：0-全部 1-待支付 2-待发货 3-待收货 4-待核销 5-已完成 6-待评价 7-已取消
       //orderStatus
       //订单状态：-5-待支付  -1-已取消  2-待发货  3-待收货  4-待自提  5-已完成
-      let user_index = {} || this.user_index;
+      let orderData = {} || this.orderData;
       let tabList = [
-        { value: 0, title: "全部订单" },
-        { value: 1, title: "待付款", num: user_index.order_num_1 || 0 },
-        { value: 2, title: "待发货", num: user_index.order_num_2 || 0 },
-        { value: 3, title: "待收货", num: user_index.order_num_3 || 0 },
-        // { value: 4, title: "待核销", num: user_index.order_num_4 || 0 },
-        { value: 6, title: "待评价", num: user_index.order_num_4 || 0 },
-        { value: 5, title: "已完成", num: user_index.order_num_4 || 0 },
-        { value: 7, title: "已取消", num: user_index.order_num_4 || 0 },
-        // { value: 6, title: "待审核", num: user_index.order_num_6 || 0 },
+        { value: -1, title: "全部账单" },
+        { value: 0, title: "待确认", num: orderData.billConfirm1Count || 0 },
+        { value: 1, title: "已确认", num: orderData.billConfirm2Count || 0 },
       ];
       return tabList;
     },
   },
-  created() {
+  mounted() {
     this.setView();
   },
 
@@ -321,18 +318,7 @@ export default {
           this.tabList[0];
       }
 
-      this.query_userIndex();
       this.query_order();
-    },
-
-    //用户主页数据
-    query_userIndex() {
-      this.$api("users_index").then((res) => {
-        let { code, data } = res;
-        if (code == 200) {
-          this.user_index = data;
-        }
-      });
     },
 
     //订单列表
@@ -341,16 +327,16 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "orders_lists",
+          action: "orders_getBillOrderList",
           ...this.pagination,
-          scene: this.tabSelect.value,
-          // keyword: this.keyword,
+          billConfirm: this.tabSelect.value,
+          orderNo: this.keyword,
         },
       }).then((res) => {
         let { code, data } = res;
         if (code == 200) {
           let list = data.list;
-
+          this.orderData = data;
           list.forEach((order) => {
             order.isPay = order.value >= 0;
             order.actions = this.getOrderActions({

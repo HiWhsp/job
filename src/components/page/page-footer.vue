@@ -125,7 +125,7 @@ export default {
         method: "get",
         data: {
           action: "news_getIndexFooter",
-          channelId: 59,
+          channelId: 60,
           page: 1,
           pageNum: 1000,
           orderType: 0, //排序情况：0-自然排序 1-最新

@@ -93,6 +93,7 @@ export default {
       banner_poster: "",
       UPLOAD_ACTION: UPLOAD_ACTION,
       UPLOAD_NAME: UPLOAD_NAME,
+      loading: null,
     };
   },
   computed: {
@@ -150,12 +151,24 @@ export default {
         );
       }
     },
-    beforeAvatarUpload(file) {},
+    beforeAvatarUpload(file) {
+      if (this.loading) {
+        this.loading.close();
+      }
+      this.loading = this.$loading({
+        lock: true,
+        text: "正在解析文件，请稍后...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+    },
     handleAvatarSuccess(res, file, fileList) {
       if (res.code != 200) {
         this.$message.error(res.message);
+        this.loading.close();
       } else {
         localStorage.setItem("batchData", JSON.stringify(res.data));
+        this.loading.close();
         this.batchConfirm();
       }
       // this.batchConfirm(res.data.url, file.name);

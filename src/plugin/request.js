@@ -91,8 +91,30 @@ function api(option) {
         let ret = "";
         let items = []
         for (let key in data) {
-          let str = encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
-          items.push(str)
+          let value = data[key];
+          // 处理数组参数
+          if (Array.isArray(value)) {
+            // 如果数组元素是对象，则序列化为JSON字符串
+            if (value.length > 0 && typeof value[0] === 'object') {
+              let str = encodeURIComponent(key) + "=" + encodeURIComponent(JSON.stringify(value))
+              items.push(str)
+            } else {
+              // 如果是简单数组，使用 key[]=value 格式
+              value.forEach((item, index) => {
+                let str = encodeURIComponent(key + '[]') + "=" + encodeURIComponent(item)
+                items.push(str)
+              })
+            }
+          } else if (value !== null && typeof value === 'object') {
+            // 处理对象参数，序列化为JSON字符串
+            let str = encodeURIComponent(key) + "=" + encodeURIComponent(JSON.stringify(value))
+            items.push(str)
+          } else {
+            // 处理普通值
+            let str = encodeURIComponent(key) + "=" + encodeURIComponent(value)
+            items.push(str)
+          }
+
         }
         ret = items.join('&')
         return ret;
@@ -124,3 +146,4 @@ Vue.prototype.$api = api;
 export default {
   api,
 };
+

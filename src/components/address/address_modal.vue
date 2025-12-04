@@ -19,14 +19,14 @@
           <span class="text required">手机号</span>
           <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
         </div>
-        <!-- <div class="item">
-          <span class="text required">固定电话</span>
-          <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
+        <div class="item">
+          <span class="text">固定电话</span>
+          <el-input clearable v-model="form.tel" placeholder="固定电话"></el-input>
         </div>
         <div class="item">
-          <span class="text required">邮政编码</span>
-          <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
-        </div> -->
+          <span class="text">邮政编码</span>
+          <el-input clearable v-model="form.zipCode" placeholder="邮政编码"></el-input>
+        </div>
         <div class="item">
           <span class="text">默认地址</span>
           <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#F74747"
@@ -131,6 +131,8 @@ export default {
             latitude: data.latitude,
             shequId: data.shequId,
             addressType: data.addressType,
+            tel: data.tel,
+            zipCode: data.zipCode,
           }
 
           this.$nextTick(() => {
@@ -166,9 +168,9 @@ export default {
     changeSelectAddress(data) {
       this.$log("更新省市区数据", data);
       let { sheng, shi, qu } = data;
-      this.form.province = sheng.name;
-      this.form.city = shi.name;
-      this.form.area = qu.name;
+      this.form.province = sheng.title;
+      this.form.city = shi.title;
+      this.form.area = qu.title;
 
       this.form.provinceCode = sheng.id;
       this.form.cityCode = shi.id;

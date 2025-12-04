@@ -161,18 +161,18 @@ export default {
             }
           ],
         },
-        {
-          title: "企业管理",
-          route: "",
-          icon: require("@img/my/nav-4.png"),
-          blacklistT: [1],
-          child: [
-            {
-              title: "人员管理",
-              route: "enterprise-member-man",
-            },
-          ],
-        },
+        // {
+        //   title: "企业管理",
+        //   route: "",
+        //   icon: require("@img/my/nav-4.png"),
+        //   blacklistT: [1],
+        //   child: [
+        //     {
+        //       title: "人员管理",
+        //       route: "enterprise-member-man",
+        //     },
+        //   ],
+        // },
         // {
         //   title: "评价晒单",
         //   route: "my-review-list",

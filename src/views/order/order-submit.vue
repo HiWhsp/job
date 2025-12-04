@@ -1127,21 +1127,7 @@ export default {
         if (res.code == 200) {
           let { id, orderNo } = res.data;
           this.order_id = id;
-          // 上传汇款截图
-          this.$api({
-            url: "/service.php",
-            method: "get",
-            data: {
-              action: "orders_savePayImg",
-              id: this.order_id,
-              payImg: this.xianxia_file_list.join(","),
-            },
-          }).then((res) => {
-            if (res.code == 200) {
-              this.toPaySuccess();
-            }
-          });
-
+          this.toPaySuccess();
           // this.do_order_pay();
         }
       });
