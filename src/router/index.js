@@ -24,6 +24,7 @@ Vue.use(VueRouter);
 const index = () => import(/* webpackChunkName: "index" */ "@/views/index.vue");
 
 const login = () => import(/* webpackChunkName: "login" */ "@/views/account/login.vue");
+const otherLogin = () => import(/* webpackChunkName: "otherLogin" */ "@/views/account/other-login.vue");
 const register = () => import(/* webpackChunkName: "register" */ "@/views/account/register.vue");
 const retrieve = () => import(/* webpackChunkName: "passwordReset" */ "@/views/account/retrieve.vue");
 const contractList = () => import(/* webpackChunkName: "contractList" */ "@/views/contractList.vue");
@@ -56,6 +57,12 @@ const routes = [
     path: "/login",
     name: "login",
     component: login,
+    meta: {},
+  },
+  {
+    path: "/otherLogin",
+    name: "otherLogin",
+    component: otherLogin,
     meta: {},
   },
   // 注册
@@ -114,7 +121,7 @@ const routes = [
     path: "/my",
     name: "个人中心",
     component: myIndex,
-    redirect: "/my/orders",
+    redirect: "/orders",
     meta: {},
     children: [
       {

@@ -55,7 +55,6 @@ export default {
         return;
       }
 
-      this.countdown();
       this.doSend();
     },
 
@@ -70,6 +69,7 @@ export default {
       }).then((res) => {
         alert(res);
         if (res.code == 200) {
+          this.countdown();
         } else {
           clearInterval(this.timer);
           this.timer = null;

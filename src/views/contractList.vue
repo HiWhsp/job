@@ -18,8 +18,8 @@
               class="filter-option"
               v-for="(category, index) in categories"
               :key="category.id"
-              :class="{ active: selectedCategory === category.id }"
-              @click="toggleCategoryDropdown(category.id, index, $event)"
+              :class="{ active: selectedCategory.id == category.id }"
+              @click="toggleCategoryDropdown(category)"
               :ref="`categoryOption-${index}`"
             >
               {{ category.title }}
@@ -118,35 +118,19 @@ export default {
       activeFilters: [],
       showDropdown: false,
       dropdownStyle: {},
-      categories: [
-        {
-          title: "全部",
-          id: "",
-        },
-        {
-          title: "生产经营合同",
-        },
-        {
-          title: "知识产权合同",
-          id: "2",
-        },
-        {
-          title: "劳动人事合同",
-          id: "3",
-        },
-      ],
+      categories: [],
     };
   },
   computed: {},
   watch: {
     selectedCategory() {
-      this.updateActiveFilters();
+      this.getContractList();
     },
     selectedPrice() {
-      this.updateActiveFilters();
+      this.getContractList();
     },
     selectedFormat() {
-      this.updateActiveFilters();
+      this.getContractList();
     },
   },
   mounted() {
@@ -155,86 +139,75 @@ export default {
 
   methods: {
     initFilters() {
-      // 从路由参数初始化筛选
-      const category = this.$route.query.category;
-      if (category) {
-        this.selectedCategory = category;
-      }
-      this.updateActiveFilters();
+      // 获取分类列表
+      this.getDocumentTypeList();
+      // 获取文档列表
       this.getContractList();
     },
     getContractList() {
-      this.currentContracts = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
+      this.$api({
+        url: "pcDocumentList",
+        method: "get",
+        data: {
+          typeId: this.selectedCategory.id,
+          ifFree: this.selectedPrice == "free" ? 1 : this.selectedPrice == "paid" ? 0 : "", // 是否免费
+          page: this.currentPage,
+          limit: this.pageSize,
+        },
+      }).then((res) => {
+        this.currentContracts = res.data.list;
+        this.totalContracts = res.total;
+      });
     },
-    toggleCategoryDropdown(categoryId, index, event) {
-      if (this.selectedCategory === categoryId && this.showDropdown) {
-        // 如果已选中且下拉菜单已打开，则关闭
-        this.showDropdown = false;
-        this.selectedCategory = "";
+    // 切换文档分类
+    toggleCategoryDropdown(category) {
+      this.selectedCategory = category;
+      // 看下类型是否有category 如果存在则替换, 不存在则添加
+      const categoryIndex = this.activeFilters.findIndex((item) => item.type === "category");
+      if (categoryIndex !== -1) {
+        // 如果存在则替换
+        this.activeFilters.splice(categoryIndex, 1, {
+          label: category.title,
+          type: "category",
+        });
       } else {
-        // 选中分类并显示下拉菜单
-        this.selectedCategory = categoryId;
-        this.showDropdown = true;
-        // 计算下拉菜单位置
-        this.$nextTick(() => {
-          const optionElement = this.$refs[`categoryOption-${index}`]?.[0];
-          if (optionElement) {
-            const rect = optionElement.getBoundingClientRect();
-            const containerRect =
-              this.$refs.filterOptions.getBoundingClientRect();
-            this.dropdownStyle = {
-              left: `${rect.left - containerRect.left}px`,
-              top: `${rect.bottom - containerRect.top + 8}px`,
-            };
-          }
+        // 如果不存在则直接push
+        this.activeFilters.push({
+          label: category.title,
+          type: "category",
         });
       }
+      this.getContractList();
     },
-    selectPrice(priceType) {
-      if (this.selectedPrice === priceType) {
-        this.selectedPrice = "";
+    // 切换文档费用
+    selectPrice(price) {
+      this.selectedPrice = price;
+      // 看下类型是否有price 如果存在则替换, 不存在则添加
+      const priceIndex = this.activeFilters.findIndex((item) => item.type === "price");
+      if (priceIndex !== -1) {
+        // 如果存在则替换
+        this.activeFilters.splice(priceIndex, 1, {
+          label: price == "free" ? "免费" : "收费",
+          type: "price",
+        });
       } else {
-        this.selectedPrice = priceType;
+        // 如果不存在则直接push
+        this.activeFilters.push({
+          label: price == "free" ? "免费" : "收费",
+          type: "price",
+        });
       }
+      this.getContractList();
     },
-    updateActiveFilters() {
+    // 获取文档分类列表
+    getDocumentTypeList() {
       this.activeFilters = [];
-
-      if (this.selectedCategory) {
-        const category = {
-          title: "全部",
-          id: "",
-        };
-        if (category) {
-          this.activeFilters.push({
-            type: "category",
-            label: category.title,
-            value: this.selectedCategory,
-          });
-        }
-      }
-
-      if (this.selectedPrice === "free") {
-        this.activeFilters.push({
-          type: "price",
-          label: "免费",
-          value: "free",
-        });
-      } else if (this.selectedPrice === "paid") {
-        this.activeFilters.push({
-          type: "price",
-          label: "收费",
-          value: "paid",
-        });
-      }
-
-      if (this.selectedFormat === "pdf") {
-        this.activeFilters.push({
-          type: "format",
-          label: "PDF",
-          value: "pdf",
-        });
-      }
+      this.$api({
+        url: "documentTypeList",
+        method: "get",
+      }).then((res) => {
+        this.categories.push(...res.data);
+      });
     },
     removeFilter(index) {
       const filter = this.activeFilters[index];

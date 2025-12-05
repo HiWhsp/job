@@ -68,7 +68,7 @@ export default {
         url: "send",
         method: "post",
         data: {
-          scene: "password",
+          scene: "forgetPassword",
           mobile: this.form.phone,
         },
       }).then((res) => {

@@ -2,93 +2,95 @@
   <div class="orders-page">
     <h2 class="page-title">我的订单</h2>
 
-    <!-- 订单状态标签 -->
-    <div class="order-tabs">
-      <div
-        class="tab-item"
-        v-for="tab in orderTabs"
-        :key="tab.value"
-        :class="{ active: activeTab === tab.value }"
-        @click="switchTab(tab.value)"
-      >
-        {{ tab.label }}
-      </div>
-    </div>
-
-    <!-- 订单列表 -->
-    <div class="order-list">
-      <div
-        class="order-item"
-        v-for="(order, index) in filteredOrders"
-        :key="order.id || index"
-      >
-        <!-- 订单头部 -->
-        <div class="order-header">
-          <div class="order-info">
-            <span class="order-time">{{ order.create_time }}</span>
-            <span class="order-number">订单号: {{ order.order_no }}</span>
-          </div>
-          <span class="order-status" >
-            {{ getStatusText(order.status) }}
-          </span>
-        </div>
-
-        <!-- 订单内容 -->
-        <div class="order-content">
-          <div class="order-item-info">
-            <div class="item-title">{{ order.title }}</div>
-            <div class="item-price">¥{{ order.price }}</div>
-          </div>
-        </div>
-
-        <!-- 订单底部 -->
-        <div class="order-footer">
-          <div class="order-total">
-            合计金额
-            <span class="total-amount"
-              >¥{{ order.total_amount || order.price }}</span
-            >
-          </div>
-          <div class="order-actions">
-            <button
-              class="action-btn cancel-btn"
-              v-if="order.status === 'pending'"
-              @click="handleCancelOrder(order)"
-            >
-              取消订单
-            </button>
-            <button
-              class="action-btn detail-btn"
-              @click="handleOrderDetail(order)"
-            >
-              订单详情
-            </button>
-            <button
-              class="action-btn pay-btn"
-              v-if="order.status === 'pending'"
-              @click="handlePayOrder(order)"
-            >
-              去支付
-            </button>
-          </div>
+    <div class="order-tabs-box">
+      <!-- 订单状态标签 -->
+      <div class="order-tabs">
+        <div
+          class="tab-item"
+          v-for="tab in orderTabs"
+          :key="tab.value"
+          :class="{ active: activeTab === tab.value }"
+          @click="switchTab(tab.value)"
+        >
+          {{ tab.label }}
         </div>
       </div>
 
-      <el-empty
-        v-if="filteredOrders.length === 0"
-        description="暂无订单数据"
-      ></el-empty>
-    </div>
+      <!-- 订单列表 -->
+      <div class="order-list">
+        <div
+          class="order-item"
+          v-for="(order, index) in filteredOrders"
+          :key="order.id || index"
+        >
+          <!-- 订单头部 -->
+          <div class="order-header">
+            <div class="order-info">
+              <span class="order-time">{{ order.create_time }}</span>
+              <span class="order-number">订单号: {{ order.order_no }}</span>
+            </div>
+            <span class="order-status">
+              {{ getStatusText(order.status) }}
+            </span>
+          </div>
 
-    <!-- 分页 -->
-    <div class="pagination-section" v-if="filteredOrders.length > 0">
-      <el-pagination
-        :total="totalOrders"
-        :page-size="pageSize"
-        :current-page="currentPage"
-        @current-change="handlePageChange"
-        layout="prev, pager, next"
-      ></el-pagination>
+          <!-- 订单内容 -->
+          <div class="order-content">
+            <div class="order-item-info">
+              <div class="item-title">{{ order.title }}</div>
+              <div class="item-price">¥{{ order.price }}</div>
+            </div>
+          </div>
+
+          <!-- 订单底部 -->
+          <div class="order-footer">
+            <div class="order-total">
+              合计金额
+              <span class="total-amount"
+                >¥{{ order.total_amount || order.price }}</span
+              >
+            </div>
+            <div class="order-actions">
+              <button
+                class="action-btn cancel-btn"
+                v-if="order.status === 'pending'"
+                @click="handleCancelOrder(order)"
+              >
+                取消订单
+              </button>
+              <button
+                class="action-btn detail-btn"
+                @click="handleOrderDetail(order)"
+              >
+                订单详情
+              </button>
+              <button
+                class="action-btn pay-btn"
+                v-if="order.status === 'pending'"
+                @click="handlePayOrder(order)"
+              >
+                去支付
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <el-empty
+          v-if="filteredOrders.length === 0"
+          description="暂无订单数据"
+        ></el-empty>
+      </div>
+
+      <!-- 分页 -->
+      <div class="pagination-section" v-if="filteredOrders.length > 0">
+        <el-pagination
+          :total="totalOrders"
+          :page-size="pageSize"
+          :current-page="currentPage"
+          @current-change="handlePageChange"
+          layout="prev, pager, next"
+        ></el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -231,19 +233,28 @@ export default {
 
 <style lang="less" scoped>
 .orders-page {
-  background: #fff;
   border-radius: 8px;
-  padding: 20px 30px;
 
   .page-title {
-    font-size: 24px;
+    font-size: 16px;
     font-weight: bold;
     color: #333;
-    margin: 0 0 30px 0;
+    height: 56px;
+    padding: 0 30px;
+    line-height: 56px;
+    margin-bottom: 20px;
+    background: #fff;
+  }
+
+  .order-tabs-box {
+    background: #fff;
+    padding: 20px 30px;
   }
 
   // 订单状态标签
   .order-tabs {
+    background: #fff;
+
     display: flex;
     gap: 40px;
     margin-bottom: 30px;
@@ -279,6 +290,8 @@ export default {
 
   // 订单列表
   .order-list {
+    background: #fff;
+
     .order-item {
       background: #fff;
       border: 1px solid #e8e8e8;
@@ -318,10 +331,10 @@ export default {
         .order-status {
           font-size: 14px;
           font-weight: 500;
-          color: #EA3200;
+          color: #ea3200;
 
           &.status-pending {
-            color: #EA3200;
+            color: #ea3200;
           }
 
           &.status-completed {

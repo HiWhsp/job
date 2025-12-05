@@ -99,7 +99,7 @@ export default new Vuex.Store({
     set_vuex_user(state, data) {
       // //console.log("vuex set_vuex_user 设置用户信息", { ...data });
 
-      let userId = data.userId || data.id;
+      let userId = data.userId || data.user_id || data.id;
 
       state.vuex_is_login = true;
       state.userId = userId;
@@ -108,12 +108,6 @@ export default new Vuex.Store({
       
       localStorage.setItem("userId", userId);
       localStorage.setItem("vuex_user", JSON.stringify(data));
-      // let cookieVal = {
-      //   "token": token,
-      //   "userId": userId,
-      //   "vuex_user": data,
-      // }
-      // document.cookie = `jiuzhouuser=${JSON.stringify(cookieVal)}`
     },
 
     //设置购物车商品数量
@@ -180,7 +174,7 @@ export default new Vuex.Store({
     // 获取用户信息
     async query_user({ commit, state, dispatch }) {
       api({
-        url: "getUserInfo",
+        url: "getPcUserInfo",
         method: "get",
       }).then((res) => {
         if (res.code == 200) {

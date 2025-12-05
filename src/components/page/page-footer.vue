@@ -6,15 +6,15 @@
         <div class="contact-phone">
           <img src="@img/footer/phone.png" alt="" />
           <span class="phone-number-large">{{
-            vuex_config.bottom_lawer_contact || "18628267502"
+            vuex_config.bottom_lawer_contact || vuex_config.mobile
           }}</span>
         </div>
         <div class="contact-details">
           <div class="contact-item">
             <img src="@img/footer/icon1.png" alt="" />
             <span
-              >手机:联系电话:{{
-                vuex_config.bottom_lawer_contact || "18628267502"
+              >手机: 联系电话: {{
+                vuex_config.bottom_lawer_contact || vuex_config.site_tel
               }}</span
             >
           </div>
@@ -22,13 +22,13 @@
             <i class="el-icon-message contact-icon"></i>
             <span
               >邮箱:
-              {{ vuex_config.bottom_lawer_email || "******@163.com" }}</span
+              {{ vuex_config.bottom_lawer_email || vuex_config.email }}</span
             >
           </div>
           <div class="contact-item">
             <img src="@img/footer/icon2.png" alt="" />
             <span
-              >地址:{{ vuex_config.site_address || "这里显示公司地址" }}</span
+              >地址:{{ vuex_config.site_address || vuex_config.site_address }}</span
             >
           </div>
         </div>
@@ -128,11 +128,11 @@
     <div class="footer-bottom w-1600">
       <div class="copyright">
         <span
-          >Copyright © {{ new Date().getFullYear() }} 四川响梵信息科技有限公司
+          >Copyright © {{ new Date().getFullYear() }} {{ vuex_config.site_name }}
           版权所有</span
         >
         <span class="beian"
-          >备案号:{{ vuex_config.beian || "蜀ICP备20220号-2B2-20220663" }}</span
+          >备案号:{{ vuex_config.beian || vuex_config.icp }}</span
         >
       </div>
     </div>

@@ -77,6 +77,14 @@
           <i class="user-icon"><img src="@img/common/avatar.png" alt="" /></i>
           <span>会员登陆 | 注册</span>
         </button>
+        <button
+          class="login-btn"
+          v-else
+        >
+          <i class="user-icon"><img src="@img/common/avatar.png" alt="" /></i>
+          <span @click="goUrl('/my/orders')">会员中心 |</span>
+          <span @click="logout">退出</span>
+        </button>
       </div>
     </div>
   </div>

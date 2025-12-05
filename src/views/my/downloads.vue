@@ -149,7 +149,7 @@ export default {
 
   .page-title {
     background: #fff;
-    font-size: 24px;
+    font-size: 16px;
     font-weight: bold;
     color: #333;
     height: 56px;

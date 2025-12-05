@@ -47,7 +47,7 @@
             </div>
           </div>
 
-          <div class="other-login">
+          <div class="other-login" @click="do_other_login()">
             <img src="@img/login/qr-code.png" alt="" />
           </div>
         </div>
@@ -123,6 +123,9 @@ export default {
         } else {
         }
       });
+    },
+    do_other_login() {
+      this.$router.push("/other-login");
     },
   },
 };

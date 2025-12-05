@@ -87,7 +87,7 @@ export default {
       try {
         // 这里可以调用实际的API获取用户信息
         // const res = await this.$api({
-        //   url: "getUserInfo",
+        //   url: "getPcUserInfo",
         //   method: "get",
         // });
         // if (res.code === 200 && res.data) {
@@ -201,14 +201,14 @@ export default {
 
   .page-title {
     background: #fff;
-    font-size: 24px;
+    font-size: 16px;
     font-weight: bold;
     color: #333;
     height: 56px;
     line-height: 56px;
     padding: 0 30px;
     margin: 0;
-    border-bottom: 1px solid #e8e8e8;
+    border-radius: 8px 8px 0 0;
   }
 
   .profile-content {
