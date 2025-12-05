@@ -15,37 +15,37 @@
           <div class="link-group">
             <div class="group-title">帮助中心</div>
             <div class="link-item">
-              <a href="tel:13800138000">购物须知</a>
+              <router-link to="/help?id=3">购物须知</router-link>
             </div>
             <div class="link-item">
-              <a href="tel:13800138000">线下采购</a>
+              <router-link to="/help?id=4">线下采购</router-link>
             </div>
             <div class="link-item">
-              <a href="tel:13800138000">换货须知</a>
-            </div>
-          </div>
-          <div class="link-group">
-            <div class="group-title">联系我们</div>
-            <div class="link-item">
-              <a href="tel:13800138000">常见问题</a>
-            </div>
-            <div class="link-item">
-              <a href="tel:13800138000">文件下载</a>
-            </div>
-            <div class="link-item">
-              <a href="tel:13800138000">在线留言</a>
+              <router-link to="/help?id=5">换货须知</router-link>
             </div>
           </div>
           <div class="link-group">
             <div class="group-title">联系我们</div>
             <div class="link-item">
-              <a href="tel:13800138000">公司介绍</a>
+              <router-link to="/help?id=6">常见问题</router-link>
             </div>
             <div class="link-item">
-              <a href="tel:13800138000">联系我们</a>
+              <router-link to="/download">文件下载</router-link>
             </div>
             <div class="link-item">
-              <a href="tel:13800138000">资质认证</a>
+              <a href="http://www.xintiankeji.com/contact.html">在线留言</a>
+            </div>
+          </div>
+          <div class="link-group">
+            <div class="group-title">联系我们</div>
+            <div class="link-item">
+              <a href="http://www.xintiankeji.com/guanyu.html">公司介绍</a>
+            </div>
+            <div class="link-item">
+              <a href="http://www.xintiankeji.com/guanyu.html">联系我们</a>
+            </div>
+            <div class="link-item">
+              <a href="http://www.xintiankeji.com/guanyu.html">资质认证</a>
             </div>
           </div>
         </div>
@@ -197,7 +197,7 @@ export default {
           line-height: 32px;
 
           &:hover {
-            color: #2E4C87;
+            color: #fff;
           }
         }
       }

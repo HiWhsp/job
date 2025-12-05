@@ -16,20 +16,15 @@
             >
               系列说明
             </div>
-            <div
+            <!-- <div
               class="tab-item"
-              :class="{ active: activeTab === 'coating' }"
-              @click="activeTab = 'coating'"
+              :class="{ active: activeTab === item.key }"
+              @click="activeTab = item.key"
+              v-for="(item, index) in product.brandInfo ? product.brandInfo.addrows : []"
+              :key="index"
             >
-              镀膜曲线
-            </div>
-            <div
-              class="tab-item"
-              :class="{ active: activeTab === 'lens' }"
-              @click="activeTab = 'lens'"
-            >
-              光学透镜
-            </div>
+              {{ item.title }}
+            </div> -->
             <div
               class="tab-item"
               :class="{ active: activeTab === 'feedback' }"
@@ -48,16 +43,13 @@
                     <h3>产品说明</h3>
                     <div
                       class="series-content-top-item-content"
-                      v-html="product.cont1"
+                      v-html="product.content"
                     ></div>
                   </div>
                   <div class="series-content-top-item">
                     <h3>示意图</h3>
                     <div class="series-content-top-item-content">
-                      <img
-                        :src="product.brandInfo ? product.brandInfo.thumb : ''"
-                        alt="示意图"
-                      />
+                      <img :src="product.thumb2" alt="示意图" />
                     </div>
                   </div>
                 </div>
@@ -66,9 +58,7 @@
                   <div class="parameter-table">
                     <div
                       class="parameter-row"
-                      v-for="(item, index) in product.brandInfo
-                        ? product.brandInfo.addrows
-                        : []"
+                      v-for="(item, index) in product.addrows"
                       :key="index"
                     >
                       <div
@@ -76,7 +66,7 @@
                         v-for="(it, i) in item"
                         :key="i"
                       >
-                        <span class="parameter-label">{{ it.key }}</span>
+                        <span class="parameter-label">{{ it.title }}</span>
                         <span class="parameter-value ellipsis-1">{{
                           it.value
                         }}</span>
@@ -86,16 +76,6 @@
                 </div>
               </div>
             </div>
-            <div
-              v-if="activeTab === 'coating'"
-              class="content-item"
-              v-html="product.brandInfo.content2"
-            ></div>
-            <div
-              v-if="activeTab === 'lens'"
-              class="content-item"
-              v-html="product.brandInfo.content3"
-            ></div>
             <div
               v-if="activeTab === 'feedback'"
               class="content-item feedback-content"
@@ -204,6 +184,7 @@
                 </div>
               </div>
             </div>
+            <div v-else class="content-item"></div>
           </div>
 
           <!-- 产品选择区 -->
@@ -221,9 +202,9 @@
             <div class="product-list">
               <div class="product-list-header-item">
                 <span>产品编号</span>
-                <span>直径Φ</span>
-                <span>焦距f’</span>
-                <span>曲率半径R</span>
+                <span v-for="(value, index) in product.attrs" :key="index">{{
+                  value.title
+                }}</span>
                 <span>库存</span>
                 <span>对比</span>
                 <span>价格</span>
@@ -240,15 +221,15 @@
                   <template slot="title">
                     <div class="product-header">
                       <div class="product-info">
-                        <span class="product-code">{{ product.brandId }}</span>
+                        <span class="product-code ellipsis-1">{{ product.title }}</span>
                         <span class="product-diameter"
-                          >直径: {{ product.diameter || "0.00" }}mm</span
+                          >{{ product.diameter || "0.00" }}mm</span
                         >
                         <span class="product-focal"
-                          >焦距: {{ product.focal || "0.00" }}mm</span
+                          >{{ product.focal || "0.00" }}mm</span
                         >
                         <span class="product-radius"
-                          >曲率半径: {{ product.curvature || "0.00" }}mm</span
+                          >{{ product.curvature || "0.00" }}mm</span
                         >
                         <span class="product-stock">{{
                           product.kucun || 0
@@ -259,7 +240,7 @@
                             @change="toggleCompare(product)"
                           ></el-checkbox>
                         </div>
-                        <span class="product-price">¥{{ product.price }}</span>
+                        <span class="product-price">¥{{ product.priceSale }}</span>
                         <div class="product-quantity">
                           <el-button
                             @click.stop="decreaseQuantity(index)"
@@ -300,25 +281,10 @@
                         type="primary"
                         icon="el-icon-download"
                         size="small"
-                        >CAD PDF</el-button
-                      >
-                      <el-button
-                        type="primary"
-                        icon="el-icon-download"
-                        size="small"
-                        >Auto CAD DXF</el-button
-                      >
-                      <el-button
-                        type="primary"
-                        icon="el-icon-download"
-                        size="small"
-                        >SOLLIDWORKS</el-button
-                      >
-                      <el-button
-                        type="primary"
-                        icon="el-icon-download"
-                        size="small"
-                        >规格书</el-button
+                        v-for="(item, index) in product.fields"
+                        :key="index"
+                        @click="downloadFile(item.url)"
+                        >{{ item.title }}</el-button
                       >
                     </div>
 
@@ -349,13 +315,13 @@
 
           <!-- 产品推荐 -->
           <div class="product-recommend">
-            <div class="product-recommend-title">产品推荐</div>
+            <div class="product-recommend-title">系列推荐</div>
             <!-- 商品网格 -->
             <div class="product-grid">
               <div
                 class="product-card"
-                v-for="product in products"
-                :key="product.id"
+                v-for="(product, index) in products"
+                :key="index"
                 @click="handleProductClick(product)"
               >
                 <div class="product-image">
@@ -371,14 +337,14 @@
                 </div>
                 <div class="product-info">
                   <h3 class="product-name">{{ product.title }}</h3>
-                  <div class="product-price">¥{{ product.priceSale }}</div>
+                  <div class="product-price">¥{{ product.price }}</div>
                   <el-button
                     type="primary"
                     size="small"
                     class="view-products-btn"
                     @click="viewProducts(product)"
                   >
-                    查看{{ product.brandNum }}款同类型产品
+                    查看{{ product.num }}款同类型产品
                   </el-button>
                 </div>
               </div>
@@ -404,6 +370,7 @@ export default {
   data() {
     return {
       nav_option: [], // 面包屑导航
+      channelDetail: {}, // 分类详情
       product: {}, // 产品详情
       searchProductValue: "", // 搜索产品
       activeTab: "series", // 默认选中系列说明
@@ -420,47 +387,68 @@ export default {
         tell: true, // 是否联系我，默认选中
       },
       // 产品选项（可以根据实际需求从接口获取）
-      productOptions: [
-        { label: "产品A", value: "productA" },
-        { label: "产品B", value: "productB" },
-        { label: "产品C", value: "productC" },
-      ],
+      productOptions: [],
     };
+  },
+  watch: {
+    "$route.query.brandId": {
+      handler(newVal) {
+        this.getProductDetail();
+      },
+      immediate: true,
+    },
   },
   mounted() {
     this.nav_option =
       JSON.parse(localStorage.getItem("product_nav_option")) || [];
     this.getProductDetail();
-
-    this.$api({
-      url: "/service.php",
-      method: "get",
-      data: {
-        action: "product_channelToBrand",
-        channelId: this.$route.query.id,
-      },
-    }).then((res) => {});
+    this.getProductList();
   },
   methods: {
-    searchProduct() {},
+    searchProduct() {
+      this.getProductList();
+    },
+    // 获取系列详情
     getProductDetail() {
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
-          action: "product_detail",
-          id: this.$route.query.id,
+          action: "product_brandDetail",
+          id: this.$route.query.brandId,
         },
       }).then((res) => {
         if (res.code == 200 && res.data) {
           this.product = res.data;
-          this.product.quantity = 1;
-          this.product.brandInfo.addrows = this.pairArray(
-            this.product.brandInfo.addrows
-          );
-          this.product.fieldsInfo = this.pairArray(this.product.fieldsInfo);
-          this.productList.push(res.data);
+          this.product.addrows = this.pairArray(this.product.addrows);
+          this.product.attrs = JSON.parse(this.product.attrs);
+          console.log(this.product.attrs);
           this.getRecommendProduct();
+
+          this.nav_option.push({
+            title: this.product.title,
+            route: `/product-detail?brandId=${this.product.id}`,
+            id: this.product.id,
+          });
+        }
+      });
+    },
+    getProductList() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_plist",
+          brandId: this.$route.query.brandId,
+          keyword: this.searchProductValue,
+        },
+      }).then((res) => {
+        if (res.code == 200 && res.data) {
+          this.productList = res.data.list.map(item => {
+            item.quantity = 1;
+            item.checked = false;
+            return item;
+          });
           // 更新反馈表单的产品选项，将当前产品添加到选项中
           if (this.product.title) {
             this.productOptions = [
@@ -472,15 +460,7 @@ export default {
                 (item) => item.value !== (this.product.id || this.product.title)
               ),
             ];
-            // 默认选中当前产品
-            this.feedbackForm.proId = this.product.id || this.product.title;
           }
-
-          this.nav_option.push({
-            title: this.product.title,
-            route: `/product-detail?id=${this.product.id}`,
-            id: this.product.id,
-          });
         }
       });
     },
@@ -494,7 +474,7 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "product_plist",
+          action: "product_channelToBrand",
           channelId: channelId,
           page: 1,
           pageNum: 5,
@@ -509,8 +489,8 @@ export default {
     },
     viewProducts(product) {
       this.$router.push({
-        path: "/product-list",
-        query: { channelId: this.channelId },
+        path: "/product-detail",
+        query: { brandId: product.brandId },
       });
     },
     // 将数组分成两组
@@ -560,10 +540,8 @@ export default {
         },
       }).then((res) => {
         let { code, data, message } = res;
-
         if (code == 200) {
           // 三秒后关闭弹窗
-
           this.$api({
             url: "/service.php",
             method: "get",
@@ -1035,7 +1013,6 @@ export default {
               line-height: 40px;
               border-bottom: 1px dashed #d9d9d9;
               margin: 0 23px;
-              
 
               &:last-child {
                 border-bottom: none;

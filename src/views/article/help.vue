@@ -10,7 +10,7 @@
             <div class="sidebar-nav">
               <div
                 class="nav-item"
-                :class="{ active: activeTab === item.id }"
+                :class="{ active: activeTab == item.id }"
                 @click="handleTabClick(item)"
                 v-for="item in tabList"
                 :key="item.id"
@@ -48,10 +48,19 @@ export default {
   data() {
     return {
       nav_option: [{ title: "帮助中心", route: "/help" }],
-      activeTab: null, // 默认激活
+      activeTab: this.$route.query.id || '', // 默认激活
       tabList: [],
       activeContent: "",
     };
+  },
+  watch: {
+    '$route.query.id': {
+      handler(newVal) {
+        this.activeTab = newVal;
+        this.query_content(newVal);
+      },
+      immediate: true,
+    },
   },
   mounted() {
     // this.query_tab_list();
@@ -73,7 +82,7 @@ export default {
         }
       });
     },
-    query_content() {
+    query_content(id) {
       this.$api({
         url: "/service.php",
         method: "get",
@@ -81,11 +90,11 @@ export default {
           action: "index_helpList",
           // channelId: this.activeTab,
         },
-      }).then((res) => {
+      }).then((res) => {        
         if (res.code == 200) {
           this.tabList = res.data.list;
-          this.activeTab = this.tabList[0].id;
-          this.activeContent = this.tabList[0];
+          this.activeTab = id || this.activeTab;
+          this.activeContent = this.tabList.find(item => item.id == this.activeTab);
         }
       });
     },

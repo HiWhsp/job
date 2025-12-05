@@ -17,12 +17,12 @@
             <el-collapse v-model="activeFilters" class="filter-collapse">
               <el-collapse-item
                 :title="item.title"
-                :name="item.fieldTitle"
+                :name="item.title"
                 v-for="item in filterOptions"
-                :key="item.fieldTitle"
+                :key="item.title"
               >
                 <el-checkbox-group
-                  v-model="filters[item.fieldTitle]"
+                  v-model="filters[item.title]"
                   @change="handleFilterChange"
                 >
                   <el-checkbox
@@ -43,7 +43,7 @@
                 {{ nav_option[nav_option.length - 1].title }}
               </h2>
               <div class="sort-section">
-                <el-select
+                <!-- <el-select
                   v-model="sortBy"
                   placeholder="请选择排序方式"
                   @change="handleSortChange"
@@ -59,7 +59,7 @@
                     value="price-desc"
                   ></el-option>
                   <el-option label="销量排序" value="sales"></el-option>
-                </el-select>
+                </el-select> -->
               </div>
             </div>
 
@@ -73,7 +73,7 @@
               >
                 <div class="product-image">
                   <img :src="product.thumb" :alt="product.title" />
-                  <div class="product-actions">
+                  <!-- <div class="product-actions">
                     <img
                       src="@img/product/icon-fav1.png"
                       @click.stop="toggleFavorite(product, 1)"
@@ -86,17 +86,17 @@
                       alt=""
                       v-else
                     />
-                  </div>
+                  </div> -->
                 </div>
                 <div class="product-info">
                   <h3 class="product-name">{{ product.title }}</h3>
-                  <div class="product-price">¥{{ product.priceSale || 0 }}</div>
+                  <div class="product-price">¥{{ product.price || 0 }}</div>
                   <el-button
                     type="primary"
                     size="small"
                     class="view-products-btn"
                   >
-                    查看{{ product.brandNum }}款同类型产品
+                    查看{{ product.num }}款同类型产品
                   </el-button>
                 </div>
               </div>
@@ -160,7 +160,7 @@ export default {
       if (this.filters) {
         Object.keys(this.filters).forEach((key) => {
           if (this.filters[key].length > 0) {
-            attrs.push({ key, value: this.filters[key].join(",") });
+            attrs.push({ id: this.filterOptions.find(item => item.title === key).id, value: this.filters[key].join(",") });
           }
         });
       }
@@ -168,13 +168,13 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "product_plist",
-          orderType: this.sortBy,
-          keyword: this.$route.query.keyword || "",
+          action: "product_channelToBrand",
+          // orderType: this.sortBy,
+          // keyword: this.$route.query.keyword || "",
           channelId: this.nav_option[this.nav_option.length - 1].id,
           page: this.currentPage,
           pageNum: this.pageSize,
-          attrs: attrs.length > 0 ? JSON.stringify(attrs) : "",
+          attrIds: attrs.length > 0 ? JSON.stringify(attrs) : "",
         },
       }).then((res) => {
         let { list, count } = res.data;
@@ -187,7 +187,7 @@ export default {
     // 重置筛选条件
     resetFilters() {
       this.filters = this.filterOptions.reduce((acc, item) => {
-        acc[item.fieldTitle] = [];
+        acc[item.title] = [];
         return acc;
       }, {});
       this.currentPage = 1;
@@ -208,7 +208,9 @@ export default {
 
     // 商品点击
     handleProductClick(item) {
-      this.$router.push(`/product-detail?id=${item.id}`);
+      this.$router.push(
+        `/product-detail?brandId=${item.id}`
+      );
     },
 
     // 切换收藏
@@ -244,13 +246,13 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "product_zdyAttr",
+          action: "product_brandAttr",
         },
       }).then((res) => {
         if (res.code == 200 && res.data) {
           this.filterOptions = res.data;
           this.filters = this.filterOptions.reduce((acc, item) => {
-            acc[item.fieldTitle] = [];
+            acc[item.title] = [];
             return acc;
           }, {});
         }

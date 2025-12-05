@@ -336,26 +336,19 @@ export default {
 
     //可换货产品
     query_exchange_products() {
+      console.log(12321);
+      
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "refund_showChangeProduct",
-          inventoryId: this.inventoryId,
-          productId: this.product.productId,
-          num: this.product.num,
-          priceSale: this.product.priceSale,
+          productId: this.inventoryId,
         },
       }).then((res) => {
         if (res.code == 200) {
-          res.data.forEach((v) => {
-            v.inventoryId = v.id;
-          });
-          this.exchange_products = res.data;
           this.$nextTick(() => {
-            this.$refs.refund_sku_choose.init({
-              inventorys: res.data,
-            });
+            this.$refs.refund_sku_choose.init(res.data);
           });
         }
       });
