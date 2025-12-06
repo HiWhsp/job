@@ -154,7 +154,7 @@
                     :key="index"
                     :style="{ display: product.visible ? 'block' : 'none' }"
                   >
-                    <div class="table-right-item-title">
+                    <div class="table-right-item-title ellipsis-1" @click="copyText(item[product.fieldTitle])">
                       {{ item[product.fieldTitle] || "--" }}
                     </div>
                   </div>
@@ -228,11 +228,24 @@ export default {
     };
   },
   methods: {
+    copyText(text) {
+      if(!text) {
+        return;
+      }
+      // 原生复制
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("Copy");
+      document.body.removeChild(textarea);
+      this.$message.success("复制成功");
+    },
     // 获取对比产品列表
     getCompareProducts() {
       // 从localStorage中获取对比产品ID列表
       const ids = JSON.parse(localStorage.getItem("compare_productsIds"));
-      if (ids) {
+      if (ids && ids.length > 0) {
         this.$api({
           url: "/service.php",
           method: "get",
@@ -365,6 +378,7 @@ export default {
         .then(() => {
           this.compareProducts = [];
           this.visibleSpecs = [];
+          localStorage.removeItem("compare_productsIds");
           this.$message.success("已清空对比");
         })
         .catch(() => {});
@@ -816,7 +830,8 @@ export default {
       align-items: center;
       gap: 10px;
       width: 100%;
-      padding-left: 17px;
+      padding: 0 17px;
+      cursor: pointer;
     }
   }
 }

@@ -149,6 +149,22 @@ export default {
   },
 
   methods: {
+    addCart(item) {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "gouwuche_add",
+          inventoryId: item.inventoryId,
+          num: 1,
+        },
+      }).then((res) => {
+        let { code, data, message } = res;
+        if (code == 200) {
+          this.$message.success("加入购物车成功");
+        }
+      });
+    },
     setView() {
       this.query_fav();
     },

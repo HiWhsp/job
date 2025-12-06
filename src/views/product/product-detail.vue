@@ -2,7 +2,10 @@
   <div class="product-detail">
     <div class="inner">
       <div class="product-img">
-        <img :src="product.thumb" :alt="product.title" />
+        <img
+          :src="product.images ? product.images[0] : ''"
+          :alt="product.title"
+        />
       </div>
       <pageBreadcrumb :option="nav_option" />
       <div class="page-ctx w-1400">
@@ -16,15 +19,15 @@
             >
               系列说明
             </div>
-            <!-- <div
+            <div
               class="tab-item"
               :class="{ active: activeTab === item.key }"
-              @click="activeTab = item.key"
-              v-for="(item, index) in product.brandInfo ? product.brandInfo.addrows : []"
+              @click="addTab(item)"
+              v-for="(item, index) in product.addrows ? product.addrows : []"
               :key="index"
             >
               {{ item.title }}
-            </div> -->
+            </div>
             <div
               class="tab-item"
               :class="{ active: activeTab === 'feedback' }"
@@ -53,7 +56,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="series-content-bottom">
+                <!-- <div class="series-content-bottom">
                   <h3>通用参数</h3>
                   <div class="parameter-table">
                     <div
@@ -73,7 +76,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
             <div
@@ -184,7 +187,7 @@
                 </div>
               </div>
             </div>
-            <div v-else class="content-item"></div>
+            <div v-else class="content-item" v-html="selectedTab.value"></div>
           </div>
 
           <!-- 产品选择区 -->
@@ -193,6 +196,7 @@
               <el-input
                 v-model="searchProductValue"
                 placeholder="请输入产品编号"
+                clearable
               >
                 <el-button slot="append" type="primary" @click="searchProduct"
                   >搜索</el-button
@@ -221,7 +225,9 @@
                   <template slot="title">
                     <div class="product-header">
                       <div class="product-info">
-                        <span class="product-code ellipsis-1">{{ product.title }}</span>
+                        <span class="product-code ellipsis-1">{{
+                          product.title
+                        }}</span>
                         <span class="product-diameter"
                           >{{ product.diameter || "0.00" }}mm</span
                         >
@@ -240,7 +246,9 @@
                             @change="toggleCompare(product)"
                           ></el-checkbox>
                         </div>
-                        <span class="product-price">¥{{ product.priceSale }}</span>
+                        <span class="product-price"
+                          >¥{{ product.priceSale }}</span
+                        >
                         <div class="product-quantity">
                           <el-button
                             @click.stop="decreaseQuantity(index)"
@@ -310,6 +318,10 @@
                   </div>
                 </el-collapse-item>
               </el-collapse>
+              <el-empty
+                v-if="productList.length === 0"
+                description="暂无产品"
+              ></el-empty>
             </div>
           </div>
 
@@ -378,6 +390,7 @@ export default {
       productList: [], // 产品列表
       products: [], // 产品推荐
       channelId: null, // 频道ID
+      selectedTab: {}, // 选中的选项卡
       // 反馈表单数据
       feedbackForm: {
         bType: "1", // 默认选中"改进建议"
@@ -397,6 +410,17 @@ export default {
       },
       immediate: true,
     },
+    "product.title": {
+      handler(newVal) {
+        if (newVal) {
+          this.nav_option.push({
+            title: newVal,
+            route: `/product-detail?brandId=${this.$route.query.brandId}`,
+            id: this.$route.query.brandId,
+          });
+        }
+      },
+    },
   },
   mounted() {
     this.nav_option =
@@ -405,6 +429,10 @@ export default {
     this.getProductList();
   },
   methods: {
+    addTab(item) {
+      this.activeTab = item.key;
+      this.selectedTab = item;
+    },
     searchProduct() {
       this.getProductList();
     },
@@ -420,16 +448,9 @@ export default {
       }).then((res) => {
         if (res.code == 200 && res.data) {
           this.product = res.data;
-          this.product.addrows = this.pairArray(this.product.addrows);
+          // this.product.addrows = this.pairArray(this.product.addrows);
           this.product.attrs = JSON.parse(this.product.attrs);
-          console.log(this.product.attrs);
           this.getRecommendProduct();
-
-          this.nav_option.push({
-            title: this.product.title,
-            route: `/product-detail?brandId=${this.product.id}`,
-            id: this.product.id,
-          });
         }
       });
     },
@@ -444,7 +465,7 @@ export default {
         },
       }).then((res) => {
         if (res.code == 200 && res.data) {
-          this.productList = res.data.list.map(item => {
+          this.productList = res.data.list.map((item) => {
             item.quantity = 1;
             item.checked = false;
             return item;

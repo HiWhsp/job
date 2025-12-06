@@ -250,7 +250,7 @@ export default {
         let { code, data } = res;
         if (code == 200) {
           data.forEach((v) => {
-            v.checked = true;
+            v.checked = false;
           });
           this.list_shopcart = data;
           if (data.length) {

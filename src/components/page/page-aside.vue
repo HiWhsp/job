@@ -11,7 +11,10 @@
       v-show="item.key !== 'top' || showBackTop"
       @click="handleClick(item)"
     >
-      <img :src="item.icon" :alt="item.label" />
+      <el-badge :value="vuex_cart_number" v-if="item.key === 'custom'" class="item">
+        <img :src="item.icon" :alt="item.label" />
+      </el-badge>
+      <img :src="item.icon" :alt="item.label" v-else />
       <span>{{ item.label }}</span>
     </div>
   </div>
@@ -99,7 +102,7 @@ export default {
     justify-content: center;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border-bottom: 2px solid #F4F4F4;
+    border-bottom: 2px solid #f4f4f4;
 
     &:hover {
       transform: translateY(-4px);

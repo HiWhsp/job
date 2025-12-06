@@ -33,7 +33,7 @@
               <router-link to="/download">文件下载</router-link>
             </div>
             <div class="link-item">
-              <a href="http://www.xintiankeji.com/contact.html">在线留言</a>
+              <router-link to="/online-message">在线留言</router-link>
             </div>
           </div>
           <div class="link-group">
