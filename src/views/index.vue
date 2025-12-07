@@ -106,7 +106,7 @@
                   <div
                     class="type-menu-item"
                     :class="{ active: activeType === category.id }"
-                    v-for="(category, index) in categoryList"
+                    v-for="(category, index) in vuex_document_tree"
                     :key="index"
                     @click="switchType(category.id)"
                   >
@@ -233,8 +233,6 @@ export default {
       documentList: [],
       // 文档列表的当前选中类型
       activeType: "",
-      // 分类列表
-      categoryList: [],
       // 免费下载文档
       freeDownloadDocumentList: [],
       // 类型菜单滚动相关
@@ -247,7 +245,7 @@ export default {
     };
   },
   watch: {
-    categoryList: {
+    vuex_document_tree: {
       handler() {
         this.$nextTick(() => {
           this.checkScrollButtons();
@@ -261,7 +259,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["vuex_index_banners", "vuex_config"]),
+    ...mapState(["vuex_index_banners", "vuex_config", "vuex_document_tree"]),
   },
   mounted() {
     // 获取首页数据
@@ -352,20 +350,8 @@ export default {
       } catch (error) {
         console.error("获取免费下载文档列表失败:", error);
       }
-      // 获取分类
-      try {
-        const res = await this.$api({
-          url: "documentTypeList",
-          method: "get",
-        });
-        if (res.code === 200 && res.data) {
-          this.categoryList = res.data;
-          this.activeType = res.data[0].id;
-          this.getList();
-        }
-      } catch (error) {
-        console.error("获取分类列表失败:", error);
-      }
+      this.activeType = this.vuex_document_tree[0].id;
+      this.getList();
     },
     async getList() {
       try {

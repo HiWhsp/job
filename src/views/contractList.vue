@@ -18,7 +18,7 @@
               class="filter-option"
               v-for="(category, index) in categories"
               :key="category.id"
-              :class="{ active: selectedCategory.id == category.id }"
+              :class="{ active: selectedType == category.id }"
               @click="toggleCategoryDropdown(category)"
               :ref="`categoryOption-${index}`"
             >
@@ -112,7 +112,7 @@ export default {
       pageSize: 10,
       totalContracts: 0,
       currentContracts: [],
-      selectedCategory: "",
+      selectedType: "",
       selectedPrice: "",
       selectedFormat: "",
       activeFilters: [],
@@ -123,7 +123,13 @@ export default {
   },
   computed: {},
   watch: {
-    selectedCategory() {
+    $route: {
+      handler(newVal) {
+        this.selectedType = newVal.query.type || "";
+        this.getContractList();
+      },
+    },
+    selectedType() {
       this.getContractList();
     },
     selectedPrice() {
@@ -134,6 +140,7 @@ export default {
     },
   },
   mounted() {
+    this.selectedType = this.$route.query.type || "";
     this.initFilters();
   },
 
@@ -149,7 +156,7 @@ export default {
         url: "pcDocumentList",
         method: "get",
         data: {
-          typeId: this.selectedCategory.id,
+          typeId: this.selectedType,
           ifFree: this.selectedPrice == "free" ? 1 : this.selectedPrice == "paid" ? 0 : "", // 是否免费
           page: this.currentPage,
           limit: this.pageSize,
@@ -161,7 +168,7 @@ export default {
     },
     // 切换文档分类
     toggleCategoryDropdown(category) {
-      this.selectedCategory = category;
+      this.selectedType = category.id;
       // 看下类型是否有category 如果存在则替换, 不存在则添加
       const categoryIndex = this.activeFilters.findIndex((item) => item.type === "category");
       if (categoryIndex !== -1) {
@@ -212,7 +219,7 @@ export default {
     removeFilter(index) {
       const filter = this.activeFilters[index];
       if (filter.type === "category") {
-        this.selectedCategory = "";
+        this.selectedType = "";
       } else if (filter.type === "price") {
         this.selectedPrice = "";
       } else if (filter.type === "format") {
@@ -221,7 +228,7 @@ export default {
       this.activeFilters.splice(index, 1);
     },
     clearAllFilters() {
-      this.selectedCategory = "";
+      this.selectedType = "";
       this.selectedPrice = "";
       this.selectedFormat = "";
       this.activeFilters = [];

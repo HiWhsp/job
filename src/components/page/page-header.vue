@@ -18,21 +18,37 @@
             <li class="nav-item" :class="{ active: $route.path === '/' }">
               <span class="nav-link" @click="handleNavClick('/')">首页</span>
             </li>
-            <li
-              class="nav-item"
-              :class="{ active: $route.path === '/contractList' }"
-            >
-              <router-link to="/contractList" class="nav-link"
-                >文档中心</router-link
+
+            <el-dropdown @command="handleDocumentCommand">
+              <li
+                class="nav-item"
+                :class="{ active: $route.path === '/contractList' }"
               >
-            </li>
+                <router-link to="/contractList" class="nav-link"
+                  >文档中心</router-link
+                >
+              </li>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item
+                  v-for="(item, index) in vuex_document_tree"
+                  :key="index"
+                  :command="item.id"
+                  >{{ item.title }}</el-dropdown-item
+                >
+              </el-dropdown-menu>
+            </el-dropdown>
+
             <el-dropdown @command="handleNewsCommand">
               <li class="nav-item" :class="{ active: $route.path === '/news' }">
                 <router-link to="/news" class="nav-link">新闻资讯</router-link>
               </li>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="1">公司新闻</el-dropdown-item>
-                <el-dropdown-item command="2">行业动态</el-dropdown-item>
+                <el-dropdown-item
+                  v-for="(item, index) in vuex_category_tree"
+                  :key="index"
+                  :command="item.id"
+                  >{{ item.title }}</el-dropdown-item
+                >
               </el-dropdown-menu>
             </el-dropdown>
 
@@ -44,7 +60,7 @@
                 <router-link to="/about" class="nav-link">关于我们</router-link>
               </li>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="company">公司简介</el-dropdown-item>
+                <el-dropdown-item command="about">公司简介</el-dropdown-item>
                 <el-dropdown-item command="contact">联系我们</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -77,10 +93,7 @@
           <i class="user-icon"><img src="@img/common/avatar.png" alt="" /></i>
           <span>会员登陆 | 注册</span>
         </button>
-        <button
-          class="login-btn"
-          v-else
-        >
+        <button class="login-btn" v-else>
           <i class="user-icon"><img src="@img/common/avatar.png" alt="" /></i>
           <span @click="goUrl('/my/orders')">会员中心 |</span>
           <span @click="logout">退出</span>
@@ -91,6 +104,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "page-header",
   data() {
@@ -98,6 +112,9 @@ export default {
       isLogin: false,
       searchText: "",
     };
+  },
+  computed: {
+    ...mapState(["vuex_document_tree", "vuex_category_tree"]),
   },
   mounted() {
     if (["/login", "/register", "/retrieve"].includes(location.pathname)) {
@@ -124,6 +141,14 @@ export default {
     handleNewsCommand(command) {
       this.$router.push({
         path: "/news",
+        query: {
+          type: command,
+        },
+      });
+    },
+    handleDocumentCommand(command) {
+      this.$router.push({
+        path: "/contractList",
         query: {
           type: command,
         },

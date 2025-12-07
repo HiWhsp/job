@@ -5,18 +5,18 @@
       <div
         class="download-item"
         v-for="(item, index) in downloadList"
-        :key="item.id || index"
+        :key="index"
       >
         <div class="item-content">
-          <div class="item-title">{{ item.title }}</div>
+          <div class="item-title">{{ item.document.title }}</div>
           <div class="item-meta">
-            <span class="file-size">{{ item.file_size }}</span>
-            <span class="upload-date">{{ item.upload_date }}上传</span>
+            <span class="file-size">{{ formatFileSize(item.fileSize) }}</span>
+            <span class="upload-date">{{ item.document.created_at }}上传</span>
           </div>
         </div>
         <button class="download-btn" @click="handleRedownload(item)">
           <i class="el-icon-download"></i>
-          重新下载
+          {{ item.ifMulti == 1 ? "重复下载" : "首次下载" }}
         </button>
       </div>
 
@@ -38,18 +38,6 @@
           layout="prev, pager, next"
           :page-count="pageCount"
         ></el-pagination>
-        <div class="pagination-jump">
-          <span class="jump-label">前往</span>
-          <el-input
-            v-model="jumpPage"
-            type="number"
-            :min="1"
-            :max="pageCount"
-            @keyup.enter="handleJumpPage"
-            class="jump-input"
-          ></el-input>
-          <span class="jump-label">页</span>
-        </div>
       </div>
     </div>
   </div>
@@ -78,31 +66,18 @@ export default {
   methods: {
     async getDownloadList() {
       try {
-        // 这里可以调用实际的API获取下载记录
-        // const res = await this.$api({
-        //   url: "downloadList",
-        //   method: "get",
-        //   data: {
-        //     page: this.currentPage,
-        //     pageSize: this.pageSize,
-        //   },
-        // });
-        // if (res.code === 200 && res.data) {
-        //   this.downloadList = res.data.list;
-        //   this.totalDownloads = res.data.total || 0;
-        // }
-
-        // 临时使用模拟数据
-        const mockData = [];
-        for (let i = 0; i < 10; i++) {
-          mockData.push({
-            id: i + 1,
-            title: "仁寿县关于进一步支持科技创新的若干政策",
-            file_size: "15.22KB",
-            upload_date: "2025-11-20",
-          });
+        const res = await this.$api({
+          url: "pcDownloadList",
+          method: "get",
+          data: {
+            page: this.currentPage,
+            limit: this.pageSize,
+          },
+        });
+        if (res.code === 200 && res.data) {
+          this.downloadList = res.data.list;
+          this.totalDownloads = res.data.count || 0;
         }
-        this.downloadList = mockData;
       } catch (error) {
         console.error("获取下载记录失败:", error);
         this.$message.error("获取下载记录失败");
@@ -110,33 +85,29 @@ export default {
     },
     handlePageChange(page) {
       this.currentPage = page;
-      this.jumpPage = page;
       this.getDownloadList();
-    },
-    handleJumpPage() {
-      const page = parseInt(this.jumpPage);
-      if (page >= 1 && page <= this.pageCount) {
-        this.currentPage = page;
-        this.handlePageChange(page);
-      } else {
-        this.$message.warning(`请输入1-${this.pageCount}之间的页码`);
-        this.jumpPage = this.currentPage;
-      }
     },
     handleRedownload(item) {
       // 处理重新下载逻辑
-      // this.$api({
-      //   url: "redownload",
-      //   method: "get",
-      //   data: { fileId: item.id },
-      // }).then((res) => {
-      //   if (res.code === 200) {
-      //     // 触发下载
-      //     window.open(res.data.downloadUrl);
-      //   }
-      // });
-      this.$message.success("开始下载");
-      console.log("重新下载:", item);
+      this.$api({
+        url: "pcDownloadTwice",
+        method: "get",
+        data: { id: item.id },
+      }).then((res) => {
+        if (res.code === 200) {
+          // 触发下载
+          window.open(item.document.url);
+        } else {
+          this.$message.error(res.msg);
+        }
+      });
+    },
+    // 格式化文件大小
+    formatFileSize(bytes) {
+      if (!bytes) return "";
+      if (bytes < 1024) return bytes + "B";
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + "KB";
+      return (bytes / (1024 * 1024)).toFixed(2) + "MB";
     },
   },
 };
@@ -175,7 +146,6 @@ export default {
       &:last-child {
         border-bottom: none;
       }
-
 
       .item-content {
         flex: 1;

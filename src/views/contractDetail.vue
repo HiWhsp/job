@@ -19,12 +19,20 @@
             <div class="header-left">
               <h1 class="document-title">{{ detail.title || "文档标题" }}</h1>
               <div class="document-meta">
-                <span class="file-size">{{ formatFileSize(detail.file_size) || "15.22KB" }}</span>
-                <span class="upload-date">{{ formatDate(detail.created_at) || "2025-11-20上传" }}</span>
+                <span class="file-size">{{
+                  formatFileSize(detail.fileSize) || "15.22KB"
+                }}</span>
+                <span class="upload-date">{{
+                  formatDate(detail.created_at) || "2025-11-20上传"
+                }}</span>
               </div>
             </div>
             <div class="header-right">
-              <span class="free-download-link">免费下载</span>
+              <span class="free-download-link" v-if="detail.ifFree == 1"
+                >免费下载</span
+              ><span class="free-download-link" v-else
+                >￥{{ detail.price }}</span
+              >
               <button class="download-btn" @click="handleDownload">
                 <i class="el-icon-download"></i>
                 立即下载
@@ -33,52 +41,10 @@
           </div>
           <div class="document-container">
             <div class="document-page">
-              <div class="document-content blurred">
-                <!-- PDF所有页面展示 -->
-                <div
-                  v-if="
-                    detail.preview_pdf_url &&
-                    detail.preview_pdf_url.includes('.pdf')
-                  "
-                  class="pdf-all-pages-container"
-                  ref="pdfContainer"
-                >
-                  <div
-                    v-for="(page, index) in pdfPages"
-                    :key="index"
-                    class="pdf-page-wrapper"
-                  >
-                    <canvas
-                      :ref="`pdfCanvas${index}`"
-                      class="pdf-page-canvas"
-                    ></canvas>
-                    <canvas
-                      :ref="`watermarkCanvas${index}`"
-                      class="watermark-canvas"
-                    ></canvas>
-                  </div>
-
-                  <!-- 加载状态 -->
-                  <div v-if="pdfLoading" class="pdf-loading">
-                    <div class="loading-spinner"></div>
-                    <p>PDF加载中...</p>
-                  </div>
-
-                  <!-- 错误状态 -->
-                  <div v-if="pdfError" class="pdf-error">
-                    <p>PDF加载失败，请稍后重试</p>
-                    <button @click="loadAllPages" class="retry-btn">
-                      重试
-                    </button>
-                  </div>
-                </div>
-
-                <!-- 非PDF文件显示 -->
-                <img v-else :src="detail.preview_pdf_url" alt="" />
-              </div>
+              <img :src="detail.thumb" alt="" srcset="" />
             </div>
           </div>
-          <div class="document-page-bottom-bottom">
+          <!-- <div class="document-page-bottom-bottom">
             <div class="item">
               <router-link to="/contractDetail" class="item-link"
                 >上一条：仁寿县关于进一步支持科技创新的若干政策</router-link
@@ -89,7 +55,7 @@
                 >下一条：仁寿县关于进一步支持科技创新的若干政策</router-link
               >
             </div>
-          </div>
+          </div> -->
         </div>
 
         <div class="download-info-section">
@@ -99,24 +65,30 @@
             :class="{ 'download-info-absolute': isDownloadInfoAbsolute }"
             ref="downloadInfo"
           >
-          <!-- 相关文档 -->
-          <div class="related-documents">
-            <h3 class="related-documents-title">相关文档</h3>
-            <div class="related-documents-list">
-              <div
-                class="related-document-item"
-                v-for="(doc, index) in relatedDocuments"
-                :key="doc.id || index"
-                @click="handleRelatedDocClick(doc)"
-              >
-                <div class="document-item-title ellipsis-1">{{ doc.title || "仁寿县关于进一步支持科技创新的若干政策" }}</div>
-                <div class="document-item-meta">
-                  <span class="file-size">{{ formatFileSize(doc.file_size) || "15.22KB" }}</span>
-                  <span class="upload-date">{{ formatDate(doc.created_at) || "2025-11-20上传" }}</span>
+            <!-- 相关文档 -->
+            <div class="related-documents">
+              <h3 class="related-documents-title">相关文档</h3>
+              <div class="related-documents-list">
+                <div
+                  class="related-document-item"
+                  v-for="(doc, index) in relatedDocuments"
+                  :key="doc.id || index"
+                  @click="handleRelatedDocClick(doc)"
+                >
+                  <div class="document-item-title ellipsis-1">
+                    {{ doc.title }}
+                  </div>
+                  <div class="document-item-meta">
+                    <span class="file-size">{{
+                      formatFileSize(doc.fileSize) || "15.22KB"
+                    }}</span>
+                    <span class="upload-date">{{
+                      formatDate(doc.created_at) || "2025-11-20上传"
+                    }}</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
@@ -157,16 +129,15 @@ export default {
       pdfPages: [],
     };
   },
-  mounted() {
-    this.$api({
-      url: "index",
-      method: "get",
-      data: {
-        keyword: this.searchKeyword,
+  watch: {
+    $route: {
+      handler(newVal) {
+        this.setView();
       },
-    }).then((res) => {
-      this.latestUpdates = res.data.recent;
-    });
+      immediate: true,
+    },
+  },
+  mounted() {
     this.setView();
     this.addScrollListener();
     this.addResizeListener();
@@ -179,10 +150,10 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: "contractPreview",
-        method: "post",
+        url: "pcGetDocument",
+        method: "get",
         data: {
-          articleId: this.$route.query.id,
+          id: this.$route.query.id,
         },
       }).then((res) => {
         this.detail = res.data;
@@ -194,21 +165,49 @@ export default {
           }
         });
         this.$api({
-          url: "contractList",
+          url: "pcDocumentList",
           method: "get",
           data: {
-            category_id: this.detail.category_id,
+            typeId: this.detail.typeId,
+            page: 1,
+            limit: 6,
           },
         }).then((res) => {
-          this.contracts = res.data.list.slice(0, 5);
           // 获取相关文档（排除当前文档）
-          this.relatedDocuments = res.data.list
-            .filter((item) => item.id !== this.detail.id)
-            .slice(0, 7);
+          this.relatedDocuments = res.data.list.filter(
+            (item) => item.id !== this.detail.id
+          );
         });
       });
     },
     showDownloadModal() {
+      if (this.detail.ifFree == 1) {
+        this.$api({
+          url: "pcFileDownload",
+          method: "get",
+          data: {
+            documentId: this.detail.id,
+          },
+        }).then((res) => {
+          if (res.code == 200) {
+            window.open(this.detail.url, "_blank");
+          }else{
+            this.$message.error(res.msg);
+          }
+        });
+        // fetch(this.detail.url)
+        //   .then((res) => res.blob())
+        //   .then((blob) => {
+        //     const link = document.createElement("a");
+        //     const objectUrl = URL.createObjectURL(blob);
+        //     link.href = objectUrl;
+        //     link.download = res.data.doc_name; // 指定保存的文件名
+        //     link.click();
+        //     URL.revokeObjectURL(objectUrl);
+        //   })
+        //   .catch((err) => console.error("下载失败:", err));
+        return;
+      }
       this.$api({
         url: "contractPreview",
         method: "post",
@@ -266,11 +265,6 @@ export default {
           this.$message.success(res.msg);
         }
       });
-    },
-    // 免费下载
-    handleFreeDownload() {
-      // 可以跳转到免费下载页面或执行其他操作
-      this.showDownloadModal();
     },
     // 立即下载
     handleDownload() {

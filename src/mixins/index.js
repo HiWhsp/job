@@ -13,8 +13,8 @@ export default {
       mix_upload_name: "file",
       mix_upload_action:
         process.env.NODE_ENV !== "production"
-          ? "/api/service.php"
-          : API_ROOT + "/service.php",
+          ? API_ROOT + "/api/upload"
+          : API_ROOT + "/api/upload",
     }
   },
   computed: {
@@ -37,8 +37,6 @@ export default {
 
     mix_upload_data() {
       let data = {
-        action: "index_localUpload",
-        userId: localStorage.getItem("userId") || "",
         token: localStorage.getItem("token") || "",
       };
       return data;

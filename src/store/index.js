@@ -74,7 +74,7 @@ export default new Vuex.Store({
     vuex_huobi: "￥",
     //
     vuex_category_tree: [],
-    vuex_category_flat: [],
+    vuex_document_tree: [],
     //
     default_address: {}, //默认收货地址
     //
@@ -123,13 +123,12 @@ export default new Vuex.Store({
     set_vuex_banner(state, data) {
       state.vuex_index_banners = data;
     },
-    // 产品分类树
+    // 新闻分类树
     set_vuex_product_cate(state, data) {
-      let category_flat = data;
-      let category_tree = data;
-
-      state.vuex_category_tree = category_tree;
-      state.vuex_category_flat = category_flat;
+      state.vuex_category_tree = data;
+    },
+    set_vuex_document_category(state, data) {
+      state.vuex_document_tree = data;
     },
 
     set_vuex_login_status(state, value) {
@@ -190,6 +189,7 @@ export default new Vuex.Store({
       dispatch('query_config')
       dispatch('query_banner')
       dispatch('query_category')
+      dispatch('query_document_category')
     },
 
     // 查询配置
@@ -221,12 +221,21 @@ export default new Vuex.Store({
     // 查询
     async query_category({ commit, state, dispatch }) {
       api({
-        url: "setting",
+        url: "getArticleCategory",
         method: "get",
       }).then((res) => {
         if (res.code == 200) {
-          // let catesInfo = handle_product_cate_data(res.data);
-          commit("set_vuex_product_cate", res.data.categoryList);
+          commit("set_vuex_product_cate", res.data);
+        }
+      });
+    },
+    async query_document_category({ commit, state, dispatch }) {
+      api({
+        url: "documentTypeList",
+        method: "get",
+      }).then((res) => {
+        if (res.code == 200) {
+          commit("set_vuex_document_category", res.data);
         }
       });
     },

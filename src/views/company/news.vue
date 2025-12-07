@@ -18,24 +18,19 @@
           <div class="category-tabs">
             <div
               class="tab-item"
-              :class="{ active: activeTab === 'all' }"
-              @click="switchTab('all')"
+              :class="{ active: activeTab == '' }"
+              @click="switchTab('')"
             >
               全部
             </div>
             <div
               class="tab-item"
-              :class="{ active: activeTab === 'company' }"
-              @click="switchTab('company')"
+              :class="{ active: activeTab == item.id }"
+              @click="switchTab(item.id)"
+              v-for="(item, index) in vuex_category_tree"
+              :key="index"
             >
-              公司新闻
-            </div>
-            <div
-              class="tab-item"
-              :class="{ active: activeTab === 'industry' }"
-              @click="switchTab('industry')"
-            >
-              行业动态
+              {{ item.title }}
             </div>
           </div>
 
@@ -43,7 +38,7 @@
           <div class="article-list">
             <div
               class="article-item"
-              v-for="(article, index) in filteredArticles"
+              v-for="(article, index) in articles"
               :key="article.id || index"
               @click="handleArticleClick(article)"
             >
@@ -54,13 +49,13 @@
               </div>
             </div>
             <el-empty
-              v-if="filteredArticles.length === 0"
+              v-if="articles.length === 0"
               description="暂无新闻数据"
             ></el-empty>
           </div>
 
           <!-- 分页 -->
-          <div class="pagination-section" v-if="filteredArticles.length > 0">
+          <div class="pagination-section" v-if="articles.length > 0">
             <el-pagination
               :total="totalArticles"
               :page-size="pageSize"
@@ -109,12 +104,12 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "News",
   data() {
     return {
-      currentCategory: "1",
-      activeTab: "all",
+      activeTab: "",
       currentPage: 1,
       pageSize: 10,
       totalArticles: 0,
@@ -124,54 +119,23 @@ export default {
     };
   },
   computed: {
-    filteredArticles() {
-      let filtered = this.articles;
-
-      if (this.activeTab === "company") {
-        filtered = filtered.filter((item) => item.category === "公司新闻");
-      } else if (this.activeTab === "industry") {
-        filtered = filtered.filter((item) => item.category === "行业动态");
-      }
-
-      // 分页
-      const start = (this.currentPage - 1) * this.pageSize;
-      const end = start + this.pageSize;
-      return filtered.slice(start, end);
-    },
+    ...mapState(["vuex_category_tree"]),
   },
   watch: {
     $route: {
       handler(newVal) {
-        if(newVal.query.type) {
-          if (newVal.query.type == "1") {
-            this.activeTab = "company";
-          } else if (newVal.query.type == "2") {
-            this.activeTab = "industry";
-          }
-        } else {
-          this.activeTab = "all";
-        }
+        this.activeTab = newVal.query.type || "";
+        this.getNewsList();
       },
       immediate: true,
     },
   },
   mounted() {
-    this.initCategory();
     this.getNewsList();
     this.getHotNews();
     this.getLatestNews();
   },
   methods: {
-    initCategory() {
-      const category = this.$route.query.type;
-      if (category == "1") {
-        this.activeTab = "company";
-      } else if (category == "2") {
-        this.activeTab = "industry";
-      } else {
-        this.activeTab = "all";
-      }
-    },
     switchTab(tab) {
       this.activeTab = tab;
       this.currentPage = 1;
@@ -179,65 +143,20 @@ export default {
     },
     async getNewsList() {
       try {
-        // 这里可以调用实际的API获取新闻数据
-        // const res = await this.$api({
-        //   url: "newsList",
-        //   method: "get",
-        //   data: {
-        //     page: this.currentPage,
-        //     pageSize: this.pageSize,
-        //     category: this.activeTab === 'all' ? '' : (this.activeTab === 'company' ? '公司新闻' : '行业动态'),
-        //   },
-        // });
-        // if (res.code === 200 && res.data && res.data.list) {
-        //   this.articles = res.data.list;
-        //   this.totalArticles = res.data.total || 0;
-        // }
-
-        // 临时使用模拟数据
-        this.articles = [
-          {
-            id: 1,
-            title: "Windows Server 2012 在桌面上显示我的电脑",
-            description:
-              "四川响梵信息科技有限公司成立于2023年7月,注册资本100万元,本公司是一家致力于现代化企业体系服务的企业,主要对企业制度体系建设、科技创新、政策咨询、辅助完成知识产权积累、专项资金申报、会议展览、招投标采购、人力资源等内容进行服务。公司已辅助多家企业完成企业技术中心、工程中心...",
-            date: "2025-11-20",
-            category: "公司新闻",
+        const res = await this.$api({
+          url: "getArticleList",
+          method: "get",
+          data: {
+            page: this.currentPage,
+            limit: this.pageSize,
+            type_id: this.activeTab,
           },
-          {
-            id: 2,
-            title: "Windows Server 2012 在桌面上显示我的电脑",
-            description:
-              "四川响梵信息科技有限公司成立于2023年7月,注册资本100万元,本公司是一家致力于现代化企业体系服务的企业,主要对企业制度体系建设、科技创新、政策咨询、辅助完成知识产权积累、专项资金申报、会议展览、招投标采购、人力资源等内容进行服务。公司已辅助多家企业完成企业技术中心、工程中心...",
-            date: "2025-11-20",
-            category: "公司新闻",
-          },
-          {
-            id: 3,
-            title: "Windows Server 2012 在桌面上显示我的电脑",
-            description:
-              "四川响梵信息科技有限公司成立于2023年7月,注册资本100万元,本公司是一家致力于现代化企业体系服务的企业,主要对企业制度体系建设、科技创新、政策咨询、辅助完成知识产权积累、专项资金申报、会议展览、招投标采购、人力资源等内容进行服务。公司已辅助多家企业完成企业技术中心、工程中心...",
-            date: "2025-11-20",
-            category: "行业动态",
-          },
-          {
-            id: 4,
-            title: "Windows Server 2012 在桌面上显示我的电脑",
-            description:
-              "四川响梵信息科技有限公司成立于2023年7月,注册资本100万元,本公司是一家致力于现代化企业体系服务的企业,主要对企业制度体系建设、科技创新、政策咨询、辅助完成知识产权积累、专项资金申报、会议展览、招投标采购、人力资源等内容进行服务。公司已辅助多家企业完成企业技术中心、工程中心...",
-            date: "2025-11-20",
-            category: "公司新闻",
-          },
-          {
-            id: 5,
-            title: "Windows Server 2012 在桌面上显示我的电脑",
-            description:
-              "四川响梵信息科技有限公司成立于2023年7月,注册资本100万元,本公司是一家致力于现代化企业体系服务的企业,主要对企业制度体系建设、科技创新、政策咨询、辅助完成知识产权积累、专项资金申报、会议展览、招投标采购、人力资源等内容进行服务。公司已辅助多家企业完成企业技术中心、工程中心...",
-            date: "2025-11-20",
-            category: "行业动态",
-          },
-        ];
-        this.totalArticles = this.articles.length;
+        }).then((res) => {
+          if (res.code === 200 && res.data && res.data.list) {
+            this.articles = res.data.list;
+            this.totalArticles = res.data.count || 0;
+          }
+        });
       } catch (error) {
         console.error("获取新闻列表失败:", error);
       }
@@ -296,6 +215,7 @@ export default {
       this.currentPage = page;
       // 滚动到顶部
       window.scrollTo({ top: 0, behavior: "smooth" });
+      this.getNewsList();
     },
     handleArticleClick(article) {
       // 跳转到新闻详情页

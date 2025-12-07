@@ -20,7 +20,7 @@
       <div class="order-list">
         <div
           class="order-item"
-          v-for="(order, index) in filteredOrders"
+          v-for="(order, index) in ordersList"
           :key="order.id || index"
         >
           <!-- 订单头部 -->
@@ -76,13 +76,13 @@
         </div>
 
         <el-empty
-          v-if="filteredOrders.length === 0"
+          v-if="ordersList.length === 0"
           description="暂无订单数据"
         ></el-empty>
       </div>
 
       <!-- 分页 -->
-      <div class="pagination-section" v-if="filteredOrders.length > 0">
+      <div class="pagination-section" v-if="ordersList.length > 0">
         <el-pagination
           :total="totalOrders"
           :page-size="pageSize"
@@ -100,33 +100,20 @@ export default {
   name: "MyOrders",
   data() {
     return {
-      activeTab: "all",
+      activeTab: 0,
       currentPage: 1,
       pageSize: 10,
       totalOrders: 0,
-      orders: [],
+      ordersList: [],
       orderTabs: [
-        { label: "全部订单", value: "all" },
-        { label: "待付款", value: "pending" },
-        { label: "已完成", value: "completed" },
-        { label: "已取消", value: "cancelled" },
+        { label: "全部订单", value: 0 },
+        { label: "待付款", value: 1 },
+        { label: "已完成", value: 2 },
+        { label: "已取消", value: -1 },
       ],
     };
   },
-  computed: {
-    filteredOrders() {
-      let filtered = this.orders;
-
-      if (this.activeTab !== "all") {
-        filtered = filtered.filter((order) => order.status === this.activeTab);
-      }
-
-      // 分页
-      const start = (this.currentPage - 1) * this.pageSize;
-      const end = start + this.pageSize;
-      return filtered.slice(start, end);
-    },
-  },
+  computed: {},
   mounted() {
     this.getOrders();
   },
@@ -134,64 +121,26 @@ export default {
     switchTab(tab) {
       this.activeTab = tab;
       this.currentPage = 1;
+      this.getOrders();
     },
     async getOrders() {
       try {
-        // 这里可以调用实际的API获取订单数据
-        // const res = await this.$api({
-        //   url: "myOrders",
-        //   method: "get",
-        //   data: {
-        //     page: this.currentPage,
-        //     pageSize: this.pageSize,
-        //     status: this.activeTab === 'all' ? '' : this.activeTab,
-        //   },
-        // });
-        // if (res.code === 200 && res.data) {
-        //   this.orders = res.data.list;
-        //   this.totalOrders = res.data.total || 0;
-        // }
-
-        // 临时使用模拟数据
-        this.orders = [
-          {
-            id: 1,
-            order_no: "154545456456456",
-            title: "仁寿县关于进一步支持科技创新的若干政策",
-            price: 199,
-            total_amount: 199,
-            create_time: "2022-10-21 12:24:30",
-            status: "pending",
+        const res = await this.$api({
+          url: "pcOrderList",
+          method: "get",
+          data: {
+            page: this.currentPage,
+            limit: this.pageSize,
+            status: this.activeTab,
           },
-          {
-            id: 2,
-            order_no: "154545456456457",
-            title: "仁寿县关于进一步支持科技创新的若干政策",
-            price: 199,
-            total_amount: 199,
-            create_time: "2022-10-21 12:24:30",
-            status: "completed",
-          },
-        ];
-        this.totalOrders = this.orders.length;
+        });
+        if (res.code === 200 && res.data) {
+          this.ordersList = res.data.list;
+          this.totalOrders = res.data.count || 0;
+        }
       } catch (error) {
         console.error("获取订单列表失败:", error);
       }
-    },
-    getStatusText(status) {
-      const statusMap = {
-        pending: "待支付",
-        completed: "已完成",
-        cancelled: "已取消",
-      };
-      return statusMap[status] || "未知";
-    },
-    getStatusClass(status) {
-      return {
-        "status-pending": status === "pending",
-        "status-completed": status === "completed",
-        "status-cancelled": status === "cancelled",
-      };
     },
     handleCancelOrder(order) {
       this.$confirm("确定要取消该订单吗？", "提示", {

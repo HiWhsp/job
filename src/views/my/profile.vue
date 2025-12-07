@@ -11,27 +11,32 @@
             <label class="field-label">头像</label>
             <div class="avatar-wrapper">
               <img
-                :src="userInfo.avatar || defaultAvatar"
+                :src="userInfo.image || defaultAvatar"
                 alt="头像"
                 class="avatar-img"
               />
-              <div class="avatar-overlay" @click="handleAvatarClick">
-                <span class="overlay-text">修改头像</span>
-              </div>
+              <el-upload
+                class="avatar-uploader"
+                :action="mix_upload_action"
+                :data="mix_upload_data"
+                :name="mix_upload_name"
+                :on-success="handleAvatarSuccess"
+                :on-error="handleAvatarError"
+                :before-upload="beforeAvatarUpload"
+                :show-file-list="false"
+                accept="image/*"
+              >
+                <div class="avatar-overlay">
+                  <span class="overlay-text">修改头像</span>
+                </div>
+              </el-upload>
             </div>
-            <input
-              ref="avatarInput"
-              type="file"
-              accept="image/*"
-              style="display: none"
-              @change="handleAvatarChange"
-            />
           </div>
 
           <!-- 手机号 -->
           <div class="phone-section">
             <label class="field-label">手机</label>
-            <div class="phone-value">{{ userInfo.phone || "15931263145" }}</div>
+            <div class="phone-value">{{ userInfo.mobile || "--" }}</div>
           </div>
         </div>
       </div>
@@ -85,73 +90,44 @@ export default {
   methods: {
     async getUserInfo() {
       try {
-        // 这里可以调用实际的API获取用户信息
-        // const res = await this.$api({
-        //   url: "getPcUserInfo",
-        //   method: "get",
-        // });
-        // if (res.code === 200 && res.data) {
-        //   this.userInfo = res.data;
-        //   this.formData.name = res.data.name || "";
-        // }
-
-        // 临时使用模拟数据
-        this.userInfo = {
-          avatar: "",
-          phone: "15931263145",
-          name: "",
-        };
-        this.formData.name = "";
+        const res = await this.$api({
+          url: "getPcUserInfo",
+          method: "get",
+        });
+        if (res.code === 200 && res.data) {
+          this.userInfo = res.data;
+          this.formData.name = res.data.username || "";
+        }
       } catch (error) {
         console.error("获取用户信息失败:", error);
       }
     },
-    handleAvatarClick() {
-      this.$refs.avatarInput.click();
-    },
-    handleAvatarChange(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
+    // 上传前验证
+    beforeAvatarUpload(file) {
       // 验证文件类型
       if (!file.type.startsWith("image/")) {
         this.$message.warning("只能上传图片文件");
-        return;
+        return false;
       }
 
       // 验证文件大小（1MB）
       if (file.size > 1024 * 1024) {
         this.$message.warning("图片大小不能超过1MB");
-        return;
+        return false;
       }
-
-      // 预览头像
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.userInfo.avatar = e.target.result;
-      };
-      reader.readAsDataURL(file);
-
-      // 这里可以调用上传API
-      // this.uploadAvatar(file);
+      return true;
+    },  
+    handleAvatarSuccess(response, file) {
+      if (response.code === 200 && response.data) {
+        this.userInfo.image = response.data.path;
+        this.$message.success("头像上传成功");
+      } else {
+        this.$message.error(response.message || "上传头像失败");
+      }
     },
-    async uploadAvatar(file) {
-      try {
-        // const formData = new FormData();
-        // formData.append("file", file);
-        // const res = await this.$api({
-        //   url: "uploadAvatar",
-        //   method: "post",
-        //   data: formData,
-        // });
-        // if (res.code === 200 && res.data) {
-        //   this.userInfo.avatar = res.data.avatarUrl;
-        //   this.$message.success("头像上传成功");
-        // }
-      } catch (error) {
-        console.error("上传头像失败:", error);
-        this.$message.error("上传头像失败");
-      }
+    handleAvatarError(error, file) {
+      console.error("上传头像失败:", error);
+      this.$message.error("上传头像失败");
     },
     handleConfirm() {
       // 验证必填字段
@@ -166,21 +142,18 @@ export default {
     async submitForm() {
       try {
         // 这里可以调用实际的API保存用户信息
-        // const res = await this.$api({
-        //   url: "updateUserInfo",
-        //   method: "post",
-        //   data: {
-        //     name: this.formData.name,
-        //     avatar: this.userInfo.avatar,
-        //   },
-        // });
-        // if (res.code === 200) {
-        //   this.$message.success("保存成功");
-        //   this.getUserInfo();
-        // }
-
-        // 临时提示
-        this.$message.success("保存成功");
+        const res = await this.$api({
+          url: "updatePcUser",
+          method: "post",
+          data: {
+            username: this.formData.name,
+            image: this.userInfo.image || "",
+          },
+        });
+        if (res.code === 200) {
+          this.$message.success("保存成功");
+          this.getUserInfo();
+        }
       } catch (error) {
         console.error("保存失败:", error);
         this.$message.error("保存失败");
@@ -261,22 +234,46 @@ export default {
           object-fit: cover;
         }
 
-        .avatar-overlay {
+        .avatar-uploader {
           position: absolute;
           top: 0;
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(0, 0, 0, 0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          opacity: 0;
-          transition: opacity 0.3s ease;
+          width: 100%;
+          height: 100%;
 
-          .overlay-text {
-            color: #fff;
-            font-size: 14px;
+          /deep/ .el-upload {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+          }
+
+          /deep/ .el-upload:hover {
+            border: none;
+          }
+
+          .avatar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+
+            .overlay-text {
+              color: #fff;
+              font-size: 14px;
+            }
           }
         }
 

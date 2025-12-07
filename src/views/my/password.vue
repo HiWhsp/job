@@ -106,27 +106,22 @@ export default {
     },
     async submitPasswordChange() {
       try {
-        // 这里可以调用实际的API修改密码
-        // const res = await this.$api({
-        //   url: "changePassword",
-        //   method: "post",
-        //   data: {
-        //     oldPassword: this.formData.oldPassword,
-        //     newPassword: this.formData.newPassword,
-        //   },
-        // });
-        // if (res.code === 200) {
-        //   this.$message.success("密码修改成功");
-        //   this.resetForm();
-        //   // 可以选择退出登录，让用户重新登录
-        //   // this.$router.push("/login");
-        // } else {
-        //   this.$message.error(res.message || "密码修改失败");
-        // }
-
-        // 临时提示
-        this.$message.success("密码修改成功");
-        this.resetForm();
+        const res = await this.$api({
+          url: "changePcPwd",
+          method: "post",
+          data: {
+            old: this.formData.oldPassword,
+            new: this.formData.newPassword,
+          },
+        });
+        if (res.code === 200) {
+          this.$message.success("密码修改成功");
+          this.resetForm();
+          // 可以选择退出登录，让用户重新登录
+          // this.$router.push("/login");
+        } else {
+          this.$message.error(res.message || "密码修改失败");
+        }
       } catch (error) {
         console.error("修改密码失败:", error);
         this.$message.error("修改密码失败，请重试");

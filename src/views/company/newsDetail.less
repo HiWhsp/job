@@ -86,6 +86,7 @@
     color: #333;
     line-height: 1.8;
     word-break: break-word;
+    margin-bottom: 20px;
 
     /deep/ p {
       margin: 0 0 16px 0;
@@ -100,6 +101,25 @@
       height: auto;
       margin: 16px 0;
     }
+  }
+  .prev-next-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 20px;
+  }
+  .prev-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .next-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
   }
 }
 

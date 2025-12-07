@@ -13,7 +13,8 @@
           <div class="contact-item">
             <img src="@img/footer/icon1.png" alt="" />
             <span
-              >手机: 联系电话: {{
+              >手机: 联系电话:
+              {{
                 vuex_config.bottom_lawer_contact || vuex_config.site_tel
               }}</span
             >
@@ -28,7 +29,9 @@
           <div class="contact-item">
             <img src="@img/footer/icon2.png" alt="" />
             <span
-              >地址:{{ vuex_config.site_address || vuex_config.site_address }}</span
+              >地址:{{
+                vuex_config.site_address || vuex_config.site_address
+              }}</span
             >
           </div>
         </div>
@@ -57,29 +60,11 @@
           <h3 class="nav-title">文档中心</h3>
           <div class="nav-links">
             <router-link
-              to="/contractList?category=常用表格及模版"
               class="nav-link"
-              >常用表格及模版</router-link
-            >
-            <router-link
-              to="/contractList?category=企业基本制度"
-              class="nav-link"
-              >企业基本制度</router-link
-            >
-            <router-link
-              to="/contractList?category=科创管理制度"
-              class="nav-link"
-              >科创管理制度</router-link
-            >
-            <router-link
-              to="/contractList?category=股东&董事&监事制度及模版"
-              class="nav-link"
-              >股东&董事&监事制度及模版</router-link
-            >
-            <router-link
-              to="/contractList?category=工程项目管理制度"
-              class="nav-link"
-              >工程项目管理制度</router-link
+              v-for="(item, index) in vuex_document_tree"
+              :key="index"
+              :to="`/contractList?type=${item.id}`"
+              >{{ item.title }}</router-link
             >
           </div>
         </div>
@@ -88,11 +73,12 @@
         <div class="nav-section">
           <h3 class="nav-title">新闻资讯</h3>
           <div class="nav-links">
-            <router-link to="/news?category=公司新闻" class="nav-link"
-              >公司新闻</router-link
-            >
-            <router-link to="/news?category=行业动态" class="nav-link"
-              >行业动态</router-link
+            <router-link
+              class="nav-link"
+              v-for="(item, index) in vuex_category_tree"
+              :key="index"
+              :to="`/news?type=${item.id}`"
+              >{{ item.title }}</router-link
             >
           </div>
         </div>
@@ -128,8 +114,8 @@
     <div class="footer-bottom w-1600">
       <div class="copyright">
         <span
-          >Copyright © {{ new Date().getFullYear() }} {{ vuex_config.site_name }}
-          版权所有</span
+          >Copyright © {{ new Date().getFullYear() }}
+          {{ vuex_config.site_name }} 版权所有</span
         >
         <span class="beian"
           >备案号:{{ vuex_config.beian || vuex_config.icp }}</span
@@ -145,7 +131,7 @@ import { mapState } from "vuex";
 export default {
   name: "PageFooter",
   computed: {
-    ...mapState(["vuex_config"]),
+    ...mapState(["vuex_config", "vuex_document_tree", "vuex_category_tree"]),
   },
 };
 </script>
@@ -227,7 +213,7 @@ export default {
       margin: 0 0 20px 0;
       padding-bottom: 8px;
       &::after {
-        content: '';
+        content: "";
         display: block;
         width: 28px;
         height: 3px;

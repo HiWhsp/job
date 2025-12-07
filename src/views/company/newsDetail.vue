@@ -8,7 +8,9 @@
           <i class="el-icon-arrow-right breadcrumb-separator"></i>
           <router-link to="/news" class="breadcrumb-item">新闻资讯</router-link>
           <i class="el-icon-arrow-right breadcrumb-separator"></i>
-          <span class="breadcrumb-item current">{{ news.category || "公司新闻" }}</span>
+          <span class="breadcrumb-item current">{{
+            news.category || "公司新闻"
+          }}</span>
         </div>
       </div>
 
@@ -17,19 +19,34 @@
         <!-- 左侧主内容 -->
         <div class="news-main">
           <!-- 标题 -->
-          <h1 class="news-title">{{ news.title || "Windows Server 2012 在桌面上显示我的电脑" }}</h1>
-          
+          <h1 class="news-title">
+            {{ news.title }}
+          </h1>
+
           <!-- 元信息 -->
           <div class="news-meta">
-            <span class="meta-item">发布时间: {{ formatDate(news.created_at || news.date) || "2022-10-10" }}</span>
-            <span class="meta-item">来源: {{ news.source || "确" }}</span>
+            <span class="meta-item">发布时间: {{ news.created_at }}</span>
+            <span class="meta-item">来源: {{ news.source || "无" }}</span>
           </div>
-          
+
           <!-- 分隔线 -->
           <div class="divider"></div>
-          
+
           <!-- 内容 -->
-          <div class="news-content-text" v-html="news.content || news.description || defaultContent"></div>
+          <div class="news-content-text" v-html="news.content"></div>
+          <div class="divider"></div>
+
+          <!-- 上一天下一篇 -->
+          <div class="prev-next-section">
+            <div class="prev-section" @click="handleArticleClick(news.previous_id)">
+              <span>上一篇：</span>
+              <span>{{ news.previous_title || '无' }}</span>
+            </div>
+            <div class="next-section" @click="handleArticleClick(news.next_id)">
+              <span>下一篇：</span>
+              <span>{{ news.next_title || '无' }}</span>
+            </div>
+          </div>
         </div>
 
         <!-- 右侧边栏 -->
@@ -42,7 +59,7 @@
                 class="sidebar-item"
                 v-for="(item, index) in hotNews"
                 :key="index"
-                @click="handleArticleClick(item)"
+                @click="handleArticleClick(item.id)"
               >
                 {{ item.title }}
               </li>
@@ -80,6 +97,15 @@ export default {
       defaultContent: "这里是新闻内容...",
     };
   },
+  watch: {
+    $route: {
+      handler(newVal) {
+        if (newVal.query.id) {
+          this.getNewsDetail();
+        }
+      },
+    },
+  },
   mounted() {
     this.getNewsDetail();
     this.getHotNews();
@@ -91,28 +117,17 @@ export default {
       try {
         const newsId = this.$route.query.id;
         if (newsId) {
-          // 这里可以调用实际的API获取新闻详情
-          // const res = await this.$api({
-          //   url: "newsDetail",
-          //   method: "get",
-          //   data: {
-          //     id: newsId,
-          //   },
-          // });
-          // if (res.code === 200 && res.data) {
-          //   this.news = res.data;
-          // }
-
-          // 临时使用模拟数据
-          this.news = {
-            id: newsId,
-            title: "Windows Server 2012 在桌面上显示我的电脑",
-            content: "这里是新闻的详细内容...",
-            date: "2022-10-10",
-            created_at: "2022-10-10",
-            category: "公司新闻",
-            source: "确",
-          };
+          const res = await this.$api({
+            url: "getArticle",
+            method: "get",
+            data: {
+              id: newsId,
+            },
+          }).then((res) => {
+            if (res.code === 200 && res.data) {
+              this.news = res.data;
+            }
+          });
         }
       } catch (error) {
         console.error("获取新闻详情失败:", error);
@@ -171,8 +186,8 @@ export default {
       }
     },
     // 点击文章
-    handleArticleClick(article) {
-      this.$router.push(`/newsDetail?id=${article.id}`);
+    handleArticleClick(id) {
+      this.$router.push(`/newsDetail?id=${id}`);
     },
     // 格式化日期
     formatDate(dateString) {

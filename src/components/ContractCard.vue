@@ -1,5 +1,5 @@
 <template>
-  <div class="contract-card">
+  <div class="contract-card" @click="handleView">
     <div class="card-content">
       <div class="document-preview">
         <div class="document-content">
@@ -66,13 +66,7 @@ export default {
   },
   methods: {
     handleView() {
-      window.open(
-        `/contractDetail?id=${
-          this.type == "collect" ? this.contract.articleId : this.contract.id
-        }`,
-        "_blank"
-      );
-      console.log(this.contract);
+      this.$router.push(`/contractDetail?id=${this.contract.id}`);
     },
     handleCollect() {
       const status = this.contract.is_collect == 0 ? 1 : 0;
