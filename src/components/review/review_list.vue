@@ -11,7 +11,7 @@
             text-color="#F74747"></el-rate>
         </div>
       </div>
-      <div class="content">{{ item.content }}</div>
+      <div class="content" v-html="item.content"></div>
       <div class="img-list cover">
         <div class="img-item" v-for="(url, index) in item.images" :key="index" alt>
           <el-image style="" :src="url" :preview-src-list="item.images"> </el-image>

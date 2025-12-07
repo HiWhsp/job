@@ -1652,7 +1652,7 @@ export default {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 16px;
+            // margin-top: 16px;
             font-size: 18px;
             font-family: PingFang SC, PingFang SC;
             font-weight: 500;

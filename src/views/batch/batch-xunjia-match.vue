@@ -43,7 +43,7 @@
                   <div class="check-box">
                     <el-checkbox
                       v-model="item.selected"
-                      @change="handleChange(item)"
+                      @change="handleChange(item, index)"
                     ></el-checkbox>
                   </div>
                   <div class="info-box">
@@ -100,6 +100,7 @@
                   class="match-item-loop"
                   v-for="(item, index) in selectedProductList"
                   :key="index"
+                  :class="{ folded: item && item.length > 0 && item[0].fold }"
                 >
                   <div
                     class="match-item"
@@ -134,16 +135,31 @@
                         :min="1"
                       ></el-input-number>
                       <div class="num-box-tip">
-                        <el-checkbox v-model="itLoop.selected"></el-checkbox>
+                        <el-checkbox v-model="itLoop.selected" @change="handleChangeSelected(itLoop, index, item)"></el-checkbox>
+
+                        <div
+                          class="fold-box"
+                          v-if="item.length > 1 && index == 0"
+                          @click="toggleFold(itLoop, index)"
+                        >
+                          <div class="fold-box-text">
+                            {{ itLoop.fold ? "收起" : "更换其它" }}
+                          </div>
+                          <img
+                            :src="
+                              itLoop.fold
+                                ? require('@/assets/img/batch/fold.png')
+                                : require('@/assets/img/batch/unfold.png')
+                            "
+                            alt=""
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  v-if="selectedProductList.length == 0"
-                  class="no-match-item"
-                >
-                  <div class="no-match-item-text-title">暂无此商品</div>
+                  <div v-if="!item || item.length == 0" class="no-match-item">
+                    <div class="no-match-item-text-title">暂无此商品</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -168,17 +184,21 @@
                 <div class="num-box flex">
                   <div class="num-item">
                     <span class="label">总需求数：</span>
-                    <span class="value">{{ info.origin_list.length }}件</span>
+                    <span class="value"
+                      >{{ (info.origin_list || []).length }}件</span
+                    >
                   </div>
                   <div class="num-item">
                     <span class="label">已报价：</span>
-                    <span class="value">{{ info.product_list.length }}种</span>
+                    <span class="value"
+                      >{{ (info.product_list || []).length }}种</span
+                    >
                   </div>
                   <div class="num-item">
                     <span class="label">待报价：</span>
                     <span class="value"
                       >{{
-                        info.origin_list.length -
+                        (info.origin_list || []).length -
                         selectedProductList.flat().length
                       }}件</span
                     >
@@ -214,7 +234,6 @@
   </div>
 </template>
 <script>
-
 export default {
   name: "category",
   data() {
@@ -274,10 +293,11 @@ export default {
         });
       }
       if (this.info && this.info.product_list) {
-        this.info.product_list.forEach((item) => {
+        this.info.product_list.forEach((item, index) => {
           item.forEach((itLoop) => {
-            this.$set(itLoop, "num", 1);
+            this.$set(itLoop, "num", this.info.origin_list[index].requireNum);
             this.$set(itLoop, "selected", false);
+            this.$set(itLoop, "fold", false);
           });
         });
       }
@@ -286,80 +306,94 @@ export default {
       this.$set(item, "fold", !item.fold);
     },
     doConfirm() {
-      // [
-      //   {
-      //     serialNo: "001",
-      //     requireDate: "2020-01-01",
-      //     productName: "产品1",
-      //     brandName: "华为",
-      //     manufacturerNo: "a123456",
-      //     image: "http://1.jpg",
-      //     description: "九成新",
-      //     requireNum: 100,
-      //     note: "八成新也可以",
-      //   },
-      // ];
       const data = [];
-      this.selectedProductList.forEach((item) => {
-        item.forEach((itLoop) => {
-          if (itLoop.selected) {
-            data.push({
-              serialNo: itLoop.inventoryId,
-              requireDate: itLoop.dtTime,
-              productName: itLoop.title,
-              brandName: itLoop.brandName,
-              manufacturerNo: itLoop.inventory.sn,
-              image: itLoop.thumb,
-              description: itLoop.description,
-              requireNum: itLoop.num,
-              note: itLoop.note,
-            });
-          }
-        });
+      // this.selectedProductList.forEach((item) => {
+      //   item.forEach((itLoop) => {
+      //     if (itLoop.selected) {
+      //       data.push({
+      //         serialNo: itLoop.inventoryId,
+      //         requireDate: itLoop.dtTime,
+      //         productName: itLoop.title,
+      //         brandName: itLoop.brandName,
+      //         manufacturerNo: itLoop.inventory.sn,
+      //         image: itLoop.thumb,
+      //         description: itLoop.description,
+      //         requireNum: itLoop.num,
+      //         note: itLoop.note,
+      //       });
+      //     }
+      //   });
+      // });
+      this.info.origin_list.forEach((item, index) => {
+        if(item.selected) {
+          data.push(item);
+        }
       });
       this.$api({
         url: "/service.php",
         method: "post",
         data: {
           action: "Inquiry_createInquiryOrder",
-          data,
+          data: JSON.stringify(data),
         },
       }).then((res) => {
-        // this.toRoute({
-        //   path: "/batch-xunjia-result",
-        //   query: {
-        //     id: this.fullInfo.id,
-        //   },
-        // });
+        this.selectedProductList.forEach((item) => {
+          item.forEach((itLoop) => {
+            this.$api({
+              url: "/service.php",
+              method: "get",
+              data: {
+                action: "gouwuche_add",
+                inventoryId: itLoop.inventoryId,
+                num: itLoop.num,
+              },
+            });
+          });
+        });
+        this.toRoute({
+          path: "/batch-xunjia-result",
+          query: {
+            id: res.data.id,
+          },
+        });
       });
     },
     on_change_checked_all() {
       // 判断全选复选框是否选中
       if (this.checked_all) {
         // 如果全选复选框被选中,则重新给选项复选框赋值,即选中所有的选项复选框
-        this.selectedProductList.forEach((item) => {
-          item.forEach((itLoop) => {
-            this.$set(itLoop, "selected", true);
-            this.checkedItem.push(itLoop.inventoryId);
-          });
+        this.info.origin_list.forEach((item, index) => {
+          this.$set(item, "selected", true);
+          this.selectedProductList[index] = this.info.product_list[index];
         });
       } else {
         // 如果全选复未选框未被选中,则选中所有的选项复选框
-        this.selectedProductList.forEach((item) => {
-          item.forEach((itLoop) => {
-            this.$set(itLoop, "selected", false);
-          });
+        this.info.origin_list.forEach((item, index) => {
+          this.$set(item, "selected", false);
+          this.selectedProductList[index] = [];
         });
         this.checkedItem = [];
       }
     },
-    async do_cart_remove_select_tip() {},
+    async do_cart_remove_select_tip() {
+      // 删除info.origin_list中selected为true的
+      this.info.origin_list.forEach((item, index) => {
+        if(item.selected) {
+          this.info.origin_list.splice(index, 1);
+          this.info.product_list.splice(index, 1);
+        }
+      });
+      localStorage.setItem("batchData", JSON.stringify(this.info));
+    },
     async toCart() {
       if (this.checkedItem.length === 0) {
         alert("请选择商品");
       } else {
         for (let i = 0; i < this.checkedItem.length; i++) {
           for (let j = 0; j < this.selectedProductList.length; j++) {
+            if(!this.selectedProductList[j] || this.selectedProductList[j].length === 0) {
+              continue;
+            }
             for (let k = 0; k < this.selectedProductList[j].length; k++) {
               if (
                 this.selectedProductList[j][k].inventoryId ===
@@ -390,14 +424,16 @@ export default {
       });
     },
 
-    handleChange(item) {
+    handleChange(item, index) {
       if (item.selected) {
-        this.selectedProductList[item.index] =
-          this.info.product_list[item.index];
+        this.selectedProductList[index] = this.info.product_list[index];
       } else {
-        this.selectedProductList[item.index] = [];
+        this.selectedProductList[index] = [];
       }
     },
+    handleChangeSelected(itLoop, index, item) {
+      this.checkedItem.push(itLoop.inventoryId);
+    }
   },
 };
 </script>
@@ -682,8 +718,17 @@ export default {
       padding: 20px 0;
       display: flex;
       align-items: center;
-      height: 133px;
+      height: 147px;
       justify-content: center;
+      border-top: 1px solid #f74747;
+    }
+
+    .match-item-loop {
+      height: 147px;
+      overflow: hidden;
+    }
+    .folded {
+      height: auto;
     }
 
     .match-item {
@@ -693,7 +738,7 @@ export default {
       padding: 30px 0;
       display: flex;
       align-items: flex-start;
-      height: 143px;
+      height: 147px;
       border-top: 1px solid #f74747;
 
       .poster-box {
@@ -747,6 +792,27 @@ export default {
       .num-box {
         .num-box-tip {
           margin-top: 30px;
+          display: flex;
+          justify-content: space-between;
+
+          .fold-box {
+            cursor: pointer;
+            padding: 4px 8px;
+            background: #fafafa;
+            border-radius: 4px 4px 4px 4px;
+            border: 1px solid #dee1e7;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .fold-box-text {
+              font-family: Microsoft YaHei, Microsoft YaHei;
+            }
+            img {
+              margin-left: 8px;
+              width: 8px;
+              height: 8px;
+            }
+          }
         }
       }
     }

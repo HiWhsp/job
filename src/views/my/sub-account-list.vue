@@ -28,49 +28,49 @@
           <el-table :data="orders" style="width: 100%" border>
             <el-table-column prop="id" label="id" width="50" align="center" />
             <el-table-column
-              prop="name"
+              prop="realName"
               label="用户名称"
               width="100"
               align="center"
             />
             <el-table-column
-              prop="sex"
+              prop="sexText"
               label="用户性别"
               width="80"
               align="center"
             />
             <el-table-column
-              prop="phone"
+              prop="department"
               label="部门"
               width="100"
               align="center"
             />
             <el-table-column
-              prop="email"
+              prop="position"
               label="职位"
               width="100"
               align="center"
             />
             <el-table-column
-              prop="status"
+              prop="phone"
               label="手机号"
               width="140"
               align="center"
             />
             <el-table-column
-              prop="status"
+              prop="email"
               label="邮箱"
               width="170"
               align="center"
             />
             <el-table-column
-              prop="create_time"
+              prop="note"
               label="备注"
               width="100"
               align="center"
             />
             <el-table-column
-              prop="update_time"
+              prop="userStatusText"
               label="状态"
               width="110"
               align="center"
@@ -236,6 +236,8 @@ export default {
         userStatus: 1,
         sex: 1,
       };
+      this.dialog_show = false;
+      this.$refs.ruleForm.resetFields();
     },
     emitConfirm() {
       this.query_order();
@@ -280,7 +282,7 @@ export default {
       }).then((res) => {
         let { code, data } = res;
         if (code == 200) {
-          this.orders = data;
+          this.orders = data.list;
           this.count = data.count;
         }
       });
@@ -425,6 +427,13 @@ export default {
               action: "users_addSub",
               ...this.ruleForm,
             },
+          }).then((res) => {
+            let { code, data } = res;
+            if (code == 200) {
+              this.$message.success("添加成功");
+              this.do_close();
+              this.query_order();
+            }
           });
         }
       });
@@ -443,9 +452,15 @@ export default {
         url: "/service.php",
         method: "post",
         data: {
-          action: "orders_del",
-          order_id: row.id,
+          action: "users_delSub",
+          id: row.id,
         },
+      }).then((res) => {
+        let { code, data } = res;
+        if (code == 200) {
+          this.$message.success("删除成功");
+          this.query_order();
+        }
       });
     },
   },

@@ -22,6 +22,7 @@ export default {
     },
     onModalClose() {
       this.show = false;
+      this.xianxia_file_list = [];
     },
     uploadSuccess_pingjia(res, file) {
       //console.log("上传结果", res);
@@ -49,13 +50,12 @@ export default {
           url: "/service.php",
           method: "post",
           data: {
-            action: "pay_offline",
-            orderType: 1,
+            action: "orders_savePayImg",
             orderId: this.info.id,
-            images: images,
+            billConfirmFile: images,
+            type: 1,
           },
         }).then((res) => {
-          alert(res);
           if (res.code == 200) {
             this.$emit("confirm");
             this.show = false;
@@ -70,30 +70,15 @@ export default {
 <template>
   <div class="modal-container">
     <el-dialog
-      :before-close="onModalClose"
       :close-on-click-modal="false"
       :visible.sync="show"
       custom-class="modal-custom"
       title="上传盖章合同"
       width="680px"
+      @close="onModalClose"
     >
       <div class="modal-inner">
         <div class="modal-ctx">
-          <!-- <div class="xianxia-info">
-            <p style="font-size: 16px; margin-bottom: 8px">收款信息</p>
-            <div class="info-item">
-              <div class="info-label">户名:</div>
-              <div class="info-val">{{ vuex_config.offline_company }}</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">开户银行:</div>
-              <div class="info-val">{{ vuex_config.offline_bank }}</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">账号:</div>
-              <div class="info-val">{{ vuex_config.offline_code }}</div>
-            </div>
-          </div> -->
           <div class="info-item scroll-target-pingzheng">
             <div class="info-val">
               <el-upload
@@ -167,7 +152,7 @@ export default {
     height: 48px;
     background: #ffffff;
     border-radius: 5px;
-    border: 1px solid #DEDEDE;
+    border: 1px solid #dedede;
 
     font-size: 18px;
     color: #666666;

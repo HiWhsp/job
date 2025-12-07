@@ -46,17 +46,17 @@
             <div class="icon-box">
               <img src="@img/batch/succ.png" alt="" />
             </div>
-            <div class="title">系统已成功生成报价单！</div>
+            <div class="title">系统已成功生成询价单！</div>
             <div class="desc">已报价产品，已帮您加入购物车，可直接结算。</div>
             <div class="btns flex">
-              <div
+              <!-- <div
                 class="btn btn-bg flex-center btn-ripple"
                 @click="toRoute('/cart')"
               >
                 去结算
-              </div>
+              </div> -->
               <div class="btn flex-center btn-ripple" @click="toDetail">
-                查看报价单
+                查看询价单
               </div>
             </div>
           </div>

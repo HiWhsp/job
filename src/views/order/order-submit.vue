@@ -575,35 +575,18 @@ export default {
       // 支付方式
       payTypeValue: 2,
       pay_type_value: "pay2",
-      pay_method_list: [
-        {
-          value: "pay1",
-          title: "账期月结",
-          icon: require("@img/pay-method/pay1.png"),
-        },
-        {
-          value: "pay2",
-          title: "对公转账",
-          icon: require("@img/pay-method/pay2.png"),
-        },
-        // { value: 'xianxia', title: '线下转款', icon: require('@img/pay-method/type-xianxia.png') },
-        //{ value: 'paypal', title: 'PayPal', icon: require('@img/pay-method/type-paypal.png') },
-        // {
-        //   value: "yue",
-        //   title: "余额支付",
-        //   icon: require("@img/pay-method/type-yue.png"),
-        // },
-      ],
-
-      //
-      //
-      //
-      //
-      //
-      //
-      //
-      //
-      //
+      // pay_method_list: [
+      //   {
+      //     value: "pay1",
+      //     title: "账期月结",
+      //     icon: require("@img/pay-method/pay1.png"),
+      //   },
+      //   {
+      //     value: "pay2",
+      //     title: "对公转账",
+      //     icon: require("@img/pay-method/pay2.png"),
+      //   },
+      // ],
 
       order_id: "", //是否已经创建过订单
       showCoupon: true, //
@@ -644,7 +627,43 @@ export default {
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState(["vuex_user"]),
+    
+
+    pay_method_list() {
+      if(this.vuex_user.payType.includes('1') && this.vuex_user.payType.includes('2')) {
+        return [
+          {
+            value: "pay1",
+            title: "账期月结",
+            icon: require("@img/pay-method/pay1.png"),
+          },
+          {
+            value: "pay2",
+            title: "对公转账",
+            icon: require("@img/pay-method/pay2.png"),
+          },
+        ];
+      } else if(this.vuex_user.payType.includes('2')) {
+        return [
+          {
+            value: "pay1",
+            title: "账期月结",
+            icon: require("@img/pay-method/pay1.png"),
+          },
+        ];
+      } else if(this.vuex_user.payType.includes('1')) {
+        return [
+          {
+            value: "pay2",
+            title: "对公转账",
+            icon: require("@img/pay-method/pay2.png"),
+          },
+        ];
+      } else {
+        return [];
+      }
+    },
 
     real_payment_money() {
       let money = parseFloat(

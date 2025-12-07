@@ -43,7 +43,7 @@
                 <span>{{ item.orderNo }}</span>
               </div>
               <div class="order-state" :class="'state-' + item.orderStatus">
-                {{ item.statusInfo }}
+                {{ item.billConfirmText }}
               </div>
             </div>
 
@@ -51,7 +51,7 @@
               <div class="product-list">
                 <div
                   class="product-item flex"
-                  v-for="(product_item, product_index) in item.products"
+                  v-for="(product_item, product_index) in item.productJson"
                   :key="product_index"
                 >
                   <div
@@ -73,7 +73,7 @@
                       {{ product_item.title }}
                     </div>
                     <div class="product-sku">
-                      订货编码：{{ product_item.keyVals }}
+                      订货编码：{{ product_item.sn }}
                     </div>
                     <div class="product-sku">
                       商品型号：{{ product_item.keyVals }}
@@ -101,10 +101,10 @@
             <div class="info-heji">
               <div class="heji">
                 <div class="heji-num">
-                  共 <b>{{ item.count_goods }}</b> 个商品
+                  共 <b>{{ item.productNum }}</b> 个商品
                 </div>
                 <div class="heji-money">
-                  合计金额： <b>{{ item.price }} 元</b>
+                  合计金额： <b>{{ vuex_huobi }} {{ item.price }}</b>
                 </div>
               </div>
 
@@ -112,71 +112,22 @@
                 <button class="btn-ripple fit-text" @click="toDetail(item)">
                   账单详情
                 </button>
-                <button class="btn-ripple fit-text" @click="toDetail(item)">
+                <button class="btn-ripple fit-text" @click="doDownload(item, 2)">
                   下载开票凭证
                 </button>
-                <button class="btn-ripple fit-text" @click="toDetail(item)">
+                <button class="btn-ripple fit-text" @click="doDownload(item, 1)">
                   下载合同文件
                 </button>
-                <button class="btn-ripple fit-text" @click="doYiYi(item)">
+                <button class="btn-ripple fit-text" @click="doYiYi(item)" v-if="item.billConfirm == 0">
                   有异议
                 </button>
                 <button
                   class="btn-ripple fit-text btn-bg"
                   @click="doOfflinePay(item)"
+                  v-if="item.billConfirm != 1"
                 >
                   确认无误
                 </button>
-
-                <!-- <button
-                  v-if="item.ifCancel == 1"
-                  class="btn-ripple fit-text btn-bg"
-                  @click="doCancel(item)"
-                >
-                  取消订单
-                </button>
-                <button
-                  v-if="item.ifPay == 1"
-                  class="btn-ripple fit-text btn-bg"
-                  @click="doPay(item)"
-                >
-                  去支付
-                </button>
-                <button
-                    v-if="item.ifPay == 1 && vuex_user.staffType == 1"
-                    class="btn-ripple fit-text btn-bg"
-                    @click="doOfflinePay(item)"
-                >
-                  上传支付凭证
-                </button>
-                <button
-                  v-if="item.ifDel == 1"
-                  class="btn-ripple fit-text btn-bg"
-                  @click="doDelete(item)"
-                >
-                  删除订单
-                </button>
-                <button
-                  v-if="item.ifReceive == 1"
-                  class="btn-ripple fit-text btn-bg"
-                  @click="doReceive(item)"
-                >
-                  确认收货
-                </button>
-                <button
-                  v-if="item.orderStatus == 6"
-                  class="btn-ripple fit-text btn-bg"
-                  @click="doReview(item)"
-                >
-                  去评价
-                </button>
-                <button
-                  v-if="item.orderStatus >= 5"
-                  class="btn-ripple fit-text btn-bg"
-                  @click="doRefund(item)"
-                >
-                  售后
-                </button> -->
               </div>
             </div>
           </div>
@@ -215,7 +166,7 @@
           <button class="btn-ripple fit-text" @click="yiyi_show = false">
             取消
           </button>
-          <button class="btn-ripple fit-text btn-bg" @click="yiyi_show = false">
+          <button class="btn-ripple fit-text btn-bg" @click="doYiYiSubmit">
             提交
           </button>
         </div>
@@ -281,7 +232,6 @@ export default {
       },
       count: 0,
       keyword: "",
-      user_index: {},
       yiyi_info: {},
       yiyi_show: false,
     };
@@ -294,11 +244,12 @@ export default {
       //筛选状态：0-全部 1-待支付 2-待发货 3-待收货 4-待核销 5-已完成 6-待评价 7-已取消
       //orderStatus
       //订单状态：-5-待支付  -1-已取消  2-待发货  3-待收货  4-待自提  5-已完成
-      let orderData = {} || this.orderData;
+      let orderData = this.orderData || {};
       let tabList = [
         { value: -1, title: "全部账单" },
-        { value: 0, title: "待确认", num: orderData.billConfirm1Count || 0 },
-        { value: 1, title: "已确认", num: orderData.billConfirm2Count || 0 },
+        { value: 0, title: "待确认", num: orderData.billConfirm0Count || 0 },
+        { value: 1, title: "已确认", num: orderData.billConfirm1Count || 0 },
+        { value: 2, title: "有异议", num: orderData.billConfirm2Count || 0 }
       ];
       return tabList;
     },
@@ -308,6 +259,23 @@ export default {
   },
 
   methods: {
+    doYiYiSubmit() {
+      this.$api({
+        url: "/service.php",
+        method: "post",
+        data: {
+          action: "orders_billConfirm",
+          orderId: this.yiyi_info.id,
+          type: 2,
+          billConfirmNote: this.yiyi_info.remark,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.yiyi_show = false;
+          this.query_order();
+        }
+      });
+    },
     emitConfirm() {
       this.query_order();
     },
@@ -337,87 +305,11 @@ export default {
         if (code == 200) {
           let list = data.list;
           this.orderData = data;
-          list.forEach((order) => {
-            order.isPay = order.value >= 0;
-            order.actions = this.getOrderActions({
-              ...order,
-            });
-
-            let count_goods = 0;
-            order.products.forEach((product) => {
-              count_goods = count_goods + +product.num;
-            });
-            order.count_goods = count_goods;
-          });
 
           this.orders = list;
           this.count = data.count;
         }
       });
-    },
-
-    //根据订单状态获取订单操作结果
-    getOrderActions(order) {
-      let { status, status_info, ifpingjia } = order;
-      let actions = [];
-      // let actions = [
-      //   { name: "取消订单",type: 'quxiao' },
-      //   { name: "立即支付",type: 'zhifu' },
-      //   { name: "确认收货",type: 'shouhuo' },
-      //   { name: "评价订单",type: 'pingjia' },
-      //   { name: "申请售后",type: 'shouhou' },
-      //   { name: "删除订单",type: 'shanchu' },
-      //   { name: "再次购买",type: 'goumai' },
-      // ];
-
-      if (status == -5) {
-        //待支付
-        if (status_info == "无效") {
-          actions = [{ name: "取消订单", type: "quxiao" }];
-        } else if (status_info == "待支付") {
-          actions = [
-            { name: "立即支付", type: "zhifu" },
-            { name: "取消订单", type: "quxiao" },
-          ];
-        }
-      } else if (status == -3) {
-        //-3售后处理中
-        actions = [{ name: "删除订单", type: "shanchu" }];
-      } else if (status == -1) {
-        //无效
-        actions = [{ name: "删除订单", type: "shanchu" }];
-      } else if (status == 0) {
-        //0待成团
-        actions = [{ name: "取消订单", type: "quxiao" }];
-      } else if (status == 2) {
-        //2待发货
-        actions = [
-          // { name: "取消订单", type: "quxiao" }
-        ];
-      } else if (status == 3) {
-        //3待收货
-        actions = [
-          { name: "确认收货", type: "shouhuo" },
-          { name: "查看物流", type: "wuliu" },
-        ];
-      } else if (status == 4) {
-        //4已收货
-        if (ifpingjia) {
-          actions = [
-            // { name: "删除订单", type: "shanchu" },
-            // { name: "查看物流", type: "wuliu" },
-            // { name: "售后", type: "shouhou" },
-          ];
-        } else {
-          actions = [
-            // { name: "删除订单", type: "shanchu" },
-            // { name: "查看物流", type: "wuliu" },
-            // { name: "售后", type: "shouhou" },
-            //  { name: "评价", type: 'pingjia' }
-          ];
-        }
-      }
-      return actions;
     },
 
     do_toggle_tab(item) {
@@ -461,6 +353,18 @@ export default {
     doYiYi(item) {
       this.yiyi_info = item;
       this.yiyi_show = true;
+    },
+    doDownload(item, type) {
+      // this.$api({
+      //   url: "/service.php",
+      //   method: "get",
+      //   data: {
+      //     action: "orders_downloadAttach",
+      //     id: item.id,
+      //     type: type,
+      //   },
+      // }).then((res) => {
+      // });
     },
     doCancel(item) {
       this.$refs.order_cancel_modal.init(item);
@@ -546,9 +450,10 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "orders_orderExport",
-          orderStatus:
-            this.tabSelect.value == 0 ? "" : this.tabSelect.value || "",
+          action: "orders_getBillOrderList",
+          billConfirm: this.tabSelect.value,
+          orderNo: this.keyword,
+          ...this.pagination,
         },
       }).then(async (res) => {
         console.log(res);
@@ -848,7 +753,6 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
-      color: #999999;
       color: #f74747;
 
       // 待付款

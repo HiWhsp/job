@@ -53,36 +53,29 @@
           </div>
           <div class="info-item" v-for="(item, index) in orders" :key="index">
             <div class="basic-info flex">
-              <div class="date">{{ item.dtTime }}</div>
+              <div class="date">{{ item.createTime }}</div>
               <div class="order-code">
-                报价单号：
-                <span>{{ item.xunjiaNo }}</span>
+                询价单号：
+                <span>{{ item.orderNo }}</span>
               </div>
             </div>
             <div class="product-box">
               <div class="product-list">
-                <div
-                  class="product-item flex"
-                  v-for="(product_item, product_index) in item.xunjiaDetail"
-                  :key="product_index"
-                >
-                  <div
-                    class="box-image cover"
-                    @click="mix_to_product(product_item)"
-                  >
-                    <!-- <img :src="good.img" alt /> -->
-                    <el-image :src="product_item.product.thumb">
+                <div class="product-item flex">
+                  <div class="box-image cover">
+                    <el-image
+                      :src="product_item.image"
+                      v-for="(product_item, product_index) in item.productList"
+                      :key="product_index"
+                    >
                       <div slot="error" class="image-slot">
-                        <img :src="product_item.product.thumb" />
+                        <img :src="product_item.thumb" />
                       </div>
                     </el-image>
                   </div>
-                  <div class="box-price">
-                    {{ vuex_huobi }} {{ product_item.baojiaPrice }}
-                  </div>
+                  <div class="box-price">{{ vuex_huobi }} {{ item.money }}</div>
                   <div class="order-state" :class="'state-' + item.status">
-                    {{ item.status == 0 ? "待报价" : "" }}
-                    {{ item.status == 1 ? "已报价" : "" }}
+                    {{ item.statusText }}
                   </div>
                   <div class="box-refund" @click="toDetail(item)">
                     <div class="refund-act">查看详情</div>
@@ -209,7 +202,7 @@ export default {
         data: {
           action: "inquiry_getInquiryOrderList",
           ...this.pagination,
-          status: this.tabSelect.id,
+          status: this.tabSelect.value,
           orderNo: this.keyword,
           createTime: this.data,
         },
@@ -217,19 +210,19 @@ export default {
         let { code, data } = res;
         if (code == 200) {
           let list = data.list;
-          console.log(list);
-          list.forEach((order) => {
-            order.isPay = order.value >= 0;
-            order.actions = this.getOrderActions({
-              ...order,
-            });
+          // console.log(list);
+          // list.forEach((order) => {
+          //   order.isPay = order.value >= 0;
+          //   order.actions = this.getOrderActions({
+          //     ...order,
+          //   });
 
-            let count_goods = 0;
-            order.xunjiaDetail.forEach((product) => {
-              count_goods = count_goods + +product.num;
-            });
-            order.count_goods = count_goods;
-          });
+          //   let count_goods = 0;
+          //   order.xunjiaDetail.forEach((product) => {
+          //     count_goods = count_goods + +product.num;
+          //   });
+          //   order.count_goods = count_goods;
+          // });
 
           this.orders = list;
           this.count = data.count;
@@ -345,7 +338,6 @@ export default {
     },
 
     toDetail(item) {
-      // this.$router.push(`/order-detail?id=${item.id}`);
       this.toRoute({
         path: "/batch-xunjia-detail",
         query: {
@@ -633,7 +625,7 @@ export default {
   .basic-info {
     height: 48px;
     padding: 0 15px;
-    background: #F5F5F5;
+    background: #f5f5f5;
     .order-code {
       font-size: 14px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
@@ -808,7 +800,7 @@ export default {
             font-size: 14px;
             color: #333;
             border-radius: 4px 4px 4px 4px;
-            border: 1px solid #D5DBE8;
+            border: 1px solid #d5dbe8;
           }
         }
       }

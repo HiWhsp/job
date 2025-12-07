@@ -1,6 +1,9 @@
 <template>
   <div class="page">
-    <div style="position: absolute; top: 0; left: 0; z-index: -100" id="tableGen"></div>
+    <div
+      style="position: absolute; top: 0; left: 0; z-index: -100"
+      id="tableGen"
+    ></div>
     <div class="page-title">我的订单</div>
 
     <div class="page-ctx">
@@ -22,7 +25,11 @@
           导出信息
         </div> -->
         <div class="search-box">
-          <input v-model="keyword" type="text" placeholder="输入商品名称、订单号" />
+          <input
+            v-model="keyword"
+            type="text"
+            placeholder="输入商品名称、订单号"
+          />
           <button @click="do_search()">搜索</button>
           <button @click="do_reset()">重置</button>
         </div>
@@ -69,9 +76,12 @@
                     >
                       {{ product_item.title }}
                     </div>
-                    <div class="product-sku">订货编码：{{ product_item.keyVals }}</div>
-                    <div class="product-sku">商品型号：{{ product_item.keyVals }}</div>
-
+                    <div class="product-sku">
+                      订货编码：{{ product_item.sn }}
+                    </div>
+                    <div class="product-sku">
+                      商品型号：{{ product_item.keyVals }}
+                    </div>
                   </div>
                   <!-- <div class="box-sku">
                     <div class="product-sku">{{ product_item.keyVals }}</div>
@@ -107,6 +117,13 @@
                   订单详情
                 </button>
                 <button
+                  class="btn-ripple fit-text"
+                  v-if="item.orderStatus >= 2"
+                  @click="doDownloadContract(item)"
+                >
+                  下载合同文件
+                </button>
+                <button
                   v-if="item.ifCancel == 1"
                   class="btn-ripple fit-text btn-bg"
                   @click="doCancel(item)"
@@ -114,9 +131,9 @@
                   取消订单
                 </button>
                 <button
-                    v-if="item.ifPay == 1"
-                    class="btn-ripple fit-text btn-bg"
-                    @click="doOfflinePay(item)"
+                  v-if="item.ifPay == 1"
+                  class="btn-ripple fit-text btn-bg"
+                  @click="doOfflinePay(item)"
                 >
                   上传支付凭证
                 </button>
@@ -142,7 +159,7 @@
                   去评价
                 </button>
                 <button
-                  v-if="item.orderStatus >= 5"
+                  v-if="item.orderStatus >= 5 && item.ifRefund == 0"
                   class="btn-ripple fit-text btn-bg"
                   @click="doRefund(item)"
                 >
@@ -195,10 +212,7 @@
       @confirm="emitConfirm"
       data-type="售后"
     />
-    <xianxia_submit
-    ref="xianxia"
-    @confirm="emitConfirm"
-    ></xianxia_submit>
+    <xianxia_submit ref="xianxia" @confirm="emitConfirm"></xianxia_submit>
   </div>
 </template>
 
@@ -210,7 +224,7 @@ import order_receive_modal from "@/components/order/order_receive_modal.vue"; //
 import order_refund_modal from "@/components/order/order_refund_modal.vue"; //售后
 import xianxia_submit from "@/components/order/xianxia_submit.vue";
 import { mapState } from "vuex";
-import TableExport from 'tableexport';
+import TableExport from "tableexport";
 import download from "@/util/download";
 export default {
   name: "servicePage",
@@ -220,7 +234,7 @@ export default {
     order_delete_modal,
     order_receive_modal,
     order_refund_modal,
-    xianxia_submit
+    xianxia_submit,
   },
   data() {
     return {
@@ -405,7 +419,7 @@ export default {
     do_search() {
       this.query_order();
     },
-    doOfflinePay(item){
+    doOfflinePay(item) {
       this.$refs.xianxia.init(item);
     },
     //重置
@@ -454,6 +468,9 @@ export default {
           inventoryId: item.products[0].productId,
         },
       });
+    },
+    doDownloadContract(item) {
+      this.$refs.order_refund_modal.init(item);
     },
 
     // updateView() {
@@ -506,51 +523,63 @@ export default {
         },
       });
     },
-    async getList(){
+    async getList() {
       this.showLoading();
       this.$api({
-        url: '/service.php',
-        method: 'get',
-        data:{
-          action: 'orders_orderExport',
-          orderStatus: this.tabSelect.value == 0? '' : this.tabSelect.value || ''
-        }
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "orders_orderExport",
+          orderStatus:
+            this.tabSelect.value == 0 ? "" : this.tabSelect.value || "",
+        },
       }).then(async (res) => {
-        console.log(res)
-        if (res.code == 200){
+        console.log(res);
+        if (res.code == 200) {
           window.location.href = res.data;
         }
         this.hideLoading();
         // download.excel(res, 'report.xls')
-      })
-      if (false){
+      });
+      if (false) {
         this.$api({
-          url: '/service.php',
-          method: 'post',
+          url: "/service.php",
+          method: "post",
           data: {
-            action: 'orders_daochu',
-            orderStatus: this.tabSelect.value == 0? '' : this.tabSelect.value || ''
-          }
-        }).then(res => {
+            action: "orders_daochu",
+            orderStatus:
+              this.tabSelect.value == 0 ? "" : this.tabSelect.value || "",
+          },
+        }).then((res) => {
           document.getElementById("tableGen").innerHTML = res;
-          let exporttable = TableExport(document.getElementById("tableGen").children[0], {
-            exportButtons: false,
+          let exporttable = TableExport(
+            document.getElementById("tableGen").children[0],
+            {
+              exportButtons: false,
 
-            filename: '我的订单',
+              filename: "我的订单",
 
-            sheetname: 'Sheet1',
-            type: 'excel'
-          });
+              sheetname: "Sheet1",
+              type: "excel",
+            }
+          );
           let tabledata = exporttable.getExportData();
           console.log(tabledata);
           var xlsxData = Object.values(tabledata)[0].xlsx;
           console.log(xlsxData);
-          exporttable.export2file(xlsxData.data, xlsxData.mimeType, xlsxData.filename, xlsxData.fileExtension, xlsxData.merges, xlsxData.RTL, xlsxData.sheetname)
+          exporttable.export2file(
+            xlsxData.data,
+            xlsxData.mimeType,
+            xlsxData.filename,
+            xlsxData.fileExtension,
+            xlsxData.merges,
+            xlsxData.RTL,
+            xlsxData.sheetname
+          );
 
           // alert(res)
-        })
+        });
       }
-
     },
     //订单支付
     order_payment(order_id) {
@@ -590,7 +619,7 @@ export default {
   display: flex;
   align-items: center;
   margin-left: 16px;
-  color: #F74747;
+  color: #f74747;
   font-size: 14px;
   font-weight: normal;
   cursor: pointer;
@@ -647,14 +676,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #F74747;
+        color: #f74747;
       }
 
       &.active {
         // background: #F74747;
         // color: #fff;
         font-weight: bold;
-        color: #F74747;
+        color: #f74747;
 
         &::after {
           content: "";
@@ -663,7 +692,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #F74747;
+          background: #f74747;
         }
       }
     }
@@ -759,7 +788,7 @@ export default {
       font-weight: 400;
       line-height: 20px;
       color: #999999;
-      color: #F74747;
+      color: #f74747;
 
       // 待付款
       &.state--5 {
@@ -769,8 +798,8 @@ export default {
       }
 
       &.state-2 {
-        color: #F74747;
-        border-color: #F74747;
+        color: #f74747;
+        border-color: #f74747;
       }
     }
   }
@@ -824,7 +853,7 @@ export default {
             font-weight: bold;
 
             &:hover {
-              color: #F74747;
+              color: #f74747;
             }
           }
 
@@ -921,7 +950,7 @@ export default {
         background: #ffffff;
         border-radius: 50px 50px 50px 50px;
         border-radius: 4px;
-        border: 1px solid #D5DBE8;
+        border: 1px solid #d5dbe8;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
@@ -936,7 +965,7 @@ export default {
         }
 
         &.btn-bg {
-          background: #F74747;
+          background: #f74747;
           color: #ffffff;
         }
       }

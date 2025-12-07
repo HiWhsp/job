@@ -100,7 +100,6 @@ const scene = () =>
 
 // 个人中心
 const my_layout = () => import("@/views/my/my-layout.vue");
-const my_index = () => import("@/views/my/my-index.vue");
 
 // 订单
 // 下单
@@ -387,15 +386,6 @@ const routes = [
         component: () => import('@/views/my/sub-account-list.vue'),
         meta: {
           title: "子账号管理",
-          requireAuth: true,
-        },
-      },
-      {
-        path: "/my-index",
-        name: "my-index",
-        component: my_index,
-        meta: {
-          title: "会员中心",
           requireAuth: true,
         },
       },

@@ -55,8 +55,8 @@
 
       <div class="base-ctx">
         <div class="base-title">
-          <div class="data">{{ info.dtTime }}</div>
-          <div class="data">询价单号：{{ info.xunjiaNo }}</div>
+          <div class="data">{{ info.order.createTime }}</div>
+          <div class="data">询价单号：{{ info.order.orderNo }}</div>
         </div>
         <div class="page-ctx">
           <div class="result-wrap">
@@ -66,7 +66,7 @@
                 <div class="data-list">
                   <div
                     class="data-item"
-                    v-for="(item, index) in info.xunjiaDetail"
+                    v-for="(item, index) in origin"
                     :key="index"
                   >
                     <div class="check-box">
@@ -98,7 +98,7 @@
                 <div class="match-list">
                   <div
                     class="match-item-loop"
-                    v-for="(item, index) in info.xunjiaDetail"
+                    v-for="(item, index) in products"
                     :key="index"
                   >
                     <div class="match-item" v-if="info.xunjiaDetail">
@@ -239,14 +239,13 @@ export default {
       fahuoInfo: {}, //发货信息
       total_product_number: 0,
       products: [],
+      origin: [],
       full_receive_address: "",
       //
       is_finish_pay: false, //
       //
       is_jifen_goods: false,
       //
-
-      orderObj: {}, //订单信息
       detail: {}, //订单信息
 
       pay_info: {}, //支付信息
@@ -275,47 +274,7 @@ export default {
   computed: {
     ...mapState([""]),
   },
-  watch: {
-    orderObj(data) {
-      let { shouhuoInfo, status, pay_info, fahuo_info, peisong_type, shequ } =
-        data;
-
-      this.peisong_type = peisong_type;
-      this.shequ = shequ;
-      // this.shouhuoInfo = shouhuoInfo;
-      // this.pay_info = pay_info;
-
-      //订单状态码(-5待支付 -3售后处理中 -1无效 0待成团 2待发货 3待收货 4已收货)
-      if (status != -5 && status != -1 && status != 0) {
-        this.is_payed = true;
-      }
-
-      //配送方式
-      let peisong_map = {
-        1: "上门自提",
-        2: "社区配送",
-        3: "普通快递",
-        4: "",
-        5: "",
-      };
-
-      //社区购配送方式(1自提 2社区配送 3快递)
-
-      this.peisong_type_text = peisong_map[peisong_type] || "";
-      //门店配送订单需要显示配送员信息
-      if (this.peisong_type_text == "同城配送") {
-        this.is_mendian_peisong = true;
-        this.peisong_info = fahuo_info;
-      }
-
-      //发货信息
-      if (fahuo_info && fahuo_info.company) {
-        this.fahuo_info = fahuo_info;
-        this.is_fahuo = true; //已经发货
-      }
-    },
-  },
-  created() {
+  mounted() {
     this.setView();
   },
   methods: {
@@ -370,36 +329,15 @@ export default {
         method: "get",
         data: {
           action: "inquiry_getInquiryOrderDetail",
-          id: this.id,
+          orderId: this.id,
         },
       }).then((res) => {
         let { code, data, msg } = res;
         if (code == 200) {
           this.info = data;
-          console.log(this.info);
-          for (let i = 0; i < this.info.xunjiaDetail.length; i++) {
-            this.checkedAttr.push(this.info.xunjiaDetail[i].id);
-          }
-          // this.payInfo = data.payInfo;
+          this.origin = data.origin;
           this.products = data.products;
-          // this.fahuoInfo = data.fahuoInfo;
-          this.invioceJson = data.invioceJson || {};
-          this.is_finish_pay = parseFloat(data.pricePayed) > 0;
 
-          //
-          // this.shouhuoInfo = data.shouhuoInfo;
-          // if (data.shouhuoInfo) {
-          //   let { country, province, city, area, address } = data.shouhuoInfo;
-          //   this.full_receive_address = [country, province, city, area, address]
-          //     .filter((v) => v)
-          //     .join(" ");
-          // }
-
-          //
-          //支付方式
-
-          //凭证图片
-          this.orderObj = data;
           this.detail = data;
         }
       });

@@ -43,7 +43,7 @@
                 <div class="label">支付方式：</div>
                 <div class="val">
                   <!-- <span v-if="payInfo.balance">余额</span> -->
-                  {{ info.payMethod == 2 ? '账期月结' : '对公转账' }}
+                  {{ info.payMethod == 2 ? "账期月结" : "对公转账" }}
                 </div>
               </div>
               <div class="info-item">
@@ -57,7 +57,11 @@
               <div class="info-item" v-if="info.payMethod == 1">
                 <div class="label">汇款截图：</div>
                 <div class="val">
-                  <el-image :src="info.payImg"  style="width: 50px; height: 50px;" :preview-src-list="[info.payImg]" />
+                  <el-image
+                    :src="info.payImg"
+                    style="width: 50px; height: 50px"
+                    :preview-src-list="[info.payImg]"
+                  />
                 </div>
               </div>
             </div>
@@ -198,7 +202,7 @@
                   <span class="label">配送费：</span>
                   <div class="value">
                     <span class="money-num"
-                      >{{ vuex_huobi }}{{ payInfo.foreignYunfei }}</span
+                      >{{ vuex_huobi }}{{ payInfo.yunfei }}</span
                     >
                   </div>
                 </div>
@@ -250,9 +254,13 @@
           <!-- 订单操作 -->
           <div class="order-action-box">
             <div class="btn-box">
-              <!-- <button class="btn-ripple fit-text" @click="doRefund(info)">
+              <button
+                class="btn-ripple fit-text"
+                v-if="info.orderStatus >= 2"
+                @click="doRefund(info)"
+              >
                 下载合同文件
-              </button> -->
+              </button>
 
               <button
                 v-if="info.ifCancel == 1"
@@ -283,7 +291,7 @@
                 确认收货
               </button>
               <button
-                v-if="info.orderStatus >= 5"
+                v-if="info.orderStatus >= 5 && ifRefund == 0"
                 class="btn-ripple fit-text btn-bg"
                 @click="doRefund(info)"
               >
@@ -343,11 +351,12 @@ export default {
     return {
       id: this.$route.query.id,
       order_id: this.$route.query.id,
+      ifRefund: "",
       info: {},
       payInfo: {},
       shouhuoInfo: {}, //收货人信息
       fahuoInfo: {}, //发货信息
-      total_product_number: 0,
+      total_product_number: "",
       products: [],
       full_receive_address: "",
       //
@@ -489,6 +498,10 @@ export default {
           this.fahuoInfo = data.fahuoInfo;
           this.invioceJson = data.invioceJson || {};
           this.is_finish_pay = parseFloat(data.pricePayed) > 0;
+          this.products.forEach((item) => {
+            this.total_product_number += item.num;
+            this.ifRefund = item.ifRefund;
+          });
 
           //
           this.shouhuoInfo = data.shouhuoInfo;

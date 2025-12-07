@@ -138,11 +138,11 @@
                   </div>
                   <div class="misc-sector">
                     <div class="label">商品型号：</div>
-                    <div class="value">{{ info.productNo || "--" }}</div>
+                    <div class="value">{{ info.addrows['商品型号'] || "--" }}</div>
                   </div>
                   <div class="misc-sector">
                     <div class="label">起订量：</div>
-                    <div class="value">{{ info.minNum }}</div>
+                    <div class="value">{{ info.miniOrder }}</div>
                   </div>
                 </div>
                 <div class="sku-box">
