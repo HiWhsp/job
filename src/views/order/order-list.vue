@@ -83,7 +83,13 @@
                       订货编码：{{ product_item.sn }}
                     </div>
                     <div class="product-sku">
-                      商品型号：{{ product_item.keyVals }}
+                      商品型号：{{
+                        product_item.addrows
+                          ? product_item.addrows[0]
+                            ? product_item.addrows[0].val
+                            : "--"
+                          : "--"
+                      }}
                     </div>
                   </div>
                   <!-- <div class="box-sku">
@@ -228,7 +234,7 @@ import order_refund_modal from "@/components/order/order_refund_modal.vue"; //�
 import xianxia_submit from "@/components/order/xianxia_submit.vue";
 import { mapState } from "vuex";
 import TableExport from "tableexport";
-import download from "@/util/download";
+import { API_ROOT } from "@/config/env.js";
 export default {
   name: "servicePage",
   components: {
@@ -473,7 +479,9 @@ export default {
       });
     },
     doDownloadContract(item) {
-      this.$refs.order_refund_modal.init(item);
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
+      window.open(API_ROOT + `/service.php?action=orders_downloadAttach&token=${token}&userId=${userId}&id=${item.id}&type=1`, "_blank");
     },
 
     // updateView() {

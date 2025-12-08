@@ -176,7 +176,7 @@ export default {
 
   methods: {
     setView() {
-      this.query_userIndex();
+      // this.query_userIndex();
       this.query_list();
     },
 

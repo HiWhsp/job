@@ -413,11 +413,11 @@ export default {
         sort_params = {
           orderType: 0,
         };
-      } else if (this.sort_type == "销量") {
+      } else if (this.sort_type == "销量排序") {
         sort_params = {
-          orderType: 1,
+          orderType: 4,
         };
-      } else if (this.sort_type == "价格") {
+      } else if (this.sort_type == "价格排序") {
         if (this.isAsc == "asc") {
           //价格升序
           sort_params = {
@@ -545,6 +545,9 @@ export default {
         this.isAsc = "asc";
       }
       this.sort_type = item.type;
+      console.log('====================================');
+      console.log(this.sort_type);
+      console.log('====================================');
       this.setView();
     },
 

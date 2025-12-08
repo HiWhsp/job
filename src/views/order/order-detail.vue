@@ -257,7 +257,7 @@
               <button
                 class="btn-ripple fit-text"
                 v-if="info.orderStatus >= 2"
-                @click="doRefund(info)"
+                @click="doDownloadContract(info)"
               >
                 下载合同文件
               </button>
@@ -336,7 +336,7 @@ import order_refund_modal from "@/components/order/order_refund_modal.vue"; //�
 // import orderInfo from "@/components/order/orderInfo.vue"; //
 import { mapState } from "vuex";
 import xianxia_submit from "@/components/order/xianxia_submit.vue";
-
+import {API_ROOT} from "@/config/env.js"
 export default {
   name: "order-detail",
   components: {
@@ -550,6 +550,11 @@ export default {
     },
     doRefund(item) {
       this.$refs.order_refund_modal.init(item);
+    },
+    doDownloadContract(item) {
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
+      window.open(API_ROOT + `/service.php?action=orders_downloadAttach&token=${token}&userId=${userId}&id=${item.id}&type=1` , "_blank");
     },
     doOfflinePay(item) {
       this.$refs.xianxia.init(item);

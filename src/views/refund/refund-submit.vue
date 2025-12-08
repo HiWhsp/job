@@ -9,8 +9,22 @@
               <div class="action">{{ type_title }}</div>
             </div> -->
 
-            <div class="input-box">
+            <div class="input-box" v-if="type != 4">
               <div class="label">{{ type != 3 ? '退款原因：' : '退货原因：' }}</div>
+              <div class="action">
+                <el-select v-model="refund_reason" placeholder="请选择">
+                  <el-option
+                    v-for="item in refund_reasons"
+                    :key="item.tilte"
+                    :label="item.tilte"
+                    :value="item.title"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
+            </div>
+            <div class="input-box" v-if="type == 4">
+              <div class="label">维修原因：</div>
               <div class="action">
                 <el-select v-model="refund_reason" placeholder="请选择">
                   <el-option
@@ -94,7 +108,7 @@
               </div>
             </div>
 
-            <div class="input-box remark-box">
+            <div class="input-box remark-box" v-if="type != 4">
               <div class="label">退款说明：</div>
               <div class="action">
                 <el-input
@@ -105,6 +119,17 @@
                 />
               </div>
             </div>
+            <div class="input-box remark-box" v-if="type == 4">
+              <div class="label">维修说明：</div>
+              <div class="action">
+                <el-input
+                  type="textarea"
+                  placeholder="请输入维修说明"
+                  v-model="refund_remark"
+                  :autosize="{ minRows: 6 }"
+                />
+              </div>
+            </div> 
             <div class="input-box upload-box">
               <div class="label">上传凭证：</div>
               <div class="action" style="flex: 1; width: fit-content">
@@ -129,7 +154,7 @@
               <div class="label">退货方式：</div>
               <div class="action">自行寄回</div>
             </div>
-            <div class="input-box upload-box" v-if="type == 2">
+            <div class="input-box upload-box" v-if="type == 2 || type == 4">
               <div class="label">我的地址：</div>
               <div class="action">
                 <p style="margin-bottom: 10px;color: #7D7D7D;font-size: 14px;">张三 1810000000</p>
@@ -169,7 +194,7 @@ export default {
   },
   props: {
     type: {
-      type: Number,
+      type: Number | String,
       default: 1,
     },
     orderId: {

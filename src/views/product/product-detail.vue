@@ -83,7 +83,7 @@
                       <div class="vals vals-price">
                         <div class="val">
                           {{ vuex_huobi }}
-                          <span class="price">{{ view_info.priceSale }}</span>
+                          <span class="price">{{ view_info.priceUser || view_info.priceSale }}</span>
                           <span class="unit">/{{ info.unit }}</span>
                         </div>
                       </div>

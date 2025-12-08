@@ -59,7 +59,7 @@
               </div>
               <div class="text-box">
                 <div class="type">仅退款</div>
-                <div class="desc">与卖家协商同意不用退货只退款</div>
+                <div class="desc">与卖家协商同意只退款</div>
               </div>
             </div>
             <div class="service-item" @click="to_refund_submit('2')">
@@ -68,7 +68,7 @@
               </div>
               <div class="text-box">
                 <div class="type">退货退款</div>
-                <div class="desc">退还收到的货物，并退款</div>
+                <div class="desc">退还收到的货物并退款</div>
               </div>
             </div>
             <div class="service-item" @click="to_refund_submit('3')">
@@ -78,6 +78,15 @@
               <div class="text-box">
                 <div class="type">换货</div>
                 <div class="desc">买家退货后商家补发新货</div>
+              </div>
+            </div>
+            <div class="service-item" @click="to_refund_submit('4')">
+              <div class="img-box">
+                <img src="@img/refund/refund-weixiu.png" alt />
+              </div>
+              <div class="text-box">
+                <div class="type">维修</div>
+                <div class="desc">买家退货商家维修后寄回</div>
               </div>
             </div>
           </div>
@@ -366,7 +375,7 @@ export default {
 
       .text-box {
         text-align: left;
-        padding-left: 20px;
+        padding-left: 16px;
         flex: 2;
 
         .type {
@@ -379,7 +388,7 @@ export default {
 
         .desc {
           margin-top: 10px;
-          font-size: 16px;
+          font-size: 14px;
           font-family: Microsoft YaHei;
           font-weight: 400;
 
