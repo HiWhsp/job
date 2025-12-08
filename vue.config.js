@@ -97,7 +97,7 @@ module.exports = {
     },
     proxy: {
       "/api": {
-        target: 'http://qdjiuzhou.dx.hdapp.com.cn',
+        target: 'https://lidong.dx.hdapp.com.cn',
         ws: true,
         changeOrigin: true,
         pathRewrite: {

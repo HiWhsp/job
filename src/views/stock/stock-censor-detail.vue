@@ -58,9 +58,9 @@
                 <div class="label">支付方式：</div>
                 <div class="val">
                   {{
-                    info.payType == 1
+                    info.payMethod == 1
                       ? "对公转账"
-                      : info.payType == 2
+                      : info.payMethod == 2
                       ? "账期月结"
                       : "无"
                   }}
@@ -73,11 +73,11 @@
               <div class="info-item">
                 <div class="label">配送方式：</div>
                 <div class="val">
-                  {{ fahuoInfo.expressName || "" }}
-                  {{ fahuoInfo.expressOrder || "" }}
+                  {{ fahuoInfo.expressName || "--" }}
+                  {{ fahuoInfo.expressOrder || "--" }}
                 </div>
               </div>
-              <div class="info-item">
+              <div class="info-item" v-if="info.payMethod == 1">
                 <div class="label">汇款截图：</div>
                 <div class="val">
                   <el-image
@@ -97,14 +97,89 @@
             <div class="info-content">
               <div class="info-item">
                 <div class="label">付款状态：</div>
-                <div class="val">部分付款</div>
+                <div class="val">
+                  {{ info.payMethod == 1 ? "已付款" : "部分付款" }}
+                </div>
               </div>
-              <div class="info-item">
+              <div class="info-item" v-if="info.payMethod == 2">
                 <div class="label">应付款时间：</div>
-                <div class="val">2025-08-18 10:00:00</div>
+                <div class="val">{{ info.payTime }}</div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <!-- 开票信息 -->
+      <div class="base-ctx" v-if="invoiceList && invoiceList.length > 0">
+        <div class="base-title">开票信息</div>
+        <div class="table-content">
+          <table class="info-table">
+            <thead>
+              <tr>
+                <th>开票时间</th>
+                <th>开票金额</th>
+                <th>发票号</th>
+                <th>开票凭证</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in invoiceList" :key="index">
+                <td>{{ item.invoiceTime || "--" }}</td>
+                <td>
+                  {{ vuex_huobi }}{{ item.money || "0.00" }}
+                </td>
+                <td>{{ item.invoiceCode || "--" }}</td>
+                <td>
+                  <el-image
+                    v-if="item.invoiceUrl"
+                    :src="item.invoiceUrl"
+                    style="width: 50px; height: 50px; cursor: pointer"
+                    :preview-src-list="[item.invoiceUrl]"
+                    fit="cover"
+                  />
+                  <span v-else>--</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 付款记录 -->
+      <div class="base-ctx" v-if="paymentList && paymentList.length > 0">
+        <div class="base-title">付款记录</div>
+        <div class="table-content">
+          <table class="info-table">
+            <thead>
+              <tr>
+                <th>付款时间</th>
+                <th>付款金额</th>
+                <th>付款凭证</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in paymentList" :key="index">
+                <td>
+                  {{ item.createTime || "--" }}
+                </td>
+                <td>
+                  {{ vuex_huobi }}{{ item.money || "0.00" }}
+                </td>
+                <td>
+                  <el-image
+                    v-if="item.attach"
+                    :src="item.attach"
+                    style="width: 50px; height: 50px; cursor: pointer"
+                    :preview-src-list="[
+                      item.attach,
+                    ]"
+                    fit="cover"
+                  />
+                  <span v-else>--</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -329,50 +404,12 @@ export default {
       xianxia_imgs: [], //线下凭证信息
       is_xianxia: false, //是否线下转款
       pay_type: "", //支付方式
+      invoiceList: [], //开票信息列表
+      paymentList: [], //付款记录列表
     };
   },
   computed: {
     ...mapState([""]),
-  },
-  watch: {
-    orderObj(data) {
-      let { shouhuoInfo, status, pay_info, fahuo_info, peisong_type, shequ } =
-        data;
-
-      this.peisong_type = peisong_type;
-      this.shequ = shequ;
-      this.shouhuoInfo = shouhuoInfo;
-      this.pay_info = pay_info;
-
-      //订单状态码(-5待支付 -3售后处理中 -1无效 0待成团 2待发货 3待收货 4已收货)
-      if (status != -5 && status != -1 && status != 0) {
-        this.is_payed = true;
-      }
-
-      //配送方式
-      let peisong_map = {
-        1: "上门自提",
-        2: "社区配送",
-        3: "普通快递",
-        4: "",
-        5: "",
-      };
-
-      //社区购配送方式(1自提 2社区配送 3快递)
-
-      this.peisong_type_text = peisong_map[peisong_type] || "";
-      //门店配送订单需要显示配送员信息
-      if (this.peisong_type_text == "同城配送") {
-        this.is_mendian_peisong = true;
-        this.peisong_info = fahuo_info;
-      }
-
-      //发货信息
-      if (fahuo_info && fahuo_info.company) {
-        this.fahuo_info = fahuo_info;
-        this.is_fahuo = true; //已经发货
-      }
-    },
   },
   created() {
     this.setView();
@@ -398,10 +435,10 @@ export default {
         if (code == 200) {
           this.info = data.order;
 
-          this.payInfo = JSON.parse(data.order.priceJson);
-          this.products = JSON.parse(data.order.productJson);
-          this.fahuoInfo = JSON.parse(data.order.fahuoJson);
-          this.invioceJson = JSON.parse(data.order.invioceJson) || {};
+          this.payInfo = JSON.parse(data.order.priceJson || "{}");
+          this.products = JSON.parse(data.order.productJson || "[]");
+          this.fahuoInfo = JSON.parse(data.order.fahuoJson || "{}");
+          this.invioceJson = JSON.parse(data.order.invioceJson || "{}");
 
           this.products.forEach((item) => {
             this.total_product_number += item.num;
@@ -415,6 +452,9 @@ export default {
               .filter((v) => v)
               .join(" ");
           }
+
+          this.invoiceList = data.invoice;
+          this.paymentList = data.bill;
 
           //凭证图片
           this.detail = data.order;
@@ -705,6 +745,55 @@ export default {
         }
       }
     }
+  }
+}
+
+.table-content {
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    color: #333333;
+
+    thead {
+      padding: 0 16px;
+      th {
+        padding: 12px 24px;
+        text-align: left;
+        font-weight: bold;
+        border-bottom: 1px solid #e5e5e5;
+        color: #333333;
+      }
+    }
+
+    tbody {
+
+      tr {
+        border-bottom: 1px solid #f5f5f5;
+
+        &:hover {
+          background: #fafafa;
+        }
+
+        td {
+          padding: 12px 24px;
+          color: #666666;
+          vertical-align: middle;
+
+          &:first-child {
+            color: #333333;
+          }
+        }
+      }
+    }
+  }
+
+  .empty-data {
+    padding: 40px 0;
+    text-align: center;
+    color: #999999;
+    font-size: 14px;
   }
 }
 

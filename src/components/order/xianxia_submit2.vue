@@ -10,7 +10,7 @@ export default {
       dialogImageUrl: "",
       dialogVisible: false,
       upload_col_name: "",
-      UPLOAD_ACTION: "http://jzgy360.com/service.php",
+      UPLOAD_ACTION: UPLOAD_ACTION,
       UPLOAD_NAME,
       UPLOAD_PARAMS_ACTION: "index_localUpload",
     };

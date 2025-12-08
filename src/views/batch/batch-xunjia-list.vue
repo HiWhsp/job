@@ -736,7 +736,7 @@ export default {
         }
         .box-image {
           cursor: pointer;
-          border: 1px solid #f5f5f5;
+          // border: 1px solid #f5f5f5;
           flex: 1;
 
           /deep/ img {

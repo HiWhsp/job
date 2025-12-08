@@ -138,7 +138,9 @@
                   </div>
                   <div class="misc-sector">
                     <div class="label">商品型号：</div>
-                    <div class="value">{{ info.addrows['商品型号'] || "--" }}</div>
+                    <div class="value">
+                      {{ info.addrows["商品型号"] || "--" }}
+                    </div>
                   </div>
                   <div class="misc-sector">
                     <div class="label">起订量：</div>
@@ -1007,6 +1009,18 @@ export default {
     do_pay_now() {
       if (this.selected_num == 0) {
         alertErr("请选择订购数量！");
+        return;
+      }
+      if (this.selected_num <= this.info.miniOrder) {
+        alertErr("当前商品最小订购数量为" + this.info.miniOrder);
+        return;
+      }
+      if (this.selected_num > this.sku_select.kucun) {
+        alertErr("当前商品库存不足！");
+        return;
+      }
+      if (this.sku_select.status == -1) {
+        alertErr("当前商品已下架！");
         return;
       }
       if (!this.mix_get_login_status()) {

@@ -108,7 +108,7 @@
                     :key="index"
                   >
                     <div class="poster-box">
-                      <img :src="itLoop.images" alt="" />
+                      <img :src="itLoop.thumb" alt="" />
                     </div>
                     <div class="title-box">
                       <div class="title ellipsis-1">
@@ -135,7 +135,10 @@
                         :min="1"
                       ></el-input-number>
                       <div class="num-box-tip">
-                        <el-checkbox v-model="itLoop.selected" @change="handleChangeSelected(itLoop, index, item)"></el-checkbox>
+                        <el-checkbox
+                          v-model="itLoop.selected"
+                          @change="handleChangeSelected(itLoop, index, item)"
+                        ></el-checkbox>
 
                         <div
                           class="fold-box"
@@ -191,16 +194,13 @@
                   <div class="num-item">
                     <span class="label">已报价：</span>
                     <span class="value"
-                      >{{ (info.product_list || []).length }}种</span
+                      >{{ (info.product_list.filter(item => item.length > 0) || []).length }}种</span
                     >
                   </div>
                   <div class="num-item">
                     <span class="label">待报价：</span>
                     <span class="value"
-                      >{{
-                        (info.origin_list || []).length -
-                        selectedProductList.flat().length
-                      }}件</span
+                      >{{ (info.product_list.filter(item => item.length == 0) || []).length }}种</span
                     >
                   </div>
                 </div>
@@ -208,7 +208,7 @@
               <div class="right-acts flex">
                 <div class="total-number">
                   已选中：
-                  <b>{{ checkedItem.length }}</b>
+                  <b>{{ info.origin_list.filter(item => item.selected).length }}件</b>
                 </div>
 
                 <button
@@ -307,47 +307,52 @@ export default {
     },
     doConfirm() {
       const data = [];
-      // this.selectedProductList.forEach((item) => {
-      //   item.forEach((itLoop) => {
-      //     if (itLoop.selected) {
-      //       data.push({
-      //         serialNo: itLoop.inventoryId,
-      //         requireDate: itLoop.dtTime,
-      //         productName: itLoop.title,
-      //         brandName: itLoop.brandName,
-      //         manufacturerNo: itLoop.inventory.sn,
-      //         image: itLoop.thumb,
-      //         description: itLoop.description,
-      //         requireNum: itLoop.num,
-      //         note: itLoop.note,
-      //       });
-      //     }
-      //   });
-      // });
-      this.info.origin_list.forEach((item, index) => {
-        if(item.selected) {
-          data.push(item);
-        }
+      this.selectedProductList.forEach((item) => {
+        item.forEach((itLoop) => {
+          if (itLoop.selected) {
+            data.push({
+              serialNo: itLoop.inventoryId,
+              requireDate: itLoop.dtTime,
+              productName: itLoop.title,
+              brandName: itLoop.brandName,
+              manufacturerNo: itLoop.inventory.sn,
+              image: itLoop.thumb,
+              description: itLoop.description,
+              requireNum: itLoop.num,
+              note: itLoop.note,
+              productId: itLoop.inventory.productId,
+              productNum: itLoop.num,
+              inventoryId: itLoop.inventory.id,
+            });
+          }
+        });
       });
+      // this.info.origin_list.forEach((item, index) => {
+      //   if(item.selected) {
+      //     data.push(item);
+      //   }
+      // });
       this.$api({
         url: "/service.php",
         method: "post",
         data: {
           action: "Inquiry_createInquiryOrder",
-          data: JSON.stringify(data),
+          data,
         },
       }).then((res) => {
         this.selectedProductList.forEach((item) => {
           item.forEach((itLoop) => {
-            this.$api({
-              url: "/service.php",
-              method: "get",
-              data: {
-                action: "gouwuche_add",
-                inventoryId: itLoop.inventoryId,
-                num: itLoop.num,
-              },
-            });
+            if (itLoop.selected) {
+              this.$api({
+                url: "/service.php",
+                method: "post",
+                data: {
+                  action: "gouwuche_add",
+                  inventoryId: itLoop.inventoryId,
+                  num: itLoop.num,
+                },
+              });
+            }
           });
         });
         this.toRoute({
@@ -378,7 +383,7 @@ export default {
     async do_cart_remove_select_tip() {
       // 删除info.origin_list中selected为true的
       this.info.origin_list.forEach((item, index) => {
-        if(item.selected) {
+        if (item.selected) {
           this.info.origin_list.splice(index, 1);
           this.info.product_list.splice(index, 1);
         }
@@ -391,7 +396,10 @@ export default {
       } else {
         for (let i = 0; i < this.checkedItem.length; i++) {
           for (let j = 0; j < this.selectedProductList.length; j++) {
-            if(!this.selectedProductList[j] || this.selectedProductList[j].length === 0) {
+            if (
+              !this.selectedProductList[j] ||
+              this.selectedProductList[j].length === 0
+            ) {
               continue;
             }
             for (let k = 0; k < this.selectedProductList[j].length; k++) {
@@ -433,7 +441,7 @@ export default {
     },
     handleChangeSelected(itLoop, index, item) {
       this.checkedItem.push(itLoop.inventoryId);
-    }
+    },
   },
 };
 </script>

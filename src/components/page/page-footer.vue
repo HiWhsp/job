@@ -62,7 +62,6 @@
         <!-- 网站信息 -->
         <div class="logo-wrap link-info">
           <div class="top-info">
-
             <div class="icon-box">
               <img :src="vuex_config.accountImg" alt="" />
               <div class="icon-title">微信公众号</div>
@@ -85,28 +84,7 @@ export default {
   props: [],
   data() {
     return {
-      footerTips: [
-        {
-          icon: require("@/assets/img/foot/foot-1.png"),
-          title: "正品保障",
-          desc: "正品保障，诚信服务",
-        },
-        {
-          icon: require("@/assets/img/foot/foot-2.png"),
-          title: "货期保证",
-          desc: "一站式服务",
-        },
-        {
-          icon: require("@/assets/img/foot/foot-3.png"),
-          title: "阳光采购",
-          desc: "全网比价 惠到实处",
-        },
-        {
-          icon: require("@/assets/img/foot/foot-4.png"),
-          title: "诚信服务",
-          desc: "专业团队 无忧售后",
-        },
-      ],
+      footerTips: [],
       footer_link_group: [],
     };
   },
@@ -125,7 +103,7 @@ export default {
         method: "get",
         data: {
           action: "news_getIndexFooter",
-          channelId: 60,
+          channelId: 59,
           page: 1,
           pageNum: 1000,
           orderType: 0, //排序情况：0-自然排序 1-最新
@@ -133,6 +111,23 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           this.footer_link_group = res.data;
+          this.footer_link_group.forEach((item) => {
+            this.$api({
+              url: "/service.php",
+              method: "get",
+              data: {
+                action: "news_getIndexFooter",
+                channelId: item.id,
+                page: 1,
+                pageNum: 1000,
+                orderType: 0, //排序情况：0-自然排序 1-最新
+              },
+            }).then((res) => {
+              if (res.code == 200) {
+                item.newList = res.data;
+              }
+            });
+          });
         }
       });
     },

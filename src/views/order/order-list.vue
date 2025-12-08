@@ -52,6 +52,9 @@
             </div>
 
             <div class="product-box">
+              <div class="check" v-if="item.checkStatus == 2">
+                <span>{{ item.checkNote }}</span>
+              </div>
               <div class="product-list">
                 <div
                   class="product-item flex"
@@ -314,7 +317,7 @@ export default {
           action: "orders_lists",
           ...this.pagination,
           scene: this.tabSelect.value,
-          // keyword: this.keyword,
+          keyword: this.keyword,
         },
       }).then((res) => {
         let { code, data } = res;
@@ -805,6 +808,21 @@ export default {
   }
 
   .product-box {
+    .check {
+      margin: 20px 20px 0 20px;
+      background: #ffece7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      height: 40px;
+      line-height: 40px;
+      span {
+        color: #f74747;
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
     .product-list {
       .product-item {
         padding: 20px;
