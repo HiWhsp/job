@@ -137,7 +137,7 @@
         <el-form-item label="用户性别：" prop="sex">
           <el-radio-group v-model="ruleForm.sex">
             <el-radio :label="1">男</el-radio>
-            <el-radio :label="0">女</el-radio>
+            <el-radio :label="2">女</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="部门：" prop="department">

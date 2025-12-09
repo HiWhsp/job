@@ -52,7 +52,9 @@
               </div>
               <div class="info-item">
                 <div class="label">配送方式：</div>
-                <div class="val">快递配送</div>
+                <div class="val">快递配送：
+                  <p v-if="fahuoInfo.expressName">{{ fahuoInfo.expressName }} ({{ fahuoInfo.expressOrder }})</p>
+                </div>
               </div>
               <div class="info-item" v-if="info.payMethod == 1">
                 <div class="label">汇款截图：</div>
@@ -336,7 +338,7 @@ import order_refund_modal from "@/components/order/order_refund_modal.vue"; //�
 // import orderInfo from "@/components/order/orderInfo.vue"; //
 import { mapState } from "vuex";
 import xianxia_submit from "@/components/order/xianxia_submit.vue";
-import {API_ROOT} from "@/config/env.js"
+import { API_ROOT } from "@/config/env.js";
 export default {
   name: "order-detail",
   components: {
@@ -492,10 +494,9 @@ export default {
         let { code, data, msg } = res;
         if (code == 200) {
           this.info = data;
-
           this.payInfo = data.payInfo;
           this.products = data.products;
-          this.fahuoInfo = data.fahuoInfo;
+          this.fahuoInfo = data.fahuoInfo.fahuoList[0][0][0];
           this.invioceJson = data.invioceJson || {};
           this.is_finish_pay = parseFloat(data.pricePayed) > 0;
           this.products.forEach((item) => {
@@ -554,7 +555,11 @@ export default {
     doDownloadContract(item) {
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("userId");
-      window.open(API_ROOT + `/service.php?action=orders_downloadAttach&token=${token}&userId=${userId}&id=${item.id}&type=1` , "_blank");
+      window.open(
+        API_ROOT +
+          `/service.php?action=orders_downloadAttach&token=${token}&userId=${userId}&id=${item.id}&type=1`,
+        "_blank"
+      );
     },
     doOfflinePay(item) {
       this.$refs.xianxia.init(item);
