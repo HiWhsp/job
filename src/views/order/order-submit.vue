@@ -80,24 +80,37 @@
                 <div class="info-item">
                   <div class="info-label">收款单位名称:</div>
                   <div class="info-val">
-                    {{ vuex_config.offline_company || "--"
+                    {{ vuex_bank_info.company || "--"
                     }}<img
                       src="@img/pay-method/copy.png"
                       alt=""
                       class="copy-img"
+                      @click="copy_text(vuex_bank_info.company)"
                     />
                   </div>
                 </div>
                 <div class="info-item">
                   <div class="info-label">收款单位账号:</div>
                   <div class="info-val">
-                    {{ vuex_config.offline_code || "--" }}
+                    {{ vuex_bank_info.bankAccount || "--" }}
+                    <img
+                      src="@img/pay-method/copy.png"
+                      alt=""
+                      class="copy-img"
+                      @click="copy_text(vuex_bank_info.bankAccount)"
+                    />
                   </div>
                 </div>
                 <div class="info-item">
                   <div class="info-label">开户银行:</div>
                   <div class="info-val">
-                    {{ vuex_config.offline_bank || "--" }}
+                    {{ vuex_bank_info.bankName || "--" }}
+                    <img
+                      src="@img/pay-method/copy.png"
+                      alt=""
+                      class="copy-img"
+                      @click="copy_text(vuex_bank_info.bankName)"
+                    />
                   </div>
                 </div>
               </div>
@@ -114,9 +127,7 @@
                   :before-upload="beforeUpload_pingjia"
                   :on-preview="handlePictureCardPreview"
                 >
-                  <div class="info-label">
-                    上传汇款截图
-                  </div>
+                  <div class="info-label">上传汇款截图</div>
                 </el-upload>
               </div>
             </div>
@@ -625,7 +636,7 @@ export default {
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState(["vuex_bank_info"]),
 
     real_payment_money() {
       let money = parseFloat(
@@ -723,7 +734,7 @@ export default {
     },
   },
   watch: {},
-  created() {
+  mounted() {
     this.from = this.$route.query.from || "";
     this.getCacheProduct();
 
@@ -734,6 +745,18 @@ export default {
     // this.query_pay_platform_account_list(); // 获取支付平台账号列表
   },
   methods: {
+    copy_text(text) {
+      if (text) {
+        // 原生复制
+        const input = document.createElement('input');
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        this.$message.success("复制成功");
+      }
+    },
     query_pay_platform_account_list() {
       this.$api({
         url: "/service.php",
@@ -882,7 +905,8 @@ export default {
         tuanId: "", //参与拼团的团ID
         tuanType: "", //拼团类型：0-普通订单 1-普通团 2-社区团
         remark: this.remark, //备注
-        payType: this.payType == 'weixin' ? 1 : this.payType == 'zhifubao' ? 2 : 3,
+        payType:
+          this.payType == "weixin" ? 1 : this.payType == "zhifubao" ? 2 : 3,
         ...this.fapiao_info,
       };
       return params;
@@ -1253,7 +1277,7 @@ export default {
           orderType: 1,
           orderId: this.order_id,
           images: this.xianxia_file_list.join(","),
-          bankId: 3,
+          bankId: this.vuex_bank_info.id,
         },
       }).then((res) => {
         console.log(res.code);

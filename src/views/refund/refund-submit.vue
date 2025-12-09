@@ -318,7 +318,7 @@ export default {
           this.order = data;
           this.orderObj = data;
           this.product_info =
-            data.products.find((v) => v.productId == this.inventoryId) || {};
+            data.products.find((v) => v.id == this.inventoryId) || {};
           this.product = this.product_info;
           this.max_refund_money = parseFloat(data.price);
           this.shouhuoInfo = data.shouhuoInfo;
@@ -337,13 +337,13 @@ export default {
     //可换货产品
     query_exchange_products() {
       console.log(12321);
-      
+
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "refund_showChangeProduct",
-          productId: this.inventoryId,
+          productId: this.product.productId,
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -385,18 +385,18 @@ export default {
       });
     },
 
-    //提交评价
+    //提交
     submit_refund() {
       //退换货类型(1-退款   2-退货退款  3-换货)
       let params = {
         action: "refund_add",
         orderId: this.orderId,
-        productId: this.inventoryId,
+        productId: this.product.productId,
         type: this.type, //退换货类型(1-退款 2-退货退款 3-换货 4-维修)
         num: this.product_info.num,
         reason: this.refund_reason,
         remark: this.refund_remark,
-        money: this.refund_money,
+        money: this.refund_money || 0,
         images: this.upload_pic_list.join(","),
         // addressId: this.address_select.id,//type=3 换货传用户地址id
         // new_product: ''//type=3换货 传换货的商品
@@ -405,9 +405,8 @@ export default {
         params.addressId = this.address_select.id;
         params.new_product = JSON.stringify([
           {
-            productId: this.product_select.inventoryId,
-            productId: this.product_select.productId,
-            num: this.product_info.num,
+            productId: this.product_select.product.id,
+            num: this.product_select.quantity,
           },
         ]);
       }
@@ -429,7 +428,7 @@ export default {
         }
       } else if (this.type == 3) {
         //换货
-        if (!this.product_select.id) {
+        if (!this.product_select.product.id) {
           return alertErr("请选择换货商品");
         }
         if (!this.address_select.id) {

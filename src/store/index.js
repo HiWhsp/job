@@ -67,6 +67,7 @@ export default new Vuex.Store({
     //
     vuex_config: {},
     vuex_news_cates: [],
+    vuex_bank_info: [],
     //
     vuex_is_login: false, //是否登录
     //
@@ -152,6 +153,9 @@ export default new Vuex.Store({
       state.vuex_category_tree = category_tree;
       state.vuex_category_flat = category_flat;
     },
+    set_vuex_bank_info(state, data) {
+      state.vuex_bank_info = data;
+    },
 
     set_vuex_login_status(state, value) {
       // //console.log("--------------- 用户是否登录 ---------------", value);
@@ -178,7 +182,6 @@ export default new Vuex.Store({
 
       let token = localStorage.getItem("token");
       let userId = localStorage.getItem("userId");
-      console.log(userId);
       if (token && userId) {
         let cache_user = JSON.parse(localStorage.getItem("vuex_user"));
         console.log(cache_user);
@@ -238,6 +241,7 @@ export default new Vuex.Store({
       dispatch('query_banner')
       dispatch('query_category')
       dispatch('query_news')
+      dispatch('query_bank_info')
     },
 
     // 查询
@@ -309,6 +313,19 @@ export default new Vuex.Store({
       });
     },
 
-
+    // 获取对公账户
+    async query_bank_info({ commit, state, dispatch }) {
+      api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "index_getBankInfo",
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          commit("set_vuex_bank_info", res.data);
+        }
+      });
+    },
   },
 });

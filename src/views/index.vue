@@ -23,7 +23,7 @@
 
         <div class="content-box w-1400">
           <!-- 产品中心 -->
-          <div class="product-center">
+          <div class="product-center" v-if="vuex_config.proCenterMold == 1">
             <div class="product-center-left">
               <div class="sub-title">
                 <h2 class="product-title-text">产品中心</h2>
@@ -56,7 +56,7 @@
             </div>
           </div>
           <!-- 产品推荐 -->
-          <div class="product-recommendation">
+          <div class="product-recommendation" v-if="vuex_config.proRecMold == 1">
             <div class="product-grid-container">
               <div class="product-grid-8" v-if="productList.length > 0">
                 <div
@@ -94,7 +94,7 @@
             </div>
           </div>
           <!-- 新闻动态 -->
-          <div class="news-section">
+          <div class="news-section" v-if="vuex_config.newsMold == 1">
             <div class="sub-title">
               <h2 class="product-title-text">新闻动态</h2>
               <p class="product-subtitle">NEWS UPDATES</p>
@@ -150,7 +150,7 @@
             <el-empty v-if="newsList.length === 0" description="暂无数据" />
           </div>
           <!-- 服务中心 -->
-          <div class="service-center">
+          <div class="service-center" v-if="vuex_config.serveMold == 1">
             <div class="sub-title">
               <h2 class="product-title-text">服务中心</h2>
               <p class="product-subtitle">SERVICE CENTER</p>

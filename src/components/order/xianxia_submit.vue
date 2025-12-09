@@ -1,5 +1,6 @@
 <script>
 import { UPLOAD_ACTION, UPLOAD_NAME, UPLOAD_PARAMS_ACTION } from "@/config/env";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -10,10 +11,13 @@ export default {
       dialogImageUrl: "",
       dialogVisible: false,
       upload_col_name: "",
-      UPLOAD_ACTION: "http://jzgy360.com/service.php",
+      UPLOAD_ACTION: UPLOAD_ACTION,
       UPLOAD_NAME,
       UPLOAD_PARAMS_ACTION: "index_localUpload",
     };
+  },
+  computed: {
+    ...mapState(["vuex_bank_info"]),
   },
   methods: {
     init(info) {
@@ -53,6 +57,7 @@ export default {
             orderType: 1,
             orderId: this.info.id,
             images: images,
+            bankId: this.vuex_bank_info.id,
           },
         }).then((res) => {
           alert(res);

@@ -81,22 +81,34 @@
               <div class="info-item">
                 <div class="label">收款单位名称：</div>
                 <div class="val">
-                  这里展示收款方名称
-                  <img src="@/assets/img/pay-method/copy.png" alt="" />
+                  {{ vuex_bank_info.company }}
+                  <img
+                    src="@/assets/img/pay-method/copy.png"
+                    alt=""
+                    @click="copy_text(vuex_bank_info.company)"
+                  />
                 </div>
               </div>
               <div class="info-item">
                 <div class="label">收款单位号码：</div>
                 <div class="val">
-                  4205 0111 6297 0918 8188
-                  <img src="@/assets/img/pay-method/copy.png" alt="" />
+                  {{ vuex_bank_info.bankAccount }}
+                  <img
+                    src="@/assets/img/pay-method/copy.png"
+                    alt=""
+                    @click="copy_text(vuex_bank_info.bankAccount)"
+                  />
                 </div>
               </div>
               <div class="info-item">
                 <div class="label">开户银行：</div>
                 <div class="val">
-                  这里展示收款方名称
-                  <img src="@/assets/img/pay-method/copy.png" alt="" />
+                  {{ vuex_bank_info.bankName }}
+                  <img
+                    src="@/assets/img/pay-method/copy.png"
+                    alt=""
+                    @click="copy_text(vuex_bank_info.bankName)"
+                  />
                 </div>
               </div>
             </div>
@@ -245,15 +257,15 @@
               >
                 取消订单
               </button>
-              <button
+              <!-- <button
                 v-if="info.ifPay == 1"
                 class="btn-ripple fit-text btn-bg"
                 @click="doPay(info)"
               >
                 去支付
-              </button>
+              </button> -->
               <button
-                v-if="info.ifPay == 1 && vuex_user.staffType == 1"
+                v-if="info.ifPay == 1"
                 class="btn-ripple fit-text btn-bg"
                 @click="doOfflinePay(info)"
               >
@@ -369,19 +381,16 @@ export default {
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState(["vuex_bank_info"]),
   },
   watch: {
     orderObj(data) {
-      let { shouhuoInfo, payInfo, peisongType, shequ, offlineJson } = data;
+      let { shouhuoInfo, payInfo, peisongType, shequ } = data;
 
       this.peisong_type = peisongType;
       this.shequ = shequ;
       this.shouhuoInfo = shouhuoInfo;
       this.pay_info = payInfo;
-      offlineJson.forEach((item) => {
-        this.xianxia_imgs.push(item.images);
-      });
       //配送方式
       let peisong_map = {
         1: "快递配送",
@@ -395,6 +404,18 @@ export default {
     this.setView();
   },
   methods: {
+    copy_text(text) {
+      if (text) {
+        // 原生复制
+        const input = document.createElement("input");
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand("copy");
+        document.body.removeChild(input);
+        this.$message.success("复制成功");
+      }
+    },
     emitConfirm() {
       this.setView();
     },

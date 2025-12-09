@@ -243,6 +243,8 @@ export default {
     },
     // 获取对比产品列表
     getCompareProducts() {
+      this.compareProducts = [];
+      this.compareProductsSpecs = [];
       // 从localStorage中获取对比产品ID列表
       const ids = JSON.parse(localStorage.getItem("compare_productsIds"));
       if (ids && ids.length > 0) {
@@ -310,6 +312,9 @@ export default {
         this.$message.warning("请选择要添加的产品");
         return;
       }
+
+      console.log("添加产品", this.inputProduct);
+      
 
       // 检查最大对比数量（通常限制为6个）
       //   const MAX_COMPARE_COUNT = 6;

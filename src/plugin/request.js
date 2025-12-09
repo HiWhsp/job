@@ -1,8 +1,8 @@
 import Vue from "vue";
 import axios from "axios";
 import { Message } from "element-ui";
-// import store from "@/store";
-// import router from "@/router";
+import store from "@/store";
+import router from "@/router";
 
 import {
   API_ROOT
@@ -35,7 +35,7 @@ axios.interceptors.response.use(
       return res;
     } else if (code == -1 || code == 401) {
       Message.error("登录已过期，请重新登录");
-      this.$store.dispatch("remove_vuex_user");
+      store.dispatch("remove_vuex_user");
       router.push("/login");
       return Promise.reject(res);
     }

@@ -124,15 +124,15 @@
                 >
                   取消订单
                 </button>
-                <button
+                <!-- <button
                   v-if="item.ifPay == 1"
                   class="btn-ripple fit-text btn-bg"
                   @click="doPay(item)"
                 >
                   去支付
-                </button>
+                </button> -->
                 <button
-                  v-if="item.ifPay == 1 && vuex_user.staffType == 1"
+                  v-if="item.ifPay == 1"
                   class="btn-ripple fit-text btn-bg"
                   @click="doOfflinePay(item)"
                 >

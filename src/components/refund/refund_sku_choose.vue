@@ -57,7 +57,7 @@ export default {
       // 默认选择第一个有库存的商品
       const firstAvailable = this.productList.find(item => item.kucun > 0);
       if (firstAvailable) {
-        this.selectedProduct = firstAvailable;
+        // this.selectedProduct = firstAvailable;
         this.quantity = 1;
       } else {
         this.selectedProduct = null;
