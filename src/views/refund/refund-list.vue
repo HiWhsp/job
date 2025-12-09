@@ -55,8 +55,14 @@
                       </div>
                       <div class="box-title">
                         <div class="title">{{ order.products.title }}</div>
-                        <div class="sku">订货编码：UA199</div>
-                        <div class="sku">商品型号：S54001</div>
+                        <div class="sku">订货编码：{{ order.products.sn }}</div>
+                        <div class="sku">商品型号：{{
+                          order.products.addrows
+                            ? order.products.addrows[0]
+                              ? order.products.addrows[0].val
+                              : "--"
+                            : "--"
+                        }}</div>
                       </div>
                       <div class="box-price">
                         <div class="price">
@@ -138,8 +144,14 @@
                       </div>
                       <div class="box-title">
                         <div class="title">{{ order.products.title }}</div>
-                        <div class="sku">订货编码：UA199</div>
-                        <div class="sku">商品型号：S54001</div>
+                        <div class="sku">订货编码：{{ order.products.sn }}</div>
+                        <div class="sku">商品型号：{{
+                          order.products.addrows
+                            ? order.products.addrows[0]
+                              ? order.products.addrows[0].val
+                              : "--"
+                            : "--"
+                        }}</div>
                       </div>
                       <div class="box-price">
                         <div class="price">
@@ -278,7 +290,7 @@ export default {
         data: {
           action: "refund_lists",
           ...this.pagination,
-          status: this.refund_status, //(0待处理  1已完成  -1无效)
+          status: this.tab_select.value, //(0待处理  1已完成  -1无效)
         },
       }).then((res) => {
         if (res.code == 200) {

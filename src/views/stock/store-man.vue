@@ -76,7 +76,13 @@
                       订货编码：{{ product_item.sn }}
                     </div>
                     <div class="product-sku">
-                      商品型号：{{ product_item.keyVals }}
+                      商品型号：{{
+                        product_item.addrows
+                          ? product_item.addrows[0]
+                            ? product_item.addrows[0].val
+                            : "--"
+                          : "--"
+                      }}
                     </div>
                   </div>
                   <!-- <div class="box-sku">
@@ -112,13 +118,23 @@
                 <button class="btn-ripple fit-text" @click="toDetail(item)">
                   账单详情
                 </button>
-                <button class="btn-ripple fit-text" @click="doDownload(item, 2)">
+                <button
+                  class="btn-ripple fit-text"
+                  @click="doDownload(item, 2)"
+                >
                   下载开票凭证
                 </button>
-                <button class="btn-ripple fit-text" @click="doDownload(item, 1)">
+                <button
+                  class="btn-ripple fit-text"
+                  @click="doDownload(item, 1)"
+                >
                   下载合同文件
                 </button>
-                <button class="btn-ripple fit-text" @click="doYiYi(item)" v-if="item.billConfirm == 0">
+                <button
+                  class="btn-ripple fit-text"
+                  @click="doYiYi(item)"
+                  v-if="item.billConfirm == 0"
+                >
                   有异议
                 </button>
                 <button
@@ -206,7 +222,8 @@ import order_refund_modal from "@/components/order/order_refund_modal.vue"; //�
 import xianxia_submit2 from "@/components/order/xianxia_submit2.vue";
 import { mapState } from "vuex";
 import TableExport from "tableexport";
-import download from "@/util/download";
+import { API_ROOT } from "@/config/env.js";
+
 export default {
   name: "servicePage",
   components: {
@@ -249,7 +266,7 @@ export default {
         { value: -1, title: "全部账单" },
         { value: 0, title: "待确认", num: orderData.billConfirm0Count || 0 },
         { value: 1, title: "已确认", num: orderData.billConfirm1Count || 0 },
-        { value: 2, title: "有异议", num: orderData.billConfirm2Count || 0 }
+        { value: 2, title: "有异议", num: orderData.billConfirm2Count || 0 },
       ];
       return tabList;
     },
@@ -265,7 +282,7 @@ export default {
         method: "post",
         data: {
           action: "orders_billConfirm",
-          orderId: this.yiyi_info.id,
+          id: this.yiyi_info.id,
           type: 2,
           billConfirmNote: this.yiyi_info.remark,
         },
@@ -355,16 +372,13 @@ export default {
       this.yiyi_show = true;
     },
     doDownload(item, type) {
-      // this.$api({
-      //   url: "/service.php",
-      //   method: "get",
-      //   data: {
-      //     action: "orders_downloadAttach",
-      //     id: item.id,
-      //     type: type,
-      //   },
-      // }).then((res) => {
-      // });
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
+      window.open(
+        API_ROOT +
+          `/service.php?action=orders_downloadAttach&token=${token}&userId=${userId}&id=${item.id}&type=${type}`,
+        "_blank"
+      );
     },
     doCancel(item) {
       this.$refs.order_cancel_modal.init(item);

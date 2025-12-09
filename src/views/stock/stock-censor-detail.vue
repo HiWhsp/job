@@ -360,6 +360,7 @@
 <script>
 import { mapState } from "vuex";
 import xianxia_submit2 from "@/components/order/xianxia_submit2.vue";
+import { API_ROOT } from "@/config/env.js";
 
 export default {
   name: "order-detail",
@@ -485,16 +486,13 @@ export default {
     },
 
     doDownload(type) {
-      // this.$api({
-      //   url: "/service.php",
-      //   method: "get",
-      //   data: {
-      //     action: "orders_downloadAttach",
-      //     id: this.info.id,
-      //     type: type,
-      //   },
-      // }).then((res) => {
-      // });
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
+      window.open(
+        API_ROOT +
+          `/service.php?action=orders_downloadAttach&token=${token}&userId=${userId}&id=${this.info.id}&type=${type}`,
+        "_blank"
+      );
     },
     doYiYi() {
       this.yiyi_show = true;
@@ -505,7 +503,7 @@ export default {
         method: "post",
         data: {
           action: "orders_billConfirm",
-          orderId: this.info.id,
+          id: this.info.id,
           type: 2,
           billConfirmNote: this.yiyi_info.remark,
         },
@@ -1117,6 +1115,36 @@ export default {
           opacity: 0.7;
         }
       }
+    }
+  }
+}
+.yiyi-info {
+  .yiyi-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  .yiyi-btn {
+    display: flex;
+  }
+  .yiyi-btn {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 20px;
+    button {
+      width: 100px;
+      height: 32px;
+      background: #ffffff;
+      border-radius: 50px 50px 50px 50px;
+      border-radius: 4px;
+      border: 1px solid #d5dbe8;
+    }
+    .btn-bg {
+      background: #f74747;
+      color: #ffffff;
+      border: 1px solid #f74747;
     }
   }
 }

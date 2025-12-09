@@ -101,7 +101,7 @@
               v-if="type_title == '退款' || type_title == '退货退款'"
             >
               <div class="label">
-                {{ type_title == "退款" ? "退款金额：" : "退款金额" }}：
+                {{ type_title == "退款" ? "退款金额：" : "退款金额" }}
               </div>
               <div class="action">
                 <el-input placeholder="请输入退款金额" v-model="refund_money" />
@@ -154,13 +154,36 @@
               <div class="label">退货方式：</div>
               <div class="action">自行寄回</div>
             </div>
-            <div class="input-box upload-box" v-if="type == 2 || type == 4">
-              <div class="label">我的地址：</div>
-              <div class="action">
-                <p style="margin-bottom: 10px;color: #7D7D7D;font-size: 14px;">张三 1810000000</p>
-                <p style="color: #7D7d7d;font-size: 14px;">详细地址：中关村东路XXX号 XXXXXXX</p>
+            <div class="input-box shouhuo-box" v-if="[2, 4, '2', '4'].includes(type)">
+                <div class="label">我的地址：</div>
+                <div class="action" style="width: fit-content">
+                  <div class="huanhuo-receive">
+                    <div
+                      class="btn btn-ripple fit-text"
+                      @click="do_choose_addr()"
+                    >
+                      选择收货地址
+                    </div>
+                  </div>
+                  <div class="huanhuo-receive" v-if="address_select.id">
+                    <div class="rec">
+                      <span class="text">收货人: </span>
+                      <span class="val"> {{ address_select.name }}</span>
+                    </div>
+                    <div class="rec">
+                      <span class="text">收货地址:</span>
+                      <span class="val">{{ address_select.phone }} </span>
+                    </div>
+                    <div class="rec">
+                      <span class="text">手机号码: </span>
+                      <span class="val">
+                        {{ address_select.province }}{{ address_select.city
+                        }}{{ shouhuoInfo.area }} {{ shouhuoInfo.address }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
 
             <div class="submit-box">
               <button class="btn btn-ripple" @click="submit_refund">
@@ -412,6 +435,11 @@ export default {
         }
         if (!this.address_select.id) {
           return alertErr("请选择换货收货地址");
+        }
+      }
+      if(['2', '4', 2, 4].includes(this.type)) {
+        if (!this.address_select.id) {
+          return alertErr("请选择收货地址");
         }
       }
       // if (!this.refund_remark) {

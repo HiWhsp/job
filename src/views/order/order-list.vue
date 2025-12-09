@@ -161,7 +161,7 @@
                   确认收货
                 </button>
                 <button
-                  v-if="item.orderStatus == 6"
+                  v-if="item.orderStatus == 5"
                   class="btn-ripple fit-text btn-bg"
                   @click="doReview(item)"
                 >
@@ -468,7 +468,15 @@ export default {
     doReceive(item) {
       this.$refs.order_receive_modal.init(item);
     },
-    doReview(item) {},
+    doReview(item) {
+      this.$router.push({
+        path: "/order-review-submit",
+        query: {
+          orderId: item.id,
+          inventoryId: item.products[0].id,
+        },
+      });
+    },
     doRefund(item) {
       this.toRoute({
         path: "/refund-type",

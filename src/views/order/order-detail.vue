@@ -496,7 +496,7 @@ export default {
           this.info = data;
           this.payInfo = data.payInfo;
           this.products = data.products;
-          this.fahuoInfo = data.fahuoInfo.fahuoList[0][0][0];
+          this.fahuoInfo = data.fahuoInfo;
           this.invioceJson = data.invioceJson || {};
           this.is_finish_pay = parseFloat(data.pricePayed) > 0;
           this.products.forEach((item) => {
@@ -550,7 +550,13 @@ export default {
       this.$refs.order_receive_modal.init(item);
     },
     doRefund(item) {
-      this.$refs.order_refund_modal.init(item);
+      this.toRoute({
+        path: "/refund-type",
+        query: {
+          orderId: item.id,
+          inventoryId: item.products[0].id,
+        },
+      });
     },
     doDownloadContract(item) {
       const token = localStorage.getItem("token");
