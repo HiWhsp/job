@@ -51,7 +51,7 @@ export default {
           method: "post",
           data: {
             action: "orders_savePayImg",
-            orderId: this.info.id,
+            id: this.info.id,
             billConfirmFile: images,
             type: 1,
           },
@@ -84,6 +84,7 @@ export default {
               <el-upload
                 :action="UPLOAD_ACTION"
                 :name="UPLOAD_NAME"
+                :file-list="xianxia_file_list"
                 :before-upload="beforeUpload_pingjia"
                 :data="mix_upload_data"
                 :limit="upload_limit_number"

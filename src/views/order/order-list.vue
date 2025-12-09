@@ -337,7 +337,7 @@ export default {
             });
 
             let count_goods = 0;
-            order.products.forEach((product) => {
+            order.products && order.products.forEach((product) => {
               count_goods = count_goods + +product.num;
             });
             order.count_goods = count_goods;
