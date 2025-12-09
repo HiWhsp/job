@@ -1011,7 +1011,7 @@ export default {
         alertErr("请选择订购数量！");
         return;
       }
-      if (this.selected_num <= this.info.miniOrder) {
+      if (this.selected_num < this.info.miniOrder) {
         alertErr("当前商品最小订购数量为" + this.info.miniOrder);
         return;
       }
@@ -1065,10 +1065,15 @@ export default {
         alertErr("请选择订购数量！");
         return;
       }
-      if (!this.mix_get_login_status()) {
+
+      if (this.selected_num < this.info.miniOrder) {
+        alertErr("当前商品最小订购数量为" + this.info.miniOrder);
         return;
       }
 
+      if (!this.mix_get_login_status()) {
+        return;
+      }
       //console.log("shopcart_add 加入购物车");
       if (!this.sku_select.inventoryId) {
         alertErr("请选择商品规格！");

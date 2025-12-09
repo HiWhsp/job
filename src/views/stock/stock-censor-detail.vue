@@ -73,8 +73,13 @@
               <div class="info-item">
                 <div class="label">配送方式：</div>
                 <div class="val">
-                  {{ fahuoInfo.expressName || "--" }}
-                  {{ fahuoInfo.expressOrder || "--" }}
+                  {{
+                    fahuoInfo[1]
+                      ? fahuoInfo[1].expressType == 1
+                        ? "快递"
+                        : "专送"
+                      : "--"
+                  }}
                 </div>
               </div>
               <div class="info-item" v-if="info.payMethod == 1">
@@ -98,12 +103,12 @@
               <div class="info-item">
                 <div class="label">付款状态：</div>
                 <div class="val">
-                  {{ info.payMethod == 1 ? "已付款" : "部分付款" }}
+                  {{ getPayStatusText(info.payStatus) }}
                 </div>
               </div>
               <div class="info-item" v-if="info.payMethod == 2">
                 <div class="label">应付款时间：</div>
-                <div class="val">{{ info.payTime }}</div>
+                <div class="val">{{ info.nextPayDate }}</div>
               </div>
             </div>
           </div>
@@ -125,9 +130,7 @@
             <tbody>
               <tr v-for="(item, index) in invoiceList" :key="index">
                 <td>{{ item.invoiceTime || "--" }}</td>
-                <td>
-                  {{ vuex_huobi }}{{ item.money || "0.00" }}
-                </td>
+                <td>{{ vuex_huobi }}{{ item.money || "0.00" }}</td>
                 <td>{{ item.invoiceCode || "--" }}</td>
                 <td>
                   <el-image
@@ -162,17 +165,13 @@
                 <td>
                   {{ item.createTime || "--" }}
                 </td>
-                <td>
-                  {{ vuex_huobi }}{{ item.money || "0.00" }}
-                </td>
+                <td>{{ vuex_huobi }}{{ item.money || "0.00" }}</td>
                 <td>
                   <el-image
                     v-if="item.attach"
                     :src="item.attach"
                     style="width: 50px; height: 50px; cursor: pointer"
-                    :preview-src-list="[
-                      item.attach,
-                    ]"
+                    :preview-src-list="[item.attach]"
                     fit="cover"
                   />
                   <span v-else>--</span>
@@ -410,6 +409,20 @@ export default {
   },
   computed: {
     ...mapState([""]),
+    getPayStatusText() {
+      return (payStatus) => {
+        switch (payStatus) {
+          case -1:
+            return "所有";
+          case 0:
+            return "待付款";
+          case 1:
+            return "部分付款";
+          case 2:
+            return "已付款";
+        }
+      };
+    },
   },
   created() {
     this.setView();
@@ -768,7 +781,6 @@ export default {
     }
 
     tbody {
-
       tr {
         border-bottom: 1px solid #f5f5f5;
 

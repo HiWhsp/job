@@ -22,7 +22,7 @@
         <div class="link-wrap">
           <div
             class="link-group"
-            v-for="(group, index) in footer_link_group"
+            v-for="(group, index) in vuex_footer_cates"
             :key="index"
           >
             <div class="group-title">
@@ -36,7 +36,7 @@
               <a :href="sub.url" v-if="sub.url" target="_blank">
                 {{ sub.title }}
               </a>
-              <router-link :to="'/help?id=' + sub.id">
+              <router-link :to="'/help?id=' + (sub.newList[0] ? sub.newList[0].id : '')">
                 {{ sub.title }}
               </router-link>
               <!-- <div v-else>{{ sub.title }}</div> -->
@@ -78,6 +78,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "web-footer",
   components: {},
@@ -85,53 +86,16 @@ export default {
   data() {
     return {
       footerTips: [],
-      footer_link_group: [],
     };
   },
   computed: {
-    // ...mapState([""]),
+    ...mapState(["vuex_footer_cates"]),
   },
   watch: {},
 
   created() {
-    this.query_footer_link();
   },
-  methods: {
-    query_footer_link() {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "news_getIndexFooter",
-          channelId: 59,
-          page: 1,
-          pageNum: 1000,
-          orderType: 0, //排序情况：0-自然排序 1-最新
-        },
-      }).then((res) => {
-        if (res.code == 200) {
-          this.footer_link_group = res.data;
-          this.footer_link_group.forEach((item) => {
-            this.$api({
-              url: "/service.php",
-              method: "get",
-              data: {
-                action: "news_getIndexFooter",
-                channelId: item.id,
-                page: 1,
-                pageNum: 1000,
-                orderType: 0, //排序情况：0-自然排序 1-最新
-              },
-            }).then((res) => {
-              if (res.code == 200) {
-                item.newList = res.data;
-              }
-            });
-          });
-        }
-      });
-    },
-  },
+  methods: {},
 };
 </script>
 

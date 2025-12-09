@@ -69,7 +69,6 @@
                   <button @click="do_number_minus(item)">-</button>
                   <input
                     type="number"
-                    min="1"
                     v-model="item.num"
                     @blur="on_blur_input(item)"
                   />
@@ -363,7 +362,8 @@ export default {
 
     //购物车商品数量减少
     do_number_minus(item) {
-      if (item.num == 1) {
+      if (item.num == item.miniOrder) {
+        alertErr(`${item.title} 最少购买 ${item.miniOrder} 件`);
         return;
       }
       item.num = --item.num;

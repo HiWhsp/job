@@ -194,13 +194,24 @@
                   <div class="num-item">
                     <span class="label">已报价：</span>
                     <span class="value"
-                      >{{ (info.product_list.filter(item => item.length > 0) || []).length }}种</span
+                      >{{
+                        (
+                          info.product_list.filter((item) => item.length > 0) ||
+                          []
+                        ).length
+                      }}种</span
                     >
                   </div>
                   <div class="num-item">
                     <span class="label">待报价：</span>
                     <span class="value"
-                      >{{ (info.product_list.filter(item => item.length == 0) || []).length }}种</span
+                      >{{
+                        (
+                          info.product_list.filter(
+                            (item) => item.length == 0
+                          ) || []
+                        ).length
+                      }}种</span
                     >
                   </div>
                 </div>
@@ -208,7 +219,11 @@
               <div class="right-acts flex">
                 <div class="total-number">
                   已选中：
-                  <b>{{ info.origin_list.filter(item => item.selected).length }}件</b>
+                  <b
+                    >{{
+                      info.origin_list.filter((item) => item.selected).length
+                    }}件</b
+                  >
                 </div>
 
                 <button
@@ -369,6 +384,9 @@ export default {
         // 如果全选复选框被选中,则重新给选项复选框赋值,即选中所有的选项复选框
         this.info.origin_list.forEach((item, index) => {
           this.$set(item, "selected", true);
+          this.info.product_list[index].forEach((itLoop, i) => {
+            this.$set(itLoop, "selected", true);
+          });
           this.selectedProductList[index] = this.info.product_list[index];
         });
       } else {
@@ -434,6 +452,9 @@ export default {
 
     handleChange(item, index) {
       if (item.selected) {
+        this.info.product_list[index].forEach((itLoop, i) => {
+          this.$set(itLoop, "selected", true);
+        });
         this.selectedProductList[index] = this.info.product_list[index];
       } else {
         this.selectedProductList[index] = [];

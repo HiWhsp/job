@@ -133,7 +133,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           this.order = res.data;
-          this.product_info = res.data.products.find(v => v.productId == this.inventoryId) || {}
+          this.product_info = res.data.products.find(v => v.id == this.inventoryId) || {}
         }
       });
     },

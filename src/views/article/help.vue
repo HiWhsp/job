@@ -24,7 +24,7 @@
                 <div class="nav-item">
                   上一条：<router-link
                     v-if="last_news.id"
-                    :to="'news-detail?id=' + last_news.id"
+                    :to="'help?id=' + last_news.id"
                     >{{ last_news.title }}</router-link
                   >
                   <span v-else>无</span>
@@ -32,7 +32,7 @@
                 <div class="nav-item">
                   下一条：<router-link
                     v-if="next_news.id"
-                    :to="'news-detail?id=' + next_news.id"
+                    :to="'help?id=' + next_news.id"
                     >{{ next_news.title }}</router-link
                   >
                   <span v-else>无</span>
@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     initParams() {
-      this.id = this.$route.query.id;
+      this.id = this.$route.query.id || "135";
     },
     setView() {
       this.$api({
@@ -86,7 +86,7 @@ export default {
         method: "get",
         data: {
           action: "news_detail",
-          id: 124,
+          id: this.id,
         },
       }).then((res) => {
         if (res.code == 200) {

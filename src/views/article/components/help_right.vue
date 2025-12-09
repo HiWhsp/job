@@ -10,7 +10,7 @@
           <div class="cate-list">
             <div
               class="cate-group"
-              v-for="(group, index) in link_group"
+              v-for="(group, index) in vuex_footer_cates"
               :key="index"
             >
               <div class="group-title">
@@ -19,13 +19,15 @@
               <div class="child-box">
                 <div
                   class="child-item"
-                  v-for="(item, index) in item.newList"
+                  v-for="(item, index) in group.newList"
                   :key="index"
                   :class="{
                     active:
-                      item.id == $route.query.cid || item.id == current_cid,
+                      item.id == $route.query.id || item.id == current_cid,
                   }"
-                  @click="do_toggle_cate(item)"
+                  @click="
+                    do_toggle_cate(item.newList[0] ? item.newList[0].id : '')
+                  "
                 >
                   {{ item.title }}
                 </div>
@@ -46,7 +48,7 @@ export default {
   props: {
     current_cid: {
       //当前新闻分类 channelId
-      type: String,
+      type: Number | String,
       default: "",
       required: false,
     },
@@ -62,7 +64,7 @@ export default {
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState(["vuex_footer_cates"]),
   },
   watch: {},
   created() {
@@ -87,11 +89,16 @@ export default {
         }
       });
     },
-    do_toggle_cate(item) {
+    do_toggle_cate(id) {
+      console.log(id);
+      if (!id) {
+        this.$message.error("暂无内容");
+        return;
+      };
       this.mix_toRoute({
-        path: "/news",
+        path: "/help",
         query: {
-          cid: item.id,
+          id: id,
         },
       });
     },
@@ -122,7 +129,7 @@ export default {
       display: inline-block;
       width: 6px;
       height: 24px;
-      background: #F74747;
+      background: #f74747;
       border-radius: 100px 100px 100px 100px;
     }
   }
@@ -132,6 +139,13 @@ export default {
       margin-top: 24px;
 
       .cate-list {
+        .group-title {
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: 400;
+          font-size: 16px;
+          color: #000000;
+          margin-bottom: 12px;
+        }
         .child-item {
           cursor: pointer;
           margin-bottom: 12px;
@@ -146,7 +160,7 @@ export default {
           color: #000000;
 
           &.active {
-            background: #F74747;
+            background: #f74747;
             color: #ffffff;
           }
         }

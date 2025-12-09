@@ -75,6 +75,7 @@ export default new Vuex.Store({
     //
     vuex_category_tree: [],
     vuex_category_flat: [],
+    vuex_footer_cates: [],
     //
     default_address: {}, //默认收货地址
     //
@@ -154,6 +155,9 @@ export default new Vuex.Store({
       state.vuex_category_flat = category_flat;
     },
 
+    set_vuex_footer_cates(state, data) {
+      state.vuex_footer_cates = data;
+    },
     set_vuex_login_status(state, value) {
       // //console.log("--------------- 用户是否登录 ---------------", value);
       state.vuex_is_login = value;
@@ -174,6 +178,7 @@ export default new Vuex.Store({
   actions: {
     async appInit({ commit, state, dispatch }, data) {
       dispatch("query_assets");
+      dispatch("query_footer_cates");
 
       let token = localStorage.getItem("token");
       let userId = localStorage.getItem("userId");
@@ -307,7 +312,41 @@ export default new Vuex.Store({
         }
       });
     },
-
+    async query_footer_cates({ commit, state, dispatch }) {
+      api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "news_getIndexFooter",
+          channelId: 59,
+          page: 1,
+          pageNum: 1000,
+          orderType: 0, //排序情况：0-自然排序 1-最新
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          let footer_link_group = res.data;
+          footer_link_group.forEach((item) => {
+            api({
+              url: "/service.php",
+              method: "get",
+              data: {
+                action: "news_getIndexFooter",
+                channelId: item.id,
+                page: 1,
+                pageNum: 1000,
+                orderType: 0, //排序情况：0-自然排序 1-最新
+              },
+            }).then((res) => {
+              if (res.code == 200) {
+                item.newList = res.data;
+              }
+            });
+          });
+          commit("set_vuex_footer_cates", footer_link_group);
+        }
+      });
+    },
 
   },
 });
