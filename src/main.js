@@ -21,6 +21,7 @@ import "@/css/css-reset.css"; // css reset
 import "@/plugin/request.js"; 
 import "@/plugin/message.js"; 
 import "@/plugin/log.js"; 
+import "@/plugin/modal.js"; // modal 插件
 import '@/lib/lib-flexible.js';
 
 
@@ -44,6 +45,10 @@ Vue.use(ElementUI);
 // 混入
 import _mixin from "@/mixins/index.js";
 Vue.mixin(_mixin);
+
+// Modal 插件
+import ModalPlugin from "@/plugin/modal.js";
+Vue.use(ModalPlugin);
 
 Vue.prototype.$load = {
   loading: null,

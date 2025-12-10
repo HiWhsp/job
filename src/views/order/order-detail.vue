@@ -52,8 +52,15 @@
               </div>
               <div class="info-item">
                 <div class="label">配送方式：</div>
-                <div class="val">快递配送：
-                  <p v-if="fahuoInfo.expressName">{{ fahuoInfo.expressName }} ({{ fahuoInfo.expressOrder }})</p>
+                <div class="val">
+                  <p
+                    style="cursor: pointer"
+                    @click="to_delivery_method()"
+                    v-if="fahuoInfo.length > 0"
+                  >
+                    点击查看
+                  </p>
+                  <p v-else>暂无配送信息</p>
                 </div>
               </div>
               <div class="info-item" v-if="info.payMethod == 1">
@@ -436,6 +443,22 @@ export default {
     this.setView();
   },
   methods: {
+    to_delivery_method() {
+      // 弹窗展示物流信息
+      this.$modal.open({
+        title: "物流信息",
+        component: "delivery-method",
+        data: {
+          fahuoInfo: this.fahuoInfo,
+        },
+        width: "500px",
+        height: "500px",
+        zIndex: 1000,
+        showClose: true,
+        showFooter: false,
+        showHeader: true,
+      });
+    },
     copy_text(text) {
       // 使用原生方法
       const input = document.createElement("input");
@@ -496,13 +519,56 @@ export default {
           this.info = data;
           this.payInfo = data.payInfo;
           this.products = data.products;
-          this.fahuoInfo = data.fahuoInfo;
+          const fahuoList = data.fahuoInfo.fahuoList || [];
           this.invioceJson = data.invioceJson || {};
           this.is_finish_pay = parseFloat(data.pricePayed) > 0;
           this.products.forEach((item) => {
             this.total_product_number += item.num;
             this.ifRefund = item.ifRefund;
           });
+
+          // 遍历fahuoInfo，将expressName和expressOrder拼接起来
+          // 处理fahuoList，转换为新格式 [{type: '快递配送/专送', name: 'expressName expressOrder'}]
+          const processedFahuoInfo = [];
+
+          // 扁平化处理嵌套数组
+          const flattenArray = (arr) => {
+            const result = [];
+            arr.forEach((item) => {
+              if (Array.isArray(item)) {
+                result.push(...flattenArray(item));
+              } else if (item && typeof item === "object") {
+                result.push(item);
+              }
+            });
+            return result;
+          };
+
+          const flatList = flattenArray(fahuoList);
+          flatList.forEach((info) => {
+            if (info && (info.expressName || info.expressOrder)) {
+              const expressName = info.expressName || "";
+              const expressOrder = info.expressOrder || "";
+              const name =
+                expressName && expressOrder
+                  ? `${expressName} ${expressOrder}`
+                  : expressName || expressOrder;
+              const type =
+                info.expressType === 1
+                  ? "快递配送"
+                  : info.expressType === 2
+                  ? "专送"
+                  : "";
+
+              if (type && name) {
+                processedFahuoInfo.push({
+                  type: type,
+                  name: name,
+                });
+              }
+            }
+          });
+          this.fahuoInfo = processedFahuoInfo;
 
           //
           this.shouhuoInfo = data.shouhuoInfo;
