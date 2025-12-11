@@ -159,8 +159,8 @@ export default {
       let user_index = {} || this.user_index;
       let tabList = [
         { value: -1, id: "", title: "全部状态" },
-        { value: 0, id: 0, title: "待提交", num: user_index.order_num_0 || 0 },
-        { value: 1, id: 1, title: "待处理", num: user_index.order_num_1 || 0 },
+        { value: 0, id: 0, title: "待报价", num: user_index.order_num_0 || 0 },
+        { value: 1, id: 1, title: "已报价", num: user_index.order_num_1 || 0 },
       ];
       return tabList;
     },

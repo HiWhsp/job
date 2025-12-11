@@ -385,7 +385,9 @@ export default {
         this.info.origin_list.forEach((item, index) => {
           this.$set(item, "selected", true);
           this.info.product_list[index].forEach((itLoop, i) => {
-            this.$set(itLoop, "selected", true);
+            if (i == 0) {
+              this.$set(itLoop, "selected", true);
+            }
           });
           this.selectedProductList[index] = this.info.product_list[index];
         });
@@ -453,7 +455,9 @@ export default {
     handleChange(item, index) {
       if (item.selected) {
         this.info.product_list[index].forEach((itLoop, i) => {
-          this.$set(itLoop, "selected", true);
+          if (i == 0) {
+            this.$set(itLoop, "selected", true);
+          }
         });
         this.selectedProductList[index] = this.info.product_list[index];
       } else {

@@ -89,6 +89,10 @@
                   </div>
                 </div>
               </div>
+              <el-empty
+                v-if="allow_refund_order_list.length === 0"
+                description="暂无数据..."
+              ></el-empty>
             </div>
 
             <div
@@ -193,6 +197,10 @@
                   </div>
                 </div>
               </div>
+              <el-empty
+                v-if="refund_service_count === 0"
+                description="暂无数据..."
+              ></el-empty>
             </div>
           </div>
           <div class="pagi-box" v-if="refund_service_count !== 0">
@@ -273,6 +281,7 @@ export default {
         data: {
           action: "refund_afterSaleList",
           ...this.pagination,
+          keyword: this.keyword,
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -291,6 +300,7 @@ export default {
           action: "refund_lists",
           ...this.pagination,
           status: this.tab_select.value, //(0待处理  1已完成  -1无效)
+          keyword: this.keyword,
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -335,7 +345,11 @@ export default {
       this.setView();
     },
 
-    do_search() {},
+    do_search() {
+      this.allow_pagination.page = 1;
+      this.service_pagination.page = 1;
+      this.setView();
+    },
 
     updateView() {
       this.setView();

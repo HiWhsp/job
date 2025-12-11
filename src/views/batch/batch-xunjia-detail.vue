@@ -288,7 +288,12 @@ export default {
       this.$set(item, "fold", !item.fold);
     },
     handleChange(item, index) {
-      this.$set(item, "selected", !item.selected);
+      this.total_price = this.products.reduce((total, item) => {
+        if (item.selected) {
+          return total + item.product.inventory.priceSale * item.productNum;
+        }
+        return total;
+      }, 0);
     },
     setView() {
       this.query_order();
@@ -312,9 +317,10 @@ export default {
             }
           });
           this.products = data.product || [];
-          this.total_price = this.products.reduce((total, item) => {
-            return total + item.product.price * item.productNum;
-          }, 0);
+          // this.total_price = 
+          this.products.forEach((item, index) => {
+            this.$set(item, "selected", false);
+          });
 
           this.detail = data;
         }
@@ -372,10 +378,17 @@ export default {
         this.products.forEach((item, index) => {
           this.$set(item, "selected", true);
         });
+        this.total_price = this.products.reduce((total, item) => {
+          if (item.selected) {
+            return total + item.product.inventory.priceSale * item.productNum;
+          }
+          return total;
+        }, 0);
       } else {
         this.products.forEach((item, index) => {
           this.$set(item, "selected", false);
         });
+        this.total_price = 0
       }
     },
   },
