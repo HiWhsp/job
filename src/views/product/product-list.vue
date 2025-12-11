@@ -90,7 +90,7 @@
                 </div>
                 <div class="product-info">
                   <h3 class="product-name">{{ product.title }}</h3>
-                  <div class="product-price">¥{{ product.price || 0 }}</div>
+                  <div class="product-price">¥{{ product.minPrice || 0 }} ~ {{ product.maxPrice || 0 }}</div>
                   <el-button
                     type="primary"
                     size="small"
@@ -160,7 +160,11 @@ export default {
       if (this.filters) {
         Object.keys(this.filters).forEach((key) => {
           if (this.filters[key].length > 0) {
-            attrs.push({ id: this.filterOptions.find(item => item.title === key).id, value: this.filters[key].join(",") });
+            attrs.push({
+              id: this.filterOptions.find((item) => item.title === key)
+                .fieldTitle,
+              value: this.filters[key].join(","),
+            });
           }
         });
       }
@@ -174,7 +178,10 @@ export default {
           channelId: this.nav_option[this.nav_option.length - 1].id,
           page: this.currentPage,
           pageNum: this.pageSize,
-          attrIds: attrs.length > 0 ? JSON.stringify(attrs) : "",
+          ...attrs.reduce((acc, item) => {
+            acc[item.id] = item.value;
+            return acc;
+          }, {}),
         },
       }).then((res) => {
         let { list, count } = res.data;
@@ -208,9 +215,7 @@ export default {
 
     // 商品点击
     handleProductClick(item) {
-      this.$router.push(
-        `/product-detail?brandId=${item.id}`
-      );
+      this.$router.push(`/product-detail?brandId=${item.id}`);
     },
 
     // 切换收藏
@@ -246,7 +251,8 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "product_brandAttr",
+          action: "product_channelSearch",
+          channelId: this.nav_option[this.nav_option.length - 1].id,
         },
       }).then((res) => {
         if (res.code == 200 && res.data) {
