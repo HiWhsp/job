@@ -306,7 +306,7 @@
           <!-- 订单操作 -->
           <div class="order-action-box">
             <div class="btn-box">
-              <button class="btn-ripple fit-text" @click="doDownload(2)">
+              <button class="btn-ripple fit-text" @click="doDownload(2)" v-if="[2, 3, '2', '3'].includes(info.invoiceStatus)">
                 下载开票凭证
               </button>
               <button class="btn-ripple fit-text" @click="doDownload(1)">
@@ -353,19 +353,19 @@
       </div>
     </el-dialog>
 
-    <xianxia_submit2 ref="xianxia" @confirm="emitConfirm"></xianxia_submit2>
+    <xianxia_submit3 ref="xianxia" @confirm="emitConfirm"></xianxia_submit3>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import xianxia_submit2 from "@/components/order/xianxia_submit2.vue";
+import xianxia_submit3 from "@/components/order/xianxia_submit3.vue";
 import { API_ROOT } from "@/config/env.js";
 
 export default {
   name: "order-detail",
   components: {
-    xianxia_submit2,
+    xianxia_submit3,
   },
   data() {
     return {

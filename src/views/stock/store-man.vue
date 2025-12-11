@@ -121,6 +121,7 @@
                 <button
                   class="btn-ripple fit-text"
                   @click="doDownload(item, 2)"
+                  v-if="[2, 3, '2', '3'].includes(item.invoiceStatus)"
                 >
                   下载开票凭证
                 </button>
@@ -209,7 +210,7 @@
       @confirm="emitConfirm"
       data-type="售后"
     />
-    <xianxia_submit2 ref="xianxia" @confirm="emitConfirm"></xianxia_submit2>
+    <xianxia_submit3 ref="xianxia" @confirm="emitConfirm"></xianxia_submit3>
   </div>
 </template>
 
@@ -219,7 +220,7 @@ import order_cancel_modal from "@/components/order/order_cancel_modal.vue"; //�
 import order_delete_modal from "@/components/order/order_delete_modal.vue"; //删除
 import order_receive_modal from "@/components/order/order_receive_modal.vue"; //收货
 import order_refund_modal from "@/components/order/order_refund_modal.vue"; //售后
-import xianxia_submit2 from "@/components/order/xianxia_submit2.vue";
+import xianxia_submit3 from "@/components/order/xianxia_submit3.vue";
 import { mapState } from "vuex";
 import TableExport from "tableexport";
 import { API_ROOT } from "@/config/env.js";
@@ -232,7 +233,7 @@ export default {
     order_delete_modal,
     order_receive_modal,
     order_refund_modal,
-    xianxia_submit2,
+    xianxia_submit3,
   },
   data() {
     return {
@@ -282,7 +283,7 @@ export default {
         method: "post",
         data: {
           action: "orders_billConfirm",
-          id: this.yiyi_info.id,
+          orderId: this.yiyi_info.id,
           type: 2,
           billConfirmNote: this.yiyi_info.remark,
         },
