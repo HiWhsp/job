@@ -12,7 +12,7 @@
       <div class="filter-section">
         <!-- 文档分类 -->
         <div class="filter-row">
-          <span class="filter-label">文档分类</span>
+          <span class="filter-label filter-label-bg">文档分类</span>
           <div class="filter-options" ref="filterOptions">
             <div
               class="filter-option"
@@ -29,7 +29,7 @@
 
         <!-- 费用 -->
         <div class="filter-row">
-          <span class="filter-label">费用</span>
+          <span class="filter-label filter-label-bg">费用</span>
           <div class="filter-options">
             <div
               class="filter-option"
@@ -87,11 +87,12 @@
         />
       </div>
       <!-- 分页 -->
-      <div class="pagination-section" v-if="currentContracts.length > 0">
+      <div class="pagination-section" v-if="totalContracts > 0">
         <el-pagination
           :total="totalContracts"
           :page-size="pageSize"
           :current-page="currentPage"
+          layout="total, prev, pager, next, jumper"
           @current-change="handleCurrentChange"
         />
       </div>
@@ -162,8 +163,10 @@ export default {
           limit: this.pageSize,
         },
       }).then((res) => {
+        console.log(res);
+        
         this.currentContracts = res.data.list;
-        this.totalContracts = res.total;
+        this.totalContracts = res.data.count;
       });
     },
     // 切换文档分类
@@ -296,10 +299,18 @@ export default {
   }
 
   .filter-label {
-    width: 100px;
+    width: 110px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     font-size: 16px;
     color: #333;
     text-align: right;
+    padding-right: 20px;
+  }
+  .filter-label-bg {
+    background: #FAFAFA;
   }
 
   .filter-options {

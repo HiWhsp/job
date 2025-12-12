@@ -29,13 +29,12 @@
     <!-- 分页 -->
     <div class="pagination-section" v-if="downloadList.length > 0">
       <div class="pagination-wrapper">
-        <div class="pagination-info">共{{ totalDownloads }}条</div>
         <el-pagination
           :total="totalDownloads"
           :page-size="pageSize"
           :current-page="currentPage"
           @current-change="handlePageChange"
-          layout="prev, pager, next"
+          layout="total, prev, pager, next, jumper"
           :page-count="pageCount"
         ></el-pagination>
       </div>

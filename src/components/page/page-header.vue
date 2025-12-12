@@ -201,7 +201,7 @@ export default {
 .header-container {
   height: 100%;
   justify-content: space-between;
-  padding: 8px 0;
+  // padding: 8px 0;
 }
 
 // 左侧Logo和品牌名
@@ -231,19 +231,34 @@ export default {
   display: flex;
   align-items: center;
   width: 860px;
+  height: 100%;
+  display: flex;
+  align-items: center;
   .navigation {
     margin-right: 60px;
+    height: 100%;
     .nav-list {
       display: flex;
       list-style: none;
       margin: 0;
       padding: 0;
       gap: 90px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      .el-dropdown {
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
     }
 
     .nav-item {
       width: 80px;
       text-align: center;
+      height: 100%;
+      display: flex;
+      align-items: center;
       .nav-link {
         color: #333;
         text-decoration: none;

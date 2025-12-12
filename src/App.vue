@@ -33,7 +33,7 @@ export default {
         this.isFooter = true;
       } else {
         this.isFooter = false;
-      } 
+      }
     },
   },
   beforeCreate() {},
@@ -66,7 +66,6 @@ export default {
   margin: 0;
   padding: 0;
 }
-
 
 .w-1600 {
   width: @width;
@@ -149,12 +148,12 @@ body {
 }
 
 .el-textarea__inner:focus {
-  border-color: #0081FF !important;
+  border-color: #0081ff !important;
 }
 
 .el-radio__input.is-checked .el-radio__inner {
-  background: #0081FF !important;
-  border-color: #0081FF !important;
+  background: #0081ff !important;
+  border-color: #0081ff !important;
 }
 
 .el-radio__input.is-checked + .el-radio__label {
@@ -162,17 +161,17 @@ body {
 }
 
 .el-checkbox__input.is-focus .el-checkbox__inner {
-  border-color: #0081FF !important;
+  border-color: #0081ff !important;
 }
 
 .el-checkbox__input.is-checked + .el-checkbox__label {
-  color: #0081FF !important;
+  color: #0081ff !important;
 }
 
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-  background: #0081FF !important;
-  border-color: #0081FF !important;
+  background: #0081ff !important;
+  border-color: #0081ff !important;
 }
 
 .pagination-box {
@@ -319,11 +318,11 @@ button {
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled):hover {
-  color: #4E57D9 !important;
+  color: #4e57d9 !important;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #4E57D9 !important;
+  background-color: #4e57d9 !important;
   color: #fff !important;
 }
 
@@ -535,6 +534,13 @@ button {
       margin-bottom: 0 !important;
     }
   }
+}
+
+.el-popper {
+  margin-top: 0 !important;
+}
+.popper__arrow {
+  display: none !important;
 }
 
 @media screen and (max-width: 1199px) {
