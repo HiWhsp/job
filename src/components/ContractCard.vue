@@ -21,13 +21,13 @@
       </div>
     </div>
     <!-- 悬浮遮罩层 -->
-    <div class="overlay" v-show="showOverlay && !vuex_h5">
+    <div class="overlay" v-show="showOverlay && !vuex_h5" @click="handleView">
       <div class="overlay-buttons">
-        <button class="view-btn btn-hover" @click="handleView">
+        <button class="view-btn btn-hover">
           <i class="el-icon-view"></i>
           点击查看
         </button>
-        <button class="collect-btn" @click="handleCollect">
+        <button class="collect-btn" @click.stop="handleCollect">
           <i
             class="el-icon-star-off"
             :class="{ 'is-collected': contract.is_collect }"

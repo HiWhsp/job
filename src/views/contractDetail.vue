@@ -143,8 +143,9 @@
 
         <div class="mobileFoot" v-if="vuex_h5">
           <router-link to="/">
-            <img src="@/assets/img/common/home.png" alt="">
-            首页</router-link>
+            <img src="@/assets/img/common/home.png" alt="" />
+            首页</router-link
+          >
           <div @click="handleCollect">
             <img
               src="@/assets/img/common/collect.png"
@@ -167,24 +168,10 @@
             <!-- 下载须知 -->
             <div class="download-notice">
               <h3 class="notice-title">下载须知</h3>
-              <div class="notice-content">
-                <p>
-                  1.
-                  购买本站合同范本，即可享受律师合同审核、签约指导及终生法律咨询服务，下载后添加律师微信（{{
-                    vuex_config.bottom_lawer_contact
-                  }}）即可获取上述服务；
-                </p>
-                <p>2. 本产品为电子文档，无实体发货，无快递配送；</p>
-                <p>
-                  3.
-                  由于电子产品的可复制性，下载后不支持退换货，请确认需求后再购买；
-                </p>
-                <p>
-                  4. 如有疑问，请先咨询律师微信（{{
-                    vuex_config.bottom_lawer_contact
-                  }}）后再下单，或直接向律师购买合同范本。
-                </p>
-              </div>
+              <div
+                class="notice-content"
+                v-html="vuex_config.download_xieyi"
+              ></div>
             </div>
 
             <!-- 文档详情 -->
