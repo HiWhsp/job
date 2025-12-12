@@ -52,6 +52,9 @@
             </div>
 
             <div class="product-box">
+              <div class="reject-box" v-if="item.orderStatus == 1 && !['', '审核通过'].includes(item.remark)">
+                {{ item.remark }}
+              </div>
               <div class="product-list">
                 <div
                   class="product-item flex"
@@ -807,6 +810,14 @@ export default {
   }
 
   .product-box {
+    .reject-box {
+      background: #ffecea;
+      color: #f83b3b;
+      height: 48px;
+      line-height: 48px;
+      text-align: center;
+      margin: 15px 20px 0 20px;
+    }
     .product-list {
       .product-item {
         padding: 20px;

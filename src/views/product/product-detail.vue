@@ -225,9 +225,12 @@
                   <template slot="title">
                     <div class="product-header">
                       <div class="product-info">
-                        <span class="product-code ellipsis-1">{{
-                          product.title
-                        }}</span>
+                        <span class="product-code">
+                          <img src="@img/product/arrow-icon.png" alt="" />
+                          <span class="product-title ellipsis-1">{{
+                            product.title
+                          }}</span>
+                        </span>
                         <span class="product-diameter"
                           >{{ product.diameter || "0.00" }}mm</span
                         >
@@ -289,9 +292,9 @@
                         type="primary"
                         icon="el-icon-download"
                         size="small"
-                        v-for="(item, index) in product.fields"
+                        v-for="(item, index) in product.fieldsInfo"
                         :key="index"
-                        @click="downloadFile(item.url)"
+                        @click="downloadFile(item.fieldValue)"
                         >{{ item.title }}</el-button
                       >
                     </div>
@@ -300,7 +303,7 @@
                     <div class="parameter-table">
                       <div
                         class="parameter-row"
-                        v-for="(item, index) in product.fieldsInfo"
+                        v-for="(item, index) in product.fields"
                         :key="index"
                       >
                         <div
@@ -429,6 +432,9 @@ export default {
     this.getProductList();
   },
   methods: {
+    downloadFile(url) {
+      window.open(url, "_blank");
+    },
     addTab(item) {
       this.activeTab = item.key;
       this.selectedTab = item;
@@ -469,6 +475,23 @@ export default {
             item.quantity = 1;
             item.checked = false;
             return item;
+          });
+          this.productList.forEach((item) => {
+            // fields是对象，需要转换为数组
+            item.fields = Object.values(item.fields || {});
+            // 只存储type为5的项
+            item.fieldsInfo = item.fields.filter((v) => v.type == 5);
+            // item.fields只存储type不为5的项
+            item.fields = item.fields.filter((v) => v.type != 5);
+            // 按照两个一组存储
+            item.fields = item.fields.reduce((acc, curr, index) => {
+              if (index % 2 === 0) {
+                acc.push([curr]);
+              } else {
+                acc[acc.length - 1].push(curr);
+              }
+              return acc;
+            }, []);
           });
           // 更新反馈表单的产品选项，将当前产品添加到选项中
           if (this.product.title) {
@@ -925,7 +948,19 @@ export default {
               font-weight: 600;
               font-size: 16px;
               color: #333;
-              min-width: 80px;
+              width: 80px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 10px;
+              img {
+                width: 12px;
+                height: 12px;
+              }
+              .product-title {
+                width: 100%;
+                text-align: left;
+              }
             }
 
             .product-diameter,
