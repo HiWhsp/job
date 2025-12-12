@@ -97,25 +97,29 @@
                     </button>
                   </div>
                 </div>
-
                 <!-- 非PDF文件显示 -->
                 <img v-else :src="detail.preview_pdf_url" alt="" />
               </div>
             </div>
+
             <div class="document-page-bottom">
               <div class="document-page-bottom-left">
                 <p class="document-page-bottom-text">
                   预览结束，下载后可获得完整文档
                 </p>
-                <button class="download-btn" @click="showDownloadModal">
+                <button
+                  class="download-btn"
+                  @click="showDownloadModal"
+                  v-if="!vuex_h5"
+                >
                   <span>下载Word版本</span>
                 </button>
-                <button class="collect-btn">
+                <button class="collect-btn" v-if="!vuex_h5">
                   <img src="@/assets/img/common/kefu.png" alt="" />
                   <span>联系客服电话：18696628883 (微信同号)</span>
                 </button>
               </div>
-              <div class="document-page-bottom-right">
+              <div class="document-page-bottom-right" v-if="!vuex_h5">
                 <div class="item">
                   <img src="@/assets/img/common/look.png" alt="" />
                   <span>{{ detail.view_num || 0 }}</span>
@@ -127,7 +131,7 @@
               </div>
             </div>
           </div>
-          <div class="document-page-bottom-bottom">
+          <div class="document-page-bottom-bottom" v-if="!vuex_h5">
             <h3>相关搜索</h3>
             <div class="document-page-bottom-border-content">
               <div class="item" v-for="item in detail.about_list" :key="item">
@@ -135,6 +139,22 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="mobileFoot" v-if="vuex_h5">
+          <router-link to="/">
+            <img src="@/assets/img/common/home.png" alt="">
+            首页</router-link>
+          <div @click="handleCollect">
+            <img
+              src="@/assets/img/common/collect.png"
+              alt=""
+              v-if="detail.is_collect == 0"
+            />
+            <img src="@/assets/img/common/my-collect.png" alt="" v-else />
+            <span>{{ detail.is_collect == 0 ? "收藏" : "已收藏" }}</span>
+          </div>
+          <div @click="showDownloadModal">立即下载</div>
         </div>
 
         <div class="download-info-section">
@@ -193,7 +213,7 @@
               </div>
 
               <!-- 操作按钮 -->
-              <div class="action-buttons">
+              <div class="action-buttons" v-if="!vuex_h5">
                 <button class="download-btn" @click="showDownloadModal">
                   <img src="@/assets/img/common/down.png" alt="" />
                   <span>下载Word版本</span>
@@ -319,6 +339,7 @@ export default {
           },
         }).then((res) => {
           this.contracts = res.data.list.slice(0, 5);
+          this.preview_pdf_url = this.contracts[0].preview_pdf_url;
         });
       });
     },
@@ -416,10 +437,7 @@ export default {
     },
     handleKeyDown(e) {
       // 阻止Ctrl+S、Ctrl+Shift+S等保存快捷键
-      if (
-        (e.ctrlKey || e.metaKey) &&
-        (e.key === "s" || e.key === "S")
-      ) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === "s" || e.key === "S")) {
         const activeElement = document.activeElement;
         if (activeElement && activeElement.tagName === "CANVAS") {
           e.preventDefault();
@@ -584,8 +602,8 @@ export default {
         this.contract_type == 1
           ? `专业合同范本+律师合同审核+签约指导+法律咨询\n下载范本后，添加律师微信18696628883，即刻获取全套服务。`
           : "专业法律文书+法律咨询，下载范本后\n添加律师微信18696628883，即可获取法律咨询服务";
-      const fontSize = 22;
-      const spacing = 550; // 水印间距（增加间距让多个水印之间更宽松）
+      const fontSize = this.vuex_h5 ? 10 : 22;
+      const spacing = this.vuex_h5 ? 200 : 550; // 水印间距（增加间距让多个水印之间更宽松）
       const angle = -45; // 旋转角度
       const opacity = 0.1; // 透明度
 
@@ -606,7 +624,7 @@ export default {
       const lines = watermarkText.split("\n"); // 按换行符分割文本
       const lineHeight = fontSize * 1.8; // 行高（增加行高让两行文字间距更大）
       const totalHeight = lines.length * lineHeight; // 总高度
-      
+
       for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
           const x = j * spacing;
@@ -615,13 +633,13 @@ export default {
           ctx.save();
           ctx.translate(x, y);
           ctx.rotate((angle * Math.PI) / 180);
-          
+
           // 绘制多行文本
           lines.forEach((line, lineIndex) => {
             const offsetY = (lineIndex - (lines.length - 1) / 2) * lineHeight;
             ctx.fillText(line, 0, offsetY);
           });
-          
+
           ctx.restore();
         }
       }

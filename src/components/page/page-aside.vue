@@ -127,7 +127,7 @@ export default {
 
 <style scoped lang="less">
 .aside {
-  z-index: 10000;
+  z-index: 99;
   position: fixed;
   right: 0px;
   top: 40%;

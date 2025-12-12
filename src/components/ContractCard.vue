@@ -1,5 +1,9 @@
 <template>
-  <div class="contract-card" @mouseenter="showOverlay = true" @mouseleave="showOverlay = false">
+  <div
+    class="contract-card"
+    @mouseenter="showOverlay = true"
+    @mouseleave="showOverlay = false"
+  >
     <div class="card-content">
       <div class="document-preview">
         <div class="document-header">
@@ -11,7 +15,7 @@
             <div class="document-info">word A4 打印 内容可随意更改</div>
           </div>
         </div>
-        <div class="document-content">
+        <div class="document-content" @click="toDetail">
           <img :src="contract.thumb" alt="" />
         </div>
       </div>
@@ -24,7 +28,10 @@
           点击查看
         </button>
         <button class="collect-btn" @click="handleCollect">
-          <i class="el-icon-star-off" :class="{ 'is-collected': contract.is_collect }"></i>
+          <i
+            class="el-icon-star-off"
+            :class="{ 'is-collected': contract.is_collect }"
+          ></i>
           {{ contract.is_collect ? "取消收藏" : "收藏" }}
         </button>
       </div>
@@ -39,21 +46,25 @@
         </div>
       </div>
     </div>
-   
 
     <div class="card-title ellipsis-1">{{ displayTitle }}</div>
-     <div v-if="vuex_h5" class="overlay-operate-h5">
+    <div v-if="vuex_h5" class="overlay-operate-h5">
       <div class="overlay-buttons">
-        <button class="view-btn btn-hover" @click="handleView">
+        <button
+          class="view-btn btn-hover"
+          @click="handleView(itemId, contractId)"
+        >
           <i class="el-icon-view"></i>
           点击查看
         </button>
         <button class="collect-btn" @click="handleCollect">
-          <i class="el-icon-star-off" :class="{ 'is-collected': contract.is_collect }"></i>
+          <i
+            class="el-icon-star-off"
+            :class="{ 'is-collected': contract.is_collect }"
+          ></i>
           {{ contract.is_collect ? "取消收藏" : "收藏" }}
         </button>
       </div>
-      
     </div>
   </div>
 </template>
@@ -75,6 +86,12 @@ export default {
       type: String,
       default: "",
     },
+    itemId: {
+      type: Number,
+    },
+    contractId: {
+      type: Number,
+    },
   },
   data() {
     return {
@@ -85,15 +102,52 @@ export default {
     displayTitle() {
       if (!this.contract.title) return "";
       // 使用字段截取，只展示括号左边的内容
-      const leftBracketIndex = this.contract.title.indexOf('（') || this.contract.title.indexOf('(');
-      return leftBracketIndex !== -1 ? this.contract.title.substring(0, leftBracketIndex) : this.contract.title;
+      const leftBracketIndex =
+        this.contract.title.indexOf("（") || this.contract.title.indexOf("(");
+      return leftBracketIndex !== -1
+        ? this.contract.title.substring(0, leftBracketIndex)
+        : this.contract.title;
     },
   },
   methods: {
-    handleView() {
-      window.open(`/contractDetail?id=${this.type == "collect" ? this.contract.articleId : this.contract.id}`, '_blank');
-      console.log(this.contract);
+    handleView(itemId, contractId) {
+      if (!this.vuex_h5) {
+        window.open(
+          `/contractDetail?id=${
+            this.type == "collect" ? this.contract.articleId : this.contract.id
+          }`,
+          "_blank"
+        );
+        console.log(this.contract);
+      } else {
+        this.$api({
+          url: "contractList",
+          method: "get",
+          data: {
+            category_id: itemId,
+          },
+        }).then((res) => {
+          // this.contracts = res.data.list.slice(0, 5);
+          let contract = res.data.list.filter((e) => e.id == contractId);
+          // console.log(contract)
+          // window.open(contract[0].preview_pdf_url)
+          window.location.href = contract[0].preview_pdf_url;
+        });
+      }
     },
+
+    toDetail() {
+      if (this.vuex_h5) {
+        window.open(
+          `/contractDetail?id=${
+            this.type == "collect" ? this.contract.articleId : this.contract.id
+          }`,
+          "_blank"
+        );
+        console.log(this.contract);
+      }
+    },
+
     handleCollect() {
       const status = this.contract.is_collect == 0 ? 1 : 0;
       this.$api({
@@ -294,11 +348,13 @@ export default {
 }
 </style>
 <style lang="less" scoped>
-@media screen and (max-width:750px) {
+@media screen and (max-width: 750px) {
   .contract-card {
     border-radius: 0.8rem;
     width: 100%;
+    width: 48%;
     height: 42rem;
+    height: auto;
     margin-bottom: 0rem;
     padding-bottom: 1rem;
 
@@ -337,10 +393,12 @@ export default {
 
       .document-content {
         height: 25.2rem;
+        height: auto;
 
         img {
           width: 100%;
-          height: 25rem;
+          // height: 25rem;
+          height: auto;
         }
       }
 
@@ -354,10 +412,10 @@ export default {
   .overlay-operate-h5 {
     .overlay-buttons {
       display: flex;
-      justify-content: space-between;      
+      justify-content: space-between;
       margin-top: 1rem;
       flex-direction: column;
-      gap:0.6rem;
+      gap: 0.6rem;
       justify-content: center;
       align-items: center;
       .view-btn,
@@ -418,6 +476,5 @@ export default {
       }
     }
   }
-
 }
 </style>

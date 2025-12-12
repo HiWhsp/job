@@ -32,7 +32,9 @@
             </div>
 
             <div class="btn-box">
-              <button class="btn-ripple btn-hover" @click="do_submit()">登录</button>
+              <button class="btn-ripple btn-hover" @click="do_submit()">
+                登录
+              </button>
             </div>
 
             <div class="register-box">
@@ -157,7 +159,9 @@ export default {
     background: transparent;
     align-items: center;
     position: absolute;
-    right: 350px;
+    left: 50%;
+    transform: translateX(10%);
+    // right: 350px;
 
     .form-box {
       position: relative;
@@ -348,6 +352,10 @@ export default {
     font-size: 12px;
     color: #f74747;
   }
+}
+
+@media screen and (max-width:1024px) {
+  
 }
 </style>
 <style scoped lang="less" src="@/assets/h5css/login.less"></style>

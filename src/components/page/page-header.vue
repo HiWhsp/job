@@ -138,7 +138,9 @@
           </div>
           <div class="user-info" slot="reference">
             <img src="@img/common/avatar.png" alt="" />
-            <span>{{ vuex_user.mobile || "13333333333" }}</span>
+            <span class="user-phone">{{
+              vuex_user.mobile || "13333333333"
+            }}</span>
           </div>
         </el-popover>
         <button
@@ -478,6 +480,8 @@ export default {
     font-size: 32px;
     font-weight: bold;
     line-height: 1.2;
+    text-align: center;
+    width: 100%;
   }
 }
 </style>

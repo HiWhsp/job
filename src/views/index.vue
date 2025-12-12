@@ -1,6 +1,6 @@
 <template>
   <div class="page-index">
-    <div class="lunbo-box">
+    <div class="lunbo-box" v-if="!vuex_h5">
       <el-carousel trigger="click" :autoplay="false">
         <el-carousel-item
           v-for="(item, index) in vuex_index_banners"
@@ -12,6 +12,36 @@
       </el-carousel>
     </div>
 
+    <div class="contact-info" v-else>
+      <div class="contact-text" @click="drawer = true" type="primary">
+        <div class="contact-label flex-center">
+          <div class="phone-icon">
+            <img src="@img/index/phone.png" alt="" />
+          </div>
+          <!-- <span @click="copyToClipboard(vuex_config.bottom_lawer_contact || '18696628883')">律师咨询电话(同微信)</span> -->
+          <span>律师咨询电话(同微信)</span>
+        </div>
+        <!-- <a :href="'tel:' + vuex_config.bottom_lawer_contact || '18696628883'" class="phone-number">
+          {{ vuex_config.bottom_lawer_contact || "18696628883" }}
+        </a> -->
+        <div class="phone-number">
+          {{ vuex_config.bottom_lawer_contact || "18696628883" }}
+        </div>
+      </div>
+
+      <el-drawer
+        title="我是标题"
+        :visible.sync="drawer"
+        :direction="direction"
+        :with-header="false"
+      >
+        <a :href="'tel:' + vuex_config.bottom_lawer_contact || '18696628883'" class="phone-number">
+          呼叫 18696628883
+        </a>
+        <span @click="copyToClipboard(vuex_config.bottom_lawer_contact || '18696628883')">复制加微信18696628883</span>
+      </el-drawer>
+    </div>
+
     <div class="main-content w-1600">
       <!-- 业务公告 -->
       <div class="announcement-section">
@@ -20,7 +50,7 @@
         </div>
 
         <!-- 最新动态 -->
-        <div class="latest-updates">
+        <div class="latest-updates" v-if="!vuex_h5">
           <p class="latest-updates-title">最新动态</p>
           <div class="updates-list">
             <div
@@ -120,6 +150,8 @@
                 v-for="contract in item.child.slice(0, 5)"
                 :key="contract.id"
                 :contract="contract"
+                :itemId="item.id"
+                :contractId="contract.id"
               />
             </template>
             <template v-else>
@@ -127,6 +159,8 @@
                 v-for="contract in item.child"
                 :key="contract.id"
                 :contract="contract"
+                :itemId="item.id"
+                :contractId="contract.id"
               />
             </template>
             <el-empty
@@ -166,6 +200,8 @@ export default {
   },
   data() {
     return {
+      drawer: false,
+      direction: "btt",
       searchKeyword: "",
       activeCategory: "",
       categories: [],
@@ -183,13 +219,25 @@ export default {
         return "";
       }
       // 使用正则表达式去除所有 style 属性（包括单引号、双引号、以及各种空格情况）
-      return this.vuex_config.yewu_gonggao.replace(/\s*style\s*=\s*(["'])[^"']*\1/gi, "");
+      return this.vuex_config.yewu_gonggao.replace(
+        /\s*style\s*=\s*(["'])[^"']*\1/gi,
+        ""
+      );
     },
   },
   mounted() {
     this.getIndex();
   },
   methods: {
+    copyToClipboard(text) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      alert("已复制，请打开微信添加");
+    },
     // 轮播图点击
     do_banner_click(item) {
       if (item.url) {
@@ -248,8 +296,8 @@ export default {
       this.getIndex();
     },
     // 查看更多
-    handleViewMore(categoryId = '0') {
-      this.$router.push("/contractList?category=" + categoryId || '0');
+    handleViewMore(categoryId = "0") {
+      this.$router.push("/contractList?category=" + categoryId || "0");
     },
   },
 };
@@ -259,4 +307,3 @@ export default {
 @import "./index.less";
 </style>
 <style scoped lang="less" src="@/assets/h5css/index.less"></style>
-

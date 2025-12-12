@@ -15,26 +15,7 @@
           </div>
           <div class="brand-name">法律文书网</div>
         </div>
-        <div class="header-search-box-phone" :class="{ shown: showHeaderSearch }">
-          <el-dropdown trigger="click" class="nav-dropdown">
-            <span class="nav-link">
-              分类 <i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item v-for="item in vuex_category_tree" :key="item.id" @click.native="
-                handleNavClick('/contractList?category=' + item.id)
-                ">{{ item.title }}</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-          <input style="margin-left: 0.8rem;" ref="searchInput" type="search" placeholder="请输入"
-            class="form-control header-search-input-phone" v-model="keyword" @keyup.enter="handleSearch"
-            @input="handleSearchInput" />
-          <span style="font-size: 0.8rem;padding-left: 0.7rem;" @click="handleSearch">搜索</span>
-        </div>
-        <!-- 去掉搜索按钮 -->
-        <div class="search-box" @click="toggleSearchBox(false)" v-if="!showHeaderSearch">
-          <img src="@img/h5/h5-search.png" alt="" class="header-search-phone" />
-        </div>
+       
 
       </div>
     </div>

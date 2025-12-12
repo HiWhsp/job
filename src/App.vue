@@ -1,8 +1,7 @@
 <template>
   <div id="app">
-     <page-header-mobile v-if="vuex_h5" />
+    <page-header-mobile v-if="vuex_h5" />
     <page_header v-else />
-   
 
     <div class="layout-box">
       <router-view></router-view>
@@ -23,7 +22,7 @@ export default {
     page_aside,
     page_header,
     page_footer,
-    pageHeaderMobile
+    pageHeaderMobile,
   },
   data() {
     return {
@@ -37,34 +36,32 @@ export default {
         this.isFooter = true;
       } else {
         this.isFooter = false;
-      } 
+      }
     },
   },
   beforeCreate() {},
   created() {},
   mounted() {
-    this.setPhoneSize()
+    this.setPhoneSize();
   },
   methods: {
     setPhoneSize() {
-
       const baseSize = 16; // 基础字号（PC 端值）
       const designWidth = 375; // 设计稿宽度（按 iPhone 6/7/8）
 
       function setRem() {
         if (document.documentElement.clientWidth <= 750) {
           const scale = document.documentElement.clientWidth / designWidth;
-          document.getElementById('app').style.width = document.documentElement.clientWidth + 'px'
-          document.getElementById('app').style.overflow = 'hidden'
-          const size = baseSize * Math.min(scale, 2) + 'px';
-          document.documentElement.style.fontSize = size
+          document.getElementById("app").style.width =
+            document.documentElement.clientWidth + "px";
+          document.getElementById("app").style.overflow = "hidden";
+          const size = baseSize * Math.min(scale, 2) + "px";
+          document.documentElement.style.fontSize = size;
         }
-
       }
 
       setRem();
-      window.addEventListener('resize', setRem);
-
+      window.addEventListener("resize", setRem);
     },
     // scrollToTop() {
     //   let disallowScrollPages = ["product-detail"];
@@ -94,17 +91,64 @@ export default {
   padding: 0;
 }
 
-
 .w-1600 {
   width: @width;
   margin: 0 auto;
 }
 
-@media screen  and (max-width:750px){
+// @media screen and (min-width: 1200px) {
+//   .w-1600 {
+//     margin: 0 auto;
+//     max-width: 1050px;
+//   }
+// }
+
+// @media screen and (min-width: 1300px) {
+//   .w-1600 {
+//     margin: 0 auto;
+//     max-width: 1150px;
+//   }
+// }
+
+// @media screen and (min-width: 1400px) {
+//   .w-1600 {
+//     margin: 0 auto;
+//     max-width: 1250px;
+//   }
+// }
+
+// @media screen and (min-width: 1500px) {
+//   .w-1600 {
+//     margin: 0 auto;
+//     max-width: 1350px;
+//   }
+// }
+
+// @media screen and (min-width: 1600px) {
+//   .w-1600 {
+//     // width: 1600px;
+//     margin: 0 auto;
+//     max-width: 1450px;
+//   }
+// }
+
+// @media screen and (min-width: 1200px) {
+//   html {
+//     font-size: 16px !important;
+//   }
+// }
+
+// @media screen and (min-width: 1600px) {
+//   html {
+//     font-size: 20px !important;
+//   }
+// }
+
+@media screen and (max-width: 750px) {
   .w-1600 {
-  width: 100vw !important;
-  margin: 0 auto;
-}
+    width: 100vw !important;
+    margin: 0 auto;
+  }
 }
 .btn {
   cursor: pointer;
@@ -353,11 +397,11 @@ button {
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled):hover {
-  color: #4E57D9 !important;
+  color: #4e57d9 !important;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #4E57D9 !important;
+  background-color: #4e57d9 !important;
   color: #fff !important;
 }
 
@@ -612,4 +656,3 @@ button {
 }
 </style>
 <style lang="less" src="@/assets/h5css/h5Element.less"></style>
-
