@@ -168,12 +168,8 @@
                         class="order-state"
                         :class="'state-' + item.product.status"
                       >
-                        {{ item.product.status == 0 ? "待提交" : "" }}
-                        {{ item.product.status == 1 ? "待处理" : "" }}
-                        {{ item.product.status == 2 ? "待采购确认" : "" }}
-                        {{ item.product.status == 3 ? "已下单" : "" }}
-                        {{ item.product.status == -1 ? "后台取消" : "" }}
-                        {{ item.product.status == -2 ? "用户取消" : "" }}
+                        {{ item.product.status == 0 ? "待报价" : "" }}
+                        {{ item.product.status == 1 ? "已报价" : "" }}
                       </div>
 
                       <div class="num-box">

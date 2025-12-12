@@ -815,6 +815,8 @@ export default {
       sessionStorage.removeItem("cache_payment_products");
     },
     useInvoice(info) {
+      console.log(info, "info");
+      
       this.fapiao_info = info;
     },
     openInvoice() {
