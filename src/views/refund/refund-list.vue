@@ -173,7 +173,7 @@
                       <div class="box-xiaoji">
                         <div class="price">
                           {{ vuex_huobi }}
-                          {{ order.products.priceSale * order.products.num }}
+                          {{ (order.products.priceSale * order.products.num).toFixed(2) }}
                         </div>
                       </div>
                     </div>

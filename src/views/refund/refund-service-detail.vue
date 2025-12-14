@@ -6,16 +6,14 @@
     </div>
 
     <div class="page-ctx">
-      <div class="jindu-info ">
+      <div class="jindu-info">
         <div class="jindu-inner">
           <div class="jindu-title">{{ status_info.title }}</div>
           <div class="jindu-desc">{{ status_info.desc }}</div>
         </div>
       </div>
 
-   
-
-      <div class="refund-sec ">
+      <div class="refund-sec">
         <div class="sec-title">售后信息</div>
         <div class="sec-ctx">
           <div class="text-info">
@@ -60,10 +58,19 @@
             </div>
             <div class="item">
               <div class="text">售后凭证：</div>
-              <div class="val ">
+              <div class="val">
                 <div class="pic-list flex" v-if="info.images">
-                  <div class="pic-item" v-for="(pic, index) in info.images" :key="index" alt>
-                    <el-image style="width: 120px;height: 120px;" :src="pic" :preview-src-list="info.images">
+                  <div
+                    class="pic-item"
+                    v-for="(pic, index) in info.images"
+                    :key="index"
+                    alt
+                  >
+                    <el-image
+                      style="width: 120px; height: 120px"
+                      :src="pic"
+                      :preview-src-list="info.images"
+                    >
                     </el-image>
                   </div>
                 </div>
@@ -82,8 +89,10 @@
           </div>
         </div>
 
-
-        <div class="tuihuo-ctx" v-if="is_allow_buyer_submit_wuliu || is_finish_buyer_wuliu">
+        <div
+          class="tuihuo-ctx"
+          v-if="is_allow_buyer_submit_wuliu || is_finish_buyer_wuliu"
+        >
           <div class="text-info">
             <div class="item">
               <div class="text">退货方式：</div>
@@ -122,23 +131,45 @@
 
       <div class="act-sec">
         <div class="btns flex">
-          <div v-if="info.ifCancel == 1" class="btn btn-ripple" @click="do_cancel_refund()">取消售后</div>
-          <div v-if="is_allow_buyer_submit_wuliu" class="btn btn-ripple btn-bg" @click="do_open_express()">邮寄回平台</div>
-          <div v-if="info.ifReceive" class="btn btn-ripple" @click="do_open_receive()">确认收货</div>
+          <div
+            v-if="info.ifCancel == 1"
+            class="btn btn-ripple"
+            @click="do_cancel_refund()"
+          >
+            取消售后
+          </div>
+          <div
+            v-if="is_allow_buyer_submit_wuliu"
+            class="btn btn-ripple btn-bg"
+            @click="do_open_express()"
+          >
+            邮寄回平台
+          </div>
+          <div
+            v-if="info.ifReceive"
+            class="btn btn-ripple"
+            @click="do_open_receive()"
+          >
+            确认收货
+          </div>
         </div>
       </div>
     </div>
 
-
-
-
     <!-- 填写物流 -->
-    <refund_add_express_modal data-title="买家邮寄商品物流" ref="refund_add_express_modal" @confirm="do_confirm_add_express" />
+    <refund_add_express_modal
+      data-title="买家邮寄商品物流"
+      ref="refund_add_express_modal"
+      @confirm="do_confirm_add_express"
+    />
     <!-- 取消售后 -->
     <refund_cancel_modal ref="refund_cancel_modal" @confirm="setView" />
     <!-- 售后 确认收货 -->
-    <refund_receive_modal  data-title="换货-买家确认收货"  ref="refund_receive_modal" @confirm="setView" />
-
+    <refund_receive_modal
+      data-title="换货-买家确认收货"
+      ref="refund_receive_modal"
+      @confirm="setView"
+    />
   </div>
 </template>
 
@@ -165,38 +196,76 @@ export default {
     return {
       refund_id: this.$route.query.id,
       //
-      type: '',
-      info: {},//售后信息
-      productInfo: {},//产品信息
+      type: "",
+      info: {}, //售后信息
+      productInfo: {}, //产品信息
       type_1_status_list: [
-        { value: 1, title: '等待审核', desc: '等待平台确认退款' },
-        { value: 3, title: '审核通过', desc: '处理中，等待平台退款' },
-        { value: 6, title: '退款成功', desc: '' },
-        { value: -1, title: '已驳回', desc: '售后申请已经被驳回' },
+        { value: 1, title: "等待审核", desc: "等待平台确认退款" },
+        { value: 3, title: "审核通过", desc: "处理中，等待平台退款" },
+        { value: 6, title: "退款成功", desc: "" },
+        { value: -1, title: "已驳回", desc: "售后申请已经被驳回" },
       ],
       type_2_status_list: [
-        { value: 1, title: '等待审核', desc: '等待平台确认提货退款' },
-        { value: 2, ifExpress: 1, title: '待买家发货', desc: '请按照商家地址将产品寄回' },
-        { value: 2, ifExpress: 0, title: '退货待收货', desc: '待卖家确认收货 7天后自动收货' },
-        { value: 3, title: '审核通过', desc: '处理中，等待平台退款' },
-        { value: 6, title: '退货退款完成', desc: '' },
-        { value: -1, title: '已驳回', desc: '售后申请已经被驳回' },
+        { value: 1, title: "等待审核", desc: "等待平台确认提货退款" },
+        {
+          value: 2,
+          ifExpress: 1,
+          title: "待买家发货",
+          desc: "请按照商家地址将产品寄回",
+        },
+        {
+          value: 2,
+          ifExpress: 0,
+          title: "退货待收货",
+          desc: "待卖家确认收货 7天后自动收货",
+        },
+        { value: 3, title: "审核通过", desc: "处理中，等待平台退款" },
+        { value: 6, title: "退货退款完成", desc: "" },
+        { value: -1, title: "已驳回", desc: "售后申请已经被驳回" },
       ],
       type_3_status_list: [
-        { value: 1, title: '等待审核', desc: '等待平台确认提货退款' },
-        { value: 2, ifExpress: 1, title: '待买家发货', desc: '请按照商家地址将产品寄回' },
-        { value: 2, ifExpress: 0, title: '退货待收货', desc: '待卖家确认收货 7天后自动收货' },
+        { value: 1, title: "等待审核", desc: "等待平台确认提货退款" },
+        {
+          value: 2,
+          ifExpress: 1,
+          title: "待买家发货",
+          desc: "请按照商家地址将产品寄回",
+        },
+        {
+          value: 2,
+          ifExpress: 0,
+          title: "退货待收货",
+          desc: "待卖家确认收货 7天后自动收货",
+        },
         // { value: 3, title: '审核通过', desc: '处理中，等待平台退款' },
-        { value: 4, title: '换货待发货', desc: '处理中，等待平台发货' },
-        { value: 5, title: '换货待买家收货', desc: '待买家确认收货' },
-        { value: 6, title: '换货完成', desc: '' },
-        { value: -1, title: '已驳回', desc: '售后申请已经被驳回' },
+        { value: 4, title: "换货待发货", desc: "处理中，等待平台发货" },
+        { value: 5, title: "换货待买家收货", desc: "待买家确认收货" },
+        { value: 6, title: "换货完成", desc: "" },
+        { value: -1, title: "已驳回", desc: "售后申请已经被驳回" },
+      ],
+      type_4_status_list: [
+        { value: 1, title: "等待审核", desc: "等待平台确认维修申请" },
+        {
+          value: 2,
+          ifExpress: 1,
+          title: "待维修",
+          desc: "请按照商家地址将产品寄回",
+        },
+        {
+          value: 2,
+          ifExpress: 0,
+          title: "维修待收货",
+          desc: "待卖家确认收货 7天后自动收货",
+        },
+        { value: 3, title: "审核通过", desc: "处理中，等待平台维修" },
+        { value: 6, title: "维修完成", desc: "" },
+        { value: -1, title: "已驳回", desc: "维修申请已经被驳回" },
       ],
       status_info: {},
       shop_info: {},
-      is_allow_buyer_submit_wuliu: false,//是否允许买家填写物流信息
-      is_allow_buyer_receive: false,//是否可确认收货
-      is_finish_buyer_wuliu: false,//是否已提交买家物流信息
+      is_allow_buyer_submit_wuliu: false, //是否允许买家填写物流信息
+      is_allow_buyer_receive: false, //是否可确认收货
+      is_finish_buyer_wuliu: false, //是否已提交买家物流信息
       kuaidiJson: {},
 
       // isRefundDone: false, //售后已完成
@@ -223,8 +292,6 @@ export default {
       refundObj: {}, //
       beizhuArr: [], //备注
 
- 
-
       show_tuihuoxinxi: false, //是否显示退货信息
       currency: "￥",
 
@@ -238,8 +305,6 @@ export default {
   },
   computed: {
     ...mapState([""]),
-
-
 
     //换货 物流
     mendian_send() {
@@ -317,7 +382,10 @@ export default {
 
         if (status_info == "已取消") {
           arr = [
-            { title: `① 等待卖家审核${refund_type_text}申请`, active: active_1 },
+            {
+              title: `① 等待卖家审核${refund_type_text}申请`,
+              active: active_1,
+            },
             { title: "② 申请通过", active: active_2 },
             { title: "③ 处理中", active: active_3 },
             { title: "③ 已取消", active: active_4 },
@@ -330,7 +398,10 @@ export default {
           ];
         } else {
           arr = [
-            { title: `① 等待卖家审核${refund_type_text}申请`, active: active_1 },
+            {
+              title: `① 等待卖家审核${refund_type_text}申请`,
+              active: active_1,
+            },
             { title: "② 申请通过", active: active_2 },
             { title: "③ 处理中", active: active_3 },
             { title: "③ 已换货", active: active_4 },
@@ -370,7 +441,10 @@ export default {
 
         if (status_info == "已取消") {
           arr = [
-            { title: `① 等待卖家审核${refund_type_text}申请`, active: active_1 },
+            {
+              title: `① 等待卖家审核${refund_type_text}申请`,
+              active: active_1,
+            },
             { title: "② 申请通过", active: active_2 },
             { title: "③ 处理中", active: active_3 },
             { title: "③ 已取消", active: active_4 },
@@ -383,7 +457,10 @@ export default {
           ];
         } else {
           arr = [
-            { title: `① 等待卖家审核${refund_type_text}申请`, active: active_1 },
+            {
+              title: `① 等待卖家审核${refund_type_text}申请`,
+              active: active_1,
+            },
             { title: "② 申请通过", active: active_2 },
             { title: "③ 处理中", active: active_3 },
             { title: "③ 已退款", active: active_4 },
@@ -518,7 +595,12 @@ export default {
       }
 
       //是否可取消售后申请
-      if (data.status == -1 || data.status == 6 || data.status == 5 || data.status == 4) {
+      if (
+        data.status == -1 ||
+        data.status == 6 ||
+        data.status == 5 ||
+        data.status == 4
+      ) {
         this.isRefundCanCancel = false;
       } else {
         this.isRefundCanCancel = true;
@@ -532,33 +614,33 @@ export default {
   },
 
   created() {
-    this.query_mendian_address()
+    this.query_mendian_address();
     this.setView();
   },
   methods: {
     query_mendian_address() {
       //查询退货门店地址
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'index_config',
+          action: "index_config",
         },
-      }).then(res => {
+      }).then((res) => {
         if (res.code == 200) {
           this.shop_info = res.data;
         }
-      })
+      });
     },
     setView() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'refund_detail',
-          id: this.refund_id
+          action: "refund_detail",
+          id: this.refund_id,
         },
-      }).then(res => {
+      }).then((res) => {
         if (res.code == 200) {
           let data = res.data;
           let status = data.status;
@@ -569,63 +651,92 @@ export default {
           this.productInfo = data.productInfo || {};
           this.kuaidiJson = data.kuaidiJson || {};
 
-
           if (status >= 3) {
             if (data.fahuo_info) {
-              this.express_getInfo(data.fahuo_info.fahuo_id)
+              this.express_getInfo(data.fahuo_info.fahuo_id);
             }
           }
 
-          if (this.type == 1) {//仅退款
-            this.status_info = this.type_1_status_list.find(v => v.value == status) || {}
+          if (this.type == 1) {
+            //仅退款
+            this.status_info =
+              this.type_1_status_list.find((v) => v.value == status) || {};
           } else if (this.type == 2) {
             if (data.kuaidiJson) {
-              this.is_finish_buyer_wuliu = true
-              this.kuaidiJson = data.kuaidiJson
+              this.is_finish_buyer_wuliu = true;
+              this.kuaidiJson = data.kuaidiJson;
             }
-            if (data.ifExpress == 1) {//待买家发货
-              this.is_allow_buyer_submit_wuliu = true
-            } else {//已发货
+            if (data.ifExpress == 1) {
+              //待买家发货
+              this.is_allow_buyer_submit_wuliu = true;
+            } else {
+              //已发货
             }
             if (status == 2) {
-              this.status_info = this.type_2_status_list.find(v => v.value == status && v.ifExpress == data.ifExpress) || {}
+              this.status_info =
+                this.type_2_status_list.find(
+                  (v) => v.value == status && v.ifExpress == data.ifExpress
+                ) || {};
             } else {
-              this.status_info = this.type_2_status_list.find(v => v.value == status) || {}
+              this.status_info =
+                this.type_2_status_list.find((v) => v.value == status) || {};
             }
             // if(data.ifExpress) {
             //   this.is_finish_buyer_wuliu = true
             //   this.kuaidiJson = data.kuaidiJson
             // }
-          }else if (this.type == 3) {
+          } else if (this.type == 3) {
             if (data.kuaidiJson) {
-              this.is_finish_buyer_wuliu = true
-              this.kuaidiJson = data.kuaidiJson
+              this.is_finish_buyer_wuliu = true;
+              this.kuaidiJson = data.kuaidiJson;
             }
-            if (data.ifExpress == 1) {//待买家发货
-              this.is_allow_buyer_submit_wuliu = true
-            } else {//已发货
+            if (data.ifExpress == 1) {
+              //待买家发货
+              this.is_allow_buyer_submit_wuliu = true;
+            } else {
+              //已发货
             }
             if (status == 2) {
-              this.status_info = this.type_3_status_list.find(v => v.value == status && v.ifExpress == data.ifExpress) || {}
+              this.status_info =
+                this.type_3_status_list.find(
+                  (v) => v.value == status && v.ifExpress == data.ifExpress
+                ) || {};
             } else {
-              this.status_info = this.type_3_status_list.find(v => v.value == status) || {}
+              this.status_info =
+                this.type_3_status_list.find((v) => v.value == status) || {};
             }
             // if(data.ifExpress) {
             //   this.is_finish_buyer_wuliu = true
             //   this.kuaidiJson = data.kuaidiJson
             // }
+          } else if (this.type == 4) {
+            if (data.ifExpress == 1) {
+              //待买家发货
+              this.is_allow_buyer_submit_wuliu = true;
+            } else {
+              //已发货
+            }
+            if (status == 2) {
+              this.status_info =
+                this.type_4_status_list.find(
+                  (v) => v.value == status && v.ifExpress == data.ifExpress
+                ) || {};
+            } else {
+              this.status_info =
+                this.type_4_status_list.find((v) => v.value == status) || {};
+            }
           }
 
-          if (status == 6) {//退款完成
-            this.status_info.desc = `退款成功￥${this.info.refundPrice}`
+          if (status == 6) {
+            //退款完成
+            this.status_info.desc = `退款成功￥${this.info.refundPrice}`;
           }
-
 
           //
           data.products = data.productInfo;
           this.refundObj = data;
         }
-      })
+      });
     },
 
     //提交快递信息
@@ -634,22 +745,20 @@ export default {
     },
     //取消售后申请
     do_cancel_refund() {
-      this.$refs.refund_cancel_modal.init(this.info)
+      this.$refs.refund_cancel_modal.init(this.info);
     },
     do_confirm_add_express() {
       this.is_allow_buyer_submit_wuliu = false;
-      this.setView()
+      this.setView();
     },
     do_open_receive() {
-      this.$refs.refund_receive_modal.init(this.info)
-    }
+      this.$refs.refund_receive_modal.init(this.info);
+    },
   },
 };
 </script>
 
-
 <style scoped lang="less">
-
 .page {
   padding-bottom: 50px;
 
@@ -669,7 +778,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #f74747;
       color: #fff;
       font-size: 14px;
     }
@@ -680,7 +789,6 @@ export default {
     background: #fff;
   }
 }
-
 
 .refund-sec {
   min-height: 210px;
@@ -713,7 +821,7 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 14px;
-      color: #7D7D7D;
+      color: #7d7d7d;
       line-height: 30px;
     }
 
@@ -721,7 +829,7 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 14px;
-      color: #7D7D7D;
+      color: #7d7d7d;
       line-height: 30px;
     }
   }
@@ -734,7 +842,6 @@ export default {
     }
   }
 }
-
 
 .product-box {
   .img-box {
@@ -777,7 +884,6 @@ export default {
   }
 }
 
-
 .text-info {
   text-align: left;
 
@@ -805,8 +911,6 @@ export default {
   }
 }
 
-
-
 .act-sec {
   margin-top: 24px;
 
@@ -819,36 +923,35 @@ export default {
       padding: 0 6px;
       min-width: 104px;
       height: 32px;
-      background: #FFFFFF;
+      background: #ffffff;
       border-radius: 4px 4px 4px 4px;
-      border: 1px solid #F74747;
+      border: 1px solid #f74747;
 
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 14px;
-      color: #F74747;
+      color: #f74747;
 
       &.btn-bg {
-        background: #F74747;
-        color: #FFF;
+        background: #f74747;
+        color: #fff;
       }
     }
   }
 }
 
-
 .jindu-info {
   margin-bottom: 24px;
   padding: 30px;
   min-height: 115px;
-  background: #F74747;
+  background: #f74747;
   border-radius: 0px 0px 0px 0px;
 
   .jindu-title {
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;
     font-size: 19px;
-    color: #FFFFFF;
+    color: #ffffff;
   }
 
   .jindu-desc {
@@ -856,8 +959,7 @@ export default {
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;
     font-size: 13px;
-    color: #FFFFFF;
+    color: #ffffff;
   }
 }
-
 </style>
