@@ -40,7 +40,7 @@
         <div
           v-for="(tab, index) in tabs"
           :key="tab.id"
-          :class="['tab-item', { active: activeTabTitle == tab.title }]"
+          :class="['tab-item', { active: activeTab == index }]"
           @click="selectTab(tab, index)"
         >
           {{ tab.title }}
@@ -59,7 +59,7 @@
       <!-- 控制器和雷达标签页 -->
       <div
         v-if="
-          activeTabTitle === '控制器与雷达' || activeTabTitle === '控制器和雷达'
+          tabs[activeTab] && (tabs[activeTab].title === '控制器与雷达' || tabs[activeTab].title === '控制器和雷达')
         "
         class="config-section"
       >
@@ -157,7 +157,7 @@
       </div>
 
       <!-- 元器件标签页 -->
-      <div v-if="activeTabTitle === '元器件'" class="config-section">
+      <div v-if="tabs[activeTab] && tabs[activeTab].title === '元器件'" class="config-section">
         <div v-for="item in controllers" :key="item.id">
           <div class="section-title">{{ item.title }}</div>
           <div class="motor-grid" v-if="!item.child">
@@ -310,7 +310,7 @@
       </div>
 
       <!-- 外观模块标签页 -->
-      <div v-if="activeTabTitle === '外观模块'" class="config-section">
+      <div v-if="tabs[activeTab] && tabs[activeTab].title === '外观模块'" class="config-section">
         <div class="select-module">
           <div v-for="item in controllers" :key="item.id">
             <div class="select-module-title">{{ item.title }}</div>
@@ -927,13 +927,14 @@ export default {
       this.showOverlay =
         this.$route.query.showOverlay == "false" ? false : true;
       this.compareSorce = this.$route.query.compare || 0;
-      this.editIndex = this.$route.query.index || 0;
+      this.editIndex = Number(this.$route.query.index) || 0;
       this.tabs = this.detail;
       this.activeTab = this.editIndex || 0;
       this.controllers = this.tabs[this.editIndex].child;
-      this.activeTabTitle = this.tabs[this.editIndex || 0]
-        ? this.tabs[this.editIndex || 0].title
-        : this.tabs[this.editIndex || 0].title;
+      // activeTabTitle 显示下一项的标题
+      const currentIndex = this.editIndex || 0;
+      const nextIndex = currentIndex + 1;
+      this.activeTabTitle = this.tabs[nextIndex] ? this.tabs[nextIndex].title : '';
       // 为所有item添加selected属性
       this.initializeSelectedState();
       // 加载本地保存的配置
@@ -1545,9 +1546,9 @@ export default {
         this.activeTab = this.tabs.length - 1;
       }
 
-      this.activeTabTitle = this.tabs[this.activeTab]
-        ? this.tabs[this.activeTab].title
-        : this.tabs[this.activeTab].title;
+      // activeTabTitle 显示下一项的标题
+      const nextIndex = this.activeTab + 1;
+      this.activeTabTitle = this.tabs[nextIndex] ? this.tabs[nextIndex].title : '';
       this.controllers = this.tabs[this.activeTab].child;
       // 切换标签页时，将滚动距离归零
       this.$nextTick(() => {
@@ -1563,7 +1564,9 @@ export default {
         this.activeTab = 0;
       }
 
-      this.activeTabTitle = this.tabs[this.activeTab].title;
+      // activeTabTitle 显示下一项的标题
+      const nextIndex = this.activeTab + 1;
+      this.activeTabTitle = this.tabs[nextIndex] ? this.tabs[nextIndex].title : '';
       this.controllers = this.tabs[this.activeTab].child;
       // 切换标签页时，将滚动距离归零
       this.$nextTick(() => {
@@ -1574,7 +1577,9 @@ export default {
     },
     selectTab(tab, index) {
       this.activeTab = index;
-      this.activeTabTitle = this.tabs[this.activeTab].title;
+      // activeTabTitle 显示下一项的标题
+      const nextIndex = this.activeTab + 1;
+      this.activeTabTitle = this.tabs[nextIndex] ? this.tabs[nextIndex].title : '';
       this.controllers = this.tabs[this.activeTab].child;
       // 切换标签页时，将滚动距离归零
       this.$nextTick(() => {

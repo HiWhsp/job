@@ -101,7 +101,8 @@
         </div>
 
         <div class="panel-content">
-          <div class="components-list">
+          <ComponentList :components="myConfig" />
+          <!-- <div class="components-list">
             <div v-for="(item, index) in myConfig" :key="index">
               <div class="component-item-title">{{ item.firstTitle }}</div>
 
@@ -176,7 +177,7 @@
                 </template>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -304,11 +305,11 @@ export default {
     },
 
     resetMyConfig() {
+      // localStorage.removeItem("robotConfig");
       this.$router.push({
-        path: "/",
+        path: "/rebotPreview",
         query: {
           id: this.$route.query.id,
-          showOverlay: "false",
         },
       });
     },
@@ -437,205 +438,136 @@ export default {
             JSON.parse(savedConfig)
           );
           console.log(this.configItems);
-          this.myConfig = this.configItems;
+          // 将过滤后的数据转换为ComponentList需要的格式（扁平化child数组）
+          // 类似 select1 = res.data.lists.map((item) => item.child).flat()
+          this.myConfig = this.configItems.map((item) => item.child).flat();
+          console.log(this.myConfig);
         }
       });
     },
-    // 查找选中项的原数据
+    // 查找选中项的原数据，保留原始结构
     findSelectedItems(apiConfigItems, localStorageData) {
-      const selectedItems = [];
-      // 遍历接口返回的配置项数组
-      if (Array.isArray(apiConfigItems)) {
-        apiConfigItems.forEach((tab, index) => {
-          if (tab.child && Array.isArray(tab.child)) {
-            // 遍历第一层子项
-            tab.child.forEach((firstLevel) => {
-              // 检查第一层是否有 producntInfos
-              if (
-                firstLevel.producntInfos &&
-                Array.isArray(firstLevel.producntInfos)
-              ) {
-                firstLevel.producntInfos.forEach((item) => {
-                  // 在localStorage中查找匹配的选中项
-                  const matchedItem = localStorageData.find(
-                    (localItem) => localItem.product_type_goods_ids === item.id
-                  );
-
-                  if (matchedItem) {
-                    if (
-                      item.title == "其他" ||
-                      item.title == "定制" ||
-                      item.title == "定制logo"
-                    ) {
-                      selectedItems.push({
-                        activeTab: index,
-                        firstTitle: firstLevel.title,
-                        id: item.id,
-                        name:
-                          this.paramsText(
-                            firstLevel.title,
-                            item.title,
-                            matchedItem.other.notes
-                          ) || item.title,
-                        model: item.description,
-                        image: matchedItem.other.image || item.thumb,
-                        params: matchedItem.other || item.spec,
-                        progress: item.delivery_time,
-                        price_status: item.price_status,
-                        delivery_title: item.delivery_title,
-                      });
-                    } else {
-                      selectedItems.push({
-                        activeTab: index,
-                        firstTitle: firstLevel.title,
-                        id: item.id,
-                        name: item.title,
-                        model: item.description,
-                        image: item.thumb,
-                        params:
-                          item.title == "其他" ||
-                          item.title == "定制" ||
-                          item.title == "定制logo"
-                            ? matchedItem.other
-                            : item.spec,
-                        progress: item.delivery_time,
-                        price_status: item.price_status,
-                        delivery_title: item.delivery_title,
-                      });
-                    }
-                  }
-                });
-              }
-
-              // 遍历第二层子项
-              if (firstLevel.child && Array.isArray(firstLevel.child)) {
-                firstLevel.child.forEach((secondLevel) => {
-                  if (
-                    secondLevel.producntInfos &&
-                    Array.isArray(secondLevel.producntInfos)
-                  ) {
-                    secondLevel.producntInfos.forEach((item) => {
-                      // 在localStorage中查找匹配的选中项
-                      const matchedItem = localStorageData.find(
-                        (localItem) =>
-                          localItem.product_type_goods_ids === item.id
-                      );
-
-                      if (matchedItem) {
-                        if (
-                          item.title == "其他" ||
-                          item.title == "定制" ||
-                          item.title == "定制logo"
-                        ) {
-                          selectedItems.push({
-                            activeTab: index,
-                            firstTitle: secondLevel.title,
-                            id: item.id,
-                            name:
-                              this.paramsText(
-                                firstLevel.title,
-                                item.title,
-                                matchedItem.other.notes
-                              ) || item.title,
-                            model: item.description,
-                            image: matchedItem.other.image || item.thumb,
-                            params: matchedItem.other || item.spec,
-                            progress: item.delivery_time,
-                            price_status: item.price_status,
-                            delivery_title: item.delivery_title,
-                          });
-                        } else {
-                          selectedItems.push({
-                            activeTab: index,
-                            firstTitle: secondLevel.title,
-                            id: item.id,
-                            name: item.title,
-                            model: item.description,
-                            image: item.thumb,
-                            params:
-                              item.title == "其他" ||
-                              item.title == "定制" ||
-                              item.title == "定制logo"
-                                ? matchedItem.other
-                                : item.spec,
-                            progress: item.delivery_time,
-                            price_status: item.price_status,
-                            delivery_title: item.delivery_title,
-                          });
-                        }
-                      }
-                    });
-                  }
-
-                  // 遍历第三层子项
-                  if (secondLevel.child && Array.isArray(secondLevel.child)) {
-                    secondLevel.child.forEach((thirdLevel) => {
-                      if (
-                        thirdLevel.producntInfos &&
-                        Array.isArray(thirdLevel.producntInfos)
-                      ) {
-                        thirdLevel.producntInfos.forEach((item) => {
-                          // 在localStorage中查找匹配的选中项
-                          const matchedItem = localStorageData.find(
-                            (localItem) =>
-                              localItem.product_type_goods_ids === item.id
-                          );
-
-                          if (matchedItem) {
-                            if (
-                              item.title == "其他" ||
-                              item.title == "定制" ||
-                              item.title == "定制logo"
-                            ) {
-                              selectedItems.push({
-                                activeTab: index,
-                                firstTitle: thirdLevel.title,
-                                id: item.id,
-                                name:
-                                  this.paramsText(
-                                    firstLevel.title,
-                                    item.title,
-                                    matchedItem.other.notes
-                                  ) || item.title,
-                                model: item.description,
-                                image: matchedItem.other.image || item.thumb,
-                                params: matchedItem.other || item.spec,
-                                progress: item.delivery_time,
-                                price_status: item.price_status,
-                                delivery_title: item.delivery_title,
-                              });
-                            } else {
-                              selectedItems.push({
-                                activeTab: index,
-                                firstTitle: thirdLevel.title,
-                                id: item.id,
-                                name: item.title,
-                                model: item.description,
-                                image: item.thumb,
-                                params:
-                                  item.title == "其他" ||
-                                  item.title == "定制" ||
-                                  item.title == "定制logo"
-                                    ? matchedItem.other
-                                    : item.spec,
-                                progress: item.delivery_time,
-                                price_status: item.price_status,
-                                delivery_title: item.delivery_title,
-                              });
-                            }
-                          }
-                        });
-                      }
-                    });
-                  }
-                });
-              }
-            });
-          }
-        });
+      if (!Array.isArray(apiConfigItems) || !Array.isArray(localStorageData)) {
+        return [];
       }
 
-      return selectedItems;
+      // 深度克隆原始数据
+      const clonedData = JSON.parse(JSON.stringify(apiConfigItems));
+
+      // 递归过滤 producntInfos
+      const filterProducntInfos = (producntInfos) => {
+        if (!Array.isArray(producntInfos)) {
+          return [];
+        }
+
+        return producntInfos
+          .map((item) => {
+            // 在localStorage中查找匹配的选中项
+            const localItem = localStorageData.find(
+              (localItem) => localItem.product_type_goods_ids === item.id
+            );
+
+            if (!localItem) {
+              return null; // 不在localStorage中，返回null用于过滤
+            }
+
+            // 创建新的item对象，保留原始结构
+            const newItem = { ...item };
+
+            // 如果是"其他"、"定制"或"定制logo"，更新相关字段
+            if (
+              item.title == "其他" ||
+              item.title == "定制" ||
+              item.title == "定制logo"
+            ) {
+              // 更新图片
+              if (localItem.other && localItem.other.image) {
+                newItem.thumb = localItem.other.image;
+              }
+              // 更新spec
+              if (localItem.other) {
+                newItem.spec = localItem.other;
+              }
+            } else {
+              // 非定制类型，如果有other数据也更新
+              if (localItem.other) {
+                newItem.spec = localItem.other;
+              }
+            }
+
+            return newItem;
+          })
+          .filter((item) => item !== null); // 过滤掉null值
+      };
+
+      // 递归处理子节点
+      const processChild = (childArray) => {
+        if (!Array.isArray(childArray)) {
+          return [];
+        }
+
+        return childArray
+          .map((childItem) => {
+            const newChildItem = { ...childItem };
+
+            // 处理当前节点的 producntInfos
+            if (
+              newChildItem.producntInfos &&
+              Array.isArray(newChildItem.producntInfos)
+            ) {
+              newChildItem.producntInfos = filterProducntInfos(
+                newChildItem.producntInfos
+              );
+            }
+
+            // 递归处理子节点
+            if (newChildItem.child && Array.isArray(newChildItem.child)) {
+              newChildItem.child = processChild(newChildItem.child);
+            }
+
+            // 判断是否应该保留该节点
+            // 如果有 producntInfos 且过滤后不为空，保留
+            // 如果有 child 且过滤后不为空，保留
+            const hasProducntInfos =
+              newChildItem.producntInfos &&
+              Array.isArray(newChildItem.producntInfos) &&
+              newChildItem.producntInfos.length > 0;
+            const hasChild =
+              newChildItem.child &&
+              Array.isArray(newChildItem.child) &&
+              newChildItem.child.length > 0;
+
+            // 如果既没有 producntInfos 也没有 child，则不保留该节点
+            if (!hasProducntInfos && !hasChild) {
+              return null;
+            }
+
+            return newChildItem;
+          })
+          .filter((item) => item !== null); // 过滤掉null值
+      };
+
+      // 处理顶层tabs
+      return clonedData
+        .map((tab) => {
+          const newTab = { ...tab };
+
+          if (newTab.child && Array.isArray(newTab.child)) {
+            newTab.child = processChild(newTab.child);
+          }
+
+          // 如果tab的child过滤后为空，则不保留该tab
+          if (
+            !newTab.child ||
+            !Array.isArray(newTab.child) ||
+            newTab.child.length === 0
+          ) {
+            return null;
+          }
+
+          return newTab;
+        })
+        .filter((tab) => tab !== null); // 过滤掉null值
     },
     paramsText(firstTitle, name, params) {
       if (firstTitle == "颜色" && name == "定制") {
@@ -650,6 +582,53 @@ export default {
         }`;
       }
       return params || "";
+    },
+    /**
+     * 按照firstTitle分组并转换成目标格式
+     * @param {Array} items 原始数据数组
+     * @returns {Array} 分组后的数组，格式类似select1
+     */
+    groupByFirstTitle(items) {
+      if (!Array.isArray(items) || items.length === 0) {
+        return [];
+      }
+
+      // 使用Map来分组，key为firstTitle
+      const groupedMap = new Map();
+
+      items.forEach((item, index) => {
+        const firstTitle = item.firstTitle || "";
+
+        if (!groupedMap.has(firstTitle)) {
+          // 创建新的分组
+          groupedMap.set(firstTitle, {
+            id: item.activeTab !== undefined ? item.activeTab : index,
+            title: firstTitle,
+            sort: groupedMap.size, // 使用当前分组数量作为sort
+            producntInfos: [],
+          });
+        }
+
+        // 将当前项转换为producntInfos格式
+        const productInfo = {
+          delivery_time: item.progress || "",
+          delivery_title: item.delivery_title || "",
+          description: item.model || "",
+          glId: "", // 根据图二显示，glId为空字符串
+          id: item.id || "",
+          nonumber: item.nonumber || "",
+          price_status: item.price_status || 0,
+          spec: item.params || "",
+          thumb: item.image || "",
+          title: item.name || "",
+        };
+
+        // 添加到对应分组的producntInfos数组
+        groupedMap.get(firstTitle).producntInfos.push(productInfo);
+      });
+
+      // 将Map转换为数组
+      return Array.from(groupedMap.values());
     },
   },
 };
