@@ -231,15 +231,7 @@
                             product.title
                           }}</span>
                         </span>
-                        <span class="product-diameter"
-                          >{{ product.diameter || "0.00" }}mm</span
-                        >
-                        <span class="product-focal"
-                          >{{ product.focal || "0.00" }}mm</span
-                        >
-                        <span class="product-radius"
-                          >{{ product.curvature || "0.00" }}mm</span
-                        >
+                        <span class="product-diameter" v-for="(item, index) in product.attrs" :key="index">{{ item.value }}</span>
                         <span class="product-stock">{{
                           product.kucun || 0
                         }}</span>

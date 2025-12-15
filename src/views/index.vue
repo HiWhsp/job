@@ -63,7 +63,7 @@
                   class="product-item"
                   v-for="(item, index) in productList.slice(0, 8)"
                   :key="index"
-                  @click="toRouter(`/product-detail?id=${item.id}`)"
+                  @click="toRouter(`/product-detail?brandId=${item.brand.id}`)"
                 >
                   <div class="product-image">
                     <img :src="item.thumb" :alt="`产品${index + 1}`" />
