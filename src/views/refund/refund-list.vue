@@ -56,13 +56,15 @@
                       <div class="box-title">
                         <div class="title">{{ order.products.title }}</div>
                         <div class="sku">订货编码：{{ order.products.sn }}</div>
-                        <div class="sku">商品型号：{{
-                          order.products.addrows
-                            ? order.products.addrows[0]
-                              ? order.products.addrows[0].val
+                        <div class="sku">
+                          商品型号：{{
+                            order.products.addrows
+                              ? order.products.addrows[0]
+                                ? order.products.addrows[0].val
+                                : "--"
                               : "--"
-                            : "--"
-                        }}</div>
+                          }}
+                        </div>
                       </div>
                       <div class="box-price">
                         <div class="price">
@@ -149,13 +151,15 @@
                       <div class="box-title">
                         <div class="title">{{ order.products.title }}</div>
                         <div class="sku">订货编码：{{ order.products.sn }}</div>
-                        <div class="sku">商品型号：{{
-                          order.products.addrows
-                            ? order.products.addrows[0]
-                              ? order.products.addrows[0].val
+                        <div class="sku">
+                          商品型号：{{
+                            order.products.addrows
+                              ? order.products.addrows[0]
+                                ? order.products.addrows[0].val
+                                : "--"
                               : "--"
-                            : "--"
-                        }}</div>
+                          }}
+                        </div>
                       </div>
                       <div class="box-price">
                         <div class="price">
@@ -173,7 +177,11 @@
                       <div class="box-xiaoji">
                         <div class="price">
                           {{ vuex_huobi }}
-                          {{ (order.products.priceSale * order.products.num).toFixed(2) }}
+                          {{
+                            (
+                              order.products.priceSale * order.products.num
+                            ).toFixed(2)
+                          }}
                         </div>
                       </div>
                     </div>
@@ -181,8 +189,8 @@
                 </div>
                 <div class="actions-box">
                   <div class="item-wrap">
-                    <div class="item">等待审核</div>
-                    <div class="item2">等待平台审核</div>
+                    <div class="item">{{ status_title(order.status) }}</div>
+                    <div class="item2">{{ order.statusInfo }}</div>
                   </div>
                   <div class="btn-wrap">
                     <button
@@ -260,7 +268,30 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    status_title() {
+      return (status) => {
+        // //1-待审核  2-待买家发货/退货待收货 3-待退款  4-换货待发货  5-待客户接货 6-已完成  -1 已驳回
+        switch (status) {
+          case 1:
+            return "等待审核";
+          case 2:
+            return "待买家发货/退货待收货";
+          case 3:
+            return "待退款";
+          case 4:
+            return "换货待发货";
+          case 5:
+            return "待客户接货";
+          case 6:
+            return "已完成";
+          case -1:
+            return "已驳回";
+        }
+        return "";
+      };
+    },
+  },
   created() {
     this.setView();
   },

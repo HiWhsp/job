@@ -179,6 +179,7 @@ export default new Vuex.Store({
     async appInit({ commit, state, dispatch }, data) {
       dispatch("query_assets");
       dispatch("query_footer_cates");
+      dispatch("query_Visit_Record");
 
       let token = localStorage.getItem("token");
       let userId = localStorage.getItem("userId");
@@ -191,6 +192,16 @@ export default new Vuex.Store({
       } else {
         commit("remove_vuex_user");
       }
+    },
+
+    async query_Visit_Record({ commit, state, dispatch }) {
+      api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "users_setVisit",
+        },
+      });
     },
 
     //获取登录后的信息

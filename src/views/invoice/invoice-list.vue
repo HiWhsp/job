@@ -66,10 +66,20 @@
                     >
                       {{ product_item.title }}
                     </div>
-                    <div class="product-sku">订货编码：UA199</div>
-                    <div class="product-sku">商品型号：S54001</div>
+                    <div class="product-sku">
+                      订货编码：{{ product_item.sn }}
+                    </div>
+                    <div class="product-sku">
+                      商品型号：{{
+                        product_item.addrows
+                          ? product_item.addrows[0]
+                            ? product_item.addrows[0].val
+                            : "--"
+                          : "--"
+                      }}
+                    </div>
                   </div>
-  
+
                   <div class="box-price">
                     {{ vuex_huobi }} {{ product_item.priceSale }}
                   </div>
@@ -306,14 +316,14 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #F74747;
+        color: #f74747;
       }
 
       &.active {
         // background: #F74747;
         // color: #fff;
         font-weight: bold;
-        color: #F74747;
+        color: #f74747;
 
         &::after {
           content: "";
@@ -322,7 +332,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #F74747;
+          background: #f74747;
         }
       }
     }
@@ -422,7 +432,7 @@ export default {
       font-weight: 400;
       line-height: 20px;
       color: #999999;
-      color: #F74747;
+      color: #f74747;
 
       // 待付款
       &.state--5 {
@@ -432,8 +442,8 @@ export default {
       }
 
       &.state-2 {
-        color: #F74747;
-        border-color: #F74747;
+        color: #f74747;
+        border-color: #f74747;
       }
     }
   }
@@ -485,7 +495,7 @@ export default {
             margin-bottom: 10px;
 
             &:hover {
-              color: #F74747;
+              color: #f74747;
             }
           }
 
@@ -565,13 +575,13 @@ export default {
         margin-right: 30px;
 
         b {
-          color: #F74747;
+          color: #f74747;
         }
       }
 
       .heji-money {
         b {
-          color: #F74747;
+          color: #f74747;
         }
       }
     }
@@ -584,11 +594,11 @@ export default {
         background: #ffffff;
         border-radius: 50px 50px 50px 50px;
         border-radius: 4px;
-        border: 1px solid #F74747;
+        border: 1px solid #f74747;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #F74747;
+        color: #f74747;
 
         & + button {
           margin-left: 20px;
@@ -599,7 +609,7 @@ export default {
         }
 
         &.btn-bg {
-          background: #F74747;
+          background: #f74747;
           color: #ffffff;
         }
       }
