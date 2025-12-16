@@ -347,6 +347,11 @@ export default {
       width: 100%;
       height: 1080px;
       cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    /deep/ .el-carousel__item:hover img {
+      transform: scale(1.05);
     }
 
     /deep/ .el-carousel__button {
@@ -489,6 +494,7 @@ export default {
         width: 100%;
         height: 100%;
         // object-fit: cover;
+        transition: transform 0.3s ease;
       }
     }
 
@@ -502,6 +508,12 @@ export default {
       text-align: center;
       background: #fdfdfd;
       border: 1px solid #e4e4e4;
+    }
+
+    &:hover {
+      .product-image img {
+        transform: scale(1.1);
+      }
     }
   }
 }
@@ -547,6 +559,7 @@ export default {
         max-width: 100%;
         max-height: 100%;
         object-fit: cover;
+        transition: transform 0.3s ease;
       }
     }
 
@@ -562,6 +575,12 @@ export default {
       border-top: 1px solid #e4e4e4;
       padding: 0 15px;
       box-sizing: border-box;
+    }
+
+    &:hover {
+      .product-image img {
+        transform: scale(1.1);
+      }
     }
 
     .view-details-btn {
@@ -660,6 +679,7 @@ export default {
         img {
           width: 100%;
           height: 100%;
+          transition: transform 0.3s ease;
         }
       }
 
@@ -702,6 +722,9 @@ export default {
       }
 
       &:hover {
+        .news-image img {
+          transform: scale(1.1);
+        }
         .news-info {
           .news-title {
             color: #2e4c87;
@@ -811,6 +834,23 @@ export default {
             transition: all 0.3s ease;
             font-size: 16px;
           }
+        }
+      }
+
+      .news-item:hover {
+        .news-item-title {
+          color: #2e4c87;
+        }
+        .news-item-date {
+          color: #2e4c87;
+        }
+        .news-item-action-btn {
+          border-color: #2e4c87;
+          background: #2e4c87;
+          .el-icon-right {
+            color: #fff;
+          }
+          transform: rotate(-45deg);
         }
       }
     }

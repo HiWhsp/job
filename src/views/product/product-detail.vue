@@ -231,7 +231,12 @@
                             product.title
                           }}</span>
                         </span>
-                        <span class="product-diameter" v-for="(item, index) in product.attrs" :key="index">{{ item.value }}</span>
+                        <span
+                          class="product-diameter"
+                          v-for="(item, index) in product.attrs"
+                          :key="index"
+                          >{{ item.value }}</span
+                        >
                         <span class="product-stock">{{
                           product.kucun || 0
                         }}</span>
@@ -344,7 +349,10 @@
                 </div>
                 <div class="product-info">
                   <h3 class="product-name">{{ product.title }}</h3>
-                  <div class="product-price">¥{{ product.price }}</div>
+                  <div class="product-price">
+                    ¥{{ product.minPrice || 0 }} ~ {{ product.maxPrice || 0 }}
+                  </div>
+
                   <el-button
                     type="primary"
                     size="small"
@@ -1138,6 +1146,9 @@ export default {
           .product-actions {
             display: flex;
           }
+          img {
+            transform: scale(1.1);
+          }
         }
       }
 
@@ -1154,6 +1165,7 @@ export default {
           max-width: 100%;
           max-height: 100%;
           object-fit: contain;
+          transition: transform 0.3s ease;
         }
 
         .product-actions {

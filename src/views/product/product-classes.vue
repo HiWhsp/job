@@ -365,6 +365,9 @@ export default {
         .category-name {
           color: #2e4c87;
         }
+        .category-image img {
+          transform: scale(1.1);
+        }
       }
 
       .category-image {

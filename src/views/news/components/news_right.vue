@@ -198,6 +198,11 @@ export default {
         flex-direction: column;
         align-items: self-start;
         cursor: pointer;
+        &:hover {
+          .ellipsis-2 {
+            color: #2e4c87;
+          }
+        }
 
         .ellipsis-2 {
           font-family: Microsoft YaHei, Microsoft YaHei;

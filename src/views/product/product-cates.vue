@@ -127,6 +127,9 @@ export default {
         .category-name {
           color: #2e4c87;
         }
+        .category-image img {
+          transform: scale(1.1);
+        }
       }
 
       .category-image {
@@ -206,7 +209,7 @@ export default {
       color: #aeaeae;
     }
     .search-keyword {
-      color: #2E4C87;
+      color: #2e4c87;
     }
   }
 }

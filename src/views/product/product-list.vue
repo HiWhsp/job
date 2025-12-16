@@ -64,7 +64,7 @@
             </div>
 
             <!-- 商品网格 -->
-            <div class="product-grid">
+            <div class="product-grid" v-if="products && products.length > 0">
               <div
                 class="product-card"
                 v-for="product in products"
@@ -101,6 +101,13 @@
                 </div>
               </div>
             </div>
+            
+            <!-- 空数据占位 -->
+            <el-empty
+              v-else
+              description="暂无商品数据"
+              :image-size="120"
+            ></el-empty>
 
             <!-- 分页 -->
             <div class="pagination-section">
@@ -450,6 +457,9 @@ export default {
           .product-actions {
             display: flex;
           }
+          img {
+            transform: scale(1.1);
+          }
         }
       }
 
@@ -466,6 +476,7 @@ export default {
           max-width: 100%;
           max-height: 100%;
           object-fit: contain;
+          transition: transform 0.3s ease;
         }
 
         .product-actions {
