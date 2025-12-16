@@ -450,7 +450,7 @@ export default {
               .join(" ");
           }
           this.products.forEach((item) => {
-            this.total_product_number += item.num;
+            this.total_product_number += Number(item.num);
           });
 
           //

@@ -350,9 +350,9 @@ export default {
       transition: transform 0.3s ease;
     }
 
-    /deep/ .el-carousel__item:hover img {
-      transform: scale(1.05);
-    }
+    // /deep/ .el-carousel__item:hover img {
+    //   transform: scale(1.05);
+    // }
 
     /deep/ .el-carousel__button {
       border-radius: 50%;

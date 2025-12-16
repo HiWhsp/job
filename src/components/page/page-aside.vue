@@ -11,7 +11,7 @@
       v-show="item.key !== 'top' || showBackTop"
       @click="handleClick(item)"
     >
-      <el-badge :value="vuex_cart_number" v-if="item.key === 'custom'" class="item">
+      <el-badge :value="vuex_cart_number" v-if="item.key === 'custom' && vuex_cart_number > 0" class="item">
         <img :src="item.icon" :alt="item.label" />
       </el-badge>
       <img :src="item.icon" :alt="item.label" v-else />

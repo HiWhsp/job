@@ -297,21 +297,24 @@
                     </div>
 
                     <!-- 详细参数表格 -->
-                    <div class="parameter-table">
-                      <div
-                        class="parameter-row"
-                        v-for="(item, index) in product.fields"
-                        :key="index"
-                      >
+                    <div class="parameter-table-container">
+                      <img :src="product.thumb" alt="示意图" />
+                      <div class="parameter-table">
                         <div
-                          class="parameter-item"
-                          v-for="(it, i) in item"
-                          :key="i"
+                          class="parameter-row"
+                          v-for="(item, index) in product.fields"
+                          :key="index"
                         >
-                          <span class="parameter-label">{{ it.title }}</span>
-                          <span class="parameter-value">{{
-                            it.fieldValue
-                          }}</span>
+                          <div
+                            class="parameter-item"
+                            v-for="(it, i) in item"
+                            :key="i"
+                          >
+                            <span class="parameter-label">{{ it.title }}</span>
+                            <span class="parameter-value">{{
+                              it.fieldValue
+                            }}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -338,14 +341,14 @@
               >
                 <div class="product-image">
                   <img :src="product.thumb" :alt="product.title" />
-                  <div class="product-actions">
+                  <!-- <div class="product-actions">
                     <img
                       src="@img/product/icon-fav1.png"
                       alt=""
                       v-if="product.favorite"
                     />
                     <img src="@img/product/icon-fav0.png" alt="" v-else />
-                  </div>
+                  </div> -->
                 </div>
                 <div class="product-info">
                   <h3 class="product-name">{{ product.title }}</h3>
@@ -376,11 +379,15 @@
 <script>
 import pageBreadcrumb from "@/components/page/page-breadcrumb.vue";
 import product_add_cart_success_modal from "@/components/product/product_add_cart_success_modal.vue";
+import { mapState } from "vuex";
 export default {
   name: "ProductDetail",
   components: {
     pageBreadcrumb,
     product_add_cart_success_modal,
+  },
+  computed: {
+    ...mapState(["vuex_is_login"]),
   },
   data() {
     return {
@@ -410,6 +417,7 @@ export default {
     "$route.query.brandId": {
       handler(newVal) {
         this.getProductDetail();
+        this.getProductList();
       },
       immediate: true,
     },
@@ -574,6 +582,16 @@ export default {
     },
     // 加入购物车
     addToCart(product) {
+      if (!this.vuex_is_login) {
+        this.$message.warning("请先登录");
+        this.$router.push({
+          path: "/login",
+          query: {
+            redirect: this.$route.fullPath,
+          },
+        });
+        return;
+      }
       this.$api({
         url: "/service.php",
         method: "get",
@@ -633,7 +651,7 @@ export default {
     handleProductClick(product) {
       this.$router.push({
         path: "/product-detail",
-        query: { id: product.id },
+        query: { brandId: product.id },
       });
     },
     // 提交反馈
@@ -1057,7 +1075,17 @@ export default {
             }
           }
 
+          .parameter-table-container {
+            display: flex;
+            gap: 20px;
+            img {
+              width: 150px;
+              height: 150px;
+            }
+          }
+
           .parameter-table {
+            flex: 1;
             background: #fafbfc;
             border: 1px solid #ebeef5;
             margin-bottom: 20px;

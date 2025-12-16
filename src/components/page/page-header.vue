@@ -125,7 +125,11 @@
                 </div>
               </template>
               <div class="btn" @click="$router.push('/cart')">
-                <el-badge :value="vuex_cart_number" class="item">
+                <el-badge
+                  :value="vuex_cart_number"
+                  class="item"
+                  v-if="vuex_cart_number > 0"
+                >
                   <img
                     src="@img/head/icon3-scrolled.png"
                     alt=""
@@ -133,6 +137,12 @@
                   />
                   <img src="@img/head/icon3.png" alt="" v-else />
                 </el-badge>
+                <img src="@img/head/icon3-scrolled.png" alt="" v-if="isScrolled && vuex_cart_number == 0" />
+                <img
+                  src="@img/head/icon3.png"
+                  alt=""
+                  v-if="vuex_cart_number == 0 && !isScrolled"
+                />
                 <span>购物车</span>
               </div>
               <div class="btn" @click="$router.push('/message-list')">

@@ -95,7 +95,7 @@
                   <div class="box-num">{{ product_item.num }}</div>
                   <div class="box-subtotal">
                     {{ vuex_huobi }}
-                    {{ product_item.priceSale * product_item.num }}
+                    {{ (product_item.priceSale * product_item.num).toFixed(2) }}
                   </div>
                   <!-- <div class="box-refund">
                     <div class="refund-act">
@@ -265,11 +265,11 @@ export default {
       //订单状态：-5-待支付  -1-已取消  2-待发货  3-待收货  4-待自提  5-已完成
       let user_index = this.vuex_user || {};
       console.log(user_index);
-      // users_userInfo 中 orderNeedPay 待支付 orderNeedDelivery 待发货 orderNeedShouhuo 待收货 orderNeedHexiao 待核销 orderNeedComment 待评论 orderRefundNum 待售后
+      // users_userInfo 中 orderNeedPay 待支付 orderNeedDelivery 待发货 orderNeedShouhuo 待收货 orderNeedShenhe 待核销 orderNeedComment 待评论 orderRefundNum 待售后
       let tabList = [
         { value: 0, title: "全部订单" },
         { value: 1, title: "待付款", num: user_index.orderNeedPay || 0 },
-        { value: 8, title: "待审核", num: user_index.orderNeedHexiao || 0 },
+        { value: 8, title: "待审核", num: user_index.orderNeedShenhe || 0 },
         { value: 2, title: "待发货", num: user_index.orderNeedDelivery || 0 },
         { value: 3, title: "待收货", num: user_index.orderNeedShouhuo || 0 },
         { value: 5, title: "已完成", num: user_index.orderNeedComment || 0 },

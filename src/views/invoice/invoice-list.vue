@@ -74,7 +74,7 @@
                   </div>
                   <div class="box-num">x {{ product_item.num }}</div>
                   <div class="box-subtotal">
-                    {{ vuex_huobi }} {{ product_item.priceSale * product_item.num }}
+                    {{ vuex_huobi }} {{ (product_item.priceSale * product_item.num).toFixed(2) }}
                   </div>
                 </div>
               </div>

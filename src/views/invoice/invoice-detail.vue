@@ -30,7 +30,7 @@
               <div class="goods-item-info">{{ item.priceSale }}</div>
               <div class="goods-item-info">× {{ item.num }}</div>
               <div class="goods-item-info">
-                {{ item.priceSale * item.num }}元
+                {{ (item.priceSale * item.num).toFixed(2) }}元
               </div>
             </div>
             <div class="item-info-box">
