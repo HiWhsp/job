@@ -30,7 +30,7 @@
               <div class="goods-item-info">{{ item.priceSale }}</div>
               <div class="goods-item-info">× {{ item.num }}</div>
               <div class="goods-item-info">
-                {{ item.priceSale * item.num }}元
+                {{ (item.priceSale * item.num).toFixed(2) }}元
               </div>
             </div>
             <div class="item-info-box">
@@ -158,7 +158,6 @@ export default {
 
       order_info: {},
       payInfo: {},
-      products: [],
       order_yunfei: 0, // 运费
       order_coupon_price: 0, // 优惠
       fapiao_is_image: true,
@@ -214,15 +213,13 @@ export default {
         method: "get",
         data: {
           action: "orders_detail",
-          id: this.invoiceId,
+          id: this.orderId,
         },
       }).then((res) => {
         if (res.code == 200) {
           let data = res.data;
           this.order_info = data;
           this.payInfo = data.payInfo;
-          // this.info = data.invioceJson
-          this.products = data.products;
         }
       });
     },

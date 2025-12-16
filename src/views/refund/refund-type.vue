@@ -39,7 +39,7 @@
                     <div class="num">x {{ product_info.num }}</div>
                   </div>
                   <div class="box-xiaoji">
-                    <div class="price">{{ vuex_huobi }} {{ product_info.priceSale * product_info.num }}</div>
+                    <div class="price">{{ vuex_huobi }} {{ (product_info.priceSale * product_info.num).toFixed(2) }}</div>
                   </div>
                 </div>
 

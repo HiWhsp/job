@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <div class="page-title">我的订单</div>
+    <div class="page-title">我的发票</div>
 
     <div class="page-ctx">
       <div class="tab-box">

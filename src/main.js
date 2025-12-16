@@ -63,7 +63,16 @@ Vue.prototype.$load = {
   },
 };
 
-
+// 初始化的时候判断地址栏是否有userId & token
+let urlParams = new URLSearchParams(window.location.search);
+let userId = urlParams.get("userId");
+let token = urlParams.get("token");
+if (userId && token) {
+  store.commit("set_vuex_user", {
+    userId: userId,
+    token: token,
+  });
+}
 store.dispatch("appInit"); //重新初始化
 
 Vue.config.productionTip = false;

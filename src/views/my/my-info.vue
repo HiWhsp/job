@@ -5,6 +5,9 @@
     </div>
 
     <div class="page-ctx">
+      <div class="renzheng-box" v-if="my_info.renzheng == -1">
+        {{ my_info.renzhengMsg }}
+      </div>
       <div class="section">
         <div class="section-ctx">
           <div class="item upload-box">
@@ -314,8 +317,19 @@ export default {
 
   .page-ctx {
     margin-top: 24px;
-    padding: 80px 100px;
+    padding: 20px 100px 80px;
     background: #fff;
+    .renzheng-box {
+      margin-bottom: 40px;
+      background: #fff9f6;
+      border: 1px solid #ec1c2a;
+      height: 80px;
+      text-align: center;
+      line-height: 80px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #ec1c2a;
+    }
   }
 }
 

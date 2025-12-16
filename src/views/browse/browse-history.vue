@@ -61,10 +61,10 @@
                   <div class="text-1">
                     {{ item.title }}
                     <p class="text-1-num">
-                      品牌名称：<span>{{ item.brandName }}</span>
+                      品牌名称：<span>{{ item.brand ? item.brand.title : '--' }}</span>
                     </p>
                     <p class="text-1-num">
-                      商品型号：<span>{{ item.model }}</span>
+                      商品型号：<span>{{ item.skus[0] ? item.skus[0].sn : '--' }}</span>
                     </p>
                   </div>
                   <div class="text-2">

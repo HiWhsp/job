@@ -196,6 +196,7 @@
                     <button
                       class="btn btn-ripple btn-text"
                       @click="to_service(order)"
+                      v-if="order.status != 6"
                     >
                       取消售后
                     </button>

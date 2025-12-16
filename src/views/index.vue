@@ -597,7 +597,7 @@ export default {
           title: "我的询价",
           icon: require("@img/index/nav3.png"),
           icon1: require("@img/index/nav3.png"),
-          route: "/batch-xiadan",
+          route: "/batch-xunjia",
         },
       ],
       news_list: [],

@@ -177,6 +177,7 @@ export default new Vuex.Store({
 
   actions: {
     async appInit({ commit, state, dispatch }, data) {
+      
       dispatch("query_assets");
       dispatch("query_footer_cates");
       dispatch("query_Visit_Record");
@@ -195,13 +196,16 @@ export default new Vuex.Store({
     },
 
     async query_Visit_Record({ commit, state, dispatch }) {
-      api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "users_setVisit",
-        },
-      });
+      // 有用户登录才记录访问记录
+      if (state.vuex_is_login) {
+        api({
+          url: "/service.php",
+          method: "get",
+          data: {
+            action: "users_setVisit",
+          },
+        });
+      }
     },
 
     //获取登录后的信息
