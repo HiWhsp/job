@@ -16,7 +16,7 @@ Vue.component("pageBread", pageBread); //
 
 // import "lib-flexible";//网页适配
 
-
+import 'animate.css';
 import "@/css/css-reset.css"; // css reset
 import "@/plugin/request.js"; 
 import "@/plugin/message.js"; 
@@ -44,6 +44,7 @@ Vue.use(ElementUI);
 // 混入
 import _mixin from "@/mixins/index.js";
 Vue.mixin(_mixin);
+
 
 Vue.prototype.$load = {
   loading: null,

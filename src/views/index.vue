@@ -23,7 +23,13 @@
 
         <div class="content-box w-1400">
           <!-- 产品中心 -->
-          <div class="product-center" v-if="vuex_config.proCenterMold == 1">
+          <div
+            class="product-center section-animate"
+            v-if="vuex_config.proCenterMold == 1"
+            ref="productCenter"
+            data-section-key="productCenter"
+            :class="{ 'section-visible': sectionInView.productCenter }"
+          >
             <div class="product-center-left">
               <div class="sub-title">
                 <h2 class="product-title-text">产品中心</h2>
@@ -56,7 +62,13 @@
             </div>
           </div>
           <!-- 产品推荐 -->
-          <div class="product-recommendation" v-if="vuex_config.proRecMold == 1">
+          <div
+            class="product-recommendation section-animate"
+            v-if="vuex_config.proRecMold == 1"
+            ref="productRecommendation"
+            data-section-key="productRecommendation"
+            :class="{ 'section-visible': sectionInView.productRecommendation }"
+          >
             <div class="product-grid-container">
               <div class="product-grid-8" v-if="productList.length > 0">
                 <div
@@ -94,7 +106,13 @@
             </div>
           </div>
           <!-- 新闻动态 -->
-          <div class="news-section" v-if="vuex_config.newsMold == 1">
+          <div
+            class="news-section section-animate"
+            v-if="vuex_config.newsMold == 1"
+            ref="newsSection"
+            data-section-key="newsSection"
+            :class="{ 'section-visible': sectionInView.newsSection }"
+          >
             <div class="sub-title">
               <h2 class="product-title-text">新闻动态</h2>
               <p class="product-subtitle">NEWS UPDATES</p>
@@ -150,7 +168,13 @@
             <el-empty v-if="newsList.length === 0" description="暂无数据" />
           </div>
           <!-- 服务中心 -->
-          <div class="service-center" v-if="vuex_config.serveMold == 1">
+          <div
+            class="service-center section-animate"
+            v-if="vuex_config.serveMold == 1"
+            ref="serviceCenter"
+            data-section-key="serviceCenter"
+            :class="{ 'section-visible': sectionInView.serviceCenter }"
+          >
             <div class="sub-title">
               <h2 class="product-title-text">服务中心</h2>
               <p class="product-subtitle">SERVICE CENTER</p>
@@ -194,6 +218,13 @@ export default {
       productList: [],
       productChannelList: [],
       newsList: [],
+      sectionInView: {
+        productCenter: false,
+        productRecommendation: false,
+        newsSection: false,
+        serviceCenter: false,
+      },
+      sectionObserver: null,
       serviceList: [
         [
           {
@@ -247,7 +278,19 @@ export default {
   created() {
     this.setView();
   },
-  mounted() {},
+  mounted() {
+    this.initSectionObserver();
+  },
+  updated() {
+    // 确保异步渲染 / v-if 打开后，板块元素能被及时加入观察
+    this.registerSectionTargets();
+  },
+  beforeDestroy() {
+    if (this.sectionObserver) {
+      this.sectionObserver.disconnect();
+      this.sectionObserver = null;
+    }
+  },
   methods: {
     setView() {
       this.query_product_list();
@@ -297,6 +340,58 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           this.newsList = res.data.list;
+        }
+      });
+    },
+    initSectionObserver() {
+      // 兼容性处理：不支持 IntersectionObserver 时直接展示所有板块
+      if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
+        this.sectionInView.productCenter = true;
+        this.sectionInView.productRecommendation = true;
+        this.sectionInView.newsSection = true;
+        this.sectionInView.serviceCenter = true;
+        return;
+      }
+
+      if (this.sectionObserver) {
+        this.sectionObserver.disconnect();
+        this.sectionObserver = null;
+      }
+
+      this.sectionObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const key = entry.target.dataset.sectionKey;
+              if (key && !this.sectionInView[key]) {
+                this.$set(this.sectionInView, key, true);
+              }
+            }
+          });
+        },
+        {
+          root: null,
+          threshold: 0.25,
+        }
+      );
+
+      this.$nextTick(() => {
+        this.registerSectionTargets();
+      });
+    },
+    registerSectionTargets() {
+      if (!this.sectionObserver) return;
+      const sectionMap = {
+        productCenter: this.$refs.productCenter,
+        productRecommendation: this.$refs.productRecommendation,
+        newsSection: this.$refs.newsSection,
+        serviceCenter: this.$refs.serviceCenter,
+      };
+
+      Object.keys(sectionMap).forEach((key) => {
+        const el = sectionMap[key];
+        if (el && el.dataset && el.dataset.sectionKey === key) {
+          this.sectionObserver.observe(el);
         }
       });
     },
@@ -399,6 +494,70 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 120px;
+}
+
+// 通用板块入场动效（参考 Mindray 首页的渐显上浮效果）
+.section-animate {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.section-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+// 子元素级联动效
+.section-animate .product-item,
+.section-animate .news-card,
+.section-animate .news-item,
+.section-animate .service-card1,
+.section-animate .service-card {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.section-visible .product-item,
+.section-visible .news-card,
+.section-visible .news-item,
+.section-visible .service-card1,
+.section-visible .service-card {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.section-visible .product-item:nth-child(1),
+.section-visible .news-card:nth-child(1),
+.section-visible .news-item:nth-child(1),
+.section-visible .service-card1:nth-child(1),
+.section-visible .service-card:nth-child(1) {
+  transition-delay: 0.1s;
+}
+
+.section-visible .product-item:nth-child(2),
+.section-visible .news-card:nth-child(2),
+.section-visible .news-item:nth-child(2),
+.section-visible .service-card1:nth-child(2),
+.section-visible .service-card:nth-child(2) {
+  transition-delay: 0.2s;
+}
+
+.section-visible .product-item:nth-child(3),
+.section-visible .news-card:nth-child(3),
+.section-visible .news-item:nth-child(3),
+.section-visible .service-card1:nth-child(3),
+.section-visible .service-card:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
+.section-visible .product-item:nth-child(4),
+.section-visible .news-card:nth-child(4),
+.section-visible .news-item:nth-child(4),
+.section-visible .service-card1:nth-child(4),
+.section-visible .service-card:nth-child(4) {
+  transition-delay: 0.4s;
 }
 
 // 公共标题样式
