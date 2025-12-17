@@ -50,6 +50,7 @@
 </template>
   <script>
 import help_right from "./components/help_right.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "news-detail",
@@ -65,22 +66,24 @@ export default {
     };
   },
   computed: {
-    // ...mapState([]),
+    ...mapState(["vuex_footer_cates"]),
   },
   watch: {
     $route() {
-      this.initParams();
+      this.id = this.$route.query.id || this.vuex_footer_cates[0].newList[0].id;
+      this.setView();
+    },
+    vuex_footer_cates() {
+      this.id = this.$route.query.id || this.vuex_footer_cates[0].newList[0].id;
       this.setView();
     },
   },
-  created() {
+  mounted() {
     this.setView();
   },
   methods: {
-    initParams() {
-      this.id = this.$route.query.id || "135";
-    },
     setView() {
+      if (!this.id) return;
       this.$api({
         url: "/service.php",
         method: "get",
