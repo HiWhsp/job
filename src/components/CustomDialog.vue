@@ -43,7 +43,6 @@
           :on-remove="handleRemove"
           list-type="picture-card"
           class="custom-upload"
-          accept="image/*"
         >
           <div class="upload-button">
             <!-- <div class="upload-icon">
@@ -155,13 +154,13 @@ export default {
     },
     // 文件上传前的处理
     beforeUpload(file) {
-      const isImage = file.type.startsWith("image/");
-      if (!isImage) {
-        this.$message.error("只能上传图片文件!");
-        return false;
-      }
+      // const isImage = file.type.startsWith("image/");
+      // if (!isImage) {
+      //   this.$message.error("只能上传图片文件!");
+      //   return false;
+      // }
       if (this.uploadedImages.length >= 1) {
-        this.$message.error("只能上传一张图片!");
+        this.$message.error("只能上传一个文件!");
         return false;
       }
       // 验证通过，设置上传状态
@@ -175,13 +174,8 @@ export default {
     // 移除文件
     handleRemove(file, fileList) {
       this.fileList = fileList;
-      // 从uploadedImages中移除对应的文件
-      const index = this.uploadedImages.findIndex(
-        (img) => img.url === file.url
-      );
-      if (index > -1) {
-        this.uploadedImages.splice(index, 1);
-      }
+      this.uploadedImages = [];
+      this.isUploading = false;
     },
     handleSubmit() {
       // 如果正在上传图片，阻止提交

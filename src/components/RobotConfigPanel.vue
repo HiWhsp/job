@@ -1780,15 +1780,29 @@ export default {
 
       let content =
         '<div class="tooltip-content" style="width: 423px;max-height: 538px; border-radius: 8px 8px 8px 8px;">';
+
       // 如果有备注，添加备注信息
       if (other.notes) {
         const escapedNotes = this.escapeHtml(other.notes);
         content += `<div class="tooltip-notes" style="font-size: 14px; color: #fff; margin-bottom: 10px; white-space: pre-wrap; word-break: break-word;">备注: ${escapedNotes}</div>`;
       }
-      // 如果有图片，添加图片信息
+
+      // 如果有图片/文件地址，根据后缀判断是否为图片
       if (other.image) {
-        const escapedImage = this.escapeHtml(other.image);
-        content += `<img src="${escapedImage}" class="tooltip-image" style="width: 100%; height: 380px; border-radius: 4px; margin-bottom: 8px;" />`;
+        const url = String(other.image);
+        const pureUrl = url.split("?")[0].toLowerCase();
+        const isImage = /\.(png|jpe?g|gif|bmp|webp|svg)$/.test(pureUrl);
+        const escapedUrl = this.escapeHtml(url);
+
+        if (isImage) {
+          // 图片：直接展示
+          content += `<img src="${escapedUrl}" class="tooltip-image" style="width: 100%; height: 380px; border-radius: 4px; margin-bottom: 8px;" />`;
+        } else {
+          // 非图片：展示下载按钮，点击新窗口打开链接
+          content += `<div class="tooltip-file-download" style="margin-bottom: 8px;">\
+<a href="${escapedUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 6px 12px; background: #409EFF; color: #fff; border-radius: 4px; text-decoration: none;">下载文件</a>\
+</div>`;
+        }
       }
 
       // 如果有品牌信息，添加品牌信息

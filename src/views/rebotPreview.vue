@@ -14,12 +14,134 @@
           </div>
         </div>
         <div class="config-order-number">
-          配置单号: <span>{{ configOrderNumber || "暂无" }}</span>
+          submit 配置单号: <span>{{ configOrderNumber || "暂无" }}</span>
         </div>
 
         <!-- 配置项列表 -->
         <div class="config-items-list">
-          <ComponentList :components="configItems" />
+          <div v-for="(titleItems, index) in configItems" :key="index">
+            <div class="title-item">{{ index }}</div>
+            <div
+              v-for="(item, index) in titleItems"
+              :key="index"
+              class="config-item-row"
+            >
+              <template v-if="item.image">
+                <div class="item-thumbnail">
+                  <img :src="item.image" :alt="item.name" v-if="item.image" />
+                  <div class="no-image" v-else></div>
+                </div>
+                <div class="item-details">
+                  <div class="item-name">{{ item.firstTitle }}</div>
+                  <div class="item-model">{{ item.name }} {{ item.model }}</div>
+                </div>
+                <div class="item-params">参数信息：{{ paramsText(item) }}</div>
+                <div class="item-progress">
+                  <div class="progress-bar-container">
+                    <div class="progress-bar-track">
+                      <div
+                        class="progress-bar-fill"
+                        :style="{ width: item.progress * 20 + '%' }"
+                      >
+                        <span class="progress-slider"> </span>
+                      </div>
+                    </div>
+                    <div class="progress-label">
+                      {{ item.delivery_title }}
+                    </div>
+                  </div>
+                </div>
+                <div class="item-price">
+                  <img
+                    src="@/assets/img/icon/Group1.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 1"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group2.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 2"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group3.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 3"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group4.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 4"
+                  />
+                </div>
+                <div class="item-edit" v-if="!configOrderNumber">
+                  <i class="el-icon-edit" @click="editItem(item)"></i>
+                </div>
+              </template>
+              <template v-else>
+                <div class="item-details">
+                  <div class="item-name">{{ item.firstTitle }}</div>
+                  <!-- <div class="item-model">{{ item.name }} {{ item.model }}</div> -->
+                </div>
+                <div class="item-params">
+                  <p>{{ item.name }}</p>
+                  <p>{{ paramsText(item) }}</p>
+                </div>
+                <div class="item-progress">
+                  <div class="progress-bar-container">
+                    <div class="progress-bar-track">
+                      <div
+                        class="progress-bar-fill"
+                        :style="{
+                          width:
+                            (item.progress * 20 > 100
+                              ? 100
+                              : item.progress * 20) + '%',
+                        }"
+                      >
+                        <span class="progress-slider"> </span>
+                      </div>
+                    </div>
+                    <div class="progress-label">
+                      {{ item.delivery_title }}
+                    </div>
+                  </div>
+                </div>
+                <div class="item-price">
+                  <img
+                    src="@/assets/img/icon/Group1.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 1"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group2.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 2"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group3.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 3"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group4.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 4"
+                  />
+                </div>
+                <div class="item-edit" v-if="!configOrderNumber">
+                  <i class="el-icon-edit" @click="editItem(item)"></i>
+                </div>
+              </template>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -94,10 +216,129 @@
 
         <!-- 配置项列表 -->
         <div class="config-items-list">
-          <ComponentList
-            :components="configItems"
-            :configOrderNumber="configOrderNumber"
-          />
+          <div v-for="(titleItems, index) in configItems" :key="index">
+            <div class="title-item">{{ index }}</div>
+            <div
+              v-for="(item, index) in titleItems"
+              :key="index"
+              class="config-item-row"
+            >
+              <template v-if="item.image">
+                <div class="item-thumbnail">
+                  <img :src="item.image" :alt="item.name" v-if="item.image" />
+                  <div class="no-image" v-else></div>
+                </div>
+                <div class="item-details">
+                  <div class="item-name">{{ item.originTitle }}</div>
+                  <div class="item-model">{{ item.name }} {{ item.model }}</div>
+                </div>
+                <div class="item-params">参数信息：{{ paramsText(item) }}</div>
+                <div class="item-progress">
+                  <div class="progress-bar-container">
+                    <div class="progress-bar-track">
+                      <div
+                        class="progress-bar-fill"
+                        :style="{ width: item.progress * 20 + '%' }"
+                      >
+                        <span class="progress-slider"> </span>
+                      </div>
+                    </div>
+                    <div class="progress-label">
+                      {{ item.delivery_title }}
+                    </div>
+                  </div>
+                </div>
+                <div class="item-price">
+                  <img
+                    src="@/assets/img/icon/Group1.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 1"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group2.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 2"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group3.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 3"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group4.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 4"
+                  />
+                </div>
+                <div class="item-edit" v-if="!configOrderNumber">
+                  <i class="el-icon-edit" @click="editItem(item)"></i>
+                </div>
+              </template>
+              <template v-else>
+                <div class="item-details">
+                  <div class="item-name">{{ item.firstTitle }}</div>
+                  <!-- <div class="item-model">{{ item.name }} {{ item.model }}</div> -->
+                </div>
+                <div class="item-params">
+                  <p>{{ item.name }}</p>
+                  <p>{{ paramsText(item) }}</p>
+                </div>
+                <div class="item-progress">
+                  <div class="progress-bar-container">
+                    <div class="progress-bar-track">
+                      <div
+                        class="progress-bar-fill"
+                        :style="{
+                          width:
+                            (item.progress * 20 > 100
+                              ? 100
+                              : item.progress * 20) + '%',
+                        }"
+                      >
+                        <span class="progress-slider"> </span>
+                      </div>
+                    </div>
+                    <div class="progress-label">
+                      {{ item.delivery_title }}
+                    </div>
+                  </div>
+                </div>
+                <div class="item-price">
+                  <img
+                    src="@/assets/img/icon/Group1.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 1"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group2.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 2"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group3.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 3"
+                  />
+                  <img
+                    src="@/assets/img/icon/Group4.png"
+                    alt="price"
+                    class="price-icon"
+                    v-if="item.price_status == 4"
+                  />
+                </div>
+                <div class="item-edit" v-if="!configOrderNumber">
+                  <i class="el-icon-edit" @click="editItem(item)"></i>
+                </div>
+              </template>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -164,7 +405,6 @@
 </template>
 
 <script>
-import ComponentList from "@/components/ComponentList2.vue";
 import DownloadDialog from "@/components/DownloadDialog.vue";
 import UserInfoDialog from "@/components/UserInfoDialog.vue";
 import html2canvas from "html2canvas";
@@ -172,7 +412,6 @@ import html2canvas from "html2canvas";
 export default {
   name: "RobotPreview",
   components: {
-    ComponentList,
     DownloadDialog,
     UserInfoDialog,
   },
@@ -232,16 +471,12 @@ export default {
 
           // 遍历接口返回的数组，找到选中值的原数据
           this.configItems = this.findSelectedItems(apiConfigItems, configData);
-          //
-          this.configItems = this.configItems
-            .map((item, index) => {
-              if (index < 2) {
-                return item.child;
-              } else {
-                return item;
-              }
-            })
-            .flat();
+          // 按照originTitle分组
+          this.configItems = this.configItems.reduce((acc, item) => {
+            acc[item.originTitle] = acc[item.originTitle] || [];
+            acc[item.originTitle].push(item);
+            return acc;
+          }, {});
         } else {
           this.$message.warning("未找到保存的配置数据");
           // 如果没有localStorage数据，使用接口返回的数据
@@ -257,128 +492,191 @@ export default {
 
     // 查找选中项的原数据
     findSelectedItems(apiConfigItems, localStorageData) {
-      if (!Array.isArray(apiConfigItems) || !Array.isArray(localStorageData)) {
-        return [];
+      const selectedItems = [];
+
+      // 遍历接口返回的配置项数组
+      if (Array.isArray(apiConfigItems)) {
+        apiConfigItems.forEach((tab, index) => {
+          if (tab.child && Array.isArray(tab.child)) {
+            // 遍历第一层子项
+            tab.child.forEach((firstLevel) => {
+              // 检查第一层是否有 producntInfos
+              if (
+                firstLevel.producntInfos &&
+                Array.isArray(firstLevel.producntInfos)
+              ) {
+                firstLevel.producntInfos.forEach((item) => {
+                  // 在localStorage中查找匹配的选中项
+                  const matchedItem = localStorageData.find(
+                    (localItem) => localItem.product_type_goods_ids === item.id
+                  );
+
+                  if (matchedItem) {
+                    if (
+                      item.title == "其他" ||
+                      item.title == "定制" ||
+                      item.title == "定制logo"
+                    ) {
+                      selectedItems.push({
+                        activeTab: index,
+                        originTitle: tab.title,
+                        firstTitle: firstLevel.title,
+                        id: item.id,
+                        name: item.title,
+                        model: item.description,
+                        image: matchedItem.other.image || item.thumb,
+                        params: matchedItem.other || item.spec,
+                        progress: item.delivery_time,
+                        price_status: item.price_status,
+                        delivery_title: item.delivery_title,
+                      });
+                    } else {
+                      selectedItems.push({
+                        activeTab: index,
+                        originTitle: tab.title,
+                        firstTitle: firstLevel.title,
+                        id: item.id,
+                        name: item.title,
+                        model: item.description,
+                        image: item.thumb,
+                        params:
+                          item.title == "其他" ||
+                          item.title == "定制" ||
+                          item.title == "定制logo"
+                            ? matchedItem.other
+                            : item.spec,
+                        progress: item.delivery_time,
+                        price_status: item.price_status,
+                        delivery_title: item.delivery_title,
+                      });
+                    }
+                  }
+                });
+              }
+
+              // 遍历第二层子项
+              if (firstLevel.child && Array.isArray(firstLevel.child)) {
+                firstLevel.child.forEach((secondLevel) => {
+                  if (
+                    secondLevel.producntInfos &&
+                    Array.isArray(secondLevel.producntInfos)
+                  ) {
+                    secondLevel.producntInfos.forEach((item) => {
+                      // 在localStorage中查找匹配的选中项
+                      const matchedItem = localStorageData.find(
+                        (localItem) =>
+                          localItem.product_type_goods_ids === item.id
+                      );
+
+                      if (matchedItem) {
+                        if (
+                          item.title == "其他" ||
+                          item.title == "定制" ||
+                          item.title == "定制logo"
+                        ) {
+                          selectedItems.push({
+                            activeTab: index,
+                            originTitle: firstLevel.title,
+                            firstTitle: secondLevel.title,
+                            id: item.id,
+                            name: item.title,
+                            model: item.description,
+                            image: matchedItem.other.image || item.thumb,
+                            params: matchedItem.other || item.spec,
+                            progress: item.delivery_time,
+                            price_status: item.price_status,
+                            delivery_title: item.delivery_title,
+                          });
+                        } else {
+                          selectedItems.push({
+                            activeTab: index,
+                            originTitle: firstLevel.title,
+                            firstTitle: secondLevel.title,
+                            id: item.id,
+                            name: item.title,
+                            model: item.description,
+                            image: item.thumb,
+                            params:
+                              item.title == "其他" ||
+                              item.title == "定制" ||
+                              item.title == "定制logo"
+                                ? matchedItem.other
+                                : item.spec,
+                            progress: item.delivery_time,
+                            price_status: item.price_status,
+                            delivery_title: item.delivery_title,
+                          });
+                        }
+                      }
+                    });
+                  }
+
+                  // 遍历第三层子项
+                  if (secondLevel.child && Array.isArray(secondLevel.child)) {
+                    secondLevel.child.forEach((thirdLevel) => {
+                      if (
+                        thirdLevel.producntInfos &&
+                        Array.isArray(thirdLevel.producntInfos)
+                      ) {
+                        thirdLevel.producntInfos.forEach((item) => {
+                          // 在localStorage中查找匹配的选中项
+                          const matchedItem = localStorageData.find(
+                            (localItem) =>
+                              localItem.product_type_goods_ids === item.id
+                          );
+
+                          if (matchedItem) {
+                            if (
+                              item.title == "其他" ||
+                              item.title == "定制" ||
+                              item.title == "定制logo"
+                            ) {
+                              selectedItems.push({
+                                activeTab: index,
+                                originTitle: secondLevel.title,
+                                firstTitle: thirdLevel.title,
+                                id: item.id,
+                                name: item.title,
+                                model: item.description,
+                                image: matchedItem.other.image || item.thumb,
+                                params: matchedItem.other || item.spec,
+                                progress: item.delivery_time,
+                                price_status: item.price_status,
+                                delivery_title: item.delivery_title,
+                              });
+                            } else {
+                              selectedItems.push({
+                                activeTab: index,
+                                originTitle: secondLevel.title,
+                                firstTitle: thirdLevel.title,
+                                id: item.id,
+                                name: item.title,
+                                model: item.description,
+                                image: item.thumb,
+                                params:
+                                  item.title == "其他" ||
+                                  item.title == "定制" ||
+                                  item.title == "定制logo"
+                                    ? matchedItem.other
+                                    : item.spec,
+                                progress: item.delivery_time,
+                                price_status: item.price_status,
+                                delivery_title: item.delivery_title,
+                              });
+                            }
+                          }
+                        });
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
       }
 
-      // 深度克隆原始数据
-      const clonedData = JSON.parse(JSON.stringify(apiConfigItems));
-
-      // 递归过滤 producntInfos
-      const filterProducntInfos = (producntInfos) => {
-        if (!Array.isArray(producntInfos)) {
-          return [];
-        }
-
-        return producntInfos
-          .map((item) => {
-            // 在localStorage中查找匹配的选中项
-            const localItem = localStorageData.find(
-              (localItem) => localItem.product_type_goods_ids === item.id
-            );
-
-            if (!localItem) {
-              return null; // 不在localStorage中，返回null用于过滤
-            }
-
-            // 创建新的item对象，保留原始结构
-            const newItem = { ...item };
-
-            // 如果是"其他"、"定制"或"定制logo"，更新相关字段
-            if (
-              item.title == "其他" ||
-              item.title == "定制" ||
-              item.title == "定制logo"
-            ) {
-              // 更新图片
-              if (localItem.other && localItem.other.image) {
-                newItem.thumb = localItem.other.image;
-              }
-              // 更新spec
-              if (localItem.other) {
-                newItem.spec = localItem.other;
-              }
-            } else {
-              // 非定制类型，如果有other数据也更新
-              if (localItem.other) {
-                newItem.spec = localItem.other;
-              }
-            }
-
-            return newItem;
-          })
-          .filter((item) => item !== null); // 过滤掉null值
-      };
-
-      // 递归处理子节点
-      const processChild = (childArray, tabIndex) => {
-        if (!Array.isArray(childArray)) {
-          return [];
-        }
-
-        return childArray
-          .map((childItem) => {
-            const newChildItem = { ...childItem };
-            // 标记来源的tab索引，便于后续跳转编辑
-            newChildItem.activeTab = tabIndex;
-
-            // 处理当前节点的 producntInfos
-            if (
-              newChildItem.producntInfos &&
-              Array.isArray(newChildItem.producntInfos)
-            ) {
-              newChildItem.producntInfos = filterProducntInfos(
-                newChildItem.producntInfos
-              );
-            }
-
-            // 递归处理子节点
-            if (newChildItem.child && Array.isArray(newChildItem.child)) {
-              newChildItem.child = processChild(newChildItem.child, tabIndex);
-            }
-
-            // 判断是否应该保留该节点
-            // 如果有 producntInfos 且过滤后不为空，保留
-            // 如果有 child 且过滤后不为空，保留
-            const hasProducntInfos =
-              newChildItem.producntInfos &&
-              Array.isArray(newChildItem.producntInfos) &&
-              newChildItem.producntInfos.length > 0;
-            const hasChild =
-              newChildItem.child &&
-              Array.isArray(newChildItem.child) &&
-              newChildItem.child.length > 0;
-
-            // 如果既没有 producntInfos 也没有 child，则不保留该节点
-            if (!hasProducntInfos && !hasChild) {
-              return null;
-            }
-
-            return newChildItem;
-          })
-          .filter((item) => item !== null); // 过滤掉null值
-      };
-
-      // 处理顶层tabs
-      return clonedData
-        .map((tab, tabIndex) => {
-          const newTab = { ...tab };
-          if (newTab.child && Array.isArray(newTab.child)) {
-            newTab.child = processChild(newTab.child, tabIndex);
-          }
-
-          // 如果tab的child过滤后为空，则不保留该tab
-          if (
-            !newTab.child ||
-            !Array.isArray(newTab.child) ||
-            newTab.child.length === 0
-          ) {
-            return null;
-          }
-
-          return newTab;
-        })
-        .filter((tab) => tab !== null); // 过滤掉null值
+      return selectedItems;
     },
 
     // 编辑配置项
