@@ -179,7 +179,7 @@
                     <div class="news-box">
                       <div class="main-title flex-between">
                         <div class="text">莉东公告</div>
-                        <router-link to="/news">更多 ></router-link>
+                        <router-link to="/news?cid=58">更多 ></router-link>
                       </div>
                       <div class="news-list">
                         <div
