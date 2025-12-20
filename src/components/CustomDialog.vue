@@ -41,8 +41,7 @@
           :on-success="handleUploadSuccess"
           :on-error="handleUploadError"
           :on-remove="handleRemove"
-          list-type="picture-card"
-          class="custom-upload"
+          :on-preview="handlePreview"
         >
           <div class="upload-button">
             <!-- <div class="upload-icon">
@@ -81,6 +80,7 @@ export default {
         notes: "",
         brand: "",
       },
+      isImage: false,
       fileList: [],
       uploadedImages: [],
       isUploading: false, // 标记是否有图片正在上传
@@ -109,6 +109,21 @@ export default {
       this.resetForm();
     },
     handleUploadSuccess(response, file) {
+      // 判断上传的是图片还是文件
+      if (
+        [
+          ".jpg",
+          ".png",
+          ".jpeg",
+          ".JPG",
+          ".PNG",
+          ".JPEG",
+          ".webp",
+          ".WEBP",
+        ].includes(response.data.path.split(".").pop())
+      ) {
+        this.isImage = true;
+      }
       this.isUploading = false; // 上传完成（成功或失败），重置上传状态
       if (response.code === 200 && response.data && response.data.path) {
         this.uploadedImages.push({
@@ -176,6 +191,19 @@ export default {
       this.fileList = fileList;
       this.uploadedImages = [];
       this.isUploading = false;
+    },
+    // 预览文件 - 在新页面打开
+    handlePreview(file) {
+      // 优先使用 response 中的路径，如果没有则使用 url
+      const filePath = file.response?.data?.path || file.url || "";
+      
+      if (!filePath) {
+        this.$message.warning("文件地址不存在");
+        return;
+      }
+      
+      // 在新窗口打开文件
+      window.open(filePath, "_blank");
     },
     handleSubmit() {
       // 如果正在上传图片，阻止提交
@@ -260,11 +288,51 @@ export default {
           border: 1px solid #dcdfe6;
           margin: 0;
           position: relative;
+          cursor: pointer;
 
           img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+          }
+
+          .el-upload-list__item-actions {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            cursor: default;
+            text-align: center;
+            color: #fff;
+            opacity: 0;
+            font-size: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            &:hover {
+              opacity: 1;
+            }
+
+            .el-upload-list__item-preview {
+              cursor: pointer;
+              color: #fff;
+              font-size: 18px;
+              transition: all 0.3s;
+
+              &:hover {
+                color: #409eff;
+                transform: scale(1.2);
+              }
+            }
+          }
+
+          &:hover .el-upload-list__item-actions {
+            opacity: 1;
           }
 
           .el-upload-list__item-delete {
@@ -282,6 +350,7 @@ export default {
             color: white;
             font-size: 12px;
             border: none;
+            z-index: 10;
 
             &:hover {
               background: #f78989;
@@ -307,26 +376,26 @@ export default {
             background-color: #fff5f2;
           }
         }
+      }
+      .upload-button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 80px;
+        border: 0.2rem solid #ff6600;
+        border-radius: 10px;
+        .upload-icon {
+          font-size: 24px;
+          color: #ff6600;
+          margin-bottom: 5px;
+        }
 
-        .upload-button {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          width: 80px;
-          height: 80px;
-
-          .upload-icon {
-            font-size: 24px;
-            color: #ff6600;
-            margin-bottom: 5px;
-          }
-
-          .upload-text {
-            font-size: 12px;
-            color: #ff6600;
-            text-align: center;
-          }
+        .upload-text {
+          font-size: 12px;
+          color: #ff6600;
+          text-align: center;
         }
       }
     }

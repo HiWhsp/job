@@ -14,7 +14,7 @@
           </div>
         </div>
         <div class="config-order-number">
-          submit 配置单号: <span>{{ configOrderNumber || "暂无" }}</span>
+          配置单号: <span>{{ configOrderNumber || "暂无" }}</span>
         </div>
 
         <!-- 配置项列表 -->
@@ -28,14 +28,16 @@
             >
               <template v-if="item.image">
                 <div class="item-thumbnail">
-                  <img :src="item.image" :alt="item.name" v-if="item.image" />
+                  <img :src="item.name == '其他' && !isImage(item.params.image) ? vuex_avatar_default : item.image" :alt="item.name" v-if="item.image" />
                   <div class="no-image" v-else></div>
                 </div>
                 <div class="item-details">
                   <div class="item-name">{{ item.firstTitle }}</div>
                   <div class="item-model">{{ item.name }} {{ item.model }}</div>
                 </div>
-                <div class="item-params">参数信息：{{ paramsText(item) }}</div>
+                <div class="item-params">参数信息：{{ paramsText(item) }} 
+                  <span class="download-file" v-if="item.name == '其他' && !isImage(item.params.image)" @click="downloadFile(item.params.image)">下载文件</span>
+                </div>
                 <div class="item-progress">
                   <div class="progress-bar-container">
                     <div class="progress-bar-track">
@@ -225,14 +227,16 @@
             >
               <template v-if="item.image">
                 <div class="item-thumbnail">
-                  <img :src="item.image" :alt="item.name" v-if="item.image" />
+                  <img :src="item.name == '其他' ? vuex_avatar_default : item.image" :alt="item.name" v-if="item.image" />
                   <div class="no-image" v-else></div>
                 </div>
                 <div class="item-details">
                   <div class="item-name">{{ item.originTitle }}</div>
                   <div class="item-model">{{ item.name }} {{ item.model }}</div>
                 </div>
-                <div class="item-params">参数信息：{{ paramsText(item) }}</div>
+                <div class="item-params">参数信息：{{ paramsText(item) }} 
+                  <span class="download-file" v-if="item.name == '其他' && !isImage(item.params.image)" @click="downloadFile(item.params.image)">下载文件</span>
+                </div>
                 <div class="item-progress">
                   <div class="progress-bar-container">
                     <div class="progress-bar-track">
@@ -436,6 +440,12 @@ export default {
     this.getRobotConfig();
   },
   methods: {
+    downloadFile(image) {
+      window.open(image, "_blank");
+    },
+    isImage(image) {
+      return /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/.test(image);
+    },
     goHome() {
       this.$router.push({
         path: "/",
