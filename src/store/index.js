@@ -197,7 +197,7 @@ export default new Vuex.Store({
 
     async query_Visit_Record({ commit, state, dispatch }) {
       // 有用户登录才记录访问记录
-      if (state.vuex_is_login) {
+      if (localStorage.getItem("token")) {
         api({
           url: "/service.php",
           method: "get",
