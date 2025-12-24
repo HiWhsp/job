@@ -24,12 +24,12 @@
           <div class="help-content">
             <div class="content-title">
               <div class="title-bar"></div>
-              {{ activeContent.title }}
+              {{ activeContent ? activeContent.title : '' }}
             </div>
 
             <div class="content-body">
               <!-- 购物须知内容 -->
-              <div class="content-section" v-html="activeContent.content"></div>
+              <div class="content-section" v-html="activeContent ? activeContent.content : ''"></div>
               </div>
             </div>
           </div>
@@ -93,7 +93,7 @@ export default {
       }).then((res) => {        
         if (res.code == 200) {
           this.tabList = res.data.list;
-          this.activeTab = id || this.activeTab;
+          this.activeTab = id || this.tabList[0].id;
           this.activeContent = this.tabList.find(item => item.id == this.activeTab);
         }
       });

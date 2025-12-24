@@ -21,7 +21,7 @@
             </div>
             <div
               class="tab-item"
-              :class="{ active: activeTab === item.key }"
+              :class="{ active: activeTab === item.title }"
               @click="addTab(item)"
               v-for="(item, index) in product.addrows ? product.addrows : []"
               :key="index"
@@ -225,19 +225,19 @@
                   <template slot="title">
                     <div class="product-header">
                       <div class="product-info">
-                        <span class="product-code">
+                        <span class="product-code ellipsis-1">
                           <img src="@img/product/arrow-icon.png" alt="" />
                           <span class="product-title ellipsis-1">{{
                             product.title
                           }}</span>
                         </span>
                         <span
-                          class="product-diameter"
+                          class="product-diameter ellipsis-1"
                           v-for="(item, index) in product.attrs"
                           :key="index"
                           >{{ item.value }}</span
                         >
-                        <span class="product-stock">{{
+                        <span class="product-stock ellipsis-1">{{
                           product.kucun || 0
                         }}</span>
                         <div class="product-compare">
@@ -246,7 +246,7 @@
                             @change="toggleCompare(product)"
                           ></el-checkbox>
                         </div>
-                        <span class="product-price"
+                        <span class="product-price ellipsis-1"
                           >¥{{ product.priceSale }}</span
                         >
                         <div class="product-quantity">
@@ -259,7 +259,7 @@
                             v-model="product.quantity"
                             size="mini"
                             style="width: 60px; margin: 0 5px"
-                            @change="updateQuantity(index, $event)"
+                            @change.stop="updateQuantity(index, $event)"
                           ></el-input>
                           <el-button
                             @click.stop="increaseQuantity(index)"
@@ -298,7 +298,15 @@
 
                     <!-- 详细参数表格 -->
                     <div class="parameter-table-container">
-                      <img :src="product.thumb" alt="示意图" />
+                      <!-- 轮播图区域 不显示指示器-->
+                      <el-carousel :interval="5000" height="149px" indicator-position="none">
+                        <el-carousel-item
+                          v-for="(item, index) in product.images"
+                          :key="index"
+                        >
+                          <img :src="item" alt="示意图" style="width: 100%; height: 100%;" />
+                        </el-carousel-item>
+                      </el-carousel>
                       <div class="parameter-table">
                         <div
                           class="parameter-row"
@@ -444,7 +452,7 @@ export default {
       window.open(url, "_blank");
     },
     addTab(item) {
-      this.activeTab = item.key;
+      this.activeTab = item.title;
       this.selectedTab = item;
     },
     searchProduct() {
@@ -500,6 +508,7 @@ export default {
               }
               return acc;
             }, []);
+            item.images = item.images[0] ? item.images[0].split(",") : [];
           });
           // 更新反馈表单的产品选项，将当前产品添加到选项中
           if (this.product.title) {
@@ -954,8 +963,8 @@ export default {
           .product-info {
             display: flex;
             align-items: center;
-            // gap: 20px;
             width: 100%;
+
             div,
             span {
               flex: 1;
@@ -1078,7 +1087,11 @@ export default {
           .parameter-table-container {
             display: flex;
             gap: 20px;
-            img {
+            .el-carousel {
+              width: 150px;
+              height: 150px;
+            }
+            .el-carousel-item {
               width: 150px;
               height: 150px;
             }

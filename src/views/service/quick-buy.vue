@@ -145,8 +145,9 @@
                   <label>*您的联系方式:</label>
                   <el-input
                     v-model="contactInfo.phone"
-                    placeholder="请输入"
+                    placeholder="请输入手机号或邮箱"
                     class="contact-input"
+                    @blur="handleContactBlur"
                   />
                 </div>
               </div>
@@ -337,6 +338,36 @@ export default {
       }
     },
 
+    // 校验联系方式（支持手机号和邮箱）
+    validateContact(value) {
+      if (!value) {
+        return "请输入您的联系方式";
+      }
+      
+      // 手机号正则：1开头的11位数字
+      const phonePattern = /^1[3-9]\d{9}$/;
+      // 邮箱正则
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      
+      if (phonePattern.test(value)) {
+        return "";
+      } else if (emailPattern.test(value)) {
+        return "";
+      } else {
+        return "请输入正确的手机号或邮箱格式";
+      }
+    },
+
+    // 处理联系方式输入框失焦事件
+    handleContactBlur() {
+      if (this.contactInfo.phone) {
+        const error = this.validateContact(this.contactInfo.phone);
+        if (error) {
+          this.$message.warning(error);
+        }
+      }
+    },
+
     // 提交订单
     submitOrder() {
       // 验证必填字段
@@ -344,6 +375,14 @@ export default {
         this.$message.error("请输入您的联系方式");
         return;
       }
+      
+      // 校验联系方式格式
+      const contactError = this.validateContact(this.contactInfo.phone);
+      if (contactError) {
+        this.$message.error(contactError);
+        return;
+      }
+      
       if (!this.contactInfo.address) {
         this.$message.error("请输入送货地址");
         return;

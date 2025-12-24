@@ -49,9 +49,7 @@
 </template>
 
 <script>
-
 import page_breadcrumb from "@/components/page/page-breadcrumb.vue";
-
 
 export default {
   name: "my",
@@ -103,6 +101,9 @@ export default {
             {
               title: "修改密码",
               route: "change-password",
+            },
+            {
+              title: "退出登录",
             },
 
             // {
@@ -273,6 +274,12 @@ export default {
 
   methods: {
     do_toggle_nav(item) {
+      if (item.title === "退出登录") {
+        this.$store.dispatch("remove_vuex_user");
+        localStorage.clear();
+        document.cookie = "";
+        this.$router.push("/login");
+      }
       if (!item.route) {
         // let route = item.sub[0].route;
         // this.$router.push("/" + route);

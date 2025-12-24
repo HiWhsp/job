@@ -81,10 +81,6 @@ export default {
     nav_option() {
       let option = [
         {
-          route: "",
-          title: this.$route.meta.title,
-        },
-        {
           route: "/news",
           title: "新闻动态",
         },

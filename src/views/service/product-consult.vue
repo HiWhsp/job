@@ -21,7 +21,7 @@
                 <el-form-item label="您的联系方式:" prop="phone">
                   <el-input
                     v-model="formData.phone"
-                    placeholder="请输入"
+                    placeholder="请输入手机号或邮箱"
                     clearable
                   />
                 </el-form-item>
@@ -134,8 +134,7 @@ export default {
         phone: [
           { required: true, message: "请输入您的联系方式", trigger: "blur" },
           {
-            pattern: /^1[3-9]\d{9}$/,
-            message: "请输入正确的手机号格式",
+            validator: this.validateContact,
             trigger: "blur",
           },
         ],
@@ -152,6 +151,26 @@ export default {
     this.getProductList();
   },
   methods: {
+    // 校验联系方式（支持手机号和邮箱）
+    validateContact(rule, value, callback) {
+      if (!value) {
+        callback(new Error("请输入您的联系方式"));
+        return;
+      }
+      
+      // 手机号正则：1开头的11位数字
+      const phonePattern = /^1[3-9]\d{9}$/;
+      // 邮箱正则
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      
+      if (phonePattern.test(value)) {
+        callback();
+      } else if (emailPattern.test(value)) {
+        callback();
+      } else {
+        callback(new Error("请输入正确的手机号或邮箱格式"));
+      }
+    },
     // 获取产品列表，支持关键字搜索
     getProductList(keyword = "") {
       this.productLoading = true;
