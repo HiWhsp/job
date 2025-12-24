@@ -75,6 +75,9 @@ export default {
       first_suggest: {},
       //
       keyword: "",
+      scrollPosition: 0, // 滚动位置
+      scrollTimer: null, // 滚动防抖定时器
+      isRestored: false, // 是否已恢复滚动位置
     };
   },
   computed: {
@@ -90,13 +93,34 @@ export default {
   },
   watch: {
     $route(to, from) {
+      // 路由变化时重置恢复标志
+      this.isRestored = false;
       this.initParams();
       this.setView();
     },
   },
+  beforeRouteLeave(to, from, next) {
+    // 离开页面时保存滚动位置
+    this.saveScrollPosition();
+    next();
+  },
   created() {
     this.query_suggest();
     this.setView();
+  },
+  mounted() {
+    // 监听滚动事件
+    window.addEventListener("scroll", this.handleScroll, { passive: true });
+  },
+  beforeDestroy() {
+    // 组件销毁前保存滚动位置
+    this.saveScrollPosition();
+    // 移除滚动监听
+    window.removeEventListener("scroll", this.handleScroll);
+    // 清除定时器
+    if (this.scrollTimer) {
+      clearTimeout(this.scrollTimer);
+    }
   },
 
   methods: {
@@ -123,6 +147,16 @@ export default {
 
           this.list_news = data.list;
           this.count = data.count;
+
+          // 等待 DOM 更新和所有图片加载完成后再恢复滚动位置
+          this.$nextTick(() => {
+            this.waitForImagesLoad().then(() => {
+              // 再等待一下确保页面完全渲染
+              setTimeout(() => {
+                this.restoreScrollPosition();
+              }, 100);
+            });
+          });
         }
       });
     },
@@ -151,6 +185,151 @@ export default {
     on_current_change(value) {
       this.pagination.page = value;
       this.setView();
+    },
+
+    // 保存滚动位置
+    saveScrollPosition() {
+      const scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop ||
+        0;
+      sessionStorage.setItem("news_scroll_position", scrollTop.toString());
+    },
+
+    // 等待所有图片加载完成
+    waitForImagesLoad() {
+      return new Promise((resolve) => {
+        // 确保 $el 存在
+        if (!this.$el) {
+          setTimeout(() => {
+            resolve();
+          }, 100);
+          return;
+        }
+        
+        const images = this.$el.querySelectorAll("img");
+        if (images.length === 0) {
+          // 如果没有图片，等待一小段时间确保 DOM 完全渲染
+          setTimeout(() => {
+            resolve();
+          }, 100);
+          return;
+        }
+
+        let loadedCount = 0;
+        const totalImages = images.length;
+
+        // 检查图片是否已经加载完成
+        const checkImageLoad = (img) => {
+          if (img.complete && img.naturalHeight !== 0) {
+            loadedCount++;
+            if (loadedCount === totalImages) {
+              resolve();
+            }
+          } else {
+            img.onload = () => {
+              loadedCount++;
+              if (loadedCount === totalImages) {
+                resolve();
+              }
+            };
+            img.onerror = () => {
+              // 图片加载失败也计入已加载
+              loadedCount++;
+              if (loadedCount === totalImages) {
+                resolve();
+              }
+            };
+          }
+        };
+
+        // 遍历所有图片
+        images.forEach((img) => {
+          checkImageLoad(img);
+        });
+
+        // 设置超时，防止某些图片一直不加载
+        setTimeout(() => {
+          if (loadedCount < totalImages) {
+            resolve();
+          }
+        }, 3000);
+      });
+    },
+
+    // 恢复滚动位置
+    restoreScrollPosition() {
+      // 防止重复恢复
+      if (this.isRestored) {
+        return;
+      }
+
+      const savedPosition = sessionStorage.getItem("news_scroll_position");
+      if (savedPosition) {
+        const scrollTop = parseInt(savedPosition, 10);
+        if (scrollTop > 0) {
+          // 使用多次尝试确保滚动成功
+          const tryScroll = (attempts = 0) => {
+            if (attempts > 20) {
+              // 最多尝试20次
+              this.isRestored = true;
+              return;
+            }
+            
+            // 确保页面高度足够
+            const pageHeight = Math.max(
+              document.body.scrollHeight,
+              document.body.offsetHeight,
+              document.documentElement.clientHeight,
+              document.documentElement.scrollHeight,
+              document.documentElement.offsetHeight
+            );
+            
+            if (pageHeight < scrollTop && attempts < 5) {
+              // 如果页面高度不够，等待一下再试
+              setTimeout(() => {
+                tryScroll(attempts + 1);
+              }, 100);
+              return;
+            }
+            
+            requestAnimationFrame(() => {
+              window.scrollTo({
+                top: scrollTop,
+                behavior: "auto",
+              });
+              
+              // 检查是否滚动成功，如果没成功则重试
+              setTimeout(() => {
+                const newScroll = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                if (Math.abs(newScroll - scrollTop) > 10 && attempts < 20) {
+                  // 如果滚动位置差距大于10px，继续尝试
+                  tryScroll(attempts + 1);
+                } else {
+                  this.isRestored = true;
+                }
+              }, 100);
+            });
+          };
+          
+          tryScroll();
+        } else {
+          this.isRestored = true;
+        }
+      } else {
+        this.isRestored = true;
+      }
+    },
+
+    // 处理滚动事件（防抖）
+    handleScroll() {
+      if (this.scrollTimer) {
+        clearTimeout(this.scrollTimer);
+      }
+      this.scrollTimer = setTimeout(() => {
+        this.saveScrollPosition();
+      }, 150); // 150ms 防抖
     },
   },
 };
