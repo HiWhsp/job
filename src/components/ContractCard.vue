@@ -48,7 +48,7 @@
     </div>
 
     <div class="card-title ellipsis-1">{{ displayTitle }}</div>
-    <div v-if="vuex_h5" class="overlay-operate-h5">
+    <!-- <div v-if="vuex_h5" class="overlay-operate-h5">
       <div class="overlay-buttons">
         <button
           class="view-btn btn-hover"
@@ -65,7 +65,7 @@
           {{ contract.is_collect ? "取消收藏" : "收藏" }}
         </button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -350,6 +350,7 @@ export default {
 <style lang="less" scoped>
 @media screen and (max-width: 750px) {
   .contract-card {
+    background: transparent;
     border-radius: 0.8rem;
     width: 100%;
     width: 48%;
@@ -359,14 +360,16 @@ export default {
     padding-bottom: 1rem;
 
     .card-title {
-      font-size: 1rem;
-      height: 3rem;
-      line-height: 3rem;
+      font-size: .6rem;
+      height: 2rem;
+      line-height: 2rem;
       margin-top: 0;
+      text-align: center;
     }
 
     .card-content {
       padding: 0.8rem;
+      background: #f4f5f8;
     }
 
     .document-preview {
@@ -380,7 +383,7 @@ export default {
 
         .document-title {
           p {
-            font-size: 1rem;
+            font-size: .8rem;
             width: 80%;
             line-height: 1.2rem;
           }

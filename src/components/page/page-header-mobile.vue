@@ -15,14 +15,54 @@
           </div>
           <div class="brand-name">法律文书网</div>
         </div>
-       
 
+        <div class="contact-info">
+          <div class="contact-text" @click="drawer = true" type="primary">
+            <div class="phone-icon">
+              <img src="@img/index/phone.png" alt="" />
+            </div>
+            <div>
+              <div class="contact-label flex-center">
+                <span>律师咨询电话(同微信)</span>
+              </div>
+              <div class="phone-number">
+                {{ vuex_config.bottom_lawer_contact || "18696628883" }}
+              </div>
+            </div>
+          </div>
+
+          <el-drawer
+            title="我是标题"
+            :visible.sync="drawer"
+            :direction="direction"
+            :with-header="false"
+          >
+            <a
+              :href="'tel:' + vuex_config.bottom_lawer_contact || '18696628883'"
+              class="phone-number"
+            >
+              呼叫 18696628883
+            </a>
+            <span
+              @click="
+                copyToClipboard(
+                  vuex_config.bottom_lawer_contact || '18696628883'
+                )
+              "
+              >复制加微信18696628883</span
+            >
+          </el-drawer>
+        </div>
       </div>
     </div>
 
     <!-- 悬浮侧边栏 -->
     <div class="side-wrap">
-      <div class="side-modal" :class="{ expand: expandSideNav }" @click="expandSideNav = false"></div>
+      <div
+        class="side-modal"
+        :class="{ expand: expandSideNav }"
+        @click="expandSideNav = false"
+      ></div>
       <div class="side-container" :class="{ expand: expandSideNav }">
         <div class="side-wrap">
           <div class="side-inner">
@@ -32,9 +72,14 @@
                 <img src="@img/common/logo.png" class="side-logo" />
                 <!-- </a> -->
               </div>
-              <div @click="goUrl('/login')" v-if="!isLogin && !vuex_user.id" style="font-size: 0.8rem;width: 8rem;">
-                登录/注册</div>
-              <div v-else style="font-size: 0.8rem;width: 8rem;">
+              <div
+                @click="goUrl('/login')"
+                v-if="!isLogin && !vuex_user.id"
+                style="font-size: 0.8rem; width: 8rem"
+              >
+                登录/注册
+              </div>
+              <div v-else style="font-size: 0.8rem; width: 8rem">
                 <div class="user-info" slot="reference">
                   <img src="@img/common/avatar.png" alt="" />
                   <span>{{ vuex_user.mobile || "13333333333" }}</span>
@@ -48,11 +93,24 @@
               <!-- 主导航 -->
 
               <!-- 一级导航 -->
-              <div class="side-nav-list side-nav-list-main" v-if="show_level == 1" data-level="1">
-                <div class="nav-item" v-for="(item, index) in opt_nav" :key="index" @click="clickMenuNav(item)">
+              <div
+                class="side-nav-list side-nav-list-main"
+                v-if="show_level == 1"
+                data-level="1"
+              >
+                <div
+                  class="nav-item"
+                  v-for="(item, index) in opt_nav"
+                  :key="index"
+                  @click="clickMenuNav(item)"
+                >
                   <div class="nav-item-inner">
                     <span>{{ item.title }}</span>
-                    <img src="@img/h5/h5-arrow-right.png" alt="" class="arrow-right" />
+                    <img
+                      src="@img/h5/h5-arrow-right.png"
+                      alt=""
+                      class="arrow-right"
+                    />
                   </div>
                 </div>
               </div>
@@ -63,17 +121,30 @@
                   <div class="nav-item" @click="level2Back">
                     <div class="nav-item-inner nav-item-inner-back">
                       <span>
-                        <img src="@img/h5/h5-arrow-left.png" alt="" class="side-back-img" />返回</span>
+                        <img
+                          src="@img/h5/h5-arrow-left.png"
+                          alt=""
+                          class="side-back-img"
+                        />返回</span
+                      >
                     </div>
                   </div>
 
                   <!-- 二级导航 -->
-                  <div class="nav-item" v-for="(level2, level2_index) in expand_level2_child" :key="level2_index"
-                    @click="clickMenuLevel2(level2)">
+                  <div
+                    class="nav-item"
+                    v-for="(level2, level2_index) in expand_level2_child"
+                    :key="level2_index"
+                    @click="clickMenuLevel2(level2)"
+                  >
                     <div>
                       <div class="nav-item-inner">
                         <span>{{ level2.title }}</span>
-                        <img src="@img/h5/h5-arrow-right.png" alt="" class="arrow-right" />
+                        <img
+                          src="@img/h5/h5-arrow-right.png"
+                          alt=""
+                          class="arrow-right"
+                        />
                       </div>
                     </div>
                   </div>
@@ -86,17 +157,30 @@
                   <div class="nav-item" @click="level3Back">
                     <div class="nav-item-inner nav-item-inner-back">
                       <span>
-                        <img src="@img/h5/h5-arrow-left.png" alt="" class="side-back-img" />返回</span>
+                        <img
+                          src="@img/h5/h5-arrow-left.png"
+                          alt=""
+                          class="side-back-img"
+                        />返回</span
+                      >
                     </div>
                   </div>
 
                   <!-- 3级导航 -->
-                  <div class="nav-item" v-for="(level3, level3_index) in expand_level3_child" :key="level3_index"
-                    @click="clickMenuLevel3(level3)">
+                  <div
+                    class="nav-item"
+                    v-for="(level3, level3_index) in expand_level3_child"
+                    :key="level3_index"
+                    @click="clickMenuLevel3(level3)"
+                  >
                     <div>
                       <div class="nav-item-inner">
                         <span>{{ level3.title }}</span>
-                        <img src="@img/h5/h5-arrow-right.png" alt="" class="arrow-right" />
+                        <img
+                          src="@img/h5/h5-arrow-right.png"
+                          alt=""
+                          class="arrow-right"
+                        />
                       </div>
                     </div>
                   </div>
@@ -109,17 +193,30 @@
                   <div class="nav-item" @click="level4Back">
                     <div class="nav-item-inner nav-item-inner-back">
                       <span>
-                        <img src="@img/h5/h5-arrow-left.png" alt="" class="side-back-img" />返回</span>
+                        <img
+                          src="@img/h5/h5-arrow-left.png"
+                          alt=""
+                          class="side-back-img"
+                        />返回</span
+                      >
                     </div>
                   </div>
 
                   <!-- 3级导航 -->
-                  <div class="nav-item" v-for="(level4, level4_index) in expand_level4_child" :key="level4_index"
-                    @click="clickMenuLevel4(level4)">
+                  <div
+                    class="nav-item"
+                    v-for="(level4, level4_index) in expand_level4_child"
+                    :key="level4_index"
+                    @click="clickMenuLevel4(level4)"
+                  >
                     <div>
                       <div class="nav-item-inner">
                         <span>{{ level4.title }}</span>
-                        <img src="@img/h5/h5-arrow-right.png" alt="" class="arrow-right" />
+                        <img
+                          src="@img/h5/h5-arrow-right.png"
+                          alt=""
+                          class="arrow-right"
+                        />
                       </div>
                     </div>
                   </div>
@@ -132,7 +229,11 @@
     </div>
     <!-- 悬浮2 -->
     <div class="side-wrap">
-      <div class="side-modal" :class="{ expand: expand2SideNav }" @click="expand2SideNav = false"></div>
+      <div
+        class="side-modal"
+        :class="{ expand: expand2SideNav }"
+        @click="expand2SideNav = false"
+      ></div>
       <div class="side-container" :class="{ expand: expand2SideNav }">
         <div class="side-wrap">
           <div class="side-inner">
@@ -151,14 +252,22 @@
 
               <!-- 一级导航 -->
               <div class="side-nav-list side-nav-list-main" data-level="1">
-                <div class="nav-item" v-for="(item, index) in opt2_nav" :key="index" @click="clickMenuNav(item)">
+                <div
+                  class="nav-item"
+                  v-for="(item, index) in opt2_nav"
+                  :key="index"
+                  @click="clickMenuNav(item)"
+                >
                   <div class="nav-item-inner">
                     <span>{{ item.title }}</span>
-                    <img src="@img/h5/h5-arrow-right.png" alt="" class="arrow-right" />
+                    <img
+                      src="@img/h5/h5-arrow-right.png"
+                      alt=""
+                      class="arrow-right"
+                    />
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -174,6 +283,8 @@ export default {
   name: "HeaderIndex",
   data() {
     return {
+      drawer: false,
+      direction: "btt",
       show_level: 1, //默认展示的导航分类级别
       expandSideNav: false,
       expand2SideNav: false,
@@ -249,97 +360,102 @@ export default {
 
     // 主导航
     opt_nav() {
-
-
-
-      let listArr = [{
-        title: '首页',
-        route: '/'
-      }, {
-        title: '关于我们',
-        route: '/about'
-      }, {
-        title: '业务范围',
-        route: '/business'
-      }, {
-        title: '联系我们',
-        route: '/contact',
-      }, {
-        title: '个人中心',
-        child: [
-          {
-            title: '我的订单',
-            route: '/my?tab=1',
-          },
-          {
-            title: '我的下载',
-            route: '/my?tab=2',
-          },
-          {
-            title: '我的收藏',
-            route: '/my?tab=3',
-          },
-        ]
-      }]
+      let listArr = [
+        {
+          title: "首页",
+          route: "/",
+        },
+        {
+          title: "关于我们",
+          route: "/about",
+        },
+        {
+          title: "业务范围",
+          route: "/business",
+        },
+        {
+          title: "联系我们",
+          route: "/contact",
+        },
+        {
+          title: "个人中心",
+          child: [
+            {
+              title: "我的订单",
+              route: "/my?tab=1",
+            },
+            {
+              title: "我的下载",
+              route: "/my?tab=2",
+            },
+            {
+              title: "我的收藏",
+              route: "/my?tab=3",
+            },
+          ],
+        },
+      ];
 
       // return arr;
       return listArr;
     },
     opt2_nav() {
-      let listArr = [{
-        title: "个人中心",
-        route: "/my-info",
-        role: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-      }, {
-        title: "会员中心",
-        route: "/vip-center",
-        role: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-      },
-      {
-        title: "我的发布",
-        route: "/my-publish-list",
-        role: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-      },
-      {
-        title: "我的标源",
-        route: "/my-bid-list-daiyan",
-        role: [1, 2, 3, 4]
-      },
-      {
-        title: "财务管理",
-        route: "/my-finances",
-        role: [1, 2, 3, 4]
-      },
-      {
-        title: "佣金分销",
-        route: "/my-commission",
-        role: [1, 2, 3, 4, 8]
-      },
-      {
-        title: "我的收藏",
-        route: "/my-collection",
-        role: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-      },
-      {
-        title: "我的关注",
-        route: "/my-follows",
-        role: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-      },
-      {
-        title: "排名竞价",
-        route: "/my-rank-bid",
-        role: [1, 2, 3, 4]
-      },
-      {
-        title: "我的消息",
-        route: "/my-message",
-        role: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-      },
-      {
-        title: "退出登录",
-        route: "logout",
-      },
-      ]
+      let listArr = [
+        {
+          title: "个人中心",
+          route: "/my-info",
+          role: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        },
+        {
+          title: "会员中心",
+          route: "/vip-center",
+          role: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        },
+        {
+          title: "我的发布",
+          route: "/my-publish-list",
+          role: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        },
+        {
+          title: "我的标源",
+          route: "/my-bid-list-daiyan",
+          role: [1, 2, 3, 4],
+        },
+        {
+          title: "财务管理",
+          route: "/my-finances",
+          role: [1, 2, 3, 4],
+        },
+        {
+          title: "佣金分销",
+          route: "/my-commission",
+          role: [1, 2, 3, 4, 8],
+        },
+        {
+          title: "我的收藏",
+          route: "/my-collection",
+          role: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        },
+        {
+          title: "我的关注",
+          route: "/my-follows",
+          role: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        },
+        {
+          title: "排名竞价",
+          route: "/my-rank-bid",
+          role: [1, 2, 3, 4],
+        },
+        {
+          title: "我的消息",
+          route: "/my-message",
+          role: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        },
+        {
+          title: "退出登录",
+          route: "logout",
+        },
+      ];
 
       // return arr;
       return listArr;
@@ -351,7 +467,7 @@ export default {
   },
 
   watch: {
-    expandSideNav(val) { },
+    expandSideNav(val) {},
 
     $route(to, from) {
       //console.log("页面顶部 watch $route", to);
@@ -381,18 +497,24 @@ export default {
     // this.setView();
   },
   mounted() {
-
     if (["/login", "/register", "/retrieve"].includes(location.pathname)) {
       this.isLogin = true;
     }
-
   },
 
-
   methods: {
+    copyToClipboard(text) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      alert("已复制，请打开微信添加");
+    },
     goUrl(path) {
       this.$router.push(path);
-      this.expandSideNav = false
+      this.expandSideNav = false;
     },
     handleNavClick(path) {
       if (path === "/" && location.pathname === "/") {
@@ -404,11 +526,10 @@ export default {
     },
     goServe() {
       if (this.checkLogin()) {
-        this.expand2SideNav = true
+        this.expand2SideNav = true;
       } else {
-        this.$openLoginDialog()
+        this.$openLoginDialog();
       }
-
     },
     //一级分类
     clickMenuNav(item) {
@@ -423,7 +544,7 @@ export default {
         this.expandSideNav = false;
         if (item.route == "logout") {
           this.logout();
-          this.expand2SideNav = false
+          this.expand2SideNav = false;
           return;
         }
         this.$router.push(item.route);
@@ -527,7 +648,6 @@ export default {
       });
     },
 
-
     handleSearch() {
       // 这里可以添加搜索逻辑
       this.$router.push({
@@ -598,7 +718,6 @@ export default {
 }
 
 @media only screen and (max-width: 1199px) {
-
   /* body {
 		padding: 0.9rem 0 1rem !important;
 	} */
@@ -686,7 +805,7 @@ export default {
         font-size: 12px;
 
         &:hover {
-          color: #1958C7;
+          color: #1958c7;
         }
       }
     }
@@ -850,7 +969,7 @@ export default {
     /* border-bottom: 1px solid #eee; */
   }
 
-  .nav-item-product-sub-list>a>div {
+  .nav-item-product-sub-list > a > div {
     padding: 0.2rem 0 0.2rem 0.5rem;
     border-bottom: 1px solid #eee;
   }
@@ -905,7 +1024,7 @@ export default {
   }
 }
 
-@media screen and (max-width:750px) {
+@media screen and (max-width: 750px) {
   .header-left {
     display: flex;
     align-items: center;
@@ -938,6 +1057,68 @@ export default {
     img {
       width: 2rem;
       height: 2rem;
+    }
+  }
+  .contact-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-left: 3rem;
+  }
+
+  .contact-text {
+    display: flex;
+    align-items: center;
+    // padding: 10px 15px;
+    gap: 0 .5rem;
+    .phone-icon {
+      width: 1.6rem;
+      height: 1.6rem;
+      // margin-right: 1rem;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .contact-label {
+      color: #d32f2f;
+      font-size: 10px;
+      font-weight: bold;
+      line-height: 1.2;
+    }
+
+    .phone-number {
+      color: #d32f2f;
+      font-size: 14px;
+      font-weight: bold;
+      // line-height: 1.2;
+      text-align: left;
+      // width: 100%;
+    }
+  }
+
+  /deep/.el-drawer {
+    background: transparent;
+    height: auto !important;
+    padding: 15px;
+    .el-drawer__body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      & * {
+        width: 100%;
+        height: 30px;
+        background: #fff;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #4e57d9;
+        font-size: 16px;
+        border: 1px solid #4e57d9;
+      }
     }
   }
 }

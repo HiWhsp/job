@@ -416,6 +416,9 @@ button {
 
 //通用 移动端适配开始
 @media screen and (max-width: 1199px) {
+  .v-modal{
+    z-index: 20!important;
+  }
   #app {
     padding-top: 50px !important;
 

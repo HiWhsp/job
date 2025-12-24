@@ -12,36 +12,6 @@
       </el-carousel>
     </div>
 
-    <div class="contact-info" v-else>
-      <div class="contact-text" @click="drawer = true" type="primary">
-        <div class="contact-label flex-center">
-          <div class="phone-icon">
-            <img src="@img/index/phone.png" alt="" />
-          </div>
-          <!-- <span @click="copyToClipboard(vuex_config.bottom_lawer_contact || '18696628883')">律师咨询电话(同微信)</span> -->
-          <span>律师咨询电话(同微信)</span>
-        </div>
-        <!-- <a :href="'tel:' + vuex_config.bottom_lawer_contact || '18696628883'" class="phone-number">
-          {{ vuex_config.bottom_lawer_contact || "18696628883" }}
-        </a> -->
-        <div class="phone-number">
-          {{ vuex_config.bottom_lawer_contact || "18696628883" }}
-        </div>
-      </div>
-
-      <el-drawer
-        title="我是标题"
-        :visible.sync="drawer"
-        :direction="direction"
-        :with-header="false"
-      >
-        <a :href="'tel:' + vuex_config.bottom_lawer_contact || '18696628883'" class="phone-number">
-          呼叫 18696628883
-        </a>
-        <span @click="copyToClipboard(vuex_config.bottom_lawer_contact || '18696628883')">复制加微信18696628883</span>
-      </el-drawer>
-    </div>
-
     <div class="main-content w-1600">
       <!-- 业务公告 -->
       <div class="announcement-section">
@@ -200,8 +170,6 @@ export default {
   },
   data() {
     return {
-      drawer: false,
-      direction: "btt",
       searchKeyword: "",
       activeCategory: "",
       categories: [],
@@ -229,15 +197,6 @@ export default {
     this.getIndex();
   },
   methods: {
-    copyToClipboard(text) {
-      const textarea = document.createElement("textarea");
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textarea);
-      alert("已复制，请打开微信添加");
-    },
     // 轮播图点击
     do_banner_click(item) {
       if (item.url) {

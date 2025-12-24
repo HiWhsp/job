@@ -8,7 +8,7 @@
         </div>
 
         <!-- 最新动态 -->
-        <div class="latest-updates">
+        <div class="latest-updates" v-if="!vuex_h5">
           <p class="latest-updates-title">最新动态</p>
           <div class="updates-list">
             <div class="update-item" v-for="(update, index) in latestUpdates" :key="index">

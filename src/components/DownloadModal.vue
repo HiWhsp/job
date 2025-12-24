@@ -42,10 +42,14 @@
                 {{ product.title }}
               </h3>
               <p class="product-description">
-                <el-tooltip :content="product.description" placement="top" v-if="!vuex_h5">
+                <el-tooltip
+                  :content="product.description"
+                  placement="top"
+                  v-if="!vuex_h5"
+                >
                   <span class="ellipsis-3">{{ product.description }}</span>
                 </el-tooltip>
-                 <span class="ellipsis-3" v-else>{{ product.description }}</span>
+                <span class="ellipsis-3" v-else>{{ product.description }}</span>
               </p>
 
               <div class="flex-between">
@@ -68,7 +72,7 @@
       <div class="payment-section">
         <div class="payment-left">
           <!-- 二维码区域 -->
-          <div class="qr-codes">
+          <div class="qr-codes" v-if="!vuex_h5">
             <div class="qr-item">
               <div class="qr-code wechat-qr">
                 <img :src="wechatQR" alt="微信支付二维码" />
@@ -87,6 +91,19 @@
                 <span>支付宝扫码支付</span>
               </div>
             </div>
+          </div>
+
+          <div class="MobilePay" v-if="vuex_h5">
+            <button>
+              <img src="@/assets/img/common/wechat2.png" alt="微信" /><span
+                >微信支付</span
+              >
+            </button>
+            <button>
+              <img src="@/assets/img/common/alipay.png" alt="支付宝" /><span
+                >支付宝支付</span
+              >
+            </button>
           </div>
 
           <!-- 金额显示 -->
@@ -190,11 +207,14 @@ export default {
   },
   mounted() {
     console.log(this.detail.contract_type);
-    
+
     // 服务
     this.$set(this.products, 0, {
       title: this.detail.title + "(服务版)",
-      description: this.detail.contract_type == 1 ? this.vuex_config.service_buy_notice_2 : this.vuex_config.service_buy_notice,
+      description:
+        this.detail.contract_type == 1
+          ? this.vuex_config.service_buy_notice_2
+          : this.vuex_config.service_buy_notice,
       format: "word格式",
       size: this.detail.size + "MB",
       pages: "共" + this.detail.total_page + "页",
@@ -204,7 +224,10 @@ export default {
     // 基础
     this.$set(this.products, 1, {
       title: this.detail.title + "(基础版)",
-      description: this.detail.contract_type == 1 ? this.vuex_config.basic_buy_notice_2 : this.vuex_config.basic_buy_notice,
+      description:
+        this.detail.contract_type == 1
+          ? this.vuex_config.basic_buy_notice_2
+          : this.vuex_config.basic_buy_notice,
       format: "word格式",
       size: this.detail.size + "MB",
       pages: "共" + this.detail.total_page + "页",
@@ -796,11 +819,11 @@ export default {
 <style lang="less" scoped src="@/assets/h5css/modals/DownloadModal.less"></style>
 
 <style lang="less">
-@media screen and (max-width:750px) {
+@media screen and (max-width: 750px) {
   .download-modal {
-        width: 96vw !important;
-        min-width: 96vw !important;
-        max-width: 96vw !important;
-    }
+    width: 96vw !important;
+    min-width: 96vw !important;
+    max-width: 96vw !important;
+  }
 }
 </style>

@@ -105,7 +105,7 @@
             <div class="document-page-bottom">
               <div class="document-page-bottom-left">
                 <p class="document-page-bottom-text">
-                  预览结束，下载后可获得完整文档
+                  预览结束，下载后可获得完整Word文档。
                 </p>
                 <button
                   class="download-btn"
@@ -200,12 +200,12 @@
               </div>
 
               <!-- 操作按钮 -->
-              <div class="action-buttons" v-if="!vuex_h5">
+              <div class="action-buttons">
                 <button class="download-btn" @click="showDownloadModal">
                   <img src="@/assets/img/common/down.png" alt="" />
                   <span>下载Word版本</span>
                 </button>
-                <button class="collect-btn" @click="handleCollect">
+                <button class="collect-btn" @click="handleCollect" v-if="!vuex_h5">
                   <img
                     src="@/assets/img/common/collect.png"
                     alt=""
