@@ -167,8 +167,12 @@ export default {
       alipayQR: "",
       basic_price_id: "",
       service_price_id: "",
-      timer: null, // 用于存储setTimeout的ID
-      currentPollingOrderId: null, // 当前正在轮询的订单ID
+      alipay_basic_price_id: "",
+      alipay_service_price_id: "",
+      wechatTimer: null, // 微信支付轮询定时器
+      alipayTimer: null, // 支付宝支付轮询定时器
+      currentWechatOrderId: null, // 当前正在轮询的微信订单ID
+      currentAlipayOrderId: null, // 当前正在轮询的支付宝订单ID
     };
   },
   computed: {
@@ -211,30 +215,45 @@ export default {
   },
   beforeDestroy() {
     // 组件销毁前清理定时器和轮询状态
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
+    if (this.wechatTimer) {
+      clearTimeout(this.wechatTimer);
+      this.wechatTimer = null;
     }
-    this.currentPollingOrderId = null;
+    if (this.alipayTimer) {
+      clearTimeout(this.alipayTimer);
+      this.alipayTimer = null;
+    }
+    this.currentWechatOrderId = null;
+    this.currentAlipayOrderId = null;
   },
   methods: {
     selectProduct(index) {
       // 清理定时器和轮询状态
-      if (this.timer) {
-        clearTimeout(this.timer);
-        this.timer = null;
+      if (this.wechatTimer) {
+        clearTimeout(this.wechatTimer);
+        this.wechatTimer = null;
       }
-      this.currentPollingOrderId = null; // 重置轮询状态
+      if (this.alipayTimer) {
+        clearTimeout(this.alipayTimer);
+        this.alipayTimer = null;
+      }
+      this.currentWechatOrderId = null;
+      this.currentAlipayOrderId = null;
       this.selectedProductIndex = index;
       this.getQRCode();
     },
     handleClose() {
       // 清理定时器和轮询状态
-      if (this.timer) {
-        clearTimeout(this.timer);
-        this.timer = null;
+      if (this.wechatTimer) {
+        clearTimeout(this.wechatTimer);
+        this.wechatTimer = null;
       }
-      this.currentPollingOrderId = null;
+      if (this.alipayTimer) {
+        clearTimeout(this.alipayTimer);
+        this.alipayTimer = null;
+      }
+      this.currentWechatOrderId = null;
+      this.currentAlipayOrderId = null;
       this.$emit("update:visible", false);
       this.selectedProductIndex = 0;
     },
@@ -270,26 +289,33 @@ export default {
     },
     getQRCode() {
       // 清理之前的定时器
-      if (this.timer) {
-        clearTimeout(this.timer);
-        this.timer = null;
+      if (this.wechatTimer) {
+        clearTimeout(this.wechatTimer);
+        this.wechatTimer = null;
+      }
+      if (this.alipayTimer) {
+        clearTimeout(this.alipayTimer);
+        this.alipayTimer = null;
       }
 
-      if (this.selectedProductIndex === 0 && this.service_price_id) {
-        this.getWchatQR(this.service_price_id);
-        // this.getAlipayQR(this.service_price_id);
-      } else if (this.selectedProductIndex === 1 && this.basic_price_id) {
-        this.getWchatQR(this.basic_price_id);
-        // this.getAlipayQR(this.basic_price_id);
+      const priceType = this.selectedProductIndex === 1 ? "basic_price" : "service_price";
+      
+      // 检查微信订单是否存在
+      const wechatOrderId = this.selectedProductIndex === 0 ? this.service_price_id : this.basic_price_id;
+      // 检查支付宝订单是否存在
+      const alipayOrderId = this.selectedProductIndex === 0 ? this.alipay_service_price_id : this.alipay_basic_price_id;
+
+      // 如果微信订单存在，直接获取二维码
+      if (wechatOrderId) {
+        this.getWchatQR(wechatOrderId);
       } else {
-        // 先获取订单
+        // 创建微信订单
         this.$api({
           url: "createOrder",
           method: "POST",
           data: {
             articleId: this.detail.id,
-            priceType:
-              this.selectedProductIndex === 1 ? "basic_price" : "service_price",
+            priceType: priceType,
           },
         }).then((res) => {
           if (res.code === 200) {
@@ -299,19 +325,43 @@ export default {
               this.basic_price_id = res.data.id;
             }
             this.getWchatQR(res.data.id);
-            // this.getAlipayQR(res.data.id);
+          }
+        });
+      }
+
+      // 如果支付宝订单存在，直接获取二维码
+      if (alipayOrderId) {
+        this.getAlipayQR(alipayOrderId);
+      } else {
+        // 创建支付宝订单
+        this.$api({
+          url: "createOrder",
+          method: "POST",
+          data: {
+            articleId: this.detail.id,
+            priceType: priceType,
+          },
+        }).then((res) => {
+          if (res.code === 200) {
+            if (this.selectedProductIndex === 0) {
+              this.alipay_service_price_id = res.data.id;
+            } else {
+              this.alipay_basic_price_id = res.data.id;
+            }
+            this.getAlipayQR(res.data.id);
           }
         });
       }
     },
     getWchatQR(orderId) {
-      // 清理之前的定时器和轮询状态
-      if (this.timer) {
-        clearTimeout(this.timer);
-        this.timer = null;
+      // 清理之前的微信定时器和轮询状态
+      if (this.wechatTimer) {
+        clearTimeout(this.wechatTimer);
+        this.wechatTimer = null;
       }
-      this.currentPollingOrderId = null;
+      this.currentWechatOrderId = null;
 
+      // 微信
       this.$api({
         url: "wx_scan_qr",
         method: "POST",
@@ -320,24 +370,38 @@ export default {
         },
       }).then((res) => {
         this.wechatQR = res.qrcode;
-        // 设置当前轮询的订单ID
-        this.currentPollingOrderId = orderId;
-        // 轮询检测订单状态
-        this.checkOrderStatus(orderId);
+        // 设置当前轮询的微信订单ID
+        this.currentWechatOrderId = orderId;
+        // 轮询检测微信订单状态
+        this.checkWechatOrderStatus(orderId);
       });
     },
     getAlipayQR(orderId) {
+      // 清理之前的支付宝定时器和轮询状态
+      if (this.alipayTimer) {
+        clearTimeout(this.alipayTimer);
+        this.alipayTimer = null;
+      }
+      this.currentAlipayOrderId = null;
+
+      // 支付宝
       this.$api({
         url: "alipay_web_qr",
         method: "POST",
         data: {
           orderId: orderId,
         },
+      }).then((res) => {
+        this.alipayQR = res.qrcode;
+        // 设置当前轮询的支付宝订单ID
+        this.currentAlipayOrderId = orderId;
+        // 轮询检测支付宝订单状态
+        this.checkAlipayOrderStatus(orderId);
       });
     },
-    checkOrderStatus(orderId) {
-      // 检查是否是当前正在轮询的订单
-      if (this.currentPollingOrderId !== orderId) {
+    checkWechatOrderStatus(orderId) {
+      // 检查是否是当前正在轮询的微信订单
+      if (this.currentWechatOrderId !== orderId) {
         return; // 如果不是当前订单，直接返回，不进行轮询
       }
 
@@ -349,27 +413,68 @@ export default {
         },
       }).then((res) => {
         // 再次检查订单ID，防止异步请求返回时订单已切换
-        if (this.currentPollingOrderId !== orderId) {
+        if (this.currentWechatOrderId !== orderId) {
           return;
         }
 
         if (res.code == 200) {
           if (res.code == 200 && res.data.payResult == true) {
-            // 支付成功，清理定时器和轮询状态
-            if (this.timer) {
-              clearTimeout(this.timer);
-              this.timer = null;
-            }
-            this.currentPollingOrderId = null;
+            // 支付成功，清理所有定时器和轮询状态
+            this.clearAllPolling();
             this.isPaySuccess = false;
           } else {
             // 继续轮询，存储定时器ID
-            this.timer = setTimeout(() => {
-              this.checkOrderStatus(orderId);
+            this.wechatTimer = setTimeout(() => {
+              this.checkWechatOrderStatus(orderId);
             }, 1000);
           }
         }
       });
+    },
+    checkAlipayOrderStatus(orderId) {
+      // 检查是否是当前正在轮询的支付宝订单
+      if (this.currentAlipayOrderId !== orderId) {
+        return; // 如果不是当前订单，直接返回，不进行轮询
+      }
+
+      this.$api({
+        url: "getOrderPayStatus",
+        method: "POST",
+        data: {
+          orderId: orderId,
+        },
+      }).then((res) => {
+        // 再次检查订单ID，防止异步请求返回时订单已切换
+        if (this.currentAlipayOrderId !== orderId) {
+          return;
+        }
+
+        if (res.code == 200) {
+          if (res.code == 200 && res.data.payResult == true) {
+            // 支付成功，清理所有定时器和轮询状态
+            this.clearAllPolling();
+            this.isPaySuccess = false;
+          } else {
+            // 继续轮询，存储定时器ID
+            this.alipayTimer = setTimeout(() => {
+              this.checkAlipayOrderStatus(orderId);
+            }, 1000);
+          }
+        }
+      });
+    },
+    clearAllPolling() {
+      // 清理所有定时器和轮询状态
+      if (this.wechatTimer) {
+        clearTimeout(this.wechatTimer);
+        this.wechatTimer = null;
+      }
+      if (this.alipayTimer) {
+        clearTimeout(this.alipayTimer);
+        this.alipayTimer = null;
+      }
+      this.currentWechatOrderId = null;
+      this.currentAlipayOrderId = null;
     },
   },
 };
