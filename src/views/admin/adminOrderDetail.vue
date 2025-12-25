@@ -76,12 +76,23 @@
             <div class="config-params">
               参数信息: {{ item.producntInfos.spec }}
               {{ item.other && item.other.notes ? item.other.notes : "" }}
-              <img
-                :src="item.other && item.other.image"
-                v-if="item.other && item.other.image"
-                alt="image"
-                @click="handleImageClick(item.other.image)"
-              />
+              <template v-if="item.other && item.other.image">
+                <img
+                  v-for="(fileUrl, index) in getImageFiles(item.other.image)"
+                  :key="index"
+                  :src="fileUrl"
+                  alt="image"
+                  @click="handleImageClick(fileUrl)"
+                  style="max-width: 200px; max-height: 150px; margin: 4px; cursor: pointer;"
+                />
+                <span
+                  v-for="(fileUrl, index) in getNonImageFiles(item.other.image)"
+                  :key="'file-' + index"
+                  class="download-file"
+                  @click="handleFileDownload(fileUrl)"
+                  style="margin-left: 8px; cursor: pointer; color: #409EFF; text-decoration: underline;"
+                >下载文件{{ getNonImageFiles(item.other.image).length > 1 ? index + 1 : '' }}</span>
+              </template>
             </div>
 
             <div class="config-delivery">
@@ -146,43 +157,67 @@
             }}</span>
             <span class="component-value"
               >{{ item.producntInfos.title }} {{ item.other && item.other.notes ? item.other.notes : '' }}
-              <img
-                :src="item.other && item.other.image"
-                v-if="item.other && item.other.image"
-                alt="image"
-                @click="handleImageClick(item.other.image)"
-              />
+              <template v-if="item.other && item.other.image">
+                <img
+                  v-for="(fileUrl, index) in getImageFiles(item.other.image)"
+                  :key="index"
+                  :src="fileUrl"
+                  alt="image"
+                  @click="handleImageClick(fileUrl)"
+                  style="max-width: 200px; max-height: 150px; margin: 4px; cursor: pointer;"
+                />
+                <span
+                  v-for="(fileUrl, index) in getNonImageFiles(item.other.image)"
+                  :key="'file-' + index"
+                  class="download-file"
+                  @click="handleFileDownload(fileUrl)"
+                  style="margin-left: 8px; cursor: pointer; color: #409EFF; text-decoration: underline;"
+                >下载文件{{ getNonImageFiles(item.other.image).length > 1 ? index + 1 : '' }}</span>
+              </template>
             </span>
           </div>
         </div>
       </div>
 
-      <template v-for="(items, key) in configItems3MultipleData">
-        <div class="section rear-casing" v-bind:key="key">
-          <h2 class="section-title">{{ items[0].product_type_two_title }}</h2>
-          <div class="component-grid">
-            <div
-              class="component-item"
-              v-for="(item, index) in items"
-              :key="index"
-            >
-              <span class="component-name">{{
-                item.product_type_three_title
-              }}</span>
-              <span class="component-value">{{
-                item.producntInfos.title
-              }} {{ item.other && item.other.notes ? item.other.notes : '' }}
+      <div
+        v-for="(items, key) in configItems3MultipleData"
+        :key="key"
+        class="section rear-casing"
+      >
+        <h2 class="section-title">{{ items[0].product_type_two_title }}</h2>
+        <div class="component-grid">
+          <div
+            class="component-item"
+            v-for="(item, index) in items"
+            :key="index"
+          >
+            <span class="component-name">{{
+              item.product_type_three_title
+            }}</span>
+            <span class="component-value">{{
+              item.producntInfos.title
+            }} {{ item.other && item.other.notes ? item.other.notes : '' }}
+            <template v-if="item.other && item.other.image">
               <img
-                :src="item.other && item.other.image"
-                v-if="item.other && item.other.image"
+                v-for="(fileUrl, index) in getImageFiles(item.other.image)"
+                :key="index"
+                :src="fileUrl"
                 alt="image"
-                @click="handleImageClick(item.other.image)"
+                @click="handleImageClick(fileUrl)"
+                style="max-width: 200px; max-height: 150px; margin: 4px; cursor: pointer;"
               />
-            </span>
-            </div>
+              <span
+                v-for="(fileUrl, index) in getNonImageFiles(item.other.image)"
+                :key="'file-' + index"
+                class="download-file"
+                @click="handleFileDownload(fileUrl)"
+                style="margin-left: 8px; cursor: pointer; color: #409EFF; text-decoration: underline;"
+              >下载文件{{ getNonImageFiles(item.other.image).length > 1 ? index + 1 : '' }}</span>
+            </template>
+          </span>
           </div>
         </div>
-      </template>
+      </div>
 
       <!-- 元器件 -->
       <div class="section components">
@@ -197,12 +232,23 @@
               item.product_type_two_title
             }}</span>
             <span class="component-value">{{ item.producntInfos.title }} {{ item.other && item.other.notes ? item.other.notes : '' }}
-              <img
-                :src="item.other && item.other.image"
-                v-if="item.other && item.other.image"
-                alt="image"
-                @click="handleImageClick(item.other.image)"
-              />
+              <template v-if="item.other && item.other.image">
+                <img
+                  v-for="(fileUrl, index) in getImageFiles(item.other.image)"
+                  :key="index"
+                  :src="fileUrl"
+                  alt="image"
+                  @click="handleImageClick(fileUrl)"
+                  style="max-width: 200px; max-height: 150px; margin: 4px; cursor: pointer;"
+                />
+                <span
+                  v-for="(fileUrl, index) in getNonImageFiles(item.other.image)"
+                  :key="'file-' + index"
+                  class="download-file"
+                  @click="handleFileDownload(fileUrl)"
+                  style="margin-left: 8px; cursor: pointer; color: #409EFF; text-decoration: underline;"
+                >下载文件{{ getNonImageFiles(item.other.image).length > 1 ? index + 1 : '' }}</span>
+              </template>
             </span>
           </div>
         </div>
@@ -291,8 +337,34 @@ export default {
     handleImageClick(image) {
       window.open(image, "_blank");
     },
+    handleFileDownload(fileUrl) {
+      window.open(fileUrl, "_blank");
+    },
     handleDownload() {
       window.open(this.orderDetail.pdfUrl, "_blank");
+    },
+    // 判断是否为图片
+    isImage(image) {
+      if (!image) return false;
+      const pureUrl = image.split("?")[0].toLowerCase();
+      return /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/.test(pureUrl);
+    },
+    // 获取文件列表（支持多个文件，逗号分隔）
+    getFileList(image) {
+      if (!image) return [];
+      return image.split(",").map((url) => url.trim()).filter((url) => url);
+    },
+    // 获取图片文件列表
+    getImageFiles(image) {
+      if (!image) return [];
+      const files = this.getFileList(image);
+      return files.filter((fileUrl) => this.isImage(fileUrl));
+    },
+    // 获取非图片文件列表（用于下载）
+    getNonImageFiles(image) {
+      if (!image) return [];
+      const files = this.getFileList(image);
+      return files.filter((fileUrl) => !this.isImage(fileUrl));
     },
   },
   mounted() {

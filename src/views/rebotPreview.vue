@@ -58,9 +58,7 @@
                       class="download-file"
                       @click="downloadFile(fileUrl)"
                       style="margin-left: 8px"
-                      >下载文件{{
-                        index + 1
-                      }}</span
+                      >下载文件{{ index + 1 }}</span
                     >
                   </template>
                 </div>
@@ -460,7 +458,7 @@
 import DownloadDialog from "@/components/DownloadDialog.vue";
 import UserInfoDialog from "@/components/UserInfoDialog.vue";
 import html2canvas from "html2canvas";
-
+import Cookies from "js-cookie";
 export default {
   name: "RobotPreview",
   components: {
@@ -490,6 +488,19 @@ export default {
   methods: {
     // 清除所有cookie
     clearAllCookies() {
+      // 删除所有XSRF-TOKEN（库会自动适配域名/路径）
+      Cookies.remove("XSRF-TOKEN", {
+        path: "/",
+        domain: "www.robotphoenixonline.com",
+      });
+      Cookies.remove("XSRF-TOKEN", {
+        path: "/",
+        domain: ".www.robotphoenixonline.com",
+      });
+      Cookies.remove("XSRF-TOKEN", {
+        path: "/",
+        domain: ".robotphoenixonline.com",
+      });
       // 获取所有cookie
       const cookies = document.cookie.split(";");
       const expiredDate = "Thu, 01 Jan 1970 00:00:00 UTC";
@@ -517,10 +528,10 @@ export default {
       // 生成所有可能的路径
       const currentPath = window.location.pathname;
       const paths = ["/"]; // 根路径
-      
+
       // 添加当前路径及其所有父路径
       if (currentPath !== "/") {
-        const pathParts = currentPath.split("/").filter(p => p);
+        const pathParts = currentPath.split("/").filter((p) => p);
         let currentPathStr = "";
         pathParts.forEach((part) => {
           currentPathStr += "/" + part;
@@ -560,7 +571,16 @@ export default {
       });
 
       // 额外尝试：清除所有已知的常见cookie名称（如果有的话）
-      const commonCookieNames = ['token', 'session', 'sessionId', 'auth', 'user', 'userId', 'username', 'laravel_session'];
+      const commonCookieNames = [
+        "token",
+        "session",
+        "sessionId",
+        "auth",
+        "user",
+        "userId",
+        "username",
+        "laravel_session",
+      ];
       commonCookieNames.forEach((name) => {
         domains.forEach((domain) => {
           paths.forEach((path) => {
