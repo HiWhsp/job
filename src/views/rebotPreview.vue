@@ -19,7 +19,11 @@
 
         <!-- 配置项列表 -->
         <div class="config-items-list">
-          <div v-for="(titleItems, index) in configItems" :key="index">
+          <div
+            class="config-item-box"
+            v-for="(titleItems, index) in configItems"
+            :key="index"
+          >
             <div class="title-item">{{ index }}</div>
             <div
               v-for="(item, index) in titleItems"
@@ -28,15 +32,37 @@
             >
               <template v-if="item.image">
                 <div class="item-thumbnail">
-                  <img :src="item.name == '其他' && !isImage(item.params.image) ? vuex_avatar_default : item.image" :alt="item.name" v-if="item.image" />
+                  <img
+                    :src="
+                      item.name == '其他' && !isImage(item.params.image)
+                        ? vuex_avatar_default
+                        : item.image
+                    "
+                    :alt="item.name"
+                    v-if="item.image"
+                  />
                   <div class="no-image" v-else></div>
                 </div>
                 <div class="item-details">
                   <div class="item-name">{{ item.firstTitle }}</div>
                   <div class="item-model">{{ item.name }} {{ item.model }}</div>
                 </div>
-                <div class="item-params">参数信息：{{ paramsText(item) }} 
-                  <span class="download-file" v-if="item.name == '其他' && !isImage(item.params.image)" @click="downloadFile(item.params.image)">下载文件</span>
+                <div class="item-params">
+                  参数信息：{{ paramsText(item) }}
+                  <template v-if="item.name == '其他' && item.params.image">
+                    <span
+                      v-for="(fileUrl, index) in getNonImageFiles(
+                        item.params.image
+                      )"
+                      :key="index"
+                      class="download-file"
+                      @click="downloadFile(fileUrl)"
+                      style="margin-left: 8px"
+                      >下载文件{{
+                        index + 1
+                      }}</span
+                    >
+                  </template>
                 </div>
                 <div class="item-progress">
                   <div class="progress-bar-container">
@@ -218,7 +244,11 @@
 
         <!-- 配置项列表 -->
         <div class="config-items-list">
-          <div v-for="(titleItems, index) in configItems" :key="index">
+          <div
+            class="config-item-box"
+            v-for="(titleItems, index) in configItems"
+            :key="index"
+          >
             <div class="title-item">{{ index }}</div>
             <div
               v-for="(item, index) in titleItems"
@@ -227,15 +257,33 @@
             >
               <template v-if="item.image">
                 <div class="item-thumbnail">
-                  <img :src="item.name == '其他' ? vuex_avatar_default : item.image" :alt="item.name" v-if="item.image" />
+                  <img
+                    :src="
+                      item.name == '其他' ? vuex_avatar_default : item.image
+                    "
+                    :alt="item.name"
+                    v-if="item.image"
+                  />
                   <div class="no-image" v-else></div>
                 </div>
                 <div class="item-details">
                   <div class="item-name">{{ item.originTitle }}</div>
                   <div class="item-model">{{ item.name }} {{ item.model }}</div>
                 </div>
-                <div class="item-params">参数信息：{{ paramsText(item) }} 
-                  <span class="download-file" v-if="item.name == '其他' && !isImage(item.params.image)" @click="downloadFile(item.params.image)">下载文件</span>
+                <div class="item-params">
+                  参数信息：{{ paramsText(item) }}
+                  <template v-if="item.name == '其他' && item.params.image">
+                    <span
+                      v-for="(fileUrl, index) in getNonImageFiles(
+                        item.params.image
+                      )"
+                      :key="index"
+                      class="download-file"
+                      @click="downloadFile(fileUrl)"
+                      style="margin-left: 8px"
+                      >下载文件{{ index + 1 }}</span
+                    >
+                  </template>
                 </div>
                 <div class="item-progress">
                   <div class="progress-bar-container">
@@ -440,11 +488,127 @@ export default {
     this.getRobotConfig();
   },
   methods: {
+    // 清除所有cookie
+    clearAllCookies() {
+      // 获取所有cookie
+      const cookies = document.cookie.split(";");
+      const expiredDate = "Thu, 01 Jan 1970 00:00:00 UTC";
+      const maxAge = "max-age=0";
+
+      // 获取当前域名和所有可能的父域名变体
+      const hostname = window.location.hostname;
+      const domainParts = hostname.split(".");
+      const domains = [hostname]; // 当前完整域名
+
+      // 生成所有可能的域名变体
+      if (domainParts.length > 1) {
+        // 添加二级域名（如 .example.com）
+        domains.push("." + domainParts.slice(-2).join("."));
+        // 如果有多级，也添加三级域名（如 .sub.example.com）
+        if (domainParts.length > 2) {
+          domains.push("." + domainParts.slice(-3).join("."));
+        }
+        // 添加根域名（如 .com）
+        if (domainParts.length >= 2) {
+          domains.push("." + domainParts[domainParts.length - 1]);
+        }
+      }
+
+      // 生成所有可能的路径
+      const currentPath = window.location.pathname;
+      const paths = ["/"]; // 根路径
+      
+      // 添加当前路径及其所有父路径
+      if (currentPath !== "/") {
+        const pathParts = currentPath.split("/").filter(p => p);
+        let currentPathStr = "";
+        pathParts.forEach((part) => {
+          currentPathStr += "/" + part;
+          paths.push(currentPathStr);
+        });
+        paths.push(currentPath);
+      }
+
+      // 遍历所有cookie并尝试清除
+      cookies.forEach((cookie) => {
+        const cookieName = cookie.split("=")[0].trim();
+        if (cookieName) {
+          // 尝试所有可能的域名和路径组合
+          domains.forEach((domain) => {
+            paths.forEach((path) => {
+              // 使用 expires 清除
+              document.cookie = `${cookieName}=;expires=${expiredDate};path=${path};domain=${domain}`;
+              // 使用 max-age 清除
+              document.cookie = `${cookieName}=;${maxAge};path=${path};domain=${domain}`;
+              // 尝试设置为空值
+              document.cookie = `${cookieName}=;path=${path};domain=${domain}`;
+            });
+          });
+
+          // 尝试不指定domain的清除方式
+          paths.forEach((path) => {
+            document.cookie = `${cookieName}=;expires=${expiredDate};path=${path}`;
+            document.cookie = `${cookieName}=;${maxAge};path=${path}`;
+            document.cookie = `${cookieName}=;path=${path}`;
+          });
+
+          // 最后尝试最通用的清除方式
+          document.cookie = `${cookieName}=;expires=${expiredDate};path=/`;
+          document.cookie = `${cookieName}=;${maxAge};path=/`;
+          document.cookie = `${cookieName}=;path=/`;
+        }
+      });
+
+      // 额外尝试：清除所有已知的常见cookie名称（如果有的话）
+      const commonCookieNames = ['token', 'session', 'sessionId', 'auth', 'user', 'userId', 'username', 'laravel_session'];
+      commonCookieNames.forEach((name) => {
+        domains.forEach((domain) => {
+          paths.forEach((path) => {
+            document.cookie = `${name}=;expires=${expiredDate};path=${path};domain=${domain}`;
+            document.cookie = `${name}=;${maxAge};path=${path};domain=${domain}`;
+          });
+        });
+        paths.forEach((path) => {
+          document.cookie = `${name}=;expires=${expiredDate};path=${path}`;
+          document.cookie = `${name}=;${maxAge};path=${path}`;
+        });
+        document.cookie = `${name}=;expires=${expiredDate};path=/`;
+        document.cookie = `${name}=;${maxAge};path=/`;
+      });
+    },
     downloadFile(image) {
       window.open(image, "_blank");
     },
     isImage(image) {
-      return /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/.test(image);
+      if (!image) return false;
+      // 如果是多个文件（逗号分隔），检查是否都是图片
+      if (image.includes(",")) {
+        const files = image
+          .split(",")
+          .map((url) => url.trim())
+          .filter((url) => url);
+        return files.every((url) => {
+          const pureUrl = url.split("?")[0].toLowerCase();
+          return /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/.test(pureUrl);
+        });
+      }
+      // 单个文件判断
+      const pureUrl = image.split("?")[0].toLowerCase();
+      return /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/.test(pureUrl);
+    },
+    // 获取文件列表（支持多个文件，逗号分隔）
+    getFileList(image) {
+      if (!image) return [];
+      return image
+        .split(",")
+        .map((url) => url.trim())
+        .filter((url) => url);
+    },
+    // 获取非图片文件列表（用于下载）
+    getNonImageFiles(image) {
+      if (!image) return [];
+      const files = this.getFileList(image);
+      return files;
     },
     goHome() {
       this.$router.push({
@@ -750,17 +914,10 @@ export default {
         .then((res) => {
           if (res.code == 200) {
             // this.$message.success("配置单保存成功");
-            // localStorage.removeItem("robotConfig");
+            localStorage.removeItem("robotConfig");
             localStorage.removeItem("robotUserInfo");
             // 清除cookie中所有内容
-            document.cookie.split(";").forEach(function (c) {
-              document.cookie = c
-                .replace(/^ +/, "")
-                .replace(
-                  /=.*/,
-                  "=;expires=" + new Date().toUTCString() + ";path=/"
-                );
-            });
+            this.clearAllCookies();
             this.configOrderNumber = res.data.order_no;
             this.robotConfig = res.data;
             this.showDownloadDialog = true;

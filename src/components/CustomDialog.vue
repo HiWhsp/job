@@ -36,6 +36,8 @@
           action="https://www.robotphoenixonline.com/api/upload"
           :data="uploadData"
           name="file"
+          :multiple="true"
+          :limit="5"
           :file-list="fileList"
           :before-upload="beforeUpload"
           :on-success="handleUploadSuccess"
@@ -151,10 +153,23 @@ export default {
       console.log(data);
       this.formData.notes = data.notes || "";
       this.formData.brand = data.brand || "";
-      if (data.image) {
+      if (data.image.includes(",")) {
+        const imageUrls = data.image.split(",").map(url => url.trim()).filter(url => url);
+        imageUrls.forEach((url, index) => {
+          this.fileList.push({
+            name: "文件" + (index + 1) + "." + url.split(".").pop(),
+            url: url,
+            status: "success",
+          });
+        });
+        this.uploadedImages = imageUrls.map(url => ({
+          file: url,
+          url: url,
+        }));
+      } else {
         this.fileList = [
           {
-            name: "image",
+            name: "文件. " + data.image.split(".").pop(),
             url: data.image,
             status: "success",
           },
@@ -174,8 +189,8 @@ export default {
       //   this.$message.error("只能上传图片文件!");
       //   return false;
       // }
-      if (this.uploadedImages.length >= 1) {
-        this.$message.error("只能上传一个文件!");
+      if (this.uploadedImages.length >= 5) {
+        this.$message.error("只能上传5个文件!");
         return false;
       }
       // 验证通过，设置上传状态

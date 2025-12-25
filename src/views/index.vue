@@ -83,7 +83,6 @@ export default {
       });
     },
     handleThumbnailChange(thumbnail) {
-      console.log(thumbnail);
       if (thumbnail && thumbnail.includes("http")) {
         this.currentBackgroundImage = thumbnail;
       } else {
@@ -99,7 +98,7 @@ export default {
     },
     handleNavigateToAI() {
       // 处理AI推荐跳转
-      console.log("父组件接收到AI推荐跳转事件");
+      // console.log("父组件接收到AI推荐跳转事件");
       // 这里可以实现具体的跳转逻辑
       // 例如：跳转到外部链接、显示AI推荐页面等
       this.$message({

@@ -163,7 +163,6 @@ export default new Vuex.Store({
 
       let token = localStorage.getItem("token");
       let userId = localStorage.getItem("userId");
-      console.log(userId);
       if (token && userId) {
         let cache_user = JSON.parse(localStorage.getItem("vuex_user"));
         console.log(cache_user);
