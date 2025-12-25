@@ -20,19 +20,19 @@
         />
         <div class="info">
           <div class="info-item">
-            <div class="info-value"><span>2023</span>年</div>
-            <div class="info-label">2023年成立</div>
+            <div class="info-value"><span>{{ vuex_config.establish_year }}</span>年</div>
+            <div class="info-label">{{ vuex_config.establish_year }}年成立</div>
           </div>
           <div class="info-item">
-            <div class="info-value"><span>100</span>万元</div>
-            <div class="info-label">注册资本100万元</div>
+            <div class="info-value"><span>{{ vuex_config.reg_capital }}</span>万元</div>
+            <div class="info-label">注册资本{{ vuex_config.reg_capital }}万元</div>
           </div>
           <div class="info-item">
-            <div class="info-value"><span>66</span>人</div>
+            <div class="info-value"><span>{{ vuex_config.team_num }}</span>人</div>
             <div class="info-label">员工团队</div>
           </div>
           <div class="info-item">
-            <div class="info-value"><span>600+</span></div>
+            <div class="info-value"><span>{{ vuex_config.serve_num }}+</span></div>
             <div class="info-label">服务客户</div>
           </div>
         </div>
@@ -43,7 +43,7 @@
       <div class="partner-content">
         <h3>合作伙伴</h3>
         <p>
-          谁选择我们不重要，重要的是客户给予的信任，也许同行看来，这些大客户足以让人羡慕。
+          {{ vuex_config.friend_word }}
         </p>
         <div class="partner-list">
           <div class="partner-item">
