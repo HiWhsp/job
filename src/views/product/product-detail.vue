@@ -129,8 +129,9 @@
                     <input
                       type="text"
                       class="form-input"
-                      placeholder="请输入"
+                      placeholder="请输入手机号或邮箱"
                       v-model="feedbackForm.phone"
+                      @blur="validateContactInput"
                     />
                   </div>
 
@@ -259,7 +260,7 @@
                             v-model="product.quantity"
                             size="mini"
                             style="width: 60px; margin: 0 5px"
-                            @change.stop="updateQuantity(index, $event)"
+                            @change="updateQuantity(index, $event)"
                           ></el-input>
                           <el-button
                             @click.stop="increaseQuantity(index)"
@@ -299,12 +300,21 @@
                     <!-- 详细参数表格 -->
                     <div class="parameter-table-container">
                       <!-- 轮播图区域 不显示指示器-->
-                      <el-carousel :interval="5000" height="149px" indicator-position="none">
+                      <el-carousel
+                        :interval="5000"
+                        height="149px"
+                        indicator-position="none"
+                      >
                         <el-carousel-item
                           v-for="(item, index) in product.images"
                           :key="index"
                         >
-                          <img :src="item" alt="示意图" style="width: 100%; height: 100%;" />
+                          <el-image
+                            :src="item"
+                            alt="示意图"
+                            :preview-src-list="product.images"
+                            style="width: 100%; height: 100%"
+                          />
                         </el-carousel-item>
                       </el-carousel>
                       <div class="parameter-table">
@@ -432,6 +442,9 @@ export default {
     "product.title": {
       handler(newVal) {
         if (newVal) {
+          this.searchProductValue = "";
+          this.nav_option =
+            JSON.parse(localStorage.getItem("product_nav_option")) || [];
           this.nav_option.push({
             title: newVal,
             route: `/product-detail?brandId=${this.$route.query.brandId}`,
@@ -487,19 +500,28 @@ export default {
         },
       }).then((res) => {
         if (res.code == 200 && res.data) {
+          const ids = JSON.parse(
+            localStorage.getItem("compare_productsIds") || "[]"
+          );
           this.productList = res.data.list.map((item) => {
-            item.quantity = 1;
-            item.checked = false;
+            const list = item.attrs.map((v) => {
+              const obj = {};
+              obj[v.title] = {
+                type: v.type,
+                fieldValue: v.value,
+                fieldTitle: v.key,
+                title: v.title,
+              };
+              return obj;
+            });
+            item.fields = Object.assign(...list, item.fields);
+            item.checked = ids.includes(item.id);
             return item;
           });
           this.productList.forEach((item) => {
-            // fields是对象，需要转换为数组
             item.fields = Object.values(item.fields || {});
-            // 只存储type为5的项
             item.fieldsInfo = item.fields.filter((v) => v.type == 5);
-            // item.fields只存储type不为5的项
             item.fields = item.fields.filter((v) => v.type != 5);
-            // 按照两个一组存储
             item.fields = item.fields.reduce((acc, curr, index) => {
               if (index % 2 === 0) {
                 acc.push([curr]);
@@ -543,7 +565,7 @@ export default {
       }).then((res) => {
         let { list, count } = res.data;
         if (res.code == 200 && list) {
-          this.products = list;
+          this.products = list.filter(item => item.id != this.$route.query.brandId);
           this.totalProducts = count;
         }
       });
@@ -579,11 +601,12 @@ export default {
     },
     // 更新数量
     updateQuantity(index, value) {
+      console.log(value);
       const quantity = parseInt(value);
-      if (quantity > 0 && quantity <= this.productList[index].stock) {
+      if (quantity > 0 && quantity <= this.productList[index].kucun) {
         this.productList[index].quantity = quantity;
-      } else if (quantity > this.productList[index].stock) {
-        this.productList[index].quantity = this.productList[index].stock;
+      } else if (quantity > this.productList[index].kucun) {
+        this.productList[index].quantity = this.productList[index].kucun;
         this.$message.warning("数量不能超过库存");
       } else {
         this.productList[index].quantity = 1;
@@ -639,7 +662,7 @@ export default {
     },
     // 切换对比状态
     toggleCompare(product) {
-      // 查看是否已经在对比列表中,如果有没有则添加, 如果有则提示
+      // 查看是否已经在对比列表中,如果没有则添加, 如果有则删除
       const compareProductsIds = JSON.parse(
         localStorage.getItem("compare_productsIds") || "[]"
       );
@@ -647,8 +670,12 @@ export default {
       if (compareProductsIds.indexOf(product.id) === -1) {
         compareProductsIds.push(product.id);
       } else {
-        this.$message.warning("该产品已添加到对比列表中");
-        product.checked = false;
+        compareProductsIds.splice(compareProductsIds.indexOf(product.id), 1);
+        this.$message.warning("已从对比列表中删除");
+        localStorage.setItem(
+          "compare_productsIds",
+          JSON.stringify(compareProductsIds)
+        );
         return;
       }
       localStorage.setItem(
@@ -668,6 +695,11 @@ export default {
       // 验证必填项
       if (!this.feedbackForm.phone) {
         this.$message.warning("请输入您的联系方式");
+        return;
+      }
+      // 校验联系方式格式（手机号或邮箱）
+      if (!this.validateContact(this.feedbackForm.phone)) {
+        this.$message.warning("请输入正确的联系方式（手机号或邮箱）");
         return;
       }
       if (!this.feedbackForm.content) {
@@ -704,6 +736,28 @@ export default {
           this.$message.error(res.message || "提交失败");
         }
       });
+    },
+    // 校验联系方式格式（手机号或邮箱）
+    validateContact(contact) {
+      if (!contact) return false;
+      // 手机号正则：11位数字，1开头，第二位是3-9
+      const phoneRegex = /^1[3-9]\d{9}$/;
+      // 邮箱正则
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      // 判断是否为手机号或邮箱
+      return phoneRegex.test(contact) || emailRegex.test(contact);
+    },
+    // 校验联系方式输入（失焦时）
+    validateContactInput() {
+      if (!this.feedbackForm.phone) {
+        this.$message.warning("请输入联系方式");
+        return;
+      }
+      if (!this.validateContact(this.feedbackForm.phone)) {
+        this.$message.warning("请输入正确的联系方式（手机号或邮箱）");
+        return false;
+      }
+      return true;
     },
   },
 };

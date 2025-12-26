@@ -59,7 +59,7 @@
                     {{ item.title }}
                   </div>
                   <div class="sku-info">
-                    规格：{{ item.keyVals || '--' }}
+                    产品编号：{{ item.productId || '--' }}
                   </div>
                 </div>
                 <div class="box-unit-price">

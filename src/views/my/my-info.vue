@@ -77,7 +77,7 @@
               </label>
               <div class="form-input-wrapper">
                 <el-input
-                  clearable
+                  disabled
                   type="text"
                   v-model="form.phone"
                   placeholder="请输入手机号"
@@ -121,6 +121,7 @@
                   type="date"
                   placeholder="请选择出生日期"
                   value-format="yyyy-MM-dd"
+                  :picker-options="birthdayPickerOptions"
                   class="form-input date-picker"
                 />
                 <span class="input-icon calendar-icon">
@@ -209,6 +210,13 @@ export default {
       },
       loading: false,
       pendingAddress: null, // 待处理的地址数据
+      // 出生日期选择器配置：限制不能选择当前日期之后
+      birthdayPickerOptions: {
+        disabledDate(time) {
+          // 禁用当前日期之后的所有日期
+          return time.getTime() > Date.now();
+        },
+      },
     };
   },
   computed: {

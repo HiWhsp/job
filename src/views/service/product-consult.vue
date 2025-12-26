@@ -142,10 +142,24 @@ export default {
           { required: true, message: "请输入反馈内容", trigger: "blur" },
         ],
         proId: [
-          { required: true, message: "请选择反馈产品", trigger: "change" },
+          {
+            validator: this.validateProId,
+            trigger: "change",
+          },
         ],
       },
     };
+  },
+  watch: {
+    // 监听反馈类型变化，当变为1时清除反馈产品的验证错误
+    "formData.bType"(newVal) {
+      if (newVal === 1) {
+        // 清除反馈产品的验证错误
+        this.$nextTick(() => {
+          this.$refs.consultForm && this.$refs.consultForm.clearValidate("proId");
+        });
+      }
+    },
   },
   mounted() {
     this.getProductList();
@@ -170,6 +184,20 @@ export default {
       } else {
         callback(new Error("请输入正确的手机号或邮箱格式"));
       }
+    },
+    // 校验反馈产品（bType为1时非必填）
+    validateProId(rule, value, callback) {
+      // 当反馈类型为1（新品需求）时，反馈产品为非必填项
+      if (this.formData.bType === 1) {
+        callback();
+        return;
+      }
+      // 其他情况下，反馈产品为必填项
+      if (!value) {
+        callback(new Error("请选择反馈产品"));
+        return;
+      }
+      callback();
     },
     // 获取产品列表，支持关键字搜索
     getProductList(keyword = "") {

@@ -139,13 +139,31 @@
             <el-row :gutter="24">
               <el-col :span="12">
                 <el-form-item prop="code" label="验证码">
-                  <el-input
-                    v-model="formData.code"
-                    placeholder="请输入"
-                    class="form-input"
-                  >
-                  </el-input> </el-form-item
-              ></el-col>
+                  <div class="captcha-wrapper">
+                    <el-input
+                      v-model="formData.code"
+                      placeholder="请输入验证码"
+                      class="form-input captcha-input"
+                      @keyup.enter="submitForm"
+                      @input="clearCaptchaError"
+                    >
+                    </el-input>
+                    <div class="captcha-container">
+                      <canvas
+                        ref="captchaCanvas"
+                        width="120"
+                        height="40"
+                        aria-label="验证码"
+                        class="captcha-canvas"
+                        @click="refreshCaptcha"
+                      ></canvas>
+                    </div>
+                  </div>
+                  <div v-if="captchaError" class="captcha-error">
+                    {{ captchaError }}
+                  </div>
+                </el-form-item>
+              </el-col>
             </el-row>
 
             <div class="form-actions">
@@ -201,9 +219,13 @@ export default {
         ],
       },
       uploadedFiles: [],
+      currentCaptchaCode: "", // 当前验证码
+      canvasContext: null, // canvas 上下文
+      captchaError: "", // 验证码错误提示
     };
   },
   mounted() {
+    this.initCaptcha();
   },
   methods: {
     triggerFileUpload() {
@@ -302,6 +324,12 @@ export default {
     submitForm() {
       this.$refs.customForm.validate((valid) => {
         if (valid) {
+          // 验证验证码
+          if (!this.validateCaptcha()) {
+            this.$message.error(this.captchaError || "验证码错误");
+            return;
+          }
+
           // 检查是否有文件正在上传
           const uploadingFiles = this.uploadedFiles.filter(
             (file) => file.status === "uploading"
@@ -345,6 +373,8 @@ export default {
               this.$message.success("提交成功！我们会尽快与您联系");
               this.$refs.customForm.resetFields();
               this.uploadedFiles = [];
+              this.formData.code = "";
+              this.refreshCaptcha();
             } else {
               this.$message.error(res.msg);
             }
@@ -353,6 +383,215 @@ export default {
           this.$message.error("请检查表单信息");
         }
       });
+    },
+    // 初始化验证码
+    initCaptcha() {
+      this.$nextTick(() => {
+        const canvas = this.$refs.captchaCanvas;
+        if (!canvas) return;
+        this.canvasContext = canvas.getContext("2d");
+        this.refreshCaptcha();
+      });
+    },
+    // 生成随机数
+    randInt(min, max) {
+      const range = max - min + 1;
+      const r = crypto.getRandomValues(new Uint32Array(1))[0] / 0xffffffff;
+      return Math.floor(r * range) + min;
+    },
+    // 生成验证码文本
+    makeCode(length = 4) {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+      let s = "";
+      for (let i = 0; i < length; i++) {
+        s += chars.charAt(this.randInt(0, chars.length - 1));
+      }
+      return s;
+    },
+    // 清空画布
+    clearCanvas() {
+      const canvas = this.$refs.captchaCanvas;
+      if (!canvas || !this.canvasContext) return;
+      this.canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+      // 背景渐变
+      const g = this.canvasContext.createLinearGradient(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+      g.addColorStop(0, "#f8fafc");
+      g.addColorStop(1, "#eef2f6");
+      this.canvasContext.fillStyle = g;
+      this.canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+    },
+    // 绘制噪点
+    drawNoiseDots(count = 80) {
+      const canvas = this.$refs.captchaCanvas;
+      if (!canvas || !this.canvasContext) return;
+      for (let i = 0; i < count; i++) {
+        this.canvasContext.beginPath();
+        this.canvasContext.fillStyle = `rgba(${this.randInt(
+          50,
+          200
+        )},${this.randInt(50, 200)},${this.randInt(50, 200)},${(
+          Math.random() * 0.6
+        ).toFixed(2)})`;
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const r = Math.random() * 1.2;
+        this.canvasContext.arc(x, y, r, 0, Math.PI * 2);
+        this.canvasContext.fill();
+      }
+    },
+    // 绘制干扰线
+    drawInterferenceLines(count = 4) {
+      const canvas = this.$refs.captchaCanvas;
+      if (!canvas || !this.canvasContext) return;
+      for (let i = 0; i < count; i++) {
+        this.canvasContext.beginPath();
+        this.canvasContext.lineWidth = this.randInt(1, 1.5);
+        this.canvasContext.strokeStyle = `rgba(${this.randInt(
+          30,
+          150
+        )},${this.randInt(30, 150)},${this.randInt(30, 150)},${(
+          0.25 +
+          Math.random() * 0.4
+        ).toFixed(2)})`;
+        const startY = Math.random() * canvas.height;
+        this.canvasContext.moveTo(0, startY);
+        const cpX = this.randInt(canvas.width * 0.2, canvas.width * 0.8);
+        const cpY = this.randInt(0, canvas.height);
+        const endY = Math.random() * canvas.height;
+        const steps = 50;
+        let prevX = 0,
+          prevY = startY;
+        for (let t = 1; t <= steps; t++) {
+          const tt = t / steps;
+          const x = tt * canvas.width;
+          const y =
+            (1 - tt) * (1 - tt) * startY +
+            2 * (1 - tt) * tt * cpY +
+            tt * tt * endY;
+          this.canvasContext.moveTo(prevX, prevY);
+          this.canvasContext.lineTo(x, y);
+          prevX = x;
+          prevY = y;
+        }
+        this.canvasContext.stroke();
+      }
+    },
+    // 绘制文本
+    drawText(code) {
+      const canvas = this.$refs.captchaCanvas;
+      if (!canvas || !this.canvasContext) return;
+      const len = code.length;
+      const baseX = 5;
+      const availableW = canvas.width - baseX * 2;
+      const perW = availableW / len;
+
+      for (let i = 0; i < len; i++) {
+        const ch = code[i];
+        const fontSize = this.randInt(18, 24);
+        const rotate = Math.random() * 0.4 - 0.2;
+        const color = `rgba(${this.randInt(30, 110)},${this.randInt(
+          30,
+          110
+        )},${this.randInt(30, 110)},1)`;
+        this.canvasContext.save();
+        const centerX =
+          baseX + perW * (i + 0.5) + (Math.random() * perW - perW / 2) * 0.15;
+        const centerY = canvas.height / 2 + this.randInt(-3, 3);
+
+        const channels = [
+          { dx: this.randInt(-1, 1), dy: this.randInt(-1, 1) },
+          { dx: this.randInt(-1, 1), dy: this.randInt(-1, 1) },
+        ];
+
+        this.canvasContext.translate(centerX, centerY);
+        this.canvasContext.rotate(rotate);
+        this.canvasContext.font = `${fontSize}px "Arial", sans-serif`;
+        this.canvasContext.textBaseline = "middle";
+        this.canvasContext.textAlign = "center";
+
+        this.canvasContext.shadowColor = "rgba(0,0,0,0.12)";
+        this.canvasContext.shadowBlur = 1;
+        this.canvasContext.fillStyle = color;
+        this.canvasContext.fillText(ch, 0, 0);
+
+        this.canvasContext.lineWidth = 0.5;
+        this.canvasContext.strokeStyle = `rgba(0,0,0,0.06)`;
+        this.canvasContext.strokeText(ch, 0, 0);
+
+        this.canvasContext.restore();
+
+        for (let c = 0; c < channels.length; c++) {
+          const { dx, dy } = channels[c];
+          this.canvasContext.save();
+          this.canvasContext.translate(centerX + dx * 1, centerY + dy * 1);
+          this.canvasContext.rotate(rotate + (Math.random() * 0.04 - 0.02));
+          this.canvasContext.font = `${fontSize}px "Arial", sans-serif`;
+          this.canvasContext.textBaseline = "middle";
+          this.canvasContext.textAlign = "center";
+          this.canvasContext.globalAlpha = 0.1;
+          this.canvasContext.fillText(ch, 0, 0);
+          this.canvasContext.restore();
+        }
+      }
+    },
+    // 绘制网格
+    drawGridFine() {
+      const canvas = this.$refs.captchaCanvas;
+      if (!canvas || !this.canvasContext) return;
+      this.canvasContext.save();
+      this.canvasContext.globalAlpha = 0.03;
+      for (let x = 0; x < canvas.width; x += 5) {
+        this.canvasContext.fillRect(x, 0, 0.5, canvas.height);
+      }
+      for (let y = 0; y < canvas.height; y += 5) {
+        this.canvasContext.fillRect(0, y, canvas.width, 0.5);
+      }
+      this.canvasContext.restore();
+    },
+    // 渲染验证码
+    renderCaptcha(code) {
+      this.clearCanvas();
+      this.drawGridFine();
+      this.drawNoiseDots(30);
+      this.drawInterferenceLines(1 + this.randInt(0, 1));
+      this.drawText(code);
+      this.drawNoiseDots(15);
+    },
+    // 生成并渲染验证码
+    generateAndRender(length = 4) {
+      this.currentCaptchaCode = this.makeCode(length);
+      this.renderCaptcha(this.currentCaptchaCode);
+      this.formData.code = "";
+      this.captchaError = "";
+    },
+    // 刷新验证码
+    refreshCaptcha() {
+      this.generateAndRender(4);
+    },
+    // 验证验证码
+    validateCaptcha() {
+      const input = this.formData.code.trim();
+      if (!input) {
+        this.captchaError = "请输入验证码";
+        return false;
+      }
+      if (input.toLowerCase() !== this.currentCaptchaCode.toLowerCase()) {
+        this.captchaError = "验证码错误";
+        return false;
+      }
+      this.captchaError = "";
+      return true;
+    },
+    // 清除验证码错误提示
+    clearCaptchaError() {
+      if (this.captchaError) {
+        this.captchaError = "";
+      }
     },
   },
 };
@@ -604,6 +843,55 @@ export default {
         &:hover {
           background: #2e4c87;
         }
+      }
+    }
+
+    // 验证码样式
+    .captcha-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+
+      .captcha-input {
+        flex: 1;
+      }
+
+      .captcha-container {
+        flex-shrink: 0;
+        height: 40px;
+      }
+
+      .captcha-canvas {
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        cursor: pointer;
+        background: #fff;
+        transition: all 0.3s ease;
+
+        &:hover {
+          border-color: #409eff;
+          box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
+        }
+      }
+    }
+
+    .captcha-error {
+      color: #f56c6c;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-top: 5px;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
   }

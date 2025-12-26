@@ -2,6 +2,9 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+import $ from "jquery";
+
+Vue.prototype.$ = $;
 
 // 全局组件注册
 import pageTop from "@/components/page/pageTop.vue";
@@ -17,11 +20,10 @@ Vue.component("pageBread", pageBread); //
 // import "lib-flexible";//网页适配
 
 import "@/css/css-reset.css"; // css reset
-import "@/plugin/request.js"; 
-import "@/plugin/message.js"; 
-import "@/plugin/log.js"; 
-import '@/lib/lib-flexible.js';
-
+import "@/plugin/request.js";
+import "@/plugin/message.js";
+import "@/plugin/log.js";
+import "@/lib/lib-flexible.js";
 
 import Directives from "./directives"; //全局指令
 Vue.use(Directives);
@@ -30,7 +32,6 @@ import * as filters from "@/filters/index"; //全局过滤器
 Object.keys(filters).forEach((key) => {
   Vue.filter(key, filters[key]);
 });
-
 
 // 加载
 import ElementUI from "element-ui";
@@ -44,7 +45,6 @@ Vue.use(ElementUI);
 import _mixin from "@/mixins/index.js";
 Vue.mixin(_mixin);
 
-
 Vue.prototype.$load = {
   loading: null,
   open: function () {
@@ -57,7 +57,6 @@ Vue.prototype.$load = {
     this.loading.close();
   },
 };
-
 
 store.dispatch("appInit"); //重新初始化
 

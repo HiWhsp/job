@@ -52,7 +52,7 @@ export default {
   data() {
     return {
       nav_option: [{ title: "下载中心", route: "/download" }],
-      activeTab: 0,
+      activeTab: 'null',
       tabList: [],
       fileList: [],
       pagination: {
@@ -77,7 +77,11 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           this.tabList = res.data;
-          this.activeTab = this.tabList[0].id + '';
+          this.tabList.unshift({
+            id: 'null',
+            title: '全部分类',
+          });
+          this.activeTab = 'null';
           this.query_file_list();
         }
       });
@@ -88,7 +92,7 @@ export default {
         method: "get",
         data: {
           action: "index_downloadList",
-          channelId: this.activeTab,
+          channelId: this.activeTab === 'null' ? '' : this.activeTab,
           page: this.pagination.page,
           pageNum: this.pagination.pageNum,
         },
@@ -99,7 +103,7 @@ export default {
         }
       });
     },
-    handleTabClick(tab, event) {
+    handleTabClick(tab, event) {    
       this.activeTab = tab.name;
       this.pagination.page = 1;
       this.query_file_list();

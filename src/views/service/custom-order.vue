@@ -350,7 +350,7 @@ export default {
             areaId: Array.isArray(this.formData.areaId)
               ? this.formData.areaId[this.formData.areaId.length - 1]
               : this.formData.areaId,
-            files: fileUrls.join(","), // 文件URL用 | 分隔
+            file: fileUrls.join(","), // 文件URL用 | 分隔
           };
 
           // 这里可以添加提交逻辑

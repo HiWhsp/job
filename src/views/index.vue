@@ -11,7 +11,14 @@
                   :key="index"
                   @click.native="do_banner_click(item)"
                 >
-                  <img :src="item.image" alt="" />
+                  <div
+                    class="lunbo-img-box"
+                    :style="{ backgroundImage: `url(${item.image})` }"
+                  >
+                    <p class="lunbo-img-box-title">{{ item.title }}</p>
+                    <p class="lunbo-img-box-desc">{{ item.description }}</p>
+                    <button class="lunbo-img-box-btn">了解详情</button>
+                  </div>
                 </el-carousel-item>
               </el-carousel>
               <div class="lunbo-icon">
@@ -31,19 +38,36 @@
             :class="{ 'section-visible': sectionInView.productCenter }"
           >
             <div class="product-center-left">
-              <div class="sub-title">
-                <h2 class="product-title-text">产品中心</h2>
-                <p class="product-subtitle">PRODUCT CENTER</p>
-              </div>
-              <p class="product-desc">
-                了解我们如何更好地 <br />为客户创造价值
-              </p>
-              <button
-                class="learn-more-btn"
-                @click="toRouter('/product-cates')"
+              <div
+                class="sub-title"
+                :class="{ active: sectionInView.productCenter }"
               >
-                了解更多
-              </button>
+                <h2 class="product-title-text">
+                  <div class="product-title-text-text">产品中心</div>
+                </h2>
+                <div class="product-subtitle">
+                  <div class="product-subtitle-text">PRODUCT CENTER</div>
+                </div>
+              </div>
+              <div class="product-desc">
+                <div
+                  class="product-desc-text"
+                  :class="{ active: sectionInView.productCenter }"
+                >
+                  了解我们如何更好地 <br />为客户创造价值
+                </div>
+              </div>
+              <div
+                class="learn-more-btn-box"
+                :class="{ active: sectionInView.productCenter }"
+              >
+                <button
+                  class="learn-more-btn btn-ripple"
+                  @click="toRouter('/product-cates')"
+                >
+                  了解更多
+                </button>
+              </div>
             </div>
             <div class="product-center-right">
               <div class="product-grid">
@@ -56,7 +80,10 @@
                   <div class="product-image">
                     <img :src="item.thumb" alt="光学元件" />
                   </div>
-                  <div class="product-category">{{ item.title }}</div>
+                  <div class="product-category">
+                    <div class="bgBox"></div>
+                    <div class="product-title">{{ item.title }}</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -83,7 +110,7 @@
                   <div class="product-category ellipsis-1">
                     {{ item.title }}
                   </div>
-                  <button class="view-details-btn">查看详情</button>
+                  <button class="view-details-btn btn-ripple">查看详情</button>
                 </div>
               </div>
               <el-empty
@@ -92,17 +119,46 @@
               />
             </div>
             <div class="recommendation-sidebar">
-              <div class="sub-title">
-                <h2 class="product-title-text">产品推荐</h2>
-                <p class="product-subtitle">RECOMMENDATION</p>
+              <div
+                class="recommendation-sidebar-bgBox"
+                :class="{ active: sectionInView.productRecommendation }"
+              ></div>
+              <div
+                class="sub-title"
+                :class="{ active: sectionInView.productRecommendation }"
+              >
+                <h2 class="product-title-text">
+                  <div class="product-title-text-text">产品推荐</div>
+                </h2>
+                <div class="product-subtitle">
+                  <div class="product-subtitle-text">RECOMMENDATION</div>
+                </div>
               </div>
-              <p class="recommendation-desc">优质好物为您推荐</p>
-              <button
-                class="learn-more-btn"
+              <div class="recommendation-desc">
+                <div
+                  class="recommendation-desc-text"
+                  :class="{ active: sectionInView.productRecommendation }"
+                >
+                  优质好物为您推荐
+                </div>
+              </div>
+              <!-- <button
+                class="learn-more-btn btn-ripple"
                 @click="toRouter('/product-cates')"
               >
                 了解更多
-              </button>
+              </button> -->
+              <div
+                class="learn-more-btn-box"
+                :class="{ active: sectionInView.productRecommendation }"
+              >
+                <button
+                  class="learn-more-btn btn-ripple"
+                  @click="toRouter('/product-cates')"
+                >
+                  了解更多
+                </button>
+              </div>
             </div>
           </div>
           <!-- 新闻动态 -->
@@ -118,7 +174,10 @@
               <p class="product-subtitle">NEWS UPDATES</p>
             </div>
             <div class="news-content" v-if="newsList.length > 0">
-              <div class="news-left">
+              <div
+                class="news-left"
+                :class="{ active: sectionInView.newsSection }"
+              >
                 <div
                   class="news-card"
                   v-for="(item, index) in newsList.slice(0, 2)"
@@ -141,7 +200,10 @@
                   </div>
                 </div>
               </div>
-              <div class="news-right">
+              <div
+                class="news-right"
+                :class="{ active: sectionInView.newsSection }"
+              >
                 <div class="news-list">
                   <div
                     class="news-item"
@@ -160,7 +222,10 @@
                     </div>
                   </div>
                 </div>
-                <button class="learn-more-btn" @click="toRouter('/news')">
+                <button
+                  class="learn-more-btn btn-ripple"
+                  @click="toRouter('/news')"
+                >
                   了解更多
                 </button>
               </div>
@@ -186,7 +251,10 @@
                 :key="item.titletitle"
                 @click="toRouter(item.path)"
               >
-                <div class="service-content" :style="{ backgroundImage: `url(${item.image})` }">
+                <div
+                  class="service-content"
+                  :style="{ backgroundImage: `url(${item.image})` }"
+                >
                   <h3 class="service-title">{{ item.title }}</h3>
                   <p class="service-subtitle">{{ item.subtitle }}</p>
                 </div>
@@ -196,7 +264,10 @@
                 v-for="item in serviceList[1]"
                 :key="item.title"
               >
-                <div class="service-content" :style="{ backgroundImage: `url(${item.image})` }">
+                <div
+                  class="service-content"
+                  :style="{ backgroundImage: `url(${item.image})` }"
+                >
                   <!-- <h3 class="service-title">{{ item.title }}</h3> -->
                   <!-- <p class="service-subtitle">{{ item.subtitle }}</p> -->
                 </div>
@@ -276,9 +347,12 @@ export default {
   },
 
   created() {
+    window.removeEventListener("scroll", this.onScroll);
+    window.addEventListener("scroll", this.onScroll);
     this.setView();
   },
   mounted() {
+    // 开始监听
     this.initSectionObserver();
   },
   updated() {
@@ -286,12 +360,21 @@ export default {
     this.registerSectionTargets();
   },
   beforeDestroy() {
+    window.removeEventListener("scroll", this.onScroll);
     if (this.sectionObserver) {
       this.sectionObserver.disconnect();
       this.sectionObserver = null;
     }
   },
   methods: {
+    onScroll() {
+      let scrollTop = 0;
+      if (document.documentElement && document.documentElement.scrollTop) {
+        scrollTop = document.documentElement.scrollTop;
+      } else if (document.body) {
+        scrollTop = document.body.scrollTop;
+      }
+    },
     setView() {
       this.query_product_list();
       this.query_product();
@@ -335,7 +418,7 @@ export default {
         method: "get",
         data: {
           action: "news_lists",
-          channelId: 49
+          channelId: 49,
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -345,7 +428,10 @@ export default {
     },
     initSectionObserver() {
       // 兼容性处理：不支持 IntersectionObserver 时直接展示所有板块
-      if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
+      if (
+        typeof window === "undefined" ||
+        !("IntersectionObserver" in window)
+      ) {
         this.sectionInView.productCenter = true;
         this.sectionInView.productRecommendation = true;
         this.sectionInView.newsSection = true;
@@ -433,6 +519,39 @@ export default {
     position: relative;
     width: 100%;
     height: 1080px;
+    .lunbo-img-box {
+      width: 100%;
+      height: 100%;
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      padding: 348px 0 0 200px;
+      .lunbo-img-box-title {
+        font-family: PingFang SC, PingFang SC;
+        font-weight: 600;
+        font-size: 60px;
+        line-height: 84px;
+        color: #ffffff;
+        text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.16);
+      }
+      .lunbo-img-box-desc {
+        font-weight: 400;
+        font-size: 20px;
+        color: #ffffff;
+        line-height: 25px;
+        text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.16);
+      }
+      .lunbo-img-box-btn {
+        margin-top: 32px;
+        width: 140px;
+        height: 45px;
+        border: 2px solid #fff;
+        background: transparent;
+        color: #fff;
+        font-size: 16px;
+        border-radius: 30px;
+      }
+    }
 
     /deep/ .el-carousel__container {
       height: 1080px;
@@ -565,24 +684,62 @@ export default {
   &::before {
     content: "";
     display: block;
-    width: 80px;
+    width: 0px;
     height: 10px;
     background: #2e4c87;
     margin-bottom: 20px;
+    transition: all 1s;
+    position: relative;
   }
   .product-title-text {
-    font-size: 48px;
-    font-weight: bold;
-    color: #242728;
     margin: 0 0 10px 0;
-    line-height: 1.2;
+    height: 58px;
+    position: relative;
+    overflow: hidden;
+
+    .product-title-text-text {
+      font-size: 48px;
+      font-weight: bold;
+      color: #242728;
+      line-height: 58px;
+      position: absolute;
+      top: 46px;
+      left: 0;
+      transition: all 1.5s;
+    }
   }
 
   .product-subtitle {
-    font-size: 16px;
-    color: #242728;
     margin: 0 0 20px 0;
-    letter-spacing: 2px;
+    position: relative;
+    height: 26px;
+    position: relative;
+    overflow: hidden;
+
+    .product-subtitle-text {
+      letter-spacing: 2px;
+      color: #242728;
+      font-size: 16px;
+      line-height: 26px;
+      position: absolute;
+      top: 46px;
+      left: 0;
+      transition: 1s all;
+    }
+  }
+
+  &.active {
+    &::before {
+      width: 100px;
+    }
+
+    .product-title-text-text {
+      top: 0;
+    }
+
+    .product-subtitle-text {
+      top: 0;
+    }
   }
 }
 
@@ -598,27 +755,53 @@ export default {
     flex-direction: column;
 
     .product-desc {
-      font-size: 18px;
-      color: #666;
-      line-height: 1.6;
       margin: 0 0 40px 0;
-    }
+      height: 56px;
+      position: relative;
+      overflow: hidden;
 
-    .learn-more-btn {
-      width: 140px;
-      height: 45px;
-      border: 2px solid #073090;
-      background: transparent;
-      color: #073090;
-      font-size: 16px;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-
-      &:hover {
-        transform: translateY(-2px);
+      .product-desc-text {
+        font-size: 18px;
+        color: #666;
+        line-height: 28px;
+        position: absolute;
+        top: 56px;
+        left: 0;
+        transition: all 0.8s;
       }
     }
+
+    .learn-more-btn-box {
+      width: 140px;
+      height: 45px;
+      overflow: hidden;
+      position: relative;
+
+      .learn-more-btn {
+        position: absolute;
+        top: 45px;
+        left: 0;
+        width: 140px;
+        height: 45px;
+        border: 2px solid #073090;
+        background: transparent;
+        color: #073090;
+        font-size: 16px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.8s;
+      }
+
+      &.active {
+        .learn-more-btn {
+          top: 0;
+        }
+      }
+    }
+  }
+
+  .product-desc-text.active {
+    top: 0 !important;
   }
 
   &-right {
@@ -667,11 +850,41 @@ export default {
       text-align: center;
       background: #fdfdfd;
       border: 1px solid #e4e4e4;
+      position: relative;
+
+      .bgBox {
+        width: 0%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #2e4c87;
+        opacity: 0;
+        transition: 0.5s all;
+      }
+
+      .product-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #000;
+        text-align: center;
+        position: relative;
+        background-color: transparent;
+      }
     }
 
     &:hover {
       .product-image img {
         transform: scale(1.1);
+      }
+
+      .bgBox {
+        width: 100%;
+        opacity: 1;
+      }
+
+      .product-title {
+        color: #fff;
       }
     }
   }
@@ -757,13 +970,28 @@ export default {
 
   .recommendation-sidebar {
     width: 432px;
-    background: #fafafa;
+    background: transparent;
     border-radius: 0 250px 0 0;
     padding: 40px 30px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     position: relative;
+
+    .recommendation-sidebar-bgBox {
+      width: 0;
+      height: 100%;
+      background: #fafafa;
+      border-radius: 0 250px 0 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: 1.5s all;
+
+      &.active {
+        width: 100%;
+      }
+    }
 
     &::after {
       content: "";
@@ -779,25 +1007,50 @@ export default {
     }
 
     .recommendation-desc {
-      font-size: 18px;
-      color: #666;
-      line-height: 1.6;
       margin: 20px 0 40px 0;
+      height: 28px;
+      overflow: hidden;
+      position: relative;
+
+      .recommendation-desc-text {
+        font-size: 18px;
+        color: #666;
+        line-height: 28px;
+        transition: 1s all;
+        position: absolute;
+        top: 28px;
+        left: 0;
+
+        &.active {
+          top: 0;
+        }
+      }
     }
 
-    .learn-more-btn {
+    .learn-more-btn-box {
       width: 120px;
       height: 45px;
-      border: 2px solid #073090;
-      background: transparent;
-      color: #073090;
-      font-size: 16px;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      overflow: hidden;
+      position: relative;
 
-      &:hover {
-        transform: translateY(-2px);
+      .learn-more-btn {
+        position: absolute;
+        top: 45px;
+        width: 120px;
+        height: 45px;
+        border: 2px solid #073090;
+        background: transparent;
+        color: #073090;
+        font-size: 16px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: 1s all;
+      }
+
+      &.active {
+        .learn-more-btn {
+          top: 0;
+        }
       }
     }
   }
@@ -907,10 +1160,24 @@ export default {
       position: absolute;
       right: 0;
       top: -171px;
-      width: 731px;
+      width: 0px;
       height: 170px;
       background: #f5f5f5;
       border-radius: 250px 0px 0px 0px;
+      transition: 1.5s all;
+    }
+
+    &.active {
+      &::before {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: -171px;
+        width: 731px;
+        height: 170px;
+        background: #f5f5f5;
+        border-radius: 250px 0px 0px 0px;
+      }
     }
   }
 
@@ -1036,10 +1303,25 @@ export default {
       position: absolute;
       left: 0;
       top: -171px;
-      width: 100%;
+      width: 0%;
       height: 171px;
       background: #fafafa;
       border-radius: 0 250px 0 0;
+      transition: 1s all;
+    }
+
+    &.active {
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: -171px;
+        width: 100%;
+        height: 171px;
+        background: #fafafa;
+        border-radius: 0 250px 0 0;
+        transition: 1.5s all;
+      }
     }
   }
 }
@@ -1120,7 +1402,6 @@ export default {
       align-items: flex-start;
       background-size: 100% 100%;
       background-repeat: no-repeat;
-
     }
   }
 }
@@ -1139,5 +1420,43 @@ export default {
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+
+.btn-ripple {
+  vertical-align: bottom;
+}
+
+.btn-ripple:not(:disabled):hover {
+  opacity: 1;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    animation: ani_ripple 0.75s;
+    z-index: 1;
+    content: "";
+    position: absolute;
+    display: block;
+    transition: all 0.6s;
+    width: 100%;
+    height: 0;
+    border-radius: 50%;
+    left: 50%;
+    top: 50%;
+    padding-top: 100%;
+    transform: translateX(-50%) translateY(-50%);
+  }
+}
+
+@keyframes ani_ripple {
+  0% {
+    background: rgba(0, 0, 0, 0.25);
+    transform: translateX(-50%) translateY(-50%) scale(0);
+  }
+
+  to {
+    background: transparent;
+    transform: translateX(-50%) translateY(-50%) scale(1);
+  }
 }
 </style>

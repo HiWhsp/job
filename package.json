@@ -12,6 +12,7 @@
     "core-js": "^3.6.5",
     "dayjs": "^1.11.12",
     "element-ui": "^2.15.0",
+    "jquery": "^3.7.1",
     "lib-flexible": "^0.3.2",
     "lodash": "^4.17.21",
     "tableexport": "^5.2.0",

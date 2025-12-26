@@ -275,10 +275,8 @@ export default {
   methods: {
     do_toggle_nav(item) {
       if (item.title === "退出登录") {
-        this.$store.dispatch("remove_vuex_user");
-        localStorage.clear();
-        document.cookie = "";
-        this.$router.push("/login");
+        this.handleLogout();
+        return;
       }
       if (!item.route) {
         // let route = item.sub[0].route;
@@ -286,6 +284,24 @@ export default {
       } else {
         this.$router.push("/" + item.route);
       }
+    },
+    // 退出登录
+    handleLogout() {
+      this.$confirm("确定要退出登录吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.$store.dispatch("remove_vuex_user");
+          localStorage.clear();
+          document.cookie = "";
+          this.$router.push("/login");
+          location.reload();
+        })
+        .catch(() => {
+          // 用户取消操作，不做任何处理
+        });
     },
   },
 };
