@@ -444,3 +444,4 @@ export default {
   margin-top: 24px;
 }
 </style>
+<style src="./style/h5-contractList.less" scoped lang="less"></style>

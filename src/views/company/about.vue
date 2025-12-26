@@ -62,7 +62,7 @@ export default {
     return {
       activeTab: 0,
     };
-  },
+  },  
   mounted() {
     // this.$api({
     //   url: "setting",
@@ -79,3 +79,5 @@ export default {
 <style lang="less" scoped>
 @import "./about.less";
 </style>
+
+<style lang="less" scoped src="./style/h5-about.less"></style>

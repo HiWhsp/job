@@ -129,3 +129,4 @@ export default {
   min-height: 600px;
 }
 </style>
+<style lang="less" scoped src="./style/h5-myIndex.less"></style>

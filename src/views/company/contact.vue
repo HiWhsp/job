@@ -60,3 +60,4 @@ export default {
 <style lang="less" scoped>
 @import "./contact.less";
 </style>
+<style lang="less" scoped src="./style/h5-about.less"></style>

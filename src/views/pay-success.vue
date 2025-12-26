@@ -208,4 +208,4 @@ export default {
   }
 }
 </style>
-
+<style scoped lang="less" src="./style/h5-pay-success.less"></style>

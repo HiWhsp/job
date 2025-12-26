@@ -327,3 +327,4 @@ export default {
   }
 }
 </style>
+<style scoped lang="less" src="./style/h5-page-footer.less"></style>

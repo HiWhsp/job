@@ -30,7 +30,7 @@
               <span class="order-number">订单号: {{ order.order_no }}</span>
             </div>
             <span class="order-status">
-              {{ getStatusText(order.status) }}
+              {{ order.status }}
             </span>
           </div>
 
@@ -390,3 +390,4 @@ export default {
   }
 }
 </style>
+<style lang="less" scoped src="./style/h5-orders.less"></style>

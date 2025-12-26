@@ -205,3 +205,4 @@ export default {
 <style lang="less" scoped>
 @import "./newsDetail.less";
 </style>
+<style lang="less" scoped src="./style/h5-news.less"></style>

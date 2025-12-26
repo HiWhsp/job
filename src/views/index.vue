@@ -535,3 +535,4 @@ export default {
 <style lang="less" scoped>
 @import "./index.less";
 </style>
+<style lang="less" scoped src="./style/h5-style.less"></style>

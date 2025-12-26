@@ -1,0 +1,160 @@
+@media (max-width: 1199px) {
+  .page-index {
+    margin-top: 0px;
+    .lunbo-box {
+      width: 100%;
+      /deep/.el-carousel {
+        .el-carousel__container {
+          height: 150px;
+        }
+        .el-carousel__indicators {
+          bottom: 0px;
+        }
+      }
+    }
+    .main-content {
+      width: 100%;
+      margin-top: 30px;
+      padding: 0 15px;
+      .contract-section {
+        .head-title {
+          flex-direction: column;
+          align-items: flex-start;
+          .left-title {
+            flex-direction: column;
+            align-items: flex-start;
+            h2 {
+              font-size: 20px;
+              white-space: nowrap;
+              span {
+                font-size: 20px;
+              }
+            }
+            span {
+              font-size: 16px;
+            }
+          }
+          .type-list {
+            width: 100%;
+            margin-top: 10px;
+            .type-menu-list {
+              .type-menu-item {
+                font-size: 1.4rem;
+                padding: 0.8rem 1.5rem;
+              }
+            }
+          }
+          .right-title {
+            margin-top: 5px;
+            .right-btn,
+            .left-btn {
+              width: 30px;
+              height: 30px;
+            }
+          }
+        }
+
+        .contract-grid {
+          width: 100%;
+          /deep/.el-carousel__container {
+            height: auto;
+            .el-carousel__item {
+              display: flex;
+              position: relative;
+              .contract-grid-item {
+                width: 100%;
+                gap: 0 4%;
+                .contract-card {
+                  width: 48%;
+                  // margin-bottom: 0;
+                  &:nth-child(2n) {
+                    margin-right: 0;
+                  }
+                  .document-content {
+                    height: 20rem;
+                  }
+                }
+              }
+            }
+          }
+          .contract-grid-item {
+            width: 100%;
+            gap: 0 4%;
+            /deep/.contract-card {
+              width: 48%;
+              // margin-bottom: 0;
+              &:nth-child(2n) {
+                margin-right: 0;
+              }
+              .document-content {
+                height: 20rem;
+              }
+            }
+          }
+        }
+        &.free-download-section {
+          height: auto;
+          padding: 2rem 1.5rem;
+          .download-content {
+            height: auto;
+            gap: 4%;
+            .download-item {
+              width: 48%;
+              margin-bottom: 15px;
+              img {
+                height: 10rem;
+              }
+            }
+          }
+        }
+
+        .news-list{
+          padding-bottom: 30px;
+          .news-grid{
+            grid-template-columns: repeat(1, 1fr);
+            .news-card{
+              .news-title{
+                font-size: 1.6rem;
+              }
+            }
+          }
+          .news-more{
+            .more-btn{
+              width: 13rem;
+              padding:1.2rem 1.8rem;
+              span{
+                font-size: 1.4rem;
+              }
+            }
+          }
+        }
+      }
+      .company-info{
+        .company-info-content{
+          flex-direction: column;
+          .company-info-left{
+            padding:20px 15px;
+            .company-name{
+              font-size: 2.4rem;
+            }
+            .company-slogan{
+              font-size: 1.8rem;
+              margin-bottom: 20px;
+            }
+            .company-description{
+              margin-bottom: 30px;
+              font-size: 1.4rem;
+            }
+            .company-btn{
+              width: 13rem;
+              padding:1.2rem 1.8rem;
+              span{
+                font-size: 1.4rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

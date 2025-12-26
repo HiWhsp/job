@@ -481,3 +481,4 @@ export default {
 <style lang="less" scoped>
 @import "./contractDetail.less";
 </style>
+<style src="./style/h5-contractDetail.less" scoped lang="less"></style>

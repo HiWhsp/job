@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <page_header />
+    <page_header v-if="!vuex_h5" />
+    <page_header_mobile v-else />
+  
 
     <div class="layout-box">
       <router-view></router-view>
@@ -13,6 +15,7 @@
 <script>
 import page_aside from "@/components/page/page-aside.vue";
 import page_header from "@/components/page/page-header.vue"; //顶部搜索
+import page_header_mobile from "@/components/page/page-header-mobile.vue";
 import page_footer from "@/components/page/page-footer.vue";
 
 export default {
@@ -20,6 +23,7 @@ export default {
     page_aside,
     page_header,
     page_footer,
+    page_header_mobile
   },
   data() {
     return {
@@ -337,6 +341,9 @@ button {
 
 //通用 移动端适配开始
 @media screen and (max-width: 1199px) {
+  body{
+    min-width: 100%;
+  }
   #app {
     padding-top: 50px !important;
 
@@ -347,7 +354,7 @@ button {
     &.productSpecification {
       padding-top: 0 !important;
     }
-
+    
     &.productSpecificationPdf {
       padding-top: 0 !important;
     }

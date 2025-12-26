@@ -262,3 +262,4 @@ export default {
   }
 }
 </style>
+<style lang="less" scoped src="./style/h5-downloads.less"></style>

@@ -1,0 +1,49 @@
+@media (max-width: 1199px) {
+  .contract-list {
+    margin-top: 0;
+    padding: 2.4rem 15px;
+    .w-1600 {
+      width: 100%;
+    }
+    .filter-section {
+      .filter-row {
+        height: auto;
+        align-items: stretch;
+
+        .filter-label {
+          min-width: 100px;
+          width: 100px;
+         padding:10px 15px 10px 0;
+          height: auto;
+          font-size: 1.4rem;
+        }
+        .filter-options {
+          margin-left: 10px;
+          padding: 10px 0;
+          gap: 0 5px;
+          .filter-option {
+            padding: 5px;
+            font-size: 1.4rem;
+          }
+        }
+        .active-filters {
+          margin-left: 10px;
+          padding: 10px 0;
+        }
+      }
+    }
+    .contract-list-section {
+        gap: 0 4%;
+        /deep/.contract-card {
+        width: 48%;
+        // margin-bottom: 0;
+        &:nth-child(2n) {
+          margin-right: 0;
+        }
+        .document-content {
+          height: 20rem;
+        }
+      }
+    }
+  }
+}

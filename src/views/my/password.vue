@@ -235,4 +235,18 @@ export default {
     }
   }
 }
+@media (max-width: 1199px) {
+    .password-page{
+        .page-title{
+            padding: 0 1.5rem;
+        }
+        .password-content{
+            padding:3rem 1.5rem;
+            
+            .action-buttons{
+              margin-top:0;
+            }
+        }
+    }
+}
 </style>

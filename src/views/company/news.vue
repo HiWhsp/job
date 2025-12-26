@@ -137,9 +137,11 @@ export default {
   },
   methods: {
     switchTab(tab) {
+    
       this.activeTab = tab;
       this.currentPage = 1;
       this.getNewsList();
+   
     },
     async getNewsList() {
       try {
@@ -236,3 +238,5 @@ export default {
 <style lang="less" scoped>
 @import "./news.less";
 </style>
+<style lang="less" scoped src="./style/h5-news.less"></style>
+
