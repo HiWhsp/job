@@ -13,26 +13,35 @@
             四川响梵信息科技有限公司成立于2023年，是一家致力于现代企业体系制度服务的企业，主要对企业制度体系建设、科技创新、政策咨询、科技成果积累、专项资金申报、会议展览、招投标代理、人力资源等内容进行服务。
           </p>
         </div>
-        <img
-          class="about-img"
-          src="@/assets/img/company/about-img1.png"
-          alt=""
-        />
+        <div class="about-img">{{ vuex_config.public_word }}</div>
         <div class="info">
           <div class="info-item">
-            <div class="info-value"><span>{{ vuex_config.establish_year }}</span>年</div>
+            <div class="info-value">
+              <span>{{ vuex_config.establish_year }}</span
+              >年
+            </div>
             <div class="info-label">{{ vuex_config.establish_year }}年成立</div>
           </div>
           <div class="info-item">
-            <div class="info-value"><span>{{ vuex_config.reg_capital }}</span>万元</div>
-            <div class="info-label">注册资本{{ vuex_config.reg_capital }}万元</div>
+            <div class="info-value">
+              <span>{{ vuex_config.reg_capital }}</span
+              >万元
+            </div>
+            <div class="info-label">
+              注册资本{{ vuex_config.reg_capital }}万元
+            </div>
           </div>
           <div class="info-item">
-            <div class="info-value"><span>{{ vuex_config.team_num }}</span>人</div>
+            <div class="info-value">
+              <span>{{ vuex_config.team_num }}</span
+              >人
+            </div>
             <div class="info-label">员工团队</div>
           </div>
           <div class="info-item">
-            <div class="info-value"><span>{{ vuex_config.serve_num }}+</span></div>
+            <div class="info-value">
+              <span>{{ vuex_config.serve_num }}+</span>
+            </div>
             <div class="info-label">服务客户</div>
           </div>
         </div>
@@ -62,7 +71,7 @@ export default {
     return {
       activeTab: 0,
     };
-  },  
+  },
   mounted() {
     // this.$api({
     //   url: "setting",

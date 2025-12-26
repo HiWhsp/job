@@ -41,7 +41,52 @@
           </div>
           <div class="document-container">
             <div class="document-page">
-              <img :src="detail.thumb" alt="" srcset="" />
+              <div class="document-content blurred">
+                <!-- PDF所有页面展示 -->
+                <div
+                  v-if="
+                    detail.url &&
+                    detail.url.includes('.pdf')
+                  "
+                  class="pdf-all-pages-container"
+                  ref="pdfContainer"
+                >
+                  <div
+                    v-for="(page, index) in pdfPages"
+                    :key="index"
+                    class="pdf-page-wrapper"
+                  >
+                    <canvas
+                      :ref="`pdfCanvas${index}`"
+                      class="pdf-page-canvas"
+                      @contextmenu.prevent
+                      @selectstart.prevent
+                    ></canvas>
+                    <canvas
+                      :ref="`watermarkCanvas${index}`"
+                      class="watermark-canvas"
+                      @contextmenu.prevent
+                      @selectstart.prevent
+                    ></canvas>
+                  </div>
+
+                  <!-- 加载状态 -->
+                  <div v-if="pdfLoading" class="pdf-loading">
+                    <div class="loading-spinner"></div>
+                    <p>PDF加载中...</p>
+                  </div>
+
+                  <!-- 错误状态 -->
+                  <div v-if="pdfError" class="pdf-error">
+                    <p>PDF加载失败，请稍后重试</p>
+                    <button @click="loadAllPages" class="retry-btn">
+                      重试
+                    </button>
+                  </div>
+                </div>
+                <!-- 非PDF文件显示 -->
+                <img v-else :src="detail.url" alt="" />
+              </div>
             </div>
           </div>
           <!-- <div class="document-page-bottom-bottom">
@@ -160,7 +205,7 @@ export default {
         this.contract_type = res.data.contract_type;
         // 当detail数据加载完成后，加载PDF
         this.$nextTick(() => {
-          if (window.pdfjsLib && this.detail.preview_pdf_url) {
+          if (window.pdfjsLib && this.detail.url) {
             this.loadAllPages();
           }
         });
@@ -355,21 +400,21 @@ export default {
 
     // 初始化PDF
     initPDF() {
-      if (this.detail.preview_pdf_url) {
+      if (this.detail.url) {
         this.loadAllPages();
       }
     },
 
     // 加载所有PDF页面
     loadAllPages() {
-      if (!this.detail.preview_pdf_url) return;
+      if (!this.detail.url) return;
 
       this.pdfLoading = true;
       this.pdfError = false;
       this.pdfPages = [];
 
       const loadingTask = window.pdfjsLib.getDocument({
-        url: this.detail.preview_pdf_url,
+        url: this.detail.url,
         cMapUrl:
           "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/",
         cMapPacked: true,
@@ -420,9 +465,9 @@ export default {
           };
 
           await page.render(renderContext).promise;
-          this.$nextTick(() => {
-            this.loadWatermark(scaledViewport.width, scaledViewport.height, i);
-          });
+          // this.$nextTick(() => {
+          //   this.loadWatermark(scaledViewport.width, scaledViewport.height, i);
+          // });
         } catch (error) {
           console.error(`渲染第${i + 1}页失败:`, error);
         }

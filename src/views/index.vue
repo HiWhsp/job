@@ -7,7 +7,17 @@
           :key="index"
           @click.native="do_banner_click(item)"
         >
-          <img :src="item.image" alt="" />
+          <div
+            class="banner-item-content"
+            :style="{ backgroundImage: `url(${item.image})` }"
+          >
+            <p class="banner-item-title">{{ item.title }}</p>
+            <p class="banner-item-description">{{ item.description }}</p>
+            <div class="banner-item-btn">
+              <span>了解更多</span>
+              <i class="el-icon-right"></i>
+            </div>
+          </div>
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -188,9 +198,7 @@
                     news.created_at
                   }}</span
                 >
-                <span class="news-tag">
-                  公司新闻
-                </span>
+                <span class="news-tag"> 公司新闻 </span>
               </div>
               <h3 class="news-title ellipsis-2">{{ news.title }}</h3>
               <p class="news-description ellipsis-2">{{ news.description }}</p>
