@@ -109,8 +109,14 @@
 
     <!-- 底部按钮 -->
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="handleSubmit" class="submit-button">
-        提交
+      <el-button 
+        type="primary" 
+        @click="handleSubmit" 
+        class="submit-button"
+        :loading="isSubmitting"
+        :disabled="isSubmitting"
+      >
+        {{ isSubmitting ? '提交中...' : '提交' }}
       </el-button>
     </div>
   </el-dialog>
@@ -141,6 +147,7 @@ export default {
       captchaInput: "",
       currentCaptchaCode: "",
       canvasContext: null,
+      isSubmitting: false, // 防抖标志位
     };
   },
   computed: {
@@ -210,6 +217,11 @@ export default {
       this.resetForm();
     },
     handleSubmit() {
+      // 防抖：如果正在提交，直接返回
+      if (this.isSubmitting) {
+        return;
+      }
+
       // 表单验证
       if (!this.formData.name) {
         this.$message.error("请输入联系人姓名");
@@ -247,6 +259,9 @@ export default {
         return;
       }
 
+      // 设置提交状态
+      this.isSubmitting = true;
+
       const submitData = {
         name: this.formData.name,
         mobile: this.formData.mobile,
@@ -254,8 +269,14 @@ export default {
         company: this.formData.company,
       };
 
+      // 触发提交事件
       this.$emit("submit", submitData);
-      this.handleClose();
+      
+      // 延迟恢复状态，确保提交事件已处理
+      setTimeout(() => {
+        this.isSubmitting = false;
+        this.handleClose();
+      }, 500);
     },
     resetForm() {
       this.formData = {

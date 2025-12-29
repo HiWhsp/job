@@ -20,9 +20,16 @@
             v-for="(item, index) in items"
             :key="index"
           >
-            <template v-if="item.producntInfos.thumb || (item.other && item.other.image)">
+            <template
+              v-if="
+                item.producntInfos.thumb || (item.other && item.other.image)
+              "
+            >
               <div class="content-box-list-item-content-img">
-                <img :src="item.producntInfos.thumb || item.other.image" alt="" />
+                <img
+                  :src="item.producntInfos.thumb || item.other.image"
+                  alt=""
+                />
               </div>
               <div class="content-box-info">
                 <div class="content-box-info-title">
@@ -32,7 +39,8 @@
                 </div>
                 <div class="content-box-info-content">
                   {{
-                    item.producntInfos.title != "其他" && !item.producntInfos.title.includes("定制")
+                    item.producntInfos.title != "其他" &&
+                    !item.producntInfos.title.includes("定制")
                       ? item.producntInfos.description
                       : item.other && item.other.notes
                       ? item.other.notes
@@ -167,6 +175,8 @@ export default {
       .content-box-list-item {
         margin-bottom: 10px;
         padding-bottom: 10px;
+        border-bottom: 1px solid #565656;
+
         .content-box-list-item-title {
           font-size: 10px;
           font-weight: 400;
@@ -178,7 +188,7 @@ export default {
           align-items: center;
           gap: 10px;
           padding: 10px 0;
-          border-bottom: 1px solid #565656;
+          // border-bottom: 1px solid #565656;
           .content-box-list-item-content-img {
             width: 35px;
             height: 35px;

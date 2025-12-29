@@ -1,11 +1,15 @@
 <template>
   <div class="components-list ai-components-list">
-    <div v-for="(item, index) in components" :key="index">
+    <div
+      v-for="(item, index) in components"
+      :key="index"
+      :class="{ 'component-item-container': firstIndex === 0 }"
+    >
       <div class="component-item-title">{{ item.title }}</div>
 
       <!-- 如果有子组件，递归渲染 -->
       <template v-if="item.child && item.child.length > 0">
-        <ComponentList :components="item.child" />
+        <ComponentList :components="item.child" :firstIndex="2" />
       </template>
 
       <!-- 如果有产品信息，渲染产品列表 -->
@@ -95,6 +99,10 @@ export default {
       type: Array,
       required: true,
       default: () => [],
+    },
+    firstIndex: {
+      type: Number,
+      default: 0,
     },
   },
 };
