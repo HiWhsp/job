@@ -2,9 +2,9 @@
   .page {
     padding-bottom: 80px;
     .main-title {
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 0 32px;
       text-align: left;
       height: 56px;
@@ -19,7 +19,7 @@
         min-width: 96px;
         height: 30px;
         line-height: 30px;
-        background: #F74747;
+        background: #009f39;
         color: #fff;
         font-size: 14px;
         font-weight: bold;
@@ -35,7 +35,9 @@
   }
 
   .step-box {
-    .flex-center();
+    display: flex;
+    justify-content: center;
+    align-items: center;
     align-items: flex-start;
     padding: 25px 0;
 
@@ -56,8 +58,8 @@
 
       .step-number {
         margin: 0 auto;
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
 
         .step-line {
           width: 147px;
@@ -83,7 +85,7 @@
           font-size: 20px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #999999;
+          color: #505050;
         }
       }
       .step-title {
@@ -126,8 +128,8 @@
 
     .other {
       //   display: flex;
-  align-items: center;
-  justify-content: space-between;
+      align-items: center;
+      justify-content: space-between;
       display: flex;
       flex-wrap: wrap;
       padding: 10px;
@@ -143,7 +145,7 @@
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: bold;
-          color: #999999;
+          color: #505050;
           color: #333;
           margin-bottom: 10px;
         }
@@ -169,11 +171,13 @@
   }
 
   .order-product {
+   
+    
   }
 
   .pingzheng-box {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     flex-wrap: wrap;
 
     .pingzheng-item {
@@ -181,5 +185,19 @@
       margin-bottom: 10px;
       margin-right: 10px;
     }
+  }
+
+  .order-info .info-heji{
+    font-size: 14px;
+  }
+  .order-info .zhifufangshi-wrap .zhifufangshi .pay-item{
+    font-size: 14px;
+  }
+  .order-info .order-list-wrap .info-good .list-good .goods-action .btn-goods-action{
+    height: 26px;
+    font-size: 12px;
+  }
+  .order-info .order-list-wrap .info-title .order-code{
+    padding: 0 5px;
   }
 }

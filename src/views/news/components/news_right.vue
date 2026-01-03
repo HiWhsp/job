@@ -149,7 +149,7 @@ export default {
             display: inline-block;
             width: 6px;
             height: 24px;
-            background: #F74747;
+            background: #7853B2;
             border-radius: 100px 100px 100px 100px;
         }
 
@@ -176,7 +176,7 @@ export default {
                     color: #000000;
 
                     &.active {
-                        background: #F74747;
+                        background: #7853B2;
                         color: #FFFFFF;
                     }
                 }
@@ -211,7 +211,7 @@ export default {
                     display: inline-block;
                     width: 6px;
                     height: 6px;
-                    background: #F74747;
+                    background: #7853B2;
                     border-radius: 0;
                 }
 
@@ -223,14 +223,14 @@ export default {
                     color: #282828;
 
                     &:hover {
-                        color: #F74747;
+                        color: #7853B2;
                     }
                 }
 
                 .date {
                     margin-top: 15px;
                     text-align: right;
-                    color: #999999;
+                    color: #505050;
                 }
             }
         }

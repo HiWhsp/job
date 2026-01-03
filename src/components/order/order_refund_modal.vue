@@ -4,7 +4,7 @@
       :visible.sync="show_modal" :before-close="onbeforeclose" @closed="onclosed">
       <div class="modal-inner">
         <div class="success-box">
-          <img src="@/static/common/success.png" alt="">
+          <img src="@img/common/success.png" alt="">
         </div>
         <div class="text-1">
           {{ vuex_config.comEmail }}
@@ -115,12 +115,12 @@ export default {
     height: 32px;
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    border: 1px solid #7853B2;
 
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
+    color: #7853B2;
 
     &+button {
       margin-left: 16px;
@@ -132,7 +132,7 @@ export default {
   .btn-2 {}
 
   .btn-bg {
-    background: #F74747;
+    background: #7853B2;
     color: #ffffff;
   }
 }
@@ -166,7 +166,7 @@ export default {
       font-family: Arial, Arial;
       font-weight: 400;
       font-size: 14px;
-      color: #999999;
+      color: #505050;
     }
   }
 }

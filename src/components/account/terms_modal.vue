@@ -1,7 +1,14 @@
 <template>
   <div class="modal-box">
-    <el-dialog custom-class="modal-terms" :title="info.title" width="780px" :close-on-click-modal="false"
-      :visible.sync="show" :before-close="onbeforeclose" :closed="onclosed">
+    <el-dialog
+      custom-class="modal-terms"
+      :title="info.title"
+      width="780px"
+      :close-on-click-modal="false"
+      :visible.sync="is_show"
+      :before-close="on_before_close"
+      @closed="on_closed"
+    >
       <div class="modal-inner">
         <!-- <div class="modal-title">{{ detail.title }}</div> -->
         <div class="modal-ctx">
@@ -10,14 +17,20 @@
           </div>
         </div>
         <div class="modal-footer">
-          <div class="left-check">
-            <label class="el-checkbox check-box" :class="{ checked: checked }" @click="checked = !checked">
-              <img src="@/static/common/check0.png" alt="" class="check-0" />
-              <img src="@/static/common/check1.png" alt="" class="check-1" />
-              <span>登录注册即表示您已阅读并同意上述内容</span>
-            </label>
+          <div
+            class="left-check check-box"
+            :class="{ checked: is_check }"
+            @click="is_check = !is_check"
+          >
+            <img src="@img/common/check0.png" alt="" class="check-0" />
+            <img src="@img/common/check1.png" alt="" class="check-1" />
+            <span>登录注册即表示您已阅读并同意上述内容</span>
           </div>
-          <button :disabled="!checked" class="btn-confirm fit-text btn-ripple" @click="show = false">
+          <button
+            :disabled="!is_check"
+            class="btn-confirm fit-text btn-ripple"
+            @click="is_show = false"
+          >
             确定
           </button>
         </div>
@@ -27,21 +40,17 @@
 </template>
 <script>
 export default {
-  name: "level_2_3",
+  name: "terms-modal",
   data() {
     return {
       info: {},
-      show: false,
-      checked: false,
-      mode: "",
+      is_show: false,
+      is_check: false,
     };
   },
   watch: {
-    show(val) {
+    is_show(val) {
       if (!val) {
-        this.info = {};
-        this.mode = "";
-
         document.querySelector("body").classList.remove("lock");
         document.querySelector("#app").classList.remove("lock");
       } else {
@@ -52,17 +61,18 @@ export default {
   },
 
   methods: {
-    onbeforeclose() {
-      this.show = false;
+    on_before_close() {
+      this.is_show = false;
     },
-    onclosed() {
-      this.info = {}
+    on_closed() {
+      console.log("关闭弹窗");
+      this.info = {};
     },
 
     init(id) {
       this.id = id;
       this.queryDetail();
-      this.show = true;
+      this.is_show = true;
     },
 
     queryDetail() {
@@ -72,7 +82,7 @@ export default {
         data: {
           action: "news_detail",
           id: this.id,
-        }
+        },
       }).then((res) => {
         let { code, data, msg } = res;
         if (code == 200) {
@@ -86,6 +96,10 @@ export default {
 
 <style lang="less" scoped>
 .check-box {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
   &.checked {
     .check-0 {
       display: none;
@@ -98,6 +112,7 @@ export default {
 
   img {
     width: 20px;
+    margin-right: 8px;
     &.check-0 {
       display: block;
     }
@@ -166,8 +181,6 @@ export default {
   border: 1px solid #ccc;
   overflow-y: auto;
   overflow-x: hidden;
-
-
 }
 
 .modal-footer {
@@ -212,19 +225,11 @@ export default {
   cursor: not-allowed;
 }
 
-.el-checkbox {
-  cursor: pointer;
-    display: flex;
-  align-items: center;
 
-  img {
-    margin-right: 5px;
-  }
-}
 
 .btn-confirm:not(:disabled) {
-  background: #F74747;
-  border-color: #F74747;
+  background: #7853B2;
+  border-color: #7853B2;
   color: #fff;
 }
 

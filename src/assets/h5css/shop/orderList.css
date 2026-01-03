@@ -1,0 +1,225 @@
+@media screen and (max-width: 1199px) {
+  .goods-sku {
+    margin: 15px 0;
+  }
+  .check-url span {
+    cursor: pointer;
+    display: inlin-block;
+    padding: 2px 4px;
+    background: coral;
+    color: #fff;
+  }
+  .order-list-wrap .info-item {
+    border: 1px solid #e5e5e5;
+    margin-bottom: 15px;
+  }
+  .order-list-wrap .info-title {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  .order-list-wrap .info-title .date {
+    font-size: 12px;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+  }
+  .order-list-wrap .info-title .order-code {
+    margin-top: 10px;
+    width: 100%;
+    flex: auto;
+    text-align: left;
+    padding-left: 0;
+    font-size: 12px;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+  }
+  .order-list-wrap .info-title .order-code span {
+    color: #333333;
+  }
+  .order-list-wrap .info-title .order-state {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    padding: 3px 6px;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #505050;
+    color: #009f39;
+  }
+  .order-list-wrap .info-title .order-state.state-2 {
+    color: #009f39;
+    border-color: #009f39;
+  }
+  .order-list-wrap .info-good .list-good .item-good {
+    padding: 10px;
+    border-bottom: 1px dashed #ccc;
+    display: flex;
+    align-items: center;
+  }
+  .order-list-wrap .info-good .list-good .item-good:last-child {
+    border: none;
+  }
+  .order-list-wrap .info-good .list-good .item-good .img-box {
+    width: 90px;
+    cursor: pointer;
+  }
+  .order-list-wrap .info-good .list-good .item-good .img-box img {
+    width: 80px;
+    height: 80px;
+  }
+  .order-list-wrap .info-good .list-good .item-good .title {
+    text-align: left;
+    padding-left: 0;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #333333;
+    flex: 2;
+  }
+  .order-list-wrap .info-good .list-good .item-good .title .goods-title {
+    width: fit-content;
+    cursor: pointer;
+  }
+  .order-list-wrap .info-good .list-good .item-good .title .goods-title:hover {
+    color: #009f39;
+  }
+  .order-list-wrap .info-good .list-good .item-good .num {
+    width: auto;
+    min-width: 20px;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #505050;
+  }
+  .order-list-wrap .info-good .list-good .item-good .price {
+    text-align: right;
+    min-width: 80px;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #333333;
+  }
+  .order-list-wrap .info-heji {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 10px;
+    border-top: 1px solid #e5e5e5;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #7d7d7d;
+  }
+  .order-list-wrap .info-heji .heji {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #333333;
+  }
+  .order-list-wrap .info-heji .heji .heji-num {
+    margin-right: 30px;
+  }
+  .order-list-wrap .info-heji .heji .heji-num b {
+    color: #009f39;
+  }
+  .order-list-wrap .info-heji .heji .heji-money b {
+    font-size: 14px;
+    color: #009f39;
+  }
+  .order-list-wrap .info-heji .btn-actions {
+    margin-top: 10px;
+    width: 100%;
+    text-align: right;
+  }
+  .order-list-wrap .info-heji .btn-actions button {
+    transition: 0.3s;
+    margin-left: 15px;
+    width: auto;
+    height: 26px;
+    padding: 0 10px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  .order-list-wrap .info-heji .btn-actions button:hover {
+    opacity: 0.7;
+  }
+  .order-list-wrap .info-heji .btn-actions .order-detail {
+    background: #fff;
+    border: 1px solid #cccccc;
+    font-size: 14px;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #7d7d7d;
+    border: 1px solid #009f39;
+    color: #009f39;
+  }
+  .order-list-wrap .info-heji .btn-actions .order-action {
+    background: #fff;
+    border: 1px solid #009f39;
+    font-size: 12px;
+    color: #009f39;
+  }
+  .order-list-wrap .info-heji .btn-actions .order-action.zhifu {
+    background: #009f39;
+    border-color: #009f39;
+    color: #fff;
+  }
+  .order-list-wrap .info-heji .btn-actions .order-action.shanchu {
+    background: #009f39;
+    border-color: #009f39;
+    color: #fff;
+  }
+   /deep/ .el-dialog {
+    width: 94% !important;
+  }
+   /deep/ .el-dialog .el-dialog__title {
+    font-size: 1.4rem;
+  }
+   /deep/ .el-dialog .el-dialog__body {
+    padding: 3.4rem 3rem 3.3rem;
+  }
+   /deep/ .el-dialog .el-dialog__body .text-box-1 {
+    font-size: 1.4rem;
+  }
+   /deep/ .el-dialog .el-dialog__body .text-1 {
+    font-size: 1.4rem;
+  }
+   /deep/ .el-dialog .el-dialog__body .text-2 {
+    font-size: 1.1rem;
+  }
+   /deep/ .el-dialog .el-dialog__body .success-box img {
+    width: 6rem;
+    height: 6rem;
+  }
+   /deep/ .el-dialog .el-dialog__footer {
+    padding-bottom: 3rem;
+  }
+   /deep/ .el-dialog .dialog-footer {
+    display: flex;
+  }
+   /deep/ .el-dialog .dialog-footer .btn {
+    height: 3rem;
+    font-size: 1rem;
+  }
+}

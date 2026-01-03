@@ -9,12 +9,12 @@
         <div class="comment-item" v-for="(item, index) in list_comment" :key="index">
           <div class="avatar-info">
             <div class="left">
-              <img :src="item.image || avatar_default" alt />
+              <img :src="item.image || vuex_avatar_default" alt />
               <span>{{ item.nickname }}</span>
             </div>
             <div class="right">
-              <el-rate v-model="item.star" disabled :colors="['#F74747', '#F74747', '#F74747']"
-                text-color="#F74747"></el-rate>
+              <el-rate v-model="item.star" disabled :colors="['#7853B2', '#7853B2', '#7853B2']"
+                text-color="#7853B2"></el-rate>
             </div>
           </div>
 
@@ -75,7 +75,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar"]),
+    ...mapState([""]),
   },
   created() {
     this.setView();
@@ -125,7 +125,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #7853B2;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -151,7 +151,9 @@ export default {
 
       .left {
         min-width: 127px;
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
 
         img {
           width: 60px;
@@ -216,7 +218,7 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         line-height: 19px;
-        color: #999999;
+        color: #505050;
       }
 
       .goods-info {

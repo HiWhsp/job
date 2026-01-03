@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="pay-info">
         <!-- 成功 -->
         <div class="img-box">
@@ -35,7 +35,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar"]),
+    ...mapState([""]),
   },
   watch: {
     address(val) {
@@ -98,11 +98,13 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 53px;
-      color: #999999;
+      color: #505050;
     }
     .bottom {
       margin-top: 60px;
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
       button {
         width: 170px;
         height: 40px;

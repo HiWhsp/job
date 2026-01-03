@@ -73,7 +73,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
 
     list_tab() {
       let arr = [
@@ -162,7 +162,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #7853B2;
       color: #fff;
       font-size: 14px;
     }
@@ -180,7 +180,7 @@ export default {
       margin-bottom: 10px;
       .tab-item {
         font-size: 16px;
-        color: #666666;
+        color: #1F1F1F;
         padding: 12px 0;
         margin-right: 50px;
         min-width: 70px;

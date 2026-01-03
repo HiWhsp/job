@@ -183,7 +183,7 @@ export default {
 
 <style scoped lang="less">
 .plus {
-  color: #F74747;
+  color: #7853B2;
   font-weight: bold;
 }
 .minus {
@@ -225,7 +225,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #7853B2;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -249,7 +249,9 @@ export default {
   padding-left: 40px;
   padding-left: 40px;
   flex-direction: column;
-  .flex-center();
+    display: flex;
+          justify-content: center;
+          align-items: center;
   align-items: flex-start;
 
   .text-box {
@@ -312,9 +314,9 @@ export default {
     color: #333333;
 
     &.active {
-      border-bottom: 3px solid #F74747;
+      border-bottom: 3px solid #7853B2;
       font-weight: bold;
-      color: #F74747;
+      color: #7853B2;
     }
   }
 }
@@ -337,7 +339,7 @@ export default {
     font-size: 14px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
-    color: #666666;
+    color: #1F1F1F;
 
     &:last-child {
     }
@@ -347,7 +349,7 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
       font-weight: bold;
-      color: #666666;
+      color: #1F1F1F;
     }
 
     .item-1 {
@@ -380,7 +382,7 @@ export default {
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #999999;
+          color: #505050;
         }
       }
     }

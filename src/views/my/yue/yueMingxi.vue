@@ -12,7 +12,7 @@
         <div class="text-box">
           <div class="text-1">我的余额</div>
           <div class="text-2">
-            {{ baseInfo.yue || 0 }}
+            {{ vuex_user.yue || 0 }}
             <span class="currency">元</span>
           </div>
           <div class="text-3">
@@ -133,7 +133,7 @@ export default {
     },
 
     setYuePass() {
-      this.$refs.balance_password_set_modal.init(this.baseInfo);
+      this.$refs.balance_password_set_modal.init(this.vuex_user);
     },
   },
 };
@@ -161,7 +161,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #7853B2;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -184,7 +184,9 @@ export default {
   padding-left: 40px;
   padding-left: 40px;
   flex-direction: column;
-  .flex-center();
+    display: flex;
+          justify-content: center;
+          align-items: center;
   align-items: flex-start;
 
   .text-box {
@@ -246,9 +248,9 @@ export default {
     color: #333333;
 
     &.active {
-      border-bottom: 3px solid #F74747;
+      border-bottom: 3px solid #7853B2;
       font-weight: bold;
-      color: #F74747;
+      color: #7853B2;
     }
   }
 }
@@ -282,11 +284,11 @@ export default {
       .mingxi-desc {
         margin: 10px 0;
         font-size: 14px;
-        color: #999999;
+        color: #505050;
       }
       .mingxi-date {
         font-size: 14px;
-        color: #999999;
+        color: #505050;
       }
     }
     .mingxi-value {
@@ -294,7 +296,7 @@ export default {
         font-size: 24px;
       }
       &.plus {
-        color: #F74747;
+        color: #7853B2;
       }
 
       &.minus {

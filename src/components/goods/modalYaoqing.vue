@@ -44,7 +44,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
 
     firstImage() {
       let src = "";

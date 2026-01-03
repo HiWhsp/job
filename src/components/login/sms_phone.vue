@@ -122,7 +122,7 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 24px;
-    color: #999999;
+    color: #505050;
     text-indent: 1em;
   }
 
@@ -149,7 +149,7 @@ export default {
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: #F74747;
+  color: #7853B2;
   font-size: 1.4rem;
 
   &.disabled {
@@ -184,7 +184,7 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 24px;
-      color: #999999;
+      color: #505050;
       text-indent: 1em;
     }
 
@@ -211,7 +211,7 @@ export default {
       display: flex;
   align-items: center;
     cursor: pointer;
-    color: #F74747;
+    color: #7853B2;
 
     &.disabled {
       color: #ccc;

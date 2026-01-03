@@ -17,7 +17,7 @@
             <!-- <div class="yue-box">
               <div class="text-box">
                 <div class="text-1">余额</div>
-                <div class="text-2">{{vuex_huobi}}{{ baseInfo.yue }}</div>
+                <div class="text-2">{{vuex_huobi}}{{ vuex_user.yue }}</div>
                 <div class="text-3">
                   <button @click="$router.push('/chongzhijilu')">充值记录</button>
                 </div>
@@ -46,14 +46,14 @@
               :class="{ checked: type == '微信' }"
               @click="type = '微信'"
             >
-              <img src="@/static/common/check0.png" alt="" class="img-check check-0" />
-              <img src="@/static/common/check1.png" alt="" class="img-check check-1" />
+              <img src="@img/common/check0.png" alt="" class="img-check check-0" />
+              <img src="@img/common/check1.png" alt="" class="img-check check-1" />
               <img src="@img/chongzhi-wx.png" alt="" class="img-marker" />
               <span>微信支付</span>
             </div>
             <!-- <div class="type-item" :class="{ checked: type == '支付宝' }" @click="type = '支付宝'">
-              <img src="@/static/common/check0.png" alt="" class="img-check check-0" />
-              <img src="@/static/common/check1.png" alt="" class="img-check check-1" />
+              <img src="@img/common/check0.png" alt="" class="img-check check-0" />
+              <img src="@img/common/check1.png" alt="" class="img-check check-1" />
               <img src="@img/chongzhi-zfb.png" alt="" class="img-marker" />
               <span>支付宝支付</span>
             </div> -->
@@ -92,7 +92,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
     select_chongzhi() {
       return this.list_chongzhi[this.select_chongzhi_index] || {};
     },
@@ -229,7 +229,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #7853B2;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -255,7 +255,9 @@ export default {
     height: 240px;
     background: url(~@img/yue/yue-bg.png) no-repeat center / cover;
     padding-left: 40px;
-    .flex-center();
+      display: flex;
+          justify-content: center;
+          align-items: center;
     flex-direction: column;
     align-items: flex-start;
 
@@ -304,7 +306,9 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   .item {
-    .flex-center();
+      display: flex;
+          justify-content: center;
+          align-items: center;
     cursor: pointer;
     justify-content: flex-start;
     margin-top: 20px;
@@ -356,7 +360,7 @@ export default {
   font-size: 14px;
   font-family: Microsoft YaHei-Regular, Microsoft YaHei;
   font-weight: 400;
-  color: #666666;
+  color: #1F1F1F;
   line-height: 28px;
 }
 
@@ -376,7 +380,9 @@ export default {
   .chongzhi-item {
     cursor: pointer;
     position: relative;
-    .flex-center();
+      display: flex;
+          justify-content: center;
+          align-items: center;
     flex-direction: column;
     margin-right: 31px;
     margin-bottom: 50px;
@@ -384,7 +390,7 @@ export default {
     height: 180px;
     border-radius: 12px;
 
-    border: 2px solid #F74747;
+    border: 2px solid #7853B2;
     border: 2px solid transparent;
     background: #f6f6f6;
     &:nth-child(3n) {
@@ -392,7 +398,7 @@ export default {
     }
 
     &.selected {
-      border: 2px solid #F74747;
+      border: 2px solid #7853B2;
     }
     .song-marker {
       position: absolute;
@@ -402,7 +408,7 @@ export default {
       height: 40px;
       line-height: 40px;
       text-align: center;
-      background: linear-gradient(61deg, #F74747 0%, #fe6927 100%);
+      background: linear-gradient(61deg, #7853B2 0%, #fe6927 100%);
       border-radius: 20px 0px 20px 0px;
       font-size: 18px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -414,14 +420,14 @@ export default {
       font-size: 42px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
       font-weight: bold;
-      color: #F74747;
+      color: #7853B2;
     }
     .tip {
       margin-top: 10px;
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #666666;
+      color: #1F1F1F;
     }
   }
 }
@@ -469,7 +475,7 @@ export default {
     height: 48px;
     line-height: 48px;
     background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
-    background: #F74747;
+    background: #7853B2;
     border-radius: 4px;
     font-size: 16px;
     font-family: PingFang SC;

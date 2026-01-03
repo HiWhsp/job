@@ -16,7 +16,7 @@
             <span class="label">手机号</span>
             <!-- <input type="text" placeholder="请输入手机号码" v-model="form.phone" /> -->
             <span class="val">
-              {{ baseInfo.phone }}
+              {{ vuex_user.phone }}
             </span>
           </div>
 
@@ -83,7 +83,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    // ...mapState([""]),
   },
   watch: {
     showModal(val) {
@@ -233,7 +233,7 @@ export default {
     text-align: left;
 
     .tip {
-      color: #F74747;
+      color: #7853B2;
       margin-bottom: 20px;
     }
   }
@@ -294,7 +294,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #F74747;
+  // background: #7853B2;
   background: #f7f7f7;
   text-align: left;
 
@@ -325,11 +325,11 @@ export default {
     font-size: 14px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
-    color: #F74747;
-    border: 1px solid #F74747;
+    color: #7853B2;
+    border: 1px solid #7853B2;
   }
   .queding {
-    background: #F74747;
+    background: #7853B2;
     color: #fff;
   }
 }
@@ -341,7 +341,7 @@ export default {
     display: flex;
   align-items: center;
   cursor: pointer;
-  color: #F74747;
+  color: #7853B2;
 
   &.disabled {
     color: #ccc;

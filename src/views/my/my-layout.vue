@@ -1,33 +1,45 @@
 <template>
   <div class="page-user-wrap">
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <page_breadcrumb :option="nav_option" />
 
       <div class="page-ctx">
         <div class="menu-wrap">
-          <div class="left-title">
-            个人中心
-          </div>
-          <div class="title-line">
-
-          </div>
+          <div class="left-title">个人中心</div>
+          <div class="title-line"></div>
           <div class="nav-wrap">
-            <div class="nav-group" v-for="(group, gindex) in page_menu" :key="gindex">
+            <div
+              class="nav-group"
+              v-for="(group, gindex) in page_menu"
+              :key="gindex"
+            >
               <div class="group-title-box flex">
                 <div class="icon-box">
-                  <img :src="group.icon" alt="">
+                  <img :src="group.icon" alt="" />
                 </div>
                 <div class="group-title">
                   {{ group.title }}
                 </div>
                 <div class="arrow-box">
-                  <img class="arrow-right" src="@img/my/arrow-right.png" alt="">
+                  <img
+                    class="arrow-right"
+                    src="@img/my/arrow-right.png"
+                    alt=""
+                  />
                   <!-- <img class="arrow-down" src="@img/my/arrow-down.png" alt=""> -->
                 </div>
               </div>
               <div class="sub-child" v-if="group.child && group.child.length">
-                <div class="sub-item" v-for="(item, index) in group.child" :key="index" @click="do_toggle_nav(item)">
-                  <div class="sub-title" :class="$route.name == item.route ? 'active' : ''">
+                <div
+                  class="sub-item"
+                  v-for="(item, index) in group.child"
+                  :key="index"
+                  @click="do_toggle_nav(item)"
+                >
+                  <div
+                    class="sub-title"
+                    :class="$route.name == item.route ? 'active' : ''"
+                  >
                     {{ item.title }}
                   </div>
                 </div>
@@ -44,7 +56,6 @@
                 {{ item.title }}
               </div>
             </div> -->
-
           </div>
         </div>
         <div class="view-wrap">
@@ -56,9 +67,9 @@
 </template>
 
 <script>
-import { SHOP_TYPE } from '@/config/env.js'
+import { SHOP_TYPE } from "@/config/env.js";
 
-import page_breadcrumb from '@/components/page/page-breadcrumb.vue'
+import page_breadcrumb from "@/views/layout/comps/page_breadcrumb.vue";
 
 import { mapState } from "vuex";
 
@@ -79,7 +90,7 @@ export default {
         {
           title: "订单管理",
           route: "",
-          icon: require('@img/my/nav-1.png'),
+          icon: require("@img/my/nav-1.png"),
           child: [
             {
               title: "我的订单",
@@ -89,13 +100,25 @@ export default {
               title: "我的售后",
               route: "refund-list",
             },
-          ]
+            {
+              title: "我的评价",
+              route: "my-review-list",
+            },
+          ],
         },
         {
           title: "我的活动",
           route: "",
-          icon: require('@img/my/nav-2.png'),
+          icon: require("@img/my/nav-2.png"),
           child: [
+            {
+              title: "我的充值",
+              route: "balance-list",
+            },
+            {
+              title: "我的兑换卡",
+              route: "card-list",
+            },
             {
               title: "我的收藏",
               route: "favorite-list",
@@ -104,12 +127,12 @@ export default {
               title: "我的足迹",
               route: "browse-history",
             },
-          ]
+          ],
         },
         {
           title: "个人资料",
           route: "",
-          icon: require('@img/my/nav-3.png'),
+          icon: require("@img/my/nav-3.png"),
           child: [
             {
               title: "地址管理",
@@ -127,95 +150,44 @@ export default {
               title: "修改密码",
               route: "change-password",
             },
-          ]
+          ],
         },
-        {
-          title: "其他",
-          route: "",
-          icon: require('@img/my/nav-3.png'),
-          child: [
-            {
-              title: "我的积分",
-              route: "points-record",
-            },
-            {
-              title: "我的优惠券",
-              route: "coupon-list",
-            },
-            {
-              title: "领券中心",
-              route: "coupon-center",
-            },
-
-          ]
-        },
-
         // {
-        //   title: "评价晒单",
-        //   route: "my-review-list",
-        // },
-
-        // {
-        //   title: "意见反馈",
-        //   route: "feedback",
-        // },
-        // {
-        //   title: "我的优惠券",
-        //   route: "myCoupon",
-        // },
-        // {
-        //   title: "领券中心",
-        //   route: "couponCenter",
-        // },
-        // {
-        //   title: "账户资金",
+        //   title: "其他",
         //   route: "",
-        // },
-        // {
-        //   title: "我的佣金",
-        //   route: "myCommission",
-        // },
-        // {
-        //   title: "我的业绩",
-        //   route: "myYeJi",
-        // },
-
-        // {
-        //   title: "我的团队",
-        //   route: "myTeam",
-        // },
-        // {
-        //   title: "分润统计",
-        //   route: "myFenRun",
-        // },
-        // {
-        //   title: "在线充值",
-        //   route: "yueChongzhi",
-        // },
-        // {
-        //   title: "余额明细",
-        //   route: "yueMingxi",
-        // },
-
-        // {
-        //   title: "积分商城",
-        //   route: "pointsMall",
+        //   icon: require('@img/my/nav-3.png'),
+        //   child: [
+        //     {
+        //       title: "我的积分",
+        //       route: "points-record",
+        //     },
+        //     {
+        //       title: "我的优惠券",
+        //       route: "coupon-list",
+        //     },
+        //     {
+        //       title: "领券中心",
+        //       route: "coupon-center",
+        //     },
+        //   ]
         // },
       ],
       activeRoute: "",
-      openeds: [
-        "order-list",
-      ],
+      openeds: ["order-list"],
     };
   },
   computed: {
     // ...mapState(["",]),
     nav_option() {
       let option = [
-        { route: '/my-index', title: '用户中心', title2: 'Personal Center' },
-        { route: '', title: this.$route.meta.title, title: this.$route.meta.title }
-      ]
-      return option
+        { route: "/my-index", title: "用户中心", title2: "Personal Center" },
+        {
+          route: "",
+          title: this.$route.meta.title,
+          title: this.$route.meta.title,
+        },
+      ];
+      return option;
     },
 
     page_menu() {
@@ -240,7 +212,7 @@ export default {
     // this.subArr = this.subNavArr[0];
   },
 
-  mounted() { },
+  mounted() {},
 
   methods: {
     do_toggle_nav(item) {
@@ -251,16 +223,13 @@ export default {
         this.$router.push("/" + item.route);
       }
     },
-
-
-
   },
 };
 </script>
 
 <style scoped lang="less">
 .page-user-wrap {
-  background: #F9FAFC;
+  background: #f9fafc;
   padding-top: 35px;
 
   .inner {
@@ -271,6 +240,7 @@ export default {
       padding-top: 30px;
       display: flex;
       justify-content: space-between;
+      align-items: flex-start;
     }
 
     .menu-wrap {
@@ -280,7 +250,6 @@ export default {
       background: #f9f9f9;
       background: #fff;
       padding-bottom: 20px;
-
 
       .left-title {
         padding: 18px 0;
@@ -294,21 +263,26 @@ export default {
       .title-line {
         margin: 0 auto;
         width: 196px;
-        background: #F0F0F0;
+        background: #f0f0f0;
         height: 1px;
       }
 
       .nav-wrap {
         .nav-group {
-
           // margin-bottom: 10px;
           &::after {
-            content: '';
+            content: "";
             display: inline-block;
             margin: 0 auto;
             width: 196px;
             height: 1px;
-            background: #F0F0F0;
+            background: #f0f0f0;
+          }
+
+          &:last-child {
+            &::after {
+              display: none;
+            }
           }
 
           .group-title-box {
@@ -336,7 +310,8 @@ export default {
             }
 
             .arrow-box {
-              img {}
+              img {
+              }
 
               .arrow-down {
                 width: 14.22px;
@@ -354,20 +329,18 @@ export default {
               cursor: pointer;
 
               .sub-title {
-
                 font-family: Microsoft YaHei, Microsoft YaHei;
                 font-weight: 400;
                 font-size: 14px;
-                color: #666666;
+                color: #1F1F1F;
 
                 &.active {
-                  color: #F74747;
+                  color: #009f39;
                 }
               }
             }
           }
         }
-
 
         .nav-item {
           overflow: hidden;
@@ -384,12 +357,11 @@ export default {
             font-size: 12px;
             color: #808080;
 
-
             &.link {
               margin-bottom: 16px;
 
               &:hover {
-                color: #F74747;
+                color: #009f39;
               }
             }
 
@@ -407,7 +379,7 @@ export default {
             &.active {
               // background: #ffffff;
               // background: #fffaf7;
-              color: #F74747;
+              color: #009f39;
 
               &:before {
                 // content: "";
@@ -416,7 +388,7 @@ export default {
                 // top: 0;
                 // bottom: 0;
                 // width: 3px;
-                // background-color: #F74747;
+                // background-color: #7853B2;
               }
             }
 
@@ -445,3 +417,4 @@ export default {
 </style>
 
 <style scoped lang="less" src="@/assets/h5css/user/index.less"></style>
+<style scoped lang="less" src="@/assets/h5css/page/shipei3.less"></style>

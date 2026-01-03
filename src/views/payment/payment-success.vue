@@ -1,11 +1,11 @@
 <template>
   <div class="page">
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="page-title">支付结果</div>
       <div class="pay-info">
         <div class="img-box">
-          <img v-if="payState == '支付成功' || payState == '提交成功'" src="@/static/payment/pay-succ.png" alt />
-          <img v-else src="@/static/payment/pay-fail.png" alt />
+          <img v-if="payState == '支付成功' || payState == '提交成功'" src="@img/payment/pay-succ.png" alt />
+          <img v-else src="@img/payment/pay-fail.png" alt />
         </div>
         <div class="text-1">{{ payState }}</div>
         <div class="text-2" v-if="payState == '提交成功'">
@@ -65,9 +65,9 @@ export default {
         let { code, data, msg } = res;
         if (code == 200) {
           this.info = data;
-          if (data.status_info == "待支付") {
+          if (data.statusInfo == "待支付") {
             this.payState = "支付失败";
-          } else if (data.status_info == "待审核") {
+          } else if (data.statusInfo == "待审核") {
             this.payState = "提交成功";
           } else {
             this.payState = "支付成功";
@@ -121,15 +121,15 @@ export default {
       font-family: Arial, Arial;
       font-weight: 400;
       font-size: 24px;
-      color: #000000;
+      color: #1F1F1F;
     }
 
     .text-2 {
       margin-top: 21px;
       font-family: Arial, Arial;
       font-weight: 400;
-      font-size: 14px;
-      color: #999999;
+      font-size: 16px;
+      color: #1F1F1F;
     }
 
     .btns {
@@ -140,14 +140,14 @@ export default {
         height: 45px;
         background: #FFFFFF;
         border-radius: 0px 0px 0px 0px;
-        border: 1px solid #F74747;
+        border: 1px solid #7853B2;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 17px;
-        color: #F74747;
+        color: #7853B2;
 
         &.btn-bg {
-          background: #F74747;
+          background: #7853B2;
           color: #FFFFFF;
         }
 

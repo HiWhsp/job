@@ -71,7 +71,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar"]),
+    ...mapState([""]),
   },
   created() {
     this.setView();
@@ -171,10 +171,10 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #7853B2;
       color: #fff;
       background: #fff;
-      color: #F74747;
+      color: #7853B2;
       font-size: 14px;
       // font-weight: bold;
 
@@ -224,7 +224,7 @@ export default {
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #666666;
+          color: #1F1F1F;
         }
       }
     }
@@ -244,7 +244,7 @@ export default {
           line-height: 30px;
           text-align: center;
           // background: rgba(255, 90, 0, 0.68);
-          background: #F74747;
+          background: #7853B2;
           font-size: 14px;
           color: #ffffff;
         }
@@ -255,7 +255,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 20px;
-        color: #F74747;
+        color: #7853B2;
 
         .action {
           margin-left: 20px;

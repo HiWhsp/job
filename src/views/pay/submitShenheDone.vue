@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <PopKefu ref="PopKefu"/>
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="pay-info">
         <!-- 成功 -->
         <div class="img-box">
@@ -38,7 +38,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar", 'kefu_weixin']),
+    ...mapState(['kefu_weixin']),
   },
   watch: {
     address(val) {
@@ -75,9 +75,7 @@ export default {
 
 
 <style scoped lang="less">
-/deep/ .order-list-wrap {
-  margin-top: 30px;
-}
+
 
 .page {
   text-align: center;
@@ -111,11 +109,13 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 53px;
-      color: #999999;
+      color: #505050;
     }
     .bottom {
       margin-top: 60px;
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
       button {
         width: 170px;
         height: 40px;

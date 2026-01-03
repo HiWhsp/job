@@ -23,10 +23,10 @@
                     <div class="info-item" v-for="(item, index) in fapiao_list" :key="index">
                         <div class="base-box flex-between">
                             <div class="date">{{ item.dtTime }}</div>
-                            <div class="order-code">
+                            <!-- <div class="order-code">
                                 订单号：
                                 <span>{{ item.orderId }}</span>
-                            </div>
+                            </div> -->
                             <div class="order-state"  >
                                 {{ item.cus_status }}
                             </div>
@@ -38,25 +38,26 @@
                                     :key="product_index">
                                     <div class="box-image cover" @click="mix_to_product(product_item)">
                                         <!-- <img :src="good.img" alt /> -->
-                                        <el-image :src="product_item.image">
+                                        <el-image :src="item.type==1?product_item.image:product_item.thumb">
                                             <div slot="error" class="image-slot">
-                                                <img :src="product_item.image" />
+                                                <img :src="item.type==1?product_item.image:product_item.thumb" />
                                             </div>
                                         </el-image>
                                     </div>
                                     <div class="box-title">
                                         <div class="product-title" @click="mix_to_product(product_item)">{{
-                                            product_item.title }}</div>
-                                        <div class="product-sku">{{ product_item.keyVals }}</div>
+                                             item.type==1?product_item.title:product_item.cardNo }}</div>
+                                        <div v-if="item.type==1" class="product-sku">{{ item.keyVals }}</div>
+                                        <div v-else class="product-sku">{{ item.type==2?'普通兑换卡':'商品兑换卡' }}</div>
                                     </div>
                                     <!-- <div class="box-sku">
                       <div class="product-sku">{{ product_item.keyVals }}</div>
                     </div> -->
-                                    <div class="box-price">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
-                                    <div class="box-num">
+                                    <div class="box-price" v-if="item.type==1">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
+                                    <div class="box-num" v-if="item.type==1">
                                         x {{ product_item.num }}
                                     </div>
-                                    <div class="box-subtotal">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
+                                    <div class="box-subtotal" v-if="item.type==1">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
 
                                 </div>
                             </div>
@@ -195,11 +196,18 @@ export default {
                     data.list.forEach((v) => {
                         v.cus_status = this.status_map[v.status]
                         try {
-                            v.products = JSON.parse(v.info)
+                            if(v.type==1){
+
+                                v.products = JSON.parse(v.info)
+                            }else{
+                                v.products = [JSON.parse(v.info)]
+                            }
                         } catch (error) {
                             v.products = []
                         }
                     });
+                    console.log(data.list);
+                    
                     this.fapiao_list = data.list;
                     this.count = data.count;
                 }
@@ -292,14 +300,14 @@ export default {
             margin-right: 40px;
 
             .number {
-                color: #F74747;
+                color: #7853B2;
             }
 
             &.active {
-                // background: #F74747;
+                // background: #7853B2;
                 // color: #fff;
                 font-weight: bold;
-                color: #F74747;
+                color: #7853B2;
 
                 &::after {
                     content: "";
@@ -308,7 +316,7 @@ export default {
                     left: 0;
                     right: 0;
                     height: 3px;
-                    background: #F74747;
+                    background: #7853B2;
                 }
             }
         }
@@ -415,8 +423,8 @@ export default {
             font-family: Microsoft YaHei;
             font-weight: 400;
             line-height: 20px;
-            color: #999999;
-            color: #F74747;
+            color: #505050;
+            color: #7853B2;
 
             // 待付款
             &.state--5 {
@@ -426,8 +434,8 @@ export default {
             }
 
             &.state-2 {
-                color: #F74747;
-                border-color: #F74747;
+                color: #7853B2;
+                border-color: #7853B2;
             }
         }
     }
@@ -480,7 +488,7 @@ export default {
                         cursor: pointer;
 
                         &:hover {
-                            color: #F74747;
+                            color: #7853B2;
                         }
                     }
 
@@ -562,13 +570,13 @@ export default {
                 margin-right: 30px;
 
                 b {
-                    color: #F74747;
+                    color: #7853B2;
                 }
             }
 
             .heji-money {
                 b {
-                    color: #F74747;
+                    color: #7853B2;
                 }
             }
         }
@@ -581,11 +589,11 @@ export default {
                 background: #FFFFFF;
                 border-radius: 50px 50px 50px 50px;
                 border-radius: 4px;
-                border: 1px solid #F74747;
+                border: 1px solid #7853B2;
                 font-family: Arial, Arial;
                 font-weight: 400;
                 font-size: 14px;
-                color: #F74747;
+                color: #7853B2;
 
                 &+button {
                     margin-left: 20px;
@@ -596,7 +604,7 @@ export default {
                 }
 
                 &.btn-bg {
-                    background: #F74747;
+                    background: #7853B2;
                     color: #FFFFFF;
                 }
             }
@@ -608,3 +616,4 @@ export default {
 <style scoped lang="less" src="@/assets/h5css/shop/order-list.less"></style>
 
 <style scoped lang="less" src="@/assets/h5css/shop/orderList.less"></style>
+<style scoped lang="less" src="@/assets/h5css/page/shipei3.less"></style>

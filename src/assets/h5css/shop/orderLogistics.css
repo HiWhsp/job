@@ -1,0 +1,333 @@
+@media screen and (max-width: 1199px) {
+  .page {
+    padding-bottom: 80px;
+  }
+  .page .main-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    text-align: left;
+    height: 56px;
+    line-height: 56px;
+    background: #ffffff;
+    font-size: 16px;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+  }
+  .page .main-title button {
+    min-width: 96px;
+    height: 30px;
+    line-height: 30px;
+    background: #7853B2;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .page .page-ctx {
+    margin-top: 24px;
+    padding: 24px 32px;
+    padding: 15px;
+    background: #fff;
+  }
+  .order-liucheng-box {
+    border-top: 1px solid #eee;
+    padding: 30px 70px 0;
+  }
+  .order-liucheng-box .state-box {
+    display: flex;
+    justify-content: space-between;
+  }
+  .order-liucheng-box .state-box .state-item {
+    display: flex;
+    align-items: center;
+  }
+  .order-liucheng-box .state-box .state-item .img-box img {
+    width: 70px;
+    height: 70px;
+  }
+  .order-liucheng-box .state-box .state-item .line-box {
+    margin-left: 6px;
+  }
+  .order-liucheng-box .state-box .state-item .line-box img {
+    width: 174px;
+  }
+  .order-liucheng-box .text-box {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    margin-left: -93px;
+    margin-right: -93px;
+  }
+  .order-liucheng-box .text-box .text-item {
+    flex: 1;
+    width: 115px;
+    text-align: center;
+    color: #999;
+  }
+  .section-danhao .section-title {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    text-align: left;
+    height: 44px;
+    line-height: 44px;
+    background: #f5f5f5;
+    border: 1px solid #e5e5e5;
+    font-size: 14px;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+  }
+  .section-danhao .section-title .code {
+    margin-left: 10px;
+  }
+  .section-goods .section-title {
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+    text-align: left;
+    height: 44px;
+    line-height: 44px;
+    background: #f5f5f5;
+    border: 1px solid #e5e5e5;
+    font-size: 14px;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+  }
+  .section-goods .section-title .code {
+    margin-left: 30px;
+  }
+  .real-wuliu {
+    min-height: 150px;
+    background: #f9f9f9;
+    margin: 15px auto;
+    padding: 10px;
+    text-align: left;
+  }
+  .real-wuliu .real-wuliu-inner {
+    border-left: 1px solid #ddd;
+    padding-left: 20px;
+    position: relative;
+  }
+  .real-wuliu .wuliu-item {
+    margin-bottom: 10px;
+    font-size: 12px;
+  }
+  .real-wuliu .wuliu-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    transform: translate(-50%, 8px);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ccc;
+  }
+  .real-wuliu .wuliu-item .wuliu-title {
+    color: #333;
+    margin-bottom: 5px;
+  }
+  .real-wuliu .wuliu-item .wuliu-time {
+    color: #999;
+  }
+  .real-wuliu .wuliu-item:last-child .wuliu-title {
+    color: coral;
+    font-weight: bold;
+  }
+  .real-wuliu .wuliu-item:last-child .wuliu-time {
+    color: coral;
+  }
+  .wuliu-info {
+    margin-bottom: 20px;
+    min-height: 186px;
+    background: #ffffff;
+    border: 1px solid #cccccc;
+  }
+  .wuliu-info .info-good .list-good .item {
+    border-bottom: 1px solid #ddd;
+  }
+  .wuliu-info .info-good .list-good .item:last-child {
+    border-bottom: none;
+  }
+  .wuliu-info .info-good .list-good .item-good {
+    padding: 20px;
+    border-bottom: 1px dashed #ccc;
+    display: flex;
+    align-items: center;
+  }
+  .wuliu-info .info-good .list-good .item-good:last-child {
+    border: none;
+  }
+  .wuliu-info .info-good .list-good .item-good .img-box {
+    width: 100px;
+  }
+  .wuliu-info .info-good .list-good .item-good .img-box img {
+    width: 100px;
+    height: 100px;
+  }
+  .wuliu-info .info-good .list-good .item-good .title {
+    text-align: left;
+    padding-left: 20px;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #333333;
+    flex: 2;
+  }
+  .wuliu-info .info-good .list-good .item-good .title .guige {
+    margin-top: 20px;
+  }
+  .wuliu-info .info-good .list-good .item-good .num {
+    width: 100px;
+    font-size: 16px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #505050;
+  }
+  .wuliu-info .info-good .list-good .item-good .price {
+    text-align: right;
+    width: 150px;
+    font-size: 16px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #333333;
+  }
+  .wuliu-info .info-good .list-good .goods-action {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px;
+  }
+  .wuliu-info .info-good .list-good .goods-action .btn-goods-action {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 10px;
+    min-width: 96px;
+    height: 30px;
+    background: #7853B2;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    color: #ffffff;
+    border-radius: 14px;
+    transition: 0.3s;
+  }
+  .wuliu-info .info-good .list-good .goods-action .btn-goods-action:hover {
+    opacity: 0.8;
+  }
+  .wuliu-info .info-good .list-good .goods-action .btn-goods-action.disabled {
+    background: #ccc;
+  }
+  .section-item {
+    min-height: 186px;
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+  }
+  .section-item .section-title {
+    text-align: left;
+    padding-left: 20px;
+    height: 44px;
+    line-height: 44px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+  }
+  .section-item .section-other {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 25px;
+  }
+  .section-item .section-other .item {
+    text-align: left;
+    flex: 1;
+  }
+  .section-item .section-other .item .item-title {
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+    line-height: 20px;
+    color: #333333;
+    margin-bottom: 20px;
+  }
+  .section-item .section-other .item .item-content {
+    min-height: 80px;
+    font-size: 14px;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    line-height: 1.7;
+    color: #333333;
+  }
+  .section-item .section-other .item .item-content > div {
+    margin-bottom: 5px;
+  }
+  .section-item .section-other .item .item-content > div span {
+    display: inline-block;
+  }
+  .order-other {
+    margin-bottom: 24px;
+    min-height: 156px;
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+  }
+  .order-other .title {
+    text-align: left;
+    padding-left: 10px;
+    height: 48px;
+    line-height: 48px;
+    background: #f9f9f9;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+  }
+  .order-other .other {
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 20px 25px;
+    padding: 10px;
+  }
+  .order-other .other .item {
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: left;
+    flex: 1;
+  }
+  .order-other .other .item .item-title {
+    font-size: 14px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #666;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .order-other .other .item .item-content {
+    min-height: 20px;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #666;
+  }
+  .order-other .other .item .item-content > div {
+    margin-bottom: 5px;
+  }
+  .order-other .other .item .item-content > div span {
+    display: inline-block;
+  }
+}

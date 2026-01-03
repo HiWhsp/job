@@ -1,6 +1,7 @@
 <template>
   <div class="page">
     <div class="page-title">
+      <img src="@img/my/nav-2.png" alt="" />
       <span>我的优惠券</span>
       <!-- <b @click="$router.push('/coupon')">领券中心</b> -->
     </div>
@@ -9,8 +10,13 @@
       <div class="inner">
         <div class="tab-wrap">
           <div class="tab-box">
-            <div class="tab-item" v-for="(item, index) in tabList" :key="index" @click="do_tab_toggle(item)"
-              :class="tabSelect.value == item.value ? 'active' : ''">
+            <div
+              class="tab-item"
+              v-for="(item, index) in tabList"
+              :key="index"
+              @click="do_tab_toggle(item)"
+              :class="tabSelect.value == item.value ? 'active' : ''"
+            >
               {{ item.title }}
             </div>
           </div>
@@ -48,37 +54,69 @@
             </div>
           </div> -->
 
+          <div class="coupon-grid">
+            <div
+              class="coupon-card"
+              :class="'state-' + item.status"
+              v-for="(item, index) in list_yhq"
+              :key="index"
+            >
+              <!-- 上方：优惠券价值区域 -->
+              <div class="coupon-top">
+                <div class="flex">
+                  <div class="coupon-value">
+                    <div class="currency">{{ vuex_huobi }}</div>
+                    <div class="amount">{{ item.jian }}</div>
+                  </div>
+                  <div class="coupon-condition">满{{ item.man }}元可用</div>
+                </div>
+                <div class="validity-period">
+                  有效期{{ item.startTime }}至{{ item.endTime }}
+                </div>
+              </div>
 
-          <div class="list-box">
-            <div class="item" :class="'state-' + item.status" v-for="(item, index) in list_yhq" :key="index">
-              <div class="info">
-                <div class="title">
-                  <span class="huobi">{{ vuex_huobi }} </span>
-                  <span class="num">{{ item.jian }}</span>
+              <!-- 下方：使用规则和按钮区域 -->
+              <div class="coupon-bottom">
+                <div class="usage-rules">
+                  <div class="rules-title">使用规则</div>
+                  <div class="rules-list">
+                    <div class="rule-item">1. 买部分品类活动商品</div>
+                    <div class="rule-item">2. 全平台可用</div>
+                    <div class="rule-item">3. 不可叠加</div>
+                  </div>
                 </div>
-                <div class="tiaojian">
-                  <!-- 使用条件： -->
-                  满{{ item.man }}可用
-                </div>
-                <div class="shijian">
-                  <!-- 有效时间： -->
-                  {{ item.startTime }}-{{ item.endTime }}
+                <div class="coupon-action">
+                  <button
+                  v-if="item.status == 0"
+                    class="use-btn"
+                    :disabled="item.status != 0"
+                    @click="do_coupon_use(item)"
+                  >
+                    立即使用
+                  </button>
                 </div>
               </div>
-              <div class="action">
-                <button :disabled="item.status != 0" @click="do_coupon_use(item)">立即使用</button>
-              </div>
-              <div class="guoqi">
-                <!-- <img v-if="item.status == 0" src="@img/coupon/jijiangguoqi.png" alt /> -->
-                <img v-if="item.status == 1" src="@img/coupon/yiguoqi.png" alt />
-                <img v-if="item.status == 2" src="@img/coupon/yishiyong.png" alt />
+
+              <!-- 状态标识 -->
+              <div class="status-overlay" v-if="item.status != 0">
+                <img
+                  v-if="item.status == 1"
+                  src="@img/coupon/yiguoqi.png"
+                  alt="已过期"
+                />
+                <img
+                  v-if="item.status == 2"
+                  src="@img/coupon/yishiyong.png"
+                  alt="已使用"
+                />
               </div>
             </div>
           </div>
 
-          <el-empty v-if="!list_yhq.length" description="暂无数据..."></el-empty>
-
-
+          <el-empty
+            v-if="!list_yhq.length"
+            description="暂无数据..."
+          ></el-empty>
         </div>
       </div>
     </div>
@@ -90,18 +128,17 @@ import { mapState } from "vuex";
 
 export default {
   name: "coupon-list",
-  components: {
-
-  },
+  components: {},
   data() {
     return {
       tabSelect: {
-        title: "未使用", value: 1
+        title: "待使用",
+        value: 1,
       },
       // 0全部 1未使用 2已使用 3已过期
       tabList: [
         // { title: "全部", status: 0 },
-        { title: "未使用", value: 1 },
+        { title: "待使用", value: 1 },
         { title: "已使用", value: 2 },
         { title: "已过期", value: 3 },
       ],
@@ -110,7 +147,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar"]),
+    ...mapState([""]),
   },
   watch: {},
   created() {
@@ -119,10 +156,10 @@ export default {
   methods: {
     setView() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'yhq_myList',
+          action: "yhq_myList",
           ...this.pagination,
           scene: this.tabSelect.value, //0全部 1未使用 2已使用 3已过期
         },
@@ -130,14 +167,14 @@ export default {
         if (res.code == 200) {
           let data = res.data;
           this.list_yhq = data.list;
-          this.count = data.count
+          this.count = data.count;
         }
       });
     },
     do_tab_toggle(item) {
       if (this.tabSelect.value != item.value) {
         this.list_yhq = [];
-        this.tabSelect = item
+        this.tabSelect = item;
         this.setView();
       }
     },
@@ -159,7 +196,7 @@ export default {
   .page-title {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+
     padding: 0 32px;
     text-align: left;
     height: 56px;
@@ -169,12 +206,16 @@ export default {
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
     color: #333333;
+    img {
+      width: 22px;
+      margin-right: 10px;
+    }
 
     button {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #7853b2;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -188,181 +229,238 @@ export default {
   background: #fff;
 }
 
-
-
-
 .inner {
   padding-bottom: 80px;
 }
 
 .tab-wrap {
-    position: relative;
-    margin-bottom: 30px;
+  position: relative;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .tab-box {
+    flex: 2;
     display: flex;
     align-items: center;
-    justify-content: space-between;
 
-    .tab-box {
-      flex: 2;
-      // border-bottom: 1px solid #eee;
-
-      display: flex;
-      align-items: center;
-
-      .tab-item {
-        cursor: pointer;
-        padding-bottom: 10px;
-        border-bottom: 3px solid transparent;
-        margin-right: 60px;
-
-        font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #333333;
-
-        &.active {
-          border-bottom: 3px solid #F74747;
-          font-weight: bold;
-          color: #F74747;
-        }
-      }
-    }
-
-    .lingquan {
-      position: absolute;
-      right: 0;
-      display: flex;
-      align-items: center;
+    .tab-item {
       cursor: pointer;
-      width: fit-content;
+      padding: 12px 24px;
+      margin-right: 0;
+      font-size: 16px;
+      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-weight: 400;
+      color: #1F1F1F;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s ease;
 
-      .coupon {
-        width: 25px;
+      &:hover {
+        color: #7853b2;
       }
 
-      .arrow {
-        width: 10px;
-        margin-left: 8px;
-      }
-
-      span {
-        margin-left: 10px;
-        font-size: 16px;
-        font-family: PingFang SC;
-        font-weight: 400;
-        line-height: 36px;
-        color: #333;
+      &.active {
+        color: #7853b2;
+        font-weight: 500;
+        border-bottom-color: #7853b2;
       }
     }
   }
 
-
-
-
-
-  .list-box {
+  .lingquan {
+    position: absolute;
+    right: 0;
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    cursor: pointer;
+    width: fit-content;
 
-    .item {
-      position: relative;
-      background: url(~@img/other/mycoupon-bg.png) center / cover no-repeat;
-      width: 238px;
-      height: 234px;
-      padding: 15px;
-      margin-right: 10px;
+    .coupon {
+      width: 25px;
+    }
+
+    .arrow {
+      width: 10px;
+      margin-left: 8px;
+    }
+
+    span {
+      margin-left: 10px;
+      font-size: 16px;
+      font-family: PingFang SC;
+      font-weight: 400;
+      line-height: 36px;
+      color: #333;
+    }
+  }
+}
+
+// 优惠券网格布局
+.coupon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+// 优惠券卡片样式
+.coupon-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;border: 1px solid #D6D6D6;
+border-radius: 4px 4px 4px 4px;
+  overflow: hidden; 
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  // 上方：优惠券价值区域
+  .coupon-top {
+    background: #f7efff;
+    padding: 20px;
+    color: #7853b2; 
+    border-radius: 3px 3px 0px 0px;
+
+    .coupon-value {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      margin-bottom: 8px;
+
+      .currency {
+        font-size: 24px;
+        font-weight: 500;
+        margin-right: 4px;
+      }
+
+      .amount {
+        font-size: 48px;
+        font-weight: bold;
+        line-height: 1;
+      }
+    }
+
+    .coupon-condition {
+      font-size: 14px;
+      margin-bottom: 8px;
+      opacity: 0.9;
+      line-height: 1.3;
+      margin-left: 25px;
+    }
+
+    .validity-period {
+      font-size: 12px;
+      opacity: 0.8;
+      line-height: 1.3;
+    }
+  }
+
+  // 下方：使用规则和按钮区域
+  .coupon-bottom {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    .usage-rules {
+      flex: 1;
       margin-bottom: 20px;
-      color: #fff;
 
-      &.state-2 {
-        background: url(~@img/coupon/bg-yishiyong.png) center / cover no-repeat;
+      .rules-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: #505050;
+        margin-bottom: 12px;
       }
 
-      &.state-3 {
-        background: url(~@img/coupon/bg-yiguoqi.png) center / cover no-repeat;
+      .rules-list {
+        .rule-item {
+          font-size: 12px;
+          color: #505050;
+          line-height: 1.6;
+          margin-bottom: 4px;
+        }
       }
+    }
 
-      &:nth-child(4n) {
-        margin-right: 0;
-      }
-
-      .info {
-        font-size: 12px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        line-height: 20px;
+    .coupon-action {
+      .use-btn {
+        width: 104px;
+        height: 32px;
+        background: #7853b2;
         color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
 
-        .title {
-          margin-top: 25px;
-
-          .huobi {
-            font-size: 24px;
-            font-family: Microsoft YaHei;
-            font-weight: 400;
-            line-height: 20px;
-            color: #ffffff;
-          }
-
-          .num {
-            font-size: 36px;
-            font-family: Microsoft YaHei;
-            font-weight: bold;
-            line-height: 20px;
-            color: #ffffff;
-          }
+        &:hover:not(:disabled) {
+          background: #6b46a3;
         }
 
-        .tiaojian {
-          margin: 20px 0 10px;
-        }
-
-        .shijian {}
-      }
-
-      .action {
-        margin-top: 43px;
-        text-align: center;
-
-        button {
-          width: 122px;
-          height: 34px;
-          border: 1px solid #ff3d00;
-          background: transparent;
-          font-size: 14px;
-          font-family: Microsoft YaHei;
-          font-weight: 400;
-          line-height: 20px;
-          color: #ff3d00;
-          border-radius: 17px;
-
-          // &:hover {
-          //   background: #ff3d00;
-          //   color: #fff;
-          // }
-
-          &:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-          }
-        }
-      }
-
-      .guoqi {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-
-        img {
-          width: 60px;
-          vertical-align: middle;
+        &:disabled {
+          background: #cccccc;
+          cursor: not-allowed;
+          opacity: 0.6;
         }
       }
     }
   }
 
+  // 状态覆盖层
+  .status-overlay {
+    position: absolute; 
+    right: 5px;
+    bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 10;
 
+    img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+    }
+  }
+
+   // 不同状态的样式
+   &.state-1 {
+     opacity: 0.6;
+     filter: grayscale(0.3);
+     .coupon-top{
+      background: #C2C2C2;
+      color: #fff;
+     }
+   }
+
+   &.state-2 {
+     opacity: 0.6;
+     filter: grayscale(0.3);
+     
+     .coupon-top {
+       background: #f5f5f5; /* 已使用状态：浅灰色背景 */
+       color: #505050; /* 已使用状态：灰色文字 */
+     }
+   }
+
+   &.state-3 {
+     opacity: 0.6;
+     filter: grayscale(0.3);
+     
+     .coupon-top {
+       background: #f5f5f5; /* 已过期状态：浅灰色背景 */
+       color: #505050; /* 已过期状态：灰色文字 */
+     }
+   }
+}
 
 .yhq-list {
   .yhq-item-box {
@@ -398,14 +496,14 @@ export default {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #7853b2;
         }
 
         .num {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #7853b2;
         }
       }
 
@@ -414,7 +512,7 @@ export default {
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
+        color: #505050;
         line-height: 28px;
       }
 
@@ -422,7 +520,7 @@ export default {
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
+        color: #505050;
         line-height: 28px;
       }
 
@@ -432,7 +530,7 @@ export default {
         button {
           width: 127px;
           height: 36px;
-          background: #F74747;
+          background: #7853b2;
           border-radius: 4px 4px 4px 4px;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;

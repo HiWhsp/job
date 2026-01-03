@@ -14,10 +14,10 @@
         </div>
 
         <div class="info-box">
-          <div class="text-1">Hi! {{ baseInfo.name }}</div>
+          <div class="text-1">Hi! {{ vuex_user.name }}</div>
           <div class="text-2">
             <span>
-              {{ baseInfo.name }}
+              {{ vuex_user.name }}
             </span>
           </div>
         </div>
@@ -79,16 +79,16 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar", "baseInfo"]),
+    ...mapState(["",]),
     userAvatar() {
-      return this.uploadImg || this.baseInfo.user_image;
+      return this.uploadImg || this.vuex_user.user_image;
     },
 
     curr_level() {
-      return this.baseInfo.curr_level || {};
+      return this.vuex_user.curr_level || {};
     },
     next_level() {
-      return this.baseInfo.next_level || {};
+      return this.vuex_user.next_level || {};
     },
 
     progress_style() {
@@ -105,20 +105,20 @@ export default {
     },
 
     level_id() {
-      return this.baseInfo.level_id;
+      return this.vuex_user.level_id;
     },
 
     role() {
-      return this.baseInfo.level_title;
+      return this.vuex_user.level_title;
     },
 
     progressInfo() {
       //数据 differ 是 还差多少 升级
-      let next_level = this.baseInfo.next_level || {};
+      let next_level = this.vuex_user.next_level || {};
       let percentage = (100 / 100).toFixed(0) + "%";
 
       let info = {
-        from: this.baseInfo.level,
+        from: this.vuex_user.level,
         to: next_level.title,
       };
       let list = [];
@@ -314,3 +314,5 @@ export default {
   }
 }
 </style>
+
+<style scoped lang="less" src="@/assets/h5css/page/shipei3.less"></style>

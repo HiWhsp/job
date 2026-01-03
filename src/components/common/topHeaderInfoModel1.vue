@@ -1,12 +1,12 @@
 <template>
   <div class="header-box">
-    <div class="header w-1200">
+    <div class="header w-1400">
       <!-- 没登录 -->
       <div class="left" v-if="!vuex_is_login">您好，欢迎您来本站购物!</div>
 
       <div class="left" v-if="vuex_is_login">
-        <span style="color: var(--main_color)" @click="$router.push('user')">{{
-          baseInfo.name
+        <span style="color: #f00" @click="$router.push('user')">{{
+          vuex_user.name
         }}</span
         >您好，欢迎您来本站购物!
 
@@ -67,9 +67,6 @@ export default {
   computed: {
     ...mapState([
       "config",
-      "vuex_is_login",
-      "baseInfo",
-      "shopcart_count",
       "navMap",
     ]),
     ...mapGetters(["cartListNum"]),
@@ -112,7 +109,7 @@ export default {
       }
     },
     logout() {
-      this.$store.commit("clear_loginInfo");
+      this.$store.commit("remove_vuex_user");
       // debugger
       if (this.$route.meta.requireAuth) {
         this.$router.push("/");
@@ -154,7 +151,7 @@ export default {
 
   .left {
     font-size: 13px;
-    color: #666666;
+    color: #1F1F1F;
     span {
       cursor: pointer;
     }
@@ -164,7 +161,7 @@ export default {
       color: #585858;
 
       &:hover {
-        color: var(--main_color);
+        color: #f00;
       }
     }
     .register {
@@ -173,7 +170,7 @@ export default {
       color: #585858;
 
       &:hover {
-        color: var(--main_color);
+        color: #f00;
       }
     }
     span {
@@ -181,7 +178,7 @@ export default {
     }
     a {
       font-size: 13px;
-      color: var(--main_color);
+      color: #f00;
       margin: 0 5px;
     }
   }
@@ -202,13 +199,13 @@ export default {
       color: #101000;
     }
     .redActive {
-      color: var(--main_color);
+      color: #f00;
     }
     .phone {
       display: flex;
       align-items: center;
       font-size: 18px;
-      color: var(--main_color);
+      color: #f00;
       margin-left: 15px;
       img {
         margin-right: 5px;
@@ -220,7 +217,7 @@ export default {
   margin-left: 5px;
   cursor: pointer;
   &:hover {
-    color: var(--main_color);
+    color: #f00;
   }
 }
 
@@ -231,7 +228,7 @@ export default {
   }
   &:hover {
     b {
-      color: var(--main_color);
+      color: #f00;
     }
   }
 }

@@ -100,7 +100,7 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 24px;
-    color: #999999;
+    color: #505050;
   }
   input {
     flex: 2;

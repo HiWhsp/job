@@ -10,7 +10,7 @@
           <div class="info-box">
             <div class="number">
               <span>{{vuex_huobi}}</span>
-              <b>{{ baseInfo.order_price }}</b>
+              <b>{{ vuex_user.order_price }}</b>
             </div>
             <div class="text">当月团队新增业绩</div>
           </div>
@@ -120,7 +120,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   created() {
     this.init();
@@ -264,7 +264,9 @@ export default {
       }
 
       .info-box {
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
         flex-direction: column;
         position: absolute;
         z-index: 100;
@@ -297,7 +299,7 @@ export default {
       margin-bottom: 30px;
       .tab-item {
         font-size: 16px;
-        color: #666666;
+        color: #1F1F1F;
         padding-bottom: 12px;
         margin-right: 50px;
         min-width: 70px;
@@ -444,9 +446,9 @@ export default {
             margin-top: 20px;
             text-align: right;
             a {
-              border: 1px solid #F74747;
+              border: 1px solid #7853B2;
               padding: 3px 8px;
-              color: #F74747;
+              color: #7853B2;
             }
           }
         }

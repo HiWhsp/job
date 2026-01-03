@@ -1,42 +1,65 @@
 <template>
   <div class="page">
-    <div class="inner w-1200">
-      <div class="page-title flex-between" v-if="false">
+    <div class="inner w-1400">
+      <!-- <div class="page-title flex-between" v-if="false">
         <div class="left">
           <span>提交订单</span>
         </div>
-      </div>
+      </div> -->
       <div class="page-ctx">
-        <div class="section sec-addr">
-          <div class="section-title">选择收货人地址</div>
-          <div class="section-ctx">
-            <div class="address-list">
-              <div class="address-item" v-for="(item, index) in list_address" :key="index"
-                :class="{ active: item.id == address_selected.id }" @click="do_toggle_address(item)">
+        <div class="sec-addr">
+          <div class="sec-title">选择收货人地址</div>
+          <div class="sec-ctx">
+            <div class="address-list" v-if="address_list.length">
+              <div
+                class="address-item"
+                v-for="(item, index) in address_list"
+                :key="index"
+                :class="{ active: item.id == address_select.id }"
+                @click="do_toggle_address(item)"
+              >
                 <div class="address-top">{{ item.name_phone }}</div>
                 <div class="address-bottom">
                   {{ item.full_addr }}
                 </div>
-                <img src="@/static/order/addr-select.png" alt="" class="marker" />
+                <img src="@img/order/addr-select.png" alt="" class="marker" />
               </div>
             </div>
-            <div class="btn-box">
-              <button class="btn-ripple" @click="open_addr_add()">使用新地址</button>
+            <div class="addr-add">
+              <div class="empty-title" v-if="!address_list.length">
+                还没有收件地址
+              </div>
+              <button class="btn btn-ripple" @click="open_addr_add()">
+                + 新增地址
+              </button>
             </div>
           </div>
         </div>
 
-
-        <div class="section section-pay">
-          <div class="section-title">支付和配送信息</div>
-          <div class="section-ctx section-ctx-type">
+        <div class="sec-pay">
+          <div class="sec-title">支付信息</div>
+          <div class="sec-ctx sec-ctx-type">
             <div class="pay-group">
-              <!-- <div class="title">支付方式：</div> -->
+              <div class="title">支付方式：</div>
               <div class="pay-items">
-                <div class="item" v-for="(item, index) in pay_method_list" @click="do_toggle_paytype(item)"
-                  :class="{ checked: pay_type_value == item.value }">
-                  <img class="img-check check-0 check-img check-img-0" src="@/static/common/check0.png" alt="" />
-                  <img class="img-check check-1 check-img check-img-1" src="@/static/common/check1.png" alt="" />
+                <div
+                  class="item"
+                  v-for="(item, index) in pay_method_list"
+                  v-show="item.show"
+                  :key="index"
+                  @click="do_toggle_paytype(item)"
+                  :class="{ checked: pay_type_value == item.value }"
+                >
+                  <img
+                    class="img-check check-0 check-img check-img-0"
+                    src="@img/common/check0.png"
+                    alt=""
+                  />
+                  <img
+                    class="img-check check-1 check-img check-img-1"
+                    src="@img/common/check1.png"
+                    alt=""
+                  />
                   <img class="marker-img" :src="item.icon" alt="" />
                   <span>{{ item.title }}</span>
                 </div>
@@ -48,9 +71,23 @@
                 <div class="info-label">可用余额：</div>
                 <div class="info-val">{{ total_balance }}</div>
               </div>
-              <div class="info-item" v-if="total_balance < this.real_payment_money">
+              <div
+                class="info-item"
+                v-if="total_balance < this.real_payment_money"
+              >
                 <div class="info-label yue-warn-tip">
                   提示：您的余额不足，请选择其他支付方式
+                </div>
+              </div>
+            </div>
+            <div class="yue-info" v-if="payType == '兑换卡支付'">
+              <div class="info-item">
+                <div class="info-label">卡余额：</div>
+                <div class="info-val">{{ userCard }}</div>
+              </div>
+              <div class="info-item" v-if="userCard == 0">
+                <div class="info-label yue-warn-tip">
+                  提示：您的兑换卡余额不足，请选择其他支付方式
                 </div>
               </div>
             </div>
@@ -72,10 +109,19 @@
               <div class="info-item scroll-target-pingzheng">
                 <div class="info-label">转账凭证:</div>
                 <div class="info-val">
-                  <el-upload class="upload-demo" list-type="picture-card" multiple accept="image/*"
-                    :limit="upload_limit_number" :name="upload_col_name" :action="mix_upload_action"
-                    :data="mix_upload_data" :on-success="uploadSuccess_pingjia" :before-upload="beforeUpload_pingjia"
-                    :on-preview="handlePictureCardPreview">
+                  <el-upload
+                    class="upload-demo"
+                    list-type="picture-card"
+                    multiple
+                    accept="image/*"
+                    :limit="upload_limit_number"
+                    :name="upload_col_name"
+                    :action="mix_upload_action"
+                    :data="mix_upload_data"
+                    :on-success="uploadSuccess_pingjia"
+                    :before-upload="beforeUpload_pingjia"
+                    :on-preview="handlePictureCardPreview"
+                  >
                     <i class="el-icon-plus"></i>
 
                     <!-- <div class="el-upload__tip" slot="tip">
@@ -90,96 +136,173 @@
                 </div>
               </div>
             </div>
-
-            <!-- <div class="pay-group" style="margin-top: 32px">
-            <div class="title">配送方式：</div>
-            <div class="peisong-items">
-              <div class="item">快递配送</div>
-            </div>
-          </div> -->
           </div>
         </div>
-
 
         <!-- 发票信息 -->
-        <div class="section invoiceBox">
-          <div class="section-title">发票信息</div>
-          <div class="fill40"></div>
-          <div class="invoiceLineBox">
-            <div class="title">是否开票:</div>
-            <div class="flexBox">
-              <div @click="invoiceSwitch(0)" class="inItem btn-ripple" :class="{ active: invoicType == 0 }">不开票
+        <div class="sec-fapiao">
+          <div class="sec-title">发票信息</div>
+          <div class="fapiao-info">
+            <div class="main-title">是否开票:</div>
+            <div class="type-list">
+              <div
+                class="type-item"
+                :class="{ active: fapiao_info.invoicType == '' }"
+                @click="do_fapiao_type('')"
+              >
+                不开票
               </div>
-              <div @click="invoiceSwitch(1)" class="inItem btn-ripple" :class="{ active: invoicType == 1 }">普通发票
+              <div
+                class="type-item"
+                :class="{ active: fapiao_info.invoicType == 1 }"
+                @click="do_fapiao_type(1)"
+              >
+                普通发票
               </div>
-              <div @click="invoiceSwitch(2)" class="inItem btn-ripple" :class="{ active: invoicType == 2 }">专用发票
+              <div
+                class="type-item"
+                :class="{ active: fapiao_info.invoicType == 2 }"
+                @click="do_fapiao_type(2)"
+              >
+                专用发票
               </div>
             </div>
           </div>
-          <!-- 普通发票 -->
-          <el-form ref="invoiceForm" v-if="invoicType == 1" class="invoiceForm" label-position="right"
-            label-width="120px">
-            <el-form-item label="发票抬头类型:" prop="radio">
-              <el-radio-group v-model="invoiceForm.radio">
-                <el-radio label="1">个人</el-radio>
-                <el-radio label="2">企业</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="发票抬头:" prop="input">
-              <el-input v-model="invoiceForm.input" placeholder="请填写准确的抬头名称"></el-input>
-            </el-form-item>
-            <el-form-item label="纳税人识别号:" prop="input3" v-if="invoiceForm.radio == 2">
-              <el-input v-model="invoiceForm.input3" placeholder="请填写纳税人识别号"></el-input>
-            </el-form-item>
-            <!-- <el-form-item label="电子邮箱:" prop="input2">
-										<el-input v-model="invoiceForm.input2" placeholder="请填写电子邮箱，用于接收电子发票"></el-input>
-									</el-form-item> -->
-          </el-form>
 
-          <!-- 专用发票 -->
-          <el-form ref="invoiceForm2" v-if="invoicType == 2" class="invoiceForm2" label-position="right"
-            label-width="120px">
-            <el-form-item label="发票抬头:" prop="input">
-              <el-input v-model="invoiceForm2.input" placeholder="请填写准确的抬头名称"></el-input>
-            </el-form-item>
-            <el-form-item label="纳税人识别号:" prop="input2">
-              <el-input v-model="invoiceForm2.input2" placeholder="请填写准确的纳税人识别号"></el-input>
-            </el-form-item>
-            <el-form-item label="注册地址:" prop="input3">
-              <el-input v-model="invoiceForm2.input3" placeholder="请输入单位注册地址"></el-input>
-            </el-form-item>
-            <el-form-item label="注册电话:" prop="input4">
-              <el-input v-model="invoiceForm2.input4" placeholder="请输入单位注册电话"></el-input>
-            </el-form-item>
-            <el-form-item label="开户银行:" prop="input5">
-              <el-input v-model="invoiceForm2.input5" placeholder="请输入开户银行"></el-input>
-            </el-form-item>
-            <el-form-item label="银行账户:" prop="input6">
-              <el-input v-model="invoiceForm2.input6" placeholder="请输入银行账户"></el-input>
-            </el-form-item>
-            <!-- <el-form-item label="邮箱:" prop="input7">
-										<el-input v-model="invoiceForm2.input7" placeholder="请输入邮箱"></el-input>
-									</el-form-item> -->
-          </el-form>
+          <div
+            class="fapiao-box"
+            data-title="普通发票"
+            v-if="fapiao_info.invoicType == 1"
+          >
+            <div class="input-box">
+              <div class="label">发票抬头类型:</div>
+              <div class="val-box">
+                <el-radio-group v-model="fapiao_info.titleType">
+                  <el-radio :label="1">个人</el-radio>
+                  <el-radio :label="2">企业</el-radio>
+                </el-radio-group>
+              </div>
+            </div>
+            <div class="input-box">
+              <div class="label">发票抬头:</div>
+              <div class="val-box">
+                <el-input
+                  clearable
+                  v-model="fapiao_info.title"
+                  placeholder="请填写准确的抬头名称"
+                ></el-input>
+              </div>
+            </div>
+            <div class="input-box" v-if="fapiao_info.titleType == 2">
+              <div class="label">纳税人识别号:</div>
+              <div class="val-box">
+                <el-input
+                  clearable
+                  v-model="fapiao_info.shibiema"
+                  placeholder="请填写纳税人识别号"
+                ></el-input>
+              </div>
+            </div>
+            <div class="input-box">
+              <div class="label">电子邮箱:</div>
+              <div class="val-box">
+                <el-input
+                  clearable
+                  v-model="fapiao_info.email"
+                  placeholder="请填写电子邮箱,用于接收电子发票"
+                ></el-input>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="fapiao-box"
+            data-title="专用发票"
+            v-if="fapiao_info.invoicType == 2"
+          >
+            <div class="input-box">
+              <div class="label">发票抬头:</div>
+              <div class="val-box">
+                <el-input
+                  clearable
+                  v-model="fapiao_info.title"
+                  placeholder="请填写准确的抬头名称"
+                ></el-input>
+              </div>
+            </div>
+            <div class="input-box">
+              <div class="label">纳税人识别号:</div>
+              <div class="val-box">
+                <el-input
+                  clearable
+                  v-model="fapiao_info.shibiema"
+                  placeholder="请填写准确的纳税人识别号"
+                ></el-input>
+              </div>
+            </div>
+            <div class="input-box">
+              <div class="label">注册地址:</div>
+              <div class="val-box">
+                <el-input
+                  clearable
+                  v-model="fapiao_info.companyAddress"
+                  placeholder="请输入单位注册地址"
+                ></el-input>
+              </div>
+            </div>
+            <div class="input-box">
+              <div class="label">注册电话:</div>
+              <div class="val-box">
+                <el-input
+                  clearable
+                  v-model="fapiao_info.companyPhone"
+                  placeholder="请输入单位注册电话"
+                ></el-input>
+              </div>
+            </div>
+            <div class="input-box">
+              <div class="label">开户银行:</div>
+              <div class="val-box">
+                <el-input
+                  clearable
+                  v-model="fapiao_info.bankName"
+                  placeholder="请输入开户银行"
+                ></el-input>
+              </div>
+            </div>
+            <div class="input-box">
+              <div class="label">银行账户:</div>
+              <div class="val-box">
+                <el-input
+                  clearable
+                  v-model="fapiao_info.bankNo"
+                  placeholder="请输入银行账户"
+                ></el-input>
+              </div>
+            </div>
+          </div>
         </div>
 
-
-
-        <!-- 收货人地址 -->
         <div class="type-select" v-if="false">
           <div class="type-title">
             <div class="text">配送方式</div>
           </div>
           <div class="type-inner">
-            <div class="select-1">
+            <!-- <div class="select-1">
               <div class="title">配送方式</div>
               <div class="list">
-                <button class="item" :class="peisong_type == item ? 'active' : ''" v-for="(item, index) in opts_peisong"
-                  :key="index" @click="peisong_toggle(item)">
+                <button
+                  class="item"
+                  :class="peisong_type == item ? 'active' : ''"
+                  v-for="(item, index) in peisong_list"
+                  :key="index"
+                  @click="peisong_toggle(item)"
+                >
                   {{ item }}
                 </button>
               </div>
-            </div>
+            </div> -->
+
             <!-- <div class="ziti-box" v-if="peisong_type == '上门自提'">
             <div class="title">厂家信息</div>
             <div class="ziti-info">地址：{{ vuex_config.com_address }}</div>
@@ -199,11 +322,9 @@
           </div>
         </div>
 
-
-
-        <div class="section section-product">
-          <div class="section-title">订单商品</div>
-          <div class="section-ctx" style="padding-top: 24px;">
+        <div class="sec sec-product">
+          <div class="sec-title">订单商品</div>
+          <div class="sec-ctx" style="padding-top: 24px">
             <div class="goods-list">
               <!-- <div class="title">订单商品</div> -->
               <div class="list">
@@ -211,16 +332,20 @@
                   <!-- 标题 -->
                   <div class="list-title flex">
                     <div class="box-title">
-                      <div class="title-text">产品标题</div>
+                      <div class="title-text">商品</div>
                     </div>
-                    <div class="box-sku">规格</div>
-                    <div class="box-unit">价格</div>
+                    <!-- <div class="box-sku">规格</div> -->
+                    <div class="box-unit">单价</div>
                     <div class="box-num">数量</div>
-                    <div class="box-subtitle">小计</div>
+                    <div class="box-subtitle">金额</div>
                   </div>
 
                   <!-- 商品列表 -->
-                  <div class="item" v-for="(item, index) in payment_products" :key="index">
+                  <div
+                    class="item"
+                    v-for="(item, index) in payment_products"
+                    :key="index"
+                  >
                     <div class="item-detail flex">
                       <div class="box-title flex">
                         <div class="poster-box">
@@ -234,44 +359,63 @@
                           {{ item.title }}
                         </div>
                       </div>
-                      <div class="box-sku">
+                      <!-- <div class="box-sku">
                         {{ item.keyVals }}
+                      </div> -->
+                      <div class="box-unit">
+                        {{ vuex_huobi }} {{ item.priceSale }}
                       </div>
-                      <div class="box-unit">{{ vuex_huobi }} {{ item.priceSale }}</div>
                       <div class="box-num">{{ item.num }}</div>
                       <div class="box-subtitle">
-                        {{ vuex_huobi }} {{ (item.priceSale * item.num).toFixed(2) }}
+                        {{ vuex_huobi }}
+                        {{ (item.priceSale * item.num).toFixed(2) }}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div class="order-action">
+              <div class="order-action" v-if="false">
                 <div class="order-action-inner">
-                  <div class="section-item" v-if="list_coupon.length">
-                    <div class="sub-title" @click="showCoupon = !showCoupon" :class="{ 'expand-0': !showCoupon }">
+                  <div class="sec-item" v-if="list_coupon.length">
+                    <div
+                      class="sub-title"
+                      @click="showCoupon = !showCoupon"
+                      :class="{ 'expand-0': !showCoupon }"
+                    >
                       <div class="text">使用优惠</div>
-                      <img src="@/static/common/pay-arrow-top.png" alt="" />
+                      <img src="@img/common/pay-arrow-top.png" alt="" />
                     </div>
-                    <!-- <div class="section-input">
+                    <!-- <div class="sec-input">
                     <el-select v-model="coupon_select_id" placeholder="请选择优惠券">
                       <el-option v-for="item in list_coupon" :key="item.id" :label="`${item.title} 【${item.miaoshu}】`" :value="item.id"> </el-option>
                     </el-select>
                   </div> -->
 
                     <div class="yhq-list" v-if="showCoupon">
-                      <div class="yhq-item" v-for="(item, index) in list_coupon" :key="index"
-                        :class="{ active: coupon_select_id == item.id }" @click="handleCouponSelect(item)">
-                        <img src="@/static/address/dizhi-check-1.png" alt="" class="marker" />
+                      <div
+                        class="yhq-item"
+                        v-for="(item, index) in list_coupon"
+                        :key="index"
+                        :class="{ active: coupon_select_id == item.id }"
+                        @click="handleCouponSelect(item)"
+                      >
+                        <img
+                          src="@img/address/dizhi-check-1.png"
+                          alt=""
+                          class="marker"
+                        />
 
                         <div class="yhq-top">
                           <div class="yhq-1">
-                            <div class="text-1">{{ vuex_huobi }}{{ +item.jian }}</div>
+                            <div class="text-1">
+                              {{ vuex_huobi }}{{ +item.jian }}
+                            </div>
                             <div class="text-2">满{{ +item.man }}</div>
                           </div>
                           <div class="yhq-2">
-                            有效期至 {{ item.endTime && item.endTime.substr(0, 10) }}
+                            有效期至
+                            {{ item.endTime && item.endTime.substr(0, 10) }}
                           </div>
                         </div>
                         <div class="yhq-bottom">
@@ -283,83 +427,299 @@
                     <div class="yhq-select-info">
                       <b>金额抵用</b>
                       <template v-if="coupon_select.id">
-                        <b class="number">{{ vuex_huobi }}{{ +coupon_select.jian }}</b>, 使用【{{ coupon_select.title
-                        }}】优惠券
-                        1张，优惠
+                        <b class="number"
+                          >{{ vuex_huobi }}{{ +coupon_select.jian }}</b
+                        >, 使用【{{ coupon_select.title }}】优惠券 1张，优惠
                         {{ +coupon_select.jian }} 元
                       </template>
                       <template v-else> 无 </template>
                     </div>
                   </div>
 
-                  <div class="section-item" v-if="false">
+                  <div class="sec-item" v-if="false">
                     <div class="sub-title">使用积分</div>
-                    <div class="section-tip" v-if="jifen_pay.jifen">
-                      可用积分：{{ +baseInfo.jifen || 0 }}, 本单最多可用
-                      {{ jifen_pay.jifen }} 积分抵扣 {{ currency }}{{ jifen_pay.money }}
+                    <div class="sec-tip" v-if="jifen_pay.jifen">
+                      可用积分：{{ +vuex_user.jifen || 0 }}, 本单最多可用
+                      {{ jifen_pay.jifen }} 积分抵扣 {{ currency
+                      }}{{ jifen_pay.money }}
                     </div>
-                    <div class="section-tip" v-else>当前没有可抵扣的积分</div>
+                    <div class="sec-tip" v-else>当前没有可抵扣的积分</div>
 
-                    <div class="section-btn-actions">
-                      <button class="btn" :class="{ active: if_use_jifen }" @click="if_use_jifen = true">
+                    <div class="sec-btn-actions">
+                      <button
+                        class="btn"
+                        :class="{ active: if_use_jifen }"
+                        @click="if_use_jifen = true"
+                      >
                         使用积分
                       </button>
-                      <button class="btn" :class="{ active: !if_use_jifen }" @click="if_use_jifen = false">
+                      <button
+                        class="btn"
+                        :class="{ active: !if_use_jifen }"
+                        @click="if_use_jifen = false"
+                      >
                         不使用积分
                       </button>
                     </div>
                     <div class="use-jifen-num">
                       本单将扣减积分 <b>{{ use_jifen_num }}</b>
                     </div>
-                    <!-- <div class="section-input" v-if="jifen_pay.jifen">
+                    <!-- <div class="sec-input" v-if="jifen_pay.jifen">
                 <el-input type="number" :disabled="jifen_pay.jifen <= 0" v-model="use_jifen_num" @input="onInput_jifen" placeholder="请填写要抵扣的积分"></el-input>
               </div> -->
                   </div>
 
-                  <div class="section-item" v-if="false">
+                  <div class="sec-item" v-if="false">
                     <div class="sub-title">使用佣金</div>
-                    <div class="section-tip">可用佣金：{{ +baseInfo.yongjin || 0 }}</div>
-                    <div class="section-btn-actions">
-                      <button class="btn" :class="{ active: if_use_yongjin }" @click="if_use_yongjin = true">
+                    <div class="sec-tip">
+                      可用佣金：{{ +vuex_user.yongjin || 0 }}
+                    </div>
+                    <div class="sec-btn-actions">
+                      <button
+                        class="btn"
+                        :class="{ active: if_use_yongjin }"
+                        @click="if_use_yongjin = true"
+                      >
                         使用佣金
                       </button>
-                      <button class="btn" :class="{ active: !if_use_yongjin }" @click="if_use_yongjin = false">
+                      <button
+                        class="btn"
+                        :class="{ active: !if_use_yongjin }"
+                        @click="if_use_yongjin = false"
+                      >
                         不使用佣金
                       </button>
                     </div>
                     <div class="use-jifen-num">
                       本单将扣减佣金 <b>{{ money_yongjin_dixian }}</b>
                     </div>
-                    <!-- <div class="section-input" v-if="jifen_pay.jifen">
+                    <!-- <div class="sec-input" v-if="jifen_pay.jifen">
                 <el-input type="number" :disabled="jifen_pay.jifen <= 0" v-model="use_jifen_num" @input="onInput_jifen" placeholder="请填写要抵扣的积分"></el-input>
               </div> -->
                   </div>
 
-                  <!-- 
-            <div class="section-item">
-              <div class="section-title">优惠码</div>
-              <div class="section-input">
-                <el-input v-model="yh_code" placeholder="请填写优惠码"></el-input>
-              </div>
-              <div class="section-tip">优惠码填写完成后, 请点击下方使用按钮查询优惠信息。</div>
-              <div class="section-input">
-                <div class="btn-actions">
-                  <el-button size="small" type="warning" @click="query_yh">使用优惠</el-button>
-                  <el-button size="small" type="warning" @click="not_use_yh">不使用</el-button>
-                </div>
-              </div>
-            </div>
-          -->
-                  <div class="section-item remark-box" v-if="false">
+                  <!-- <div class="sec-item">
+                    <div class="sec-title">优惠码</div>
+                    <div class="sec-input">
+                      <el-input
+                        v-model="yh_code"
+                        placeholder="请填写优惠码"
+                      ></el-input>
+                    </div>
+                    <div class="sec-tip">
+                      优惠码填写完成后, 请点击下方使用按钮查询优惠信息。
+                    </div>
+                    <div class="sec-input">
+                      <div class="btn-actions">
+                        <el-button size="small" type="warning" @click="query_yh"
+                          >使用优惠</el-button
+                        >
+                        <el-button
+                          size="small"
+                          type="warning"
+                          @click="not_use_yh"
+                          >不使用</el-button
+                        >
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <!-- <div class="sec-item remark-box" v-if="false">
                     <div class="sub-title">
                       <b> 订单备注 </b>
                     </div>
-                    <div class="section-input input-box">
-                      <el-input type="textarea" :autosize="{ minRows: 3 }" placeholder="请填写订单备注" v-model="remark">
+                    <div class="sec-input input-box">
+                      <el-input
+                        type="textarea"
+                        :autosize="{ minRows: 3 }"
+                        placeholder="请填写订单备注"
+                        v-model="remark"
+                      >
                       </el-input>
-                      <!-- <textarea placeholder="请填写订单备注"></textarea> -->
+                      <textarea placeholder="请填写订单备注"></textarea>
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+
+              <div class="huizong" v-if="false">
+                <!-- <div class="item">
+            积分抵扣：
+            <b>{{vuex_huobi}} {{ jifen_pay.money || 0 }}</b>
+          </div> -->
+                <!-- <div class="order-tip">
+            {{ vuex_config.yunfei_msg }}
+          </div> -->
+
+                <div class="item">
+                  <!-- <span class="text">共：</span> -->
+                  <b class="val">共 {{ total_product_number || 0 }} 件</b>
+                </div>
+                <div class="item">
+                  <span class="text">商品总价：</span>
+                  <b class="val"
+                    >{{ vuex_huobi }} {{ pay_info.goodsPrice || 0 }}</b
+                  >
+                </div>
+                <!-- <div class="item">
+                <span class="text">优惠券：</span>
+                <b class="val">-{{ vuex_huobi }} {{ money_yhq || 0 }}</b>
+              </div> -->
+                <!-- <div class="item">
+                <span class="text">积分抵现：</span>
+                <b>-{{ vuex_huobi }} {{ money_jifen_dixian || 0 }}</b>
+              </div> -->
+                <!-- <div class="item">
+                <span class="text">佣金：</span>
+                <b>-{{ vuex_huobi }} {{ money_yongjin_dixian || 0 }}</b>
+              </div> -->
+                <div class="item">
+                  <span class="text">运费：</span>
+                  <b>{{ vuex_huobi }} {{ pay_info.foreignYunfei || 0 }}</b>
+                </div>
+                <!-- <div class="item">
+                  <span class="text">满减：</span>
+                  <b>- {{ vuex_huobi }} {{ pay_info.foreignManjian || 0 }}</b>
+                </div> -->
+                <div class="item total">
+                  <span class="text">总计：</span>
+                  <b>{{ vuex_huobi }} {{ pay_info.orderPrice }}</b>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sec sec-product">
+          <div class="sec-title">优惠券/优惠码</div>
+          <div class="sec-ctx" style="padding-top: 24px">
+            <div class="goods-list">
+              <!-- 优惠券/优惠码标签页 -->
+              <div class="coupon-tabs">
+                <div class="tab-header">
+                  <div
+                    class="tab-item"
+                    :class="{ active: activeTab === 'coupon' }"
+                    @click="switchTab('coupon')"
+                  >
+                    优惠券{{ list_coupon.length > 1 ? list_coupon.length : "" }}
+                  </div>
+                  <div
+                    class="tab-item"
+                    :class="{ active: activeTab === 'code' }"
+                    @click="switchTab('code')"
+                  >
+                    优惠码
+                  </div>
+                </div>
+
+                <!-- 优惠券内容 -->
+                <div class="tab-content" v-if="activeTab === 'coupon'">
+                  <!-- 可用/不可用子标签 -->
+                  <div class="sub-tabs">
+                    <div
+                      class="sub-tab-item"
+                      :class="{ active: couponSubTab === 'available' }"
+                      @click="switchCouponSubTab('available')"
+                    >
+                      可用
+                    </div>
+                    <div
+                      class="sub-tab-item"
+                      :class="{ active: couponSubTab === 'unavailable' }"
+                      @click="switchCouponSubTab('unavailable')"
+                    >
+                      不可用
                     </div>
                   </div>
+
+                  <!-- 优惠券列表 -->
+                  <div class="coupon-list" v-if="currentCouponList.length > 0">
+                    <div
+                      class="coupon-card"
+                      v-for="(item, index) in currentCouponList"
+                      :key="index"
+                      :class="{
+                        active: coupon_select_id == item.id,
+                        unavailable: couponSubTab === 'unavailable',
+                      }"
+                      @click="handleCouponSelect(item)"
+                    >
+                      <div
+                        class="coupon-check"
+                        v-if="coupon_select_id == item.id"
+                      >
+                        <img src="@img/order/addr-select.png" alt="" />
+                      </div>
+
+                      <div class="coupon-content">
+                        <div class="flex">
+                          <div class="coupon-amount">
+                            <span class="currency">{{ vuex_huobi }}</span>
+                            <span class="amount">{{ +item.jian }}</span>
+                          </div>
+                          <div class="coupon-condition">
+                            满{{ +item.man }}元可用
+                          </div>
+                        </div>
+                        <div class="flex">
+                          <div class="coupon-expire">
+                            有效期至{{
+                              item.endTime && item.endTime.substr(0, 10)
+                            }}
+                          </div>
+                          <div class="coupon-rules">
+                            使用规则
+                            <i class="info-icon">i</i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 无优惠券提示 -->
+                  <div class="no-coupon" v-else>
+                    <div class="no-coupon-text">
+                      {{
+                        couponSubTab === "available"
+                          ? "暂无可用优惠券"
+                          : "暂无不可用优惠券"
+                      }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 优惠码内容 -->
+                <div class="tab-content" v-if="activeTab === 'code'">
+                  <div class="promo-code-section">
+                    <div class="promo-code-input">
+                      <el-input
+                        v-model="yh_code"
+                        placeholder="请输入优惠码"
+                        class="code-input"
+                        @keyup.enter="query_yh"
+                      ></el-input>
+                    </div>
+
+                    <el-button
+                      size="small"
+                      class="promo-code-tip" 
+                      @click="query_yh"
+                      >使用优惠码</el-button
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- 优惠信息汇总 -->
+              <div class="discount-summary">
+                <div class="summary-item">
+                  <span class="label">金额抵用</span>
+                  <span class="value">
+                    <template v-if="coupon_select.id">
+                      {{ vuex_huobi }}{{ +coupon_select.jian }}
+                    </template>
+                    <template v-else>{{ vuex_huobi }}-</template>
+                  </span>
                 </div>
               </div>
 
@@ -378,12 +738,14 @@
                 </div>
                 <div class="item">
                   <span class="text">商品总价：</span>
-                  <b class="val">{{ vuex_huobi }} {{ pay_info.goodsPrice || 0 }}</b>
+                  <b class="val"
+                    >{{ vuex_huobi }} {{ pay_info.goodsPrice || 0 }}</b
+                  >
                 </div>
-                <!-- <div class="item">
-                <span class="text">优惠券：</span>
-                <b class="val">-{{ vuex_huobi }} {{ money_yhq || 0 }}</b>
-              </div> -->
+                <div class="item">
+                  <span class="text">优惠券折扣：</span>
+                  <b class="val">-{{ vuex_huobi }} {{ money_yhq || 0 }}</b>
+                </div>
                 <!-- <div class="item">
                 <span class="text">积分抵现：</span>
                 <b>-{{ vuex_huobi }} {{ money_jifen_dixian || 0 }}</b>
@@ -396,10 +758,10 @@
                   <span class="text">运费：</span>
                   <b>{{ vuex_huobi }} {{ pay_info.foreignYunfei || 0 }}</b>
                 </div>
-                <div class="item">
+                <!-- <div class="item">
                   <span class="text">满减：</span>
                   <b>- {{ vuex_huobi }} {{ pay_info.foreignManjian || 0 }}</b>
-                </div>
+                </div> -->
                 <div class="item total">
                   <span class="text">总计：</span>
                   <b>{{ vuex_huobi }} {{ pay_info.orderPrice }}</b>
@@ -411,19 +773,25 @@
 
         <!-- 操作按钮 -->
         <div class="bottom-btns">
-          <button class="btn-ripple fit-text btn-1" @click="$router.push('/cart')">
+          <button
+            class="btn-ripple fit-text btn-1"
+            @click="$router.push('/cart')"
+          >
             返回购物车
           </button>
-          <button class="btn-ripple fit-text btn-2" @click="do_submit()">去支付</button>
+          <button class="btn-ripple fit-text btn-2" @click="do_submit()">
+            去支付
+          </button>
         </div>
       </div>
     </div>
 
-
-
     <!-- 新增收货地址弹窗 -->
     <address_modal ref="address_modal" @confirm="confirm_add_address" />
-    <foreign_address_modal ref="foreign_address_modal" @confirm="confirm_add_address" />
+    <foreign_address_modal
+      ref="foreign_address_modal"
+      @confirm="confirm_add_address"
+    />
 
     <!-- 余额支付弹窗 -->
     <balance_password_set_modal ref="balance_password_set_modal" />
@@ -442,11 +810,18 @@
     </el-dialog>
 
     <!-- 订单支付提示 -->
-    <el-dialog class="modal-pay-tip" title="订单提醒" :visible.sync="order_confirm_tip" width="30%"
-      :before-close="handleClose" :close-on-click-modal="false" :append-to-body="true">
+    <el-dialog
+      class="modal-pay-tip"
+      title="订单提醒"
+      :visible.sync="confirm_tip"
+      width="30%"
+      :before-close="handleClose"
+      :close-on-click-modal="false"
+      :append-to-body="true"
+    >
       <span>确认支付当前订单？</span>
       <span slot="footer" class="dialog-footer">
-        <button class="btn-ripple btn-cancel" @click="order_confirm_tip = false">
+        <button class="btn-ripple btn-cancel" @click="confirm_tip = false">
           取 消
         </button>
         <button class="btn-ripple btn-confirm" @click="do_confirm_submit()">
@@ -455,11 +830,32 @@
       </span>
     </el-dialog>
 
+    <!-- 选择支付方式 -->
+    <el-dialog
+      class="modal-pay-tip"
+      :visible.sync="payment_tip"
+      width="30%"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :append-to-body="true"
+      center
+    >
+      <span>支付方式</span>
+      <span slot="footer" class="dialog-footer">
+        <button class="btn-ripple btn-confirm" @click="pay_use_weixin()">
+          微信
+        </button>
+        <button class="btn-ripple btn-confirm" @click="pay_use_zhifubao()">
+          支付宝
+        </button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { SHOP_TYPE } from '@/config/env.js'
+import { SHOP_TYPE } from "@/config/env.js";
 
 import address_modal from "@/components/address/address_modal.vue"; //新增地址
 import foreign_address_modal from "@/components/address/foreign_address_modal.vue"; //新增地址
@@ -476,7 +872,6 @@ import { mapState } from "vuex";
 export default {
   name: "order-submit",
   components: {
-
     address_modal,
     foreign_address_modal,
 
@@ -490,16 +885,16 @@ export default {
     return {
       is_order_test: false, //订单测试
       //
-      from: '', //product-detail  ||  cart
+      from: "", //product-detail  ||  cart
       //
-      address_selected: {}, //地址
+      address_select: {}, //地址
       pagination_address: {
         page: 1,
-        pagenum: 20
+        pagenum: 20,
       },
       coupon_selected: {}, //优惠券
       coupons_for_allow_use: [],
-      remark: '',
+      remark: "",
       //
       payment_products: [],
       total_product_number: 0,
@@ -510,7 +905,6 @@ export default {
       order_yunfei: 0, //运费金额
       order_points_dixian_price: 0, //积分抵现金额
       order_points_dixian_number: 0, //使用积分数量
-
 
       pay_info: {}, //预下单信息
       jifen_pay: {
@@ -523,29 +917,50 @@ export default {
 
       my_info: {}, //我的信息 包含 余额 佣金数值
       total_balance: 0,
+      userCard: "", //卡余额
       //
-      invoice_info: {
+      fapiao_info: {
         invoiceStatus: 0, //是否开票 0-不需要 1-需要发票
-        invoicType: '1', //发票类型：1-普通发票 2-专用发票
-        titleType: '1', //抬头：1-个人 2-单位
-        title: '', //
-        shibiema: '', //
-        companyAddress: '', //
-        companyPhone: '', //
-        bankName: '', //
-        bankNo: '', //
+        invoicType: "", //发票类型：1-普通发票 2-专用发票
+        titleType: "1", //抬头：1-个人 2-单位
+        title: "", //
+        shibiema: "", //
+        companyAddress: "", //
+        companyPhone: "", //
+        bankName: "", //
+        bankNo: "", //
       },
       // 支付方式
       payTypeValue: 2,
-      pay_type_value: 'paypal',
+      pay_type_value: "paypal",
       pay_method_list: [
-        { value: 'weixin', title: '微信支付', icon: require('@img/pay-method/type-weixin.png') },
-        { value: 'zhifubao', title: '支付宝支付', icon: require('@img/pay-method/type-zfb.png') },
+        {
+          value: "weixin",
+          title: "微信支付",
+          icon: require("@img/pay-method/type-weixin.png"),
+          show: true,
+        },
+        {
+          value: "zhifubao",
+          title: "支付宝支付",
+          icon: require("@img/pay-method/type-zfb.png"),
+          show: true,
+        },
         // { value: 'xianxia', title: '线下转款', icon: require('@img/pay-method/type-xianxia.png') },
         //{ value: 'paypal', title: 'PayPal', icon: require('@img/pay-method/type-paypal.png') },
-        { value: 'yue', title: '余额支付', icon: require('@img/pay-method/type-yue.png') },
+        {
+          value: "yue",
+          title: "余额支付",
+          icon: require("@img/pay-method/type-yue.png"),
+          show: true,
+        },
+        // {
+        //   value: "duihuanka",
+        //   title: "兑换卡支付",
+        //   icon: require("@img/pay-method/type-yue.png"),
+        //   show: false,
+        // },
       ],
-
 
       //
       //
@@ -574,82 +989,50 @@ export default {
       remark: "",
 
       peisong_type: "快递配送",
-      address_selected: {},
+      address_select: {},
       address: "", //选择的地址
-      list_address: [], //地址列表
+      address_list: [], //地址列表
       payment_products: [], //要支付的商品信息
       list_coupon: [], //优惠券
       coupon_select_id: "", //选择的优惠券 id
 
-      // select_date: "", //日期
-      // select_time: "", //时间
-
-      shouhuo_name: "", //自提 取货人姓名
-      shouhuo_phone: "", //自提 取货人电话
-
-      // pickerOptions: {
-      //   disabledDate(time) {
-      //     return time.getTime() < Date.now() - 1000 * 60 * 60 * 24 * 1 || time.getTime() > Date.now() + 1000 * 60 * 60 * 24 * 6;
-      //   },
-      // },
-
-      form: {
-        real_name: "",
-        phone: "",
-        address: "",
-        company: "",
-        u_group: "",
-        worker: "",
-      },
+      //
 
       is_pay_pass: 0, //是否设置余额支付密码
       payType: "",
       upload_limit_number: 6,
       dialogVisible: false,
       dialogImageUrl: "", //转账图片查看
-      order_confirm_tip: false, //确认支付信息提示
+      confirm_tip: false, //确认支付信息提示
       xianxia_file_list: [],
 
+      peisong_list: ["快递配送", "上门自提"],
+      ifCard: 0, //是否使用兑换
+      payment_tip: false,
 
+      // 优惠券/优惠码相关状态
+      activeTab: "coupon", // 当前激活的标签页: 'coupon' | 'code'
+      couponSubTab: "available", // 优惠券子标签: 'available' | 'unavailable'
+      unavailable_coupons: [], // 不可用优惠券列表
 
+      coupon_code_info: {//优惠码信息
 
-      //发票信息
-      // 发票
-      invoicType: 0, // 是否开票：0.不开票，1.普通发票，2.专用发票
-      invoiceForm: {
-        radio: '0', // 发票抬头类型：0.个人，1.企业
-        input: '', // 发票抬头
-        input3: '', // 纳税人识别号
-        input2: '', // 电子邮箱
-      }, // 普通发票
-      invoiceForm2: {
-        input: '', // 发票抬头
-        input2: '', // 纳税人识别号
-        input3: '', // 注册地址
-        input4: '', // 注册电话
-        input5: '', // 开户银行
-        input6: '', // 银行账户
-        input7: '', // 邮箱
-      }, // 专用发票
-      invoiceFormRules: {}, // 发票表单验证规则
+      }
     };
   },
   computed: {
-    ...mapState(["if_calc_yunfei"]),
+    ...mapState([""]),
 
     real_payment_money() {
-      let money = parseFloat((this.total_order_price - this.order_points_dixian_price).toFixed(2))
-      return money
+      let money = parseFloat(
+        (this.total_order_price - this.order_points_dixian_price).toFixed(2)
+      );
+      return money;
     },
     //
 
     coupon_select() {
       return this.list_coupon.find((v) => v.id == this.coupon_select_id) || {};
-    },
-
-    opts_peisong() {
-      let arr = ["快递配送", "上门自提"];
-      return arr;
     },
 
     //使用积分支付要抵扣的积分
@@ -679,9 +1062,9 @@ export default {
           }
         }
       }
-      if (this.baseInfo.jifen && total_dixian_jifen) {
-        if (this.baseInfo.jifen < total_dixian_jifen) {
-          jifen = this.baseInfo.jifen;
+      if (this.vuex_user.jifen && total_dixian_jifen) {
+        if (this.vuex_user.jifen < total_dixian_jifen) {
+          jifen = this.vuex_user.jifen;
         } else {
           jifen = total_dixian_jifen;
         }
@@ -694,9 +1077,11 @@ export default {
     money_yhq() {
       let money_yhq = 0;
       if (this.coupon_select_id) {
-        let yhq = this.list_coupon.find((v) => v.id == this.coupon_select_id) || {};
+        let yhq =
+          this.list_coupon.find((v) => v.id == this.coupon_select_id) || {};
         money_yhq = yhq.jian || 0;
       }
+      // this.query_pay_info();
       return money_yhq;
     },
 
@@ -714,17 +1099,18 @@ export default {
       if (!this.if_use_yongjin) {
         return 0;
       }
-      if (!this.baseInfo.yongjin) {
+      if (!this.vuex_user.yongjin) {
         return 0;
       }
       // debugger
       let money_yongjin = 0;
       let money_last = 0; //剩余待支付金额
       if (this.order_price) {
-        money_last = this.order_price - this.money_yhq - this.money_jifen_dixian;
+        money_last =
+          this.order_price - this.money_yhq - this.money_jifen_dixian;
 
-        if (money_last > this.baseInfo.yongjin) {
-          money_yongjin = this.baseInfo.yongjin;
+        if (money_last > this.vuex_user.yongjin) {
+          money_yongjin = this.vuex_user.yongjin;
         } else {
           money_yongjin = money_last;
         }
@@ -733,243 +1119,253 @@ export default {
       return money_yongjin.toFixed(2);
     },
 
+    // 当前显示的优惠券列表
+    currentCouponList() {
+      if (this.couponSubTab === "available") {
+        return this.list_coupon;
+      } else {
+        return this.unavailable_coupons;
+      }
+    },
   },
   watch: {
-
+    coupon_select_id(val, oldval) {
+      this.query_pay_info();
+    },
   },
   created() {
-    this.from = this.$route.query.from || '';
+    this.from = this.$route.query.from || "";
     this.getCacheProduct();
 
     //
     this.query_user();
     this.query_address();
-
     this.query_pay_info();
+    // this.do_create_submit(0)
   },
   methods: {
     //下单成功后 移除商品信息
     clearCacheProduct() {
-      if (this.from == 'cart') {
+      if (this.from == "cart") {
         //移除购物车中商品
-        let guige_ids = this.payment_products.map(v => v.guige_id).join(',')
+        let guige_ids = this.payment_products.map((v) => v.guige_id).join(",");
         this.$api({
-          url: '/service.php',
-          method: 'get',
+          url: "/service.php",
+          method: "get",
           data: {
-            action: 'gouwuche_del',
+            action: "gouwuche_del",
             inventoryId: guige_ids, //产品规格id(多个用,分开)
           },
-        }).then(res => {
+        }).then((res) => {
           if (res.code == 200) {
-            this.$store.commit('set_vuex_cart_number', res.count)
+            this.$store.commit("set_vuex_cart_number", res.count);
           }
-        })
+        });
       }
-      sessionStorage.removeItem('cache_payment_products')
+      sessionStorage.removeItem("cache_payment_products");
     },
 
     //获取缓存的产品信息
     getCacheProduct() {
       //本地产品数据
-      let cache_payment_products = sessionStorage.getItem('cache_payment_products');
+      let cache_payment_products = sessionStorage.getItem(
+        "cache_payment_products"
+      );
       if (cache_payment_products) {
-        this.payment_products = JSON.parse(cache_payment_products)
+        this.payment_products = JSON.parse(cache_payment_products);
 
         let total_product_number = 0;
         let total_product_price = 0;
-        this.payment_products.forEach(v => {
-          total_product_number += parseInt(v.num)
-          total_product_price += v.price_sale * parseInt(v.num)
-        })
+        this.payment_products.forEach((v) => {
+          total_product_number += parseInt(v.num);
+          total_product_price += v.price_sale * parseInt(v.num);
+        });
         this.total_product_number = total_product_number;
         this.total_product_price = total_product_price;
-        console.log(total_product_price, 's数量11')
-        this.$log('缓存 待下单产品', this.payment_products)
+        console.log(total_product_price, "s数量11");
+        this.$log("缓存 待下单产品", this.payment_products);
       } else {
-
       }
     },
     //获取缓存的地址信息
     query_user() {
       // this.$store.dispatch("query_user");
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'users_userInfo',
+          action: "users_userInfo",
         },
-      }).then(res => {
+      }).then((res) => {
         if (res.code == 200) {
           this.my_info = res.data;
           this.total_balance = parseFloat(this.my_info.money) || 0;
         }
-      })
+      });
     },
 
     //获取地址列表
     query_address() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'userAddress_lists',
+          action: "userAddress_lists",
           ...this.pagination_address,
           // shop_id: this.id,
         },
-      }).then(res => {
+      }).then((res) => {
         if (res.code == 200) {
-          let data = res.data
+          let data = res.data;
 
           data.forEach((v) => {
-            if (SHOP_TYPE == 'foreign') {//东莞市锋扬礼品
-              v.full_addr = [v.country, v.province, v.city, v.area, v.address].filter(v => !!v).join(',');
-              v.name_phone = `${v.firstName} ${v.lastName} (${v.phone})`
+            if (SHOP_TYPE == "foreign") {
+              //医买买
+              v.full_addr = [v.country, v.province, v.city, v.area, v.address]
+                .filter((v) => !!v)
+                .join(",");
+              v.name_phone = `${v.firstName} ${v.lastName} (${v.phone})`;
             } else {
-              v.full_addr = [v.country, v.province, v.city, v.area, v.address].filter(v => !!v).join(',');
-              v.name_phone = `${v.name} (${v.phone})`
+              v.full_addr = [v.country, v.province, v.city, v.area, v.address]
+                .filter((v) => !!v)
+                .join(",");
+              v.name_phone = `${v.name} (${v.phone})`;
             }
           });
-          this.list_address = data;
+          this.address_list = data;
 
           let obj = data.find((v) => v.if_default) || {};
-          this.address_selected = obj || {};
+          this.address_select = obj || {};
         }
-      })
+      });
     },
-
-
 
     get_pay_info_params() {
-      let product_items = this.payment_products.map(v => ({
-        "inventoryId": v.inventoryId,
-        "productId": v.productId,
-        "num": v.num
-      }))
-      let productInfo = JSON.stringify(product_items)
+      let product_items = this.payment_products.map((v) => ({
+        inventoryId: v.inventoryId,
+        productId: v.productId,
+        num: v.num,
+      }));
+      let productInfo = JSON.stringify(product_items);
 
       let params = {
         productInfo: productInfo,
-        addressId: this.address_selected.id || '',
-      }
-      return params
+        addressId: this.address_select.id || "",
+        yhqId: this.coupon_select_id || "", //优惠券记录ID
+      };
+      return params;
     },
-
 
     get_pay_params() {
-      let product_items = this.payment_products.map(v => ({
-        "inventoryId": v.inventoryId,
-        "productId": v.productId,
-        "num": v.num
-      }))
-      let productInfo = JSON.stringify(product_items)
-
-
-      let invoice_params = {
-        invoiceStatus: this.invoicType == 0 ? 0 : 1, //是否开票 0-不需要 1-需要发票
-        invoiceType: this.invoicType == 2 ? 2 : 1, //发票类型：1-普通发票 2-专用发票
-        titleType: this.invoiceForm.radio == 2 || this.invoicType == 2 ? 2 : 1, //抬头：1-个人 2-单位
-        title: this.invoiceForm2.input || this.invoiceForm.input,
-        shibiema: this.invoiceForm2.input2 || this.invoiceForm.input3,
-        companyAddress: this.invoiceForm2.input3,
-        companyPhone: this.invoiceForm2.input4,
-        bankName: this.invoiceForm2.input5,
-        bankNo: this.invoiceForm2.input6,
-      }
-
-
+      let product_items = this.payment_products.map((v) => ({
+        inventoryId: v.inventoryId,
+        productId: v.productId,
+        num: v.num,
+      }));
+      let productInfo = JSON.stringify(product_items);
 
       let params = {
-        invoiceStatus: 0,//是否开票 0-不需要 1-需要发票
         productInfo: productInfo,
-        addressId: this.address_selected.id || '',
-        peisongType: 1,//配送类型：1-快递物流 2-上门自提
-        peisongTime: '',//配送时间
-        yhqId: '',//优惠券记录ID
-        tuanId: '',//参与拼团的团ID
-        tuanType: '',//拼团类型：0-普通订单 1-普通团 2-社区团
-        remark: '',//备注
+        addressId: this.address_select.id || "",
+        peisongType: 1, //配送类型：1-快递物流 2-上门自提
+        peisongTime: "", //配送时间
+        yhqId: this.coupon_select_id, //优惠券记录ID
+        tuanId: "", //参与拼团的团ID
+        tuanType: "", //拼团类型：0-普通订单 1-普通团 2-社区团
+        remark: "", //备注
 
-        ...invoice_params
-      }
-      return params
+        ...this.fapiao_info,
+      };
+      return params;
     },
-
-
 
     //根据下单商品获取确认订单信息
     query_pay_info() {
       let params = this.get_pay_info_params();
 
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'orders_getPayInfo',
-          ...params
+          action: "orders_getPayInfo",
+          ifCard: this.ifCard,
+          ...params,
         },
       }).then((res) => {
         let { code, data, msg } = res;
         if (code == 200) {
+          // let item = this.pay_method_list.find(item => item.value == 'duihuanka');
+          // if(res.data.cardInfo!=false){
+          //  item.show=true
+          // }else{
+          // item.show=false
+          // }
           this.pay_info = data;
           this.jifen_pay = data.jifen_pay || {}; //积分信息
-
+          console.log(data, "---r");
+          this.userCard = data.userCard;
           //
-          this.total_order_price = data.order_price || 0
+          this.total_order_price = data.orderPrice || 0;
           //this.total_product_price = data.goods_price || 0;
-          this.order_zhekou_bili = parseFloat(data.zhekou) || 10
-          this.order_zhekou_price = parseFloat(data.zhekou_price) || 0
+          this.order_zhekou_bili = parseFloat(data.zhekou) || 10;
+          this.order_zhekou_price = parseFloat(data.zhekouPrice) || 0;
           this.order_yunfei = data.yunfei || 0;
 
-
-          // this.format_coupon_view_info(data.yhq_list)
-          // this.coupons_for_allow_use = data.yhq_list || []
-          // this.total_product_price = data.goods_price;
+          this.format_coupon_view_info(data.yhqList);
+          this.coupons_for_allow_use = data.yhqList || [];
+          this.total_product_price = data.goods_price;
 
           if (this.coupon_selected.id) {
-            this.total_order_price = (this.total_order_price - this.coupon_selected.jian).toFixed(2)
+            this.total_order_price = (
+              this.total_order_price - this.coupon_selected.jian
+            ).toFixed(2);
           }
 
+          if (data.yhqList.length) {
+            this.list_coupon = data.yhqList.map((item) => ({
+              ...item,
 
-
-          // if (data.yhq_list.length) {
-          //   this.list_coupon = data.yhq_list.map((item) => ({
-          //     ...item,
-
-          //     miaoshu: +item.man
-          //       ? `满${+item.man}减${+item.jian}元`
-          //       : `下单立减${+item.jian}元`,
-          //     youxiaoqi:
-          //       item.startTime.substr(0, 10) + " - " + item.endTime.substr(0, 10),
-          //   }));
-          // }
-          // this.order_price = data.order_price;
-          // this.money_yunfei = +data.yunfei || 0;
-          // this.jifen_pay = data.jifen_pay;
+              miaoshu: +item.man
+                ? `满${+item.man}减${+item.jian}元`
+                : `下单立减${+item.jian}元`,
+              youxiaoqi:
+                item.startTime.substr(0, 10) +
+                " - " +
+                item.endTime.substr(0, 10),
+            }));
+          }
+          this.order_price = data.order_price;
+          this.money_yunfei = +data.yunfei || 0;
+          this.jifen_pay = data.jifen_pay;
         }
       });
     },
 
-
-
     // 格式化优惠券展示信息
     format_coupon_view_info(list) {
-      list.forEach(v => {
+      console.log(list, "?");
+      list.forEach((v) => {
         // v.is_expand = false;
         v.man_price = parseFloat(v.man);
         v.jian_price = parseFloat(v.jian);
-        v.tiaojian = v.man_price == 0 ? '无门槛' : `满${v.man_price}元可用`
-      })
+        v.tiaojian = v.man_price == 0 ? "无门槛" : `满${v.man_price}元可用`;
+      });
     },
 
     do_toggle_paytype(item) {
-      this.pay_type_value = item.value
-      this.payType = item.title
-      let value = item.title
+      this.pay_type_value = item.value;
+      this.payType = item.title;
+      let value = item.title;
+      if (value == "兑换卡支付") {
+        this.ifCard = 1;
+      } else {
+        this.ifCard = 0;
+      }
+      this.query_pay_info();
       if (value == "余额支付") {
-        if (this.baseInfo.is_pay_pass == 0) {
+        if (this.vuex_user.is_pay_pass == 0) {
           //未设置支付密码
-          this.$refs.balance_password_set_modal.init(this.baseInfo);
+          this.$refs.balance_password_set_modal.init(this.vuex_user);
         } else if (this.total_balance < this.real_payment_money) {
           //余额不足提示
           this.$refs.balance_pay_disable_modal.init({
@@ -977,14 +1373,11 @@ export default {
           });
         }
       }
-
     },
-
 
     yuePayPassSetCallback() {
       this.is_pay_pass = 1;
     },
-
 
     parentHandleModalAction(option = {}) {
       let type = option.type || "";
@@ -993,9 +1386,6 @@ export default {
       }
     },
 
-
-
-
     //提交订单
     do_submit() {
       let params_info = {
@@ -1003,82 +1393,119 @@ export default {
       };
       delete params_info.phone;
 
-      if (!this.address_selected.id) {
-        alertErr("请选择收货地址");
-        return;
+      if (!this.address_select.id) {
+        return alertErr("请选择收货地址");
       }
 
       if (!this.pay_type_value) {
-        alertErr("请选择支付方式");
-        return;
+        return alertErr("请选择支付方式");
       }
 
       if (this.pay_type_value == "xianxia") {
         if (!this.xianxia_file_list.length) {
-          alertErr("请上传转款凭证信息");
           this.scrollToTarget(".scroll-target-pingzheng");
-          return;
+          return alertErr("请上传转款凭证信息");
         }
       }
 
       if (this.pay_type_value == "balance") {
         if (this.total_balance < +this.real_payment_money) {
-          alertErr("您的余额不足，请选择其他支付方式");
-          return;
+          return alertErr("您的余额不足，请选择其他支付方式");
         }
         // if (!this.is_pay_pass) {
         //   alertErr("请先设置余额支付密码");
-        //   this.$refs.balance_password_set_modal.init(this.baseInfo);
+        //   this.$refs.balance_password_set_modal.init(this.vuex_user);
         //   return;
         // }
       }
 
-      if (this.invoicType == 1) {//普通发票
-        if (!this.invoiceForm.radio) {
+      if (this.fapiao_info.invoicType == 1) {
+        //普通发票
+        if (!this.fapiao_info.titleType) {
           return alertErr("请选择发票抬头类型");
         }
-        if (!this.invoiceForm.input) {
+        if (!this.fapiao_info.title) {
           return alertErr("请填写发票抬头");
         }
-      } else if (this.invoicType == 2) {//增值税发票
-        if (!this.invoiceForm2.input) {
+        if (!this.fapiao_info.email) {
+          return alertErr("请填写电子邮箱");
+        }
+        if (this.fapiao_info.titleType == 2) {
+          if (!this.fapiao_info.shibiema) {
+            return alertErr("请填写纳税人识别号");
+          }
+        }
+      } else if (this.fapiao_info.invoicType == 2) {
+        //增值税发票
+        if (!this.fapiao_info.title) {
           return alertErr("请填写准确的抬头名称");
         }
-        if (!this.invoiceForm2.input2) {
+        if (!this.fapiao_info.shibiema) {
           return alertErr("请填写准确的纳税人识别号");
         }
-        if (!this.invoiceForm2.input3) {
+        if (!this.fapiao_info.companyAddress) {
           return alertErr("请输入单位注册地址");
         }
-        if (!this.invoiceForm2.input4) {
+        if (!this.fapiao_info.companyPhone) {
           return alertErr("请输入单位注册电话");
         }
-        if (!this.invoiceForm2.input5) {
+        if (!this.fapiao_info.bankName) {
           return alertErr("请输入开户银行");
         }
-        if (!this.invoiceForm2.input6) {
+        if (!this.fapiao_info.bankNo) {
           return alertErr("请输入银行账户");
         }
       }
 
-      this.order_confirm_tip = true;
+      this.confirm_tip = true;
     },
 
     //滚动到指定位置 元素类名
     scrollToTarget(clsName) {
       // var element = document.querySelector(".wenxian-box");
       var element = document.querySelector(clsName);
-      element.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
     },
 
-    handleClose(done) { },
+    handleClose(done) {},
 
+    // 预支付
+    do_create_submit(val) {
+      let params = this.get_pay_params();
+
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "orders_getPayInfo",
+          ifCard: val,
+          ...params,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          console.log(res, "-预支付");
+          let item = this.pay_method_list.find(
+            (item) => item.value == "duihuanka"
+          );
+          if (res.data.cardInfo != false) {
+            item.show = true;
+          } else {
+            item.show = false;
+          }
+          this.query_pay_info();
+        }
+      });
+    },
     //订单提交-支付
     do_confirm_submit() {
-      this.order_confirm_tip = false;
+      this.confirm_tip = false;
 
-      // let not_use_jifen = !this.if_use_jifen || this.baseInfo.jifen <= 0;
-      // let not_use_yongjin = !this.if_use_yongjin || this.baseInfo.yongjin <= 0;
+      // let not_use_jifen = !this.if_use_jifen || this.vuex_user.jifen <= 0;
+      // let not_use_yongjin = !this.if_use_yongjin || this.vuex_user.yongjin <= 0;
       // if (not_use_jifen && not_use_yongjin) {
       //   //不使用积分 不使用佣金  直接进行微信支付
       //   // alert(res);
@@ -1089,10 +1516,10 @@ export default {
       let params = this.get_pay_params();
 
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'orders_create',
+          action: "orders_create",
           ...params,
         },
       }).then((res) => {
@@ -1107,20 +1534,78 @@ export default {
     //支付方式调取
     do_order_pay() {
       if (this.is_order_test) {
-        this.pay_use_yue()
+        this.pay_use_yue();
       } else {
         if (this.pay_type_value == "weixin") {
-          this.order_payment_wx_pc();
+          this.pay_use_weixin();
         } else if (this.pay_type_value == "zhifubao") {
-          this.order_payment_zfb();
+          this.pay_use_zhifubao();
         } else if (this.pay_type_value == "yue") {
-          this.pay_use_yue()
+          this.pay_use_yue();
+        } else if (this.pay_type_value == "duihuanka") {
+          this.pay_use_duihuan();
         } else if (this.pay_type_value == "xianxia") {
-          this.order_payment_xianxia();
+          this.pay_use_xianxia();
         } else if (this.pay_type_value == "paypal") {
           this.pay_use_paypal();
         }
       }
+    },
+
+    //微信支付 pc
+    pay_use_weixin() {
+      this.payment_tip = false;
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "pay_wxScanCodePay", //pay_wxScanCodePay
+          userId: localStorage.getItem("userId"),
+          token: localStorage.getItem("token"),
+          orderType: 1,
+          orderId: this.order_id,
+        },
+      }).then((res) => {
+        alert(res);
+        if (res.code == 200) {
+          let { data } = res.data;
+          let info = {
+            // ...res,
+            qrcode: data.qrcode,
+            order_id: this.order_id,
+          };
+          this.$refs.orderPayWxCode.init(info);
+          this.$refs.orderPayWxCode.qrcode = data.qrcode;
+          this.$refs.orderPayWxCode.showModal = true;
+          // this.showWaiting();
+        } else {
+        }
+      });
+    },
+
+    pay_use_duihuan() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "pay_recharge",
+          orderType: 1,
+          orderId: this.order_id,
+        },
+      }).then((res) => {
+        alert(res);
+        if (res.code == 200) {
+          console.log(res, "rrres");
+          if (res.data.isOver == 0) {
+            // this.payment_tip=true
+            this.pay_use_weixin();
+            // this.pay_use_zhifubao();
+          } else {
+            this.toPaySuccess();
+          }
+        } else {
+        }
+      });
     },
 
     pay_use_yue() {
@@ -1130,17 +1615,16 @@ export default {
       // });
 
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'pay_balance',
+          action: "pay_balance",
           orderType: 1,
           orderId: this.order_id,
         },
       }).then((res) => {
-        alert(res)
-        let { code, message } = res;
-        if (code == 200) {
+        alert(res);
+        if (res.code == 200) {
           this.toPaySuccess();
         } else {
         }
@@ -1160,55 +1644,38 @@ export default {
       //   },
       // }).then((res) => {
       //   alert(res)
-      //   let { code, message } = res;
-      //   if (code == 200) {
+      //   if (res.code == 200) {
       //     this.toPaySuccess();
       //   } else {
       //   }
       // });
     },
 
-
-    //微信支付 pc
-    order_payment_wx_pc() {
-      this.$api("orders_wxScanCodePay", {
-        order_id: this.order_id,
-      }).then((res) => {
-        //console.log("pc 微信扫码", res);
-        // alert(res);
-        let { code, data } = res;
-        if (res.code == 200) {
-          let info = {
-            // ...res,
-            qrcode: data.qrcode,
-            order_id: this.order_id,
-          };
-          this.$refs.orderPayWxCode.init(info);
-          // this.$refs.orderPayWxCode.qrcode = data.qrcode;
-          // this.$refs.orderPayWxCode.showModal = true;
-          // this.showWaiting();
-        }
-      });
-    },
-
     //pc 支付宝支付
-    order_payment_zfb() {
+    pay_use_zhifubao() {
       // alertErr('尚未开通支付宝支付');
 
-      this.showWaiting();
-
-      this.$api("orders_aliScanCodePay", {
-        order_id: this.order_id,
+      // this.showWaiting();
+      this.payment_tip = false;
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "pay_aliScanCodePay", // pay_aliScanCodePay
+          orderType: 1,
+          orderId: this.order_id,
+        },
       }).then((res) => {
-        //console.log("支付宝支付", res);
-        let { code, msg, data } = res;
-        if (code == 200) {
+        // alert(res);
+        if (res.code == 1) {
+          let data = res.data;
           const { href } = this.$router.resolve({
             path: "/zfbPay",
             query: {
               htmlData: data,
             },
           });
+
           window.open(href, "_blank");
 
           // this.$router.push({
@@ -1217,18 +1684,26 @@ export default {
           //     htmlData: data,
           //   },
           // });
+        } else {
         }
       });
     },
 
     //余额支付
     order_payment_yue() {
-      if (+this.baseInfo.money < +this.real_payment_money) {
+      if (+this.vuex_user.money < +this.real_payment_money) {
         alertErr("您的余额不足，请选择其他支付方式");
         return;
       }
 
-      this.$api("orders_yuePay", { order_id: this.order_id }).then((res) => {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "orders_yuePay",
+          orderId: this.order_id,
+        },
+      }).then((res) => {
         //console.log("余额支付", res);
         let { code, message } = res;
 
@@ -1240,7 +1715,7 @@ export default {
     },
 
     //线下转款
-    order_payment_xianxia() {
+    pay_use_xianxia() {
       // this.$api("orders_offlinePay", { order_id: this.order_id }).then((res) => {
       //   //console.log("货到付款支付", res);
       //   let { code, message } = res;
@@ -1310,8 +1785,13 @@ export default {
       this.$refs.orderPayWaiting.show = true;
 
       this.timer = setInterval(() => {
-        this.$api("orders_detail", {
-          id: this.order_id,
+        this.$api({
+          url: "/service.php",
+          method: "get",
+          data: {
+            action: "orders_detail",
+            id: this.order_id,
+          },
         }).then((res) => {
           let { code, data, msg } = res;
           if (data.status == 2 || data.status == 3) {
@@ -1354,15 +1834,14 @@ export default {
       let ids = this.payment_products.map((v) => v.inventoryId);
       let id = ids.join();
 
-
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "gouwuche_del",
           inventoryId: inventoryId,
-        }
-      }).then(res => {
+        },
+      }).then((res) => {
         if (res.code == 200) {
           let list = this.list_shopcart;
           let ids = (inventoryId + "").split(",");
@@ -1372,21 +1851,19 @@ export default {
             list.splice(index, 1);
           });
 
-          this.do_update_vuex_cart_number()
+          this.do_update_vuex_cart_number();
         }
-      })
-
+      });
     },
-
 
     //选择收货地址
     do_toggle_address(item) {
-      this.address_selected = item;
-      this.query_pay_info()
+      this.address_select = item;
+      this.query_pay_info();
     },
     //新增地址
     open_addr_add() {
-      if (SHOP_TYPE == 'foreign') {
+      if (SHOP_TYPE == "foreign") {
         this.$refs.foreign_address_modal.init();
       } else {
         this.$refs.address_modal.init();
@@ -1394,10 +1871,8 @@ export default {
     },
 
     confirm_add_address() {
-      this.query_address()
+      this.query_address();
     },
-
-
 
     // 订单积分抵现
     order_jifen_dixian() {
@@ -1469,17 +1944,13 @@ export default {
     },
 
     peisong_toggle(item) {
-      //console.log("配送方式", item);
-
-      this.peisong_type = item;
-
-      if (item == "上门自提") {
-        //console.log("用户地址", { ...this.address_selected });
-        if (this.address_selected.id) {
-          this.shouhuo_name = this.address_selected.name;
-          this.shouhuo_phone = this.address_selected.phone;
-        }
-      }
+      // this.peisong_type = item;
+      // if (item == "上门自提") {
+      //   // if (this.address_select.id) {
+      //   //   this.shouhuo_name = this.address_select.name;
+      //   //   this.shouhuo_phone = this.address_select.phone;
+      //   // }
+      // }
     },
 
     //上传相关
@@ -1506,44 +1977,159 @@ export default {
     //优惠券相关
     handleCouponSelect(item) {
       //console.log("优惠券", { ...item });
+      if (this.coupon_select_id == item.id) {
+        this.coupon_select_id = "";
+        return;
+      }
       this.coupon_select_id = item.id;
     },
 
     //
     toPaySuccess() {
-      this.toPayResult(1)
+      this.toPayResult(1);
     },
     toPayFail() {
       // this.toPayResult(0)
       this.toRoute({
-        path: '/order-detail',
+        path: "/order-detail",
         query: {
-          from: 'payment',
+          from: "payment",
           id: this.order_id,
         },
-        mode: 'reLaunch'
-      })
+        mode: "reLaunch",
+      });
     },
 
     //
     toPayResult(is_pay = 0) {
       // this.clearCacheProduct()
       this.toRoute({
-        path: '/payment-success',
+        path: "/payment-success",
         query: {
           id: this.order_id,
-          type: 'order',
+          type: "order",
           is_pay: is_pay,
         },
         // mode: 'redirectTo'
-      })
+      });
     },
 
-
-
     // 发票切换
-    invoiceSwitch(val) {
-      this.invoicType = val
+    do_fapiao_type(val) {
+      this.fapiao_info.invoicType = val;
+
+      if (val === "") {
+        this.fapiao_info.invoiceStatus = 0;
+      } else if (val === 1) {
+        //普通
+        this.fapiao_info.invoiceStatus = 1;
+        this.fapiao_info.titleType = 1; //个人
+      } else if (val === 2) {
+        //专用发票
+        this.fapiao_info.invoiceStatus = 1;
+        this.fapiao_info.titleType = 2; //企业
+      }
+    },
+
+    // 切换优惠券/优惠码标签页
+    switchTab(tab) {
+      this.activeTab = tab;
+      if (tab === "code") {
+        // 切换到优惠码时，可以在这里添加相关逻辑
+        this.coupon_select_id=""
+      }
+    },
+
+    // 切换优惠券可用/不可用子标签
+    switchCouponSubTab(subTab) {
+      this.couponSubTab = subTab;
+      if (subTab === "unavailable" && this.unavailable_coupons.length === 0) {
+        // 如果不可用优惠券列表为空，可以在这里请求数据
+        this.loadUnavailableCoupons();
+      }
+    },
+
+    // 加载不可用优惠券
+    loadUnavailableCoupons() {
+      // 这里可以调用API获取不可用优惠券
+      // 暂时使用模拟数据
+      this.unavailable_coupons = [
+        // {
+        //   id: "unavailable_1",
+        //   title: "已过期优惠券",
+        //   jian: 50,
+        //   man: 200,
+        //   endTime: "2024-01-01 00:00:00",
+        //   status: "expired",
+        // },
+        // {
+        //   id: "unavailable_2",
+        //   title: "不满足条件优惠券",
+        //   jian: 30,
+        //   man: 1000,
+        //   endTime: "2025-12-31 23:59:59",
+        //   status: "not_met",
+        // },
+      ];
+    },
+
+    // 查询优惠码
+    query_yh() {
+      if (!this.yh_code.trim()) {
+        this.$message.warning("请输入优惠码");
+        return;
+      }
+
+      // 调用API查询优惠码
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "yhq_checkYhqCode",
+          code: this.yh_code.trim(),
+          // 可以添加其他必要参数，如订单金额等
+        },
+      })
+        .then((res) => {
+          if (res.code == 200) {
+            this.$message.success("优惠码验证成功");
+            // 处理优惠码信息
+            this.handlePromoCodeSuccess(res.data);
+
+
+          } else {
+            this.$message.error(res.msg || "优惠码无效或已过期");
+          }
+        })
+        .catch((error) => {
+          this.$message.error("查询优惠码失败，请重试");
+          console.error("查询优惠码失败:", error);
+        });
+    },
+
+    // 处理优惠码验证成功
+    handlePromoCodeSuccess(data) {
+      // 这里可以处理优惠码验证成功后的逻辑
+      // 比如更新订单金额、显示优惠信息等
+      console.log("优惠码信息:", data);
+
+      // 可以在这里更新订单总金额
+      if (data.discount_amount) {
+        // 更新订单金额逻辑
+        this.total_order_price = this.total_order_price - data.discount_amount;
+      }
+
+      this.coupon_code_info =data;
+      this.coupon_select =data;
+      this.coupon_select_id = data.id;
+      this.query_pay_info()
+    },
+
+    // 不使用优惠码
+    not_use_yh() {
+      this.yh_code = "";
+      // 重置相关状态
+      this.$message.info("已取消使用优惠码");
     },
   },
 };
@@ -1558,8 +2144,8 @@ export default {
 .btn-cancel {
   min-width: 100px;
   height: 40px;
-  border: 1px solid #F74747;
-  color: #F74747;
+  border: 1px solid #7853b2;
+  color: #7853b2;
   font-size: 14px;
 }
 
@@ -1567,7 +2153,7 @@ export default {
   margin-left: 20px;
   min-width: 100px;
   height: 40px;
-  background: #F74747;
+  background: #7853b2;
   color: #fff;
   font-size: 14px;
 }
@@ -1597,9 +2183,10 @@ export default {
 }
 
 .page {
-  background: #FFFFFF;
+  background: #f5f7fa;
   text-align: center;
   font-size: 14px;
+  padding-top: 24px;
 
   .inner {
     margin: 0 auto;
@@ -1632,7 +2219,7 @@ export default {
       padding-left: 20px;
       height: 48px;
       line-height: 48px;
-      background: #F5F5F5;
+      background: #f5f5f5;
       border-bottom: 1px solid #cccccc;
       font-size: 14px;
       font-weight: bold;
@@ -1645,13 +2232,12 @@ export default {
         text-align: center;
         height: 48px;
         background: #f9f9f9;
-        background: #F5F5F5;
         padding: 15px 0;
 
         font-family: OPPOSans, OPPOSans;
         // font-weight: bold;
-        font-size: 14px;
-        color: #666666;
+        font-size: 16px;
+        color: #1F1F1F;
 
         // border-bottom: 1px solid #ddd;
         .box-title {
@@ -1690,11 +2276,10 @@ export default {
         .item-detail {
           padding: 15px 0;
           text-align: center;
-          font-family: OPPOSans, OPPOSans;
+          font-family: Microsoft YaHei, Microsoft YaHei;
           // font-weight: bold;
-          font-size: 14px;
-          color: #666666;
-
+          font-size: 18px;
+          color: #1F1F1F;
 
           .box-title {
             flex: 1;
@@ -1718,16 +2303,15 @@ export default {
           .box-sku {
             width: 240px;
 
-
             font-size: 12px;
             font-family: Microsoft YaHei-Regular, Microsoft YaHei;
             font-weight: 400;
-            color: #999999;
+            color: #505050;
           }
 
           .box-unit {
             width: 240px;
-            color: #FF0000;
+            color: #7853b2;
           }
 
           .box-num {
@@ -1736,7 +2320,8 @@ export default {
 
           .box-subtitle {
             width: 240px;
-            color: #FF0000;
+            color: #7853b2;
+            font-weight: bold;
           }
         }
       }
@@ -1752,7 +2337,7 @@ export default {
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #666666;
+        color: #1F1F1F;
 
         &:last-child {
           margin-bottom: 0;
@@ -1764,7 +2349,7 @@ export default {
           font-family: Arial, Arial;
           font-weight: 400;
           font-size: 14px;
-          color: #666666;
+          color: #1F1F1F;
         }
       }
 
@@ -1775,7 +2360,7 @@ export default {
           font-family: Arial, Arial;
           font-weight: bold;
           font-size: 20px;
-          color: #FF0000;
+          color: #7853b2;
         }
       }
     }
@@ -1786,38 +2371,36 @@ export default {
     justify-content: flex-end;
 
     button {
-      &+button {
+      & + button {
         margin-left: 16px;
       }
 
       &.btn-1 {
         min-width: 200px;
         height: 45px;
-        background: #FFFFFF;
+        background: #ffffff;
         border-radius: 0px 0px 0px 0px;
-        border: 1px solid #F74747;
+        border: 1px solid #7853b2;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 17px;
-        color: #F74747;
+        color: #7853b2;
       }
 
       &.btn-2 {
-
         width: 200px;
         height: 45px;
-        background: #F74747;
+        background: #7853b2;
         border-radius: 0px 0px 0px 0px;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 17px;
-        color: #FFFFFF;
+        color: #ffffff;
       }
 
       &:hover {
         opacity: 0.8;
       }
-
     }
   }
 }
@@ -1830,9 +2413,9 @@ export default {
   border: 1px solid #cccccc;
 
   .ziti-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding-left: 20px;
     padding-right: 20px;
     height: 48px;
@@ -1850,8 +2433,8 @@ export default {
 
     .ziti-info {
       margin-bottom: 15px;
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
 
       span {
         display: inline-block;
@@ -1895,10 +2478,10 @@ export default {
     padding: 30px 20px;
 
     .select-1 {
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
 
-      &+.select-1 {
+      & + .select-1 {
         margin-top: 30px;
       }
 
@@ -1920,7 +2503,7 @@ export default {
           border: 1px solid #cccccc;
 
           &.active {
-            border: 1px solid #F74747;
+            border: 1px solid #7853b2;
           }
         }
       }
@@ -1951,28 +2534,28 @@ export default {
     padding-bottom: 10px;
   }
 
-  .section-item {
+  .sec-item {
     margin-bottom: 20px;
   }
 
-  .section-title {
+  .sec-title {
     margin-bottom: 5px;
     font-family: Poppins, Poppins;
-    font-weight: bold;
     font-size: 24px;
-    color: #333333;
+    color: #1F1F1F;
+    padding-left: 34px;
   }
 
-  .section-tip {
+  .sec-tip {
     margin-bottom: 5px;
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 25px;
-    color: #666666;
+    color: #1F1F1F;
   }
 
-  .section-input {
+  .sec-input {
     margin-top: 5px;
     margin-bottom: 5px;
 
@@ -2017,13 +2600,13 @@ export default {
     margin-bottom: 10px;
 
     b {
-      color: #F74747;
+      color: #7853b2;
     }
   }
 
-  .section-btn-actions {
-      display: flex;
-  align-items: center;
+  .sec-btn-actions {
+    display: flex;
+    align-items: center;
 
     .btn {
       width: 160px;
@@ -2043,29 +2626,44 @@ export default {
 }
 
 // 新增
-.section {
+.sec {
   padding-bottom: 55px;
   text-align: left;
 
-  .section-title {
+  .sec-title {
     padding-bottom: 16px;
     border-bottom: 1px solid #d5d8de;
-    font-family: Poppins, Poppins;
-    font-weight: bold;
+    font-family: Microsoft YaHei, Microsoft YaHei;
+
     font-size: 24px;
-    color: #333333;
+    color: #1F1F1F;
+    padding-left: 34px;
   }
 
-  .section-ctx {
+  .sec-ctx {
     padding-top: 45px;
-
-
   }
 }
 
-
-
 .sec-addr {
+  padding-bottom: 55px;
+  text-align: left;
+
+  .sec-title {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-weight: 400;
+
+    font-size: 24px;
+    color: #1F1F1F;
+    padding-left: 34px;
+  }
+
+  .sec-ctx {
+    padding: 0 34px;
+  }
+
   .address-list {
     display: flex;
     flex-wrap: wrap;
@@ -2074,7 +2672,7 @@ export default {
       position: relative;
       margin-top: 20px;
       margin-right: 30px;
-      margin-bottom: 40px;
+      margin-bottom: 20px;
       width: 440px;
       min-height: 130px;
       padding: 15px 20px;
@@ -2084,17 +2682,15 @@ export default {
       overflow: hidden;
       cursor: pointer;
 
-
       &:nth-child(3n) {
         margin-right: 0;
       }
-
       &:nth-child(-n + 3) {
         margin-top: 0;
       }
 
       &.active {
-        border: 2px solid #FF0000;
+        border: 2px solid #7853b2;
 
         .marker {
           display: block;
@@ -2122,31 +2718,38 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
+        color: #505050;
       }
     }
   }
 
-  .btn-box {
+  .addr-add {
     margin-top: 32px;
+    padding-left: 32px;
 
-    button {
+    .empty-title {
+      margin-bottom: 40px;
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: 400;
+      font-size: 16px;
+      color: #333333;
+    }
+
+    .btn {
       min-width: 124px;
-      min-height: 32px;
+      height: 32px;
       background: #ffffff;
       border-radius: 2px 2px 2px 2px;
-      border: 1px solid #b9b9b9;
+      border: 1px solid #7853b2;
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: 400;
       font-size: 14px;
-      font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
-      font-weight: normal;
-      color: #666666;
+      color: #7853b2;
     }
   }
 }
 
-
-
-.section-info {
+.sec-info {
   .input-list {
     display: flex;
     flex-wrap: wrap;
@@ -2168,10 +2771,10 @@ export default {
         margin-bottom: 16px;
         font-size: 14px;
         font-weight: normal;
-        color: #666666;
+        color: #1F1F1F;
 
         span {
-          color: #F74747;
+          color: #7853b2;
         }
       }
 
@@ -2187,27 +2790,47 @@ export default {
 }
 
 // 支付配送
-.section-pay {
+.sec-pay {
+  padding-bottom: 55px;
+  text-align: left;
+
+  .sec-title {
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #d5d8de;
+    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-weight: 400;
+
+    font-size: 24px;
+    color: #1F1F1F;
+    padding-left: 34px;
+  }
+
+  .sec-ctx {
+  }
+
   .pay-group {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
+    padding-left: 32px;
 
     .title {
-      min-width: 120px;
-      font-size: 14px;
-      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      // min-width: 120px;
+      font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
-      color: #666666;
+      font-size: 16px;
+      color: #1F1F1F;
     }
 
     .pay-items {
+      padding-left: 20px;
       flex: 1;
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
 
       .item {
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
         margin-right: 60px;
         cursor: pointer;
 
@@ -2241,17 +2864,20 @@ export default {
         line-height: 40px;
         background: #ffffff;
         border-radius: 3px 3px 3px 3px;
-        border: 1px solid #F74747;
+        border: 1px solid #7853b2;
         font-size: 14px;
         font-family: Microsoft YaHei-Bold, Microsoft YaHei;
         font-weight: bold;
-        color: #F74747;
+        color: #7853b2;
       }
     }
   }
 }
 
-.section-product {
+.sec-product {
+  .sec-ctx {
+    padding: 0 34px;
+  }
   .sub-title {
     padding-left: 30px;
     height: 50px;
@@ -2290,7 +2916,7 @@ export default {
       cursor: pointer;
 
       &.active {
-        border-color: #F74747;
+        border-color: #7853b2;
 
         .marker {
           display: block;
@@ -2310,15 +2936,15 @@ export default {
         padding: 10px 15px;
 
         .yhq-1 {
-            display: flex;
-  align-items: center;
+          display: flex;
+          align-items: center;
           align-items: flex-end;
 
           .text-1 {
             font-size: 24px;
             font-family: Microsoft YaHei-Bold, Microsoft YaHei;
             font-weight: bold;
-            color: #F74747;
+            color: #7853b2;
           }
 
           .text-2 {
@@ -2335,7 +2961,7 @@ export default {
           font-size: 12px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #999999;
+          color: #505050;
         }
       }
 
@@ -2346,7 +2972,7 @@ export default {
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #F74747;
+        color: #7853b2;
       }
     }
   }
@@ -2358,7 +2984,7 @@ export default {
     padding: 0 30px;
 
     .number {
-      color: #F74747;
+      color: #7853b2;
       margin: 0 10px;
     }
   }
@@ -2370,7 +2996,7 @@ export default {
   }
 }
 
-.section-ctx-type {
+.sec-ctx-type {
   padding-left: 32px;
   padding-left: 0;
 }
@@ -2384,8 +3010,8 @@ export default {
   border: 1px dashed #ccc;
 
   .info-item {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     align-items: flex-start;
     margin-bottom: 10px;
 
@@ -2395,7 +3021,7 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #666666;
+      color: #1F1F1F;
     }
 
     .info-val {
@@ -2403,11 +3029,11 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #666666;
+      color: #1F1F1F;
     }
 
     .yue-warn-tip {
-      color: #F74747;
+      color: #7853b2;
       font-size: 14px;
     }
   }
@@ -2422,8 +3048,8 @@ export default {
   border: 1px dashed #ccc;
 
   .info-item {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     align-items: flex-start;
     margin-bottom: 10px;
 
@@ -2433,7 +3059,7 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #666666;
+      color: #1F1F1F;
     }
 
     .info-val {
@@ -2441,73 +3067,338 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #666666;
+      color: #1F1F1F;
     }
   }
 }
 
+.sec-fapiao {
+  padding-bottom: 55px;
+  text-align: left;
 
+  .sec-title {
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #d5d8de;
+    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-weight: 400;
 
-
-.invoiceBox {
-  width: 100%;
-
-  .fill40 {
-    width: 100%;
-    height: 40px;
+    font-size: 24px;
+    color: #1F1F1F;
+    padding-left: 34px;
   }
 
-  .invoiceLineBox {
+  .sec-ctx {
+  }
+
+  .fapiao-info {
+    padding-left: 32px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     margin-bottom: 30px;
+    .main-title {
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: 400;
+      font-size: 16px;
+      color: #1F1F1F;
+    }
 
-    .flexBox {
+    .type-list {
+      margin-left: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
 
-      .inItem {
+      .type-item {
         width: 105px;
         height: 33px;
         background: #ffffff;
-        border-radius: 2px 2px 2px 2px;
-        border: 1px solid #EEEEEE;
-        font-family: Microsoft YaHei, Microsoft YaHei;
-        font-weight: 400;
-        font-size: 14px;
-        color: #7D7D7D;
+        border: 1px solid #eeeeee;
+
         line-height: 33px;
         text-align: center;
         margin-right: 20px;
         cursor: pointer;
 
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-weight: 400;
+        font-size: 16px;
+        color: #333333;
+
         &.active {
-          color: #FFAA06;
-          border: 1px solid #FFAA06;
+          color: #7853b2;
+          border: 1px solid #7853b2;
         }
 
-        &:hover {}
+        &:hover {
+        }
+      }
+    }
+  }
+
+  .fapiao-box {
+    width: 600px;
+
+    .input-box {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      margin-bottom: 16px;
+      .label {
+        width: 216px;
+        text-align: right;
+        font-family: Microsoft YaHei, Microsoft YaHei;
+        font-weight: 400;
+        font-size: 14px;
+        color: #1F1F1F;
+
+        &::before {
+          content: "*";
+          color: #f00;
+          margin-right: 4px;
+        }
+      }
+      .val-box {
+        flex: 1;
+        margin-left: 16px;
+      }
+    }
+  }
+}
+
+// 优惠券/优惠码样式
+.coupon-tabs {
+  .tab-header {
+    display: flex;
+    height: 48px;
+    margin-bottom: 20px;
+    background: #f9f9f9;
+    border: 1px solid #cccccc;
+
+    .tab-item {
+      width: 131px;
+      height: 48px;
+      text-align: center;
+      line-height: 48px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #f9f9f9;
+      transition: all 0.3s ease;
+      color: #1F1F1F;
+      border-bottom: 1px solid #cccccc;
+
+      &.active {
+        color: #ffffff;
+        background: #7853b2;
+      }
+    }
+  }
+
+  .tab-content {
+    padding: 0 20px;
+    .sub-tabs {
+      display: flex;
+      margin-bottom: 20px;
+
+      .sub-tab-item {
+        padding: 12px 0;
+        font-size: 14px;
+        color: #999;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s ease;
+        position: relative;
+        margin-right: 80px;
+
+        &.active {
+          color: #7853b2;
+          border-bottom-color: #7853b2;
+        }
+
+        &:hover {
+          color: #7853b2;
+        }
       }
     }
 
-    .title {
-      min-width: 100px;
-      font-weight: 400;
-      font-size: 16px;
-      color: #666666;
-      line-height: 16px;
+    .coupon-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+
+      .coupon-card {
+        position: relative;
+        width: 307px;
+        height: 106px;
+        border: 1px solid #d6d6d6;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #fff;
+
+        &:hover {
+          border-color: #7853b2;
+        }
+
+        &.active {
+          border-color: #7853b2;
+          box-shadow: 0 2px 8px rgba(120, 83, 178, 0.2);
+        }
+
+        &.unavailable {
+          opacity: 0.6;
+          background: #f9f9f9;
+
+          .coupon-content {
+            .coupon-amount {
+              color: #999;
+            }
+            .coupon-condition,
+            .coupon-expire {
+              color: #ccc;
+            }
+          }
+        }
+
+        .coupon-check {
+          position: absolute;
+          right: -1px;
+          bottom: -1px;
+          width: 32px;
+          height: 32px;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+        }
+
+        .coupon-content {
+          padding: 12px 16px;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+
+          .coupon-amount {
+            display: flex;
+            align-items: baseline;
+            margin-right: 17px;
+
+            .currency {
+              font-size: 14px;
+              color: #be9bdf;
+              font-weight: 500;
+            }
+
+            .amount {
+              font-size: 24px;
+              color: #be9bdf;
+              font-weight: bold;
+              margin-left: 2px;
+            }
+          }
+
+          .coupon-condition {
+            font-size: 14px;
+            color: #1F1F1F;
+          }
+
+          .coupon-expire {
+            font-size: 12px;
+            color: #1F1F1F;
+            margin-right: 12px;
+          }
+
+          .coupon-rules {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+
+            .info-icon {
+              width: 12px;
+              height: 12px;
+              border-radius: 50%;
+              background: #ccc;
+              color: #fff;
+              font-size: 10px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin-left: 4px;
+              font-style: normal;
+            }
+          }
+        }
+      }
+    }
+
+    .no-coupon {
+      text-align: center;
+      padding: 40px 0;
+      color: #999;
+      font-size: 14px;
+    }
+
+    .promo-code-section {
+      .promo-code-input {
+        margin-bottom: 12px;
+
+        .code-input {
+          width: 300px;
+
+          .el-input__inner {
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            height: 40px;
+            line-height: 40px;
+            padding: 0 12px;
+            font-size: 14px;
+
+            &:focus {
+              border-color: #7853b2;
+            }
+          }
+        }
+      }
+
+      .promo-code-tip {
+        background: #7853B2;
+        font-size: 14px;
+       color: #FFFFFF; border-radius: 2px 2px 2px 2px;
+       margin-top: 16px;
+       width: 126px;
+       height: 32px;
+      }
     }
   }
+}
 
-  .invoiceForm {
-    width: 600px;
-  }
+.discount-summary {
+  padding: 15px 40px;
+  height: 50px;
 
-  .invoiceForm2 {
-    width: 600px;
+  margin: 40px 0;
+  background: #fafbfc;
+
+  .summary-item {
+    display: flex;
+    align-items: center;
+
+    .label {
+      font-size: 14px;
+      color: #333;
+    }
+
+    .value {
+      font-size: 14px;
+      color: #7853b2;
+      font-weight: 500;
+    }
   }
 }
 </style>

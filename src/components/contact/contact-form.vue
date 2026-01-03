@@ -272,7 +272,7 @@ export default {
   width: 80px;
   margin: 24px auto;
   height: 5px;
-  background: #F74747;
+  background: #7853B2;
   border-radius: 3px 3px 3px 3px;
 }
 
@@ -329,7 +329,7 @@ export default {
     button {
       width: 200px;
       height: 50px;
-      background: #F74747;
+      background: #7853B2;
       border-radius: 0px 0px 0px 0px;
 
       font-family: OPPOSans, OPPOSans;
@@ -341,16 +341,18 @@ export default {
 }
 
 .btn-upload {
-  .flex-center();
+    display: flex;
+          justify-content: center;
+          align-items: center;
   min-width: 128px;
   height: 40px;
   background: #ffffff;
   border-radius: 4px 4px 4px 4px;
-  border: 1px solid #F74747;
+  border: 1px solid #7853B2;
   font-size: 14px;
   font-family: Microsoft YaHei-Regular, Microsoft YaHei;
   font-weight: 400;
-  color: #F74747;
+  color: #7853B2;
 
   img {
     margin-right: 10px;

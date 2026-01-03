@@ -75,7 +75,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   watch: {
     showModal(val) {
@@ -199,16 +199,18 @@ export default {
 
 <style scoped lang="less">
 .btn-upload {
-  .flex-center();
+    display: flex;
+          justify-content: center;
+          align-items: center;
   min-width: 128px;
   height: 40px;
   background: #ffffff;
   border-radius: 4px 4px 4px 4px;
-  border: 1px solid #F74747;
+  border: 1px solid #7853B2;
   font-size: 14px;
   font-family: Microsoft YaHei-Regular, Microsoft YaHei;
   font-weight: 400;
-  color: #F74747;
+  color: #7853B2;
 
   img {
     margin-right: 10px;
@@ -240,7 +242,7 @@ export default {
           font-size: 20px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #7853B2;
         }
 
         input {
@@ -260,7 +262,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #F74747;
+  // background: #7853B2;
   background: #f7f7f7;
   text-align: left;
 
@@ -288,13 +290,13 @@ export default {
 
   .quxiao {
     margin-right: 24px;
-    color: #F74747;
-    border: 1px solid #F74747;
+    color: #7853B2;
+    border: 1px solid #7853B2;
   }
 
   .queding {
     // margin-right: 24px;
-    background: #F74747;
+    background: #7853B2;
     color: #fff;
   }
 }

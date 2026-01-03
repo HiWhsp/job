@@ -1,6 +1,6 @@
 <template>
   <div class="header-box">
-    <div class="header w-1200">
+    <div class="header w-1400">
       <div class="left">
         <div class="logo" @click="$router.push('/')">
           <img :src="logo" />
@@ -26,7 +26,7 @@
             <button class="btn-cart">
               <!-- <img src="@pro/common/shopcart-t.png" alt /> -->
               <router-link to="myCart">购物车</router-link>
-              <i>{{ shopcart_count }}</i>
+              <i>{{ vuex_cart_number }}</i>
             </button>
           </div>
           <!-- <div class="search-suggest">
@@ -71,7 +71,6 @@ export default {
       "index_custom_banner",
       "hot_keywords",
       "logo",
-      "shopcart_count",
     ]),
     suggestKeywods() {
       let arr = [];
@@ -155,7 +154,7 @@ export default {
       .text-2 {
         font-size: 24px;
         font-family: MicrosoftYaHei;
-        color: var(--main_color);
+        color: #f00;
       }
     }
   }
@@ -192,20 +191,22 @@ export default {
       background: #fff;
       padding-left: 40px;
       padding-right: 30px;
-      border: 2px solid var(--main_color);
+      border: 2px solid #f00;
 
       font-size: 14px;
       font-family: Microsoft YaHei;
       color: #000;
     }
     .btn-search {
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
       border-radius: 0 18px 18px 0;
       width: 96px;
       height: 100%;
       height: 36px;
-      background: var(--main_color);
-      border: 2px solid var(--main_color);
+      background: #f00;
+      border: 2px solid #f00;
       border: none;
       outline: none;
       cursor: pointer;
@@ -236,10 +237,12 @@ export default {
       & + button {
         margin-left: 20px;
       }
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
       width: 129px;
       height: 35px;
-      background: var(--main_color);
+      background: #f00;
       border: 1px solid #e3e3e3;
       opacity: 1;
       border-radius: 20px;

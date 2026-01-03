@@ -191,7 +191,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: 400;
-        color: #F74747;
+        color: #7853B2;
 
         span {
           margin-right: 20px;
@@ -213,11 +213,11 @@ export default {
     height: 32px;
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    border: 1px solid #7853B2;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
+    color: #7853B2;
 
   }
 
@@ -225,7 +225,7 @@ export default {
     margin-left: 24px;
     width: 120px;
     height: 32px;
-    background: #F74747;
+    background: #7853B2;
     border-radius: 50px 50px 50px 50px;
     font-family: Arial, Arial;
     font-weight: 400;
@@ -236,3 +236,4 @@ export default {
 </style>
 
 <style scoped lang="less" src="@/assets/h5css/user/change-password.less"></style>
+<style scoped lang="less" src="@/assets/h5css/page/shipei3.less"></style>

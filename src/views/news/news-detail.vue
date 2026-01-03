@@ -1,9 +1,9 @@
 <template>
   <div class="page">
-    <news_banner />
+    <!-- <news_banner /> -->
 
     <div class="inner">
-      <div class="page-ctx w-1200">
+      <div class="page-ctx w-1400">
         <div class="ctx-box ">
           <div class="ctx-left">
             <div class="news-ctx">
@@ -33,9 +33,9 @@
               </div>
             </div>
           </div>
-          <div class="ctx-right">
+          <!-- <div class="ctx-right">
             <news_right :current_cid="detail.channelId"/>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -158,7 +158,7 @@ export default {
       display: block;
       // margin: 10px auto;
       margin: 0 auto;
-      vertical-align: middle;
+      vertical-align: bottom;
     }
   }
 

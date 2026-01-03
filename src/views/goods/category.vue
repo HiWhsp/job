@@ -23,6 +23,7 @@
             class="goods-item scale-wrap"
             v-for="(item, index) in list_goods"
             :key="index"
+            target="_blank"
           >
             <div class="img-box cover scale-inner">
               <img :src="item.img" alt="" class="scale-target" />
@@ -216,7 +217,7 @@ export default {
         content: "";
         width: 3px;
         height: 30px;
-        background: #F74747;
+        background: #7853B2;
       }
     }
   }
@@ -279,7 +280,7 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: bold;
           line-height: 16px;
-          color: #F74747;
+          color: #7853B2;
         }
       }
     }

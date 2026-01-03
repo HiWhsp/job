@@ -22,10 +22,10 @@
         min-width: 96px;
         height: 30px;
         line-height: 30px;
-        background: #F74747;
+        background: #7853B2;
         color: #fff;
         background: #fff;
-        color: #F74747;
+        color: #7853B2;
         font-size: 14px;
         // font-weight: bold;
 
@@ -69,7 +69,7 @@
             font-size: 12px;
             font-family: Microsoft YaHei-Regular, Microsoft YaHei;
             font-weight: 400;
-            color: #666666;
+            color: #1F1F1F;
           }
         }
       }
@@ -89,7 +89,7 @@
             line-height: 24px;
             text-align: center;
             // background: rgba(255, 90, 0, 0.68);
-            background: #F74747;
+            background: #7853B2;
             font-size: 12px;
             color: #ffffff;
           }
@@ -100,12 +100,46 @@
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 20px;
-          color: #F74747;
+          color: #7853B2;
 
           .action {
             margin-left: 20px;
             cursor: pointer;
           }
+        }
+      }
+    }
+  }
+
+  .modal-container{
+    /deep/.el-dialog__wrapper{
+      .el-dialog__body{
+        padding:20px 10px;
+
+        .text {
+          min-width: 7em;
+          font-size: 12px;
+          padding-right: 0.5rem;
+        }
+        .text::before{
+          font-size: 12px;
+        }
+        .el-input__inner{
+          font-size: 12px;
+        }
+        .sanji-box{
+          .el-select{
+            margin-right: 0rem;
+          }
+        }
+      }
+
+      .el-dialog__footer{
+        .btn-ripple{
+          min-width: 0;
+          height: 2rem;
+          font-size: 16px;
+          margin:0 0.7rem;
         }
       }
     }

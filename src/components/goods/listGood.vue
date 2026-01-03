@@ -131,7 +131,7 @@ export default {
         display: flex;
   align-items: center;
       .sale {
-        color: #F74747;
+        color: #7853B2;
         font-size: 20px;
         font-family: PingFang SC;
         font-weight: bold;
@@ -235,7 +235,7 @@ export default {
           display: flex;
   align-items: center;
         .sale {
-          color: #F74747;
+          color: #7853B2;
           font-size: 14px;
           font-family: PingFang SC;
           font-weight: bold;

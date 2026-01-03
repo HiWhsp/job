@@ -108,7 +108,9 @@ export default {
 .modal-wrap {
   .modal-inner {
     padding: 0;
-    .flex-center();
+      display: flex;
+          justify-content: center;
+          align-items: center;
     flex-direction: column;
     font-size: 14px;
 
@@ -121,7 +123,7 @@ export default {
     .money {
       margin-top: 20px;
       font-size: 16px;
-      color: #F74747;
+      color: #7853B2;
       b {
         font-size: 24px;
       }
@@ -136,7 +138,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #F74747;
+  // background: #7853B2;
   background: #f7f7f7;
   text-align: left;
 
@@ -163,12 +165,12 @@ export default {
 
   .quxiao {
     // margin-right: 20px;
-    color: #F74747;
-    border: 1px solid #F74747;
+    color: #7853B2;
+    border: 1px solid #7853B2;
   }
   .queding {
     // margin-right: 24px;
-    background: #F74747;
+    background: #7853B2;
     color: #fff;
 
     &:disabled {

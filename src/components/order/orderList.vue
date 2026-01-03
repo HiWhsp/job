@@ -68,9 +68,9 @@
           <button v-if="item.orderStatus >= 5" class="btn-ripple fit-text btn-bg" @click="doRefund(item)">
             售后
           </button>
-          <!-- <button v-if="item.is_aa == 1" class="btn-ripple fit-text btn-bg" @click="toDetail(item)">
+          <button v-if="item.is_aa == 1" class="btn-ripple fit-text btn-bg" @click="toDetail(item)">
             查看物流
-          </button> -->
+          </button>
         </div>
       </div>
     </div>
@@ -167,7 +167,7 @@ export default {
         this.jump_shouhou(order_id);
       } else if (name == "查看物流") {
         this.$router.push(
-          `/orderLogistics?order_id=${order_id}&logistics_id=${fahuo_id}`
+          `/order-logistics?order_id=${order_id}&logistics_id=${fahuo_id}`
         );
       } else if (name == "售后") {
         this.$router.push(`/refundFeedback?order_id=${order_id}`);
@@ -288,8 +288,8 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
-      color: #999999;
-      color: #F74747;
+      color: #505050;
+      color: #7853B2;
 
       // 待付款
       &.state--5 {
@@ -299,8 +299,8 @@ export default {
       }
 
       &.state-2 {
-        color: #F74747;
-        border-color: #F74747;
+        color: #7853B2;
+        border-color: #7853B2;
       }
     }
   }
@@ -353,7 +353,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #F74747;
+              color: #7853B2;
             }
           }
         }
@@ -405,13 +405,13 @@ export default {
         margin-right: 30px;
 
         b {
-          color: #F74747;
+          color: #7853B2;
         }
       }
 
       .heji-money {
         b {
-          color: #F74747;
+          color: #7853B2;
         }
       }
     }
@@ -423,11 +423,11 @@ export default {
         height: 32px;
         background: #FFFFFF;
         border-radius: 50px 50px 50px 50px;
-        border: 1px solid #F74747;
+        border: 1px solid #7853B2;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #F74747;
+        color: #7853B2;
 
         &+button {
           margin-left: 20px;
@@ -438,7 +438,7 @@ export default {
         }
 
         &.btn-bg {
-          background: #F74747;
+          background: #7853B2;
           color: #FFFFFF;
         }
       }

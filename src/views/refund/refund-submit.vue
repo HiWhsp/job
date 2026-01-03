@@ -479,7 +479,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 20px;
-        color: #999999;
+        color: #505050;
       }
     }
 
@@ -555,7 +555,7 @@ export default {
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
-              color: #999999;
+              color: #505050;
             }
           }
 
@@ -641,7 +641,7 @@ export default {
       width: 240px;
       height: 40px;
       background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
-      background: #F74747;
+      background: #7853B2;
       border-radius: 30px;
       border-radius: 0;
 
@@ -677,3 +677,7 @@ export default {
   }
 }
 </style>
+
+<style scoped lang="less" src="@/assets/h5css/page/shipei3.less"></style>
+<style scoped lang="less" src="@/assets/h5css/page/shipei3.less"></style>
+<style scoped lang="less" src="@/assets/h5css/modals/refundList.less"></style>

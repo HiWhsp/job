@@ -48,7 +48,7 @@
             ">
               <!-- <button v-if="!is_jifen_goods && item.allow_actions.allow_refund" class="btn-goods-action" @click="refundApply(item)">申请售后</button> -->
               <!-- <button v-if="item.ifshouhou" class="btn-goods-action disabled">已售后</button> -->
-              <!-- <button v-if="item.allow_actions.allow_logistics" class="btn-goods-action" @click="toRoute(`/orderLogistics?order_id=${order_id}&logistics_id=${fahuo_id}`)">查看物流</button> -->
+              <!-- <button v-if="item.allow_actions.allow_logistics" class="btn-goods-action" @click="toRoute(`/order-logistics?order_id=${order_id}&logistics_id=${fahuo_id}`)">查看物流</button> -->
               <button v-if="product_item.allow_actions.allow_review" class="btn-goods-action"
                 @click="to_review(product_item)">
                 商品评价
@@ -337,7 +337,7 @@ export default {
         this.jump_shouhou(order_id);
       } else if (name == "查看物流") {
         this.$router.push(
-          `/orderLogistics?order_id=${order_id}&logistics_id=${this.fahuo_id}`
+          `/order-logistics?order_id=${order_id}&logistics_id=${this.fahuo_id}`
         );
 
         // window.open('https://www.kuaidi100.com/', '_blank')
@@ -446,7 +446,7 @@ export default {
 
 .money-heji {
   span {
-    color: #F74747;
+    color: #7853B2;
     font-weight: bold;
   }
 }
@@ -473,7 +473,7 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: bold;
       line-height: 24px;
-      color: #F74747;
+      color: #7853B2;
 
       .pay-title {
         margin-right: 5px;
@@ -518,8 +518,8 @@ export default {
       // min-width: 96px;
       height: 30px;
       line-height: 30px;
-      // background: #F74747;
-      color: #F74747;
+      // background: #7853B2;
+      color: #7853B2;
       // color: #fff;
       font-size: 14px;
     }
@@ -577,7 +577,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #F74747;
+              color: #7853B2;
             }
           }
         }
@@ -617,7 +617,7 @@ export default {
           margin-left: 10px;
           min-width: 96px;
           height: 30px;
-          background: #F74747;
+          background: #7853B2;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;
@@ -660,7 +660,7 @@ export default {
 
     .count {
       font-weight: bold;
-      color: #F74747;
+      color: #7853B2;
     }
 
     .money-item {
@@ -676,7 +676,7 @@ export default {
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #666666;
+        color: #1F1F1F;
       }
 
       .value {
@@ -684,7 +684,7 @@ export default {
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #666666;
+        color: #1F1F1F;
       }
 
       .money-num {
@@ -729,8 +729,8 @@ export default {
     line-height: 20px;
     color: #7d7d7d;
 
-    border: 1px solid #F74747;
-    color: #F74747;
+    border: 1px solid #7853B2;
+    color: #7853B2;
   }
 
   .order-action {
@@ -739,28 +739,28 @@ export default {
     font-size: 14px;
     color: #7d7d7d;
 
-    border: 1px solid #F74747;
-    color: #F74747;
+    border: 1px solid #7853B2;
+    color: #7853B2;
 
     &:hover {
       opacity: 0.8;
     }
 
     &.zhifu {
-      background: #F74747;
-      border-color: #F74747;
+      background: #7853B2;
+      border-color: #7853B2;
       color: #fff;
     }
 
     &.shanchu {
-      background: #F74747;
-      border-color: #F74747;
+      background: #7853B2;
+      border-color: #7853B2;
       color: #fff;
     }
 
     &.shouhuo {
-      background: #F74747;
-      border-color: #F74747;
+      background: #7853B2;
+      border-color: #7853B2;
       color: #fff;
     }
   }

@@ -16,7 +16,7 @@
         <div class="text-box">
           <div class="text-1">我的积分</div>
           <div class="text-2">
-            {{ baseInfo.jifen || 0 }}
+            {{ vuex_user.jifen || 0 }}
             <!-- <span class="currency">元</span> -->
           </div>
           <div class="text-3">
@@ -106,7 +106,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
 
     list_tab() {
       return [
@@ -193,7 +193,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #7853B2;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -216,7 +216,9 @@ export default {
   padding-left: 40px;
   padding-left: 40px;
   flex-direction: column;
-  .flex-center();
+    display: flex;
+          justify-content: center;
+          align-items: center;
   align-items: flex-start;
 
   .text-box {
@@ -279,9 +281,9 @@ export default {
     color: #333333;
 
     &.active {
-      border-bottom: 3px solid #F74747;
+      border-bottom: 3px solid #7853B2;
       font-weight: bold;
-      color: #F74747;
+      color: #7853B2;
     }
   }
 }
@@ -376,7 +378,7 @@ export default {
       button {
         width: 51px;
         height: 22px;
-        background: #F74747;
+        background: #7853B2;
         border-radius: 2px;
         color: #fff;
         font-size: 12px;

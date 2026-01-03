@@ -51,7 +51,7 @@ export default {
   .section-title {
     .text-box {
       font-size: 26px;
-      color: var(--main_color);
+      color: #f00;
       b {
       }
       span {
@@ -66,7 +66,7 @@ export default {
         display: inline-block;
         width: 50px;
         height: 2px;
-        background: var(--main_color);
+        background: #f00;
       }
     }
   }

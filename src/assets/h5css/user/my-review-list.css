@@ -1,0 +1,129 @@
+@media screen and (max-width: 1199px) {
+  .page {
+    text-align: left;
+    padding-bottom: 80px;
+  }
+  .page .main-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    text-align: left;
+    height: 56px;
+    line-height: 56px;
+    background: #ffffff;
+    font-size: 16px;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+  }
+  .page .main-title button {
+    min-width: 96px;
+    height: 30px;
+    line-height: 30px;
+    background: #7853B2;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .page /deep/ .el-rate__icon {
+    width: 15px;
+  }
+  .page .wrap-comments .comment-item {
+    margin-top: 20px;
+  }
+  .page .page-ctx {
+    margin-top: 24px;
+    padding: 32px 32px 40px 32px;
+    padding: 15px;
+    background: #fff;
+  }
+  .wrap-comments .comment-item {
+    padding: 15px 20px;
+    padding: 0;
+    border-bottom: 1px solid #ddd;
+  }
+  .wrap-comments .comment-item .avatar-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .wrap-comments .comment-item .avatar-info .left {
+    min-width: 127px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .wrap-comments .comment-item .avatar-info .left img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .wrap-comments .comment-item .avatar-info .left span {
+    flex: 2;
+    margin-left: 10px;
+    display: inline-block;
+    text-align: left;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: #333333;
+  }
+  .wrap-comments .comment-item .info-box {
+    padding-left: 0;
+  }
+  .wrap-comments .comment-item .info-box .content {
+    margin: 10px 0;
+    margin-top: 0;
+    text-align: left;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 30px;
+    color: #222222;
+  }
+  .wrap-comments .comment-item .info-box .img-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    text-align: left;
+  }
+  .wrap-comments .comment-item .info-box .img-list .img-item {
+    margin-right: 15px;
+  }
+  .wrap-comments .comment-item .info-box .img-list img {
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  .wrap-comments .comment-item .info-box .date {
+    margin-top: 10px;
+    text-align: left;
+    font-size: 14px;
+    font-family: PingFang SC;
+    font-weight: 400;
+    line-height: 19px;
+    color: #505050;
+  }
+  .wrap-comments .comment-item .info-box .goods-info {
+    margin-top: 10px;
+    background: #f8f8f8;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+  .wrap-comments .comment-item .info-box .goods-info .goods-img img {
+    width: 70px;
+    height: 70px;
+  }
+  .wrap-comments .comment-item .info-box .goods-info .goods-title {
+    text-align: left;
+    flex: 2;
+    padding-left: 30px;
+    font-size: 14px;
+  }
+}

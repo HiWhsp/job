@@ -1,6 +1,6 @@
 <template>
   <div class="header-box">
-    <div class="header w-1200">
+    <div class="header w-1400">
       <div class="left">
         <div class="logo" @click="$router.push('/')">
           <img :src="logo" />
@@ -46,7 +46,7 @@
         <button class="btn-cart">
           <!-- <img src="@pro/common/shopcart-t.png" alt /> -->
           <router-link to="myCart">我的购物车</router-link>
-          <i>{{ shopcart_count }}</i>
+          <i>{{ vuex_cart_number }}</i>
         </button>
       </div>
     </div>
@@ -67,11 +67,9 @@ export default {
   computed: {
     ...mapState([
       "config",
-
       "index_custom_banner",
       "hot_keywords",
       "logo",
-      "shopcart_count",
     ]),
     suggestKeywods() {
       let arr = [];
@@ -154,7 +152,7 @@ export default {
       .text-2 {
         font-size: 24px;
         font-family: MicrosoftYaHei;
-        color: var(--main_color);
+        color: #f00;
       }
     }
   }
@@ -191,20 +189,22 @@ export default {
       background: #fff;
       padding-left: 40px;
       padding-right: 30px;
-      border: 1px solid var(--main_color);
+      border: 1px solid #f00;
 
       font-size: 14px;
       font-family: Microsoft YaHei;
       color: #000;
     }
     .btn-search {
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
       border-radius: 0 4px 4px 0;
       width: 96px;
       height: 100%;
       height: 36px;
-      background: var(--main_color);
-      border: 1px solid var(--main_color);
+      background: #f00;
+      border: 1px solid #f00;
       border: none;
       outline: none;
       cursor: pointer;
@@ -239,7 +239,7 @@ export default {
   // width: 129px;
   height: 35px;
   background: transparent;
-  border: 1px solid #999999;
+  border: 1px solid #505050;
   opacity: 1;
   border-radius: 4px;
 

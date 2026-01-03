@@ -1,29 +1,33 @@
-@width: 1200px;
-@theme: #F74747;
+@width: 1600px;
+@theme: #7853B2;
 @navhead: 152px;
 
-.w-1200 {
-  width: 1200px;
+.w-1400 {
+  width: 1600px;
 }
 
 .flex {
   display: flex;
   align-items: center;
 }
+
 .flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .flex-start {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
+
 .v-flex-start {
   display: flex;
   align-items: flex-start;
 }
+
 .flex-between {
   display: flex;
   justify-content: space-between;
@@ -42,6 +46,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
 .ellipsis-2 {
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -49,6 +54,7 @@
   overflow: hidden;
   -webkit-line-clamp: 2;
 }
+
 .ellipsis-3 {
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -56,6 +62,7 @@
   overflow: hidden;
   -webkit-line-clamp: 3;
 }
+
 .ellipsis-4 {
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -63,6 +70,7 @@
   overflow: hidden;
   -webkit-line-clamp: 4;
 }
+
 .ellipsis-5 {
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -87,11 +95,13 @@
 
 .scrollbar {
   overflow-y: auto;
+
   &::-webkit-scrollbar-thumb {
     border-radius: 3px;
     border: 5px solid #bbb;
     background: #fff;
   }
+
   &::-webkit-scrollbar {
     width: 5px;
     height: 0px;
@@ -101,13 +111,25 @@
 
 .scrollbar-y {
   overflow-y: auto;
+
   &::-webkit-scrollbar-thumb {
     border-radius: 3px;
     border: 5px solid #bbb;
     background: #fff;
   }
+
   &::-webkit-scrollbar {
     width: 5px;
     height: 0px;
+  }
+}
+
+
+.hover-color {
+  cursor: pointer;
+
+  &:hover {
+
+    color: #5b339a !important;
   }
 }

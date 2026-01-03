@@ -39,7 +39,7 @@
         min-width: 96px;
         height: 30px;
         line-height: 30px;
-        background: #F74747;
+        background: #7853B2;
         color: #fff;
         font-size: 14px;
         font-weight: bold;
@@ -83,7 +83,9 @@
       }
 
       .action-box {
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
         position: absolute;
         z-index: 10;
         right: 0;
@@ -153,7 +155,7 @@
       border: 1px solid #e5e5e5;
       height: 44px;
       background: #f5f5f5;
-      color: #666666;
+      color: #1F1F1F;
       font-size: 14px;
       .fav-check {
           display: flex;
@@ -179,6 +181,11 @@
         flex-wrap: wrap;
         padding: 10px;
         border-bottom: 1px solid #e5e5e5;
+
+        .goods-price{
+          min-width: 0;
+          white-space: nowrap;
+        }
 
         &:last-child {
           border-bottom: none;
@@ -221,7 +228,7 @@
             font-size: 12px;
             font-family: Microsoft YaHei-Bold, Microsoft YaHei;
             font-weight: bold;
-            color: #F74747;
+            color: #7853B2;
           }
         }
 
@@ -237,12 +244,12 @@
             font-size: 14px;
 
             &.btn-cancel {
-              color: #999999;
+              color: #505050;
             }
             &.btn-detail {
               display: none;
-              border: 1px solid #F74747;
-              color: #F74747;
+              border: 1px solid #7853B2;
+              color: #7853B2;
             }
           }
         }

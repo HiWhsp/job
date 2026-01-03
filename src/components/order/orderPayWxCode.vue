@@ -11,7 +11,7 @@
     >
       <div class="modal-inner">
         <div class="pay-wrap">
-          <!-- <div class="pay-tip">扫描下方微信二维码完成支付</div> -->
+          <div class="pay-tip">扫描下方微信二维码完成支付</div>
           <div class="pay-qrcode">
             <img :src="qrcode" alt />
           </div>
@@ -51,7 +51,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   watch: {
     showModal(val) {
@@ -65,6 +65,7 @@ export default {
 
   mounted() {
     // this.creatQrCode();
+    
   },
 
   beforeDestroy() {
@@ -73,6 +74,8 @@ export default {
 
   methods: {
     init(data) {
+      console.log(data);
+      
       this.order_id = data.order_id;
       this.qrcode = data.qrcode;
 
@@ -87,7 +90,7 @@ export default {
       // this.order_id =
       if (this.$route.name == "order-submit" || this.$route.name == "payment-methods") {
         //创建订单页
-        this.$router.push("/payment-success?order_id=" + this.order_id);
+        this.$router.push("/payment-success?orderId=" + this.order_id);
       } else {
         this.showModal = false;
       }
@@ -95,8 +98,13 @@ export default {
 
     orders_detail() {
       this.timer = setInterval(() => {
-        this.$api("orders_detail", {
-          id: this.order_id,
+        this.$api({
+          url: "/service.php",
+          method: "get",
+          data: {
+            action: "orders_detail",
+            id: this.order_id,
+          },
         }).then((res) => {
           let { code, data, msg} = res;
 
@@ -140,7 +148,7 @@ export default {
 
       .pay-info {
         b {
-          color: #F74747;
+          color: #7853B2;
           font-size: 20px;
         }
       }
@@ -150,7 +158,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  background: #F74747;
+  background: #7853B2;
 
   .el-dialog__title {
     color: #fff;
@@ -175,7 +183,7 @@ export default {
     margin-right: 20px;
   }
   .queding {
-    background: #F74747;
+    background: #7853B2;
     color: #fff;
 
     &:disabled {

@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="section-title">
         支付成功
       </div>
@@ -35,7 +35,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar"]),
+    ...mapState([""]),
   },
   watch: {
     address(val) {
@@ -67,9 +67,6 @@ export default {
 
 
 <style scoped lang="less">
-/deep/ .order-list-wrap {
-  margin-top: 30px;
-}
 
 .section-title {
   text-align: left;
@@ -115,7 +112,9 @@ export default {
     }
     .bottom {
       margin-top: 30px;
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
       button {
         width: 170px;
         height: 40px;
@@ -135,12 +134,12 @@ export default {
         &.tijiao {
           margin-right: 30px;
           color: #ffffff;
-          background: #F74747;
+          background: #7853B2;
         }
 
         &.back {
-          border: 1px solid #F74747;
-          color: #F74747;
+          border: 1px solid #7853B2;
+          color: #7853B2;
         }
       }
     }

@@ -1,8 +1,21 @@
 <template>
   <div class="page">
-    <div class="main-title">
-      <span>领券中心</span>
-      <!-- <b @click="$router.push('/mycoupon')">我的优惠券</b> -->
+    <!-- 顶部 Banner -->
+    <div class="banner-box">
+      <div class="poster-box">
+        <!-- <img :src="banner_poster" alt="" /> -->
+        <el-carousel trigger="click" height="100%">
+          <el-carousel-item v-for="(item, index) in banner_list" :key="index">
+            <el-image :src="item.image"> </el-image>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+    </div>
+
+    <div class="suggest-title flex-center">
+      <!-- <img src="@img/index/suggest-left.png" alt="" /> -->
+      <span class="block">精选<span style="color: #7853b2">好券</span></span>
+      <!-- <img src="@img/index/suggest-right.png" alt="" /> -->
     </div>
 
     <div class="page-ctx">
@@ -33,33 +46,48 @@
           </div>
         </div> -->
 
-        <div class="list-box">
-          <div class="item" :class="'state-' + status" v-for="(item, index) in list_yhq" :key="index">
-            <div class="info">
-              <div class="title">
-                <span class="huobi">{{ vuex_huobi }} </span>
-                <span class="num">{{ item.money }}</span>
+        <div class="coupon-grid">
+          <div
+            class="coupon-item"
+            :class="{ disabled: item.if_ke_lingqu != 1 }"
+            v-for="(item, index) in list_yhq"
+            :key="index"
+          >
+            <div class="coupon-content">
+              <div class="coupon-left">
+                <div class="flex" style="align-items: flex-end">
+                  <div class="coupon-amount">
+                    <span class="currency">{{ vuex_huobi }}</span>
+                    <span class="amount">{{ item.money }}</span>
+                  </div>
+                  <div class="coupon-condition">
+                    <span class="condition-tag">满{{ item.man }}元可用</span>
+                  </div>
+                </div>
+
+                <div class="coupon-validity">
+                  有效期{{ item.startTime }}至{{ item.endTime }}
+                </div>
+                <div class="coupon-scope">全平台可用</div>
               </div>
-              <div class="tiaojian">
-                <!-- 使用条件： -->
-                满{{ item.man }}可用
+              <div class="coupon-right">
+                <button
+                  class="claim-btn"
+                  v-if="item.if_ke_lingqu == 1"
+                  @click="do_coupon_pick(item)"
+                >
+                  立即领取
+                </button>
+                <button class="claim-btn disabled" v-else>已经抢完</button>
               </div>
-              <div class="shijian">
-                <!-- 有效时间： -->
-                {{ item.startTime }}-{{ item.endTime }}
-              </div>
-            </div>
-            <div class="action">
-              <button class="btn-lingqu" v-if="item.if_ke_lingqu == 1" @click="do_coupon_pick(item)">
-                立即领取
-              </button>
-              <button class="btn-yilingqu" v-else>已领取</button>
             </div>
           </div>
         </div>
 
-
-        <el-empty v-if="!list_yhq.length" description="暂无优惠券信息..."></el-empty>
+        <el-empty
+          v-if="!list_yhq.length"
+          description="暂无优惠券信息..."
+        ></el-empty>
 
         <!-- <div class="bg-box">
           <img src="@img/my/bg-coupon.png" alt="" />
@@ -77,13 +105,23 @@
         </div>
       </div> -->
 
-
         <!-- <el-empty v-if="!list_yhq.length" description="暂无优惠券信息..."></el-empty> -->
 
         <!-- <div class="lingquan" @click="$router.push('/mycoupon')">
         <img src="@img/other/mycoupon-to-center.png" alt="" />
         <span>我的优惠券 ></span>
       </div> -->
+      <div class="page-box">
+          <el-pagination
+          background
+          layout="total,prev, pager, next,jumper"
+          :total="count"
+          :current-page="pagination.page"
+          :page-size="pagination.pageNum"
+          @current-change="mix_current_change"
+        >
+        </el-pagination>
+      </div>
       </div>
     </div>
   </div>
@@ -110,45 +148,78 @@ export default {
 
       pagination: {
         page: 1,
-        pageNum: 10,
+        pageNum: 15,
       },
-      count: 0
+      count: 0,
+
+      // Banner 相关数据
+      banner_list: [],
+      banner_poster: "",
     };
   },
   computed: {
     // ...mapState([""]),
   },
   created() {
+    this.query_banner();
     this.setView();
   },
   methods: {
+    query_banner() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "banner_index",
+          position: 0,
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          this.banner_list = res.data.filter((it) => it.id == 180)[0].images;
+
+          this.banner_poster = this.banner_list[0].image;
+        }
+      });
+    },
+    do_banner_click(item) {
+      if (item.url) {
+        window.open(item.url, "_blank");
+      } else if (item.inventoryId) {
+        this.$router.push(
+          "/product-detail/" + (item.skuId || item.inventoryId)
+        );
+      window.open('/product-detail?id='+(item.skuId || item.inventoryId),'__blank','',false)
+
+
+      }
+    },
     setView() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'yhq_list',
+          action: "yhq_list",
           ...this.pagination,
-          scene: 0,//0全部 1未使用 2已使用 3已过期
+          scene: 0, //0全部 1未使用 2已使用 3已过期
         },
       }).then((res) => {
         if (res.code == 200) {
           let data = res.data;
           this.list_yhq = data.list;
-          this.count = data.count
+          this.count = data.count;
         }
       });
     },
     do_coupon_pick(item) {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'yhq_lingQu',
+          action: "yhq_lingQu",
           id: item.id,
         },
       }).then((res) => {
-        alert(res)
+        alert(res);
         if (res.code == 200) {
           this.setView();
         }
@@ -159,32 +230,58 @@ export default {
 </script>
 
 <style scoped lang="less">
+.page-box{
+  text-align: center;
+  margin-top: 90px;
+}
 .page {
   text-align: left;
   padding-bottom: 80px;
+}
 
-  .main-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 32px;
-    text-align: left;
-    height: 56px;
-    line-height: 56px;
-    background: #ffffff;
-    font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-    font-weight: bold;
-    color: #333333;
+.banner-box {
+  position: relative;
+  height: 350px;
+}
 
-    button {
-      min-width: 96px;
-      height: 30px;
-      line-height: 30px;
-      background: #F74747;
-      color: #fff;
-      font-size: 14px;
+.poster-box {
+  /deep/.el-carousel {
+    height: 350px;
+  }
+  img {
+    width: 100%;
+    height: 350px;
+  }
+}
+
+.page {
+  .suggest-title {
+    padding: 40px 0 43px;
+    .block {
+      position: relative;
+      z-index: 1;
+      &::after {
+        z-index: -1;
+        position: absolute;
+        left: -4px;
+        bottom: 0;
+        content: "";
+        width: 128px;
+        height: 10px;
+        background: #FCB000;
+        border-radius: 0px 0px 0px 0px;
+      }
+    }
+    span {
+      font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: bold;
+      font-size: 30px;
+      color: #1F1F1F;
+    }
+
+    img {
+      margin: 0 10px;
+      width: 22.46px;
     }
   }
 
@@ -192,7 +289,6 @@ export default {
     min-height: 400px;
     margin-top: 24px;
     padding: 24px 32px 40px 32px;
-    background: #fff;
   }
 }
 
@@ -224,108 +320,179 @@ export default {
     }
   }
 
-  .list-box {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
+  .coupon-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 53px;
+    max-width: 1600px;
+    margin: 0 auto;
 
-    .item {
+    @media (max-width: 1600px) {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      justify-items: center;
+    }
+
+    @media (max-width: 1100px) {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      justify-items: center;
+    }
+
+    .coupon-item {
       position: relative;
-      background: url(~@img/coupon/mycoupon-bg.png) center / cover no-repeat;
-      width: 238px;
-      height: 234px;
-      padding: 15px;
-      margin-right: 10px;
-      margin-bottom: 20px;
-      color: #fff;
+      background: url(~@img/coupon/bg.png) center / cover no-repeat;
+      width: 494px;
+      height: 219px;
+      border-radius: 8px;
+      // border: 1px solid #7853B2;
+      overflow: hidden;
 
-      &.state-2 {
-        background: url(~@img/coupon/bg-yishiyong.png) center / cover no-repeat;
-      }
-
-      &.state-3 {
+      &.disabled {
         background: url(~@img/coupon/bg-yiguoqi.png) center / cover no-repeat;
       }
 
-      &:nth-child(4n) {
-        margin-right: 0;
-      }
+      .coupon-content {
+        display: flex;
+        height: 100%;
+        position: relative;
 
-      .info {
-        font-size: 12px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        line-height: 20px;
-        color: #ffffff;
+        .coupon-left {
+          flex: 1;
+          padding: 35px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
 
-        .title {
-          margin-top: 25px;
+          .coupon-amount {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 15px;
 
-          .huobi {
-            font-size: 24px;
-            font-family: Microsoft YaHei;
-            font-weight: 400;
-            line-height: 20px;
-            color: #ffffff;
+            .currency {
+              font-size: 32px;
+              font-weight: bold;
+              color: #7853b2;
+              margin-right: 4px;
+            }
+
+            .amount {
+              font-size: 66px;
+              font-weight: bold;
+              color: #7853b2;
+            }
           }
 
-          .num {
-            font-size: 36px;
-            font-family: Microsoft YaHei;
-            font-weight: bold;
-            line-height: 20px;
-            color: #ffffff;
+          .coupon-condition {
+            margin-bottom: 32px;
+
+            .condition-tag {
+              margin-left: 16px;
+              display: inline-block;
+              background: #FCB000;
+              color: #fff;
+              font-size: 14px;
+              padding: 2px 5px;
+              border-radius: 4px;
+            }
+          }
+
+          .coupon-validity {
+            font-size: 16px;
+            color: #1F1F1F;
+            margin-bottom: 10px;
+          }
+
+          .coupon-scope {
+            font-size: 16px;
+            color: #1F1F1F;
           }
         }
 
-        .tiaojian {
-          margin: 20px 0 10px;
-        }
+        .coupon-right {
+          width: 120px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          // background: #7853b2;
+          position: relative;
 
-        .shijian {}
-      }
-
-      .action {
-        margin-top: 43px;
-        text-align: center;
-
-        button {
-          width: 122px;
-          height: 34px;
-          border: 1px solid #ff3d00;
-          background: transparent;
-          font-size: 14px;
-          font-family: Microsoft YaHei;
-          font-weight: 400;
-          line-height: 20px;
-          color: #ff3d00;
-          border-radius: 17px;
-
-          // &:hover {
-          //   background: #ff3d00;
-          //   color: #fff;
+          // &::before {
+          //   content: '';
+          //   position: absolute;
+          //   left: -8px;
+          //   top: 50%;
+          //   transform: translateY(-50%);
+          //   width: 0;
+          //   height: 0;
+          //   border-top: 8px solid transparent;
+          //   border-bottom: 8px solid transparent;
+          //   border-right: 8px solid #7853b2;
           // }
 
-          &:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-          }
+          .claim-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 26px;
+            font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            line-height: 1.2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 3px;
 
-          &.btn-yilingqu {
-            filter: grayscale(1);
-            cursor: not-allowed;
+            &.disabled {
+              // color: #ccc;
+              cursor: not-allowed;
+            }
           }
         }
       }
 
-      .guoqi {
-        position: absolute;
-        bottom: 0;
-        right: 0;
+      &.disabled {
+        .coupon-left {
+          .coupon-amount {
+            .currency,
+            .amount {
+              color: #ccc;
+            }
+          }
 
-        img {
-          width: 60px;
-          vertical-align: middle;
+          .coupon-condition {
+            .condition-tag {
+              background: #ddd;
+              color: #999;
+            }
+          }
+
+          .coupon-validity,
+          .coupon-scope {
+            color: #ccc;
+          }
+        }
+
+        .coupon-right {
+          background: #ddd;
+
+          &::before {
+            border-right-color: #ddd;
+          }
+
+          .claim-btn {
+            color: #999;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 3px;
+          }
         }
       }
     }
@@ -383,14 +550,14 @@ export default {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #7853b2;
         }
 
         .num {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #7853b2;
         }
       }
 
@@ -399,7 +566,7 @@ export default {
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
+        color: #505050;
         line-height: 28px;
       }
 
@@ -407,7 +574,7 @@ export default {
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
+        color: #505050;
         line-height: 28px;
       }
 
@@ -417,7 +584,7 @@ export default {
         button {
           width: 127px;
           height: 36px;
-          background: #F74747;
+          background: #7853b2;
           border-radius: 4px 4px 4px 4px;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;

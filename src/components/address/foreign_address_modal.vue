@@ -52,7 +52,7 @@
         </div>
         <div class="item">
           <span class="text" style="visibility: hidden;">默认地址</span>
-          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#F74747"
+          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#7853B2"
             inactive-color="#eeeeee">
           </el-switch>
           <span class="default-text">
@@ -120,7 +120,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   watch: {
 
@@ -361,7 +361,7 @@ export default {
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
           font-size: 14px;
-          color: #999999;
+          color: #505050;
         }
       }
 
@@ -374,7 +374,7 @@ export default {
         font-family: OPPOSans, OPPOSans;
         font-weight: 400;
         font-size: 14px;
-        color: #666666;
+        color: #1F1F1F;
       }
     }
 
@@ -434,17 +434,17 @@ export default {
     height: 32px;
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #F74747;
+    border: 1px solid #7853B2;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #F74747;
+    color: #7853B2;
   }
 
   .btn-2 {
     min-width: 120px;
     height: 32px;
-    background: #F74747;
+    background: #7853B2;
     border-radius: 50px 50px 50px 50px;
     font-family: Arial, Arial;
     font-weight: 400;

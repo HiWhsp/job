@@ -1,13 +1,12 @@
 <template>
   <div class="page">
-    <!-- <pageBread /> -->
     <pageTop :config="pageConfig" />
 
     <modalJobApply ref="modalJobApply" />
     <!-- <pageAboutTop /> -->
 
     <div class="page-box">
-      <div class="page-inner w-1200">
+      <div class="page-inner w-1400">
         <div class="job-title">
           <div class="left">
             {{ detail.title }}
@@ -82,7 +81,7 @@ export default {
             route: '',
           },
         ],
-        nav_list: this.child_about
+        nav_list: []
       };
     },
   },
@@ -160,7 +159,7 @@ export default {
     line-height: 48px;
     text-align: center;
     background: #ea3200;
-    background: #F74747;
+    background: #7853B2;
     border-radius: 4px 4px 4px 4px;
     font-size: 20px;
     font-family: SourceHanSansSC-Regular-, SourceHanSansSC-Regular;

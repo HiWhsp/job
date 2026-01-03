@@ -121,7 +121,7 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           this.order = res.data;
-          this.product_info = res.data.products.find(v => v.id == this.inventoryId) || {}
+          this.product_info =   res.data.products.find(v => v.id == this.inventoryId) || {}
         }
       });
     },
@@ -203,7 +203,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 20px;
-        color: #999999;
+        color: #505050;
       }
     }
 
@@ -279,7 +279,7 @@ export default {
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
-              color: #999999;
+              color: #505050;
             }
           }
 
@@ -381,3 +381,4 @@ export default {
   }
 }
 </style>
+<style scoped lang="less" src="@/assets/h5css/modals/refundList.less"></style>

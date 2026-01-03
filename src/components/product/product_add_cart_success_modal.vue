@@ -1,17 +1,31 @@
 <template>
   <div class="modal-container">
-    <el-dialog :title="number + '件商品加入购物车'" width="580px" custom-class="cus-modal-wrap" :close-on-click-modal="true"
-      :visible.sync="show_modal" :before-close="onBeforeClose">
+    <el-dialog
+      :title="number + '件商品加入购物车'"
+      width="568px"
+      custom-class="cus-modal-wrap"
+      :close-on-click-modal="true"
+      :visible.sync="show_modal"
+      :before-close="onBeforeClose"
+    >
       <div class="modal-inner">
         <div class="tip-box">
-          <img src="@/static/product/product-add-success.png" alt />
+          <img src="@img/product/product-add-success.png" alt />
         </div>
         <div class="text-box-1">该商品已成功加入购物车</div>
-        <div class="text-box-2">购物车共{{ shopcart_count }}件商品</div>
+        <div class="text-box-2">
+          购物车共 <span class="number">{{ vuex_cart_number }}</span> 件商品
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <button class="btn btn-ripple btn-1" @click="$router.push('/cart')">查看购物车</button>
-        <button class="btn btn-ripple btn-2" @click="show_modal = false">继续购物</button>
+        <div class="btns flex-center">
+          <button class="btn btn-ripple btn-bg" @click="$router.push('/cart')">
+            查看购物车
+          </button>
+          <!-- <button class="btn btn-ripple" @click="handle_xjgw">
+            继续购物
+          </button> -->
+        </div>
       </span>
     </el-dialog>
   </div>
@@ -21,9 +35,8 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "add-success",
+  name: "product-add-cart-success",
   components: {},
-  // props: ["curr"],
   data() {
     return {
       show_modal: false,
@@ -40,9 +53,32 @@ export default {
       this.number = select_sku.num;
       this.select_sku = select_sku;
       this.show_modal = true;
+
+      // 3秒后显示提示信息
+setTimeout(() => {
+console.log("3秒后执行此代码");
+      this.show_modal = false;
+
+}, 3000);
+      
     },
     onBeforeClose() {
       this.show_modal = false;
+    },
+    handle_xjgw(){
+      this.show_modal = false;
+
+      console.log('继续购物')
+        window.close();
+      return
+     if (navigator.userAgent.includes("Firefox") || navigator.userAgent.includes("Chrome")) {
+        window.location.href = "about:blank";
+        window.close();
+      } else {
+        window.opener = null;
+        window.open("", "_self");
+        window.close();
+      }
     },
   },
 };
@@ -52,7 +88,7 @@ export default {
 /deep/ .el-dialog__header {
   padding: 16px 24px;
   border-bottom: 1px solid #eee;
-  background: #F7F7F7;
+  background: #f7f7f7;
 
   font-family: Poppins, Poppins;
   font-weight: 600;
@@ -65,36 +101,12 @@ export default {
 }
 
 /deep/ .el-dialog__body {
-  padding: 34px 60px 53px;
+  padding: 34px 60px 30px;
 }
 
 /deep/ .el-dialog__footer {
   text-align: center;
   padding-bottom: 60px;
-
-  button {
-    margin: 0 8px;
-  }
-
-  .btn-1 {
-    width: 200px;
-    height: 45px;
-    background: #F74747;
-    font-family: Arial, Arial;
-    font-weight: 400;
-    font-size: 17px;
-    color: #FFFFFF;
-  }
-  .btn-2 {
-    width: 200px;
-    height: 45px;
-    border-radius: 0px 0px 0px 0px;
-    border: 1px solid #F74747;
-    font-family: Arial, Arial;
-    font-weight: 400;
-    font-size: 17px;
-    color: #F74747;
-  }
 }
 
 .cus-modal-wrap {
@@ -112,22 +124,53 @@ export default {
 
     .text-box-1 {
       margin-top: 18px;
-      font-family: Arial, Arial;
-      font-weight: 400;
-      font-size: 22px;
-      color: #000000;
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: bold;
+      font-size: 20px;
+      color: #1F1F1F;
     }
 
     .text-box-2 {
       margin-top: 18px;
-      font-family: Arial, Arial;
+     font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
-      font-size: 14px;
-      color: #999999;
+      font-size: 16px;
+      color: #333;
+
+      .number {
+        font-weight: bold;
+        color: #7853B2;
+      }
     }
   }
 }
 
+.btns {
+  button {
+    margin: 0 8px;
+
+    width: 150px;
+    height: 46px;
+    background: #fffefe;
+    border-radius: 4px 4px 4px 4px;
+    border: 1px solid #7853b2;
+    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-weight: 400;
+    font-size: 18px;
+    color: #7853b2;
+  }
+
+  .btn-bg {
+    width: 150px;
+    height: 46px;
+    background: #7853b2;
+    border-radius: 4px 4px 4px 4px;
+    font-family: Microsoft YaHei, Microsoft YaHei;
+    font-weight: 400;
+    font-size: 18px;
+    color: #ffffff;
+  }
+}
 </style>
 
 <style scoped lang="less" src="@/assets/h5css/modals/product_add_cart_success_modal.less"></style>

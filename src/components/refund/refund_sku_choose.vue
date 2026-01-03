@@ -371,7 +371,7 @@ export default {
 
     &.selected {
       // background: #CB0011;
-      border: 1px solid #F74747;
+      border: 1px solid #7853B2;
       // color: #FFFFFF;
     }
 
@@ -406,7 +406,7 @@ export default {
 
     &.selected {
       // background: #CB0011;
-      border: 1px solid #F74747;
+      border: 1px solid #7853B2;
       // color: #FFFFFF;
     }
 

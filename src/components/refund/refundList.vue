@@ -88,11 +88,11 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
-      color: #999999;
+      color: #505050;
 
       &.state2 {
-        color: #F74747;
-        border-color: #F74747;
+        color: #7853B2;
+        border-color: #7853B2;
       }
     }
   }
@@ -132,7 +132,7 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 20px;
-          color: #999999;
+          color: #505050;
         }
         .price {
           min-width: 100px;
@@ -161,8 +161,8 @@ export default {
     .order-detail {
       min-width: 96px;
       height: 30px;
-      background: #F74747;
-      border: 1px solid #F74747;
+      background: #7853B2;
+      border: 1px solid #7853B2;
       font-size: 14px;
       color: #fff;
       transition: 0.3s;
@@ -174,3 +174,4 @@ export default {
   }
 }
 </style>
+<style scoped lang="less" src="@/assets/h5css/modals/refundList.less"></style>

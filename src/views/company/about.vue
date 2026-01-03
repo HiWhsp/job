@@ -28,7 +28,7 @@
           <div class="info-list flex-between">
             <div class="info-item">
               <div class="icon-box">
-                <img src="@/static/about/icon1.png" alt="">
+                <img src="@img/about/icon1.png" alt="">
               </div>
               <div class="title">
                 Wholesale
@@ -41,7 +41,7 @@
             </div>
             <div class="info-item">
               <div class="icon-box">
-                <img src="@/static/about/icon2.png" alt="">
+                <img src="@img/about/icon2.png" alt="">
               </div>
               <div class="title">
                 Dealer
@@ -55,7 +55,7 @@
             </div>
             <div class="info-item">
               <div class="icon-box">
-                <img src="@/static/about/icon3.png" alt="">
+                <img src="@img/about/icon3.png" alt="">
               </div>
               <div class="title">
                 OEM Service
@@ -96,13 +96,12 @@
   </div>
 </template>
 <script>
-import pageBanner from '@/components/page/page-banner.vue'
-import pageBreadcrumb from '@/components/page/page-breadcrumb.vue'
+
+import pageBreadcrumb from '@/views/layout/comps/page_breadcrumb.vue'
 import { mapState } from "vuex";
 export default {
   name: "index",
   components: {
-    pageBanner,
     pageBreadcrumb,
   },
   data() {
@@ -111,9 +110,9 @@ export default {
     };
   },
   computed: {
-    ...mapState(['map_banners']),
+    ...mapState(['vuex_map_banners']),
     banners() {
-      return this.map_banners['关于我们'] || []
+      return this.vuex_map_banners['关于我们'] || []
     },
     nav_option() {
       let option = [
@@ -174,7 +173,7 @@ export default {
       padding-top: 173px;
 
       .banner-content {
-        width: 1200px;
+        width: 1400px;
         margin: 0 auto;
         text-align: left;
 
@@ -212,7 +211,7 @@ export default {
 }
 
 .page-ctx {
-  width: 1200px;
+  width: 1400px;
   margin: 0 auto;
 
   padding-top: 35px;
@@ -299,17 +298,17 @@ export default {
     width: 200px;
     height: 50px;
     border-radius: 0px 0px 0px 0px;
-    border: 1px solid #F74747;
+    border: 1px solid #7853B2;
 
     font-family: OPPOSans, OPPOSans;
     font-weight: bold;
     font-size: 16px;
-    color: #F74747;
+    color: #7853B2;
     background: #FFFFFF;
     transition: .3s;
 
     &:hover {
-      background: #F74747;
+      background: #7853B2;
       color: #FFFFFF;
     }
   }

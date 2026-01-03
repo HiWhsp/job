@@ -184,7 +184,7 @@ export default {
         color: #5e5e5e;
       }
       .pannel-item:hover {
-        color: var(--main_color);
+        color: #f00;
       }
     }
   }

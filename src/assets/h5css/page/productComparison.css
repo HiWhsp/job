@@ -1,0 +1,337 @@
+@media screen and (max-width: 1199px) {
+  .open-hide-same .same {
+    display: none !important;
+  }
+  .open-hight-light-diff .diff {
+    background: #e6a23c;
+  }
+  .page-top {
+    position: relative;
+  }
+  .page-top .page-top-banner img {
+    width: 100%;
+  }
+  .page-top .page-bread {
+    width: 100%;
+    margin: 0 auto;
+    height: 44px;
+    background: #f5f5f5;
+    padding: 0 15px;
+  }
+  .page-top .page-bread .bread-box {
+    height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .page-top .page-bread .bread-box img {
+    width: 15px;
+    margin-right: 10px;
+  }
+  .page-top .page-bread .bread-box .bread-divider {
+    margin: 0 5px;
+    font-size: 14px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #505050;
+  }
+  .page-top .page-bread .bread-box a {
+    font-size: 12px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #505050;
+  }
+  .page-top .page-bread .bread-box a:hover {
+    color: #7853B2;
+  }
+  .page {
+    padding: 20px 15px;
+  }
+  .page .page-box {
+    background: #f7f7f7;
+    background: #fff;
+  }
+  .page .page-inner {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 0;
+    text-align: left;
+  }
+  .page .page-inner .page-block {
+    width: 100%;
+    margin: 0 auto;
+  }
+  .total-box {
+    margin-bottom: 0;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #333333;
+  }
+  .ctx-box {
+    display: flex;
+    align-items: flex-start;
+    background: #ffffff;
+    border-radius: 0px 0px 0px 0px;
+    border: 1px solid #d5d8de;
+  }
+  .ctx-box .ctx-left {
+    width: 155px;
+    height: 470px;
+    height: auto;
+    background: #f5f5f5;
+  }
+  .ctx-box .ctx-left .filter-item {
+    background: #f5f5f5;
+    border-top: 1px solid #d5d8de;
+    text-align: left;
+    padding: 0 20px;
+  }
+  .ctx-box .ctx-left .filter-item .text {
+    line-height: 50px;
+    font-size: 14px;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-weight: bold;
+    color: #1F1F1F;
+  }
+  .ctx-box .ctx-left .filter-actions {
+    border-top: none;
+    height: 320px;
+    padding-top: 100px;
+    font-size: 12px;
+  }
+  .ctx-box .ctx-left .checks .check-item {
+    margin-bottom: 13px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+  .ctx-box .ctx-left .checks .check-item .check-0 {
+    display: block;
+  }
+  .ctx-box .ctx-left .checks .check-item .check-1 {
+    display: none;
+  }
+  .ctx-box .ctx-left .checks .check-item.checked .check-0 {
+    display: none;
+  }
+  .ctx-box .ctx-left .checks .check-item.checked .check-1 {
+    display: block;
+  }
+  .ctx-box .ctx-left .checks .check-item img {
+    width: 13px;
+    margin-right: 10px;
+  }
+  .ctx-box .ctx-left .checks .check-item span {
+    font-size: 12px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #1F1F1F;
+  }
+  .ctx-box .ctx-right {
+    width: calc(100% - 155px);
+  }
+  .ctx-box .ctx-right .product-list {
+    width: 100%;
+    display: flex;
+  }
+  .ctx-box .ctx-right .product-list .product-item {
+    flex: 1;
+    font-size: 14px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #1F1F1F;
+    border-left: 1px solid #d5d8de;
+    text-align: center;
+  }
+  .ctx-box .ctx-right .product-list .product-item .top-box {
+    height: 250px;
+  }
+  .ctx-box .ctx-right .product-list .product-item .top-box a {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    font-size: 14px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #1F1F1F;
+  }
+  .ctx-box .ctx-right .product-list .product-item .top-box a:hover {
+    color: #7853B2;
+  }
+  .ctx-box .ctx-right .product-list .product-item .top-box .img-box {
+    padding: 10px;
+  }
+  .ctx-box .ctx-right .product-list .product-item .top-box .img-box .img-link {
+    display: block;
+  }
+  .ctx-box .ctx-right .product-list .product-item .top-box .img-box img {
+    width: 180px;
+    height: 180px;
+  }
+  .ctx-box .ctx-right .product-list .product-item .top-box .title {
+    margin: 10px 0;
+  }
+  .ctx-box .ctx-right .product-list .product-item .info-item {
+    border-top: 1px solid #d5d8de;
+    font-size: 14px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #1F1F1F;
+  }
+  .ctx-box .ctx-right .product-list .product-item .info-item .text {
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .ctx-table-box {
+    min-height: 400px;
+    overflow-x: auto;
+  }
+  .ctx-table-box img {
+    max-width: 150px;
+  }
+  .ctx-table-box .filter-actions {
+    border-top: none;
+    height: 320px;
+    padding-top: 100px;
+  }
+  .ctx-table-box .filter-actions .filter-text {
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  .ctx-table-box .checks .check-item {
+    margin-bottom: 13px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+  .ctx-table-box .checks .check-item .check-0 {
+    display: block;
+  }
+  .ctx-table-box .checks .check-item .check-1 {
+    display: none;
+  }
+  .ctx-table-box .checks .check-item.checked .check-0 {
+    display: none;
+  }
+  .ctx-table-box .checks .check-item.checked .check-1 {
+    display: block;
+  }
+  .ctx-table-box .checks .check-item img {
+    width: 13px;
+    margin-right: 10px;
+  }
+  .ctx-table-box .checks .check-item span {
+    font-size: 12px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #1F1F1F;
+  }
+  .ctx-table-box table {
+    margin-top: 20px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    max-width: 10000vw !important;
+  }
+  .ctx-table-box table td {
+    border: 1px solid #d5d8de;
+    padding: 10px 5px;
+  }
+  .ctx-table-box table td:first-child {
+    background: #f5f5f5;
+    padding-left: 0;
+    padding: 0 5px;
+    text-align: left;
+    width: 80px;
+  }
+  .ctx-table-box table td:first-child .text-box {
+    justify-content: flex-start;
+    font-weight: bold;
+    text-align: left;
+    font-size: 14px;
+    font-size: 12px;
+  }
+  .ctx-table-box table td.td-1 {
+    width: 90%;
+  }
+  .ctx-table-box table td.td-2 {
+    width: 45%;
+  }
+  .ctx-table-box table td.td-3 {
+    width: 30%;
+  }
+  .ctx-table-box table td.td-4 {
+    width: 22.5%;
+  }
+  .ctx-table-box table td.td-5 {
+    width: 18%;
+  }
+  .ctx-table-box table td .text-box {
+    min-height: 50px;
+    padding: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    word-break: break-all;
+    text-align: center;
+    font-size: 14px;
+    font-size: 12px;
+  }
+  .ctx-table-box table td .top-box {
+    height: auto;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .ctx-table-box table td .top-box a {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -webkit-line-clamp: 5;
+    text-align: center;
+    font-size: 12px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #1F1F1F;
+  }
+  .ctx-table-box table td .top-box a:hover {
+    color: #7853B2;
+  }
+  .ctx-table-box table td .top-box .img-box {
+    padding: 10px;
+  }
+  .ctx-table-box table td .top-box .img-box .img-link {
+    display: block;
+  }
+  .ctx-table-box table td .top-box .img-box img {
+    width: 60px;
+    height: 60px;
+  }
+  .ctx-table-box table td .top-box .title {
+    margin: 10px 0;
+  }
+}
+@media screen and (max-width: 1199px) and (min-width: 768px) {
+  .ctx-table-box .filter-actions {
+    height: auto;
+    padding-top: 0;
+  }
+  .ctx-table-box table td .top-box {
+    min-height: 200px;
+    height: auto;
+  }
+  .ctx-table-box table td:first-child {
+    width: 140px;
+  }
+}

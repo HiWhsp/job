@@ -1,0 +1,122 @@
+@media screen and (max-width: 1199px) {
+  .page {
+    text-align: left;
+    padding-bottom: 80px;
+  }
+  .page .main-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    text-align: left;
+    height: 56px;
+    line-height: 56px;
+    background: #ffffff;
+    font-size: 16px;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+  }
+  .page .main-title button {
+    display: flex;
+    align-items: center;
+    min-width: 96px;
+    height: 30px;
+    line-height: 30px;
+    background: #7853B2;
+    color: #fff;
+    background: #fff;
+    color: #7853B2;
+    font-size: 14px;
+  }
+  .page .main-title button img {
+    width: 20px;
+    margin-right: 5px;
+  }
+  .page .page-ctx {
+    margin-top: 24px;
+    padding: 32px 32px 55px 32px;
+    padding: 15px;
+    background: #fff;
+  }
+  .wrap-address {
+    text-align: left;
+  }
+  .wrap-address .address-item {
+    min-height: auto;
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  .wrap-address .address-item .top {
+    padding-bottom: 10px;
+    font-size: 12px;
+  }
+  .wrap-address .address-item .top > div {
+    margin-bottom: 10px;
+    color: #333333;
+  }
+  .wrap-address .address-item .top > div:last-child {
+    margin-bottom: 0;
+  }
+  .wrap-address .address-item .top > div span {
+    font-size: 14px;
+    font-size: 12px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #1F1F1F;
+  }
+  .wrap-address .address-item .bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #eeeeee;
+    padding-top: 10px;
+  }
+  .wrap-address .address-item .bottom .left .moren {
+    display: inline-block;
+    width: fit-content;
+    padding: 0 10px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    background: #7853B2;
+    font-size: 12px;
+    color: #ffffff;
+  }
+  .wrap-address .address-item .bottom .right {
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #7853B2;
+  }
+  .wrap-address .address-item .bottom .right .action {
+    margin-left: 20px;
+    cursor: pointer;
+  }
+  .modal-container /deep/ .el-dialog__wrapper .el-dialog__body {
+    padding: 20px 10px;
+  }
+  .modal-container /deep/ .el-dialog__wrapper .el-dialog__body .text {
+    min-width: 7em;
+    font-size: 12px;
+    padding-right: 0.5rem;
+  }
+  .modal-container /deep/ .el-dialog__wrapper .el-dialog__body .text::before {
+    font-size: 12px;
+  }
+  .modal-container /deep/ .el-dialog__wrapper .el-dialog__body .el-input__inner {
+    font-size: 12px;
+  }
+  .modal-container /deep/ .el-dialog__wrapper .el-dialog__body .sanji-box .el-select {
+    margin-right: 0rem;
+  }
+  .modal-container /deep/ .el-dialog__wrapper .el-dialog__footer .btn-ripple {
+    min-width: 0;
+    height: 2rem;
+    font-size: 16px;
+    margin: 0 0.7rem;
+  }
+}

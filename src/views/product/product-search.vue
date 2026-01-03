@@ -2,9 +2,9 @@
   <div class="page">
 
     <div class="page-top">
-      <div class="page-bread w-1200">
+      <div class="page-bread w-1400">
         <div class="bread-box">
-          <img src="@/static/common/product-home.png" alt="" />
+          <img src="@img/common/product-home.png" alt="" />
           <router-link to="/">首页</router-link>
           <span class="bread-divider">&gt;</span>
           <!-- <router-link to="/products">产品中心</router-link>
@@ -16,10 +16,10 @@
       </div>
     </div>
 
-    <div class="page-box w-1200">
-      <div class="page-inner w-1200">
+    <div class="page-box w-1400">
+      <div class="page-inner w-1400">
         <div class="total-box">共{{ count }}条数据</div>
-        <div class="ctx-box w-1200">
+        <div class="ctx-box w-1400">
           <div class="bottom-list">
             <productList :list="product_list" />
             <!-- <div class="product-list">
@@ -92,7 +92,8 @@ export default {
   },
   methods: {
     toDetail(item) {
-      this.$router.push(`/product-detail?id=${item.inventoryId}`)
+      // this.$router.push(`/product-detail?id=${item.inventoryId}`)
+      window.open('/product-detail?id='+item.inventoryId,'__blank','',false)
     },
 
     setView() {
@@ -160,17 +161,17 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
+        color: #505050;
       }
 
       a {
         font-size: 14px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
+        color: #505050;
 
         &:hover {
-          color: #F74747;
+          color: #7853B2;
         }
       }
     }
@@ -240,7 +241,7 @@ export default {
 
     &:hover {
       .title {
-        color: #F74747 !important;
+        color: #7853B2 !important;
       }
 
     }
@@ -291,14 +292,14 @@ export default {
             font-family: PingFang SC, PingFang SC;
             font-weight: 400;
             font-size: 14px;
-            color: #999999;
+            color: #505050;
           }
         }
 
         .yishou {
           font-weight: 400;
           font-size: 12px;
-          color: #999999;
+          color: #505050;
         }
       }
     }

@@ -75,7 +75,9 @@ export default {
   color: #333333;
 
   .item {
-    .flex-center();
+      display: flex;
+          justify-content: center;
+          align-items: center;
     width: 120px;
     text-align: center;
     cursor: pointer;
@@ -86,7 +88,7 @@ export default {
     user-select: none;
 
     &.active {
-      background: #F74747;
+      background: #7853B2;
       color: #fff;
     }
 

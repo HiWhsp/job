@@ -12,18 +12,18 @@
                         <div class="goods-warp" v-for="(item, index) in invoicesDetail.info" :key="item.id">
                             <div class="left">
                                 <div class="image-warp">
-                                    <el-image class="elImg" :src="item.image" fit="cover"></el-image>
+                                    <el-image class="elImg" :src="item.image||item.thumb" fit="cover"></el-image>
                                 </div>
                                 <div class="info-warp">
-                                    <div class="title">{{ item.title }}</div>
+                                    <div class="title">{{ item.title||item.cardNo }}</div>
                                     <div class="sku">{{ item.keyVals }}</div>
                                 </div>
                             </div>
-                            <div class="goods-item-info">{{ item.priceSale }}</div>
-                            <div class="goods-item-info">× {{ item.num }}</div>
-                            <div class="goods-item-info">{{ item.priceSale * item.num }}元</div>
+                            <div class="goods-item-info" v-if="info.type==1">{{ item.priceSale }}</div>
+                            <div class="goods-item-info" v-if="info.type==1">× {{ item.num }}</div>
+                            <div class="goods-item-info" v-if="info.type==1">{{ item.priceSale * item.num }}元</div>
                         </div>
-                        <div class="item-info-box">
+                        <div class="item-info-box" v-if="info.type==1">
                             <div class="item-info">
                                 <label class="label">商品总价：</label>
                                 <div class="val">￥{{ payInfo.goods }}</div>
@@ -47,6 +47,12 @@
                             <div class="item-info">
                                 <label class="label">下单时间：</label>
                                 <div class="val">{{ order_info.createdTime }}</div>
+                            </div>
+                        </div>
+                        <div v-else class="item-info-box">
+                            <div class="item-info">
+                                <label class="label">类型：</label>
+                                <div class="val">{{ info.type==2?'普通兑换卡':'商品兑换卡' }}</div>
                             </div>
                         </div>
                     </section>
@@ -165,7 +171,14 @@ export default {
             }).then((res) => {
                 if (res.code == 200) {
                     let data = res.data
-                    data.info = JSON.parse(data.info)
+                    if(data.type==1){
+
+                        data.info = JSON.parse(data.info)
+                    }else{
+                        data.info = [JSON.parse(data.info)]
+                    }
+                    console.log(data);
+                    
                     this.invoicesDetail = data
 
                     this.info = data
@@ -425,3 +438,4 @@ export default {
 }
 </style>
 <!-- <style scoped lang="less" src="@/assets/h5css/shop/myOrder.less"></style> -->
+<style scoped lang="less" src="@/assets/h5css/shop/order-list.less"></style>

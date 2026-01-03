@@ -88,7 +88,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["defaultAvatar"]),
+    ...mapState([""]),
   },
   watch: {
     orderObj(data) {
@@ -133,9 +133,6 @@ export default {
 
 
 <style scoped lang="less">
-/deep/ .order-list-wrap {
-  margin-top: 30px;
-}
 
 .page {
   padding-bottom: 80px;

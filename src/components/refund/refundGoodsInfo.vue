@@ -100,7 +100,7 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
-      color: #999999;
+      color: #505050;
     }
   }
   .info-good {
@@ -139,7 +139,7 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 20px;
-          color: #999999;
+          color: #505050;
         }
         .price {
           text-align: right;
@@ -161,7 +161,7 @@ export default {
           margin-left: 10px;
           width: 96px;
           height: 30px;
-          background: #F74747;
+          background: #7853B2;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;

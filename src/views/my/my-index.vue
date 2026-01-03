@@ -18,7 +18,7 @@
           <div class="text-1">{{ mix_user_name }}</div>
           <!-- <div class="text-2">
             <img src="@img/level-0.png" alt="" />
-            <span>{{ baseInfo.level }}</span>
+            <span>{{ vuex_user.level }}</span>
           </div> -->
         </div>
       </div>
@@ -76,6 +76,12 @@
             </div>
             <div class="label">待评价</div>
           </div>
+          <div class="item" @click="$router.push('/part-time-sales')">
+            <div class="val">
+              <span>申请</span>
+            </div>
+            <div class="label">成为兼职销售代表</div>
+          </div>
         </div>
 
       </div>
@@ -86,14 +92,14 @@
         <div class="label">最近订单</div>
         <router-link to="/order-list" class="action">
           <span>全部订单</span>
-          <img src="@/static/my-index/more.png" alt="" />
+          <img src="@img/my-index/more.png" alt="" />
         </router-link>
       </div>
 
       <div class="order-box">
         <div class="empty-info" v-if="!list_order.length">
           <div class="empty-img">
-            <img src="@/static/common/empty-img.png" alt="" />
+            <img src="@img/common/empty-img.png" alt="" />
           </div>
           <div class="empty-text">您还没有订单，赶快去逛逛吧！</div>
           <router-link to="/product-cates" class="empty-action">
@@ -111,7 +117,7 @@
         <div class="label">我们向您推荐</div>
         <div class="action" @click="changeSugges">
           <span>换一组</span>
-          <img src="@/static/my-index/refresh.png" alt="" />
+          <img src="@img/my-index/refresh.png" alt="" />
         </div>
       </div>
 
@@ -280,9 +286,11 @@ export default {
 }
 
 .section-1 {
-  .flex-center();
+    display: flex;
+          justify-content: center;
+          align-items: center;
   position: relative;
-  background: #ffffff url("~@/static/my-index/user-bg.png");
+  background: #ffffff url("~@img/my-index/user-bg.png");
   background-size: 100% 100%;
   padding: 0 15px;
   width: 256px;
@@ -321,7 +329,7 @@ export default {
     background: #ffffff;
     text-align: left;
     padding: 0 15px;
-    border: 1px solid #F74747;
+    border: 1px solid #7853B2;
     border-radius: 0 0 11px 11px;
 
     .text-1 {
@@ -344,7 +352,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #F74747;
+        color: #7853B2;
       }
     }
   }
@@ -389,7 +397,7 @@ export default {
           font-size: 32px;
           font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
           font-weight: normal;
-          color: #F74747;
+          color: #7853B2;
         }
       }
     }
@@ -421,7 +429,7 @@ export default {
     font-size: 14px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
-    color: #F74747;
+    color: #7853B2;
     cursor: pointer;
 
     img {
@@ -455,12 +463,12 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #999999;
+        color: #505050;
       }
 
       .empty-action {
         font-size: 14px;
-        color: #F74747;
+        color: #7853B2;
       }
     }
   }

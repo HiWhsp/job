@@ -4,18 +4,11 @@ import router from "./router";
 import store from "./store";
 
 // 全局组件注册
-import pageTop from "@/components/page/pageTop.vue";
-Vue.component("pageTop", pageTop); //
-import pageBread from "@/components/page/pageBread.vue";
-Vue.component("pageBread", pageBread); //
-
 // import VConsole from "vconsole";
 // if (VConsole) {
 //   new VConsole();
 // }
-
 // import "lib-flexible";//网页适配
-
 
 import "@/css/css-reset.css"; // css reset
 import "@/plugin/request.js"; 

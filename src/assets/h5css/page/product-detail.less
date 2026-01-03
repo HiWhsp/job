@@ -29,16 +29,16 @@
     //       font-size: 14px;
     //       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     //       font-weight: 400;
-    //       color: #999999;
+    //       color: #505050;
     //     }
     //     a {
     //       font-size: 12px;
     //       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     //       font-weight: 400;
-    //       color: #999999;
+    //       color: #505050;
 
     //       &:hover {
-    //         color: #F74747;
+    //         color: #7853B2;
     //       }
     //     }
     //   }
@@ -96,7 +96,7 @@
               font-weight: normal;
               font-size: 14px;
               color: #999;
-              color: #F74747;
+              color: #7853B2;
             }
           }
           .product-other-action {
@@ -112,7 +112,7 @@
 
               &:hover {
                 span {
-                  color: #F74747;
+                  color: #7853B2;
                 }
               }
 
@@ -125,7 +125,7 @@
                 font-size: 12px;
                 font-family: Microsoft YaHei-Regular, Microsoft YaHei;
                 font-weight: 400;
-                color: #666666;
+                color: #1F1F1F;
 
                 font-size: 12px;
               }
@@ -162,7 +162,9 @@
   text-overflow: ellipsis;
   overflow: hidden;
                 margin-bottom: 10px;
-                // .flex-center();
+                //   display: flex;
+          justify-content: center;
+          align-items: center;
                 margin-right: 5px;
                 min-width: 32px;
                 padding: 3px 5px;
@@ -176,14 +178,14 @@
                 font-size: 12px;
                 font-family: Microsoft YaHei-Regular, Microsoft YaHei;
                 font-weight: 400;
-                color: #999999;
+                color: #505050;
                 font-size: 12px;
                 max-width: 70%;
 
                 &.active {
-                  background: #F74747;
+                  background: #7853B2;
                   color: #fff;
-                  border-color: #F74747;
+                  border-color: #7853B2;
                 }
               }
             }
@@ -211,7 +213,7 @@
               width: 100%;
               .limit-end-box {
                 font-size: 0.3rem;
-                color: #F74747;
+                color: #7853B2;
                 font-weight: bold;
                 text-align: center;
                 padding-bottom: 0.5rem;
@@ -301,7 +303,7 @@
                   font-size: 20px;
                   font-family: Microsoft YaHei-Bold, Microsoft YaHei;
                   font-weight: bold;
-                  color: #F74747;
+                  color: #7853B2;
                 }
               }
 
@@ -332,24 +334,26 @@
                   }
 
                   &.active {
-                    border: 1px solid #F74747;
+                    border: 1px solid #7853B2;
                     .img-box {
                       img {
                         visibility: visible !important;
                       }
                     }
                     .text {
-                      color: #F74747;
+                      color: #7853B2;
                     }
                     .price {
-                      color: #F74747;
+                      color: #7853B2;
                     }
                   }
 
                   .img-box {
                     width: 42px;
                     text-align: center;
-                    .flex-center();
+                      display: flex;
+          justify-content: center;
+          align-items: center;
                     img {
                       width: 16px;
                       height: 16px;
@@ -380,7 +384,7 @@
                     position: absolute;
                     right: 0;
                     font-size: 12px;
-                    color: #F74747;
+                    color: #7853B2;
                   }
                 }
               }
@@ -470,11 +474,11 @@
                 font-size: 14px;
                 font-family: Microsoft YaHei;
                 font-weight: 400;
-                color: #999999;
+                color: #505050;
               }
 
               .shuliang {
-                min-width: 105px;
+                min-width: 0;
                   display: flex;
   align-items: center;
                 div {
@@ -489,7 +493,7 @@
                   img {
                     width: 30px;
                     height: 30px;
-                    vertical-align: middle;
+                    vertical-align: bottom;
                   }
                 }
                 .minus {
@@ -556,7 +560,7 @@
                       color: #333;
 
                       &.active {
-                        border-color: #F74747;
+                        border-color: #7853B2;
                         color: #333;
                       }
                     }
@@ -584,7 +588,7 @@
                         margin-bottom: 5px;
 
                         &.active {
-                          background: #F74747;
+                          background: #7853B2;
                           color: #fff;
                         }
 
@@ -622,7 +626,7 @@
                   font-size: 12px;
 
                   &:hover {
-                    border-color: #F74747;
+                    border-color: #7853B2;
                   }
 
                   .coupon-info {
@@ -651,9 +655,9 @@
                 min-width: 142px;
                 height: 48px;
                 background: #fff7f2;
-                border: 1px solid #F74747;
+                border: 1px solid #7853B2;
                 // border-radius: 24px;
-                color: #F74747;
+                color: #7853B2;
               }
 
               .huoqi {
@@ -668,7 +672,7 @@
                 width: 266px;
                 height: 36px;
                 line-height: 36px;
-                background: #F74747;
+                background: #7853B2;
                 border-radius: 4px 4px 4px 4px;
                 font-size: 14px;
                 font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -702,13 +706,13 @@
 
   .bottom-nav {
     position: relative;
-    // border-bottom: 2px solid #F74747;
+    // border-bottom: 2px solid #7853B2;
     display: flex;
     height: 40px; /*no */
     line-height: 40px; /*no */
 
     .count-num {
-      color: #F74747;
+      color: #7853B2;
     }
 
     .nav-item {
@@ -727,7 +731,7 @@
       }
 
       &.active {
-        background-color: #F74747 !important;
+        background-color: #7853B2 !important;
         color: #fff !important;
 
         .count-num {
@@ -745,8 +749,10 @@
       height: 32px; /*no */
 
       &.contact {
-        background: #F74747;
-        .flex-center();
+        background: #7853B2;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         right: 20px;
 
         &:hover {
@@ -755,7 +761,7 @@
         img {
           width: 20px;
           margin-right: 10px;
-          vertical-align: middle;
+          vertical-align: bottom;
         }
         span {
           font-size: 14px;
@@ -917,7 +923,7 @@
       .comment-title-text {
         padding: 5px 30px;
         margin-right: 20px;
-        background-color: #F74747;
+        background-color: #7853B2;
         color: #fff;
       }
     }
@@ -1072,7 +1078,7 @@
 
         &:hover {
           .title {
-            color: #F74747;
+            color: #7853B2;
           }
         }
 
@@ -1080,7 +1086,7 @@
           width: 100%;
           height: auto;
           img {
-            vertical-align: middle;
+            vertical-align: bottom;
             height: 42vmin;
             object-fit: contain;
           }
@@ -1146,7 +1152,7 @@
     display: none;
   }
   /deep/ .swiper-pagination-bullet-active {
-    background: #F74747;
+    background: #7853B2;
   }
 
   .swiper-wenxian {
@@ -1169,7 +1175,7 @@
 
     &:hover {
       .title {
-        color: #F74747;
+        color: #7853B2;
       }
     }
 
@@ -1203,7 +1209,7 @@
         font-size: 14px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #666666;
+        color: #1F1F1F;
         line-height: 1.7;
 
         &:nth-child(2n + 1) {

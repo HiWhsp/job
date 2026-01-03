@@ -27,7 +27,7 @@
     </el-dialog>
 
 
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="order-info">
         <div class="left">
           <img src="@img/pay/create-success.png" alt="" />
@@ -156,7 +156,7 @@
                   <div class="section-title">使用积分</div>
 
                   <template v-if="!used_jifen">
-                    <div class="section-tip" v-if="jifen_pay.jifen">可用积分：{{ +baseInfo.jifen || 0 }}, 本单最多可用 {{
+                    <div class="section-tip" v-if="jifen_pay.jifen">可用积分：{{ +vuex_user.jifen || 0 }}, 本单最多可用 {{
                       jifen_pay.jifen }} 积分抵扣 {{ currency }}{{ jifen_pay.money }}</div>
                     <div class="section-tip" v-else>当前没有可抵扣的积分</div>
                     <div class="section-btn-actions">
@@ -188,7 +188,7 @@
                 <!-- 佣金抵现功能 -->
                 <div class="section-item">
                   <div class="section-title">使用佣金</div>
-                  <div class="section-tip">可用佣金：{{ +baseInfo.yongjin || 0 }}</div>
+                  <div class="section-tip">可用佣金：{{ +vuex_user.yongjin || 0 }}</div>
                   <div class="section-btn-actions">
                     <template v-if="!used_yongjin">
                       <button class="btn" :class="{ active: if_use_yongjin }"
@@ -224,44 +224,44 @@
                   <div class="pay-group">
                     <div class="title">支付方式：</div>
                     <div class="pay-items">
-                      <div class="item" v-for="(item, index) in pay_method_list" @click="do_toggle_paytype(item)"
+                      <div class="item" v-for="(item, index) in pay_method_list" v-show="item.show" :key="index" @click="do_toggle_paytype(item)"
                         :class="{ checked: pay_type_value == item.value }">
-                        <img class="img-check check-0 check-img check-img-0" src="@/static/common/check0.png" alt="" />
-                        <img class="img-check check-1 check-img check-img-1" src="@/static/common/check1.png" alt="" />
+                        <img class="img-check check-0 check-img check-img-0" src="@img/common/check0.png" alt="" />
+                        <img class="img-check check-1 check-img check-img-1" src="@img/common/check1.png" alt="" />
                         <img class="marker-img" :src="item.icon" alt="" />
-                        <span>余额支付</span>
+                        <span>{{item.title}}</span>
                       </div>
 
 
                       <!-- <div class="item" @click="payType = '微信支付'" :class="{ checked: payType == '微信支付' }">
-                        <img class="img-check check-0 check-img check-img-0" src="@/static/common/check0.png" alt="" />
-                        <img class="img-check check-1 check-img check-img-1" src="@/static/common/check1.png" alt="" />
+                        <img class="img-check check-0 check-img check-img-0" src="@img/common/check0.png" alt="" />
+                        <img class="img-check check-1 check-img check-img-1" src="@img/common/check1.png" alt="" />
                         <img class="marker-img" src="@img/pay-wx.png" alt="" />
                         <span>微信支付</span>
                       </div> -->
                       <!-- <div class="item" @click="payType = '支付宝支付'" :class="{ checked: payType == '支付宝支付' }">
-                <img class="img-check check-0 check-img check-img-0" src="@/static/common/check0.png" alt="" />
-                <img class="img-check check-1 check-img check-img-1" src="@/static/common/check1.png" alt="" />
+                <img class="img-check check-0 check-img check-img-0" src="@img/common/check0.png" alt="" />
+                <img class="img-check check-1 check-img check-img-1" src="@img/common/check1.png" alt="" />
                 <img class="marker-img" src="@img/pay-zfb.png" alt="" />
                 <span>支付宝支付</span>
               </div> -->
                       <!-- <div class="item" @click="payType = 'Paypal'" :class="{ checked: payType == 'Paypal' }">
-                        <img class="img-check check-0 check-img check-img-0" src="@/static/common/check0.png" alt="" />
-                        <img class="img-check check-1 check-img check-img-1" src="@/static/common/check1.png" alt="" />
+                        <img class="img-check check-0 check-img check-img-0" src="@img/common/check0.png" alt="" />
+                        <img class="img-check check-1 check-img check-img-1" src="@img/common/check1.png" alt="" />
                         <img class="marker-img" src="@img/pay-yue.png" alt="" />
                         <span> Paypal </span>
                       </div> -->
 
                       <!-- <div class="item" @click="payType = '余额支付'" :class="{ checked: payType == '余额支付' }">
-                        <img class="img-check check-0 check-img check-img-0" src="@/static/common/check0.png" alt="" />
-                        <img class="img-check check-1 check-img check-img-1" src="@/static/common/check1.png" alt="" />
+                        <img class="img-check check-0 check-img check-img-0" src="@img/common/check0.png" alt="" />
+                        <img class="img-check check-1 check-img check-img-1" src="@img/common/check1.png" alt="" />
                         <img class="marker-img" src="@img/pay-yue.png" alt="" />
                         <span> 余额支付 </span>
                       </div> -->
 
                       <!-- <div class="item" @click="payType = '线下转款'" :class="{ checked: payType == '线下转款' }">
-                        <img class="img-check check-0 check-img check-img-0" src="@/static/common/check0.png" alt="" />
-                        <img class="img-check check-1 check-img check-img-1" src="@/static/common/check1.png" alt="" />
+                        <img class="img-check check-0 check-img check-img-0" src="@img/common/check0.png" alt="" />
+                        <img class="img-check check-1 check-img check-img-1" src="@img/common/check1.png" alt="" />
                         <img class="marker-img" src="@img/pay-xianxia.png" alt="" />
                         <span> 线下转款 </span>
                       </div> -->
@@ -370,7 +370,7 @@
 
         <div class="yue-box" v-if="payType == '余额'">
           <div class="text-1">使用余额</div>
-          <div class="text-2">您当前可用余额为 {{ vuex_huobi }}{{ baseInfo.yue }}</div>
+          <div class="text-2">您当前可用余额为 {{ vuex_huobi }}{{ vuex_user.yue }}</div>
         </div>
       </div>
 
@@ -417,11 +417,12 @@ export default {
 
       // 支付方式
       pay_method_list: [
-        { value: 'weixin', title: '微信支付', icon: require('@img/pay-method/type-weixin.png') },
-        { value: 'zhifubao', title: '支付宝支付', icon: require('@img/pay-method/type-zfb.png') },
+        { value: 'weixin', title: '微信支付', icon: require('@img/pay-method/type-weixin.png'),show:true },
+        { value: 'zhifubao', title: '支付宝支付', icon: require('@img/pay-method/type-zfb.png'),show:true },
         // { value: 'xianxia', title: '线下转款', icon: require('@img/pay-method/type-xianxia.png') },
         //{ value: 'paypal', title: 'PayPal', icon: require('@img/pay-method/type-paypal.png') },
-        { value: 'yue', title: '余额支付', icon: require('@img/pay-method/type-yue.png') },
+        { value: 'yue', title: '余额支付', icon: require('@img/pay-method/type-yue.png'),show:true },
+        // { value: 'duihuanka', title: '兑换卡支付', icon: require('@img/pay-method/type-yue.png'),show:true },
       ],
       pay_type_value: 'paypal',
       payType: "PayPal",
@@ -462,7 +463,7 @@ export default {
       allow_use_jifen: true, //是否允许使用积分
       allow_use_yongjin: true, //是否允许使用佣金
 
-      baseInfo_query_done: false, //是否已经查询完用户信息
+      user_query_done: false, //是否已经查询完用户信息
 
       //
       is_pay_pass: 0, //是否设置余额支付密码
@@ -582,9 +583,9 @@ export default {
           }
         }
       }
-      if (this.baseInfo.jifen && total_dixian_jifen) {
-        if (this.baseInfo.jifen < total_dixian_jifen) {
-          jifen = this.baseInfo.jifen;
+      if (this.vuex_user.jifen && total_dixian_jifen) {
+        if (this.vuex_user.jifen < total_dixian_jifen) {
+          jifen = this.vuex_user.jifen;
         } else {
           jifen = total_dixian_jifen;
         }
@@ -655,7 +656,7 @@ export default {
       if (!this.if_use_yongjin) {
         return 0;
       }
-      if (!this.baseInfo.yongjin) {
+      if (!this.vuex_user.yongjin) {
         return 0;
       }
 
@@ -666,8 +667,8 @@ export default {
       if (this.order_price) {
         money_last = this.order_price - this.money_yhq - this.money_jifen_dixian;
 
-        if (money_last > this.baseInfo.yongjin) {
-          money_yongjin = this.baseInfo.yongjin;
+        if (money_last > this.vuex_user.yongjin) {
+          money_yongjin = this.vuex_user.yongjin;
         } else {
           money_yongjin = money_last;
         }
@@ -693,12 +694,10 @@ export default {
     },
   },
   watch: {
-    baseInfo(data) {
+    my_info(data) {
       if (data) {
         this.is_pay_pass = data.is_pay_pass;
-
-        this.baseInfo_query_done = true;
-
+        this.user_query_done = true;
         // this.check_jifen_yongjin();
       }
     },
@@ -767,12 +766,12 @@ export default {
               }
             }
 
-            // if (data.status_info != "待支付") {
-            //   alertErr("当前订单不是待支付状态!");
-            //   this.$router.push("/order-list");
-            // } else {
-            //   this.orders_getPayInfo();
-            // }
+            if (data.statusInfo != "待支付") {
+              alertErr("当前订单不是待支付状态!");
+              this.$router.push("/order-list");
+            } else {
+              this.orders_getPayInfo();
+            }
           }
         });
     },
@@ -782,9 +781,9 @@ export default {
       this.payType = item.title
       let value = item.title
       // if (value == "余额支付") {
-      //   if (this.baseInfo.is_pay_pass == 0) {
+      //   if (this.vuex_user.is_pay_pass == 0) {
       //     //未设置支付密码
-      //     this.$refs.balance_password_set_modal.init(this.baseInfo);
+      //     this.$refs.balance_password_set_modal.init(this.my_info);
       //   } else if (+this.total_balance < this.real_payment_money) {
       //     //余额不足提示
       //     this.$refs.balance_pay_disable_modal.init({
@@ -809,9 +808,9 @@ export default {
 
     //检测积分佣金是否可使用的情况  如果用户来自于下单页面 则默认不显示 积分 佣金使用
     check_jifen_yongjin() {
-      if (this.order.price && this.baseInfo_query_done) {
+      if (this.order.price && this.user_query_done) {
         // debugger
-        let data = this.baseInfo;
+        let data = this.my_info;
         if (data.jifen <= 0 || this.from == "order-submit") {
           this.allow_use_jifen = false;
           this.if_use_jifen = false;
@@ -842,8 +841,13 @@ export default {
       this.$refs.orderPayWaiting.show = true;
 
       this.timer = setInterval(() => {
-        this.$api("orders_detail", {
-          id: this.order_id,
+        this.$api({
+          url: "/service.php",
+          method: "get",
+          data: {
+            action: "orders_detail",
+            id: this.order_id,
+          },
         }).then((res) => {
           let { code, data, msg } = res;
           if (data.status == 2 || data.status == 3) {
@@ -873,14 +877,19 @@ export default {
       }));
       list_product_str = JSON.stringify(list_product_str);
 
-      this.$api("orders_getPayInfo", {
-        address_id: "",
-        product_info: list_product_str,
-      }).then((res) => {
+      this.$api({
+          url: "/service.php",
+          method: "get",
+          data: {
+            action: "orders_getPayInfo",
+            addressId: "",
+            productInfo: list_product_str,
+          },
+        }).then((res) => {
         let { code, data, msg } = res;
         if (code == 200) {
-          //console.log("根据下单商品获取确认订单信息", data);
-          this.order_price = data.order_price;
+          console.log("根据下单商品获取确认订单信息", data);
+          this.order_price = data.orderPrice;
           this.money_yunfei = +data.yunfei || 0;
           this.jifen_pay = data.jifen_pay;
         }
@@ -898,7 +907,7 @@ export default {
       var element = document.querySelector(clsName);
       element.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
     },
-
+    
     // 支付提示
     do_confirm_pay() {
 
@@ -920,7 +929,7 @@ export default {
         // if (!this.is_pay_pass) {
         //   alertErr("请先设置余额支付密码");
         //   // this.scrollToTarget(".section-pay");
-        //   this.$refs.balance_password_set_modal.init(this.baseInfo);
+        //   this.$refs.balance_password_set_modal.init(this.my_info);
         //   return;
         // }
       }
@@ -946,6 +955,8 @@ export default {
           this.order_payment_zfb();
         } else if (this.pay_type_value == "yue") {
           this.pay_use_yue()
+        }else if (this.pay_type_value == "duihuanka") {
+          this.pay_use_duihuan()
         } else if (this.pay_type_value == "xianxia") {
           this.order_payment_xianxia();
         } else if (this.pay_type_value == "paypal") {
@@ -953,6 +964,25 @@ export default {
         }
       }
     },
+
+    pay_use_duihuan(){
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "pay_recharge",
+          orderType: 1,
+          orderId: this.order_id,
+        },
+      }).then((res) => {
+        alert(res);
+        if (res.code == 200) {
+          this.toPaySuccess();
+        } else {
+        }
+      });
+    },
+
 
     pay_use_yue() {
       // this.$refs.balance_pay_modal.init({
@@ -1001,12 +1031,19 @@ export default {
 
     //微信支付 pc
     order_payment_wx_pc() {
-      this.$api("orders_wxScanCodePay", {
-        order_id: this.order_id,
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'pay_wxScanCodePay',
+          orderId: this.order_id,
+          orderType: 1,
+        },
       }).then((res) => {
         //console.log("pc 微信扫码", res);
         // alert(res);
-        let { code, data } = res;
+        let { code, data } = res.data;
+        
         if (res.code == 200) {
           let info = {
             // ...res,
@@ -1014,9 +1051,11 @@ export default {
             order_id: this.order_id,
           };
           this.$refs.orderPayWxCode.init(info);
-          // this.$refs.orderPayWxCode.qrcode = data.qrcode;
-          // this.$refs.orderPayWxCode.showModal = true;
+          this.$refs.orderPayWxCode.qrcode = data.qrcode;
+          this.$refs.orderPayWxCode.showModal = true;
           // this.showWaiting();
+        }else{
+          alertErr(res.msg);
         }
       });
     },
@@ -1027,8 +1066,13 @@ export default {
 
       this.showWaiting();
 
-      this.$api("orders_aliScanCodePay", {
-        order_id: this.order_id,
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'orders_aliScanCodePay',
+          orderId: this.order_id,
+        },
       }).then((res) => {
         //console.log("支付宝支付", res);
         let { code, msg, data } = res;
@@ -1053,12 +1097,19 @@ export default {
 
     //余额支付
     order_payment_yue() {
-      if (+this.baseInfo.money < +this.money_daizhifu) {
+      if (+this.vuex_user.money < +this.money_daizhifu) {
         alertErr("您的余额不足，请选择其他支付方式");
         return;
       }
 
-      this.$api("orders_yuePay", { order_id: this.order_id }).then((res) => {
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'orders_yuePay',
+          orderId: this.order_id,
+        },
+      }).then((res) => {
         //console.log("余额支付", res);
         let { code, message } = res;
 
@@ -1083,10 +1134,14 @@ export default {
       // });
 
       let paypz = this.xianxia_file_list.join();
-      this.$api("orders_uploadPz", {
-        //
-        order_id: this.order_id,
-        paypz: paypz,
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'orders_uploadPz',
+          orderId: this.order_id,
+          paypz: paypz,
+        },
       }).then((res) => {
         //console.log("线下转款支付", res);
         let { code, message } = res;
@@ -1196,7 +1251,14 @@ export default {
 
     //余额支付
     orderPay_yue() {
-      this.$api("orders_yuePay", { order_id: this.order_id }).then((res) => {
+      this.$api({
+        url: '/service.php',
+        method: 'get',
+        data: {
+          action: 'orders_yuePay',
+          orderId: this.order_id,
+        },
+      }).then((res) => {
         //console.log("余额支付", res);
         let { code, message } = res;
 
@@ -1326,8 +1388,8 @@ export default {
 .btn-cancel {
   min-width: 100px;
   height: 40px;
-  border: 1px solid #F74747;
-  color: #F74747;
+  border: 1px solid #7853B2;
+  color: #7853B2;
   font-size: 14px;
 }
 
@@ -1335,7 +1397,7 @@ export default {
   margin-left: 20px;
   min-width: 100px;
   height: 40px;
-  background: #F74747;
+  background: #7853B2;
   color: #fff;
   font-size: 14px;
 }
@@ -1442,7 +1504,7 @@ export default {
             img {
               height: 30px;
               object-fit: contain;
-              vertical-align: middle;
+              vertical-align: bottom;
             }
           }
         }
@@ -1524,11 +1586,11 @@ export default {
       height: 45px;
       background: #FFFFFF;
       border-radius: 0px 0px 0px 0px;
-      border: 1px solid #F74747;
+      border: 1px solid #7853B2;
       font-family: Arial, Arial;
       font-weight: 400;
       font-size: 17px;
-      color: #F74747;
+      color: #7853B2;
       transition: 0.3s;
 
       &+button {
@@ -1540,7 +1602,7 @@ export default {
       }
 
       &.btn-bg {
-        background: #F74747;
+        background: #7853B2;
         color: #FFFFFF;
       }
     }
@@ -1645,7 +1707,7 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 30px;
-    color: #666666;
+    color: #1F1F1F;
   }
 }
 
@@ -1671,7 +1733,7 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 25px;
-    color: #666666;
+    color: #1F1F1F;
   }
 
   .section-input {
@@ -1729,8 +1791,8 @@ export default {
       display: inline-block;
       height: 20px;
       line-height: 20px;
-      color: #F74747;
-      vertical-align: middle;
+      color: #7853B2;
+      vertical-align: bottom;
     }
 
     .dikou-info {
@@ -1856,7 +1918,7 @@ export default {
         font-family: OPPOSans, OPPOSans;
         // font-weight: bold;
         font-size: 14px;
-        color: #666666;
+        color: #1F1F1F;
 
         // border-bottom: 1px solid #ddd;
         .box-title {
@@ -1898,7 +1960,7 @@ export default {
           font-family: OPPOSans, OPPOSans;
           // font-weight: bold;
           font-size: 14px;
-          color: #666666;
+          color: #1F1F1F;
 
 
           .box-title {
@@ -1927,7 +1989,7 @@ export default {
             font-size: 12px;
             font-family: Microsoft YaHei-Regular, Microsoft YaHei;
             font-weight: 400;
-            color: #999999;
+            color: #505050;
           }
 
           .box-unit {
@@ -1957,7 +2019,7 @@ export default {
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #666666;
+        color: #1F1F1F;
 
         &:last-child {
           margin-bottom: 0;
@@ -1969,7 +2031,7 @@ export default {
           font-family: Arial, Arial;
           font-weight: 400;
           font-size: 14px;
-          color: #666666;
+          color: #1F1F1F;
         }
       }
 
@@ -2006,7 +2068,7 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #666666;
+      color: #1F1F1F;
     }
 
     .pay-items {
@@ -2050,11 +2112,11 @@ export default {
         line-height: 40px;
         background: #ffffff;
         border-radius: 3px 3px 3px 3px;
-        border: 1px solid #F74747;
+        border: 1px solid #7853B2;
         font-size: 14px;
         font-family: Microsoft YaHei-Bold, Microsoft YaHei;
         font-weight: bold;
-        color: #F74747;
+        color: #7853B2;
       }
     }
   }
@@ -2080,7 +2142,7 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #666666;
+      color: #1F1F1F;
     }
 
     .info-val {
@@ -2088,11 +2150,11 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #666666;
+      color: #1F1F1F;
     }
 
     .yue-warn-tip {
-      color: #F74747;
+      color: #7853B2;
       font-size: 14px;
     }
   }
@@ -2118,7 +2180,7 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #666666;
+      color: #1F1F1F;
     }
 
     .info-val {
@@ -2126,7 +2188,7 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #666666;
+      color: #1F1F1F;
     }
   }
 }

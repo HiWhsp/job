@@ -84,8 +84,6 @@
 <script>
 import { UPLOAD_ACTION, UPLOAD_NAME } from '@/config/env.js'
 
-
-
 import { mapState } from "vuex";
 
 export default {
@@ -124,9 +122,13 @@ export default {
     }
   },
   created() {
+    this.init_params()
     this.setView();
   },
   methods: {
+    init_params() {
+      
+    },
     setView() {
       this.$api({
         url: '/service.php',
@@ -194,7 +196,7 @@ export default {
 
 <style scoped lang="less">
 /deep/ .el-rate__icon {
-  color: #F74747 !important;
+  color: #FFC208 !important;
 }
 
 /deep/ .el-upload--picture-card {
@@ -226,7 +228,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #7853B2;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -303,7 +305,7 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
-      color: #999999;
+      color: #505050;
     }
   }
 
@@ -353,7 +355,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #F74747;
+              color: #7853B2;
             }
           }
         }
@@ -392,7 +394,7 @@ export default {
           margin-left: 10px;
           min-width: 96px;
           height: 30px;
-          background: #F74747;
+          background: #7853B2;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;
@@ -452,7 +454,7 @@ export default {
     .btn {
       width: 250px;
       height: 48px;
-      background: #F74747;
+      background: #7853B2;
       border-radius: 100px 100px 100px 100px;
       font-family: OPPOSans, OPPOSans;
 font-weight: 400;

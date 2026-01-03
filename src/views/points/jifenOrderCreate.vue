@@ -3,7 +3,7 @@
     <!-- 新增收货地址 -->
     <addressAdd ref="addressAdd" />
 
-    <div class="inner w-1200">
+    <div class="inner w-1400">
       <div class="section">
         <div class="section-title">选择收货人地址</div>
         <div class="section-ctx">
@@ -19,7 +19,7 @@
               <div class="address-bottom">
                 {{ item.areaName }} {{ item.address }} {{ item.phone }}
               </div>
-              <img src="@/static/address/dizhi-check-1.png" alt="" class="marker" />
+              <img src="@img/address/dizhi-check-1.png" alt="" class="marker" />
             </div>
           </div>
           <div class="btn-box">
@@ -143,7 +143,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
 
     opts_peisong() {
       let arr = ["同城配送", "门店自取"];
@@ -310,9 +310,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-/deep/ .order-list-wrap {
-  margin-top: 30px;
-}
 
 .page {
   text-align: center;
@@ -522,7 +519,7 @@ export default {
     .add {
       b {
         font-weight: bold;
-        color: #F74747;
+        color: #7853B2;
         cursor: pointer;
       }
     }
@@ -591,7 +588,7 @@ export default {
 
         .checked {
           flex: 2;
-          color: #F74747;
+          color: #7853B2;
           text-align: right;
         }
       }
@@ -646,7 +643,7 @@ export default {
           background: #ffffff;
           border: 1px solid #cccccc;
           &.active {
-            border: 1px solid #F74747;
+            border: 1px solid #7853B2;
           }
         }
       }
@@ -680,7 +677,7 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 30px;
-    color: #666666;
+    color: #1F1F1F;
   }
   .section-input {
     margin-bottom: 10px;
@@ -755,7 +752,7 @@ export default {
         }
 
         &.active {
-          border: 2px solid #F74747;
+          border: 2px solid #7853B2;
 
           .marker {
             display: block;
@@ -782,7 +779,7 @@ export default {
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
-          color: #999999;
+          color: #505050;
         }
       }
     }
@@ -798,7 +795,7 @@ export default {
         font-size: 14px;
         font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
         font-weight: normal;
-        color: #666666;
+        color: #1F1F1F;
       }
     }
   }
@@ -816,7 +813,7 @@ export default {
     border: 1px solid #cccccc;
     font-size: 16px;
     font-weight: 400;
-    color: #F74747;
+    color: #7853B2;
 
     transition: 0.3s;
     &:hover {
@@ -825,16 +822,16 @@ export default {
 
     &.back {
       margin-right: 24px;
-      border: 1px solid #F74747;
+      border: 1px solid #7853B2;
       font-size: 16px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #F74747;
+      color: #7853B2;
     }
 
     &.tijiao {
       color: #ffffff;
-      background: #F74747;
+      background: #7853B2;
     }
   }
 }

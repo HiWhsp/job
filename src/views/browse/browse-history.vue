@@ -8,8 +8,8 @@
       <div class="product-box">
         <div class="product-titles flex">
           <div class="product-check flex" @click="do_toggle_all()" :class="{ checked: checkedAll }">
-            <img src="@/static/common/check0.png" alt="" class="img-check check-0" />
-            <img src="@/static/common/check1.png" alt="" class="img-check check-1" />
+            <img src="@img/common/check0.png" alt="" class="img-check check-0" />
+            <img src="@img/common/check1.png" alt="" class="img-check check-1" />
             <span>全选</span>
           </div>
           <div class="product-delete" @click="do_delete_checked()">移除选中</div>
@@ -21,8 +21,8 @@
             <div class="product-list">
               <div class="product-item" v-for="(item, index) in product_list" :key="index">
                 <div class="img-check-box" @click.stop="do_toggle_item(item)" :class="{ checked: item.checked }">
-                  <img src="@/static/common/check0.png" alt="" class="img-check check-0" />
-                  <img src="@/static/common/check1.png" alt="" class="img-check check-1" />
+                  <img src="@img/common/check0.png" alt="" class="img-check check-0" />
+                  <img src="@img/common/check1.png" alt="" class="img-check check-1" />
                 </div>
 
                 <div class="goods-img scale-box" @click="mix_to_product(item)">
@@ -119,12 +119,15 @@ export default {
     },
 
     to_product(item) {
-      this.$router.push({
-        path: "/product-detail",
-        query: {
-          id: item.inventoryId,
-        },
-      });
+      // this.$router.push({
+      //   path: "/product-detail",
+      //   query: {
+      //     id: item.inventoryId,
+      //   },
+      // });
+
+      window.open('/product-detail?id='+item.inventoryId,'__blank','',false)
+
     },
 
     do_toggle_all() {
@@ -251,7 +254,7 @@ export default {
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 14px;
-    color: #666666;
+    color: #1F1F1F;
 
 
     .product-check {
@@ -260,11 +263,11 @@ export default {
       font-family: OPPOSans, OPPOSans;
       font-weight: 400;
       font-size: 14px;
-      color: #666666;
+      color: #1F1F1F;
 
 
       &.checked {
-        color: #F74747;
+        color: #7853B2;
       }
 
       img {
@@ -280,7 +283,7 @@ export default {
       font-family: OPPOSans, OPPOSans;
       font-weight: 400;
       font-size: 14px;
-      color: #666666;
+      color: #1F1F1F;
 
     }
   }
@@ -307,7 +310,9 @@ export default {
       }
 
       .img-check-box {
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
         position: absolute;
         z-index: 10;
         left: 10px;
@@ -357,7 +362,7 @@ export default {
           font-size: 14px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #F74747;
+          color: #7853B2;
 
           b {
             font-size: 20px;
@@ -370,3 +375,4 @@ export default {
 </style>
 
 <style scoped lang="less" src="@/assets/h5css/user/browse-history.less"></style>
+<style scoped lang="less" src="@/assets/h5css/page/shipei3.less"></style>

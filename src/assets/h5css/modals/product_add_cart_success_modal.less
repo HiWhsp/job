@@ -1,16 +1,18 @@
 @media screen and (max-width: 1199px) {
   .btn-upload {
-    .flex-center();
+      display: flex;
+          justify-content: center;
+          align-items: center;
     min-width: fit-content;
     padding: 0 15px;
     height: 36px;
     background: #ffffff;
     border-radius: 4px 4px 4px 4px;
-    border: 1px solid #F74747;
+    border: 1px solid #7853B2;
     font-size: 14px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
-    color: #F74747;
+    color: #7853B2;
 
     img {
       margin-right: 10px;
@@ -74,7 +76,9 @@
       .text-box {
         flex: 2;
         text-align: center;
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
         font-size: 14px;
         font-family: Microsoft YaHei;
         font-weight: bold;
@@ -96,23 +100,23 @@
         width: 104px;
         height: 40px;
         border-radius: 4px 4px 4px 4px;
-        border: 1px solid #F74747;
+        border: 1px solid #7853B2;
         border: 1px solid transparent;
       }
       .queding {
         margin-right: 20px;
-        background: #F74747;
+        background: #7853B2;
         border-radius: 3px;
         font-size: 14px;
         color: #ffffff;
-        border: 1px solid #F74747;
+        border: 1px solid #7853B2;
       }
       .quxiao {
         background: #fff;
         border-radius: 3px;
         font-size: 14px;
-        color: #F74747;
-        border: 1px solid #F74747;
+        color: #7853B2;
+        border: 1px solid #7853B2;
       }
     }
   }
@@ -146,6 +150,27 @@
 
       &:disabled {
         color: #666;
+      }
+    }
+  }
+
+  /deep/.el-dialog{
+    width: 94% !important;
+    .el-dialog__body{
+      padding:3.4rem 3rem 5.3rem;
+
+      .text-box-1{
+        font-size: 1.4rem;
+      }
+    }
+    
+
+    .dialog-footer{
+      display: flex;
+
+      .btn{
+        height: 3rem;
+        font-size: 1rem;
       }
     }
   }

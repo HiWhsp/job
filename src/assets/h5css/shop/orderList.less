@@ -21,9 +21,9 @@
     }
     .info-title {
       position: relative;
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       flex-wrap: wrap;
       height: auto;
       padding: 10px;
@@ -62,8 +62,8 @@
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 20px;
-        color: #999999;
-        color: #F74747;
+        color: #505050;
+        color: #009f39;
 
         // 待付款
         &.state--5 {
@@ -72,8 +72,8 @@
           // color: #fff;
         }
         &.state-2 {
-          color: #F74747;
-          border-color: #F74747;
+          color: #009f39;
+          border-color: #009f39;
         }
       }
     }
@@ -82,8 +82,8 @@
         .item-good {
           padding: 10px;
           border-bottom: 1px dashed #ccc;
-            display: flex;
-  align-items: center;
+          display: flex;
+          align-items: center;
 
           &:last-child {
             border: none;
@@ -111,7 +111,7 @@
               width: fit-content;
               cursor: pointer;
               &:hover {
-                color: #F74747;
+                color: #009f39;
               }
             }
           }
@@ -122,7 +122,7 @@
             font-family: Microsoft YaHei;
             font-weight: 400;
             line-height: 20px;
-            color: #999999;
+            color: #505050;
           }
           .price {
             text-align: right;
@@ -137,9 +137,9 @@
       }
     }
     .info-heji {
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       flex-wrap: wrap;
       padding: 10px;
       border-top: 1px solid #e5e5e5;
@@ -152,8 +152,8 @@
 
       .heji {
         width: 100%;
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
         justify-content: space-between;
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -163,13 +163,13 @@
         .heji-num {
           margin-right: 30px;
           b {
-            color: #F74747;
+            color: #009f39;
           }
         }
         .heji-money {
           b {
             font-size: 14px;
-            color: #F74747;
+            color: #009f39;
           }
         }
       }
@@ -202,28 +202,67 @@
           line-height: 20px;
           color: #7d7d7d;
 
-          border: 1px solid #F74747;
-          color: #F74747;
+          border: 1px solid #009f39;
+          color: #009f39;
         }
 
         .order-action {
           background: #fff;
-          border: 1px solid #F74747;
+          border: 1px solid #009f39;
           font-size: 12px;
-          color: #F74747;
+          color: #009f39;
 
           &.zhifu {
-            background: #F74747;
-            border-color: #F74747;
+            background: #009f39;
+            border-color: #009f39;
             color: #fff;
           }
 
           &.shanchu {
-            background: #F74747;
-            border-color: #F74747;
+            background: #009f39;
+            border-color: #009f39;
             color: #fff;
           }
         }
+      }
+    }
+  }
+
+
+  /deep/.el-dialog {
+    width: 94% !important;
+
+    .el-dialog__title {
+      font-size: 1.4rem;
+    }
+
+    .el-dialog__body {
+      padding: 3.4rem 3rem 3.3rem;
+
+      .text-box-1 {
+        font-size: 1.4rem;
+      }
+      .text-1 {
+        font-size: 1.4rem;
+      }
+      .text-2 {
+        font-size: 1.1rem;
+      }
+      .success-box img {
+        width: 6rem;
+        height: 6rem;
+      }
+    }
+
+    .el-dialog__footer {
+      padding-bottom: 3rem;
+    }
+    .dialog-footer {
+      display: flex;
+
+      .btn {
+        height: 3rem;
+        font-size: 1rem;
       }
     }
   }

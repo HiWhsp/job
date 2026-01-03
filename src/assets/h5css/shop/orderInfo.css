@@ -1,0 +1,228 @@
+@media screen and (max-width: 1199px) {
+  .money-yh span {
+    color: #04be02;
+    font-weight: bold;
+  }
+  .money-heji span {
+    color: #7853B2;
+    font-weight: bold;
+  }
+  .zhifufangshi-wrap {
+    margin-bottom: 0 !important;
+    padding: 10px 0;
+    width: 100%;
+    border-top: 1px dashed #e5e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .zhifufangshi-wrap .zhifufangshi {
+    display: flex;
+    align-items: center;
+  }
+  .zhifufangshi-wrap .zhifufangshi .pay-item {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+    line-height: 24px;
+    color: #7853B2;
+  }
+  .zhifufangshi-wrap .zhifufangshi .pay-item .pay-title {
+    margin-right: 5px;
+  }
+  .order-list-wrap .info-item {
+    border: 1px solid #e5e5e5;
+    margin-bottom: 15px;
+  }
+  .order-list-wrap .info-item:last-child {
+    margin-bottom: 0;
+  }
+  .order-list-wrap .info-title {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  .order-list-wrap .info-title .date {
+    font-size: 12px;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+  }
+  .order-list-wrap .info-title .order-code {
+    margin-top: 10px;
+    width: 100%;
+    flex: auto;
+    text-align: left;
+    padding-left: 0;
+    font-size: 12px;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+    font-weight: bold;
+    color: #333333;
+  }
+  .order-list-wrap .info-title .order-code span {
+    color: #333333;
+  }
+  .order-list-wrap .info-title .order-state {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    padding: 3px 6px;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #505050;
+    color: #7853B2;
+  }
+  .order-list-wrap .info-title .order-state.state-2 {
+    color: #7853B2;
+    border-color: #7853B2;
+  }
+  .order-list-wrap .info-good .list-good .item-good {
+    padding: 10px;
+    border-bottom: 1px dashed #ccc;
+    display: flex;
+    align-items: center;
+  }
+  .order-list-wrap .info-good .list-good .item-good:last-child {
+    border: none;
+  }
+  .order-list-wrap .info-good .list-good .item-good .img-box {
+    width: 90px;
+    cursor: pointer;
+  }
+  .order-list-wrap .info-good .list-good .item-good .img-box img {
+    width: 80px;
+    height: 80px;
+  }
+  .order-list-wrap .info-good .list-good .item-good .title {
+    text-align: left;
+    padding-left: 0;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #333333;
+    flex: 2;
+  }
+  .order-list-wrap .info-good .list-good .item-good .title .goods-title {
+    width: fit-content;
+    cursor: pointer;
+  }
+  .order-list-wrap .info-good .list-good .item-good .title .goods-title:hover {
+    color: #7853B2;
+  }
+  .order-list-wrap .info-good .list-good .item-good .num {
+    width: auto;
+    min-width: 20px;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #505050;
+  }
+  .order-list-wrap .info-good .list-good .item-good .price {
+    text-align: right;
+    min-width: 80px;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #333333;
+  }
+  .info-heji {
+    background: #fafafa;
+    padding: 15px;
+    padding: 10px;
+    border-top: 1px solid #e5e5e5;
+    align-items: center;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #666;
+  }
+  .info-heji .heji {
+    visibility: hidden;
+  }
+  .info-heji .money-box {
+    text-align: right;
+  }
+  .info-heji .money-box > div {
+    margin-bottom: 10px;
+  }
+  .info-heji .money-box .count {
+    font-weight: bold;
+    color: #7853B2;
+  }
+  .info-heji .money-box .money-item .money-num {
+    min-width: 70px;
+    display: inline-block;
+  }
+  .info-heji .money-box .money-item .money-num.money-total {
+    color: #7853B2;
+    font-weight: bold;
+  }
+  .order-action-box {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .btn-box button {
+    transition: 0.3s;
+    margin-left: 15px;
+    width: 104px;
+    height: 32px;
+    border-radius: 4px;
+  }
+  .btn-box button:hover {
+    opacity: 0.7;
+  }
+  .btn-box .order-detail {
+    background: #fff;
+    border: 1px solid #cccccc;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    line-height: 20px;
+    color: #7d7d7d;
+    border: 1px solid #7853B2;
+    color: #7853B2;
+  }
+  .btn-box .order-action {
+    background: #fff;
+    border: 1px solid #cccccc;
+    font-size: 14px;
+    color: #7d7d7d;
+    border: 1px solid #7853B2;
+    color: #7853B2;
+  }
+  .btn-box .order-action:hover {
+    opacity: 0.8;
+  }
+  .btn-box .order-action.zhifu {
+    background: #7853B2;
+    border-color: #7853B2;
+    color: #fff;
+  }
+  .btn-box .order-action.shanchu {
+    background: #7853B2;
+    border-color: #7853B2;
+    color: #fff;
+  }
+  .btn-box .order-action.shouhuo {
+    background: #7853B2;
+    border-color: #7853B2;
+    color: #fff;
+  }
+}

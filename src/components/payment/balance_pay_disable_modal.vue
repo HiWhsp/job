@@ -3,13 +3,13 @@
     <el-dialog title="余额支付" width="580px" custom-class="modal-wrap" :close-on-click-modal="true" :visible.sync="showModal" :before-close="onModal_close">
       <div class="modal-inner">
         <div class="img-box">
-          <img src="@/static/payment/pay-warn.png" alt="" />
+          <img src="@img/payment/pay-warn.png" alt="" />
         </div>
         <div class="tip">余额不足</div>
         <div class="texts">
           <div class="text">
             <div class="label">余额：</div>
-            <div class="val">{{ baseInfo.yue }}</div>
+            <div class="val">{{ vuex_user.yue }}</div>
           </div>
           <div class="text" style="margin-left: 50px">
             <div class="label">需支付：</div>
@@ -18,8 +18,8 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <button class="queding" @click="$router.push('/yueChongzhi')">去充值</button>
-        <!-- <button class="quxiao" @click="showModal = false">取消</button> -->
+        <!-- <button class="queding" @click="$router.push('/yueChongzhi')">去充值</button> -->
+        <button class="quxiao" @click="showModal = false">取消</button>
       </span>
     </el-dialog>
   </div>
@@ -39,7 +39,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   watch: {
     showModal(val) {
@@ -85,7 +85,9 @@ export default {
       color: #000000;
     }
     .texts {
-      .flex-center();
+        display: flex;
+          justify-content: center;
+          align-items: center;
 
       .text {
           display: flex;
@@ -100,7 +102,7 @@ export default {
           font-size: 14px;
           font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
           font-weight: normal;
-          color: #F74747;
+          color: #7853B2;
         }
       }
     }
@@ -109,7 +111,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #F74747;
+  // background: #7853B2;
   background: #f7f7f7;
   text-align: left;
 
@@ -139,12 +141,12 @@ export default {
     font-size: 14px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
-    color: #F74747;
-    border: 1px solid #F74747;
+    color: #7853B2;
+    border: 1px solid #7853B2;
   }
   .queding {
     // margin-right: 24px;
-    background: #F74747;
+    background: #7853B2;
     color: #fff;
   }
 }

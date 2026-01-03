@@ -65,7 +65,9 @@ export default {
   left: 0;
   background: rgba(255, 255, 255, 0.5);
   background: rgba(0, 0, 0, 0.5);
-  .flex-center();
+    display: flex;
+          justify-content: center;
+          align-items: center;
 
   // display: none;
   &.shown {
@@ -119,7 +121,7 @@ export default {
   width: 15px;
   height: 15px;
   background-color: #fff;
-  background-color: #F74747;
+  background-color: #7853B2;
   border-radius: 100%;
   position: absolute;
   -webkit-animation: bouncedelay 1.2s infinite ease-in-out;
@@ -262,7 +264,7 @@ export default {
     width: 10px;
     height: 10px;
     background-color: #fff;
-    background-color: #F74747;
+    background-color: #7853B2;
     border-radius: 100%;
     position: absolute;
     -webkit-animation: bouncedelay 1.2s infinite ease-in-out;

@@ -1,11 +1,9 @@
 <template>
   <div class="page">
-    <pageTop :config="pageConfig" />
 
-    <!-- <pageBread /> -->
 
     <div class="page-box">
-      <div class="page-inner w-1200">
+      <div class="page-inner w-1400">
         <div class="p-page-title">
           人才招聘
         </div>
@@ -93,7 +91,7 @@ export default {
             route: '',
           },
         ],
-        nav_list: this.child_about
+        nav_list: []
       };
     },
   },
@@ -252,7 +250,7 @@ export default {
             font-size: 14px;
             font-family: Microsoft YaHei-Regular, Microsoft YaHei;
             font-weight: 400;
-            color: #666666;
+            color: #1F1F1F;
           }
         }
       }
@@ -264,11 +262,11 @@ export default {
         height: 40px;
         background: #ffffff;
         border-radius: 4px 4px 4px 4px;
-        border: 1px solid #F74747;
+        border: 1px solid #7853B2;
         font-size: 14px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #F74747;
+        color: #7853B2;
       }
     }
   }

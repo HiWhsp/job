@@ -10,7 +10,7 @@
           <div class="yue-box">
             <div class="text-box">
               <div class="text-1">余额</div>
-              <div class="text-2">{{vuex_huobi}}{{ baseInfo.yue }}</div>
+              <div class="text-2">{{vuex_huobi}}{{ vuex_user.yue }}</div>
               <div class="text-3">
                 <button @click="$router.push('/chongzhijilu')">充值记录</button>
               </div>
@@ -186,7 +186,9 @@ export default {
     height: 240px;
     background: url(~@img/yue/yue-bg.png) no-repeat center / cover;
     padding-left: 40px;
-    .flex-center();
+      display: flex;
+          justify-content: center;
+          align-items: center;
     flex-direction: column;
     align-items: flex-start;
 
@@ -252,7 +254,9 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   .item {
-    .flex-center();
+      display: flex;
+          justify-content: center;
+          align-items: center;
     cursor: pointer;
     justify-content: flex-start;
     margin-top: 20px;

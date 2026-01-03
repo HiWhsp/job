@@ -195,7 +195,7 @@ export default {
           //   let resUser = await this.$api("users_userInfo");
           //   if (resUser && resUser.code == 200) {
           //     this.$store.commit("set_vuex_is_login", true);
-          //     this.$store.commit("set_baseInfo", resUser.data);
+          //     this.$store.commit("set_vuex_user", resUser.data);
           //     this.$store.dispatch("appInit"); //重新初始化
           //   } else {
           //     //登录过期
@@ -212,11 +212,11 @@ export default {
           // if (resUser && resUser.code == 200) {
           //   if (resUser.code == 200) {
           //     // this.$store.commit("set_vuex_is_login", true);
-          //     // this.$store.commit("set_baseInfo", resUser.data);
+          //     // this.$store.commit("set_vuex_user", resUser.data);
           //     // this.$store.dispatch("appInit"); //重新初始化
           //   } else {
           //     // this.$store.commit("set_vuex_is_login", false);
-          //     // this.$store.commit("clear_loginInfo", false);
+          //     // this.$store.commit("remove_vuex_user", false);
           //     // this.$store.dispatch("appInit"); //重新初始化
           //   }
           // }

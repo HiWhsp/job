@@ -105,7 +105,7 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei;
       font-weight: 300;
-      color: #666666;
+      color: #1F1F1F;
       line-height: 14px;
     }
 

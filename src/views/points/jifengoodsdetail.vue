@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="detail-container">
-      <div class="content w-1200">
+      <div class="content w-1400">
         <div class="main-content">
           <div class="content-top">
             <div class="left">
@@ -240,7 +240,7 @@ export default {
             width: 100%;
             .limit-end-box {
               font-size: 0.3rem;
-              color: #F74747;
+              color: #7853B2;
               font-weight: bold;
               text-align: center;
               padding-bottom: 0.5rem;
@@ -384,7 +384,7 @@ export default {
               font-size: 14px;
               font-family: Microsoft YaHei;
               font-weight: 400;
-              color: #999999;
+              color: #505050;
             }
             .text-2 {
             }
@@ -399,7 +399,7 @@ export default {
               font-size: 14px;
               font-family: Microsoft YaHei;
               font-weight: 400;
-              color: #999999;
+              color: #505050;
             }
 
             .shuliang {
@@ -418,7 +418,7 @@ export default {
                 img {
                   width: 30px;
                   height: 30px;
-                  vertical-align: middle;
+                  vertical-align: bottom;
                 }
               }
               .minus {
@@ -514,7 +514,7 @@ export default {
                 font-size: 12px;
 
                 &:hover {
-                  border-color: #F74747;
+                  border-color: #7853B2;
                 }
 
                 .coupon-info {
@@ -568,7 +568,7 @@ export default {
         width: 100%;
         .detail-nav {
           position: relative;
-          border-bottom: 2px solid #F74747;
+          border-bottom: 2px solid #7853B2;
           display: flex;
 
           height: 48px; /*no */
@@ -581,7 +581,7 @@ export default {
             min-width: 100px; /*no */
           }
           .active {
-            background-color: #F74747;
+            background-color: #7853B2;
             color: #fff;
           }
 
@@ -594,8 +594,10 @@ export default {
             height: 32px; /*no */
 
             &.contact {
-              background: #F74747;
-              .flex-center();
+              background: #7853B2;
+                display: flex;
+          justify-content: center;
+          align-items: center;
               right: 20px;
 
               &:hover {
@@ -604,7 +606,7 @@ export default {
               img {
                 width: 20px;
                 margin-right: 10px;
-                vertical-align: middle;
+                vertical-align: bottom;
               }
               span {
                 font-size: 14px;
@@ -652,7 +654,7 @@ export default {
 
           .sort-info-title {
             display: inline-block;
-            background-color: #F74747;
+            background-color: #7853B2;
             color: #fff;
             padding: 0.1rem 0.2rem;
           }
@@ -679,7 +681,7 @@ export default {
             .comment-title-text {
               padding: 5px 30px;
               margin-right: 20px;
-              background-color: #F74747;
+              background-color: #7853B2;
               color: #fff;
             }
           }

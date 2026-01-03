@@ -40,7 +40,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["baseInfo"]),
+    ...mapState([""]),
   },
   watch: {},
   created() {
@@ -89,7 +89,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #F74747;
+      background: #7853B2;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -135,7 +135,7 @@ export default {
       .date {
         font-weight: 400;
         font-size: 14px;
-        color: #999999;
+        color: #505050;
       }
     }
 

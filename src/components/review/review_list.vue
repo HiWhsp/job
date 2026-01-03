@@ -3,12 +3,12 @@
     <div class="review-item" v-for="(item, index) in list" :key="index">
       <div class="avatar-info flex">
         <div class="left">
-          <img :src="item.image || avatar_default" alt class="avatar" />
+          <img :src="item.image || vuex_avatar_default" alt class="avatar" />
           <span>{{ item.nickname }}</span>
         </div>
         <div class="right">
-          <el-rate v-model="item.star" disabled :colors="['#F74747', '#F74747', '#F74747']"
-            text-color="#F74747"></el-rate>
+          <el-rate disabled v-model="item.star"  :colors="['#F7BB04', '#F7BB04', '#F7BB04']"
+            text-color="#7853B2"></el-rate>
         </div>
       </div>
       <div class="content">{{ item.content }}</div>
@@ -41,7 +41,7 @@ export default {
 
 <style scoped lang="less">
 /deep/ .el-rate__icon {
-  color: #F7BB04 !important;
+  // color: #F7BB04 !important;
 }
 
 .wrap-review {
@@ -54,7 +54,9 @@ export default {
 
       .left {
         min-width: 150px;
-        .flex-center();
+          display: flex;
+          justify-content: center;
+          align-items: center;
 
         .avatar {
           width: 64px;
@@ -125,7 +127,7 @@ export default {
       font-family: PingFang SC;
       font-weight: 400;
       line-height: 19px;
-      color: #999999;
+      color: #505050;
     }
   }
 }
@@ -144,7 +146,9 @@ export default {
 
         .left {
           min-width: 150px;
-          .flex-center();
+            display: flex;
+          justify-content: center;
+          align-items: center;
 
           .avatar {
             width: 40px;
@@ -220,7 +224,7 @@ export default {
         font-family: PingFang SC;
         font-weight: 400;
         line-height: 1.2;
-        color: #999999;
+        color: #505050;
       }
     }
   }

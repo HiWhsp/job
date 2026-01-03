@@ -347,7 +347,7 @@ export default {
                     font-size: 14px;
                     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
                     font-weight: 400;
-                    color: #999999;
+                    color: #505050;
                 }
             }
         }
@@ -364,7 +364,7 @@ export default {
                 font-size: 14px;
                 font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
                 font-weight: normal;
-                color: #666666;
+                color: #1F1F1F;
             }
         }
     }

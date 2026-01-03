@@ -8,6 +8,9 @@
           <div v-for="(item, index) in tab_list" :key="index" class="tab-item"
             :class="{ active: tab_select.value == item.value }" @click="do_toggle_tab(item)">
             {{ item.title }}
+            <span class="number" v-if="number_info[item.number_key]">{{
+              number_info[item.number_key]
+            }}</span>
           </div>
         </div>
         <!-- <div class="search-box">
@@ -58,16 +61,16 @@
               </div>
             </div>
 
-            <div class="pagi-box">
+            <div class="pagi-box" v-if="allow_refund_count">
               <el-pagination @current-change="on_current_change_allow" :current-page.sync="allow_pagination.page"
                 :page-size="allow_pagination.pageNum" layout="total, prev, pager, next" :total="allow_refund_count"></el-pagination>
             </div>
-            <el-empty v-if="allow_refund_count" description="暂无数据..."></el-empty>
+            <el-empty v-if="!allow_refund_count" description="暂无数据..."></el-empty>
           </div>
         </div>
 
 
-        <div class="service-wrap" data-title="售后申请列表">
+        <div class="service-wrap" data-title="售后申请列表" v-else>
           <div class="service-inner">
             <div class="service-list">
               <div class="service-item" v-for="(order, index) in refund_service_list" :key="index">
@@ -116,8 +119,8 @@
                 </div>
               </div>
             </div>
-
           </div>
+
           <div class="pagi-box">
             <el-pagination @current-change="on_current_change_service" :current-page.sync="service_pagination.page"
               :page-size="service_pagination.pageNum" layout="total, prev, pager, next" :total="refund_service_count"></el-pagination>
@@ -143,8 +146,8 @@ export default {
       tab_list: [
         { value: -10, title: "全部" },
         { value: 2, title: "申请记录" },
-        { value: 0, title: "待处理" },
-        { value: 1, title: "已完成" },
+        { value: 0, title: "待处理",number_key:"orderRefundNum" },
+        { value: 1, title: "已完成",number_key:"orderRefundFinishNum" },
       ],
       tab_select: {
         value: -10, title: "全部"
@@ -167,6 +170,9 @@ export default {
       refund_service_list: [],//售后申请服务列表
       //
       keyword: "",
+      number_info:{
+
+      }
     };
   },
 
@@ -175,6 +181,7 @@ export default {
   },
   created() {
     this.setView();
+    this.query_userIndex()
   },
   methods: {
     setView() {
@@ -183,6 +190,24 @@ export default {
       } else {
         this.query_refund_service_list(); //售后申请列表
       }
+    },
+        //用户主页数据
+        query_userIndex() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "users_userInfo",
+        },
+      }).then((res) => {
+        if (res.code == 200) {
+          let data = res.data;
+          this.number_info = {
+            orderRefundNum: data.orderRefundNum || 0,
+            orderRefundFinishNum: data.orderRefundFinishNum || 0,
+          };
+        }
+      });
     },
 
     //售后列表
@@ -224,6 +249,7 @@ export default {
     },
     
     do_toggle_tab(item) {
+      this.refund_status=item.value
       this.tab_select = item;
       this.setView()
     },
@@ -359,16 +385,15 @@ export default {
       line-height: 48px;
       cursor: pointer;
       margin-right: 40px;
-
       .number {
-        color: #F74747;
+        color: #f74747;
       }
 
       &.active {
-        // background: #F74747;
+        // background: #7853B2;
         // color: #fff;
         font-weight: bold;
-        color: #F74747;
+        color: #7853B2;
 
         &::after {
           content: "";
@@ -377,7 +402,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #F74747;
+          background: #7853B2;
         }
       }
     }
@@ -533,7 +558,7 @@ export default {
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
-              color: #999999;
+              color: #505050;
             }
           }
 
@@ -570,8 +595,8 @@ export default {
       .btn {
         min-width: 96px;
         height: 30px;
-        background: #F74747;
-        border: 1px solid #F74747;
+        background: #7853B2;
+        border: 1px solid #7853B2;
         font-size: 14px;
         color: #fff;
         transition: 0.3s;
@@ -605,7 +630,7 @@ export default {
       .refund-type {
         min-width: 80px;
         text-align: left;
-        color: #F74747;
+        color: #7853B2;
       }
 
       .date {
@@ -639,11 +664,11 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: 400;
         line-height: 20px;
-        color: #999999;
+        color: #505050;
 
         &.state2 {
-          color: #F74747;
-          border-color: #F74747;
+          color: #7853B2;
+          border-color: #7853B2;
         }
       }
     }
@@ -718,7 +743,7 @@ export default {
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
-              color: #999999;
+              color: #505050;
             }
           }
 
@@ -756,8 +781,8 @@ export default {
       .btn {
         min-width: 96px;
         height: 30px;
-        background: #F74747;
-        border: 1px solid #F74747;
+        background: #7853B2;
+        border: 1px solid #7853B2;
         font-size: 14px;
         color: #fff;
         transition: 0.3s;
@@ -769,8 +794,8 @@ export default {
     }
   }
 
-
-
-
 }
 </style>
+
+<style scoped lang="less" src="@/assets/h5css/page/shipei3.less"></style>
+<style scoped lang="less" src="@/assets/h5css/modals/refundList.less"></style>
