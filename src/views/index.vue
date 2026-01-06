@@ -15,12 +15,6 @@
             <div class="lunbo-cont">
               <div class="lunbo-inner w-1400 flex-between" @mouseleave="on_mouseleave">
                 <div class="lunbo-left">
-                  <!-- 1 -->
-                  <!-- <asideChannelNav v-if="1" /> -->
-                  <!-- <asideChannelNav2 v-if="2" /> -->
-                  <!-- <asideChannelNav3 v-if="3" /> -->
-                  <!-- <asideChannelNav4 v-if="4" /> -->
-
                   <div class="cate-wrap">
                     <div class="cate-group-list">
                       <div class="cate-group" v-for="(group, group_index) in vuex_category_tree" :key="group_index"
@@ -53,7 +47,7 @@
                         <div class="v2-group">
                           <div class="menu-row">
                             <div class="first-level-title">
-                              {{ vuex_category_tree[float_index]?.title }}
+                              {{ vuex_category_tree[float_index].title }}
                             </div>
                             <div class="cate-v2-horizontal">
                               <span class="v2-title-horizontal" v-for="(v2, index) in float_category_list" :key="index"
@@ -95,7 +89,7 @@
                     </el-carousel>
                   </div>
                 </div>
-                <div class="lunbo-right">
+                <!-- <div class="lunbo-right">
                   <div class="right">
                     <div class="user-box">
                       <div class="avatar-box" @click="$router.push('/my-info')">
@@ -108,7 +102,6 @@
                       </div>
                       <div class="tip-box">
                         <template v-if="!vuex_is_login">Hi 欢迎来到医买买
-                          <!-- {{vuex_config.comTitle}} -->
                         </template>
                         <template v-else>
                           <p>Hi，{{ vuex_user.nickname }}</p>
@@ -134,35 +127,12 @@
                           </div>
                         </div>
                       </template>
-                      <!-- <div class="operate-box">
-                        <el-button @click="$router.push('login')" v-if="!vuex_is_login" class="denglu">登录</el-button>
-                        <el-button @click="$router.push('register')" v-if="!vuex_is_login" class="zhuce">注册</el-button>
-                        <el-button @click="do_logout()" v-else class="denglu">退出</el-button>
-                      </div> -->
                     </div>
-                    <!-- <div class="tequan-list flex">
-                      <div
-                        class="tequan-item"
-                        v-for="(item, index) in nav_list"
-                        :key="index"
-                        @click="$router.push(item.route)"
-                      >
-                        <div class="img-box">
-                          <img class="icon" :src="item.icon" alt="" />
-                          <img class="icon1" :src="item.icon1" alt="" />
-                        </div>
-                        <div class="tequan-title">
-                          {{ item.title }}
-                        </div>
-                      </div>
-                    </div> -->
                     <div class="news-box">
                       <div class="main-title flex-between">
                         <div class="text">更多服务</div>
-                        <!-- <router-link to="/news">更多 ></router-link> -->
                       </div>
                       <div class="news-list">
-                        <!-- 使用顶部导航的前三项数据 -->
                         <div class="news-item hover-color flex-center" v-for="(item, index) in topNavItems" :key="index"
                           @click="navigateToItem(item, true)">
                           <img :src="item.thumb" class="ico" />
@@ -171,65 +141,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="hot-sec flex">
-                  <div class="title-box title-boxs">
-                    <div class="title-left column-flex-center" @click="hotPanelMinus()">
-                      <div class="sec-title color-0">限时秒杀</div>
-                      <div class="sec-desc flex-center">
-                        立即抢购 <img src="@img/index/right.png" alt="" />
-                      </div>
-                      <div class="countdown-text">本场距结束还剩</div>
-                      <div class="countdown-timer">
-                        <div class="time-box">
-                          <div class="time-value">{{ countdown.hours }}</div>
-                          <div class="time-label">时</div>
-                        </div>
-                        <div class="time-box">
-                          <div class="time-value">{{ countdown.minutes }}</div>
-                          <div class="time-label">分</div>
-                        </div>
-                        <div class="time-box">
-                          <div class="time-value">{{ countdown.seconds }}</div>
-                          <div class="time-label">秒</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="sec-ctx">
-                    <div class="hot-lunbo">
-                      <el-carousel ref="hotLunbo" trigger="click" :autoplay="true" :interval="6000">
-                        <el-carousel-item v-for="(group, gindex) in jingpin_group" :key="gindex">
-                          <div class="product-list">
-                            <div class="product-item hover" v-for="(item, index) in group" :key="index"
-                              @click="to_product(item)">
-                              <div class="poster-box scale-box">
-                                <img class="scale-img" :src="item.thumb" alt="" />
-                              </div>
-                              <div class="info-box">
-                                <div class="title-box">
-                                  <div class="title ellipsis-1">
-                                    {{ item.title }}
-                                  </div>
-                                </div>
-                                <div class="price flex-between">
-                                  <div class="flex-center">
-                                    <div class="huobi">￥</div>
-                                    <div class="price-value">
-                                      {{ item.priceUser }}
-                                    </div>
-                                  </div>
-
-                                  <div class="unit">￥{{ item.priceSale }}</div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </el-carousel-item>
-                      </el-carousel>
-                    </div>
-                  </div>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -413,17 +325,6 @@
             </div>
           </div>
         </div>
-        <!-- <div class="back-box" v-if="showButton">
-          <router-link to="/cart" class="link bg">
-            <div class="btn-box">
-              <img src="@img/backtop/cart-back.png" alt="" />
-              <span class="cart-num fit-text">{{ vuex_cart_number }}</span>
-            </div>
-          </router-link>
-          <div class="btn-box">
-            <img src="@img/backtop/back.png" @click="scrollToTop" />
-          </div>
-        </div> -->
       </div>
     </div>
 
