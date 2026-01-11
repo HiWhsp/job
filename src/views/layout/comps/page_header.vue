@@ -7,13 +7,9 @@
             <!-- 没登录 -->
             <div class="base-left flex" v-if="!vuex_is_login">
               <div class="web-title">
-                您好，欢迎访问医买买
+                <img src="" alt="">
                 <!-- {{ vuex_config.comTitle }} -->
               </div>
-              <!-- <router-link class="login" to="/login">请登录</router-link>
-              <router-link class="register" to="/register"
-                >免费注册</router-link
-              > -->
             </div>
             <div class="base-left flex" v-if="vuex_is_login">
               <div class="web-title">您好，</div>
