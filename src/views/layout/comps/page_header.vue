@@ -5,107 +5,29 @@
         <div class="base-inner">
           <div class="base-box w-1400 flex-between">
             <!-- 没登录 -->
-            <div class="base-left flex" v-if="!vuex_is_login">
+            <div class="base-left flex">
               <div class="web-title">
-                <img src="" alt="">
-                <!-- {{ vuex_config.comTitle }} -->
+                <img src="@/assets/img/head/head-phone.png" alt="" />
+                <span class="phone-number">+4000-000-0000</span>
+                <span class="welcome-text">Hi, welcome to MEDOOO</span>
               </div>
-            </div>
-            <div class="base-left flex" v-if="vuex_is_login">
-              <div class="web-title">您好，</div>
-              <span>
-                <b class="user-index" @click="$router.push('/userIndex')">{{
-                  vuex_user.name
-                }}</b>
-                <span class="text-1"
-                  >{{ `${vuex_user.realName || vuex_user.nickname}` }}
-                  <span style="user-select: none">&nbsp;</span>
-                  <!-- （${
-                      vuex_user.companyName
-                    }） -->
-                </span>
-              </span>
-              欢迎进入医买买
-              <!-- {{ vuex_config.comTitle }} -->
-              <span class="logout" @click="logout()"> 【退出登录】</span>
             </div>
 
             <div class="base-right flex">
-              <!-- <div class="login-action" v-if="!vuex_is_login">
-              <router-link class="login" to="/login">登录</router-link>
-            </div>
-            <div class="login-action" v-if="!vuex_is_login">
-              <router-link class="register" to="/register">注册</router-link>
-            </div> -->
-
-              <!-- <template v-if="vuex_is_login">
-                <div
-                  class="audit-count"
-                  v-if="vuex_user.auditCount > 0"
-                  @click="toAudit"
-                ></div>
-                <el-popover
-                  popper-class="w-nav-popover"
-                  placement="top"
-                  title=""
-                  width="150"
-                  trigger="hover"
-                  content=""
-                >
-                  <router-link
-                    slot="reference"
-                    class="u-act u-my flex"
-                    to="/order-list"
-                  >
-                    <span class="logout"> 我的氿洲工品 </span>
-                    <i class="el-icon-caret-bottom"></i>
-                  </router-link>
-
-                  <div class="pop-child">
-                    <div
-                      :to="sub.route"
-                      class="child-item"
-                      v-for="(sub, index) in user_menus"
-                      :key="index"
-                      @click="navtoRoute(sub)"
-                    >
-                      {{ sub.title }}
-                    </div>
-                  </div>
-                </el-popover>
-              </template> -->
               <div class="u-act">
-                <router-link to="/footprint-list">我的足迹</router-link>
-              </div>
-              <span class="u-line"></span>
-
-              <div class="u-act">
-                <router-link to="/favorite-list">收藏夹</router-link>
+                <img src="@/assets/img/head/CouponCenter.png" alt="" />
+                <router-link to="/footprint-list">Coupon Center</router-link>
               </div>
               <span class="u-line"></span>
               <div class="u-act">
-                <router-link to="/my-info">会员中心</router-link>
+                <img src="@/assets/img/head/ContactUs.png" alt="" />
+                <router-link to="/favorite-list">Contact Us</router-link>
               </div>
               <span class="u-line"></span>
-
-              <!-- <template v-if="vuex_is_login">
-                <div class="u-act">
-                  <span class="logout" @click="do_logout()">退出登录</span>
-                </div>
-                <span class="u-line"></span>
-              </template> -->
-
               <div class="u-act">
-                <router-link to="/help">联系我们</router-link>
-                <!-- <i class="el-icon-caret-bottom"></i> -->
+                <img src="@/assets/img/head/LoginOrRegister.png" alt="" />
+                <router-link to="/my-info">Login or Register</router-link>
               </div>
-              <!-- <span class="u-line"></span>
-              <div class="u-act">
-                <a href="" class="flex-center">
-                  <img class="icon" src="@img/head/mobile.png" alt="" />
-                  <span>{{ vuex_config.comPhone }}</span>
-                </a>
-              </div> -->
             </div>
           </div>
         </div>
@@ -130,8 +52,17 @@
                   <i class="el-icon-search"></i>
                   <span>搜索</span>
                 </button>
-                <div class="search_list" v-if="search_show" @mouseleave="handleBlur">
-                  <div class="items" v-for="(item,index) in search_list" :key="index" @click="handle_search_list(item.title,index)">
+                <div
+                  class="search_list"
+                  v-if="search_show"
+                  @mouseleave="handleBlur"
+                >
+                  <div
+                    class="items"
+                    v-for="(item, index) in search_list"
+                    :key="index"
+                    @click="handle_search_list(item.title, index)"
+                  >
                     {{ item.title }}
                   </div>
                 </div>
@@ -234,8 +165,8 @@ export default {
         { title: "修改密码", route: "/change-password" },
         { title: "退出登录", route: "/exit" },
       ],
-      search_show:false,
-      search_list:[],
+      search_show: false,
+      search_list: [],
     };
   },
 
@@ -277,22 +208,22 @@ export default {
   },
 
   methods: {
-    handleBlur(){
-      this.search_show=false
+    handleBlur() {
+      this.search_show = false;
     },
-    focusHandler(){
-      let search_list =JSON.parse(localStorage.getItem('search_list'))||[]
-      this.search_list= search_list
-      if(this.search_list.length){
-        this.search_show=true
+    focusHandler() {
+      let search_list = JSON.parse(localStorage.getItem("search_list")) || [];
+      this.search_list = search_list;
+      if (this.search_list.length) {
+        this.search_show = true;
       }
     },
-    handle_search_list(title,index){
-      console.log('title',title)
-      this.keyword=title
-      this.search_show=false
-      this.search_list.splice(index,1)
-      this.do_search()
+    handle_search_list(title, index) {
+      console.log("title", title);
+      this.keyword = title;
+      this.search_show = false;
+      this.search_list.splice(index, 1);
+      this.do_search();
     },
     //跳转待审核
     toAudit() {
@@ -384,21 +315,21 @@ export default {
 
     //搜索
     do_search() {
-      let search_list=this.search_list
-      const found = search_list.some(item => item.title === this.keyword);
-      if(!found){
-        if(search_list.length<5){
+      let search_list = this.search_list;
+      const found = search_list.some((item) => item.title === this.keyword);
+      if (!found) {
+        if (search_list.length < 5) {
           search_list.unshift({
-            title:this.keyword,
-          })
-        }else{
+            title: this.keyword,
+          });
+        } else {
           search_list.unshift({
-            title:this.keyword,
-          })
-          search_list.splice(5,1)
+            title: this.keyword,
+          });
+          search_list.splice(5, 1);
         }
       }
-      localStorage.setItem('search_list',JSON.stringify(search_list))
+      localStorage.setItem("search_list", JSON.stringify(search_list));
       window.location.href = `/product-cates?keyword=${this.keyword || ""}`;
       // this.$router.push({
       //   path: "/product-cates",
@@ -520,10 +451,10 @@ export default {
 }
 .head-base {
   .base-inner {
-    background: #f4f4f4;
-    color: #585858;
+    background: #fff;
+    border-bottom: 1px solid #eeeeee;
     .base-box {
-      height: 35px;
+      height: 54px;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 14px;
@@ -531,65 +462,56 @@ export default {
 
       .base-left {
         float: left;
-        min-width: 20%;
-        text-align: left;
-        .text-1 {
-          color: #7853b2;
-        }
+        display: flex;
+        align-items: center;
         .web-title {
-          // margin-right: 40px;
-        }
-        a {
-          font-family: Microsoft YaHei, Microsoft YaHei;
-          font-weight: 400;
-          font-size: 14px;
-          &:hover {
-            color: #7853b2;
+          display: flex;
+          align-items: center;
+          img {
+            width: 28px;
+            height: 28px;
           }
-        }
-
-        .login {
-          margin-right: 20px;
-        }
-        .register {
-          color: #7853b2;
-        }
-        .logout {
-          cursor: pointer;
+          .phone-number {
+            font-family: Poppins, Poppins;
+            font-weight: 600;
+            font-size: 18px;
+            color: #ec6a2b;
+            margin-right: 17px;
+            margin-left: 8px;
+            line-height: 25px;
+          }
+          .welcome-text {
+            font-family: Poppins, Poppins;
+            font-weight: 400;
+            font-size: 18px;
+            color: #5e5e5e;
+            line-height: 25px;
+          }
         }
       }
 
       .base-right {
+        display: flex;
+        align-items: center;
         a {
-          color: #222;
-        }
-
-        .login-action {
-          .login {
-            color: #585858;
-          }
-
-          .logout {
-            color: #585858;
-          }
-        }
-
-        .icon {
-          width: 16px;
-          margin-right: 6px;
+          color: #5E5E5E;
         }
 
         .u-act {
-        }
-        .u-my {
-          height: 36px;
+          display: flex;
+          align-items: center;
+          img {
+            width: 28px;
+            height: 28px;
+            margin-right: 8px;
+          }
         }
 
         .u-line {
           margin: 0 15px;
           width: 1px;
-          height: 16px;
-          background: #bbbbbb;
+          height: 20px;
+          background: #5E5E5E;
         }
       }
       .audit-count {
@@ -652,7 +574,6 @@ export default {
         // overflow: hidden;
         border-radius: 0 4px 4px 0;
         position: relative;
-        
 
         input {
           flex: 1;
@@ -689,8 +610,8 @@ export default {
           display: flex;
           align-items: center;
           justify-content: center;
-          span{
-            vertical-align:top;
+          span {
+            vertical-align: top;
             padding-bottom: 2px;
           }
           i {
@@ -707,9 +628,8 @@ export default {
             height: 31px;
           }
         }
-        
 
-        .search_list{
+        .search_list {
           position: absolute;
           // bottom: 0;
           top: 45px;
@@ -720,7 +640,7 @@ export default {
           background-color: #fff;
           border: 1px solid #ddd;
           z-index: 1000;
-          .items{
+          .items {
             padding: 0 20px;
             height: 35px;
             line-height: 35px;
@@ -731,13 +651,12 @@ export default {
             text-overflow: ellipsis; /* 使用省略号 */
             cursor: pointer;
             font-size: 14px;
-            &:hover{
-              background-color:#f5f5f5 ;
+            &:hover {
+              background-color: #f5f5f5;
               color: #7853b2;
             }
           }
         }
-
       }
 
       .reci-wrap {
@@ -801,7 +720,7 @@ export default {
         }
 
         &.bg {
-          background: #FCB000;
+          background: #fcb000;
           width: 147px;
           height: 40px;
 
