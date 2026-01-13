@@ -46,70 +46,35 @@
                   v-model="keyword"
                   @keyup.enter="do_search"
                   @focus="focusHandler"
-                  placeholder="请输入关键词"
+                  placeholder="Input Keyword or Item"
                 />
                 <button class="btn btn-ripple" @click="do_search()">
                   <i class="el-icon-search"></i>
-                  <span>搜索</span>
                 </button>
-                <div
-                  class="search_list"
-                  v-if="search_show"
-                  @mouseleave="handleBlur"
-                >
-                  <div
-                    class="items"
-                    v-for="(item, index) in search_list"
-                    :key="index"
-                    @click="handle_search_list(item.title, index)"
-                  >
-                    {{ item.title }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="reci-wrap">
-                <!-- <div class="reci-label">热搜词:</div> -->
-                <div class="reci-list">
-                  <div
-                    class="reci"
-                    v-for="(item, index) in keyword_list"
-                    :key="index"
-                    @click="do_search_reci(item)"
-                  >
-                    {{ item.title }}
-                  </div>
-                </div>
               </div>
             </div>
 
             <div class="btns flex-between">
-              <router-link to="/part-time-sales" class="link jz">
+              <router-link to="/part-time-sales" class="link">
                 <div class="btn-box">
-                  <img src="@img/head/jianzhi.png" alt="" />
-                  <span class="text">成为兼职销售</span>
+                  <img src="@img/head/43838.png" alt="" />
+                  <span class="text">Commission-only Reps</span>
                 </div>
               </router-link>
-              <router-link to="/supplier-onboarding" class="link rz">
+              <router-link to="/supplier-onboarding" class="link">
                 <div class="btn-box">
-                  <img src="@img/head/ruzhu.png" alt="" />
-                  <span class="text">供应商入驻</span>
+                  <img src="@img/head/43837.png" alt="" />
+                  <span class="text">Become Supplier</span>
                 </div>
               </router-link>
-              <router-link to="/cart" class="link bg">
+              <router-link to="/cart" class="link">
                 <div class="btn-box">
-                  <img src="@img/head/cart.png" alt="" />
-                  <span class="text">我的购物车</span>
-                  <span class="cart-num fit-text">{{ vuex_cart_number }}</span>
+                  <el-badge :value="vuex_cart_number" class="item" type="warning">
+                    <img src="@img/head/cart.png" alt="" />
+                  </el-badge>
+                  <span class="text cart-text">cart</span>
                 </div>
               </router-link>
-
-              <!-- <router-link to="/batch-xiadan" class="link">
-                <div class="btn-box">
-                  <img src="@img/head/xiadan.png" alt="" />
-                  <span class="text">批量下单</span>
-                </div>
-              </router-link> -->
             </div>
           </div>
         </div>
@@ -494,7 +459,7 @@ export default {
         display: flex;
         align-items: center;
         a {
-          color: #5E5E5E;
+          color: #5e5e5e;
         }
 
         .u-act {
@@ -511,7 +476,7 @@ export default {
           margin: 0 15px;
           width: 1px;
           height: 20px;
-          background: #5E5E5E;
+          background: #5e5e5e;
         }
       }
       .audit-count {
@@ -531,21 +496,23 @@ export default {
 .head-search {
   // background: #0c0a0a;
   .search-inner {
-    height: auto;
-    padding: 24px 0;
+    height: 128px;
+    padding: 26px 0;
+    display: flex;
+    align-items: center;
   }
 
   .search-box {
     display: flex;
     justify-content: space-between;
-    // align-items: center;
+    align-items: center;
 
     .left-logo {
       cursor: pointer;
       justify-content: flex-start;
 
       img {
-        width: 203px;
+        width: 143px;
         cursor: pointer;
       }
 
@@ -560,19 +527,18 @@ export default {
     }
 
     .center-search {
-      height: 80px;
+      height: 56px;
       flex: 1;
-      margin-left: 132px;
+      margin-left: 128px;
 
       .input-box {
-        border: 1px solid #7853b2;
+        border: 2px solid #00306b;
         display: flex;
         align-items: center;
-        width: 600px;
-        height: 40px;
+        width: 542px;
+        height: 56px;
         background: #efefef;
-        // overflow: hidden;
-        border-radius: 0 4px 4px 0;
+        border-radius: 40px;
         position: relative;
 
         input {
@@ -584,207 +550,74 @@ export default {
           background: #fff;
           padding-left: 20px;
           padding-right: 30px;
-          // border: 2px solid #333;
-          font-size: 14px;
+          font-size: 16px;
           font-family: Microsoft YaHei;
-          color: #000;
+          color: #5e5e5e;
+          border-radius: 40px 0 0 40px;
           &::placeholder {
             color: #999;
           }
         }
 
         button {
-          width: 113px;
-          height: 40px;
-          background: #7853b2;
-          // border: 2px solid #333;
-          border: none;
-          outline: none;
-          cursor: pointer;
-
-          font-family: PingFang SC, PingFang SC;
-          font-weight: 500;
-          font-size: 16px;
-          color: #ffffff;
-          border-radius: 0 4px 4px 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          span {
-            vertical-align: top;
-            padding-bottom: 2px;
-          }
+          width: 82px;
+          height: 56px;
+          background: #00306b;
+          border-radius: 0 40px 40px 0;
           i {
             color: #fff;
-            font-size: 22px;
-          }
-
-          &:hover {
-            filter: opacity(0.8);
-          }
-
-          img {
-            width: 31px;
-            height: 31px;
-          }
-        }
-
-        .search_list {
-          position: absolute;
-          // bottom: 0;
-          top: 45px;
-          left: 0;
-          width: 100%;
-          border-radius: 5px;
-          // height: 100px;
-          background-color: #fff;
-          border: 1px solid #ddd;
-          z-index: 1000;
-          .items {
-            padding: 0 20px;
-            height: 35px;
-            line-height: 35px;
-            display: -webkit-box; /* 弹性盒子模型 */
-            -webkit-box-orient: vertical; /* 垂直排列 */
-            -webkit-line-clamp: 1; /* 限制显示3行 */
-            overflow: hidden; /* 隐藏超出内容 */
-            text-overflow: ellipsis; /* 使用省略号 */
-            cursor: pointer;
-            font-size: 14px;
-            &:hover {
-              background-color: #f5f5f5;
-              color: #7853b2;
-            }
-          }
-        }
-      }
-
-      .reci-wrap {
-        margin-top: 7px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        font-size: 12px;
-
-        .reci-label {
-          color: #000;
-          display: inline-block;
-          min-width: 40px;
-        }
-
-        .reci-list {
-          display: flex;
-          color: #9f9f9f;
-
-          .reci {
-            margin-right: 24px;
-            cursor: pointer;
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: 400;
-            font-size: 14px;
-            color: #666;
-
-            &:hover {
-              color: #7853b2;
-            }
+            font-size: 24px;
           }
         }
       }
     }
 
     .btns {
-      height: 80px;
       margin-left: 40px;
-      padding-bottom: 30px;
+      gap: 20px;
 
       .link {
         background: #ffffff;
-        border: 1px solid #dddddd;
         transition: 0.3s;
         border-radius: 4px;
         .btn-box {
-          width: 147px;
-          height: 40px;
           position: relative;
           display: flex;
           justify-content: center;
           align-items: center;
         }
 
-        &:hover {
-          opacity: 0.75;
-        }
-
         & + .link {
           margin-left: 10px;
         }
 
-        &.bg {
-          background: #fcb000;
-          width: 147px;
-          height: 40px;
-
-          .text {
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: 400;
-            font-size: 16px;
-            color: #ffffff;
-          }
-        }
-        &.jz {
-          background: #f3a145;
-          .text {
-            color: #ffffff;
-          }
-        }
-        &.rz {
-          background: #7853b2;
-          .text {
-            color: #ffffff;
-          }
-        }
-
         img {
-          width: 17px;
+          width: 35px;
+          height: 35px;
           margin-right: 11px;
         }
 
         .text {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
-          font-size: 14px;
-          font-size: 16px;
-          color: #0c0a0a;
+          font-size: 20px;
+          color: #00306b;
         }
 
-        .cart-num {
-          position: absolute;
-          right: 0;
-          top: -5px;
-          min-width: 23px;
-          height: 18px;
-          background: #ff9900;
-          font-size: 12px;
-          color: #fff;
-          border-radius: 9px 9px 9px 9px;
+        .cart-text {
+          color: #1e262e;
         }
       }
     }
   }
 }
 
-//
-//
-//
-//
-//
-
 .head-nav {
-  background: #202020;
+  
 }
 
 .page-head {
-  //position: sticky;
+  // position: sticky;
   z-index: 1024;
   top: 0;
   left: 0;

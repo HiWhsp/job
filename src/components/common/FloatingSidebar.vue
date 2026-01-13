@@ -2,16 +2,34 @@
   <div class="floating-sidebar">
     <!-- 悬浮框按钮组 -->
     <div class="sidebar-items">
-      <div v-for="(item, index) in sidebarItems" :key="index" class="sidebar-item"
-        :class="{ 'is-hover': item.isHovered, }" @mouseenter="handleMouseEnter(item, index)"
-        @mouseleave="handleMouseLeave(item, index)" @click="handleItemClick(item)">
-        <div class="item-text" :class="{'item-text2':item.name=='客服电话'}" v-if="item.name!='手机版'">{{ shown_info[item.name] || item.name }}</div>
-
+      <div
+        v-for="(item, index) in sidebarItems"
+        :key="index"
+        class="sidebar-item"
+        :class="{ 'is-hover': item.isHovered }"
+        @mouseenter="handleMouseEnter(item, index)"
+        @mouseleave="handleMouseLeave(item, index)"
+        @click="handleItemClick(item)"
+      >
+        <div
+          class="item-text"
+          :class="{ 'item-text2': item.name == '客服电话' }"
+          v-if="item.name != '手机版'"
+        >
+          {{ shown_info[item.name] || item.name }}
+        </div>
 
         <div class="circle-box">
           <div class="icon-wrapper">
-            <img :src="item.isHovered ? item.hoverIcon : item.icon" :alt="item.name" class="icon" />
-            <div v-if="item.name === '购物车' && vuex_cart_number > 0" class="badge">
+            <img
+              :src="item.isHovered ? item.hoverIcon : item.icon"
+              :alt="item.name"
+              class="icon"
+            />
+            <div
+              v-if="item.name === '购物车' && vuex_cart_number > 0"
+              class="badge"
+            >
               {{ vuex_cart_number }}
             </div>
             <div v-else-if="item.badge && item.name !== '购物车'" class="badge">
@@ -20,22 +38,16 @@
           </div>
         </div>
 
-
         <div class="qrcode-wrap" v-if="item.name == '手机版' && item.isHovered">
           <div class="qrcode-box">
             <div class="pic-box">
-              <img :src="vuex_config.accountImg" alt="">
+              <img :src="vuex_config.accountImg" alt="" />
             </div>
-            <div class="pic-title">
-              扫描二维码
-            </div>
+            <div class="pic-title">扫描二维码</div>
           </div>
         </div>
       </div>
     </div>
-
-
-
   </div>
 </template>
 
@@ -62,22 +74,22 @@ export default {
           hoverIcon: require("@/assets/img/common/icon2-a.png"),
           isHovered: false,
         },
+        // {
+        //   name: "手机版",
+        //   icon: require("@/assets/img/common/icon3.png"),
+        //   hoverIcon: require("@/assets/img/common/icon3-a.png"),
+        //   isHovered: false,
+        // },
         {
-          name: "手机版",
-          icon: require("@/assets/img/common/icon3.png"),
-          hoverIcon: require("@/assets/img/common/icon3-a.png"),
+          name: "客服电话",
+          icon: require("@/assets/img/common/icon5.png"),
+          hoverIcon: require("@/assets/img/common/icon5-a.png"),
           isHovered: false,
         },
         {
           name: "在线客服",
           icon: require("@/assets/img/common/icon4.png"),
           hoverIcon: require("@/assets/img/common/icon4-a.png"),
-          isHovered: false,
-        },
-        {
-          name: "客服电话",
-          icon: require("@/assets/img/common/icon5.png"),
-          hoverIcon: require("@/assets/img/common/icon5-a.png"),
           isHovered: false,
         },
         {
@@ -93,8 +105,8 @@ export default {
     shown_info() {
       let map = {
         客服电话: this.vuex_config.comPhone || "400-000-0000",
-      }
-      return map
+      };
+      return map;
     },
   },
   methods: {
@@ -135,7 +147,7 @@ export default {
       });
     },
     showMobileTip() {
-      return
+      return;
       this.$message({
         message: "请使用手机扫描二维码访问手机版",
         type: "info",
@@ -151,7 +163,7 @@ export default {
       });
     },
     callCustomerService() {
-      return
+      return;
       // 拨打电话
       const phoneNumber = this.vuex_config.comPhone || "400-000-0000";
       window.open(`tel:${phoneNumber}`);
@@ -165,7 +177,7 @@ export default {
   width: 64px;
   // height: 362px;
   height: 448px;
-  background: #ffffff;
+  // background: #ffffff;
   border-radius: 32px 32px 32px 32px;
   position: fixed;
   right: 0;
@@ -183,24 +195,26 @@ export default {
   .sidebar-items {
     display: flex;
     flex-direction: column;
-    gap: 21px;
+    gap: 2px;
     // width: 100%;
     // align-items: center;
-
 
     .sidebar-item {
       position: relative;
       cursor: pointer;
       // margin-bottom: 22px;
 
+      &:nth-child(5) {
+        .circle-box {
+          background-color: #00306B;
+        }
+      }
 
       .circle-box {
-        // width: 44px;
-        // height: 44px;
-        width: 54px;
-        height: 54px;
-        background: #f7efff;
-        border-radius: 50%;
+        width: 57px;
+        height: 57px;
+        background: #ec6a2b;
+        border-radius: 10px 10px 10px 10px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -208,13 +222,9 @@ export default {
         transition: all 0.3s ease;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         overflow: visible;
-
       }
 
-
-
       &.is-hover {
-
         .circle-box {
           background: #7853b2;
         }
@@ -224,7 +234,6 @@ export default {
           opacity: 1;
           padding: 0 36px 0 20px;
           // padding: 0 36px 0 20px;
-
         }
 
         .badge {
@@ -264,7 +273,6 @@ export default {
           transition: all 0.3s ease;
         }
       }
-
 
       .qrcode-wrap {
         position: absolute;
@@ -321,7 +329,6 @@ export default {
         font-size: 18px;
         color: #414141;
 
-
         white-space: nowrap;
         flex-wrap: nowrap;
         display: flex;
@@ -334,40 +341,16 @@ export default {
         box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.09);
         border-radius: 100px 0 0 100px;
       }
-      .item-text2{
+      .item-text2 {
         font-weight: bold;
-        color:#7853B2 ;
+        color: #7853b2;
       }
     }
   }
-
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.floating-sidebar {}
+.floating-sidebar {
+}
 
 // 响应式设计
 @media (max-width: 768px) {

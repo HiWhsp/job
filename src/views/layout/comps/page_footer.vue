@@ -94,23 +94,23 @@ export default {
       footerTips: [
         {
           icon: require("@/assets/img/foot/foot-1.png"),
-          title: "正品保障",
-          desc: "正品保障，诚信服务",
+          title: "genuine product",
+          desc: "Worry-free after-sales service",
         },
         {
           icon: require("@/assets/img/foot/foot-2.png"),
-          title: "一站式服务",
-          desc: "一站式服务",
+          title: "one-stop service",
+          desc: "Worry-free after-sales service",
         },
         {
           icon: require("@/assets/img/foot/foot-3.png"),
-          title: "全网比价",
-          desc: "全网比价 惠到实处",
+          title: "discounted price",
+          desc: "Worry-free after-sales service",
         },
         {
           icon: require("@/assets/img/foot/foot-4.png"),
-          title: "无忧售后",
-          desc: "专业团队 无忧售后",
+          title: "after-sales service",
+          desc: "Worry-free after-sales service",
         },
       ],
       footer_link_group: [],
@@ -137,7 +137,7 @@ export default {
           orderType: 0, //排序情况：0-自然排序 1-最新
         },
       }).then((res) => {
-        if (res.code == 200) { 
+        if (res.code == 200) {
           this.footer_link_group = res.data;
         }
       });
@@ -157,8 +157,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid #e5e5e5;
-  border-top: 4px solid #7853b2;
+  border-top: 4px solid #EC6A2B;
 
   .footer-icons {
     display: flex;
@@ -167,25 +166,27 @@ export default {
       flex: 1;
       text-align: left;
       display: flex;
+      flex-direction: column;
       align-items: center;
 
       .icon-box {
-       
+        margin-bottom: 10px;
         img {
-          width: 47px;
-          height: 47px;
+          width: 40px;
+          height: 40px;
         }
       }
 
       .info-box {
         flex: 1;
-        padding-left: 15px;
-
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         .title {
           margin-bottom: 10px;
           font-size: 18px;
           font-family: PingFang SC, PingFang SC;
-          color: #1F1F1F;
+          color: #000;
           font-weight: bold;
         }
 
@@ -193,7 +194,7 @@ export default {
           font-size: 14px;
           font-family: PingFang SC, PingFang SC;
           font-weight: 500;
-          color: #1F1F1F;
+          color: #5E5E5E;
         }
       }
     }
@@ -202,8 +203,8 @@ export default {
 
 .page-footer {
   padding-top: 40px;
-  background: #ffffff;
-  color: #222;
+  background: #00306B;
+  color: #fff;
 }
 
 .web-footer {
@@ -228,7 +229,7 @@ export default {
         font-size: 16px;
         font-family: PingFang SC, PingFang SC;
         font-weight: bold;
-        color: #1F1F1F;
+        color: #fff;
       }
 
       .link-item {
@@ -236,7 +237,7 @@ export default {
         font-size: 14px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #1F1F1F;
+        color: #fff;
         line-height: 32px;
 
         a {
@@ -244,11 +245,11 @@ export default {
           font-family: MicrosoftYaHei, MicrosoftYaHei;
           font-weight: normal;
           font-size: 14px;
-          color: #1F1F1F;
+          color: #fff;
           line-height: 30px;
 
           &:hover {
-            color: #7853B2;
+            color: #fff;
           }
         }
       }
@@ -278,28 +279,28 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 16px;
-          color: #1F1F1F;
+          color: #fff;
         }
         .mobile {
           margin: 10px 0 25px 0;
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 26px;
-          color: #7853b2;
+          color: #fff;
           font-weight: bold;
         }
         .time-text {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 16px;
-          color: #1F1F1F;
+          color: #fff;
         }
         .time {
           margin-top: 10px;
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 14px;
-          color: #1F1F1F;
+          color: #fff;
         }
       }
     }
@@ -351,66 +352,6 @@ export default {
   .contact-item {
     margin: 0 5px;
     color: #fff;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .footer-tip {
-    padding: 15px;
-
-    .footer-icons {
-      width: 100%;
-      flex-direction: column;
-
-      .icon-item {
-        margin-bottom: 15px;
-
-        .info-box {
-          .title {
-            font-size: 1.8rem;
-          }
-
-          .desc {
-            font-size: 1.4rem;
-          }
-        }
-      }
-    }
-  }
-
-  .page-footer {
-    padding: 15px;
-
-    .web-footer {
-      width: 100%;
-      flex-direction: column;
-
-      .link-wrap {
-        width: 100%;
-        padding-right: 0;
-        margin-bottom: 15px;
-        justify-content: space-between;
-
-        .link-group {
-          .group-title {
-            font-size: 1.4rem;
-          }
-
-          .link-item a {
-            font-size: 1.2rem;
-          }
-        }
-      }
-
-      .logo-wrap {
-        width: 100%;
-      }
-    }
-  }
-
-  .link-info .top-info .icon-box img {
-    width: 10rem;
-    height: 10rem;
   }
 }
 </style>

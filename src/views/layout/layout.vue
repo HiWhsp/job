@@ -6,9 +6,6 @@
       <router-view></router-view>
     </div>
     <page_footer v-if="!is_show_login_comp"/>
-    <!-- <page_footer_2 /> -->
-    <!-- <page_aside /> -->
-    <!-- <page_kefu /> -->
   </div>
 </template>
 <script>
