@@ -103,75 +103,87 @@
 
           <!-- 秒杀模块 -->
           <div class="hot-sec flex">
-            <div class="title-box title-boxs">
-              <div
-                class="title-left column-flex-center"
-                @click="hotPanelMinus()"
-              >
-                <div class="sec-title color-0">限时秒杀</div>
-                <div class="sec-desc flex-center">
-                  立即抢购 <img src="@img/index/right.png" alt="" />
+            <div class="sec-left">
+              <p class="sec-left-title">SAFE AND RELIABLE</p>
+              <img
+                src="@img/index/sec-left-icon.png"
+                class="sec-left-icon"
+                alt=""
+              />
+              <p class="sec-left-desc">
+                Clearance sale for some products, lowest prices available, come
+                and buy now
+              </p>
+              <img
+                class="sec-left-btn"
+                src="@img/index/sec-left-btn.png"
+                alt=""
+              />
+            </div>
+            <div class="sec-right">
+              <div class="sec-right-header">
+                <div class="limited-offer-banner">
+                  <img src="~@img/index/sec-right-icon.png" alt="" />
+                  <span>LIMITED-TIME OFFER</span>
                 </div>
-                <div class="countdown-text">本场距结束还剩</div>
-                <div class="countdown-timer">
-                  <div class="time-box">
-                    <div class="time-value">{{ countdown.hours }}</div>
-                    <div class="time-label">时</div>
+                <div class="countdown-display">
+                  <div class="countdown-timer-new">
+                    <span class="time-value">{{ countdown.hours }}</span>
+                    <span class="time-separator">:</span>
+                    <span class="time-value">{{ countdown.minutes }}</span>
+                    <span class="time-separator">:</span>
+                    <span class="time-value">{{ countdown.seconds }}</span>
                   </div>
-                  <div class="time-box">
-                    <div class="time-value">{{ countdown.minutes }}</div>
-                    <div class="time-label">分</div>
-                  </div>
-                  <div class="time-box">
-                    <div class="time-value">{{ countdown.seconds }}</div>
-                    <div class="time-label">秒</div>
+                </div>
+                <div class="sold-progress">
+                  <div class="sold-text">Sold 30%</div>
+                  <div class="progress-bar">
+                    <div class="progress-fill"></div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="sec-ctx">
-              <div class="hot-lunbo">
-                <el-carousel
-                  ref="hotLunbo"
-                  trigger="click"
-                  :autoplay="true"
-                  :interval="6000"
-                >
-                  <el-carousel-item
-                    v-for="(group, gindex) in jingpin_group"
-                    :key="gindex"
+              <div class="sec-ctx">
+                <div class="hot-lunbo">
+                  <el-carousel
+                    ref="hotLunbo"
+                    trigger="click"
+                    :autoplay="true"
+                    :interval="6000"
+                    arrow="always"
                   >
-                    <div class="product-list">
-                      <div
-                        class="product-item hover"
-                        v-for="(item, index) in group"
-                        :key="index"
-                        @click="to_product(item)"
-                      >
-                        <div class="poster-box scale-box">
-                          <img class="scale-img" :src="item.thumb" alt="" />
-                        </div>
-                        <div class="info-box">
-                          <div class="title-box">
-                            <div class="title ellipsis-1">
-                              {{ item.title }}
-                            </div>
+                    <el-carousel-item
+                      v-for="(group, gindex) in jingpin_group"
+                      :key="gindex"
+                    >
+                      <div class="product-list">
+                        <div
+                          class="product-item hover"
+                          v-for="(item, index) in group"
+                          :key="index"
+                          @click="to_product(item)"
+                        >
+                          <div class="poster-box scale-box">
+                            <img class="scale-img" :src="item.thumb" alt="" />
                           </div>
-                          <div class="price flex-between">
-                            <div class="flex-center">
-                              <div class="huobi">￥</div>
-                              <div class="price-value">
-                                {{ item.priceUser }}
+                          <div class="info-box">
+                            <div class="title-box">
+                              <div class="title ellipsis-1">
+                                {{ item.title }}
                               </div>
                             </div>
-
-                            <div class="unit">￥{{ item.priceSale }}</div>
+                            <div class="price-new">
+                              US${{ item.priceUser || item.priceSale }}
+                            </div>
+                            <div class="certifications">
+                              <span class="cert-badge">FDA</span>
+                              <span class="cert-badge">CE</span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </el-carousel-item>
-                </el-carousel>
+                    </el-carousel-item>
+                  </el-carousel>
+                </div>
               </div>
             </div>
           </div>
@@ -188,19 +200,6 @@
                     <img src="@img/index/area.png" alt="" />
                   </div>
                   <div class="sec-title">{{ group.title }}</div>
-                </div>
-                <div class="sec-more">
-                  <div class="text">为您推荐</div>
-                  <div class="flex-center">
-                    <span
-                      v-for="(menu, idx) in getSubMenus(group.id).slice(0, 5)"
-                      :key="idx"
-                      @click="onSubMenuClick(menu, group.id)"
-                      class="sub-menu-item"
-                      >{{ menu.title || menu.name }}</span
-                    >
-                  </div>
-                  <!-- <img class="arrow" src="@img/index/cate-more.png" alt="" /> -->
                 </div>
               </div>
 
@@ -1825,7 +1824,7 @@ export default {
     .sec-title-box {
       margin-bottom: 18px;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
 
       .title-left {
@@ -1833,70 +1832,17 @@ export default {
 
         .sec-line {
           img {
-            width: 24px;
+            width: 38px;
             margin-right: 12px;
           }
         }
 
         .sec-title {
-          font-size: 24px;
-          color: #1f1f1f;
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: bold;
-        }
-
-        .sec-divider {
-          margin: 0 15px;
-          font-size: 14px;
-          font-family: PingFang SC, PingFang SC;
-          font-weight: 500;
-          color: #505050;
-        }
-
-        .sec-desc {
-          font-size: 14px;
-          font-family: PingFang SC, PingFang SC;
-          font-weight: 500;
-          color: #505050;
-        }
-      }
-
-      .sec-more {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-
-        .text {
-          font-family: MicrosoftYaHei, MicrosoftYaHei;
-          font-weight: normal;
-          font-size: 16px;
-          font-weight: bold;
-          color: #1f1f1f;
-          margin-right: 20px;
-        }
-
-        .arrow {
-          margin-left: 10px;
-          width: 17px;
-          height: 17px;
-        }
-
-        span {
-          padding: 0 10px;
-
-          &:hover {
-            color: #5b339a;
-          }
-        }
-
-        .sub-menu-item {
-          padding: 0 10px;
-          cursor: pointer;
-          transition: color 0.3s ease;
-
-          &:hover {
-            color: #5b339a;
-          }
+          font-size: 40px;
+          color: #00306b;
+          line-height: 56px;
         }
       }
     }
@@ -2090,188 +2036,277 @@ export default {
 }
 
 .hot-sec {
-  border-radius: 12px 12px 12px 12px;
-  background: linear-gradient(180deg, #ffa408 0%, #ffc209 100%);
-  height: 309px;
-  padding: 10px 12px 10px 18px;
-
-  .title-boxs {
-    width: 206px;
-    background-image: url("~@img/index/jingpin.png");
+  height: 541px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 17px;
+  .sec-left {
+    position: relative;
+    width: 354px;
+    height: 100%;
+    background-image: url("~@img/index/sec-left-bg.png");
     background-size: 100%;
     background-repeat: no-repeat;
-    height: 100%;
+    padding: 30px;
+    .sec-left-title {
+      font-size: 30px;
+      color: #fff;
+      font-weight: 400;
+      margin-bottom: 10px;
+    }
+    .sec-left-icon {
+      width: 55px;
+      height: 55px;
+      margin-bottom: 18px;
+    }
+    .sec-left-desc {
+      font-size: 24px;
+      color: #ffffff;
+      line-height: 30px;
+    }
+    .sec-left-btn {
+      position: absolute;
+      bottom: 40px;
+      right: 40px;
+      width: 41px;
+      height: 41px;
+      cursor: pointer;
+    }
   }
+  .sec-right {
+    flex: 1;
+    border: 2px solid #ec6a2b;
+    border-radius: 24px;
+    height: 100%;
+    .sec-right-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      height: 93px;
+      border-bottom: 1px solid #f0f0f0;
+      padding-right: 47px;
 
-  .title-box {
-    .title-left {
-      text-align: center;
-
-      .lightning-icon {
-        font-size: 40px;
-        margin-bottom: 10px;
-        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
-      }
-
-      .sec-title {
-        margin: 15px 10px;
-        font-family: Microsoft YaHei, Microsoft YaHei;
+      .limited-offer-banner {
+        width: 480px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: #ec6a2b;
+        color: #fff;
         font-weight: bold;
-        font-size: 24px;
-        color: #ffffff;
-      }
-
-      .sec-desc {
-        font-family: Microsoft YaHei, Microsoft YaHei;
-        font-weight: 400;
-        font-size: 20px;
-        font-weight: 500;
-        color: #ffffff;
-
+        font-size: 30px;
+        border-bottom-right-radius: 200px;
         img {
-          width: 18px;
-          margin-left: 5px;
+          width: 48px;
         }
       }
 
-      .countdown-text {
-        font-family: Microsoft YaHei, Microsoft YaHei;
-        font-weight: 400;
-        font-size: 12px;
-        color: #ffffff;
-        margin-bottom: 29px;
-        margin-top: 103px;
+      .countdown-display {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .countdown-timer-new {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          .time-value {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            background: #1a237e;
+            color: #ffffff;
+            border-radius: 10px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 40px;
+            padding: 0 8px;
+          }
+
+          .time-separator {
+            color: #1a237e;
+            font-size: 40px;
+            font-weight: bold;
+            margin: 0 2px;
+            line-height: 64px;
+          }
+        }
       }
 
-      .countdown-timer {
+      .sold-progress {
         display: flex;
-        justify-content: center;
-        gap: 8px;
+        flex-direction: column;
+        gap: 6px;
+        width: 389px;
 
-        .time-box {
+        .sold-text {
+          font-family: Poppins, Poppins;
+          font-weight: 400;
+          font-size: 18px;
+          color: #1e262e;
+          line-height: 25px;
+        }
+
+        .progress-bar {
+          width: 100%;
+          height: 22px;
+          background: #f5e6d3;
+          border-radius: 11px;
+          overflow: hidden;
+
+          .progress-fill {
+            width: 30%;
+            height: 100%;
+            background: #ff7600;
+            border-radius: 11px;
+            transition: width 0.3s ease;
+          }
+        }
+      }
+    }
+
+    .sec-ctx {
+      width: 100%;
+      height: 448px;
+      padding: 20px 47px;
+    }
+
+    .hot-lunbo {
+      position: relative;
+      width: 100%;
+      background: transparent;
+
+      /deep/ .el-carousel__container {
+        height: auto;
+      }
+
+      /deep/ .el-carousel__arrow {
+        width: 40px;
+        height: 40px;
+        background: #f5f5f5;
+        border: none;
+        border-radius: 4px;
+        color: #666;
+        font-size: 18px;
+
+        &:hover {
+          background: #e0e0e0;
+        }
+
+        &::before {
+          font-size: 18px;
+        }
+      }
+
+      /deep/ .el-carousel__arrow--left {
+        left: -20px;
+      }
+
+      /deep/ .el-carousel__arrow--right {
+        right: -20px;
+      }
+
+      /deep/ img {
+        object-fit: contain;
+      }
+    }
+
+    .product-list {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 10px 0;
+
+      .product-item {
+        flex: 1;
+        padding: 15px;
+        background: #000;
+        border: 2px dashed #d4d4d4;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &:hover {
+          border-color: #ff7600;
+          box-shadow: 0 4px 12px rgba(255, 118, 0, 0.2);
+        }
+
+        .poster-box {
+          width: 100%;
+          max-width: 180px;
+          height: 180px;
+          margin-bottom: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+        }
+
+        .info-box {
+          width: 100%;
+          text-align: center;
           display: flex;
           flex-direction: column;
           align-items: center;
+          gap: 8px;
 
-          .time-value {
-            width: 35px;
-            height: 41px;
-            background: #000000;
-            color: #ffffff;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: Arial, Arial;
-            font-size: 22px;
+          .title-box {
+            width: 100%;
+            padding: 0;
+            margin-bottom: 8px;
           }
 
-          .time-label {
-            font-family: Arial, Arial;
-            font-weight: 400;
-            font-size: 12px;
-            color: #ffffff;
-          }
-        }
-      }
-    }
-  }
-
-  .sec-ctx {
-    width: calc(100% - 224px);
-    margin-left: 18px;
-  }
-
-  .hot-lunbo {
-    position: relative;
-    width: 100%;
-    height: 286px;
-    background: #fff;
-    border-radius: 8px 8px 8px 8px;
-
-    /deep/ .el-carousel__container {
-      height: 286px;
-    }
-
-    /deep/ img {
-      object-fit: cover;
-    }
-  }
-
-  .product-list {
-    display: flex;
-    flex-wrap: wrap;
-    height: 253px;
-    border-radius: 8px 8px 8px 8px;
-    overflow: hidden;
-
-    .product-item {
-      margin-top: 18px;
-
-      // padding-top: 14px;
-      // margin: 0 24px;
-      padding: 14px 23px;
-      // margin-right: 10px;
-      background: #fff;
-      border-right: 1px solid #d4d4d4;
-
-      &:nth-child(5n) {
-        border-right: none;
-        padding-right: 10px;
-      }
-
-      .poster-box {
-        margin: 0 auto;
-        width: 152px;
-        height: 152px;
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
-      }
-
-      .info-box {
-        text-align: left;
-        padding-top: 7px;
-
-        .title-box {
-          // height: 48px;
-          padding: 0;
-        }
-
-        .title {
-          font-family: MicrosoftYaHei, MicrosoftYaHei;
-          font-weight: normal;
-          font-size: 14px;
-          color: #1f1f1f;
-        }
-
-        .price {
-          background-image: url("~@img/index/jingpinbtn.png");
-          background-size: 100%;
-          background-repeat: no-repeat;
-          width: 152px;
-          height: 32px;
-          margin-top: 6px;
-          color: #ffffff;
-          font-family: Microsoft YaHei, Microsoft YaHei;
-          font-weight: normal;
-          padding: 0 10px;
-
-          .huobi {
+          .title {
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-weight: normal;
             font-size: 14px;
+            color: #1f1f1f;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
 
-          .price-value {
+          .price-new {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
             font-size: 18px;
+            color: #ff7600;
+            margin: 8px 0;
           }
 
-          .unit {
-            text-decoration-line: line-through;
-            color: #505050;
-            font-size: 12px;
+          .certifications {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+
+            .cert-badge {
+              padding: 4px 12px;
+              background: #fff;
+              border: 1px solid #1a237e;
+              border-radius: 4px;
+              color: #1a237e;
+              font-size: 12px;
+              font-weight: 500;
+              white-space: nowrap;
+            }
           }
         }
       }
