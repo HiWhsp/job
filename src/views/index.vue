@@ -4,152 +4,184 @@
       <div class="inner">
         <div class="banner-box">
           <div class="lunbo-wrap">
-            <!-- <div class="lunbo-box">
+            <div class="lunbo-box">
               <el-carousel trigger="click" :autoplay="true">
-                <el-carousel-item v-for="(item, index) in vuex_index_banners" :key="index"
-                  @click.native="do_banner_click(item)">
+                <el-carousel-item
+                  v-for="(item, index) in vuex_index_banners"
+                  :key="index"
+                  @click.native="do_banner_click(item)"
+                >
                   <img :src="item.image" alt="" />
                 </el-carousel-item>
               </el-carousel>
-            </div> -->
-            <div class="lunbo-cont">
-              <div class="lunbo-inner w-1400 flex-between" @mouseleave="on_mouseleave">
-                <div class="lunbo-left">
-                  <div class="cate-wrap">
-                    <div class="cate-group-list">
-                      <div class="cate-group" v-for="(group, group_index) in vuex_category_tree" :key="group_index"
-                        @mouseover="on_mouseover(group, group_index)">
-                        <div class="cate-v1" @click="to_cate_v1(group)">
-                          <div class="cate-header">
-                            <div class="main-title">{{ group.title }}</div>
-                          </div>
-                          <div class="cate-v2-wrap">
-                            <div class="cate-v2-box">
-                              <span class="v2-title" v-for="(v2, v2_index) in group.channels" :key="v2_index"
-                                @click.stop="to_cate_v2(v2)">
-                                {{ v2.title }}
-                              </span>
-                            </div>
-                            <div class="v1-arrow">
-                              <img src="@img/index/cate-arrow.png" alt="" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="lunbo-float" v-if="show_float">
-                  <div class="float-cate-wrap">
-                    <div class="cate-inner">
-                      <div class="cate-v2-list">
-                        <div class="v2-group">
-                          <div class="menu-row">
-                            <div class="first-level-title">
-                              {{ vuex_category_tree[float_index].title }}
-                            </div>
-                            <div class="cate-v2-horizontal">
-                              <span class="v2-title-horizontal" v-for="(v2, index) in float_category_list" :key="index"
-                                @click="to_cate_v2(v2)">
-                                {{ v2.title }}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- <div class="brand-wrap">
-                      <div class="brand-title flex-center">
-                        <img src="@img/index/brand.png" alt="" />
-                        品牌推荐
-                      </div>
-                      <div class="brand-list">
-                        <div
-                          class="item"
-                          v-for="(item, index) in brand_list"
-                          :key="index"
-                          @click="to_brand(item)"
-                        >
-                          <img :src="item.thumb" alt="" />
-                        </div>
-                      </div>
-                    </div> -->
-                  </div>
-                </div>
-                <!-- v-if="!show_float" -->
-                <div class="lunbo-center">
-                  <div class="lunbo-box">
-                    <el-carousel trigger="click" :autoplay="true">
-                      <el-carousel-item v-for="(item, index) in vuex_index_banners" :key="index"
-                        @click.native="do_banner_click(item)">
-                        <img :src="item.image" alt="" />
-                      </el-carousel-item>
-                    </el-carousel>
-                  </div>
-                </div>
-                <!-- <div class="lunbo-right">
-                  <div class="right">
-                    <div class="user-box">
-                      <div class="avatar-box" @click="$router.push('/my-info')">
-                        <template v-if="!vuex_is_login">
-                          <img :src="vuex_avatar_default" />
-                        </template>
-                        <template v-else>
-                          <img :src="vuex_user.image || vuex_avatar_default" />
-                        </template>
-                      </div>
-                      <div class="tip-box">
-                        <template v-if="!vuex_is_login">Hi 欢迎来到医买买
-                        </template>
-                        <template v-else>
-                          <p>Hi，{{ vuex_user.nickname }}</p>
-                          <p>欢迎来到医买买</p>
-                        </template>
-                      </div>
-                      <template v-if="!vuex_is_login">
-                        <div class="login-box flex-center">
-                          <div class="btn btn-ripple flex-center" @click="$router.push('/login')">
-                            登录
-                          </div>
-                        </div>
-                        <div class="reg-box flex-center">
-                          <div class="btn btn-ripple flex-center" @click="$router.push('/register')">
-                            注册
-                          </div>
-                        </div>
-                      </template>
-                      <template v-else>
-                        <div class="reg-box flex-center">
-                          <div class="btn btn-ripple flex-center" @click="do_logout()">
-                            退出
-                          </div>
-                        </div>
-                      </template>
-                    </div>
-                    <div class="news-box">
-                      <div class="main-title flex-between">
-                        <div class="text">更多服务</div>
-                      </div>
-                      <div class="news-list">
-                        <div class="news-item hover-color flex-center" v-for="(item, index) in topNavItems" :key="index"
-                          @click="navigateToItem(item, true)">
-                          <img :src="item.thumb" class="ico" />
-                          {{ item.title }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
-              </div>
             </div>
           </div>
         </div>
 
         <div class="content-box w-1400">
+          <!-- 推荐模块 -->
+          <div class="recommend-box">
+            <div class="recommend-list">
+              <!-- 服务卡片1 -->
+              <div class="recommend-card service-card">
+                <div class="card-content">
+                  <h3 class="card-title">
+                    Product registration and certification services
+                  </h3>
+                  <div class="card-desc">
+                    Shanghai Weili Information Consulting Co., Ltd. provides you
+                    with product registration and certification services...
+                  </div>
+                </div>
+                <div class="card-icon">
+                  <div class="card-more">
+                    <span>MORE</span>
+                    <i class="el-icon-right"></i>
+                  </div>
+                  <div class="icon-placeholder">
+                    <img src="@img/index/recommend-1.png" alt="" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- 服务卡片2 -->
+              <div class="recommend-card service-card">
+                <div class="card-content">
+                  <h3 class="card-title">
+                    Disinfection and Sterilization Services
+                  </h3>
+                  <div class="card-desc">
+                    Shanghai Weili Information Consulting Co., Ltd. provides you
+                    with product registration and certification services...
+                  </div>
+                </div>
+                <div class="card-icon">
+                  <div class="card-more">
+                    <span>MORE</span>
+                    <i class="el-icon-right"></i>
+                  </div>
+                  <div class="icon-placeholder">
+                    <img src="@img/index/recommend-2.png" alt="" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- 服务卡片3 -->
+              <div class="recommend-card service-card">
+                <div class="card-content">
+                  <h3 class="card-title">
+                    Hospital and Clinic Construction Services
+                  </h3>
+                  <div class="card-desc">
+                    Shanghai Weili Information Consulting Co., Ltd. provides you
+                    with product registration and certification services...
+                  </div>
+                </div>
+                <div class="card-icon">
+                  <div class="card-more">
+                    <span>MORE</span>
+                    <i class="el-icon-right"></i>
+                  </div>
+                  <div class="icon-placeholder">
+                    <img src="@img/index/recommend-3.png" alt="" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- 优惠券卡片 -->
+              <div class="recommend-card coupon-card">
+                <div class="coupon-content">
+                  <h3 class="coupon-title">Coupon Center</h3>
+                  <div class="coupon-desc">Get coupons for better prices!</div>
+                  <div class="coupon-arrow">
+                    <img src="@img/index/coupon-arrow.png" alt="" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 秒杀模块 -->
+          <div class="hot-sec flex">
+            <div class="title-box title-boxs">
+              <div
+                class="title-left column-flex-center"
+                @click="hotPanelMinus()"
+              >
+                <div class="sec-title color-0">限时秒杀</div>
+                <div class="sec-desc flex-center">
+                  立即抢购 <img src="@img/index/right.png" alt="" />
+                </div>
+                <div class="countdown-text">本场距结束还剩</div>
+                <div class="countdown-timer">
+                  <div class="time-box">
+                    <div class="time-value">{{ countdown.hours }}</div>
+                    <div class="time-label">时</div>
+                  </div>
+                  <div class="time-box">
+                    <div class="time-value">{{ countdown.minutes }}</div>
+                    <div class="time-label">分</div>
+                  </div>
+                  <div class="time-box">
+                    <div class="time-value">{{ countdown.seconds }}</div>
+                    <div class="time-label">秒</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="sec-ctx">
+              <div class="hot-lunbo">
+                <el-carousel
+                  ref="hotLunbo"
+                  trigger="click"
+                  :autoplay="true"
+                  :interval="6000"
+                >
+                  <el-carousel-item
+                    v-for="(group, gindex) in jingpin_group"
+                    :key="gindex"
+                  >
+                    <div class="product-list">
+                      <div
+                        class="product-item hover"
+                        v-for="(item, index) in group"
+                        :key="index"
+                        @click="to_product(item)"
+                      >
+                        <div class="poster-box scale-box">
+                          <img class="scale-img" :src="item.thumb" alt="" />
+                        </div>
+                        <div class="info-box">
+                          <div class="title-box">
+                            <div class="title ellipsis-1">
+                              {{ item.title }}
+                            </div>
+                          </div>
+                          <div class="price flex-between">
+                            <div class="flex-center">
+                              <div class="huobi">￥</div>
+                              <div class="price-value">
+                                {{ item.priceUser }}
+                              </div>
+                            </div>
+
+                            <div class="unit">￥{{ item.priceSale }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </el-carousel-item>
+                </el-carousel>
+              </div>
+            </div>
+          </div>
+
           <div class="group-panel">
-            <div class="sec-cate" v-for="(group, gindex) in cateGroup" :key="gindex">
+            <div
+              class="sec-cate"
+              v-for="(group, gindex) in cateGroup"
+              :key="gindex"
+            >
               <div class="sec-title-box">
                 <div class="title-left flex">
                   <div class="sec-line">
@@ -160,8 +192,13 @@
                 <div class="sec-more">
                   <div class="text">为您推荐</div>
                   <div class="flex-center">
-                    <span v-for="(menu, idx) in getSubMenus(group.id).slice(0, 5)" :key="idx"
-                      @click="onSubMenuClick(menu, group.id)" class="sub-menu-item">{{ menu.title || menu.name }}</span>
+                    <span
+                      v-for="(menu, idx) in getSubMenus(group.id).slice(0, 5)"
+                      :key="idx"
+                      @click="onSubMenuClick(menu, group.id)"
+                      class="sub-menu-item"
+                      >{{ menu.title || menu.name }}</span
+                    >
                   </div>
                   <!-- <img class="arrow" src="@img/index/cate-more.png" alt="" /> -->
                 </div>
@@ -169,9 +206,20 @@
 
               <div class="cate-ctx w-1400">
                 <div class="cate-left">
-                  <el-carousel class="bg-box" ref="hotLunbo" arrow="never" :autoplay="true" :interval="6000" loop
-                    indicator-position="none">
-                    <el-carousel-item class="bg-box" v-for="(item, index) in group.images" :key="index">
+                  <el-carousel
+                    class="bg-box"
+                    ref="hotLunbo"
+                    arrow="never"
+                    :autoplay="true"
+                    :interval="6000"
+                    loop
+                    indicator-position="none"
+                  >
+                    <el-carousel-item
+                      class="bg-box"
+                      v-for="(item, index) in group.images"
+                      :key="index"
+                    >
                       <div class="product-lunbo bg-box">
                         <img :src="item" alt="" />
                       </div>
@@ -195,8 +243,12 @@
                 <div class="cate-right">
                   <div class="cate-product-wrap">
                     <div class="product-list">
-                      <div class="product-item hover" v-for="(item, index) in group.products" :key="index"
-                        @click="to_product(item)">
+                      <div
+                        class="product-item hover"
+                        v-for="(item, index) in group.products"
+                        :key="index"
+                        @click="to_product(item)"
+                      >
                         <div class="poster-box scale-box">
                           <img class="scale-img" :src="item.thumb" alt="" />
                         </div>
@@ -227,26 +279,49 @@
                             </div>
                           </div>
                         </div>
-                        <el-tooltip class="item" effect="dark" content="仅限企业用户购买" placement="top">
-                          <el-tag class="tag-dom" type="warning" effect="dark" v-if="item.isThird == 1">三类</el-tag>
+                        <el-tooltip
+                          class="item"
+                          effect="dark"
+                          content="仅限企业用户购买"
+                          placement="top"
+                        >
+                          <el-tag
+                            class="tag-dom"
+                            type="warning"
+                            effect="dark"
+                            v-if="item.isThird == 1"
+                            >三类</el-tag
+                          >
                         </el-tooltip>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <img class="cate-banner" :src="vuex_map_banners['优惠券广告'][0].image" alt=""
-                @click="$router.push(vuex_map_banners['优惠券广告'][0].url)" v-if="gindex == 1" />
+              <img
+                class="cate-banner"
+                :src="vuex_map_banners['优惠券广告'][0].image"
+                alt=""
+                @click="$router.push(vuex_map_banners['优惠券广告'][0].url)"
+                v-if="gindex == 1"
+              />
 
-              <img class="cate-banner" :src="vuex_map_banners['首页推荐'][0].image" alt=""
-                @click="$router.push(vuex_map_banners['首页推荐'][0].url)" v-if="gindex == cateGroup.length - 1" />
+              <img
+                class="cate-banner"
+                :src="vuex_map_banners['首页推荐'][0].image"
+                alt=""
+                @click="$router.push(vuex_map_banners['首页推荐'][0].url)"
+                v-if="gindex == cateGroup.length - 1"
+              />
             </div>
           </div>
 
           <div class="suggest-box">
             <div class="suggest-title flex-center">
               <!-- <img src="@img/index/suggest-left.png" alt="" /> -->
-              <span class="block">推荐<span style="color: #7853b2">产品</span></span>
+              <span class="block"
+                >推荐<span style="color: #7853b2">产品</span></span
+              >
               <!-- <img src="@img/index/suggest-right.png" alt="" /> -->
             </div>
 
@@ -266,8 +341,12 @@
 
             <div class="suggest-list">
               <div class="product-list">
-                <div class="product-item hover" v-for="(item, index) in suggest_products" :key="index"
-                  @click="to_product(item)">
+                <div
+                  class="product-item hover"
+                  v-for="(item, index) in suggest_products"
+                  :key="index"
+                  @click="to_product(item)"
+                >
                   <div class="poster-box scale-box">
                     <img class="scale-img" :src="item.thumb" alt="" />
                   </div>
@@ -305,17 +384,26 @@
           </div>
           <div class="suggest-box">
             <div class="suggest-title flex-center">
-              <span class="block">热门<span style="color: #7853b2">品牌</span></span>
+              <span class="block"
+                >热门<span style="color: #7853b2">品牌</span></span
+              >
             </div>
 
-            <div class="suggest-list flex-center" style="align-items: flex-start; background-color: #fff">
+            <div
+              class="suggest-list flex-center"
+              style="align-items: flex-start; background-color: #fff"
+            >
               <div class="brand-left column-flex-center">
                 <p class="num">500+</p>
                 <p class="tip">品牌成功入驻</p>
               </div>
               <div class="brand-wrap">
                 <div class="brand-list">
-                  <div class="brand-item flex-center" v-for="(item, index) in brand_list" :key="index">
+                  <div
+                    class="brand-item flex-center"
+                    v-for="(item, index) in brand_list"
+                    :key="index"
+                  >
                     <div class="img-cov scale-box">
                       <img class="scale-img" :src="item.thumb" alt="" />
                     </div>
@@ -329,13 +417,15 @@
     </div>
 
     <!-- 企业用户认证弹窗 -->
-    <EnterpriseUserModal :visible="showEnterpriseModal" @close="closeEnterpriseModal"
-      @confirm="confirmEnterpriseModal" />
+    <EnterpriseUserModal
+      :visible="showEnterpriseModal"
+      @close="closeEnterpriseModal"
+      @confirm="confirmEnterpriseModal"
+    />
     <!-- 快速购买弹窗 -->
     <product_quick_buy_modal ref="product_quick_buy_modal" />
 
     <product_renzheng_tip ref="product_renzheng_tip" />
-
   </div>
 </template>
 <script>
@@ -348,7 +438,6 @@ import EnterpriseUserModal from "@/components/modals/enterpriseUserModal.vue";
 import { mapState } from "vuex";
 import product_renzheng_tip from "@/components/product/product_renzheng_tip.vue";
 
-
 export default {
   name: "index",
   components: {
@@ -356,7 +445,6 @@ export default {
     EnterpriseUserModal,
     product_quick_buy_modal,
     product_renzheng_tip,
-
   },
   data() {
     return {
@@ -471,7 +559,7 @@ export default {
   },
   created() {
     this.setView();
-    this.$store.dispatch("appInit")
+    this.$store.dispatch("appInit");
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
@@ -485,25 +573,24 @@ export default {
   },
   methods: {
     openQuickBuy(item) {
-      console.log('this.vuex_user.userType',this.vuex_user.userType)
+      console.log("this.vuex_user.userType", this.vuex_user.userType);
       if (item.isThird == 1) {
         if (this.vuex_user.userType != 1) {
           this.$refs.product_renzheng_tip.init();
-          return
+          return;
         } else if (this.vuex_user.userType == 1) {
-          if (this.vuex_user.license2 || this.vuex_user.license3 || this.vuex_user.license4 | this.vuex_user.license6) {
-            console.log('可以购买三类')
+          if (
+            this.vuex_user.license2 ||
+            this.vuex_user.license3 ||
+            this.vuex_user.license4 | this.vuex_user.license6
+          ) {
+            console.log("可以购买三类");
           } else {
             this.$refs.product_renzheng_tip.init();
-            return
+            return;
           }
         }
       }
-
-
-
-
-
 
       const inventoryId = item.inventoryId || item.id;
       if (inventoryId && this.$refs.product_quick_buy_modal) {
@@ -670,7 +757,12 @@ export default {
     },
 
     to_product(item) {
-      window.open('/product-detail?id='+item.inventoryId, '_blank','',false)
+      window.open(
+        "/product-detail?id=" + item.inventoryId,
+        "_blank",
+        "",
+        false
+      );
       // this.mix_toRoute({
       //   path: "/product-detail",
       //   query: {
@@ -695,8 +787,12 @@ export default {
         // this.$router.push(
         //   "/product-detail?id=" + (item.skuId || item.inventoryId)
         // );
-      window.open('/product-detail?id='+(item.skuId || item.inventoryId),'__blank','',false)
-
+        window.open(
+          "/product-detail?id=" + (item.skuId || item.inventoryId),
+          "__blank",
+          "",
+          false
+        );
       }
     },
 
@@ -928,7 +1024,6 @@ export default {
 
 <style scoped lang="less">
 .page {
-  padding-top: 15px;
   padding-bottom: 95px;
   background: #f5f7fa;
 
@@ -968,15 +1063,15 @@ export default {
 .banner-box .lunbo-box {
   position: relative;
   width: 100%;
-  height: 546px;
+  height: 690;
 
   /deep/ .el-carousel__container {
-    height: 546px;
+    height: 690px;
   }
 
   /deep/ img {
     width: 100%;
-    height: 546px;
+    height: 690px;
     cursor: pointer;
   }
 }
@@ -993,7 +1088,8 @@ export default {
     position: relative;
     align-items: flex-start;
 
-    .lunbo-left {}
+    .lunbo-left {
+    }
 
     .lunbo-center {
       flex: 1;
@@ -1035,7 +1131,7 @@ export default {
       position: relative;
       cursor: pointer;
 
-      &+.cate-group {
+      & + .cate-group {
         // border-top: 1px solid #f0f0f0;
       }
 
@@ -1078,7 +1174,7 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 600;
             font-size: 16px;
-            color: #1F1F1F;
+            color: #1f1f1f;
             line-height: 1.4;
             position: relative;
             padding-left: 0;
@@ -1137,7 +1233,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 14px;
-          color: #1F1F1F;
+          color: #1f1f1f;
           line-height: 1.3;
           transition: all 0.3s ease;
           border: none;
@@ -1248,7 +1344,7 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: normal;
             font-size: 14px;
-            color: #1F1F1F;
+            color: #1f1f1f;
             padding: 6px 12px;
             transition: all 0.3s ease;
             white-space: nowrap;
@@ -1433,7 +1529,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: bold;
           font-size: 18px;
-          color: #1F1F1F;
+          color: #1f1f1f;
           margin-bottom: 25px;
           justify-content: flex-start;
           cursor: pointer;
@@ -1505,7 +1601,7 @@ export default {
         .tequan-title {
           margin-top: 10px;
           font-size: 12px;
-          color: #1F1F1F;
+          color: #1f1f1f;
         }
       }
     }
@@ -1536,7 +1632,192 @@ export default {
 //
 .content-box {
   margin: 0 auto;
-  padding-top: 10px;
+  padding-top: 32px;
+
+  // 推荐模块
+  .recommend-box {
+    margin-bottom: 100px;
+
+    .recommend-list {
+      display: flex;
+      justify-content: space-between;
+
+      .recommend-card {
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+      }
+
+      // 服务卡片样式
+      .service-card {
+        flex: 1;
+        background: #feeedd;
+        padding: 20px;
+        height: 330px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-right: 17px;
+
+        &:hover {
+          .card-content .card-title {
+            color: #ec6a2b;
+          }
+        }
+
+        .card-content {
+          flex: 1;
+
+          .card-title {
+            margin: 0 0 16px 0;
+            position: relative;
+            padding-bottom: 12px;
+
+            font-family: Poppins, Poppins;
+            font-weight: bold;
+            font-size: 24px;
+            color: #1e262e;
+            line-height: 34px;
+
+            &::after {
+              content: "";
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 40px;
+              height: 3px;
+              background: #ec6a2b;
+            }
+          }
+
+          .card-desc {
+            font-family: Poppins, Poppins;
+            font-weight: 400;
+            font-size: 18px;
+            color: #1e262e;
+            line-height: 30px;
+            height: 115px;
+          }
+
+          .card-more {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-size: 14px;
+            color: #ff7600;
+            font-weight: 500;
+
+            .more-icon {
+              display: inline-block;
+              width: 16px;
+              height: 16px;
+              background: #d0d0d0;
+              border-radius: 2px;
+              position: relative;
+
+              &::before,
+              &::after {
+                content: "";
+                position: absolute;
+                background: #fff;
+                width: 2px;
+                height: 8px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+              }
+
+              &::after {
+                transform: translate(-50%, -50%) rotate(90deg);
+              }
+            }
+          }
+        }
+
+        .card-icon {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .card-more {
+            font-family: Poppins, Poppins;
+            font-weight: bold;
+            font-size: 18px;
+            color: #ec6a2b;
+            line-height: 25px;
+            i {
+              font-size: 18px;
+              color: #ec6a2b;
+              margin-left: 15px;
+            }
+          }
+          .icon-placeholder {
+            width: 70px;
+            height: 70px;
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+        }
+      }
+
+      // 优惠券卡片样式
+      .coupon-card {
+        flex: 1;
+        background-image: url("~@img/index/coupon-bg.png");
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        padding: 30px 24px;
+        height: 330px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        color: #fff;
+
+        .coupon-content {
+          flex: 1;
+          z-index: 2;
+          position: relative;
+
+          .coupon-title {
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-weight: bold;
+            font-size: 40px;
+            color: #fff;
+            margin: 0 0 22px 0;
+          }
+
+          .coupon-desc {
+            width: 250px;
+            height: 123px;
+            font-family: Microsoft YaHei, Microsoft YaHei;
+            font-size: 30px;
+            color: #fff;
+            margin-bottom: 24px;
+            line-height: 40px;
+          }
+
+          .coupon-arrow {
+            width: 46px;
+            height: 46px;
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
 
   .sec-cate {
     margin-bottom: 60px;
@@ -1559,7 +1840,7 @@ export default {
 
         .sec-title {
           font-size: 24px;
-          color: #1F1F1F;
+          color: #1f1f1f;
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: bold;
         }
@@ -1590,7 +1871,7 @@ export default {
           font-weight: normal;
           font-size: 16px;
           font-weight: bold;
-          color: #1F1F1F;
+          color: #1f1f1f;
           margin-right: 20px;
         }
 
@@ -1755,7 +2036,7 @@ export default {
             font-family: MicrosoftYaHei, MicrosoftYaHei;
             font-weight: normal;
             font-size: 14px;
-            color: #1F1F1F;
+            color: #1f1f1f;
             line-height: 20px;
             word-break: break-word;
           }
@@ -1798,7 +2079,7 @@ export default {
             }
 
             &:last-child {
-              background: #FCB000;
+              background: #fcb000;
               margin-left: 7px;
             }
           }
@@ -1813,10 +2094,6 @@ export default {
   background: linear-gradient(180deg, #ffa408 0%, #ffc209 100%);
   height: 309px;
   padding: 10px 12px 10px 18px;
-  position: absolute;
-  left: 344px;
-  top: 554px;
-  width: 1255px;
 
   .title-boxs {
     width: 206px;
@@ -1968,7 +2245,7 @@ export default {
           font-family: MicrosoftYaHei, MicrosoftYaHei;
           font-weight: normal;
           font-size: 14px;
-          color: #1F1F1F;
+          color: #1f1f1f;
         }
 
         .price {
@@ -2045,9 +2322,11 @@ export default {
           font-size: 16px;
           color: #5b339a;
 
-          .huobi {}
+          .huobi {
+          }
 
-          .price-value {}
+          .price-value {
+          }
         }
       }
     }
@@ -2072,7 +2351,7 @@ export default {
         content: "";
         width: 128px;
         height: 10px;
-        background: #FCB000;
+        background: #fcb000;
         border-radius: 0px 0px 0px 0px;
       }
     }
@@ -2081,7 +2360,7 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: bold;
       font-size: 30px;
-      color: #1F1F1F;
+      color: #1f1f1f;
     }
 
     img {
@@ -2224,7 +2503,7 @@ export default {
               font-family: MicrosoftYaHei, MicrosoftYaHei;
               font-weight: normal;
               font-size: 16px;
-              color: #1F1F1F;
+              color: #1f1f1f;
               line-height: 22px;
             }
           }
@@ -2251,7 +2530,7 @@ export default {
             }
 
             &:last-child {
-              background: #FCB000;
+              background: #fcb000;
               margin-left: 7px;
             }
           }

@@ -1,7 +1,6 @@
 // import {API_ROOT} from '@/config/env.js'
 
-const ROOT = "https://judaifu.dx.hdapp.com.cn";//vuesc.new.zhishangez.com
-
+const ROOT = "https://judaifuen.dx.hdapp.com.cn";//vuesc.new.zhishangez.com
 /**
  * 全局接口请求根域名
  */

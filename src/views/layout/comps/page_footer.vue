@@ -45,23 +45,30 @@
         </div>
 
         <!-- 网站信息 -->
-        <div class="logo-wrap link-info">
-          <div class="site-info v-flex-start">
-            <div class="info-box">
-              <div class="phone-icon-box">
-                <img src="@img/foot/foot-mobile.png" alt="" />
-              </div>
-              <div class="text-box">
-                <div class="mobile-text">服务热线</div>
-                <div class="mobile">{{ vuex_config.comPhone }}</div>
-                <div class="time-text">服务时间</div>
-                <div class="time">{{ vuex_config.serviceTime }}</div>
-              </div>
-            </div>
-
+        <div class="link-info">
+          <div class="site-info">
             <div class="icon-box">
               <img :src="vuex_config.comLogo" alt="" />
-              <!-- <div class="icon-title">小程序</div> -->
+            </div>
+            <div class="info-box">
+              <div class="info-item">
+                <div class="info-item-title">
+                  <img src="@/assets/img/foot/phone-wx.png" alt="" />
+                  <span>CONTACT US</span>
+                </div>
+                <div class="info-item-content">4000-888-8888</div>
+              </div>
+              <div class="info-item">
+                <div class="info-item-title bold">
+                  <span class="bold">FOLLOW US</span>
+                </div>
+                <div class="info-item-content">
+                  <img src="@/assets/img/foot/fackbock.png" alt="" />
+                  <img src="@/assets/img/foot/instagram.png" alt="" />
+                  <img src="@/assets/img/foot/telegram.png" alt="" />
+                  <img src="@/assets/img/foot/youtube.png" alt="" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -70,12 +77,6 @@
       <div class="beian-box">
         <div class="beian" v-html="vuex_config.comBeian">
           <a href="https://beian.miit.gov.cn/">{{ vuex_config.comBeian }} </a>
-        </div>
-        <div class="contact-info flex-center">
-          <div class="contact-item">公司地址：{{ vuex_config.comAddress }}</div>
-          <div class="contact-item">联系人：{{ vuex_config.comDesc }}</div>
-          <div class="contact-item">手机：{{ vuex_config.comPhone }}</div>
-          <div class="contact-item">邮箱：{{ vuex_config.comEmail }}</div>
         </div>
       </div>
     </div>
@@ -94,22 +95,22 @@ export default {
       footerTips: [
         {
           icon: require("@/assets/img/foot/foot-1.png"),
-          title: "genuine product",
+          title: "GENUINE PRODUCT",
           desc: "Worry-free after-sales service",
         },
         {
           icon: require("@/assets/img/foot/foot-2.png"),
-          title: "one-stop service",
+          title: "ONE-STOP SERVICE",
           desc: "Worry-free after-sales service",
         },
         {
           icon: require("@/assets/img/foot/foot-3.png"),
-          title: "discounted price",
+          title: "DISCOUNTED PRICE",
           desc: "Worry-free after-sales service",
         },
         {
           icon: require("@/assets/img/foot/foot-4.png"),
-          title: "after-sales service",
+          title: "AFTER-SALES SERVICE",
           desc: "Worry-free after-sales service",
         },
       ],
@@ -148,7 +149,7 @@ export default {
 
 <style scoped lang="less">
 .w-1400 {
-  width: 1400px !important;
+  width: 1600px !important;
 }
 .footer-tip {
   width: 100%;
@@ -157,7 +158,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-top: 4px solid #EC6A2B;
+  border-top: 4px solid #ec6a2b;
 
   .footer-icons {
     display: flex;
@@ -194,7 +195,7 @@ export default {
           font-size: 14px;
           font-family: PingFang SC, PingFang SC;
           font-weight: 500;
-          color: #5E5E5E;
+          color: #5e5e5e;
         }
       }
     }
@@ -203,7 +204,7 @@ export default {
 
 .page-footer {
   padding-top: 40px;
-  background: #00306B;
+  background: #00306b;
   color: #fff;
 }
 
@@ -211,8 +212,7 @@ export default {
   margin: 0 auto;
   margin-bottom: 40px;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
 
   .link-wrap {
     flex: 1;
@@ -226,25 +226,28 @@ export default {
       .group-title {
         text-align: left;
         margin-bottom: 15px;
-        font-size: 16px;
+        font-size: 20px;
         font-family: PingFang SC, PingFang SC;
         font-weight: bold;
         color: #fff;
+        line-height: 50px;
       }
 
       .link-item {
         text-align: left;
-        font-size: 14px;
+        font-size: 18px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
         color: #fff;
-        line-height: 32px;
+        line-height: 40px;
+        position: relative;
+        padding-left: 13px;
 
         a {
           font-weight: normal;
           font-family: MicrosoftYaHei, MicrosoftYaHei;
           font-weight: normal;
-          font-size: 14px;
+          font-size: 18px;
           color: #fff;
           line-height: 30px;
 
@@ -252,71 +255,83 @@ export default {
             color: #fff;
           }
         }
+
+        &::before {
+          content: "";
+          display: block;
+          width: 5px;
+          height: 5px;
+          background: #fff;
+          border-radius: 50%;
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+        }
       }
     }
   }
 }
 
 .link-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-
   .site-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     .info-box {
-      margin-right: 120px;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      .info-item {
+        display: flex;
+        flex-direction: column;
+        .info-item-title {
+          display: flex;
+          align-items: center;
+          img {
+            width: 26px;
+            height: 26px;
+            margin-right: 10px;
+          }
 
-      .phone-icon-box {
-        img {
-          width: 48.43px;
-        }
-      }
-      .text-box {
-        padding-left: 12px;
-        .mobile-text {
-          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-family: Poppins, Poppins;
           font-weight: 400;
-          font-size: 16px;
-          color: #fff;
+          font-size: 20px;
+          color: #ffffff;
+          line-height: 28px;
+
+          &.bold {
+            font-weight: bold;
+            font-size: 24px;
+          }
         }
-        .mobile {
-          margin: 10px 0 25px 0;
-          font-family: Microsoft YaHei, Microsoft YaHei;
-          font-weight: 400;
-          font-size: 26px;
-          color: #fff;
-          font-weight: bold;
-        }
-        .time-text {
-          font-family: Microsoft YaHei, Microsoft YaHei;
-          font-weight: 400;
-          font-size: 16px;
-          color: #fff;
-        }
-        .time {
-          margin-top: 10px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
-          font-weight: 400;
-          font-size: 14px;
-          color: #fff;
+        .info-item-content {
+          font-family: Poppins, Poppins;
+          font-weight: 600;
+          font-size: 30px;
+          color: #ec6a2b;
+          line-height: 50px;
+
+          img {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            cursor: pointer;
+            &:hover {
+              opacity: 0.8;
+            }
+          }
         }
       }
     }
 
     .icon-box {
-       display: flex;
-        align-items: center;
-        height: 140px;
+      width: 140px;
+      height: 75px;
       img {
-        width: 180px;
-        // height: 54px;
-      }
-
-      .icon-title {
-        margin-top: 16px;
-        text-align: center;
+        width: 100%;
+        height: 100%;
       }
     }
   }
@@ -324,9 +339,9 @@ export default {
 
 .beian-box {
   text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.4);
-  padding: 36px 0;
-  background: #7853b2;
+  border-top: 1px solid #4C6E97;
+  padding: 25px 0;
+  background: #00306B;
 
   .beian {
     text-align: center;
