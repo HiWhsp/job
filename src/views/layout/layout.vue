@@ -96,7 +96,7 @@ export default {
 }
 
 .layout-box {
-  background: #f5f5f5;
+  background: #fff;
 }
 
 .poster-box .poster {

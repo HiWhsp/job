@@ -141,10 +141,7 @@ export default new Vuex.Store({
         关于我们: pos_1.images,
         联系我们: pos_2.images,
         优惠券广告: pos_3.images,
-        首页推荐:pos_4.images
-        // 中科优选: pos_5.images,
-        // 充值中心: pos_6.images,
-        // 新闻中心: pos_7.images,
+        首页推荐:[pos_4.images, pos_6.images,pos_7.images]
       }; 
       
     },

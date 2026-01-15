@@ -204,41 +204,6 @@
               </div>
 
               <div class="cate-ctx w-1400">
-                <div class="cate-left">
-                  <el-carousel
-                    class="bg-box"
-                    ref="hotLunbo"
-                    arrow="never"
-                    :autoplay="true"
-                    :interval="6000"
-                    loop
-                    indicator-position="none"
-                  >
-                    <el-carousel-item
-                      class="bg-box"
-                      v-for="(item, index) in group.images"
-                      :key="index"
-                    >
-                      <div class="product-lunbo bg-box">
-                        <img :src="item" alt="" />
-                      </div>
-                    </el-carousel-item>
-                  </el-carousel>
-                  <!-- <div class="fix-cate">
-                  <div class="cate-list">
-                    <div
-                      class="cate-item flex"
-                      v-for="(item, gindex) in cateGroup.slice(0, 10)"
-                      :key="gindex"
-                      :data-id="item.id"
-                      @click="do_toggle_cate(item)"
-                      :class="{ active: cate_select.id == item.id }"
-                    >
-                      {{ item.title }}
-                    </div>
-                  </div>
-                </div> -->
-                </div>
                 <div class="cate-right">
                   <div class="cate-product-wrap">
                     <div class="product-list">
@@ -257,24 +222,22 @@
                               {{ item.title }}
                             </div>
                           </div>
-                          <div class="flex-between">
-                            <div>
-                              <div class="price">
-                                <div class="pirce-num">
-                                  ￥{{ item.priceSale }}
-                                </div>
-                              </div>
-                              <div class="market-price">
-                                {{ item.priceMarket }}
+                          <div class="price-box">
+                            <div class="price">
+                              <div class="pirce-num">
+                                US${{ item.priceSale }}
                               </div>
                             </div>
-                            <div class="flex-center">
-                              <div class="btn" @click.stop="openQuickBuy(item)">
-                                <img src="@img/index/order.png" />
-                              </div>
-                              <div class="btn" @click.stop="openQuickBuy(item)">
-                                <img src="@img/index/cart.png" />
-                              </div>
+                            <div class="market-price">
+                              US${{ item.priceMarket }}
+                            </div>
+                          </div>
+                          <div class="btn-box">
+                            <div class="btn" @click.stop="openQuickBuy(item)">
+                              FDA
+                            </div>
+                            <div class="btn" @click.stop="openQuickBuy(item)">
+                              ISO13485
                             </div>
                           </div>
                         </div>
@@ -297,49 +260,47 @@
                   </div>
                 </div>
               </div>
-              <img
-                class="cate-banner"
-                :src="vuex_map_banners['优惠券广告'][0].image"
-                alt=""
-                @click="$router.push(vuex_map_banners['优惠券广告'][0].url)"
-                v-if="gindex == 1"
-              />
-
-              <img
-                class="cate-banner"
-                :src="vuex_map_banners['首页推荐'][0].image"
-                alt=""
-                @click="$router.push(vuex_map_banners['首页推荐'][0].url)"
-                v-if="gindex == cateGroup.length - 1"
-              />
+              <div class="cate-banner-box" v-if="gindex == 0">
+                <img
+                  :key="index"
+                  v-for="(item, index) in vuex_map_banners['首页推荐'][0]"
+                  class="cate-banner"
+                  :src="item.image"
+                  alt=""
+                  @click="$router.push(item.url)"
+                />
+              </div>
+              <div class="cate-banner-box2" v-if="gindex == 1">
+                <img
+                  :key="index"
+                  v-for="(item, index) in vuex_map_banners['首页推荐'][1]"
+                  class="cate-banner"
+                  :src="item.image"
+                  alt=""
+                  @click="$router.push(item.url)"
+                />
+              </div>
+              <div class="cate-banner-box" v-if="gindex == 2">
+                <img
+                  :key="index"
+                  v-for="(item, index) in vuex_map_banners['首页推荐'][2]"
+                  class="cate-banner"
+                  :src="item.image"
+                  alt=""
+                  @click="$router.push(item.url)"
+                />
+              </div>
             </div>
           </div>
 
           <div class="suggest-box">
             <div class="suggest-title flex-center">
-              <!-- <img src="@img/index/suggest-left.png" alt="" /> -->
-              <span class="block"
-                >推荐<span style="color: #7853b2">产品</span></span
-              >
-              <!-- <img src="@img/index/suggest-right.png" alt="" /> -->
+              <img src="@img/index/area.png" alt="" />
+              <span class="sec-title">RECOMMENDED PRODUCTS</span>
             </div>
 
-            <!-- <div class="suggest-tabs">
-              <div class="tab-list flex-center">
-                <div
-                  class="tab-item"
-                  v-for="(item, index) in tab_list"
-                  :key="index"
-                  @click="do_toggle_tab(item)"
-                  :class="{ active: tab_select.value == item.value }"
-                >
-                  {{ item.title }}
-                </div>
-              </div>
-            </div> -->
-
             <div class="suggest-list">
-              <div class="product-list">
+              <!-- <div class="product-list">
                 <div
                   class="product-item hover"
                   v-for="(item, index) in suggest_products"
@@ -355,55 +316,42 @@
                         {{ item.title }}
                       </div>
                     </div>
-                    <!-- <div class="price flex">
-                      <div class="pirce-num">￥ {{ item.priceSale }}</div>
-                    </div> -->
                     <div class="flex-between">
                       <div>
                         <div class="price">
-                          <div class="pirce-num">￥{{ item.priceSale }}</div>
+                          <div class="pirce-num">US${{ item.priceSale }}</div>
                         </div>
                         <div class="market-price">
-                          {{ item.priceMarket }}
-                        </div>
-                      </div>
-                      <div class="flex-center">
-                        <div class="btn" @click.stop="openQuickBuy(item)">
-                          <img src="@img/index/order.png" />
-                        </div>
-                        <div class="btn" @click.stop="openQuickBuy(item)">
-                          <img src="@img/index/cart.png" />
+                          US${{ item.priceMarket }}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
-          <div class="suggest-box">
-            <div class="suggest-title flex-center">
-              <span class="block"
-                >热门<span style="color: #7853b2">品牌</span></span
-              >
-            </div>
-
-            <div
-              class="suggest-list flex-center"
-              style="align-items: flex-start; background-color: #fff"
-            >
-              <div class="brand-left column-flex-center">
-                <p class="num">500+</p>
-                <p class="tip">品牌成功入驻</p>
-              </div>
-              <div class="brand-wrap">
-                <div class="brand-list">
+          <div class="brand-box">
+            <div class="brand-wrap">
+              <div class="brand-list-container">
+                <div class="brand-list brand-list-1">
                   <div
                     class="brand-item flex-center"
                     v-for="(item, index) in brand_list"
-                    :key="index"
+                    :key="'brand-' + index"
                   >
-                    <div class="img-cov scale-box">
+                    <div class="img-cov">
+                      <img class="scale-img" :src="item.thumb" alt="" />
+                    </div>
+                  </div>
+                </div>
+                <div class="brand-list brand-list-2">
+                  <div
+                    class="brand-item flex-center"
+                    v-for="(item, index) in brand_list"
+                    :key="'brand-dup-' + index"
+                  >
+                    <div class="img-cov">
                       <img class="scale-img" :src="item.thumb" alt="" />
                     </div>
                   </div>
@@ -1023,8 +971,7 @@ export default {
 
 <style scoped lang="less">
 .page {
-  padding-bottom: 95px;
-  background: #f5f7fa;
+  background: #fff;
 
   .inner {
     padding-top: 0;
@@ -1086,9 +1033,6 @@ export default {
   .lunbo-inner {
     position: relative;
     align-items: flex-start;
-
-    .lunbo-left {
-    }
 
     .lunbo-center {
       flex: 1;
@@ -1302,15 +1246,6 @@ export default {
       height: 0px;
     }
   }
-
-  // ::-webkit-scrollbar {
-  //   width: 0 !important;
-  // }
-
-  // ::-webkit-scrollbar {
-  //   width: 0 !important;
-  //   height: 0;
-  // }
   .cate-v2-list {
     max-height: 530px;
     overflow: auto;
@@ -1356,46 +1291,53 @@ export default {
       }
     }
   }
+}
 
+.brand-box {
+  margin-top: 100px;
+  background: #E0E2E6;
+  width: 100vw;
+  height: 312px;
+  margin-left: -160px;
+  
   .brand-wrap {
-    width: 300px;
-    padding-left: 14px;
-    padding-right: 19px;
-
-    .brand-title {
-      padding: 16px 0;
-      font-family: Microsoft YaHei, Microsoft YaHei;
-      font-weight: bold;
-      font-size: 18px;
-      color: #5b339a;
-
-      img {
-        margin-right: 4px;
-        width: 18.44px;
-      }
-    }
-
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .brand-list-container {
+    display: flex;
+    width: fit-content;
+    height: 312px;
+    animation: scroll-left 30s linear infinite;
+    
     .brand-list {
+      height: 312px;
       display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-
-      .item {
-        margin-bottom: 10px;
-        cursor: pointer;
-        width: 127px;
-        height: 54px;
-        background: #ffffff;
-        border-radius: 8px 8px 8px 8px;
-        border: 1px solid #f3f3f3;
-        overflow: hidden;
-
-        img {
-          width: 127px;
-          height: 54px;
-          object-fit: contain;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: 143px;
+      flex-shrink: 0;
+      
+      .brand-item {
+        flex-shrink: 0;
+        
+        .img-cov {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
         }
       }
+    }
+  }
+  
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
     }
   }
 }
@@ -1859,95 +1801,37 @@ export default {
   display: flex;
   align-items: flex-start;
 
-  .cate-left {
-    position: relative;
-    width: 255px;
-    height: 685px;
-    border-radius: 32px 0 0 0;
-    overflow: hidden;
-
-    .bg-box {
-      width: 255px;
-      height: 685px;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-
-    .fix-cate {
-      position: absolute;
-      width: 143px;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      padding: 28px 0;
-
-      .cate-list {
-        .cate-item {
-          cursor: pointer;
-          justify-content: flex-end;
-          text-align: right;
-          padding: 0 24px;
-          width: 143px;
-          height: 42px;
-          margin-bottom: 9px;
-          font-family: Microsoft YaHei, Microsoft YaHei;
-          font-weight: bold;
-          font-size: 18px;
-          color: #0c0a0a;
-
-          &.active {
-            background: url("~@img/index/cate-bg.png");
-            font-weight: bold;
-            font-size: 18px;
-            color: #ffffff;
-          }
-        }
-      }
-    }
-  }
-
   .cate-right {
     flex: 1;
     overflow: hidden;
     align-self: stretch;
     background: #fff;
-    // padding: 0 10px;
 
     .product-list {
       display: flex;
       flex-wrap: wrap;
+      gap: 36px;
 
       .product-item {
         .tag-dom {
           position: absolute;
-          right: 0;
+          left: 0;
           top: 0;
-          width: 40px;
-          height: 25px;
-          line-height: 25px;
+          text-align: center;
+          font-size: 22px;
+          line-height: 30px;
+          width: 82px;
+          height: 37px;
+          background: linear-gradient(90deg, #ec6a2b 0%, #ff9524 100%);
+          border-radius: 24px 0px 24px 0px;
         }
-
-        border-right: 1px solid #e6e6e6;
-        border-bottom: 1px solid #e6e6e6;
-        padding: 21px 37px 15px;
         position: relative;
-
-        &:nth-child(5n) {
-          border-right: 0;
-        }
-
-        &:nth-child(n + 6) {
-          border-bottom: 0;
-        }
 
         .poster-box {
           margin: 0 auto;
-          width: 194px;
-          height: 194px;
+          width: 373px;
+          height: 373px;
+          border-radius: 24px;
 
           img {
             width: 100%;
@@ -1959,79 +1843,85 @@ export default {
         .info-box {
           text-align: left;
           padding-top: 4px;
-          width: 194px;
+          width: 373px;
 
-          .brand {
-            text-align: center;
-            font-family: MicrosoftYaHei, MicrosoftYaHei;
-            font-weight: normal;
-            font-size: 13px;
-            color: #656565;
+          .price-box {
+            display: flex;
+            align-items: end;
+            gap: 10px;
+            .price {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              font-size: 30px;
+              color: #ec6a2b;
+              font-family: Microsoft YaHei, Microsoft YaHei;
+              font-weight: bold;
+            }
+
+            .market-price {
+              color: #5e5e5e;
+              font-size: 20px;
+            }
           }
 
           .title-box {
-            height: 48px;
-          }
+            height: 85px;
 
-          .title {
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-family: MicrosoftYaHei, MicrosoftYaHei;
-            font-weight: normal;
-            font-size: 14px;
-            color: #1f1f1f;
-            line-height: 20px;
-            word-break: break-word;
+            .title {
+              height: 80px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 3;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              font-family: MicrosoftYaHei, MicrosoftYaHei;
+              font-weight: normal;
+              font-size: 20px;
+              color: #1e262e;
+              line-height: 26px;
+            }
           }
-
-          .price {
-            margin-top: 12px;
+          .btn-box {
+            margin-top: 22px;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 20px;
-            color: #7853b2;
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: bold;
-
-            .chengjiao {
-              color: #777;
-              font-size: 14px;
-            }
-          }
-
-          .market-price {
-            text-decoration-line: line-through;
-            color: #505050;
-            font-size: 14px;
-          }
-
-          .btn {
-            width: 32px;
-            height: 32px;
-            text-align: center;
-            border-radius: 50%;
-
-            img {
-              margin-top: 6px;
-              width: 19px;
-            }
-
-            &:first-child {
-              background: #7853b2;
-            }
-
-            &:last-child {
-              background: #fcb000;
-              margin-left: 7px;
+            gap: 12px;
+            .btn {
+              height: 30px;
+              text-align: center;
+              border-radius: 5px;
+              border: 1px solid #00306b;
+              padding: 0 10px;
+              font-family: Poppins, Poppins;
+              font-weight: 600;
+              font-size: 22px;
+              color: #00306b;
+              line-height: 31px;
             }
           }
         }
       }
     }
+  }
+}
+
+.cate-banner-box {
+  display: flex;
+  gap: 20px;
+  .cate-banner {
+    width: 790px;
+    height: 275px;
+    cursor: pointer;
+  }
+}
+
+.cate-banner-box2 {
+  width: 100vw;
+  margin-left: -160px;
+  .cate-banner {
+    width: 100%;
+    height: 583px;
+    cursor: pointer;
   }
 }
 
@@ -2356,12 +2246,6 @@ export default {
           font-weight: 400;
           font-size: 16px;
           color: #5b339a;
-
-          .huobi {
-          }
-
-          .price-value {
-          }
         }
       }
     }
@@ -2373,34 +2257,17 @@ export default {
 
   .suggest-title {
     margin-bottom: 30px;
-
-    .block {
-      position: relative;
-      z-index: 1;
-
-      &::after {
-        z-index: -1;
-        position: absolute;
-        left: -4px;
-        bottom: 0;
-        content: "";
-        width: 128px;
-        height: 10px;
-        background: #fcb000;
-        border-radius: 0px 0px 0px 0px;
-      }
-    }
-
-    span {
-      font-family: Microsoft YaHei, Microsoft YaHei;
-      font-weight: bold;
-      font-size: 30px;
-      color: #1f1f1f;
-    }
-
     img {
-      margin: 0 10px;
-      width: 22.46px;
+      width: 38px;
+      margin-right: 12px;
+    }
+
+    .sec-title {
+      font-family: Poppins, Poppins;
+      font-weight: bold;
+      font-size: 40px;
+      color: #00306b;
+      line-height: 56px;
     }
   }
 
@@ -2468,32 +2335,6 @@ export default {
 
     .brand-wrap {
       width: calc(100% - 330px);
-    }
-
-    .brand-list {
-      flex-wrap: wrap;
-      display: flex;
-
-      .brand-item {
-        width: calc(100% / 5);
-        height: 108px;
-        background: #ffffff;
-        border-right: 1px solid #d4d4d4;
-        border-bottom: 1px solid #d4d4d4;
-
-        .img-cov {
-          width: 192px;
-          height: 88px;
-        }
-
-        &:nth-child(5n) {
-          // border-right: 0;
-        }
-
-        &:nth-child(-n + 5) {
-          border-top: 1px solid #d4d4d4;
-        }
-      }
     }
 
     .product-list {
