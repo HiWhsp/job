@@ -300,37 +300,26 @@
             </div>
 
             <div class="suggest-list">
-              <!-- <div class="product-list">
-                <div
-                  class="product-item hover"
-                  v-for="(item, index) in suggest_products"
-                  :key="index"
-                  @click="to_product(item)"
-                >
-                  <div class="poster-box scale-box">
-                    <img class="scale-img" :src="item.thumb" alt="" />
-                  </div>
-                  <div class="info-box">
-                    <div class="title-box">
-                      <div class="title ellipsis-1">
-                        {{ item.title }}
-                      </div>
-                    </div>
-                    <div class="flex-between">
-                      <div>
-                        <div class="price">
-                          <div class="pirce-num">US${{ item.priceSale }}</div>
-                        </div>
-                        <div class="market-price">
-                          US${{ item.priceMarket }}
-                        </div>
-                      </div>
-                    </div>
+              <div class="suggest-grid">
+                <!-- 第一行：4个产品 -->
+                <div class="suggest-row suggest-row-top">
+                  <div class="suggest-item hover suggest-item-1"></div>
+                  <div class="suggest-item hover suggest-item-2"></div>
+                  <div class="suggest-row-right">
+                    <div class="suggest-item hover suggest-item-3"></div>
+                    <div class="suggest-item hover suggest-item-4"></div>
                   </div>
                 </div>
-              </div> -->
+
+                <!-- 第二行：2个产品 -->
+                <div class="suggest-row suggest-row-bottom">
+                  <div class="suggest-item hover suggest-item-5"></div>
+                  <div class="suggest-item hover suggest-item-6"></div>
+                </div>
+              </div>
             </div>
           </div>
+          <!-- 合作伙伴 -->
           <div class="brand-box">
             <div class="brand-wrap">
               <div class="brand-list-container">
@@ -519,6 +508,22 @@ export default {
     }
   },
   methods: {
+    // 获取卡片背景色
+    getCardBgColor(index, column) {
+      const colorMap = {
+        top: ["#E0E2E6", "#E3F2FD", "#FF6B35", "#F5F5DC"], // 第一行4个：浅灰、浅蓝、橙色、米色
+        bottom: ["#E0E2E6", "#1A237E"], // 第二行2个：浅灰、深蓝
+      };
+      return colorMap[column] ? colorMap[column][index] : "#ffffff";
+    },
+    // 获取卡片文字颜色
+    getCardTextColor(index, column) {
+      const colorMap = {
+        top: ["#000000", "#000000", "#FFFFFF", "#000000"], // 第一行：黑、黑、白、黑
+        bottom: ["#000000", "#FFFFFF"], // 第二行：黑、白
+      };
+      return colorMap[column] ? colorMap[column][index] : "#000000";
+    },
     openQuickBuy(item) {
       console.log("this.vuex_user.userType", this.vuex_user.userType);
       if (item.isThird == 1) {
@@ -1295,23 +1300,23 @@ export default {
 
 .brand-box {
   margin-top: 100px;
-  background: #E0E2E6;
+  background: #e0e2e6;
   width: 100vw;
   height: 312px;
   margin-left: -160px;
-  
+
   .brand-wrap {
     width: 100%;
     height: 100%;
     overflow: hidden;
   }
-  
+
   .brand-list-container {
     display: flex;
     width: fit-content;
     height: 312px;
     animation: scroll-left 30s linear infinite;
-    
+
     .brand-list {
       height: 312px;
       display: flex;
@@ -1319,10 +1324,10 @@ export default {
       flex-wrap: nowrap;
       gap: 143px;
       flex-shrink: 0;
-      
+
       .brand-item {
         flex-shrink: 0;
-        
+
         .img-cov {
           width: 100%;
           height: 100%;
@@ -1331,7 +1336,7 @@ export default {
       }
     }
   }
-  
+
   @keyframes scroll-left {
     0% {
       transform: translateX(0);
@@ -1837,6 +1842,7 @@ export default {
             width: 100%;
             height: 100%;
             object-fit: contain;
+            border-radius: 24px;
           }
         }
 
@@ -2317,6 +2323,90 @@ export default {
   }
 
   .suggest-list {
+    margin-top: 40px;
+
+    .suggest-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 35px;
+      width: 100%;
+    }
+
+    .suggest-row {
+      display: flex;
+      gap: 30px;
+      width: 100%;
+    }
+
+    .suggest-row-right {
+      display: flex;
+      flex-direction: column;
+      gap: 35px;
+    }
+
+    .suggest-item {
+      cursor: pointer;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background-color: #000;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      &.suggest-item-1 {
+        width: 505px;
+        height: 694px;
+        background: url("~@/assets/img/index/suggest/1.png") no-repeat center
+          center / 100% 100%;
+      }
+
+      &.suggest-item-2 {
+        width: 505px;
+        height: 694px;
+        background: url("~@/assets/img/index/suggest/2.png") no-repeat center
+          center / 100% 100%;
+      }
+
+      &.suggest-item-3 {
+        width: 524px;
+        height: 328px;
+        background: url("~@/assets/img/index/suggest/3.png") no-repeat center
+          center / 100% 100%;
+      }
+
+      &.suggest-item-4 {
+        width: 524px;
+        height: 328px;
+        // background: url('~@/assets/img/index/suggest/4.png') no-repeat center center / 100% 100%;
+      }
+
+      &.suggest-item-5 {
+        width: 505px;
+        height: 328px;
+        background: url("~@/assets/img/index/suggest/5.png") no-repeat center
+          center / 100% 100%;
+      }
+
+      &.suggest-item-6 {
+        flex: 1;
+        height: 328px;
+        background: url("~@/assets/img/index/suggest/6.png") no-repeat center
+          center / 100% 100%;
+      }
+    }
+
+    // 价格默认左对齐
+    .suggest-item .suggest-price {
+      justify-content: flex-start;
+    }
+
+    // 兼容旧样式
     .brand-left {
       width: 333px;
       height: 331px;

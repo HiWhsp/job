@@ -1,5 +1,36 @@
 <template>
   <div class="lunbo-box">
+    <div class="slt-wrap">
+      <div class="lunbo-arrow arrow-left" @click="toPrev()">
+        <i class="el-icon-arrow-up"></i>
+      </div>
+      <div class="lunbo-slt-list">
+        <div
+          class="lunbo-slt-item cover hidden"
+          v-for="(item, index) in imageViewList"
+          :key="index"
+          :class="{
+            active: index == activeSwipeIndex,
+            shown: Math.floor(index / 4) == shownGroupIndex,
+          }"
+          @click="onClickSwipeItem(index)"
+        >
+          <img v-if="!item.videoUrl" :src="item.image" />
+          <video
+            v-else
+            :src="item.videoUrl"
+            muted
+            loop
+            :controls="false"
+            style="object-fit: fill"
+          ></video>
+        </div>
+      </div>
+      <div class="lunbo-arrow arrow-right" @click="toNext()">
+        <i class="el-icon-arrow-down"></i>
+      </div>
+    </div>
+
     <div class="zhutu-wrap">
       <div
         class="zhutu-inner"
@@ -56,37 +87,6 @@
         </div> -->
 
     <!-- 缩略图 -->
-    <div class="slt-wrap">
-      <div class="lunbo-arrow arrow-left" @click="toPrev()">
-        <i class="el-icon-arrow-left"></i>
-      </div>
-      <div class="lunbo-arrow arrow-right" @click="toNext()">
-        <i class="el-icon-arrow-right"></i>
-      </div>
-
-      <div class="lunbo-slt-list">
-        <div
-          class="lunbo-slt-item cover hidden"
-          v-for="(item, index) in imageViewList"
-          :key="index"
-          :class="{
-            active: index == activeSwipeIndex,
-            shown: Math.floor(index / 4) == shownGroupIndex,
-          }"
-          @click="onClickSwipeItem(index)"
-        >
-          <img v-if="!item.videoUrl" :src="item.image" />
-          <video
-            v-else
-            :src="item.videoUrl"
-            muted
-            loop
-            :controls="false"
-            style="object-fit: fill"
-          ></video>
-        </div>
-      </div>
-    </div>
 
     <el-dialog
       custom-class="cd-img"
@@ -130,7 +130,7 @@ export default {
   },
   computed: {
     imageViewList() {
-      let imgList = this.imageList//.images;
+      let imgList = this.imageList; //.images;
       // console.log('??',imgList)
       this.imgs = imgList && imgList.map((v) => v.image);
       // if (this.imageList.videoUrl != "") {
@@ -252,8 +252,9 @@ export default {
   }
 }
 /deep/ .el-carousel {
-  width: 535px;
-  height: 535px;
+  width: 624px;
+  height: 624px;
+  border-radius: 24px;
 }
 
 /deep/ .el-carousel__container {
@@ -265,25 +266,26 @@ export default {
 }
 
 .zhutu-wrap {
-  width: 535px;
+  width: 624px;
+  height: 624px;
   padding: 0 0px;
 
   .zhutu-inner {
     border: 1px solid #eee;
     overflow: hidden;
-    width: 535px;
-    height: 535px;
+    width: 624px;
+    height: 624px;
+    border-radius: 24px;
     margin: 0 auto;
     user-select: none;
   }
 }
 
 .lunbo-box {
-  position: relative;
-  width: 535px;
-  //   height: 535px;
-  // border: 1px solid #eee;
-  // padding-top: 20px;
+  width: 783px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   .img-box {
     display: flex;
@@ -303,6 +305,7 @@ export default {
     img {
       max-width: 100%;
       max-height: 100%;
+      border-radius: 24px;
     }
     video {
       width: 100%;
@@ -341,22 +344,20 @@ export default {
 }
 
 .lunbo-slt-list {
-  margin-left: 30px;
-  margin-right: 30px;
   width: 100%;
-  margin-top: 10px;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+  flex: 1;
+  padding: 16px 0;
+  gap: 10px;
 
   .lunbo-slt-item {
-    width: 76px;
-    height: 76px;
+    width: 120px;
+    height: 120px;
     padding: 0;
     cursor: pointer;
-    border: 1px solid transparent;
-    margin-right: 10px;
-    border: 1px solid #dddddd;
+    border: 1px solid #CECECE;
 
     &.hidden {
       display: none;
@@ -386,64 +387,34 @@ export default {
 }
 
 .slt-wrap {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 624px;
 }
 
 .lunbo-arrow {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
   z-index: 3;
   cursor: pointer;
-  top: 50%;
-  transform: translate(0, -50%);
+  width: 121px;
+  height: 39px;
+  background: #f1f1f1;
+  border-radius: 6px 6px 6px 6px;
 
-  //   height: 74p  rgba(0, 0, 0, 0.3);
-  width: 30px;
-  height: 30px;
-  background: #fff;
-  border-radius: 50%;
-  border: 1px solid #aaa;
-  border: 1px solid transparent;
-
-  &.arrow-left {
-    left: 0px;
-  }
-
-  &.arrow-right {
-    right: 0px;
+  &:hover {
+    background: #EC6A2B;
+    i {
+      color: #fff;
+    }
   }
 
   i {
-    color: #fff;
-    font-size: 20px;
-    font-size: 14px;
     font-size: 24px;
-    color: #aaa;
-  }
-}
-.video {
-  display: block;
-}
-i {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 100px;
-  color: #ffffff;
-  cursor: pointer;
-  opacity: 0.85;
-  z-index: 9;
-  &.el-icon-video-pause {
-    opacity: 0;
-    transition: all 0.4s;
-  }
-}
-.el-icon-video-pause {
-  &:hover {
-    opacity: 0.85;
+    color: #1E262E;
   }
 }
 </style>

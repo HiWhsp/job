@@ -5,26 +5,35 @@
         <div class="bread-box">
           <!-- <img src="@img/common/product-home.png" alt="" /> -->
           <router-link to="/">首页</router-link>
-          <!-- <span class="bread-divider">&gt;</span> -->
-          <!-- <router-link to="/products">产品中心</router-link>
-          <span class="bread-divider">&gt;</span> -->
-
-          <div class="bread-item" v-for="(item, index) in bread_list" :key="index">
-            <span class="arrow">></span>
+          <div
+            class="bread-item"
+            v-for="(item, index) in bread_list"
+            :key="index"
+          >
+            <span class="arrow">/</span>
             <template v-if="item">
-              <a v-if="item && !item.route" class="link" href="javascript: void(0)">{{ item.title }}</a>
-              <router-link v-else-if="item && item.route" :to="item.route" class="route-link">{{ item.title
-                }}</router-link>
+              <a
+                v-if="item && !item.route"
+                class="link"
+                href="javascript: void(0)"
+                >{{ item.title }}</a
+              >
+              <router-link
+                v-else-if="item && item.route"
+                :to="item.route"
+                class="route-link"
+                >{{ item.title }}</router-link
+              >
             </template>
           </div>
-          <span class="arrow">></span>
+          <span class="arrow">/</span>
           <a href="javascirpt:void(0);">{{ info.title }}</a>
         </div>
       </div>
     </div>
 
-    <div class="page-box w-1400">
-      <div class="page-inner">
+    <div class="page-box">
+      <div class="page-inner w-1400">
         <div class="main-content">
           <div class="ctx-top">
             <div class="ctx-left">
@@ -33,7 +42,7 @@
               <div class="preview-wrap">
                 <detailLunbo :imageList="detailImages" />
               </div>
-              <div class="detail-act-list">
+              <!-- <div class="detail-act-list">
                 <div class="act-item">
                   <img src="@img/product/icon-zhengpin.png" alt="" />
                   <span>正品保障</span>
@@ -51,92 +60,51 @@
                   <img v-else src="@img/product/icon-fav0.png" alt="" />
                   <span>{{ if_shoucang ? "取消收藏" : "收藏商品" }}</span>
                 </div>
-              </div>
+              </div> -->
             </div>
 
             <div class="ctx-right">
               <div class="detail-title flex">
                 <div class="title-text flex">
                   {{ info.title }}
-                  <img v-if="info.isThird == 1" src="@img/product/sanlei.png" alt="" />
+                  <!-- <img v-if="info.isThird == 1" src="@img/product/sanlei.png" alt="" /> -->
                 </div>
-
-                <!-- <div class="price-box">
-                  未税价格：{{ vuex_huobi }} {{ info.priceSale }}
-                </div> -->
               </div>
               <div class="detail-desc">
-                商品编号：{{ info.productNo || "--" }}
+                <div class="btn">FDA</div>
+                <div class="btn">CE</div>
               </div>
-              <!-- <div class="detail-desc" v-if="info.jianjie">
-                {{ info.jianjie }}
-              </div> -->
 
               <div class="sale-info">
                 <div class="list">
                   <div class="item price-item">
-                    <div class="label">价格</div>
                     <div class="vals vals-price">
                       <div class="val">
-                        {{ vuex_huobi }}
-                        {{ view_info.priceSale }}
+                        {{ vuex_huobi }}{{ view_info.priceSale }}
                       </div>
                     </div>
-                    <div style="color: gray; margin-left: 16px;text-decoration: line-through;font-size: 20px;">{{
-                      vuex_huobi
-                      }}{{ view_info.priceMarket }}</div>
-
-
-                    <!-- <div
-                      style="color: gray; margin-left: 16px"
-                      v-if="view_info.usersCompany"
+                    <span
+                      style="color: #ec6a2b; line-height: 30px; margin: 0 10px"
+                      >/pack</span
                     >
-                      未税价格：{{ vuex_huobi
-                      }}{{
-                        vuex_is_login
-                          ? (view_info.priceSale / 1.3).toFixed(2) *
-                            view_info.companyDiscount
-                          : "---"
-                      }}
+                    <div class="val" style="color: #5e5e5e; line-height: 30px">
+                      {{ vuex_huobi }}{{ view_info.priceMarket }}
                     </div>
-                    <div style="color: gray; margin-left: 16px" v-else>
-                      未税价格：{{ vuex_huobi
-                      }}{{
-                        vuex_is_login
-                          ? (view_info.priceSale / 1.3).toFixed(2)
-                          : "---"
-                      }}
-                    </div>
-                    <div style="color: gray; margin-left: 16px">税率：13%</div> -->
                   </div>
-                  <div class="item" v-if="info.discountSale">
+                  <div class="item">
+                    <span class="date">5-7 days delivery! </span>
+                    <img src="@/assets/img/product/icon-fav0.png" v-if="!if_shoucang" alt="" @click="do_fav_toggle()" />
+                    <img src="@/assets/img/product/icon-fav1.png" v-else alt="" @click="do_fav_toggle()" />
+                  </div>
+                  <!-- <div class="item" v-if="info.discountSale">
                     <div class="label">折扣价格</div>
                     <div class="vals">
                       <div class="val">
                         {{ vuex_huobi }}{{ info.discountSale || 0 }}
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
-              </div>
-              <div class="info-texts">
-                <div class="text-item">
-                  <div class="label">总销量</div>
-                  <div class="text">{{ info.orders }}</div>
-                </div>
-                <!-- <div class="text-item">
-                  <div class="label">累计评价</div>
-                  <div class="text">{{ info.comment_num }}</div>
-                </div>
-                <div class="text-item detail-act-list" @click="do_fav_toggle()">
-                  <div class="label">
-                    <div class="detail-act-list">
-                      <img v-if="if_shoucang" src="@img/detail-fav-1.png" alt="" />
-                      <img v-else src="@img/detail-fav-0.png" alt="" />
-                    </div>
-                  </div>
-                  <div class="text"> <span>{{ if_shoucang ? "取消收藏" : "收藏商品" }}</span></div>
-                </div> -->
               </div>
               <!-- <div class="misc-detail">
                 <div class="misc-sector">
@@ -183,24 +151,44 @@
                 <div class="sku-box column-flex-center">
                   <div class="flex-between" style="width: 100%">
                     <div class="sku-label">选择规格</div>
-                    <div class="sku-tip" v-if="sku_list.filter((it) => it.priceConfig || [].length > 0).length">
+                    <div
+                      class="sku-tip"
+                      v-if="
+                        sku_list.filter((it) => it.priceConfig || [].length > 0)
+                          .length
+                      "
+                    >
                       <i class="el-icon-warning"></i>
                       量大优惠，请关注以下单价变化
                     </div>
                   </div>
                   <div class="sku-list">
-                    <div class="sku-item flex-between" :class="{active: getSkuQuantity(item) > 0,}" v-for="(item, index) in sku_list" :key="index" >
+                    <div
+                      class="sku-item flex-between"
+                      :class="{ active: getSkuQuantity(item) > 0 }"
+                      v-for="(item, index) in sku_list"
+                      :key="index"
+                    >
                       <!-- @click="clickSkuItem(item)" -->
                       <div>
                         <div class="text">
-                          <el-image style="width: 40px; height: 40px":src="item.image" :preview-src-list="[item.image]"></el-image>
-                          <span>  {{ item.keyVals }}</span>
+                          <el-image
+                            style="width: 40px; height: 40px"
+                            :src="item.image"
+                            :preview-src-list="[item.image]"
+                          ></el-image>
+                          <span> {{ item.keyVals }}</span>
                         </div>
                         <div class="tier-pricing">
-                          <span v-for="(cit, cidx) in item.priceConfig" :key="cidx" style="margin-right: 8px">
-                            
+                          <span
+                            v-for="(cit, cidx) in item.priceConfig"
+                            :key="cidx"
+                            style="margin-right: 8px"
+                          >
                             <template v-if="cit.min && cit.max">
-                              {{ cit.min }}-{{ cit.max + info.unit }}¥{{cit.price}}
+                              {{ cit.min }}-{{ cit.max + info.unit }}¥{{
+                                cit.price
+                              }}
                             </template>
                             <template v-else>
                               ≥{{ cit.min + info.unit }}¥{{ cit.price }}
@@ -223,8 +211,11 @@
                         <div class="stock-info">库存{{ item.kucun }}</div>
                         <div class="quantity-control">
                           <div class="quantity-input">
-                            <div class="btn minus" :disabled="getSkuQuantity(item) <= 0"
-                              @click.stop="decreaseSkuQuantity(item)">
+                            <div
+                              class="btn minus"
+                              :disabled="getSkuQuantity(item) <= 0"
+                              @click.stop="decreaseSkuQuantity(item)"
+                            >
                               <img src="@img/product/num-minus.png" alt="" />
                             </div>
 
@@ -233,13 +224,23 @@
                                 updateSkuQuantity(item, $event.target.value)
                               " -->
                             <!-- @blur="onBlurSkuQuantity(item)" -->
-                            <input type="number" v-model="sku_quantities[item.inventoryId]" @click.stop min="0"
-                              :max="item.kucun" @blur="onBlurSkuQuantity(item)" @input="
+                            <input
+                              type="number"
+                              v-model="sku_quantities[item.inventoryId]"
+                              @click.stop
+                              min="0"
+                              :max="item.kucun"
+                              @blur="onBlurSkuQuantity(item)"
+                              @input="
                                 updateSkuQuantity(item, $event.target.value)
-                                " />
+                              "
+                            />
 
-                            <div class="btn plus" :disabled="getSkuQuantity(item) >= item.kucun"
-                              @click.stop="increaseSkuQuantity(item)">
+                            <div
+                              class="btn plus"
+                              :disabled="getSkuQuantity(item) >= item.kucun"
+                              @click.stop="increaseSkuQuantity(item)"
+                            >
                               <img src="@img/product/num-plus.png" alt="" />
                             </div>
                           </div>
@@ -305,20 +306,25 @@
                       加入购物车
                     </button> -->
                     <button class="contact-service" @click="openInquiryModal">
-                        <img src="@img/product/chat.png" alt="" />
-                        批发请联系客服
-                    </button> 
+                      <img src="@img/product/chat.png" alt="" />
+                      批发请联系客服
+                    </button>
                   </div>
 
                   <div class="order-summary">
                     <div class="flex-center box">
                       <div class="summary-item">
-                        已选 <span>{{ orderSummary.selectedItems }}</span>款<span>{{ orderSummary.totalQuantity }}</span>件
+                        已选 <span>{{ orderSummary.selectedItems }}</span
+                        >款<span>{{ orderSummary.totalQuantity }}</span
+                        >件
                       </div>
                       <div class="summary-item">
                         实付金额<span>¥{{ orderSummary.finalAmount }}</span>
                       </div>
-                      <div class="summary-item" v-if="orderSummary.discount > 0">
+                      <div
+                        class="summary-item"
+                        v-if="orderSummary.discount > 0"
+                      >
                         <div style="font-weight: 400">
                           优惠¥{{ orderSummary.discount }}
                         </div>
@@ -329,13 +335,27 @@
                       <img src="@img/product/chat.png" alt="" />
                       批发请联系客服
                     </button> -->
-                     <div class="left-buttons2">
-                      <button class="btn-ripple flex-center btn-buy" @click="do_pay_now()">
-                        <img src="@img/product/detail-buy.png" alt="" class="cart" />
+                    <div class="left-buttons2">
+                      <button
+                        class="btn-ripple flex-center btn-buy"
+                        @click="do_pay_now()"
+                      >
+                        <img
+                          src="@img/product/detail-buy.png"
+                          alt=""
+                          class="cart"
+                        />
                         立即购买
                       </button>
-                      <button class="btn-ripple flex-center btn-add-cart" @click="do_add_cart()">
-                        <img src="@img/product/detail-cart.png" alt="" class="cart" />
+                      <button
+                        class="btn-ripple flex-center btn-add-cart"
+                        @click="do_add_cart()"
+                      >
+                        <img
+                          src="@img/product/detail-cart.png"
+                          alt=""
+                          class="cart"
+                        />
                         加入购物车
                       </button>
                     </div>
@@ -356,8 +376,12 @@
             <div class="bottom-left">
               <div class="main-title">推荐产品</div>
               <div class="product-list">
-                <div class="product-item" v-for="(item, index) in related_products" :key="index"
-                  @click="toDetail(item)">
+                <div
+                  class="product-item"
+                  v-for="(item, index) in related_products"
+                  :key="index"
+                  @click="toDetail(item)"
+                >
                   <div class="poster-box scale-box">
                     <img :src="item.thumb" alt="" class="poster scale-img" />
                   </div>
@@ -378,14 +402,26 @@
               <div class="ctx-bottom">
                 <div class="ctx-bottom-inner">
                   <div class="bottom-nav">
-                    <div class="nav-item" @click="togglePanel('详情')" :class="active_panel == '详情' ? 'active' : ''">
+                    <div
+                      class="nav-item"
+                      @click="togglePanel('详情')"
+                      :class="active_panel == '详情' ? 'active' : ''"
+                    >
                       商品详情
                     </div>
-                    <div class="nav-item" @click="togglePanel('资质证书')" :class="active_panel == '资质证书' ? 'active' : ''">
+                    <div
+                      class="nav-item"
+                      @click="togglePanel('资质证书')"
+                      :class="active_panel == '资质证书' ? 'active' : ''"
+                    >
                       资质证书
                     </div>
 
-                    <div class="nav-item" @click="togglePanel('评价')" :class="active_panel == '评价' ? 'active' : ''">
+                    <div
+                      class="nav-item"
+                      @click="togglePanel('评价')"
+                      :class="active_panel == '评价' ? 'active' : ''"
+                    >
                       累计评价
                       <span class="count-num">{{ info.commentNum }}</span>
                     </div>
@@ -415,7 +451,11 @@
                     </div>
                     <div class="panel-title-line"></div> -->
                     <div class="detail-spec">
-                      <div class="detail-spec-sector" v-for="(value, key) in info.addrows" :key="key">
+                      <div
+                        class="detail-spec-sector"
+                        v-for="(value, key) in info.addrows"
+                        :key="key"
+                      >
                         <div>{{ key }}</div>
                         <div>{{ value || "--" }}</div>
                       </div>
@@ -424,7 +464,10 @@
                     <div class="rich-html" v-html="info.cont2"></div>
                     <div class="rich-html" v-html="info.cont3"></div>
                   </div>
-                  <div class="detail-content-box" v-if="active_panel == '资质证书'">
+                  <div
+                    class="detail-content-box"
+                    v-if="active_panel == '资质证书'"
+                  >
                     <div class="rich-html" v-html="info.cont4"></div>
                   </div>
                   <!-- v-if="active_panel == '评价'" -->
@@ -436,10 +479,19 @@
 
                     <review_list :list="reviews" />
 
-                    <div class="pagination-box" style="margin-top: 80px" v-if="info.commentNum">
-                      <el-pagination background layout="total, prev, pager, next" @current-change="changePage_comment"
-                        :current-page.sync="pagination.page" :page-size="pagination.pageNum"
-                        :total="info.commentNum"></el-pagination>
+                    <div
+                      class="pagination-box"
+                      style="margin-top: 80px"
+                      v-if="info.commentNum"
+                    >
+                      <el-pagination
+                        background
+                        layout="total, prev, pager, next"
+                        @current-change="changePage_comment"
+                        :current-page.sync="pagination.page"
+                        :page-size="pagination.pageNum"
+                        :total="info.commentNum"
+                      ></el-pagination>
                     </div>
 
                     <div class="detail-empty" v-else>
@@ -690,7 +742,7 @@ export default {
 
   created() {
     this.setView();
-    this.$store.dispatch("appInit")
+    this.$store.dispatch("appInit");
   },
 
   beforeDestroy() {
@@ -709,7 +761,12 @@ export default {
 
     toDetail(item) {
       // this.$router.push(`/product-detail?id=${item.inventoryId}`);
-      window.open('/product-detail?id='+item.inventoryId,'__blank','',false)
+      window.open(
+        "/product-detail?id=" + item.inventoryId,
+        "__blank",
+        "",
+        false
+      );
     },
 
     setView() {
@@ -845,7 +902,7 @@ export default {
           operateType: 2, //1-关注 2-足迹
           operateSence: 0, //0-关注（添加记录） 1-取消关注（删除记录）
         },
-      }).then((res) => { });
+      }).then((res) => {});
     },
     do_fav_toggle() {
       this.do_add_fav();
@@ -1010,7 +1067,10 @@ export default {
         data.inventorys.forEach((v) => {
           sku_list.push({
             ...v,
-            priceConfig: (data.seckillInfo || (v.priceConfig[0] || {}).price == '') ? [] : v.priceConfig,
+            priceConfig:
+              data.seckillInfo || (v.priceConfig[0] || {}).price == ""
+                ? []
+                : v.priceConfig,
             kucun: +v.kucun,
             key_vals: v.key_vals,
           });
@@ -1196,7 +1256,6 @@ export default {
         }
         this.updateTotalQuantity();
       }
-
     },
 
     //商品是否选择规格检测
@@ -1238,8 +1297,8 @@ export default {
     //立即购买
     do_pay_now() {
       //企业用户
-      console.log('vuex_user', this.vuex_user)
-      console.log('info', this.info)
+      console.log("vuex_user", this.vuex_user);
+      console.log("info", this.info);
       // return
       // if (this.info.isThird == 1 &&!(this.vuex_user.userType == 1 && this.vuex_user.renzheng == 2)) {
       //   // 打开认证提示弹窗
@@ -1255,21 +1314,22 @@ export default {
       if (this.info.isThird == 1) {
         if (this.vuex_user.userType != 1) {
           this.$refs.product_renzheng_tip.init();
-          return
+          return;
         } else if (this.vuex_user.userType == 1) {
-          if (this.vuex_user.license2 || this.vuex_user.license3 || this.vuex_user.license4 | this.vuex_user.license6) {
-            console.log('可以购买三类')
+          if (
+            this.vuex_user.license2 ||
+            this.vuex_user.license3 ||
+            this.vuex_user.license4 | this.vuex_user.license6
+          ) {
+            console.log("可以购买三类");
           } else {
             this.$refs.product_renzheng_tip.init();
-            return
+            return;
           }
         }
       }
 
       // this.$refs.product_renzheng_tip.init();
-
-
-
 
       // this.updateTotalQuantity();
       if (this.selected_num == 0) {
@@ -1348,16 +1408,20 @@ export default {
       //   this.$refs.product_renzheng_tip.init();
       //   return;
       // }
-       if (this.info.isThird == 1) {
+      if (this.info.isThird == 1) {
         if (this.vuex_user.userType != 1) {
           this.$refs.product_renzheng_tip.init();
-          return
+          return;
         } else if (this.vuex_user.userType == 1) {
-          if (this.vuex_user.license2 || this.vuex_user.license3 || this.vuex_user.license4 | this.vuex_user.license6) {
-            console.log('可以购买三类')
+          if (
+            this.vuex_user.license2 ||
+            this.vuex_user.license3 ||
+            this.vuex_user.license4 | this.vuex_user.license6
+          ) {
+            console.log("可以购买三类");
           } else {
             this.$refs.product_renzheng_tip.init();
-            return
+            return;
           }
         }
       }
@@ -1440,10 +1504,10 @@ export default {
             num: totalCount,
             title: "商品已添加到购物车",
           });
-          
-          this.sku_list.forEach((e)=>{
-            this.sku_quantities[e.inventoryId]=0
-          })
+
+          this.sku_list.forEach((e) => {
+            this.sku_quantities[e.inventoryId] = 0;
+          });
           this.$store.commit("set_vuex_cart_number", totalCount);
         }
       });
@@ -1580,7 +1644,7 @@ export default {
 
 <style scoped lang="less">
 .page-top {
-  padding: 14px 0;
+  padding: 28px 0;
   position: relative;
 
   .page-top-banner {
@@ -1618,8 +1682,8 @@ export default {
         align-items: center;
 
         font-family: OPPOSans, OPPOSans;
-        font-size: 15px;
-        color: #505050;
+        font-size: 18px;
+        color: #5e5e5e;
 
         img {
           margin-right: 10px;
@@ -1643,7 +1707,7 @@ export default {
         color: #aeaeae;
       }
 
-      >*:last-child {
+      > *:last-child {
         font-family: OPPOSans, OPPOSans;
         font-size: 15px;
         color: #000000;
@@ -1661,9 +1725,11 @@ export default {
       font-size: 14px;
     }
 
-    .kefu-code {}
+    .kefu-code {
+    }
 
-    .erweima {}
+    .erweima {
+    }
   }
 }
 
@@ -1775,7 +1841,7 @@ export default {
               font-size: 12px;
               font-family: sans-serif;
               font-weight: 400;
-              color: #1F1F1F;
+              color: #1f1f1f;
 
               font-size: 16px;
             }
@@ -1841,7 +1907,7 @@ export default {
         justify-content: space-between;
 
         .ctx-left {
-          width: 535px;
+          width: 783px;
           position: relative;
 
           .detail-act-list {
@@ -1883,8 +1949,8 @@ export default {
               flex: 1;
               font-family: Poppins, Poppins;
               font-weight: bold;
-              font-size: 26px;
-              color: #000000;
+              font-size: 30px;
+              color: #242424;
 
               img {
                 width: 94px;
@@ -1902,33 +1968,37 @@ export default {
           }
 
           .detail-desc {
-            margin-top: 17px;
-            margin-bottom: 20px;
-            font-family: OPPOSans, OPPOSans;
-            // font-weight: bold;
-            font-size: 16px;
-            color: #747474;
-            line-height: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            .btn {
+              background: #ffffff;
+              border-radius: 5px 5px 5px 5px;
+              border: 1px solid #00306b;
+              font-family: Poppins, Poppins;
+              font-weight: bold;
+              font-size: 22px;
+              color: #00306b;
+              line-height: 31px;
+              padding: 0 10px;
+            }
           }
 
           .sale-info {
             padding: 0px;
-            background: #f7f7f7;
             background-repeat: no-repeat;
             background-size: 100% 100%;
+            border-bottom: 1px solid #DEDEDE;
 
             .list {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
               .item {
                 display: flex;
-                align-items: center;
-                padding: 12px 20px;
-
-                &.price-item {
-                  background: url("~@img/product/sale-bg.png");
-                  // padding-top: 20px;
-                  // padding-bottom: 35px;
-                  padding: 20px 40px 35px;
-                }
+                align-items: end;
+                padding: 12px 0;
 
                 .label {
                   font-family: Microsoft YaHei, Microsoft YaHei;
@@ -1941,7 +2011,6 @@ export default {
                   display: flex;
                   align-items: center;
                   //flex: 1;
-                  margin-left: 28px;
 
                   font-size: 16px;
                   font-family: PingFang SC, PingFang SC;
@@ -1949,19 +2018,32 @@ export default {
                   color: #353535;
 
                   &.vals-price {
-                    font-size: 32px;
+                    font-size: 40px;
                     font-family: PingFang SC, PingFang SC;
                     font-weight: bold;
-                    color: #6941aa;
+                    color: #ec6a2b;
                   }
 
                   .val {
                     flex: 1;
                     font-family: Microsoft YaHei, Microsoft YaHei;
                     font-weight: bold;
-                    font-size: 32px;
-                    color: #6941aa;
+                    font-size: 40px;
+                    color: #ec6a2b;
                   }
+                }
+
+                .date {
+                  font-family: Poppins, Poppins;
+                  font-weight: 600;
+                  font-size: 22px;
+                  color: #242424;
+                  line-height: 30px;
+                  margin-right: 25px;
+                }
+                img {
+                  width: 26px;
+                  height: 26px;
                 }
               }
             }
@@ -1983,36 +2065,8 @@ export default {
             padding-left: 20px;
           }
 
-          .info-texts {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 40px;
-            height: 45px;
-            background: #f8f8f8;
-
-            .text-item {
-              display: flex;
-              align-items: center;
-
-              .label {
-                font-family: Microsoft YaHei, Microsoft YaHei;
-                font-weight: 400;
-                font-size: 18px;
-                color: #6a6a6a;
-              }
-
-              .text {
-                margin-left: 16px;
-                font-size: 18px;
-                color: #6941aa;
-                font-weight: bold;
-              }
-            }
-          }
-
           .sku-box {
-            margin-top: 33px;
+            margin-top: 23px;
             display: flex;
             align-items: flex-start;
             width: 100%;
@@ -2082,14 +2136,13 @@ export default {
               .text {
                 font-size: 18px;
                 // font-weight: 500;
-                color: #1F1F1F;
+                color: #1f1f1f;
                 // margin-bottom: 10px;
                 display: flex;
                 align-items: center;
-                span{
+                span {
                   margin-left: 20px;
                 }
-
               }
 
               .tier-pricing {
@@ -2232,7 +2285,8 @@ export default {
                 }
               }
 
-              .minus {}
+              .minus {
+              }
 
               input {
                 outline: none;
@@ -2265,7 +2319,8 @@ export default {
                 /* firefox */
               }
 
-              .plus {}
+              .plus {
+              }
             }
           }
 
@@ -2296,7 +2351,7 @@ export default {
             align-items: flex-start;
 
             .left-buttons {
-               margin-top: 42px;
+              margin-top: 42px;
               display: flex;
               gap: 20px;
               .contact-service {
@@ -2358,7 +2413,7 @@ export default {
               }
 
               .btn-add-cart {
-                background: #FCB000;
+                background: #fcb000;
 
                 img {
                   margin-right: 2px;
@@ -2378,7 +2433,6 @@ export default {
               }
             }
 
-
             .order-summary {
               display: flex;
               flex-direction: column;
@@ -2393,7 +2447,7 @@ export default {
 
               .summary-item {
                 font-size: 16px;
-                color: #1F1F1F;
+                color: #1f1f1f;
                 text-align: right;
                 margin-left: 20px;
                 font-weight: bold;
@@ -2404,8 +2458,6 @@ export default {
                   padding: 0 1px;
                 }
               }
-
-              
             }
           }
         }
@@ -2438,7 +2490,8 @@ export default {
         }
       }
 
-      .ctx-bottom {}
+      .ctx-bottom {
+      }
 
       .ctx-bottom-inner {
         width: 100%;
@@ -2615,7 +2668,7 @@ export default {
           font-size: 14px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #1F1F1F;
+          color: #1f1f1f;
 
           font-size: 16px;
         }
@@ -2628,7 +2681,7 @@ export default {
           font-size: 14px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #1F1F1F;
+          color: #1f1f1f;
 
           font-size: 16px;
         }
@@ -2667,7 +2720,6 @@ export default {
 
       &.firstRow {
         td {
-
           p,
           span,
           strong,
@@ -2775,7 +2827,7 @@ export default {
     text-align: center;
     height: 48px;
     line-height: 48px;
-    background: #FCB000;
+    background: #fcb000;
     border-radius: 0px 0px 0px 0px;
 
     position: relative;
@@ -2835,7 +2887,7 @@ export default {
         overflow: hidden;
         font-weight: 400;
         font-size: 16px;
-        color: #1F1F1F;
+        color: #1f1f1f;
       }
 
       .pirce-box {
@@ -2846,10 +2898,10 @@ export default {
         font-size: 20px;
         color: #7853b2;
       }
-      .market-price{
-          text-decoration-line: line-through;
-            color: #505050;
-            font-size: 14px;
+      .market-price {
+        text-decoration-line: line-through;
+        color: #505050;
+        font-size: 14px;
       }
     }
 
@@ -2863,4 +2915,8 @@ export default {
 
 <style scoped lang="less" src="@/assets/h5css/page/product-detail.less"></style>
 
-<style scoped lang="less" src="@/assets/h5css/mobile/product-detail.less"></style>
+<style
+  scoped
+  lang="less"
+  src="@/assets/h5css/mobile/product-detail.less"
+></style>

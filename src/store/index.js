@@ -72,7 +72,7 @@ export default new Vuex.Store({
     vuex_is_login: false, //是否登录
     //
     vuex_cart_number: 0,
-    vuex_huobi: "￥",
+    vuex_huobi: "US$",
     //
     vuex_category_tree: [],
     vuex_category_flat: [],
