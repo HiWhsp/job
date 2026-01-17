@@ -17,7 +17,7 @@
           <el-image style="" :src="url" :preview-src-list="item.images"> </el-image>
         </div>
       </div>
-      <div class="date">{{ item.createdTime }}</div>
+      <div class="date">{{ item.productKeyVals }} {{ new Date(item.createdTime).toLocaleTimeString() }}</div>
     </div>
   </div>
 </template>
@@ -59,8 +59,8 @@ export default {
           align-items: center;
 
         .avatar {
-          width: 64px;
-          height: 64px;
+          width: 30px;
+          height: 30px;
           border-radius: 50%;
           object-fit: cover;
         }
@@ -79,7 +79,13 @@ export default {
         }
       }
 
-      .right {}
+      .right {
+        /deep/.el-rate__item {
+          .el-rate__icon {
+            font-size: 24px;
+          }
+        }
+      }
     }
 
     .content {
@@ -123,11 +129,11 @@ export default {
       margin-top: 20px;
       padding-left: 150px;
       text-align: left;
-      font-size: 14px;
+      font-size: 18px;
       font-family: PingFang SC;
       font-weight: 400;
       line-height: 19px;
-      color: #505050;
+      color: #999;
     }
   }
 }

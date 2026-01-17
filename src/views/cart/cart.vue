@@ -1,21 +1,24 @@
 <template>
   <div class="page">
-    <div class="inner w-1400">
-      <div class="main-title flex-between">
-        <div class="left">
-          <span>购物车</span>
+    <div class="page-top">
+      <div class="page-bread w-1400">
+        <div class="bread-box">
+          <router-link to="/">Home</router-link>
+          <span class="arrow">/</span>
+          <a class="link">Cart</a>
         </div>
       </div>
-
+    </div>
+    <div class="inner w-1400">
       <!-- 商品列表 -->
       <div class="empty-wrap column-flex-center" v-if="!list_shopcart.length">
         <div class="empty-pic-box">
           <img src="@img/cart/cart-empty.png" alt="" />
         </div>
-        <div class="empty-text">购物车为空，快去选购商品吧～</div>
+        <div class="empty-text">Your cart is empty, go and purchase some items~</div>
         <div class="empty-btn">
           <div class="btn flex-center btn-ripple" @click="toRoute('/')">
-            去购物
+            Go Shopping
           </div>
         </div>
       </div>
@@ -25,15 +28,15 @@
           <div class="cart-list-inner">
             <!-- 标题 -->
             <div class="list-title">
-              <div class="title-1">选择</div>
+              <div class="title-1"></div>
               <div class="title-2" style="text-align: left; padding-left: 0px">
-                产品名称
+                Product
               </div>
               <!-- <div class="title-3">规格</div> -->
-              <div class="title-4">单价</div>
-              <div class="title-5">数量</div>
-              <div class="title-6">金额</div>
-              <div class="title-7">操作</div>
+              <div class="title-4">price</div>
+              <div class="title-5">quantity</div>
+              <div class="title-6">TOTAL</div>
+              <div class="title-7"></div>
             </div>
 
             <!-- 商品列表 -->
@@ -63,14 +66,14 @@
                     {{ item.title }}
                   </div>
                   <div class="sku-info">
-                    {{ item.key_vals }}
+                    {{ item.keyVals }}
                   </div>
                 </div>
                 <!-- <div class="box-sku">
                   {{ item.keyVals }}
                 </div> -->
                 <div class="box-unit-price">
-                  {{ vuex_huobi }} {{ item.priceSale }}
+                  {{ vuex_huobi }} {{ item.priceSale }} / pack
                 </div>
                 <div class="box-number">
                   <button @click="do_number_minus(item)">-</button>
@@ -101,9 +104,8 @@
                       data-fn="do_cart_delete_row"
                       @click="do_cart_delete_row_tip(item.inventoryId)"
                     >
-                      <!-- <img src="@img/other/shopcart-goods-delete.png" alt="" /> -->
-                      删除</span
-                    >
+                      <img src="@img/other/shopcart-goods-delete.png" alt="" />
+                    </span>
                   </div>
                 </div>
               </div>
@@ -123,29 +125,29 @@
             <el-checkbox
               v-model="checked_all"
               @change="on_change_checked_all"
-              >{{ checked_all ? "反选" : "全选" }}</el-checkbox
+              >{{ checked_all ? "Unselect All" : "Select All" }}</el-checkbox
             >
           </div>
           <div class="delete-box">
             <span
               data-fn="do_cart_remove_select"
               @click="do_cart_remove_select_tip()"
-              >删除选中</span
+              >Delete selected</span
             >
           </div>
           <div class="clear-box">
             <span data-fn="do_cart_clear" @click="do_cart_clear_tip()"
-              >清空购物车</span
+              >Clear cart</span
             >
           </div>
 
           <div class="total-number">
-            已选择
+            Selected
             <b>{{ count_shopcart_checked }}</b>
-            件商品
+            Item
           </div>
           <div class="total-price">
-            总金额：
+            Total Amount
             <b>{{ vuex_huobi }} {{ shopcart_money }}</b>
           </div>
           <button
@@ -153,7 +155,7 @@
             class="btn-ripple btn-order"
             @click="to_pay()"
           >
-            去下单
+            Check out
           </button>
         </div>
       </div>
@@ -291,21 +293,21 @@ export default {
 
     do_cart_remove_select_tip() {
       if (!this.list_shopcart_checked.length) {
-        alertErr("请先选择要删除的商品");
+        alertErr("Please select the products to delete");
         return;
       }
 
       this.$refs.cart_action_modal.init({
         type: "批量",
         inventoryId: "",
-        tip: "确定删除所选商品吗？",
+        tip: "Are you sure to delete the selected products?",
       });
     },
 
     //购物车 删除选中
     do_cart_remove_select() {
       if (!this.list_shopcart_checked.length) {
-        alertErr("请先选择要删除的商品");
+        alertErr("Please select the products to delete");
         return;
       }
       let ids = this.list_shopcart_checked.map((v) => v.inventoryId);
@@ -318,7 +320,7 @@ export default {
       this.$refs.cart_action_modal.init({
         type: "单个",
         inventoryId: inventoryId,
-        tip: "确定删除该商品吗？",
+        tip: "Are you sure to delete this product?",
       });
     },
 
@@ -398,21 +400,21 @@ export default {
 
     do_cart_clear_tip() {
       if (!this.list_shopcart.length) {
-        alertErr("购物车是空的！");
+        alertErr("The shopping cart is empty!");
         return;
       }
 
       this.$refs.cart_action_modal.init({
         type: "全部",
         inventoryId: "",
-        tip: "确定清空购物车吗？",
+        tip: "Are you sure to clear the shopping cart?",
       });
     },
 
     //清空购物车
     do_cart_clear() {
       if (!this.list_shopcart.length) {
-        alertErr("购物车是空的！");
+        alertErr("The shopping cart is empty!");
         return;
       }
 
@@ -496,14 +498,43 @@ export default {
 </script>
 
 <style scoped lang="less">
-page{
-  background: #F5F7FA;
+page {
+  background: #fff;
 }
-.page { 
-  background: #F5F7FA;
+.page {
   text-align: center;
   font-size: 14px;
   padding-top: 45px;
+
+  .page-top {
+    height: 83px;
+    line-height: 83px;
+    background: #fbfbfb;
+    border-top: 1px solid #d5d8de;
+    .bread-box {
+      display: flex;
+      align-items: flex-start;
+      a {
+        font-family: Poppins, Poppins;
+        font-weight: 400;
+        font-size: 16px;
+        color: #5e5e5e;
+      }
+      .arrow {
+        font-family: Poppins, Poppins;
+        font-weight: 400;
+        font-size: 18px;
+        color: #5e5e5e;
+        margin: 0 6px;
+      }
+      .link {
+        font-family: Poppins, Poppins;
+        font-weight: 400;
+        font-size: 18px;
+        color: #5e5e5e;
+      }
+    }
+  }
 
   .inner {
     background: #ffffff;
@@ -518,42 +549,19 @@ page{
     color: #333333;
   }
 
-  .main-title {
-    height: 68px;
-    padding: 0 24px;
-    border-bottom: 1px solid #d5d8de;
-    text-align: left;
-
-    .left {
-      font-family: Microsoft YaHei, Microsoft YaHei;
-      font-weight: 400;
-      font-size: 24px;
-      color: #333333;
-
-      .num {
-        margin-left: 10px;
-        color: #ff9312;
-      }
-    }
-  }
-
   .ctx-box {
     background: #fff;
     margin-top: 30px;
 
     .list {
-      border: 1px solid #eee;
-
       .list-title {
         text-align: center;
         height: 50px;
-        background: #f9f9f9;
-        background: #f5f5f5;
+        background: #fbfbfb;
         padding: 15px 0;
 
         display: flex;
         align-items: center;
-        border-bottom: 1px solid #eee;
 
         .title-1 {
           width: 100px;
@@ -587,8 +595,7 @@ page{
       }
 
       .item {
-        border-bottom: 1px solid #eee;
-        background: #fff;
+        border-bottom: 1px solid #dedede;
 
         &:last-child {
           border-bottom: none;
@@ -604,15 +611,15 @@ page{
           font-family: Arial, Arial;
           font-weight: 400;
           font-size: 14px;
-          color: #1F1F1F;
+          color: #1f1f1f;
         }
 
         .item-detail {
-          padding: 15px 0;
+          padding: 40px 0;
           font-family: OPPOSans, OPPOSans;
           // font-weight: bold;
           font-size: 14px;
-          color: #1F1F1F;
+          color: #1f1f1f;
 
           .box-select {
             width: 58px;
@@ -621,15 +628,15 @@ page{
 
           .box-image {
             img {
-              width: 70px;
-              height: 70px;
+              width: 120px;
+              height: 120px;
               margin-right: 10px;
               cursor: pointer;
             }
 
             /deep/ img {
-              width: 70px;
-              height: 70px;
+              width: 120px;
+              height: 120px;
               margin-right: 10px;
               cursor: pointer;
             }
@@ -646,9 +653,12 @@ page{
             }
 
             .goods-title {
+              font-size: 24px;
+              color: #1e262e;
               width: fit-content;
               cursor: pointer;
-              // height: 40px;
+              height: 63px;
+              line-height: 30px;
               display: -webkit-box;
               -webkit-box-orient: vertical;
               text-overflow: ellipsis;
@@ -659,7 +669,9 @@ page{
             .sku-info {
               width: fit-content;
               cursor: pointer;
-              margin-top: 10px;
+              margin-top: 15px;
+              color: #5e5e5e;
+              font-size: 20px;
             }
           }
 
@@ -669,7 +681,9 @@ page{
 
           .box-unit-price {
             width: 200px;
-            color: 7853B2;
+            font-size: 20px;
+            font-weight: 600;
+            color: #ec6a2b;
           }
 
           .box-number {
@@ -680,7 +694,7 @@ page{
 
             input {
               width: 48px;
-              height: 30px;
+              height: 48px;
               border: 1px solid #d5d8de;
               text-align: center;
               border-left: 0;
@@ -693,15 +707,16 @@ page{
             }
 
             button {
-              width: 30px;
-              height: 30px;
+              width: 48px;
+              height: 48px;
               border: 1px solid #d5d8de;
             }
           }
 
           .box-subtotal {
             width: 200px;
-            color: #7853b2;
+            color: #ec6a2b;
+            font-size: 20px;
             font-weight: bold;
           }
 
@@ -733,7 +748,7 @@ page{
   text-align: center;
   font-size: 14px;
   font-weight: normal;
-  color: #1F1F1F;
+  color: #1f1f1f;
 
   .goods-action {
     display: flex;
@@ -742,10 +757,10 @@ page{
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 14px;
-    color: #1F1F1F;
+    color: #1f1f1f;
 
     img {
-      width: 20px;
+      width: 44px;
     }
   }
 }
@@ -767,8 +782,13 @@ page{
     width: fit-content;
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
-    font-size: 14px;
-    color: #1F1F1F;
+    font-size: 22px;
+    color: #1e262e;
+    margin-right: 20px;
+    /deep/ .el-checkbox__input + .el-checkbox__label {
+      color: #1e262e !important;
+      font-size: 22px !important;
+    }
   }
 
   .delete-box {
@@ -778,8 +798,8 @@ page{
     span {
       font-family: OPPOSans, OPPOSans;
       font-weight: 400;
-      font-size: 14px;
-      color: #1F1F1F;
+      font-size: 22px;
+      color: #ec6a2b;
 
       &:hover {
         color: #7853b2;
@@ -796,8 +816,8 @@ page{
     span {
       font-family: OPPOSans, OPPOSans;
       font-weight: 400;
-      font-size: 16px;
-      color: #1F1F1F;
+      font-size: 22px;
+      color: #1e262e;
 
       &:hover {
         color: #7853b2;
@@ -810,14 +830,14 @@ page{
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 16px;
-    color: #1F1F1F;
+    color: #1f1f1f;
 
     b {
       font-size: 24px;
       font-family: Microsoft YaHei;
       font-weight: bold;
       line-height: 20px;
-      color: #7853b2;
+      color: #EC6A2B;
     }
   }
 
@@ -829,14 +849,14 @@ page{
     font-family: OPPOSans, OPPOSans;
     font-weight: 400;
     font-size: 16px;
-    color: #1F1F1F;
+    color: #1f1f1f;
 
     b {
       font-size: 24px;
       font-family: Microsoft YaHei;
       font-weight: bold;
       line-height: 20px;
-      color: #7853b2;
+      color: #EC6A2B;
     }
   }
 
@@ -883,14 +903,14 @@ page{
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;
     font-size: 16px;
-    color: #1F1F1F;
+    color: #1f1f1f;
   }
   .empty-btn {
     .btn {
       width: 224px;
       height: 56px;
       border-radius: 8px 8px 8px 8px;
-      background: #7853b2;
+      background: #EC6A2B;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 18px;

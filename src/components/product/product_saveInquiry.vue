@@ -1,7 +1,7 @@
 <template>
   <div class="modal-container">
     <el-dialog
-      title="量大购买需求咨询"
+      title="Large Order Inquiry"
       width="800px"
       custom-class="inquiry-modal-wrap"
       :close-on-click-modal="false"
@@ -12,23 +12,23 @@
         <!-- 产品信息 -->
         <div class="form-section">
           <div class="form-item">
-            <label class="form-label">产品名称：</label>
+            <label class="form-label">Product Name</label>
             <div class="form-input">
               <el-input
                 v-model="form.productName"
                 readonly
-                placeholder="产品名称"
+                placeholder="Product Name"
               />
             </div>
           </div>
 
           <div class="form-item">
-            <label class="form-label">产品编号：</label>
+            <label class="form-label">serial number</label>
             <div class="form-input">
               <el-input
                 v-model="form.productCode"
                 readonly
-                placeholder="产品编号"
+                placeholder="serial number"
               />
             </div>
           </div>
@@ -37,7 +37,10 @@
         <!-- 所需规格 -->
         <div class="form-section">
           <div class="form-item">
-            <label class="form-label">所需规格：<i style="color: red;">*</i></label>
+            <label class="form-label"
+              >Specifications
+              <!-- <i style="color: red">*</i> -->
+            </label>
             <div class="spec-list">
               <div
                 class="spec-item"
@@ -70,13 +73,13 @@
         <!-- 需求描述 -->
         <div class="form-section">
           <div class="form-item">
-            <label class="form-label">需求描述：<i style="color: red;">*</i></label>
+            <label class="form-label"> Describe the requirements</label>
             <div class="form-input">
               <el-input
                 v-model="form.note"
                 type="textarea"
                 :rows="4"
-                placeholder="可描述您的需求"
+                placeholder="Describe the requirements"
                 maxlength="300"
                 show-word-limit
               />
@@ -87,36 +90,51 @@
         <!-- 联系信息 -->
         <div class="form-section">
           <div class="form-item">
-            <label class="form-label">企业名称：</label>
-            <!-- <i style="color: red;">*</i> -->
+            <label class="form-label"
+              ><i style="color: red">*</i>Company Name</label
+            >
             <div class="form-input">
               <el-input
                 v-model="form.companyName"
-                placeholder="请输入您的企业名称"
+                placeholder="Enter your company name"
                 clearable
               />
             </div>
           </div>
 
           <div class="form-item">
-            <label class="form-label">联系电话：</label>
-            <!-- <i style="color: red;">*</i> -->
+            <label class="form-label"
+              ><i style="color: red">*</i> Telephone</label
+            >
             <div class="form-input">
               <el-input
                 v-model="form.mobile"
-                placeholder="请输入您的手机号"
+                placeholder="Enter your phone number"
                 clearable
               />
             </div>
           </div>
 
           <div class="form-item">
-            <label class="form-label">联系人：</label>
-            <!-- <i style="color: red;">*</i> -->
+            <label class="form-label"
+              ><i style="color: red">*</i>Contact Person Name</label
+            >
             <div class="form-input">
               <el-input
                 v-model="form.contact"
-                placeholder="请输入您的姓名"
+                placeholder="Enter your name"
+                clearable
+              />
+            </div>
+          </div>
+          <div class="form-item">
+            <label class="form-label"
+              ><i style="color: red">*</i>Mail Address</label
+            >
+            <div class="form-input">
+              <el-input
+                v-model="form.mail"
+                placeholder="Enter your mail address"
                 clearable
               />
             </div>
@@ -133,13 +151,15 @@
               :loading="submitting"
               size="medium"
             >
-              提交
+              SUBMIT
             </el-button>
           </div>
           <div class="contact-service">
-            <img src="@img/foot/foot-mobile.png" alt="" />
-            <span>联系客服</span>
-            <span class="phone-number">400-888-888</span>
+            <div class="flex-center">
+              <span>Contact Us</span>
+              <span class="phone-number">400-888-888</span>
+            </div>
+            <img src="@img/product/detail-service.png" alt="" />
           </div>
         </div>
       </span>
@@ -343,8 +363,7 @@ export default {
 <style scoped lang="less">
 /deep/ .el-dialog__header {
   padding: 16px 24px;
-  border-bottom: 1px solid #eee;
-  background: #f7f7f7;
+  background: #fff;
 
   font-family: Poppins, Poppins;
   font-weight: 600;
@@ -361,8 +380,7 @@ export default {
 }
 
 /deep/ .el-dialog__footer {
-  padding: 20px 30px;
-  border-top: 1px solid #eee;
+  padding: 0px 30px 20px 30px;
 }
 
 .inquiry-modal-wrap {
@@ -376,12 +394,16 @@ export default {
         margin-bottom: 16px;
 
         .form-label {
-          min-width: 100px;
-          font-size: 14px;
-          color: #333;
-          line-height: 32px;
+          font-family: Poppins, Poppins;
+          width: 155px;
+          font-size: 18px;
+          color: #1e262e;
           margin-right: 12px;
-          flex-shrink: 0;
+          text-align: right;
+
+          i {
+            margin-right: 5px;
+          }
         }
 
         .form-input {
@@ -390,6 +412,10 @@ export default {
           .el-input,
           .el-textarea {
             width: 100%;
+          }
+
+          /deep/ .el-input__inner {
+            height: 50px;
           }
 
           .el-textarea__inner {
@@ -448,24 +474,27 @@ export default {
   }
 
   .footer-content {
-    margin-top: 40px;
     .contact-service {
-      img {
-        width: 29px;
-        margin-right: 7px;
-      }
       width: 100%;
-      margin-top: 70px;
+      margin-top: 40px;
       display: flex;
-      align-items: flex-end;
-      justify-content: flex-end;
+      justify-content: space-between;
+
+      font-family: Poppins, Poppins;
+      font-weight: 600;
       font-size: 20px;
-      color: #1F1F1F;
-      font-weight: bold;
+      color: #00306b;
 
       .phone-number {
-        margin-left: 8px;
-        color: #7853b2;
+        font-family: Poppins, Poppins;
+        font-weight: 600;
+        font-size: 30px;
+        color: #ec6a2b;
+        margin-left: 10px;
+      }
+      img {
+        width: 57px;
+        height: 57px;
       }
     }
 
@@ -474,12 +503,12 @@ export default {
         width: 150px;
         height: 46px;
         border-radius: 4px 4px 4px 4px;
-        background: #7853b2;
-        border-color: #7853b2;
+        background: #ec6a2b;
+        border-color: #ec6a2b;
 
         &:hover {
-          background: #6a4a9a;
-          border-color: #6a4a9a;
+          background: #ec6a2b;
+          border-color: #ec6a2b;
         }
       }
     }
@@ -487,4 +516,8 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/modals/product_add_cart_success_modal.less"></style>
+<style
+  scoped
+  lang="less"
+  src="@/assets/h5css/modals/product_add_cart_success_modal.less"
+></style>

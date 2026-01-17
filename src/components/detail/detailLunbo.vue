@@ -87,28 +87,6 @@
         </div> -->
 
     <!-- 缩略图 -->
-
-    <el-dialog
-      custom-class="cd-img"
-      :visible.sync="centerDialogVisible"
-      width="1200px"
-      @close="close"
-      center
-    >
-      <div class="img">
-        <video
-          width="100%"
-          height="100%"
-          ref="video"
-          muted
-          autoplay
-          controls
-          style="object-fit: fill"
-        >
-          <source :src="imgVideoList" type="video/mp4" />
-        </video>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -387,6 +365,7 @@ export default {
 }
 
 .slt-wrap {
+  width: 120px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

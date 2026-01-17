@@ -1995,6 +1995,7 @@ export default {
         font-weight: bold;
         font-size: 30px;
         border-bottom-right-radius: 200px;
+        border-top-left-radius: 40px;
         img {
           width: 48px;
         }

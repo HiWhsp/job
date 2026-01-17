@@ -183,8 +183,8 @@ body {
 
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-  background: #7853B2!important;
-  border-color: #7853B2!important;
+  background: #00306B!important;
+  border-color: #00306B!important;
 }
 
 .pagination-box {
@@ -331,11 +331,11 @@ button {
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled):hover {
-  color: #7853B2!important;
+  color: #EC6A2B!important;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #7853B2!important;
+  background-color: #EC6A2B!important;
   color: #fff !important;
 }
 
@@ -433,14 +433,14 @@ button {
   }
 
   // 复选框样式
-  .el-checkbox__inner {
-    width: 14px !important;
-    height: 14px !important;
+  /deep/ .el-checkbox__inner {
+    width: 28px !important;
+    height: 28px !important;
   }
 
   .el-checkbox__inner::after {
     width: 3px !important;
-    height: 8px !important;
+    height: 12px !important;
     left: 4px !important;
   }
 

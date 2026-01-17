@@ -1,7 +1,7 @@
 <template>
   <div class="modal-container">
     <el-dialog
-      :title="number + '件商品加入购物车'"
+      :title="number + ' items added to cart'"
       width="568px"
       custom-class="cus-modal-wrap"
       :close-on-click-modal="true"
@@ -12,19 +12,20 @@
         <div class="tip-box">
           <img src="@img/product/product-add-success.png" alt />
         </div>
-        <div class="text-box-1">该商品已成功加入购物车</div>
+        <div class="text-box-1">Successfully added to cart!</div>
         <div class="text-box-2">
-          购物车共 <span class="number">{{ vuex_cart_number }}</span> 件商品
+          There are <span class="number">{{ vuex_cart_number }}</span> items in
+          the cart
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <div class="btns flex-center">
           <button class="btn btn-ripple btn-bg" @click="$router.push('/cart')">
-            查看购物车
+            VIEW MY CART
           </button>
-          <!-- <button class="btn btn-ripple" @click="handle_xjgw">
-            继续购物
-          </button> -->
+          <button class="btn btn-ripple" @click="handle_xjgw">
+            Continue shopping
+          </button>
         </div>
       </span>
     </el-dialog>
@@ -55,30 +56,18 @@ export default {
       this.show_modal = true;
 
       // 3秒后显示提示信息
-setTimeout(() => {
-console.log("3秒后执行此代码");
-      this.show_modal = false;
-
-}, 3000);
-      
+      // setTimeout(() => {
+      //   console.log("3秒后执行此代码");
+      //   this.show_modal = false;
+      // }, 3000);
     },
     onBeforeClose() {
       this.show_modal = false;
     },
-    handle_xjgw(){
+    handle_xjgw() {
       this.show_modal = false;
 
-      console.log('继续购物')
-        window.close();
-      return
-     if (navigator.userAgent.includes("Firefox") || navigator.userAgent.includes("Chrome")) {
-        window.location.href = "about:blank";
-        window.close();
-      } else {
-        window.opener = null;
-        window.open("", "_self");
-        window.close();
-      }
+      window.open("/product-xieyi", "__blank", "", false);
     },
   },
 };
@@ -127,19 +116,19 @@ console.log("3秒后执行此代码");
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: bold;
       font-size: 20px;
-      color: #1F1F1F;
+      color: #1f1f1f;
     }
 
     .text-box-2 {
       margin-top: 18px;
-     font-family: Microsoft YaHei, Microsoft YaHei;
+      font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 16px;
       color: #333;
 
       .number {
         font-weight: bold;
-        color: #7853B2;
+        color: #7853b2;
       }
     }
   }
@@ -149,28 +138,31 @@ console.log("3秒后执行此代码");
   button {
     margin: 0 8px;
 
-    width: 150px;
-    height: 46px;
-    background: #fffefe;
+    padding: 0 25px;
+    height: 52px;
+    background: #00306B;
     border-radius: 4px 4px 4px 4px;
-    border: 1px solid #7853b2;
     font-family: Microsoft YaHei, Microsoft YaHei;
-    font-weight: 400;
-    font-size: 18px;
-    color: #7853b2;
+    font-weight: bold;
+    font-size: 20px;
+    color: #fff;
   }
 
   .btn-bg {
-    width: 150px;
-    height: 46px;
-    background: #7853b2;
+    padding: 0 25px;
+    height: 52px;
+    background: #EC6A2B;
     border-radius: 4px 4px 4px 4px;
     font-family: Microsoft YaHei, Microsoft YaHei;
-    font-weight: 400;
+    font-weight: bold;
     font-size: 18px;
     color: #ffffff;
   }
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/modals/product_add_cart_success_modal.less"></style>
+<style
+  scoped
+  lang="less"
+  src="@/assets/h5css/modals/product_add_cart_success_modal.less"
+></style>

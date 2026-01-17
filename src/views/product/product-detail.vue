@@ -38,36 +38,15 @@
           <div class="ctx-top">
             <div class="ctx-left">
               <!-- 商品预览 -->
-              <!-- <carouselComponent :swiperImgs="swiperImgs" /> -->
               <div class="preview-wrap">
                 <detailLunbo :imageList="detailImages" />
               </div>
-              <!-- <div class="detail-act-list">
-                <div class="act-item">
-                  <img src="@img/product/icon-zhengpin.png" alt="" />
-                  <span>正品保障</span>
-                </div>
-                <div class="act-item">
-                  <img src="@img/product/icon-shouhou.png" alt="" />
-                  <span>无忧售后</span>
-                </div>
-                <div class="act-item" @click="do_open_share()">
-                  <img src="@img/product/icon-share.png" alt="" />
-                  <span>分享</span>
-                </div>
-                <div class="act-item" @click="do_fav_toggle()">
-                  <img v-if="if_shoucang" src="@img/product/icon-fav1.png" alt="" />
-                  <img v-else src="@img/product/icon-fav0.png" alt="" />
-                  <span>{{ if_shoucang ? "取消收藏" : "收藏商品" }}</span>
-                </div>
-              </div> -->
             </div>
 
             <div class="ctx-right">
               <div class="detail-title flex">
                 <div class="title-text flex">
                   {{ info.title }}
-                  <!-- <img v-if="info.isThird == 1" src="@img/product/sanlei.png" alt="" /> -->
                 </div>
               </div>
               <div class="detail-desc">
@@ -93,63 +72,25 @@
                   </div>
                   <div class="item">
                     <span class="date">5-7 days delivery! </span>
-                    <img src="@/assets/img/product/icon-fav0.png" v-if="!if_shoucang" alt="" @click="do_fav_toggle()" />
-                    <img src="@/assets/img/product/icon-fav1.png" v-else alt="" @click="do_fav_toggle()" />
+                    <img
+                      src="@/assets/img/product/icon-fav0.png"
+                      v-if="!if_shoucang"
+                      alt=""
+                      @click="do_fav_toggle()"
+                    />
+                    <img
+                      src="@/assets/img/product/icon-fav1.png"
+                      v-else
+                      alt=""
+                      @click="do_fav_toggle()"
+                    />
                   </div>
-                  <!-- <div class="item" v-if="info.discountSale">
-                    <div class="label">折扣价格</div>
-                    <div class="vals">
-                      <div class="val">
-                        {{ vuex_huobi }}{{ info.discountSale || 0 }}
-                      </div>
-                    </div>
-                  </div> -->
                 </div>
               </div>
-              <!-- <div class="misc-detail">
-                <div class="misc-sector">
-                  <div>商品编号：</div>
-                  <div>{{ info.productNo || "--" }}</div>
-                </div>
-                <div class="misc-sector">
-                  <div>起订量：</div>
-                  <div>{{ info.minNum }}</div>
-                </div>
-                <div class="misc-sector">
-                  <div>品牌名称：</div>
-                  <div>{{ info.brand.title || "--" }}</div>
-                </div>
-                <div class="misc-sector">
-                  <div>单位：</div>
-                  <div>{{ info.unit }}</div>
-                </div>
-                <div class="misc-sector">
-                  <div>库存：</div>
-                  <div>{{ view_info.kucun || "--" }}</div>
-                </div>
-                <div class="misc-sector">
-                  <div>质量评价：</div>
-                  <div>{{ info.zhiliangPingjia? info.zhiliangPingjia : '--' }}</div>
-                </div>
-                <div class="misc-sector">
-                  <div>销量：</div>
-                  <div>{{ info.orders }}</div>
-                </div>
-                <div class="misc-sector">
-                  <div>货期：</div>
-                  <div>
-                    {{
-                      view_info.kucun > 0
-                        ? "48小时内发货"
-                        : info.delivery_date || "请联系客服发货"
-                    }}
-                  </div>
-                </div>
-              </div> -->
 
               <div class="other-box">
                 <div class="sku-box column-flex-center">
-                  <div class="flex-between" style="width: 100%">
+                  <!-- <div class="flex-between" style="width: 100%">
                     <div class="sku-label">选择规格</div>
                     <div
                       class="sku-tip"
@@ -161,165 +102,112 @@
                       <i class="el-icon-warning"></i>
                       量大优惠，请关注以下单价变化
                     </div>
-                  </div>
+                  </div> -->
                   <div class="sku-list">
                     <div
-                      class="sku-item flex-between"
-                      :class="{ active: getSkuQuantity(item) > 0 }"
+                      class="sku-item"
                       v-for="(item, index) in sku_list"
                       :key="index"
+                      @click="selectSku(item)"
                     >
-                      <!-- @click="clickSkuItem(item)" -->
-                      <div>
+                      <div class="sku-item-text">
                         <div class="text">
-                          <el-image
-                            style="width: 40px; height: 40px"
-                            :src="item.image"
-                            :preview-src-list="[item.image]"
-                          ></el-image>
-                          <span> {{ item.keyVals }}</span>
-                        </div>
-                        <div class="tier-pricing">
-                          <span
-                            v-for="(cit, cidx) in item.priceConfig"
-                            :key="cidx"
-                            style="margin-right: 8px"
+                          <div
+                            class="sku-item-image"
+                            :class="{
+                              active: selectedSkuId === item.inventoryId,
+                            }"
                           >
-                            <template v-if="cit.min && cit.max">
-                              {{ cit.min }}-{{ cit.max + info.unit }}¥{{
-                                cit.price
-                              }}
-                            </template>
-                            <template v-else>
-                              ≥{{ cit.min + info.unit }}¥{{ cit.price }}
-                            </template>
-                          </span>
-
-                          <!-- 1-50盒¥{{ item.priceSale }} 50-100盒 ¥{{
-                            item.priceSale2 || item.priceSale
-                          }}
-                          ≥101盒¥{{ item.priceSale3 || item.priceSale }} -->
+                            <el-image :src="item.image"></el-image>
+                          </div>
+                          <span> </span>
                         </div>
                       </div>
-
-                      <div class="sku-details flex-center">
-                        <div class="price-info">
-                          <div class="current-price">
-                            ¥{{ getCurrentPrice(item) }}/{{ info.unit }}
+                    </div>
+                  </div>
+                  <div class="sku-details-box">
+                    <div
+                      v-for="(item, index) in sku_list"
+                      :key="index"
+                      class="sku-details"
+                    >
+                      <template v-if="selectedSkuId === item.inventoryId">
+                        <div
+                          class="key-vals"
+                          :class="{
+                            active: selectedSkuId === item.inventoryId,
+                          }"
+                        >
+                          {{ item.keyVals }}
+                        </div>
+                        <!-- 操作 -->
+                        <div class="operation-box">
+                          <div class="operation-item">
+                            <div class="price-info">
+                              <div class="price-info-text">Quantity:</div>
+                              <div class="current-price">
+                                {{ vuex_huobi }}{{ getCurrentPrice(item) }}/{{
+                                  info.unit || "pack"
+                                }}
+                              </div>
+                            </div>
+                            <!-- <div class="stock-info">库存{{ item.kucun }}</div> -->
+                            <div class="quantity-control">
+                              <div class="quantity-input">
+                                <div
+                                  class="btn minus"
+                                  :disabled="getSkuQuantity(item) <= 0"
+                                  @click.stop="decreaseSkuQuantity(item)"
+                                >
+                                  <img
+                                    src="@img/product/num-minus.png"
+                                    alt=""
+                                  />
+                                </div>
+                                <input
+                                  type="number"
+                                  v-model="sku_quantities[item.inventoryId]"
+                                  @click.stop
+                                  min="0"
+                                  :max="item.kucun"
+                                  @blur="onBlurSkuQuantity(item)"
+                                  @input="
+                                    updateSkuQuantity(item, $event.target.value)
+                                  "
+                                />
+                                <div
+                                  class="btn plus"
+                                  :disabled="getSkuQuantity(item) >= item.kucun"
+                                  @click.stop="increaseSkuQuantity(item)"
+                                >
+                                  <img src="@img/product/num-plus.png" alt="" />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="operation-item">
+                            <div class="operation-item-tip">
+                              Increased quantity with lower unit price, pay
+                              attention on the price change.
+                            </div>
                           </div>
                         </div>
-                        <div class="stock-info">库存{{ item.kucun }}</div>
-                        <div class="quantity-control">
-                          <div class="quantity-input">
-                            <div
-                              class="btn minus"
-                              :disabled="getSkuQuantity(item) <= 0"
-                              @click.stop="decreaseSkuQuantity(item)"
-                            >
-                              <img src="@img/product/num-minus.png" alt="" />
-                            </div>
-
-                            <!-- :value="getSkuQuantity(item)" -->
-                            <!-- @input="
-                                updateSkuQuantity(item, $event.target.value)
-                              " -->
-                            <!-- @blur="onBlurSkuQuantity(item)" -->
-                            <input
-                              type="number"
-                              v-model="sku_quantities[item.inventoryId]"
-                              @click.stop
-                              min="0"
-                              :max="item.kucun"
-                              @blur="onBlurSkuQuantity(item)"
-                              @input="
-                                updateSkuQuantity(item, $event.target.value)
-                              "
-                            />
-
-                            <div
-                              class="btn plus"
-                              :disabled="getSkuQuantity(item) >= item.kucun"
-                              @click.stop="increaseSkuQuantity(item)"
-                            >
-                              <img src="@img/product/num-plus.png" alt="" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      </template>
                     </div>
                   </div>
                 </div>
-
-                <!-- <div class="shuliang-box">
-                  <div class="sel-num-title">订购方式</div>
-                  <div class="shuliang">
-                    <span class="kucun">先款后货</span>
-                  </div>
-                </div> -->
-                <!-- <div class="yunfei-box flex">
-                  <div class="label">运费</div>
-                  <div class="value">满300包邮 不到300运费15元</div>
-                </div> -->
-                <!-- <div class="dinghuo-box flex">
-                  <div class="label">支付方式：</div>
-                  <div class="value">
-                    <div class="" v-if="info.dinggouType">
-                      {{ info.dinggouType }}
-                    </div>
-                    <div class="flex" v-else>
-                      <div class="flex">
-                        <img
-                          src="@/assets/img/pay/type-xianxia.png"
-                          style="height: 28px; margin-right: 8px"
-                          alt=""
-                        />
-                        线下支付
-                      </div>
-                      &nbsp;&nbsp;&nbsp;
-                      <div class="flex">
-                        <img
-                          src="@/assets/img/pay/type-wx.png"
-                          style="height: 28px; margin-right: 8px"
-                          alt=""
-                        />
-                        在线支付
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
-                <!-- <div class="dinghuo-box flex">
-                  <div class="label">配送至：</div>
-                  <area_select
-                    ref="area_select"
-                    @change="changeSelectAddress"
-                  /> -->
-                <!-- <div class="value"><el-button @click="do_pay_now()">请选择</el-button></div> -->
-                <!-- </div> -->
                 <div class="btn-box flex">
-                  <div class="left-buttons">
-                    <!-- <button class="btn-ripple flex-center btn-buy" @click="do_pay_now()">
-                      <img src="@img/product/detail-buy.png" alt="" class="cart" />
-                      立即购买
-                    </button>
-                    <button class="btn-ripple flex-center btn-add-cart" @click="do_add_cart()">
-                      <img src="@img/product/detail-cart.png" alt="" class="cart" />
-                      加入购物车
-                    </button> -->
-                    <button class="contact-service" @click="openInquiryModal">
-                      <img src="@img/product/chat.png" alt="" />
-                      批发请联系客服
-                    </button>
-                  </div>
-
                   <div class="order-summary">
                     <div class="flex-center box">
                       <div class="summary-item">
-                        已选 <span>{{ orderSummary.selectedItems }}</span
-                        >款<span>{{ orderSummary.totalQuantity }}</span
-                        >件
+                        Selected<span>{{ orderSummary.selectedItems }}</span
+                        >items<span>{{ orderSummary.totalQuantity }}</span
+                        >Pack
                       </div>
                       <div class="summary-item">
-                        实付金额<span>¥{{ orderSummary.finalAmount }}</span>
+                        Actual amount<span>{{
+                          vuex_huobi + "" + orderSummary.finalAmount
+                        }}</span>
                       </div>
                       <div
                         class="summary-item"
@@ -330,12 +218,10 @@
                         </div>
                       </div>
                     </div>
-
-                    <!-- <button class="contact-service" @click="openInquiryModal">
-                      <img src="@img/product/chat.png" alt="" />
-                      批发请联系客服
-                    </button> -->
                     <div class="left-buttons2">
+                      <button class="contact-service" @click="openInquiryModal">
+                        LARGE ORDER GET COMPETITIVE QUOTE
+                      </button>
                       <button
                         class="btn-ripple flex-center btn-buy"
                         @click="do_pay_now()"
@@ -345,7 +231,7 @@
                           alt=""
                           class="cart"
                         />
-                        立即购买
+                        SHOP NOW
                       </button>
                       <button
                         class="btn-ripple flex-center btn-add-cart"
@@ -356,7 +242,7 @@
                           alt=""
                           class="cart"
                         />
-                        加入购物车
+                        ADD TO CART
                       </button>
                     </div>
                   </div>
@@ -374,7 +260,7 @@
 
           <div class="ctx-bottom-container">
             <div class="bottom-left">
-              <div class="main-title">推荐产品</div>
+              <div class="main-title">Recommended Products</div>
               <div class="product-list">
                 <div
                   class="product-item"
@@ -387,11 +273,17 @@
                   </div>
                   <div class="info-box">
                     <div class="title ellipsis-2">{{ item.title }}</div>
-                    <div class="pirce-box">
-                      ￥{{ vuex_is_login ? item.priceSale : "---" }}
+                    <div class="price-box">
+                      <div class="pirce-item-value">
+                        {{ vuex_huobi + "" + item.priceSale }}
+                      </div>
+                      <div class="market-price">
+                        {{ item.priceMarket }}
+                      </div>
                     </div>
-                    <div class="market-price">
-                      {{ item.priceMarket }}
+                    <div class="description-box">
+                      <div class="description-item">FDA</div>
+                      <div class="description-item">ISO13485</div>
                     </div>
                   </div>
                 </div>
@@ -407,14 +299,14 @@
                       @click="togglePanel('详情')"
                       :class="active_panel == '详情' ? 'active' : ''"
                     >
-                      商品详情
+                      Product Specifications
                     </div>
                     <div
                       class="nav-item"
                       @click="togglePanel('资质证书')"
                       :class="active_panel == '资质证书' ? 'active' : ''"
                     >
-                      资质证书
+                      Qualification & Certificates
                     </div>
 
                     <div
@@ -422,8 +314,8 @@
                       @click="togglePanel('评价')"
                       :class="active_panel == '评价' ? 'active' : ''"
                     >
-                      累计评价
-                      <span class="count-num">{{ info.commentNum }}</span>
+                      Comments
+                      <!-- <span class="count-num">{{ info.commentNum }}</span> -->
                     </div>
 
                     <!-- <el-popover placement="bottom" trigger="click">
@@ -486,7 +378,7 @@
                     >
                       <el-pagination
                         background
-                        layout="total, prev, pager, next"
+                        layout="prev, pager, next"
                         @current-change="changePage_comment"
                         :current-page.sync="pagination.page"
                         :page-size="pagination.pageNum"
@@ -624,6 +516,9 @@ export default {
       //
       if_shoucang: false,
       related_products: [],
+
+      // 选中的SKU ID（单选）
+      selectedSkuId: null,
     };
   },
 
@@ -705,15 +600,6 @@ export default {
         }
       });
       const finalAmount = totalAmount; //totalAmount - discount;
-
-      // console.log("orderSummary calculated:", {
-      //   selectedItems,
-      //   totalQuantity,
-      //   totalAmount,
-      //   discount,
-      //   finalAmount,
-      // });
-      console.log("[]", finalAmount);
 
       return {
         selectedItems,
@@ -1073,6 +959,7 @@ export default {
                 : v.priceConfig,
             kucun: +v.kucun,
             key_vals: v.key_vals,
+            keyVals: v.keyVals || v.key_vals,
           });
         });
       } else {
@@ -1082,6 +969,7 @@ export default {
             image: this.info.images[0],
             inventoryId: this.info.inventoryId,
             key_vals: this.info.key_vals == "无" ? "默认" : this.info.key_vals,
+            keyVals: this.info.key_vals == "无" ? "默认" : this.info.key_vals,
             kucun: +this.info.kucun,
             priceMarket: this.info.priceMarket,
             priceSale: this.info.priceSale,
@@ -1096,9 +984,21 @@ export default {
       //单规格商品 默认勾选
       if (sku_list.length == 1) {
         this.sku_select = sku_list[0];
+        this.selectedSkuId = sku_list[0].inventoryId;
       } else {
         // this.sku_select = {};
         this.sku_select = sku_list.find((v) => v.inventoryId == this.id) || {};
+        // 如果有匹配的SKU，设置为选中，否则选中第一个有库存的
+        if (this.sku_select.inventoryId) {
+          this.selectedSkuId = this.sku_select.inventoryId;
+        } else {
+          const firstAvailable = sku_list.find((v) => v.kucun > 0);
+          if (firstAvailable) {
+            this.selectedSkuId = firstAvailable.inventoryId;
+          } else if (sku_list.length > 0) {
+            this.selectedSkuId = sku_list[0].inventoryId;
+          }
+        }
       }
       this.sku_list = sku_list;
 
@@ -1134,6 +1034,19 @@ export default {
         if (this.selected_num > item.kucun) {
           this.selected_num = item.kucun;
         }
+      }
+    },
+
+    // 选择SKU（单选）
+    selectSku(item) {
+      // 如果点击的是已选中的SKU，取消选中
+      if (this.selectedSkuId === item.inventoryId) {
+        this.selectedSkuId = null;
+        // 不清零数量，保留用户输入的值
+      } else {
+        // 选中新的SKU
+        this.selectedSkuId = item.inventoryId;
+        // 不清除其他SKU的数量，保留用户之前输入的值
       }
     },
 
@@ -1176,12 +1089,12 @@ export default {
       if (!this.sku_quantities[item.inventoryId]) {
         this.$set(this.sku_quantities, item.inventoryId, 0);
       }
-      console.log(
-        "getSkuQuantity for",
-        item.inventoryId,
-        ":",
-        this.sku_quantities[item.inventoryId]
-      );
+      // console.log(
+      //   "getSkuQuantity for",
+      //   item.inventoryId,
+      //   ":",
+      //   this.sku_quantities[item.inventoryId]
+      // );
       // 确保返回数值类型，避免字符串拼接问题
       return parseInt(this.sku_quantities[item.inventoryId]) || 0;
     },
@@ -1989,7 +1902,7 @@ export default {
             padding: 0px;
             background-repeat: no-repeat;
             background-size: 100% 100%;
-            border-bottom: 1px solid #DEDEDE;
+            border-bottom: 1px solid #dedede;
 
             .list {
               display: flex;
@@ -2062,7 +1975,6 @@ export default {
           }
 
           .other-box {
-            padding-left: 20px;
           }
 
           .sku-box {
@@ -2093,142 +2005,188 @@ export default {
           .sku-list {
             flex: 1;
             display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 100%;
-            margin-top: 20px;
-            border-bottom: 1px solid #d6d6d6;
-            padding-bottom: 10px;
+            gap: 8px;
 
             .sku-item {
-              // padding: 10px;
-              // border: 1px solid #ddd;
-              // border-radius: 8px;
               background: #fff;
               transition: all 0.3s;
               cursor: pointer;
+              border-radius: 8px;
+              border: 2px solid transparent;
 
-              &:hover {
-                // border-color: #7853b2;
-                // box-shadow: 0 2px 8px rgba(120, 83, 178, 0.1);
-              }
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              width: 100%;
 
-              &:disabled {
-                cursor: not-allowed;
-                opacity: 0.6;
-                color: #ccc;
-              }
-
-              &.active {
-                // border: 1px solid #7853b2;
-                // box-shadow: 0 0 10px rgba(120, 83, 178, 0.2);
-                // background: #f8f5ff;
-
-                .text {
-                  // color: #7853b2;
-                }
-
-                .price {
-                  // color: #7853b2;
-                }
+              .sku-item-text {
+                display: flex;
+                align-items: center;
+                flex: 1;
               }
 
               .text {
                 font-size: 18px;
-                // font-weight: 500;
                 color: #1f1f1f;
-                // margin-bottom: 10px;
                 display: flex;
+                flex-direction: column;
                 align-items: center;
-                span {
-                  margin-left: 20px;
+                gap: 15px;
+
+                .sku-item-image {
+                  width: 80px;
+                  height: 80px;
+                  border: 1px solid transparent;
+                  border-radius: 6px;
                 }
-              }
-
-              .tier-pricing {
-                font-size: 16px;
-                color: #9b9b9b;
-                // margin-bottom: 15px;
-                // line-height: 1.5;
-              }
-
-              .sku-details {
-                // display: flex;
-                // justify-content: space-between;
-                // align-items: center;
-
-                .price-info {
-                  display: flex;
-                  flex-direction: column;
-                  gap: 5px;
-
-                  .current-price {
-                    font-size: 16px;
-                    color: #7853b2;
+                .active {
+                  width: 80px;
+                  height: 80px;
+                  border: 1px solid #ec6a2b;
+                  border-radius: 6px;
+                }
+                .el-image {
+                  width: 100%;
+                  height: 100%;
+                  border-radius: 6px;
+                  img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 6px;
                   }
                 }
+              }
+            }
+          }
 
-                .stock-info {
-                  padding: 0 13px 0 25px;
-                  font-size: 16px;
+          .sku-details-box {
+            width: 100%;
+            .sku-details {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 10px;
+
+              .key-vals {
+                height: 36px;
+                line-height: 36px;
+                padding: 0 10px;
+                background: #ffffff;
+                border-radius: 6px;
+                border: 1px solid #707070;
+                font-size: 18px;
+                color: #242424;
+                font-weight: bold;
+                cursor: pointer;
+                &.active {
+                  background: #fff8f5;
+                  border: 2px solid #ec6a2b;
+                }
+              }
+
+              .operation-box {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                border-top: 1px solid #dedede;
+                border-bottom: 1px solid #dedede;
+                margin-top: 10px;
+                padding: 20px 0;
+                .operation-item {
+                  width: 100%;
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  gap: 10px;
+                }
+
+                .operation-item-tip {
+                  font-family: Poppins, Poppins;
+                  font-weight: 400;
+                  font-size: 20px;
+                  color: #ec6a2b;
+                  margin-top: 30px;
+                }
+              }
+
+              .price-info {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+
+                .price-info-text {
+                  font-size: 20px;
                   color: #505050;
                 }
 
-                .quantity-control {
+                .current-price {
+                  font-size: 20px;
+                  color: #242424;
+                }
+              }
+
+              .stock-info {
+                font-size: 16px;
+                color: #505050;
+                white-space: nowrap;
+              }
+
+              .quantity-control {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                .quantity-input {
                   display: flex;
                   align-items: center;
-                  gap: 10px;
+                  border: 1px solid #ddd;
+                  border-radius: 4px;
+                  overflow: hidden;
 
-                  .quantity-input {
+                  .btn {
                     display: flex;
+                    justify-content: center;
                     align-items: center;
-                    border: 1px solid #ddd;
-                    border-radius: 4px;
-                    overflow: hidden;
+                    width: 42px;
+                    height: 42px;
+                    background: #f5f5f5;
+                    border: none;
+                    cursor: pointer;
+                    transition: background 0.3s;
 
-                    .btn {
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
-                      width: 32px;
-                      height: 32px;
-                      background: #f5f5f5;
-                      border: none;
-                      cursor: pointer;
-                      transition: background 0.3s;
-
-                      &:hover {
-                        background: #e0e0e0;
-                      }
-
-                      &:disabled {
-                        cursor: not-allowed;
-                        opacity: 0.5;
-                      }
-
-                      img {
-                        width: 12px;
-                        height: 12px;
-                      }
+                    &:hover {
+                      background: #e0e0e0;
                     }
 
-                    input {
-                      width: 60px;
-                      height: 32px;
-                      border: none;
-                      text-align: center;
-                      font-size: 14px;
-                      outline: none;
-                      background: #fff;
+                    &:disabled {
+                      cursor: not-allowed;
+                      opacity: 0.5;
+                    }
 
-                      &::-webkit-outer-spin-button,
-                      &::-webkit-inner-spin-button {
-                        -webkit-appearance: none;
-                      }
+                    img {
+                      width: 12px;
+                      height: 12px;
+                    }
+                  }
 
-                      &[type="number"] {
-                        -moz-appearance: textfield;
-                      }
+                  input {
+                    width: 60px;
+                    height: 42px;
+                    border: none;
+                    text-align: center;
+                    font-size: 14px;
+                    outline: none;
+                    background: #fff;
+
+                    &::-webkit-outer-spin-button,
+                    &::-webkit-inner-spin-button {
+                      -webkit-appearance: none;
+                    }
+
+                    &[type="number"] {
+                      -moz-appearance: textfield;
                     }
                   }
                 }
@@ -2354,36 +2312,27 @@ export default {
               margin-top: 42px;
               display: flex;
               gap: 20px;
-              .contact-service {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 224px;
-                height: 56px;
-                border-radius: 8px 8px 8px 8px;
-                border: 1px solid #7853b2;
-                font-size: 20px;
-                font-weight: bold;
-                color: #7853b2;
-                cursor: pointer;
-                transition: all 0.3s;
-                // font-weight: bold;
-
-                &:hover {
-                  background: #e0e0ff;
-                }
-
-                img {
-                  width: 24px;
-                  height: 24px;
-                  margin-right: 2px;
-                }
-              }
             }
 
             .left-buttons2 {
               display: flex;
               gap: 20px;
+
+              .contact-service {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 284px;
+                height: 80px;
+                border-radius: 10px;
+                background: #4891e9;
+                font-size: 20px;
+                font-weight: bold;
+                color: #fff;
+                cursor: pointer;
+                transition: all 0.3s;
+                padding: 0 20px;
+              }
               button {
                 font-size: 16px;
                 transition: 0.3s;
@@ -2394,7 +2343,7 @@ export default {
                 font-weight: bold;
                 color: #ffffff;
                 width: 224px;
-                height: 56px;
+                height: 80px;
 
                 .cart {
                   width: 24px;
@@ -2407,13 +2356,12 @@ export default {
               }
 
               .btn-buy {
-                background: #7853b2;
-
+                background: #ec6a2b;
                 font-family: Microsoft YaHei, Microsoft YaHei;
               }
 
               .btn-add-cart {
-                background: #fcb000;
+                background: #00306b;
 
                 img {
                   margin-right: 2px;
@@ -2454,8 +2402,8 @@ export default {
 
                 span {
                   font-size: 24px;
-                  color: #7853b2;
-                  padding: 0 1px;
+                  color: #ec6a2b;
+                  padding: 0 5px;
                 }
               }
             }
@@ -2472,15 +2420,12 @@ export default {
         .bottom-left {
           border: 1px solid #d6d6d6;
           margin-right: 24px;
-          width: 255px;
+          width: 384px;
           background: #fff;
           font-weight: 400;
           font-size: 16px;
           color: #333333;
-
-          .product-list {
-            padding: 12px 16px;
-          }
+          border-radius: 10px;
         }
 
         .bottom-right {
@@ -2488,9 +2433,6 @@ export default {
           overflow: hidden;
           background: #fff;
         }
-      }
-
-      .ctx-bottom {
       }
 
       .ctx-bottom-inner {
@@ -2518,51 +2460,29 @@ export default {
 }
 
 .bottom-nav {
-  background: #f9f9f9;
   position: relative;
-  border: 1px solid #ddd;
   display: flex;
-  height: 48px;
-  line-height: 48px;
-
+  height: 70px;
+  line-height: 70px;
+  border-bottom: 1px solid #dedede;
   .count-num {
     color: #7853b2;
   }
 
   .nav-item {
-    min-width: 100px;
     text-align: center;
     cursor: pointer;
     text-align: center;
-    margin-right: 10px;
-    // background: #fff;
-    font-size: 16px;
+    padding: 0 30px;
+    font-size: 24px;
     font-family: sans-serif;
     font-weight: 400;
     color: #000000;
 
-    &:last-child {
-      margin-right: 0;
-    }
-
     &.active {
-      font-weight: bold;
-      position: relative;
-      background: #7853b2;
-      color: #ffffff;
-
-      // &::after {
-      //   content: "";
-      //   position: absolute;
-      //   left: 50%;
-      //   transform: translate(-50%);
-      //   bottom: 0;
-      //   width: 40px;
-      //   height: 4px;
-      //   background: #eb0611;
-      //   border-radius: 50px 50px 50px 50px;
-      // }
-
+      background: #ec6a2b;
+      border-radius: 10px 10px 0px 0px;
+      color: #fff;
       .count-num {
         color: #fff;
       }
@@ -2824,38 +2744,22 @@ export default {
 
 .bottom-left {
   .main-title {
+    line-height: 70px;
+    height: 70px;
+    background: #00306b;
+    border-radius: 10px 10px 0px 0px;
+
+    font-family: Poppins, Poppins;
+    font-weight: 600;
+    font-size: 24px;
+    color: #ffffff;
     text-align: center;
-    height: 48px;
-    line-height: 48px;
-    background: #fcb000;
-    border-radius: 0px 0px 0px 0px;
-
-    position: relative;
-    border-bottom: 1px solid #d6d6d6;
-    line-height: 45px;
-    padding-left: 16px;
-    font-family: Microsoft YaHei, Microsoft YaHei;
-    font-weight: 400;
-    font-size: 16px;
-    color: #fff;
-
-    // &::after {
-    //   position: absolute;
-    //   content: "";
-    //   background: #333;
-    //   bottom: 0;
-    //   width: 96px;
-    //   left: 16px;
-    //   height: 2px;
-    // }
   }
 }
 
 .product-list {
+  padding: 34px 26px;
   .product-item {
-    padding-bottom: 12px;
-    border-bottom: 1px solid #d6d6d6;
-    margin-bottom: 20px;
     width: 100%;
     // height: 349px;
     background: #ffffff;
@@ -2868,9 +2772,8 @@ export default {
     }
 
     .poster-box {
-      margin: 0 auto;
-      width: 200px;
-      height: 200px;
+      width: 100%;
+      height: 334px;
 
       .poster {
         width: 100%;
@@ -2879,8 +2782,7 @@ export default {
     }
 
     .info-box {
-      padding: 10px 20px 0;
-
+      margin-top: 20px;
       .title {
         // white-space: nowrap;
         // text-overflow: ellipsis;
@@ -2890,18 +2792,40 @@ export default {
         color: #1f1f1f;
       }
 
-      .pirce-box {
-        // margin-top: 15px;
-
-        font-family: Microsoft YaHei, Microsoft YaHei;
-        font-weight: bold;
-        font-size: 20px;
-        color: #7853b2;
+      .price-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+        .pirce-item-value {
+          font-size: 30px;
+          color: #ec6a2b;
+          font-weight: bold;
+        }
+        .market-price {
+          font-size: 20px;
+          color: #5e5e5e;
+        }
       }
-      .market-price {
-        text-decoration-line: line-through;
-        color: #505050;
-        font-size: 14px;
+
+      .description-box {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        .description-item {
+          padding: 0 10px;
+          height: 30px;
+          border-radius: 5px;
+          border: 1px solid #00306b;
+          font-family: Poppins, Poppins;
+          font-weight: bold;
+          font-size: 22px;
+          color: #00306b;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
       }
     }
 

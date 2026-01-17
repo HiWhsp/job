@@ -1,7 +1,6 @@
 <template>
   <div class="modal-container">
     <el-dialog
-      title="提示"
       width="580px"
       custom-class="cus-modal-wrap"
       :close-on-click-modal="true"
@@ -9,22 +8,22 @@
       :before-close="onBeforeClose"
     >
       <div class="modal-inner">
-        <!-- <div class="tip-box">
-            <img src="@img/product/product-add-success.png" alt />
-          </div> -->
+        <div class="tip-box">
+          <img src="@img/product/tip.png" alt />
+        </div>
         <div class="text-box-1">{{ tip }}</div>
       </div>
       <span slot="footer" class="dialog-footer">
         <button class="btn btn-ripple btn-bg" @click="do_confirm()">
-          确认
+          Confirm
         </button>
-        <button class="btn btn-ripple" @click="show_modal = false">取消</button>
+        <button class="btn btn-ripple" @click="show_modal = false">Cancel</button>
       </span>
     </el-dialog>
   </div>
 </template>
-  
-  <script>
+
+<script>
 import { mapState } from "vuex";
 
 export default {
@@ -59,12 +58,11 @@ export default {
   },
 };
 </script>
-  
-  <style scoped lang="less">
+
+<style scoped lang="less">
 /deep/ .el-dialog__header {
   padding: 16px 24px;
-  border-bottom: 1px solid #eee;
-  background: #f7f7f7;
+  background: #fff;
 
   font-family: Poppins, Poppins;
   font-weight: 600;
@@ -90,17 +88,16 @@ export default {
     width: 150px;
     font-size: 18px;
     height: 46px;
-    background: #fffefe;
+    background: #00306B;
     border-radius: 4px 4px 4px 4px;
 
-    border: 1px solid #7853b2;
-    color: #7853b2;
+    color: #fff;
   }
 
   .btn-bg {
     width: 150px;
     height: 46px;
-    background: #7853b2;
+    background: #EC6A2B;
     border-radius: 4px 4px 4px 4px;
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;
@@ -114,12 +111,10 @@ export default {
     padding: 0;
     text-align: center;
 
-    .img-box {
-      img {
-        width: 150px;
-        height: 150px;
-        object-fit: contain;
-      }
+    img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
     }
 
     .text-box-1 {
@@ -140,6 +135,9 @@ export default {
   }
 }
 </style>
-  
-  <style scoped lang="less" src="@/assets/h5css/modals/product_add_cart_success_modal.less"></style>
-  
+
+<style
+  scoped
+  lang="less"
+  src="@/assets/h5css/modals/product_add_cart_success_modal.less"
+></style>

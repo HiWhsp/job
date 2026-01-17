@@ -12,16 +12,20 @@
         <div class="tip-box">
           <img src="@img/product/product-add-success.png" alt />
         </div>
-        <div class="text-box-1">您的采购需求提交成功</div>
-        <div class="text-box-2">客服会电话联系您</div>
+        <div class="text-box-1">
+          Your inquiry has been successfully submitted.
+        </div>
+        <div class="text-box-2">
+          Our customer service will contact you soon.
+        </div>
       </div>
-      <span slot="footer" class="dialog-footer">
+      <!-- <span slot="footer" class="dialog-footer">
         <div class="btns flex-center">
           <button class="btn btn-ripple btn-bg" @click="confirmClose">
             确定
           </button>
         </div>
-      </span>
+      </span> -->
     </el-dialog>
   </div>
 </template>
@@ -60,8 +64,7 @@ export default {
 <style scoped lang="less">
 /deep/ .el-dialog__header {
   padding: 16px 24px;
-  border-bottom: 1px solid #eee;
-  background: #f7f7f7;
+  background: #fff;
 
   font-family: Poppins, Poppins;
   font-weight: 600;
@@ -74,7 +77,7 @@ export default {
 }
 
 /deep/ .el-dialog__body {
-  padding: 34px 60px 30px;
+  padding: 34px 80px 30px;
 }
 
 /deep/ .el-dialog__footer {
@@ -88,28 +91,26 @@ export default {
     padding: 0;
     text-align: center;
 
-    .img-box {
-      img {
-        width: 150px;
-        height: 150px;
-        object-fit: contain;
-      }
+    img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
     }
 
     .text-box-1 {
       margin-top: 18px;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: bold;
-      font-size: 20px;
-      color: #1F1F1F;
+      font-size: 24px;
+      color: #1E262E;
     }
 
     .text-box-2 {
       margin-top: 18px;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
-      font-size: 16px;
-      color: #333;
+      font-size: 20px;
+      color: #5E5E5E;;
 
       .number {
         font-weight: bold;
@@ -147,4 +148,8 @@ export default {
 }
 </style>
 
-<style scoped lang="less" src="@/assets/h5css/modals/product_add_cart_success_modal.less"></style>
+<style
+  scoped
+  lang="less"
+  src="@/assets/h5css/modals/product_add_cart_success_modal.less"
+></style>
