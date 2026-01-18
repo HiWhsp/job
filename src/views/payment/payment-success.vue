@@ -1,25 +1,18 @@
 <template>
   <div class="page">
     <div class="inner w-1400">
-      <div class="page-title">支付结果</div>
       <div class="pay-info">
         <div class="img-box">
           <img v-if="payState == '支付成功' || payState == '提交成功'" src="@img/payment/pay-succ.png" alt />
           <img v-else src="@img/payment/pay-fail.png" alt />
         </div>
         <div class="text-1">{{ payState }}</div>
-        <div class="text-2" v-if="payState == '提交成功'">
-          您的转账凭证已提交，请等待后台审核！
-        </div>
-        <div class="text-2">订单号：{{ info.orderNo }}</div>
+        <div class="text-2" v-if="payState == '提交成功'">您的转账凭证已提交，请等待后台审核！</div>
+        <div class="text-2">Order number：{{ info.orderNo }}</div>
 
         <div class="btns flex-center">
-          <button class="btn-ripple fit-text" @click="to_order()">
-            查看订单
-          </button>
-          <button class="btn-ripple fit-text btn-bg" @click="to_liulan()">
-            继续浏览
-          </button>
+          <button class="btn-ripple fit-text btn-bg" @click="to_liulan()">Continue Shopping</button>
+          <button class="btn-ripple fit-text" @click="to_order()">View Order</button>
         </div>
       </div>
     </div>
@@ -36,11 +29,11 @@ export default {
     return {
       id: this.$route.query.id || this.$route.query.orderId,
       payState: "",
-      info: {},
+      info: {}
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState([""])
   },
   watch: {},
   created() {
@@ -48,34 +41,34 @@ export default {
   },
   methods: {
     to_order() {
-      this.$router.push('/order-list')
+      this.$router.push("/order-list");
     },
     to_liulan() {
-      this.$router.push('/')
+      this.$router.push("/");
     },
     setView() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'orders_detail',
+          action: "orders_detail",
           id: this.id
-        },
-      }).then((res) => {
+        }
+      }).then(res => {
         let { code, data, msg } = res;
         if (code == 200) {
           this.info = data;
           if (data.statusInfo == "待支付") {
-            this.payState = "支付失败";
+            this.payState = "Pending Payment";
           } else if (data.statusInfo == "待审核") {
-            this.payState = "提交成功";
+            this.payState = "Submitted Successfully";
           } else {
-            this.payState = "支付成功";
+            this.payState = "Successful";
           }
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -91,13 +84,11 @@ export default {
   color: #333333;
 }
 
-
 .page {
-  background: #FFFFFF;
+  background: #ffffff;
   text-align: center;
   font-size: 14px;
   padding-bottom: 100px;
-
 
   .inner {
     // width: 100%;
@@ -112,7 +103,7 @@ export default {
 
     .img-box {
       img {
-        width: 80px;
+        width: 70px;
       }
     }
 
@@ -121,7 +112,7 @@ export default {
       font-family: Arial, Arial;
       font-weight: 400;
       font-size: 24px;
-      color: #1F1F1F;
+      color: #1f1f1f;
     }
 
     .text-2 {
@@ -129,29 +120,28 @@ export default {
       font-family: Arial, Arial;
       font-weight: 400;
       font-size: 16px;
-      color: #1F1F1F;
+      color: #1f1f1f;
     }
 
     .btns {
       margin-top: 50px;
 
       button {
-        width: 200px;
-        height: 45px;
-        background: #FFFFFF;
-        border-radius: 0px 0px 0px 0px;
-        border: 1px solid #7853B2;
+        width: 300px;
+        height: 80px;
+        background: #ec6a2b;
+        border-radius: 10px 10px 10px 10px;
         font-family: Arial, Arial;
         font-weight: 400;
-        font-size: 17px;
-        color: #7853B2;
+        font-size: 24px;
+        color: #fff;
 
         &.btn-bg {
-          background: #7853B2;
-          color: #FFFFFF;
+          background: #00306B;
+          color: #ffffff;
         }
 
-        &+button {
+        & + button {
           margin-left: 16px;
         }
         &:hover {

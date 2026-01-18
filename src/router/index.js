@@ -31,6 +31,8 @@ const news_detail = () => import("@/views/news/news-detail.vue");
 const product_brand = () => import("@/views/product/product-brand.vue");
 // 账号相关
 const register = () => import("@/views/account/register.vue");
+const register_business = () => import("@/views/account/register-business.vue");
+const register_personal = () => import("@/views/account/register-personal.vue");
 const login = () => import("@/views/account/login.vue");
 const retrieve = () => import("@/views/account/retrieve.vue");
 
@@ -179,6 +181,18 @@ const routes = [
         path: "/register",
         name: "register",
         component: register,
+        meta: {},
+      },
+      {
+        path: "/register-business",
+        name: "register-business",
+        component: register_business,
+        meta: {},
+      },
+      {
+        path: "/register-personal",
+        name: "register-personal",
+        component: register_personal,
         meta: {},
       },
       {

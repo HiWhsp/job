@@ -1,797 +1,421 @@
 <template>
-  <div class="page">
+  <div class="page order-submit-page">
     <div class="inner w-1400">
-      <!-- <div class="page-title flex-between" v-if="false">
-        <div class="left">
-          <span>提交订单</span>
-        </div>
-      </div> -->
-      <div class="page-ctx">
-        <div class="sec-addr">
-          <div class="sec-title">选择收货人地址</div>
-          <div class="sec-ctx">
-            <div class="address-list" v-if="address_list.length">
-              <div
-                class="address-item"
-                v-for="(item, index) in address_list"
-                :key="index"
-                :class="{ active: item.id == address_select.id }"
-                @click="do_toggle_address(item)"
-              >
-                <div class="address-top">{{ item.name_phone }}</div>
-                <div class="address-bottom">
-                  {{ item.full_addr }}
-                </div>
-                <img src="@img/order/addr-select.png" alt="" class="marker" />
-              </div>
-            </div>
-            <div class="addr-add">
-              <div class="empty-title" v-if="!address_list.length">
-                还没有收件地址
-              </div>
-              <button class="btn btn-ripple" @click="open_addr_add()">
-                + 新增地址
-              </button>
-            </div>
+      <div class="page-ctx two-column-layout">
+        <!-- 左侧主列：表单信息 -->
+        <div class="left-column">
+          <div class="page-header">
+            <h1 class="page-title">Please fill in the order information</h1>
           </div>
-        </div>
-
-        <div class="sec-pay">
-          <div class="sec-title">支付信息</div>
-          <div class="sec-ctx sec-ctx-type">
-            <div class="pay-group">
-              <div class="title">支付方式：</div>
-              <div class="pay-items">
+          <!-- Shipping Address -->
+          <div class="sec-addr section-card">
+            <div class="section-header">
+              <div class="section-icon">
+                <img src="@img/order/icon1.png" alt />
+              </div>
+              <div class="section-title">Shipping Address</div>
+            </div>
+            <div class="sec-ctx address-form" v-if="!address_list.length || showAddressForm">
+              <div class="form-group">
+                <label class="form-label">
+                  First Name:
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-input"
+                  placeholder="Please enter first name"
+                  v-model="addressForm.firstName"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">
+                  Last Name:
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-input"
+                  placeholder="Please enter Last name"
+                  v-model="addressForm.lastName"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">
+                  Phone Number:
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-input"
+                  placeholder="Please enter Phone Number"
+                  v-model="addressForm.phone"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">
+                  Email:
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="email"
+                  class="form-input"
+                  placeholder="Please enter an email address"
+                  v-model="addressForm.email"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">
+                  Detailed Address:
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-input"
+                  placeholder="Please enter"
+                  v-model="addressForm.address"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">
+                  City:
+                  <span class="required">*</span>
+                </label>
+                <select class="form-input" v-model="addressForm.city">
+                  <option value>Please enter</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">
+                  State:
+                  <span class="required">*</span>
+                </label>
+                <select class="form-input" v-model="addressForm.state">
+                  <option value>Please enter</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">
+                  Country:
+                  <span class="required">*</span>
+                </label>
+                <select class="form-input" v-model="addressForm.country">
+                  <option value>Please enter</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">
+                  Zip Code:
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-input"
+                  placeholder="Please enter"
+                  v-model="addressForm.zipCode"
+                />
+              </div>
+              <div class="form-group toggle-group">
+                <label class="toggle-label">
+                  <input type="checkbox" v-model="addressForm.setAsDefault" />
+                  <span class="toggle-text">Set as default address</span>
+                </label>
+              </div>
+              <div class="form-actions">
+                <button class="btn-confirm" @click="confirmAddress()">CONFIRM</button>
+                <button class="btn-cancel" @click="cancelAddressForm()">CANCEL</button>
+              </div>
+            </div>
+            <div class="sec-ctx" v-else>
+              <div class="address-list" v-if="address_list.length">
                 <div
-                  class="item"
-                  v-for="(item, index) in pay_method_list"
-                  v-show="item.show"
+                  class="address-item"
+                  v-for="(item, index) in address_list"
                   :key="index"
-                  @click="do_toggle_paytype(item)"
-                  :class="{ checked: pay_type_value == item.value }"
+                  :class="{ active: item.id == address_select.id }"
+                  @click="do_toggle_address(item)"
                 >
-                  <img
-                    class="img-check check-0 check-img check-img-0"
-                    src="@img/common/check0.png"
-                    alt=""
-                  />
-                  <img
-                    class="img-check check-1 check-img check-img-1"
-                    src="@img/common/check1.png"
-                    alt=""
-                  />
-                  <img class="marker-img" :src="item.icon" alt="" />
-                  <span>{{ item.title }}</span>
+                  <div class="address-top">{{ item.name_phone }}</div>
+                  <div class="address-bottom">{{ item.full_addr }}</div>
+                  <img src="@img/order/addr-select.png" alt class="marker" />
                 </div>
               </div>
-            </div>
-
-            <div class="yue-info" v-if="payType == '余额支付'">
-              <div class="info-item">
-                <div class="info-label">可用余额：</div>
-                <div class="info-val">{{ total_balance }}</div>
-              </div>
-              <div
-                class="info-item"
-                v-if="total_balance < this.real_payment_money"
-              >
-                <div class="info-label yue-warn-tip">
-                  提示：您的余额不足，请选择其他支付方式
-                </div>
-              </div>
-            </div>
-            <div class="yue-info" v-if="payType == '兑换卡支付'">
-              <div class="info-item">
-                <div class="info-label">卡余额：</div>
-                <div class="info-val">{{ userCard }}</div>
-              </div>
-              <div class="info-item" v-if="userCard == 0">
-                <div class="info-label yue-warn-tip">
-                  提示：您的兑换卡余额不足，请选择其他支付方式
-                </div>
-              </div>
-            </div>
-
-            <!-- 线下转款信息 -->
-            <div class="xianxia-info" v-if="payType == '线下转款'">
-              <div class="info-item">
-                <div class="info-label">收款单位名称:</div>
-                <div class="info-val">{{ vuex_config.offline_company }}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">收款单位账号:</div>
-                <div class="info-val">{{ vuex_config.offline_code }}</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">开户银行:</div>
-                <div class="info-val">{{ vuex_config.offline_bank }}</div>
-              </div>
-              <div class="info-item scroll-target-pingzheng">
-                <div class="info-label">转账凭证:</div>
-                <div class="info-val">
-                  <el-upload
-                    class="upload-demo"
-                    list-type="picture-card"
-                    multiple
-                    accept="image/*"
-                    :limit="upload_limit_number"
-                    :name="upload_col_name"
-                    :action="mix_upload_action"
-                    :data="mix_upload_data"
-                    :on-success="uploadSuccess_pingjia"
-                    :before-upload="beforeUpload_pingjia"
-                    :on-preview="handlePictureCardPreview"
-                  >
-                    <i class="el-icon-plus"></i>
-
-                    <!-- <div class="el-upload__tip" slot="tip">
-                    <div class="tip-text-1">添加图片</div>
-                    <div class="tip-text-2">
-                      最多
-                      <b class="number">6</b>
-                      张
-                    </div>
-                  </div> -->
-                  </el-upload>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 发票信息 -->
-        <div class="sec-fapiao">
-          <div class="sec-title">发票信息</div>
-          <div class="fapiao-info">
-            <div class="main-title">是否开票:</div>
-            <div class="type-list">
-              <div
-                class="type-item"
-                :class="{ active: fapiao_info.invoicType == '' }"
-                @click="do_fapiao_type('')"
-              >
-                不开票
-              </div>
-              <div
-                class="type-item"
-                :class="{ active: fapiao_info.invoicType == 1 }"
-                @click="do_fapiao_type(1)"
-              >
-                普通发票
-              </div>
-              <div
-                class="type-item"
-                :class="{ active: fapiao_info.invoicType == 2 }"
-                @click="do_fapiao_type(2)"
-              >
-                专用发票
+              <div class="addr-add">
+                <div class="empty-title" v-if="!address_list.length">还没有收件地址</div>
+                <button class="btn btn-ripple" @click="open_addr_add()">+ 新增地址</button>
               </div>
             </div>
           </div>
 
-          <div
-            class="fapiao-box"
-            data-title="普通发票"
-            v-if="fapiao_info.invoicType == 1"
-          >
-            <div class="input-box">
-              <div class="label">发票抬头类型:</div>
-              <div class="val-box">
-                <el-radio-group v-model="fapiao_info.titleType">
-                  <el-radio :label="1">个人</el-radio>
-                  <el-radio :label="2">企业</el-radio>
-                </el-radio-group>
+          <!-- Delivery Method -->
+          <div class="sec-delivery section-card">
+            <div class="section-header">
+              <div class="section-icon">
+                <img src="@img/order/icon2.png" alt />
               </div>
+              <div class="section-title">Delivery Method</div>
             </div>
-            <div class="input-box">
-              <div class="label">发票抬头:</div>
-              <div class="val-box">
-                <el-input
-                  clearable
-                  v-model="fapiao_info.title"
-                  placeholder="请填写准确的抬头名称"
-                ></el-input>
-              </div>
-            </div>
-            <div class="input-box" v-if="fapiao_info.titleType == 2">
-              <div class="label">纳税人识别号:</div>
-              <div class="val-box">
-                <el-input
-                  clearable
-                  v-model="fapiao_info.shibiema"
-                  placeholder="请填写纳税人识别号"
-                ></el-input>
-              </div>
-            </div>
-            <div class="input-box">
-              <div class="label">电子邮箱:</div>
-              <div class="val-box">
-                <el-input
-                  clearable
-                  v-model="fapiao_info.email"
-                  placeholder="请填写电子邮箱,用于接收电子发票"
-                ></el-input>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="fapiao-box"
-            data-title="专用发票"
-            v-if="fapiao_info.invoicType == 2"
-          >
-            <div class="input-box">
-              <div class="label">发票抬头:</div>
-              <div class="val-box">
-                <el-input
-                  clearable
-                  v-model="fapiao_info.title"
-                  placeholder="请填写准确的抬头名称"
-                ></el-input>
-              </div>
-            </div>
-            <div class="input-box">
-              <div class="label">纳税人识别号:</div>
-              <div class="val-box">
-                <el-input
-                  clearable
-                  v-model="fapiao_info.shibiema"
-                  placeholder="请填写准确的纳税人识别号"
-                ></el-input>
-              </div>
-            </div>
-            <div class="input-box">
-              <div class="label">注册地址:</div>
-              <div class="val-box">
-                <el-input
-                  clearable
-                  v-model="fapiao_info.companyAddress"
-                  placeholder="请输入单位注册地址"
-                ></el-input>
-              </div>
-            </div>
-            <div class="input-box">
-              <div class="label">注册电话:</div>
-              <div class="val-box">
-                <el-input
-                  clearable
-                  v-model="fapiao_info.companyPhone"
-                  placeholder="请输入单位注册电话"
-                ></el-input>
-              </div>
-            </div>
-            <div class="input-box">
-              <div class="label">开户银行:</div>
-              <div class="val-box">
-                <el-input
-                  clearable
-                  v-model="fapiao_info.bankName"
-                  placeholder="请输入开户银行"
-                ></el-input>
-              </div>
-            </div>
-            <div class="input-box">
-              <div class="label">银行账户:</div>
-              <div class="val-box">
-                <el-input
-                  clearable
-                  v-model="fapiao_info.bankNo"
-                  placeholder="请输入银行账户"
-                ></el-input>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="type-select" v-if="false">
-          <div class="type-title">
-            <div class="text">配送方式</div>
-          </div>
-          <div class="type-inner">
-            <!-- <div class="select-1">
-              <div class="title">配送方式</div>
-              <div class="list">
-                <button
-                  class="item"
-                  :class="peisong_type == item ? 'active' : ''"
-                  v-for="(item, index) in peisong_list"
-                  :key="index"
-                  @click="peisong_toggle(item)"
-                >
-                  {{ item }}
-                </button>
-              </div>
-            </div> -->
-
-            <!-- <div class="ziti-box" v-if="peisong_type == '上门自提'">
-            <div class="title">厂家信息</div>
-            <div class="ziti-info">地址：{{ vuex_config.com_address }}</div>
-            <div class="ziti-info">电话：{{ vuex_config.com_kefu }}</div>
-          </div> -->
-
-            <!-- <div class="select-1">
-            <div class="title">配送时间</div>
-            <div class="list">
-              <el-date-picker v-model="select_date" type="date" placeholder="选择配送时间" value-format="yyyy-MM-dd" :picker-options="pickerOptions"> </el-date-picker>
-
-              <el-select v-model="select_time" placeholder="请选择" style="margin-left: 30px">
-                <el-option v-for="item in defaultContent" :key="item" :label="item" :value="item"> </el-option>
-              </el-select>
-            </div>
-          </div> -->
-          </div>
-        </div>
-
-        <div class="sec sec-product">
-          <div class="sec-title">订单商品</div>
-          <div class="sec-ctx" style="padding-top: 24px">
-            <div class="goods-list">
-              <!-- <div class="title">订单商品</div> -->
-              <div class="list">
-                <div class="goods-list-inner">
-                  <!-- 标题 -->
-                  <div class="list-title flex">
-                    <div class="box-title">
-                      <div class="title-text">商品</div>
-                    </div>
-                    <!-- <div class="box-sku">规格</div> -->
-                    <div class="box-unit">单价</div>
-                    <div class="box-num">数量</div>
-                    <div class="box-subtitle">金额</div>
-                  </div>
-
-                  <!-- 商品列表 -->
-                  <div
-                    class="item"
-                    v-for="(item, index) in payment_products"
-                    :key="index"
-                  >
-                    <div class="item-detail flex">
-                      <div class="box-title flex">
-                        <div class="poster-box">
-                          <el-image :src="item.image">
-                            <div slot="error" class="image-slot">
-                              <img :src="item.image" />
-                            </div>
-                          </el-image>
-                        </div>
-                        <div class="title-box">
-                          {{ item.title }}
-                        </div>
-                      </div>
-                      <!-- <div class="box-sku">
-                        {{ item.keyVals }}
-                      </div> -->
-                      <div class="box-unit">
-                        {{ vuex_huobi }} {{ item.priceSale }}
-                      </div>
-                      <div class="box-num">{{ item.num }}</div>
-                      <div class="box-subtitle">
-                        {{ vuex_huobi }}
-                        {{ (item.priceSale * item.num).toFixed(2) }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="order-action" v-if="false">
-                <div class="order-action-inner">
-                  <div class="sec-item" v-if="list_coupon.length">
-                    <div
-                      class="sub-title"
-                      @click="showCoupon = !showCoupon"
-                      :class="{ 'expand-0': !showCoupon }"
-                    >
-                      <div class="text">使用优惠</div>
-                      <img src="@img/common/pay-arrow-top.png" alt="" />
-                    </div>
-                    <!-- <div class="sec-input">
-                    <el-select v-model="coupon_select_id" placeholder="请选择优惠券">
-                      <el-option v-for="item in list_coupon" :key="item.id" :label="`${item.title} 【${item.miaoshu}】`" :value="item.id"> </el-option>
-                    </el-select>
-                  </div> -->
-
-                    <div class="yhq-list" v-if="showCoupon">
-                      <div
-                        class="yhq-item"
-                        v-for="(item, index) in list_coupon"
-                        :key="index"
-                        :class="{ active: coupon_select_id == item.id }"
-                        @click="handleCouponSelect(item)"
-                      >
-                        <img
-                          src="@img/address/dizhi-check-1.png"
-                          alt=""
-                          class="marker"
-                        />
-
-                        <div class="yhq-top">
-                          <div class="yhq-1">
-                            <div class="text-1">
-                              {{ vuex_huobi }}{{ +item.jian }}
-                            </div>
-                            <div class="text-2">满{{ +item.man }}</div>
-                          </div>
-                          <div class="yhq-2">
-                            有效期至
-                            {{ item.endTime && item.endTime.substr(0, 10) }}
-                          </div>
-                        </div>
-                        <div class="yhq-bottom">
-                          <div class="yhq-3">[{{ item.title }}]</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="yhq-select-info">
-                      <b>金额抵用</b>
-                      <template v-if="coupon_select.id">
-                        <b class="number"
-                          >{{ vuex_huobi }}{{ +coupon_select.jian }}</b
-                        >, 使用【{{ coupon_select.title }}】优惠券 1张，优惠
-                        {{ +coupon_select.jian }} 元
-                      </template>
-                      <template v-else> 无 </template>
-                    </div>
-                  </div>
-
-                  <div class="sec-item" v-if="false">
-                    <div class="sub-title">使用积分</div>
-                    <div class="sec-tip" v-if="jifen_pay.jifen">
-                      可用积分：{{ +vuex_user.jifen || 0 }}, 本单最多可用
-                      {{ jifen_pay.jifen }} 积分抵扣 {{ currency
-                      }}{{ jifen_pay.money }}
-                    </div>
-                    <div class="sec-tip" v-else>当前没有可抵扣的积分</div>
-
-                    <div class="sec-btn-actions">
-                      <button
-                        class="btn"
-                        :class="{ active: if_use_jifen }"
-                        @click="if_use_jifen = true"
-                      >
-                        使用积分
-                      </button>
-                      <button
-                        class="btn"
-                        :class="{ active: !if_use_jifen }"
-                        @click="if_use_jifen = false"
-                      >
-                        不使用积分
-                      </button>
-                    </div>
-                    <div class="use-jifen-num">
-                      本单将扣减积分 <b>{{ use_jifen_num }}</b>
-                    </div>
-                    <!-- <div class="sec-input" v-if="jifen_pay.jifen">
-                <el-input type="number" :disabled="jifen_pay.jifen <= 0" v-model="use_jifen_num" @input="onInput_jifen" placeholder="请填写要抵扣的积分"></el-input>
-              </div> -->
-                  </div>
-
-                  <div class="sec-item" v-if="false">
-                    <div class="sub-title">使用佣金</div>
-                    <div class="sec-tip">
-                      可用佣金：{{ +vuex_user.yongjin || 0 }}
-                    </div>
-                    <div class="sec-btn-actions">
-                      <button
-                        class="btn"
-                        :class="{ active: if_use_yongjin }"
-                        @click="if_use_yongjin = true"
-                      >
-                        使用佣金
-                      </button>
-                      <button
-                        class="btn"
-                        :class="{ active: !if_use_yongjin }"
-                        @click="if_use_yongjin = false"
-                      >
-                        不使用佣金
-                      </button>
-                    </div>
-                    <div class="use-jifen-num">
-                      本单将扣减佣金 <b>{{ money_yongjin_dixian }}</b>
-                    </div>
-                    <!-- <div class="sec-input" v-if="jifen_pay.jifen">
-                <el-input type="number" :disabled="jifen_pay.jifen <= 0" v-model="use_jifen_num" @input="onInput_jifen" placeholder="请填写要抵扣的积分"></el-input>
-              </div> -->
-                  </div>
-
-                  <!-- <div class="sec-item">
-                    <div class="sec-title">优惠码</div>
-                    <div class="sec-input">
-                      <el-input
-                        v-model="yh_code"
-                        placeholder="请填写优惠码"
-                      ></el-input>
-                    </div>
-                    <div class="sec-tip">
-                      优惠码填写完成后, 请点击下方使用按钮查询优惠信息。
-                    </div>
-                    <div class="sec-input">
-                      <div class="btn-actions">
-                        <el-button size="small" type="warning" @click="query_yh"
-                          >使用优惠</el-button
-                        >
-                        <el-button
-                          size="small"
-                          type="warning"
-                          @click="not_use_yh"
-                          >不使用</el-button
-                        >
-                      </div>
-                    </div>
-                  </div> -->
-
-                  <!-- <div class="sec-item remark-box" v-if="false">
-                    <div class="sub-title">
-                      <b> 订单备注 </b>
-                    </div>
-                    <div class="sec-input input-box">
-                      <el-input
-                        type="textarea"
-                        :autosize="{ minRows: 3 }"
-                        placeholder="请填写订单备注"
-                        v-model="remark"
-                      >
-                      </el-input>
-                      <textarea placeholder="请填写订单备注"></textarea>
-                    </div>
-                  </div> -->
-                </div>
-              </div>
-
-              <div class="huizong" v-if="false">
-                <!-- <div class="item">
-            积分抵扣：
-            <b>{{vuex_huobi}} {{ jifen_pay.money || 0 }}</b>
-          </div> -->
-                <!-- <div class="order-tip">
-            {{ vuex_config.yunfei_msg }}
-          </div> -->
-
-                <div class="item">
-                  <!-- <span class="text">共：</span> -->
-                  <b class="val">共 {{ total_product_number || 0 }} 件</b>
-                </div>
-                <div class="item">
-                  <span class="text">商品总价：</span>
-                  <b class="val"
-                    >{{ vuex_huobi }} {{ pay_info.goodsPrice || 0 }}</b
-                  >
-                </div>
-                <!-- <div class="item">
-                <span class="text">优惠券：</span>
-                <b class="val">-{{ vuex_huobi }} {{ money_yhq || 0 }}</b>
-              </div> -->
-                <!-- <div class="item">
-                <span class="text">积分抵现：</span>
-                <b>-{{ vuex_huobi }} {{ money_jifen_dixian || 0 }}</b>
-              </div> -->
-                <!-- <div class="item">
-                <span class="text">佣金：</span>
-                <b>-{{ vuex_huobi }} {{ money_yongjin_dixian || 0 }}</b>
-              </div> -->
-                <div class="item">
-                  <span class="text">运费：</span>
-                  <b>{{ vuex_huobi }} {{ pay_info.foreignYunfei || 0 }}</b>
-                </div>
-                <!-- <div class="item">
-                  <span class="text">满减：</span>
-                  <b>- {{ vuex_huobi }} {{ pay_info.foreignManjian || 0 }}</b>
-                </div> -->
-                <div class="item total">
-                  <span class="text">总计：</span>
-                  <b>{{ vuex_huobi }} {{ pay_info.orderPrice }}</b>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="sec sec-product">
-          <div class="sec-title">优惠券/优惠码</div>
-          <div class="sec-ctx" style="padding-top: 24px">
-            <div class="goods-list">
-              <!-- 优惠券/优惠码标签页 -->
-              <div class="coupon-tabs">
-                <div class="tab-header">
-                  <div
-                    class="tab-item"
-                    :class="{ active: activeTab === 'coupon' }"
-                    @click="switchTab('coupon')"
-                  >
-                    优惠券{{ list_coupon.length > 1 ? list_coupon.length : "" }}
-                  </div>
-                  <div
-                    class="tab-item"
-                    :class="{ active: activeTab === 'code' }"
-                    @click="switchTab('code')"
-                  >
-                    优惠码
-                  </div>
-                </div>
-
-                <!-- 优惠券内容 -->
-                <div class="tab-content" v-if="activeTab === 'coupon'">
-                  <!-- 可用/不可用子标签 -->
-                  <div class="sub-tabs">
-                    <div
-                      class="sub-tab-item"
-                      :class="{ active: couponSubTab === 'available' }"
-                      @click="switchCouponSubTab('available')"
-                    >
-                      可用
-                    </div>
-                    <div
-                      class="sub-tab-item"
-                      :class="{ active: couponSubTab === 'unavailable' }"
-                      @click="switchCouponSubTab('unavailable')"
-                    >
-                      不可用
-                    </div>
-                  </div>
-
-                  <!-- 优惠券列表 -->
-                  <div class="coupon-list" v-if="currentCouponList.length > 0">
-                    <div
-                      class="coupon-card"
-                      v-for="(item, index) in currentCouponList"
-                      :key="index"
-                      :class="{
-                        active: coupon_select_id == item.id,
-                        unavailable: couponSubTab === 'unavailable',
-                      }"
-                      @click="handleCouponSelect(item)"
-                    >
-                      <div
-                        class="coupon-check"
-                        v-if="coupon_select_id == item.id"
-                      >
-                        <img src="@img/order/addr-select.png" alt="" />
-                      </div>
-
-                      <div class="coupon-content">
-                        <div class="flex">
-                          <div class="coupon-amount">
-                            <span class="currency">{{ vuex_huobi }}</span>
-                            <span class="amount">{{ +item.jian }}</span>
-                          </div>
-                          <div class="coupon-condition">
-                            满{{ +item.man }}元可用
-                          </div>
-                        </div>
-                        <div class="flex">
-                          <div class="coupon-expire">
-                            有效期至{{
-                              item.endTime && item.endTime.substr(0, 10)
-                            }}
-                          </div>
-                          <div class="coupon-rules">
-                            使用规则
-                            <i class="info-icon">i</i>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- 无优惠券提示 -->
-                  <div class="no-coupon" v-else>
-                    <div class="no-coupon-text">
-                      {{
-                        couponSubTab === "available"
-                          ? "暂无可用优惠券"
-                          : "暂无不可用优惠券"
-                      }}
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 优惠码内容 -->
-                <div class="tab-content" v-if="activeTab === 'code'">
-                  <div class="promo-code-section">
-                    <div class="promo-code-input">
-                      <el-input
-                        v-model="yh_code"
-                        placeholder="请输入优惠码"
-                        class="code-input"
-                        @keyup.enter="query_yh"
-                      ></el-input>
-                    </div>
-
-                    <el-button
-                      size="small"
-                      class="promo-code-tip" 
-                      @click="query_yh"
-                      >使用优惠码</el-button
-                    >
-                  </div>
-                </div>
-              </div>
-
-              <!-- 优惠信息汇总 -->
-              <div class="discount-summary">
-                <div class="summary-item">
-                  <span class="label">金额抵用</span>
-                  <span class="value">
-                    <template v-if="coupon_select.id">
-                      {{ vuex_huobi }}{{ +coupon_select.jian }}
-                    </template>
-                    <template v-else>{{ vuex_huobi }}-</template>
+            <div class="sec-ctx">
+              <div class="delivery-options">
+                <label class="radio-option">
+                  <input type="radio" name="delivery" value="express" v-model="deliveryMethod" />
+                  <span>Express Mail</span>
+                  <span class="delivery-price">
+                    <img src="@img/order/delivery.png" alt />
                   </span>
-                </div>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="delivery" value="pickup" v-model="deliveryMethod" />
+                  <span>Pickup available at XXXaddress</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Methods -->
+          <div class="sec-pay section-card">
+            <div class="section-header">
+              <div class="section-icon">
+                <img src="@img/order/icon3.png" alt />
+              </div>
+              <div class="section-title">Payment Methods</div>
+            </div>
+            <div class="sec-ctx sec-ctx-type">
+              <div class="payment-options">
+                <label class="radio-option">
+                  <input type="radio" name="payment" value="online" v-model="paymentType" checked />
+                  <span>Online Payment</span>
+                  <div class="payment-logos">
+                    <div class="payment-logo">
+                      <img src="@img/order/paypal.png" alt />
+                    </div>
+                    <div class="payment-logo">
+                      <img src="@img/order/stripe.png" alt />
+                    </div>
+                  </div>
+                </label>
               </div>
 
-              <div class="huizong">
-                <!-- <div class="item">
-            积分抵扣：
-            <b>{{vuex_huobi}} {{ jifen_pay.money || 0 }}</b>
-          </div> -->
-                <!-- <div class="order-tip">
-            {{ vuex_config.yunfei_msg }}
-          </div> -->
+              <div class="card-form" v-if="paymentType === 'online'">
+                <div class="form-group">
+                  <label class="form-label">
+                    <span class="required">*</span>
+                    <span>Cardholder's Name:</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Please enter"
+                    v-model="cardForm.cardholderName"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">
+                    <span class="required">*</span>
+                    <span>Card Number:</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Please enter"
+                    v-model="cardForm.cardNumber"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">
+                    <span class="required">*</span>
+                    <span>Expiry Date:</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-input"
+                    placeholder="MM/YY"
+                    v-model="cardForm.expiryDate"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">
+                    <span class="required">*</span>
+                    <span>CVC/CVV:</span>
+                  </label>
+                  <input type="text" class="form-input" placeholder="CVC" v-model="cardForm.cvc" />
+                </div>
+                <div class="form-group checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" v-model="cardForm.saveCard" />
+                    <span>
+                      Save card for future purchases
+                      <br />Your card details are protected using PCI DSS v3.2 security standards.
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
 
-                <div class="item">
-                  <!-- <span class="text">共：</span> -->
-                  <b class="val">共 {{ total_product_number || 0 }} 件</b>
+          <!-- Invoice -->
+          <div class="sec-fapiao section-card">
+            <div class="section-header">
+              <div class="section-icon">
+                <img src="@img/order/icon4.png" alt />
+              </div>
+              <div class="section-title">Invoice</div>
+            </div>
+            <div class="sec-ctx">
+              <div class="invoice-toggles">
+                <button
+                  class="toggle-btn"
+                  :class="{ active: fapiao_info.invoicType == '' }"
+                  @click="do_fapiao_type('')"
+                >Not Required</button>
+                <button
+                  class="toggle-btn"
+                  :class="{ active: fapiao_info.invoicType == 1 }"
+                  @click="do_fapiao_type(1)"
+                >Receipt</button>
+                <button
+                  class="toggle-btn"
+                  :class="{ active: fapiao_info.invoicType == 2 }"
+                  @click="do_fapiao_type(2)"
+                >Commercial Invoice</button>
+              </div>
+              <div class="invoice-type-toggles" v-if="fapiao_info.invoicType != ''">
+                <button
+                  class="toggle-btn"
+                  :class="{ active: fapiao_info.titleType == 1 }"
+                  @click="fapiao_info.titleType = 1"
+                >Personal</button>
+                <button
+                  class="toggle-btn"
+                  :class="{ active: fapiao_info.titleType == 2 }"
+                  @click="fapiao_info.titleType = 2"
+                >Company</button>
+              </div>
+              <div class="invoice-form" v-if="fapiao_info.invoicType != ''">
+                <div class="form-group">
+                  <label class="form-label">Name:</label>
+                  <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Please enter your name"
+                    v-model="fapiao_info.title"
+                  />
                 </div>
-                <div class="item">
-                  <span class="text">商品总价：</span>
-                  <b class="val"
-                    >{{ vuex_huobi }} {{ pay_info.goodsPrice || 0 }}</b
-                  >
-                </div>
-                <div class="item">
-                  <span class="text">优惠券折扣：</span>
-                  <b class="val">-{{ vuex_huobi }} {{ money_yhq || 0 }}</b>
-                </div>
-                <!-- <div class="item">
-                <span class="text">积分抵现：</span>
-                <b>-{{ vuex_huobi }} {{ money_jifen_dixian || 0 }}</b>
-              </div> -->
-                <!-- <div class="item">
-                <span class="text">佣金：</span>
-                <b>-{{ vuex_huobi }} {{ money_yongjin_dixian || 0 }}</b>
-              </div> -->
-                <div class="item">
-                  <span class="text">运费：</span>
-                  <b>{{ vuex_huobi }} {{ pay_info.foreignYunfei || 0 }}</b>
-                </div>
-                <!-- <div class="item">
-                  <span class="text">满减：</span>
-                  <b>- {{ vuex_huobi }} {{ pay_info.foreignManjian || 0 }}</b>
-                </div> -->
-                <div class="item total">
-                  <span class="text">总计：</span>
-                  <b>{{ vuex_huobi }} {{ pay_info.orderPrice }}</b>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coupon -->
+          <div class="sec-coupon section-card">
+            <div class="section-header">
+              <div class="section-icon">
+                <img src="@img/order/icon4.png" alt />
+              </div>
+              <div class="section-title">Coupon</div>
+            </div>
+            <div class="sec-ctx">
+              <div class="coupon-toggles">
+                <button
+                  class="toggle-btn"
+                  :class="{ active: couponTab === 'coupon' }"
+                  @click="couponTab = 'coupon'"
+                >Coupon</button>
+                <button
+                  class="toggle-btn"
+                  :class="{ active: couponTab === 'promo' }"
+                  @click="couponTab = 'promo'"
+                >Promo Code</button>
+              </div>
+              <div class="coupon-cards" v-if="couponTab === 'coupon'">
+                <div
+                  class="coupon-card-item"
+                  v-for="(item, index) in list_coupon.slice(0, 2)"
+                  :key="index"
+                  :class="{ selected: coupon_select_id == item.id }"
+                  @click="handleCouponSelect(item)"
+                >
+                  <div class="coupon-amount">${{ +item.jian }}</div>
+                  <div class="coupon-condition">Orders Over ${{ +item.man }}</div>
+                  <div
+                    class="coupon-expire"
+                  >Expires {{ item.endTime && item.endTime.substr(0, 10) }}, 11:59</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 操作按钮 -->
-        <div class="bottom-btns">
-          <button
-            class="btn-ripple fit-text btn-1"
-            @click="$router.push('/cart')"
-          >
-            返回购物车
-          </button>
-          <button class="btn-ripple fit-text btn-2" @click="do_submit()">
-            去支付
-          </button>
+        <!-- 右侧列：订单摘要 -->
+        <div class="right-column">
+          <div class="order-summary">
+            <!-- 商品列表 -->
+            <div class="product-list">
+              <div class="product-item" v-for="(item, index) in payment_products" :key="index">
+                <div class="product-item-top">
+                  <div class="product-icon">
+                    <img :src="item.image" alt />
+                  </div>
+                  <div class="product-info">
+                    <div class="product-name">{{ item.title }}</div>
+                    <div
+                      class="product-details"
+                    >{{ item.keyVals || 'Color: green Size: M Style: 100/pack' }}</div>
+                  </div>
+                </div>
+
+                <div class="product-quantity">
+                  <div class="product-price">{{ vuex_huobi }}{{ item.priceSale }}</div>
+                  <div class="product-quantity-actions">
+                    <button class="qty-btn" @click="decreaseQuantity(item, index)">-</button>
+                    <span class="qty-value">{{ item.num }}</span>
+                    <button class="qty-btn" @click="increaseQuantity(item, index)">+</button>
+                    <div
+                      class="product-remove"
+                      :class="{ disabled: payment_products.length <= 1 }"
+                      @click="removeProduct(item, index)"
+                    >
+                      <img src="@img/order/icon-delete.png" alt />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 价格明细 -->
+            <div class="price-breakdown">
+              <div class="price-item">
+                <span class="price-label">Subtotal: {{ total_product_number }} items</span>
+                <span class="price-value">{{ vuex_huobi }}{{ pay_info.goodsPrice || 0 }}</span>
+              </div>
+              <div class="price-item">
+                <span class="price-label">Shipping</span>
+                <span class="price-value">+{{ vuex_huobi }}{{ pay_info.foreignYunfei || 0 }}</span>
+              </div>
+              <div class="price-item" v-if="money_yhq > 0">
+                <span class="price-label">Coupon</span>
+                <span class="price-value">-{{ vuex_huobi }}{{ money_yhq || 0 }}</span>
+              </div>
+              <div class="price-item" v-if="order_zhekou_price > 0">
+                <span class="price-label">Other Discounts</span>
+                <span class="price-value">-20%</span>
+              </div>
+              <div class="price-item total">
+                <span class="price-label">Total Amount</span>
+                <span class="price-value">{{ vuex_huobi }}{{ pay_info.orderPrice || 0 }}</span>
+              </div>
+
+              <div class="submit">
+                <button class="btn-ripple btn-confirm" @click="do_confirm_submit()">Check out</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- 新增收货地址弹窗 -->
     <address_modal ref="address_modal" @confirm="confirm_add_address" />
-    <foreign_address_modal
-      ref="foreign_address_modal"
-      @confirm="confirm_add_address"
-    />
+    <foreign_address_modal ref="foreign_address_modal" @confirm="confirm_add_address" />
 
     <!-- 余额支付弹窗 -->
     <balance_password_set_modal ref="balance_password_set_modal" />
@@ -806,7 +430,7 @@
 
     <!-- 图片预览 -->
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt="" />
+      <img width="100%" :src="dialogImageUrl" alt />
     </el-dialog>
 
     <!-- 订单支付提示 -->
@@ -821,12 +445,8 @@
     >
       <span>确认支付当前订单？</span>
       <span slot="footer" class="dialog-footer">
-        <button class="btn-ripple btn-cancel" @click="confirm_tip = false">
-          取 消
-        </button>
-        <button class="btn-ripple btn-confirm" @click="do_confirm_submit()">
-          确认支付
-        </button>
+        <button class="btn-ripple btn-cancel" @click="confirm_tip = false">取 消</button>
+        <button class="btn-ripple btn-confirm" @click="do_confirm_submit()">确认支付</button>
       </span>
     </el-dialog>
 
@@ -843,12 +463,8 @@
     >
       <span>支付方式</span>
       <span slot="footer" class="dialog-footer">
-        <button class="btn-ripple btn-confirm" @click="pay_use_weixin()">
-          微信
-        </button>
-        <button class="btn-ripple btn-confirm" @click="pay_use_zhifubao()">
-          支付宝
-        </button>
+        <button class="btn-ripple btn-confirm" @click="pay_use_weixin()">微信</button>
+        <button class="btn-ripple btn-confirm" @click="pay_use_zhifubao()">支付宝</button>
       </span>
     </el-dialog>
   </div>
@@ -879,7 +495,7 @@ export default {
     balance_pay_modal,
     balance_pay_disable_modal,
     orderPayWxCode,
-    orderPayWaiting,
+    orderPayWaiting
   },
   data() {
     return {
@@ -890,7 +506,7 @@ export default {
       address_select: {}, //地址
       pagination_address: {
         page: 1,
-        pagenum: 20,
+        pagenum: 20
       },
       coupon_selected: {}, //优惠券
       coupons_for_allow_use: [],
@@ -928,7 +544,7 @@ export default {
         companyAddress: "", //
         companyPhone: "", //
         bankName: "", //
-        bankNo: "", //
+        bankNo: "" //
       },
       // 支付方式
       payTypeValue: 2,
@@ -938,13 +554,13 @@ export default {
           value: "weixin",
           title: "微信支付",
           icon: require("@img/pay-method/type-weixin.png"),
-          show: true,
+          show: true
         },
         {
           value: "zhifubao",
           title: "支付宝支付",
           icon: require("@img/pay-method/type-zfb.png"),
-          show: true,
+          show: true
         },
         // { value: 'xianxia', title: '线下转款', icon: require('@img/pay-method/type-xianxia.png') },
         //{ value: 'paypal', title: 'PayPal', icon: require('@img/pay-method/type-paypal.png') },
@@ -952,8 +568,8 @@ export default {
           value: "yue",
           title: "余额支付",
           icon: require("@img/pay-method/type-yue.png"),
-          show: true,
-        },
+          show: true
+        }
         // {
         //   value: "duihuanka",
         //   title: "兑换卡支付",
@@ -996,6 +612,32 @@ export default {
       list_coupon: [], //优惠券
       coupon_select_id: "", //选择的优惠券 id
 
+      // 新样式相关数据
+      showAddressForm: false,
+      addressForm: {
+        firstName: "",
+        lastName: "",
+        phone: "",
+        email: "",
+        address: "",
+        city: "",
+        state: "",
+        country: "",
+        zipCode: "",
+        setAsDefault: false
+      },
+      deliveryMethod: "express",
+      paymentType: "online",
+      paymentProvider: "",
+      cardForm: {
+        cardholderName: "",
+        cardNumber: "",
+        expiryDate: "",
+        cvc: "",
+        saveCard: false
+      },
+      couponTab: "coupon",
+
       //
 
       is_pay_pass: 0, //是否设置余额支付密码
@@ -1015,8 +657,8 @@ export default {
       couponSubTab: "available", // 优惠券子标签: 'available' | 'unavailable'
       unavailable_coupons: [], // 不可用优惠券列表
 
-      coupon_code_info: {//优惠码信息
-
+      coupon_code_info: {
+        //优惠码信息
       }
     };
   },
@@ -1032,7 +674,7 @@ export default {
     //
 
     coupon_select() {
-      return this.list_coupon.find((v) => v.id == this.coupon_select_id) || {};
+      return this.list_coupon.find(v => v.id == this.coupon_select_id) || {};
     },
 
     //使用积分支付要抵扣的积分
@@ -1078,7 +720,7 @@ export default {
       let money_yhq = 0;
       if (this.coupon_select_id) {
         let yhq =
-          this.list_coupon.find((v) => v.id == this.coupon_select_id) || {};
+          this.list_coupon.find(v => v.id == this.coupon_select_id) || {};
         money_yhq = yhq.jian || 0;
       }
       // this.query_pay_info();
@@ -1126,12 +768,12 @@ export default {
       } else {
         return this.unavailable_coupons;
       }
-    },
+    }
   },
   watch: {
     coupon_select_id(val, oldval) {
       this.query_pay_info();
-    },
+    }
   },
   created() {
     this.from = this.$route.query.from || "";
@@ -1144,19 +786,67 @@ export default {
     // this.do_create_submit(0)
   },
   methods: {
+    // 新样式相关方法
+    confirmAddress() {
+      // 确认地址逻辑
+      this.showAddressForm = false;
+    },
+    cancelAddressForm() {
+      this.showAddressForm = false;
+    },
+    selectPaymentProvider(provider) {
+      this.paymentProvider = provider;
+    },
+    decreaseQuantity(item, index) {
+      if (item.num > 1) {
+        item.num--;
+        this.updateProductQuantity();
+      }
+    },
+    increaseQuantity(item, index) {
+      item.num++;
+      this.updateProductQuantity();
+    },
+    removeProduct(item, index) {
+      // 如果只有一个商品，禁止删除
+      if (this.payment_products.length <= 1) {
+        alertErr("至少需要保留一个商品");
+        return;
+      }
+      this.payment_products.splice(index, 1);
+      this.updateProductQuantity();
+    },
+    // 更新商品数量后同步更新价格
+    updateProductQuantity() {
+      // 更新总商品数量
+      let total_product_number = 0;
+      this.payment_products.forEach(v => {
+        total_product_number += parseInt(v.num);
+      });
+      this.total_product_number = total_product_number;
+
+      // 更新缓存的产品信息
+      sessionStorage.setItem(
+        "cache_payment_products",
+        JSON.stringify(this.payment_products)
+      );
+
+      // 重新查询价格信息
+      this.query_pay_info();
+    },
     //下单成功后 移除商品信息
     clearCacheProduct() {
       if (this.from == "cart") {
         //移除购物车中商品
-        let guige_ids = this.payment_products.map((v) => v.guige_id).join(",");
+        let guige_ids = this.payment_products.map(v => v.guige_id).join(",");
         this.$api({
           url: "/service.php",
           method: "get",
           data: {
             action: "gouwuche_del",
-            inventoryId: guige_ids, //产品规格id(多个用,分开)
-          },
-        }).then((res) => {
+            inventoryId: guige_ids //产品规格id(多个用,分开)
+          }
+        }).then(res => {
           if (res.code == 200) {
             this.$store.commit("set_vuex_cart_number", res.count);
           }
@@ -1176,7 +866,7 @@ export default {
 
         let total_product_number = 0;
         let total_product_price = 0;
-        this.payment_products.forEach((v) => {
+        this.payment_products.forEach(v => {
           total_product_number += parseInt(v.num);
           total_product_price += v.price_sale * parseInt(v.num);
         });
@@ -1194,9 +884,9 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "users_userInfo",
-        },
-      }).then((res) => {
+          action: "users_userInfo"
+        }
+      }).then(res => {
         if (res.code == 200) {
           this.my_info = res.data;
           this.total_balance = parseFloat(this.my_info.money) || 0;
@@ -1211,56 +901,56 @@ export default {
         method: "get",
         data: {
           action: "userAddress_lists",
-          ...this.pagination_address,
+          ...this.pagination_address
           // shop_id: this.id,
-        },
-      }).then((res) => {
+        }
+      }).then(res => {
         if (res.code == 200) {
           let data = res.data;
 
-          data.forEach((v) => {
+          data.forEach(v => {
             if (SHOP_TYPE == "foreign") {
               //医买买
               v.full_addr = [v.country, v.province, v.city, v.area, v.address]
-                .filter((v) => !!v)
+                .filter(v => !!v)
                 .join(",");
               v.name_phone = `${v.firstName} ${v.lastName} (${v.phone})`;
             } else {
               v.full_addr = [v.country, v.province, v.city, v.area, v.address]
-                .filter((v) => !!v)
+                .filter(v => !!v)
                 .join(",");
               v.name_phone = `${v.name} (${v.phone})`;
             }
           });
           this.address_list = data;
 
-          let obj = data.find((v) => v.if_default) || {};
+          let obj = data.find(v => v.if_default) || {};
           this.address_select = obj || {};
         }
       });
     },
 
     get_pay_info_params() {
-      let product_items = this.payment_products.map((v) => ({
+      let product_items = this.payment_products.map(v => ({
         inventoryId: v.inventoryId,
         productId: v.productId,
-        num: v.num,
+        num: v.num
       }));
       let productInfo = JSON.stringify(product_items);
 
       let params = {
         productInfo: productInfo,
         addressId: this.address_select.id || "",
-        yhqId: this.coupon_select_id || "", //优惠券记录ID
+        yhqId: this.coupon_select_id || "" //优惠券记录ID
       };
       return params;
     },
 
     get_pay_params() {
-      let product_items = this.payment_products.map((v) => ({
+      let product_items = this.payment_products.map(v => ({
         inventoryId: v.inventoryId,
         productId: v.productId,
-        num: v.num,
+        num: v.num
       }));
       let productInfo = JSON.stringify(product_items);
 
@@ -1274,7 +964,7 @@ export default {
         tuanType: "", //拼团类型：0-普通订单 1-普通团 2-社区团
         remark: "", //备注
 
-        ...this.fapiao_info,
+        ...this.fapiao_info
       };
       return params;
     },
@@ -1289,9 +979,9 @@ export default {
         data: {
           action: "orders_getPayInfo",
           ifCard: this.ifCard,
-          ...params,
-        },
-      }).then((res) => {
+          ...params
+        }
+      }).then(res => {
         let { code, data, msg } = res;
         if (code == 200) {
           // let item = this.pay_method_list.find(item => item.value == 'duihuanka');
@@ -1322,7 +1012,7 @@ export default {
           }
 
           if (data.yhqList.length) {
-            this.list_coupon = data.yhqList.map((item) => ({
+            this.list_coupon = data.yhqList.map(item => ({
               ...item,
 
               miaoshu: +item.man
@@ -1331,7 +1021,7 @@ export default {
               youxiaoqi:
                 item.startTime.substr(0, 10) +
                 " - " +
-                item.endTime.substr(0, 10),
+                item.endTime.substr(0, 10)
             }));
           }
           this.order_price = data.order_price;
@@ -1344,7 +1034,7 @@ export default {
     // 格式化优惠券展示信息
     format_coupon_view_info(list) {
       console.log(list, "?");
-      list.forEach((v) => {
+      list.forEach(v => {
         // v.is_expand = false;
         v.man_price = parseFloat(v.man);
         v.jian_price = parseFloat(v.jian);
@@ -1369,7 +1059,7 @@ export default {
         } else if (this.total_balance < this.real_payment_money) {
           //余额不足提示
           this.$refs.balance_pay_disable_modal.init({
-            money: this.real_payment_money,
+            money: this.real_payment_money
           });
         }
       }
@@ -1389,7 +1079,7 @@ export default {
     //提交订单
     do_submit() {
       let params_info = {
-        ...this.form,
+        ...this.form
       };
       delete params_info.phone;
 
@@ -1467,7 +1157,7 @@ export default {
       element.scrollIntoView({
         behavior: "smooth",
         block: "center",
-        inline: "center",
+        inline: "center"
       });
     },
 
@@ -1483,13 +1173,13 @@ export default {
         data: {
           action: "orders_getPayInfo",
           ifCard: val,
-          ...params,
-        },
-      }).then((res) => {
+          ...params
+        }
+      }).then(res => {
         if (res.code == 200) {
           console.log(res, "-预支付");
           let item = this.pay_method_list.find(
-            (item) => item.value == "duihuanka"
+            item => item.value == "duihuanka"
           );
           if (res.data.cardInfo != false) {
             item.show = true;
@@ -1520,9 +1210,9 @@ export default {
         method: "get",
         data: {
           action: "orders_create",
-          ...params,
-        },
-      }).then((res) => {
+          ...params
+        }
+      }).then(res => {
         if (res.code == 200) {
           let { id, orderNo } = res.data;
           this.order_id = id;
@@ -1563,16 +1253,16 @@ export default {
           userId: localStorage.getItem("userId"),
           token: localStorage.getItem("token"),
           orderType: 1,
-          orderId: this.order_id,
-        },
-      }).then((res) => {
+          orderId: this.order_id
+        }
+      }).then(res => {
         alert(res);
         if (res.code == 200) {
           let { data } = res.data;
           let info = {
             // ...res,
             qrcode: data.qrcode,
-            order_id: this.order_id,
+            order_id: this.order_id
           };
           this.$refs.orderPayWxCode.init(info);
           this.$refs.orderPayWxCode.qrcode = data.qrcode;
@@ -1590,9 +1280,9 @@ export default {
         data: {
           action: "pay_recharge",
           orderType: 1,
-          orderId: this.order_id,
-        },
-      }).then((res) => {
+          orderId: this.order_id
+        }
+      }).then(res => {
         alert(res);
         if (res.code == 200) {
           console.log(res, "rrres");
@@ -1620,9 +1310,9 @@ export default {
         data: {
           action: "pay_balance",
           orderType: 1,
-          orderId: this.order_id,
-        },
-      }).then((res) => {
+          orderId: this.order_id
+        }
+      }).then(res => {
         alert(res);
         if (res.code == 200) {
           this.toPaySuccess();
@@ -1663,17 +1353,17 @@ export default {
         data: {
           action: "pay_aliScanCodePay", // pay_aliScanCodePay
           orderType: 1,
-          orderId: this.order_id,
-        },
-      }).then((res) => {
+          orderId: this.order_id
+        }
+      }).then(res => {
         // alert(res);
         if (res.code == 1) {
           let data = res.data;
           const { href } = this.$router.resolve({
             path: "/zfbPay",
             query: {
-              htmlData: data,
-            },
+              htmlData: data
+            }
           });
 
           window.open(href, "_blank");
@@ -1701,9 +1391,9 @@ export default {
         method: "get",
         data: {
           action: "orders_yuePay",
-          orderId: this.order_id,
-        },
-      }).then((res) => {
+          orderId: this.order_id
+        }
+      }).then(res => {
         //console.log("余额支付", res);
         let { code, message } = res;
 
@@ -1731,8 +1421,8 @@ export default {
       this.$api("orders_uploadPz", {
         //
         order_id: this.order_id,
-        paypz: paypz,
-      }).then((res) => {
+        paypz: paypz
+      }).then(res => {
         //console.log("线下转款支付", res);
         let { code, message } = res;
         if (code == 200) {
@@ -1752,9 +1442,9 @@ export default {
       let that = this;
       order.orders_wxPay({
         params: {
-          order_id: this.order_id,
+          order_id: this.order_id
         },
-        success: (data) => {
+        success: data => {
           //console.log("订单微信jsapi支付", data);
           let { timeStamp, nonceStr, signType, paySign } = data;
 
@@ -1764,17 +1454,17 @@ export default {
             package: data.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
             signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
             paySign, // 支付签名
-            success: function (res) {
+            success: function(res) {
               that.toPaySuccess();
             },
             fail(err) {
               //console.log("支付失败了");
-            },
+            }
           });
         },
-        fail: (err) => {
+        fail: err => {
           //console.log("支付失败", err);
-        },
+        }
       });
     },
 
@@ -1790,9 +1480,9 @@ export default {
           method: "get",
           data: {
             action: "orders_detail",
-            id: this.order_id,
-          },
-        }).then((res) => {
+            id: this.order_id
+          }
+        }).then(res => {
           let { code, data, msg } = res;
           if (data.status == 2 || data.status == 3) {
             that.toPaySuccess();
@@ -1831,7 +1521,7 @@ export default {
 
     //购物车 删除支付的商品
     shopcart_delete_payment() {
-      let ids = this.payment_products.map((v) => v.inventoryId);
+      let ids = this.payment_products.map(v => v.inventoryId);
       let id = ids.join();
 
       this.$api({
@@ -1839,15 +1529,15 @@ export default {
         method: "get",
         data: {
           action: "gouwuche_del",
-          inventoryId: inventoryId,
-        },
-      }).then((res) => {
+          inventoryId: inventoryId
+        }
+      }).then(res => {
         if (res.code == 200) {
           let list = this.list_shopcart;
           let ids = (inventoryId + "").split(",");
           //可能删除多项商品
-          ids.forEach((inventoryId) => {
-            let index = list.findIndex((v) => v.inventoryId == inventoryId);
+          ids.forEach(inventoryId => {
+            let index = list.findIndex(v => v.inventoryId == inventoryId);
             list.splice(index, 1);
           });
 
@@ -1878,8 +1568,8 @@ export default {
     order_jifen_dixian() {
       this.$api("orders_jifenPay", {
         order_id: this.order_id,
-        jifen: this.use_jifen_num,
-      }).then((res) => {
+        jifen: this.use_jifen_num
+      }).then(res => {
         //console.log("积分抵现", res);
         let { code, is_over, message } = res;
         if (code == 200) {
@@ -1901,8 +1591,8 @@ export default {
     //订单佣金抵现
     order_yongjin_pay() {
       this.$api("orders_yuePay", {
-        order_id: this.order_id,
-      }).then((res) => {
+        order_id: this.order_id
+      }).then(res => {
         //console.log("余额抵扣", res);
         let { code, is_over } = res;
         if (code == 200) {
@@ -1927,8 +1617,8 @@ export default {
         path: "/payment-methods",
         query: {
           order_id: this.order_id,
-          from: "order-submit",
-        },
+          from: "order-submit"
+        }
       });
     },
 
@@ -1994,9 +1684,9 @@ export default {
         path: "/order-detail",
         query: {
           from: "payment",
-          id: this.order_id,
+          id: this.order_id
         },
-        mode: "reLaunch",
+        mode: "reLaunch"
       });
     },
 
@@ -2008,8 +1698,8 @@ export default {
         query: {
           id: this.order_id,
           type: "order",
-          is_pay: is_pay,
-        },
+          is_pay: is_pay
+        }
         // mode: 'redirectTo'
       });
     },
@@ -2036,7 +1726,7 @@ export default {
       this.activeTab = tab;
       if (tab === "code") {
         // 切换到优惠码时，可以在这里添加相关逻辑
-        this.coupon_select_id=""
+        this.coupon_select_id = "";
       }
     },
 
@@ -2086,22 +1776,20 @@ export default {
         method: "get",
         data: {
           action: "yhq_checkYhqCode",
-          code: this.yh_code.trim(),
+          code: this.yh_code.trim()
           // 可以添加其他必要参数，如订单金额等
-        },
+        }
       })
-        .then((res) => {
+        .then(res => {
           if (res.code == 200) {
             this.$message.success("优惠码验证成功");
             // 处理优惠码信息
             this.handlePromoCodeSuccess(res.data);
-
-
           } else {
             this.$message.error(res.msg || "优惠码无效或已过期");
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.$message.error("查询优惠码失败，请重试");
           console.error("查询优惠码失败:", error);
         });
@@ -2119,10 +1807,10 @@ export default {
         this.total_order_price = this.total_order_price - data.discount_amount;
       }
 
-      this.coupon_code_info =data;
-      this.coupon_select =data;
+      this.coupon_code_info = data;
+      this.coupon_select = data;
       this.coupon_select_id = data.id;
-      this.query_pay_info()
+      this.query_pay_info();
     },
 
     // 不使用优惠码
@@ -2130,12 +1818,591 @@ export default {
       this.yh_code = "";
       // 重置相关状态
       this.$message.info("已取消使用优惠码");
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped lang="less">
+// 新样式：两列布局
+.order-submit-page {
+  background: #f5f5f5;
+  min-height: 100vh;
+  padding: 20px 0;
+
+  .page-header {
+    .page-title {
+      font-size: 26px;
+      font-weight: bold;
+      color: #1e262e;
+    }
+  }
+
+  .two-column-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+  }
+
+  .left-column {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border: 1px solid #e9e9e9;
+    border-radius: 24px;
+    padding: 40px;
+    width: 998px;
+  }
+
+  .right-column {
+    flex: 1;
+    position: sticky;
+  }
+
+  // 部分卡片样式
+  .section-card {
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+
+      .section-icon {
+        width: 42px;
+        height: 42px;
+        background: #f5f5f5;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: #1e262e;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .section-title {
+        width: 860px;
+        height: 62px;
+        background: #f5f5f5;
+        border-radius: 10px 10px 0px 0px;
+
+        font-family: Poppins, Poppins;
+        font-weight: 500;
+        font-size: 20px;
+        color: #1e262e;
+        line-height: 62px;
+        padding: 0 30px;
+        text-align: left;
+      }
+    }
+
+    .sec-ctx {
+      padding: 20px 20px 20px 45px;
+      margin-left: 20px;
+      border-left: 1px dashed #e9e9e9;
+    }
+  }
+
+  // 表单样式
+  .form-group {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      font-size: 20px;
+      color: #1f1f1f;
+      width: 220px;
+      margin-right: 20px;
+
+      .required {
+        color: #ff0000;
+        margin-right: 5px;
+      }
+    }
+
+    .form-input {
+      width: 460px;
+      height: 56px;
+      padding: 0 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #1f1f1f;
+      box-sizing: border-box;
+
+      &::placeholder {
+        color: #999;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: #999;
+      }
+    }
+  }
+
+  .form-row {
+    display: flex;
+    gap: 15px;
+
+    .form-group {
+      flex: 1;
+    }
+  }
+
+  .toggle-group {
+    margin-top: 10px;
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+
+      input[type="checkbox"] {
+        cursor: pointer;
+      }
+
+      .toggle-text {
+        font-size: 14px;
+        color: #1f1f1f;
+      }
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+
+    .btn-confirm {
+      flex: 1;
+      height: 40px;
+      background: #ff6600;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+
+      &:hover {
+        background: #e55a00;
+      }
+    }
+
+    .btn-cancel {
+      flex: 1;
+      height: 40px;
+      background: transparent;
+      color: #00306b;
+      border: 2px solid #00306b;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+
+      &:hover {
+        background: #f0f0f0;
+      }
+    }
+  }
+
+  // 配送方式
+  .delivery-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+
+      input[type="radio"] {
+        cursor: pointer;
+      }
+
+      .delivery-price {
+        margin-left: 500px;
+        color: #1f1f1f;
+        font-weight: 500;
+        img {
+          width: 31px;
+          height: 31px;
+        }
+      }
+    }
+  }
+
+  // 支付方式
+  .payment-options {
+    margin-bottom: 20px;
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      margin-bottom: 15px;
+
+      input[type="radio"] {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .payment-logos {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+
+    .payment-logo {
+      width: 112px;
+      height: 54px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  .checkbox-group {
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      cursor: pointer;
+
+      input[type="checkbox"] {
+        margin-top: 3px;
+        cursor: pointer;
+      }
+
+      span {
+        font-size: 14px;
+        color: #1f1f1f;
+      }
+    }
+
+    .checkbox-tip {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #666;
+      margin-left: 24px;
+    }
+  }
+
+  // 发票切换按钮
+  .invoice-toggles,
+  .invoice-type-toggles,
+  .coupon-toggles {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+
+    .toggle-btn {
+      padding: 0 25px;
+      height: 50px;
+      background: #ffffff;
+      border: 1px solid #dbdbdb;
+      border-radius: 25px;
+      font-size: 20px;
+      color: #5e5e5e;
+      cursor: pointer;
+
+      &.active {
+        background: #feeedd;
+        color: #ec6a2b;
+        border-color: #ec6a2b;
+      }
+
+      &:hover {
+        border-color: #ff6600;
+      }
+    }
+  }
+
+  // 优惠券卡片
+  .coupon-cards {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+
+    .coupon-card-item {
+      flex: 1;
+      min-width: 200px;
+      padding: 15px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &.selected {
+        border-color: #ff6600;
+        border-style: dashed;
+      }
+
+      .coupon-amount {
+        font-size: 24px;
+        font-weight: bold;
+        color: #ff6600;
+        margin-bottom: 8px;
+      }
+
+      .coupon-condition {
+        font-size: 14px;
+        color: #1f1f1f;
+        margin-bottom: 8px;
+      }
+
+      .coupon-expire {
+        font-size: 12px;
+        color: #666;
+      }
+    }
+  }
+
+  // 订单摘要
+  .order-summary {
+    background: #ffffff;
+    border: 1px solid #efefef;
+    border-radius: 24px 24px 24px 24px;
+    padding: 30px;
+
+    .summary-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #1f1f1f;
+      margin: 0 0 20px 0;
+    }
+
+    .product-list {
+      margin-bottom: 20px;
+
+      .product-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .product-item-top {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
+
+        .product-icon {
+          font-size: 24px;
+          img {
+            width: 80px;
+            height: 80px;
+            border-radius: 6px 6px 6px 6px;
+            border: 1px solid #cecece;
+          }
+        }
+
+        .product-info {
+          flex: 1;
+          text-align: left;
+          .product-name {
+            font-family: Poppins, Poppins;
+            font-weight: 400;
+            font-size: 20px;
+            color: #1e262e;
+            line-height: 28px;
+          }
+
+          .product-details {
+            font-family: Poppins, Poppins;
+            font-weight: 400;
+            font-size: 18px;
+            color: #5e5e5e;
+            line-height: 25px;
+          }
+        }
+
+        .product-quantity {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .product-price {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1f1f1f;
+          }
+
+          .product-quantity-actions {
+            display: flex;
+            align-items: center;
+          }
+
+          .qty-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: #ffffff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+
+            &:hover {
+              background: #f0f0f0;
+            }
+          }
+
+          .qty-value {
+            width: 40px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            font-size: 18px;
+            color: #1f1f1f;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+          }
+        }
+
+        .product-remove {
+          font-size: 20px;
+          cursor: pointer;
+          margin-left: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: opacity 0.3s;
+
+          img {
+            width: 20px;
+            height: 20px;
+          }
+
+          &.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+          }
+        }
+      }
+    }
+
+    .price-breakdown {
+      margin-bottom: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #f0f0f0;
+
+      .price-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 14px;
+
+        .price-label {
+          color: #666;
+        }
+
+        .price-value {
+          color: #1f1f1f;
+          font-weight: 500;
+        }
+
+        &.total {
+          margin-top: 15px;
+          padding-top: 15px;
+          border-top: 1px solid #f0f0f0;
+
+          .price-label,
+          .price-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff6600;
+          }
+        }
+      }
+
+      .submit {
+        margin-top: 20px;
+        .btn-confirm {
+          margin-left: 20px;
+          width: 300px;
+          height: 95px;
+          background: #ec6a2b;
+          border-radius: 10px 10px 10px 10px;
+
+          font-family: Poppins, Poppins;
+          font-weight: 600;
+          font-size: 24px;
+          color: #ffffff;
+          line-height: 18px;
+        }
+      }
+    }
+
+    .promo-message {
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+      margin-bottom: 20px;
+      padding: 10px;
+      background: #fff8f0;
+      border-radius: 4px;
+
+      .promo-asterisk {
+        color: #ff6600;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .promo-text {
+        font-size: 12px;
+        color: #666;
+        line-height: 1.5;
+      }
+    }
+
+    .checkout-btn {
+      width: 100%;
+      height: 50px;
+      background: #ff6600;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        background: #e55a00;
+      }
+    }
+  }
+}
 .upload-box {
   padding: 20px 20px;
   text-align: left;
@@ -2146,15 +2413,6 @@ export default {
   height: 40px;
   border: 1px solid #7853b2;
   color: #7853b2;
-  font-size: 14px;
-}
-
-.btn-confirm {
-  margin-left: 20px;
-  min-width: 100px;
-  height: 40px;
-  background: #7853b2;
-  color: #fff;
   font-size: 14px;
 }
 
@@ -2183,20 +2441,20 @@ export default {
 }
 
 .page {
-  background: #f5f7fa;
+  background: #fbfbfb;
   text-align: center;
   font-size: 14px;
   padding-top: 24px;
 
   .inner {
     margin: 0 auto;
-    padding: 40px 0 100px 0;
-    background: #fff;
+    padding: 0 0 100px 0;
   }
 
   .page-title {
     margin-bottom: 30px;
     text-align: left;
+    margin-left: 10px;
 
     .left {
       font-size: 16px;
@@ -2237,7 +2495,7 @@ export default {
         font-family: OPPOSans, OPPOSans;
         // font-weight: bold;
         font-size: 16px;
-        color: #1F1F1F;
+        color: #1f1f1f;
 
         // border-bottom: 1px solid #ddd;
         .box-title {
@@ -2279,7 +2537,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           // font-weight: bold;
           font-size: 18px;
-          color: #1F1F1F;
+          color: #1f1f1f;
 
           .box-title {
             flex: 1;
@@ -2337,7 +2595,7 @@ export default {
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #1F1F1F;
+        color: #1f1f1f;
 
         &:last-child {
           margin-bottom: 0;
@@ -2349,7 +2607,7 @@ export default {
           font-family: Arial, Arial;
           font-weight: 400;
           font-size: 14px;
-          color: #1F1F1F;
+          color: #1f1f1f;
         }
       }
 
@@ -2542,7 +2800,7 @@ export default {
     margin-bottom: 5px;
     font-family: Poppins, Poppins;
     font-size: 24px;
-    color: #1F1F1F;
+    color: #1f1f1f;
     padding-left: 34px;
   }
 
@@ -2552,7 +2810,7 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 25px;
-    color: #1F1F1F;
+    color: #1f1f1f;
   }
 
   .sec-input {
@@ -2636,17 +2894,12 @@ export default {
     font-family: Microsoft YaHei, Microsoft YaHei;
 
     font-size: 24px;
-    color: #1F1F1F;
+    color: #1f1f1f;
     padding-left: 34px;
-  }
-
-  .sec-ctx {
-    padding-top: 45px;
   }
 }
 
 .sec-addr {
-  padding-bottom: 55px;
   text-align: left;
 
   .sec-title {
@@ -2656,7 +2909,7 @@ export default {
     font-weight: 400;
 
     font-size: 24px;
-    color: #1F1F1F;
+    color: #1f1f1f;
     padding-left: 34px;
   }
 
@@ -2771,7 +3024,7 @@ export default {
         margin-bottom: 16px;
         font-size: 14px;
         font-weight: normal;
-        color: #1F1F1F;
+        color: #1f1f1f;
 
         span {
           color: #7853b2;
@@ -2791,7 +3044,6 @@ export default {
 
 // 支付配送
 .sec-pay {
-  padding-bottom: 55px;
   text-align: left;
 
   .sec-title {
@@ -2802,7 +3054,7 @@ export default {
     font-weight: 400;
 
     font-size: 24px;
-    color: #1F1F1F;
+    color: #1f1f1f;
     padding-left: 34px;
   }
 
@@ -2819,7 +3071,7 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 16px;
-      color: #1F1F1F;
+      color: #1f1f1f;
     }
 
     .pay-items {
@@ -3021,7 +3273,7 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #1F1F1F;
+      color: #1f1f1f;
     }
 
     .info-val {
@@ -3029,7 +3281,7 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #1F1F1F;
+      color: #1f1f1f;
     }
 
     .yue-warn-tip {
@@ -3059,7 +3311,7 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #1F1F1F;
+      color: #1f1f1f;
     }
 
     .info-val {
@@ -3067,7 +3319,7 @@ export default {
       font-size: 14px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #1F1F1F;
+      color: #1f1f1f;
     }
   }
 }
@@ -3084,7 +3336,7 @@ export default {
     font-weight: 400;
 
     font-size: 24px;
-    color: #1F1F1F;
+    color: #1f1f1f;
     padding-left: 34px;
   }
 
@@ -3102,7 +3354,7 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 16px;
-      color: #1F1F1F;
+      color: #1f1f1f;
     }
 
     .type-list {
@@ -3152,7 +3404,7 @@ export default {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 14px;
-        color: #1F1F1F;
+        color: #1f1f1f;
 
         &::before {
           content: "*";
@@ -3186,7 +3438,7 @@ export default {
       cursor: pointer;
       background: #f9f9f9;
       transition: all 0.3s ease;
-      color: #1F1F1F;
+      color: #1f1f1f;
       border-bottom: 1px solid #cccccc;
 
       &.active {
@@ -3304,12 +3556,12 @@ export default {
 
           .coupon-condition {
             font-size: 14px;
-            color: #1F1F1F;
+            color: #1f1f1f;
           }
 
           .coupon-expire {
             font-size: 12px;
-            color: #1F1F1F;
+            color: #1f1f1f;
             margin-right: 12px;
           }
 
@@ -3367,12 +3619,13 @@ export default {
       }
 
       .promo-code-tip {
-        background: #7853B2;
+        background: #7853b2;
         font-size: 14px;
-       color: #FFFFFF; border-radius: 2px 2px 2px 2px;
-       margin-top: 16px;
-       width: 126px;
-       height: 32px;
+        color: #ffffff;
+        border-radius: 2px 2px 2px 2px;
+        margin-top: 16px;
+        width: 126px;
+        height: 32px;
       }
     }
   }

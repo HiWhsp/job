@@ -48,10 +48,7 @@
           <div
             v-for="(item, index) in nav_list"
             :key="index"
-            :class="[
-              'nav-item',
-              item.title === $route.query.tags ? 'active' : '',
-            ]"
+            class="nav-item"
           >
             <router-link :to="item.route" class="nav-title">
               {{ item.title }}
@@ -83,17 +80,17 @@ export default {
     nav_list() {
       let route_news = "";
       let arr = [
-        { title: "Hospital", route: "/" },
-        { title: "Clinic", route: "/product-xieyi" },
-        { title: "Nursing Home", route: "/batch-xunjia" },
-        { title: "Home Care", route: "/product-zhenxuan" },
-        { title: "Health & Beauty", route: "/scene" },
-        { title: "Ophthalmic", route: "/product-brand" },
-        { title: "Dental", route: route_news },
-        { title: "Lab", route: "/scene" },
-        { title: "Veterinary", route: "/coupon-center" },
-        { title: "Safety", route: "/coupon-center" },
-        { title: "Other", route: "/coupon-center" },
+        { title: "Hospital", route: "/product-cates" },
+        { title: "Clinic", route: "/product-cates" },
+        { title: "Nursing Home", route: "/product-cates" },
+        { title: "Home Care", route: "/product-cates" },
+        { title: "Health & Beauty", route: "/product-cates" },
+        { title: "Ophthalmic", route: "/product-cates" },
+        { title: "Dental", route: "/product-cates" },
+        { title: "Lab", route: "/product-cates" },
+        { title: "Veterinary", route: "/product-cates" },
+        { title: "Safety", route: "/product-cates" },
+        { title: "Other", route: "/product-cates" },
       ];
       return arr;
     },
@@ -233,12 +230,12 @@ export default {
 
             &.active {
               font-weight: bold;
-              color: #ec6a2b;
+              color: #00306B;
             }
 
             &.router-link-exact-active {
               font-weight: bold;
-              color: #ec6a2b;
+              color: #00306B;
             }
           }
 

@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <page_header v-if="!vuex_h5&&!is_show_login_comp" />
+    <page_header v-if="!vuex_h5" />
     <page_header_mobile v-if="vuex_h5" />
     <div class="layout-box">
       <router-view></router-view>
     </div>
-    <page_footer v-if="!is_show_login_comp"/>
+    <page_footer/>
   </div>
 </template>
 <script>

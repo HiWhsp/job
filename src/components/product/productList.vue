@@ -6,6 +6,32 @@
       :key="index"
       @click="to_product(item)"
     >
+      <div class="poster-box scale-box">
+        <img class="scale-img" :src="item.thumb" alt="" />
+      </div>
+      <div class="info-box">
+        <div class="title-box">
+          <div class="title">
+            {{ item.title }}
+          </div>
+        </div>
+        <div class="price-box">
+          <div class="price">
+            <div class="pirce-num">￥{{ item.priceSale }}</div>
+          </div>
+          <div class="market-price">
+            ￥{{ item.priceMarket }}
+          </div>
+        </div>
+        <div class="btn-box">
+          <div class="btn" @click.stop="openQuickBuy(item)">
+            FDA
+          </div>
+          <div class="btn" @click.stop="openQuickBuy(item)">
+            ISO13485
+          </div>
+        </div>
+      </div>
       <el-tooltip
         class="item"
         effect="dark"
@@ -20,37 +46,6 @@
           >三类</el-tag
         >
       </el-tooltip>
-      <div class="poster-box scale-box">
-        <img class="scale-img" :src="item.thumb" alt="" />
-      </div>
-      <div class="info-box">
-        <div class="title-box">
-          <div class="title ellipsis-1">
-            {{ item.title }}
-          </div>
-        </div>
-        <!-- <div class="price flex">
-                      <div class="pirce-num">￥ {{ item.priceSale }}</div>
-                    </div> -->
-        <div class="flex-between">
-          <div>
-            <div class="price">
-              <div class="pirce-num">￥{{ item.priceSale }}</div>
-            </div>
-            <div class="market-price">
-              {{ item.priceMarket }}
-            </div>
-          </div>
-          <div class="flex-center">
-            <div class="btn" @click.stop="openQuickBuy(item)">
-              <img src="@img/index/order.png" />
-            </div>
-            <div class="btn" @click.stop="openQuickBuy(item)">
-              <img src="@img/index/cart.png" />
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
     <!-- <div class="product-item" v-for="(item, index) in list" :key="index">
       <div class="product-item-info" @click="to_product(item)">
@@ -208,6 +203,7 @@ export default {
 <style scoped lang="less">
 .product-list {
   flex-wrap: wrap;
+  gap: 36px;
 
   // .product-item {
   //   position: relative;
@@ -368,81 +364,94 @@ export default {
   .product-item {
     cursor: pointer;
     background: #fff;
-    width: 254px;
-    height: 360px;
-    margin-bottom: 16px;
-    padding: 17px 20px;
-    margin-right: 15px;
-    border-radius: 8px 8px 8px 8px;
     position: relative;
+
     .tag-dom {
       position: absolute;
-      right: 0;
+      left: 0;
       top: 0;
-      width: 40px;
-      height: 25px;
-      line-height: 25px;
-    }
-
-    &:nth-child(6n) {
-      margin-right: 0;
+      text-align: center;
+      font-size: 22px;
+      line-height: 30px;
+      width: 82px;
+      height: 37px;
+      background: linear-gradient(90deg, #ec6a2b 0%, #ff9524 100%);
+      border-radius: 24px 0px 24px 0px;
     }
 
     .poster-box {
       margin: 0 auto;
-      width: 215px;
-      height: 215px;
+      width: 373px;
+      height: 373px;
+      border-radius: 24px;
 
       img {
         width: 100%;
         height: 100%;
         object-fit: contain;
+        border-radius: 24px;
       }
     }
 
     .info-box {
       text-align: left;
-      padding-top: 14px;
+      padding-top: 4px;
+      width: 373px;
+
+      .price-box {
+        display: flex;
+        align-items: end;
+        gap: 10px;
+        .price {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 30px;
+          color: #ec6a2b;
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          font-weight: bold;
+        }
+
+        .market-price {
+          color: #5e5e5e;
+          font-size: 20px;
+        }
+      }
 
       .title-box {
-        height: 22px;
-        margin-bottom: 16px;
+        height: 85px;
 
         .title {
+          height: 80px;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+          line-clamp: 3;
+          overflow: hidden;
+          text-overflow: ellipsis;
           font-family: MicrosoftYaHei, MicrosoftYaHei;
           font-weight: normal;
-          font-size: 16px;
-          color: #1F1F1F;
-          line-height: 22px;
+          font-size: 20px;
+          color: #1e262e;
+          line-height: 26px;
         }
       }
-      .market-price {
-        text-decoration-line: line-through;
-        color: #505050;
-        font-size: 14px;
-      }
-      .btn {
-        width: 32px;
-        height: 32px;
-        text-align: center;
-        border-radius: 50%;
-        img {
-          margin-top: 6px;
-          width: 19px;
+      .btn-box {
+        margin-top: 22px;
+        display: flex;
+        gap: 12px;
+        .btn {
+          height: 30px;
+          text-align: center;
+          border-radius: 5px;
+          border: 1px solid #00306b;
+          padding: 0 10px;
+          font-family: Poppins, Poppins;
+          font-weight: 600;
+          font-size: 22px;
+          color: #00306b;
+          line-height: 31px;
         }
-        &:first-child {
-          background: #7853b2;
-        }
-        &:last-child {
-          background: #FCB000;
-          margin-left: 7px;
-        }
-      }
-      .price {
-        font-family: Microsoft YaHei, Microsoft YaHei;
-        font-weight: bold;
-        font-size: 20px;
-        color: #7853b2;
       }
     }
   }
@@ -568,4 +577,5 @@ export default {
 }
 </style>
 
+<style scoped lang="less" src="@/assets/h5css/page/shipei.less"></style>
 <style scoped lang="less" src="@/assets/h5css/page/shipei.less"></style>

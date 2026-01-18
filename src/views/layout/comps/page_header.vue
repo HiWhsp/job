@@ -26,7 +26,7 @@
               <span class="u-line"></span>
               <div class="u-act">
                 <img src="@/assets/img/head/LoginOrRegister.png" alt="" />
-                <router-link to="/my-info">Login or Register</router-link>
+                <router-link to="/my-info">{{ vuex_user.phone ? vuex_user.phone : 'Login or Register' }}</router-link>
               </div>
             </div>
           </div>

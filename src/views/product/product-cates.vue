@@ -1,16 +1,16 @@
 <template>
   <div class="page">
-    <div class="inner w-1400">
+    <div class="inner">
       <div class="bread-box">
         <div class="bread-inner flex w-1400">
-          <router-link to="/"> 首页 </router-link>
+          <router-link to="/"> Home </router-link>
 
           <div
             class="bread-item"
             v-for="(item, index) in bread_list"
             :key="index"
           >
-            <span class="arrow">></span>
+            <span class="arrow">/</span>
             <template v-if="item">
               <a
                 v-if="item && !item.route"
@@ -36,37 +36,13 @@
         </div>
       </div>
 
-      <div class="category-box filter-box">
-        <!-- <div class="filter-item">
-          <div class="label">分类</div>
-          <div class="val">
-            <div class="cate-box" :class="{'hidden-expand': !v1_is_expand}">
-              <div
-                class="cate-item hover-color"
-                v-for="(item, index) in vuex_category_tree"
-                :key="index"
-                :class="{ active: item.id == $route.query.ids }"
-                @click="toCate(item)"
-              >
-                {{ item.title }}
-              </div>
-            </div>
-          </div>
-
-          <div class="cate-acts flex">
-            <div class="all-box flex hover-color" @click="do_toggle_all()">
-              全部
-              <img :class="{rotate: v1_is_expand}" src="@img/product/filter-arrow.png" alt="" />
-            </div>
-          </div>
-        </div> -->
-
+      <div class="category-box filter-box w-1400">
         <div
           class="filter-item"
           v-for="(group_cates, gindex) in group_options"
           :key="gindex"
         >
-          <div class="label">{{ gindex == 0 ? "分类" : "" }}</div>
+          <div class="label">{{ gindex == 0 ? "Classification" : "" }}</div>
           <div class="val">
             <div
               class="cate-box"
@@ -89,7 +65,7 @@
               class="all-box flex hover-color"
               @click="do_toggle_all(gindex)"
             >
-              全部
+            fold up
               <img
                 :class="{ rotate: cate_is_expand_list[gindex] }"
                 src="@img/product/filter-arrow.png"
@@ -100,7 +76,7 @@
         </div>
 
         <div class="filter-item">
-          <div class="label">品牌</div>
+          <div class="label">Brand</div>
           <div class="val">
             <div class="cate-box">
               <div
@@ -117,7 +93,7 @@
         </div>
 
         <div class="filter-item">
-          <div class="label">当前筛选</div>
+          <div class="label">Current Selection</div>
           <div class="val">
             <div class="check-box">
               <div
@@ -146,13 +122,13 @@
           <div class="check-acts flex">
             <div class="clear-box flex hover-color" @click="do_clear()">
               <img src="@img/product/clear.png" alt="" />
-              清除所选
+              Clear
             </div>
           </div>
         </div>
       </div>
 
-      <div class="category-box filter-box sort-wrap" style="margin-top: 16px">
+      <div class="category-box filter-box sort-wrap w-1400" style="margin-top: 16px">
         <div class="filter-item">
           <!-- <div class="label">产品排序</div> -->
           <div class="val" style="padding: 0">
@@ -185,24 +161,24 @@
                 <input
                   v-model="searchMin"
                   type="number"
-                  placeholder="最低价"
+                  placeholder="Lowest price"
                   @blur="on_blur_price"
                 />
                 <span>-</span>
                 <input
                   v-model="searchMax"
                   type="number"
-                  placeholder="最高价"
+                  placeholder="Highest price"
                   @blur="on_blur_price"
                 />
-                <button class="btn fit-text" @click="setView()">筛选</button>
+                <!-- <button class="btn fit-text" @click="setView()">筛选</button> -->
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="page-ctx">
+      <div class="page-ctx w-1400">
         <div class="product-wrap">
           <productList :list="product_list" />
         </div>
@@ -210,7 +186,7 @@
         <div class="pagination-box" v-if="count" style="margin-top: 50px">
           <el-pagination
             background
-            layout="total,prev, pager, next,jumper"
+            layout="prev, pager, next"
             :total="count"
             :current-page="pagination.page"
             :page-size="pagination.pageNum"
@@ -266,13 +242,13 @@ export default {
       //排序方向 填写 desc 或者 asc 排序字段 填写 字段名称 比如时间就是createTime  阅读量就是 hits
       isAsc: "", //升asc 降序desc
       sort_list: [
-        { type: "综合排序", ziduan: "ordering", is_arrow: false },
-        // { type: "人气排序", ziduan: "orders", is_arrow: false },
-        { type: "销量排序", ziduan: "orders", is_arrow: false },
-        { type: "价格排序", ziduan: "priceSale", is_arrow: true },
-        // { type: "新品", ziduan: "xinpin", is_arrow: true },
+        { type: "Comprehensive Ranking", ziduan: "ordering", is_arrow: false },
+        { type: "Popularity ranking", ziduan: "orders", is_arrow: false },
+        { type: "Sales", ziduan: "orders", is_arrow: false },
+        { type: "Price", ziduan: "priceSale", is_arrow: true },
+        { type: "New product", ziduan: "xinpin", is_arrow: true },
       ],
-      sort_type: "综合排序",
+      sort_type: "Comprehensive Ranking",
 
       brand_list: [],
       brand_select: {},
@@ -479,10 +455,10 @@ export default {
 
 <style scoped lang="less">
 page{
-  background: #F5F7FA;
+  background: #ffffff;
 }
 .page {  
-  background: #F5F7FA;
+  background: #fff;
   text-align: left;
 
   .inner {
@@ -497,7 +473,8 @@ page{
 
 .bread-box {
   padding: 16px 0;
-
+  background: #FBFBFB;
+  margin-bottom: 24px;
   .bread-inner {
     margin: 0 auto;
     a {
@@ -562,7 +539,7 @@ page{
       background: #fafafa;
       align-self: stretch;
       // background: #f8f8f8;
-      width: 113px;
+      width: 200px;
       display: inline-flex;
       align-items: center;
       justify-content: flex-end;
@@ -570,8 +547,8 @@ page{
 
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
-      font-size: 16px;
-      color: #333333;
+      font-size: 20px;
+      color: #1E262E;
     }
 
     .val {
@@ -709,10 +686,9 @@ page{
       justify-content: center;
       align-items: center;
       height: 40px;
-      min-width: 124px;
       border-right: 1px solid #eee;
+      padding: 0 15px;
 
-      padding: 0;
       width: fit-content;
       text-align: center;
       cursor: pointer;
@@ -768,7 +744,7 @@ page{
         text-align: center;
         padding: 0 10px;
         display: inline-block;
-        width: 79px;
+        width: 130px;
         height: 35px;
         background: #ffffff;
         border-radius: 0px 0px 0px 0px;
