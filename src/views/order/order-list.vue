@@ -1,10 +1,16 @@
 <template>
   <div class="page">
-    <div class="page-title flex">
-      <img src="@img/my/nav-1.png" alt="">我的订单</div>
+    <div class="page-title flex">MY ORDER</div>
 
     <div class="page-ctx">
       <div class="tab-box">
+        <div class="search-box">
+          <input v-model="keyword" type="text" placeholder="Search" />
+          <button @click="do_search()">
+            <img src="@img/order/order-search.png" alt />
+          </button>
+          <!-- <button @click="do_reset()">重置</button> -->
+        </div>
         <div class="tab-list">
           <div
             v-for="(item, index) in tabList"
@@ -14,21 +20,12 @@
             @click="do_toggle_tab(item)"
           >
             {{ item.title }}
-            <span class="number" v-if="number_info[item.number_key]">{{
+            <span class="number" v-if="number_info[item.number_key]">
+              {{
               number_info[item.number_key]
-            }}</span>
+              }}
+            </span>
           </div>
-        </div>
-        <div class="search-box">
-          <input
-            v-model="keyword"
-            type="text"
-            placeholder="输入商品名称、订单号"
-          />
-          <button @click="do_search()">
-            <img src="@img/order/order-search.png" alt="" />
-          </button>
-          <!-- <button @click="do_reset()">重置</button> -->
         </div>
       </div>
 
@@ -40,14 +37,14 @@
             <div class="base-box flex-between">
               <div class="date">{{ item.createdTime }}</div>
               <div class="order-code">
-                {{ tabSelect.value == "refund" ? "服务编码：" : "订单号：" }}
-                <span>{{
+                {{ tabSelect.value == "refund" ? "Service code." : "Order No." }}
+                <span>
+                  {{
                   tabSelect.value == "refund" ? item.sn : item.orderNo
-                }}</span>
+                  }}
+                </span>
               </div>
-              <div class="order-state" :class="'state-' + item.orderStatus">
-                {{ item.statusInfo }}
-              </div>
+              <div class="order-state" :class="'state-' + item.orderStatus">{{ item.statusInfo }}</div>
             </div>
 
             <div class="product-box">
@@ -57,10 +54,7 @@
                   v-for="(product_item, product_index) in item.products"
                   :key="product_index"
                 >
-                  <div
-                    class="box-image cover"
-                    @click="mix_to_product(product_item)"
-                  >
+                  <div class="box-image cover" @click="mix_to_product(product_item)">
                     <!-- <img :src="good.img" alt /> -->
                     <el-image :src="product_item.image">
                       <div slot="error" class="image-slot">
@@ -72,28 +66,22 @@
                     <div
                       class="product-title"
                       @click="mix_to_product(product_item)"
-                    >
-                      {{ product_item.title }}
-                    </div>
+                    >{{ product_item.title }}</div>
                     <div class="product-sku">{{ product_item.keyVals }}</div>
                   </div>
                   <!-- <div class="box-sku">
                     <div class="product-sku">{{ product_item.keyVals }}</div>
-                  </div> -->
-                  <div class="box-price">
-                    {{ vuex_huobi }} {{ product_item.priceSale }}
-                  </div>
+                  </div>-->
+                  <div class="box-price">{{ vuex_huobi }} {{ product_item.priceSale }}/pack</div>
                   <div class="box-num">x {{ product_item.num }}</div>
-                  <div class="box-subtotal">
-                    {{ vuex_huobi }} {{ product_item.priceSale }}
-                  </div>
-                  <div
+                  <div class="box-subtotal">{{ vuex_huobi }} {{ product_item.priceSale }}</div>
+                  <!-- <div
                     class="box-refund"
                     v-if="product_item.ifRefund == 0"
                     @click="doRefund(item, product_item)"
                   >
                     <div class="refund-act">申请售后</div>
-                  </div>
+                  </div>-->
                 </div>
               </div>
             </div>
@@ -102,66 +90,57 @@
               <div class="heji">
                 <template v-if="tabSelect.value != 'refund'">
                   <div class="heji-num">
-                    共 <b>{{ item.count_goods }}</b> 个商品
+                    <b>{{ item.count_goods }}</b> Items in Total
                   </div>
                   <div class="heji-money">
-                    合计金额： <b>￥{{ item.price }}</b>
+                    Total amount
+                    <b>{{ vuex_huobi }} {{ item.price }}</b>
                   </div>
                 </template>
                 <div class="heji-money" v-else>
-                  申请服务： <b>{{ item.typeInfo }}</b>
+                  申请服务：
+                  <b>{{ item.typeInfo }}</b>
                 </div>
               </div>
 
               <div class="btn-actions">
-                <button class="btn-ripple fit-text" @click="toDetail(item)">
-                  订单详情
-                </button>
+                <!-- <button class="btn-ripple fit-text">Cancel</button> -->
 
                 <button
-                  v-if="item.orderFahuoId&&item.orderStatus==3"
+                  v-if="item.orderStatus == 5 && item.ifComment == 0"
                   class="btn-ripple fit-text"
-                  @click="toLogistics(item)"
-                >
-                  查看物流
-                </button>
+                  @click="doReview(item)"
+                >COMMENT</button>
 
                 <button
                   v-if="item.ifCancel == 1&&tabSelect.value!='refund'"
                   class="btn-ripple fit-text btn-bg"
                   @click="doCancel(item)"
-                >
-                  取消订单
-                </button>
+                >Cancel</button>
+
+                <button class="btn-ripple fit-text btn-bg" @click="toDetail(item)">Order Details</button>
+
+                <!-- <button
+                  v-if="item.orderFahuoId&&item.orderStatus==3"
+                  class="btn-ripple fit-text"
+                  @click="toLogistics(item)"
+                >查看物流</button>-->
+
                 <button
                   v-if="item.ifPay == 1"
-                  class="btn-ripple fit-text btn-bg"
+                  class="btn-ripple fit-text btn-bg-orange"
                   @click="doPay(item)"
-                >
-                  去支付
-                </button>
+                >Payment</button>
                 <button
                   v-if="item.ifDel == 1"
-                  class="btn-ripple fit-text btn-bg"
+                  class="btn-ripple fit-text btn-bg-orange"
                   @click="doDelete(item)"
-                >
-                  删除订单
-                </button>
+                >Delete Order</button>
                 <button
                   v-if="item.ifReceive == 1"
-                  class="btn-ripple fit-text btn-bg"
+                  class="btn-ripple fit-text btn-bg-orange"
                   @click="doReceive(item)"
-                >
-                  确认收货
-                </button>
-                
-                <!-- <button
-                  v-if="item.orderStatus == 5 && item.ifComment == 0"
-                  class="btn-ripple fit-text btn-bg"
-                  @click="doReview(item)"
-                >
-                  去评价
-                </button> -->
+                >Confirm Receipt</button>
 
                 <!-- <button
                   v-if="item.orderStatus >= 5"
@@ -169,27 +148,21 @@
                   @click="doRefund(item)"
                 >
                   售后
-                </button> -->
-                <button
+                </button>-->
+                <!-- <button
                   v-if="item.orderStatus >= 5 && item.invoiceStatus == 0"
                   class="btn-ripple fit-text btn-bg"
                   @click="doInvoic(item)"
-                >
-                  开发票
-                </button>
+                >开发票</button>-->
               </div>
             </div>
           </div>
         </div>
 
-        <div
-          v-if="count"
-          class="pagination-box"
-          style="margin-top: 40px; text-align: right"
-        >
+        <div v-if="count" class="pagination-box" style="margin-top: 40px; text-align: center;">
           <el-pagination
             background
-            layout="total, prev, pager, next"
+            layout="prev, pager, next"
             @current-change="on_current_change"
             :current-page.sync="pagination.page"
             :page-size="pagination.pageNum"
@@ -200,31 +173,11 @@
       </div>
     </div>
 
-    <order_cancel_modal
-      ref="order_cancel_modal"
-      @confirm="emitConfirm"
-      data-type="取消"
-    />
-    <order_delete_modal
-      ref="order_delete_modal"
-      @confirm="emitConfirm"
-      data-type="删除"
-    />
-    <order_receive_modal
-      ref="order_receive_modal"
-      @confirm="emitConfirm"
-      data-type="收货"
-    />
-    <order_refund_modal
-      ref="order_refund_modal"
-      @confirm="emitConfirm"
-      data-type="售后"
-    />
-    <order_invoic_modal
-      ref="order_invoic_modal"
-      @confirm="emitConfirm"
-      data-type="发票"
-    />
+    <order_cancel_modal ref="order_cancel_modal" @confirm="emitConfirm" data-type="取消" />
+    <order_delete_modal ref="order_delete_modal" @confirm="emitConfirm" data-type="删除" />
+    <order_receive_modal ref="order_receive_modal" @confirm="emitConfirm" data-type="收货" />
+    <order_refund_modal ref="order_refund_modal" @confirm="emitConfirm" data-type="售后" />
+    <order_invoic_modal ref="order_invoic_modal" @confirm="emitConfirm" data-type="发票" />
   </div>
 </template>
 
@@ -246,23 +199,23 @@ export default {
     order_delete_modal,
     order_receive_modal,
     order_refund_modal,
-    order_invoic_modal,
+    order_invoic_modal
   },
   data() {
     return {
       tabSelect: {
         title: "全部",
-        value: 0,
+        value: 0
       },
       number_info: {},
       //
       orders: [],
       pagination: {
         page: 1,
-        pageNum: 10,
+        pageNum: 10
       },
       count: 0,
-      keyword: "",
+      keyword: ""
     };
   },
   computed: {
@@ -274,18 +227,22 @@ export default {
       //orderStatus
       //订单状态：-5-待支付  -1-已取消  2-待发货  3-待收货  4-待自提  5-已完成
       let list = [
-        { value: 0, title: "全部订单", number_key: "orderNum" },
-        { value: 1, title: "待付款", number_key: "orderNeedPay" },
-        { value: 2, title: "待发货", number_key: "orderNeedDelivery" },
-        { value: 3, title: "待收货", number_key: "orderNeedShouhuo" },
-        { value: 6, title: "待评价", number_key: "orderNeedComment" },
-        // { value: 5, title: "已完成", number_key: "" },
-        { value: 7, title: "已取消", number_key: "" },
+        { value: 0, title: "All Orders", number_key: "orderNum" },
+        { value: 1, title: "Unpaid", number_key: "orderNeedPay" },
+        { value: 2, title: "To be shipped", number_key: "orderNeedDelivery" },
+        {
+          value: 3,
+          title: "Goods to be received",
+          number_key: "orderNeedShouhuo"
+        },
+        // { value: 6, title: "待评价", number_key: "orderNeedComment" },
+        { value: 5, title: "Completed", number_key: "" }
+        // { value: 7, title: "已取消", number_key: "" }
         // { value: 6, title: "待审核",},
         // { value: "refund", title: "退款/售后", number_key: "" },
       ];
       return list;
-    },
+    }
   },
   created() {
     this.setView();
@@ -298,7 +255,7 @@ export default {
     setView() {
       if (this.$route.query.status) {
         this.tabSelect =
-          this.tabList.find((v) => v.value == this.$route.query.status) ||
+          this.tabList.find(v => v.value == this.$route.query.status) ||
           this.tabList[0];
       }
 
@@ -312,9 +269,9 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "users_userInfo",
-        },
-      }).then((res) => {
+          action: "users_userInfo"
+        }
+      }).then(res => {
         if (res.code == 200) {
           let data = res.data;
           this.number_info = {
@@ -324,7 +281,7 @@ export default {
             orderNeedPay: data.orderNeedPay || 0,
             orderNeedShouhuo: data.orderNeedShouhuo || 0,
             // orderNum: data.orderNum || 0,
-            orderRefundNum: data.orderRefundNum || 0,
+            orderRefundNum: data.orderRefundNum || 0
           };
         }
       });
@@ -342,23 +299,23 @@ export default {
           ...this.pagination,
           scene: this.tabSelect.value,
 
-          keyword: this.keyword,
-        },
-      }).then((res) => {
+          keyword: this.keyword
+        }
+      }).then(res => {
         let { code, data } = res;
         if (code == 200) {
           let list = data.list;
 
-          list.forEach((order) => {
+          list.forEach(order => {
             order.isPay = order.value >= 0;
             order.actions = this.getOrderActions({
-              ...order,
+              ...order
             });
 
             let count_goods = 0;
             if (this.tabSelect.value == "refund")
               order.products = [order.products];
-            order.products.forEach((product) => {
+            order.products.forEach(product => {
               count_goods = count_goods + +product.num;
             });
             order.count_goods = count_goods;
@@ -391,7 +348,7 @@ export default {
         } else if (status_info == "待支付") {
           actions = [
             { name: "立即支付", type: "zhifu" },
-            { name: "取消订单", type: "quxiao" },
+            { name: "取消订单", type: "quxiao" }
           ];
         }
       } else if (status == -3) {
@@ -412,7 +369,7 @@ export default {
         //3待收货
         actions = [
           { name: "确认收货", type: "shouhuo" },
-          { name: "查看物流", type: "wuliu" },
+          { name: "查看物流", type: "wuliu" }
         ];
       } else if (status == 4) {
         //4已收货
@@ -465,8 +422,8 @@ export default {
         path: "/order-logistics",
         query: {
           order_id: item.id,
-          logistics_id: item.fahuo_id,
-        },
+          logistics_id: item.fahuo_id
+        }
       });
     },
     toDetail(item) {
@@ -475,8 +432,8 @@ export default {
         this.mix_toRoute({
           path: "/refund-service-detail",
           query: {
-            id: item.id,
-          },
+            id: item.id
+          }
         });
 
         return;
@@ -484,8 +441,8 @@ export default {
       this.toRoute({
         path: "/order-detail",
         query: {
-          id: item.id,
-        },
+          id: item.id
+        }
       });
     },
     doCancel(item) {
@@ -495,8 +452,8 @@ export default {
       this.$router.push({
         path: "/payment-methods",
         query: {
-          id: item.id,
-        },
+          id: item.id
+        }
       });
     },
     doDelete(item) {
@@ -506,14 +463,14 @@ export default {
       this.$refs.order_receive_modal.init(item);
     },
     doReview(item) {
-      let ids = item.products.map((v) => v.id).join(",");
-       this.$router.push({
+      let ids = item.products.map(v => v.id).join(",");
+      this.$router.push({
         path: "/order-review-submit",
         query: {
           orderId: this.order_id,
           inventoryId: ids,
-          inventoryIds: ids,
-        },
+          inventoryIds: ids
+        }
       });
     },
     doRefund(item, product) {
@@ -523,8 +480,8 @@ export default {
         path: "/refund-type",
         query: {
           orderId: item.id,
-          inventoryId: product.id,
-        },
+          inventoryId: product.id
+        }
       });
     },
     doInvoic(item) {
@@ -563,7 +520,7 @@ export default {
 
     //取消订单
     orders_qxOrder(order_id) {
-      let order = this.list.find((v) => v.id == order_id);
+      let order = this.list.find(v => v.id == order_id);
 
       // order.orders_qxOrder({
       //   params: { order_id },
@@ -578,7 +535,7 @@ export default {
         params: { order_id },
         success: () => {
           this.updateView();
-        },
+        }
       });
     },
     //订单支付
@@ -588,7 +545,7 @@ export default {
 
     //订单确认收货
     order_qianshou(order_id) {
-      let order = this.list.find((v) => v.id == order_id);
+      let order = this.list.find(v => v.id == order_id);
       this.$refs.order_receive_modal.showModal = true;
       this.$refs.order_receive_modal.order = order;
       //console.log("订单信息", { ...order });
@@ -604,17 +561,17 @@ export default {
       this.$router.push({
         path: "/refund-type",
         query: {
-          orderId: this.id,
+          orderId: this.id
           // inventoryId:this.
-        },
+        }
       });
     },
     jump_order_detail(order) {},
 
     open_link(link) {
       window.open(link, "_blank");
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -625,14 +582,14 @@ export default {
   .page-title {
     padding: 0 32px;
     text-align: left;
-    height: 56px;
-    line-height: 56px;
+    height: 70px;
+    line-height: 70px;
     background: #ffffff;
-    font-size: 16px;
+    font-size: 20px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #333333;
-    img{
+    color: #1e262e;
+    img {
       width: 22px;
       margin-right: 10px;
     }
@@ -640,7 +597,7 @@ export default {
 
   .page-ctx {
     margin-top: 14px;
-    padding: 24px 32px;
+    padding: 20px 0;
     background: #fff;
   }
 }
@@ -648,20 +605,20 @@ export default {
 .tab-box {
   padding-right: 20px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   background: #ffffff;
-  // border: 1px solid #cccccc;
+  gap: 20px;
+  padding: 0 26px;
+  border-bottom: 1px solid #dedede;
 
   .tab-list {
     display: flex;
     align-items: center;
-    font-size: 14px;
+    font-size: 20px;
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 20px;
-    color: #7d7d7d;
-
+    color: #333333;
     .tab-item {
       position: relative;
       // min-width: 96px;
@@ -687,7 +644,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #7853b2;
+          background: #ec6a2b;
         }
       }
     }
@@ -696,13 +653,11 @@ export default {
   .search-box {
     display: flex;
     align-items: center;
-    min-width: 260px;
-    height: 32px;
+    width: 308px;
+    height: 56px;
     background: #ffffff;
-    border-radius: 4px 4px 4px 4px;
+    border-radius: 4px;
     border: 1px solid #e5e5e5;
-    overflow: hidden;
-
     input {
       background: #fff;
       flex: 2;
@@ -710,17 +665,15 @@ export default {
       border-right: none;
       outline: none;
       padding-left: 10px;
-      font-size: 12px;
+      font-size: 20px;
       &:placeholder {
-        color: #505050;
+        color: #5e5e5e;
       }
     }
 
     button {
       width: 50px;
       height: 32px;
-      background: #ffffff;
-      border: 1px solid #e2e2e2;
       color: #7d7d7d;
 
       &:last-child {
@@ -732,6 +685,10 @@ export default {
       }
     }
   }
+}
+
+.page-sec {
+  padding: 0 26px;
 }
 
 .goods-sku {
@@ -758,16 +715,16 @@ export default {
   }
 
   .base-box {
-    height: 48px;
+    height: 65px;
     padding: 0 15px;
     background: #f5f5f5;
     border-bottom: 1px solid #e5e5e5;
 
     .date {
-      font-size: 14px;
+      font-size: 20px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
       font-weight: bold;
-      color: #1F1F1F;
+      color: #1f1f1f;
     }
 
     .order-code {
@@ -775,13 +732,13 @@ export default {
       text-align: left;
       padding-left: 20px;
 
-      font-size: 14px;
+      font-size: 20px;
       font-family: Microsoft YaHei-Bold, Microsoft YaHei;
       font-weight: bold;
-      color: #1F1F1F;
+      color: #1f1f1f;
 
       span {
-        color: #1F1F1F;
+        color: #1f1f1f;
       }
     }
 
@@ -792,7 +749,7 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: 400;
       line-height: 20px;
-      color: #ffaa2a;
+      color: #ec6a2b;
 
       // 待付款
       &.state--5 {
@@ -802,7 +759,7 @@ export default {
       }
 
       &.state-2 {
-        color: #ffaa2a;
+        color: #ec6a2b;
         border-color: #7853b2;
       }
     }
@@ -824,21 +781,21 @@ export default {
         }
 
         .box-image {
-          width: 100px;
-          height: 100px;
+          width: 114px;
+          height: 114px;
           cursor: pointer;
           border: 1px solid #f5f5f5;
 
           /deep/ img {
-            width: 100px;
-            height: 100px;
+            width: 114px;
+            height: 114px;
             object-fit: contain;
             object-fit: cover;
           }
 
           img {
-            width: 100px;
-            height: 100px;
+            width: 114px;
+            height: 114px;
             object-fit: contain;
             object-fit: cover;
           }
@@ -847,12 +804,15 @@ export default {
         .box-title {
           flex: 1;
           text-align: left;
-          padding-left: 40px;
+          padding-left: 12px;
 
           .product-title {
             width: fit-content;
             cursor: pointer;
-            color: #333333;
+            font-size: 20px;
+            font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+            font-weight: bold;
+            color: #1e262e;
 
             &:hover {
               color: #7853b2;
@@ -860,9 +820,10 @@ export default {
           }
 
           .product-sku {
+            font-size: 20px;
             margin-top: 20px;
             min-width: 200px;
-            color: #999;
+            color: #5e5e5e;
           }
         }
 
@@ -874,6 +835,8 @@ export default {
         .box-num {
           text-align: center;
           min-width: 150px;
+          font-size: 20px;
+          color: #5e5e5e;
         }
 
         .box-price {
@@ -882,8 +845,8 @@ export default {
 
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
-          font-size: 14px;
-          color: #666;
+          font-size: 20px;
+          color: #5e5e5e;
         }
         .box-subtotal {
           text-align: center;
@@ -891,8 +854,8 @@ export default {
 
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
-          font-size: 14px;
-          color: #666;
+          font-size: 20px;
+          color: #5e5e5e;
         }
         .box-refund {
           .refund-act {
@@ -910,36 +873,37 @@ export default {
   }
 
   .info-heji {
+    height: 103px;
     padding: 15px;
     border-top: 1px solid #e5e5e5;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 14px;
+    font-size: 20px;
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 20px;
-    color: #7d7d7d;
+    color: #1e262e;
 
     .heji {
       display: flex;
       align-items: center;
-      font-size: 14px;
+      font-size: 20px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #333333;
+      color: #1e262e;
 
       .heji-num {
         margin-right: 30px;
 
         b {
-          color: #7853b2;
+          color: #ec6a2b;
         }
       }
 
       .heji-money {
         b {
-          color: #7853b2;
+          color: #ec6a2b;
         }
       }
     }
@@ -947,16 +911,16 @@ export default {
     .btn-actions {
       button {
         transition: 0.3s;
-        min-width: 120px;
-        height: 32px;
+        height: 52px;
+        line-height: 52px;
         background: #ffffff;
-        border-radius: 50px 50px 50px 50px;
-        border-radius: 4px;
-        border: 1px solid #7853b2;
-        font-family: Arial, Arial;
+        border-radius: 6px;
+        border: 1px solid #ec6a2b;
+        font-family: Microsoft YaHei;
         font-weight: 400;
-        font-size: 14px;
-        color: #7853b2;
+        font-size: 22px;
+        color: #ec6a2b;
+        padding: 0 20px;
 
         & + button {
           margin-left: 20px;
@@ -967,8 +931,14 @@ export default {
         }
 
         &.btn-bg {
-          background: #7853b2;
+          background: #00306b;
           color: #ffffff;
+          border-color: #00306b;
+        }
+        &.btn-bg-orange {
+          background: #ec6a2b;
+          color: #ffffff;
+          border-color: #ec6a2b;
         }
       }
     }
