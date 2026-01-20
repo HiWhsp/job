@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="main-title">
-      <span>我的评价</span>
+      <span>MY COMMENT</span>
     </div>
 
     <div class="page-ctx">

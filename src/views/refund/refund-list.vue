@@ -1,12 +1,17 @@
 <template>
   <div class="page">
-    <div class="page-title">售后/退款</div>
+    <div class="page-title">After-Sale Service</div>
 
     <div class="page-ctx">
       <div class="tab-box">
         <div class="tab-list">
-          <div v-for="(item, index) in tab_list" :key="index" class="tab-item"
-            :class="{ active: tab_select.value == item.value }" @click="do_toggle_tab(item)">
+          <div
+            v-for="(item, index) in tab_list"
+            :key="index"
+            class="tab-item"
+            :class="{ active: tab_select.value == item.value }"
+            @click="do_toggle_tab(item)"
+          >
             {{ item.title }}
             <span class="number" v-if="number_info[item.number_key]">{{
               number_info[item.number_key]
@@ -20,15 +25,14 @@
       </div>
 
       <div class="page-sec">
-        <div class="allow-wrap" data-title="可申请售后列表" v-if="tab_select.title == '全部'">
+        <div class="allow-wrap" data-title="可申请售后列表" v-if="tab_select.value == -10">
           <div class="allow-inner">
             <div class="order-list">
               <div class="order-item" v-for="(order, index) in allow_refund_order_list" :key="index">
                 <div class="base-box flex-between">
                   <div class="date">{{ order.createdTime }}</div>
                   <div class="order-code">
-                    订单号：
-                    <span>{{ order.orderNo }}</span>
+                    Order No. <span>{{ order.orderNo }}</span>
                   </div>
                 </div>
                 <div class="product-box">
@@ -44,19 +48,21 @@
                         <div class="sku">{{ order.products.keyVals }}</div>
                       </div>
                       <div class="box-price">
-                        <div class="price">{{ vuex_huobi }} {{ order.products.priceSale }}</div>
+                        <div class="price">{{ vuex_huobi }}{{ order.products.priceSale }}<span class="unit">/pack</span></div>
                       </div>
                       <div class="box-num">
-                        <div class="num">x {{ order.products.num }}</div>
+                        <div class="num">x{{ order.products.num }}</div>
                       </div>
                       <div class="box-xiaoji">
-                        <div class="price">{{ vuex_huobi }} {{ order.products.priceSale }}</div>
+                        <div class="price">
+                          {{ vuex_huobi }}{{ (order.products.priceSale * order.products.num).toFixed(2) }}
+                        </div>
+                      </div>
+                      <div class="box-action">
+                        <span class="refund-link" @click="to_refund_type(order)">Return/Refund</span>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="actions-box">
-                  <button class="btn btn-ripple" @click="to_refund_type(order)">申请售后</button>
                 </div>
               </div>
             </div>
@@ -74,17 +80,13 @@
           <div class="service-inner">
             <div class="service-list">
               <div class="service-item" v-for="(order, index) in refund_service_list" :key="index">
-                <div class="base-box flex">
+                <div class="base-box flex-between">
                   <!-- <div class="refund-type">
                     {{ order.statusInfo }}
                   </div> -->
                   <div class="date">{{ order.createdTime }}</div>
                   <div class="order-code">
-                    服务编码：
-                    <span>{{ order.sn }}</span>
-                  </div>
-                  <div class="order-state" :class="'state' + order.status">
-                    {{ order.typeInfo }}
+                    Order No. <span>{{ order.sn }}</span>
                   </div>
                 </div>
                 <div class="product-box">
@@ -101,27 +103,26 @@
                       </div>
                       <div class="box-price">
                         <div class="price">
-                          {{ order.is_jifen ? "积分" : "￥" }}
-                          {{ order.is_jifen ? order.products.jifen : order.products.priceSale }}
+                          {{ vuex_huobi }}{{ order.products.priceSale }}<span class="unit">/pack</span>
                         </div>
                       </div>
                       <div class="box-num">
-                        <div class="num">x {{ order.products.num }}</div>
+                        <div class="num">x{{ order.products.num }}</div>
                       </div>
                       <div class="box-xiaoji">
-                        <div class="price">{{ vuex_huobi }} {{ order.products.priceSale * order.products.num }}</div>
+                        <div class="price">{{ vuex_huobi }}{{ (order.products.priceSale * order.products.num).toFixed(2) }}</div>
+                      </div>
+                      <div class="box-action">
+                        <span class="refund-link" @click="to_service(order)">Return/Refund</span>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="actions-box">
-                  <button class="btn btn-ripple" @click="to_service(order)">售后详情</button>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="pagi-box">
+          <div class="pagi-box" v-if="refund_service_count">
             <el-pagination @current-change="on_current_change_service" :current-page.sync="service_pagination.page"
               :page-size="service_pagination.pageNum" layout="total, prev, pager, next" :total="refund_service_count"></el-pagination>
           </div>
@@ -144,13 +145,12 @@ export default {
   data() {
     return {
       tab_list: [
-        { value: -10, title: "全部" },
-        { value: 2, title: "申请记录" },
-        { value: 0, title: "待处理",number_key:"orderRefundNum" },
-        { value: 1, title: "已完成",number_key:"orderRefundFinishNum" },
+        { value: -10, title: "After-Sale Service" },
+        { value: 0, title: "Processing", number_key: "orderRefundNum" },
+        { value: 1, title: "Completed", number_key: "orderRefundFinishNum" },
       ],
       tab_select: {
-        value: -10, title: "全部"
+        value: -10, title: "After-Sale Service"
       },
 
 
@@ -345,10 +345,10 @@ export default {
     margin-bottom: 20px;
     padding: 0 32px;
     text-align: left;
-    height: 56px;
-    line-height: 56px;
+    height: 70px;
+    line-height: 70px;
     background: #ffffff;
-    font-size: 16px;
+    font-size: 20px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
     color: #333333;
@@ -393,7 +393,7 @@ export default {
         // background: #7853B2;
         // color: #fff;
         font-weight: bold;
-        color: #7853B2;
+        color: #ec6a2b;
 
         &::after {
           content: "";
@@ -402,7 +402,7 @@ export default {
           left: 0;
           right: 0;
           height: 3px;
-          background: #7853B2;
+          background: #ec6a2b;
         }
       }
     }
@@ -453,15 +453,15 @@ export default {
 .allow-wrap {
   .order-list {
     .order-item {
-      border: 1px solid #cccccc;
+      border: 1px solid #e5e5e5;
       margin-bottom: 30px;
     }
 
     .base-box {
       height: 48px;
       padding: 0 15px;
-      background: #f9f9f9;
-      border-bottom: 1px solid #cccccc;
+      background: #f5f5f5;
+      border-bottom: 1px solid #e5e5e5;
 
       .date {
         font-size: 14px;
@@ -491,8 +491,8 @@ export default {
     .product-box {
       .product-list {
         .product-item {
-          padding: 20px;
-          border-bottom: 1px dashed #ccc;
+          padding: 22px 20px;
+          border-bottom: 1px solid #eeeeee;
 
 
           &:last-child {
@@ -500,14 +500,20 @@ export default {
           }
 
           .box-pic {
-            width: 100px;
+            width: 96px;
 
             .img-box {
-              width: 100px;
+              width: 96px;
+              height: 96px;
+              border: 1px solid #eeeeee;
+              display: flex;
+              align-items: center;
+              justify-content: center;
 
               img {
-                width: 100px;
-                height: 100px;
+                width: 80px;
+                height: 80px;
+                object-fit: cover;
               }
             }
           }
@@ -522,35 +528,49 @@ export default {
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
-              color: #333333;
+              color: #1f1f1f;
+              width: 360px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
             }
 
             .sku {
-              margin-top: 20px;
+              margin-top: 10px;
               text-align: left;
+              font-size: 12px;
+              font-family: Microsoft YaHei;
+              font-weight: 400;
+              line-height: 18px;
+              color: #777;
+              width: 360px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+
+          .box-price {
+            min-width: 160px;
+            text-align: center;
+
+            .price {
               font-size: 14px;
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
               color: #333333;
-            }
-          }
-
-          .box-price {
-            min-width: 100px;
-
-            .price {
-              font-size: 16px;
-              font-family: Microsoft YaHei;
-              font-weight: 400;
-              line-height: 20px;
-              color: #333333;
+              .unit {
+                font-size: 12px;
+                font-weight: 600;
+              }
             }
           }
 
 
           .box-num {
-            width: 100px;
+            width: 80px;
+            text-align: center;
 
             .num {
 
@@ -563,14 +583,34 @@ export default {
           }
 
           .box-xiaoji {
-            min-width: 100px;
+            min-width: 120px;
+            text-align: center;
 
             .price {
-              font-size: 16px;
+              font-size: 14px;
               font-family: Microsoft YaHei;
-              font-weight: 400;
+              font-weight: 600;
               line-height: 20px;
               color: #333333;
+            }
+          }
+
+          .box-action {
+            width: 140px;
+            text-align: right;
+            padding-right: 6px;
+          }
+
+          .refund-link {
+            cursor: pointer;
+            color: #ec6a2b;
+            font-size: 12px;
+            font-weight: 700;
+            user-select: none;
+
+            &:hover {
+              opacity: 0.9;
+              text-decoration: underline;
             }
           }
 
@@ -617,15 +657,15 @@ export default {
   .service-list {
 
     .service-item {
-      border: 1px solid #cccccc;
+      border: 1px solid #e5e5e5;
       margin-bottom: 30px;
     }
 
     .base-box {
       height: 48px;
       padding: 0 15px;
-      background: #f9f9f9;
-      border-bottom: 1px solid #cccccc;
+      background: #f5f5f5;
+      border-bottom: 1px solid #e5e5e5;
 
       .refund-type {
         min-width: 80px;
@@ -676,8 +716,8 @@ export default {
     .product-box {
       .product-list {
         .product-item {
-          padding: 20px;
-          border-bottom: 1px dashed #ccc;
+          padding: 22px 20px;
+          border-bottom: 1px solid #eeeeee;
 
 
           &:last-child {
@@ -685,14 +725,20 @@ export default {
           }
 
           .box-pic {
-            width: 100px;
+            width: 96px;
 
             .img-box {
-              width: 100px;
+              width: 96px;
+              height: 96px;
+              border: 1px solid #eeeeee;
+              display: flex;
+              align-items: center;
+              justify-content: center;
 
               img {
-                width: 100px;
-                height: 100px;
+                width: 80px;
+                height: 80px;
+                object-fit: cover;
               }
             }
           }
@@ -707,35 +753,49 @@ export default {
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
-              color: #333333;
+              color: #1f1f1f;
+              width: 360px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
             }
 
             .sku {
-              margin-top: 20px;
+              margin-top: 10px;
               text-align: left;
+              font-size: 12px;
+              font-family: Microsoft YaHei;
+              font-weight: 400;
+              line-height: 18px;
+              color: #777;
+              width: 360px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+
+          .box-price {
+            min-width: 160px;
+            text-align: center;
+
+            .price {
               font-size: 14px;
               font-family: Microsoft YaHei;
               font-weight: 400;
               line-height: 20px;
               color: #333333;
-            }
-          }
-
-          .box-price {
-            min-width: 100px;
-
-            .price {
-              font-size: 16px;
-              font-family: Microsoft YaHei;
-              font-weight: 400;
-              line-height: 20px;
-              color: #333333;
+              .unit {
+                font-size: 12px;
+                font-weight: 600;
+              }
             }
           }
 
 
           .box-num {
-            width: 100px;
+            width: 80px;
+            text-align: center;
 
             .num {
 
@@ -748,14 +808,34 @@ export default {
           }
 
           .box-xiaoji {
-            min-width: 100px;
+            min-width: 120px;
+            text-align: center;
 
             .price {
-              font-size: 16px;
+              font-size: 14px;
               font-family: Microsoft YaHei;
-              font-weight: 400;
+              font-weight: 600;
               line-height: 20px;
               color: #333333;
+            }
+          }
+
+          .box-action {
+            width: 140px;
+            text-align: right;
+            padding-right: 6px;
+          }
+
+          .refund-link {
+            cursor: pointer;
+            color: #ec6a2b;
+            font-size: 12px;
+            font-weight: 700;
+            user-select: none;
+
+            &:hover {
+              opacity: 0.9;
+              text-decoration: underline;
             }
           }
 

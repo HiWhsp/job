@@ -1,69 +1,65 @@
 <template>
   <div class="page">
     <div class="main-title flex">
-      <img src="@img/my/nav-4.png" alt="" />
-      <span>收货地址管理</span>
+      <span>MY ADDRESS</span>
     </div>
 
     <div class="page-ctx">
-      <p style="display: flex;justify-content: flex-end;">
-        <button @click="do_address_add()" class="btn-c">
-          <!-- <img src="@img/address-add.png" alt="" /> -->
+      <div class="address-toolbar">
+        <button @click="do_address_add()" class="btn-add">
           <i class="el-icon-circle-plus"></i>
-          <span class="add-text">添加收货地址</span>
+          <span class="add-text">ADD NEW ADDRESS</span>
         </button>
-      </p>
+      </div>
 
       <div class="center">
-        <div class="address-table">
-          <!-- 表头 -->
-          <div class="table-header">
-            <div class="header-cell">收货人</div>
-            <div class="header-cell">电话/手机</div>
-            <div class="header-cell">所在地区</div>
-            <div class="header-cell">详细地址</div>
-            <div class="header-cell">操作</div>
-            <div class="header-cell">设置</div>
-          </div>
-
-          <!-- 表格内容 -->
-          <div class="table-body">
-            <div
-              class="table-row"
-              v-for="(item, index) in list_address"
-              :key="index"
-            >
-              <div class="table-cell">{{ item.name }}</div>
-              <div class="table-cell">{{ item.phone }}</div>
-              <div class="table-cell">{{ item.full_addr }}</div>
-              <div class="table-cell">{{ item.address }}</div>
-              <div class="table-cell">
-                <span class="action-link" @click="do_address_edit(item)"
-                  >修改</span
-                >
-                <span
-                  class="action-link delete"
-                  @click="do_address_delete(item.id)"
-                  >删除</span
-                >
+        <div class="address-list" v-if="list_address.length">
+          <div class="address-card" v-for="(item, index) in list_address" :key="index">
+            <div class="card-main">
+              <div class="kv">
+                <div class="k">Name:</div>
+                <div class="v">{{ item.name }}</div>
               </div>
-              <div class="table-cell">
-                <span v-if="item.moren == 1" class="default-btn">默认地址</span>
+              <div class="kv">
+                <div class="k">Location:</div>
+                <div class="v">{{ item.full_addr }}</div>
+              </div>
+              <div class="kv">
+                <div class="k">Detailed Address:</div>
+                <div class="v">{{ item.address }}</div>
+              </div>
+              <div class="kv">
+                <div class="k">Phone Number:</div>
+                <div class="v">{{ item.phone }}</div>
+              </div>
+              <div class="kv" v-if="item.email">
+                <div class="k">Email:</div>
+                <div class="v">{{ item.email }}</div>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              <div class="actions-left">
+                <button
+                  v-if="item.moren == 1 || item.if_default"
+                  class="btn-default"
+                  disabled
+                >DEFAULT ADDRESS</button>
                 <span
                   v-else
-                  class="action-link"
+                  class="action-link set-default"
                   @click="do_address_set_default(item.id)"
-                  >设为默认地址</span
-                >
+                >Set as default</span>
+              </div>
+              <div class="actions-right">
+                <span class="action-link edit" @click="do_address_edit(item)">Edit</span>
+                <span class="action-link delete" @click="do_address_delete(item.id)">Delete</span>
               </div>
             </div>
           </div>
         </div>
 
-        <el-empty
-          v-if="!list_address.length"
-          description="尚未添加地址"
-        ></el-empty>
+        <el-empty v-if="!list_address.length" description="尚未添加地址"></el-empty>
       </div>
     </div>
 
@@ -78,13 +74,13 @@ import { mapState } from "vuex";
 export default {
   name: "servicePage",
   components: {
-    address_modal,
+    address_modal
   },
   data() {
     return {
       pagination: {
         page: 1,
-        pageNum: 100,
+        pageNum: 100
       },
       list_address: [],
 
@@ -94,14 +90,14 @@ export default {
           receiver: "张三",
           region: "北京市海淀区直辖市",
           detailAddress: "中央村东路*********",
-          phone: "15931263145",
+          phone: "15931263145"
         },
         {
           receiver: "李四",
           region: "上海市浦东新区直辖市",
           detailAddress: "浦东大道*********",
-          phone: "13800138000",
-        },
+          phone: "13800138000"
+        }
       ],
       activeMenuMap: {
         personal: "个人中心",
@@ -110,12 +106,12 @@ export default {
         "after-sale": "我的售后",
         activity: "我的活动",
         favorite: "我的收藏",
-        history: "浏览记录",
-      },
+        history: "浏览记录"
+      }
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState([""])
   },
   created() {
     this.setView();
@@ -137,27 +133,27 @@ export default {
         method: "get",
         data: {
           action: "userAddress_lists",
-          ...this.pagination,
-        },
-      }).then((res) => {
+          ...this.pagination
+        }
+      }).then(res => {
         if (res.code == 200) {
           let data = res.data;
 
-          data.forEach((v) => {
+          data.forEach(v => {
             v.full_addr = [v.country, v.province, v.city, v.area]
-              .filter((v) => !!v)
+              .filter(v => !!v)
               .join("-");
             // v.selected =  v.if_default
           });
 
           this.list_address = data;
 
-          let obj = data.find((v) => v.if_default) || {};
+          let obj = data.find(v => v.if_default) || {};
           this.select_address = obj || {};
 
           this.$store.commit("set_vuex_data", {
             key: "default_address",
-            val: obj,
+            val: obj
           });
         }
       });
@@ -174,9 +170,9 @@ export default {
         method: "get",
         data: {
           action: "userAddress_delete",
-          id: id,
-        },
-      }).then((res) => {
+          id: id
+        }
+      }).then(res => {
         if (res.code == 200) {
           this.setView();
         }
@@ -189,15 +185,15 @@ export default {
         method: "get",
         data: {
           action: "userAddress_setDefault",
-          id: id,
-        },
-      }).then((res) => {
+          id: id
+        }
+      }).then(res => {
         if (res.code == 200) {
           this.setView();
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -209,171 +205,135 @@ export default {
   .main-title {
     padding: 0 32px;
     text-align: left;
-    height: 56px;
-    line-height: 56px;
+    height: 70px;
+    line-height: 70px;
     background: #ffffff;
-    font-size: 16px;
+    font-size: 20px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
     color: #333333;
-    img {
-      width: 22px;
-      margin-right: 10px;
-    }
   }
 
   .page-ctx {
     margin-top: 24px;
     padding: 32px 32px 55px 32px;
     background: #fff;
-    .btn-c {
-      display: flex;
-      align-items: center;
-      min-width: 96px;
-      height: 30px;
-      line-height: 30px; 
-      color: #fff;
-      background: #fff;
-      color: #7853b2;
-      font-size: 14px;
-      margin-bottom: 25px;
-     border: 1px solid #7853B2;
-     padding: 10px 16px;
-      // font-weight: bold;
+  }
+}
 
-      img {
-        width: 20px;
-      }
+.address-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 18px;
 
-      .el-icon-circle-plus {
-        font-size: 18px;
-      }
-      .add-text {
-        margin-left: 5px;
-      }
+  .btn-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 4px;
+    border: none;
+    background: #ec6a2b;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.9;
+    }
+
+    .el-icon-circle-plus {
+      font-size: 16px;
     }
   }
 }
 
-// 地址表格
-.address-table {
-  background: #ffffff;
+.address-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.address-card {
   border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  overflow: hidden;
+  background: #fff;
+  padding: 22px 24px 18px;
+}
 
-  .table-header {
-    display: flex;
-    background: #f9f9f9;
-    border-bottom: 1px solid #e5e5e5;
+.card-main {
+  max-width: 760px;
+  padding-left: 8px;
+}
 
-    .header-cell {
-      flex: 1;
-      padding: 16px 12px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #333333;
-      text-align: left;
-      // border-right: 1px solid #e5e5e5;
+.kv {
+  display: flex;
+  gap: 18px;
+  line-height: 24px;
+  font-size: 12px;
+  color: #1E262E;
 
-      &:last-child {
-        border-right: none;
-      }
-
-      &:nth-child(1) {
-        flex: 0 0 120px;
-      } // 收货人
-      &:nth-child(2) {
-        flex: 0 0 140px;
-      } // 电话/手机
-      &:nth-child(3) {
-        flex: 0 0 180px;
-      } // 所在地区
-      &:nth-child(4) {
-        flex: 1;
-      } // 详细地址
-      &:nth-child(5) {
-        flex: 0 0 120px;
-      } // 操作
-      &:nth-child(6) {
-        flex: 0 0 140px;
-      } // 设置
-    }
+  .k {
+    width: 180px;
+    text-align: right;
+    color: #5E5E5E;
+    font-size: 20px;
+    margin-bottom: 16px;
   }
 
-  .table-body {
-    .table-row {
-      display: flex;
-      border-bottom: 1px solid #e5e5e5;
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      .table-cell {
-        flex: 1;
-        padding: 16px 12px;
-        font-size: 14px;
-        color: #333333;
-        text-align: left;
-        // border-right: 1px solid #e5e5e5;
-        line-height: 1.4;
-        word-break: break-all;
-
-        &:last-child {
-          border-right: none;
-        }
-
-        &:nth-child(1) {
-          flex: 0 0 120px;
-        } // 收货人
-        &:nth-child(2) {
-          flex: 0 0 140px;
-        } // 电话/手机
-        &:nth-child(3) {
-          flex: 0 0 180px;
-        } // 所在地区
-        &:nth-child(4) {
-          flex: 1;
-        } // 详细地址
-        &:nth-child(5) {
-          flex: 0 0 120px;
-        } // 操作
-        &:nth-child(6) {
-          flex: 0 0 140px;
-        } // 设置
-
-        .action-link {
-          color: #7853b2;
-          cursor: pointer;
-          margin-right: 12px;
-          font-size: 14px;
-
-          &:last-child {
-            margin-right: 0;
-          }
-
-          &.delete {
-            color: #1F1F1F;
-          }
-
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-
-        .default-btn {
-          display: inline-block;
-          padding: 4px 12px;
-          background: #7853b2;
-          color: #ffffff;
-          font-size: 12px;
-          border-radius: 4px;
-          text-align: center;
-        }
-      }
-    }
+  .v {
+    flex: 1;
+    word-break: break-word;
+    font-size: 20px;
+    color: #1E262E;
   }
+}
+
+.card-actions {
+  margin-top: 18px;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.actions-right {
+  display: flex;
+  gap: 22px;
+  font-size: 12px;
+}
+
+.action-link {
+  font-size: 20px;
+  cursor: pointer;
+  color: #1f1f1f;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.delete {
+    color: #ec6a2b;
+  }
+}
+
+.btn-default {
+  height: 52px;
+  padding:  14px;
+  border-radius: 3px;
+  border: none;
+  background: #00306b;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.set-default {
+  color: #00306b;
+  font-weight: 600;
+  font-size: 20px;
 }
 </style>
 

@@ -1,9 +1,7 @@
 <template>
   <div class="page">
     <div class="page-title">
-      <img src="@img/my/nav-2.png" alt="" />
-      <span>我的优惠券</span>
-      <!-- <b @click="$router.push('/coupon')">领券中心</b> -->
+      <span>MY COUPONS</span>
     </div>
 
     <div class="page-ctx">
@@ -22,9 +20,8 @@
           </div>
 
           <div class="lingquan" @click="$router.push('/coupon-center')">
-            <!-- <img src="@img/other/mycoupon-to-center.png" alt="" class="coupon" /> -->
-            <span>进入领券中心 </span>
-            <img src="@img/common/right.png" alt="" class="arrow" />
+            <img src="@img/other/mycoupon-to-center.png" alt="" class="coupon" />
+            <span>Enter the coupon center</span>
           </div>
         </div>
 
@@ -63,37 +60,14 @@
             >
               <!-- 上方：优惠券价值区域 -->
               <div class="coupon-top">
-                <div class="flex">
+                <div class="coupon-label">COUPON</div>
+                <div class="coupon-main">
                   <div class="coupon-value">
                     <div class="currency">{{ vuex_huobi }}</div>
                     <div class="amount">{{ item.jian }}</div>
                   </div>
-                  <div class="coupon-condition">满{{ item.man }}元可用</div>
-                </div>
-                <div class="validity-period">
-                  有效期{{ item.startTime }}至{{ item.endTime }}
-                </div>
-              </div>
-
-              <!-- 下方：使用规则和按钮区域 -->
-              <div class="coupon-bottom">
-                <div class="usage-rules">
-                  <div class="rules-title">使用规则</div>
-                  <div class="rules-list">
-                    <div class="rule-item">1. 买部分品类活动商品</div>
-                    <div class="rule-item">2. 全平台可用</div>
-                    <div class="rule-item">3. 不可叠加</div>
-                  </div>
-                </div>
-                <div class="coupon-action">
-                  <button
-                  v-if="item.status == 0"
-                    class="use-btn"
-                    :disabled="item.status != 0"
-                    @click="do_coupon_use(item)"
-                  >
-                    立即使用
-                  </button>
+                  <div class="coupon-condition">Orders Over {{ vuex_huobi }}{{ item.man }}</div>
+                  <div class="validity-period">Expires {{ item.endTime }}</div>
                 </div>
               </div>
 
@@ -101,15 +75,16 @@
               <div class="status-overlay" v-if="item.status != 0">
                 <img
                   v-if="item.status == 1"
-                  src="@img/coupon/yiguoqi.png"
-                  alt="已过期"
-                />
-                <img
-                  v-if="item.status == 2"
                   src="@img/coupon/yishiyong.png"
                   alt="已使用"
                 />
+                <img
+                  v-if="item.status == 2"
+                  src="@img/coupon/yiguoqi.png"
+                  alt="已过期"
+                />
               </div>
+
             </div>
           </div>
 
@@ -132,15 +107,15 @@ export default {
   data() {
     return {
       tabSelect: {
-        title: "待使用",
-        value: 1,
+        title: "All Coupon",
+        value: 0,
       },
       // 0全部 1未使用 2已使用 3已过期
       tabList: [
-        // { title: "全部", status: 0 },
-        { title: "待使用", value: 1 },
-        { title: "已使用", value: 2 },
-        { title: "已过期", value: 3 },
+        { title: "All Coupon", value: 0 },
+        { title: "Not used", value: 1 },
+        { title: "Used", value: 2 },
+        { title: "Expired", value: 3 },
       ],
 
       list_yhq: [],
@@ -199,10 +174,10 @@ export default {
 
     padding: 0 32px;
     text-align: left;
-    height: 56px;
-    line-height: 56px;
+    height: 70px;
+    line-height: 70px;
     background: #ffffff;
-    font-size: 16px;
+    font-size: 20px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
     color: #333333;
@@ -234,7 +209,6 @@ export default {
 }
 
 .tab-wrap {
-  position: relative;
   margin-bottom: 30px;
   display: flex;
   align-items: center;
@@ -252,29 +226,28 @@ export default {
       font-size: 16px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #1F1F1F;
+      color: #1f1f1f;
       border-bottom: 2px solid transparent;
       transition: all 0.3s ease;
 
       &:hover {
-        color: #7853b2;
+        color: #ec6a2b;
       }
 
       &.active {
-        color: #7853b2;
-        font-weight: 500;
-        border-bottom-color: #7853b2;
+        color: #ec6a2b;
+        font-weight: 600;
+        border-bottom-color: #ec6a2b;
       }
     }
   }
 
   .lingquan {
-    position: absolute;
-    right: 0;
     display: flex;
     align-items: center;
     cursor: pointer;
     width: fit-content;
+    color: #ec6a2b;
 
     .coupon {
       width: 25px;
@@ -291,7 +264,7 @@ export default {
       font-family: PingFang SC;
       font-weight: 400;
       line-height: 36px;
-      color: #333;
+      color: #ec6a2b;
     }
   }
 }
@@ -299,16 +272,16 @@ export default {
 // 优惠券网格布局
 .coupon-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  padding: 20px 0;
+  grid-template-columns: repeat(4, minmax(220px, 1fr));
+  gap: 26px;
+  padding: 16px 0;
+  align-items: start;
 }
 
 // 优惠券卡片样式
 .coupon-card {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: block;
   background: #ffffff;border: 1px solid #D6D6D6;
 border-radius: 4px 4px 4px 4px;
   overflow: hidden; 
@@ -320,96 +293,75 @@ border-radius: 4px 4px 4px 4px;
 
   // 上方：优惠券价值区域
   .coupon-top {
-    background: #f7efff;
-    padding: 20px;
-    color: #7853b2; 
-    border-radius: 3px 3px 0px 0px;
+    position: relative;
+    height: 124px;
+    padding: 16px 16px 14px 16px;
+    background: #2f7de1;
+    color: #fff;
+    display: flex;
+    gap: 14px;
+
+    // 右侧锯齿/打孔效果
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: -10px;
+      width: 20px;
+      height: 100%;
+      background:
+        radial-gradient(circle at 10px 10px, transparent 9px, #ffffff 10px) 0 0/20px 20px repeat-y;
+      pointer-events: none;
+    }
+
+    .coupon-label {
+      width: 34px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      letter-spacing: 1px;
+      opacity: 0.65;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      user-select: none;
+    }
+
+    .coupon-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
 
     .coupon-value {
       display: flex;
       align-items: baseline;
-      justify-content: center;
-      margin-bottom: 8px;
+      gap: 6px;
 
       .currency {
-        font-size: 24px;
-        font-weight: 500;
-        margin-right: 4px;
+        font-size: 18px;
+        font-weight: 600;
       }
 
       .amount {
-        font-size: 48px;
-        font-weight: bold;
+        font-size: 36px;
+        font-weight: 800;
         line-height: 1;
       }
     }
 
     .coupon-condition {
       font-size: 14px;
-      margin-bottom: 8px;
-      opacity: 0.9;
-      line-height: 1.3;
-      margin-left: 25px;
+      font-weight: 600;
+      opacity: 0.95;
     }
 
     .validity-period {
       font-size: 12px;
-      opacity: 0.8;
-      line-height: 1.3;
-    }
-  }
-
-  // 下方：使用规则和按钮区域
-  .coupon-bottom {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-
-    .usage-rules {
-      flex: 1;
-      margin-bottom: 20px;
-
-      .rules-title {
-        font-size: 14px;
-        font-weight: 500;
-        color: #505050;
-        margin-bottom: 12px;
-      }
-
-      .rules-list {
-        .rule-item {
-          font-size: 12px;
-          color: #505050;
-          line-height: 1.6;
-          margin-bottom: 4px;
-        }
-      }
-    }
-
-    .coupon-action {
-      .use-btn {
-        width: 104px;
-        height: 32px;
-        background: #7853b2;
-        color: #ffffff;
-        border: none;
-        border-radius: 4px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-
-        &:hover:not(:disabled) {
-          background: #6b46a3;
-        }
-
-        &:disabled {
-          background: #cccccc;
-          cursor: not-allowed;
-          opacity: 0.6;
-        }
-      }
+      opacity: 0.85;
     }
   }
 
@@ -436,7 +388,7 @@ border-radius: 4px 4px 4px 4px;
      opacity: 0.6;
      filter: grayscale(0.3);
      .coupon-top{
-      background: #C2C2C2;
+      background: #bdbdbd;
       color: #fff;
      }
    }
@@ -446,8 +398,8 @@ border-radius: 4px 4px 4px 4px;
      filter: grayscale(0.3);
      
      .coupon-top {
-       background: #f5f5f5; /* 已使用状态：浅灰色背景 */
-       color: #505050; /* 已使用状态：灰色文字 */
+       background: #f0f0f0;
+       color: #ffffff;
      }
    }
 
@@ -456,8 +408,8 @@ border-radius: 4px 4px 4px 4px;
      filter: grayscale(0.3);
      
      .coupon-top {
-       background: #f5f5f5; /* 已过期状态：浅灰色背景 */
-       color: #505050; /* 已过期状态：灰色文字 */
+       background: #f0f0f0;
+       color: #ffffff;
      }
    }
 }

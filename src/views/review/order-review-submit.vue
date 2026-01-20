@@ -5,84 +5,101 @@
       <img width="100%" :src="dialogImageUrl" alt />
     </el-dialog>
 
+    <!-- 提交成功弹框 -->
+    <el-dialog
+      :visible.sync="submitSuccessVisible"
+      custom-class="submit-success-dialog"
+      :show-close="true"
+      :close-on-click-modal="false"
+      width="520px"
+    >
+      <div class="submit-success">
+        <div class="icon-wrap">
+          <img src="@/assets/img/product/product-add-success.png" alt />
+        </div>
+        <div class="title">Submission successful!</div>
+        <div class="sub">Thank you for your support!</div>
+        <div class="actions">
+          <button class="btn btn-home" @click="go_home">HOMEPAGE</button>
+          <button class="btn btn-shop" @click="continue_shopping">CONTINUE SHOPPING</button>
+        </div>
+      </div>
+    </el-dialog>
+
     <div class="main-title">
-      <span>评价</span>
-      <button class="btn-ripple" @click="$router.back()">返回</button>
+      <span>My COMMENT</span>
     </div>
 
     <div class="page-ctx">
-      <div class="order-product">
-        <div class="info-title">
-          <div class="date">{{ info.createdTime }}</div>
-          <div class="order-code">
-            订单号：
-            <span>{{ info.orderNo }}</span>
-          </div>
-          <div class="order-state">{{ info.statusInfo }}</div>
+      <div class="info-title">
+        <div class="date">{{ info.createdTime }}</div>
+        <div class="order-code">
+          Order No.
+          <span class="colon"></span>
+          <span>{{ info.orderNo }}</span>
         </div>
-        <div class="info-good">
-          <div class="list-good">
-            <div class="item" v-for="(product_item, index) in products" :key="index">
-              <div class="item-good flex" @click="mix_to_product(product_item)">
-                <div class="box-image">
-                  <img :src="product_item.image" alt />
-                </div>
-                <div class="box-title">
-                  <div class="title" @click="mix_to_product(product_item)">
-                    {{ product_item.title }}
-                  </div>
-                </div>
-                <div class="box-sku">
-                  <div class="goods-sku">{{ product_item.keyVals }}</div>
-                </div>
-                <div class="box-num">x {{ product_item.num }}</div>
-                <div class="box-price">{{vuex_huobi}} {{ product_item.priceSale }}</div>
+      </div>
+
+      <div class="review-list">
+        <div class="review-item" v-for="(product_item, index) in products" :key="index">
+          <div class="review-left">
+            <div class="box-image" @click="mix_to_product(product_item)">
+              <img :src="product_item.image" alt />
+            </div>
+            <div class="box-title" @click="mix_to_product(product_item)">
+              <div class="title">{{ product_item.title }}</div>
+            </div>
+          </div>
+
+          <div class="review-right">
+            <div class="form-title">
+              <div class="text">Overall review:</div>
+              <div class="rate">
+                <el-rate v-model="params.star"></el-rate>
               </div>
+            </div>
+
+            <div class="input-box">
+              <el-input
+                type="textarea"
+                placeholder="Share shopping tips..."
+                v-model="params.content"
+                maxlength="500"
+                :autosize="{ minRows: 6 }"
+                show-word-limit
+              />
+            </div>
+
+            <div class="upload-row">
+              <el-upload
+                class="upload-demo"
+                list-type="picture-card"
+                accept="image/*"
+                multiple
+                :name="UPLOAD_NAME"
+                :action="UPLOAD_ACTION"
+                :limit="upload_limit_number"
+                :data="mix_upload_data"
+                :on-success="upload_on_success"
+                :before-upload="upload_before_upload"
+              >
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <div class="upload-tip">Upload up to 6 photos</div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="comment-box">
-        <div class="form-box">
-          <div class="title">
-            <div class="text">总体评分</div>
-            <div>
-              <el-rate v-model="params.star" ></el-rate>
-            </div>
-          </div>
-          <div class="input-box">
-            <el-input type="textarea" placeholder="分享购物心得..." v-model="params.content" maxlength="500"
-              :autosize="{ minRows: 8 }" show-word-limit />
-          </div>
-
-          <div class="upload-box">
-            <el-upload class="upload-demo" list-type="picture-card" accept="image/*" multiple :name="UPLOAD_NAME"
-              :action="UPLOAD_ACTION" :limit="upload_limit_number" :data="mix_upload_data"
-              :on-success="upload_on_success" :before-upload="upload_before_upload">
-              <i class="el-icon-plus"></i>
-
-              <div class="el-upload__tip" slot="tip">
-                <div class="tip-text-1">添加图片</div>
-                <div class="tip-text-2">
-                  最多
-                  <b class="number">6</b>
-                  张
-                </div>
-              </div>
-            </el-upload>
-          </div>
-        </div>
-        <div class="submit-box flex-center">
-          <button class="btn btn-ripple flex-center" @click="submit_pingjia">发表评价</button>
-        </div>
+      <div class="submit-box flex-center">
+        <button class="btn btn-ripple flex-center" @click="submit_pingjia">PUBLISH COMMENT</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { UPLOAD_ACTION, UPLOAD_NAME } from '@/config/env.js'
+import { UPLOAD_ACTION, UPLOAD_NAME } from "@/config/env.js";
 
 import { mapState } from "vuex";
 
@@ -95,13 +112,13 @@ export default {
       UPLOAD_NAME,
       //
       params: {
-        id: this.$route.query.orderId || "",//订单id
+        id: this.$route.query.orderId || "", //订单id
         inventoryId: this.$route.query.inventoryId || "", //商品规格
-        star: '',
-        star1: '',
-        star2: '',
-        uploadedfile1: '',
-        content: '',
+        star: "",
+        star1: "",
+        star2: "",
+        uploadedfile1: "",
+        content: ""
       },
       //
       products: [],
@@ -111,36 +128,37 @@ export default {
       //
       dialogVisible: false,
       dialogImageUrl: "",
+      submitSuccessVisible: false
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState([""])
   },
   watch: {
     upload_pic_list(arr) {
-      this.params.uploadedfile1 = this.upload_pic_list.join('|')
+      this.params.uploadedfile1 = this.upload_pic_list.join("|");
     }
   },
   created() {
-    this.init_params()
+    this.init_params();
     this.setView();
   },
   methods: {
-    init_params() {
-      
-    },
+    init_params() {},
     setView() {
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'orders_detail',
+          action: "orders_detail",
           id: this.params.id
-        },
-      }).then((res) => {
+        }
+      }).then(res => {
         let { code, data, msg } = res;
         if (code == 200) {
-          this.products = data.products.filter((v) => v.id == this.params.inventoryId);
+          this.products = data.products.filter(
+            v => v.id == this.params.inventoryId
+          );
           this.info = data;
         }
       });
@@ -160,19 +178,29 @@ export default {
 
       // let inventoryId = this.info.products.map((v) => v.id).join();
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'orders_comment',
+          action: "orders_comment",
           ...this.params
-        },
-      }).then((res) => {
-        alert(res)
+        }
+      }).then(res => {
         let { code, msg, data } = res;
         if (code == 200) {
-          this.$router.back();
+          this.submitSuccessVisible = true;
         }
       });
+    },
+
+    go_home() {
+      this.submitSuccessVisible = false;
+      this.$router.push("/");
+    },
+
+    continue_shopping() {
+      this.submitSuccessVisible = false;
+      // 默认跳到热卖列表页（如需其它商品页可再调整）
+      this.$router.push("/product-cates");
     },
 
     //上传相关
@@ -182,21 +210,20 @@ export default {
       alert(res);
       if (code == 200) {
         // this.form.image = res.data;
-        this.upload_pic_list.push(res.data)
+        this.upload_pic_list.push(res.data);
       }
     },
     upload_before_upload(file) {
       const isLt2M = file.size / 1024 / 1024 < 20; //文件大小
       return isLt2M;
-    },
-
-  },
+    }
+  }
 };
 </script>
 
 <style scoped lang="less">
 /deep/ .el-rate__icon {
-  color: #FFC208 !important;
+  color: #ffc208 !important;
 }
 
 /deep/ .el-upload--picture-card {
@@ -205,30 +232,28 @@ export default {
   line-height: 100px;
 }
 
-
-
 .page {
   padding-bottom: 80px;
 
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 32px;
     text-align: left;
-    height: 56px;
-    line-height: 56px;
+    height: 70px;
+    line-height: 70px;
     background: #ffffff;
-    font-size: 16px;
+    font-size: 20px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #333333;
+    color: #1e262e;
 
     button {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #7853B2;
+      background: #7853b2;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -238,14 +263,9 @@ export default {
 
 .page-ctx {
   margin-top: 24px;
-  padding: 40px 60px;
+  padding: 30px;
   background: #fff;
 }
-
-/deep/.btn-box {
-  display: none;
-}
-
 
 .el-upload__tip {
   margin-top: 0;
@@ -272,206 +292,232 @@ export default {
   }
 }
 
-.order-product {
-  border: 1px solid #e5e5e5;
-  margin-bottom: 25px;
+/deep/.btn-box {
+  display: none;
+}
 
-  .info-title {
-      display: flex;
+.info-title {
+  display: flex;
   align-items: center;
-  justify-content: space-between;
-    height: 48px;
-    padding: 0 15px;
-    background: #f5f5f5;
-    border-bottom: 1px solid #e5e5e5;
+  height: 65px;
+  padding: 0 15px;
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  border-bottom: none;
+  gap: 20px;
 
+  font-size: 20px;
+  font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+  font-weight: bold;
+  color: #333333;
+
+  .order-code {
+    text-align: right;
+
+    .colon {
+      display: inline-block;
+      width: 6px;
+    }
+  }
+}
+
+.review-list {
+  border: 1px solid #e5e5e5;
+  border-top: none;
+  background: #fff;
+}
+
+.review-item {
+  display: flex;
+  align-items: stretch;
+  border-top: 1px solid #f0f0f0;
+
+  &:first-child {
+    border-top: none;
+  }
+}
+
+.review-left {
+  width: 260px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .box-image {
+    width: 200px;
+    height: 200px;
+    cursor: pointer;
+    border: 1px solid #f5f5f5;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .box-title {
+    cursor: pointer;
+    text-align: left;
+
+    .title {
+      line-height: 20px;
+      font-size: 14px;
+      color: #333;
+
+      &:hover {
+        color: #7853b2;
+      }
+    }
+  }
+}
+
+.review-right {
+  flex: 1;
+  padding: 16px 20px 20px;
+}
+
+.form-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+  color: #333;
+
+  .text {
     font-size: 14px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #333333;
-
-    .date {}
-
-    .order-code {
-      flex: 2;
-      text-align: left;
-      padding-left: 20px;
-
-      span {}
-    }
-
-    .order-state {
-      font-size: 14px;
-      font-family: Microsoft YaHei;
-      font-weight: 400;
-      line-height: 20px;
-      color: #505050;
-    }
   }
+}
 
-  .info-good {
-    .list-good {
+.input-box {
+  margin-top: 8px;
 
+  /deep/ textarea {
+    border: 1px solid #e5e5e5;
+    border-radius: 2px;
+    font-size: 14px;
+    padding: 12px;
 
-      .item-good {
-        padding: 20px;
-        border-bottom: 1px dashed #F5F5F5;
-
-        &:last-child {
-          border: none;
-        }
-
-
-        .box-image {
-          width: 100px;
-          height: 100px;
-          cursor: pointer;
-          border: 1px solid #F5F5F5;
-
-
-          /deep/ img {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-            object-fit: cover;
-          }
-
-          img {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-            object-fit: cover;
-          }
-        }
-
-        .box-title {
-          flex: 1;
-          text-align: left;
-          padding-left: 40px;
-
-
-          .title {
-            width: fit-content;
-            cursor: pointer;
-
-            &:hover {
-              color: #7853B2;
-            }
-          }
-        }
-
-        .box-sku {
-          text-align: center;
-          min-width: 200px;
-        }
-
-        .box-num {
-          text-align: center;
-          min-width: 200px;
-        }
-
-        .box-price {
-          text-align: center;
-          min-width: 200px;
-
-          font-family: OPPOSans, OPPOSans;
-          font-weight: 400;
-          font-size: 14px;
-          color: #FF0000;
-        }
-      }
-
-
-      .goods-action {
-          display: flex;
-  align-items: center;
-        justify-content: flex-end;
-        padding: 10px;
-
-        .btn-goods-action {
-          padding-left: 10px;
-          padding-right: 10px;
-          margin-left: 10px;
-          min-width: 96px;
-          height: 30px;
-          background: #7853B2;
-          font-size: 14px;
-          font-family: Microsoft YaHei;
-          color: #ffffff;
-          border-radius: 14px;
-          transition: 0.3s;
-
-          &:hover {
-            opacity: 0.8;
-          }
-
-          &.disabled {
-            background: #e5e5e5;
-          }
-        }
-      }
+    &:focus {
+      border-color: #d7d7d7 !important;
     }
   }
 }
 
-.comment-box {
-  .form-box {
-    min-height: 327px;
-    background: #ffffff;
-    border: 1px solid #e5e5e5;
+.upload-row {
+  margin-top: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
 
-    .title {
-        display: flex;
-  align-items: center;
-      height: 48px;
-      padding-left: 20px;
-      background: #f5f5f5;
-      border-bottom: 1px solid #e5e5e5;
+.upload-tip {
+  color: #888;
+  font-size: 14px;
+  line-height: 100px;
+  white-space: nowrap;
+}
 
-      .text {
-        margin-right: 20px;
-      }
+.submit-box {
+  margin-top: 40px;
+  padding-bottom: 20px;
+
+  .btn {
+    width: 250px;
+    height: 48px;
+    background: #f07a2c;
+    border-radius: 4px;
+    font-family: OPPOSans, OPPOSans;
+    font-weight: 600;
+    font-size: 16px;
+    color: #ffffff;
+    text-transform: uppercase;
+
+    &:hover {
+      opacity: 0.85;
     }
+  }
+}
 
-    .input-box {
-      /deep/ textarea {
-        border: none;
-        border-bottom: 1px solid #e5e5e5;
-        padding-top: 20px;
-        font-size: 14px;
+/* 提交成功弹窗 */
+/deep/ .submit-success-dialog {
+  border-radius: 6px;
+  overflow: hidden;
 
-        &:focus {
-          border-color: #e5e5e5 !important;
-        }
-      }
+  .el-dialog__header {
+    padding: 12px 16px;
+  }
+
+  .el-dialog__body {
+    padding: 26px 28px 30px;
+  }
+}
+
+.submit-success {
+  text-align: center;
+
+  .icon-wrap {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
 
-  .submit-box {
-    margin-top: 40px;
-    padding-bottom: 20px;
+  .title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e262e;
+    line-height: 28px;
+  }
+
+  .sub {
+    margin-top: 6px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e262e;
+    line-height: 26px;
+  }
+
+  .actions {
+    margin-top: 22px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
 
     .btn {
-      width: 250px;
-      height: 48px;
-      background: #7853B2;
-      border-radius: 100px 100px 100px 100px;
-      font-family: OPPOSans, OPPOSans;
-font-weight: 400;
-font-size: 16px;
-color: #FFFFFF;
-
+      min-width: 170px;
+      height: 42px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      padding: 0 18px;
+      transition: 0.2s;
 
       &:hover {
-        opacity: 0.75;
+        opacity: 0.9;
       }
     }
-  }
-}
 
-.upload-box {
-  padding: 20px 20px;
-  text-align: left;
+    .btn-home {
+      background: #ec6a2b;
+    }
+
+    .btn-shop {
+      background: #00306B;
+    }
+  }
 }
 </style>
 

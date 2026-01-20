@@ -2,8 +2,8 @@
   <div class="modal-container">
     <el-dialog
       class="modal-address"
-      title="新增地址"
-      width="500px"
+      title="ADD NEW ADDRESS"
+      width="420px"
       :visible.sync="show_modal"
       :before-close="onModal_close"
       :close-on-press-escape="false"
@@ -13,72 +13,116 @@
     >
       <div class="modal-inner">
         <div class="item">
-          <span class="text required">收货人</span>
+          <span class="text required">First Name</span>
           <el-input
             clearable
-            v-model="form.name"
-            placeholder="收货人姓名"
+            v-model="form.firstName"
+            placeholder="Please enter first name"
           ></el-input>
         </div>
         <div class="item">
-          <span class="text required">所在地区</span>
-          <area_select ref="area_select" @change="changeSelectAddress" />
-        </div>
-        <div class="item">
-          <span class="text required">详细地址</span>
+          <span class="text required">Last Name</span>
           <el-input
             clearable
-            v-model="form.address"
-            placeholder="详细地址"
+            v-model="form.lastName"
+            placeholder="Please enter Last name"
           ></el-input>
         </div>
         <div class="item">
-          <span class="text required">手机号</span>
+          <span class="text required">Phone Number</span>
           <el-input
             clearable
             v-model="form.phone"
-            placeholder="手机号"
+            placeholder="Please enter Phone Number"
           ></el-input>
         </div>
-        <!-- <div class="item">
+        <div class="item">
+          <span class="text required">Email</span>
+          <el-input
+            clearable
+            v-model="form.email"
+            placeholder="Please enter an email address"
+          ></el-input>
+        </div>
+        <div class="item">
+          <span class="text required">Detailed Address</span>
+          <el-input
+            clearable
+            v-model="form.address"
+            placeholder="Please enter"
+          ></el-input>
+        </div>
+        <div class="item">
+          <span class="text required">City</span>
+          <el-input
+            clearable
+            v-model="form.city"
+            placeholder="Please enter"
+          ></el-input>
+        </div>
+        <div class="item">
+          <span class="text required">State</span>
+          <el-input
+            clearable
+            v-model="form.province"
+            placeholder="Please enter"
+          ></el-input>
+        </div>
+        <div class="item">
+          <span class="text required">Country</span>
+          <el-input
+            clearable
+            v-model="form.country"
+            placeholder="Please enter"
+          ></el-input>
+        </div>
+        <div class="item">
+          <span class="text required">Zip Code</span>
+          <el-input
+            clearable
+            v-model="form.zipCode"
+            placeholder="Please enter"
+          ></el-input>
+        </div>
+        <div class="item">
           <span class="text required">固定电话</span>
           <el-input
             clearable
             v-model="form.phone"
             placeholder="固定电话"
           ></el-input>
-        </div> -->
-        <!-- <div class="item">
+        </div>
+        <div class="item">
           <span class="text required">邮政编码</span>
           <el-input
             clearable
             v-model="form.areaCode"
             placeholder="邮政编码"
           ></el-input>
-        </div> -->
+        </div>
 
         <div class="item">
-          <span class="text">默认地址</span>
-          <el-switch
-            v-model="form.moren"
-            :inactive-value="0"
-            :active-value="1"
-            active-color="#7853B2"
-            inactive-color="#eeeeee"
-          >
-          </el-switch>
+          <span class="text"> </span>
+          <div class="switch-row">
+            <el-switch
+              v-model="form.moren"
+              :inactive-value="0"
+              :active-value="1"
+              active-color="#ec6a2b"
+              inactive-color="#eeeeee"
+            >
+            </el-switch>
+            <span class="switch-text">Set as default address</span>
+          </div>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <button
-          class="btn-ripple fit-text btn-1"
+          class="btn-ripple fit-text btn-submit"
           @click="throttle_do_submit()"
-          :loading="loading"
+          :disabled="loading"
         >
-          保 存
-        </button>
-        <button class="btn-ripple fit-text btn-2" @click="show_modal = false">
-          取 消
+          SUBMIT
         </button>
       </span>
     </el-dialog>
@@ -100,8 +144,15 @@ export default {
       show_modal: false,
 
       form: {
+        // UI fields
+        firstName: "",
+        lastName: "",
+        email: "",
+        zipCode: "",
+        // backend fields
         name: "",
         phone: "",
+        country: "",
         provinceCode: "",
         province: "",
         cityCode: "",
@@ -157,9 +208,18 @@ export default {
       }).then((res) => {
         let { code, data, msg } = res;
         if (code == 200) {
+          const nameStr = (data.name || "").trim();
+          const parts = nameStr.split(/\s+/).filter(Boolean);
+          const firstName = parts[0] || "";
+          const lastName = parts.slice(1).join(" ");
           this.form = {
+            firstName,
+            lastName,
+            email: data.email || "",
+            zipCode: data.zipCode || data.areaCode || "",
             name: data.name,
             phone: data.phone,
+            country: data.country || "",
             provinceCode: data.provinceCode,
             province: data.province,
             cityCode: data.cityCode,
@@ -175,18 +235,28 @@ export default {
             addressType: data.addressType,
           };
 
-          this.$nextTick(() => {
-            this.$refs.area_select.init(data);
-          });
+          // 兼容：旧地区选择器（如果还在页面上）
+          if (this.$refs.area_select && typeof this.$refs.area_select.init === "function") {
+            this.$nextTick(() => {
+              this.$refs.area_select.init(data);
+            });
+          }
         }
       });
     },
 
     onclosed() {
-      this.$refs.area_select.clear();
+      if (this.$refs.area_select && typeof this.$refs.area_select.clear === "function") {
+        this.$refs.area_select.clear();
+      }
       this.form = {
+        firstName: "",
+        lastName: "",
+        email: "",
+        zipCode: "",
         name: "",
         phone: "",
+        country: "",
         provinceCode: "",
         province: "",
         cityCode: "",
@@ -219,12 +289,17 @@ export default {
 
     // 新建地址 / 编辑地址
     do_submit() {
-      let reg_phone = /^1[3-9]\d{9}$/;
-      let is_true_phone = reg_phone.test(this.form.phone);
+      // 允许国际手机号（至少 6 位数字）
+      const digits = (this.form.phone || "").replace(/[^\d]/g, "");
+      const is_true_phone = digits.length >= 6;
 
       //console.log("要保存的信息", form_data);
-      if (!this.form.name) {
-        alertErr("请输入收货人姓名");
+      if (!this.form.firstName) {
+        alertErr("Please enter first name");
+        return;
+      }
+      if (!this.form.lastName) {
+        alertErr("Please enter last name");
         return;
       }
       // if (!is_true_phone) {
@@ -232,25 +307,35 @@ export default {
       //   return;
       // }
       if (!is_true_phone) {
-        alertErr("请输入正确的收货人电话");
+        alertErr("Please enter a valid phone number");
         return;
       }
-      if (!this.form.area) {
-        alertErr("请选择所在地区");
+      if (!this.form.city || !this.form.province || !this.form.country) {
+        alertErr("Please enter City/State/Country");
         return;
       }
       if (!this.form.address) {
-        alertErr("请输入收货人详细地址");
+        alertErr("Please enter detailed address");
+        return;
+      }
+      if (!this.form.zipCode) {
+        alertErr("Please enter Zip Code");
         return;
       }
 
       this.loading = true;
+      // 后端仅有 name 字段时，合并 first/last
+      const submitForm = {
+        ...this.form,
+        name: `${this.form.firstName} ${this.form.lastName}`.trim(),
+        areaCode: this.form.areaCode || this.form.zipCode,
+      };
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "userAddress_add",
-          ...this.form,
+          ...submitForm,
         },
       }).then((res) => {
         alert(res).then(() => {
@@ -276,22 +361,23 @@ export default {
 
 <style scoped lang="less">
 /deep/ .modal-custom {
-  min-width: 40vw;
+  min-width: 420px;
   // margin-top: 5vh !important;
 
   .modal-inner {
     padding: 0;
 
     .item {
-      margin-bottom: 20px;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
 
       .text {
-        min-width: 190px;
-        text-align: left;
+        min-width: 120px;
         text-align: right;
-        padding-right: 10px;
+        padding-right: 14px;
+        font-size: 12px;
+        color: #505050;
 
         &.required {
           &::before {
@@ -334,14 +420,14 @@ export default {
 }
 
 /deep/ .el-dialog__header {
-  padding: 16px 24px;
-  border-bottom: 1px solid #eee;
-  background: #f7f7f7;
+  padding: 18px 22px 10px;
+  border-bottom: none;
+  background: #ffffff;
 
   font-family: Poppins, Poppins;
   font-weight: 600;
-  font-size: 18px;
-  color: #333333;
+  font-size: 16px;
+  color: #1e262e;
 
   .el-dialog__close {
     font-size: 20px;
@@ -349,14 +435,10 @@ export default {
 }
 
 /deep/ .el-dialog__body {
-  padding: 36px 60px 36px 0;
+  padding: 10px 22px 8px;
 }
 
-/deep/ .el-textarea {
-  .el-textarea__inner {
-    // background-color: #f5f5f5;
-  }
-}
+/* /deep/ .el-textarea { } */
 
 /deep/ .el-input {
   .el-input__inner {
@@ -370,33 +452,34 @@ export default {
 
 /deep/ .el-dialog__footer {
   text-align: center;
-  padding-bottom: 50px;
+  padding: 16px 22px 26px;
 
-  button {
-    margin: 0 12px;
-  }
-
-  .btn-1 {
-    min-width: 120px;
-    height: 32px;
-    background: #ffffff;
-    border-radius: 50px 50px 50px 50px;
-    border: 1px solid #7853b2;
+  .btn-submit {
+    min-width: 140px;
+    height: 36px;
+    background: #ec6a2b;
+    border-radius: 4px;
+    border: none;
     font-family: Arial, Arial;
-    font-weight: 400;
-    font-size: 14px;
-    color: #7853b2;
-  }
-
-  .btn-2 {
-    min-width: 120px;
-    height: 32px;
-    background: #7853b2;
-    border-radius: 50px 50px 50px 50px;
-    font-family: Arial, Arial;
-    font-weight: 400;
-    font-size: 14px;
+    font-weight: 700;
+    font-size: 12px;
     color: #ffffff;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .switch-text {
+    font-size: 12px;
+    color: #505050;
   }
 }
 </style>
