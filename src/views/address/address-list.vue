@@ -230,13 +230,13 @@ export default {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    height: 32px;
+    height: 52px;
     padding: 0 14px;
     border-radius: 4px;
     border: none;
     background: #ec6a2b;
     color: #fff;
-    font-size: 12px;
+    font-size: 22px;
     font-weight: 700;
     cursor: pointer;
 

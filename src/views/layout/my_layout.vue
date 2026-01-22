@@ -211,7 +211,6 @@ export default {
     .menu-wrap {
       width: 340px;
       margin-bottom: 50px;
-      background: #fff;
       border-radius: 8px;
       overflow: hidden;
 
@@ -233,6 +232,7 @@ export default {
       }
 
       .nav-wrap {
+        background: #fff;
         border: 1px solid #dedede;
         .nav-item {
           cursor: pointer;

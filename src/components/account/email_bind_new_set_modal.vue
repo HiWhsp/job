@@ -11,27 +11,27 @@
     >
       <!-- 自定义标题 -->
       <div slot="title" class="modal-title">
-        <span class="title-text">CHANGE PHONE NUMBER :</span>
+        <span class="title-text">Change Email：</span>
       </div>
 
       <div class="modal-inner">
         <div class="modal-ctx">
           <div class="input-box">
-            <div class="label">Old Phone Number :</div>
+            <div class="label">Previous Email :</div>
             <div class="input-item">
-              <el-input type="text" v-model="oldPhone" placeholder="Please enter" />
+              <el-input type="text" v-model="oldEmail" placeholder="Please enter" />
             </div>
           </div>
 
           <div class="input-box">
-            <div class="label">New Phone Number :</div>
+            <div class="label">new Email :</div>
             <div class="input-item">
-              <el-input type="text" v-model="phone" placeholder="Please enter" />
+              <el-input type="text" v-model="newEmail" placeholder="Please enter" />
             </div>
           </div>
 
           <div class="input-box">
-            <div class="label">Verification Code :</div>
+            <div class="label">Verification code :</div>
             <div class="input-item">
               <el-input
                 type="text"
@@ -65,8 +65,8 @@ export default {
     return {
       show: false,
 
-      oldPhone: "",
-      phone: "",
+      oldEmail: "",
+      newEmail: "",
       code: "",
 
       disabledBtn: false, //按钮是否可点击
@@ -86,8 +86,8 @@ export default {
   watch: {
     show(val) {
       if (!val) {
-        this.oldPhone = "";
-        this.phone = "";
+        this.oldEmail = "";
+        this.newEmail = "";
         this.code = "";
       }
     }
@@ -101,14 +101,14 @@ export default {
   methods: {
     query_code() {
       //console.log("发送验证码");
-      let phone = this.phone;
+      let email = this.newEmail;
       if (this.timer) {
         alertErr("验证码发送频繁，请稍后再试");
         return;
       }
-      let phoneReg = /^1[3-9]\d{9}$/;
-      if (!phoneReg.test(phone)) {
-        alertErr("请先输入正确的手机号码");
+      let emailReg = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
+      if (!emailReg.test(email)) {
+        alertErr("请先输入正确的邮箱");
         return;
       }
       this.countdown();
@@ -117,8 +117,8 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "login_phoneYzm",
-          phone: phone
+          action: "login_emailYzm",
+          email: email
         }
       }).then(res => {
         alert(res);
@@ -149,7 +149,7 @@ export default {
     },
 
     init(text) {
-      this.oldPhone = this.currentUserPhone;
+      this.oldEmail = this.currentUserEmail;
       this.show = true;
     },
     onModalClose() {
@@ -162,12 +162,11 @@ export default {
     },
 
     form_submit() {
-      let reg_phone = /^1[3-9]\d{9}$/;
       let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
-      let is_true_phone = reg_phone.test(this.phone);
+      let is_true_email = reg_email.test(this.newEmail);
 
-      if (!is_true_phone) {
-        alertErr("请输入正确的手机号码");
+      if (!is_true_email) {
+        alertErr("请输入正确的邮箱");
         return;
       }
       if (!this.code) {
@@ -179,16 +178,14 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "users_setNew",
-          editType: "1", //类型：1-手机号 2-邮箱
+          action: "users_setEmail",
           code: this.code,
-          phone: this.phone
-          // email: this.email,
+          email: this.newEmail
         }
       }).then(res => {
         //console.log("修改密码", res);
         alert(res);
-        let { code, data } = res;
+        let { code } = res;
         if (code == 200) {
           this.$emit("confirm");
           this.show = false;

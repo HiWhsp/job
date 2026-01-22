@@ -35,6 +35,135 @@
       padding: 15px;
       background: #fff;
     }
+
+    .tab-content {
+      padding: 40px 20px;
+
+      .basic-info-wrapper {
+        max-width: 100%;
+      }
+
+      .avatar-section {
+        margin-bottom: 40px;
+
+        .avatar-container .avatar-wrapper {
+          width: 100px;
+          height: 100px;
+          padding: 6px;
+
+          .user-avatar {
+            width: 88px;
+            height: 88px;
+          }
+
+          .avatar-change-overlay {
+            font-size: 10px;
+            padding: 2px 6px;
+            right: 4px;
+            bottom: 4px;
+          }
+        }
+      }
+
+      .form-fields {
+        .form-item {
+          flex-direction: column;
+          align-items: flex-start;
+          margin-bottom: 20px;
+
+          .field-label {
+            min-width: auto;
+            margin-bottom: 8px;
+            font-size: 13px;
+          }
+
+          .field-value {
+            width: 100%;
+            margin-left: 0;
+
+            .field-display {
+              width: 100%;
+              min-width: auto;
+              padding: 10px 12px;
+              font-size: 13px;
+            }
+
+            .el-input {
+              width: 100%;
+
+              ::v-deep .el-input__inner {
+                padding: 10px 12px;
+                font-size: 13px;
+              }
+            }
+          }
+
+          .change-btn {
+            margin-left: 0;
+            margin-top: 8px;
+            width: 100%;
+            padding: 10px;
+            font-size: 11px;
+          }
+        }
+      }
+
+      .save-button-wrapper {
+        margin-top: 40px;
+
+        .btn-save-info {
+          width: 100%;
+          min-width: auto;
+          padding: 14px 20px;
+          font-size: 14px;
+        }
+      }
+
+      // 修改密码移动端样式
+      .password-change-wrapper {
+        max-width: 100%;
+
+        .password-form-fields {
+          .password-form-item {
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 20px;
+
+            .password-field-label {
+              width: 100%;
+              margin-bottom: 8px;
+              text-align: left;
+              font-size: 14px;
+            }
+
+            .password-field-value {
+              width: 100%;
+
+              .el-input {
+                width: 100%;
+
+                ::v-deep .el-input__inner {
+                  height: 44px;
+                  line-height: 44px;
+                  font-size: 14px;
+                }
+              }
+            }
+          }
+        }
+
+        .password-save-button-wrapper {
+          margin-top: 40px;
+
+          .btn-password-confirm {
+            width: 100%;
+            min-width: auto;
+            padding: 14px 20px;
+            font-size: 14px;
+          }
+        }
+      }
+    }
   }
 
   .page {
