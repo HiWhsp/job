@@ -1,7 +1,7 @@
 <template>
   <div class="sanji-wrap">
     <div class="sanji-box">
-      <el-select v-model="provId" placeholder="请选择省" @change="changeProv">
+      <el-select v-model="provId" placeholder="Please select a country" @change="changeProv">
         <el-option
           v-for="item in provData"
           :key="item.id"
@@ -9,7 +9,7 @@
           :value="item.id"
         ></el-option>
       </el-select>
-      <el-select v-model="cityId" placeholder="请选择市" @change="changeCity">
+      <el-select v-model="cityId" placeholder="Please select a state" @change="changeCity">
         <el-option
           v-for="item in cityData"
           :key="item.id"
@@ -17,7 +17,7 @@
           :value="item.id"
         ></el-option>
       </el-select>
-      <el-select v-model="areaId" placeholder="请选择区" @change="changeArea">
+      <el-select v-model="areaId" placeholder="Please select a county" @change="changeArea">
         <el-option
           v-for="item in areaData"
           :key="item.id"

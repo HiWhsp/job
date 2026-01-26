@@ -1,23 +1,17 @@
 <template>
   <div class="page">
     <div class="main-title flex">
-      <img src="@img/my/nav-5.png" alt="" />
-      <span>成为兼职销售代表</span>
+      <span>APPLY TO BE THE COMMISSION-ONLY REPS</span>
     </div>
 
     <div class="page-ctx">
       <!-- 表单页面 -->
-      <el-form
-        :model="form"
-        :rules="rules"
-        ref="partTimeSalesForm"
-        label-width="0"
-      >
+      <el-form :model="form" :rules="rules" ref="partTimeSalesForm" label-width="0">
         <!-- 上传身份证 -->
         <div class="form-section">
           <div class="section-title">
-            <span class="title-text">上传身份证</span>
-            <span class="required">*</span>
+            <span class="title-text">ID information</span>
+            <!-- <span class="required">*</span> -->
           </div>
           <div class="upload-group">
             <div class="upload-item">
@@ -30,11 +24,11 @@
                   :data="mix_upload_data"
                   :on-success="(res) => upload_on_success(res, 'identityFront')"
                   :before-upload="upload_before_upload"
-                   :disabled="isUploadDisabled"
+                  :disabled="isUploadDisabled"
                 >
                   <div class="upload-box id-box" v-if="!form.identityFront">
                     <div class="upload-icon">+</div>
-                    <div class="upload-text">上传身份证正面</div>
+                    <div class="upload-text">Add Picture</div>
                   </div>
                   <div class="uploaded-image id-box" v-else>
                     <img :src="form.identityFront" alt="已上传图片" />
@@ -45,7 +39,7 @@
                 </el-upload>
               </div>
             </div>
-            <div class="upload-item">
+            <!-- <div class="upload-item">
               <div class="upload-area">
                 <el-upload
                   class="upload-demo"
@@ -55,8 +49,7 @@
                   :data="mix_upload_data"
                   :on-success="(res) => upload_on_success(res, 'identityBack')"
                   :before-upload="upload_before_upload"
-                   :disabled="isUploadDisabled"
-
+                  :disabled="isUploadDisabled"
                 >
                   <div class="upload-box id-box" v-if="!form.identityBack">
                     <div class="upload-icon">+</div>
@@ -70,57 +63,64 @@
                   </div>
                 </el-upload>
               </div>
-            </div>
+            </div>-->
           </div>
         </div>
-         <div class="form-section">
+        <div class="form-section">
           <div class="section-title">
-            <span class="title-text">身份证号</span>
-            <span class="required">*</span>
+            <span class="title-text">ID Number :</span>
+            <!-- <span class="required">*</span> -->
           </div>
           <el-form-item prop="identityId">
-            <el-input v-model="form.identityId" placeholder="请输入内容"></el-input>
+            <el-input v-model="form.identityId" placeholder="Please enter"></el-input>
           </el-form-item>
         </div>
 
         <!-- 销售地区 -->
         <div class="form-section">
           <div class="section-title">
-            <span class="title-text">销售地区</span>
-            <span class="required">*</span>
+            <span class="title-text">Sales Region</span>
+            <!-- <span class="required">*</span> -->
           </div>
           <!-- prop="sales_site" -->
-          <el-form-item  v-for="(item,index) in area_select_list" :key="index" >
+          <el-form-item v-for="(item,index) in area_select_list" :key="index">
             <div style="display: flex;margin-bottom: 20px;">
-              {{ index+1 }}.&nbsp;&nbsp;<area_select ref="area_select" @change="(e)=>{
+              0{{ index+1 }}&nbsp;&nbsp;
+              <area_select
+                ref="area_select"
+                @change="(e)=>{
                 changeSelectAddress(e,index)
-              }" />
-              <div class="btns_end" v-if="index==0" @click="handle_add">添加地区&nbsp;&nbsp;+</div>
+              }"
+              />
+              <!-- <div class="btns_end" v-if="index==0" @click="handle_add">添加地区&nbsp;&nbsp;+</div>
               <div class="form_text" v-if="index==0">
                 <div>最多可添加三个地区</div>
-              </div>
-              <div class="" v-if="index!=0">
+              </div>-->
+              <div class v-if="index!=0">
                 <i class="el-icon-remove-outline" @click="handle_clear(index)"></i>
               </div>
             </div>
           </el-form-item>
+          <div class="btns_end" @click="handle_add">+&nbsp;&nbsp;Add Region</div>
+          <div class="form_text">
+            <div>Up to three regions could be added</div>
+          </div>
         </div>
 
         <!-- 收款方式 -->
         <div class="form-section">
           <div class="section-title">
-            <span class="title-text">收款方式</span>
-            <span class="required">*</span>
+            <span class="title-text">Payment Method</span>
+            <!-- <span class="required">*</span> -->
           </div>
           <el-form-item prop="receiveType">
-            <el-radio-group
-              v-model="form.receiveType"
-              @change="onReceiveTypeChange"
-            >
+            <img src="@/assets/img/order/paypal.png" class="paypal-img" alt="">
+            <img src="@/assets/img/order/stripe.png" class="paypal-img" alt="">
+            <!-- <el-radio-group v-model="form.receiveType" @change="onReceiveTypeChange">
               <el-radio :label="1">微信支付</el-radio>
               <el-radio :label="2">支付宝</el-radio>
               <el-radio :label="3">银行卡</el-radio>
-            </el-radio-group>
+            </el-radio-group> -->
           </el-form-item>
         </div>
 
@@ -132,34 +132,19 @@
           </div>
           <div class="bank-info">
             <el-form-item prop="bankName">
-              <el-input
-                v-model="form.bankName"
-                placeholder="请输入开户银行名称"
-                clearable
-              ></el-input>
+              <el-input v-model="form.bankName" placeholder="请输入开户银行名称" clearable></el-input>
             </el-form-item>
             <el-form-item prop="cardCode">
-              <el-input
-                v-model="form.cardCode"
-                placeholder="请输入开户银行账号"
-                clearable
-              ></el-input>
+              <el-input v-model="form.cardCode" placeholder="请输入开户银行账号" clearable></el-input>
             </el-form-item>
             <el-form-item prop="userName">
-              <el-input
-                v-model="form.userName"
-                placeholder="请输入持卡人姓名"
-                clearable
-              ></el-input>
+              <el-input v-model="form.userName" placeholder="请输入持卡人姓名" clearable></el-input>
             </el-form-item>
           </div>
         </div>
 
         <!-- 收款二维码 -->
-        <div
-          class="form-section"
-          v-if="form.receiveType === 1 || form.receiveType === 2"
-        >
+        <div class="form-section" v-if="form.receiveType === 1 || form.receiveType === 2">
           <div class="section-title">
             <span class="title-text">收款二维码</span>
             <span class="required">*</span>
@@ -176,9 +161,7 @@
             >
               <div class="upload-box" v-if="!form.receiveQrcode">
                 <div class="upload-icon">+</div>
-                <div class="upload-text">
-                  上传{{ form.receiveType === 1 ? "微信" : "支付宝" }}收款二维码
-                </div>
+                <div class="upload-text">上传{{ form.receiveType === 1 ? "微信" : "支付宝" }}收款二维码</div>
               </div>
               <div class="uploaded-image" v-else>
                 <img :src="form.receiveQrcode" alt="已上传图片" />
@@ -196,23 +179,19 @@
             <el-checkbox v-model="form.agreement">
               已阅读并同意
               <!-- <a href="#" class="agreement-link">《医买买平台服务协议》</a> -->
-               <router-link to="/terms?id=139">《医买买平台服务协议》</router-link>
-               <router-link to="/terms?id=140">《隐私权政策》</router-link>
-               <router-link to="/terms?id=141">《运营商协议》</router-link>
+              <router-link to="/terms?id=139">《医买买平台服务协议》</router-link>
+              <router-link to="/terms?id=140">《隐私权政策》</router-link>
+              <router-link to="/terms?id=141">《运营商协议》</router-link>
               <!-- <a href="#" class="agreement-link">《隐私权政策》</a> -->
               <!-- <a href="#" class="agreement-link">《运营商协议》</a> -->
             </el-checkbox>
           </el-form-item>
         </div>
-        <div class="form-section-text">
-          收款人信息需要和上传的身份证保持一致。本账号如需更换身份证和收款信息需联系工作人员确认后才可以操作。
-        </div>
+        <div class="form-section-text">收款人信息需要和上传的身份证保持一致。本账号如需更换身份证和收款信息需联系工作人员确认后才可以操作。</div>
 
         <!-- 提交按钮 -->
         <div class="submit-section">
-          <el-button class="btn-submit" @click="do_submit()" :loading="loading">
-            提交
-          </el-button>
+          <el-button class="btn-submit" @click="do_submit()" :loading="loading">提交</el-button>
         </div>
       </el-form>
     </div>
@@ -226,7 +205,7 @@ import area_select from "@/components/address/area_select.vue";
 export default {
   name: "part-time-sales",
   components: {
-    area_select,
+    area_select
   },
   data() {
     return {
@@ -248,27 +227,27 @@ export default {
         bankName: "", // 开户银行名称
         cardCode: "", // 开户银行账号
         userName: "", // 持卡人姓名
-        sales_site:'',//销售地区 区域id ,拼接
+        sales_site: "", //销售地区 区域id ,拼接
         agreement: true, // 协议同意
-        identityId:'',
+        identityId: ""
       },
 
       // 表单验证规则
       rules: {
         identityFront: [
-          { required: true, message: "请上传身份证正面", trigger: "change" },
+          { required: true, message: "请上传身份证正面", trigger: "change" }
         ],
         identityBack: [
-          { required: true, message: "请上传身份证反面", trigger: "change" },
+          { required: true, message: "请上传身份证反面", trigger: "change" }
         ],
         identityId: [
-          { required: true, message: "请输入身份证号", trigger: "blur" },
+          { required: true, message: "请输入身份证号", trigger: "blur" }
         ],
         sales_site: [
-          { required: true, message: "请选择销售地区", trigger: "change" },
+          { required: true, message: "请选择销售地区", trigger: "change" }
         ],
         receiveType: [
-          { required: true, message: "请选择收款方式", trigger: "change" },
+          { required: true, message: "请选择收款方式", trigger: "change" }
         ],
         bankName: [
           {
@@ -279,8 +258,8 @@ export default {
                 callback();
               }
             },
-            trigger: "blur",
-          },
+            trigger: "blur"
+          }
         ],
         cardCode: [
           {
@@ -291,8 +270,8 @@ export default {
                 callback();
               }
             },
-            trigger: "blur",
-          },
+            trigger: "blur"
+          }
         ],
         userName: [
           {
@@ -303,8 +282,8 @@ export default {
                 callback();
               }
             },
-            trigger: "blur",
-          },
+            trigger: "blur"
+          }
         ],
         receiveQrcode: [
           {
@@ -318,30 +297,32 @@ export default {
                 callback();
               }
             },
-            trigger: "change",
-          },
+            trigger: "change"
+          }
         ],
         agreement: [
-          { required: true, message: "请同意相关协议", trigger: "change" },
-        ],
+          { required: true, message: "请同意相关协议", trigger: "change" }
+        ]
       },
-      userInfo:{},
-      area_select_list:[{
-        province: '',
-        city: '',
-        area: '',
-        provinceCode: '',
-        cityCode: '',
-        areaCode: '',
-      }],
+      userInfo: {},
+      area_select_list: [
+        {
+          province: "",
+          city: "",
+          area: "",
+          provinceCode: "",
+          cityCode: "",
+          areaCode: ""
+        }
+      ]
     };
   },
-  computed:{
-     // 判断是否禁用上传功能
+  computed: {
+    // 判断是否禁用上传功能
     isUploadDisabled() {
-      console.log('this.userInfo.renzheng',this.userInfo.renzheng)
+      console.log("this.userInfo.renzheng", this.userInfo.renzheng);
       return this.userInfo && this.userInfo.renzheng == 2;
-    },
+    }
   },
   created() {
     this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000);
@@ -353,12 +334,12 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "users_userInfo",
-        },
-      }).then((res) => {
+          action: "users_userInfo"
+        }
+      }).then(res => {
         if (res.code == 200) {
           let data = res.data;
-          this.userInfo=data
+          this.userInfo = data;
 
           this.form.identityFront = data.identityFront || "";
           this.form.identityBack = data.identityBack || "";
@@ -369,7 +350,6 @@ export default {
           this.form.receiveType = data.receiveType || "";
           this.form.receiveQrcode = data.receiveQrcode || "";
           this.form.identityId = data.identityId || "";
-          
 
           // if (data.province && data.areaId) {
           //   this.$nextTick(() => {
@@ -383,25 +363,23 @@ export default {
           //     });
           //   });
           // }
-          if(res.data.sales_site_json){
-            this.area_select_list=JSON.parse(res.data.sales_site_json)
-            this.area_select_list.forEach((e,i)=>{
-              console.log('e',e)
-               this.$nextTick(() => {
-                console.log('this.$refs.area_select',this.$refs.area_select)
+          if (res.data.sales_site_json) {
+            this.area_select_list = JSON.parse(res.data.sales_site_json);
+            this.area_select_list.forEach((e, i) => {
+              console.log("e", e);
+              this.$nextTick(() => {
+                console.log("this.$refs.area_select", this.$refs.area_select);
                 this.$refs.area_select[i].init({
                   province: e.province,
                   city: e.city,
                   area: e.areaId,
                   provinceCode: e.province,
                   cityCode: e.city,
-                  areaCode: e.areaId,
+                  areaCode: e.areaId
                 });
               });
-            })
-           
+            });
           }
-
 
           if (data.receiveAccount) {
             try {
@@ -424,27 +402,27 @@ export default {
       this.form.cardCode = "";
       this.form.userName = "";
     },
-    handle_add(){
-      if(this.area_select_list.length!=3){
+    handle_add() {
+      if (this.area_select_list.length != 3) {
         this.area_select_list.push({
-            province: '',//省
-            city: '',//市
-            area: '',//区
-            provinceCode: '',
-            cityCode: '',
-            areaCode: '',
-        })
+          province: "", //省
+          city: "", //市
+          area: "", //区
+          provinceCode: "",
+          cityCode: "",
+          areaCode: ""
+        });
       }
     },
-    handle_clear(i){
-      this.area_select_list.splice(i,1)
+    handle_clear(i) {
+      this.area_select_list.splice(i, 1);
     },
     // 地区选择改变
-    changeSelectAddress(data,i) {
+    changeSelectAddress(data, i) {
       this.$log("回调data", data);
       this.$log("回调i", i);
       let { sheng, shi, qu } = data;
-      let form={}
+      let form = {};
       if (sheng && shi && qu) {
         // 保存区级ID作为areaId
         form.areaId = qu.id;
@@ -453,9 +431,9 @@ export default {
         // 保存省份和城市
         form.province = sheng.id || "";
         form.city = shi.id || "";
-        this.area_select_list[i]=form
-       
-        console.log('sales_site',this.form.sales_site)
+        this.area_select_list[i] = form;
+
+        console.log("sales_site", this.form.sales_site);
         // // 触发表单验证
         this.$nextTick(() => {
           // this.$refs.partTimeSalesForm.validateField("sales_site");
@@ -464,28 +442,27 @@ export default {
     },
 
     do_submit() {
-      if(!this.form.agreement){
-               this.$message.error('请阅读协议');
-               return
-          }
+      if (!this.form.agreement) {
+        this.$message.error("请阅读协议");
+        return;
+      }
       // 使用el-form验证
-      this.$refs.partTimeSalesForm.validate((valid) => {
+      this.$refs.partTimeSalesForm.validate(valid => {
         if (valid) {
           this.loading = true;
 
-           let sales_site=[]
-            this.area_select_list.forEach((e)=>{
-              console.log('e',e)
-              if(e.areaId){
-                sales_site.push(e.areaId)
-              }
-            })
-            if(sales_site.length!=this.area_select_list.length){
-              this.$message.error('请完善销售地区');
-              this.loading = false
-              return
+          let sales_site = [];
+          this.area_select_list.forEach(e => {
+            console.log("e", e);
+            if (e.areaId) {
+              sales_site.push(e.areaId);
             }
-
+          });
+          if (sales_site.length != this.area_select_list.length) {
+            this.$message.error("请完善销售地区");
+            this.loading = false;
+            return;
+          }
 
           // 构建提交数据
           let submitData = {
@@ -496,7 +473,7 @@ export default {
             areaId: this.form.areaId, // 只保存区级ID
             receiveType: this.form.receiveType,
             agreement: this.form.agreement,
-            identityId:this.form.identityId,
+            identityId: this.form.identityId
           };
 
           // 根据收款方式添加相应数据
@@ -505,27 +482,24 @@ export default {
             submitData.receiveAccount = JSON.stringify({
               bank_name: this.form.bankName,
               card_code: this.form.cardCode,
-              user_name: this.form.userName,
+              user_name: this.form.userName
             });
           } else {
             // 微信或支付宝
             submitData.receiveQrcode = this.form.receiveQrcode;
           }
 
-
-          
           this.$api({
             url: "/service.php",
             method: "get",
             data: {
               action: "users_renzheng",
               ...submitData,
-              sales_site_json:JSON.stringify(this.area_select_list),
-              sales_site:sales_site.join(','),
-              userType:2,
-
-            },
-          }).then((res) => {
+              sales_site_json: JSON.stringify(this.area_select_list),
+              sales_site: sales_site.join(","),
+              userType: 2
+            }
+          }).then(res => {
             let { code, msg, data } = res;
             alert(res).then(() => {
               this.loading = false;
@@ -533,7 +507,6 @@ export default {
             if (code == 200) {
               this.query_user();
               // this.$router.push("/my-index");
-
             }
           });
         } else {
@@ -569,8 +542,8 @@ export default {
       }
 
       return true;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -578,23 +551,17 @@ export default {
 .page {
   text-align: left;
   padding-bottom: 80px;
-  padding-top: 20px;
 
   .main-title {
     padding: 0 32px;
     text-align: left;
-    height: 56px;
-    line-height: 56px;
+    height: 70px;
+    line-height: 70px;
     background: #ffffff;
-    font-size: 16px;
+    font-size: 20px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #333333;
-
-    img {
-      width: 22px;
-      margin-right: 10px;
-    }
+    color: #1e262e;
   }
 
   .page-ctx {
@@ -615,10 +582,11 @@ export default {
     align-items: center;
 
     .title-text {
-      font-size: 16px;
+      font-size: 22px;
       font-weight: 600;
-      color: #333333;
+      color: #1e262e;
       line-height: 1.4;
+      font-family: Poppins, Poppins;
     }
 
     .required {
@@ -641,32 +609,26 @@ export default {
     // width: 200px;
 
     .upload-box {
-      width: 200px;
-      height: 200px;
-      border: 2px dashed #be9bdf;
-      border-radius: 8px;
+      width: 335px;
+      height: 211px;
+      border: 1px solid #d1d1d1;
+      border-radius: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: all 0.3s ease;
-      background: #fff;
-
-      &:hover {
-        border-color: #7853b2;
-        background: #f7efff;
-      }
+      background: #f5f5f5;
 
       .upload-icon {
         font-size: 40px;
-        color: #be9bdf;
-        margin-bottom: 12px;
+        color: #d1d1d1;
       }
 
       .upload-text {
-        font-size: 14px;
-        color: #1F1F1F;
+        font-size: 18px;
+        color: #5e5e5e;
         text-align: center;
       }
     }
@@ -710,12 +672,6 @@ export default {
         opacity: 1;
       }
     }
-    .id-box {
-      width: 319px;
-      height: 201px;
-      border: 1px solid #be9bdf;
-      border-radius: 4px 4px 4px 4px;
-    }
   }
 
   .el-form-item {
@@ -724,13 +680,14 @@ export default {
     .el-input {
       width: 400px;
 
-      .el-input__inner {
-        border: 1px solid #d4d4d4;
+      /deep/ .el-input__inner {
+        border: 1px solid #dbdbdb;
         border-radius: 4px;
-        font-size: 14px;
-        color: #606266;
-        height: 40px;
-        line-height: 40px;
+        font-size: 20px;
+        color: #999;
+        height: 56px;
+        line-height: 56px;
+        background: #fbfbfb;
 
         &:focus {
           border-color: #7853b2;
@@ -819,12 +776,19 @@ export default {
       }
     }
   }
+
+  .paypal-img {
+    width: 110px;
+    height: 54px;
+    border-radius: 6px 6px 6px 6px;
+    margin-right: 6px;
+  }
 }
-.form-section-texr{
+.form-section-texr {
   font-size: 16px;
-    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
-    font-weight: bold;
-    color: #333333;
+  font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+  font-weight: bold;
+  color: #333333;
 }
 
 .submit-section {
@@ -855,32 +819,26 @@ export default {
       opacity: 0.6;
     }
   }
-  
 }
-.btns_end{
-    width: 132px;
-    height: 40px;
-    background: #7853B2;
-    border-radius: 4px 4px 4px 4px;
-    text-align: center;
-    line-height: 40px;
-    cursor: pointer;
-    font-weight: 400;
-    font-size: 16px;
-    color: #FFFFFF;
-    margin-left: 34px;
+.btns_end {
+  width: 206px;
+  height: 56px;
+  background: #ec6a2b;
+  border-radius: 6px 6px 6px 6px;
+  font-size: 20px;
+  color: #FFFFFF;
+  text-align: center;
+  line-height: 56px;
+  cursor: pointer;
 }
-.form_text{
+.form_text {
   height: 40px;
   font-weight: 400;
-  font-size: 14px;
-  color: #505050;
-  padding-left: 18px;
-  display: flex;
-  align-items: flex-end;
-
+  font-size: 20px;
+  color: #5E5E5E;
+  margin-top: 10px;
 }
-.el-icon-remove-outline{
+.el-icon-remove-outline {
   font-size: 30px;
   color: #6b46a3;
   margin-left: 30px;

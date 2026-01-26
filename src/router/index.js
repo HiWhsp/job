@@ -705,7 +705,7 @@ router.beforeEach((to, from, next) => {
   // debugger
   if (!user_is_login && to.meta.requireAuth) {
     // debugger
-    alertErr("请先登录");
+    alertErr("Please log in first");
     next("/login");
   } else {
     next();

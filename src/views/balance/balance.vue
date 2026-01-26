@@ -155,7 +155,7 @@ export default {
 
     do_submit() {
       if (!this.vuex_is_login) {
-        alertErr("请先登录");
+        alertErr("Please log in first");
         this.$router.push("/login");
         return
       } 

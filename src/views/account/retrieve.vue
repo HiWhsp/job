@@ -1,148 +1,187 @@
 <template>
-  <div>
-    <div class="page-top flex-center">
-      <div class="w-1400 flex-between">
-        <img src="@img/common/logo.png" class="logo" alt="" />
-        <div class="column-flex-center">
-          <div class="flex-center right">
-            <img src="@img/foot/foot-mobile.png" alt="" />
-            {{ vuex_config.comPhone }}
-          </div>
-          <div class="right-btn" @click="$router.push('/')">返回首页</div>
-        </div>
-      </div>
-    </div>
+  <div class="page-retrieve">
     <div class="page">
-      <div class="page-bg">
-        <img src="@img/login/login-bg.jpg" alt="" />
+      <!-- 面包屑导航 -->
+      <div class="breadcrumb w-1400">
+        <span>Home / Login or Register</span>
       </div>
 
       <div class="page-ctx">
-        <div class="page-inner flex-between w-1400">
-          <div class="page-poster">
-            <!-- <img src="@img/login/poster.png" alt=""> -->
-          </div>
+        <div class="page-inner">
+          <!-- 忘记密码框 -->
+          <div class="retrieve-container">
+            <div class="retrieve-box">
+              <h2 class="retrieve-title">FORGOT PASSWORD</h2>
 
-          <div class="form-box">
-            <div class="input-wrap">
-              <div class="tab-box">
-                <div class="tab-item">忘记密码</div>
-              </div>
+              <div class="retrieve-form">
+                <div class="form-group">
+                  <label class="form-label">
+                    <span class="required">*</span>
+                    Email :
+                  </label>
+                  <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Please enter"
+                    v-model="form.email"
+                  />
+                </div>
 
-              <div class="input-box">
-                <span>手机号</span>
-                <input
-                  type="text"
-                  placeholder="请输入手机号码"
-                  v-model="form.phone"
-                />
-              </div>
+                <div class="form-group">
+                  <label class="form-label">
+                    <span class="required">*</span>
+                    Verification Code :
+                  </label>
+                  <div class="form-input-group">
+                    <input
+                      type="text"
+                      class="form-input code-input"
+                      placeholder="Please enter"
+                      v-model="form.code"
+                    />
+                    <button class="obtain-btn" :disabled="disabledBtn" @click="getCode">Obtain</button>
+                  </div>
+                </div>
 
-              <retrieve_phone_code :form="form" />
+                <div class="form-group">
+                  <label class="form-label">
+                    <span class="required">*</span>
+                    New Password :
+                  </label>
+                  <input
+                    type="password"
+                    class="form-input"
+                    placeholder="Please enter"
+                    v-model="form.pass"
+                  />
+                </div>
 
-              <div class="input-box" v-if="tabType == 'PASS'">
-                <span>新密码</span>
-                <input
-                  type="password"
-                  placeholder="请输入新密码"
-                  v-model="form.pass"
-                />
-              </div>
-              <div class="input-box" v-if="tabType == 'PASS'">
-                <span>确认密码</span>
-                <input
-                  type="password"
-                  placeholder="请输入确认密码"
-                  v-model="form.confirm_pass"
-                />
-              </div>
+                <div class="form-group">
+                  <label class="form-label">
+                    <span class="required">*</span>
+                    Confirm Password :
+                  </label>
+                  <input
+                    type="password"
+                    class="form-input"
+                    placeholder="Please enter"
+                    v-model="form.confirm_pass"
+                  />
+                </div>
 
-              <div class="btn-box">
-                <button class="btn-ripple" @click="do_submit()">确定</button>
-              </div>
-
-              <div class="register-box flex-center">
-                <div class="log-box flex" @click="$router.push('/login')">
-                  <img src="@img/login/back.png" alt="" />
-                  <span class="log-text" to="/login">返回登录</span>
+                <button class="submit-btn" @click="do_submit()">SUBMIT</button>
+                <div class="go-login">
+                  <router-link to="/login">Go Login</router-link>
                 </div>
               </div>
-
-              <!-- <div class="terms-box">
-                <span class="terms-check" @click="is_agree = !is_agree">
-                  <img v-if="is_agree" src="@img/common/check1.png" alt="" />
-                  <img v-else src="@img/common/check0.png" alt="" />
-                  登录注册即表示同意
-                </span>
-                <span class="terms-text" @click="terms_open(92)"
-                  >《隐私政策》</span
-                >
-              </div> -->
             </div>
           </div>
         </div>
       </div>
-
-      <div class="page-btm column-flex-center">
-        <div v-html="vuex_config.comBeian" style="color: #fff"></div>
-        <div class="contact-info flex-center">
-          <div class="contact-item">公司地址：{{ vuex_config.comAddress }}</div>
-          <div class="contact-item">联系人：{{ vuex_config.comDesc }}</div>
-          <div class="contact-item">手机：{{ vuex_config.comPhone }}</div>
-          <div class="contact-item">邮箱：{{ vuex_config.comEmail }}</div>
-        </div>
-      </div>
-
       <terms_modal ref="terms_modal" />
     </div>
   </div>
 </template>
 
 <script>
-import retrieve_phone_code from "@/components/account/retrieve_phone_code.vue"; //短信验证码
 import terms_modal from "@/components/account/terms_modal.vue"; //协议弹窗
 import { mapState } from "vuex";
 
 export default {
   name: "retrieve",
   components: {
-    retrieve_phone_code,
-    terms_modal,
+    terms_modal
   },
   data() {
     return {
       is_agree: true,
-
-      mode: "账号密码", //微信扫码
-      tabType: "PASS", //登录方式
-      agreed: false,
+      disabledBtn: false, //按钮是否可点击
+      timer: null, //定时器 验证码
+      timeTotal: 60, //验证码总时长
+      time: 60, //验证码倒计时
 
       form: {
-        phone: "",
-        resetType: 0, //忘记方式：0-手机验证码忘记 1-邮箱验证码忘记
+        email: "",
+        resetType: 1, //忘记方式：0-手机验证码忘记 1-邮箱验证码忘记
         pass: "",
         code: "",
-        confirm_pass: "",
-        // email: "",
-      },
+        confirm_pass: ""
+      }
     };
   },
   computed: {
-    ...mapState(["vuex_config"]),
+    ...mapState(["vuex_config"])
   },
   created() {},
+  beforeDestroy() {
+    clearInterval(this.timer);
+    this.timer = null;
+  },
 
   methods: {
     terms_open(id) {
       this.$refs.terms_modal.init(id);
     },
 
-    do_submit() {
-      let reg_phone = /^1[3-9]\d{9}$/;
+    getCode() {
+      if (this.timer) {
+        alertErr("验证码发送频繁，请稍后再试");
+        return;
+      }
+
       let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
 
-      if (!reg_phone.test(this.form.phone)) {
-        alertErr("请输入正确的手机号");
+      if (!reg_email.test(this.form.email)) {
+        alertErr("请输入正确的邮箱");
+        return;
+      }
+      if (this.disabledBtn) {
+        return;
+      }
+      this.disabledBtn = true;
+      this.query_code();
+    },
+
+    query_code() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "login_emailYzm",
+          email: this.form.email
+        }
+      }).then(res => {
+        alert(res);
+        if (res.code == 200) {
+          this.countdown();
+        } else {
+          this.disabledBtn = false;
+        }
+      });
+    },
+
+    //倒计时
+    countdown() {
+      let that = this;
+      this.disabledBtn = true;
+
+      this.timer = setInterval(() => {
+        if (that.time > 0) {
+          that.time--;
+        } else {
+          that.time = that.timeTotal;
+          clearInterval(that.timer);
+          that.timer = null;
+          this.disabledBtn = false;
+        }
+      }, 1000);
+    },
+
+    do_submit() {
+      let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
+
+      if (!reg_email.test(this.form.email)) {
+        alertErr("请输入正确的邮箱");
         return;
       }
       if (!this.form.code) {
@@ -157,303 +196,207 @@ export default {
         alertErr("请输入确认密码");
         return;
       }
+      if (this.form.pass !== this.form.confirm_pass) {
+        alertErr("两次输入的密码不一致");
+        return;
+      }
 
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "login_resetPass",
-          ...this.form,
-        },
-      }).then((res) => {
+          ...this.form
+        }
+      }).then(res => {
         alert(res);
         let { code, data, msg } = res;
         if (code == 200) {
           this.$router.push("/login");
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped lang="less">
-.page-top {
-  height: 107px;
-  background: #ffffff;
-  .logo {
-    width: 203px;
-  }
-  .right {
-    color: #1F1F1F;
-    font-size: 20px;
-    img {
-      width: 28.52px;
-      margin-right: 6px;
-    }
-  }
-  .right-btn {
-    width: 115px;
-    height: 27px;
-    border-radius: 14px 14px 14px 14px;
-    border: 1px solid #7853b2;
-    color: #7853b2;
-    font-size: 14px;
-    margin-top: 14px;
-    text-align: center;
-    line-height: 27px;
-    cursor: pointer;
-  }
+.page-retrieve {
+  background: #fbfbfb;
+  min-height: 100vh;
 }
 
 .page {
   position: relative;
 
-  .page-bg {
-    img {
-      width: 100%;
-      min-height: 665px;
-    }
-  }
-
   .page-btm {
-    position: absolute;
     padding: 10px;
     width: 100%;
-    bottom: 0;
-    left: 0;
     color: #fff;
     font-size: 14px;
-    line-height: 24px;
-    text-align: center;
-    /deep/a {
-      color: #fff !important;
-    }
   }
 
   .page-ctx {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-
     display: flex;
     align-items: center;
-  }
-
-  .page-poster {
-    margin-left: 46px;
-
-    img {
-      width: 664px;
-      height: 664px;
-    }
+    justify-content: center;
+    padding: 40px 0 150px 0;
+    background-color: #fff;
   }
 
   .page-inner {
-    height: auto;
+    width: 100%;
     margin: 0 auto;
-    background: transparent;
-    align-items: center;
-    position: relative;
-
-    .form-box {
-      position: relative;
-      width: fit-content;
-      min-height: 300px;
-      background: #f9fafc;
-      background: #ffffff;
-      box-shadow: 0px 2px 15px 1px rgba(79, 79, 79, 0.15);
-      border: 1px solid transparent;
-      padding: 46px 40px;
-      border-radius: 10px;
-      padding-bottom: 70px;
-    }
-
-    .input-wrap {
-      width: 400px;
-      margin: 0 auto;
-
-      .tab-box {
-        margin-bottom: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        .tab-item {
-          font-family: Poppins, Poppins;
-          font-weight: 600;
-          font-size: 26px;
-          color: #333333;
-
-          &:first-child {
-            // &:after {
-            //   content: "";
-            //   display: inline-block;
-            //   width: 2px;
-            //   height: 24px;
-            //   background-color: #ccc;
-            //   margin: 0 30px;
-            //   position: relative;
-            //   top: 3px;
-            // }
-          }
-
-          &.active {
-            color: #333333;
-          }
-        }
-      }
-      .sms-box {
-        /deep/.input-box {
-          border: 1px solid #cccccc;
-        }
-      }
-      .input-box {
-        margin-bottom: 20px;
-        width: 100%;
-        height: 50px;
-        background: #ffffff;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        overflow: hidden;
-
-        span {
-          text-align: center;
-          display: inline-block;
-          width: 90px;
-          border-right: 1px solid #ccc;
-          font-family: OPPOSans, OPPOSans;
-          font-weight: 400;
-          font-size: 14px;
-          color: #7d7d7d;
-          // text-indent: 1em;
-        }
-
-        img {
-          width: 36px;
-        }
-
-        input {
-          flex: 2;
-          height: 100%;
-          padding-left: 16px;
-          font-size: 14px;
-          color: #000;
-
-          &::-webkit-input-placeholder {
-            font-size: 14px;
-            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-            font-weight: 400;
-            color: #d7d7d7;
-          }
-        }
-      }
-
-      .agree-box {
-        text-align: left;
-        margin-top: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        font-size: 14px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        line-height: 24px;
-        color: #505050;
-
-        a {
-          color: #009f39;
-        }
-      }
-
-      .btn-box {
-        margin-top: 60px;
-        margin-top: 30px;
-
-        button {
-          width: 100%;
-          height: 57px;
-          background: #7853b2;
-          font-size: 20px;
-          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-          font-weight: 400;
-          color: #ffffff;
-          border-radius: 8px;
-        }
-      }
-
-      .register-box {
-        margin-top: 20px;
-        text-align: center;
-        font-size: 14px;
-
-        .log-box {
-          cursor: pointer;
-          padding-bottom: 3px; 
-          border-bottom: 1px solid #7853b2;
-
-          img {
-            margin-right: 8px;
-            width: 18px;
-          }
-        }
-
-        .log-text {
-          font-size: 14px;
-          font-family: Microsoft YaHei;
-          font-weight: 400;
-          line-height: 24px;
-          color: #7853b2;
-          // border-bottom: 1px solid #7853B2;
-        }
-      }
-    }
   }
 }
 
-.terms-box {
-  position: absolute;
-  height: 40px;
-  background: #f5f6f8;
-  bottom: 0;
-  left: 0;
-  right: 0;
+// 面包屑导航
+.breadcrumb {
+  padding: 20px 0;
+  color: #1f1f1f;
+  font-size: 14px;
+
+  span {
+    color: #666;
+  }
+}
+
+// 忘记密码容器
+.retrieve-container {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+// 忘记密码框
+.retrieve-title {
+  font-size: 40px;
+  font-weight: bold;
+  color: #1e262e;
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+
+.retrieve-form {
+  margin-top: 100px;
+  width: 723px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  justify-content: flex-start;
-  padding-left: 20px;
-  text-align: center;
+}
 
-  .terms-check {
-    cursor: pointer;
-    font-family: OPPOSans, OPPOSans;
-    font-weight: 400;
-    font-size: 12px;
-    color: #505050;
+.form-group {
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
 
-    img {
-      margin-right: 10px;
-      width: 18px;
-      height: 18px;
-    }
+.form-label {
+  display: block;
+  font-size: 20px;
+  color: #1f1f1f;
+  margin-right: 10px;
+  font-weight: 400;
+  width: 210px;
+  text-align: right;
+
+  .required {
+    color: #ff0000;
+    margin-left: 2px;
+  }
+}
+
+.form-input {
+  width: 460px;
+  height: 45px;
+  padding: 0 15px;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #1f1f1f;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: #999;
+    font-size: 20px;
   }
 
-  .terms-text {
-    cursor: pointer;
-    font-family: OPPOSans, OPPOSans;
-    font-weight: 400;
-    font-size: 12px;
-    color: #505050;
+  &:focus {
+    outline: none;
+    border: 1px solid #dbdbdb;
+  }
+}
+
+.form-input-group {
+  display: flex;
+  width: 460px;
+  align-items: center;
+
+  .form-input {
+    width: 355px;
+  }
+}
+
+.code-input {
+  flex: 1;
+}
+
+.obtain-btn {
+  height: 45px;
+  padding: 0 20px;
+  background: #00306b;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    background: #0f2a47;
+  }
+
+  &:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+}
+
+.submit-btn {
+  width: 300px;
+  height: 80px;
+  background: #ec6a2b;
+  border-radius: 10px 10px 10px 10px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: 80px;
+
+  &:hover {
+    background: #e55a00;
+  }
+}
+
+.go-login {
+  text-align: center;
+  margin-top: 15px;
+  margin-left: 80px;
+  font-family: Poppins, Poppins;
+  font-weight: 400;
+
+  a {
+    color: #00306b;
+    font-size: 20px;
+    text-decoration: underline;
 
     &:hover {
-      color: #009f39;
+      color: #0f2a47;
     }
   }
 }
