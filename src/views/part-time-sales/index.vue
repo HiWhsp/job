@@ -67,11 +67,12 @@
           </div>
         </div>
         <div class="form-section">
-          <div class="section-title">
+          <!-- <div class="section-title">
             <span class="title-text">ID Number :</span>
-            <!-- <span class="required">*</span> -->
-          </div>
+            <span class="required">*</span>
+          </div>-->
           <el-form-item prop="identityId">
+            <span class="form-label-text">ID Number :</span>
             <el-input v-model="form.identityId" placeholder="Please enter"></el-input>
           </el-form-item>
         </div>
@@ -114,62 +115,30 @@
             <!-- <span class="required">*</span> -->
           </div>
           <el-form-item prop="receiveType">
-            <img src="@/assets/img/order/paypal.png" class="paypal-img" alt="">
-            <img src="@/assets/img/order/stripe.png" class="paypal-img" alt="">
-            <!-- <el-radio-group v-model="form.receiveType" @change="onReceiveTypeChange">
-              <el-radio :label="1">微信支付</el-radio>
-              <el-radio :label="2">支付宝</el-radio>
-              <el-radio :label="3">银行卡</el-radio>
-            </el-radio-group> -->
+            <img src="@/assets/img/order/paypal.png" class="paypal-img" alt />
+            <img src="@/assets/img/order/stripe.png" class="paypal-img" alt />
           </el-form-item>
         </div>
 
         <!-- 银行卡信息 -->
-        <div class="form-section" v-if="form.receiveType === 3">
-          <div class="section-title">
-            <span class="title-text">收款账号</span>
-            <span class="required">*</span>
-          </div>
+        <div class="form-section">
           <div class="bank-info">
             <el-form-item prop="bankName">
-              <el-input v-model="form.bankName" placeholder="请输入开户银行名称" clearable></el-input>
+              <span class="form-label-text form-label-text-right">Cardholder's Name :</span>
+              <el-input v-model="form.bankName" placeholder="Please enter" clearable></el-input>
             </el-form-item>
             <el-form-item prop="cardCode">
-              <el-input v-model="form.cardCode" placeholder="请输入开户银行账号" clearable></el-input>
+              <span class="form-label-text form-label-text-right">Card Number :</span>
+              <el-input v-model="form.cardCode" placeholder="Please enter" clearable></el-input>
             </el-form-item>
             <el-form-item prop="userName">
-              <el-input v-model="form.userName" placeholder="请输入持卡人姓名" clearable></el-input>
+              <span class="form-label-text form-label-text-right">Expiry date :</span>
+              <el-input v-model="form.userName" placeholder="MM/YY" clearable></el-input>
             </el-form-item>
-          </div>
-        </div>
-
-        <!-- 收款二维码 -->
-        <div class="form-section" v-if="form.receiveType === 1 || form.receiveType === 2">
-          <div class="section-title">
-            <span class="title-text">收款二维码</span>
-            <span class="required">*</span>
-          </div>
-          <div class="upload-area">
-            <el-upload
-              class="upload-demo"
-              accept="image/*"
-              :name="UPLOAD_NAME"
-              :action="UPLOAD_ACTION"
-              :data="mix_upload_data"
-              :on-success="(res) => upload_on_success(res, 'receiveQrcode')"
-              :before-upload="upload_before_upload"
-            >
-              <div class="upload-box" v-if="!form.receiveQrcode">
-                <div class="upload-icon">+</div>
-                <div class="upload-text">上传{{ form.receiveType === 1 ? "微信" : "支付宝" }}收款二维码</div>
-              </div>
-              <div class="uploaded-image" v-else>
-                <img :src="form.receiveQrcode" alt="已上传图片" />
-                <div class="image-overlay">
-                  <span class="reupload-text">重新上传</span>
-                </div>
-              </div>
-            </el-upload>
+            <el-form-item prop="userName">
+              <span class="form-label-text form-label-text-right">CVC/CVV :</span>
+              <el-input v-model="form.userName" placeholder="CVC" clearable></el-input>
+            </el-form-item>
           </div>
         </div>
 
@@ -177,21 +146,47 @@
         <div class="form-section">
           <el-form-item prop="agreement">
             <el-checkbox v-model="form.agreement">
-              已阅读并同意
-              <!-- <a href="#" class="agreement-link">《医买买平台服务协议》</a> -->
-              <router-link to="/terms?id=139">《医买买平台服务协议》</router-link>
-              <router-link to="/terms?id=140">《隐私权政策》</router-link>
-              <router-link to="/terms?id=141">《运营商协议》</router-link>
-              <!-- <a href="#" class="agreement-link">《隐私权政策》</a> -->
-              <!-- <a href="#" class="agreement-link">《运营商协议》</a> -->
+              Read and agree to the User Related Agreement
+              <router-link class="agreement-link" to>User Related Agreement</router-link>
+            </el-checkbox>
+            <el-checkbox v-model="form.agreement">
+              Agree to strictly abide by national laws and industry regulations in conducting sales activities and timely complete
+              personal income tax declaration and payment on your own.
+            </el-checkbox>
+            <el-checkbox v-model="form.agreement">
+              <div class="agreement-text">
+                <p>Important note:</p>
+                <p>
+                  1. After successfully applying to become a part-time salesperson, you can act as an agent for all products on
+                  the compliant sales platform.
+                </p>
+                <p>
+                  2. After developing customers, you can follow the steps to "add customer information" in the "Member
+                  Center" - "Customer Management" page.
+                </p>
+                <p>
+                  3. After adding customer information and successful platform review, the customer becomes your managed
+                  customer; You will receive a corresponding commission for any products purchased by the customer on
+                  this platform.
+                </p>
+                <p>
+                  4. Once your customer information is successfully established, no one else can submit to add the customer,
+                  and the platform will ensure the unique service of the customer.
+                </p>
+                <p>5. If the customer information already exists on this platform, your customer information submission will also not be completed.</p>
+                <p>6. If the customer you have bound fails to achieve any transactions within six natural months from the registration date, the customer will be automatically unbound.</p>
+                <p>7. Customers who have been unbound will no longer belong to you, and any sales generated after unbinding will no longer be associated with your account.</p>
+                <p>8. Within six months after unbinding, you will not be able to register the customer again unless you can submit the actual transaction order of the customer and the customer has not been registered by anyone else. You can contact the platform to bind the customer again for you.</p>
+                <p>9. As a part-time salesperson, it is necessary to strictly comply with national laws and industry regulations to carry out sales activities and timely complete personal income tax declaration and payment on one's own.</p>
+                <p>10. The platform conducts an annual evaluation of the part-time sales business status, and the final interpretation rights belong to the platform.</p>
+              </div>
             </el-checkbox>
           </el-form-item>
         </div>
-        <div class="form-section-text">收款人信息需要和上传的身份证保持一致。本账号如需更换身份证和收款信息需联系工作人员确认后才可以操作。</div>
 
         <!-- 提交按钮 -->
         <div class="submit-section">
-          <el-button class="btn-submit" @click="do_submit()" :loading="loading">提交</el-button>
+          <el-button class="btn-submit" @click="do_submit()" :loading="loading">SUBMIT</el-button>
         </div>
       </el-form>
     </div>
@@ -566,10 +561,8 @@ export default {
 
   .page-ctx {
     margin-top: 24px;
-    padding: 40px 32px;
+    padding: 40px 32px 110px;
     background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -594,6 +587,19 @@ export default {
       margin-left: 4px;
       font-size: 16px;
     }
+  }
+
+  .form-label-text {
+    margin-right: 15px;
+    font-size: 20px;
+    color: #1e262e;
+    text-align: right;
+    font-weight: 400;
+    font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+  }
+  .form-label-text-right {
+    width: 200px;
+    display: inline-block;
   }
 
   .upload-group {
@@ -743,13 +749,18 @@ export default {
     }
 
     .el-checkbox {
-      .el-checkbox__label {
-        font-size: 14px;
-        color: #606266;
-        padding-left: 8px;
+      display: flex;
+      margin-bottom: 20px;
+      /deep/ .el-checkbox__label {
+        font-size: 18px;
+        color: #1e262e !important;
+        width: 1080px;
+        white-space: pre-wrap;
+        line-height: 24px;
+        padding-left: 20px;
 
         .agreement-link {
-          color: #7853b2;
+          color: #ec6a2b;
           text-decoration: none;
 
           &:hover {
@@ -758,9 +769,31 @@ export default {
         }
       }
 
-      .el-checkbox__input.is-checked .el-checkbox__inner {
-        background-color: #7853b2;
-        border-color: #7853b2;
+      /deep/ .el-checkbox__inner {
+        width: 28px;
+        height: 28px;
+        &:after {
+          width: 10px;
+          height: 15px;
+          left: 7px;
+          border: 3px solid #ffffff;
+          border-top: none;
+          border-left: none;
+        }
+      }
+
+      .agreement-text {
+        width: 100%;
+        height: 100%;
+        background: #fbfbfb;
+        border-radius: 15px 15px 15px 15px;
+        padding: 17px 20px;
+        box-sizing: border-box;
+        font-size: 18px;
+        color: #1e262e;
+        line-height: 30px;
+        white-space: pre-wrap;
+        word-break: break-all;
       }
     }
   }
@@ -796,25 +829,25 @@ export default {
   text-align: center;
 
   .btn-submit {
-    width: 200px;
-    height: 48px;
-    background: #7853b2;
-    color: #ffffff;
+    width: 300px;
+    height: 80px;
+    background: #ec6a2b;
+    border-radius: 10px 10px 10px 10px;
     border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
     cursor: pointer;
     transition: all 0.3s ease;
     display: inline-block;
     text-align: center;
 
     &:hover:not(:disabled) {
-      background: #6b46a3;
+      background: #ec6a2b;
     }
 
     &:disabled {
-      background: #cccccc;
+      background: #ec6a2b;
       cursor: not-allowed;
       opacity: 0.6;
     }
@@ -826,7 +859,7 @@ export default {
   background: #ec6a2b;
   border-radius: 6px 6px 6px 6px;
   font-size: 20px;
-  color: #FFFFFF;
+  color: #ffffff;
   text-align: center;
   line-height: 56px;
   cursor: pointer;
@@ -835,7 +868,7 @@ export default {
   height: 40px;
   font-weight: 400;
   font-size: 20px;
-  color: #5E5E5E;
+  color: #5e5e5e;
   margin-top: 10px;
 }
 .el-icon-remove-outline {
