@@ -60,7 +60,7 @@
                   type="text"
                   class="form-input"
                   placeholder="Please enter"
-                  v-model="form.phoneNumber"
+                  v-model="form.phone"
                 />
               </div>
 
@@ -73,7 +73,7 @@
                   type="password"
                   class="form-input"
                   placeholder="Please enter"
-                  v-model="form.password"
+                  v-model="form.pass"
                 />
               </div>
 
@@ -145,11 +145,11 @@ export default {
         alertErr("Please enter a valid email address");
         return;
       }
-      if (!this.form.phoneNumber) {
+      if (!this.form.phone) {
         alertErr("Please enter Phone Number");
         return;
       }
-      if (!this.form.password) {
+      if (!this.form.pass) {
         alertErr("Please enter Password");
         return;
       }
@@ -157,19 +157,19 @@ export default {
         alertErr("Please enter Confirm Password");
         return;
       }
-      if (this.form.password !== this.form.confirmPassword) {
+      if (this.form.pass !== this.form.confirmPassword) {
         alertErr("Passwords do not match");
         return;
       }
 
       // 提交表单数据
       let params = {
-        action: "register_personal",
+        action: "login_emailReg",
         firstName: this.form.firstName,
         lastName: this.form.lastName,
         email: this.form.email,
-        phone: this.form.phoneNumber,
-        password: this.form.password,
+        phone: this.form.phone,
+        pass: this.form.pass,
         confirmPassword: this.form.confirmPassword,
         userType: 0 // 个人用户
       };

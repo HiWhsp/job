@@ -112,16 +112,22 @@ export default {
         //   showCondition: user => user.userType == 0 || user.userType == 1
         // },
         {
+          title: "Commission-only Reps",
+          route: "commission-only-reps",
+          icon: require("@img/my/nav-9.png"),
+          showCondition: user => user.userType == 2
+        },
+        {
           title: "Apply To Be The Commission-only Rep",
           route: "part-time-sales",
           icon: require("@img/my/nav-9.png"),
           // showCondition: (user) => !(user.renzheng == 2 && user.userType == 2),
-          showCondition: user => user.userType == 0 || user.userType == 2
+          showCondition: user => user.userType == 0
         },
         {
-          title: "客户管理",
+          title: "Customer Management",
           route: "customer-management",
-          icon: require("@img/my/nav-6.png"),
+          icon: require("@img/my/nav-10.png"),
           showCondition: user => user.renzheng == 2 && user.userType == 2
         },
         {

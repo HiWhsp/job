@@ -1,15 +1,15 @@
 <template>
   <div class="page">
     <div class="main-title flex">
-      <img src="@img/my/nav-4.png" alt="" />
-      <span>客户管理</span>
+      <!-- <img src="@img/my/nav-4.png" alt="" /> -->
+      <span>Customer Management</span>
     </div>
 
     <div class="page-ctx">
       <p style="display: flex; justify-content: flex-end">
         <button @click="do_address_add()" class="btn-c">
           <!-- <img src="@img/address-add.png" alt="" /> -->
-          <i class="el-icon-circle-plus"></i>
+          <i class="el-icon-plus"></i>
           <span class="add-text">添加客户信息</span>
         </button>
       </p>
@@ -26,11 +26,7 @@
 
           <!-- 表格内容 -->
           <div class="table-body">
-            <div
-              class="table-row"
-              v-for="(item, index) in list_address"
-              :key="index"
-            >
+            <div class="table-row" v-for="(item, index) in list_address" :key="index">
               <div class="table-cell">{{ item.nickname }}</div>
               <div class="table-cell">
                 <el-image :src="item.license1"></el-image>
@@ -55,23 +51,20 @@
                   @click="do_address_set_default(item.id)"
                   >设为默认地址</span
                 >
-              </div> -->
+              </div>-->
             </div>
           </div>
         </div>
 
-        <el-empty
-          v-if="!list_address.length"
-          description="尚未添加地址"
-        ></el-empty>
+        <el-empty v-if="!list_address.length" description="尚未添加地址"></el-empty>
       </div>
     </div>
 
     <!-- 添加客户信息弹窗 -->
     <el-dialog
-      title="添加客户信息"
+      title="Add customer"
       :visible.sync="showModal"
-      width="500px"
+      width="980px"
       :before-close="closeModal"
       :close-on-press-escape="false"
       :close-on-click-modal="false"
@@ -80,61 +73,41 @@
       <div class="modal-inner">
         <el-form :model="form" :rules="rules" ref="customerForm">
           <!-- label-width="100px" -->
-          <!-- <div class="form-item">
-            <span class="label required">客户名称:</span>
+          <div class="form-item">
+            <span class="label required">customer name :</span>
             <el-form-item prop="nickname">
-              <el-input
-                v-model="form.nickname"
-                placeholder="请输入客户名称"
-                clearable
-              ></el-input>
-            </el-form-item>
-          </div> -->
-          <div class="form-item">
-            <span class="label required">公司名称:</span>
-            <el-form-item prop="title">
-              <el-input
-                v-model="form.title"
-                placeholder="请输入公司名"
-                clearable
-              ></el-input>
+              <el-input v-model="form.nickname" placeholder="Please enter" clearable></el-input>
             </el-form-item>
           </div>
-
           <div class="form-item">
-            <span class="label">手机号:</span>
-            <el-form-item prop="phone">
-              <el-input
-                v-model="form.phone"
-                placeholder="请输入注册手机"
-                clearable
-              ></el-input>
-            </el-form-item>
-          </div>
-
-          <div class="form-item">
-            <span class="label">邮箱:</span>
-            <el-form-item prop="email">
-              <el-input
-                v-model="form.email"
-                placeholder="请输入注册邮箱"
-                clearable
-              ></el-input>
-            </el-form-item>
-          </div>
-         
-          <div class="form-item">
-            <span class="label required">统一社会信用代码:</span>
+            <span class="label required">business number :</span>
             <el-form-item prop="unified_code ">
-              <el-input
-                v-model="form.unified_code "
-                placeholder="请输入统一社会信用代码"
-                clearable
-              ></el-input>
+              <el-input v-model="form.unified_code " placeholder="Please enter" clearable></el-input>
             </el-form-item>
           </div>
 
           <div class="form-item">
+            <span class="label">Customer Phone Number :</span>
+            <el-form-item prop="phone">
+              <el-input v-model="form.phone" placeholder="Please enter" clearable></el-input>
+            </el-form-item>
+          </div>
+
+          <div class="form-item">
+            <span class="label">customer Email :</span>
+            <el-form-item prop="email">
+              <el-input v-model="form.email" placeholder="Please enter" clearable></el-input>
+            </el-form-item>
+          </div>
+
+          <div class="form-item">
+            <span class="label required">Company Address :</span>
+            <el-form-item prop="title">
+              <el-input v-model="form.title" placeholder="Please enter" clearable></el-input>
+            </el-form-item>
+          </div>
+
+          <!-- <div class="form-item">
             <span class="label required">营业执照:</span>
             <el-form-item prop="license1">
               <div class="upload-section">
@@ -175,19 +148,13 @@
                 <div>彩色扫描或复印件</div>
               </div>
             </el-form-item>
-          </div>
+          </div>-->
         </el-form>
       </div>
 
       <span slot="footer" class="dialog-footer">
-        <el-button
-          class="btn-confirm"
-          @click="throttle_do_submit()"
-          :loading="loading"
-        >
-          确定
-        </el-button>
-        <el-button class="btn-cancel" @click="closeModal"> 取消 </el-button>
+        <el-button class="btn-confirm" @click="throttle_do_submit()" :loading="loading">SUBMIT</el-button>
+        <!-- <el-button class="btn-cancel" @click="closeModal">取消</el-button> -->
       </span>
     </el-dialog>
   </div>
@@ -206,7 +173,7 @@ export default {
       UPLOAD_NAME,
       pagination: {
         page: 1,
-        pageNum: 100,
+        pageNum: 100
       },
       list_address: [],
 
@@ -220,16 +187,14 @@ export default {
         phone: "",
         email: "",
         license1: "",
-        unified_code :'',
+        unified_code: ""
       },
 
       // 表单验证规则
       rules: {
-        title: [
-          { required: true, message: "请输入公司名称", trigger: "blur" },
-        ],
-        unified_code : [
-          { required: true, message: "请输入统一社会信用代码", trigger: "blur" },
+        title: [{ required: true, message: "请输入公司名称", trigger: "blur" }],
+        unified_code: [
+          { required: true, message: "请输入统一社会信用代码", trigger: "blur" }
         ],
         // phone: [
         //   { required: true, message: "请输入手机号", trigger: "blur" },
@@ -244,13 +209,13 @@ export default {
         //   { type: "email", message: "请输入正确的邮箱格式", trigger: "blur" },
         // ],
         license1: [
-          { required: true, message: "请上传营业执照", trigger: "change" },
-        ],
-      },
+          { required: true, message: "请上传营业执照", trigger: "change" }
+        ]
+      }
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState([""])
   },
   created() {
     this.setView();
@@ -265,9 +230,9 @@ export default {
         method: "get",
         data: {
           action: "users_getCustomerList",
-          ...this.pagination,
-        },
-      }).then((res) => {
+          ...this.pagination
+        }
+      }).then(res => {
         if (res.code == 200) {
           let data = res.data;
           this.list_address = data.list;
@@ -287,7 +252,7 @@ export default {
         nickname: "",
         phone: "",
         email: "",
-        license1: "",
+        license1: ""
       };
       this.$nextTick(() => {
         this.$refs.customerForm && this.$refs.customerForm.clearValidate();
@@ -302,7 +267,7 @@ export default {
 
     // 提交表单
     do_submit() {
-      this.$refs.customerForm.validate((valid) => {
+      this.$refs.customerForm.validate(valid => {
         if (valid) {
           this.loading = true;
 
@@ -311,9 +276,9 @@ export default {
             method: "post",
             data: {
               action: "users_saveUserCompany",
-              ...this.form,
-            },
-          }).then((res) => {
+              ...this.form
+            }
+          }).then(res => {
             let { code, msg } = res;
             alert(res).then(() => {
               this.loading = false;
@@ -356,8 +321,8 @@ export default {
       }
 
       return true;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -369,13 +334,13 @@ export default {
   .main-title {
     padding: 0 32px;
     text-align: left;
-    height: 56px;
-    line-height: 56px;
+    height: 70px;
+    line-height: 70px;
     background: #ffffff;
-    font-size: 16px;
+    font-size: 20px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #333333;
+    color: #1e262e;
     img {
       width: 22px;
       margin-right: 10px;
@@ -504,7 +469,7 @@ export default {
           }
 
           &.delete {
-            color: #1F1F1F;
+            color: #1f1f1f;
           }
 
           &:hover {
@@ -543,12 +508,12 @@ export default {
       align-items: flex-start;
 
       .label {
-        width: 140px;
+        width: 263px;
         text-align: right;
-        padding-right: 10px;
-        padding-top: 10px;
-        font-size: 14px;
-        color: #333333;
+        font-size: 20px;
+        color: #1e262e;
+        margin-right: 10px;
+        line-height: 56px;
 
         &.required {
           &::before {
@@ -567,12 +532,12 @@ export default {
           width: 100%;
 
           .el-input__inner {
-            border: 1px solid #d4d4d4;
-            border-radius: 4px;
-            font-size: 14px;
+            border: 1px solid #dbdbdb;
+            border-radius: 6px;
+            font-size: 20px;
             color: #606266;
-            height: 40px;
-            line-height: 40px;
+            height: 56px;
+            line-height: 56px;
 
             &:focus {
               border-color: #7853b2;
@@ -681,7 +646,7 @@ export default {
           .sample-text {
             text-align: center;
             font-size: 12px;
-            color: #1F1F1F;
+            color: #1f1f1f;
             margin-top: 8px;
           }
         }
@@ -702,12 +667,11 @@ export default {
 
 /deep/ .el-dialog__header {
   padding: 16px 24px;
-  border-bottom: 1px solid #eee;
-  background: #f7f7f7;
+  background: #fff;
   font-family: Microsoft YaHei, Microsoft YaHei;
   font-weight: 600;
-  font-size: 18px;
-  color: #333333;
+  font-size: 24px;
+  color: #1e262e;
 
   .el-dialog__close {
     font-size: 20px;
@@ -723,21 +687,14 @@ export default {
   padding-bottom: 50px;
 
   .btn-confirm {
-    width: 104px;
-    height: 40px;
-    background: #7853b2;
-    border-radius: 50px;
-    border: 1px solid #7853b2;
+    width: 192px;
+    height: 52px;
+    background: #ec6a2b;
+    border-radius: 6px 6px 6px 6px;
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 20px;
     color: #ffffff;
-    margin-right: 12px;
-
-    &:hover {
-      background: #6b46a3;
-      border-color: #6b46a3;
-    }
   }
 
   .btn-cancel {
@@ -749,7 +706,7 @@ export default {
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;
     font-size: 14px;
-    color: #1F1F1F;
+    color: #1f1f1f;
 
     &:hover {
       border-color: #7853b2;

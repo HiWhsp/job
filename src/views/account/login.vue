@@ -115,11 +115,11 @@ export default {
 
     goToRegister(type) {
       // 跳转到注册页面，可以传递类型参数
-      if (type === 'business') {
+      if (type === "business") {
         this.$router.push({
           path: "/register-business"
         });
-      } else if (type === 'personal') {
+      } else if (type === "personal") {
         this.$router.push({
           path: "/register-personal"
         });
@@ -144,23 +144,24 @@ export default {
         alertErr("请输入正确的手机号");
         return;
       }
-      if (!reg_email.test(this.form.phone) && !isphone) {
-        alertErr("请输入正确的邮箱");
-        return;
-      }
+      // if (!reg_email.test(this.form.phone)) {
+      //   alertErr("请输入正确的邮箱");
+      //   return;
+      // }
       if (!this.form.password) {
         alertErr(`请输入${isphone ? "密码" : "邮箱验证码"}`);
         return;
       }
       let params = {};
-      if (isphone)
+      if (isphone) {
         params = {
           action: "login_phoneLogin",
           phone: this.form.phone,
           loginType: 0,
+          // code: this.form.password,
           password: this.form.password
         };
-      else
+      } else {
         params = {
           action: "login_emailLogin",
           email: this.form.phone,
@@ -168,6 +169,7 @@ export default {
           // code: this.form.password,
           password: this.form.password
         };
+      }
       this.$api({
         url: "/service.php",
         method: "get",
@@ -361,14 +363,14 @@ export default {
 .register-title {
   font-size: 40px;
   font-weight: bold;
-  color: #1E262E;
+  color: #1e262e;
   margin: 0 0 20px 0;
 }
 
 .register-btn {
   width: 100%;
   height: 50px;
-  background: #00306B;
+  background: #00306b;
   color: #ffffff;
   font-size: 20px;
   font-weight: bold;
