@@ -115,6 +115,12 @@ export default {
           title: "Commission-only Reps",
           route: "commission-only-reps",
           icon: require("@img/my/nav-9.png"),
+          showCondition: user => user.userType == 1
+        },
+        {
+          title: "business information",
+          route: "business-information",
+          icon: require("@img/my/nav-12.png"),
           showCondition: user => user.userType == 2
         },
         {
@@ -128,13 +134,13 @@ export default {
           title: "Customer Management",
           route: "customer-management",
           icon: require("@img/my/nav-10.png"),
-          showCondition: user => user.renzheng == 2 && user.userType == 2
+          showCondition: user => user.userType == 2
         },
         {
-          title: "销售业绩",
+          title: "Sales Performance",
           route: "sales-performance",
-          icon: require("@img/my/nav-7.png"),
-          showCondition: user => user.renzheng == 2 && user.userType == 2
+          icon: require("@img/my/nav-11.png"),
+          showCondition: user => user.userType == 2
         }
       ],
       activeRoute: "",
@@ -192,7 +198,7 @@ export default {
       }
     },
     go_enterpriseCert() {
-      this.$router.push("/enterprise-cert");
+      this.$router.push("/register-personal");
     }
   }
 };

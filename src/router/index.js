@@ -104,6 +104,7 @@ const couponCenter = () => import("@/views/coupon/coupon-center.vue");
 const enterpriseCert = () => import("@/views/enterprise-cert/index.vue");
 const supplierOnboarding = () => import("@/views/supplier-onboarding/index.vue");
 const partTimeSales = () => import("@/views/part-time-sales/index.vue");
+const businessInformation = () => import("@/views/business-information/index.vue");
 const commissionOnlyReps = () => import("@/views/commission-only-rep/index.vue");
 const customerManagement = () => import("@/views/customer-management/index.vue");
 const salesPerformance = () => import("@/views/sales-performance/index.vue");
@@ -645,6 +646,15 @@ const routes = [
             component: partTimeSales,
             meta: {
               title: "成为兼职销售代表",
+              requireAuth: true,
+            },
+          },
+          {
+            path: "/business-information",
+            name: "business-information",
+            component: businessInformation,
+            meta: {
+              title: "Business Information",
               requireAuth: true,
             },
           },

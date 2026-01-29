@@ -16,12 +16,12 @@
             <div class="base-right flex">
               <div class="u-act">
                 <img src="@/assets/img/head/CouponCenter.png" alt="" />
-                <router-link to="/footprint-list">Coupon Center</router-link>
+                <router-link to="/coupon-center">Coupon Center</router-link>
               </div>
               <span class="u-line"></span>
               <div class="u-act">
                 <img src="@/assets/img/head/ContactUs.png" alt="" />
-                <router-link to="/favorite-list">Contact Us</router-link>
+                <router-link to="/Contact">Contact Us</router-link>
               </div>
               <span class="u-line"></span>
               <div class="u-act">

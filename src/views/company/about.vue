@@ -24,6 +24,20 @@
       <div class="page-ctx">
         <pageBreadcrumb :option="nav_option" />
 
+        <!-- 团队卡片部分 -->
+        <div class="team-cards">
+          <div class="team-card" v-for="(team, index) in teams" :key="index">
+            <div class="card-background" :class="team.bgClass"></div>
+            <div class="card-content">
+              <div class="card-icon">
+                <i :class="team.icon"></i>
+              </div>
+              <div class="card-title">{{ team.name }}</div>
+              <div class="card-email">{{ team.email }}</div>
+            </div>
+          </div>
+        </div>
+
         <div class="contact-info">
           <div class="info-list flex-between">
             <div class="info-item">
@@ -106,7 +120,33 @@ export default {
   },
   data() {
     return {
-      info: {}
+      info: {},
+      teams: [
+        {
+          name: "Marketing Team",
+          email: "MEDOOO@123.com",
+          icon: "el-icon-user-solid",
+          bgClass: "bg-marketing"
+        },
+        {
+          name: "Sales Service Team",
+          email: "MEDOOO@123.com",
+          icon: "el-icon-suitcase",
+          bgClass: "bg-sales"
+        },
+        {
+          name: "Purchasing Team",
+          email: "MEDOOO@123.com",
+          icon: "el-icon-shopping-bag-2",
+          bgClass: "bg-purchasing"
+        },
+        {
+          name: "Technical Support Team",
+          email: "MEDOOO@123.com",
+          icon: "el-icon-connection",
+          bgClass: "bg-technical"
+        }
+      ]
     };
   },
   computed: {
@@ -216,6 +256,101 @@ export default {
 
   padding-top: 35px;
   padding-bottom: 90px;
+
+  // 团队卡片样式
+  .team-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-bottom: 80px;
+    margin-top: 40px;
+
+    .team-card {
+      position: relative;
+      height: 320px;
+      border: 1px dashed #d4d4d4;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #ffffff;
+
+      .card-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-size: cover;
+        background-position: center;
+        filter: blur(4px);
+        opacity: 0.7;
+        z-index: 1;
+
+        &.bg-marketing {
+          background: linear-gradient(135deg, rgba(255, 236, 210, 0.8) 0%, rgba(252, 182, 159, 0.8) 100%),
+            url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%23f0f0f0" width="400" height="300"/></svg>');
+        }
+
+        &.bg-sales {
+          background: linear-gradient(135deg, rgba(168, 237, 234, 0.8) 0%, rgba(254, 214, 227, 0.8) 100%),
+            url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%23f0f0f0" width="400" height="300"/></svg>');
+        }
+
+        &.bg-purchasing {
+          background: linear-gradient(135deg, rgba(210, 153, 194, 0.8) 0%, rgba(254, 249, 215, 0.8) 100%),
+            url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%23f0f0f0" width="400" height="300"/></svg>');
+        }
+
+        &.bg-technical {
+          background: linear-gradient(135deg, rgba(137, 247, 254, 0.8) 0%, rgba(102, 166, 255, 0.8) 100%),
+            url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%23f0f0f0" width="400" height="300"/></svg>');
+        }
+      }
+
+      .card-content {
+        position: relative;
+        z-index: 2;
+        padding: 40px 30px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+
+        .card-icon {
+          width: 64px;
+          height: 64px;
+          background: #00306b;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 24px;
+          flex-shrink: 0;
+
+          i {
+            font-size: 32px;
+            color: #ffffff;
+          }
+        }
+
+        .card-title {
+          font-size: 18px;
+          font-weight: 500;
+          color: #ec6a2b;
+          margin-bottom: 12px;
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          line-height: 1.4;
+        }
+
+        .card-email {
+          font-size: 14px;
+          color: #1f1f1f;
+          font-family: Microsoft YaHei, Microsoft YaHei;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
 
   .contact-info {
     padding-top: 70px;
