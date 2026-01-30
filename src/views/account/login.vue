@@ -136,20 +136,20 @@ export default {
       let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
 
       // if (!this.is_agree) {
-      //   alertErr("请阅读并勾选协议条款");
+      //   alertErr("Please read and check the agreement terms");
       //   return;
       // }
       const isphone = this.login_type == 0;
       if (!reg_phone.test(this.form.phone) && isphone) {
-        alertErr("请输入正确的手机号");
+        alertErr("Please enter the correct phone number");
         return;
       }
       // if (!reg_email.test(this.form.phone)) {
-      //   alertErr("请输入正确的邮箱");
+      //   alertErr("Please enter the correct email");
       //   return;
       // }
       if (!this.form.password) {
-        alertErr(`请输入${isphone ? "密码" : "邮箱验证码"}`);
+        alertErr(`Please enter ${isphone ? "password" : "email verification code"}`);
         return;
       }
       let params = {};

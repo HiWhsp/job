@@ -1,23 +1,18 @@
 <template>
   <div class="page">
-    <!-- <pageTop :config="pageConfig" /> -->
-    <!-- <news_banner /> -->
-
+    <div class="page-top">
+      <div class="page-bread w-1400">
+        <div class="bread-box">
+          <router-link to="/">Home</router-link>
+          <span class="arrow">/</span>
+          <a class="link">Cart</a>
+        </div>
+      </div>
+    </div>
     <div class="inner">
       <div class="page-ctx w-1400">
         <div class="ctx-news">
           <div class="ctx-left">
-            <!-- <div class="search-box">
-            <img class="img-search" src="@img/keyword-search.png" alt="" />
-            <input
-              v-model="keyword"
-              type="text"
-              placeholder="请输入要搜索的关键词"
-              @keyup.enter="setView"
-            />
-            <button class="btn-ripple" @click="setView">搜索</button>
-          </div> -->
-
             <!-- Tab切换模块 -->
             <div class="tab-container">
               <el-tabs
@@ -27,20 +22,16 @@
                 active-color="#7853B2"
               >
                 <el-tab-pane
-                  v-for="(tab, index) in tabList"
+                  v-for="tab in tabList"
                   :key="tab.id"
                   :label="tab.title"
                   :name="tab.id+''"
-                >
-                </el-tab-pane>
+                ></el-tab-pane>
               </el-tabs>
             </div>
 
             <div class="news-wrap" v-if="count">
-              <div
-                class="news-list"
-                :class="{ 'card-layout': activeTab == 1 }"
-              >
+              <div class="news-list" :class="{ 'card-layout': activeTab == 1 }">
                 <div
                   v-for="(item, index) in list_news"
                   :key="index"
@@ -49,21 +40,12 @@
                 >
                   <!-- 索引为0时的简洁布局 -->
                   <template v-if="activeTab == 0">
-                    <div class="yellow-bar"></div>
+                    <div class="shield-icon">
+                      <!-- <img src="@img/index/shield-icon.png" alt="" /> -->
+                    </div>
                     <div class="item-content">
                       <div class="company-title" @click="handle_detial(item)">{{ item.title }}</div>
-                      <div class="item-description">
-                        {{ item.content }}
-                      </div>
-                    </div>
-                    <div class="view-details">
-                      <div class="detail-link" @click="handle_detial(item)">查看详情 ></div>
-                      <!-- <router-link
-                        :to="`/news-detail?id=${item.id}`"
-                        class="detail-link"
-                      >
-                        查看详情 >
-                      </router-link> -->
+                      <div class="item-description">{{ item.content }}</div>
                     </div>
                   </template>
 
@@ -77,9 +59,7 @@
                     <!-- 中间内容区域 -->
                     <div class="card-content">
                       <div class="card-title" @click="handle_detial(item)">{{ item.title }}</div>
-                      <div class="card-description">
-                        {{ item.content }}
-                      </div>
+                      <div class="card-description">{{ item.content }}</div>
                     </div>
 
                     <!-- 右侧操作按钮 -->
@@ -91,13 +71,13 @@
                         class="card-link"
                       >
                         查看详情 >
-                      </router-link> -->
+                      </router-link>-->
                     </div>
                   </template>
                 </div>
               </div>
               <div class="pagination-box">
-                 <el-pagination
+                <el-pagination
                   background
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange"
@@ -105,8 +85,8 @@
                   :page-sizes="[10,100, 200, 300, 400]"
                   :page-size="pagination.pageNum"
                   layout="total, prev, pager, next, jumper"
-                  :total="count">
-                </el-pagination>
+                  :total="count"
+                ></el-pagination>
               </div>
             </div>
             <div class="empty-box" v-else>
@@ -114,71 +94,74 @@
             </div>
           </div>
 
-          <div class="ctx-right" >
+          <div class="ctx-right">
             <!-- 更多服务标题 -->
-            <div class="more-services-title">
-              <!-- <span class="marker"></span> -->
-              <img src="@img/other/news-tit.png" class="marker-img" alt="" />
-              更多服务
-            </div>
+            <!-- <div class="more-services-title">
+              <img src="@img/other/news-tit.png" class="marker-img" alt />
+              相关服务
+            </div>-->
 
-            <!-- 相邻分类 -->
-            <div
-              v-for="(category, categoryIndex) in otherCategories_list"
-              :key="categoryIndex"
-              class="category-section"
-            >
-              <!-- <div class="right-title flex">
-                <span class="marker"></span>
-                {{ category.name || category.title }}
-              </div> -->
-
-              <!-- 显示对应tab索引的名称 -->
-              <div class="tab-info">
-                <div class="tab-name flex">
-                  <img :src="category.thumb" alt="" class="ico">
-                  {{ category.title }}
+            <!-- 服务卡片列表 -->
+            <div class="service-cards-list">
+              <!-- 服务卡片1 -->
+              <div class="recommend-card service-card service-card-1">
+                <div class="card-content">
+                  <h3 class="card-title">Product registration and certification services</h3>
+                  <div class="card-desc">
+                    Shanghai Weili Information Consulting Co., Ltd. provides you
+                    with product registration and certification services...
+                  </div>
                 </div>
-                <!-- <div class="tab-index">
-                  Tab索引: {{ activeTab }}
-                </div> -->
-              </div>
-
-              <!-- 分类下的内容列表 -->
-              <div class="category-content" >
-                <div
-                  class="content-item"
-                  v-for="(item, index) in category.new_list"
-                  :key="item.id || index"
-                >
-                  <div class="item-title"  @click="handle_detial(item)">{{ item.title }}</div>
-                  <div class="item-desc">{{ item.content }}</div>
-                  <!-- <div class="item-date">{{ item.dtTime?.substr(0, 10) }}</div> -->
-                </div>
-
-                <!-- 如果没有数据，显示加载中或空状态 -->
-                <div
-                  v-if="otherCategories_list.length === 0"
-                  class="loading-item"
-                >
-                  <!-- <div class="item-title">加载中...</div> -->
-                  <div class="item-desc">暂无数据...</div>
+                <div class="card-icon">
+                  <div class="card-more">
+                    <span>MORE</span>
+                    <!-- <i class="el-icon-right"></i> -->
+                  </div>
+                  <div class="icon-placeholder">
+                    <img src="@img/index/recommend-1.png" alt />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 如果没有相邻分类，显示提示 -->
-            <div
-              v-if="otherCategories.length === 0"
-              class="no-categories"
-              style="
-                background: #fff;
-                padding: 20px;
-                text-align: center;
-                color: #999;
-              "
-            >
-              暂无相邻分类数据
+              <!-- 服务卡片2 -->
+              <div class="recommend-card service-card service-card-2">
+                <div class="card-content">
+                  <h3 class="card-title">Disinfection and Sterilization Services</h3>
+                  <div class="card-desc">
+                    Shanghai Weili Information Consulting Co., Ltd. provides you
+                    with product registration and certification services...
+                  </div>
+                </div>
+                <div class="card-icon">
+                  <div class="card-more">
+                    <span>MORE</span>
+                    <!-- <i class="el-icon-right"></i> -->
+                  </div>
+                  <div class="icon-placeholder">
+                    <img src="@img/index/recommend-2.png" alt />
+                  </div>
+                </div>
+              </div>
+
+              <!-- 服务卡片3 -->
+              <div class="recommend-card service-card service-card-3">
+                <div class="card-content">
+                  <h3 class="card-title">Hospital and Clinic Construction Services</h3>
+                  <div class="card-desc">
+                    Shanghai Weili Information Consulting Co., Ltd. provides you
+                    with product registration and certification services...
+                  </div>
+                </div>
+                <div class="card-icon">
+                  <div class="card-more">
+                    <span>MORE</span>
+                    <!-- <i class="el-icon-right"></i> -->
+                  </div>
+                  <div class="icon-placeholder">
+                    <img src="@img/index/recommend-3.png" alt />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -195,23 +178,23 @@ import { mapState } from "vuex";
 export default {
   name: "news",
   components: {
-    news_banner,
+    news_banner
     // news_right,
   },
   data() {
     return {
-      cid: this.$route.query.id,//当前主页分类id
+      cid: this.$route.query.id, //当前主页分类id
       pagination: {
         page: 1,
-        pageNum: 10,
+        pageNum: 10
       },
-      count: 0,//总数
-      activeTab: 0,//样式展示 0无图 1有图
+      count: 0, //总数
+      activeTab: 0, //样式展示 0无图 1有图
       activeTabName: "0", // el-tabs需要的字符串类型
 
-      list_news: [],//新闻列表
-      tabList: [],//分类列表
-      otherCategories_list:[],
+      list_news: [], //新闻列表
+      tabList: [], //分类列表
+      otherCategories_list: []
     };
   },
   computed: {
@@ -225,77 +208,74 @@ export default {
         console.log("数据不完整，返回空数组");
         return [];
       }
-      const currentIndex =[]
-      this.vuex_news_cates.forEach((e)=>{
-        if(e.id!=this.$route.query.id){
+      const currentIndex = [];
+      this.vuex_news_cates.forEach(e => {
+        if (e.id != this.$route.query.id) {
           currentIndex.push({
             ...e,
-            new_list:[],
-          })
+            new_list: []
+          });
         }
-      })
-      currentIndex.forEach((e,i)=>{
-        this.getCategoryListData(e.id,i)
-
-      })
-      this.otherCategories_list=currentIndex
-      return currentIndex
-    },
+      });
+      currentIndex.forEach((e, i) => {
+        this.getCategoryListData(e.id, i);
+      });
+      this.otherCategories_list = currentIndex;
+      return currentIndex;
+    }
   },
   watch: {
     $route(to, from) {
-      this.get_tab_list()
-       
-    },
+      this.get_tab_list();
+    }
   },
   created() {
     // this.query_suggest();
-     
-    this.get_tab_list()
+
+    this.get_tab_list();
   },
 
   methods: {
     //跳转详情
-    handle_detial(item){
+    handle_detial(item) {
       this.$router.push({
-        path:'/news-detail',
-        query:{
-          id:item.id
-        },
-      })
+        path: "/news-detail",
+        query: {
+          id: item.id
+        }
+      });
     },
     //获取顶部列表
-    get_tab_list(){
-       this.$api({
+    get_tab_list() {
+      this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "news_channel",
-          channelId: this.$route.query.id,
-        },
-      }).then((res) => {
+          channelId: this.$route.query.id
+        }
+      }).then(res => {
         if (res.code == 200) {
           console.log("获取分类", res.data);
           this.tab = res.data;
           this.tabList = res.data; // 将API数据赋值给tabList
-          if(res.data.length){
-            this.activeTabName =res.data[0].id+''; // 同步activeTabName
+          if (res.data.length) {
+            this.activeTabName = res.data[0].id + ""; // 同步activeTabName
           }
           this.get_lsit();
         }
       });
     },
-    handleCurrentChange(val){
-      this.pagination.page=val
+    handleCurrentChange(val) {
+      this.pagination.page = val;
       this.get_lsit();
-
     },
-    handleSizeChange(val){
-      this.pagination.pageNum=val
+    handleSizeChange(val) {
+      this.pagination.pageNum = val;
       this.get_lsit();
     },
     //获取新闻列表
-    get_lsit(){
+    get_lsit() {
       this.$api({
         url: "/service.php",
         method: "get",
@@ -306,9 +286,9 @@ export default {
           ...this.pagination,
           isIndex: 0, //类型：0-全部 1-推荐
           contentLen: "100", //
-          orderType: 0, //排序情况：0-自然排序 1-最新
-        },
-      }).then((res) => {
+          orderType: 0 //排序情况：0-自然排序 1-最新
+        }
+      }).then(res => {
         if (res.code == 200) {
           let data = res.data;
 
@@ -317,19 +297,18 @@ export default {
         }
       });
     },
-    
+
     // el-tabs点击事件处理
     handleTabClick(tab) {
-      console.log('tab',tab)
+      console.log("tab", tab);
 
-     
       this.activeTab = tab.index;
       this.pagination.page = 1; // 重置页码
-       console.log('activeTabName',this.activeTabName)
-      console.log('activeTab',this.activeTab)
+      console.log("activeTabName", this.activeTabName);
+      console.log("activeTab", this.activeTab);
       this.get_lsit(); // 重新获取数据
     },
-    getCategoryListData(id,index){
+    getCategoryListData(id, index) {
       this.$api({
         url: "/service.php",
         method: "get",
@@ -337,57 +316,60 @@ export default {
           action: "news_lists",
           channelId: id, // 使用当前选中tab的id
           keyword: "",
-          pageNum:3,
+          pageNum: 3,
           isIndex: 0, //类型：0-全部 1-推荐
           contentLen: "100", //
-          orderType: 0, //排序情况：0-自然排序 1-最新
-        },
-      }).then((res) => {
+          orderType: 0 //排序情况：0-自然排序 1-最新
+        }
+      }).then(res => {
         if (res.code == 200) {
           let data = res.data;
 
           // this.list_news = data.list;
           // this.count = data.count;
-          console.log('otherCategories_list',this.otherCategories_list)
-          this.otherCategories_list[index].new_list=data.list
+          console.log("otherCategories_list", this.otherCategories_list);
+          this.otherCategories_list[index].new_list = data.list;
         }
       });
-    },
-
-
-
-
-
-
-
-
- 
-    
-   
-
- 
-    
- 
-
-     
-
-    
-    
-
-     
-     
-     
-
-    
-  },
+    }
+  }
 };
 </script>
 
 <style scoped lang="less">
 .page {
   .inner {
-    background: #f3f3f3;
-    padding: 24px 0;
+    background: #fff;
+  }
+}
+
+.page-top {
+  height: 83px;
+  line-height: 83px;
+  background: #fbfbfb;
+  border-top: 1px solid #d5d8de;
+  .bread-box {
+    display: flex;
+    align-items: flex-start;
+    a {
+      font-family: Poppins, Poppins;
+      font-weight: 400;
+      font-size: 16px;
+      color: #5e5e5e;
+    }
+    .arrow {
+      font-family: Poppins, Poppins;
+      font-weight: 400;
+      font-size: 18px;
+      color: #5e5e5e;
+      margin: 0 6px;
+    }
+    .link {
+      font-family: Poppins, Poppins;
+      font-weight: 400;
+      font-size: 18px;
+      color: #5e5e5e;
+    }
   }
 }
 
@@ -400,7 +382,7 @@ export default {
 /deep/.is-top {
   margin: 0 !important;
   line-height: 60px;
-  &::after{
+  &::after {
     background: none;
   }
 }
@@ -447,7 +429,7 @@ export default {
           flex: 1;
           text-align: center;
           font-size: 16px;
-          color: #1F1F1F !important;
+          color: #1f1f1f !important;
           border-bottom: 3px solid transparent;
           transition: all 0.3s ease;
           padding: 16px 24px;
@@ -500,17 +482,18 @@ export default {
       .news-item {
         display: flex;
         align-items: flex-start;
-        padding: 20px;
+        padding: 24px;
         border-bottom: 1px solid #f0f0f0;
         position: relative;
         transition: background-color 0.3s ease;
+        background: #ffffff;
 
         &:last-child {
           border-bottom: none;
         }
 
         &:hover {
-          // background-color: #f8f8f8;
+          background-color: #f8f8f8;
           .company-title {
             color: #5b339a;
           }
@@ -540,26 +523,45 @@ export default {
           }
         }
 
-        .yellow-bar {
-          width: 6px;
-          height: 20px;
-          background: #FCB000;
-          margin-right: 10px;
+        .shield-icon {
+          width: 60px;
+          height: 60px;
           flex-shrink: 0;
-          border-radius: 3px;
+          margin-right: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #00306b;
+          border-radius: 8px;
+          position: relative;
+
+          img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+          }
+
+          // 如果没有图片，使用CSS创建盾牌图标
+          &:not(:has(img))::before {
+            content: "✚";
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: bold;
+          }
         }
 
         .item-content {
           flex: 1;
 
           .company-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
-            color: #1F1F1F;
-            margin-bottom: 8px;
-            line-height: 1.4;
+            color: #1f1f1f;
+            margin-bottom: 12px;
+            line-height: 1.5;
             cursor: pointer;
             transition: color 0.3s ease;
+            font-family: Microsoft YaHei, Microsoft YaHei;
 
             &:hover {
               color: #7853b2;
@@ -568,36 +570,15 @@ export default {
 
           .item-description {
             font-size: 14px;
-            color: #1F1F1F;
-            line-height: 1.6;
-            margin-bottom: 12px;
+            color: #666666;
+            line-height: 1.8;
             display: -webkit-box;
             -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
             overflow: hidden;
             text-overflow: ellipsis;
-          }
-        }
-        .view-details {
-          text-align: right;
-          a {
-            color: #7853b2;
-          }
-          .detail-link {
-            color: #7853b2;
-
-            text-decoration: none;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            padding: 4px 8px;
-            border-radius: 3px;
-            cursor: pointer;
-
-            &:hover {
-              color: #ffffff;
-              background-color: #7853b2;
-              text-decoration: none;
-            }
+            font-family: Microsoft YaHei, Microsoft YaHei;
           }
         }
         // 卡片图片
@@ -694,101 +675,119 @@ export default {
         margin-right: 10px;
         width: 20px;
       }
-      .marker {
-        width: 4px;
-        height: 18px;
-        background: #7853b2;
-        margin-right: 8px;
-      }
     }
 
-    .category-section {
-      background: #ffffff;
-      border-radius: 4px;
-      // margin-bottom: 20px;
-      padding: 20px;
+    .service-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      // padding: 20px;
+      background: #fff;
 
-      .right-title {
-        align-items: center;
-        margin-bottom: 15px;
-        font-size: 16px;
-        font-weight: bold;
-        color: #333333;
+      .recommend-card {
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-        .marker {
-          width: 4px;
-          height: 16px;
-          background: #7853b2;
-          margin-right: 8px;
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
       }
 
-      .tab-info {
-        // padding: 12px;
-        border-radius: 4px;
-        margin-bottom: 24px;
+      // 服务卡片样式
+      .service-card {
+        padding: 30px 20px;
+        width: 354px;
+        height: 330px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
 
-        .tab-name {
-          font-weight: bold;
-          color: #1F1F1F;
-          font-size: 16px; 
-          .ico{
-            width: 30px;
-            margin-right: 10px;
+        // 不同卡片的不同背景色
+        &.service-card-1 {
+          background: #e0e2e6; // 浅灰色
+        }
+
+        &.service-card-2 {
+          background: #feeedd; // 浅橙色
+        }
+
+        &.service-card-3 {
+          background: #feeedd; // 浅橙色
+        }
+
+        &:hover {
+          .card-content .card-title {
+            color: #ec6a2b;
           }
         }
 
-        .tab-index {
-          font-size: 12px;
-          color: #505050;
-        }
-      }
+        .card-content {
+          flex: 1;
 
-      .category-content {
-        .content-item {
-          // padding: 12px 0;
-          border-bottom: 1px solid #f0f0f0;
+          .card-title {
+            margin: 0 0 16px 0;
+            position: relative;
+            padding-bottom: 12px;
+            font-family: Poppins, Poppins;
+            font-weight: bold;
+            font-size: 24px;
+            color: #1e262e;
+            line-height: 34px;
 
-          margin-bottom: 10px;
-          &:last-child {
-            border-bottom: none;
+            &::after {
+              content: "";
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 40px;
+              height: 3px;
+              background: #ec6a2b;
+            }
           }
 
-          .item-title {
-            font-size: 16px;
-            color: #1F1F1F;
-            margin-bottom: 5px; 
-             display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            cursor: pointer;
-          }
-
-          .item-desc {
-            font-size: 14px;
-            color: #999;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 5px;
-          }
-
-          .item-date {
-            font-size: 11px;
-            color: #505050;
+          .card-desc {
+            font-family: Poppins, Poppins;
+            font-weight: 400;
+            font-size: 18px;
+            color: #1e262e;
+            line-height: 30px;
+            height: 115px;
           }
         }
 
-        .loading-item {
-          padding: 12px 0;
-          text-align: center;
-          color: #505050;
-          font-style: italic;
+        .card-icon {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .card-more {
+            font-family: Poppins, Poppins;
+            font-weight: bold;
+            font-size: 18px;
+            color: #ec6a2b;
+            line-height: 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            i {
+              font-size: 18px;
+              color: #ec6a2b;
+            }
+          }
+
+          .icon-placeholder {
+            width: 70px;
+            height: 70px;
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
         }
       }
     }
@@ -806,7 +805,7 @@ export default {
 
   .pagination-info {
     font-size: 14px;
-    color: #1F1F1F;
+    color: #1f1f1f;
   }
 
   .pagination-controls {
@@ -823,7 +822,7 @@ export default {
       border: 1px solid #ddd;
       border-radius: 4px;
       font-size: 16px;
-      color: #1F1F1F;
+      color: #1f1f1f;
       cursor: pointer;
       transition: all 0.3s ease;
 
@@ -848,7 +847,7 @@ export default {
       border: 1px solid #ddd;
       border-radius: 4px;
       font-size: 14px;
-      color: #1F1F1F;
+      color: #1f1f1f;
       cursor: pointer;
       transition: all 0.3s ease;
 
@@ -878,7 +877,7 @@ export default {
     align-items: center;
     gap: 8px;
     font-size: 14px;
-    color: #1F1F1F;
+    color: #1f1f1f;
 
     .page-input {
       width: 50px;
@@ -906,7 +905,7 @@ export default {
   border-bottom: 1px solid #d5d8de;
   padding: 23px 63px;
   .el-tabs__item {
-    color: #1F1F1F !important;
+    color: #1f1f1f !important;
     font-size: 16px;
     font-weight: bold;
 
@@ -926,7 +925,7 @@ export default {
 
 /* 使用深度选择器确保样式穿透 */
 .custom-tabs ::v-deep .el-tabs__item {
-  color: #1F1F1F !important;
+  color: #1f1f1f !important;
   font-size: 16px;
   font-weight: bold;
 

@@ -49,7 +49,7 @@
               :class="{ 'hidden-expand': !cate_is_expand_list[gindex] }"
             >
               <div
-                class="cate-item hover-color"
+                class="cate-item"
                 v-for="(item, index) in group_cates"
                 :key="index"
                 :class="{ active: query_id_list.includes(item.id) }"
@@ -517,7 +517,7 @@ page{
       color: #aeaeae;
     }
     .search-keyword {
-      color: #7853B2;
+      color: #EC6A2B;
     }
   }
 }
@@ -553,7 +553,7 @@ page{
 
     .val {
       flex: 1;
-      min-height: 46px;
+      min-height: 70px;
       background: #fff;
       padding: 10px 24px;
       display: flex;
@@ -574,16 +574,13 @@ page{
     .cate-item {
       margin: 4px 10px;
       font-weight: 400;
-      font-size: 14px;
-      color: #545454;
-      border-radius: 2px 2px 2px 2px;
       padding: 2px 12px;
-      font-size: 14px;
-      color: #333;
+      font-size: 20px;
+      color: #1E262E;
       cursor: pointer;
 
       &.active {
-        color: #7853B2;
+        color: #EC6A2B;
       }
     }
   }
@@ -599,24 +596,24 @@ page{
       min-width: 30px;
       margin-right: 20px;
       border-radius: 15px 15px 15px 15px;
-      background: #f4eeff;
-      border: 1px solid #7853b2;
+      background: #FEEEDD;
+      border: 1px solid #EC6A2B;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 14px;
-      color: #7853b2;
+      color: #EC6A2B;
       padding: 0 14px;
       padding-right: 0;
 
       &.active {
-        color: #7853b2;
+        color: #EC6A2B;
       }
 
       .check-title {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 13px;
-        color: #7853b2;
+        color: #EC6A2B;
       }
       .remove-box {
         cursor: pointer;
@@ -658,7 +655,7 @@ page{
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 14px;
-      color: #7853B2;
+      color: #EC6A2B;
 
       img {
         margin-left: 6px;
@@ -700,7 +697,7 @@ page{
 
       &.active {
         .text {
-          color: #7853B2;
+          color: #EC6A2B;
         }
       }
 
@@ -720,7 +717,7 @@ page{
           border-bottom-color: #aaa;
 
           &.active {
-            border-bottom-color: #7853B2;
+            border-bottom-color: #EC6A2B;
           }
         }
 
@@ -731,7 +728,7 @@ page{
           border-top-color: #aaa;
 
           &.active {
-            border-top-color: #7853B2;
+            border-top-color: #EC6A2B;
           }
         }
       }
@@ -768,7 +765,7 @@ page{
         margin-left: 20px;
         min-width: 70px;
         height: 32px;
-        background: #7853B2;
+        background: #EC6A2B;
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 16px;
@@ -852,7 +849,7 @@ page{
 
     &:hover {
       .title {
-        color: #7853b2 !important;
+        color: #EC6A2B !important;
       }
     }
 

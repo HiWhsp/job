@@ -11,7 +11,7 @@
                   :key="index"
                   @click.native="do_banner_click(item)"
                 >
-                  <img :src="item.image" alt="" />
+                  <img :src="item.image" alt />
                 </el-carousel-item>
               </el-carousel>
             </div>
@@ -25,9 +25,7 @@
               <!-- 服务卡片1 -->
               <div class="recommend-card service-card">
                 <div class="card-content">
-                  <h3 class="card-title">
-                    Product registration and certification services
-                  </h3>
+                  <h3 class="card-title">Product registration and certification services</h3>
                   <div class="card-desc">
                     Shanghai Weili Information Consulting Co., Ltd. provides you
                     with product registration and certification services...
@@ -39,7 +37,7 @@
                     <i class="el-icon-right"></i>
                   </div>
                   <div class="icon-placeholder">
-                    <img src="@img/index/recommend-1.png" alt="" />
+                    <img src="@img/index/recommend-1.png" alt />
                   </div>
                 </div>
               </div>
@@ -47,9 +45,7 @@
               <!-- 服务卡片2 -->
               <div class="recommend-card service-card">
                 <div class="card-content">
-                  <h3 class="card-title">
-                    Disinfection and Sterilization Services
-                  </h3>
+                  <h3 class="card-title">Disinfection and Sterilization Services</h3>
                   <div class="card-desc">
                     Shanghai Weili Information Consulting Co., Ltd. provides you
                     with product registration and certification services...
@@ -61,7 +57,7 @@
                     <i class="el-icon-right"></i>
                   </div>
                   <div class="icon-placeholder">
-                    <img src="@img/index/recommend-2.png" alt="" />
+                    <img src="@img/index/recommend-2.png" alt />
                   </div>
                 </div>
               </div>
@@ -69,9 +65,7 @@
               <!-- 服务卡片3 -->
               <div class="recommend-card service-card">
                 <div class="card-content">
-                  <h3 class="card-title">
-                    Hospital and Clinic Construction Services
-                  </h3>
+                  <h3 class="card-title">Hospital and Clinic Construction Services</h3>
                   <div class="card-desc">
                     Shanghai Weili Information Consulting Co., Ltd. provides you
                     with product registration and certification services...
@@ -83,18 +77,18 @@
                     <i class="el-icon-right"></i>
                   </div>
                   <div class="icon-placeholder">
-                    <img src="@img/index/recommend-3.png" alt="" />
+                    <img src="@img/index/recommend-3.png" alt />
                   </div>
                 </div>
               </div>
 
               <!-- 优惠券卡片 -->
-              <div class="recommend-card coupon-card">
+              <div class="recommend-card coupon-card" @click="to_url('/coupon-center')">
                 <div class="coupon-content">
                   <h3 class="coupon-title">Coupon Center</h3>
                   <div class="coupon-desc">Get coupons for better prices!</div>
                   <div class="coupon-arrow">
-                    <img src="@img/index/coupon-arrow.png" alt="" />
+                    <img src="@img/index/coupon-arrow.png" alt />
                   </div>
                 </div>
               </div>
@@ -105,25 +99,17 @@
           <div class="hot-sec flex">
             <div class="sec-left">
               <p class="sec-left-title">SAFE AND RELIABLE</p>
-              <img
-                src="@img/index/sec-left-icon.png"
-                class="sec-left-icon"
-                alt=""
-              />
+              <img src="@img/index/sec-left-icon.png" class="sec-left-icon" alt />
               <p class="sec-left-desc">
                 Clearance sale for some products, lowest prices available, come
                 and buy now
               </p>
-              <img
-                class="sec-left-btn"
-                src="@img/index/sec-left-btn.png"
-                alt=""
-              />
+              <img class="sec-left-btn" src="@img/index/sec-left-btn.png" alt />
             </div>
             <div class="sec-right">
               <div class="sec-right-header">
                 <div class="limited-offer-banner">
-                  <img src="~@img/index/sec-right-icon.png" alt="" />
+                  <img src="~@img/index/sec-right-icon.png" alt />
                   <span>LIMITED-TIME OFFER</span>
                 </div>
                 <div class="countdown-display">
@@ -136,9 +122,9 @@
                   </div>
                 </div>
                 <div class="sold-progress">
-                  <div class="sold-text">Sold 30%</div>
+                  <div class="sold-text">{{ seckillProgressText }}</div>
                   <div class="progress-bar">
-                    <div class="progress-fill"></div>
+                    <div class="progress-fill" :style="{ width: seckillProgressPercent + '%' }"></div>
                   </div>
                 </div>
               </div>
@@ -151,10 +137,7 @@
                     :interval="6000"
                     arrow="always"
                   >
-                    <el-carousel-item
-                      v-for="(group, gindex) in jingpin_group"
-                      :key="gindex"
-                    >
+                    <el-carousel-item v-for="(group, gindex) in jingpin_group" :key="gindex">
                       <div class="product-list">
                         <div
                           class="product-item hover"
@@ -163,17 +146,13 @@
                           @click="to_product(item)"
                         >
                           <div class="poster-box scale-box">
-                            <img class="scale-img" :src="item.thumb" alt="" />
+                            <img class="scale-img" :src="item.thumb" alt />
                           </div>
                           <div class="info-box">
                             <div class="title-box">
-                              <div class="title ellipsis-1">
-                                {{ item.title }}
-                              </div>
+                              <div class="title ellipsis-2">{{ item.title }}</div>
                             </div>
-                            <div class="price-new">
-                              US${{ item.priceUser || item.priceSale }}
-                            </div>
+                            <div class="price-new">US${{ item.priceUser || item.priceSale }}</div>
                             <div class="certifications">
                               <span class="cert-badge">FDA</span>
                               <span class="cert-badge">CE</span>
@@ -189,15 +168,11 @@
           </div>
 
           <div class="group-panel">
-            <div
-              class="sec-cate"
-              v-for="(group, gindex) in cateGroup"
-              :key="gindex"
-            >
+            <div class="sec-cate" v-for="(group, gindex) in cateGroup" :key="gindex">
               <div class="sec-title-box">
                 <div class="title-left flex">
                   <div class="sec-line">
-                    <img src="@img/index/area.png" alt="" />
+                    <img src="@img/index/area.png" alt />
                   </div>
                   <div class="sec-title">{{ group.title }}</div>
                 </div>
@@ -214,46 +189,30 @@
                         @click="to_product(item)"
                       >
                         <div class="poster-box scale-box">
-                          <img class="scale-img" :src="item.thumb" alt="" />
+                          <img class="scale-img" :src="item.thumb" alt />
                         </div>
                         <div class="info-box">
                           <div class="title-box">
-                            <div class="title">
-                              {{ item.title }}
-                            </div>
+                            <div class="title">{{ item.title }}</div>
                           </div>
                           <div class="price-box">
                             <div class="price">
-                              <div class="pirce-num">
-                                US${{ item.priceSale }}
-                              </div>
+                              <div class="pirce-num">US${{ item.priceSale }}</div>
                             </div>
-                            <div class="market-price">
-                              US${{ item.priceMarket }}
-                            </div>
+                            <div class="market-price">US${{ item.priceMarket }}</div>
                           </div>
                           <div class="btn-box">
-                            <div class="btn" @click.stop="openQuickBuy(item)">
-                              FDA
-                            </div>
-                            <div class="btn" @click.stop="openQuickBuy(item)">
-                              ISO13485
-                            </div>
+                            <div class="btn" @click.stop="openQuickBuy(item)">FDA</div>
+                            <div class="btn" @click.stop="openQuickBuy(item)">ISO13485</div>
                           </div>
                         </div>
-                        <el-tooltip
-                          class="item"
-                          effect="dark"
-                          content="仅限企业用户购买"
-                          placement="top"
-                        >
+                        <el-tooltip class="item" effect="dark" content="仅限企业用户购买" placement="top">
                           <el-tag
                             class="tag-dom"
                             type="warning"
                             effect="dark"
                             v-if="item.isThird == 1"
-                            >三类</el-tag
-                          >
+                          >三类</el-tag>
                         </el-tooltip>
                       </div>
                     </div>
@@ -266,7 +225,7 @@
                   v-for="(item, index) in vuex_map_banners['首页推荐'][0]"
                   class="cate-banner"
                   :src="item.image"
-                  alt=""
+                  alt
                   @click="$router.push(item.url)"
                 />
               </div>
@@ -276,7 +235,7 @@
                   v-for="(item, index) in vuex_map_banners['首页推荐'][1]"
                   class="cate-banner"
                   :src="item.image"
-                  alt=""
+                  alt
                   @click="$router.push(item.url)"
                 />
               </div>
@@ -286,7 +245,7 @@
                   v-for="(item, index) in vuex_map_banners['首页推荐'][2]"
                   class="cate-banner"
                   :src="item.image"
-                  alt=""
+                  alt
                   @click="$router.push(item.url)"
                 />
               </div>
@@ -295,7 +254,7 @@
 
           <div class="suggest-box">
             <div class="suggest-title flex-center">
-              <img src="@img/index/area.png" alt="" />
+              <img src="@img/index/area.png" alt />
               <span class="sec-title">RECOMMENDED PRODUCTS</span>
             </div>
 
@@ -330,7 +289,7 @@
                     :key="'brand-' + index"
                   >
                     <div class="img-cov">
-                      <img class="scale-img" :src="item.thumb" alt="" />
+                      <img class="scale-img" :src="item.thumb" alt />
                     </div>
                   </div>
                 </div>
@@ -341,7 +300,7 @@
                     :key="'brand-dup-' + index"
                   >
                     <div class="img-cov">
-                      <img class="scale-img" :src="item.thumb" alt="" />
+                      <img class="scale-img" :src="item.thumb" alt />
                     </div>
                   </div>
                 </div>
@@ -380,7 +339,7 @@ export default {
     productList,
     EnterpriseUserModal,
     product_quick_buy_modal,
-    product_renzheng_tip,
+    product_renzheng_tip
   },
   data() {
     return {
@@ -395,20 +354,20 @@ export default {
           title: "产品注册认证服务",
           icon: require("@img/index/nav1.png"),
           // icon1: require("@img/index/nav1-1.png"),
-          route: "/my-info",
+          route: "/my-info"
         },
         {
           title: "消毒灭菌服务",
           icon: require("@img/index/nav2.png"),
           // icon1: require("@img/index/nav2-1.png"),
-          route: "/order-list",
+          route: "/order-list"
         },
         {
           title: "医院诊所建设服务",
           icon: require("@img/index/nav3.png"),
           // icon1: require("@img/index/nav3-1.png"),
-          route: "/batch-xiadan",
-        },
+          route: "/batch-xiadan"
+        }
       ],
       news_list: [],
       jingpin_group: [],
@@ -418,14 +377,14 @@ export default {
 
       tab_select: {
         value: "1",
-        title: "推荐商品",
+        title: "推荐商品"
       },
       tab_list: [
         { value: "1", title: "推荐商品" },
         { value: "2", title: "推荐商品" },
         { value: "3", title: "推荐商品" },
         { value: "4", title: "推荐商品" },
-        { value: "5", title: "推荐商品" },
+        { value: "5", title: "推荐商品" }
       ],
 
       product_list_1: [],
@@ -439,12 +398,18 @@ export default {
       countdown: {
         hours: "00",
         minutes: "00",
-        seconds: "00",
+        seconds: "00"
       },
       endTime: null,
+      startTime: null, // 秒杀开始时间
+      seckillTotalHours: 24, // 秒杀总时长（小时）
       countdownInterval: null,
       subMenus: {}, // 存储每个分类的二级菜单数据
       subMenuProducts: {}, // 存储每个二级菜单的产品数据
+      seckillProgress: {
+        total: 0, // 总库存
+        sold: 0 // 已售数量
+      }
     };
   },
   computed: {
@@ -457,7 +422,7 @@ export default {
       "vuex_is_login",
       "vuex_user",
       "vuex_news_cates",
-      "vuex_config",
+      "vuex_config"
     ]),
 
     float_category_list() {
@@ -467,6 +432,41 @@ export default {
         tree = this.vuex_category_tree[this.float_index].channels || [];
       }
       return tree;
+    },
+
+    // 秒杀进度百分比（基于倒计时时间，24小时为100%）
+    seckillProgressPercent() {
+      if (!this.endTime) {
+        return 0;
+      }
+
+      // 依赖 countdown 对象，确保每次倒计时更新时进度也更新
+      const hours = parseInt(this.countdown.hours) || 0;
+      const minutes = parseInt(this.countdown.minutes) || 0;
+      const seconds = parseInt(this.countdown.seconds) || 0;
+
+      // 计算剩余时间（小时）
+      const remainingHours = hours + minutes / 60 + seconds / 3600;
+
+      // 总时长（小时），默认24小时
+      const totalHours = this.seckillTotalHours;
+
+      // 如果剩余时间大于总时长，说明还没开始，进度为0
+      if (remainingHours > totalHours) {
+        return 0;
+      }
+
+      // 计算已过时间（小时）
+      const elapsedHours = totalHours - remainingHours;
+
+      // 计算进度百分比：已过时间 / 总时长 * 100%
+      const percent = Math.round((elapsedHours / totalHours) * 100);
+      return Math.min(Math.max(percent, 0), 100); // 确保在0-100%之间
+    },
+
+    // 秒杀进度文本
+    seckillProgressText() {
+      return `Sold ${this.seckillProgressPercent}%`;
     },
 
     // 获取顶部导航的前三项数据（首页后的三条数据）
@@ -479,7 +479,7 @@ export default {
       }
 
       return pageNavList;
-    },
+    }
   },
 
   watch: {
@@ -490,8 +490,8 @@ export default {
         console.log("vuex_news_cates 数据已更新:", newVal);
       },
       deep: true,
-      immediate: false,
-    },
+      immediate: false
+    }
   },
   created() {
     this.setView();
@@ -508,11 +508,14 @@ export default {
     }
   },
   methods: {
+    to_url(url) {
+      window.open(url, "_blank");
+    },
     // 获取卡片背景色
     getCardBgColor(index, column) {
       const colorMap = {
         top: ["#E0E2E6", "#E3F2FD", "#FF6B35", "#F5F5DC"], // 第一行4个：浅灰、浅蓝、橙色、米色
-        bottom: ["#E0E2E6", "#1A237E"], // 第二行2个：浅灰、深蓝
+        bottom: ["#E0E2E6", "#1A237E"] // 第二行2个：浅灰、深蓝
       };
       return colorMap[column] ? colorMap[column][index] : "#ffffff";
     },
@@ -520,7 +523,7 @@ export default {
     getCardTextColor(index, column) {
       const colorMap = {
         top: ["#000000", "#000000", "#FFFFFF", "#000000"], // 第一行：黑、黑、白、黑
-        bottom: ["#000000", "#FFFFFF"], // 第二行：黑、白
+        bottom: ["#000000", "#FFFFFF"] // 第二行：黑、白
       };
       return colorMap[column] ? colorMap[column][index] : "#000000";
     },
@@ -556,7 +559,7 @@ export default {
     scrollToTop() {
       window.scrollTo({
         top: 0,
-        behavior: "smooth",
+        behavior: "smooth"
       });
     },
     setView() {
@@ -574,10 +577,10 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "product_brandList",
+          action: "product_brandList"
           //  isHot:1
-        },
-      }).then((res) => {
+        }
+      }).then(res => {
         if (res.code == 200) {
           console.log(res.data, "dddd");
           this.brand_list = res.data;
@@ -592,9 +595,9 @@ export default {
           action: "news_lists",
           channelId: "",
           page: 1,
-          pageNum: 5,
-        },
-      }).then((res) => {
+          pageNum: 5
+        }
+      }).then(res => {
         if (res.code == 200) {
           this.news_list = res.data.list;
         }
@@ -611,26 +614,43 @@ export default {
           // tags: "精选推荐",
           ifSeckill: 1,
           page: 1,
-          pageNum: 16,
-        },
-      }).then((res) => {
+          pageNum: 16
+        }
+      }).then(res => {
         if (res.code == 200) {
           let list = res.data.list;
-          this.jingpin_products = res.data.list;
-
           // 获取倒计时数据
           if (res.data.timeList && res.data.timeList.length > 0) {
             const activeTime = res.data.timeList.find(
-              (item) => item.ifStart === 1
+              item => item.ifStart === 1
             );
-            if (activeTime && activeTime.endTime) {
-              this.endTime = new Date(activeTime.endTime);
+            if (activeTime) {
+              // 设置结束时间
+              if (activeTime.endTime) {
+                this.endTime = new Date(activeTime.endTime);
+              }
+              // 设置开始时间
+              if (activeTime.startTime) {
+                this.startTime = new Date(activeTime.startTime);
+              } else if (this.endTime) {
+                // 如果没有开始时间，根据结束时间和总时长计算开始时间
+                this.startTime = new Date(
+                  this.endTime.getTime() -
+                    this.seckillTotalHours * 60 * 60 * 1000
+                );
+              }
+              // 如果接口返回了总时长，使用接口的值
+              if (activeTime.totalHours) {
+                this.seckillTotalHours = activeTime.totalHours;
+              }
               this.startCountdown();
             }
           }
 
+          // 秒杀进度现在基于倒计时时间计算，不再需要库存数据
+
           let jingpin_group = [];
-          let items_length = 6; //4个一组
+          let items_length = 4; //4个一组
           list.forEach((v, i) => {
             let group_index = Math.floor(i / items_length);
             if (!jingpin_group[group_index]) {
@@ -652,9 +672,9 @@ export default {
           // ifShowSku: 1,
           // channelId: 792,
           page: 1,
-          pageNum: 5,
-        },
-      }).then((res) => {
+          pageNum: 5
+        }
+      }).then(res => {
         if (res.code == 200) {
           let list = res.data.list;
           this.haowu_product_list = list;
@@ -670,21 +690,21 @@ export default {
           action: "product_channelPdts",
           channelNum: 20,
           pdtNum: 10,
-          isHot: 1,
-        },
-      }).then((res) => {
+          isHot: 1
+        }
+      }).then(res => {
         console.warn("首页分类产品", res);
 
-        this.cateGroup = res.data.map((its) => {
+        this.cateGroup = res.data.map(its => {
           return {
             ...its,
-            images: its.images.split(",") || [],
+            images: its.images.split(",") || []
           };
         });
         this.cate_select = this.cateGroup[0];
 
         // 为每个分类请求二级菜单数据
-        this.cateGroup.forEach((group) => {
+        this.cateGroup.forEach(group => {
           this.querySubMenus(group.id);
         });
       });
@@ -699,9 +719,9 @@ export default {
           // ifShowSku: 1,
           // channelId: 792,
           page: 1,
-          pageNum: 10,
-        },
-      }).then((res) => {
+          pageNum: 10
+        }
+      }).then(res => {
         if (res.code == 200) {
           this.suggest_products = res.data.list;
         }
@@ -726,8 +746,8 @@ export default {
       this.mix_toRoute({
         path: "/news-detail",
         query: {
-          id: item.id,
-        },
+          id: item.id
+        }
       });
     },
 
@@ -755,8 +775,8 @@ export default {
       this.$router.push({
         path: "/product-cates",
         query: {
-          ids: item.id,
-        },
+          ids: item.id
+        }
       });
     },
     to_cate_v1(v1) {
@@ -820,7 +840,7 @@ export default {
         this.countdown = {
           hours: "00",
           minutes: "00",
-          seconds: "00",
+          seconds: "00"
         };
         if (this.countdownInterval) {
           clearInterval(this.countdownInterval);
@@ -835,7 +855,7 @@ export default {
       this.countdown = {
         hours: hours.toString().padStart(2, "0"),
         minutes: minutes.toString().padStart(2, "0"),
-        seconds: seconds.toString().padStart(2, "0"),
+        seconds: seconds.toString().padStart(2, "0")
       };
     },
 
@@ -852,9 +872,9 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "users_userInfo",
-        },
-      }).then((res) => {
+          action: "users_userInfo"
+        }
+      }).then(res => {
         if (res.code == 200) {
           let { userType, renzheng } = res.data;
           if (renzheng == 0 && (userType == 1 || userType == 2)) {
@@ -913,16 +933,16 @@ export default {
         method: "get",
         data: {
           action: "product_channel",
-          parentId: parentId,
-        },
+          parentId: parentId
+        }
       })
-        .then((res) => {
+        .then(res => {
           if (res.code == 200) {
             this.$set(this.subMenus, parentId, res.data || []);
             console.log(`获取分类 ${parentId} 的二级菜单:`, res.data);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error(`获取分类 ${parentId} 的二级菜单失败:`, error);
         });
     },
@@ -938,10 +958,10 @@ export default {
           page: 1,
           pageNum: 10,
           ifShowSku: 0,
-          isRecommend: 1,
-        },
+          isRecommend: 1
+        }
       })
-        .then((res) => {
+        .then(res => {
           if (res.code == 200) {
             this.$set(this.subMenuProducts, menuId, res.data || []);
             console.log(`获取菜单 ${menuId} 的产品数据:`, res.data);
@@ -949,16 +969,16 @@ export default {
             this.$router.push({
               path: "/product-cates",
               query: {
-                ids: menuId,
-              },
+                ids: menuId
+              }
             });
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error(`获取菜单 ${menuId} 的产品数据失败:`, error);
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -2059,11 +2079,11 @@ export default {
           overflow: hidden;
 
           .progress-fill {
-            width: 30%;
             height: 100%;
             background: #ff7600;
             border-radius: 11px;
             transition: width 0.3s ease;
+            min-width: 0;
           }
         }
       }
@@ -2072,16 +2092,17 @@ export default {
     .sec-ctx {
       width: 100%;
       height: 448px;
-      padding: 20px 47px;
+      padding: 20px 40px;
     }
 
     .hot-lunbo {
       position: relative;
       width: 100%;
+      height: 100%;
       background: transparent;
 
       /deep/ .el-carousel__container {
-        height: auto;
+        height: 407px;
       }
 
       /deep/ .el-carousel__arrow {
@@ -2117,15 +2138,11 @@ export default {
 
     .product-list {
       display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 10px 0;
+      height: 100%;
+      gap: 27px;
 
       .product-item {
-        flex: 1;
-        padding: 15px;
-        background: #000;
-        border: 2px dashed #d4d4d4;
+        width: 265px;
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -2133,24 +2150,19 @@ export default {
         flex-direction: column;
         align-items: center;
 
-        &:hover {
-          border-color: #ff7600;
-          box-shadow: 0 4px 12px rgba(255, 118, 0, 0.2);
-        }
-
         .poster-box {
-          width: 100%;
-          max-width: 180px;
-          height: 180px;
-          margin-bottom: 12px;
+          width: 265px;
+          height: 265px;
+          margin-bottom: 10px;
           display: flex;
           align-items: center;
           justify-content: center;
+          border-radius: 20px;
+          border: 1px solid #e5e2e5;
 
           img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
           }
         }
 
@@ -2164,45 +2176,41 @@ export default {
 
           .title-box {
             width: 100%;
-            padding: 0;
-            margin-bottom: 8px;
+            text-align: left;
           }
 
           .title {
-            font-family: Microsoft YaHei, Microsoft YaHei;
-            font-weight: normal;
-            font-size: 14px;
-            color: #1f1f1f;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            height: 48px;
+            font-family: Poppins, Poppins;
+            font-weight: 600;
+            font-size: 18px;
+            color: #1e262e;
+            line-height: 24px;
           }
 
           .price-new {
-            font-family: Arial, sans-serif;
-            font-weight: bold;
-            font-size: 18px;
-            color: #ff7600;
-            margin: 8px 0;
+            width: 100%;
+            height: 36px;
+            font-family: Poppins, Poppins;
+            font-weight: 600;
+            font-size: 26px;
+            color: #ec6a2b;
+            text-align: left;
           }
 
           .certifications {
+            width: 100%;
             display: flex;
+            align-items: start;
             gap: 8px;
-            margin-top: 8px;
 
             .cert-badge {
-              padding: 4px 12px;
-              background: #fff;
-              border: 1px solid #1a237e;
+              padding: 0px 10px;
+              border: 1px solid #00306B;
               border-radius: 4px;
-              color: #1a237e;
-              font-size: 12px;
-              font-weight: 500;
-              white-space: nowrap;
+              color: #00306B;
+              font-size: 22px;
+              font-weight: bold;
             }
           }
         }

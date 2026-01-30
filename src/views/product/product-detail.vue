@@ -701,7 +701,7 @@ export default {
           console.log(data);
         } else {
           alert(res.message);
-          if (message == "商品不存在或已下架") {
+          if (message == "The product does not exist or has been discontinued") {
             this.$router.push("/");
           }
         }
@@ -717,12 +717,12 @@ export default {
       const clipboardItem = new ClipboardItem(clipboardItemData);
       await navigator.clipboard.write([clipboardItem]);
       console.log(text);
-      alert("链接已复制至剪贴板");
+      alert("The link has been copied to the clipboard");
     },
     showLoading() {
       this.loadingInstance = Loading.service({
         lock: true,
-        text: "数据查询中...",
+        text: "Data query in progress...",
         spinner: "el-icon-loading",
         background: "rgba(0, 0, 0, 0.7)",
       });
@@ -1176,12 +1176,12 @@ export default {
       //console.log("检测是否选择了商品", this.sku_select);
 
       if (!this.sku_select.inventoryId) {
-        alertErr("请选择商品规格");
+        alertErr("Please select product specifications");
         return false;
       }
 
       if (this.sku_select.kucun < this.selected_num) {
-        alertErr("该商品库存不足,无法购买");
+        alertErr("The product stock is insufficient, cannot be purchased");
         return false;
       }
 
@@ -1415,7 +1415,7 @@ export default {
         if (successCount == results.length) {
           this.$refs.product_add_cart_success_modal.init({
             num: totalCount,
-            title: "商品已添加到购物车",
+            title: "The product has been added to the shopping cart",
           });
 
           this.sku_list.forEach((e) => {

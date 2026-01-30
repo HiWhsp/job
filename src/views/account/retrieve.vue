@@ -125,14 +125,14 @@ export default {
 
     getCode() {
       if (this.timer) {
-        alertErr("验证码发送频繁，请稍后再试");
+        alertErr("The verification code is sent too frequently, please try again later");
         return;
       }
 
       let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
 
       if (!reg_email.test(this.form.email)) {
-        alertErr("请输入正确的邮箱");
+        alertErr("Please enter the correct email");
         return;
       }
       if (this.disabledBtn) {
@@ -181,23 +181,23 @@ export default {
       let reg_email = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
 
       if (!reg_email.test(this.form.email)) {
-        alertErr("请输入正确的邮箱");
+        alertErr("Please enter the correct email");
         return;
       }
       if (!this.form.code) {
-        alertErr("请输入验证码");
+        alertErr("Please enter the verification code");
         return;
       }
       if (!this.form.pass) {
-        alertErr("请输入密码");
+        alertErr("Please enter the password");
         return;
       }
       if (!this.form.confirm_pass) {
-        alertErr("请输入确认密码");
+        alertErr("Please enter the confirm password");
         return;
       }
       if (this.form.pass !== this.form.confirm_pass) {
-        alertErr("两次输入的密码不一致");
+        alertErr("The two passwords entered are inconsistent");
         return;
       }
 

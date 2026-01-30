@@ -499,7 +499,7 @@ export default {
   },
   data() {
     return {
-      is_order_test: false, //订单测试
+      is_order_test: true, //订单测试
       //
       from: "", //product-detail  ||  cart
       //
@@ -1217,6 +1217,8 @@ export default {
           let { id, orderNo } = res.data;
           this.order_id = id;
           this.do_order_pay();
+        }else {
+          alertErr(res.message);
         }
       });
     },

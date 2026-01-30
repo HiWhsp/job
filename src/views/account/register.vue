@@ -8,7 +8,7 @@
             <img src="@img/foot/foot-mobile.png" alt="" />
             {{ vuex_config.comPhone }}
           </div>
-          <div class="right-btn" @click="$router.push('/')">返回首页</div>
+          <div class="right-btn" @click="$router.push('/')">Back to homepage</div>
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
                 <div
                   @click="form.login_type = idx"
                   :class="['tab-item', { active: form.login_type == idx }]"
-                  v-for="(it, idx) in ['手机号注册', '邮箱注册']"
+                  v-for="(it, idx) in ['Phone number registration', 'Email registration']"
                   :key="idx"
                 >
                   {{ it }}
@@ -38,17 +38,17 @@
 
               <template>
                 <div class="input-box">
-                  <span>{{ form.login_type == 0 ? "手机号" : "邮箱" }}</span>
+                  <span>{{ form.login_type == 0 ? "Phone number" : "Email" }}</span>
                   <input
                     type="text"
-                    :placeholder="`请输入手机号码`"
+                    :placeholder="`Please enter the phone number`"
                     v-model="form.phone"
                     v-if="form.login_type == 0"
                   />
                   <input
                     type="text"
                     v-else
-                    :placeholder="`请输入邮箱地址`"
+                    :placeholder="`Please enter the email address`"
                     v-model="form.email"
                   />
                 </div>
@@ -56,16 +56,16 @@
                 <register_phone_code :form="form" />
 
                 <div class="input-box">
-                  <span>设置密码</span>
+                  <span>Set password</span>
                   <input
                     type="password"
-                    placeholder="请输入密码"
+                    placeholder="Please enter the password"
                     v-model="form.pass"
                   />
                 </div>
 
                 <div class="input-box" style=" margin-bottom: 0;">
-                  <span>确认密码</span>
+                  <span>Confirm password</span>
                   <input
                     type="password"
                     placeholder="请再次输入密码"

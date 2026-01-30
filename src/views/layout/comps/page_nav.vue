@@ -10,17 +10,9 @@
           width="150"
           trigger="hover"
           content=""
-        > -->
-        <router-link
-          slot="reference"
-          class="u-act u-my flex"
-          to="/product-cates"
-        >
-          <div
-            class="all-box"
-            @mouseover="on_mouseover"
-            @mouseleave="on_mouseleave"
-          >
+        >-->
+        <router-link slot="reference" class="u-act u-my flex" to="/product-cates">
+          <div class="all-box" @mouseover="on_mouseover" @mouseleave="on_mouseleave">
             <img src="@img/common/fenlei.png" class="all-icon" />
             <span class="all-title">All Categories</span>
             <!--              <div class="side-nav">-->
@@ -42,17 +34,11 @@
               {{ sub.title }}
             </div>
           </div>
-        </el-popover> -->
+        </el-popover>-->
 
         <div class="nav-box">
-          <div
-            v-for="(item, index) in nav_list"
-            :key="index"
-            class="nav-item"
-          >
-            <router-link :to="item.route" class="nav-title">
-              {{ item.title }}
-            </router-link>
+          <div v-for="(item, index) in nav_list" :key="index" class="nav-item">
+            <router-link :to="item.route" class="nav-title">{{ item.title }}</router-link>
           </div>
         </div>
       </div>
@@ -71,29 +57,31 @@ export default {
     return {
       show_fenlei: false,
       activeNavIndex: 0,
-      cates: [],
+      cates: []
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState(["vuex_category_tree"]),
 
     nav_list() {
       let route_news = "";
-      let arr = [
-        { title: "Hospital", route: "/product-cates" },
-        { title: "Clinic", route: "/product-cates" },
-        { title: "Nursing Home", route: "/product-cates" },
-        { title: "Home Care", route: "/product-cates" },
-        { title: "Health & Beauty", route: "/product-cates" },
-        { title: "Ophthalmic", route: "/product-cates" },
-        { title: "Dental", route: "/product-cates" },
-        { title: "Lab", route: "/product-cates" },
-        { title: "Veterinary", route: "/product-cates" },
-        { title: "Safety", route: "/product-cates" },
-        { title: "Other", route: "/product-cates" },
-      ];
+      let arr = this.vuex_category_tree.filter(item => item.isHot == 1);
       return arr;
-    },
+      // let arr = [
+      //   { title: "Hospital", route: "/product-cates" },
+      //   { title: "Clinic", route: "/product-cates" },
+      //   { title: "Nursing Home", route: "/product-cates" },
+      //   { title: "Home Care", route: "/product-cates" },
+      //   { title: "Health & Beauty", route: "/product-cates" },
+      //   { title: "Ophthalmic", route: "/product-cates" },
+      //   { title: "Dental", route: "/product-cates" },
+      //   { title: "Lab", route: "/product-cates" },
+      //   { title: "Veterinary", route: "/product-cates" },
+      //   { title: "Safety", route: "/product-cates" },
+      //   { title: "Other", route: "/product-cates" }
+      // ];
+      // return arr;
+    }
   },
   watch: {},
 
@@ -109,7 +97,7 @@ export default {
       }
       let obj = {
         active: item_route == this.$route.name,
-        active: item.route == this.$route.path,
+        active: item.route == this.$route.path
       };
       return obj;
     },
@@ -125,9 +113,9 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "product_channel",
-        },
-      }).then((res) => {
+          action: "product_channel"
+        }
+      }).then(res => {
         if (res.code == 200) {
           this.cates = res.data;
         }
@@ -149,8 +137,8 @@ export default {
     },
     on_mouseleave() {
       this.show_fenlei = false;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -202,10 +190,10 @@ export default {
 
       .nav-box {
         transition: 0.5s;
-        // width: 100%;
         flex: 2;
         display: flex;
-        justify-content: space-around;
+        gap: 30px;
+        padding-left: 25px;
 
         .nav-item {
           text-align: center;
@@ -225,17 +213,17 @@ export default {
             text-align: center;
             font-weight: 600;
             font-size: 20px;
-            color: #00306B;
+            color: #00306b;
             text-align: center;
 
             &.active {
               font-weight: bold;
-              color: #00306B;
+              color: #00306b;
             }
 
             &.router-link-exact-active {
               font-weight: bold;
-              color: #00306B;
+              color: #00306b;
             }
           }
 
