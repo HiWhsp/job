@@ -2,7 +2,7 @@
   <div class="modal-container">
     <el-dialog
       title="  "
-      width="568px"
+      width="600px"
       custom-class="cus-modal-wrap"
       :close-on-click-modal="true"
       :visible.sync="show_modal"
@@ -103,6 +103,7 @@ export default {
       font-weight: bold;
       font-size: 24px;
       color: #1E262E;
+      padding: 0 55px;
     }
 
     .text-box-2 {

@@ -22,7 +22,7 @@
         <div class="circle-box">
           <div class="icon-wrapper">
             <img
-              :src="item.isHovered ? item.hoverIcon : item.icon"
+              :src="item.icon"
               :alt="item.name"
               class="icon"
             />
@@ -63,37 +63,31 @@ export default {
     return {
       sidebarItems: [
         {
-          name: "购物车",
+          name: "cart",
           icon: require("@/assets/img/common/icon1.png"),
           hoverIcon: require("@/assets/img/common/icon1-a.png"),
           isHovered: false,
         },
         {
-          name: "会员中心",
+          name: "my-center",
           icon: require("@/assets/img/common/icon2.png"),
           hoverIcon: require("@/assets/img/common/icon2-a.png"),
           isHovered: false,
         },
-        // {
-        //   name: "手机版",
-        //   icon: require("@/assets/img/common/icon3.png"),
-        //   hoverIcon: require("@/assets/img/common/icon3-a.png"),
-        //   isHovered: false,
-        // },
         {
-          name: "客服电话",
+          name: "phone",
           icon: require("@/assets/img/common/icon5.png"),
           hoverIcon: require("@/assets/img/common/icon5-a.png"),
           isHovered: false,
         },
         {
-          name: "在线客服",
+          name: "online-kefu",
           icon: require("@/assets/img/common/icon4.png"),
           hoverIcon: require("@/assets/img/common/icon4-a.png"),
           isHovered: false,
         },
         {
-          name: "返回顶部",
+          name: "to-top",
           icon: require("@/assets/img/common/icon6.png"),
           hoverIcon: require("@/assets/img/common/icon6-a.png"),
           isHovered: false,
@@ -225,9 +219,6 @@ export default {
       }
 
       &.is-hover {
-        .circle-box {
-          background: #7853b2;
-        }
 
         .item-text {
           transform: scale(1) !important;
@@ -321,6 +312,7 @@ export default {
         z-index: 1;
         position: absolute;
         right: 22px;
+        top: 2px;
 
         transition: all 0.3s ease;
         transform: scale(0);
@@ -337,9 +329,10 @@ export default {
         width: fit-content;
         // height: 44px;
         height: 54px;
-        background: #ffffff;
+        background: #FEEEDD;
         box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.09);
         border-radius: 100px 0 0 100px;
+        border: 1px solid #EC6A2B;
       }
       .item-text2 {
         font-weight: bold;

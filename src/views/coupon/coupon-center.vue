@@ -12,12 +12,6 @@
       </div>
     </div>
 
-    <div class="suggest-title flex-center">
-      <!-- <img src="@img/index/suggest-left.png" alt="" /> -->
-      <span class="block">精选<span style="color: #7853b2">好券</span></span>
-      <!-- <img src="@img/index/suggest-right.png" alt="" /> -->
-    </div>
-
     <div class="page-ctx">
       <div class="inner">
         <!-- <div class="yhq-list" v-if="list_yhq.length">
@@ -86,7 +80,7 @@
 
         <el-empty
           v-if="!list_yhq.length"
-          description="暂无优惠券信息..."
+          description="no coupons available"
         ></el-empty>
 
         <!-- <div class="bg-box">
@@ -111,10 +105,10 @@
         <img src="@img/other/mycoupon-to-center.png" alt="" />
         <span>我的优惠券 ></span>
       </div> -->
-      <div class="page-box">
+      <div class="page-box" v-if="count">
           <el-pagination
           background
-          layout="total,prev, pager, next,jumper"
+          layout="prev, pager, next"
           :total="count"
           :current-page="pagination.page"
           :page-size="pagination.pageNum"
@@ -241,16 +235,15 @@ export default {
 
 .banner-box {
   position: relative;
-  height: 350px;
+  height: 600px;
 }
 
 .poster-box {
   /deep/.el-carousel {
-    height: 350px;
+    height: 600px;
   }
   img {
     width: 100%;
-    height: 350px;
   }
 }
 

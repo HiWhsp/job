@@ -8,6 +8,12 @@
     >
       <div class="poster-box scale-box">
         <img class="scale-img" :src="item.thumb" alt="" />
+        <div class="hover-actions">
+          <div class="action-btn favorite-btn" @click.stop="do_add_fav(item)">
+          </div>
+          <div class="action-btn cart-btn" @click.stop="addToCart(item)">
+          </div>
+        </div>
       </div>
       <div class="info-box">
         <div class="title-box">
@@ -195,6 +201,62 @@ export default {
       this.$router.push(
         this.vuex_user.userType == 2 ? "/part-time-sales" : "/enterprise-cert"
       );
+    },
+
+    // 添加收藏
+    do_add_fav(item) {
+      if (!this.mix_get_login_status()) {
+        return;
+      }
+      const productId = item.productId || item.id;
+      if (!productId) {
+        alertErr("商品信息不完整");
+        return;
+      }
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_operate",
+          productId: productId,
+          operateType: 1, //1-关注 2-足迹
+          operateSence: 0 //0-关注（添加记录） 1-取消关注（删除记录）
+        }
+      }).then(res => {
+        alert(res);
+        if (res.code == 200) {
+          // 可以在这里更新UI状态
+        }
+      });
+    },
+
+    // 加入购物车
+    addToCart(item) {
+      if (typeof this.mix_get_login_status === "function") {
+        if (!this.mix_get_login_status()) return;
+      }
+      const inventoryId = item.inventoryId || item.id;
+      if (!inventoryId) {
+        alertErr("商品信息不完整，无法加入购物车");
+        return;
+      }
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "gouwuche_add",
+          inventoryId,
+          num: 1
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          const totalCount = (res.data && res.data.count) || 0;
+          if (this.$store && this.$store.commit) {
+            this.$store.commit("set_vuex_cart_number", totalCount);
+          }
+          alertSucc("已加入购物车");
+        }
+      });
     },
   },
 };
@@ -384,12 +446,58 @@ export default {
       width: 373px;
       height: 373px;
       border-radius: 24px;
+      position: relative;
+      overflow: hidden;
 
       img {
         width: 100%;
         height: 100%;
         object-fit: contain;
         border-radius: 24px;
+      }
+
+      .hover-actions {
+        position: absolute;
+        right: 15px;
+        bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 10;
+      }
+
+      &:hover .hover-actions {
+        opacity: 1;
+      }
+
+      .action-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+
+      .favorite-btn {
+        background-image: url("~@img/my-index/favorite.png");
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+      }
+
+      .cart-btn {
+        background-image: url("~@img/my-index/cart.png");
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
       }
     }
 

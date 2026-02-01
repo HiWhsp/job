@@ -1,6 +1,6 @@
 <template>
   <div class="modal-container">
-    <el-dialog title="操作提示" width="580px" custom-class="cus-modal-wrap" :close-on-click-modal="true"
+    <el-dialog title="Delete Order" width="580px" custom-class="cus-modal-wrap" :close-on-click-modal="true"
       :visible.sync="show_modal" :before-close="onbeforeclose" @closed="onclosed">
       <div class="modal-inner">
         <!-- <div class="img-list flex-center">
@@ -9,12 +9,12 @@
           </div>
         </div> -->
         <div class="text-box">
-          确认删除当前订单?
+          Are you sure you want to delete the current order?
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <button class="btn btn-ripple fit-text btn-1" @click="show_modal = false">取消</button>
-        <el-button class="btn btn-ripple fit-text btn-2 btn-bg" @click="throttle_do_confirm()"  :loading="loading">确认</el-button>
+        <button class="btn btn-ripple fit-text btn-1" @click="show_modal = false">Cancel</button>
+        <el-button class="btn btn-ripple fit-text btn-2 btn-bg" @click="throttle_do_confirm()"  :loading="loading">Confirm</el-button>
       </span>
     </el-dialog>
   </div>
@@ -94,7 +94,13 @@ export default {
   font-family: Poppins, Poppins;
   // font-weight: 600;
   font-size: 18px;
-  color: #333333;
+  color: #1E262E;
+
+  .el-dialog__title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1E262E;
+  }
 
   .el-dialog__close {
     font-size: 20px;
@@ -111,15 +117,15 @@ export default {
 
   button {
     width: 120px;
-    height: 32px;
+    height: 56px;
     background: #FFFFFF;
-    border-radius: 50px 50px 50px 50px;
-    border: 1px solid #7853B2;
+    border-radius: 10px;
+    border: 1px solid #EC6A2B;
 
     font-family: Arial, Arial;
     font-weight: 400;
-    font-size: 14px;
-    color: #7853B2;
+    font-size: 20px;
+    color: #EC6A2B;
 
     & + button {
       margin-left: 16px;
@@ -135,7 +141,7 @@ export default {
   }
 
   .btn-bg {
-    background: #7853B2;
+    background: #EC6A2B;
     color: #ffffff;
   }
 }
@@ -160,14 +166,11 @@ export default {
     }
 
     .text-box {
-      margin-top: 20px;
-      flex: 2;
-      text-align: center;
-      font-size: 16px;
-      font-family: Microsoft YaHei;
-      // font-weight: bold;
-      line-height: 20px;
-      color: #333333;
+      font-family: Microsoft YaHei, Microsoft YaHei;
+      font-weight: bold;
+      font-size: 24px;
+      color: #1E262E;
+      padding: 0 10px;
 
       img {
         width: 25px;

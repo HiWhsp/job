@@ -5,25 +5,15 @@
         <div class="bread-box">
           <!-- <img src="@img/common/product-home.png" alt="" /> -->
           <router-link to="/">首页</router-link>
-          <div
-            class="bread-item"
-            v-for="(item, index) in bread_list"
-            :key="index"
-          >
+          <div class="bread-item" v-for="(item, index) in bread_list" :key="index">
             <span class="arrow">/</span>
             <template v-if="item">
-              <a
-                v-if="item && !item.route"
-                class="link"
-                href="javascript: void(0)"
-                >{{ item.title }}</a
-              >
+              <a v-if="item && !item.route" class="link" href="javascript: void(0)">{{ item.title }}</a>
               <router-link
                 v-else-if="item && item.route"
                 :to="item.route"
                 class="route-link"
-                >{{ item.title }}</router-link
-              >
+              >{{ item.title }}</router-link>
             </template>
           </div>
           <span class="arrow">/</span>
@@ -45,9 +35,7 @@
 
             <div class="ctx-right">
               <div class="detail-title flex">
-                <div class="title-text flex">
-                  {{ info.title }}
-                </div>
+                <div class="title-text flex">{{ info.title }}</div>
               </div>
               <div class="detail-desc">
                 <div class="btn">FDA</div>
@@ -58,30 +46,26 @@
                 <div class="list">
                   <div class="item price-item">
                     <div class="vals vals-price">
-                      <div class="val">
-                        {{ vuex_huobi }}{{ view_info.priceSale }}
-                      </div>
+                      <div class="val">{{ vuex_huobi }}{{ view_info.priceSale }}</div>
                     </div>
-                    <span
-                      style="color: #ec6a2b; line-height: 30px; margin: 0 10px"
-                      >/pack</span
-                    >
-                    <div class="val" style="color: #5e5e5e; line-height: 30px">
-                      {{ vuex_huobi }}{{ view_info.priceMarket }}
-                    </div>
+                    <span style="color: #ec6a2b; line-height: 30px; margin: 0 10px">/pack</span>
+                    <div
+                      class="val"
+                      style="color: #5e5e5e; line-height: 30px"
+                    >{{ vuex_huobi }}{{ view_info.priceMarket }}</div>
                   </div>
                   <div class="item">
-                    <span class="date">5-7 days delivery! </span>
+                    <span class="date">5-7 days delivery!</span>
                     <img
                       src="@/assets/img/product/icon-fav0.png"
                       v-if="!if_shoucang"
-                      alt=""
+                      alt
                       @click="do_fav_toggle()"
                     />
                     <img
                       src="@/assets/img/product/icon-fav1.png"
                       v-else
-                      alt=""
+                      alt
                       @click="do_fav_toggle()"
                     />
                   </div>
@@ -102,7 +86,7 @@
                       <i class="el-icon-warning"></i>
                       量大优惠，请关注以下单价变化
                     </div>
-                  </div> -->
+                  </div>-->
                   <div class="sku-list">
                     <div
                       class="sku-item"
@@ -120,26 +104,20 @@
                           >
                             <el-image :src="item.image"></el-image>
                           </div>
-                          <span> </span>
+                          <span></span>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="sku-details-box">
-                    <div
-                      v-for="(item, index) in sku_list"
-                      :key="index"
-                      class="sku-details"
-                    >
+                    <div v-for="(item, index) in sku_list" :key="index" class="sku-details">
                       <template v-if="selectedSkuId === item.inventoryId">
                         <div
                           class="key-vals"
                           :class="{
                             active: selectedSkuId === item.inventoryId,
                           }"
-                        >
-                          {{ item.keyVals }}
-                        </div>
+                        >{{ item.keyVals }}</div>
                         <!-- 操作 -->
                         <div class="operation-box">
                           <div class="operation-item">
@@ -147,7 +125,7 @@
                               <div class="price-info-text">Quantity:</div>
                               <div class="current-price">
                                 {{ vuex_huobi }}{{ getCurrentPrice(item) }}/{{
-                                  info.unit || "pack"
+                                info.unit || "pack"
                                 }}
                               </div>
                             </div>
@@ -159,10 +137,7 @@
                                   :disabled="getSkuQuantity(item) <= 0"
                                   @click.stop="decreaseSkuQuantity(item)"
                                 >
-                                  <img
-                                    src="@img/product/num-minus.png"
-                                    alt=""
-                                  />
+                                  <img src="@img/product/num-minus.png" alt />
                                 </div>
                                 <input
                                   type="number"
@@ -180,7 +155,7 @@
                                   :disabled="getSkuQuantity(item) >= item.kucun"
                                   @click.stop="increaseSkuQuantity(item)"
                                 >
-                                  <img src="@img/product/num-plus.png" alt="" />
+                                  <img src="@img/product/num-plus.png" alt />
                                 </div>
                               </div>
                             </div>
@@ -200,48 +175,34 @@
                   <div class="order-summary">
                     <div class="flex-center box">
                       <div class="summary-item">
-                        Selected<span>{{ orderSummary.selectedItems }}</span
-                        >items<span>{{ orderSummary.totalQuantity }}</span
-                        >Pack
+                        Selected
+                        <span>{{ orderSummary.selectedItems }}</span>items
+                        <span>{{ orderSummary.totalQuantity }}</span>Pack
                       </div>
                       <div class="summary-item">
-                        Actual amount<span>{{
+                        Actual amount
+                        <span>
+                          {{
                           vuex_huobi + "" + orderSummary.finalAmount
-                        }}</span>
+                          }}
+                        </span>
                       </div>
-                      <div
-                        class="summary-item"
-                        v-if="orderSummary.discount > 0"
-                      >
-                        <div style="font-weight: 400">
-                          优惠¥{{ orderSummary.discount }}
-                        </div>
+                      <div class="summary-item" v-if="orderSummary.discount > 0">
+                        Discount:
+                        <span>{{ orderSummary.discount }}</span>
                       </div>
                     </div>
                     <div class="left-buttons2">
-                      <button class="contact-service" @click="openInquiryModal">
-                        LARGE ORDER GET COMPETITIVE QUOTE
-                      </button>
                       <button
-                        class="btn-ripple flex-center btn-buy"
-                        @click="do_pay_now()"
-                      >
-                        <img
-                          src="@img/product/detail-buy.png"
-                          alt=""
-                          class="cart"
-                        />
+                        class="contact-service"
+                        @click="openInquiryModal"
+                      >LARGE ORDER GET COMPETITIVE QUOTE</button>
+                      <button class="btn-ripple flex-center btn-buy" @click="do_pay_now()">
+                        <img src="@img/product/detail-buy.png" alt class="cart" />
                         SHOP NOW
                       </button>
-                      <button
-                        class="btn-ripple flex-center btn-add-cart"
-                        @click="do_add_cart()"
-                      >
-                        <img
-                          src="@img/product/detail-cart.png"
-                          alt=""
-                          class="cart"
-                        />
+                      <button class="btn-ripple flex-center btn-add-cart" @click="do_add_cart()">
+                        <img src="@img/product/detail-cart.png" alt class="cart" />
                         ADD TO CART
                       </button>
                     </div>
@@ -252,7 +213,7 @@
                     @click="do_add_fav()"
                   >
                     {{ is_fav ? "取消收藏" : "添加收藏" }}
-                  </button> -->
+                  </button>-->
                 </div>
               </div>
             </div>
@@ -269,17 +230,13 @@
                   @click="toDetail(item)"
                 >
                   <div class="poster-box scale-box">
-                    <img :src="item.thumb" alt="" class="poster scale-img" />
+                    <img :src="item.thumb" alt class="poster scale-img" />
                   </div>
                   <div class="info-box">
                     <div class="title ellipsis-2">{{ item.title }}</div>
                     <div class="price-box">
-                      <div class="pirce-item-value">
-                        {{ vuex_huobi + "" + item.priceSale }}
-                      </div>
-                      <div class="market-price">
-                        {{ item.priceMarket }}
-                      </div>
+                      <div class="pirce-item-value">{{ vuex_huobi + "" + item.priceSale }}</div>
+                      <div class="market-price">{{ item.priceMarket }}</div>
                     </div>
                     <div class="description-box">
                       <div class="description-item">FDA</div>
@@ -298,16 +255,12 @@
                       class="nav-item"
                       @click="togglePanel('详情')"
                       :class="active_panel == '详情' ? 'active' : ''"
-                    >
-                      Product Specifications
-                    </div>
+                    >Product Specifications</div>
                     <div
                       class="nav-item"
                       @click="togglePanel('资质证书')"
                       :class="active_panel == '资质证书' ? 'active' : ''"
-                    >
-                      Qualification & Certificates
-                    </div>
+                    >Qualification & Certificates</div>
 
                     <div
                       class="nav-item"
@@ -329,11 +282,11 @@
                     <img src="@img/other/goods-detail-kefu.png" alt />
                     <span>联系客服</span>
                   </button>
-                </el-popover> -->
+                    </el-popover>-->
                     <!-- <button class="contact" slot="reference" @click="shopcart_add">
                   <img src="@img/icon-cart-trans.png" alt />
                   <span>加入购物车</span>
-                </button> -->
+                    </button>-->
                   </div>
 
                   <!-- v-if="active_panel == '详情'" -->
@@ -341,7 +294,7 @@
                     <!-- <div class="panel-title" data-title="详情">
                       商品详情
                     </div>
-                    <div class="panel-title-line"></div> -->
+                    <div class="panel-title-line"></div>-->
                     <div class="detail-spec">
                       <div
                         class="detail-spec-sector"
@@ -356,10 +309,7 @@
                     <div class="rich-html" v-html="info.cont2"></div>
                     <div class="rich-html" v-html="info.cont3"></div>
                   </div>
-                  <div
-                    class="detail-content-box"
-                    v-if="active_panel == '资质证书'"
-                  >
+                  <div class="detail-content-box" v-if="active_panel == '资质证书'">
                     <div class="rich-html" v-html="info.cont4"></div>
                   </div>
                   <!-- v-if="active_panel == '评价'" -->
@@ -367,15 +317,11 @@
                     <!-- <div class="panel-title" data-title="评论">
                       累计评价 ({{ info.commentNum }})
                     </div>
-                    <div class="panel-title-line"></div> -->
+                    <div class="panel-title-line"></div>-->
 
                     <review_list :list="reviews" />
 
-                    <div
-                      class="pagination-box"
-                      style="margin-top: 80px"
-                      v-if="info.commentNum"
-                    >
+                    <div class="pagination-box" style="margin-top: 80px" v-if="info.commentNum">
                       <el-pagination
                         background
                         layout="prev, pager, next"
@@ -387,7 +333,7 @@
                     </div>
 
                     <div class="detail-empty" v-else>
-                      <el-empty description="没有查询到评论信息..."></el-empty>
+                      <el-empty description="no comments found..."></el-empty>
                     </div>
                   </div>
                 </div>
@@ -428,7 +374,7 @@ export default {
     review_list,
     detailLunbo,
     area_select,
-    product_renzheng_tip,
+    product_renzheng_tip
     // QRCode,
     // modalLoading,
     // modalYaoqing,
@@ -438,13 +384,13 @@ export default {
     return {
       info: {
         inventorys: [],
-        brand: {},
+        brand: {}
       },
       is_fav: false,
       reviews: [],
       pagination: {
         page: 1,
-        pageNum: 10,
+        pageNum: 10
       },
       //
       //
@@ -460,7 +406,7 @@ export default {
 
       query_wenxian_done: false,
       activeCate: {
-        route: "/",
+        route: "/"
       },
 
       list_goods: [],
@@ -495,7 +441,7 @@ export default {
 
       pagination_relative: {
         page: 1,
-        pageNum: 5,
+        pageNum: 5
       },
 
       select_inventoryId: "",
@@ -518,7 +464,7 @@ export default {
       related_products: [],
 
       // 选中的SKU ID（单选）
-      selectedSkuId: null,
+      selectedSkuId: null
     };
   },
 
@@ -530,13 +476,13 @@ export default {
       if (this.info.channelId) {
         if (this.vuex_category_flat.length) {
           let cate = this.vuex_category_flat.find(
-            (v) => v.id == this.info.channelId
+            v => v.id == this.info.channelId
           );
           if (cate) {
             let ids = cate.ids || "";
-            let id_arr = ids.split("-").filter((v) => !!v);
-            id_arr.forEach((id) => {
-              let cate = this.vuex_category_flat.find((v) => v.id == id) || {};
+            let id_arr = ids.split("-").filter(v => !!v);
+            id_arr.forEach(id => {
+              let cate = this.vuex_category_flat.find(v => v.id == id) || {};
               option.push(cate);
             });
           }
@@ -583,7 +529,7 @@ export default {
       // 计算优惠
       let discount = 0;
       const prices = this.view_info.priceSale;
-      this.sku_list.forEach((item) => {
+      this.sku_list.forEach(item => {
         const quantity = this.getSkuQuantity(item);
         if (quantity > 0) {
           selectedItems++;
@@ -591,7 +537,7 @@ export default {
           const price = this.getCurrentPrice(item);
           totalAmount += price * quantity;
           if ((item.priceConfig || []).length > 0) {
-            const idx = item.priceConfig.findIndex((it) => it.price == price);
+            const idx = item.priceConfig.findIndex(it => it.price == price);
             console.log(idx, "idx");
             if (idx > 0) {
               discount += (item.priceConfig[0].price - price) * quantity;
@@ -606,15 +552,15 @@ export default {
         totalQuantity,
         totalAmount: totalAmount.toFixed(2),
         discount: discount.toFixed(2),
-        finalAmount: finalAmount.toFixed(2),
+        finalAmount: finalAmount.toFixed(2)
       };
-    },
+    }
   },
 
   watch: {
     param_list(val) {
       //console.log(" ******** 产品参数 ******** ", val);
-    },
+    }
   },
 
   beforeRouteUpdate(to, from, next) {
@@ -667,9 +613,9 @@ export default {
         data: {
           action: "product_detail",
           inventoryId: this.id,
-          ifShowSku: 1, //是否展示全部规格skus：0-不需要展示 1-需要展示（规格以组合形式展示，即规格1,规格2 组合一起的）
-        },
-      }).then((res) => {
+          ifShowSku: 1 //是否展示全部规格skus：0-不需要展示 1-需要展示（规格以组合形式展示，即规格1,规格2 组合一起的）
+        }
+      }).then(res => {
         console.log(res);
         let { code, data, message } = res;
         if (res.code == 200) {
@@ -690,7 +636,7 @@ export default {
           this.swiperImgs = data.images;
           this.detailImages = data.images.map((v, i) => ({
             index: i,
-            image: v,
+            image: v
           }));
           // console.log(this.detailImages ,'this.detailImages ')
           this.if_shoucang = data.ifShoucang == 0 ? false : true;
@@ -701,7 +647,9 @@ export default {
           console.log(data);
         } else {
           alert(res.message);
-          if (message == "The product does not exist or has been discontinued") {
+          if (
+            message == "The product does not exist or has been discontinued"
+          ) {
             this.$router.push("/");
           }
         }
@@ -712,7 +660,7 @@ export default {
       let text = window.location.href;
       const type = "text/plain";
       const clipboardItemData = {
-        [type]: text,
+        [type]: text
       };
       const clipboardItem = new ClipboardItem(clipboardItemData);
       await navigator.clipboard.write([clipboardItem]);
@@ -724,7 +672,7 @@ export default {
         lock: true,
         text: "Data query in progress...",
         spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)",
+        background: "rgba(0, 0, 0, 0.7)"
       });
       // if (this.$refs.modalLoading) {
       //   this.$refs.modalLoading.init();
@@ -751,9 +699,9 @@ export default {
         data: {
           action: "product_comments",
           productId: this.info.productId,
-          ...this.pagination,
-        },
-      }).then((res) => {
+          ...this.pagination
+        }
+      }).then(res => {
         let { code, data, count } = res;
         if (code == 200) {
           this.reviews = data.list;
@@ -769,9 +717,9 @@ export default {
           action: "product_plist",
           productId: this.info.productId,
           page: 1,
-          pageNum: 6,
-        },
-      }).then((res) => {
+          pageNum: 6
+        }
+      }).then(res => {
         if (res.code == 200) {
           this.related_products = res.data.list;
         }
@@ -786,9 +734,9 @@ export default {
           action: "product_operate",
           productId: this.info.productId,
           operateType: 2, //1-关注 2-足迹
-          operateSence: 0, //0-关注（添加记录） 1-取消关注（删除记录）
-        },
-      }).then((res) => {});
+          operateSence: 0 //0-关注（添加记录） 1-取消关注（删除记录）
+        }
+      }).then(res => {});
     },
     do_fav_toggle() {
       this.do_add_fav();
@@ -805,9 +753,9 @@ export default {
           action: "product_operate",
           productId: this.info.productId,
           operateType: 1, //1-关注 2-足迹
-          operateSence: this.if_shoucang ? 1 : 0, //0-关注（添加记录） 1-取消关注（删除记录）
-        },
-      }).then((res) => {
+          operateSence: this.if_shoucang ? 1 : 0 //0-关注（添加记录） 1-取消关注（删除记录）
+        }
+      }).then(res => {
         alert(res);
         if (res.code == 200) {
           this.if_shoucang = !this.if_shoucang;
@@ -825,13 +773,13 @@ export default {
       }
 
       let key = item.key;
-      let index = this.select_shuxing_list.findIndex((v) => v.id == item.id);
+      let index = this.select_shuxing_list.findIndex(v => v.id == item.id);
       if (index < 0) {
         //已选的属性不包含当前属性
         //需要查询是否已选过当前属性其他属性值
-        let prev_item = this.select_shuxing_list.find((v) => v.key == key);
+        let prev_item = this.select_shuxing_list.find(v => v.key == key);
         let prev_item_index = this.select_shuxing_list.findIndex(
-          (v) => v.key == key
+          v => v.key == key
         );
         if (prev_item) {
           this.select_shuxing_list.splice(prev_item_index, 1, item);
@@ -840,7 +788,7 @@ export default {
         }
       } else {
         this.select_shuxing_list.splice(index, 1, {
-          key: key,
+          key: key
         });
       }
 
@@ -852,8 +800,8 @@ export default {
       if (
         Object.keys(this.info.skus).length == this.select_shuxing_list.length
       ) {
-        let key_ids = this.select_shuxing_list.map((v) => v.id).join("-");
-        this.sku_select = this.sku_list.find((v) => v.key_ids == key_ids) || {};
+        let key_ids = this.select_shuxing_list.map(v => v.id).join("-");
+        this.sku_select = this.sku_list.find(v => v.key_ids == key_ids) || {};
       }
 
       //console.log("已选的商品属性值 select_shuxing_list", this.select_shuxing_list);
@@ -862,7 +810,7 @@ export default {
 
     //是否已选择当亲属性
     if_shuxing_list_contain(item) {
-      return !!this.select_shuxing_list.find((v) => v.id == item.id);
+      return !!this.select_shuxing_list.find(v => v.id == item.id);
     },
 
     //当前属性商品库存是否不足
@@ -871,7 +819,7 @@ export default {
       //比对目标属性是否库存不足
       let key = item.key;
       let id_arr = [];
-      this.select_shuxing_list.forEach((v) => {
+      this.select_shuxing_list.forEach(v => {
         if (v.id && key != v.key) {
           id_arr.push(v.id);
         } else if (key == v.key) {
@@ -880,8 +828,8 @@ export default {
       });
 
       //从所有规格中过滤出符合目标属性的规格
-      let list_filter = this.sku_list.filter((v) => {
-        let has_pipei = id_arr.every((id) => v.key_ids.includes(id));
+      let list_filter = this.sku_list.filter(v => {
+        let has_pipei = id_arr.every(id => v.key_ids.includes(id));
 
         return has_pipei;
       });
@@ -913,7 +861,7 @@ export default {
         var promise = this.loadImageAsync(src);
         promise_arr.push(promise);
       });
-      Promise.all(promise_arr).then((resAll) => {
+      Promise.all(promise_arr).then(resAll => {
         // //console.log("图片全部加载完成 resAll", resAll);
 
         //设置产品图片
@@ -932,7 +880,7 @@ export default {
         //实验耗材
         var cate_id = this.info.channelId;
         this.activeCate =
-          this.product_cates_all.find((v) => v.id == cate_id) || {};
+          this.product_cates_all.find(v => v.id == cate_id) || {};
 
         //console.log("activeCate", { ...this.activeCate });
 
@@ -950,7 +898,7 @@ export default {
       //规格列表组
       let sku_list = [];
       if (data.inventorys && data.inventorys.length) {
-        data.inventorys.forEach((v) => {
+        data.inventorys.forEach(v => {
           sku_list.push({
             ...v,
             priceConfig:
@@ -959,7 +907,7 @@ export default {
                 : v.priceConfig,
             kucun: +v.kucun,
             key_vals: v.key_vals,
-            keyVals: v.keyVals || v.key_vals,
+            keyVals: v.keyVals || v.key_vals
           });
         });
       } else {
@@ -976,8 +924,8 @@ export default {
             priceSale2: this.info.priceSale2,
             priceSale3: this.info.priceSale3,
             nums1: this.info.nums1,
-            nums2: this.info.nums2,
-          },
+            nums2: this.info.nums2
+          }
         ];
       }
 
@@ -987,12 +935,12 @@ export default {
         this.selectedSkuId = sku_list[0].inventoryId;
       } else {
         // this.sku_select = {};
-        this.sku_select = sku_list.find((v) => v.inventoryId == this.id) || {};
+        this.sku_select = sku_list.find(v => v.inventoryId == this.id) || {};
         // 如果有匹配的SKU，设置为选中，否则选中第一个有库存的
         if (this.sku_select.inventoryId) {
           this.selectedSkuId = this.sku_select.inventoryId;
         } else {
-          const firstAvailable = sku_list.find((v) => v.kucun > 0);
+          const firstAvailable = sku_list.find(v => v.kucun > 0);
           if (firstAvailable) {
             this.selectedSkuId = firstAvailable.inventoryId;
           } else if (sku_list.length > 0) {
@@ -1004,7 +952,7 @@ export default {
 
       // 初始化规格数量
       this.sku_quantities = {};
-      sku_list.forEach((item) => {
+      sku_list.forEach(item => {
         this.$set(this.sku_quantities, item.inventoryId, 0);
       });
 
@@ -1013,9 +961,9 @@ export default {
       if (skus && Object.keys(skus).length) {
         this.sku_mode = "多规格";
         let select_shuxing_list = [];
-        Object.keys(skus).forEach((v) => {
+        Object.keys(skus).forEach(v => {
           select_shuxing_list.push({
-            key: skus[v].key,
+            key: skus[v].key
           });
         });
 
@@ -1071,7 +1019,7 @@ export default {
             maxConfig.price || maxConfig.priceSale || item.priceSale || 0
           );
         }
-        const match = sorted.find((cfg) => {
+        const match = sorted.find(cfg => {
           const min = Number(cfg.min || 0);
           const hasMax = Number(cfg.max || 0) && !isNaN(cfg.max);
           const max = hasMax ? Number(cfg.max) : Infinity;
@@ -1255,7 +1203,7 @@ export default {
 
       // 检查是否有选择的规格
       let hasSelectedSku = false;
-      this.sku_list.forEach((item) => {
+      this.sku_list.forEach(item => {
         if (this.getSkuQuantity(item) > 0) {
           hasSelectedSku = true;
         }
@@ -1270,7 +1218,7 @@ export default {
       let data_format = [];
 
       // 构建包含所有选择规格的数据
-      this.sku_list.forEach((item) => {
+      this.sku_list.forEach(item => {
         const quantity = this.getSkuQuantity(item);
         if (quantity > 0) {
           data_format.push({
@@ -1282,7 +1230,7 @@ export default {
             num: quantity,
             priceSale: this.getCurrentPrice(item),
             discountSale: info.discountSale,
-            priceMarket: item.priceMarket,
+            priceMarket: item.priceMarket
           });
         }
       });
@@ -1290,7 +1238,7 @@ export default {
       let str_data = JSON.stringify(data_format);
       this.$store.commit("set_cache_payment_products", str_data);
       this.$router.push({
-        path: "/order-submit",
+        path: "/order-submit"
       });
     },
 
@@ -1344,7 +1292,7 @@ export default {
 
       // 检查是否有选择的规格
       let hasSelectedSku = false;
-      this.sku_list.forEach((item) => {
+      this.sku_list.forEach(item => {
         if (this.getSkuQuantity(item) > 0) {
           hasSelectedSku = true;
         }
@@ -1357,7 +1305,7 @@ export default {
 
       // 检查库存
       let hasInsufficientStock = false;
-      this.sku_list.forEach((item) => {
+      this.sku_list.forEach(item => {
         const quantity = this.getSkuQuantity(item);
         if (quantity > 0 && quantity > item.kucun) {
           hasInsufficientStock = true;
@@ -1371,7 +1319,7 @@ export default {
 
       // 检查商品状态
       let hasOfflineItem = false;
-      this.sku_list.forEach((item) => {
+      this.sku_list.forEach(item => {
         const quantity = this.getSkuQuantity(item);
         if (quantity > 0 && item.status == -1) {
           hasOfflineItem = true;
@@ -1385,7 +1333,7 @@ export default {
 
       // 添加所有选择的规格到购物车
       let addPromises = [];
-      this.sku_list.forEach((item) => {
+      this.sku_list.forEach(item => {
         const quantity = this.getSkuQuantity(item);
         if (quantity > 0) {
           addPromises.push(
@@ -1395,14 +1343,14 @@ export default {
               data: {
                 action: "gouwuche_add",
                 inventoryId: item.inventoryId,
-                num: quantity,
-              },
+                num: quantity
+              }
             })
           );
         }
       });
 
-      Promise.all(addPromises).then((results) => {
+      Promise.all(addPromises).then(results => {
         let successCount = 0;
         let totalCount = 0;
 
@@ -1415,10 +1363,10 @@ export default {
         if (successCount == results.length) {
           this.$refs.product_add_cart_success_modal.init({
             num: totalCount,
-            title: "The product has been added to the shopping cart",
+            title: "The product has been added to the shopping cart"
           });
 
-          this.sku_list.forEach((e) => {
+          this.sku_list.forEach(e => {
             this.sku_quantities[e.inventoryId] = 0;
           });
           this.$store.commit("set_vuex_cart_number", totalCount);
@@ -1431,8 +1379,8 @@ export default {
       this.$router.push({
         path: "/comments",
         query: {
-          pid: this.productId,
-        },
+          pid: this.productId
+        }
       });
     },
 
@@ -1441,7 +1389,7 @@ export default {
       ImagePreview({
         images: swiperImgs,
         startPosition: index,
-        closeable: true,
+        closeable: true
       });
     },
 
@@ -1452,7 +1400,7 @@ export default {
         ImagePreview({
           images: [e.target.currentSrc], //获取当前图片src
           showIndex: false,
-          loop: false,
+          loop: false
         });
       } else {
         //console.log("点击内容不为img");
@@ -1485,7 +1433,7 @@ export default {
       element.scrollIntoView({
         behavior: "smooth",
         block: "center",
-        inline: "center",
+        inline: "center"
       });
     },
 
@@ -1506,7 +1454,7 @@ export default {
         // 添加规格列表
         skuList: this.sku_list,
         // 添加当前选择的规格信息
-        selectedSpecs: this.getSelectedSpecsInfo(),
+        selectedSpecs: this.getSelectedSpecsInfo()
       };
 
       // 调用咨询组件
@@ -1516,19 +1464,19 @@ export default {
     // 获取当前选择的规格信息
     getSelectedSpecsInfo() {
       const selectedSpecs = [];
-      this.sku_list.forEach((item) => {
+      this.sku_list.forEach(item => {
         const quantity = this.getSkuQuantity(item);
         if (quantity > 0) {
           selectedSpecs.push({
             spec: item.keyVals || "默认规格",
             quantity: quantity,
-            price: this.getCurrentPrice(item),
+            price: this.getCurrentPrice(item)
           });
         }
       });
       return selectedSpecs;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -2036,13 +1984,13 @@ export default {
                 .sku-item-image {
                   width: 80px;
                   height: 80px;
-                  border: 1px solid transparent;
+                  border: 2px solid #707070;
                   border-radius: 6px;
                 }
                 .active {
                   width: 80px;
                   height: 80px;
-                  border: 1px solid #ec6a2b;
+                  border: 2px solid #ec6a2b;
                   border-radius: 6px;
                 }
                 .el-image {
@@ -2805,6 +2753,8 @@ export default {
         .market-price {
           font-size: 20px;
           color: #5e5e5e;
+          // 增加删除线
+          text-decoration: line-through;
         }
       }
 

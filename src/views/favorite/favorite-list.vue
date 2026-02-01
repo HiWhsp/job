@@ -67,7 +67,7 @@
           </div>
         </div>
         <div class="fav-empty" v-if="!count">
-          <el-empty description="没有查询到收藏信息..."></el-empty>
+          <el-empty description="No collection information found."></el-empty>
         </div>
       </div>
     </div>
@@ -164,7 +164,7 @@ export default {
 
     do_delete_checked() {
       if (!this.checked_number) {
-        alertErr("请选择要移除收藏的商品");
+        alertErr("Please select the product to remove from the collection.");
         return;
       }
       let ids = this.checked_list.map(v => v.id).join();
@@ -186,9 +186,9 @@ export default {
           productIds: ids
         }
       }).then(res => {
-        alert(res);
         if (res.code == 200) {
           this.setView();
+          alertSucc("The product has been removed from the collection.");
         }
       });
     },
@@ -200,7 +200,7 @@ export default {
       }
       const inventoryId = item.inventoryId || item.id;
       if (!inventoryId) {
-        alertErr("商品信息不完整，无法加入购物车");
+        alertErr("The product information is incomplete, cannot be added to the cart.");
         return;
       }
       this.$api({
@@ -217,6 +217,7 @@ export default {
           if (this.$store && this.$store.commit) {
             this.$store.commit("set_vuex_cart_number", totalCount);
           }
+          alertSucc("The product has been added to the cart.");
         }
       });
     }
@@ -360,14 +361,14 @@ export default {
       background: #fff;
 
       img {
-        width: 80px;
-        height: 80px;
+        width: 96px;
+        height: 96px;
         object-fit: cover;
       }
 
       /deep/ img {
-        width: 80px;
-        height: 80px;
+        width: 96px;
+        height: 96px;
         object-fit: cover;
       }
     }
@@ -383,7 +384,7 @@ export default {
         margin-bottom: 6px;
         font-family: OPPOSans, OPPOSans;
         // font-weight: bold;
-        font-size: 14px;
+        font-size: 20px;
         color: #1f1f1f;
         line-height: 18px;
       }
@@ -391,7 +392,7 @@ export default {
       .text-2 {
         font-family: OPPOSans, OPPOSans;
         font-weight: 400;
-        font-size: 12px;
+        font-size: 20px;
         color: #777;
       }
     }
@@ -400,7 +401,7 @@ export default {
       min-width: 220px;
       font-family: OPPOSans, OPPOSans;
       font-weight: 700;
-      font-size: 13px;
+      font-size: 20px;
       color: #1f1f1f;
 
       .unit {

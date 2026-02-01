@@ -59,7 +59,7 @@
                   Job Title
                   <span class="required">*</span>
                 </label>
-                <select class="form-input" v-model="form.jobTitle">
+                <select class="form-input" v-model="form.job_title">
                   <option value>Please select</option>
                   <option value="CEO">CEO</option>
                   <option value="Manager">Manager</option>
@@ -90,7 +90,7 @@
                   type="email"
                   class="form-input"
                   placeholder="Please enter"
-                  v-model="form.companyEmail"
+                  v-model="form.company_email"
                 />
               </div>
 
@@ -103,7 +103,7 @@
                   type="text"
                   class="form-input"
                   placeholder="Please enter"
-                  v-model="form.businessNumber"
+                  v-model="form.companyNumber"
                 />
               </div>
 
@@ -112,7 +112,7 @@
                   Business Type
                   <span class="required">*</span>
                 </label>
-                <select class="form-input" v-model="form.businessType">
+                <select class="form-input" v-model="form.companyIndustry">
                   <option value>Please select</option>
                   <option value="Retailer">Retailer</option>
                   <option value="Wholesaler">Wholesaler</option>
@@ -142,7 +142,7 @@
                   <input
                     type="number"
                     class="form-input hours-input"
-                    v-model="form.receivingStartHour"
+                    v-model="form.business_am"
                     min="1"
                     max="12"
                   />
@@ -150,7 +150,7 @@
                   <input
                     type="number"
                     class="form-input hours-input"
-                    v-model="form.receivingEndHour"
+                    v-model="form.business_pm"
                     min="1"
                     max="12"
                   />
@@ -174,7 +174,7 @@
                   type="text"
                   class="form-input"
                   placeholder="Please enter"
-                  v-model="form.billingAddress"
+                  v-model="form.billing_address"
                 />
               </div>
 
@@ -187,7 +187,7 @@
                   type="text"
                   class="form-input"
                   placeholder="Please enter"
-                  v-model="form.billingCity"
+                  v-model="form.billing_city"
                 />
               </div>
 
@@ -196,7 +196,7 @@
                   State
                   <span class="required">*</span>
                 </label>
-                <select class="form-input" v-model="form.billingState">
+                <select class="form-input" v-model="form.billing_state">
                   <option value>Please select</option>
                   <option value="CA">California</option>
                   <option value="NY">New York</option>
@@ -210,7 +210,7 @@
                   Country
                   <span class="required">*</span>
                 </label>
-                <select class="form-input" v-model="form.billingCountry">
+                <select class="form-input" v-model="form.billing_country">
                   <option value>Please select</option>
                   <option value="US">United States</option>
                   <option value="CA">Canada</option>
@@ -227,7 +227,7 @@
                   type="text"
                   class="form-input"
                   placeholder="Please enter"
-                  v-model="form.billingZipCode"
+                  v-model="form.billing_zipcode"
                 />
               </div>
 
@@ -259,7 +259,7 @@
                     type="text"
                     class="form-input"
                     placeholder="Please enter"
-                    v-model="form.shippingAddress"
+                    v-model="form.address"
                   />
                 </div>
 
@@ -272,7 +272,7 @@
                     type="text"
                     class="form-input"
                     placeholder="Please enter"
-                    v-model="form.shippingCity"
+                    v-model="form.city"
                   />
                 </div>
 
@@ -281,7 +281,7 @@
                     State
                     <span class="required">*</span>
                   </label>
-                  <select class="form-input" v-model="form.shippingState">
+                  <select class="form-input" v-model="form.province">
                     <option value>Please select</option>
                     <option value="CA">California</option>
                     <option value="NY">New York</option>
@@ -295,7 +295,7 @@
                     Country
                     <span class="required">*</span>
                   </label>
-                  <select class="form-input" v-model="form.shippingCountry">
+                  <select class="form-input" v-model="form.country">
                     <option value>Please select</option>
                     <option value="US">United States</option>
                     <option value="CA">Canada</option>
@@ -312,7 +312,7 @@
                     type="text"
                     class="form-input"
                     placeholder="Please enter"
-                    v-model="form.shippingZipCode"
+                    v-model="form.zipcode"
                   />
                 </div>
               </template>
@@ -365,7 +365,7 @@
 
               <div class="form-group certification-group">
                 <label class="checkbox-label certification-label">
-                  <input type="checkbox" v-model="form.certification" />
+                  <input type="checkbox" v-model="form.seller_permit_num" />
                   <span>I hereby certify that I hold a valid Seller’s Permit Number issued pursuant to the sales and use tax law and I am qualified to resell the products that I purchase from MEDOOO website. It is understood that I am required by the sales and use tax law to report and pay tax, measured by the purchase price of such products or other authorized amount. This certificate covers all future orders and is deemed valid until canceled by in writing or as determined by state law. This certificate is considered valid upon all requested information is provided and is correct.</span>
                 </label>
               </div>
@@ -397,7 +397,7 @@
                   type="password"
                   class="form-input"
                   placeholder="Please enter"
-                  v-model="form.password"
+                  v-model="form.pass"
                 />
               </div>
 
@@ -410,7 +410,7 @@
                   type="password"
                   class="form-input"
                   placeholder="Please enter"
-                  v-model="form.confirmPassword"
+                  v-model="form.twoPass"
                 />
               </div>
 
@@ -454,41 +454,40 @@ export default {
     return {
       form: {
         // Business Information
-        company: "",
+        company_name: "",
         firstName: "",
         lastName: "",
-        jobTitle: "",
+        job_title: "",
         phone: "",
-        companyEmail: "",
-        businessNumber: "",
-        businessType: "",
-        mainProducts: "",
-        receivingStartHour: "9",
-        receivingEndHour: "5",
-        receivingEndPeriod: "PM",
+        company_email: "",
+        company_number: "",
+        company_industry: "",
+        main_products: "",
+        business_am: "9",
+        business_pm: "5",
         // Billing Address
-        billingAddress: "",
-        billingCity: "",
-        billingState: "",
-        billingCountry: "",
-        billingZipCode: "",
+        billing_address: "",
+        billing_city: "",
+        billing_state: "",
+        billing_country: "",
+        billing_zipcode: "",
         // Shipping Address
-        sameAddress: "no",
-        shippingAddress: "",
-        shippingCity: "",
-        shippingState: "",
-        shippingCountry: "",
-        shippingZipCode: "",
+        same_address: "no",
+        shipping_address: "",
+        shipping_city: "",
+        shipping_state: "",
+        shipping_country: "",
+        shipping_zipcode: "",
         // Resale Permit
-        buyAndSell: true,
-        hasResalePermit: "yes",
-        sellerPermitNumber: "",
-        certification: false,
+        buy_and_sell: true,
+        has_resale_permit: "yes",
+        seller_permit_number: "",
+        seller_permit_certification: false,
         // Login
         email: "",
-        password: "",
-        confirmPassword: "",
-        agreeTerms: true
+        pass: "",
+        two_pass: "",
+        agree_terms: true
       }
     };
   },
@@ -498,89 +497,89 @@ export default {
   methods: {
     openTerms(type) {
       // 打开条款或隐私政策页面
-      if (type === "terms") {
-        this.$router.push("/terms");
-      } else if (type === "privacy") {
-        // 如果有隐私政策页面，跳转到那里
-        // this.$router.push("/privacy");
-      }
+      // if (type === "terms") {
+      //   this.$router.push("/terms");
+      // } else if (type === "privacy") {
+      //   // 如果有隐私政策页面，跳转到那里
+      //   // this.$router.push("/privacy");
+      // }
     },
     do_submit() {
       // 验证必填字段
-      if (!this.form.company) {
+      if (!this.form.company_name) {
         alertErr("Please enter Company");
         return;
       }
-      if (!this.form.firstName) {
+      if (!this.form.first_name) {
         alertErr("Please enter First Name");
         return;
       }
-      if (!this.form.lastName) {
+      if (!this.form.last_name) {
         alertErr("Please enter Last Name");
         return;
       }
-      if (!this.form.jobTitle) {
+      if (!this.form.job_title) {
         alertErr("Please select Job Title");
         return;
       }
-      if (!this.form.phone) {
+      if (!this.form.phone_number) {
         alertErr("Please enter Phone");
         return;
       }
-      if (!this.form.companyEmail) {
+      if (!this.form.company_email) {
         alertErr("Please enter Company E-mail");
         return;
       }
-      if (!this.form.businessNumber) {
+      if (!this.form.company_number) {
         alertErr("Please enter Business Number");
         return;
       }
-      if (!this.form.businessType) {
+      if (!this.form.company_industry) {
         alertErr("Please select Business Type");
         return;
       }
-      if (!this.form.mainProducts) {
+      if (!this.form.main_products) {
         alertErr("Please select Main Products");
         return;
       }
-      if (!this.form.billingAddress) {
+      if (!this.form.billing_address) {
         alertErr("Please enter Billing Address");
         return;
       }
-      if (!this.form.billingCity) {
+      if (!this.form.billing_city) {
         alertErr("Please enter City");
         return;
       }
-      if (!this.form.billingState) {
+      if (!this.form.billing_state) {
         alertErr("Please select State");
         return;
       }
-      if (!this.form.billingCountry) {
+      if (!this.form.billing_country) {
         alertErr("Please select Country");
         return;
       }
-      if (!this.form.billingZipCode) {
+      if (!this.form.billing_zipcode) {
         alertErr("Please enter Zip Code");
         return;
       }
-      if (this.form.sameAddress === "no") {
-        if (!this.form.shippingAddress) {
+      if (this.form.same_address === "no") {
+        if (!this.form.shipping_address) {
           alertErr("Please enter Shipping Address");
           return;
         }
-        if (!this.form.shippingCity) {
+        if (!this.form.shipping_city) {
           alertErr("Please enter Shipping City");
           return;
         }
-        if (!this.form.shippingState) {
+        if (!this.form.shipping_state) {
           alertErr("Please select Shipping State");
           return;
         }
-        if (!this.form.shippingCountry) {
+        if (!this.form.shipping_country) {
           alertErr("Please select Shipping Country");
           return;
         }
-        if (!this.form.shippingZipCode) {
+        if (!this.form.shipping_zipcode) {
           alertErr("Please enter Shipping Zip Code");
           return;
         }
@@ -589,32 +588,32 @@ export default {
         alertErr("Please enter Email");
         return;
       }
-      if (!this.form.password) {
+      if (!this.form.pass) {
         alertErr("Please enter Password");
         return;
       }
-      if (!this.form.confirmPassword) {
+      if (!this.form.two_pass) {
         alertErr("Please enter Confirm Password");
         return;
       }
-      if (this.form.password !== this.form.confirmPassword) {
+      if (this.form.pass !== this.form.two_pass) {
         alertErr("Passwords do not match");
         return;
       }
-      if (!this.form.agreeTerms) {
+      if (!this.form.agree_terms) {
         alertErr("Please agree to Terms of Sale and Privacy Policy");
         return;
       }
 
       // 提交表单数据
       let params = {
-        action: "register_business",
+        action: "login_sellerReg",
         ...this.form
       };
 
       this.$api({
         url: "/service.php",
-        method: "get",
+        method: "post",
         data: params
       }).then(res => {
         alert(res);

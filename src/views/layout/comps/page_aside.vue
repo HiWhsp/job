@@ -7,30 +7,6 @@
             <img src="@img/to-top.png" alt="" />
           </div>
         </div>
-
-        <!-- <div class="item" v-for="(item, index) in list_util" :key="index" @mouseenter="on_mouseenter(item)" @mouseleave="on_mouseleave(item)" @click="on_click_util(item)">
-          <div class="item-inner" v-if="item.title != '客服'">
-            <div class="cart-num" v-if="item.title == '购物车'">
-              {{ vuex_cart_number }}
-            </div>
-            <img :src="item.icon" alt="" />
-          </div>
-
-          <template v-if="item.title == '客服'">
-            <el-popover placement="right" trigger="hover">
-              <div class="pop-kefu">
-                <div class="pop-kefu-inner">
-                  <div class="kefu-tip">请微信扫描下方二维码</div>
-                  <img class="kefu-code" :src="vuex_config.kefu_code" />
-                </div>
-              </div>
-
-              <div class="item-inner" slot="reference">
-                <img :src="item.icon" alt="" />
-              </div>
-            </el-popover>
-          </template>
-        </div> -->
       </div>
     </div>
 

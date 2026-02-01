@@ -23,13 +23,15 @@
           <div class="recommend-box">
             <div class="recommend-list">
               <!-- 服务卡片1 -->
-              <div class="recommend-card service-card">
+              <div
+                class="recommend-card service-card"
+                v-for="item in news_list"
+                :key="item.id"
+                @click="to_news(item)"
+              >
                 <div class="card-content">
-                  <h3 class="card-title">Product registration and certification services</h3>
-                  <div class="card-desc">
-                    Shanghai Weili Information Consulting Co., Ltd. provides you
-                    with product registration and certification services...
-                  </div>
+                  <h3 class="card-title">{{ item.title }}</h3>
+                  <div class="card-desc">{{ item.description || '--' }}</div>
                 </div>
                 <div class="card-icon">
                   <div class="card-more">
@@ -37,47 +39,7 @@
                     <i class="el-icon-right"></i>
                   </div>
                   <div class="icon-placeholder">
-                    <img src="@img/index/recommend-1.png" alt />
-                  </div>
-                </div>
-              </div>
-
-              <!-- 服务卡片2 -->
-              <div class="recommend-card service-card">
-                <div class="card-content">
-                  <h3 class="card-title">Disinfection and Sterilization Services</h3>
-                  <div class="card-desc">
-                    Shanghai Weili Information Consulting Co., Ltd. provides you
-                    with product registration and certification services...
-                  </div>
-                </div>
-                <div class="card-icon">
-                  <div class="card-more">
-                    <span>MORE</span>
-                    <i class="el-icon-right"></i>
-                  </div>
-                  <div class="icon-placeholder">
-                    <img src="@img/index/recommend-2.png" alt />
-                  </div>
-                </div>
-              </div>
-
-              <!-- 服务卡片3 -->
-              <div class="recommend-card service-card">
-                <div class="card-content">
-                  <h3 class="card-title">Hospital and Clinic Construction Services</h3>
-                  <div class="card-desc">
-                    Shanghai Weili Information Consulting Co., Ltd. provides you
-                    with product registration and certification services...
-                  </div>
-                </div>
-                <div class="card-icon">
-                  <div class="card-more">
-                    <span>MORE</span>
-                    <i class="el-icon-right"></i>
-                  </div>
-                  <div class="icon-placeholder">
-                    <img src="@img/index/recommend-3.png" alt />
+                    <el-image :src="item.thumb" fit="cover"></el-image>
                   </div>
                 </div>
               </div>
@@ -147,6 +109,12 @@
                         >
                           <div class="poster-box scale-box">
                             <img class="scale-img" :src="item.thumb" alt />
+                            <div class="hover-actions">
+                              <div class="action-btn favorite-btn" @click.stop="do_add_fav(item)">
+                              </div>
+                              <div class="action-btn cart-btn" @click.stop="addToCart(item)">
+                              </div>
+                            </div>
                           </div>
                           <div class="info-box">
                             <div class="title-box">
@@ -190,6 +158,12 @@
                       >
                         <div class="poster-box scale-box">
                           <img class="scale-img" :src="item.thumb" alt />
+                          <div class="hover-actions">
+                            <div class="action-btn favorite-btn" @click.stop="do_add_fav(item)">
+                            </div>
+                            <div class="action-btn cart-btn" @click.stop="addToCart(item)">
+                            </div>
+                          </div>
                         </div>
                         <div class="info-box">
                           <div class="title-box">
@@ -349,26 +323,6 @@ export default {
       brand_list: [],
       showEnterpriseModal: false, // 企业用户认证弹窗显示状态
 
-      nav_list: [
-        {
-          title: "产品注册认证服务",
-          icon: require("@img/index/nav1.png"),
-          // icon1: require("@img/index/nav1-1.png"),
-          route: "/my-info"
-        },
-        {
-          title: "消毒灭菌服务",
-          icon: require("@img/index/nav2.png"),
-          // icon1: require("@img/index/nav2-1.png"),
-          route: "/order-list"
-        },
-        {
-          title: "医院诊所建设服务",
-          icon: require("@img/index/nav3.png"),
-          // icon1: require("@img/index/nav3-1.png"),
-          route: "/batch-xiadan"
-        }
-      ],
       news_list: [],
       jingpin_group: [],
       jingpin_list: [],
@@ -564,7 +518,7 @@ export default {
     },
     setView() {
       this.query_brand();
-      // this.query_news();
+      this.query_news();
       //
       this.query_jingpin();
 
@@ -592,14 +546,12 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "news_lists",
-          channelId: "",
-          page: 1,
-          pageNum: 5
+          action: "news_channel",
+          channelId: "65"
         }
       }).then(res => {
         if (res.code == 200) {
-          this.news_list = res.data.list;
+          this.news_list = res.data;
         }
       });
     },
@@ -743,12 +695,7 @@ export default {
       // });
     },
     to_news(item) {
-      this.mix_toRoute({
-        path: "/news-detail",
-        query: {
-          id: item.id
-        }
-      });
+      this.$router.push(`/news?id=${item.id}`);
     },
 
     do_banner_click(item) {
@@ -977,6 +924,62 @@ export default {
         .catch(error => {
           console.error(`获取菜单 ${menuId} 的产品数据失败:`, error);
         });
+    },
+
+    // 添加收藏
+    do_add_fav(item) {
+      if (!this.mix_get_login_status()) {
+        return;
+      }
+      const productId = item.productId || item.id;
+      if (!productId) {
+        alertErr("商品信息不完整");
+        return;
+      }
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "product_operate",
+          productId: productId,
+          operateType: 1, //1-关注 2-足迹
+          operateSence: 0 //0-关注（添加记录） 1-取消关注（删除记录）
+        }
+      }).then(res => {
+        alert(res);
+        if (res.code == 200) {
+          // 可以在这里更新UI状态
+        }
+      });
+    },
+
+    // 加入购物车
+    addToCart(item) {
+      if (typeof this.mix_get_login_status === "function") {
+        if (!this.mix_get_login_status()) return;
+      }
+      const inventoryId = item.inventoryId || item.id;
+      if (!inventoryId) {
+        alertErr("商品信息不完整，无法加入购物车");
+        return;
+      }
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "gouwuche_add",
+          inventoryId,
+          num: 1
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          const totalCount = (res.data && res.data.count) || 0;
+          if (this.$store && this.$store.commit) {
+            this.$store.commit("set_vuex_cart_number", totalCount);
+          }
+          alertSucc("已加入购物车");
+        }
+      });
     }
   }
 };
@@ -1838,6 +1841,9 @@ export default {
       gap: 36px;
 
       .product-item {
+        margin-bottom: 50px;
+        position: relative;
+
         .tag-dom {
           position: absolute;
           left: 0;
@@ -1850,13 +1856,14 @@ export default {
           background: linear-gradient(90deg, #ec6a2b 0%, #ff9524 100%);
           border-radius: 24px 0px 24px 0px;
         }
-        position: relative;
 
         .poster-box {
           margin: 0 auto;
           width: 373px;
           height: 373px;
           border-radius: 24px;
+          position: relative;
+          overflow: hidden;
 
           img {
             width: 100%;
@@ -1864,11 +1871,55 @@ export default {
             object-fit: contain;
             border-radius: 24px;
           }
+
+          .hover-actions {
+            position: absolute;
+            right: 15px;
+            bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+          }
+
+          &:hover .hover-actions {
+            opacity: 1;
+          }
+
+          .action-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+            &:hover {
+              transform: scale(1.1);
+            }
+          }
+
+          .favorite-btn {
+            background-image: url("~@img/my-index/favorite.png");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+          }
+
+          .cart-btn {
+            background-image: url("~@img/my-index/cart.png");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+          }
         }
 
         .info-box {
           text-align: left;
-          padding-top: 4px;
+          padding-top: 15px;
           width: 373px;
 
           .price-box {
@@ -2159,10 +2210,56 @@ export default {
           justify-content: center;
           border-radius: 20px;
           border: 1px solid #e5e2e5;
+          position: relative;
+          overflow: hidden;
 
           img {
             width: 100%;
             height: 100%;
+          }
+
+          .hover-actions {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+          }
+
+          &:hover .hover-actions {
+            opacity: 1;
+          }
+
+          .action-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+            &:hover {
+              transform: scale(1.1);
+            }
+          }
+
+          .favorite-btn {
+            background-image: url("~@img/my-index/favorite.png");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+          }
+
+          .cart-btn {
+            background-image: url("~@img/my-index/cart.png");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
           }
         }
 
@@ -2206,9 +2303,9 @@ export default {
 
             .cert-badge {
               padding: 0px 10px;
-              border: 1px solid #00306B;
+              border: 1px solid #00306b;
               border-radius: 4px;
-              color: #00306B;
+              color: #00306b;
               font-size: 22px;
               font-weight: bold;
             }

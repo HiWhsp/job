@@ -13,8 +13,12 @@
               <span>{{ item.nickname }}</span>
             </div>
             <div class="right">
-              <el-rate v-model="item.star" disabled :colors="['#7853B2', '#7853B2', '#7853B2']"
-                text-color="#7853B2"></el-rate>
+              <el-rate
+                v-model="item.star"
+                disabled
+                :colors="['#7853B2', '#7853B2', '#7853B2']"
+                text-color="#7853B2"
+              ></el-rate>
             </div>
           </div>
 
@@ -24,15 +28,18 @@
               <!-- <img v-for="(url, index) in item.imgs" :key="index" :src="url" alt /> -->
 
               <div class="img-item" v-for="(url, index) in item.images" :key="index" alt>
-                <el-image style="width: 70px; height: 70px" :src="url" :preview-src-list="item.images">
-                </el-image>
+                <el-image
+                  style="width: 70px; height: 70px"
+                  :src="url"
+                  :preview-src-list="item.images"
+                ></el-image>
               </div>
             </div>
             <div class="date">{{ item.createdTime }}</div>
 
             <div class="goods-info" @click="mix_to_product({ inventoryId: item.inventoryId })">
               <div class="goods-img cover">
-                <img :src="item.productImage" alt="" />
+                <img :src="item.productImage" alt />
               </div>
               <div class="goods-title">
                 <div class="product-title">{{ item.productName }}</div>
@@ -43,12 +50,18 @@
         </div>
 
         <div class="pagination-box" style="margin-top: 80px">
-          <el-pagination background layout="total, prev, pager, next" @current-change="mix_current_change"
-            :current-page.sync="pagination.page" :page-size="pagination.pageNum" :total="count"></el-pagination>
+          <el-pagination
+            background
+            layout="total, prev, pager, next"
+            @current-change="mix_current_change"
+            :current-page.sync="pagination.page"
+            :page-size="pagination.pageNum"
+            :total="count"
+          ></el-pagination>
         </div>
       </div>
 
-      <el-empty v-if="!list_comment.length" description="评论列表为空..."></el-empty>
+      <el-empty v-if="!list_comment.length" description="The review list is empty."></el-empty>
     </div>
   </div>
 </template>
@@ -68,14 +81,14 @@ export default {
       orderStatus: 0,
       pagination: {
         page: 1,
-        pageNum: 10,
+        pageNum: 10
       },
       list_comment: [],
-      count: 0,
+      count: 0
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState([""])
   },
   created() {
     this.setView();
@@ -83,8 +96,8 @@ export default {
   methods: {
     setView() {
       this.$api("users_myselfComments", {
-        ...this.pagination,
-      }).then((res) => {
+        ...this.pagination
+      }).then(res => {
         let { code, data, message, count } = res;
         if (code == 200) {
           let { list, count, pages } = data;
@@ -97,8 +110,8 @@ export default {
     //分页
     changePage() {
       this.setView();
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -108,15 +121,15 @@ export default {
   padding-bottom: 80px;
 
   .main-title {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 32px;
     text-align: left;
-    height: 56px;
-    line-height: 56px;
+    height: 70px;
+    line-height: 70px;
     background: #ffffff;
-    font-size: 16px;
+    font-size: 20px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
     color: #333333;
@@ -125,7 +138,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #7853B2;
+      background: #7853b2;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -145,15 +158,15 @@ export default {
     border-bottom: 1px solid #ddd;
 
     .avatar-info {
-        display: flex;
-  align-items: center;
-  justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
       .left {
         min-width: 127px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         img {
           width: 60px;
@@ -176,7 +189,8 @@ export default {
         }
       }
 
-      .right {}
+      .right {
+      }
     }
 
     .info-box {
@@ -195,8 +209,8 @@ export default {
       }
 
       .img-list {
-          display: flex;
-  align-items: center;
+        display: flex;
+        align-items: center;
         flex-wrap: wrap;
         text-align: left;
 
@@ -225,9 +239,9 @@ export default {
         margin-top: 10px;
         background: #f8f8f8;
         padding: 10px;
-          display: flex;
-  align-items: center;
-  justify-content: space-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         cursor: pointer;
 
         .goods-img {

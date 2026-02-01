@@ -1,49 +1,58 @@
 <template>
   <div class="page">
-    <!-- <news_banner /> -->
-
+    <div class="page-top">
+      <div class="page-bread w-1400">
+        <div class="bread-box">
+          <router-link to="/">Home</router-link>
+          <span class="arrow">/</span>
+          <a class="link">{{ detail.title }}</a>
+        </div>
+      </div>
+    </div>
     <div class="inner">
       <div class="page-ctx w-1400">
-        <div class="ctx-box ">
+        <div class="ctx-box">
           <div class="ctx-left">
             <div class="news-ctx">
-              <div class="news-title">
-                {{ detail.title }}
-              </div>
-              <div class="news-desc">
-                发布时间： {{ detail.dtTime && detail.dtTime.substr(0, 10) }}
-              </div>
-              <div class="news-line"></div>
+              <div class="news-title">{{ detail.title }}</div>
+              <!-- <div class="news-desc">发布时间： {{ detail.dtTime && detail.dtTime.substr(0, 10) }}</div> -->
+              <!-- <div class="news-line"></div> -->
               <div class="news-content">
                 <div class="html-box">
                   <div class="news-html html-frag" v-html="detail.content"></div>
                 </div>
               </div>
-              <div class="nav-box">
+              <!-- <div class="nav-box">
                 <div class="nav-item">
-                  上一条：<router-link v-if="last_news.id" :to="'news-detail?id=' + last_news.id">{{ last_news.title
-                    }}</router-link>
+                  上一条：
+                  <router-link v-if="last_news.id" :to="'news-detail?id=' + last_news.id">
+                    {{ last_news.title
+                    }}
+                  </router-link>
                   <span v-else>无</span>
                 </div>
                 <div class="nav-item">
-                  下一条：<router-link v-if="next_news.id" :to="'news-detail?id=' + next_news.id">{{ next_news.title
-                    }}</router-link>
+                  下一条：
+                  <router-link v-if="next_news.id" :to="'news-detail?id=' + next_news.id">
+                    {{ next_news.title
+                    }}
+                  </router-link>
                   <span v-else>无</span>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
           <!-- <div class="ctx-right">
             <news_right :current_cid="detail.channelId"/>
-          </div> -->
+          </div>-->
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import news_banner from './components/news_banner.vue'
-import news_right from './components/news_right.vue'
+import news_banner from "./components/news_banner.vue";
+import news_right from "./components/news_right.vue";
 
 import { mapState } from "vuex";
 
@@ -58,7 +67,7 @@ export default {
       id: this.$route.query.id,
       detail: {},
       last_news: {},
-      next_news: {},
+      next_news: {}
     };
   },
   computed: {
@@ -66,7 +75,7 @@ export default {
   },
   watch: {
     $route() {
-      this.initParams()
+      this.initParams();
       this.setView();
     }
   },
@@ -84,8 +93,8 @@ export default {
         data: {
           action: "news_detail",
           id: this.id
-        },
-      }).then((res) => {
+        }
+      }).then(res => {
         if (res.code == 200) {
           let data = res.data;
           this.detail = data.info;
@@ -93,8 +102,8 @@ export default {
           this.next_news = data.next_news || {};
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -104,6 +113,36 @@ export default {
     min-height: 700px;
     padding-top: 24px;
     padding-bottom: 30px;
+  }
+}
+
+.page-top {
+  height: 83px;
+  line-height: 83px;
+  background: #fbfbfb;
+  border-top: 1px solid #d5d8de;
+  .bread-box {
+    display: flex;
+    align-items: flex-start;
+    a {
+      font-family: Poppins, Poppins;
+      font-weight: 400;
+      font-size: 16px;
+      color: #5e5e5e;
+    }
+    .arrow {
+      font-family: Poppins, Poppins;
+      font-weight: 400;
+      font-size: 18px;
+      color: #5e5e5e;
+      margin: 0 6px;
+    }
+    .link {
+      font-family: Poppins, Poppins;
+      font-weight: 400;
+      font-size: 18px;
+      color: #5e5e5e;
+    }
   }
 }
 
@@ -122,7 +161,6 @@ export default {
   }
 }
 
-
 .news-ctx {
   padding: 36px;
 
@@ -130,9 +168,10 @@ export default {
     text-align: center;
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: bold;
-    font-size: 28px;
-    color: #000000;
+    font-size: 30px;
+    color: #1E262E;
     line-height: 48px;
+    margin-bottom: 60px;
   }
 
   .news-desc {
@@ -188,7 +227,6 @@ export default {
       }
     }
   }
-
 }
 </style>
 

@@ -86,7 +86,7 @@
                   type="password"
                   class="form-input"
                   placeholder="Please enter"
-                  v-model="form.confirmPassword"
+                  v-model="form.twoPass"
                 />
               </div>
 
@@ -115,9 +115,9 @@ export default {
         firstName: "",
         lastName: "",
         email: "",
-        phoneNumber: "",
-        password: "",
-        confirmPassword: ""
+        phone: "",
+        pass: "",
+        two_pass: ""
       }
     };
   },
@@ -153,11 +153,11 @@ export default {
         alertErr("Please enter Password");
         return;
       }
-      if (!this.form.confirmPassword) {
+      if (!this.form.two_pass) {
         alertErr("Please enter Confirm Password");
         return;
       }
-      if (this.form.pass !== this.form.confirmPassword) {
+      if (this.form.pass !== this.form.two_pass) {
         alertErr("Passwords do not match");
         return;
       }
@@ -170,13 +170,13 @@ export default {
         email: this.form.email,
         phone: this.form.phone,
         pass: this.form.pass,
-        confirmPassword: this.form.confirmPassword,
+        two_pass: this.form.two_pass,
         userType: 0 // 个人用户
       };
 
       this.$api({
         url: "/service.php",
-        method: "get",
+        method: "post",
         data: params
       }).then(res => {
         alert(res);
