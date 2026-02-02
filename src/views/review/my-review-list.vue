@@ -95,8 +95,13 @@ export default {
   },
   methods: {
     setView() {
-      this.$api("users_myselfComments", {
-        ...this.pagination
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "users_myselfComments",
+          ...this.pagination
+        }
       }).then(res => {
         let { code, data, message, count } = res;
         if (code == 200) {

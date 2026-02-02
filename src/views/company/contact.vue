@@ -171,8 +171,7 @@ export default {
     .team-card {
       position: relative;
       height: 320px;
-      border: 1px dashed #d4d4d4;
-      border-radius: 4px;
+      border-radius: 10px;
       overflow: hidden;
       background: #ffffff;
 

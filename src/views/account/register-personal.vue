@@ -117,7 +117,7 @@ export default {
         email: "",
         phone: "",
         pass: "",
-        two_pass: ""
+        twoPass: ""
       }
     };
   },
@@ -153,11 +153,11 @@ export default {
         alertErr("Please enter Password");
         return;
       }
-      if (!this.form.two_pass) {
+      if (!this.form.twoPass) {
         alertErr("Please enter Confirm Password");
         return;
       }
-      if (this.form.pass !== this.form.two_pass) {
+      if (this.form.pass !== this.form.twoPass) {
         alertErr("Passwords do not match");
         return;
       }
@@ -170,7 +170,7 @@ export default {
         email: this.form.email,
         phone: this.form.phone,
         pass: this.form.pass,
-        two_pass: this.form.two_pass,
+        twoPass: this.form.twoPass,
         userType: 0 // 个人用户
       };
 

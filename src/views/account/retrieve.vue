@@ -206,7 +206,10 @@ export default {
         method: "get",
         data: {
           action: "login_resetPass",
-          ...this.form
+          email: this.form.email,
+          code: this.form.code,
+          pass: this.form.pass,
+          twoPass: this.form.confirm_pass
         }
       }).then(res => {
         alert(res);

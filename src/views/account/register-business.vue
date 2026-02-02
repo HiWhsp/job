@@ -126,7 +126,7 @@
                   Main Products
                   <span class="required">*</span>
                 </label>
-                <select class="form-input" v-model="form.mainProducts">
+                <select class="form-input" v-model="form.companyType">
                   <option value>Please select</option>
                   <option value="Electronics">Electronics</option>
                   <option value="Clothing">Clothing</option>
@@ -196,13 +196,19 @@
                   State
                   <span class="required">*</span>
                 </label>
-                <select class="form-input" v-model="form.billing_state">
+                <input
+                  type="text"
+                  class="form-input"
+                  placeholder="Please enter"
+                  v-model="form.billing_state"
+                />
+                <!-- <select class="form-input" v-model="form.billing_state">
                   <option value>Please select</option>
                   <option value="CA">California</option>
                   <option value="NY">New York</option>
                   <option value="TX">Texas</option>
                   <option value="FL">Florida</option>
-                </select>
+                </select> -->
               </div>
 
               <div class="form-group">
@@ -210,12 +216,18 @@
                   Country
                   <span class="required">*</span>
                 </label>
-                <select class="form-input" v-model="form.billing_country">
+                <input
+                  type="text"
+                  class="form-input"
+                  placeholder="Please enter"
+                  v-model="form.billing_country"
+                />
+                <!-- <select class="form-input" v-model="form.billing_country">
                   <option value>Please select</option>
                   <option value="US">United States</option>
                   <option value="CA">Canada</option>
                   <option value="MX">Mexico</option>
-                </select>
+                </select> -->
               </div>
 
               <div class="form-group">
@@ -236,18 +248,18 @@
                 <label class="form-label">Is your shipping address same as your billing address?</label>
                 <div class="radio-group">
                   <label class="radio-label">
-                    <input type="radio" name="sameAddress" value="yes" v-model="form.sameAddress" />
+                    <input type="radio" name="sameAddress" value="1" v-model="form.is_shipping_billing_same" />
                     <span>YES</span>
                   </label>
                   <label class="radio-label">
-                    <input type="radio" name="sameAddress" value="no" v-model="form.sameAddress" />
+                    <input type="radio" name="sameAddress" value="0" v-model="form.is_shipping_billing_same" />
                     <span>NO</span>
                   </label>
                 </div>
               </div>
 
               <!-- Shipping Address (shown when NO is selected) -->
-              <template v-if="form.sameAddress === 'no'">
+              <template v-if="form.is_shipping_billing_same && form.is_shipping_billing_same == 0">
                 <h3 class="subsection-title">Shipping Address</h3>
 
                 <div class="form-group">
@@ -281,13 +293,19 @@
                     State
                     <span class="required">*</span>
                   </label>
-                  <select class="form-input" v-model="form.province">
+                  <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Please enter"
+                    v-model="form.province"
+                  />
+                  <!-- <select class="form-input" v-model="form.province">
                     <option value>Please select</option>
                     <option value="CA">California</option>
                     <option value="NY">New York</option>
                     <option value="TX">Texas</option>
                     <option value="FL">Florida</option>
-                  </select>
+                  </select> -->
                 </div>
 
                 <div class="form-group">
@@ -295,12 +313,18 @@
                     Country
                     <span class="required">*</span>
                   </label>
-                  <select class="form-input" v-model="form.country">
+                  <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Please enter"
+                    v-model="form.country"
+                  />
+                  <!-- <select class="form-input" v-model="form.country">
                     <option value>Please select</option>
                     <option value="US">United States</option>
                     <option value="CA">Canada</option>
                     <option value="MX">Mexico</option>
-                  </select>
+                  </select> -->
                 </div>
 
                 <div class="form-group">
@@ -324,7 +348,7 @@
 
               <div class="form-group checkbox-group">
                 <label class="checkbox-label">
-                  <input type="checkbox" v-model="form.buyAndSell" />
+                  <input type="checkbox" v-model="form.buy_and_sell" />
                   <span>Buy & Sell</span>
                 </label>
               </div>
@@ -359,13 +383,13 @@
                   type="text"
                   class="form-input"
                   placeholder="Please enter"
-                  v-model="form.sellerPermitNumber"
+                  v-model="form.seller_permit_num"
                 />
               </div>
 
               <div class="form-group certification-group">
                 <label class="checkbox-label certification-label">
-                  <input type="checkbox" v-model="form.seller_permit_num" />
+                  <input type="checkbox" v-model="form.seller_permit_certification" />
                   <span>I hereby certify that I hold a valid Seller’s Permit Number issued pursuant to the sales and use tax law and I am qualified to resell the products that I purchase from MEDOOO website. It is understood that I am required by the sales and use tax law to report and pay tax, measured by the purchase price of such products or other authorized amount. This certificate covers all future orders and is deemed valid until canceled by in writing or as determined by state law. This certificate is considered valid upon all requested information is provided and is correct.</span>
                 </label>
               </div>
@@ -454,15 +478,15 @@ export default {
     return {
       form: {
         // Business Information
-        company_name: "",
+        company: "",
         firstName: "",
         lastName: "",
         job_title: "",
         phone: "",
         company_email: "",
-        company_number: "",
-        company_industry: "",
-        main_products: "",
+        companyNumber: "",
+        companyIndustry: "",
+        companyType: "",
         business_am: "9",
         business_pm: "5",
         // Billing Address
@@ -472,22 +496,22 @@ export default {
         billing_country: "",
         billing_zipcode: "",
         // Shipping Address
-        same_address: "no",
-        shipping_address: "",
-        shipping_city: "",
-        shipping_state: "",
-        shipping_country: "",
-        shipping_zipcode: "",
+        is_shipping_billing_same: '1',
+        address: null,
+        city: null,
+        province: null,
+        country: null,
+        zipcode: null,
         // Resale Permit
         buy_and_sell: true,
-        has_resale_permit: "yes",
+        hasResalePermit: "yes",
         seller_permit_number: "",
         seller_permit_certification: false,
         // Login
         email: "",
         pass: "",
-        two_pass: "",
-        agree_terms: true
+        twoPass: "",
+        agreeTerms: true
       }
     };
   },
@@ -506,15 +530,15 @@ export default {
     },
     do_submit() {
       // 验证必填字段
-      if (!this.form.company_name) {
+      if (!this.form.company) {
         alertErr("Please enter Company");
         return;
       }
-      if (!this.form.first_name) {
+      if (!this.form.firstName) {
         alertErr("Please enter First Name");
         return;
       }
-      if (!this.form.last_name) {
+      if (!this.form.lastName) {
         alertErr("Please enter Last Name");
         return;
       }
@@ -522,7 +546,7 @@ export default {
         alertErr("Please select Job Title");
         return;
       }
-      if (!this.form.phone_number) {
+      if (!this.form.phone) {
         alertErr("Please enter Phone");
         return;
       }
@@ -530,15 +554,15 @@ export default {
         alertErr("Please enter Company E-mail");
         return;
       }
-      if (!this.form.company_number) {
+      if (!this.form.companyNumber) {
         alertErr("Please enter Business Number");
         return;
       }
-      if (!this.form.company_industry) {
+      if (!this.form.companyIndustry) {
         alertErr("Please select Business Type");
         return;
       }
-      if (!this.form.main_products) {
+      if (!this.form.companyType) {
         alertErr("Please select Main Products");
         return;
       }
@@ -562,24 +586,24 @@ export default {
         alertErr("Please enter Zip Code");
         return;
       }
-      if (this.form.same_address === "no") {
-        if (!this.form.shipping_address) {
+      if (this.form.is_shipping_billing_same && this.form.is_shipping_billing_same == 0) {
+        if (!this.form.address) {
           alertErr("Please enter Shipping Address");
           return;
         }
-        if (!this.form.shipping_city) {
+        if (!this.form.city) {
           alertErr("Please enter Shipping City");
           return;
         }
-        if (!this.form.shipping_state) {
+        if (!this.form.province) {
           alertErr("Please select Shipping State");
           return;
         }
-        if (!this.form.shipping_country) {
+        if (!this.form.country) {
           alertErr("Please select Shipping Country");
           return;
         }
-        if (!this.form.shipping_zipcode) {
+        if (!this.form.zipcode) {
           alertErr("Please enter Shipping Zip Code");
           return;
         }
@@ -592,18 +616,24 @@ export default {
         alertErr("Please enter Password");
         return;
       }
-      if (!this.form.two_pass) {
+      if (!this.form.twoPass) {
         alertErr("Please enter Confirm Password");
         return;
       }
-      if (this.form.pass !== this.form.two_pass) {
+      if (this.form.pass !== this.form.twoPass) {
         alertErr("Passwords do not match");
         return;
       }
-      if (!this.form.agree_terms) {
+      if (!this.form.agreeTerms) {
         alertErr("Please agree to Terms of Sale and Privacy Policy");
         return;
       }
+      // 清除空值
+      Object.keys(this.form).forEach(key => {
+        if (this.form[key] === null || this.form[key] === undefined || this.form[key] === '') {
+          delete this.form[key];
+        }
+      });
 
       // 提交表单数据
       let params = {
