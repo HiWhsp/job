@@ -59,7 +59,7 @@
           </div>
         </div>
 
-        <el-empty v-if="!list_address.length" description="尚未添加地址"></el-empty>
+        <el-empty v-if="!list_address.length" description="No address added"></el-empty>
       </div>
     </div>
 
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import address_modal from "@/components/address/address_modal.vue"; //新增地址
+import address_modal from "@/components/address/foreign_address_modal.vue"; //新增地址
 
 import { mapState } from "vuex";
 export default {

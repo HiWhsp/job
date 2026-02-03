@@ -93,6 +93,7 @@
               <div class="sec-ctx">
                 <div class="hot-lunbo">
                   <el-carousel
+                    v-if="jingpin_group.length > 0"
                     ref="hotLunbo"
                     trigger="click"
                     :autoplay="true"
@@ -110,10 +111,8 @@
                           <div class="poster-box scale-box">
                             <img class="scale-img" :src="item.thumb" alt />
                             <div class="hover-actions">
-                              <div class="action-btn favorite-btn" @click.stop="do_add_fav(item)">
-                              </div>
-                              <div class="action-btn cart-btn" @click.stop="addToCart(item)">
-                              </div>
+                              <div class="action-btn favorite-btn" @click.stop="do_add_fav(item)"></div>
+                              <div class="action-btn cart-btn" @click.stop="addToCart(item)"></div>
                             </div>
                           </div>
                           <div class="info-box">
@@ -130,6 +129,7 @@
                       </div>
                     </el-carousel-item>
                   </el-carousel>
+                  <el-empty description="No data" v-if="jingpin_group.length === 0" />
                 </div>
               </div>
             </div>
@@ -159,10 +159,8 @@
                         <div class="poster-box scale-box">
                           <img class="scale-img" :src="item.thumb" alt />
                           <div class="hover-actions">
-                            <div class="action-btn favorite-btn" @click.stop="do_add_fav(item)">
-                            </div>
-                            <div class="action-btn cart-btn" @click.stop="addToCart(item)">
-                            </div>
+                            <div class="action-btn favorite-btn" @click.stop="do_add_fav(item)"></div>
+                            <div class="action-btn cart-btn" @click.stop="addToCart(item)"></div>
                           </div>
                         </div>
                         <div class="info-box">
@@ -988,12 +986,12 @@ export default {
 <style lang="less">
 .el-select-dropdown__item.hover,
 .el-select-dropdown__item:hover {
-  background: #5b339a;
+  background: #ec6a2b;
   color: #fff !important;
 }
 
 .el-select-dropdown__item.selected {
-  color: #5b339a;
+  color: #ec6a2b;
 }
 </style>
 

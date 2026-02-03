@@ -1,60 +1,91 @@
 <template>
   <div class="modal-container">
-    <el-dialog class="modal-address" title="新增地址" width="500px" :visible.sync="show_modal" :before-close="onModal_close"
-      :close-on-press-escape="false" :close-on-click-modal="false" custom-class="modal-custom" @closed="onclosed">
+    <el-dialog
+      class="modal-address"
+      title="ADD NEW ADDRESS"
+      width="920px"
+      :visible.sync="show_modal"
+      :before-close="onModal_close"
+      :close-on-press-escape="false"
+      :close-on-click-modal="false"
+      custom-class="modal-custom"
+      @closed="onclosed"
+    >
       <div class="modal-inner">
         <div class="item">
-          <span class="text required">名</span>
-          <el-input clearable v-model="form.firstName" placeholder="名"></el-input>
+          <span class="text required">First Name</span>
+          <el-input clearable v-model="form.firstName" placeholder="Please enter first name"></el-input>
         </div>
         <div class="item">
-          <span class="text required">姓</span>
-          <el-input clearable v-model="form.lastName" placeholder="姓"></el-input>
-        </div>
-        <div class="item">
-          <span class="text">公司</span>
-          <el-input clearable v-model="form.company" placeholder="公司"></el-input>
+          <span class="text required">Last Name</span>
+          <el-input clearable v-model="form.lastName" placeholder="Please enter last name"></el-input>
         </div>
         <div class="item required">
-          <span class="text">联系电话</span>
-          <el-input clearable v-model="form.phone" placeholder="联系电话"></el-input>
+          <span class="text required">Phone Number</span>
+          <el-input clearable v-model="form.phone" placeholder="Please enter phone number"></el-input>
         </div>
         <div class="item">
-          <span class="text required">国家</span>
-          <el-select filterable v-model="form.country" placeholder="Country" @change="changeCountry">
-            <el-option v-for="item in countryList" :key="item.value" :label="item.label" :value="item.label">
-            </el-option>
-          </el-select>
+          <span class="text required">Email</span>
+          <el-input clearable v-model="form.company" placeholder="Please enter an email address"></el-input>
         </div>
         <div class="item">
-          <span class="text required">州</span>
+          <span class="text required">Detailed Address</span>
+          <el-input clearable v-model="form.address" placeholder="Please enter"></el-input>
+        </div>
+        <div class="item">
+          <span class="text required">City</span>
+          <el-input clearable v-model="form.city" placeholder="Please enter"></el-input>
+        </div>
+        <div class="item">
+          <span class="text required">State</span>
           <template v-if="!provinceList.length">
-            <el-input clearable v-model="form.province" placeholder="State/province"></el-input>
+            <el-input clearable v-model="form.province" placeholder="Please enter"></el-input>
           </template>
           <template v-else>
-            <el-select filterable v-model="form.province" placeholder="State/province" @change="changeProv">
-              <el-option v-for="item in provinceList" :key="item.value" :label="item.label" :value="item.label">
-              </el-option>
+            <el-select
+              filterable
+              v-model="form.province"
+              placeholder="Please enter"
+              @change="changeProv"
+            >
+              <el-option
+                v-for="item in provinceList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.label"
+              ></el-option>
             </el-select>
           </template>
         </div>
         <div class="item">
-          <span class="text required">城市</span>
-          <el-input clearable v-model="form.city" placeholder="City"></el-input>
+          <span class="text required">Country</span>
+          <el-select
+            filterable
+            v-model="form.country"
+            placeholder="Please select"
+            @change="changeCountry"
+          >
+            <el-option
+              v-for="item in countryList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.label"
+            ></el-option>
+          </el-select>
         </div>
         <div class="item">
-          <span class="text required">详细地址</span>
-          <el-input clearable v-model="form.address" placeholder="详细地址"></el-input>
+          <span class="text required">Zip Code</span>
+          <el-input clearable v-model="form.zipCode" placeholder="Please enter"></el-input>
         </div>
         <div class="item">
-          <span class="text required">邮编</span>
-          <el-input clearable v-model="form.zipCode" placeholder="邮编"></el-input>
-        </div>
-        <div class="item">
-          <span class="text" style="visibility: hidden;">默认地址</span>
-          <el-switch v-model="form.moren" :inactive-value="0" :active-value="1" active-color="#7853B2"
-            inactive-color="#eeeeee">
-          </el-switch>
+          <span class="text" style="visibility: hidden;"></span>
+          <el-switch
+            v-model="form.moren"
+            :inactive-value="0"
+            :active-value="1"
+            active-color="#EC6A2B"
+            inactive-color="#eeeeee"
+          ></el-switch>
           <span class="default-text">
             <!-- 设为默认地址 -->
             Set as default address
@@ -62,22 +93,20 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button class="btn-ripple fit-text btn-1" @click="throttle_do_submit()" :loading="loading">保 存</el-button>
-        <button class="btn-ripple fit-text btn-2" @click="show_modal = false">取 消</button>
+        <el-button class="btn-2" @click="throttle_do_submit()" :loading="loading">Submit</el-button>
+        <!-- <button class="btn-ripple fit-text btn-2" @click="show_modal = false">取 消</button> -->
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import countryData from '@/constant/countryData.js'
+import countryData from "@/constant/countryData.js";
 
 import { mapState } from "vuex";
 export default {
   name: "address-add",
-  components: {
-
-  },
+  components: {},
   props: [],
   data() {
     return {
@@ -95,63 +124,56 @@ export default {
         address: "",
         moren: 0,
         id: 0,
-        longitude: '',
-        latitude: '',
-        shequId: '',
+        longitude: "",
+        latitude: "",
+        shequId: "",
         addressType: 1,
 
-
-        firstName: '',
-        lastName: '',
-        company: '',
-        country: '',
-        addressType: 2,//版本：1-国内 2-国外
-        zipCode: '',
+        firstName: "",
+        lastName: "",
+        company: "",
+        country: "",
+        addressType: 2, //版本：1-国内 2-国外
+        zipCode: ""
       },
-
-
 
       countryList: [],
       allProvinceList: [],
       provinceList: [],
 
-
-      loading: false,
+      loading: false
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState([""])
   },
-  watch: {
-
-  },
+  watch: {},
 
   created() {
-    this.countryList = countryData.countryList
-    this.allProvinceList = countryData.provinceList
+    this.countryList = countryData.countryList;
+    this.allProvinceList = countryData.provinceList;
 
-    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000)
+    this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000);
   },
 
   methods: {
-    throttle_do_submit() {
-
-    },
+    throttle_do_submit() {},
 
     changeCountry(val) {
-      this.form.province = ''
+      this.form.province = "";
 
-      console.log('国家', val)
-      let country_info = this.countryList.find(v => v.label == val)
+      console.log("国家", val);
+      let country_info = this.countryList.find(v => v.label == val);
       let country_id = country_info.value;
-      this.provinceList = this.allProvinceList.filter(v => v.country_id == country_id)
+      this.provinceList = this.allProvinceList.filter(
+        v => v.country_id == country_id
+      );
 
-      console.log('省份列表 provinceList', this.allProvinceList)
-      console.log('省份列表 provinceList', this.provinceList)
+      console.log("省份列表 provinceList", this.allProvinceList);
+      console.log("省份列表 provinceList", this.provinceList);
     },
     changeProv(val) {
-      console.log('省份', val)
-
+      console.log("省份", val);
     },
 
     //
@@ -171,10 +193,9 @@ export default {
     query_address_detail() {
       this.$api("userAddress_detail", {
         id: this.form.id
-      }).then((res) => {
+      }).then(res => {
         let { code, data, msg } = res;
         if (code == 200) {
-
           this.form = {
             name: data.name,
             phone: data.phone,
@@ -197,15 +218,13 @@ export default {
             company: data.company,
             country: data.country,
             addressType: data.addressType,
-            zipCode: data.zipCode,
-          }
-
+            zipCode: data.zipCode
+          };
         }
       });
     },
 
     onclosed() {
-
       this.form = {
         name: "",
         phone: "",
@@ -218,22 +237,19 @@ export default {
         address: "",
         moren: 0,
         id: 0,
-        longitude: '',
-        latitude: '',
-        shequId: '',
+        longitude: "",
+        latitude: "",
+        shequId: "",
         addressType: 1,
 
-        firstName: '',
-        lastName: '',
-        company: '',
-        country: '',
-        addressType: 2,//版本：1-国内 2-国外
-        zipCode: ''
-      }
-
-
+        firstName: "",
+        lastName: "",
+        company: "",
+        country: "",
+        addressType: 2, //版本：1-国内 2-国外
+        zipCode: ""
+      };
     },
-
 
     //更新当前父组件数据
     changeSelectAddress(data) {
@@ -249,8 +265,6 @@ export default {
       // debugger
     },
 
-
-
     // 新建地址 / 编辑地址
     do_submit() {
       let reg_phone = /^1[3-9]\d{9}$/;
@@ -258,11 +272,11 @@ export default {
 
       //console.log("要保存的信息", form_data);
       if (!this.form.firstName) {
-        alertErr("请输入名");
+        alertErr("Please enter first name");
         return;
       }
       if (!this.form.lastName) {
-        alertErr("请输入姓");
+        alertErr("Please enter last name");
         return;
       }
       // if (!is_true_phone) {
@@ -270,44 +284,44 @@ export default {
       //   return;
       // }
       if (!this.form.phone) {
-        alertErr("请输入收货人电话");
+        alertErr("Please enter phone number");
         return;
       }
 
       if (!this.form.country) {
-        alertErr("请选择所在国家");
+        alertErr("Please select country");
         return;
       }
       if (!this.form.province) {
-        alertErr("请选择所在州或省");
+        alertErr("Please enter state");
         return;
       }
       if (!this.form.city) {
-        alertErr("请选择所在城市");
+        alertErr("Please enter city");
         return;
       }
       if (!this.form.address) {
-        alertErr("请输入收货人详细地址");
+        alertErr("Please enter detailed address");
         return;
       }
       if (!this.form.zipCode) {
-        alertErr("请输入邮编");
+        alertErr("Please enter zip code");
         return;
       }
       this.loading = true;
       this.$api({
-        url: '/service.php',
-        method: 'get',
+        url: "/service.php",
+        method: "get",
         data: {
-          action: 'userAddress_add',
+          action: "userAddress_add",
           ...this.form
-        },
-      }).then((res) => {
+        }
+      }).then(res => {
         alert(res).then(() => {
           this.loading = false;
         });
         if (res.code == 200) {
-          this.$emit('confirm')
+          this.$emit("confirm");
           this.show_modal = false;
         }
       });
@@ -316,11 +330,11 @@ export default {
     onModal_close() {
       this.show_modal = false;
       //console.log("关闭前的回调");
-      Object.keys(this.form).forEach((key) => {
+      Object.keys(this.form).forEach(key => {
         this.form[key] = "";
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -332,41 +346,45 @@ export default {
   .modal-inner {
     padding: 0;
 
-
     .item {
       margin-bottom: 20px;
-        display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
 
       .text {
-        min-width: 190px;
-        text-align: left;
+        min-width: 200px;
         text-align: right;
         padding-right: 10px;
+        color: #1e262e;
+        font-size: 20px;
 
         &.required {
           &::before {
             margin-right: 3px;
-            content: '*';
+            content: "*";
             font-family: OPPOSans, OPPOSans;
             font-weight: 400;
             font-size: 14px;
-            color: #FF0000;
+            color: #ff0000;
           }
         }
 
         &::after {
           margin-left: 3px;
-          content: ':';
+          content: ":";
           font-family: OPPOSans, OPPOSans;
           font-weight: 400;
-          font-size: 14px;
+          font-size: 20px;
           color: #505050;
         }
       }
 
       .default-text {
         margin-left: 20px;
+        font-size: 20px;
+        color: #1e262e;
+        font-weight: 400;
+        font-family: OPPOSans, OPPOSans;
       }
 
       .el-select {
@@ -374,7 +392,7 @@ export default {
         font-family: OPPOSans, OPPOSans;
         font-weight: 400;
         font-size: 14px;
-        color: #1F1F1F;
+        color: #1f1f1f;
       }
     }
 
@@ -386,13 +404,12 @@ export default {
 
 /deep/ .el-dialog__header {
   padding: 16px 24px;
-  border-bottom: 1px solid #eee;
-  background: #F7F7F7;
+  background: #fff;
 
   font-family: Poppins, Poppins;
   font-weight: 600;
-  font-size: 18px;
-  color: #333333;
+  font-size: 24px;
+  color: #1E262E;
 
   .el-dialog__close {
     font-size: 20px;
@@ -400,9 +417,8 @@ export default {
 }
 
 /deep/ .el-dialog__body {
-  padding: 36px 60px 36px 0;
+  padding: 50px;
 }
-
 
 /deep/ .el-textarea {
   .el-textarea__inner {
@@ -412,11 +428,14 @@ export default {
 
 /deep/ .el-input {
   .el-input__inner {
-
-    // background: #f9f9f9;
+    height: 56px;
+    font-size: 20px;
+    color: #1e262e;
+    border: 1px solid #dbdbdb;
+    border-radius: 6px;
+    background: #fbfbfb;
     &:disabled {
-      // background-color: #eee;
-      color: #666;
+      color: #999;
     }
   }
 }
@@ -432,24 +451,25 @@ export default {
   .btn-1 {
     min-width: 120px;
     height: 32px;
-    background: #FFFFFF;
+    background: #ffffff;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #7853B2;
+    border: 1px solid #7853b2;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #7853B2;
+    color: #7853b2;
   }
 
   .btn-2 {
-    min-width: 120px;
-    height: 32px;
-    background: #7853B2;
-    border-radius: 50px 50px 50px 50px;
-    font-family: Arial, Arial;
-    font-weight: 400;
-    font-size: 14px;
-    color: #FFFFFF;
+    width: 192px;
+    height: 52px;
+    background: #ec6a2b;
+    border-radius: 6px 6px 6px 6px;
+
+    font-family: Poppins, Poppins;
+    font-weight: 600;
+    font-size: 20px;
+    color: #ffffff;
   }
 }
 </style>
