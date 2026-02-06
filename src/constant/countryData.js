@@ -1,7 +1,7 @@
 var obj = {
   //国家列表
   countryList: [
-    { value: "", label: " " },
+    { value: "", label: "Please select" },
     { value: "AF", label: "Afghanistan", is_region_visible: true },
     {
       value: "AX",

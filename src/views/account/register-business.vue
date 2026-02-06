@@ -196,19 +196,23 @@
                   State
                   <span class="required">*</span>
                 </label>
-                <input
-                  type="text"
-                  class="form-input"
-                  placeholder="Please enter"
-                  v-model="form.billing_state"
-                />
-                <!-- <select class="form-input" v-model="form.billing_state">
-                  <option value>Please select</option>
-                  <option value="CA">California</option>
-                  <option value="NY">New York</option>
-                  <option value="TX">Texas</option>
-                  <option value="FL">Florida</option>
-                </select> -->
+                <template v-if="!billingProvinceList.length">
+                  <el-input clearable v-model="form.billing_state" placeholder="Please enter"></el-input>
+                </template>
+                <template v-else>
+                  <el-select
+                    filterable
+                    v-model="form.billing_state"
+                    placeholder="Please enter"
+                  >
+                    <el-option
+                      v-for="item in billingProvinceList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.label"
+                    ></el-option>
+                  </el-select>
+                </template>
               </div>
 
               <div class="form-group">
@@ -216,18 +220,19 @@
                   Country
                   <span class="required">*</span>
                 </label>
-                <input
-                  type="text"
-                  class="form-input"
-                  placeholder="Please enter"
+                <el-select
+                  filterable
                   v-model="form.billing_country"
-                />
-                <!-- <select class="form-input" v-model="form.billing_country">
-                  <option value>Please select</option>
-                  <option value="US">United States</option>
-                  <option value="CA">Canada</option>
-                  <option value="MX">Mexico</option>
-                </select> -->
+                  placeholder="Please select"
+                  @change="changeBillingCountry(form.billing_country)"
+                >
+                  <el-option
+                    v-for="item in countryList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.label"
+                  ></el-option>
+                </el-select>
               </div>
 
               <div class="form-group">
@@ -293,19 +298,23 @@
                     State
                     <span class="required">*</span>
                   </label>
-                  <input
-                    type="text"
-                    class="form-input"
-                    placeholder="Please enter"
-                    v-model="form.province"
-                  />
-                  <!-- <select class="form-input" v-model="form.province">
-                    <option value>Please select</option>
-                    <option value="CA">California</option>
-                    <option value="NY">New York</option>
-                    <option value="TX">Texas</option>
-                    <option value="FL">Florida</option>
-                  </select> -->
+                  <template v-if="!shippingProvinceList.length">
+                    <el-input clearable v-model="form.province" placeholder="Please enter"></el-input>
+                  </template>
+                  <template v-else>
+                    <el-select
+                      filterable
+                      v-model="form.province"
+                      placeholder="Please enter"
+                    >
+                      <el-option
+                        v-for="item in shippingProvinceList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.label"
+                      ></el-option>
+                    </el-select>
+                  </template>
                 </div>
 
                 <div class="form-group">
@@ -313,18 +322,19 @@
                     Country
                     <span class="required">*</span>
                   </label>
-                  <input
-                    type="text"
-                    class="form-input"
-                    placeholder="Please enter"
+                  <el-select
+                    filterable
                     v-model="form.country"
-                  />
-                  <!-- <select class="form-input" v-model="form.country">
-                    <option value>Please select</option>
-                    <option value="US">United States</option>
-                    <option value="CA">Canada</option>
-                    <option value="MX">Mexico</option>
-                  </select> -->
+                    placeholder="Please select"
+                    @change="changeShippingCountry(form.country)"
+                  >
+                    <el-option
+                      v-for="item in countryList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.label"
+                    ></el-option>
+                  </el-select>
                 </div>
 
                 <div class="form-group">
@@ -471,6 +481,7 @@
 
 <script>
 import { mapState } from "vuex";
+import countryData from "@/constant/countryData.js";
 
 export default {
   name: "register-business",
@@ -512,13 +523,38 @@ export default {
         pass: "",
         twoPass: "",
         agreeTerms: true
-      }
+      },
+
+      countryList: [],
+      allProvinceList: [],
+      billingProvinceList: [],
+      shippingProvinceList: []
     };
   },
   computed: {
     ...mapState(["vuex_config"])
   },
+  created() {
+    this.countryList = countryData.countryList || [];
+    this.allProvinceList = countryData.provinceList || [];
+  },
   methods: {
+    changeBillingCountry(val) {
+      this.form.billing_state = "";
+      let country_info = this.countryList.find(v => v.label === val);
+      let country_id = country_info ? country_info.value : "";
+      this.billingProvinceList = this.allProvinceList.filter(
+        v => v.country_id === country_id && v.label
+      );
+    },
+    changeShippingCountry(val) {
+      this.form.province = "";
+      let country_info = this.countryList.find(v => v.label === val);
+      let country_id = country_info ? country_info.value : "";
+      this.shippingProvinceList = this.allProvinceList.filter(
+        v => v.country_id === country_id && v.label
+      );
+    },
     openTerms(type) {
       // 打开条款或隐私政策页面
       // if (type === "terms") {
@@ -575,7 +611,7 @@ export default {
         return;
       }
       if (!this.form.billing_state) {
-        alertErr("Please select State");
+        alertErr("Please enter State");
         return;
       }
       if (!this.form.billing_country) {
@@ -596,7 +632,7 @@ export default {
           return;
         }
         if (!this.form.province) {
-          alertErr("Please select Shipping State");
+          alertErr("Please enter Shipping State");
           return;
         }
         if (!this.form.country) {
@@ -898,6 +934,36 @@ export default {
 
     &:hover {
       text-decoration: underline;
+    }
+  }
+}
+
+// Element UI 组件样式
+/deep/ .el-select {
+  width: 100%;
+  font-family: OPPOSans, OPPOSans;
+  font-weight: 400;
+  font-size: 14px;
+  color: #1f1f1f;
+}
+
+/deep/ .el-input {
+  .el-input__inner {
+    height: 40px;
+    font-size: 14px;
+    color: #1e262e;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #ffffff;
+    box-sizing: border-box;
+
+    &::placeholder {
+      color: #999;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: #999;
     }
   }
 }

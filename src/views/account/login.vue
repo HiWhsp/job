@@ -140,36 +140,36 @@ export default {
       //   return;
       // }
       const isphone = this.login_type == 0;
-      if (!reg_phone.test(this.form.phone) && isphone) {
-        alertErr("Please enter the correct phone number");
-        return;
-      }
-      // if (!reg_email.test(this.form.phone)) {
-      //   alertErr("Please enter the correct email");
+      // if (!reg_phone.test(this.form.phone) && isphone) {
+      //   alertErr("Please enter the correct phone number");
       //   return;
       // }
+      if (!reg_email.test(this.form.phone)) {
+        alertErr("Please enter the correct email");
+        return;
+      }
       if (!this.form.password) {
-        alertErr(`Please enter ${isphone ? "password" : "email verification code"}`);
+        alertErr(`Please enter password`);
         return;
       }
       let params = {};
-      if (isphone) {
-        params = {
-          action: "login_phoneLogin",
-          phone: this.form.phone,
-          loginType: 0,
-          // code: this.form.password,
-          password: this.form.password
-        };
-      } else {
-        params = {
-          action: "login_emailLogin",
-          email: this.form.phone,
-          loginType: 0,
-          // code: this.form.password,
-          password: this.form.password
-        };
-      }
+      // if (isphone) {
+      //   params = {
+      //     action: "login_phoneLogin",
+      //     phone: this.form.phone,
+      //     loginType: 0,
+      //     // code: this.form.password,
+      //     password: this.form.password
+      //   };
+      // } else {
+      params = {
+        action: "login_emailLogin",
+        email: this.form.phone,
+        loginType: 0,
+        // code: this.form.password,
+        password: this.form.password
+      };
+      // }
       this.$api({
         url: "/service.php",
         method: "get",
