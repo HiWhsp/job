@@ -71,7 +71,7 @@
               <el-pagination @current-change="on_current_change_allow" :current-page.sync="allow_pagination.page"
                 :page-size="allow_pagination.pageNum" layout="total, prev, pager, next" :total="allow_refund_count"></el-pagination>
             </div>
-            <el-empty v-if="!allow_refund_count" description="暂无数据..."></el-empty>
+            <el-empty v-if="!allow_refund_count" description="No data found..."></el-empty>
           </div>
         </div>
 

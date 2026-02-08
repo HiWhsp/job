@@ -68,7 +68,7 @@
             <div class="form-item">
               <span class="field-label">Phone Number</span>
               <div class="field-value">
-                <span class="field-display">{{ my_info.phone || form.phone }}</span>
+                <span class="field-display">{{ my_info.phone || form.phone || 'no phone' }}</span>
               </div>
               <button class="change-btn" @click="open_phone_update()">CHANGE</button>
             </div>
@@ -76,7 +76,7 @@
             <div class="form-item">
               <span class="field-label">Email</span>
               <div class="field-value">
-                <span class="field-display">{{ form.email || my_info.email || '123456789' }}</span>
+                <span class="field-display">{{ form.email || my_info.email || 'no email' }}</span>
               </div>
               <button class="change-btn" @click="open_email_update()">CHANGE</button>
             </div>

@@ -47,7 +47,7 @@
                 <!-- <button class="btn btn-detail btn-ripple" @click="addCart(item)">
                   加入购物车
                 </button>-->
-                <button class="btn btn-detail btn-ripple" @click="to_product(item)">Add To Cart</button>
+                <button class="btn btn-detail btn-ripple" @click="addCart(item)">Add To Cart</button>
                 <button class="btn btn-cancel" @click.stop="do_fav_cancel_item(item)">
                   <img src="@img/other/shopcart-goods-delete.png" alt="">
                 </button>
@@ -189,6 +189,21 @@ export default {
         alert(res);
         if (res.code == 200) {
           this.setView();
+        }
+      });
+    },
+    addCart(item) {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "gouwuche_add",
+          inventoryId: item.inventoryId,
+          num: 1
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          alertSucc("The product has been added to the cart.");
         }
       });
     }

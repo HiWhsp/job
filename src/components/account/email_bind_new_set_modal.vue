@@ -36,11 +36,11 @@
               <el-input
                 type="text"
                 v-model="code"
-                placeholder="Receive the code from your registered email"
+                placeholder="Enter the verification code sent to your email"
               />
               <button class="btn-obtain" @click="query_code()" :disabled="disabledBtn">
                 Obtain
-                <span v-if="time < 60 && time > 0">（{{ time }}）</span>
+                <span v-if="disabledBtn && time > 0">（{{ time }}）</span>
               </button>
             </div>
           </div>
@@ -81,6 +81,9 @@ export default {
     }),
     currentUserPhone() {
       return this.vuex_user?.phone || "";
+    },
+    currentUserEmail() {
+      return this.vuex_user?.email || "";
     }
   },
   watch: {
@@ -89,6 +92,13 @@ export default {
         this.oldEmail = "";
         this.newEmail = "";
         this.code = "";
+        // 重置倒计时相关状态
+        if (this.timer) {
+          clearInterval(this.timer);
+          this.timer = null;
+        }
+        this.time = this.timeTotal;
+        this.disabledBtn = false;
       }
     }
   },
@@ -111,7 +121,6 @@ export default {
         alertErr("请先输入正确的邮箱");
         return;
       }
-      this.countdown();
 
       this.$api({
         url: "/service.php",
@@ -121,8 +130,10 @@ export default {
           email: email
         }
       }).then(res => {
-        alert(res);
+        console.log(res);
         if (res.code == 200) {
+          alertSucc("The verification code has been sent to your email.");
+          this.countdown();
         } else {
           clearInterval(this.timer);
           this.timer = null;
@@ -135,6 +146,8 @@ export default {
     countdown() {
       let that = this;
       this.disabledBtn = true;
+      // 重置倒计时时间
+      this.time = this.timeTotal;
 
       this.timer = setInterval(() => {
         if (that.time > 0) {
@@ -143,7 +156,7 @@ export default {
           that.time = that.timeTotal;
           clearInterval(that.timer);
           that.timer = null;
-          this.disabledBtn = false;
+          that.disabledBtn = false;
         }
       }, 1000);
     },
@@ -153,6 +166,13 @@ export default {
       this.show = true;
     },
     onModalClose() {
+      // 清除定时器
+      if (this.timer) {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+      this.time = this.timeTotal;
+      this.disabledBtn = false;
       this.show = false;
     },
 
@@ -178,7 +198,8 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "users_setEmail",
+          action: "users_setNew",
+          editType: "2", //类型：1-手机号 2-邮箱
           code: this.code,
           email: this.newEmail
         }
@@ -305,14 +326,14 @@ export default {
 
 .btn-obtain {
   width: 105px;
-height: 56px;
-background: #00306B;
-border-radius: 0px 6px 6px 0px;
-color: #fff;
-font-size: 20px;
-font-weight: 600;
-line-height: 20px;
-text-align: center;
+  height: 56px;
+  background: #00306b;
+  border-radius: 0px 6px 6px 0px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: center;
 
   &:hover:not(:disabled) {
     background: #002855;

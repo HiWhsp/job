@@ -56,7 +56,7 @@
         </div>
 
         <div class="nav-box">
-          <div v-for="(item, index) in nav_list" :key="index" class="nav-item">
+          <div v-for="(item, index) in vuex_top_title" :key="index" class="nav-item">
             <router-link :to="item.route" class="nav-title">{{ item.title }}</router-link>
           </div>
         </div>
@@ -82,7 +82,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["vuex_category_tree"]),
+    ...mapState(["vuex_category_tree", "vuex_top_title"]),
 
     nav_list() {
       let route_news = "";

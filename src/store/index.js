@@ -67,7 +67,7 @@ export default new Vuex.Store({
     //
     vuex_config: {},
     vuex_news_cates: [],//新闻分类首页使用
-    vuex_top_title:[],//商品标签首页顶部使用
+    vuex_top_title: [],//商品标签首页顶部使用
     //
     vuex_is_login: false, //是否登录
     //
@@ -83,8 +83,8 @@ export default new Vuex.Store({
     vuex_map_banners: {
       关于我们: [],
       联系我们: [],
-      优惠券广告:[],
-      首页推荐:[],
+      优惠券广告: [],
+      首页推荐: [],
     },
     //
   },
@@ -100,7 +100,7 @@ export default new Vuex.Store({
     },
     set_vuex_config(state, data) {
       state.vuex_config = data;
-      console.log(data,'data')
+      console.log(data, 'data')
     },
 
     //设置基本信息
@@ -117,8 +117,8 @@ export default new Vuex.Store({
 
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
-      console.log(data,1);
-      
+      console.log(data, 1);
+
       // 修复：将对象序列化为JSON字符串存储
       localStorage.setItem("vuex_user", JSON.stringify(data));
     },
@@ -134,16 +134,16 @@ export default new Vuex.Store({
     },
 
     set_vuex_banner(state, data) {
-      let [pos_0, pos_1, pos_2,pos_3,pos_4,pos_5,pos_6,pos_7] = data; 
+      let [pos_0, pos_1, pos_2, pos_3, pos_4, pos_5, pos_6, pos_7] = data;
       state.vuex_index_banners = pos_0.images;
 
       state.vuex_map_banners = {
         关于我们: pos_1.images,
         联系我们: pos_2.images,
         优惠券广告: pos_3.images,
-        首页推荐:[pos_4.images, pos_6.images,pos_7.images]
-      }; 
-      
+        首页推荐: [pos_4.images, pos_6.images, pos_7.images]
+      };
+
     },
     // 产品分类树
     set_vuex_product_cate(state, data) {
@@ -253,7 +253,7 @@ export default new Vuex.Store({
       dispatch('query_category')
       dispatch('query_news')
       dispatch('query_getCompanyType')
-      
+
     },
 
     // 查询
@@ -285,7 +285,7 @@ export default new Vuex.Store({
         data: {
           action: "banner_index",
           position: 0, //服务端：0-全部 1-通用 2-PC 3-H5 4-小程序 5-APP
-          t:new Date().getTime()
+          t: new Date().getTime()
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -323,7 +323,7 @@ export default new Vuex.Store({
         if (res.code == 200) {
           let data = res.data
           data.forEach((v) => {
-            v.route =`/product-cates?tags=${v.title}`;// v.id==66? `/news?id=${v.id}`:
+            v.route = `/product-cates?tags=${v.title}`;// v.id==66? `/news?id=${v.id}`:
           });
           commit("set_vuex_data", {
             key: "vuex_news_cates",
@@ -332,7 +332,7 @@ export default new Vuex.Store({
         }
       });
     },
-     // 查询
+    // 查询
     async query_getCompanyType({ commit, state, dispatch }) {
       api({
         url: "/service.php",
@@ -342,12 +342,12 @@ export default new Vuex.Store({
         },
       }).then((res) => {
         if (res.code == 200) {
-          console.log('标签',res)
-          let data=[]
-          res.data.forEach((e)=>{
+          console.log('标签', res)
+          let data = []
+          res.data.forEach((e) => {
             data.push({
-              title:e,
-              route:`/product-cates?tags=${e}`
+              title: e,
+              route: `/product-cates?tags=${e}`
             })
           })
           // let data = res.data
@@ -365,7 +365,7 @@ export default new Vuex.Store({
 
 
 
-    
+
 
 
   },

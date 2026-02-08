@@ -10,6 +10,7 @@
                 <img src="@/assets/img/head/head-phone.png" alt="" />
                 <span class="phone-number">+4000-000-0000</span>
                 <span class="welcome-text">Hi, welcome to MEDOOO</span>
+                <span class="login-out" v-if="vuex_user.phone" @click="logout">Logout</span>
               </div>
             </div>
 
@@ -269,10 +270,6 @@ export default {
     },
     logout() {
       this.$store.commit("remove_vuex_user");
-      // debugger
-      if (this.$route.meta.requireAuth) {
-      }
-
       this.$router.push("/login");
     },
 
@@ -451,6 +448,15 @@ export default {
             font-size: 18px;
             color: #5e5e5e;
             line-height: 25px;
+          }
+          .login-out {
+            cursor: pointer;
+            color: #5e5e5e;
+            font-size: 18px;
+            font-family: Poppins, Poppins;
+            font-weight: 400;
+            line-height: 25px;
+            margin-left: 20px;
           }
         }
       }

@@ -18,8 +18,8 @@
             <div class="sec-ctx address-form" v-if="!address_list.length || showAddressForm">
               <div class="form-group">
                 <label class="form-label">
-                  First Name:
                   <span class="required">*</span>
+                  First Name:
                 </label>
                 <input
                   type="text"
@@ -30,8 +30,8 @@
               </div>
               <div class="form-group">
                 <label class="form-label">
-                  Last Name:
                   <span class="required">*</span>
+                  Last Name:
                 </label>
                 <input
                   type="text"
@@ -42,8 +42,8 @@
               </div>
               <div class="form-group">
                 <label class="form-label">
-                  Phone Number:
                   <span class="required">*</span>
+                  Phone Number:
                 </label>
                 <input
                   type="text"
@@ -54,8 +54,8 @@
               </div>
               <div class="form-group">
                 <label class="form-label">
-                  Email:
                   <span class="required">*</span>
+                  Email:
                 </label>
                 <input
                   type="email"
@@ -66,8 +66,8 @@
               </div>
               <div class="form-group">
                 <label class="form-label">
-                  Detailed Address:
                   <span class="required">*</span>
+                  Detailed Address:
                 </label>
                 <input
                   type="text"
@@ -78,35 +78,58 @@
               </div>
               <div class="form-group">
                 <label class="form-label">
+                  <span class="required">*</span>
                   City:
-                  <span class="required">*</span>
                 </label>
-                <select class="form-input" v-model="addressForm.city">
-                  <option value>Please enter</option>
-                </select>
+                <el-input clearable v-model="addressForm.city" placeholder="Please enter"></el-input>
               </div>
               <div class="form-group">
                 <label class="form-label">
+                  <span class="required">*</span>
                   State:
-                  <span class="required">*</span>
                 </label>
-                <select class="form-input" v-model="addressForm.state">
-                  <option value>Please enter</option>
-                </select>
+                <template v-if="!provinceList.length">
+                  <el-input clearable v-model="addressForm.state" placeholder="Please enter"></el-input>
+                </template>
+                <template v-else>
+                  <el-select
+                    filterable
+                    v-model="addressForm.state"
+                    placeholder="Please enter"
+                    @change="changeProv"
+                  >
+                    <el-option
+                      v-for="item in provinceList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.label"
+                    ></el-option>
+                  </el-select>
+                </template>
               </div>
               <div class="form-group">
                 <label class="form-label">
+                  <span class="required">*</span>
                   Country:
-                  <span class="required">*</span>
                 </label>
-                <select class="form-input" v-model="addressForm.country">
-                  <option value>Please enter</option>
-                </select>
+                <el-select
+                  filterable
+                  v-model="addressForm.country"
+                  placeholder="Please select"
+                  @change="changeCountry"
+                >
+                  <el-option
+                    v-for="item in countryList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.label"
+                  ></el-option>
+                </el-select>
               </div>
               <div class="form-group">
                 <label class="form-label">
-                  Zip Code:
                   <span class="required">*</span>
+                  Zip Code:
                 </label>
                 <input
                   type="text"
@@ -135,14 +158,38 @@
                   :class="{ active: item.id == address_select.id }"
                   @click="do_toggle_address(item)"
                 >
-                  <div class="address-top">{{ item.name_phone }}</div>
-                  <div class="address-bottom">{{ item.full_addr }}</div>
+                  <div class="address-top">
+                    <div>
+                      <span>Receiver:</span>
+                      {{ item.firstName + item.lastName }}
+                    </div>
+                    <div>
+                      <span>Location:</span>
+                      {{ item.full_addr }}
+                    </div>
+                    <div>
+                      <span>Detailed Address:</span>
+                      {{ item.address }}
+                    </div>
+                    <div>
+                      <span>Phone Number:</span>
+                      {{ item.phone }}
+                    </div>
+                  </div>
+                  <div class="address-bottom">
+                    <div class="left">
+                      <span
+                        v-if="item.if_default == 1 || item.moren == 1"
+                        class="moren"
+                      >Default Address</span>
+                    </div>
+                  </div>
                   <img src="@img/order/addr-select.png" alt class="marker" />
                 </div>
               </div>
               <div class="addr-add">
-                <div class="empty-title" v-if="!address_list.length">还没有收件地址</div>
-                <button class="btn btn-ripple" @click="open_addr_add()">+ 新增地址</button>
+                <div class="empty-title" v-if="!address_list.length">No shipping address</div>
+                <button class="btn btn-ripple" @click="open_addr_add()">+ Add Address</button>
               </div>
             </div>
           </div>
@@ -265,21 +312,21 @@
               <div class="invoice-toggles">
                 <button
                   class="toggle-btn"
-                  :class="{ active: fapiao_info.invoicType == '' }"
+                  :class="{ active: fapiao_info.invoiceType == '' }"
                   @click="do_fapiao_type('')"
                 >Not Required</button>
                 <button
                   class="toggle-btn"
-                  :class="{ active: fapiao_info.invoicType == 1 }"
+                  :class="{ active: fapiao_info.invoiceType == 1 }"
                   @click="do_fapiao_type(1)"
                 >Receipt</button>
                 <button
                   class="toggle-btn"
-                  :class="{ active: fapiao_info.invoicType == 2 }"
+                  :class="{ active: fapiao_info.invoiceType == 2 }"
                   @click="do_fapiao_type(2)"
                 >Commercial Invoice</button>
               </div>
-              <div class="invoice-type-toggles" v-if="fapiao_info.invoicType != ''">
+              <div class="invoice-type-toggles" v-if="fapiao_info.invoiceType != ''">
                 <button
                   class="toggle-btn"
                   :class="{ active: fapiao_info.titleType == 1 }"
@@ -291,16 +338,54 @@
                   @click="fapiao_info.titleType = 2"
                 >Company</button>
               </div>
-              <div class="invoice-form" v-if="fapiao_info.invoicType != ''">
-                <div class="form-group">
-                  <label class="form-label">Name:</label>
-                  <input
-                    type="text"
-                    class="form-input"
-                    placeholder="Please enter your name"
-                    v-model="fapiao_info.title"
-                  />
-                </div>
+              <div class="invoice-form" v-if="fapiao_info.invoiceType != ''">
+                <!-- Personal 模式 -->
+                <template v-if="fapiao_info.titleType == 1">
+                  <div class="form-group">
+                    <label class="form-label">Name:</label>
+                    <input
+                      type="text"
+                      class="form-input"
+                      placeholder="Please enter your name"
+                      v-model="fapiao_info.title"
+                    />
+                  </div>
+                </template>
+                <!-- Company 模式 -->
+                <template v-if="fapiao_info.titleType == 2">
+                  <div class="form-group">
+                    <label class="form-label">Company Name:</label>
+                    <el-input
+                      clearable
+                      v-model="fapiao_info.title"
+                      placeholder="Please fill in the name of the organization"
+                    ></el-input>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Taxpayer Identification Code:</label>
+                    <el-input
+                      clearable
+                      v-model="fapiao_info.shibiema"
+                      placeholder="Please fill in the taxpayer identification code"
+                    ></el-input>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Company Registered Address:</label>
+                    <el-input
+                      clearable
+                      v-model="fapiao_info.companyAddress"
+                      placeholder="Please fill in the registered address"
+                    ></el-input>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Registration Phone Number:</label>
+                    <el-input
+                      clearable
+                      v-model="fapiao_info.companyPhone"
+                      placeholder="Please fill in the registration phone number"
+                    ></el-input>
+                  </div>
+                </template>
               </div>
             </div>
           </div>
@@ -414,7 +499,6 @@
     </div>
 
     <!-- 新增收货地址弹窗 -->
-    <address_modal ref="address_modal" @confirm="confirm_add_address" />
     <foreign_address_modal ref="foreign_address_modal" @confirm="confirm_add_address" />
 
     <!-- 余额支付弹窗 -->
@@ -472,8 +556,8 @@
 
 <script>
 import { SHOP_TYPE } from "@/config/env.js";
+import countryData from "@/constant/countryData.js";
 
-import address_modal from "@/components/address/address_modal.vue"; //新增地址
 import foreign_address_modal from "@/components/address/foreign_address_modal.vue"; //新增地址
 
 import balance_password_set_modal from "@/components/payment/balance_password_set_modal.vue";
@@ -488,7 +572,6 @@ import { mapState } from "vuex";
 export default {
   name: "order-submit",
   components: {
-    address_modal,
     foreign_address_modal,
 
     balance_password_set_modal,
@@ -537,7 +620,7 @@ export default {
       //
       fapiao_info: {
         invoiceStatus: 0, //是否开票 0-不需要 1-需要发票
-        invoicType: "", //发票类型：1-普通发票 2-专用发票
+        invoiceType: "", //发票类型：1-普通发票 2-专用发票
         titleType: "1", //抬头：1-个人 2-单位
         title: "", //
         shibiema: "", //
@@ -626,6 +709,10 @@ export default {
         zipCode: "",
         setAsDefault: false
       },
+      // 地区选择相关数据
+      countryList: [],
+      allProvinceList: [],
+      provinceList: [],
       deliveryMethod: "express",
       paymentType: "online",
       paymentProvider: "",
@@ -779,6 +866,10 @@ export default {
     this.from = this.$route.query.from || "";
     this.getCacheProduct();
 
+    // 初始化国家省份数据
+    this.countryList = countryData.countryList;
+    this.allProvinceList = countryData.provinceList;
+
     //
     this.query_user();
     this.query_address();
@@ -788,11 +879,123 @@ export default {
   methods: {
     // 新样式相关方法
     confirmAddress() {
-      // 确认地址逻辑
-      this.showAddressForm = false;
+      // 表单验证
+      if (!this.addressForm.firstName) {
+        alertErr("Please enter first name");
+        return;
+      }
+      if (!this.addressForm.lastName) {
+        alertErr("Please enter last name");
+        return;
+      }
+      if (!this.addressForm.phone) {
+        alertErr("Please enter phone number");
+        return;
+      }
+      if (!this.addressForm.country) {
+        alertErr("Please select country");
+        return;
+      }
+      if (!this.addressForm.state) {
+        alertErr("Please enter state");
+        return;
+      }
+      if (!this.addressForm.city) {
+        alertErr("Please enter city");
+        return;
+      }
+      if (!this.addressForm.address) {
+        alertErr("Please enter detailed address");
+        return;
+      }
+      if (!this.addressForm.zipCode) {
+        alertErr("Please enter zip code");
+        return;
+      }
+
+      // 构建提交数据
+      let formData = {
+        firstName: this.addressForm.firstName,
+        lastName: this.addressForm.lastName,
+        phone: this.addressForm.phone,
+        company: this.addressForm.email || "",
+        country: this.addressForm.country,
+        province: this.addressForm.state,
+        city: this.addressForm.city,
+        address: this.addressForm.address,
+        zipCode: this.addressForm.zipCode,
+        moren: this.addressForm.setAsDefault ? 1 : 0,
+        addressType: 2 // 版本：1-国内 2-国外
+      };
+
+      // 提交地址
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "userAddress_add",
+          ...formData
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          alert(res);
+          // 刷新地址列表
+          this.query_address();
+          // 关闭表单
+          this.showAddressForm = false;
+          // 清空表单
+          this.addressForm = {
+            firstName: "",
+            lastName: "",
+            phone: "",
+            email: "",
+            address: "",
+            city: "",
+            state: "",
+            country: "",
+            zipCode: "",
+            setAsDefault: false
+          };
+          this.provinceList = [];
+        } else {
+          alertErr(res.message || "Failed to add address");
+        }
+      });
     },
     cancelAddressForm() {
+      // 清空表单
+      this.addressForm = {
+        firstName: "",
+        lastName: "",
+        phone: "",
+        email: "",
+        address: "",
+        city: "",
+        state: "",
+        country: "",
+        zipCode: "",
+        setAsDefault: false
+      };  
+      this.provinceList = [];
       this.showAddressForm = false;
+    },
+    // 地区选择相关方法
+    changeCountry(val) {
+      this.addressForm.state = "";
+
+      let country_info = this.countryList.find(v => v.label == val);
+      if (country_info) {
+        let country_id = country_info.value;
+        this.provinceList = this.allProvinceList.filter(
+          v => v.country_id == country_id
+        );
+      } else {
+        this.provinceList = [];
+      }
+    },
+    changeProv(val) {
+      // 省份选择变化时的处理
+      console.log("省份", val);
     },
     selectPaymentProvider(provider) {
       this.paymentProvider = provider;
@@ -911,14 +1114,14 @@ export default {
           data.forEach(v => {
             if (SHOP_TYPE == "foreign") {
               //医买买
-              v.full_addr = [v.country, v.province, v.city, v.area, v.address]
+              v.full_addr = [v.country, v.province, v.city, v.area]
                 .filter(v => !!v)
-                .join(",");
+                .join("-");
               v.name_phone = `${v.firstName} ${v.lastName} (${v.phone})`;
             } else {
-              v.full_addr = [v.country, v.province, v.city, v.area, v.address]
+              v.full_addr = [v.country, v.province, v.city, v.area]
                 .filter(v => !!v)
-                .join(",");
+                .join("-");
               v.name_phone = `${v.name} (${v.phone})`;
             }
           });
@@ -1109,7 +1312,7 @@ export default {
         // }
       }
 
-      if (this.fapiao_info.invoicType == 1) {
+      if (this.fapiao_info.invoiceType == 1) {
         //普通发票
         if (!this.fapiao_info.titleType) {
           return alertErr("请选择发票抬头类型");
@@ -1125,7 +1328,7 @@ export default {
             return alertErr("请填写纳税人识别号");
           }
         }
-      } else if (this.fapiao_info.invoicType == 2) {
+      } else if (this.fapiao_info.invoiceType == 2) {
         //增值税发票
         if (!this.fapiao_info.title) {
           return alertErr("请填写准确的抬头名称");
@@ -1217,7 +1420,7 @@ export default {
           let { id, orderNo } = res.data;
           this.order_id = id;
           this.do_order_pay();
-        }else {
+        } else {
           alertErr(res.message);
         }
       });
@@ -1555,11 +1758,7 @@ export default {
     },
     //新增地址
     open_addr_add() {
-      if (SHOP_TYPE == "foreign") {
-        this.$refs.foreign_address_modal.init();
-      } else {
-        this.$refs.address_modal.init();
-      }
+      this.$refs.foreign_address_modal.init();
     },
 
     confirm_add_address() {
@@ -1708,7 +1907,7 @@ export default {
 
     // 发票切换
     do_fapiao_type(val) {
-      this.fapiao_info.invoicType = val;
+      this.fapiao_info.invoiceType = val;
 
       if (val === "") {
         this.fapiao_info.invoiceStatus = 0;
@@ -1950,6 +2149,78 @@ export default {
 
       &:focus {
         outline: none;
+        border-color: #999;
+      }
+
+      // el-input 和 el-select 样式
+      /deep/ .el-input__inner {
+        width: 100%;
+        height: 56px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #1f1f1f;
+        padding: 0 12px;
+        box-sizing: border-box;
+
+        &::placeholder {
+          color: #999;
+        }
+
+        &:focus {
+          border-color: #999;
+        }
+      }
+
+      /deep/ .el-input {
+        width: 100%;
+      }
+
+      /deep/ .el-select {
+        width: 100%;
+
+        .el-input__inner {
+          width: 100%;
+          height: 56px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-size: 14px;
+          color: #1f1f1f;
+          padding: 0 12px;
+          box-sizing: border-box;
+        }
+      }
+    }
+    .el-input {
+      width: 460px;
+      height: 56px;
+    }
+
+    /deep/ .el-input__inner {
+      width: 460px;
+      height: 56px;
+    }
+  }
+
+  // 发票表单中的 el-input 样式
+  .el-input {
+    width: 460px;
+
+    /deep/ .el-input__inner {
+      width: 460px;
+      height: 56px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #1f1f1f;
+      padding: 0 12px;
+      box-sizing: border-box;
+
+      &::placeholder {
+        color: #999;
+      }
+
+      &:focus {
         border-color: #999;
       }
     }
@@ -2925,24 +3196,15 @@ export default {
 
     .address-item {
       position: relative;
-      margin-top: 20px;
-      margin-right: 30px;
       margin-bottom: 20px;
-      width: 440px;
-      min-height: 130px;
-      padding: 15px 20px;
+      width: 100%;
+      min-height: 190px;
+      padding: 20px;
       background: #ffffff;
-      border-radius: 4px 4px 4px 4px;
-      border: 2px solid #d5d8de;
+      border: 1px solid #e5e5e5;
       overflow: hidden;
       cursor: pointer;
-
-      &:nth-child(3n) {
-        margin-right: 0;
-      }
-      &:nth-child(-n + 3) {
-        margin-top: 0;
-      }
+      transition: all 0.3s;
 
       &.active {
         border: 2px solid #7853b2;
@@ -2960,20 +3222,45 @@ export default {
       }
 
       .address-top {
-        padding-bottom: 15px;
-        border-bottom: 1px solid #d5d8de;
-        font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #000000;
+        padding-bottom: 20px;
+
+        > div {
+          margin-bottom: 10px;
+          color: #333333;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          span {
+            font-size: 14px;
+            font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+            font-weight: 400;
+            color: #1f1f1f;
+          }
+        }
       }
 
       .address-bottom {
-        padding-top: 15px;
-        font-size: 14px;
-        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
-        font-weight: 400;
-        color: #505050;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid #eeeeee;
+        padding-top: 20px;
+
+        .left {
+          .moren {
+            display: inline-block;
+            width: 104px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background: #7853b2;
+            font-size: 14px;
+            color: #ffffff;
+            border-radius: 4px;
+          }
+        }
       }
     }
   }
@@ -3654,6 +3941,18 @@ export default {
       color: #7853b2;
       font-weight: 500;
     }
+  }
+}
+
+.invoice-form {
+  .form-label {
+    width: 300px !important;
+    font-family: Poppins, Poppins;
+    font-weight: 400;
+    font-size: 20px;
+    color: #1e262e;
+    line-height: 18px;
+    margin-right: 0px!important;
   }
 }
 </style>

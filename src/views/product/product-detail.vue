@@ -74,100 +74,143 @@
 
               <div class="other-box">
                 <div class="sku-box column-flex-center">
-                  <!-- <div class="flex-between" style="width: 100%">
-                    <div class="sku-label">选择规格</div>
-                    <div
-                      class="sku-tip"
-                      v-if="
-                        sku_list.filter((it) => it.priceConfig || [].length > 0)
-                          .length
-                      "
-                    >
-                      <i class="el-icon-warning"></i>
-                      量大优惠，请关注以下单价变化
-                    </div>
-                  </div>-->
-                  <div class="sku-list">
-                    <div
-                      class="sku-item"
-                      v-for="(item, index) in sku_list"
-                      :key="index"
-                      @click="selectSku(item)"
-                    >
-                      <div class="sku-item-text">
-                        <div class="text">
-                          <div
-                            class="sku-item-image"
-                            :class="{
-                              active: selectedSkuId === item.inventoryId,
-                            }"
-                          >
-                            <el-image :src="item.image"></el-image>
-                          </div>
-                          <span></span>
+                  <!-- SKU选择器 -->
+                  <template v-if="skuLists && skuLists.length > 0">
+                    <div class="sku-selectors">
+                      <div
+                        class="sku-selector-group"
+                        v-for="(skuGroup, groupIndex) in skuLists"
+                        :key="groupIndex"
+                      >
+                        <div class="sku-selector-label">
+                          {{ skuGroup.key }}: {{ getSelectedOptionTitle(skuGroup) }}
+                        </div>
+                        <div class="sku-selector-options">
+                          <!-- 颜色选择器（图片） -->
+                          <template v-if="skuGroup.key.toLowerCase() === 'color'">
+                            <div
+                              class="sku-option-item sku-option-color"
+                              :class="{
+                                active: isOptionSelected(skuGroup.id, child.id),
+                                disabled: !isOptionAvailable(skuGroup.id, child.id)
+                              }"
+                              v-for="child in skuGroup.child"
+                              :key="child.id"
+                              @click="selectSkuOption(skuGroup.id, child.id)"
+                            >
+                              <el-image
+                                v-if="child.image"
+                                :src="child.image"
+                                class="color-image"
+                              ></el-image>
+                              <span v-else>{{ child.title }}</span>
+                            </div>
+                          </template>
+                          <!-- 其他选择器（按钮） -->
+                          <template v-else>
+                            <div
+                              class="sku-option-item sku-option-button"
+                              :class="{
+                                active: isOptionSelected(skuGroup.id, child.id),
+                                disabled: !isOptionAvailable(skuGroup.id, child.id)
+                              }"
+                              v-for="child in skuGroup.child"
+                              :key="child.id"
+                              @click="selectSkuOption(skuGroup.id, child.id)"
+                            >
+                              {{ child.title }}
+                            </div>
+                          </template>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="sku-details-box">
-                    <div v-for="(item, index) in sku_list" :key="index" class="sku-details">
-                      <template v-if="selectedSkuId === item.inventoryId">
-                        <div
-                          class="key-vals"
-                          :class="{
-                            active: selectedSkuId === item.inventoryId,
-                          }"
-                        >{{ item.keyVals }}</div>
-                        <!-- 操作 -->
-                        <div class="operation-box">
-                          <div class="operation-item">
-                            <div class="price-info">
-                              <div class="price-info-text">Quantity:</div>
-                              <div class="current-price">
-                                {{ vuex_huobi }}{{ getCurrentPrice(item) }}/{{
-                                info.unit || "pack"
-                                }}
-                              </div>
+                  </template>
+                  <!-- 旧的SKU列表（兼容，如果没有skuLists则显示） -->
+                  <template v-else>
+                    <div class="sku-list">
+                      <div
+                        class="sku-item"
+                        v-for="(item, index) in sku_list"
+                        :key="index"
+                        @click="selectSku(item)"
+                      >
+                        <div class="sku-item-text">
+                          <div class="text">
+                            <div
+                              class="sku-item-image"
+                              :class="{
+                                active: selectedSkuId === item.inventoryId,
+                              }"
+                            >
+                              <el-image :src="item.image"></el-image>
                             </div>
-                            <!-- <div class="stock-info">库存{{ item.kucun }}</div> -->
-                            <div class="quantity-control">
-                              <div class="quantity-input">
-                                <div
-                                  class="btn minus"
-                                  :disabled="getSkuQuantity(item) <= 0"
-                                  @click.stop="decreaseSkuQuantity(item)"
-                                >
-                                  <img src="@img/product/num-minus.png" alt />
-                                </div>
-                                <input
-                                  type="number"
-                                  v-model="sku_quantities[item.inventoryId]"
-                                  @click.stop
-                                  min="0"
-                                  :max="item.kucun"
-                                  @blur="onBlurSkuQuantity(item)"
-                                  @input="
-                                    updateSkuQuantity(item, $event.target.value)
-                                  "
-                                />
-                                <div
-                                  class="btn plus"
-                                  :disabled="getSkuQuantity(item) >= item.kucun"
-                                  @click.stop="increaseSkuQuantity(item)"
-                                >
-                                  <img src="@img/product/num-plus.png" alt />
-                                </div>
-                              </div>
+                            <span></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                  <!-- SKU详情和操作 -->
+                  <div class="sku-details-box">
+                    <div v-if="currentSelectedInventory" class="sku-details">
+                      <!-- <div class="key-vals active">{{ currentSelectedInventory.keyVals }}</div> -->
+                      <!-- 操作 -->
+                      <div class="operation-box">
+                        <div class="operation-item">
+                          <div class="price-info">
+                            <div class="price-info-text">Quantity:</div>
+                            <div class="price-tiers" v-if="currentSelectedInventory.priceConfig && currentSelectedInventory.priceConfig.length > 0">
+                              <span
+                                v-for="(tier, index) in formatPriceConfig(currentSelectedInventory.priceConfig)"
+                                :key="index"
+                                class="price-tier-item"
+                              >
+                                {{ tier }}
+                              </span>
+                            </div>
+                            <div class="current-price" v-else>
+                              {{ vuex_huobi }}{{ getCurrentPrice(currentSelectedInventory) }}/{{
+                              info.unit || "pack"
+                              }}
                             </div>
                           </div>
-                          <div class="operation-item">
-                            <div class="operation-item-tip">
-                              Increased quantity with lower unit price, pay
-                              attention on the price change.
+                          <div class="quantity-control">
+                            <div class="quantity-input">
+                              <div
+                                class="btn minus"
+                                :disabled="getSkuQuantity(currentSelectedInventory) <= 0"
+                                @click.stop="decreaseSkuQuantity(currentSelectedInventory)"
+                              >
+                                <img src="@img/product/num-minus.png" alt />
+                              </div>
+                              <input
+                                type="number"
+                                v-model="sku_quantities[currentSelectedInventory.inventoryId]"
+                                @click.stop
+                                min="0"
+                                :max="currentSelectedInventory.kucun"
+                                @blur="onBlurSkuQuantity(currentSelectedInventory)"
+                                @input="
+                                  updateSkuQuantity(currentSelectedInventory, $event.target.value)
+                                "
+                              />
+                              <div
+                                class="btn plus"
+                                :disabled="getSkuQuantity(currentSelectedInventory) >= currentSelectedInventory.kucun"
+                                @click.stop="increaseSkuQuantity(currentSelectedInventory)"
+                              >
+                                <img src="@img/product/num-plus.png" alt />
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </template>
+                        <div class="operation-item">
+                          <div class="operation-item-tip">
+                            Increased quantity with lower unit price, pay
+                            attention on the price change.
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -464,7 +507,11 @@ export default {
       related_products: [],
 
       // 选中的SKU ID（单选）
-      selectedSkuId: null
+      selectedSkuId: null,
+      // SKU列表配置（来自接口的skuLists）
+      skuLists: [],
+      // 已选择的SKU选项 { key: [id1, id2, ...] }
+      selectedSkuOptions: {}
     };
   },
 
@@ -554,6 +601,32 @@ export default {
         discount: discount.toFixed(2),
         finalAmount: finalAmount.toFixed(2)
       };
+    },
+
+    // 当前选中的库存项（根据选择的SKU选项匹配）
+    currentSelectedInventory() {
+      if (!this.skuLists || this.skuLists.length === 0) {
+        // 如果没有skuLists，返回当前选中的SKU
+        return this.sku_list.find(item => item.inventoryId === this.selectedSkuId) || null;
+      }
+
+      // 根据选择的选项组合匹配对应的库存
+      const selectedIds = this.getSelectedOptionIds();
+      if (selectedIds.length === 0) {
+        return null;
+      }
+
+      // 将选中的ID排序后拼接，匹配keyIds
+      const keyIdsStr = selectedIds.sort((a, b) => a - b).join("-");
+      
+      // 查找匹配的库存项
+      const matchedInventory = this.sku_list.find(item => {
+        if (!item.keyIds) return false;
+        const itemKeyIds = item.keyIds.split("-").map(id => parseInt(id)).sort((a, b) => a - b).join("-");
+        return itemKeyIds === keyIdsStr;
+      });
+
+      return matchedInventory || null;
     }
   },
 
@@ -895,6 +968,32 @@ export default {
 
     //设置规格
     set_sku(data) {
+      // 保存skuLists
+      if (data.skuLists && Array.isArray(data.skuLists)) {
+        this.skuLists = data.skuLists;
+        // 初始化选中的选项
+        this.selectedSkuOptions = {};
+        this.skuLists.forEach(skuGroup => {
+          // 优先选择is_selected为1的选项，否则选择第一个
+          const selectedOption = skuGroup.child.find(child => child.is_selected === 1) || 
+                                (skuGroup.child.length > 0 ? skuGroup.child[0] : null);
+          if (selectedOption) {
+            this.$set(this.selectedSkuOptions, skuGroup.id, selectedOption.id);
+          }
+        });
+        
+        // 等待Vue更新后，尝试匹配对应的库存
+        this.$nextTick(() => {
+          const matchedInventory = this.currentSelectedInventory;
+          if (matchedInventory) {
+            this.selectedSkuId = matchedInventory.inventoryId;
+            this.sku_select = matchedInventory;
+          }
+        });
+      } else {
+        this.skuLists = [];
+      }
+
       //规格列表组
       let sku_list = [];
       if (data.inventorys && data.inventorys.length) {
@@ -996,6 +1095,115 @@ export default {
         this.selectedSkuId = item.inventoryId;
         // 不清除其他SKU的数量，保留用户之前输入的值
       }
+    },
+
+    // 选择SKU选项（基于skuLists）
+    selectSkuOption(groupId, optionId) {
+      // 检查选项是否可用
+      if (!this.isOptionAvailable(groupId, optionId)) {
+        return;
+      }
+
+      // 更新选中的选项
+      this.$set(this.selectedSkuOptions, groupId, optionId);
+
+      // 等待Vue更新后，根据选择的选项匹配对应的库存
+      this.$nextTick(() => {
+        const matchedInventory = this.currentSelectedInventory;
+        if (matchedInventory) {
+          this.selectedSkuId = matchedInventory.inventoryId;
+          this.sku_select = matchedInventory;
+          
+          // 如果该库存项还没有初始化数量，初始化为0
+          if (this.sku_quantities[matchedInventory.inventoryId] === undefined) {
+            this.$set(this.sku_quantities, matchedInventory.inventoryId, 0);
+          }
+        } else {
+          // 如果还没有选择完所有选项，清空selectedSkuId
+          this.selectedSkuId = null;
+          this.sku_select = {};
+        }
+      });
+    },
+
+    // 判断选项是否被选中
+    isOptionSelected(groupId, optionId) {
+      return this.selectedSkuOptions[groupId] === optionId;
+    },
+
+    // 判断选项是否可用（是否有对应的库存）
+    isOptionAvailable(groupId, optionId) {
+      // 构建临时选择（将当前选项替换为要检查的选项）
+      const tempSelected = { ...this.selectedSkuOptions };
+      tempSelected[groupId] = optionId;
+
+      // 获取所有已选择的组ID
+      const selectedGroupIds = Object.keys(tempSelected).filter(key => tempSelected[key] !== undefined && tempSelected[key] !== null);
+      
+      // 如果还没有选择所有必需的选项，检查是否有任何库存项包含这个选项
+      if (selectedGroupIds.length < this.skuLists.length) {
+        // 检查是否有任何库存项的keyIds包含这个选项ID
+        return this.sku_list.some(item => {
+          if (!item.keyIds) return false;
+          const itemKeyIds = item.keyIds.split("-").map(id => parseInt(id));
+          return itemKeyIds.includes(parseInt(optionId)) && item.kucun > 0;
+        });
+      }
+
+      // 如果所有选项都已选择，检查完整组合是否有库存
+      const selectedIds = Object.values(tempSelected).filter(id => id !== undefined && id !== null);
+      if (selectedIds.length === 0) {
+        return true;
+      }
+
+      // 检查是否有匹配的库存
+      const keyIdsStr = selectedIds.map(id => parseInt(id)).sort((a, b) => a - b).join("-");
+      const hasMatch = this.sku_list.some(item => {
+        if (!item.keyIds) return false;
+        const itemKeyIds = item.keyIds.split("-").map(id => parseInt(id)).sort((a, b) => a - b).join("-");
+        return itemKeyIds === keyIdsStr && item.kucun > 0;
+      });
+
+      return hasMatch;
+    },
+
+    // 获取已选择的选项ID列表
+    getSelectedOptionIds() {
+      return Object.values(this.selectedSkuOptions).filter(id => id !== undefined && id !== null);
+    },
+
+    // 获取选中选项的标题
+    getSelectedOptionTitle(skuGroup) {
+      const selectedId = this.selectedSkuOptions[skuGroup.id];
+      if (!selectedId) {
+        return "";
+      }
+      const selectedOption = skuGroup.child.find(child => child.id === selectedId);
+      return selectedOption ? selectedOption.title : "";
+    },
+
+    // 格式化priceConfig为显示文本
+    formatPriceConfig(priceConfig) {
+      if (!Array.isArray(priceConfig) || priceConfig.length === 0) {
+        return [];
+      }
+
+      const unit = this.info.unit || "pack";
+      const sorted = [...priceConfig].sort((a, b) => (a.min || 0) - (b.min || 0));
+      
+      return sorted.map(config => {
+        const min = Number(config.min || 0);
+        const max = config.max === "" || config.max === null || config.max === undefined ? null : Number(config.max);
+        const price = Number(config.price || 0);
+        
+        if (max === null) {
+          // 无上限，显示 >minpack $price
+          return `>${min}${unit} ${this.vuex_huobi}${price}`;
+        } else {
+          // 有上限，显示 min-maxpack $price
+          return `${min}-${max}${unit} ${this.vuex_huobi}${price}`;
+        }
+      });
     },
 
     // 获取规格当前价格（按 priceConfig 区间优先）
@@ -1172,29 +1380,29 @@ export default {
       //   return;
       // }
       //如果是三类
-      if (this.info.isThird == 1) {
-        if (this.vuex_user.userType != 1) {
-          this.$refs.product_renzheng_tip.init();
-          return;
-        } else if (this.vuex_user.userType == 1) {
-          if (
-            this.vuex_user.license2 ||
-            this.vuex_user.license3 ||
-            this.vuex_user.license4 | this.vuex_user.license6
-          ) {
-            console.log("可以购买三类");
-          } else {
-            this.$refs.product_renzheng_tip.init();
-            return;
-          }
-        }
-      }
+      // if (this.info.isThird == 1) {
+      //   if (this.vuex_user.userType != 1) {
+      //     this.$refs.product_renzheng_tip.init();
+      //     return;
+      //   } else if (this.vuex_user.userType == 1) {
+      //     if (
+      //       this.vuex_user.license2 ||
+      //       this.vuex_user.license3 ||
+      //       this.vuex_user.license4 | this.vuex_user.license6
+      //     ) {
+      //       console.log("可以购买三类");
+      //     } else {
+      //       this.$refs.product_renzheng_tip.init();
+      //       return;
+      //     }
+      //   }
+      // }
 
       // this.$refs.product_renzheng_tip.init();
 
       // this.updateTotalQuantity();
       if (this.selected_num == 0) {
-        alertErr("请选择订购数量！");
+        alertErr("please select the quantity!");
         return;
       }
       if (!this.mix_get_login_status()) {
@@ -1210,7 +1418,7 @@ export default {
       });
 
       if (!hasSelectedSku) {
-        alertErr("请选择商品规格！");
+        alertErr("please select the product specifications!");
         return;
       }
 
@@ -1252,7 +1460,7 @@ export default {
     do_add_cart() {
       // this.updateTotalQuantity()
       if (this.selected_num == 0) {
-        alertErr("请选择订购数量！");
+        alertErr("please select the quantity!");
         return;
       }
       // if (
@@ -1269,23 +1477,25 @@ export default {
       //   this.$refs.product_renzheng_tip.init();
       //   return;
       // }
-      if (this.info.isThird == 1) {
-        if (this.vuex_user.userType != 1) {
-          this.$refs.product_renzheng_tip.init();
-          return;
-        } else if (this.vuex_user.userType == 1) {
-          if (
-            this.vuex_user.license2 ||
-            this.vuex_user.license3 ||
-            this.vuex_user.license4 | this.vuex_user.license6
-          ) {
-            console.log("可以购买三类");
-          } else {
-            this.$refs.product_renzheng_tip.init();
-            return;
-          }
-        }
-      }
+
+      // if (this.info.isThird == 1) {
+      //   if (this.vuex_user.userType != 1) {
+      //     this.$refs.product_renzheng_tip.init();
+      //     return;
+      //   } else if (this.vuex_user.userType == 1) {
+      //     if (
+      //       this.vuex_user.license2 ||
+      //       this.vuex_user.license3 ||
+      //       this.vuex_user.license4 | this.vuex_user.license6
+      //     ) {
+      //       console.log("可以购买三类");
+      //     } else {
+      //       this.$refs.product_renzheng_tip.init();
+      //       return;
+      //     }
+      //   }
+      // }
+
       if (!this.mix_get_login_status()) {
         return;
       }
@@ -1299,7 +1509,7 @@ export default {
       });
 
       if (!hasSelectedSku) {
-        alertErr("请选择商品规格！");
+        alertErr("please select the product specifications!");
         return;
       }
 
@@ -1313,7 +1523,7 @@ export default {
       });
 
       if (hasInsufficientStock) {
-        alertErr("部分商品库存不足！");
+        alertErr("some products are out of stock!");
         return;
       }
 
@@ -1327,7 +1537,7 @@ export default {
       });
 
       if (hasOfflineItem) {
-        alertErr("部分商品已下架！");
+        alertErr("some products have been taken off the shelf!");
         return;
       }
 
@@ -1453,6 +1663,8 @@ export default {
           this.info.images && this.info.images[0] ? this.info.images[0] : "",
         // 添加规格列表
         skuList: this.sku_list,
+        // 添加SKU列表配置
+        skuLists: this.skuLists,
         // 添加当前选择的规格信息
         selectedSpecs: this.getSelectedSpecsInfo()
       };
@@ -1928,6 +2140,7 @@ export default {
           .sku-box {
             margin-top: 23px;
             display: flex;
+            flex-direction: column;
             align-items: flex-start;
             width: 100%;
 
@@ -1947,6 +2160,106 @@ export default {
               color: #7853b2;
               font-weight: bold;
               font-family: Microsoft YaHei, Microsoft YaHei;
+            }
+
+            // SKU选择器样式
+            .sku-selectors {
+              width: 100%;
+              display: flex;
+              flex-direction: column;
+              gap: 20px;
+
+              .sku-selector-group {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                .sku-selector-label {
+                  font-family: Poppins, Poppins;
+                  font-weight: 600;
+                  font-size: 20px;
+                  color: #242424;
+                }
+
+                .sku-selector-options {
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: 10px;
+
+                  .sku-option-item {
+                    cursor: pointer;
+                    transition: all 0.3s;
+                    border-radius: 6px;
+                    border: 2px solid #707070;
+                    background: #ffffff;
+
+                    &.sku-option-color {
+                      width: 80px;
+                      height: 80px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      overflow: hidden;
+
+                      .color-image {
+                        width: 100%;
+                        height: 100%;
+                        border-radius: 4px;
+
+                        img {
+                          width: 100%;
+                          height: 100%;
+                          object-fit: cover;
+                        }
+                      }
+
+                      span {
+                        font-size: 14px;
+                        color: #242424;
+                      }
+
+                      &.active {
+                        border: 2px solid #ec6a2b;
+                      }
+
+                      &.disabled {
+                        opacity: 0.5;
+                        cursor: not-allowed;
+                        border-color: #ccc;
+                      }
+                    }
+
+                    &.sku-option-button {
+                      padding: 10px 20px;
+                      min-width: 60px;
+                      text-align: center;
+                      font-family: Poppins, Poppins;
+                      font-weight: 400;
+                      font-size: 18px;
+                      color: #242424;
+                      line-height: 1.5;
+
+                      &.active {
+                        background: #fff8f5;
+                        border: 2px solid #ec6a2b;
+                        color: #ec6a2b;
+                        font-weight: bold;
+                      }
+
+                      &.disabled {
+                        opacity: 0.5;
+                        cursor: not-allowed;
+                        border-color: #ccc;
+                        color: #999;
+                      }
+
+                      &:hover:not(.disabled) {
+                        border-color: #ec6a2b;
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
 
@@ -2040,7 +2353,7 @@ export default {
                 width: 100%;
                 border-top: 1px solid #dedede;
                 border-bottom: 1px solid #dedede;
-                margin-top: 10px;
+                margin-top: 20px;
                 padding: 20px 0;
                 .operation-item {
                   width: 100%;
@@ -2063,15 +2376,31 @@ export default {
                 display: flex;
                 align-items: center;
                 gap: 5px;
+                flex-wrap: wrap;
 
                 .price-info-text {
                   font-size: 20px;
                   color: #505050;
+                  margin-right: 5px;
                 }
 
                 .current-price {
                   font-size: 20px;
                   color: #242424;
+                }
+
+                .price-tiers {
+                  display: flex;
+                  align-items: center;
+                  flex-wrap: wrap;
+                  gap: 10px;
+                  font-size: 18px;
+                  color: #242424;
+                  font-family: Poppins, Poppins;
+
+                  .price-tier-item {
+                    white-space: nowrap;
+                  }
                 }
               }
 

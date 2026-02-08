@@ -9,7 +9,9 @@
           </div>
         </div> -->
         <div class="text-box">
-          Are you sure you want to confirm receipt? Please check the goods carefully.
+          Are you sure you want to confirm receipt? 
+          <br>
+          Please check the goods carefully.
         </div>
       </div>
       <span slot="footer" class="dialog-footer">

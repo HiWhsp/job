@@ -56,7 +56,7 @@
               </div>
             </div>
             <div class="empty-box" v-else>
-              <el-empty description="没有查询到相关信息..."></el-empty>
+              <el-empty description="no data..."></el-empty>
             </div>
           </div>
 

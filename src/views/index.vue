@@ -192,34 +192,61 @@
                 </div>
               </div>
               <div class="cate-banner-box" v-if="gindex == 0">
-                <img
-                  :key="index"
+                <div
+                  class="cate-banner-item"
                   v-for="(item, index) in vuex_map_banners['首页推荐'][0]"
-                  class="cate-banner"
-                  :src="item.image"
-                  alt
-                  @click="$router.push(item.url)"
-                />
+                  :key="index"
+                  :style="{ backgroundImage: `url(${item.image})` }"
+                >
+                  <div class="cate-banner-item-content" :class="`content-0-${index}`">
+                    <div class="cate-banner-item-title ellipsis-2">{{ item.product_info.title }}</div>
+                    <div class="cate-banner-item-desc">${{ item.product_info.priceSale }}</div>
+                    <div class="cate-banner-item-btn">
+                      <button
+                        class="btn btn-primary"
+                        @click="openQuickBuy(item.product_info)"
+                      >SHOW NOW</button>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="cate-banner-box2" v-if="gindex == 1">
-                <img
-                  :key="index"
+                <div
+                  class="cate-banner-item content-1-0"
                   v-for="(item, index) in vuex_map_banners['首页推荐'][1]"
-                  class="cate-banner"
-                  :src="item.image"
-                  alt
-                  @click="$router.push(item.url)"
-                />
-              </div>
-              <div class="cate-banner-box" v-if="gindex == 2">
-                <img
                   :key="index"
+                  :style="{ backgroundImage: `url(${item.image})` }"
+                >
+                  <div class="cate-banner-item-content" :class="`content-1-${index}`">
+                    <div class="cate-banner-item-title ellipsis-3">{{ item.product_info.title }}</div>
+                    <div class="cate-banner-item-desc">${{ item.product_info.priceSale }}</div>
+                    <div class="cate-banner-item-btn">
+                      <button class="btn btn-primary" @click="openQuickBuy(item.product_info)">
+                        <i class="el-icon-caret-right"></i>
+                        Go to purchase
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="cate-banner-box3" v-if="gindex == 2">
+                <div
+                  class="cate-banner-item"
                   v-for="(item, index) in vuex_map_banners['首页推荐'][2]"
-                  class="cate-banner"
-                  :src="item.image"
-                  alt
-                  @click="$router.push(item.url)"
-                />
+                  :key="index"
+                  :style="{ backgroundImage: `url(${item.image})` }"
+                >
+                  <div class="cate-banner-item-content" :class="`content-2-${index}`">
+                    <div class="cate-banner-item-title ellipsis-3">{{ item.product_info.title }}</div>
+                    <div class="cate-banner-item-desc">${{ item.product_info.priceSale }}</div>
+                    <div class="cate-banner-item-btn">
+                      <button
+                        class="btn btn-primary"
+                        @click="openQuickBuy(item.product_info)"
+                      >SHOW NOW</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -480,29 +507,7 @@ export default {
       return colorMap[column] ? colorMap[column][index] : "#000000";
     },
     openQuickBuy(item) {
-      console.log("this.vuex_user.userType", this.vuex_user.userType);
-      if (item.isThird == 1) {
-        if (this.vuex_user.userType != 1) {
-          this.$refs.product_renzheng_tip.init();
-          return;
-        } else if (this.vuex_user.userType == 1) {
-          if (
-            this.vuex_user.license2 ||
-            this.vuex_user.license3 ||
-            this.vuex_user.license4 | this.vuex_user.license6
-          ) {
-            console.log("可以购买三类");
-          } else {
-            this.$refs.product_renzheng_tip.init();
-            return;
-          }
-        }
-      }
-
-      const inventoryId = item.inventoryId || item.id;
-      if (inventoryId && this.$refs.product_quick_buy_modal) {
-        this.$refs.product_quick_buy_modal.init(inventoryId);
-      }
+      this.$router.push(`/product-detail?id=${item.id}`);
     },
     handleScroll() {
       this.showButton = window.scrollY > 200;
@@ -822,10 +827,10 @@ export default {
       }).then(res => {
         if (res.code == 200) {
           let { userType, renzheng } = res.data;
-          if (renzheng == 0 && (userType == 1 || userType == 2)) {
-            //renzheng为0，且用户类型为1或2时，显示弹窗
-            this.showEnterpriseModal = true;
-          }
+          // if (renzheng == 0 && (userType == 1 || userType == 2)) {
+          //   //renzheng为0，且用户类型为1或2时，显示弹窗
+          //   this.showEnterpriseModal = true;
+          // }
         }
       });
     },
@@ -1988,18 +1993,168 @@ export default {
     height: 275px;
     cursor: pointer;
   }
+  .cate-banner-item {
+    width: 790px;
+    height: 275px;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    .cate-banner-item-content {
+      padding: 40px;
+      color: #fff;
+
+      &.content-0-1 {
+        padding-left: 440px;
+      }
+      .cate-banner-item-title {
+        width: 320px;
+        height: 65px;
+        line-height: 30px;
+        font-size: 24px;
+        font-weight: 400;
+      }
+      .cate-banner-item-desc {
+        font-family: Poppins, Poppins;
+        font-weight: 600;
+        font-size: 30px;
+        color: #ffffff;
+        line-height: 43px;
+        text-align: left;
+      }
+      .cate-banner-item-btn {
+        margin-top: 20px;
+        width: 171px;
+        height: 51px;
+        border-radius: 26px 26px 26px 26px;
+        border: 1px solid #ffffff;
+
+        .btn {
+          font-family: Poppins, Poppins;
+          font-weight: 300;
+          font-size: 20px;
+          color: #ffffff;
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
 }
 
 .cate-banner-box2 {
   width: 100vw;
   margin-left: -160px;
-  .cate-banner {
-    width: 100%;
-    height: 583px;
+  .cate-banner-item {
+    display: flex;
+    align-items: center;
+    padding-left: 245px;
+  }
+  .cate-banner-item {
+    width: 100vw;
+    height: 663px;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
     cursor: pointer;
+    .cate-banner-item-content {
+      padding: 40px;
+      color: #fff;
+      &.content-1-1 {
+        padding-left: 440px;
+      }
+    }
+    .cate-banner-item-title {
+      width: 737px;
+      max-height: 152px;
+      line-height: 40px;
+      font-size: 34px;
+      font-weight: 400;
+    }
+    .cate-banner-item-desc {
+      font-family: Poppins, Poppins;
+      font-weight: 600;
+      font-size: 50px;
+      color: #ec6a2b;
+      line-height: 71px;
+    }
+    .cate-banner-item-btn {
+      margin-top: 80px;
+      width: 252px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 42px 42px 42px 42px;
+      border: 1px solid #ffffff;
+    }
+    .btn {
+      font-family: Poppins, Poppins;
+      font-weight: 600;
+      font-size: 18px;
+      color: #ffffff;
+    }
+    i {
+      font-size: 20px;
+      color: #ffffff;
+      margin-right: 10px;
+    }
   }
 }
 
+.cate-banner-box3 {
+  display: flex;
+  gap: 20px;
+  .cate-banner {
+    width: 790px;
+    height: 275px;
+    cursor: pointer;
+  }
+  .cate-banner-item {
+    width: 790px;
+    height: 275px;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    .cate-banner-item-content {
+      padding: 40px;
+      color: #fff;
+
+      &.content-0-1 {
+        padding-left: 440px;
+      }
+      .cate-banner-item-title {
+        width: 320px;
+        height: 65px;
+        line-height: 30px;
+        font-size: 24px;
+        font-weight: 400;
+      }
+      .cate-banner-item-desc {
+        font-family: Poppins, Poppins;
+        font-weight: 600;
+        font-size: 30px;
+        color: #FFC208;
+        line-height: 43px;
+        text-align: left;
+      }
+      .cate-banner-item-btn {
+        margin-top: 20px;
+        width: 171px;
+        height: 51px;
+        border-radius: 26px 26px 26px 26px;
+        border: 1px solid #ffffff;
+
+        .btn {
+          font-family: Poppins, Poppins;
+          font-weight: 300;
+          font-size: 20px;
+          color: #ffffff;
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+}
 .hot-sec {
   height: 541px;
   display: flex;

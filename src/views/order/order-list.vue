@@ -169,7 +169,7 @@
             :total="count"
           ></el-pagination>
         </div>
-        <el-empty v-if="!count" description="没有查询到订单信息..."></el-empty>
+        <el-empty v-if="!count" description="No order information found..."></el-empty>
       </div>
     </div>
 

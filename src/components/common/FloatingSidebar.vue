@@ -69,7 +69,7 @@ export default {
           isHovered: false,
         },
         {
-          name: "my-center",
+          name: "my-info",
           icon: require("@/assets/img/common/icon2.png"),
           hoverIcon: require("@/assets/img/common/icon2-a.png"),
           isHovered: false,
@@ -111,23 +111,24 @@ export default {
       item.isHovered = false;
     },
     handleItemClick(item) {
+      console.log("item", item);
       switch (item.name) {
-        case "购物车":
+        case "cart":
           this.$router.push("/cart");
           break;
-        case "会员中心":
+        case "my-info":
           this.$router.push("/my");
           break;
         case "手机版":
           this.showMobileTip();
           break;
-        case "在线客服":
+        case "online-kefu":
           this.openCustomerService();
           break;
-        case "客服电话":
+        case "phone":
           this.callCustomerService();
           break;
-        case "返回顶部":
+        case "to-top":
           this.scrollToTop();
           break;
         default:

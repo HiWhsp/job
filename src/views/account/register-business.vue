@@ -59,13 +59,12 @@
                   Job Title
                   <span class="required">*</span>
                 </label>
-                <select class="form-input" v-model="form.job_title">
-                  <option value>Please select</option>
-                  <option value="CEO">CEO</option>
-                  <option value="Manager">Manager</option>
-                  <option value="Director">Director</option>
-                  <option value="Other">Other</option>
-                </select>
+                <el-select v-model="form.job_title" placeholder="Please select">
+                  <el-option value="CEO" label="CEO">CEO</el-option>
+                  <el-option value="Manager" label="Manager">Manager</el-option>
+                  <el-option value="Director" label="Director">Director</el-option>
+                  <el-option value="Other" label="Other">Other</el-option>
+                </el-select>
               </div>
 
               <div class="form-group">
@@ -112,13 +111,9 @@
                   Business Type
                   <span class="required">*</span>
                 </label>
-                <select class="form-input" v-model="form.companyIndustry">
-                  <option value>Please select</option>
-                  <option value="Retailer">Retailer</option>
-                  <option value="Wholesaler">Wholesaler</option>
-                  <option value="Distributor">Distributor</option>
-                  <option value="Other">Other</option>
-                </select>
+                <el-select v-model="form.companyIndustry" placeholder="Please select">
+                  <el-option v-for="(item, index) in vuex_top_title" :key="index" :value="item.title" :label="item.title"></el-option>
+                </el-select>
               </div>
 
               <div class="form-group">
@@ -126,13 +121,9 @@
                   Main Products
                   <span class="required">*</span>
                 </label>
-                <select class="form-input" v-model="form.companyType">
-                  <option value>Please select</option>
-                  <option value="Electronics">Electronics</option>
-                  <option value="Clothing">Clothing</option>
-                  <option value="Food">Food</option>
-                  <option value="Other">Other</option>
-                </select>
+                <el-select v-model="form.companyType" placeholder="Please select">
+                  <el-option v-for="(item, index) in vuex_top_title" :key="index" :value="item.title" :label="item.title"></el-option>
+                </el-select>
               </div>
 
               <!-- Receiving Hours -->
@@ -455,12 +446,12 @@
                     By submitting this form, you agree to MEDOOO
                     <a
                       href="#"
-                      @click.prevent="openTerms('terms')"
+                      @click.prevent="openTerms('/news-detail?id=145')"
                     >Terms of Sale</a>
                     and
                     <a
                       href="#"
-                      @click.prevent="openTerms('privacy')"
+                      @click.prevent="openTerms('/news-detail?id=146')"
                     >Privacy Policy</a>.
                   </span>
                 </label>
@@ -532,7 +523,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["vuex_config"])
+    ...mapState(["vuex_config", "vuex_top_title"])
   },
   created() {
     this.countryList = countryData.countryList || [];
@@ -555,14 +546,8 @@ export default {
         v => v.country_id === country_id && v.label
       );
     },
-    openTerms(type) {
-      // 打开条款或隐私政策页面
-      // if (type === "terms") {
-      //   this.$router.push("/terms");
-      // } else if (type === "privacy") {
-      //   // 如果有隐私政策页面，跳转到那里
-      //   // this.$router.push("/privacy");
-      // }
+    openTerms(url) {
+      window.open(url, '_blank');
     },
     do_submit() {
       // 验证必填字段
@@ -663,6 +648,14 @@ export default {
       if (!this.form.agreeTerms) {
         alertErr("Please agree to Terms of Sale and Privacy Policy");
         return;
+      }
+      // 如果 shipping address 和 billing address 相同，将 billing address 的值复制到 shipping address
+      if (this.form.is_shipping_billing_same == '1' || this.form.is_shipping_billing_same == 1) {
+        this.form.address = this.form.billing_address;
+        this.form.city = this.form.billing_city;
+        this.form.province = this.form.billing_state;
+        this.form.country = this.form.billing_country;
+        this.form.zipcode = this.form.billing_zipcode;
       }
       // 清除空值
       Object.keys(this.form).forEach(key => {
