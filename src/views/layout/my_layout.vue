@@ -6,7 +6,8 @@
       <div class="page-ctx">
         <div class="menu-wrap">
           <div class="left-title">
-            <img src="@img/my/member-center.png" alt />
+            <img src="@img/my/member-center.png" v-if="vuex_user.userType == 0 || vuex_user.userType == 2" alt />
+            <img src="@img/my/member-center-enterprise.png" v-if="vuex_user.userType == 1" alt />
             Member Center
           </div>
           <div class="nav-wrap">
@@ -39,7 +40,10 @@
             </div>-->
           </div>
 
-          <div class="btn-wrap" @click="go_enterpriseCert">PERSONAL REGISTER</div>
+          <!-- 普通-销售 -->
+          <div class="btn-wrap" @click="go_businessRegister" v-if="vuex_user.userType == 0 || vuex_user.userType == 2">BUSINESS REGISTER</div>
+          <!-- 企业用户 -->
+          <div class="btn-wrap" @click="go_enterpriseCert" v-if="vuex_user.userType == 1">PERSONAL REGISTER</div>
         </div>
 
         <div class="view-wrap">
@@ -115,13 +119,13 @@ export default {
           title: "Commission-only Reps",
           route: "commission-only-reps",
           icon: require("@img/my/nav-9.png"),
-          showCondition: user => user.userType == 1
+          showCondition: user => user.userType == 2
         },
         {
           title: "business information",
           route: "business-information",
           icon: require("@img/my/nav-12.png"),
-          showCondition: user => user.userType == 2
+          showCondition: user => user.userType == 1
         },
         {
           title: "Apply To Be The Commission-only Rep",
@@ -134,7 +138,7 @@ export default {
           title: "Customer Management",
           route: "customer-management",
           icon: require("@img/my/nav-10.png"),
-          showCondition: user => user.userType == 2
+          showCondition: user => user.userType == 1 || user.userType == 2
         },
         {
           title: "Sales Performance",
@@ -199,6 +203,9 @@ export default {
     },
     go_enterpriseCert() {
       this.$router.push("/register-personal");
+    },
+    go_businessRegister() {
+      this.$router.push("/register-business");
     }
   }
 };

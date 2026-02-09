@@ -71,13 +71,13 @@
         <el-form :model="form" :rules="rules" ref="customerForm">
           <!-- label-width="100px" -->
           <div class="form-item">
-            <span class="label required">customer name :</span>
+            <span class="label required">Customer name :</span>
             <el-form-item prop="nickname">
               <el-input v-model="form.nickname" placeholder="Please enter" clearable></el-input>
             </el-form-item>
           </div>
           <div class="form-item">
-            <span class="label required">business number :</span>
+            <span class="label required">Business number :</span>
             <el-form-item prop="unified_code ">
               <el-input v-model="form.unified_code " placeholder="Please enter" clearable></el-input>
             </el-form-item>
@@ -91,7 +91,7 @@
           </div>
 
           <div class="form-item">
-            <span class="label">customer Email :</span>
+            <span class="label">Customer Email :</span>
             <el-form-item prop="email">
               <el-input v-model="form.email" placeholder="Please enter" clearable></el-input>
             </el-form-item>
@@ -189,9 +189,9 @@ export default {
 
       // 表单验证规则
       rules: {
-        title: [{ required: true, message: "请输入公司名称", trigger: "blur" }],
+        title: [{ required: true, message: "Please enter the company name", trigger: "blur" }],
         unified_code: [
-          { required: true, message: "请输入统一社会信用代码", trigger: "blur" }
+          { required: true, message: "Please enter the unified social credit code", trigger: "blur" }
         ],
         // phone: [
         //   { required: true, message: "请输入手机号", trigger: "blur" },
@@ -206,7 +206,7 @@ export default {
         //   { type: "email", message: "请输入正确的邮箱格式", trigger: "blur" },
         // ],
         license1: [
-          { required: true, message: "请上传营业执照", trigger: "change" }
+          { required: true, message: "Please upload the business license", trigger: "change" }
         ]
       }
     };
@@ -245,9 +245,9 @@ export default {
 
     // 删除客户
     do_address_delete(id) {
-      this.$confirm("确定要删除该客户吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+      this.$confirm("Are you sure you want to delete this customer?", "Tips", {
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
         type: "warning"
       })
         .then(() => {
@@ -260,10 +260,10 @@ export default {
             }
           }).then(res => {
             if (res.code == 200) {
-              this.$message.success("删除成功");
+              this.$message.success("Delete successfully");
               this.setView();
             } else {
-              this.$message.error(res.msg || "删除失败");
+              this.$message.error(res.msg || "Delete failed");
             }
           });
         })
@@ -334,13 +334,13 @@ export default {
     upload_before_upload(file) {
       const isLt5M = file.size / 1024 / 1024 < 5; // 文件大小限制5M
       if (!isLt5M) {
-        alertErr("上传文件大小不能超过 5MB!");
+        alertErr("The file size cannot exceed 5MB!");
         return false;
       }
 
       const isJPG = file.type === "image/jpeg" || file.type === "image/png";
       if (!isJPG) {
-        alertErr("上传文件只能是 JPG/PNG 格式!");
+        alertErr("The file can only be JPG/PNG format!");
         return false;
       }
 

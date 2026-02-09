@@ -6,7 +6,11 @@
 
     <div class="page-ctx">
       <!-- 修改按钮 -->
-      <div class="modify-btn" v-if="isUploadDisabled" @click="isUploadDisabled = !isUploadDisabled">Change information</div>
+      <div
+        class="modify-btn"
+        v-if="isUploadDisabled"
+        @click="isUploadDisabled = !isUploadDisabled"
+      >Change information</div>
       <!-- 表单页面 -->
       <el-form :model="form" :rules="rules" ref="partTimeSalesForm" label-width="0">
         <!-- 上传身份证 -->
@@ -35,37 +39,12 @@
                   <div class="uploaded-image id-box" v-else>
                     <img :src="form.identityFront" alt="已上传图片" />
                     <div class="image-overlay">
-                      <span class="reupload-text">重新上传</span>
+                      <span class="reupload-text">Reupload</span>
                     </div>
                   </div>
                 </el-upload>
               </div>
             </div>
-            <!-- <div class="upload-item">
-                <div class="upload-area">
-                  <el-upload
-                    class="upload-demo"
-                    accept="image/*"
-                    :name="UPLOAD_NAME"
-                    :action="UPLOAD_ACTION"
-                    :data="mix_upload_data"
-                    :on-success="(res) => upload_on_success(res, 'identityBack')"
-                    :before-upload="upload_before_upload"
-                    :disabled="isUploadDisabled"
-                  >
-                    <div class="upload-box id-box" v-if="!form.identityBack">
-                      <div class="upload-icon">+</div>
-                      <div class="upload-text">上传身份证反面</div>
-                    </div>
-                    <div class="uploaded-image" v-else>
-                      <img :src="form.identityBack" alt="已上传图片" />
-                      <div class="image-overlay">
-                        <span class="reupload-text">重新上传</span>
-                      </div>
-                    </div>
-                  </el-upload>
-                </div>
-            </div>-->
           </div>
         </div>
         <div class="form-section">
@@ -75,7 +54,11 @@
           </div>-->
           <el-form-item prop="identityId">
             <span class="form-label-text">ID Number :</span>
-            <el-input v-model="form.identityId" placeholder="Please enter" :disabled="isUploadDisabled"></el-input>
+            <el-input
+              v-model="form.identityId"
+              placeholder="Please enter"
+              :disabled="isUploadDisabled"
+            ></el-input>
           </el-form-item>
         </div>
 
@@ -95,10 +78,6 @@
                   changeSelectAddress(e,index)
                 }"
               />
-              <!-- <div class="btns_end" v-if="index==0" @click="handle_add">添加地区&nbsp;&nbsp;+</div>
-                <div class="form_text" v-if="index==0">
-                  <div>最多可添加三个地区</div>
-              </div>-->
               <div class v-if="index!=0">
                 <i class="el-icon-remove-outline" @click="handle_clear(index)"></i>
               </div>
@@ -117,29 +96,41 @@
             <!-- <span class="required">*</span> -->
           </div>
           <el-form-item prop="receiveType">
-            <img src="@/assets/img/order/paypal.png" class="paypal-img" alt />
-            <img src="@/assets/img/order/stripe.png" class="paypal-img" alt />
+            <img
+              src="@/assets/img/order/paypal.png"
+              class="paypal-img"
+              :class="{ active: form.receiveType == 1 }"
+              @click="handle_paypal_click(1)"
+              alt
+            />
+            <img
+              src="@/assets/img/order/stripe.png"
+              class="paypal-img"
+              :class="{ active: form.receiveType == 2 }"
+              @click="handle_paypal_click(2)"
+              alt
+            />
           </el-form-item>
         </div>
 
         <!-- 银行卡信息 -->
         <div class="form-section">
           <div class="bank-info">
-            <el-form-item prop="bankName">
+            <el-form-item prop="card_name">
               <span class="form-label-text form-label-text-right">Cardholder's Name :</span>
-              <el-input v-model="form.bankName" placeholder="Please enter" clearable></el-input>
+              <el-input v-model="form.card_name" placeholder="Please enter" clearable></el-input>
             </el-form-item>
-            <el-form-item prop="cardCode">
+            <el-form-item prop="card_num">
               <span class="form-label-text form-label-text-right">Card Number :</span>
-              <el-input v-model="form.cardCode" placeholder="Please enter" clearable></el-input>
+              <el-input v-model="form.card_num" placeholder="Please enter" clearable></el-input>
             </el-form-item>
-            <el-form-item prop="userName">
+            <el-form-item prop="card_date">
               <span class="form-label-text form-label-text-right">Expiry date :</span>
-              <el-input v-model="form.userName" placeholder="MM/YY" clearable></el-input>
+              <el-input v-model="form.card_date" placeholder="MM/YY" clearable></el-input>
             </el-form-item>
-            <el-form-item prop="userName">
+            <el-form-item prop="card_cvv">
               <span class="form-label-text form-label-text-right">CVC/CVV :</span>
-              <el-input v-model="form.userName" placeholder="CVC" clearable></el-input>
+              <el-input v-model="form.card_cvv" placeholder="CVC" clearable></el-input>
             </el-form-item>
           </div>
         </div>
@@ -149,7 +140,7 @@
           <el-form-item prop="agreement">
             <el-checkbox v-model="form.agreement">
               Read and agree to the User Related Agreement
-              <router-link class="agreement-link" to>User Related Agreement</router-link>
+              <router-link class="agreement-link" to="/news-detail?id=147">User Related Agreement</router-link>
             </el-checkbox>
             <el-checkbox v-model="form.agreement">
               Agree to strictly abide by national laws and industry regulations in conducting sales activities and timely complete
@@ -187,8 +178,13 @@
         </div>
 
         <!-- 提交按钮 -->
-        <div class="submit-section" >
-          <el-button class="btn-submit" v-if="!isUploadDisabled" @click="do_submit()" :loading="loading">SUBMIT</el-button>
+        <div class="submit-section">
+          <el-button
+            class="btn-submit"
+            v-if="!isUploadDisabled"
+            @click="do_submit()"
+            :loading="loading"
+          >SUBMIT</el-button>
         </div>
       </el-form>
     </div>
@@ -214,92 +210,84 @@ export default {
       // 表单数据
       form: {
         identityFront: "", // 身份证正面
-        identityBack: "", // 身份证反面
+        identityId: "",
         province: "", // 省份
         city: "", // 省份
         areaId: "", // 销售地区ID
         areaName: "", // 销售地区名称
-        receiveType: 1, // 收款方式：1=微信，2=支付宝，3=银行卡
-        receiveAccount: "", // 收款账号（银行卡）
-        receiveQrcode: "", // 收款二维码
-        bankName: "", // 开户银行名称
-        cardCode: "", // 开户银行账号
-        userName: "", // 持卡人姓名
+        receiveType: 1, // 收款方式：1=paypal，2=stripe
         sales_site: "", //销售地区 区域id ,拼接
         agreement: true, // 协议同意
-        identityId: ""
+        card_name: "",
+        card_num: "",
+        card_date: "",
+        card_cvv: ""
       },
 
       // 表单验证规则
       rules: {
         identityFront: [
-          { required: true, message: "请上传身份证正面", trigger: "change" }
-        ],
-        identityBack: [
-          { required: true, message: "请上传身份证反面", trigger: "change" }
+          {
+            required: true,
+            message: "please upload the identity front",
+            trigger: "change"
+          }
         ],
         identityId: [
-          { required: true, message: "请输入身份证号", trigger: "blur" }
+          {
+            required: true,
+            message: "please enter the identity id",
+            trigger: "blur"
+          }
         ],
         sales_site: [
-          { required: true, message: "请选择销售地区", trigger: "change" }
+          {
+            required: true,
+            message: "please select the sales region",
+            trigger: "change"
+          }
         ],
         receiveType: [
-          { required: true, message: "请选择收款方式", trigger: "change" }
-        ],
-        bankName: [
           {
-            validator: (rule, value, callback) => {
-              if (this.form.receiveType === 3 && !value) {
-                callback(new Error("请输入开户银行名称"));
-              } else {
-                callback();
-              }
-            },
-            trigger: "blur"
-          }
-        ],
-        cardCode: [
-          {
-            validator: (rule, value, callback) => {
-              if (this.form.receiveType === 3 && !value) {
-                callback(new Error("请输入开户银行账号"));
-              } else {
-                callback();
-              }
-            },
-            trigger: "blur"
-          }
-        ],
-        userName: [
-          {
-            validator: (rule, value, callback) => {
-              if (this.form.receiveType === 3 && !value) {
-                callback(new Error("请输入持卡人姓名"));
-              } else {
-                callback();
-              }
-            },
-            trigger: "blur"
-          }
-        ],
-        receiveQrcode: [
-          {
-            validator: (rule, value, callback) => {
-              if (
-                (this.form.receiveType === 1 || this.form.receiveType === 2) &&
-                !value
-              ) {
-                callback(new Error("请上传收款二维码"));
-              } else {
-                callback();
-              }
-            },
+            required: true,
+            message: "please select the payment method",
             trigger: "change"
           }
         ],
         agreement: [
-          { required: true, message: "请同意相关协议", trigger: "change" }
+          {
+            required: true,
+            message: "please agree to the related agreement",
+            trigger: "change"
+          }
+        ],
+        card_name: [
+          {
+            required: true,
+            message: "please enter the card name",
+            trigger: "blur"
+          }
+        ],
+        card_num: [
+          {
+            required: true,
+            message: "please enter the card number",
+            trigger: "blur"
+          }
+        ],
+        card_date: [
+          {
+            required: true,
+            message: "please enter the card date",
+            trigger: "blur"
+          }
+        ],
+        card_cvv: [
+          {
+            required: true,
+            message: "please enter the card cvv",
+            trigger: "blur"
+          }
         ]
       },
       userInfo: {},
@@ -327,6 +315,9 @@ export default {
     this.query_user();
   },
   methods: {
+    handle_paypal_click(type) {
+      this.form.receiveType = type;
+    },
     query_user() {
       this.$api({
         url: "/service.php",
@@ -337,36 +328,22 @@ export default {
       }).then(res => {
         if (res.code == 200) {
           let data = res.data;
+          const receiveAccount = JSON.parse(data.receiveAccount || "{}") || {};
+
           this.userInfo = data;
 
           this.form.identityFront = data.identityFront || "";
-          this.form.identityBack = data.identityBack || "";
-          this.form.province = data.province || "";
-          this.form.city = data.city || "";
-          this.form.areaId = data.areaId || "";
-          this.form.areaName = data.areaName || "";
           this.form.receiveType = data.receiveType || "";
-          this.form.receiveQrcode = data.receiveQrcode || "";
           this.form.identityId = data.identityId || "";
+          this.form.card_name = receiveAccount.card_name || "";
+          this.form.card_num = receiveAccount.card_num || "";
+          this.form.card_date = receiveAccount.card_date || "";
+          this.form.card_cvv = receiveAccount.card_cvv || "";
 
-          // if (data.province && data.areaId) {
-          //   this.$nextTick(() => {
-          //     this.$refs.area_select.init({
-          //       province: data.province,
-          //       city: data.city,
-          //       area: data.areaId,
-          //       provinceCode: data.province,
-          //       cityCode: data.city,
-          //       areaCode: data.areaId,
-          //     });
-          //   });
-          // }
           if (res.data.sales_site_json) {
             this.area_select_list = JSON.parse(res.data.sales_site_json);
             this.area_select_list.forEach((e, i) => {
-              console.log("e", e);
               this.$nextTick(() => {
-                console.log("this.$refs.area_select", this.$refs.area_select);
                 this.$refs.area_select[i].init({
                   province: e.province,
                   city: e.city,
@@ -378,28 +355,13 @@ export default {
               });
             });
           }
-
-          if (data.receiveAccount) {
-            try {
-              let obj = JSON.parse(data.receiveAccount);
-              this.form.bankName = obj.bank_name || "";
-              this.form.cardCode = obj.card_code || "";
-              this.form.userName = obj.user_name || "";
-            } catch (error) {}
-          }
         }
       });
     },
     throttle_do_submit() {},
 
     // 收款方式改变
-    onReceiveTypeChange(value) {
-      // 清空相关字段
-      this.form.receiveQrcode = "";
-      this.form.bankName = "";
-      this.form.cardCode = "";
-      this.form.userName = "";
-    },
+    onReceiveTypeChange(value) {},
     handle_add() {
       if (this.area_select_list.length != 3) {
         this.area_select_list.push({
@@ -417,15 +379,15 @@ export default {
     },
     // 地区选择改变
     changeSelectAddress(data, i) {
-      this.$log("回调data", data);
-      this.$log("回调i", i);
       let { sheng, shi, qu } = data;
       let form = {};
       if (sheng && shi && qu) {
         // 保存区级ID作为areaId
         form.areaId = qu.id;
         // 保存完整的地区名称
-        form.areaName = `${sheng.title}-${shi.title}-${qu.title}`;
+        form.areaName = `${sheng.title}${shi.title ? "-" + shi.title : ""}${
+          qu.title ? "-" + qu.title : ""
+        }`;
         // 保存省份和城市
         form.province = sheng.id || "";
         form.city = shi.id || "";
@@ -450,14 +412,18 @@ export default {
           this.loading = true;
 
           let sales_site = [];
+          let name_list = [];
           this.area_select_list.forEach(e => {
             console.log("e", e);
             if (e.areaId) {
               sales_site.push(e.areaId);
             }
+            if (e.areaName) {
+              name_list.push(e.areaName);
+            }
           });
-          if (sales_site.length != this.area_select_list.length) {
-            this.$message.error("请完善销售地区");
+          if (name_list.length != this.area_select_list.length) {
+            this.$message.error("please complete the sales region");
             this.loading = false;
             return;
           }
@@ -465,28 +431,9 @@ export default {
           // 构建提交数据
           let submitData = {
             identityFront: this.form.identityFront,
-            identityBack: this.form.identityBack,
-            province: this.form.province, // 只保存区级ID
-            city: this.form.city, // 只保存区级ID
-            areaId: this.form.areaId, // 只保存区级ID
-            receiveType: this.form.receiveType,
-            agreement: this.form.agreement,
-            identityId: this.form.identityId
+            identityId: this.form.identityId,
+            receiveType: this.form.receiveType
           };
-
-          // 根据收款方式添加相应数据
-          if (this.form.receiveType === 3) {
-            // 银行卡
-            submitData.receiveAccount = JSON.stringify({
-              bank_name: this.form.bankName,
-              card_code: this.form.cardCode,
-              user_name: this.form.userName
-            });
-          } else {
-            // 微信或支付宝
-            submitData.receiveQrcode = this.form.receiveQrcode;
-          }
-
           this.$api({
             url: "/service.php",
             method: "get",
@@ -495,7 +442,12 @@ export default {
               ...submitData,
               sales_site_json: JSON.stringify(this.area_select_list),
               sales_site: sales_site.join(","),
-              userType: 2
+              receiveAccount: {
+                card_name: this.form.card_name,
+                card_num: this.form.card_num,
+                card_date: this.form.card_date,
+                card_cvv: this.form.card_cvv
+              }
             }
           }).then(res => {
             let { code, msg, data } = res;
@@ -529,13 +481,13 @@ export default {
     upload_before_upload(file) {
       const isLt5M = file.size / 1024 / 1024 < 5; // 文件大小限制5M
       if (!isLt5M) {
-        alertErr("上传文件大小不能超过 5MB!");
+        alertErr("the file size cannot exceed 5MB!");
         return false;
       }
 
       const isJPG = file.type === "image/jpeg" || file.type === "image/png";
       if (!isJPG) {
-        alertErr("上传文件只能是 JPG/PNG 格式!");
+        alertErr("the file can only be JPG/PNG format!");
         return false;
       }
 

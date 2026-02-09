@@ -385,8 +385,11 @@ export default {
       line-height: 48px;
       cursor: pointer;
       margin-right: 40px;
+      font-size: 20px;
+
       .number {
         color: #f74747;
+        font-size: 20px;
       }
 
       &.active {

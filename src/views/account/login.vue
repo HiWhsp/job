@@ -92,7 +92,7 @@ export default {
       tabType: "PASS", //登录方式
       agreed: false,
       savePass: true, //记住密码
-      login_type: 0, //手机号登录
+      login_type: 1, //手机号登录
       form: {
         loginType: "0", //登录方式：1-手机验证码登录 0-手机密码登录
         phone: "",
@@ -140,11 +140,11 @@ export default {
       //   return;
       // }
       const isphone = this.login_type == 0;
-      // if (!reg_phone.test(this.form.phone) && isphone) {
-      //   alertErr("Please enter the correct phone number");
-      //   return;
-      // }
-      if (!reg_email.test(this.form.phone)) {
+      if (!reg_phone.test(this.form.phone) && isphone) {
+        alertErr("Please enter the correct phone number");
+        return;
+      }
+      if (!reg_email.test(this.form.phone) && !isphone) {
         alertErr("Please enter the correct email");
         return;
       }
@@ -153,15 +153,15 @@ export default {
         return;
       }
       let params = {};
-      // if (isphone) {
-      //   params = {
-      //     action: "login_phoneLogin",
-      //     phone: this.form.phone,
-      //     loginType: 0,
-      //     // code: this.form.password,
-      //     password: this.form.password
-      //   };
-      // } else {
+      if (isphone) {
+        params = {
+          action: "login_phoneLogin",
+          phone: this.form.phone,
+          loginType: 0,
+          // code: this.form.password,
+          password: this.form.password
+        };
+      } else {
       params = {
         action: "login_emailLogin",
         email: this.form.phone,
@@ -169,7 +169,7 @@ export default {
         // code: this.form.password,
         password: this.form.password
       };
-      // }
+      }
       this.$api({
         url: "/service.php",
         method: "get",
