@@ -126,7 +126,7 @@
           <el-form-item prop="agreement">
             <el-checkbox v-model="form.agreement">
               Read and agree to the User Related Agreement
-              <router-link class="agreement-link" to>User Related Agreement</router-link>
+              <router-link class="agreement-link" to="/news-detail?id=147">User Related Agreement</router-link>
             </el-checkbox>
             <el-checkbox v-model="form.agreement">
               Agree to strictly abide by national laws and industry regulations in conducting sales activities and timely complete

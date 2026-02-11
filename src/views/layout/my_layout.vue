@@ -138,7 +138,7 @@ export default {
           title: "Customer Management",
           route: "customer-management",
           icon: require("@img/my/nav-10.png"),
-          showCondition: user => user.userType == 1 || user.userType == 2
+          showCondition: user => user.userType == 2
         },
         {
           title: "Sales Performance",

@@ -6,7 +6,7 @@
 
     <div class="page-ctx">
       <!-- <div class="form-title">BUSINESS INFORMATION</div> -->
-      
+
       <div class="form-container">
         <el-form :model="form" :rules="rules" ref="businessForm" label-width="0">
           <div class="form-columns">
@@ -15,99 +15,82 @@
               <div class="form-item">
                 <label class="form-label">Company :</label>
                 <el-form-item prop="company">
-                  <el-input 
-                    v-model="form.company" 
-                    placeholder="Company"
-                    clearable
-                  ></el-input>
+                  <el-input v-model="form.company" placeholder="Company" clearable></el-input>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">First Name :</label>
                 <el-form-item prop="firstName">
-                  <el-input 
-                    v-model="form.firstName" 
-                    placeholder="First Name"
-                    clearable
-                  ></el-input>
+                  <el-input v-model="form.firstName" placeholder="First Name" clearable></el-input>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">Last Name :</label>
                 <el-form-item prop="lastName">
-                  <el-input 
-                    v-model="form.lastName" 
-                    placeholder="Last Name"
-                    clearable
-                  ></el-input>
+                  <el-input v-model="form.lastName" placeholder="Last Name" clearable></el-input>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">Job Title :</label>
-                <el-form-item prop="jobTitle">
-                  <el-input 
-                    v-model="form.jobTitle" 
-                    placeholder="Job Title"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="job_title">
+                  <el-select v-model="form.job_title" placeholder="Please select">
+                    <el-option value="CEO" label="CEO">CEO</el-option>
+                    <el-option value="Manager" label="Manager">Manager</el-option>
+                    <el-option value="Director" label="Director">Director</el-option>
+                    <el-option value="Other" label="Other">Other</el-option>
+                  </el-select>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">Phone :</label>
                 <el-form-item prop="phone">
-                  <el-input 
-                    v-model="form.phone" 
-                    placeholder="Phone"
-                    clearable
-                  ></el-input>
+                  <el-input v-model="form.phone" placeholder="Phone" clearable></el-input>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">Company Email :</label>
-                <el-form-item prop="companyEmail">
-                  <el-input 
-                    v-model="form.companyEmail" 
-                    placeholder="Company Email"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="company_email">
+                  <el-input v-model="form.company_email" placeholder="Company Email" clearable></el-input>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">Business Number :</label>
-                <el-form-item prop="businessNumber">
-                  <el-input 
-                    v-model="form.businessNumber" 
-                    placeholder="Business Number"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="companyNumber">
+                  <el-input v-model="form.companyNumber" placeholder="Business Number" clearable></el-input>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">Business Type :</label>
-                <el-form-item prop="businessType">
-                  <el-input 
-                    v-model="form.businessType" 
-                    placeholder="Business Type"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="companyIndustry">
+                  <el-select v-model="form.companyIndustry" placeholder="Please select">
+                    <el-option
+                      v-for="(item, index) in vuex_top_title"
+                      :key="index"
+                      :value="item.title"
+                      :label="item.title"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">Main Products :</label>
-                <el-form-item prop="mainProducts">
-                  <el-input 
-                    v-model="form.mainProducts" 
-                    placeholder="Main Products"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="companyType">
+                  <el-select v-model="form.companyType" placeholder="Please select">
+                    <el-option
+                      v-for="(item, index) in vuex_category_tree"
+                      :key="index"
+                      :value="item.title"
+                      :label="item.title"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </div>
 
@@ -115,17 +98,9 @@
                 <label class="form-label">Receiving Hours :</label>
                 <el-form-item prop="receivingHours">
                   <div class="receiving-hours">
-                    <el-input 
-                      v-model="form.receivingHoursStart" 
-                      placeholder="9"
-                      class="hours-input"
-                    ></el-input>
+                    <el-input v-model="form.business_am" placeholder="9" class="hours-input"></el-input>
                     <span class="hours-text">AM-</span>
-                    <el-input 
-                      v-model="form.receivingHoursEnd" 
-                      placeholder="5"
-                      class="hours-input"
-                    ></el-input>
+                    <el-input v-model="form.business_pm" placeholder="5" class="hours-input"></el-input>
                     <span class="hours-text">PM</span>
                   </div>
                 </el-form-item>
@@ -136,111 +111,119 @@
             <div class="form-column right-column">
               <div class="form-item">
                 <label class="form-label">Billing Address :</label>
-                <el-form-item prop="billingAddress">
-                  <el-input 
-                    v-model="form.billingAddress" 
-                    placeholder="Billing Address"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="billing_address">
+                  <el-input v-model="form.billing_address" placeholder="Billing Address" clearable></el-input>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">City :</label>
-                <el-form-item prop="billingCity">
-                  <el-input 
-                    v-model="form.billingCity" 
-                    placeholder="City"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="billing_city">
+                  <el-input v-model="form.billing_city" placeholder="City" clearable></el-input>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">State :</label>
-                <el-form-item prop="billingState">
-                  <el-input 
-                    v-model="form.billingState" 
-                    placeholder="State"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="billing_state">
+                  <template v-if="!billingProvinceList.length">
+                    <el-input clearable v-model="form.billing_state" placeholder="Please enter"></el-input>
+                  </template>
+                  <template v-else>
+                    <el-select filterable v-model="form.billing_state" placeholder="Please enter">
+                      <el-option
+                        v-for="item in billingProvinceList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.label"
+                      ></el-option>
+                    </el-select>
+                  </template>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">Country :</label>
-                <el-form-item prop="billingCountry">
-                  <el-input 
-                    v-model="form.billingCountry" 
-                    placeholder="Country"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="billing_country">
+                  <el-select
+                    filterable
+                    v-model="form.billing_country"
+                    placeholder="Please select"
+                    @change="changeBillingCountry(form.billing_country)"
+                  >
+                    <el-option
+                      v-for="item in countryList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.label"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">Zip Code :</label>
-                <el-form-item prop="billingZipCode">
-                  <el-input 
-                    v-model="form.billingZipCode" 
-                    placeholder="Zip Code"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="billing_zipcode">
+                  <el-input v-model="form.billing_zipcode" placeholder="Zip Code" clearable></el-input>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">Shipping Address :</label>
-                <el-form-item prop="shippingAddress">
-                  <el-input 
-                    v-model="form.shippingAddress" 
-                    placeholder="Shipping Address"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="address">
+                  <el-input v-model="form.address" placeholder="Shipping Address" clearable></el-input>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">City :</label>
-                <el-form-item prop="shippingCity">
-                  <el-input 
-                    v-model="form.shippingCity" 
-                    placeholder="City"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="city">
+                  <el-input v-model="form.city" placeholder="City" clearable></el-input>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">State :</label>
-                <el-form-item prop="shippingState">
-                  <el-input 
-                    v-model="form.shippingState" 
-                    placeholder="State"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="province">
+                  <template v-if="!shippingProvinceList.length">
+                    <el-input clearable v-model="form.province" placeholder="Please enter"></el-input>
+                  </template>
+                  <template v-else>
+                    <el-select filterable v-model="form.province" placeholder="Please enter">
+                      <el-option
+                        v-for="item in shippingProvinceList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.label"
+                      ></el-option>
+                    </el-select>
+                  </template>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">Country :</label>
-                <el-form-item prop="shippingCountry">
-                  <el-input 
-                    v-model="form.shippingCountry" 
-                    placeholder="Country"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="country">
+                  <el-select
+                    filterable
+                    v-model="form.country"
+                    placeholder="Please select"
+                    @change="changeShippingCountry(form.country)"
+                  >
+                    <el-option
+                      v-for="item in countryList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.label"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </div>
 
               <div class="form-item">
                 <label class="form-label">Zip Code :</label>
-                <el-form-item prop="shippingZipCode">
-                  <el-input 
-                    v-model="form.shippingZipCode" 
-                    placeholder="Zip Code"
-                    clearable
-                  ></el-input>
+                <el-form-item prop="zipcode">
+                  <el-input v-model="form.zipcode" placeholder="Zip Code" clearable></el-input>
                 </el-form-item>
               </div>
             </div>
@@ -252,6 +235,9 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import countryData from "@/constant/countryData.js";
+
 export default {
   name: "business-information",
   data() {
@@ -260,31 +246,40 @@ export default {
         company: "",
         firstName: "",
         lastName: "",
-        jobTitle: "",
+        job_title: "",
         phone: "",
-        companyEmail: "",
-        businessNumber: "",
-        businessType: "",
-        mainProducts: "",
-        receivingHoursStart: "",
-        receivingHoursEnd: "",
-        billingAddress: "",
-        billingCity: "",
-        billingState: "",
-        billingCountry: "",
-        billingZipCode: "",
-        shippingAddress: "",
-        shippingCity: "",
-        shippingState: "",
-        shippingCountry: "",
-        shippingZipCode: ""
+        company_email: "",
+        companyNumber: "",
+        companyIndustry: "",
+        companyType: "",
+        business_am: "9",
+        business_pm: "5",
+        billing_address: "",
+        billing_city: "",
+        billing_state: "",
+        billing_country: "",
+        billing_zipcode: "",
+        address: "",
+        city: "",
+        province: "",
+        country: "",
+        zipcode: ""
       },
       rules: {
         // 可以根据需要添加验证规则
-      }
+      },
+      countryList: [],
+      allProvinceList: [],
+      billingProvinceList: [],
+      shippingProvinceList: [],
     };
   },
+  computed: {
+    ...mapState(["vuex_top_title", "vuex_category_tree"])
+  },
   created() {
+    this.countryList = countryData.countryList || [];
+    this.allProvinceList = countryData.provinceList || [];
     this.getBusinessInfo();
   },
   methods: {
@@ -294,13 +289,40 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "users_getBusinessInfo"
+          action: "users_userInfo"
         }
       }).then(res => {
         if (res.code == 200 && res.data) {
           this.form = { ...this.form, ...res.data };
+          // 初始化省份列表
+          if (this.form.billing_country) {
+            this.changeBillingCountry(this.form.billing_country);
+          }
+          if (this.form.country) {
+            this.changeShippingCountry(this.form.country);
+          }
         }
       });
+    },
+    changeBillingCountry(val) {
+      let country_info = this.countryList.find(v => v.label === val);
+      let country_id = country_info ? country_info.value : "";
+      this.billingProvinceList = this.allProvinceList.filter(
+        v => v.country_id === country_id && v.label
+      );
+      if (this.billingProvinceList.length) {
+        this.form.billing_state = "";
+      }
+    },
+    changeShippingCountry(val) {
+      let country_info = this.countryList.find(v => v.label === val);
+      let country_id = country_info ? country_info.value : "";
+      this.shippingProvinceList = this.allProvinceList.filter(
+        v => v.country_id === country_id && v.label
+      );
+      if (this.shippingProvinceList.length) {
+        this.form.province = "";
+      }
     },
     saveBusinessInfo() {
       this.$refs.businessForm.validate(valid => {
@@ -393,6 +415,29 @@ export default {
                 width: 100%;
 
                 /deep/ .el-input__inner {
+                  height: 56px;
+                  border: 1px solid #e0e0e0;
+                  border-radius: 4px;
+                  font-size: 20px;
+                  color: #1e262e;
+                  padding: 0 16px;
+                  background: #ffffff;
+
+                  &::placeholder {
+                    color: #999999;
+                    font-size: 20px;
+                  }
+
+                  &:hover {
+                    border-color: #c0c0c0;
+                  }
+                }
+              }
+
+              /deep/ .el-select {
+                width: 100%;
+
+                .el-input__inner {
                   height: 56px;
                   border: 1px solid #e0e0e0;
                   border-radius: 4px;

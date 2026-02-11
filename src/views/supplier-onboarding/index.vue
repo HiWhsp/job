@@ -1,23 +1,12 @@
 <template>
   <div class="page">
-   
-
     <div class="page-ctx w-1400">
-       <div class="main-title flex"> 
-      <span>BECOME MEDOOO'S SUPPLIER</span>
-    </div>
-     
-
-     
+      <div class="main-title flex">
+        <span>BECOME MEDOOO'S SUPPLIER</span>
+      </div>
 
       <!-- 认证表单页面 -->
-      <el-form
-        v-if="showFormPage"
-        :model="form"
-        :rules="rules"
-        ref="supplierForm"
-        label-width="0"
-      >
+      <el-form v-if="showFormPage" :model="form" :rules="rules" ref="supplierForm" label-width="0">
         <!-- 证件上传部分 - 暂时隐藏 -->
         <div class="certification-list" v-if="false">
           <!-- 营业执照 -->
@@ -36,7 +25,6 @@
                   :data="mix_upload_data"
                   :on-success="(res) => upload_on_success(res, 'license1')"
                   :before-upload="upload_before_upload"
-                  
                 >
                   <div class="upload-box" v-if="!form.license1">
                     <div class="upload-icon">+</div>
@@ -79,7 +67,6 @@
                   :data="mix_upload_data"
                   :on-success="(res) => upload_on_success(res, 'license2')"
                   :before-upload="upload_before_upload"
-                  
                 >
                   <div class="upload-box" v-if="!form.license2">
                     <div class="upload-icon">+</div>
@@ -122,7 +109,6 @@
                   :data="mix_upload_data"
                   :on-success="(res) => upload_on_success(res, 'license3')"
                   :before-upload="upload_before_upload"
-                  
                 >
                   <div class="upload-box" v-if="!form.license3">
                     <div class="upload-icon">+</div>
@@ -165,7 +151,6 @@
                   :data="mix_upload_data"
                   :on-success="(res) => upload_on_success(res, 'license4')"
                   :before-upload="upload_before_upload"
-                  
                 >
                   <div class="upload-box" v-if="!form.license4">
                     <div class="upload-icon">+</div>
@@ -208,7 +193,6 @@
                   :data="mix_upload_data"
                   :on-success="(res) => upload_on_success(res, 'license5')"
                   :before-upload="upload_before_upload"
-                  
                 >
                   <div class="upload-box" v-if="!form.license5">
                     <div class="upload-icon">+</div>
@@ -251,7 +235,6 @@
                   :data="mix_upload_data"
                   :on-success="(res) => upload_on_success(res, 'license6')"
                   :before-upload="upload_before_upload"
-                  
                 >
                   <div class="upload-box" v-if="!form.license6">
                     <div class="upload-icon">+</div>
@@ -274,171 +257,157 @@
           </div>
         </div>
 
-         <!-- 表单字段 -->
-         <div class="form-fields">
-           <div class="form-columns">
-             <!-- 左侧列：公司信息 -->
-             <div class="form-column left-column">
-               <div class="field-row">
-                 <div class="field-item">
-                   <div class="field-label">Company Name:</div>
-                   <el-form-item prop="companyName">
-                     <el-input
-                       v-model="form.companyName"
-                       placeholder="Please enter"
-                       clearable
-                     ></el-input>
-                   </el-form-item>
-                 </div>
-               </div>
+        <!-- 表单字段 -->
+        <div class="form-fields">
+          <div class="form-columns">
+            <!-- 左侧列：公司信息 -->
+            <div class="form-column left-column">
+              <div class="field-row">
+                <div class="field-item">
+                  <div class="field-label">Company Name:</div>
+                  <el-form-item prop="companyName">
+                    <el-input v-model="form.companyName" placeholder="Please enter" clearable></el-input>
+                  </el-form-item>
+                </div>
+              </div>
 
-               <div class="field-row">
-                 <div class="field-item">
-                   <div class="field-label">Business Number:</div>
-                   <el-form-item prop="bankAccount">
-                     <el-input
-                       v-model="form.bankAccount"
-                       placeholder="Please enter"
-                       clearable
-                     ></el-input>
-                   </el-form-item>
-                 </div>
-               </div>
+              <div class="field-row">
+                <div class="field-item">
+                  <div class="field-label">Business Number:</div>
+                  <el-form-item prop="bankAccount">
+                    <el-input v-model="form.bankAccount" placeholder="Please enter" clearable></el-input>
+                  </el-form-item>
+                </div>
+              </div>
 
-               <div class="field-row">
-                 <div class="field-item">
-                   <div class="field-label">Phone Number:</div>
-                   <el-form-item prop="mobile">
-                     <el-input
-                       v-model="form.mobile"
-                       placeholder="Please enter"
-                       clearable
-                     ></el-input>
-                   </el-form-item>
-                 </div>
-               </div>
+              <div class="field-row">
+                <div class="field-item">
+                  <div class="field-label">Phone Number:</div>
+                  <el-form-item prop="mobile">
+                    <el-input v-model="form.mobile" placeholder="Please enter" clearable></el-input>
+                  </el-form-item>
+                </div>
+              </div>
 
-               <div class="field-row">
-                 <div class="field-item">
-                   <div class="field-label">Email:</div>
-                   <el-form-item prop="wechat">
-                     <el-input
-                       v-model="form.wechat"
-                       placeholder="Please enter"
-                       clearable
-                     ></el-input>
-                   </el-form-item>
-                 </div>
-               </div>
+              <div class="field-row">
+                <div class="field-item">
+                  <div class="field-label">Email:</div>
+                  <el-form-item prop="wechat">
+                    <el-input v-model="form.wechat" placeholder="Please enter" clearable></el-input>
+                  </el-form-item>
+                </div>
+              </div>
 
-               <div class="field-row">
-                 <div class="field-item textarea-field">
-                   <div class="field-label">Company Address:</div>
-                   <el-form-item prop="bankName">
-                     <el-input
-                       v-model="form.bankName"
-                       type="textarea"
-                       :rows="3"
-                       placeholder="Please enter"
-                       clearable
-                     ></el-input>
-                   </el-form-item>
-                 </div>
-               </div>
-             </div>
+              <div class="field-row">
+                <div class="field-item textarea-field">
+                  <div class="field-label">Company Address:</div>
+                  <el-form-item prop="bankName">
+                    <el-input
+                      v-model="form.bankName"
+                      type="textarea"
+                      :rows="3"
+                      placeholder="Please enter"
+                      clearable
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </div>
+            </div>
 
-             <!-- 右侧列：产品信息 -->
-             <div class="form-column right-column">
-               <div class="field-row">
-                 <div class="field-item">
-                   <div class="field-label">Product Name:</div>
-                   <el-form-item prop="productName">
-                     <el-input
-                       v-model="form.productName"
-                       placeholder="Please enter"
-                       clearable
-                     ></el-input>
-                   </el-form-item>
-                 </div>
-               </div>
+            <!-- 右侧列：产品信息 -->
+            <div class="form-column right-column">
+              <div class="field-row">
+                <div class="field-item">
+                  <div class="field-label">Product Name:</div>
+                  <el-form-item prop="productName">
+                    <el-input v-model="form.productName" placeholder="Please enter" clearable></el-input>
+                  </el-form-item>
+                </div>
+              </div>
 
-               <div class="field-row">
-                 <div class="field-item textarea-field">
-                   <div class="field-label">Specification Description:</div>
-                   <el-form-item prop="specDesc">
-                     <el-input
-                       v-model="form.specDesc"
-                       type="textarea"
-                       :rows="3"
-                       placeholder="Please enter"
-                       clearable
-                     ></el-input>
-                   </el-form-item>
-                 </div>
-               </div>
+              <div class="field-row">
+                <div class="field-item textarea-field">
+                  <div class="field-label">Specification Description:</div>
+                  <el-form-item prop="specDesc">
+                    <el-input
+                      v-model="form.specDesc"
+                      type="textarea"
+                      :rows="3"
+                      placeholder="Please enter"
+                      clearable
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </div>
 
-               <div class="field-row">
-                 <div class="field-item">
-                   <div class="field-label">Supply Price:</div>
-                   <el-form-item prop="supplyPrice">
-                     <el-upload
-                       class="upload-demo"
-                       :name="UPLOAD_NAME"
-                       :action="UPLOAD_ACTION"
-                       :data="mix_upload_data"
-                       :on-preview="handlePreview"
-                       :before-upload="beforeAvatarUpload"
-                       :on-remove="on_remove_supplyPrice"
-                       multiple
-                       :on-success="on_success_supplyPrice"
-                       :file-list="supplyPrice"
-                     >
-                       <el-button size="small" type="primary">Upload</el-button>
-                       <div slot="tip" class="el-upload__tip">Can upload Word, Excel, PDF (PDF can be previewed)</div>
-                     </el-upload>
-                   </el-form-item>
-                 </div>
-               </div>
+              <div class="field-row">
+                <div class="field-item">
+                  <div class="field-label">Supply Price:</div>
+                  <el-form-item prop="supplyPrice">
+                    <el-upload
+                      class="upload-demo"
+                      :name="UPLOAD_NAME"
+                      :action="UPLOAD_ACTION"
+                      :data="mix_upload_data"
+                      :on-preview="handlePreview"
+                      :before-upload="beforeAvatarUpload"
+                      :on-remove="on_remove_supplyPrice"
+                      multiple
+                      :on-success="on_success_supplyPrice"
+                      :file-list="supplyPrice"
+                    >
+                      <el-button size="small" type="primary">Upload</el-button>
+                      <div
+                        slot="tip"
+                        class="el-upload__tip"
+                      >Can upload Word, Excel, PDF (PDF can be previewed)</div>
+                    </el-upload>
+                  </el-form-item>
+                </div>
+              </div>
 
-               <div class="field-row">
-                 <div class="field-item">
-                   <div class="field-label">Suggested Retail Price:</div>
-                   <el-form-item prop="salePrice">
-                     <el-upload
-                       class="upload-demo"
-                       :name="UPLOAD_NAME"
-                       :action="UPLOAD_ACTION"
-                       :data="mix_upload_data"
-                       :on-preview="handlePreview"
-                       :before-upload="beforeAvatarUpload"
-                       :on-remove="on_remove_salePrice"
-                       multiple
-                       :on-success="on_success_salePrice"
-                       :file-list="salePrice"
-                     >
-                       <el-button size="small" type="primary">Upload</el-button>
-                       <div slot="tip" class="el-upload__tip">Can upload Word, Excel, PDF (PDF can be previewed)</div>
-                     </el-upload>
-                   </el-form-item>
-                 </div>
-               </div>
+              <div class="field-row">
+                <div class="field-item">
+                  <div class="field-label">Suggested Retail Price:</div>
+                  <el-form-item prop="salePrice">
+                    <el-upload
+                      class="upload-demo"
+                      :name="UPLOAD_NAME"
+                      :action="UPLOAD_ACTION"
+                      :data="mix_upload_data"
+                      :on-preview="handlePreview"
+                      :before-upload="beforeAvatarUpload"
+                      :on-remove="on_remove_salePrice"
+                      multiple
+                      :on-success="on_success_salePrice"
+                      :file-list="salePrice"
+                    >
+                      <el-button size="small" type="primary">Upload</el-button>
+                      <div
+                        slot="tip"
+                        class="el-upload__tip"
+                      >Can upload Word, Excel, PDF (PDF can be previewed)</div>
+                    </el-upload>
+                  </el-form-item>
+                </div>
+              </div>
 
-               <div class="field-row">
-                 <div class="field-item">
-                   <div class="field-label">Is it possible to ship products to customers directly?</div>
-                   <el-form-item prop="dropshipping">
-                     <el-radio-group v-model="form.dropshipping">
-                       <el-radio :label="1">YES</el-radio>
-                       <el-radio :label="0">NO</el-radio>
-                     </el-radio-group>
-                   </el-form-item>
-                 </div>
-               </div>
-             </div>
-           </div>
+              <div class="field-row">
+                <div class="field-item">
+                  <div class="field-label">Is it possible to ship products to customers directly?</div>
+                  <el-form-item prop="dropshipping">
+                    <el-radio-group v-model="form.dropshipping">
+                      <el-radio :label="1">YES</el-radio>
+                      <el-radio :label="0">NO</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                </div>
+              </div>
+            </div>
+          </div>
 
-           <!-- 注释掉的字段 -->
-           <!-- <div class="field-row">
+          <!-- 注释掉的字段 -->
+          <!-- <div class="field-row">
              <div class="field-item">
                <div class="field-label">开户银行全称</div>
                <el-form-item prop="bankName">
@@ -449,26 +418,23 @@
                  ></el-input>
                </el-form-item>
              </div>
-           </div> -->
-         </div>
+          </div>-->
+        </div>
 
         <!-- 提交按钮 -->
-        <div class="submit-section"  >
-          <el-button
-            class="btn-submit"
-            @click="throttle_do_submit()"
-            :loading="loading"
-          >
-            SUBMIT
-          </el-button>
+        <div class="submit-section">
+          <el-button class="btn-submit" @click="throttle_do_submit()" :loading="loading">SUBMIT</el-button>
         </div>
       </el-form>
-       <!-- 审核状态页面 -->
+      <!-- 审核状态页面 -->
       <div v-else class="review-status">
         <div class="status-icon">
-          <img src="@img/enterprise-cert/gys.png" alt="审核中" />
+          <img src="@img/product/product-add-success.png" alt="审核中" />
         </div>
-        <div class="status-text">提交成功，等待平台联系！</div>
+        <div class="status-text">
+          Your application has been successfully submitted!
+          <br />Please wait for MEDOOO review...
+        </div>
       </div>
     </div>
   </div>
@@ -486,8 +452,8 @@ export default {
       loading: false,
       userInfo: null,
       showForm: false, // 控制是否显示表单
-      supplyPrice:[],
-      salePrice:[],
+      supplyPrice: [],
+      salePrice: [],
       // 表单数据
       form: {
         // 证件上传
@@ -497,54 +463,90 @@ export default {
         license4: "", // 第二类医疗器械经营备案凭证
         license5: "", // 医疗器械注册证
         license6: "", // 其他证件
-        
+
         // 基本信息
         companyName: "", // 公司名称
         productName: "", // 产品品名
         specDesc: "", // 规格描述
-        supplyPrice: '', // 供应价
+        supplyPrice: "", // 供应价
         salePrice: "", // 建议售价
         dropshipping: 0, // 可否一件代发：1=是，0=否
         bankName: "", // 开户银行全称
         bankAccount: "", // 开户银行账户
         mobile: "", // 联系电话
-        wechat: "", // 微信号
+        wechat: "" // 微信号
       },
 
       // 表单验证规则
       rules: {
         license1: [
-          { required: true, message: "请上传营业执照", trigger: "change" },
+          { required: true, message: "请上传营业执照", trigger: "change" }
         ],
         companyName: [
-          { required: true, message: "Please enter company name", trigger: "blur" },
+          {
+            required: true,
+            message: "Please enter company name",
+            trigger: "blur"
+          }
         ],
         productName: [
-          { required: true, message: "Please enter product name", trigger: "blur" },
+          {
+            required: true,
+            message: "Please enter product name",
+            trigger: "blur"
+          }
         ],
         specDesc: [
-          { required: true, message: "Please enter specification description", trigger: "blur" },
+          {
+            required: true,
+            message: "Please enter specification description",
+            trigger: "blur"
+          }
         ],
         supplyPrice: [
-          { required: true, message: "Please upload supply price", trigger: "blur" },
+          {
+            required: true,
+            message: "Please upload supply price",
+            trigger: "blur"
+          }
         ],
         salePrice: [
-          { required: true, message: "Please upload suggested retail price", trigger: "blur" },
+          {
+            required: true,
+            message: "Please upload suggested retail price",
+            trigger: "blur"
+          }
         ],
         bankName: [
-          { required: true, message: "Please enter company address", trigger: "blur" },
+          {
+            required: true,
+            message: "Please enter company address",
+            trigger: "blur"
+          }
         ],
         bankAccount: [
-          { required: true, message: "Please enter business number", trigger: "blur" },
+          {
+            required: true,
+            message: "Please enter business number",
+            trigger: "blur"
+          }
         ],
         mobile: [
-          { required: true, message: "Please enter phone number", trigger: "blur" },
-          { pattern: /^1[3-9]\d{9}$/, message: "Please enter a valid phone number", trigger: "blur" },
+          {
+            required: true,
+            message: "Please enter phone number",
+            trigger: "blur"
+          },
+          {
+            pattern: /^1[3-9]\d{9}$/,
+            message: "Please enter a valid phone number",
+            trigger: "blur"
+          }
         ],
         wechat: [
-          { required: true, message: "Please enter email", trigger: "blur" },
-        ],
-      },
+          { required: true, message: "Please enter email", trigger: "blur" }
+        ]
+      }
     };
   },
   computed: {
@@ -557,7 +559,7 @@ export default {
         !this.showForm
       );
     },
-   
+
     // 判断是否显示表单页面
     showFormPage() {
       return (
@@ -567,90 +569,86 @@ export default {
           this.userInfo.renzheng != 1 &&
           this.userInfo.renzheng != -1)
       );
-    },
-   
-    
+    }
   },
   created() {
     this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000);
     // this.setView();
-    this.showForm=true
+    this.showForm = true;
   },
   methods: {
     //通用的文件点击
-    handlePreview(file){
-      console.log(file)
-      if((file.response||{}).data){
-        window.open(file.response.data)
-      }else{
-        
+    handlePreview(file) {
+      console.log(file);
+      if ((file.response || {}).data) {
+        window.open(file.response.data);
+      } else {
       }
     },
     //通用上传前的回调
     beforeAvatarUpload(file) {
-      let type=file.name.split('.')
-      let name=type[type.length-1]
-      console.log('name',name)
-      let show_up=false
-      if(name=='docx'||name=='doc'||name=='pdf'||name=='xlsx'||name=='cvs'){
-        show_up=true
-      }else{
-          this.$message.error('上传文件只能是word/excel/pdf格式!');
-
+      let type = file.name.split(".");
+      let name = type[type.length - 1];
+      console.log("name", name);
+      let show_up = false;
+      if (
+        name == "docx" ||
+        name == "doc" ||
+        name == "pdf" ||
+        name == "xlsx" ||
+        name == "cvs"
+      ) {
+        show_up = true;
+      } else {
+        this.$message.error("Uploaded files can only be word/excel/pdf format!");
       }
-      return show_up ;
+      return show_up;
     },
-    on_success_supplyPrice(res, file,fileList){
-      console.log('fileList', fileList)
-      let supplyPrice=[]
-      fileList.forEach((e)=>{
-        if(e.response){
-          supplyPrice.push(e.response.data)
-        }else{
-
+    on_success_supplyPrice(res, file, fileList) {
+      console.log("fileList", fileList);
+      let supplyPrice = [];
+      fileList.forEach(e => {
+        if (e.response) {
+          supplyPrice.push(e.response.data);
+        } else {
         }
-      })
-      this.form.supplyPrice=supplyPrice.join(',')
+      });
+      this.form.supplyPrice = supplyPrice.join(",");
     },
-    on_remove_supplyPrice(file, fileList){
+    on_remove_supplyPrice(file, fileList) {
       console.log(file, fileList);
-      let supplyPrice=[]
-      fileList.forEach((e)=>{
-        if(e.response){
-          supplyPrice.push(e.response.data)
-        }else{
-
+      let supplyPrice = [];
+      fileList.forEach(e => {
+        if (e.response) {
+          supplyPrice.push(e.response.data);
+        } else {
         }
-      })
-      this.form.supplyPrice=supplyPrice.join(',')
+      });
+      this.form.supplyPrice = supplyPrice.join(",");
     },
 
-
-    on_success_salePrice(res, file,fileList){
-      console.log('fileList', fileList)
-      let salePrice=[]
-      fileList.forEach((e)=>{
-        if(e.response){
-          salePrice.push(e.response.data)
-        }else{
-
+    on_success_salePrice(res, file, fileList) {
+      console.log("fileList", fileList);
+      let salePrice = [];
+      fileList.forEach(e => {
+        if (e.response) {
+          salePrice.push(e.response.data);
+        } else {
         }
-      })
-      this.form.salePrice=salePrice.join(',')
+      });
+      this.form.salePrice = salePrice.join(",");
     },
-    on_remove_salePrice(file, fileList){
+    on_remove_salePrice(file, fileList) {
       console.log(file, fileList);
-      let salePrice=[]
-      fileList.forEach((e)=>{
-        if(e.response){
-          salePrice.push(e.response.data)
-        }else{
-
+      let salePrice = [];
+      fileList.forEach(e => {
+        if (e.response) {
+          salePrice.push(e.response.data);
+        } else {
         }
-      })
-      this.form.salePrice=salePrice.join(',')
+      });
+      this.form.salePrice = salePrice.join(",");
     },
-    
 
     throttle_do_submit() {},
 
@@ -695,7 +693,7 @@ export default {
 
     do_submit() {
       // 使用el-form验证
-      this.$refs.supplierForm.validate((valid) => {
+      this.$refs.supplierForm.validate(valid => {
         if (valid) {
           this.loading = true;
           this.$api({
@@ -703,9 +701,9 @@ export default {
             method: "post",
             data: {
               action: "users_saveSupplier",
-              ...this.form,
-            },
-          }).then((res) => {
+              ...this.form
+            }
+          }).then(res => {
             let { code, msg, data } = res;
             alert(res).then(() => {
               this.loading = false;
@@ -737,13 +735,13 @@ export default {
     upload_before_upload(file) {
       const isLt5M = file.size / 1024 / 1024 < 5; // 文件大小限制5M
       if (!isLt5M) {
-        alertErr("上传文件大小不能超过 5MB!");
+        alertErr("The uploaded file size cannot exceed 5MB!");
         return false;
       }
 
       const isJPG = file.type === "image/jpeg" || file.type === "image/png";
       if (!isJPG) {
-        alertErr("上传文件只能是 JPG/PNG 格式!");
+        alertErr("The uploaded file can only be JPG/PNG format!");
         return false;
       }
 
@@ -763,19 +761,19 @@ export default {
         companyName: "",
         productName: "",
         specDesc: "",
-        supplyPrice: '',
+        supplyPrice: "",
         salePrice: "",
         dropshipping: 0,
         bankName: "",
         bankAccount: "",
         mobile: "",
-        wechat: "",
+        wechat: ""
       };
 
       // 显示表单页面
       this.showForm = true;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -789,9 +787,9 @@ export default {
 
   .main-title {
     padding: 20px 0;
-    text-align: center; 
-    background: transparent; 
-    font-family: Poppins, Poppins; 
+    text-align: center;
+    background: transparent;
+    font-family: Poppins, Poppins;
     font-size: 24px;
     font-weight: 600;
     border-bottom: none;
@@ -799,7 +797,7 @@ export default {
     color: #1e262e;
   }
 
-  .page-ctx { 
+  .page-ctx {
     padding: 40px 60px;
     background: #fff;
     border-radius: 0;
@@ -820,17 +818,19 @@ export default {
     margin-bottom: 30px;
 
     img {
-      width: 120px;
-      height: 120px;
+      width: 70px;
+      height: 70px;
       object-fit: contain;
     }
   }
 
   .status-text {
-    font-size: 18px;
-    font-weight: 500;
-    color: #1F1F1F;
-    line-height: 1.4;
+    font-family: Poppins, Poppins;
+    font-weight: 600;
+    font-size: 22px;
+    color: #1e262e;
+    text-align: center;
+    line-height: 35px;
   }
 }
 
@@ -847,20 +847,18 @@ export default {
     margin-bottom: 30px;
 
     img {
-      width: 120px;
-      height: 120px;
+      width: 70px;
+      height: 70px;
       object-fit: contain;
     }
   }
 
   .status-text {
-    font-size: 18px;
-    font-weight: 500;
-    color: #1F1F1F;
-    line-height: 1.4;
-    margin-bottom: 30px;
-    max-width: 500px;
-    word-wrap: break-word;
+    font-family: Poppins, Poppins;
+    font-weight: 600;
+    font-size: 22px;
+    color: #1e262e;
+    text-align: center;
   }
 
   .retry-section {
@@ -956,7 +954,7 @@ export default {
 
         .upload-text {
           font-size: 14px;
-          color: #1F1F1F;
+          color: #1f1f1f;
         }
       }
 
@@ -1035,7 +1033,7 @@ export default {
 
       .instruction-item {
         font-size: 14px;
-        color: #1F1F1F;
+        color: #1f1f1f;
         line-height: 1.6;
         margin-bottom: 8px;
 
@@ -1050,7 +1048,7 @@ export default {
 // 表单字段样式
 .form-fields {
   margin-top: 0;
-  padding-top: 0; 
+  padding-top: 0;
 
   .form-columns {
     display: flex;
@@ -1071,7 +1069,7 @@ export default {
     .field-item {
       flex: 1;
       display: flex;
-      flex-direction: column; 
+      flex-direction: column;
       gap: 10px;
 
       .field-label {
@@ -1081,16 +1079,16 @@ export default {
         line-height: 1.4;
         flex-shrink: 0;
         margin-bottom: 4px;
-        &::after{
-          content:'*';
-          color: #FF0000;
+        &::after {
+          content: "*";
+          color: #ff0000;
           margin-left: 4px;
         }
       }
 
       &.textarea-field {
         align-items: flex-start;
-        
+
         .field-label {
           margin-top: 0;
         }
@@ -1217,7 +1215,7 @@ export default {
 }
 
 .submit-section {
-  margin-top: 50px; 
+  margin-top: 50px;
   text-align: center;
   padding-bottom: 40px;
 
@@ -1232,7 +1230,7 @@ export default {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    display: inline-block; 
+    display: inline-block;
     text-align: center;
     text-transform: uppercase;
     font-family: Poppins, Poppins;

@@ -126,7 +126,7 @@
             <el-pagination @current-change="on_current_change_service" :current-page.sync="service_pagination.page"
               :page-size="service_pagination.pageNum" layout="total, prev, pager, next" :total="refund_service_count"></el-pagination>
           </div>
-          <el-empty v-if="!refund_service_count" description="暂无数据..."></el-empty>
+          <el-empty v-if="!refund_service_count" description="No data found..."></el-empty>
         </div>
       </div>
 

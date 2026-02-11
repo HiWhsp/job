@@ -390,6 +390,7 @@ export default {
             (v) => v.inventoryId == inventoryId
           );
           this.list_shopcart.splice(index, 1, item);
+          this.setView();
 
           this.do_update_vuex_cart_number();
         }

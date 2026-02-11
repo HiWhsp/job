@@ -122,7 +122,7 @@
                   <span class="required">*</span>
                 </label>
                 <el-select v-model="form.companyType" placeholder="Please select">
-                  <el-option v-for="(item, index) in vuex_top_title" :key="index" :value="item.title" :label="item.title"></el-option>
+                  <el-option v-for="(item, index) in vuex_category_tree" :key="index" :value="item.title" :label="item.title"></el-option>
                 </el-select>
               </div>
 
