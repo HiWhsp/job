@@ -230,20 +230,28 @@
             <div class="sec-ctx sec-ctx-type">
               <div class="payment-options">
                 <label class="radio-option">
-                  <input type="radio" name="payment" value="online" v-model="paymentType" checked />
-                  <span>Online Payment</span>
+                  <input type="radio" name="payment" value="online" checked />
+                  <span class="payment-title">Online Payment</span>
                   <div class="payment-logos">
-                    <div class="payment-logo">
+                    <div
+                      class="payment-logo"
+                      :class="{ active: paymentType === 'online' }"
+                      @click="handle_paypal_click('online')"
+                    >
                       <img src="@img/order/paypal.png" alt />
                     </div>
-                    <div class="payment-logo">
+                    <div
+                      class="payment-logo"
+                      :class="{ active: paymentType === 'stripe' }"
+                      @click="handle_paypal_click('stripe')"
+                    >
                       <img src="@img/order/stripe.png" alt />
                     </div>
                   </div>
                 </label>
               </div>
 
-              <div class="card-form" v-if="paymentType === 'online'">
+              <!-- <div class="card-form" v-if="paymentType === 'online'">
                 <div class="form-group">
                   <label class="form-label">
                     <span class="required">*</span>
@@ -296,7 +304,7 @@
                     </span>
                   </label>
                 </div>
-              </div>
+              </div>-->
             </div>
           </div>
 
@@ -414,16 +422,37 @@
               <div class="coupon-cards" v-if="couponTab === 'coupon'">
                 <div
                   class="coupon-card-item"
-                  v-for="(item, index) in list_coupon.slice(0, 2)"
+                  v-for="(item, index) in list_coupon"
                   :key="index"
                   :class="{ selected: coupon_select_id == item.id }"
                   @click="handleCouponSelect(item)"
                 >
-                  <div class="coupon-amount">${{ +item.jian }}</div>
-                  <div class="coupon-condition">Orders Over ${{ +item.man }}</div>
-                  <div
-                    class="coupon-expire"
-                  >Expires {{ item.endTime && item.endTime.substr(0, 10) }}, 11:59</div>
+                  <div class="coupon-top">
+                    <div class="currency">$</div>
+                    <div class="amount">{{ item.jian }}</div>
+                  </div>
+                  <div class="coupon-bottom">
+                    <div class="coupon-condition">Orders Over ${{ item.man }}</div>
+                    <div class="validity-period">Expires {{ item.endTime }}</div>
+                  </div>
+                  <img src="@img/coupon/selectd.png" alt class="selectd" />
+                </div>
+              </div>
+              <!-- Promo Code Section -->
+              <div class="promo-code-section" v-if="couponTab === 'promo'">
+                <div class="promo-code-label">Please enter the promo code :</div>
+                <div class="promo-code-input-wrapper">
+                  <input
+                    type="text"
+                    class="promo-code-input"
+                    v-model="yh_code"
+                    placeholder="Enter promo code"
+                  />
+                  <button class="promo-code-confirm-btn" @click="query_yh">CONFIRM</button>
+                </div>
+                <div class="promo-code-discount" v-if="money_yhq > 0 || (coupon_code_info && (coupon_code_info.discount_amount || coupon_code_info.jian))">
+                  <span class="discount-label">Discount code offset amount</span>
+                  <span class="discount-amount">{{ vuex_huobi }}{{ money_yhq || (coupon_code_info && (coupon_code_info.discount_amount || coupon_code_info.jian)) || 0 }}</span>
                 </div>
               </div>
             </div>
@@ -877,6 +906,9 @@ export default {
     // this.do_create_submit(0)
   },
   methods: {
+    handle_paypal_click(type) {
+      this.paymentType = type;
+    },
     // 新样式相关方法
     confirmAddress() {
       // 表单验证
@@ -975,7 +1007,7 @@ export default {
         country: "",
         zipCode: "",
         setAsDefault: false
-      };  
+      };
       this.provinceList = [];
       this.showAddressForm = false;
     },
@@ -1166,7 +1198,8 @@ export default {
         tuanId: "", //参与拼团的团ID
         tuanType: "", //拼团类型：0-普通订单 1-普通团 2-社区团
         remark: "", //备注
-
+        payType: this.paymentType == "online" ? 1 : 2,
+        receiveType: this.paymentType == "online" ? 1 : 2,
         ...this.fapiao_info
       };
       return params;
@@ -2337,6 +2370,10 @@ export default {
       input[type="radio"] {
         cursor: pointer;
       }
+      .payment-title {
+        font-size: 20px;
+        font-weight: bold;
+      }
     }
   }
 
@@ -2348,9 +2385,14 @@ export default {
     .payment-logo {
       width: 112px;
       height: 54px;
+      border: 2px solid transparent;
+      border-radius: 6px;
       img {
         width: 100%;
         height: 100%;
+      }
+      &.active {
+        border: 2px solid #ec6a2b;
       }
     }
   }
@@ -2418,38 +2460,156 @@ export default {
     flex-wrap: wrap;
 
     .coupon-card-item {
-      flex: 1;
-      min-width: 200px;
-      padding: 15px;
-      border: 2px solid #ddd;
-      border-radius: 8px;
+      position: relative;
+      background-image: url("~@img/coupon/yhq-bg.png");
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+
+      width: 255px;
+      height: 175px;
+      border: 2px solid transparent;
       cursor: pointer;
       transition: all 0.3s;
 
       &.selected {
-        border-color: #ff6600;
-        border-style: dashed;
+        border-color: #ec6a2b;
+        .selectd {
+          display: block;
+        }
+      }
+      // 上方：优惠券价值区域
+      .coupon-top {
+        height: 93px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .currency {
+          font-size: 30px;
+          font-family: Poppins, Poppins;
+          font-weight: 600;
+          color: #ffffff;
+        }
+        .amount {
+          font-size: 40px;
+          font-family: Poppins, Poppins;
+          font-weight: 600;
+          color: #ffffff;
+        }
       }
 
-      .coupon-amount {
-        font-size: 24px;
-        font-weight: bold;
-        color: #ff6600;
-        margin-bottom: 8px;
+      .coupon-bottom {
+        height: 80px;
+        padding: 10px 18px 15px 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .coupon-condition {
+          font-size: 18px;
+          font-family: Poppins, Poppins;
+          font-weight: 400;
+          color: #00306b;
+          text-align: left;
+        }
+        .validity-period {
+          text-align: left;
+          font-size: 16px;
+          font-family: Poppins, Poppins;
+          font-weight: 400;
+          color: #5e5e5e;
+        }
       }
 
-      .coupon-condition {
-        font-size: 14px;
-        color: #1f1f1f;
-        margin-bottom: 8px;
+      .selectd {
+        display: none;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 28px;
+        height: 28px;
       }
-
-      .coupon-expire {
-        font-size: 12px;
-        color: #666;
-      }
+      
     }
   }
+
+  .promo-code-section {
+      padding: 20px 0;
+
+      .promo-code-label {
+        font-size: 14px;
+        color: #5e5e5e;
+        margin-bottom: 16px;
+        text-align: left;
+      }
+
+      .promo-code-input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+
+        .promo-code-input {
+          height: 40px;
+          padding: 0 16px;
+          border: 1px solid #e5e5e5;
+          border-radius: 8px;
+          font-size: 14px;
+          color: #1e262e;
+          background: #ffffff;
+          outline: none;
+          transition: all 0.3s;
+
+          &:focus {
+            border-color: #ec6a2b;
+          }
+
+          &::placeholder {
+            color: #999;
+          }
+        }
+
+        .promo-code-confirm-btn {
+          min-width: 120px;
+          height: 40px;
+          background: #ec6a2b;
+          color: #ffffff;
+          border: none;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 600;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.3s;
+
+          &:hover {
+            background: #d85a1f;
+          }
+
+          &:active {
+            transform: scale(0.98);
+          }
+        }
+      }
+
+      .promo-code-discount {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        text-align: left;
+
+        .discount-label {
+          font-size: 14px;
+          color: #5e5e5e;
+        }
+
+        .discount-amount {
+          font-size: 14px;
+          color: #ec6a2b;
+          font-weight: 600;
+        }
+      }
+    }
 
   // 订单摘要
   .order-summary {
@@ -3884,39 +4044,6 @@ export default {
       color: #999;
       font-size: 14px;
     }
-
-    .promo-code-section {
-      .promo-code-input {
-        margin-bottom: 12px;
-
-        .code-input {
-          width: 300px;
-
-          .el-input__inner {
-            border: 1px solid #e5e5e5;
-            border-radius: 4px;
-            height: 40px;
-            line-height: 40px;
-            padding: 0 12px;
-            font-size: 14px;
-
-            &:focus {
-              border-color: #7853b2;
-            }
-          }
-        }
-      }
-
-      .promo-code-tip {
-        background: #7853b2;
-        font-size: 14px;
-        color: #ffffff;
-        border-radius: 2px 2px 2px 2px;
-        margin-top: 16px;
-        width: 126px;
-        height: 32px;
-      }
-    }
   }
 }
 
@@ -3952,7 +4079,7 @@ export default {
     font-size: 20px;
     color: #1e262e;
     line-height: 18px;
-    margin-right: 0px!important;
+    margin-right: 0px !important;
   }
 }
 </style>

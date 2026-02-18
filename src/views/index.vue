@@ -178,14 +178,14 @@
                             <div class="btn" @click.stop="openQuickBuy(item)">ISO13485</div>
                           </div>
                         </div>
-                        <el-tooltip class="item" effect="dark" content="仅限企业用户购买" placement="top">
+                        <!-- <el-tooltip class="item" effect="dark" content="仅限企业用户购买" placement="top"> -->
                           <el-tag
                             class="tag-dom"
                             type="warning"
                             effect="dark"
                             v-if="item.isThird == 1"
-                          >三类</el-tag>
-                        </el-tooltip>
+                          >510K</el-tag>
+                        <!-- </el-tooltip> -->
                       </div>
                     </div>
                   </div>
@@ -1848,12 +1848,13 @@ export default {
         position: relative;
 
         .tag-dom {
+          cursor: pointer;
           position: absolute;
           left: 0;
           top: 0;
           text-align: center;
           font-size: 22px;
-          line-height: 30px;
+          line-height: 37px;
           width: 82px;
           height: 37px;
           background: linear-gradient(90deg, #ec6a2b 0%, #ff9524 100%);

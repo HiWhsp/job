@@ -38,20 +38,20 @@
           </div>
         </div>
       </div>
-      <el-tooltip
+      <!-- <el-tooltip
         class="item"
         effect="dark"
         content="仅限企业用户购买"
         placement="top"
-      >
+      > -->
         <el-tag
           class="tag-dom"
           type="warning"
           effect="dark"
           v-if="item.isThird == 1"
-          >三类</el-tag
+          >510K</el-tag
         >
-      </el-tooltip>
+      <!-- </el-tooltip> -->
     </div>
     <!-- <div class="product-item" v-for="(item, index) in list" :key="index">
       <div class="product-item-info" @click="to_product(item)">
@@ -434,7 +434,7 @@ export default {
       top: 0;
       text-align: center;
       font-size: 22px;
-      line-height: 30px;
+      line-height: 37px;
       width: 82px;
       height: 37px;
       background: linear-gradient(90deg, #ec6a2b 0%, #ff9524 100%);

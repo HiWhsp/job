@@ -781,7 +781,7 @@ export default {
                   min-width: 60px;
                   text-align: center;
                   font-family: Poppins, Poppins;
-                  font-weight: 400;
+                  font-weight: bold;
                   font-size: 18px;
                   color: #242424;
                   line-height: 1.5;

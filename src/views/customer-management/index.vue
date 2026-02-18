@@ -53,7 +53,7 @@
           </div>
         </div>
 
-        <el-empty v-if="!list_address.length" description="尚未添加客户"></el-empty>
+        <el-empty v-if="!list_address.length" description="No customer added"></el-empty>
       </div>
     </div>
 

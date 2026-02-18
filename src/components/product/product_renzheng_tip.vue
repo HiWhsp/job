@@ -12,14 +12,12 @@
         <div class="tip-box">
           <img src="@img/product/warning.png" style="width: 44px;" alt />
         </div>
-        <div class="text-box-1">三类医疗器械仅限合规企业用户购买</div>
-        <div class="text-box-2">去会员中心认证成为企业用户</div>
+        <div class="text-box-1">510K Medical Devices are only available to compliant corporate users</div>
+        <div class="text-box-2">Please certify as a corporate user at the member center</div>
       </div>
       <span slot="footer" class="dialog-footer">
         <div class="btns flex-center">
-          <button class="btn btn-ripple btn-bg" @click="goToMemberCenter">
-            确定
-          </button>
+          <button class="btn btn-ripple btn-bg" @click="goToMemberCenter">SUBMIT</button>
         </div>
       </span>
     </el-dialog>
@@ -36,11 +34,11 @@ export default {
     return {
       show_modal: false,
       select_sku: {},
-      number: 1,
+      number: 1
     };
   },
   computed: {
-    ...mapState([""]),
+    ...mapState([""])
   },
   watch: {},
   methods: {
@@ -51,12 +49,12 @@ export default {
       this.show_modal = false;
 
       // this.$router.push('/my');
-      this.$router.push('/enterprise-cert');
+      this.$router.push("/enterprise-cert");
     },
     onBeforeClose() {
       this.show_modal = false;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -104,7 +102,7 @@ export default {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: bold;
       font-size: 20px;
-      color: #1F1F1F;
+      color: #1f1f1f;
     }
 
     .text-box-2 {

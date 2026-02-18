@@ -531,18 +531,18 @@ export default {
             trigger: "blur"
           }
         ],
-        mobile: [
-          {
-            required: true,
-            message: "Please enter phone number",
-            trigger: "blur"
-          },
-          {
-            pattern: /^1[3-9]\d{9}$/,
-            message: "Please enter a valid phone number",
-            trigger: "blur"
-          }
-        ],
+        // mobile: [
+        //   {
+        //     required: true,
+        //     message: "Please enter phone number",
+        //     trigger: "blur"
+        //   },
+        //   {
+        //     pattern: /^1[3-9]\d{9}$/,
+        //     message: "Please enter a valid phone number",
+        //     trigger: "blur"
+        //   }
+        // ],
         wechat: [
           { required: true, message: "Please enter email", trigger: "blur" }
         ]
