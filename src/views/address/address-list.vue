@@ -18,7 +18,7 @@
             <div class="card-main">
               <div class="kv">
                 <div class="k">Name:</div>
-                <div class="v">{{ item.name }}</div>
+                <div class="v">{{ item.firstName }} {{ item.lastName }}</div>
               </div>
               <div class="kv">
                 <div class="k">Location:</div>
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import address_modal from "@/components/address/foreign_address_modal.vue"; //新增地址
+import address_modal from "./foreign-address-list.vue"; //新增地址
 
 import { mapState } from "vuex";
 export default {
@@ -140,7 +140,7 @@ export default {
           let data = res.data;
 
           data.forEach(v => {
-            v.full_addr = [v.country, v.province, v.city, v.area]
+            v.full_addr = [v.country, v.state, v.city]
               .filter(v => !!v)
               .join("-");
             // v.selected =  v.if_default
@@ -148,7 +148,7 @@ export default {
 
           this.list_address = data;
 
-          let obj = data.find(v => v.if_default) || {};
+          let obj = data.find(v => v.moren) || {};
           this.select_address = obj || {};
 
           this.$store.commit("set_vuex_data", {

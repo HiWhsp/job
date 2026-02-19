@@ -72,8 +72,8 @@
           <!-- label-width="100px" -->
           <div class="form-item">
             <span class="label required">Customer name :</span>
-            <el-form-item prop="nickname">
-              <el-input v-model="form.nickname" placeholder="Please enter" clearable></el-input>
+            <el-form-item prop="title">
+              <el-input v-model="form.title" placeholder="Please enter" clearable></el-input>
             </el-form-item>
           </div>
           <div class="form-item">
@@ -99,8 +99,8 @@
 
           <div class="form-item">
             <span class="label required">Company Address :</span>
-            <el-form-item prop="title">
-              <el-input v-model="form.title" placeholder="Please enter" clearable></el-input>
+            <el-form-item prop="companyAddress">
+              <el-input v-model="form.companyAddress" placeholder="Please enter" clearable></el-input>
             </el-form-item>
           </div>
 

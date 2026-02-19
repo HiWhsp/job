@@ -67,7 +67,7 @@ export default {
     handle_xjgw() {
       this.show_modal = false;
 
-      window.open("/product-xieyi", "__blank", "", false);
+      window.open("/product-cates", "__blank", "", false);
     },
   },
 };
