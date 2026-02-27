@@ -1,22 +1,9 @@
 let system_menus = [
+	// 客户管理
 	{
-	title: "项目管理",
-	route: "/project",
-},
-{
-	title: "审核记录",
-	route: "/audit-record",
-	is_permission: true,
-},
-{
-	title: "查看权限",
-	route: "/view-permission",
-	is_permission: true,
-},
-{
-	title: "设置",
-	route: "/setting",
-},
+		title: "客户管理",
+		route: "/customer",
+	}
 ]
 
 export {

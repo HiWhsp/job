@@ -12,9 +12,23 @@ export default new Vuex.Store({
 			/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
 		),
 		//
-		vuex_user: {},
-		vuex_depart_list: [],
-		token: "",
+		vuex_user: (() => {
+			try {
+				const user = localStorage.getItem("vuex_user");
+				return user ? JSON.parse(user) : {};
+			} catch (e) {
+				return {};
+			}
+		})(),
+		vuex_depart_list: (() => {
+			try {
+				const list = localStorage.getItem("vuex_depart_list");
+				return list ? JSON.parse(list) : [];
+			} catch (e) {
+				return [];
+			}
+		})(),
+		token: localStorage.getItem("token") || "",
 
 
 		//
@@ -22,8 +36,26 @@ export default new Vuex.Store({
 		user_id: 0,
 		userInfo: {},
 		isLogin: false,
-		vuex_role: "",
-		vuex_red_number: 0,
+		vuex_role: (() => {
+			try {
+				const role = localStorage.getItem("vuex_role");
+				if (role) {
+					return JSON.parse(role);
+				}
+				return "";
+			} catch (e) {
+				const role = localStorage.getItem("vuex_role");
+				return role || "";
+			}
+		})(),
+		vuex_red_number: (() => {
+			try {
+				const num = localStorage.getItem("vuex_red_number");
+				return num ? parseInt(num) : 0;
+			} catch (e) {
+				return 0;
+			}
+		})(),
 
 		//
 		vuex_iframe_page_data: {},

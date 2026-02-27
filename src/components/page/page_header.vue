@@ -3,27 +3,22 @@
     <div class="header-inner">
       <div class="brand-box">
         <div class="logo-box">
-          <img src="@/assets/img/head-logo.png" />
+          <i class="el-icon-s-unfold"></i>
         </div>
-        <div class="title">豫安金属结构 项目数据录入审核系统</div>
       </div>
       <div class="top-right">
-        <!-- <div class="notice-box">
-					<img src="@/assets/imgs/bell.png" alt="" />
-				</div> -->
         <div class="user-info flex" @click="do_user()">
           <div class="avatar-box">
-            <img :src="vuex_user.image || defaultAvatar" alt="" />
+            <img :src="vuex_user.image || defaultAvatar" alt />
           </div>
           <div class="user-name">
-            <p>员工：{{ vuex_user.real_name }}</p>
-            <p>部门：{{ departName || "--" }}</p>
+            <p>{{ vuex_user.real_name }}</p>
           </div>
         </div>
-        <div class="info-line"></div>
         <div class="logout-box flex" @click="do_logout()">
-          <img src="@/assets/img/logout.png" />
-          <span class="logout-text"> 退出 </span>
+          <span class="logout-text">密码修改</span>
+          <div class="info-line"></div>
+          <span class="logout-text">退出登录</span>
         </div>
       </div>
     </div>
@@ -44,9 +39,9 @@ export default {
     ...mapState(["vuex_depart_list"]),
     departName() {
       let departId = this.vuex_user.departId;
-      let depart = this.vuex_depart_list.find((item) => item.id === departId);
+      let depart = this.vuex_depart_list.find(item => item.id === departId);
       return depart ? depart.title : "";
-    },
+    }
   },
   created() {},
 
@@ -57,33 +52,23 @@ export default {
     do_logout() {
       this.$store.commit("clearAdminInfo");
       this.$router.push("/login");
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped lang="less">
-@keyframes ani_rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
 
 .header-wrap {
-  box-shadow: 0 2px 10px rgba(7, 0, 72, 0.1);
-  background: #3377fe;
+  background: #fff;
+  box-shadow: 0px 2px 8px 1px rgba(0,0,0,0.05);
 
   .header-inner {
-    padding: 14px 48px;
+    padding: 14px 31px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-    height: 100px;
+    height: 83px;
     border-radius: 0px 0px 0px 0px;
 
     .brand-box {
@@ -95,13 +80,9 @@ export default {
       justify-content: center;
 
       .logo-box {
-        padding: 3px;
-
-        img {
-          width: 90px;
-          height: 72px;
-          cursor: pointer;
-        }
+        font-size: 24px;
+        color: #333;
+        cursor: pointer;
       }
 
       .title {
@@ -110,7 +91,7 @@ export default {
         font-family: PingFang SC, PingFang SC;
         font-weight: 800;
         font-size: 32px;
-        color: #ffffff;
+        color: #333;
       }
     }
 
@@ -118,11 +99,12 @@ export default {
       display: flex;
       align-items: center;
       justify-content: flex-end;
+      gap: 24px;
 
       .user-info {
         .avatar-box {
-          width: 44px;
-          height: 44px;
+          width: 27px;
+          height: 27px;
           border-radius: 50%;
           overflow: hidden;
 
@@ -144,17 +126,17 @@ export default {
           p {
             text-align: left;
             font-size: 14px;
-            color: #ffffff;
+            color: #333;
             font-weight: 400;
           }
         }
       }
 
       .info-line {
-        margin: 0 24px;
+        margin: 0 10px;
         width: 1px;
         height: 16px;
-        background: rgba(255, 255, 255, 0.48);
+        background: #333;
         border-radius: 2px 2px 2px 2px;
       }
 
@@ -173,7 +155,7 @@ export default {
           font-family: PingFang SC, PingFang SC;
           font-weight: 400;
           font-size: 14px;
-          color: #ffffff;
+          color: #333;
         }
       }
     }

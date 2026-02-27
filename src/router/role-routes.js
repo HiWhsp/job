@@ -1,0 +1,255 @@
+// 角色路由映射配置
+// 根据用户角色返回对应的路由配置
+
+// 管理端路由
+const managerRoutes = [
+  {
+    path: "/manager",
+    name: "manager",
+    component: () => import("@/views/layout.vue"),
+    meta: {
+      title: "管理端",
+      requireAuth: true
+    },
+    children: [
+      // 客户管理
+      {
+        path: "customer",
+        name: "customer",
+        component: () => import("@/views/manager/customer.vue"),
+        meta: {
+          title: "客户管理",
+          requireAuth: true
+        }
+      },
+      // 客户管理审核
+      {
+        path: 'customer-audit',
+        name: 'customer-audit',
+        component: () => import("@/views/manager/customer_audit.vue"),
+        meta: {
+          title: "客户管理审核",
+          requireAuth: true
+        }
+      }
+    ]
+  },
+];
+
+// 业务员端路由
+const salesRoutes = [
+  {
+    path: "/sales",
+    name: "sales",
+    component: () => import("@/views/layout.vue"),
+    meta: {
+      title: "业务员端",
+      requireAuth: true
+    },
+    children: [
+      // {
+      //   path: "dashboard",
+      //   name: "sales-dashboard",
+      //   component: () => import("@/views/sales/dashboard.vue"),
+      //   meta: {
+      //     title: "业务员首页"
+      //   }
+      // }
+    ]
+  }
+];
+
+// 营销端路由
+const marketingRoutes = [
+  {
+    path: "/marketing",
+    name: "marketing",
+    component: () => import("@/views/layout.vue"),
+    meta: {
+      title: "营销端",
+      requireAuth: true
+    },
+    children: [
+      // {
+      //   path: "dashboard",
+      //   name: "marketing-dashboard",
+      //   component: () => import("@/views/marketing/dashboard.vue"),
+      //   meta: {
+      //     title: "营销端首页"
+      //   }
+      // }
+    ]
+  }
+];
+
+// 总经理路由
+const generalManagerRoutes = [
+  {
+    path: "/general-manager",
+    name: "general-manager",
+    component: () => import("@/views/layout.vue"),
+    meta: {
+      title: "总经理",
+      requireAuth: true
+    },
+    children: [
+      // {
+      //   path: "dashboard",
+      //   name: "general-manager-dashboard",
+      //   component: () => import("@/views/general-manager/dashboard.vue"),
+      //   meta: {
+      //     title: "总经理首页"
+      //   }
+      // }
+    ]
+  }
+];
+
+// 财务端路由
+const financeRoutes = [
+  {
+    path: "/finance",
+    name: "finance",
+    component: () => import("@/views/layout.vue"),
+    meta: {
+      title: "财务端",
+      requireAuth: true
+    },
+    children: [
+      // {
+      //   path: "dashboard",
+      //   name: "finance-dashboard",
+      //   component: () => import("@/views/finance/dashboard.vue"),
+      //   meta: {
+      //     title: "财务端首页"
+      //   }
+      // }
+    ]
+  }
+];
+
+// 采购端路由
+const purchaseRoutes = [
+  {
+    path: "/purchase",
+    name: "purchase",
+    component: () => import("@/views/layout.vue"),
+    meta: {
+      title: "采购端",
+      requireAuth: true
+    },
+    children: [
+      // {
+      //   path: "dashboard",
+      //   name: "purchase-dashboard",
+      //   component: () => import("@/views/purchase/dashboard.vue"),
+      //   meta: {
+      //     title: "采购端首页"
+      //   }
+      // }
+    ]
+  }
+];
+
+// 生产副总路由
+const productionVicePresidentRoutes = [
+  {
+    path: "/production-vice-president",
+    name: "production-vice-president",
+    component: () => import("@/views/layout.vue"),
+    meta: {
+      title: "生产副总",
+      requireAuth: true
+    },
+    children: [
+      // {
+      //   path: "dashboard",
+      //   name: "production-vice-president-dashboard",
+      //   component: () => import("@/views/production-vice-president/dashboard.vue"),
+      //   meta: {
+      //     title: "生产副总首页"
+      //   }
+      // }
+    ]
+  }
+];
+
+// 库管理端路由
+const warehouseRoutes = [
+  {
+    path: "/warehouse",
+    name: "warehouse",
+    component: () => import("@/views/layout.vue"),
+    meta: {
+      title: "库管理端",
+      requireAuth: true
+    },
+    children: [
+      // {
+      //   path: "dashboard",
+      //   name: "warehouse-dashboard",
+      //   component: () => import("@/views/warehouse/dashboard.vue"),
+      //   meta: {
+      //     title: "库管理端首页"
+      //   }
+      // }
+    ]
+  }
+];
+
+// 角色路由映射表
+// key: 角色标识（从后端返回的 opRole）
+// value: 对应的路由配置数组
+const roleRouteMap = {
+  // manager: managerRoutes,
+  do: managerRoutes,
+  sales: salesRoutes,
+  marketing: marketingRoutes,
+  generalManager: generalManagerRoutes,
+  finance: financeRoutes,
+  purchase: purchaseRoutes,
+  productionVicePresident: productionVicePresidentRoutes,
+  warehouse: warehouseRoutes
+};
+
+/**
+ * 根据角色获取对应的路由配置
+ * @param {string} role - 用户角色
+ * @returns {Array} 路由配置数组
+ */
+export function getRoutesByRole(role) {
+  if (!role) {
+    return [];
+  }
+
+  // 如果角色是字符串，直接查找
+  if (typeof role === 'string') {
+    return roleRouteMap[role] || [];
+  }
+
+  // 如果角色是数组，返回所有匹配的路由
+  if (Array.isArray(role)) {
+    const routes = [];
+    role.forEach(r => {
+      if (roleRouteMap[r]) {
+        routes.push(...roleRouteMap[r]);
+      }
+    });
+    return routes;
+  }
+
+  return [];
+}
+
+/**
+ * 获取所有角色路由（用于开发调试）
+ */
+export function getAllRoleRoutes() {
+  return Object.values(roleRouteMap).flat();
+}
+
+export default {
+  getRoutesByRole,
+  getAllRoleRoutes,
+  roleRouteMap
+};

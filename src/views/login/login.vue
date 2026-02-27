@@ -5,23 +5,15 @@
         <div class="logo-box">
           <img src="@/assets/img/logo.png" class="logo" />
         </div>
-        <div class="title">欢迎回来</div>
-        <div class="desc">welcome back</div>
       </div>
 
       <div class="inner flex-center">
-        <div class="title">豫安金属结构</div>
-        <div class="title">项目数据录入审核系统</div>
+        <div class="title">物料管理&订单管理系统</div>
         <div class="input-box">
           <span>
             <img src="@/assets/img/login-user.png" class="icon" />
           </span>
-          <input
-            type="text"
-            placeholder="请输入账号"
-            v-model="form.username"
-            @keyup.enter="do_submit()"
-          />
+          <input type="text" placeholder="请输入账号" v-model="form.username" @keyup.enter="do_submit()" />
         </div>
         <div class="input-box">
           <span>
@@ -38,14 +30,13 @@
                       <span>验证码</span>
                       <input type="text" placeholder v-model="form.code" @keyup.enter="do_submit()" />
                       <img class="code" :src="verify_pic" alt="" @click="query_code()" />
-                  </div> -->
+        </div>-->
         <div class="btn-box">
           <el-button
             class="btn-ripple btn-ripple"
             :loading="loading"
             @click="throttle_do_submit()"
-            >确认登录</el-button
-          >
+          >确认登录</el-button>
         </div>
       </div>
     </div>
@@ -53,11 +44,13 @@
       <div class="html-box">
         <a href="https://beian.miit.gov.cn/" target="_blank">备案号</a>
       </div>
-    </div> -->
+    </div>-->
   </div>
 </template>
 
 <script>
+import { addRoleRoutes, getFirstRouteByRole, getFirstRouteObjectByRole } from "@/router/index.js";
+
 export default {
   name: "servicePage",
   components: {},
@@ -69,13 +62,13 @@ export default {
         username: "", //admin
         password: "", //yjd@2025...
         code: "", //
-        uuid: "",
+        uuid: ""
       },
 
       // beian_info: '',
       verify_pic: "",
 
-      loading: false,
+      loading: false
     };
   },
   computed: {},
@@ -90,8 +83,8 @@ export default {
       this.$api({
         url: "/captchaImage",
         method: "get",
-        data: {},
-      }).then((res) => {
+        data: {}
+      }).then(res => {
         this.$log("登录-获取验证码", res);
         if (res.code == 200) {
           this.verify_pic = "data:image/png;base64," + res.img;
@@ -119,7 +112,6 @@ export default {
     // },
 
     do_submit() {
-
       // let { phone, password } = this.form;
       let usernameReg = /^[a-zA-Z0-9]{6,16}$/;
       if (!this.form.username && !usernameReg.test(this.form.username)) {
@@ -138,30 +130,74 @@ export default {
         method: "post",
         data: {
           username: this.form.username,
-          password: this.form.password,
+          password: this.form.password
           // code: this.form.code,
           // uuid: this.form.uuid,
-        },
-      }).then((res) => {
+        }
+      }).then(res => {
         this.$logjson("登录", res);
         alert(res).then(() => {
           this.loading = false;
         });
 
-        if (res.code == 200) {
+        if (res.code == 200) {          
           let token = res.data.token;
           this.$store.commit("set_vuex_token", token);
           this.$store.commit("set_vuex_user", res.data);
-          this.to_success();
+          
+          // 设置 userId 到 localStorage（路由守卫需要）
+          if (res.data.id || res.data.userId) {
+            localStorage.setItem("userId", res.data.id || res.data.userId);
+          }
+          
+          // 设置用户角色
+          const userRole = res.data.opRole || 'do';
+          this.$store.commit("set_vuex_role", userRole);
+          
+          // 跳转到角色对应的第一个路由
+          this.to_success(userRole);
         } else {
           // this.query_code();
         }
       });
     },
-    to_success() {
-      this.$router.push("/project");
-    },
-  },
+    to_success(role) {
+      console.log("开始跳转，角色:", role);
+      
+      // 添加角色路由
+      const routes = addRoleRoutes(role);
+      console.log("添加的路由:", routes);
+      
+      // 获取第一个路由对象（包含 name 和 path）
+      const firstRouteObj = getFirstRouteObjectByRole(role);
+      console.log("第一个路由对象:", firstRouteObj);
+      
+      if (firstRouteObj && firstRouteObj.name) {
+        // 等待路由添加完成后再跳转
+        this.$nextTick(() => {
+          // 优先使用路由名称跳转（更可靠）
+          this.$router.replace({
+            name: firstRouteObj.name
+          }).catch(err => {
+            console.error("通过名称跳转失败:", err);
+            // 如果名称跳转失败，尝试使用路径
+            if (firstRouteObj.path) {
+              this.$router.replace(firstRouteObj.path).catch(err2 => {
+                console.error("通过路径跳转也失败:", err2);
+                this.$router.replace("/");
+              });
+            } else {
+              this.$router.replace("/");
+            }
+          });
+        });
+      } else {
+        console.warn("未找到角色对应的路由");
+        // 如果没有找到路由，跳转到首页
+        this.$router.replace("/");
+      }
+    }
+  }
 };
 </script>
 
@@ -174,24 +210,21 @@ export default {
   background: #ffffff;
 
   .inner-content {
-    width: 1200px;
-    height: 706px;
+    width: 100vw;
+    height: 100vh;
+
     background: #ffffff;
-    box-shadow: 0px 0px 4px 1px #f0f4f5;
-    border-radius: 16px 16px 16px 16px;
-    border: 1px solid #f4f5f9;
 
     .left-view {
-      width: 419px;
-      height: 706px;
-      background: url("~@/assets/img/bg.png") no-repeat center / cover;
+      width: 50vw;
+      height: 100vh;
+      background: url("~@/assets/img/bg-left.png") no-repeat center / cover;
       padding: 40px 0;
       .logo-box {
-        margin: 100px auto 0;
-        width: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        position: absolute;
+        top: 27px;
+        left: 40px;
+        width: 155px;
         .logo {
           width: 100%;
           height: 100%;
@@ -216,9 +249,10 @@ export default {
     }
 
     .inner {
+      background: url("~@/assets/img/bg-right.png") no-repeat center / cover;
       flex: 1;
       overflow: hidden;
-      height: 706px;
+      height: 100vh;
       flex-direction: column;
       padding: 100px 160px;
 
@@ -227,18 +261,18 @@ export default {
 
         font-family: PingFang SC, PingFang SC;
         font-weight: 800;
-        font-size: 40px;
-        color: #3377fe;
+        font-size: 36px;
+        color: #333;
         line-height: 52px;
       }
 
       .input-box {
         position: relative;
         margin-top: 40px;
-        width: 100%;
-        height: 64px;
+        width: 424px;
+        height: 50px;
         background: #f8f8f8;
-        border-radius: 8px 8px 8px 8px;
+        border-radius: 4px;
 
         display: flex;
         align-items: center;
@@ -251,7 +285,8 @@ export default {
           width: 60px;
 
           .icon {
-            width: 24px;
+            width: 21px;
+            height: 23px;
           }
         }
 
@@ -259,8 +294,8 @@ export default {
           flex: 2;
           height: 100%;
           padding-left: 0px;
-          font-size: 16px;
-          color: #000;
+          font-size: 14px;
+          color: #686868;
           border: none;
           background: #f8f8f8;
         }
@@ -301,10 +336,10 @@ export default {
         margin-top: 80px;
 
         button {
-          width: 320px;
-          height: 56px;
-          background: #3377fe;
-          border-radius: 33px 33px 33px 33px;
+          width: 424px;
+          height: 50px;
+          background: #2373c8;
+          border-radius: 27px;
           font-family: PingFang SC, PingFang SC;
           font-weight: 500;
           font-size: 16px;
