@@ -16,17 +16,39 @@ const managerRoutes = [
       {
         path: "customer",
         name: "customer",
-        component: () => import("@/views/manager/customer.vue"),
+        component: () => import("@/views/manager/index.vue"),
         meta: {
           title: "客户管理",
           requireAuth: true
-        }
+        },
+        children: [
+          // 客户列表
+          {
+            path: "list",
+            name: "customer-list",
+            component: () => import("@/views/manager/list.vue"),
+            meta: {
+              title: "客户列表",
+              requireAuth: true
+            }
+          },
+          // 新增客户
+          {
+            path: "add",
+            name: "customer-add",
+            component: () => import("@/views/manager/add.vue"),
+            meta: {
+              title: "新增客户",
+              requireAuth: true
+            }
+          }
+        ]
       },
       // 客户管理审核
       {
-        path: 'customer-audit',
+        path: 'audit',
         name: 'customer-audit',
-        component: () => import("@/views/manager/customer_audit.vue"),
+        component: () => import("@/views/manager/audit.vue"),
         meta: {
           title: "客户管理审核",
           requireAuth: true

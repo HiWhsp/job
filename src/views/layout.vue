@@ -76,8 +76,11 @@ export default {
 
 .root-right {
   flex: 1;
+  position: relative;
+  overflow: hidden;
 
   .root-right-header {
+    height: 83px;
   }
 
   &::-webkit-scrollbar-thumb {
@@ -92,7 +95,9 @@ export default {
   }
 
   .root-right-inner {
-    padding: 20px 0px;
+    height: calc(100vh - 83px);
+    padding: 20px 27px;
+    overflow-y: auto;
   }
 }
 </style>

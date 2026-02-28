@@ -313,7 +313,7 @@ export default {
           }
           .arrow-box {
             i {
-              color: #ffffff;
+              color: #ffffff !important;
             }
           }
         }
@@ -350,6 +350,9 @@ export default {
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
+          i {
+            color: #969eb8;
+          }
 
           .arrow {
             width: 0;
