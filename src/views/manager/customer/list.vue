@@ -110,8 +110,8 @@
 </template>
 
 <script>
-import DeleteDialog from './components/delete-dialog.vue';
-import DetailDrawer from './components/detail-drawer.vue';
+import DeleteDialog from '../components/delete-dialog.vue';
+import DetailDrawer from '../components/detail-drawer.vue';
 
 export default {
   name: 'Customer',

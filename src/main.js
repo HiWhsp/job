@@ -14,14 +14,11 @@ Vue.component('class_select', class_select)
 // console.warn("本项目菜单路由",window.admin_config);
 //表格展示与筛选
 // 富文本编辑器
-// import CKEditor from "@ckeditor/ckeditor5-vue2";
-// Vue.use(CKEditor);
-// 富文本编辑器 开始
-// import tinymce from "tinymce";
-// import VueTinymce from "@packy-tang/vue-tinymce";
-// Vue.prototype.$tinymce = tinymce; // 将全局tinymce对象指向给Vue作用域下
-// Vue.use(VueTinymce); // 安装vue的tinymce组件
-// 富文本编辑器 结束
+import CKEditor from "@ckeditor/ckeditor5-vue2";
+Vue.use(CKEditor);
+// TinyMCE 富文本编辑器（全局注册，可直接使用 <tiny-rich-editor>）
+import TinyRichEditor from "@/components/tinyRichEditor.vue";
+Vue.component("TinyRichEditor", TinyRichEditor);
 
 import "@/config/style/css-reset.css"; // css reset
 
@@ -58,7 +55,7 @@ import log from "@/plugins/log.js";
 Vue.prototype.$logjson = log.logjson;
 Vue.prototype.$log = log.logjson;
 
-import "@/plugins/message.js"; 
+import "@/plugins/message.js";
 
 
 
@@ -68,12 +65,12 @@ Vue.mixin(_mixin);
 
 Vue.prototype.$load = {
 	loading: null,
-	open: function() {
+	open: function () {
 		this.loading = Loading.service({
 			fullscreen: true,
 		});
 	},
-	close: function() {
+	close: function () {
 		if (!this.loading) return false;
 		this.loading.close();
 	},

@@ -72,47 +72,56 @@ const router = new VueRouter({
 const addedRouteNames = new Set();
 
 /**
- * 根据角色动态添加路由
+ * 根据 meta.hidden 过滤路由树：用于获取「在菜单展示」的路由（如登录后默认跳转的第一项）
+ * meta.hidden === false 的项不展示在菜单，但路由仍会注册，可通过 this.$router.push 跳转
+ * @param {Array} routes - 路由配置数组
+ * @returns {Array} 过滤后的新路由树（不修改原对象）
+ */
+function filterRoutesByHidden(routes) {
+  if (!routes || !Array.isArray(routes)) return [];
+  return routes
+    .filter(route => !(route.meta && route.meta.hidden === false))
+    .map(route => {
+      const copy = { ...route };
+      if (copy.meta) copy.meta = { ...copy.meta };
+      if (copy.children && copy.children.length > 0) {
+        copy.children = filterRoutesByHidden(copy.children);
+      }
+      return copy;
+    });
+}
+
+/**
+ * 根据角色动态添加路由（所有路由都会注册，含 meta.hidden 为 false 的）
+ * meta.hidden 仅控制是否在侧边栏菜单展示，不影响路由注册，可通过 this.$router.push 跳转
  * @param {string|Array} role - 用户角色
  * @returns {Array} 添加的路由数组
  */
 export function addRoleRoutes(role) {
-  const routes = getRoutesByRole(role);
-  
-  if (routes && routes.length > 0) {
-    // 将动态路由添加到路由表中
-    routes.forEach(route => {
-      // 检查路由是否已添加
-      if (!addedRouteNames.has(route.name)) {
-        router.addRoute(route);
-        addedRouteNames.add(route.name);
-        // 如果有子路由，也要添加到动态路由列表
-        if (route.children && route.children.length > 0) {
-          route.children.forEach(child => {
-          });
-        }
-      } else {
-      }
+  const routes = getRoutesByRole(role) || [];
+
+  if (routes.length > 0) {
+    const newlyAdded = routes.filter(r => !addedRouteNames.has(r.name));
+    newlyAdded.forEach(route => {
+      router.addRoute(route);
+      addedRouteNames.add(route.name);
     });
-    // 更新动态路由列表
-    dynamicRoutes = [...dynamicRoutes, ...routes.filter(r => !addedRouteNames.has(r.name))];
-  } else {
+    dynamicRoutes = [...dynamicRoutes, ...newlyAdded];
   }
   return routes;
 }
 
 /**
- * 获取角色的第一个路由路径
+ * 获取角色的第一个路由路径（仅考虑 meta.hidden 不为 false 的路由）
  * @param {string|Array} role - 用户角色
  * @returns {string|null} 第一个路由的完整路径
  */
 export function getFirstRouteByRole(role) {
-  const routes = getRoutesByRole(role);
-  if (!routes || routes.length === 0) {
+  const routes = filterRoutesByHidden(getRoutesByRole(role) || []);
+  if (routes.length === 0) {
     return null;
   }
-  
-  // 获取第一个路由
+
   const firstRoute = routes[0];
   
   // 如果有子路由，返回第一个子路由的完整路径
@@ -135,17 +144,16 @@ export function getFirstRouteByRole(role) {
 }
 
 /**
- * 获取角色的第一个路由对象（用于通过名称跳转）
+ * 获取角色的第一个路由对象（用于通过名称跳转，仅考虑 meta.hidden 不为 false 的路由）
  * @param {string|Array} role - 用户角色
  * @returns {Object|null} 第一个路由对象，包含 name 和 path
  */
 export function getFirstRouteObjectByRole(role) {
-  const routes = getRoutesByRole(role);
-  if (!routes || routes.length === 0) {
+  const routes = filterRoutesByHidden(getRoutesByRole(role) || []);
+  if (routes.length === 0) {
     return null;
   }
-  
-  // 获取第一个路由
+
   const firstRoute = routes[0];
   
   // 如果有子路由，返回第一个子路由

@@ -126,8 +126,8 @@
 </template>
 
 <script>
-import DetailDrawer from './components/detail-drawer.vue';
-import AuditDialog from './components/audit-dialog.vue';
+import DetailDrawer from '../components/detail-drawer.vue';
+import AuditDialog from '../components/audit-dialog.vue';
 
 export default {
   name: 'Customer',

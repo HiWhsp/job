@@ -1,5 +1,6 @@
 // 角色路由映射配置
 // 根据用户角色返回对应的路由配置
+// 路由 meta 支持 hidden：为 true 或未设置时在侧边栏菜单展示，为 false 时不在菜单展示（路由仍会注册，可通过 this.$router.push 跳转）
 
 // 管理端路由
 const managerRoutes = [
@@ -16,7 +17,7 @@ const managerRoutes = [
       {
         path: "customer",
         name: "customer",
-        component: () => import("@/views/manager/index.vue"),
+        component: () => import("@/views/manager/customer/index.vue"),
         meta: {
           title: "客户管理",
           requireAuth: true
@@ -26,20 +27,22 @@ const managerRoutes = [
           {
             path: "list",
             name: "customer-list",
-            component: () => import("@/views/manager/list.vue"),
+            component: () => import("@/views/manager/customer/list.vue"),
             meta: {
               title: "客户列表",
-              requireAuth: true
+              requireAuth: true,
+              hidden: true
             }
           },
           // 新增客户
           {
             path: "add",
             name: "customer-add",
-            component: () => import("@/views/manager/add.vue"),
+            component: () => import("@/views/manager/customer/add.vue"),
             meta: {
               title: "新增客户",
-              requireAuth: true
+              requireAuth: true,
+              hidden: true
             }
           }
         ]
@@ -48,11 +51,58 @@ const managerRoutes = [
       {
         path: 'audit',
         name: 'customer-audit',
-        component: () => import("@/views/manager/audit.vue"),
+        component: () => import("@/views/manager/customer/audit.vue"),
         meta: {
           title: "客户管理审核",
-          requireAuth: true
+          requireAuth: true,
+          hidden: true
         }
+      },
+      // 产品管理
+      {
+        path: 'product',
+        name: 'product',
+        component: () => import("@/views/manager/product/index.vue"),
+        meta: {
+          title: "产品管理",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          // 产品分类管理
+          {
+            path: 'category',
+            name: 'product-category',
+            component: () => import("@/views/manager/product/category.vue"),
+            meta: {
+              title: "产品分类管理",
+              requireAuth: true,
+              hidden: true
+            }
+          },
+          // 产品管理
+          {
+            path: 'list',
+            name: 'product-list',
+            component: () => import("@/views/manager/product/list.vue"),
+            meta: {
+              title: "产品管理",
+              requireAuth: true,
+              hidden: true
+            }
+          },
+          // 产品新增
+          {
+            path: 'add',
+            name: 'product-add',
+            component: () => import("@/views/manager/product/add.vue"),
+            meta: {
+              title: "产品新增",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
       }
     ]
   },

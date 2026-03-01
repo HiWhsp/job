@@ -88,19 +88,35 @@ export default {
   },
   computed: {
     ...mapState(["vuex_role"]),
-    // 根据角色获取菜单路由（只返回一级路由的 children，保持原有结构）
+    // 根据角色获取菜单路由（只返回一级路由的 children 作为菜单项，不展示 layout 本身）
+    // meta.hidden 为 false 的不展示（与 index.js 中不添加该路由一致），为 true 或未设置时展示
     menuRoutes() {
       if (!this.vuex_role) {
         return [];
       }
       const routes = getRoutesByRole(this.vuex_role);
 
-      // 只返回一级路由的 children，不展示一级路由本身
       const childrenRoutes = [];
       routes.forEach(route => {
+        if (route.meta && route.meta.hidden === false) return;
         if (route.children && route.children.length > 0) {
-          // 直接返回 children，保持原有的父子结构
-          childrenRoutes.push(...route.children);
+          // 只取二级路由作为菜单项（客户管理、产品管理等），并过滤 hidden: false
+          const filteredChildren = route.children
+            .filter(child => !(child.meta && child.meta.hidden === false))
+            .map(child => {
+              if (child.children && child.children.length > 0) {
+                return {
+                  ...child,
+                  children: child.children.filter(
+                    c => !(c.meta && c.meta.hidden === false)
+                  )
+                };
+              }
+              return child;
+            });
+          childrenRoutes.push(...filteredChildren);
+        } else {
+          childrenRoutes.push(route);
         }
       });
       return childrenRoutes;
