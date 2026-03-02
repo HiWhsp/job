@@ -44,7 +44,7 @@
     top: 0;
     bottom: 0;
     width: 80px;
-    background: #7853B2;
+    background: #00306B;
     color: #fff;
   }
   .ctx-news .ctx-left .cate-title {
@@ -65,7 +65,7 @@
     border-bottom: 1px solid #eee;
   }
   .ctx-news .ctx-left .news-list .news-item:hover .news-title {
-    color: #7853B2 !important;
+    color: #00306B !important;
   }
   .ctx-news .ctx-left .news-list .news-item .img-box {
     width: 100px;

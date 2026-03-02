@@ -446,7 +446,7 @@ export default {
 
 .money-heji {
   span {
-    color: #7853B2;
+    color: #00306B;
     font-weight: bold;
   }
 }
@@ -473,7 +473,7 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: bold;
       line-height: 24px;
-      color: #7853B2;
+      color: #00306B;
 
       .pay-title {
         margin-right: 5px;
@@ -518,8 +518,8 @@ export default {
       // min-width: 96px;
       height: 30px;
       line-height: 30px;
-      // background: #7853B2;
-      color: #7853B2;
+      // background: #00306B;
+      color: #00306B;
       // color: #fff;
       font-size: 14px;
     }
@@ -577,7 +577,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #7853B2;
+              color: #00306B;
             }
           }
         }
@@ -617,7 +617,7 @@ export default {
           margin-left: 10px;
           min-width: 96px;
           height: 30px;
-          background: #7853B2;
+          background: #00306B;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;
@@ -660,7 +660,7 @@ export default {
 
     .count {
       font-weight: bold;
-      color: #7853B2;
+      color: #00306B;
     }
 
     .money-item {
@@ -729,8 +729,8 @@ export default {
     line-height: 20px;
     color: #7d7d7d;
 
-    border: 1px solid #7853B2;
-    color: #7853B2;
+    border: 1px solid #00306B;
+    color: #00306B;
   }
 
   .order-action {
@@ -739,28 +739,28 @@ export default {
     font-size: 14px;
     color: #7d7d7d;
 
-    border: 1px solid #7853B2;
-    color: #7853B2;
+    border: 1px solid #00306B;
+    color: #00306B;
 
     &:hover {
       opacity: 0.8;
     }
 
     &.zhifu {
-      background: #7853B2;
-      border-color: #7853B2;
+      background: #00306B;
+      border-color: #00306B;
       color: #fff;
     }
 
     &.shanchu {
-      background: #7853B2;
-      border-color: #7853B2;
+      background: #00306B;
+      border-color: #00306B;
       color: #fff;
     }
 
     &.shouhuo {
-      background: #7853B2;
-      border-color: #7853B2;
+      background: #00306B;
+      border-color: #00306B;
       color: #fff;
     }
   }

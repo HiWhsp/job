@@ -33,45 +33,62 @@
           <el-input clearable v-model="form.address" placeholder="Please enter"></el-input>
         </div>
         <div class="item">
-          <span class="text required">City</span>
-          <el-input clearable v-model="form.city" placeholder="Please enter"></el-input>
-        </div>
-        <div class="item">
-          <span class="text required">State</span>
-          <template v-if="!provinceList.length">
-            <el-input clearable v-model="form.province" placeholder="Please enter"></el-input>
-          </template>
-          <template v-else>
-            <el-select
-              filterable
-              v-model="form.province"
-              placeholder="Please enter"
-              @change="changeProv"
-            >
-              <el-option
-                v-for="item in provinceList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.label"
-              ></el-option>
-            </el-select>
-          </template>
-        </div>
-        <div class="item">
           <span class="text required">Country</span>
           <el-select
             filterable
-            v-model="form.country"
+            v-model="form.countryId"
             placeholder="Please select"
             @change="changeCountry"
           >
             <el-option
               v-for="item in countryList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.label"
+              :key="item.id"
+              :label="item.title"
+              :value="item.id"
             ></el-option>
           </el-select>
+        </div>
+        <div class="item">
+          <span class="text required">State</span>
+          <template v-if="!stateList.length">
+            <el-input clearable v-model="form.province" placeholder="Please enter"></el-input>
+          </template>
+          <template v-else>
+            <el-select
+              filterable
+              v-model="form.stateId"
+              placeholder="Please select"
+              @change="changeProv"
+            >
+              <el-option
+                v-for="item in stateList"
+                :key="item.id"
+                :label="item.title"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </template>
+        </div>
+        <div class="item">
+          <span class="text required">City</span>
+          <template v-if="!cityList.length">
+            <el-input clearable v-model="form.city" placeholder="Please enter"></el-input>
+          </template>
+          <template v-else>
+            <el-select
+              filterable
+              v-model="form.cityId"
+              placeholder="Please select"
+              @change="changeCity"
+            >
+              <el-option
+                v-for="item in cityList"
+                :key="item.id"
+                :label="item.title"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </template>
         </div>
         <div class="item">
           <span class="text required">Zip Code</span>
@@ -101,8 +118,6 @@
 </template>
 
 <script>
-import countryData from "@/constant/countryData.js";
-
 import { mapState } from "vuex";
 export default {
   name: "address-add",
@@ -119,6 +134,9 @@ export default {
         province: "",
         cityCode: "",
         city: "",
+        countryId: "",
+        stateId: "",
+        cityId: "",
         areaCode: "",
         area: "",
         address: "",
@@ -138,8 +156,8 @@ export default {
       },
 
       countryList: [],
-      allProvinceList: [],
-      provinceList: [],
+      stateList: [],
+      cityList: [],
 
       loading: false
     };
@@ -150,31 +168,58 @@ export default {
   watch: {},
 
   created() {
-    this.countryList = countryData.countryList;
-    this.allProvinceList = countryData.provinceList;
-
+    this.queryCountryData();
     this.throttle_do_submit = this.mix_throttle(this.do_submit, 1000);
   },
 
   methods: {
     throttle_do_submit() {},
 
-    changeCountry(val) {
+    queryCountryData() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: { action: "users_getAreaList" }
+      }).then(res => {
+        if (res.code == 200) {
+          this.countryList = res.data || [];
+        }
+      });
+    },
+    changeCountry(id) {
       this.form.province = "";
-
-      console.log("国家", val);
-      let country_info = this.countryList.find(v => v.label == val);
-      let country_id = country_info.value;
-      this.provinceList = this.allProvinceList.filter(
-        v => v.country_id == country_id
-      );
-
-      console.log("省份列表 provinceList", this.allProvinceList);
-      console.log("省份列表 provinceList", this.provinceList);
+      this.form.city = "";
+      this.form.stateId = "";
+      this.form.cityId = "";
+      this.stateList = [];
+      this.cityList = [];
+      if (!id) return;
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: { action: "users_getAreaList", parent_id: id }
+      }).then(res => {
+        if (res.code == 200) {
+          this.stateList = res.data || [];
+        }
+      });
     },
-    changeProv(val) {
-      console.log("省份", val);
+    changeProv(id) {
+      this.form.city = "";
+      this.form.cityId = "";
+      this.cityList = [];
+      if (!id) return;
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: { action: "users_getAreaList", parent_id: id }
+      }).then(res => {
+        if (res.code == 200) {
+          this.cityList = res.data || [];
+        }
+      });
     },
+    changeCity() {},
 
     //
     //
@@ -194,7 +239,7 @@ export default {
       this.$api("userAddress_detail", {
         id: this.form.id
       }).then(res => {
-        let { code, data, msg } = res;
+        let { code, data } = res;
         if (code == 200) {
           this.form = {
             name: data.name,
@@ -203,6 +248,9 @@ export default {
             province: data.province,
             cityCode: data.cityCode,
             city: data.city,
+            countryId: "",
+            stateId: "",
+            cityId: "",
             areaCode: data.areaCode,
             area: data.area,
             address: data.address,
@@ -220,8 +268,45 @@ export default {
             addressType: data.addressType,
             zipCode: data.zipCode
           };
+          this.initAddressSelectData(data);
         }
       });
+    },
+    // 编辑时根据 country/province/city 回填级联并设置 countryId/stateId/cityId
+    async initAddressSelectData(data) {
+      const countryTitle = data.country;
+      const stateTitle = data.province || data.area;
+      const cityTitle = data.city;
+      if (!countryTitle) return;
+      const countryInfo = this.countryList.find(c => c.title === countryTitle || c.title == countryTitle);
+      if (!countryInfo) return;
+      this.form.countryId = countryInfo.id;
+      const resState = await this.$api({
+        url: "/service.php",
+        method: "get",
+        data: { action: "users_getAreaList", parent_id: countryInfo.id }
+      });
+      if (resState.code == 200) {
+        this.stateList = resState.data || [];
+        if (stateTitle) {
+          const stateInfo = this.stateList.find(s => s.title === stateTitle || s.title == stateTitle);
+          if (stateInfo) {
+            this.form.stateId = stateInfo.id;
+            const resCity = await this.$api({
+              url: "/service.php",
+              method: "get",
+              data: { action: "users_getAreaList", parent_id: stateInfo.id }
+            });
+            if (resCity.code == 200) {
+              this.cityList = resCity.data || [];
+              if (cityTitle) {
+                const cityInfo = this.cityList.find(c => c.title === cityTitle || c.title == cityTitle);
+                if (cityInfo) this.form.cityId = cityInfo.id;
+              }
+            }
+          }
+        }
+      }
     },
 
     onclosed() {
@@ -232,6 +317,9 @@ export default {
         province: "",
         cityCode: "",
         city: "",
+        countryId: "",
+        stateId: "",
+        cityId: "",
         areaCode: "",
         area: "",
         address: "",
@@ -249,6 +337,8 @@ export default {
         addressType: 2, //版本：1-国内 2-国外
         zipCode: ""
       };
+      this.stateList = [];
+      this.cityList = [];
     },
 
     //更新当前父组件数据
@@ -288,16 +378,23 @@ export default {
         return;
       }
 
-      if (!this.form.country) {
+      const countryTitle = this.countryList.find(c => c.id == this.form.countryId)?.title;
+      if (!this.form.countryId || !countryTitle) {
         alertErr("Please select country");
         return;
       }
-      if (!this.form.province) {
-        alertErr("Please enter state");
+      const provinceTitle = this.stateList.length
+        ? this.stateList.find(s => s.id == this.form.stateId)?.title
+        : this.form.province;
+      if (!provinceTitle) {
+        alertErr(this.stateList.length ? "Please select state" : "Please enter state");
         return;
       }
-      if (!this.form.city) {
-        alertErr("Please enter city");
+      const cityTitle = this.cityList.length
+        ? this.cityList.find(c => c.id == this.form.cityId)?.title
+        : this.form.city;
+      if (!cityTitle) {
+        alertErr(this.cityList.length ? "Please select city" : "Please enter city");
         return;
       }
       if (!this.form.address) {
@@ -309,12 +406,19 @@ export default {
         return;
       }
       this.loading = true;
+      const { countryId, stateId, cityId, ...rest } = this.form;
+      const formData = {
+        ...rest,
+        country: countryTitle,
+        province: provinceTitle,
+        city: cityTitle
+      };
       this.$api({
         url: "/service.php",
         method: "get",
         data: {
           action: "userAddress_add",
-          ...this.form
+          ...formData
         }
       }).then(res => {
         alert(res).then(() => {
@@ -329,9 +433,10 @@ export default {
 
     onModal_close() {
       this.show_modal = false;
-      //console.log("关闭前的回调");
+      this.stateList = [];
+      this.cityList = [];
       Object.keys(this.form).forEach(key => {
-        this.form[key] = "";
+        this.form[key] = key === "moren" ? 0 : key === "id" ? 0 : "";
       });
     }
   }
@@ -453,11 +558,11 @@ export default {
     height: 32px;
     background: #ffffff;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #7853b2;
+    border: 1px solid #00306B;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #7853b2;
+    color: #00306B;
   }
 
   .btn-2 {

@@ -304,8 +304,8 @@ export default {
     width: 115px;
     height: 27px;
     border-radius: 14px 14px 14px 14px;
-    border: 1px solid #7853b2;
-    color: #7853b2;
+    border: 1px solid #00306B;
+    color: #00306B;
     font-size: 14px;
     margin-top: 14px;
     text-align: center;
@@ -413,8 +413,8 @@ export default {
           }
 
           &.active {
-            color: #7853b2;
-            border-bottom: 4px solid #7853b2;
+            color: #00306B;
+            border-bottom: 4px solid #00306B;
           }
         }
       }
@@ -506,12 +506,12 @@ export default {
             }
 
             .el-radio__input.is-checked .el-radio__inner {
-              border-color: #7853b2;
-              background: #7853b2;
+              border-color: #00306B;
+              background: #00306B;
             }
 
             .el-radio__input.is-checked + .el-radio__label {
-              color: #7853b2;
+              color: #00306B;
             }
 
             .el-radio__inner {
@@ -547,7 +547,7 @@ export default {
           border-radius: 8px;
           width: 100%;
           height: 57px;
-          background: #7853b2;
+          background: #00306B;
           font-size: 20px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;
           font-weight: 400;
@@ -566,8 +566,8 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: 400;
           line-height: 24px;
-          color: #7853b2;
-          border-bottom: 1px solid #7853b2;
+          color: #00306B;
+          border-bottom: 1px solid #00306B;
         }
       }
     }
@@ -629,7 +629,7 @@ export default {
     .btns{
       width: 150px;
       height: 46px;
-      background: #7853B2;
+      background: #00306B;
       border-radius: 4px 4px 4px 4px;
       font-weight: 400;
       font-size: 18px;

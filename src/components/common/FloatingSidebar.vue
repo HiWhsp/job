@@ -305,7 +305,7 @@ export default {
       }
 
       &.hovered .icon-wrapper .badge {
-        border-color: #7853b2;
+        border-color: #00306B;
       }
 
       .item-text {
@@ -337,7 +337,7 @@ export default {
       }
       .item-text2 {
         font-weight: bold;
-        color: #7853b2;
+        color: #00306B;
       }
     }
   }

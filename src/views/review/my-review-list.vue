@@ -16,8 +16,8 @@
               <el-rate
                 v-model="item.star"
                 disabled
-                :colors="['#7853B2', '#7853B2', '#7853B2']"
-                text-color="#7853B2"
+                :colors="['#00306B', '#00306B', '#00306B']"
+                text-color="#00306B"
               ></el-rate>
             </div>
           </div>
@@ -143,7 +143,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #7853b2;
+      background: #00306B;
       color: #fff;
       font-size: 14px;
       font-weight: bold;

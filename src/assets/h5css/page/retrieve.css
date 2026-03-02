@@ -116,7 +116,7 @@
     color: #505050;
   }
   .page .center .agree-box a {
-    color: #7853B2;
+    color: #00306B;
   }
   .page .center .btn-box {
     margin-top: 60px;
@@ -141,8 +141,8 @@
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 24px;
-    color: #7853B2;
-    border-bottom: 1px solid #7853B2;
+    color: #00306B;
+    border-bottom: 1px solid #00306B;
   }
   .terms-box {
     position: absolute;
@@ -161,7 +161,7 @@
     cursor: pointer;
   }
   .terms-box span:hover {
-    color: #7853B2;
+    color: #00306B;
   }
   .qrcode-cit .qrcode-box img {
     width: 240px;

@@ -388,7 +388,7 @@ export default {
                 // top: 0;
                 // bottom: 0;
                 // width: 3px;
-                // background-color: #7853B2;
+                // background-color: #00306B;
               }
             }
 

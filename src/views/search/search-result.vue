@@ -359,10 +359,10 @@ export default {
   align-items: center;
     height: 40px;
     line-height: 40px;
-    border: 2px solid #7853B2;
+    border: 2px solid #00306B;
 
     .btn-search {
-      background: #7853B2;
+      background: #00306B;
       width: 120px;
       height: 100%;
       color: #fff;
@@ -481,11 +481,11 @@ export default {
         border: 1px solid transparent;
 
         &:hover {
-          color: #7853B2;
+          color: #00306B;
         }
 
         &.active {
-          color: #7853B2;
+          color: #00306B;
           border: 1px solid #ff9312;
 
           background: url(~@img/other/fenlei-checked.png) no-repeat right bottom;
@@ -541,11 +541,11 @@ export default {
           span {
             cursor: pointer;
             &:hover {
-              color: #7853B2;
+              color: #00306B;
             }
 
             &.active {
-              color: #7853B2;
+              color: #00306B;
             }
           }
         }
@@ -631,7 +631,7 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: bold;
           line-height: 16px;
-          color: #7853B2;
+          color: #00306B;
         }
       }
     }

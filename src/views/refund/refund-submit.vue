@@ -1,179 +1,114 @@
 <template>
   <div class="page">
-    <div class="page-title">申请售后</div>
-    <div class="page-ctx">
-      <div class="refund-info">
-        <div class="refund-product-detail">
-          <div class="refund-item">
-            <div class="base-box flex">
-              商品信息
-              <!-- <div class="date">{{ order.dtTime }}</div>
-            <div class="order-code">
-              订单号：
-              <span>{{ order.order_id }}</span>
+    <div class="refund-info">
+
+      <div class="form-wrap">
+        <div class="form-box">
+
+          <div class="input-box">
+            <div class="label"><span>*</span>Product status :</div>
+            <div class="action">
+              <el-radio-group v-model="product_status">
+                <el-radio :label="1">Received</el-radio>
+                <el-radio :label="2" v-if="type == 1">Not reveived</el-radio>
+              </el-radio-group>
             </div>
-            <div class="order-state">{{ order.status_info }}</div> -->
+          </div>
+
+          <div class="input-box">
+            <div class="label"><span>*</span>Reason for refund :</div>
+            <div class="action">
+              <el-select v-model="refund_reason" placeholder="please select">
+                <el-option v-for="item in refund_reasons" :key="item.tilte" :label="item.tilte" :value="item.title">
+                </el-option>
+              </el-select>
             </div>
-            <div class="product-box">
-              <div class="product-list">
-                <div class="product-item flex">
-                  <div class="box-pic">
-                    <div class="img-box">
-                      <img :src="product_info.image" alt />
-                    </div>
+          </div>
+
+          <div class="input-box" v-if="type == 1 || type == 2">
+            <div class="label">
+              Refund amount :
+            </div>
+            <div class="action">
+              <el-input placeholder="Please enter the refund amount" v-model="refund_money" />
+              <!-- <span class="desc">Up to US${{ max_refund_money }}, including shipping fee of US$0.00</span> -->
+            </div>
+          </div>
+
+          <div class="input-box remark-box">
+            <div class="label"><span>*</span>Refund Details :</div>
+            <div class="action">
+              <el-input type="textarea" placeholder="Please describe the problem…" v-model="refund_remark"
+                :autosize="{ minRows: 6 }" />
+            </div>
+          </div>
+          <div class="input-box upload-box">
+            <div class="label">Upload image :</div>
+            <div class="action">
+              <el-upload class="upload-demo" list-type="picture-card" multiple accept="image/*" :name="UPLOAD_NAME"
+                :action="UPLOAD_ACTION" :on-success="on_success_upload" :before-upload="on_before_upload"
+                :data="mix_upload_data">
+                <img src="@img/refund/upload.png" alt="">
+              </el-upload>
+              <div class="upload-tip">Upload up to 6 photos</div>
+            </div>
+          </div>
+
+          <!-- 退货地址（仅退货退款 type=2 显示） -->
+          <div class="return-address-box" v-if="type == 2">
+            <div class="input-box return-address-item">
+              <div class="label">Return Method :</div>
+              <div class="action">{{ returnAddress.method || 'Return by Express' }}</div>
+            </div>
+            <div class="input-box return-address-item">
+              <div class="label">Return Address :</div>
+              <div class="action">
+                <div class="return-address-text" v-if="returnAddress.address">{{ returnAddress.address }}</div>
+                <div class="return-address-empty" v-else>-</div>
+                <div class="return-address-extra" v-if="returnAddress.consignee || returnAddress.phone">
+                  <div class="extra-row" v-if="returnAddress.consignee">
+                    <span class="extra-label">Consignee:</span>
+                    <span class="extra-val">{{ returnAddress.consignee }}</span>
                   </div>
-                  <div class="box-title">
-                    <div class="title">{{ product_info.title }}</div>
-                    <div class="sku">{{ product_info.keyVals }}</div>
-                  </div>
-                  <div class="box-price">
-                    <div class="price">
-                      {{ order.is_jifen ? "积分" : "￥" }}
-                      {{ order.is_jifen ? product_info.jifen : product_info.priceSale }}
-                    </div>
-                  </div>
-                  <div class="box-num">
-                    <div class="num">x {{ product_info.num }}</div>
-                  </div>
-                  <div class="box-xiaoji">
-                    <div class="price">{{ vuex_huobi }} {{ product_info.priceSale * product_info.num }}</div>
+                  <div class="extra-row" v-if="returnAddress.phone">
+                    <span class="extra-label">Contact Information:</span>
+                    <span class="extra-val">{{ returnAddress.phone }}</span>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="form-wrap">
-          <div class="form-box">
-            <div class="input-box">
-              <div class="label">服务类型：</div>
-              <div class="action">{{ type_title }}</div>
-            </div>
-
-            <div class="input-box">
-              <div class="label">申请原因：</div>
-              <div class="action">
-                <el-select v-model="refund_reason" placeholder="请选择">
-                  <el-option v-for="item in refund_reasons" :key="item.tilte" :label="item.tilte" :value="item.title">
-                  </el-option>
-                </el-select>
-              </div>
-            </div>
-
-            <div class="huanhuo-wrap" v-if="type == 3">
-              <div class="input-box" style="align-items: flex-start;">
-                <div class="label">换新商品：</div>
-                <div class="action">
-                  <div class="huanhuo-tip">
-                    价格相同的商品才可以换货哦
-                  </div>
-                  <div class="huanhuo-sku-info">
-                    <refund_sku_choose data-title="售后商品的sku选择" ref="refund_sku_choose" @confirm="do_confirm_product" />
-                  </div>
-                </div>
-              </div>
-              <div class="input-box shouhuo-box">
-                <div class="label">换货地址：</div>
-                <div class="action" style="width: fit-content;">
-                  <div class="huanhuo-receive">
-                    <div class="btn btn-ripple fit-text" @click="do_choose_addr()">
-                      选择收货地址
-                    </div>
-                  </div>
-                  <!-- <div class="huanhuo-receive" v-if="!address_select.id">
-                    <div class="rec">
-                      <span class="text">收货人: </span> <span class="val"> {{ shouhuoInfo.name }}</span>
-                    </div>
-                    <div class="rec">
-                      <span class="text">收货地址:</span> <span class="val">{{ shouhuoInfo.phone }} </span>
-                    </div>
-                    <div class="rec">
-                      <span class="text">手机号码: </span> <span class="val"> {{ shouhuoInfo.province }}{{ shouhuoInfo.city
-                        }}{{ shouhuoInfo.area }} {{ shouhuoInfo.address }}</span>
-                    </div>
-                  </div> -->
-                  <div class="huanhuo-receive" v-if="address_select.id">
-                    <div class="rec">
-                      <span class="text">收货人: </span> <span class="val"> {{ address_select.name }}</span>
-                    </div>
-                    <div class="rec">
-                      <span class="text">收货地址:</span> <span class="val">{{ address_select.phone }} </span>
-                    </div>
-                    <div class="rec">
-                      <span class="text">手机号码: </span> <span class="val"> {{ address_select.province }}{{
-                        address_select.city
-                      }}{{ shouhuoInfo.area }} {{ shouhuoInfo.address }}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="input-box" v-if="type_title == '退款' || type_title == '退货退款'">
-              <div class="label">
-                {{ currency == "积分" ? "退还积分" : "退款金额(￥)" }}：
-              </div>
-              <div class="action">
-                <el-input placeholder="请输入退款金额" v-model="refund_money" />
-              </div>
-            </div>
-
-            <div class="input-box remark-box">
-              <div class="label">详细说明：</div>
-              <div class="action">
-                <el-input type="textarea" placeholder="请输入说明信息" v-model="refund_remark" :autosize="{ minRows: 6 }" />
-              </div>
-            </div>
-            <div class="input-box upload-box">
-              <div class="label">上传凭证：</div>
-              <div class="action" style="flex:1; width: fit-content;">
-                <el-upload class="upload-demo" list-type="picture-card" multiple accept="image/*"
-                  :name="mix_upload_name" :action="mix_upload_action" :on-success="on_success_upload"
-                  :before-upload="on_before_upload" :data="mix_upload_data">
-                  <!-- <i class="el-icon-upload"></i> -->
-                  上传图片
-                  <!-- <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div> -->
-                </el-upload>
-              </div>
-            </div>
-
-            <div class="submit-box">
-              <button class="btn btn-ripple" @click="submit_refund">提交申请</button>
-            </div>
+          <div class="submit-box">
+            <button class="btn btn-ripple" @click="submit_refund">SUBMIT</button>
           </div>
         </div>
       </div>
     </div>
-
-    <refund_address_list_modal data-title="售后选择地址" ref="refund_address_list_modal" @confirm="do_confirm_address" />
   </div>
 </template>
 
 <script>
-import refund_sku_choose from '@/components/refund/refund_sku_choose.vue'
-import refund_address_list_modal from '@/components/refund/refund_address_list_modal.vue'
+import { UPLOAD_ACTION, UPLOAD_NAME } from "@/config/env.js";
 
 import { mapState } from "vuex";
 
 export default {
   name: "page-refund-submit",
   components: {
-    refund_sku_choose,
-    refund_address_list_modal,
   },
   data() {
     return {
-      orderId: this.$route.query.orderId,
-      inventoryId: this.$route.query.inventoryId,
-      type: this.$route.query.type,
+      // orderId: this.$route.query.orderId,
+      // inventoryId: this.$route.query.inventoryId,
+      // type: this.$route.query.type,
       //
+      UPLOAD_ACTION,
+      UPLOAD_NAME,
       type_title: '',
       type_map: {
-        1: "退款",
-        2: "退货退款",
-        3: "换货",
+        1: "I want a refund (no return required)",
+        2: "I want a return and refund",
       },
       //
       order: {}, //
@@ -181,10 +116,18 @@ export default {
       currency: "",
       product_info: {},
       product: {},
+      product_status: 1,
       max_refund_money: 0,//可申请的最大退款金额
       shouhuoInfo: {},
       address_select: {},
       product_select: {},
+      // 退货地址（type=2 退货退款时展示，可从订单详情或配置获取）
+      returnAddress: {
+        method: "Return by Express",
+        address: "",
+        consignee: "",
+        phone: ""
+      },
       //
       refund_reason: "",
       refund_money: "",
@@ -196,6 +139,20 @@ export default {
       dialogVisible: false,
       dialogImageUrl: "",
     };
+  },
+  props: {
+    orderId: {
+      type: String,
+      default: ""
+    },
+    inventoryId: {
+      type: String,
+      default: ""
+    },
+    type: {
+      type: String,
+      default: ""
+    }
   },
   computed: {
     ...mapState([""]),
@@ -227,7 +184,7 @@ export default {
   methods: {
     initParams() {
       this.type_title = this.type_map[this.type]
-      if (this.type == 3 || this.type_title == '换货') {
+      if (this.type == 2) {
         this.query_address();
       }
     },
@@ -248,48 +205,15 @@ export default {
           let data = res.data;
           this.order = data;
           this.orderObj = data;
-          this.product_info = data.products.find(v => v.id == this.inventoryId) || {}
-          this.product = this.product_info
-          this.max_refund_money = parseFloat(data.price);
+          this.product_info = data.products.find(v => v.id == this.inventoryId) || {};
+          this.max_refund_money = parseFloat(this.product_info.priceSale * this.product_info.num);
           this.shouhuoInfo = data.shouhuoInfo
 
           if (data && data.if_jifen) {
             this.currency = "积分";
           }
-
-          if (this.type == 3) {
-            this.query_exchange_products()
-          }
         }
       });
-    },
-
-
-    //可换货产品
-    query_exchange_products() {
-      this.$api({
-        url: '/service.php',
-        method: 'get',
-        data: {
-          action: 'refund_showChangeProduct',
-          inventoryId: this.inventoryId,
-          productId: this.product.productId,
-          num: this.product.num,
-          priceSale: this.product.priceSale,
-        },
-      }).then(res => {
-        if (res.code == 200) {
-          res.data.forEach(v => {
-            v.inventoryId = v.id
-          })
-          this.exchange_products = res.data;
-          this.$nextTick(() => {
-            this.$refs.refund_sku_choose.init({
-              inventorys: res.data
-            })
-          })
-        }
-      })
     },
 
     query_address() {
@@ -304,71 +228,45 @@ export default {
       }).then(res => {
         if (res.code == 200) {
           let list = res.data;
-          list.forEach(v => {
-            v.full_addr = [v.country, v.province, v.city, v.area].filter(v => !!v).join('-');
-            // v.xing = v.name[0] || ''
-          })
-          let cache_refund_address_id = localStorage.getItem('cache_refund_address_id');
-          if (cache_refund_address_id) {
-            this.address_select = list.find(v => v.id == cache_refund_address_id);
-          }
+          this.returnAddress = list[0];
         }
-        // this.hideLoading()
       })
     },
 
 
-
-
-    //提交评价
+    //提交
     submit_refund() {
-      //退换货类型(1-退款   2-退货退款  3-换货)
+      //退换货类型(1-退款   2-退货退款)
       let params = {
         action: 'refund_add',
         orderId: this.orderId,
         inventoryId: this.inventoryId,
-        type: this.type, //退换货类型(1-退款 2-退货退款 3-换货)
+        type: this.type, //退换货类型(1-退款 2-退货退款)
         num: this.product_info.num,
         reason: this.refund_reason,
         remark: this.refund_remark,
         money: this.refund_money,
         images: this.upload_pic_list.join(","),
-        // addressId: this.address_select.id,//type=3 换货传用户地址id
-        // new_product: ''//type=3换货 传换货的商品
       };
-      if (this.type == 3) {
-        params.addressId = this.address_select.id
-        params.new_product = JSON.stringify([{ "inventoryId": this.product_select.inventoryId, "productId": this.product_select.productId, "num": this.product_info.num }])
-      }
       console.log("要提交的信息", params);
       // return;
 
       if (!this.refund_reason) {
-        alertErr("请选择售后原因");
+        alertErr("please select the reason for refund");
         return;
       }
 
-      if (this.type == 2) {//退货退款
-        if (!this.refund_money) {
-          return alertErr("请输入退款金额");
-        }
-        if (this.refund_money > this.product_info.priceSale) {
-          return alertErr("退款金额应小于等于商品金额");
-        }
-      } else if (this.type == 3) {//换货
-        if (!this.product_select.id) {
-          return alertErr("请选择换货商品");
-        }
-        if (!this.address_select.id) {
-          return alertErr("请选择换货收货地址");
-        }
+      if (!this.refund_money) {
+        return alertErr("please enter the refund amount");
+      }
+      if (Number(this.refund_money) > Number(this.max_refund_money)) {
+        return alertErr("the refund amount should be less than or equal to the product amount");
       }
       // if (!this.refund_remark) {
       //   alertErr("请填写详细说明");
       //   return;
       // }
 
-      // debugger;
       this.$api({
         url: '/service.php',
         method: 'get',
@@ -384,10 +282,7 @@ export default {
           })
         }
       })
-
-
     },
-
     //上传相关
     on_success_upload(res, file) {
       console.log("上传结果 res", res);
@@ -409,8 +304,7 @@ export default {
     },
     do_confirm_product(info) {
       this.product_select = info;
-    },
-
+    }
   },
 };
 </script>
@@ -584,11 +478,51 @@ export default {
   margin-top: 30px;
   text-align: left;
 
+  .return-address-box {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+
+    .return-address-text {
+      font-size: 14px;
+      color: #1E262E;
+      line-height: 22px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .return-address-empty {
+      color: #999;
+    }
+
+    .return-address-extra {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #505050;
+
+      .extra-row {
+        margin-bottom: 6px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      .extra-label {
+        margin-right: 8px;
+        color: #1E262E;
+      }
+
+      .extra-val {
+        color: #1E262E;
+      }
+    }
+  }
+
   .input-box {
     display: flex;
     align-items: center;
     margin-bottom: 25px;
-
 
     &.shouhuo-box {
       align-items: flex-start;
@@ -602,13 +536,35 @@ export default {
       align-items: flex-start;
     }
 
+    &.return-address-item .action {
+      flex: 1;
+      font-family: Poppins, Poppins;
+      font-weight: 400;
+      font-size: 20px;
+      color: #1E262E;
+      ;
+      line-height: 30px;
+    }
+
     .label {
-      min-width: 120px;
-      min-width: 90px;
+      min-width: 210px;
+      height: 28px;
+      font-family: Poppins, Poppins;
+      font-weight: 400;
+      font-size: 20px;
+      color: #1E262E;
+      line-height: 30px;
+      text-align: right;
+      margin-right: 26px;
+
+      span {
+        color: #FF0000;
+      }
     }
 
     .action {
       width: 455px;
+      font-size: 20px;
 
       .el-input {
         width: 100%;
@@ -620,8 +576,8 @@ export default {
 
       .shouhuo {
         .rec {
-            display: flex;
-  align-items: center;
+          display: flex;
+          align-items: center;
 
           .text {
             min-width: 75px;
@@ -629,6 +585,47 @@ export default {
 
           .val {}
         }
+      }
+
+      .desc {
+        margin-top: 10px;
+        font-family: Poppins, Poppins;
+        font-weight: 400;
+        font-size: 20px;
+        color: #999999;
+        line-height: 24px;
+      }
+
+      :deep(.el-upload--picture-card) {
+        width: 113px;
+        height: 113px;
+        border: none;
+        line-height: 113px;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      :deep(.el-upload-list__item) {
+        width: 113px;
+        height: 113px;
+        border: none;
+        line-height: 113px;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .upload-tip {
+        font-family: Poppins, Poppins;
+        font-weight: 400;
+        font-size: 20px;
+        color: #999999;
+        line-height: 28px;
       }
     }
   }
@@ -638,18 +635,15 @@ export default {
     padding-left: 120px;
 
     .btn {
-      width: 240px;
-      height: 40px;
-      background: linear-gradient(90deg, #ff9312 0%, #eb5d53 100%);
-      background: #7853B2;
-      border-radius: 30px;
-      border-radius: 0;
+      width: 300px;
+      height: 80px;
+      background: #EC6A2B;
+      border-radius: 10px 10px 10px 10px;
 
-      font-size: 16px;
-      font-family: PingFang SC;
-      font-weight: 400;
-      line-height: 36px;
-      color: #ffffff;
+      font-family: Poppins, Poppins;
+      font-weight: 600;
+      font-size: 24px;
+      color: #FFFFFF;
     }
   }
 }

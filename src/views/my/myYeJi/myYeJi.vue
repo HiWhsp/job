@@ -343,8 +343,8 @@ export default {
           .btn {
             display: inline-block;
             padding: 3px 8px;
-            border: 1px solid #7853B2;
-            color: #7853B2;
+            border: 1px solid #00306B;
+            color: #00306B;
             background: #fff;
           }
         }

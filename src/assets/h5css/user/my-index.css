@@ -55,7 +55,7 @@
     background: #ffffff;
     text-align: left;
     padding: 0 15px;
-    border: 1px solid #7853B2;
+    border: 1px solid #00306B;
     border-radius: 0 0 11px 11px;
   }
   .section-1 .right .text-1 {
@@ -76,7 +76,7 @@
     font-size: 14px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
-    color: #7853B2;
+    color: #00306B;
   }
   .section-2 {
     flex: 1;
@@ -110,7 +110,7 @@
     font-size: 16px;
     font-family: SourceHanSansCN-Regular-, SourceHanSansCN-Regular;
     font-weight: normal;
-    color: #7853B2;
+    color: #00306B;
   }
   .page {
     padding-bottom: 70px;
@@ -135,7 +135,7 @@
     font-size: 14px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
-    color: #7853B2;
+    color: #00306B;
     cursor: pointer;
   }
   .section-title .action img {
@@ -166,7 +166,7 @@
   }
   .section-order .order-box .empty-info .empty-action {
     font-size: 14px;
-    color: #7853B2;
+    color: #00306B;
   }
   .section-order .order-info {
     padding: 24px 32px;

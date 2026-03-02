@@ -143,7 +143,7 @@ export default {
         padding: 0 24px;
         width: fit-content;
         height: 61px;
-        background: #7853B2;
+        background: #00306B;
         border-radius: 0px 0px 0px 0px;
 
         font-family: Microsoft YaHei, Microsoft YaHei;

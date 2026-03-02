@@ -128,7 +128,7 @@ export default {
 
       .number {
         font-weight: bold;
-        color: #7853b2;
+        color: #00306B;
       }
     }
   }

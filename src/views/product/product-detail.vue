@@ -4,7 +4,7 @@
       <div class="page-bread w-1400">
         <div class="bread-box">
           <!-- <img src="@img/common/product-home.png" alt="" /> -->
-          <router-link to="/">首页</router-link>
+          <router-link to="/">Home</router-link>
           <div class="bread-item" v-for="(item, index) in bread_list" :key="index">
             <span class="arrow">/</span>
             <template v-if="item">
@@ -86,41 +86,26 @@
                           {{ skuGroup.key }}: {{ getSelectedOptionTitle(skuGroup) }}
                         </div>
                         <div class="sku-selector-options">
-                          <!-- 颜色选择器（图片） -->
-                          <template v-if="skuGroup.key.toLowerCase() === 'color'">
-                            <div
-                              class="sku-option-item sku-option-color"
-                              :class="{
-                                active: isOptionSelected(skuGroup.id, child.id),
-                                disabled: !isOptionAvailable(skuGroup.id, child.id)
-                              }"
-                              v-for="child in skuGroup.child"
-                              :key="child.id"
-                              @click="selectSkuOption(skuGroup.id, child.id)"
-                            >
-                              <el-image
-                                v-if="child.image"
-                                :src="child.image"
-                                class="color-image"
-                              ></el-image>
-                              <span v-else>{{ child.title }}</span>
-                            </div>
-                          </template>
-                          <!-- 其他选择器（按钮） -->
-                          <template v-else>
-                            <div
-                              class="sku-option-item sku-option-button"
-                              :class="{
-                                active: isOptionSelected(skuGroup.id, child.id),
-                                disabled: !isOptionAvailable(skuGroup.id, child.id)
-                              }"
-                              v-for="child in skuGroup.child"
-                              :key="child.id"
-                              @click="selectSkuOption(skuGroup.id, child.id)"
-                            >
-                              {{ child.title }}
-                            </div>
-                          </template>
+                          <!-- 有 thumb 显示图片，无 thumb 显示文字 -->
+                          <div
+                            v-for="child in skuGroup.child"
+                            :key="child.id"
+                            class="sku-option-item"
+                            :class="{
+                              'sku-option-color': child.thumb,
+                              'sku-option-button': !child.thumb,
+                              active: isOptionSelected(skuGroup.id, child.id),
+                              disabled: !isOptionAvailable(skuGroup.id, child.id)
+                            }"
+                            @click="selectSkuOption(skuGroup.id, child.id)"
+                          >
+                            <el-image
+                              v-if="child.thumb"
+                              :src="child.thumb"
+                              class="color-image"
+                            ></el-image>
+                            <span v-else>{{ child.title }}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1900,7 +1885,7 @@ export default {
 
             &:hover {
               span {
-                color: #7853b2;
+                color: #00306B;
               }
             }
 
@@ -1959,9 +1944,9 @@ export default {
               font-size: 16px;
 
               &.active {
-                background: #7853b2;
+                background: #00306B;
                 color: #fff;
-                border-color: #7853b2;
+                border-color: #00306B;
               }
             }
           }
@@ -2157,7 +2142,7 @@ export default {
             .sku-tip {
               margin-left: 20px;
               font-size: 18px;
-              color: #7853b2;
+              color: #00306B;
               font-weight: bold;
               font-family: Microsoft YaHei, Microsoft YaHei;
             }
@@ -2650,11 +2635,11 @@ export default {
                 height: 48px;
                 background: #ffffff;
                 border-radius: 0px 0px 0px 0px;
-                border: 1px solid #7853b2;
+                border: 1px solid #00306B;
                 font-family: OPPOSans, OPPOSans;
                 // font-weight: bold;
                 font-size: 18px;
-                color: #7853b2;
+                color: #00306B;
               }
             }
 
@@ -2721,14 +2706,14 @@ export default {
           font-family: Poppins, Poppins;
           font-weight: bold;
           font-size: 25px;
-          color: #7853b2;
+          color: #00306B;
         }
 
         .panel-title-line {
           margin-bottom: 64px;
           width: 100%;
           height: 7px;
-          background: #7853b2;
+          background: #00306B;
           border-radius: 0px 0px 0px 0px;
         }
       }
@@ -2743,7 +2728,7 @@ export default {
   line-height: 70px;
   border-bottom: 1px solid #dedede;
   .count-num {
-    color: #7853b2;
+    color: #00306B;
   }
 
   .nav-item {
@@ -2779,7 +2764,7 @@ export default {
     /*no */
 
     &.contact {
-      background: #7853b2;
+      background: #00306B;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -2961,7 +2946,7 @@ export default {
     .comment-title-text {
       padding: 5px 30px;
       margin-right: 20px;
-      background-color: #7853b2;
+      background-color: #00306B;
       color: #fff;
     }
   }
@@ -3044,7 +3029,7 @@ export default {
 
     &:hover {
       .title {
-        color: #7853b2 !important;
+        color: #00306B !important;
       }
     }
 

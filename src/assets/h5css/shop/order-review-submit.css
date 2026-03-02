@@ -1,6 +1,6 @@
 @media screen and (max-width: 1199px) {
    /deep/ .el-rate__icon {
-    color: #7853B2 !important;
+    color: #00306B !important;
   }
   .page {
     padding-bottom: 80px;
@@ -23,7 +23,7 @@
     min-width: 96px;
     height: 30px;
     line-height: 30px;
-    background: #7853B2;
+    background: #00306B;
     color: #fff;
     font-size: 14px;
     font-weight: bold;
@@ -107,11 +107,11 @@
     font-weight: 400;
     line-height: 20px;
     color: #505050;
-    color: #7853B2;
+    color: #00306B;
   }
   .order-product .info-title .order-state.state-2 {
-    color: #7853B2;
-    border-color: #7853B2;
+    color: #00306B;
+    border-color: #00306B;
   }
   .order-product .info-good .list-good .item-good {
     padding: 10px;
@@ -145,7 +145,7 @@
     cursor: pointer;
   }
   .order-product .info-good .list-good .item-good .title .goods-title:hover {
-    color: #7853B2;
+    color: #00306B;
   }
   .order-product .info-good .list-good .item-good .num {
     width: auto;
@@ -197,7 +197,7 @@
   .comment-box .submit-box .btn {
     width: 300px;
     height: 48px;
-    background: #7853B2;
+    background: #00306B;
     border-radius: 4px 4px 4px 4px;
     transition: 0.3s;
     font-size: 14px;

@@ -38,7 +38,7 @@
     min-width: 96px;
     height: 30px;
     line-height: 30px;
-    background: #7853B2;
+    background: #00306B;
     color: #fff;
     font-size: 14px;
     font-weight: bold;
@@ -148,7 +148,7 @@
     cursor: pointer;
   }
   .product-box .product-titles .product-check.checked {
-    color: #7853B2;
+    color: #00306B;
   }
   .product-box .product-titles .product-check img {
     width: 13px;
@@ -226,7 +226,7 @@
     font-size: 14px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #7853B2;
+    color: #00306B;
   }
   .product-box .product-list .product-item .goods-title .text-2 b {
     font-size: 20px;

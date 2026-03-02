@@ -400,14 +400,14 @@ export default {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #7853b2;
+          color: #00306B;
         }
 
         .num {
           font-size: 42px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #7853b2;
+          color: #00306B;
         }
       }
 
@@ -434,7 +434,7 @@ export default {
         button {
           width: 127px;
           height: 36px;
-          background: #7853b2;
+          background: #00306B;
           border-radius: 4px 4px 4px 4px;
           font-size: 14px;
           font-family: Microsoft YaHei-Regular, Microsoft YaHei;

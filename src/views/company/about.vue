@@ -433,17 +433,17 @@ export default {
     width: 200px;
     height: 50px;
     border-radius: 0px 0px 0px 0px;
-    border: 1px solid #7853B2;
+    border: 1px solid #00306B;
 
     font-family: OPPOSans, OPPOSans;
     font-weight: bold;
     font-size: 16px;
-    color: #7853B2;
+    color: #00306B;
     background: #FFFFFF;
     transition: .3s;
 
     &:hover {
-      background: #7853B2;
+      background: #00306B;
       color: #FFFFFF;
     }
   }

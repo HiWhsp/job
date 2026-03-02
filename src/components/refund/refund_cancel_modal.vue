@@ -1,12 +1,13 @@
 <template>
   <div class="modal-container">
-    <el-dialog title="取消售后？" width="580px" custom-class="modal-wrap" :close-on-click-modal="false" :visible.sync="show_modal" :before-close="on_before_close">
+    <el-dialog title="Cancel After-sale？" width="580px" custom-class="modal-wrap" :close-on-click-modal="false"
+      :visible.sync="show_modal" :before-close="on_before_close">
       <div class="modal-inner">
-        <div class="text-2">确认取消售后申请？</div>
+        <div class="text-2">Confirm to cancel the after-sale application？</div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <button class="quxiao" @click="show_modal = false">取消</button>
-        <button class="queding" @click="do_submit()">确定</button>
+        <button class="quxiao" @click="show_modal = false">Cancel</button>
+        <button class="queding" @click="do_submit()">Confirm</button>
       </span>
     </el-dialog>
   </div>
@@ -71,9 +72,10 @@ export default {
       font-size: 20px;
       color: #ff3d00;
     }
+
     .text-2 {
       text-align: center;
-      font-size: 14px;
+      font-size: 20px;
       color: #333333;
       margin-bottom: 20px;
     }
@@ -82,12 +84,19 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  background: #7853B2;
+  background: #00306B;
+  padding-top: 10px;
 
   .el-dialog__title {
     color: #fff;
   }
+
+  .el-dialog__headerbtn {
+    top: 15px;
+    color: #fff;
+  }
   .el-dialog__headerbtn .el-dialog__close {
+    font-size: 20px;
     color: #fff;
   }
 }
@@ -97,13 +106,14 @@ export default {
 
   button {
     width: 180px;
-    height: 35px;
+    height: 50px;
     background: #ff3d00;
     opacity: 1;
-    border-radius: 15px;
+    border-radius: 10px;
   }
 
   .quxiao {
+    font-size: 20px;
     background: #fff;
     color: #000;
     border: 1px solid #aaa;
@@ -111,7 +121,8 @@ export default {
 
   .queding {
     margin-left: 20px;
-    background: #7853B2;
+    font-size: 20px;
+    background: #00306B;
     color: #fff;
   }
 }

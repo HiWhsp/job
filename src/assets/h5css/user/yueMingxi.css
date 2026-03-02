@@ -21,7 +21,7 @@
     min-width: 96px;
     height: 30px;
     line-height: 30px;
-    background: #7853B2;
+    background: #00306B;
     color: #fff;
     font-size: 14px;
     font-weight: bold;
@@ -100,9 +100,9 @@
     color: #333333;
   }
   .tab-box .tab-item.active {
-    border-bottom: 3px solid #7853B2;
+    border-bottom: 3px solid #00306B;
     font-weight: bold;
-    color: #7853B2;
+    color: #00306B;
   }
   .mingxi-list {
     margin-top: 24px;
@@ -145,7 +145,7 @@
     font-size: 14px;
   }
   .mingxi-list .mingxi-item .mingxi-value.plus {
-    color: #7853B2;
+    color: #00306B;
   }
   .mingxi-list .mingxi-item .mingxi-value.minus {
     color: #8cc63f;

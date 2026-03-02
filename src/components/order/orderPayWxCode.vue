@@ -148,7 +148,7 @@ export default {
 
       .pay-info {
         b {
-          color: #7853B2;
+          color: #00306B;
           font-size: 20px;
         }
       }
@@ -158,7 +158,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  background: #7853B2;
+  background: #00306B;
 
   .el-dialog__title {
     color: #fff;
@@ -183,7 +183,7 @@ export default {
     margin-right: 20px;
   }
   .queding {
-    background: #7853B2;
+    background: #00306B;
     color: #fff;
 
     &:disabled {

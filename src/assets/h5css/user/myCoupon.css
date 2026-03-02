@@ -21,7 +21,7 @@
     min-width: 96px;
     height: 30px;
     line-height: 30px;
-    background: #7853B2;
+    background: #00306B;
     color: #fff;
     font-size: 14px;
     font-weight: bold;
@@ -58,9 +58,9 @@
     color: #333333;
   }
   .inner .tab-wrap .tab-box .tab-item.active {
-    border-bottom: 3px solid #7853B2;
+    border-bottom: 3px solid #00306B;
     font-weight: bold;
-    color: #7853B2;
+    color: #00306B;
   }
   .inner .tab-wrap .lingquan {
     position: absolute;
@@ -197,13 +197,13 @@
     font-size: 24px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #7853B2;
+    color: #00306B;
   }
   .yhq-list .yhq-item .yhq-right .money .num {
     font-size: 24px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #7853B2;
+    color: #00306B;
   }
   .yhq-list .yhq-item .yhq-right .tiaojian {
     margin-top: 0;
@@ -226,7 +226,7 @@
   .yhq-list .yhq-item .yhq-right .action button {
     width: 127px;
     height: 36px;
-    background: #7853B2;
+    background: #00306B;
     border-radius: 4px 4px 4px 4px;
     font-size: 14px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;

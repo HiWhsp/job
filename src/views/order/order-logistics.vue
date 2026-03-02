@@ -508,7 +508,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #7853b2;
+      background: #00306B;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -597,7 +597,7 @@ export default {
 
           .total-price {
             font-weight: 500;
-            color: #7853b2;
+            color: #00306B;
           }
         }
       }
@@ -740,7 +740,7 @@ export default {
         }
 
         .order-state {
-          color: #7853B2;
+          color: #00306B;
           font-size: 14px;
         }
       }
@@ -833,7 +833,7 @@ export default {
 
           .count {
             font-weight: bold;
-            color: #7853B2;
+            color: #00306B;
           }
 
           .money-item {
@@ -865,7 +865,7 @@ export default {
                 font-family: Arial, Arial;
                 font-weight: bold;
                 font-size: 20px;
-                color: #7853B2;
+                color: #00306B;
               }
             }
           }
@@ -1090,7 +1090,7 @@ export default {
           margin-left: 10px;
           min-width: 96px;
           height: 30px;
-          background: #7853b2;
+          background: #00306B;
           font-size: 14px;
           font-family: Microsoft YaHei;
           color: #ffffff;

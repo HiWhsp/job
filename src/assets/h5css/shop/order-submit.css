@@ -21,15 +21,15 @@
   .btn-cancel {
     min-width: 100px;
     height: 40px;
-    border: 1px solid #7853B2;
-    color: #7853B2;
+    border: 1px solid #00306B;
+    color: #00306B;
     font-size: 14px;
   }
   .btn-confirm {
     margin-left: 20px;
     min-width: 100px;
     height: 40px;
-    background: #7853B2;
+    background: #00306B;
     color: #fff;
     font-size: 14px;
   }
@@ -115,7 +115,7 @@
     clip-path: polygon(0% 0%, 97% 0%, 100% 50%, 97% 100%, 0% 100%, 3% 50%);
   }
   .page .main-title .right .step-box .step.active {
-    background: #7853B2;
+    background: #00306B;
     color: #fff;
   }
   .page .goods-list {
@@ -212,14 +212,14 @@
   }
   .page .goods-list .list .item .item-detail .item-3 {
     width: 100px;
-    color: #7853B2;
+    color: #00306B;
   }
   .page .goods-list .list .item .item-detail .item-4 {
     width: 80px;
   }
   .page .goods-list .list .item .item-detail .item-5 {
     width: 100px;
-    color: #7853B2;
+    color: #00306B;
   }
   .page .goods-list .huizong {
     padding: 10px;
@@ -258,7 +258,7 @@
     border: 1px solid #cccccc;
     font-size: 14px;
     font-weight: 400;
-    color: #7853B2;
+    color: #00306B;
     transition: 0.3s;
   }
   .page .bottom-btns button:hover {
@@ -266,15 +266,15 @@
   }
   .page .bottom-btns button.back {
     margin-right: 24px;
-    border: 1px solid #7853B2;
+    border: 1px solid #00306B;
     font-size: 14px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
-    color: #7853B2;
+    color: #00306B;
   }
   .page .bottom-btns button.tijiao {
     color: #ffffff;
-    background: #7853B2;
+    background: #00306B;
   }
   .ziti-wrap {
     margin-bottom: 40px;
@@ -340,7 +340,7 @@
   }
   .dizhi-select .dizhi-title .add b {
     font-weight: bold;
-    color: #7853B2;
+    color: #00306B;
     cursor: pointer;
   }
   .dizhi-select .dizhi-inner {
@@ -351,7 +351,7 @@
     color: #7d7d7d;
   }
   .dizhi-select .dizhi-inner .tip b {
-    color: #7853B2;
+    color: #00306B;
     cursor: pointer;
   }
   .dizhi-select .dizhi-inner .list {
@@ -396,7 +396,7 @@
   }
   .dizhi-select .dizhi-inner .list .item .checked {
     flex: 2;
-    color: #7853B2;
+    color: #00306B;
     text-align: right;
   }
   .type-select {
@@ -445,7 +445,7 @@
     border: 1px solid #cccccc;
   }
   .type-select .type-inner .select-1 .list button.active {
-    border: 1px solid #7853B2;
+    border: 1px solid #00306B;
   }
   .type-select .type-inner .ziti-box {
     padding-top: 10px;
@@ -522,7 +522,7 @@
     margin-bottom: 10px;
   }
   .order-action .use-jifen-num b {
-    color: #7853B2;
+    color: #00306B;
   }
   .order-action .section-btn-actions {
     display: flex;
@@ -584,7 +584,7 @@
     margin-top: 0;
   }
   .section .section-ctx .address-list .address-item.active {
-    border: 2px solid #7853B2;
+    border: 2px solid #00306B;
   }
   .section .section-ctx .address-list .address-item.active .marker {
     display: block;
@@ -648,7 +648,7 @@
     color: #1F1F1F;
   }
   .section-info .input-list .input-item .label span {
-    color: #7853B2;
+    color: #00306B;
   }
   .section-info .input-list .input-item .val .img-address-edit {
     margin-left: 15px;
@@ -709,11 +709,11 @@
     line-height: 32px;
     background: #ffffff;
     border-radius: 3px 3px 3px 3px;
-    border: 1px solid #7853B2;
+    border: 1px solid #00306B;
     font-size: 14px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: normal;
-    color: #7853B2;
+    color: #00306B;
   }
   .section-huizong .sub-title {
     display: flex;
@@ -751,7 +751,7 @@
     cursor: pointer;
   }
   .section-huizong .yhq-list .yhq-item.active {
-    border-color: #7853B2;
+    border-color: #00306B;
   }
   .section-huizong .yhq-list .yhq-item.active .marker {
     display: block;
@@ -776,7 +776,7 @@
     font-size: 24px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #7853B2;
+    color: #00306B;
   }
   .section-huizong .yhq-list .yhq-item .yhq-top .yhq-1 .text-2 {
     margin-left: 5px;
@@ -799,7 +799,7 @@
     font-size: 12px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
-    color: #7853B2;
+    color: #00306B;
   }
   .section-huizong .yhq-select-info {
     height: 50px;
@@ -808,7 +808,7 @@
     padding: 0 30px;
   }
   .section-huizong .yhq-select-info .number {
-    color: #7853B2;
+    color: #00306B;
     margin: 0 10px;
   }
   .section-huizong .remark-box .input-box {
@@ -847,7 +847,7 @@
     color: #1F1F1F;
   }
   .yue-info .info-item .yue-warn-tip {
-    color: #7853B2;
+    color: #00306B;
     font-size: 14px;
   }
   .xianxia-info {

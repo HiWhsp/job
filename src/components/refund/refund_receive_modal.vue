@@ -1,12 +1,13 @@
 <template>
   <div class="modal-container">
-    <el-dialog title="确认收货？" width="580px" custom-class="modal-wrap" :close-on-click-modal="false" :visible.sync="show_modal" :before-close="on_before_close">
+    <el-dialog title="Confirm Receipt？" width="580px" custom-class="modal-wrap" :close-on-click-modal="false" :visible.sync="show_modal" :before-close="on_before_close">
       <div class="modal-inner">
-        <div class="text-2">确认收货后，此售后服务单将完成。</div>
+        <div class="text-2">Confirm receipt, 
+          <br/>this after-sale service order will be completed.</div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <button class="quxiao" @click="show_modal = false">取消</button>
-        <button class="queding" @click="do_refund_receive()">确定</button>
+        <button class="quxiao" @click="show_modal = false">Cancel</button>
+        <button class="queding" @click="do_refund_receive()">Confirm</button>
       </span>
     </el-dialog>
   </div>
@@ -76,7 +77,7 @@ export default {
     }
     .text-2 {
       text-align: center;
-      font-size: 14px;
+      font-size: 20px;
       color: #333333;
       margin-bottom: 20px;
     }
@@ -85,7 +86,8 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  background: #7853B2;
+  background: #00306B;
+  padding-top: 10px;
 
   .el-dialog__title {
     color: #fff;
@@ -100,22 +102,24 @@ export default {
 
   button {
     width: 180px;
-    height: 35px;
+    height: 50px;
     background: #ff3d00;
     opacity: 1;
-    border-radius: 15px;
+    border-radius: 10px;
   }
 
   .quxiao {
     background: #fff;
     color: #000;
     border: 1px solid #aaa;
+    font-size: 20px;
   }
 
   .queding {
     margin-left: 20px;
-    background: #7853B2;
+    background: #00306B;
     color: #fff;
+    font-size: 20px;
   }
 }
 </style>

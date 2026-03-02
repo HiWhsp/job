@@ -193,7 +193,7 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #7853B2;
+      background: #00306B;
       color: #fff;
       font-size: 14px;
       font-weight: bold;
@@ -281,9 +281,9 @@ export default {
     color: #333333;
 
     &.active {
-      border-bottom: 3px solid #7853B2;
+      border-bottom: 3px solid #00306B;
       font-weight: bold;
-      color: #7853B2;
+      color: #00306B;
     }
   }
 }
@@ -378,7 +378,7 @@ export default {
       button {
         width: 51px;
         height: 22px;
-        background: #7853B2;
+        background: #00306B;
         border-radius: 2px;
         color: #fff;
         font-size: 12px;

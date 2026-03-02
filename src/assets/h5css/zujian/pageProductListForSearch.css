@@ -1,6 +1,6 @@
 @media screen and (max-width: 1199px) {
    /deep/ .highlight {
-    color: #7853B2;
+    color: #00306B;
   }
   .info-list {
     overflow-x: auto;
@@ -16,7 +16,7 @@
     min-width: 800px;
     min-width: 600px;
     height: 50px;
-    background: linear-gradient(180deg, #7853B2 0%, #fe6927 100%) !important;
+    background: linear-gradient(180deg, #00306B 0%, #fe6927 100%) !important;
   }
   .info-list .title-item .item {
     font-size: 14px;
@@ -70,7 +70,7 @@
     color: #1F1F1F;
   }
   .info-list .info-item .item a:hover {
-    color: #7853B2;
+    color: #00306B;
   }
   .product-list {
     padding-top: 0;
@@ -105,7 +105,7 @@
     color: #333333;
   }
   .product-list .product-item .product-left .title:hover {
-    color: #7853B2;
+    color: #00306B;
   }
   .product-list .product-item .product-left .biaoqian img {
     height: 24px;
@@ -125,7 +125,7 @@
     font-size: 12px;
   }
   .product-list .product-item .product-left .shuoming .shuoming-item:hover {
-    color: #7853B2;
+    color: #00306B;
   }
   .product-list .product-item .product-left .shuoming .shuoming-item img {
     width: 16px;
@@ -141,7 +141,7 @@
     width: 32px;
     height: 18px;
     line-height: 18px;
-    background: #7853B2;
+    background: #00306B;
     border-radius: 3px 3px 3px 3px;
     font-size: 12px;
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
@@ -177,7 +177,7 @@
     font-size: 1.4rem;
   }
   .product-list .product-item .product-left .text-box .val a:hover {
-    color: #7853B2;
+    color: #00306B;
   }
   .product-list .product-item .product-right {
     width: 100%;

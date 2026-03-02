@@ -544,7 +544,7 @@ export default {
             line-height: 56px;
 
             &:focus {
-              border-color: #7853b2;
+              border-color: #00306B;
             }
           }
         }
@@ -570,7 +570,7 @@ export default {
             background: #fff;
 
             &:hover {
-              border-color: #7853b2;
+              border-color: #00306B;
               background: #f7efff;
             }
 
@@ -713,8 +713,8 @@ export default {
     color: #1f1f1f;
 
     &:hover {
-      border-color: #7853b2;
-      color: #7853b2;
+      border-color: #00306B;
+      color: #00306B;
     }
   }
 }

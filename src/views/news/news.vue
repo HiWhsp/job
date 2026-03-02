@@ -503,18 +503,18 @@ export default {
           align-items: center;
 
           .card-link {
-            color: #7853b2;
+            color: #00306B;
             text-decoration: none;
             font-size: 14px;
             transition: all 0.3s ease;
             padding: 8px 16px;
-            // border: 1px solid #7853b2;
+            // border: 1px solid #00306B;
             border-radius: 4px;
             display: inline-block;
 
             &:hover {
               color: #ffffff;
-              background-color: #7853b2;
+              background-color: #00306B;
               text-decoration: none;
             }
           }
@@ -681,8 +681,8 @@ export default {
       transition: all 0.3s ease;
 
       &:hover:not(.disabled) {
-        border-color: #7853b2;
-        color: #7853b2;
+        border-color: #00306B;
+        color: #00306B;
       }
 
       &.disabled {
@@ -706,13 +706,13 @@ export default {
       transition: all 0.3s ease;
 
       &:hover:not(.dots) {
-        border-color: #7853b2;
-        color: #7853b2;
+        border-color: #00306B;
+        color: #00306B;
       }
 
       &.active {
-        background: #7853b2;
-        border-color: #7853b2;
+        background: #00306B;
+        border-color: #00306B;
         color: #ffffff;
       }
 
@@ -743,7 +743,7 @@ export default {
       outline: none;
 
       &:focus {
-        border-color: #7853b2;
+        border-color: #00306B;
       }
     }
   }
@@ -764,16 +764,16 @@ export default {
     font-weight: bold;
 
     &:hover {
-      color: #7853b2 !important;
+      color: #00306B !important;
     }
 
     &.is-active {
-      color: #7853b2 !important;
+      color: #00306B !important;
     }
   }
 
   .el-tabs__active-bar {
-    background-color: #7853b2 !important;
+    background-color: #00306B !important;
   }
 }
 
@@ -784,15 +784,15 @@ export default {
   font-weight: bold;
 
   &:hover {
-    color: #7853b2 !important;
+    color: #00306B !important;
   }
 
   &.is-active {
-    color: #7853b2 !important;
+    color: #00306B !important;
   }
 }
 
 .custom-tabs ::v-deep .el-tabs__active-bar {
-  background-color: #7853b2 !important;
+  background-color: #00306B !important;
 }
 </style>

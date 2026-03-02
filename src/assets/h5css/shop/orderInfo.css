@@ -4,7 +4,7 @@
     font-weight: bold;
   }
   .money-heji span {
-    color: #7853B2;
+    color: #00306B;
     font-weight: bold;
   }
   .zhifufangshi-wrap {
@@ -28,7 +28,7 @@
     font-family: Microsoft YaHei;
     font-weight: bold;
     line-height: 24px;
-    color: #7853B2;
+    color: #00306B;
   }
   .zhifufangshi-wrap .zhifufangshi .pay-item .pay-title {
     margin-right: 5px;
@@ -81,11 +81,11 @@
     font-weight: 400;
     line-height: 20px;
     color: #505050;
-    color: #7853B2;
+    color: #00306B;
   }
   .order-list-wrap .info-title .order-state.state-2 {
-    color: #7853B2;
-    border-color: #7853B2;
+    color: #00306B;
+    border-color: #00306B;
   }
   .order-list-wrap .info-good .list-good .item-good {
     padding: 10px;
@@ -119,7 +119,7 @@
     cursor: pointer;
   }
   .order-list-wrap .info-good .list-good .item-good .title .goods-title:hover {
-    color: #7853B2;
+    color: #00306B;
   }
   .order-list-wrap .info-good .list-good .item-good .num {
     width: auto;
@@ -164,14 +164,14 @@
   }
   .info-heji .money-box .count {
     font-weight: bold;
-    color: #7853B2;
+    color: #00306B;
   }
   .info-heji .money-box .money-item .money-num {
     min-width: 70px;
     display: inline-block;
   }
   .info-heji .money-box .money-item .money-num.money-total {
-    color: #7853B2;
+    color: #00306B;
     font-weight: bold;
   }
   .order-action-box {
@@ -196,33 +196,33 @@
     font-weight: 400;
     line-height: 20px;
     color: #7d7d7d;
-    border: 1px solid #7853B2;
-    color: #7853B2;
+    border: 1px solid #00306B;
+    color: #00306B;
   }
   .btn-box .order-action {
     background: #fff;
     border: 1px solid #cccccc;
     font-size: 14px;
     color: #7d7d7d;
-    border: 1px solid #7853B2;
-    color: #7853B2;
+    border: 1px solid #00306B;
+    color: #00306B;
   }
   .btn-box .order-action:hover {
     opacity: 0.8;
   }
   .btn-box .order-action.zhifu {
-    background: #7853B2;
-    border-color: #7853B2;
+    background: #00306B;
+    border-color: #00306B;
     color: #fff;
   }
   .btn-box .order-action.shanchu {
-    background: #7853B2;
-    border-color: #7853B2;
+    background: #00306B;
+    border-color: #00306B;
     color: #fff;
   }
   .btn-box .order-action.shouhuo {
-    background: #7853B2;
-    border-color: #7853B2;
+    background: #00306B;
+    border-color: #00306B;
     color: #fff;
   }
 }

@@ -44,35 +44,22 @@
                   class="spec-selector-label"
                 >{{ skuGroup.key }}: {{ getSelectedOptionTitle(skuGroup) }}</div>
                 <div class="spec-selector-options">
-                  <!-- 颜色选择器（图片） -->
-                  <template v-if="skuGroup.key.toLowerCase() === 'color'">
-                    <div
-                      class="spec-option-item spec-option-color"
-                      :class="{
-                        active: isOptionSelected(skuGroup.id, child.id),
-                        disabled: !isOptionAvailable(skuGroup.id, child.id)
-                      }"
-                      v-for="child in skuGroup.child"
-                      :key="child.id"
-                      @click="selectSpecOption(skuGroup.id, child.id)"
-                    >
-                      <el-image v-if="child.image" :src="child.image" class="color-image"></el-image>
-                      <span v-else>{{ child.title }}</span>
-                    </div>
-                  </template>
-                  <!-- 其他选择器（按钮） -->
-                  <template v-else>
-                    <div
-                      class="spec-option-item spec-option-button"
-                      :class="{
-                        active: isOptionSelected(skuGroup.id, child.id),
-                        disabled: !isOptionAvailable(skuGroup.id, child.id)
-                      }"
-                      v-for="child in skuGroup.child"
-                      :key="child.id"
-                      @click="selectSpecOption(skuGroup.id, child.id)"
-                    >{{ child.title }}</div>
-                  </template>
+                  <!-- 有 thumb 显示图片，无 thumb 显示文字 -->
+                  <div
+                    v-for="child in skuGroup.child"
+                    :key="child.id"
+                    class="spec-option-item"
+                    :class="{
+                      'spec-option-color': child.thumb,
+                      'spec-option-button': !child.thumb,
+                      active: isOptionSelected(skuGroup.id, child.id),
+                      disabled: !isOptionAvailable(skuGroup.id, child.id)
+                    }"
+                    @click="selectSpecOption(skuGroup.id, child.id)"
+                  >
+                    <el-image v-if="child.thumb" :src="child.thumb" class="color-image"></el-image>
+                    <span v-else>{{ child.title }}</span>
+                  </div>
                 </div>
               </div>
               <!-- 数量输入 -->

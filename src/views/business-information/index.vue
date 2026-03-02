@@ -7,7 +7,7 @@
     <div class="page-ctx">
       <!-- <div class="form-title">BUSINESS INFORMATION</div> -->
 
-      <div class="form-container">
+      <div class="form-container" v-if="vuex_user.renzheng == 0 || vuex_user.renzheng == 2">
         <el-form :model="form" :rules="rules" ref="businessForm" label-width="0">
           <div class="form-columns">
             <!-- 左列：公司信息 -->
@@ -70,12 +70,8 @@
                 <label class="form-label">Business Type :</label>
                 <el-form-item prop="companyIndustry">
                   <el-select v-model="form.companyIndustry" placeholder="Please select">
-                    <el-option
-                      v-for="(item, index) in vuex_top_title"
-                      :key="index"
-                      :value="item.title"
-                      :label="item.title"
-                    ></el-option>
+                    <el-option v-for="(item, index) in vuex_top_title" :key="index" :value="item.title"
+                      :label="item.title"></el-option>
                   </el-select>
                 </el-form-item>
               </div>
@@ -84,12 +80,8 @@
                 <label class="form-label">Main Products :</label>
                 <el-form-item prop="companyType">
                   <el-select v-model="form.companyType" placeholder="Please select">
-                    <el-option
-                      v-for="(item, index) in vuex_category_tree"
-                      :key="index"
-                      :value="item.title"
-                      :label="item.title"
-                    ></el-option>
+                    <el-option v-for="(item, index) in vuex_category_tree" :key="index" :value="item.title"
+                      :label="item.title"></el-option>
                   </el-select>
                 </el-form-item>
               </div>
@@ -131,12 +123,8 @@
                   </template>
                   <template v-else>
                     <el-select filterable v-model="form.billing_state" placeholder="Please enter">
-                      <el-option
-                        v-for="item in billingProvinceList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.label"
-                      ></el-option>
+                      <el-option v-for="item in billingProvinceList" :key="item.value" :label="item.label"
+                        :value="item.label"></el-option>
                     </el-select>
                   </template>
                 </el-form-item>
@@ -145,18 +133,10 @@
               <div class="form-item">
                 <label class="form-label">Country :</label>
                 <el-form-item prop="billing_country">
-                  <el-select
-                    filterable
-                    v-model="form.billing_country"
-                    placeholder="Please select"
-                    @change="changeBillingCountry(form.billing_country)"
-                  >
-                    <el-option
-                      v-for="item in countryList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.label"
-                    ></el-option>
+                  <el-select filterable v-model="form.billing_country" placeholder="Please select"
+                    @change="changeBillingCountry(form.billing_country)">
+                    <el-option v-for="item in countryList" :key="item.value" :label="item.label"
+                      :value="item.label"></el-option>
                   </el-select>
                 </el-form-item>
               </div>
@@ -190,12 +170,8 @@
                   </template>
                   <template v-else>
                     <el-select filterable v-model="form.province" placeholder="Please enter">
-                      <el-option
-                        v-for="item in shippingProvinceList"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.label"
-                      ></el-option>
+                      <el-option v-for="item in shippingProvinceList" :key="item.value" :label="item.label"
+                        :value="item.label"></el-option>
                     </el-select>
                   </template>
                 </el-form-item>
@@ -204,18 +180,10 @@
               <div class="form-item">
                 <label class="form-label">Country :</label>
                 <el-form-item prop="country">
-                  <el-select
-                    filterable
-                    v-model="form.country"
-                    placeholder="Please select"
-                    @change="changeShippingCountry(form.country)"
-                  >
-                    <el-option
-                      v-for="item in countryList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.label"
-                    ></el-option>
+                  <el-select filterable v-model="form.country" placeholder="Please select"
+                    @change="changeShippingCountry(form.country)">
+                    <el-option v-for="item in countryList" :key="item.value" :label="item.label"
+                      :value="item.label"></el-option>
                   </el-select>
                 </el-form-item>
               </div>
@@ -229,6 +197,21 @@
             </div>
           </div>
         </el-form>
+      </div>
+      <!-- 认证中 -->
+      <div class="form-auth" v-else-if="vuex_user.renzheng == 1">
+        <img src="@/assets/img/product/product-add-success.png" alt="">
+        <div class="fail-text">
+          <p>Submission successful!</p>
+          <p>Please wait for MEDOOO review...</p>
+        </div>
+      </div>
+      <!-- 认证失败 -->
+      <div class="form-auth" v-else-if="vuex_user.renzheng == -1">
+        <img src="@/assets/img/pay/fail.png" alt="">
+        <div class="fail-text">Authentication failed</div>
+        <!-- 重新申请 -->
+        <!-- <el-button type="primary" class="reapply-btn" @click="reapply">Reapply</el-button> -->
       </div>
     </div>
   </div>
@@ -275,7 +258,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["vuex_top_title", "vuex_category_tree"])
+    ...mapState(["vuex_top_title", "vuex_category_tree", "vuex_user"])
   },
   created() {
     this.countryList = countryData.countryList || [];
@@ -343,6 +326,9 @@ export default {
           });
         }
       });
+    },
+    reapply() {
+
     }
   }
 };
@@ -482,6 +468,39 @@ export default {
             }
           }
         }
+      }
+    }
+
+    .form-auth {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+
+      img {
+        width: 70px;
+        height: 70px;
+      }
+
+      .fail-text {
+        text-align: center;
+        font-family: Poppins, Poppins;
+        font-weight: 600;
+        font-size: 22px;
+        color: #1E262E;
+        line-height: 35px;
+      }
+
+      .reapply-btn {
+        width: 100px;
+        height: 40px;
+        border-radius: 4px;
+        background: #00306B;
+        border: none;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 400;
       }
     }
   }

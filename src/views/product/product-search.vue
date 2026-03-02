@@ -5,7 +5,7 @@
       <div class="page-bread w-1400">
         <div class="bread-box">
           <img src="@img/common/product-home.png" alt="" />
-          <router-link to="/">首页</router-link>
+          <router-link to="/">Home</router-link>
           <span class="bread-divider">&gt;</span>
           <!-- <router-link to="/products">产品中心</router-link>
           <span class="bread-divider">&gt;</span> -->
@@ -171,7 +171,7 @@ export default {
         color: #505050;
 
         &:hover {
-          color: #7853B2;
+          color: #00306B;
         }
       }
     }
@@ -241,7 +241,7 @@ export default {
 
     &:hover {
       .title {
-        color: #7853B2 !important;
+        color: #00306B !important;
       }
 
     }

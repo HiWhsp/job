@@ -519,7 +519,7 @@ export default {
     .add {
       b {
         font-weight: bold;
-        color: #7853B2;
+        color: #00306B;
         cursor: pointer;
       }
     }
@@ -588,7 +588,7 @@ export default {
 
         .checked {
           flex: 2;
-          color: #7853B2;
+          color: #00306B;
           text-align: right;
         }
       }
@@ -643,7 +643,7 @@ export default {
           background: #ffffff;
           border: 1px solid #cccccc;
           &.active {
-            border: 1px solid #7853B2;
+            border: 1px solid #00306B;
           }
         }
       }
@@ -752,7 +752,7 @@ export default {
         }
 
         &.active {
-          border: 2px solid #7853B2;
+          border: 2px solid #00306B;
 
           .marker {
             display: block;
@@ -813,7 +813,7 @@ export default {
     border: 1px solid #cccccc;
     font-size: 16px;
     font-weight: 400;
-    color: #7853B2;
+    color: #00306B;
 
     transition: 0.3s;
     &:hover {
@@ -822,16 +822,16 @@ export default {
 
     &.back {
       margin-right: 24px;
-      border: 1px solid #7853B2;
+      border: 1px solid #00306B;
       font-size: 16px;
       font-family: Microsoft YaHei-Regular, Microsoft YaHei;
       font-weight: 400;
-      color: #7853B2;
+      color: #00306B;
     }
 
     &.tijiao {
       color: #ffffff;
-      background: #7853B2;
+      background: #00306B;
     }
   }
 }

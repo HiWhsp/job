@@ -1114,7 +1114,7 @@ export default {
 
         .cate-header {
           .main-title {
-            color: #7853b2;
+            color: #00306B;
           }
         }
 
@@ -1125,7 +1125,7 @@ export default {
 
         .cate-v2-wrap {
           .v2-title {
-            color: #7853b2;
+            color: #00306B;
           }
         }
       }
@@ -1414,7 +1414,7 @@ export default {
         .btn {
           width: 210px;
           height: 40px;
-          background: #7853b2;
+          background: #00306B;
           border-radius: 4px 4px 4px 4px;
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
@@ -1431,11 +1431,11 @@ export default {
           height: 40px;
           background: #ffffff;
           border-radius: 4px 4px 4px 4px;
-          border: 1px solid #7853b2;
+          border: 1px solid #00306B;
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
           font-size: 16px;
-          color: #7853b2;
+          color: #00306B;
         }
       }
 
@@ -1485,7 +1485,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: bold;
           font-size: 18px;
-          color: #7853b2;
+          color: #00306B;
         }
 
         a {
@@ -2752,7 +2752,7 @@ export default {
             }
 
             &:first-child {
-              background: #7853b2;
+              background: #00306B;
             }
 
             &:last-child {
@@ -2765,7 +2765,7 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: bold;
             font-size: 20px;
-            color: #7853b2;
+            color: #00306B;
           }
         }
       }

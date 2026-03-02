@@ -249,7 +249,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #7853b2;
+      background: #00306B;
       border-radius: 8px;
 
       img {

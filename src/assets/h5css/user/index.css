@@ -55,7 +55,7 @@
     color: #1F1F1F;
   }
   .page-user-wrap .inner .user-left .nav-wrap .nav-item .nav-title.link:hover {
-    color: #7853B2;
+    color: #00306B;
   }
   .page-user-wrap .inner .user-left .nav-wrap .nav-item .nav-title.main-title {
     line-height: 48px;
@@ -72,7 +72,7 @@
   .page-user-wrap .inner .user-left .nav-wrap .nav-item .nav-title.active {
     background: #ffffff;
     background: #fffaf7;
-    color: #7853B2;
+    color: #00306B;
   }
   .page-user-wrap .inner .user-left .nav-wrap .nav-item .nav-title.active:before {
     content: "";
@@ -81,7 +81,7 @@
     top: 0;
     bottom: 0;
     width: 3px;
-    background-color: #7853B2;
+    background-color: #00306B;
   }
   .page-user-wrap .inner .user-left .nav-wrap .nav-item .nav-title[data-hide="hide"] {
     display: none;

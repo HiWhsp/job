@@ -149,7 +149,7 @@ export default {
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: #7853B2;
+  color: #00306B;
   font-size: 1.4rem;
 
   &.disabled {
@@ -211,7 +211,7 @@ export default {
       display: flex;
   align-items: center;
     cursor: pointer;
-    color: #7853B2;
+    color: #00306B;
 
     &.disabled {
       color: #ccc;

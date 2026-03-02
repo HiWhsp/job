@@ -91,8 +91,8 @@ export default {
       color: #505050;
 
       &.state2 {
-        color: #7853B2;
-        border-color: #7853B2;
+        color: #00306B;
+        border-color: #00306B;
       }
     }
   }
@@ -161,8 +161,8 @@ export default {
     .order-detail {
       min-width: 96px;
       height: 30px;
-      background: #7853B2;
-      border: 1px solid #7853B2;
+      background: #00306B;
+      border: 1px solid #00306B;
       font-size: 14px;
       color: #fff;
       transition: 0.3s;

@@ -161,12 +161,12 @@ body {
 }
 
 .el-textarea__inner:focus {
-  border-color: #7853B2!important;
+  border-color: #00306B!important;
 }
 
 .el-radio__input.is-checked .el-radio__inner {
-  background: #7853B2!important;
-  border-color: #7853B2!important;
+  background: #00306B!important;
+  border-color: #00306B!important;
 }
 
 .el-radio__input.is-checked + .el-radio__label {
@@ -174,11 +174,11 @@ body {
 }
 
 .el-checkbox__input.is-focus .el-checkbox__inner {
-  border-color: #7853B2!important;
+  border-color: #00306B!important;
 }
 
 .el-checkbox__input.is-checked + .el-checkbox__label {
-  color: #7853B2!important;
+  color: #00306B!important;
 }
 
 .el-checkbox__input.is-checked .el-checkbox__inner,

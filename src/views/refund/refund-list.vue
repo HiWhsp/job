@@ -5,13 +5,8 @@
     <div class="page-ctx">
       <div class="tab-box">
         <div class="tab-list">
-          <div
-            v-for="(item, index) in tab_list"
-            :key="index"
-            class="tab-item"
-            :class="{ active: tab_select.value == item.value }"
-            @click="do_toggle_tab(item)"
-          >
+          <div v-for="(item, index) in tab_list" :key="index" class="tab-item"
+            :class="{ active: tab_select.value == item.value }" @click="do_toggle_tab(item)">
             {{ item.title }}
             <span class="number" v-if="number_info[item.number_key]">{{
               number_info[item.number_key]
@@ -37,29 +32,31 @@
                 </div>
                 <div class="product-box">
                   <div class="product-list">
-                    <div class="product-item flex">
+                    <div class="product-item flex" v-for="(product_item, product_index) in order.products"
+                      :key="product_index">
                       <div class="box-pic">
                         <div class="img-box">
-                          <img :src="order.products.image" alt />
+                          <img :src="product_item.image" alt />
                         </div>
                       </div>
                       <div class="box-title">
-                        <div class="title">{{ order.products.title }}</div>
-                        <div class="sku">{{ order.products.keyVals }}</div>
+                        <div class="title ellipsis-2">{{ product_item.title }}</div>
+                        <div class="sku">{{ product_item.keyVals }}</div>
                       </div>
                       <div class="box-price">
-                        <div class="price">{{ vuex_huobi }}{{ order.products.priceSale }}<span class="unit">/pack</span></div>
+                        <div class="price">{{ vuex_huobi }}{{ product_item.priceSale }}<span class="unit">/pack</span>
+                        </div>
                       </div>
                       <div class="box-num">
-                        <div class="num">x{{ order.products.num }}</div>
+                        <div class="num">x{{ product_item.num }}</div>
                       </div>
                       <div class="box-xiaoji">
                         <div class="price">
-                          {{ vuex_huobi }}{{ (order.products.priceSale * order.products.num).toFixed(2) }}
+                          {{ vuex_huobi }}{{ (product_item.priceSale * product_item.num).toFixed(2) }}
                         </div>
                       </div>
                       <div class="box-action">
-                        <span class="refund-link" @click="to_refund_type(order)">Return/Refund</span>
+                        <span class="refund-link" @click="to_refund_type(order, product_item)">Return/Refund</span>
                       </div>
                     </div>
                   </div>
@@ -67,9 +64,10 @@
               </div>
             </div>
 
-            <div class="pagi-box" v-if="allow_refund_count">
+            <div class="pagination-box" style="margin-top: 40px; text-align: center;">
               <el-pagination @current-change="on_current_change_allow" :current-page.sync="allow_pagination.page"
-                :page-size="allow_pagination.pageNum" layout="total, prev, pager, next" :total="allow_refund_count"></el-pagination>
+                :page-size="allow_pagination.pageNum" background layout="prev, pager, next"
+                :total="allow_refund_count"></el-pagination>
             </div>
             <el-empty v-if="!allow_refund_count" description="No data found..."></el-empty>
           </div>
@@ -86,7 +84,7 @@
                   </div> -->
                   <div class="date">{{ order.createdTime }}</div>
                   <div class="order-code">
-                    Order No. <span>{{ order.sn }}</span>
+                    Order No.<span>{{ order.sn }}</span>
                   </div>
                 </div>
                 <div class="product-box">
@@ -98,7 +96,7 @@
                         </div>
                       </div>
                       <div class="box-title">
-                        <div class="title">{{ order.products.title }}</div>
+                        <div class="title ellipsis-2">{{ order.products.title }}</div>
                         <div class="sku">{{ order.products.keyVals }}</div>
                       </div>
                       <div class="box-price">
@@ -110,10 +108,11 @@
                         <div class="num">x{{ order.products.num }}</div>
                       </div>
                       <div class="box-xiaoji">
-                        <div class="price">{{ vuex_huobi }}{{ (order.products.priceSale * order.products.num).toFixed(2) }}</div>
+                        <div class="price">{{ vuex_huobi }}{{ (order.products.priceSale * order.products.num).toFixed(2)
+                        }}</div>
                       </div>
                       <div class="box-action">
-                        <span class="refund-link" @click="to_service(order)">Return/Refund</span>
+                        <span class="refund-link" @click="to_service(order)">Detail</span>
                       </div>
                     </div>
                   </div>
@@ -122,9 +121,10 @@
             </div>
           </div>
 
-          <div class="pagi-box" v-if="refund_service_count">
+          <div class="pagination-box" style="margin-top: 40px; text-align: center;">
             <el-pagination @current-change="on_current_change_service" :current-page.sync="service_pagination.page"
-              :page-size="service_pagination.pageNum" layout="total, prev, pager, next" :total="refund_service_count"></el-pagination>
+              :page-size="service_pagination.pageNum" background layout="prev, pager, next"
+              :total="refund_service_count"></el-pagination>
           </div>
           <el-empty v-if="!refund_service_count" description="No data found..."></el-empty>
         </div>
@@ -170,7 +170,7 @@ export default {
       refund_service_list: [],//售后申请服务列表
       //
       keyword: "",
-      number_info:{
+      number_info: {
 
       }
     };
@@ -185,14 +185,14 @@ export default {
   },
   methods: {
     setView() {
-      if (this.tab_select.title == '全部') {
+      if (this.tab_select.value == -10) {
         this.query_allow_refund_order(); //可申请订单列表
       } else {
         this.query_refund_service_list(); //售后申请列表
       }
     },
-        //用户主页数据
-        query_userIndex() {
+    //用户主页数据
+    query_userIndex() {
       this.$api({
         url: "/service.php",
         method: "get",
@@ -216,7 +216,8 @@ export default {
         url: '/service.php',
         method: 'get',
         data: {
-          action: 'refund_afterSaleList',
+          action: 'orders_lists',
+          scene: 5,
           ...this.pagination,
         },
       }).then((res) => {
@@ -247,19 +248,19 @@ export default {
         }
       });
     },
-    
+
     do_toggle_tab(item) {
-      this.refund_status=item.value
+      this.refund_status = item.value
       this.tab_select = item;
       this.setView()
     },
 
-    to_refund_type(item) {
+    to_refund_type(item, product_item) {
       this.mix_toRoute({
         path: '/refund-type',
         query: {
-          orderId: item.orderId,
-          inventoryId: item.inventoryId,
+          orderId: item.id,
+          inventoryId: product_item.id,
         }
       })
     },
@@ -285,7 +286,7 @@ export default {
     do_search() {
 
     },
-    
+
     updateView() {
       this.setView();
     },
@@ -363,15 +364,15 @@ export default {
 
 .tab-box {
   padding-right: 20px;
-    display: flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   background: #ffffff;
   // border: 1px solid #cccccc;
 
   .tab-list {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     font-size: 14px;
     font-family: Microsoft YaHei;
     font-weight: 400;
@@ -393,7 +394,7 @@ export default {
       }
 
       &.active {
-        // background: #7853B2;
+        // background: #00306B;
         // color: #fff;
         font-weight: bold;
         color: #ec6a2b;
@@ -412,8 +413,8 @@ export default {
   }
 
   .search-box {
-      display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     min-width: 260px;
     height: 32px;
     background: #f9f9f9;
@@ -461,33 +462,25 @@ export default {
     }
 
     .base-box {
-      height: 48px;
-      padding: 0 15px;
+      height: 65px;
+      padding: 0 20px;
       background: #f5f5f5;
       border-bottom: 1px solid #e5e5e5;
 
       .date {
-        font-size: 14px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        line-height: 20px;
-        color: #7d7d7d;
+        font-family: Poppins, Poppins;
+        font-weight: 600;
+        font-size: 20px;
+        color: #333333;
       }
 
       .order-code {
         flex: 2;
-        text-align: left;
-        padding-left: 20px;
-
-        font-size: 14px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        line-height: 20px;
-        color: #7d7d7d;
-
-        span {
-          color: #333333;
-        }
+        font-family: Poppins, Poppins;
+        font-weight: 600;
+        font-size: 20px;
+        color: #333333;
+        margin-left: 20px;
       }
     }
 
@@ -503,19 +496,18 @@ export default {
           }
 
           .box-pic {
-            width: 96px;
+            width: 114px;
 
             .img-box {
-              width: 96px;
-              height: 96px;
-              border: 1px solid #eeeeee;
+              width: 114px;
+              height: 114px;
               display: flex;
               align-items: center;
               justify-content: center;
 
               img {
-                width: 80px;
-                height: 80px;
+                width: 100%;
+                height: 100%;
                 object-fit: cover;
               }
             }
@@ -526,30 +518,20 @@ export default {
             padding-left: 20px;
 
             .title {
-              text-align: left;
-              font-size: 14px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
-              line-height: 20px;
-              color: #1f1f1f;
-              width: 360px;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
+              font-size: 20px;
+              color: #1E262E;
+              line-height: 30px;
             }
 
             .sku {
-              margin-top: 10px;
-              text-align: left;
-              font-size: 12px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
-              line-height: 18px;
-              color: #777;
-              width: 360px;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
+              font-size: 20px;
+              color: #5E5E5E;
+              line-height: 28px;
+              margin-top: 10px;
             }
           }
 
@@ -558,15 +540,11 @@ export default {
             text-align: center;
 
             .price {
-              font-size: 14px;
-              font-family: Microsoft YaHei;
-              font-weight: 400;
-              line-height: 20px;
-              color: #333333;
-              .unit {
-                font-size: 12px;
-                font-weight: 600;
-              }
+              font-family: Poppins, Poppins;
+              font-weight: 600;
+              font-size: 20px;
+              color: #5E5E5E;
+              line-height: 28px;
             }
           }
 
@@ -576,25 +554,24 @@ export default {
             text-align: center;
 
             .num {
-
-              font-size: 16px;
-              font-family: Microsoft YaHei;
-              font-weight: 400;
-              line-height: 20px;
-              color: #505050;
+              font-family: Poppins, Poppins;
+              font-weight: 600;
+              font-size: 20px;
+              color: #1E262E;
+              line-height: 18px;
             }
           }
 
           .box-xiaoji {
-            min-width: 120px;
+            min-width: 180px;
             text-align: center;
 
             .price {
-              font-size: 14px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 600;
-              line-height: 20px;
-              color: #333333;
+              font-size: 20px;
+              color: #1E262E;
+              line-height: 28px;
             }
           }
 
@@ -606,20 +583,12 @@ export default {
 
           .refund-link {
             cursor: pointer;
-            color: #ec6a2b;
-            font-size: 12px;
-            font-weight: 700;
-            user-select: none;
-
-            &:hover {
-              opacity: 0.9;
-              text-decoration: underline;
-            }
+            font-family: Poppins, Poppins;
+            font-weight: 400;
+            font-size: 20px;
+            color: #EC6A2B;
+            line-height: 28px;
           }
-
-
-
-
         }
       }
     }
@@ -638,8 +607,8 @@ export default {
       .btn {
         min-width: 96px;
         height: 30px;
-        background: #7853B2;
-        border: 1px solid #7853B2;
+        background: #00306B;
+        border: 1px solid #00306B;
         font-size: 14px;
         color: #fff;
         transition: 0.3s;
@@ -673,31 +642,23 @@ export default {
       .refund-type {
         min-width: 80px;
         text-align: left;
-        color: #7853B2;
+        color: #00306B;
       }
 
       .date {
-        font-size: 14px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        line-height: 20px;
-        color: #7d7d7d;
+        font-family: Poppins, Poppins;
+        font-weight: 600;
+        font-size: 20px;
+        color: #333333;
       }
 
       .order-code {
         flex: 2;
-        text-align: left;
-        padding-left: 20px;
-
-        font-size: 14px;
-        font-family: Microsoft YaHei;
-        font-weight: 400;
-        line-height: 20px;
-        color: #7d7d7d;
-
-        span {
-          color: #333333;
-        }
+        font-family: Poppins, Poppins;
+        font-weight: 600;
+        font-size: 20px;
+        color: #333333;
+        margin-left: 20px;
       }
 
       .order-state {
@@ -710,8 +671,8 @@ export default {
         color: #505050;
 
         &.state2 {
-          color: #7853B2;
-          border-color: #7853B2;
+          color: #00306B;
+          border-color: #00306B;
         }
       }
     }
@@ -728,7 +689,7 @@ export default {
           }
 
           .box-pic {
-            width: 96px;
+            width: 114px;
 
             .img-box {
               width: 96px;
@@ -751,30 +712,20 @@ export default {
             padding-left: 20px;
 
             .title {
-              text-align: left;
-              font-size: 14px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
-              line-height: 20px;
-              color: #1f1f1f;
-              width: 360px;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
+              font-size: 20px;
+              color: #1E262E;
+              line-height: 30px;
             }
 
             .sku {
-              margin-top: 10px;
-              text-align: left;
-              font-size: 12px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
-              line-height: 18px;
-              color: #777;
-              width: 360px;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
+              font-size: 20px;
+              color: #5E5E5E;
+              line-height: 28px;
+              margin-top: 10px;
             }
           }
 
@@ -783,15 +734,11 @@ export default {
             text-align: center;
 
             .price {
-              font-size: 14px;
-              font-family: Microsoft YaHei;
-              font-weight: 400;
-              line-height: 20px;
-              color: #333333;
-              .unit {
-                font-size: 12px;
-                font-weight: 600;
-              }
+              font-family: Poppins, Poppins;
+              font-weight: 600;
+              font-size: 20px;
+              color: #5E5E5E;
+              line-height: 28px;
             }
           }
 
@@ -801,25 +748,24 @@ export default {
             text-align: center;
 
             .num {
-
-              font-size: 16px;
-              font-family: Microsoft YaHei;
-              font-weight: 400;
-              line-height: 20px;
-              color: #505050;
+              font-family: Poppins, Poppins;
+              font-weight: 600;
+              font-size: 20px;
+              color: #1E262E;
+              line-height: 18px;
             }
           }
 
           .box-xiaoji {
-            min-width: 120px;
+            min-width: 180px;
             text-align: center;
 
             .price {
-              font-size: 14px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 600;
-              line-height: 20px;
-              color: #333333;
+              font-size: 20px;
+              color: #1E262E;
+              line-height: 28px;
             }
           }
 
@@ -831,15 +777,11 @@ export default {
 
           .refund-link {
             cursor: pointer;
-            color: #ec6a2b;
-            font-size: 12px;
-            font-weight: 700;
-            user-select: none;
-
-            &:hover {
-              opacity: 0.9;
-              text-decoration: underline;
-            }
+            font-family: Poppins, Poppins;
+            font-weight: 400;
+            font-size: 20px;
+            color: #EC6A2B;
+            line-height: 28px;
           }
 
 
@@ -864,8 +806,8 @@ export default {
       .btn {
         min-width: 96px;
         height: 30px;
-        background: #7853B2;
-        border: 1px solid #7853B2;
+        background: #00306B;
+        border: 1px solid #00306B;
         font-size: 14px;
         color: #fff;
         transition: 0.3s;

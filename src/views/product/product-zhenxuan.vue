@@ -375,13 +375,13 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: bold;
           font-size: 14px;
-          color: #7853B2;
+          color: #00306B;
 
           .unit {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: bold;
             font-size: 14px;
-            color: #7853B2;
+            color: #00306B;
           }
         }
       }
@@ -434,7 +434,7 @@ export default {
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: bold;
           font-size: 18px;
-          color: #7853B2;
+          color: #00306B;
         }
 
         &:not(:first-child) {

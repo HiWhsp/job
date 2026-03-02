@@ -235,7 +235,7 @@ export default {
             margin: 11px auto;
             width: 56px;
             height: 3px;
-            background: #7853B2;
+            background: #00306B;
           }
         }
         

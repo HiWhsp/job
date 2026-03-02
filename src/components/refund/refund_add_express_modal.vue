@@ -1,25 +1,25 @@
 <template>
   <div class="modal-container">
-    <el-dialog title="输入邮寄信息" width="600px" custom-class="modal-wrap" :close-on-click-modal="false"
+    <el-dialog title="Enter mailing information" width="600px" custom-class="modal-wrap" :close-on-click-modal="false"
       :visible.sync="show_modal" :before-close="on_before_close">
       <div class="modal-inner">
         <div class="company-item">
-          <div class="label">快递公司：</div>
+          <div class="label">courier company</div>
           <div class="input-box">
-            <el-input clearable type="text" v-model="params.kuaidiCompany" placeholder="请输入您邮寄商品的快递公司" />
+            <el-input clearable type="text" v-model="params.kuaidiCompany" placeholder="Please enter..." />
           </div>
         </div>
         <div class="company-item">
-          <div class="label">物流单号：</div>
+          <div class="label">tracking number</div>
           <div class="input-box">
-            <el-input clearable type="text" v-model="params.kuaidiOrderId" placeholder="请输入您邮寄商品的快递单号" />
+            <el-input clearable type="text" v-model="params.kuaidiOrderId" placeholder="Please enter..." />
           </div>
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
         <div class="btns flex-center">
-          <button class="btn btn-ripple btn-bg" @click="do_submit_wuliu()">提交</button>
-          <button class="btn btn-ripple" @click="show_modal = false">取消</button>
+          <button class="btn btn-ripple btn-bg" @click="do_submit_wuliu()">Submit</button>
+          <!-- <button class="btn btn-ripple" @click="show_modal = false">Cancel</button> -->
         </div>
       </div>
     </el-dialog>
@@ -102,10 +102,11 @@ export default {
 
 
       .label {
-        width: 100px;
+        width: 200px;
         text-align: right;
-        font-size: 14px;
+        font-size: 20px;
         color: #333333;
+        margin-right: 10px;
       }
 
       .input-box {
@@ -114,7 +115,7 @@ export default {
         input {
           width: 100%;
           border: 1px solid #eee;
-          height: 40px;
+          height: 50px;
           padding-left: 20px;
           font-family: Microsoft YaHei, Microsoft YaHei;
           font-weight: 400;
@@ -147,24 +148,25 @@ export default {
 
   .btn {
     margin: 0 10px;
-    width: 104px;
-    height: 40px;
+    width: 114px;
+    height: 50px;
     border-radius: 4px 4px 4px 4px;
-    border: 1px solid #7853B2;
+    border: 1px solid #EC6A2B;
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;
-    font-size: 14px;
-    color: #7853B2;
+    font-size: 20px;
+    color: #EC6A2B;
   }
 
   .btn-bg {
-    width: 104px;
-    height: 40px;
-    background: #7853B2;
+    width: 114px;
+    height: 50px;
+    background: #EC6A2B;
+    border: none;
     border-radius: 4px 4px 4px 4px;
     font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 20px;
     color: #FFFFFF;
   }
 

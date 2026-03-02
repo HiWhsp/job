@@ -155,7 +155,7 @@ export default {
   position: absolute;
   right: 0;
   cursor: pointer;
-  color: #7853b2;
+  color: #00306B;
   font-size: 1.4rem;
 
   &.disabled {

@@ -1,8 +1,8 @@
 <template>
   <div class="page">
     <div class="page-title flex-between">
-      <span>申请售后</span>
-      <button @click="$router.back()">返回</button>
+      <span>After-sale service</span>
+      <!-- <button @click="$router.back()">返回</button> -->
     </div>
 
     <div class="page-ctx">
@@ -13,14 +13,15 @@
         </div>
       </div>
 
-   
+
 
       <div class="refund-sec ">
-        <div class="sec-title">售后服务信息</div>
+        <div class="sec-title">{{ type == 1 ? 'Refund Information' : 'return and Refund Information' }}</div>
         <div class="sec-ctx">
           <div class="text-info">
-            <div class="item">
-              <div class="text">售后商品：</div>
+            <div class="item" style="flex-direction: column; margin-bottom: 30px;padding: 20px;">
+              <div class="text" style="font-size: 20px; color: #1E262E; font-weight: 600;margin-bottom: 30px;">Refunded
+                goods</div>
               <div class="val">
                 <div class="product-box flex">
                   <div class="img-box">
@@ -29,47 +30,44 @@
                   <div class="product-info">
                     <div class="title">{{ productInfo.title }}</div>
                     <div class="sku"> {{ productInfo.keyVals }}</div>
-                    <div class="num">x {{ productInfo.num }}</div>
+                    <!-- <div class="num">x {{ productInfo.num }}</div> -->
                   </div>
                 </div>
               </div>
             </div>
-            <div class="item" v-if="type == 3">
-              <div class="text">换货规格：</div>
-              <div class="val">{{ info.reason }}</div>
-            </div>
-            <div class="item">
-              <div class="text">售后原因：</div>
-              <div class="val">{{ info.reason }}</div>
-            </div>
-            <div class="item">
-              <div class="text">售后金额：</div>
-              <div class="val">￥{{ info.refundPrice }}</div>
-            </div>
-            <div class="item">
-              <div class="text">申请时间：</div>
-              <div class="val">{{ info.createdTime }}</div>
-            </div>
-            <div class="item">
-              <div class="text">售后编号：</div>
-              <div class="val">{{ info.sn }}</div>
-            </div>
-            <div class="item">
-              <div class="text">售后说明：</div>
-              <div class="val">{{ info.remark }}</div>
-            </div>
-            <div class="item">
-              <div class="text">售后凭证：</div>
-              <div class="val ">
-                <div class="pic-list flex" v-if="info.images">
-                  <div class="pic-item" v-for="(pic, index) in info.images" :key="index" alt>
-                    <el-image style="width: 120px;height: 120px;" :src="pic" :preview-src-list="info.images">
-                    </el-image>
+            <div class="sec-ctx-info">
+              <div class="item">
+                <div class="text">Refund Reason：</div>
+                <div class="val">{{ info.reason }}</div>
+              </div>
+              <div class="item">
+                <div class="text">Refund Amount：</div>
+                <div class="val">￥{{ info.refundPrice }}</div>
+              </div>
+              <div class="item">
+                <div class="text">Application Time：</div>
+                <div class="val">{{ info.createdTime }}</div>
+              </div>
+              <div class="item">
+                <div class="text">Refund Number：</div>
+                <div class="val">{{ info.sn }}</div>
+              </div>
+              <div class="item">
+                <div class="text">Refund Description：</div>
+                <div class="val">{{ info.remark }}</div>
+              </div>
+              <div class="item">
+                <div class="text">Refund Proof：</div>
+                <div class="val ">
+                  <div class="pic-list flex" v-if="info.images">
+                    <div class="pic-item" v-for="(pic, index) in info.images" :key="index" alt>
+                      <el-image style="width: 120px;height: 120px;" :src="pic" :preview-src-list="info.images">
+                      </el-image>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
             <!-- <div class="item">
               <span class="text">商家备注：</span>
               <span class="val" v-if="refundObj.dealCont">
@@ -122,9 +120,9 @@
 
       <div class="act-sec">
         <div class="btns flex">
-          <div v-if="info.ifCancel == 1" class="btn btn-ripple" @click="do_cancel_refund()">取消售后</div>
-          <div v-if="is_allow_buyer_submit_wuliu" class="btn btn-ripple btn-bg" @click="do_open_express()">邮寄回平台</div>
-          <div v-if="info.ifReceive" class="btn btn-ripple" @click="do_open_receive()">确认收货</div>
+          <div v-if="info.ifCancel == 1" class="btn btn-ripple" @click="do_cancel_refund()">Cancel After-sale</div>
+          <div v-if="is_allow_buyer_submit_wuliu" class="btn btn-ripple btn-bg" @click="do_open_express()">Return to platform</div>
+          <div v-if="info.ifReceive" class="btn btn-ripple" @click="do_open_receive()">Confirm Receipt</div>
         </div>
       </div>
     </div>
@@ -137,7 +135,7 @@
     <!-- 取消售后 -->
     <refund_cancel_modal ref="refund_cancel_modal" @confirm="setView" />
     <!-- 售后 确认收货 -->
-    <refund_receive_modal  data-title="换货-买家确认收货"  ref="refund_receive_modal" @confirm="setView" />
+    <refund_receive_modal data-title="换货-买家确认收货" ref="refund_receive_modal" @confirm="setView" />
 
   </div>
 </template>
@@ -223,7 +221,7 @@ export default {
       refundObj: {}, //
       beizhuArr: [], //备注
 
- 
+
 
       show_tuihuoxinxi: false, //是否显示退货信息
       currency: "￥",
@@ -596,7 +594,7 @@ export default {
             //   this.is_finish_buyer_wuliu = true
             //   this.kuaidiJson = data.kuaidiJson
             // }
-          }else if (this.type == 3) {
+          } else if (this.type == 3) {
             if (data.kuaidiJson) {
               this.is_finish_buyer_wuliu = true
               this.kuaidiJson = data.kuaidiJson
@@ -649,7 +647,6 @@ export default {
 
 
 <style scoped lang="less">
-
 .page {
   padding-bottom: 50px;
 
@@ -657,19 +654,19 @@ export default {
     margin-bottom: 20px;
     padding: 0 32px;
     text-align: left;
-    height: 56px;
-    line-height: 56px;
+    height: 70px;
+    line-height: 70px;
     background: #ffffff;
-    font-size: 16px;
+    font-size: 20px;
     font-family: Microsoft YaHei-Bold, Microsoft YaHei;
     font-weight: bold;
-    color: #333333;
+    color: #1E262E;
 
     button {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      background: #7853B2;
+      background: #00306B;
       color: #fff;
       font-size: 14px;
     }
@@ -689,20 +686,18 @@ export default {
   // border-top: none;
 
   .sec-title {
+    height: 65px;
+    line-height: 65px;
     text-align: left;
-    height: 48px;
-    line-height: 48px;
-    padding: 0 20px;
-    background: #f9f9f9;
-    font-size: 14px;
-    font-family: Microsoft YaHei;
-    font-weight: 400;
+    font-family: Poppins, Poppins;
+    font-weight: 600;
+    font-size: 20px;
     color: #333333;
+    padding-left: 20px;
+    background: #F5F5F5;
   }
 
-  .sec-ctx {
-    padding: 20px;
-  }
+  .sec-ctx {}
 
   .tuihuo-ctx {
     border-top: 1px solid #eee;
@@ -737,12 +732,12 @@ export default {
 
 .product-box {
   .img-box {
-    width: 104px;
-    height: 104px;
+    width: 114px;
+    height: 114px;
 
     img {
-      width: 104px;
-      height: 104px;
+      width: 114px;
+      height: 114px;
     }
   }
 
@@ -753,8 +748,8 @@ export default {
     .title {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
-      font-size: 16px;
-      color: #333333;
+      font-size: 20px;
+      color: #5E5E5E;
       line-height: 1.5;
     }
 
@@ -763,15 +758,15 @@ export default {
       height: 16px;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
-      font-size: 14px;
-      color: #505050;
+      font-size: 20px;
+      color: #5E5E5E;
     }
 
     .num {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
-      font-size: 14px;
-      color: #505050;
+      font-size: 20px;
+      color: #5E5E5E;
     }
   }
 }
@@ -804,31 +799,46 @@ export default {
   }
 }
 
+.sec-ctx-info {
+  border-top: 1px solid #DEDEDE;
+  padding: 30px 20px 20px;
 
+  .item {
+    .text {
+      width: 240px;
+      text-align: right;
+      font-size: 20px;
+      color: #5E5E5E;
+    }
+
+    .val {
+      font-size: 20px;
+      color: #5E5E5E;
+    }
+  }
+}
 
 .act-sec {
   margin-top: 24px;
 
   .btns {
+    justify-content: center;
     .btn {
-      margin-right: 24px;
-      display: inline-flex;
+      display: flex;
       justify-content: center;
       align-items: center;
-      padding: 0 6px;
-      min-width: 104px;
-      height: 32px;
+      margin-right: 24px;
+      width: 300px;
+      height: 80px;
       background: #FFFFFF;
-      border-radius: 4px 4px 4px 4px;
-      border: 1px solid #7853B2;
-
-      font-family: Microsoft YaHei, Microsoft YaHei;
-      font-weight: 400;
-      font-size: 14px;
-      color: #7853B2;
+      border: 1px solid #EC6A2B;
+      font-size: 20px;
+      color: #EC6A2B;
+      font-weight: 600;
+      border-radius: 10px;
 
       &.btn-bg {
-        background: rgba(247, 71, 71, 1);
+        background: EC6A2B;
         color: #FFF;
       }
     }
@@ -840,9 +850,9 @@ export default {
   margin-bottom: 24px;
   padding: 30px;
   min-height: 115px;
-  background: #7853B2 url('~@img/refund/bgm.png') no-repeat center center;
+  background: #EC6A2B;
   background-size: cover;
-  border-radius: 0px 0px 0px 0px;
+  border-radius: 10px;
 
   .jindu-title {
     font-family: Microsoft YaHei, Microsoft YaHei;
@@ -859,5 +869,4 @@ export default {
     color: #FFFFFF;
   }
 }
-
 </style>

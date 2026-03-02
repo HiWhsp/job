@@ -163,7 +163,7 @@ export default {
       margin-right: 20px;
 
       &.active {
-        border: 1px solid #7853B2;
+        border: 1px solid #00306B;
       }
       img {
         width: 100%;

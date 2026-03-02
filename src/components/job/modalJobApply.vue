@@ -206,11 +206,11 @@ export default {
   height: 40px;
   background: #ffffff;
   border-radius: 4px 4px 4px 4px;
-  border: 1px solid #7853B2;
+  border: 1px solid #00306B;
   font-size: 14px;
   font-family: Microsoft YaHei-Regular, Microsoft YaHei;
   font-weight: 400;
-  color: #7853B2;
+  color: #00306B;
 
   img {
     margin-right: 10px;
@@ -242,7 +242,7 @@ export default {
           font-size: 20px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #7853B2;
+          color: #00306B;
         }
 
         input {
@@ -262,7 +262,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  // background: #7853B2;
+  // background: #00306B;
   background: #f7f7f7;
   text-align: left;
 
@@ -290,13 +290,13 @@ export default {
 
   .quxiao {
     margin-right: 24px;
-    color: #7853B2;
-    border: 1px solid #7853B2;
+    color: #00306B;
+    border: 1px solid #00306B;
   }
 
   .queding {
     // margin-right: 24px;
-    background: #7853B2;
+    background: #00306B;
     color: #fff;
   }
 }

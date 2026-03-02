@@ -289,7 +289,7 @@ export default {
       font-weight: 400;
       line-height: 20px;
       color: #505050;
-      color: #7853B2;
+      color: #00306B;
 
       // 待付款
       &.state--5 {
@@ -299,8 +299,8 @@ export default {
       }
 
       &.state-2 {
-        color: #7853B2;
-        border-color: #7853B2;
+        color: #00306B;
+        border-color: #00306B;
       }
     }
   }
@@ -353,7 +353,7 @@ export default {
             cursor: pointer;
 
             &:hover {
-              color: #7853B2;
+              color: #00306B;
             }
           }
         }
@@ -405,13 +405,13 @@ export default {
         margin-right: 30px;
 
         b {
-          color: #7853B2;
+          color: #00306B;
         }
       }
 
       .heji-money {
         b {
-          color: #7853B2;
+          color: #00306B;
         }
       }
     }
@@ -423,11 +423,11 @@ export default {
         height: 32px;
         background: #FFFFFF;
         border-radius: 50px 50px 50px 50px;
-        border: 1px solid #7853B2;
+        border: 1px solid #00306B;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 14px;
-        color: #7853B2;
+        color: #00306B;
 
         &+button {
           margin-left: 20px;
@@ -438,7 +438,7 @@ export default {
         }
 
         &.btn-bg {
-          background: #7853B2;
+          background: #00306B;
           color: #FFFFFF;
         }
       }

@@ -91,7 +91,7 @@ export default {
 
 /deep/ .el-dialog__header {
   border-bottom: 1px solid #eee;
-  background: #7853B2;
+  background: #00306B;
 
   .el-dialog__title {
     color: #fff;

@@ -92,7 +92,7 @@
               <div class="info-item">
                 <div class="label">Payment method：</div>
                 <div class="val">
-                  <span v-if="payInfo.balance">余额</span>
+                  <span v-if="payTypeText">{{ payTypeText }}</span>
                   <span v-else>-</span>
                 </div>
               </div>
@@ -488,7 +488,20 @@ export default {
     };
   },
   computed: {
-    ...mapState([""])
+    ...mapState([""]),
+    // 支付类型：0-待支付 1-微信支付 2-余额支付 3-佣金支付 4-线下支付 5-积分支付
+    payTypeText() {
+      const map = {
+        0: "Pending payment",
+        1: "WeChat Pay",
+        2: "Balance",
+        3: "Commission",
+        4: "Offline payment",
+        5: "Points payment"
+      };
+      const type = this.detail && this.detail.payType;
+      return map[type] !== undefined ? map[type] : (type !== undefined && type !== null && type !== "" ? String(type) : "");
+    }
   },
   watch: {
     orderObj(data) {
@@ -646,8 +659,8 @@ export default {
       min-width: 96px;
       height: 30px;
       line-height: 30px;
-      border: 1px solid #7853b2;
-      color: #7853b2;
+      border: 1px solid #00306B;
+      color: #00306B;
       font-size: 14px;
       font-weight: bold;
     }
@@ -841,7 +854,7 @@ export default {
 
   .money-heji {
     span {
-      color: #7853b2;
+      color: #00306B;
       font-weight: bold;
     }
   }
@@ -868,7 +881,7 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: bold;
         line-height: 24px;
-        color: #7853b2;
+        color: #00306B;
 
         .pay-title {
           margin-right: 5px;
@@ -957,7 +970,7 @@ export default {
               line-height: 30px;
 
               &:hover {
-                color: #7853b2;
+                color: #00306B;
               }
             }
             .sku {
@@ -1017,7 +1030,7 @@ export default {
             margin-left: 10px;
             min-width: 96px;
             height: 30px;
-            background: #7853b2;
+            background: #00306B;
             font-size: 14px;
             font-family: Microsoft YaHei;
             color: #ffffff;
@@ -1059,7 +1072,7 @@ export default {
 
       // .count {
       //   font-weight: bold;
-      //   color: #7853b2;
+      //   color: #00306B;
       // }
 
       .money-item {
@@ -1091,7 +1104,7 @@ export default {
           //   font-family: Arial, Arial;
           //   font-weight: bold;
           //   font-size: 20px;
-          //   color: #7853b2;
+          //   color: #00306B;
           // }
         }
       }

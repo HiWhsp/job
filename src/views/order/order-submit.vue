@@ -79,30 +79,42 @@
               <div class="form-group">
                 <label class="form-label">
                   <span class="required">*</span>
-                  City:
+                  Country:
                 </label>
-                <el-input clearable v-model="addressForm.city" placeholder="Please enter"></el-input>
+                <el-select
+                  filterable
+                  v-model="addressForm.countryId"
+                  placeholder="Please select"
+                  @change="changeCountry"
+                >
+                  <el-option
+                    v-for="item in countryList"
+                    :key="item.id"
+                    :label="item.title"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
               </div>
               <div class="form-group">
                 <label class="form-label">
                   <span class="required">*</span>
                   State:
                 </label>
-                <template v-if="!provinceList.length">
+                <template v-if="!stateList.length">
                   <el-input clearable v-model="addressForm.state" placeholder="Please enter"></el-input>
                 </template>
                 <template v-else>
                   <el-select
                     filterable
-                    v-model="addressForm.state"
-                    placeholder="Please enter"
+                    v-model="addressForm.stateId"
+                    placeholder="Please select"
                     @change="changeProv"
                   >
                     <el-option
-                      v-for="item in provinceList"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.label"
+                      v-for="item in stateList"
+                      :key="item.id"
+                      :label="item.title"
+                      :value="item.id"
                     ></el-option>
                   </el-select>
                 </template>
@@ -110,21 +122,26 @@
               <div class="form-group">
                 <label class="form-label">
                   <span class="required">*</span>
-                  Country:
+                  City:
                 </label>
-                <el-select
-                  filterable
-                  v-model="addressForm.country"
-                  placeholder="Please select"
-                  @change="changeCountry"
-                >
-                  <el-option
-                    v-for="item in countryList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.label"
-                  ></el-option>
-                </el-select>
+                <template v-if="!cityList.length">
+                  <el-input clearable v-model="addressForm.city" placeholder="Please enter"></el-input>
+                </template>
+                <template v-else>
+                  <el-select
+                    filterable
+                    v-model="addressForm.cityId"
+                    placeholder="Please select"
+                    @change="changeCity"
+                  >
+                    <el-option
+                      v-for="item in cityList"
+                      :key="item.id"
+                      :label="item.title"
+                      :value="item.id"
+                    ></el-option>
+                  </el-select>
+                </template>
               </div>
               <div class="form-group">
                 <label class="form-label">
@@ -585,7 +602,6 @@
 
 <script>
 import { SHOP_TYPE } from "@/config/env.js";
-import countryData from "@/constant/countryData.js";
 
 import foreign_address_modal from "@/components/address/foreign_address_modal.vue"; //新增地址
 
@@ -735,13 +751,16 @@ export default {
         city: "",
         state: "",
         country: "",
+        countryId: "",
+        stateId: "",
+        cityId: "",
         zipCode: "",
         setAsDefault: false
       },
-      // 地区选择相关数据
+      // 地区选择相关数据（通过 users_getAreaList 接口获取）
       countryList: [],
-      allProvinceList: [],
-      provinceList: [],
+      stateList: [],
+      cityList: [],
       deliveryMethod: "express",
       paymentType: "online",
       paymentProvider: "",
@@ -895,9 +914,8 @@ export default {
     this.from = this.$route.query.from || "";
     this.getCacheProduct();
 
-    // 初始化国家省份数据
-    this.countryList = countryData.countryList;
-    this.allProvinceList = countryData.provinceList;
+    // 通过 users_getAreaList 获取国家列表
+    this.queryCountryData();
 
     //
     this.query_user();
@@ -924,16 +942,23 @@ export default {
         alertErr("Please enter phone number");
         return;
       }
-      if (!this.addressForm.country) {
+      const countryTitle = this.countryList.find(c => c.id == this.addressForm.countryId)?.title;
+      if (!this.addressForm.countryId || !countryTitle) {
         alertErr("Please select country");
         return;
       }
-      if (!this.addressForm.state) {
-        alertErr("Please enter state");
+      const stateTitle = this.stateList.length
+        ? this.stateList.find(s => s.id == this.addressForm.stateId)?.title
+        : this.addressForm.state;
+      if (!stateTitle) {
+        alertErr(this.stateList.length ? "Please select state" : "Please enter state");
         return;
       }
-      if (!this.addressForm.city) {
-        alertErr("Please enter city");
+      const cityTitle = this.cityList.length
+        ? this.cityList.find(c => c.id == this.addressForm.cityId)?.title
+        : this.addressForm.city;
+      if (!cityTitle) {
+        alertErr(this.cityList.length ? "Please select city" : "Please enter city");
         return;
       }
       if (!this.addressForm.address) {
@@ -945,15 +970,15 @@ export default {
         return;
       }
 
-      // 构建提交数据
+      // 构建提交数据（Country/State/City 从 users_getAreaList 列表取 title 提交）
       let formData = {
         firstName: this.addressForm.firstName,
         lastName: this.addressForm.lastName,
         phone: this.addressForm.phone,
         company: this.addressForm.email || "",
-        country: this.addressForm.country,
-        province: this.addressForm.state,
-        city: this.addressForm.city,
+        country: countryTitle,
+        province: stateTitle,
+        city: cityTitle,
         address: this.addressForm.address,
         zipCode: this.addressForm.zipCode,
         moren: this.addressForm.setAsDefault ? 1 : 0,
@@ -985,10 +1010,14 @@ export default {
             city: "",
             state: "",
             country: "",
+            countryId: "",
+            stateId: "",
+            cityId: "",
             zipCode: "",
             setAsDefault: false
           };
-          this.provinceList = [];
+          this.stateList = [];
+          this.cityList = [];
         } else {
           alertErr(res.message || "Failed to add address");
         }
@@ -1005,29 +1034,74 @@ export default {
         city: "",
         state: "",
         country: "",
+        countryId: "",
+        stateId: "",
+        cityId: "",
         zipCode: "",
         setAsDefault: false
       };
-      this.provinceList = [];
+      this.stateList = [];
+      this.cityList = [];
       this.showAddressForm = false;
     },
-    // 地区选择相关方法
-    changeCountry(val) {
-      this.addressForm.state = "";
-
-      let country_info = this.countryList.find(v => v.label == val);
-      if (country_info) {
-        let country_id = country_info.value;
-        this.provinceList = this.allProvinceList.filter(
-          v => v.country_id == country_id
-        );
-      } else {
-        this.provinceList = [];
-      }
+    // 通过 users_getAreaList 获取国家列表
+    queryCountryData() {
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "users_getAreaList"
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.countryList = res.data || [];
+        }
+      });
     },
-    changeProv(val) {
-      // 省份选择变化时的处理
-      console.log("省份", val);
+    // 选择国家
+    changeCountry(id) {
+      this.addressForm.state = "";
+      this.addressForm.city = "";
+      this.addressForm.stateId = "";
+      this.addressForm.cityId = "";
+      this.stateList = [];
+      this.cityList = [];
+      if (!id) return;
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "users_getAreaList",
+          parent_id: id
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.stateList = res.data || [];
+        }
+      });
+    },
+    // 选择州/省
+    changeProv(id) {
+      this.addressForm.city = "";
+      this.addressForm.cityId = "";
+      this.cityList = [];
+      if (!id) return;
+      this.$api({
+        url: "/service.php",
+        method: "get",
+        data: {
+          action: "users_getAreaList",
+          parent_id: id
+        }
+      }).then(res => {
+        if (res.code == 200) {
+          this.cityList = res.data || [];
+        }
+      });
+    },
+    // 选择城市
+    changeCity(id) {
+      // 仅更新 cityId，提交时从 cityList 取 title
     },
     selectPaymentProvider(provider) {
       this.paymentProvider = provider;
@@ -1045,7 +1119,7 @@ export default {
     removeProduct(item, index) {
       // 如果只有一个商品，禁止删除
       if (this.payment_products.length <= 1) {
-        alertErr("至少需要保留一个商品");
+        alertErr("At least one product is required");
         return;
       }
       this.payment_products.splice(index, 1);
@@ -1320,26 +1394,26 @@ export default {
       delete params_info.phone;
 
       if (!this.address_select.id) {
-        return alertErr("请选择收货地址");
+        return alertErr("Please select a delivery address");
       }
 
       if (!this.pay_type_value) {
-        return alertErr("请选择支付方式");
+        return alertErr("Please select a payment method");
       }
 
       if (this.pay_type_value == "xianxia") {
         if (!this.xianxia_file_list.length) {
           this.scrollToTarget(".scroll-target-pingzheng");
-          return alertErr("请上传转款凭证信息");
+          return alertErr("Please upload transfer voucher");
         }
       }
 
       if (this.pay_type_value == "balance") {
         if (this.total_balance < +this.real_payment_money) {
-          return alertErr("您的余额不足，请选择其他支付方式");
+          return alertErr("Insufficient balance, please choose another payment method");
         }
         // if (!this.is_pay_pass) {
-        //   alertErr("请先设置余额支付密码");
+        //   alertErr("Please set balance payment password first");
         //   this.$refs.balance_password_set_modal.init(this.vuex_user);
         //   return;
         // }
@@ -1348,38 +1422,38 @@ export default {
       if (this.fapiao_info.invoiceType == 1) {
         //普通发票
         if (!this.fapiao_info.titleType) {
-          return alertErr("请选择发票抬头类型");
+          return alertErr("Please select invoice title type");
         }
         if (!this.fapiao_info.title) {
-          return alertErr("请填写发票抬头");
+          return alertErr("Please enter invoice title");
         }
         if (!this.fapiao_info.email) {
-          return alertErr("请填写电子邮箱");
+          return alertErr("Please enter email address");
         }
         if (this.fapiao_info.titleType == 2) {
           if (!this.fapiao_info.shibiema) {
-            return alertErr("请填写纳税人识别号");
+            return alertErr("Please enter tax identification number");
           }
         }
       } else if (this.fapiao_info.invoiceType == 2) {
         //增值税发票
         if (!this.fapiao_info.title) {
-          return alertErr("请填写准确的抬头名称");
+          return alertErr("Please enter the correct title name");
         }
         if (!this.fapiao_info.shibiema) {
-          return alertErr("请填写准确的纳税人识别号");
+          return alertErr("Please enter the correct tax identification number");
         }
         if (!this.fapiao_info.companyAddress) {
-          return alertErr("请输入单位注册地址");
+          return alertErr("Please enter company registration address");
         }
         if (!this.fapiao_info.companyPhone) {
-          return alertErr("请输入单位注册电话");
+          return alertErr("Please enter company registration phone");
         }
         if (!this.fapiao_info.bankName) {
-          return alertErr("请输入开户银行");
+          return alertErr("Please enter bank name");
         }
         if (!this.fapiao_info.bankNo) {
-          return alertErr("请输入银行账户");
+          return alertErr("Please enter bank account");
         }
       }
 
@@ -1581,7 +1655,7 @@ export default {
 
     //pc 支付宝支付
     pay_use_zhifubao() {
-      // alertErr('尚未开通支付宝支付');
+      // alertErr('Alipay is not available yet');
 
       // this.showWaiting();
       this.payment_tip = false;
@@ -1620,7 +1694,7 @@ export default {
     //余额支付
     order_payment_yue() {
       if (+this.vuex_user.money < +this.real_payment_money) {
-        alertErr("您的余额不足，请选择其他支付方式");
+        alertErr("Insufficient balance, please choose another payment method");
         return;
       }
 
@@ -1862,7 +1936,7 @@ export default {
       //console.log("最多可使用积分", +this.jifen_pay.jifen);
 
       if (this.use_jifen_num && +this.use_jifen_num > +this.jifen_pay.jifen) {
-        alertErr(`输入的积分大于${this.jifen_pay.jifen},请重新输入`);
+        alertErr(`Points entered exceed your available points (${this.jifen_pay.jifen}), please re-enter`);
         this.use_jifen_num = "";
       }
     },
@@ -2000,7 +2074,7 @@ export default {
     // 查询优惠码
     query_yh() {
       if (!this.yh_code.trim()) {
-        this.$message.warning("请输入优惠码");
+        this.$message.warning("Please enter a discount code");
         return;
       }
 
@@ -2009,22 +2083,23 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "yhq_checkYhqCode",
-          code: this.yh_code.trim()
+          action: "checkYhqCode",
+          code: this.yh_code.trim(),
+          price: this.total_order_price
           // 可以添加其他必要参数，如订单金额等
         }
       })
         .then(res => {
           if (res.code == 200) {
-            this.$message.success("优惠码验证成功");
+            this.$message.success("Discount code verification successful");
             // 处理优惠码信息
             this.handlePromoCodeSuccess(res.data);
           } else {
-            this.$message.error(res.msg || "优惠码无效或已过期");
+            this.$message.error(res.msg || "Discount code is invalid or expired");
           }
         })
         .catch(error => {
-          this.$message.error("查询优惠码失败，请重试");
+          this.$message.error("Failed to query discount code, please try again");
           console.error("查询优惠码失败:", error);
         });
     },
@@ -2033,7 +2108,7 @@ export default {
     handlePromoCodeSuccess(data) {
       // 这里可以处理优惠码验证成功后的逻辑
       // 比如更新订单金额、显示优惠信息等
-      console.log("优惠码信息:", data);
+      console.log("Discount code information:", data);
 
       // 可以在这里更新订单总金额
       if (data.discount_amount) {
@@ -2051,7 +2126,7 @@ export default {
     not_use_yh() {
       this.yh_code = "";
       // 重置相关状态
-      this.$message.info("已取消使用优惠码");
+      this.$message.info("Discount code usage cancelled");
     }
   }
 };
@@ -2844,8 +2919,8 @@ export default {
 .btn-cancel {
   min-width: 100px;
   height: 40px;
-  border: 1px solid #7853b2;
-  color: #7853b2;
+  border: 1px solid #00306B;
+  color: #00306B;
   font-size: 14px;
 }
 
@@ -3002,7 +3077,7 @@ export default {
 
           .box-unit {
             width: 240px;
-            color: #7853b2;
+            color: #00306B;
           }
 
           .box-num {
@@ -3011,7 +3086,7 @@ export default {
 
           .box-subtitle {
             width: 240px;
-            color: #7853b2;
+            color: #00306B;
             font-weight: bold;
           }
         }
@@ -3051,7 +3126,7 @@ export default {
           font-family: Arial, Arial;
           font-weight: bold;
           font-size: 20px;
-          color: #7853b2;
+          color: #00306B;
         }
       }
     }
@@ -3071,17 +3146,17 @@ export default {
         height: 45px;
         background: #ffffff;
         border-radius: 0px 0px 0px 0px;
-        border: 1px solid #7853b2;
+        border: 1px solid #00306B;
         font-family: Arial, Arial;
         font-weight: 400;
         font-size: 17px;
-        color: #7853b2;
+        color: #00306B;
       }
 
       &.btn-2 {
         width: 200px;
         height: 45px;
-        background: #7853b2;
+        background: #00306B;
         border-radius: 0px 0px 0px 0px;
         font-family: Arial, Arial;
         font-weight: 400;
@@ -3194,7 +3269,7 @@ export default {
           border: 1px solid #cccccc;
 
           &.active {
-            border: 1px solid #7853b2;
+            border: 1px solid #00306B;
           }
         }
       }
@@ -3291,7 +3366,7 @@ export default {
     margin-bottom: 10px;
 
     b {
-      color: #7853b2;
+      color: #00306B;
     }
   }
 
@@ -3367,7 +3442,7 @@ export default {
       transition: all 0.3s;
 
       &.active {
-        border: 2px solid #7853b2;
+        border: 2px solid #00306B;
 
         .marker {
           display: block;
@@ -3411,11 +3486,11 @@ export default {
         .left {
           .moren {
             display: inline-block;
-            width: 104px;
             height: 30px;
+            padding: 0 10px;
             line-height: 30px;
             text-align: center;
-            background: #7853b2;
+            background: #00306B;
             font-size: 14px;
             color: #ffffff;
             border-radius: 4px;
@@ -3442,11 +3517,11 @@ export default {
       height: 32px;
       background: #ffffff;
       border-radius: 2px 2px 2px 2px;
-      border: 1px solid #7853b2;
+      border: 1px solid #00306B;
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
       font-size: 14px;
-      color: #7853b2;
+      color: #00306B;
     }
   }
 }
@@ -3476,7 +3551,7 @@ export default {
         color: #1f1f1f;
 
         span {
-          color: #7853b2;
+          color: #00306B;
         }
       }
 
@@ -3565,11 +3640,11 @@ export default {
         line-height: 40px;
         background: #ffffff;
         border-radius: 3px 3px 3px 3px;
-        border: 1px solid #7853b2;
+        border: 1px solid #00306B;
         font-size: 14px;
         font-family: Microsoft YaHei-Bold, Microsoft YaHei;
         font-weight: bold;
-        color: #7853b2;
+        color: #00306B;
       }
     }
   }
@@ -3617,7 +3692,7 @@ export default {
       cursor: pointer;
 
       &.active {
-        border-color: #7853b2;
+        border-color: #00306B;
 
         .marker {
           display: block;
@@ -3645,7 +3720,7 @@ export default {
             font-size: 24px;
             font-family: Microsoft YaHei-Bold, Microsoft YaHei;
             font-weight: bold;
-            color: #7853b2;
+            color: #00306B;
           }
 
           .text-2 {
@@ -3673,7 +3748,7 @@ export default {
         font-size: 12px;
         font-family: Microsoft YaHei-Regular, Microsoft YaHei;
         font-weight: 400;
-        color: #7853b2;
+        color: #00306B;
       }
     }
   }
@@ -3685,7 +3760,7 @@ export default {
     padding: 0 30px;
 
     .number {
-      color: #7853b2;
+      color: #00306B;
       margin: 0 10px;
     }
   }
@@ -3734,7 +3809,7 @@ export default {
     }
 
     .yue-warn-tip {
-      color: #7853b2;
+      color: #00306B;
       font-size: 14px;
     }
   }
@@ -3829,8 +3904,8 @@ export default {
         color: #333333;
 
         &.active {
-          color: #7853b2;
-          border: 1px solid #7853b2;
+          color: #00306B;
+          border: 1px solid #00306B;
         }
 
         &:hover {
@@ -3892,7 +3967,7 @@ export default {
 
       &.active {
         color: #ffffff;
-        background: #7853b2;
+        background: #00306B;
       }
     }
   }
@@ -3914,12 +3989,12 @@ export default {
         margin-right: 80px;
 
         &.active {
-          color: #7853b2;
-          border-bottom-color: #7853b2;
+          color: #00306B;
+          border-bottom-color: #00306B;
         }
 
         &:hover {
-          color: #7853b2;
+          color: #00306B;
         }
       }
     }
@@ -3940,11 +4015,11 @@ export default {
         background: #fff;
 
         &:hover {
-          border-color: #7853b2;
+          border-color: #00306B;
         }
 
         &.active {
-          border-color: #7853b2;
+          border-color: #00306B;
           box-shadow: 0 2px 8px rgba(120, 83, 178, 0.2);
         }
 
@@ -4065,7 +4140,7 @@ export default {
 
     .value {
       font-size: 14px;
-      color: #7853b2;
+      color: #00306B;
       font-weight: 500;
     }
   }

@@ -23,10 +23,10 @@
     min-width: 96px;
     height: 30px;
     line-height: 30px;
-    background: #7853B2;
+    background: #00306B;
     color: #fff;
     background: #fff;
-    color: #7853B2;
+    color: #00306B;
     font-size: 14px;
   }
   .page .main-title button img {
@@ -81,7 +81,7 @@
     height: 24px;
     line-height: 24px;
     text-align: center;
-    background: #7853B2;
+    background: #00306B;
     font-size: 12px;
     color: #ffffff;
   }
@@ -90,7 +90,7 @@
     font-family: Microsoft YaHei;
     font-weight: 400;
     line-height: 20px;
-    color: #7853B2;
+    color: #00306B;
   }
   .wrap-address .address-item .bottom .right .action {
     margin-left: 20px;

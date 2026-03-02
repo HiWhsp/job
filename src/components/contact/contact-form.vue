@@ -272,7 +272,7 @@ export default {
   width: 80px;
   margin: 24px auto;
   height: 5px;
-  background: #7853B2;
+  background: #00306B;
   border-radius: 3px 3px 3px 3px;
 }
 
@@ -329,7 +329,7 @@ export default {
     button {
       width: 200px;
       height: 50px;
-      background: #7853B2;
+      background: #00306B;
       border-radius: 0px 0px 0px 0px;
 
       font-family: OPPOSans, OPPOSans;
@@ -348,11 +348,11 @@ export default {
   height: 40px;
   background: #ffffff;
   border-radius: 4px 4px 4px 4px;
-  border: 1px solid #7853B2;
+  border: 1px solid #00306B;
   font-size: 14px;
   font-family: Microsoft YaHei-Regular, Microsoft YaHei;
   font-weight: 400;
-  color: #7853B2;
+  color: #00306B;
 
   img {
     margin-right: 10px;

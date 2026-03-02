@@ -737,7 +737,7 @@ export default {
     .retry-btn {
       width: 150px;
       height: 46px;
-      background: #7853b2;
+      background: #00306B;
       color: #ffffff;
       border: none;
       border-radius: 4px;
@@ -814,7 +814,7 @@ export default {
         background: #fff;
 
         &:hover {
-          border-color: #7853b2;
+          border-color: #00306B;
           background: #f7efff;
         }
 
@@ -925,7 +925,7 @@ export default {
   .btn-submit {
     width: 200px;
     height: 48px;
-    background: #7853b2;
+    background: #00306B;
     color: #ffffff;
     border: none;
     border-radius: 4px;

@@ -400,7 +400,7 @@ export default {
     color: #000000;
 
     &:hover {
-      background: #7853b2;
+      background: #00306B;
       color: #fff;
     }
   }
@@ -693,7 +693,7 @@ export default {
           transform: translate(-50%);
           width: 0;
           height: 2px;
-          background: #7853b2;
+          background: #00306B;
           transition: 0.3s;
         }
       }
@@ -707,7 +707,7 @@ export default {
       &.active {
         .nav-link {
           // font-weight: bold;
-          color: #7853b2;
+          color: #00306B;
 
           &::after {
             // width: 36px;
@@ -782,7 +782,7 @@ export default {
         right: 0;
         width: 40px;
         height: 40px;
-        background: #7853b2;
+        background: #00306B;
         border-radius: 0px 6px 6px 0px;
         font-weight: normal;
         font-size: 16px;
@@ -846,7 +846,7 @@ export default {
         font-size: 1.3rem;
 
         &:hover {
-          color: #7853b2;
+          color: #00306B;
         }
       }
     }
@@ -947,7 +947,7 @@ export default {
     color: #505050;
 
     &:hover {
-      color: #7853b2;
+      color: #00306B;
     }
   }
 
@@ -958,7 +958,7 @@ export default {
     color: #505050;
 
     &:hover {
-      color: #7853b2;
+      color: #00306B;
     }
   }
 }

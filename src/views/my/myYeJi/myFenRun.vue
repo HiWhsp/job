@@ -446,9 +446,9 @@ export default {
             margin-top: 20px;
             text-align: right;
             a {
-              border: 1px solid #7853B2;
+              border: 1px solid #00306B;
               padding: 3px 8px;
-              color: #7853B2;
+              color: #00306B;
             }
           }
         }

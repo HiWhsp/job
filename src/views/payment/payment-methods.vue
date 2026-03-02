@@ -1388,8 +1388,8 @@ export default {
 .btn-cancel {
   min-width: 100px;
   height: 40px;
-  border: 1px solid #7853B2;
-  color: #7853B2;
+  border: 1px solid #00306B;
+  color: #00306B;
   font-size: 14px;
 }
 
@@ -1397,7 +1397,7 @@ export default {
   margin-left: 20px;
   min-width: 100px;
   height: 40px;
-  background: #7853B2;
+  background: #00306B;
   color: #fff;
   font-size: 14px;
 }
@@ -1586,11 +1586,11 @@ export default {
       height: 45px;
       background: #FFFFFF;
       border-radius: 0px 0px 0px 0px;
-      border: 1px solid #7853B2;
+      border: 1px solid #00306B;
       font-family: Arial, Arial;
       font-weight: 400;
       font-size: 17px;
-      color: #7853B2;
+      color: #00306B;
       transition: 0.3s;
 
       &+button {
@@ -1602,7 +1602,7 @@ export default {
       }
 
       &.btn-bg {
-        background: #7853B2;
+        background: #00306B;
         color: #FFFFFF;
       }
     }
@@ -1791,7 +1791,7 @@ export default {
       display: inline-block;
       height: 20px;
       line-height: 20px;
-      color: #7853B2;
+      color: #00306B;
       vertical-align: bottom;
     }
 
@@ -2112,11 +2112,11 @@ export default {
         line-height: 40px;
         background: #ffffff;
         border-radius: 3px 3px 3px 3px;
-        border: 1px solid #7853B2;
+        border: 1px solid #00306B;
         font-size: 14px;
         font-family: Microsoft YaHei-Bold, Microsoft YaHei;
         font-weight: bold;
-        color: #7853B2;
+        color: #00306B;
       }
     }
   }
@@ -2154,7 +2154,7 @@ export default {
     }
 
     .yue-warn-tip {
-      color: #7853B2;
+      color: #00306B;
       font-size: 14px;
     }
   }

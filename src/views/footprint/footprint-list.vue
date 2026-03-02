@@ -292,7 +292,7 @@ export default {
       color: #1f1f1f;
 
       &.checked {
-        color: #7853b2;
+        color: #00306B;
       }
 
       img {

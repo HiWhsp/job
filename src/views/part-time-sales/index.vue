@@ -613,7 +613,7 @@ export default {
         background: #fbfbfb;
 
         &:focus {
-          border-color: #7853b2;
+          border-color: #00306B;
         }
       }
     }
@@ -637,7 +637,7 @@ export default {
           line-height: 40px;
 
           &:focus {
-            border-color: #7853b2;
+            border-color: #00306B;
           }
         }
       }
@@ -655,12 +655,12 @@ export default {
         }
 
         .el-radio__input.is-checked .el-radio__inner {
-          background-color: #7853b2;
-          border-color: #7853b2;
+          background-color: #00306B;
+          border-color: #00306B;
         }
 
         .el-radio__input.is-checked + .el-radio__label {
-          color: #7853b2;
+          color: #00306B;
         }
       }
     }

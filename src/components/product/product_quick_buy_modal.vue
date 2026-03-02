@@ -643,7 +643,7 @@ export default {
     .sku-tip {
       margin-left: 20px;
       font-size: 18px;
-      color: #7853b2;
+      color: #00306B;
       font-family: Microsoft YaHei, Microsoft YaHei;
     }
   }
@@ -683,7 +683,7 @@ export default {
       }
 
       &:hover {
-        // border-color: #7853b2;
+        // border-color: #00306B;
         // box-shadow: 0 2px 8px rgba(120, 83, 178, 0.1);
       }
 
@@ -694,16 +694,16 @@ export default {
       }
 
       &.active {
-        // border: 1px solid #7853b2;
+        // border: 1px solid #00306B;
         // box-shadow: 0 0 10px rgba(120, 83, 178, 0.2);
         // background: #f8f5ff;
 
         .text {
-          // color: #7853b2;
+          // color: #00306B;
         }
 
         .price {
-          // color: #7853b2;
+          // color: #00306B;
         }
       }
 
@@ -733,7 +733,7 @@ export default {
 
           .current-price {
             font-size: 16px;
-            color: #7853b2;
+            color: #00306B;
             text-wrap: nowrap;
           }
         }
@@ -935,7 +935,7 @@ export default {
 
       span {
         font-size: 24px;
-        color: #7853b2;
+        color: #00306B;
         padding: 0 1px;
       }
     }
@@ -947,10 +947,10 @@ export default {
       width: 224px;
       height: 56px;
       border-radius: 8px 8px 8px 8px;
-      border: 1px solid #7853b2;
+      border: 1px solid #00306B;
       font-size: 20px;
       font-weight: bold;
-      color: #7853b2;
+      color: #00306B;
       cursor: pointer;
       transition: all 0.3s;
 
@@ -999,7 +999,7 @@ export default {
       }
 
       .btn-buy {
-        background: #7853b2;
+        background: #00306B;
 
         font-family: Microsoft YaHei, Microsoft YaHei;
       }
@@ -1017,11 +1017,11 @@ export default {
         height: 48px;
         background: #ffffff;
         border-radius: 0px 0px 0px 0px;
-        border: 1px solid #7853b2;
+        border: 1px solid #00306B;
         font-family: OPPOSans, OPPOSans;
         // font-weight: bold;
         font-size: 18px;
-        color: #7853b2;
+        color: #00306B;
       }
     }
   }

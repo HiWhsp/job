@@ -301,7 +301,7 @@ export default {
       }
 
       &.active {
-        color: #7853B2;
+        color: #00306B;
       }
     }
   }
@@ -330,9 +330,9 @@ export default {
       }
 
       &.active {
-        background: #7853B2;
+        background: #00306B;
         .dot-box {
-          background: #7853B2;
+          background: #00306B;
         }
       }
 
@@ -384,7 +384,7 @@ export default {
         display: flex;
         align-items: flex-start;
         height: 113px;
-        border-top: 1px solid #7853B2;
+        border-top: 1px solid #00306B;
         .check-box {
           width: 35px;
           text-align: center;
@@ -395,7 +395,7 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 12px;
-            color: #7853B2;
+            color: #00306B;
           }
           .title {
             margin: 10px 0;
@@ -433,7 +433,7 @@ export default {
       display: flex;
       align-items: flex-start;
       height: 133px;
-      border-top: 1px solid #7853B2;
+      border-top: 1px solid #00306B;
 
       .poster-box {
         width: 80px;
@@ -462,7 +462,7 @@ export default {
             font-family: Microsoft YaHei, Microsoft YaHei;
             font-weight: 400;
             font-size: 16px;
-            color: #7853B2;
+            color: #00306B;
           }
         }
       }
@@ -520,7 +520,7 @@ export default {
       color: #1F1F1F;
 
       &:hover {
-        color: #7853B2;
+        color: #00306B;
       }
     }
   }
@@ -538,7 +538,7 @@ export default {
       color: #1F1F1F;
 
       &:hover {
-        color: #7853B2;
+        color: #00306B;
       }
     }
   }
@@ -556,7 +556,7 @@ export default {
         font-family: Microsoft YaHei, Microsoft YaHei;
         font-weight: 400;
         font-size: 12px;
-        color: #7853B2;
+        color: #00306B;
       }
     }
   }
@@ -622,7 +622,7 @@ export default {
     cursor: pointer;
     width: 191px;
     height: 46px;
-    background: #7853B2;
+    background: #00306B;
 
     font-size: 16px;
     font-family: Microsoft YaHei;

@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <div class="page-title">申请售后</div>
+    <div class="page-title">After-sale service</div>
 
     <div class="page-ctx">
       <div class="refund-info ">
@@ -8,38 +8,30 @@
         <!-- <refundGoodsInfo :order="order" /> -->
         <div class="refund-product-detail">
           <div class="refund-item">
-            <div class="base-box flex">
-              商品信息
-              <!-- <div class="date">{{ order.dtTime }}</div>
-            <div class="order-code">
-              订单号：
-              <span>{{ order.order_id }}</span>
-            </div>
-            <div class="order-state">{{ order.status_info }}</div> -->
-            </div>
             <div class="product-box">
               <div class="product-list">
-                <div class="product-item flex">
+                <div class="product-item flex" v-for="(product_item, product_index) in order.products"
+                  :key="product_index">
                   <div class="box-pic">
                     <div class="img-box">
-                      <img :src="product_info.image" alt />
+                      <img :src="product_item.image" alt />
                     </div>
                   </div>
                   <div class="box-title">
-                    <div class="title">{{ product_info.title }}</div>
-                    <div class="sku">{{ product_info.keyVals }}</div>
+                    <div class="title">{{ product_item.title }}</div>
+                    <div class="sku">{{ product_item.keyVals }}</div>
                   </div>
                   <div class="box-price">
                     <div class="price">
-                      {{ order.is_jifen ? "积分" : "￥" }}
-                      {{ order.is_jifen ? product_info.jifen : product_info.priceSale }}
+                      {{ vuex_huobi }}
+                      {{ order.is_jifen ? product_item.jifen : product_item.priceSale }}
                     </div>
                   </div>
                   <div class="box-num">
-                    <div class="num">x {{ product_info.num }}</div>
+                    <div class="num">x {{ product_item.num }}</div>
                   </div>
                   <div class="box-xiaoji">
-                    <div class="price">{{ vuex_huobi }} {{ product_info.priceSale * product_info.num }}</div>
+                    <div class="price">{{ vuex_huobi }} {{ product_item.priceSale * product_item.num }}</div>
                   </div>
                 </div>
 
@@ -50,16 +42,17 @@
 
         <!-- 服务类型 -->
         <div class="service-box">
-          <div class="service-title">选择服务类型</div>
+          <div class="service-title">Select service type</div>
           <div class="service-list">
-            <!-- 退换货类型(1-退款 2-退货退款 3-换货) -->
+            <!-- 退换货类型(1-退款 2-退货退款) -->
             <div class="service-item" @click="to_refund_submit('1')">
               <div class="img-box">
                 <img src="@img/refund/refund-tuikuan.png" alt />
               </div>
               <div class="text-box">
-                <div class="type">仅退款</div>
-                <div class="desc">与卖家协商同意不用退货只退款</div>
+                <div class="type">I want a refund (no return required)</div>
+                <div class="desc">Not receiving the goods, or negotiating with the seller to agree not to return the
+                  goods but only to refund them</div>
               </div>
             </div>
             <div class="service-item" @click="to_refund_submit('2')">
@@ -67,20 +60,15 @@
                 <img src="@img/refund/refund-tuihuo.png" alt />
               </div>
               <div class="text-box">
-                <div class="type">退货退款</div>
-                <div class="desc">退还收到的货物，并退款</div>
-              </div>
-            </div>
-            <div class="service-item" @click="to_refund_submit('3')">
-              <div class="img-box">
-                <img src="@img/refund/refund-huanhuo.png" alt />
-              </div>
-              <div class="text-box">
-                <div class="type">换货</div>
-                <div class="desc">买家退货后商家补发新货</div>
+                <div class="type">I want a return and refund</div>
+                <div class="desc">Received goods, need to return received goods</div>
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="refund-submit-box" v-if="type !== null">
+          <refund_submit :orderId="orderId" :inventoryId="inventoryId" :type="type" />
         </div>
       </div>
     </div>
@@ -90,17 +78,18 @@
 
 <script>
 import { mapState } from "vuex";
+import refund_submit from './refund-submit.vue'
 export default {
   name: "page-refund-type",
   components: {
-
+    refund_submit
   },
   data() {
     return {
       orderId: this.$route.query.orderId,
       inventoryId: this.$route.query.inventoryId,
       order: {},
-      product_info: {}
+      type: null, //1-退款 2-退货退款
     };
   },
   computed: {
@@ -121,21 +110,20 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           this.order = res.data;
-          this.product_info =   res.data.products.find(v => v.id == this.inventoryId) || {}
         }
       });
     },
 
     to_refund_submit(type) {
       //退换货类型(1-退款   2-退货退款  3-换货)
-      this.mix_toRoute({
-        path: '/refund-submit',
-        query: {
-          orderId: this.orderId,
-          inventoryId: this.inventoryId,
-          type: type,
-        }
-      })
+      this.type = type;
+      // this.mix_toRoute({
+      //   path: '/refund-submit',
+      //   query: {
+      //     orderId: this.orderId,
+      //     type: type,
+      //   }
+      // })
     },
   },
 };
@@ -218,17 +206,22 @@ export default {
             border-bottom: none;
           }
 
-     
+
 
           .box-pic {
-            width: 100px;
+            width: 114px;
 
             .img-box {
-              width: 100px;
+              width: 114px;
+              height: 114px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
 
               img {
-                width: 100px;
-                height: 100px;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
               }
             }
           }
@@ -238,66 +231,63 @@ export default {
             padding-left: 20px;
 
             .title {
-              text-align: left;
-              font-size: 14px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
-              line-height: 20px;
-              color: #333333;
+              font-size: 20px;
+              color: #1E262E;
+              line-height: 30px;
             }
 
             .sku {
-              margin-top: 20px;
-              text-align: left;
-              font-size: 14px;
-              font-family: Microsoft YaHei;
+              font-family: Poppins, Poppins;
               font-weight: 400;
-              line-height: 20px;
-              color: #333333;
+              font-size: 20px;
+              color: #5E5E5E;
+              line-height: 28px;
+              margin-top: 10px;
             }
           }
 
           .box-price {
-            min-width: 100px;
+            min-width: 160px;
+            text-align: center;
 
             .price {
-              font-size: 16px;
-              font-family: Microsoft YaHei;
-              font-weight: 400;
-              line-height: 20px;
-              color: #333333;
+              font-family: Poppins, Poppins;
+              font-weight: 600;
+              font-size: 20px;
+              color: #5E5E5E;
+              line-height: 28px;
             }
           }
 
 
           .box-num {
-            width: 100px;
+            width: 80px;
+            text-align: center;
 
             .num {
-
-              font-size: 16px;
-              font-family: Microsoft YaHei;
-              font-weight: 400;
-              line-height: 20px;
-              color: #505050;
+              font-family: Poppins, Poppins;
+              font-weight: 600;
+              font-size: 20px;
+              color: #1E262E;
+              line-height: 18px;
             }
           }
 
           .box-xiaoji {
-            min-width: 100px;
+            min-width: 180px;
+            text-align: center;
 
             .price {
-              font-size: 16px;
-              font-family: Microsoft YaHei;
-              font-weight: 400;
-              line-height: 20px;
-              color: #333333;
+              font-family: Poppins, Poppins;
+              font-weight: 600;
+              font-size: 20px;
+              color: #1E262E;
+              line-height: 28px;
             }
           }
-
-
         }
-
       }
     }
   }
@@ -309,30 +299,26 @@ export default {
   padding-top: 20px;
 
   .service-title {
-    font-size: 14px;
-    font-family: Microsoft YaHei;
-    font-weight: 400;
-    line-height: 30px;
-    color: #333333;
+    font-family: Poppins, Poppins;
+    font-weight: 600;
+    font-size: 20px;
+    color: #1E262E;
+    line-height: 35px;
     margin-bottom: 20px;
-    text-align: left;
   }
 
   .service-list {
-      display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
 
     .service-item {
       display: flex;
-      align-items: center;
-      flex: 1;
-      height: 120px;
-      background: #ffffff;
-      border: 1px solid #eeeeee;
-      opacity: 1;
+      width: 490px;
+      height: 174px;
+      background: #FFFFFF;
+      border: 1px solid #D4D4D4;
       border-radius: 4px;
-      padding-left: 20px;
+      padding: 25px;
       cursor: pointer;
       transition: 0.3s;
 
@@ -341,13 +327,6 @@ export default {
       &:last-child {
         margin-right: 0;
       }
-
-      &:hover {
-        background: #eee;
-        // background: #FF9312;
-      }
-
-
 
       .img-box {
         img {
@@ -361,7 +340,7 @@ export default {
         flex: 2;
 
         .type {
-          font-size: 16px;
+          font-size: 20px;
           font-family: Microsoft YaHei;
           font-weight: bold;
           line-height: 20px;
@@ -369,12 +348,11 @@ export default {
         }
 
         .desc {
-          margin-top: 10px;
-          font-size: 16px;
+          margin-top: 14px;
+          font-size: 18px;
           font-family: Microsoft YaHei;
           font-weight: 400;
-
-          color: #9f9f9f;
+          color: #999;
         }
       }
     }

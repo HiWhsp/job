@@ -267,7 +267,7 @@ export default {
 
 
       &.checked {
-        color: #7853B2;
+        color: #00306B;
       }
 
       img {
@@ -362,7 +362,7 @@ export default {
           font-size: 14px;
           font-family: Microsoft YaHei-Bold, Microsoft YaHei;
           font-weight: bold;
-          color: #7853B2;
+          color: #00306B;
 
           b {
             font-size: 20px;

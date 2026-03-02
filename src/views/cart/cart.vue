@@ -649,7 +649,7 @@ page {
 
             div {
               &:hover {
-                color: #7853b2;
+                color: #00306B;
               }
             }
 
@@ -734,7 +734,7 @@ page {
                 cursor: pointer;
 
                 &:hover {
-                  color: #7853b2;
+                  color: #00306B;
                 }
               }
             }
@@ -803,7 +803,7 @@ page {
       color: #ec6a2b;
 
       &:hover {
-        color: #7853b2;
+        color: #00306B;
       }
     }
   }
@@ -821,7 +821,7 @@ page {
       color: #1e262e;
 
       &:hover {
-        color: #7853b2;
+        color: #00306B;
       }
     }
   }
@@ -865,7 +865,7 @@ page {
     cursor: pointer;
     width: 191px;
     height: 46px;
-    background: #7853b2;
+    background: #00306B;
 
     font-size: 16px;
     font-family: Microsoft YaHei;

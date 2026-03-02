@@ -228,8 +228,8 @@ export default {
 
 <style scoped lang="less">
 /deep/ .el-switch.is-checked .el-switch__core {
-  background-color: #7853b2 !important;
-  border-color: #7853b2 !important;
+  background-color: #00306B !important;
+  border-color: #00306B !important;
 }
 
 /deep/ .el-input {

@@ -298,7 +298,6 @@ export default {
           action: actioc,
           ...this.pagination,
           scene: this.tabSelect.value,
-
           keyword: this.keyword
         }
       }).then(res => {
@@ -628,11 +627,11 @@ export default {
       margin-right: 40px;
 
       .number {
-        color: #7853b2;
+        color: #00306B;
       }
 
       &.active {
-        // background: #7853B2;
+        // background: #00306B;
         // color: #fff;
         // font-weight: bold;
         // color: #009f39;
@@ -760,7 +759,7 @@ export default {
 
       &.state-2 {
         color: #ec6a2b;
-        border-color: #7853b2;
+        border-color: #00306B;
       }
     }
   }
@@ -815,7 +814,7 @@ export default {
             color: #1e262e;
 
             &:hover {
-              color: #7853b2;
+              color: #00306B;
             }
           }
 

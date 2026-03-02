@@ -8,7 +8,7 @@
         </div>
         <div class="right">
           <el-rate disabled v-model="item.star"  :colors="['#F7BB04', '#F7BB04', '#F7BB04']"
-            text-color="#7853B2"></el-rate>
+            text-color="#00306B"></el-rate>
         </div>
       </div>
       <div class="content">{{ item.content }}</div>

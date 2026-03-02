@@ -249,11 +249,11 @@ export default {
     height: 32px;
     background: #FFFFFF;
     border-radius: 50px 50px 50px 50px;
-    border: 1px solid #7853B2;
+    border: 1px solid #00306B;
     font-family: Arial, Arial;
     font-weight: 400;
     font-size: 14px;
-    color: #7853B2;
+    color: #00306B;
 
     &+button {
       margin-left: 20px;
@@ -261,7 +261,7 @@ export default {
   }
 
   .btn-bg {
-    background: #7853B2;
+    background: #00306B;
     color: #FFFFFF;
   }
 }
@@ -275,7 +275,7 @@ export default {
   padding: 0 10px;
   height: 40px;
   background: #fff;
-  color: #7853B2;
+  color: #00306B;
   font-size: 14px;
   margin-left: 15px;
   border-radius: 5px;
