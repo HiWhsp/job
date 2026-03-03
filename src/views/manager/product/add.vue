@@ -87,71 +87,110 @@
 
           <div class="spec-setting">
             <div class="spec-setting-title">规格设置</div>
-            <div class="spec-setting-row">
-              <div class="spec-field">
-                <span class="spec-label">规格名称</span>
-                <div class="spec-tags-wrap">
-                  <el-tag
-                    v-for="(item, idx) in specGroups"
-                    :key="'name-' + idx"
-                    closable
-                    type="primary"
-                    size="small"
-                    class="spec-tag"
-                    @close="removeSpecGroup(idx)"
-                  >
-                    {{ item.name }}
-                  </el-tag>
-                  <el-tag
-                    v-if="currentSpecName"
-                    closable
-                    type="primary"
-                    size="small"
-                    class="spec-tag"
-                    @close="currentSpecName = ''"
-                  >
-                    {{ currentSpecName }}
-                  </el-tag>
+
+            <!-- 表头 -->
+            <div class="spec-setting-table">
+              <div class="spec-setting-header">
+                <div class="spec-col spec-col-name">规格名称</div>
+                <div class="spec-col spec-col-values">规格值</div>
+              </div>
+
+              <!-- 已有规格组：一行一个规格名称，对应自己的一组规格值 -->
+              <div
+                v-for="(group, gIndex) in specGroups"
+                :key="'spec-row-' + gIndex"
+                class="spec-setting-row"
+              >
+                <div class="spec-col spec-col-name">
+                  <div class="spec-tags-wrap">
+                    <el-tag
+                      closable
+                      type="primary"
+                      size="small"
+                      class="spec-tag"
+                      @close.stop="handleRemoveSpecGroup(gIndex)"
+                    >
+                      {{ group.name }}
+                    </el-tag>
+                  </div>
+                </div>
+                <div class="spec-col spec-col-values">
+                  <div class="spec-tags-wrap">
+                    <el-tag
+                      v-for="(v, vIndex) in group.values"
+                      :key="'g-' + gIndex + '-v-' + vIndex"
+                      closable
+                      type="primary"
+                      size="small"
+                      class="spec-tag"
+                      @close="removeGroupValue(gIndex, vIndex)"
+                    >
+                      {{ v }}
+                    </el-tag>
+                    <el-input
+                      v-model="group.valueInput"
+                      placeholder="输入规格值后回车添加"
+                      size="small"
+                      class="spec-input-inline"
+                      maxlength="30"
+                      @keyup.enter.native="addValueForGroup(gIndex)"
+                    />
+                    <el-button
+                      type="primary"
+                      size="small"
+                      class="btn-add-spec"
+                      @click="addValueForGroup(gIndex)"
+                    >
+                      +新增
+                    </el-button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 新增规格行 -->
+              <div class="spec-setting-row spec-setting-row-new">
+                <div class="spec-col spec-col-name">
                   <el-input
                     v-model="currentSpecName"
-                    placeholder="输入规格名称后回车添加"
+                    placeholder="请输入规格名称"
                     size="small"
                     class="spec-input-inline"
                     maxlength="20"
-                    @keyup.enter.native="addSpecName"
                   />
+                </div>
+                <div class="spec-col spec-col-values">
+                  <div class="spec-tags-wrap">
+                    <el-tag
+                      v-for="(v, idx) in currentSpecValues"
+                      :key="'new-val-' + idx"
+                      closable
+                      type="primary"
+                      size="small"
+                      class="spec-tag"
+                      @close="removeCurrentValue(idx)"
+                    >
+                      {{ v }}
+                    </el-tag>
+                    <el-input
+                      v-model="currentSpecValueInput"
+                      placeholder="输入规格值后回车添加"
+                      size="small"
+                      class="spec-input-inline"
+                      maxlength="30"
+                      @keyup.enter.native="addSpecValue"
+                    />
+                    <el-button
+                      type="primary"
+                      size="small"
+                      class="btn-add-spec"
+                      @click="confirmAddSpec"
+                    >
+                      +新增
+                    </el-button>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="spec-setting-row">
-              <div class="spec-field">
-                <span class="spec-label">规格值</span>
-                <div class="spec-tags-wrap">
-                  <el-tag
-                    v-for="(v, idx) in currentSpecValues"
-                    :key="'val-' + idx"
-                    closable
-                    type="primary"
-                    size="small"
-                    class="spec-tag"
-                    @close="removeCurrentValue(idx)"
-                  >
-                    {{ v }}
-                  </el-tag>
-                  <el-input
-                    v-model="currentSpecValueInput"
-                    placeholder="输入规格值后回车添加"
-                    size="small"
-                    class="spec-input-inline"
-                    maxlength="30"
-                    @keyup.enter.native="addSpecValue"
-                  />
-                </div>
-              </div>
-            </div>
-            <el-button type="primary" size="small" class="btn-add-spec" @click="confirmAddSpec">
-              +新增
-            </el-button>
           </div>
 
           <div class="spec-list-block">
@@ -202,9 +241,9 @@ export default {
         unit: "",
         detail: ""
       },
-      // 产品规格：已确认的规格组 [{ name, values }]
+      // 产品规格：已确认的规格组 [{ name, values, valueInput }]
       specGroups: [],
-      // 当前正在编辑的规格名称、规格值
+      // 新增规格名称 / 规格值（底部“新增”行）
       currentSpecName: "",
       currentSpecValueInput: "",
       currentSpecValues: [],
@@ -214,11 +253,6 @@ export default {
   },
 
   methods: {
-    addSpecName() {
-      const name = (this.currentSpecName || "").trim();
-      if (!name) return;
-      this.currentSpecName = name;
-    },
     addSpecValue() {
       const val = (this.currentSpecValueInput || "").trim();
       if (!val) return;
@@ -227,8 +261,35 @@ export default {
       }
       this.currentSpecValueInput = "";
     },
+    // 为已有规格组添加规格值
+    addValueForGroup(gIndex) {
+      const group = this.specGroups[gIndex];
+      if (!group) return;
+      const val = (group.valueInput || "").trim();
+      if (!val) return;
+      if (!group.values) group.values = [];
+      if (group.values.indexOf(val) === -1) {
+        group.values.push(val);
+      }
+      group.valueInput = "";
+      this.$set(this.specGroups, gIndex, { ...group });
+      this.buildSpecList();
+    },
+    // 删除前弹确认
+    handleRemoveSpecGroup(idx) {
+      this.$confirm("确认删除该规格，该操作将会重新生成规格数据？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.removeSpecGroup(idx);
+        })
+        .catch(() => {});
+    },
     removeSpecGroup(idx) {
       this.specGroups.splice(idx, 1);
+      // 如果删除的是当前“新增行”里同名的规格，不做特殊处理，只重新生成列表
       this.buildSpecList();
     },
     removeCurrentValue(idx) {
@@ -244,10 +305,19 @@ export default {
         this.$message.warning("请至少添加一个规格值");
         return;
       }
+      const values = [...this.currentSpecValues];
+      const existIndex = this.specGroups.findIndex((g) => g.name === name);
+      if (existIndex > -1) {
+        this.$message.warning("已存在同名规格，请更换规格名称");
+        return;
+      }
+      // 新增一个规格
       this.specGroups.push({
         name,
-        values: [...this.currentSpecValues]
+        values,
+        valueInput: ""
       });
+      // 重置“新增行”
       this.currentSpecName = "";
       this.currentSpecValues = [];
       this.currentSpecValueInput = "";
@@ -419,23 +489,48 @@ export default {
   border-radius: 4px;
 }
 
-.spec-setting-row {
-  margin-bottom: 12px;
-
-  &:last-of-type {
-    margin-bottom: 0;
-  }
+.spec-setting-table {
+  border: 1px solid #ebeef5;
+  border-radius: 4px;
+  background: #fff;
 }
 
-.spec-field {
-  .spec-label {
-    display: inline-block;
-    min-width: 80px;
-    font-size: 14px;
-    color: #606266;
-    vertical-align: top;
-    line-height: 32px;
-  }
+.spec-setting-header {
+  display: flex;
+  border-bottom: 1px solid #ebeef5;
+  background-color: #f9fafc;
+  height: 40px;
+  align-items: center;
+}
+
+.spec-setting-row {
+  display: flex;
+  min-height: 60px;
+  border-top: 1px solid #ebeef5;
+  align-items: flex-start;
+}
+
+.spec-setting-row:first-of-type {
+  border-top: none;
+}
+
+.spec-setting-row-new {
+  background: #fafafa;
+}
+
+.spec-col {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+}
+
+.spec-col-name {
+  width: 160px;
+  border-right: 1px solid #ebeef5;
+}
+
+.spec-col-values {
+  flex: 1;
 }
 
 .spec-tags-wrap {
