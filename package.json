@@ -10,7 +10,7 @@
     "@ckeditor/ckeditor5-build-decoupled-document": "^40.1.0",
     "@ckeditor/ckeditor5-vue2": "^3.0.1",
     "@textbus/xnote": "^0.3.7",
-    "@tinymce/tinymce-vue": "^3.2.8",
+    "@tinymce/tinymce-vue": "^6.3.0",
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
     "dayjs": "^1.11.9",
