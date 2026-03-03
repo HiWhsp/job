@@ -3,11 +3,8 @@
     <div class="form-card">
       <div class="page-title">新增产品</div>
       <el-form ref="formRef" :model="form" label-width="140px" class="product-form">
-        <el-form-item label="产品名称" prop="name">
+        <el-form-item label="原料名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入" clearable />
-        </el-form-item>
-        <el-form-item label="产品编码" prop="code">
-          <el-input v-model="form.code" placeholder="请输入" clearable />
         </el-form-item>
         <el-form-item label="所属分类" prop="categoryId">
           <el-select v-model="form.categoryId" placeholder="请选择" clearable>
@@ -16,42 +13,18 @@
             <el-option label="其他产品" value="3" />
           </el-select>
         </el-form-item>
-        <el-form-item label="注册证编码" prop="registerCode">
-          <el-input v-model="form.registerCode" placeholder="请输入" clearable />
-        </el-form-item>
-        <el-form-item label="注册证附件" prop="registerCertList">
-          <el-upload
-            class="upload-image-card"
-            action="#"
-            list-type="picture-card"
-            :auto-upload="false"
-            :file-list="form.registerCertList"
-            :on-change="(file, list) => handleUploadChange('registerCertList', list)"
-            :on-remove="() => handleUploadRemove('registerCertList')"
-          >
-            <i class="el-icon-plus" />
-            <span class="upload-text">添加图片</span>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="生产许可证" prop="licenseList">
-          <el-upload
-            class="upload-image-card"
-            action="#"
-            list-type="picture-card"
-            :auto-upload="false"
-            :file-list="form.licenseList"
-            :on-change="(file, list) => handleUploadChange('licenseList', list)"
-            :on-remove="() => handleUploadRemove('licenseList')"
-          >
-            <i class="el-icon-plus" />
-            <span class="upload-text">添加图片</span>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="产品效期" prop="expiry">
-          <el-input v-model="form.expiry" placeholder="请输入" clearable />
+        <el-form-item label="用于产品大类" prop="code">
+          <el-select v-model="form.categoryId" placeholder="请选择" clearable>
+            <el-option label="树脂盘" value="1" />
+            <el-option label="硅橡胶" value="2" />
+            <el-option label="其他产品" value="3" />
+          </el-select>
         </el-form-item>
         <el-form-item label="单位" prop="unit">
           <el-input v-model="form.unit" placeholder="请输入" clearable />
+        </el-form-item>
+        <el-form-item label="存储条件" prop="expiry">
+          <el-input v-model="form.expiry" placeholder="请输入" clearable />
         </el-form-item>
         <el-form-item label="产品详情" prop="detail">
           <tiny-rich-editor id="product-detail-editor" v-model="form.detail" :height="400" />
@@ -187,7 +160,7 @@
 
 <script>
 export default {
-  name: "ProductAdd",
+  name: "InternalMaterialAdd",
 
   data() {
     return {

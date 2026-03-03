@@ -243,7 +243,7 @@ export default {
       this.loadList();
     },
     handleAdd() {
-      this.$router.push('/manager/customer-add');
+      this.$router.push('/manager/customer/add');
     },
     handleImport() {
       // TODO: 客户导入

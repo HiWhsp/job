@@ -18,6 +18,7 @@ const managerRoutes = [
         path: "customer",
         name: "customer",
         component: () => import("@/views/manager/customer/index.vue"),
+        redirect: '/manager/customer/list',
         meta: {
           title: "客户管理",
           requireAuth: true
@@ -31,7 +32,7 @@ const managerRoutes = [
             meta: {
               title: "客户列表",
               requireAuth: true,
-              hidden: true
+              hidden: false
             }
           },
           // 新增客户
@@ -42,7 +43,7 @@ const managerRoutes = [
             meta: {
               title: "新增客户",
               requireAuth: true,
-              hidden: true
+              hidden: false
             }
           }
         ]
@@ -98,6 +99,134 @@ const managerRoutes = [
             component: () => import("@/views/manager/product/add.vue"),
             meta: {
               title: "产品新增",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      },
+      // 产品指导价格
+      {
+        path: 'price',
+        name: 'product-price',
+        component: () => import("@/views/manager/product/price.vue"),
+        meta: {
+          title: "产品指导价格",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 内部原料管理
+      {
+        path: 'internal-material',
+        name: 'internal-material',
+        component: () => import("@/views/manager/internal-material/index.vue"),
+        meta: {
+          title: "内部原料管理",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          // 原料分类管理
+          {
+            path: 'category',
+            name: 'internal-material-category',
+            component: () => import("@/views/manager/internal-material/category.vue"),
+            meta: {
+              title: "原料分类管理",
+              requireAuth: true,
+              hidden: true
+            }
+          },
+          {
+            path: 'list',
+            name: 'internal-material-list',
+            component: () => import("@/views/manager/internal-material/list.vue"),
+            meta: {
+              title: "原料管理",
+              requireAuth: true,
+              hidden: true
+            }
+          },
+          // 新增原料
+          {
+            path: 'add',
+            name: 'internal-material-add',
+            component: () => import("@/views/manager/internal-material/add.vue"),
+            meta: {
+              title: "新增原料",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      },
+      // 客户外来包装
+      {
+        path: 'external-package',
+        name: 'external-package',
+        component: () => import("@/views/manager/external-package/index.vue"),
+        redirect: '/manager/external-package/list',
+        meta: {
+          title: "客户外来包装",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [ 
+          // 客户外来包装管理
+          {
+            path: 'list',
+            name: 'external-package-list',
+            component: () => import("@/views/manager/external-package/list.vue"),
+            meta: {
+              title: "客户外来包装管理",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 新增客户外来包装
+          {
+            path: 'add',
+            name: 'external-package-add',
+            component: () => import("@/views/manager/external-package/add.vue"),
+            meta: {
+              title: "新增客户外来包装",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      },
+      // 外购产品管理
+      {
+        path: 'external-product',
+        name: 'external-product',
+        component: () => import("@/views/manager/external-product/index.vue"),
+        redirect: '/manager/external-product/list',
+        meta: {
+          title: "外购产品管理",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          // 外购产品管理
+          {
+            path: 'list',
+            name: 'external-product-list',
+            component: () => import("@/views/manager/external-product/list.vue"),
+            meta: {
+              title: "外购产品管理",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 新增外购产品
+          {
+            path: 'add',
+            name: 'external-product-add',
+            component: () => import("@/views/manager/external-product/add.vue"),
+            meta: {
+              title: "新增外购产品",
               requireAuth: true,
               hidden: false
             }
