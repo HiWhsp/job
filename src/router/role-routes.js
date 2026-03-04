@@ -232,6 +232,42 @@ const managerRoutes = [
             }
           }
         ]
+      },
+      // 订单发货审批
+      {
+        path: 'order-delivery-approval',
+        name: 'order-delivery-approval',
+        component: () => import("@/views/manager/order-delivery-approval/index.vue"),
+        redirect: '/manager/order-delivery-approval/list',
+        meta: {
+          title: "订单发货审批",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          // 订单发货审批列表
+          {
+            path: 'list',
+            name: 'order-delivery-approval-list',
+            component: () => import("@/views/manager/order-delivery-approval/list.vue"),
+            meta: {
+              title: "订单发货审批列表",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 订单发货审批详情
+          {
+            path: 'detail',
+            name: 'order-delivery-approval-detail',
+            component: () => import("@/views/manager/order-delivery-approval/detail.vue"),
+            meta: {
+              title: "订单发货审批详情",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
       }
     ]
   },
