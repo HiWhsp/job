@@ -2083,7 +2083,7 @@ export default {
         url: "/service.php",
         method: "get",
         data: {
-          action: "checkYhqCode",
+          action: "yhq_checkYhqCode",
           code: this.yh_code.trim(),
           price: this.total_order_price
           // 可以添加其他必要参数，如订单金额等
