@@ -53,7 +53,7 @@
             <span class="field-value">{{ detail.batchDelivery ? '是' : '否' }}</span>
           </el-col>
         </el-row>
-        
+
         <el-row :gutter="24" class="field-row">
           <el-col :span="8" class="field-item">
             <span class="field-label">是否接受分批发货：</span>
@@ -184,6 +184,106 @@
         </el-row>
       </div>
     </div>
+
+    <!-- 产品信息 -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">产品信息</span>
+      </div>
+      <div class="section-body">
+        <el-table :data="detail.productList" class="product-table">
+          <el-table-column type="selection" width="48" align="center" />
+          <el-table-column prop="code" label="产品编码" min-width="140" />
+          <el-table-column prop="name" label="产品名称" min-width="160" />
+          <el-table-column prop="spec" label="规格" min-width="140" />
+          <el-table-column prop="category" label="所属分类" min-width="120" />
+          <el-table-column prop="unit" label="单位" width="80" />
+          <el-table-column prop="guidePrice" label="指导单价" min-width="120" />
+          <el-table-column prop="quantity" label="数量" width="80" />
+          <el-table-column prop="totalPrice" label="总价" min-width="120" />
+          <el-table-column prop="stockQty" label="库存数量" min-width="100" />
+          <el-table-column label="库存状态" min-width="100">
+            <template slot-scope="scope">
+              <span :class="[
+                'stock-status-text',
+                scope.row.stockStatus === '缺货' ? 'is-shortage' : 'is-normal'
+              ]">
+                {{ scope.row.stockStatus }}
+              </span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </div>
+
+    <!-- 外购产品信息 -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">外购产品信息</span>
+      </div>
+      <div class="section-body">
+        <el-table :data="detail.externalProductList" class="product-table">
+          <el-table-column type="index" label="序号" width="70" align="center" />
+          <el-table-column prop="name" label="产品名称" min-width="160" />
+          <el-table-column prop="spec" label="规格" min-width="140" />
+          <el-table-column prop="unitPrice" label="单价" min-width="100" />
+          <el-table-column prop="quantity" label="数量" min-width="80" />
+          <el-table-column prop="arrivalQty" label="到货数量" min-width="100" />
+          <el-table-column label="是否缺货" min-width="100">
+            <template slot-scope="scope">
+              <span :class="[
+                'stock-status-text',
+                scope.row.isShortage ? 'is-shortage' : 'is-normal'
+              ]">
+                {{ scope.row.isShortage ? '缺货' : '有货' }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="totalPrice" label="总价" min-width="120" />
+          <el-table-column prop="unit" label="单位" width="80" />
+        </el-table>
+      </div>
+    </div>
+
+
+    <div class="form-footer">
+      <el-button type="primary" @click="openDeliveryDialog">发货</el-button>
+      <el-button @click="handleCancel">取消</el-button>
+    </div>
+
+    <!-- 审批发货弹框 -->
+    <el-dialog
+      title="审批发货"
+      :visible.sync="deliveryDialogVisible"
+      width="520px"
+      :close-on-click-modal="false"
+    >
+      <el-form
+        :model="deliveryForm"
+        label-width="100px"
+        label-position="right"
+      >
+        <el-form-item label="审批：">
+          <el-radio-group v-model="deliveryForm.approveType">
+            <el-radio label="batch">审批发货</el-radio>
+            <el-radio label="lack">库存不足</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="交货时间：">
+          <el-date-picker
+            v-model="deliveryForm.deliveryTime"
+            type="date"
+            placeholder="请设置"
+            value-format="yyyy-MM-dd"
+          />
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer" style="text-align: center;">
+        <el-button type="primary" @click="submitDelivery">提交</el-button>
+        <el-button @click="deliveryDialogVisible = false">取消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -223,7 +323,63 @@ export default {
           bankAccountNo: '76454212657855',
           bankName: '中国银行',
           bankCode: '***********'
-        }
+        },
+        // 产品信息列表
+        productList: [
+          {
+            code: '4578786954',
+            name: '单层牙托盘',
+            spec: '98,A1,10mm',
+            category: '树脂盘',
+            unit: '盒',
+            guidePrice: 15.0,
+            quantity: 20,
+            totalPrice: 300.0,
+            stockQty: 60,
+            stockStatus: '有货'
+          },
+          {
+            code: '4578786954',
+            name: '单层牙托盘',
+            spec: '98,A1,10mm',
+            category: '树脂盘',
+            unit: '盒',
+            guidePrice: 20.0,
+            quantity: 20,
+            totalPrice: 4000.0,
+            stockQty: 60,
+            stockStatus: '缺货'
+          }
+        ],
+        // 外购产品信息列表
+        externalProductList: [
+          {
+            name: '单层牙托盘',
+            spec: '98,A1,10mm',
+            unitPrice: 2000.0,
+            quantity: 20,
+            arrivalQty: 40,
+            isShortage: false,
+            totalPrice: 40000.0,
+            unit: '盒'
+          },
+          {
+            name: '单层牙托盘',
+            spec: '98,A1,10mm',
+            unitPrice: 2000.0,
+            quantity: 20,
+            arrivalQty: 40,
+            isShortage: true,
+            totalPrice: 40000.0,
+            unit: '盒'
+          }
+        ]
+      },
+      // 审批发货弹框
+      deliveryDialogVisible: false,
+      deliveryForm: {
+        approveType: 'batch', // batch: 审批发货, lack: 库存不足
+        deliveryTime: ''
       }
     };
   },
@@ -249,7 +405,27 @@ export default {
     // TODO: 根据路由参数请求详情接口并替换 detail
   },
 
-  methods: {}
+  methods: {
+    openDeliveryDialog() {
+      this.deliveryDialogVisible = true;
+    },
+    submitDelivery() {
+      if (!this.deliveryForm.approveType) {
+        this.$message.error('请选择审批结果');
+        return;
+      }
+      if (!this.deliveryForm.deliveryTime) {
+        this.$message.error('请选择交货时间');
+        return;
+      }
+      // TODO: 调用审批发货接口，传递 deliveryForm 与订单信息
+      this.$message.success('提交成功');
+      this.deliveryDialogVisible = false;
+    },
+    handleCancel() {
+      this.$router.back();
+    }
+  }
 };
 </script>
 
@@ -344,5 +520,39 @@ export default {
   border-radius: 4px;
   border: 1px solid #ebeef5;
   background: #f5f7fa;
+}
+
+.form-footer {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #f1f1f1;
+  text-align: left;
+
+  .el-button {
+    width: 112px;
+    height: 38px;
+    padding: 10px 24px;
+  }
+
+  .el-button--primary {
+    background: #2373C8 !important;
+    border: none;
+  }
+}
+
+:deep(.el-dialog__header) {
+  height: 60px;
+  padding: 0 24px 0;
+  background: #F7F7F7;
+  text-align: left;
+  .el-dialog__title {
+    line-height: 60px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333333;
+  }
+}
+:deep(.el-dialog__body){
+  padding: 30px 80px;
 }
 </style>

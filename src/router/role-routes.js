@@ -13,6 +13,17 @@ const managerRoutes = [
       requireAuth: true
     },
     children: [
+      // 数据统计
+      {
+        path: 'data-statistics',
+        name: 'data-statistics',
+        component: () => import("@/views/manager/data-statistics/index.vue"),
+        meta: {
+          title: "数据统计",
+          requireAuth: true,
+          hidden: true
+        }
+      },
       // 客户管理
       {
         path: "customer",
@@ -268,6 +279,17 @@ const managerRoutes = [
             }
           }
         ]
+      },
+      // 询盘数据
+      {
+        path: 'inquiry-data',
+        name: 'inquiry-data',
+        component: () => import("@/views/manager/inquiry-data/index.vue"),
+        meta: {
+          title: "询盘数据",
+          requireAuth: true,
+          hidden: true
+        }
       }
     ]
   },
