@@ -221,7 +221,7 @@ export default {
     },
     handleAdd() {
       // TODO: 新增原料
-      this.$router.push('/manager/external-product/add');
+      this.$router.push("/manager/external-product/add");
     },
     handleImport() {
       // TODO: 批量导入
@@ -239,7 +239,7 @@ export default {
 };
 </script>
     
-    <style lang="less" scoped>
+<style lang="less" scoped>
 .customer-page {
   background: #fff;
   // border: 1px solid #E6E6E6;

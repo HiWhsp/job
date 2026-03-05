@@ -306,14 +306,42 @@ const salesRoutes = [
       requireAuth: true
     },
     children: [
-      // {
-      //   path: "dashboard",
-      //   name: "sales-dashboard",
-      //   component: () => import("@/views/sales/dashboard.vue"),
-      //   meta: {
-      //     title: "业务员首页"
-      //   }
-      // }
+      // 订单管理
+      {
+        path: 'order',
+        name: 'order',
+        component: () => import("@/views/sales/order/index.vue"),
+        redirect: '/sales/order/list',
+        meta: {
+          title: "订单管理",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          // 订单列表
+          {
+            path: 'list',
+            name: 'order-list',
+            component: () => import("@/views/sales/order/list.vue"),
+            meta: {
+              title: "订单管理",
+              requireAuth: true,
+              hidden: true
+            }
+          },
+          // 订单详情
+          {
+            path: 'detail',
+            name: 'order-detail',
+            component: () => import("@/views/sales/order/detail.vue"),
+            meta: {
+              title: "订单详情",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      }
     ]
   }
 ];

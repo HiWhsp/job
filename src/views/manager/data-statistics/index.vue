@@ -4,9 +4,9 @@
     <div class="page-head">
       <div class="page-title">
         数据总览
-        <el-tooltip effect="dark" content="统计数据示例展示，接入接口后可替换为真实数据" placement="right">
-          <i class="el-icon-question title-tip" />
-        </el-tooltip>
+        <div class="title-icon" @click="handleQuery">
+          <i class="el-icon-refresh-left" />
+        </div>
       </div>
 
       <div class="page-filters">
@@ -42,8 +42,19 @@
               <div class="panel-title">产品销售数量统计</div>
               <div class="panel-filter">
                 <span class="panel-filter-label">产品分类</span>
-                <el-select v-model="productQuery.category" placeholder="请选择" clearable size="small" class="panel-select">
-                  <el-option v-for="opt in productCategoryOptions" :key="opt.value" :label="opt.label" :value="opt.value" />
+                <el-select
+                  v-model="productQuery.category"
+                  placeholder="请选择"
+                  clearable
+                  size="small"
+                  class="panel-select"
+                >
+                  <el-option
+                    v-for="opt in productCategoryOptions"
+                    :key="opt.value"
+                    :label="opt.label"
+                    :value="opt.value"
+                  />
                 </el-select>
               </div>
             </div>
@@ -53,14 +64,27 @@
                 header-cell-class-name="table-header-cell"
                 :row-class-name="tableRowClassName"
               >
-                <el-table-column prop="productName" label="产品名称" min-width="120" show-overflow-tooltip />
-                <el-table-column prop="productCode" label="产品编码" min-width="110" show-overflow-tooltip />
-                <el-table-column prop="categoryName" label="所属分类" min-width="100" show-overflow-tooltip />
+                <el-table-column
+                  prop="productName"
+                  label="产品名称"
+                  min-width="120"
+                  show-overflow-tooltip
+                />
+                <el-table-column
+                  prop="productCode"
+                  label="产品编码"
+                  min-width="110"
+                  show-overflow-tooltip
+                />
+                <el-table-column
+                  prop="categoryName"
+                  label="所属分类"
+                  min-width="100"
+                  show-overflow-tooltip
+                />
                 <el-table-column prop="saleQty" label="销售数量" min-width="90" align="right" />
                 <el-table-column prop="saleAmount" label="销售金额" min-width="100" align="right">
-                  <template slot-scope="{ row }">
-                    {{ formatMoney(row.saleAmount, true) }}
-                  </template>
+                  <template slot-scope="{ row }">{{ formatMoney(row.saleAmount, true) }}</template>
                 </el-table-column>
               </el-table>
             </div>
@@ -73,8 +97,19 @@
               <div class="panel-title">客户数据统计</div>
               <div class="panel-filter">
                 <span class="panel-filter-label">客户名称</span>
-                <el-select v-model="customerQuery.customerId" placeholder="请选择" clearable size="small" class="panel-select">
-                  <el-option v-for="opt in customerOptions" :key="opt.value" :label="opt.label" :value="opt.value" />
+                <el-select
+                  v-model="customerQuery.customerId"
+                  placeholder="请选择"
+                  clearable
+                  size="small"
+                  class="panel-select"
+                >
+                  <el-option
+                    v-for="opt in customerOptions"
+                    :key="opt.value"
+                    :label="opt.label"
+                    :value="opt.value"
+                  />
                 </el-select>
               </div>
             </div>
@@ -84,22 +119,21 @@
                 header-cell-class-name="table-header-cell"
                 :row-class-name="tableRowClassName"
               >
-                <el-table-column prop="customerName" label="客户名称" min-width="160" show-overflow-tooltip />
+                <el-table-column
+                  prop="customerName"
+                  label="客户名称"
+                  min-width="160"
+                  show-overflow-tooltip
+                />
                 <el-table-column prop="orderCount" label="订单数量" min-width="90" align="right" />
                 <el-table-column prop="orderAmount" label="订单总金额" min-width="110" align="right">
-                  <template slot-scope="{ row }">
-                    {{ formatMoney(row.orderAmount, true) }}
-                  </template>
+                  <template slot-scope="{ row }">{{ formatMoney(row.orderAmount, true) }}</template>
                 </el-table-column>
                 <el-table-column prop="paidAmount" label="已回款金额" min-width="110" align="right">
-                  <template slot-scope="{ row }">
-                    {{ formatMoney(row.paidAmount, true) }}
-                  </template>
+                  <template slot-scope="{ row }">{{ formatMoney(row.paidAmount, true) }}</template>
                 </el-table-column>
                 <el-table-column prop="unpaidAmount" label="未回款金额" min-width="110" align="right">
-                  <template slot-scope="{ row }">
-                    {{ formatMoney(row.unpaidAmount, true) }}
-                  </template>
+                  <template slot-scope="{ row }">{{ formatMoney(row.unpaidAmount, true) }}</template>
                 </el-table-column>
               </el-table>
             </div>
@@ -112,55 +146,164 @@
 
 <script>
 export default {
-  name: 'DataStatistics',
+  name: "DataStatistics",
   data() {
     return {
       queryParams: {
         dateRange: []
       },
       statCards: [
-        { key: 'orderTotal', label: '订单总金额', value: 10000, isMoney: true },
-        { key: 'orderCount', label: '订单数量', value: 200, isMoney: false },
-        { key: 'paidTotal', label: '已回款金额', value: 5000, isMoney: true },
-        { key: 'unpaidTotal', label: '待回款金额', value: 5000, isMoney: true },
-        { key: 'purchaseTotal', label: '采购总金额', value: 5000, isMoney: true }
+        { key: "orderTotal", label: "订单总金额", value: 10000, isMoney: true },
+        { key: "orderCount", label: "订单数量", value: 200, isMoney: false },
+        { key: "paidTotal", label: "已回款金额", value: 5000, isMoney: true },
+        { key: "unpaidTotal", label: "待回款金额", value: 5000, isMoney: true },
+        {
+          key: "purchaseTotal",
+          label: "采购总金额",
+          value: 5000,
+          isMoney: true
+        }
       ],
 
       productQuery: {
-        category: ''
+        category: ""
       },
       productCategoryOptions: [
-        { label: '颗粒盘', value: '颗粒盘' },
-        { label: '胶囊', value: '胶囊' },
-        { label: '片剂', value: '片剂' }
+        { label: "颗粒盘", value: "颗粒盘" },
+        { label: "胶囊", value: "胶囊" },
+        { label: "片剂", value: "片剂" }
       ],
       productRows: [
-        { productName: '单层牙齿盘', productCode: '7889789', categoryName: '颗粒盘', saleQty: 500, saleAmount: 50000 },
-        { productName: '单层牙齿盘', productCode: '7889789', categoryName: '颗粒盘', saleQty: 500, saleAmount: 50000 },
-        { productName: '单层牙齿盘', productCode: '500.00', categoryName: '颗粒盘', saleQty: 50000, saleAmount: 50000 },
-        { productName: '单层牙齿盘', productCode: '500.00', categoryName: '颗粒盘', saleQty: 50000, saleAmount: 50000 },
-        { productName: '单层牙齿盘', productCode: '500.00', categoryName: '颗粒盘', saleQty: 50000, saleAmount: 50000 },
-        { productName: '单层牙齿盘', productCode: '500.00', categoryName: '颗粒盘', saleQty: 50000, saleAmount: 50000 },
-        { productName: '单层牙齿盘', productCode: '500.00', categoryName: '颗粒盘', saleQty: 50000, saleAmount: 50000 },
-        { productName: '单层牙齿盘', productCode: '500.00', categoryName: '颗粒盘', saleQty: 50000, saleAmount: 50000 }
+        {
+          productName: "单层牙齿盘",
+          productCode: "7889789",
+          categoryName: "颗粒盘",
+          saleQty: 500,
+          saleAmount: 50000
+        },
+        {
+          productName: "单层牙齿盘",
+          productCode: "7889789",
+          categoryName: "颗粒盘",
+          saleQty: 500,
+          saleAmount: 50000
+        },
+        {
+          productName: "单层牙齿盘",
+          productCode: "500.00",
+          categoryName: "颗粒盘",
+          saleQty: 50000,
+          saleAmount: 50000
+        },
+        {
+          productName: "单层牙齿盘",
+          productCode: "500.00",
+          categoryName: "颗粒盘",
+          saleQty: 50000,
+          saleAmount: 50000
+        },
+        {
+          productName: "单层牙齿盘",
+          productCode: "500.00",
+          categoryName: "颗粒盘",
+          saleQty: 50000,
+          saleAmount: 50000
+        },
+        {
+          productName: "单层牙齿盘",
+          productCode: "500.00",
+          categoryName: "颗粒盘",
+          saleQty: 50000,
+          saleAmount: 50000
+        },
+        {
+          productName: "单层牙齿盘",
+          productCode: "500.00",
+          categoryName: "颗粒盘",
+          saleQty: 50000,
+          saleAmount: 50000
+        },
+        {
+          productName: "单层牙齿盘",
+          productCode: "500.00",
+          categoryName: "颗粒盘",
+          saleQty: 50000,
+          saleAmount: 50000
+        }
       ],
 
       customerQuery: {
-        customerId: ''
+        customerId: ""
       },
       customerOptions: [
-        { label: '浙江求实医疗科技有限公司', value: '1' },
-        { label: '上海示例有限公司', value: '2' }
+        { label: "浙江求实医疗科技有限公司", value: "1" },
+        { label: "上海示例有限公司", value: "2" }
       ],
       customerRows: [
-        { customerId: '1', customerName: '浙江求实医疗科技有限公司', orderCount: 500, orderAmount: 50000, paidAmount: 50000, unpaidAmount: 0 },
-        { customerId: '1', customerName: '浙江求实医疗科技有限公司', orderCount: 500, orderAmount: 50000, paidAmount: 50000, unpaidAmount: 0 },
-        { customerId: '1', customerName: '浙江求实医疗科技有限公司', orderCount: 50000, orderAmount: 50000, paidAmount: 50000, unpaidAmount: 0 },
-        { customerId: '1', customerName: '浙江求实医疗科技有限公司', orderCount: 50000, orderAmount: 50000, paidAmount: 50000, unpaidAmount: 0 },
-        { customerId: '1', customerName: '浙江求实医疗科技有限公司', orderCount: 50000, orderAmount: 50000, paidAmount: 50000, unpaidAmount: 0 },
-        { customerId: '1', customerName: '浙江求实医疗科技有限公司', orderCount: 50000, orderAmount: 50000, paidAmount: 50000, unpaidAmount: 0 },
-        { customerId: '1', customerName: '浙江求实医疗科技有限公司', orderCount: 50000, orderAmount: 50000, paidAmount: 50000, unpaidAmount: 0 },
-        { customerId: '1', customerName: '浙江求实医疗科技有限公司', orderCount: 50000, orderAmount: 50000, paidAmount: 50000, unpaidAmount: 0 }
+        {
+          customerId: "1",
+          customerName: "浙江求实医疗科技有限公司",
+          orderCount: 500,
+          orderAmount: 50000,
+          paidAmount: 50000,
+          unpaidAmount: 0
+        },
+        {
+          customerId: "1",
+          customerName: "浙江求实医疗科技有限公司",
+          orderCount: 500,
+          orderAmount: 50000,
+          paidAmount: 50000,
+          unpaidAmount: 0
+        },
+        {
+          customerId: "1",
+          customerName: "浙江求实医疗科技有限公司",
+          orderCount: 50000,
+          orderAmount: 50000,
+          paidAmount: 50000,
+          unpaidAmount: 0
+        },
+        {
+          customerId: "1",
+          customerName: "浙江求实医疗科技有限公司",
+          orderCount: 50000,
+          orderAmount: 50000,
+          paidAmount: 50000,
+          unpaidAmount: 0
+        },
+        {
+          customerId: "1",
+          customerName: "浙江求实医疗科技有限公司",
+          orderCount: 50000,
+          orderAmount: 50000,
+          paidAmount: 50000,
+          unpaidAmount: 0
+        },
+        {
+          customerId: "1",
+          customerName: "浙江求实医疗科技有限公司",
+          orderCount: 50000,
+          orderAmount: 50000,
+          paidAmount: 50000,
+          unpaidAmount: 0
+        },
+        {
+          customerId: "1",
+          customerName: "浙江求实医疗科技有限公司",
+          orderCount: 50000,
+          orderAmount: 50000,
+          paidAmount: 50000,
+          unpaidAmount: 0
+        },
+        {
+          customerId: "1",
+          customerName: "浙江求实医疗科技有限公司",
+          orderCount: 50000,
+          orderAmount: 50000,
+          paidAmount: 50000,
+          unpaidAmount: 0
+        }
       ]
     };
   },
@@ -168,29 +311,32 @@ export default {
     filteredProductRows() {
       const { category } = this.productQuery;
       if (!category) return this.productRows;
-      return this.productRows.filter((r) => r.categoryName === category);
+      return this.productRows.filter(r => r.categoryName === category);
     },
     filteredCustomerRows() {
       const { customerId } = this.customerQuery;
       if (!customerId) return this.customerRows;
-      return this.customerRows.filter((r) => r.customerId === customerId);
+      return this.customerRows.filter(r => r.customerId === customerId);
     }
   },
   methods: {
     handleQuery() {
-      this.$message.success('已按时间筛选刷新（示例）');
+      this.$message.success("已按时间筛选刷新（示例）");
     },
     resetQuery() {
       this.queryParams.dateRange = [];
-      this.$message.success('已重置（示例）');
+      this.$message.success("已重置（示例）");
     },
     tableRowClassName({ rowIndex }) {
-      return rowIndex % 2 === 1 ? 'row-even' : '';
+      return rowIndex % 2 === 1 ? "row-even" : "";
     },
     formatMoney(val, isMoney) {
       if (!isMoney) return val ?? 0;
       const num = Number(val || 0);
-      return num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return num.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
     }
   }
 };
@@ -206,20 +352,33 @@ export default {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  height: 80px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0 22px;
 }
 
 .page-title {
   font-size: 16px;
   font-weight: 600;
-  color: #303133;
+  color: #555555;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 
-  .title-tip {
-    color: #c0c4cc;
+  .title-icon {
+    width: 21px;
+    height: 21px;
+    background: #d2d2d2;
+    border-radius: 50%;
     cursor: pointer;
-    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    i {
+      color: #fff;
+      font-size: 12px;
+    }
   }
 }
 
@@ -245,32 +404,35 @@ export default {
 
 .stat-cards {
   margin-top: 16px;
+  height: 195px;
+  background: #fff;
+  border-radius: 6px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 16px;
+  gap: 21px;
+  padding: 32px;
 }
 
 .stat-card {
-  background: #fff;
+  background: #F7F8FA;
   border-radius: 8px;
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.06);
-  padding: 18px 18px 14px;
-  min-height: 78px;
+  padding-left: 36px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: start;
 
   .stat-value {
-    color: #f56c6c;
-    font-size: 20px;
+    color: #FF3131;
+    font-size: 24px;
     font-weight: 600;
-    line-height: 26px;
+    line-height: 34px;
   }
 
   .stat-label {
-    margin-top: 6px;
-    color: #909399;
-    font-size: 12px;
+    color: #7D7D7D;
+    font-size: 14px;
+    line-height: 19px;
   }
 }
 
@@ -286,7 +448,7 @@ export default {
 }
 
 .panel-head {
-  padding: 14px 16px;
+  padding: 18px 26px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -315,7 +477,7 @@ export default {
 }
 
 .panel-body {
-  padding: 0 12px 14px;
+  padding: 0 26px 14px;
 }
 
 ::v-deep .el-table {
