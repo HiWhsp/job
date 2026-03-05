@@ -980,7 +980,7 @@ export default {
           if (this.$store && this.$store.commit) {
             this.$store.commit("set_vuex_cart_number", totalCount);
           }
-          alertSucc("已加入购物车");
+          alertSucc("Added to cart");
         }
       });
     }

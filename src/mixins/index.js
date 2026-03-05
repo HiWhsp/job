@@ -79,7 +79,7 @@ export default {
     mix_get_login_status() {
       let loginStatus = true;
       if (!this.vuex_is_login) {
-        alertErr("请您先登录");
+        alertErr("Please log in first");
         setTimeout(() => {
           this.toRoute("/login");
         }, 1000);
@@ -207,7 +207,7 @@ export default {
 
     checkLogin() {
       if (!this.vuex_is_login) {
-        alertErr("请您先登录");
+        alertErr("Please log in first");
         this.$router.push("/login");
         return false;
       }

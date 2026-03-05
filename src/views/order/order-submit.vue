@@ -573,10 +573,10 @@
       :close-on-click-modal="false"
       :append-to-body="true"
     >
-      <span>确认支付当前订单？</span>
+      <span>Confirm payment for the current order?</span>
       <span slot="footer" class="dialog-footer">
-        <button class="btn-ripple btn-cancel" @click="confirm_tip = false">取 消</button>
-        <button class="btn-ripple btn-confirm" @click="do_confirm_submit()">确认支付</button>
+        <button class="btn-ripple btn-cancel" @click="confirm_tip = false">Cancel</button>
+        <button class="btn-ripple btn-confirm" @click="do_confirm_submit()">Confirm payment</button>
       </span>
     </el-dialog>
 
@@ -591,10 +591,10 @@
       :append-to-body="true"
       center
     >
-      <span>支付方式</span>
+      <span>Payment method</span>
       <span slot="footer" class="dialog-footer">
-        <button class="btn-ripple btn-confirm" @click="pay_use_weixin()">微信</button>
-        <button class="btn-ripple btn-confirm" @click="pay_use_zhifubao()">支付宝</button>
+        <button class="btn-ripple btn-confirm" @click="pay_use_weixin()">WeChat</button>
+        <button class="btn-ripple btn-confirm" @click="pay_use_zhifubao()">Alipay</button>
       </span>
     </el-dialog>
   </div>
@@ -1233,7 +1233,7 @@ export default {
           });
           this.address_list = data;
 
-          let obj = data.find(v => v.if_default) || {};
+          let obj = data.find(v => v.moren) || {};
           this.address_select = obj || {};
         }
       });

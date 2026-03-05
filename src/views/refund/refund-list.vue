@@ -32,31 +32,30 @@
                 </div>
                 <div class="product-box">
                   <div class="product-list">
-                    <div class="product-item flex" v-for="(product_item, product_index) in order.products"
-                      :key="product_index">
+                    <div class="product-item flex">
                       <div class="box-pic">
                         <div class="img-box">
-                          <img :src="product_item.image" alt />
+                          <img :src="order.products.image" alt />
                         </div>
                       </div>
                       <div class="box-title">
-                        <div class="title ellipsis-2">{{ product_item.title }}</div>
-                        <div class="sku">{{ product_item.keyVals }}</div>
+                        <div class="title ellipsis-2">{{ order.products.title }}</div>
+                        <div class="sku">{{ order.products.keyVals }}</div>
                       </div>
                       <div class="box-price">
-                        <div class="price">{{ vuex_huobi }}{{ product_item.priceSale }}<span class="unit">/pack</span>
+                        <div class="price">{{ vuex_huobi }}{{ order.products.priceSale }}<span class="unit">/pack</span>
                         </div>
                       </div>
                       <div class="box-num">
-                        <div class="num">x{{ product_item.num }}</div>
+                        <div class="num">x{{ order.products.num }}</div>
                       </div>
                       <div class="box-xiaoji">
                         <div class="price">
-                          {{ vuex_huobi }}{{ (product_item.priceSale * product_item.num).toFixed(2) }}
+                          {{ vuex_huobi }}{{ (order.products.priceSale * order.products.num).toFixed(2) }}
                         </div>
                       </div>
                       <div class="box-action">
-                        <span class="refund-link" @click="to_refund_type(order, product_item)">Return/Refund</span>
+                        <span class="refund-link" @click="to_refund_type(order)">Return/Refund</span>
                       </div>
                     </div>
                   </div>
@@ -64,7 +63,7 @@
               </div>
             </div>
 
-            <div class="pagination-box" style="margin-top: 40px; text-align: center;">
+            <div class="pagination-box" style="margin-top: 40px; text-align: center;" v-if="allow_refund_count > 0">
               <el-pagination @current-change="on_current_change_allow" :current-page.sync="allow_pagination.page"
                 :page-size="allow_pagination.pageNum" background layout="prev, pager, next"
                 :total="allow_refund_count"></el-pagination>
@@ -121,12 +120,12 @@
             </div>
           </div>
 
+          <el-empty v-if="!refund_service_count" description="No data found..."></el-empty>
           <div class="pagination-box" style="margin-top: 40px; text-align: center;">
             <el-pagination @current-change="on_current_change_service" :current-page.sync="service_pagination.page"
               :page-size="service_pagination.pageNum" background layout="prev, pager, next"
-              :total="refund_service_count"></el-pagination>
+              :total="refund_service_count" v-if="refund_service_count > 0"></el-pagination>
           </div>
-          <el-empty v-if="!refund_service_count" description="No data found..."></el-empty>
         </div>
       </div>
 
@@ -216,9 +215,8 @@ export default {
         url: '/service.php',
         method: 'get',
         data: {
-          action: 'orders_lists',
-          scene: 5,
-          ...this.pagination,
+          action: 'refund_afterSaleList',
+          ...this.allow_pagination,
         },
       }).then((res) => {
         if (res.code == 200) {
@@ -255,12 +253,12 @@ export default {
       this.setView()
     },
 
-    to_refund_type(item, product_item) {
+    to_refund_type(item) {
       this.mix_toRoute({
         path: '/refund-type',
         query: {
-          orderId: item.id,
-          inventoryId: product_item.id,
+          orderId: item.orderId,
+          inventoryId: item.inventoryId,
         }
       })
     },

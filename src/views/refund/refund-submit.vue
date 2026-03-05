@@ -25,13 +25,13 @@
             </div>
           </div>
 
-          <div class="input-box" v-if="type == 1 || type == 2">
+          <div class="input-box" v-if="type == 1 || type == 2" style="align-items: flex-start;">
             <div class="label">
               Refund amount :
             </div>
             <div class="action">
               <el-input placeholder="Please enter the refund amount" v-model="refund_money" />
-              <!-- <span class="desc">Up to US${{ max_refund_money }}, including shipping fee of US$0.00</span> -->
+              <span class="desc">Up to US${{ max_refund_money }}, including shipping fee of US${{ order.payInfo.yunfei || 0 }}</span>
             </div>
           </div>
 
@@ -588,6 +588,7 @@ export default {
       }
 
       .desc {
+        display: inline-block;
         margin-top: 10px;
         font-family: Poppins, Poppins;
         font-weight: 400;

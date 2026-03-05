@@ -42,7 +42,7 @@
               </div>
               <div class="item">
                 <div class="text">Refund Amount：</div>
-                <div class="val">￥{{ info.refundPrice }}</div>
+                <div class="val">{{ vuex_huobi }}{{ info.refundPrice }}</div>
               </div>
               <div class="item">
                 <div class="text">Application Time：</div>
@@ -84,11 +84,11 @@
         <div class="tuihuo-ctx" v-if="is_allow_buyer_submit_wuliu || is_finish_buyer_wuliu">
           <div class="text-info">
             <div class="item">
-              <div class="text">退货方式：</div>
-              <div class="val">自行寄回</div>
+              <div class="text">Return method:</div>
+              <div class="val">Self return</div>
             </div>
             <div class="item">
-              <div class="text">商品寄回地址：</div>
+              <div class="text">Return address:</div>
               <div class="val">
                 <div class="name-info">
                   {{ shop_info.comTitle }}
@@ -102,15 +102,15 @@
 
             <div class="buyer-wuliu-info" v-if="is_finish_buyer_wuliu">
               <div class="item">
-                <div class="text">快递公司：</div>
+                <div class="text">Express company:</div>
                 <div class="val">{{ kuaidiJson.company }}</div>
               </div>
               <div class="item">
-                <div class="text">快递单号：</div>
+                <div class="text">Tracking number:</div>
                 <div class="val">{{ kuaidiJson.orderId }}</div>
               </div>
               <div class="item">
-                <div class="text">邮寄时间：</div>
+                <div class="text">Shipment time:</div>
                 <div class="val">{{ kuaidiJson.express_time }}</div>
               </div>
             </div>
@@ -131,11 +131,11 @@
 
 
     <!-- 填写物流 -->
-    <refund_add_express_modal data-title="买家邮寄商品物流" ref="refund_add_express_modal" @confirm="do_confirm_add_express" />
+    <refund_add_express_modal data-title="Buyer shipping logistics" ref="refund_add_express_modal" @confirm="do_confirm_add_express" />
     <!-- 取消售后 -->
     <refund_cancel_modal ref="refund_cancel_modal" @confirm="setView" />
     <!-- 售后 确认收货 -->
-    <refund_receive_modal data-title="换货-买家确认收货" ref="refund_receive_modal" @confirm="setView" />
+    <refund_receive_modal data-title="Exchange - Buyer confirm receipt" ref="refund_receive_modal" @confirm="setView" />
 
   </div>
 </template>
@@ -167,28 +167,28 @@ export default {
       info: {},//售后信息
       productInfo: {},//产品信息
       type_1_status_list: [
-        { value: 1, title: '等待审核', desc: '等待平台确认退款' },
-        { value: 3, title: '审核通过', desc: '处理中，等待平台退款' },
-        { value: 6, title: '退款成功', desc: '' },
-        { value: -1, title: '已驳回', desc: '售后申请已经被驳回' },
+        { value: 1, title: 'Pending review', desc: 'Waiting for platform to confirm refund' },
+        { value: 3, title: 'Approved', desc: 'Processing, waiting for platform refund' },
+        { value: 6, title: 'Refund success', desc: '' },
+        { value: -1, title: 'Rejected', desc: 'After-sale application has been rejected' },
       ],
       type_2_status_list: [
-        { value: 1, title: '等待审核', desc: '等待平台确认提货退款' },
-        { value: 2, ifExpress: 1, title: '待买家发货', desc: '请按照商家地址将产品寄回' },
-        { value: 2, ifExpress: 0, title: '退货待收货', desc: '待卖家确认收货 7天后自动收货' },
-        { value: 3, title: '审核通过', desc: '处理中，等待平台退款' },
-        { value: 6, title: '退货退款完成', desc: '' },
-        { value: -1, title: '已驳回', desc: '售后申请已经被驳回' },
+        { value: 1, title: 'Pending review', desc: 'Waiting for platform to confirm return and refund' },
+        { value: 2, ifExpress: 1, title: 'Waiting for buyer to ship', desc: 'Please return the product to the merchant address' },
+        { value: 2, ifExpress: 0, title: 'Waiting for seller to receive', desc: 'Waiting for seller to confirm receipt, auto-receive in 7 days' },
+        { value: 3, title: 'Approved', desc: 'Processing, waiting for platform refund' },
+        { value: 6, title: 'Return and refund completed', desc: '' },
+        { value: -1, title: 'Rejected', desc: 'After-sale application has been rejected' },
       ],
       type_3_status_list: [
-        { value: 1, title: '等待审核', desc: '等待平台确认提货退款' },
-        { value: 2, ifExpress: 1, title: '待买家发货', desc: '请按照商家地址将产品寄回' },
-        { value: 2, ifExpress: 0, title: '退货待收货', desc: '待卖家确认收货 7天后自动收货' },
+        { value: 1, title: 'Pending review', desc: 'Waiting for platform to confirm return and refund' },
+        { value: 2, ifExpress: 1, title: 'Waiting for buyer to ship', desc: 'Please return the product to the merchant address' },
+        { value: 2, ifExpress: 0, title: 'Waiting for seller to receive', desc: 'Waiting for seller to confirm receipt, auto-receive in 7 days' },
         // { value: 3, title: '审核通过', desc: '处理中，等待平台退款' },
-        { value: 4, title: '换货待发货', desc: '处理中，等待平台发货' },
-        { value: 5, title: '换货待买家收货', desc: '待买家确认收货' },
-        { value: 6, title: '换货完成', desc: '' },
-        { value: -1, title: '已驳回', desc: '售后申请已经被驳回' },
+        { value: 4, title: 'Exchange pending shipment', desc: 'Processing, waiting for platform to ship' },
+        { value: 5, title: 'Exchange waiting for buyer receipt', desc: 'Waiting for buyer to confirm receipt' },
+        { value: 6, title: 'Exchange completed', desc: '' },
+        { value: -1, title: 'Rejected', desc: 'After-sale application has been rejected' },
       ],
       status_info: {},
       shop_info: {},
@@ -259,8 +259,8 @@ export default {
       let status_info = this.refundObj.status_info;
       let refund_type = this.refundObj.type;
       let refund_type_map = {
-        2: "退货退款",
-        3: "换货",
+        2: "Return & Refund",
+        3: "Exchange",
       };
       let refund_type_text = refund_type_map[refund_type];
 
@@ -276,7 +276,7 @@ export default {
       let step_3_status = [2];
       let step_4_status = [];
 
-      if (refund_type_text == "换货") {
+      if (refund_type_text == "Exchange") {
         let refund_status_text = {
           已驳回: "-1",
           已取消: "-1",
@@ -315,27 +315,27 @@ export default {
 
         if (status_info == "已取消") {
           arr = [
-            { title: `① 等待卖家审核${refund_type_text}申请`, active: active_1 },
-            { title: "② 申请通过", active: active_2 },
-            { title: "③ 处理中", active: active_3 },
-            { title: "③ 已取消", active: active_4 },
+            { title: `① Waiting for seller to review ${refund_type_text} application`, active: active_1 },
+            { title: "② Application approved", active: active_2 },
+            { title: "③ Processing", active: active_3 },
+            { title: "③ Cancelled", active: active_4 },
           ];
         } else if (status_info == "已驳回") {
           //有bug
           arr = [
-            { title: `① 等待卖家审核${refund_type_text}申请`, active: 1 },
-            { title: "② 已驳回", active: 1 },
+            { title: `① Waiting for seller to review ${refund_type_text} application`, active: 1 },
+            { title: "② Rejected", active: 1 },
           ];
         } else {
           arr = [
-            { title: `① 等待卖家审核${refund_type_text}申请`, active: active_1 },
-            { title: "② 申请通过", active: active_2 },
-            { title: "③ 处理中", active: active_3 },
-            { title: "③ 已换货", active: active_4 },
-            { title: "④ 换货成功", active: active_5 },
+            { title: `① Waiting for seller to review ${refund_type_text} application`, active: active_1 },
+            { title: "② Application approved", active: active_2 },
+            { title: "③ Processing", active: active_3 },
+            { title: "③ Exchanged", active: active_4 },
+            { title: "④ Exchange success", active: active_5 },
           ];
         }
-      } else if (refund_type_text == "退货退款") {
+      } else if (refund_type_text == "Return & Refund") {
         let refund_status_text = {
           已驳回: "-1",
           已取消: "-1",
@@ -368,23 +368,23 @@ export default {
 
         if (status_info == "已取消") {
           arr = [
-            { title: `① 等待卖家审核${refund_type_text}申请`, active: active_1 },
-            { title: "② 申请通过", active: active_2 },
-            { title: "③ 处理中", active: active_3 },
-            { title: "③ 已取消", active: active_4 },
+            { title: `① Waiting for seller to review ${refund_type_text} application`, active: active_1 },
+            { title: "② Application approved", active: active_2 },
+            { title: "③ Processing", active: active_3 },
+            { title: "③ Cancelled", active: active_4 },
           ];
         } else if (status_info == "已驳回") {
           //有bug
           arr = [
-            { title: `① 等待卖家审核${refund_type_text}申请`, active: 1 },
-            { title: "② 已驳回", active: 1 },
+            { title: `① Waiting for seller to review ${refund_type_text} application`, active: 1 },
+            { title: "② Rejected", active: 1 },
           ];
         } else {
           arr = [
-            { title: `① 等待卖家审核${refund_type_text}申请`, active: active_1 },
-            { title: "② 申请通过", active: active_2 },
-            { title: "③ 处理中", active: active_3 },
-            { title: "③ 已退款", active: active_4 },
+            { title: `① Waiting for seller to review ${refund_type_text} application`, active: active_1 },
+            { title: "② Application approved", active: active_2 },
+            { title: "③ Processing", active: active_3 },
+            { title: "③ Refunded", active: active_4 },
           ];
         }
       }
@@ -406,7 +406,7 @@ export default {
 
     orderMoney() {
       let total = 0;
-      if (this.currency == "积分") {
+      if (this.currency == "Points") {
         total = this.refundObj.productInfo.jifen;
       } else {
         if (this.refundObj && this.refundObj.productInfo) {
@@ -429,34 +429,34 @@ export default {
       let { type, status, status_info, productInfo, user_send } = data;
 
       if (productInfo && productInfo.jifen) {
-        this.currency = "积分";
+        this.currency = "Points";
       }
 
       //退换货类型(2退款  3退货退款)
       // refund_type  退换货类型(1-退款   2-退货退款  3-换货)
       if (type == 1) {
-        this.typeText = "退款";
+        this.typeText = "Refund";
 
         let statusMap = {
-          "-1": "已驳回",
-          1: "待审核",
-          3: "待退款",
-          6: "退款完成",
+          "-1": "Rejected",
+          1: "Pending review",
+          3: "Pending refund",
+          6: "Refund completed",
         };
 
         this.statusText = statusMap[status];
       } else if (type == 2) {
-        this.typeText = "退货退款";
+        this.typeText = "Return & Refund";
         //状态控制
         let statusMap = {
-          "-1": "已驳回",
-          1: "待审核",
-          2: "待买家发货", //2: "退货待收货"
-          3: "待退款",
-          6: "退款完成",
+          "-1": "Rejected",
+          1: "Pending review",
+          2: "Waiting for buyer to ship", //2: "退货待收货"
+          3: "Pending refund",
+          6: "Refund completed",
         };
         if (status_info == "退货待收货") {
-          statusMap["2"] = "退货待收货";
+          statusMap["2"] = "Waiting for seller to receive";
         }
 
         //顶部进度控制
@@ -475,7 +475,7 @@ export default {
         this.statusText = statusMap[status];
         this.progress_index = statusMapForStep[status];
       } else if (type == 3) {
-        this.typeText = "换货";
+        this.typeText = "Exchange";
         let statusMap = {
           已驳回: "-1",
           待审核: "1",
@@ -615,7 +615,7 @@ export default {
           }
 
           if (status == 6) {//退款完成
-            this.status_info.desc = `退款成功￥${this.info.refundPrice}`
+            this.status_info.desc = `Refund success ¥${this.info.refundPrice}`
           }
 
 
@@ -838,7 +838,7 @@ export default {
       border-radius: 10px;
 
       &.btn-bg {
-        background: EC6A2B;
+        background: #EC6A2B;
         color: #FFF;
       }
     }

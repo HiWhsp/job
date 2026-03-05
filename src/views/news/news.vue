@@ -5,7 +5,7 @@
         <div class="bread-box">
           <router-link to="/">Home</router-link>
           <span class="arrow">/</span>
-          <a class="link">{{ tabList.find(item => item.id == activeTabName).title || '--' }}</a>
+          <a class="link">{{ activeTabName }}</a>
         </div>
       </div>
     </div>
@@ -15,7 +15,7 @@
           <div class="ctx-left">
             <div
               class="news-title"
-            >{{ tabList.find(item => item.id == activeTabName).title || '--' }}</div>
+            >{{ activeTabName }}</div>
             <div class="news-wrap" v-if="count">
               <div class="news-list">
                 <div v-for="(item, index) in list_news" :key="index" class="news-item">
@@ -72,10 +72,10 @@
               <!-- 服务卡片1 -->
               <div
                 class="recommend-card service-card"
-                v-for="item in tabList"
+                v-for="(item, index) in otherCategories_list"
                 :key="item.id"
-                :class="{ 'active': item.id == activeTabName }"
-                @click="handleTabClick(item)"
+                :class="{ 'active': index == 0 }"
+                @click="handleTabClick(item, index)"
               >
                 <div class="card-content">
                   <h3 class="card-title">{{ item.title }}</h3>
@@ -86,7 +86,7 @@
                     <span>MORE</span>
                     <!-- <i class="el-icon-right"></i> -->
                   </div>
-                  <div class="icon-placeholder" v-if="item.id != activeTabName">
+                  <div class="icon-placeholder" v-if="index != 0">
                     <el-image :src="item.thumb" fit="cover"></el-image>
                   </div>
                 </div>
@@ -116,7 +116,7 @@ export default {
         pageNum: 10
       },
       count: 0, //总数
-      activeTab: null, //样式展示 0无图 1有图
+      activeTab: null, 
       activeTabName: "0", // el-tabs需要的字符串类型
 
       list_news: [], //新闻列表
@@ -126,39 +126,14 @@ export default {
   },
   computed: {
     ...mapState(["vuex_news_cates"]),
-    // 获取相邻的两个分类（不包含当前分类）
-    otherCategories() {
-      console.log("vuex_news_cates:", this.vuex_news_cates);
-      console.log("this.cid:", this.cid, "type:", typeof this.cid);
-
-      if (!this.vuex_news_cates || !this.cid) {
-        console.log("数据不完整，返回空数组");
-        return [];
-      }
-      const currentIndex = [];
-      this.vuex_news_cates.forEach(e => {
-        if (e.id != this.$route.query.id) {
-          currentIndex.push({
-            ...e,
-            new_list: []
-          });
-        }
-      });
-      currentIndex.forEach((e, i) => {
-        this.getCategoryListData(e.id, i);
-      });
-      this.otherCategories_list = currentIndex;
-      return currentIndex;
-    }
   },
   watch: {
     $route(to, from) {
       this.get_tab_list();
     }
   },
-  created() {
+  mounted() {
     // this.query_suggest();
-
     this.get_tab_list();
   },
 
@@ -179,16 +154,18 @@ export default {
         method: "get",
         data: {
           action: "news_channel",
-          channelId: this.$route.query.id || 65
+          channelId: this.$route.query.id || 66
         }
       }).then(res => {
         if (res.code == 200) {
-          console.log("获取分类", res.data);
           this.tab = res.data;
           this.tabList = res.data; // 将API数据赋值给tabList
           if (res.data.length) {
-            this.activeTabName = res.data[0].id + ""; // 同步activeTabName
+            this.activeTab = res.data[0].id + ""; // 同步activeTabName
+            this.activeTabName = res.data[0].title + "";
           }
+          this.otherCategories_list = [res.data[1]];
+          this.otherCategories_list.push(...this.vuex_news_cates.filter(item => item.id != this.$route.query.id));
           this.get_lsit();
         }
       });
@@ -208,7 +185,7 @@ export default {
         method: "get",
         data: {
           action: "news_lists",
-          channelId: this.activeTabName, // 使用当前选中tab的id
+          channelId: this.activeTab, // 使用当前选中tab的id
           keyword: "",
           ...this.pagination,
           isIndex: 0, //类型：0-全部 1-推荐
@@ -226,38 +203,24 @@ export default {
     },
 
     // el-tabs点击事件处理
-    handleTabClick(tab) {
-      console.log("tab", tab);
-
-      this.activeTabName = tab.id + "";
+    handleTabClick(tab, index) {
+      this.activeTab = tab.id + "";
+      this.activeTabName = tab.title + "";
       this.pagination.page = 1; // 重置页码
-      console.log("activeTabName", this.activeTabName);
+      if (index == 0) {
+        const list = this.tabList.filter(item => item.id != this.activeTab);
+        this.otherCategories_list = [...list];
+        this.otherCategories_list.push(...this.vuex_news_cates.filter(item => item.id != this.$route.query.id));
+      } else {
+        this.$router.push({
+          path: "/news",
+          query: {
+            id: tab.id
+          }
+        });
+      }
       this.get_lsit(); // 重新获取数据
     },
-    getCategoryListData(id, index) {
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "news_lists",
-          channelId: id, // 使用当前选中tab的id
-          keyword: "",
-          pageNum: 3,
-          isIndex: 0, //类型：0-全部 1-推荐
-          contentLen: "100", //
-          orderType: 0 //排序情况：0-自然排序 1-最新
-        }
-      }).then(res => {
-        if (res.code == 200) {
-          let data = res.data;
-
-          // this.list_news = data.list;
-          // this.count = data.count;
-          console.log("otherCategories_list", this.otherCategories_list);
-          this.otherCategories_list[index].new_list = data.list;
-        }
-      });
-    }
   }
 };
 </script>
