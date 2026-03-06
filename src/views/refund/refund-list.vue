@@ -254,6 +254,7 @@ export default {
     },
 
     to_refund_type(item) {
+      localStorage.setItem('actualRefundAmount', item.products.actualRefundAmount);
       this.mix_toRoute({
         path: '/refund-type',
         query: {

@@ -523,6 +523,7 @@ export default {
         .market-price {
           color: #5e5e5e;
           font-size: 20px;
+          text-decoration: line-through;
         }
       }
 
@@ -538,7 +539,7 @@ export default {
           overflow: hidden;
           text-overflow: ellipsis;
           font-family: MicrosoftYaHei, MicrosoftYaHei;
-          font-weight: normal;
+          font-weight: bold;
           font-size: 20px;
           color: #1e262e;
           line-height: 26px;

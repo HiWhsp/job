@@ -55,7 +55,7 @@
             <div class="form-title">
               <div class="text">Overall review:</div>
               <div class="rate">
-                <el-rate v-model="params.star"></el-rate>
+                <el-rate v-model="product_item.reviewStar"></el-rate>
               </div>
             </div>
 
@@ -63,7 +63,7 @@
               <el-input
                 type="textarea"
                 placeholder="Share shopping tips..."
-                v-model="params.content"
+                v-model="product_item.reviewContent"
                 maxlength="500"
                 :autosize="{ minRows: 6 }"
                 show-word-limit
@@ -80,7 +80,8 @@
                 :action="UPLOAD_ACTION"
                 :limit="upload_limit_number"
                 :data="mix_upload_data"
-                :on-success="upload_on_success"
+                :on-success="(res, file, fileList) => upload_on_success(res, file, fileList, product_item)"
+                :on-remove="(file, fileList) => upload_on_remove(file, fileList, product_item)"
                 :before-upload="upload_before_upload"
               >
                 <i class="el-icon-plus"></i>
@@ -113,31 +114,21 @@ export default {
       //
       params: {
         id: this.$route.query.orderId || "", //订单id
-        inventoryId: this.$route.query.inventoryId || "", //商品规格
-        star: "",
-        star1: "",
-        star2: "",
-        uploadedfile1: "",
-        content: ""
+        inventoryId: this.$route.query.inventoryId || "" //商品规格
       },
       //
       products: [],
       info: {},
-      upload_pic_list: [], //评价图片
       upload_limit_number: 6,
       //
       dialogVisible: false,
       dialogImageUrl: "",
-      submitSuccessVisible: false
+      submitSuccessVisible: false,
+      submitLoading: false
     };
   },
   computed: {
     ...mapState([""])
-  },
-  watch: {
-    upload_pic_list(arr) {
-      this.params.uploadedfile1 = this.upload_pic_list.join("|");
-    }
   },
   created() {
     this.init_params();
@@ -156,40 +147,71 @@ export default {
       }).then(res => {
         let { code, data, msg } = res;
         if (code == 200) {
-          this.products = data.products.filter(
-            v => v.id == this.params.inventoryId
-          );
+          // this.products = data.products.filter(
+          //   v => v.id == this.params.inventoryId
+          // );
+          this.products = (data.products || []).map(item => ({
+            ...item,
+            reviewStar: "",
+            reviewContent: "",
+            upload_pic_list: []
+          }));
           this.info = data;
         }
       });
     },
 
     //提交评价
-    submit_pingjia() {
-      let { content, star } = this.params;
-      if (!star) {
-        alertErr("请选择总体评分");
-        return;
-      }
-      if (!content) {
-        alertErr("请输入评价内容");
+    async submit_pingjia() {
+      if (this.submitLoading) return;
+
+      if (!this.products.length) {
+        alertErr("No products to review");
         return;
       }
 
-      // let inventoryId = this.info.products.map((v) => v.id).join();
-      this.$api({
-        url: "/service.php",
-        method: "get",
-        data: {
-          action: "orders_comment",
-          ...this.params
+      for (let i = 0; i < this.products.length; i++) {
+        const productItem = this.products[i];
+        const productName = productItem.title || `The ${i + 1}th product`;
+        if (!productItem.reviewStar) {
+          alertErr(`Please select the overall rating for ${productName}`);
+          return;
         }
-      }).then(res => {
-        let { code, msg, data } = res;
-        if (code == 200) {
-          this.submitSuccessVisible = true;
+        if (!String(productItem.reviewContent || "").trim()) {
+          alertErr(`Please enter the evaluation content for ${productName}`);
+          return;
         }
-      });
+      }
+
+      this.submitLoading = true;
+
+      try {
+        for (let i = 0; i < this.products.length; i++) {
+          const productItem = this.products[i];
+          const res = await this.$api({
+            url: "/service.php",
+            method: "get",
+            data: {
+              action: "orders_comment",
+              id: this.params.id,
+              inventoryId: productItem.id,
+              star: productItem.reviewStar,
+              content: String(productItem.reviewContent || "").trim(),
+              uploadedfile1: (productItem.upload_pic_list || []).join("|")
+            }
+          });
+
+          let { code, msg } = res || {};
+          if (code != 200) {
+            alertErr(msg || "Failed to submit evaluation, please try again later");
+            return;
+          }
+        }
+
+        this.submitSuccessVisible = true;
+      } finally {
+        this.submitLoading = false;
+      }
     },
 
     go_home() {
@@ -204,14 +226,27 @@ export default {
     },
 
     //上传相关
-    upload_on_success(res, file) {
+    upload_on_success(res, file, fileList, productItem) {
       //console.log("上传结果", res);
       let { code, data, msg } = res;
-      alert(res);
       if (code == 200) {
-        // this.form.image = res.data;
-        this.upload_pic_list.push(res.data);
+        if (!Array.isArray(productItem.upload_pic_list)) {
+          this.$set(productItem, "upload_pic_list", []);
+        }
+        productItem.upload_pic_list.push(data);
+      } else {
+        alertErr(msg || "Upload failed, please try again");
       }
+    },
+    upload_on_remove(file, fileList, productItem) {
+      if (!productItem) return;
+      const newPics = (fileList || [])
+        .map(item => {
+          if (item && item.response && item.response.data) return item.response.data;
+          return "";
+        })
+        .filter(Boolean);
+      this.$set(productItem, "upload_pic_list", newPics);
     },
     upload_before_upload(file) {
       const isLt2M = file.size / 1024 / 1024 < 20; //文件大小

@@ -195,15 +195,15 @@ export default {
     },
     handle_tx_end() {
       if (this.tx_price == 0) {
-        this.$message.error("提现金额不能为0");
+        this.$message.error("Withdrawal amount cannot be 0");
         return;
       }
       if (!this.realName) {
-        this.$message.error("请输入姓名");
+        this.$message.error("Please enter your name");
         return;
       }
       if (!this.identityId) {
-        this.$message.error("请输入身份证号");
+        this.$message.error("Please enter your ID number");
         return;
       }
 
@@ -220,7 +220,7 @@ export default {
       }).then(res => {
         if (res.code == 200) {
           this.$message({
-            message: "申请成功",
+            message: "Application successful",
             type: "success"
           });
           this.sqtx_show = false;

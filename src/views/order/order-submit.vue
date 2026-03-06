@@ -21,78 +21,49 @@
                   <span class="required">*</span>
                   First Name:
                 </label>
-                <input
-                  type="text"
-                  class="form-input"
-                  placeholder="Please enter first name"
-                  v-model="addressForm.firstName"
-                />
+                <input type="text" class="form-input" placeholder="Please enter first name"
+                  v-model="addressForm.firstName" />
               </div>
               <div class="form-group">
                 <label class="form-label">
                   <span class="required">*</span>
                   Last Name:
                 </label>
-                <input
-                  type="text"
-                  class="form-input"
-                  placeholder="Please enter Last name"
-                  v-model="addressForm.lastName"
-                />
+                <input type="text" class="form-input" placeholder="Please enter Last name"
+                  v-model="addressForm.lastName" />
               </div>
               <div class="form-group">
                 <label class="form-label">
                   <span class="required">*</span>
                   Phone Number:
                 </label>
-                <input
-                  type="text"
-                  class="form-input"
-                  placeholder="Please enter Phone Number"
-                  v-model="addressForm.phone"
-                />
+                <input type="text" class="form-input" placeholder="Please enter Phone Number"
+                  v-model="addressForm.phone" />
               </div>
               <div class="form-group">
                 <label class="form-label">
                   <span class="required">*</span>
                   Email:
                 </label>
-                <input
-                  type="email"
-                  class="form-input"
-                  placeholder="Please enter an email address"
-                  v-model="addressForm.email"
-                />
+                <input type="email" class="form-input" placeholder="Please enter an email address"
+                  v-model="addressForm.email" />
               </div>
               <div class="form-group">
                 <label class="form-label">
                   <span class="required">*</span>
                   Detailed Address:
                 </label>
-                <input
-                  type="text"
-                  class="form-input"
-                  placeholder="Please enter"
-                  v-model="addressForm.address"
-                />
+                <input type="text" class="form-input" placeholder="Please enter" v-model="addressForm.address" />
               </div>
               <div class="form-group">
                 <label class="form-label">
                   <span class="required">*</span>
                   Country:
                 </label>
-                <el-select
-                  filterable
-                  v-model="addressForm.countryId"
-                  placeholder="Please select"
-                  @change="changeCountry"
-                >
-                  <el-option
-                    v-for="item in countryList"
-                    :key="item.id"
-                    :label="item.title"
-                    :value="item.id"
-                  ></el-option>
+                <el-select filterable v-model="addressForm.countryId" placeholder="Please select"
+                  @change="changeCountry">
+                  <el-option v-for="item in countryList" :key="item.id" :label="item.title"
+                    :value="item.id"></el-option>
                 </el-select>
               </div>
               <div class="form-group">
@@ -104,18 +75,9 @@
                   <el-input clearable v-model="addressForm.state" placeholder="Please enter"></el-input>
                 </template>
                 <template v-else>
-                  <el-select
-                    filterable
-                    v-model="addressForm.stateId"
-                    placeholder="Please select"
-                    @change="changeProv"
-                  >
-                    <el-option
-                      v-for="item in stateList"
-                      :key="item.id"
-                      :label="item.title"
-                      :value="item.id"
-                    ></el-option>
+                  <el-select filterable v-model="addressForm.stateId" placeholder="Please select" @change="changeProv">
+                    <el-option v-for="item in stateList" :key="item.id" :label="item.title"
+                      :value="item.id"></el-option>
                   </el-select>
                 </template>
               </div>
@@ -128,18 +90,8 @@
                   <el-input clearable v-model="addressForm.city" placeholder="Please enter"></el-input>
                 </template>
                 <template v-else>
-                  <el-select
-                    filterable
-                    v-model="addressForm.cityId"
-                    placeholder="Please select"
-                    @change="changeCity"
-                  >
-                    <el-option
-                      v-for="item in cityList"
-                      :key="item.id"
-                      :label="item.title"
-                      :value="item.id"
-                    ></el-option>
+                  <el-select filterable v-model="addressForm.cityId" placeholder="Please select" @change="changeCity">
+                    <el-option v-for="item in cityList" :key="item.id" :label="item.title" :value="item.id"></el-option>
                   </el-select>
                 </template>
               </div>
@@ -148,12 +100,7 @@
                   <span class="required">*</span>
                   Zip Code:
                 </label>
-                <input
-                  type="text"
-                  class="form-input"
-                  placeholder="Please enter"
-                  v-model="addressForm.zipCode"
-                />
+                <input type="text" class="form-input" placeholder="Please enter" v-model="addressForm.zipCode" />
               </div>
               <div class="form-group toggle-group">
                 <label class="toggle-label">
@@ -168,13 +115,8 @@
             </div>
             <div class="sec-ctx" v-else>
               <div class="address-list" v-if="address_list.length">
-                <div
-                  class="address-item"
-                  v-for="(item, index) in address_list"
-                  :key="index"
-                  :class="{ active: item.id == address_select.id }"
-                  @click="do_toggle_address(item)"
-                >
+                <div class="address-item" v-for="(item, index) in address_list" :key="index"
+                  :class="{ active: item.id == address_select.id }" @click="do_toggle_address(item)">
                   <div class="address-top">
                     <div>
                       <span>Receiver:</span>
@@ -195,10 +137,7 @@
                   </div>
                   <div class="address-bottom">
                     <div class="left">
-                      <span
-                        v-if="item.if_default == 1 || item.moren == 1"
-                        class="moren"
-                      >Default Address</span>
+                      <span v-if="item.if_default == 1 || item.moren == 1" class="moren">Default Address</span>
                     </div>
                   </div>
                   <img src="@img/order/addr-select.png" alt class="marker" />
@@ -250,18 +189,12 @@
                   <input type="radio" name="payment" value="online" checked />
                   <span class="payment-title">Online Payment</span>
                   <div class="payment-logos">
-                    <div
-                      class="payment-logo"
-                      :class="{ active: paymentType === 'online' }"
-                      @click="handle_paypal_click('online')"
-                    >
+                    <div class="payment-logo" :class="{ active: paymentType === 'online' }"
+                      @click="handle_paypal_click('online')">
                       <img src="@img/order/paypal.png" alt />
                     </div>
-                    <div
-                      class="payment-logo"
-                      :class="{ active: paymentType === 'stripe' }"
-                      @click="handle_paypal_click('stripe')"
-                    >
+                    <div class="payment-logo" :class="{ active: paymentType === 'stripe' }"
+                      @click="handle_paypal_click('stripe')">
                       <img src="@img/order/stripe.png" alt />
                     </div>
                   </div>
@@ -335,80 +268,51 @@
             </div>
             <div class="sec-ctx">
               <div class="invoice-toggles">
-                <button
-                  class="toggle-btn"
-                  :class="{ active: fapiao_info.invoiceType == '' }"
-                  @click="do_fapiao_type('')"
-                >Not Required</button>
-                <button
-                  class="toggle-btn"
-                  :class="{ active: fapiao_info.invoiceType == 1 }"
-                  @click="do_fapiao_type(1)"
-                >Receipt</button>
-                <button
-                  class="toggle-btn"
-                  :class="{ active: fapiao_info.invoiceType == 2 }"
-                  @click="do_fapiao_type(2)"
-                >Commercial Invoice</button>
+                <button class="toggle-btn" :class="{ active: fapiao_info.invoiceType == '' }"
+                  @click="do_fapiao_type('')">Not
+                  Required</button>
+                <button class="toggle-btn" :class="{ active: fapiao_info.invoiceType == 1 }"
+                  @click="do_fapiao_type(1)">Receipt</button>
+                <button class="toggle-btn" :class="{ active: fapiao_info.invoiceType == 2 }"
+                  @click="do_fapiao_type(2)">Commercial
+                  Invoice</button>
               </div>
               <div class="invoice-type-toggles" v-if="fapiao_info.invoiceType != ''">
-                <button
-                  class="toggle-btn"
-                  :class="{ active: fapiao_info.titleType == 1 }"
-                  @click="fapiao_info.titleType = 1"
-                >Personal</button>
-                <button
-                  class="toggle-btn"
-                  :class="{ active: fapiao_info.titleType == 2 }"
-                  @click="fapiao_info.titleType = 2"
-                >Company</button>
+                <button class="toggle-btn" :class="{ active: fapiao_info.titleType == 1 }"
+                  @click="fapiao_info.titleType = 1">Personal</button>
+                <button class="toggle-btn" :class="{ active: fapiao_info.titleType == 2 }"
+                  @click="fapiao_info.titleType = 2">Company</button>
               </div>
               <div class="invoice-form" v-if="fapiao_info.invoiceType != ''">
                 <!-- Personal 模式 -->
                 <template v-if="fapiao_info.titleType == 1">
                   <div class="form-group">
                     <label class="form-label">Name:</label>
-                    <input
-                      type="text"
-                      class="form-input"
-                      placeholder="Please enter your name"
-                      v-model="fapiao_info.title"
-                    />
+                    <input type="text" class="form-input" placeholder="Please enter your name"
+                      v-model="fapiao_info.title" />
                   </div>
                 </template>
                 <!-- Company 模式 -->
                 <template v-if="fapiao_info.titleType == 2">
                   <div class="form-group">
                     <label class="form-label">Company Name:</label>
-                    <el-input
-                      clearable
-                      v-model="fapiao_info.title"
-                      placeholder="Please fill in the name of the organization"
-                    ></el-input>
+                    <el-input clearable v-model="fapiao_info.title"
+                      placeholder="Please fill in the name of the organization"></el-input>
                   </div>
                   <div class="form-group">
                     <label class="form-label">Taxpayer Identification Code:</label>
-                    <el-input
-                      clearable
-                      v-model="fapiao_info.shibiema"
-                      placeholder="Please fill in the taxpayer identification code"
-                    ></el-input>
+                    <el-input clearable v-model="fapiao_info.shibiema"
+                      placeholder="Please fill in the taxpayer identification code"></el-input>
                   </div>
                   <div class="form-group">
                     <label class="form-label">Company Registered Address:</label>
-                    <el-input
-                      clearable
-                      v-model="fapiao_info.companyAddress"
-                      placeholder="Please fill in the registered address"
-                    ></el-input>
+                    <el-input clearable v-model="fapiao_info.companyAddress"
+                      placeholder="Please fill in the registered address"></el-input>
                   </div>
                   <div class="form-group">
                     <label class="form-label">Registration Phone Number:</label>
-                    <el-input
-                      clearable
-                      v-model="fapiao_info.companyPhone"
-                      placeholder="Please fill in the registration phone number"
-                    ></el-input>
+                    <el-input clearable v-model="fapiao_info.companyPhone"
+                      placeholder="Please fill in the registration phone number"></el-input>
                   </div>
                 </template>
               </div>
@@ -425,25 +329,14 @@
             </div>
             <div class="sec-ctx">
               <div class="coupon-toggles">
-                <button
-                  class="toggle-btn"
-                  :class="{ active: couponTab === 'coupon' }"
-                  @click="couponTab = 'coupon'"
-                >Coupon</button>
-                <button
-                  class="toggle-btn"
-                  :class="{ active: couponTab === 'promo' }"
-                  @click="couponTab = 'promo'"
-                >Promo Code</button>
+                <button class="toggle-btn" :class="{ active: couponTab === 'coupon' }"
+                  @click="couponTab = 'coupon'">Coupon</button>
+                <button class="toggle-btn" :class="{ active: couponTab === 'promo' }" @click="couponTab = 'promo'">Promo
+                  Code</button>
               </div>
               <div class="coupon-cards" v-if="couponTab === 'coupon'">
-                <div
-                  class="coupon-card-item"
-                  v-for="(item, index) in list_coupon"
-                  :key="index"
-                  :class="{ selected: coupon_select_id == item.id }"
-                  @click="handleCouponSelect(item)"
-                >
+                <div class="coupon-card-item" v-for="(item, index) in list_coupon" :key="index"
+                  :class="{ selected: coupon_select_id == item.id }" @click="handleCouponSelect(item)">
                   <div class="coupon-top">
                     <div class="currency">$</div>
                     <div class="amount">{{ item.jian }}</div>
@@ -459,17 +352,14 @@
               <div class="promo-code-section" v-if="couponTab === 'promo'">
                 <div class="promo-code-label">Please enter the promo code :</div>
                 <div class="promo-code-input-wrapper">
-                  <input
-                    type="text"
-                    class="promo-code-input"
-                    v-model="yh_code"
-                    placeholder="Enter promo code"
-                  />
+                  <input type="text" class="promo-code-input" v-model="yh_code" placeholder="Enter promo code" />
                   <button class="promo-code-confirm-btn" @click="query_yh">CONFIRM</button>
                 </div>
-                <div class="promo-code-discount" v-if="money_yhq > 0 || (coupon_code_info && (coupon_code_info.discount_amount || coupon_code_info.jian))">
+                <div class="promo-code-discount"
+                  v-if="money_yhq > 0 || (coupon_code_info && (coupon_code_info.discount_amount || coupon_code_info.jian))">
                   <span class="discount-label">Discount code offset amount</span>
-                  <span class="discount-amount">{{ vuex_huobi }}{{ money_yhq || (coupon_code_info && (coupon_code_info.discount_amount || coupon_code_info.jian)) || 0 }}</span>
+                  <span class="discount-amount">{{ vuex_huobi }}{{ money_yhq || (coupon_code_info &&
+                    (coupon_code_info.discount_amount || coupon_code_info.jian)) || 0 }}</span>
                 </div>
               </div>
             </div>
@@ -488,9 +378,7 @@
                   </div>
                   <div class="product-info">
                     <div class="product-name">{{ item.title }}</div>
-                    <div
-                      class="product-details"
-                    >{{ item.keyVals || 'Color: green Size: M Style: 100/pack' }}</div>
+                    <div class="product-details">{{ item.keyVals || 'Color: green Size: M Style: 100/pack' }}</div>
                   </div>
                 </div>
 
@@ -500,11 +388,8 @@
                     <button class="qty-btn" @click="decreaseQuantity(item, index)">-</button>
                     <span class="qty-value">{{ item.num }}</span>
                     <button class="qty-btn" @click="increaseQuantity(item, index)">+</button>
-                    <div
-                      class="product-remove"
-                      :class="{ disabled: payment_products.length <= 1 }"
-                      @click="removeProduct(item, index)"
-                    >
+                    <div class="product-remove" :class="{ disabled: payment_products.length <= 1 }"
+                      @click="removeProduct(item, index)">
                       <img src="@img/order/icon-delete.png" alt />
                     </div>
                   </div>
@@ -536,7 +421,7 @@
               </div>
 
               <div class="submit">
-                <button class="btn-ripple btn-confirm" @click="do_confirm_submit()">Check out</button>
+                <button class="btn-ripple btn-confirm" @click="do_submit()">Check out</button>
               </div>
             </div>
           </div>
@@ -564,15 +449,8 @@
     </el-dialog>
 
     <!-- 订单支付提示 -->
-    <el-dialog
-      class="modal-pay-tip"
-      title="订单提醒"
-      :visible.sync="confirm_tip"
-      width="30%"
-      :before-close="handleClose"
-      :close-on-click-modal="false"
-      :append-to-body="true"
-    >
+    <el-dialog class="modal-pay-tip" title="Order Reminder" :visible.sync="confirm_tip" width="30%"
+      :before-close="handleClose" :append-to-body="true" :show-close="false">
       <span>Confirm payment for the current order?</span>
       <span slot="footer" class="dialog-footer">
         <button class="btn-ripple btn-cancel" @click="confirm_tip = false">Cancel</button>
@@ -581,16 +459,8 @@
     </el-dialog>
 
     <!-- 选择支付方式 -->
-    <el-dialog
-      class="modal-pay-tip"
-      :visible.sync="payment_tip"
-      width="30%"
-      :show-close="false"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      :append-to-body="true"
-      center
-    >
+    <el-dialog class="modal-pay-tip" :visible.sync="payment_tip" width="30%" :show-close="false"
+      :close-on-click-modal="false" :close-on-press-escape="false" :append-to-body="true" center>
       <span>Payment method</span>
       <span slot="footer" class="dialog-footer">
         <button class="btn-ripple btn-confirm" @click="pay_use_weixin()">WeChat</button>
@@ -1471,7 +1341,7 @@ export default {
       });
     },
 
-    handleClose(done) {},
+    handleClose(done) { },
 
     // 预支付
     do_create_submit(val) {
@@ -1766,7 +1636,7 @@ export default {
             package: data.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
             signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
             paySign, // 支付签名
-            success: function(res) {
+            success: function (res) {
               that.toPaySuccess();
             },
             fail(err) {
@@ -2190,6 +2060,7 @@ export default {
         justify-content: center;
         font-size: 20px;
         color: #1e262e;
+
         img {
           width: 100%;
           height: 100%;
@@ -2299,6 +2170,7 @@ export default {
         }
       }
     }
+
     .el-input {
       width: 460px;
       height: 56px;
@@ -2423,6 +2295,7 @@ export default {
         margin-left: 500px;
         color: #1f1f1f;
         font-weight: 500;
+
         img {
           width: 31px;
           height: 31px;
@@ -2445,6 +2318,7 @@ export default {
       input[type="radio"] {
         cursor: pointer;
       }
+
       .payment-title {
         font-size: 20px;
         font-weight: bold;
@@ -2462,10 +2336,12 @@ export default {
       height: 54px;
       border: 2px solid transparent;
       border-radius: 6px;
+
       img {
         width: 100%;
         height: 100%;
       }
+
       &.active {
         border: 2px solid #ec6a2b;
       }
@@ -2549,22 +2425,26 @@ export default {
 
       &.selected {
         border-color: #ec6a2b;
+
         .selectd {
           display: block;
         }
       }
+
       // 上方：优惠券价值区域
       .coupon-top {
         height: 93px;
         display: flex;
         align-items: center;
         justify-content: center;
+
         .currency {
           font-size: 30px;
           font-family: Poppins, Poppins;
           font-weight: 600;
           color: #ffffff;
         }
+
         .amount {
           font-size: 40px;
           font-family: Poppins, Poppins;
@@ -2579,6 +2459,7 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+
         .coupon-condition {
           font-size: 18px;
           font-family: Poppins, Poppins;
@@ -2586,6 +2467,7 @@ export default {
           color: #00306b;
           text-align: left;
         }
+
         .validity-period {
           text-align: left;
           font-size: 16px;
@@ -2603,88 +2485,88 @@ export default {
         width: 28px;
         height: 28px;
       }
-      
+
     }
   }
 
   .promo-code-section {
-      padding: 20px 0;
+    padding: 20px 0;
 
-      .promo-code-label {
+    .promo-code-label {
+      font-size: 14px;
+      color: #5e5e5e;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .promo-code-input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+
+      .promo-code-input {
+        height: 40px;
+        padding: 0 16px;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
         font-size: 14px;
-        color: #5e5e5e;
-        margin-bottom: 16px;
-        text-align: left;
-      }
+        color: #1e262e;
+        background: #ffffff;
+        outline: none;
+        transition: all 0.3s;
 
-      .promo-code-input-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 16px;
-
-        .promo-code-input {
-          height: 40px;
-          padding: 0 16px;
-          border: 1px solid #e5e5e5;
-          border-radius: 8px;
-          font-size: 14px;
-          color: #1e262e;
-          background: #ffffff;
-          outline: none;
-          transition: all 0.3s;
-
-          &:focus {
-            border-color: #ec6a2b;
-          }
-
-          &::placeholder {
-            color: #999;
-          }
+        &:focus {
+          border-color: #ec6a2b;
         }
 
-        .promo-code-confirm-btn {
-          min-width: 120px;
-          height: 40px;
-          background: #ec6a2b;
-          color: #ffffff;
-          border: none;
-          border-radius: 8px;
-          font-size: 14px;
-          font-weight: 600;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: all 0.3s;
-
-          &:hover {
-            background: #d85a1f;
-          }
-
-          &:active {
-            transform: scale(0.98);
-          }
+        &::placeholder {
+          color: #999;
         }
       }
 
-      .promo-code-discount {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 12px;
-        text-align: left;
+      .promo-code-confirm-btn {
+        min-width: 120px;
+        height: 40px;
+        background: #ec6a2b;
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s;
 
-        .discount-label {
-          font-size: 14px;
-          color: #5e5e5e;
+        &:hover {
+          background: #d85a1f;
         }
 
-        .discount-amount {
-          font-size: 14px;
-          color: #ec6a2b;
-          font-weight: 600;
+        &:active {
+          transform: scale(0.98);
         }
       }
     }
+
+    .promo-code-discount {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      text-align: left;
+
+      .discount-label {
+        font-size: 14px;
+        color: #5e5e5e;
+      }
+
+      .discount-amount {
+        font-size: 14px;
+        color: #ec6a2b;
+        font-weight: 600;
+      }
+    }
+  }
 
   // 订单摘要
   .order-summary {
@@ -2724,6 +2606,7 @@ export default {
 
         .product-icon {
           font-size: 24px;
+
           img {
             width: 80px;
             height: 80px;
@@ -2735,6 +2618,7 @@ export default {
         .product-info {
           flex: 1;
           text-align: left;
+
           .product-name {
             font-family: Poppins, Poppins;
             font-weight: 400;
@@ -2854,6 +2738,7 @@ export default {
 
       .submit {
         margin-top: 20px;
+
         .btn-confirm {
           margin-left: 20px;
           width: 300px;
@@ -2911,17 +2796,32 @@ export default {
     }
   }
 }
+
 .upload-box {
   padding: 20px 20px;
   text-align: left;
 }
 
 .btn-cancel {
-  min-width: 100px;
+  width: 140px;
   height: 40px;
   border: 1px solid #00306B;
   color: #00306B;
   font-size: 14px;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.btn-confirm {
+  width: 140px;
+  height: 40px;
+  border: 1px solid #ff6600;
+  background: #ff6600;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 8px;
+  margin-left: 10px;
 }
 
 .img-check {
@@ -3137,7 +3037,7 @@ export default {
     justify-content: flex-end;
 
     button {
-      & + button {
+      &+button {
         margin-left: 16px;
       }
 
@@ -3247,7 +3147,7 @@ export default {
       display: flex;
       align-items: center;
 
-      & + .select-1 {
+      &+.select-1 {
         margin-top: 30px;
       }
 
@@ -3459,7 +3359,7 @@ export default {
       .address-top {
         padding-bottom: 20px;
 
-        > div {
+        >div {
           margin-bottom: 10px;
           color: #333333;
 
@@ -3582,8 +3482,7 @@ export default {
     padding-left: 34px;
   }
 
-  .sec-ctx {
-  }
+  .sec-ctx {}
 
   .pay-group {
     display: flex;
@@ -3654,6 +3553,7 @@ export default {
   .sec-ctx {
     padding: 0 34px;
   }
+
   .sub-title {
     padding-left: 30px;
     height: 50px;
@@ -3864,8 +3764,7 @@ export default {
     padding-left: 34px;
   }
 
-  .sec-ctx {
-  }
+  .sec-ctx {}
 
   .fapiao-info {
     padding-left: 32px;
@@ -3874,6 +3773,7 @@ export default {
     align-items: center;
     justify-content: flex-start;
     margin-bottom: 30px;
+
     .main-title {
       font-family: Microsoft YaHei, Microsoft YaHei;
       font-weight: 400;
@@ -3908,8 +3808,7 @@ export default {
           border: 1px solid #00306B;
         }
 
-        &:hover {
-        }
+        &:hover {}
       }
     }
   }
@@ -3922,6 +3821,7 @@ export default {
       align-items: center;
       height: 40px;
       margin-bottom: 16px;
+
       .label {
         width: 216px;
         text-align: right;
@@ -3936,6 +3836,7 @@ export default {
           margin-right: 4px;
         }
       }
+
       .val-box {
         flex: 1;
         margin-left: 16px;
@@ -3974,6 +3875,7 @@ export default {
 
   .tab-content {
     padding: 0 20px;
+
     .sub-tabs {
       display: flex;
       margin-bottom: 20px;
@@ -4031,6 +3933,7 @@ export default {
             .coupon-amount {
               color: #999;
             }
+
             .coupon-condition,
             .coupon-expire {
               color: #ccc;
@@ -4188,7 +4091,8 @@ export default {
 
       .el-dialog__body {
         padding: 30px 20px;
-        font-size: 14px;
+        font-size: 16px;
+        font-weight: bold;
       }
 
       .el-dialog__footer {
@@ -4205,6 +4109,13 @@ export default {
         height: 32px;
       }
     }
+  }
+}
+
+.el-dialog {
+  .el-dialog__body {
+    font-size: 16px;
+    font-weight: bold;
   }
 }
 </style>

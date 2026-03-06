@@ -68,7 +68,7 @@
         </div>
 
         <div class="refund-submit-box" v-if="type !== null">
-          <refund_submit :orderId="orderId" :inventoryId="inventoryId" :type="type" />
+          <refund_submit :orderId="orderId" :inventoryId="inventoryId" :type="type" :actualRefundAmount="actualRefundAmount" />
         </div>
       </div>
     </div>
@@ -90,12 +90,14 @@ export default {
       inventoryId: this.$route.query.inventoryId,
       order: {},
       type: null, //1-退款 2-退货退款
+      actualRefundAmount: 0,
     };
   },
   computed: {
     ...mapState([""]),
   },
   created() {
+    this.actualRefundAmount = localStorage.getItem('actualRefundAmount');
     this.setView();
   },
   methods: {
@@ -110,6 +112,9 @@ export default {
       }).then((res) => {
         if (res.code == 200) {
           this.order = res.data;
+          this.order.products = this.order.products.filter(
+            v => v.id == this.inventoryId
+          );
         }
       });
     },

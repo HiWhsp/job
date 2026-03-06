@@ -31,7 +31,7 @@
             </div>
             <div class="action">
               <el-input placeholder="Please enter the refund amount" v-model="refund_money" />
-              <span class="desc">Up to US${{ max_refund_money }}, including shipping fee of US${{ order.payInfo.yunfei || 0 }}</span>
+              <span class="desc">Up to US${{ actualRefundAmount }}, including shipping fee of US${{ order.payInfo.yunfei || 0 }}</span>
             </div>
           </div>
 
@@ -152,6 +152,10 @@ export default {
     type: {
       type: String,
       default: ""
+    },
+    actualRefundAmount: {
+      type: String,
+      default: ""
     }
   },
   computed: {
@@ -259,7 +263,7 @@ export default {
       if (!this.refund_money) {
         return alertErr("please enter the refund amount");
       }
-      if (Number(this.refund_money) > Number(this.max_refund_money)) {
+      if (Number(this.refund_money) > Number(this.actualRefundAmount)) {
         return alertErr("the refund amount should be less than or equal to the product amount");
       }
       // if (!this.refund_remark) {

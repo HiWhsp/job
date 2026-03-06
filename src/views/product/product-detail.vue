@@ -142,7 +142,7 @@
                       <!-- 操作 -->
                       <div class="operation-box">
                         <div class="operation-item">
-                          <div class="price-info">
+                          <div class="price-info" v-if="!info.seckillInfo">
                             <div class="price-info-text">Quantity:</div>
                             <div class="price-tiers" v-if="currentSelectedInventory.priceConfig && currentSelectedInventory.priceConfig.length > 0">
                               <span

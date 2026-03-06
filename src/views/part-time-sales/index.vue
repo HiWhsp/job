@@ -76,10 +76,9 @@
         </div>
 
         <!-- 收款方式 -->
-        <div class="form-section">
+        <!-- <div class="form-section">
           <div class="section-title">
             <span class="title-text">Payment Method</span>
-            <!-- <span class="required">*</span> -->
           </div>
           <el-form-item prop="receiveType">
             <img
@@ -97,7 +96,7 @@
               alt
             />
           </el-form-item>
-        </div>
+        </div> -->
 
         <!-- 银行卡信息 -->
         <div class="form-section">
