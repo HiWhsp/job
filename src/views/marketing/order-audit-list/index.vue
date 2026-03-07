@@ -5,29 +5,42 @@
       <el-form :model="queryParams" ref="queryForm" inline class="search-form" label-width="80px">
         <div class="search-row">
           <el-form-item label="关键词">
-            <el-input v-model="queryParams.keyword" placeholder="订单编号/客户名称" clearable style="width: 260px" />
+            <el-input
+              v-model="queryParams.keyword"
+              placeholder="订单编号/客户名称"
+              clearable
+              style="width: 260px"
+            />
           </el-form-item>
           <el-form-item label="订单状态">
-            <el-select v-model="queryParams.status" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="待审批" value="待审批" />
-              <el-option label="待发货" value="待发货" />
-              <el-option label="已发货" value="已发货" />
-              <el-option label="已取消" value="已取消" />
+            <el-select
+              v-model="queryParams.status"
+              placeholder="请选择"
+              clearable
+              style="width: 140px"
+            >
+              <el-option label="启用" value="1" />
+              <el-option label="禁用" value="0" />
             </el-select>
           </el-form-item>
           <el-form-item label="支付方式">
-            <el-select v-model="queryParams.payMethod" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="现结" value="现结" />
-              <el-option label="账期" value="账期" />
-              <el-option label="分期付款" value="分期付款" />
-              <el-option label="预付款" value="预付款" />
+            <el-select
+              v-model="queryParams.region"
+              placeholder="客户区域"
+              clearable
+              style="width: 140px"
+            >
+              <el-option label="国内" value="国内" />
+              <el-option label="国外" value="国外" />
+              <el-option label="中国" value="中国" />
+              <el-option label="北京" value="北京" />
+              <el-option label="英国" value="英国" />
             </el-select>
           </el-form-item>
-          <el-form-item label="收款状态">
-            <el-select v-model="queryParams.paymentStatus" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="待回款" value="待回款" />
-              <el-option label="部分回款" value="部分回款" />
-              <el-option label="全部回款" value="全部回款" />
+          <el-form-item label="回款状态">
+            <el-select v-model="queryParams.attr" placeholder="客户属性" clearable style="width: 140px">
+              <el-option label="企业" value="企业" />
+              <el-option label="个人" value="个人" />
             </el-select>
           </el-form-item>
         </div>
@@ -40,7 +53,15 @@
           </el-form-item>
           <!-- 时间筛选 -->
           <el-form-item label="时间筛选">
-            <el-date-picker v-model="queryParams.date" type="daterange" range-separator="-" start-placeholder="开始时间" end-placeholder="结束时间" clearable style="width: 236px" />
+            <el-date-picker
+              v-model="queryParams.date"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              clearable
+              style="width: 236px"
+            />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handleQuery">搜索</el-button>
@@ -54,9 +75,15 @@
     <div class="table-view">
       <div class="table-util-bar">
         <div class="table-tabs">
-          <div v-for="(tab, index) in auditTabs" :key="index" class="tab-item"
-            :class="{ active: auditTab === tab.value }" @click="handleAuditTabChange(tab.value)">
-            {{ tab.label }}
+          <div
+            v-for="(tab, index) in auditTabs"
+            :key="index"
+            class="tab-item"
+            :class="{ active: auditTab === tab.value }"
+            @click="handleAuditTabChange(tab.value)"
+          >
+            {{
+            tab.label }}
           </div>
         </div>
         <div class="table-acts">
@@ -64,8 +91,13 @@
         </div>
       </div>
       <div class="table-box">
-        <el-table ref="tableH" :height="tableHeight" :data="tableData" header-cell-class-name="table-header-cell"
-          :row-class-name="tableRowClassName">
+        <el-table
+          ref="tableH"
+          :height="tableHeight"
+          :data="tableData"
+          header-cell-class-name="table-header-cell"
+          :row-class-name="tableRowClassName"
+        >
           <el-table-column type="index" label="序号" width="70" align="center" />
           <el-table-column prop="orderNo" label="订单编号" min-width="130" show-overflow-tooltip />
           <el-table-column prop="customerName" label="客户名称" min-width="200" show-overflow-tooltip>
@@ -89,7 +121,12 @@
               <span v-else>—</span>
             </template>
           </el-table-column>
-          <el-table-column prop="deliveryPlanTime" label="预计发货时间" min-width="140" show-overflow-tooltip />
+          <el-table-column
+            prop="deliveryPlanTime"
+            label="预计发货时间"
+            min-width="140"
+            show-overflow-tooltip
+          />
           <el-table-column prop="payMethod" label="支付方式" min-width="110" show-overflow-tooltip />
           <el-table-column prop="accountDate" label="账期时间" width="120" align="center" />
           <el-table-column prop="payDueDate" label="应付款时间" width="120" align="center" />
@@ -106,70 +143,48 @@
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span class="row-act" @click="handleSubmitPayment(row)">提交回款</span>
-                <span class="row-act" @click="handleView(row)">编辑</span>
-                <!-- <span class="row-act" @click="handleView(row)">删除</span> -->
-                <span class="row-act" @click="handleAudit(row)">继续</span>
+                <span class="row-act" @click="handleAudit(row)">审核</span>
               </span>
             </template>
           </el-table-column>
         </el-table>
         <div class="pagination-wrap">
-          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-            :current-page="queryParams.pageNum" :page-sizes="[10, 20, 50, 100]" :page-size="queryParams.pageSize"
-            layout="total, prev, pager, next, jumper" :total="total" />
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="queryParams.pageNum"
+            :page-sizes="[10, 20, 50, 100]"
+            :page-size="queryParams.pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="total"
+          />
         </div>
       </div>
     </div>
 
-    <!-- 提交回款 弹框 -->
-    <el-dialog title="提交回款" :visible.sync="paymentDialogVisible" width="520px" :close-on-click-modal="false"
-      @close="closePaymentDialog">
-      <el-form ref="paymentForm" :model="paymentForm" :rules="paymentRules" label-width="120px">
-        <el-form-item label="订单金额:">
-          <p class="payment-amount">{{ paymentOrderAmount }}</p>
-        </el-form-item>
-        <el-form-item label="已回款金额:">
-          <p class="payment-amount">{{ paymentPaidAmount }}</p>
-        </el-form-item>
-        <el-form-item label="未回款金额:">
-          <p class="payment-amount amount-unpaid">{{ paymentUnpaidAmount }}</p>
-        </el-form-item>
-        <el-form-item label="本次回款金额:" prop="currentAmount">
-          <el-input v-model="paymentForm.currentAmount" placeholder="请输入" clearable style="width: 100%" />
-        </el-form-item>
-        <el-form-item label="回款凭证:">
-          <el-upload
-            class="payment-upload"
-            action="#"
-            :auto-upload="false"
-            :on-change="handlePaymentFileChange"
-            :file-list="paymentForm.voucherList"
-            list-type="picture-card"
-            accept="image/*">
-            <div class="upload-inner">
-              <i class="el-icon-plus" />
-              <span class="upload-tip">添加图片</span>
-            </div>
-          </el-upload>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitPayment">提交</el-button>
-        <el-button @click="closePaymentDialog">取消</el-button>
-      </span>
-    </el-dialog>
-
     <!-- 是否继续 弹框 -->
-    <el-dialog title="是否继续" :visible.sync="auditDialogVisible" width="480px" :close-on-click-modal="false"
-      @close="closeAuditDialog">
+    <el-dialog
+      title="审核"
+      :visible.sync="auditDialogVisible"
+      width="480px"
+      :close-on-click-modal="false"
+      @close="closeAuditDialog"
+    >
       <el-form label-width="100px">
-        <el-form-item label="是否继续:">
+        <el-form-item label="审核状态:" style="text-align: left;">
           <el-radio-group v-model="auditContinueChoice">
-            <el-radio label="continue">继续</el-radio>
-            <el-radio label="pause">暂停</el-radio>
-            <el-radio label="cancel">取消</el-radio>
+            <el-radio label="continue">批准</el-radio>
+            <el-radio label="pause">拒绝</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item label="审核备注:">
+          <el-input
+            v-model="auditRemark"
+            placeholder="请输入"
+            clearable
+            maxlength="500"
+            show-word-limit
+          />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -182,16 +197,15 @@
 
 <script>
 export default {
-  name: 'OrderDeliveryApprovalList',
+  name: "OrderAuditList",
   data() {
     return {
       queryParams: {
-        keyword: '',
-        status: '',
-        payMethod: '',
-        paymentStatus: '',
-        type: '',
-        date: null,
+        keyword: "",
+        status: "",
+        region: "",
+        attr: "",
+        type: "",
         pageNum: 1,
         pageSize: 20
       },
@@ -200,91 +214,74 @@ export default {
       tableData: [
         {
           id: 1,
-          orderNo: '2020001-959',
-          customerName: '浙江立汇医疗科技有限公司',
-          dosageForm: '颗粒',
-          address: '浙江立汇医疗科技有限公司天目大道566号',
-          orderAmount: '2564.00',
-          orderType: '标研订单',
-          orderStatus: '待审批',
-          deliveryPlanTime: '2026-01-08',
-          payMethod: '预付款',
-          deliveryMethod: '快递',
-          accountPeriod: '1个月',
-          accountDate: '2026-01-05',
-          payDueDate: '2026-02-05',
-          paymentStatus: '待回款',
-          paidAmount: '0.00',
-          auditStatus: 'pending',
-          orderTime: '2026-01-05'
+          orderNo: "2020001-959",
+          customerName: "浙江立汇医疗科技有限公司",
+          dosageForm: "颗粒",
+          address: "浙江立汇医疗科技有限公司天目大道566号",
+          orderAmount: "2564.00",
+          orderType: "标研订单",
+          orderStatus: "待审批",
+          deliveryPlanTime: "2026-01-08",
+          payMethod: "预付款",
+          deliveryMethod: "快递",
+          accountPeriod: "1个月",
+          accountDate: "2026-01-05",
+          payDueDate: "2026-02-05",
+          paymentStatus: "待回款",
+          paidAmount: "0.00",
+          auditStatus: "pending",
+          orderTime: "2026-01-05"
         },
         {
           id: 2,
-          orderNo: '2020001-965',
-          customerName: '浙江中汇医疗科技有限公司',
-          dosageForm: '颗粒',
-          address: '浙江中汇医疗科技有限公司天目大道566号',
-          orderAmount: '2564.00',
-          orderType: '标研订单',
-          orderStatus: '待发货',
-          deliveryPlanTime: '2026-01-10',
-          payMethod: '预付款',
-          deliveryMethod: '快递',
-          accountPeriod: '2个月',
-          accountDate: '2026-01-05',
-          payDueDate: '2026-03-05',
-          paymentStatus: '部分回款',
-          paidAmount: '2000.00',
-          auditStatus: 'pending',
-          orderTime: '2026-01-05'
+          orderNo: "2020001-965",
+          customerName: "浙江中汇医疗科技有限公司",
+          dosageForm: "颗粒",
+          address: "浙江中汇医疗科技有限公司天目大道566号",
+          orderAmount: "2564.00",
+          orderType: "标研订单",
+          orderStatus: "待发货",
+          deliveryPlanTime: "2026-01-10",
+          payMethod: "预付款",
+          deliveryMethod: "快递",
+          accountPeriod: "2个月",
+          accountDate: "2026-01-05",
+          payDueDate: "2026-03-05",
+          paymentStatus: "部分回款",
+          paidAmount: "2000.00",
+          auditStatus: "pending",
+          orderTime: "2026-01-05"
         },
         {
           id: 3,
-          orderNo: '2020001-978',
-          customerName: '示例客户C',
-          dosageForm: '颗粒',
-          address: '示例客户C的收货地址',
-          orderAmount: '1280.00',
-          orderType: '标研订单',
-          orderStatus: '已发货',
-          deliveryPlanTime: '2026-01-06',
-          payMethod: '预付款',
-          deliveryMethod: '快递',
-          accountPeriod: '1个月',
-          accountDate: '2026-01-06',
-          payDueDate: '2026-02-06',
-          paymentStatus: '全部回款',
-          paidAmount: '1280.00',
-          auditStatus: 'audited',
-          orderTime: '2026-01-06'
+          orderNo: "2020001-978",
+          customerName: "示例客户C",
+          dosageForm: "颗粒",
+          address: "示例客户C的收货地址",
+          orderAmount: "1280.00",
+          orderType: "标研订单",
+          orderStatus: "已发货",
+          deliveryPlanTime: "2026-01-06",
+          payMethod: "预付款",
+          deliveryMethod: "快递",
+          accountPeriod: "1个月",
+          accountDate: "2026-01-06",
+          payDueDate: "2026-02-06",
+          paymentStatus: "全部回款",
+          paidAmount: "1280.00",
+          auditStatus: "audited",
+          orderTime: "2026-01-06"
         }
       ],
       rowToDelete: null,
       auditDialogVisible: false,
       rowToAudit: null,
-      /** 是否继续：continue-继续，pause-暂停，cancel-取消，默认暂停 */
-      auditContinueChoice: 'pause',
-      /** 提交回款弹框 */
-      paymentDialogVisible: false,
-      rowToPayment: null,
-      paymentForm: {
-        currentAmount: '',
-        voucherList: []
-      },
-      paymentRules: {
-        currentAmount: [
-          { required: true, message: '请输入本次回款金额', trigger: 'blur' },
-          { pattern: /^\d+(\.\d{1,2})?$/, message: '请输入有效金额（最多两位小数）', trigger: 'blur' }
-        ]
-      },
-      auditTab: 'pending',
+      /** 审核状态：continue-批准，pause-拒绝，默认拒绝 */
+      auditContinueChoice: "pause",
+      auditRemark: "",
+      auditTab: "pending",
       auditTabs: [
-        { label: '待审核', value: 'pending' },
-        { label: '待发货', value: 'delivery' },
-        { label: '已发货', value: 'delivered' },
-        { label: '审核不通过', value: 'rejected' },
-        { label: '缺货审核', value: 'rejected' },
-        { label: '已取消', value: 'canceled' }
+        { label: "待审核", value: "pending" }
       ]
     };
   },
@@ -292,19 +289,24 @@ export default {
   computed: {
     /** 提交回款弹框 - 订单金额 */
     paymentOrderAmount() {
-      if (!this.rowToPayment) return '0.00';
-      return this.rowToPayment.orderAmount || '0.00';
+      if (!this.rowToPayment) return "0.00";
+      return this.rowToPayment.orderAmount || "0.00";
     },
     /** 提交回款弹框 - 已回款金额 */
     paymentPaidAmount() {
-      if (!this.rowToPayment) return '0.00';
-      return this.rowToPayment.paidAmount != null ? String(this.rowToPayment.paidAmount) : '0.00';
+      if (!this.rowToPayment) return "0.00";
+      return this.rowToPayment.paidAmount != null
+        ? String(this.rowToPayment.paidAmount)
+        : "0.00";
     },
     /** 提交回款弹框 - 未回款金额（红色） */
     paymentUnpaidAmount() {
-      if (!this.rowToPayment) return '0.00';
-      const order = parseFloat(String(this.rowToPayment.orderAmount).replace(/,/g, '')) || 0;
-      const paid = parseFloat(String(this.paymentPaidAmount).replace(/,/g, '')) || 0;
+      if (!this.rowToPayment) return "0.00";
+      const order =
+        parseFloat(String(this.rowToPayment.orderAmount).replace(/,/g, "")) ||
+        0;
+      const paid =
+        parseFloat(String(this.paymentPaidAmount).replace(/,/g, "")) || 0;
       const unpaid = (order - paid).toFixed(2);
       return unpaid;
     }
@@ -327,14 +329,14 @@ export default {
         const windowHeight = window.innerHeight;
         this.tableHeight = Math.max(windowHeight - tableOffsetTop, 200);
         const that = this;
-        window.onresize = function () {
+        window.onresize = function() {
           const top = tableEl.offsetTop + 84 + 80;
           that.tableHeight = Math.max(window.innerHeight - top, 200);
         };
       });
     },
     tableRowClassName({ rowIndex }) {
-      return rowIndex % 2 === 1 ? 'row-even' : '';
+      return rowIndex % 2 === 1 ? "row-even" : "";
     },
     loadList() {
       // TODO: 根据 auditTab 调用接口获取列表
@@ -356,74 +358,37 @@ export default {
     },
     handleView() {
       this.$router.push({
-        path: '/sales/order/detail',
-        query: {
-        }
-      });
-    },
-    /** 打开提交回款弹框 */
-    handleSubmitPayment(row) {
-      this.rowToPayment = row;
-      this.paymentForm.currentAmount = '';
-      this.paymentForm.voucherList = [];
-      this.paymentDialogVisible = true;
-    },
-    /** 关闭提交回款弹框 */
-    closePaymentDialog() {
-      this.paymentDialogVisible = false;
-      this.rowToPayment = null;
-      this.paymentForm.currentAmount = '';
-      this.paymentForm.voucherList = [];
-      this.$refs.paymentForm && this.$refs.paymentForm.resetFields();
-    },
-    /** 回款凭证文件变更 */
-    handlePaymentFileChange(file, fileList) {
-      this.paymentForm.voucherList = fileList;
-    },
-    /** 提交回款 */
-    submitPayment() {
-      this.$refs.paymentForm.validate(valid => {
-        if (!valid) return;
-        if (!this.rowToPayment) return;
-        const unpaid = parseFloat(String(this.paymentUnpaidAmount).replace(/,/g, '')) || 0;
-        const current = parseFloat(this.paymentForm.currentAmount) || 0;
-        if (current > unpaid) {
-          this.$message.warning('本次回款金额不能大于未回款金额');
-          return;
-        }
-        // TODO: 调用提交回款接口，上传凭证
-        this.$message.success('提交成功');
-        this.closePaymentDialog();
-        this.loadList();
+        path: "/sales/order/detail",
+        query: {}
       });
     },
     handleAudit(row) {
       this.rowToAudit = row;
-      this.auditContinueChoice = 'pause';
+      this.auditContinueChoice = "pause";
       this.auditDialogVisible = true;
     },
     /** 关闭是否继续弹框 */
     closeAuditDialog() {
       this.auditDialogVisible = false;
       this.rowToAudit = null;
-      this.auditContinueChoice = 'pause';
+      this.auditContinueChoice = "pause";
     },
     /** 提交是否继续选择 */
     submitAuditChoice() {
       if (!this.rowToAudit) return;
       // TODO: 根据 auditContinueChoice 调用接口（继续/暂停/取消）
-      const actionMap = { continue: '继续', pause: '暂停', cancel: '取消' };
+      const actionMap = { continue: "继续", pause: "暂停", cancel: "取消" };
       this.$message.success(`已选择${actionMap[this.auditContinueChoice]}`);
       this.closeAuditDialog();
       this.loadList();
     },
     handleEdit(row) {
       // TODO: 编辑
-      this.$message.info('编辑：' + row.name);
+      this.$message.info("编辑：" + row.name);
     },
     handleExport() {
       // TODO: 导出
-      this.$message.info('导出');
+      this.$message.info("导出");
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;
@@ -479,7 +444,7 @@ export default {
   }
 
   .el-button--primary {
-    background: linear-gradient(90deg, #157DE9 0%, #3697FD 100%) !important;
+    background: linear-gradient(90deg, #157de9 0%, #3697fd 100%) !important;
   }
 }
 
@@ -520,7 +485,7 @@ export default {
         font-weight: 500;
 
         &::after {
-          content: '';
+          content: "";
           position: absolute;
           left: 0;
           right: 0;
@@ -539,7 +504,7 @@ export default {
     gap: 10px;
 
     .el-button {
-      background: linear-gradient(90deg, #157DE9 0%, #3697FD 100%) !important;
+      background: linear-gradient(90deg, #157de9 0%, #3697fd 100%) !important;
     }
   }
 }
@@ -561,14 +526,14 @@ export default {
       background: #f3f7fa;
     }
 
-    .el-table__body tr:hover>td {
+    .el-table__body tr:hover > td {
       background: #f5f7fa !important;
     }
   }
 }
 
 .link-name {
-  color: #2373C8;
+  color: #2373c8;
   cursor: pointer;
 
   &:hover {
@@ -607,7 +572,6 @@ export default {
 }
 
 /* 提交回款弹框 */
-
 .payment-amount {
   font-size: 16px;
   color: #333;
@@ -629,19 +593,26 @@ export default {
     align-items: center;
     justify-content: center;
   }
+
   .upload-inner {
     display: flex;
     flex-direction: column;
     align-items: center;
+
     .el-icon-plus {
       font-size: 28px;
       margin-bottom: 8px;
       color: #8c939d;
     }
   }
+
   .upload-tip {
     font-size: 12px;
     color: #909399;
   }
+}
+
+::v-deep .el-dialog__footer {
+    text-align: center;
 }
 </style>

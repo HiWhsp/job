@@ -9,25 +9,23 @@
           </el-form-item>
           <el-form-item label="订单状态">
             <el-select v-model="queryParams.status" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="待审批" value="待审批" />
-              <el-option label="待发货" value="待发货" />
-              <el-option label="已发货" value="已发货" />
-              <el-option label="已取消" value="已取消" />
+              <el-option label="启用" value="1" />
+              <el-option label="禁用" value="0" />
             </el-select>
           </el-form-item>
           <el-form-item label="支付方式">
-            <el-select v-model="queryParams.payMethod" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="现结" value="现结" />
-              <el-option label="账期" value="账期" />
-              <el-option label="分期付款" value="分期付款" />
-              <el-option label="预付款" value="预付款" />
+            <el-select v-model="queryParams.region" placeholder="客户区域" clearable style="width: 140px">
+              <el-option label="国内" value="国内" />
+              <el-option label="国外" value="国外" />
+              <el-option label="中国" value="中国" />
+              <el-option label="北京" value="北京" />
+              <el-option label="英国" value="英国" />
             </el-select>
           </el-form-item>
-          <el-form-item label="收款状态">
-            <el-select v-model="queryParams.paymentStatus" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="待回款" value="待回款" />
-              <el-option label="部分回款" value="部分回款" />
-              <el-option label="全部回款" value="全部回款" />
+          <el-form-item label="回款状态">
+            <el-select v-model="queryParams.attr" placeholder="客户属性" clearable style="width: 140px">
+              <el-option label="企业" value="企业" />
+              <el-option label="个人" value="个人" />
             </el-select>
           </el-form-item>
         </div>
@@ -40,7 +38,7 @@
           </el-form-item>
           <!-- 时间筛选 -->
           <el-form-item label="时间筛选">
-            <el-date-picker v-model="queryParams.date" type="daterange" range-separator="-" start-placeholder="开始时间" end-placeholder="结束时间" clearable style="width: 236px" />
+            <el-date-picker v-model="queryParams.date" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" clearable style="width: 236px" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handleQuery">搜索</el-button>
@@ -106,10 +104,10 @@
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span class="row-act" @click="handleSubmitPayment(row)">提交回款</span>
-                <span class="row-act" @click="handleView(row)">编辑</span>
+                <!-- <span class="row-act" @click="handleSubmitPayment(row)">提交回款</span> -->
+                <!-- <span class="row-act" @click="handleView(row)">编辑</span> -->
                 <!-- <span class="row-act" @click="handleView(row)">删除</span> -->
-                <span class="row-act" @click="handleAudit(row)">继续</span>
+                <!-- <span class="row-act" @click="handleAudit(row)">继续</span> -->
               </span>
             </template>
           </el-table-column>
@@ -188,10 +186,9 @@ export default {
       queryParams: {
         keyword: '',
         status: '',
-        payMethod: '',
-        paymentStatus: '',
+        region: '',
+        attr: '',
         type: '',
-        date: null,
         pageNum: 1,
         pageSize: 20
       },
@@ -279,12 +276,12 @@ export default {
       },
       auditTab: 'pending',
       auditTabs: [
-        { label: '待审核', value: 'pending' },
-        { label: '待发货', value: 'delivery' },
-        { label: '已发货', value: 'delivered' },
-        { label: '审核不通过', value: 'rejected' },
-        { label: '缺货审核', value: 'rejected' },
-        { label: '已取消', value: 'canceled' }
+        { label: '订单列表', value: 'pending' },
+        // { label: '待发货', value: 'delivery' },
+        // { label: '已发货', value: 'delivered' },
+        // { label: '审核不通过', value: 'rejected' },
+        // { label: '缺货审核', value: 'rejected' },
+        // { label: '已取消', value: 'canceled' }
       ]
     };
   },

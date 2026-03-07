@@ -183,7 +183,7 @@ const managerRoutes = [
           requireAuth: true,
           hidden: true
         },
-        children: [ 
+        children: [
           // 客户外来包装管理
           {
             path: 'list',
@@ -329,6 +329,17 @@ const salesRoutes = [
               hidden: true
             }
           },
+          // 新增订单
+          {
+            path: 'add',
+            name: 'order-add',
+            component: () => import("@/views/sales/order/add.vue"),
+            meta: {
+              title: "新增订单",
+              requireAuth: true,
+              hidden: true
+            }
+          },
           // 订单详情
           {
             path: 'detail',
@@ -341,7 +352,64 @@ const salesRoutes = [
             }
           }
         ]
-      }
+      },
+      // 订单回款记录
+      {
+        path: 'payment-record',
+        name: 'order-payment-record',
+        component: () => import("@/views/sales/payment-record/index.vue"),
+        meta: {
+          title: "订单回款记录",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 询盘数据
+      {
+        path: 'inquiry-data',
+        name: 'inquiry-data',
+        component: () => import("@/views/sales/inquiry-data/index.vue"),
+        meta: {
+          title: "询盘数据",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 客户管理
+      {
+        path: "sales-customer",
+        name: "sales-customer",
+        component: () => import("@/views/sales/sales-customer/index.vue"),
+        redirect: '/sales/sales-customer/list',
+        meta: {
+          title: "客户管理",
+          requireAuth: true
+        },
+        children: [
+          // 客户列表
+          {
+            path: "list",
+            name: "customer-list",
+            component: () => import("@/views/sales/sales-customer/list.vue"),
+            meta: {
+              title: "客户列表",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 新增客户
+          {
+            path: "add",
+            name: "customer-add",
+            component: () => import("@/views/sales/sales-customer/add.vue"),
+            meta: {
+              title: "新增客户",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      },
     ]
   }
 ];
@@ -357,14 +425,66 @@ const marketingRoutes = [
       requireAuth: true
     },
     children: [
-      // {
-      //   path: "dashboard",
-      //   name: "marketing-dashboard",
-      //   component: () => import("@/views/marketing/dashboard.vue"),
-      //   meta: {
-      //     title: "营销端首页"
-      //   }
-      // }
+      // 订单审核列表
+      {
+        path: 'order-audit-list',
+        name: 'order-audit-list',
+        component: () => import("@/views/marketing/order-audit-list/index.vue"),
+        meta: {
+          title: "订单审核列表",
+          requireAuth: true,
+          hidden: true
+        },
+      },
+
+      // 订单管理
+      {
+        path: 'order',
+        name: 'order',
+        component: () => import("@/views/marketing/order/index.vue"),
+        redirect: '/sales/order/list',
+        meta: {
+          title: "订单管理",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          // 订单列表
+          {
+            path: 'list',
+            name: 'order-list',
+            component: () => import("@/views/marketing/order/list.vue"),
+            meta: {
+              title: "订单列表",
+              requireAuth: true,
+              hidden: true
+            }
+          },
+          // 订单详情
+          {
+            path: 'detail',
+            name: 'order-detail',
+            component: () => import("@/views/marketing/order/detail.vue"),
+            meta: {
+              title: "订单详情",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      },
+
+      // 数据统计
+      {
+        path: 'data-statistics',
+        name: 'data-statistics',
+        component: () => import("@/views/marketing/data-statistics/index.vue"),
+        meta: {
+          title: "数据统计",
+          requireAuth: true,
+          hidden: true
+        }
+      },
     ]
   }
 ];
@@ -380,14 +500,186 @@ const generalManagerRoutes = [
       requireAuth: true
     },
     children: [
-      // {
-      //   path: "dashboard",
-      //   name: "general-manager-dashboard",
-      //   component: () => import("@/views/general-manager/dashboard.vue"),
-      //   meta: {
-      //     title: "总经理首页"
-      //   }
-      // }
+      // 原料采购
+      {
+        path: 'material-purchase',
+        name: 'material-purchase',
+        component: () => import("@/views/general-manager/material-purchase/index.vue"),
+        redirect: '/general-manager/material-purchase/list',
+        meta: {
+          title: "原料采购",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          // 列表
+          {
+            path: 'list',
+            name: 'material-purchase-list',
+            component: () => import("@/views/general-manager/material-purchase/list.vue"),
+            meta: {
+              title: "原料采购列表",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 详情
+          {
+            path: 'detail',
+            name: 'material-purchase-detail',
+            component: () => import("@/views/general-manager/material-purchase/detail.vue"),
+            meta: {
+              title: "原料采购详情",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      },
+      // 外采产品采购
+      {
+        path: 'external-product-purchase',
+        name: 'external-product-purchase',
+        component: () => import("@/views/general-manager/external-product-purchase/index.vue"),
+        redirect: '/general-manager/external-product-purchase/list',
+        meta: {
+          title: "外采产品采购",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          // 列表
+          {
+            path: 'list',
+            name: 'external-product-purchase-list',
+            component: () => import("@/views/general-manager/external-product-purchase/list.vue"),
+            meta: {
+              title: "外采产品采购列表",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 详情
+          {
+            path: 'detail',
+            name: 'external-product-purchase-detail',
+            component: () => import("@/views/general-manager/external-product-purchase/detail.vue"),
+            meta: {
+              title: "外采产品采购详情",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      },
+      // 外采包装
+      {
+        path: 'external-package-purchase',
+        name: 'external-package-purchase',
+        component: () => import("@/views/general-manager/external-package-purchase/index.vue"),
+        redirect: '/general-manager/external-package-purchase/list',
+        meta: {
+          title: "外采包装采购",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          // 列表
+          {
+            path: 'list',
+            name: 'external-package-purchase-list',
+            component: () => import("@/views/general-manager/external-package-purchase/list.vue"),
+            meta: {
+              title: "外采包装采购列表",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 详情
+          {
+            path: 'detail',
+            name: 'external-package-purchase-detail',
+            component: () => import("@/views/general-manager/external-package-purchase/detail.vue"),
+            meta: {
+              title: "外采包装采购详情",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      },
+      // 设备采购
+      {
+        path: 'device-purchase',
+        name: 'device-purchase',
+        component: () => import("@/views/general-manager/device-purchase/index.vue"),
+        redirect: '/general-manager/device-purchase/list',
+        meta: {
+          title: "设备采购",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          // 列表
+          {
+            path: 'list',
+            name: 'device-purchase-list',
+            component: () => import("@/views/general-manager/device-purchase/list.vue"),
+            meta: {
+              title: "设备采购列表",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 详情
+          {
+            path: 'detail',
+            name: 'device-purchase-detail',
+            component: () => import("@/views/general-manager/device-purchase/detail.vue"),
+            meta: {
+              title: "设备采购详情",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      },
+      // 其他采购
+      {
+        path: 'other-purchase',
+        name: 'other-purchase',
+        component: () => import("@/views/general-manager/other-purchase/index.vue"),
+        redirect: '/general-manager/other-purchase/list',
+        meta: {
+          title: "其他采购",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          // 列表
+          {
+            path: 'list',
+            name: 'other-purchase-list',
+            component: () => import("@/views/general-manager/other-purchase/list.vue"),
+            meta: {
+              title: "其他采购列表",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 详情
+          {
+            path: 'detail',
+            name: 'other-purchase-detail',
+            component: () => import("@/views/general-manager/other-purchase/detail.vue"),
+            meta: {
+              title: "其他采购详情",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      }
     ]
   }
 ];
@@ -403,14 +695,83 @@ const financeRoutes = [
       requireAuth: true
     },
     children: [
-      // {
-      //   path: "dashboard",
-      //   name: "finance-dashboard",
-      //   component: () => import("@/views/finance/dashboard.vue"),
-      //   meta: {
-      //     title: "财务端首页"
-      //   }
-      // }
+      // 订单付款审核
+      {
+        path: 'order-payment-approval',
+        name: 'order-payment-approval',
+        component: () => import("@/views/finance/order-payment-approval/index.vue"),
+        meta: {
+          title: "订单管理",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 订单回款审核
+      {
+        path: 'order-payment-receipt-approval',
+        name: 'order-payment-receipt-approval',
+        component: () => import("@/views/finance/order-payment-receipt-approval/index.vue"),
+        meta: {
+          title: "订单回款审核",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 原材料采购单付款
+      {
+        path: 'material-purchase-payment',
+        name: 'material-purchase-payment',
+        component: () => import("@/views/finance/material-purchase-payment/index.vue"),
+        meta: {
+          title: "原料采购单",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 外采产品付款
+      {
+        path: 'external-product-payment',
+        name: 'external-product-payment',
+        component: () => import("@/views/finance/external-product-payment/index.vue"),
+        meta: {
+          title: "外购产品采购单",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 外采包装付款
+      {
+        path: 'external-package-payment',
+        name: 'external-package-payment',
+        component: () => import("@/views/finance/external-package-payment/index.vue"),
+        meta: {
+          title: "外采包装",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 设备采购付款
+      {
+        path: 'device-purchase-payment',
+        name: 'device-purchase-payment',
+        component: () => import("@/views/finance/device-purchase-payment/index.vue"),
+        meta: {
+          title: "设备采购",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 其他采购付款
+      {
+        path: 'other-purchase-payment',
+        name: 'other-purchase-payment',
+        component: () => import("@/views/finance/other-purchase-payment/index.vue"),
+        meta: {
+          title: "其他采购",
+          requireAuth: true,
+          hidden: true
+        }
+      }
     ]
   }
 ];
@@ -488,8 +849,8 @@ const warehouseRoutes = [
 // key: 角色标识（从后端返回的 opRole）
 // value: 对应的路由配置数组
 const roleRouteMap = {
+  do: financeRoutes,
   // manager: managerRoutes,
-  do: managerRoutes,
   sales: salesRoutes,
   marketing: marketingRoutes,
   generalManager: generalManagerRoutes,

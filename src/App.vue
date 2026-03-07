@@ -106,8 +106,8 @@ textarea {
 
 
 .el-radio__input.is-checked .el-radio__inner {
-	background: #e4393c !important;
-	border-color: #e4393c !important;
+	background: #2373C8 !important;
+	border-color: #2373C8 !important;
 }
 
 .el-radio__input.is-checked+.el-radio__label {
@@ -115,17 +115,17 @@ textarea {
 }
 
 .el-checkbox__input.is-focus .el-checkbox__inner {
-	border-color: #e4393c !important;
+	border-color: #2373C8 !important;
 }
 
 .el-checkbox__input.is-checked+.el-checkbox__label {
-	color: #e4393c !important;
+	color: #2373C8 !important;
 }
 
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-	background: #e4393c !important;
-	border-color: #e4393c !important;
+	background: #2373C8 !important;
+	border-color: #2373C8 !important;
 }
 
 .el-button--primary {

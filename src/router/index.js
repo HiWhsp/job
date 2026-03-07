@@ -190,7 +190,8 @@ export function resetRoutes() {
 function getUserRole() {
   let userRole = null;
   const roleStr = localStorage.getItem("vuex_role");
-  
+  // 清除缓存路由
+  localStorage.removeItem("last_route");
   if (roleStr) {
     try {
       // 尝试解析 JSON
@@ -231,7 +232,6 @@ router.beforeEach((to, from, next) => {
         if (addedRouteNames.size === 0) {
           addRoleRoutes(userRole);
         }
-        
         // 检查是否有保存的路由（刷新页面时）
         if (isPageRefresh) {
           const savedRoute = localStorage.getItem("last_route");
