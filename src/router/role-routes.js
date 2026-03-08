@@ -787,14 +787,252 @@ const purchaseRoutes = [
       requireAuth: true
     },
     children: [
-      // {
-      //   path: "dashboard",
-      //   name: "purchase-dashboard",
-      //   component: () => import("@/views/purchase/dashboard.vue"),
-      //   meta: {
-      //     title: "采购端首页"
-      //   }
-      // }
+      // 原料采购
+      {
+        path: 'material-purchase',
+        name: 'material-purchase',
+        component: () => import("@/views/purchase/material-purchase/index.vue"),
+        redirect: '/purchase/material-purchase/list',
+        meta: {
+          title: "原料采购",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          {
+            path: 'list',
+            name: 'material-purchase-list',
+            component: () => import("@/views/purchase/material-purchase/list.vue"),
+            meta: {
+              title: "原料采购列表",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          {
+            path: 'detail',
+            name: 'material-purchase-detail',
+            component: () => import("@/views/purchase/material-purchase/detail.vue"),
+            meta: {
+              title: "原料采购详情",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          {
+            path: 'add',
+            name: 'material-purchase-add',
+            component: () => import("@/views/purchase/material-purchase/add.vue"),
+            meta: {
+              title: "新增原料采购单",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      },
+      // 外采产品采购
+      {
+        path: 'external-product-purchase',
+        name: 'external-product-purchase',
+        component: () => import("@/views/purchase/external-product-purchase/index.vue"),
+        redirect: '/purchase/external-product-purchase/list',
+        meta: {
+          title: "外采产品采购",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          {
+            path: 'list',
+            name: 'external-product-purchase-list',
+            component: () => import("@/views/purchase/external-product-purchase/list.vue"),
+            meta: {
+              title: "外采产品请购单",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 外购采购单列表
+          {
+            path: 'purchase-order-list',
+            name: 'external-product-purchase-purchase-order-list',
+            component: () => import("@/views/purchase/external-product-purchase/purchase-order-list.vue"),
+            meta: {
+              title: "外购采购单列表",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 详情
+          {
+            path: 'detail',
+            name: 'external-product-purchase-detail',
+            component: () => import("@/views/purchase/external-product-purchase/detail.vue"),
+            meta: {
+              title: "外采产品请购单详情",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 生成采购单
+          {
+            path: 'generate-purchase-order',
+            name: 'external-product-purchase-generate-purchase-order',
+            component: () => import("@/views/purchase/external-product-purchase/generate-purchase-order.vue"),
+            meta: {
+              title: "生成采购单",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 采购单详情
+          {
+            path: 'purchase-order-detail',
+            name: 'external-product-purchase-purchase-order-detail',
+            component: () => import("@/views/purchase/external-product-purchase/purchase-order-detail.vue"),
+            meta: {
+              title: "采购单详情",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      },
+      // 外采包装
+      {
+        path: 'external-package-purchase',
+        name: 'external-package-purchase',
+        component: () => import("@/views/purchase/external-package-purchase/index.vue"),
+        redirect: '/purchase/external-package-purchase/list',
+        meta: {
+          title: "外采包装",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          {
+            path: 'list',
+            name: 'external-package-purchase-list',
+            component: () => import("@/views/purchase/external-package-purchase/list.vue"),
+            meta: {
+              title: "外采包装订单",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 详情
+          {
+            path: 'detail',
+            name: 'external-package-purchase-detail',
+            component: () => import("@/views/purchase/external-package-purchase/detail.vue"),
+            meta: {
+              title: "外购包装详情",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          // 采购单
+          {
+            path: 'purchase-order-list',
+            name: 'external-package-purchase-purchase-order-list',
+            component: () => import("@/views/purchase/external-package-purchase/purchase-order-list.vue"),
+            meta: {
+              title: "采购单列表",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      },
+      // 设备采购
+      {
+        path: 'device-purchase',
+        name: 'device-purchase',
+        component: () => import("@/views/purchase/device-purchase/index.vue"),
+        redirect: '/purchase/device-purchase/list',
+        meta: {
+          title: "设备采购",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          {
+            path: 'list',
+            name: 'device-purchase-list',
+            component: () => import("@/views/purchase/device-purchase/list.vue"),
+            meta: {
+              title: "设备采购列表",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          {
+            path: 'detail',
+            name: 'device-purchase-detail',
+            component: () => import("@/views/purchase/device-purchase/detail.vue"),
+            meta: {
+              title: "设备采购详情",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          {
+            path: 'add',
+            name: 'device-purchase-add',
+            component: () => import("@/views/purchase/device-purchase/add.vue"),
+            meta: {
+              title: "新增设备采购单",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      },
+      // 其他采购
+      {
+        path: 'other-purchase',
+        name: 'other-purchase',
+        component: () => import("@/views/purchase/other-purchase/index.vue"),
+        redirect: '/purchase/other-purchase/list',
+        meta: {
+          title: "其他采购",
+          requireAuth: true,
+          hidden: true
+        },
+        children: [
+          {
+            path: 'list',
+            name: 'other-purchase-list',
+            component: () => import("@/views/purchase/other-purchase/list.vue"),
+            meta: {
+              title: "其他采购列表",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          {
+            path: 'detail',
+            name: 'other-purchase-detail',
+            component: () => import("@/views/purchase/other-purchase/detail.vue"),
+            meta: {
+              title: "其他采购详情",
+              requireAuth: true,
+              hidden: false
+            }
+          },
+          {
+            path: 'add',
+            name: 'other-purchase-add',
+            component: () => import("@/views/purchase/other-purchase/add.vue"),
+            meta: {
+              title: "新增其他采购单",
+              requireAuth: true,
+              hidden: false
+            }
+          }
+        ]
+      }
     ]
   }
 ];
@@ -810,14 +1048,50 @@ const productionVicePresidentRoutes = [
       requireAuth: true
     },
     children: [
-      // {
-      //   path: "dashboard",
-      //   name: "production-vice-president-dashboard",
-      //   component: () => import("@/views/production-vice-president/dashboard.vue"),
-      //   meta: {
-      //     title: "生产副总首页"
-      //   }
-      // }
+      // 原料采购
+      {
+        path: 'material-purchase',
+        name: 'material-purchase',
+        component: () => import("@/views/production-vice-president/material-purchase/index.vue"),
+        meta: {
+          title: "原料采购",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 外采产品采购
+      {
+        path: 'external-product-purchase',
+        name: 'external-product-purchase',
+        component: () => import("@/views/production-vice-president/external-product-purchase/index.vue"),
+        meta: {
+          title: "外采产品采购",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 设备采购
+      {
+        path: 'device-purchase',
+        name: 'device-purchase',
+        component: () => import("@/views/production-vice-president/device-purchase/index.vue"),
+        meta: {
+          title: "设备采购",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 其他采购
+      {
+        path: 'other-purchase',
+        name: 'other-purchase',
+        component: () => import("@/views/production-vice-president/other-purchase/index.vue"),
+        meta: {
+          title: "其他采购",
+          requireAuth: true,
+          hidden: true
+        }
+      }
     ]
   }
 ];
@@ -833,14 +1107,116 @@ const warehouseRoutes = [
       requireAuth: true
     },
     children: [
-      // {
-      //   path: "dashboard",
-      //   name: "warehouse-dashboard",
-      //   component: () => import("@/views/warehouse/dashboard.vue"),
-      //   meta: {
-      //     title: "库管理端首页"
-      //   }
-      // }
+      // 产品库存管理
+      {
+        path: 'product-inventory-management',
+        name: 'product-inventory-management',
+        component: () => import("@/views/warehouse/product-inventory-management/index.vue"),
+        meta: {
+          title: "产品库存管理",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 产品库存盘点
+      {
+        path: 'product-inventory-check',
+        name: 'product-inventory-check',
+        component: () => import("@/views/warehouse/product-inventory-check/index.vue"),
+        meta: {
+          title: "产品库存盘点",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 产品出库申请
+      {
+        path: 'product-out-apply',
+        name: 'product-out-apply',
+        component: () => import("@/views/warehouse/product-out-apply/index.vue"),
+        meta: {
+          title: "产品出库申请",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 产品出库记录
+      {
+        path: 'product-out-record',
+        name: 'product-out-record',
+        component: () => import("@/views/warehouse/product-out-record/index.vue"),
+        meta: {
+          title: "产品出库记录",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 原料库管理
+      {
+        path: 'material-warehouse-management',
+        name: 'material-warehouse-management',
+        component: () => import("@/views/warehouse/material-warehouse-management/index.vue"),
+        meta: {
+          title: "原料库管理",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 原料出库管理
+      {
+        path: 'material-out-management',
+        name: 'material-out-management',
+        component: () => import("@/views/warehouse/material-out-management/index.vue"),
+        meta: {
+          title: "原料出库管理",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 原料采购单入库
+      {
+        path: 'material-purchase-single-in-storage',
+        name: 'material-purchase-single-in-storage',
+        component: () => import("@/views/warehouse/material-purchase-single-in-storage/index.vue"),
+        meta: {
+          title: "原料采购单入库",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 客户外来包装
+      {
+        path: 'external-package-from-customer',
+        name: 'external-package-from-customer',
+        component: () => import("@/views/warehouse/external-package-from-customer/index.vue"),
+        meta: {
+          title: "客户外来包装",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 外购产品库存
+      {
+        path: 'external-product-inventory',
+        name: 'external-product-inventory',
+        component: () => import("@/views/warehouse/external-product-inventory/index.vue"),
+        meta: {
+          title: "外购产品库存",
+          requireAuth: true,
+          hidden: true
+        }
+      },
+      // 外购采购单入库
+      {
+        path: 'external-purchase-single-in-storage',
+        name: 'external-purchase-single-in-storage',
+        component: () => import("@/views/warehouse/external-purchase-single-in-storage/index.vue"),
+        meta: {
+          title: "外购采购单入库",
+          requireAuth: true,
+          hidden: true
+        }
+      }
     ]
   }
 ];
@@ -849,8 +1225,8 @@ const warehouseRoutes = [
 // key: 角色标识（从后端返回的 opRole）
 // value: 对应的路由配置数组
 const roleRouteMap = {
-  do: financeRoutes,
-  // manager: managerRoutes,
+  do: warehouseRoutes,
+  manager: managerRoutes,
   sales: salesRoutes,
   marketing: marketingRoutes,
   generalManager: generalManagerRoutes,

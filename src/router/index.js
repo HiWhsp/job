@@ -190,8 +190,6 @@ export function resetRoutes() {
 function getUserRole() {
   let userRole = null;
   const roleStr = localStorage.getItem("vuex_role");
-  // 清除缓存路由
-  localStorage.removeItem("last_route");
   if (roleStr) {
     try {
       // 尝试解析 JSON
