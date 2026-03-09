@@ -82,10 +82,6 @@ function api(option) {
 	let reqUrl = process.env.NODE_ENV !== "production" ? API_ROOT + option.url : API_ROOT + option.url
 	let method = option.method || "get"; //
 
-	// for (var key in option) {
-	//   reqData.append(key, option[key]);
-	// }
-
 
 	let reqData = {
 		...option.data,
@@ -103,33 +99,20 @@ function api(option) {
 	let token = localStorage.getItem("token");
 	let otherConfig = {
 		headers: {
-			// "Content-Type": "application/x-www-form-urlencoded",
-			"Content-Type": "application/json",
 			"Authorization": "Bearer " + token,
 		},
-		// transformRequest: [
-		// 	function(data) {
-		// 		let ret = "";
-		// 		let i = 0;
-		// 		for (let key in data) {
-		// 			if (i != 0) {
-		// 				ret += "&";
-		// 			} else {}
-		// 			if (key != "action") {
-		// 				// debugger
-		// 				ret +=
-		// 					encodeURIComponent(key) + "=" + encodeURIComponent(data[key]);
-		// 				i++;
-		// 			}
-		// 		}
-		// 		return ret;
-		// 	},
-		// ],
 	};
+
+	// get 请求使用 application/json（仅影响部分场景）；post/put/delete 使用 form-data
+	if (method == "get") {
+		otherConfig.headers["Content-Type"] = "application/json";
+	} else {
+		otherConfig.headers["Content-Type"] = "application/x-www-form-urlencoded";
+	}
 
 	//特殊处理上传
 	if (reqUrl.includes("/file/api/v1/app/upload")) {
-		otherConfig.headers["Content-Type"] = "application/form-data";
+		otherConfig.headers["Content-Type"] = "multipart/form-data";
 	}
 
 	if (method == "get") {
@@ -140,10 +123,18 @@ function api(option) {
 			...otherConfig,
 		});
 	} else if (method == "post" || method == "put" || method == "delete") {
+		// form-data 需使用 URLSearchParams 或 FormData 序列化
+		const formData = new URLSearchParams();
+		for (let key in reqData) {
+			const val = reqData[key];
+			if (val !== undefined && val !== null) {
+				formData.append(key, typeof val === 'object' ? JSON.stringify(val) : val);
+			}
+		}
 		return axios_ins_common({
 			url: reqUrl,
 			method: method,
-			data: reqData,
+			data: formData,
 			...otherConfig,
 		});
 	}

@@ -19,12 +19,7 @@
           <span>
             <img src="@/assets/img/login-pass.png" class="icon" />
           </span>
-          <input
-            type="password"
-            placeholder="请输入密码"
-            v-model="form.password"
-            @keyup.enter="do_submit()"
-          />
+          <input type="password" placeholder="请输入密码" v-model="form.password" @keyup.enter="do_submit()" />
         </div>
         <!-- <div class="input-box">
                       <span>验证码</span>
@@ -32,11 +27,7 @@
                       <img class="code" :src="verify_pic" alt="" @click="query_code()" />
         </div>-->
         <div class="btn-box">
-          <el-button
-            class="btn-ripple btn-ripple"
-            :loading="loading"
-            @click="throttle_do_submit()"
-          >确认登录</el-button>
+          <el-button class="btn-ripple btn-ripple" :loading="loading" @click="throttle_do_submit()">确认登录</el-button>
         </div>
       </div>
     </div>
@@ -126,7 +117,7 @@ export default {
       this.loading = true;
 
       this.$api({
-        url: "/web_login",
+        url: "/loginSysUser",
         method: "post",
         data: {
           username: this.form.username,
@@ -136,42 +127,42 @@ export default {
         }
       }).then(res => {
         this.$logjson("登录", res);
-        alert(res).then(() => {
-          this.loading = false;
-        });
+        this.loading = false;
 
-        if (res.code == 200) {          
+        if (res.code == 200) {
           let token = res.data.token;
           this.$store.commit("set_vuex_token", token);
           this.$store.commit("set_vuex_user", res.data);
-          
+
           // 设置 userId 到 localStorage（路由守卫需要）
           if (res.data.id || res.data.userId) {
             localStorage.setItem("userId", res.data.id || res.data.userId);
           }
-          
+
           // 设置用户角色
-          const userRole = res.data.opRole || 'do';
+          const userRole = res.data.roleId;
           this.$store.commit("set_vuex_role", userRole);
-          
+
           // 跳转到角色对应的第一个路由
           this.to_success(userRole);
         } else {
           // this.query_code();
         }
+      }).catch(err => {
+        this.loading = false;
       });
     },
     to_success(role) {
       console.log("开始跳转，角色:", role);
-      
+
       // 添加角色路由
       const routes = addRoleRoutes(role);
       console.log("添加的路由:", routes);
-      
+
       // 获取第一个路由对象（包含 name 和 path）
       const firstRouteObj = getFirstRouteObjectByRole(role);
       console.log("第一个路由对象:", firstRouteObj);
-      
+
       if (firstRouteObj && firstRouteObj.name) {
         // 等待路由添加完成后再跳转
         this.$nextTick(() => {
@@ -220,16 +211,19 @@ export default {
       height: 100vh;
       background: url("~@/assets/img/bg-left.png") no-repeat center / cover;
       padding: 40px 0;
+
       .logo-box {
         position: absolute;
         top: 27px;
         left: 40px;
         width: 155px;
+
         .logo {
           width: 100%;
           height: 100%;
         }
       }
+
       .title {
         text-align: center;
         margin-top: 35px;
@@ -239,6 +233,7 @@ export default {
         font-size: 40px;
         color: #ffffff;
       }
+
       .desc {
         font-family: PingFang SC, PingFang SC;
         font-weight: 400;

@@ -12,16 +12,50 @@
             <img :src="vuex_user.image || defaultAvatar" alt />
           </div>
           <div class="user-name">
-            <p>{{ vuex_user.real_name }}</p>
+            <p>{{ vuex_user.real_name || vuex_user.name }}</p>
           </div>
         </div>
-        <div class="logout-box flex" @click="do_logout()">
-          <span class="logout-text">密码修改</span>
+        <div class="logout-box flex">
+          <span class="logout-text" @click="do_password()">密码修改</span>
           <div class="info-line"></div>
-          <span class="logout-text">退出登录</span>
+          <span class="logout-text" @click="do_logout()">退出登录</span>
         </div>
       </div>
     </div>
+
+    <!-- 修改密码弹框 -->
+    <el-dialog
+      title="修改密码"
+      :visible.sync="passwordDialogVisible"
+      width="400px"
+      :close-on-click-modal="false"
+      @close="resetPasswordForm"
+    >
+      <el-form ref="passwordFormRef" :model="passwordForm" :rules="passwordRules" label-width="100px">
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input
+            v-model="passwordForm.newPassword"
+            type="password"
+            placeholder="请输入新密码"
+            show-password
+            @keyup.enter.native="submitPassword"
+          />
+        </el-form-item>
+        <el-form-item label="确认新密码" prop="confirmPassword">
+          <el-input
+            v-model="passwordForm.confirmPassword"
+            type="password"
+            placeholder="请再次输入新密码"
+            show-password
+            @keyup.enter.native="submitPassword"
+          />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="passwordDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="passwordLoading" @click="submitPassword">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -33,7 +67,26 @@ export default {
     //
   },
   data() {
-    return {};
+    return {
+      passwordDialogVisible: false,
+      passwordLoading: false,
+      passwordForm: {
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: ""
+      },
+      passwordRules: {
+        oldPassword: [{ required: true, message: "请输入原密码", trigger: "blur" }],
+        newPassword: [
+          { required: true, message: "请输入新密码", trigger: "blur" },
+          { min: 6, message: "新密码至少6位", trigger: "blur" }
+        ],
+        confirmPassword: [
+          { required: true, message: "请再次输入新密码", trigger: "blur" },
+          { validator: this.validateConfirmPassword, trigger: "blur" }
+        ]
+      }
+    };
   },
   computed: {
     ...mapState(["vuex_depart_list"]),
@@ -51,7 +104,56 @@ export default {
     },
     do_logout() {
       this.$store.commit("clearAdminInfo");
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
       this.$router.push("/login");
+    },
+    do_password() {
+      this.passwordDialogVisible = true;
+    },
+    validateConfirmPassword(rule, value, callback) {
+      if (value !== this.passwordForm.newPassword) {
+        callback(new Error("两次输入的新密码不一致"));
+      } else {
+        callback();
+      }
+    },
+    resetPasswordForm() {
+      this.passwordForm = {
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: ""
+      };
+      this.$refs.passwordFormRef && this.$refs.passwordFormRef.resetFields();
+    },
+    submitPassword() {
+      this.$refs.passwordFormRef.validate(valid => {
+        if (!valid) return;
+        this.passwordLoading = true;
+        this.$api({
+          url: "/editPassWord",
+          method: "post",
+          data: {
+            password: this.passwordForm.newPassword
+          }
+        })
+          .then(res => {
+            this.passwordLoading = false;
+            if (res.code == 200) {
+              this.$message.success("密码修改成功，请重新登录");
+              this.passwordDialogVisible = false;
+              this.$store.commit("clearAdminInfo");
+              localStorage.removeItem("token");
+              localStorage.removeItem("userId");
+              this.$router.push("/login");
+            } else {
+              this.$message.error(res.msg || "修改失败");
+            }
+          })
+          .catch(() => {
+            this.passwordLoading = false;
+          });
+      });
     }
   }
 };

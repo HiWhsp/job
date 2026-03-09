@@ -48,14 +48,6 @@ export default new Vuex.Store({
 				return role || "";
 			}
 		})(),
-		vuex_red_number: (() => {
-			try {
-				const num = localStorage.getItem("vuex_red_number");
-				return num ? parseInt(num) : 0;
-			} catch (e) {
-				return 0;
-			}
-		})(),
 
 		//
 		vuex_iframe_page_data: {},
@@ -83,16 +75,15 @@ export default new Vuex.Store({
 			state.vuex_role = data;
 			localStorage.setItem("vuex_role", JSON.stringify(state.vuex_role));
 		},
-		set_vuex_red_number(state, data) {
-			state.vuex_red_number = data || 0;
-			localStorage.setItem("vuex_red_number", JSON.stringify(state.vuex_red_number));
-		},
 		//清空登录信息
 		clearAdminInfo(state) {
 			state.vuex_user = {};
 			state.vuex_depart_list = [];
 			localStorage.removeItem("vuex_user");
 			localStorage.removeItem("vuex_depart_list");
+			localStorage.removeItem("vuex_role");
+			state.token = "";
+			state.vuex_role = "";
 		},
 	},
 
@@ -104,7 +95,7 @@ export default new Vuex.Store({
 		}, data) {
 			dispatch("getUserInfo");
 			dispatch("getDepartList");
-			dispatch("getRedNumber");
+			// dispatch("getRedNumber");
 		},
 
 		// 获取用户信息
@@ -114,12 +105,12 @@ export default new Vuex.Store({
 			dispatch
 		}, option) {
 			api({
-				url: '/getUserInfo2',
-				method: 'get',
+				url: '/useGetSysUser',
+				method: 'post',
 			}).then((res) => {
 				if (res.code == 200) {
 					commit("set_vuex_user", res.data);
-					commit("set_vuex_role", res.data.opRole);
+					commit("set_vuex_role", res.data.roleId);
 				} else {}
 			});
 		},
@@ -129,27 +120,13 @@ export default new Vuex.Store({
 			dispatch
 		}, option) {
 			api({
-				url: '/departs',
-				method: 'get',
+				url: '/getSysUserRoleList',
+				method: 'post',
 			}).then((res) => {
 				if (res.code == 200) {
 					commit("set_vuex_depart_list", res.data);
 				} else {}
 			});
-		},
-		async getRedNumber({
-			commit,
-			state,
-			dispatch
-		}, option) {
-			api({
-				url: '/projectList',
-				method: 'get',
-			}).then((res) => {
-				if (res.code == 200) {
-					commit("set_vuex_red_number", state.vuex_role.includes("shenhe") ? res.data.num2 : res.data.num1);
-				} else {}
-			});
-		},
+		}
 	},
 });
