@@ -1112,11 +1112,30 @@ const warehouseRoutes = [
         path: 'product-inventory-management',
         name: 'product-inventory-management',
         component: () => import("@/views/warehouse/product-inventory-management/index.vue"),
+        redirect: '/warehouse/product-inventory-management/list',
         meta: {
           title: "产品库存管理",
           requireAuth: true,
           hidden: true
-        }
+        },
+        children: [
+          {
+            path: 'list',
+            name: 'product-inventory-management-list',
+            component: () => import("@/views/warehouse/product-inventory-management/list.vue"),
+            meta: {
+              title: "产品库存管理列表",
+            }
+          },
+          {
+            path: 'detail',
+            name: 'product-inventory-management-detail',
+            component: () => import("@/views/warehouse/product-inventory-management/detail.vue"),
+            meta: {
+              title: "产品库存管理详情",
+            }
+          }
+        ]
       },
       // 产品库存盘点
       {
