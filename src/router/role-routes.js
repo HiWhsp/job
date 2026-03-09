@@ -1225,15 +1225,15 @@ const warehouseRoutes = [
 // key: 角色标识（从后端返回的 opRole）
 // value: 对应的路由配置数组
 const roleRouteMap = {
-  do: warehouseRoutes,
-  manager: managerRoutes,
-  sales: salesRoutes,
-  marketing: marketingRoutes,
-  generalManager: generalManagerRoutes,
-  finance: financeRoutes,
-  purchase: purchaseRoutes,
-  productionVicePresident: productionVicePresidentRoutes,
-  warehouse: warehouseRoutes
+  "1": warehouseRoutes, // 超级管理员
+  manager: managerRoutes, // 管理员
+  sales: salesRoutes, // 业务员
+  marketing: marketingRoutes, // 营销员
+  generalManager: generalManagerRoutes, // 总经理
+  finance: financeRoutes, // 财务
+  purchase: purchaseRoutes, // 采购
+  productionVicePresident: productionVicePresidentRoutes, // 生产副总
+  warehouse: warehouseRoutes // 库管理员
 };
 
 /**
@@ -1247,7 +1247,7 @@ export function getRoutesByRole(role) {
   }
 
   // 如果角色是字符串，直接查找
-  if (typeof role === 'string') {
+  if (typeof role === 'string' || typeof role === 'number') {
     return roleRouteMap[role] || [];
   }
 
