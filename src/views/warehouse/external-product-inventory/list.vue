@@ -11,18 +11,6 @@
             style="width: 260px"
           />
         </el-form-item>
-        <el-form-item label="产品分类">
-          <el-select
-            v-model="queryParams.categoryId"
-            placeholder="请选择"
-            clearable
-            style="width: 200px"
-          >
-            <el-option label="树脂盘" value="1" />
-            <el-option label="硅橡胶" value="2" />
-            <el-option label="其他产品" value="3" />
-          </el-select>
-        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleQuery">搜索</el-button>
           <el-button @click="resetQuery">重置</el-button>
@@ -33,10 +21,10 @@
     <!-- 表格区域 -->
     <div class="table-view">
       <div class="table-util-bar">
-        <div class="table-title">产品管理</div>
+        <div class="table-title">外购产品库存</div>
         <div class="table-acts">
-          <el-button type="primary" size="small" @click="handleAddIn">新增入库</el-button>
-          <el-button size="small" @click="handleExport">导出</el-button>
+          <!-- <el-button type="primary" size="small" @click="handleAddIn">新增入库</el-button> -->
+          <!-- <el-button size="small" @click="handleExport">导出</el-button> -->
         </div>
       </div>
       <div class="table-box">
@@ -57,19 +45,10 @@
           <el-table-column prop="categoryName" label="所属分类" min-width="100" show-overflow-tooltip />
           <el-table-column prop="unit" label="单位" min-width="80" show-overflow-tooltip />
           <el-table-column prop="stockQuantity" label="库存数量" min-width="100" align="center" show-overflow-tooltip />
-          <el-table-column prop="warnQuantity" label="库存预警数量" min-width="120" align="center" show-overflow-tooltip />
-          <el-table-column label="库存预警" min-width="100" align="center">
-            <template slot-scope="{ row }">
-              <span :class="row.isWarn ? 'warn-status' : 'normal-status'">
-                {{ row.isWarn ? '预警中' : '正常' }}
-              </span>
-            </template>
-          </el-table-column>
           <el-table-column label="操作" width="180" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleViewDetail(row)">查看详情</span>
-                <span class="row-act" @click="handleSetWarn(row)">设置库存预警</span>
               </span>
             </template>
           </el-table-column>
@@ -87,30 +66,6 @@
         </div>
       </div>
     </div>
-
-    <!-- 设置库存预警数量弹框 -->
-    <el-dialog
-      title="设置库存预警数量"
-      :visible.sync="warnDialogVisible"
-      width="480px"
-      :close-on-click-modal="false"
-      @close="handleWarnDialogClose"
-    >
-      <el-form ref="warnForm" :model="warnForm" label-width="120px">
-        <el-form-item label="库存预警数量：">
-          <el-input
-            v-model="warnForm.warnQuantity"
-            placeholder="请输入"
-            clearable
-            style="width: 100%"
-          />
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleWarnSubmit">提交</el-button>
-        <el-button @click="warnDialogVisible = false">取消</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -128,11 +83,6 @@ export default {
       },
       total: 295,
       tableHeight: 0,
-      warnDialogVisible: false,
-      currentWarnRow: null,
-      warnForm: {
-        warnQuantity: ''
-      },
       tableData: [
         {
           id: 1,
@@ -211,38 +161,9 @@ export default {
     },
     handleViewDetail(row) {
       this.$router.push({
-        path: '/warehouse/product-inventory-management/detail',
+        path: '/warehouse/external-product-inventory/detail',
         query: { id: row.id }
       });
-    },
-    handleSetWarn(row) {
-      this.currentWarnRow = row;
-      this.warnForm.warnQuantity = row.warnQuantity != null ? String(row.warnQuantity) : '';
-      this.warnDialogVisible = true;
-    },
-    handleWarnDialogClose() {
-      this.currentWarnRow = null;
-      this.warnForm.warnQuantity = '';
-      this.$refs.warnForm && this.$refs.warnForm.resetFields();
-    },
-    handleWarnSubmit() {
-      const val = this.warnForm.warnQuantity;
-      if (val === '' || val === undefined || val === null) {
-        this.$message.warning('请输入库存预警数量');
-        return;
-      }
-      const num = Number(val);
-      if (isNaN(num) || num < 0 || !Number.isInteger(num)) {
-        this.$message.warning('请输入有效的非负整数');
-        return;
-      }
-      // TODO: 调用接口保存库存预警数量 this.currentWarnRow.id, num
-      this.$message.success('设置成功');
-      if (this.currentWarnRow) {
-        this.currentWarnRow.warnQuantity = num;
-        this.currentWarnRow.isWarn = this.currentWarnRow.stockQuantity != null && this.currentWarnRow.stockQuantity < num;
-      }
-      this.warnDialogVisible = false;
     },
     handleAddIn() {
       // TODO: 新增入库

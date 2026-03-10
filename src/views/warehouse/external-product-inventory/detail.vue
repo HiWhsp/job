@@ -15,16 +15,6 @@
                         <span class="info-value">{{ productInfo.code }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">产品名称</span>
-                        <span class="info-value">{{ productInfo.name }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">所属分类</span>
-                        <span class="info-value">{{ productInfo.categoryName }}</span>
-                    </div>
-                </div>
-                <div class="info-row">
-                    <div class="info-item">
                         <span class="info-label">规格</span>
                         <span class="info-value">{{ productInfo.spec }}</span>
                     </div>
@@ -32,15 +22,11 @@
                         <span class="info-label">单位</span>
                         <span class="info-value">{{ productInfo.unit }}</span>
                     </div>
-                    <div class="info-item">
-                        <span class="info-label">库存数量</span>
-                        <span class="info-value">{{ productInfo.stockQuantity }}</span>
-                    </div>
                 </div>
                 <div class="info-row">
                     <div class="info-item">
-                        <span class="info-label">库存预警数量</span>
-                        <span class="info-value">{{ productInfo.warnQuantity }}</span>
+                        <span class="info-label">库存数量</span>
+                        <span class="info-value">{{ productInfo.stockQuantity }}</span>
                     </div>
                 </div>
             </div>
@@ -74,15 +60,13 @@
                                 show-overflow-tooltip />
                             <el-table-column prop="inDate" label="入库日期" min-width="120" align="center"
                                 show-overflow-tooltip />
-                            <el-table-column prop="quantityBefore" label="入库前数量" min-width="120" align="center"
-                                show-overflow-tooltip />
-                            <el-table-column prop="quantityAfter" label="入库后数量" min-width="120" align="center"
+                            <el-table-column prop="quantityBefore" label="对应入库单号" min-width="120" align="center"
                                 show-overflow-tooltip />
                             <el-table-column label="操作" width="160" align="center" fixed="right">
                                 <template slot-scope="{ row }">
                                     <span class="row-acts">
                                         <span class="row-act" @click="handleInDetail(row)">查看详情</span>
-                                        <span class="row-act" @click="handleInEdit(row)">编辑</span>
+                                        <!-- <span class="row-act" @click="handleInEdit(row)">编辑</span> -->
                                     </span>
                                 </template>
                             </el-table-column>
@@ -120,7 +104,6 @@
                                 show-overflow-tooltip />
                             <el-table-column prop="orderNo" label="对应出库单号" min-width="140" align="center"
                                 show-overflow-tooltip />
-                            <el-table-column prop="customerName" label="客户名称" min-width="180" show-overflow-tooltip />
                             <el-table-column label="操作" width="120" align="center" fixed="right">
                                 <template slot-scope="{ row }">
                                     <span class="row-acts">
@@ -185,12 +168,12 @@
                             <span class="value">{{ outDetailInfo.outTime }}</span>
                         </div>
                     </div>
-                    <div class="wrap">
+                    <!-- <div class="wrap">
                         <div class="in-detail-info-item">
                             <span class="label">客户名称：</span>
                             <span class="value">{{ outDetailInfo.customerName }}</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="in-detail-table-wrap">
                     <el-table :data="outDetailGoodsList" border header-cell-class-name="table-header-cell">

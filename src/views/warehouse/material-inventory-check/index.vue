@@ -40,7 +40,7 @@
     <!-- 表格区域 -->
     <div class="table-view">
       <div class="table-util-bar">
-        <div class="table-title">产品库存盘点</div>
+        <div class="table-title">原料库存盘点</div>
         <div class="table-acts">
           <el-button type="primary" size="small" @click="handleAddCheck">新增盘点</el-button>
           <el-button size="small" @click="handleExport">导出</el-button>

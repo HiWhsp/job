@@ -6,26 +6,26 @@
         <div class="block-section">
             <div class="block-title">
                 <span class="block-title-bar" />
-                <span>产品信息</span>
+                <span>包装信息</span>
             </div>
             <div class="info-grid">
                 <div class="info-row">
                     <div class="info-item">
-                        <span class="info-label">产品编码</span>
+                        <span class="info-label">原料编码</span>
                         <span class="info-value">{{ productInfo.code }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">产品名称</span>
+                        <span class="info-label">包装名称</span>
                         <span class="info-value">{{ productInfo.name }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">所属分类</span>
+                        <span class="info-label">对应产品</span>
                         <span class="info-value">{{ productInfo.categoryName }}</span>
                     </div>
                 </div>
                 <div class="info-row">
                     <div class="info-item">
-                        <span class="info-label">规格</span>
+                        <span class="info-label">客户名称</span>
                         <span class="info-value">{{ productInfo.spec }}</span>
                     </div>
                     <div class="info-item">
@@ -35,12 +35,6 @@
                     <div class="info-item">
                         <span class="info-label">库存数量</span>
                         <span class="info-value">{{ productInfo.stockQuantity }}</span>
-                    </div>
-                </div>
-                <div class="info-row">
-                    <div class="info-item">
-                        <span class="info-label">库存预警数量</span>
-                        <span class="info-value">{{ productInfo.warnQuantity }}</span>
                     </div>
                 </div>
             </div>
@@ -74,15 +68,13 @@
                                 show-overflow-tooltip />
                             <el-table-column prop="inDate" label="入库日期" min-width="120" align="center"
                                 show-overflow-tooltip />
-                            <el-table-column prop="quantityBefore" label="入库前数量" min-width="120" align="center"
-                                show-overflow-tooltip />
-                            <el-table-column prop="quantityAfter" label="入库后数量" min-width="120" align="center"
+                            <el-table-column prop="quantityBefore" label="对应入库单号" min-width="120" align="center"
                                 show-overflow-tooltip />
                             <el-table-column label="操作" width="160" align="center" fixed="right">
                                 <template slot-scope="{ row }">
                                     <span class="row-acts">
                                         <span class="row-act" @click="handleInDetail(row)">查看详情</span>
-                                        <span class="row-act" @click="handleInEdit(row)">编辑</span>
+                                        <!-- <span class="row-act" @click="handleInEdit(row)">编辑</span> -->
                                     </span>
                                 </template>
                             </el-table-column>
@@ -120,7 +112,6 @@
                                 show-overflow-tooltip />
                             <el-table-column prop="orderNo" label="对应出库单号" min-width="140" align="center"
                                 show-overflow-tooltip />
-                            <el-table-column prop="customerName" label="客户名称" min-width="180" show-overflow-tooltip />
                             <el-table-column label="操作" width="120" align="center" fixed="right">
                                 <template slot-scope="{ row }">
                                     <span class="row-acts">
@@ -157,8 +148,7 @@
                 <div class="in-detail-table-wrap">
                     <el-table :data="inDetailGoodsList" border header-cell-class-name="table-header-cell">
                         <el-table-column type="index" label="序号" width="60" align="center" />
-                        <el-table-column prop="productName" label="产品名称" min-width="120" show-overflow-tooltip />
-                        <el-table-column prop="spec" label="规格" min-width="120" show-overflow-tooltip />
+                        <el-table-column prop="materialName" label="包装名称" min-width="120" show-overflow-tooltip />
                         <el-table-column prop="unit" label="单位" width="80" align="center" />
                         <el-table-column prop="quantity" label="本次入库数量" width="120" align="center" />
                     </el-table>
@@ -185,18 +175,22 @@
                             <span class="value">{{ outDetailInfo.outTime }}</span>
                         </div>
                     </div>
-                    <div class="wrap">
+                    <!-- <div class="wrap">
                         <div class="in-detail-info-item">
-                            <span class="label">客户名称：</span>
+                            <span class="label">出库单名称：</span>
                             <span class="value">{{ outDetailInfo.customerName }}</span>
                         </div>
-                    </div>
+                        <div class="in-detail-info-item">
+                            <span class="label">出库单备注：</span>
+                            <span class="value">{{ outDetailInfo.customerName }}</span>
+                        </div>
+                    </div> -->
                 </div>
                 <div class="in-detail-table-wrap">
                     <el-table :data="outDetailGoodsList" border header-cell-class-name="table-header-cell">
                         <el-table-column type="index" label="序号" width="60" align="center" />
-                        <el-table-column prop="productName" label="产品名称" min-width="120" show-overflow-tooltip />
-                        <el-table-column prop="spec" label="规格" min-width="120" show-overflow-tooltip />
+                        <el-table-column prop="productName" label="包装名称" min-width="120" show-overflow-tooltip />
+                        <!-- <el-table-column prop="spec" label="规格" min-width="120" show-overflow-tooltip /> -->
                         <el-table-column prop="unit" label="单位" width="80" align="center" />
                         <el-table-column prop="quantity" label="本次出库数量" width="120" align="center" />
                     </el-table>
@@ -215,13 +209,8 @@
                 <div class="add-in-form-head">
                     <el-form label-width="90px" class="add-in-form">
                         <el-form-item label="入库时间：">
-                            <el-date-picker
-                                v-model="editInForm.inTime"
-                                type="date"
-                                placeholder="默认今天"
-                                value-format="yyyy-MM-dd"
-                                style="width: 100%"
-                            />
+                            <el-date-picker v-model="editInForm.inTime" type="date" placeholder="默认今天"
+                                value-format="yyyy-MM-dd" style="width: 100%" />
                         </el-form-item>
                     </el-form>
                     <el-button type="primary" class="add-product-btn" @click="addEditInProduct">添加产品</el-button>
@@ -233,7 +222,8 @@
                         </el-table-column>
                         <el-table-column label="产品名称" min-width="140">
                             <template slot-scope="{ row }">
-                                <el-input v-if="row.isEditing" v-model="row.productName" placeholder="搜索选择" size="small" />
+                                <el-input v-if="row.isEditing" v-model="row.productName" placeholder="搜索选择"
+                                    size="small" />
                                 <span v-else>{{ row.productName }}</span>
                             </template>
                         </el-table-column>
@@ -251,7 +241,8 @@
                         </el-table-column>
                         <el-table-column label="本次入库数量" width="120" align="center">
                             <template slot-scope="{ row }">
-                                <el-input v-if="row.isEditing" v-model.number="row.quantity" placeholder="请输入" size="small" />
+                                <el-input v-if="row.isEditing" v-model.number="row.quantity" placeholder="请输入"
+                                    size="small" />
                                 <span v-else>{{ row.quantity }}</span>
                             </template>
                         </el-table-column>

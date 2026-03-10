@@ -1,25 +1,17 @@
 <template>
-  <div class="view-wrap inventory-check-page">
+  <div class="view-wrap material-out-list-page">
     <!-- 搜索/筛选区域 -->
     <div class="search-section">
-      <el-form :model="queryParams" ref="queryForm" inline class="search-form" label-width="90px">
-        <el-form-item label="盘点名称">
+      <el-form :model="queryParams" ref="queryForm" inline class="search-form" label-width="80px">
+        <el-form-item label="关键词" prop="keyword">
           <el-input
-            v-model="queryParams.checkName"
-            placeholder="请输入"
+            v-model="queryParams.keyword"
+            placeholder="出库单号/出库单名称"
             clearable
-            style="width: 200px"
+            style="width: 260px"
           />
         </el-form-item>
-        <el-form-item label="盘点单号">
-          <el-input
-            v-model="queryParams.checkNo"
-            placeholder="请输入"
-            clearable
-            style="width: 200px"
-          />
-        </el-form-item>
-        <el-form-item label="时间筛选">
+        <el-form-item label="时间筛选" prop="dateRange">
           <el-date-picker
             v-model="queryParams.dateRange"
             type="daterange"
@@ -40,10 +32,10 @@
     <!-- 表格区域 -->
     <div class="table-view">
       <div class="table-util-bar">
-        <div class="table-title">产品库存盘点</div>
+        <div class="table-title">原料出库管理</div>
         <div class="table-acts">
-          <el-button type="primary" size="small" @click="handleAddCheck">新增盘点</el-button>
           <el-button size="small" @click="handleExport">导出</el-button>
+          <el-button type="primary" size="small" @click="handleAdd">新增原料出库单</el-button>
         </div>
       </div>
       <div class="table-box">
@@ -59,10 +51,10 @@
               {{ String((queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1).padStart(3, '0') }}
             </template>
           </el-table-column>
-          <el-table-column prop="checkNo" label="盘点单号" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="checkName" label="盘点名称" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="remark" label="备注" min-width="140" show-overflow-tooltip />
-          <el-table-column prop="checkTime" label="盘点时间" width="120" align="center" />
+          <el-table-column prop="outNo" label="出库单号" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="outName" label="出库单名称" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="remark" label="出库单备注" min-width="340" show-overflow-tooltip />
+          <el-table-column prop="outTime" label="出库时间" width="120" align="center" />
           <el-table-column label="操作" width="120" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-act" @click="handleViewDetail(row)">查看详情</span>
@@ -83,80 +75,86 @@
       </div>
     </div>
 
-    <!-- 新增盘点弹框 -->
-    <el-dialog
-      title="新增盘点"
-      :visible.sync="addCheckDialogVisible"
-      width="520px"
-      :close-on-click-modal="false"
-      @close="handleAddCheckDialogClose"
+    <!-- 出库详情抽屉：从右到左打开，800px -->
+    <el-drawer
+      title="出库详情"
+      :visible.sync="detailDrawerVisible"
+      direction="rtl"
+      size="800px"
+      :before-close="closeDetailDrawer"
     >
-      <el-form ref="addCheckForm" :model="addCheckForm" :rules="addCheckRules" label-width="100px">
-        <el-form-item label="盘点名称：" prop="checkName">
-          <el-input v-model="addCheckForm.checkName" placeholder="请输入" clearable />
-        </el-form-item>
-        <el-form-item label="备注：" prop="remark">
-          <el-input v-model="addCheckForm.remark" placeholder="请输入" clearable />
-        </el-form-item>
-        <el-form-item label="库存文件：" prop="inventoryFile">
-          <div class="upload-file-row">
-            <el-upload
-              ref="uploadRef"
-              :auto-upload="false"
-              :limit="1"
-              :on-change="handleFileChange"
-              :on-remove="handleFileRemove"
-              :file-list="addCheckForm.fileList"
-            >
-              <el-button size="small" type="primary">上传文件</el-button>
-            </el-upload>
-            <span v-if="addCheckForm.fileName" class="file-name">{{ addCheckForm.fileName }}</span>
+      <div class="detail-drawer">
+        <div class="detail-base-info">
+          <div class="info-line">
+            <div class="info-item">
+              <span class="label">出库单号：</span>
+              <span class="value">{{ detailInfo.outNo }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">出库时间：</span>
+              <span class="value">{{ detailInfo.outTime }}</span>
+            </div>
           </div>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleAddCheckSubmit">提交</el-button>
-        <el-button @click="addCheckDialogVisible = false">取消</el-button>
-      </span>
-    </el-dialog>
+          <div class="info-line">
+            <div class="info-item">
+              <span class="label">出库单名称：</span>
+              <span class="value">{{ detailInfo.outName }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">出库单备注：</span>
+              <span class="value">{{ detailInfo.remark }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <el-table :data="detailMaterials" border header-cell-class-name="table-header-cell">
+            <el-table-column label="序号" width="70" align="center">
+              <template slot-scope="{ $index }">{{ String($index + 1).padStart(3, '0') }}</template>
+            </el-table-column>
+            <el-table-column prop="materialName" label="原料名称" min-width="160" show-overflow-tooltip />
+            <el-table-column prop="spec" label="规格" min-width="140" show-overflow-tooltip />
+            <el-table-column prop="unit" label="单位" width="80" align="center" />
+            <el-table-column prop="quantity" label="本次出库数量" width="120" align="center" />
+          </el-table>
+        </div>
+
+        <div class="detail-footer">
+          <el-button type="primary" @click="detailDrawerVisible = false">确定</el-button>
+          <el-button @click="detailDrawerVisible = false">取消</el-button>
+        </div>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'WarehouseProductInventoryCheck',
+  name: 'WarehouseMaterialOutManagementList',
   data() {
     return {
       queryParams: {
-        checkName: '',
-        checkNo: '',
+        keyword: '',
         dateRange: null,
         pageNum: 1,
         pageSize: 20
       },
-      total: 8,
+      total: 295,
       tableHeight: 0,
-      tableData: [
-        { id: 1, checkNo: '4578786954', checkName: '盘点名称', remark: '盘点备注文字', checkTime: '2026-1-15' },
-        { id: 2, checkNo: '4578786954', checkName: '盘点名称', remark: '盘点备注文字', checkTime: '2026-1-15' },
-        { id: 3, checkNo: '4578786954', checkName: '盘点名称', remark: '盘点备注文字', checkTime: '2026-1-15' },
-        { id: 4, checkNo: '4578786954', checkName: '盘点名称', remark: '盘点备注文字', checkTime: '2026-1-15' },
-        { id: 5, checkNo: '4578786954', checkName: '盘点名称', remark: '盘点备注文字', checkTime: '2026-1-15' },
-        { id: 6, checkNo: '4578786954', checkName: '盘点名称', remark: '盘点备注文字', checkTime: '2026-1-15' },
-        { id: 7, checkNo: '4578786954', checkName: '盘点名称', remark: '盘点备注文字', checkTime: '2026-1-15' },
-        { id: 8, checkNo: '4578786954', checkName: '盘点名称', remark: '盘点备注文字', checkTime: '2026-1-15' }
-      ],
-      addCheckDialogVisible: false,
-      addCheckForm: {
-        checkName: '',
-        remark: '',
-        inventoryFile: null,
-        fileName: '',
-        fileList: []
+      tableData: Array.from({ length: 10 }, () => ({
+        outNo: '4521414',
+        outName: '出库单名称',
+        remark: '出库单备注信息出库单备注信息出库单备注信息出库单备注信息出库单备注信息出库单备注信息出库单备注信息',
+        outTime: '2026-01-05'
+      })),
+      detailDrawerVisible: false,
+      detailInfo: {
+        outNo: '',
+        outTime: '',
+        outName: '',
+        remark: ''
       },
-      addCheckRules: {
-        checkName: [{ required: true, message: '请输入盘点名称', trigger: 'blur' }]
-      }
+      detailMaterials: []
     };
   },
   mounted() {
@@ -182,7 +180,7 @@ export default {
       return rowIndex % 2 === 1 ? 'row-even' : '';
     },
     loadList() {
-      // TODO: 调用产品库存盘点列表接口
+      // TODO: 调用原料出库管理列表接口
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -201,59 +199,42 @@ export default {
       this.queryParams.pageNum = val;
       this.loadList();
     },
-    handleAddCheck() {
-      this.addCheckDialogVisible = true;
-    },
-    handleViewDetail(row) {
-      // TODO: 跳转盘点详情或打开详情抽屉
-      this.$message.info('查看详情：' + row.checkNo);
-    },
     handleExport() {
       // TODO: 导出
       this.$message.info('导出');
     },
-    handleAddCheckDialogClose() {
-      this.addCheckForm.checkName = '';
-      this.addCheckForm.remark = '';
-      this.addCheckForm.inventoryFile = null;
-      this.addCheckForm.fileName = '';
-      this.addCheckForm.fileList = [];
-      this.$refs.addCheckForm && this.$refs.addCheckForm.resetFields();
+    handleAdd() {
+      this.$router.push('/warehouse/material-out-management/add');
     },
-    handleFileChange(file) {
-      this.addCheckForm.inventoryFile = file.raw;
-      this.addCheckForm.fileName = file.name || '库存文件.excel';
+    handleViewDetail(row) {
+      // TODO: 可根据 row.id 请求详情接口，这里用示例数据
+      this.detailInfo = { ...row };
+      this.detailMaterials = Array.from({ length: 10 }, () => ({
+        materialName: '原料名称1',
+        spec: '98,A1,10mm',
+        unit: '盒',
+        quantity: 10
+      }));
+      this.detailDrawerVisible = true;
     },
-    handleFileRemove() {
-      this.addCheckForm.inventoryFile = null;
-      this.addCheckForm.fileName = '';
-      this.addCheckForm.fileList = [];
-    },
-    handleAddCheckSubmit() {
-      this.$refs.addCheckForm.validate(valid => {
-        if (!valid) return;
-        // TODO: 提交新增盘点接口，可带上 addCheckForm.checkName, addCheckForm.remark, addCheckForm.inventoryFile
-        this.$message.success('提交成功');
-        this.addCheckDialogVisible = false;
-        this.handleAddCheckDialogClose();
-        this.loadList();
-      });
+    closeDetailDrawer(done) {
+      if (typeof done === 'function') done();
+      else this.detailDrawerVisible = false;
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-.inventory-check-page {
+.material-out-list-page {
   background: #fff;
   border-radius: 8px;
-  height: 100%;
 }
 
 .search-section {
+  text-align: left;
   padding: 20px 24px;
   margin-bottom: 20px;
-  text-align: left;
 }
 
 .search-form {
@@ -261,19 +242,23 @@ export default {
     margin-bottom: 0;
     margin-right: 16px;
   }
+
   ::v-deep .el-form-item__label {
     color: #303133;
     font-size: 14px;
   }
+
   ::v-deep .el-input__inner,
   ::v-deep .el-date-editor {
     border-radius: 4px;
     border-color: #dcdfe6;
   }
+
   .el-button--primary {
     background: linear-gradient(90deg, #157de9 0%, #3697fd 100%) !important;
     border: none;
   }
+
   .el-button:not(.el-button--primary) {
     background: #fff;
     border: 1px solid #dcdfe6;
@@ -295,6 +280,7 @@ export default {
   border-bottom: 1px solid #edf0f6;
 
   .table-title {
+    font-family: Microsoft YaHei, Microsoft YaHei;
     font-weight: bold;
     font-size: 16px;
     color: #333333;
@@ -356,18 +342,68 @@ export default {
   justify-content: flex-end;
 }
 
-.upload-file-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+/* 详情抽屉 */
+::v-deep .el-drawer__header {
+  height: 60px;
+  line-height: 60px;
+  font-size: 18px;
+  color: #333;
+  font-weight: bold;
+  text-align: left;
+  border-bottom: 1px solid #eeeeee;
+  padding: 0 16px;
+}
 
-  .file-name {
+.detail-drawer {
+  padding: 0 24px 20px;
+  height: 100%;
+  overflow: auto;
+}
+
+.detail-base-info {
+  padding: 16px 0 6px;
+
+  .info-line {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .info-item {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
     font-size: 14px;
-    color: #606266;
+    color: #333;
+    display: flex;
+
+    .label {
+      color: #333;
+      margin-right: 12px;
+      min-width: 112px;
+    }
   }
 }
 
-::v-deep .el-dialog__footer {
-  text-align: center;
+.detail-section {
+  margin-top: 12px;
+}
+
+.detail-footer {
+  margin-top: 24px;
+  padding: 20px 0 10px;
+  text-align: right;
+  border-top: 1px solid #eeeeee;
+
+  .el-button--primary {
+    background: #2373c8 !important;
+    border: none;
+  }
+
+  .el-button:not(.el-button--primary) {
+    background: #fff;
+    border: 1px solid #b8b8b8;
+    color: #6a6a6a;
+  }
 }
 </style>

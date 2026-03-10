@@ -1,5 +1,5 @@
 <template>
-  <div class="view-wrap product-inventory-page">
+  <div class="view-wrap material-warehouse-management-page">
     <!-- 搜索/筛选区域 -->
     <div class="search-section">
       <el-form :model="queryParams" ref="queryForm" inline class="search-form" label-width="80px">
@@ -33,9 +33,8 @@
     <!-- 表格区域 -->
     <div class="table-view">
       <div class="table-util-bar">
-        <div class="table-title">产品管理</div>
+        <div class="table-title">原料库管理</div>
         <div class="table-acts">
-          <el-button type="primary" size="small" @click="handleAddIn">新增入库</el-button>
           <el-button size="small" @click="handleExport">导出</el-button>
         </div>
       </div>
@@ -47,13 +46,14 @@
           header-cell-class-name="table-header-cell"
           :row-class-name="tableRowClassName"
         >
-          <el-table-column prop="code" label="产品编码" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="name" label="产品名称" min-width="140" show-overflow-tooltip>
+          <el-table-column prop="code" label="原料编码" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="name" label="原料名称" min-width="140" show-overflow-tooltip>
             <template slot-scope="{ row }">
               <span class="link-name" @click="handleViewDetail(row)">{{ row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="spec" label="规格" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="spec" label="批次" min-width="120" show-overflow-tooltip />
           <el-table-column prop="categoryName" label="所属分类" min-width="100" show-overflow-tooltip />
           <el-table-column prop="unit" label="单位" min-width="80" show-overflow-tooltip />
           <el-table-column prop="stockQuantity" label="库存数量" min-width="100" align="center" show-overflow-tooltip />
@@ -116,7 +116,7 @@
 
 <script>
 export default {
-  name: 'ProductInventoryList',
+  name: 'MaterialWarehouseManagementList',
 
   data() {
     return {
@@ -211,7 +211,7 @@ export default {
     },
     handleViewDetail(row) {
       this.$router.push({
-        path: '/warehouse/product-inventory-management/detail',
+        path: '/warehouse/material-warehouse-management/detail',
         query: { id: row.id }
       });
     },
@@ -265,7 +265,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.product-inventory-page {
+.material-warehouse-management-page {
   background: #fff;
   border-radius: 8px;
 }
