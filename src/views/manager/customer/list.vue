@@ -8,32 +8,45 @@
             <el-input v-model="queryParams.keyword" placeholder="客户编码/客户名称/联系人/电话" clearable style="width: 260px" />
           </el-form-item>
           <el-form-item label="客户属地">
-            <el-select v-model="queryParams.status" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="启用" value="1" />
-              <el-option label="禁用" value="0" />
+            <el-select v-model="queryParams.belong" placeholder="请选择" clearable style="width: 140px">
+              <el-option
+                v-for="item in customerBelongOptions"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="客户区域">
             <el-select v-model="queryParams.region" placeholder="客户区域" clearable style="width: 140px">
-              <el-option label="国内" value="国内" />
-              <el-option label="国外" value="国外" />
-              <el-option label="中国" value="中国" />
-              <el-option label="北京" value="北京" />
-              <el-option label="英国" value="英国" />
+              <el-option
+                v-for="item in customerRegionOptions"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="客户属性A">
-            <el-select v-model="queryParams.attr" placeholder="客户属性" clearable style="width: 140px">
-              <el-option label="企业" value="企业" />
-              <el-option label="个人" value="个人" />
+            <el-select v-model="queryParams.attrA" placeholder="客户属性A" clearable style="width: 140px">
+              <el-option
+                v-for="item in customerAttrAOptions"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
         </div>
         <div class="search-row">
           <el-form-item label="客户属性B">
-            <el-select v-model="queryParams.type" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="类型A" value="A" />
-              <el-option label="类型B" value="B" />
+            <el-select v-model="queryParams.attrB" placeholder="客户属性B" clearable style="width: 140px">
+              <el-option
+                v-for="item in customerAttrBOptions"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -110,6 +123,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import DeleteDialog from '../components/delete-dialog.vue';
 import DetailDrawer from '../components/detail-drawer.vue';
 
@@ -124,10 +138,10 @@ export default {
     return {
       queryParams: {
         keyword: '',
-        status: '',
+        belong: '',
         region: '',
-        attr: '',
-        type: '',
+        attrA: '',
+        attrB: '',
         pageNum: 1,
         pageSize: 20
       },
@@ -179,6 +193,15 @@ export default {
       detailDrawerVisible: false,
       detailRow: null
     };
+  },
+
+  computed: {
+    ...mapState([
+      'customerBelongOptions',
+      'customerRegionOptions',
+      'customerAttrAOptions',
+      'customerAttrBOptions',
+    ]),
   },
 
   mounted() {

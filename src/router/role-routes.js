@@ -1540,32 +1540,36 @@ const warehouseManagerRoutes = [
 // key: 角色标识（从后端返回的 opRole）
 // value: 对应的路由配置数组
 const roleRouteMap = {
-  9: managerRoutes, // 管理员
-  '9': managerRoutes, // 管理员
+  1: managerRoutes, // 管理员
+  '1': managerRoutes, // 管理员
 
-  1: salesRoutes, // 业务员
-  '1': salesRoutes, // 业务员
 
-  2: marketingRoutes, // 营销员
-  '2': marketingRoutes, // 营销员
+  // 9: managerRoutes, // 管理员
+  // '9': managerRoutes, // 管理员
 
-  5: generalManagerRoutes, // 总经理
-  '5': generalManagerRoutes, // 总经理
+  // 1: salesRoutes, // 业务员
+  // '1': salesRoutes, // 业务员
 
-  6: financeRoutes, // 财务
-  '6': financeRoutes, // 财务
+  // 2: marketingRoutes, // 营销员
+  // '2': marketingRoutes, // 营销员
 
-  3: purchaseRoutes, // 采购
-  '3': purchaseRoutes, // 采购
+  // 5: generalManagerRoutes, // 总经理
+  // '5': generalManagerRoutes, // 总经理
 
-  4: productionVicePresidentRoutes, // 生产副总
-  '4': productionVicePresidentRoutes, // 生产副总
+  // 6: financeRoutes, // 财务
+  // '6': financeRoutes, // 财务
 
-  7: warehouseRoutes, // 产品库管
-  '7': warehouseRoutes, // 产品库管
+  // 3: purchaseRoutes, // 采购
+  // '3': purchaseRoutes, // 采购
+
+  // 4: productionVicePresidentRoutes, // 生产副总
+  // '4': productionVicePresidentRoutes, // 生产副总
+
+  // 7: warehouseRoutes, // 产品库管
+  // '7': warehouseRoutes, // 产品库管
   
-  8: warehouseManagerRoutes, // 原料库管
-  '8': warehouseManagerRoutes, // 原料库管
+  // 8: warehouseManagerRoutes, // 原料库管
+  // '8': warehouseManagerRoutes, // 原料库管
 };
 
 /**

@@ -52,6 +52,32 @@ export default new Vuex.Store({
 		//
 		vuex_iframe_page_data: {},
 		is_open_oss_upload: false, //是否开启oss上传
+		// 客户属地下拉
+		customerBelongOptions: [
+			{ value: 1, name: "国内" },
+			{ value: 2, name: "国外" },
+		],
+		// 客户区域下拉
+		customerRegionOptions: [
+			{ value: "国外", name: "国外" },
+			{ value: "中国各省", name: "中国各省" },
+		],
+		// 客户属性A下拉
+		customerAttrAOptions: [
+			{ value: "临床", name: "临床" },
+			{ value: "技工", name: "技工" },
+			{ value: "临床&技工", name: "临床&技工" },
+			{ value: "工业", name: "工业" },
+			{ value: "其他", name: "其他" },
+		],
+		// 客户属性B下拉
+		customerAttrBOptions: [
+			{ value: "经销商", name: "经销商" },
+			{ value: "终端", name: "终端" },
+			{ value: "经销商&终端", name: "经销商&终端" },
+			{ value: "OEM厂商", name: "OEM厂商" },
+			{ value: "其它", name: "其它" },
+		],
 	},
 
 	getters: {},
@@ -82,6 +108,7 @@ export default new Vuex.Store({
 			localStorage.removeItem("vuex_user");
 			localStorage.removeItem("vuex_depart_list");
 			localStorage.removeItem("vuex_role");
+			localStorage.removeItem("last_route");
 			state.token = "";
 			state.vuex_role = "";
 		},
@@ -97,7 +124,6 @@ export default new Vuex.Store({
 			dispatch("getDepartList");
 			// dispatch("getRedNumber");
 		},
-
 		// 获取用户信息
 		async getUserInfo({
 			commit,
