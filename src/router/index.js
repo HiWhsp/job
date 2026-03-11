@@ -236,12 +236,14 @@ router.beforeEach((to, from, next) => {
           if (savedRoute) {
             try {
               const routeInfo = JSON.parse(savedRoute);
-              // 尝试跳转到保存的路由
+              const query = routeInfo.query && typeof routeInfo.query === 'object' && Object.keys(routeInfo.query).length ? routeInfo.query : undefined;
+              const params = routeInfo.params && typeof routeInfo.params === 'object' && Object.keys(routeInfo.params).length ? routeInfo.params : undefined;
+              // 尝试跳转到保存的路由（含 query、params）
               if (routeInfo.name) {
-                next({ name: routeInfo.name, replace: true });
+                next({ name: routeInfo.name, query, params, replace: true });
                 return;
               } else if (routeInfo.path) {
-                next({ path: routeInfo.path, replace: true });
+                next({ path: routeInfo.path, query, params, replace: true });
                 return;
               }
             } catch (e) {
@@ -272,8 +274,13 @@ router.beforeEach((to, from, next) => {
               if (savedRoute) {
                 try {
                   const routeInfo = JSON.parse(savedRoute);
+                  const query = routeInfo.query && typeof routeInfo.query === 'object' && Object.keys(routeInfo.query).length ? routeInfo.query : undefined;
+                  const params = routeInfo.params && typeof routeInfo.params === 'object' && Object.keys(routeInfo.params).length ? routeInfo.params : undefined;
                   if (routeInfo.name) {
-                    next({ name: routeInfo.name, replace: true });
+                    next({ name: routeInfo.name, query, params, replace: true });
+                    return;
+                  } else if (routeInfo.path) {
+                    next({ path: routeInfo.path, query, params, replace: true });
                     return;
                   }
                 } catch (e) {}
@@ -309,11 +316,13 @@ router.beforeEach((to, from, next) => {
           if (savedRoute) {
             try {
               const routeInfo = JSON.parse(savedRoute);
+              const query = routeInfo.query && typeof routeInfo.query === 'object' && Object.keys(routeInfo.query).length ? routeInfo.query : undefined;
+              const params = routeInfo.params && typeof routeInfo.params === 'object' && Object.keys(routeInfo.params).length ? routeInfo.params : undefined;
               if (routeInfo.name) {
-                next({ name: routeInfo.name, replace: true });
+                next({ name: routeInfo.name, query, params, replace: true });
                 return;
               } else if (routeInfo.path) {
-                next({ path: routeInfo.path, replace: true });
+                next({ path: routeInfo.path, query, params, replace: true });
                 return;
               }
             } catch (e) {
@@ -339,8 +348,13 @@ router.beforeEach((to, from, next) => {
               if (savedRoute) {
                 try {
                   const routeInfo = JSON.parse(savedRoute);
+                  const query = routeInfo.query && typeof routeInfo.query === 'object' && Object.keys(routeInfo.query).length ? routeInfo.query : undefined;
+                  const params = routeInfo.params && typeof routeInfo.params === 'object' && Object.keys(routeInfo.params).length ? routeInfo.params : undefined;
                   if (routeInfo.name) {
-                    next({ name: routeInfo.name, replace: true });
+                    next({ name: routeInfo.name, query, params, replace: true });
+                    return;
+                  } else if (routeInfo.path) {
+                    next({ path: routeInfo.path, query, params, replace: true });
                     return;
                   }
                 } catch (e) {}
@@ -367,8 +381,13 @@ router.beforeEach((to, from, next) => {
             if (savedRoute) {
               try {
                 const routeInfo = JSON.parse(savedRoute);
+                const query = routeInfo.query && typeof routeInfo.query === 'object' && Object.keys(routeInfo.query).length ? routeInfo.query : undefined;
+                const params = routeInfo.params && typeof routeInfo.params === 'object' && Object.keys(routeInfo.params).length ? routeInfo.params : undefined;
                 if (routeInfo.name) {
-                  next({ name: routeInfo.name, replace: true });
+                  next({ name: routeInfo.name, query, params, replace: true });
+                  return;
+                } else if (routeInfo.path) {
+                  next({ path: routeInfo.path, query, params, replace: true });
                   return;
                 }
               } catch (e) {}

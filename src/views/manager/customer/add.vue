@@ -10,29 +10,43 @@
               <el-input v-model="form.name" placeholder="请输入" clearable />
             </el-form-item>
             <el-form-item label="客户属地" prop="territory" required>
-              <el-radio-group v-model="form.territory">
-                <el-radio label="国内">国内</el-radio>
-                <el-radio label="国外">国外</el-radio>
-              </el-radio-group>
+              <el-select v-model="form.territory" placeholder="请选择" clearable style="width: 100%">
+                <el-option
+                  v-for="item in customerBelongOptions"
+                  :key="item.value"
+                  :label="item.name"
+                  :value="item.value"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item label="客户区域" prop="region" required>
-              <el-select v-model="form.region" placeholder="请选择省" clearable style="width: 100%">
-                <el-option label="北京市" value="北京" />
-                <el-option label="浙江省" value="浙江" />
-                <el-option label="上海市" value="上海" />
-                <el-option label="广东省" value="广东" />
+              <el-select v-model="form.region" placeholder="请选择客户区域" clearable style="width: 100%">
+                <el-option
+                  v-for="item in customerRegionOptions"
+                  :key="item.value"
+                  :label="item.name"
+                  :value="item.value"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="客户属性A" prop="attrA" required>
-              <el-select v-model="form.attrA" placeholder="请选择" clearable style="width: 100%">
-                <el-option label="企业" value="企业" />
-                <el-option label="个人" value="个人" />
+              <el-select v-model="form.attrA" placeholder="请选择客户属性A" clearable style="width: 100%">
+                <el-option
+                  v-for="item in customerAttrAOptions"
+                  :key="item.value"
+                  :label="item.name"
+                  :value="item.value"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="客户属性B" prop="attrB" required>
-              <el-select v-model="form.attrB" placeholder="请选择" clearable style="width: 100%">
-                <el-option label="类型A" value="A" />
-                <el-option label="类型B" value="B" />
+              <el-select v-model="form.attrB" placeholder="请选择客户属性B" clearable style="width: 100%">
+                <el-option
+                  v-for="item in customerAttrBOptions"
+                  :key="item.value"
+                  :label="item.name"
+                  :value="item.value"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="客户直接联系人" prop="contactPerson" required>
@@ -48,19 +62,32 @@
               <el-input v-model="form.termMonth" placeholder="请输入" clearable />
             </el-form-item>
             <el-form-item label="营业执照" prop="businessLicense">
-              <el-upload class="upload-image-card" action="#" list-type="picture-card" :auto-upload="false"
+              <el-upload
+                class="upload-image-card"
+                list-type="picture-card"
+                :action="uploadAction"
+                name="file"
+                limit="1"
                 :file-list="form.businessLicenseList"
-                :on-change="(file, list) => handleLicenseChange('businessLicense', list)"
-                :on-remove="() => handleLicenseRemove('businessLicense')">
+                :on-success="(res, file, list) => handleUploadSuccess('businessLicense', res, file, list)"
+                :on-remove="(file, list) => handleLicenseRemove('businessLicense', file, list)"
+                :http-request="(opt) => handleUploadRequest(opt, 'businessLicense')"
+              >
                 <i class="el-icon-plus" />
                 <span class="upload-text">添加图片</span>
               </el-upload>
             </el-form-item>
             <el-form-item label="医疗器械相关许可证" prop="medicalLicense">
-              <el-upload class="upload-image-card" action="#" list-type="picture-card" :auto-upload="false"
+              <el-upload
+                class="upload-image-card"
+                list-type="picture-card"
+                :action="uploadAction"
+                name="file"
                 :file-list="form.medicalLicenseList"
-                :on-change="(file, list) => handleLicenseChange('medicalLicense', list)"
-                :on-remove="() => handleLicenseRemove('medicalLicense')">
+                :on-success="(res, file, list) => handleUploadSuccess('medicalLicense', res, file, list)"
+                :on-remove="(file, list) => handleLicenseRemove('medicalLicense', file, list)"
+                :http-request="(opt) => handleUploadRequest(opt, 'medicalLicense')"
+              >
                 <i class="el-icon-plus" />
                 <span class="upload-text">添加图片</span>
               </el-upload>
@@ -128,68 +155,287 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import axios from "axios";
+import { UPLOAD_ROOT } from "@/config/env.js";
+
 export default {
-  name: 'CustomerAdd',
+  name: "CustomerAdd",
+
+  computed: {
+    ...mapState([
+      "customerBelongOptions",
+      "customerRegionOptions",
+      "customerAttrAOptions",
+      "customerAttrBOptions"
+    ])
+  },
 
   data() {
     return {
+      uploadAction: UPLOAD_ROOT,
+      editId: "", // 编辑时的客户 id，提交时传给 editCustomer
       form: {
-        name: '',
-        territory: '国内',
-        region: '',
-        attrA: '',
-        attrB: '',
-        contactPerson: '',
-        contactPhone: '',
-        companyPhone: '',
-        termMonth: '',
+        name: "",
+        territory: "",
+        region: "",
+        attrA: "",
+        attrB: "",
+        contactPerson: "",
+        contactPhone: "",
+        companyPhone: "",
+        termMonth: "",
         businessLicenseList: [],
         medicalLicenseList: [],
-        accountName: '',
-        accountNo: '',
-        bankName: '',
-        address: '',
-        receiver: '',
-        receiverPhone: '',
-        introducer: '',
-        manager: '',
-        other: ''
+        businessLicense: "", // 营业执照图片 URL，提交用
+        medicalLicense: "", // 许可证图片 URL，多张英文逗号隔开，提交用
+        accountName: "",
+        accountNo: "",
+        bankName: "",
+        address: "",
+        receiver: "",
+        receiverPhone: "",
+        introducer: "",
+        manager: "",
+        other: ""
       },
       rules: {
-        name: [{ required: true, message: '请输入客户名称', trigger: 'blur' }],
-        territory: [{ required: true, message: '请选择客户属地', trigger: 'change' }],
-        region: [{ required: true, message: '请选择客户区域', trigger: 'change' }],
-        attrA: [{ required: true, message: '请选择客户属性A', trigger: 'change' }],
-        attrB: [{ required: true, message: '请选择客户属性B', trigger: 'change' }],
-        contactPerson: [{ required: true, message: '请输入客户直接联系人', trigger: 'blur' }],
-        contactPhone: [{ required: true, message: '请输入客户联系电话', trigger: 'blur' }],
-        accountName: [{ required: true, message: '请输入开户名', trigger: 'blur' }],
-        accountNo: [{ required: true, message: '请输入账号', trigger: 'blur' }],
-        bankName: [{ required: true, message: '请输入开户行', trigger: 'blur' }],
-        address: [{ required: true, message: '请输入收货地址', trigger: 'blur' }],
-        receiver: [{ required: true, message: '请输入收货人', trigger: 'blur' }],
-        receiverPhone: [{ required: true, message: '请输入收货人联系方式', trigger: 'blur' }]
+        name: [{ required: true, message: "请输入客户名称", trigger: "blur" }],
+        territory: [
+          { required: true, message: "请选择客户属地", trigger: "change" }
+        ],
+        region: [
+          { required: true, message: "请选择客户区域", trigger: "change" }
+        ],
+        attrA: [
+          { required: true, message: "请选择客户属性A", trigger: "change" }
+        ],
+        attrB: [
+          { required: true, message: "请选择客户属性B", trigger: "change" }
+        ],
+        contactPerson: [
+          { required: true, message: "请输入客户直接联系人", trigger: "blur" }
+        ],
+        contactPhone: [
+          { required: true, message: "请输入客户联系电话", trigger: "blur" }
+        ],
+        accountName: [
+          { required: true, message: "请输入开户名", trigger: "blur" }
+        ],
+        accountNo: [{ required: true, message: "请输入账号", trigger: "blur" }],
+        bankName: [
+          { required: true, message: "请输入开户行", trigger: "blur" }
+        ],
+        address: [
+          { required: true, message: "请输入收货地址", trigger: "blur" }
+        ],
+        receiver: [
+          { required: true, message: "请输入收货人", trigger: "blur" }
+        ],
+        receiverPhone: [
+          { required: true, message: "请输入收货人联系方式", trigger: "blur" }
+        ]
       }
     };
   },
 
+  mounted() {
+    const id = this.$route.query.id;
+    if (id) {
+      this.editId = String(id);
+      this.loadDetail();
+    }
+  },
+
   methods: {
-    handleLicenseChange(field, fileList) {
-      this.form[field + 'List'] = fileList;
+    loadDetail() {
+      if (!this.editId) return;
+      this.$api({
+        url: "/getCustomer?id=" + encodeURIComponent(this.editId),
+        method: "post",
+        data: {}
+      })
+        .then(res => {
+          if (res && res.data) this.fillFormFromDetail(res.data);
+        })
+        .catch(() => {
+          this.$message.error("获取客户详情失败");
+        });
     },
-    handleLicenseRemove(field) {
-      this.form[field + 'List'] = [];
+    fillFormFromDetail(data) {
+      const payment = this._parseJson(data.paymentJson);
+      const address = this._parseJson(data.addressJson);
+      const other =
+        data.otherJson && typeof data.otherJson === "object"
+          ? data.otherJson
+          : this._parseJson(data.otherJson);
+      const licenseArr = Array.isArray(data.licenseImage)
+        ? data.licenseImage
+        : [];
+      this.form = {
+        name: data.title ?? "",
+        territory:
+          data.territory !== undefined && data.territory !== null
+            ? data.territory
+            : "",
+        region: data.region ?? "",
+        attrA: data.attributeA ?? "",
+        attrB: data.attributeB ?? "",
+        contactPerson: data.contact ?? "",
+        contactPhone: data.phone ?? "",
+        companyPhone: data.companyPhone ?? "",
+        termMonth: data.paymentTerm ?? "",
+        businessLicenseList: data.businessLicenseImage
+          ? [{ url: data.businessLicenseImage }]
+          : [],
+        medicalLicenseList: licenseArr.map(u => ({ url: u })),
+        businessLicense: data.businessLicenseImage ?? "",
+        medicalLicense: licenseArr.join(","),
+        accountName: payment.account ?? "",
+        accountNo: payment.code ?? "",
+        bankName: payment.bank ?? "",
+        address: address.address ?? "",
+        receiver: address.name ?? "",
+        receiverPhone: address.phone ?? "",
+        introducer: other.introducer ?? "",
+        manager: other.superintendent ?? "",
+        other: other.other ?? ""
+      };
+    },
+    _parseJson(val) {
+      if (val == null) return {};
+      if (typeof val === "object") return val;
+      try {
+        return typeof val === "string" ? JSON.parse(val || "{}") : {};
+      } catch (e) {
+        return {};
+      }
+    },
+    /** 自定义上传：使用 UPLOAD_ROOT，参数名 file */
+    handleUploadRequest(option, field) {
+      const formData = new FormData();
+      formData.append("file", option.file);
+      const token = localStorage.getItem("token");
+      axios
+        .post(UPLOAD_ROOT, formData, {
+          headers: {
+            Authorization: "Bearer " + token
+          },
+          timeout: 60000
+        })
+        .then(res => {
+          const data = res.data || res;
+          const payload = data && data.data ? data.data : data;
+          const url = (payload && (payload.path || payload.url)) || (data && data.path) || "";
+          if (field === "businessLicense") {
+            this.form.businessLicense = url;
+          } else {
+            const arr = this.form.medicalLicense
+              ? this.form.medicalLicense.split(",").filter(Boolean)
+              : [];
+            arr.push(url);
+            this.form.medicalLicense = arr.join(",");
+          }
+          option.onSuccess({ url });
+        })
+        .catch(err => {
+          this.$message.error(
+            (err.response && err.response.data && err.response.data.msg) ||
+              "上传失败"
+          );
+          option.onError(err);
+        });
+    },
+    handleUploadSuccess(field, res, file, fileList) {
+      this.form[field + "List"] = fileList;
+      const r = res || (file && file.response);
+      const payload = r && r.data ? r.data : r;
+      const url = (payload && (payload.path || payload.url)) || (r && r.path) || (file && file.url) || "";
+      if (url && file) file.url = url;
+    },
+    handleLicenseRemove(field, file, fileList) {
+      this.form[field + "List"] = fileList || [];
+      if (field === "businessLicense") {
+        this.form.businessLicense = "";
+      } else {
+        const removeUrl =
+          (file && (file.url || (file.response && file.response.url))) || "";
+        if (removeUrl) {
+          const arr = (this.form.medicalLicense || "")
+            .split(",")
+            .filter(Boolean);
+          const idx = arr.indexOf(removeUrl);
+          if (idx > -1) arr.splice(idx, 1);
+          this.form.medicalLicense = arr.join(",");
+        } else {
+          this.form.medicalLicense = (fileList || [])
+            .map(f => f.url || (f.response && f.response.url))
+            .filter(Boolean)
+            .join(",");
+        }
+      }
+    },
+    buildEditCustomerParams() {
+      const territory =
+        this.form.territory !== undefined &&
+        this.form.territory !== null &&
+        this.form.territory !== ""
+          ? String(this.form.territory)
+          : "1";
+      const paymentJson = JSON.stringify({
+        account: this.form.accountName,
+        code: this.form.accountNo,
+        bank: this.form.bankName
+      });
+      const addressJson = JSON.stringify({
+        address: this.form.address,
+        name: this.form.receiver,
+        phone: this.form.receiverPhone
+      });
+      const otherJson = JSON.stringify({
+        introducer: this.form.introducer,
+        superintendent: this.form.manager,
+        other: this.form.other
+      });
+      const params = {
+        title: this.form.name,
+        territory,
+        region: this.form.region,
+        attributeA: this.form.attrA,
+        attributeB: this.form.attrB,
+        contact: this.form.contactPerson,
+        phone: this.form.contactPhone,
+        companyPhone: this.form.companyPhone,
+        businessLicenseImage: this.form.businessLicense,
+        licenseImage: this.form.medicalLicense,
+        paymentJson,
+        addressJson,
+        otherJson,
+        paymentTerm: this.form.termMonth
+      };
+      if (this.editId) params.id = this.editId;
+      return params;
     },
     handleSubmit() {
       this.$refs.formRef.validate(valid => {
         if (!valid) return;
-        // TODO: 调用新增接口
-        this.$message.success('提交成功');
-        this.$router.push('/manager/customer');
+        const params = this.buildEditCustomerParams();
+        this.$api({
+          url: "/editCustomer",
+          method: "post",
+          data: params
+        })
+          .then(() => {
+            this.$message.success(this.editId ? "保存成功" : "新增成功");
+            this.$router.push("/manager/customer");
+          })
+          .catch(err => {
+            this.$message.error(err && err.msg ? err.msg : "提交失败");
+          });
       });
     },
     handleCancel() {
-      this.$router.push('/manager/customer');
+      this.$router.push("/manager/customer");
     }
   }
 };
@@ -227,18 +473,18 @@ export default {
   margin-bottom: 20px;
   font-size: 16px;
   font-weight: bold;
-  color: #2373C8;
+  color: #2373c8;
   text-align: left;
-  border-bottom: 2px solid #F1F1F1;
+  border-bottom: 2px solid #f1f1f1;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     top: 2px;
     width: 8px;
     height: 21px;
-    background: #2373C8;
+    background: #2373c8;
     border-radius: 2px;
   }
 }
@@ -273,11 +519,12 @@ export default {
 }
 
 .upload-image-card {
+  display: flex;
   ::v-deep .el-upload--picture-card {
     width: 120px;
     height: 120px;
     line-height: 120px;
-    border: 1px solid #F5F5F5;
+    border: 1px solid #c0ccda;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -295,6 +542,9 @@ export default {
     height: 120px;
     border-radius: 4px;
   }
+  ::v-deep .el-upload-list__item-thumbnail {
+    object-fit: fill;
+  }
 }
 
 .upload-text {
@@ -310,7 +560,7 @@ export default {
   text-align: left;
 
   &--red {
-    color: #FF6F00;
+    color: #ff6f00;
   }
 }
 
@@ -322,17 +572,17 @@ export default {
   .el-button {
     width: 180px;
     height: 45px;
-    background: #2373C8;
+    background: #2373c8;
     border-radius: 4px;
     font-size: 16px;
     font-weight: bold;
-    color: #FFFFFF;
+    color: #ffffff;
     margin-right: 16px;
   }
   .el-button--default {
-    background: #FFFFFF;
-    border: 1px solid #9D9D9D;
-    color: #4A4A4A;
+    background: #ffffff;
+    border: 1px solid #9d9d9d;
+    color: #4a4a4a;
   }
 }
 </style>

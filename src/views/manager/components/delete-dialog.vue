@@ -7,7 +7,6 @@
     @close="handleClose"
   >
     <span slot="title" class="dialog-title-hidden" />
-    <i class="el-icon-close dialog-close" @click="handleClose" />
 
     <div class="delete-dialog-body">
       <p class="delete-dialog-main">确定要删除这个客户信息吗?</p>

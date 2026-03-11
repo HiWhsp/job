@@ -5,10 +5,20 @@
       <el-form :model="queryParams" ref="queryForm" inline class="search-form" label-width="80px">
         <div class="search-row">
           <el-form-item label="关键词">
-            <el-input v-model="queryParams.keyword" placeholder="客户编码/客户名称/联系人/电话" clearable style="width: 260px" />
+            <el-input
+              v-model="queryParams.keyword"
+              placeholder="客户编码/客户名称/联系人/电话"
+              clearable
+              style="width: 260px"
+            />
           </el-form-item>
           <el-form-item label="客户属地">
-            <el-select v-model="queryParams.belong" placeholder="请选择" clearable style="width: 140px">
+            <el-select
+              v-model="queryParams.belong"
+              placeholder="请选择"
+              clearable
+              style="width: 140px"
+            >
               <el-option
                 v-for="item in customerBelongOptions"
                 :key="item.value"
@@ -18,7 +28,12 @@
             </el-select>
           </el-form-item>
           <el-form-item label="客户区域">
-            <el-select v-model="queryParams.region" placeholder="客户区域" clearable style="width: 140px">
+            <el-select
+              v-model="queryParams.region"
+              placeholder="客户区域"
+              clearable
+              style="width: 140px"
+            >
               <el-option
                 v-for="item in customerRegionOptions"
                 :key="item.value"
@@ -28,7 +43,12 @@
             </el-select>
           </el-form-item>
           <el-form-item label="客户属性A">
-            <el-select v-model="queryParams.attrA" placeholder="客户属性A" clearable style="width: 140px">
+            <el-select
+              v-model="queryParams.attrA"
+              placeholder="客户属性A"
+              clearable
+              style="width: 140px"
+            >
               <el-option
                 v-for="item in customerAttrAOptions"
                 :key="item.value"
@@ -40,7 +60,12 @@
         </div>
         <div class="search-row">
           <el-form-item label="客户属性B">
-            <el-select v-model="queryParams.attrB" placeholder="客户属性B" clearable style="width: 140px">
+            <el-select
+              v-model="queryParams.attrB"
+              placeholder="客户属性B"
+              clearable
+              style="width: 140px"
+            >
               <el-option
                 v-for="item in customerAttrBOptions"
                 :key="item.value"
@@ -68,8 +93,14 @@
         </div>
       </div>
       <div class="table-box">
-        <el-table ref="tableH" :height="tableHeight" :data="tableData" header-cell-class-name="table-header-cell"
-          :row-class-name="tableRowClassName" @selection-change="handleSelectionChange">
+        <el-table
+          ref="tableH"
+          :height="tableHeight"
+          :data="tableData"
+          header-cell-class-name="table-header-cell"
+          :row-class-name="tableRowClassName"
+          @selection-change="handleSelectionChange"
+        >
           <el-table-column type="selection" width="55" align="center" />
           <el-table-column prop="code" label="客户编码" min-width="100" show-overflow-tooltip />
           <el-table-column prop="name" label="客户名称" min-width="180" show-overflow-tooltip>
@@ -81,12 +112,27 @@
           <el-table-column prop="region" label="客户区域" min-width="90" show-overflow-tooltip />
           <el-table-column prop="attrA" label="客户属性A" min-width="100" show-overflow-tooltip />
           <el-table-column prop="attrB" label="客户属性B" min-width="100" show-overflow-tooltip />
-          <el-table-column prop="contactPerson" label="客户直接联系人" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="contactPhone" label="客户联系电话" min-width="120" show-overflow-tooltip />
+          <el-table-column
+            prop="contactPerson"
+            label="客户直接联系人"
+            min-width="120"
+            show-overflow-tooltip
+          />
+          <el-table-column
+            prop="contactPhone"
+            label="客户联系电话"
+            min-width="120"
+            show-overflow-tooltip
+          />
           <el-table-column prop="companyPhone" label="公司电话" min-width="120" show-overflow-tooltip />
           <el-table-column prop="address" label="收货地址" min-width="200" show-overflow-tooltip />
           <el-table-column prop="receiver" label="收货人" min-width="90" show-overflow-tooltip />
-          <el-table-column prop="receiverPhone" label="收货人联系方式" min-width="120" show-overflow-tooltip />
+          <el-table-column
+            prop="receiverPhone"
+            label="收货人联系方式"
+            min-width="120"
+            show-overflow-tooltip
+          />
           <el-table-column prop="introducer" label="客户引入人" min-width="100" show-overflow-tooltip />
           <el-table-column prop="manager" label="客户负责人" min-width="100" show-overflow-tooltip />
           <el-table-column prop="other" label="其他" min-width="120" show-overflow-tooltip />
@@ -101,34 +147,34 @@
           </el-table-column>
         </el-table>
         <div class="pagination-wrap">
-          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-            :current-page="queryParams.pageNum" :page-sizes="[10, 20, 50, 100]" :page-size="queryParams.pageSize"
-            layout="total, prev, pager, next, jumper" :total="total" />
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="queryParams.pageNum"
+            :page-sizes="[10, 20, 50, 100]"
+            :page-size="queryParams.pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="total"
+          />
         </div>
       </div>
     </div>
 
     <!-- 删除确认弹框 -->
-    <delete-dialog
-      :visible.sync="deleteDialogVisible"
-      @confirm="handleDeleteConfirm"
-    />
+    <delete-dialog :visible.sync="deleteDialogVisible" @confirm="handleDeleteConfirm" />
 
     <!-- 查看详情 Drawer（从右往左展开） -->
-    <detail-drawer
-      :visible.sync="detailDrawerVisible"
-      :detail-row="detailRow"
-    />
+    <detail-drawer :visible.sync="detailDrawerVisible" :detail-row="detailRow" />
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import DeleteDialog from '../components/delete-dialog.vue';
-import DetailDrawer from '../components/detail-drawer.vue';
+import { mapState } from "vuex";
+import DeleteDialog from "../components/delete-dialog.vue";
+import DetailDrawer from "../components/detail-drawer.vue";
 
 export default {
-  name: 'Customer',
+  name: "Customer",
 
   components: {
     DeleteDialog,
@@ -137,56 +183,17 @@ export default {
   data() {
     return {
       queryParams: {
-        keyword: '',
-        belong: '',
-        region: '',
-        attrA: '',
-        attrB: '',
+        keyword: "",
+        belong: "",
+        region: "",
+        attrA: "",
+        attrB: "",
         pageNum: 1,
         pageSize: 20
       },
       total: 0,
       tableHeight: 0,
-      tableData: [
-        {
-          id: 1,
-          code: 'L2026001',
-          name: '浙江省惠工医疗科技有限公司',
-          territory: '浙江',
-          region: '中国',
-          attrA: '企业',
-          attrB: '—',
-          contactPerson: '—',
-          contactPhone: '15931263178',
-          companyPhone: '0573-84006364',
-          address: '浙江省惠工医疗科技有限公司天目大道566号',
-          receiver: '—',
-          receiverPhone: '—',
-          introducer: '郭小仙',
-          manager: '郭小红',
-          other: '',
-          status: '启用'
-        },
-        {
-          id: 2,
-          code: 'A2025001',
-          name: '示例客户B',
-          territory: '北京',
-          region: '北京',
-          attrA: '个人',
-          attrB: '—',
-          contactPerson: '—',
-          contactPhone: '—',
-          companyPhone: '—',
-          address: '—',
-          receiver: '—',
-          receiverPhone: '—',
-          introducer: '—',
-          manager: '—',
-          other: '',
-          status: '禁用'
-        }
-      ],
+      tableData: [],
       selectedRows: [],
       deleteDialogVisible: false,
       rowToDelete: null,
@@ -197,11 +204,11 @@ export default {
 
   computed: {
     ...mapState([
-      'customerBelongOptions',
-      'customerRegionOptions',
-      'customerAttrAOptions',
-      'customerAttrBOptions',
-    ]),
+      "customerBelongOptions",
+      "customerRegionOptions",
+      "customerAttrAOptions",
+      "customerAttrBOptions"
+    ])
   },
 
   mounted() {
@@ -221,38 +228,174 @@ export default {
         const windowHeight = window.innerHeight;
         this.tableHeight = Math.max(windowHeight - tableOffsetTop, 200);
         const that = this;
-        window.onresize = function () {
+        window.onresize = function() {
           const top = tableEl.offsetTop + 84 + 80;
           that.tableHeight = Math.max(window.innerHeight - top, 200);
         };
       });
     },
     tableRowClassName({ rowIndex }) {
-      return rowIndex % 2 === 1 ? 'row-even' : '';
+      return rowIndex % 2 === 1 ? "row-even" : "";
+    },
+    /** 将接口单条数据映射为表格行（含 addressJson/otherJson 解析） */
+    mapApiRowToTableRow(item) {
+      let addressObj = {};
+      try {
+        addressObj =
+          typeof item.addressJson === "string"
+            ? JSON.parse(item.addressJson || "{}")
+            : item.addressJson || {};
+      } catch (e) {
+        addressObj = {};
+      }
+      const otherObj = item.otherJson || {};
+      const territoryText =
+        item.territory === 1 ? "国内" : item.territory === 2 ? "国外" : "";
+      return {
+        ...item,
+        code: item.customerNo ?? "",
+        name: item.title ?? "",
+        territory: territoryText,
+        region: item.region ?? "",
+        attrA: item.attributeA ?? "",
+        attrB: item.attributeB ?? "",
+        contactPerson: item.contact ?? "",
+        contactPhone: item.phone ?? "",
+        companyPhone: item.companyPhone ?? "",
+        address: addressObj.address ?? "",
+        receiver: addressObj.name ?? "",
+        receiverPhone: addressObj.phone ?? "",
+        introducer: otherObj.introducer ?? "",
+        manager: otherObj.superintendent ?? "",
+        other: otherObj.other ?? ""
+      };
     },
     loadList() {
-      // TODO: 调用接口获取列表
-      this.total = this.tableData.length;
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        keyword: this.queryParams.keyword || "",
+        territory: this.queryParams.belong || "",
+        region: this.queryParams.region || "",
+        attributeA: this.queryParams.attrA || "",
+        attributeB: this.queryParams.attrB || ""
+      };
+      this.$api({
+        url: "/getCustomerList",
+        method: "post",
+        data: params
+      })
+        .then(res => {
+          if (res && res.data) {
+            const list = res.data.list || res.data.rows || [];
+            this.tableData = list.map(row => this.mapApiRowToTableRow(row));
+            this.total =
+              res.data.count ?? res.data.total ?? this.tableData.length;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.loadList();
     },
     resetQuery() {
-      this.$refs.queryForm.resetFields();
-      this.queryParams.pageNum = 1;
+      this.$refs["queryForm"].resetFields();
+      this.queryParams = {
+        keyword: "",
+        belong: "",
+        region: "",
+        attrA: "",
+        attrB: "",
+        pageNum: 1,
+        pageSize: 20
+      };
       this.loadList();
     },
     handleSelectionChange(selection) {
       this.selectedRows = selection;
     },
+    _parseJsonField(val) {
+      if (val == null) return {};
+      if (typeof val === "object") return val;
+      try {
+        return typeof val === "string" ? JSON.parse(val || "{}") : {};
+      } catch (e) {
+        return {};
+      }
+    },
+    /** 调用详情接口并打开抽屉 */
     handleView(row) {
-      this.detailRow = row;
+      const id = row.id;
+      if (id == null || id === "") {
+        this.$message.warning("缺少客户 id");
+        return;
+      }
+      this.detailRow = null;
       this.detailDrawerVisible = true;
+      this.$api({
+        url: "/getCustomer",
+        method: "post",
+        data: {
+          id: id
+        }
+      })
+        .then(res => {
+          if (res && res.data) {
+            this.detailRow = this.mapDetailApiToDrawer(res.data);
+          } else {
+            this.$message.error("获取详情失败");
+            this.detailDrawerVisible = false;
+          }
+        })
+        .catch(() => {
+          this.$message.error("获取详情失败");
+          this.detailDrawerVisible = false;
+        });
+    },
+    /** 将详情接口返回的数据映射为详情抽屉展示结构 */
+    mapDetailApiToDrawer(data) {
+      const payment = this._parseJsonField(data.paymentJson);
+      const address = this._parseJsonField(data.addressJson);
+      const other =
+        data.otherJson && typeof data.otherJson === "object"
+          ? data.otherJson
+          : this._parseJsonField(data.otherJson);
+      const licenseList = Array.isArray(data.licenseImage)
+        ? data.licenseImage
+        : [];
+      const territoryText =
+        data.territory === 1 ? "国内" : data.territory === 2 ? "国外" : "";
+      return {
+        ...data,
+        code: data.customerNo ?? "",
+        name: data.title ?? "",
+        territory: territoryText,
+        region: data.region ?? "",
+        attrA: data.attributeA ?? "",
+        attrB: data.attributeB ?? "",
+        contactPerson: data.contact ?? "",
+        contactPhone: data.phone ?? "",
+        companyPhone: data.companyPhone ?? "",
+        termMonth: data.termMonth ?? "",
+        businessLicense: data.businessLicenseImage ?? "",
+        medicalLicense1: licenseList[0] ?? "",
+        accountName: payment.account ?? "",
+        accountNo: payment.code ?? "",
+        bankName: payment.bank ?? "",
+        address: address.address ?? "",
+        receiver: address.name ?? "",
+        receiverPhone: address.phone ?? "",
+        introducer: other.introducer ?? "",
+        manager: other.superintendent ?? "",
+        other: other.other ?? ""
+      };
     },
     handleEdit(row) {
-      // TODO: 编辑
-      this.$message.info('编辑：' + row.name);
+      this.$router.push({ path: "/manager/customer/add", query: { id: row.id } });
     },
     handleDelete(row) {
       this.rowToDelete = row;
@@ -260,21 +403,32 @@ export default {
     },
     handleDeleteConfirm() {
       if (!this.rowToDelete) return;
-      // TODO: 调用删除接口，例如：await deleteCustomer(this.rowToDelete.id);
-      this.$message.success('删除成功');
-      this.rowToDelete = null;
-      this.loadList();
+      const id = this.rowToDelete.id;
+      this.$api({
+        url: "/delCustomer",
+        method: "post",
+        data: { id: String(id) }
+      })
+        .then(() => {
+          this.$message.success("删除成功");
+          this.rowToDelete = null;
+          this.deleteDialogVisible = false;
+          this.loadList();
+        })
+        .catch(err => {
+          this.$message.error(err && err.msg ? err.msg : "删除失败");
+        });
     },
     handleAdd() {
-      this.$router.push('/manager/customer/add');
+      this.$router.push("/manager/customer/add");
     },
     handleImport() {
       // TODO: 客户导入
-      this.$message.info('客户导入');
+      this.$message.info("客户导入");
     },
     handleExport() {
       // TODO: 导出
-      this.$message.info('导出');
+      this.$message.info("导出");
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;
@@ -330,7 +484,7 @@ export default {
   }
 
   .el-button--primary {
-    background: linear-gradient(90deg, #157DE9 0%, #3697FD 100%) !important;
+    background: linear-gradient(90deg, #157de9 0%, #3697fd 100%) !important;
   }
 }
 
@@ -345,7 +499,7 @@ export default {
   padding-bottom: 20px;
   margin: 0 27px 25px;
   background: #fff;
-  border-bottom: 1px solid #EDF0F6;
+  border-bottom: 1px solid #edf0f6;
 
   .table-title {
     font-family: Microsoft YaHei, Microsoft YaHei;
@@ -360,7 +514,7 @@ export default {
     gap: 10px;
 
     .el-button {
-      background: linear-gradient(90deg, #157DE9 0%, #3697FD 100%) !important;
+      background: linear-gradient(90deg, #157de9 0%, #3697fd 100%) !important;
     }
   }
 }
@@ -382,14 +536,14 @@ export default {
       background: #f3f7fa;
     }
 
-    .el-table__body tr:hover>td {
+    .el-table__body tr:hover > td {
       background: #f5f7fa !important;
     }
   }
 }
 
 .link-name {
-  color: #2373C8;
+  color: #2373c8;
   cursor: pointer;
 
   &:hover {
@@ -420,8 +574,8 @@ export default {
       text-decoration: underline;
     }
 
-    &+.row-act::before {
-      content: '';
+    & + .row-act::before {
+      content: "";
       display: inline-block;
       width: 1px;
       height: 12px;

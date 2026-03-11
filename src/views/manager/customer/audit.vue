@@ -8,32 +8,65 @@
             <el-input v-model="queryParams.keyword" placeholder="客户编码/客户名称/联系人/电话" clearable style="width: 260px" />
           </el-form-item>
           <el-form-item label="客户属地">
-            <el-select v-model="queryParams.status" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="启用" value="1" />
-              <el-option label="禁用" value="0" />
+            <el-select
+              v-model="queryParams.belong"
+              placeholder="请选择"
+              clearable
+              style="width: 140px"
+            >
+              <el-option
+                v-for="item in customerBelongOptions"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="客户区域">
-            <el-select v-model="queryParams.region" placeholder="客户区域" clearable style="width: 140px">
-              <el-option label="国内" value="国内" />
-              <el-option label="国外" value="国外" />
-              <el-option label="中国" value="中国" />
-              <el-option label="北京" value="北京" />
-              <el-option label="英国" value="英国" />
+            <el-select
+              v-model="queryParams.region"
+              placeholder="客户区域"
+              clearable
+              style="width: 140px"
+            >
+              <el-option
+                v-for="item in customerRegionOptions"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="客户属性A">
-            <el-select v-model="queryParams.attr" placeholder="客户属性" clearable style="width: 140px">
-              <el-option label="企业" value="企业" />
-              <el-option label="个人" value="个人" />
+            <el-select
+              v-model="queryParams.attrA"
+              placeholder="客户属性A"
+              clearable
+              style="width: 140px"
+            >
+              <el-option
+                v-for="item in customerAttrAOptions"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
         </div>
         <div class="search-row">
           <el-form-item label="客户属性B">
-            <el-select v-model="queryParams.type" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="类型A" value="A" />
-              <el-option label="类型B" value="B" />
+            <el-select
+              v-model="queryParams.attrB"
+              placeholder="客户属性B"
+              clearable
+              style="width: 140px"
+            >
+              <el-option
+                v-for="item in customerAttrBOptions"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -95,7 +128,7 @@
               <span v-else>—</span>
             </template>
           </el-table-column>
-          <el-table-column prop="updateTime" label="更新时间" width="120" align="center" />
+          <el-table-column prop="updateTime" label="更新时间" width="180" align="center" />
           <el-table-column label="操作" width="180" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
@@ -126,6 +159,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import DetailDrawer from '../components/detail-drawer.vue';
 import AuditDialog from '../components/audit-dialog.vue';
 
@@ -136,90 +170,30 @@ export default {
     DetailDrawer,
     AuditDialog
   },
+
+  computed: {
+    ...mapState([
+      'customerBelongOptions',
+      'customerRegionOptions',
+      'customerAttrAOptions',
+      'customerAttrBOptions'
+    ])
+  },
+
   data() {
     return {
       queryParams: {
         keyword: '',
-        status: '',
+        belong: '',
         region: '',
-        attr: '',
-        type: '',
+        attrA: '',
+        attrB: '',
         pageNum: 1,
         pageSize: 20
       },
       total: 0,
       tableHeight: 0,
-      tableData: [
-        {
-          id: 1,
-          code: 'L2026001',
-          name: '浙江省惠工医疗科技有限公司',
-          territory: '浙江',
-          region: '中国',
-          attrA: '企业',
-          attrB: '—',
-          contactPerson: '—',
-          contactPhone: '15931263178',
-          companyPhone: '0573-84006364',
-          address: '浙江省惠工医疗科技有限公司天目大道566号',
-          receiver: '—',
-          receiverPhone: '—',
-          introducer: '郭小仙',
-          manager: '郭小红',
-          other: '',
-          status: '启用',
-          auditStatus: 'pending',
-          updateTime: '2026-01-05',
-          auditTime: '',
-          auditRemark: ''
-        },
-        {
-          id: 2,
-          code: 'A2025001',
-          name: '示例客户B',
-          territory: '北京',
-          region: '北京',
-          attrA: '个人',
-          attrB: '—',
-          contactPerson: '—',
-          contactPhone: '—',
-          companyPhone: '—',
-          address: '—',
-          receiver: '—',
-          receiverPhone: '—',
-          introducer: '—',
-          manager: '—',
-          other: '',
-          status: '禁用',
-          auditStatus: 'rejected',
-          updateTime: '2026-01-05',
-          auditTime: '2026-3-23 15:23:24',
-          auditRemark: '这里显示未通过原因'
-        },
-        {
-          id: 3,
-          code: 'B2025002',
-          name: '示例客户C',
-          territory: '上海',
-          region: '中国',
-          attrA: '企业',
-          attrB: '—',
-          contactPerson: '—',
-          contactPhone: '—',
-          companyPhone: '—',
-          address: '—',
-          receiver: '—',
-          receiverPhone: '—',
-          introducer: '—',
-          manager: '—',
-          other: '',
-          status: '启用',
-          auditStatus: 'audited',
-          updateTime: '2026-01-05',
-          auditTime: '2026-01-05 14:00:00',
-          auditRemark: '—'
-        }
-      ],
+      tableData: [],
       selectedRows: [],
       rowToDelete: null,
       detailDrawerVisible: false,
@@ -241,6 +215,52 @@ export default {
   },
 
   methods: {
+    _parseJsonField(val) {
+      if (val == null) return {};
+      if (typeof val === 'object') return val;
+      try {
+        return typeof val === 'string' ? JSON.parse(val || '{}') : {};
+      } catch (e) {
+        return {};
+      }
+    },
+    /** 将列表接口数据映射到表格行（与客户列表保持一致） */
+    mapApiRowToTableRow(item) {
+      const addressObj = this._parseJsonField(item.addressJson);
+      const otherObj =
+        item.otherJson && typeof item.otherJson === 'object'
+          ? item.otherJson
+          : this._parseJsonField(item.otherJson);
+      const territoryText =
+        item.territory === 1 ? '国内' : item.territory === 2 ? '国外' : '';
+      const statusNum = item.status;
+      let auditStatus = '';
+      if (statusNum === 1) auditStatus = 'pending';
+      else if (statusNum === 2) auditStatus = 'audited';
+      else if (statusNum === -1) auditStatus = 'rejected';
+      return {
+        ...item,
+        code: item.customerNo ?? '',
+        name: item.title ?? '',
+        territory: territoryText,
+        region: item.region ?? '',
+        attrA: item.attributeA ?? '',
+        attrB: item.attributeB ?? '',
+        contactPerson: item.contact ?? '',
+        contactPhone: item.phone ?? '',
+        companyPhone: item.companyPhone ?? '',
+        address: addressObj.address ?? '',
+        receiver: addressObj.name ?? '',
+        receiverPhone: addressObj.phone ?? '',
+        introducer: otherObj.introducer ?? '',
+        manager: otherObj.superintendent ?? '',
+        other: otherObj.other ?? '',
+        auditStatus,
+        updateTime: item.updated_at || item.updateTime || '',
+        auditTime: item.review_at || item.auditTime || '',
+        auditRemark: item.reCont || item.auditRemark || ''
+      };
+    },
     /** 设置表格高度（与 mtOrder 一致：可视区高度 - 表格顶部距离 - 头部 - 分页） */
     setView() {
       this.$nextTick(() => {
@@ -262,8 +282,37 @@ export default {
       return rowIndex % 2 === 1 ? 'row-even' : '';
     },
     loadList() {
-      // TODO: 根据 auditTab 调用接口获取列表
-      this.total = this.tableData.length;
+      const statusMap = {
+        pending: '1',
+        audited: '2',
+        rejected: '-1'
+      };
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        keyword: this.queryParams.keyword || '',
+        territory: this.queryParams.belong || '',
+        region: this.queryParams.region || '',
+        attributeA: this.queryParams.attrA || '',
+        attributeB: this.queryParams.attrB || '',
+        status: statusMap[this.auditTab] || ''
+      };
+      this.$api({
+        url: '/getCustomerList',
+        method: 'post',
+        data: params
+      })
+        .then(res => {
+          if (res && res.data) {
+            const list = res.data.list || res.data.rows || [];
+            this.tableData = list.map(row => this.mapApiRowToTableRow(row));
+            this.total = res.data.count ?? res.data.total ?? this.tableData.length;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleAuditTabChange(value) {
       this.auditTab = value;

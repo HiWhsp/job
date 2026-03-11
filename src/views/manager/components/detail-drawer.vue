@@ -1,7 +1,11 @@
 <template>
   <el-drawer title="查看详情" :visible.sync="drawerVisible" direction="rtl" size="800px"
     custom-class="customer-detail-drawer" @close="handleClose">
-    <div class="detail-drawer-body" v-if="detailRow">
+    <div class="detail-drawer-body">
+      <div v-if="!detailRow" class="detail-loading-wrap">
+        <span>加载中...</span>
+      </div>
+      <template v-else>
       <!-- 基础信息 -->
       <div class="detail-section">
         <div class="detail-section-title">基础信息</div>
@@ -56,7 +60,7 @@
               <span class="detail-value">{{ detailRow.termMonth || '—' }}</span>
             </div>
           </div>
-          <div class="detail-row">
+          <div class="detail-row two-col">
             <div class="detail-item full has-block-label">
               <span class="detail-label">营业执照：</span>
               <div class="detail-image-wrap">
@@ -185,6 +189,7 @@
         <el-button type="primary" @click="handleConfirm">确定</el-button>
         <el-button @click="handleClose">取消</el-button>
       </div>
+      </template>
     </div>
   </el-drawer>
 </template>
@@ -251,6 +256,13 @@ export default {
 
 .detail-drawer-body {
   padding: 24px 28px 24px;
+}
+
+.detail-loading-wrap {
+  padding: 40px 0;
+  text-align: center;
+  color: #909399;
+  font-size: 14px;
 }
 
 .detail-section {
@@ -336,6 +348,7 @@ export default {
     grid-template-columns: 1fr 1fr;
     gap: 0 32px;
     margin-bottom: 18px;
+    margin-left: 28px;
   }
 }
 
