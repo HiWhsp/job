@@ -100,32 +100,7 @@ export default {
       },
       total: 0,
       tableHeight: 0,
-      tableData: [
-        {
-          id: 1,
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "规格",
-          storageCondition: "储存条件",
-          batchNumber: "789754654",
-          unit: "盒",
-          managementCategory: "类别",
-          productClassification: "大类名称 大类名称 大类名称",
-          updateTime: "2025-10-10"
-        },
-        {
-          id: 2,
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "规格",
-          storageCondition: "储存条件",
-          batchNumber: "789754654",
-          unit: "盒",
-          managementCategory: "类别",
-          productClassification: "大类名称 大类名称 大类名称",
-          updateTime: "2025-10-10"
-        }
-      ],
+      tableData: [],
       detailDrawerVisible: false,
       detailRow: null,
       deleteDialogVisible: false,
@@ -241,7 +216,7 @@ export default {
     },
     handleEdit(row) {
       // TODO: 跳转或打开编辑页
-      this.$message.info("编辑：" + row.materialName);
+      this.$router.push(`/manager/internal-material/add?id=${row.id}`);
     },
     handleDelete(row) {
       this.rowToDelete = row;

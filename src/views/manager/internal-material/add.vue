@@ -1,33 +1,55 @@
 <template>
   <div class="view-wrap product-add-page">
     <div class="form-card">
-      <div class="page-title">新增产品</div>
+      <div class="page-title">{{ editId ? '编辑原料' : '新增原料' }}</div>
       <el-form ref="formRef" :model="form" label-width="140px" class="product-form">
         <el-form-item label="原料名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入" clearable />
         </el-form-item>
         <el-form-item label="所属分类" prop="categoryId">
-          <el-select v-model="form.categoryId" placeholder="请选择" clearable>
-            <el-option label="树脂盘" value="1" />
-            <el-option label="硅橡胶" value="2" />
-            <el-option label="其他产品" value="3" />
-          </el-select>
+          <el-cascader
+            v-model="form.categoryIds"
+            :options="internalMaterialCateCascaderOptions"
+            :props="{
+              value: 'value',
+              label: 'label',
+              children: 'children',
+              checkStrictly: true
+            }"
+            placeholder="请选择原料分类"
+            clearable
+            style="width: 322px"
+            show-all-levels
+          />
         </el-form-item>
-        <el-form-item label="用于产品大类" prop="code">
-          <el-select v-model="form.categoryId" placeholder="请选择" clearable>
-            <el-option label="树脂盘" value="1" />
-            <el-option label="硅橡胶" value="2" />
-            <el-option label="其他产品" value="3" />
-          </el-select>
+        <el-form-item label="用于产品大类" prop="productCategoryIds">
+          <el-cascader
+            v-model="form.productCategoryIds"
+            :options="productCategoryCascaderOptions"
+            :props="{
+              value: 'value',
+              label: 'label',
+              children: 'children',
+              checkStrictly: true
+            }"
+            placeholder="请选择产品大类"
+            clearable
+            style="width: 322px"
+            show-all-levels
+          />
         </el-form-item>
         <el-form-item label="单位" prop="unit">
           <el-input v-model="form.unit" placeholder="请输入" clearable />
         </el-form-item>
-        <el-form-item label="存储条件" prop="expiry">
+        <el-form-item label="储存条件" prop="expiry">
           <el-input v-model="form.expiry" placeholder="请输入" clearable />
         </el-form-item>
         <el-form-item label="产品详情" prop="detail">
-          <tiny-rich-editor id="product-detail-editor" v-model="form.detail" :height="400" />
+          <quill-editor
+            v-model="form.content"
+            class="quill-editor-wrap"
+            :options="quillOptions"
+          />
         </el-form-item>
 
         <!-- 产品规格 -->
@@ -137,7 +159,7 @@
               </el-table-column>
               <el-table-column label="编码" min-width="180">
                 <template slot-scope="{ row }">
-                  <el-input v-model="row.code" placeholder="请输入编码" size="small" disabled clearable />
+                  <el-input v-model="row.code" placeholder="请输入编码" size="small" clearable />
                 </template>
               </el-table-column>
               <el-table-column label="库存" min-width="160">
@@ -159,34 +181,200 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "InternalMaterialAdd",
 
+  computed: {
+    ...mapState(["vuex_internal_material_cate_list", "vuex_product_cate_list"]),
+    /** 将 Vuex 原料分类树转为 Cascader 所需格式 { value, label, children } */
+    internalMaterialCateCascaderOptions() {
+      const list = this.vuex_internal_material_cate_list || [];
+      const mapTree = nodes => {
+        if (!Array.isArray(nodes)) return [];
+        return nodes.map(node => {
+          const item = {
+            value: node.id,
+            label: node.title || ""
+          };
+          const children = node.child;
+          if (Array.isArray(children) && children.length) {
+            item.children = mapTree(children);
+          }
+          return item;
+        });
+      };
+      return mapTree(list);
+    },
+    /** 产品大类级联选项（复用产品新增页的数据结构） */
+    productCategoryCascaderOptions() {
+      const list = this.vuex_product_cate_list || [];
+      const mapTree = nodes => {
+        if (!Array.isArray(nodes)) return [];
+        return nodes.map(node => {
+          const item = { value: node.id, label: node.title || "" };
+          const children = node.child;
+          if (Array.isArray(children) && children.length) {
+            item.children = mapTree(children);
+          }
+          return item;
+        });
+      };
+      return mapTree(list);
+    }
+  },
+
   data() {
     return {
+      editId: "",
+      /** 原料 id：编辑时为 editId，新增时首次添加规格后由 setMaterialKey 返回 */
+      materialId: "",
+      /** 规格树（来自 getMaterialInfo / setMaterialKey），用于接口增删规格 */
+      skus: [],
       form: {
         name: "",
         code: "",
         categoryId: "",
+        categoryIds: [],
+        productCategoryIds: [],
         registerCode: "",
         registerCertList: [],
         licenseList: [],
         expiry: "",
         unit: "",
-        detail: ""
+        detail: "",
+        materialType: "1" // 1 原料，2 外购包装
       },
-      // 产品规格：已确认的规格组 [{ name, values, valueInput }]
+      quillOptions: {
+        theme: 'snow',
+        placeholder: '请输入产品详情...',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ header: 1 }, { header: 2 }],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ indent: '-1' }, { indent: '+1' }],
+            [{ align: [] }],
+            [{ color: [] }, { background: [] }],
+            ['link', 'image'],
+            ['clean']
+          ]
+        }
+      },
+      // 产品规格：已确认的规格组 [{ id?, name, values, valueIds?, valueInput }]
       specGroups: [],
       // 新增规格名称 / 规格值（底部“新增”行）
       currentSpecName: "",
       currentSpecValueInput: "",
       currentSpecValues: [],
-      // 规格列表（笛卡尔积生成），每项 { specValue, code, stock }
+      // 规格列表（笛卡尔积生成），每项 { specValue, code, stock, id?, keyIds? }
       specList: []
     };
   },
 
+  mounted() {
+    const id = this.$route.query.id;
+    if (id) {
+      this.editId = String(id);
+      this.loadDetail();
+    }
+  },
+
   methods: {
+    withFullLoading(text, fn) {
+      const loading = this.$loading({
+        lock: true,
+        fullscreen: true,
+        text: text || "处理中...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.35)"
+      });
+      const close = () => {
+        try {
+          if (loading && loading.close) loading.close();
+        } catch (e) {}
+      };
+      return Promise.resolve()
+        .then(fn)
+        .finally(close);
+    },
+    /** 在树中查找节点 id 的路径（用于级联回显） */
+    findPathInTree(nodes, targetId, path = []) {
+      if (!Array.isArray(nodes)) return [];
+      for (const node of nodes) {
+        const p = [...path, node.id];
+        if (node.id == targetId) return p;
+        const childs = node.child || node.childs;
+        if (Array.isArray(childs)) {
+          const found = this.findPathInTree(childs, targetId, p);
+          if (found.length) return found;
+        }
+      }
+      return [];
+    },
+    loadDetail() {
+      if (!this.editId) return;
+      this.$api({
+        url: "/getMaterialInfo",
+        method: "post",
+        data: { id: this.editId }
+      })
+        .then(res => {
+          if (res && res.data) this.fillFormFromDetail(res.data);
+        })
+        .catch(() => {
+          this.$message.error("获取原料详情失败");
+        });
+    },
+    /** 将详情接口返回的数据回填到表单和规格 */
+    fillFormFromDetail(data) {
+      this.materialId = data.id != null ? String(data.id) : "";
+      this.skus = data.skus || [];
+      const catePath = this.findPathInTree(this.vuex_internal_material_cate_list || [], data.cateId);
+      const productCatePath = this.findPathInTree(
+        this.vuex_product_cate_list || [],
+        data.productCateId === "0" || data.productCateId === 0 ? null : data.productCateId
+      );
+      this.form = {
+        name: data.title ?? "",
+        code: data.materialNo ?? "",
+        categoryIds: catePath.length ? catePath : [data.cateId],
+        productCategoryIds: productCatePath.length ? productCatePath : (data.productCateId && data.productCateId !== "0" ? [data.productCateId] : []),
+        registerCode: this.form.registerCode || "",
+        registerCertList: this.form.registerCertList || [],
+        licenseList: this.form.licenseList || [],
+        expiry: data.storageConditions ?? "",
+        unit: data.unit ?? "",
+        detail: data.content ?? "",
+        content: data.content ?? "",
+        materialType: this.form.materialType || "1"
+      };
+      this.syncSpecGroupsFromSkus();
+      const inventorys = data.inventorys || [];
+      this.specList = inventorys.map(inv => ({
+        specValue: inv.keyVals ?? "",
+        code: inv.sn ?? "",
+        stock: inv.kucun ?? inv.num ?? "",
+        id: inv.id,
+        keyIds: inv.keyIds ?? "",
+        batchNo: inv.batchNo ?? ""
+      }));
+    },
+    /** 根据 skus 同步 specGroups（含 id、valueIds） */
+    syncSpecGroupsFromSkus() {
+      const skus = this.skus || [];
+      this.specGroups = skus.map(s => {
+        const childs = s.childs || s.child || [];
+        return {
+          id: s.id,
+          name: s.title || "",
+          values: childs.map(c => c.title || ""),
+          valueIds: childs.map(c => c.id),
+          valueInput: ""
+        };
+      });
+    },
     addSpecValue() {
       const val = (this.currentSpecValueInput || "").trim();
       if (!val) return;
@@ -195,19 +383,43 @@ export default {
       }
       this.currentSpecValueInput = "";
     },
-    // 为已有规格组添加规格值
+    // 为已有规格组添加规格值（有 materialId 且 group.id 时调 setMaterialKey）
     addValueForGroup(gIndex) {
       const group = this.specGroups[gIndex];
       if (!group) return;
       const val = (group.valueInput || "").trim();
       if (!val) return;
-      if (!group.values) group.values = [];
-      if (group.values.indexOf(val) === -1) {
-        group.values.push(val);
-      }
       group.valueInput = "";
-      this.$set(this.specGroups, gIndex, { ...group });
-      this.buildSpecList();
+      const mid = this.materialId || this.editId || "0";
+      if (group.id && mid && mid !== "0") {
+        this.withFullLoading("正在添加规格值...", () =>
+          this.$api({
+            url: "/setMaterialKey",
+            method: "post",
+            data: { materialId: mid, parentId: String(group.id), title: val }
+          })
+            .then(res => {
+              if (res && res.data && res.data.skus) {
+                this.skus = res.data.skus;
+                this.syncSpecGroupsFromSkus();
+                this.buildSpecList();
+              } else {
+                if (!group.values) group.values = [];
+                if (group.values.indexOf(val) === -1) group.values.push(val);
+                this.$set(this.specGroups, gIndex, { ...group });
+                this.buildSpecList();
+              }
+            })
+            .catch(() => {
+              this.$message.error("添加规格值失败");
+            })
+        );
+      } else {
+        if (!group.values) group.values = [];
+        if (group.values.indexOf(val) === -1) group.values.push(val);
+        this.$set(this.specGroups, gIndex, { ...group });
+        this.buildSpecList();
+      }
     },
     // 删除前弹确认
     handleRemoveSpecGroup(idx) {
@@ -222,12 +434,63 @@ export default {
         .catch(() => {});
     },
     removeSpecGroup(idx) {
-      this.specGroups.splice(idx, 1);
-      // 如果删除的是当前“新增行”里同名的规格，不做特殊处理，只重新生成列表
-      this.buildSpecList();
+      const group = this.specGroups[idx];
+      if (!group) return;
+      if (group.id && (this.materialId || this.editId)) {
+        this.withFullLoading("正在删除规格...", () =>
+          this.$api({ url: "/delMaterialKey", method: "post", data: { id: String(group.id) } }).then(() =>
+            this.refreshSpecFromDetail()
+          )
+        ).catch(() => this.$message.error("删除规格失败"));
+      } else {
+        this.specGroups.splice(idx, 1);
+        this.buildSpecList();
+      }
+    },
+    refreshSpecFromDetail() {
+      const mid = this.materialId || this.editId;
+      if (!mid) return Promise.resolve();
+      return this.$api({ url: "/getMaterialInfo", method: "post", data: { id: mid } })
+        .then(res => {
+          if (res && res.data) {
+            this.skus = res.data.skus || [];
+            this.syncSpecGroupsFromSkus();
+            const list = res.data.inventorys || [];
+            this.specList = list.map(inv => ({
+              specValue: inv.keyVals ?? "",
+              code: inv.sn ?? "",
+              stock: inv.kucun ?? inv.num ?? "",
+              id: inv.id,
+              keyIds: inv.keyIds ?? "",
+              batchNo: inv.batchNo ?? ""
+            }));
+          }
+        })
+        .catch(() => {});
     },
     removeCurrentValue(idx) {
       this.currentSpecValues.splice(idx, 1);
+    },
+    /** 删除规格组内一个规格值：有 valueIds 时调 delMaterialKey 并刷新 */
+    removeGroupValue(gIndex, vIndex) {
+      const group = this.specGroups[gIndex];
+      if (!group) return;
+      const valueIds = group.valueIds || [];
+      const id = valueIds[vIndex];
+      if (id != null && (this.materialId || this.editId)) {
+        this.withFullLoading("正在删除规格值...", () =>
+          this.$api({
+            url: "/delMaterialKey",
+            method: "post",
+            data: { id: String(id) }
+          }).then(() => this.refreshSpecFromDetail())
+        ).catch(() => this.$message.error("删除规格值失败"));
+      } else {
+        group.values.splice(vIndex, 1);
+        if (valueIds.length) valueIds.splice(vIndex, 1);
+        this.$set(this.specGroups, gIndex, { ...group });
+        this.buildSpecList();
+      }
     },
     confirmAddSpec() {
       const name = (this.currentSpecName || "").trim();
@@ -245,19 +508,79 @@ export default {
         this.$message.warning("已存在同名规格，请更换规格名称");
         return;
       }
-      // 新增一个规格
-      this.specGroups.push({
-        name,
-        values,
-        valueInput: ""
+      const mid = this.materialId || this.editId || "0";
+      this.withFullLoading("正在添加规格...", () =>
+        this.$api({
+          url: "/setMaterialKey",
+          method: "post",
+          data: { materialId: mid, parentId: "0", title: name }
+        }).then(res => {
+          if (!res || !res.data) {
+            this.specGroups.push({ name, values, valueInput: "" });
+            this.currentSpecName = "";
+            this.currentSpecValues = [];
+            this.currentSpecValueInput = "";
+            this.buildSpecList();
+            return;
+          }
+          if (res.data.materialId) this.materialId = String(res.data.materialId);
+          const skus = res.data.skus || [];
+          const parent = skus.find(s => (s.title || "") === name && (s.parentId === 0 || !s.parentId));
+          const parentId = parent ? String(parent.id) : "";
+          if (!parentId) {
+            this.skus = skus;
+            this.syncSpecGroupsFromSkus();
+            this.currentSpecName = "";
+            this.currentSpecValues = [];
+            this.currentSpecValueInput = "";
+            this.buildSpecList();
+            return;
+          }
+          let lastSkus = skus;
+          return new Promise((resolve, reject) => {
+            const addNext = (i) => {
+              if (i >= values.length) {
+                this.skus = lastSkus;
+                this.syncSpecGroupsFromSkus();
+                this.currentSpecName = "";
+                this.currentSpecValues = [];
+                this.currentSpecValueInput = "";
+                this.buildSpecList();
+                resolve();
+                return;
+              }
+              this.$api({
+                url: "/setMaterialKey",
+                method: "post",
+                data: { materialId: this.materialId || this.editId, parentId, title: values[i] }
+              })
+                .then(r => {
+                  if (r && r.data && r.data.skus) lastSkus = r.data.skus;
+                  addNext(i + 1);
+                })
+                .catch(() => {
+                  this.$message.error("添加规格值失败");
+                  this.skus = lastSkus;
+                  this.syncSpecGroupsFromSkus();
+                  this.currentSpecName = "";
+                  this.currentSpecValues = [];
+                  this.currentSpecValueInput = "";
+                  this.buildSpecList();
+                  reject();
+                });
+            };
+            addNext(0);
+          });
+        })
+      ).catch(() => {
+        this.specGroups.push({ name, values, valueInput: "" });
+        this.currentSpecName = "";
+        this.currentSpecValues = [];
+        this.currentSpecValueInput = "";
+        this.buildSpecList();
       });
-      // 重置“新增行”
-      this.currentSpecName = "";
-      this.currentSpecValues = [];
-      this.currentSpecValueInput = "";
-      this.buildSpecList();
     },
-    // 根据 specGroups 笛卡尔积生成规格列表
+    // 根据 specGroups 笛卡尔积生成规格列表；有 valueIds 时计算 keyIds，并尽量保留原有编码/库存
     buildSpecList() {
       if (!this.specGroups.length) {
         this.specList = [];
@@ -265,17 +588,42 @@ export default {
       }
       const combos = this.cartesian(
         this.specGroups.map(g =>
-          g.values.map(v => ({ name: g.name, value: v }))
+          (g.values || []).map((v, i) => ({
+            name: g.name,
+            value: v,
+            valueId: (g.valueIds && g.valueIds[i]) || null
+          }))
         )
       );
-      const existingKeys = new Set(this.specList.map(r => r.specValue));
+      // 按 keyIds / specValue 建立索引，尽量复用已有行的数据
+      const existingByKeyIds = {};
+      const existingBySpec = {};
+      (this.specList || []).forEach(r => {
+        const kid = r.keyIds != null && r.keyIds !== "" ? String(r.keyIds) : "";
+        const sv = r.specValue != null ? String(r.specValue) : "";
+        if (kid) existingByKeyIds[kid] = r;
+        if (sv) existingBySpec[sv] = r;
+      });
+
       const newList = combos.map(combo => {
-        const specValue = combo.map(c => c.value).join(",");
-        const existing = this.specList.find(r => r.specValue === specValue);
+        const defaultSpecValue = combo.map(c => c.value).join(",");
+        const keyIds = combo
+          .map(c => c.valueId)
+          .filter(id => id != null && id !== "")
+          .join("-");
+        const existing =
+          (keyIds && existingByKeyIds[keyIds]) ||
+          existingBySpec[defaultSpecValue] ||
+          null;
+        const specValue = existing && existing.specValue != null
+          ? String(existing.specValue)
+          : defaultSpecValue;
         return {
           specValue,
-          code: existing ? existing.code : "",
-          stock: existing ? existing.stock : ""
+          code: existing && existing.code != null ? existing.code : "",
+          stock: existing && existing.stock != null ? existing.stock : "",
+          id: existing && existing.id != null ? existing.id : undefined,
+          keyIds: keyIds || (existing && existing.keyIds != null ? String(existing.keyIds) : "")
         };
       });
       this.specList = newList;
@@ -298,21 +646,53 @@ export default {
     handleUploadRemove(field) {
       this.form[field] = [];
     },
+    /** 构建原料规格 inventorys，结构参考产品新增；编辑时保留 keyIds */
+    buildInventorys() {
+      return (this.specList || []).map(row => ({
+        id: row.id != null && row.id !== "" ? String(row.id) : "",
+        sn: String(row.code ?? ""),
+        keyIds: row.keyIds != null ? String(row.keyIds) : "",
+        keyVals: String(row.specValue ?? ""),
+        num: String(row.stock ?? "")
+      }));
+    },
     handleSubmit() {
       this.$refs.formRef.validate(valid => {
         if (!valid) return;
-        // 提交时带上产品规格 specList，可一并传给后端
-        const payload = {
-          ...this.form,
-          specList: this.specList
+        // 所属分类使用级联最后一级 id 作为 categoryId
+        const ids = this.form.categoryIds || [];
+        const categoryId = ids.length ? String(ids[ids.length - 1]) : this.form.categoryId;
+        // 用于产品大类使用级联最后一级 id 作为 productCateId
+        const pIds = this.form.productCategoryIds || [];
+        const productCateId = pIds.length ? String(pIds[pIds.length - 1]) : "0";
+        const params = {
+          id: this.editId || this.materialId || "",
+          title: this.form.name,
+          cateId: categoryId,
+          productCateId,
+          storageConditions: this.form.expiry || "",
+          unit: this.form.unit || "",
+          content: this.form.content || "",
+          inventorys: JSON.stringify(this.buildInventorys()),
+          materialNo: this.form.code || "",
+          materialType: this.form.materialType || "1"
         };
-        // TODO: 调用新增产品接口，如 this.$api.xxx(payload)
-        this.$message.success("提交成功");
-        this.$router.push("/manager/product/list");
+        this.$api({
+          url: "/addMaterial",
+          method: "post",
+          data: params
+        })
+          .then(() => {
+            this.$message.success("提交成功");
+            this.$router.push("/manager/internal-material/list");
+          })
+          .catch(err => {
+            this.$message.error((err && err.msg) ? err.msg : "提交失败");
+          });
       });
     },
     handleCancel() {
-      this.$router.push("/manager/product/list");
+      this.$router.push("/manager/internal-material/list");
     }
   }
 };
@@ -355,12 +735,22 @@ export default {
   :deep(.el-input),
   :deep(.el-input__inner),
   :deep(.el-select .el-input__inner) {
-    width: 101px;
+    width: 322px;
   }
 
   :deep(.el-form-item__content) {
     text-align: left;
   }
+}
+
+.quill-editor-wrap {
+  width: 100%;
+  max-width: 860px;
+}
+
+/* Quill 编辑区高度 */
+:deep(.quill-editor-wrap .ql-container) {
+  min-height: 320px;
 }
 
 .upload-image-card {
