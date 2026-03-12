@@ -1,7 +1,10 @@
 import axios from "axios";
 import {
-	API_ROOT
+	API_ROOT,
+	UPLOAD_ROOT
 } from '@/config/env.js'
+import store from '@/store';
+import router from '@/router';
 
 const axios_ins_common = axios.create({
 	// baseURL: 'https://rblxzz.cn',
@@ -43,10 +46,10 @@ axios_ins_common.interceptors.response.use(
 		let data = res.data;
 		let code = data.code
 		if (code == 403 || code == 401) {
-			// if (data.msg === '请登录') {
-			// 	window.location.href = '/login';
-			// 	return;
-			// }
+			if (data.msg === '请登录') {
+				store.commit('clearAdminInfo');
+				router.push({ path: '/login' });
+			}
 			alertErr(data.msg)
 			return Promise.reject(data);
 		} else if (code == 500) {
@@ -246,11 +249,10 @@ function apiUploadImage(option) {
 	} = option;
 
 	const formData = new FormData();
-	formData.append("action", 'upload_uploadImg');
 	formData.append("token", localStorage.getItem("token"));
 	formData.append("file", file);
 
-	let url = process.env.NODE_ENV !== "production" ? API_ROOT : "/admin_service.php"
+	let url = process.env.NODE_ENV !== "production" ? UPLOAD_ROOT : UPLOAD_ROOT
 	return axios_ins_upload({
 		url: url,
 		method: "post",

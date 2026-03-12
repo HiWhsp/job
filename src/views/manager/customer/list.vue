@@ -14,7 +14,7 @@
           </el-form-item>
           <el-form-item label="客户属地">
             <el-select
-              v-model="queryParams.belong"
+              v-model="queryParams.territory"
               placeholder="请选择"
               clearable
               style="width: 140px"
@@ -44,7 +44,7 @@
           </el-form-item>
           <el-form-item label="客户属性A">
             <el-select
-              v-model="queryParams.attrA"
+              v-model="queryParams.attributeA"
               placeholder="客户属性A"
               clearable
               style="width: 140px"
@@ -61,7 +61,7 @@
         <div class="search-row">
           <el-form-item label="客户属性B">
             <el-select
-              v-model="queryParams.attrB"
+              v-model="queryParams.attributeB"
               placeholder="客户属性B"
               clearable
               style="width: 140px"
@@ -102,24 +102,24 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55" align="center" />
-          <el-table-column prop="code" label="客户编码" min-width="100" show-overflow-tooltip />
-          <el-table-column prop="name" label="客户名称" min-width="180" show-overflow-tooltip>
+          <el-table-column prop="customerNo" label="客户编码" min-width="100" show-overflow-tooltip />
+          <el-table-column prop="title" label="客户名称" min-width="180" show-overflow-tooltip>
             <template slot-scope="{ row }">
-              <span class="link-name" @click="handleView(row)">{{ row.name }}</span>
+              <span class="link-name" @click="handleView(row)">{{ row.title }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="territory" label="客户属地" min-width="90" show-overflow-tooltip />
           <el-table-column prop="region" label="客户区域" min-width="90" show-overflow-tooltip />
-          <el-table-column prop="attrA" label="客户属性A" min-width="100" show-overflow-tooltip />
-          <el-table-column prop="attrB" label="客户属性B" min-width="100" show-overflow-tooltip />
+          <el-table-column prop="attributeA" label="客户属性A" min-width="100" show-overflow-tooltip />
+          <el-table-column prop="attributeB" label="客户属性B" min-width="100" show-overflow-tooltip />
           <el-table-column
-            prop="contactPerson"
+            prop="contact"
             label="客户直接联系人"
             min-width="120"
             show-overflow-tooltip
           />
           <el-table-column
-            prop="contactPhone"
+            prop="phone"
             label="客户联系电话"
             min-width="120"
             show-overflow-tooltip
@@ -184,10 +184,10 @@ export default {
     return {
       queryParams: {
         keyword: "",
-        belong: "",
+        territory: "",
         region: "",
-        attrA: "",
-        attrB: "",
+        attributeA: "",
+        attributeB: "",
         pageNum: 1,
         pageSize: 20
       },
@@ -237,7 +237,7 @@ export default {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
-    /** 将接口单条数据映射为表格行（含 addressJson/otherJson 解析） */
+    /** 将接口单条数据映射为表格行（仅处理需特殊转换的字段：territory 转文案、addressJson/otherJson 解析） */
     mapApiRowToTableRow(item) {
       let addressObj = {};
       try {
@@ -248,20 +248,12 @@ export default {
       } catch (e) {
         addressObj = {};
       }
-      const otherObj = item.otherJson || {};
+      const otherObj = this._parseJsonField(item.otherJson);
       const territoryText =
-        item.territory === 1 ? "国内" : item.territory === 2 ? "国外" : "";
+        item.territory === 1 ? "国内" : item.territory === 2 ? "国外" : (item.territory ?? "");
       return {
         ...item,
-        code: item.customerNo ?? "",
-        name: item.title ?? "",
         territory: territoryText,
-        region: item.region ?? "",
-        attrA: item.attributeA ?? "",
-        attrB: item.attributeB ?? "",
-        contactPerson: item.contact ?? "",
-        contactPhone: item.phone ?? "",
-        companyPhone: item.companyPhone ?? "",
         address: addressObj.address ?? "",
         receiver: addressObj.name ?? "",
         receiverPhone: addressObj.phone ?? "",
@@ -275,10 +267,10 @@ export default {
         page: String(this.queryParams.pageNum),
         limit: String(this.queryParams.pageSize),
         keyword: this.queryParams.keyword || "",
-        territory: this.queryParams.belong || "",
+        territory: this.queryParams.territory || "",
         region: this.queryParams.region || "",
-        attributeA: this.queryParams.attrA || "",
-        attributeB: this.queryParams.attrB || ""
+        attributeA: this.queryParams.attributeA || "",
+        attributeB: this.queryParams.attributeB || ""
       };
       this.$api({
         url: "/getCustomerList",
@@ -306,10 +298,10 @@ export default {
       this.$refs["queryForm"].resetFields();
       this.queryParams = {
         keyword: "",
-        belong: "",
+        territory: "",
         region: "",
-        attrA: "",
-        attrB: "",
+        attributeA: "",
+        attributeB: "",
         pageNum: 1,
         pageSize: 20
       };
@@ -356,33 +348,17 @@ export default {
           this.detailDrawerVisible = false;
         });
     },
-    /** 将详情接口返回的数据映射为详情抽屉展示结构 */
+    /** 将详情接口返回的数据映射为详情抽屉展示（仅处理需特殊转换的：territory 文案、paymentJson/addressJson/otherJson 解析、paymentTerm→termMonth） */
     mapDetailApiToDrawer(data) {
       const payment = this._parseJsonField(data.paymentJson);
       const address = this._parseJsonField(data.addressJson);
-      const other =
-        data.otherJson && typeof data.otherJson === "object"
-          ? data.otherJson
-          : this._parseJsonField(data.otherJson);
-      const licenseList = Array.isArray(data.licenseImage)
-        ? data.licenseImage
-        : [];
+      const other = this._parseJsonField(data.otherJson);
       const territoryText =
-        data.territory === 1 ? "国内" : data.territory === 2 ? "国外" : "";
+        data.territory === 1 ? "国内" : data.territory === 2 ? "国外" : (data.territory ?? "");
       return {
         ...data,
-        code: data.customerNo ?? "",
-        name: data.title ?? "",
         territory: territoryText,
-        region: data.region ?? "",
-        attrA: data.attributeA ?? "",
-        attrB: data.attributeB ?? "",
-        contactPerson: data.contact ?? "",
-        contactPhone: data.phone ?? "",
-        companyPhone: data.companyPhone ?? "",
-        termMonth: data.termMonth ?? "",
-        businessLicense: data.businessLicenseImage ?? "",
-        medicalLicense1: licenseList[0] ?? "",
+        termMonth: data.paymentTerm ?? data.termMonth ?? "",
         accountName: payment.account ?? "",
         accountNo: payment.code ?? "",
         bankName: payment.bank ?? "",

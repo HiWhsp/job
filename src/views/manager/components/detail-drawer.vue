@@ -13,11 +13,11 @@
           <div class="detail-row two-col">
             <div class="detail-item">
               <span class="detail-label">客户编号：</span>
-              <span class="detail-value">{{ detailRow.code || '—' }}</span>
+              <span class="detail-value">{{ detailRow.customerNo || '—' }}</span>
             </div>
             <div class="detail-item">
               <span class="detail-label">客户名称：</span>
-              <span class="detail-value">{{ detailRow.name || '—' }}</span>
+              <span class="detail-value">{{ detailRow.title || '—' }}</span>
             </div>
           </div>
           <div class="detail-row two-col">
@@ -33,21 +33,21 @@
           <div class="detail-row two-col">
             <div class="detail-item">
               <span class="detail-label">客户属性A：</span>
-              <span class="detail-value">{{ detailRow.attrA || '—' }}</span>
+              <span class="detail-value">{{ detailRow.attributeA || '—' }}</span>
             </div>
             <div class="detail-item">
               <span class="detail-label">客户属性B：</span>
-              <span class="detail-value">{{ detailRow.attrB || '—' }}</span>
+              <span class="detail-value">{{ detailRow.attributeB || '—' }}</span>
             </div>
           </div>
           <div class="detail-row two-col">
             <div class="detail-item">
               <span class="detail-label">客户直接联系人：</span>
-              <span class="detail-value">{{ detailRow.contactPerson || '—' }}</span>
+              <span class="detail-value">{{ detailRow.contact || '—' }}</span>
             </div>
             <div class="detail-item">
               <span class="detail-label">客户联系电话：</span>
-              <span class="detail-value">{{ detailRow.contactPhone || '—' }}</span>
+              <span class="detail-value">{{ detailRow.phone || '—' }}</span>
             </div>
           </div>
           <div class="detail-row two-col">
@@ -64,10 +64,10 @@
             <div class="detail-item full has-block-label">
               <span class="detail-label">营业执照：</span>
               <div class="detail-image-wrap">
-                <div class="detail-image-placeholder" v-if="!detailRow.businessLicense">
+                <div class="detail-image-placeholder" v-if="!detailRow.businessLicenseImage">
                   <span>暂无图片</span>
                 </div>
-                <img v-else :src="detailRow.businessLicense" class="detail-image" alt="营业执照" />
+                <img v-else :src="detailRow.businessLicenseImage" class="detail-image" alt="营业执照" />
               </div>
             </div>
           </div>
@@ -75,10 +75,10 @@
             <div class="detail-item full has-block-label">
               <span class="detail-label">医疗器械相关许可证：</span>
               <div class="detail-image-group">
-                <div class="detail-image-placeholder" v-if="!detailRow.medicalLicense1">
+                <div class="detail-image-placeholder" v-if="!licenseImageFirst">
                   <span>暂无</span>
                 </div>
-                <img v-else :src="detailRow.medicalLicense1" class="detail-image" alt="许可证1" />
+                <img v-else :src="licenseImageFirst" class="detail-image" alt="许可证1" />
               </div>
             </div>
           </div>
@@ -160,27 +160,23 @@
         </div>
       </div>
 
-      <!-- 审核（仅审核页查看详情时展示） -->
+      <!-- 审核记录（仅审核页查看详情时展示，使用接口返回的 log 数组） -->
       <div v-if="showAuditSection" class="detail-section">
         <div class="detail-section-title">审核</div>
         <div class="detail-section-content">
-          <div class="audit-table">
+          <div class="audit-table" v-if="auditLogList.length">
             <div class="audit-table-header">
               <span class="audit-th">审核时间</span>
               <span class="audit-th">审核状态</span>
               <span class="audit-th">审核备注</span>
             </div>
-            <div class="audit-table-body">
-              <span class="audit-td">{{ detailRow.auditTime || '—' }}</span>
-              <span class="audit-td">
-                <el-tag v-if="detailRow.auditStatus === 'pending'" type="info" size="small">待审核</el-tag>
-                <el-tag v-else-if="detailRow.auditStatus === 'rejected'" type="danger" size="small">审核未通过</el-tag>
-                <el-tag v-else-if="detailRow.auditStatus === 'audited'" type="success" size="small">已审核</el-tag>
-                <span v-else>—</span>
-              </span>
-              <span class="audit-td">{{ detailRow.auditRemark || '—' }}</span>
+            <div class="audit-table-body" v-for="(item, index) in auditLogList" :key="item.id || index">
+              <span class="audit-td">{{ item.created_at || '—' }}</span>
+              <span class="audit-td">{{ item.cont || '—' }}</span>
+              <span class="audit-td">{{ item.reCont || '—' }}</span>
             </div>
           </div>
+          <div v-else class="audit-empty">暂无审核记录</div>
         </div>
       </div>
 
@@ -222,6 +218,16 @@ export default {
       set(val) {
         this.$emit('update:visible', val);
       }
+    },
+    /** 接口返回 licenseImage 数组，取第一张用于展示 */
+    licenseImageFirst() {
+      const arr = this.detailRow && this.detailRow.licenseImage;
+      return Array.isArray(arr) && arr.length ? arr[0] : '';
+    },
+    /** 接口返回的审核记录 log 数组 */
+    auditLogList() {
+      const log = this.detailRow && this.detailRow.log;
+      return Array.isArray(log) ? log : [];
     }
   },
 
@@ -326,11 +332,23 @@ export default {
   grid-template-columns: 180px 120px 1fr;
   font-size: 14px;
   color: #303133;
+  border-bottom: 1px solid #ebeef5;
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .audit-td {
   padding: 12px 16px;
   word-break: break-all;
+}
+
+.audit-empty {
+  padding: 16px;
+  color: #909399;
+  font-size: 14px;
+  text-align: center;
 }
 
 .detail-row {

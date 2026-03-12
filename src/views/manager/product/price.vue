@@ -13,15 +13,22 @@
             />
           </el-form-item>
           <el-form-item label="产品分类">
-            <el-select
-              v-model="queryParams.category"
-              placeholder="请选择"
+            <el-cascader
+              ref="cascaderRef"
+              v-model="queryParams.categoryIds"
+              :options="productCategoryCascaderOptions"
+              :props="{
+                value: 'value',
+                label: 'label',
+                children: 'children',
+                checkStrictly: true
+              }"
+              placeholder="请选择产品分类"
               clearable
-              style="width: 140px"
-            >
-              <el-option label="树脂盘" value="树脂盘" />
-              <el-option label="其他分类" value="其他" />
-            </el-select>
+              style="width: 260px"
+              show-all-levels
+              @visible-change="onCascaderVisibleChange"
+            />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handleQuery">搜索</el-button>
@@ -48,26 +55,26 @@
           header-cell-class-name="table-header-cell"
           :row-class-name="tableRowClassName"
         >
-          <el-table-column prop="productCode" label="产品编码" min-width="120" show-overflow-tooltip align="center" />
-          <el-table-column prop="productName" label="产品名称" min-width="140" show-overflow-tooltip align="center">
+          <el-table-column prop="sn" label="产品编码" min-width="120" show-overflow-tooltip align="center" />
+          <el-table-column prop="title" label="产品名称" min-width="140" show-overflow-tooltip align="center">
             <template slot-scope="{ row }">
-              <span class="link-name" @click="handleViewProduct(row)">{{ row.productName }}</span>
+              <span class="link-name" @click="handleViewProduct(row)">{{ row.title }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="spec" label="规格" min-width="120" show-overflow-tooltip align="center" />
-          <el-table-column prop="category" label="所属分类" min-width="100" show-overflow-tooltip align="center" />
+          <el-table-column prop="keyVals" label="规格" min-width="120" show-overflow-tooltip align="center" />
+          <el-table-column prop="cateTitle" label="所属分类" min-width="100" show-overflow-tooltip align="center" />
           <el-table-column prop="unit" label="单位" min-width="70" show-overflow-tooltip align="center" />
-          <el-table-column prop="dealerPrice" label="经销商指导价格" min-width="130" align="center">
+          <el-table-column prop="price1" label="经销商指导价格" min-width="130" align="center">
             <template slot-scope="{ row }">
-              {{ row.dealerPrice != null && row.dealerPrice !== '' ? row.dealerPrice : '—' }}
+              {{ row.price1 != null && row.price1 !== '' ? row.price1 : '—' }}
             </template>
           </el-table-column>
-          <el-table-column prop="terminalPrice" label="终端指导价格" min-width="130" align="center">
+          <el-table-column prop="price2" label="终端指导价格" min-width="130" align="center">
             <template slot-scope="{ row }">
-              {{ row.terminalPrice != null && row.terminalPrice !== '' ? row.terminalPrice : '—' }}
+              {{ row.price2 != null && row.price2 !== '' ? row.price2 : '—' }}
             </template>
           </el-table-column>
-          <el-table-column prop="updateTime" label="更新时间" min-width="110" show-overflow-tooltip align="center" />
+          <el-table-column prop="updated_at" label="更新时间" min-width="110" show-overflow-tooltip align="center" />
           <el-table-column label="操作" width="340" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
@@ -105,6 +112,7 @@
 </template>
   
   <script>
+import { mapState } from "vuex";
 import DetailDrawer from "../components/detail-drawer.vue";
 import EditPriceDialog from "../components/edit-price-dialog.vue";
 
@@ -115,40 +123,36 @@ export default {
     DetailDrawer,
     EditPriceDialog
   },
+
+  computed: {
+    ...mapState(["vuex_product_cate_list"]),
+    /** 将 Vuex 树形分类转为 Cascader 所需格式 { value, label, children } */
+    productCategoryCascaderOptions() {
+      const list = this.vuex_product_cate_list || [];
+      const mapTree = (nodes) => {
+        if (!Array.isArray(nodes)) return [];
+        return nodes.map((node) => {
+          const item = { value: node.id, label: node.title || "" };
+          if (Array.isArray(node.child) && node.child.length) {
+            item.children = mapTree(node.child);
+          }
+          return item;
+        });
+      };
+      return mapTree(list);
+    }
+  },
   data() {
     return {
       queryParams: {
         keyword: "",
-        category: "",
+        categoryIds: [],
         pageNum: 1,
         pageSize: 20
       },
       total: 0,
       tableHeight: 0,
-      tableData: [
-        {
-          id: 1,
-          productCode: "4578786954",
-          productName: "单层牙齿盘",
-          spec: "98,A1,10mm",
-          category: "树脂盘",
-          unit: "盒",
-          dealerPrice: null,
-          terminalPrice: null,
-          updateTime: "2025-10-10"
-        },
-        {
-          id: 2,
-          productCode: "4578786954",
-          productName: "单层牙齿盘",
-          spec: "98,A1,10mm",
-          category: "树脂盘",
-          unit: "盒",
-          dealerPrice: "60.00",
-          terminalPrice: "60.00",
-          updateTime: "2025-10-10"
-        }
-      ],
+      tableData: [],
       detailDrawerVisible: false,
       detailRow: null,
       editPriceVisible: false,
@@ -184,8 +188,33 @@ export default {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
     loadList() {
-      // TODO: 调用接口获取列表
-      this.total = this.tableData.length;
+      const ids = this.queryParams.categoryIds || [];
+      const cateld = ids.length ? String(ids[ids.length - 1]) : "";
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        keyword: this.queryParams.keyword || "",
+        cateld
+      };
+      this.$api({
+        url: "/getProductInventoryList",
+        method: "post",
+        data: params
+      })
+        .then((res) => {
+          if (res && res.code === 200 && res.data) {
+            const list = res.data.list || [];
+            this.tableData = Array.isArray(list) ? list : [];
+            this.total = res.data.count ?? this.tableData.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -195,6 +224,20 @@ export default {
       this.$refs.queryForm.resetFields();
       this.queryParams.pageNum = 1;
       this.loadList();
+    },
+    /** 级联收起时把焦点移出下拉层，避免 aria-hidden 与焦点冲突的控制台警告 */
+    onCascaderVisibleChange(visible) {
+      if (!visible) {
+        this.$nextTick(() => {
+          requestAnimationFrame(() => {
+            const active = document.activeElement;
+            const cascaderEl = this.$refs.cascaderRef?.$el;
+            if (cascaderEl && active && cascaderEl.contains(active)) {
+              active.blur();
+            }
+          });
+        });
+      }
     },
     handleViewProduct(row) {
       this.detailRow = row;

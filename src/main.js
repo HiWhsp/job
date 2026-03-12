@@ -16,9 +16,12 @@ Vue.component('class_select', class_select)
 // 富文本编辑器
 import CKEditor from "@ckeditor/ckeditor5-vue2";
 Vue.use(CKEditor);
-// TinyMCE 富文本编辑器（全局注册，可直接使用 <tiny-rich-editor>）
-import TinyRichEditor from "@/components/tinyRichEditor.vue";
-Vue.component("TinyRichEditor", TinyRichEditor);
+// Quill 富文本编辑器（vue2）
+import VueQuillEditor from "vue-quill-editor";
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+Vue.use(VueQuillEditor);
 
 import "@/config/style/css-reset.css"; // css reset
 

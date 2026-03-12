@@ -5,23 +5,17 @@
       <el-form :model="queryParams" ref="queryForm" inline class="search-form" label-width="80px">
         <div class="search-row">
           <el-form-item label="关键词">
-            <el-input
-              v-model="queryParams.keyword"
-              placeholder="原料编码/原料名称"
-              clearable
-              style="width: 260px"
-            />
+            <el-input v-model="queryParams.keyword" placeholder="原料编码/原料名称" clearable style="width: 260px" />
           </el-form-item>
-          <el-form-item label="管理类别">
-            <el-select
-              v-model="queryParams.category"
-              placeholder="请选择"
-              clearable
-              style="width: 140px"
-            >
-              <el-option label="类别一" value="类别一" />
-              <el-option label="类别二" value="类别二" />
-            </el-select>
+          <el-form-item label="原料分类">
+            <el-cascader ref="cascaderRef" v-model="queryParams.categoryIds" :options="internalMaterialCateCascaderOptions"
+              :props="{
+                value: 'value',
+                label: 'label',
+                children: 'children',
+                checkStrictly: true
+              }" placeholder="请选择原料分类" clearable style="width: 260px" show-all-levels
+              @visible-change="onCascaderVisibleChange" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handleQuery">搜索</el-button>
@@ -41,80 +35,24 @@
         </div>
       </div>
       <div class="table-box">
-        <el-table
-          ref="tableH"
-          :height="tableHeight"
-          :data="tableData"
-          header-cell-class-name="table-header-cell"
-          :row-class-name="tableRowClassName"
-        >
-          <el-table-column
-            prop="materialCode"
-            label="原料编码"
-            min-width="120"
-            show-overflow-tooltip
-            align="center"
-          />
-          <el-table-column
-            prop="materialName"
-            label="原料名称"
-            min-width="120"
-            show-overflow-tooltip
-            align="center"
-          >
+        <el-table ref="tableH" :height="tableHeight" :data="tableData" header-cell-class-name="table-header-cell"
+          :row-class-name="tableRowClassName">
+          <el-table-column prop="materialNo" label="原料编码" min-width="120" show-overflow-tooltip align="center" />
+          <el-table-column prop="title" label="原料名称" min-width="120" show-overflow-tooltip align="center">
             <template slot-scope="{ row }">
-              <span class="link-name" @click="handleView(row)">{{ row.materialName }}</span>
+              <span class="link-name" @click="handleView(row)">{{ row.title }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="spec"
-            label="规格"
-            min-width="100"
-            show-overflow-tooltip
-            align="center"
-          />
-          <el-table-column
-            prop="storageCondition"
-            label="储存条件"
-            min-width="100"
-            show-overflow-tooltip
-            align="center"
-          />
-          <el-table-column
-            prop="batchNumber"
-            label="批次"
-            min-width="110"
-            show-overflow-tooltip
-            align="center"
-          />
-          <el-table-column
-            prop="unit"
-            label="单位"
-            min-width="70"
-            show-overflow-tooltip
-            align="center"
-          />
-          <el-table-column
-            prop="managementCategory"
-            label="所属管理类别"
-            min-width="120"
-            show-overflow-tooltip
-            align="center"
-          />
-          <el-table-column
-            prop="productClassification"
-            label="用于产品分类"
-            min-width="160"
-            show-overflow-tooltip
-            align="center"
-          />
-          <el-table-column
-            prop="updateTime"
-            label="更新时间"
-            min-width="110"
-            show-overflow-tooltip
-            align="center"
-          />
+          <el-table-column prop="spec" label="规格" min-width="100" show-overflow-tooltip align="center" />
+          <el-table-column prop="storageConditions" label="储存条件" min-width="100" show-overflow-tooltip
+            align="center" />
+          <el-table-column prop="batchNo" label="批次" min-width="110" show-overflow-tooltip align="center" />
+          <el-table-column prop="unit" label="单位" min-width="70" show-overflow-tooltip align="center" />
+          <el-table-column prop="cateTitle" label="所属管理类别" min-width="120" show-overflow-tooltip
+            align="center" />
+          <el-table-column prop="productCateTitle" label="用于产品分类" min-width="160" show-overflow-tooltip
+            align="center" />
+          <el-table-column prop="updated_at" label="更新时间" min-width="110" show-overflow-tooltip align="center" />
           <el-table-column label="操作" width="160" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
@@ -125,15 +63,9 @@
           </el-table-column>
         </el-table>
         <div class="pagination-wrap">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="queryParams.pageNum"
-            :page-sizes="[10, 20, 50, 100]"
-            :page-size="queryParams.pageSize"
-            layout="total, prev, pager, next, jumper"
-            :total="total"
-          />
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+            :current-page="queryParams.pageNum" :page-sizes="[10, 20, 50, 100]" :page-size="queryParams.pageSize"
+            layout="total, prev, pager, next, jumper" :total="total" />
         </div>
       </div>
     </div>
@@ -145,8 +77,9 @@
     <delete-dialog :visible.sync="deleteDialogVisible" @confirm="handleDeleteConfirm" />
   </div>
 </template>
-    
-    <script>
+
+<script>
+import { mapState } from "vuex";
 import DetailDrawer from "../components/detail-drawer.vue";
 import DeleteDialog from "../components/delete-dialog.vue";
 
@@ -161,7 +94,7 @@ export default {
     return {
       queryParams: {
         keyword: "",
-        category: "",
+        categoryIds: [], // 原料分类级联选中的路径，接口需要时取最后一级 id
         pageNum: 1,
         pageSize: 20
       },
@@ -199,6 +132,28 @@ export default {
       rowToDelete: null
     };
   },
+  computed: {
+    ...mapState(["vuex_internal_material_cate_list"]),
+    /** 将 Vuex 原料分类树转为 Cascader 所需格式 { value, label, children } */
+    internalMaterialCateCascaderOptions() {
+      const list = this.vuex_internal_material_cate_list || [];
+      const mapTree = (nodes) => {
+        if (!Array.isArray(nodes)) return [];
+        return nodes.map((node) => {
+          const item = {
+            value: node.id,
+            label: node.title || ""
+          };
+          const children = node.child;
+          if (Array.isArray(children) && children.length) {
+            item.children = mapTree(children);
+          }
+          return item;
+        });
+      };
+      return mapTree(list);
+    }
+  },
 
   mounted() {
     this.setView();
@@ -217,7 +172,7 @@ export default {
         const windowHeight = window.innerHeight;
         this.tableHeight = Math.max(windowHeight - tableOffsetTop, 200);
         const that = this;
-        window.onresize = function() {
+        window.onresize = function () {
           const top = tableEl.offsetTop + 84 + 80;
           that.tableHeight = Math.max(window.innerHeight - top, 200);
         };
@@ -227,17 +182,58 @@ export default {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
     loadList() {
-      // TODO: 调用接口获取列表
-      this.total = this.tableData.length;
+      const ids = this.queryParams.categoryIds || [];
+      const cateld = ids.length ? String(ids[ids.length - 1]) : "";
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        keyword: this.queryParams.keyword || "",
+        cateld
+      };
+      this.$api({
+        url: "/getMaterialList",
+        method: "post",
+        data: params
+      })
+        .then((res) => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list;
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.loadList();
     },
     resetQuery() {
-      this.$refs.queryForm.resetFields();
+      this.$refs['queryForm'].resetFields();
+      this.queryParams.keyword = "";
+      this.queryParams.categoryIds = [];
       this.queryParams.pageNum = 1;
       this.loadList();
+    },
+    /** 级联收起时把焦点移出下拉层，避免 aria-hidden 与焦点冲突的控制台警告 */
+    onCascaderVisibleChange(visible) {
+      if (!visible) {
+        this.$nextTick(() => {
+          requestAnimationFrame(() => {
+            const active = document.activeElement;
+            const cascaderEl = this.$refs.cascaderRef?.$el;
+            if (cascaderEl && active && cascaderEl.contains(active)) {
+              active.blur();
+            }
+          });
+        });
+      }
     },
     handleView(row) {
       this.detailRow = row;
@@ -277,8 +273,8 @@ export default {
   }
 };
 </script>
-    
-    <style lang="less" scoped>
+
+<style lang="less" scoped>
 .customer-page {
   background: #fff;
   // border: 1px solid #E6E6E6;
@@ -372,7 +368,7 @@ export default {
       background: #f3f7fa;
     }
 
-    .el-table__body tr:hover > td {
+    .el-table__body tr:hover>td {
       background: #f5f7fa !important;
     }
   }
@@ -410,7 +406,7 @@ export default {
       text-decoration: underline;
     }
 
-    & + .row-act::before {
+    &+.row-act::before {
       content: "";
       display: inline-block;
       width: 1px;
@@ -427,7 +423,5 @@ export default {
   background: #fff;
   display: flex;
   justify-content: flex-end;
-  border-top: 1px solid #ebeef5;
 }
 </style>
-    

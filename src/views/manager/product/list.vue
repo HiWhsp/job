@@ -11,17 +11,23 @@
             style="width: 260px"
           />
         </el-form-item>
-        <el-form-item label="产品分类">
-          <el-select
-            v-model="queryParams.categoryId"
-            placeholder="请选择"
+        <el-form-item label="产品分类" prop="categoryIds">
+          <el-cascader
+            ref="cascaderRef"
+            v-model="queryParams.categoryIds"
+            :options="productCategoryCascaderOptions"
+            :props="{
+              value: 'value',
+              label: 'label',
+              children: 'children',
+              checkStrictly: true
+            }"
+            placeholder="请选择产品分类"
             clearable
-            style="width: 200px"
-          >
-            <el-option label="树脂盘" value="1" />
-            <el-option label="硅橡胶" value="2" />
-            <el-option label="其他产品" value="3" />
-          </el-select>
+            style="width: 260px"
+            show-all-levels
+            @visible-change="onCascaderVisibleChange"
+          />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleQuery">搜索</el-button>
@@ -47,17 +53,17 @@
           header-cell-class-name="table-header-cell"
           :row-class-name="tableRowClassName"
         >
-          <el-table-column prop="code" label="产品编码" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="name" label="产品名称" min-width="140" show-overflow-tooltip>
+          <el-table-column prop="productNo" label="产品编码" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="title" label="产品名称" min-width="140" show-overflow-tooltip>
             <template slot-scope="{ row }">
-              <span class="link-name" @click="handleView(row)">{{ row.name }}</span>
+              <span class="link-name" @click="handleView(row)">{{ row.title }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="spec" label="规格" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="categoryName" label="所属分类" min-width="100" show-overflow-tooltip />
+          <el-table-column prop="keyVals" label="规格" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="cateTitle" label="所属分类" min-width="100" show-overflow-tooltip />
           <el-table-column prop="unit" label="单位" min-width="80" show-overflow-tooltip />
-          <el-table-column prop="updateTime" label="更新时间" min-width="110" show-overflow-tooltip />
-          <el-table-column label="操作" width="140" align="center" fixed="right">
+          <el-table-column prop="updated_at" label="更新时间" min-width="110" show-overflow-tooltip />
+          <el-table-column label="操作" width="180" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleEdit(row)">编辑</span>
@@ -83,48 +89,44 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'ProductList',
+
+  computed: {
+    ...mapState(['vuex_product_cate_list']),
+    /** 将 Vuex 树形分类转为 Cascader 所需格式 { value, label, children } */
+    productCategoryCascaderOptions() {
+      const list = this.vuex_product_cate_list || [];
+      const mapTree = (nodes) => {
+        if (!Array.isArray(nodes)) return [];
+        return nodes.map(node => {
+          const item = {
+            value: node.id,
+            label: node.title || ''
+          };
+          if (Array.isArray(node.child) && node.child.length) {
+            item.children = mapTree(node.child);
+          }
+          return item;
+        });
+      };
+      return mapTree(list);
+    }
+  },
 
   data() {
     return {
       queryParams: {
         keyword: '',
-        categoryId: '',
+        categoryIds: [], // 级联选中的路径 [一级id, 二级id, ...]，请求时取最后一项作为 categoryId
         pageNum: 1,
         pageSize: 20
       },
-      total: 295,
+      total: 0,
       tableHeight: 0,
-      tableData: [
-        {
-          id: 1,
-          code: '4578786954',
-          name: '单层牙齿盘',
-          spec: '98,A1,10mm',
-          categoryName: '树脂盘',
-          unit: '盒',
-          updateTime: '2025-10-10'
-        },
-        {
-          id: 2,
-          code: '4578786955',
-          name: '示例产品B',
-          spec: '—',
-          categoryName: '树脂盘',
-          unit: '个',
-          updateTime: '2025-10-09'
-        },
-        {
-          id: 3,
-          code: '4578786956',
-          name: '示例产品C',
-          spec: '—',
-          categoryName: '硅橡胶',
-          unit: '盒',
-          updateTime: '2025-10-08'
-        }
-      ]
+      tableData: []
     };
   },
 
@@ -134,6 +136,21 @@ export default {
   },
 
   methods: {
+    withFullLoading(text, fn) {
+      const loading = this.$loading({
+        lock: true,
+        fullscreen: true,
+        text: text || '处理中...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.35)'
+      });
+      const close = () => {
+        try { loading && loading.close && loading.close(); } catch (e) { }
+      };
+      return Promise.resolve()
+        .then(fn)
+        .finally(close);
+    },
     setView() {
       this.$nextTick(() => {
         const refTable = this.$refs.tableRef;
@@ -153,9 +170,33 @@ export default {
       return rowIndex % 2 === 1 ? 'row-even' : '';
     },
     loadList() {
-      // TODO: 调用接口获取产品列表，如 getProductList(this.queryParams)
-      // this.total = res.total;
-      // this.tableData = res.list;
+      const ids = this.queryParams.categoryIds || [];
+      const cateld = ids.length ? String(ids[ids.length - 1]) : '';
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        keyword: this.queryParams.keyword || '',
+        cateld
+      };
+      this.$api({
+        url: '/getProductList',
+        method: 'post',
+        data: params
+      })
+        .then(res => {
+          if (res && res.data) {
+            const list = res.data.list || res.data.rows || [];
+            this.tableData = list;
+            this.total = res.data.total ?? res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -166,13 +207,27 @@ export default {
       this.queryParams.pageNum = 1;
       this.loadList();
     },
+    /** 级联收起时把焦点移出下拉层，避免 aria-hidden 与焦点冲突的控制台警告 */
+    onCascaderVisibleChange(visible) {
+      if (!visible) {
+        this.$nextTick(() => {
+          requestAnimationFrame(() => {
+            const active = document.activeElement;
+            const cascaderEl = this.$refs.cascaderRef?.$el;
+            if (cascaderEl && active && cascaderEl.contains(active)) {
+              active.blur();
+            }
+          });
+        });
+      }
+    },
     handleView(row) {
       // TODO: 查看产品详情（弹框或跳转）
-      this.$message.info('查看：' + row.name);
+      this.$message.info('查看：' + (row.title || row.name));
     },
     handleEdit(row) {
       // TODO: 编辑产品，如 this.$router.push('/manager/product-edit?id=' + row.id)
-      this.$message.info('编辑：' + row.name);
+      this.$router.push('/manager/product/add?id=' + row.id);
     },
     handleDelete(row) {
       this.$confirm('确定要删除该产品吗？', '提示', {
@@ -180,10 +235,25 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       })
-        .then(() => {
-          // TODO: 调用删除接口
-          this.$message.success('删除成功');
-          this.loadList();
+        .then(async () => {
+          const id = row && row.id != null ? String(row.id) : '';
+          if (!id) {
+            this.$message.error('缺少产品id，无法删除');
+            return;
+          }
+          try {
+            await this.withFullLoading('正在删除产品...', async () => {
+              await this.$api({
+                url: '/delProduct',
+                method: 'post',
+                data: { id }
+              });
+              this.loadList();
+            });
+            this.$message.success('删除成功');
+          } catch (e) {
+            this.$message.error((e && e.msg) ? e.msg : '删除失败');
+          }
         })
         .catch(() => {});
     },
@@ -341,6 +411,5 @@ export default {
   background: #fff;
   display: flex;
   justify-content: flex-end;
-  border-top: 1px solid #ebeef5;
 }
 </style>

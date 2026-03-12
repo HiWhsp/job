@@ -4,7 +4,7 @@
     <div class="search-section">
       <el-form :model="queryParams" ref="queryForm" inline class="search-form">
         <el-form-item label="分类名称">
-          <el-input v-model="queryParams.name" placeholder="请输入" clearable style="width: 260px" />
+          <el-input v-model="queryParams.keyword" placeholder="请输入" clearable style="width: 260px" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleQuery">搜索</el-button>
@@ -26,13 +26,13 @@
           ref="tableRef"
           :data="tableData"
           row-key="id"
-          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+          :tree-props="{ children: 'child', hasChildren: 'hasChildren' }"
           default-expand-all
           header-cell-class-name="table-header-cell"
           :height="tableHeight"
         >
-          <el-table-column prop="name" label="分类名称" min-width="280" show-overflow-tooltip />
-          <el-table-column prop="code" label="分类编码" min-width="140" show-overflow-tooltip />
+          <el-table-column prop="title" label="分类名称" min-width="280" show-overflow-tooltip />
+          <el-table-column prop="cateNo" label="分类编码" min-width="140" show-overflow-tooltip />
           <el-table-column label="操作" width="220" align="left" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
@@ -54,12 +54,12 @@
       @close="handleDialogClose"
     >
       <el-form ref="formRef" :model="form" :rules="formRules" label-width="100px">
-        <el-form-item label="分类名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入分类名称" />
+        <el-form-item label="分类名称" prop="title">
+          <el-input v-model="form.title" placeholder="请输入分类名称" />
         </el-form-item>
-        <!-- <el-form-item label="分类编码" prop="code">
-            <el-input v-model="form.code" placeholder="请输入分类编码" />
-        </el-form-item>-->
+        <el-form-item label="排序" prop="sort">
+          <el-input-number v-model="form.sort" :min="0" :max="9999" controls-position="right" style="width: 100%" />
+        </el-form-item>
       </el-form>
       <span slot="footer">
         <el-button @click="dialogVisible = false">取消</el-button>
@@ -71,72 +71,33 @@
   
   <script>
 export default {
-  name: "ProductCategory",
+  name: "MaterialCategory",
 
   data() {
     return {
       queryParams: {
-        name: ""
+        keyword: ""
       },
       tableHeight: 400,
-      tableData: [
-        {
-          id: 1,
-          name: "树脂盘",
-          code: "8951546",
-          level: 1,
-          children: [
-            {
-              id: 2,
-              name: "二级分类",
-              code: "8951546",
-              level: 2,
-              children: [
-                { id: 4, name: "三级分类", code: "8951546", level: 3 },
-                { id: 5, name: "三级分类", code: "8951546", level: 3 },
-                { id: 6, name: "三级分类", code: "8951546", level: 3 }
-              ]
-            },
-            {
-              id: 3,
-              name: "二级分类",
-              code: "8951546",
-              level: 2,
-              children: []
-            }
-          ]
-        },
-        {
-          id: 7,
-          name: "硅橡胶",
-          code: "8951546",
-          level: 1,
-          children: []
-        },
-        {
-          id: 8,
-          name: "其他产品",
-          code: "8951546",
-          level: 1,
-          children: []
-        }
-      ],
+      tableData: [],
       dialogVisible: false,
       dialogTitle: "新增分类",
       isEdit: false,
       form: {
-        name: "",
-        code: "",
-        parentId: null
+        title: "",
+        parent_id: 0,
+        sort: 0
       },
       formRules: {
-        name: [{ required: true, message: "请输入分类名称", trigger: "blur" }]
+        title: [{ required: true, message: "请输入分类名称", trigger: "blur" }],
+        sort: [{ required: true, message: "请输入排序", trigger: "blur" }]
       }
     };
   },
 
   mounted() {
     this.setTableHeight();
+    this.loadList();
     window.addEventListener("resize", this.setTableHeight);
   },
 
@@ -159,32 +120,57 @@ export default {
     },
     resetQuery() {
       this.$refs.queryForm.resetFields();
+      this.queryParams = { keyword: "" };
       this.loadList();
     },
+    /** 递归为树节点添加 level（1/2/3），便于操作列“新增子分类”判断 */
+    normalizeTreeLevel(nodes, level = 1) {
+      if (!Array.isArray(nodes)) return [];
+      return nodes.map(node => {
+        const item = { ...node, level };
+        if (Array.isArray(item.child) && item.child.length) {
+          item.child = this.normalizeTreeLevel(item.child, level + 1);
+        }
+        return item;
+      });
+    },
     loadList() {
-      // TODO: 调用接口获取树形分类列表
-      // this.tableData = await getCategoryTree(this.queryParams);
+      this.$api({
+        url: "/getMaterialCateList",
+        method: "post",
+        data: { keyword: this.queryParams.keyword || "" }
+      })
+        .then(res => {
+          if (res && res.code === 200 && Array.isArray(res.data)) {
+            this.tableData = this.normalizeTreeLevel(res.data);
+          } else {
+            this.tableData = [];
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+        });
     },
     handleAdd() {
       this.dialogTitle = "新增分类";
       this.isEdit = false;
-      this.form = { name: "", code: "", parentId: null };
+      this.form = { title: "", parent_id: 0, sort: 0 };
       this.dialogVisible = true;
     },
     handleAddChild(row) {
       this.dialogTitle = "新增子分类";
       this.isEdit = false;
-      this.form = { name: "", code: "", parentId: row.id };
+      this.form = { title: "", parent_id: row.id, sort: 0 };
       this.dialogVisible = true;
     },
     handleEdit(row) {
       this.dialogTitle = "编辑分类";
       this.isEdit = true;
       this.form = {
-        name: row.name,
-        code: row.code,
+        title: row.title,
         id: row.id,
-        parentId: row.parentId
+        parent_id: row.parent_id ?? 0,
+        sort: row.sort ?? 0
       };
       this.dialogVisible = true;
     },
@@ -195,9 +181,16 @@ export default {
         type: "warning"
       })
         .then(() => {
-          // TODO: 调用删除接口
-          this.$message.success("删除成功");
-          this.loadList();
+          const id = row && row.id != null ? String(row.id) : "";
+          if (!id) return;
+          this.$api({ url: "/delMaterialCate", method: "post", data: { id } })
+            .then(() => {
+              this.$message.success("删除成功");
+              this.loadList();
+            })
+            .catch(err => {
+              this.$message.error((err && err.msg) ? err.msg : "删除失败");
+            });
         })
         .catch(() => {});
     },
@@ -207,10 +200,27 @@ export default {
     handleSubmit() {
       this.$refs.formRef.validate(valid => {
         if (!valid) return;
-        // TODO: 调用新增/编辑接口
-        this.$message.success(this.isEdit ? "修改成功" : "新增成功");
-        this.dialogVisible = false;
-        this.loadList();
+        const params = {
+          title: this.form.title,
+          parent_id: String(this.form.parent_id ?? 0),
+          sort: String(this.form.sort ?? 0)
+        };
+        if (this.isEdit && this.form.id != null && this.form.id !== "") {
+          params.id = String(this.form.id);
+        }
+        this.$api({
+          url: "/addMaterialCate",
+          method: "post",
+          data: params
+        })
+          .then(() => {
+            this.$message.success(this.isEdit ? "修改成功" : "新增成功");
+            this.dialogVisible = false;
+            this.loadList();
+          })
+          .catch(err => {
+            this.$message.error((err && err.msg) ? err.msg : "操作失败");
+          });
       });
     }
   }

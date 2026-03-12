@@ -6,8 +6,8 @@
         <div class="form-section">
           <div class="section-title">基础信息</div>
           <div class="section-content">
-            <el-form-item label="客户名称" prop="name" required>
-              <el-input v-model="form.name" placeholder="请输入" clearable />
+            <el-form-item label="客户名称" prop="title" required>
+              <el-input v-model="form.title" placeholder="请输入" clearable />
             </el-form-item>
             <el-form-item label="客户属地" prop="territory" required>
               <el-select v-model="form.territory" placeholder="请选择" clearable style="width: 100%">
@@ -29,8 +29,8 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="客户属性A" prop="attrA" required>
-              <el-select v-model="form.attrA" placeholder="请选择客户属性A" clearable style="width: 100%">
+            <el-form-item label="客户属性A" prop="attributeA" required>
+              <el-select v-model="form.attributeA" placeholder="请选择客户属性A" clearable style="width: 100%">
                 <el-option
                   v-for="item in customerAttrAOptions"
                   :key="item.value"
@@ -39,8 +39,8 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="客户属性B" prop="attrB" required>
-              <el-select v-model="form.attrB" placeholder="请选择客户属性B" clearable style="width: 100%">
+            <el-form-item label="客户属性B" prop="attributeB" required>
+              <el-select v-model="form.attributeB" placeholder="请选择客户属性B" clearable style="width: 100%">
                 <el-option
                   v-for="item in customerAttrBOptions"
                   :key="item.value"
@@ -49,11 +49,11 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="客户直接联系人" prop="contactPerson" required>
-              <el-input v-model="form.contactPerson" placeholder="请输入" clearable />
+            <el-form-item label="客户直接联系人" prop="contact" required>
+              <el-input v-model="form.contact" placeholder="请输入" clearable />
             </el-form-item>
-            <el-form-item label="客户联系电话" prop="contactPhone" required>
-              <el-input v-model="form.contactPhone" placeholder="请输入" clearable />
+            <el-form-item label="客户联系电话" prop="phone" required>
+              <el-input v-model="form.phone" placeholder="请输入" clearable />
             </el-form-item>
             <el-form-item label="公司电话" prop="companyPhone">
               <el-input v-model="form.companyPhone" placeholder="请输入" clearable />
@@ -176,13 +176,13 @@ export default {
       uploadAction: UPLOAD_ROOT,
       editId: "", // 编辑时的客户 id，提交时传给 editCustomer
       form: {
-        name: "",
+        title: "",
         territory: "",
         region: "",
-        attrA: "",
-        attrB: "",
-        contactPerson: "",
-        contactPhone: "",
+        attributeA: "",
+        attributeB: "",
+        contact: "",
+        phone: "",
         companyPhone: "",
         termMonth: "",
         businessLicenseList: [],
@@ -200,23 +200,23 @@ export default {
         other: ""
       },
       rules: {
-        name: [{ required: true, message: "请输入客户名称", trigger: "blur" }],
+        title: [{ required: true, message: "请输入客户名称", trigger: "blur" }],
         territory: [
           { required: true, message: "请选择客户属地", trigger: "change" }
         ],
         region: [
           { required: true, message: "请选择客户区域", trigger: "change" }
         ],
-        attrA: [
+        attributeA: [
           { required: true, message: "请选择客户属性A", trigger: "change" }
         ],
-        attrB: [
+        attributeB: [
           { required: true, message: "请选择客户属性B", trigger: "change" }
         ],
-        contactPerson: [
+        contact: [
           { required: true, message: "请输入客户直接联系人", trigger: "blur" }
         ],
-        contactPhone: [
+        phone: [
           { required: true, message: "请输入客户联系电话", trigger: "blur" }
         ],
         accountName: [
@@ -251,9 +251,11 @@ export default {
     loadDetail() {
       if (!this.editId) return;
       this.$api({
-        url: "/getCustomer?id=" + encodeURIComponent(this.editId),
+        url: "/getCustomer",
         method: "post",
-        data: {}
+        data: {
+          id: this.editId
+        }
       })
         .then(res => {
           if (res && res.data) this.fillFormFromDetail(res.data);
@@ -262,45 +264,41 @@ export default {
           this.$message.error("获取客户详情失败");
         });
     },
+    /** 用详情回填表单（仅处理需解析/转换的字段：paymentJson、addressJson、otherJson、证照、paymentTerm） */
     fillFormFromDetail(data) {
       const payment = this._parseJson(data.paymentJson);
       const address = this._parseJson(data.addressJson);
-      const other =
-        data.otherJson && typeof data.otherJson === "object"
-          ? data.otherJson
-          : this._parseJson(data.otherJson);
-      const licenseArr = Array.isArray(data.licenseImage)
-        ? data.licenseImage
+      const other = this._parseJson(data.otherJson);
+      const licenseArr = Array.isArray(data.licenseImage) ? data.licenseImage : [];
+
+      // 与接口同名字段直接赋值
+      this.form.title = data.title ?? "";
+      this.form.territory =
+        data.territory !== undefined && data.territory !== null ? data.territory : "";
+      this.form.region = data.region ?? "";
+      this.form.attributeA = data.attributeA ?? "";
+      this.form.attributeB = data.attributeB ?? "";
+      this.form.contact = data.contact ?? "";
+      this.form.phone = data.phone ?? "";
+      this.form.companyPhone = data.companyPhone ?? "";
+
+      // 需特殊处理的字段
+      this.form.termMonth = data.paymentTerm ?? "";
+      this.form.businessLicenseList = data.businessLicenseImage
+        ? [{ url: data.businessLicenseImage }]
         : [];
-      this.form = {
-        name: data.title ?? "",
-        territory:
-          data.territory !== undefined && data.territory !== null
-            ? data.territory
-            : "",
-        region: data.region ?? "",
-        attrA: data.attributeA ?? "",
-        attrB: data.attributeB ?? "",
-        contactPerson: data.contact ?? "",
-        contactPhone: data.phone ?? "",
-        companyPhone: data.companyPhone ?? "",
-        termMonth: data.paymentTerm ?? "",
-        businessLicenseList: data.businessLicenseImage
-          ? [{ url: data.businessLicenseImage }]
-          : [],
-        medicalLicenseList: licenseArr.map(u => ({ url: u })),
-        businessLicense: data.businessLicenseImage ?? "",
-        medicalLicense: licenseArr.join(","),
-        accountName: payment.account ?? "",
-        accountNo: payment.code ?? "",
-        bankName: payment.bank ?? "",
-        address: address.address ?? "",
-        receiver: address.name ?? "",
-        receiverPhone: address.phone ?? "",
-        introducer: other.introducer ?? "",
-        manager: other.superintendent ?? "",
-        other: other.other ?? ""
-      };
+      this.form.medicalLicenseList = licenseArr.map(u => ({ url: u }));
+      this.form.businessLicense = data.businessLicenseImage ?? "";
+      this.form.medicalLicense = licenseArr.join(",");
+      this.form.accountName = payment.account ?? "";
+      this.form.accountNo = payment.code ?? "";
+      this.form.bankName = payment.bank ?? "";
+      this.form.address = address.address ?? "";
+      this.form.receiver = address.name ?? "";
+      this.form.receiverPhone = address.phone ?? "";
+      this.form.introducer = other.introducer ?? "";
+      this.form.manager = other.superintendent ?? "";
+      this.form.other = other.other ?? "";
     },
     _parseJson(val) {
       if (val == null) return {};
@@ -398,13 +396,13 @@ export default {
         other: this.form.other
       });
       const params = {
-        title: this.form.name,
+        title: this.form.title,
         territory,
         region: this.form.region,
-        attributeA: this.form.attrA,
-        attributeB: this.form.attrB,
-        contact: this.form.contactPerson,
-        phone: this.form.contactPhone,
+        attributeA: this.form.attributeA,
+        attributeB: this.form.attributeB,
+        contact: this.form.contact,
+        phone: this.form.phone,
         companyPhone: this.form.companyPhone,
         businessLicenseImage: this.form.businessLicense,
         licenseImage: this.form.medicalLicense,

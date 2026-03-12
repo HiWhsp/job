@@ -8,65 +8,29 @@
             <el-input v-model="queryParams.keyword" placeholder="客户编码/客户名称/联系人/电话" clearable style="width: 260px" />
           </el-form-item>
           <el-form-item label="客户属地">
-            <el-select
-              v-model="queryParams.belong"
-              placeholder="请选择"
-              clearable
-              style="width: 140px"
-            >
-              <el-option
-                v-for="item in customerBelongOptions"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              />
+            <el-select v-model="queryParams.belong" placeholder="请选择" clearable style="width: 140px">
+              <el-option v-for="item in customerBelongOptions" :key="item.value" :label="item.name"
+                :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="客户区域">
-            <el-select
-              v-model="queryParams.region"
-              placeholder="客户区域"
-              clearable
-              style="width: 140px"
-            >
-              <el-option
-                v-for="item in customerRegionOptions"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              />
+            <el-select v-model="queryParams.region" placeholder="客户区域" clearable style="width: 140px">
+              <el-option v-for="item in customerRegionOptions" :key="item.value" :label="item.name"
+                :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="客户属性A">
-            <el-select
-              v-model="queryParams.attrA"
-              placeholder="客户属性A"
-              clearable
-              style="width: 140px"
-            >
-              <el-option
-                v-for="item in customerAttrAOptions"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              />
+            <el-select v-model="queryParams.attrA" placeholder="客户属性A" clearable style="width: 140px">
+              <el-option v-for="item in customerAttrAOptions" :key="item.value" :label="item.name"
+                :value="item.value" />
             </el-select>
           </el-form-item>
         </div>
         <div class="search-row">
           <el-form-item label="客户属性B">
-            <el-select
-              v-model="queryParams.attrB"
-              placeholder="客户属性B"
-              clearable
-              style="width: 140px"
-            >
-              <el-option
-                v-for="item in customerAttrBOptions"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              />
+            <el-select v-model="queryParams.attrB" placeholder="客户属性B" clearable style="width: 140px">
+              <el-option v-for="item in customerAttrBOptions" :key="item.value" :label="item.name"
+                :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -81,38 +45,31 @@
     <div class="table-view">
       <div class="table-util-bar">
         <div class="table-tabs">
-          <div
-            v-for="(tab, index) in auditTabs"
-            :key="index"
-            class="tab-item"
-            :class="{ active: auditTab === tab.value }"
-            @click="handleAuditTabChange(tab.value)"
-          >
+          <div v-for="(tab, index) in auditTabs" :key="index" class="tab-item"
+            :class="{ active: auditTab === tab.value }" @click="handleAuditTabChange(tab.value)">
             {{ tab.label }}
           </div>
         </div>
         <div class="table-acts">
-          <!-- <el-button type="primary" size="small" @click="handleImport">客户导入</el-button> -->
           <el-button type="primary" size="small" @click="handleExport">导出</el-button>
-          <!-- <el-button type="primary" size="small" @click="handleAdd">新增客户</el-button> -->
         </div>
       </div>
       <div class="table-box">
         <el-table ref="tableH" :height="tableHeight" :data="tableData" header-cell-class-name="table-header-cell"
           :row-class-name="tableRowClassName" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" align="center" />
-          <el-table-column prop="code" label="客户编码" min-width="100" show-overflow-tooltip />
-          <el-table-column prop="name" label="客户名称" min-width="180" show-overflow-tooltip>
+          <el-table-column prop="customerNo" label="客户编码" min-width="100" show-overflow-tooltip />
+          <el-table-column prop="title" label="客户名称" min-width="180" show-overflow-tooltip>
             <template slot-scope="{ row }">
-              <span class="link-name" @click="handleView(row)">{{ row.name }}</span>
+              <span class="link-name" @click="handleView(row)">{{ row.title }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="territory" label="客户属地" min-width="90" show-overflow-tooltip />
           <el-table-column prop="region" label="客户区域" min-width="90" show-overflow-tooltip />
-          <el-table-column prop="attrA" label="客户属性A" min-width="100" show-overflow-tooltip />
-          <el-table-column prop="attrB" label="客户属性B" min-width="100" show-overflow-tooltip />
-          <el-table-column prop="contactPerson" label="客户直接联系人" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="contactPhone" label="客户联系电话" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="attributeA" label="客户属性A" min-width="100" show-overflow-tooltip />
+          <el-table-column prop="attributeB" label="客户属性B" min-width="100" show-overflow-tooltip />
+          <el-table-column prop="contact" label="客户直接联系人" min-width="120" show-overflow-tooltip />
+          <el-table-column prop="phone" label="客户联系电话" min-width="120" show-overflow-tooltip />
           <el-table-column prop="companyPhone" label="公司电话" min-width="120" show-overflow-tooltip />
           <el-table-column prop="address" label="收货地址" min-width="200" show-overflow-tooltip />
           <el-table-column prop="receiver" label="收货人" min-width="90" show-overflow-tooltip />
@@ -120,11 +77,11 @@
           <el-table-column prop="introducer" label="客户引入人" min-width="100" show-overflow-tooltip />
           <el-table-column prop="manager" label="客户负责人" min-width="100" show-overflow-tooltip />
           <el-table-column prop="other" label="其他" min-width="120" show-overflow-tooltip />
-          <el-table-column prop="auditStatus" label="审核状态" width="100" align="center">
+          <el-table-column prop="status" label="审核状态" width="100" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.auditStatus === 'pending'" type="info" size="small">待审核</el-tag>
-              <el-tag v-else-if="row.auditStatus === 'rejected'" type="danger" size="small">审核未通过</el-tag>
-              <el-tag v-else-if="row.auditStatus === 'audited'" type="success" size="small">已审核</el-tag>
+              <el-tag v-if="row.status == '1'" type="info" size="small">待审核</el-tag>
+              <el-tag v-else-if="row.status == '2'" type="danger" size="small">审核未通过</el-tag>
+              <el-tag v-else-if="row.status == '-1'" type="success" size="small">已审核</el-tag>
               <span v-else>—</span>
             </template>
           </el-table-column>
@@ -133,7 +90,7 @@
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span class="row-act" v-if="row.auditStatus === 'pending'" @click="handleAudit(row)">审核</span>
+                <span class="row-act" v-if="row.status == '1'" @click="handleAudit(row)">审核</span>
               </span>
             </template>
           </el-table-column>
@@ -150,11 +107,7 @@
     <audit-dialog :visible.sync="auditDialogVisible" @confirm="handleAuditConfirm" />
 
     <!-- 查看详情 Drawer（从右往左展开，审核页展示审核数据） -->
-    <detail-drawer
-      :visible.sync="detailDrawerVisible"
-      :detail-row="detailRow"
-      :show-audit-section="true"
-    />
+    <detail-drawer :visible.sync="detailDrawerVisible" :detail-row="detailRow" :show-audit-section="true" />
   </div>
 </template>
 
@@ -224,41 +177,51 @@ export default {
         return {};
       }
     },
-    /** 将列表接口数据映射到表格行（与客户列表保持一致） */
+    /** 将列表接口数据映射到表格行（仅处理需特殊转换：territory 转文案、addressJson/otherJson 解析、审核状态与时间） */
     mapApiRowToTableRow(item) {
       const addressObj = this._parseJsonField(item.addressJson);
-      const otherObj =
-        item.otherJson && typeof item.otherJson === 'object'
-          ? item.otherJson
-          : this._parseJsonField(item.otherJson);
+      const otherObj = this._parseJsonField(item.otherJson);
       const territoryText =
-        item.territory === 1 ? '国内' : item.territory === 2 ? '国外' : '';
-      const statusNum = item.status;
-      let auditStatus = '';
-      if (statusNum === 1) auditStatus = 'pending';
-      else if (statusNum === 2) auditStatus = 'audited';
-      else if (statusNum === -1) auditStatus = 'rejected';
+        item.territory === 1 ? '国内' : item.territory === 2 ? '国外' : (item.territory ?? '');
       return {
         ...item,
-        code: item.customerNo ?? '',
-        name: item.title ?? '',
         territory: territoryText,
-        region: item.region ?? '',
-        attrA: item.attributeA ?? '',
-        attrB: item.attributeB ?? '',
-        contactPerson: item.contact ?? '',
-        contactPhone: item.phone ?? '',
-        companyPhone: item.companyPhone ?? '',
         address: addressObj.address ?? '',
         receiver: addressObj.name ?? '',
         receiverPhone: addressObj.phone ?? '',
         introducer: otherObj.introducer ?? '',
         manager: otherObj.superintendent ?? '',
         other: otherObj.other ?? '',
+        updateTime: item.updated_at || item.updateTime || ''
+      };
+    },
+    /** 将详情接口返回的数据映射为详情抽屉展示（仅处理需特殊转换 + 审核字段） */
+    mapDetailApiToDrawer(data) {
+      const payment = this._parseJsonField(data.paymentJson);
+      const address = this._parseJsonField(data.addressJson);
+      const other = this._parseJsonField(data.otherJson);
+      const territoryText =
+        data.territory === 1 ? '国内' : data.territory === 2 ? '国外' : (data.territory ?? '');
+      const statusNum = data.status;
+      let auditStatus = '';
+      if (statusNum === 1) auditStatus = 'pending';
+      else if (statusNum === 2) auditStatus = 'audited';
+      else if (statusNum === -1) auditStatus = 'rejected';
+      return {
+        ...data,
+        territory: territoryText,
+        termMonth: data.paymentTerm ?? data.termMonth ?? '',
+        accountName: payment.account ?? '',
+        accountNo: payment.code ?? '',
+        bankName: payment.bank ?? '',
+        address: address.address ?? '',
+        receiver: address.name ?? '',
+        receiverPhone: address.phone ?? '',
+        introducer: other.introducer ?? '',
+        manager: other.superintendent ?? '',
+        other: other.other ?? '',
         auditStatus,
-        updateTime: item.updated_at || item.updateTime || '',
-        auditTime: item.review_at || item.auditTime || '',
-        auditRemark: item.reCont || item.auditRemark || ''
+        updateTime: data.updated_at || data.updateTime || ''
       };
     },
     /** 设置表格高度（与 mtOrder 一致：可视区高度 - 表格顶部距离 - 头部 - 分页） */
@@ -324,16 +287,47 @@ export default {
       this.loadList();
     },
     resetQuery() {
-      this.$refs.queryForm.resetFields();
-      this.queryParams.pageNum = 1;
+      this.$refs["queryForm"].resetFields();
+      this.queryParams = {
+        keyword: '',
+        belong: '',
+        region: '',
+        attributeA: '',
+        attributeB: '',
+        pageNum: 1,
+        pageSize: 20
+      };
       this.loadList();
     },
     handleSelectionChange(selection) {
       this.selectedRows = selection;
     },
+    /** 调用详情接口并打开抽屉（与客户列表 list.vue 保持一致） */
     handleView(row) {
-      this.detailRow = row;
+      const id = row && row.id;
+      if (id == null || id === '') {
+        this.$message.warning('缺少客户 id');
+        return;
+      }
+      this.detailRow = null;
       this.detailDrawerVisible = true;
+      this.$api({
+        url: '/getCustomer',
+        method: 'post',
+        data: { id }
+      })
+        .then(res => {
+          if (res && res.data) {
+            this.detailRow = this.mapDetailApiToDrawer(res.data);
+          } else {
+            this.$message.error('获取详情失败');
+            this.detailDrawerVisible = false;
+          }
+        })
+        .catch(() => {
+          this.$message.error('获取客户详情失败');
+          this.detailDrawerVisible = false;
+        });
     },
     handleAudit(row) {
       this.rowToAudit = row;
@@ -341,21 +335,31 @@ export default {
     },
     handleAuditConfirm({ auditStatus, auditRemark }) {
       if (!this.rowToAudit) return;
-      // TODO: 调用审核接口，传入 this.rowToAudit.id, auditStatus, auditRemark
-      this.$message.success(auditStatus === 'approve' ? '审核已通过' : '已拒绝');
-      this.rowToAudit = null;
-      this.loadList();
-    },
-    handleEdit(row) {
-      // TODO: 编辑
-      this.$message.info('编辑：' + row.name);
-    },
-    handleAdd() {
-      this.$router.push('/manager/customer-add');
-    },
-    handleImport() {
-      // TODO: 客户导入
-      this.$message.info('客户导入');
+      const id = this.rowToAudit.id;
+      if (id == null || id === '') {
+        this.$message.warning('缺少客户 id');
+        return;
+      }
+      // 接口：status 2通过 -1驳回，reCont 审核原因
+      const status = auditStatus === 'approve' ? '2' : '-1';
+      this.$api({
+        url: '/reviewCustomer',
+        method: 'post',
+        data: {
+          id: String(id),
+          status,
+          reCont: auditRemark || ''
+        }
+      })
+        .then(() => {
+          this.$message.success(auditStatus === 'approve' ? '审核已通过' : '已驳回');
+          this.rowToAudit = null;
+          this.auditDialogVisible = false;
+          this.loadList();
+        })
+        .catch(err => {
+          this.$message.error((err && err.msg) ? err.msg : '审核失败');
+        });
     },
     handleExport() {
       // TODO: 导出
