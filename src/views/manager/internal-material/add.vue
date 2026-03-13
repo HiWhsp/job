@@ -352,7 +352,7 @@ export default {
       };
       this.syncSpecGroupsFromSkus();
       const inventorys = data.inventorys || [];
-      this.specList = inventorys.map(inv => ({
+      this.specList = inventorys.map((inv, index) => ({
         specValue: inv.keyVals ?? "",
         code: inv.sn ?? "",
         stock: inv.kucun ?? inv.num ?? "",
@@ -456,7 +456,7 @@ export default {
             this.skus = res.data.skus || [];
             this.syncSpecGroupsFromSkus();
             const list = res.data.inventorys || [];
-            this.specList = list.map(inv => ({
+            this.specList = list.map((inv, index) => ({
               specValue: inv.keyVals ?? "",
               code: inv.sn ?? "",
               stock: inv.kucun ?? inv.num ?? "",
@@ -653,7 +653,8 @@ export default {
         sn: String(row.code ?? ""),
         keyIds: row.keyIds != null ? String(row.keyIds) : "",
         keyVals: String(row.specValue ?? ""),
-        num: String(row.stock ?? "")
+        num: String(row.stock ?? ""),
+        batchNo: String(row.batchNo ?? "")
       }));
     },
     handleSubmit() {

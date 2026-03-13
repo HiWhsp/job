@@ -1,27 +1,17 @@
 <template>
   <div class="view-wrap external-package-add-page">
     <div class="form-card">
-      <div class="page-title">新增外购包装</div>
-      <el-form ref="formRef" :model="form" label-width="100px" class="package-form">
-        <el-form-item label="包装名称" prop="packageName">
-          <el-input v-model="form.packageName" placeholder="请输入" clearable />
+      <div class="page-title">{{ editId ? '编辑外购产品' : '新增外购产品' }}</div>
+      <el-form ref="formRef" :model="form" :rules="formRules" label-width="100px" class="package-form">
+        <el-form-item label="产品名称" prop="title">
+          <el-input v-model="form.title" placeholder="请输入" clearable />
         </el-form-item>
-        <el-form-item label="对应产品" prop="productId">
-          <el-select v-model="form.productId" placeholder="请选择" clearable style="width: 100%">
-            <el-option label="产品A" value="1" />
-            <el-option label="产品B" value="2" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="客户名称" prop="customerId">
-          <el-select v-model="form.customerId" placeholder="请选择" clearable style="width: 100%">
-            <el-option label="客户A" value="1" />
-            <el-option label="客户B" value="2" />
-          </el-select>
+        <el-form-item label="规格名称" prop="keyVals">
+          <el-input v-model="form.keyVals" placeholder="请输入" clearable />
         </el-form-item>
         <el-form-item label="单位" prop="unit">
           <el-input v-model="form.unit" placeholder="请输入" clearable />
         </el-form-item>
-
         <div class="form-footer">
           <el-button type="primary" @click="handleSubmit">提交</el-button>
           <el-button @click="handleCancel">取消</el-button>
@@ -33,30 +23,78 @@
 
 <script>
 export default {
-  name: "ExternalPackageAdd",
+  name: "ExternalProductAdd",
 
   data() {
     return {
+      editId: "",
       form: {
-        packageName: "",
-        productId: "",
-        customerId: "",
+        title: "",
+        keyVals: "",
         unit: ""
       },
+      formRules: {
+        title: [{ required: true, message: "请输入产品名称", trigger: "blur" }],
+        keyVals: [{ required: true, message: "请输入规格名称", trigger: "blur" }],
+        unit: [{ required: true, message: "请输入单位", trigger: "blur" }]
+      }
     };
   },
 
+  mounted() {
+    const id = this.$route.query.id;
+    if (id) {
+      this.editId = String(id);
+      this.loadDetail();
+    }
+  },
+
   methods: {
+    loadDetail() {
+      if (!this.editId) return;
+      this.$api({
+        url: "/getForeignProduct",
+        method: "post",
+        data: { id: this.editId }
+      })
+        .then((res) => {
+          if (!res || !res.data) return;
+          const data = res.data;
+          this.form = {
+            title: data.title || "",
+            keyVals: data.keyVals || "",
+            unit: data.unit || ""
+          };
+        })
+        .catch(() => {
+          this.$message.error("获取外购产品详情失败");
+        });
+    },
     handleSubmit() {
       this.$refs.formRef.validate(valid => {
         if (!valid) return;
-        // TODO: 调用新增接口
-        this.$message.success("提交成功");
-        this.$router.push("/manager/external-package/list");
+        const params = {
+          id: this.editId || "",
+          title: this.form.title || "",
+          keyVals: this.form.keyVals || "",
+          unit: this.form.unit || ""
+        };
+        this.$api({
+          url: "/addForeignProduct",
+          method: "post",
+          data: params
+        })
+          .then(() => {
+            this.$message.success(this.editId ? "修改成功" : "新增成功");
+            this.$router.push("/manager/external-product/list");
+          })
+          .catch((err) => {
+            this.$message.error(err && err.msg ? err.msg : "提交失败");
+          });
       });
     },
     handleCancel() {
-      this.$router.push("/manager/external-package/list");
+      this.$router.push("/manager/external-product/list");
     }
   }
 };
@@ -90,7 +128,7 @@ export default {
 
   ::v-deep .el-form-item__label {
     color: #606266;
-    text-align: left;
+    text-align: right;
   }
 
   ::v-deep .el-input__inner,

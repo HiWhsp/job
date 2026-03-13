@@ -38,41 +38,41 @@
           :row-class-name="tableRowClassName"
         >
           <el-table-column
-            prop="materialCode"
+            prop="productNo"
             label="产品编码"
-            min-width="120"
+            min-width="140"
             show-overflow-tooltip
             align="center"
           />
           <el-table-column
-            prop="materialName"
+            prop="title"
             label="产品名称"
-            min-width="120"
+            min-width="140"
             show-overflow-tooltip
             align="center"
           >
             <template slot-scope="{ row }">
-              <span class="link-name" @click="handleView(row)">{{ row.materialName }}</span>
+              <span class="link-name" @click="handleView(row)">{{ row.title }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="spec"
+            prop="keyVals"
             label="规格"
-            min-width="100"
+            min-width="140"
             show-overflow-tooltip
             align="center"
           />
           <el-table-column
             prop="unit"
             label="单位"
-            min-width="70"
+            min-width="80"
             show-overflow-tooltip
             align="center"
           />
           <el-table-column
-            prop="updateTime"
+            prop="updated_at"
             label="更新时间"
-            min-width="110"
+            min-width="160"
             show-overflow-tooltip
             align="center"
           />
@@ -103,16 +103,21 @@
     <detail-drawer :visible.sync="detailDrawerVisible" :detail-row="detailRow" />
 
     <!-- 删除确认弹框 -->
-    <delete-dialog :visible.sync="deleteDialogVisible" @confirm="handleDeleteConfirm" />
+    <delete-dialog
+      :visible.sync="deleteDialogVisible"
+      main-text="确定要删除这个外购产品吗？"
+      tip-text="删除后将无法恢复"
+      @confirm="handleDeleteConfirm"
+    />
   </div>
 </template>
     
-    <script>
+<script>
 import DetailDrawer from "../components/detail-drawer.vue";
 import DeleteDialog from "../components/delete-dialog.vue";
 
 export default {
-  name: "InternalMaterialList",
+  name: "ExternalProductList",
 
   components: {
     DetailDrawer,
@@ -122,38 +127,12 @@ export default {
     return {
       queryParams: {
         keyword: "",
-        category: "",
         pageNum: 1,
         pageSize: 20
       },
       total: 0,
       tableHeight: 0,
-      tableData: [
-        {
-          id: 1,
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "规格",
-          storageCondition: "储存条件",
-          batchNumber: "789754654",
-          unit: "盒",
-          managementCategory: "类别",
-          productClassification: "大类名称 大类名称 大类名称",
-          updateTime: "2025-10-10"
-        },
-        {
-          id: 2,
-          materialCode: "4578786954",
-          materialName: "原料名称",
-          spec: "规格",
-          storageCondition: "储存条件",
-          batchNumber: "789754654",
-          unit: "盒",
-          managementCategory: "类别",
-          productClassification: "大类名称 大类名称 大类名称",
-          updateTime: "2025-10-10"
-        }
-      ],
+      tableData: [],
       detailDrawerVisible: false,
       detailRow: null,
       deleteDialogVisible: false,
@@ -188,15 +167,38 @@ export default {
       return rowIndex % 2 === 1 ? "row-even" : "";
     },
     loadList() {
-      // TODO: 调用接口获取列表
-      this.total = this.tableData.length;
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        keyword: this.queryParams.keyword || ""
+      };
+      this.$api({
+        url: "/getForeignProductList",
+        method: "post",
+        data: params
+      })
+        .then((res) => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list;
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleQuery() {
       this.queryParams.pageNum = 1;
       this.loadList();
     },
     resetQuery() {
-      this.$refs.queryForm.resetFields();
+      this.$refs['queryForm'].resetFields();
+      this.queryParams.keyword = "";
       this.queryParams.pageNum = 1;
       this.loadList();
     },
@@ -205,8 +207,9 @@ export default {
       this.detailDrawerVisible = true;
     },
     handleEdit(row) {
-      // TODO: 跳转或打开编辑页
-      this.$message.info("编辑：" + row.materialName);
+      const id = row && row.id != null ? String(row.id) : "";
+      if (!id) return;
+      this.$router.push(`/manager/external-product/add?id=${id}`);
     },
     handleDelete(row) {
       this.rowToDelete = row;
@@ -214,13 +217,23 @@ export default {
     },
     handleDeleteConfirm() {
       if (!this.rowToDelete) return;
-      // TODO: 调用删除接口
-      this.$message.success("删除成功");
-      this.rowToDelete = null;
-      this.loadList();
+      const id = this.rowToDelete && this.rowToDelete.id != null ? String(this.rowToDelete.id) : "";
+      if (!id) return;
+      this.$api({
+        url: "/delForeignProduct",
+        method: "post",
+        data: { id }
+      })
+        .then(() => {
+          this.$message.success("删除成功");
+          this.rowToDelete = null;
+          this.loadList();
+        })
+        .catch((err) => {
+          this.$message.error(err && err.msg ? err.msg : "删除失败");
+        });
     },
     handleAdd() {
-      // TODO: 新增原料
       this.$router.push("/manager/external-product/add");
     },
     handleImport() {

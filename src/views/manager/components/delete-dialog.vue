@@ -9,8 +9,8 @@
     <span slot="title" class="dialog-title-hidden" />
 
     <div class="delete-dialog-body">
-      <p class="delete-dialog-main">确定要删除这个客户信息吗?</p>
-      <p class="delete-dialog-tip">删除后将不能回复</p>
+      <p class="delete-dialog-main">{{ mainText }}</p>
+      <p class="delete-dialog-tip">{{ tipText }}</p>
     </div>
 
     <div slot="footer" class="delete-dialog-footer">
@@ -28,6 +28,14 @@ export default {
     visible: {
       type: Boolean,
       default: false
+    },
+    mainText: {
+      type: String,
+      default: "确定要删除这个客户信息吗?"
+    },
+    tipText: {
+      type: String,
+      default: "删除后将不能回复"
     }
   },
 

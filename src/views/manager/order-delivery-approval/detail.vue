@@ -192,7 +192,7 @@
       </div>
       <div class="section-body">
         <el-table :data="detail.productList" class="product-table">
-          <el-table-column type="selection" width="48" align="center" />
+          <!-- <el-table-column type="selection" width="48" align="center" /> -->
           <el-table-column prop="code" label="产品编码" min-width="140" />
           <el-table-column prop="name" label="产品名称" min-width="160" />
           <el-table-column prop="spec" label="规格" min-width="140" />
@@ -293,87 +293,44 @@ export default {
 
   data() {
     return {
+      orderId: '',
       // 模拟详情数据，后续可替换为接口返回
       detail: {
-        orderNo: '2026001-999',
-        orderTime: '2026-01-01',
-        orderAmount: '2545.00',
-        orderType: '销售订单',
-        needApprove: true,
-        payMethod: '现金',
-        needMark: true,
-        payAmount: '2500.00',
+        orderNo: '',
+        orderTime: '',
+        orderAmount: '',
+        orderType: '',
+        needApprove: false,
+        payMethod: '',
+        needMark: false,
+        payAmount: '',
         batchDelivery: false,
-        packageSpec: '箱/盒',
-        orderStatus: '待审核', // 示例：待审核 / 待发货 / 已发货
-        paymentStatus: '待回款', // 示例：待回款 / 部分回款 / 全部回款
+        packageSpec: '',
+        orderStatus: '',
+        paymentStatus: '',
         contractImages: [],
         payImages: [],
         customer: {
-          code: 'L2026001',
-          name: '浙江实安医疗科技有限公司',
-          region: '国内',
-          attr: '美团',
-          attrB: '经销商',
-          contactPerson: '郭珊珊',
-          contactPhone: '15931263178',
-          companyPhone: '0573-84986384',
-          address: '浙江省嘉兴市经济技术开发区某某路 123 号',
-          bankAccountName: '浙江实安医疗科技有限公司',
-          bankAccountNo: '76454212657855',
-          bankName: '中国银行',
-          bankCode: '***********'
+          code: '',
+          name: '',
+          region: '',
+          attr: '',
+          attrB: '',
+          contactPerson: '',
+          contactPhone: '',
+          companyPhone: '',
+          address: '',
+          receiver: '',
+          receiverPhone: '',
+          bankAccountName: '',
+          bankAccountNo: '',
+          bankName: '',
+          bankCode: ''
         },
         // 产品信息列表
-        productList: [
-          {
-            code: '4578786954',
-            name: '单层牙托盘',
-            spec: '98,A1,10mm',
-            category: '树脂盘',
-            unit: '盒',
-            guidePrice: 15.0,
-            quantity: 20,
-            totalPrice: 300.0,
-            stockQty: 60,
-            stockStatus: '有货'
-          },
-          {
-            code: '4578786954',
-            name: '单层牙托盘',
-            spec: '98,A1,10mm',
-            category: '树脂盘',
-            unit: '盒',
-            guidePrice: 20.0,
-            quantity: 20,
-            totalPrice: 4000.0,
-            stockQty: 60,
-            stockStatus: '缺货'
-          }
-        ],
+        productList: [],
         // 外购产品信息列表
-        externalProductList: [
-          {
-            name: '单层牙托盘',
-            spec: '98,A1,10mm',
-            unitPrice: 2000.0,
-            quantity: 20,
-            arrivalQty: 40,
-            isShortage: false,
-            totalPrice: 40000.0,
-            unit: '盒'
-          },
-          {
-            name: '单层牙托盘',
-            spec: '98,A1,10mm',
-            unitPrice: 2000.0,
-            quantity: 20,
-            arrivalQty: 40,
-            isShortage: true,
-            totalPrice: 40000.0,
-            unit: '盒'
-          }
-        ]
+        externalProductList: []
       },
       // 审批发货弹框
       deliveryDialogVisible: false,
@@ -386,10 +343,10 @@ export default {
 
   computed: {
     orderStatusTagType() {
-      const status = this.detail.orderStatus;
-      if (status === '待审核') return 'info';
-      if (status === '待发货' || status === '部分发货') return 'warning';
-      if (status === '已发货') return 'success';
+      const status = this.detail.orderStatus || '';
+      if (status.includes('缺货') || status.includes('驳回')) return 'danger';
+      if (status.includes('已发货') || status.includes('审核完') || status.includes('通过')) return 'success';
+      if (status.includes('暂停')) return 'warning';
       return 'info';
     },
     paymentStatusTagType() {
@@ -402,10 +359,112 @@ export default {
   },
 
   mounted() {
-    // TODO: 根据路由参数请求详情接口并替换 detail
+    const id = this.$route.query.id;
+    if (!id) {
+      this.$message.warning('缺少订单id');
+      return;
+    }
+    this.orderId = String(id);
+    this.loadDetail();
   },
 
   methods: {
+    _splitImages(val) {
+      if (!val) return [];
+      if (Array.isArray(val)) return val.filter(Boolean);
+      if (typeof val !== 'string') return [];
+      return val
+        .split(',')
+        .map(s => (s || '').trim())
+        .filter(Boolean);
+    },
+    payStatusText(status) {
+      const s = Number(status);
+      if (s === 1) return '未回款';
+      if (s === 2) return '部分回款';
+      if (s === 3) return '全部回款';
+      return '';
+    },
+    loadDetail() {
+      if (!this.orderId) return;
+      this.$api({
+        url: '/getStaffOrder',
+        method: 'post',
+        data: { id: String(this.orderId) }
+      })
+        .then((res) => {
+          if (!res || res.code !== 200 || !res.data) {
+            this.$message.error('获取订单详情失败');
+            return;
+          }
+          const data = res.data;
+
+          const customerAddress = data.customerAddress || {};
+          const orderStatusTitle = data.orderStatusTitle || '';
+          const productList = Array.isArray(data.productJson) ? data.productJson : [];
+          const foreignList = Array.isArray(data.foreignProductJson) ? data.foreignProductJson : [];
+
+          this.detail = {
+            ...this.detail,
+            orderNo: data.orderNo || '',
+            orderTime: data.created_at || '',
+            orderAmount: data.orderPrice || '',
+            orderType: data.orderTypeTitle || '',
+            needApprove: String(data.isApproval) === '1',
+            payMethod: data.payTypeTitle || '',
+            needMark: String(data.isPay) === '1',
+            payAmount: data.payPrice || '',
+            batchDelivery: String(data.isMoreFaHuo) === '1',
+            packageSpec: data.packStr != null ? String(data.packStr) : '',
+            orderStatus: orderStatusTitle || '',
+            paymentStatus: this.payStatusText(data.payStatus),
+            contractImages: this._splitImages(data.contractImages),
+            payImages: this._splitImages(data.payImage),
+            customer: {
+              ...this.detail.customer,
+              code: '',
+              name: data.customerTitle || '',
+              region: data.customerTerritory || '',
+              address: customerAddress.address || '',
+              receiver: customerAddress.name || '',
+              receiverPhone: customerAddress.phone || ''
+            },
+            productList: productList.map((it) => {
+              const product = it.product || {};
+              const inventory = it.inventory || {};
+              return {
+                code: product.productNo || '',
+                name: product.title || '',
+                spec: inventory.keyVals || '',
+                category: '',
+                unit: product.unit || '',
+                guidePrice: it.yPrice || '',
+                quantity: it.num || '',
+                totalPrice: it.totalPrice || '',
+                stockQty: '',
+                stockStatus: orderStatusTitle || ''
+              };
+            }),
+            externalProductList: foreignList.map((it) => {
+              const fp = it.foreign_product || {};
+              const isShortage = orderStatusTitle.includes('缺货');
+              return {
+                name: fp.title || '外购产品',
+                spec: fp.keyVals || '',
+                unitPrice: it.price || '',
+                quantity: it.num || '',
+                arrivalQty: '',
+                isShortage,
+                totalPrice: it.totalPrice || '',
+                unit: fp.unit || ''
+              };
+            })
+          };
+        })
+        .catch((err) => {
+          this.$message.error((err && err.msg) ? err.msg : '获取订单详情失败');
+        });
+    },
     openDeliveryDialog() {
       this.deliveryDialogVisible = true;
     },

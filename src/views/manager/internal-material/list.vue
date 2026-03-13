@@ -74,7 +74,12 @@
     <detail-drawer :visible.sync="detailDrawerVisible" :detail-row="detailRow" />
 
     <!-- 删除确认弹框 -->
-    <delete-dialog :visible.sync="deleteDialogVisible" @confirm="handleDeleteConfirm" />
+    <delete-dialog
+      :visible.sync="deleteDialogVisible"
+      main-text="确定要删除这个原料吗？"
+      tip-text="删除后将无法恢复"
+      @confirm="handleDeleteConfirm"
+    />
   </div>
 </template>
 
@@ -224,10 +229,17 @@ export default {
     },
     handleDeleteConfirm() {
       if (!this.rowToDelete) return;
-      // TODO: 调用删除接口
-      this.$message.success("删除成功");
-      this.rowToDelete = null;
-      this.loadList();
+      const id = this.rowToDelete && this.rowToDelete.id != null ? String(this.rowToDelete.id) : "";
+      if (!id) return;
+      this.$api({ url: "/delMaterial", method: "post", data: { id } })
+        .then(() => {
+          this.$message.success("删除成功");
+          this.rowToDelete = null;
+          this.loadList();
+        })
+        .catch((err) => {
+          this.$message.error(err && err.msg ? err.msg : "删除失败");
+        });
     },
     handleAdd() {
       // TODO: 新增原料

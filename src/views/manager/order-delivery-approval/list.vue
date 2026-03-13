@@ -8,32 +8,45 @@
             <el-input v-model="queryParams.keyword" placeholder="订单编号/客户名称" clearable style="width: 260px" />
           </el-form-item>
           <el-form-item label="订单状态">
-            <el-select v-model="queryParams.status" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="启用" value="1" />
-              <el-option label="禁用" value="0" />
+            <el-select v-model="queryParams.orderStatus" placeholder="请选择" clearable style="width: 140px">
+              <el-option
+                v-for="item in orderStatusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="支付方式">
-            <el-select v-model="queryParams.region" placeholder="客户区域" clearable style="width: 140px">
-              <el-option label="国内" value="国内" />
-              <el-option label="国外" value="国外" />
-              <el-option label="中国" value="中国" />
-              <el-option label="北京" value="北京" />
-              <el-option label="英国" value="英国" />
+            <el-select v-model="queryParams.payType" placeholder="请选择" clearable style="width: 140px">
+              <el-option
+                v-for="item in payTypeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="回款状态">
-            <el-select v-model="queryParams.attr" placeholder="客户属性" clearable style="width: 140px">
-              <el-option label="企业" value="企业" />
-              <el-option label="个人" value="个人" />
+            <el-select v-model="queryParams.payStatus" placeholder="请选择" clearable style="width: 140px">
+              <el-option
+                v-for="item in payStatusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
         </div>
         <div class="search-row">
           <el-form-item label="订单类型">
-            <el-select v-model="queryParams.type" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="类型A" value="A" />
-              <el-option label="类型B" value="B" />
+            <el-select v-model="queryParams.orderType" placeholder="请选择" clearable style="width: 140px">
+              <el-option
+                v-for="item in orderTypeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <!-- 时间筛选 -->
@@ -68,40 +81,52 @@
           :row-class-name="tableRowClassName">
           <el-table-column type="index" label="序号" width="70" align="center" />
           <el-table-column prop="orderNo" label="订单编号" min-width="130" show-overflow-tooltip />
-          <el-table-column prop="customerName" label="客户名称" min-width="200" show-overflow-tooltip>
+          <el-table-column prop="customerTitle" label="客户名称" min-width="180" show-overflow-tooltip>
             <template slot-scope="{ row }">
-              <span class="link-name" @click="handleView(row)">{{ row.customerName }}</span>
+              <span class="link-name" @click="handleView(row)">{{ row.customerTitle }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="dosageForm" label="属地" min-width="80" show-overflow-tooltip />
-          <el-table-column prop="address" label="收货地址" min-width="260" show-overflow-tooltip />
-          <el-table-column prop="orderAmount" label="订单金额" min-width="100" align="right">
+          <el-table-column prop="customerTerritory" label="属地" min-width="80" show-overflow-tooltip />
+          <el-table-column label="收货地址" min-width="240" show-overflow-tooltip>
             <template slot-scope="{ row }">
-              <span>{{ row.orderAmount }}</span>
+              <span>{{ row.customerAddress && row.customerAddress.address ? row.customerAddress.address : '' }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="orderType" label="订单类型" min-width="110" show-overflow-tooltip />
-          <el-table-column prop="orderStatus" label="订单状态" width="100" align="center">
+          <el-table-column prop="orderPrice" label="订单金额" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.orderStatus === '待审批'" type="info" size="small">待审批</el-tag>
-              <el-tag v-else-if="row.orderStatus === '待发货'" type="warning" size="small">待发货</el-tag>
-              <el-tag v-else-if="row.orderStatus === '已发货'" type="success" size="small">已发货</el-tag>
+              <span>{{ row.orderPrice }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="orderTypeTitle" label="订单类型" min-width="110" show-overflow-tooltip />
+          <el-table-column prop="orderStatusTitle" label="订单状态" width="120" align="center">
+            <template slot-scope="{ row }">
+              <el-tag
+                v-if="row.orderStatus != null"
+                :type="orderStatusTagType(row.orderStatus)"
+                size="small"
+              >
+                {{ row.orderStatusTitle || '-' }}
+              </el-tag>
               <span v-else>—</span>
             </template>
           </el-table-column>
           <el-table-column prop="deliveryPlanTime" label="预计发货时间" min-width="140" show-overflow-tooltip />
-          <el-table-column prop="payMethod" label="支付方式" min-width="110" show-overflow-tooltip />
+          <el-table-column prop="payTypeTitle" label="支付方式" min-width="110" show-overflow-tooltip />
           <el-table-column prop="accountDate" label="账期时间" width="120" align="center" />
           <el-table-column prop="payDueDate" label="应付款时间" width="120" align="center" />
-          <el-table-column prop="paymentStatus" label="回款状态" width="100" align="center">
+          <el-table-column prop="payStatus" label="回款状态" width="120" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.paymentStatus === '待回款'" type="info" size="small">待回款</el-tag>
-              <el-tag v-else-if="row.paymentStatus === '部分回款'" type="warning" size="small">部分回款</el-tag>
-              <el-tag v-else-if="row.paymentStatus === '全部回款'" type="success" size="small">全部回款</el-tag>
+              <el-tag
+                v-if="row.payStatus != null"
+                :type="payStatusTagType(row.payStatus)"
+                size="small"
+              >
+                {{ payStatusText(row.payStatus) }}
+              </el-tag>
               <span v-else>—</span>
             </template>
           </el-table-column>
-          <el-table-column prop="orderTime" label="下单时间" width="120" align="center" />
+          <el-table-column prop="created_at" label="下单时间" width="160" align="center" />
           <el-table-column label="操作" width="180" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
@@ -137,82 +162,49 @@ export default {
     return {
       queryParams: {
         keyword: '',
-        status: '',
-        region: '',
-        attr: '',
-        type: '',
+        orderStatus: '',
+        orderType: '',
+        payType: '',
+        payStatus: '',
+        date: [],
         pageNum: 1,
         pageSize: 20
       },
       total: 0,
       tableHeight: 0,
-      tableData: [
-        {
-          id: 1,
-          orderNo: '2020001-959',
-          customerName: '浙江立汇医疗科技有限公司',
-          dosageForm: '颗粒',
-          address: '浙江立汇医疗科技有限公司天目大道566号',
-          orderAmount: '2564.00',
-          orderType: '标研订单',
-          orderStatus: '待审批',
-          deliveryPlanTime: '2026-01-08',
-          payMethod: '预付款',
-          deliveryMethod: '快递',
-          accountPeriod: '1个月',
-          accountDate: '2026-01-05',
-          payDueDate: '2026-02-05',
-          paymentStatus: '待回款',
-          auditStatus: 'pending',
-          orderTime: '2026-01-05'
-        },
-        {
-          id: 2,
-          orderNo: '2020001-965',
-          customerName: '浙江中汇医疗科技有限公司',
-          dosageForm: '颗粒',
-          address: '浙江中汇医疗科技有限公司天目大道566号',
-          orderAmount: '2564.00',
-          orderType: '标研订单',
-          orderStatus: '待发货',
-          deliveryPlanTime: '2026-01-10',
-          payMethod: '预付款',
-          deliveryMethod: '快递',
-          accountPeriod: '2个月',
-          accountDate: '2026-01-05',
-          payDueDate: '2026-03-05',
-          paymentStatus: '部分回款',
-          auditStatus: 'pending',
-          orderTime: '2026-01-05'
-        },
-        {
-          id: 3,
-          orderNo: '2020001-978',
-          customerName: '示例客户C',
-          dosageForm: '颗粒',
-          address: '示例客户C的收货地址',
-          orderAmount: '1280.00',
-          orderType: '标研订单',
-          orderStatus: '已发货',
-          deliveryPlanTime: '2026-01-06',
-          payMethod: '预付款',
-          deliveryMethod: '快递',
-          accountPeriod: '1个月',
-          accountDate: '2026-01-06',
-          payDueDate: '2026-02-06',
-          paymentStatus: '全部回款',
-          auditStatus: 'audited',
-          orderTime: '2026-01-06'
-        }
-      ],
+      tableData: [],
       rowToDelete: null,
       auditDialogVisible: false,
       rowToAudit: null,
-      auditTab: 'pending',
+      auditTab: '',
       auditTabs: [
-        { label: '发货审批', value: 'pending' },
-        { label: '待发货', value: 'delivery' },
-        { label: '已发货', value: 'delivered' }
+        { label: '发货审批', value: '' },
+        { label: '待发货', value: '4' },
+        { label: '已发货', value: '7' }
+      ],
+      orderStatusOptions: [
+        { label: '待营销总监审核', value: '1' },
+        { label: '待总经理审核', value: '2' },
+        { label: '缺货审核', value: '3' },
+        { label: '待发货', value: '4' },
+        { label: '缺货', value: '5' },
+        { label: '暂停', value: '6' },
+        { label: '已发货', value: '7' },
+        { label: '驳回', value: '-1' }
+      ],
+      orderTypeOptions: [
+        { label: '销售订单', value: '1' },
+        { label: '样品订单', value: '2' }
+      ],
+      payTypeOptions: [
+        { label: '现结', value: '1' },
+        { label: '账期', value: '2' },
+        { label: '分期付款', value: '3' }
+      ],
+      payStatusOptions: [
+        { label: '未回款', value: '1' },
+        { label: '部分回款', value: '2' },
+        { label: '全部回款', value: '3' }
       ]
     };
   },
@@ -244,11 +236,38 @@ export default {
       return rowIndex % 2 === 1 ? 'row-even' : '';
     },
     loadList() {
-      // TODO: 根据 auditTab 调用接口获取列表
-      this.total = this.tableData.length;
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        keyword: this.queryParams.keyword || '',
+        orderStatus: this.queryParams.orderStatus || '',
+        orderType: this.queryParams.orderType || '',
+        payType: this.queryParams.payType || '',
+        payStatus: this.queryParams.payStatus || ''
+      };
+      this.$api({
+        url: '/getStaffOrderList',
+        method: 'post',
+        data: params
+      })
+        .then((res) => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list;
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleAuditTabChange(value) {
       this.auditTab = value;
+      this.queryParams.orderStatus = value;
       this.queryParams.pageNum = 1;
       this.loadList();
     },
@@ -258,14 +277,27 @@ export default {
     },
     resetQuery() {
       this.$refs.queryForm.resetFields();
-      this.queryParams.pageNum = 1;
+      this.queryParams = {
+        keyword: '',
+        orderStatus: '',
+        orderType: '',
+        payType: '',
+        payStatus: '',
+        date: [],
+        pageNum: 1,
+        pageSize: this.queryParams.pageSize
+      };
       this.loadList();
     },
-    handleView() {
+    handleView(row) {
+      const id = row && row.id != null ? String(row.id) : '';
+      if (!id) {
+        this.$message.warning('缺少订单id');
+        return;
+      }
       this.$router.push({
         path: '/manager/order-delivery-approval/detail',
-        query: {
-        }
+        query: { id }
       });
     },
     handleAudit(row) {
@@ -301,6 +333,28 @@ export default {
     handleCurrentChange(val) {
       this.queryParams.pageNum = val;
       this.loadList();
+    },
+    orderStatusTagType(status) {
+      const s = Number(status);
+      if (s === 7) return 'success';
+      if (s === 4) return 'success';
+      if (s === 5 || s === -1) return 'danger';
+      if (s === 6) return 'warning';
+      return 'info';
+    },
+    payStatusText(status) {
+      const s = Number(status);
+      if (s === 1) return '未回款';
+      if (s === 2) return '部分回款';
+      if (s === 3) return '全部回款';
+      return '';
+    },
+    payStatusTagType(status) {
+      const s = Number(status);
+      if (s === 1) return 'info';
+      if (s === 2) return 'warning';
+      if (s === 3) return 'success';
+      return 'info';
     }
   }
 };
