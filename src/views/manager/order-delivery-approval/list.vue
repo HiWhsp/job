@@ -110,10 +110,10 @@
               <span v-else>—</span>
             </template>
           </el-table-column>
-          <el-table-column prop="deliveryPlanTime" label="预计发货时间" min-width="140" show-overflow-tooltip />
+          <el-table-column prop="estimateTime" label="预计发货时间" min-width="140" show-overflow-tooltip />
           <el-table-column prop="payTypeTitle" label="支付方式" min-width="110" show-overflow-tooltip />
-          <el-table-column prop="accountDate" label="账期时间" width="120" align="center" />
-          <el-table-column prop="payDueDate" label="应付款时间" width="120" align="center" />
+          <el-table-column prop="paymentTerm" label="账期时间" width="120" align="center" />
+          <el-table-column prop="paymentTermTime" label="应付款时间" width="120" align="center" />
           <el-table-column prop="payStatus" label="回款状态" width="120" align="center">
             <template slot-scope="{ row }">
               <el-tag
@@ -127,11 +127,14 @@
             </template>
           </el-table-column>
           <el-table-column prop="created_at" label="下单时间" width="160" align="center" />
-          <el-table-column label="操作" width="180" align="center" fixed="right">
+          <el-table-column label="操作" width="280" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
-                <span class="row-act" v-if="row.auditStatus === 'pending'" @click="handleAudit(row)">审核</span>
+                <span class="row-act" v-if="row.orderStatusTitle.includes('审核')" @click="handleAudit(row)">审核</span>
+                <span class="row-act" v-if="row.orderStatus == 4" @click="handleDelivery(row)">发货</span>
+                <span class="row-act" v-if="row.orderStatus >= 4 && row.orderStatus != 4" @click="handleAudit(row)">打印电子订单</span>
+
               </span>
             </template>
           </el-table-column>
@@ -146,6 +149,41 @@
 
     <!-- 审核弹框 -->
     <audit-dialog :visible.sync="auditDialogVisible" @confirm="handleAuditConfirm" />
+
+    <!-- 审批发货弹框（与详情页一致） -->
+    <el-dialog
+      title="审批发货"
+      :visible.sync="deliveryDialogVisible"
+      width="520px"
+      :close-on-click-modal="false"
+    >
+      <el-form
+        :model="deliveryForm"
+        label-width="100px"
+        label-position="right"
+      >
+        <el-form-item label="审批：">
+          <el-radio-group v-model="deliveryForm.approveType">
+            <el-radio label="batch">审批发货</el-radio>
+            <el-radio label="lack">库存不足</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="预计发货时间：">
+          <el-date-picker
+            v-model="deliveryForm.estimateTime"
+            type="date"
+            placeholder="请设置"
+            value-format="yyyy-MM-dd"
+            style="width: 100%"
+          />
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer" style="text-align: center;">
+        <el-button type="primary" @click="submitDelivery">提交</el-button>
+        <el-button @click="deliveryDialogVisible = false">取消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -176,6 +214,12 @@ export default {
       rowToDelete: null,
       auditDialogVisible: false,
       rowToAudit: null,
+      deliveryDialogVisible: false,
+      rowToDelivery: null,
+      deliveryForm: {
+        approveType: 'batch', // batch: 审批发货 -> status=1, lack: 库存不足 -> status=-1
+        estimateTime: ''
+      },
       auditTab: '',
       auditTabs: [
         { label: '发货审批', value: '' },
@@ -235,6 +279,7 @@ export default {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? 'row-even' : '';
     },
+    // POST getStaffOrderList，Body 参数：page, limit, keyword, orderStatus, orderType, payType, payStatus（均为 string）；返回 data: { count, list }
     loadList() {
       const params = {
         page: String(this.queryParams.pageNum),
@@ -303,6 +348,53 @@ export default {
     handleAudit(row) {
       this.rowToAudit = row;
       this.auditDialogVisible = true;
+    },
+    /** 列表发货：打开与详情页一致的审批发货弹框 */
+    handleDelivery(row) {
+      this.rowToDelivery = row;
+      this.deliveryForm = {
+        approveType: 'batch',
+        estimateTime: ''
+      };
+      this.deliveryDialogVisible = true;
+    },
+    /** 提交审批发货：调用缺货审核接口 qhReviewStaffOrder，id + status(1发货/-1缺货) + estimateTime */
+    submitDelivery() {
+      if (!this.rowToDelivery) return;
+      if (!this.deliveryForm.estimateTime) {
+        this.$message.error('请选择预计发货时间');
+        return;
+      }
+      const id = this.rowToDelivery.id != null ? String(this.rowToDelivery.id) : '';
+      if (!id) {
+        this.$message.warning('缺少订单id');
+        return;
+      }
+      const status = this.deliveryForm.approveType === 'lack' ? '-1' : '1'; // 1发货, -1缺货
+      const estimateTime = this.deliveryForm.estimateTime || '';
+
+      this.$api({
+        url: '/qhReviewStaffOrder',
+        method: 'post',
+        data: {
+          id,
+          status,
+          estimateTime
+        }
+      })
+        .then((res) => {
+          if (res && res.code === 200) {
+            this.$message.success('提交成功');
+            this.deliveryDialogVisible = false;
+            this.rowToDelivery = null;
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || '提交失败');
+          }
+        })
+        .catch((err) => {
+          this.$message.error((err && err.msg) ? err.msg : '提交失败');
+        });
     },
     handleAuditConfirm({ auditStatus, auditRemark }) {
       if (!this.rowToAudit) return;
@@ -540,5 +632,22 @@ export default {
   display: flex;
   justify-content: flex-end;
   border-top: 1px solid #ebeef5;
+}
+
+/* 审批发货弹框与详情页一致 */
+:deep(.el-dialog__header) {
+  height: 60px;
+  padding: 0 24px 0;
+  background: #F7F7F7;
+  text-align: left;
+  .el-dialog__title {
+    line-height: 60px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333333;
+  }
+}
+:deep(.el-dialog__body) {
+  padding: 30px 80px;
 }
 </style>

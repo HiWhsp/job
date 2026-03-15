@@ -105,12 +105,13 @@
             <el-form-item label="合同图片:" prop="contractImages" class="form-item--upload">
               <el-upload
                 class="upload-image-card"
-                action="#"
                 list-type="picture-card"
-                :auto-upload="false"
+                :action="uploadAction"
+                name="file"
                 :file-list="form.contractImageList"
-                :on-change="(file, list) => handleImageChange('contract', list)"
-                :on-remove="() => handleImageRemove('contract')"
+                :on-success="(res, file, list) => handleUploadSuccess('contract', res, file, list)"
+                :on-remove="(file, list) => handleUploadRemove('contract', file, list)"
+                :http-request="(opt) => handleUploadRequest(opt, 'contract')"
               >
                 <i class="el-icon-plus" />
                 <span class="upload-text">添加图片</span>
@@ -121,12 +122,13 @@
             <el-form-item label="付款凭证:" prop="payVoucherImages" class="form-item--upload">
               <el-upload
                 class="upload-image-card"
-                action="#"
                 list-type="picture-card"
-                :auto-upload="false"
+                :action="uploadAction"
+                name="file"
                 :file-list="form.payVoucherImageList"
-                :on-change="(file, list) => handleImageChange('payVoucher', list)"
-                :on-remove="() => handleImageRemove('payVoucher')"
+                :on-success="(res, file, list) => handleUploadSuccess('payVoucher', res, file, list)"
+                :on-remove="(file, list) => handleUploadRemove('payVoucher', file, list)"
+                :http-request="(opt) => handleUploadRequest(opt, 'payVoucher')"
               >
                 <i class="el-icon-plus" />
                 <span class="upload-text">添加图片</span>
@@ -204,7 +206,7 @@
             <span class="block-title">外购产品信息</span>
             <div class="block-actions">
               <el-button type="primary" size="small" @click="handleDeleteExternalProducts">删除</el-button>
-              <el-button type="primary" size="small" @click="handleAddProduct">添加外购产品</el-button>
+              <el-button type="primary" size="small" @click="handleAddExternalProduct">添加外购产品</el-button>
             </div>
           </div>
           <el-table
@@ -318,36 +320,75 @@
         </div>
       </el-form>
 
-      <!-- 添加产品弹窗 -->
-      <add-product-dialog
-        :visible.sync="addProductVisible"
-        @confirm="onAddProductConfirm"
+      <!-- 添加产品弹窗：getProductList -->
+      <add-product-dialog :visible.sync="addProductVisible" @confirm="onAddProductConfirm" />
+
+      <!-- 添加外购产品弹窗：getForeignProductList -->
+      <add-external-product-dialog
+        :visible.sync="addExternalProductVisible"
+        @confirm="onAddExternalProductConfirm"
       />
+
+      <!-- 选择客户弹窗：getCustomerList 按 form.customerName 查询 -->
+      <el-dialog
+        title="选择客户"
+        :visible.sync="customerSelectVisible"
+        width="700px"
+        :close-on-click-modal="false"
+        @open="loadCustomerList"
+      >
+        <el-table
+          ref="customerTable"
+          :data="customerList"
+          highlight-current-row
+          max-height="360"
+          @current-change="onCustomerRowSelect"
+        >
+          <el-table-column type="index" label="序号" width="60" align="center" />
+          <el-table-column prop="title" label="客户名称" show-overflow-tooltip />
+          <el-table-column prop="customerNo" label="客户编码" show-overflow-tooltip />
+          <el-table-column prop="territory" label="属地" />
+          <el-table-column label="操作" width="80" align="center" fixed="right">
+            <template slot-scope="{ row }">
+              <el-button type="text" size="small" @click="selectCustomer(row)">选择</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="customerSelectVisible = false">取消</el-button>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import AddProductDialog from './components/add-product-dialog.vue';
+import axios from "axios";
+import { UPLOAD_ROOT } from "@/config/env.js";
+import AddProductDialog from "./components/add-product-dialog.vue";
+import AddExternalProductDialog from "./components/add-external-product-dialog.vue";
 
 export default {
   name: "OrderAdd",
 
   components: {
     AddProductDialog,
+    AddExternalProductDialog
   },
 
   data() {
     return {
+      uploadAction: UPLOAD_ROOT,
       form: {
+        customerId: "",
         customerName: "",
         orderType: "",
         priceType: "dealer",
         needApprove: false,
         payMethod: "",
         isPaid: true,
-        payAmount: "",
-        stockMeet: false,
+        payAmount: "0",
+        stockMeet: true,
         acceptBatch: true,
         packageSpec: "",
         packageSpecOther: "",
@@ -356,7 +397,7 @@ export default {
       },
       rules: {
         customerName: [
-          { required: true, message: "请输入或选择客户名称", trigger: "blur" }
+          { required: true, message: "请输入客户名称", trigger: "blur" }
         ],
         orderType: [
           { required: true, message: "请选择订单类型", trigger: "change" }
@@ -365,60 +406,14 @@ export default {
           { required: true, message: "请选择支付方式", trigger: "change" }
         ]
       },
-      productList: [
-        {
-          code: "4578786954",
-          name: "单层牙齿盘",
-          spec: "98,A1,10mm",
-          category: "树脂盘",
-          unit: "盒",
-          guidePrice: "15.00",
-          quantity: 20,
-          guideTotal: "300.00",
-          actualPrice: "",
-          stockQty: 60,
-          stockStatus: "有货"
-        },
-        {
-          code: "4578786955",
-          name: "单层牙齿盘",
-          spec: "98,A1,10mm",
-          category: "树脂盘",
-          unit: "盒",
-          guidePrice: "20.00",
-          quantity: 200,
-          guideTotal: "4000.00",
-          actualPrice: "",
-          stockQty: 60,
-          stockStatus: "有货"
-        }
-      ],
+      productList: [],
       productSelected: [],
-      externalProductList: [
-        {
-          name: "单层牙齿盘",
-          spec: "98,A1,10mm",
-          price: "2000.00",
-          quantity: 20,
-          total: "40000.00",
-          unit: "盒",
-          stock: "20",
-          stockStatus: "有货"
-        },
-        {
-          name: "单层牙齿盘",
-          spec: "98,A1,10mm",
-          price: "2000.00",
-          quantity: 20,
-          total: "40000.00",
-          unit: "盒",
-          stock: "20",
-          stockStatus: "缺货"
-        }
-      ],
+      externalProductList: [],
       externalNewRow: null,
       addProductVisible: false,
-      addExternalProductVisible: false
+      addExternalProductVisible: false,
+      customerSelectVisible: false,
+      customerList: []
     };
   },
 
@@ -473,6 +468,8 @@ export default {
     onAddProductConfirm(rows) {
       rows.forEach(r => {
         this.productList.push({
+          productId: r.productId || r.code || "",
+          inventoryId: r.inventoryId || "",
           code: r.code,
           name: r.name,
           spec: r.spec,
@@ -510,22 +507,29 @@ export default {
         row => !selection.includes(row)
       );
     },
+    /** 添加外购产品：打开弹窗，由 getForeignProductList 接口获取列表并选择 */
     handleAddExternalProduct() {
       if (this.externalNewRow) {
         this.$message.warning("请先保存当前新增行");
         return;
       }
-      this.externalNewRow = {
-        isNew: true,
-        name: "",
-        spec: "",
-        price: null,
-        quantity: null,
-        total: "0.00",
-        unit: "",
-        stock: "",
-        stockStatus: "缺货"
-      };
+      this.addExternalProductVisible = true;
+    },
+    onAddExternalProductConfirm(rows) {
+      if (!Array.isArray(rows)) return;
+      rows.forEach(row => {
+        this.externalProductList.push({
+          productId: row.productId || "2",
+          name: row.name || "",
+          spec: row.spec || "",
+          price: row.price != null ? String(row.price) : "",
+          quantity: row.quantity,
+          total: row.total || "0.00",
+          unit: row.unit || "",
+          stock: "",
+          stockStatus: "—"
+        });
+      });
     },
     calcExternalRowTotal(row) {
       if (!row || !row.isNew) return;
@@ -541,6 +545,7 @@ export default {
         return;
       }
       this.externalProductList.push({
+        productId: row.productId || "2",
         name: row.name,
         spec: row.spec,
         price: String(row.price != null ? row.price : ""),
@@ -564,30 +569,194 @@ export default {
         this.form.packageSpecOther = "";
       }
     },
+    /** 点击新增客户：打开选择客户弹窗，调用 getCustomerList，keyword 使用 form.customerName */
     handleAddCustomer() {
-      // TODO: 跳转新增客户或打开弹窗
-      this.$message.info("跳转新增客户");
+      this.customerSelectVisible = true;
     },
-    handleImageChange(type, fileList) {
-      if (type === "contract") {
+    loadCustomerList() {
+      this.$api({
+        url: "/getCustomerList",
+        method: "post",
+        data: {
+          page: "1",
+          limit: "20",
+          keyword: (this.form.customerName || "").trim()
+        }
+      })
+        .then(res => {
+          if (res && res.data) {
+            const list = res.data.list || res.data.rows || [];
+            this.customerList = list.map(row => ({
+              ...row,
+              territory: row.territory === 1 ? "国内" : row.territory === 2 ? "国外" : (row.territory ?? "")
+            }));
+          } else {
+            this.customerList = [];
+          }
+        })
+        .catch(() => {
+          this.customerList = [];
+        });
+    },
+    onCustomerRowSelect(row) {
+      this._selectedCustomerRow = row;
+    },
+    selectCustomer(row) {
+      if (!row) return;
+      this.form.customerId = row.id != null ? String(row.id) : "";
+      this.form.customerName = row.title != null ? String(row.title) : "";
+      this.customerSelectVisible = false;
+    },
+    /** 自定义上传：使用 UPLOAD_ROOT，参数名 file（与 customer add 一致） */
+    handleUploadRequest(option, field) {
+      const formData = new FormData();
+      formData.append("file", option.file);
+      const token = localStorage.getItem("token");
+      axios
+        .post(UPLOAD_ROOT, formData, {
+          headers: {
+            Authorization: "Bearer " + token
+          },
+          timeout: 60000
+        })
+        .then(res => {
+          const data = res.data || res;
+          const payload = (data && data.data) ? data.data : data;
+          const url = (payload && (payload.path || payload.url)) || (data && data.path) || "";
+          option.onSuccess({ url });
+        })
+        .catch(err => {
+          this.$message.error(
+            (err.response && err.response.data && err.response.data.msg) || "上传失败"
+          );
+          option.onError(err);
+        });
+    },
+    handleUploadSuccess(field, res, file, fileList) {
+      if (field === "contract") {
         this.form.contractImageList = fileList;
       } else {
         this.form.payVoucherImageList = fileList;
       }
+      const r = res || (file && file.response);
+      const payload = (r && r.data) ? r.data : r;
+      const url = (payload && (payload.path || payload.url)) || (r && r.path) || (file && file.url) || "";
+      if (url && file) file.url = url;
     },
-    handleImageRemove(type) {
-      if (type === "contract") {
-        this.form.contractImageList = [];
+    handleUploadRemove(field, file, fileList) {
+      if (field === "contract") {
+        this.form.contractImageList = fileList || [];
       } else {
-        this.form.payVoucherImageList = [];
+        this.form.payVoucherImageList = fileList || [];
       }
+    },
+    /** 包装类型 -> 接口 packType：1标准彩盒 2标准白盒 3无包装 4客户定制包装 5其他 */
+    getPackTypeValue() {
+      const map = {
+        color_box: "1",
+        white_box: "2",
+        none: "3",
+        custom: "4",
+        other: "5"
+      };
+      return map[this.form.packageSpec] || "1";
+    },
+    getPackStr() {
+      const packType = this.getPackTypeValue();
+      if (packType === "5") return this.form.packageSpecOther || "5";
+      return packType;
+    },
+    /** 合同图片、付款凭证：上传后为 URL 逗号拼接，此处先传空串 */
+    getContractImagesString() {
+      if (!this.form.contractImageList || !this.form.contractImageList.length)
+        return "";
+      const urls = this.form.contractImageList
+        .map(f => f.url || f.response?.url)
+        .filter(Boolean);
+      return urls.join(",");
+    },
+    getPayImageString() {
+      if (
+        !this.form.payVoucherImageList ||
+        !this.form.payVoucherImageList.length
+      )
+        return "";
+      const urls = this.form.payVoucherImageList
+        .map(f => f.url || f.response?.url)
+        .filter(Boolean);
+      return urls.join(",");
+    },
+    /** 产品 Json：接口格式 [{"productId":"2","inventoryId":"5","yPrice":"20","price":"40","num":"10"},...] */
+    buildProductJson() {
+      const list = (this.productList || []).map(row => ({
+        productId: String(
+          row.productId != null ? row.productId : row.code || ""
+        ),
+        inventoryId: String(row.inventoryId != null ? row.inventoryId : ""),
+        yPrice: String(row.guidePrice != null ? row.guidePrice : ""),
+        price: String(
+          row.actualPrice != null && row.actualPrice !== ""
+            ? row.actualPrice
+            : row.guidePrice || ""
+        ),
+        num: String(Number(row.quantity) || 0)
+      }));
+      return JSON.stringify(list);
+    },
+    /** 外购产品 Json：接口格式 [{"productId":"2","price":"100","num":"10"}] */
+    buildForeignProductJson() {
+      const list = (this.externalProductList || []).map(row => ({
+        productId: String(row.productId != null ? row.productId : "2"),
+        price: String(row.price != null ? row.price : ""),
+        num: String(Number(row.quantity) || 0)
+      }));
+      return JSON.stringify(list);
     },
     handleSubmit() {
       this.$refs.formRef.validate(valid => {
         if (!valid) return;
-        // TODO: 调用新增订单接口，提交 form + productList + externalProductList
-        this.$message.success("提交成功");
-        this.$router.push("/sales/order/list");
+        if (!(this.productList && this.productList.length)) {
+          this.$message.warning("请至少添加一条产品信息");
+          return;
+        }
+        const packType = this.getPackTypeValue();
+        const packStr = this.getPackStr();
+        const contractImages = this.getContractImagesString();
+        const payImage = this.getPayImageString();
+        const productJson = this.buildProductJson();
+        const foreignProductJson = this.buildForeignProductJson();
+
+        const data = {
+          customerId: String(this.form.customerId).trim(),
+          payPrice: String(
+            this.form.payAmount != null ? this.form.payAmount : "0"
+          ),
+          isManKuCun: this.form.stockMeet ? "1" : "2",
+          isMoreFaHuo: this.form.acceptBatch ? "1" : "2",
+          packType,
+          packStr,
+          contractImages: contractImages || "",
+          payImage: payImage || "",
+          productJson,
+          foreignProductJson
+        };
+
+        this.$api({
+          url: "/addStaffOrder",
+          method: "post",
+          data
+        })
+          .then(res => {
+            if (res && res.code === 200) {
+              this.$message.success("提交成功");
+              this.$router.push("/sales/order/list");
+            } else {
+              this.$message.error((res && res.msg) || "提交失败");
+            }
+          })
+          .catch(err => {
+            this.$message.error(err && err.msg ? err.msg : "提交失败");
+          });
       });
     },
     handleCancel() {
@@ -689,17 +858,16 @@ export default {
 }
 
 .upload-image-card {
+  display: flex;
   ::v-deep .el-upload--picture-card {
     width: 120px;
     height: 120px;
     line-height: 120px;
-    border: 1px solid #e5e5e5;
-    background: #fafafa;
+    border: 1px solid #c0ccda;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
 
     .el-icon-plus {
       font-size: 28px;
@@ -712,13 +880,15 @@ export default {
     width: 120px;
     height: 120px;
     border-radius: 4px;
-    border: 1px solid #e5e5e5;
+  }
+  ::v-deep .el-upload-list__item-thumbnail {
+    object-fit: fill;
   }
 }
 
 .upload-text {
   font-size: 14px;
-  color: #606266;
+  color: #878787;
   line-height: 20px;
 }
 

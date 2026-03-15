@@ -8,39 +8,50 @@
             <el-input v-model="queryParams.keyword" placeholder="订单编号/客户名称" clearable style="width: 260px" />
           </el-form-item>
           <el-form-item label="订单状态">
-            <el-select v-model="queryParams.status" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="待审批" value="待审批" />
-              <el-option label="待发货" value="待发货" />
-              <el-option label="已发货" value="已发货" />
-              <el-option label="已取消" value="已取消" />
+            <el-select v-model="queryParams.orderStatus" placeholder="请选择" clearable style="width: 140px">
+              <el-option
+                v-for="item in orderStatusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="支付方式">
-            <el-select v-model="queryParams.payMethod" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="现结" value="现结" />
-              <el-option label="账期" value="账期" />
-              <el-option label="分期付款" value="分期付款" />
-              <el-option label="预付款" value="预付款" />
+            <el-select v-model="queryParams.payType" placeholder="请选择" clearable style="width: 140px">
+              <el-option
+                v-for="item in payTypeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
-          <el-form-item label="收款状态">
-            <el-select v-model="queryParams.paymentStatus" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="待回款" value="待回款" />
-              <el-option label="部分回款" value="部分回款" />
-              <el-option label="全部回款" value="全部回款" />
+          <el-form-item label="回款状态">
+            <el-select v-model="queryParams.payStatus" placeholder="请选择" clearable style="width: 140px">
+              <el-option
+                v-for="item in payStatusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
         </div>
         <div class="search-row">
           <el-form-item label="订单类型">
-            <el-select v-model="queryParams.type" placeholder="请选择" clearable style="width: 140px">
-              <el-option label="类型A" value="A" />
-              <el-option label="类型B" value="B" />
+            <el-select v-model="queryParams.orderType" placeholder="请选择" clearable style="width: 140px">
+              <el-option
+                v-for="item in orderTypeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <!-- 时间筛选 -->
           <el-form-item label="时间筛选">
-            <el-date-picker v-model="queryParams.date" type="daterange" range-separator="-" start-placeholder="开始时间" end-placeholder="结束时间" clearable style="width: 236px" />
+            <el-date-picker v-model="queryParams.date" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" clearable style="width: 236px" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handleQuery">搜索</el-button>
@@ -61,6 +72,7 @@
         </div>
         <div class="table-acts">
           <el-button type="primary" size="small" @click="handleExport">导出</el-button>
+          <el-button type="primary" size="small" @click="handleAdd">新增订单</el-button>
         </div>
       </div>
       <div class="table-box">
@@ -68,47 +80,59 @@
           :row-class-name="tableRowClassName">
           <el-table-column type="index" label="序号" width="70" align="center" />
           <el-table-column prop="orderNo" label="订单编号" min-width="130" show-overflow-tooltip />
-          <el-table-column prop="customerName" label="客户名称" min-width="200" show-overflow-tooltip>
+          <el-table-column prop="customerTitle" label="客户名称" min-width="180" show-overflow-tooltip>
             <template slot-scope="{ row }">
-              <span class="link-name" @click="handleView(row)">{{ row.customerName }}</span>
+              <span class="link-name" @click="handleView(row)">{{ row.customerTitle || row.customerName }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="dosageForm" label="属地" min-width="80" show-overflow-tooltip />
-          <el-table-column prop="address" label="收货地址" min-width="260" show-overflow-tooltip />
-          <el-table-column prop="orderAmount" label="订单金额" min-width="100" align="right">
+          <el-table-column prop="customerTerritory" label="属地" min-width="80" show-overflow-tooltip />
+          <el-table-column label="收货地址" min-width="240" show-overflow-tooltip>
             <template slot-scope="{ row }">
-              <span>{{ row.orderAmount }}</span>
+              <span>{{ (row.customerAddress && row.customerAddress.address) ? row.customerAddress.address : (row.address || '') }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="orderType" label="订单类型" min-width="110" show-overflow-tooltip />
-          <el-table-column prop="orderStatus" label="订单状态" width="100" align="center">
+          <el-table-column prop="orderPrice" label="订单金额" align="center" min-width="100">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.orderStatus === '待审批'" type="info" size="small">待审批</el-tag>
-              <el-tag v-else-if="row.orderStatus === '待发货'" type="warning" size="small">待发货</el-tag>
-              <el-tag v-else-if="row.orderStatus === '已发货'" type="success" size="small">已发货</el-tag>
+              <span>{{ row.orderPrice != null ? row.orderPrice : row.orderAmount }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="orderTypeTitle" label="订单类型" min-width="110" show-overflow-tooltip />
+          <el-table-column prop="orderStatusTitle" label="订单状态" width="120" align="center">
+            <template slot-scope="{ row }">
+              <el-tag
+                v-if="row.orderStatus != null"
+                :type="orderStatusTagType(row.orderStatus)"
+                size="small"
+              >
+                {{ row.orderStatusTitle || row.orderStatus || '-' }}
+              </el-tag>
               <span v-else>—</span>
             </template>
           </el-table-column>
-          <el-table-column prop="deliveryPlanTime" label="预计发货时间" min-width="140" show-overflow-tooltip />
-          <el-table-column prop="payMethod" label="支付方式" min-width="110" show-overflow-tooltip />
-          <el-table-column prop="accountDate" label="账期时间" width="120" align="center" />
-          <el-table-column prop="payDueDate" label="应付款时间" width="120" align="center" />
-          <el-table-column prop="paymentStatus" label="回款状态" width="100" align="center">
+          <el-table-column prop="estimateTime" label="预计发货时间" min-width="140" show-overflow-tooltip />
+          <el-table-column prop="payTypeTitle" label="支付方式" min-width="110" show-overflow-tooltip />
+          <el-table-column prop="paymentTerm" label="账期时间" width="120" align="center" />
+          <el-table-column prop="paymentTermTime" label="应付款时间" width="120" align="center" />
+          <el-table-column prop="payStatus" label="回款状态" width="120" align="center">
             <template slot-scope="{ row }">
-              <el-tag v-if="row.paymentStatus === '待回款'" type="info" size="small">待回款</el-tag>
-              <el-tag v-else-if="row.paymentStatus === '部分回款'" type="warning" size="small">部分回款</el-tag>
-              <el-tag v-else-if="row.paymentStatus === '全部回款'" type="success" size="small">全部回款</el-tag>
-              <span v-else>—</span>
+              <el-tag
+                v-if="row.payStatus != null"
+                :type="payStatusTagType(row.payStatus)"
+                size="small"
+              >
+                {{ payStatusText(row.payStatus) }}
+              </el-tag>
+              <span v-else>{{ row.paymentStatus || '—' }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="orderTime" label="下单时间" width="120" align="center" />
+          <el-table-column prop="created_at" label="下单时间" width="160" align="center" />
           <el-table-column label="操作" width="280" align="center" fixed="right">
             <template slot-scope="{ row }">
               <span class="row-acts">
                 <span class="row-act" @click="handleView(row)">查看详情</span>
                 <span class="row-act" @click="handleSubmitPayment(row)">提交回款</span>
-                <span class="row-act" @click="handleView(row)">编辑</span>
-                <!-- <span class="row-act" @click="handleView(row)">删除</span> -->
+                <span class="row-act" v-if="row.orderStatusTitle && row.orderStatusTitle.includes('审核')" @click="handleAudit(row)">审核</span>
+                <span class="row-act" v-if="row.orderStatus == 4" @click="handleDelivery(row)">发货</span>
                 <span class="row-act" @click="handleAudit(row)">继续</span>
               </span>
             </template>
@@ -141,16 +165,16 @@
         <el-form-item label="回款凭证:">
           <el-upload
             class="payment-upload"
-            action="#"
-            :auto-upload="false"
-            :on-change="handlePaymentFileChange"
-            :file-list="paymentForm.voucherList"
             list-type="picture-card"
-            accept="image/*">
-            <div class="upload-inner">
-              <i class="el-icon-plus" />
-              <span class="upload-tip">添加图片</span>
-            </div>
+            :action="uploadAction"
+            name="file"
+            :file-list="paymentForm.voucherList"
+            :on-success="(res, file, list) => handlePaymentUploadSuccess(res, file, list)"
+            :on-remove="(file, list) => handlePaymentUploadRemove(file, list)"
+            :http-request="handlePaymentUploadRequest"
+          >
+            <i class="el-icon-plus" />
+            <span class="upload-tip">添加图片</span>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -158,6 +182,36 @@
         <el-button type="primary" @click="submitPayment">提交</el-button>
         <el-button @click="closePaymentDialog">取消</el-button>
       </span>
+    </el-dialog>
+
+    <!-- 审批发货弹框 -->
+    <el-dialog
+      title="审批发货"
+      :visible.sync="deliveryDialogVisible"
+      width="520px"
+      :close-on-click-modal="false"
+    >
+      <el-form :model="deliveryForm" label-width="100px" label-position="right">
+        <el-form-item label="审批：">
+          <el-radio-group v-model="deliveryForm.approveType">
+            <el-radio label="batch">审批发货</el-radio>
+            <el-radio label="lack">库存不足</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="预计发货时间：">
+          <el-date-picker
+            v-model="deliveryForm.estimateTime"
+            type="date"
+            placeholder="请设置"
+            value-format="yyyy-MM-dd"
+            style="width: 100%"
+          />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer" style="text-align: center;">
+        <el-button type="primary" @click="submitDelivery">提交</el-button>
+        <el-button @click="deliveryDialogVisible = false">取消</el-button>
+      </div>
     </el-dialog>
 
     <!-- 是否继续 弹框 -->
@@ -181,129 +235,93 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { UPLOAD_ROOT } from '@/config/env.js';
+
 export default {
   name: 'OrderDeliveryApprovalList',
   data() {
     return {
+      uploadAction: UPLOAD_ROOT,
+      // 接口 getStaffOrderList 请求参数：page, limit, keyword, orderStatus, orderType, payType, payStatus（均为 string，必填传空串表示不限）
       queryParams: {
         keyword: '',
-        status: '',
-        payMethod: '',
-        paymentStatus: '',
-        type: '',
-        date: null,
+        orderStatus: '',
+        orderType: '',
+        payType: '',
+        payStatus: '',
+        date: [],
         pageNum: 1,
         pageSize: 20
       },
       total: 0,
       tableHeight: 0,
-      tableData: [
-        {
-          id: 1,
-          orderNo: '2020001-959',
-          customerName: '浙江立汇医疗科技有限公司',
-          dosageForm: '颗粒',
-          address: '浙江立汇医疗科技有限公司天目大道566号',
-          orderAmount: '2564.00',
-          orderType: '标研订单',
-          orderStatus: '待审批',
-          deliveryPlanTime: '2026-01-08',
-          payMethod: '预付款',
-          deliveryMethod: '快递',
-          accountPeriod: '1个月',
-          accountDate: '2026-01-05',
-          payDueDate: '2026-02-05',
-          paymentStatus: '待回款',
-          paidAmount: '0.00',
-          auditStatus: 'pending',
-          orderTime: '2026-01-05'
-        },
-        {
-          id: 2,
-          orderNo: '2020001-965',
-          customerName: '浙江中汇医疗科技有限公司',
-          dosageForm: '颗粒',
-          address: '浙江中汇医疗科技有限公司天目大道566号',
-          orderAmount: '2564.00',
-          orderType: '标研订单',
-          orderStatus: '待发货',
-          deliveryPlanTime: '2026-01-10',
-          payMethod: '预付款',
-          deliveryMethod: '快递',
-          accountPeriod: '2个月',
-          accountDate: '2026-01-05',
-          payDueDate: '2026-03-05',
-          paymentStatus: '部分回款',
-          paidAmount: '2000.00',
-          auditStatus: 'pending',
-          orderTime: '2026-01-05'
-        },
-        {
-          id: 3,
-          orderNo: '2020001-978',
-          customerName: '示例客户C',
-          dosageForm: '颗粒',
-          address: '示例客户C的收货地址',
-          orderAmount: '1280.00',
-          orderType: '标研订单',
-          orderStatus: '已发货',
-          deliveryPlanTime: '2026-01-06',
-          payMethod: '预付款',
-          deliveryMethod: '快递',
-          accountPeriod: '1个月',
-          accountDate: '2026-01-06',
-          payDueDate: '2026-02-06',
-          paymentStatus: '全部回款',
-          paidAmount: '1280.00',
-          auditStatus: 'audited',
-          orderTime: '2026-01-06'
-        }
-      ],
+      tableData: [],
       rowToDelete: null,
       auditDialogVisible: false,
       rowToAudit: null,
-      /** 是否继续：continue-继续，pause-暂停，cancel-取消，默认暂停 */
       auditContinueChoice: 'pause',
-      /** 提交回款弹框 */
+      deliveryDialogVisible: false,
+      rowToDelivery: null,
+      deliveryForm: { approveType: 'batch', estimateTime: '' },
       paymentDialogVisible: false,
       rowToPayment: null,
-      paymentForm: {
-        currentAmount: '',
-        voucherList: []
-      },
+      paymentForm: { currentAmount: '', voucherList: [] },
       paymentRules: {
         currentAmount: [
           { required: true, message: '请输入本次回款金额', trigger: 'blur' },
           { pattern: /^\d+(\.\d{1,2})?$/, message: '请输入有效金额（最多两位小数）', trigger: 'blur' }
         ]
       },
-      auditTab: 'pending',
+      auditTab: '1',
       auditTabs: [
-        { label: '待审核', value: 'pending' },
-        { label: '待发货', value: 'delivery' },
-        { label: '已发货', value: 'delivered' },
-        { label: '审核不通过', value: 'rejected' },
-        { label: '缺货审核', value: 'rejected' },
-        { label: '已取消', value: 'canceled' }
+        { label: '待审核', value: '1' },
+        { label: '待发货', value: '4' },
+        { label: '已发货', value: '7' },
+        { label: '审核未通过', value: '-1' },
+        { label: '缺货审核', value: '3' },
+        { label: '已取消', value: '6' }
+      ],
+      orderStatusOptions: [
+        { label: '待营销总监审核', value: '1' },
+        { label: '待总经理审核', value: '2' },
+        { label: '缺货审核', value: '3' },
+        { label: '待发货', value: '4' },
+        { label: '缺货', value: '5' },
+        { label: '暂停', value: '6' },
+        { label: '已发货', value: '7' },
+        { label: '驳回', value: '-1' }
+      ],
+      orderTypeOptions: [
+        { label: '销售订单', value: '1' },
+        { label: '样品订单', value: '2' }
+      ],
+      payTypeOptions: [
+        { label: '现结', value: '1' },
+        { label: '账期', value: '2' },
+        { label: '分期付款', value: '3' }
+      ],
+      payStatusOptions: [
+        { label: '未回款', value: '1' },
+        { label: '部分回款', value: '2' },
+        { label: '全部回款', value: '3' }
       ]
     };
   },
 
   computed: {
-    /** 提交回款弹框 - 订单金额 */
     paymentOrderAmount() {
       if (!this.rowToPayment) return '0.00';
-      return this.rowToPayment.orderAmount || '0.00';
+      return this.rowToPayment.orderPrice != null ? String(this.rowToPayment.orderPrice) : (this.rowToPayment.orderAmount || '0.00');
     },
-    /** 提交回款弹框 - 已回款金额 */
     paymentPaidAmount() {
       if (!this.rowToPayment) return '0.00';
-      return this.rowToPayment.paidAmount != null ? String(this.rowToPayment.paidAmount) : '0.00';
+      const v = this.rowToPayment.payPrice != null ? this.rowToPayment.payPrice : this.rowToPayment.paidAmount;
+      return v != null ? String(v) : '0.00';
     },
-    /** 提交回款弹框 - 未回款金额（红色） */
     paymentUnpaidAmount() {
       if (!this.rowToPayment) return '0.00';
-      const order = parseFloat(String(this.rowToPayment.orderAmount).replace(/,/g, '')) || 0;
+      const order = parseFloat(String(this.paymentOrderAmount).replace(/,/g, '')) || 0;
       const paid = parseFloat(String(this.paymentPaidAmount).replace(/,/g, '')) || 0;
       const unpaid = (order - paid).toFixed(2);
       return unpaid;
@@ -336,12 +354,40 @@ export default {
     tableRowClassName({ rowIndex }) {
       return rowIndex % 2 === 1 ? 'row-even' : '';
     },
+    // POST getStaffOrderList，返回 data: { count, list }，list 项含 orderNo/customerTitle/customerAddress/orderPrice/orderStatusTitle 等
     loadList() {
-      // TODO: 根据 auditTab 调用接口获取列表
-      this.total = this.tableData.length;
+      const params = {
+        page: String(this.queryParams.pageNum),
+        limit: String(this.queryParams.pageSize),
+        keyword: this.queryParams.keyword || '',
+        orderStatus: this.queryParams.orderStatus || '',
+        orderType: this.queryParams.orderType || '',
+        payType: this.queryParams.payType || '',
+        payStatus: this.queryParams.payStatus || ''
+      };
+      this.$api({
+        url: '/getStaffOrderList',
+        method: 'post',
+        data: params
+      })
+        .then((res) => {
+          if (res && res.code === 200 && res.data) {
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            this.tableData = list;
+            this.total = res.data.count ?? list.length;
+          } else {
+            this.tableData = [];
+            this.total = 0;
+          }
+        })
+        .catch(() => {
+          this.tableData = [];
+          this.total = 0;
+        });
     },
     handleAuditTabChange(value) {
       this.auditTab = value;
+      this.queryParams.orderStatus = value;
       this.queryParams.pageNum = 1;
       this.loadList();
     },
@@ -351,15 +397,83 @@ export default {
     },
     resetQuery() {
       this.$refs.queryForm.resetFields();
-      this.queryParams.pageNum = 1;
+      this.queryParams = {
+        keyword: '',
+        orderStatus: '',
+        orderType: '',
+        payType: '',
+        payStatus: '',
+        date: [],
+        pageNum: 1,
+        pageSize: this.queryParams.pageSize
+      };
       this.loadList();
     },
-    handleView() {
-      this.$router.push({
-        path: '/sales/order/detail',
-        query: {
-        }
-      });
+    handleView(row) {
+      const id = row && row.id != null ? String(row.id) : '';
+      if (!id) {
+        this.$message.warning('缺少订单id');
+        return;
+      }
+      this.$router.push({ path: '/sales/order/detail', query: { id } });
+    },
+    orderStatusTagType(status) {
+      const s = Number(status);
+      if (s === 7) return 'success';
+      if (s === 4) return 'success';
+      if (s === 5 || s === -1) return 'danger';
+      if (s === 6) return 'warning';
+      return 'info';
+    },
+    payStatusText(status) {
+      const s = Number(status);
+      if (s === 1) return '未回款';
+      if (s === 2) return '部分回款';
+      if (s === 3) return '全部回款';
+      return status != null ? String(status) : '';
+    },
+    payStatusTagType(status) {
+      const s = Number(status);
+      if (s === 1) return 'info';
+      if (s === 2) return 'warning';
+      if (s === 3) return 'success';
+      return 'info';
+    },
+    handleDelivery(row) {
+      this.rowToDelivery = row;
+      this.deliveryForm = { approveType: 'batch', estimateTime: '' };
+      this.deliveryDialogVisible = true;
+    },
+    submitDelivery() {
+      if (!this.rowToDelivery) return;
+      if (!this.deliveryForm.estimateTime) {
+        this.$message.error('请选择预计发货时间');
+        return;
+      }
+      const id = String(this.rowToDelivery.id);
+      const status = this.deliveryForm.approveType === 'lack' ? '-1' : '1';
+      const estimateTime = this.deliveryForm.estimateTime || '';
+      this.$api({
+        url: '/qhReviewStaffOrder',
+        method: 'post',
+        data: { id, status, estimateTime }
+      })
+        .then((res) => {
+          if (res && res.code === 200) {
+            this.$message.success('提交成功');
+            this.deliveryDialogVisible = false;
+            this.rowToDelivery = null;
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || '提交失败');
+          }
+        })
+        .catch((err) => {
+          this.$message.error((err && err.msg) ? err.msg : '提交失败');
+        });
+    },
+    handlePrintOrder(row) {
+      this.$message.info('打印电子订单：' + (row.orderNo || ''));
     },
     /** 打开提交回款弹框 */
     handleSubmitPayment(row) {
@@ -376,11 +490,46 @@ export default {
       this.paymentForm.voucherList = [];
       this.$refs.paymentForm && this.$refs.paymentForm.resetFields();
     },
-    /** 回款凭证文件变更 */
-    handlePaymentFileChange(file, fileList) {
-      this.paymentForm.voucherList = fileList;
+    /** 回款凭证：自定义上传，与订单新增等图片上传一致 */
+    handlePaymentUploadRequest(option) {
+      const formData = new FormData();
+      formData.append('file', option.file);
+      const token = localStorage.getItem('token');
+      axios
+        .post(UPLOAD_ROOT, formData, {
+          headers: { Authorization: 'Bearer ' + token },
+          timeout: 60000
+        })
+        .then(res => {
+          const data = res.data || res;
+          const payload = (data && data.data) ? data.data : data;
+          const url = (payload && (payload.path || payload.url)) || (data && data.path) || '';
+          option.onSuccess({ url });
+        })
+        .catch(err => {
+          this.$message.error(
+            (err.response && err.response.data && err.response.data.msg) || '上传失败'
+          );
+          option.onError(err);
+        });
     },
-    /** 提交回款 */
+    handlePaymentUploadSuccess(res, file, fileList) {
+      this.paymentForm.voucherList = fileList;
+      const r = res || (file && file.response);
+      const payload = (r && r.data) ? r.data : r;
+      const url = (payload && (payload.path || payload.url)) || (r && r.path) || (file && file.url) || '';
+      if (url && file) file.url = url;
+    },
+    handlePaymentUploadRemove(file, fileList) {
+      this.paymentForm.voucherList = fileList || [];
+    },
+    /** 回款凭证 URL 拼接为逗号字符串（与 addStaffOrderPay 的 payImage 一致） */
+    getPaymentVoucherUrls() {
+      const list = this.paymentForm.voucherList || [];
+      const urls = list.map(f => f.url || (f.response && f.response.url)).filter(Boolean);
+      return urls.join(',');
+    },
+    /** 提交回款：POST addStaffOrderPay，参数 orderId、payImage、payPrice */
     submitPayment() {
       this.$refs.paymentForm.validate(valid => {
         if (!valid) return;
@@ -391,10 +540,35 @@ export default {
           this.$message.warning('本次回款金额不能大于未回款金额');
           return;
         }
-        // TODO: 调用提交回款接口，上传凭证
-        this.$message.success('提交成功');
-        this.closePaymentDialog();
-        this.loadList();
+        const orderId = this.rowToPayment.id != null ? String(this.rowToPayment.id) : '';
+        if (!orderId) {
+          this.$message.warning('缺少订单id');
+          return;
+        }
+        const payImage = this.getPaymentVoucherUrls();
+        if (!payImage) {
+          this.$message.warning('请上传回款凭证');
+          return;
+        }
+        const payPrice = String(this.paymentForm.currentAmount || '0');
+
+        this.$api({
+          url: '/addStaffOrderPay',
+          method: 'post',
+          data: { orderId, payImage, payPrice }
+        })
+          .then(res => {
+            if (res && res.code === 200) {
+              this.$message.success('提交成功');
+              this.closePaymentDialog();
+              this.loadList();
+            } else {
+              this.$message.error((res && res.msg) || '提交失败');
+            }
+          })
+          .catch(err => {
+            this.$message.error((err && err.msg) ? err.msg : '提交失败');
+          });
       });
     },
     handleAudit(row) {
@@ -408,22 +582,42 @@ export default {
       this.rowToAudit = null;
       this.auditContinueChoice = 'pause';
     },
-    /** 提交是否继续选择 */
+    /** 提交是否继续：POST jxStaffOrder，参数 id、status（1继续 2暂停 3取消） */
     submitAuditChoice() {
       if (!this.rowToAudit) return;
-      // TODO: 根据 auditContinueChoice 调用接口（继续/暂停/取消）
-      const actionMap = { continue: '继续', pause: '暂停', cancel: '取消' };
-      this.$message.success(`已选择${actionMap[this.auditContinueChoice]}`);
-      this.closeAuditDialog();
-      this.loadList();
-    },
-    handleEdit(row) {
-      // TODO: 编辑
-      this.$message.info('编辑：' + row.name);
+      const id = this.rowToAudit.id != null ? String(this.rowToAudit.id) : '';
+      if (!id) {
+        this.$message.warning('缺少订单id');
+        return;
+      }
+      const statusMap = { continue: '1', pause: '2', cancel: '3' };
+      const status = statusMap[this.auditContinueChoice] || '2';
+
+      this.$api({
+        url: '/jxStaffOrder',
+        method: 'post',
+        data: { id, status }
+      })
+        .then(res => {
+          if (res && res.code === 200) {
+            const actionMap = { continue: '继续', pause: '暂停', cancel: '取消' };
+            this.$message.success(`已选择${actionMap[this.auditContinueChoice]}`);
+            this.closeAuditDialog();
+            this.loadList();
+          } else {
+            this.$message.error((res && res.msg) || '提交失败');
+          }
+        })
+        .catch(err => {
+          this.$message.error((err && err.msg) ? err.msg : '提交失败');
+        });
     },
     handleExport() {
       // TODO: 导出
       this.$message.info('导出');
+    },
+    handleAdd() {
+      this.$router.push('/sales/order/add');
     },
     handleSizeChange(val) {
       this.queryParams.pageSize = val;
@@ -594,8 +788,33 @@ export default {
     color: #3377fe;
     cursor: pointer;
     font-size: 14px;
-    margin-right: 10px;
+
+    & + .row-act::before {
+      content: '';
+      display: inline-block;
+      width: 1px;
+      height: 12px;
+      background: #dcdfe6;
+      margin: 0 8px;
+      vertical-align: middle;
+    }
   }
+}
+
+:deep(.el-dialog__header) {
+  height: 60px;
+  padding: 0 24px 0;
+  background: #F7F7F7;
+  text-align: left;
+  .el-dialog__title {
+    line-height: 60px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333333;
+  }
+}
+:deep(.el-dialog__body) {
+  padding: 30px 80px;
 }
 
 .pagination-wrap {
@@ -621,27 +840,35 @@ export default {
 }
 
 .payment-upload {
+  display: flex;
   ::v-deep .el-upload--picture-card {
     width: 120px;
     height: 120px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .upload-inner {
+    line-height: 120px;
+    border: 1px solid #c0ccda;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+
     .el-icon-plus {
       font-size: 28px;
-      margin-bottom: 8px;
-      color: #8c939d;
+      color: #909399;
+      margin-bottom: 4px;
     }
   }
+  ::v-deep .el-upload-list--picture-card .el-upload-list__item {
+    width: 120px;
+    height: 120px;
+    border-radius: 4px;
+  }
+  ::v-deep .el-upload-list__item-thumbnail {
+    object-fit: fill;
+  }
   .upload-tip {
-    font-size: 12px;
-    color: #909399;
+    font-size: 14px;
+    color: #878787;
+    line-height: 20px;
   }
 }
 </style>

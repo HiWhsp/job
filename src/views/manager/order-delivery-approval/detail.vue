@@ -16,52 +16,52 @@
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">下单时间：</span>
-            <span class="field-value">{{ detail.orderTime }}</span>
+            <span class="field-value">{{ detail.created_at }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">销售金额：</span>
-            <span class="field-value">{{ detail.orderAmount }}</span>
+            <span class="field-value">{{ detail.orderPrice }}</span>
           </el-col>
         </el-row>
 
         <el-row :gutter="24" class="field-row">
           <el-col :span="8" class="field-item">
             <span class="field-label">订单类型：</span>
-            <span class="field-value">{{ detail.orderType }}</span>
+            <span class="field-value">{{ orderTypeText(detail.orderType) }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">是否需要审批：</span>
-            <span class="field-value">{{ detail.needApprove ? '是' : '否' }}</span>
+            <span class="field-value">{{ isApprovalText(detail.isApproval) }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">支付方式：</span>
-            <span class="field-value">{{ detail.payMethod }}</span>
+            <span class="field-value">{{ payTypeText(detail.payType) }}</span>
           </el-col>
         </el-row>
 
         <el-row :gutter="24" class="field-row">
           <el-col :span="8" class="field-item">
             <span class="field-label">是否付款：</span>
-            <span class="field-value">{{ detail.needMark ? '是' : '否' }}</span>
+            <span class="field-value">{{ isPayText(detail.isPay) }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">付款金额：</span>
-            <span class="field-value">{{ detail.payAmount }}</span>
+            <span class="field-value">{{ detail.payPrice }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
-            <span class="field-label">是否签约与分批发货：</span>
-            <span class="field-value">{{ detail.batchDelivery ? '是' : '否' }}</span>
+            <span class="field-label">库存是否满足要求：</span>
+            <span class="field-value">{{ isManKuCunText(detail.isManKuCun) }}</span>
           </el-col>
         </el-row>
 
         <el-row :gutter="24" class="field-row">
           <el-col :span="8" class="field-item">
             <span class="field-label">是否接受分批发货：</span>
-            <span class="field-value">{{ detail.packageSpec }}</span>
+            <span class="field-value">{{ isMoreFaHuoText(detail.isMoreFaHuo) }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">包装规格：</span>
-            <span class="field-value">{{ detail.packageSpec }}</span>
+            <span class="field-value">{{ packTypeText(detail.packType, detail.packStr) }}</span>
           </el-col>
         </el-row>
 
@@ -69,13 +69,13 @@
           <el-col :span="8" class="field-item">
             <span class="field-label">订单状态：</span>
             <el-tag :type="orderStatusTagType" size="small">
-              {{ detail.orderStatus }}
+              {{ orderStatusText(detail.orderStatus) }}
             </el-tag>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">回款状态：</span>
             <el-tag :type="paymentStatusTagType" size="small">
-              {{ detail.paymentStatus }}
+              {{ payStatusText(detail.payStatus) }}
             </el-tag>
           </el-col>
         </el-row>
@@ -84,7 +84,7 @@
           <el-col :span="24" class="field-item field-images">
             <span class="field-label">合同图片：</span>
             <div class="image-list">
-              <el-image v-for="(img, index) in detail.contractImages" :key="index" :src="img" fit="cover"
+              <el-image v-for="(img, index) in detail.contractimages" :key="index" :src="img" fit="cover"
                 class="thumb-image" />
             </div>
           </el-col>
@@ -94,7 +94,7 @@
           <el-col :span="24" class="field-item field-images">
             <span class="field-label">付款凭证：</span>
             <div class="image-list">
-              <el-image v-for="(img, index) in detail.payImages" :key="index" :src="img" fit="cover"
+              <el-image v-for="(img, index) in detail.payImage" :key="index" :src="img" fit="cover"
                 class="thumb-image" />
             </div>
           </el-col>
@@ -119,14 +119,14 @@
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">客户属地：</span>
-            <span class="field-value">{{ detail.customer.region }}</span>
+            <span class="field-value">{{ detail.customer.territory }}</span>
           </el-col>
         </el-row>
 
         <el-row :gutter="24" class="field-row">
           <el-col :span="8" class="field-item">
             <span class="field-label">客户区域：</span>
-            <span class="field-value">{{ detail.customer.contactPerson }}</span>
+            <span class="field-value">{{ detail.customer.region }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">客户属性A：</span>
@@ -175,11 +175,11 @@
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">收货人：</span>
-            <span class="field-value">{{ detail.customer.address }}</span>
+            <span class="field-value">{{ detail.customer.receiver }}</span>
           </el-col>
           <el-col :span="8" class="field-item">
             <span class="field-label">收货人联系方式：</span>
-            <span class="field-value">{{ detail.customer.address }}</span>
+            <span class="field-value">{{ detail.customer.receiverPhone }}</span>
           </el-col>
         </el-row>
       </div>
@@ -247,7 +247,7 @@
 
 
     <div class="form-footer">
-      <el-button type="primary" @click="openDeliveryDialog">发货</el-button>
+      <el-button type="primary" @click="openDeliveryDialog" v-if="detail.orderStatus == 4">发货</el-button>
       <el-button @click="handleCancel">取消</el-button>
     </div>
 
@@ -269,9 +269,9 @@
             <el-radio label="lack">库存不足</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="交货时间：">
+        <el-form-item label="预计发货时间：">
           <el-date-picker
-            v-model="deliveryForm.deliveryTime"
+            v-model="deliveryForm.estimateTime"
             type="date"
             placeholder="请设置"
             value-format="yyyy-MM-dd"
@@ -294,25 +294,35 @@ export default {
   data() {
     return {
       orderId: '',
-      // 模拟详情数据，后续可替换为接口返回
+      // 与 staff_order 表字段对应
       detail: {
         orderNo: '',
-        orderTime: '',
-        orderAmount: '',
-        orderType: '',
-        needApprove: false,
-        payMethod: '',
-        needMark: false,
-        payAmount: '',
-        batchDelivery: false,
-        packageSpec: '',
-        orderStatus: '',
-        paymentStatus: '',
-        contractImages: [],
-        payImages: [],
+        created_at: '',
+        orderPrice: '',
+        orderType: null, // 1销售订单, 2样品订单
+        priceType: null, // 1经销商, 2终端指导价格
+        isApproval: null, // 1需要审核, 2不需要
+        payType: null, // 1现结, 2账期, 3分期付款
+        isPay: null, // 0未付款, 1已付款
+        payPrice: '',
+        isManKuCun: null, // 1满足, 2不满足
+        isMoreFaHuo: null, // 1是, 2否
+        packType: null, // 1标准彩盒, 2标准白盒, 3无包装, 4客户定制包装, 5其他
+        packStr: '',
+        contractimages: [],
+        payImage: [],
+        orderStatus: null, // 1待营销总监审核, 2待总经理审核, 3缺货审核, 4待发货, 5缺货, 6暂停, 7已发货, -1驳回
+        payStatus: null, // 1未回款, 2部分回款, 3全部回款
+        estimateTime: '',
+        paymentTerm: '',
+        paymentTermTime: '',
+        reviewJson: '',
+        reviewJson2: '',
+        customerId: null,
         customer: {
           code: '',
           name: '',
+          territory: '',
           region: '',
           attr: '',
           attrB: '',
@@ -335,25 +345,25 @@ export default {
       // 审批发货弹框
       deliveryDialogVisible: false,
       deliveryForm: {
-        approveType: 'batch', // batch: 审批发货, lack: 库存不足
-        deliveryTime: ''
+        approveType: 'batch', // batch: 审批发货 -> status=1, lack: 库存不足 -> status=-1
+        estimateTime: ''
       }
     };
   },
 
   computed: {
     orderStatusTagType() {
-      const status = this.detail.orderStatus || '';
-      if (status.includes('缺货') || status.includes('驳回')) return 'danger';
-      if (status.includes('已发货') || status.includes('审核完') || status.includes('通过')) return 'success';
-      if (status.includes('暂停')) return 'warning';
+      const s = Number(this.detail.orderStatus);
+      if (s === 5 || s === -1) return 'danger'; // 缺货, 驳回
+      if (s === 7) return 'success'; // 已发货
+      if (s === 6) return 'warning'; // 暂停
       return 'info';
     },
     paymentStatusTagType() {
-      const status = this.detail.paymentStatus;
-      if (status === '待回款') return 'info';
-      if (status === '部分回款') return 'warning';
-      if (status === '全部回款') return 'success';
+      const s = Number(this.detail.payStatus);
+      if (s === 1) return 'info'; // 未回款
+      if (s === 2) return 'warning'; // 部分回款
+      if (s === 3) return 'success'; // 全部回款
       return 'info';
     }
   },
@@ -378,12 +388,101 @@ export default {
         .map(s => (s || '').trim())
         .filter(Boolean);
     },
+    // 1销售订单, 2样品订单
+    orderTypeText(v) {
+      const s = Number(v);
+      if (s === 1) return '销售订单';
+      if (s === 2) return '样品订单';
+      return v != null ? String(v) : '—';
+    },
+    // 1经销商, 2终端指导价格
+    priceTypeText(v) {
+      const s = Number(v);
+      if (s === 1) return '经销商';
+      if (s === 2) return '终端指导价格';
+      return v != null ? String(v) : '—';
+    },
+    // 1需要审核, 2不需要
+    isApprovalText(v) {
+      const s = Number(v);
+      if (s === 1) return '需要审核';
+      if (s === 2) return '不需要';
+      return v != null ? String(v) : '—';
+    },
+    // 1现结, 2账期, 3分期付款
+    payTypeText(v) {
+      const s = Number(v);
+      if (s === 1) return '现结';
+      if (s === 2) return '账期';
+      if (s === 3) return '分期付款';
+      return v != null ? String(v) : '—';
+    },
+    // 0未付款, 1已付款
+    isPayText(v) {
+      const s = Number(v);
+      if (s === 0) return '未付款';
+      if (s === 1) return '已付款';
+      return v != null ? String(v) : '—';
+    },
+    // 库存是否满足: 1满足, 2不满足
+    isManKuCunText(v) {
+      const s = Number(v);
+      if (s === 1) return '满足';
+      if (s === 2) return '不满足';
+      return v != null ? String(v) : '—';
+    },
+    // 是否接受分批发货: 1是, 2否
+    isMoreFaHuoText(v) {
+      const s = Number(v);
+      if (s === 1) return '是';
+      if (s === 2) return '否';
+      return v != null ? String(v) : '—';
+    },
+    // 1标准彩盒, 2标准白盒, 3无包装, 4客户定制包装, 5其他(输入形式)
+    packTypeText(type, packStr) {
+      const s = Number(type);
+      if (s === 1) return '标准彩盒';
+      if (s === 2) return '标准白盒';
+      if (s === 3) return '无包装';
+      if (s === 4) return '客户定制包装';
+      if (s === 5) return packStr ? `其他(${packStr})` : '其他';
+      if (packStr) return packStr;
+      return type != null ? String(type) : '—';
+    },
+    // 1待营销总监审核, 2待总经理审核, 3缺货审核, 4待发货, 5缺货, 6暂停, 7已发货, -1驳回
+    orderStatusText(v) {
+      const s = Number(v);
+      const map = {
+        1: '待营销总监审核',
+        2: '待总经理审核',
+        3: '缺货审核',
+        4: '待发货',
+        5: '缺货',
+        6: '暂停',
+        7: '已发货',
+        [-1]: '驳回'
+      };
+      return map[s] != null ? map[s] : (v != null ? String(v) : '—');
+    },
+    // 1未回款, 2部分回款, 3全部回款
     payStatusText(status) {
       const s = Number(status);
       if (s === 1) return '未回款';
       if (s === 2) return '部分回款';
       if (s === 3) return '全部回款';
-      return '';
+      return status != null ? String(status) : '—';
+    },
+    formatReviewJson(val) {
+      if (!val) return '—';
+      if (typeof val === 'string') {
+        try {
+          const arr = JSON.parse(val);
+          return Array.isArray(arr) ? arr.map((it) => (it && it.remark) || JSON.stringify(it)).join('；') : val;
+        } catch (_) {
+          return val;
+        }
+      }
+      return Array.isArray(val) ? val.map((it) => (it && it.remark) || JSON.stringify(it)).join('；') : String(val);
     },
     loadDetail() {
       if (!this.orderId) return;
@@ -400,35 +499,35 @@ export default {
           const data = res.data;
 
           const customerAddress = data.customerAddress || {};
-          const orderStatusTitle = data.orderStatusTitle || '';
           const productList = Array.isArray(data.productJson) ? data.productJson : [];
           const foreignList = Array.isArray(data.foreignProductJson) ? data.foreignProductJson : [];
+          const orderStatusTitle = data.orderStatusTitle || this.orderStatusText(data.orderStatus);
 
           this.detail = {
             ...this.detail,
             orderNo: data.orderNo || '',
-            orderTime: data.created_at || '',
-            orderAmount: data.orderPrice || '',
-            orderType: data.orderTypeTitle || '',
-            needApprove: String(data.isApproval) === '1',
-            payMethod: data.payTypeTitle || '',
-            needMark: String(data.isPay) === '1',
-            payAmount: data.payPrice || '',
-            batchDelivery: String(data.isMoreFaHuo) === '1',
-            packageSpec: data.packStr != null ? String(data.packStr) : '',
-            orderStatus: orderStatusTitle || '',
-            paymentStatus: this.payStatusText(data.payStatus),
-            contractImages: this._splitImages(data.contractImages),
-            payImages: this._splitImages(data.payImage),
-            customer: {
-              ...this.detail.customer,
-              code: '',
-              name: data.customerTitle || '',
-              region: data.customerTerritory || '',
-              address: customerAddress.address || '',
-              receiver: customerAddress.name || '',
-              receiverPhone: customerAddress.phone || ''
-            },
+            created_at: data.created_at || '',
+            orderPrice: data.orderPrice != null ? data.orderPrice : '',
+            orderType: data.orderType,
+            priceType: data.priceType,
+            isApproval: data.isApproval,
+            payType: data.payType,
+            isPay: data.isPay,
+            payPrice: data.payPrice != null ? data.payPrice : '',
+            isManKuCun: data.isManKuCun,
+            isMoreFaHuo: data.isMoreFaHuo,
+            packType: data.packType,
+            packStr: data.packStr != null ? String(data.packStr) : '',
+            contractimages: this._splitImages(data.contractimages || data.contractImages),
+            payImage: this._splitImages(data.paylmage || data.payImage),
+            orderStatus: data.orderStatus,
+            payStatus: data.payStatus,
+            estimateTime: data.estimateTime || '',
+            paymentTerm: data.paymentTerm || '',
+            paymentTermTime: data.paymentTermTime || data.aymentTermTime || '',
+            reviewJson: data.reviewJson || '',
+            reviewJson2: data.reviewJson2 || '',
+            customerId: data.customerId != null ? data.customerId : null,
             productList: productList.map((it) => {
               const product = it.product || {};
               const inventory = it.inventory || {};
@@ -460,10 +559,58 @@ export default {
               };
             })
           };
+          if (data.customerId != null && data.customerId !== '') {
+            this.loadCustomerDetail(String(data.customerId));
+          }
         })
         .catch((err) => {
           this.$message.error((err && err.msg) ? err.msg : '获取订单详情失败');
         });
+    },
+    /** 根据 detail.customerId 调用客户详情接口 getCustomer，回填客户信息 */
+    loadCustomerDetail(customerId) {
+      if (!customerId) return;
+      this.$api({
+        url: '/getCustomer',
+        method: 'post',
+        data: { id: customerId }
+      })
+        .then((res) => {
+          if (!res || !res.data) return;
+          const data = res.data;
+          const payment = this._parseCustomerJson(data.paymentJson);
+          const address = this._parseCustomerJson(data.addressJson);
+          this.detail.customer = {
+            ...this.detail.customer,
+            code: data.customerNo ?? '',
+            name: data.title ?? '',
+            territory: data.territory === 1 ? "国内" : data.territory === 2 ? "国外" : (data.territory ?? ""),
+            region: data.region ?? '',
+            attr: data.attributeA ?? '',
+            attrB: data.attributeB ?? '',
+            contactPerson: data.contact ?? '',
+            contactPhone: data.phone ?? '',
+            companyPhone: data.companyPhone ?? '',
+            bankAccountName: payment.account ?? '',
+            bankAccountNo: payment.code ?? '',
+            bankName: payment.bank ?? '',
+            address: address.address ?? this.detail.customer.address,
+            receiver: address.name ?? this.detail.customer.receiver,
+            receiverPhone: address.phone ?? this.detail.customer.receiverPhone
+          };
+        })
+        .catch(() => {
+          this.$message.error('获取客户详情失败');
+        });
+    },
+    _parseCustomerJson(val) {
+      if (val == null) return {};
+      if (typeof val === 'object') return val;
+      try {
+        return typeof val === 'string' ? JSON.parse(val || '{}') : {};
+      } catch (e) {
+        return {};
+      }
     },
     openDeliveryDialog() {
       this.deliveryDialogVisible = true;
@@ -473,13 +620,31 @@ export default {
         this.$message.error('请选择审批结果');
         return;
       }
-      if (!this.deliveryForm.deliveryTime) {
-        this.$message.error('请选择交货时间');
+      if (!this.deliveryForm.estimateTime) {
+        this.$message.error('请选择预计发货时间');
         return;
       }
-      // TODO: 调用审批发货接口，传递 deliveryForm 与订单信息
-      this.$message.success('提交成功');
-      this.deliveryDialogVisible = false;
+      const id = this.orderId;
+      const status = this.deliveryForm.approveType === 'lack' ? '-1' : '1'; // 1发货, -1缺货
+      const estimateTime = this.deliveryForm.estimateTime || '';
+
+      this.$api({
+        url: '/qhReviewStaffOrder',
+        method: 'post',
+        data: { id, status, estimateTime }
+      })
+        .then((res) => {
+          if (res && res.code === 200) {
+            this.$message.success('提交成功');
+            this.deliveryDialogVisible = false;
+            this.loadDetail();
+          } else {
+            this.$message.error((res && res.msg) || '提交失败');
+          }
+        })
+        .catch((err) => {
+          this.$message.error((err && err.msg) ? err.msg : '提交失败');
+        });
     },
     handleCancel() {
       this.$router.back();
@@ -579,6 +744,11 @@ export default {
   border-radius: 4px;
   border: 1px solid #ebeef5;
   background: #f5f7fa;
+}
+
+.review-json {
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 
 .form-footer {
